@@ -23,12 +23,14 @@ var myFacesKupuClientId;
 var myFacesKupuFormId;
 var myFacesKupuEnableFlexiTools;
 var myFacesKupuOriginalDocOnSubmit;
+var myFacesKupuResourceBaseURL;
 
-function myFacesKupuSet(text, clientId, formId, enableFlexiTools){
+function myFacesKupuSet(text, clientId, formId, enableFlexiTools, resourceBaseURL){
 	myFacesKupuTextToLoad = text;
 	myFacesKupuClientId = clientId;
 	myFacesKupuFormId = formId;
 	myFacesKupuEnableFlexiTools = enableFlexiTools;
+	myFacesKupuResourceBaseURL = resourceBaseURL;
 	
 	var onLoadSrc;
     if( document.all ) // IE
@@ -61,4 +63,17 @@ function myFacesKupuSubmit(){
 
 	if( myFacesKupuOriginalDocOnSubmit )
 		return myFacesKupuOriginalDocOnSubmit();
+}
+
+// Redefine or extend buggy kupu functions
+
+function openPopup(url, width, height){
+    /* open and center a popup window */
+    var sw = screen.width;
+    var sh = screen.height;
+    var left = sw / 2 - width / 2;
+    var top = sh / 2 - height / 2;
+    var win = window.open(myFacesKupuResourceBaseURL+url, 'someWindow', 
+                'width=' + width + ',height=' + height + ',left=' + left + ',top=' + top);
+    return win;
 }

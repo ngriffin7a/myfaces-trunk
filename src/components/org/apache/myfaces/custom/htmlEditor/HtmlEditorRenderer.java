@@ -33,6 +33,9 @@ import org.apache.myfaces.renderkit.html.util.JavascriptUtils;
  * @author Sylvain Vieujot (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.7  2004/12/04 02:09:42  svieujot
+ * Several small fixes.
+ *
  * Revision 1.6  2004/12/04 00:40:25  svieujot
  * htmlEditor : add style and styleClass attributes.
  *
@@ -250,7 +253,6 @@ public class HtmlEditorRenderer extends Renderer {
             	
             	writer.startElement(HTML.SPAN_ELEM,null);
             	writer.writeAttribute(HTML.CLASS_ATTR, "kupu-tb-buttongroup", null);
-            	// TODO : Check if id not missing (would cause the bug for bgcolor.
             		writeButton(writer, "kupu-forecolor", "text color: alt-f", "f");
             		writeButton(writer, "kupu-hilitecolor", "background color: alt-h", "h");
             	writer.endElement(HTML.SPAN_ELEM);
@@ -279,13 +281,12 @@ public class HtmlEditorRenderer extends Renderer {
             	writer.startElement(HTML.SPAN_ELEM,null);
             	writer.writeAttribute(HTML.CLASS_ATTR, "kupu-tb-buttongroup", null);
             	writer.writeAttribute(HTML.ID_ATTR, "kupu-bg-indent", null);
-            		writeButton(writer, "kupu-outdent", "outdent: alt-&lt;", "&lt;");
-            		writeButton(writer, "kupu-indent", "indent: alt-&gt;", "&gt;");
+            		writeButton(writer, "kupu-outdent", "outdent: alt-<", "<");
+            		writeButton(writer, "kupu-indent", "indent: alt->", ">");
             	writer.endElement(HTML.SPAN_ELEM);
             	
             	writer.startElement(HTML.SPAN_ELEM,null);
             	writer.writeAttribute(HTML.CLASS_ATTR, "kupu-tb-buttongroup", null);
-            	// TODO : No ID ?
             		writeButton(writer, "kupu-image", "Insert image", null, "kupu-imagelibdrawer-button");
             		writeButton(writer, "kupu-hyperlink", "Insert link", null, "kupu-linklibdrawer-button");
             		writeButton(writer, "kupu-hyperlink", "Insert external link", null, "kupu-linkdrawer-button");
@@ -872,9 +873,18 @@ public class HtmlEditorRenderer extends Renderer {
             AddResource.addJavaScriptToHeader(HtmlEditorRenderer.class, "flexitools/flexitools.js", context);
         
         AddResource.addJavaScriptToHeader(HtmlEditorRenderer.class, "myFacesUtils.js", context);
+        
+        String resourceBaseURL = AddResource.getResourceMappedPath(HtmlEditorRenderer.class, "", context);
+        
         writer.startElement(HTML.SCRIPT_ELEM, null);
         writer.writeAttribute(HTML.SCRIPT_LANGUAGE_ATTR, HTML.SCRIPT_LANGUAGE_JAVASCRIPT, null);
-        	writer.write("myFacesKupuSet(\""+encodedText+"\",\""+clientId+"\",\""+formId+"\","+formularMode+");");
+        	writer.write("myFacesKupuSet(" +
+        			"\""+encodedText+"\"," +
+        			"\""+clientId+"\"," +
+        			"\""+formId+"\"," +
+        			formularMode+","+
+        			"\""+resourceBaseURL+"\"" +
+        			");");
         writer.endElement(HTML.SCRIPT_ELEM);
     }
     
