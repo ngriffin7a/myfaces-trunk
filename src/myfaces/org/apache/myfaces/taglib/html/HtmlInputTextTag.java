@@ -18,7 +18,10 @@
  */
 package net.sourceforge.myfaces.taglib.html;
 
+import net.sourceforge.myfaces.renderkit.JSFAttr;
+import net.sourceforge.myfaces.renderkit.html.HTML;
 
+import javax.faces.component.UIComponent;
 
 
 /**
@@ -41,13 +44,161 @@ public class HtmlInputTextTag
 
     // UIComponent attributes --> already implemented in MyfacesComponentTag
 
-    // HTML universal attributes --> already implemented in MyfacesComponentTag
+    // user role attributes --> already implemented in MyfacesComponentTag
 
-    // HTML event handler attributes --> already implemented in MyfacesComponentTag
+    // HTML universal attributes --> already implemented in HtmlComponentTag
+
+    // HTML event handler attributes --> already implemented in HtmlComponentTag
 
     // HTML input attributes
+    private String _accesskey;
+    private String _align;
+    private String _alt;
+    private String _datafld;
+    private String _datasrc;
+    private String _dataformatas;
+    private String _disabled;
+    private String _maxlength;
+    private String _onblur;
+    private String _onchange;
+    private String _onfocus;
+    private String _onselect;
+    private String _readonly;
+    private String _size;
+    private String _tabindex;
 
-    //TODO: look at legacy InputTextTag...
+    // UIOutput attributes
+    private String _converter;
 
-    // user role attributes --> already implemented in MyfacesComponentTag
+    // UIInput attributes
+    private Object _required;
+    private String _validator;
+
+    // HtmlInputText attributes
+    private Object _escape;
+
+
+
+    protected void setProperties(UIComponent component)
+    {
+        super.setProperties(component);
+
+        setStringProperty(component, HTML.ACCESSKEY_ATTR, _accesskey);
+        setStringProperty(component, HTML.ALIGN_ATTR, _align);
+        setStringProperty(component, HTML.ALT_ATTR, _alt);
+        setStringProperty(component, HTML.DATAFLD_ATTR, _datafld);
+        setStringProperty(component, HTML.DATASRC_ATTR, _datasrc);
+        setStringProperty(component, HTML.DATAFORMATAS_ATTR, _dataformatas);
+        setStringProperty(component, HTML.DISABLED_ATTR, _disabled);
+        setStringProperty(component, HTML.MAXLENGTH_ATTR, _maxlength);
+        setStringProperty(component, HTML.ONBLUR_ATTR, _onblur);
+        setStringProperty(component, HTML.ONCHANGE_ATTR, _onchange);
+        setStringProperty(component, HTML.ONFOCUS_ATTR, _onfocus);
+        setStringProperty(component, HTML.ONSELECT_ATTR, _onselect);
+        setStringProperty(component, HTML.READONLY_ATTR, _readonly);
+        setStringProperty(component, HTML.SIZE_ATTR, _size);
+        setStringProperty(component, HTML.TABINDEX_ATTR, _tabindex);
+
+        setStringProperty(component, JSFAttr.CONVERTER_ATTR, _converter);
+
+        setBooleanProperty(component, JSFAttr.REQUIRED_ATTR, _required);
+        setStringProperty(component, JSFAttr.VALIDATOR_ATTR, _validator);
+
+        setBooleanProperty(component, JSFAttr.ESCAPE_ATTR, _escape);
+    }
+
+    public void setAccesskey(String accesskey)
+    {
+        _accesskey = accesskey;
+    }
+
+    public void setAlign(String align)
+    {
+        _align = align;
+    }
+
+    public void setAlt(String alt)
+    {
+        _alt = alt;
+    }
+
+    public void setDatafld(String datafld)
+    {
+        _datafld = datafld;
+    }
+
+    public void setDatasrc(String datasrc)
+    {
+        _datasrc = datasrc;
+    }
+
+    public void setDataformatas(String dataformatas)
+    {
+        _dataformatas = dataformatas;
+    }
+
+    public void setDisabled(String disabled)
+    {
+        _disabled = disabled;
+    }
+
+    public void setMaxlength(String maxlength)
+    {
+        _maxlength = maxlength;
+    }
+
+    public void setOnblur(String onblur)
+    {
+        _onblur = onblur;
+    }
+
+    public void setOnchange(String onchange)
+    {
+        _onchange = onchange;
+    }
+
+    public void setOnfocus(String onfocus)
+    {
+        _onfocus = onfocus;
+    }
+
+    public void setOnselect(String onselect)
+    {
+        _onselect = onselect;
+    }
+
+    public void setReadonly(String readonly)
+    {
+        _readonly = readonly;
+    }
+
+    public void setSize(String size)
+    {
+        _size = size;
+    }
+
+    public void setTabindex(String tabindex)
+    {
+        _tabindex = tabindex;
+    }
+
+    public void setConverter(String converter)
+    {
+        _converter = converter;
+    }
+
+    public void setRequired(Object required)
+    {
+        _required = required;
+    }
+
+    public void setValidator(String validator)
+    {
+        _validator = validator;
+    }
+
+    public void setEscape(Object escape)
+    {
+        _escape = escape;
+    }
 }

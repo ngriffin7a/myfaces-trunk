@@ -18,7 +18,6 @@
  */
 package net.sourceforge.myfaces.taglib.html;
 
-import net.sourceforge.myfaces.renderkit.JSFAttr;
 import net.sourceforge.myfaces.renderkit.html.HTML;
 import net.sourceforge.myfaces.taglib.MyfacesComponentTag;
 
@@ -33,15 +32,12 @@ public abstract class HtmlComponentTag
 {
     //private static final Log log = LogFactory.getLog(HtmlComponentTag.class);
 
-    // Common HTML component attributes
-    private String _styleClass;
-    private Object _escape;
-
     //HTML universal attributes
     private String _dir;
     private String _lang;
     private String _style;
     private String _title;
+    private String _styleClass;
 
     //HTML event handler attributes
     private String _onclick;
@@ -55,21 +51,14 @@ public abstract class HtmlComponentTag
     private String _onkeydown;
     private String _onkeyup;
 
-    //user role attributes (Myfaces extension)
-    private Object _enabledOnUserRole;
-    private Object _visibleOnUserRole;
-
     protected void setProperties(UIComponent component)
     {
         super.setProperties(component);
-        setStringProperty(component, JSFAttr.STYLE_CLASS_ATTR, _styleClass);
-        setBooleanProperty(component, JSFAttr.ESCAPE_ATTR, _escape);
-        setBooleanProperty(component, JSFAttr.ENABLED_ON_USER_ROLE_ATTR, _enabledOnUserRole);
-        setBooleanProperty(component, JSFAttr.VISIBLE_ON_USER_ROLE_ATTR, _visibleOnUserRole);
         setStringProperty(component, HTML.DIR_ATTR, _dir);
         setStringProperty(component, HTML.LANG_ATTR, _lang);
         setStringProperty(component, HTML.STYLE_ATTR, _style);
         setStringProperty(component, HTML.TITLE_ATTR, _title);
+        setStringProperty(component, HTML.STYLE_CLASS_ATTR, _styleClass);
         setStringProperty(component, HTML.ONCLICK_ATTR, _onclick);
         setStringProperty(component, HTML.ONDBLCLICK_ATTR, _ondblclick);
         setStringProperty(component, HTML.ONMOUSEDOWN_ATTR, _onmousedown);
@@ -85,11 +74,6 @@ public abstract class HtmlComponentTag
     public void setStyleClass(String styleClass)
     {
         _styleClass = styleClass;
-    }
-
-    public void setEscape(Object escape)
-    {
-        _escape = escape;
     }
 
     public void setDir(String dir)
@@ -160,16 +144,6 @@ public abstract class HtmlComponentTag
     public void setOnkeyup(String onkeyup)
     {
         _onkeyup = onkeyup;
-    }
-
-    public void setEnabledOnUserRole(Object enabledOnUserRole)
-    {
-        _enabledOnUserRole = enabledOnUserRole;
-    }
-
-    public void setVisibleOnUserRole(Object visibleOnUserRole)
-    {
-        _visibleOnUserRole = visibleOnUserRole;
     }
 
 }

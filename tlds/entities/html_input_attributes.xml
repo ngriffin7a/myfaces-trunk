@@ -6,6 +6,7 @@
         <attribute><name>datasrc</name>     <required>false</required>  <rtexprvalue>true</rtexprvalue></attribute>
         <attribute><name>dataformatas</name><required>false</required>  <rtexprvalue>true</rtexprvalue></attribute>
         <attribute><name>disabled</name>    <required>false</required>  <rtexprvalue>true</rtexprvalue></attribute>
+        <attribute><name>maxlength</name>   <required>false</required>  <rtexprvalue>true</rtexprvalue></attribute>
         <attribute><name>onblur</name>      <required>false</required>  <rtexprvalue>true</rtexprvalue></attribute>
         <attribute><name>onchange</name>    <required>false</required>  <rtexprvalue>true</rtexprvalue></attribute>
         <attribute><name>onfocus</name>     <required>false</required>  <rtexprvalue>true</rtexprvalue></attribute>

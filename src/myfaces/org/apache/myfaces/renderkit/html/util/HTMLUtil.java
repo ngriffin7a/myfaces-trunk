@@ -99,6 +99,8 @@ public class HTMLUtil
     /**
      * @return true, if the attribute was written
      * @throws IOException
+     *
+     * @deprecated styleClass is now contained in HTML.UNIVERSAL_ATTRIBUTES
      */
     public static boolean renderStyleClass(ResponseWriter writer, UIComponent uiComponent)
         throws IOException
@@ -151,9 +153,20 @@ public class HTMLUtil
         for (int i = 0; i < attributes.length; i++)
         {
             String attrName = attributes[i];
-            if (renderHTMLAttribute(writer, component, attrName, attrName))
+            if (attrName.equals(HTML.STYLE_CLASS_ATTR))
             {
-                somethingDone = true;
+                //render JSF "styleClass" attribute as "class"
+                if (renderHTMLAttribute(writer, component, attrName, "class"))
+                {
+                    somethingDone = true;
+                }
+            }
+            else
+            {
+                if (renderHTMLAttribute(writer, component, attrName, attrName))
+                {
+                    somethingDone = true;
+                }
             }
         }
         return somethingDone;

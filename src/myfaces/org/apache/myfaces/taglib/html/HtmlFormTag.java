@@ -41,6 +41,14 @@ public class HtmlFormTag
         return "Form";
     }
 
+    // UIComponent attributes --> already implemented in MyfacesComponentTag
+
+    // user role attributes --> already implemented in MyfacesComponentTag
+
+    // HTML universal attributes --> already implemented in HtmlComponentTag
+
+    // HTML event handler attributes --> already implemented in HtmlComponentTag
+
     // HTML form attributes
 
     private String _accept;
@@ -49,6 +57,9 @@ public class HtmlFormTag
     private String _onreset;
     private String _onsubmit;
     private String _target;
+
+    // UIForm attributes --> none so far
+
 
     protected void setProperties(UIComponent component)
     {

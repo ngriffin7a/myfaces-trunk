@@ -18,6 +18,10 @@
  */
 package net.sourceforge.myfaces.taglib.html;
 
+import net.sourceforge.myfaces.renderkit.JSFAttr;
+
+import javax.faces.component.UIComponent;
+
 /**
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
@@ -39,30 +43,111 @@ public class HtmlOutputMessageTag
 
     // UIComponent attributes --> already implemented in MyfacesComponentTag
 
-    // HTML universal attributes --> already implemented in MyfacesComponentTag
-
-    // HTML event handler attributes --> already implemented in MyfacesComponentTag
-
     // user role attributes --> already implemented in MyfacesComponentTag
 
-    // UIMessage attributes
+    // HTML universal attributes --> already implemented in HtmlComponentTag
 
+    // HTML event handler attributes --> already implemented in HtmlComponentTag
+
+    // UIMessage attributes
     private String _for;
     private Object _showSummary;
     private Object _showDetail;
 
     // HtmlOutputMessage attributes
+    private String _errorClass;
+    private String _errorStyle;
+    private String _fatalClass;
+    private String _fatalStyle;
+    private String _infoClass;
+    private String _infoStyle;
+    private String _warnClass;
+    private String _warnStyle;
+    private String _title;
+    private String _tooltip;
 
-        private String errorClass;
-        private String errorStyle;
-        private String fatalClass;
-        private String fatalStyle;
-        private String infoClass;
-        private String infoStyle;
-        private String warnClass;
-        private String warnStyle;
-        private String title;
-        private String title;
-        private String tooltip;
+    protected void setProperties(UIComponent component)
+    {
+        super.setProperties(component);
 
+        setStringProperty(component, JSFAttr.FOR_ATTR, _for);
+        setBooleanProperty(component, JSFAttr.SHOW_SUMMARY_ATTR, _showSummary);
+        setBooleanProperty(component, JSFAttr.SHOW_DETAIL_ATTR, _showDetail);
+
+        setStringProperty(component, JSFAttr.ERROR_CLASS_ATTR, _errorClass);
+        setStringProperty(component, JSFAttr.ERROR_STYLE_ATTR, _errorStyle);
+        setStringProperty(component, JSFAttr.FATAL_CLASS_ATTR, _fatalClass);
+        setStringProperty(component, JSFAttr.FATAL_STYLE_ATTR, _fatalStyle);
+        setStringProperty(component, JSFAttr.INFO_CLASS_ATTR, _infoClass);
+        setStringProperty(component, JSFAttr.INFO_STYLE_ATTR, _infoStyle);
+        setStringProperty(component, JSFAttr.WARN_CLASS_ATTR, _warnClass);
+        setStringProperty(component, JSFAttr.WARN_STYLE_ATTR, _warnStyle);
+        setStringProperty(component, JSFAttr.TITLE_ATTR, _title);
+        setStringProperty(component, JSFAttr.TOOLTIP_ATTR, _tooltip);
+    }
+
+    public void setFor(String aFor)
+    {
+        _for = aFor;
+    }
+
+    public void setShowSummary(Object showSummary)
+    {
+        _showSummary = showSummary;
+    }
+
+    public void setShowDetail(Object showDetail)
+    {
+        _showDetail = showDetail;
+    }
+
+    public void setErrorClass(String errorClass)
+    {
+        _errorClass = errorClass;
+    }
+
+    public void setErrorStyle(String errorStyle)
+    {
+        _errorStyle = errorStyle;
+    }
+
+    public void setFatalClass(String fatalClass)
+    {
+        _fatalClass = fatalClass;
+    }
+
+    public void setFatalStyle(String fatalStyle)
+    {
+        _fatalStyle = fatalStyle;
+    }
+
+    public void setInfoClass(String infoClass)
+    {
+        _infoClass = infoClass;
+    }
+
+    public void setInfoStyle(String infoStyle)
+    {
+        _infoStyle = infoStyle;
+    }
+
+    public void setWarnClass(String warnClass)
+    {
+        _warnClass = warnClass;
+    }
+
+    public void setWarnStyle(String warnStyle)
+    {
+        _warnStyle = warnStyle;
+    }
+
+    public void setTitle(String title)
+    {
+        _title = title;
+    }
+
+    public void setTooltip(String tooltip)
+    {
+        _tooltip = tooltip;
+    }
 }

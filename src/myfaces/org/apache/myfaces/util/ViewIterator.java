@@ -113,4 +113,3 @@ public class ViewIterator
         throw new UnsupportedOperationException();
     }
 }
-}

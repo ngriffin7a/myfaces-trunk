@@ -47,8 +47,7 @@ public class JSFAttr
     public static final String   VALUE_ATTR                     = "value";
     public static final String   STYLE_CLASS_ATTR               = "styleClass";
     public static final String   ESCAPE_ATTR                    = "escape";
-    /**@deprecated */
-    public static final String   CONVERTER_ATTR                 = "converter";
+    public static final String   TRANSIENT_ATTR                 = "transient";
     /**@deprecated */
     public static final String   DATE_STYLE_ATTR                = "dateStyle";
     /**@deprecated */
@@ -72,6 +71,7 @@ public class JSFAttr
     /**@deprecated */
     public static final String   OUTPUT_CLASS_ATTR              = "outputClass";
     public static final String   FOR_ATTR                       = "for";
+    public static final String   CONVERTER_ATTR                 = "converter";
 
     // Ouput_Time Attributes
     public static final String   TIME_STYLE_ATTR                = "timeStyle";
@@ -80,7 +80,10 @@ public class JSFAttr
     // Common Input Attributes
     /**@deprecated */
     public static final String   INPUT_CLASS_ATTR               = "inputClass";
+    /**@deprecated */
     public static final String   MAXLENGTH_ATTR                 = "maxlength";
+    public static final String   REQUIRED_ATTR                  = "required";
+    public static final String   VALIDATOR_ATTR                 = "validator";
 
     // Input_Secret Attributes
     public static final String   REDISPLAY_ATTR                 = "redisplay";
@@ -114,6 +117,24 @@ public class JSFAttr
 
     // Panel_Data Attributes
     public static final String VAR_ATTR                = "var";
+
+    // UIMessage attributes
+    public static final String SHOW_SUMMARY_ATTR            = "showSummary";
+    public static final String SHOW_DETAIL_ATTR             = "showDetail";
+
+    // HtmlOutputMessage attributes
+    public static final String ERROR_CLASS_ATTR            = "errorClass";
+    public static final String ERROR_STYLE_ATTR            = "errorStyle";
+    public static final String FATAL_CLASS_ATTR            = "fatalClass";
+    public static final String FATAL_STYLE_ATTR            = "fatalStyle";
+    public static final String INFO_CLASS_ATTR             = "infoClass";
+    public static final String INFO_STYLE_ATTR             = "infoStyle";
+    public static final String WARN_CLASS_ATTR             = "warnClass";
+    public static final String WARN_STYLE_ATTR             = "warnStyle";
+    public static final String TITLE_ATTR                  = "title";
+    public static final String TOOLTIP_ATTR                = "tooltip";
+
+
 
     //~ Constructors -------------------------------------------------------------------------------
 

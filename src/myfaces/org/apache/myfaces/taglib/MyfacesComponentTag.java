@@ -18,6 +18,7 @@
  */
 package net.sourceforge.myfaces.taglib;
 
+import net.sourceforge.myfaces.renderkit.JSFAttr;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -35,9 +36,15 @@ public abstract class MyfacesComponentTag
 {
     private static final Log log = LogFactory.getLog(MyfacesComponentTag.class);
 
+    //UIComponent attributes
     private String _rendererType;
     private Object _transient;
     private Object _value;
+
+    //user role attributes (Myfaces extension)
+    private Object _enabledOnUserRole;
+    private Object _visibleOnUserRole;
+
 
     protected abstract String getDefaultRendererType();
 
@@ -62,12 +69,23 @@ public abstract class MyfacesComponentTag
         _value = value;
     }
 
+    public void setEnabledOnUserRole(Object enabledOnUserRole)
+    {
+        _enabledOnUserRole = enabledOnUserRole;
+    }
+
+    public void setVisibleOnUserRole(Object visibleOnUserRole)
+    {
+        _visibleOnUserRole = visibleOnUserRole;
+    }
 
     protected void setProperties(UIComponent component)
     {
         super.setProperties(component);
 
-        setBooleanProperty(component, "transient", _transient);
+        setBooleanProperty(component, JSFAttr.TRANSIENT_ATTR, _transient);
+        setBooleanProperty(component, JSFAttr.ENABLED_ON_USER_ROLE_ATTR, _enabledOnUserRole);
+        setBooleanProperty(component, JSFAttr.VISIBLE_ON_USER_ROLE_ATTR, _visibleOnUserRole);
 
         if (_value != null)
         {

@@ -18,7 +18,9 @@
  */
 package net.sourceforge.myfaces.taglib.html;
 
+import net.sourceforge.myfaces.renderkit.JSFAttr;
 
+import javax.faces.component.UIComponent;
 
 
 /**
@@ -41,9 +43,35 @@ public class HtmlOutputTextTag
 
     // UIComponent attributes --> already implemented in MyfacesComponentTag
 
-    // HTML universal attributes --> already implemented in MyfacesComponentTag
-
-    // HTML event handler attributes --> already implemented in MyfacesComponentTag
-
     // user role attributes --> already implemented in MyfacesComponentTag
+
+    // HTML universal attributes --> already implemented in HtmlComponentTag
+
+    // HTML event handler attributes --> already implemented in HtmlComponentTag
+
+    // UIOutput attributes
+    private String _converter;
+
+    // HtmlOutputText attributes
+    private Object _escape;
+
+
+    protected void setProperties(UIComponent component)
+    {
+        super.setProperties(component);
+
+        setStringProperty(component, JSFAttr.CONVERTER_ATTR, _converter);
+
+        setBooleanProperty(component, JSFAttr.ESCAPE_ATTR, _escape);
+    }
+
+    public void setConverter(String converter)
+    {
+        _converter = converter;
+    }
+
+    public void setEscape(Object escape)
+    {
+        _escape = escape;
+    }
 }

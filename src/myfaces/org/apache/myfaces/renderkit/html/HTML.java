@@ -84,12 +84,14 @@ public class HTML
     public static final String LANG_ATTR  = "lang";
     public static final String STYLE_ATTR = "style";
     public static final String TITLE_ATTR = "title";
+    public static final String STYLE_CLASS_ATTR = "styleClass"; //"class" cannot be used as property name
     public static final String[] UNIVERSAL_ATTRIBUTES =
     {
         DIR_ATTR,
         LANG_ATTR,
         STYLE_ATTR,
         TITLE_ATTR,
+        STYLE_CLASS_ATTR
     };
 
     // common form field attributes
@@ -177,6 +179,7 @@ public class HTML
 
     // <input>
     public static final String SIZE_ATTR = "size";
+    public static final String MAXLENGTH_ATTR = "maxlength";
     public static final String[] INPUT_ATTRIBUTES = {
         ACCESSKEY_ATTR,
         ALIGN_ATTR,
@@ -185,13 +188,14 @@ public class HTML
         DATASRC_ATTR,
         DATAFORMATAS_ATTR,
         DISABLED_ATTR,
+        MAXLENGTH_ATTR,
         ONBLUR_ATTR,
         ONCHANGE_ATTR,
         ONFOCUS_ATTR,
         ONSELECT_ATTR,
         READONLY_ATTR,
         SIZE_ATTR,
-        TABINDEX_ATTR,
+        TABINDEX_ATTR
     };
 
     // <button>
@@ -273,7 +277,6 @@ public class HTML
     };
 
     // <input type=file>
-    public static final String MAXLENGTH_ATTR = "maxlength";
     public static final String[] INPUT_FILE_UPLOAD_ATTRIBUTES =
     {
         ACCEPT_ATTR,

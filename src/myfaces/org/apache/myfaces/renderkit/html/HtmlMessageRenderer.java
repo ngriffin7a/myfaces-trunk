@@ -25,4 +25,6 @@ package net.sourceforge.myfaces.renderkit.html;
 public class HtmlMessageRenderer
 {
     //private static final Log log = LogFactory.getLog(HtmlMessageRenderer.class);
+
+    //TODO
 }
