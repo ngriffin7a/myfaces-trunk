@@ -117,13 +117,13 @@ public class ApplicationTest extends MyFacesTest
 
         final Random random = new Random();
 
-        for (int i = 0, len = strings.length; i < len; i++)
+        for (int i = strings.length; i > 0;)
         {
-            int    a    = Math.abs(random.nextInt()) % len;
-            int    b    = Math.abs(random.nextInt()) % len;
-            String temp = strings[a];
-            strings[a]     = strings[b];
-            strings[b]     = temp;
+            int    j    = random.nextInt(i);
+            i--;
+            String temp = strings[i];
+            strings[i]     = strings[j];
+            strings[j]     = temp;
         }
 
         return strings;
