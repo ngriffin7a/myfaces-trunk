@@ -4,8 +4,12 @@ MyFaces Release Notes
 ----------------------------------------------------------------------
 Changes in Release 1.0.1 alpha
 * x-checked various Renderers for Specs (tlddoc) compliance
-* fixed server state saving bug
+* serious bug in UIData fixed
+* server state saving bug fixed
 * new DataList component (dynamical List based on UIData - see examples webapp)
+* <f:convertNumber> threw NPE - fixed
+* HiddenRenderer fixed
+* many small bugfixes
 
 ----------------------------------------------------------------------
 Changes in Release 1.0.0 alpha
