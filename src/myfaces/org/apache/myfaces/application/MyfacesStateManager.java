@@ -23,7 +23,7 @@ import javax.faces.context.FacesContext;
 import java.io.IOException;
 
 /**
- * @author gem (latest modification by $Author$)
+ * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
 public abstract class MyfacesStateManager

@@ -64,8 +64,8 @@ public class ApplicationImpl
             }
         };
 
-    private Collection           _supportedLocales;
-    private Locale               _defaultLocale;
+    private Collection           _supportedLocales = Collections.EMPTY_SET;
+    private Locale               _defaultLocale = Locale.getDefault();
     private String               _messageBundle;
 
     private ViewHandler          _viewHandler;
@@ -445,6 +445,12 @@ public class ApplicationImpl
                 converter = createConverter(superClazz);
             }
         }
+
+        if (converter == null)
+        {
+            throw new FacesException("There is no registered converter for class " + targetClass.getName());
+        }
+
         return converter;
     }
 

@@ -18,34 +18,9 @@
  */
 package net.sourceforge.myfaces.renderkit.html.state.client;
 
-import net.sourceforge.myfaces.component.MyFacesUIOutput;
-import net.sourceforge.myfaces.component.MyFacesUISelectOne;
-import net.sourceforge.myfaces.component.UIComponentUtils;
-import net.sourceforge.myfaces.component.ext.UISaveState;
-import net.sourceforge.myfaces.convert.ConverterUtils;
-import net.sourceforge.myfaces.convert.impl.StringArrayConverter;
-import net.sourceforge.myfaces.renderkit.html.HTMLRenderer;
-import net.sourceforge.myfaces.renderkit.html.jspinfo.JspInfo;
-import net.sourceforge.myfaces.renderkit.html.state.StateUtils;
-import net.sourceforge.myfaces.util.bean.BeanUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
-import javax.faces.FacesException;
-import javax.faces.FactoryFinder;
-import javax.faces.application.ApplicationFactory;
-import javax.faces.component.*;
+import javax.faces.component.UIViewRoot;
 import javax.faces.context.FacesContext;
-import javax.faces.convert.Converter;
-import javax.faces.convert.ConverterException;
-import javax.faces.el.ValueBinding;
-import javax.faces.event.ActionListener;
-import javax.faces.event.FacesListener;
-import javax.faces.validator.Validator;
-import javax.servlet.ServletRequest;
-import java.beans.PropertyDescriptor;
 import java.io.IOException;
-import java.util.*;
 
 /**
  * StateRestorer that restores state info saved by the MinimizingStateSaver.
@@ -423,7 +398,7 @@ public class MinimizingStateRestorer
 //        }
 //
 //        //Find proper converter to convert back from external String
-//        Converter conv = HTMLRenderer.findConverterForAttribute(facesContext,
+//        Converter conv = HtmlRenderer.findConverterForAttribute(facesContext,
 //                                                                uiComponent,
 //                                                                attrName);
 //

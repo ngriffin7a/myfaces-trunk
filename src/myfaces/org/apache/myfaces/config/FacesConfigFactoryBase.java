@@ -29,7 +29,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.Iterator;
-import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.jar.JarEntry;
@@ -49,23 +48,26 @@ public abstract class FacesConfigFactoryBase
     private static final String CONFIG_FILES_INIT_PARAM
         = "javax.faces.application.CONFIG_FILES";
 
-    private static final String FACES_CONFIG_ATTR = FacesConfig.class.getName();
+//    private static final String FACES_CONFIG_ATTR = FacesConfig.class.getName();
 
 
     public FacesConfig getFacesConfig(ExternalContext context)
     {
+        /*
         Map appMap = context.getApplicationMap();
         FacesConfig facesConfig = (FacesConfig)appMap.get(FACES_CONFIG_ATTR);
         if (facesConfig != null)
         {
             return facesConfig;
         }
+        */
 
-        facesConfig = new FacesConfig();
-        
+        FacesConfig facesConfig = new FacesConfig();
         parseFacesConfigFiles(facesConfig, context);
 
+        /*
         appMap.put(FACES_CONFIG_ATTR, facesConfig);
+        */
         return facesConfig;
     }
 

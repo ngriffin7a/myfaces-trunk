@@ -18,6 +18,7 @@
  */
 package net.sourceforge.myfaces.webapp.webxml;
 
+import net.sourceforge.myfaces.webapp.MyFacesServlet;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -25,10 +26,8 @@ import javax.faces.context.ExternalContext;
 import javax.faces.webapp.FacesServlet;
 import java.util.*;
 
-import net.sourceforge.myfaces.webapp.MyFacesServlet;
-
 /**
- * @author gem (latest modification by $Author$)
+ * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
 public class WebXml

@@ -20,9 +20,9 @@ package net.sourceforge.myfaces.renderkit.html.ext;
 
 import net.sourceforge.myfaces.renderkit.JSFAttr;
 import net.sourceforge.myfaces.renderkit.attr.ext.TabbedPaneRendererAttributes;
-import net.sourceforge.myfaces.renderkit.html.FormRenderer;
 import net.sourceforge.myfaces.renderkit.html.GroupRenderer;
 import net.sourceforge.myfaces.renderkit.html.HTML;
+import net.sourceforge.myfaces.renderkit.html.legacy.FormRenderer;
 import net.sourceforge.myfaces.renderkit.html.state.StateRenderer;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLEncoder;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLUtil;
@@ -30,7 +30,6 @@ import net.sourceforge.myfaces.util.bundle.BundleUtils;
 
 import javax.faces.FactoryFinder;
 import javax.faces.application.FacesMessage;
-import javax.faces.component.UICommand;
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIForm;
 import javax.faces.context.FacesContext;
@@ -300,7 +299,7 @@ public class TabbedPaneRenderer
         uiComponent.getAttributes().put(HTML.BGCOLOR_ATTR, null);
 
         writer.write("<table cellspacing=\"0\"");
-        HTMLUtil.renderCssClass(writer, uiComponent, JSFAttr.PANEL_CLASS_ATTR);
+        HTMLUtil.renderStyleClass(writer, uiComponent);
         HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML.UNIVERSAL_ATTRIBUTES);
         HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML.EVENT_HANDLER_ATTRIBUTES);
         HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML.TABLE_ATTRIBUTES);
@@ -382,7 +381,7 @@ public class TabbedPaneRenderer
             tab.getAttributes().put(HTML.STYLE_ATTR, active ? style + oldStyle : style + oldStyle);
         }
 
-        HTMLUtil.renderCssClass(writer, tab, JSFAttr.COMMAND_CLASS_ATTR);//TODO: ?
+        HTMLUtil.renderStyleClass(writer, tab);//TODO: ?
         HTMLUtil.renderHTMLAttributes(writer, tab, HTML.UNIVERSAL_ATTRIBUTES);
         HTMLUtil.renderHTMLAttributes(writer, tab, HTML.EVENT_HANDLER_ATTRIBUTES);
         HTMLUtil.renderHTMLAttributes(writer, tab, HTML.BUTTON_ATTRIBUTES);

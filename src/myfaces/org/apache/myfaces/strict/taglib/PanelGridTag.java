@@ -30,7 +30,7 @@ import java.io.IOException;
  * @version $Revision$ $Date$
  */
 public class PanelGridTag
-extends net.sourceforge.myfaces.taglib.PanelGridTag
+extends net.sourceforge.myfaces.taglib.legacy.PanelGridTag
 implements BodyTag
 {
     //~ Instance fields ----------------------------------------------------------------------------

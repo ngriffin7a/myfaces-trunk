@@ -20,7 +20,7 @@ package net.sourceforge.myfaces.taglib.ext;
 
 import net.sourceforge.myfaces.renderkit.JSFAttr;
 import net.sourceforge.myfaces.renderkit.html.ext.NavigationSeparatorRenderer;
-import net.sourceforge.myfaces.taglib.MyFacesTag;
+import net.sourceforge.myfaces.taglib.legacy.MyFacesTag;
 
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIOutput;

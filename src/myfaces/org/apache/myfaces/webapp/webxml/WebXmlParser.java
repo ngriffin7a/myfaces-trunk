@@ -37,7 +37,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 /**
- * @author gem (latest modification by $Author$)
+ * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
 public class WebXmlParser
@@ -46,6 +46,13 @@ public class WebXmlParser
 
     private static final String WEB_XML_PATH = "/WEB-INF/web.xml";
     private static final String DEFAULT_ENCODING = "ISO-8859-1";
+
+    private static final String WEB_APP_2_2_SYSTEM_ID = "http://java.sun.com/dtd/web-app_2_2.dtd";
+    private static final String WEB_APP_2_2_RESOURCE  = "javax/servlet/resources/web-app_2_2.dtd";
+
+    private static final String WEB_APP_2_3_SYSTEM_ID = "http://java.sun.com/dtd/web-app_2_3.dtd";
+    private static final String WEB_APP_2_3_RESOURCE  = "javax/servlet/resources/web-app_2_3.dtd";
+
 
     private ExternalContext _context;
     private WebXml _webXml;
@@ -70,7 +77,7 @@ public class WebXmlParser
             db.setEntityResolver(new _EntityResolver());
             db.setErrorHandler(new MyFacesErrorHandler(log));
 
-            InputSource is = createInputSource(null, WEB_XML_PATH);
+            InputSource is = createContextInputSource(null, WEB_XML_PATH);
 
             Document document = db.parse(is);
 
@@ -93,13 +100,13 @@ public class WebXmlParser
     }
 
 
-    public InputSource createInputSource(String publicId, String systemId)
+    private InputSource createContextInputSource(String publicId, String systemId)
         throws IOException
     {
         InputStream inStream = _context.getResourceAsStream(systemId);
         if (inStream == null)
         {
-            throw new IOException("Unable to find resource " + systemId);
+            throw new IOException("Unable to find web context resource " + systemId);
         }
         InputSource is = new InputSource(inStream);
         is.setPublicId(publicId);
@@ -108,6 +115,20 @@ public class WebXmlParser
         return is;
     }
 
+    private InputSource createClassloaderInputSource(String publicId, String systemId)
+        throws IOException
+    {
+        InputStream inStream = Thread.currentThread().getContextClassLoader().getResourceAsStream(systemId);
+        if (inStream == null)
+        {
+            throw new IOException("Unable to find classloader resource " + systemId);
+        }
+        InputSource is = new InputSource(inStream);
+        is.setPublicId(publicId);
+        is.setSystemId(systemId);
+        is.setEncoding(DEFAULT_ENCODING);
+        return is;
+    }
 
     public class _EntityResolver implements EntityResolver
     {
@@ -118,19 +139,23 @@ public class WebXmlParser
                 throw new UnsupportedOperationException("systenId must not be null");
             }
 
-            if (systemId.equals("http://java.sun.com/dtd/web-app_2_2.dtd"))
+            if (systemId.equals(WebXmlParser.WEB_APP_2_2_SYSTEM_ID))
             {
-                return createInputSource(publicId, "javax/servlet/resources/web-app_2_2.dtd");
+                //Load DTD from servlet.jar
+                return createClassloaderInputSource(publicId, WebXmlParser.WEB_APP_2_2_RESOURCE);
             }
-            else if (systemId.equals("http://java.sun.com/dtd/web-app_2_3.dtd"))
+            else if (systemId.equals(WebXmlParser.WEB_APP_2_3_SYSTEM_ID))
             {
-                return createInputSource(publicId, "javax/servlet/resources/web-app_2_3.dtd");
+                //Load DTD from servlet.jar
+                return createClassloaderInputSource(publicId, WebXmlParser.WEB_APP_2_3_RESOURCE);
             }
             else
             {
-                return createInputSource(publicId, systemId);
+                //Load additional entities from web context
+                return createContextInputSource(publicId, systemId);
             }
         }
+
     }
 
 

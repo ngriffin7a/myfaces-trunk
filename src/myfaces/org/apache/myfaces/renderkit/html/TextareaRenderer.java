@@ -18,7 +18,6 @@
  */
 package net.sourceforge.myfaces.renderkit.html;
 
-import net.sourceforge.myfaces.renderkit.JSFAttr;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLEncoder;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLUtil;
 
@@ -36,7 +35,7 @@ import java.io.IOException;
  * @version $Revision$ $Date$
  */
 public class TextareaRenderer
-extends HTMLRenderer
+extends HtmlRenderer
 {
     //~ Static fields/initializers -----------------------------------------------------------------
 
@@ -82,7 +81,7 @@ extends HTMLRenderer
         writer.write(coumpoundId);
         writer.write('"');
 
-        HTMLUtil.renderCssClass(writer, uiComponent, JSFAttr.INPUT_CLASS_ATTR);
+        HTMLUtil.renderStyleClass(writer, uiComponent);
         HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML.UNIVERSAL_ATTRIBUTES);
         HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML.EVENT_HANDLER_ATTRIBUTES);
         HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML.TEXTAREA_ATTRIBUTES);

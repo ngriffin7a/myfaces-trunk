@@ -1,7 +1,7 @@
 package net.sourceforge.myfaces.webapp.webxml;
 
 /**
- * @author gem (latest modification by $Author$)
+ * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
 public class ServletMapping

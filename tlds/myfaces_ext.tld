@@ -22,7 +22,6 @@
 <!DOCTYPE taglib
   PUBLIC "-//Sun Microsystems, Inc.//DTD JSP Tag Library 1.2//EN"
   "http://java.sun.com/dtd/web-jsptaglibrary_1_2.dtd" [
-<!ENTITY converter_attributes           SYSTEM "entities/converter_attributes.xml">
 <!ENTITY html_anchor_attributes         SYSTEM "entities/html_anchor_attributes.xml">
 <!ENTITY html_button_attributes         SYSTEM "entities/html_button_attributes.xml">
 <!ENTITY html_event_handler_attributes  SYSTEM "entities/html_event_handler_attributes.xml">
@@ -406,27 +405,6 @@
 
 
 
-    <tag>
-        <name>setBundle</name>
-        <tag-class>net.sourceforge.myfaces.taglib.ext.SetBundleTag</tag-class>
-        <body-content>empty</body-content>
-        <attribute>
-            <name>basename</name>
-            <required>true</required>
-            <rtexprvalue>false</rtexprvalue>
-        </attribute>
-        <attribute>
-            <name>var</name>
-            <required>true</required>
-            <rtexprvalue>false</rtexprvalue>
-        </attribute>
-        <attribute>
-            <name>scope</name>
-            <required>false</required>
-            <rtexprvalue>false</rtexprvalue>
-        </attribute>
-    </tag>
-
 
 
 
@@ -484,6 +462,38 @@
         <!-- MenuRenderer attributes -->
         <attribute>
             <name>layout</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
+        </attribute>
+    </tag>
+
+
+
+
+
+
+
+
+
+
+    <!-- legacy tags -->
+
+    <tag>
+        <name>setBundle</name>
+        <tag-class>net.sourceforge.myfaces.taglib.legacy.SetBundleTag</tag-class>
+        <body-content>empty</body-content>
+        <attribute>
+            <name>basename</name>
+            <required>true</required>
+            <rtexprvalue>false</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>var</name>
+            <required>true</required>
+            <rtexprvalue>false</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>scope</name>
             <required>false</required>
             <rtexprvalue>false</rtexprvalue>
         </attribute>

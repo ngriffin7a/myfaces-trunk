@@ -19,12 +19,12 @@
 package net.sourceforge.myfaces.util.xml;
 
 import org.apache.commons.logging.Log;
-import org.xml.sax.SAXParseException;
 import org.xml.sax.ErrorHandler;
+import org.xml.sax.SAXParseException;
 
 /**
  * Convenient error handler for xml sax parsing.
- * @author gem (latest modification by $Author$)
+ * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
 public class MyFacesErrorHandler

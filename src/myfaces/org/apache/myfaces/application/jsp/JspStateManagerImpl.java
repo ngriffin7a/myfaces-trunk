@@ -146,14 +146,17 @@ public class JspStateManagerImpl
     public UIViewRoot restoreView(FacesContext facescontext, String viewId)
     {
         UIViewRoot uiViewRoot = restoreTreeStructure(facescontext, viewId);
-        try
+        if (uiViewRoot != null)
         {
-            uiViewRoot.setViewId(viewId);
-            restoreComponentState(facescontext, uiViewRoot);
-        }
-        catch (IOException e)
-        {
-            throw new FacesException(e);
+            try
+            {
+                uiViewRoot.setViewId(viewId);
+                restoreComponentState(facescontext, uiViewRoot);
+            }
+            catch (IOException e)
+            {
+                throw new FacesException(e);
+            }
         }
         return uiViewRoot;
     }

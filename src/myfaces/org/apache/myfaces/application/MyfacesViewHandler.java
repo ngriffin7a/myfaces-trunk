@@ -25,7 +25,7 @@ import java.io.IOException;
 /**
  * Extends the standard ViewHandler for client state saving in URLs.
  *
- * @author gem (latest modification by $Author$)
+ * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
 public interface MyfacesViewHandler

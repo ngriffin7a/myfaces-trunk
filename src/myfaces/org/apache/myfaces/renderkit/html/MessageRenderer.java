@@ -20,7 +20,6 @@ package net.sourceforge.myfaces.renderkit.html;
 
 import net.sourceforge.myfaces.renderkit.JSFAttr;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLEncoder;
-import net.sourceforge.myfaces.renderkit.html.util.HTMLUtil;
 import net.sourceforge.myfaces.util.bundle.BundleUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -45,7 +44,7 @@ import java.util.Locale;
  * @version $Revision$ $Date$
  */
 public class MessageRenderer
-extends HTMLRenderer
+extends HtmlRenderer
 {
     //~ Static fields/initializers -----------------------------------------------------------------
     private static final Log log = LogFactory.getLog(MessageRenderer.class);
@@ -75,8 +74,9 @@ extends HTMLRenderer
     {
         ResponseWriter writer = facesContext.getResponseWriter();
 
+        /* FIXME: see HtmlTextRenderer
         StringBuffer   buf = new StringBuffer();
-        HTMLUtil.renderCssClass(buf, uiComponent, JSFAttr.OUTPUT_CLASS_ATTR);
+        HTMLUtil.renderStyleClass(buf, uiComponent);
         HTMLUtil.renderHTMLAttributes(buf, uiComponent, HTML.UNIVERSAL_ATTRIBUTES);
         HTMLUtil.renderHTMLAttributes(buf, uiComponent, HTML.EVENT_HANDLER_ATTRIBUTES);
 
@@ -86,6 +86,7 @@ extends HTMLRenderer
             writer.write(buf.toString());
             writer.write(">");
         }
+        */
 
         String pattern;
         String key = (String) uiComponent.getAttributes().get(JSFAttr.KEY_ATTR);
@@ -149,9 +150,11 @@ extends HTMLRenderer
 
         writer.write(HTMLEncoder.encode(text, true, true));
 
+        /* FIXME
         if (buf.length() > 0)
         {
             writer.write("</span>");
         }
+        */
     }
 }

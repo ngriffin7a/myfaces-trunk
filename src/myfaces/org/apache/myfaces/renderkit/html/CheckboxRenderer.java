@@ -18,7 +18,6 @@
  */
 package net.sourceforge.myfaces.renderkit.html;
 
-import net.sourceforge.myfaces.renderkit.JSFAttr;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLUtil;
 import net.sourceforge.myfaces.renderkit.html.util.SelectItemUtil;
 
@@ -41,7 +40,7 @@ import java.util.Set;
  * @version $Revision$ $Date$
  */
 public class CheckboxRenderer
-extends HTMLRenderer
+extends HtmlRenderer
 {
     //~ Static fields/initializers -----------------------------------------------------------------
 
@@ -198,7 +197,7 @@ extends HTMLRenderer
             writer.write('"');
         }
 
-        HTMLUtil.renderCssClass(writer, uiComponent, JSFAttr.SELECT_BOOLEAN_CLASS_ATTR);
+        HTMLUtil.renderStyleClass(writer, uiComponent);
         HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML.UNIVERSAL_ATTRIBUTES);
         HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML.EVENT_HANDLER_ATTRIBUTES);
         HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML.INPUT_ATTRIBUTES);

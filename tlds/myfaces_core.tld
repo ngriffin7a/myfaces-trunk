@@ -41,7 +41,7 @@
 
 <!--
 ======================================================
-use_faces
+ view
 ======================================================
 -->
 
@@ -51,6 +51,35 @@ use_faces
         <body-content>JSP</body-content>
     </tag>
 
+
+<!--
+======================================================
+ loadBundle
+======================================================
+-->
+
+    <tag>
+        <name>loadBundle</name>
+        <tag-class>net.sourceforge.myfaces.taglib.core.LoadBundleTag</tag-class>
+        <body-content>empty</body-content>
+        <attribute>
+            <name>basename</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>var</name>
+            <required>true</required>
+            <rtexprvalue>false</rtexprvalue>
+        </attribute>
+    </tag>
+
+
+
+
+
+
+    
 
 <!--
 ======================================================

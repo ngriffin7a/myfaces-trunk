@@ -21,13 +21,10 @@ package net.sourceforge.myfaces.renderkit.html;
 import net.sourceforge.myfaces.renderkit.JSFAttr;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLEncoder;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLUtil;
-import net.sourceforge.myfaces.tree.TreeUtils;
 import net.sourceforge.myfaces.util.bundle.BundleUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import javax.faces.FactoryFinder;
-import javax.faces.application.ApplicationFactory;
 import javax.faces.application.FacesMessage;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
@@ -47,7 +44,7 @@ import java.util.Map;
  * @version $Revision$ $Date$
  */
 public class ErrorsRenderer
-extends HTMLRenderer
+extends HtmlRenderer
 {
     //~ Static fields/initializers -----------------------------------------------------------------
     private static final Log log = LogFactory.getLog(ErrorsRenderer.class);
@@ -189,7 +186,7 @@ extends HTMLRenderer
 
         writer.write("\n<ul");
 
-        HTMLUtil.renderCssClass(writer, uiComponent, JSFAttr.OUTPUT_CLASS_ATTR);
+        HTMLUtil.renderStyleClass(writer, uiComponent);
         HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML.UNIVERSAL_ATTRIBUTES);
         HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML.EVENT_HANDLER_ATTRIBUTES);
 
@@ -284,7 +281,7 @@ extends HTMLRenderer
         while (it.hasNext())
         {
             writer.write("<span");
-            HTMLUtil.renderCssClass(writer, uiComponent, JSFAttr.OUTPUT_CLASS_ATTR);
+            HTMLUtil.renderStyleClass(writer, uiComponent);
             HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML.UNIVERSAL_ATTRIBUTES);
             HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML.EVENT_HANDLER_ATTRIBUTES);
             writer.write('>');

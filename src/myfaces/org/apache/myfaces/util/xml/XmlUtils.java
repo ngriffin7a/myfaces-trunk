@@ -1,13 +1,13 @@
 package net.sourceforge.myfaces.util.xml;
 
 import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
 import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 import javax.faces.FacesException;
 
 /**
- * @author gem (latest modification by $Author$)
+ * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
 public class XmlUtils

@@ -3,7 +3,6 @@
             <name>enabledOnUserRole</name>
             <required>false</required>
             <rtexprvalue>false</rtexprvalue>
-            <type>java.lang.String</type>
             <description>
                 If user is in given role, this hyperlink will be rendered
                 normally. If not, no hyperlink is rendered but all nested
@@ -14,7 +13,6 @@
             <name>visibleOnUserRole</name>
             <required>false</required>
             <rtexprvalue>false</rtexprvalue>
-            <type>java.lang.String</type>
             <description>
                 If user is in given role, this hyperlink will be rendered
                 normally. If not, no hyperlink is rendered body of this tag

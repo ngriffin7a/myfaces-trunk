@@ -29,6 +29,22 @@
 
   <!-- Standard Components -->
   <component>
+    <component-type>OutputText</component-type>
+    <component-class>net.sourceforge.myfaces.component.html.MyFacesHtmlOutputText</component-class>
+  </component>
+
+  <component>
+    <component-type>InputText</component-type>
+    <component-class>net.sourceforge.myfaces.component.html.MyFacesHtmlInputText</component-class>
+  </component>
+
+  <component>
+    <component-type>Form</component-type>
+    <component-class>net.sourceforge.myfaces.component.html.MyFacesHtmlForm</component-class>
+  </component>
+
+    <!--
+  <component>
     <component-type>Column</component-type>
     <component-class>javax.faces.component.UIColumn</component-class>
   </component>
@@ -59,18 +75,8 @@
   </component>
 
   <component>
-    <component-type>Form</component-type>
-    <component-class>net.sourceforge.myfaces.component.html.MyFacesHtmlForm</component-class>
-  </component>
-
-  <component>
     <component-type>Graphic</component-type>
     <component-class>net.sourceforge.myfaces.component.MyFacesUIGraphic</component-class>
-  </component>
-
-  <component>
-    <component-type>Input</component-type>
-    <component-class>net.sourceforge.myfaces.component.MyFacesUIInput</component-class>
   </component>
 
   <component>
@@ -84,18 +90,8 @@
   </component>
 
   <component>
-    <component-type>InputText</component-type>
-    <component-class>net.sourceforge.myfaces.component.html.MyFacesHtmlInputText</component-class>
-  </component>
-
-  <component>
     <component-type>InputTextarea</component-type>
     <component-class>net.sourceforge.myfaces.component.html.MyFacesHtmlInputTextarea</component-class>
-  </component>
-
-  <component>
-    <component-type>Output</component-type>
-    <component-class>net.sourceforge.myfaces.component.MyFacesUIOutput</component-class>
   </component>
 
   <component>
@@ -111,11 +107,6 @@
   <component>
     <component-type>OutputMessage</component-type>
     <component-class>net.sourceforge.myfaces.component.html.MyFacesHtmlOutputMessage</component-class>
-  </component>
-
-  <component>
-    <component-type>OutputText</component-type>
-    <component-class>net.sourceforge.myfaces.component.html.MyFacesHtmlOutputText</component-class>
   </component>
 
   <component>
@@ -211,8 +202,10 @@
     <component-type>Messages</component-type>
     <component-class>net.sourceforge.myfaces.component.html.MyFacesHtmlMessages</component-class>
   </component>
+  -->
 
     <!-- MyFaces Extension Components -->
+    <!--
     <component>
       <component-type>FileUpload</component-type>
       <component-class>net.sourceforge.myfaces.component.ext.UIFileUpload</component-class>
@@ -252,6 +245,7 @@
       <component-type>SelectOneRadio</component-type>
       <component-class>net.sourceforge.myfaces.component.ext.UISelectOneRadio</component-class>
     </component>
+    -->
 
 
   <!-- standard converters -->
@@ -550,11 +544,27 @@
   </validator>
 -->
 
+
+
   <!-- standard renderkit -->
   <render-kit>
       <render-kit-id>DEFAULT</render-kit-id>
       <render-kit-class>net.sourceforge.myfaces.renderkit.html.HTMLRenderKitImpl</render-kit-class>
 
+      <renderer>
+          <renderer-type>Text</renderer-type>
+          <renderer-class>net.sourceforge.myfaces.renderkit.html.HtmlTextRenderer</renderer-class>
+          <supported-component-type><component-type>InputText</component-type></supported-component-type>
+          <supported-component-type><component-type>OutputText</component-type></supported-component-type>
+      </renderer>
+
+      <renderer>
+          <renderer-type>Form</renderer-type>
+          <renderer-class>net.sourceforge.myfaces.renderkit.html.HtmlFormRenderer</renderer-class>
+          <supported-component-type><component-type>Form</component-type></supported-component-type>
+      </renderer>
+
+      <!--
       <renderer>
           <renderer-type>Button</renderer-type>
           <renderer-class>net.sourceforge.myfaces.renderkit.html.ButtonRenderer</renderer-class>
@@ -586,10 +596,10 @@
           <renderer-type>Date</renderer-type>
           <renderer-class>net.sourceforge.myfaces.renderkit.html.DateRenderer</renderer-class>
             <supported-component-type>
-                <component-type>Input</component-type>
+                <component-type>InputText</component-type>
             </supported-component-type>
             <supported-component-type>
-                <component-type>Output</component-type>
+                <component-type>OutputText</component-type>
             </supported-component-type>
       </renderer>
 
@@ -597,10 +607,10 @@
           <renderer-type>DateTime</renderer-type>
           <renderer-class>net.sourceforge.myfaces.renderkit.html.DateTimeRenderer</renderer-class>
             <supported-component-type>
-                <component-type>Input</component-type>
+                <component-type>InputText</component-type>
             </supported-component-type>
             <supported-component-type>
-                <component-type>Output</component-type>
+                <component-type>OutputText</component-type>
             </supported-component-type>
       </renderer>
 
@@ -731,7 +741,7 @@
           <renderer-type>Textarea</renderer-type>
           <renderer-class>net.sourceforge.myfaces.renderkit.html.TextareaRenderer</renderer-class>
             <supported-component-type>
-                <component-type>Input</component-type>
+                <component-type>InputTextarea</component-type>
             </supported-component-type>
       </renderer>
 
@@ -761,10 +771,12 @@
           <renderer-type>SelectItem</renderer-type>
           <renderer-class>net.sourceforge.myfaces.renderkit.html.SelectItemRenderer</renderer-class>
       </renderer>
+      -->
 
   </render-kit>
 
     <!-- MyFaces Renderkit Extensions -->
+    <!--
     <render-kit>
         <render-kit-id>DEFAULT</render-kit-id>
 
@@ -836,5 +848,6 @@
         </renderer>
 
     </render-kit>
+    -->
 
 </faces-config>

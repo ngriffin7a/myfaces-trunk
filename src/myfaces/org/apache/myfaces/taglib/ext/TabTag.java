@@ -19,7 +19,7 @@
 package net.sourceforge.myfaces.taglib.ext;
 
 import net.sourceforge.myfaces.renderkit.html.ext.TabRenderer;
-import net.sourceforge.myfaces.taglib.CommandButtonTag;
+import net.sourceforge.myfaces.taglib.legacy.CommandButtonTag;
 
 /**
  * DOCUMENT ME!

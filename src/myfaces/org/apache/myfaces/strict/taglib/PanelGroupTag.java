@@ -30,7 +30,7 @@ import java.io.IOException;
  * @version $Revision$ $Date$
  */
 public class PanelGroupTag
-extends net.sourceforge.myfaces.taglib.PanelGroupTag
+extends net.sourceforge.myfaces.taglib.legacy.PanelGroupTag
 implements BodyTag
 {
     //~ Instance fields ----------------------------------------------------------------------------

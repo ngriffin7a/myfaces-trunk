@@ -19,7 +19,7 @@
 package net.sourceforge.myfaces.taglib.ext;
 
 import net.sourceforge.myfaces.component.ext.UISaveState;
-import net.sourceforge.myfaces.taglib.MyFacesTag;
+import net.sourceforge.myfaces.taglib.legacy.MyFacesTag;
 
 /**
  * DOCUMENT ME!

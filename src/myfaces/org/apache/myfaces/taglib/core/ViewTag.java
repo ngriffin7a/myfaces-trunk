@@ -33,7 +33,7 @@ import javax.servlet.jsp.tagext.BodyTag;
 import java.io.IOException;
 
 /**
- * @author gem (latest modification by $Author$)
+ * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
 public class ViewTag

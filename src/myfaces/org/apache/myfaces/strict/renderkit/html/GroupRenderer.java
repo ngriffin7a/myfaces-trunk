@@ -18,7 +18,7 @@
  */
 package net.sourceforge.myfaces.strict.renderkit.html;
 
-import net.sourceforge.myfaces.renderkit.html.HTMLRenderer;
+import net.sourceforge.myfaces.renderkit.html.HtmlRenderer;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLUtil;
 
 import javax.faces.component.UIComponent;
@@ -34,7 +34,7 @@ import java.util.Iterator;
  * @version $Revision$ $Date$
  */
 public class GroupRenderer
-extends HTMLRenderer
+extends HtmlRenderer
 {
     //~ Static fields/initializers -----------------------------------------------------------------
 

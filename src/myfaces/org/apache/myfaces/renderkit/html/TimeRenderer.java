@@ -18,6 +18,8 @@
  */
 package net.sourceforge.myfaces.renderkit.html;
 
+import net.sourceforge.myfaces.renderkit.html.legacy.TextRenderer;
+
 
 /**
  * DOCUMENT ME!

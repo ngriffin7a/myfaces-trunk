@@ -70,7 +70,8 @@ public class ServletExternalContextImpl
         _requestHeaderValuesMap = null;
         _requestCookieMap = null;
         _initParameterMap = null;
-        _isHttpServletRequest = (servletRequest instanceof HttpServletRequest);
+        _isHttpServletRequest = (servletRequest != null &&
+                                 servletRequest instanceof HttpServletRequest);
     }
 
     public void release()

@@ -37,7 +37,7 @@ import java.io.IOException;
  * @version $Revision$ $Date$
  */
 public class SecretRenderer
-extends HTMLRenderer
+extends HtmlRenderer
 {
     //~ Static fields/initializers -----------------------------------------------------------------
 
@@ -70,7 +70,7 @@ extends HTMLRenderer
             }
         }
 
-        HTMLUtil.renderCssClass(writer, uiComponent, JSFAttr.INPUT_CLASS_ATTR);
+        HTMLUtil.renderStyleClass(writer, uiComponent);
         HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML.UNIVERSAL_ATTRIBUTES);
         HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML.EVENT_HANDLER_ATTRIBUTES);
         HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML.INPUT_ATTRIBUTES);

@@ -24,7 +24,6 @@ import net.sourceforge.myfaces.renderkit.html.util.HTMLUtil;
 import net.sourceforge.myfaces.util.bundle.BundleUtils;
 
 import javax.faces.component.UIComponent;
-import javax.faces.component.UIGraphic;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 import javax.servlet.http.HttpServletRequest;
@@ -38,7 +37,7 @@ import java.io.IOException;
  * @version $Revision$ $Date$
  */
 public class ImageRenderer
-extends HTMLRenderer
+extends HtmlRenderer
 {
     //~ Static fields/initializers -----------------------------------------------------------------
 
@@ -149,7 +148,7 @@ extends HTMLRenderer
                 writer.write('"');
             }
 
-            HTMLUtil.renderCssClass(writer, uiComponent, JSFAttr.GRAPHIC_CLASS_ATTR);
+            HTMLUtil.renderStyleClass(writer, uiComponent);
             HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML.UNIVERSAL_ATTRIBUTES);
             HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML.EVENT_HANDLER_ATTRIBUTES);
             HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML.IMG_ATTRUBUTES);

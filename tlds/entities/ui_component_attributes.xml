@@ -3,7 +3,6 @@
             <name>id</name>
             <required>false</required>
             <rtexprvalue>false</rtexprvalue>
-            <type>java.lang.String</type>
             <description>Every component may have an unique id. Automatically created if omitted.</description>
         </attribute>
         <attribute>
@@ -19,9 +18,21 @@
             <description>Override default rendererType.</description>
         </attribute>
         <attribute>
-            <name>converter</name>
+            <name>transient</name>
             <required>false</required>
-            <rtexprvalue>false</rtexprvalue>
-            <type>java.lang.String</type>
-            <description>Converter identifier (see JSF.3.1.8, JSF.3.3.2)</description>
+            <rtexprvalue>true</rtexprvalue>
+            <description>If true, this component will not be saved during state saving.</description>
+        </attribute>
+
+        <attribute>
+            <name>styleClass</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <description>Corresponds to the HTML class attribute.</description>
+        </attribute>
+        <attribute>
+            <name>escape</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <description>Indicates whether rendered markup should be escaped.</description>
         </attribute>

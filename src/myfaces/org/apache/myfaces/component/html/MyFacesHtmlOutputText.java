@@ -18,7 +18,11 @@
  */
 package net.sourceforge.myfaces.component.html;
 
+import net.sourceforge.myfaces.component.UserRoleSupport;
+import net.sourceforge.myfaces.renderkit.JSFAttr;
+
 import javax.faces.component.html.HtmlOutputText;
+import javax.faces.el.ValueBinding;
 
 /**
  * DOCUMENT ME!
@@ -27,6 +31,33 @@ import javax.faces.component.html.HtmlOutputText;
  * @version $Revision$ $Date$
  */
 public class MyFacesHtmlOutputText
-    extends HtmlOutputText
+        extends HtmlOutputText
+        implements UserRoleSupport
 {
+    private String _enabledOnUserRole;
+    private String _visibleOnUserRole;
+
+    public String getEnabledOnUserRole()
+    {
+        if (_enabledOnUserRole != null) return _enabledOnUserRole;
+        ValueBinding vb = getValueBinding(JSFAttr.ENABLED_ON_USER_ROLE_ATTR);
+        return vb != null ? (String)vb.getValue(getFacesContext()) : null;
+    }
+
+    public void setEnabledOnUserRole(String enabledOnUserRole)
+    {
+        _enabledOnUserRole = enabledOnUserRole;
+    }
+
+    public String getVisibleOnUserRole()
+    {
+        if (_visibleOnUserRole != null) return _visibleOnUserRole;
+        ValueBinding vb = getValueBinding(JSFAttr.VISIBLE_ON_USER_ROLE_ATTR);
+        return vb != null ? (String)vb.getValue(getFacesContext()) : null;
+    }
+
+    public void setVisibleOnUserRole(String visibleOnUserRole)
+    {
+        _visibleOnUserRole = visibleOnUserRole;
+    }
 }

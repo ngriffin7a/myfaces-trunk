@@ -22,7 +22,6 @@
 <!DOCTYPE taglib
   PUBLIC "-//Sun Microsystems, Inc.//DTD JSP Tag Library 1.2//EN"
   "http://java.sun.com/dtd/web-jsptaglibrary_1_2.dtd" [
-<!ENTITY converter_attributes           SYSTEM "entities/converter_attributes.xml">
 <!ENTITY html_anchor_attributes         SYSTEM "entities/html_anchor_attributes.xml">
 <!ENTITY html_button_attributes         SYSTEM "entities/html_button_attributes.xml">
 <!ENTITY html_event_handler_attributes  SYSTEM "entities/html_event_handler_attributes.xml">
@@ -60,10 +59,57 @@
         Tag library for the MyFaces basic implementation.
     </description>
 
+<!-- output_text -->
+    <tag>
+        <name>output_text</name>
+        <tag-class>net.sourceforge.myfaces.taglib.html.HtmlOutputTextTag</tag-class>
+        <body-content>empty</body-content>
+        &ui_component_attributes;
+        &ui_output_attributes;
+        &html_universal_attributes;
+        &html_event_handler_attributes;
+        &user_role_attributes;
+    </tag>
+
+<!-- form -->
+    <tag>
+        <name>form</name>
+        <tag-class>net.sourceforge.myfaces.taglib.html.HtmlFormTag</tag-class>
+        <body-content>JSP</body-content>
+        &ui_component_attributes;
+        &ui_form_attributes;
+        &html_universal_attributes;
+        &html_event_handler_attributes;
+        &html_form_attributes;
+        &user_role_attributes;
+    </tag>
+
+<!-- input_text -->
+    <tag>
+        <name>input_text</name>
+        <tag-class>net.sourceforge.myfaces.taglib.html.HtmlInputTextTag</tag-class>
+        <body-content>JSP</body-content>
+        &ui_component_attributes;
+        &ui_input_attributes;
+        &converter_attributes;
+        &html_input_attributes;
+        &html_universal_attributes;
+        &html_event_handler_attributes;
+        <attribute>
+            <name>maxlength</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        &user_role_attributes;
+    </tag>
+
+
+
+
 <!-- command_button -->
     <tag>
         <name>command_button</name>
-        <tag-class>net.sourceforge.myfaces.taglib.CommandButtonTag</tag-class>
+        <tag-class>net.sourceforge.myfaces.taglib.legacy.CommandButtonTag</tag-class>
         <body-content>JSP</body-content>
         &ui_component_attributes;
         &ui_command_attributes;
@@ -117,7 +163,7 @@
 <!-- command_hyperlink -->
     <tag>
         <name>command_hyperlink</name>
-        <tag-class>net.sourceforge.myfaces.taglib.CommandHyperlinkTag</tag-class>
+        <tag-class>net.sourceforge.myfaces.taglib.legacy.CommandHyperlinkTag</tag-class>
         <body-content>JSP</body-content>
         &ui_component_attributes;
         &ui_command_attributes;
@@ -153,24 +199,10 @@
         <!-- TODO attributes image, label-->
     </tag>
 
-<!-- form -->
-    <tag>
-        <name>form</name>
-        <tag-class>net.sourceforge.myfaces.taglib.FormTag</tag-class>
-        <body-content>JSP</body-content>
-        &ui_component_attributes;
-        &ui_form_attributes;
-        &html_universal_attributes;
-        &html_event_handler_attributes;
-        &html_form_attributes;
-        <!-- FormRenderer attributes -->
-        &user_role_attributes;
-    </tag>
-
 <!-- graphic_image -->
     <tag>
         <name>graphic_image</name>
-        <tag-class>net.sourceforge.myfaces.taglib.GraphicImageTag</tag-class>
+        <tag-class>net.sourceforge.myfaces.taglib.legacy.GraphicImageTag</tag-class>
         <body-content>empty</body-content>
         &ui_component_attributes;
         &ui_graphic_attributes;
@@ -199,7 +231,7 @@
     <tag>
         <!-- deprecated: identical to 'graphic_image' -->
         <name>image</name>
-        <tag-class>net.sourceforge.myfaces.taglib.GraphicImageTag</tag-class>
+        <tag-class>net.sourceforge.myfaces.taglib.legacy.GraphicImageTag</tag-class>
         <body-content>empty</body-content>
         &ui_component_attributes;
         &ui_graphic_attributes;
@@ -228,7 +260,7 @@
 <!-- input_hidden -->
     <tag>
         <name>input_hidden</name>
-        <tag-class>net.sourceforge.myfaces.taglib.InputHiddenTag</tag-class>
+        <tag-class>net.sourceforge.myfaces.taglib.legacy.InputHiddenTag</tag-class>
         <body-content>empty</body-content>
         &ui_component_attributes;
         &ui_input_attributes;
@@ -242,7 +274,7 @@
 <!-- input_secret -->
     <tag>
         <name>input_secret</name>
-        <tag-class>net.sourceforge.myfaces.taglib.InputSecretTag</tag-class>
+        <tag-class>net.sourceforge.myfaces.taglib.legacy.InputSecretTag</tag-class>
         <body-content>JSP</body-content>
         &ui_component_attributes;
         &ui_input_attributes;
@@ -270,30 +302,10 @@
         &user_role_attributes;
     </tag>
 
-<!-- input_text -->
-    <tag>
-        <name>input_text</name>
-        <tag-class>net.sourceforge.myfaces.taglib.InputTextTag</tag-class>
-        <body-content>JSP</body-content>
-        &ui_component_attributes;
-        &ui_input_attributes;
-        &converter_attributes;
-        &html_input_attributes;
-        &html_universal_attributes;
-        &html_event_handler_attributes;
-        <attribute>
-            <name>maxlength</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-        </attribute>
-        <!-- TextRenderer attributes -->
-        &user_role_attributes;
-    </tag>
-
 <!-- input_textarea -->
     <tag>
         <name>input_textarea</name>
-        <tag-class>net.sourceforge.myfaces.taglib.InputTextareaTag</tag-class>
+        <tag-class>net.sourceforge.myfaces.taglib.legacy.InputTextareaTag</tag-class>
         <body-content>JSP</body-content>
         &ui_component_attributes;
         &ui_input_attributes;
@@ -311,7 +323,7 @@
 <!-- output_date -->
     <tag>
         <name>output_date</name>
-        <tag-class>net.sourceforge.myfaces.taglib.OutputDateTag</tag-class>
+        <tag-class>net.sourceforge.myfaces.taglib.legacy.OutputDateTag</tag-class>
         <body-content>empty</body-content>
         &ui_component_attributes;
         &ui_output_attributes;
@@ -334,7 +346,7 @@
 <!-- output_date_time -->
     <tag>
         <name>output_date_time</name>
-        <tag-class>net.sourceforge.myfaces.taglib.OutputDateTimeTag</tag-class>
+        <tag-class>net.sourceforge.myfaces.taglib.legacy.OutputDateTimeTag</tag-class>
         <body-content>empty</body-content>
         &ui_component_attributes;
         &ui_output_attributes;
@@ -367,7 +379,7 @@
 <!-- output_errors -->
     <tag>
         <name>output_errors</name>
-        <tag-class>net.sourceforge.myfaces.taglib.OutputErrorsTag</tag-class>
+        <tag-class>net.sourceforge.myfaces.taglib.legacy.OutputErrorsTag</tag-class>
         <body-content>empty</body-content>
         &ui_component_attributes;
         <!-- ui_output_attributes not included because "output_errors" has no "value" -->
@@ -392,7 +404,7 @@
 <!-- output_label -->
     <tag>
         <name>output_label</name>
-        <tag-class>net.sourceforge.myfaces.taglib.OutputLabelTag</tag-class>
+        <tag-class>net.sourceforge.myfaces.taglib.legacy.OutputLabelTag</tag-class>
         <body-content>empty</body-content>
         <description>
             In addition to the JSF specification, MyFaces allows it to directly
@@ -417,7 +429,7 @@
 <!-- output_message -->
     <tag>
         <name>output_message</name>
-        <tag-class>net.sourceforge.myfaces.taglib.OutputMessageTag</tag-class>
+        <tag-class>net.sourceforge.myfaces.taglib.legacy.OutputMessageTag</tag-class>
         <body-content>JSP</body-content>
         &ui_component_attributes;
         &ui_output_attributes;
@@ -432,24 +444,10 @@
 <!-- output_number -->
     <!-- TODO -->
 
-<!-- output_text -->
-    <tag>
-        <name>output_text</name>
-        <tag-class>net.sourceforge.myfaces.taglib.OutputTextTag</tag-class>
-        <body-content>empty</body-content>
-        &ui_component_attributes;
-        &ui_output_attributes;
-        &converter_attributes;
-        &html_universal_attributes;
-        &html_event_handler_attributes;
-        <!-- TextRenderer attributes -->
-        &user_role_attributes;
-    </tag>
-
 <!-- output_time -->
     <tag>
         <name>output_time</name>
-        <tag-class>net.sourceforge.myfaces.taglib.OutputTimeTag</tag-class>
+        <tag-class>net.sourceforge.myfaces.taglib.legacy.OutputTimeTag</tag-class>
         <body-content>empty</body-content>
         &ui_component_attributes;
         &ui_output_attributes;
@@ -473,7 +471,7 @@
     <tag>
         <name>selectboolean_checkbox</name>
         <!-- strictly speaking "select_boolean_checkbox", but Sun names it so in ref.impl.-->
-        <tag-class>net.sourceforge.myfaces.taglib.SelectBooleanCheckboxTag</tag-class>
+        <tag-class>net.sourceforge.myfaces.taglib.legacy.SelectBooleanCheckboxTag</tag-class>
         <body-content>JSP</body-content>
         &ui_component_attributes;
         &ui_select_boolean_attributes;
@@ -487,7 +485,7 @@
     <tag>
         <name>selectmany_checkbox</name>
         <!-- strictly speaking "select_many_checkbox", but Sun names it so in ref.impl.-->
-        <tag-class>net.sourceforge.myfaces.taglib.SelectManyCheckboxTag</tag-class>
+        <tag-class>net.sourceforge.myfaces.taglib.legacy.SelectManyCheckboxTag</tag-class>
         <body-content>JSP</body-content>
         &ui_component_attributes;
         &ui_select_many_attributes;
@@ -509,7 +507,7 @@
     <tag>
         <name>selectmany_listbox</name>
         <!-- strictly speaking "select_many_listbox", but Sun names it so in ref.impl.-->
-        <tag-class>net.sourceforge.myfaces.taglib.SelectManyListboxTag</tag-class>
+        <tag-class>net.sourceforge.myfaces.taglib.legacy.SelectManyListboxTag</tag-class>
         <body-content>JSP</body-content>
         &ui_component_attributes;
         &ui_select_many_attributes;
@@ -523,7 +521,7 @@
     <tag>
         <name>selectmany_menu</name>
         <!-- strictly speaking "select_many_menu", but Sun names it so in ref.impl.-->
-        <tag-class>net.sourceforge.myfaces.taglib.SelectManyMenuTag</tag-class>
+        <tag-class>net.sourceforge.myfaces.taglib.legacy.SelectManyMenuTag</tag-class>
         <body-content>JSP</body-content>
         &ui_component_attributes;
         &ui_select_many_attributes;
@@ -543,7 +541,7 @@
     <tag>
         <name>selectone_listbox</name>
         <!-- strictly speaking "select_one_listbox", but Sun names it so in ref.impl.-->
-        <tag-class>net.sourceforge.myfaces.taglib.SelectOneListboxTag</tag-class>
+        <tag-class>net.sourceforge.myfaces.taglib.legacy.SelectOneListboxTag</tag-class>
         <body-content>JSP</body-content>
         &ui_component_attributes;
         &ui_select_one_attributes;
@@ -557,7 +555,7 @@
     <tag>
         <name>selectone_menu</name>
         <!-- strictly speaking "select_one_menu", but Sun names it so in ref.impl.-->
-        <tag-class>net.sourceforge.myfaces.taglib.SelectOneMenuTag</tag-class>
+        <tag-class>net.sourceforge.myfaces.taglib.legacy.SelectOneMenuTag</tag-class>
         <body-content>JSP</body-content>
         &ui_component_attributes;
         &ui_select_one_attributes;
@@ -577,7 +575,7 @@
     <tag>
         <name>selectone_radio</name>
         <!-- strictly speaking "select_one_radio", but Sun names it so in ref.impl.-->
-        <tag-class>net.sourceforge.myfaces.taglib.SelectOneRadioTag</tag-class>
+        <tag-class>net.sourceforge.myfaces.taglib.legacy.SelectOneRadioTag</tag-class>
         <body-content>JSP</body-content>
         &ui_component_attributes;
         &ui_select_one_attributes;
@@ -596,7 +594,7 @@
 <!-- panel_data -->
     <tag>
         <name>panel_data</name>
-        <tag-class>net.sourceforge.myfaces.taglib.PanelDataTag</tag-class>
+        <tag-class>net.sourceforge.myfaces.taglib.legacy.PanelDataTag</tag-class>
         <body-content>JSP</body-content>
         &ui_component_attributes;
         &ui_panel_attributes;
@@ -611,7 +609,7 @@
 <!-- panel_grid -->
     <tag>
         <name>panel_grid</name>
-        <tag-class>net.sourceforge.myfaces.taglib.PanelGridTag</tag-class>
+        <tag-class>net.sourceforge.myfaces.taglib.legacy.PanelGridTag</tag-class>
         <body-content>JSP</body-content>
         &ui_component_attributes;
         &ui_panel_attributes;
@@ -650,7 +648,7 @@
 <!-- panel_group -->
     <tag>
         <name>panel_group</name>
-        <tag-class>net.sourceforge.myfaces.taglib.PanelGroupTag</tag-class>
+        <tag-class>net.sourceforge.myfaces.taglib.legacy.PanelGroupTag</tag-class>
         <body-content>JSP</body-content>
         &ui_component_attributes;
         &ui_panel_attributes;
@@ -660,7 +658,7 @@
 <!-- panel_list -->
     <tag>
         <name>panel_list</name>
-        <tag-class>net.sourceforge.myfaces.taglib.PanelListTag</tag-class>
+        <tag-class>net.sourceforge.myfaces.taglib.legacy.PanelListTag</tag-class>
         <body-content>JSP</body-content>
         &ui_component_attributes;
         &ui_panel_attributes;
@@ -694,7 +692,7 @@
 <!-- selectitem -->
     <tag>
         <name>selectitem</name>
-        <tag-class>net.sourceforge.myfaces.taglib.SelectItemTag</tag-class>
+        <tag-class>net.sourceforge.myfaces.taglib.legacy.SelectItemTag</tag-class>
         <body-content>JSP</body-content>
         &ui_component_attributes;
         &ui_select_item_attributes;
@@ -719,7 +717,7 @@
 <!-- selectitems -->
     <tag>
         <name>selectitems</name>
-        <tag-class>net.sourceforge.myfaces.taglib.SelectItemsTag</tag-class>
+        <tag-class>net.sourceforge.myfaces.taglib.legacy.SelectItemsTag</tag-class>
         <body-content>JSP</body-content>
         &ui_component_attributes;
         &ui_select_items_attributes;

@@ -20,14 +20,12 @@ package net.sourceforge.myfaces.renderkit.html;
 
 import net.sourceforge.myfaces.component.UIComponentUtils;
 import net.sourceforge.myfaces.renderkit.JSFAttr;
+import org.apache.commons.collections.iterators.ArrayIterator;
 
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIPanel;
 import javax.faces.context.FacesContext;
 import javax.servlet.ServletRequest;
-
-import org.apache.commons.collections.iterators.ArrayIterator;
-
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Iterator;
@@ -39,7 +37,7 @@ import java.util.Iterator;
  * @version $Revision$ $Date$
  */
 public class DataRenderer
-    extends HTMLRenderer
+    extends HtmlRenderer
 {
     public static final String ITERATOR_ATTR = DataRenderer.class.getName() + ".ITERATOR";
 

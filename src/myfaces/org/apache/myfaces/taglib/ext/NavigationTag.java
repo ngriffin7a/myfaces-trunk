@@ -22,7 +22,7 @@ import net.sourceforge.myfaces.renderkit.JSFAttr;
 import net.sourceforge.myfaces.renderkit.attr.ext.NavigationRendererAttributes;
 import net.sourceforge.myfaces.renderkit.html.HTML;
 import net.sourceforge.myfaces.renderkit.html.ext.NavigationRenderer;
-import net.sourceforge.myfaces.taglib.MyFacesTag;
+import net.sourceforge.myfaces.taglib.legacy.MyFacesTag;
 
 /**
  * see "navigation" tag in myfaces_ext.tld

@@ -18,7 +18,7 @@
  */
 package net.sourceforge.myfaces.renderkit.html.state.client;
 
-import net.sourceforge.myfaces.renderkit.html.HTMLRenderer;
+import net.sourceforge.myfaces.renderkit.html.HtmlRenderer;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLEncoder;
 import net.sourceforge.myfaces.util.Base64;
 
@@ -74,7 +74,7 @@ public class ZipMinimizingStateSaver
         Map stateMap = null;
         writer.write(STATE_PARAM);
         writer.write('=');
-        writer.write(HTMLRenderer.urlEncode(getZippedParams(facesContext, stateMap)));
+        writer.write(HtmlRenderer.urlEncode(getZippedParams(facesContext, stateMap)));
     }
 
     protected String getZippedParams(FacesContext facesContext, Map stateMap) throws IOException

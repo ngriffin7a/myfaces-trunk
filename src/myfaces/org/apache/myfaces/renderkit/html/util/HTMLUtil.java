@@ -19,8 +19,8 @@
 package net.sourceforge.myfaces.renderkit.html.util;
 
 import net.sourceforge.myfaces.renderkit.JSFAttr;
+import net.sourceforge.myfaces.renderkit.RendererUtils;
 import net.sourceforge.myfaces.renderkit.html.HTML;
-import net.sourceforge.myfaces.renderkit.html.HTMLRenderer;
 import net.sourceforge.myfaces.renderkit.html.ListboxRenderer;
 
 import javax.faces.component.UIComponent;
@@ -95,131 +95,70 @@ public class HTMLUtil
         component.encodeEnd(context);
     }
 
-    //Utility class
-    public static void renderCssClass(
-        StringBuffer buf, UIComponent uiComponent, String classAttrName)
-    {
-        String cssClass = (String) uiComponent.getAttributes().get(classAttrName);
 
-        if (cssClass != null && cssClass.length() > 0)
+    /**
+     * @return true, if the attribute was written
+     * @throws IOException
+     */
+    public static boolean renderStyleClass(ResponseWriter writer, UIComponent uiComponent)
+        throws IOException
+    {
+        String styleClass = (String) uiComponent.getAttributes().get(JSFAttr.STYLE_CLASS_ATTR);
+        if (styleClass != null && styleClass.length() > 0)
         {
-            buf.append(" class=\"");
-            buf.append(cssClass);
-            buf.append('"');
+            writer.writeAttribute("class", styleClass, JSFAttr.STYLE_CLASS_ATTR);
+            return true;
+        }
+        else
+        {
+            return false;
         }
     }
 
-    public static void renderCssClass(
-        ResponseWriter writer, UIComponent uiComponent, String classAttrName)
-    throws IOException
-    {
-        String cssClass = (String) uiComponent.getAttributes().get(classAttrName);
-
-        if (cssClass != null && cssClass.length() > 0)
-        {
-            writer.write(" class=\"");
-            writer.write(cssClass);
-            writer.write('"');
-        }
-    }
-
-    public static void renderDisabledOnUserRole(FacesContext facesContext, UIComponent uiComponent)
-    throws IOException
-    {
-        if (!HTMLRenderer.isEnabledOnUserRole(facesContext, uiComponent))
-        {
-            ResponseWriter writer = facesContext.getResponseWriter();
-            writer.write(" disabled");
-        }
-    }
-
-    public static void renderHTMLAttribute(
-        StringBuffer buf, UIComponent component, String rendererAttrName, String htmlAttrName)
+    /**
+     * @return true, if the attribute was written
+     * @throws IOException
+     */
+    public static boolean renderHTMLAttribute(ResponseWriter writer,
+                                              UIComponent component,
+                                              String rendererAttrName,
+                                              String htmlAttrName)
+        throws IOException
     {
         Object value = component.getAttributes().get(rendererAttrName);
-
         if (value != null)
         {
-            if (value instanceof Boolean)
-            {
-                if (((Boolean) value).booleanValue())
-                {
-                    // value as name for XHTML compatibility
-                    buf.append(' ');
-                    buf.append(htmlAttrName);
-                    buf.append("=\"");
-                    buf.append(htmlAttrName);
-                    buf.append('"');
-                }
-            }
-            else
-            {
-                buf.append(' ');
-                buf.append(htmlAttrName);
-                buf.append("=\"");
-                buf.append(HTMLEncoder.encode(
-                        value.toString(),
-                        false,
-                        true));
-                buf.append('"');
-            }
+            writer.writeAttribute(htmlAttrName, value, rendererAttrName);
+            return true;
+        }
+        else
+        {
+            return false;
         }
     }
 
-    public static void renderHTMLAttribute(
-        ResponseWriter writer, UIComponent component, String rendererAttrName, String htmlAttrName)
-    throws IOException
-    {
-        Object value = component.getAttributes().get(rendererAttrName);
 
-        if (value != null)
-        {
-            if (value instanceof Boolean)
-            {
-                if (((Boolean) value).booleanValue())
-                {
-                    // value as name for XHTML compatibility
-                    writer.write(' ');
-                    writer.write(htmlAttrName);
-                    writer.write("=\"");
-                    writer.write(htmlAttrName);
-                    writer.write('"');
-                }
-            }
-            else
-            {
-                writer.write(' ');
-                writer.write(htmlAttrName);
-                writer.write("=\"");
-                writer.write(HTMLEncoder.encode(
-                        value.toString(),
-                        false,
-                        true));
-                writer.write('"');
-            }
-        }
-    }
-
-    public static void renderHTMLAttributes(
-        StringBuffer buf, UIComponent component, String[] attributes)
+    /**
+     * @return true, if an attribute was written
+     * @throws IOException
+     */
+    public static boolean renderHTMLAttributes(ResponseWriter writer,
+                                               UIComponent component,
+                                               String[] attributes)
+        throws IOException
     {
+        boolean somethingDone = false;
         for (int i = 0; i < attributes.length; i++)
         {
             String attrName = attributes[i];
-            renderHTMLAttribute(buf, component, attrName, attrName);
+            if (renderHTMLAttribute(writer, component, attrName, attrName))
+            {
+                somethingDone = true;
+            }
         }
+        return somethingDone;
     }
 
-    public static void renderHTMLAttributes(
-        ResponseWriter writer, UIComponent component, String[] attributes)
-    throws IOException
-    {
-        for (int i = 0; i < attributes.length; i++)
-        {
-            String attrName = attributes[i];
-            renderHTMLAttribute(writer, component, attrName, attrName);
-        }
-    }
 
     public static void renderSelect(
         FacesContext facesContext, UIComponent uiComponent, String rendererType, int size)
@@ -241,9 +180,7 @@ public class HTMLUtil
             writer.write('"');
         }
 
-        renderCssClass(
-            writer, uiComponent,
-            selectMany ? JSFAttr.SELECT_MANY_CLASS_ATTR : JSFAttr.SELECT_ONE_CLASS_ATTR);
+        renderStyleClass(writer, uiComponent);
         renderHTMLAttributes(writer, uiComponent, HTML.SELECT_PASSTHROUGH_ATTRIBUTES);
         renderDisabledOnUserRole(facesContext, uiComponent);
 
@@ -316,6 +253,32 @@ public class HTMLUtil
 
         writer.write("</select>");
     }
+
+
+    /**@deprecated */
+    public static void renderDisabledOnUserRole(FacesContext facesContext, UIComponent uiComponent)
+        throws IOException
+    {
+        if (!RendererUtils.isEnabledOnUserRole(facesContext, uiComponent))
+        {
+            ResponseWriter writer = facesContext.getResponseWriter();
+            writer.write(" disabled");
+        }
+    }
+
+
+    public static void renderDisabledOnUserRole(ResponseWriter writer,
+                                                UIComponent uiComponent,
+                                                FacesContext facesContext)
+        throws IOException
+    {
+        if (!RendererUtils.isEnabledOnUserRole(facesContext, uiComponent))
+        {
+            writer.writeAttribute(HTML.DISABLED_ATTR, Boolean.TRUE, JSFAttr.ENABLED_ON_USER_ROLE_ATTR);
+        }
+    }
+
+
 
     public static void renderTableRowOfOneCell(
         FacesContext context, UIComponent component, int columns, String rowClass,

@@ -28,7 +28,7 @@ import net.sourceforge.myfaces.renderkit.JSFAttr;
  * @version $Revision$ $Date$
  */
 public class CommandHyperlinkTag
-extends net.sourceforge.myfaces.taglib.CommandHyperlinkTag
+extends net.sourceforge.myfaces.taglib.legacy.CommandHyperlinkTag
 {
     //~ Methods ------------------------------------------------------------------------------------
 

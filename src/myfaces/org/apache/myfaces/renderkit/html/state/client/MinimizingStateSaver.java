@@ -18,41 +18,9 @@
  */
 package net.sourceforge.myfaces.renderkit.html.state.client;
 
-import net.sourceforge.myfaces.component.*;
-import net.sourceforge.myfaces.component.ext.UISaveState;
-import net.sourceforge.myfaces.convert.ConverterUtils;
-import net.sourceforge.myfaces.lifecycle.LifecycleImpl;
-import net.sourceforge.myfaces.renderkit.JSFAttr;
-import net.sourceforge.myfaces.renderkit.html.HTMLRenderer;
-import net.sourceforge.myfaces.renderkit.html.SecretRenderer;
-import net.sourceforge.myfaces.renderkit.html.jspinfo.JspInfo;
-import net.sourceforge.myfaces.renderkit.html.jspinfo.StaticFacesListener;
-import net.sourceforge.myfaces.renderkit.html.state.StateUtils;
-import net.sourceforge.myfaces.renderkit.html.util.HTMLEncoder;
-import net.sourceforge.myfaces.tree.TreeUtils;
-import net.sourceforge.myfaces.util.bean.BeanUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
-import javax.faces.FacesException;
-import javax.faces.FactoryFinder;
-import javax.faces.application.ApplicationFactory;
-import javax.faces.component.*;
 import javax.faces.context.FacesContext;
-import javax.faces.convert.Converter;
-import javax.faces.convert.ConverterException;
-import javax.faces.el.ValueBinding;
-import javax.faces.event.ActionListener;
-import javax.faces.event.FacesListener;
-import javax.faces.event.PhaseId;
-import javax.faces.validator.Validator;
-import javax.servlet.ServletRequest;
-import java.beans.BeanInfo;
-import java.beans.PropertyDescriptor;
 import java.io.IOException;
-import java.io.Serializable;
 import java.io.Writer;
-import java.util.*;
 
 /**
  * StateSaver for the "client_minimized" state saving mode.
@@ -489,7 +457,7 @@ public class MinimizingStateSaver
 //
 //        //convert attribute value to String
 //        String strValue;
-//        Converter conv = HTMLRenderer.findConverterForAttribute(facesContext,
+//        Converter conv = HtmlRenderer.findConverterForAttribute(facesContext,
 //                                                                uiComponent,
 //                                                                attrName);
 //        if (conv != null)
@@ -616,7 +584,7 @@ public class MinimizingStateSaver
 //            writer.write('&');  //we assume that there were previous parameters
 //            writer.write((String)entry.getKey());
 //            writer.write('=');
-//            writer.write(HTMLRenderer.urlEncode((String)entry.getValue()));
+//            writer.write(HtmlRenderer.urlEncode((String)entry.getValue()));
 //        }
 //    }
 //

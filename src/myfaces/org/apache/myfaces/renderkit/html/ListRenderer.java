@@ -42,7 +42,7 @@ import java.util.StringTokenizer;
  * @version $Revision$ $Date$
  */
 public class ListRenderer
-extends HTMLRenderer
+extends HtmlRenderer
 implements CallbackRenderer
 {
     //~ Static fields/initializers -----------------------------------------------------------------
@@ -156,7 +156,7 @@ implements CallbackRenderer
         {
             pushListComponent(facesContext, uiComponent);
             writer.write("<table");
-            HTMLUtil.renderCssClass(writer, uiComponent, JSFAttr.PANEL_CLASS_ATTR);
+            HTMLUtil.renderStyleClass(writer, uiComponent);
             HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML.UNIVERSAL_ATTRIBUTES);
             HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML.EVENT_HANDLER_ATTRIBUTES);
             HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML.TABLE_ATTRIBUTES);

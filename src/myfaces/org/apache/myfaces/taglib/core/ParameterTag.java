@@ -19,7 +19,7 @@
 package net.sourceforge.myfaces.taglib.core;
 
 import net.sourceforge.myfaces.component.MyFacesUIParameter;
-import net.sourceforge.myfaces.taglib.MyFacesTag;
+import net.sourceforge.myfaces.taglib.legacy.MyFacesTag;
 
 /**
  * DOCUMENT ME!

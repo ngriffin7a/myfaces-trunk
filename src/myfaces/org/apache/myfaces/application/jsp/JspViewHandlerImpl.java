@@ -295,7 +295,7 @@ public class JspViewHandlerImpl
 
         ExternalContext externalContext = facesContext.getExternalContext();
 
-        String viewId = facesContext.getViewRoot().getId();
+        String viewId = facesContext.getViewRoot().getViewId();
         ServletMapping servletMapping = getServletMapping(externalContext);
         if (servletMapping.isExtensionMapping())
         {

@@ -21,16 +21,11 @@ package net.sourceforge.myfaces.strict.renderkit.html;
 import net.sourceforge.myfaces.component.UIComponentUtils;
 import net.sourceforge.myfaces.renderkit.JSFAttr;
 import net.sourceforge.myfaces.renderkit.html.HTML;
-import net.sourceforge.myfaces.renderkit.html.HTMLRenderer;
+import net.sourceforge.myfaces.renderkit.html.HtmlRenderer;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLEncoder;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLUtil;
 import net.sourceforge.myfaces.util.FacesUtils;
 import net.sourceforge.myfaces.util.bundle.BundleUtils;
-
-import java.io.IOException;
-
-import java.util.Iterator;
-import java.util.Map;
 
 import javax.faces.FacesException;
 import javax.faces.component.UICommand;
@@ -39,6 +34,9 @@ import javax.faces.component.UIForm;
 import javax.faces.component.UIParameter;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
+import java.io.IOException;
+import java.util.Iterator;
+import java.util.Map;
 
 
 /**
@@ -53,7 +51,7 @@ import javax.faces.context.ResponseWriter;
  * @version $Revision$ $Date$
  */
 public class HyperlinkRenderer
-    extends HTMLRenderer
+    extends HtmlRenderer
 {
     //~ Static fields/initializers -----------------------------------------------------------------
 
@@ -160,7 +158,7 @@ public class HyperlinkRenderer
             writer.write("'].submit()\"");
         }
 
-        HTMLUtil.renderCssClass(writer, uiComponent, JSFAttr.COMMAND_CLASS_ATTR);
+        HTMLUtil.renderStyleClass(writer, uiComponent);
 
         HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML.COMMON_PASSTROUGH_ATTRIBUTES);
         writer.write('>');

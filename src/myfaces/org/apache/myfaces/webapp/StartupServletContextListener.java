@@ -47,8 +47,11 @@ public class StartupServletContextListener
         try
         {
             ServletContext servletContext = event.getServletContext();
+            ExternalContext externalContext = new ServletExternalContextImpl(servletContext,
+                                                                             null,
+                                                                             null);
+
             FacesConfigFactory fcf = MyFacesFactoryFinder.getFacesConfigFactory(servletContext);
-            ExternalContext externalContext = new ServletExternalContextImpl(servletContext, null, null);
             FacesConfig facesConfig = fcf.getFacesConfig(externalContext);
             facesConfig.configureAll(externalContext);
 

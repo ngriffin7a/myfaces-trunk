@@ -273,10 +273,28 @@ public class HTML
     };
 
     // <input type=file>
-    public static final String MAX_LENGTH_ATTR = "maxlength";
+    public static final String MAXLENGTH_ATTR = "maxlength";
     public static final String[] INPUT_FILE_UPLOAD_ATTRIBUTES =
     {
         ACCEPT_ATTR,
-        MAX_LENGTH_ATTR
+        MAXLENGTH_ATTR
     };
+
+
+
+    //HTML attributes needed for renderding only
+    public static final String ID_ATTR = "id";
+    public static final String NAME_ATTR = "name";
+    public static final String VALUE_ATTR = "value";
+    public static final String METHOD_ATTR = "method";
+    public static final String ACTION_ATTR = "action";
+
+
+    //HTML element constants
+    public static final String SPAN_ELEM = "span";
+    public static final String INPUT_ELEM = "input";
+    public static final String FORM_ELEM = "form";
+
+
+
 }

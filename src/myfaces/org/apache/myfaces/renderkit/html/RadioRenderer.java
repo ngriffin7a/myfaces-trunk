@@ -29,12 +29,12 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import javax.faces.FacesException;
-import javax.faces.model.SelectItem;
 import javax.faces.component.UIComponent;
 import javax.faces.component.UISelectItem;
 import javax.faces.component.UISelectOne;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
+import javax.faces.model.SelectItem;
 import javax.faces.render.Renderer;
 import java.io.IOException;
 import java.util.Iterator;
@@ -45,7 +45,7 @@ import java.util.Iterator;
  * @version $Revision$ $Date$
  */
 public class RadioRenderer
-    extends HTMLRenderer
+    extends HtmlRenderer
     implements CallbackRenderer
 {
     private static final Log log = LogFactory.getLog(RadioRenderer.class);
@@ -186,7 +186,7 @@ public class RadioRenderer
             writer.write(" checked=\"true\"");
         }
 
-        HTMLUtil.renderCssClass(writer, uiSelectOne, JSFAttr.SELECT_ONE_CLASS_ATTR);
+        HTMLUtil.renderStyleClass(writer, uiSelectOne);
         HTMLUtil.renderHTMLAttributes(writer, uiSelectOne, HTML.UNIVERSAL_ATTRIBUTES);
         HTMLUtil.renderHTMLAttributes(writer, uiSelectOne, HTML.EVENT_HANDLER_ATTRIBUTES);
         HTMLUtil.renderHTMLAttributes(writer, uiSelectOne, HTML.INPUT_ATTRIBUTES);
@@ -225,7 +225,7 @@ public class RadioRenderer
             if (span)
             {
                 writer.write("<span ");
-                HTMLUtil.renderCssClass(writer, selectOne, JSFAttr.SELECT_ONE_CLASS_ATTR);
+                HTMLUtil.renderStyleClass(writer, selectOne);
                 writer.write(">");
             }
             label = selectItem.getLabel();

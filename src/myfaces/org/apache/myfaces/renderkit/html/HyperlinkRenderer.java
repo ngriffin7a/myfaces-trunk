@@ -18,7 +18,6 @@
  */
 package net.sourceforge.myfaces.renderkit.html;
 
-import net.sourceforge.myfaces.convert.ConverterUtils;
 import net.sourceforge.myfaces.renderkit.JSFAttr;
 import net.sourceforge.myfaces.renderkit.html.state.StateRenderer;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLEncoder;
@@ -54,7 +53,7 @@ import java.util.Iterator;
  * @version $Revision$ $Date$
  */
 public class HyperlinkRenderer
-    extends HTMLRenderer
+    extends HtmlRenderer
 {
     private static final Log log = LogFactory.getLog(HyperlinkRenderer.class);
 
@@ -228,7 +227,7 @@ public class HyperlinkRenderer
 
         writer.write("\"");
 
-        HTMLUtil.renderCssClass(writer, uiComponent, JSFAttr.COMMAND_CLASS_ATTR);
+        HTMLUtil.renderStyleClass(writer, uiComponent);
         HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML.UNIVERSAL_ATTRIBUTES);
         HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML.EVENT_HANDLER_ATTRIBUTES);
         HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML.ANCHOR_ATTRIBUTES);

@@ -1,22 +1,8 @@
 <!-- JSF UIInput attributes -->
         <attribute>
-            <name>inputClass</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-            <type>java.lang.String</type>
-            <description>Corresponds to the HTML class attribute.</description>
-        </attribute>
-        <attribute>
             <name>value</name>
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>
             <type>java.lang.Object</type>
             <description>Initial value to set when rendered for the first time.</description>
-        </attribute>
-        <attribute>
-            <name>valueRef</name>
-            <required>false</required>
-            <rtexprvalue>false</rtexprvalue>
-            <type>java.lang.String</type>
-            <description>Reference to a bean or a bean property.</description>
         </attribute>

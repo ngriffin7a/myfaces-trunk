@@ -20,7 +20,7 @@ package net.sourceforge.myfaces.taglib.ext;
 
 import net.sourceforge.myfaces.component.ext.UISortColumn;
 import net.sourceforge.myfaces.renderkit.html.ext.SortColumnRenderer;
-import net.sourceforge.myfaces.taglib.CommandHyperlinkTag;
+import net.sourceforge.myfaces.taglib.legacy.CommandHyperlinkTag;
 
 
 /**

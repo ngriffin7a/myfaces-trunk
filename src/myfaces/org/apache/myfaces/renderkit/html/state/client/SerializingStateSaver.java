@@ -18,28 +18,9 @@
  */
 package net.sourceforge.myfaces.renderkit.html.state.client;
 
-import net.sourceforge.myfaces.component.ext.UISaveState;
-import net.sourceforge.myfaces.renderkit.html.HTMLRenderer;
-import net.sourceforge.myfaces.renderkit.html.state.ModelValueEntry;
-import net.sourceforge.myfaces.renderkit.html.state.StateUtils;
-import net.sourceforge.myfaces.renderkit.html.util.HTMLEncoder;
-import net.sourceforge.myfaces.tree.TreeUtils;
-import net.sourceforge.myfaces.util.Base64;
-import net.sourceforge.myfaces.util.FacesUtils;
-import net.sourceforge.myfaces.util.DebugUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
-import javax.faces.FactoryFinder;
-import javax.faces.application.ApplicationFactory;
-import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
-import java.io.*;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.zip.GZIPOutputStream;
+import java.io.IOException;
+import java.io.Writer;
 
 /**
  * StateSaver for the "client_serialized" state saving mode.
@@ -108,7 +89,7 @@ public class SerializingStateSaver
 //        writer.write('&');  //we assume that there were previous parameters
 //        writer.write(TREE_REQUEST_PARAM);
 //        writer.write('=');
-//        writer.write(HTMLRenderer.urlEncode(getSerializedTree(facesContext)));
+//        writer.write(HtmlRenderer.urlEncode(getSerializedTree(facesContext)));
 //    }
 //
 //    protected void writeHiddenInputsState(FacesContext facesContext, Writer writer) throws IOException
