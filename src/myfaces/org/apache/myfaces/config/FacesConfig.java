@@ -329,7 +329,14 @@ public class FacesConfig
 
     public void configureAll()
     {
+        configureFactoryFinder();
         configureRenderKits();
+    }
+
+
+    public void configureFactoryFinder()
+    {
+        //TODO
     }
 
     /**
