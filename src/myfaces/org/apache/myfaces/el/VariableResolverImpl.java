@@ -33,8 +33,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.faces.context.FacesContext;
 import javax.faces.context.ExternalContext;
+import javax.faces.context.FacesContext;
 import javax.faces.el.ReferenceSyntaxException;
 import javax.faces.el.VariableResolver;
 
@@ -253,7 +253,6 @@ public class VariableResolverImpl
         // Request context
         Map    requestMap = externalContext.getRequestMap();
         Object obj = requestMap.get(name);
-
         if (obj != null)
         {
             return obj;
@@ -261,11 +260,9 @@ public class VariableResolverImpl
 
         // Session context (try to get without creating a new session)
         Object session = externalContext.getSession(false);
-
         if (session != null)
         {
             obj = externalContext.getSessionMap().get(name);
-
             if (obj != null)
             {
                 return obj;
@@ -274,25 +271,22 @@ public class VariableResolverImpl
 
         // Application context
         obj = externalContext.getApplicationMap().get(name);
-
         if (obj != null)
         {
             return obj;
         }
 
         // ManagedBean
-        FacesConfigFactory fcf         = MyFacesFactoryFinder.getFacesConfigFactory(externalContext);
+        FacesConfigFactory fcf         =
+            MyFacesFactoryFinder.getFacesConfigFactory(externalContext);
         FacesConfig        facesConfig = fcf.getFacesConfig(externalContext);
         ManagedBeanConfig  mbc         = facesConfig.getManagedBeanConfig(name);
-
         if (mbc != null)
         {
             obj = ConfigUtil.newInstance(mbc.getManagedBeanClass());
-
             setManagedBeanProperties(facesContext, obj, mbc);
 
             Scope scope = (Scope) _scopes.get(mbc.getManagedBeanScope());
-
             if (scope != null)
             {
                 scope.put(externalContext, name, obj);
@@ -314,7 +308,6 @@ public class VariableResolverImpl
         FacesContext facesContext, Object bean, ManagedBeanConfig mbc)
     {
         List managedPropertyConfigList = mbc.getManagedPropertyConfigList();
-
         if (managedPropertyConfigList == null)
         {
             return;
@@ -324,7 +317,6 @@ public class VariableResolverImpl
         {
             ManagedPropertyConfig propConfig =
                 (ManagedPropertyConfig) managedPropertyConfigList.get(i);
-
             if (propConfig.getMapEntriesConfig() != null)
             {
                 setMapEntries(bean, propConfig);
@@ -335,7 +327,6 @@ public class VariableResolverImpl
             }
 
             Object value;
-
             if (propConfig.getValueRef() != null)
             {
                 value = FacesUtils.getValueRef(facesContext, propConfig.getValueRef());
