@@ -37,6 +37,9 @@ import java.util.StringTokenizer;
  * X-CHECKED: tlddoc h:panelGrid 1.0 final
  *
  * $Log$
+ * Revision 1.11  2004/06/04 00:51:05  o_rossmueller
+ * fixed NPE
+ *
  * Revision 1.10  2004/06/03 23:02:14  o_rossmueller
  * fix for completion of last row
  *
@@ -208,7 +211,7 @@ public class HtmlGridRenderer
 
         String[] rowClassesArray;
         int rowClassesCount;
-        if (columnClasses == null)
+        if (rowClasses == null)
         {
             rowClassesCount = 0;
             rowClassesArray = ArrayUtils.EMPTY_STRING_ARRAY;
