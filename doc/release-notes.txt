@@ -10,6 +10,7 @@ Changes in Release 0.4.4
 * replaced the proprietary logging by jakarta commons logging
 * convert/impl/DateConverter now parses with the "formatPattern" of the component
   if all other parsing attempts fail
+* hyperlink-attributes where added to sortcolumn
 
 ----------------------------------------------------------------------
 Changes in Release 0.4.3

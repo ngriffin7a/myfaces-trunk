@@ -254,26 +254,44 @@
         <name>sortcolumn</name>
         <tag-class>net.sourceforge.myfaces.taglib.ext.SortColumnTag</tag-class>
         <body-content>JSP</body-content>
+        <!-- sortcolumn attributes -->
         <attribute>
-            <name>id</name>
-            <required>false</required>
-            <rtexprvalue>false</rtexprvalue>
-        </attribute>
-       <attribute>
            <name>column</name>
            <required>true</required>
            <rtexprvalue>true</rtexprvalue>
-       </attribute>
+        </attribute>
         <attribute>
             <name>defaultAscending</name>
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>
         </attribute>
+
+        &ui_component_attributes;
+        &ui_command_attributes;
+        &html_universal_attributes;
+        &html_event_handler_attributes;
+        &html_anchor_attributes;
+
+        <!-- HyperlinkRenderer attributes -->
+        &key_bundle_attributes;
+        &user_role_attributes;
+
+        <!-- MyFaces extensions -->
         <attribute>
-            <name>cssClass</name>
+            <name>immediateAction</name>
             <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
+            <rtexprvalue>false</rtexprvalue>
+            <type>java.lang.String</type>
+            <description>
+                This is a MyFaces extension.
+                If set to "true" the lifecycle will immediatly go to the
+                Render Response phase (without validation) if this button was
+                clicked.
+                Convenient if you need a button that should handle navigation
+                without performing validation or model updates.
+            </description>
         </attribute>
+
    </tag>
 
 

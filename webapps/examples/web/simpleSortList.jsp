@@ -59,12 +59,8 @@ managed beans used:
                                   ascending="true"
                                   columnReference="list.sort"
                                   ascendingReference="list.ascending" >
-                        <x:sortcolumn id="hdr1" column="type" cssClass="sortLink" >
-                            <h:output_text value="Car-Type" />
-                        </x:sortcolumn>
-                        <x:sortcolumn id="hdr2" column="color" cssClass="sortLink" >
-                            <h:output_text id="list_header_iso" value="Car-Color"  />
-                        </x:sortcolumn>
+                        <x:sortcolumn id="hdr1" column="type" commandClass="sortLink" key="sort_cartype" bundle="example_messages" />
+                        <x:sortcolumn id="hdr2" column="color" commandClass="sortLink" key="sort_carcolor" bundle="example_messages" />
                     </x:sortheader>
                     <!-- DATA -->
                     <h:panel_data var="car" valueRef="list.cars" >

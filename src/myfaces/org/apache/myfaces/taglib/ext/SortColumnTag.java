@@ -19,9 +19,8 @@
 package net.sourceforge.myfaces.taglib.ext;
 
 import net.sourceforge.myfaces.component.ext.UISortColumn;
-import net.sourceforge.myfaces.renderkit.JSFAttr;
 import net.sourceforge.myfaces.renderkit.html.ext.SortColumnRenderer;
-import net.sourceforge.myfaces.taglib.MyFacesBodyTag;
+import net.sourceforge.myfaces.taglib.CommandHyperlinkTag;
 
 
 /**
@@ -30,7 +29,7 @@ import net.sourceforge.myfaces.taglib.MyFacesBodyTag;
  * @version $Revision$ $Date$
  */
 public class SortColumnTag
-    extends MyFacesBodyTag
+    extends CommandHyperlinkTag
 {
     public String getComponentType()
     {
@@ -51,12 +50,6 @@ public class SortColumnTag
     {
         setRendererAttributeBoolean(SortColumnRenderer.DEFAULT_ASCENDING_ATTR, b);
     }
-
-    public void setCssClass(String v)
-    {
-        setRendererAttributeString(JSFAttr.COMMAND_CLASS_ATTR, v);
-    }
-
 
     /*
     public int getDoStartValue() throws JspException
