@@ -57,6 +57,11 @@ public class NavigationItemTag
         setRendererAttributeString(LABEL_ATTR, s);
     }
 
+    public void setColumnClass(String s)
+    {
+        setRendererAttributeString(COLUMN_CLASSES_ATTR, s);
+    }
+
     // key and bundle attributes --> already implemented in MyFacesTag
 
     public void setTreeId(String s)

@@ -137,6 +137,11 @@
                 If true, this item will be open.
             </description>
         </attribute>
+        <attribute>
+            <name>columnClass</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
         &ui_component_attributes;
         &ui_command_attributes;
         &html_universal_attributes;

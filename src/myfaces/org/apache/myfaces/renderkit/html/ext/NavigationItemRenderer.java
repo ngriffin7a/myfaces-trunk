@@ -145,6 +145,20 @@ public class NavigationItemRenderer
         }
 
         ResponseWriter writer = facesContext.getResponseWriter();
+
+        String label = null;
+        String key = (String)uiComponent.getAttribute(KEY_ATTR);
+        if (key == null)
+        {
+            label = (String)uiComponent.getAttribute(LABEL_ATTR);
+        }
+
+        if (label == null && key == null)
+        {
+            writer.write("&nbsp;");
+            return;
+        }
+
         writer.write("<a href=\"");
 
         //Modify URL for the faces servlet mapping:
@@ -189,9 +203,6 @@ public class NavigationItemRenderer
 
         writer.write(">");
 
-        String label;
-        String key = (String)uiComponent.getAttribute(KEY_ATTR);
-
         UIComponent navigationComponent = uiComponent.getParent();
         while (navigationComponent != null &&
             !navigationComponent.getRendererType().equals(NavigationRenderer.TYPE))
@@ -215,10 +226,6 @@ public class NavigationItemRenderer
             {
                 label = BundleUtils.getString(facesContext, bundle, key);
             }
-        }
-        else
-        {
-            label = (String)uiComponent.getAttribute(LABEL_ATTR);
         }
 
         boolean open = UIComponentUtils.getBooleanAttribute(uiComponent,

@@ -197,11 +197,18 @@ public class NavigationRenderer
         throws IOException
     {
         ResponseWriter writer = facesContext.getResponseWriter();
-        writer.write("\n<tr>");
+        writer.write("\n<tr><td");
 
-        writer.write("<td>");
+        String columnClass = (String)item.getAttribute(NavigationItemRenderer.COLUMN_CLASSES_ATTR);
+        if (columnClass != null)
+        {
+            writer.write(" class=\"");
+            writer.write(columnClass);
+            writer.write("\"");
+        }
+        writer.write(">");
 
-        String itemClass = getLevelClass(navigation, level);
+        String itemClass = calcLevelClass(navigation, level);
         if (itemClass != null)
         {
             writer.write("<span class=\"");
@@ -241,10 +248,10 @@ public class NavigationRenderer
 
     }
 
+
     private static final String DELIMITER = ",";
     private static final String[] DUMMY = {};
-
-    private String getLevelClass(UIComponent navigation, int level)
+    private String calcLevelClass(UIComponent navigation, int level)
     {
         String[] levelClasses = (String[])navigation.getAttribute(LEVEL_CLASSES_CACHE);
         if (levelClasses == null)

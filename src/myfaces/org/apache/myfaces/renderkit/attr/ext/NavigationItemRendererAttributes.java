@@ -40,6 +40,7 @@ public interface NavigationItemRendererAttributes
         TREE_ID_ATTR,
         LABEL_ATTR,
         COMMAND_CLASS_ATTR,
+        COLUMN_CLASSES_ATTR,
         HREF_ATTR,
         KEY_ATTR,
         BUNDLE_ATTR

@@ -147,6 +147,12 @@ a.navigation_link:hover,active {
     margin-left : 24px;
 }
 
+.navseparator {
+    border-bottom: 1px solid #000000;
+    width=230px;
+	font-size: 0px;
+    font-color: #9999CC;
+}
 
 .fileUploadInput {
 	font-family : verdana, Geneva, Arial, Helvetica, sans-serif;
