@@ -65,7 +65,6 @@ public class ListRenderer
                                   Renderer renderer,
                                   UIComponent uiComponent) throws IOException
     {
-        ResponseWriter writer = facesContext.getResponseWriter();
         UIComponent parent = uiComponent.getParent();
         String rendererType = uiComponent.getRendererType();
         String parentRendererType = parent.getRendererType();
@@ -81,10 +80,6 @@ public class ListRenderer
                     // first call of encodeBegin
                     incrementComponentCountAttr(facesContext);
                 }
-                else
-                {
-                    writer.write("</tr>\n");
-                }
 
                 Iterator it = getIterator(facesContext, uiComponent);
 
@@ -93,7 +88,8 @@ public class ListRenderer
                 {
                     facesContext.setModelValue(varAttr, it.next());
                     // new row
-                    openNewRow(facesContext, uiComponent.getRendererType());
+                    closeRow(facesContext);
+                    openRow(facesContext, uiComponent.getRendererType());
                 }
                 else
                 {
@@ -105,7 +101,8 @@ public class ListRenderer
             {
                 incrementComponentCountAttr(facesContext);
                 // new row
-                openNewRow(facesContext, uiComponent.getRendererType());
+                closeRow(facesContext);
+                openRow(facesContext, uiComponent.getRendererType());
             }
             else
             {
@@ -115,7 +112,7 @@ public class ListRenderer
                     (parentParentRendererType != null &&
                      parentParentRendererType.equals(TYPE)))
                 {
-                    openNewColumn(facesContext);
+                    openColumn(facesContext);
                 }
             }
         }
@@ -129,7 +126,6 @@ public class ListRenderer
         if (uicomponent.getRendererType().equals(TYPE))
         {
             pushListComponent(context, uicomponent);
-
             writer.write("<table");
             String style = (String)uicomponent.getAttribute(PANEL_CLASS_ATTR.getName());
             if (style != null && style.length() > 0)
@@ -151,6 +147,7 @@ public class ListRenderer
         {
             popListComponent(facesContext);
 
+            closeRow(facesContext);
             writer.write("</table>\n");
             //restoreRenderKit(facesContext, uicomponent);
         }
@@ -168,23 +165,15 @@ public class ListRenderer
 
         if (rendererType != null && parentRendererType != null)
         {
-            if (parentRendererType.equals(TYPE) && (
-                rendererType.equals(DataRenderer.TYPE) ||
-                rendererType.equals(GroupRenderer.TYPE)))
+            if (parentRendererType.equals(TYPE) &&
+                rendererType.equals(DataRenderer.TYPE))
             {
-                ResponseWriter writer = facesContext.getResponseWriter();
-                writer.write("</tr>\n");
-
-                if (rendererType.equals(DataRenderer.TYPE))
+                //Remove iterator after last row
+                Iterator it = getIterator(facesContext, uiComponent);
+                if (it != null && !it.hasNext())
                 {
-                    //Remove iterator after last row
-                    Iterator it = getIterator(facesContext, uiComponent);
-                    if (it != null && !it.hasNext())
-                    {
-                        uiComponent.setAttribute(ITERATOR_ATTR, null);
-                    }
+                    uiComponent.setAttribute(ITERATOR_ATTR, null);
                 }
-
             }
             else
             {
@@ -195,7 +184,9 @@ public class ListRenderer
                      parentParentRendererType.equals(TYPE)))
                 {
                     ResponseWriter writer = facesContext.getResponseWriter();
-                    writer.write("</td>\n");
+                    closeColumn(facesContext);
+                    int column = getActualColumnAttr(facesContext).intValue();
+                    afterCloseColumn(facesContext, column -1);
                 }
             }
         }
@@ -232,12 +223,36 @@ public class ListRenderer
         return iterator;
     }
 
+    //-------------------------------------------------------------
+    // protected methods
+    //-------------------------------------------------------------
+    public void afterOpenRow(FacesContext facesContext, int row)
+        throws IOException
+    {
+        ResponseWriter writer = facesContext.getResponseWriter();
+    }
+
+    public void beforeCloseRow(FacesContext facesContext, int row)
+        throws IOException
+    {
+        ResponseWriter writer = facesContext.getResponseWriter();
+    }
+
+    public void beforeOpenColumn(FacesContext facesContext, int column)
+        throws IOException
+    {
+    }
+
+    public void afterCloseColumn(FacesContext facesContext, int column)
+        throws IOException
+    {
+    }
 
     //-------------------------------------------------------------
     // write methods
     //-------------------------------------------------------------
 
-    protected void openNewRow(FacesContext context, String rendererType)
+    protected void openRow(FacesContext context, String rendererType)
         throws IOException
     {
         ResponseWriter writer = context.getResponseWriter();
@@ -257,12 +272,29 @@ public class ListRenderer
         }
         writer.write(">");
 
+        int row = getActualRowAttr(context).intValue();
+        afterOpenRow(context, row);
+
         incrementRowAttr(context);
     }
 
-    protected void openNewColumn(FacesContext context)
+    protected void closeRow(FacesContext context)
         throws IOException
     {
+       int row = getActualRowAttr(context).intValue();
+       if (row > 0)
+       {
+           beforeCloseRow(context, row);
+           context.getResponseWriter().write("</tr>");
+       }
+    }
+
+    protected void openColumn(FacesContext context)
+        throws IOException
+    {
+        int column = getActualColumnAttr(context).intValue();
+        beforeOpenColumn(context, column);
+
         ResponseWriter writer = context.getResponseWriter();
 
         String style = calcColumnStyle(context);
@@ -277,6 +309,12 @@ public class ListRenderer
         writer.write(">");
 
         incrementColumnAttr(context);
+    }
+
+    protected void closeColumn(FacesContext context)
+        throws IOException
+    {
+        context.getResponseWriter().write("</td>");
     }
 
     //-------------------------------------------------------------
