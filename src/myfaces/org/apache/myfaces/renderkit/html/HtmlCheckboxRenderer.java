@@ -189,7 +189,6 @@ extends HtmlRenderer
             inputElemWriter.writeAttribute(HTML.VALUE_ATTR,value,null);
         }
 
-        HTMLUtil.renderStyleClass(inputElemWriter, uiComponent);
         HTMLUtil.renderHTMLAttributes(inputElemWriter, uiComponent, HTML.UNIVERSAL_ATTRIBUTES);
         HTMLUtil.renderHTMLAttributes(inputElemWriter, uiComponent, HTML.EVENT_HANDLER_ATTRIBUTES);
         HTMLUtil.renderHTMLAttributes(inputElemWriter, uiComponent, HTML.INPUT_ATTRIBUTES);

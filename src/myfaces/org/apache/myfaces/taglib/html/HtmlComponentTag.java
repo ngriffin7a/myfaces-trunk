@@ -36,20 +36,21 @@ public abstract class HtmlComponentTag
     private String _dir;
     private String _lang;
     private String _style;
-    private String _title;
     private String _styleClass;
+    private String _title;
 
     //HTML event handler attributes
     private String _onclick;
     private String _ondblclick;
+    private String _onkeydown;
+    private String _onkeypress;
+    private String _onkeyup;
     private String _onmousedown;
-    private String _onmouseup;
-    private String _onmouseover;
     private String _onmousemove;
     private String _onmouseout;
-    private String _onkeypress;
-    private String _onkeydown;
-    private String _onkeyup;
+    private String _onmouseover;
+    private String _onmouseup;
+
 
     protected void setProperties(UIComponent component)
     {

@@ -109,23 +109,24 @@ extends HtmlRenderer
 
         writer.startElement(HTML.INPUT_ELEM, uiComponent);
 
-        String imageSrc = (String) htmlCommand.getAttributes().get(JSFAttr.IMAGE_ATTR);
+        String image = htmlCommand.getImage();
 
-        if (imageSrc != null)
+        if (image != null)
         {
             writer.writeAttribute(HTML.TYPE_ATTR, IMAGE_BUTTON_TYPE, null);
-            writer.writeAttribute(HTML.SRC_ATTR, imageSrc, JSFAttr.IMAGE_ATTR);
+            writer.writeAttribute(HTML.SRC_ATTR, image, JSFAttr.IMAGE_ATTR);
         }
         else
         {
-            String type = (String) uiComponent.getAttributes().get(JSFAttr.TYPE_ATTR);
+            String type = htmlCommand.getType();
 
             if (type == null)
             {
                 type = SUBMIT_BUTTON_TYPE;
             }
             writer.writeAttribute(HTML.TYPE_ATTR, type, JSFAttr.TYPE_ATTR);
-            writer.writeAttribute(HTML.VALUE_ATTR, htmlCommand.getTitle(), null);
+            //FIXME: htmlCommand.getTitle() or getValue()? I would think getValue()
+            writer.writeAttribute(HTML.VALUE_ATTR, htmlCommand.getValue(), null);
         }
 
         writer.writeAttribute(HTML.NAME_ATTR, clientId, null);

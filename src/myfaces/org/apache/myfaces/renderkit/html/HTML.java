@@ -303,7 +303,7 @@ public class HTML
     public static final String INPUT_ELEM = "input";
     public static final String FORM_ELEM = "form";
     public static final String ANCHOR_ELEM = "a";
-    public static final String IMG_ELEM = "img";
+    public static final String IMG_ATTR = "img";
     public static final String LABEL_ELEM = "label";
 
 

@@ -104,6 +104,7 @@ public class JSFAttr
     public static final String   COMMAND_CLASS_ATTR           = "commandClass";
     public static final String   LABEL_ATTR                   = "label";
     public static final String   IMAGE_ATTR                   = "image";
+    public static final String   ACTION_ATTR                 = "action";
 
     // Command_Button Attributes
     public static final String   TYPE_ATTR                    = "type";
