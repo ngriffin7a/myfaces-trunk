@@ -39,20 +39,18 @@ public class RequestParameterNames
         return "SM_" + modelRef;
     }
 
-    protected static String getUIComponentStateParameterName(FacesContext facesContext,
-                                                             UIComponent uiComponent,
-                                                             String attributeName)
+    protected static String getUIComponentStateParameterPropName(FacesContext facesContext,
+                                                                 UIComponent uiComponent,
+                                                                 String propertyName)
     {
-        //return "SC_" + uiComponent.getClientId(facesContext) + "/" + attributeName;
-        return "SC_" + UIComponentUtils.getUniqueComponentId(facesContext, uiComponent) + "/" + attributeName;
+        return "SCP_" + UIComponentUtils.getUniqueComponentId(facesContext, uiComponent) + "/" + propertyName;
     }
 
-    protected static String restoreUIComponentStateParameterAttributeName(FacesContext facesContext,
-                                                                          UIComponent uiComponent,
-                                                                          String paramName)
+    protected static String restoreUIComponentStateParameterPropName(FacesContext facesContext,
+                                                                     UIComponent uiComponent,
+                                                                     String paramName)
     {
-        //String prefix = "SC_" + uiComponent.getClientId(facesContext) + "/";
-        String prefix = "SC_" + UIComponentUtils.getUniqueComponentId(facesContext, uiComponent) + "/";
+        String prefix = "SCP_" + UIComponentUtils.getUniqueComponentId(facesContext, uiComponent) + "/";
         if (paramName.startsWith(prefix))
         {
             return paramName.substring(prefix.length());
@@ -63,7 +61,27 @@ public class RequestParameterNames
         }
     }
 
+    protected static String getUIComponentStateParameterAttrName(FacesContext facesContext,
+                                                                 UIComponent uiComponent,
+                                                                 String attributeName)
+    {
+        return "SCA_" + UIComponentUtils.getUniqueComponentId(facesContext, uiComponent) + "/" + attributeName;
+    }
 
+    protected static String restoreUIComponentStateParameterAttrName(FacesContext facesContext,
+                                                                     UIComponent uiComponent,
+                                                                     String paramName)
+    {
+        String prefix = "SCA_" + UIComponentUtils.getUniqueComponentId(facesContext, uiComponent) + "/";
+        if (paramName.startsWith(prefix))
+        {
+            return paramName.substring(prefix.length());
+        }
+        else
+        {
+            return null;
+        }
+    }
 
     private static final String LISTENER_SERIAL_ATTR
         = RequestParameterNames.class.getName() + ".LISTENER_SERIAL";

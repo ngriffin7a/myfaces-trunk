@@ -283,6 +283,7 @@ public class UIComponentUtils
     public static boolean isInternalAttribute(String attrName)
     {
         return (attrName.startsWith("javax.") ||
+                attrName.startsWith("net.sf.myfaces.") ||
                 attrName.startsWith("net.sourceforge.myfaces."));
     }
 

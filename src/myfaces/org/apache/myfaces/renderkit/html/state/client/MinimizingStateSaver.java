@@ -32,6 +32,7 @@ import net.sourceforge.myfaces.renderkit.html.state.StateRenderer;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLEncoder;
 import net.sourceforge.myfaces.tree.TreeUtils;
 import net.sourceforge.myfaces.util.logging.LogUtil;
+import net.sourceforge.myfaces.util.bean.BeanUtils;
 
 import javax.faces.FacesException;
 import javax.faces.FactoryFinder;
@@ -39,6 +40,7 @@ import javax.faces.application.ApplicationFactory;
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIOutput;
 import javax.faces.component.UIPanel;
+import javax.faces.component.UICommand;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.convert.ConverterException;
@@ -53,6 +55,8 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.io.Writer;
 import java.util.*;
+import java.beans.BeanInfo;
+import java.beans.PropertyDescriptor;
 
 /**
  * StateSaver for the "client_minimized" state saving mode.
@@ -98,7 +102,7 @@ public class MinimizingStateSaver
         //we must save the "valid" attribute
 
         //we must save the "componentId" because:
-        //      - static componentId are in parsed tree and are not saved anyway.
+        //      - static componentIds are in parsed tree and are not saved anyway.
         //      - we cannot be sure that a dynamically created componentId is
         //        the same when the tree is getting restored.
     }
@@ -149,6 +153,7 @@ public class MinimizingStateSaver
             {
                 LogUtil.getLogger().warning("Corresponding parsed component not found for component " + UIComponentUtils.getUniqueComponentId(facesContext, comp));
             }
+            saveComponentProperties(facesContext, stateMap, comp, parsedComp);
             saveComponentAttributes(facesContext, stateMap, comp, parsedComp);
             saveListeners(facesContext, stateMap, comp, parsedComp);
             visitedComponents.add(UIComponentUtils.getUniqueComponentId(facesContext, comp));
@@ -216,6 +221,145 @@ public class MinimizingStateSaver
     }
 
 
+    protected void saveComponentProperties(FacesContext facesContext,
+                                           Map stateMap,
+                                           UIComponent uiComponent,
+                                           UIComponent parsedComp)
+    {
+        //step through all properties of component
+        BeanInfo beanInfo = BeanUtils.getBeanInfo(uiComponent);
+        PropertyDescriptor[] propertyDescriptors = beanInfo.getPropertyDescriptors();
+        for (int i = 0; i < propertyDescriptors.length; i++)
+        {
+            PropertyDescriptor propertyDescriptor = propertyDescriptors[i];
+            //Only save properties that are get- and setable
+            if (propertyDescriptor.getReadMethod() != null &&
+                propertyDescriptor.getWriteMethod() != null)
+            {
+                saveComponentProperty(facesContext,
+                                      stateMap,
+                                      uiComponent,
+                                      propertyDescriptor,
+                                      parsedComp);
+            }
+        }
+    }
+
+    protected void saveComponentProperty(FacesContext facesContext,
+                                         Map stateMap,
+                                         UIComponent uiComponent,
+                                         PropertyDescriptor propertyDescriptor,
+                                         UIComponent parsedComponent)
+    {
+        String propName = propertyDescriptor.getName();
+
+        if (isIgnoreProperty(uiComponent, propName))
+        {
+            return;
+        }
+
+        if (propName.equals(CommonComponentProperties.VALID_PROP) &&
+            uiComponent.isValid())
+        {
+            //No need to save "valid" if true, because MinimizingStateRestorer
+            //assumes true as default anyway.
+            return;
+        }
+
+        Object propValue = null;
+        try
+        {
+            propValue = BeanUtils.getBeanPropertyValue(uiComponent,
+                                                       propertyDescriptor);
+        }
+        catch (Exception e)
+        {
+            LogUtil.getLogger().warning("Exception getting property '" + propName + "' of component '" + uiComponent.getClientId(facesContext) + "': " + e.getMessage());
+            return;
+        }
+
+        //compare current value to static value in parsed component
+        if (parsedComponent != null)
+        {
+            Object parsedValue = BeanUtils.getBeanPropertyValue(parsedComponent,
+                                                                propertyDescriptor);
+            if ((parsedValue != null && parsedValue.equals(propValue)) ||
+                (parsedValue == null && propValue == null))
+            {
+                //current value identical to hardcoded value --> no need to save
+                return;
+            }
+        }
+
+        //is null value?
+        if (propValue == null)
+        {
+            saveParameter(stateMap,
+                          RequestParameterNames.getUIComponentStateParameterPropName(facesContext,
+                                                                                     uiComponent,
+                                                                                     propName),
+                          NULL_DUMMY_VALUE);
+            return;
+        }
+
+        //convert attribute value to String
+        Converter conv;
+        if (uiComponent instanceof UIOutput &&
+            propName.equals(MyFacesUIOutput.VALUE_PROP))
+        {
+            conv = ConverterUtils.findValueConverter(facesContext,
+                                                     (UIOutput)uiComponent);
+        }
+        else
+        {
+            conv = ConverterUtils.findConverter(propertyDescriptor.getPropertyType());
+        }
+
+        String strValue;
+        if (conv != null)
+        {
+            //lucky, we have a converter  :-)
+            try
+            {
+                strValue = conv.getAsString(facesContext, uiComponent, propValue);
+            }
+            catch (ConverterException e)
+            {
+                LogUtil.getLogger().severe("Value of attribute " + propName + " will be lost, because of converter exception saving state of component " + UIComponentUtils.toString(uiComponent) + ".");
+                return;
+            }
+        }
+        else
+        {
+            //damn, we could not find a converter  :-(
+            if (propValue instanceof Serializable)
+            {
+                try
+                {
+                    strValue = ConverterUtils.serializeAndEncodeBase64(propValue);
+                }
+                catch (FacesException e)
+                {
+                    LogUtil.getLogger().severe("Value of attribute " + propName + " of component " + UIComponentUtils.toString(uiComponent) + " will be lost, because of exception during serialization: " + e.getMessage());
+                    return;
+                }
+            }
+            else
+            {
+                LogUtil.getLogger().severe("Value of attribute " + propName + " of component " + UIComponentUtils.toString(uiComponent) + " will be lost, because it is of non-serializable type: " + propValue.getClass().getName());
+                return;
+            }
+        }
+
+        saveParameter(stateMap,
+                      RequestParameterNames.getUIComponentStateParameterPropName(facesContext,
+                                                                                 uiComponent,
+                                                                                 propName),
+                      strValue);
+    }
+
+
+
     protected void saveComponentAttributes(FacesContext facesContext,
                                            Map stateMap,
                                            UIComponent uiComponent,
@@ -249,10 +393,6 @@ public class MinimizingStateSaver
             visitedAttributes.add(attrName);
         }
 
-        //TODO: handle all Properties that have a setter and a getter
-
-
-
         // Save all attributes, that are set in the parsed tree
         // but not in the current tree (= removed attributes).
         // Save them by means of a special null dummy value
@@ -273,41 +413,6 @@ public class MinimizingStateSaver
                 }
             }
         }
-
-
-        //enforce saving of "valid" attribute, if it is null and defaults to false
-        if (!visitedAttributes.contains(CommonComponentProperties.VALID_PROP) &&    //TODO: visitedProperties instead!
-            !uiComponent.isValid())
-        {
-            //"valid" attribute not yet seen, so the internal attribute is null
-            //but there is a default value when we use the property getter.
-            //If valid == false, we must save it, because MinimizingStateRestorer
-            //always assumes true as the default.
-            //Since normally all common are valid, this can minimize
-            //the number of saved attributes.
-            saveComponentAttribute(facesContext,
-                                   stateMap,
-                                   uiComponent,
-                                   CommonComponentProperties.VALID_PROP,
-                                   Boolean.FALSE,
-                                   null);
-            visitedAttributes.add(CommonComponentProperties.VALID_PROP);
-        }
-
-        /*
-        Problems! e.g. components with modelRef to a var
-        if (!visitedAttributes.contains(CommonComponentProperties.VALUE_PROP) &&
-            uiComponent.getModelReference() != null &&
-            !UIComponentUtils.isTransient(uiComponent))
-        {
-            saveComponentAttribute(facesContext,
-                                   stateMap,
-                                   uiComponent,
-                                   CommonComponentProperties.VALUE_PROP,
-                                   uiComponent.currentValue(facesContext),
-                                   null);
-        }
-        */
     }
 
 
@@ -342,14 +447,6 @@ public class MinimizingStateSaver
             return;
         }
 
-        if (attrName.equals(CommonComponentProperties.VALID_PROP) &&
-            uiComponent.isValid())
-        {
-            //No need to save "valid" if true, because MinimizingStateRestorer
-            //assumes true as default anyway.
-            return;
-        }
-
         //compare current value to static value in parsed component
         if (parsedComponent != null)
         {
@@ -366,9 +463,9 @@ public class MinimizingStateSaver
         if (attrValue == null)
         {
             saveParameter(stateMap,
-                          RequestParameterNames.getUIComponentStateParameterName(facesContext,
-                                                                                 uiComponent,
-                                                                                 attrName),
+                          RequestParameterNames.getUIComponentStateParameterAttrName(facesContext,
+                                                                                     uiComponent,
+                                                                                     attrName),
                           NULL_DUMMY_VALUE);
             return;
         }
@@ -414,9 +511,9 @@ public class MinimizingStateSaver
         }
 
         saveParameter(stateMap,
-                      RequestParameterNames.getUIComponentStateParameterName(facesContext,
-                                                                             uiComponent,
-                                                                             attrName),
+                      RequestParameterNames.getUIComponentStateParameterAttrName(facesContext,
+                                                                                 uiComponent,
+                                                                                 attrName),
                       strValue);
     }
 
@@ -433,8 +530,8 @@ public class MinimizingStateSaver
     }
 
     protected void saveModelValue(FacesContext facesContext,
-                                     Map stateMap,
-                                     UISaveState uiSaveState)
+                                  Map stateMap,
+                                  UISaveState uiSaveState)
     {
         String valueRef = uiSaveState.getValueRef();
         if (valueRef == null)
@@ -555,8 +652,8 @@ public class MinimizingStateSaver
         if (rendererType != null && rendererType.equals(SecretRenderer.TYPE))
         {
             Boolean redisplay = (Boolean)comp.getAttribute(SecretRenderer.REDISPLAY_ATTR);
-            if (redisplay == null   //because false is default
-                || !redisplay.booleanValue())
+            if (redisplay == null ||   //because false is default
+                !redisplay.booleanValue())
             {
                 //value must not be redisplayed, so also no (visual) state saving must occur
                 return true;
@@ -614,15 +711,13 @@ public class MinimizingStateSaver
                                  UIComponent uiComponent,
                                  UIComponent parsedComp)
     {
+        ApplicationFactory af = (ApplicationFactory)FactoryFinder.getFactory(FactoryFinder.APPLICATION_FACTORY);
+        ActionListener actionListener = af.getApplication().getActionListener();
+
         List[] listeners = UIComponentUtils.getListeners(uiComponent);
         List[] staticListeners = UIComponentUtils.getListeners(parsedComp);
         if (listeners != null)
         {
-            /*
-            Set tagCreatedActionListenersSet
-                = (Set)facesContext.getExternalContext().getRequest()
-                    .getAttribute(ActionListenerTag.TAG_CREATED_ACTION_LISTENERS_SET_ATTR);
-            */
             for (Iterator it = PhaseId.VALUES.iterator(); it.hasNext();)
             {
                 PhaseId phaseId = (PhaseId)it.next();
@@ -637,9 +732,9 @@ public class MinimizingStateSaver
                     savePhaseListeners(facesContext,
                                        stateMap,
                                        uiComponent,
-                                       //tagCreatedActionListenersSet,
                                        phaseListeners,
-                                       staticPhaseListeners);
+                                       staticPhaseListeners,
+                                       actionListener);
                 }
             }
         }
@@ -648,9 +743,9 @@ public class MinimizingStateSaver
     protected void savePhaseListeners(FacesContext facesContext,
                                       Map stateMap,
                                       UIComponent uiComponent,
-                                      //Set tagCreatedActionListenersSet,
                                       List phaseListeners,
-                                      List staticPhaseListeners)
+                                      List staticPhaseListeners,
+                                      ActionListener applicationActionListener)
     {
         for (Iterator it = phaseListeners.iterator(); it.hasNext();)
         {
@@ -661,20 +756,17 @@ public class MinimizingStateSaver
                 return;
             }
 
-            /*
-            if (tagCreatedActionListenersSet != null &&
-                tagCreatedActionListenersSet.contains(facesListener))
-            {
-                //Listener was created by a "f:action_listener" tag
-                //and can automatically be restored by MinimizingStateRestorer.
-                return;
-            }
-            */
-
             String listenerType;
             if (facesListener instanceof ActionListener)
             {
                 listenerType = LISTENER_TYPE_ACTION;
+                if (uiComponent instanceof UICommand &&
+                    facesListener == applicationActionListener)
+                {
+                    //default ActionListener for this UICommand will be
+                    //automatically registered again in "reconstituteComponentTree" phase
+                    return;
+                }
             }
             else if (facesListener instanceof ValueChangedListener)
             {

@@ -42,7 +42,7 @@
         * "FINEST", "FINER", "FINE", "INFO", "WARNING", "SEVERE"
         -->
         <param-name>myfaces_LogLevel</param-name>
-        <param-value>FINEST</param-value>
+        <param-value>WARNING</param-value>
     </context-param>
 
     <context-param>
@@ -82,7 +82,7 @@
         * "client_minimized_zipped" = like "client_minimal", but additionally state info is zipped (GZIP), encoded to allowed characters (Base64) written as one query parameter or hidden form input.
         -->
         <param-name>myfaces_StateSavingMode</param-name>
-        <param-value>server_session</param-value>
+        <param-value>client_minimized</param-value>
     </context-param>
 
     <context-param>

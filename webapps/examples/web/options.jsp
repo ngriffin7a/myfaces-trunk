@@ -55,12 +55,12 @@ managed beans used:
                 <h4>Options</h4>
                 <table border="1"><tr><td>
                     <h:form id="form1" formName="optionsForm">
-                        <h:output_message key="option_lang" bundle="net.sourceforge.myfaces.examples.resource.example_messages" />
+                        <h:output_message key="option_lang" bundle="example_messages" />
                         <h:selectone_menu id="locale" valueRef="optionsForm.language">
                             <h:selectitems id="available" valueRef="optionsForm.availableLanguages" />
                         </h:selectone_menu><br>
 
-                        <h:output_message key="option_layout" bundle="net.sourceforge.myfaces.examples.resource.example_messages" />
+                        <h:output_message key="option_layout" bundle="example_messages" />
                         <h:selectone_menu id="layout" valueRef="globalOptions.pageLayout"  >
                             <h:selectitem id="item101" label="Classic" value="classic" />
                             <h:selectitem id="item102" label="Navigation right" value="navigationRight" />

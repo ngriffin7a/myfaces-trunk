@@ -19,6 +19,7 @@
 package net.sourceforge.myfaces.renderkit.html.state.client;
 
 import net.sourceforge.myfaces.component.UIComponentUtils;
+import net.sourceforge.myfaces.component.MyFacesUIOutput;
 import net.sourceforge.myfaces.component.ext.UISaveState;
 import net.sourceforge.myfaces.convert.ConverterUtils;
 import net.sourceforge.myfaces.convert.impl.StringArrayConverter;
@@ -32,6 +33,7 @@ import javax.faces.application.ApplicationFactory;
 import javax.faces.component.UICommand;
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIInput;
+import javax.faces.component.UIOutput;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.convert.ConverterException;
@@ -270,11 +272,27 @@ public class MinimizingStateRestorer
             uiComponent.setValid(true);
         }
 
+        //restore properties
+        for (Iterator it = stateMap.entrySet().iterator(); it.hasNext();)
+        {
+            Map.Entry entry = (Map.Entry)it.next();
+            String propName = RequestParameterNames.restoreUIComponentStateParameterPropName(facesContext,
+                                                                                             uiComponent,
+                                                                                             (String)entry.getKey());
+            if (propName != null)
+            {
+                restoreComponentProperty(facesContext,
+                                         uiComponent,
+                                         propName,
+                                         entry.getValue());
+            }
+        }
+
         //restore attributes
         for (Iterator it = stateMap.entrySet().iterator(); it.hasNext();)
         {
             Map.Entry entry = (Map.Entry)it.next();
-            String attrName = RequestParameterNames.restoreUIComponentStateParameterAttributeName(facesContext,
+            String attrName = RequestParameterNames.restoreUIComponentStateParameterAttrName(facesContext,
                                                                                                   uiComponent,
                                                                                                   (String)entry.getKey());
             if (attrName != null)
@@ -289,6 +307,84 @@ public class MinimizingStateRestorer
         //Not any longer needed when we have cloned the full static tree
         //registerTagCreatedActionListeners(facesContext, stateMap, uiComponent);
     }
+
+
+    protected void restoreComponentProperty(FacesContext facesContext,
+                                            UIComponent uiComponent,
+                                            String propName,
+                                            Object paramValue)
+    {
+        String strValue = getStateParameterValueAsString(paramValue);
+        PropertyDescriptor propertyDescriptor
+            = BeanUtils.findPropertyDescriptor(uiComponent,
+                                               propName);
+        if (propertyDescriptor == null)
+        {
+            throw new IllegalArgumentException("No property descriptor found for property '" + propName + "' of component " + uiComponent.getClientId(facesContext));
+        }
+
+        //is it a null value?
+        if (strValue.equals(MinimizingStateSaver.NULL_DUMMY_VALUE))
+        {
+            BeanUtils.setBeanPropertyValue(uiComponent, propertyDescriptor, null);
+            return;
+        }
+
+        //Find proper converter to convert back from external String
+        Converter conv;
+        if (uiComponent instanceof UIOutput &&
+            propName.equals(MyFacesUIOutput.VALUE_PROP))
+        {
+            conv = ConverterUtils.findValueConverter(facesContext,
+                                                     (UIOutput)uiComponent);
+        }
+        else
+        {
+            conv = ConverterUtils.findConverter(propertyDescriptor.getPropertyType());
+        }
+
+        Object objValue;
+        if (conv != null)
+        {
+            //we have a converter, so MinimizingStateSaver did convert to String
+            if (conv instanceof StringArrayConverter &&
+                paramValue instanceof String[])
+            {
+                //no need to convert the String value back to StringArray
+                objValue = paramValue;
+            }
+            else
+            {
+                try
+                {
+                    objValue = conv.getAsObject(facesContext,
+                                                uiComponent,
+                                                strValue);
+                }
+                catch (ConverterException e)
+                {
+                    LogUtil.getLogger().severe("Value of attribute " + propName + " will be lost, because of converter exception restoring state of component " + UIComponentUtils.toString(uiComponent) + ".");
+                    return;
+                }
+            }
+        }
+        else
+        {
+            //we have no converter, so MinimizingStateSaver did serialize the value
+            try
+            {
+                objValue = ConverterUtils.deserializeAndDecodeBase64(strValue);
+            }
+            catch (FacesException e)
+            {
+                LogUtil.getLogger().severe("Value of attribute " + propName + " of component " + UIComponentUtils.toString(uiComponent) + " will be lost, because of exception during deserialization: " + e.getMessage());
+                return;
+            }
+        }
+
+        BeanUtils.setBeanPropertyValue(uiComponent, propertyDescriptor, objValue);
+    }
+
 
 
     protected void restoreComponentAttribute(FacesContext facesContext,
@@ -349,20 +445,8 @@ public class MinimizingStateRestorer
             }
         }
 
-        PropertyDescriptor pd = BeanUtils.findPropertyDescriptor(uiComponent, attrName);
-        if (pd != null && pd.getWriteMethod() != null)
-        {
-            //We must use setter method if one exists, because some setter methods
-            //have side effects: e.g. setComponentId() adds id to NamingContainer
-            BeanUtils.setBeanPropertyValue(uiComponent, pd, objValue);
-        }
-        else
-        {
-            uiComponent.setAttribute(attrName, objValue);
-        }
+        uiComponent.setAttribute(attrName, objValue);
     }
-
-
 
 
 

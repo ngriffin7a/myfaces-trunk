@@ -54,9 +54,7 @@
                                        valueRef="fileUploadForm.upFile"
                                        inputClass="fileUploadInput"
                                        size="100" />
-                        <h:command_button label="load it up">
-                            <f:action_listener type="net.sourceforge.myfaces.examples.misc.FileUploadController" />
-                        </h:command_button>
+                        <h:command_button label="load it up" actionRef="fileUploadForm.fileUploadAction" />
                     </h:form>
                 </td></tr></table>
 

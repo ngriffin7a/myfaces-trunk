@@ -2,7 +2,7 @@
 <%@ taglib uri="http://myfaces.sourceforge.net/tld/myfaces_ext_0_4.tld" prefix="x"%>
 <f:facet name="navigation">
     <x:navigation id="nav"
-                  bundle="net.sourceforge.myfaces.examples.resource.example_messages"
+                  bundle="example_messages"
                   panelClass="navigation"
                   levelClasses="navlevel1,navlevel2,navlevel3"
                   itemClass="navitem"

@@ -45,6 +45,7 @@ public class BundleUtils
         ApplicationFactory af = (ApplicationFactory)FactoryFinder.getFactory(FactoryFinder.APPLICATION_FACTORY);
         VariableResolver vr = af.getApplication().getVariableResolver();
         ResourceBundle bundle = (ResourceBundle)vr.resolveVariable(facesContext, bundleName);
+        /*
         if (bundle == null)
         {
             try
@@ -58,6 +59,7 @@ public class BundleUtils
                 bundle = null;
             }
         }
+        */
 
         return bundle;
     }

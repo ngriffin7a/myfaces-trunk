@@ -1,8 +1,5 @@
 <head>
   <meta HTTP-EQUIV="Content-Type" CONTENT="text/html;CHARSET=iso-8859-1">
-  <title>MyFaces - a free JSF Implementation</title>
+  <title>MyFaces - the free JSF Implementation</title>
   <Link rel="stylesheet" type="text/css" href="css/basic.css">
 </head>
-<%
-    String msgBundle = "net.sourceforge.myfaces.examples.resource.example_messages";
-%>

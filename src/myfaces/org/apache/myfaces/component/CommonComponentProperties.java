@@ -18,7 +18,7 @@ public interface CommonComponentProperties
     public static final String CLIENT_ID_PROP = "clientId";
 
     //MyFaces internal
-    public static final String STRING_VALUE_ATTR = "net.sf.myfaces.component.stringValue";
+    public static final String STRING_VALUE_ATTR = "net.sf.myfaces.component.STRING_VALUE";
     public static final String CLIENT_ID_ATTR = "net.sf.myfaces.component.CLIENT_ID";
 
     //JSF internal

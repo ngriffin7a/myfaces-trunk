@@ -47,14 +47,14 @@
                 <table border="0">
                     <tr>
                         <td valign="middle">
-                            <h:output_message id="welcome" bundle="net.sourceforge.myfaces.examples.resource.example_messages" key="welcome" />
+                            <h:output_message id="welcome" bundle="example_messages" key="welcome" />
                         </td>
                         <td valign="middle">
                             <h:graphic_image id="logo" url="images/logo.jpg"/>
                         </td>
                     </tr>
                 </table>
-                <h:output_message bundle="net.sourceforge.myfaces.examples.resource.example_messages" key="today" >
+                <h:output_message bundle="example_messages" key="today" >
                     <f:parameter id="p0" value="<%=new Date()%>" />
                 </h:output_message>
             </h:panel_group>
