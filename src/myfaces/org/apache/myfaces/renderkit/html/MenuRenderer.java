@@ -33,7 +33,7 @@ import java.io.IOException;
 public class MenuRenderer
         extends AbstractSelectOptionRenderer
 {
-    public static final String TYPE = "SelectManyOptionRenderer";
+    public static final String TYPE = "Menu";
     private static final int DEFAULT_SIZE = 1;
 
     public String getRendererType()

@@ -34,7 +34,7 @@ import java.io.IOException;
 public class ListboxRenderer
         extends AbstractSelectOptionRenderer
 {
-    public static final String TYPE = "ListboxRenderer";
+    public static final String TYPE = "Listbox";
 
     public String getRendererType()
     {
