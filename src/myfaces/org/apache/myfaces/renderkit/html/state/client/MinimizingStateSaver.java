@@ -842,7 +842,15 @@ public class MinimizingStateSaver
                                   UIComponent uiComponent,
                                   UIComponent parsedComp)
     {
-        Iterator parsedIt = parsedComp.getValidators();
+        Iterator parsedIt;
+        if (parsedComp != null)
+        {
+            parsedIt = parsedComp.getValidators();
+        }
+        else
+        {
+            parsedIt = Collections.EMPTY_LIST.iterator();
+        }
         Iterator it = uiComponent.getValidators();
         int parsedValIdx = 0;
         for (; parsedIt.hasNext() && it.hasNext(); parsedValIdx++)

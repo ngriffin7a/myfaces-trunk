@@ -35,7 +35,11 @@ public class UIComponentHacks
 
     public static List[] getListeners(UIComponent uiComponent)
     {
-        if (uiComponent instanceof MyFacesUICommand)
+        if (uiComponent == null)
+        {
+            return null;
+        }
+        else if (uiComponent instanceof MyFacesUICommand)
         {
             return ((MyFacesUICommand)uiComponent).getListeners();
         }

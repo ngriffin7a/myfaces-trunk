@@ -297,7 +297,7 @@ public class BeanUtils
     {
         try
         {
-            return getPropertyType(Introspector.getBeanInfo(beanClass, 5),
+            return getPropertyType(Introspector.getBeanInfo(beanClass),
                                    propertyName);
         }
         catch (IntrospectionException e)
