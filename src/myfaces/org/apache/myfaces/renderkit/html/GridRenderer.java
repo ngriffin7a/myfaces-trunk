@@ -55,7 +55,6 @@ public class GridRenderer
 {
     public static final String TYPE = "Grid";
     private static final String COLUMN_COUNT_ATTR = GridRenderer.class.getName() + ".colcount";
-    private static final String STYLES_ATTR = GridRenderer.class.getName() + ".styles";
     private static final String ROW_COUNT_ATTR = GridRenderer.class.getName() + ".rowcount";
     private static final Integer ZERO = new Integer(0);
 
@@ -117,7 +116,7 @@ public class GridRenderer
         {
             String style = calcRowStyle(gridComponent,
                                         actualRow,
-                                        actualColumn);
+                                        false);
             writer.write("<tr");
             if (style != null && style.length() > 0)
             {
@@ -129,7 +128,16 @@ public class GridRenderer
         }
 
         // open column
-        writer.write("<td>");
+        String style = calcColumnStyle(gridComponent,
+                                       actualColumn);
+        writer.write("<td");
+        if (style != null && style.length() > 0)
+        {
+            writer.write(" class=\"");
+            writer.write(style);
+            writer.write("\"");
+        }
+        writer.write(">");
         actualColumn++;
 
         // save attributes
@@ -137,42 +145,7 @@ public class GridRenderer
         gridComponent.setAttribute(ROW_COUNT_ATTR, new Integer(actualRow));
     }
 
-    private String calcRowStyle(UIComponent gridComponent, int actualRow, int actualColumn)
-    {
-        String style = null;
-        if (actualRow == 0)
-        {
-            style = (String)gridComponent.getAttribute(HEADER_CLASS_ATTR);
-        }
-        if (style == null)
-        {
-            String columnStyles[] = (String[])gridComponent.getAttribute(STYLES_ATTR);
-            if (columnStyles == null)
-            {
-                String columnClasses = (String)gridComponent.getAttribute(COLUMN_CLASSES_ATTR);
-                if (columnClasses != null)
-                {
-                    StringTokenizer tokenizer = new StringTokenizer(columnClasses, ",");
-                    columnStyles = new String[tokenizer.countTokens()];
-                    for (int i = 0; tokenizer.hasMoreTokens(); )
-                    {
-                        columnStyles[i] = tokenizer.nextToken();
-                    }
-                    gridComponent.setAttribute(STYLES_ATTR, columnStyles);
-                }
-                else
-                {
-                    columnStyles = new String[0];
-                    gridComponent.setAttribute(STYLES_ATTR, columnStyles);
-                }
-            }
-            if (columnStyles != null && columnStyles.length > 0)
-            {
-                style = columnStyles[(actualColumn + 1) % columnStyles.length];
-            }
-        }
-        return style;
-    }
+
 
     public void afterEncodeEnd(FacesContext facesContext,
                                Renderer renderer,
@@ -215,4 +188,89 @@ public class GridRenderer
         CallbackSupport.removeCallbackRenderer(facesContext, uiComponent, this);
 
     }
+
+
+    /**
+     * TODO: refactor see ListRenderer
+     */
+    private String calcRowStyle(UIComponent gridComponent,
+                                int actualRow,
+                                boolean isLastRow)
+    {
+        String style = null;
+        String headerStyle = (String)gridComponent.getAttribute(HEADER_CLASS_ATTR);
+        boolean hasHeaderStyle = headerStyle != null;
+
+        if (actualRow == 0)
+        {
+            style = headerStyle;
+        }
+        if (isLastRow && style == null)
+        {
+            style = (String)gridComponent.getAttribute(FOOTER_CLASS_ATTR);
+        }
+        if (style == null)
+        {
+            String[] rowStyles = getAttributes(gridComponent, ROW_CLASSES_ATTR);
+            if (rowStyles != null && rowStyles.length > 0)
+            {
+                int ref = hasHeaderStyle ? actualRow - 1 : actualRow;
+                int i = (ref % rowStyles.length);
+                style = rowStyles[i];
+            }
+        }
+        return style;
+    }
+
+
+    /**
+     * TODO: refactor see ListRenderer
+     */
+    private String calcColumnStyle(UIComponent gridComponent, int actualColumn)
+    {
+        String[] columnClasses = getAttributes(gridComponent, COLUMN_CLASSES_ATTR);
+
+        if (columnClasses != null && columnClasses.length > 0)
+        {
+            return columnClasses[(actualColumn + 1) % columnClasses.length];
+        }
+
+        return null;
+    }
+
+    private static final String DELIMITER = ",";
+
+    private String[] getAttributes(UIComponent uiComponent, String attributeName)
+    {
+        String[] attr = null;
+        Object obj = uiComponent.getAttribute(attributeName);
+        if (obj instanceof String[])
+        {
+            return (String[])obj;
+        }
+        String rowClasses = (String)obj;
+        if (rowClasses != null && rowClasses.length() > 0)
+        {
+            StringTokenizer tokenizer = new StringTokenizer(rowClasses, DELIMITER);
+
+            attr = new String[tokenizer.countTokens()];
+            for (int i = 0; tokenizer.hasMoreTokens(); i++)
+            {
+                attr[i] = tokenizer.nextToken().trim();
+                i++;
+            }
+        }
+
+        if (attr == null)
+        {
+            attr = new String[0];
+        }
+
+        // TODO: not very nice to change uiComponent's attribute
+        //       refactor see ListRenderer
+        uiComponent.setAttribute(attributeName, attr);
+
+        return attr;
+    }
+
 }
