@@ -153,32 +153,47 @@ public class ApplicationTest extends MyFacesBaseTest
 
         public void run()
         {
-            final Application    application = getApplication();
-            final ValueBinding[] bindings = new ValueBinding[_names.length];
-            for (int i = 0, len = _names.length; i < len; i++)
-            {
-                bindings[i] = application.createValueBinding(_names[i]);
-            }
-
-            final Map bindingsMap = _bindingsMap;
-            synchronized (bindingsMap)
-            {
-                boolean put = !bindingsMap.containsKey(_names[0]);
+            try {
+                // invoke to initialize FacesContext.currentInstance() for this thread
+                new MyFacesBaseTest("dummy") {
+                    public void setUp()
+                        throws Exception
+                    {
+                        super.setUp();
+                    }
+                }.setUp();
+    
+                final Application    application = getApplication();
+                final ValueBinding[] bindings = new ValueBinding[_names.length];
                 for (int i = 0, len = _names.length; i < len; i++)
                 {
-                    String       name = _names[i];
-                    ValueBinding vb = bindings[i];
-                    if (put)
+                    bindings[i] = application.createValueBinding(_names[i]);
+                }
+    
+                final Map bindingsMap = _bindingsMap;
+                synchronized (bindingsMap)
+                {
+                    boolean put = !bindingsMap.containsKey(_names[0]);
+                    for (int i = 0, len = _names.length; i < len; i++)
                     {
-                        bindingsMap.put(name, vb);
-                    }
-                    else
-                    {
-                        assertSame(
-                            "Probably serious mutli-threading issue, please report to MyFaces team",
-                            vb, bindingsMap.get(name));
+                        String       name = _names[i];
+                        ValueBinding vb = bindings[i];
+                        if (put)
+                        {
+                            bindingsMap.put(name, vb);
+                        }
+                        else
+                        {
+                            assertSame(
+                                "Probably serious mutli-threading issue, please report to MyFaces team",
+                                vb, bindingsMap.get(name));
+                        }
                     }
                 }
+            } 
+            catch (Exception e)
+            {
+                assertTrue(false);
             }
         }
     }

@@ -42,19 +42,23 @@ import java.util.Map;
  * @author Anton Koinov
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.22  2004/04/08 05:16:45  dave0000
+ * change to always use JSF PropertyResolver (was using JSP PR sometimes)
+ *
  * Revision 1.21  2004/04/06 06:48:23  manolito
  * IndexedPropertyDescriptor issue
  *
  */
 public class PropertyResolverImpl extends PropertyResolver
 {
-    private static final Log log = LogFactory.getLog(PropertyResolverImpl.class);
+    private static final Log log = 
+        LogFactory.getLog(PropertyResolverImpl.class);
 
-    //~ Static fields/initializers -----------------------------------------------------------------
+    //~ Static fields/initializers ---------------------------------------------
 
     private static final Object[] NO_ARGS = {};
 
-    //~ Public PropertyResolver Methods ------------------------------------------------------------
+    //~ Public PropertyResolver Methods ----------------------------------------
 
     public Object getValue(Object base, Object property)
             throws EvaluationException, PropertyNotFoundException
@@ -72,7 +76,9 @@ public class PropertyResolverImpl extends PropertyResolver
             }
             if (base instanceof UIComponent)
             {
-                for (Iterator children = ((UIComponent) base).getChildren().iterator(); children.hasNext();)
+                for (Iterator children = 
+                    ((UIComponent) base).getChildren().iterator(); 
+                    children.hasNext();)
                 {
                     UIComponent child = (UIComponent) children.next();
 
@@ -90,8 +96,9 @@ public class PropertyResolverImpl extends PropertyResolver
         }
         catch (RuntimeException e)
         {
-            log.error("Exception getting value of property " + property + " of bean " +
-                      base != null ? base.getClass().getName() : "NULL", e);
+            log.error("Exception getting value of property " + property 
+                + " of bean " 
+                + base != null ? base.getClass().getName() : "NULL", e);
             throw e;
         }
     }
@@ -112,12 +119,10 @@ public class PropertyResolverImpl extends PropertyResolver
                 {
                     return Array.get(base, index);
                 }
-
                 if (base instanceof List)
                 {
                     return ((List) base).get(index);
                 }
-
                 if (base instanceof UIComponent)
                 {
                     return ((UIComponent) base).getChildren().get(index);
@@ -129,12 +134,14 @@ public class PropertyResolverImpl extends PropertyResolver
                 return null;
             }
 
-            throw new ReferenceSyntaxException("Must be array or List. Bean: " + base.getClass().getName() + ", index " + index);
+            throw new ReferenceSyntaxException("Must be array or List. Bean: " 
+                + base.getClass().getName() + ", index " + index);
         }
         catch (RuntimeException e)
         {
-            log.error("Exception getting value for index " + index + " of bean " +
-                      base != null ? base.getClass().getName() : "NULL", e);
+            log.error("Exception getting value for index " + index 
+                + " of bean " 
+                + base != null ? base.getClass().getName() : "NULL", e);
             throw e;
         }
     }
@@ -147,12 +154,15 @@ public class PropertyResolverImpl extends PropertyResolver
             // TODO: convert newValue to property type
             if (base == null)
             {
-                throw new PropertyNotFoundException("Null bean, property: " + property);
+                throw new PropertyNotFoundException(
+                    "Null bean, property: " + property);
             }
             if (property == null ||
                 property instanceof String && ((String)property).length() == 0)
             {
-                throw new PropertyNotFoundException("Bean: " + base.getClass().getName() + ", null or empty property property");
+                throw new PropertyNotFoundException("Bean: " 
+                    + base.getClass().getName() 
+                    + ", null or empty property property");
             }
 
             if (base instanceof Map)
@@ -163,7 +173,8 @@ public class PropertyResolverImpl extends PropertyResolver
             }
             if (base instanceof UIComponent)
             {
-                throw new PropertyNotFoundException("Bean must not be UIComponent, property: " + property);
+                throw new PropertyNotFoundException(
+                    "Bean must not be UIComponent, property: " + property);
             }
 
             // If none of the special bean types, then process as normal Bean
@@ -171,8 +182,9 @@ public class PropertyResolverImpl extends PropertyResolver
         }
         catch (RuntimeException e)
         {
-            log.error("Exception setting value of property " + property + " of bean " +
-                      base != null ? base.getClass().getName() : "NULL", e);
+            log.error("Exception setting value of property " + property 
+                + " of bean " 
+                + base != null ? base.getClass().getName() : "NULL", e);
             throw e;
         }
     }
@@ -184,7 +196,8 @@ public class PropertyResolverImpl extends PropertyResolver
         {
             if (base == null)
             {
-                throw new PropertyNotFoundException("Null bean, index: " + index);
+                throw new PropertyNotFoundException(
+                    "Null bean, index: " + index);
             }
 
             // TODO: convert newValue to property type
@@ -196,10 +209,11 @@ public class PropertyResolverImpl extends PropertyResolver
 
                     return;
                 }
-
                 if (base instanceof List)
                 {
-                    // REVISIT: should we try to grow the list, if growable type (e.g., ArrayList, etc.), and if not large enough?
+                    // REVISIT: should we try to grow the list, if growable type 
+                    //          (e.g., ArrayList, etc.), and if not large 
+                    //          enough?
                     ((List) base).set(index, newValue);
 
                     return;
@@ -207,15 +221,17 @@ public class PropertyResolverImpl extends PropertyResolver
             }
             catch (IndexOutOfBoundsException e)
             {
-                throw new PropertyNotFoundException("Bean: " + base.getClass().getName() + ", index " + index, e);
+                throw new PropertyNotFoundException("Bean: " 
+                    + base.getClass().getName() + ", index " + index, e);
             }
 
-            throw new ReferenceSyntaxException("Must be array or List. Bean: " + base.getClass().getName() + ", index " + index);
+            throw new ReferenceSyntaxException("Must be array or List. Bean: " 
+                + base.getClass().getName() + ", index " + index);
         }
         catch (RuntimeException e)
         {
-            log.error("Exception setting value of index " + index + " of bean " +
-                      base != null ? base.getClass().getName() : "NULL", e);
+            log.error("Exception setting value of index " + index + " of bean " 
+                + base != null ? base.getClass().getName() : "NULL", e);
             throw e;
         }
     }
@@ -227,12 +243,15 @@ public class PropertyResolverImpl extends PropertyResolver
         {
             if (base == null)
             {
-                throw new PropertyNotFoundException("Null bean, property: " + property);
+                throw new PropertyNotFoundException(
+                    "Null bean, property: " + property);
             }
             if (property == null ||
                 property instanceof String && ((String)property).length() == 0)
             {
-                throw new PropertyNotFoundException("Bean: " + base.getClass().getName() + ", null or empty property property");
+                throw new PropertyNotFoundException("Bean: " 
+                    + base.getClass().getName() 
+                    + ", null or empty property property");
             }
 
             // Is there any way to determine whether Map.put() will fail?
@@ -246,15 +265,16 @@ public class PropertyResolverImpl extends PropertyResolver
             }
 
             // If none of the special bean types, then process as normal Bean
-            PropertyDescriptor propertyDescriptor = getPropertyDescriptor(base,
-                                                                          property.toString());
+            PropertyDescriptor propertyDescriptor = 
+                getPropertyDescriptor(base, property.toString());
 
-            return propertyDescriptor.getWriteMethod() == null;
+            return propertyDescriptor.getWriteMethod() == null; 
         }
         catch (RuntimeException e)
         {
-            log.error("Exception determining readonly for property " + property + " of bean " +
-                      base != null ? base.getClass().getName() : "NULL", e);
+            log.error("Exception determining readonly for property " + property 
+                + " of bean " 
+                + base != null ? base.getClass().getName() : "NULL", e);
             throw e;
         }
     }
@@ -266,10 +286,11 @@ public class PropertyResolverImpl extends PropertyResolver
         {
             if (base == null)
             {
-                throw new PropertyNotFoundException("Null bean, index: " + index);
+                throw new PropertyNotFoundException(
+                    "Null bean, index: " + index);
             }
 
-            // Is there any way to determine whether List.set() will be declined?
+            // Is there any way to determine whether List.set() will fail?
             if (base instanceof List || base.getClass().isArray())
             {
                 return false;
@@ -279,12 +300,14 @@ public class PropertyResolverImpl extends PropertyResolver
                 return true;
             }
 
-            throw new ReferenceSyntaxException("Must be array or List. Bean: " + base.getClass().getName() + ", index " + index);
+            throw new ReferenceSyntaxException("Must be array or List. Bean: " 
+                + base.getClass().getName() + ", index " + index);
         }
         catch (RuntimeException e)
         {
-            log.error("Exception determining readonly for index " + index + " of bean " +
-                      base != null ? base.getClass().getName() : "NULL", e);
+            log.error("Exception determining readonly for index " + index 
+                + " of bean " 
+                + base != null ? base.getClass().getName() : "NULL", e);
             throw e;
         }
     }
@@ -296,19 +319,23 @@ public class PropertyResolverImpl extends PropertyResolver
         {
             if (base == null)
             {
-                throw new PropertyNotFoundException("Null bean, property: " + property);
+                throw new PropertyNotFoundException(
+                    "Null bean, property: " + property);
             }
             if (property == null ||
                 property instanceof String && ((String)property).length() == 0)
             {
-                throw new PropertyNotFoundException("Bean: " + base.getClass().getName() + ", null or empty property property");
+                throw new PropertyNotFoundException(
+                    "Bean: " + base.getClass().getName() 
+                    + ", null or empty property property");
             }
 
             if (base instanceof Map)
             {
                 Object value = ((Map) base).get(property);
 
-                return (value == null) ? Object.class : value.getClass(); // REVISIT: when generics are imlemented in JVM 1.5
+                // REVISIT: when generics are imlemented in JVM 1.5
+                return (value == null) ? Object.class : value.getClass();
             }
             if (base instanceof UIComponent)
             {
@@ -316,15 +343,16 @@ public class PropertyResolverImpl extends PropertyResolver
             }
 
             // If none of the special bean types, then process as normal Bean
-            PropertyDescriptor propertyDescriptor = getPropertyDescriptor(base,
-                                                                          property.toString());
+            PropertyDescriptor propertyDescriptor = 
+                getPropertyDescriptor(base, property.toString());
 
             return propertyDescriptor.getPropertyType();
         }
         catch (RuntimeException e)
         {
-            log.error("Exception determining type of property " + property + " of bean " +
-                      base != null ? base.getClass().getName() : "NULL", e);
+            log.error("Exception determining type of property " + property 
+                + " of bean " 
+                + base != null ? base.getClass().getName() : "NULL", e);
             throw e;
         }
     }
@@ -336,7 +364,8 @@ public class PropertyResolverImpl extends PropertyResolver
         {
             if (base == null)
             {
-                throw new PropertyNotFoundException("Null bean, index: " + index);
+                throw new PropertyNotFoundException(
+                    "Null bean, index: " + index);
             }
 
             if (base.getClass().isArray())
@@ -348,15 +377,20 @@ public class PropertyResolverImpl extends PropertyResolver
             {
                 if (base instanceof List)
                 {
-                    // REVISIT: does it make sense to do this or simply return Object.class? What if the new value is not of the old value's class?
+                    // REVISIT: does it make sense to do this or simply return 
+                    //          Object.class? What if the new value is not of 
+                    //          the old value's class?
                     Object value = ((List) base).get(index);
 
-                    return (value != null) ? value.getClass() : Object.class; // until generics are implemented in JVM 1.5
+                    // REVISIT: when generics are implemented in JVM 1.5
+                    return (value != null) ? value.getClass() : Object.class;
                 }
             }
             catch (Throwable t)
             {
-                throw new PropertyNotFoundException("Bean: " + base.getClass().getName() + ", index: " + index, t);
+                throw new PropertyNotFoundException(
+                    "Bean: " + base.getClass().getName() 
+                    + ", index: " + index, t);
             }
 
             if (base instanceof UIComponent)
@@ -364,27 +398,31 @@ public class PropertyResolverImpl extends PropertyResolver
                 return UIComponent.class;
             }
 
-            throw new ReferenceSyntaxException("Must be array or List. Bean: " + base.getClass().getName() + ", index " + index);
+            throw new ReferenceSyntaxException("Must be array or List. Bean: " 
+                + base.getClass().getName() + ", index " + index);
         }
         catch (RuntimeException e)
         {
-            log.error("Exception determining type for index " + index + " of bean " +
-                      base != null ? base.getClass().getName() : "NULL", e);
+            log.error("Exception determining type for index " + index 
+                + " of bean " 
+                + base != null ? base.getClass().getName() : "NULL", e);
             throw e;
         }
     }
 
 
-    //~ Internal Helper Methods ------------------------------------------------------------
+    //~ Internal Helper Methods ------------------------------------------------
 
     public static void setProperty(Object base, String name, Object newValue)
     {
-        PropertyDescriptor propertyDescriptor = getPropertyDescriptor(base, name);
+        PropertyDescriptor propertyDescriptor = 
+            getPropertyDescriptor(base, name);
 
         Method m = propertyDescriptor.getWriteMethod();
         if (m == null)
         {
-            throw new PropertyNotFoundException("Bean: " + base.getClass().getName() + ", property: " + name);
+            throw new PropertyNotFoundException(
+                "Bean: " + base.getClass().getName() + ", property: " + name);
         }
 
         try
@@ -393,18 +431,21 @@ public class PropertyResolverImpl extends PropertyResolver
         }
         catch (Throwable t)
         {
-            throw new EvaluationException("Bean: " + base.getClass().getName() + ", property: " + name, t);
+            throw new EvaluationException("Bean: " 
+                + base.getClass().getName() + ", property: " + name, t);
         }
     }
 
     public static Object getProperty(Object base, String name)
     {
-        PropertyDescriptor propertyDescriptor = getPropertyDescriptor(base, name);
+        PropertyDescriptor propertyDescriptor = 
+            getPropertyDescriptor(base, name);
 
         Method m = propertyDescriptor.getReadMethod();
         if (m == null)
         {
-            throw new PropertyNotFoundException("Bean: " + base.getClass().getName() + ", property: " + name);
+            throw new PropertyNotFoundException(
+                "Bean: " + base.getClass().getName() + ", property: " + name);
         }
 
         try
@@ -413,50 +454,56 @@ public class PropertyResolverImpl extends PropertyResolver
         }
         catch (Throwable t)
         {
-            throw new EvaluationException("Bean: " + base.getClass().getName() + ", property: " + name, t);
+            throw new EvaluationException("Bean: " 
+                + base.getClass().getName() + ", property: " + name, t);
         }
     }
 
-    public static PropertyDescriptor getPropertyDescriptor(Object base, String name)
+    public static PropertyDescriptor getPropertyDescriptor(
+        Object base, String name)
     {
         PropertyDescriptor propertyDescriptor;
 
         try
         {
             propertyDescriptor =
-                getPropertyDescriptor(Introspector.getBeanInfo(base.getClass()), name);
+                getPropertyDescriptor(
+                    Introspector.getBeanInfo(base.getClass()), name);
         }
         catch (IntrospectionException e)
         {
-            throw new PropertyNotFoundException("Bean: " + base.getClass().getName() + ", property: " + name, e);
+            throw new PropertyNotFoundException("Bean: " 
+                + base.getClass().getName() + ", property: " + name, e);
         }
 
         return propertyDescriptor;
     }
 
-    public static PropertyDescriptor getPropertyDescriptor(BeanInfo beanInfo, String propertyName)
+    public static PropertyDescriptor getPropertyDescriptor(
+        BeanInfo beanInfo, String propertyName)
     {
-        PropertyDescriptor[] propDescriptors = beanInfo.getPropertyDescriptors();
-
-        // TODO: cache this in classLoader safe way
-        // binary search
-        for (int l = 0, h = propDescriptors.length - 1, i = h >> 1; l <= h; i = (l + h) >> 1)
+        PropertyDescriptor[] propDescriptors = 
+            beanInfo.getPropertyDescriptors();
+        
+        if (propDescriptors != null)
         {
-            int compare = propDescriptors[i].getName().compareTo(propertyName);
-            if (compare > 0)
+            // TODO: cache this in classLoader safe way
+            for (int i = 0, len = propDescriptors.length; i < len; i++)
             {
-                h = i - 1;
-            }
-            else if (compare < 0)
-            {
-                l = i + 1;
-            }
-            else
-            {
-                return propDescriptors[i];
+                if (propDescriptors[i].getName().equals(propertyName))
+                    return propDescriptors[i];
             }
         }
 
-        throw new PropertyNotFoundException("Bean: " + beanInfo.getBeanDescriptor().getBeanClass().getName() + ", property: " + propertyName);
+        throw new PropertyNotFoundException("Bean: " 
+            + beanInfo.getBeanDescriptor().getBeanClass().getName() 
+            + ", property: " + propertyName);
+    }
+    
+    public static void main(String[] args)
+    {
+        Object base = new IndexedProperty();
+        PropertyResolverImpl resolver = new PropertyResolverImpl();
+        System.out.println(resolver.getValue(base, "nonindexed"));
     }
 }
