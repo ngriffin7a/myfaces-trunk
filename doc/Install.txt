@@ -21,10 +21,7 @@ HOWTO - Use MyFaces in your own WebApp
   the WEB-INF/lib dir of your (J2EE conform) Webapplication.
 - Copy the lib/myfaces.jar file to the WEB-INF/lib dir of your Webapplication.
 - Copy the lib/cos.jar file to the WEB-INF/lib dir of your Webapplication.
-- Copy the doc/faces.properties file to your WEB-INF/classes directory
-- Copy the doc/faces-config.xml file to your WEB-INF directory
-- Copy the doc/message_resources_en.xml file to your WEB-INF directory
-- Copy the doc/message_resources_de.xml file to your WEB-INF directory (if you need german messages)
+- Copy the conf/faces.properties file to your WEB-INF/classes directory
 - Configure your webapp's web.xml file (see web.xml.sample)
 - Add the line
     <%@ taglib uri="http://java.sun.com/jsf/html" prefix="h"%>

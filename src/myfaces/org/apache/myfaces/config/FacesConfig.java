@@ -315,7 +315,7 @@ public class FacesConfig
         _navigationRuleConfigList.add(navigationRuleConfig);
     }
 
-    public List getNavigationCaseConfigList()
+    public List getNavigationRuleConfigList()
     {
         return _navigationRuleConfigList == null
                 ? Collections.EMPTY_LIST

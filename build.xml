@@ -74,9 +74,12 @@
                         includes="*.tld"
                         prefix="META-INF/"/>
             <!-- faces-config.xml -->
-            <!--zipfileset dir="${project.dir}/doc"
+            <zipfileset dir="${project.dir}/conf"
                         includes="faces-config.xml"
-                        prefix="META-INF/"/-->
+                        prefix="META-INF/"/>
+            <zipfileset dir="${project.dir}/conf"
+                        includes="message_resources_*.xml"
+                        prefix="META-INF/"/>
         </jar>
 
         <!-- remove temporary files -->
