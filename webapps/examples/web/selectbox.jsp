@@ -67,24 +67,24 @@ managed beans used:
 
                         <h:outputLabel for="selone_lb" value="#{example_messages['label_cars']}" />
                         <h:selectOneListbox id="selone_lb" size="3" value="#{carconf.car}"
-                                            validator="#{carconf.validateCar}" >
+                                            validator="#{carconf.validateCar}" styleClass="selectOneListbox">
                             <f:selectItems id="selone_lb_cars" value="#{carconf.cars}" />
                         </h:selectOneListbox>
 
                         <h:outputLabel for="selone_menu_colors" value="#{example_messages['label_colors']}" />
-                        <h:selectOneMenu id="selone_menu_colors" value="#{carconf.color}" >
+                        <h:selectOneMenu id="selone_menu_colors" value="#{carconf.color}" styleClass="selectOneMenu">
                             <f:selectItem itemValue="" itemLabel="#{example_messages['empty_selitem']}" />
                             <f:selectItems value="#{carconf.colors}" />
                         </h:selectOneMenu>
 
                         <h:outputLabel for="selone_menu_extras" value="#{example_messages['label_extras']}" />
-                        <h:selectManyCheckbox id="selone_menu_extras" value="#{carconf.extras}" layout="pageDirection" >
+                        <h:selectManyCheckbox id="selone_menu_extras" value="#{carconf.extras}" layout="pageDirection" styleClass="selectManyCheckbox">
                             <f:selectItems value="#{carconf.extrasList}" />
                         </h:selectManyCheckbox>
 
                         <f:verbatim>&nbsp;</f:verbatim>
                         <h:panelGroup >
-                            <h:selectOneRadio id="r1" value="#{carconf.discount}" layout="pageDirection" >
+                            <h:selectOneRadio id="r1" value="#{carconf.discount}" layout="pageDirection"  styleClass="selectOneRadio">
                                 <f:selectItem itemValue="1" itemLabel="#{example_messages['discount_0']}" />
                                 <f:selectItem itemValue="2" itemLabel="#{example_messages['discount_1']}"  />
                                 <f:selectItem itemValue="3" itemLabel="#{example_messages['discount_2']}"  />
@@ -100,7 +100,7 @@ managed beans used:
                                    if layout="spread" selectitems wont get rendered
                                    instead x:radio components are getting rendered
                             */%>
-                            <x:selectOneRadio id="discount2" value="#{carconf.discount2}" layout="spread" >
+                            <x:selectOneRadio id="discount2" value="#{carconf.discount2}" layout="spread" styleClass="selectOneRadio">
                                 <f:selectItem itemValue="0" itemLabel="#{example_messages['discount_2_0']}" />
                                 <f:selectItem itemValue="1" itemLabel="#{example_messages['discount_2_1']}" />
                                 <f:selectItem itemValue="2" itemLabel="#{example_messages['discount_2_2']}" />

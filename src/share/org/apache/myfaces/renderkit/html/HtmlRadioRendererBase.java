@@ -44,6 +44,9 @@ import java.util.List;
  * @author Thomas Spiegl
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.4  2004/05/26 11:10:12  o_rossmueller
+ * fix #959926: styleClass support for selectOneRadio, selectOneList, selectManyList
+ *
  * Revision 1.3  2004/05/18 14:31:39  manolito
  * user role support completely moved to components source tree
  *
@@ -88,6 +91,14 @@ public class HtmlRadioRendererBase
         }
 
         ResponseWriter writer = facesContext.getResponseWriter();
+        String styleClass = getStyleClass(selectOne);
+
+        if (styleClass != null && styleClass.length() > 0) {
+            writer.startElement(HTML.SPAN_ELEM, selectOne);
+            writer.writeAttribute(HTML.CLASS_ATTR, styleClass, null);
+        }
+
+
         writer.startElement(HTML.TABLE_ELEM, selectOne);
         if (!pageDirectionLayout) writer.startElement(HTML.TR_ELEM, selectOne);
 
@@ -134,6 +145,9 @@ public class HtmlRadioRendererBase
 
         if (!pageDirectionLayout) writer.endElement(HTML.TR_ELEM);
         writer.endElement(HTML.TABLE_ELEM);
+       if (styleClass != null && styleClass.length() > 0) {
+            writer.endElement(HTML.SPAN_ELEM);
+        }
     }
 
 
@@ -148,6 +162,19 @@ public class HtmlRadioRendererBase
             return (String)selectOne.getAttributes().get(JSFAttr.LAYOUT_ATTR);
         }
     }
+
+
+    protected String getStyleClass(UISelectOne selectOne)
+     {
+         if (selectOne instanceof HtmlSelectOneRadio)
+         {
+             return ((HtmlSelectOneRadio)selectOne).getStyleClass();
+         }
+         else
+         {
+             return (String)selectOne.getAttributes().get(JSFAttr.STYLE_CLASS_ATTR);
+         }
+     }
 
 
     protected void renderRadio(FacesContext facesContext,

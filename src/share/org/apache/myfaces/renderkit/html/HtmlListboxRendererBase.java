@@ -27,6 +27,7 @@ import javax.faces.component.UISelectOne;
 import javax.faces.component.html.HtmlSelectManyListbox;
 import javax.faces.component.html.HtmlSelectOneListbox;
 import javax.faces.context.FacesContext;
+import javax.faces.context.ResponseWriter;
 import javax.faces.convert.ConverterException;
 import java.io.IOException;
 
@@ -36,6 +37,9 @@ import java.io.IOException;
  * @author Anton Koinov
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.2  2004/05/26 11:10:12  o_rossmueller
+ * fix #959926: styleClass support for selectOneRadio, selectOneList, selectManyList
+ *
  * Revision 1.1  2004/05/18 14:31:39  manolito
  * user role support completely moved to components source tree
  *
@@ -47,6 +51,7 @@ public class HtmlListboxRendererBase
             throws IOException
     {
         RendererUtils.checkParamValidity(facesContext, uiComponent, null);
+        String styleClass;
 
         if (uiComponent instanceof UISelectMany)
         {
@@ -54,16 +59,28 @@ public class HtmlListboxRendererBase
             if (uiComponent instanceof HtmlSelectManyListbox)
             {
                 size = ((HtmlSelectManyListbox)uiComponent).getSize();
+                styleClass = ((HtmlSelectManyListbox)uiComponent).getStyleClass();
             }
             else
             {
                 Integer i = (Integer)uiComponent.getAttributes().get(JSFAttr.SIZE_ATTR);
                 size = i != null ? i.intValue() : 0;
+                styleClass = (String)uiComponent.getAttributes().get(JSFAttr.STYLE_CLASS_ATTR);
+            }
+            ResponseWriter writer = facesContext.getResponseWriter();
+
+            if (styleClass != null && styleClass.length() > 0) {
+
+                writer.startElement(HTML.SPAN_ELEM, uiComponent);
+                writer.writeAttribute(HTML.CLASS_ATTR, styleClass, null);
             }
             HtmlRendererUtils.renderListbox(facesContext,
                                             (UISelectMany)uiComponent,
                                             isDisabled(facesContext, uiComponent),
                                             size);
+            if (styleClass != null && styleClass.length() > 0) {
+                writer.endElement(HTML.SPAN_ELEM);
+            }
         }
         else if (uiComponent instanceof HtmlSelectOneListbox)
         {
@@ -71,16 +88,28 @@ public class HtmlListboxRendererBase
             if (uiComponent instanceof HtmlSelectOneListbox)
             {
                 size = ((HtmlSelectOneListbox)uiComponent).getSize();
+                styleClass = ((HtmlSelectOneListbox)uiComponent).getStyleClass();
             }
             else
             {
                 Integer i = (Integer)uiComponent.getAttributes().get(JSFAttr.SIZE_ATTR);
                 size = i != null ? i.intValue() : 0;
+                styleClass = (String)uiComponent.getAttributes().get(JSFAttr.STYLE_CLASS_ATTR);
+            }
+            ResponseWriter writer = facesContext.getResponseWriter();
+
+            if (styleClass != null && styleClass.length() > 0) {
+
+                writer.startElement(HTML.SPAN_ELEM, uiComponent);
+                writer.writeAttribute(HTML.CLASS_ATTR, styleClass, null);
             }
             HtmlRendererUtils.renderListbox(facesContext,
                                             (UISelectOne)uiComponent,
                                             isDisabled(facesContext, uiComponent),
                                             size);
+            if (styleClass != null && styleClass.length() > 0) {
+                writer.endElement(HTML.SPAN_ELEM);
+            }
         }
         else
         {
