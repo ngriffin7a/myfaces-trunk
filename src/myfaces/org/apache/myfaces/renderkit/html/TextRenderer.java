@@ -71,7 +71,11 @@ public class TextRenderer
         addAttributeDescriptors(UIInput.TYPE, TLD_HTML_URI, "input_text", HTML_INPUT_ATTRIBUTES);
         addAttributeDescriptors(UIInput.TYPE, TLD_HTML_URI, "input_text", INPUT_TEXT_ATTRIBUTES);
         addAttributeDescriptors(UIInput.TYPE, TLD_HTML_URI, "input_text", USER_ROLE_ATTRIBUTES);
-        //TODO: output
+
+        addAttributeDescriptors(UIOutput.TYPE, TLD_HTML_URI, "output_text", HTML_UNIVERSAL_ATTRIBUTES);
+        addAttributeDescriptors(UIOutput.TYPE, TLD_HTML_URI, "output_text", HTML_EVENT_HANDLER_ATTRIBUTES);
+        addAttributeDescriptors(UIOutput.TYPE, TLD_HTML_URI, "output_text", OUTPUT_TEXT_ATTRIBUTES);
+        addAttributeDescriptors(UIOutput.TYPE, TLD_HTML_URI, "output_text", USER_ROLE_ATTRIBUTES);
     }
 
 

@@ -18,20 +18,31 @@
  */
 package net.sourceforge.myfaces.renderkit.attr.ext;
 
-import net.sourceforge.myfaces.renderkit.attr.TextRendererAttributes;
+import net.sourceforge.myfaces.renderkit.attr.CommonRendererAttributes;
 
 /**
  * Constant definitions for the specified render dependent attributes of the
- * "Text" renderer type.
+ * "FileUpload" renderer type.
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
 public interface FileUploadRendererAttributes
-    extends TextRendererAttributes
+    extends CommonRendererAttributes
 {
     public static final String ACCEPT_ATTR = "accept";
-    public static final String[] COMMON_FILE_UPLOAD_ATTRIBUTES =
+    public static final String MAX_LENGTH_ATTR = "maxlength";
+
+    public static final String[] FILE_UPLOAD_ATTRIBUTES =
     {
-        ACCEPT_ATTR
+        INPUT_CLASS_ATTR,
+        ACCEPT_ATTR,
+        MAX_LENGTH_ATTR
     };
+
+    public static final String[] HTML_INPUT_FILE_UPLOAD_ATTRIBUTES =
+    {
+        ACCEPT_ATTR,
+        MAX_LENGTH_ATTR
+    };
+
 }

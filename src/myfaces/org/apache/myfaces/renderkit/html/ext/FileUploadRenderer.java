@@ -66,6 +66,16 @@ public class FileUploadRenderer
         return uicomponent instanceof UIFileUpload;
     }
 
+    protected void initAttributeDescriptors()
+    {
+        addAttributeDescriptors(UIFileUpload.TYPE, TLD_EXT_URI, "file_upload", HTML_UNIVERSAL_ATTRIBUTES);
+        addAttributeDescriptors(UIFileUpload.TYPE, TLD_EXT_URI, "file_upload", HTML_EVENT_HANDLER_ATTRIBUTES);
+        addAttributeDescriptors(UIFileUpload.TYPE, TLD_EXT_URI, "file_upload", HTML_INPUT_ATTRIBUTES);
+        addAttributeDescriptors(UIFileUpload.TYPE, TLD_EXT_URI, "file_upload", FILE_UPLOAD_ATTRIBUTES);
+        addAttributeDescriptors(UIFileUpload.TYPE, TLD_EXT_URI, "file_upload", USER_ROLE_ATTRIBUTES);
+    }
+
+
 
     public void decode(FacesContext facescontext, UIComponent uiComponent)
         throws IOException
@@ -134,19 +144,12 @@ public class FileUploadRenderer
             writer.write(HTMLEncoder.encode(value.getFilePath(), false, false));
             writer.write("\"");
         }
-        String css = (String)uiComponent.getAttribute(INPUT_CLASS_ATTR);
-        if (css != null)
-        {
-            writer.write(" class=\"");
-            writer.write(css);
-            writer.write("\"");
-        }
 
-        //TODO: CommonAttributes.renderCssClass(writer, uiComponent, FILE_UPLOAD_CLASS_ATTR);
+        CommonAttributes.renderCssClass(writer, uiComponent,INPUT_CLASS_ATTR);
         CommonAttributes.renderHTMLAttributes(writer, uiComponent, HTML_UNIVERSAL_ATTRIBUTES);
         CommonAttributes.renderHTMLAttributes(writer, uiComponent, HTML_EVENT_HANDLER_ATTRIBUTES);
         CommonAttributes.renderHTMLAttributes(writer, uiComponent, HTML_INPUT_ATTRIBUTES);
-        //TODO: HTML file upload input
+        CommonAttributes.renderHTMLAttributes(writer, uiComponent, HTML_INPUT_FILE_UPLOAD_ATTRIBUTES);
 
         writer.write(">");
     }

@@ -19,19 +19,22 @@
 package net.sourceforge.myfaces.taglib.ext;
 
 import net.sourceforge.myfaces.component.ext.UIFileUpload;
-import net.sourceforge.myfaces.renderkit.html.TextRenderer;
+import net.sourceforge.myfaces.renderkit.attr.HTMLInputAttributes;
+import net.sourceforge.myfaces.renderkit.attr.ext.FileUploadRendererAttributes;
 import net.sourceforge.myfaces.renderkit.html.ext.FileUploadRenderer;
 import net.sourceforge.myfaces.taglib.MyFacesTag;
 
 import javax.faces.component.UIComponent;
 
 /**
- * DOCUMENT ME!
+ * see "file_upload" tag in myfaces_ext.tld
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
 public class FileUploadTag
-        extends MyFacesTag
+    extends MyFacesTag
+    implements HTMLInputAttributes,
+               FileUploadRendererAttributes
 {
     public UIComponent createComponent()
     {
@@ -43,86 +46,128 @@ public class FileUploadTag
         return FileUploadRenderer.TYPE;
     }
 
-    public void setInputClass(String value)
+    // UIComponent attributes --> already implemented in MyFacesTag
+
+    // UIInput attributes
+
+    public void setValue(Object v)
     {
-        setRendererAttribute(TextRenderer.INPUT_CLASS_ATTR, value);
+        super.setValue(v);
     }
+
+    public void setInputClass(String v)
+    {
+        setRendererAttribute(INPUT_CLASS_ATTR, v);
+    }
+
+    // HTML universal attributes --> already implemented in MyFacesTag
+
+    // HTML event handler attributes --> already implemented in MyFacesTag
+
+    // HTML input attributes
 
     public void setAccesskey(String value)
     {
-        setRendererAttribute(TextRenderer.ACCESSKEY_ATTR, value);
+        setRendererAttribute(ACCESSKEY_ATTR, value);
     }
 
     public void setAlign(String value)
     {
-        setRendererAttribute(TextRenderer.ALIGN_ATTR, value);
+        setRendererAttribute(ALIGN_ATTR, value);
     }
 
     public void setAlt(String value)
     {
-        setRendererAttribute(TextRenderer.ALT_ATTR, value);
+        setRendererAttribute(ALT_ATTR, value);
     }
 
     public void setDatafld(String value)
     {
-        setRendererAttribute(TextRenderer.DATAFLD_ATTR, value);
+        setRendererAttribute(DATAFLD_ATTR, value);
     }
 
     public void setDatasrc(String value)
     {
-        setRendererAttribute(TextRenderer.DATASRC_ATTR, value);
+        setRendererAttribute(DATASRC_ATTR, value);
     }
 
     public void setDataformatas(String value)
     {
-        setRendererAttribute(TextRenderer.DATAFORMATAS_ATTR, value);
+        setRendererAttribute(DATAFORMATAS_ATTR, value);
     }
 
-    public void setMaxlength(String value)
+    public void setDisabled(boolean value)
     {
-        setRendererAttribute(TextRenderer.MAX_LENGTH_ATTR, value);
+        setRendererAttribute(DISABLED_ATTR, value);
     }
 
     public void setOnblur(String value)
     {
-        setRendererAttribute(TextRenderer.ONBLUR_ATTR, value);
+        setRendererAttribute(ONBLUR_ATTR, value);
     }
 
     public void setOnchange(String value)
     {
-        setRendererAttribute(TextRenderer.ONCHANGE_ATTR, value);
+        setRendererAttribute(ONCHANGE_ATTR, value);
     }
 
     public void setOnfocus(String value)
     {
-        setRendererAttribute(TextRenderer.ONFOCUS_ATTR, value);
+        setRendererAttribute(ONFOCUS_ATTR, value);
     }
 
     public void setOnselect(String value)
     {
-        setRendererAttribute(TextRenderer.ONSELECT_ATTR, value);
+        setRendererAttribute(ONSELECT_ATTR, value);
     }
 
-    public void setReadonly(String value)
+    public void setReadonly(boolean value)
     {
-        setRendererAttribute(TextRenderer.READONLY_ATTR, value);
+        setRendererAttribute(READONLY_ATTR, value);
+    }
+
+    public void setReadonly(Boolean value)
+    {
+        setRendererAttribute(READONLY_ATTR, value);
     }
 
     public void setSize(String value)
     {
-        setRendererAttribute(TextRenderer.SIZE_ATTR, value);
+        setRendererAttribute(SIZE_ATTR, value);
     }
 
-    public void setTabindex(String value)
+    public void setTabindex(int value)
     {
-        setRendererAttribute(TextRenderer.TABINDEX_ATTR, value);
+        setRendererAttribute(TABINDEX_ATTR, value);
+    }
+
+    public void setTabindex(Integer value)
+    {
+        setRendererAttribute(TABINDEX_ATTR, value);
     }
 
 
+    // Text Renderer attributes
 
     public void setAccept(String value)
     {
-        setRendererAttribute(FileUploadRenderer.ACCEPT_ATTR, value);
+        setRendererAttribute(ACCEPT_ATTR, value);
     }
+
+    public void setMaxlength(int v)
+    {
+        setRendererAttribute(MAX_LENGTH_ATTR, v);
+    }
+
+    public void setMaxlength(Integer v)
+    {
+        setRendererAttribute(MAX_LENGTH_ATTR, v);
+    }
+
+
+
+    // converter attribute --> already implemented in MyFacesTag
+
+    // user role attributes --> already implemented in MyFacesTag
 
 }

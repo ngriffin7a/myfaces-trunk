@@ -54,6 +54,11 @@ public class SortHeaderTag
                               b ? Boolean.TRUE : Boolean.FALSE);
     }
 
+    public void setAscending(Boolean b)
+    {
+        setComponentProperty(UISortHeader.ASCENDING_ATTR, b);
+    }
+
     public void setColumnReference(String value)
     {
         setModelReference(value);
