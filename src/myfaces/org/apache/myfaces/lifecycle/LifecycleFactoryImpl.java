@@ -1,4 +1,4 @@
-/**
+/*
  * MyFaces - the free JSF implementation
  * Copyright (C) 2003  The MyFaces Team (http://myfaces.sourceforge.net)
  *
@@ -26,15 +26,14 @@ import java.util.Iterator;
 import java.util.Map;
 
 /**
- * Spec 1.0 EA - JSF.6.5 LifecycleFactory
  * @author Manfred Geiler (latest modification by $Author$)
+ * @author Anton Koinov
  * @version $Revision$ $Date$
  */
 public class LifecycleFactoryImpl
         extends LifecycleFactory
 {
-    private static final Object _lock = new Object();
-    private static Map _lifecycles = new HashMap();
+    private static final Map _lifecycles = new HashMap();
 
     public LifecycleFactoryImpl()
     {
@@ -43,7 +42,7 @@ public class LifecycleFactoryImpl
 
     public void addLifecycle(String id, Lifecycle lifecycle)
     {
-        synchronized (_lock)
+        synchronized (_lifecycles)
         {
             if (_lifecycles.get(id) != null)
             {
@@ -56,7 +55,7 @@ public class LifecycleFactoryImpl
     public Lifecycle getLifecycle(String id)
             throws FacesException
     {
-        synchronized (_lock)
+        synchronized (_lifecycles)
         {
             Lifecycle lifecycle = (Lifecycle)_lifecycles.get(id);
             if (lifecycle == null)
