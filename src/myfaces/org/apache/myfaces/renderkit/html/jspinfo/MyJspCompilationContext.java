@@ -25,7 +25,10 @@ import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.compiler.Compiler;
 import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.compiler.JspReader;
 import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.compiler.ServletWriter;
 import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.compiler.TldLocationsCache;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
+import javax.faces.context.ExternalContext;
 import javax.servlet.ServletContext;
 import java.io.InputStream;
 import java.net.MalformedURLException;
@@ -39,13 +42,15 @@ import java.net.URL;
 public class MyJspCompilationContext
         implements JspCompilationContext
 {
-    private ServletContext _servletContext;
+    private static final Log log = LogFactory.getLog(MyJspCompilationContext.class);
+
+    private ExternalContext _externalContext;
     private TldLocationsCache _tldLocationsCache;
 
-    public MyJspCompilationContext(ServletContext servletContext)
+    public MyJspCompilationContext(ExternalContext context)
     {
-        _servletContext = servletContext;
-        _tldLocationsCache = new TldLocationsCache(servletContext);
+        _externalContext = context;
+        _tldLocationsCache = new TldLocationsCache(context);
     }
 
     public Compiler createCompiler() throws JasperException
@@ -95,17 +100,27 @@ public class MyJspCompilationContext
 
     public String getRealPath(String path)
     {
-        return _servletContext.getRealPath(path);
+        if (!(_externalContext.getContext() instanceof ServletContext))
+        {
+            log.error("ServletContext expected");
+        }
+        ServletContext servletContext = (ServletContext)_externalContext.getContext();
+        return servletContext.getRealPath(path);
     }
 
     public URL getResource(String res) throws MalformedURLException
     {
-        return _servletContext.getResource(res);
+        if (!(_externalContext.getContext() instanceof ServletContext))
+        {
+            log.error("ServletContext expected");
+        }
+        ServletContext servletContext = (ServletContext)_externalContext.getContext();
+        return servletContext.getResource(res);
     }
 
     public InputStream getResourceAsStream(String res)
     {
-        return _servletContext.getResourceAsStream(res);
+        return _externalContext.getResourceAsStream(res);
     }
 
     public String getServletClassName()

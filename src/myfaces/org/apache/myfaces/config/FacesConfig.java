@@ -18,13 +18,6 @@
  */
 package net.sourceforge.myfaces.config;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -35,6 +28,7 @@ import javax.faces.convert.Converter;
 import javax.faces.render.RenderKit;
 import javax.faces.render.RenderKitFactory;
 import javax.faces.validator.Validator;
+import java.util.*;
 
 
 /**
@@ -333,10 +327,22 @@ public class FacesConfig
         configureRenderKits();
     }
 
-
     public void configureFactoryFinder()
     {
-        //TODO
+        FactoryConfig config = getFactoryConfig();
+        if (config == null)
+        {
+            log.error("Could not find factory configuration in faces-config");
+            throw new NullPointerException("Could not find factory configuration in faces-config");
+        }
+        FactoryFinder.setFactory(FactoryFinder.APPLICATION_FACTORY,
+                                 getFactoryConfig().getApplicationFactory());
+        FactoryFinder.setFactory(FactoryFinder.FACES_CONTEXT_FACTORY,
+                                 getFactoryConfig().getFacesContextFactory());
+        FactoryFinder.setFactory(FactoryFinder.LIFECYCLE_FACTORY,
+                                 getFactoryConfig().getLifecycleFactory());
+        FactoryFinder.setFactory(FactoryFinder.RENDER_KIT_FACTORY,
+                                 getFactoryConfig().getRenderKitFactory());
     }
 
     /**
@@ -388,7 +394,14 @@ public class FacesConfig
     
     public void setFactoryConfig(FactoryConfig factoryConfig)
     {
-        _factoryConfig = factoryConfig;
+        if (_factoryConfig == null)
+        {
+            _factoryConfig = factoryConfig;
+        }
+        else
+        {
+            _factoryConfig.update(factoryConfig);
+        }
     }
     
     public LifecycleConfig getLifecycleConfig()

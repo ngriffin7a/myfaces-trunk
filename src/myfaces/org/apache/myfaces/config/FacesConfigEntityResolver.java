@@ -23,8 +23,7 @@ import org.apache.commons.logging.LogFactory;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
 
-import javax.servlet.ServletContext;
-
+import javax.faces.context.ExternalContext;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.JarURLConnection;
@@ -35,6 +34,7 @@ import java.util.jar.JarFile;
 /**
  * DOCUMENT ME!
  * @author Manfred Geiler (latest modification by $Author$)
+ * @author Thomas Spiegl
  * @version $Revision$ $Date$
  */
 public class FacesConfigEntityResolver
@@ -42,12 +42,12 @@ public class FacesConfigEntityResolver
 {
     private static final Log log = LogFactory.getLog(FacesConfigEntityResolver.class);
 
-    private ServletContext _servletContext = null;
+    private ExternalContext _externalContext = null;
     private JarFile _jarFile = null;
 
-    public FacesConfigEntityResolver(ServletContext servletContext)
+    public FacesConfigEntityResolver(ExternalContext context)
     {
-        _servletContext = servletContext;
+        _externalContext = context;
     }
 
     public FacesConfigEntityResolver(JarFile jarFile)
@@ -78,7 +78,7 @@ public class FacesConfigEntityResolver
         }
         else
         {
-            if (_servletContext == null)
+            if (_externalContext == null)
             {
                 log.fatal("No servletContext !?");
             }
@@ -87,7 +87,7 @@ public class FacesConfigEntityResolver
                 systemId = systemId.substring(7); // remove file://
             }
                 
-            stream = _servletContext.getResourceAsStream(systemId);
+            stream = _externalContext.getResourceAsStream(systemId);
         }
 
         InputSource is = new InputSource(stream);

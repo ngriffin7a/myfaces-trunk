@@ -38,7 +38,7 @@ import javax.faces.component.UICommand;
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIViewRoot;
 import javax.faces.context.FacesContext;
-import javax.faces.context.ExternalContext;
+import javax.faces.context.ApplicationMap;
 import javax.faces.event.*;
 import javax.faces.lifecycle.Lifecycle;
 import javax.faces.render.RenderKit;

@@ -43,29 +43,53 @@ public class FactoryConfig
 
     public void setApplicationFactory(String className)
     {
-        setFactory(FactoryFinder.APPLICATION_FACTORY, className);
+        if (className == null) return;
+        _applicationFactory = className;
     }
 
     public void setFacesContextFactory(String className)
     {
-        setFactory(FactoryFinder.APPLICATION_FACTORY, className);
+        if (className == null) return;
+        _facesContextFactory = className;
     }
 
     public void setLifecycleFactory(String className)
     {
-        setFactory(FactoryFinder.APPLICATION_FACTORY, className);
+        if (className == null) return;
+        _lifecycleFactory = className;
     }
 
     public void setRenderKitFactory(String className)
     {
-        setFactory(FactoryFinder.APPLICATION_FACTORY, className);
+        if (className == null) return;
+        _renderKitFactory = className;
     }
 
-    private void setFactory(String factoryName, String className)
+    public String getApplicationFactory()
     {
-        if (className != null)
-        {
-            FactoryFinder.setFactory(factoryName, className);
-        }
+        return _applicationFactory;
+    }
+
+    public String getFacesContextFactory()
+    {
+        return _facesContextFactory;
+    }
+
+    public String getLifecycleFactory()
+    {
+        return _lifecycleFactory;
+    }
+
+    public String getRenderKitFactory()
+    {
+        return _renderKitFactory;
+    }
+
+    public void update(FactoryConfig config)
+    {
+        setApplicationFactory(config.getApplicationFactory());
+        setFacesContextFactory(config.getFacesContextFactory());
+        setLifecycleFactory(config.getLifecycleFactory());
+        setRenderKitFactory(config.getRenderKitFactory());
     }
 }

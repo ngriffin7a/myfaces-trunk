@@ -33,7 +33,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.faces.context.ExternalContext;
+import javax.faces.context.ApplicationMap;
 import javax.faces.context.FacesContext;
 import javax.faces.el.ReferenceSyntaxException;
 import javax.faces.el.VariableResolver;
@@ -191,7 +191,7 @@ public class VariableResolverImpl
             "request",
             new Scope()
             {
-                public void put(ExternalContext extContext, String name, Object obj)
+                public void put(ApplicationMap extContext, String name, Object obj)
                 {
                     extContext.getRequestMap().put(name, obj);
                 }
@@ -200,7 +200,7 @@ public class VariableResolverImpl
             "session",
             new Scope()
             {
-                public void put(ExternalContext extContext, String name, Object obj)
+                public void put(ApplicationMap extContext, String name, Object obj)
                 {
                     extContext.getSessionMap().put(name, obj);
                 }
@@ -209,7 +209,7 @@ public class VariableResolverImpl
             "application",
             new Scope()
             {
-                public void put(ExternalContext extContext, String name, Object obj)
+                public void put(ApplicationMap extContext, String name, Object obj)
                 {
                     ((ServletContext) extContext.getContext()).setAttribute(name, obj);
                 }
@@ -218,7 +218,7 @@ public class VariableResolverImpl
             "none",
             new Scope()
             {
-                public void put(ExternalContext extContext, String name, Object obj)
+                public void put(ApplicationMap extContext, String name, Object obj)
                 {
                     // do nothing
                 }
@@ -250,7 +250,7 @@ public class VariableResolverImpl
             }
         }
 
-        ExternalContext extContext = facesContext.getExternalContext();
+        ApplicationMap extContext = facesContext.getExternalContext();
 
         // Request context
         Map    requestMap = extContext.getRequestMap();
@@ -376,5 +376,5 @@ interface Scope
 {
     //~ Methods ------------------------------------------------------------------------------------
 
-    public void put(ExternalContext extContext, String name, Object obj);
+    public void put(ApplicationMap extContext, String name, Object obj);
 }

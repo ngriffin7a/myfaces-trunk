@@ -59,7 +59,10 @@ import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.JasperException;
 import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.logging.Logger;
 import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.parser.ParserUtils;
 import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.parser.TreeNode;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
+import javax.faces.context.ExternalContext;
 import javax.servlet.ServletContext;
 import java.io.InputStream;
 import java.net.JarURLConnection;
@@ -105,6 +108,7 @@ import java.util.jar.JarFile;
 
 public class TldLocationsCache {
 
+private static final Log log = LogFactory.getLog(TldLocationsCache.class);
     /**
      * The types of URI one may specify for a tag library
      */
@@ -127,7 +131,7 @@ public class TldLocationsCache {
     //*********************************************************************
     // Constructor and Initilizations
 
-    public TldLocationsCache(ServletContext ctxt) {
+    public TldLocationsCache(ExternalContext ctxt) {
         try {
             processWebDotXml(ctxt);
             processJars(ctxt);
@@ -138,7 +142,7 @@ public class TldLocationsCache {
         }
     }
 
-    private void processWebDotXml(ServletContext ctxt)
+    private void processWebDotXml(ExternalContext ctxt)
         throws JasperException
     {
 
@@ -189,7 +193,7 @@ public class TldLocationsCache {
      * Process all the jar files contained in this web application
      * WEB-INF/lib directory.
      */
-    private void processJars(ServletContext ctxt)
+    private void processJars(ExternalContext ctxt)
         throws JasperException
     {
 
@@ -214,13 +218,18 @@ public class TldLocationsCache {
      *
      * @param resourcePath Context-relative resource path
      */
-    private void tldConfigJar(ServletContext ctxt, String resourcePath) 
+    private void tldConfigJar(ExternalContext ctxt, String resourcePath)
         throws JasperException
     {
         JarFile jarFile = null;
         InputStream stream = null;
         try {
-            URL url = ctxt.getResource(resourcePath);
+            if (!(ctxt.getContext() instanceof ServletContext))
+            {
+                log.error("ServletContext expected");
+            }
+            ServletContext servletContext = (ServletContext)ctxt.getContext();
+            URL url = servletContext.getResource(resourcePath);
             if (url == null) return;
             url = new URL("jar:" + url.toString() + "!/");
             JarURLConnection conn =

@@ -32,6 +32,7 @@ import javax.faces.application.StateManager;
 import javax.faces.application.ViewHandler;
 import javax.faces.component.UIViewRoot;
 import javax.faces.context.FacesContext;
+import javax.faces.context.ExternalContext;
 import javax.faces.render.RenderKit;
 import javax.faces.render.RenderKitFactory;
 import javax.faces.render.Renderer;
@@ -112,8 +113,8 @@ public class ViewHandlerImpl
     public void renderView(FacesContext facesContext, UIViewRoot viewRoot) throws IOException, FacesException
     {
         // TODO: adapt
-        ServletRequest servletRequest = (ServletRequest)facesContext.getExternalContext().getRequest();
-        ServletContext servletContext = (ServletContext)facesContext.getExternalContext().getContext();
+        ExternalContext externalContext = facesContext.getExternalContext();
+        ServletRequest servletRequest = (ServletRequest)externalContext.getRequest();
 
         //Build component tree from parsed JspInfo so that all components
         //already exist in case a component needs it's children prior to
@@ -152,9 +153,10 @@ public class ViewHandlerImpl
         }
 
         //forward request to JSP page
-        ServletMappingFactory smf = MyFacesFactoryFinder.getServletMappingFactory(servletContext);
-        ServletMapping sm = smf.getServletMapping(servletContext);
-        String forwardURL = sm.mapViewIdToFilename(servletContext, viewRoot.getViewId());
+        ServletMappingFactory smf = MyFacesFactoryFinder.getServletMappingFactory(externalContext);
+        ServletMapping sm = smf.getServletMapping((ServletContext)externalContext.getContext());
+        String forwardURL = sm.mapViewIdToFilename((ServletContext)externalContext.getContext(),
+                                                   viewRoot.getViewId());
 
         RequestDispatcher requestDispatcher
             = servletRequest.getRequestDispatcher(forwardURL);

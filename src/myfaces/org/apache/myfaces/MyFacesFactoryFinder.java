@@ -26,12 +26,13 @@ import net.sourceforge.myfaces.webapp.ServletMappingFactoryImpl;
 
 import javax.faces.FacesException;
 import javax.faces.context.ExternalContext;
-import javax.servlet.ServletContext;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * DOCUMENT ME!
  * @author Manfred Geiler (latest modification by $Author$)
+ * @author Thomas Spiegl
  * @version $Revision$ $Date$
  */
 public class MyFacesFactoryFinder
@@ -49,11 +50,11 @@ public class MyFacesFactoryFinder
     private static Object getFactory(ExternalContext context, String factoryName)
             throws FacesException
     {
-        ServletContext servletContext = (ServletContext)context;
-        Object fact = servletContext.getAttribute(factoryName);
+        Map appMap = context.getApplicationMap();
+        Object fact = appMap.get(factoryName);
         if (fact == null)
         {
-            String compFactClass = servletContext.getInitParameter(factoryName);
+            String compFactClass = context.getInitParameter(factoryName);
             if (compFactClass == null)
             {
                 compFactClass = (String)DEFAULT_FACTORIES.get(factoryName);
@@ -81,7 +82,7 @@ public class MyFacesFactoryFinder
                 throw new FacesException(e);
             }
 
-            servletContext.setAttribute(factoryName, fact);
+            appMap.put(factoryName, fact);
         }
 
         return fact;

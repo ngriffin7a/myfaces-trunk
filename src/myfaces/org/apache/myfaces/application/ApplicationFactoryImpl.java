@@ -18,30 +18,41 @@
  */
 package net.sourceforge.myfaces.application;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import javax.faces.application.Application;
 import javax.faces.application.ApplicationFactory;
 import javax.faces.context.FacesContext;
-import javax.servlet.ServletContext;
+import java.util.Map;
 
 /**
  * JSF 1.0 PRD2, 7.2
  * @author Manfred Geiler (latest modification by $Author$)
+ * @author Thomas Spiegl
  * @version $Revision$ $Date$
  */
 public class ApplicationFactoryImpl
     extends ApplicationFactory
 {
+    private static final Log log = LogFactory.getLog(ApplicationFactory.class);
+
+    public ApplicationFactoryImpl()
+    {
+        if (log.isTraceEnabled()) log.trace("New ApplicationFactory instance created");
+    }
+
     private static final String APPLICATION_ATTR = Application.class.getName();
 
     public Application getApplication()
     {
-        ServletContext servletContext = getServletContext();
-        Application application = (Application)servletContext.getAttribute(APPLICATION_ATTR);
+        Map appMap = getApplicationMap();
+        Application application = (Application)appMap.get(APPLICATION_ATTR);
 
         if (application == null)
         {
-            application = new ApplicationImpl(servletContext);
-            servletContext.setAttribute(APPLICATION_ATTR, application);
+            application = new ApplicationImpl(FacesContext.getCurrentInstance().getExternalContext());
+            appMap.put(APPLICATION_ATTR, application);
         }
 
         return application;
@@ -49,16 +60,17 @@ public class ApplicationFactoryImpl
 
     public void setApplication(Application application)
     {
-        getServletContext().setAttribute(APPLICATION_ATTR, application);
+        getApplicationMap().put(APPLICATION_ATTR, application);
     }
 
-    private ServletContext getServletContext()
+    private Map getApplicationMap()
     {
         FacesContext facesContext = FacesContext.getCurrentInstance();
         if (facesContext == null)
         {
+            log.error("FacesContext is null");
             throw new IllegalStateException("FacesContext is null");
         }
-        return (ServletContext)facesContext.getExternalContext().getContext();
+        return facesContext.getExternalContext().getApplicationMap();
     }
 }

@@ -21,7 +21,7 @@ package net.sourceforge.myfaces.context;
 import net.sourceforge.myfaces.context.maphelp.*;
 
 import javax.faces.FacesException;
-import javax.faces.context.ExternalContext;
+import javax.faces.context.ApplicationMap;
 import javax.servlet.*;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -39,7 +39,7 @@ import java.util.*;
  * @version $Revision$ $Date$
  */
 public class ExternalContextImpl
-    extends ExternalContext
+    extends ApplicationMap
 {
     private static final String INIT_PARAMETER_MAP_ATTRIBUTE = InitParameterMap.class.getName();
     

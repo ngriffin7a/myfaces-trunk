@@ -35,7 +35,7 @@ import net.sourceforge.myfaces.util.FacesUtils;
 import javax.faces.application.NavigationHandler;
 import javax.faces.application.ViewHandler;
 import javax.faces.context.FacesContext;
-import javax.servlet.ServletContext;
+import javax.faces.context.ExternalContext;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -145,7 +145,7 @@ public class NavigationHandlerImpl
     {
         if (_cazes == null)
         {
-            ServletContext servletContext = (ServletContext)facesContext.getExternalContext().getContext();
+            ExternalContext servletContext =facesContext.getExternalContext();
             FacesConfigFactory fcf = MyFacesFactoryFinder.getFacesConfigFactory(servletContext);
             FacesConfig fc = fcf.getFacesConfig(servletContext);
 

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
-<project name="myfaces-release" default="all">
+<project name="myfaces-release" default="all" >
 
     <property environment="env"/>
 

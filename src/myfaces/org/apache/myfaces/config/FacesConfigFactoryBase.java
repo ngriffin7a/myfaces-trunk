@@ -24,19 +24,19 @@ import org.apache.commons.logging.LogFactory;
 import org.xml.sax.EntityResolver;
 
 import javax.faces.FacesException;
-import javax.faces.context.ExternalContext;
 import javax.faces.component.UIComponent;
+import javax.faces.context.ExternalContext;
 import javax.faces.webapp.UIComponentTag;
 import javax.servlet.ServletContext;
 import javax.servlet.jsp.tagext.Tag;
 import javax.servlet.jsp.tagext.TagAttributeInfo;
 import javax.servlet.jsp.tagext.TagInfo;
 import javax.servlet.jsp.tagext.TagLibraryInfo;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.jar.JarEntry;
@@ -64,8 +64,8 @@ public abstract class FacesConfigFactoryBase
 
     public FacesConfig getFacesConfig(ExternalContext context)
     {
-        ServletContext servletContext = (ServletContext)context;
-        FacesConfig facesConfig = (FacesConfig)servletContext.getAttribute(FACES_CONFIG_ATTR);
+        Map appMap = context.getApplicationMap();
+        FacesConfig facesConfig = (FacesConfig)appMap.get(FACES_CONFIG_ATTR);
         if (facesConfig != null)
         {
             return facesConfig;
@@ -73,14 +73,14 @@ public abstract class FacesConfigFactoryBase
 
         facesConfig = new FacesConfig();
 // FIXME        
-        parseFacesConfigFiles(facesConfig, servletContext);
+        parseFacesConfigFiles(facesConfig, context);
 
         completeRendererComponentClasses(facesConfig);
 
-        completeRendererAttributesByTLD(servletContext, facesConfig, TLD_HTML_URI);
-        completeRendererAttributesByTLD(servletContext, facesConfig, TLD_EXT_URI);
+        completeRendererAttributesByTLD(context, facesConfig, TLD_HTML_URI);
+        completeRendererAttributesByTLD(context, facesConfig, TLD_EXT_URI);
 
-        servletContext.setAttribute(FACES_CONFIG_ATTR, facesConfig);
+        appMap.put(FACES_CONFIG_ATTR, facesConfig);
         return facesConfig;
     }
 
@@ -90,11 +90,11 @@ public abstract class FacesConfigFactoryBase
                                              EntityResolver entityResolver) throws IOException, FacesException;
 
 
-    private void parseFacesConfigFiles(FacesConfig facesConfig, ServletContext servletContext)
+    private void parseFacesConfigFiles(FacesConfig facesConfig, ExternalContext context)
         throws FacesException
     {
         //Search through JAR files
-        Set jars = servletContext.getResourcePaths("/WEB-INF/lib/");
+        Set jars = context.getResourcePaths("/WEB-INF/lib/");
         if (jars != null)
         {
             for (Iterator it = jars.iterator(); it.hasNext(); )
@@ -102,21 +102,21 @@ public abstract class FacesConfigFactoryBase
                 String path = (String)it.next();
                 if (path.toLowerCase().endsWith(".jar"))
                 {
-                    parseJarConfig(facesConfig, servletContext, path);
+                    parseJarConfig(facesConfig, context, path);
                 }
             }
         }
 
-        String configFiles = servletContext.getInitParameter(CONFIG_FILES_INIT_PARAM);
+        String configFiles = context.getInitParameter(CONFIG_FILES_INIT_PARAM);
         if (configFiles == null)
         {
             String systemId = "/WEB-INF/faces-config.xml";
-            InputStream stream = servletContext.getResourceAsStream(systemId);
+            InputStream stream = context.getResourceAsStream(systemId);
             if (stream != null)
             {
                 log.info("Reading config /WEB-INF/faces-config.xml");
                 parseStreamConfig(facesConfig, stream, systemId,
-                                  new FacesConfigEntityResolver(servletContext));
+                                  new FacesConfigEntityResolver(context));
             }
         }
         else
@@ -125,7 +125,7 @@ public abstract class FacesConfigFactoryBase
             while (st.hasMoreTokens())
             {
                 String systemId = st.nextToken().trim();
-                InputStream stream = servletContext.getResourceAsStream(systemId);
+                InputStream stream = context.getResourceAsStream(systemId);
                 if (stream == null)
                 {
                     throw new FacesException("Resource '" + systemId + "' not found!");
@@ -134,19 +134,24 @@ public abstract class FacesConfigFactoryBase
                 log.info("Reading config " + systemId);
 
                 parseStreamConfig(facesConfig, stream, systemId,
-                                  new FacesConfigEntityResolver(servletContext));
+                                  new FacesConfigEntityResolver(context));
             }
         }
     }
 
 
     private void parseJarConfig(FacesConfig facesConfig,
-                                ServletContext servletContext,
+                                ExternalContext context,
                                 String jarPath)
         throws FacesException
     {
         try
         {
+            if (!(context.getContext() instanceof ServletContext))
+            {
+                log.error("ServletContext expected");
+            }
+            ServletContext servletContext = (ServletContext)context.getContext();
             URL url = servletContext.getResource(jarPath);
             if (url == null)
             {
@@ -219,11 +224,11 @@ public abstract class FacesConfigFactoryBase
      * Reads additional renderer attribute information from the given
      * Taglib descriptor.
      */
-    protected void completeRendererAttributesByTLD(ServletContext servletContext,
+    protected void completeRendererAttributesByTLD(ExternalContext context,
                                                    FacesConfig facesConfig,
                                                    String taglibURI)
     {
-        TagLibraryInfo tagLibraryInfo = TLDInfo.getTagLibraryInfo(servletContext,
+        TagLibraryInfo tagLibraryInfo = TLDInfo.getTagLibraryInfo(context,
                                                                   taglibURI);
         TagInfo[] tagInfos = tagLibraryInfo.getTags();
         for (int i = 0; i < tagInfos.length; i++)

@@ -24,31 +24,24 @@ import net.sourceforge.myfaces.config.FacesConfigFactory;
 import net.sourceforge.myfaces.el.MethodBindingImpl;
 import net.sourceforge.myfaces.el.ValueBindingImpl;
 import net.sourceforge.myfaces.util.BiLevelCacheMap;
-
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.Locale;
-import java.util.Map;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import javax.faces.FacesException;
 import javax.faces.application.Application;
 import javax.faces.application.NavigationHandler;
 import javax.faces.application.ViewHandler;
 import javax.faces.component.UIComponent;
+import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
-import javax.faces.el.MethodBinding;
-import javax.faces.el.PropertyResolver;
-import javax.faces.el.ReferenceSyntaxException;
-import javax.faces.el.ValueBinding;
-import javax.faces.el.VariableResolver;
+import javax.faces.el.*;
 import javax.faces.event.ActionListener;
 import javax.faces.validator.Validator;
-
-import javax.servlet.ServletContext;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.Locale;
+import java.util.Map;
 
 
 /**
@@ -75,7 +68,7 @@ public class ApplicationImpl
             }
         };
 
-    private final ServletContext _servletContext;
+    private final ExternalContext _externalContext;
     private Collection           _supportedLocales;
     private Locale               _defaultLocale;
     private String               _messageBundle;
@@ -83,12 +76,12 @@ public class ApplicationImpl
 
     //~ Constructors -------------------------------------------------------------------------------
 
-    public ApplicationImpl(ServletContext servletContext)
+    public ApplicationImpl(ExternalContext externalContext)
     {
-        _servletContext = servletContext;
+        this._externalContext = externalContext;
 
-        FacesConfigFactory fcf = MyFacesFactoryFinder.getFacesConfigFactory(_servletContext);
-        _facesConfig = fcf.getFacesConfig(_servletContext);
+        FacesConfigFactory fcf = MyFacesFactoryFinder.getFacesConfigFactory(_externalContext);
+        _facesConfig = fcf.getFacesConfig(_externalContext);
         if (log.isTraceEnabled()) log.trace("New Application instance created");
     }
 
@@ -127,6 +120,7 @@ public class ApplicationImpl
     {
         if (locale == null)
         {
+            log.error("setting locale to null is not allowed");
             throw new NullPointerException("locale");
         }
         _defaultLocale = locale;
@@ -141,6 +135,7 @@ public class ApplicationImpl
     {
         if (messageBundle == null)
         {
+            log.error("setting messageBundle to null is not allowed");
             throw new NullPointerException("messageBundle");
         }
         _messageBundle = messageBundle;
@@ -155,6 +150,7 @@ public class ApplicationImpl
     {
         if (navigationHandler == null)
         {
+            log.error("setting navigationHandler to null is not allowed");
             throw new NullPointerException("navigationHandler");
         }
         getFacesConfig().getApplicationConfig().setNavigationHandler(navigationHandler);
@@ -169,6 +165,7 @@ public class ApplicationImpl
     {
         if (propertyResolver == null)
         {
+            log.error("setting propertyResolver to null is not allowed");
             throw new NullPointerException("propertyResolver");
         }
         getFacesConfig().getApplicationConfig().setPropertyResolver(propertyResolver);
@@ -183,6 +180,7 @@ public class ApplicationImpl
     {
         if (locales == null)
         {
+            log.error("setting supportedLocales to null is not allowed");
             throw new NullPointerException("locales");
         }
         _supportedLocales = locales;
@@ -202,6 +200,7 @@ public class ApplicationImpl
     {
         if (variableResolver == null)
         {
+            log.error("setting variableResolver to null is not allowed");
             throw new NullPointerException("variableResolver");
         }
         getFacesConfig().getApplicationConfig().setVariableResolver(variableResolver);
@@ -216,6 +215,7 @@ public class ApplicationImpl
     {
         if (viewHandler == null)
         {
+            log.error("setting viewHandler to null is not allowed");
             throw new NullPointerException("viewHandler");
         }
         _viewHandler = viewHandler;
@@ -230,10 +230,12 @@ public class ApplicationImpl
     {
         if ((componentType == null) || (componentType.length() == 0))
         {
+            log.error("addComponent: componentType = null ist not allowed");
             throw new NullPointerException("componentType");
         }
         if ((componentClass == null) || (componentClass.length() == 0))
         {
+            log.error("addComponent: component = null is not allowed");
             throw new NullPointerException("componentClass");
         }
         getFacesConfig().addComponent(componentType, componentClass);
@@ -243,10 +245,12 @@ public class ApplicationImpl
     {
         if ((converterId == null) || (converterId.length() == 0))
         {
+            log.error("addConverter: converterId = null ist not allowed");
             throw new NullPointerException("converterId");
         }
         if ((converterClass == null) || (converterClass.length() == 0))
         {
+            log.error("addConverter: converterClass = null ist not allowed");
             throw new NullPointerException("converterClass");
         }
         getFacesConfig().addConverter(converterId, converterClass);
@@ -256,10 +260,12 @@ public class ApplicationImpl
     {
         if ((targetClass == null))
         {
+            log.error("addConverter: targetClass = null ist not allowed");
             throw new NullPointerException("targetClass");
         }
         if ((converterClass == null) || (converterClass.length() == 0))
         {
+            log.error("addConverter: converterClass = null ist not allowed");
             throw new NullPointerException("converterClass");
         }
         getFacesConfig().addConverter(targetClass, converterClass);
@@ -269,10 +275,12 @@ public class ApplicationImpl
     {
         if ((validatorId == null) || (validatorId.length() == 0))
         {
+            log.error("addValidator: validatorId = null ist not allowed");
             throw new NullPointerException("validatorId");
         }
         if ((validatorClass == null) || (validatorClass.length() == 0))
         {
+            log.error("addValidator:  validatorClass = null ist not allowed");
             throw new NullPointerException("validatorClass");
         }
         getFacesConfig().addValidator(validatorId, validatorClass);
@@ -283,7 +291,8 @@ public class ApplicationImpl
     {
         if ((componentType == null) || (componentType.length() == 0))
         {
-            throw new NullPointerException("converterClass");
+            log.error("createComponent: componentType = null is not allowed");
+            throw new NullPointerException("componentType");
         }
         return getFacesConfig().getComponent(componentType);
     }
@@ -294,14 +303,17 @@ public class ApplicationImpl
     {
         if ((valueBinding == null))
         {
+            log.error("createComponent: valueBinding = null ist not allowed");
             throw new NullPointerException("valueBinding");
         }
         if ((facesContext == null))
         {
+            log.error("createComponent: facesContext = null ist not allowed");
             throw new NullPointerException("facesContext");
         }
         if ((componentType == null) || (componentType.length() == 0))
         {
+            log.error("createComponent: componentType = null ist not allowed");
             throw new NullPointerException("componentType");
         }
 
@@ -320,7 +332,8 @@ public class ApplicationImpl
     {
         if ((converterId == null) || (converterId.length() == 0))
         {
-            throw new NullPointerException("componentType");
+            log.error("createConverter: converterId = null ist not allowed");
+            throw new NullPointerException("converterId");
         }
         return getFacesConfig().getConverter(converterId);
     }
@@ -329,6 +342,7 @@ public class ApplicationImpl
     {
         if (targetClass == null)
         {
+            log.error("createConverter: targetClass = null ist not allowed");
             throw new NullPointerException("targetClass");
         }
         return getFacesConfig().getConverter(targetClass);
@@ -339,6 +353,7 @@ public class ApplicationImpl
     {
         if ((reference == null) || (reference.length() == 0))
         {
+            log.error("createMethodBinding: reference = null ist not allowed");
             throw new NullPointerException("reference");
         }
 
@@ -354,6 +369,7 @@ public class ApplicationImpl
     {
         if ((validatorId == null) || (validatorId.length() == 0))
         {
+            log.error("createValidator: validatorId = null ist not allowed");
             throw new NullPointerException("validatorId");
         }
         return getFacesConfig().getValidator(validatorId);
@@ -364,6 +380,7 @@ public class ApplicationImpl
     {
         if ((reference == null) || (reference.length() == 0))
         {
+            log.error("createValueBinding: reference = null ist not allowed");
             throw new NullPointerException("reference");
         }
         return (ValueBinding) _valueBindingCache.get(reference);

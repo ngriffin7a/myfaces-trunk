@@ -1,6 +1,6 @@
 MyFaces Release Notes
 =====================
-
+       
 ----------------------------------------------------------------------
 Changes in Release 0.4.4
 * added "rendererType" attribute to tag library for all components.

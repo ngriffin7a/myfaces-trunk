@@ -88,6 +88,7 @@ public class UseFacesTag
     public void doInitBody() throws JspException
     {
         ResponseWriter writer = new JspResponseWriter(super.pageContext);
+        //TODO: think about setting ResponseStream (use an attribute in UseFaces tag?)
         getFacesContext().setResponseWriter(writer);
     }
 

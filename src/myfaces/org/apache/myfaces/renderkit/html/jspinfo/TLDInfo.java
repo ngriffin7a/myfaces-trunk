@@ -25,7 +25,7 @@ import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.compiler.TldLocatio
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import javax.servlet.ServletContext;
+import javax.faces.context.ExternalContext;
 import javax.servlet.jsp.tagext.TagAttributeInfo;
 import javax.servlet.jsp.tagext.TagInfo;
 import javax.servlet.jsp.tagext.TagLibraryInfo;
@@ -46,7 +46,7 @@ public class TLDInfo
         = TLDInfo.class.getName() + ".TAGLIB_MAP";
     private static final Object LOCK = new Object();
 
-    public static TagAttributeInfo getTagAttributeInfo(ServletContext servletContext,
+    public static TagAttributeInfo getTagAttributeInfo(ExternalContext context,
                                                        String taglibURI,
                                                        String tagName,
                                                        String attributeName)
@@ -54,11 +54,12 @@ public class TLDInfo
         Map taglibMap;
         synchronized (LOCK)
         {
-            taglibMap = (Map)servletContext.getAttribute(TAGLIB_MAP_CONTEXT_ATTR);
+            Map appMap = context.getApplicationMap();
+            taglibMap = (Map)appMap.get(TAGLIB_MAP_CONTEXT_ATTR);
             if (taglibMap == null)
             {
                 taglibMap = new WeakHashMap();
-                servletContext.setAttribute(TAGLIB_MAP_CONTEXT_ATTR, taglibMap);
+                appMap.put(TAGLIB_MAP_CONTEXT_ATTR, taglibMap);
             }
         }
 
@@ -68,7 +69,7 @@ public class TLDInfo
             tagMap = (Map)taglibMap.get(taglibURI);
             if (tagMap == null)
             {
-                tagMap = buildTagMap(servletContext, taglibURI);
+                tagMap = buildTagMap(context, taglibURI);
                 taglibMap.put(taglibURI, tagMap);
             }
         }
@@ -88,11 +89,11 @@ public class TLDInfo
         return tagAttributeInfo;
     }
 
-    private static Map buildTagMap(ServletContext servletContext,
+    private static Map buildTagMap(ExternalContext context,
                                    String taglibURI)
         throws IllegalArgumentException
     {
-        TagLibraryInfo tagLibraryInfo = getTagLibraryInfo(servletContext,
+        TagLibraryInfo tagLibraryInfo = getTagLibraryInfo(context,
                                                           taglibURI);
         TagInfo[] tags = tagLibraryInfo.getTags();
         Map tagMap = new HashMap(tags.length);
@@ -112,15 +113,15 @@ public class TLDInfo
         return tagMap;
     }
 
-    public static TagLibraryInfo getTagLibraryInfo(ServletContext servletContext,
+    public static TagLibraryInfo getTagLibraryInfo(ExternalContext context,
                                                    String taglibURI)
     {
         try
         {
-            TldLocationsCache locCache = new TldLocationsCache(servletContext);
+            TldLocationsCache locCache = new TldLocationsCache(context);
             String[] loc = locCache.getLocation(taglibURI);
             JspCompilationContext jspCompilationContext
-                = new MyJspCompilationContext(servletContext);
+                = new MyJspCompilationContext(context);
             return new TagLibraryInfoImpl(jspCompilationContext,
                                           "dummy",
                                           taglibURI,

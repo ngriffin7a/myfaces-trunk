@@ -24,7 +24,7 @@ import javax.faces.application.Application;
 import javax.faces.application.FacesMessage;
 import javax.faces.application.FacesMessage.Severity;
 import javax.faces.component.UIViewRoot;
-import javax.faces.context.ExternalContext;
+import javax.faces.context.ApplicationMap;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseStream;
 import javax.faces.context.ResponseWriter;
@@ -63,7 +63,7 @@ public class FacesContextWrapper
         return _facesContext.getClientIdsWithMessages();
     }
 
-    public ExternalContext getExternalContext()
+    public ApplicationMap getExternalContext()
     {
         return _facesContext.getExternalContext();
     }

@@ -40,6 +40,7 @@ public class CalcForm
 
     public void subtract()
     {
+        System.out.println("--> subtract!!!.dd.");
         result = number1.subtract(number2);
     }
 

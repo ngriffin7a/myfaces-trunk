@@ -10,11 +10,11 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.faces.FacesException;
-import javax.faces.context.ExternalContext;
+import javax.faces.context.ApplicationMap;
 import javax.servlet.http.Cookie;
 
 
-public class ExternalContextMockImpl extends ExternalContext {
+public class ExternalContextMockImpl extends ApplicationMap {
 
     public ExternalContextMockImpl() {
         throw new UnsupportedOperationException();

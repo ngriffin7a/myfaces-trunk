@@ -27,7 +27,7 @@ import java.util.NoSuchElementException;
 import javax.faces.application.Application;
 import javax.faces.application.FacesMessage;
 import javax.faces.component.UIViewRoot;
-import javax.faces.context.ExternalContext;
+import javax.faces.context.ApplicationMap;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseStream;
 import javax.faces.context.ResponseWriter;
@@ -59,7 +59,7 @@ public class FacesContextImpl
     List                          _messageClientIds = null;
     List                          _messages         = null;
     private Application           _application;
-    private ExternalContext       _externalContext;
+    private ApplicationMap       _externalContext;
     private ResponseStream        _responseStream   = null;
     private ResponseWriter        _responseWriter   = null;
     private FacesMessage.Severity _maximumSeverity  = FacesMessage.SEVERITY_INFO;
@@ -81,7 +81,7 @@ public class FacesContextImpl
 
     //~ Methods ------------------------------------------------------------------------------------
 
-    public ExternalContext getExternalContext()
+    public ApplicationMap getExternalContext()
     {
         return _externalContext;
     }
