@@ -46,7 +46,9 @@ public class MyFacesHtmlDataTable
     private static final Class OBJECT_ARRAY_CLASS = (new Object[0]).getClass();
 
     private boolean _preserveDataModel = true;
-
+    private boolean _preserveSort = true;
+    private String _sortColumn;
+    private Boolean _sortAscending;
 
     public void encodeBegin(FacesContext context) throws IOException
     {
@@ -68,51 +70,82 @@ public class MyFacesHtmlDataTable
     {
         if (_preserveDataModel)
         {
-            Object value = getLocalValue();
-            if (value instanceof SerializableDataModel)
+            updateModelFromPreservedDataModel(context);
+        }
+
+        if (_preserveSort)
+        {
+            if (_sortColumn != null)
             {
-                ValueBinding vb = getValueBinding("value");
-                if (vb != null && !vb.isReadOnly(context))
+                ValueBinding vb = getValueBinding("sortColumn");
+                if (vb != null)
                 {
-                    SerializableDataModel dm = (SerializableDataModel)value;
-                    Class type = vb.getType(context);
-                    if (DataModel.class.isAssignableFrom(type))
-                    {
-                        vb.setValue(context, dm);
-                    }
-                    else if (List.class.isAssignableFrom(type))
-                    {
-                        vb.setValue(context, (List)dm.getWrappedData());
-                    }
-                    else if (OBJECT_ARRAY_CLASS.isAssignableFrom(type))
-                    {
-                        List lst = (List)dm.getWrappedData();
-                        vb.setValue(context, lst.toArray(new Object[lst.size()]));
-                    }
-                    else if (ResultSet.class.isAssignableFrom(type))
-                    {
-                        throw new UnsupportedOperationException();
-                    }
-                    else
-                    {
-                        //Assume scalar data model
-                        List lst = (List)dm.getWrappedData();
-                        if (lst.size() > 0)
-                        {
-                            vb.setValue(context, lst.get(0));
-                        }
-                        else
-                        {
-                            vb.setValue(context, null);
-                        }
-                    }
-                    setValue(null); //clear local value
+                    vb.setValue(context, _sortColumn);
+                    _sortColumn = null;
+                }
+            }
+
+            if (_sortAscending != null)
+            {
+                ValueBinding vb = getValueBinding("sortAscending");
+                if (vb != null)
+                {
+                    vb.setValue(context, _sortAscending);
+                    _sortAscending = null;
                 }
             }
         }
 
         super.processUpdates(context);
     }
+
+
+    private void updateModelFromPreservedDataModel(FacesContext context)
+    {
+        Object value = getLocalValue();
+        if (value instanceof SerializableDataModel)
+        {
+            ValueBinding vb = getValueBinding("value");
+            if (vb != null && !vb.isReadOnly(context))
+            {
+                SerializableDataModel dm = (SerializableDataModel)value;
+                Class type = vb.getType(context);
+                if (DataModel.class.isAssignableFrom(type))
+                {
+                    vb.setValue(context, dm);
+                }
+                else if (List.class.isAssignableFrom(type))
+                {
+                    vb.setValue(context, (List)dm.getWrappedData());
+                }
+                else if (OBJECT_ARRAY_CLASS.isAssignableFrom(type))
+                {
+                    List lst = (List)dm.getWrappedData();
+                    vb.setValue(context, lst.toArray(new Object[lst.size()]));
+                }
+                else if (ResultSet.class.isAssignableFrom(type))
+                {
+                    throw new UnsupportedOperationException();
+                }
+                else
+                {
+                    //Assume scalar data model
+                    List lst = (List)dm.getWrappedData();
+                    if (lst.size() > 0)
+                    {
+                        vb.setValue(context, lst.get(0));
+                    }
+                    else
+                    {
+                        vb.setValue(context, null);
+                    }
+                }
+                setValue(null); //clear local value
+            }
+        }
+    }
+
+
 
     public int getFirst()
     {
@@ -142,10 +175,13 @@ public class MyFacesHtmlDataTable
 
     public Object saveState(FacesContext context)
     {
-        Object values[] = new Object[3];
+        Object values[] = new Object[6];
         values[0] = super.saveState(context);
         values[1] = Boolean.valueOf(_preserveDataModel);
         values[2] = _preserveDataModel ? getSerializableDataModel() : null;
+        values[3] = Boolean.valueOf(_preserveSort);
+        values[4] = _preserveSort ? getSortColumn() : _sortColumn;
+        values[5] = _preserveSort ? Boolean.valueOf(getSortAscending()) : _sortAscending;
         return ((Object) (values));
     }
 
@@ -159,6 +195,9 @@ public class MyFacesHtmlDataTable
         {
             setValue(serDataModel);
         }
+        _preserveSort = ((Boolean)values[3]).booleanValue();
+        _sortColumn = (String)values[4];
+        _sortAscending = (Boolean)values[5];
     }
 
 
@@ -319,4 +358,30 @@ public class MyFacesHtmlDataTable
         }
     }
 
+
+    public String getSortColumn()
+    {
+        if (_sortColumn != null) return _sortColumn;
+        ValueBinding vb = getValueBinding("sortColumn");
+        return vb != null ? (String)vb.getValue(getFacesContext()) : null;
+    }
+
+    public void setSortColumn(String sortColumn)
+    {
+        _sortColumn = sortColumn;
+    }
+
+
+    public boolean getSortAscending()
+    {
+        if (_sortAscending != null) return _sortAscending.booleanValue();
+        ValueBinding vb = getValueBinding("sortAscending");
+        Boolean b = vb != null ? (Boolean)vb.getValue(getFacesContext()) : null;
+        return b != null ? b.booleanValue() : true;
+    }
+
+    public void setSortAscending(boolean sortAscending)
+    {
+        _sortAscending = Boolean.valueOf(sortAscending);
+    }
 }

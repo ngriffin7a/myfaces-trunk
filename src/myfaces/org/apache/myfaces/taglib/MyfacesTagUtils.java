@@ -109,8 +109,8 @@ public class MyfacesTagUtils
 
 
     public static void setValueProperty(FacesContext context,
-                                  UIComponent component,
-                                  String value)
+                                        UIComponent component,
+                                        String value)
     {
         if (value != null)
         {
@@ -157,6 +157,26 @@ public class MyfacesTagUtils
             else
             {
                 log.error("Component " + component.getClass().getName() + " is no ValueHolder, cannot set value.");
+            }
+        }
+    }
+
+
+    public static void setValueBinding(FacesContext context,
+                                       UIComponent component,
+                                       String propName,
+                                       String value)
+    {
+        if (value != null)
+        {
+            if (isValueReference(value))
+            {
+                ValueBinding vb = context.getApplication().createValueBinding(value);
+                component.setValueBinding(propName, vb);
+            }
+            else
+            {
+                throw new IllegalArgumentException("Attribute " + propName + " must be a value reference");
             }
         }
     }

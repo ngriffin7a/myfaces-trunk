@@ -89,10 +89,38 @@
         <!-- TODO attributes image, label - old todo.. still necessary?-->
     </tag>
 
+<!-- command_sortheader -->
+    <tag>
+        <name>command_sortheader</name>
+        <tag-class>net.sourceforge.myfaces.taglib.ext.HtmlCommandSortHeaderTag</tag-class>
+        <body-content>JSP</body-content>
+        &ui_component_attributes;
+        &ui_command_attributes;
+        &html_universal_attributes;
+        &html_event_handler_attributes;
+        &html_anchor_attributes;
+        &user_role_attributes;
+        <!-- HtmlCommandSortHeader attributes -->
+        <attribute>
+            <name>columnName</name>
+            <required>true</required>
+            <rtexprvalue>false</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>arrow</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
+            <description>
+                Indicates whether an arrow, that shows the sort direction should be rendered.
+                Default: true
+            </description>
+        </attribute>
+    </tag>
+
 <!-- data_table -->
     <tag>
-        <name>sort_data_table</name>
-        <tag-class>net.sourceforge.myfaces.taglib.ext.HtmlSortDataTableTag</tag-class>
+        <name>data_table</name>
+        <tag-class>net.sourceforge.myfaces.taglib.ext.HtmlDataTableTag</tag-class>
         <body-content>JSP</body-content>
         &ui_component_attributes;
         &ui_panel_attributes;
@@ -116,17 +144,6 @@
             <required>false</required>
             <rtexprvalue>false</rtexprvalue>
         </attribute>
-        <!-- HtmlSortDataTable attributes -->
-        <attribute>
-            <name>column</name>
-            <required>true</required>
-            <rtexprvalue>false</rtexprvalue>
-        </attribute>
-        <attribute>
-            <name>ascending</name>
-            <required>true</required>
-            <rtexprvalue>false</rtexprvalue>
-        </attribute>
         <!-- TableRenderer attributes -->
         <attribute>
             <name>columnClasses</name>
@@ -147,6 +164,44 @@
             <name>rowClasses</name>
             <required>false</required>
             <rtexprvalue>false</rtexprvalue>
+        </attribute>
+        <!-- MyFaces extensions -->
+        <attribute>
+            <name>preserveDataModel</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
+            <description>
+                Indicates whether the state of the whole DataModel should be saved and
+                restored.
+                Default: true
+            </description>
+        </attribute>
+        <attribute>
+            <name>sortColumn</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
+            <description>
+                Value reference to a model property that gives the current sort column name.
+            </description>
+        </attribute>
+        <attribute>
+            <name>sortAscending</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
+            <description>
+                Value reference to a model property that gives the current sort direction.
+            </description>
+        </attribute>
+        <attribute>
+            <name>preserveSort</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
+            <description>
+                Indicates whether the state of the sortColumn and sortAscending attribute
+                should be saved and restored and written back to the model during the
+                update model phase.
+                Default: true
+            </description>
         </attribute>
      </tag>
 

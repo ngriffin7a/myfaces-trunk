@@ -18,12 +18,15 @@
  */
 package net.sourceforge.myfaces.examples.listexample;
 
+import java.io.Serializable;
+
 /**
  * DOCUMENT ME!
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
 public class SimpleCar
+        implements Serializable
 {
     private String _type;
     private String _color;

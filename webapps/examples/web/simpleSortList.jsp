@@ -51,19 +51,40 @@ managed beans used:
         <f:facet name="body">
             <h:panel_group id="body">
 
-                <x:sort_data_table styleClass="standardTable"
+                <x:data_table styleClass="standardTable"
                         headerClass="standardTable_SortHeader"
                         footerClass="standardTable_Footer"
                         rowClasses="standardTable_Row1,standardTable_Row2"
                         var="car"
                         value="#{list.cars}"
-                        column="test_col"
-                        ascending="test_asc"
-                 >
+                        sortColumn="#{list.sort}"
+                        sortAscending="#{list.ascending}">
+
                     <h:column>
+                        <f:facet name="header">
+                            <x:command_sortheader columnName="type">
+                                <h:output_text value="#{example_messages['sort_cartype']}" />
+                            </x:command_sortheader>
+                        </f:facet>
                         <h:output_text value="#{car.type}" />
+                        <f:facet name="footer">
+                            <h:output_text id="ftr1" value="..."  />
+                        </f:facet>
                     </h:column>
-                </x:sort_data_table>
+
+                    <h:column>
+                        <f:facet name="header">
+                            <x:command_sortheader columnName="color">
+                                <h:output_text value="#{example_messages['sort_carcolor']}" />
+                            </x:command_sortheader>
+                        </f:facet>
+                        <h:output_text value="#{car.color}" />
+                        <f:facet name="footer">
+                            <h:output_text id="ftr2" value=""  />
+                        </f:facet>
+                    </h:column>
+                    
+                </x:data_table>
 
             </h:panel_group>
         </f:facet>

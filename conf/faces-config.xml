@@ -21,7 +21,6 @@
     <navigation-handler>net.sourceforge.myfaces.application.NavigationHandlerImpl</navigation-handler>
     <variable-resolver>net.sourceforge.myfaces.el.VariableResolverImpl</variable-resolver>
     <property-resolver>net.sourceforge.myfaces.el.PropertyResolverImpl</property-resolver>
-    <!--message-bundle></message-bundle-->
     <locale-config>
         <default-locale>en</default-locale>
         <supported-locale>en</supported-locale>
@@ -195,8 +194,18 @@
   </component>
 
   <component>
+    <component-type>CommandSortHeader</component-type>
+    <component-class>net.sourceforge.myfaces.component.ext.HtmlCommandSortHeader</component-class>
+  </component>
+
+  <component>
     <component-type>InputFileUpload</component-type>
     <component-class>net.sourceforge.myfaces.component.ext.HtmlInputFileUpload</component-class>
+  </component>
+
+  <component>
+    <component-type>MyfacesDataTable</component-type>
+    <component-class>net.sourceforge.myfaces.component.html.MyFacesHtmlDataTable</component-class>
   </component>
 
   <component>
@@ -228,23 +237,6 @@
     <component-type>SaveState</component-type>
     <component-class>net.sourceforge.myfaces.component.ext.UISaveState</component-class>
   </component>
-
-    <!--
-    <component>
-      <component-type>SortColumn</component-type>
-      <component-class>net.sourceforge.myfaces.component.ext.UISortColumn</component-class>
-    </component>
-
-    <component>
-      <component-type>SortHeader</component-type>
-      <component-class>net.sourceforge.myfaces.component.ext.UISortHeader</component-class>
-    </component>
-
-    <component>
-      <component-type>Tab</component-type>
-      <component-class>net.sourceforge.myfaces.component.ext.UITab</component-class>
-    </component>
-    -->
 
 
   <!-- standard converters by id -->
@@ -498,9 +490,6 @@
           <supported-component-type><component-type>OutputText</component-type></supported-component-type>
       </renderer>
 
-
-      <!-- TODO: other renderers... -->
-
   </render-kit>
 
 
@@ -527,20 +516,16 @@
         </renderer>
 
         <renderer>
+            <renderer-type>SortHeader</renderer-type>
+            <renderer-class>net.sourceforge.myfaces.renderkit.html.ext.HtmlSortHeaderRenderer</renderer-class>
+            <supported-component-type><component-type>CommandSortHeader</component-type></supported-component-type>
+        </renderer>
+
+        <renderer>
             <renderer-type>TabbedPane</renderer-type>
             <renderer-class>net.sourceforge.myfaces.renderkit.html.ext.HtmlTabbedPaneRenderer</renderer-class>
             <supported-component-type><component-type>PanelTabbedPane</component-type></supported-component-type>
         </renderer>
-
-    <!--
-        <renderer>
-            <renderer-type>SortColumn</renderer-type>
-            <renderer-class>net.sourceforge.myfaces.renderkit.html.ext.SortColumnRenderer</renderer-class>
-            <supported-component-type>
-               <component-type>SortColumn</component-type>
-            </supported-component-type>
-        </renderer>
-    -->
 
     </render-kit>
 

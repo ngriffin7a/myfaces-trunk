@@ -1,4 +1,4 @@
-/**
+/*
  * MyFaces - the free JSF implementation
  * Copyright (C) 2003, 2004  The MyFaces Team (http://myfaces.sourceforge.net)
  *
@@ -16,31 +16,49 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package net.sourceforge.myfaces.component.ext;
+package net.sourceforge.myfaces.taglib.ext;
 
-import net.sourceforge.myfaces.component.MyFacesUIInput;
-import net.sourceforge.myfaces.model.UploadedFile;
+import net.sourceforge.myfaces.taglib.html.HtmlCommandLinkTag;
+
+import javax.faces.component.UIComponent;
 
 /**
- * DOCUMENT ME!
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public class UIFileUpload
-        extends MyFacesUIInput
+public class HtmlCommandSortHeaderTag
+        extends HtmlCommandLinkTag
 {
-    public UIFileUpload()
+    //private static final Log log = LogFactory.getLog(HtmlCommandSortHeaderTag.class);
+
+    public String getComponentType()
     {
-        setValid(true);
+        return "CommandSortHeader";
     }
 
-    public void setUploadedFile(UploadedFile upFile)
+    public String getDefaultRendererType()
     {
-        setValue(upFile);
+        return "SortHeader";
     }
 
-    public UploadedFile getUploadedFile()
+    private String _columnName;
+    private String _arrow;
+
+    protected void setProperties(UIComponent component)
     {
-        return (UploadedFile)getValue();
+        super.setProperties(component);
+
+        setStringProperty(component, "columnName", _columnName);
+        setBooleanProperty(component, "arrow", _arrow);
+    }
+
+    public void setColumnName(String columnName)
+    {
+        _columnName = columnName;
+    }
+
+    public void setArrow(String arrow)
+    {
+        _arrow = arrow;
     }
 }

@@ -30,8 +30,8 @@ import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 import java.io.IOException;
 import java.util.Iterator;
-import java.util.StringTokenizer;
 import java.util.List;
+import java.util.StringTokenizer;
 
 /**
  * DOCUMENT ME!
@@ -163,12 +163,12 @@ public class HtmlTableRenderer
                 UIColumn uiColumn = (UIColumn)it.next();
                 if (uiColumn.isRendered())
                 {
-                    UIComponent headerComp = (UIComponent)uiColumn.getFacet("header");
+                    UIComponent facetComp = (UIComponent)uiColumn.getFacet(facetName);
 
                     writer.startElement("td", uiData);
-                    if (headerComp != null)
+                    if (facetComp != null)
                     {
-                        RendererUtils.renderChild(facesContext, headerComp);
+                        RendererUtils.renderChild(facesContext, facetComp);
                     }
                     writer.endElement("td");
                 }

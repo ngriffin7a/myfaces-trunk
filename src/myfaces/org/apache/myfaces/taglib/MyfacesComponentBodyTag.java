@@ -179,4 +179,11 @@ public abstract class MyfacesComponentBodyTag
         MyfacesTagUtils.setConverterIdProperty(context, component, value);
     }
 
+    public void setValueBinding(UIComponent component,
+                                String propName,
+                                String value)
+    {
+        MyfacesTagUtils.setValueBinding(context, component, propName, value);
+    }
+
 }
