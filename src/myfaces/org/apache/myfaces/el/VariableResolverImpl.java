@@ -20,11 +20,10 @@ package net.sourceforge.myfaces.el;
 
 import net.sourceforge.myfaces.MyFacesFactoryFinder;
 import net.sourceforge.myfaces.config.*;
-import net.sourceforge.myfaces.util.bean.BeanUtils;
+import net.sourceforge.myfaces.util.FacesUtils;
 import net.sourceforge.myfaces.util.logging.LogUtil;
 
-import javax.faces.FactoryFinder;
-import javax.faces.application.ApplicationFactory;
+import javax.faces.application.Application;
 import javax.faces.context.FacesContext;
 import javax.faces.el.ReferenceSyntaxException;
 import javax.faces.el.ValueBinding;
@@ -149,8 +148,8 @@ public class VariableResolverImpl
             Object value;
             if (propConfig.getValueRef() != null)
             {
-                ApplicationFactory af = (ApplicationFactory)FactoryFinder.getFactory(FactoryFinder.APPLICATION_FACTORY);
-                ValueBinding vb = af.getApplication().getValueBinding(propConfig.getValueRef());
+                Application app = FacesUtils.getApplication();
+                ValueBinding vb = app.getValueBinding(propConfig.getValueRef());
                 value = vb.getValue(facesContext);
             }
             else
@@ -158,9 +157,8 @@ public class VariableResolverImpl
                 value = propConfig.getValue();
             }
 
-            BeanUtils.setBeanPropertyValue(bean,
-                                           propConfig.getPropertyName(),
-                                           value);
+            PropertyResolverImpl.setProperty(bean,
+                propConfig.getPropertyName(), value);
         }
     }
 

@@ -50,6 +50,47 @@ public class PropertyResolverImpl extends PropertyResolver {
 
     //~ Methods ----------------------------------------------------------------
 
+    public static void setProperty(Object base, String name, Object newValue) {
+        PropertyDescriptor propertyDescriptor =
+            getPropertyDescriptor(base, name);
+
+        Method             m = propertyDescriptor.getWriteMethod();
+
+        if (m == null)
+            throw new PropertyNotFoundException(
+                "Bean: " + base.getClass() + ", property: " + name);
+
+        try {
+            m.invoke(base, new Object[] {newValue});
+        } catch (IllegalAccessException e) {
+            throw new EvaluationException(
+                "Bean: " + base.getClass() + ", property: " + name, e);
+        } catch (InvocationTargetException e) {
+            throw new EvaluationException(
+                "Bean: " + base.getClass() + ", property: " + name, e);
+        }
+    }
+
+    public static PropertyDescriptor getPropertyDescriptor(
+        Object base, String name) {
+        PropertyDescriptor propertyDescriptor;
+
+        try {
+            propertyDescriptor =
+                findPropertyDescriptor(
+                    Introspector.getBeanInfo(base.getClass()), name);
+        } catch (IntrospectionException e) {
+            throw new PropertyNotFoundException(
+                "Bean: " + base.getClass() + ", property: " + name, e);
+        }
+
+        if (propertyDescriptor == null)
+            throw new PropertyNotFoundException(
+                "Bean: " + base.getClass() + ", property: " + name);
+
+        return propertyDescriptor;
+    }
+
     public boolean isReadOnly(Object base, String name)
     throws PropertyNotFoundException
     {
@@ -68,20 +109,8 @@ public class PropertyResolverImpl extends PropertyResolver {
             return true;
 
         // If none of the special bean types, then process as normal Bean
-        PropertyDescriptor propertyDescriptor = null;
-
-        try {
-            propertyDescriptor =
-                findPropertyDescriptor(
-                    Introspector.getBeanInfo(base.getClass()), name);
-        } catch (IntrospectionException e) {
-            throw new PropertyNotFoundException(
-                "Bean: " + base.getClass() + ", property: " + name, e);
-        }
-
-        if (propertyDescriptor == null)
-            throw new PropertyNotFoundException(
-                "Bean: " + base.getClass() + ", property: " + name);
+        PropertyDescriptor propertyDescriptor =
+            getPropertyDescriptor(base, name);
 
         return propertyDescriptor.getWriteMethod() == null;
     }
@@ -121,20 +150,8 @@ public class PropertyResolverImpl extends PropertyResolver {
             return ((UIComponent)base).findComponent(name).getClass();
 
         // If none of the special bean types, then process as normal Bean
-        PropertyDescriptor propertyDescriptor;
-
-        try {
-            propertyDescriptor =
-                findPropertyDescriptor(
-                    Introspector.getBeanInfo(base.getClass()), name);
-        } catch (IntrospectionException e) {
-            throw new PropertyNotFoundException(
-                "Bean: " + base.getClass() + ", property: " + name, e);
-        }
-
-        if (propertyDescriptor == null)
-            throw new PropertyNotFoundException(
-                "Bean: " + base.getClass() + ", property: " + name);
+        PropertyDescriptor propertyDescriptor =
+            getPropertyDescriptor(base, name);
 
         return propertyDescriptor.getPropertyType();
     }
@@ -227,36 +244,7 @@ public class PropertyResolverImpl extends PropertyResolver {
                 "Bean must not be UIComponent, property: " + name);
 
         // If none of the special bean types, then process as normal Bean
-        PropertyDescriptor propertyDescriptor;
-
-        try {
-            propertyDescriptor =
-                findPropertyDescriptor(
-                    Introspector.getBeanInfo(base.getClass()), name);
-        } catch (IntrospectionException e) {
-            throw new PropertyNotFoundException(
-                "Bean: " + base.getClass() + ", property: " + name, e);
-        }
-
-        if (propertyDescriptor == null)
-            throw new PropertyNotFoundException(
-                "Bean: " + base.getClass() + ", property: " + name);
-
-        Method m = propertyDescriptor.getWriteMethod();
-
-        if (m == null)
-            throw new PropertyNotFoundException(
-                "Bean: " + base.getClass() + ", property: " + name);
-
-        try {
-            m.invoke(base, new Object[] {newValue});
-        } catch (IllegalAccessException e) {
-            throw new EvaluationException(
-                "Bean: " + base.getClass() + ", property: " + name, e);
-        } catch (InvocationTargetException e) {
-            throw new EvaluationException(
-                "Bean: " + base.getClass() + ", property: " + name, e);
-        }
+        setProperty(base, name, newValue);
     }
 
     public Object getValue(Object base, String name) {
@@ -270,22 +258,10 @@ public class PropertyResolverImpl extends PropertyResolver {
             return ((UIComponent)base).findComponent(name);
 
         // If none of the special bean types, then process as normal Bean
-        PropertyDescriptor propertyDescriptor;
+        PropertyDescriptor propertyDescriptor =
+            getPropertyDescriptor(base, name);
 
-        try {
-            propertyDescriptor =
-                findPropertyDescriptor(
-                    Introspector.getBeanInfo(base.getClass()), name);
-        } catch (IntrospectionException e) {
-            throw new PropertyNotFoundException(
-                "Bean: " + base.getClass() + ", property: " + name, e);
-        }
-
-        if (propertyDescriptor == null)
-            throw new PropertyNotFoundException(
-                "Bean: " + base.getClass() + ", property: " + name);
-
-        Method m = propertyDescriptor.getReadMethod();
+        Method             m = propertyDescriptor.getReadMethod();
 
         if (m == null)
             throw new PropertyNotFoundException(

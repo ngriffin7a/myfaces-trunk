@@ -47,9 +47,9 @@ public class ValueBindingImpl extends ValueBinding {
 
     //~ Instance fields --------------------------------------------------------
 
-    private Application _application;
-    private String      _reference;
-    private Object[]    _parsedReference;
+    protected Application _application;
+    protected String      _reference;
+    protected Object[]    _parsedReference;
 
     //~ Constructors -----------------------------------------------------------
 
@@ -135,7 +135,7 @@ public class ValueBindingImpl extends ValueBinding {
         return base;
     }
 
-    private boolean isPropertyReadOnly(
+    protected boolean isPropertyReadOnly(
         FacesContext facesContext, Object base, Object name) {
         name = preprocessProperty(facesContext, base, name);
 
@@ -146,7 +146,7 @@ public class ValueBindingImpl extends ValueBinding {
             base, ((Integer)name).intValue());
     }
 
-    private Class getPropertyType(
+    protected Class getPropertyType(
         FacesContext facesContext, Object base, Object name) {
         name = preprocessProperty(facesContext, base, name);
 
@@ -157,7 +157,7 @@ public class ValueBindingImpl extends ValueBinding {
             base, ((Integer)name).intValue());
     }
 
-    private void setPropertyValue(
+    protected void setPropertyValue(
         FacesContext facesContext, Object base, Object name, Object newValue) {
         name = preprocessProperty(facesContext, base, name);
 
@@ -168,6 +168,52 @@ public class ValueBindingImpl extends ValueBinding {
         else
             _application.getPropertyResolver().setValue(
                 base, ((Integer)name).intValue(), newValue);
+    }
+
+    /**
+     * Gets the value of property <code>name</code> from object
+     * <code>base</code>. Call the appropriate
+     * <code>PropertyResolver.getValue</code> method based on the type (int or
+     * String) of <code>name</code>
+     *
+     * @param facesContext facesContext to resolve abgainst
+     * @param base the bean whose property to get
+     * @param name the name or index of the property
+     *
+     * @return the value of requested property
+     */
+    protected Object getPropertyValue(
+        FacesContext facesContext, Object base, Object name) {
+        name = preprocessProperty(facesContext, base, name);
+
+        if (name == ZERO_FROM_EMPTY)
+            return null; // (see JSF 1.0, PRD2, 5.1.2.1)
+
+        return (name instanceof String)
+        ? _application.getPropertyResolver().getValue(base, (String)name)
+        : _application.getPropertyResolver().getValue(
+            base, ((Integer)name).intValue());
+    }
+
+    protected Object resolve(FacesContext facesContext) {
+        Object base =
+            _application.getVariableResolver().resolveVariable(
+                facesContext, (String)_parsedReference[0]);
+
+        return resolve(facesContext, base, 1);
+    }
+
+    protected Object resolve(FacesContext facesContext, Object base, int start) {
+        for (int i = start, max = _parsedReference.length - 1; i < max; i++) {
+            Object curProperty = _parsedReference[i];
+
+            base = getPropertyValue(facesContext, base, curProperty);
+
+            if (base == null)
+                return null; // (see JSF 1.0, PRD2, 5.1.2.1)
+        }
+
+        return base;
     }
 
     /**
@@ -334,54 +380,12 @@ public class ValueBindingImpl extends ValueBinding {
             "Unmatched bracket in reference '" + str + "'");
     }
 
-    /**
-     * Gets the value of property <code>name</code> from object
-     * <code>base</code>. Call the appropriate
-     * <code>PropertyResolver.getValue</code> method based on the type (int or
-     * String) of <code>name</code>
-     *
-     * @param facesContext facesContext to resolve abgainst
-     * @param base the bean whose property to get
-     * @param name the name or index of the property
-     *
-     * @return the value of requested property
-     */
-    private Object getPropertyValue(
-        FacesContext facesContext, Object base, Object name) {
-        name = preprocessProperty(facesContext, base, name);
-
-        if (name == ZERO_FROM_EMPTY)
-            return null; // (see JSF 1.0, PRD2, 5.1.2.1)
-
-        return (name instanceof String)
-        ? _application.getPropertyResolver().getValue(base, (String)name)
-        : _application.getPropertyResolver().getValue(
-            base, ((Integer)name).intValue());
-    }
-
     private Object preprocessProperty(
         FacesContext facesContext, Object base, Object name) {
         // Map is a special case, need to force property to String
         return (name instanceof ValueBinding)
         ? coerceProperty(base, ((ValueBinding)name).getValue(facesContext))
         : ((base instanceof Map) ? name.toString() : name);
-    }
-
-    private Object resolve(FacesContext facesContext) {
-        Object base =
-            _application.getVariableResolver().resolveVariable(
-                facesContext, (String)_parsedReference[0]);
-
-        for (int i = 1, max = _parsedReference.length - 1; i < max; i++) {
-            Object curProperty = _parsedReference[i];
-
-            base = getPropertyValue(facesContext, base, curProperty);
-
-            if (base == null)
-                return null; // (see JSF 1.0, PRD2, 5.1.2.1)
-        }
-
-        return base;
     }
 
     /**
