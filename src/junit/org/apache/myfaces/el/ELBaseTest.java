@@ -41,6 +41,11 @@ public class ELBaseTest extends MyFacesBaseTest
     protected Map      _m    = new HashMap();
     protected Object[] _a0;
     protected Object[] _a1;
+    
+    protected double[] _arrd = {0, 1, 2};
+    protected int[] _arri = {0, 1, 2};
+    protected Double[] _arrD = {new Double(0), new Double(1), new Double(2)};
+    protected Integer[] _arrI = {new Integer(0), new Integer(1), new Integer(2)};
 
     //~ Constructors -------------------------------------------------------------------------------
 
@@ -67,6 +72,10 @@ public class ELBaseTest extends MyFacesBaseTest
                     _implicitObjects.put("theA", _theA);
                     _implicitObjects.put("a", _a);
                     _implicitObjects.put("testmap", _m);
+                    _implicitObjects.put("arrd", _arrd);
+                    _implicitObjects.put("arri", _arri);
+                    _implicitObjects.put("arrD", _arrD);
+                    _implicitObjects.put("arrI", _arrI);
                 }
             });
 

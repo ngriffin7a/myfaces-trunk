@@ -1,4 +1,4 @@
-/*
+/**
  * MyFaces - the free JSF implementation
  * Copyright (C) 2003, 2004  The MyFaces Team (http://myfaces.sourceforge.net)
  *
@@ -37,6 +37,9 @@ import java.util.*;
  * @author Anton Koinov (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.3  2004/04/26 05:54:59  dave0000
+ * Add coercion to ValueBinding (and related changes)
+ *
  * Revision 1.2  2004/04/01 05:37:34  dave0000
  * Correct L2->L1 merge condition
  *
@@ -200,10 +203,7 @@ public abstract class BiLevelCacheMap implements Map
             {
                 // "dummy" synchronization to guarantee _cacheL1 will be assigned after fully initialized
                 // at least until JVM 1.5 where this should be guaranteed by the volatile keyword
-                newMap = new HashMap(HashMapUtils.calcCapacity(
-                    _cacheL1.size() + _cacheL2.size()));
-                newMap.putAll(_cacheL1);
-                newMap.putAll(_cacheL2);
+                newMap = HashMapUtils.merge(_cacheL1, _cacheL2);
                 retval = newMap.remove(key);
             }
             

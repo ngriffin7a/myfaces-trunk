@@ -30,6 +30,7 @@ import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.el.EvaluationException;
 import javax.faces.el.PropertyNotFoundException;
+import javax.faces.el.PropertyResolver;
 import javax.faces.el.ReferenceSyntaxException;
 import javax.faces.el.ValueBinding;
 import javax.servlet.jsp.el.ELException;
@@ -47,6 +48,9 @@ import java.util.Map;
  * @version $Revision$ $Date$
  * 
  * $Log$
+ * Revision 1.38  2004/04/26 05:54:59  dave0000
+ * Add coercion to ValueBinding (and related changes)
+ *
  * Revision 1.37  2004/04/08 05:16:45  dave0000
  * change to always use JSF PropertyResolver (was using JSP PR sometimes)
  *
@@ -235,17 +239,22 @@ public class ValueBindingImpl extends ValueBinding implements StateHolder
                 Object[] baseAndProperty = (Object[]) base_;
                 Object base      = baseAndProperty[0];
                 Object property  = baseAndProperty[1];
-    
+                PropertyResolver propertyResolver = 
+                    _application.getPropertyResolver();
+
                 Integer index = ELParserHelper.toIndex(base, property);
                 if (index == null)
                 {
-                    _application.getPropertyResolver().setValue(
-                        base, property, newValue);
+                    Class clazz = propertyResolver.getType(base, property);
+                    propertyResolver.setValue(
+                        base, property, coerce(newValue, clazz));
                 }
                 else
                 {
-                    _application.getPropertyResolver().setValue(
-                        base, index.intValue(), newValue);
+                    int indexVal = index.intValue();
+                    Class clazz = propertyResolver.getType(base, indexVal);
+                    propertyResolver.setValue(
+                        base, indexVal, coerce(newValue, clazz));
                 }
             }
         }
@@ -454,6 +463,11 @@ public class ValueBindingImpl extends ValueBinding implements StateHolder
         }
         
         return new Object[] {base, index};
+    }
+
+    private Object coerce(Object value, Class clazz) throws ELException
+    {
+        return Coercions.coerce(value, clazz, ELParserHelper.s_logger);
     }
 
     //~ State Holder ------------------------------------------------------

@@ -75,4 +75,43 @@ public class SetValueBindingTest extends ELBaseTest
         vb.setValue(_facesContext, "another-value");
         assertSame("another-value", vb.getValue(_facesContext));
     }
+    
+    public void testCoercion()
+    {
+        ValueBinding vb;
+
+        // test with no coercion needed
+        vb = _application.createValueBinding("#{arrd[0]}");
+        vb.setValue(_facesContext, new Double(666.666));
+        assertEquals(new Double(666.666), vb.getValue(_facesContext));
+
+        vb = _application.createValueBinding("#{arri[0]}");
+        vb.setValue(_facesContext, new Integer(667));
+        assertEquals(new Integer(667), vb.getValue(_facesContext));
+
+        vb = _application.createValueBinding("#{arrD[0]}");
+        vb.setValue(_facesContext, new Double(668.666));
+        assertEquals(new Double(668.666), vb.getValue(_facesContext));
+
+        vb = _application.createValueBinding("#{arrI[0]}");
+        vb.setValue(_facesContext, new Integer(669));
+        assertEquals(new Integer(669), vb.getValue(_facesContext));
+
+        // test with coercion
+        vb = _application.createValueBinding("#{arrd[0]}");
+        vb.setValue(_facesContext, new Integer(666));
+        assertEquals(new Double(666), vb.getValue(_facesContext));
+
+        vb = _application.createValueBinding("#{arri[0]}");
+        vb.setValue(_facesContext, new Double(667.666));
+        assertEquals(new Integer(667), vb.getValue(_facesContext));
+
+        vb = _application.createValueBinding("#{arrD[0]}");
+        vb.setValue(_facesContext, new Integer(668));
+        assertEquals(new Double(668), vb.getValue(_facesContext));
+
+        vb = _application.createValueBinding("#{arrI[0]}");
+        vb.setValue(_facesContext, new Double(669.666));
+        assertEquals(new Integer(669), vb.getValue(_facesContext));
+    }
 }

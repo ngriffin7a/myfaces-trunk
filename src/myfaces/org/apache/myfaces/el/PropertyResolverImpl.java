@@ -26,6 +26,7 @@ import javax.faces.el.EvaluationException;
 import javax.faces.el.PropertyNotFoundException;
 import javax.faces.el.PropertyResolver;
 import javax.faces.el.ReferenceSyntaxException;
+
 import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
@@ -42,6 +43,9 @@ import java.util.Map;
  * @author Anton Koinov
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.24  2004/04/26 05:54:59  dave0000
+ * Add coercion to ValueBinding (and related changes)
+ *
  * Revision 1.23  2004/04/08 13:42:13  royalts
  * removed main method
  *
@@ -154,7 +158,6 @@ public class PropertyResolverImpl extends PropertyResolver
     {
         try
         {
-            // TODO: convert newValue to property type
             if (base == null)
             {
                 throw new PropertyNotFoundException(
@@ -165,7 +168,7 @@ public class PropertyResolverImpl extends PropertyResolver
             {
                 throw new PropertyNotFoundException("Bean: " 
                     + base.getClass().getName() 
-                    + ", null or empty property property");
+                    + ", null or empty property name");
             }
 
             if (base instanceof Map)
@@ -185,7 +188,7 @@ public class PropertyResolverImpl extends PropertyResolver
         }
         catch (RuntimeException e)
         {
-            log.error("Exception setting value of property " + property 
+            log.error("Exception setting property " + property 
                 + " of bean " 
                 + base != null ? base.getClass().getName() : "NULL", e);
             throw e;
@@ -203,7 +206,6 @@ public class PropertyResolverImpl extends PropertyResolver
                     "Null bean, index: " + index);
             }
 
-            // TODO: convert newValue to property type
             try
             {
                 if (base.getClass().isArray())
@@ -228,7 +230,8 @@ public class PropertyResolverImpl extends PropertyResolver
                     + base.getClass().getName() + ", index " + index, e);
             }
 
-            throw new ReferenceSyntaxException("Must be array or List. Bean: " 
+            throw new EvaluationException(
+                "Bean must be array or List. Bean: " 
                 + base.getClass().getName() + ", index " + index);
         }
         catch (RuntimeException e)
