@@ -43,7 +43,7 @@ public abstract class InputRendererHelper
             while (it.hasNext())
             {
                 Message msg = (Message)it.next();
-                writer.write(msg.getSummary());
+                writer.write(msg.getDetail());
             }
         }
     }
