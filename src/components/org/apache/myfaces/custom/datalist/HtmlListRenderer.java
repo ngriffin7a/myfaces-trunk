@@ -31,6 +31,10 @@ import java.util.Map;
 /**
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
+ * $Log$
+ * Revision 1.4  2004/08/09 09:10:39  manolito
+ * RFE #990814 - dataList component ignores styleClass attribute
+ *
  */
 public class HtmlListRenderer
     extends HtmlRenderer
@@ -57,10 +61,14 @@ public class HtmlListRenderer
             if (layout.equals(LAYOUT_UL))
             {
                 writer.startElement(HTML.UL_ELEM, uiComponent);
+                HtmlRendererUtils.renderHTMLAttributes(writer, uiComponent,
+                                                       HTML.COMMON_PASSTROUGH_ATTRIBUTES);
             }
             else if (layout.equals(LAYOUT_OL))
             {
                 writer.startElement(HTML.OL_ELEM, uiComponent);
+                HtmlRendererUtils.renderHTMLAttributes(writer, uiComponent,
+                                                       HTML.COMMON_PASSTROUGH_ATTRIBUTES);
             }
         }
     }
