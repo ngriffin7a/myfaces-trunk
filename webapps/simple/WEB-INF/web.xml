@@ -201,6 +201,13 @@
         <load-on-startup>1</load-on-startup>
     </servlet>
 
+    <!-- source code servlet (will not work with JSF virtual path mapping) -->
+    <!--  this servlet is optional and for educational purposes only -->
+    <servlet>
+        <servlet-name>SourceCodeServlet</servlet-name>
+        <servlet-class>org.apache.myfaces.examples.servlet.SourceCodeServlet</servlet-class>
+    </servlet>
+
 
     <!-- Faces Servlet Mapping -->
 
@@ -218,16 +225,6 @@
         <url-pattern>*.jsf</url-pattern>
     </servlet-mapping>
 
-    <servlet-mapping>
-        <servlet-name>Faces Servlet</servlet-name>
-        <url-pattern>*.jsf</url-pattern>
-    </servlet-mapping>
-
-    <!-- source code servlet (will not work with JSF virtual path mapping) -->
-    <servlet>
-        <servlet-name>SourceCodeServlet</servlet-name>
-        <servlet-class>org.apache.myfaces.examples.servlet.SourceCodeServlet</servlet-class>
-    </servlet>
 
     <servlet-mapping>
         <servlet-name>SourceCodeServlet</servlet-name>
@@ -241,6 +238,5 @@
         <welcome-file>index.jsp</welcome-file>
         <welcome-file>index.html</welcome-file>
     </welcome-file-list>
-
 
 </web-app>
