@@ -1,4 +1,4 @@
-/**
+/*
  * MyFaces - the free JSF implementation
  * Copyright (C) 2003  The MyFaces Team (http://myfaces.sourceforge.net)
  *
@@ -18,67 +18,64 @@
  */
 package net.sourceforge.myfaces.context;
 
-import javax.faces.application.Message;
-import javax.faces.component.UIComponent;
+import com.expio.ebiz.util.FacesUtils;
+
+import java.util.*;
+
+import javax.faces.application.Application;
+import javax.faces.application.FacesMessage;
+import javax.faces.component.UIViewRoot;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseStream;
 import javax.faces.context.ResponseWriter;
-import javax.faces.event.FacesEvent;
-import javax.faces.tree.Tree;
+import javax.faces.render.RenderKit;
+
 import javax.servlet.ServletContext;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
-import java.util.*;
+
 
 /**
  * DOCUMENT ME!
  *
  * @author Manfred Geiler (latest modification by $Author$)
+ * @author Anton Koinov
  * @version $Revision$ $Date$
  */
 public class FacesContextImpl
     extends FacesContext
 {
-    private ExternalContext _externalContext;
-    private Locale _locale = null;
-    private Tree _tree = null;
-    private List _facesEvents = null;
-    private List _messages = null;
-    private List _messageComponents = null;
-    private int _maximumSeverity = 0;
-    private ResponseStream _responseStream = null;
-    private ResponseWriter _responseWriter = null;
-    private boolean _renderResponse = false;
-    private boolean _responseComplete = false;
+    //~ Static fields/initializers -----------------------------------------------------------------
 
-    public FacesContextImpl(ServletContext servletContext,
-                            ServletRequest servletRequest,
-                            ServletResponse servletResponse)
+    protected static final Object NULL_DUMMY        = new Object();
+
+    //~ Instance fields ----------------------------------------------------------------------------
+
+    List                          _messageClientIds = null;
+    List                          _messages         = null;
+    private Application           _application;
+    private ExternalContext       _externalContext;
+    private ResponseStream        _responseStream   = null;
+    private ResponseWriter        _responseWriter   = null;
+    private FacesMessage.Severity _maximumSeverity  = FacesMessage.SEVERITY_INFO;
+    private UIViewRoot            _viewRoot;
+    private boolean               _renderResponse   = false;
+    private boolean               _responseComplete = false;
+
+    //~ Constructors -------------------------------------------------------------------------------
+
+    public FacesContextImpl(
+        ServletContext servletContext, ServletRequest servletRequest,
+        ServletResponse servletResponse)
     {
-        _externalContext = new ExternalContextImpl(servletContext,
-                                                   servletRequest,
-                                                   servletResponse);
+        _application         = FacesUtils.getApplication();
+        _externalContext     = new ExternalContextImpl(
+                servletContext, servletRequest, servletResponse);
         FacesContext.setCurrentInstance(this);
     }
 
-    public void release()
-    {
-        _locale = null;
-        _tree = null;
-        _facesEvents = null;
-        _messages = null;
-        _messageComponents = null;
-        _maximumSeverity = 0;
-        _responseStream = null;
-        _responseWriter = null;
-        _renderResponse = false;
-        _responseComplete = false;
-        FacesContext.setCurrentInstance(null);
-    }
-
-
-
+    //~ Methods ------------------------------------------------------------------------------------
 
     //JSF 6.1.1
     public ExternalContext getExternalContext()
@@ -86,77 +83,9 @@ public class FacesContextImpl
         return _externalContext;
     }
 
-
-    //JSF.6.1.2
-    public Locale getLocale()
-    {
-        return _locale == null
-                ? Locale.getDefault()
-                : _locale;
-    }
-
-    public void setLocale(Locale locale)
-    {
-        _locale = locale;
-    }
-
-    //JSF.6.1.3
-    public Tree getTree()
-    {
-        return _tree;
-    }
-
-    public void setTree(Tree tree)
-    {
-        _tree = tree;
-    }
-
-    //JSF.6.1.4
-    private static final Object NULL_DUMMY = new Object();
-    public void addMessage(UIComponent uicomponent, Message message)
-    {
-        if (_messages == null)
-        {
-            _messages = new ArrayList();
-            _messageComponents = new ArrayList();
-        }
-        _messages.add(message);
-        _messageComponents.add(uicomponent != null ? uicomponent : NULL_DUMMY);
-        if (message.getSeverity() > _maximumSeverity)
-        {
-            _maximumSeverity = message.getSeverity();
-        }
-    }
-
-    public int getMaximumSeverity()
+    public FacesMessage.Severity getMaximumSeverity()
     {
         return _maximumSeverity;
-    }
-
-    public Iterator getMessages(UIComponent uicomponent)
-    {
-        if (_messages == null)
-        {
-            return Collections.EMPTY_LIST.iterator();
-        }
-        List lst = new ArrayList();
-        for (int i = 0; i < _messages.size(); i++)
-        {
-            Object msgComp = _messageComponents.get(i);
-            if ((msgComp == NULL_DUMMY && uicomponent == null) ||
-                 msgComp != NULL_DUMMY && uicomponent == (UIComponent)msgComp)
-            {
-                lst.add(_messages.get(i));
-            }
-        }
-        return lst.iterator();
-    }
-
-    public Iterator getMessages()
-    {
-        return _messages != null
-                ? _messages.iterator()
-                : Collections.EMPTY_LIST.iterator();
     }
 
     /**
@@ -164,42 +93,155 @@ public class FacesContextImpl
      */
     public int getMessageCount()
     {
-        return _messages == null
-                ? 0
-                : _messages.size();
+        return (_messages == null) ? 0 : _messages.size();
+    }
+
+    public Iterator getMessages()
+    {
+        return (_messages != null) ? _messages.iterator() : Collections.EMPTY_LIST.iterator();
     }
 
     /**
-     * MyFaces extension.
+     * MyFaces utility extension.
      */
-    public void clearMessages()
+    public static boolean isRenderResponse(FacesContext facesContext)
     {
-        _messages = null;
-        _messageComponents = null;
-        _maximumSeverity = 0;
-    }
-
-    //JSF.6.1.5
-    public Iterator getFacesEvents()
-    {
-        return _facesEvents != null
-                ? _facesEvents.iterator()
-                : Collections.EMPTY_LIST.iterator();
-    }
-
-    public void addFacesEvent(FacesEvent facesevent)
-    {
-        if (_facesEvents == null)
+        if (facesContext instanceof FacesContextImpl)
         {
-            _facesEvents = new ArrayList();
+            return ((FacesContextImpl) facesContext)._renderResponse;
         }
-        _facesEvents.add(facesevent);
+        else
+        {
+            throw new IllegalArgumentException(
+                "FacesContext of class " + facesContext.getClass().getName() + " is not supported.");
+        }
     }
 
-    //JSF.6.1.6
+    /**
+     * MyFaces utility extension.
+     */
+    public static boolean isResponseComplete(FacesContext facesContext)
+    {
+        if (facesContext instanceof FacesContextImpl)
+        {
+            return ((FacesContextImpl) facesContext)._responseComplete;
+        }
+        else
+        {
+            throw new IllegalArgumentException(
+                "FacesContext of class " + facesContext.getClass().getName() + " is not supported.");
+        }
+    }
+
+    public Application getApplication()
+    {
+        return _application;
+    }
+
+    public Iterator getClientIdsWithMessages()
+    {
+        if (_messages.isEmpty())
+        {
+            return Collections.EMPTY_LIST.iterator();
+        }
+
+        return new Iterator()
+            {
+                private int _next      = -1;
+                boolean     _nextFound;
+
+                public void remove()
+                {
+                    throw new UnsupportedOperationException();
+                }
+
+                public boolean hasNext()
+                {
+                    if (!_nextFound)
+                    {
+                        while (++_next < _messageClientIds.size())
+                        {
+                            Object messageClientId = _messageClientIds.get(_next);
+                            if (messageClientId != NULL_DUMMY)
+                            {
+                                _nextFound = true;
+                                break;
+                            }
+                        }
+                    }
+                    return _nextFound;
+                }
+
+                public Object next()
+                {
+                    if (hasNext())
+                    {
+                        _nextFound = false;
+                        return _messages.get(_next);
+                    }
+
+                    throw new NoSuchElementException();
+                }
+            };
+    }
+
+    public Iterator getMessages(String clientId)
+    {
+        if (_messages == null)
+        {
+            return Collections.EMPTY_LIST.iterator();
+        }
+
+        List lst = new ArrayList();
+        for (int i = 0; i < _messages.size(); i++)
+        {
+            String savedClientId = (String) _messageClientIds.get(i);
+            if (
+                ((savedClientId == NULL_DUMMY) && (clientId == null))
+                        || savedClientId.equals(clientId))
+            {
+                lst.add(_messages.get(i));
+            }
+        }
+        return lst.iterator();
+    }
+
+    public RenderKit getRenderKit()
+    {
+        //return ???;
+    }
+
+    public boolean getRenderResponse()
+    {
+        return _renderResponse;
+    }
+
+    public boolean getResponseComplete()
+    {
+        return _responseComplete;
+    }
+
+    public void setResponseStream(ResponseStream responseStream)
+    {
+        if (responseStream == null)
+        {
+            throw new NullPointerException("responseStream");
+        }
+        _responseStream = responseStream;
+    }
+
     public ResponseStream getResponseStream()
     {
         return _responseStream;
+    }
+
+    public void setResponseWriter(ResponseWriter responseWriter)
+    {
+        if (responseWriter == null)
+        {
+            throw new NullPointerException("responseWriter");
+        }
+        _responseWriter = responseWriter;
     }
 
     public ResponseWriter getResponseWriter()
@@ -207,14 +249,60 @@ public class FacesContextImpl
         return _responseWriter;
     }
 
-    public void setResponseStream(ResponseStream responsestream)
+    public void setViewRoot(UIViewRoot viewRoot)
     {
-        _responseStream = responsestream;
+        if (viewRoot == null)
+        {
+            throw new NullPointerException("viewRoot");
+        }
+        _viewRoot = viewRoot;
     }
 
-    public void setResponseWriter(ResponseWriter responsewriter)
+    public UIViewRoot getViewRoot()
     {
-        _responseWriter = responsewriter;
+        return _viewRoot;
+    }
+
+    public void addMessage(String clientId, FacesMessage message)
+    {
+        if (message == null)
+        {
+            throw new NullPointerException("message");
+        }
+
+        if (_messages == null)
+        {
+            _messages             = new ArrayList();
+            _messageClientIds     = new ArrayList();
+        }
+        _messages.add(message);
+        _messageClientIds.add((clientId != null) ? clientId : NULL_DUMMY);
+        if (message.getSeverity().compareTo(_maximumSeverity) > 0)
+        {
+            _maximumSeverity = message.getSeverity();
+        }
+    }
+
+    /**
+     * MyFaces extension.
+     */
+    public void clearMessages()
+    {
+        _messages             = null;
+        _messageClientIds     = null;
+        _maximumSeverity      = FacesMessage.SEVERITY_INFO;
+    }
+
+    public void release()
+    {
+        _messages             = null;
+        _messageClientIds     = null;
+        _maximumSeverity      = FacesMessage.SEVERITY_INFO;
+        _responseStream       = null;
+        _responseWriter       = null;
+        _renderResponse       = false;
+        _responseComplete     = false;
+        FacesContext.setCurrentInstance(null);
     }
 
     //JSF.6.1.7
@@ -227,36 +315,4 @@ public class FacesContextImpl
     {
         _responseComplete = true;
     }
-
-    /**
-     * MyFaces utility extension.
-     */
-    public static boolean isRenderResponse(FacesContext facesContext)
-    {
-        if (facesContext instanceof FacesContextImpl)
-        {
-            return ((FacesContextImpl)facesContext)._renderResponse;
-        }
-        else
-        {
-            throw new IllegalArgumentException("FacesContext of class " + facesContext.getClass().getName() + " is not supported.");
-        }
-    }
-
-    /**
-     * MyFaces utility extension.
-     */
-    public static boolean isResponseComplete(FacesContext facesContext)
-    {
-        if (facesContext instanceof FacesContextImpl)
-        {
-            return ((FacesContextImpl)facesContext)._responseComplete;
-        }
-        else
-        {
-            throw new IllegalArgumentException("FacesContext of class " + facesContext.getClass().getName() + " is not supported.");
-        }
-    }
-
-
 }
