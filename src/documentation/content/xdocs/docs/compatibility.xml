@@ -15,6 +15,7 @@
 		<li>Java</li>
 		<ol>
 			<li>JDK 1.4.x</li>
+			<li>JDK 1.5.x</li>
 		</ol>
 		<li>Servlet Container</li>
 		<ol>
