@@ -209,6 +209,11 @@
             <fileset file="${examples.web}/WEB-INF/web.xml"/>
             <fileset file="${examples.web}/WEB-INF/faces-config.xml"/>
         </delete>
+        <delete quiet="true" failonerror="false" includeEmptyDirs="true">
+            <fileset dir="${tiles.web}/WEB-INF/classes"/>
+            <fileset dir="${tiles.web}/WEB-INF/lib"/>
+            <fileset file="${tiles.web}/WEB-INF/web.xml"/>
+        </delete>
     </target>
 
 </project>

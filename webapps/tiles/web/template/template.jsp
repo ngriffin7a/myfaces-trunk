@@ -7,27 +7,26 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html;CHARSET=iso-8859-1" />
   <title>Myfaces - Tiles</title>
-  <link rel="stylesheet" type="text/css" href="../css/roncalli.css" />
-  <script language="javascript" type="text/javascript" src="../javascript/main.js" ></script>
+  <link rel="stylesheet" type="text/css" href="css/tiles.css" />
 </head>
 <f:view>
 <body>
   <div id="lftBar">
     <f:subview id="menu">
-        <tiles:insert attribute="menu" flush="false" />
+      <tiles:insert attribute="menu" flush="false" />
     </f:subview>
   </div>
   <div id="level0">
     <div id="level1">
-        <div id="topBar">
+       <div id="topBar">
           <f:subview id="header">
             <tiles:insert attribute="header" flush="false"/>
           </f:subview>
-         </div>
+       </div>
        <div id="level2">
-             <f:subview id="content">
-                 <tiles:insert attribute="body" flush="false"/>
-             </f:subview>
+         <f:subview id="content">
+            <tiles:insert attribute="body" flush="false"/>
+         </f:subview>
       </div>
     </div>
   </div>

@@ -63,9 +63,11 @@
     <target name="-compile-and-copy-libs"
             depends="-myfaces-jar, -myfaces-jsf-api-jar"
             description="compiles the tiles java classes to WEB-INF/classes and copies all needed libs to WEB-INF/lib">
+        <mkdir dir="${web-inf.classes.dir}" />
     </target>
 
     <target name="-war" depends="-compile-and-copy-libs">
+        <mkdir dir="${temp.dir}" /> 
         <tstamp>
             <format property="TODAY" pattern="yyyy-MM-dd HH:mm" locale="en"/>
         </tstamp>
