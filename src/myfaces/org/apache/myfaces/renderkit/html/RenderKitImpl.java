@@ -19,10 +19,7 @@
 package net.sourceforge.myfaces.renderkit.html;
 
 import net.sourceforge.myfaces.MyFacesConfig;
-import net.sourceforge.myfaces.renderkit.html.ext.LayoutRenderer;
-import net.sourceforge.myfaces.renderkit.html.ext.NavigationItemRenderer;
-import net.sourceforge.myfaces.renderkit.html.ext.NavigationRenderer;
-import net.sourceforge.myfaces.renderkit.html.ext.SortColumnRenderer;
+import net.sourceforge.myfaces.renderkit.html.ext.*;
 import net.sourceforge.myfaces.renderkit.html.state.StateRenderer;
 
 import javax.faces.component.UIComponent;
@@ -74,6 +71,7 @@ public class RenderKitImpl
         addRenderer(new NavigationItemRenderer());
         addRenderer(new SortColumnRenderer());
         addRenderer(new LayoutRenderer());
+        addRenderer(new FileUploadRenderer());
     }
 
     private void addRenderer(HTMLRenderer r)
