@@ -12,8 +12,4 @@
         <name>target</name>
         <type>java.lang.String</type>
     </field>
-    <field>
-        <name>actionUpdateValue</name>
-        <type>java.lang.Object</type>
-    </field>
 </component>

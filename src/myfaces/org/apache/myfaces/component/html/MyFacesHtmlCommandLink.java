@@ -18,14 +18,9 @@
  */
 package net.sourceforge.myfaces.component.html;
 
-import net.sourceforge.myfaces.util.ClassUtils;
-
 import javax.faces.component.html.HtmlCommandLink;
 import javax.faces.context.FacesContext;
 import javax.faces.el.ValueBinding;
-import javax.faces.event.AbortProcessingException;
-import javax.faces.event.ActionEvent;
-import javax.faces.event.FacesEvent;
 
 /**
  * @author Thomas Spiegl (latest modification by $Author$)
@@ -35,52 +30,6 @@ import javax.faces.event.FacesEvent;
 public class MyFacesHtmlCommandLink
     extends HtmlCommandLink
 {
-    public ValueBinding getActionUpdateProperty()
-    {
-        return getValueBinding("actionUpdateProperty");
-    }
-
-    public void setActionUpdateProperty(ValueBinding actionUpdateProperty)
-    {
-        setValueBinding("actionUpdateProperty", actionUpdateProperty);
-    }
-
-
-    /**
-     * Prior to standard broadcast the following is done:
-     * If actionUpdateProperty ValueBinding is set, the setValue method of
-     * this ValueBinding is called with the current actionUpdateValue. If the
-     * current actionUpdateValue is a String but the getType method of
-     * the actionUpdateProperty ValueBinding returns a Class other than String
-     * automatic conversion is done for primitive and standard java types.
-     * @param event
-     * @throws AbortProcessingException
-     * @see ClassUtils#convertToType
-     */
-    public void broadcast(FacesEvent event) throws AbortProcessingException
-    {
-        if (event instanceof ActionEvent)
-        {
-            ValueBinding vb = getActionUpdateProperty();
-            if (vb != null)
-            {
-                FacesContext context = getFacesContext();
-                Object updateValue = getActionUpdateValue();
-                if (updateValue != null && updateValue instanceof String)
-                {
-                    Class type = vb.getType(context);
-                    if (!type.equals(String.class))
-                    {
-                        updateValue = ClassUtils.convertToType((String)updateValue, type);
-                    }
-                }
-                vb.setValue(context, updateValue);
-            }
-        }
-
-        super.broadcast(event);
-    }
-
     //------------------ GENERATED CODE BEGIN (do not modify!) --------------------
 
     public static final String COMPONENT_TYPE = "net.sourceforge.myfaces.HtmlCommandLink";
@@ -88,7 +37,6 @@ public class MyFacesHtmlCommandLink
     private static final String DEFAULT_RENDERER_TYPE = "net.sourceforge.myfaces.Link";
 
     private String _target = null;
-    private Object _actionUpdateValue = null;
 
     public MyFacesHtmlCommandLink()
     {
@@ -112,25 +60,12 @@ public class MyFacesHtmlCommandLink
         return vb != null ? (String)vb.getValue(getFacesContext()) : null;
     }
 
-    public void setActionUpdateValue(Object actionUpdateValue)
-    {
-        _actionUpdateValue = actionUpdateValue;
-    }
-
-    public Object getActionUpdateValue()
-    {
-        if (_actionUpdateValue != null) return _actionUpdateValue;
-        ValueBinding vb = getValueBinding("actionUpdateValue");
-        return vb != null ? (Object)vb.getValue(getFacesContext()) : null;
-    }
-
 
     public Object saveState(FacesContext context)
     {
-        Object values[] = new Object[3];
+        Object values[] = new Object[2];
         values[0] = super.saveState(context);
         values[1] = _target;
-        values[2] = _actionUpdateValue;
         return ((Object) (values));
     }
 
@@ -139,7 +74,6 @@ public class MyFacesHtmlCommandLink
         Object values[] = (Object[])state;
         super.restoreState(context, values[0]);
         _target = (String)values[1];
-        _actionUpdateValue = (Object)values[2];
     }
     //------------------ GENERATED CODE END ---------------------------------------
 }
