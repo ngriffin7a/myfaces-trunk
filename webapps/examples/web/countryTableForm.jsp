@@ -57,9 +57,10 @@ managed beans used:
         <f:facet name="body">
             <h:panelGroup id="body">
 
-               <h:messages errorClass="error" showSummary="true" showDetail="true" />
-
                 <h:form id="form" style="display:inline" >
+
+                <x:messages errorClass="error" showSummary="true" showDetail="true" />
+
                 <x:dataTable id="data"
                         styleClass="standardTable"
                         headerClass="standardTable_Header"

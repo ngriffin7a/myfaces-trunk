@@ -34,6 +34,9 @@ import java.util.Map;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.12  2005/01/26 13:27:16  mmarinschek
+ * The x:message tags are now extended to use the column-name as a label for all inputs in an x:dataTable, without having to specify additional information.
+ *
  * Revision 1.11  2005/01/22 19:47:44  mmarinschek
  * Message rendering updated - if a validation exception needs to be rendered, the id of the component is replaced with a label.
  *
@@ -115,7 +118,7 @@ public abstract class HtmlMessageRendererBase
         FacesMessage facesMessage = (FacesMessage)messageIterator.next();
 
         // and render it
-        renderSingleFacesMessage(facesContext, message, facesMessage, clientId);
+        renderSingleFacesMessage(facesContext, message, facesMessage,clientId);
     }
 
 

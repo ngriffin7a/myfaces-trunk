@@ -21,6 +21,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import javax.faces.FacesException;
+import javax.faces.render.Renderer;
 import javax.faces.component.*;
 import javax.faces.component.html.HtmlInputText;
 import javax.faces.context.FacesContext;
@@ -37,6 +38,9 @@ import java.util.*;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.22  2005/01/26 13:27:16  mmarinschek
+ * The x:message tags are now extended to use the column-name as a label for all inputs in an x:dataTable, without having to specify additional information.
+ *
  * Revision 1.21  2005/01/22 16:47:17  mmarinschek
  * fixing bug with validation not called if the submitted value is empty; an empty string is submitted instead if the component is enabled.
  *
@@ -147,7 +151,40 @@ public class RendererUtils
             getPathToComponent(component.getParent(),buf);
         }
     }
-    
+
+    public static String getConcatenatedId(FacesContext context, UIComponent container,
+                                           String clientId)
+    {
+        UIComponent child = container.findComponent(clientId);
+
+        if(child == null)
+                return clientId;
+
+        return getConcatenatedId(context, child);
+    }
+
+    public static String getConcatenatedId(FacesContext context, UIComponent component)
+    {
+        if (context == null) throw new NullPointerException("context");
+
+        StringBuffer idBuf = new StringBuffer();
+
+        idBuf.append(component.getId());
+
+        UIComponent parent = null;
+
+        while((parent = component.getParent())!=null)
+        {
+            if(parent instanceof NamingContainer)
+            {
+                idBuf.insert(0,NamingContainer.SEPARATOR_CHAR);
+                idBuf.insert(0,parent.getId());
+            }
+        }
+
+        return idBuf.toString();
+    }
+
     public static Boolean getBooleanValue(UIComponent component)
     {
         if (!(component instanceof ValueHolder))

@@ -25,18 +25,26 @@ import org.apache.commons.logging.LogFactory;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.component.UIComponent;
+import javax.faces.component.UIColumn;
+import javax.faces.component.UIInput;
+import javax.faces.component.ValueHolder;
 import javax.faces.component.html.HtmlOutputLabel;
+import javax.faces.component.html.HtmlOutputText;
 import javax.faces.context.FacesContext;
 import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.List;
 
 /**
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.8  2005/01/26 13:27:16  mmarinschek
+ * The x:message tags are now extended to use the column-name as a label for all inputs in an x:dataTable, without having to specify additional information.
+ *
  * Revision 1.7  2005/01/22 19:47:44  mmarinschek
  * Message rendering updated - if a validation exception needs to be rendered, the id of the component is replaced with a label.
  *
@@ -146,6 +154,28 @@ public class HtmlMessageRenderer
     {
         Map outputLabelMap = getOutputLabelMap(facesContext);
         MessageLabelInfo info = ((MessageLabelInfo)outputLabelMap.get(inputClientId));
+
+        if(info == null)
+        {
+            UIComponent comp = facesContext.getViewRoot().findComponent(inputClientId);
+
+            UIComponent parent=comp;
+
+            while(parent != null && !((parent=parent.getParent())instanceof UIColumn));
+
+            if(parent != null)
+            {
+                UIColumn column = (UIColumn) parent;
+
+                if(column.getHeader()!=null)
+                {
+                    UIComponent header = column.getHeader();
+
+                    return getComponentText(facesContext, header);
+                }
+            }
+        }
+
         return info==null?null:info.getText();
     }
 
@@ -153,6 +183,17 @@ public class HtmlMessageRenderer
     {
         Map outputLabelMap = getOutputLabelMap(facesContext);
         MessageLabelInfo info = ((MessageLabelInfo)outputLabelMap.get(inputClientId));
+
+        if(info == null)
+        {
+            UIComponent comp = facesContext.getViewRoot().findComponent(inputClientId);
+
+            if(comp!=null)
+            {
+                return comp.getId();
+            }
+        }
+
         return info==null?null:(info.getForComponent()==null?null:info.getForComponent().getId());
     }
 
@@ -192,7 +233,7 @@ public class HtmlMessageRenderer
                 {
                     map.put(input.getClientId(facesContext),
                             new MessageLabelInfo(
-                                    input,getLabelText(facesContext, (HtmlOutputLabel)child)));
+                                    input,getComponentText(facesContext, (HtmlOutputLabel)child)));
                 }
             }
             else
@@ -202,12 +243,34 @@ public class HtmlMessageRenderer
         }
     }
 
-    private static String getLabelText(FacesContext facesContext, HtmlOutputLabel label)
+    private static String getComponentText(FacesContext facesContext, UIComponent component)
     {
-        String text = RendererUtils.getStringValue(facesContext, label);
+        String text = null;
+
+        if(component instanceof ValueHolder)
+        {
+            text=RendererUtils.getStringValue(facesContext, component);
+        }
+
         if (text == null)
         {
-            //TODO: traverse children and append OutputText and/or OutputMessage texts
+            StringBuffer buf = new StringBuffer();
+            List li = component.getChildren();
+
+            for (int i = 0; i < li.size(); i++)
+            {
+                UIComponent uiComponent = (UIComponent) li.get(i);
+
+                if(uiComponent instanceof HtmlOutputText)
+                {
+                    String str = RendererUtils.getStringValue(facesContext, component);
+
+                    if(str!=null)
+                        buf.append(str);
+                }
+            }
+
+            text = buf.toString();
         }
         return text;
     }

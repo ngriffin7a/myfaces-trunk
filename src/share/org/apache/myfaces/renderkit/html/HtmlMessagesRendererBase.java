@@ -35,6 +35,9 @@ import java.util.Map;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.5  2005/01/26 13:27:16  mmarinschek
+ * The x:message tags are now extended to use the column-name as a label for all inputs in an x:dataTable, without having to specify additional information.
+ *
  * Revision 1.4  2004/12/23 13:03:09  mmarinschek
  * id's not rendered (or not conditionally rendered); changes in jslistener to support both ie and firefox now
  *
@@ -132,7 +135,8 @@ public abstract class HtmlMessagesRendererBase
             renderSingleFacesMessage(facesContext,
                                      messages,
                                      (FacesMessage)messagesIterator.next(),
-                                     messagesIterator.getClientId());
+                                        messagesIterator.getClientId());
+
             writer.endElement(HTML.TD_ELEM);
             writer.endElement(HTML.TR_ELEM);
         }

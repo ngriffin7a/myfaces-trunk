@@ -72,7 +72,7 @@ class _ComponentUtils
 
     static UIComponent findComponent(UIComponent findBase, String id)
     {
-        if (id.equals(findBase.getId()))
+        if (idsAreEqual(id,findBase))
         {
             return findBase;
         }
@@ -85,13 +85,35 @@ class _ComponentUtils
                 UIComponent find = findComponent(childOrFacet, id);
                 if (find != null) return find;
             }
-            else if (id.equals(childOrFacet.getId()))
+            else if (idsAreEqual(id,childOrFacet))
             {
                 return childOrFacet;
             }
         }
 
         return null;
+    }
+
+    private static boolean idsAreEqual(String id, UIComponent cmp)
+    {
+        if(id.equals(cmp.getId()))
+            return true;
+
+        if(cmp instanceof UIData)
+        {
+            UIData uiData = ((UIData) cmp);
+
+            if(uiData.getRowIndex()==-1)
+            {
+                return id.startsWith(cmp.getId());
+            }
+            else
+            {
+                return id.equals(cmp.getId()+"_"+uiData.getRowIndex());
+            }
+        }
+
+        return false;
     }
 
 
