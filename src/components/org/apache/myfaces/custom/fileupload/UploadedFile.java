@@ -19,6 +19,8 @@
 package net.sourceforge.myfaces.custom.fileupload;
 
 import java.io.File;
+import java.io.IOException;
+import org.apache.commons.fileupload.FileItem;
 
 /**
  * @author Manfred Geiler (latest modification by $Author$)
@@ -26,29 +28,60 @@ import java.io.File;
  */
 public class UploadedFile
 {
-    private String _filePath;
-    private String _contentType;
-    private File _file;
-
-    public UploadedFile(String filePath, String contentType, File file)
-    {
-        _filePath = filePath;
-        _contentType = contentType;
-        _file = file;
+    private String _name = null;
+    private String _contentType = null;
+    protected byte[] _bytes =  null;
+    
+    public UploadedFile(){}
+    
+    public UploadedFile(FileItem fileItem) throws IOException {
+    	int sizeInBytes = (int)fileItem.getSize();
+    	_bytes = new byte[sizeInBytes];
+    	fileItem.getInputStream().read( _bytes );
+    	
+    	if (_bytes.length != 0) {
+    		_name = fileItem.getName();
+    		_contentType = fileItem.getContentType();
+    	}else{
+    		_bytes = null;
+    	}
     }
 
-    public String getFilePath()
-    {
-        return _filePath;
-    }
 
-    public String getContentType()
-    {
-        return _contentType;
-    }
-
-    public File getFile()
-    {
-        return _file;
-    }
+	/**
+	 * @return Returns the _bytes.
+	 */
+	public byte[] getBytes() {
+		return _bytes;
+	}
+	/**
+	 * @param _bytes The _bytes to set.
+	 */
+	public void setBytes(byte[] _bytes) {
+		this._bytes = _bytes;
+	}
+	/**
+	 * @return Returns the _contentType.
+	 */
+	public String getContentType() {
+		return _contentType;
+	}
+	/**
+	 * @param type The _contentType to set.
+	 */
+	public void setContentType(String type) {
+		_contentType = type;
+	}
+	/**
+	 * @return Returns the _name.
+	 */
+	public String getName() {
+		return _name;
+	}
+	/**
+	 * @param _name The _name to set.
+	 */
+	public void setName(String _name) {
+		this._name = _name;
+	}
 }

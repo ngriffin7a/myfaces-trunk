@@ -42,7 +42,7 @@ public class UploadedFileConverter
     {
         if (obj instanceof UploadedFile)
         {
-            return ((UploadedFile)obj).getFilePath();
+            return ((UploadedFile)obj).getName();
         }
         else
         {

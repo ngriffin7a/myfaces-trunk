@@ -18,7 +18,8 @@
  */
 package net.sourceforge.myfaces.custom.fileupload;
 
-import com.oreilly.servlet.MultipartWrapper;
+import org.apache.commons.fileupload.FileItem;
+
 import net.sourceforge.myfaces.renderkit.html.HTML;
 import net.sourceforge.myfaces.renderkit.html.HtmlRendererUtils;
 
@@ -28,12 +29,14 @@ import javax.faces.context.ResponseWriter;
 import javax.faces.render.Renderer;
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
-import java.io.File;
 import java.io.IOException;
 
 /**
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
+ * 
+ * Revision 1.2 Sylvain Vieujot
+ * Upgraded to use commons fileUpload
  */
 public class HtmlFileUploadRenderer
     extends Renderer
@@ -52,7 +55,7 @@ public class HtmlFileUploadRenderer
         UploadedFile value = (UploadedFile)((HtmlInputFileUpload)uiComponent).getValue();
         if (value != null)
         {
-            writer.writeAttribute(HTML.VALUE_ATTR, value.getFilePath(), null);
+            writer.writeAttribute(HTML.VALUE_ATTR, value.getName(), null);
         }
         HtmlRendererUtils.renderHTMLAttributes(writer, uiComponent, HTML.INPUT_FILE_PASSTHROUGH_ATTRIBUTES);
         writer.endElement(HTML.INPUT_ELEM);
@@ -69,7 +72,7 @@ public class HtmlFileUploadRenderer
         //this will fail.
         ServletRequest multipartRequest = (ServletRequest)facesContext.getExternalContext().getRequest();
         while (multipartRequest != null &&
-               !(multipartRequest instanceof MultipartWrapper))
+               !(multipartRequest instanceof MultipartRequestWrapper))
         {
             if (multipartRequest instanceof HttpServletRequestWrapper)
             {
@@ -83,20 +86,20 @@ public class HtmlFileUploadRenderer
 
         if (multipartRequest != null)
         {
-            MultipartWrapper mpReq = (MultipartWrapper)multipartRequest;
+        	MultipartRequestWrapper mpReq = (MultipartRequestWrapper)multipartRequest;
 
             String paramName = uiComponent.getClientId(facesContext);
-            File file = mpReq.getFile(paramName);
-            if (file != null)
+            FileItem fileItem = mpReq.getFileItem(paramName);
+            if (fileItem != null)
             {
-                UploadedFile upFile = new UploadedFile(mpReq.getFilesystemName(paramName),
-                                                       mpReq.getContentType(paramName),
-                                                       file);
-                ((HtmlInputFileUpload)uiComponent).setValue(upFile);
-                ((HtmlInputFileUpload)uiComponent).setValid(true);
+            	try{
+            		UploadedFile upFile = new UploadedFile( fileItem );
+            		((HtmlInputFileUpload)uiComponent).setValue(upFile);
+            		((HtmlInputFileUpload)uiComponent).setValid(true);
+            	}catch(IOException ioe){
+            		// TODO : Log, and maybe setValid(false) ??
+            	}
             }
         }
     }
-
-
 }
