@@ -25,6 +25,9 @@ import java.io.IOException;
  * @author Manfred Geiler
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.15  2004/05/18 08:29:38  manolito
+ * saveSerializedView now caches the SerializedView within the request, so that multiple calls only process the saveState methods of components once.
+ *
  * Revision 1.14  2004/04/13 08:08:08  manolito
  * NPE bug fix
  *
@@ -41,12 +44,10 @@ public class JspStateManagerImpl
     extends MyfacesStateManager
 {
     private static final Log log = LogFactory.getLog(JspStateManagerImpl.class);
-    private static final String SERIALIZED_VIEW_PARAM
+    private static final String SERIALIZED_VIEW_SESSION_ATTR
             = JspStateManagerImpl.class.getName() + ".SERIALIZED_VIEW";
-    /*
-    private static final String VIEW_MAP_SESSION_PARAM
-            = JspStateManagerImpl.class.getName() + ".VIEW_MAP";
-            */
+    private static final String SERIALIZED_VIEW_REQUEST_ATTR
+            = JspStateManagerImpl.class.getName() + ".SERIALIZED_VIEW";
 
     private RenderKitFactory _renderKitFactory = null;
 
@@ -194,9 +195,21 @@ public class JspStateManagerImpl
     {
         //removeTransientComponents(facesContext.getViewRoot());
 
-        Object treeStruct = getTreeStructureToSave(facesContext);
-        Object compStates = getComponentStateToSave(facesContext);
-        SerializedView serializedView = new SerializedView(treeStruct, compStates);
+        ExternalContext externalContext = facesContext.getExternalContext();
+
+        // SerializedView already created before within this request?
+        SerializedView serializedView = (SerializedView)externalContext.getRequestMap()
+                                                            .get(SERIALIZED_VIEW_REQUEST_ATTR);
+        if (serializedView == null)
+        {
+            // first call to saveSerializedView --> create SerializedView
+            Object treeStruct = getTreeStructureToSave(facesContext);
+            Object compStates = getComponentStateToSave(facesContext);
+            serializedView = new SerializedView(treeStruct, compStates);
+            externalContext.getRequestMap().put(SERIALIZED_VIEW_REQUEST_ATTR,
+                                                serializedView);
+        }
+
         if (isSavingStateInClient(facesContext))
         {
             return serializedView;
@@ -204,7 +217,7 @@ public class JspStateManagerImpl
         else
         {
             //save state in server session
-            saveSerializedViewInServletSession(facesContext.getExternalContext(),
+            saveSerializedViewInServletSession(externalContext,
                                                facesContext.getViewRoot().getViewId(),
                                                serializedView);
             return null;    //return null to signal that saving is done
@@ -271,14 +284,14 @@ public class JspStateManagerImpl
                                                       String viewId,
                                                       SerializedView serializedView)
     {
-        externalContext.getSessionMap().put(SERIALIZED_VIEW_PARAM,
+        externalContext.getSessionMap().put(SERIALIZED_VIEW_SESSION_ATTR,
                                             new Object[] {viewId, serializedView});
     }
     
     protected SerializedView getSerializedViewFromServletSession(ExternalContext externalContext,
                                                                  String viewId)
     {
-        Object[] ar = (Object[])externalContext.getSessionMap().get(SERIALIZED_VIEW_PARAM);
+        Object[] ar = (Object[])externalContext.getSessionMap().get(SERIALIZED_VIEW_SESSION_ATTR);
         if (ar == null) return null;    // no state information in session
         String savedViewId = (String)ar[0];
         if (viewId == null || viewId.equals(savedViewId))
@@ -294,7 +307,7 @@ public class JspStateManagerImpl
 
     protected void removeSerializedViewFromServletSession(ExternalContext externalContext)
     {
-        externalContext.getSessionMap().remove(SERIALIZED_VIEW_PARAM);
+        externalContext.getSessionMap().remove(SERIALIZED_VIEW_SESSION_ATTR);
     }
 
     /*
