@@ -8,6 +8,7 @@
             <x:navigation_item id="nav-2-3-1" key="nav_Simple_list" treeId="/simpleList.jsf"/>
             <x:navigation_item id="nav-2-3-2" key="nav_Sortable_list" treeId="/simpleSortList.jsf"/>
             <x:navigation_item id="nav-2-3-3" key="nav_Selectbox" treeId="/selectbox.jsf"/>
+            <x:navigation_item id="nav-2-3-4" key="nav_FileUpload" treeId="/fileupload.jsf"/>
         </x:navigation_item>
     </x:navigation_item>
     <x:navigation_item id="nav-3" key="nav_Documentation" >

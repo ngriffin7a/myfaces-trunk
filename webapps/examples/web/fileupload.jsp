@@ -47,7 +47,7 @@
                     Gimme an image:
                     <x:file_upload id="fileupload"
                                    accept="image/*"
-                                   modelReference="fileUploadForm.file"
+                                   modelReference="fileUploadForm.upFile"
                                    inputClass="fileUploadInput"
                                    size="100" />
                     <h:command_button label="load it up">

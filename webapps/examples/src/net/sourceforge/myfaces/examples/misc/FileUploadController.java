@@ -18,11 +18,11 @@
  */
 package net.sourceforge.myfaces.examples.misc;
 
-import net.sourceforge.myfaces.component.ext.UIFileUpload;
+import net.sourceforge.myfaces.component.ext.UploadedFile;
 
 import javax.faces.context.FacesContext;
-import javax.faces.event.ActionEvent;
 import javax.faces.event.AbortProcessingException;
+import javax.faces.event.ActionEvent;
 import javax.faces.event.ActionListener;
 import javax.faces.event.PhaseId;
 
@@ -46,13 +46,9 @@ public class FileUploadController
         FileUploadForm form = (FileUploadForm)facesContext.getModelValue("fileUploadForm");
         if (form != null)
         {
-            facesContext.getServletContext().setAttribute("fileupload_file", form.getFile());
-
-            UIFileUpload comp = (UIFileUpload)facesContext.getTree().getRoot().findComponent("fileupload");
-            if (comp != null)
-            {
-                facesContext.getServletContext().setAttribute("fileupload_type", comp.getContentType());
-            }
+            UploadedFile upFile = form.getUpFile();
+            facesContext.getServletContext().setAttribute("fileupload_file", upFile.getFile());
+            facesContext.getServletContext().setAttribute("fileupload_type", upFile.getContentType());
         }
     }
 }

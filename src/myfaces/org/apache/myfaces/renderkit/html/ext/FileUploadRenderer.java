@@ -20,6 +20,7 @@ package net.sourceforge.myfaces.renderkit.html.ext;
 
 import com.oreilly.servlet.MultipartWrapper;
 import net.sourceforge.myfaces.component.ext.UIFileUpload;
+import net.sourceforge.myfaces.component.ext.UploadedFile;
 import net.sourceforge.myfaces.renderkit.attr.TextRendererAttributes;
 import net.sourceforge.myfaces.renderkit.attr.ext.FileUploadRendererAttributes;
 import net.sourceforge.myfaces.renderkit.html.HTMLRenderer;
@@ -69,6 +70,10 @@ public class FileUploadRenderer
             throw new IllegalArgumentException("Only UIFileUpload type supported.");
         }
 
+        //MultipartWrapper might have been wrapped again by one or more additional
+        //Filters. We try to find the MultipartWrapper, but if a filter has wrapped
+        //the ServletRequest with a class other than HttpServletRequestWrapper
+        //this will fail.
         ServletRequest multipartRequest = facescontext.getServletRequest();
         while (multipartRequest != null &&
                !(multipartRequest instanceof MultipartWrapper))
@@ -91,9 +96,10 @@ public class FileUploadRenderer
             File file = mpReq.getFile(paramName);
             if (file != null)
             {
-                uiComponent.setValue(file);
-                ((UIFileUpload)uiComponent).setFilePath(mpReq.getFilesystemName(paramName));
-                ((UIFileUpload)uiComponent).setContentType(mpReq.getContentType(paramName));
+                UploadedFile upFile = new UploadedFile(mpReq.getFilesystemName(paramName),
+                                                       mpReq.getContentType(paramName),
+                                                       file);
+                uiComponent.setValue(upFile);
                 uiComponent.setValid(true);
             }
         }
@@ -116,11 +122,11 @@ public class FileUploadRenderer
         writer.write(" id=\"");
         writer.write(clientId);
         writer.write("\"");
-        String value = ((UIFileUpload)uiComponent).getFilePath();
+        UploadedFile value = (UploadedFile)uiComponent.currentValue(facesContext);
         if (value != null)
         {
             writer.write(" value=\"");
-            writer.write(HTMLEncoder.encode(value, false, false));
+            writer.write(HTMLEncoder.encode(value.getFilePath(), false, false));
             writer.write("\"");
         }
         String css = (String)uiComponent.getAttribute(INPUT_CLASS_ATTR);

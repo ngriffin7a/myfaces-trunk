@@ -21,9 +21,6 @@ package net.sourceforge.myfaces.component.ext;
 import net.sourceforge.myfaces.component.UIComponentUtils;
 import net.sourceforge.myfaces.component.UIInput;
 
-import javax.faces.context.FacesContext;
-import java.io.File;
-
 /**
  * DOCUMENT ME!
  * @author Manfred Geiler (latest modification by $Author$)
@@ -32,59 +29,19 @@ import java.io.File;
 public class UIFileUpload
         extends UIInput
 {
-    public static final String CONTENT_TYPE_ATTR = "contentType";
-    public static final String FILE_PATH_ATTR = "filePath";
-    public static final String CONTENT_TYPE_REFERENCE_ATTR = "contentTypeReference";
-
     public UIFileUpload()
     {
         UIComponentUtils.setTransient(this, true);  //No state to be saved
         setValid(true);
     }
 
-    public String getContentType()
+    public void setUploadedFile(UploadedFile upFile)
     {
-        return (String)getAttribute(CONTENT_TYPE_ATTR);
+        setValue(upFile);
     }
 
-    public void setContentType(String contentType)
+    public UploadedFile getUploadedFile()
     {
-        setAttribute(CONTENT_TYPE_ATTR, contentType);
-    }
-
-    public String getFilePath()
-    {
-        return (String)getAttribute(FILE_PATH_ATTR);
-    }
-
-    public void setFilePath(String filePath)
-    {
-        setAttribute(FILE_PATH_ATTR, filePath);
-    }
-
-    public File getFile()
-    {
-        return (File)getValue();
-    }
-
-    public String getContentTypeReference()
-    {
-        return (String)getAttribute(CONTENT_TYPE_REFERENCE_ATTR);
-    }
-
-    public void setContentTypeReference(String contentTypeReference)
-    {
-        setAttribute(CONTENT_TYPE_REFERENCE_ATTR, contentTypeReference);
-    }
-
-    public void updateModel(FacesContext context)
-    {
-        super.updateModel(context);
-        String contentTypeReference = getContentTypeReference();
-        if (contentTypeReference != null)
-        {
-            context.setModelValue(contentTypeReference,
-                                  getContentType());
-        }
+        return (UploadedFile)getValue();
     }
 }

@@ -29,8 +29,6 @@ import net.sourceforge.myfaces.renderkit.attr.TextRendererAttributes;
 public interface FileUploadRendererAttributes
     extends TextRendererAttributes
 {
-    public static final String MAX_UPLOAD_SIZE_ATTR = "maxUploadSize";
-
     public static final String ACCEPT_ATTR = "accept";
     public static final String[] COMMON_FILE_UPLOAD_ATTRIBUTES =
     {

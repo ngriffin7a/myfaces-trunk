@@ -16,9 +16,7 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package net.sourceforge.myfaces.examples.misc;
-
-import net.sourceforge.myfaces.component.ext.UploadedFile;
+package net.sourceforge.myfaces.component.ext;
 
 import java.io.File;
 
@@ -27,17 +25,31 @@ import java.io.File;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public class FileUploadForm
+public class UploadedFile
 {
-    private UploadedFile _upFile;
+    private String _filePath;
+    private String _contentType;
+    private File _file;
 
-    public UploadedFile getUpFile()
+    public UploadedFile(String filePath, String contentType, File file)
     {
-        return _upFile;
+        _filePath = filePath;
+        _contentType = contentType;
+        _file = file;
     }
 
-    public void setUpFile(UploadedFile upFile)
+    public String getFilePath()
     {
-        _upFile = upFile;
+        return _filePath;
+    }
+
+    public String getContentType()
+    {
+        return _contentType;
+    }
+
+    public File getFile()
+    {
+        return _file;
     }
 }
