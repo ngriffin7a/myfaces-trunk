@@ -3,6 +3,7 @@ MyFaces Release Notes
 
 ----------------------------------------------------------------------
 Changes in Release 1.0.7 beta
+* bug #998464 request charset handling is invalid
 
 ----------------------------------------------------------------------
 Changes in Release 1.0.6 beta

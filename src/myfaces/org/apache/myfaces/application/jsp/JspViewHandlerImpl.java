@@ -43,6 +43,9 @@ import java.util.*;
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.26  2004/08/11 23:09:35  o_rossmueller
+ * handle character encoding as described in section 2.5.2.2 of JSF 1.1
+ *
  * Revision 1.25  2004/08/11 22:56:30  o_rossmueller
  * handle character encoding as described in section 2.5.2.2 of JSF 1.1
  *
@@ -224,6 +227,7 @@ public class JspViewHandlerImpl
 
         if (log.isTraceEnabled()) log.trace("Dispatching to " + viewId);
 
+        // handle character encoding as of section 2.5.2.2 of JSF 1.1
         if (externalContext.getResponse() instanceof ServletResponse) {
             ServletResponse response = (ServletResponse) externalContext.getResponse();
             response.setLocale(viewToRender.getLocale());
@@ -231,13 +235,14 @@ public class JspViewHandlerImpl
 
         externalContext.dispatch(viewId);
 
+        // handle character encoding as of section 2.5.2.2 of JSF 1.1
         if (externalContext.getRequest() instanceof HttpServletRequest) {
             HttpServletResponse response = (HttpServletResponse) externalContext.getResponse();
             HttpServletRequest request = (HttpServletRequest) externalContext.getRequest();
             HttpSession session = request.getSession(false);
 
             if (session != null) {
-                session.setAttribute(ServletExternalContextImpl.CHARACTER_ENCODING_ATTRIBUTE, response.getCharacterEncoding());
+                session.setAttribute(ViewHandler.CHARACTER_ENCODING_KEY, response.getCharacterEncoding());
             }
         }
 
@@ -246,7 +251,6 @@ public class JspViewHandlerImpl
 
     public UIViewRoot restoreView(FacesContext facesContext, String viewId)
     {
-        handleCharacterEncoding(facesContext);
         Application application = facesContext.getApplication();
         ViewHandler applicationViewHandler = application.getViewHandler();
         String renderKitId = applicationViewHandler.calculateRenderKitId(facesContext);
@@ -267,78 +271,6 @@ public class JspViewHandlerImpl
         if (facesContext.getApplication().getStateManager().isSavingStateInClient(facesContext))
         {
             facesContext.getResponseWriter().write(FORM_STATE_MARKER);
-        }
-    }
-
-    /**
-     * Find character encoding and examine Content-Type header as stated in Spec. 2.5.1.2
-     * @param facesContext
-     */
-    private void handleCharacterEncoding(FacesContext facesContext)
-    {
-        ExternalContext externalContext = facesContext.getExternalContext();
-        String characterEncoding = null;
-
-        String contentType = (String)externalContext.getRequestHeaderMap().get("Content-Type");
-        if (contentType != null)
-        {
-            int charsetFind = contentType.indexOf("charset=");
-            if (charsetFind != -1)
-            {
-                if (charsetFind == 0)
-                {
-                    //charset at beginning of Content-Type, curious
-                    characterEncoding = contentType.substring(8);
-                }
-                else
-                {
-                    char charBefore = contentType.charAt(charsetFind - 1);
-                    if (charBefore == ';' || Character.isWhitespace(charBefore))
-                    {
-                        //Correct charset after mime type
-                        characterEncoding = contentType.substring(charsetFind + 8);
-                    }
-                }
-                if (log.isDebugEnabled()) log.debug("Incoming request has Content-Type header with character encoding " + characterEncoding);
-            }
-            else
-            {
-                if (log.isDebugEnabled()) log.debug("Incoming request has Content-Type header without character encoding: " + contentType);
-            }
-        }
-        else
-        {
-            if (log.isDebugEnabled()) log.debug("Incoming request has no Content-Type header.");
-        }
-
-        if (characterEncoding == null)
-        {
-            Map sessionMap = externalContext.getSessionMap();
-            if (sessionMap != null)
-            {
-                characterEncoding = (String)sessionMap.get(ViewHandler.CHARACTER_ENCODING_KEY);
-                if (log.isDebugEnabled()) log.debug("Got character encoding from session.");
-            }
-        }
-
-        if (characterEncoding != null)
-        {
-            Object request = externalContext.getRequest();
-            if (request instanceof ServletRequest)
-            {
-                try
-                {
-                    ((ServletRequest)request).setCharacterEncoding(characterEncoding);
-                }
-                catch (UnsupportedEncodingException e)
-                {
-                    if (log.isWarnEnabled()) log.warn("Request does not support character encoding " + characterEncoding);
-                }
-            }
-            else
-            {
-                log.error("Request of type " + request.getClass().getName() + " not supported by ViewHandler " + getClass().getName() + ": Could not set character encoding!");
-            }
         }
     }
 

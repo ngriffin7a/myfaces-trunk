@@ -18,6 +18,7 @@ package net.sourceforge.myfaces.context.servlet;
 import net.sourceforge.myfaces.util.EnumerationIterator;
 
 import javax.faces.FacesException;
+import javax.faces.application.ViewHandler;
 import javax.faces.context.ExternalContext;
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
@@ -31,6 +32,9 @@ import java.security.Principal;
 import java.util.*;
 import java.lang.reflect.Method;
 
+import org.apache.commons.logging.LogFactory;
+import org.apache.commons.logging.Log;
+
 /**
  * JSF 1.0 PRD2, 6.1.1
  * @author Manfred Geiler (latest modification by $Author$)
@@ -43,7 +47,8 @@ import java.lang.reflect.Method;
 public class ServletExternalContextImpl
     extends ExternalContext
 {
-    public static final String CHARACTER_ENCODING_ATTRIBUTE = "net.sourceforge.myfaces.characterEncoding";
+
+    private static final Log log = LogFactory.getLog(ServletExternalContextImpl.class);
 
     private static final String INIT_PARAMETER_MAP_ATTRIBUTE = InitParameterMap.class.getName();
 
@@ -105,7 +110,7 @@ public class ServletExternalContextImpl
                         HttpSession session = httpServletRequest.getSession(false);
 
                         if (session != null) {
-                            characterEncoding = (String) session.getAttribute(CHARACTER_ENCODING_ATTRIBUTE);
+                            characterEncoding = (String) session.getAttribute(ViewHandler.CHARACTER_ENCODING_KEY);
                         }
 
                         if (characterEncoding != null) {
@@ -115,7 +120,8 @@ public class ServletExternalContextImpl
                 }
             } catch (Exception e)
             {
-
+                if (log.isWarnEnabled())
+                    log.warn("Failed to set character encoding " + e);
             }
         }
     }
@@ -123,18 +129,35 @@ public class ServletExternalContextImpl
 
     private String lookupCharacterEncoding(String contentType)
     {
-        int start = contentType.indexOf("charset=");
+        String characterEncoding = null;
 
-        if (start == -1) {
-            return null;
+        if (contentType != null)
+        {
+            int charsetFind = contentType.indexOf("charset=");
+            if (charsetFind != -1)
+            {
+                if (charsetFind == 0)
+                {
+                    //charset at beginning of Content-Type, curious
+                    characterEncoding = contentType.substring(8);
+                }
+                else
+                {
+                    char charBefore = contentType.charAt(charsetFind - 1);
+                    if (charBefore == ';' || Character.isWhitespace(charBefore))
+                    {
+                        //Correct charset after mime type
+                        characterEncoding = contentType.substring(charsetFind + 8);
+                    }
+                }
+                if (log.isDebugEnabled()) log.debug("Incoming request has Content-Type header with character encoding " + characterEncoding);
+            }
+            else
+            {
+                if (log.isDebugEnabled()) log.debug("Incoming request has Content-Type header without character encoding: " + contentType);
+            }
         }
-
-        int end = contentType.indexOf(';', start);
-
-        if (end == -1) {
-            end = contentType.length();
-        }
-        return contentType.substring(start + 8, end).trim();
+        return characterEncoding;
     }
 
 
