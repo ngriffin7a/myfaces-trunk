@@ -79,6 +79,12 @@ managed beans used:
                     </h:inputText>
 					<h:message id="creditCardNumberError" for="form1:creditCardNumber" styleClass="error" />
 
+					<h:outputLabel for="form1:regExprValue" value="Regular Expressions" />
+                    <h:inputText id="regExprValue" value="#{validateForm.regExpr}" required="true">
+                        <x:validateRegExpr pattern='\d{5}' />
+                    </h:inputText>
+					<h:message id="regExprValueError" for="form1:regExprValue" styleClass="error" />
+
                     <h:panelGroup/>
 				    <h:commandButton id="validateButton" value="Submit" action="#{validateForm.submit}"/>
                     <h:panelGroup/>

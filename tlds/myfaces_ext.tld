@@ -1082,4 +1082,23 @@
         </description>
 	</tag>   
 
+    <tag>
+        <name>validateRegExpr</name>
+        <tag-class>net.sourceforge.myfaces.custom.regexprvalidator.ValidateRegExprTag</tag-class>
+        <body-content>JSP</body-content>
+        <description>
+			A custom validator for reg. expr., based upons Jakarta Commons.
+        </description>
+
+        <attribute>
+            <name>pattern</name>
+            <required>true</required>
+            <rtexprvalue>false</rtexprvalue>
+            <description>
+				the pattern, which is the base of the validation
+            </description>
+        </attribute>
+	</tag>
+
+
 </taglib>

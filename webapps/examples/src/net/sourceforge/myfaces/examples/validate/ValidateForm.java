@@ -8,6 +8,7 @@ public class ValidateForm {
 	private String email = null;
 	private String email2 = null;
 	private String creditCardNumber = null;
+	private String regExpr = null;
 	
 
 	public String getEmail() {
@@ -37,6 +38,20 @@ public class ValidateForm {
 
 	public void setEmail2(String string) {
 		email2 = string;
+	}
+
+	/**
+	 * @return
+	 */
+	public String getRegExpr() {
+		return regExpr;
+	}
+
+	/**
+	 * @param string
+	 */
+	public void setRegExpr(String string) {
+		regExpr = string;
 	}
 
 }

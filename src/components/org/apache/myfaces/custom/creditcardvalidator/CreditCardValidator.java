@@ -31,6 +31,10 @@ import javax.faces.validator.ValidatorException;
  * @author mwessendorf (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.2  2004/06/05 09:37:43  mwessendorf
+ * new validator for regExpr.
+ * and began with Friendly validator messages
+ *
  * Revision 1.1  2004/05/27 14:09:00  manolito
  * creditcard and email validator refactored
  *
@@ -46,7 +50,7 @@ public class CreditCardValidator implements Validator,StateHolder {
 	 * <p>The message identifier of the {@link FacesMessage} to be created if
 	 * the creditcard check fails.</p>
 	 */
-	public static final String CREDITCATD_MESSAGE_ID = "net.sourceforge.myfaces.Creditcard.INVALID";	
+	public static final String CREDITCARD_MESSAGE_ID = "net.sourceforge.myfaces.Creditcard.INVALID";	
 	
 	//private DEFAULT_VALUES
 	private static final boolean DEFAULT_AMEX = true;
@@ -92,7 +96,8 @@ public class CreditCardValidator implements Validator,StateHolder {
 			}
 		initValidator();
 		if (!this.creditCardValidator.isValid(value.toString())){
-			throw new ValidatorException(MessageUtils.getMessage(FacesMessage.SEVERITY_ERROR,CREDITCATD_MESSAGE_ID, null));
+			Object[] args = {uiComponent.getId()};
+			throw new ValidatorException(MessageUtils.getMessage(FacesMessage.SEVERITY_ERROR,CREDITCARD_MESSAGE_ID, args));
 		}
 	}
 
@@ -177,6 +182,9 @@ public class CreditCardValidator implements Validator,StateHolder {
 	public void setVisa(boolean b) {
 		_visa =   Boolean.valueOf(b);
 	}
+
+
+	// -------------------------------------------------------- StateholderIF
 
 	/* (non-Javadoc)
 	 * @see javax.faces.component.StateHolder#saveState(javax.faces.context.FacesContext)

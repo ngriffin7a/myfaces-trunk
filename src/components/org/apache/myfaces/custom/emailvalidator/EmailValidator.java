@@ -32,6 +32,10 @@ import javax.faces.validator.ValidatorException;
  * @author mwessendorf (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.2  2004/06/05 09:37:43  mwessendorf
+ * new validator for regExpr.
+ * and began with Friendly validator messages
+ *
  * Revision 1.1  2004/05/27 14:09:01  manolito
  * creditcard and email validator refactored
  *
@@ -70,8 +74,8 @@ public class EmailValidator implements Validator {
 				return;
 			}
 			if (!GenericValidator.isEmail(value.toString())) {
-
-				throw new ValidatorException(MessageUtils.getMessage(FacesMessage.SEVERITY_ERROR,EMAIL_MESSAGE_ID, null));
+				Object[] args = {uiComponent.getId()};
+				throw new ValidatorException(MessageUtils.getMessage(FacesMessage.SEVERITY_ERROR,EMAIL_MESSAGE_ID, args));
 				
 			}
 

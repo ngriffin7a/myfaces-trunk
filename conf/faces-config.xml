@@ -359,7 +359,9 @@
 		<validator-class>net.sourceforge.myfaces.custom.emailvalidator.EmailValidator</validator-class>
 	</validator>
 
-
-    
+	<validator>
+		<validator-id>net.sourceforge.myfaces.validator.RegExpr</validator-id>
+		<validator-class>net.sourceforge.myfaces.custom.regexprvalidator.RegExprValidator</validator-class>
+	</validator>
 
 </faces-config>
