@@ -38,6 +38,9 @@ import java.util.List;
  * @author Thomas Spiegl
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.4  2004/04/05 09:11:03  manolito
+ * extended exception messages
+ *
  * Revision 1.3  2004/04/02 13:57:11  manolito
  * extended HtmlSelectManyCheckbox with layout "spread" and custom Checkbox component
  *
@@ -99,7 +102,7 @@ public class HtmlRadioRenderer
         UIComponent uiComponent = radio.findComponent(forAttr);
         if (uiComponent == null)
         {
-            throw new IllegalStateException("Could not find component '" + forAttr + "'");
+            throw new IllegalStateException("Could not find component '" + forAttr + "' (calling findComponent on component '" + radio.getClientId(facesContext) + "')");
         }
         if (!(uiComponent instanceof UISelectOne))
         {

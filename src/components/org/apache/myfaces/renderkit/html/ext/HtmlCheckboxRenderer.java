@@ -38,6 +38,9 @@ import java.util.Set;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.2  2004/04/05 09:11:03  manolito
+ * extended exception messages
+ *
  * Revision 1.1  2004/04/02 13:57:11  manolito
  * extended HtmlSelectManyCheckbox with layout "spread" and custom Checkbox component
  *
@@ -93,7 +96,7 @@ public class HtmlCheckboxRenderer
         UIComponent uiComponent = checkbox.findComponent(forAttr);
         if (uiComponent == null)
         {
-            throw new IllegalStateException("Could not find component '" + forAttr + "'");
+            throw new IllegalStateException("Could not find component '" + forAttr + "' (calling findComponent on component '" + checkbox.getClientId(facesContext) + "')");
         }
         if (!(uiComponent instanceof UISelectMany))
         {

@@ -36,6 +36,9 @@ import java.util.Map;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.5  2004/04/05 09:11:03  manolito
+ * extended exception messages
+ *
  * Revision 1.4  2004/04/01 12:43:18  manolito
  * html nesting bug fixed
  *
@@ -80,7 +83,7 @@ public abstract class HtmlMessageRendererBase
         UIComponent forComponent = message.findComponent(forAttr);
         if (forComponent == null)
         {
-            throw new FacesException("Could not render Message. Component '" + forAttr + "' not found.");
+            throw new FacesException("Could not render Message. Unable to find component '" + forAttr + "' (calling findComponent on component '" + message.getClientId(facesContext) + "')");
         }
 
         Iterator messageIterator = facesContext.getMessages(forComponent.getClientId(facesContext));
