@@ -124,7 +124,7 @@
             <description>
                 Indicates whether the state of the whole DataModel should be saved and
                 restored.
-                Default: true
+                Default: false
             </description>
         </attribute>
         <attribute>
