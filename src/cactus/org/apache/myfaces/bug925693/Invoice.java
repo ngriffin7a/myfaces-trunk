@@ -2,19 +2,6 @@ package net.sourceforge.myfaces.bug925693;
 import java.util.ArrayList;
 import java.util.List;
 
-/*
- * Created on Mar 29, 2004
- *
- * To change the template for this generated file go to
- * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
- */
-
-/**
- * @author arthur.fitt
- *
- * To change the template for this generated type comment go to
- * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
- */
 public class Invoice
 {
 	private String invoiceNumber;
