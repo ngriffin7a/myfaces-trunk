@@ -27,6 +27,9 @@ import javax.faces.component.UIComponent;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.3  2004/03/31 14:51:47  manolito
+ * summaryFormat and detailFormat support
+ *
  * Revision 1.2  2004/03/30 17:47:32  manolito
  * Message and Messages refactored
  *
@@ -49,18 +52,24 @@ public class HtmlMessageTag
         return "net.sourceforge.myfaces.Message";
     }
 
-    private String _summaryDetailSeparator;
+    private String _summaryFormat;
+    private String _detailFormat;
 
     protected void setProperties(UIComponent component)
     {
         super.setProperties(component);
 
-        setStringProperty(component, "summaryDetailSeparator", _summaryDetailSeparator);
+        setStringProperty(component, "summaryFormat", _summaryFormat);
+        setStringProperty(component, "detailFormat", _detailFormat);
     }
 
-    public void setSummaryDetailSeparator(String summaryDetailSeparator)
+    public void setSummaryFormat(String summaryFormat)
     {
-        _summaryDetailSeparator = summaryDetailSeparator;
+        _summaryFormat = summaryFormat;
     }
 
+    public void setDetailFormat(String detailFormat)
+    {
+        _detailFormat = detailFormat;
+    }
 }

@@ -18,6 +18,7 @@
  */
 package net.sourceforge.myfaces.renderkit.html;
 
+import javax.faces.application.FacesMessage;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import java.io.IOException;
@@ -27,6 +28,9 @@ import java.io.IOException;
  * @author Thomas Spiegl
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.14  2004/03/31 14:51:46  manolito
+ * summaryFormat and detailFormat support
+ *
  * Revision 1.13  2004/03/30 17:47:34  manolito
  * Message and Messages refactored
  *
@@ -46,12 +50,19 @@ public class HtmlMessageRenderer
         renderMessage(facesContext, component);
     }
 
-    protected String getSummaryDetailSeparator(FacesContext facesContext,
-                                               UIComponent message,
-                                               String msgClientId)
+    protected String getSummary(FacesContext facesContext,
+                                UIComponent message,
+                                FacesMessage facesMessage,
+                                String msgClientId)
     {
-        return " ";
+        return facesMessage.getSummary();
     }
 
-
+    protected String getDetail(FacesContext facesContext,
+                               UIComponent message,
+                               FacesMessage facesMessage,
+                               String msgClientId)
+    {
+        return facesMessage.getDetail();
+    }
 }

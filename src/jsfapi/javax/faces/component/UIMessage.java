@@ -29,6 +29,9 @@ import javax.faces.el.ValueBinding;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.7  2004/03/31 14:51:48  manolito
+ * summaryFormat and detailFormat support
+ *
  * Revision 1.6  2004/03/30 17:47:33  manolito
  * Message and Messages refactored
  *
@@ -92,13 +95,8 @@ public class UIMessage
     {
         if (_showSummary != null) return _showSummary.booleanValue();
         ValueBinding vb = getValueBinding("showSummary");
-        if (vb != null)
-        {
-            Boolean v = vb != null ? (Boolean)vb.getValue(getFacesContext()) : null;
-            return v != null ? v.booleanValue() : DEFAULT_SHOWSUMMARY;
-        }
-        // default
-        return true;
+        Boolean v = vb != null ? (Boolean)vb.getValue(getFacesContext()) : null;
+        return v != null ? v.booleanValue() : DEFAULT_SHOWSUMMARY;
     }
 
 

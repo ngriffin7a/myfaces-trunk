@@ -18,23 +18,22 @@
  */
 package net.sourceforge.myfaces.renderkit.html.ext;
 
-import net.sourceforge.myfaces.component.html.ext.HtmlMessages;
-import net.sourceforge.myfaces.renderkit.RendererUtils;
+import net.sourceforge.myfaces.component.html.ext.HtmlMessage;
 import net.sourceforge.myfaces.renderkit.html.HtmlMessagesRendererBase;
 
+import javax.faces.application.FacesMessage;
 import javax.faces.component.UIComponent;
-import javax.faces.component.html.HtmlOutputLabel;
 import javax.faces.context.FacesContext;
 import java.io.IOException;
 import java.text.MessageFormat;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
 
 /**
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.2  2004/03/31 14:51:46  manolito
+ * summaryFormat and detailFormat support
+ *
  * Revision 1.1  2004/03/30 17:47:32  manolito
  * Message and Messages refactored
  *
@@ -44,101 +43,69 @@ public class HtmlMessagesRenderer
 {
     //private static final Log log = LogFactory.getLog(HtmlMessagesRenderer.class);
     
-    private static final String OUTPUT_LABEL_MAP = HtmlMessagesRenderer.class.getName() + ".OUTPUT_LABEL_MAP";
 
     public void encodeEnd(FacesContext facesContext, UIComponent component)
             throws IOException
     {
         super.encodeEnd(facesContext, component);   //check for NP
-        renderMessage(facesContext, component);
+        renderMessages(facesContext, component);
     }
 
-    protected String getSummaryDetailSeparator(FacesContext facesContext,
-                                               UIComponent messages,
-                                               String msgClientId)
+    protected String getSummary(FacesContext facesContext,
+                                UIComponent message,
+                                FacesMessage facesMessage,
+                                String msgClientId)
     {
-        String separator;
-        if (messages instanceof HtmlMessages)
+        String msgSummary = facesMessage.getSummary();
+        if (msgSummary == null) return null;
+
+        String summaryFormat;
+        if (message instanceof HtmlMessage)
         {
-            separator = ((HtmlMessages)messages).getSummaryDetailSeparator();
+            summaryFormat = ((HtmlMessage)message).getSummaryFormat();
         }
         else
         {
-            separator = (String)messages.getAttributes().get("summaryDetailSeparator");
+            summaryFormat = (String)message.getAttributes().get("summaryFormat");
         }
 
-        String labelFormat;
-        if (messages instanceof HtmlMessages)
+        if (summaryFormat == null) return msgSummary;
+
+        String inputLabel = null;
+        if (msgClientId != null) inputLabel = HtmlMessageRenderer.findInputLabel(facesContext, msgClientId);
+        if (inputLabel == null) inputLabel = "";
+
+        MessageFormat format = new MessageFormat(summaryFormat, facesContext.getViewRoot().getLocale());
+        return format.format(new Object[] {msgSummary, inputLabel});
+    }
+
+    protected String getDetail(FacesContext facesContext,
+                               UIComponent message,
+                               FacesMessage facesMessage,
+                               String msgClientId)
+    {
+        String msgDetail = facesMessage.getDetail();
+        if (msgDetail == null) return null;
+
+        String detailFormat;
+        if (message instanceof HtmlMessage)
         {
-            labelFormat = ((HtmlMessages)messages).getLabelFormat();
+            detailFormat = ((HtmlMessage)message).getDetailFormat();
         }
         else
         {
-            labelFormat = (String)messages.getAttributes().get("labelFormat");
-        }
-        
-        if (msgClientId != null && labelFormat != null)
-        {
-            String inputLabel = findInputLabel(facesContext, msgClientId);
-            if (inputLabel != null)
-            {
-                MessageFormat format = new MessageFormat(labelFormat,
-                                                         facesContext.getViewRoot().getLocale());
-                return format.format(new Object[] {inputLabel}) + separator;
-            }
+            detailFormat = (String)message.getAttributes().get("detailFormat");
         }
 
-        return separator;
+        if (detailFormat == null) return msgDetail;
+
+        String inputLabel = null;
+        if (msgClientId != null) inputLabel = HtmlMessageRenderer.findInputLabel(facesContext, msgClientId);
+        if (inputLabel == null) inputLabel = "";
+
+        MessageFormat format = new MessageFormat(detailFormat, facesContext.getViewRoot().getLocale());
+        return format.format(new Object[] {msgDetail, inputLabel});
     }
 
 
-    private String findInputLabel(FacesContext facesContext, String inputClientId)
-    {
-        Map outputLabelMap = getOutputLabelMap(facesContext);
-        HtmlOutputLabel outputLabel = (HtmlOutputLabel)outputLabelMap.get(inputClientId);
-        String text = RendererUtils.getStringValue(facesContext, outputLabel);
-        if (text == null)
-        {
-            //TODO: traverse children and append OutputText and/or OutputMessage texts
-        }
-        return text;
-    }
-
-    
-    /**
-     * @param facesContext
-     * @return a Map that reversely maps clientIds of components to their
-     *         corresponding OutputLabel component
-     */
-    private Map getOutputLabelMap(FacesContext facesContext)
-    {
-        Map map = (Map)facesContext.getExternalContext().getRequestMap().get(OUTPUT_LABEL_MAP);
-        if (map == null)
-        {
-            map = new HashMap();
-            createOutputLabelMap(facesContext.getViewRoot(), map);
-            facesContext.getExternalContext().getRequestMap().put(OUTPUT_LABEL_MAP, map);
-        }
-        return map;
-    }
-
-    private void createOutputLabelMap(UIComponent root, Map map)
-    {
-        if (root.getChildCount() > 0)
-        {
-            for (Iterator it = root.getChildren().iterator(); it.hasNext(); )
-            {
-                UIComponent child = (UIComponent)it.next();
-                if (child instanceof HtmlOutputLabel)
-                {
-                    map.put(((HtmlOutputLabel)child).getFor(), child);
-                }
-                else
-                {
-                    createOutputLabelMap(child, map);
-                }
-            }
-        }
-    }
-    
 }

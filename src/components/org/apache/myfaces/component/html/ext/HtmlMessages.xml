@@ -9,14 +9,12 @@
     <component-family>javax.faces.Messages</component-family>
     <renderer-type>javax.faces.Messages</renderer-type>
     <field>
-        <name>summaryDetailSeparator</name>
+        <name>summaryFormat</name>
         <type>java.lang.String</type>
-        <default-value>: </default-value>
     </field>
     <field>
-        <name>labelFormat</name>
+        <name>detailFormat</name>
         <type>java.lang.String</type>
-        <default-value> in {0}</default-value>
     </field>
     <field>
         <name>enabledOnUserRole</name>

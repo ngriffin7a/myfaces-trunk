@@ -37,6 +37,9 @@ import java.util.Map;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.3  2004/03/31 14:51:47  manolito
+ * summaryFormat and detailFormat support
+ *
  * Revision 1.2  2004/03/31 13:25:24  manolito
  * locale variable renamed
  *
@@ -52,11 +55,15 @@ public abstract class HtmlMessageRendererBase
 {
     //private static final Log log = LogFactory.getLog(HtmlMessageRendererBase.class);
 
+    protected abstract String getSummary(FacesContext facesContext,
+                                         UIComponent message,
+                                         FacesMessage facesMessage,
+                                         String msgClientId);
 
-    protected abstract String getSummaryDetailSeparator(FacesContext facesContext,
-                                                        UIComponent message,
-                                                        String msgClientId);
-
+    protected abstract String getDetail(FacesContext facesContext,
+                                        UIComponent message,
+                                        FacesMessage facesMessage,
+                                        String msgClientId);
 
     protected void renderMessage(FacesContext facesContext,
                                  UIComponent message)
@@ -101,8 +108,8 @@ public abstract class HtmlMessageRendererBase
         String style = styleAndClass[0];
         String styleClass = styleAndClass[1];
 
-        String summary = facesMessage.getSummary();
-        String detail = facesMessage.getDetail();
+        String summary = getSummary(facesContext, message, facesMessage, messageClientId);
+        String detail = getDetail(facesContext, message, facesMessage, messageClientId);
 
         String title = getTitle(message);
         boolean tooltip = isTooltip(message);
@@ -134,21 +141,15 @@ public abstract class HtmlMessageRendererBase
             writer.write(buf.toString());
         }
 
-        boolean showSummary = isShowSummary(message) && summary != null;
-        boolean showDetail = isShowDetail(message) && detail != null;
+        boolean showSummary = isShowSummary(message) && (summary != null);
+        boolean showDetail = isShowDetail(message) && (detail != null);
 
         if (showSummary && !(title == null && tooltip))
         {
             writer.writeText(summary, null);
             if (showDetail)
             {
-                String summaryDetailSeparator = getSummaryDetailSeparator(facesContext,
-                                                                          message,
-                                                                          messageClientId);
-                if (summaryDetailSeparator != null)
-                {
-                    writer.writeText(summaryDetailSeparator, null);
-                }
+                writer.writeText(" ", null);
             }
         }
 

@@ -43,25 +43,25 @@ public class HtmlMessagesTag
         return "net.sourceforge.myfaces.Messages";
     }
 
-    private String _summaryDetailSeparator;
-    private String _labelFormat;
+    private String _summaryFormat;
+    private String _detailFormat;
 
     protected void setProperties(UIComponent component)
     {
         super.setProperties(component);
 
-        setStringProperty(component, "summaryDetailSeparator", _summaryDetailSeparator);
-        setStringProperty(component, "labelFormat", _labelFormat);
+        setStringProperty(component, "summaryFormat", _summaryFormat);
+        setStringProperty(component, "detailFormat", _detailFormat);
     }
 
-    public void setSummaryDetailSeparator(String summaryDetailSeparator)
+    public void setSummaryFormat(String summaryFormat)
     {
-        _summaryDetailSeparator = summaryDetailSeparator;
+        _summaryFormat = summaryFormat;
     }
 
-    public void setLabelFormat(String labelFormat)
+    public void setDetailFormat(String detailFormat)
     {
-        _labelFormat = labelFormat;
+        _detailFormat = detailFormat;
     }
 
 }

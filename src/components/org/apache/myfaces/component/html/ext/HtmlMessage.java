@@ -28,6 +28,9 @@ import javax.faces.el.ValueBinding;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.4  2004/03/31 14:51:45  manolito
+ * summaryFormat and detailFormat support
+ *
  * Revision 1.3  2004/03/31 11:58:33  manolito
  * custom component refactoring
  *
@@ -47,9 +50,9 @@ public class HtmlMessage
     public static final String COMPONENT_TYPE = "net.sourceforge.myfaces.HtmlMessage";
     public static final String COMPONENT_FAMILY = "javax.faces.Message";
     private static final String DEFAULT_RENDERER_TYPE = "javax.faces.Message";
-    private static final String DEFAULT_SUMMARYDETAILSEPARATOR = ": ";
 
-    private String _summaryDetailSeparator = null;
+    private String _summaryFormat = null;
+    private String _detailFormat = null;
     private String _enabledOnUserRole = null;
     private String _visibleOnUserRole = null;
 
@@ -63,16 +66,28 @@ public class HtmlMessage
         return COMPONENT_FAMILY;
     }
 
-    public void setSummaryDetailSeparator(String summaryDetailSeparator)
+    public void setSummaryFormat(String summaryFormat)
     {
-        _summaryDetailSeparator = summaryDetailSeparator;
+        _summaryFormat = summaryFormat;
     }
 
-    public String getSummaryDetailSeparator()
+    public String getSummaryFormat()
     {
-        if (_summaryDetailSeparator != null) return _summaryDetailSeparator;
-        ValueBinding vb = getValueBinding("summaryDetailSeparator");
-        return vb != null ? (String)vb.getValue(getFacesContext()) : DEFAULT_SUMMARYDETAILSEPARATOR;
+        if (_summaryFormat != null) return _summaryFormat;
+        ValueBinding vb = getValueBinding("summaryFormat");
+        return vb != null ? (String)vb.getValue(getFacesContext()) : null;
+    }
+
+    public void setDetailFormat(String detailFormat)
+    {
+        _detailFormat = detailFormat;
+    }
+
+    public String getDetailFormat()
+    {
+        if (_detailFormat != null) return _detailFormat;
+        ValueBinding vb = getValueBinding("detailFormat");
+        return vb != null ? (String)vb.getValue(getFacesContext()) : null;
     }
 
     public void setEnabledOnUserRole(String enabledOnUserRole)
@@ -108,11 +123,12 @@ public class HtmlMessage
 
     public Object saveState(FacesContext context)
     {
-        Object values[] = new Object[4];
+        Object values[] = new Object[5];
         values[0] = super.saveState(context);
-        values[1] = _summaryDetailSeparator;
-        values[2] = _enabledOnUserRole;
-        values[3] = _visibleOnUserRole;
+        values[1] = _summaryFormat;
+        values[2] = _detailFormat;
+        values[3] = _enabledOnUserRole;
+        values[4] = _visibleOnUserRole;
         return ((Object) (values));
     }
 
@@ -120,9 +136,10 @@ public class HtmlMessage
     {
         Object values[] = (Object[])state;
         super.restoreState(context, values[0]);
-        _summaryDetailSeparator = (String)values[1];
-        _enabledOnUserRole = (String)values[2];
-        _visibleOnUserRole = (String)values[3];
+        _summaryFormat = (String)values[1];
+        _detailFormat = (String)values[2];
+        _enabledOnUserRole = (String)values[3];
+        _visibleOnUserRole = (String)values[4];
     }
     //------------------ GENERATED CODE END ---------------------------------------
 }

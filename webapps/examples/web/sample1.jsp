@@ -63,7 +63,7 @@ managed beans used:
                 <x:saveState id="save2" value="#{calcForm.number2}" />
                 <x:saveState id="save3" value="#{ucaseForm.text}" />
 
-                <h:messages id="messageList" styleClass="error"/>
+                <x:messages id="messageList" styleClass="error" summaryFormat="{0} in {1}" />
 
                 <f:verbatim>
                     <h4>A Form</h4>

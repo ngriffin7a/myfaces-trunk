@@ -182,12 +182,27 @@
         <!-- MyFaces extensions -->
         &user_role_attributes;
         <attribute>
-            <name>summaryDetailSeparator</name>
+            <name>summaryFormat</name>
             <required>false</required>
             <rtexprvalue>false</rtexprvalue>
             <description>
-                Text, that will be rendered between summary and detail.
-                Default: ": "
+                If present, instead of rendering the message summary, a MessageFormat with this
+                attribute as pattern is created. The format method of this MessageFormat is
+                called with the message summary as the first argument and the label of the
+                associated component (if any) as the second argument.
+                Example: "{0}:"
+            </description>
+        </attribute>
+        <attribute>
+            <name>detailFormat</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
+            <description>
+                If present, instead of rendering the message detail, a MessageFormat with this
+                attribute as pattern is created. The format method of this MessageFormat is
+                called with the message detail as the first argument and the label of the
+                associated component (if any) as the second argument.
+                Example: "The input in field {1} is wrong: {0}"
             </description>
         </attribute>
     </tag>
@@ -195,7 +210,7 @@
     <!-- messages -->
     <tag>
         <name>messages</name>
-        <tag-class>net.sourceforge.myfaces.taglib.ext.HtmlMessagesTag</tag-class>
+        <tag-class>net.sourceforge.myfaces.taglib.html.ext.HtmlMessagesTag</tag-class>
         <body-content>JSP</body-content>
         <description>
             MyFaces extension to the standard messages tag: see showInputLabel attribute
@@ -204,30 +219,27 @@
         <!-- MyFaces extensions -->
         &user_role_attributes;
         <attribute>
-            <name>summaryDetailSeparator</name>
+            <name>summaryFormat</name>
             <required>false</required>
             <rtexprvalue>false</rtexprvalue>
             <description>
-                Text, that will be rendered between summary and detail for all
-                messages that do not apply to a component.
-                Default: ": "
+                If present, instead of rendering the message summary, a MessageFormat with this
+                attribute as pattern is created. The format method of this MessageFormat is
+                called with the message summary as the first argument and the label of the
+                associated component (if any) as the second argument.
+                Example: "{0}:"
             </description>
         </attribute>
         <attribute>
-            <name>labelFormat</name>
+            <name>detailFormat</name>
             <required>false</required>
             <rtexprvalue>false</rtexprvalue>
             <description>
-                Text, that will be rendered after the summary for all
-                messages that apply to a component.
-                The renderer tries to find a label for the UIInput that applies to this message.
-                If a label was found, the labelSeparatorFormat text is interpreted as a MessageFormat
-                pattern with the found label text as single argument.
-                Example: summary = "Validation error", labelFormat = " in field {0}"
-                         The text "Validation error in field xyz" will be rendered if "xyz" is
-                         the text of a HtmlOutputLabel component that applies to the component
-                         the current message is associated with.
-                Default: " in {0}"
+                If present, instead of rendering the message detail, a MessageFormat with this
+                attribute as pattern is created. The format method of this MessageFormat is
+                called with the message detail as the first argument and the label of the
+                associated component (if any) as the second argument.
+                Example: "The input in field {1} is wrong: {0}"
             </description>
         </attribute>
     </tag>
