@@ -63,7 +63,10 @@
             You can perform the release build manually from the command line using: <br/>
             <code>ant -buildfile bootstrap.xml -Dbuild.version=1_0_9 clean nightly</code>
             <note label="NOTE">       
-                The release target requires that the source be tagged as rel_x where build.version = x
+                The release target requires that the source be tagged as rel_x where build.version = x.  You should also 
+                update the manifest.properties in the build directory before checking out.  The value of manifest.impl.version 
+                will be used in the bundle filenames.  (Ex. <code>manifest.impl.version=1.0.9</code> yields a filename of 
+                <code>myfaces-1.0.9.tgz</code>)
             </note>
         </li>
     </ul>
@@ -75,7 +78,7 @@
     </ul>    
     <ul>
         <li>
-            A cron job also needs to be added tothe machine performing the nightly build <br/>
+            A cron job also needs to be added to the machine performing the nightly build <br/>
             <code>00 23 * * * ant -buildfile bootstrap.xml clean nightly >/dev/null 2>&amp;1</code>
         </li>
     </ul>        
