@@ -44,6 +44,9 @@ import org.apache.commons.logging.LogFactory;
  * @version $Revision$ $Date$
  * 
  * $Log$
+ * Revision 1.43  2004/06/28 22:12:13  o_rossmueller
+ * fix #978654: do not coerce null
+ *
  * Revision 1.42  2004/06/16 23:02:24  o_rossmueller
  * merged confignew_branch
  *
@@ -544,6 +547,9 @@ public class ValueBindingImpl extends ValueBinding implements StateHolder
 
     private Object coerce(Object value, Class clazz) throws ELException
     {
+        if (value == null) {
+            return null;
+        }
         return Coercions.coerce(value, clazz, ELParserHelper.s_logger);
     }
     

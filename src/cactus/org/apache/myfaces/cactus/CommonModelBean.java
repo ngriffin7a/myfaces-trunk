@@ -23,6 +23,9 @@ package net.sourceforge.myfaces.cactus;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.3  2004/06/28 22:12:11  o_rossmueller
+ * fix #978654: do not coerce null
+ *
  * Revision 1.2  2004/05/26 17:19:56  o_rossmueller
  * test for bug 948626
  *
@@ -36,6 +39,21 @@ public class CommonModelBean
 
     private long _primitiveLong = 0;
     private boolean primitiveLongSet = false;
+    private Integer integer = null;
+    private String string;
+
+
+    public String getString()
+    {
+        return string;
+    }
+
+
+    public void setString(String string)
+    {
+        this.string = string;
+    }
+
 
     public long getPrimitiveLong()
     {
@@ -52,5 +70,17 @@ public class CommonModelBean
     public boolean isPrimitiveLongSet()
     {
         return primitiveLongSet;
+    }
+
+
+    public Integer getInteger()
+    {
+        return integer;
+    }
+
+
+    public void setInteger(Integer integer)
+    {
+        this.integer = integer;
     }
 }

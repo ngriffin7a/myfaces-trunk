@@ -31,6 +31,9 @@ import javax.faces.validator.ValidatorException;
  * @author mwessendorf (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.3  2004/06/28 22:12:13  o_rossmueller
+ * fix #978654: do not coerce null
+ *
  * Revision 1.2  2004/06/05 09:37:43  mwessendorf
  * new validator for regExpr.
  * and began with Friendly validator messages
