@@ -96,7 +96,7 @@
                      resolve-tld-entities" >
         <!-- timestamp for the manifest -->
         <tstamp>
-            <format property="TODAY_DE" pattern="dd.MM.yyyy HH:mm" locale="de"/>
+            <format property="TODAY" pattern="yyyy-MM-dd HH:mm z"/>
         </tstamp>
 
         <!-- build the jar -->
@@ -106,7 +106,7 @@
                 <attribute name="Built-By" value="${user.name}"/>
                 <section name="myfaces.sourceforge.net">
                     <attribute name="Implementation-Title" value="${manifest.impl.title}"/>
-                    <attribute name="Implementation-Version" value="${manifest.impl.version} ${TODAY_DE}"/>
+                    <attribute name="Implementation-Version" value="${manifest.impl.version} (${TODAY})"/>
                     <attribute name="Implementation-Vendor" value="${manifest.impl.vendor}"/>
                 </section>
             </manifest>
@@ -137,9 +137,6 @@
             <zipfileset dir="${project.dir}/conf"
                         includes="faces-config.xml"
                         prefix="META-INF/"/>
-            <zipfileset dir="${project.dir}/conf"
-                        includes="message_resources_*.xml"
-                        prefix="META-INF/"/>
         </jar>
 
     </target>
@@ -147,12 +144,11 @@
     <target name="myfaces-components-jar"
             description="builds the myfaces-components.jar file"
             depends="-compile-share,
-                     -compile-impl,
                      -compile-components,
                      resolve-tld-entities" >
         <!-- timestamp for the manifest -->
         <tstamp>
-            <format property="TODAY_DE" pattern="dd.MM.yyyy HH:mm" locale="de"/>
+            <format property="TODAY" pattern="yyyy-MM-dd HH:mm z"/>
         </tstamp>
 
         <!-- build the jar -->
@@ -161,8 +157,8 @@
             <manifest>
                 <attribute name="Built-By" value="${user.name}"/>
                 <section name="myfaces.sourceforge.net">
-                    <attribute name="Implementation-Title" value="${manifest.impl.title}"/>
-                    <attribute name="Implementation-Version" value="${manifest.impl.version} ${TODAY_DE}"/>
+                    <attribute name="Implementation-Title" value="${manifest.impl.title.components}"/>
+                    <attribute name="Implementation-Version" value="${manifest.impl.version} (${TODAY})"/>
                     <attribute name="Implementation-Vendor" value="${manifest.impl.vendor}"/>
                 </section>
             </manifest>
@@ -174,29 +170,13 @@
             <fileset dir="${components.classes}"
                      includes="**"
                      excludes=".dependency-info/**/*"/>
-            <fileset dir="${impl.classes}"
-                     includes="**/net/sourceforge/myfaces/renderkit/html/**"
-                     excludes=".dependency-info/**/*"/>
-            <!-- properties, DTDs, XMLs -->
-            <fileset dir="${myfaces.src}"
-                     includes="**"
-                     excludes="**/*.java,
-                               **/javax/faces/**/*,
-                               **/web-facesconfig_1_0.dtd,
-                               **/standard-faces-config.xml,
-                               **/package.html"/>
             <!-- TLDs -->
             <zipfileset dir="${resolved-tlds.dir}"
-                        includes="*.tld"
-                        excludes="**/myfaces_core.tld,
-                                  **/myfaces_html.tld"
+                        includes="myfaces_ext.tld"
                         prefix="META-INF/"/>
             <!-- faces-config.xml -->
             <zipfileset dir="${project.dir}/conf"
                         includes="faces-config.xml"
-                        prefix="META-INF/"/>
-            <zipfileset dir="${project.dir}/conf"
-                        includes="message_resources_*.xml"
                         prefix="META-INF/"/>
         </jar>
 
