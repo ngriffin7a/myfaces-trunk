@@ -19,6 +19,7 @@
 package net.sourceforge.myfaces.convert.impl;
 
 import net.sourceforge.myfaces.convert.ConverterUtils;
+import net.sourceforge.myfaces.convert.MyFacesConverterException;
 
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
@@ -80,7 +81,10 @@ public class DateConverter
                     }
                 }
             }
-            throw new ConverterException(CONVERTER_EXCEPTION_MSG_ID);
+            throw new MyFacesConverterException(context,
+                                                component,
+                                                CONVERTER_EXCEPTION_MSG_ID,
+                                                value);
         }
     }
 

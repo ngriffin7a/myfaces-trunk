@@ -37,15 +37,18 @@ public class MyFacesConverterException
     private FacesContext _facesContext;
     private UIComponent _comp;
     private String _messageId;
+    private String _stringValue;
 
     public MyFacesConverterException(FacesContext facesContext,
                                      UIComponent comp,
-                                     String messageId)
+                                     String messageId,
+                                     String stringValue)
     {
         super();
         _facesContext = facesContext;
         _comp = comp;
         _messageId = messageId;
+        _stringValue = stringValue;
     }
 
     public String getMessage()

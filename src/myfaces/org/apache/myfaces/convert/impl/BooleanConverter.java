@@ -18,6 +18,8 @@
  */
 package net.sourceforge.myfaces.convert.impl;
 
+import net.sourceforge.myfaces.convert.MyFacesConverterException;
+
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
@@ -65,8 +67,10 @@ public class BooleanConverter
         Boolean b = (Boolean)BOOLEAN_MAP.get(value);
         if (b == null)
         {
-            //throw new ConverterException(CONVERTER_EXCEPTION_MSG_ID, value);
-            throw new ConverterException(CONVERTER_EXCEPTION_MSG_ID);
+            throw new MyFacesConverterException(context,
+                                                component,
+                                                CONVERTER_EXCEPTION_MSG_ID,
+                                                value);
         }
         return b;
     }

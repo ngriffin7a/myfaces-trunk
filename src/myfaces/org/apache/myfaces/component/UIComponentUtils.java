@@ -18,6 +18,7 @@
  */
 package net.sourceforge.myfaces.component;
 
+import net.sourceforge.myfaces.convert.ConversionErrorMessage;
 import net.sourceforge.myfaces.convert.ConverterUtils;
 import net.sourceforge.myfaces.convert.MyFacesConverterException;
 import net.sourceforge.myfaces.convert.impl.StringArrayConverter;
@@ -28,7 +29,6 @@ import net.sourceforge.myfaces.tree.TreeUtils;
 import javax.faces.FacesException;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
-import javax.faces.context.Message;
 import javax.faces.convert.Converter;
 import javax.faces.convert.ConverterException;
 import javax.faces.tree.Tree;
@@ -164,59 +164,9 @@ public class UIComponentUtils
         }
         else
         {
-            facesContext.addMessage(comp, new SimpleMessage(e.getMessage()));
+            facesContext.addMessage(comp, new ConversionErrorMessage(e.getMessage()));
         }
     }
-
-
-    private static class SimpleMessage
-        implements Message
-    {
-        private String _msgText;
-
-        public SimpleMessage(String msgText)
-        {
-            _msgText = msgText;
-        }
-
-        public int getSeverity()
-        {
-            return Message.SEVERITY_ERROR;
-        }
-
-        public String getSummary()
-        {
-            return _msgText;
-        }
-
-        public String getDetail()
-        {
-            return _msgText;
-        }
-    }
-
-
-    /*
-    protected UIComponent findLabelComponent(FacesContext facesContext,
-                                             UIComponent forComponent)
-    {
-        Tree tree = facesContext.getResponseTree();
-        for (Iterator it = TreeUtils.treeIterator(tree); it.hasNext();)
-        {
-            UIComponent comp = (UIComponent)it.next();
-            if (comp.getComponentType().equals(UIOutput.TYPE) &&
-                comp.getRendererType().equals(LabelRenderer.TYPE))
-            {
-                String forAttr = (String)comp.getAttribute(LabelRendererAttributes.FOR_ATTR);
-                if (forAttr != null && forAttr.equals(forComponent.getCompoundId()))
-                {
-                    return comp;
-                }
-            }
-        }
-        return null;
-    }
-    */
 
 
     public static void setTransient(UIComponent uiComponent, boolean b)
