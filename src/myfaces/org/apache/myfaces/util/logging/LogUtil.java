@@ -22,7 +22,7 @@ import java.util.logging.Logger;
 
 
 /**
- * TODO: description
+ * Utilities (shortcuts) for logging.
  * @author Manfred Geiler
  * @version $Revision$ $Date$
  */
