@@ -42,6 +42,10 @@ import org.apache.myfaces.renderkit.html.HTML;
  * @author Sylvain Vieujot (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.5  2004/12/02 00:25:34  oros
+ * i18n issues
+ * some slight refactorings
+ *
  * Revision 1.4  2004/12/01 22:12:51  svieujot
  * Add xml and xsl content types.
  *
@@ -97,7 +101,12 @@ public class AddResource {
         String javascriptRenderedAttributeName = "myFacesResourceRendered"+(componentClass.hashCode()+(resourceFileName+scriptBody).hashCode());
         
         if( request.getAttribute(javascriptRenderedAttributeName) == null ){
-            addJavaScript(componentClass, resourceFileName, context);
+            if (scriptBody == null) {
+                AdditionalHeaderInfoToRender jsInfo = new AdditionalHeaderInfoToRender(AdditionalHeaderInfoToRender.TYPE_JS, componentClass, resourceFileName);
+                getAdditionalHeaderInfoToRender(context).add( jsInfo );
+            } else {
+                addJavaScript(componentClass, resourceFileName, context);
+            }
             request.setAttribute(javascriptRenderedAttributeName, Boolean.TRUE);
         }
     }
@@ -231,26 +240,47 @@ public class AddResource {
             ExtensionsResponseWrapper responseWrapper,
             HttpServletResponse response) throws IOException{
         
-        String initialResponse = responseWrapper.toString();
-        String lcInitialResponse = initialResponse.toLowerCase();
-        
+        String originalResponse = responseWrapper.toString();
+
+        // try the most common cases first
         boolean addHeaderTags = false;
-        int insertPosition = lcInitialResponse.indexOf( "</head>" );
+        int insertPosition = originalResponse.indexOf( "</head>" );
         
         if( insertPosition < 0 ){
-            insertPosition = lcInitialResponse.indexOf( "<body " );
+            insertPosition = originalResponse.indexOf( "<body" );
             addHeaderTags = true;
         }
-        
+
+        if ( insertPosition < 0 ) {
+            insertPosition = originalResponse.indexOf( "</HEAD>" );
+
+            if( insertPosition < 0 ){
+                insertPosition = originalResponse.indexOf( "<BODY" );
+                addHeaderTags = true;
+
+                if( insertPosition < 0 ){
+                    // the two most common cases head/HEAD and body/BODY did not work, so we try it with lowercase
+                    String lowerCase = originalResponse.toLowerCase(response.getLocale());
+                    insertPosition = lowerCase.indexOf( "</head>" );
+
+                    if( insertPosition < 0 ){
+                        insertPosition = lowerCase.indexOf( "<body" );
+                        addHeaderTags = true;
+                    }
+                }
+            }
+
+        }
+
         if( insertPosition < 0 ){
-            log.warn("Response has not <head> or <body> tags.");
+            log.warn("Response has no <head> or <body> tag.");
             insertPosition = 0;
         }
         
         PrintWriter writer = response.getWriter();
         
         if( insertPosition > 0 )
-            writer.write( initialResponse.substring(0, insertPosition) );
+            writer.write( originalResponse.substring(0, insertPosition) );
         if( addHeaderTags )
             writer.write("<head>");
         
@@ -262,11 +292,12 @@ public class AddResource {
         if( addHeaderTags )
             writer.write("</head>");
         
-        writer.write( initialResponse.substring(insertPosition) );
+        writer.write( originalResponse.substring(insertPosition) );
     }
     
     private static class AdditionalHeaderInfoToRender{
         public static final int TYPE_CSS = 0;
+        public static final int TYPE_JS = 1;
         public String componentName;
         public String resourceFileName;
         public int type;
@@ -288,13 +319,18 @@ public class AddResource {
         }
         
         public String getString(HttpServletRequest request){
-            if( type == TYPE_CSS )
+            switch (type) {
+            case TYPE_CSS:
                 return "<link rel=\"stylesheet\" "
                 	+"href=\""+getResourceMappedPath(componentName, resourceFileName, request)+"\" "
                 	+"type=\"text/css\"/>\n";
-            
-            log.warn("Unknown type:"+type);
-            return "<link href=\""+"\"/>\n";
+           case TYPE_JS:
+                    return "<script language=\"JavaScript\" "
+                        +"src=\""+getResourceMappedPath(componentName, resourceFileName, request)+"\" type=\"text/javascript\"></script>\n";
+            default:
+                log.warn("Unknown type:"+type);
+                return "<link href=\""+"\"/>\n";
+            }
         }
     }
 }
