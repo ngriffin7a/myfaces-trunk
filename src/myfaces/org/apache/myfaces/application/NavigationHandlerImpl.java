@@ -38,6 +38,9 @@ import java.util.*;
  * @author Anton Koinov
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.32  2004/08/26 08:03:29  manolito
+ * viewId for redirect might already contain a query string, so we must check for ? in url
+ *
  * Revision 1.31  2004/08/26 08:00:58  manolito
  * add current queryString to url on redirect
  *
@@ -152,7 +155,14 @@ public class NavigationHandlerImpl
                     String queryString = ((HttpServletRequest)req).getQueryString();
                     if (queryString != null)
                     {
-                        redirectPath = redirectPath + '?' + queryString;
+                        if (redirectPath.indexOf('?') == -1)
+                        {
+                            redirectPath = redirectPath + '?' + queryString;
+                        }
+                        else
+                        {
+                            redirectPath = redirectPath + '&' + queryString;
+                        }
                     }
                 }
                 else
