@@ -246,7 +246,7 @@
             <!-- components_resources -->
             <fileset    dir="${components.src}"
                         includes="**/resource/**"/>
-            <fileset    dir="${components.src}"
+            <fileset    dir="${components.classes}"
                         includes="**/*.properties"/>
         </jar>
 
@@ -298,8 +298,6 @@
             <!-- components_resources -->
             <fileset    dir="${components.src}"
                         includes="**/resource/**"/>
-            <fileset    dir="${components.src}"
-                        includes="**/*.properties"/>
             <fileset    dir="${components.classes}"
                         includes="**/*.properties"/>
         </jar>
