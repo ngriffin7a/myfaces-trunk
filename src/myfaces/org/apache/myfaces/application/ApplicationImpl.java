@@ -68,11 +68,11 @@ public class ApplicationImpl
     private Locale               _defaultLocale;
     private String               _messageBundle;
 
-    private ViewHandler          _viewHandler = new JspViewHandlerImpl();
-    private NavigationHandler    _navigationHandler = new NavigationHandlerImpl();
-    private VariableResolver     _variableResolver = new VariableResolverImpl();
-    private PropertyResolver     _propertyResolver = new PropertyResolverImpl();
-    private ActionListener       _actionListener = new ActionListenerImpl();
+    private ViewHandler          _viewHandler;
+    private NavigationHandler    _navigationHandler;
+    private VariableResolver     _variableResolver;
+    private PropertyResolver     _propertyResolver;
+    private ActionListener       _actionListener;
 
     private final Map _converterMap = new HashMap();
     private final Map _converterTypeMap = new HashMap();
@@ -85,6 +85,13 @@ public class ApplicationImpl
 
     public ApplicationImpl()
     {
+        // set default implementation in constructor
+        // pragmatic approach, no syncronizing will be needed in get methods
+        _viewHandler = new JspViewHandlerImpl();
+        _navigationHandler = new NavigationHandlerImpl();
+        _variableResolver = new VariableResolverImpl();
+        _propertyResolver = new PropertyResolverImpl();
+        _actionListener = new ActionListenerImpl();
         if (log.isTraceEnabled()) log.trace("New Application instance created");
     }
 
