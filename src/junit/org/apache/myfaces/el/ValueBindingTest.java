@@ -248,50 +248,68 @@ public class ValueBindingTest
         assertEquals(r, new Integer(0));
 
 
-        try {
+        try 
+        {
             vb = _application.getValueBinding("testmap.map.list[4].map.list[][1][0][0]");
             assertTrue(false);
-        } catch (ReferenceSyntaxException e) {
+        }
+        catch (ReferenceSyntaxException e) 
+        {
             //System.out.println(e.getMessage());
             // we expect this
         }
 
-        try {
+        try 
+        {
             vb = _application.getValueBinding("testmap.map.list[4].map.list.[4][1][0][0]");
             assertTrue(false);
-        } catch (ReferenceSyntaxException e) {
+        } 
+        catch (ReferenceSyntaxException e) 
+        {
             //System.out.println(e.getMessage());
             // we expect this
         }
 
-        try {
+        try 
+        {
             vb = _application.getValueBinding("testmap.map.list[4].map..list[4][1][0][0]");
             assertTrue(false);
-        } catch (ReferenceSyntaxException e) {
+        } 
+        catch (ReferenceSyntaxException e) 
+        {
             //System.out.println(e.getMessage());
             // we expect this
         }
 
-        try {
+        try 
+        {
             vb = _application.getValueBinding(".testmap.map.list[4].map.list[4][1][0][0]");
             assertTrue(false);
-        } catch (ReferenceSyntaxException e) {
+        }
+        catch (ReferenceSyntaxException e) 
+        {
             //System.out.println(e.getMessage());
             // we expect this
         }
 
-        try {
+        try 
+        {
             vb = _application.getValueBinding("testmap.map.list[4].map.list[4[1][0]['0']");
             assertTrue(false);
-        } catch (ReferenceSyntaxException e) {
+        } 
+        catch (ReferenceSyntaxException e) 
+        {
             //System.out.println(e.getMessage());
             // we expect this
         }
 
-        try {
+        try 
+        {
             vb = _application.getValueBinding("testmap.map.list[4].map.list[4][1][0].[0]");
             assertTrue(false);
-        } catch (ReferenceSyntaxException e) {
+        }
+        catch (ReferenceSyntaxException e) 
+        {
             //System.out.println(e.getMessage());
             // we expect this
         }

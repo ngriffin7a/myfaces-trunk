@@ -23,24 +23,28 @@ package net.sourceforge.myfaces.el;
  * @author Anton Koinov (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public class D {
-    //~ Instance fields ----------------------------------------------------
+public class D
+{
+    //~ Instance fields --------------------------------------------------------
 
     private Object _obj;
 
-    //~ Constructors -------------------------------------------------------
+    //~ Constructors -----------------------------------------------------------
 
-    public D(Object o) {
+    public D(Object o)
+    {
         _obj = o;
     }
 
-    //~ Methods ------------------------------------------------------------
+    //~ Methods ----------------------------------------------------------------
 
-    public void setObj(Object object) {
+    public void setObj(Object object)
+    {
         _obj = object;
     }
 
-    public Object getObj() {
+    public Object getObj()
+    {
         return _obj;
     }
 }
