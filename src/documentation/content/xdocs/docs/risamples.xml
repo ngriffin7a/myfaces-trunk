@@ -15,8 +15,8 @@
 		<li>Download the latest JSF Reference Implementation <link href="http://java.sun.com/j2ee/javaserverfaces/download.html">here</link></li>
 		<li>In samples dir you will find the cardemo web application archive named jsf-cardemo.war</li>
 		<li>Unpack jsf-cardemo.war to a directory of your choice. If you are not familiar with deploying web applications and you are using tomcat, unpack jsf-cardemo.war to CATALINA_HOME/webapps/cardemo directory (where CATALINA_HOME = Tomcat installation directory)</li>
-		<li>Remove jsf-api.jar and jsf-impl.jar from WEB-INF/lib directory</li>
-		<li>Copy myfaces.jar and cos.jar to WEB-INF/lib directory</li>
+		<li>Remove all jar files from WEB-INF/lib directory but NOT! demo-components.jar</li>
+		<li>Copy all jar files from myfaces-example to WEB-INF/lib directory</li>
 		<li>Replace WEB-INF/web.xml with <link href="cardemoweb.html">web.xml</link></li>
 		<li>Deploy web application. If you unpacked cardemo.war into CATALINA_HOME/webapps/cardemo start tomcat and see cardemo running at http://localhost:8080/cardemo</li>
 	</ol>
