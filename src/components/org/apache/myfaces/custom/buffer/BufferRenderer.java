@@ -36,6 +36,9 @@ import org.apache.myfaces.renderkit.html.HtmlResponseWriterImpl;
  * @author Sylvain Vieujot (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.3  2005/02/01 16:54:07  svieujot
+ * Clean up.
+ *
  * Revision 1.2  2005/02/01 16:51:48  svieujot
  * Move the HtmlResponseWriterImpl to the shared sources directory.
  *
@@ -85,7 +88,6 @@ public class BufferRenderer extends Renderer {
     
     private static class HtmlBufferResponseWriterWrapper extends HtmlResponseWriterImpl {
         
-        private ResponseWriter initialWriter;
         private ByteArrayOutputStream stream;
         private PrintWriter writer;
         
@@ -98,7 +100,6 @@ public class BufferRenderer extends Renderer {
         
         private HtmlBufferResponseWriterWrapper(ResponseWriter initialWriter, ByteArrayOutputStream stream, PrintWriter writer){
             super(writer, initialWriter.getContentType(), initialWriter.getCharacterEncoding());
-            this.initialWriter = initialWriter;
             this.stream = stream;
             this.writer = writer;
         }
