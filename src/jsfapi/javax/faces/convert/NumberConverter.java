@@ -84,7 +84,7 @@ public class NumberConverter implements Converter {
                 }
                 catch (ParseException e)
                 {
-                    throw new ConverterException("Cannot convert value " + value);
+                    throw new ConverterException("Cannot convert value '" + value + "'");
                 }
             }
         }
@@ -96,10 +96,15 @@ public class NumberConverter implements Converter {
         if (facesContext == null) throw new NullPointerException("facesContext");
         if (uiComponent == null) throw new NullPointerException("uiComponent");
 
+        if (value == null)
+        {
+            return "";
+        }
         if (value instanceof String)
         {
             return (String)value;
         }
+
         NumberFormat format = getNumberFormat(facesContext);
         format.setGroupingUsed(_groupingUsed);
         if (_maxFractionDigitsSet) format.setMaximumFractionDigits(_maxFractionDigits);
@@ -113,16 +118,14 @@ public class NumberConverter implements Converter {
         }
         catch (Exception e)
         {
-            throw new ConverterException("Cannot convert value " + value);
+            throw new ConverterException("Cannot convert value '" + value + "'");
         }
     }
 
     private NumberFormat getNumberFormat(FacesContext facesContext)
     {
-        if (_locale == null)
-        {
-            _locale = facesContext.getViewRoot().getLocale();
-        }
+        Locale lokale = _locale != null ? _locale : facesContext.getViewRoot().getLocale();
+
         if (_pattern == null && _type == null)
         {
             throw new ConverterException("Cannot get NumberFormat, either type or pattern needed.");
@@ -131,21 +134,21 @@ public class NumberConverter implements Converter {
         // pattern
         if (_pattern != null)
         {
-            return new DecimalFormat(_pattern, new DecimalFormatSymbols(_locale));
+            return new DecimalFormat(_pattern, new DecimalFormatSymbols(lokale));
         }
 
         // type
         if (_type.equals("number"))
         {
-            return NumberFormat.getNumberInstance(_locale);
+            return NumberFormat.getNumberInstance(lokale);
         }
         else if (_type.equals("currency"))
         {
-            return NumberFormat.getCurrencyInstance(_locale);
+            return NumberFormat.getCurrencyInstance(lokale);
         }
         else if (_type.equals("percent"))
         {
-            return NumberFormat.getPercentInstance(_locale);
+            return NumberFormat.getPercentInstance(lokale);
         }
         throw new ConverterException("Cannot get NumberFormat, illegal type " + _type);
     }
@@ -190,7 +193,7 @@ public class NumberConverter implements Converter {
        }
     }
 
-    // State restore/save
+    // STATE SAVE/RESTORE
 	public void restoreState(FacesContext facesContext, Object state)
 	{
         Object values[] = (Object[])state;
@@ -236,7 +239,7 @@ public class NumberConverter implements Converter {
         return values;
 	}
 
-    // getter & setter
+    // GETTER & SETTER
     public String getCurrencyCode()
     {
         return _currencyCode;

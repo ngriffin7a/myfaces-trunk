@@ -52,7 +52,7 @@ public class FloatConverter implements Converter {
                 }
                 catch (NumberFormatException e)
                 {
-                    throw new ConverterException("Cannot convert value " + value);
+                    throw new ConverterException("Cannot convert value '" + value + "'");
                 }
             }
         }
@@ -64,6 +64,10 @@ public class FloatConverter implements Converter {
         if (facesContext == null) throw new NullPointerException("facesContext");
         if (uiComponent == null) throw new NullPointerException("uiComponent");
 
+        if (value == null)
+        {
+            return "";
+        }
         if (value instanceof String)
         {
             return (String)value;

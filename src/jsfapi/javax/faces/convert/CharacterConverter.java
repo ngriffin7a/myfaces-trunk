@@ -57,6 +57,10 @@ public class CharacterConverter implements Converter {
         if (facesContext == null) throw new NullPointerException("facesContext");
         if (uiComponent == null) throw new NullPointerException("uiComponent");
 
+        if (value == null)
+        {
+            return "";
+        }
         if (value instanceof String)
         {
             return (String)value;

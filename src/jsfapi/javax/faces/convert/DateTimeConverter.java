@@ -22,6 +22,9 @@ import javax.faces.context.FacesContext;
 import javax.faces.component.UIComponent;
 import java.util.Locale;
 import java.util.TimeZone;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.text.ParseException;
 
 /**
  * @author Thomas Spiegl (latest modification by $Author$)
@@ -48,30 +51,148 @@ public class DateTimeConverter implements Converter {
 	// METHODS
 	public Object getAsObject(FacesContext facesContext, UIComponent uiComponent, String value)
 	{
-		//TODO
-		throw new UnsupportedOperationException();
+        if (facesContext == null) throw new NullPointerException("facesContext");
+        if (uiComponent == null) throw new NullPointerException("uiComponent");
+
+        if (value != null)
+        {
+            value = value.trim();
+            if (value.length() > 0)
+            {
+                DateFormat format = getDateFormat(facesContext);
+                format.setLenient(true);
+                if (_timeZone != null)
+                {
+                    format.setTimeZone(_timeZone);
+                }
+                try
+                {
+                    return format.parse(value);
+                }
+                catch (ParseException e)
+                {
+                    throw new ConverterException("Cannot convert value '" + value + "'");
+                }
+            }
+        }
+        return null;
 	}
 
 	public String getAsString(FacesContext facesContext, UIComponent uiComponent, Object value)
 	{
-		//TODO
-		throw new UnsupportedOperationException();
+        if (facesContext == null) throw new NullPointerException("facesContext");
+        if (uiComponent == null) throw new NullPointerException("uiComponent");
+
+        if (value == null)
+        {
+            return "";
+        }
+        if (value instanceof String)
+        {
+            return (String)value;
+        }
+
+        DateFormat format = getDateFormat(facesContext);
+        if (_timeZone != null)
+        {
+            format.setTimeZone(_timeZone);
+        }
+        try
+        {
+            return format.format(value);
+        }
+        catch (Exception e)
+        {
+            throw new ConverterException("Cannot convert value '" + value + "'");
+        }
 	}
 
-    // State restore/save
-	public void restoreState(FacesContext facesContext, Object value)
+    private DateFormat getDateFormat(FacesContext facesContext)
+    {
+        Locale lokale = _locale != null ? _locale : facesContext.getViewRoot().getLocale();
+
+        if (_pattern == null && _type == null)
+        {
+            throw new ConverterException("Cannot get DateFormat, either type or pattern needed.");
+        }
+
+        DateFormat format = null;
+        if (_pattern != null)
+        {
+            format = new SimpleDateFormat(_pattern, lokale);
+        }
+        else if (_type.equals("date"))
+        {
+            format = DateFormat.getDateInstance(calcStyle(_dateStyle), lokale);
+        }
+        else if (_type.equals("time"))
+        {
+            format = DateFormat.getTimeInstance(calcStyle(_timeStyle), lokale);
+        }
+        else if (_type.equals("both"))
+        {
+            format = DateFormat.getDateTimeInstance(calcStyle(_dateStyle),
+                                                    calcStyle(_timeStyle),
+                                                    lokale);
+        }
+        else
+        {
+            throw new ConverterException("invalid type '" + _type + "'");
+        }
+        return format;
+    }
+
+    private int calcStyle(String name)
+    {
+        if (name.equals("default"))
+        {
+            return DateFormat.DEFAULT;
+        }
+        if (name.equals("medium"))
+        {
+            return DateFormat.MEDIUM;
+        }
+        if (name.equals("short"))
+        {
+            return DateFormat.SHORT;
+        }
+        if (name.equals("long"))
+        {
+            return DateFormat.LONG;
+        }
+        if (name.equals("full"))
+        {
+            return DateFormat.FULL;
+        }
+
+        throw new ConverterException("invalid style '" + name + "'");
+    }
+
+    // STATE SAVE/RESTORE
+	public void restoreState(FacesContext facesContext, Object state)
 	{
-		//TODO
-		throw new UnsupportedOperationException();
+        Object[] values = (Object[])state;
+        _dateStyle = (String)values[0];
+        _locale = (Locale)values[0];
+        _pattern = (String)values[0];
+        _timeStyle = (String)values[0];
+        _timeZone = (TimeZone)values[0];
+        _type = (String)values[0];
 	}
 
 	public Object saveState(FacesContext facesContext)
 	{
-		//TODO
-		throw new UnsupportedOperationException();
+        Object[] values = new Object[6];
+        values[0] = _dateStyle;
+        values[1] = _locale;
+        values[2] = _pattern;
+        values[3] = _timeStyle;
+        values[4] = _timeZone;
+        values[5] = _type;
+        return values;
 	}
 
-    // getter & setter
+    // GETTER & SETTER
     public String getDateStyle()
     {
         return _dateStyle;
