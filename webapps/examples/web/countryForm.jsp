@@ -51,13 +51,22 @@
             <h:panelGroup>
                 <h:form id="countryForm" name="countryForm">
                     <x:saveState value="#{countryForm.id}" />
-                    <h:panelGrid columns="2" styleClass="standardTable" >
+                    <h:panelGrid columns="2" styleClass="countryFormTable"
+                                 headerClass="countryFormHeader"
+                                 footerClass="countryFormFooter"
+                                 columnClasses="countryFormLabels, countryFormInputs" >
+                        <f:facet name="header">
+                            <h:outputText value="(Country Form Header)"/>
+                        </f:facet>
+                        <f:facet name="footer">
+                            <h:outputText value="(Country Form Footer)"/>
+                        </f:facet>
+
                         <h:outputLabel for="name" value="#{example_messages['label_country_name']}"/>
                         <h:panelGroup>
                             <h:inputText id="name" value="#{countryForm.name}" required="true" />
                             <h:message for="name" styleClass="error" showDetail="true" showSummary="false" />
                         </h:panelGroup>
-
 
                         <h:outputLabel for="isoCode" value="#{example_messages['label_country_iso']}"/>
                         <h:panelGroup>
