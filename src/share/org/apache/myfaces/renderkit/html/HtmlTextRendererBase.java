@@ -33,6 +33,9 @@ import java.io.IOException;
  * @author Manfred Geiler
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.5  2004/08/30 17:50:34  tinytoony
+ * fix for span-element bug
+ *
  * Revision 1.4  2004/08/30 17:29:26  tinytoony
  * fix for span-element bug
  *
@@ -100,6 +103,8 @@ public class HtmlTextRendererBase
             ResponseWriter writer = facesContext.getResponseWriter();
 
             writer.startElement(HTML.SPAN_ELEM, component);
+
+            writer.writeAttribute(HTML.ID_ATTR, component.getClientId(facesContext),null);
 
             HtmlRendererUtils.renderHTMLAttributes(writer, component, HTML.COMMON_PASSTROUGH_ATTRIBUTES);
 
