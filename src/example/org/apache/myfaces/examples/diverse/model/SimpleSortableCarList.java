@@ -25,12 +25,12 @@ import java.util.*;
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public class SimpleCarList
+public class SimpleSortableCarList
     extends SortableList
 {
     private List _cars;
 
-    public SimpleCarList()
+    public SimpleSortableCarList()
     {
         super("type");
 

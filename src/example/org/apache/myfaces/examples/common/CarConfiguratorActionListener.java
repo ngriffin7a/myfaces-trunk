@@ -16,42 +16,36 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package net.sourceforge.myfaces.taglib;
+package net.sourceforge.myfaces.examples.common;
 
-import net.sourceforge.myfaces.component.UIOutput;
-import net.sourceforge.myfaces.renderkit.html.TextRenderer;
-
-import javax.faces.component.UIComponent;
-
+import javax.faces.event.ActionListener;
+import javax.faces.event.ActionEvent;
+import javax.faces.event.AbortProcessingException;
+import javax.faces.event.PhaseId;
+import javax.faces.context.FacesContext;
 
 /**
  * DOCUMENT ME!
- * @author Manfred Geiler (latest modification by $Author$)
+ * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public class OutputTextTag
-        extends MyFacesTag
+public class CarConfiguratorActionListener
+    implements ActionListener
 {
-    //MyFaces tag extensions:
-    public UIComponent createComponent()
+    public void processAction(ActionEvent event) throws AbortProcessingException
     {
-        return new UIOutput();
+        String commandName = event.getActionCommand();
+        FacesContext context = FacesContext.getCurrentInstance();
+
+        CarConfigurator list = (CarConfigurator)context.getModelValue("simpleList");
+        if (list != null && commandName.equals("calcPrice"))
+        {
+            list.calcPrice();
+        }
     }
 
-    public String getRendererType()
+    public PhaseId getPhaseId()
     {
-        return TextRenderer.TYPE;
+        return PhaseId.UPDATE_MODEL_VALUES;
     }
-
-    public void setText(String value)
-    {
-        setValue(value);
-    }
-
-    public void setOutputClass(String value)
-    {
-        setRendererAttribute(TextRenderer.OUTPUT_CLASS_ATTR, value);
-    }
-
-
 }

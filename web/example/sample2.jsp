@@ -47,18 +47,18 @@
                                    modelReference="q_form.text"
                                    size="60" /><br>
                 <br>
-                <h:selectone_listbox id="oneoption" modelReference="q_form.quoteChar" >
-                    <h:selectbox_item id="item0" value="" label="select a quote character" />
-                    <h:selectbox_item id="item1" value="\"" label="Double" />
-                    <h:selectbox_item id="item2" value="'" label="Single" />
-                    <h:selectbox_items id="moreItems" modelReference="q_form.selectOneItems" />
-                </h:selectone_listbox>
+                <h:selectone_menu id="oneoption" modelReference="q_form.quoteChar" >
+                    <h:selectitem id="item0" value="" label="select a quote character" />
+                    <h:selectitem id="item1" value="\"" label="Double" />
+                    <h:selectitem id="item2" value="'" label="Single" />
+                    <h:selectitems id="moreItems" modelReference="q_form.selectOneItems" />
+                </h:selectone_menu>
                 <h:command_button id="button1" commandName="quotationOn" commandReference="q_controller.processEvent" label="Add quotes"/>
 
                 <br><br>
                 <h:selectmany_listbox id="manyoptions" modelReference="q_form.selectManyValues" >
-                    <h:selectbox_item id="item0" value="" label="select the unquote characters" />
-                    <h:selectbox_items id="manyItems" modelReference="q_form.selectManyItems" />
+                    <h:selectitem id="item0" value="" label="select the unquote characters" />
+                    <h:selectitems id="manyItems" modelReference="q_form.selectManyItems" />
                 </h:selectmany_listbox>
                 <h:command_button id="button2" commandName="quotationOff"  commandReference="q_controller.processEvent" label="Remove quotes"/><br>
 

@@ -32,6 +32,8 @@ public class UISelectItem
 
     //MyFaces eextension
     public static final String SELECTED_ATTR = "selected";
+    public static final String ITEM_KEY_ATTR = "itemKey";
+    public static final String ITEM_BUNDLE_ATTR = "itemBundle";
 
     public UISelectItem()
     {
@@ -72,4 +74,25 @@ public class UISelectItem
     {
         setAttribute(VALUE_ATTR, itemValue);
     }
+
+    public String getItemKey()
+    {
+        return (String)getAttribute(ITEM_KEY_ATTR);
+    }
+
+    public void setItemKey(String itemValue)
+    {
+        setAttribute(ITEM_KEY_ATTR, itemValue);
+    }
+
+    public String getItemBundle()
+    {
+        return (String)getAttribute(ITEM_BUNDLE_ATTR);
+    }
+
+    public void setItemBundle(String itemValue)
+    {
+        setAttribute(ITEM_BUNDLE_ATTR, itemValue);
+    }
+
 }

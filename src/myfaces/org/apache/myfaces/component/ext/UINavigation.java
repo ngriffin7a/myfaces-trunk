@@ -204,7 +204,7 @@ public class UINavigation
         {
             //HACK: Because there is a bug in the API implementation of UIComponentBase
             //(removeChild does not call removeComponentFromNamespace) we ignore
-            //components already in namespace
+            //common already in namespace
             if (_namingContainer.findComponentInNamespace(componentId) != null)
             {
                 return;

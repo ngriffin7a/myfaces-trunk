@@ -6,6 +6,9 @@
         <x:navigation_item id="nav-2-2" key="nav_Sample_2" treeId="/example/sample2.jsf"/>
         <x:navigation_item id="nav-2-3" key="nav_Simple_list" treeId="/example/simpleList.jsf"/>
         <x:navigation_item id="nav-2-4" key="nav_Sortable_list" treeId="/example/simpleSortList.jsf"/>
+        <x:navigation_item id="nav-2-5" key="nav_Components" >
+            <x:navigation_item id="nav-2-5-1" key="nav_Selectbox" treeId="/example/selectbox.jsf"/>
+        </x:navigation_item>
     </x:navigation_item>
     <x:navigation_item id="nav-3" key="nav_Documentation" >
         <x:navigation_item id="nav-3-1" key="nav_Features" treeId="/example/features.jsf"/>

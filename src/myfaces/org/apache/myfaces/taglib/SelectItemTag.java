@@ -54,4 +54,14 @@ public class SelectItemTag
     {
         setComponentAttribute(UISelectItem.ITEM_LABEL_ATTR, v);
     }
+
+    public void setKey(String v)
+    {
+        setComponentAttribute(UISelectItem.ITEM_KEY_ATTR, v);
+    }
+
+    public void setBundle(String v)
+    {
+        setComponentAttribute(UISelectItem.ITEM_BUNDLE_ATTR, v);
+    }
 }

@@ -253,7 +253,7 @@ public class StateSaver
             //but there is a default value when we use the property getter.
             //If valid == false, we must save it, because StateRestorer
             //always assumes true as the default.
-            //Since normally all components are valid, this can minimize
+            //Since normally all common are valid, this can minimize
             //the number of saved attributes.
             saveComponentAttribute(facesContext,
                                    stateMap,

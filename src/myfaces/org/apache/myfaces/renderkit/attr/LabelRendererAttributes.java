@@ -27,5 +27,19 @@ package net.sourceforge.myfaces.renderkit.attr;
 public interface LabelRendererAttributes
     extends CommonRendererAttributes
 {
+    public static final String KEY_ATTR = "key";
+    public static final String BUNDLE_ATTR = "bundle";
+
     public static final String FOR_ATTR = "for";
+    public static final String ACCESSKEY_ATTR = "accesskey";
+    public static final String ONBLUR_ATTR = "onblur";
+    public static final String ONFOKUS_ATTR = "onfocus";
+    public static final String[] COMMON_LABEL_ATTRIBUTES =
+    {
+        FOR_ATTR,
+        ACCESSKEY_ATTR,
+        ONBLUR_ATTR,
+        ONFOKUS_ATTR
+    };
+
 }

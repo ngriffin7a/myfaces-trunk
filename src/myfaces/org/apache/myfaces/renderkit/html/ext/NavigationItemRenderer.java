@@ -97,7 +97,7 @@ public class NavigationItemRenderer
     }
 
     /**
-     * UINavigationItem components do not render themselves. Method is directly called
+     * UINavigationItem common do not render themselves. Method is directly called
      * by NavigationRenderer.
      * @param facesContext
      * @param uiComponent
@@ -199,7 +199,7 @@ public class NavigationItemRenderer
     }
 
     /**
-     * UINavigationItem components do not render themselves. Method is directly called
+     * UINavigationItem common do not render themselves. Method is directly called
      * by NavigationRenderer.
      * @param facesContext
      * @param uiComponent

@@ -18,8 +18,8 @@
  */
 package net.sourceforge.myfaces.taglib;
 
-import net.sourceforge.myfaces.component.UICommand;
-import net.sourceforge.myfaces.renderkit.html.ButtonRenderer;
+import net.sourceforge.myfaces.component.UIOutput;
+import net.sourceforge.myfaces.renderkit.html.LabelRenderer;
 
 import javax.faces.component.UIComponent;
 
@@ -29,49 +29,56 @@ import javax.faces.component.UIComponent;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public class CommandButtonTag
-        extends TextEntryInputTag
+public class OutputLabelTag
+        extends MyFacesTag
 {
     //MyFaces tag extensions:
     public UIComponent createComponent()
     {
-        return new UICommand();
+        return new UIOutput();
     }
 
     public String getRendererType()
     {
-        return ButtonRenderer.TYPE;
+        return LabelRenderer.TYPE;
     }
 
-
-    public void setLabel(String v)
+    public void setKey(String value)
     {
-        setRendererAttribute(ButtonRenderer.LABEL_ATTR, v);
+        setRendererAttribute(LabelRenderer.KEY_ATTR, value);
     }
 
-    public void setCommandName(String v)
+    public void setBundle(String value)
     {
-        setValue(v);
+        setRendererAttribute(LabelRenderer.BUNDLE_ATTR, value);
     }
 
-    public void setCommandReference(String v)
+    public void setText(String value)
     {
-        setComponentAttribute(UICommand.COMMAND_REFERENCE_ATTR, v);
+        setValue(value);
     }
 
-    public void setCommandClass(String v)
+    public void setAccesskey(String value)
     {
-        setRendererAttribute(ButtonRenderer.COMMAND_CLASS_ATTR, v);
+        setRendererAttribute(LabelRenderer.ACCESSKEY_ATTR, value);
     }
-
-    public void setKey(String v)
+    public void setFor(String value)
     {
-        setRendererAttribute(ButtonRenderer.KEY_ATTR, v);
+        setRendererAttribute(LabelRenderer.FOR_ATTR, value);
     }
 
-    public void setBundle(String v)
+    public void setOnblur(String value)
     {
-        setRendererAttribute(ButtonRenderer.BUNDLE_ATTR, v);
+        setRendererAttribute(LabelRenderer.ONBLUR_ATTR, value);
     }
 
+    public void setOnfocus(String value)
+    {
+        setRendererAttribute(LabelRenderer.ONFOKUS_ATTR, value);
+    }
+
+    public void setOutputClass(String value)
+    {
+        setRendererAttribute(LabelRenderer.OUTPUT_CLASS_ATTR, value);
+    }
 }

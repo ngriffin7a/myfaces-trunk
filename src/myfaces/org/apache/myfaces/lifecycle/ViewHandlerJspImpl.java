@@ -53,7 +53,7 @@ public class ViewHandlerJspImpl
         ServletContext servletContext = facesContext.getServletContext();
         Tree tree = facesContext.getTree();
 
-        //Build component tree from parsed JspInfo so that all components
+        //Build component tree from parsed JspInfo so that all common
         //already exist in case a component needs it's children prior to
         //rendering it's body
         /*

@@ -32,7 +32,7 @@ import java.util.*;
  * prior to rendering the page.<br>
  * These infos are:
  * <ul>
- *  <li>The full faces tree of all components in that JSP.</li>
+ *  <li>The full faces tree of all common in that JSP.</li>
  *  <li>The type of each bean on that page as given in the "class" attribute of the useBean declaration.</li>
  *  <li>The FacesTag, that is responsible to create a component.</li>
  * <ul>

@@ -45,7 +45,7 @@
                 </tr>
             </table>
             <h:message id="today" bundle="net.sourceforge.myfaces.examples.resource.example_messages" key="today" >
-                <h:param id="p0" value="<%=new Date()%>" />
+                <h:parameter id="p0" value="<%=new Date()%>" />
             </h:message>
         </x:page_body>
 

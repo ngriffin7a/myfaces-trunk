@@ -71,35 +71,35 @@ public class TextRenderer
         }
     }
 
-    public void renderInput(FacesContext context, UIComponent component)
+    public void renderInput(FacesContext facesContext, UIComponent uiComponent)
             throws IOException
     {
-        ResponseWriter writer = context.getResponseWriter();
+        ResponseWriter writer = facesContext.getResponseWriter();
         writer.write("<input type=\"text\"");
-        String coumpoundId = component.getClientId(context);
+        String coumpoundId = uiComponent.getClientId(facesContext);
         writer.write(" name=\"");
         writer.write(coumpoundId);
         writer.write("\"");
         writer.write(" id=\"");
         writer.write(coumpoundId);
         writer.write("\"");
-        String currentValue = getStringValue(context, component);
+        String currentValue = getStringValue(facesContext, uiComponent);
         if (currentValue != null)
         {
             writer.write(" value=\"");
             writer.write(HTMLEncoder.encode(currentValue, false, false));
             writer.write("\"");
         }
-        String css = (String)component.getAttribute(INPUT_CLASS_ATTR);
+        String css = (String)uiComponent.getAttribute(INPUT_CLASS_ATTR);
         if (css != null)
         {
             writer.write("<span class=\"");
             writer.write(css);
             writer.write("\">");
         }
-        CommonAttributes.renderHTMLEventHandlerAttributes(context, component);
-        CommonAttributes.renderUniversalHTMLAttributes(context, component);
-        CommonAttributes.renderAttributes(context, component, TextRendererAttributes.COMMON_TEXT_ATTRIBUTES);
+        CommonAttributes.renderHTMLEventHandlerAttributes(facesContext, uiComponent);
+        CommonAttributes.renderUniversalHTMLAttributes(facesContext, uiComponent);
+        CommonAttributes.renderAttributes(facesContext, uiComponent, TextRendererAttributes.COMMON_TEXT_ATTRIBUTES);
         writer.write(">");
     }
 

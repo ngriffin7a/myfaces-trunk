@@ -19,6 +19,10 @@
 package net.sourceforge.myfaces.renderkit.html;
 
 import net.sourceforge.myfaces.renderkit.attr.LabelRendererAttributes;
+import net.sourceforge.myfaces.renderkit.attr.TextRendererAttributes;
+import net.sourceforge.myfaces.renderkit.html.util.CommonAttributes;
+import net.sourceforge.myfaces.renderkit.html.util.HTMLEncoder;
+import net.sourceforge.myfaces.util.bundle.BundleUtils;
 
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIOutput;
@@ -57,14 +61,24 @@ public class LabelRenderer
     {
         ResponseWriter writer = facesContext.getResponseWriter();
         writer.write("<label");
-        String forAttr = (String)uiComponent.getAttribute(FOR_ATTR);
-        if (forAttr != null && forAttr.length() > 0)
-        {
-            writer.write(" for=\"");
-            writer.write(forAttr);
-            writer.write("\"");
-        }
+        CommonAttributes.renderHTMLEventHandlerAttributes(facesContext, uiComponent);
+        CommonAttributes.renderUniversalHTMLAttributes(facesContext, uiComponent);
+        CommonAttributes.renderAttributes(facesContext, uiComponent, TextRendererAttributes.COMMON_TEXT_ATTRIBUTES);
         writer.write(">");
+
+        String text;
+        String key = (String)uiComponent.getAttribute(KEY_ATTR);
+        if (key != null)
+        {
+            text = BundleUtils.getString(facesContext,
+                                            (String)uiComponent.getAttribute(BUNDLE_ATTR),
+                                            key);
+        }
+        else
+        {
+            text = getStringValue(facesContext, uiComponent);
+        }
+        writer.write(HTMLEncoder.encode(text, true, true));
     }
 
     public void encodeEnd(FacesContext facesContext, UIComponent uiComponent)

@@ -65,11 +65,11 @@
                     <h:output_text id="footer_1" text="take a look at this runtime values ..."/>
                     <h:group id="g2" >
                         <h:message id="row_count" msg="{0} rows" >
-                            <h:param id="rows" value="<%=new Integer(rows)%>"/>
+                            <h:parameter id="rows" value="<%=new Integer(rows)%>"/>
                         </h:message>
                         &nbsp; / &nbsp;
                         <h:message id="col_count" msg="{0} cols" >
-                            <h:param id="cols" value="<%=new Integer(cols)%>"/>
+                            <h:parameter id="cols" value="<%=new Integer(cols)%>"/>
                         </h:message>
                     </h:group>
                 </h:group>

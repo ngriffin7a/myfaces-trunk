@@ -16,23 +16,29 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package net.sourceforge.myfaces.renderkit.attr;
+package net.sourceforge.myfaces.examples.util;
+
+import net.sourceforge.myfaces.util.bundle.BundleUtils;
+
+import javax.faces.component.SelectItem;
+import javax.faces.context.FacesContext;
 
 /**
- * Constant definitions for the specified render dependent attributes of the
- * "Button" renderer type.
- * @author Manfred Geiler (latest modification by $Author$)
+ * DOCUMENT ME!
+ * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public interface ButtonRendererAttributes
-    extends CommonRendererAttributes
+public class LocalizedSelectItem
+    extends SelectItem
 {
-    public static final String KEY_ATTR = "key";
-    public static final String BUNDLE_ATTR = "bundle";
-    public static final String TYPE_ATTR = "type";
-    public static final String IMAGE_ATTR = "image";
-    public static final String LABEL_ATTR = "label";
+    public LocalizedSelectItem(String key)
+    {
+        super(key,
+              BundleUtils.getString(FacesContext.getCurrentInstance(),
+                                             "net.sourceforge.myfaces.examples.resource.example_messages",
+                                             key),
+              null);
 
-    public static final String[] COMMON_BUTTON_ATTRIBUTES
-        = TextRendererAttributes.COMMON_TEXT_ATTRIBUTES;
+    }
+
 }

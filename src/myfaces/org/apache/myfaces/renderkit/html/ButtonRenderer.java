@@ -22,6 +22,7 @@ import net.sourceforge.myfaces.renderkit.attr.ButtonRendererAttributes;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLEncoder;
 import net.sourceforge.myfaces.renderkit.html.util.CommonAttributes;
 import net.sourceforge.myfaces.util.logging.LogUtil;
+import net.sourceforge.myfaces.util.bundle.BundleUtils;
 
 import javax.faces.component.UICommand;
 import javax.faces.component.UIComponent;
@@ -142,32 +143,44 @@ public class ButtonRenderer
         }
     }
 
-    public void encodeEnd(FacesContext context, UIComponent component) throws IOException
+    public void encodeEnd(FacesContext facesContext, UIComponent uiComponent) throws IOException
     {
-        ResponseWriter writer = context.getResponseWriter();
+        ResponseWriter writer = facesContext.getResponseWriter();
         boolean hiddenParam = true;
         writer.write("<input type=");
-        String imageSrc = (String)component.getAttribute(IMAGE_ATTR);
+        String imageSrc = (String)uiComponent.getAttribute(IMAGE_ATTR);
         if (imageSrc != null)
         {
             writer.write("\"image\" src=\"");
             writer.write(imageSrc);
             writer.write("\"");
             writer.write(" name=\"");
-            writer.write(component.getClientId(context));
+            writer.write(uiComponent.getClientId(facesContext));
             writer.write("\"");
         }
         else
         {
             writer.write("\"submit\" name=\"");
-            writer.write(component.getClientId(context));
+            writer.write(uiComponent.getClientId(facesContext));
             writer.write("\"");
             writer.write(" value=\"");
-            String label = (String)component.getAttribute(LABEL_ATTR);
-            //TODO: key/bundle instead of label
+
+            String label;
+            String key = (String)uiComponent.getAttribute(KEY_ATTR);
+            if (key != null)
+            {
+                label = BundleUtils.getString(facesContext,
+                                              (String)uiComponent.getAttribute(BUNDLE_ATTR),
+                                              key);
+            }
+            else
+            {
+                label = (String)uiComponent.getAttribute(LABEL_ATTR);
+
+            }
             if (label == null)
             {
-                label = getStringValue(context, component);
+                label = getStringValue(facesContext, uiComponent);
                 hiddenParam = false;
             }
             writer.write(HTMLEncoder.encode(label, false, false));
@@ -175,7 +188,7 @@ public class ButtonRenderer
         }
 
         //css class:
-        String cssClass = (String)component.getAttribute(COMMAND_CLASS_ATTR);
+        String cssClass = (String)uiComponent.getAttribute(COMMAND_CLASS_ATTR);
         if (cssClass != null)
         {
             writer.write(" class=\"");
@@ -183,18 +196,18 @@ public class ButtonRenderer
             writer.write("\"");
         }
 
-        CommonAttributes.renderHTMLEventHandlerAttributes(context, component);
-        CommonAttributes.renderUniversalHTMLAttributes(context, component);
-        CommonAttributes.renderAttributes(context, component, ButtonRendererAttributes.COMMON_BUTTON_ATTRIBUTES);
+        CommonAttributes.renderHTMLEventHandlerAttributes(facesContext, uiComponent);
+        CommonAttributes.renderUniversalHTMLAttributes(facesContext, uiComponent);
+        CommonAttributes.renderAttributes(facesContext, uiComponent, ButtonRendererAttributes.COMMON_BUTTON_ATTRIBUTES);
 
         writer.write(">");
 
         if (hiddenParam)
         {
             writer.write("<input type=\"hidden\" name=\"");
-            writer.write(getHiddenValueParamName(context, component));
+            writer.write(getHiddenValueParamName(facesContext, uiComponent));
             writer.write("\" value=\"");
-            String strVal = getStringValue(context, component);
+            String strVal = getStringValue(facesContext, uiComponent);
             writer.write(HTMLEncoder.encode(strVal, false, false));
             writer.write("\">");
         }

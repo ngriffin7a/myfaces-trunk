@@ -31,13 +31,13 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 /**
- * Sun saves a special Map in the root component, when there are components without an id.
+ * Sun saves a special Map in the root component, when there are common without an id.
  * They calculate a hashKey from the nested tags and store the corresponding component with
  * that key. During {@link javax.faces.webapp.FacesTag#findComponent} they use this map
- * to lookup and identify components that are already in the tree.
+ * to lookup and identify common that are already in the tree.
  * We must save and restore this Map, because otherwise the findComponent method would always
  * add a component that has no id again to our restored tree.
- * Since this is a heavy object and we do not want to drag the whole bunch of components, we use
+ * Since this is a heavy object and we do not want to drag the whole bunch of common, we use
  * this little trick:
  * Before we save the map by serializing, we replace each component by it's clientId. And then
  * when we have restored the map again, we do the other way round and replace each clientId by

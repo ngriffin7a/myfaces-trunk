@@ -46,14 +46,14 @@
                 <h:form id="form1" formName="calcForm">
                     <h:message key="option_lang" bundle="net.sourceforge.myfaces.examples.resource.example_messages" />
                     <h:selectone_listbox id="locale" modelReference="optionsForm.language"  >
-                        <h:selectbox_items id="available" modelReference="optionsForm.availableLanguages" />
+                        <h:selectitems id="available" modelReference="optionsForm.availableLanguages" />
                     </h:selectone_listbox><br>
 
                     <h:message key="option_layout" bundle="net.sourceforge.myfaces.examples.resource.example_messages" />
                     <h:selectone_listbox id="layout" modelReference="pageLayout"  >
-                        <h:selectbox_item id="item101" label="Classic" value="classic" />
-                        <h:selectbox_item id="item102" label="Navigation right" value="navigationRight" />
-                        <h:selectbox_item id="item103" label="Upside down" value="upsideDown" />
+                        <h:selectitem id="item101" label="Classic" value="classic" />
+                        <h:selectitem id="item102" label="Navigation right" value="navigationRight" />
+                        <h:selectitem id="item103" label="Upside down" value="upsideDown" />
                     </h:selectone_listbox><br>
 
                     <h:command_button id="apply" commandName="apply" commandReference="optionsCtrl.setLocale" label="Apply"/>

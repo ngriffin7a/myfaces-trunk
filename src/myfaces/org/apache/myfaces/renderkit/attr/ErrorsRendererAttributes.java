@@ -28,5 +28,5 @@ public interface ErrorsRendererAttributes
     extends CommonRendererAttributes
 {
     //public static final String COMPOUND_ID_ATTR = "compoundId";
-    public static final String COMPOUND_ID_ATTR = "msgCompoundId"; //Error in Spec.: Cannot be "compoundId" because components already have a compoundId property!
+    public static final String COMPOUND_ID_ATTR = "msgCompoundId"; //Error in Spec.: Cannot be "compoundId" because common already have a compoundId property!
 }

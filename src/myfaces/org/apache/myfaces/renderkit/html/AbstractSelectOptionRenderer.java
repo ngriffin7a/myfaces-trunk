@@ -25,16 +25,14 @@ import net.sourceforge.myfaces.renderkit.html.util.HTMLEncoder;
 import net.sourceforge.myfaces.renderkit.html.util.CommonAttributes;
 import net.sourceforge.myfaces.renderkit.attr.ListboxRendererAttributes;
 import net.sourceforge.myfaces.renderkit.attr.MenuRendererAttributes;
+import net.sourceforge.myfaces.util.bundle.BundleUtils;
 
 import javax.faces.component.SelectItem;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.Map;
+import java.util.*;
 
 /**
  * DOCUMENT ME!
@@ -61,14 +59,18 @@ public abstract class AbstractSelectOptionRenderer
         Iterator it = getSelectItems(facesContext, uicomponent);
         if (it.hasNext())
         {
-            writer.write("<select ");
+            writer.write("<select");
             writer.write(" name=\"");
             writer.write(uicomponent.getClientId(facesContext));
+            writer.write("\"");
 
             CommonAttributes.renderHTMLEventHandlerAttributes(facesContext, uicomponent);
             CommonAttributes.renderUniversalHTMLAttributes(facesContext, uicomponent);
             if (rendererType.equals(ListboxRenderer.TYPE))
             {
+                writer.write(" size=\"");
+                writer.write(new Integer(size).toString());
+                writer.write("\"");
                 CommonAttributes.renderAttributes(facesContext,
                                                   uicomponent,
                                                   ListboxRendererAttributes.COMMON_LISTBOX_ATTRIBUTES);
@@ -83,8 +85,6 @@ public abstract class AbstractSelectOptionRenderer
             {
                 throw new IllegalArgumentException("Unknown renderer-type " + rendererType);
             }
-
-            writer.write("\"");
 
             if (multipleSelect) writer.write(" multiple ");
             writer.write(">\n");
@@ -165,8 +165,21 @@ public abstract class AbstractSelectOptionRenderer
                 if (child instanceof UISelectItem)
                 {
                     UISelectItem item = (UISelectItem)child;
+                    String key = item.getItemKey();
+                    String text;
+                    if (key != null)
+                    {
+                        text = BundleUtils.getString(context,
+                                                     item.getItemBundle(),
+                                                     key);
+                    }
+                    else
+                    {
+                        text = item.getItemLabel();
+                    }
+
                     list.add(new SelectItem(item.getItemValue(),
-                                            item.getItemLabel(),
+                                            text,
                                             item.getItemDescription()));
                 }
                 else if (child instanceof UISelectItems)

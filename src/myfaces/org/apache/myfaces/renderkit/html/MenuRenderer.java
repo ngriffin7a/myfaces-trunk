@@ -67,8 +67,16 @@ public class MenuRenderer
     public void encodeEnd(FacesContext facescontext, UIComponent uicomponent)
         throws IOException
     {
-        Integer i = (Integer)uicomponent.getAttribute(SIZE_ATTR);
-        int size = i != null ? i.intValue() : DEFAULT_SIZE;
+        String strSize = (String)uicomponent.getAttribute(SIZE_ATTR);
+        int size;
+        try
+        {
+            size = strSize != null ? Integer.parseInt(strSize) : DEFAULT_SIZE;
+        }
+        catch (NumberFormatException e)
+        {
+            size = DEFAULT_SIZE;
+        }
 
         super.encodeEnd(facescontext, uicomponent, size, TYPE);
     }
