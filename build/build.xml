@@ -315,7 +315,8 @@
         <javadoc destdir="${doc.dir}/javadoc"
                  packagenames="org.apache.myfaces.*"
                  classpathref="javadoc.class.path"
-                 failonerror="true">
+                 failonerror="true"
+        	     Windowtitle="Apache MyFaces API Documentation">
         	<sourcepath>
            		<pathelement location="${myfaces.src}"/>
            		<pathelement location="${share.src}"/>
