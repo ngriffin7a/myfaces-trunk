@@ -18,17 +18,21 @@
  */
 package javax.faces.webapp;
 
-import java.io.IOException;
 import javax.faces.FactoryFinder;
 import javax.faces.context.FacesContext;
 import javax.faces.context.FacesContextFactory;
 import javax.faces.lifecycle.Lifecycle;
 import javax.faces.lifecycle.LifecycleFactory;
 import javax.servlet.*;
+import java.io.IOException;
 
 /**
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
+ * $Log$
+ * Revision 1.8  2004/06/14 12:55:23  manolito
+ * Added missing CVS Log comment
+ *
  */
 public class FacesServlet
         implements Servlet

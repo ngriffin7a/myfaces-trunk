@@ -26,6 +26,10 @@ import javax.faces.context.FacesContext;
  * @author Manfred Geiler (latest modification by $Author$)
  * @author Thomas Spiegl
  * @version $Revision$ $Date$
+ * $Log$
+ * Revision 1.6  2004/06/14 12:55:22  manolito
+ * Added missing CVS Log comment
+ *
  */
 public class DoubleRangeValidator
         implements Validator, StateHolder

@@ -37,6 +37,10 @@ import java.util.*;
  *
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
+ * $Log$
+ * Revision 1.5  2004/06/14 12:55:23  manolito
+ * Added missing CVS Log comment
+ *
  */
 public class LoadBundleTag
         extends TagSupport

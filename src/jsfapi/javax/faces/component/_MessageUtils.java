@@ -28,6 +28,10 @@ import java.util.ResourceBundle;
 /**
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
+ * $Log$
+ * Revision 1.4  2004/06/14 12:55:21  manolito
+ * Added missing CVS Log comment
+ *
  */
 class _MessageUtils
 {

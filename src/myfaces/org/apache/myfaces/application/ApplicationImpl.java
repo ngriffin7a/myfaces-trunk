@@ -26,6 +26,7 @@ import net.sourceforge.myfaces.el.ValueBindingImpl;
 import net.sourceforge.myfaces.el.VariableResolverImpl;
 import net.sourceforge.myfaces.util.BiLevelCacheMap;
 import net.sourceforge.myfaces.util.ClassUtils;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -49,6 +50,10 @@ import java.util.*;
  * @author Anton Koinov
  * @author Thomas Spiegl
  * @version $Revision$ $Date$
+ * $Log$
+ * Revision 1.30  2004/06/14 12:55:23  manolito
+ * Added missing CVS Log comment
+ *
  */
 public class ApplicationImpl
     extends Application
