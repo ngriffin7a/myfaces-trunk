@@ -67,7 +67,7 @@
 
     <tlib-version>0.9.0</tlib-version>
     <jsp-version>1.2</jsp-version>
-    <short-name>MyFaces Extensions</short-name>
+    <short-name>x</short-name>
     <uri>http://myfaces.sourceforge.net/tld/myfaces_ext_0_9.tld</uri>
     <description>
         Enhanced standard JSP actions and custom MyFaces actions.

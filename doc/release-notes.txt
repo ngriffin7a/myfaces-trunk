@@ -13,6 +13,7 @@ Changes in Release 1.0.8 beta
 * bug fix #1049792 rendered attribute is disabled for commandNavigation
 * bug fix #1042890 HtmlNavigationRenderer renders separator for parameters
 * bug fix #1046763 Temp jar built at config time not deleted
+* bug fix MYFACES-50: JBuilder 2005 fails to load TLD file descriptors
 * refactor the jar files :
   - myfaces-jsf-api.jar contains the api classes (no change)
   - myfaces-impl.jar contains the standard jsf implementation
