@@ -19,6 +19,7 @@
 <!DOCTYPE taglib
   PUBLIC "-//Sun Microsystems, Inc.//DTD JSP Tag Library 1.2//EN"
   "http://java.sun.com/dtd/web-jsptaglibrary_1_2.dtd" [
+<!ENTITY ext_forceId_attribute          SYSTEM "entities/ext_forceId_attribute.xml">  
 <!ENTITY html_anchor_attributes         SYSTEM "entities/html_anchor_attributes.xml">
 <!ENTITY html_button_attributes         SYSTEM "entities/html_button_attributes.xml">
 <!ENTITY html_event_handler_attributes  SYSTEM "entities/html_event_handler_attributes.xml">
@@ -85,6 +86,7 @@
         </description>
         &standard_command_button_attributes;
         &user_role_attributes;
+        &ext_forceId_attribute;
     </tag>
 
     <!-- commandLink -->
@@ -97,6 +99,7 @@
         </description>
         &standard_command_link_attributes;
         &user_role_attributes;
+        &ext_forceId_attribute;
     </tag>
 
     <!-- dataTable -->
@@ -111,6 +114,7 @@
         </description>
         &standard_data_table_attributes;
         <!-- MyFaces extensions -->
+        &ext_forceId_attribute;
         &user_role_attributes;
         <attribute>
             <name>preserveDataModel</name>
@@ -206,6 +210,7 @@
         </description>
         &standard_input_text_attributes;
         &user_role_attributes;
+        &ext_forceId_attribute;
     </tag>
 
     <!-- inputTextarea -->
@@ -218,6 +223,7 @@
         </description>
         &standard_input_textarea_attributes;
         &user_role_attributes;
+        &ext_forceId_attribute;
     </tag>
 
     <!-- message -->
@@ -231,6 +237,7 @@
         &standard_message_attributes;
         <!-- MyFaces extensions -->
         &user_role_attributes;
+        &ext_forceId_attribute;
         <attribute>
             <name>summaryFormat</name>
             <required>false</required>
@@ -278,6 +285,7 @@
         &standard_messages_attributes;
         <!-- MyFaces extensions -->
         &user_role_attributes;
+        &ext_forceId_attribute;
         <attribute>
             <name>summaryFormat</name>
             <required>false</required>
@@ -334,6 +342,7 @@
         </description>
         &standard_output_label_attributes;
         &user_role_attributes;
+        &ext_forceId_attribute;
     </tag>
 
     <!-- outputText -->
@@ -346,6 +355,7 @@
         </description>
         &standard_output_text_attributes;
         &user_role_attributes;
+        &ext_forceId_attribute;
     </tag>
 
     <!-- panelGroup -->
@@ -358,6 +368,7 @@
         </description>
         &standard_panel_group_attributes;
         &user_role_attributes;
+        &ext_forceId_attribute;
     </tag>
 
     <!-- selectOneMenu -->
@@ -370,6 +381,7 @@
         </description>
         &standard_select_one_menu_attributes;
         &user_role_attributes;
+        &ext_forceId_attribute;
     </tag>
 
     <!-- selectOneRadio -->
@@ -384,6 +396,7 @@
         </description>
         &standard_select_one_radio_attributes;
         &user_role_attributes;
+        &ext_forceId_attribute;
     </tag>
 
     <!-- selectManyCheckbox -->
@@ -398,6 +411,7 @@
         </description>
         &standard_select_many_checkbox_attributes;
         &user_role_attributes;
+        &ext_forceId_attribute;
     </tag>
 
 
