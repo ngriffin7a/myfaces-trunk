@@ -50,6 +50,10 @@ import java.util.*;
  * @author Thomas Spiegl
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.37  2005/03/10 10:26:00  matzew
+ * Patch for the ApplicationImpl form Mike Traum (MYFACES-122).
+ * Also changed behaivor of "createConverter(java.lang.String converterId)"
+ *
  * Revision 1.36  2005/03/04 00:28:45  mmarinschek
  * Changes in configuration due to missing Attribute/Property classes for the converter; not building in the functionality yet except for part of the converter properties
  *
@@ -466,11 +470,6 @@ public class ApplicationImpl
         }
 
         Class converterClass = (Class) _converterIdToClassMap.get(converterId);
-        if (converterClass == null)
-        {
-            log.error("Unknown converter id '" + converterId + "'.");
-            throw new FacesException("Unknown converter id '" + converterId + "'.");
-        }
 
         try
         {
@@ -493,10 +492,6 @@ public class ApplicationImpl
         }
 
         Converter converter = internalCreateConverter(targetClass);
-        if (converter == null)
-        {
-            throw new FacesException("There is no registered converter for class " + targetClass.getName());
-        }
 
         return converter;
     }
