@@ -26,7 +26,7 @@ import net.sourceforge.myfaces.renderkit.html.util.HTMLEncoder;
 import net.sourceforge.myfaces.tree.TreeUtils;
 import net.sourceforge.myfaces.util.Base64;
 import net.sourceforge.myfaces.util.FacesUtils;
-import net.sourceforge.myfaces.util.logging.LogUtil;
+import net.sourceforge.myfaces.util.DebugUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -74,7 +74,7 @@ public class SerializingStateSaver
         {
             Tree tree = facesContext.getTree();
 
-            if (log.isTraceEnabled()) LogUtil.logTree(log, tree, "Tree to serialize");
+            if (log.isTraceEnabled()) DebugUtils.logTree(log, tree, "Tree to serialize");
 
             //discard internal attributes ("javax.*" and "net.sourceforge.*")
             StateUtils.discardInternalAttributes(facesContext, tree);

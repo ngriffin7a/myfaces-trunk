@@ -25,7 +25,8 @@ import net.sourceforge.myfaces.renderkit.html.state.client.*;
 import net.sourceforge.myfaces.renderkit.html.state.server.HTTPSessionStateRestorer;
 import net.sourceforge.myfaces.renderkit.html.state.server.HTTPSessionStateSaver;
 import net.sourceforge.myfaces.util.FacesUtils;
-import net.sourceforge.myfaces.util.logging.LogUtil;
+import net.sourceforge.myfaces.util.DebugUtils;
+import net.sourceforge.myfaces.util.DebugUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -120,7 +121,7 @@ public class StateRenderer
     {
         if (_stateSaver == null) init(facesContext);
         _stateRestorer.restoreState(facesContext);
-        if (log.isTraceEnabled()) LogUtil.logTree(log, "Current tree after restoring state");
+        if (log.isTraceEnabled()) DebugUtils.logTree(log, "Current tree after restoring state");
 
         FacesUtils.getRequestMap(facesContext).put(StateRestorer.STATE_RESTORER_REQUEST_ATTR, _stateRestorer);
     }
@@ -170,7 +171,7 @@ public class StateRenderer
     {
         if (_stateSaver == null) init(facesContext);
         _stateSaver.release(facesContext);
-        if (log.isTraceEnabled()) LogUtil.logTree(log, "Current tree after saving state");
+        if (log.isTraceEnabled()) DebugUtils.logTree(log, "Current tree after saving state");
     }
 
 }

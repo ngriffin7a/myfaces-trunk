@@ -18,6 +18,8 @@
  */
 package net.sourceforge.myfaces.config;
 
+import net.sourceforge.myfaces.util.xml.MyFacesErrorHandler;
+import net.sourceforge.myfaces.util.xml.XmlUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.w3c.dom.Document;
@@ -25,16 +27,13 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.EntityResolver;
-import org.xml.sax.ErrorHandler;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
-import org.xml.sax.SAXParseException;
 
 import javax.faces.FacesException;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
@@ -51,8 +50,9 @@ import java.util.Map;
 public class FacesConfigFactoryImpl
     extends FacesConfigFactoryBase
 {
-    static final Log log = LogFactory.getLog(FacesConfigFactoryImpl.class);
-    private Map _propPatternCache;    
+    private static final Log log = LogFactory.getLog(FacesConfigFactoryImpl.class);
+
+    private Map _propPatternCache;
 
     public void parseFacesConfig(FacesConfig facesConfig,
                                  InputStream in,
@@ -81,7 +81,7 @@ public class FacesConfigFactoryImpl
             throw new FacesException(e);
         }
         db.setEntityResolver(entityResolver);
-        db.setErrorHandler(ERROR_HANDLER);
+        db.setErrorHandler(new MyFacesErrorHandler(log));
 
         Document document;
         try
@@ -196,7 +196,7 @@ public class FacesConfigFactoryImpl
         {
             // FIXME: maybe should call getAttributeNS()?
             String language = elem.getAttribute("xml:lang");
-            invokeWithLang(obj, method, language, getElementText(elem));
+            invokeWithLang(obj, method, language, XmlUtils.getElementText(elem));
         }
         else
         {
@@ -244,7 +244,7 @@ public class FacesConfigFactoryImpl
     {
         if (String.class.isAssignableFrom(propType))
         {
-            invoke(obj, propWriteMethod, getElementText(elem));
+            invoke(obj, propWriteMethod, XmlUtils.getElementText(elem));
         }
         else if (Config.class.isAssignableFrom(propType))
         {
@@ -259,7 +259,7 @@ public class FacesConfigFactoryImpl
         else
         {
             // Assume class name
-            String type = getElementText(elem);
+            String type = XmlUtils.getElementText(elem);
             Class clazz = null;
             try
             {
@@ -271,26 +271,6 @@ public class FacesConfigFactoryImpl
             }
             invoke(obj, propWriteMethod, instantiate(clazz));
         }
-    }
-
-
-    private String getElementText(Element elem)
-    {
-        StringBuffer buf = new StringBuffer();
-        NodeList nodeList = elem.getChildNodes();
-        for (int i = 0, len = nodeList.getLength(); i < len; i++)
-        {
-            Node n = nodeList.item(i);
-            if (n.getNodeType() == Node.TEXT_NODE)
-            {
-                buf.append(n.getNodeValue());
-            }
-            else
-            {
-                throw new FacesException("Unexpected node type " + n.getNodeType());
-            }
-        }
-        return buf.toString();
     }
 
 
@@ -406,38 +386,6 @@ public class FacesConfigFactoryImpl
         }
     }
     */
-
-
-    private static final ErrorHandler ERROR_HANDLER = new ErrorHandler()
-    {
-        public void warning(SAXParseException exception)
-        {
-            log.warn(getMessage(exception), exception);
-        }
-
-        public void error(SAXParseException exception)
-        {
-            log.error(getMessage(exception), exception);
-        }
-
-        public void fatalError(SAXParseException exception)
-        {
-            log.fatal(getMessage(exception), exception);
-        }
-
-        private String getMessage(SAXParseException exception)
-        {
-            StringBuffer buf = new StringBuffer();
-            buf.append("SAXParseException at");
-            buf.append(" URI=");
-            buf.append(exception.getSystemId());
-            buf.append(" Line=");
-            buf.append(exception.getLineNumber());
-            buf.append(" Column=");
-            buf.append(exception.getColumnNumber());
-            return buf.toString();
-        }
-    };
 
 
 }

@@ -494,7 +494,7 @@ public class MyParseEventListener
         /*
         if (comp == null)
         {
-            LogUtil.getLogger().warning("Tag class " + facesTag.getClass().getName() + " did not create a component.");
+            DebugUtils.getLogger().warning("Tag class " + facesTag.getClass().getName() + " did not create a component.");
             //We set current component to a dummy, so that the
             //getParent in handleEndTag returns the right component:
             final UIComponent currComp = _currentComponent;

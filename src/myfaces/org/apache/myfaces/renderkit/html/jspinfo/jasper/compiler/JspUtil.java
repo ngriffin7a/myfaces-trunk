@@ -224,7 +224,7 @@ public class JspUtil {
     /**
      * Parses the XML document contained in the InputStream.
      * This XML document is either web.xml or a tld.
-     * [The TLD has to be cached internally (see MyEntityResolver)]
+     * [The TLD has to be cached internally (see _EntityResolver)]
      *
      * @deprecated Use ParserUtils.parseXMLDocument() instead
      */

@@ -220,7 +220,7 @@ public class HyperlinkRenderer
 //                        conv.getAsObject(facesContext, uiParameter, strV);
 //                } catch (ConverterException e) {
 //                    objValue = null;
-//                    LogUtil.getLogger().severe(
+//                    DebugUtils.getLogger().severe(
 //                        "Could not reconvert hyperlink parameter " + name
 //                        + " to Object.");
 //                }

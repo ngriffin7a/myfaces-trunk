@@ -71,13 +71,7 @@ public class MyFacesConfig
     private static final String PARAM_disableJspParser = "myfaces_DisableJspParser";
     private static final boolean DEFAULT_disableJspParser = false;
 
-    private static final String PARAM_defaultLanguage = "myfaces_DefaultLanguage";
-    private static final String DEFAULT_defaultLanguage = "en";
-
     private static final String CONFIG_MAP_ATTR = MyFacesConfig.class.getName() + ".MAP";
-
-    private static final String PARAM_wrapPageContext = "myfaces_WrapPageContext";
-    private static final boolean DEFAULT_wrapPageContext = false;
 
 
     private MyFacesConfig() {}
@@ -215,26 +209,6 @@ public class MyFacesConfig
         return getBooleanInitParameter(servletContext,
                                        PARAM_disableJspParser,
                                        DEFAULT_disableJspParser);
-    }
-
-    /**
-     * See web.xml in the examples webapp for documentation!
-     */
-    public static boolean isWrapPageContext(ServletContext servletContext)
-    {
-        return getBooleanInitParameter(servletContext,
-                                       PARAM_wrapPageContext,
-                                       DEFAULT_wrapPageContext);
-    }
-
-    /**
-     * See web.xml in the examples webapp for documentation!
-     */
-    public static String getDefaultLanguage(ServletContext servletContext)
-    {
-        return getStringInitParameter(servletContext,
-                                      PARAM_defaultLanguage,
-                                      DEFAULT_defaultLanguage);
     }
 
 

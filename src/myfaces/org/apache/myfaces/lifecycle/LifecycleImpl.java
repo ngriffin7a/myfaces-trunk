@@ -19,6 +19,7 @@
 package net.sourceforge.myfaces.lifecycle;
 
 import net.sourceforge.myfaces.MyFacesFactoryFinder;
+import net.sourceforge.myfaces.util.DebugUtils;
 import net.sourceforge.myfaces.config.FacesConfigFactory;
 import net.sourceforge.myfaces.config.FacesConfig;
 import net.sourceforge.myfaces.application.ViewHandlerImpl;
@@ -26,6 +27,7 @@ import net.sourceforge.myfaces.context.FacesContextImpl;
 import net.sourceforge.myfaces.renderkit.html.state.StateRenderer;
 import net.sourceforge.myfaces.webapp.ServletMapping;
 import net.sourceforge.myfaces.webapp.ServletMappingFactory;
+import net.sourceforge.myfaces.webapp.webxml.WebXml;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -62,39 +64,26 @@ public class LifecycleImpl
 {
     private static final Log log = LogFactory.getLog(LifecycleImpl.class);
 
-    private ViewHandler _viewHandler = null;
-    private final RenderKitFactory _rkFactory;
+    private final ApplicationFactory _applicationFactory;
+//    private final RenderKitFactory _rkFactory;
     private final List _phaseListeners = new ArrayList();
 
     public LifecycleImpl()
     {
-// FIXME        
+        _applicationFactory = (ApplicationFactory)FactoryFinder.getFactory(FactoryFinder.APPLICATION_FACTORY);
+// FIXME
 //        _treeFactory = (TreeFactory)FactoryFinder.getFactory(FactoryFinder.TREE_FACTORY);
-        _rkFactory = (RenderKitFactory)FactoryFinder.getFactory(FactoryFinder.RENDER_KIT_FACTORY);
+//        _rkFactory = (RenderKitFactory)FactoryFinder.getFactory(FactoryFinder.RENDER_KIT_FACTORY);
     }
-
-
-    public ViewHandler getViewHandler()
-    {
-        if (_viewHandler == null)
-        {
-            _viewHandler = new ViewHandlerImpl();
-        }
-        return _viewHandler;
-    }
-
-    public void setViewHandler(ViewHandler viewhandler)
-    {
-        _viewHandler = viewhandler;
-    }
-
-
 
 
     public void execute(FacesContext facesContext)
         throws FacesException
     {
-        restoreView(facesContext);
+        if (restoreView(facesContext))
+        {
+            return;
+        }
 
         if (applyRequestValues(facesContext))
         {
@@ -119,15 +108,23 @@ public class LifecycleImpl
         renderResponse(facesContext);
     }
 
+
     // Phases
 
     /**
-     * Reconstitute Component Tree (JSF.2.2.1)
+     * Restore View (JSF.2.2.1)
+     * @return true, if response is complete
      */
-    private void restoreView(FacesContext facesContext)
+    private boolean restoreView(FacesContext facesContext)
         throws FacesException
     {
         if (log.isTraceEnabled()) log.trace("entering restoreView in " + LifecycleImpl.class.getName());
+
+        // Derive view identifier
+        String viewId = deriveViewId(facesContext);
+
+        ViewHandler viewHandler
+
 
         UIViewRoot viewRoot = facesContext.getViewRoot();
 
@@ -139,7 +136,6 @@ public class LifecycleImpl
         }
 
         //Create tree
-        ViewHandler viewHandler
         Tree tree = _treeFactory.getViewRoot(facesContext, getViewId(facesContext));
         facesContext.setTree(tree);
 
@@ -420,12 +416,36 @@ public class LifecycleImpl
     }
 
 
-    public static String getViewId(FacesContext facesContext)
+    public static String deriveViewId(FacesContext facesContext)
     {
         ExternalContext externalContext = facesContext.getExternalContext();
-        ServletMappingFactory servletMappingFactory = MyFacesFactoryFinder.getServletMappingFactory(externalContext);
-        ServletMapping sm = servletMappingFactory.getServletMapping((ServletContext)externalContext);
-        return sm.getViewIdFromRequest(facesContext);
+
+        String viewId = externalContext.getRequestPathInfo();
+        if (viewId == null)
+        {
+            //No extra path info found, so it is propably extension mapping
+            viewId = externalContext.getRequestServletPath();
+            DebugUtils.assertError(viewId != null,
+                                   log, "RequestServletPath is null, cannot determine viewId of current page.");
+
+            //TODO: JSF Spec 2.2.1 - what do they mean by "if the default ViewHandler implementation is used..." ?
+            String defaultSuffix = externalContext.getInitParameter(ViewHandler.DEFAULT_SUFFIX_PARAM_NAME);
+            String suffix = defaultSuffix != null ? defaultSuffix : ViewHandler.DEFAULT_SUFFIX;
+            DebugUtils.assertError(suffix.charAt(0) == '.',
+                                   log, "Default suffix must start with a dot!");
+
+            int dot = viewId.lastIndexOf('.');
+            if (dot == -1)
+            {
+                log.error("Assumed extension mapping, but there is no extension in " + viewId);
+            }
+            else
+            {
+                viewId = viewId.substring(0, dot) + suffix;
+            }
+        }
+
+        return viewId;
     }
 
 

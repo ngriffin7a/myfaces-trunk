@@ -55,7 +55,7 @@ public class SortColumnRenderer
         {
             if (!(uiComponent instanceof UICommand))
             {
-                LogUtil.getLogger().severe("Component " + UIComponentUtils.toString(uiComponent) + "is no UICommand.");
+                DebugUtils.getLogger().severe("Component " + UIComponentUtils.toString(uiComponent) + "is no UICommand.");
                 return;
             }
 

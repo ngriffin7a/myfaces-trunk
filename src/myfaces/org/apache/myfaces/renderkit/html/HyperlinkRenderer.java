@@ -137,7 +137,7 @@ public class HyperlinkRenderer
                 catch (ConverterException e)
                 {
                     objValue = null;
-                    LogUtil.getLogger().severe("Could not reconvert hyperlink parameter " + name + " to Object.");
+                    DebugUtils.getLogger().severe("Could not reconvert hyperlink parameter " + name + " to Object.");
                 }
             }
             else

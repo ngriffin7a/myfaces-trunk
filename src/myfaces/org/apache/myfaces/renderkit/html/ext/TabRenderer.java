@@ -91,7 +91,7 @@ public class TabRenderer
 
             if (sel == null)
             {
-                LogUtil.getLogger().warning("Tab " + uiTab.getClientId(facesContext) + " not found in parent TabbedPane " + uiTabbedPane.getClientId(facesContext));
+                DebugUtils.getLogger().warning("Tab " + uiTab.getClientId(facesContext) + " not found in parent TabbedPane " + uiTabbedPane.getClientId(facesContext));
                 sel = Boolean.FALSE;
             }
         }

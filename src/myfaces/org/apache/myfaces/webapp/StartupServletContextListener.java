@@ -48,7 +48,7 @@ public class StartupServletContextListener
 
             //Set logging level
             /*
-            setLoggerLevel(LogUtil.getLogger(),
+            setLoggerLevel(DebugUtils.getLogger(),
                            MyFacesConfig.getLogLevel(servletContext));
             */
 

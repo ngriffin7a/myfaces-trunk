@@ -21,6 +21,7 @@ package net.sourceforge.myfaces.tree;
 import net.sourceforge.myfaces.util.bean.BeanUtils;
 
 import javax.faces.component.UIComponent;
+import javax.faces.component.UIViewRoot;
 import javax.faces.tree.Tree;
 import java.beans.BeanInfo;
 import java.beans.PropertyDescriptor;
@@ -146,14 +147,14 @@ public class TreeUtils
     }
     */
 
-    public static void printTree(Tree tree)
+    public static void printTree(UIViewRoot uiViewRoot)
     {
-        printTree(tree, System.out);
+        printTree(uiViewRoot, System.out);
     }
 
-    public static void printTree(Tree tree, PrintStream stream)
+    public static void printTree(UIViewRoot uiViewRoot, PrintStream stream)
     {
-        printComponent(tree.getRoot(), stream, 0, true);
+        printComponent(uiViewRoot, stream, 0, true);
     }
 
     public static void printComponent(UIComponent comp, PrintStream stream)

@@ -18,19 +18,11 @@
  */
 package net.sourceforge.myfaces.webapp;
 
-import net.sourceforge.myfaces.MyFacesConfig;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import javax.faces.webapp.FacesServlet;
-import javax.servlet.Servlet;
-import javax.servlet.ServletConfig;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
-import javax.servlet.jsp.JspFactory;
-import java.io.ByteArrayOutputStream;
-import java.io.PrintStream;
+import javax.servlet.*;
 
 /**
  * DOCUMENT ME!
@@ -62,21 +54,15 @@ public class MyFacesServlet
     public void init(ServletConfig servletConfig)
         throws ServletException
     {
-        synchronized (System.out)
-        {
-            PrintStream oldOut = System.out;
+        //synchronized (System.out)
+        //{
+            //PrintStream oldOut = System.out;
             //Sun's copyright is nice and important, but drives me crazy during testing...
             //Uncomment the following line during development if you feel the same:
-            System.setOut(new PrintStream(new ByteArrayOutputStream()));
+            //System.setOut(new PrintStream(new ByteArrayOutputStream()));
             _facesServlet.init(servletConfig);
-            System.setOut(oldOut);
-
-            //Wrap JspFactory to enhance Logging of ServletExceptions
-            if (MyFacesConfig.isWrapPageContext(servletConfig.getServletContext()))
-            {
-                wrapJspFactory();
-            }
-        }
+            //System.setOut(oldOut);
+        //}
 
         log.info("MyFacesServlet for context '" + servletConfig.getServletContext().getRealPath("/") + "' initialized.");
     }
@@ -86,6 +72,7 @@ public class MyFacesServlet
     {
         try
         {
+            if (log.isTraceEnabled()) log.trace("MyFacesServlet service start");
             _facesServlet.service(request, response);
         }
         catch (Exception e)
@@ -100,11 +87,10 @@ public class MyFacesServlet
             }
             throw new ServletException(e);
         }
+        finally
+        {
+            if (log.isTraceEnabled()) log.trace("MyFacesServlet service end");
+        }
     }
 
-    private void wrapJspFactory()
-    {
-        final JspFactory defaultFactory = JspFactory.getDefaultFactory();
-        JspFactory.setDefaultFactory(new JspFactoryWrapper(defaultFactory));
-    }
 }

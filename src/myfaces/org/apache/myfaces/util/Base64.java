@@ -44,7 +44,7 @@ public class Base64
         }
         catch (MessagingException e)
         {
-            LogUtil.getLogger().severe(e.getMessage());
+            DebugUtils.getLogger().severe(e.getMessage());
             throw new RuntimeException(e);
         }
         */
@@ -60,7 +60,7 @@ public class Base64
         }
         catch (MessagingException e)
         {
-            LogUtil.getLogger().severe(e.getMessage());
+            DebugUtils.getLogger().severe(e.getMessage());
             throw new RuntimeException(e);
         }
         */

@@ -133,29 +133,6 @@
         </description>
     </context-param>
 
-    <context-param>
-        <param-name>myfaces_WrapPageContext</param-name>
-        <param-value>false</param-value>
-        <description>
-            If true, the JspFactory of the servlet container is wrapped by
-            the class net.sourceforge.myfaces.webapp.JspFactoryWrapper to enhance
-            the logging of ServletExceptions.
-            Using Tomcat, it is sometimes difficult to find the reason for a
-            RuntimeException, because the default error handler only logs the
-            execption message but not the stack trace. Enabling this option, the exception
-            handling is enhanced by logging the full stack trace.
-            Default value is false because JRun does not like it (ClassCastException).
-        </description>
-    </context-param>
-
-    <context-param>
-        <param-name>myfaces_DefaultLanguage</param-name>
-        <param-value>en</param-value>
-        <description>
-            The default language for message resources.
-        </description>
-    </context-param>
-
     <!-- WelcomeFile Filter -->
     <!--
     <filter>

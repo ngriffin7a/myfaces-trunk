@@ -16,13 +16,14 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package net.sourceforge.myfaces.util.logging;
+package net.sourceforge.myfaces.util;
 
 import net.sourceforge.myfaces.tree.TreeUtils;
 import org.apache.commons.logging.Log;
 
 import javax.faces.context.FacesContext;
-import javax.faces.tree.Tree;
+import javax.faces.component.UIViewRoot;
+import javax.faces.FacesException;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 
@@ -33,27 +34,28 @@ import java.io.PrintStream;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public class LogUtil
+public class DebugUtils
 {
-    private LogUtil() {}
+    private DebugUtils() {}
 
     public static void logTree(Log log, String additionalMsg)
     {
         logTree(log, null, additionalMsg);
     }
 
-    public static void logTree(Log log, Tree tree, String additionalMsg)
+    public static void logTree(Log log, UIViewRoot viewRoot, String additionalMsg)
     {
         if (log.isTraceEnabled())
         {
-            if (tree == null)
+            if (viewRoot == null)
             {
                 FacesContext facesContext = FacesContext.getCurrentInstance();
                 if (facesContext == null)
                 {
-                    log.info("Could not print tree to console (no FacesContext).");
+                    log.error("Cannot not print view to console (no FacesContext).");
+                    return;
                 }
-                tree = facesContext.getTree();
+                viewRoot = facesContext.getViewRoot();
             }
 
             log.trace("========================================");
@@ -62,10 +64,30 @@ public class LogUtil
                 log.trace(additionalMsg);
             }
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            TreeUtils.printTree(tree, new PrintStream(baos));
+            TreeUtils.printTree(viewRoot, new PrintStream(baos));
             log.trace(baos.toString());
             log.trace("========================================");
         }
     }
 
+
+    public static void assertError(boolean condition, Log log, String msg)
+            throws FacesException
+    {
+        if (!condition)
+        {
+            log.error(msg);
+            throw new FacesException(msg);
+        }
+    }
+
+    public static void assertFatal(boolean condition, Log log, String msg)
+        throws FacesException
+    {
+        if (!condition)
+        {
+            log.fatal(msg);
+            throw new FacesException(msg);
+        }
+    }
 }
