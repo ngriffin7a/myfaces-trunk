@@ -239,6 +239,7 @@ public class HyperlinkRenderer
 
         //write out body content
         BodyContent bodyContent = getBodyContent(facesContext, uiComponent);
+        if (bodyCon)
         bodyContent.writeOut(writer);
 
         //close anchor

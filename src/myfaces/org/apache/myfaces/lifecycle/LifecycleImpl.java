@@ -127,7 +127,7 @@ public class LifecycleImpl
     private void restoreView(FacesContext facesContext)
         throws FacesException
     {
-        if (log.isTraceEnabled()) log.trace("entering reconstituteComponentTree in " + LifecycleImpl.class.getName());
+        if (log.isTraceEnabled()) log.trace("entering restoreView in " + LifecycleImpl.class.getName());
 
         UIViewRoot viewRoot = facesContext.getViewRoot();
 
@@ -210,7 +210,7 @@ public class LifecycleImpl
         ActionListener actionListener = af.getApplication().getActionListener();
         traverseAndRegisterActionListener(actionListener, root);
 
-        if (log.isTraceEnabled()) log.trace("exiting reconstituteComponentTree in " + LifecycleImpl.class.getName());
+        if (log.isTraceEnabled()) log.trace("exiting restoreView in " + LifecycleImpl.class.getName());
     }
 
 
