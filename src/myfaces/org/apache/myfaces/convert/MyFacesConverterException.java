@@ -62,9 +62,8 @@ public class MyFacesConverterException
 
     public FacesMessage getFacesMessage()
     {
-        ApplicationFactory af = (ApplicationFactory)FactoryFinder.getFactory(FactoryFinder.APPLICATION_FACTORY);
         //FIXME
-        // //MessageResources msgRes = af.getApplication().getMessageResources(MessageResources.FACES_IMPL_MESSAGES);
+        // //MessageResources msgRes = facesContext.getApplication().getMessageResources(MessageResources.FACES_IMPL_MESSAGES);
         //return msgRes.getMessage(_facesContext, _messageId);
         return null;
     }

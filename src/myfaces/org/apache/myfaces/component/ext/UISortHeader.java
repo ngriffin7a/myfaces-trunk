@@ -106,17 +106,14 @@ public class UISortHeader
         }
 
         String ascRef = getAscendingRef();
-        ApplicationFactory af = (ApplicationFactory)FactoryFinder.getFactory(FactoryFinder.APPLICATION_FACTORY);
         //FIXME
-        //asc = (Boolean)af.getApplication().getValueBinding(ascRef).getValue(facesContext);
+        //asc = (Boolean)facesContext.getApplication().getValueBinding(ascRef).getValue(facesContext);
         return asc;
     }
 
 
     public void updateModel(FacesContext facesContext)
     {
-        ApplicationFactory af = (ApplicationFactory)FactoryFinder.getFactory(FactoryFinder.APPLICATION_FACTORY);
-
         String column = getColumn();
         if (column != null)
         {
@@ -124,7 +121,7 @@ public class UISortHeader
             if (columnRef != null)
             {
                 //FIXME
-                //af.getApplication().getValueBinding(columnRef).setValue(facesContext, column);
+                //facesContext.getApplication().getValueBinding(columnRef).setValue(facesContext, column);
             }
         }
 

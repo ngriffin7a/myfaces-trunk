@@ -258,8 +258,7 @@ public class UINavigationItem
     protected void handleNavigation()
     {
         FacesContext facesContext = FacesContext.getCurrentInstance();
-        ApplicationFactory af = (ApplicationFactory)FactoryFinder.getFactory(FactoryFinder.APPLICATION_FACTORY);
-        Application application = af.getApplication();
+        Application application = facesContext.getApplication();
 
         //FIXME
         /*

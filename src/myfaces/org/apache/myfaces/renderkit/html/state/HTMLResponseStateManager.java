@@ -33,7 +33,9 @@ public class HTMLResponseStateManager
     public void writeState(FacesContext facescontext,
                            StateManager.SerializedView serializedview) throws IOException
     {
-        //TODO
+        Object treeStruct = serializedview.getStructure();
+        Object compStates = serializedview.getState();
+        
     }
 
     public Object getTreeStructureToRestore(FacesContext facescontext, String s)

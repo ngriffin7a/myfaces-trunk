@@ -23,9 +23,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import javax.faces.FacesException;
-import javax.faces.FactoryFinder;
 import javax.faces.application.Application;
-import javax.faces.application.ApplicationFactory;
 import javax.faces.application.ViewHandler;
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIInput;
@@ -53,13 +51,11 @@ public class LifecycleImpl
 {
     private static final Log log = LogFactory.getLog(LifecycleImpl.class);
 
-    private final ApplicationFactory _applicationFactory;
     private List _phaseListenerList = new ArrayList();
     private PhaseListener[] _phaseListenerArray = null;
 
     public LifecycleImpl()
     {
-        _applicationFactory = (ApplicationFactory)FactoryFinder.getFactory(FactoryFinder.APPLICATION_FACTORY);
     }
 
     public void execute(FacesContext facesContext)
@@ -110,7 +106,7 @@ public class LifecycleImpl
         // Derive view identifier
         String viewId = deriveViewId(facesContext);
 
-        Application application = _applicationFactory.getApplication();
+        Application application = facesContext.getApplication();
         ViewHandler viewHandler = application.getViewHandler();
 
         UIViewRoot viewRoot = viewHandler.restoreView(facesContext, viewId);
@@ -309,7 +305,7 @@ public class LifecycleImpl
 
         informPhaseListenersBefore(facesContext, PhaseId.RENDER_RESPONSE);
 
-        Application application = _applicationFactory.getApplication();
+        Application application = facesContext.getApplication();
         ViewHandler viewHandler = application.getViewHandler();
         try
         {

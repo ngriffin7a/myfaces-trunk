@@ -141,9 +141,8 @@ public class ConverterUtils
 
         if (converterId != null)
         {
-            ApplicationFactory af = (ApplicationFactory)FactoryFinder.getFactory(FactoryFinder.APPLICATION_FACTORY);
             //FIXME
-            //return af.getApplication().getConverter(converterId);
+            //return facesContext.getApplication().getConverter(converterId);
         }
 
         //FIXME
@@ -151,10 +150,9 @@ public class ConverterUtils
         String valueRef = null;
         if (valueRef != null)
         {
-            ApplicationFactory af = (ApplicationFactory)FactoryFinder.getFactory(FactoryFinder.APPLICATION_FACTORY);
             //FIXME
-            //Class c = af.getApplication().getValueBinding(valueRef).getType(facesContext);
-            //return af.getApplication().getConverter(c.getName());
+            //Class c = facesContext.getApplication().getValueBinding(valueRef).getType(facesContext);
+            //return facesContext.getApplication().getConverter(c.getName());
             return null;
         }
 

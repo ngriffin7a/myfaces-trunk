@@ -19,24 +19,19 @@
 
 package net.sourceforge.myfaces.application.jsp;
 
-import net.sourceforge.myfaces.renderkit.html.state.StateRenderer;
+import net.sourceforge.myfaces.util.DebugUtils;
 import net.sourceforge.myfaces.webapp.webxml.ServletMapping;
 import net.sourceforge.myfaces.webapp.webxml.WebXml;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import javax.faces.FacesException;
-import javax.faces.FactoryFinder;
 import javax.faces.application.StateManager;
 import javax.faces.application.ViewHandler;
 import javax.faces.component.UIViewRoot;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
-import javax.faces.render.RenderKit;
-import javax.faces.render.RenderKitFactory;
-import javax.faces.render.Renderer;
 import javax.servlet.ServletRequest;
-import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.*;
@@ -151,7 +146,8 @@ public class JspViewHandlerImpl
 
     public Locale calculateLocale(FacesContext facesContext)
     {
-        //TODO: ExternalContext.getLocales()
+        //ExternalContext.getLocales() is missing. Next Spec will define it.
+        //But since we are in a JSP specific impl we can cast...
         Enumeration locales = ((ServletRequest)facesContext.getExternalContext().getRequest()).getLocales();
         while (locales.hasMoreElements())
         {
@@ -178,10 +174,12 @@ public class JspViewHandlerImpl
         return locale != null ? locale : Locale.getDefault();
     }
 
+
     public StateManager getStateManager()
     {
         return _stateManager;
     }
+
 
     public String getViewIdPath(FacesContext facescontext, String viewId)
     {
@@ -280,7 +278,9 @@ public class JspViewHandlerImpl
                   " requestPathInfo = " + requestPathInfo);
     }
 
-    public void renderView(FacesContext facesContext, UIViewRoot viewToRender) throws IOException, FacesException
+
+    public void renderView(FacesContext facesContext, UIViewRoot viewToRender)
+            throws IOException, FacesException
     {
         if (viewToRender == null)
         {
@@ -290,41 +290,35 @@ public class JspViewHandlerImpl
 
         ExternalContext externalContext = facesContext.getExternalContext();
 
-        //Since this is a JSP specific implementation, we are allowed to cast:
-        HttpServletRequest servletRequest = (HttpServletRequest)externalContext.getRequest();
-
         String viewId = facesContext.getViewRoot().getId();
-        String uri = getViewIdPath(facesContext, viewId);
-        externalContext.dispatchMessage(uri);
-
-
-        //forward request to JSP page
-        //ServletMappingFactory smf = MyFacesFactoryFinder.getServletMappingFactory(externalContext);
-        //ServletMapping sm = smf.getServletMapping((ServletContext)externalContext.getContext());
-        //String forwardURL = sm.mapViewIdToFilename((ServletContext)externalContext.getContext(),
-        //                                           viewToRender.getViewId());
-
-        //RequestDispatcher requestDispatcher
-        //    = servletRequest.getRequestDispatcher(forwardURL);
-        /*
-        try
+        ServletMapping servletMapping = getServletMapping(externalContext);
+        if (servletMapping.isExtensionMapping())
         {
-            //requestDispatcher.forward(servletRequest,
-                                      (ServletResponse)facesContext.getExternalContext().getResponse());
+            String defaultSuffix = externalContext.getInitParameter(ViewHandler.DEFAULT_SUFFIX_PARAM_NAME);
+            String suffix = defaultSuffix != null ? defaultSuffix : ViewHandler.DEFAULT_SUFFIX;
+            DebugUtils.assertError(suffix.charAt(0) == '.',
+                                   log, "Default suffix must start with a dot!");
+            if (!viewId.endsWith(suffix))
+            {
+                int dot = viewId.lastIndexOf('.');
+                if (dot == -1)
+                {
+                    if (log.isTraceEnabled()) log.trace("Current viewId has no extension, appending default suffix " + suffix);
+                    viewId = viewId + suffix;
+                }
+                else
+                {
+                    if (log.isTraceEnabled()) log.trace("Replacing extension of current viewId by suffix " + suffix);
+                    viewId = viewId.substring(0, dot) + suffix;
+                }
+                facesContext.getViewRoot().setViewId(viewId);
+            }
         }
-        catch(IOException ioe)
-        {
-            log.error("IOException in method renderView of class " + this.getClass().getName(), ioe);
-            throw new IOException(ioe.getMessage());
-        }
-        catch(ServletException se)
-        {
-            log.error("ServletException in method renderView of class " + this.getClass().getName(), se);
-            throw new FacesException(se.getMessage(), se);
-        }
-        */
 
+        if (log.isTraceEnabled()) log.trace("Dispatching to " + viewId);
+        externalContext.dispatchMessage(viewId);
     }
+
 
     public void writeState(FacesContext facescontext) throws IOException
     {

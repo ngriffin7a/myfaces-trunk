@@ -70,12 +70,14 @@ public class ServletFacesContextImpl
     //~ Constructors -------------------------------------------------------------------------------
 
     public ServletFacesContextImpl(ServletContext servletContext,
-                            ServletRequest servletRequest,
-                            ServletResponse servletResponse)
+                                   ServletRequest servletRequest,
+                                   ServletResponse servletResponse)
     {
         _application         = FacesUtils.getApplication();
-        _externalContext     = new ServletExternalContextImpl(servletContext, servletRequest, servletResponse);
-        FacesContext.setCurrentInstance(this);
+        _externalContext     = new ServletExternalContextImpl(servletContext,
+                                                              servletRequest,
+                                                              servletResponse);
+        FacesContext.setCurrentInstance(this);  //protected method, therefore must be called from here
     }
 
     //~ Methods ------------------------------------------------------------------------------------

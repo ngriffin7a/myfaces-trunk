@@ -195,12 +195,10 @@ extends HTMLRenderer
 
         writer.write('>');
 
-        ApplicationFactory af =
-            (ApplicationFactory) FactoryFinder.getFactory(FactoryFinder.APPLICATION_FACTORY);
         //FIXME
         /*
         MessageResources   mr =
-            af.getApplication().getMessageResources(MessageResources.FACES_IMPL_MESSAGES);
+            facesContext.getApplication().getMessageResources(MessageResources.FACES_IMPL_MESSAGES);
         */
 
         while (it.hasNext())

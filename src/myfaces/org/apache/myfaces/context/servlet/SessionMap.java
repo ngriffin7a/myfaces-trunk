@@ -18,10 +18,10 @@
  */
 package net.sourceforge.myfaces.context.servlet;
 
-import net.sourceforge.myfaces.context.servlet.AbstractAttributeMap;
-
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.Enumeration;
+import java.util.NoSuchElementException;
 
 /**
  * Helper class for {@link net.sourceforge.myfaces.context.servlet.ServletExternalContextImpl}
@@ -31,31 +31,53 @@ import java.util.Enumeration;
 public class SessionMap
     extends AbstractAttributeMap
 {
-    private HttpSession _session;
+    private HttpServletRequest _request;
 
-    SessionMap(HttpSession session)
+    public SessionMap(HttpServletRequest request)
     {
-        _session = session;
+        _request = request;
     }
 
     protected Object getAttribute(String name)
     {
-        return _session.getAttribute(name);
+        HttpSession session = _request.getSession(false);
+        return session != null ?
+               session.getAttribute(name) :
+               null;
     }
 
     protected void setAttribute(String name, Object newVal)
     {
-        _session.setAttribute(name, newVal);
+        HttpSession session = _request.getSession(true);
+        session.setAttribute(name, newVal);
     }
 
     protected void removeAttribute(String name)
     {
-        _session.removeAttribute(name);
+        HttpSession session = _request.getSession(true);
+        session.removeAttribute(name);
     }
 
     protected Enumeration getAttributeNames()
     {
-        return _session.getAttributeNames();
+        HttpSession session = _request.getSession(false);
+        return session != null ?
+               session.getAttributeNames() :
+               EMPTY_ENUMERATION;
     }
+
+
+    private static final Enumeration EMPTY_ENUMERATION = new Enumeration()
+    {
+        public boolean hasMoreElements()
+        {
+            return false;
+        }
+
+        public Object nextElement()
+        {
+            throw new NoSuchElementException();
+        }
+    };
 
 }
