@@ -41,6 +41,9 @@ import org.apache.myfaces.renderkit.html.HTML;
  * @author Sylvain Vieujot (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.13  2004/12/03 21:20:09  svieujot
+ * Add type="text/css" for inline styles.
+ *
  * Revision 1.12  2004/12/03 21:15:21  svieujot
  * define AdditionalHeaderInfoToRender.equals to prevent several include of the same header info.
  *
@@ -424,7 +427,7 @@ public class AddResource {
                	+"href=\""+getResourceMappedPath(componentName, resourceFileName, request)+"\" "
                	+"type=\"text/css\"/>\n";
            case TYPE_CSS_INLINE:
-               return "<style>"+inlineText+"</style>\n";
+               return "<style type=\"text/css\">"+inlineText+"</style>\n";
             default:
                 log.warn("Unknown type:"+type);
                 return "<link href=\""+"\"/>\n";
