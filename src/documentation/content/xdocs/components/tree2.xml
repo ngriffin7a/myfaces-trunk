@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V1.2//EN" "document-v12.dtd">
+
+<!--
+This is a standard template meant to be used for the documentation of all custom
+components.
+-->
+<document>
+    <!-- component name -->
+    <header>
+        <title>Tree2</title>
+        <subtitle>&lt;x:tree2/></subtitle>
+    </header>
+    <body>
+        <!-- Description -->
+        <section>
+            <title>Description</title>
+            <p>
+                A component that provides an HTML-based tree from data supplied by a backing
+                bean.  The tree is highly customizable and allows for fine-grained control
+                over the appearance of each of the nodes depending on their type.  Almost any
+                type of JSF component (text, image, checkbox, etc.) can be rendered inside the
+                nodes and there is an option for client-side or server-side toggling of the
+                expand/collapse state.
+            </p>
+        </section>
+        <!-- screen shot -->
+        <section>
+            <title>Screen Shot</title>
+            <figure src="images/tree2.jpeg" alt="Tree2"/>
+        </section>
+        <!-- API -->
+        <section>
+            <title>API</title>
+            <table>
+                <tr>
+                    <td>component-family</td>
+                    <td>org.apache.myfaces.HtmlTree</td>
+                </tr>
+                <tr>
+                    <td>renderer-type</td>
+                    <td>org.apache.myfaces.Tree</td>
+                </tr>
+                <tr>
+                    <td>component-class</td>
+                    <td>org.apache.myfaces.custom.tree2.HtmlTree</td>
+                </tr>
+                <tr>
+                    <td>renderer-class</td>
+                    <td>org.apache.myfaces.custom.tree2.HtmlTreeRenderer</td>
+                </tr>
+                <tr>
+                    <td>tag-class</td>
+                    <td>org.apache.myfaces.custom.tree2.TreeTag</td>
+                </tr>
+            </table>
+        </section>
+        <!-- Syntax -->
+        <section>
+            <title>Syntax</title>
+            <note label="&lt;x:tree2>">
+                <code>id</code><br/>
+                <code>clientSideToggle [true|false] (default=true)</code><br/>
+                <code>imageLocation</code><br/>
+                <code>javascriptLocation</code><br/>
+                <code>showLines [true|false] (default=true)</code><br/>
+                <code>showNav [true|false] (default=true)</code><br/>
+                <code>showRootNode [true|false] (default=true)</code><br/>
+                <code>styleLocation</code><br/>
+                <code>value [value binding expression] (required)</code><br/>
+                <code>var</code><br/>
+                <code>varNodeToggler</code><br/>
+            </note>
+        </section>
+        <!-- Instructions -->
+        <section>
+            <title>Instructions</title>
+            <p>[TO DO]</p>
+        </section>
+    </body>
+    <footer>
+    	<legal>Java, J2EE, and JCP are trademarks or registered trademarks of Sun Microsystems, Inc. in the United States and other countries.<br />
+	&copy; 2004 - 2005, Apache Software Foundation
+	</legal>
+    </footer>
+
+</document>

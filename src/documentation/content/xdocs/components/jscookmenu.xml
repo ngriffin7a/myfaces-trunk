@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V1.2//EN" "document-v12.dtd">
+
+<document>
+    <!-- component name -->
+    <header>
+        <title>JSCook Menu</title>
+        <subtitle>&lt;x:jscookMenu/></subtitle>
+    </header>
+    <body>
+        <!-- Description -->
+        <section>
+            <title>Description</title>
+            <p>
+                Renders a Javascript Menu based on the excellent
+                <link href="http://www.cs.ucla.edu/~heng/JSCookMenu">JSCookMenu</link>
+                by Heng Yuan.  Renders the nested NavigationMenuItem(s) as Javascript Menu.
+            </p>
+        </section>
+        <!-- screen shot -->
+        <section>
+            <title>Screen Shot</title>
+            <figure src="images/jscookmenu.png" alt="jscookmenu"/>
+        </section>
+        <!-- API -->
+        <section>
+            <title>API</title>
+            <table>
+                <tr>
+                    <td>component-family</td>
+                    <td>[TODO]</td>
+                </tr>
+                <tr>
+                    <td>renderer-type</td>
+                    <td>[TODO]</td>
+                </tr>
+                <tr>
+                    <td>component-class</td>
+                    <td>[TODO]</td>
+                </tr>
+                <tr>
+                    <td>renderer-class</td>
+                    <td>[TODO]</td>
+                </tr>
+                <tr>
+                    <td>tag-class</td>
+                    <td>[TODO]</td>
+                </tr>
+            </table>
+        </section>
+        <!-- Syntax -->
+        <section>
+            <title>Syntax</title>
+            <p>[TO DO]</p>
+        </section>
+        <!-- Instructions -->
+        <section>
+            <title>Instructions</title>
+            <p>If you want to use jscookMenu in your application, you will have to: </p>
+            <ul>
+                <li>
+                    Add jscookmenu directory containing css and scripting code to your web directory
+                    (you can find it in the examples application).
+                </li>
+                <li>
+                    Add scripts and stylesheets for the theme you would like to use to html-header
+                    (see also inc/header.inc in the examples application)
+                </li>
+            </ul>
+            <p>
+                <code>&lt;!-- JSCook Menu --></code><br/>
+                <code>&lt;script language="JavaScript" src="jscookmenu/JSCookMenu.js" type="text/javascript">&lt;/script></code><br/>
+                <code>&lt;script language="JavaScript" src="jscookmenu/ThemeOffice/theme.js">&lt;/script></code> <br/>
+                <code>&lt;link rel="stylesheet" href="jscookmenu/ThemeOffice/theme.css" type="text/css"></code> <br/>
+                <code>&lt;script language="JavaScript" src="jscookmenu/ThemeMiniBlack/theme.js">&lt;/script></code> <br/>
+                <code>&lt;link rel="stylesheet" href="jscookmenu/ThemeMiniBlack/theme.css" type="text/css"></code> <br/>
+                <code>&lt;script language="JavaScript" src="jscookmenu/ThemeIE/theme.js">&lt;/script></code> <br/>
+                <code>&lt;link rel="stylesheet" href="jscookmenu/ThemeIE/theme.css" type="text/css"></code> <br/>
+                <code>&lt;script language="JavaScript" src="jscookmenu/ThemePanel/theme.js">&lt;/script></code> <br/>
+                <code>&lt;link rel="stylesheet" href="jscookmenu/ThemePanel/theme.css" type="text/css"></code> <br/>
+            </p>
+        </section>
+    </body>
+    <footer>
+    	<legal>Java, J2EE, and JCP are trademarks or registered trademarks of Sun Microsystems, Inc. in the United States and other countries.<br />
+	&copy; 2004 - 2005, Apache Software Foundation
+	</legal>
+    </footer>
+
+</document>
