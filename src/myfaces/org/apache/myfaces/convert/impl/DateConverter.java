@@ -28,6 +28,7 @@ import javax.faces.convert.ConverterException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.Locale;
+import java.util.Date;
 
 /**
  * DOCUMENT ME!
@@ -38,6 +39,7 @@ public class DateConverter
     implements Converter
 {
     private static final String CONVERTER_EXCEPTION_MSG_ID = DateConverter.class.getName() + ".EXCEPTION";
+    private static final String CONVERTER_EXCEPTION_TYPE_ERROR_MSG_ID = DateConverter.class.getName() + ".TYPE_ERROR";
 
     public Object getAsObject(FacesContext context, UIComponent component, String value)
             throws ConverterException
@@ -50,25 +52,25 @@ public class DateConverter
         Locale locale = context.getLocale();
         try
         {
-            return parse(value, DateFormat.SHORT, locale);
+            return parse(component, value, DateFormat.SHORT, locale);
         }
         catch (ParseException ex1)
         {
             try
             {
-                return parse(value, DateFormat.MEDIUM, locale);
+                return parse(component, value, DateFormat.MEDIUM, locale);
             }
             catch (ParseException ex2)
             {
                 try
                 {
-                    return parse(value, DateFormat.LONG, locale);
+                    return parse(component, value, DateFormat.LONG, locale);
                 }
                 catch (ParseException ex3)
                 {
                     try
                     {
-                        return parse(value, DateFormat.FULL, locale);
+                        return parse(component, value, DateFormat.FULL, locale);
                     }
                     catch (ParseException ex4)
                     {
@@ -83,10 +85,11 @@ public class DateConverter
     }
 
 
-    private static Object parse(String value, int dateStyle, Locale locale)
+    private static Object parse(UIComponent component, String value, int dateStyle, Locale locale)
         throws ParseException
     {
         DateFormat format = DateFormat.getDateInstance(dateStyle, locale);
+        format.setTimeZone(ConverterUtils.getTimeZone(component));
         return format.parse(value);
     }
 
@@ -98,8 +101,24 @@ public class DateConverter
         {
             return "";
         }
-        DateFormat format = ConverterUtils.getDateFormat(component, context.getLocale());
-        return format.format(value);
+        else if (value instanceof Date)
+        {
+            DateFormat format = ConverterUtils.getDateFormat(component, context.getLocale());
+            return format.format(value);
+        }
+        else if (value instanceof Number)
+        {
+            Date dateValue = new Date(((Number)value).longValue());
+            DateFormat format = ConverterUtils.getDateFormat(component, context.getLocale());
+            return format.format(dateValue);
+        }
+        else
+        {
+            throw new MyFacesConverterException(context,
+                                                component,
+                                                CONVERTER_EXCEPTION_TYPE_ERROR_MSG_ID,
+                                                value.getClass().getName());
+        }
     }
 
 }

@@ -183,6 +183,10 @@
         <converter-class>net.sourceforge.myfaces.convert.impl.DateConverter</converter-class>
     </converter>
     <converter>
+        <converter-id>DateFormat</converter-id>
+        <converter-class>net.sourceforge.myfaces.convert.impl.DateConverter</converter-class>
+    </converter>
+    <converter>
         <converter-id>java.util.Date</converter-id>
         <converter-class>net.sourceforge.myfaces.convert.impl.DateConverter</converter-class>
     </converter>
@@ -220,6 +224,10 @@
 
     <converter>
         <converter-id>Number</converter-id>
+        <converter-class>net.sourceforge.myfaces.convert.impl.NumberConverter</converter-class>
+    </converter>
+    <converter>
+        <converter-id>NumberFormat</converter-id>
         <converter-class>net.sourceforge.myfaces.convert.impl.NumberConverter</converter-class>
     </converter>
     <converter>
@@ -332,6 +340,11 @@
 
       <message>
           <message-id>net.sourceforge.myfaces.convert.impl.DateConverter.EXCEPTION</message-id>
+          <severity>ERROR</severity>
+      </message>
+
+      <message>
+          <message-id>net.sourceforge.myfaces.convert.impl.DateConverter.TYPE_ERROR</message-id>
           <severity>ERROR</severity>
       </message>
 

@@ -9,6 +9,7 @@ Changes in Release 0.4.2
   by MinimizingStateSaver.
 * getValidator() in ApplicationImpl returned always the same validator
   instance: fixed.
+* Support for converter attributes "dateStyle", "formatPattern", etc.
 
 ----------------------------------------------------------------------
 Changes in Release 0.4.1

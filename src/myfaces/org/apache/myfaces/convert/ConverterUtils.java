@@ -37,11 +37,9 @@ import javax.faces.convert.ConverterException;
 import javax.servlet.ServletContext;
 import java.beans.PropertyDescriptor;
 import java.io.*;
-import java.text.DateFormat;
-import java.text.DecimalFormat;
-import java.text.DecimalFormatSymbols;
-import java.text.NumberFormat;
+import java.text.*;
 import java.util.Locale;
+import java.util.TimeZone;
 
 /**
  * DOCUMENT ME!
@@ -50,8 +48,8 @@ import java.util.Locale;
  */
 public class ConverterUtils
 {
-    private static final int DEFAULT_DATE_STYLE = DateFormat.MEDIUM;
-    private static final int DEFAULT_TIME_STYLE = DateFormat.MEDIUM;
+    private static final int DEFAULT_DATE_STYLE = DateFormat.SHORT;
+    private static final int DEFAULT_TIME_STYLE = DateFormat.SHORT;
 
     private ConverterUtils() {}
 
@@ -323,7 +321,7 @@ public class ConverterUtils
             }
             else
             {
-                format = NumberFormat.getInstance(locale);
+                format = NumberFormat.getIntegerInstance(locale);
             }
         }
 
@@ -333,23 +331,54 @@ public class ConverterUtils
 
     public static DateFormat getDateFormat(UIComponent component, Locale locale)
     {
-        return DateFormat.getDateInstance(getDateStyle(component), locale);
+        DateFormat format;
+        String pattern = (String)component.getAttribute(CommonRendererAttributes.FORMAT_PATTERN_ATTR);
+        if (pattern != null)
+        {
+            format = new SimpleDateFormat(pattern, locale);
+        }
+        else
+        {
+            format = DateFormat.getDateInstance(getDateStyle(component), locale);
+        }
+        format.setTimeZone(getTimeZone(component));
+        return format;
     }
 
 
     public static DateFormat getTimeFormat(UIComponent component, Locale locale)
     {
-        return DateFormat.getTimeInstance(getTimeStyle(component), locale);
+        DateFormat format;
+        String pattern = (String)component.getAttribute(CommonRendererAttributes.FORMAT_PATTERN_ATTR);
+        if (pattern != null)
+        {
+            format = new SimpleDateFormat(pattern, locale);
+        }
+        else
+        {
+            format = DateFormat.getTimeInstance(getTimeStyle(component), locale);
+        }
+        format.setTimeZone(getTimeZone(component));
+        return format;
     }
-
 
     public static DateFormat getDateTimeFormat(UIComponent component, Locale locale)
     {
-        return DateFormat.getDateTimeInstance(getDateStyle(component),
-                                              getTimeStyle(component),
-                                              locale);
+        DateFormat format;
+        String pattern = (String)component.getAttribute(CommonRendererAttributes.FORMAT_PATTERN_ATTR);
+        if (pattern != null)
+        {
+            format = new SimpleDateFormat(pattern, locale);
+        }
+        else
+        {
+            format = DateFormat.getDateTimeInstance(getDateStyle(component),
+                                                    getTimeStyle(component),
+                                                    locale);
+        }
+        format.setTimeZone(getTimeZone(component));
+        return format;
     }
-
 
     private static int getDateStyle(UIComponent component)
     {
@@ -409,6 +438,20 @@ public class ConverterUtils
         }
         return DEFAULT_TIME_STYLE;
     }
+
+    public static TimeZone getTimeZone(UIComponent component)
+    {
+        String tzId = (String)component.getAttribute(CommonRendererAttributes.TIMEZONE_ATTR);
+        if (tzId == null)
+        {
+            return TimeZone.getDefault();
+        }
+        else
+        {
+            return TimeZone.getTimeZone(tzId);
+        }
+    }
+
 
 
     private static final String SERIALIZE_CHARSET = "ISO-8859-1";

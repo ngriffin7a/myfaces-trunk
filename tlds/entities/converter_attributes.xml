@@ -1,0 +1,36 @@
+<!-- Common converter attributes -->
+        <attribute>
+            <name>dateStyle</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
+            <type>java.lang.String</type>
+            <description>(see JSF PRD2 3.3.3)</description>
+        </attribute>
+        <attribute>
+            <name>timeStyle</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
+            <type>java.lang.String</type>
+            <description>(see JSF PRD2 3.3.3)</description>
+        </attribute>
+        <attribute>
+            <name>numberStyle</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
+            <type>java.lang.String</type>
+            <description>(see JSF PRD2 3.3.3)</description>
+        </attribute>
+        <attribute>
+            <name>timezone</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
+            <type>java.lang.String</type>
+            <description>(see JSF PRD2 3.3.3)</description>
+        </attribute>
+        <attribute>
+            <name>formatPattern</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
+            <type>java.lang.String</type>
+            <description>(see JSF PRD2 3.3.3)</description>
+        </attribute>

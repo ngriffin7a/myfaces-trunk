@@ -126,6 +126,12 @@
     </message>
 
     <message>
+        <message-id>net.sourceforge.myfaces.convert.impl.DateConverter.TYPE_ERROR</message-id>
+        <summary xml:lang="de">Interner Fehler</summary>
+        <detail xml:lang="de">Der zu formatierende Wert ist kein gültiges Datum.</detail>
+    </message>
+
+    <message>
         <message-id>net.sourceforge.myfaces.convert.impl.DateTimeConverter.EXCEPTION</message-id>
         <summary xml:lang="de">Eingabefehler</summary>
         <detail xml:lang="de">Der eingegebene Wert ist keine gültige Datum/Zeit.</detail>

@@ -358,4 +358,32 @@ public abstract class MyFacesTag
         setRendererAttributeString(VISIBLE_ON_USER_ROLE_ATTR, value);
     }
 
+
+
+    // converter attributes
+    public void setDateStyle(String value)
+    {
+        setRendererAttributeString(DATE_STYLE_ATTR, value);
+    }
+
+    public void setTimeStyle(String value)
+    {
+        setRendererAttributeString(TIME_STYLE_ATTR, value);
+    }
+
+    public void setTimezone(String value)
+    {
+        setRendererAttributeString(TIMEZONE_ATTR, value);
+    }
+
+    public void setFormatPattern(String value)
+    {
+        setRendererAttributeString(FORMAT_PATTERN_ATTR, value);
+    }
+
+    public void setNumberStyle(String value)
+    {
+        setRendererAttributeString(NUMBER_STYLE_ATTR, value);
+    }
+
 }
