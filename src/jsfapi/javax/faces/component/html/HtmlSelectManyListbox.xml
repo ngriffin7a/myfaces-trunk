@@ -85,7 +85,6 @@
     <field>
         <name>size</name>
         <type>int</type>
-        <default-value>-2147483648</default-value>
     </field>
     <field>
         <name>style</name>
