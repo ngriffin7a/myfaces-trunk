@@ -395,16 +395,6 @@
     <validator-class>javax.faces.validator.LongRangeValidator</validator-class>
   </validator>
 	
-<!--custom validators based upon jakarta commons validator-->
-	<validator>
-		<validator-id>myfaces.validator.Email</validator-id>
-		<validator-class>net.sourceforge.myfaces.validate.EmailValidator</validator-class>
-	</validator>
-	<validator>
-		<validator-id>myfaces.validator.CreditCard</validator-id>
-		<validator-class>net.sourceforge.myfaces.validate.CreditCardValidator</validator-class>
-	</validator>
-
   <!-- standard renderkit -->
   <render-kit>
       <render-kit-id>HTML_BASIC</render-kit-id>
