@@ -501,6 +501,13 @@ Start of revised 1.0 conforming tags (in alphabetical order)
             <type>java.lang.String</type>
             <description>see JSF Spec. 8.5.10</description>
         </attribute>
+        <attribute>
+            <name>border</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
+            <type>java.lang.String</type>
+            <description>see JSF Spec. 8.5.10</description>
+        </attribute>
     </tag>
 
 </taglib>

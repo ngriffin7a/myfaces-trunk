@@ -45,14 +45,40 @@ public class ConfigUtils
         {
             return null;
         }
-        else if (desiredClass.equals(String.class))
+        if (desiredClass.equals(String.class))
         {
             return value;
         }
-        else
+
+        try
         {
-            throw new UnsupportedOperationException("Conversion to " + desiredClass.getName() + " not yet supported");
+            if (desiredClass.equals(Byte.TYPE))
+            {
+                return new Byte(Byte.parseByte(value.trim()));
+            }
+            else if (desiredClass.equals(Short.TYPE))
+            {
+                return new Short(Short.parseShort(value.trim()));
+            }
+            else if (desiredClass.equals(Integer.TYPE))
+            {
+                return new Integer(Integer.parseInt(value.trim()));
+            }
+            else if (desiredClass.equals(Long.TYPE))
+            {
+                return new Long(Long.parseLong(value.trim()));
+            }
+            else if (desiredClass.equals(Double.TYPE))
+            {
+                return new Double(Double.parseDouble(value.trim()));
+            }
         }
+        catch (NumberFormatException e)
+        {
+            log.error("NumberFormatException value '" + value + "' type " + desiredClass.getName());
+            throw e;
+        }
+        throw new UnsupportedOperationException("Conversion to " + desiredClass.getName() + " not yet supported");
     }
     
     

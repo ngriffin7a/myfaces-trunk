@@ -43,7 +43,7 @@ public class SelectItemTag
     }
 
     // UISelectItem attributes
-    private String _disabled;
+    private String _itemDisabled;
     private String _itemDescription;
     private String _itemLabel;
     private String _itemValue;
@@ -52,7 +52,7 @@ public class SelectItemTag
     {
         super.setProperties(component);
 
-        setBooleanProperty(component, JSFAttr.DISABLED_ATTR, _disabled);
+        setBooleanProperty(component, JSFAttr.ITEM_DISABLED_ATTR, _itemDisabled);
         setStringProperty(component, JSFAttr.ITEM_DESCRIPTION_ATTR, _itemDescription);
         setStringProperty(component, JSFAttr.ITEM_LABEL_ATTR, _itemLabel);
         setStringProperty(component, JSFAttr.ITEM_VALUE_ATTR, _itemValue);
@@ -65,9 +65,9 @@ public class SelectItemTag
         }
     }
 
-    public void setDisabled(String disabled)
+    public void setItemDisabled(String itemDisabled)
     {
-        _disabled = disabled;
+        _itemDisabled = itemDisabled;
     }
 
     public void setItemDescription(String itemDescription)

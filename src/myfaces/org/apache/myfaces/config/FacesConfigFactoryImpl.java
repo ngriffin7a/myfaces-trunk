@@ -152,7 +152,7 @@ public class FacesConfigFactoryImpl
                     {"add" + methodNameMiddle, STRING_PARAM},
                     {"set" + methodNameMiddle, STRING_PARAM},
                     {"add" + methodNameMiddle, OBJECT_PARAM},
-                    {"set" + methodNameMiddle, OBJECT_PARAM},
+                    {"set" + methodNameMiddle, OBJECT_PARAM}
             };
             
             _propPatternCache.put(nodeName, searchPatterns);

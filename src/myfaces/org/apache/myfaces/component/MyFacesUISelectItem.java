@@ -45,7 +45,7 @@ public class MyFacesUISelectItem
     public boolean isDisabled()
     {
         if (_disabled != null) return _disabled.booleanValue();
-        ValueBinding vb = getValueBinding(JSFAttr.DISABLED_ATTR);
+        ValueBinding vb = getValueBinding(JSFAttr.ITEM_DISABLED_ATTR);
         return vb != null ?
                ((Boolean)vb.getValue(getFacesContext())).booleanValue() :
                DISABLED_DEFAULT;
@@ -59,7 +59,7 @@ public class MyFacesUISelectItem
         }
         else
         {
-            Boolean boolVal = (Boolean)uiSelectItem.getAttributes().get(JSFAttr.DISABLED_ATTR);
+            Boolean boolVal = (Boolean)uiSelectItem.getAttributes().get(JSFAttr.ITEM_DISABLED_ATTR);
             return  boolVal != null ? boolVal.booleanValue() : DISABLED_DEFAULT;
         }
     }

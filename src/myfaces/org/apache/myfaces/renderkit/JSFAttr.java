@@ -148,7 +148,7 @@ public class JSFAttr
     public static final String URL_ATTR                    = "url";
 
     // UISelectItem attributes
-    public static final String DISABLED_ATTR               = "disabled";
+    public static final String ITEM_DISABLED_ATTR          = "itemDisabled";
     public static final String ITEM_DESCRIPTION_ATTR       = "itemDescription";
     public static final String ITEM_LABEL_ATTR             = "itemLabel";
     public static final String ITEM_VALUE_ATTR             = "itemValue";
