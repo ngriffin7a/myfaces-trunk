@@ -23,7 +23,7 @@ import java.io.Serializable;
 
 /**
  * TODO: description
- * @author Manfred Geiler &
+ * @author Manfred Geiler
  * @version $Revision$ $Date$
  */
 public class CalcForm
