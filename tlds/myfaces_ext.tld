@@ -46,7 +46,6 @@
 <!ENTITY ui_select_items_attributes     SYSTEM "entities/ui_select_items_attributes.xml">
 <!ENTITY ui_select_many_attributes      SYSTEM "entities/ui_select_many_attributes.xml">
 <!ENTITY ui_select_one_attributes       SYSTEM "entities/ui_select_one_attributes.xml">
-<!ENTITY key_bundle_attributes          SYSTEM "entities/key_bundle_attributes.xml">
 <!ENTITY user_role_attributes           SYSTEM "entities/user_role_attributes.xml">
 ]>
 
@@ -84,7 +83,7 @@
                     navigationRight | top    | right      | left  | bottom
                     upsideDown      | bottom | left       | right | top
 
-                Default: classic 
+                Default: classic
             </description>
         </attribute>
         <attribute>

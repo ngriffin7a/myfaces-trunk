@@ -325,6 +325,7 @@ public class HTML
     public static final String VALUE_ATTR = "value";
     public static final String METHOD_ATTR = "method";
     public static final String ACTION_ATTR = "action";
+    public static final String COLSPAN_ATTR = "colspan";
 
 
     //HTML element constants

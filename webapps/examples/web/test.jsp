@@ -1,5 +1,6 @@
 <%@ taglib uri="http://java.sun.com/jsf/html" prefix="h" %>
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %>
+<%@ taglib uri="http://myfaces.sourceforge.net/tld/myfaces_ext_0_9.tld" prefix="x" %>
 <html>
 <body>
 <p>before faces
@@ -9,17 +10,25 @@
 
     <p>view start
 
-    <h:messages globalOnly="false" layout="list" showDetail="true" />
+    <x:panel_layout layout="classic" >
 
-    <p>
-    <h:form id="testform">
-        <h:output_text value="#{text['empty_selitem']}" />
-        <h:input_text id="testinput1" value="#{calcForm.number1}" />
-            <h:message for="testform:testinput1" showSummary="false" showDetail="true" />
-        <h:input_text id="testinput2" value="#{calcForm.number2}" />
-            <h:message for="testform:testinput2" showSummary="false" showDetail="true" />
-        <h:command_button id="testbutton" />
-    </h:form>
+        <f:facet name="header">
+            <h:messages globalOnly="false" layout="list" showDetail="true" />
+        </f:facet>
+
+        <f:facet name="body">
+            <p>
+            <h:form id="testform">
+                <h:output_text value="#{text['empty_selitem']}" />
+                <h:input_text id="testinput1" value="#{calcForm.number1}" />
+                    <h:message for="testform:testinput1" showSummary="false" showDetail="true" />
+                <h:input_text id="testinput2" value="#{calcForm.number2}" />
+                    <h:message for="testform:testinput2" showSummary="false" showDetail="true" />
+                <h:command_button id="testbutton" />
+            </h:form>
+        </f:facet>
+
+    </x:panel_layout>
 
     <p>view end
 </f:view>

@@ -26,7 +26,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import javax.faces.component.UIComponent;
-import javax.faces.component.html.HtmlPanelGroup;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 import java.io.IOException;
@@ -75,11 +74,11 @@ public class HtmlLayoutRenderer
         }
         else if (layout.equals(NAV_RIGHT_LAYOUT))
         {
-
+            //TODO
         }
         else if (layout.equals(UPSIDE_DOWN_LAYOUT))
         {
-
+            //TODO
         }
         else
         {
@@ -91,19 +90,53 @@ public class HtmlLayoutRenderer
             throws IOException
     {
         ResponseWriter writer = facesContext.getResponseWriter();
+        UIComponent header = panelLayout.getHeader();
+        UIComponent navigation = panelLayout.getNavigation();
+        UIComponent body = panelLayout.getBody();
+        UIComponent footer = panelLayout.getFooter();
+
         writer.startElement(HTML.TABLE_ELEM, null);
-        HtmlPanelGroup header = panelLayout.getHeader();
         if (header != null)
         {
             writer.startElement(HTML.TR_ELEM, null);
             writer.startElement(HTML.TD_ELEM, null);
+            if (navigation != null && body != null)
+            {
+                writer.writeAttribute(HTML.COLSPAN_ATTR, "2", null);
+            }
             renderChild(facesContext, header);
             writer.endElement(HTML.TD_ELEM);
             writer.endElement(HTML.TR_ELEM);
         }
-
-        //HtmlPanelGroup header = panelLayout.getHeader();
-
+        if (navigation != null || body != null)
+        {
+            writer.startElement(HTML.TR_ELEM, null);
+            if (navigation != null)
+            {
+                writer.startElement(HTML.TD_ELEM, null);
+                renderChild(facesContext, navigation);
+                writer.endElement(HTML.TD_ELEM);
+            }
+            if (body != null)
+            {
+                writer.startElement(HTML.TD_ELEM, null);
+                renderChild(facesContext, body);
+                writer.endElement(HTML.TD_ELEM);
+            }
+            writer.endElement(HTML.TR_ELEM);
+        }
+        if (footer != null)
+        {
+            writer.startElement(HTML.TR_ELEM, null);
+            writer.startElement(HTML.TD_ELEM, null);
+            if (navigation != null && body != null)
+            {
+                writer.writeAttribute(HTML.COLSPAN_ATTR, "2", null);
+            }
+            renderChild(facesContext, footer);
+            writer.endElement(HTML.TD_ELEM);
+            writer.endElement(HTML.TR_ELEM);
+        }
         writer.endElement(HTML.TABLE_ELEM);
     }
 

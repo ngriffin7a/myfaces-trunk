@@ -18,6 +18,7 @@
  */
 package net.sourceforge.myfaces.component.ext;
 
+import javax.faces.component.UIComponent;
 import javax.faces.component.html.HtmlPanelGroup;
 import javax.faces.el.ValueBinding;
 
@@ -108,25 +109,24 @@ public class HtmlPanelLayout
 
     // typesafe facet getters
 
-    public HtmlPanelGroup getHeader()
+    public UIComponent getHeader()
     {
-        return (HtmlPanelGroup)getFacet("header");
+        return (UIComponent)getFacet("header");
     }
 
-    //TODO: return HtmlPanelNavigation type
-    public HtmlPanelGroup getNavigation()
+    public UIComponent getNavigation()
     {
-        return (HtmlPanelGroup)getFacet("navigation");
+        return (UIComponent)getFacet("navigation");
     }
 
-    public HtmlPanelGroup getBody()
+    public UIComponent getBody()
     {
-        return (HtmlPanelGroup)getFacet("body");
+        return (UIComponent)getFacet("body");
     }
 
-    public HtmlPanelGroup getFooter()
+    public UIComponent getFooter()
     {
-        return (HtmlPanelGroup)getFacet("footer");
+        return (UIComponent)getFacet("footer");
     }
 
 }
