@@ -7,3 +7,10 @@
             <type>java.lang.String</type>
             <description>URL of the image (see JSF.4.1.5).</description>
         </attribute>
+        <attribute>
+            <name>value</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
+            <type>java.lang.String</type>
+            <description>URL of the image (see JSF.4.1.5).</description>
+        </attribute>
