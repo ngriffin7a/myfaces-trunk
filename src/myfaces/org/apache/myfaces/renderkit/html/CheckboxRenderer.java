@@ -34,6 +34,7 @@ import javax.faces.component.UISelectBoolean;
 import javax.faces.component.UISelectMany;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
+import javax.faces.el.ValueBinding;
 import javax.servlet.ServletRequest;
 import java.io.IOException;
 import java.util.Iterator;
@@ -79,6 +80,20 @@ public class CheckboxRenderer
             if (newValues != null)
             {
                 ((UISelectBoolean)uiComponent).setSelected(newValues[0].equals("1"));
+            }
+            else
+            {
+                String valueRef = ((UISelectBoolean)uiComponent).getValueRef();
+                if (valueRef != null)
+                {
+                    //If there is a model reference, we must beware the model
+                    //from being changed later in the update model phase.
+                    //Since we cannot avoid the model beeing set, we simply
+                    //get the current model value and overwrite the component's
+                    //value.
+                    ValueBinding vb = getApplication().getValueBinding(valueRef);
+                    ((UISelectBoolean)uiComponent).setValue(vb.getValue(facesContext));
+                }
             }
             uiComponent.setValid(true);
         }

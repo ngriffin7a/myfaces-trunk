@@ -18,6 +18,8 @@
  */
 package net.sourceforge.myfaces.el;
 
+import net.sourceforge.myfaces.util.logging.LogUtil;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -112,25 +114,40 @@ extends ValueBinding
     public void setValue(FacesContext facesContext, Object newValue)
     throws PropertyNotFoundException
     {
-        // TODO: allow setting of base class (myfaces extension)
-        Object base = resolve(facesContext);
-
-        if (base == null)
+        try
         {
-            throw new NullPointerException(
-                "Null bean, property: " + _reference);
+            // TODO: allow setting of base class (myfaces extension)
+            Object base = resolve(facesContext);
+
+            if (base == null)
+            {
+                throw new NullPointerException(
+                    "Null bean, property: " + _reference);
+            }
+
+            int maxIndex = _parsedReference.length - 1;
+
+            if (maxIndex > 0)
+            {
+                setPropertyValue(
+                    facesContext, base, _parsedReference[maxIndex], newValue);
+            }
+            else
+            {
+                throw new EvaluationException("Cannot set base class");
+            }
         }
-
-        int maxIndex = _parsedReference.length - 1;
-
-        if (maxIndex > 0)
+        catch (RuntimeException ex)
         {
-            setPropertyValue(
-                facesContext, base, _parsedReference[maxIndex], newValue);
-        }
-        else
-        {
-            throw new EvaluationException("Cannot set base class");
+            if (newValue == null)
+            {
+                LogUtil.getLogger().severe("Exception setting value of reference '" + _reference + "' to null: " + ex.getMessage());
+            }
+            else
+            {
+                LogUtil.getLogger().severe("Exception setting value of reference '" + _reference + "' to object of type '" + newValue.getClass().getName() + "': " + ex.getMessage());
+            }
+            throw ex;
         }
     }
 

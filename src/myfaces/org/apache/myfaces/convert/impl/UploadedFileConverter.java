@@ -16,30 +16,39 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package net.sourceforge.myfaces.component.ext;
+package net.sourceforge.myfaces.convert.impl;
 
-import net.sourceforge.myfaces.component.MyFacesUIInput;
+import net.sourceforge.myfaces.component.ext.UploadedFile;
+
+import javax.faces.convert.Converter;
+import javax.faces.convert.ConverterException;
+import javax.faces.context.FacesContext;
+import javax.faces.component.UIComponent;
 
 /**
  * DOCUMENT ME!
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public class UIFileUpload
-        extends MyFacesUIInput
+public class UploadedFileConverter
+    implements Converter
 {
-    public UIFileUpload()
+    public Object getAsObject(FacesContext facescontext, UIComponent uicomponent, String s)
+        throws ConverterException
     {
-        setValid(true);
+        return null;
     }
 
-    public void setUploadedFile(UploadedFile upFile)
+    public String getAsString(FacesContext facescontext, UIComponent uicomponent, Object obj)
+        throws ConverterException
     {
-        setValue(upFile);
-    }
-
-    public UploadedFile getUploadedFile()
-    {
-        return (UploadedFile)getValue();
+        if (obj instanceof UploadedFile)
+        {
+            return ((UploadedFile)obj).getFilePath();
+        }
+        else
+        {
+            return null;
+        }
     }
 }

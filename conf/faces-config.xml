@@ -238,6 +238,11 @@
         <converter-class>net.sourceforge.myfaces.convert.impl.NumberConverter</converter-class>
     </converter>
 
+    <converter>
+        <converter-id>net.sourceforge.myfaces.component.ext.UploadedFile</converter-id>
+        <converter-class>net.sourceforge.myfaces.convert.impl.UploadedFileConverter</converter-class>
+    </converter>
+
 
 <!-- standard message-resources -->
   <message-resources>
