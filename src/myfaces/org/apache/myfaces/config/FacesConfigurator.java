@@ -63,6 +63,9 @@ import java.util.jar.JarInputStream;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  *          $Log$
+ *          Revision 1.5  2004/08/10 10:57:38  manolito
+ *          fixed StackOverflow in ClassUtils and cleaned up ClassUtils methods
+ *
  *          Revision 1.4  2004/07/20 14:56:41  manolito
  *          removed public FactoryFinder method getValidFactoryNames - there is no such method in JSF 1.1 !
  *
@@ -153,9 +156,10 @@ public class FacesConfigurator
     public void configure()
         throws FacesException
     {
-        //TODO: create via Factory !
+        //These two classes can be easily replaced by alternative implementations.
+        //As long as there is no need to switch implementations we need no
+        //factory pattern to create them.
         _unmarshaller = new DigesterFacesConfigUnmarshallerImpl(_externalContext);
-        //TODO: create via Factory !
         _dispenser = new DigesterFacesConfigDispenserImpl();
 
         try
@@ -484,7 +488,7 @@ public class FacesConfigurator
             String converterClass = (String) it.next();
             try
             {
-                application.addConverter(ClassUtils.classForName(converterClass),
+                application.addConverter(ClassUtils.simpleClassForName(converterClass),
                     _dispenser.getConverterClassByClass(converterClass));
             }
             catch(Exception ex)
@@ -509,7 +513,7 @@ public class FacesConfigurator
         while (classNamesIterator.hasNext())
         {
             String implClassName = (String) classNamesIterator.next();
-            Class implClass = ClassUtils.classForName(implClassName);
+            Class implClass = ClassUtils.simpleClassForName(implClassName);
 
             // check, if class is of expected interface type
             if (!interfaceClass.isAssignableFrom(implClass))

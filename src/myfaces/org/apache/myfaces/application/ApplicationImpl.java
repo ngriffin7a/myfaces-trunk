@@ -48,6 +48,9 @@ import java.util.*;
  * @author Thomas Spiegl
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.32  2004/08/10 10:57:37  manolito
+ * fixed StackOverflow in ClassUtils and cleaned up ClassUtils methods
+ *
  * Revision 1.31  2004/07/01 22:05:14  mwessendorf
  * ASF switch
  *
@@ -271,7 +274,7 @@ public class ApplicationImpl
         
         try
         {
-            _componentClassMap.put(componentType, ClassUtils.classForName(componentClassName));
+            _componentClassMap.put(componentType, ClassUtils.simpleClassForName(componentClassName));
             if (log.isTraceEnabled()) log.trace("add Component class = " + componentClassName +
                                                 " for type = " + componentType);
         }
@@ -297,7 +300,7 @@ public class ApplicationImpl
         
         try
         {
-            _converterMap.put(converterId, ClassUtils.classForName(converterClass));
+            _converterMap.put(converterId, ClassUtils.simpleClassForName(converterClass));
             if (log.isTraceEnabled()) log.trace("add Converter id = " + converterId +
                     " converterClass = " + converterClass);
            }
@@ -322,7 +325,7 @@ public class ApplicationImpl
         
         try
         {
-            _converterTypeMap.put(targetClass, ClassUtils.classForName(converterClass));
+            _converterTypeMap.put(targetClass, ClassUtils.simpleClassForName(converterClass));
             if (log.isTraceEnabled()) log.trace("add Converter for class = " + targetClass +
                     " converterClass = " + converterClass);
         }
@@ -347,7 +350,7 @@ public class ApplicationImpl
         
         try
         {
-            _validatorClassMap.put(validatorId, ClassUtils.classForName(validatorClass));
+            _validatorClassMap.put(validatorId, ClassUtils.simpleClassForName(validatorClass));
             if (log.isTraceEnabled()) log.trace("add Validator id = " + validatorId +
                                             " class = " + validatorClass);
         }

@@ -23,6 +23,8 @@ import org.apache.commons.logging.LogFactory;
 import javax.faces.FacesException;
 import javax.servlet.jsp.el.ELException;
 import java.io.InputStream;
+import java.lang.reflect.Array;
+import java.util.HashMap;
 import java.util.Map;
 
 
@@ -31,6 +33,9 @@ import java.util.Map;
  * @author Anton Koinov
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.8  2004/08/10 10:57:38  manolito
+ * fixed StackOverflow in ClassUtils and cleaned up ClassUtils methods
+ *
  * Revision 1.7  2004/08/05 22:55:51  o_rossmueller
  * fix: resolve primitive classes
  *
@@ -60,8 +65,8 @@ public class ClassUtils
 {
     //~ Static fields/initializers -----------------------------------------------------------------
 
-    private static final Logger s_logger          = new Logger(System.out);
-    private static final Log  log                 = LogFactory.getLog(ClassUtils.class);
+    private static final Logger coerceLogger      = new Logger(System.out);
+    private static final Log log                  = LogFactory.getLog(ClassUtils.class);
     public static final Class BYTE_ARRAY_CLASS    = byte[].class;
     public static final Class CHAR_ARRAY_CLASS    = char[].class;
     public static final Class DOUBLE_ARRAY_CLASS  = double[].class;
@@ -72,14 +77,36 @@ public class ClassUtils
     public static final Class BOOLEAN_ARRAY_CLASS = boolean[].class;
     public static final Class OBJECT_ARRAY_CLASS  = Object[].class;
     public static final Class STRING_ARRAY_CLASS  = String[].class;
-    
-// Array of void is an invalid type
-//    public static final Class VOID_ARRAY_CLASS    = classForName("[V");
+
+    private static final Map PRIMITIVE_TYPES_MAP = new HashMap();
+    static
+    {
+        PRIMITIVE_TYPES_MAP.put("byte", Byte.TYPE);
+        PRIMITIVE_TYPES_MAP.put("char", Character.TYPE);
+        PRIMITIVE_TYPES_MAP.put("double", Double.TYPE);
+        PRIMITIVE_TYPES_MAP.put("float", Float.TYPE);
+        PRIMITIVE_TYPES_MAP.put("int", Integer.TYPE);
+        PRIMITIVE_TYPES_MAP.put("long", Long.TYPE);
+        PRIMITIVE_TYPES_MAP.put("short", Short.TYPE);
+        PRIMITIVE_TYPES_MAP.put("boolean", Boolean.TYPE);
+        PRIMITIVE_TYPES_MAP.put("void", Void.TYPE);
+        PRIMITIVE_TYPES_MAP.put("byte[]", BYTE_ARRAY_CLASS);
+        PRIMITIVE_TYPES_MAP.put("char[]", CHAR_ARRAY_CLASS);
+        PRIMITIVE_TYPES_MAP.put("double[]", DOUBLE_ARRAY_CLASS);
+        PRIMITIVE_TYPES_MAP.put("float[]", FLOAT_ARRAY_CLASS);
+        PRIMITIVE_TYPES_MAP.put("int[]", INT_ARRAY_CLASS);
+        PRIMITIVE_TYPES_MAP.put("long[]", LONG_ARRAY_CLASS);
+        PRIMITIVE_TYPES_MAP.put("short[]", SHORT_ARRAY_CLASS);
+        PRIMITIVE_TYPES_MAP.put("boolean[]", BOOLEAN_ARRAY_CLASS);
+        // array of void is no valid type
+    }
+
+    /*
     public static final Map s_javatypeLookupMap   =
         new BiLevelCacheMap(90)
         {
             {
-                // Pre-initialize cache with built-in types 
+                // Pre-initialize cache with built-in types
                 _cacheL1.put("byte", Byte.TYPE);
                 _cacheL1.put("char", Character.TYPE);
                 _cacheL1.put("double", Double.TYPE);
@@ -106,17 +133,124 @@ public class ClassUtils
             protected Object newInstance(Object key)
             {
                 String className = (String) key;
-
                 // REVISIT: we could cache the Class itself (instead of the class name),
-                //          but not sure whether that would interfere with multiple ContextClassloaders  
+                //          but not sure whether that would interfere with multiple ContextClassloaders
                 return (className.endsWith("[]"))
-                ? ("[L" + className.substring(0, className.length() - 2) + ";") : className;
+                       ? ("[L" + className.substring(0, className.length() - 2) + ";")
+                       : className;
             }
         };
+        */
 
 
     //~ Methods ------------------------------------------------------------------------------------
 
+    /**
+     * Tries a Class.forName with the context class loader of the current thread first and
+     * automatically falls back to the ClassUtils class loader (i.e. the loader of the
+     * myfaces.jar lib) if necessary.
+     * @param type fully qualified name of a non-primitive non-array class
+     * @return the corresponding Class
+     * @throws ClassNotFoundException
+     * @throws NullPointerException if type is null
+     */
+    public static Class classForName(String type)
+            throws ClassNotFoundException
+    {
+        if (type == null) throw new NullPointerException("type");
+        try
+        {
+            // Try WebApp ClassLoader first
+            return Class.forName(type,
+                                 false, // we do not initialize for faster startup
+                                 Thread.currentThread().getContextClassLoader());
+        }
+        catch (ClassNotFoundException ignore)
+        {
+            // fallback: Try ClassLoader for ClassUtils (i.e. the myfaces.jar lib)
+            return Class.forName(type,
+                                 false,// we do not initialize for faster startup
+                                 ClassUtils.class.getClassLoader());
+        }
+    }
+
+
+    /**
+     * Same as {@link #classForName(String)}, but throws a RuntimeException
+     * (FacesException) instead of a ClassNotFoundException.
+     * @return the corresponding Class
+     * @throws FacesException if class not found
+     * @throws NullPointerException if type is null
+     */
+    public static Class simpleClassForName(String type)
+    {
+        try
+        {
+            return classForName(type);
+        }
+        catch (ClassNotFoundException e)
+        {
+            log.error("Class " + type + " not found", e);
+            throw new FacesException(e);
+        }
+    }
+
+
+    /**
+     * Similar as {@link #classForName(String)}, but also supports primitive types
+     * and arrays as specified for the JavaType element in the JavaServer Faces Config DTD.
+     * @param type fully qualified class name or name of a primitive type, both optionally
+     *             followed by "[]" to indicate an array type
+     * @return the corresponding Class
+     * @throws ClassNotFoundException
+     * @throws NullPointerException if type is null
+     */
+    public static Class javaTypeToClass(String type)
+            throws ClassNotFoundException
+    {
+        if (type == null) throw new NullPointerException("type");
+
+        // try primitive and array of primitives first
+        Class clazz = (Class)PRIMITIVE_TYPES_MAP.get(type);
+        if (clazz != null)
+        {
+            return clazz;
+        }
+
+        if (type.endsWith("[]"))
+        {
+            String pureType = type.substring(0, type.length() - 2);
+            Class pureClazz = classForName(pureType);
+            return Array.newInstance(pureClazz, 0).getClass();
+        }
+        else
+        {
+            return classForName(type);
+        }
+    }
+
+
+    /**
+     * Same as {@link #javaTypeToClass(String)}, but throws a RuntimeException
+     * (FacesException) instead of a ClassNotFoundException.
+     * @return the corresponding Class
+     * @throws FacesException if class not found
+     * @throws NullPointerException if type is null
+     */
+    public static Class simpleJavaTypeToClass(String type)
+    {
+        try
+        {
+            return javaTypeToClass(type);
+        }
+        catch (ClassNotFoundException e)
+        {
+            log.error("Class " + type + " not found", e);
+            throw new FacesException(e);
+        }
+    }
+
+    /*
     public static Class classForName(String type)
             throws FacesException
     {
@@ -131,46 +265,33 @@ public class ClassUtils
         }
     }
 
-    public static Class classForNameBasic(String type)  throws ClassNotFoundException
+    public static Class classForNameBasic(String type)
+            throws ClassNotFoundException
     {
-            return _classForName(type);
-    }
+        //Try primitive type first:
+        Class clazz = primitiveTypeToClass(type);
+        if (clazz != null)
+        {
+            return clazz;
+        }
 
-    private static Class _classForName(String type) throws ClassNotFoundException
-    {
         try
         {
-            return Class.forName(type, false,
-                Thread.currentThread().getContextClassLoader());
+            // Try WebApp ClassLoader first
+            return Class.forName(type,
+                                 false, // we do not initialize for faster startup
+                                 Thread.currentThread().getContextClassLoader());
         }
         catch (ClassNotFoundException ignore)
         {
-            try
-            {
-                // fallback
-                return Class.forName(type, false,
-                    ClassUtils.class.getClassLoader());
-            }
-            catch(ClassNotFoundException ignore2)
-            {
-                //final fallback - the calls above are not able to load classes of primitive types
-
-                Class clazz = javaTypeToClass(type);
-
-                if(clazz==null)
-                    throw new ClassNotFoundException(type);
-
-                return clazz;
-            }
+            // fallback: Try ClassLoader for ClassUtils (i.e. the myfaces.jar lib)
+            return Class.forName(type,
+                                 false,// we do not initialize for faster startup
+                                 ClassUtils.class.getClassLoader());
         }
-// we do not initialize (second param to forName() is false) for faster startup
-//      catch (ExceptionInInitializerError e)
-//      {
-//          log.error("Error in static initializer of class " + type + ": " 
-//                + e.getMessage(), e);
-//          throw e;
-//      }
     }
+    */
+
 
     public static InputStream getResourceAsStream(String resource)
     {
@@ -179,37 +300,25 @@ public class ClassUtils
         if (stream == null)
         {
             // fallback
-            stream = 
-                ClassUtils.class.getClassLoader().getResourceAsStream(resource);
+            stream = ClassUtils.class.getClassLoader().getResourceAsStream(resource);
         }
         return stream;
     }
 
 
-    public static Class javaTypeToClass(String javaType)
-    {
-        Object clazz = s_javatypeLookupMap.get(javaType);
-        if (clazz instanceof String)
-        {
-            return classForName((String) clazz);
-        }
-
-        return (Class) clazz;
-    }
-
     public static Object newInstance(String type)
-    throws FacesException
+        throws FacesException
     {
         if (type == null)
         {
             return null;
         }
-
-        return newInstance(classForName(type));
+        return newInstance(simpleClassForName(type));
     }
 
+
     public static Object newInstance(Class clazz)
-    throws FacesException
+        throws FacesException
     {
         try
         {
@@ -233,31 +342,19 @@ public class ClassUtils
         {
             return null;
         }
-        
+
         try
         {
-            // Use coersion implemented by JSP EL for consistency with EL 
+            // Use coersion implemented by JSP EL for consistency with EL
             // expressions. Additionally, it caches some of the coersions.
-            return Coercions.coerce(value, desiredClass, s_logger);
+            return Coercions.coerce(value, desiredClass, coerceLogger);
         }
         catch (ELException e)
         {
-            log.error("Cannot coerce " + value.getClass().getName() 
+            log.error("Cannot coerce " + value.getClass().getName()
                 + " to " + desiredClass.getName(), e);
             throw new FacesException(e);
         }
     }
 
-//    public static void main(String[] args)
-//    {
-//        // test code
-//        System.out.println(javaTypeToClass("int").getName());
-//        System.out.println(javaTypeToClass("int[]").getName());
-//        System.out.println(javaTypeToClass("java.lang.String").getName());
-//        System.out.println(javaTypeToClass("java.lang.String[]").getName());
-//        System.out.println(javaTypeToClass("int").getName());
-//        System.out.println(javaTypeToClass("int[]").getName());
-//        System.out.println(javaTypeToClass("java.lang.String").getName());
-//        System.out.println(javaTypeToClass("java.lang.String[]").getName());
-//    }
 }

@@ -16,6 +16,7 @@
 package net.sourceforge.myfaces.webapp.webxml;
 
 import net.sourceforge.myfaces.util.ClassUtils;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -27,6 +28,9 @@ import java.util.*;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.2  2004/08/10 10:57:39  manolito
+ * fixed StackOverflow in ClassUtils and cleaned up ClassUtils methods
+ *
  * Revision 1.1  2004/07/16 15:16:10  royalts
  * moved net.sourceforge.myfaces.webapp.webxml and net.sourceforge.util.xml to share src-tree (needed WebXml for JspTilesViewHandlerImpl)
  *
@@ -82,7 +86,8 @@ public class WebXml
         {
             Map.Entry entry = (Map.Entry)it.next();
             String servletName = (String)entry.getKey();
-            if(null == entry.getValue()) {
+            if (null == entry.getValue())
+            {
                 // the value is null in the case of jsp files listed as servlets 
                 // in cactus
                 // <servlet>
@@ -91,7 +96,7 @@ public class WebXml
                 // </servlet>
                 continue;
             }
-            Class servletClass = ClassUtils.classForName((String)entry.getValue());
+            Class servletClass = ClassUtils.simpleClassForName((String)entry.getValue());
             if (FacesServlet.class.isAssignableFrom(servletClass))
             {
                 List urlPatterns = (List)_servletMappings.get(servletName);

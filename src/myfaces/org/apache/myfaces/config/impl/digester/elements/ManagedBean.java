@@ -15,12 +15,11 @@
  */
 package net.sourceforge.myfaces.config.impl.digester.elements;
 
-import java.util.List;
+import net.sourceforge.myfaces.util.ClassUtils;
+
 import java.util.ArrayList;
 import java.util.Iterator;
-
-import net.sourceforge.myfaces.util.ClassUtils;
-import net.sourceforge.myfaces.config.impl.digester.elements.ListEntries;
+import java.util.List;
 
 
 /**
@@ -98,11 +97,13 @@ public class ManagedBean implements net.sourceforge.myfaces.config.element.Manag
 
     public Class getManagedBeanClass()
     {
-        if (beanClassName == null) {
+        if (beanClassName == null)
+        {
             return null;
         }
-        if (beanClass == null) {
-            beanClass = ClassUtils.classForName(beanClassName);
+        if (beanClass == null)
+        {
+            beanClass = ClassUtils.simpleClassForName(beanClassName);
         }
         return beanClass;
     }

@@ -15,16 +15,16 @@
  */
 package net.sourceforge.myfaces.config;
 
-import java.util.*;
+import net.sourceforge.myfaces.config.element.*;
+import net.sourceforge.myfaces.util.ClassUtils;
+
 import javax.faces.FacesException;
 import javax.faces.application.Application;
 import javax.faces.context.FacesContext;
 import javax.faces.el.PropertyResolver;
 import javax.faces.el.ValueBinding;
 import javax.faces.webapp.UIComponentTag;
-
-import net.sourceforge.myfaces.config.element.*;
-import net.sourceforge.myfaces.util.ClassUtils;
+import java.util.*;
 
 
 /**
@@ -33,6 +33,9 @@ import net.sourceforge.myfaces.util.ClassUtils;
  * @author <a href="mailto:oliver@rossmueller.com">Oliver Rossmueller</a>
  *
  * $Log$
+ * Revision 1.2  2004/08/10 10:57:38  manolito
+ * fixed StackOverflow in ClassUtils and cleaned up ClassUtils methods
+ *
  * Revision 1.1  2004/07/07 00:25:05  o_rossmueller
  * tidy up config/confignew package (moved confignew classes to package config)
  *
@@ -132,9 +135,10 @@ public class ManagedBeanBuilder
             if (property.getPropertyClass() == null)
             {
                 propertyClass = propertyResolver.getType(bean, property.getPropertyName());
-            } else
+            }
+            else
             {
-                propertyClass = ClassUtils.classForName(property.getPropertyClass());
+                propertyClass = ClassUtils.simpleJavaTypeToClass(property.getPropertyClass());
             }
             Object coercedValue = ClassUtils.convertToType(value, propertyClass);
             propertyResolver.setValue(bean, property.getPropertyName(), coercedValue);
@@ -145,8 +149,8 @@ public class ManagedBeanBuilder
     private void initializeMap(FacesContext facesContext, MapEntries mapEntries, Map map)
     {
         Application application = facesContext.getApplication();
-        Class keyClass = mapEntries.getKeyClass() == null ? String.class : ClassUtils.classForName(mapEntries.getKeyClass());
-        Class valueClass = mapEntries.getValueClass() == null ? String.class : ClassUtils.classForName(mapEntries.getValueClass());
+        Class keyClass = mapEntries.getKeyClass() == null ? String.class : ClassUtils.simpleJavaTypeToClass(mapEntries.getKeyClass());
+        Class valueClass = mapEntries.getValueClass() == null ? String.class : ClassUtils.simpleJavaTypeToClass(mapEntries.getValueClass());
         ValueBinding valueBinding;
 
         for (Iterator iterator = mapEntries.getMapEntries(); iterator.hasNext();)
@@ -180,7 +184,7 @@ public class ManagedBeanBuilder
     private void initializeList(FacesContext facesContext, ListEntries listEntries, List list)
     {
         Application application = facesContext.getApplication();
-        Class valueClass = listEntries.getValueClass() == null ? String.class : ClassUtils.classForName(listEntries.getValueClass());
+        Class valueClass = listEntries.getValueClass() == null ? String.class : ClassUtils.simpleJavaTypeToClass(listEntries.getValueClass());
         ValueBinding valueBinding;
 
         for (Iterator iterator = listEntries.getListEntries(); iterator.hasNext();)
