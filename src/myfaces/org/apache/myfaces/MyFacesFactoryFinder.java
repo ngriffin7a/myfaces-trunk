@@ -32,12 +32,17 @@ import java.util.Map;
  * @author Thomas Spiegl
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.17.2.1  2004/06/16 02:07:24  o_rossmueller
+ * get navigation rules from RuntimeConfig
+ * refactored all remaining usages of MyFacesFactoryFinder to use RuntimeConfig
+ *
  * Revision 1.17  2004/03/30 16:59:47  manolito
  * MessageFactory removed, MessageUtils moved to util in src/share
  *
  */
 public class MyFacesFactoryFinder
 {
+    // TODO: this class is no longer used; remove???
     public static final String FACES_CONFIG_FACTORY = FacesConfigFactory.class.getName();
 
     private static final HashMap DEFAULT_FACTORIES = new HashMap();

@@ -143,4 +143,8 @@ public class ConfigurationCactusTest extends ServletTestCase
         }
     }
 
+
+    public void testNavigationRules() {
+        // TODO:
+    }
 }

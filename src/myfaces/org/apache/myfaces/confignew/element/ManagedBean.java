@@ -25,6 +25,10 @@ import java.util.Iterator;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.1.2.1  2004/06/16 02:07:22  o_rossmueller
+ * get navigation rules from RuntimeConfig
+ * refactored all remaining usages of MyFacesFactoryFinder to use RuntimeConfig
+ *
  * Revision 1.1  2004/05/17 14:28:26  manolito
  * new configuration concept
  *
@@ -39,7 +43,8 @@ public interface ManagedBean
     public static final int INIT_MODE_LIST = 3;
 
     public String getManagedBeanName();
-    public String getManagedBeanClass();
+    public String getManagedBeanClassName();
+    public Class getManagedBeanClass();
     public String getManagedBeanScope();
 
     public int getInitMode();

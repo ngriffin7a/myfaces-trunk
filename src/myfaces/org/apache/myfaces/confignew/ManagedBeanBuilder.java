@@ -42,7 +42,7 @@ public class ManagedBeanBuilder
 
     public Object buildManagedBean(FacesContext facesContext, ManagedBean beanConfiguration) throws FacesException
     {
-        Object bean = ClassUtils.newInstance(beanConfiguration.getManagedBeanClass());
+        Object bean = ClassUtils.newInstance(beanConfiguration.getManagedBeanClassName());
 
         switch (beanConfiguration.getInitMode())
         {

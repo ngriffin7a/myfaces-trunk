@@ -18,25 +18,18 @@
  */
 package net.sourceforge.myfaces.el;
 
-import net.sourceforge.myfaces.MyFacesFactoryFinder;
-import net.sourceforge.myfaces.confignew.RuntimeConfig;
-import net.sourceforge.myfaces.confignew.ManagedBeanBuilder;
-import net.sourceforge.myfaces.confignew.element.ManagedBean;
-import net.sourceforge.myfaces.config.FacesConfig;
-import net.sourceforge.myfaces.config.FacesConfigFactory;
-import net.sourceforge.myfaces.config.ManagedBeanConfig;
-import net.sourceforge.myfaces.config.configure.ManagedBeanConfigurator;
-import net.sourceforge.myfaces.util.ClassUtils;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
+import java.util.HashMap;
+import java.util.Map;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.el.ReferenceSyntaxException;
 import javax.faces.el.VariableResolver;
-import java.util.HashMap;
-import java.util.Map;
+
+import net.sourceforge.myfaces.confignew.ManagedBeanBuilder;
+import net.sourceforge.myfaces.confignew.RuntimeConfig;
+import net.sourceforge.myfaces.confignew.element.ManagedBean;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 
 /**
@@ -44,6 +37,10 @@ import java.util.Map;
  * @author Anton Koinov
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.27.2.2  2004/06/16 02:07:23  o_rossmueller
+ * get navigation rules from RuntimeConfig
+ * refactored all remaining usages of MyFacesFactoryFinder to use RuntimeConfig
+ *
  * Revision 1.27.2.1  2004/06/13 15:59:07  o_rossmueller
  * started integration of new config mechanism:
  * - factories
@@ -246,10 +243,10 @@ public class VariableResolverImpl
     }
 
     /**
-     * FacesConfig is instantiated once per servlet and never changes--we can
+     * RuntimeConfig is instantiated once per servlet and never changes--we can
      * safely cache it
      */
-    private FacesConfig _facesConfig;
+    private RuntimeConfig _runtimeConfig;
 
     private ManagedBeanBuilder beanBuilder = new ManagedBeanBuilder();
 
@@ -308,7 +305,7 @@ public class VariableResolverImpl
         }
 
         // ManagedBean
-        ManagedBean mbc = RuntimeConfig.getCurrentInstance(facesContext.getExternalContext()).getManagedBean(name);
+        ManagedBean mbc = getRuntimeConfig(facesContext).getManagedBean(name);
 
         if (mbc != null)
         {
@@ -335,18 +332,14 @@ public class VariableResolverImpl
         log.error("Variable '" + name + "' could not be resolved.");
         return null;
     }
-    
-    protected FacesConfig getFacesConfig(FacesContext facesContext)
+
+    protected RuntimeConfig getRuntimeConfig(FacesContext facesContext)
     {
-        if (_facesConfig == null)
+        if (_runtimeConfig == null)
         {
-            ExternalContext externalContext = 
-                facesContext.getExternalContext();
-            FacesConfigFactory facesConfigFactory =
-                MyFacesFactoryFinder.getFacesConfigFactory(externalContext);
-            _facesConfig = facesConfigFactory.getFacesConfig(externalContext);
+            _runtimeConfig = RuntimeConfig.getCurrentInstance(facesContext.getExternalContext());
         }
-        return _facesConfig;
+        return _runtimeConfig;
     }
 }
 

@@ -18,32 +18,24 @@
  */
 package net.sourceforge.myfaces.el;
 
-import net.sourceforge.myfaces.MyFacesFactoryFinder;
-import net.sourceforge.myfaces.config.FacesConfig;
-import net.sourceforge.myfaces.config.FacesConfigFactory;
-import net.sourceforge.myfaces.config.ManagedBeanConfig;
-import net.sourceforge.myfaces.util.BiLevelCacheMap;
-
-import org.apache.commons.el.*;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
+import java.lang.reflect.Method;
+import java.util.List;
+import java.util.Map;
 import javax.faces.application.Application;
 import javax.faces.component.StateHolder;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
-import javax.faces.el.EvaluationException;
-import javax.faces.el.PropertyNotFoundException;
-import javax.faces.el.PropertyResolver;
-import javax.faces.el.ReferenceSyntaxException;
-import javax.faces.el.ValueBinding;
+import javax.faces.el.*;
 import javax.servlet.jsp.el.ELException;
 import javax.servlet.jsp.el.FunctionMapper;
 import javax.servlet.jsp.el.VariableResolver;
 
-import java.lang.reflect.Method;
-import java.util.List;
-import java.util.Map;
+import net.sourceforge.myfaces.confignew.RuntimeConfig;
+import net.sourceforge.myfaces.confignew.element.ManagedBean;
+import net.sourceforge.myfaces.util.BiLevelCacheMap;
+import org.apache.commons.el.*;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 
 /**
@@ -52,6 +44,10 @@ import java.util.Map;
  * @version $Revision$ $Date$
  * 
  * $Log$
+ * Revision 1.41.2.1  2004/06/16 02:07:23  o_rossmueller
+ * get navigation rules from RuntimeConfig
+ * refactored all remaining usages of MyFacesFactoryFinder to use RuntimeConfig
+ *
  * Revision 1.41  2004/05/31 02:28:37  dave0000
  * Fix for: [955111] RestoreState of outputText with mixed ValueBinding attribute
  *
@@ -121,7 +117,7 @@ public class ValueBindingImpl extends ValueBinding implements StateHolder
      * FacesConfig is instantiated once per servlet and never changes--we can
      * safely cache it
      */
-    private FacesConfig   _facesConfig;
+    private RuntimeConfig   _runtimeConfig;
 
     //~ Constructors ----------------------------------------------------------
 
@@ -201,8 +197,8 @@ public class ValueBindingImpl extends ValueBinding implements StateHolder
                 // Check if it is a ManagedBean
                 // WARNING: must do this check first to avoid instantiating
                 //          the MB in resolveVariable()
-                ManagedBeanConfig mbConfig = 
-                    getFacesConfig(facesContext).getManagedBeanConfig(name);
+                ManagedBean mbConfig =
+                    getRuntimeConfig(facesContext).getManagedBean(name);
                 if (mbConfig != null)
                 {
                     // Note: if MB Class is not set, will return 
@@ -364,8 +360,8 @@ public class ValueBindingImpl extends ValueBinding implements StateHolder
         if (scopeMap == null)
         {
             // Check for ManagedBean
-            ManagedBeanConfig mbConfig = 
-                getFacesConfig(facesContext).getManagedBeanConfig(name);
+            ManagedBean mbConfig =
+                getRuntimeConfig(facesContext).getManagedBean(name);
             if (mbConfig != null)
             {
                 targetClass = mbConfig.getManagedBeanClass();
@@ -548,17 +544,13 @@ public class ValueBindingImpl extends ValueBinding implements StateHolder
         return Coercions.coerce(value, clazz, ELParserHelper.s_logger);
     }
     
-    protected FacesConfig getFacesConfig(FacesContext facesContext)
+    protected RuntimeConfig getRuntimeConfig(FacesContext facesContext)
     {
-        if (_facesConfig == null)
+        if (_runtimeConfig == null)
         {
-            ExternalContext externalContext = 
-                facesContext.getExternalContext();
-            FacesConfigFactory facesConfigFactory =
-                MyFacesFactoryFinder.getFacesConfigFactory(externalContext);
-            _facesConfig = facesConfigFactory.getFacesConfig(externalContext);
+            _runtimeConfig = RuntimeConfig.getCurrentInstance(facesContext.getExternalContext());
         }
-        return _facesConfig;
+        return _runtimeConfig;
     }
     
     public String toString()
