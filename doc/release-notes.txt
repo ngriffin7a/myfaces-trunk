@@ -5,6 +5,10 @@ MyFaces Release Notes
 Changes in Release 1.0.6 beta
 * switch to apache license
 * new JspTilesViewHandler for flawless Tiles support
+* RFE #975649 Enhance HtmlTabbedPaneRenderer (rendered attribute for TabbedPane component)
+* RFE #990814 dataList component ignores styleClass attribute
+* bug #1004867 h:message has duplicate attributes
+* bug #1004896 h:dataTable id attribute not rendered
 * bug #995085 graphicImage ignores value attribute
 * bug #992668 selectOneMenu doesn't restore the bean value if it's a primitive
 * bug #992628 StateManager.SerializedView is not static
@@ -22,6 +26,8 @@ Changes in Release 1.0.6 beta
 * bug #985217 decorator-factory not supported
 * splitting jar-files (myfaces.jar, myfaces-jsf-api.jar, myfaces-components.jar)
 * new EXPERIMENTAL feature to detect JavaScript support of a client browser
+
+
 ----------------------------------------------------------------------
 Changes in Release 1.0.5 beta
 * new faces configurator

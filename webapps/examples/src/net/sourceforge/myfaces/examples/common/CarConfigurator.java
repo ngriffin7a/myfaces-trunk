@@ -283,7 +283,7 @@ public class CarConfigurator
     {
         if (value instanceof String && value.equals("c6"))
         {
-            throw new ValidatorException(new FacesMessage("Are you kinding?", "You cannot buy a James Blond car!"));
+            throw new ValidatorException(new FacesMessage("Are you kidding?", "You cannot buy a James Blond car!"));
         }
     }
 
