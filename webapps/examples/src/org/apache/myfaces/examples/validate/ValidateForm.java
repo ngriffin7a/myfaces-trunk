@@ -28,6 +28,7 @@ public class ValidateForm {
 	private String equal = null;
 	private String equal2 = null;
 	
+	private String isbn =null;
 	
 
 	public String getEmail() {
@@ -101,4 +102,10 @@ public class ValidateForm {
 		equal = string;
 	}
 
+    public String getIsbn() {
+        return isbn;
+    }
+    public void setIsbn(String isbn) {
+        this.isbn = isbn;
+    }
 }

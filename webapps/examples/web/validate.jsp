@@ -81,11 +81,17 @@ managed beans used:
                     </h:inputText>
 					<h:message id="creditCardNumberError" for="form1:creditCardNumber" styleClass="error" />
 
-					<h:outputLabel for="form1:regExprValue" value="#{example_messages['validate_regexp']}" />
+                         <h:outputLabel for="form1:regExprValue" value="#{example_messages['validate_regexp']}" />
                     <h:inputText id="regExprValue" value="#{validateForm.regExpr}" required="true">
                         <x:validateRegExpr pattern='\d{5}' />
                     </h:inputText>
-					<h:message id="regExprValueError" for="form1:regExprValue" styleClass="error" />
+                         <h:message id="regExprValueError" for="form1:regExprValue" styleClass="error" />
+
+                         <h:outputLabel for="form1:isbn" value="#{example_messages['validate_isbn']}" />
+                    <h:inputText id="isbn" value="#{validateForm.isbn}" required="true">
+                        <x:validateISBN />
+                    </h:inputText>
+                         <h:message id="isbnError" for="form1:isbn" styleClass="error" />
 
 					<h:outputLabel for="form1:equal" value="#{example_messages['validate_equal']}" />
                     <h:inputText id="equal" value="#{validateForm.equal}" required="true"/>
