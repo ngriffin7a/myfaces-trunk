@@ -31,10 +31,9 @@ public abstract class VariableResolver
 	// CONSTRUCTORS
 	public VariableResolver()
 	{
-		//TODO
-		throw new UnsupportedOperationException();
 	}
 
 	// METHODS
-	public abstract Object resolveVariable(FacesContext facesContext, String name);
+	public abstract Object resolveVariable(FacesContext facesContext, String name)
+        throws EvaluationException;
 }

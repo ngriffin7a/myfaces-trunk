@@ -32,22 +32,23 @@ public abstract class ValueBinding
 	// CONSTRUCTORS
 	public ValueBinding()
 	{
-		//TODO
-		throw new UnsupportedOperationException();
 	}
 
 	// METHODS
 	public String getExpressionString()
 	{
-        //TODO
-        throw new UnsupportedOperationException();
+        return null;
 	}
 
-	abstract public Class getType(FacesContext facesContext);
+	abstract public Class getType(FacesContext facesContext)
+        throws EvaluationException, PropertyNotFoundException;
 
-	public abstract Object getValue(FacesContext facesContext);
+	public abstract Object getValue(FacesContext facesContext)
+        throws EvaluationException, PropertyNotFoundException;
 
-	public abstract boolean isReadOnly(FacesContext facesContext);
+	public abstract boolean isReadOnly(FacesContext facesContext)
+        throws EvaluationException, PropertyNotFoundException;
 
-	public abstract void setValue(FacesContext facesContext, Object value);
+	public abstract void setValue(FacesContext facesContext, Object value)
+        throws EvaluationException, PropertyNotFoundException;
 }

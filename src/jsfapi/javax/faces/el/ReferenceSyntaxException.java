@@ -30,26 +30,21 @@ public class ReferenceSyntaxException extends EvaluationException
 	// CONSTRUCTORS
 	public ReferenceSyntaxException()
 	{
-		//TODO
-		throw new UnsupportedOperationException();
+		super();
 	}
 
 	public ReferenceSyntaxException(String message)
 	{
-		//TODO
-		throw new UnsupportedOperationException();
+		super(message);
 	}
 
 	public ReferenceSyntaxException(String message, Throwable cause)
 	{
-		//TODO
-		throw new UnsupportedOperationException();
+		super(message, cause);
 	}
 
 	public ReferenceSyntaxException(Throwable cause)
 	{
-		//TODO
-		throw new UnsupportedOperationException();
+		super(cause);
 	}
-
 }

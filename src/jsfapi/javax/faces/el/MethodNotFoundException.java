@@ -30,26 +30,21 @@ public class MethodNotFoundException extends EvaluationException
 	// CONSTRUCTORS
 	public MethodNotFoundException()
 	{
-		//TODO
-		throw new UnsupportedOperationException();
+		super();
 	}
 
 	public MethodNotFoundException(String message)
 	{
-
-		//TODO
-		throw new UnsupportedOperationException();
+        super(message);
 	}
 
 	public MethodNotFoundException(String message, Throwable cause)
 	{
-		//TODO
-		throw new UnsupportedOperationException();
+		super(message, cause);
 	}
 
 	public MethodNotFoundException(Throwable cause)
 	{
-		//TODO
-		throw new UnsupportedOperationException();
+		super(cause);
 	}
 }

@@ -32,18 +32,16 @@ public abstract class MethodBinding
 	// CONSTRUCTORS
 	public MethodBinding()
 	{
-		//TODO
-		throw new UnsupportedOperationException();
 	}
 
 	// METHODS
 	public String getExpressionString()
 	{
-        //TODO
-        throw new UnsupportedOperationException();
+        return null;
 	}
+    
+    public abstract Class getType(FacesContext facescontext) throws MethodNotFoundException;
 
-	public abstract Class getType(FacesContext facesContext);
-
-	public abstract Object invoke(FacesContext facesContext, java.lang.Object[] value);
+    public abstract Object invoke(FacesContext facescontext, Object aobj[])
+        throws EvaluationException, MethodNotFoundException;
 }

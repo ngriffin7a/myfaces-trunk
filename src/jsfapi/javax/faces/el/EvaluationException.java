@@ -31,25 +31,21 @@ public class EvaluationException extends FacesException
 	// CONSTRUCTORS
 	public EvaluationException()
     {
-		//TODO
-		throw new UnsupportedOperationException();
+		super();
 	}
 
-	public EvaluationException(String value)
+	public EvaluationException(String message)
 	{
-		//TODO
-		throw new UnsupportedOperationException();
+		super(message);
 	}
 
-	public EvaluationException(String value, Throwable cause)
+	public EvaluationException(String message, Throwable cause)
 	{
-		//TODO
-		throw new UnsupportedOperationException();
+		super(message, cause);
 	}
     
 	public EvaluationException(Throwable cause)
 	{
-		//TODO
-		throw new UnsupportedOperationException();
+        super(cause);
 	}
 }

@@ -29,25 +29,21 @@ public class PropertyNotFoundException extends EvaluationException
 	// CONSTRUCTORS
 	public PropertyNotFoundException()
 	{
-		//TODO
-		throw new UnsupportedOperationException();
+		super();
 	}
 
 	public PropertyNotFoundException(String message)
 	{
-		//TODO
-		throw new UnsupportedOperationException();
+		super(message);
 	}
 
 	public PropertyNotFoundException(String message, Throwable cause)
 	{
-		//TODO
-		throw new UnsupportedOperationException();
+		super(message, cause);
 	}
 
 	public PropertyNotFoundException(Throwable cause)
 	{
-		//TODO
-		throw new UnsupportedOperationException();
+		super(cause);
 	}
 }
