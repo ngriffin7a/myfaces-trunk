@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+
+<!DOCTYPE faces-config PUBLIC
+  "-//Sun Microsystems, Inc.//DTD JavaServer Faces Config 1.0//EN"
+  "http://java.sun.com/dtd/web-facesconfig_1_0.dtd">
+
+<!-- =========== FULL CONFIGURATION FILE ================================== -->
+
+<faces-config xmlns="http://java.sun.com/JSF/Configuration">
+
+  <factory>
+    <application-factory>net.sourceforge.myfaces.application.ApplicationFactoryImpl</application-factory>
+    <faces-context-factory>net.sourceforge.myfaces.context.FacesContextFactoryImpl</faces-context-factory>
+    <lifecycle-factory>net.sourceforge.myfaces.lifecycle.LifecycleFactoryImpl</lifecycle-factory>
+    <render-kit-factory>net.sourceforge.myfaces.renderkit.RenderKitFactoryImpl</render-kit-factory>
+  </factory>
+
+  <!-- Initial application element with partial values -->
+  <application>
+    <action-listener>net.sourceforge.myfaces.application.ActionListenerImpl</action-listener>
+    <navigation-handler>net.sourceforge.myfaces.application.NavigationHandlerImpl</navigation-handler>
+    <variable-resolver>net.sourceforge.myfaces.el.VariableResolverImpl</variable-resolver>
+    <property-resolver>net.sourceforge.myfaces.el.PropertyResolverImpl</property-resolver>
+    <locale-config>
+        <default-locale>en</default-locale>
+        <supported-locale>en</supported-locale>
+        <supported-locale>de</supported-locale>
+    </locale-config>
+  </application>
+
+
+  <!-- Smile extension components -->
+  <!-- (in alphabetical order) -->
+  <component>
+    <component-type>net.sourceforge.myfaces.Screen</component-type>
+    <component-class>net.sourceforge.myfaces.component.ext.Screen</component-class>
+  </component>
+
+  <component>
+    <component-type>net.sourceforge.myfaces.Toolbar</component-type>
+    <component-class>net.sourceforge.myfaces.component.ext.Toolbar</component-class>
+  </component>
+
+  <component>
+    <component-type>net.sourceforge.myfaces.Tree</component-type>
+    <component-class>net.sourceforge.myfaces.component.ext.Tree</component-class>
+  </component>
+
+    <!-- Ssmile Renderkit Extensions -->
+    <render-kit>
+        <render-kit-id>HTML_BASIC</render-kit-id>
+      <renderer>
+        <component-family>javax.faces.Form</component-family>
+        <renderer-type>net.sourceforge.myfaces.Screen</renderer-type>
+        <renderer-class>net.sourceforge.myfaces.renderkit.html.ext.ScreenRenderer</renderer-class>
+      </renderer>
+        
+      <renderer>
+        <component-family>smile</component-family>
+        <renderer-type>net.sourceforge.myfaces.Toolbar</renderer-type>
+        <renderer-class>net.sourceforge.myfaces.renderkit.html.ext.ToolbarRenderer</renderer-class>
+      </renderer>
+
+      <renderer>
+        <component-family>smile</component-family>
+        <renderer-type>net.sourceforge.myfaces.Tree</renderer-type>
+        <renderer-class>net.sourceforge.myfaces.renderkit.html.ext.TreeRenderer</renderer-class>
+      </renderer>
+    </render-kit>
+
+</faces-config>
