@@ -15,60 +15,65 @@
  */
 package org.apache.myfaces.custom.tree;
 
-import java.util.List;
-import java.io.Serializable;
+import java.util.Iterator;
 
 /**
  * Defines the requirements for an object that can be used as a tree node for
- * use in a {@link UITreeData} component. (inspired by javax.swing.tree.TreeNode).
+ * {@link HtmlTree}. (inspired by javax.swing.tree.TreeNode).
  * 
  * @author <a href="mailto:oliver@rossmueller.com">Oliver Rossmueller </a>
- * @author Sean Schofield
  * @version $Revision$ $Date$
+ *
+ *          $Log$
+ *          Revision 1.6  2005/02/11 00:54:02  svieujot
+ *          Revert changes commited to the wrong branch.
+ *
+ *          Revision 1.4  2004/11/26 12:14:10  oros
+ *          MYFACES-8: applied tree table patch by David Le Strat
+ *
+ *  *  
  */
-public interface TreeNode extends Serializable
+public interface TreeNode
 {
-    public boolean isLeaf();
-    
-    public void setLeaf(boolean leaf);
-
-    public List getChildren();
 
     /**
-     * Gets the type of {@link TreeNode}.
-     * @return The node type
+     * @return Gets the user object of this node.
      */
-    public String getType();
-    
+    Object getUserObject();
+
     /**
-     * Sets the type of {@link TreeNode}.
-     * @param type The node type
+     * Answer the child at the given index.
      */
-    public void setType(String type);
-    
-    public String getDescription();
-    
-    public void setDescription(String description);
-    
+    TreeNode getChildAt(int childIndex);
+
     /**
-     * Sets the identifier associated with the {@link TreeNode}.
-     * @param id The identifier
+     * Answer the number of children this node contains.
      */
-    public void setIdentifier(String identifier);
-    
+    int getChildCount();
+
     /**
-     * Gets the identifier asociated with the {@link TreeNode}.
-     * @return the identifier
+     * Answer the parent of this node.
      */
-    public String getIdentifier();
-    
-    public void setExpanded(boolean expanded);
-    
-    public boolean isExpanded();
-    
+    TreeNode getParent();
+
     /**
-     * Gets the number of children this node has.
-     * @return the number of children
+     * Answer the index of the given node in this node's children.
      */
-    public int getChildCount();
+    int getIndex(TreeNode node);
+
+    /**
+     * Answer true if this node allows children.
+     */
+    boolean getAllowsChildren();
+
+    /**
+     * Answer true if this is a leaf node.
+     */
+    boolean isLeaf();
+
+    /**
+     * Answer the children of the receiver. The base collection is unmodifyable.
+     */
+    Iterator children();
+
 }
