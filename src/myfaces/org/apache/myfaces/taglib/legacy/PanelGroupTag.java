@@ -19,7 +19,6 @@
 package net.sourceforge.myfaces.taglib.legacy;
 
 import net.sourceforge.myfaces.renderkit.JSFAttr;
-import net.sourceforge.myfaces.renderkit.html.GroupRenderer;
 
 
 
@@ -38,7 +37,7 @@ extends MyFacesTag
 
     public String getDefaultRendererType()
     {
-        return GroupRenderer.TYPE;
+        return "Group";
     }
 
     // UIComponent attributes --> already implemented in MyFacesTag

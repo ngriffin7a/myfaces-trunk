@@ -19,7 +19,6 @@
 package net.sourceforge.myfaces.taglib.ext;
 
 import net.sourceforge.myfaces.component.ext.UISortHeader;
-import net.sourceforge.myfaces.renderkit.html.GroupRenderer;
 import net.sourceforge.myfaces.taglib.legacy.MyFacesTag;
 
 
@@ -38,7 +37,7 @@ public class SortHeaderTag
 
     public String getDefaultRendererType()
     {
-        return GroupRenderer.TYPE;
+        return "Group";
     }
 
     public void setColumn(String value)

@@ -19,7 +19,6 @@
 package net.sourceforge.myfaces.taglib.legacy;
 
 import net.sourceforge.myfaces.renderkit.JSFAttr;
-import net.sourceforge.myfaces.renderkit.html.GridRenderer;
 import net.sourceforge.myfaces.renderkit.html.HTML;
 
 
@@ -38,7 +37,7 @@ extends MyFacesTag
 
     public String getDefaultRendererType()
     {
-        return GridRenderer.TYPE;
+        return "Grid";
     }
 
     // UIComponent attributes --> already implemented in MyFacesTag
