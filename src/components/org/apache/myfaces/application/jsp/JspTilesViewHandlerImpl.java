@@ -41,6 +41,9 @@ import java.util.Locale;
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.10  2004/11/11 17:43:07  tomsp
+ * no message
+ *
  * Revision 1.9  2004/11/11 14:50:38  bdudney
  * made getInitParameter use the defined constant instead of the string
  *
@@ -196,8 +199,6 @@ public class JspTilesViewHandlerImpl
         }
 
         viewId = definition.getPage();
-        externalContext.dispatch(viewId);
-
         dispatch(externalContext, viewToRender, viewId);
     }
 
