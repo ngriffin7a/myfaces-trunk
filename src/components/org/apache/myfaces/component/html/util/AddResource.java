@@ -41,6 +41,9 @@ import org.apache.myfaces.renderkit.html.HTML;
  * @author Sylvain Vieujot (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.8  2004/12/02 11:53:27  svieujot
+ * Replace java 1.5 code by 1.4 version.
+ *
  * Revision 1.7  2004/12/02 02:20:55  svieujot
  * Bugfix : render the head elements in the same order as they were added (use a LinkedHashSet).
  *
@@ -146,7 +149,7 @@ public class AddResource {
     }
     
     public static boolean isResourceMappedPath(HttpServletRequest request){
-        return request.getRequestURI().contains( RESOURCE_VIRUAL_PATH );
+        return request.getRequestURI().indexOf( RESOURCE_VIRUAL_PATH ) != -1;
     }
     
     /**
