@@ -260,6 +260,7 @@
                destdir="${temp.dir}/myfaces-jar/classes"
                optimize="${javac.optimize}"
                debug="${javac.debug}"
+               source="1.4" 
                classpathref="myfaces.class.path">
         </javac>
     </target>
