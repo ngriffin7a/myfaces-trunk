@@ -103,7 +103,6 @@ public class UIViewRoot
     {
         if (context == null) throw new NullPointerException("context");
         super.processDecodes(context);
-        _broadcastForPhase(PhaseId.ANY_PHASE);
         _broadcastForPhase(PhaseId.APPLY_REQUEST_VALUES);
         if (context.getRenderResponse() || context.getResponseComplete())
         {
@@ -115,7 +114,6 @@ public class UIViewRoot
     {
         if (context == null) throw new NullPointerException("context");
         super.processValidators(context);
-        _broadcastForPhase(PhaseId.ANY_PHASE);
         _broadcastForPhase(PhaseId.PROCESS_VALIDATIONS);
         if (context.getRenderResponse() || context.getResponseComplete())
         {
@@ -127,7 +125,6 @@ public class UIViewRoot
     {
         if (context == null) throw new NullPointerException("context");
         super.processUpdates(context);
-        _broadcastForPhase(PhaseId.ANY_PHASE);
         _broadcastForPhase(PhaseId.UPDATE_MODEL_VALUES);
         if (context.getRenderResponse() || context.getResponseComplete())
         {
@@ -138,7 +135,6 @@ public class UIViewRoot
     public void processApplication(FacesContext context)
     {
         if (context == null) throw new NullPointerException("context");
-        _broadcastForPhase(PhaseId.ANY_PHASE);
         _broadcastForPhase(PhaseId.INVOKE_APPLICATION);
         if (context.getRenderResponse() || context.getResponseComplete())
         {
