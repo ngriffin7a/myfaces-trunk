@@ -40,10 +40,10 @@ import javax.faces.event.ActionEvent;
 import java.io.IOException;
 import java.io.Writer;
 import java.net.URLEncoder;
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * HyperlinkRenderer-Extension:
@@ -390,7 +390,7 @@ public class HtmlLinkRenderer
     private class DummyFormResponseWriter
             extends ResponseWriterWrapper
     {
-        private List _hiddenParams = new ArrayList();
+        private Set _hiddenParams = new HashSet();
 
         public DummyFormResponseWriter(ResponseWriter responseWriter)
         {
@@ -398,7 +398,7 @@ public class HtmlLinkRenderer
         }
 
         private DummyFormResponseWriter(ResponseWriter responseWriter,
-                                        List hiddenParams)
+                                        Set hiddenParams)
         {
             super(responseWriter);
             _hiddenParams = hiddenParams;
