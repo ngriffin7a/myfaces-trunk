@@ -558,6 +558,16 @@
                debug="${javac.debug}"
                classpathref="components.class.path">
         </javac>
+        <!-- timestamp for the manifest -->
+        <tstamp>
+            <format property="cacheKey" pattern="MdHHmm"/>
+        </tstamp>
+    	<copy todir="${components.classes}" filtering="on">
+        	<fileset dir="${components.src}" includes="**/*.properties"/>
+			<filterset>
+				<filter token="cacheKey" value="${cacheKey}"/>
+			</filterset>
+		</copy>
     </target>
 
 

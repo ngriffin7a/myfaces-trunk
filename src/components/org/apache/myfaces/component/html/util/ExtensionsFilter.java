@@ -93,11 +93,12 @@ public class ExtensionsFilter implements Filter {
             return;
         }
 
+		HttpServletResponse httpResponse = (HttpServletResponse) response; 
         HttpServletRequest httpRequest = (HttpServletRequest) request;
 
         // Serve myFaces internal resources files 
         if( AddResource.isResourceMappedPath( httpRequest ) ){
-            AddResource.serveResource(httpRequest, response);
+            AddResource.serveResource(httpRequest, httpResponse);
             return;
         }
         
@@ -106,11 +107,6 @@ public class ExtensionsFilter implements Filter {
         // For multipart/form-data requests
         if (FileUpload.isMultipartContent(httpRequest)) {
             extendedRequest = new MultipartRequestWrapper(httpRequest, uploadMaxFileSize, uploadThresholdSize, uploadRepositoryPath);
-        }
-
-        if( !(response instanceof HttpServletResponse)){
-            chain.doFilter(extendedRequest, response);
-            return;
         }
         
         ExtensionsResponseWrapper extendedResponse = new ExtensionsResponseWrapper((HttpServletResponse) response);

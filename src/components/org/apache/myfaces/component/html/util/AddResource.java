@@ -19,13 +19,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.util.Calendar;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
+import java.util.ResourceBundle;
 import java.util.Set;
 
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
-import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -41,6 +42,9 @@ import org.apache.myfaces.renderkit.html.HTML;
  * @author Sylvain Vieujot (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.21  2005/03/14 15:58:42  svieujot
+ * Added caching to the ExtensionsFilter
+ *
  * Revision 1.20  2005/02/22 08:41:50  matzew
  * Patch for the new tree component form Sean Schofield
  *
@@ -198,8 +202,20 @@ public class AddResource {
         String contextPath = "";
         if( request != null )
             contextPath = request.getContextPath();
-        return contextPath+RESOURCE_VIRTUAL_PATH+"/"+componentName+'/'+resourceFileName;
+        return contextPath+RESOURCE_VIRTUAL_PATH+"/"+componentName+'/'+getCacheKey()+'/'+resourceFileName;
     }
+
+	private static String cacheKey = null;
+	private static String getCacheKey(){
+		if( cacheKey == null ){
+	        final String bundleName = AddResource.class.getName();
+	        ResourceBundle resources = ResourceBundle.getBundle( bundleName );
+			cacheKey = resources.getString("cacheKey");
+System.out.println("Package : "+cacheKey);
+		}
+		
+		return cacheKey; 
+	}
 
     public static boolean isResourceMappedPath(HttpServletRequest request){
         return request.getRequestURI().indexOf( RESOURCE_VIRTUAL_PATH ) != -1;
@@ -217,8 +233,11 @@ public class AddResource {
         int posStartComponentName = uri.indexOf( componentNameStartsAfter )+componentNameStartsAfter.length();
         int posEndComponentName = uri.indexOf("/", posStartComponentName);
         String componentName = uri.substring(posStartComponentName, posEndComponentName);
+		
+		// Skip implementation hash
+		int posStartResourceFileName = uri.indexOf("/", posEndComponentName+1)+1;
 
-        String resourceFileName = uri.substring(posEndComponentName+1);
+        String resourceFileName = uri.substring(posStartResourceFileName);
 
         return new String[]{componentName, resourceFileName};
     }
@@ -259,7 +278,7 @@ public class AddResource {
         return component.getResourceAsStream( "resource/"+resourceFileName );
     }
 
-    static public void serveResource(HttpServletRequest request, ServletResponse response) throws IOException{
+    static public void serveResource(HttpServletRequest request, HttpServletResponse response) throws IOException{
         String[] resourceInfo = getResourceInfoFromPath(request);
         String componentName = resourceInfo[0];
         String resourceFileName = resourceInfo[1];
@@ -286,7 +305,13 @@ public class AddResource {
             throw new IOException("Unable to find resource "+resourceFileName+" for component "+componentName+
                     ". Check that this file is available in the classpath in sub-directory /resource of the component-directory.");
         }
-        // TODO: make this more efficent or move to servlet
+        
+		// Set browser cache to a week.
+		// There is no risk, as the cache key is part of the URL.
+		Calendar expires = Calendar.getInstance();
+		expires.add(Calendar.DAY_OF_YEAR, 7);
+		response.setDateHeader("Expires", expires.getTimeInMillis());
+		
         OutputStream os = response.getOutputStream();
         int c;
         while ((c = is.read()) != -1)
