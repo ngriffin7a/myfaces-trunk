@@ -4,6 +4,7 @@ MyFaces Release Notes
 ----------------------------------------------------------------------
 Changes in Release 1.0.6 beta
 * switch to apache license
+* new JspTilesViewHandler for flawless Tiles support
 * bug #992668 selectOneMenu doesn't restore the bean value if it's a primitive
 * bug #992628 StateManager.SerializedView is not static
 * bug #992629 FacesContext.getRenderKit() unimplemented
