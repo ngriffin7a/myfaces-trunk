@@ -146,24 +146,25 @@ public class HtmlInputDate extends UIInput implements UserRoleAware {
     }
     
     public static class UserData implements Serializable {
-        private String day = null;
-        private String month = null;
-        private String year = null;
-        private String hours = null;
-        private String minutes = null;
-        private String seconds = null;
+        private String day;
+        private String month;
+        private String year;
+        private String hours;
+        private String minutes;
+        private String seconds;
         
         public UserData(Date date, Locale currentLocale){
-            if( date != null ){
-                Calendar calendar = Calendar.getInstance(currentLocale);
-                calendar.setTime( date );
-                day = Integer.toString(calendar.get(Calendar.DAY_OF_MONTH));
-                month = Integer.toString(calendar.get(Calendar.MONTH)+1);
-                year = Integer.toString(calendar.get(Calendar.YEAR));
-                hours = Integer.toString(calendar.get(Calendar.HOUR_OF_DAY));
-                minutes = Integer.toString(calendar.get(Calendar.MINUTE));
-                seconds = Integer.toString(calendar.get(Calendar.SECOND));
-            }
+            if( date == null )
+                date = new Date();
+            
+            Calendar calendar = Calendar.getInstance(currentLocale);
+            calendar.setTime( date );
+            day = Integer.toString(calendar.get(Calendar.DAY_OF_MONTH));
+            month = Integer.toString(calendar.get(Calendar.MONTH)+1);
+            year = Integer.toString(calendar.get(Calendar.YEAR));
+            hours = Integer.toString(calendar.get(Calendar.HOUR_OF_DAY));
+            minutes = Integer.toString(calendar.get(Calendar.MINUTE));
+            seconds = Integer.toString(calendar.get(Calendar.SECOND));
         }
         
         public Date parse() throws ParseException{
