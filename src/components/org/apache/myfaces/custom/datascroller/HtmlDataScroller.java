@@ -209,18 +209,6 @@ public class HtmlDataScroller
         return vb != null ? (String)vb.getValue(getFacesContext()) : null;
     }
 
-    public void setColumnClasses(String columnClasses)
-    {
-        _columnClasses = columnClasses;
-    }
-
-    public String getColumnClasses()
-    {
-        if (_columnClasses != null) return _columnClasses;
-        ValueBinding vb = getValueBinding("columnClasses");
-        return vb != null ? (String)vb.getValue(getFacesContext()) : null;
-    }
-
     public void setPaginator(boolean paginator)
     {
         _paginator = Boolean.valueOf(paginator);
