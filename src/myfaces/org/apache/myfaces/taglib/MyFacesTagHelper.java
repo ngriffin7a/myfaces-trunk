@@ -250,6 +250,7 @@ public class MyFacesTagHelper
         if (parsedComp != null)
         {
             return parsedComp.getComponentId();
+            //TODO: Optimize: check if component exists and add it to current parent if not
         }
         else
         {
