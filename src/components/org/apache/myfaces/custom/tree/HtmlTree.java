@@ -43,6 +43,9 @@ import java.util.Map;
  * @author <a href="mailto:oliver@rossmueller.com">Oliver Rossmueller</a>
  * @version $Revision$ $Date$
  *          $Log$
+ *          Revision 1.4  2004/04/22 22:00:30  o_rossmueller
+ *          implemented HtmlTree.expandPath
+ *
  *          Revision 1.3  2004/04/22 21:14:55  o_rossmueller
  *          TreeSelectionListener support
  *
@@ -333,9 +336,18 @@ public class HtmlTree
         // Only expand if not leaf!
         TreeModel model = getModel(context);
 
-        if (path != null && model != null &&
-            !model.isLeaf(path.getLastPathComponent())) {
-            setExpandedState(path, true);
+        if (path != null && model != null && !model.isLeaf(path.getLastPathComponent())) {
+            int[] translatedPath = HtmlTreeNode.translatePath(path, getModel(context));
+            HtmlTreeNode rootNode = getRootNode();
+            if (rootNode == null) {
+                createRootNode(context);
+                rootNode = getRootNode();
+            }
+            if (! rootNode.isExpanded()) {
+                rootNode.setExpanded(true);
+            }
+            rootNode.expandPath(translatedPath, 0);
+
         }
     }
 
@@ -445,18 +457,26 @@ public class HtmlTree
         HtmlTreeNode node = getRootNode();
 
         if (node == null) {
-            TreeModel model = getModel(context);
-            Object root = model.getRoot();
-            node = (HtmlTreeNode) context.getApplication().createComponent(HtmlTreeNode.COMPONENT_TYPE);
-            String id = createUniqueId(context);
-            node.setId(id);
+            createRootNode(context);
 
-            node.setPath(new TreePath(new Object[]{root}));
-            node.setUserObject(root);
-            node.setLayout(new int[]{HtmlTreeNode.CLOSED_SINGLE});
-            getFacets().put(FACET_ROOTNODE, node);
         }
         super.encodeBegin(context);
+    }
+
+
+    private void createRootNode(FacesContext context)
+    {
+        HtmlTreeNode node;
+        TreeModel model = getModel(context);
+        Object root = model.getRoot();
+        node = (HtmlTreeNode) context.getApplication().createComponent(HtmlTreeNode.COMPONENT_TYPE);
+        String id = createUniqueId(context);
+        node.setId(id);
+
+        node.setPath(new TreePath(new Object[]{root}));
+        node.setUserObject(root);
+        node.setLayout(new int[]{HtmlTreeNode.CLOSED_SINGLE});
+        getFacets().put(FACET_ROOTNODE, node);
     }
 
 

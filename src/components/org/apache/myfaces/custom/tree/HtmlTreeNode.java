@@ -35,6 +35,9 @@ import java.util.Iterator;
  * @author <a href="mailto:oliver@rossmueller.com">Oliver Rossmueller</a>
  * @version $Revision$ $Date$
  *          $Log$
+ *          Revision 1.4  2004/04/22 22:00:31  o_rossmueller
+ *          implemented HtmlTree.expandPath
+ *
  *          Revision 1.3  2004/04/22 21:14:56  o_rossmueller
  *          TreeSelectionListener support
  *
@@ -409,5 +412,23 @@ public class HtmlTreeNode
     public boolean isLeaf(FacesContext context)
     {
         return getTreeModel(context).isLeaf(getUserObject());
+    }
+
+
+    public void expandPath(int[] translatedPath, int current)
+    {
+        if (current >= translatedPath.length)
+        {
+            return;
+        }
+
+        HtmlTreeNode child = (HtmlTreeNode) getChildren().get(translatedPath[current]);
+
+        if (!child.isExpanded())
+        {
+            child.setExpanded(true);
+        }
+        
+        child.expandPath(translatedPath, current++);
     }
 }
