@@ -3,13 +3,38 @@
             <pathelement path="${tomcat.home}/server/lib/catalina-ant.jar"/>
         </classpath>
     </taskdef>
-
-	<target name="tomcat-deploy-app" description="Deploy the App to Tomcat">
+    
+   	<target name="tomcat-deploy-app-locally" unless="tomcat.remote.deploy">
 	        <deploy url="${tomcat.manager.url}"
             username="${tomcat.manager.username}"
             password="${tomcat.manager.password}"
             path="${tomcat.context.path}"
             localWar="file://${tomcat.war.file}" update="true"/>
+    </target>
+   	<target name="tomcat-deploy-app-remotely" if="tomcat.remote.deploy">
+	        <!--deploy url="${tomcat.manager.url}"
+            username="${tomcat.manager.username}"
+            password="${tomcat.manager.password}"
+            path="${tomcat.context.path}"
+            localWar="file://${tomcat.war.file}" update="true"/-->
+   	        <deploy url="${tomcat.manager.url}"
+            username="${tomcat.manager.username}"
+            password="${tomcat.manager.password}"
+            path="${tomcat.context.path}"
+            war="file://${tomcat.war.file}" update="true"/>
+    </target>
+
+	<target name="tomcat-deploy-app" description="Deploy the App to Tomcat">
+	        <!--deploy url="${tomcat.manager.url}"
+            username="${tomcat.manager.username}"
+            password="${tomcat.manager.password}"
+            path="${tomcat.context.path}"
+            localWar="file://${tomcat.war.file}" update="true"/-->
+   	        <deploy url="${tomcat.manager.url}"
+            username="${tomcat.manager.username}"
+            password="${tomcat.manager.password}"
+            path="${tomcat.context.path}"
+            war="file://${tomcat.war.file}" update="true"/>
     </target>
 	<target name="tomcat-undeploy-app" description="Undeploy the App from Tomcat">
         <undeploy url="${tomcat.manager.url}"
