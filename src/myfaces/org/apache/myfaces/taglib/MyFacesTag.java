@@ -33,6 +33,7 @@ import javax.servlet.jsp.PageContext;
 import javax.servlet.jsp.tagext.IterationTag;
 import javax.servlet.jsp.tagext.Tag;
 import java.io.IOException;
+import java.io.Serializable;
 
 /**
  * DOCUMENT ME!
@@ -48,7 +49,8 @@ public abstract class MyFacesTag
                HTMLUniversalAttributes,
                HTMLEventHandlerAttributes,
                KeyBundleAttributes,
-               UserRoleAttributes
+               UserRoleAttributes,
+               Serializable    //so that we can serialize a parsed tree with references to the "creator tag"
 {
     protected MyFacesTagHelper _helper;
 
@@ -82,16 +84,7 @@ public abstract class MyFacesTag
 
     public int doEndTag() throws JspException
     {
-        try
-        {
-            return super.doEndTag();
-        }
-        finally
-        {
-            _helper.release();
-            id = null;
-            //TODO: HACK for created = false;
-        }
+        return super.doEndTag();
     }
 
     public int getDoEndValue() throws JspException
@@ -130,6 +123,14 @@ public abstract class MyFacesTag
         return id;
     }
 
+
+    /**
+     * TODO: Why do they suppress facets ?!
+     */
+    protected boolean isSuppressed()
+    {
+        return false;
+    }
 
 
     //subclass helpers
@@ -205,7 +206,7 @@ public abstract class MyFacesTag
 
     public void setCreated(boolean b)
     {
-        //created = b;    //TODO: HACK
+        UIComponentTagHacks.setCreated(this, b);
     }
 
 
@@ -235,9 +236,17 @@ public abstract class MyFacesTag
         setRendererAttributeString(CONVERTER_ATTR, converter);
     }
 
+    /**
+     * @deprecated
+     */
     public void setModelReference(String s)
     {
-        setComponentPropertyString(MODEL_REFERENCE_ATTR, s);
+        setComponentPropertyString(VALUE_REF_ATTR, s);
+    }
+
+    public void setValueRef(String s)
+    {
+        setComponentPropertyString(VALUE_REF_ATTR, s);
     }
 
     public void setRendered(boolean rendered)

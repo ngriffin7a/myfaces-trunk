@@ -19,8 +19,10 @@
 package net.sourceforge.myfaces.tree;
 
 import net.sourceforge.myfaces.component.CommonComponentAttributes;
+import net.sourceforge.myfaces.util.bean.BeanUtils;
 
 import javax.faces.component.UIComponent;
+import javax.faces.component.UIOutput;
 import javax.faces.tree.Tree;
 import java.io.PrintStream;
 import java.util.Iterator;
@@ -173,20 +175,18 @@ public class TreeUtils
         stream.print("\"");
         */
 
-        printAttribute(stream, comp, CommonComponentAttributes.COMPONENT_ID_ATTR, "id");
-        printAttribute(stream, comp, CommonComponentAttributes.VALUE_ATTR);
-        printAttribute(stream, comp, CommonComponentAttributes.MODEL_REFERENCE_ATTR);
+        printProperty(stream, comp, CommonComponentAttributes.COMPONENT_ID_ATTR, "id");
+        printProperty(stream, comp, CommonComponentAttributes.RENDERER_TYPE_ATTR, "rendererType");
+        if (comp instanceof UIOutput)
+        {
+            printProperty(stream, comp, CommonComponentAttributes.VALUE_ATTR);
+            printProperty(stream, comp, CommonComponentAttributes.VALUE_REF_ATTR);
+        }
 
         for (Iterator it = comp.getAttributeNames(); it.hasNext();)
         {
             String attrName = (String)it.next();
-            if (!(attrName.equals("id") ||
-                  attrName.equals("uniqueId") ||
-                  attrName.equals(CommonComponentAttributes.VALUE_ATTR) ||
-                  attrName.equals(CommonComponentAttributes.MODEL_REFERENCE_ATTR)))
-            {
-                printAttribute(stream, comp, attrName);
-            }
+            printAttribute(stream, comp, attrName);
         }
 
         /*
@@ -249,6 +249,41 @@ public class TreeUtils
             stream.print(v.toString());
             stream.print("\"");
         }
+    }
+
+    private static void printProperty(PrintStream stream,
+                                      UIComponent comp,
+                                      String propName)
+    {
+        printProperty(stream, comp, propName, propName);
+    }
+
+    private static void printProperty(PrintStream stream,
+                                       UIComponent comp,
+                                       String propName,
+                                       String prettyPropName)
+    {
+        Object v = null;
+        try
+        {
+            v = BeanUtils.getBeanPropertyValue(comp, propName);
+            if (v == null) v = "NULL";
+        }
+        catch (Exception e)
+        {
+        }
+        stream.print(' ');
+        stream.print(prettyPropName);
+        stream.print("=\"");
+        if (v != null)
+        {
+            stream.print(v.toString());
+        }
+        else
+        {
+            stream.print("?");
+        }
+        stream.print("\"");
     }
 
     private static void printIndent(PrintStream stream, int depth)

@@ -265,5 +265,63 @@ public class UIComponentTagHacks
     }
 
 
+    /**
+     * Hack to set the private "created" field.
+     */
+    public static void setCreated(Object tag, boolean newValue)
+    {
+        try
+        {
+            Field f = null;
+            Class c = tag.getClass();
+            while (f == null && c != null && !c.equals(Object.class))
+            {
+                try
+                {
+                    f = c.getDeclaredField("created");
+                }
+                catch (NoSuchFieldException e)
+                {
+                }
+                c = c.getSuperclass();
+            }
+
+            if (f == null)
+            {
+                throw new RuntimeException(new NoSuchFieldException());
+            }
+
+            if (f.isAccessible())
+            {
+                f.set(tag, Boolean.valueOf(newValue));
+            }
+            else
+            {
+                try
+                {
+                    final Field finalF = f;
+                    AccessController.doPrivileged(
+                        new PrivilegedAction()
+                        {
+                            public Object run()
+                            {
+                                finalF.setAccessible(true);
+                                return null;
+                            }
+                        });
+                    f.set(tag, Boolean.valueOf(newValue));
+                }
+                finally
+                {
+                    f.setAccessible(false);
+                }
+            }
+        }
+        catch (IllegalAccessException e)
+        {
+            throw new RuntimeException(e);
+        }
+    }
+
 
 }

@@ -61,6 +61,7 @@ public class CallbackRenderKit
         throw new UnsupportedOperationException();
     }
 
+    /*
     public void addComponentClass(Class aClass)
     {
         throw new UnsupportedOperationException();
@@ -85,5 +86,6 @@ public class CallbackRenderKit
     {
         throw new UnsupportedOperationException();
     }
+    */
 
 }

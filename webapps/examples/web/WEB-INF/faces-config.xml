@@ -95,7 +95,7 @@
 
     <component>
       <component-type>NavigationItem</component-type>
-      <component-class>net.sourceforge.myfaces.component.ext.UINavigation.UINavigationItem</component-class>
+      <component-class>net.sourceforge.myfaces.component.ext.UINavigation$UINavigationItem</component-class>
     </component>
 
     <component>
@@ -435,27 +435,31 @@
 
     <!-- MyFaces Renderkit Extensions -->
     <render-kit>
-      <render-kit-id>DEFAULT</render-kit-id>
-      <renderer>
-        <renderer-type>FileUpload</renderer-type>
-        <renderer-class>net.sourceforge.myfaces.renderkit.html.ext.FileUploadRenderer</renderer-class>
-      </renderer>
-      <renderer>
-        <renderer-type>Layout</renderer-type>
-        <renderer-class>net.sourceforge.myfaces.renderkit.html.ext.LayoutRenderer</renderer-class>
-      </renderer>
-      <renderer>
-        <renderer-type>Navigation</renderer-type>
-        <renderer-class>net.sourceforge.myfaces.renderkit.html.ext.NavigationRenderer</renderer-class>
-      </renderer>
-      <renderer>
-        <renderer-type>NavigationItem</renderer-type>
-        <renderer-class>net.sourceforge.myfaces.renderkit.html.ext.NavigationItemRenderer</renderer-class>
-      </renderer>
-      <renderer>
-        <renderer-type>SortColumn</renderer-type>
-        <renderer-class>net.sourceforge.myfaces.renderkit.html.ext.SortColumnRenderer</renderer-class>
-      </renderer>
+        <render-kit-id>DEFAULT</render-kit-id>
+        <renderer>
+          <renderer-type>FileUpload</renderer-type>
+          <renderer-class>net.sourceforge.myfaces.renderkit.html.ext.FileUploadRenderer</renderer-class>
+        </renderer>
+        <renderer>
+          <renderer-type>Layout</renderer-type>
+          <renderer-class>net.sourceforge.myfaces.renderkit.html.ext.LayoutRenderer</renderer-class>
+        </renderer>
+        <renderer>
+          <renderer-type>Navigation</renderer-type>
+          <renderer-class>net.sourceforge.myfaces.renderkit.html.ext.NavigationRenderer</renderer-class>
+        </renderer>
+        <renderer>
+          <renderer-type>NavigationItem</renderer-type>
+          <renderer-class>net.sourceforge.myfaces.renderkit.html.ext.NavigationItemRenderer</renderer-class>
+        </renderer>
+        <renderer>
+          <renderer-type>SortColumn</renderer-type>
+          <renderer-class>net.sourceforge.myfaces.renderkit.html.ext.SortColumnRenderer</renderer-class>
+        </renderer>
+        <renderer>
+          <renderer-type>State</renderer-type>
+          <renderer-class>net.sourceforge.myfaces.renderkit.html.state.StateRenderer</renderer-class>
+        </renderer>
     </render-kit>
 
 </faces-config>

@@ -25,6 +25,8 @@ import net.sourceforge.myfaces.taglib.MyFacesTag;
  * DOCUMENT ME!
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
+ *
+ * @deprecated panel_group with facet should be used
  */
 public class PageFooterTag
         extends MyFacesTag

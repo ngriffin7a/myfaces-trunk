@@ -29,6 +29,7 @@ import net.sourceforge.myfaces.util.logging.LogUtil;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.servlet.ServletRequest;
+import javax.servlet.ServletContext;
 import java.io.IOException;
 
 /**
@@ -39,13 +40,20 @@ import java.io.IOException;
 public class StateRenderer
     extends HTMLRenderer
 {
-    public static final String TYPE = "StateRenderer";
+    public static final String TYPE = "State";
 
     protected StateSaver _stateSaver;
     protected StateRestorer _stateRestorer;
 
-    public StateRenderer(int stateSavingMode)
+    public StateRenderer()
     {
+    }
+
+    private void init(FacesContext facesContext)
+    {
+        ServletContext servletContext = (ServletContext)facesContext.getExternalContext().getContext();
+        int stateSavingMode = MyFacesConfig.getStateSavingMode(servletContext);
+
         switch (stateSavingMode)
         {
             case MyFacesConfig.STATE_SAVING_MODE__SERVER_SESSION:
@@ -78,6 +86,7 @@ public class StateRenderer
         return TYPE;
     }
 
+    /*
     public boolean supportsComponentType(String s)
     {
         return false;
@@ -91,6 +100,7 @@ public class StateRenderer
     protected void initAttributeDescriptors()
     {
     }
+    */
 
 
     /**
@@ -104,6 +114,7 @@ public class StateRenderer
      */
     public void decode(FacesContext facesContext, UIComponent comp) throws IOException
     {
+        if (_stateSaver == null) init(facesContext);
         _stateRestorer.restoreState(facesContext);
         LogUtil.printTreeToConsole("Current tree after restoring state");
 
@@ -122,6 +133,7 @@ public class StateRenderer
      */
     public void encodeBegin(FacesContext facesContext, UIComponent dummy) throws IOException
     {
+        if (_stateSaver == null) init(facesContext);
         _stateSaver.init(facesContext);
     }
 
@@ -136,6 +148,7 @@ public class StateRenderer
     public void encodeChildren(FacesContext facesContext, UIComponent commandComponent)
         throws IOException
     {
+        if (_stateSaver == null) init(facesContext);
         String commandRendererType = commandComponent.getRendererType();
         if (commandRendererType.equals(FormRenderer.TYPE))
         {
@@ -153,6 +166,7 @@ public class StateRenderer
      */
     public void encodeEnd(FacesContext facesContext, UIComponent none) throws IOException
     {
+        if (_stateSaver == null) init(facesContext);
         _stateSaver.release(facesContext);
         LogUtil.printTreeToConsole("Current tree after saving state");
     }

@@ -66,9 +66,9 @@ public class PageLayoutTag
         setValue(value);
     }
 
-    public void setLayoutReference(String value)
+    public void setLayoutRef(String value)
     {
-        setModelReference(value);
+        setValueRef(value);
     }
 
     // HTML universal attributes --> already implemented in MyFacesTag

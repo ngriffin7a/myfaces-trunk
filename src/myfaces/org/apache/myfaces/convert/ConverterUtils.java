@@ -192,9 +192,9 @@ public class ConverterUtils
      * @param attrName
      * @return
      */
-    public static Converter findAttributeConverter(FacesContext facesContext,
-                                                   UIComponent uiComponent,
-                                                   String attrName)
+    public static Converter findPropertyOrAttributeConverter(FacesContext facesContext,
+                                                             UIComponent uiComponent,
+                                                             String attrName)
     {
         //Is it a component property?
         PropertyDescriptor pd = BeanUtils.findPropertyDescriptor(uiComponent,

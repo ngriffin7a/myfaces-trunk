@@ -87,7 +87,8 @@ public class MyParseEventListener
     {
         _parser = parser;
         _ctxt = ctxt;
-        _currentComponent = jspInfo.getTree().getRoot();
+        //_currentComponent = jspInfo.getTree().getRoot();
+        _currentComponent = null;
         _jspInfo = jspInfo;
     }
 
@@ -412,6 +413,25 @@ public class MyParseEventListener
                                       Attributes attrs,
                                       String filename, int startLine, int endLine)
     {
+        /*
+        if (isRootUIComponentTag(facesTag))
+        {
+            //This is the UseFacesTag which represents the root component
+            if (_currentComponent != null)
+            {
+                throw new IllegalStateException("Current component already set?");
+            }
+            _currentComponent = _jspInfo.getTree().getRoot();
+            return;
+        }
+        */
+        if (_currentComponent == null)
+        {
+            //This must be the UseFacesTag, which represents the root component
+            _currentComponent = _jspInfo.getTree().getRoot();
+            return;
+        }
+
         String id = null;
 
         BeanInfo beanInfo = BeanUtils.getBeanInfo(facesTag);
@@ -474,6 +494,7 @@ public class MyParseEventListener
         String componentType = UIComponentTagHacks.getComponentType(facesTag);
         ApplicationFactory af = (ApplicationFactory)FactoryFinder.getFactory(FactoryFinder.APPLICATION_FACTORY);
         UIComponent comp = af.getApplication().getComponent(componentType);
+        /*
         if (comp == null)
         {
             LogUtil.getLogger().warning("Tag class " + facesTag.getClass().getName() + " did not create a component.");
@@ -495,6 +516,7 @@ public class MyParseEventListener
             facesTag.release();
             return;
         }
+        */
 
         if (id != null)
         {
@@ -531,12 +553,6 @@ public class MyParseEventListener
         String facetName = (String)_currentComponent.getAttribute(PENDING_FACET_ATTR);
         if (facetName != null)
         {
-            /*
-            if (!(_currentComponent instanceof NamingContainer))
-            {
-                LogUtil.getLogger().severe("Component " + UIComponentUtils.toString(_currentComponent) + " is a facet (named '" + facetName + "'), but is no NamingContainer. Facets always must be NamingContainers because they have no parent!");
-            }
-            */
             _currentComponent.addFacet(facetName, comp);
             _currentComponent.setAttribute(PENDING_FACET_ATTR, null);
         }
@@ -545,10 +561,8 @@ public class MyParseEventListener
             _currentComponent.addChild(comp);
         }
 
-        if (facesTag instanceof MyFacesTagBaseIF)
-        {
-            ((MyFacesTagBaseIF)facesTag).setCreated(true);
-        }
+
+        UIComponentTagHacks.setCreated(facesTag, true);
         UIComponentTagHacks.overrideProperties(facesTag, comp);
         facesTag.release(); //Just to be sure
 
@@ -572,6 +586,23 @@ public class MyParseEventListener
         //getClientId should not have a side-effect
         _jspInfo.getComponentMap().put(getClientId(comp), comp);
     }
+
+
+    /*
+    protected boolean isRootUIComponentTag(UIComponentTag tag)
+    {
+        Tag find = tag.getParent();
+        while (find != null)
+        {
+            if (find instanceof UIComponentTag)
+            {
+                return false;
+            }
+            find = find.getParent();
+        }
+        return true;
+    }
+    */
 
 
     private String getClientId(UIComponent comp)
@@ -697,7 +728,8 @@ public class MyParseEventListener
                               Attributes attrs, TagLibraryInfo tli, TagInfo ti)
     {
         Tag tag = getTagInstance(ti);
-        if (tag != null && tag instanceof UIComponentTag)
+        if (tag != null &&
+            tag instanceof UIComponentTag)
         {
             _currentComponent = UIComponentUtils.getParentOrFacetOwner(_currentComponent);
         }

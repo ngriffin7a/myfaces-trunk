@@ -32,11 +32,11 @@ public class ActionListenerImpl
 {
     public void processAction(ActionEvent actionevent) throws AbortProcessingException
     {
-        throw new UnsupportedOperationException();         //TODO
+        //TODO
     }
 
     public PhaseId getPhaseId()
     {
-        throw new UnsupportedOperationException();         //TODO
+        return PhaseId.INVOKE_APPLICATION;
     }
 }

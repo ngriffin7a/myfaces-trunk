@@ -30,6 +30,7 @@ import javax.faces.render.RenderKit;
 import javax.faces.render.RenderKitFactory;
 import javax.faces.render.Renderer;
 import javax.faces.webapp.JspResponseWriter;
+import javax.faces.webapp.UIComponentBodyTag;
 import javax.servlet.ServletRequest;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.BodyContent;
@@ -43,8 +44,20 @@ import java.io.IOException;
  * @version $Revision$ $Date$
  */
 public class UseFacesTag
-        extends BodyTagSupport
+    //extends BodyTagSupport
+    extends UIComponentBodyTag
 {
+    protected String getComponentType()
+    {
+        //Should not be called normally
+        return "Root";
+    }
+
+    public String getRendererType()
+    {
+        return null;
+    }
+
     protected FacesContext getFacesContext()
     {
         //FacesServlet saves the FacesContext as request attribute:
@@ -57,7 +70,7 @@ public class UseFacesTag
     }
 
 
-    public int doStartTag() throws JspException
+    public int getDoStartValue() throws JspException
     {
         //ResponseWriter will be set in doInitBody()
         int mode = MyFacesConfig.getStateSavingMode(super.pageContext.getServletContext());

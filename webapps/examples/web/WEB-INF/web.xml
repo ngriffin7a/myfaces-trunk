@@ -33,7 +33,7 @@
         * "FINEST", "FINER", "FINE", "INFO", "WARNING", "SEVERE"
         -->
         <param-name>myfaces_LogLevel</param-name>
-        <param-value>WARNING</param-value>
+        <param-value>FINEST</param-value>
     </context-param>
 
     <context-param>

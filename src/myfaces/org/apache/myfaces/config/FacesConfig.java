@@ -18,6 +18,8 @@
  */
 package net.sourceforge.myfaces.config;
 
+import net.sourceforge.myfaces.util.logging.LogUtil;
+
 import javax.faces.FacesException;
 import javax.faces.FactoryFinder;
 import javax.faces.component.UIComponent;
@@ -341,10 +343,36 @@ public class FacesConfig
 
 
 
-    public void addRenderKitConfig(RenderKitConfig renderKitConfig)
+    public void addRenderKitConfig(RenderKitConfig newRKC)
     {
-        getRenderKitConfigMap().put(renderKitConfig.getRenderKitId(),
-                                    renderKitConfig);
+        RenderKitConfig oldRKC = getRenderKitConfig(newRKC.getRenderKitId());
+        if (oldRKC == null)
+        {
+            getRenderKitConfigMap().put(newRKC.getRenderKitId(),
+                                        newRKC);
+        }
+        else
+        {
+            //merge RenderKitConfigs
+
+            //check consistence
+            if (oldRKC.getRenderKitClass() != null &&
+                newRKC.getRenderKitClass() != null &&
+                oldRKC.getRenderKitClass().equals(newRKC.getRenderKitClass()))
+            {
+                LogUtil.getLogger().warning("RenderKit '" + newRKC.getRenderKitId() + "' defined twice with different classes!");
+            }
+            else if (oldRKC.getRenderKitClass() == null)
+            {
+                oldRKC.setRenderKitClass(newRKC.getRenderKitClass());
+            }
+
+            for (Iterator it = newRKC.getRendererTypes(); it.hasNext(); )
+            {
+                RendererConfig rc = newRKC.getRendererConfig((String)it.next());
+                oldRKC.addRendererConfig(rc);
+            }
+        }
     }
 
     public RenderKitConfig getRenderKitConfig(String renderKitId)
@@ -398,6 +426,7 @@ public class FacesConfig
             else
             {
                 rk = rkc.newRenderKit();
+                rkf.addRenderKit(id, rk);
             }
             rkc.configureRenderers(rk);
         }

@@ -125,10 +125,6 @@ public class MinimizingStateRestorer
         //restore component states and remove previously unrendered components
         traverseTree(facesContext, stateMap, unrendererComponents, tree.getRoot());
 
-
-        //remap tagHash
-        TagHashHack.convertUniqueIdsBackToComponents(facesContext, tree);
-
         ((ServletRequest)facesContext.getExternalContext().getRequest())
             .setAttribute(PREVIOUS_TREE_REQUEST_ATTR, tree);
         return tree;
@@ -303,13 +299,6 @@ public class MinimizingStateRestorer
                                              Object paramValue)
     {
         String strValue = getStateParameterValueAsString(paramValue);
-
-        if (TagHashHack.isTagHashAttribute(uiComponent, attrName))
-        {
-            Object objValue = TagHashHack.getAsObjectFromSaved(strValue);
-            uiComponent.setAttribute(attrName, objValue);
-            return;
-        }
 
         //is it a null value?
         if (strValue.equals(MinimizingStateSaver.NULL_DUMMY_VALUE))

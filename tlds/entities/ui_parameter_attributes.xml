@@ -1,16 +1,15 @@
-<!-- JSF UISelectMany attributes -->
+<!-- JSF UIParameter attributes -->
         <attribute>
-            <name>selectManyClass</name>
+            <name>name</name>
             <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
+            <rtexprvalue>false</rtexprvalue>
             <type>java.lang.String</type>
-            <description>Corresponds to the HTML class attribute.</description>
         </attribute>
         <attribute>
             <name>value</name>
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>
-            <type>java.lang.String</type>
+            <type>java.lang.Object</type>
             <description>Initial value to set when rendered for the first time.</description>
         </attribute>
         <attribute>

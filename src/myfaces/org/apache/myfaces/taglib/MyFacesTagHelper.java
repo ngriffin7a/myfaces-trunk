@@ -369,6 +369,9 @@ public class MyFacesTagHelper
      */
     protected UIComponent findComponent()
     {
+        //TODO: deaktivated for testing:
+        if (1 == 1) return null;
+
         int mode = MyFacesConfig.getStateSavingMode((ServletContext)getFacesContext().getExternalContext().getContext());
         if (mode != MyFacesConfig.STATE_SAVING_MODE__CLIENT_MINIMIZED &&
             mode != MyFacesConfig.STATE_SAVING_MODE__CLIENT_MINIMIZED_ZIPPED)
@@ -417,11 +420,11 @@ public class MyFacesTagHelper
         {
             parentTag = parentTag.getParent();
         }
-        UIComponentTag parentFacesTag = (UIComponentTag)parentTag;
+        UIComponentTag parentUIComponentTag = (UIComponentTag)parentTag;
         UIComponent parent;
         String parentClientId;
         UIComponent parsedParent;
-        if (parentFacesTag == null)
+        if (parentUIComponentTag == null)
         {
             parent = facesContext.getTree().getRoot();
             parentClientId = "";
@@ -432,7 +435,7 @@ public class MyFacesTagHelper
         else
         {
             //only parent tags that have a component are searched in loop above
-            parent = parentFacesTag.getComponent();
+            parent = parentUIComponentTag.getComponent();
             parentClientId = parent.getClientId(facesContext);
             Map componentMap = JspInfo.getComponentMap(facesContext,
                                                        facesContext.getTree().getTreeId());
@@ -470,7 +473,7 @@ public class MyFacesTagHelper
             //add component to tree
             newComponent.setComponentId(id);
             parent.addChild(newComponent);
-            ((MyFacesTagBaseIF)facesTag).setCreated(true);
+            ((MyFacesTagBaseIF)facesTag).setCreated(true);  //TODO: already done?
             return newComponent;
         }
     }

@@ -7,6 +7,13 @@
             <description>URL of the image (see JSF.4.3).</description>
         </attribute>
         <attribute>
+            <name>valueRef</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
+            <type>java.lang.String</type>
+            <description>Reference to a bean or a bean property that gives the URL.</description>
+        </attribute>
+        <attribute>
             <name>graphicClass</name>
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>

@@ -33,6 +33,7 @@ import javax.servlet.jsp.PageContext;
 import javax.servlet.jsp.tagext.BodyTag;
 import javax.servlet.jsp.tagext.Tag;
 import java.io.IOException;
+import java.io.Serializable;
 
 /**
  * BodyContent is automatically added as an attribute ({@link #BODY_CONTENT_ATTR)
@@ -50,7 +51,8 @@ public abstract class MyFacesBodyTag
                HTMLUniversalAttributes,
                HTMLEventHandlerAttributes,
                KeyBundleAttributes,
-               UserRoleAttributes
+               UserRoleAttributes,
+               Serializable    //so that we can serialize a parsed tree with references to the "creator tag"
 {
     public static final String BODY_CONTENT_ATTR
         = MyFacesBodyTag.class.getName() + ".BODY_CONTENT";
@@ -82,20 +84,11 @@ public abstract class MyFacesBodyTag
 
     public int doEndTag() throws JspException
     {
-        try
-        {
-            UIComponent comp = getComponent();
-            comp.setAttribute(BODY_CONTENT_ATTR, getBodyContent());
-            int ret = super.doEndTag();
-            comp.setAttribute(BODY_CONTENT_ATTR, null);
-            return ret;
-        }
-        finally
-        {
-            _helper.release();
-            id = null;
-            //TODO: HACK for created = false;
-        }
+        UIComponent comp = getComponent();
+        comp.setAttribute(BODY_CONTENT_ATTR, getBodyContent());
+        int ret = super.doEndTag();
+        comp.setAttribute(BODY_CONTENT_ATTR, null);
+        return ret;
     }
 
     public int getDoEndValue() throws JspException
@@ -126,6 +119,16 @@ public abstract class MyFacesBodyTag
     {
         return id;
     }
+
+
+    /**
+     * TODO: Why do they suppress facets ?!
+     */
+    protected boolean isSuppressed()
+    {
+        return false;
+    }
+
 
 
     //subclass helpers
@@ -201,8 +204,9 @@ public abstract class MyFacesBodyTag
 
     public void setCreated(boolean b)
     {
-        //TODO: HACK for created = b;
+        UIComponentTagHacks.setCreated(this, b);
     }
+
 
     /**
      * Overwrite to make public.
@@ -230,9 +234,17 @@ public abstract class MyFacesBodyTag
         setRendererAttributeString(CONVERTER_ATTR, converter);
     }
 
+    /**
+     * @deprecated
+     */
     public void setModelReference(String s)
     {
-        setComponentPropertyString(MODEL_REFERENCE_ATTR, s);
+        setComponentPropertyString(VALUE_REF_ATTR, s);
+    }
+
+    public void setValueRef(String s)
+    {
+        setComponentPropertyString(VALUE_REF_ATTR, s);
     }
 
     public void setRendered(boolean rendered)

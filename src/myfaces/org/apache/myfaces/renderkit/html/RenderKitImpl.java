@@ -18,14 +18,8 @@
  */
 package net.sourceforge.myfaces.renderkit.html;
 
-import net.sourceforge.myfaces.MyFacesConfig;
-import net.sourceforge.myfaces.renderkit.html.ext.*;
-import net.sourceforge.myfaces.renderkit.html.state.StateRenderer;
-
-import javax.faces.context.FacesContext;
 import javax.faces.render.RenderKit;
 import javax.faces.render.Renderer;
-import javax.servlet.ServletContext;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -37,16 +31,16 @@ import java.util.Map;
 public class RenderKitImpl
     extends RenderKit
 {
-    private Map _renderers = null;
+    private Map _renderers;
 
     public RenderKitImpl()
     {
+        _renderers = new HashMap();
     }
 
-    private void initAndAddRenderers()
+    private void init()
     {
-        _renderers = new HashMap();
-
+        /*
         //Standard Renderkit
         _addRenderer(new FormRenderer());
         _addRenderer(new TextRenderer());
@@ -76,26 +70,30 @@ public class RenderKitImpl
         _addRenderer(new SortColumnRenderer());
         _addRenderer(new LayoutRenderer());
         _addRenderer(new FileUploadRenderer());
+        */
     }
 
+    /*
     private void _addRenderer(HTMLRenderer r)
     {
         _renderers.put(r.getRendererType(), r);
     }
+    */
 
 
     public void addRenderer(String s, Renderer renderer)
     {
-        if (_renderers == null) initAndAddRenderers();
+        if (_renderers == null) init();
         _renderers.put(s, renderer);
     }
 
     public Renderer getRenderer(String rendererType)
     {
-        if (_renderers == null) initAndAddRenderers();
+        if (_renderers == null) init();
         Renderer renderer = (Renderer)_renderers.get(rendererType);
         if (renderer == null)
         {
+            /*
             if (rendererType.equals(StateRenderer.TYPE))
             {
                 FacesContext facesContext = FacesContext.getCurrentInstance();
@@ -107,6 +105,7 @@ public class RenderKitImpl
                     return renderer;
                 }
             }
+            */
 
             throw new IllegalArgumentException("Unsupported renderer type: " + rendererType);
         }

@@ -381,10 +381,6 @@ public class UIComponentUtils
     }
 
 
-
-
-
-
     /**
      * DOCUMENT ME!
      * @param facesContext
@@ -408,7 +404,7 @@ public class UIComponentUtils
         }
         else
         {
-            return ConverterUtils.findAttributeConverter(facesContext,
+            return ConverterUtils.findPropertyOrAttributeConverter(facesContext,
                                                          uiComponent,
                                                          attrName);
         }
@@ -456,10 +452,13 @@ public class UIComponentUtils
      */
     public static UIComponent getParentOrFacetOwner(UIComponent uiComponent)
     {
+        /*
         UIComponent parent = uiComponent.getParent();
         return parent != null
                 ? parent
                 : (UIComponent)uiComponent.getAttribute(FACET_PARENT_ATTR);
+                */
+        return uiComponent.getParent();
     }
 
 

@@ -139,10 +139,10 @@ public class CallbackSupport
             //by another RenderKit in the meantime.
             throw new IllegalStateException("CallbackRenderKit has been replaced by another RenderKit.");
         }
-        ((ServletRequest)facesContext.getExternalContext().getRequest()).setAttribute(ORIGINAL_RENDER_KIT_ID_ATTR,
-                                                      currentRenderKitId);
-        ((ServletRequest)facesContext.getExternalContext().getRequest()).setAttribute(ORIGINAL_RENDER_KIT_ATTR,
-                                                      currentRenderKit);
+        ((ServletRequest)facesContext.getExternalContext().getRequest())
+            .setAttribute(ORIGINAL_RENDER_KIT_ID_ATTR, currentRenderKitId);
+        ((ServletRequest)facesContext.getExternalContext().getRequest())
+            .setAttribute(ORIGINAL_RENDER_KIT_ATTR, currentRenderKit);
 
         // lookup CallbackRenderKit in RenderKitFactory...
         synchronized (renderkitFactory)

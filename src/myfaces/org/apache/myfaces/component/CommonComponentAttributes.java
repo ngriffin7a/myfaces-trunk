@@ -7,10 +7,10 @@ package net.sourceforge.myfaces.component;
  */
 public interface CommonComponentAttributes
 {
-    //Standard attributes
+    //Standard properties
     public static final String ID_ATTR = "id";
     public static final String CONVERTER_ATTR = "converter";
-    public static final String MODEL_REFERENCE_ATTR = "modelReference";
+    public static final String VALUE_REF_ATTR = "valueRef";
     public static final String RENDERED_ATTR = "rendered";
 
     public static final String RENDERER_TYPE_ATTR = "rendererType";
@@ -25,6 +25,6 @@ public interface CommonComponentAttributes
 
 
     //JSF internal
-    public static final String FACET_PARENT_ATTR = "javax.faces.component.FacetParent";
+    //public static final String FACET_PARENT_ATTR = "javax.faces.component.FacetParent";
 
 }

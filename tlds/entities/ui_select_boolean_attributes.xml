@@ -13,3 +13,10 @@
             <type>java.lang.String</type>
             <description>Initial value to set when rendered for the first time.</description>
         </attribute>
+        <attribute>
+            <name>valueRef</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
+            <type>java.lang.String</type>
+            <description>Reference to a bean or a bean property.</description>
+        </attribute>

@@ -61,12 +61,18 @@ public class UIComponentHelper
         namingContainer.addComponentToNamespace(facet);
     }
 
+    /**
+     * TODO: No longer needed.
+     */
     public UIComponent getParent(UIComponent superGetParent)
     {
+        /*
         UIComponent parent = superGetParent;
         return parent != null
                 ? parent
                 : (UIComponent)_uiComponent.getAttribute(FACET_PARENT_ATTR);
+                */
+        return superGetParent;
     }
 
 }

@@ -340,22 +340,6 @@ public class MinimizingStateSaver
             return;
         }
 
-        //is it Sun's troublesome "tagHash" attribute in the root?
-        if (TagHashHack.isTagHashAttribute(uiComponent, attrName))
-        {
-            String strValue = TagHashHack.getAsStringToBeSaved(facesContext,
-                                                               (Map)attrValue);
-            if (strValue != null)
-            {
-                saveParameter(stateMap,
-                              RequestParameterNames.getUIComponentStateParameterName(facesContext,
-                                                                                     uiComponent,
-                                                                                     attrName),
-                              strValue);
-            }
-            return;
-        }
-
         //compare current value to static value in parsed component
         if (parsedComponent != null)
         {
