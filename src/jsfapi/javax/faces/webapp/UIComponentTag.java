@@ -526,7 +526,7 @@ public abstract class UIComponentTag
 
             ServletRequest request = (ServletRequest)facesContext.getExternalContext().getRequest();
 
-            _writer = renderKit.createResponseWriter(pageContext.getOut(),
+            _writer = renderKit.createResponseWriter(new _PageContextOutWriter(pageContext),
                                                      request.getContentType(), //TODO: is this the correct content type?
                                                      request.getCharacterEncoding());
             facesContext.setResponseWriter(_writer);

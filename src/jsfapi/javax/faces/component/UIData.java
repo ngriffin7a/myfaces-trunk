@@ -239,6 +239,7 @@ public class UIData
         for (Iterator it = component.getChildren().iterator(); it.hasNext();)
         {
             UIComponent child = (UIComponent)it.next();
+            //clear this descendant's clientId:
             child.setId(child.getId()); //HACK: This assumes that setId always clears the cached clientId. Can we be sure?
             states[counter++].restore((EditableValueHolder)child);
             restoreDescendantComponentStates(child, states, counter);
