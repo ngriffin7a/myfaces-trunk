@@ -18,20 +18,23 @@
  */
 package net.sourceforge.myfaces.custom.navigation;
 
-
+import net.sourceforge.myfaces.taglib.html.ext.HtmlCommandLinkTag;
 
 
 /**
- * DOCUMENT ME!
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
+ * $Log$
+ * Revision 1.2  2004/04/01 12:57:40  manolito
+ * additional extended component classes for user role support
+ *
  */
 public class HtmlCommandNavigationTag
-    extends net.sourceforge.myfaces.taglib.html.HtmlCommandLinkTag
+        extends HtmlCommandLinkTag
 {
     public String getComponentType()
     {
-        return net.sourceforge.myfaces.custom.navigation.HtmlCommandNavigation.COMPONENT_TYPE;
+        return HtmlCommandNavigation.COMPONENT_TYPE;
     }
 
     protected String getDefaultRendererType()

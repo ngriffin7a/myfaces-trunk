@@ -18,6 +18,7 @@
  */
 package net.sourceforge.myfaces.custom.datatablescroller;
 
+import net.sourceforge.myfaces.renderkit.JSFAttr;
 import net.sourceforge.myfaces.taglib.html.HtmlComponentBodyTagBase;
 
 import javax.faces.component.UIComponent;
@@ -26,17 +27,23 @@ import javax.faces.component.UIComponent;
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.2  2004/04/01 12:57:40  manolito
+ * additional extended component classes for user role support
+ *
  * Revision 1.1  2004/03/31 12:15:26  manolito
  * custom component refactoring
  *
  */
 public class HtmlDataTableScrollerTag
-    extends HtmlComponentBodyTagBase
+        extends HtmlComponentBodyTagBase
 {
     //private static final Log log = LogFactory.getLog(HtmlDataTableScrollerTag.class);
 
     private String _for;
 
+    // User Role support
+    private String _enabledOnUserRole;
+    private String _visibleOnUserRole;
 
     public String getComponentType()
     {
@@ -54,6 +61,9 @@ public class HtmlDataTableScrollerTag
         super.setProperties(component);
 
         setStringProperty(component, "for", _for);
+
+        setStringProperty(component, JSFAttr.ENABLED_ON_USER_ROLE_ATTR, _enabledOnUserRole);
+        setStringProperty(component, JSFAttr.VISIBLE_ON_USER_ROLE_ATTR, _visibleOnUserRole);
     }
 
     public void setFor(String aFor)
@@ -61,4 +71,13 @@ public class HtmlDataTableScrollerTag
         _for = aFor;
     }
 
+    public void setEnabledOnUserRole(String enabledOnUserRole)
+    {
+        _enabledOnUserRole = enabledOnUserRole;
+    }
+
+    public void setVisibleOnUserRole(String visibleOnUserRole)
+    {
+        _visibleOnUserRole = visibleOnUserRole;
+    }
 }

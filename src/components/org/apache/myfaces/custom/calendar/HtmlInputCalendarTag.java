@@ -18,6 +18,7 @@
  */
 package net.sourceforge.myfaces.custom.calendar;
 
+import net.sourceforge.myfaces.renderkit.JSFAttr;
 import net.sourceforge.myfaces.taglib.html.HtmlInputTagBase;
 
 import javax.faces.component.UIComponent;
@@ -26,6 +27,9 @@ import javax.faces.component.UIComponent;
  * @author Martin Marinschek (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.2  2004/04/01 12:57:39  manolito
+ * additional extended component classes for user role support
+ *
  * Revision 1.1  2004/03/31 12:15:25  manolito
  * custom component refactoring
  *
@@ -63,6 +67,10 @@ public class HtmlInputCalendarTag
     private String _dayCellClass;
     private String _currentDayCellClass;
 
+    // User Role support
+    private String _enabledOnUserRole;
+    private String _visibleOnUserRole;
+
     protected void setProperties(UIComponent component)
     {
         super.setProperties(component);
@@ -71,6 +79,9 @@ public class HtmlInputCalendarTag
         setStringProperty(component, "weekRowClass", _weekRowClass);
         setStringProperty(component, "dayCellClass", _dayCellClass);
         setStringProperty(component, "currentDayCellClass", _currentDayCellClass);
+
+        setStringProperty(component, JSFAttr.ENABLED_ON_USER_ROLE_ATTR, _enabledOnUserRole);
+        setStringProperty(component, JSFAttr.VISIBLE_ON_USER_ROLE_ATTR, _visibleOnUserRole);
     }
 
     public void setMonthYearRowClass(String monthYearRowClass)
@@ -91,5 +102,15 @@ public class HtmlInputCalendarTag
     public void setCurrentDayCellClass(String currentDayCellClass)
     {
         _currentDayCellClass = currentDayCellClass;
+    }
+
+    public void setEnabledOnUserRole(String enabledOnUserRole)
+    {
+        _enabledOnUserRole = enabledOnUserRole;
+    }
+
+    public void setVisibleOnUserRole(String visibleOnUserRole)
+    {
+        _visibleOnUserRole = visibleOnUserRole;
     }
 }

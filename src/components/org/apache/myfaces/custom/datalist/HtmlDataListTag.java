@@ -27,6 +27,9 @@ import javax.faces.component.UIComponent;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.2  2004/04/01 12:57:39  manolito
+ * additional extended component classes for user role support
+ *
  * Revision 1.1  2004/03/31 12:15:26  manolito
  * custom component refactoring
  *
@@ -64,6 +67,10 @@ public class HtmlDataListTag
     private String _rowIndexVar;
     private String _rowCountVar;
 
+    // User Role support
+    private String _enabledOnUserRole;
+    private String _visibleOnUserRole;
+
 
     protected void setProperties(UIComponent component)
     {
@@ -76,6 +83,9 @@ public class HtmlDataListTag
         setStringProperty(component, JSFAttr.LAYOUT_ATTR, _layout);
         setStringProperty(component, "rowIndexVar", _rowIndexVar);
         setStringProperty(component, "rowCountVar", _rowCountVar);
+
+        setStringProperty(component, JSFAttr.ENABLED_ON_USER_ROLE_ATTR, _enabledOnUserRole);
+        setStringProperty(component, JSFAttr.VISIBLE_ON_USER_ROLE_ATTR, _visibleOnUserRole);
     }
 
     public void setRows(String rows)
@@ -106,5 +116,15 @@ public class HtmlDataListTag
     public void setRowCountVar(String rowCountVar)
     {
         _rowCountVar = rowCountVar;
+    }
+
+    public void setEnabledOnUserRole(String enabledOnUserRole)
+    {
+        _enabledOnUserRole = enabledOnUserRole;
+    }
+
+    public void setVisibleOnUserRole(String visibleOnUserRole)
+    {
+        _visibleOnUserRole = visibleOnUserRole;
     }
 }

@@ -24,12 +24,14 @@ import javax.faces.component.UIColumn;
 /**
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
+ * $Log$
+ * Revision 1.7  2004/04/01 12:57:43  manolito
+ * additional extended component classes for user role support
+ *
  */
 public class HtmlColumnTag
         extends HtmlComponentBodyTagBase
 {
-    //private static final Log log = LogFactory.getLog(HtmlColumnTag.class);
-
     public String getComponentType()
     {
         return UIColumn.COMPONENT_TYPE;
@@ -41,12 +43,4 @@ public class HtmlColumnTag
     }
 
     // UIComponent attributes --> already implemented in UIComponentTagBase
-
-    // user role attributes --> already implemented in UIComponentTagBase
-
-    // HTML universal attributes --> already implemented in HtmlComponentTagBase
-
-    // HTML event handler attributes --> already implemented in HtmlComponentTagBase
-
-    // HTML table attributes relevant for Table
 }

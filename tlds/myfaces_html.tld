@@ -57,6 +57,7 @@
 <!ENTITY standard_message_attributes         SYSTEM "entities/standard_message_attributes.xml">
 <!ENTITY standard_messages_attributes        SYSTEM "entities/standard_messages_attributes.xml">
 <!ENTITY standard_output_label_attributes    SYSTEM "entities/standard_output_label_attributes.xml">
+<!ENTITY standard_output_text_attributes     SYSTEM "entities/standard_output_text_attributes.xml">
 <!ENTITY standard_panel_group_attributes     SYSTEM "entities/standard_panel_group_attributes.xml">
 <!ENTITY standard_select_one_menu_attributes  SYSTEM "entities/standard_select_one_menu_attributes.xml">
 <!ENTITY standard_select_one_radio_attributes SYSTEM "entities/standard_select_one_radio_attributes.xml">

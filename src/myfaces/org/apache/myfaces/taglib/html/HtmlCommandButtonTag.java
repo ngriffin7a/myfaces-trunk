@@ -18,24 +18,21 @@
  */
 package net.sourceforge.myfaces.taglib.html;
 
-import net.sourceforge.myfaces.renderkit.JSFAttr;
-import net.sourceforge.myfaces.renderkit.html.HTML;
-
-import javax.faces.component.UIComponent;
 import javax.faces.component.html.HtmlCommandButton;
 
 
 /**
- * DOCUMENT ME!
  * @author Manfred Geiler (latest modification by $Author$)
  * @author Martin Marinschek
  * @version $Revision$ $Date$
+ * $Log$
+ * Revision 1.16  2004/04/01 12:57:43  manolito
+ * additional extended component classes for user role support
+ *
  */
 public class HtmlCommandButtonTag
-    extends HtmlComponentTagBase
+    extends HtmlCommandButtonTagBase
 {
-    //private static final Log log = LogFactory.getLog(HtmlCommandButtonTag.class);
-
     public String getComponentType()
     {
         return HtmlCommandButton.COMPONENT_TYPE;
@@ -44,123 +41,5 @@ public class HtmlCommandButtonTag
     protected String getDefaultRendererType()
     {
         return "javax.faces.Button";
-    }
-
-    // UIComponent attributes --> already implemented in UIComponentTagBase
-
-    // user role attributes --> already implemented in UIComponentTagBase
-
-    // HTML universal attributes --> already implemented in HtmlComponentTagBase
-
-    // HTML event handler attributes --> already implemented in HtmlComponentTagBase
-
-    // HTML input attributes relevant for command-button
-    private String _accesskey;
-    private String _alt;
-    private String _disabled;
-    private String _onblur;
-    private String _onchange;
-    private String _onfocus;
-    private String _onselect;
-    private String _size;
-    private String _tabindex;
-    private String _type;
-
-    // UICommand attributes
-    private String _action;
-    private String _immediate;
-    private String _actionListener;
-
-    // HtmlCommandButton attributes
-    private String _image;
-
-    protected void setProperties(UIComponent component)
-    {
-        super.setProperties(component);
-
-        setStringProperty(component, HTML.ACCESSKEY_ATTR, _accesskey);
-        setStringProperty(component, HTML.ALT_ATTR, _alt);
-        setBooleanProperty(component, HTML.DISABLED_ATTR, _disabled);
-        setStringProperty(component, HTML.ONBLUR_ATTR, _onblur);
-        setStringProperty(component, HTML.ONCHANGE_ATTR, _onchange);
-        setStringProperty(component, HTML.ONFOCUS_ATTR, _onfocus);
-        setStringProperty(component, HTML.ONSELECT_ATTR, _onselect);
-        setStringProperty(component, HTML.SIZE_ATTR, _size);
-        setStringProperty(component, HTML.TABINDEX_ATTR, _tabindex);
-        setStringProperty(component, HTML.TYPE_ATTR, _type);
-        setActionProperty(component, _action);
-        setActionListenerProperty(component, _actionListener);
-        setBooleanProperty(component, JSFAttr.IMMEDIATE_ATTR, _immediate);
-        setStringProperty(component, JSFAttr.IMAGE_ATTR, _image);
-   }
-
-    public void setAccesskey(String accesskey)
-    {
-        _accesskey = accesskey;
-    }
-
-    public void setAlt(String alt)
-    {
-        _alt = alt;
-    }
-
-    public void setDisabled(String disabled)
-    {
-        _disabled = disabled;
-    }
-
-    public void setOnblur(String onblur)
-    {
-        _onblur = onblur;
-    }
-
-    public void setOnchange(String onchange)
-    {
-        _onchange = onchange;
-    }
-
-    public void setOnfocus(String onfocus)
-    {
-        _onfocus = onfocus;
-    }
-
-    public void setOnselect(String onselect)
-    {
-        _onselect = onselect;
-    }
-
-    public void setSize(String size)
-    {
-        _size = size;
-    }
-
-    public void setTabindex(String tabindex)
-    {
-        _tabindex = tabindex;
-    }
-
-    public void setType(String type)
-    {
-        _type = type;
-    }
-
-    public void setAction(String action)
-    {
-        _action = action;
-    }
-
-    public void setImmediate(String immediate)
-    {
-        _immediate = immediate;
-    }
-
-    public void setImage(String image)
-    {
-        _image = image;
-    }
-
-    public void setActionListener(String actionListener)
-    {
-        _actionListener = actionListener;
     }
 }

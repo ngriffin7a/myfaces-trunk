@@ -19,7 +19,7 @@
 package net.sourceforge.myfaces.custom.sortheader;
 
 
-import net.sourceforge.myfaces.taglib.html.HtmlCommandLinkTagBase;
+import net.sourceforge.myfaces.taglib.html.ext.HtmlCommandLinkTag;
 
 import javax.faces.component.UIComponent;
 
@@ -27,12 +27,15 @@ import javax.faces.component.UIComponent;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.2  2004/04/01 12:57:41  manolito
+ * additional extended component classes for user role support
+ *
  * Revision 1.1  2004/03/31 12:15:27  manolito
  * custom component refactoring
  *
  */
 public class HtmlCommandSortHeaderTag
-        extends HtmlCommandLinkTagBase
+        extends HtmlCommandLinkTag
 {
     //private static final Log log = LogFactory.getLog(HtmlCommandSortHeaderTag.class);
 
@@ -49,6 +52,9 @@ public class HtmlCommandSortHeaderTag
     private String _columnName;
     private String _arrow;
 
+    // User Role support --> already handled by HtmlPanelGroupTag
+
+    
     protected void setProperties(UIComponent component)
     {
         super.setProperties(component);

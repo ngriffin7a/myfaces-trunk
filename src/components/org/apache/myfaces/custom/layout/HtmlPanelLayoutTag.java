@@ -18,6 +18,7 @@
  */
 package net.sourceforge.myfaces.custom.layout;
 
+import net.sourceforge.myfaces.renderkit.JSFAttr;
 import net.sourceforge.myfaces.renderkit.html.HTML;
 import net.sourceforge.myfaces.taglib.html.HtmlComponentBodyTagBase;
 
@@ -27,12 +28,15 @@ import javax.faces.component.UIComponent;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.2  2004/04/01 12:57:40  manolito
+ * additional extended component classes for user role support
+ *
  * Revision 1.1  2004/03/31 12:15:26  manolito
  * custom component refactoring
  *
  */
 public class HtmlPanelLayoutTag
-    extends HtmlComponentBodyTagBase
+        extends HtmlComponentBodyTagBase
 {
     public String getComponentType()
     {
@@ -77,6 +81,10 @@ public class HtmlPanelLayoutTag
     private String _summary;
     private String _width;
 
+    // User Role support
+    private String _enabledOnUserRole;
+    private String _visibleOnUserRole;
+
     protected void setProperties(UIComponent component)
     {
         super.setProperties(component);
@@ -103,6 +111,9 @@ public class HtmlPanelLayoutTag
         setStringProperty(component, HTML.RULES_ATTR, _rules);
         setStringProperty(component, HTML.SUMMARY_ATTR, _summary);
         setStringProperty(component, HTML.WIDTH_ATTR, _width);
+
+        setStringProperty(component, JSFAttr.ENABLED_ON_USER_ROLE_ATTR, _enabledOnUserRole);
+        setStringProperty(component, JSFAttr.VISIBLE_ON_USER_ROLE_ATTR, _visibleOnUserRole);
     }
 
     public void setLayout(String layout)
@@ -208,5 +219,15 @@ public class HtmlPanelLayoutTag
     public void setWidth(String width)
     {
         _width = width;
+    }
+
+    public void setEnabledOnUserRole(String enabledOnUserRole)
+    {
+        _enabledOnUserRole = enabledOnUserRole;
+    }
+
+    public void setVisibleOnUserRole(String visibleOnUserRole)
+    {
+        _visibleOnUserRole = visibleOnUserRole;
     }
 }

@@ -24,6 +24,9 @@ import javax.faces.component.html.HtmlDataTable;
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.12  2004/04/01 12:57:43  manolito
+ * additional extended component classes for user role support
+ *
  * Revision 1.11  2004/03/31 11:58:41  manolito
  * custom component refactoring
  *
@@ -31,8 +34,6 @@ import javax.faces.component.html.HtmlDataTable;
 public class HtmlDataTableTag
         extends HtmlDataTableTagBase
 {
-    //private static final Log log = LogFactory.getLog(MyfacesHtmlDataTableTag.class);
-
     public String getComponentType()
     {
         return HtmlDataTable.COMPONENT_TYPE;
@@ -42,5 +43,4 @@ public class HtmlDataTableTag
     {
         return "javax.faces.Table";
     }
-
 }

@@ -18,6 +18,7 @@
  */
 package net.sourceforge.myfaces.custom.fileupload;
 
+import net.sourceforge.myfaces.renderkit.JSFAttr;
 import net.sourceforge.myfaces.renderkit.html.HTML;
 import net.sourceforge.myfaces.taglib.html.HtmlInputTagBase;
 
@@ -76,6 +77,10 @@ public class HtmlInputFileUploadTag
     // HtmlInputFileUpload attributes
     private String _accept;
 
+    // User Role support
+    private String _enabledOnUserRole;
+    private String _visibleOnUserRole;
+
 
     protected void setProperties(UIComponent component)
     {
@@ -98,6 +103,9 @@ public class HtmlInputFileUploadTag
         setStringProperty(component, HTML.TABINDEX_ATTR, _tabindex);
 
         setStringProperty(component, HTML.ACCEPT_ATTR, _accept);
+
+        setStringProperty(component, JSFAttr.ENABLED_ON_USER_ROLE_ATTR, _enabledOnUserRole);
+        setStringProperty(component, JSFAttr.VISIBLE_ON_USER_ROLE_ATTR, _visibleOnUserRole);
     }
 
     public void setAccesskey(String accesskey)
@@ -178,5 +186,15 @@ public class HtmlInputFileUploadTag
     public void setAccept(String accept)
     {
         _accept = accept;
+    }
+
+    public void setEnabledOnUserRole(String enabledOnUserRole)
+    {
+        _enabledOnUserRole = enabledOnUserRole;
+    }
+
+    public void setVisibleOnUserRole(String visibleOnUserRole)
+    {
+        _visibleOnUserRole = visibleOnUserRole;
     }
 }

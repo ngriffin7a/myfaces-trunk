@@ -18,19 +18,20 @@
  */
 package net.sourceforge.myfaces.taglib.html;
 
-import net.sourceforge.myfaces.taglib.html.HtmlInputTagBase;
-
 import javax.faces.component.html.HtmlInputHidden;
 
 
 /**
- * DOCUMENT ME!
  * @author Manfred Geiler (latest modification by $Author$)
  * @author Martin Marinschek
  * @version $Revision$ $Date$
+ * $Log$
+ * Revision 1.9  2004/04/01 12:57:43  manolito
+ * additional extended component classes for user role support
+ *
  */
 public class HtmlInputHiddenTag
-        extends HtmlInputTagBase
+        extends HtmlInputHiddenTagBase
 {
     public String getComponentType()
     {
@@ -41,22 +42,4 @@ public class HtmlInputHiddenTag
     {
         return "javax.faces.Hidden";
     }
-
-    // UIComponent attributes --> already implemented in UIComponentTagBase
-
-    // user role attributes --> already implemented in UIComponentTagBase
-
-    // HTML universal attributes --> already implemented in HtmlComponentTagBase
-
-    // HTML event handler attributes --> already implemented in HtmlComponentTagBase
-
-    // HTML input attributes relevant for hidden-inputs
-    //none relevant for hidden input
-
-    // UIOutput attributes
-    // value and converterId --> already implemented in UIComponentTagBase
-
-    // UIInput attributes
-    // --> already implemented in HtmlInputTagBase
-
 }

@@ -18,19 +18,19 @@
  */
 package net.sourceforge.myfaces.taglib.html;
 
-import net.sourceforge.myfaces.renderkit.JSFAttr;
-
-import javax.faces.component.UIComponent;
 import javax.faces.component.html.HtmlOutputText;
 
 
 /**
- * DOCUMENT ME!
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
+ * $Log$
+ * Revision 1.11  2004/04/01 12:57:43  manolito
+ * additional extended component classes for user role support
+ *
  */
 public class HtmlOutputTextTag
-    extends HtmlComponentTagBase
+        extends HtmlOutputTextTagBase
 {
     public String getComponentType()
     {
@@ -40,35 +40,5 @@ public class HtmlOutputTextTag
     protected String getDefaultRendererType()
     {
         return "javax.faces.Text";
-    }
-
-    // UIComponent attributes --> already implemented in UIComponentTagBase
-
-    // user role attributes --> already implemented in UIComponentTagBase
-
-    // HTML universal attributes --> already implemented in HtmlComponentTagBase
-
-    // HTML event handler attributes --> already implemented in HtmlComponentTagBase
-
-    // UIOutput attributes
-    // value and converterId --> already implemented in UIComponentTagBase
-
-    // HtmlOutputText attributes
-    private String _escape;
-
-
-    protected void setProperties(UIComponent component)
-    {
-        super.setProperties(component);
-
-        setBooleanProperty(component, JSFAttr.ESCAPE_ATTR, _escape);
-
-        //TODO: idea: set transient and override setValue method in UIOutput so that
-        //transient is set to false when a new value is set
-    }
-
-    public void setEscape(String escape)
-    {
-        _escape = escape;
     }
 }

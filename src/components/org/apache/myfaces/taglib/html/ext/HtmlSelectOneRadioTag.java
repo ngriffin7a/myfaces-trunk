@@ -18,15 +18,20 @@
  */
 package net.sourceforge.myfaces.taglib.html.ext;
 
+import net.sourceforge.myfaces.component.html.ext.HtmlSelectOneRadio;
+import net.sourceforge.myfaces.renderkit.JSFAttr;
 import net.sourceforge.myfaces.taglib.html.HtmlSelectOneRadioTagBase;
 
-import javax.faces.component.html.HtmlSelectOneRadio;
+import javax.faces.component.UIComponent;
 
 /**
  * @author Manfred Geiler (latest modification by $Author$)
  * @author Martin Marinschek
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.3  2004/04/01 12:57:42  manolito
+ * additional extended component classes for user role support
+ *
  * Revision 1.2  2004/03/31 13:30:13  manolito
  * no message
  *
@@ -46,4 +51,25 @@ public class HtmlSelectOneRadioTag
     {
         return "net.sourceforge.myfaces.Radio";
     }
+
+    private String _enabledOnUserRole;
+    private String _visibleOnUserRole;
+
+    protected void setProperties(UIComponent component)
+    {
+        super.setProperties(component);
+        setStringProperty(component, JSFAttr.ENABLED_ON_USER_ROLE_ATTR, _enabledOnUserRole);
+        setStringProperty(component, JSFAttr.VISIBLE_ON_USER_ROLE_ATTR, _visibleOnUserRole);
+    }
+
+    public void setEnabledOnUserRole(String enabledOnUserRole)
+    {
+        _enabledOnUserRole = enabledOnUserRole;
+    }
+
+    public void setVisibleOnUserRole(String visibleOnUserRole)
+    {
+        _visibleOnUserRole = visibleOnUserRole;
+    }
+
 }

@@ -338,6 +338,12 @@ public class HTML
 
 
 
+    public static final String[] MESSAGE_PASSTHROUGH_ATTRIBUTES =
+        (String[]) ArrayUtils.concat(
+            new String[] {DIR_ATTR, LANG_ATTR, TITLE_ATTR, STYLE_ATTR, STYLE_CLASS_ATTR},
+            EVENT_HANDLER_ATTRIBUTES);
+
+
     //HTML attributes needed for renderding only
     public static final String ID_ATTR = "id";
     public static final String NAME_ATTR = "name";

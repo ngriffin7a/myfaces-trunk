@@ -26,6 +26,9 @@ import javax.faces.component.html.HtmlCommandLink;
  * @author Martin Marinschek
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.17  2004/04/01 12:57:43  manolito
+ * additional extended component classes for user role support
+ *
  * Revision 1.16  2004/03/31 11:58:40  manolito
  * custom component refactoring
  *
@@ -33,8 +36,6 @@ import javax.faces.component.html.HtmlCommandLink;
 public class HtmlCommandLinkTag
     extends HtmlCommandLinkTagBase
 {
-    //private static final Log log = LogFactory.getLog(HtmlCommandLinkTag.class);
-
     public String getComponentType()
     {
         return HtmlCommandLink.COMPONENT_TYPE;

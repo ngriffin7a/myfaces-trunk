@@ -21,12 +21,15 @@ package net.sourceforge.myfaces.taglib.html;
 import javax.faces.component.html.HtmlSelectOneMenu;
 
 /**
- * DOCUMENT ME!
  * @author Martin Marinschek (latest modification by $Author$)
  * @version $Revision$ $Date$
+ * $Log$
+ * Revision 1.6  2004/04/01 12:57:43  manolito
+ * additional extended component classes for user role support
+ *
  */
 public class HtmlSelectOneMenuTag
-        extends HtmlSelectManyMenuTag
+        extends HtmlSelectMenuTagBase
 {
     public String getComponentType()
     {

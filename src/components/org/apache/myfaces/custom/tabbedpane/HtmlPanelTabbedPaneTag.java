@@ -19,6 +19,7 @@
 package net.sourceforge.myfaces.custom.tabbedpane;
 
 import net.sourceforge.myfaces.renderkit.html.HTML;
+import net.sourceforge.myfaces.taglib.html.ext.HtmlPanelGroupTag;
 
 import javax.faces.component.UIComponent;
 
@@ -27,13 +28,13 @@ import javax.faces.component.UIComponent;
  * @version $Revision$ $Date$
  */
 public class HtmlPanelTabbedPaneTag
-        extends net.sourceforge.myfaces.taglib.html.HtmlPanelGroupTag
+        extends HtmlPanelGroupTag
 {
     //private static final Log log = LogFactory.getLog(HtmlPanelTabbedPaneTag.class);
 
     public String getComponentType()
     {
-        return net.sourceforge.myfaces.custom.tabbedpane.HtmlPanelTabbedPane.COMPONENT_TYPE;
+        return HtmlPanelTabbedPane.COMPONENT_TYPE;
     }
 
     protected String getDefaultRendererType()
@@ -58,6 +59,8 @@ public class HtmlPanelTabbedPaneTag
     private String _rules;
     private String _summary;
     private String _width;
+
+    // User Role support --> already handled by HtmlPanelGroupTag
 
 
     protected void setProperties(UIComponent component)

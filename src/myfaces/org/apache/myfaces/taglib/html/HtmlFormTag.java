@@ -18,20 +18,19 @@
  */
 package net.sourceforge.myfaces.taglib.html;
 
-import net.sourceforge.myfaces.renderkit.html.HTML;
-
-import javax.faces.component.UIComponent;
 import javax.faces.component.html.HtmlForm;
 
 /**
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
+ * $Log$
+ * Revision 1.8  2004/04/01 12:57:43  manolito
+ * additional extended component classes for user role support
+ *
  */
 public class HtmlFormTag
-        extends HtmlComponentTagBase
+        extends HtmlFormTagBase
 {
-    //private static final Log log = LogFactory.getLog(HtmlFormTag.class);
-
     public String getComponentType()
     {
         return HtmlForm.COMPONENT_TYPE;
@@ -41,73 +40,4 @@ public class HtmlFormTag
     {
         return "javax.faces.Form";
     }
-
-    // UIComponent attributes --> already implemented in UIComponentTagBase
-
-    // user role attributes --> already implemented in UIComponentTagBase
-
-    // HTML universal attributes --> already implemented in HtmlComponentTagBase
-
-    // HTML event handler attributes --> already implemented in HtmlComponentTagBase
-
-    // HTML form attributes
-
-    private String _accept;
-    private String _acceptCharset;
-    private String _enctype;
-    private String _name;
-    private String _onreset;
-    private String _onsubmit;
-    private String _target;
-
-    // UIForm attributes --> none so far
-
-
-    protected void setProperties(UIComponent component)
-    {
-        super.setProperties(component);
-        setStringProperty(component, HTML.ACCEPT_ATTR, _accept);
-        setStringProperty(component, HTML.ACCEPT_CHARSET_ATTR, _acceptCharset);
-        setStringProperty(component, HTML.ENCTYPE_ATTR, _enctype);
-        setStringProperty(component, HTML.NAME_ATTR, _name);
-        setStringProperty(component, HTML.ONRESET_ATTR, _onreset);
-        setStringProperty(component, HTML.ONSUMBIT_ATTR, _onsubmit);
-        setStringProperty(component, HTML.TARGET_ATTR, _target);
-    }
-
-    public void setAccept(String accept)
-    {
-        _accept = accept;
-    }
-
-    public void setAcceptCharset(String acceptCharset)
-    {
-        _acceptCharset = acceptCharset;
-    }
-
-    public void setEnctype(String enctype)
-    {
-        _enctype = enctype;
-    }
-
-    public void setName(String name)
-    {
-        _name = name;
-    }
-
-    public void setOnreset(String onreset)
-    {
-        _onreset = onreset;
-    }
-
-    public void setOnsubmit(String onsubmit)
-    {
-        _onsubmit = onsubmit;
-    }
-
-    public void setTarget(String target)
-    {
-        _target = target;
-    }
-
 }

@@ -58,6 +58,7 @@
 <!ENTITY standard_message_attributes         SYSTEM "entities/standard_message_attributes.xml">
 <!ENTITY standard_messages_attributes        SYSTEM "entities/standard_messages_attributes.xml">
 <!ENTITY standard_output_label_attributes    SYSTEM "entities/standard_output_label_attributes.xml">
+<!ENTITY standard_output_text_attributes     SYSTEM "entities/standard_output_text_attributes.xml">
 <!ENTITY standard_panel_group_attributes     SYSTEM "entities/standard_panel_group_attributes.xml">
 <!ENTITY standard_select_one_menu_attributes SYSTEM "entities/standard_select_one_menu_attributes.xml">
 <!ENTITY standard_select_one_radio_attributes SYSTEM "entities/standard_select_one_radio_attributes.xml">
@@ -79,7 +80,7 @@
     <!-- commandButton -->
     <tag>
         <name>commandButton</name>
-        <tag-class>net.sourceforge.myfaces.taglib.html.HtmlCommandButtonTag</tag-class>
+        <tag-class>net.sourceforge.myfaces.taglib.html.ext.HtmlCommandButtonTag</tag-class>
         <body-content>JSP</body-content>
         <description>
             Extends standard commandButton by user role support.
@@ -161,7 +162,7 @@
     <!-- inputText -->
     <tag>
         <name>inputText</name>
-        <tag-class>net.sourceforge.myfaces.taglib.html.HtmlInputTextTag</tag-class>
+        <tag-class>net.sourceforge.myfaces.taglib.html.ext.HtmlInputTextTag</tag-class>
         <body-content>JSP</body-content>
         <description>
             Extends standard inputText by user role support.
@@ -247,7 +248,7 @@
     <!-- outputLabel -->
     <tag>
         <name>outputLabel</name>
-        <tag-class>net.sourceforge.myfaces.taglib.html.HtmlOutputLabelTag</tag-class>
+        <tag-class>net.sourceforge.myfaces.taglib.html.ext.HtmlOutputLabelTag</tag-class>
         <body-content>JSP</body-content>
         <description>
             Extends standard outputLabel by user role support.
@@ -256,10 +257,22 @@
         &user_role_attributes;
     </tag>
 
+    <!-- outputText -->
+    <tag>
+        <name>outputText</name>
+        <tag-class>net.sourceforge.myfaces.taglib.html.ext.HtmlOutputTextTag</tag-class>
+        <body-content>JSP</body-content>
+        <description>
+            Extends standard outputText by user role support.
+        </description>
+        &standard_output_text_attributes;
+        &user_role_attributes;
+    </tag>
+
     <!-- panelGroup -->
     <tag>
         <name>panelGroup</name>
-        <tag-class>net.sourceforge.myfaces.taglib.html.HtmlPanelGroupTag</tag-class>
+        <tag-class>net.sourceforge.myfaces.taglib.html.ext.HtmlPanelGroupTag</tag-class>
         <body-content>JSP</body-content>
         <description>
             Extends standard panelGroup by user role support.
@@ -271,7 +284,7 @@
     <!-- selectOneMenu -->
     <tag>
         <name>selectOneMenu</name>
-        <tag-class>net.sourceforge.myfaces.taglib.html.HtmlSelectOneMenuTag</tag-class>
+        <tag-class>net.sourceforge.myfaces.taglib.html.ext.HtmlSelectOneMenuTag</tag-class>
         <body-content>JSP</body-content>
         <description>
             Extends standard selectOneMenu by user role support.
@@ -709,12 +722,13 @@
         <tag-class>net.sourceforge.myfaces.custom.radio.HtmlRadioTag</tag-class>
         <body-content>JSP</body-content>
         <description>
-            Radio Button which gets its content from an extended selectOneRadio component.
-            The associated selectOneRadio must have the layout attribute "spread".
+            Renders a HTML input of type "radio". The associated SelectItem comes from
+            an extended selectOneRadio component with layout "spread". The selectOneRadio
+            is referenced by the "for" attribute.
+            All HTML pass-through attributes for this input are taken from the associated
+            selectOneRadio.
         </description>
         &ui_component_attributes;
-        &html_universal_attributes;
-        &html_event_handler_attributes;
         &user_role_attributes;
         <!-- HtmlRadio attributes -->
         <attribute>
@@ -730,7 +744,7 @@
             <required>true</required>
             <rtexprvalue>false</rtexprvalue>
             <description>
-                n-th SelectItem of refered UISelectOne starting with 0.
+                n-th SelectItem of referenced UISelectOne starting with 0.
             </description>
         </attribute>
     </tag>

@@ -24,6 +24,9 @@ import javax.faces.component.html.HtmlMessage;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.8  2004/04/01 12:57:43  manolito
+ * additional extended component classes for user role support
+ *
  * Revision 1.7  2004/03/30 13:24:57  manolito
  * refactoring: HtmlComponentTag moved to share and renamed to HtmlComponentTagBase
  *
@@ -31,8 +34,6 @@ import javax.faces.component.html.HtmlMessage;
 public class HtmlMessageTag
         extends HtmlMessageTagBase
 {
-    //private static final Log log = LogFactory.getLog(HtmlOutputFormatTag.class);
-
     public String getComponentType()
     {
         return HtmlMessage.COMPONENT_TYPE;
@@ -42,5 +43,4 @@ public class HtmlMessageTag
     {
         return "javax.faces.Message";
     }
-
 }

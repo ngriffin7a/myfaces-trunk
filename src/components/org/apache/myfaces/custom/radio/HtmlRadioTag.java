@@ -18,13 +18,8 @@
  */
 package net.sourceforge.myfaces.custom.radio;
 
-import net.sourceforge.myfaces.renderkit.html.HTML;
 import net.sourceforge.myfaces.renderkit.JSFAttr;
-import net.sourceforge.myfaces.taglib.html.HtmlInputTagBase;
-import net.sourceforge.myfaces.taglib.html.HtmlComponentTagBase;
-import net.sourceforge.myfaces.taglib.html.HtmlComponentBodyTagBase;
 import net.sourceforge.myfaces.taglib.UIComponentTagBase;
-import net.sourceforge.myfaces.custom.fileupload.HtmlInputFileUpload;
 
 import javax.faces.component.UIComponent;
 
@@ -60,6 +55,10 @@ public class HtmlRadioTag
     private String _for;
     private String _index;
 
+    // User Role support
+    private String _enabledOnUserRole;
+    private String _visibleOnUserRole;
+
 
     protected void setProperties(UIComponent component)
     {
@@ -67,6 +66,9 @@ public class HtmlRadioTag
 
         setStringProperty(component, HtmlRadio.FOR_ATTR, _for);
         setIntegerProperty(component, HtmlRadio.INDEX_ATTR, _index);
+
+        setStringProperty(component, JSFAttr.ENABLED_ON_USER_ROLE_ATTR, _enabledOnUserRole);
+        setStringProperty(component, JSFAttr.VISIBLE_ON_USER_ROLE_ATTR, _visibleOnUserRole);
     }
 
     public String getFor()
@@ -87,5 +89,15 @@ public class HtmlRadioTag
     public void setIndex(String index)
     {
         _index = index;
+    }
+
+    public void setEnabledOnUserRole(String enabledOnUserRole)
+    {
+        _enabledOnUserRole = enabledOnUserRole;
+    }
+
+    public void setVisibleOnUserRole(String visibleOnUserRole)
+    {
+        _visibleOnUserRole = visibleOnUserRole;
     }
 }

@@ -19,7 +19,7 @@
 package net.sourceforge.myfaces.custom.navigation;
 
 import net.sourceforge.myfaces.renderkit.html.HTML;
-import net.sourceforge.myfaces.taglib.html.HtmlComponentBodyTagBase;
+import net.sourceforge.myfaces.taglib.html.ext.HtmlPanelGroupTag;
 
 import javax.faces.component.UIComponent;
 
@@ -29,11 +29,11 @@ import javax.faces.component.UIComponent;
  * @version $Revision$ $Date$
  */
 public class HtmlPanelNavigationTag
-    extends HtmlComponentBodyTagBase
+    extends HtmlPanelGroupTag
 {
     public String getComponentType()
     {
-        return net.sourceforge.myfaces.custom.navigation.HtmlPanelNavigation.COMPONENT_TYPE;
+        return HtmlPanelNavigation.COMPONENT_TYPE;
     }
 
     protected String getDefaultRendererType()
@@ -73,6 +73,9 @@ public class HtmlPanelNavigationTag
     private String _summary;
     private String _width;
 
+    // User Role support --> already handled by HtmlPanelGroupTag
+
+    
     protected void setProperties(UIComponent component)
     {
         super.setProperties(component);
