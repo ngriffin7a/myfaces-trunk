@@ -60,8 +60,6 @@ public class NavigationRenderer
 {
 
     private static final String LEVEL_CLASSES_CACHE = NavigationRenderer.class.getName() + ".itemClasses";
-    private static final String ROW_CLASSES_ATTR_CACHE = NavigationRenderer.class.getName() + ".rowclasses";
-    private static final String COLUMN_CLASSES_ATTR_CACHE = NavigationRenderer .class.getName() + ".colclasses";
 
     /*
     public static final String CURRENT_NAVIGATION_ATTR
@@ -199,33 +197,17 @@ public class NavigationRenderer
         throws IOException
     {
         ResponseWriter writer = facesContext.getResponseWriter();
-        writer.write("\n<tr");
-        String rowStyle = calcRowStyle(navigation, 0);
-        if (rowStyle != null)
-        {
-            writer.write(" class=\"");
-            writer.write(rowStyle);
-            writer.write("\"");
-        }
-        writer.write(">");
+        writer.write("\n<tr>");
 
-        writer.write("<td");
-        String columnStyle = calcColumnStyle(navigation, 0);
-        if (columnStyle != null)
-        {
-            writer.write(" class=\"");
-            writer.write(columnStyle);
-            writer.write("\"");
-        }
-        writer.write(">");
+        writer.write("<td>");
 
-        String itemClass = getItemClass(navigation, level);
+        String itemClass = getLevelClass(navigation, level);
         if (itemClass != null)
         {
             writer.write("<span class=\"");
             writer.write(itemClass);
-            writer.write("\"");
-            writer.write(">");
+            writer.write("\">");
+
             item.encodeBegin(facesContext);
             item.encodeEnd(facesContext);
             writer.write("</span>");
@@ -262,7 +244,7 @@ public class NavigationRenderer
     private static final String DELIMITER = ",";
     private static final String[] DUMMY = {};
 
-    private String getItemClass(UIComponent navigation, int level)
+    private String getLevelClass(UIComponent navigation, int level)
     {
         String[] levelClasses = (String[])navigation.getAttribute(LEVEL_CLASSES_CACHE);
         if (levelClasses == null)
@@ -291,83 +273,4 @@ public class NavigationRenderer
         }
         return levelClasses[level % levelClasses.length];
     }
-
-
-    private String calcRowStyle(UIComponent navigation,
-                                int actualRow)
-    {
-        String[] rowClasses = getRowClasses(navigation);
-
-        if (rowClasses != null && rowClasses.length > 0)
-        {
-            return rowClasses[actualRow % rowClasses.length];
-        }
-
-        return null;
-    }
-
-
-    private String calcColumnStyle(UIComponent navigation, int actualColumn)
-    {
-        String[] columnClasses = getColumnClasses(navigation);
-
-        if (columnClasses != null && columnClasses.length > 0)
-        {
-            return columnClasses[actualColumn % columnClasses.length];
-        }
-
-        return null;
-    }
-
-    private String[] getRowClasses(UIComponent gridComponent)
-    {
-        String[] rowClasses = (String[])gridComponent.getAttribute(ROW_CLASSES_ATTR_CACHE);
-        if (rowClasses == null)
-        {
-            rowClasses = getAttributes(gridComponent, ROW_CLASSES_ATTR);
-            gridComponent.setAttribute(ROW_CLASSES_ATTR_CACHE, rowClasses);
-        }
-        return rowClasses;
-    }
-
-    private String[] getColumnClasses(UIComponent gridComponent)
-    {
-        String[] rowClasses = (String[])gridComponent.getAttribute(COLUMN_CLASSES_ATTR_CACHE);
-        if (rowClasses == null)
-        {
-            rowClasses = getAttributes(gridComponent, COLUMN_CLASSES_ATTR);
-            gridComponent.setAttribute(COLUMN_CLASSES_ATTR_CACHE, rowClasses);
-        }
-        return rowClasses;
-    }
-
-    private String[] getAttributes(UIComponent uiComponent, String attributeName)
-    {
-        String[] attr = null;
-        Object obj = uiComponent.getAttribute(attributeName);
-        if (obj instanceof String[])
-        {
-            return (String[])obj;
-        }
-        String rowClasses = (String)obj;
-        if (rowClasses != null && rowClasses.length() > 0)
-        {
-            StringTokenizer tokenizer = new StringTokenizer(rowClasses, DELIMITER);
-
-            attr = new String[tokenizer.countTokens()];
-            for (int i = 0; tokenizer.hasMoreTokens(); i++)
-            {
-                attr[i] = tokenizer.nextToken().trim();
-            }
-        }
-
-        if (attr == null)
-        {
-            attr = new String[0];
-        }
-
-        return attr;
-    }
-
-
 }

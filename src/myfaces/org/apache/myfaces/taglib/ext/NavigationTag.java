@@ -128,16 +128,6 @@ public class NavigationTag
         setRendererAttributeString(LEVEL_CLASSES, value);
     }
 
-    public void setColumnClasses(String value)
-    {
-        setRendererAttributeString(COLUMN_CLASSES_ATTR, value);
-    }
-
-    public void setRowClasses(String value)
-    {
-        setRendererAttributeString(ROW_CLASSES_ATTR, value);
-    }
-
     public void setOpenItemClass(String s)
     {
         setRendererAttributeString(OPEN_ITEM_CLASS_ATTR, s);

@@ -39,8 +39,6 @@ public interface NavigationRendererAttributes
         PANEL_CLASS_ATTR,
         BUNDLE_ATTR,
         LEVEL_CLASSES,
-        ROW_CLASSES_ATTR,
-        COLUMN_CLASSES_ATTR,
         OPEN_ITEM_CLASS_ATTR,
         ITEM_CLASS_ATTR
     };
