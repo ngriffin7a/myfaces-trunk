@@ -27,14 +27,13 @@ import javax.faces.event.PhaseId;
 import javax.faces.model.*;
 import javax.servlet.jsp.jstl.sql.Result;
 import java.io.IOException;
+import java.io.Serializable;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 /**
- * //TODO: saveState / restoreState !
- *
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
@@ -52,8 +51,8 @@ public class UIData
     private int _rowIndex = -1;
     private DataModel _dataModel;
     private String _var = null;
-    private transient Object[] _descendantStates;
-    private transient int _descendantEditableValueHolderCount = -1;
+    private Object[] _descendantStates;
+    private int _descendantEditableValueHolderCount = -1;
 
     public void setFooter(UIComponent footer)
     {
@@ -158,7 +157,7 @@ public class UIData
             List list = new ArrayList();
             saveDescendantComponentStates(this, list);
             _descendantEditableValueHolderCount = list.size();
-            if (_descendantEditableValueHolderCount != 0)
+            if (_descendantEditableValueHolderCount > 0)
             {
                 EditableValueHolderState[] rowState
                         = (EditableValueHolderState[])list.toArray(new EditableValueHolder[list.size()]);
@@ -322,8 +321,9 @@ public class UIData
     public void encodeBegin(javax.faces.context.FacesContext context)
             throws IOException
     {
-        //TODO: ensure that any saved per-row state for our child input components is discarded unless it is needed to rerender the current page with errors
+        //TODO: ??? ensure that any saved per-row state for our child input components is discarded unless it is needed to rerender the current page with errors
         _descendantStates = null;
+        _descendantEditableValueHolderCount = -1;
         super.encodeBegin(context);
     }
 
@@ -591,6 +591,7 @@ public class UIData
 
 
     private static class EditableValueHolderState
+            implements Serializable
     {
         private Object _localValue;
         private boolean _localValueSet;
@@ -614,6 +615,31 @@ public class UIData
         }
     }
 
+
+    public Object saveState(FacesContext context)
+    {
+        Object values[] = new Object[7];
+        values[0] = super.saveState(context);
+        values[1] = _first;
+        values[2] = _rows;
+        values[3] = _value;
+        values[4] = _var;
+        values[5] = _descendantStates;
+        values[6] = new Integer(_descendantEditableValueHolderCount);
+        return ((Object) (values));
+    }
+
+    public void restoreState(FacesContext context, Object state)
+    {
+        Object values[] = (Object[])state;
+        super.restoreState(context, values[0]);
+        _first = (Integer)values[1];
+        _rows = (Integer)values[2];
+        _value = (Object)values[3];
+        _var = (String)values[4];
+        _descendantStates = (Object[])values[5];
+        _descendantEditableValueHolderCount = ((Integer)values[6]).intValue();
+    }
 
 
     //------------------ GENERATED CODE BEGIN (do not modify!) --------------------
@@ -673,24 +699,6 @@ public class UIData
     }
 
 
-    public Object saveState(FacesContext context)
-    {
-        Object values[] = new Object[4];
-        values[0] = super.saveState(context);
-        values[1] = _first;
-        values[2] = _rows;
-        values[3] = _value;
-        return ((Object) (values));
-    }
-
-    public void restoreState(FacesContext context, Object state)
-    {
-        Object values[] = (Object[])state;
-        super.restoreState(context, values[0]);
-        _first = (Integer)values[1];
-        _rows = (Integer)values[2];
-        _value = (Object)values[3];
-    }
     //------------------ GENERATED CODE END ---------------------------------------
 
 

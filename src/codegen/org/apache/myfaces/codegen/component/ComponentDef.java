@@ -42,7 +42,7 @@ public class ComponentDef
     private String _componentFamily;
     private String _rendererType;
     private Map _fieldsMap;
-    private boolean _generateStateMethods;
+    private boolean _generateStateMethods = true;
     private boolean _generateConstructor = true;
 
     public ComponentDef()

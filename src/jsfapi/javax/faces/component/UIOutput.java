@@ -30,7 +30,7 @@ public class UIOutput
         extends UIComponentBase
         implements ValueHolder
 {
-    public java.lang.Object getLocalValue()
+    public Object getLocalValue()
     {
         return _value;
     }
@@ -83,7 +83,7 @@ public class UIOutput
     {
         Object values[] = new Object[3];
         values[0] = super.saveState(context);
-        values[1] = wrapForStateSaving(context, _converter);
+        values[1] = saveAttachedState(context, _converter);
         values[2] = _value;
         return ((Object) (values));
     }
@@ -92,7 +92,7 @@ public class UIOutput
     {
         Object values[] = (Object[])state;
         super.restoreState(context, values[0]);
-        _converter = (Converter)unwrapForStateRestoring(context, values[1]);
+        _converter = (Converter)restoreAttachedState(context, values[1]);
         _value = (Object)values[2];
     }
     //------------------ GENERATED CODE END ---------------------------------------

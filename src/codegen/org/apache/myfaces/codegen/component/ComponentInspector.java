@@ -74,7 +74,10 @@ public class ComponentInspector
 
             StringWriter stringWriter = new StringWriter();
             PrintWriter writer = new PrintWriter(stringWriter);
-            writer.println("<?xml version=\"1.0\"?>");
+            writer.println("<?xml version=\"1.0\" encoding=\"ISO-8859-1\" ?>");
+            writer.println("<!DOCTYPE component PUBLIC");
+            writer.println("  \"-//MyFaces//DTD MyFaces component def 1.0//EN\"");
+            writer.println("  \"http://myfaces.sourceforge.net/dtd/Component.dtd\">");
             inspectSingleClass(writer, componentClassName, oldComponentDefinition);
             writer.close();
             stringWriter.close();

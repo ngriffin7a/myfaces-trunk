@@ -18,8 +18,8 @@
  */
 package javax.faces.component;
 
-import javax.faces.context.FacesContext;
 import javax.faces.el.ValueBinding;
+
 
 /**
  * see Javadoc of JSF Specification
@@ -30,14 +30,51 @@ import javax.faces.el.ValueBinding;
 public class UISelectBoolean
         extends UIInput
 {
+
+    public void setSelected(boolean selected)
+    {
+        setValue(Boolean.valueOf(selected));
+    }
+
+    public boolean isSelected()
+    {
+        Boolean value = (Boolean)getValue();
+        return value != null ? value.booleanValue() : false;
+    }
+
+    public ValueBinding getValueBinding(String name)
+    {
+        if (name == null) throw new NullPointerException("name");
+        if (name.equals("selected"))
+        {
+            return super.getValueBinding("value");
+        }
+        else
+        {
+            return super.getValueBinding(name);
+        }
+    }
+
+    public void setValueBinding(String name,
+                                ValueBinding binding)
+    {
+        if (name == null) throw new NullPointerException("name");
+        if (name.equals("selected"))
+        {
+            super.setValueBinding("value", binding);
+        }
+        else
+        {
+            super.setValueBinding(name, binding);
+        }
+    }
+
     //------------------ GENERATED CODE BEGIN (do not modify!) --------------------
 
     public static final String COMPONENT_TYPE = "javax.faces.SelectBoolean";
     public static final String COMPONENT_FAMILY = "javax.faces.SelectBoolean";
     private static final String DEFAULT_RENDERER_TYPE = "javax.faces.Checkbox";
-    private static final boolean DEFAULT_SELECTED = false;
 
-    private Boolean _selected = null;
 
     public UISelectBoolean()
     {
@@ -49,33 +86,6 @@ public class UISelectBoolean
         return COMPONENT_FAMILY;
     }
 
-    public void setSelected(boolean selected)
-    {
-        _selected = Boolean.valueOf(selected);
-    }
 
-    public boolean isSelected()
-    {
-        if (_selected != null) return _selected.booleanValue();
-        ValueBinding vb = getValueBinding("selected");
-        Boolean v = vb != null ? (Boolean)vb.getValue(getFacesContext()) : null;
-        return v != null ? v.booleanValue() : DEFAULT_SELECTED;
-    }
-
-
-    public Object saveState(FacesContext context)
-    {
-        Object values[] = new Object[2];
-        values[0] = super.saveState(context);
-        values[1] = _selected;
-        return ((Object) (values));
-    }
-
-    public void restoreState(FacesContext context, Object state)
-    {
-        Object values[] = (Object[])state;
-        super.restoreState(context, values[0]);
-        _selected = (Boolean)values[1];
-    }
     //------------------ GENERATED CODE END ---------------------------------------
 }

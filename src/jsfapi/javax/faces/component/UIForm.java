@@ -46,39 +46,33 @@ public class UIForm
     {
         if (context == null) throw new NullPointerException("context");
         decode(context);
-        if (isSubmitted())
+        if (!isSubmitted()) return;
+        for (Iterator it = getFacetsAndChildren(); it.hasNext(); )
         {
-            for (Iterator it = getChildren().iterator(); it.hasNext();)
-            {
-                UIComponent child = (UIComponent)it.next();
-                child.processDecodes(context);
-            }
+            UIComponent childOrFacet = (UIComponent)it.next();
+            childOrFacet.processDecodes(context);
         }
     }
 
     public void processValidators(javax.faces.context.FacesContext context)
     {
         if (context == null) throw new NullPointerException("context");
-        if (isSubmitted())
+        if (!isSubmitted()) return;
+        for (Iterator it = getFacetsAndChildren(); it.hasNext(); )
         {
-            for (Iterator it = getChildren().iterator(); it.hasNext();)
-            {
-                UIComponent child = (UIComponent)it.next();
-                child.processValidators(context);
-            }
+            UIComponent childOrFacet = (UIComponent)it.next();
+            childOrFacet.processValidators(context);
         }
     }
 
     public void processUpdates(javax.faces.context.FacesContext context)
     {
         if (context == null) throw new NullPointerException("context");
-        if (isSubmitted())
+        if (!isSubmitted()) return;
+        for (Iterator it = getFacetsAndChildren(); it.hasNext(); )
         {
-            for (Iterator it = getChildren().iterator(); it.hasNext();)
-            {
-                UIComponent child = (UIComponent)it.next();
-                child.processUpdates(context);
-            }
+            UIComponent childOrFacet = (UIComponent)it.next();
+            childOrFacet.processUpdates(context);
         }
     }
 

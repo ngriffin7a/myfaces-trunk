@@ -73,19 +73,19 @@ public class UICommand
     public void broadcast(FacesEvent event)
             throws AbortProcessingException
     {
-        super.broadcast(event);
-
         if (!(event instanceof ActionEvent))
         {
-            throw new IllegalArgumentException("FacesEvent of class " + event.getClass().getName() + " is not supported");
+            throw new IllegalArgumentException("FacesEvent of class " + event.getClass().getName() + " not supported by UICommand");
         }
+
+        super.broadcast(event);
 
         FacesContext context = getFacesContext();
 
         MethodBinding actionListenerBinding = getActionListener();
         if (actionListenerBinding != null)
         {
-            actionListenerBinding.invoke(context, new Object[]{event});
+            actionListenerBinding.invoke(context, new Object[] {event});
         }
 
         ActionListener defaultActionListener

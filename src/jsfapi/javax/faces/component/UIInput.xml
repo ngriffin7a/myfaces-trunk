@@ -1,5 +1,8 @@
-<?xml version="1.0"?>
-<component>
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE component PUBLIC
+  "-//MyFaces//DTD MyFaces component def 1.0//EN"
+  "http://myfaces.sourceforge.net/dtd/Component.dtd">
+<component generateStateMethods="false" >
     <component-class>javax.faces.component.UIInput</component-class>
     <base-class>javax.faces.component.UIOutput</base-class>
     <component-type>javax.faces.Input</component-type>
@@ -10,7 +13,7 @@
         <type>boolean</type>
         <default-value>false</default-value>
     </field>
-    <field>
+    <field generateProperty="false" saveState="true" >
         <name>localValueSet</name>
         <type>boolean</type>
         <default-value>false</default-value>
@@ -20,20 +23,20 @@
         <type>boolean</type>
         <default-value>false</default-value>
     </field>
-    <field>
+    <field generateProperty="false" saveState="true"  >
         <name>submittedValue</name>
         <type>java.lang.Object</type>
     </field>
-    <field>
+    <field generateProperty="false" saveState="true" >
         <name>valid</name>
         <type>boolean</type>
         <default-value>true</default-value>
     </field>
-    <field>
+    <field generateProperty="false" saveState="true" >
         <name>validator</name>
         <type>javax.faces.el.MethodBinding</type>
     </field>
-    <field>
+    <field generateProperty="false" >
         <name>valueChangeListener</name>
         <type>javax.faces.el.MethodBinding</type>
     </field>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
-<project name="myfaces-codegen" default="generate-code">
+<project name="myfaces-codegen" default="clean">
 
     <property environment="env"/>
 

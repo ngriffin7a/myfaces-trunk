@@ -30,13 +30,64 @@ import javax.faces.el.ValueBinding;
 public class UISelectMany
         extends UIInput
 {
+    public static final String INVALID_MESSAGE_ID = "javax.faces.component.UISelectMany.INVALID";
+
+    public Object[] getSelectedValues()
+    {
+        return (Object[])getValue();
+    }
+
+    public void setSelectedValues(Object[] selectedValues)
+    {
+        setValue(selectedValues);
+    }
+
+    public ValueBinding getValueBinding(String name)
+    {
+        if (name == null) throw new NullPointerException("name");
+        if (name.equals("selectedValues"))
+        {
+            return super.getValueBinding("value");
+        }
+        else
+        {
+            return super.getValueBinding(name);
+        }
+    }
+
+    public void setValueBinding(String name,
+                                ValueBinding binding)
+    {
+        if (name == null) throw new NullPointerException("name");
+        if (name.equals("selectedValues"))
+        {
+            super.setValueBinding("value", binding);
+        }
+        else
+        {
+            super.setValueBinding(name, binding);
+        }
+    }
+
+    protected boolean compareValues(Object previous,
+                                    Object value)
+    {
+        //TODO
+        throw new UnsupportedOperationException();
+    }
+
+    public void validate(FacesContext context)
+    {
+        super.validate(context);
+        //TODO: see javadoc!
+    }
+
     //------------------ GENERATED CODE BEGIN (do not modify!) --------------------
 
     public static final String COMPONENT_TYPE = "javax.faces.SelectMany";
     public static final String COMPONENT_FAMILY = "javax.faces.SelectMany";
     private static final String DEFAULT_RENDERER_TYPE = "javax.faces.Listbox";
 
-    private [Ljava.lang.Object; _selectedValues = null;
 
     public UISelectMany()
     {
@@ -48,32 +99,6 @@ public class UISelectMany
         return COMPONENT_FAMILY;
     }
 
-    public void setSelectedValues([Ljava.lang.Object; selectedValues)
-    {
-        _selectedValues = selectedValues;
-    }
 
-    public [Ljava.lang.Object; getSelectedValues()
-    {
-        if (_selectedValues != null) return _selectedValues;
-        ValueBinding vb = getValueBinding("selectedValues");
-        return vb != null ? ([Ljava.lang.Object;)vb.getValue(getFacesContext()) : null;
-    }
-
-
-    public Object saveState(FacesContext context)
-    {
-        Object values[] = new Object[2];
-        values[0] = super.saveState(context);
-        values[1] = _selectedValues;
-        return ((Object) (values));
-    }
-
-    public void restoreState(FacesContext context, Object state)
-    {
-        Object values[] = (Object[])state;
-        super.restoreState(context, values[0]);
-        _selectedValues = ([Ljava.lang.Object;)values[1];
-    }
     //------------------ GENERATED CODE END ---------------------------------------
 }

@@ -18,6 +18,10 @@
  */
 package javax.faces.component;
 
+import javax.faces.el.MethodBinding;
+import javax.faces.event.ValueChangeListener;
+import javax.faces.validator.Validator;
+
 /**
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
@@ -25,9 +29,9 @@ package javax.faces.component;
 public interface EditableValueHolder
         extends ValueHolder
 {
-    public java.lang.Object getSubmittedValue();
+    public Object getSubmittedValue();
 
-    public void setSubmittedValue(java.lang.Object submittedValue);
+    public void setSubmittedValue(Object submittedValue);
 
     public boolean isLocalValueSet();
 
@@ -45,23 +49,23 @@ public interface EditableValueHolder
 
     public void setImmediate(boolean immediate);
 
-    public javax.faces.el.MethodBinding getValidator();
+    public MethodBinding getValidator();
 
     public void setValidator(javax.faces.el.MethodBinding validatorBinding);
 
-    public javax.faces.el.MethodBinding getValueChangeListener();
+    public MethodBinding getValueChangeListener();
 
-    public void setValueChangeListener(javax.faces.el.MethodBinding valueChangeMethod);
+    public void setValueChangeListener(MethodBinding valueChangeMethod);
 
-    public void addValidator(javax.faces.validator.Validator validator);
+    public void addValidator(Validator validator);
 
-    public javax.faces.validator.Validator[] getValidators();
+    public Validator[] getValidators();
 
-    public void removeValidator(javax.faces.validator.Validator validator);
+    public void removeValidator(Validator validator);
 
-    public void addValueChangeListener(javax.faces.event.ValueChangeListener listener);
+    public void addValueChangeListener(ValueChangeListener listener);
 
-    public javax.faces.event.ValueChangeListener[] getValueChangeListeners();
+    public ValueChangeListener[] getValueChangeListeners();
 
-    public void removeValueChangeListener(javax.faces.event.ValueChangeListener listener);
+    public void removeValueChangeListener(ValueChangeListener listener);
 }

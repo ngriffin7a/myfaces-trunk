@@ -18,6 +18,7 @@
  */
 package javax.faces.component;
 
+import javax.faces.context.FacesContext;
 
 
 /**
@@ -29,6 +30,15 @@ package javax.faces.component;
 public class UISelectOne
         extends UIInput
 {
+    public static final String INVALID_MESSAGE_ID = "javax.faces.component.UISelectOne.INVALID";
+
+    public void validate(FacesContext context)
+    {
+        super.validate(context);
+        //TODO: see javadoc!
+    }
+
+
     //------------------ GENERATED CODE BEGIN (do not modify!) --------------------
 
     public static final String COMPONENT_TYPE = "javax.faces.SelectOne";

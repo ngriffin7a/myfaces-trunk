@@ -20,6 +20,7 @@ package javax.faces.component;
 
 import javax.faces.context.FacesContext;
 import javax.faces.el.ValueBinding;
+import javax.faces.render.RenderKitFactory;
 import java.util.Locale;
 
 /**
@@ -31,15 +32,92 @@ import java.util.Locale;
 public class UIViewRoot
         extends UIComponentBase
 {
+    public static final String UNIQUE_ID_PREFIX = "_id";
+
+    private String _viewId = null;
+    private Locale _locale = null;
+
+    public String getViewId()
+    {
+        return _viewId;
+    }
+
+    public void setViewId(String viewId)
+    {
+        _viewId = viewId;
+    }
+
+    public void queueEvent(javax.faces.event.FacesEvent event)
+    {
+        throw new UnsupportedOperationException(); //TODO
+    }
+
+    public void processDecodes(javax.faces.context.FacesContext context)
+    {
+        throw new UnsupportedOperationException(); //TODO
+    }
+
+    public void encodeBegin(javax.faces.context.FacesContext context)
+            throws java.io.IOException
+    {
+        throw new UnsupportedOperationException(); //TODO
+    }
+
+    public void processValidators(javax.faces.context.FacesContext context)
+    {
+        throw new UnsupportedOperationException(); //TODO
+    }
+
+    public void processUpdates(javax.faces.context.FacesContext context)
+    {
+        throw new UnsupportedOperationException(); //TODO
+    }
+
+    public void processApplication(javax.faces.context.FacesContext context)
+    {
+        throw new UnsupportedOperationException(); //TODO
+    }
+
+    public Locale getLocale()
+    {
+        if (_locale != null) return _locale;
+        ValueBinding vb = getValueBinding("locale");
+        FacesContext facesContext = getFacesContext();
+        if (vb == null)
+        {
+            return facesContext.getApplication().getViewHandler().calculateLocale(facesContext);
+        }
+        Object locale = (Locale)vb.getValue(facesContext);
+        if (locale == null)
+        {
+            return facesContext.getApplication().getViewHandler().calculateLocale(facesContext);
+        }
+        if (locale instanceof Locale)
+        {
+            return (Locale)locale;
+        }
+        else if (locale instanceof String)
+        {
+            return new Locale((String)locale);
+        }
+        else
+        {
+            throw new IllegalArgumentException("locale binding"); //TODO: not specified!?
+        }
+    }
+
+    public void setLocale(Locale locale)
+    {
+        _locale = locale;
+    }
+
     //------------------ GENERATED CODE BEGIN (do not modify!) --------------------
 
     public static final String COMPONENT_TYPE = "javax.faces.ViewRoot";
     public static final String COMPONENT_FAMILY = "javax.faces.ViewRoot";
-    private static final String DEFAULT_RENDERKITID = "HTML_BASIC";
+    private static final String DEFAULT_RENDERKITID = RenderKitFactory.HTML_BASIC_RENDER_KIT;
 
-    private Locale _locale = null;
     private String _renderKitId = null;
-    private String _viewId = null;
 
     public UIViewRoot()
     {
@@ -50,17 +128,6 @@ public class UIViewRoot
         return COMPONENT_FAMILY;
     }
 
-    public void setLocale(Locale locale)
-    {
-        _locale = locale;
-    }
-
-    public Locale getLocale()
-    {
-        if (_locale != null) return _locale;
-        ValueBinding vb = getValueBinding("locale");
-        return vb != null ? (Locale)vb.getValue(getFacesContext()) : null;
-    }
 
     public void setRenderKitId(String renderKitId)
     {
@@ -74,17 +141,6 @@ public class UIViewRoot
         return vb != null ? (String)vb.getValue(getFacesContext()) : DEFAULT_RENDERKITID;
     }
 
-    public void setViewId(String viewId)
-    {
-        _viewId = viewId;
-    }
-
-    public String getViewId()
-    {
-        if (_viewId != null) return _viewId;
-        ValueBinding vb = getValueBinding("viewId");
-        return vb != null ? (String)vb.getValue(getFacesContext()) : null;
-    }
 
 
     public Object saveState(FacesContext context)
