@@ -18,7 +18,6 @@
  */
 package net.sourceforge.myfaces;
 
-import net.sourceforge.myfaces.convert.ConverterFactory;
 import net.sourceforge.myfaces.convert.ConverterFactoryImpl;
 import net.sourceforge.myfaces.convert.map.ConverterMapFactory;
 import net.sourceforge.myfaces.convert.map.ConverterMapFactoryImpl;
@@ -27,6 +26,7 @@ import net.sourceforge.myfaces.webapp.ServletMappingFactory;
 import net.sourceforge.myfaces.webapp.ServletMappingFactoryImpl;
 
 import javax.faces.FacesException;
+import javax.faces.convert.ConverterFactory;
 import javax.servlet.ServletContext;
 import java.util.HashMap;
 

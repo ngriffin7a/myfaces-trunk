@@ -20,7 +20,6 @@ package net.sourceforge.myfaces.taglib;
 
 import net.sourceforge.myfaces.component.CommonComponentAttributes;
 import net.sourceforge.myfaces.component.UIComponentUtils;
-import net.sourceforge.myfaces.convert.Converter;
 import net.sourceforge.myfaces.convert.ConverterUtils;
 import net.sourceforge.myfaces.util.bean.BeanUtils;
 import net.sourceforge.myfaces.util.logging.LogUtil;
@@ -28,6 +27,7 @@ import net.sourceforge.myfaces.util.logging.LogUtil;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.webapp.FacesTag;
+import javax.faces.convert.Converter;
 import javax.servlet.jsp.PageContext;
 import java.util.HashSet;
 import java.util.Iterator;

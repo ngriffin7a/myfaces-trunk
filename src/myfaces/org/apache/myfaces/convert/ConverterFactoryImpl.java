@@ -19,6 +19,8 @@
 package net.sourceforge.myfaces.convert;
 
 import javax.faces.FacesException;
+import javax.faces.convert.ConverterFactory;
+import javax.faces.convert.Converter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
@@ -32,7 +34,7 @@ import java.util.Properties;
  * @version $Revision$ $Date$
  */
 public class ConverterFactoryImpl
-        implements ConverterFactory
+        extends ConverterFactory
 {
     private static final String CONVERTER_PROPS =
         "net.sourceforge.myfaces.convert.converter".replace('.', '/') + ".properties";
@@ -112,4 +114,23 @@ public class ConverterFactoryImpl
         return _converters.keySet().iterator();
     }
 
+
+
+    public void addConverter(Class class1, Converter converter)
+    {
+        //TODO
+        throw new UnsupportedOperationException();
+    }
+
+    public Converter getConverter(Class class1)
+    {
+        //TODO
+        throw new UnsupportedOperationException();
+    }
+
+    public Iterator getConverterClasses()
+    {
+        //TODO
+        throw new UnsupportedOperationException();
+    }
 }

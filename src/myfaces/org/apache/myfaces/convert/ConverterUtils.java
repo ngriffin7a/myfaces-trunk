@@ -23,6 +23,9 @@ import net.sourceforge.myfaces.convert.map.ConverterMapFactory;
 import net.sourceforge.myfaces.renderkit.attr.CommonRendererAttributes;
 
 import javax.faces.FacesException;
+import javax.faces.convert.Converter;
+import javax.faces.convert.ConverterFactory;
+import javax.faces.convert.ConverterException;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.mail.MessagingException;
@@ -168,19 +171,19 @@ public class ConverterUtils
         String numberStyle = (String)component.getAttribute(CommonRendererAttributes.NUMBER_STYLE_ATTR);
         if (numberStyle != null)
         {
-            if (numberStyle.equals(Converter.NUMBER_STYLE_CURRENCY))
+            if (numberStyle.equals(ConverterConstants.NUMBER_STYLE_CURRENCY))
             {
                 format = NumberFormat.getCurrencyInstance(locale);
             }
-            else if (numberStyle.equals(Converter.NUMBER_STYLE_INTEGER))
+            else if (numberStyle.equals(ConverterConstants.NUMBER_STYLE_INTEGER))
             {
                 format = NumberFormat.getIntegerInstance(locale);
             }
-            else if (numberStyle.equals(Converter.NUMBER_STYLE_NUMBER))
+            else if (numberStyle.equals(ConverterConstants.NUMBER_STYLE_NUMBER))
             {
                 format = NumberFormat.getNumberInstance(locale);
             }
-            else if (numberStyle.equals(Converter.NUMBER_STYLE_PERCENT))
+            else if (numberStyle.equals(ConverterConstants.NUMBER_STYLE_PERCENT))
             {
                 format = NumberFormat.getPercentInstance(locale);
             }
@@ -231,19 +234,19 @@ public class ConverterUtils
         String dateStyle = (String)component.getAttribute(CommonRendererAttributes.DATE_STYLE_ATTR);
         if (dateStyle != null)
         {
-            if (dateStyle.equals(Converter.DATE_STYLE_SHORT))
+            if (dateStyle.equals(ConverterConstants.DATE_STYLE_SHORT))
             {
                 return DateFormat.SHORT;
             }
-            else if (dateStyle.equals(Converter.DATE_STYLE_MEDIUM))
+            else if (dateStyle.equals(ConverterConstants.DATE_STYLE_MEDIUM))
             {
                 return DateFormat.MEDIUM;
             }
-            else if (dateStyle.equals(Converter.DATE_STYLE_LONG))
+            else if (dateStyle.equals(ConverterConstants.DATE_STYLE_LONG))
             {
                 return DateFormat.LONG;
             }
-            else if (dateStyle.equals(Converter.DATE_STYLE_FULL))
+            else if (dateStyle.equals(ConverterConstants.DATE_STYLE_FULL))
             {
                 return DateFormat.FULL;
             }
@@ -261,19 +264,19 @@ public class ConverterUtils
         String timeStyle = (String)component.getAttribute(CommonRendererAttributes.TIME_STYLE_ATTR);
         if (timeStyle != null)
         {
-            if (timeStyle.equals(Converter.TIME_STYLE_SHORT))
+            if (timeStyle.equals(ConverterConstants.TIME_STYLE_SHORT))
             {
                 return DateFormat.SHORT;
             }
-            else if (timeStyle.equals(Converter.TIME_STYLE_MEDIUM))
+            else if (timeStyle.equals(ConverterConstants.TIME_STYLE_MEDIUM))
             {
                 return DateFormat.MEDIUM;
             }
-            else if (timeStyle.equals(Converter.TIME_STYLE_LONG))
+            else if (timeStyle.equals(ConverterConstants.TIME_STYLE_LONG))
             {
                 return DateFormat.LONG;
             }
-            else if (timeStyle.equals(Converter.TIME_STYLE_FULL))
+            else if (timeStyle.equals(ConverterConstants.TIME_STYLE_FULL))
             {
                 return DateFormat.FULL;
             }

@@ -19,14 +19,14 @@
 package net.sourceforge.myfaces.component;
 
 import net.sourceforge.myfaces.MyFacesConfig;
-import net.sourceforge.myfaces.convert.Converter;
-import net.sourceforge.myfaces.convert.ConverterException;
 import net.sourceforge.myfaces.convert.ConverterUtils;
 import net.sourceforge.myfaces.convert.impl.StringArrayConverter;
 import net.sourceforge.myfaces.renderkit.html.state.StateRenderer;
 
 import javax.faces.FacesException;
 import javax.faces.FactoryFinder;
+import javax.faces.convert.Converter;
+import javax.faces.convert.ConverterException;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.context.Message;
@@ -137,7 +137,8 @@ public class UIComponentUtils
             uiComponent.setValid(false);
             if (addErrorMessageOnFail)
             {
-                addConversionErrorMessage(facesContext, uiComponent, e.getMessageId());
+                //addConversionErrorMessage(facesContext, uiComponent, e.getMessageId());
+                addConversionErrorMessage(facesContext, uiComponent, e.getMessage());
             }
             else
             {

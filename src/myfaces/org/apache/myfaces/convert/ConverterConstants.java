@@ -18,15 +18,11 @@
  */
 package net.sourceforge.myfaces.convert;
 
-import javax.faces.component.UIComponent;
-import javax.faces.context.FacesContext;
-
 /**
- * FINAL: There is no Converter class in javax.faces yet, therefore here in the meantime...
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public interface Converter
+public interface ConverterConstants
 {
     public static final String NUMBER_STYLE_CURRENCY = "CURRENCY";
     public static final String NUMBER_STYLE_INTEGER  = "INTEGER";
@@ -42,9 +38,4 @@ public interface Converter
     public static final String TIME_STYLE_MEDIUM = "MEDIUM";
     public static final String TIME_STYLE_LONG   = "LONG";
     public static final String TIME_STYLE_FULL   = "FULL";
-
-    public Object getAsObject(FacesContext context, UIComponent component, String value)
-        throws ConverterException;
-    public String getAsString(FacesContext context, UIComponent component, Object value)
-        throws ConverterException;
 }
