@@ -20,12 +20,13 @@ package net.sourceforge.myfaces.renderkit.html;
 
 import net.sourceforge.myfaces.renderkit.JSFAttr;
 import net.sourceforge.myfaces.renderkit.RendererUtils;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import javax.faces.component.UIComponent;
-import javax.faces.component.UIParameter;
 import javax.faces.component.UIOutput;
+import javax.faces.component.UIParameter;
 import javax.faces.component.html.HtmlOutputFormat;
 import javax.faces.context.FacesContext;
 import java.io.IOException;
@@ -60,7 +61,6 @@ public class HtmlFormatRenderer
             throws IOException
     {
         RendererUtils.checkParamValidity(facesContext, component, UIOutput.class);
-        if (!RendererUtils.isVisibleOnUserRole(facesContext, component)) return;
 
         String text = getOutputFormatText(facesContext, component);
         boolean isEscape;

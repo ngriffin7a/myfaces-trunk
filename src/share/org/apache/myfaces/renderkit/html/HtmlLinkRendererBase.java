@@ -39,6 +39,9 @@ import java.util.Iterator;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.3  2004/04/05 11:14:05  manolito
+ * removed isVisibleOnUserRole
+ *
  * Revision 1.2  2004/03/31 14:50:34  manolito
  * bug fix
  *
@@ -154,7 +157,7 @@ public abstract class HtmlLinkRendererBase
     {
         ResponseWriter writer = facesContext.getResponseWriter();
 
-        if (RendererUtils.isEnabledOnUserRole(facesContext, component))
+        if (RendererUtils.isEnabledOnUserRole(facesContext, component)) //TODO: Move to extended renderer
         {
             if (MyFacesConfig.isAllowJavascript(facesContext.getExternalContext()))
             {
@@ -173,7 +176,7 @@ public abstract class HtmlLinkRendererBase
                                                   styleClass);
         }
 
-        //MyFaces extension: Render text of given by value
+        //MyFaces extension: Render text of given by value.  TODO: Move to extended renderer
         if(value != null)
         {
             writer.writeText(value.toString(), JSFAttr.VALUE_ATTR);

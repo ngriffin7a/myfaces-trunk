@@ -19,6 +19,7 @@
 package net.sourceforge.myfaces.renderkit;
 
 import net.sourceforge.myfaces.util.HashMapUtils;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -113,32 +114,6 @@ public class RendererUtils
         {
         */
             userRole = (String)component.getAttributes().get(JSFAttr.ENABLED_ON_USER_ROLE_ATTR);
-        //}
-
-        if (userRole == null)
-        {
-            //no restriction
-            return true;
-        }
-        else
-        {
-            return facesContext.getExternalContext().isUserInRole(userRole);
-        }
-    }
-
-    public static boolean isVisibleOnUserRole(FacesContext facesContext, UIComponent component)
-    {
-        String userRole;
-        /*
-        TODO: optimize components by implementing UserRoleSupport interface
-        if (component instanceof UserRoleSupport)
-        {
-            userRole = ((UserRoleSupport)component).getVisibleOnUserRole();
-        }
-        else
-        {
-        */
-            userRole = (String)component.getAttributes().get(JSFAttr.VISIBLE_ON_USER_ROLE_ATTR);
         //}
 
         if (userRole == null)

@@ -44,20 +44,17 @@ public class HtmlTextRenderer
     {
         RendererUtils.checkParamValidity(facesContext,component,null);
 
-        if (RendererUtils.isVisibleOnUserRole(facesContext, component))
+        if (component instanceof UIInput)
         {
-            if (component instanceof UIInput)
-            {
-                renderInput(facesContext, (UIInput)component);
-            }
-            else if (component instanceof UIOutput)
-            {
-                renderOutput(facesContext, (UIOutput)component);
-            }
-            else
-            {
-                throw new IllegalArgumentException("Unsupported component class " + component.getClass().getName());
-            }
+            renderInput(facesContext, (UIInput)component);
+        }
+        else if (component instanceof UIOutput)
+        {
+            renderOutput(facesContext, (UIOutput)component);
+        }
+        else
+        {
+            throw new IllegalArgumentException("Unsupported component class " + component.getClass().getName());
         }
     }
 
