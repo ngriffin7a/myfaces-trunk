@@ -28,6 +28,9 @@ import org.apache.myfaces.renderkit.html.HtmlRendererUtils;
  * @author bdudney (latest modification by $Author$) 
  * @version $Revision$ $Date$ 
  * $Log$
+ * Revision 1.5  2005/02/09 21:17:57  svieujot
+ * Bugfix for MYFACES-105, thanks to Norm Deane
+ *
  * Revision 1.4  2005/02/09 17:41:30  svieujot
  * Apply Sean Schofield's patch for MYFACES-104
  *
@@ -61,10 +64,10 @@ public class DivRenderer extends HtmlRenderer {
       throw new IllegalStateException("Only one of style or styleClass can be specified");
     }
     if(null != styleClass) {
-      writer.write("class=\"" + styleClass + "\"");
+        writer.writeAttribute(HTML.CLASS_ATTR, styleClass, null);
     }
     if(null != style) {
-      writer.write("style=\"" + style + "\"");
+        writer.writeAttribute(HTML.STYLE_ATTR, style, null);
     }
   }
 
