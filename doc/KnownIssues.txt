@@ -12,7 +12,4 @@ MyFaces Known Issues
   revision of the name. So, you must not use hyphens (or other special
   characters) in id attributes.
 
-* Dynamically including by <jsp:include> is not yet supported.
-
-
 TODO... (Many others!)
