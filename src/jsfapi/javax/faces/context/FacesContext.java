@@ -74,12 +74,7 @@ public abstract class FacesContext
 
     public static FacesContext getCurrentInstance()
     {
-        FacesContext facesContext = (FacesContext)_currentInstance.get();
-        if (facesContext == null)
-        {
-            System.err.println("Fatal Error: No current FacesContext instance");
-        }
-        return facesContext;
+        return (FacesContext)_currentInstance.get();
     }
 
     protected static void setCurrentInstance(javax.faces.context.FacesContext context)
