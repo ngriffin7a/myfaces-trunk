@@ -24,6 +24,9 @@ import org.apache.myfaces.taglib.UIComponentTagBase;
  * @author Sylvain Vieujot (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.10  2005/02/05 18:51:21  svieujot
+ * x:htmlEditor : Upgrade to Kupu 1.2rc1, remove formularMode (too experimental), bugfixes.
+ *
  * Revision 1.9  2005/01/02 20:39:16  svieujot
  * HtmlEditor can now process HTML documents and HTML fragments.
  *
@@ -57,7 +60,6 @@ public class HtmlEditorTag extends UIComponentTagBase {
     private String styleClass;
     
     private String type;
-    private String formularMode;
     
     private String allowEditSource;
     private String addKupuLogo;
@@ -78,7 +80,6 @@ public class HtmlEditorTag extends UIComponentTagBase {
         setStringProperty(component, "styleClass", styleClass);
         
         setBooleanProperty(component, "type", type);
-        setBooleanProperty(component, "formularMode", formularMode);
         
         setBooleanProperty(component, "allowEditSource", allowEditSource);
         setBooleanProperty(component, "addKupuLogo", addKupuLogo);
@@ -113,10 +114,6 @@ public class HtmlEditorTag extends UIComponentTagBase {
         this.type = type;
     }
     
-    public void setFormularMode(String formularMode){
-        this.formularMode = formularMode;
-    }
-
     public void setAllowEditSource(String allowEditSource){
         this.allowEditSource = allowEditSource;
     }

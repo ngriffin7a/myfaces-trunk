@@ -97,7 +97,6 @@ function KupuMultiEditor(documents, config, logger) {
             this._addEventHandler(doc, "click", this.updateStateHandler, this);
             this._addEventHandler(doc, "keyup", this.updateStateHandler, this);
             if (this.getBrowserName() == "IE") {
-                this._addEventHandler(doc, "focus", this._clearSelection, this);
                 this._addEventHandler(doc, "dblclick", this.updateStateHandler, this);
                 this._addEventHandler(doc, "select", this.updateStateHandler, this);
             };
@@ -137,10 +136,6 @@ function KupuMultiEditor(documents, config, logger) {
     this._setDesignMode = function(doc) {
         doc.getDocument().designMode = "On";
         doc.execCommand("undo");
-        // note the negation: the argument doesn't work as expected...
-        // XXX somehow calling execCommand('useCSS',...) here doesn't seem to have effect unless it's
-        // called with a timeout... don't know why, crappy workaround...
-        timer_instance.registerFunction(doc, doc.execCommand, 0, "useCSS", !this.config.use_css);
     };
 
     // XXX perhaps we can partially move this to a helper method to approve
@@ -148,6 +143,9 @@ function KupuMultiEditor(documents, config, logger) {
     this.prepareForm = function(form, idprefix) {
         /* add some fields to the form and place the contents of the iframes 
         */
+        var sourcetool = this.getTool('sourceedittool');
+        if (sourcetool) {sourcetool.cancelSourceMode();};
+
         // make sure people can't edit or save during saving
         if (!this._initialized) {
             return;

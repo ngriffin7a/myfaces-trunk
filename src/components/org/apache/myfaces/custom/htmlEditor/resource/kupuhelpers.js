@@ -162,6 +162,7 @@ function _load_dict_helper(element) {
                 // ignorable whitespace) and dive into the node
                 if (child.childNodes[j].nodeType == 1) {
                     value = _load_dict_helper(child);
+                    break;
                 } else if (typeof(value) == typeof('')) {
                     value += child.childNodes[j].nodeValue;
                 };
@@ -176,7 +177,7 @@ function _load_dict_helper(element) {
             };
             var name = child.nodeName.toLowerCase();
             if (dict[name] != undefined) {
-                if (typeof(dict[name]) == typeof('') || typeof(dict[name]) == typeof(0)) {
+                if (!dict[name].push) {
                     dict[name] = new Array(dict[name], value);
                 } else {
                     dict[name].push(value);
@@ -358,19 +359,14 @@ function BaseSelection() {
         /* returns a Boolean to indicate if the selection is resided
             inside the node
         */
-        var iterator = new NodeIterator(node);
-        var currnode = iterator.next();
-        var anchornode = node;
-        var focusnode = node;
-        if (node == anchornode || node == focusnode) {
-            return true;
-        };
+        var currnode = self.getSelectedNode();
         while (currnode) {
-            if (currnode == anchornode || currnode == focusnode) {
+            if (currnode == node) {
                 return true;
             };
-            currnode = iterator.next();
+            currnode = currnode.parentNode;
         };
+        return false;
     };
 };
 
@@ -386,26 +382,29 @@ function MozillaSelection(document) {
 
     this.getSelectedNode = function() {
         /* return the selected node (or the node containing the selection) */
-        var selectedNode = this.selection.anchorNode;
-        if (this.selection.rangeCount == 0 || selectedNode.childNodes.length == 0) {
-            return selectedNode;
-        };
-        for (var i=0; i < selectedNode.childNodes.length; i++) {
-            var child = selectedNode.childNodes[i];
-            if (this.selection.containsNode(child, true)) {
-                selectedNode = child;
-            };
-        };
+        var selection = this.selection;
+        var selectedNode = selection.anchorNode;
 
+        var n = selectedNode.parentNode;
+        // Get next sibling at any level
+        while (n) {
+            if ((n.previousSibling && selection.containsNode(n.previousSibling, true)) ||
+                (n.nextSibling && selection.containsNode(n.nextSibling, true))) {
+                selectedNode = n.parentNode;
+            }
+            n = n.parentNode;
+        }
         return selectedNode;
     };
 
     this.collapse = function(collapseToEnd) {
-        if (!collapseToEnd) {
-            this.selection.collapseToStart();
-        } else {
-            this.selection.collapseToEnd();
-        };
+        try {
+            if (!collapseToEnd) {
+                this.selection.collapseToStart();
+            } else {
+                this.selection.collapseToEnd();
+            };
+        } catch(e) {};
     };
 
     this.replaceWithNode = function(node, selectAfterPlace) {
@@ -774,6 +773,10 @@ function MozillaSelection(document) {
         return range.cloneContents();
     };
 
+    this.containsNode = function(node) {
+        return this.selection.containsNode(node, true);
+    }
+
     this.toString = function() {
         return this.selection.toString();
     };
@@ -784,7 +787,22 @@ MozillaSelection.prototype = new BaseSelection;
 function IESelection(document) {
     this.document = document;
     this.selection = document.getDocument().selection;
-    
+
+    /* If no selection in editable document, IE returns selection from
+     * main page, so force an inner selection. */
+    var doc = document.getDocument();
+
+    var range = this.selection.createRange()
+    var parent = this.selection.type=="Text" ?
+        range.parentElement() :
+        this.selection.type=="Control" ?  range.parentElement : null;
+
+    if(parent && parent.ownerDocument != doc) {
+            var range = doc.body.createTextRange();
+            range.collapse();
+            range.select();
+    }
+
     this.selectNodeContents = function(node) {
         /* select the contents of a node */
         // a bit nasty, when moveToElementText is called it will move the selection start
@@ -859,6 +877,7 @@ function IESelection(document) {
             var endpoint = selrange.duplicate();
             endpoint.collapse(false);
             var parent = selrange.parentElement();
+            if (parent.tagName=='IMG') parent=parent.parentElement;
 
             var elrange = selrange.duplicate();
             elrange.moveToElementText(parent);
@@ -1058,6 +1077,18 @@ function IESelection(document) {
         return docfrag;
     };
 
+    this.containsNode = function(node) {
+        var selected = this.selection.createRange();
+
+        var range = doc.body.createTextRange();
+        range.moveToElementText(node);
+
+        if (selected.compareEndPoints('StartToEnd', range) >= 0 ||
+            selected.compareEndPoints('EndToStart', range) <= 0) {
+            return false;
+        }
+        return true;
+    }
     this.toString = function() {
         return this.selection.createRange().htmlText;
     };

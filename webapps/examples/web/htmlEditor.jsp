@@ -60,22 +60,19 @@
 
 					<x:htmlEditor value="#{editor.text}"
 						style="height: 60ex;"
-						formularMode="#{editor.formularMode}"
 						allowEditSource="#{editor.allowEditSource}"
 						showPropertiesToolBox="#{editor.showPropertiesToolBox}"
 						showLinksToolBox="#{editor.showLinksToolBox}"
 						showImagesToolBox="#{editor.showImagesToolBox}"
 						showTablesToolBox="#{editor.showTablesToolBox}"
 						showDebugToolBox="#{editor.showDebugToolBox}"/>
+					
 					<h:commandButton value="Submit"/>
 
 					<f:verbatim>
 						<h2>Component Options</h2>
 					</f:verbatim>
 					<h:panelGrid columns="2">
-						<h:selectBooleanCheckbox value="#{editor.formularMode}" immediate="true"/>
-						<h:outputText value="Formular mode"/>
-
 						<h:selectBooleanCheckbox value="#{editor.allowEditSource}" immediate="true"/>
 						<h:outputText value="Allow Edit Source"/>
 

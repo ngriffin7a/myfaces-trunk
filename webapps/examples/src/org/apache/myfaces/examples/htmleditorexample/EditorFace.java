@@ -21,18 +21,7 @@ package org.apache.myfaces.examples.htmleditorexample;
  */
 public class EditorFace {
     
-    private String text =
-        "This is a Form where you can enter your name and Story.<br/>" +
-        "Only those fields are editable <small><i>(this isn't 100% secure though)</i></small>." +
-        "<p><span><u>Name</u> : [ </span><span editable=\"yes\">_________</span><span> ]</span></p>" +
-        "<h3>Type your story between the lines</h3>" +
-        "<hr/>" +
-        "<span editable=\"yes\">bla bla bla ...<br/><br/><br/><br/></span>" +
-        "<hr/>" +
-        "<p><i>To edit the all document, disable the <b>formular mode</b> bellow.</i></p>" +
-        "<p><i>Note : formular isn't the default mode, but this is just for the demonstration.</i></p>";
-    
-    private boolean formularMode = true;
+    private String text = "Defaut unformated text.";
     
     // Options
     private boolean allowEditSource = true;
@@ -49,13 +38,6 @@ public class EditorFace {
         this.text = text;
     }
     
-    public boolean isFormularMode() {
-        return formularMode;
-    }
-    public void setFormularMode(boolean formularMode) {
-        this.formularMode = formularMode;
-    }
-
     public boolean isAllowEditSource() {
         return allowEditSource;
     }

@@ -30,6 +30,9 @@ import org.apache.myfaces.renderkit.RendererUtils;
  * @author Sylvain Vieujot (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.16  2005/02/05 18:51:21  svieujot
+ * x:htmlEditor : Upgrade to Kupu 1.2rc1, remove formularMode (too experimental), bugfixes.
+ *
  * Revision 1.15  2005/01/03 03:49:31  svieujot
  * trim returned text
  *
@@ -95,8 +98,6 @@ public class HtmlEditor extends HtmlInputText {
     private Boolean _showImagesToolBox;
     private Boolean _showTablesToolBox;
     private Boolean _showDebugToolBox;
-    
-    private Boolean _enableFlexiTools; // Formular mode
 
     public HtmlEditor() {
         setRendererType(DEFAULT_RENDERER_TYPE);
@@ -107,7 +108,7 @@ public class HtmlEditor extends HtmlInputText {
     }
 
     public Object saveState(FacesContext context) {
-        Object values[] = new Object[6];
+        Object values[] = new Object[5];
         values[0] = super.saveState(context);
         
         String[] display = new String[2];
@@ -133,11 +134,6 @@ public class HtmlEditor extends HtmlInputText {
         
         values[4] = toolBoxes;
         
-        Boolean tools[] = new Boolean[1];
-        tools[0] = _enableFlexiTools;
-        
-        values[5] = tools;
-        
         return values;
     }
 
@@ -161,9 +157,6 @@ public class HtmlEditor extends HtmlInputText {
         _showImagesToolBox = toolBoxes[2];
         _showTablesToolBox = toolBoxes[3];
         _showDebugToolBox = toolBoxes[4];
-        
-        Boolean[] tools = (Boolean[]) values[5];
-        _enableFlexiTools = tools[0];
     }
     
     public String getStyle(){
@@ -273,17 +266,7 @@ public class HtmlEditor extends HtmlInputText {
    			|| isShowTablesToolBox()
    			|| isShowDebugToolBox();
     }
-    
-    public boolean isEnableFlexiTools(){
-   		if (_enableFlexiTools != null)
-   		    return _enableFlexiTools.booleanValue();
-    	ValueBinding vb = getValueBinding("formularMode");
-    	return vb != null ? ((Boolean)vb.getValue(getFacesContext())).booleanValue() : false;
-    }
-    public void setEnableFlexiTools(boolean formularMode){
-        this._enableFlexiTools = Boolean.valueOf(formularMode);
-    }
-    
+
     public String getValueAsHtmlDocument(FacesContext context){
         String val = RendererUtils.getStringValue(context, this);
         if( isHtmlDocument( val ) )

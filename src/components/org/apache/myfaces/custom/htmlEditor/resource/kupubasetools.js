@@ -71,6 +71,12 @@ function KupuTool() {
     this._selectSelectItem = function(select, item) {
         this.editor.logMessage('Deprecation warning: KupuTool._selectSelectItem');
     };
+    this._fixTabIndex = function(element) {
+        var tabIndex = this.editor.getDocument().getEditable().tabIndex-1;
+        if (tabIndex && !element.tabIndex) {
+            element.tabIndex = tabIndex;
+        }
+    }
 }
 
 function KupuToolBox() {
@@ -91,6 +97,13 @@ function KupuToolBox() {
     };
 };
 
+function NoContextMenu(object) {
+    /* Decorator for a tool to suppress the context menu */
+    object.createContextMenuElements = function(selNode, event) {
+        return [];
+    }
+    return object;
+}
 //----------------------------------------------------------------------------
 // Implementations
 //----------------------------------------------------------------------------
@@ -103,12 +116,14 @@ function KupuButton(buttonid, commandfunc, tool) {
 
     this.initialize = function(editor) {
         this.editor = editor;
+        this._fixTabIndex(this.button);
         addEventHandler(this.button, 'click', this.execCommand, this);
     };
 
     this.execCommand = function() {
         /* exec this button's command */
         this.commandfunc(this, this.editor, this.tool);
+        this.editor.focusDocument();
     };
 
     this.updateState = function(selNode, event) {
@@ -133,10 +148,9 @@ function KupuStateButton(buttonid, commandfunc, checkfunc, offclass, onclass) {
     this.execCommand = function() {
         /* exec this button's command */
         this.commandfunc(this, this.editor);
-        if (this.editor.getBrowserName() == 'Mozilla') {
-            this.button.className = (this.pressed ? this.offclass : this.onclass);
-            this.pressed = !this.pressed;
-        };
+        this.button.className = (this.pressed ? this.offclass : this.onclass);
+        this.pressed = !this.pressed;
+        this.editor.focusDocument();
     };
 
     this.updateState = function(selNode, event) {
@@ -195,6 +209,7 @@ function KupuUI(textstyleselectid) {
     this.initialize = function(editor) {
         /* initialize the ui like tools */
         this.editor = editor;
+        this._fixTabIndex(this.tsselect);
         addEventHandler(this.tsselect, 'change', this.setTextStyleHandler, this);
     };
 
@@ -519,17 +534,16 @@ function LinkTool() {
         if (!linkel) {
             this.editor.execCommand("CreateLink", url);
             var currnode = this.editor.getSelectedNode();
-            if (this.editor.getBrowserName() == 'IE') {
-                linkel = this.editor.getNearestParentOfType(currnode, 'A');
-            } else {
-                linkel = currnode.nextSibling;
+            linkel = this.editor.getNearestParentOfType(currnode, 'A');
+            if (this.editor.getBrowserName() != 'IE') {
+                if (!linkel) linkel = this.editor.getNearestParentOfType(currnode.nextSibling, 'A');
             };
             if (!linkel) {
                 // Insert link with no text selected, insert the title
                 // or URI instead.
                 linkel = doc.createElement("a");
                 linkel.setAttribute('href', url);
-                currnode.appendChild(linkel);
+                this.editor.getSelection().replaceWithNode(linkel, true);
             };
         } else {
             linkel.setAttribute('href', url);
@@ -549,8 +563,11 @@ function LinkTool() {
             };
         };
         
-        var selection = this.editor.getSelection();
-        selection.selectNodeContents(linkel);
+        try {
+            var selection = this.editor.getSelection();
+            selection.selectNodeContents(linkel);
+        } catch(e) { // Can fail on IE.
+        }
         
         linkel.style.color = this.linkcolor;
         
@@ -1437,6 +1454,10 @@ function ListTool(addulbuttonid, addolbuttonid, ulstyleselectid, olstyleselectid
     this.initialize = function(editor) {
         /* attach event handlers */
         this.editor = editor;
+        this._fixTabIndex(this.addulbutton);
+        this._fixTabIndex(this.addolbutton);
+        this._fixTabIndex(this.ulselect);
+        this._fixTabIndex(this.olselect);
 
         addEventHandler(this.addulbutton, "click", this.addUnorderedList, this);
         addEventHandler(this.addolbutton, "click", this.addOrderedList, this);
@@ -1448,83 +1469,80 @@ function ListTool(addulbuttonid, addolbuttonid, ulstyleselectid, olstyleselectid
         this.editor.logMessage('List style tool initialized');
     };
 
+    this._handleStyles = function(currnode, onselect, offselect) {
+        if (this.editor.config.use_css) {
+            var currstyle = currnode.style.listStyleType;
+        } else {
+            var currstyle = this.type_to_style[currnode.getAttribute('type')];
+        }
+        selectSelectItem(onselect, currstyle);
+        offselect.style.display = "none";
+        onselect.style.display = "inline";
+        offselect.selectedIndex = 0;
+    };
+
     this.updateState = function(selNode) {
         /* update the visibility and selection of the list type pulldowns */
         // we're going to walk through the tree manually since we want to 
         // check on 2 items at the same time
-        var currnode = selNode;
-        while (currnode) {
-            if (currnode.nodeName.toLowerCase() == 'ul') {
-                if (this.editor.config.use_css) {
-                    var currstyle = currnode.style.listStyleType;
-                } else {
-                    var currstyle = this.type_to_style[currnode.getAttribute('type')];
-                }
-                selectSelectItem(this.ulselect, currstyle);
-                this.olselect.style.display = "none";
-                this.ulselect.style.display = "inline";
+        for (var currnode=selNode; currnode; currnode=currnode.parentNode) {
+            var tag = currnode.nodeName.toLowerCase();
+            if (tag == 'ul') {
+                this._handleStyles(currnode, this.ulselect, this.olselect);
                 return;
-            } else if (currnode.nodeName.toLowerCase() == 'ol') {
-                if (this.editor.config.use_css) {
-                    var currstyle = currnode.listStyleType;
-                } else {
-                    var currstyle = this.type_to_style[currnode.getAttribute('type')];
-                }
-                selectSelectItem(this.olselect, currstyle);
-                this.ulselect.style.display = "none";
-                this.olselect.style.display = "inline";
+            } else if (tag == 'ol') {
+                this._handleStyles(currnode, this.olselect, this.ulselect);
                 return;
             }
-
-            currnode = currnode.parentNode;
-            this.ulselect.selectedIndex = 0;
-            this.olselect.selectedIndex = 0;
         }
-
-        this.ulselect.style.display = "none";
-        this.olselect.style.display = "none";
+        with(this.ulselect) {
+            selectedIndex = 0;
+            style.display = "none";
+        };
+        with(this.olselect) {
+            selectedIndex = 0;
+            style.display = "none";
+        };
     };
 
-    this.addUnorderedList = function() {
-        /* add an unordered list */
+    this.addList = function(command) {
         this.ulselect.style.display = "inline";
         this.olselect.style.display = "none";
-        this.editor.execCommand("insertunorderedlist");
+        this.editor.execCommand(command);
+        this.editor.focusDocument();
+    };
+    this.addUnorderedList = function() {
+        /* add an unordered list */
+        this.addList("insertunorderedlist");
     };
 
     this.addOrderedList = function() {
         /* add an ordered list */
-        this.olselect.style.display = "inline";
-        this.ulselect.style.display = "none";
-        this.editor.execCommand("insertorderedlist");
+        this.addList("insertorderedlist");
+    };
+
+    this.setListStyle = function(tag, select) {
+        /* set the type of an ul */
+        var currnode = this.editor.getSelectedNode();
+        var l = this.editor.getNearestParentOfType(currnode, tag);
+        var style = select.options[select.selectedIndex].value;
+        if (this.editor.config.use_css) {
+            l.style.listStyleType = style;
+        } else {
+            l.setAttribute('type', this.style_to_type[style]);
+        }
+        this.editor.focusDocument();
+        this.editor.logMessage('List style changed');
     };
 
     this.setUnorderedListStyle = function() {
         /* set the type of an ul */
-        var currnode = this.editor.getSelectedNode();
-        var ul = this.editor.getNearestParentOfType(currnode, 'ul');
-        var style = this.ulselect.options[this.ulselect.selectedIndex].value;
-        if (this.editor.config.use_css) {
-            ul.style.listStyleType = style;
-        } else {
-            ul.setAttribute('type', this.style_to_type[style]);
-        }
-
-        this.editor.logMessage('List style changed');
+        this.setListStyle('ul', this.ulselect);
     };
 
     this.setOrderedListStyle = function() {
         /* set the type of an ol */
-        var currnode = this.editor.getSelectedNode();
-        var ol = this.editor.getNearestParentOfType(currnode, 'ol');
-        var style = this.olselect.options[this.olselect.selectedIndex].value;
-        if (this.editor.config.use_css) {
-            ol.style.listStyleType = style;
-        } else {
-            ol.setAttribute('type', this.style_to_type[style]);
-        }
-
-        this.editor.logMessage('List style changed');
+        this.setListStyle('ol', this.olselect);
     };
 };
 
@@ -1602,6 +1620,7 @@ function DefinitionListTool(dlbuttonid) {
     this.initialize = function(editor) {
         /* initialize the tool */
         this.editor = editor;
+        this._fixTabIndex(this.dlbutton);
         addEventHandler(this.dlbutton, 'click', this.createDefinitionList, this);
         addEventHandler(editor.getInnerDocument(), 'keyup', this._keyDownHandler, this);
         addEventHandler(editor.getInnerDocument(), 'keypress', this._keyPressHandler, this);
@@ -1899,3 +1918,133 @@ function DefinitionListTool(dlbuttonid) {
 
 DefinitionListTool.prototype = new KupuTool;
 
+function KupuZoomTool(buttonid) {
+    this.button = window.document.getElementById(buttonid);
+
+    this.initialize = function(editor) {
+        this.offclass = 'kupu-zoom';
+        this.onclass = 'kupu-zoom-pressed';
+        this.pressed = false;
+
+        this.baseinitialize(editor);
+        this.button.tabIndex = this.editor.document.editable.tabIndex;
+        addEventHandler(window, "resize", this.onresize, this);
+        addEventHandler(window, "scroll", this.onscroll, this);
+
+        /* Toolbar tabbing */
+        var lastbutton = window.document.getElementById('kupu-logo-button');
+        var firstbutton = window.document.getElementById('kupu-tb-styles');
+        var iframe = editor.getInnerDocument();
+        this.setTabbing(iframe, firstbutton, lastbutton);
+        this.setTabbing(firstbutton, null, editor.getDocument().getWindow());
+
+        this.editor.logMessage('Zoom tool initialized');
+    };
+};
+
+KupuZoomTool.prototype = new KupuStateButton;
+KupuZoomTool.prototype.baseinitialize = KupuZoomTool.prototype.initialize;
+
+KupuZoomTool.prototype.onscroll = function() {
+    if (!this.zoomed) return;
+    /* XXX Problem here: Mozilla doesn't generate onscroll when window is
+     * scrolled by focus move or selection. */
+    var top = window.pageYOffset!=undefined ? window.pageYOffset : document.documentElement.scrollTop;
+    var left = window.pageXOffset!=undefined ? window.pageXOffset : document.documentElement.scrollLeft;
+    if (top || left) window.scrollTo(0, 0);
+}
+
+// Handle tab pressed from a control.
+KupuZoomTool.prototype.setTabbing = function(control, forward, backward) {
+    function TabDown(event) {
+        if (event.keyCode != 9 || !this.zoomed) return;
+
+        var target = event.shiftKey ? backward : forward;
+        if (!target) return;
+
+        if (event.stopPropogation) event.stopPropogation();
+        event.cancelBubble = true;
+        event.returnValue = false;
+
+        target.focus();
+        return false;
+    }
+    addEventHandler(control, "keydown", TabDown, this);
+}
+
+KupuZoomTool.prototype.onresize = function() {
+    if (!this.zoomed) return;
+
+    var editor = this.editor;
+    var iframe = editor.getDocument().editable;
+    var sourcetool = editor.getTool('sourceedittool');
+    var sourceArea = sourcetool?sourcetool.getSourceArea():null;
+
+    var fulleditor = iframe.parentNode;
+    var body = document.body;
+
+    if (window.innerWidth) {
+        var width = window.innerWidth;
+        var height = window.innerHeight;
+    } else if (document.documentElement) {
+        var width = document.documentElement.offsetWidth-5;
+        var height = document.documentElement.offsetHeight-5;
+    } else {
+        var width = document.body.offsetWidth-5;
+        var height = document.body.offsetHeight-5;
+    }
+    width = width + 'px';
+    var offset = iframe.offsetTop;
+    if (sourceArea && !offset) offset = sourceArea.offsetTop-1;
+    height = height - offset -1/*top border*/ + 'px';
+    fulleditor.style.width = width; /*IE needs this*/
+    iframe.style.width = width;
+    iframe.style.height = height;
+    if (sourceArea) {
+        sourceArea.style.width = width;
+        sourceArea.style.height = height;
+    }
+}
+
+KupuZoomTool.prototype.checkfunc = function(selNode, button, editor, event) {
+    return this.zoomed;
+}
+
+KupuZoomTool.prototype.commandfunc = function(button, editor) {
+    /* Toggle zoom state */
+    var zoom = !button.pressed;
+    this.zoomed = zoom;
+
+    var zoomClass = 'kupu-fulleditor-zoomed';
+    var iframe = editor.getDocument().getEditable();
+
+    var body = document.body;
+    var html = document.getElementsByTagName('html')[0];
+    if (zoom) {
+        html.style.overflow = 'hidden';
+        window.scrollTo(0, 0);
+        editor.setClass(zoomClass);
+        this.onresize();
+    } else {
+        html.style.overflow = '';
+        var fulleditor = iframe.parentNode;
+        fulleditor.style.width = '';
+        editor.clearClass(zoomClass);
+
+        iframe.style.width = '';
+        iframe.style.height = '';
+
+        var sourcetool = editor.getTool('sourceedittool');
+        var sourceArea = sourcetool?sourcetool.getSourceArea():null;
+        if (sourceArea) {
+            sourceArea.style.width = '';
+            sourceArea.style.height = '';
+        };
+    }
+    var doc = editor.getInnerDocument();
+    // Mozilla needs this. Yes, really!
+    doc.designMode=doc.designMode;
+
+    window.scrollTo(0, iframe.offsetTop);
+    editor.getDocument().getWindow().focus();
+}
