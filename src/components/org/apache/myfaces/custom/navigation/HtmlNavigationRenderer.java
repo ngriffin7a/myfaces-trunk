@@ -20,8 +20,8 @@ package net.sourceforge.myfaces.custom.navigation;
 
 import net.sourceforge.myfaces.renderkit.RendererUtils;
 import net.sourceforge.myfaces.renderkit.html.HTML;
-import net.sourceforge.myfaces.renderkit.html.HtmlLinkRendererBase;
 import net.sourceforge.myfaces.renderkit.html.HtmlRendererUtils;
+import net.sourceforge.myfaces.renderkit.html.ext.HtmlLinkRenderer;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -36,9 +36,13 @@ import java.util.List;
 /**
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
+ * $Log$
+ * Revision 1.2  2004/05/18 17:08:21  manolito
+ * no message
+ *
  */
 public class HtmlNavigationRenderer
-        extends HtmlLinkRendererBase
+        extends HtmlLinkRenderer
 {
     private static final Log log = LogFactory.getLog(HtmlNavigationRenderer.class);
 
