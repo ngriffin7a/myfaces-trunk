@@ -41,7 +41,7 @@
 
     <tlib-version>0.3.1</tlib-version>
     <jsp-version>1.2</jsp-version>
-    <short-name>MyFaces Basic Tag Library</short-name>
+    <short-name>MyFaces Basic HTML Tag Library</short-name>
     <uri>http://java.sun.com/jsf/html</uri>
     <description>
         Tag library for the MyFaces basic implementation.

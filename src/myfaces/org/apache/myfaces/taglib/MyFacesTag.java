@@ -164,12 +164,10 @@ public abstract class MyFacesTag
         setComponentProperty(CommonComponentAttributes.MODEL_REFERENCE_ATTR, s);
     }
 
-    /*
     public void setConverter(Object converter)
     {
         setRendererAttribute(CommonRendererAttributes.CONVERTER_ATTR, converter);
     }
-    */
 
     /**
      * Overwrite to make public.
