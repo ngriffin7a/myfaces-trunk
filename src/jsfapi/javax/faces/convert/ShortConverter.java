@@ -18,24 +18,27 @@
  */
 package javax.faces.convert;
 
-import javax.faces.context.FacesContext;
 import javax.faces.component.UIComponent;
+import javax.faces.context.FacesContext;
 
 /**
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public class ShortConverter implements Converter {
+public class ShortConverter
+        implements Converter
+{
+    private static final String CONVERSION_MESSAGE_ID = "javax.faces.convert.ShortConverter.CONVERSION";
 
-	// FIELDS
-	public static final String CONVERTER_ID = "javax.faces.Short";
+    // FIELDS
+    public static final String CONVERTER_ID = "javax.faces.Short";
 
-	// CONSTRUCTORS
-	public ShortConverter()
+    // CONSTRUCTORS
+    public ShortConverter()
     {
-	}
+    }
 
-	// METHODS
+    // METHODS
     public Object getAsObject(FacesContext facesContext, UIComponent uiComponent, String value)
     {
         if (facesContext == null) throw new NullPointerException("facesContext");
@@ -52,7 +55,9 @@ public class ShortConverter implements Converter {
                 }
                 catch (NumberFormatException e)
                 {
-                    throw new ConverterException("Cannot convert value '" + value + "'");
+                    throw new ConverterException(_MessageUtils.getErrorMessage(facesContext,
+                                                                               CONVERSION_MESSAGE_ID,
+                                                                               new Object[]{value}), e);
                 }
             }
         }

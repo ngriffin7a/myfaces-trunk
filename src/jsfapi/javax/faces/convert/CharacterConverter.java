@@ -18,22 +18,23 @@
  */
 package javax.faces.convert;
 
-import javax.faces.context.FacesContext;
 import javax.faces.component.UIComponent;
+import javax.faces.context.FacesContext;
 
 /**
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public class CharacterConverter implements Converter {
+public class CharacterConverter
+        implements Converter
+{
+    // FIELDS
+    public static final String CONVERTER_ID = "javax.faces.Character";
 
-	// FIELDS
-	public static final String CONVERTER_ID = "javax.faces.Character";
-
-	// CONSTRUCTORS
-	public CharacterConverter()
+    // CONSTRUCTORS
+    public CharacterConverter()
     {
-	}
+    }
 
     // METHODS
     public Object getAsObject(FacesContext facesContext, UIComponent uiComponent, String value)

@@ -25,48 +25,49 @@ import javax.faces.application.FacesMessage;
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public class ConverterException extends FacesException {
-
-	// FIELDS
+public class ConverterException
+        extends FacesException
+{
+    // FIELDS
     private FacesMessage _facesMessage;
 
-	// CONSTRUCTORS
-	public ConverterException()
+    // CONSTRUCTORS
+    public ConverterException()
     {
         super();
-	}
+    }
 
     public ConverterException(FacesMessage facesMessage)
     {
         super(facesMessage.getSummary());
         _facesMessage = facesMessage;
-	}
+    }
 
-	public ConverterException(FacesMessage facesMessage, Throwable cause)
+    public ConverterException(FacesMessage facesMessage, Throwable cause)
     {
         super(cause);
         _facesMessage = facesMessage;
-	}
+    }
 
-	public ConverterException(String message)
+    public ConverterException(String message)
     {
         super(message);
-	}
+    }
 
-	public ConverterException(String message, Throwable cause)
+    public ConverterException(String message, Throwable cause)
     {
         super(message, cause);
-	}
+    }
 
-	public ConverterException(Throwable cause)
+    public ConverterException(Throwable cause)
     {
         super(cause);
-	}
+    }
 
-	// METHODS
-	public FacesMessage getFacesMessage()
-	{
+    // METHODS
+    public FacesMessage getFacesMessage()
+    {
         return _facesMessage;
-	}
+    }
 
 }

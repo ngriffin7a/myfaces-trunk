@@ -18,22 +18,25 @@
  */
 package javax.faces.convert;
 
-import javax.faces.context.FacesContext;
 import javax.faces.component.UIComponent;
+import javax.faces.context.FacesContext;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Locale;
 import java.util.TimeZone;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.text.ParseException;
 
 /**
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public class DateTimeConverter implements Converter {
+public class DateTimeConverter
+        implements Converter
+{
+    private static final String CONVERSION_MESSAGE_ID = "javax.faces.convert.DateTimeConverter.CONVERSION";
 
-	// FIELDS
-	public static final String CONVERTER_ID = "javax.faces.DateTime";
+    // FIELDS
+    public static final String CONVERTER_ID = "javax.faces.DateTime";
 
     private String _dateStyle;
     private Locale _locale;
@@ -43,14 +46,14 @@ public class DateTimeConverter implements Converter {
     private String _type;
     private boolean _transient;
 
-	// CONSTRUCTORS
-	public DateTimeConverter()
+    // CONSTRUCTORS
+    public DateTimeConverter()
     {
-	}
+    }
 
-	// METHODS
-	public Object getAsObject(FacesContext facesContext, UIComponent uiComponent, String value)
-	{
+    // METHODS
+    public Object getAsObject(FacesContext facesContext, UIComponent uiComponent, String value)
+    {
         if (facesContext == null) throw new NullPointerException("facesContext");
         if (uiComponent == null) throw new NullPointerException("uiComponent");
 
@@ -71,15 +74,17 @@ public class DateTimeConverter implements Converter {
                 }
                 catch (ParseException e)
                 {
-                    throw new ConverterException("Cannot convert value '" + value + "'");
+                    throw new ConverterException(_MessageUtils.getErrorMessage(facesContext,
+                                                                               CONVERSION_MESSAGE_ID,
+                                                                               new Object[]{value}), e);
                 }
             }
         }
         return null;
-	}
+    }
 
-	public String getAsString(FacesContext facesContext, UIComponent uiComponent, Object value)
-	{
+    public String getAsString(FacesContext facesContext, UIComponent uiComponent, Object value)
+    {
         if (facesContext == null) throw new NullPointerException("facesContext");
         if (uiComponent == null) throw new NullPointerException("uiComponent");
 
@@ -105,7 +110,7 @@ public class DateTimeConverter implements Converter {
         {
             throw new ConverterException("Cannot convert value '" + value + "'");
         }
-	}
+    }
 
     private DateFormat getDateFormat(FacesContext facesContext)
     {
@@ -169,8 +174,8 @@ public class DateTimeConverter implements Converter {
     }
 
     // STATE SAVE/RESTORE
-	public void restoreState(FacesContext facesContext, Object state)
-	{
+    public void restoreState(FacesContext facesContext, Object state)
+    {
         Object[] values = (Object[])state;
         _dateStyle = (String)values[0];
         _locale = (Locale)values[0];
@@ -178,10 +183,10 @@ public class DateTimeConverter implements Converter {
         _timeStyle = (String)values[0];
         _timeZone = (TimeZone)values[0];
         _type = (String)values[0];
-	}
+    }
 
-	public Object saveState(FacesContext facesContext)
-	{
+    public Object saveState(FacesContext facesContext)
+    {
         Object[] values = new Object[6];
         values[0] = _dateStyle;
         values[1] = _locale;
@@ -190,7 +195,7 @@ public class DateTimeConverter implements Converter {
         values[4] = _timeZone;
         values[5] = _type;
         return values;
-	}
+    }
 
     // GETTER & SETTER
     public String getDateStyle()

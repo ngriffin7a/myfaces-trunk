@@ -18,22 +18,25 @@
  */
 package javax.faces.convert;
 
-import javax.faces.context.FacesContext;
 import javax.faces.component.UIComponent;
+import javax.faces.context.FacesContext;
 
 /**
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public class BooleanConverter implements Converter {
+public class BooleanConverter
+        implements Converter
+{
+    private static final String CONVERSION_MESSAGE_ID = "javax.faces.convert.BooleanConverter.CONVERSION";
 
-	// FIELDS
-	public static final String CONVERTER_ID = "javax.faces.Boolean";
+    // FIELDS
+    public static final String CONVERTER_ID = "javax.faces.Boolean";
 
-	// CONSTRUCTORS
-	public BooleanConverter()
+    // CONSTRUCTORS
+    public BooleanConverter()
     {
-	}
+    }
 
     // METHODS
     public Object getAsObject(FacesContext facesContext, UIComponent uiComponent, String value)
@@ -52,7 +55,9 @@ public class BooleanConverter implements Converter {
                 }
                 catch (Exception e)
                 {
-                    throw new ConverterException("Cannot convert value '" + value + "'");
+                    throw new ConverterException(_MessageUtils.getErrorMessage(facesContext,
+                                                                               CONVERSION_MESSAGE_ID,
+                                                                               new Object[]{value}), e);
                 }
             }
         }

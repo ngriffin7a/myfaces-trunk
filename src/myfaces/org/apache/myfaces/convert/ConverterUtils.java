@@ -19,7 +19,6 @@
 package net.sourceforge.myfaces.convert;
 
 import net.sourceforge.myfaces.application.MessageUtils;
-import net.sourceforge.myfaces.renderkit.JSFAttr;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -28,9 +27,7 @@ import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.convert.ConverterException;
-import java.text.*;
-import java.util.Locale;
-import java.util.TimeZone;
+import java.text.DateFormat;
 
 /**
  * DOCUMENT ME!
@@ -50,176 +47,6 @@ public class ConverterUtils
 
     private ConverterUtils() {}
 
-
-    /**
-     * @deprecated TODO: remove 
-     */
-    public static NumberFormat getNumberFormat(UIComponent component, Locale locale)
-    {
-        NumberFormat format;
-        String numberStyle = (String)component.getAttributes().get(JSFAttr.NUMBER_STYLE_ATTR);
-        if (numberStyle != null)
-        {
-            if (numberStyle.equalsIgnoreCase(ConverterConstants.NUMBER_STYLE_CURRENCY))
-            {
-                format = NumberFormat.getCurrencyInstance(locale);
-            }
-            else if (numberStyle.equalsIgnoreCase(ConverterConstants.NUMBER_STYLE_INTEGER))
-            {
-                format = NumberFormat.getIntegerInstance(locale);
-            }
-            else if (numberStyle.equalsIgnoreCase(ConverterConstants.NUMBER_STYLE_NUMBER))
-            {
-                format = NumberFormat.getNumberInstance(locale);
-            }
-            else if (numberStyle.equalsIgnoreCase(ConverterConstants.NUMBER_STYLE_PERCENT))
-            {
-                format = NumberFormat.getPercentInstance(locale);
-            }
-            else
-            {
-                throw new IllegalArgumentException("Unknown number style " + numberStyle);
-            }
-        }
-        else
-        {
-            String pattern = (String)component.getAttributes().get(JSFAttr.FORMAT_PATTERN_ATTR);
-            if (pattern != null)
-            {
-                format = new DecimalFormat(pattern, new DecimalFormatSymbols(locale));
-            }
-            else
-            {
-                format = NumberFormat.getIntegerInstance(locale);
-            }
-        }
-
-        return format;
-    }
-
-
-    public static DateFormat getDateFormat(UIComponent component, Locale locale)
-    {
-        DateFormat format;
-        String pattern = (String)component.getAttributes().get(JSFAttr.FORMAT_PATTERN_ATTR);
-        if (pattern != null)
-        {
-            format = new SimpleDateFormat(pattern, locale);
-        }
-        else
-        {
-            format = DateFormat.getDateInstance(getDateStyle(component), locale);
-        }
-        format.setTimeZone(getTimeZone(component));
-        return format;
-    }
-
-
-    public static DateFormat getTimeFormat(UIComponent component, Locale locale)
-    {
-        DateFormat format;
-        String pattern = (String)component.getAttributes().get(JSFAttr.FORMAT_PATTERN_ATTR);
-        if (pattern != null)
-        {
-            format = new SimpleDateFormat(pattern, locale);
-        }
-        else
-        {
-            format = DateFormat.getTimeInstance(getTimeStyle(component), locale);
-        }
-        format.setTimeZone(getTimeZone(component));
-        return format;
-    }
-
-    public static DateFormat getDateTimeFormat(UIComponent component, Locale locale)
-    {
-        DateFormat format;
-        String pattern = (String)component.getAttributes().get(JSFAttr.FORMAT_PATTERN_ATTR);
-        if (pattern != null)
-        {
-            format = new SimpleDateFormat(pattern, locale);
-        }
-        else
-        {
-            format = DateFormat.getDateTimeInstance(getDateStyle(component),
-                                                    getTimeStyle(component),
-                                                    locale);
-        }
-        format.setTimeZone(getTimeZone(component));
-        return format;
-    }
-
-    private static int getDateStyle(UIComponent component)
-    {
-        String dateStyle = (String)component.getAttributes().get(JSFAttr.DATE_STYLE_ATTR);
-        if (dateStyle != null)
-        {
-            if (dateStyle.equalsIgnoreCase(ConverterConstants.DATE_STYLE_SHORT))
-            {
-                return DateFormat.SHORT;
-            }
-            else if (dateStyle.equalsIgnoreCase(ConverterConstants.DATE_STYLE_MEDIUM))
-            {
-                return DateFormat.MEDIUM;
-            }
-            else if (dateStyle.equalsIgnoreCase(ConverterConstants.DATE_STYLE_LONG))
-            {
-                return DateFormat.LONG;
-            }
-            else if (dateStyle.equalsIgnoreCase(ConverterConstants.DATE_STYLE_FULL))
-            {
-                return DateFormat.FULL;
-            }
-            else
-            {
-                throw new IllegalArgumentException("Unknown date style " + dateStyle);
-            }
-        }
-        return DEFAULT_DATE_STYLE;
-    }
-
-
-    private static int getTimeStyle(UIComponent component)
-    {
-        String timeStyle = (String)component.getAttributes().get(JSFAttr.TIME_STYLE_ATTR);
-        if (timeStyle != null)
-        {
-            if (timeStyle.equalsIgnoreCase(ConverterConstants.TIME_STYLE_SHORT))
-            {
-                return DateFormat.SHORT;
-            }
-            else if (timeStyle.equalsIgnoreCase(ConverterConstants.TIME_STYLE_MEDIUM))
-            {
-                return DateFormat.MEDIUM;
-            }
-            else if (timeStyle.equalsIgnoreCase(ConverterConstants.TIME_STYLE_LONG))
-            {
-                return DateFormat.LONG;
-            }
-            else if (timeStyle.equalsIgnoreCase(ConverterConstants.TIME_STYLE_FULL))
-            {
-                return DateFormat.FULL;
-            }
-            else
-            {
-                throw new IllegalArgumentException("Unknown time style " + timeStyle);
-            }
-        }
-        return DEFAULT_TIME_STYLE;
-    }
-
-    public static TimeZone getTimeZone(UIComponent component)
-    {
-        String tzId = (String)component.getAttributes().get(JSFAttr.TIMEZONE_ATTR);
-        if (tzId == null)
-        {
-            return TimeZone.getDefault();
-        }
-        else
-        {
-            return TimeZone.getTimeZone(tzId);
-        }
-    }
 
 
     public static int convertToInt(Object value)
@@ -317,10 +144,10 @@ public class ConverterUtils
         catch (ConverterException e)
         {
             if (log.isInfoEnabled()) log.info("Converter exception", e);
-            if (e instanceof MyFacesConverterException)
+            FacesMessage msg = e.getFacesMessage();
+            if (msg != null)
             {
-                facesContext.addMessage(uiComponent.getClientId(facesContext),
-                                        ((MyFacesConverterException)e).getFacesMessage());
+                facesContext.addMessage(uiComponent.getClientId(facesContext), msg);
             }
             else
             {

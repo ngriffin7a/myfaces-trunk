@@ -18,50 +18,57 @@
  */
 package javax.faces.convert;
 
-import javax.faces.context.FacesContext;
 import javax.faces.component.UIComponent;
+import javax.faces.context.FacesContext;
 import java.math.BigDecimal;
 
 /**
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public class BigDecimalConverter implements Converter {
+public class BigDecimalConverter
+        implements Converter
+{
+    private static final String CONVERSION_MESSAGE_ID = "javax.faces.convert.BigDecimalConverter.CONVERSION";
 
-	// FIELDS
-	public static final String CONVERTER_ID = "javax.faces.BigDecimal";
+    // FIELDS
+    public static final String CONVERTER_ID = "javax.faces.BigDecimal";
 
-	// CONSTRUCTORS
-	public BigDecimalConverter()
+    // CONSTRUCTORS
+    public BigDecimalConverter()
     {
     }
 
-	// METHODS
-	public Object getAsObject(FacesContext facesContext, UIComponent uiComponent, String value)
-	{
+    // METHODS
+    public Object getAsObject(FacesContext facesContext, UIComponent uiComponent, String value)
+    {
         if (facesContext == null) throw new NullPointerException("facesContext");
         if (uiComponent == null) throw new NullPointerException("uiComponent");
 
         if (value != null)
-            {
         {
-            value = value.trim();
-            if (value.length() > 0)
-                try
+            {
+                value = value.trim();
+                if (value.length() > 0)
                 {
-                    return new BigDecimal(value.trim());
-                }
-                catch (NumberFormatException e)
-                {
-                    throw new ConverterException("Cannot convert value '" + value + "'");
+                    try
+                    {
+                        return new BigDecimal(value.trim());
+                    }
+                    catch (NumberFormatException e)
+                    {
+                        throw new ConverterException(_MessageUtils.getErrorMessage(facesContext,
+                                                                                   CONVERSION_MESSAGE_ID,
+                                                                                   new Object[]{value}), e);
+                    }
                 }
             }
         }
         return null;
-	}
+    }
 
-	public String getAsString(FacesContext facesContext, UIComponent uiComponent, Object value)
-	{
+    public String getAsString(FacesContext facesContext, UIComponent uiComponent, Object value)
+    {
         if (facesContext == null) throw new NullPointerException("facesContext");
         if (uiComponent == null) throw new NullPointerException("uiComponent");
 
@@ -74,5 +81,5 @@ public class BigDecimalConverter implements Converter {
             return (String)value;
         }
         return ((BigDecimal)value).toString();
-	}
+    }
 }

@@ -18,27 +18,30 @@
  */
 package javax.faces.convert;
 
-import javax.faces.context.FacesContext;
 import javax.faces.component.UIComponent;
+import javax.faces.context.FacesContext;
 import java.math.BigInteger;
 
 /**
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public class BigIntegerConverter implements Converter {
+public class BigIntegerConverter
+        implements Converter
+{
+    private static final String CONVERSION_MESSAGE_ID = "javax.faces.convert.BigIntegerConverter.CONVERSION";
 
-	// FIELDS
-	public static final String CONVERTER_ID = "javax.faces.BigInteger";
+    // FIELDS
+    public static final String CONVERTER_ID = "javax.faces.BigInteger";
 
-	// CONSTRUCTORS
-	public BigIntegerConverter()
+    // CONSTRUCTORS
+    public BigIntegerConverter()
     {
     }
 
-	// METHODS
-	public Object getAsObject(FacesContext facesContext, UIComponent uiComponent, String value)
-	{
+    // METHODS
+    public Object getAsObject(FacesContext facesContext, UIComponent uiComponent, String value)
+    {
         if (facesContext == null) throw new NullPointerException("facesContext");
         if (uiComponent == null) throw new NullPointerException("uiComponent");
 
@@ -53,15 +56,17 @@ public class BigIntegerConverter implements Converter {
                 }
                 catch (NumberFormatException e)
                 {
-                    throw new ConverterException("Cannot convert value '" + value + "'");
+                    throw new ConverterException(_MessageUtils.getErrorMessage(facesContext,
+                                                                               CONVERSION_MESSAGE_ID,
+                                                                               new Object[]{value}), e);
                 }
             }
         }
         return null;
-	}
+    }
 
-	public String getAsString(FacesContext facesContext, UIComponent uiComponent, Object value)
-	{
+    public String getAsString(FacesContext facesContext, UIComponent uiComponent, Object value)
+    {
         if (facesContext == null) throw new NullPointerException("facesContext");
         if (uiComponent == null) throw new NullPointerException("uiComponent");
 
@@ -74,6 +79,6 @@ public class BigIntegerConverter implements Converter {
             return (String)value;
         }
         return ((BigInteger)value).toString();
-	}
+    }
 
 }

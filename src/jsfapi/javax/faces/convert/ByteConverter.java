@@ -18,22 +18,25 @@
  */
 package javax.faces.convert;
 
-import javax.faces.context.FacesContext;
 import javax.faces.component.UIComponent;
+import javax.faces.context.FacesContext;
 
 /**
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public class ByteConverter implements Converter {
+public class ByteConverter
+        implements Converter
+{
+    private static final String CONVERSION_MESSAGE_ID = "javax.faces.convert.ByteConverter.CONVERSION";
 
-	// FIELDS
-	public static final String CONVERTER_ID = "javax.faces.Byte";
+    // FIELDS
+    public static final String CONVERTER_ID = "javax.faces.Byte";
 
-	// CONSTRUCTORS
-	public ByteConverter()
+    // CONSTRUCTORS
+    public ByteConverter()
     {
-	}
+    }
 
     // METHODS
     public Object getAsObject(FacesContext facesContext, UIComponent uiComponent, String value)
@@ -52,7 +55,9 @@ public class ByteConverter implements Converter {
                 }
                 catch (NumberFormatException e)
                 {
-                    throw new ConverterException("Cannot convert value '" + value + "'");
+                    throw new ConverterException(_MessageUtils.getErrorMessage(facesContext,
+                                                                               CONVERSION_MESSAGE_ID,
+                                                                               new Object[]{value}), e);
                 }
             }
         }

@@ -18,25 +18,29 @@
  */
 package javax.faces.convert;
 
-import javax.faces.context.FacesContext;
 import javax.faces.component.UIComponent;
-import java.util.Locale;
-import java.util.Currency;
-import java.text.NumberFormat;
+import javax.faces.context.FacesContext;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
+import java.text.NumberFormat;
 import java.text.ParseException;
+import java.util.Currency;
+import java.util.Locale;
 
 /**
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public class NumberConverter implements Converter {
+public class NumberConverter
+        implements Converter
+{
+    private static final String CONVERSION_MESSAGE_ID = "javax.faces.convert.NumberConverter.CONVERSION";
 
-	// FIELDS
-	public static final String CONVERTER_ID = "javax.faces.Number";
+    // FIELDS
+    public static final String CONVERTER_ID = "javax.faces.Number";
 
     public static final boolean JAVA_VERSION_14;
+
     static
     {
         JAVA_VERSION_14 = checkJavaVersion14();
@@ -60,12 +64,12 @@ public class NumberConverter implements Converter {
     private boolean _minFractionDigitsSet;
     private boolean _minIntegerDigitsSet;
 
-	// CONSTRUCTORS
-	public NumberConverter()
+    // CONSTRUCTORS
+    public NumberConverter()
     {
-	}
+    }
 
-	// METHODS
+    // METHODS
     public Object getAsObject(FacesContext facesContext, UIComponent uiComponent, String value)
     {
         if (facesContext == null) throw new NullPointerException("facesContext");
@@ -84,7 +88,9 @@ public class NumberConverter implements Converter {
                 }
                 catch (ParseException e)
                 {
-                    throw new ConverterException("Cannot convert value '" + value + "'");
+                    throw new ConverterException(_MessageUtils.getErrorMessage(facesContext,
+                                                                               CONVERSION_MESSAGE_ID,
+                                                                               new Object[]{value}), e);
                 }
             }
         }
@@ -190,12 +196,12 @@ public class NumberConverter implements Converter {
             DecimalFormatSymbols symbols = dFormat.getDecimalFormatSymbols();
             symbols.setCurrencySymbol(_currencySymbol);
             dFormat.setDecimalFormatSymbols(symbols);
-       }
+        }
     }
 
     // STATE SAVE/RESTORE
-	public void restoreState(FacesContext facesContext, Object state)
-	{
+    public void restoreState(FacesContext facesContext, Object state)
+    {
         Object values[] = (Object[])state;
         _currencyCode = (String)values[0];
         _currencySymbol = (String)values[1];
@@ -216,10 +222,10 @@ public class NumberConverter implements Converter {
         _maxIntegerDigitsSet = ((Boolean)values[12]).booleanValue();
         _minFractionDigitsSet = ((Boolean)values[13]).booleanValue();
         _minIntegerDigitsSet = ((Boolean)values[14]).booleanValue();
-	}
+    }
 
-	public Object saveState(FacesContext facesContext)
-	{
+    public Object saveState(FacesContext facesContext)
+    {
         Object values[] = new Object[15];
         values[0] = _currencyCode;
         values[1] = _currencySymbol;
@@ -237,7 +243,7 @@ public class NumberConverter implements Converter {
         values[13] = _minFractionDigitsSet ? Boolean.TRUE : Boolean.FALSE;
         values[14] = _minIntegerDigitsSet ? Boolean.TRUE : Boolean.FALSE;
         return values;
-	}
+    }
 
     // GETTER & SETTER
     public String getCurrencyCode()
@@ -381,10 +387,26 @@ public class NumberConverter implements Converter {
                 idx = version.indexOf('.');
                 switch (i)
                 {
-                    case 0: if (value == 1) { java14 = 1; break; }
-                            else if (value > 1) { java14 = 2;}
-                    case 1: if (java14 > 0 && value >= 4) { java14 = 2;};
-                    default: idx = 0; version = null; break;
+                    case 0:
+                        if (value == 1)
+                        {
+                            java14 = 1;
+                            break;
+                        }
+                        else if (value > 1)
+                        {
+                            java14 = 2;
+                        }
+                    case 1:
+                        if (java14 > 0 && value >= 4)
+                        {
+                            java14 = 2;
+                        }
+                        ;
+                    default:
+                        idx = 0;
+                        version = null;
+                        break;
                 }
             }
             else
