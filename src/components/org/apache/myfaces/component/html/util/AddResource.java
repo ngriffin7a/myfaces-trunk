@@ -41,6 +41,9 @@ import org.apache.myfaces.renderkit.html.HTML;
  * @author Sylvain Vieujot (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.18  2005/02/08 12:13:39  svieujot
+ * Bugfix : Serve xsl files with the text/xml content type.
+ *
  * Revision 1.17  2004/12/27 04:11:11  mmarinschek
  * Data Table stores the state of facets of children; script tag is rendered with type attribute instead of language attribute, popup works better as a column in a data table
  *
@@ -269,10 +272,8 @@ public class AddResource {
             response.setContentType("image/png");
         else if( lcResourceFileName.endsWith(".jpg") || lcResourceFileName.endsWith(".jpeg") )
             response.setContentType("image/jpeg");
-        else if( lcResourceFileName.endsWith(".xml") )
-            response.setContentType("text/xml");
-        else if( lcResourceFileName.endsWith(".xsl") )
-            response.setContentType("text/xsl");
+        else if( lcResourceFileName.endsWith(".xml")  || lcResourceFileName.endsWith(".xsl") )
+            response.setContentType("text/xml"); // XSL has to be served as XML.
         
         InputStream is = getResource(componentName, resourceFileName);
         if( is == null ){
