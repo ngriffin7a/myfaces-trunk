@@ -35,6 +35,9 @@ import java.util.*;
 
 /**
  * $Log$
+ * Revision 1.14  2004/03/31 02:29:41  dave0000
+ * avoid lastIndexOf scan if not needed
+ *
  * Revision 1.13  2004/03/26 11:48:33  manolito
  * additional NPE check
  *
@@ -152,9 +155,12 @@ public abstract class UIComponentTag
     public static boolean isValueReference(String value)
     {
         if (value == null) throw new NullPointerException("value");
+        
         int start = value.indexOf("#{");
+        if (start < 0) return false;
+        
         int end = value.lastIndexOf('}');
-        return (start != -1 && end != -1 && start < end);
+        return (end >=0 && start < end);
     }
 
     public void setPageContext(PageContext pageContext)
@@ -443,13 +449,13 @@ public abstract class UIComponentTag
 
 
     protected int getDoStartValue()
-            throws javax.servlet.jsp.JspException
+            throws JspException
     {
         return Tag.EVAL_BODY_INCLUDE;
     }
 
     protected int getDoEndValue()
-            throws javax.servlet.jsp.JspException
+            throws JspException
     {
         return Tag.EVAL_PAGE;
     }
