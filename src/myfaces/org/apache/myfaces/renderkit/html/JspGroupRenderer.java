@@ -74,7 +74,10 @@ public class JspGroupRenderer
 
             // renderer can never be null ;)
             Renderer renderer = getOriginalRenderer(context, uicomponent);
+            // TODO: Refactor
+            restoreRenderKit(context, uicomponent);
             renderer.encodeBegin(context, uicomponent);
+            storeRenderKit(context, uicomponent);
         }
     }
 
@@ -96,7 +99,10 @@ public class JspGroupRenderer
         {
             // renderer can never be null ;)
             Renderer renderer = getOriginalRenderer(facesContext, uicomponent);
+            // TODO: Refactor
+            restoreRenderKit(facesContext, uicomponent);
             renderer.encodeEnd(facesContext, uicomponent);
+            storeRenderKit(facesContext, uicomponent);
 
             if ((parent.getRendererType().equals(GroupRenderer.TYPE)) &&
                 parent.getParent().getRendererType().equals(ListRenderer.TYPE))

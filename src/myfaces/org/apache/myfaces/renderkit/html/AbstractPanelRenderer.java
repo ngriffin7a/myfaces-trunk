@@ -270,6 +270,10 @@ public abstract class AbstractPanelRenderer
 
     protected UIComponent findListComponent(UIComponent uiComponent)
     {
+        if (uiComponent.getRendererType().equals(ListRenderer.TYPE))
+        {
+            return uiComponent;
+        }
         UIComponent[] components = findComponentInfo(uiComponent);
         if (components == null)
         {
@@ -332,6 +336,38 @@ public abstract class AbstractPanelRenderer
         Integer value = (Integer)request.getAttribute(ACTUAL_ROW_ATTR);
         return value == null ? new Integer(-1) : new Integer(value.intValue());
     }
+
+
+    protected void storeRenderKit(FacesContext context, UIComponent uiComponent)
+    {
+
+        UIComponent listComponent = findListComponent(uiComponent);
+        String renderKitId = context.getResponseTree().getRenderKitId();
+
+        RenderKitFactory renderkitFactory = (RenderKitFactory)FactoryFinder.getFactory(FactoryFinder.RENDER_KIT_FACTORY);
+        RenderKit renderKit = renderkitFactory.getRenderKit(renderKitId, context);
+        RenderKit listRenderKit;
+        try
+        {
+            listRenderKit = renderkitFactory.getRenderKit(ListRenderer.JspListRenderKitImpl.ID);
+        }
+        catch (Exception e)
+        {
+            listRenderKit = new ListRenderer.JspListRenderKitImpl(renderKit);
+            renderkitFactory.addRenderKit(ListRenderer.JspListRenderKitImpl.ID, listRenderKit);
+        }
+
+        context.getResponseTree().setRenderKitId(ListRenderer.JspListRenderKitImpl.ID);
+
+        listComponent.setAttribute(RENDERKIT_ATTR, renderKitId);
+    }
+
+    protected void restoreRenderKit(FacesContext context, UIComponent uicomponent)
+    {
+        String renderKitId = getOriginalRenderKitId(context, uicomponent);
+        context.getResponseTree().setRenderKitId(renderKitId);
+    }
+
 
     protected Renderer getOriginalRenderer(FacesContext context, UIComponent component)
     {

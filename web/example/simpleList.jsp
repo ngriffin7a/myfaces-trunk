@@ -70,7 +70,8 @@
                 </f:group>
             </f:list>
             <br>
-            <!-- TODO does not work by now -->
+
+            <!-- TODO grid does not work -->
             <f:grid id="grid"
                     columns="2"
                     style="standardTable"

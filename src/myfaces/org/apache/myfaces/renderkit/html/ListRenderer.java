@@ -89,7 +89,11 @@ public class ListRenderer
 
             // renderer can never be null ;)
             Renderer renderer = getOriginalRenderer(context, uicomponent);
+
+            // TODO: Refactor
+            restoreRenderKit(context, uicomponent);
             renderer.encodeBegin(context, uicomponent);
+            storeRenderKit(context, uicomponent);
         }
     }
 
@@ -105,8 +109,12 @@ public class ListRenderer
         else
         {
             // renderer can never be null ;)
+            // TODO: Refactor
+            restoreRenderKit(facesContext, uicomponent);
             Renderer renderer = getOriginalRenderer(facesContext, uicomponent);
             renderer.encodeEnd(facesContext, uicomponent);
+            storeRenderKit(facesContext, uicomponent);
+
 
             UIComponent parent = uicomponent.getParent();
             if ((parent.getRendererType().equals(DataRenderer.TYPE) ||
@@ -118,34 +126,6 @@ public class ListRenderer
         }
     }
 
-
-    protected void storeRenderKit(FacesContext context, UIComponent listComponent)
-    {
-        String renderKitId = context.getResponseTree().getRenderKitId();
-
-        RenderKitFactory renderkitFactory = (RenderKitFactory)FactoryFinder.getFactory(FactoryFinder.RENDER_KIT_FACTORY);
-        RenderKit renderKit = renderkitFactory.getRenderKit(renderKitId, context);
-        RenderKit listRenderKit;
-        try
-        {
-            listRenderKit = renderkitFactory.getRenderKit(ListRenderer.JspListRenderKitImpl.ID);
-        }
-        catch (Exception e)
-        {
-            listRenderKit = new ListRenderer.JspListRenderKitImpl(renderKit);
-            renderkitFactory.addRenderKit(ListRenderer.JspListRenderKitImpl.ID, listRenderKit);
-        }
-
-        context.getResponseTree().setRenderKitId(ListRenderer.JspListRenderKitImpl.ID);
-
-        listComponent.setAttribute(RENDERKIT_ATTR, renderKitId);
-    }
-
-    protected void restoreRenderKit(FacesContext context, UIComponent uicomponent)
-    {
-        String renderKitId = getOriginalRenderKitId(context, uicomponent);
-        context.getResponseTree().setRenderKitId(renderKitId);
-    }
 
     /**
      * Delegates all method-calls except {@link #getRenderer} to the renderKit
