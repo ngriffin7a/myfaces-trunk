@@ -106,12 +106,19 @@ public class RadioRenderer
         }
     }
 
+    protected void beforeRenderLabel(FacesContext facesContext, UISelectOne selectOne, SelectItem item)
+        throws IOException
+    {
+        ResponseWriter writer = facesContext.getResponseWriter();
+        writer.write("&nbsp;");
+    }
+
     protected void renderLabel(FacesContext facesContext, UISelectOne selectOne, SelectItem item)
         throws IOException
     {
         ResponseWriter writer = facesContext.getResponseWriter();
         boolean span = selectOne.getAttribute(JSFAttr.OUTPUT_CLASS_ATTR) != null;
-        writer.write("&nbsp;");
+        beforeRenderLabel(facesContext, selectOne, item);
         if (span)
         {
             writer.write("<span ");
@@ -126,7 +133,12 @@ public class RadioRenderer
         {
             writer.write("</span>");
         }
+        afterRenderLabel(facesContext, selectOne, item);
+    }
 
+    protected void afterRenderLabel(FacesContext facesContext, UISelectOne selectOne, SelectItem item)
+        throws IOException
+    {
     }
 
     protected void beforeRenderItem(FacesContext facesContext,
