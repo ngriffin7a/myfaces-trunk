@@ -52,7 +52,7 @@ public class FacesContextImpl
     private ServletRequest _servletrequest;
     private ServletResponse _servletresponse;
     private Lifecycle _lifecycle;
-    private Locale _locale = Locale.getDefault();
+    private Locale _locale = null;
     private Tree _tree = null;
     private List _applicationEvents = null;
     private List _facesEvents = null;
@@ -119,7 +119,9 @@ public class FacesContextImpl
     //JSF.5.1.2
     public Locale getLocale()
     {
-        return _locale;
+        return _locale == null
+                ? Locale.getDefault()
+                : _locale;
     }
 
     public void setLocale(Locale locale)
@@ -140,7 +142,22 @@ public class FacesContextImpl
 
     public void release()
     {
-        //Our FacesContextFactory does no pooling yet, so no need to release anything here
+        _servletcontext = null;
+        _servletrequest = null;
+        _servletresponse = null;
+        _lifecycle = null;
+        _locale = null;
+        _tree = null;
+        _applicationEvents = null;
+        _facesEvents = null;
+        _messages = null;
+        _messageComponents = null;
+        _maximumSeverity = 0;
+        _responseStream = null;
+        _responseWriter = null;
+        _renderResponse = false;
+        _responseComplete = false;
+        FacesContext.setCurrentInstance(null);
     }
 
 
