@@ -67,9 +67,10 @@ managed beans used:
 
                 <x:panelTabbedPane bgcolor="#FFFFCC" >
 
-                    <f:verbatim>
-                        <p><h:outputText value="#{example_messages['tabbed_common']}"/></p>
-                    </f:verbatim>
+                    <f:verbatim><p></f:verbatim>
+                        <h:outputText value="#{example_messages['tabbed_common']}"/>
+                    <f:verbatim></p></f:verbatim>
+
 
                     <x:panelTab id="tab1" label="#{example_messages['tabbed_tab1']}" rendered="#{tabbedPaneBean.tab1Visible}">
                         <h:inputText id="inp1"/><f:verbatim><br></f:verbatim>
@@ -88,9 +89,15 @@ managed beans used:
 
                     <f:verbatim><br></f:verbatim>
 
-                    <h:selectBooleanCheckbox value="#{tabbedPaneBean.tab1Visible}"/><h:outputText value="#{example_messages['tabbed_visible1']}"/><br>
-                    <h:selectBooleanCheckbox value="#{tabbedPaneBean.tab2Visible}"/><h:outputText value="#{example_messages['tabbed_visible2']}" /><br>
-                    <h:selectBooleanCheckbox value="#{tabbedPaneBean.tab3Visible}"/><h:outputText value="#{example_messages['tabbed_visible3']}" /><br>
+                    <h:selectBooleanCheckbox value="#{tabbedPaneBean.tab1Visible}"/>
+                    <h:outputText value="#{example_messages['tabbed_visible1']}"/>
+                    <f:verbatim><br></f:verbatim>
+                    <h:selectBooleanCheckbox value="#{tabbedPaneBean.tab2Visible}"/>
+                    <h:outputText value="#{example_messages['tabbed_visible2']}" />
+                    <f:verbatim><br></f:verbatim>
+                    <h:selectBooleanCheckbox value="#{tabbedPaneBean.tab3Visible}"/>
+                    <h:outputText value="#{example_messages['tabbed_visible3']}" />
+                    <f:verbatim><br></f:verbatim>
 
                     <h:commandButton value="#{example_messages['tabbed_submit']}" />
 

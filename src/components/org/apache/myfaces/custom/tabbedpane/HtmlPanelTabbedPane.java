@@ -15,18 +15,27 @@
  */
 package org.apache.myfaces.custom.tabbedpane;
 
+import org.apache.myfaces.renderkit.RendererUtils;
+
 import javax.faces.component.html.HtmlPanelGroup;
+import javax.faces.component.UIComponent;
+import javax.faces.component.NamingContainer;
 import javax.faces.context.FacesContext;
 import javax.faces.el.EvaluationException;
 import javax.faces.el.MethodBinding;
 import javax.faces.el.ValueBinding;
 import javax.faces.event.AbortProcessingException;
 import javax.faces.event.FacesEvent;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.9  2005/01/24 12:20:11  mmarinschek
+ * Changed the TabbedPane component to only decode components which are on the visible tags - other components are not processed in the decode phase. Changed the HtmlRendererUtils back to submit empty strings for components which should be posted back but have null values.
+ *
  * Revision 1.8  2004/11/26 14:29:12  oros
  * bug fix #1006636: VisibleOnUserRole attribute for x:panelTab tag
  *
@@ -57,6 +66,52 @@ public class HtmlPanelTabbedPane
     private MethodBinding _tabChangeListener = null;
 
     //TODO: additional HTML Table attributes (see HtmlPanelTabbedPaneTag)
+
+    public void decode(FacesContext context)
+    {
+        super.decode(context);    //To change body of overridden methods use File | Settings | File Templates.
+    }
+
+    public void processDecodes(javax.faces.context.FacesContext context)
+    {
+        if (context == null) throw new NullPointerException("context");
+        decode(context);
+
+        int tabIdx = 0;
+        int selectedIndex = getSelectedIndex();
+
+        Iterator it = getFacetsAndChildren();
+
+        while (it.hasNext())
+        {
+            UIComponent childOrFacet = getUIComponent((UIComponent) it.next());
+            if (childOrFacet instanceof HtmlPanelTab)
+            {
+                if (tabIdx == selectedIndex)
+                {
+                    childOrFacet.processDecodes(context);
+                }
+                tabIdx++;
+            }
+            else
+            {
+                childOrFacet.processDecodes(context);
+            }
+        }
+    }
+
+    private UIComponent getUIComponent(UIComponent uiComponent)
+    {
+        if (uiComponent instanceof NamingContainer)
+        {
+            List children = uiComponent.getChildren();
+            for (int i = 0, len = children.size(); i < len; i++)
+            {
+                uiComponent = getUIComponent((UIComponent)children.get(i));
+            }
+        }
+        return uiComponent;
+    }
 
     public void addTabChangeListener(TabChangeListener listener)
     {

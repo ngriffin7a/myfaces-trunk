@@ -35,6 +35,9 @@ import java.util.Map;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.8  2005/01/24 12:20:11  mmarinschek
+ * Changed the TabbedPane component to only decode components which are on the visible tags - other components are not processed in the decode phase. Changed the HtmlRendererUtils back to submit empty strings for components which should be posted back but have null values.
+ *
  * Revision 1.7  2004/11/26 14:29:12  oros
  * bug fix #1006636: VisibleOnUserRole attribute for x:panelTab tag
  *
