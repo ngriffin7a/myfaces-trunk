@@ -24,7 +24,7 @@ import net.sourceforge.myfaces.util.logging.LogUtil;
 import javax.faces.FacesException;
 import javax.faces.component.UIComponent;
 import javax.faces.event.ActionListener;
-import javax.faces.webapp.FacesTag;
+import javax.faces.webapp.UIComponentTag;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.Tag;
 import javax.servlet.jsp.tagext.TagSupport;
@@ -55,16 +55,16 @@ public class ActionListenerTag
     {
         //Find parent FacesTag
         Tag parent = getParent();
-        while (parent != null && !(parent instanceof FacesTag))
+        while (parent != null && !(parent instanceof UIComponentTag))
         {
             parent = parent.getParent();
         }
         if (parent == null)
         {
-            throw new JspException("action_listener has no FacesTag ancestor");
+            throw new JspException("action_listener has no UIComponentTag ancestor");
         }
 
-        FacesTag facesTag = (FacesTag)parent;
+        UIComponentTag facesTag = (UIComponentTag)parent;
 
         if (facesTag.getCreated())
         {

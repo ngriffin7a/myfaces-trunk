@@ -18,7 +18,6 @@
  */
 package net.sourceforge.myfaces;
 
-import net.sourceforge.myfaces.config.FacesConfig;
 import net.sourceforge.myfaces.config.FacesConfigFactory;
 import net.sourceforge.myfaces.config.FacesConfigFactoryImpl;
 import net.sourceforge.myfaces.webapp.ServletMapping;
@@ -37,7 +36,7 @@ import java.util.HashMap;
 public class MyFacesFactoryFinder
 {
     public static final String SERVLET_MAPPING_FACTORY = ServletMapping.class.getName();
-    public static final String FACES_CONFIG_FACTORY = FacesConfig.class.getName();
+    public static final String FACES_CONFIG_FACTORY = FacesConfigFactory.class.getName();
 
     private static final HashMap DEFAULT_FACTORIES = new HashMap();
     static

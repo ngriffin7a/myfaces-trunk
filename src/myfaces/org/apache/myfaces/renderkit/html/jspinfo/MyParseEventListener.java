@@ -45,7 +45,6 @@ import javax.faces.component.UIComponentBase;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionListener;
 import javax.faces.validator.Validator;
-import javax.faces.webapp.FacesTag;
 import javax.faces.webapp.FacetTag;
 import javax.faces.webapp.UIComponentTag;
 import javax.faces.webapp.ValidatorTag;
@@ -698,7 +697,7 @@ public class MyParseEventListener
                               Attributes attrs, TagLibraryInfo tli, TagInfo ti)
     {
         Tag tag = getTagInstance(ti);
-        if (tag != null && tag instanceof FacesTag)
+        if (tag != null && tag instanceof UIComponentTag)
         {
             _currentComponent = UIComponentUtils.getParentOrFacetOwner(_currentComponent);
         }

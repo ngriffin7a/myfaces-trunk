@@ -32,7 +32,6 @@ import javax.faces.component.UIComponent;
 import javax.faces.component.UIOutput;
 import javax.faces.context.FacesContext;
 import javax.faces.tree.Tree;
-import javax.faces.webapp.FacesTag;
 import javax.faces.webapp.UIComponentTag;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletRequest;
@@ -413,12 +412,12 @@ public class MyFacesTagHelper
         //determine current parent
         Tag parentTag = facesTag.getParent();
         while (parentTag != null &&
-               (!(parentTag instanceof FacesTag) ||
-                (((FacesTag)parentTag).getComponent() == null)))
+               (!(parentTag instanceof UIComponentTag) ||
+                (((UIComponentTag)parentTag).getComponent() == null)))
         {
             parentTag = parentTag.getParent();
         }
-        FacesTag parentFacesTag = (FacesTag)parentTag;
+        UIComponentTag parentFacesTag = (UIComponentTag)parentTag;
         UIComponent parent;
         String parentClientId;
         UIComponent parsedParent;
