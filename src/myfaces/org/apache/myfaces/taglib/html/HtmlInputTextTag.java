@@ -71,11 +71,11 @@ public class HtmlInputTextTag
     private String _converter;
 
     // UIInput attributes
-    private Object _required;
+    private String _required;
     private String _validator;
 
     // HtmlInputText attributes
-    private Object _escape;
+    private String _escape;
 
 
 
@@ -187,7 +187,7 @@ public class HtmlInputTextTag
         _converter = converter;
     }
 
-    public void setRequired(Object required)
+    public void setRequired(String required)
     {
         _required = required;
     }
@@ -197,7 +197,7 @@ public class HtmlInputTextTag
         _validator = validator;
     }
 
-    public void setEscape(Object escape)
+    public void setEscape(String escape)
     {
         _escape = escape;
     }

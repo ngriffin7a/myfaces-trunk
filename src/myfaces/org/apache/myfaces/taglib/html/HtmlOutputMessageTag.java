@@ -51,8 +51,8 @@ public class HtmlOutputMessageTag
 
     // UIMessage attributes
     private String _for;
-    private Object _showSummary;
-    private Object _showDetail;
+    private String _showSummary;
+    private String _showDetail;
 
     // HtmlOutputMessage attributes
     private String _errorClass;
@@ -91,12 +91,12 @@ public class HtmlOutputMessageTag
         _for = aFor;
     }
 
-    public void setShowSummary(Object showSummary)
+    public void setShowSummary(String showSummary)
     {
         _showSummary = showSummary;
     }
 
-    public void setShowDetail(Object showDetail)
+    public void setShowDetail(String showDetail)
     {
         _showDetail = showDetail;
     }

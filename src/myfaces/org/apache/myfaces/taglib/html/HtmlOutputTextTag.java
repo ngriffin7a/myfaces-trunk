@@ -53,7 +53,7 @@ public class HtmlOutputTextTag
     private String _converter;
 
     // HtmlOutputText attributes
-    private Object _escape;
+    private String _escape;
 
 
     protected void setProperties(UIComponent component)
@@ -70,7 +70,7 @@ public class HtmlOutputTextTag
         _converter = converter;
     }
 
-    public void setEscape(Object escape)
+    public void setEscape(String escape)
     {
         _escape = escape;
     }

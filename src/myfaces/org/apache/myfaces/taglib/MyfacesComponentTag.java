@@ -38,12 +38,12 @@ public abstract class MyfacesComponentTag
 
     //UIComponent attributes
     private String _rendererType;
-    private Object _transient;
-    private Object _value;
+    private String _transient;
+    private String _value;
 
     //user role attributes (Myfaces extension)
-    private Object _enabledOnUserRole;
-    private Object _visibleOnUserRole;
+    private String _enabledOnUserRole;
+    private String _visibleOnUserRole;
 
 
     protected abstract String getDefaultRendererType();
@@ -59,22 +59,22 @@ public abstract class MyfacesComponentTag
     }
 
 
-    public void setTransient(Object aTransient)
+    public void setTransient(String aTransient)
     {
         _transient = aTransient;
     }
 
-    public void setValue(Object value)
+    public void setValue(String value)
     {
         _value = value;
     }
 
-    public void setEnabledOnUserRole(Object enabledOnUserRole)
+    public void setEnabledOnUserRole(String enabledOnUserRole)
     {
         _enabledOnUserRole = enabledOnUserRole;
     }
 
-    public void setVisibleOnUserRole(Object visibleOnUserRole)
+    public void setVisibleOnUserRole(String visibleOnUserRole)
     {
         _visibleOnUserRole = visibleOnUserRole;
     }
@@ -109,70 +109,11 @@ public abstract class MyfacesComponentTag
     }
 
 
-    protected void setStringProperty(UIComponent component, String propName, Object value)
+    protected void setStringProperty(UIComponent component, String propName, String value)
     {
         if (value != null)
         {
-            if (value instanceof String)
-            {
-                if (isValueReference((String)value))
-                {
-                    ValueBinding vb = context.getApplication().createValueBinding((String)value);
-                    component.setValueBinding(propName, vb);
-                }
-                else
-                {
-                    component.getAttributes().put(propName, value);
-                }
-            }
-            else
-            {
-                component.getAttributes().put(propName, value.toString());
-            }
-        }
-    }
-
-
-    protected void setBooleanProperty(UIComponent component, String propName, Object value)
-    {
-        if (value != null)
-        {
-            if (value instanceof String)
-            {
-                if (isValueReference((String)value))
-                {
-                    ValueBinding vb = context.getApplication().createValueBinding((String)value);
-                    component.setValueBinding(propName, vb);
-                }
-                else
-                {
-                    component.getAttributes().put(propName, Boolean.valueOf((String)value));
-                }
-            }
-            else if (value instanceof Boolean)
-            {
-                component.getAttributes().put(propName, value.toString());
-            }
-            else if (value instanceof Number)
-            {
-                component.getAttributes().put(propName,
-                                              Boolean.valueOf(((Number)value).intValue() != 0));
-            }
-            else
-            {
-                RuntimeException ex = new IllegalArgumentException("Attribute " + propName + " of tag " + getClass().getName() + " has unsupported type.");
-                log.error(ex.getMessage(), ex);
-                throw ex;
-            }
-        }
-    }
-
-
-    protected void setObjectProperty(UIComponent component, String propName, Object value)
-    {
-        if (value != null)
-        {
-            if (value instanceof String && isValueReference((String)value))
+            if (isValueReference((String)value))
             {
                 ValueBinding vb = context.getApplication().createValueBinding((String)value);
                 component.setValueBinding(propName, vb);
@@ -183,5 +124,24 @@ public abstract class MyfacesComponentTag
             }
         }
     }
+
+
+    protected void setBooleanProperty(UIComponent component, String propName, String value)
+    {
+        if (value != null)
+        {
+            if (isValueReference((String)value))
+            {
+                ValueBinding vb = context.getApplication().createValueBinding((String)value);
+                component.setValueBinding(propName, vb);
+            }
+            else
+            {
+                //TODO: More sophisticated way to convert boolean value (yes/no, 1/0, on/off, etc.)
+                component.getAttributes().put(propName, Boolean.valueOf((String)value));
+            }
+        }
+    }
+
 
 }
