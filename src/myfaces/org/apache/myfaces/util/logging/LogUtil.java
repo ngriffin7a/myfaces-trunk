@@ -18,9 +18,13 @@
  */
 package net.sourceforge.myfaces.util.logging;
 
-import java.util.logging.Logger;
-import java.util.logging.Handler;
+import net.sourceforge.myfaces.tree.TreeUtils;
+
+import javax.faces.context.FacesContext;
+import javax.faces.tree.Tree;
 import java.util.logging.ConsoleHandler;
+import java.util.logging.Handler;
+import java.util.logging.Level;
 
 
 /**
@@ -57,5 +61,36 @@ public class LogUtil
         }
         return _logger;
     }
+
+
+    public static void printTreeToConsole(String additionalMsg)
+    {
+        printTreeToConsole(null, additionalMsg);
+    }
+
+    public static void printTreeToConsole(Tree tree, String additionalMsg)
+    {
+        if (getLogger().getLevel().intValue() <= Level.FINEST.intValue())
+        {
+            if (tree == null)
+            {
+                FacesContext facesContext = FacesContext.getCurrentInstance();
+                if (facesContext == null)
+                {
+                    getLogger().info("Could not print tree to console (no FacesContext).");
+                }
+                tree = facesContext.getTree();
+            }
+
+            System.out.println("========================================");
+            if (additionalMsg != null)
+            {
+                System.out.println(additionalMsg);
+            }
+            TreeUtils.printTree(tree);
+            System.out.println("========================================");
+        }
+    }
+
 
 }

@@ -64,14 +64,14 @@ public class ErrorsRenderer
         boolean ulLayout;
         ResponseWriter writer = facesContext.getResponseWriter();
         Iterator it;
-        String compoundId = (String)uiComponent.getAttribute(COMPOUND_ID_ATTR);
-        if (compoundId == null)
+        String msgClientId = (String)uiComponent.getAttribute(CLIENT_ID_ATTR);
+        if (msgClientId == null)
         {
             //All messages
             it = facesContext.getMessages();
             ulLayout = true;
         }
-        else if (compoundId.length() == 0)
+        else if (msgClientId.length() == 0)
         {
             //All component messages
             it = facesContext.getMessages(null);
@@ -84,7 +84,7 @@ public class ErrorsRenderer
             UIComponent comp = null;
             try
             {
-                comp = facesContext.getTree().getRoot().findComponent(compoundId);
+                comp = facesContext.getTree().getRoot().findComponent(msgClientId);
             }
             catch (IllegalArgumentException e) {}
             if (comp != null)

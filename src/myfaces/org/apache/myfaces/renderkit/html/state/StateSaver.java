@@ -73,8 +73,14 @@ public class StateSaver
     static
     {
         IGNORE_ATTRIBUTES.add(CommonComponentAttributes.PARENT_ATTR);
-        IGNORE_ATTRIBUTES.add(CommonComponentAttributes.COMPONENT_ID_ATTR);
         IGNORE_ATTRIBUTES.add(UIComponent.CLIENT_ID_ATTR);
+
+        //we must save the "valid" attribute
+
+        //we must save the "componentId" because:
+        //      - static componentId are in parsed tree and are not saved anyway.
+        //      - we cannot be sure that a dynamically created componentId is
+        //        the same when the tree is getting restored.
     }
 
     public void init(FacesContext facesContext) throws IOException
@@ -198,15 +204,6 @@ public class StateSaver
                                                                   uiComponent);
         if (parsedComp == null)
         {
-            System.out.println("=============================================");
-            System.out.println("Current Tree:");
-            TreeUtils.printTree(facesContext.getTree());
-            System.out.println("---------------------------------------------");
-            System.out.println("Parsed Tree:");
-            TreeUtils.printTree(JspInfo.getTree(facesContext,
-                                                facesContext.getTree().getTreeId()));
-            System.out.println("=============================================");
-
             LogUtil.getLogger().warning("Corresponding parsed component not found for component " + JspInfo.getUniqueComponentId(uiComponent));
         }
 
@@ -216,7 +213,14 @@ public class StateSaver
         Set visitedAttributes = new HashSet();
 
         //step through all attributes of component
+
+        //HACK: copy to ArrayList to prevent ConcurrentModificationException
+        List attrNames = new ArrayList();
         for (Iterator compIt = uiComponent.getAttributeNames(); compIt.hasNext();)
+        {
+            attrNames.add(compIt.next());
+        }
+        for (Iterator compIt = attrNames.iterator(); compIt.hasNext();)
         {
             String attrName = (String)compIt.next();
             Object attrValue = uiComponent.getAttribute(attrName);

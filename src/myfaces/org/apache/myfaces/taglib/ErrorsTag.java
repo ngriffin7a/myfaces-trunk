@@ -43,9 +43,9 @@ public class ErrorsTag
         return ErrorsRenderer.TYPE;
     }
 
-    public void setCompoundId(String compoundId)
+    public void setClientId(String compoundId)
     {
-        setRendererAttribute(ErrorsRenderer.COMPOUND_ID_ATTR, compoundId);
+        setRendererAttribute(ErrorsRenderer.CLIENT_ID_ATTR, compoundId);
     }
 
     public void setCssClass(String value)

@@ -20,6 +20,8 @@ package net.sourceforge.myfaces.renderkit.html.state;
 
 import net.sourceforge.myfaces.renderkit.html.FormRenderer;
 import net.sourceforge.myfaces.renderkit.html.HTMLRenderer;
+import net.sourceforge.myfaces.renderkit.html.jspinfo.JspInfo;
+import net.sourceforge.myfaces.util.logging.LogUtil;
 
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
@@ -96,6 +98,10 @@ public class StateRenderer
         if (comp == null)
         {
             _stateRestorer.restoreState(facesContext);
+            LogUtil.printTreeToConsole("Current tree after restoring state");
+            LogUtil.printTreeToConsole(JspInfo.getTree(facesContext,
+                                                       facesContext.getTree().getTreeId()),
+                                       "Parsed tree");
         }
         else
         {
@@ -140,6 +146,7 @@ public class StateRenderer
     public void encodeEnd(FacesContext facesContext, UIComponent none) throws IOException
     {
         _stateSaver.release(facesContext);
+        LogUtil.printTreeToConsole("Current tree after saving state");
     }
 
 }
