@@ -33,6 +33,9 @@ import java.io.IOException;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.2  2004/06/08 02:05:14  o_rossmueller
+ * as for JSF 1.1 value is rendered as link text by standard link renderer
+ *
  * Revision 1.1  2004/05/18 14:31:38  manolito
  * user role support completely moved to components source tree
  *
@@ -53,13 +56,6 @@ public class HtmlLinkRenderer
         if (UserRoleUtils.isEnabledOnUserRole(component))
         {
             super.renderCommandLinkStart(facesContext, component, clientId, value, style, styleClass);
-        }
-
-        // MyFaces extension - render value as anchor text:
-        if (value != null)
-        {
-            ResponseWriter writer = facesContext.getResponseWriter();
-            writer.writeText(value.toString(), JSFAttr.VALUE_ATTR);
         }
     }
 
