@@ -27,10 +27,13 @@ import javax.faces.el.VariableResolver;
 import javax.faces.event.ActionListener;
 
 /**
- * DOCUMENT ME!
  * @author Manfred Geiler (latest modification by $Author$)
  * @author Anton Koinov
  * @version $Revision$ $Date$
+ * $Log$
+ * Revision 1.9  2004/05/03 09:25:05  manolito
+ * Log
+ *
  */
 public class ApplicationConfig
     implements Config
