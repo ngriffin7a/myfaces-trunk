@@ -234,6 +234,29 @@ public class FacesContextImpl
     }
 
 
+    /**
+     * MyFaces extension.
+     */
+    public int getMessageCount()
+    {
+        return _messages == null
+                ? 0
+                : _messages.size();
+    }
+
+    /**
+     * MyFaces extension.
+     */
+    public void clearMessages()
+    {
+        _messages = null;
+        _messageComponents = null;
+        _maximumSeverity = 0;
+    }
+
+
+
+
     //JSF.5.1.6
     public ApplicationHandler getApplicationHandler()
     {
@@ -486,5 +509,11 @@ public class FacesContextImpl
         return null;
     }
 
+
+
+    public static void setCurrentInstance(FacesContext context)
+    {
+        FacesContext.setCurrentInstance(context);
+    }
 
 }

@@ -29,6 +29,7 @@ import javax.faces.FacesException;
 import javax.faces.FactoryFinder;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
+import javax.faces.context.Message;
 import javax.faces.event.AbortProcessingException;
 import javax.faces.event.FacesEvent;
 import javax.faces.event.PhaseId;
@@ -182,6 +183,29 @@ public class LifecycleImpl
             {
                 throw new FacesException("Error restoring state", e);
             }
+
+            //remove messages, that were added during tree restoring
+            Iterator msgIt = facesContext.getMessages();
+            if (msgIt.hasNext())
+            {
+                if (LogUtil.getLogger().getLevel().intValue() <= Level.INFO.intValue())
+                {
+                    while (msgIt.hasNext())
+                    {
+                        Message msg = (Message)msgIt.next();
+                        LogUtil.getLogger().info("Message, added during reconstituteComponentTree: " + msg.getSummary() + " / " + msg.getDetail());
+                    }
+                }
+
+                if (facesContext instanceof FacesContextImpl)
+                {
+                    ((FacesContextImpl)facesContext).clearMessages();
+                }
+                else
+                {
+                    LogUtil.getLogger().warning("Messages were added during reconstituteComponentTree phase, but could not be removed afterwards, because current context is not instance of FacesContextImpl.");
+                }
+            }
         }
         else
         {
@@ -239,6 +263,8 @@ public class LifecycleImpl
     {
         LogUtil.getLogger().entering();
 
+        int messageCountBefore = getMessageCount(facesContext);
+
         UIComponent root = facesContext.getTree().getRoot();
         root.processValidators(facesContext);
 
@@ -257,15 +283,35 @@ public class LifecycleImpl
             return true;
         }
 
-        if (facesContext.getMessages().hasNext())
+        if (getMessageCount(facesContext) > messageCountBefore)
         {
             renderResponse(facesContext);
-            LogUtil.getLogger().exiting("after render response (because of messages)", Level.INFO);
+            LogUtil.getLogger().exiting("after render response (because of messages during validation)", Level.INFO);
             return true;
         }
 
         LogUtil.getLogger().exiting();
         return false;
+    }
+
+
+    private int getMessageCount(FacesContext facesContext)
+    {
+        if (facesContext instanceof FacesContextImpl)
+        {
+            return ((FacesContextImpl)facesContext).getMessageCount();
+        }
+        else
+        {
+            int count = 0;
+            Iterator it = facesContext.getMessages();
+            while (it.hasNext())
+            {
+                it.next();
+                count++;
+            }
+            return count;
+        }
     }
 
 
