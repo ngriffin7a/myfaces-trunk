@@ -17,15 +17,6 @@
         <default-value>false</default-value>
     </field>
     <field>
-        <name>sortColumn</name>
-        <type>java.lang.String</type>
-    </field>
-    <field>
-        <name>sortAscending</name>
-        <type>boolean</type>
-        <default-value>true</default-value>
-    </field>
-    <field>
         <name>enabledOnUserRole</name>
         <type>java.lang.String</type>
     </field>
