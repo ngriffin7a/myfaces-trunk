@@ -18,6 +18,7 @@
  */
 package net.sourceforge.myfaces.taglib;
 
+import net.sourceforge.myfaces.convert.impl.IntegerConverter;
 import net.sourceforge.myfaces.renderkit.JSFAttr;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -113,17 +114,28 @@ public abstract class MyfacesComponentTag
 
     protected void setIntegerProperty(UIComponent component, String propName, String value)
     {
-        //FIXME: should handle Integer property different?
-        setStringProperty(component, propName, value);
+        if (value != null)
+        {
+            if (isValueReference(value))
+            {
+                ValueBinding vb = context.getApplication().createValueBinding(value);
+                component.setValueBinding(propName, vb);
+            }
+            else
+            {
+                //FIXME: should use converter maybe?
+                component.getAttributes().put(propName, Integer.valueOf(value));
+            }
+        }
     }
 
     protected void setStringProperty(UIComponent component, String propName, String value)
     {
         if (value != null)
         {
-            if (isValueReference((String)value))
+            if (isValueReference(value))
             {
-                ValueBinding vb = context.getApplication().createValueBinding((String)value);
+                ValueBinding vb = context.getApplication().createValueBinding(value);
                 component.setValueBinding(propName, vb);
             }
             else
@@ -138,15 +150,15 @@ public abstract class MyfacesComponentTag
     {
         if (value != null)
         {
-            if (isValueReference((String)value))
+            if (isValueReference(value))
             {
-                ValueBinding vb = context.getApplication().createValueBinding((String)value);
+                ValueBinding vb = context.getApplication().createValueBinding(value);
                 component.setValueBinding(propName, vb);
             }
             else
             {
                 //TODO: More sophisticated way to convert boolean value (yes/no, 1/0, on/off, etc.)
-                component.getAttributes().put(propName, Boolean.valueOf((String)value));
+                component.getAttributes().put(propName, Boolean.valueOf(value));
             }
         }
     }

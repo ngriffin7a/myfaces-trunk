@@ -44,16 +44,15 @@ public class HtmlSecretRenderer
     throws IOException
     {
         RendererUtils.checkParamValidity(facesContext, uiComponent, HtmlInputSecret.class);
-
+        
         ResponseWriter writer = facesContext.getResponseWriter();
         writer.startElement(HTML.INPUT_ELEM, uiComponent);
         writer.writeAttribute(HTML.TYPE_ATTR, HTML.INPUT_TYPE_PASSWORD, null);
 
         String clientId = uiComponent.getClientId(facesContext);
 
-        writer.writeAttribute(HTML.NAME_ATTR, clientId, null);
         writer.writeAttribute(HTML.ID_ATTR, clientId, null);
-
+        writer.writeAttribute(HTML.NAME_ATTR, clientId, null);
 
         if (UIComponentUtils.getBooleanAttribute(uiComponent, JSFAttr.REDISPLAY_ATTR, false))
         {

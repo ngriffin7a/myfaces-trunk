@@ -49,11 +49,11 @@ public class RendererUtils
         Object value = ((ConvertibleValueHolder)component).getValue();
 
         Converter converter = ((ConvertibleValueHolder)component).getConverter();
-        if (converter == null && value != null)
+        if (converter == null  && value != null)
         {
             if (value instanceof String)
             {
-                return (String)value;
+                return (String) value;
             }
 
             try
@@ -63,7 +63,7 @@ public class RendererUtils
             catch (FacesException e)
             {
                 if (log.isWarnEnabled()) log.warn("No converter for class " + value.getClass().getName() + " found (component id=" + component.getId() + ").");
-                converter = null;
+                // converter stays null
             }
         }
 
@@ -80,12 +80,10 @@ public class RendererUtils
         }
         else
         {
-            return converter.getAsString(facesContext, (UIComponent)component, value);
+            return converter.getAsString(facesContext, component, value);
         }
     }
-
-
-
+    
     public static boolean isEnabledOnUserRole(FacesContext facesContext, UIComponent component)
     {
         String userRole;
@@ -109,7 +107,6 @@ public class RendererUtils
         }
     }
 
-
     public static boolean isVisibleOnUserRole(FacesContext facesContext, UIComponent component)
     {
         String userRole;
@@ -132,7 +129,6 @@ public class RendererUtils
             return facesContext.getExternalContext().isUserInRole(userRole);
         }
     }
-
 
     /**
      * See JSF Spec. 8.5 Table 8-1
@@ -178,7 +174,6 @@ public class RendererUtils
         }
         return false;
     }
-
     
     public static Converter findValueConverter(FacesContext facesContext,
                                                UIOutput component)

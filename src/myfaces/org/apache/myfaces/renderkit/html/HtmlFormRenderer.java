@@ -77,6 +77,7 @@ public class HtmlFormRenderer
                               null);
 
         HTMLUtil.renderHTMLAttributes(writer, htmlForm, HTML.FORM_PASSTHROUGH_ATTRIBUTES);
+        writer.write(""); // forse start element tag to be closed
     }
 
 

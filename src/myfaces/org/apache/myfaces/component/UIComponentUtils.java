@@ -46,21 +46,17 @@ public class UIComponentUtils
 {
     private static final Log log = LogFactory.getLog(UIComponentUtils.class);
 
-    private UIComponentUtils() {}
+    private UIComponentUtils() 
+    {
+        // disable instantiation
+    }
 
     public static boolean getBooleanAttribute(UIComponent uiComponent,
                                               String attribute,
                                               boolean defaultValue)
     {
         Boolean b = (Boolean)uiComponent.getAttributes().get(attribute);
-        if (b == null)
-        {
-            return defaultValue;
-        }
-        else
-        {
-            return b.booleanValue();
-        }
+        return (b == null) ? defaultValue : b.booleanValue();
     }
 
     public static void setBooleanAttribute(UIComponent uiComponent,

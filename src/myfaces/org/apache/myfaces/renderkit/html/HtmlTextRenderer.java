@@ -131,8 +131,8 @@ public class HtmlTextRenderer
 
         writer.startElement(HTML.INPUT_ELEM, htmlInput);
         writer.writeAttribute(HTML.ID_ATTR, clientId, null);
-        writer.writeAttribute(HTML.TYPE_ATTR, "text", null);
         writer.writeAttribute(HTML.NAME_ATTR, clientId, null);
+        writer.writeAttribute(HTML.TYPE_ATTR, "text", null);
         if (value != null)
         {
             writer.writeAttribute(HTML.VALUE_ATTR, value, JSFAttr.VALUE_ATTR);
