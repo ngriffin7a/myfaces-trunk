@@ -20,7 +20,7 @@ package net.sourceforge.myfaces.renderkit.html.ext;
 
 import net.sourceforge.myfaces.renderkit.JSFAttr;
 import net.sourceforge.myfaces.renderkit.attr.ext.TabbedPaneRendererAttributes;
-import net.sourceforge.myfaces.renderkit.html.GroupRenderer;
+import net.sourceforge.myfaces.renderkit.html.HtmlGroupRenderer;
 import net.sourceforge.myfaces.renderkit.html.HTML;
 import net.sourceforge.myfaces.renderkit.html.legacy.FormRenderer;
 import net.sourceforge.myfaces.renderkit.html.state.StateRenderer;
@@ -51,7 +51,7 @@ import java.util.Iterator;
  * @version $Revision$ $Date$
  */
 public class TabbedPaneRenderer
-    extends GroupRenderer
+    extends HtmlGroupRenderer
     implements TabbedPaneRendererAttributes
 {
     private static final String OLD_SELECTED_INDEX_ATTR

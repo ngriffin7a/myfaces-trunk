@@ -18,7 +18,7 @@
  */
 package net.sourceforge.myfaces.renderkit.html.ext;
 
-import net.sourceforge.myfaces.renderkit.html.GroupRenderer;
+import net.sourceforge.myfaces.renderkit.html.HtmlGroupRenderer;
 
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
@@ -31,7 +31,7 @@ import java.io.IOException;
  * @version $Revision$ $Date$
  */
 public class TabRenderer
-    extends GroupRenderer
+    extends HtmlGroupRenderer
 {
     public static final String TYPE = "Tab";
     public String getRendererType()

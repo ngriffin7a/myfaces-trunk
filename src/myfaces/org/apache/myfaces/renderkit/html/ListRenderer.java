@@ -81,7 +81,7 @@ implements CallbackRenderer
 
             if (
                 (parentRendererType.equals(DataRenderer.TYPE)
-                        || parentRendererType.equals(GroupRenderer.TYPE))
+                        || parentRendererType.equals(HtmlGroupRenderer.TYPE))
                         && ((parentParentRendererType != null)
                         && parentParentRendererType.equals(TYPE)))
             {
@@ -123,7 +123,7 @@ implements CallbackRenderer
             }
             else if (
                 parentRendererType.equals(ListRenderer.TYPE)
-                        && rendererType.equals(GroupRenderer.TYPE))
+                        && rendererType.equals(HtmlGroupRenderer.TYPE))
             {
                 incrementComponentCountAttr(facesContext);
 
@@ -137,7 +137,7 @@ implements CallbackRenderer
 
                 if (
                     (parentRendererType.equals(DataRenderer.TYPE)
-                            || parentRendererType.equals(GroupRenderer.TYPE))
+                            || parentRendererType.equals(HtmlGroupRenderer.TYPE))
                             && ((parentParentRendererType != null)
                             && parentParentRendererType.equals(TYPE)))
                 {
@@ -365,7 +365,7 @@ implements CallbackRenderer
         String         rendererType         = rowComponent.getRendererType();
         ResponseWriter writer               = context.getResponseWriter();
         boolean        isLastChildcomponent =
-            (rendererType.equals(GroupRenderer.TYPE) && (getComponentCountAttr(context) > 1))
+            (rendererType.equals(HtmlGroupRenderer.TYPE) && (getComponentCountAttr(context) > 1))
             ? true : false;
 
         int            row                  = incrementRowAttr(context);

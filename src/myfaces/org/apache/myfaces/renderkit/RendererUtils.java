@@ -29,6 +29,8 @@ import javax.faces.component.UIOutput;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.el.ValueBinding;
+import java.io.IOException;
+import java.util.Iterator;
 
 /**
  * @author Manfred Geiler (latest modification by $Author$)
@@ -212,6 +214,25 @@ public class RendererUtils
             throw new IllegalArgumentException("uiComponent is instanceof "
                 + uiComponent.getClass().getName()+" and not of "+compClass.getName()+" as it should be");
         }
+    }
+
+    public static void renderChild(FacesContext facesContext, UIComponent component)
+            throws IOException
+    {
+        component.encodeBegin(facesContext);
+        if (component.getRendersChildren())
+        {
+            component.encodeChildren(facesContext);
+        }
+        else if (component.getChildCount() > 0)
+        {
+            for (Iterator it = component.getChildren().iterator(); it.hasNext(); )
+            {
+                UIComponent child = (UIComponent)it.next();
+                renderChild(facesContext, child);
+            }
+        }
+        component.encodeEnd(facesContext);
     }
 
 }

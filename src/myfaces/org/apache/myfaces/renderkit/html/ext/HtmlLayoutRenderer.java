@@ -144,20 +144,7 @@ public class HtmlLayoutRenderer
     protected void renderChild(FacesContext facesContext, UIComponent component)
             throws IOException
     {
-        component.encodeBegin(facesContext);
-        if (component.getRendersChildren())
-        {
-            component.encodeChildren(facesContext);
-        }
-        else if (component.getChildCount() > 0)
-        {
-            for (Iterator it = component.getChildren().iterator(); it.hasNext(); )
-            {
-                UIComponent child = (UIComponent)it.next();
-                renderChild(facesContext, child);
-            }
-        }
-        component.encodeEnd(facesContext);
+        RendererUtils.renderChild(facesContext, component);
     }
 
 }
