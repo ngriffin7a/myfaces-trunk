@@ -63,20 +63,20 @@
 
                     <h:form>
                         <f:verbatim><p></f:verbatim>
-	                        <h:outputText value="Gimme a date: "/>
-	                        <x:inputDate value="#{date1}"/>
+	                        <h:outputText value="Gimme a date: "/> <h:message for="date1"/>
+	                        <x:inputDate id="date1" value="#{date1}"/>
 	                        <f:verbatim><br></f:verbatim>
 	                        <h:outputText value="Date is: #{date1}"/> <%-- TODO : print date part only --%>
                         <f:verbatim></p></f:verbatim>
                         
                         <h:outputText value="Gimme a time: "/>
-	                        <x:inputDate value="#{date2}" type="time"/>
+	                        <x:inputDate id="date2" value="#{date2}" type="time"/> <h:message for="date2"/>
 	                        <f:verbatim><br></f:verbatim>
 	                        <h:outputText value="Time is: #{date2}"/> <%-- TODO : print time part only --%>
                         <f:verbatim></p></f:verbatim>
                         
                         <h:outputText value="Gimme a date & time: "/>
-	                        <x:inputDate value="#{date3}" type="both"/>
+	                        <x:inputDate id="date3" value="#{date3}" type="both"/> <h:message for="date3"/>
 	                        <f:verbatim><br></f:verbatim>
 	                        <h:outputText value="Date time is: #{date3}"/>
                         <f:verbatim></p></f:verbatim>
