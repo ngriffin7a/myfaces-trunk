@@ -26,6 +26,9 @@ import javax.servlet.jsp.JspException;
  * @author mwessendorf (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.5  2004/09/15 07:58:59  mwessendorf
+ * Custom Validators now work in OC4J - thanks to Daniel Kamakura for supporting this
+ *
  * Revision 1.4  2004/07/11 16:20:21  mwessendorf
  * typo
  *
@@ -43,7 +46,6 @@ public class ValidateEqualTag extends ValidatorTag {
 	private String _for = null;
 	
 	public ValidateEqualTag(){
-		setValidatorId(EqualValidator.VALIDATOR_ID);
 	}
 
 	public void setFor(String string) {
@@ -53,6 +55,7 @@ public class ValidateEqualTag extends ValidatorTag {
 	protected Validator createValidator() throws JspException {
 
 		FacesContext facesContext = FacesContext.getCurrentInstance();
+		setValidatorId(EqualValidator.VALIDATOR_ID);
 		EqualValidator validator = (EqualValidator)super.createValidator();
 		if (_for != null)
 		{
@@ -68,6 +71,8 @@ public class ValidateEqualTag extends ValidatorTag {
 		}
 		return validator;
 	}
-
-
+    public void release() {
+        super.release();
+       _for = null;
+    }
 }

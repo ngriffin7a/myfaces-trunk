@@ -23,6 +23,9 @@ import javax.servlet.jsp.JspException;
  * @author mwessendorf (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.3  2004/09/15 07:58:58  mwessendorf
+ * Custom Validators now work in OC4J - thanks to Daniel Kamakura for supporting this
+ *
  * Revision 1.2  2004/07/01 21:53:11  mwessendorf
  * ASF switch
  *
@@ -35,7 +38,6 @@ public class ValidateEmailTag extends ValidatorTag
 	
 	public ValidateEmailTag()
     {
-		setValidatorId(EmailValidator.VALIDATOR_ID);
 	}
 
 	/* (non-Javadoc)
@@ -43,8 +45,14 @@ public class ValidateEmailTag extends ValidatorTag
 	 */
 	protected Validator createValidator() throws JspException
     {
-		EmailValidator validator = (EmailValidator)super.createValidator();
+		setValidatorId(EmailValidator.VALIDATOR_ID);
+	    EmailValidator validator = (EmailValidator)super.createValidator();
 		return validator;
 	}
+	
+    public void release()
+    {
+        super.release();
+    }
 
 }

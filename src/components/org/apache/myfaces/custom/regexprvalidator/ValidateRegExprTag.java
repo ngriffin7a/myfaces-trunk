@@ -26,6 +26,9 @@ import javax.servlet.jsp.JspException;
  * @author mwessendorf (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.4  2004/09/15 07:58:59  mwessendorf
+ * Custom Validators now work in OC4J - thanks to Daniel Kamakura for supporting this
+ *
  * Revision 1.3  2004/07/01 21:53:11  mwessendorf
  * ASF switch
  *
@@ -40,7 +43,6 @@ public class ValidateRegExprTag extends ValidatorTag {
 	private String _pattern = null;
 	
 	public ValidateRegExprTag(){
-		setValidatorId(RegExprValidator.VALIDATOR_ID);
 	}
 
 	public void setPattern(String string) {
@@ -50,6 +52,7 @@ public class ValidateRegExprTag extends ValidatorTag {
 	protected Validator createValidator() throws JspException {
 
 		FacesContext facesContext = FacesContext.getCurrentInstance();
+		setValidatorId(RegExprValidator.VALIDATOR_ID);
 		RegExprValidator validator = (RegExprValidator)super.createValidator();
 		if (_pattern != null)
 		{
@@ -65,5 +68,10 @@ public class ValidateRegExprTag extends ValidatorTag {
 		}
 		return validator;
 	}
+    public void release()
+    {
+        super.release();
+       _pattern= null;
+    }
 
 }

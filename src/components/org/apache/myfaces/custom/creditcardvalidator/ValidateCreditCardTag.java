@@ -26,6 +26,9 @@ import javax.servlet.jsp.JspException;
  * @author mwessendorf (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.3  2004/09/15 07:58:59  mwessendorf
+ * Custom Validators now work in OC4J - thanks to Daniel Kamakura for supporting this
+ *
  * Revision 1.2  2004/07/01 21:53:08  mwessendorf
  * ASF switch
  *
@@ -43,7 +46,6 @@ public class ValidateCreditCardTag extends ValidatorTag {
 	
 	public ValidateCreditCardTag()
     {
-		setValidatorId(CreditCardValidator.VALIDATOR_ID);
 	}
 
 	/**
@@ -87,6 +89,7 @@ public class ValidateCreditCardTag extends ValidatorTag {
 	protected Validator createValidator() throws JspException {
 		
 		FacesContext facesContext = FacesContext.getCurrentInstance();
+		setValidatorId(CreditCardValidator.VALIDATOR_ID);
 		CreditCardValidator validator = (CreditCardValidator)super.createValidator();
 		if (_none != null)
 		{
@@ -150,5 +153,18 @@ public class ValidateCreditCardTag extends ValidatorTag {
 		}
 		return validator;
 	}
+	
+	
 
+    /* (non-Javadoc)
+     * @see javax.servlet.jsp.tagext.Tag#release()
+     */
+    public void release() {
+        super.release();
+    	_amex = null;
+    	_discover = null;
+    	_mastercard = null;
+    	_visa = null;
+    	_none = null;
+   }
 }
