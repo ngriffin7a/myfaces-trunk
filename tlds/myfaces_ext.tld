@@ -76,7 +76,6 @@
     </description>
 
 <!--     Extended standard components     -->
-    <!-- TODO: separate user_role attributes from standard tags -->
 
     <!-- commandButton -->
     <tag>

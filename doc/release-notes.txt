@@ -9,6 +9,8 @@ javax.faces.application.CONFIG_FILES was changed to the spec-compliant
 javax.faces.CONFIG_FILES. You have to modify your web.xml accordingly,
 otherwise your config files will no longer be found and parsed.
 
+* bug #953783	h:commandLink renders value as text
+* bug #955135	graphicImage tag
 * bug #952453	Class FacesConfigFactoryBase search for wrong context-param
 * bug #951988	myfaces doesn't read faces-config.xml in foo.jars
 * bug #951896	command links broken if ALLOW_JAVASCRIPT=false

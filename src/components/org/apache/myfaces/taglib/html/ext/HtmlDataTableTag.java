@@ -28,6 +28,9 @@ import javax.faces.component.UIComponent;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.5  2004/05/18 15:07:11  manolito
+ * no message
+ *
  * Revision 1.4  2004/05/18 14:31:38  manolito
  * user role support completely moved to components source tree
  *
@@ -53,7 +56,7 @@ public class HtmlDataTableTag
 
     public String getRendererType()
     {
-        return "net.sourceforge.myfaces.Table";
+        return "javax.faces.Table";
     }
 
     private String _preserveDataModel;

@@ -28,6 +28,9 @@ import javax.faces.component.UIComponent;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.4  2004/05/18 15:07:12  manolito
+ * no message
+ *
  * Revision 1.3  2004/05/18 14:31:38  manolito
  * user role support completely moved to components source tree
  *
@@ -48,7 +51,7 @@ public class HtmlSelectOneMenuTag
 
     public String getRendererType()
     {
-        return "javax.faces.Menu";
+        return "net.sourceforge.myfaces.Menu";
     }
 
     private String _enabledOnUserRole;
