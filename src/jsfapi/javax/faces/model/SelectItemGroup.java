@@ -20,27 +20,37 @@
 package javax.faces.model;
 
 /**
-  * @author Thomas Spiegl (latest modification by $Author$)
-  * @version $Revision$ $Date$
-*/
+ * @author Thomas Spiegl (latest modification by $Author$)
+ * @version $Revision$ $Date$
+ * $Log$
+ * Revision 1.4  2004/04/07 08:20:01  manolito
+ * EMPTY_SELECT_ITEMS
+ *
+ */
 public class SelectItemGroup extends SelectItem
 {
-	// FIELDS
+	private static final SelectItem[] EMPTY_SELECT_ITEMS = new SelectItem[0];
+
+    // FIELDS
     private SelectItem[] _selectItems;
     
 	// CONSTRUCTORS
 	public SelectItemGroup()
 	{
         super();
+        _selectItems = EMPTY_SELECT_ITEMS;
 	}
 
 	public SelectItemGroup(String label)
 	{
-		super("", label, null);
+		super("", label, null, false);
+        _selectItems = EMPTY_SELECT_ITEMS;
 	}
+
 	public SelectItemGroup(String label, String description, boolean disabled, SelectItem[] selectItems)
 	{
         super("", label, description, disabled);
+        if (selectItems == null) throw new NullPointerException("selectItems");
 		_selectItems = selectItems;
 	}
 
