@@ -46,6 +46,9 @@ import java.util.List;
 
 /**
  * $Log$
+ * Revision 1.17  2005/01/09 18:15:12  mmarinschek
+ * small changes - better error handling, label renderer supports more hooks for sub-classes
+ *
  * Revision 1.16  2004/12/27 04:11:11  mmarinschek
  * Data Table stores the state of facets of children; script tag is rendered with type attribute instead of language attribute, popup works better as a column in a data table
  *
@@ -159,7 +162,7 @@ public class HtmlCalendarRenderer
 
             inputText.setTransient(true);
             inputText.setValue(getConverter(inputCalendar).getAsString(
-                    facesContext,inputCalendar,inputCalendar.getValue()));
+                    facesContext,inputCalendar,value));
             inputText.setEnabledOnUserRole(inputCalendar.getEnabledOnUserRole());
             inputText.setVisibleOnUserRole(inputCalendar.getVisibleOnUserRole());
 

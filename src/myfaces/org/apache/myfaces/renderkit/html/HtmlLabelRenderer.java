@@ -36,6 +36,9 @@ import java.io.IOException;
  * @author Martin Marinschek
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.17  2005/01/09 18:15:12  mmarinschek
+ * small changes - better error handling, label renderer supports more hooks for sub-classes
+ *
  * Revision 1.16  2005/01/09 09:18:54  mmarinschek
  * Exception thrown
  *
@@ -130,6 +133,13 @@ extends HtmlRenderer
         }
 
         writer.flush(); // close start tag
+
+        encodeAfterStart(facesContext,writer,uiComponent);
+    }
+
+    protected void encodeAfterStart(FacesContext facesContext, ResponseWriter writer, UIComponent uiComponent)
+        throws IOException
+    {
     }
 
     protected void encodeBefore(FacesContext facesContext, ResponseWriter writer, UIComponent uiComponent)
@@ -157,9 +167,17 @@ extends HtmlRenderer
         super.encodeEnd(facesContext, uiComponent); //check for NP
 
         ResponseWriter writer = facesContext.getResponseWriter();
+
+        encodeBeforeEnd(facesContext, writer, uiComponent);
+
         writer.endElement(HTML.LABEL_ELEM);
 
         encodeAfter(facesContext, writer, uiComponent);
+    }
+
+    protected void encodeBeforeEnd(FacesContext facesContext, ResponseWriter writer, UIComponent uiComponent)
+        throws IOException
+    {
     }
 
     protected void encodeAfter(FacesContext facesContext, ResponseWriter writer, UIComponent uiComponent)

@@ -27,6 +27,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.convert.ConverterException;
 import javax.faces.el.ValueBinding;
+import javax.faces.el.PropertyNotFoundException;
 import javax.faces.model.SelectItem;
 import java.io.IOException;
 import java.lang.reflect.Array;
@@ -36,6 +37,9 @@ import java.util.*;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.19  2005/01/09 18:15:12  mmarinschek
+ * small changes - better error handling, label renderer supports more hooks for sub-classes
+ *
  * Revision 1.18  2005/01/07 01:54:35  svieujot
  * radioRenderer wasn't looking at the submitted value.
  *
@@ -87,29 +91,61 @@ public class RendererUtils
     private static final Log log = LogFactory.getLog(RendererUtils.class);
 
     public static final String SELECT_ITEM_LIST_ATTR = RendererUtils.class.getName() + ".LIST";
-    
-    public static Object getValue(UIComponent component)
+
+    public static String getPathToComponent(UIComponent component)
     {
-        if (!(component instanceof ValueHolder))
+        StringBuffer buf = new StringBuffer();
+
+        if(component == null)
         {
-            throw new IllegalArgumentException("Component is not a ValueHolder");
+            buf.append("{Component-Path : ");
+            buf.append("[null]}");
+            return buf.toString();
         }
 
-        if (component instanceof EditableValueHolder)
-        {
-            Object submittedValue = ((EditableValueHolder)component).getSubmittedValue();
-            if (submittedValue != null)
-                return (Boolean)submittedValue;
-        }
+        getPathToComponent(component,buf);
 
-        return ((ValueHolder)component).getValue();
+        buf.insert(0,"{Component-Path : ");
+        buf.append("}");
+
+        return buf.toString();
+    }
+
+    private static void getPathToComponent(UIComponent component, StringBuffer buf)
+    {
+        if(component == null)
+            return;
+
+        StringBuffer intBuf = new StringBuffer();
+
+        intBuf.append("[Class: ");
+        intBuf.append(component.getClass().getName());
+        if(component instanceof UIViewRoot)
+        {
+            intBuf.append(",ViewId: ");
+            intBuf.append(((UIViewRoot) component).getViewId());
+        }
+        else
+        {
+            intBuf.append(",Id: ");
+            intBuf.append(component.getId());
+        }
+        intBuf.append("]");
+
+        buf.insert(0,intBuf);
+
+        if(component!=null)
+        {
+            getPathToComponent(component.getParent(),buf);
+        }
     }
     
     public static Boolean getBooleanValue(UIComponent component)
     {
         if (!(component instanceof ValueHolder))
         {
-            throw new IllegalArgumentException("Component is not a ValueHolder");
+            throw new IllegalArgumentException("Component : "+getPathToComponent(component)
+                    +"is not a ValueHolder");
         }
 
         if (component instanceof EditableValueHolder)
@@ -123,7 +159,8 @@ public class RendererUtils
                 }
                 else
                 {
-                    throw new IllegalArgumentException("Expected submitted value of type Date");
+                    throw new IllegalArgumentException("Expected submitted value of type Boolean for component : "+
+                            getPathToComponent(component));
                 }
             }
         }
@@ -136,7 +173,8 @@ public class RendererUtils
         }
         else
         {
-            throw new IllegalArgumentException("Expected submitted value of type Date");
+            throw new IllegalArgumentException("Expected submitted value of type Boolean for Component : "+
+                    getPathToComponent(component));
         }
     }
     
@@ -144,7 +182,8 @@ public class RendererUtils
     {
         if (!(component instanceof ValueHolder))
         {
-            throw new IllegalArgumentException("Component is not a ValueHolder");
+            throw new IllegalArgumentException("Component : "+
+                    getPathToComponent(component)+"is not a ValueHolder");
         }
 
         if (component instanceof EditableValueHolder)
@@ -158,7 +197,9 @@ public class RendererUtils
                 }
                 else
                 {
-                    throw new IllegalArgumentException("Expected submitted value of type Date");
+                    throw new IllegalArgumentException(
+                            "Expected submitted value of type Date for component : "+
+                            getPathToComponent(component));
                 }
             }
         }
@@ -171,7 +212,8 @@ public class RendererUtils
         }
         else
         {
-            throw new IllegalArgumentException("Expected submitted value of type Date");
+            throw new IllegalArgumentException("Expected submitted value of type Date for component : "
+                +getPathToComponent(component));
         }
     }
 
@@ -179,62 +221,72 @@ public class RendererUtils
     public static String getStringValue(FacesContext facesContext,
                                         UIComponent component)
     {
-        if (!(component instanceof ValueHolder))
+        try
         {
-            throw new IllegalArgumentException("Component is not a ValueHolder");
-        }
-
-        if (component instanceof EditableValueHolder)
-        {
-            Object submittedValue = ((EditableValueHolder)component).getSubmittedValue();
-            if (submittedValue != null)
+            if (!(component instanceof ValueHolder))
             {
-                if (submittedValue instanceof String)
+                throw new IllegalArgumentException("Component : "+getPathToComponent(component)+"is not a ValueHolder");
+            }
+
+            if (component instanceof EditableValueHolder)
+            {
+                Object submittedValue = ((EditableValueHolder)component).getSubmittedValue();
+                if (submittedValue != null)
                 {
-                    return (String)submittedValue;
+                    if (submittedValue instanceof String)
+                    {
+                        return (String)submittedValue;
+                    }
+                    else
+                    {
+                        throw new IllegalArgumentException("Expected submitted value of type String for component : "
+                            +getPathToComponent(component));
+                    }
+                }
+            }
+
+            Object value = ((ValueHolder)component).getValue();
+
+            Converter converter = ((ValueHolder)component).getConverter();
+            if (converter == null  && value != null)
+            {
+                if (value instanceof String)
+                {
+                    return (String) value;
+                }
+
+                try
+                {
+                    converter = facesContext.getApplication().createConverter(value.getClass());
+                }
+                catch (FacesException e)
+                {
+                    log.error("No converter for class " + value.getClass().getName() + " found (component id=" + component.getId() + ").");
+                    // converter stays null
+                }
+            }
+
+            if (converter == null)
+            {
+                if (value == null)
+                {
+                    return "";
                 }
                 else
                 {
-                    throw new IllegalArgumentException("Expected submitted value of type String");
+                    return value.toString();
                 }
-            }
-        }
-
-        Object value = ((ValueHolder)component).getValue();
-
-        Converter converter = ((ValueHolder)component).getConverter();
-        if (converter == null  && value != null)
-        {
-            if (value instanceof String)
-            {
-                return (String) value;
-            }
-
-            try
-            {
-                converter = facesContext.getApplication().createConverter(value.getClass());
-            }
-            catch (FacesException e)
-            {
-                log.error("No converter for class " + value.getClass().getName() + " found (component id=" + component.getId() + ").");
-                // converter stays null
-            }
-        }
-
-        if (converter == null)
-        {
-            if (value == null)
-            {
-                return "";
             }
             else
             {
-                return value.toString();
+                return converter.getAsString(facesContext, component, value);
             }
         }
-        else
+        catch(PropertyNotFoundException ex)
         {
-            return converter.getAsString(facesContext, component, value);
+            log.error("Property not found - called by component : "+getPathToComponent(component));
+
+            throw ex;
         }
     }
 
@@ -324,7 +376,7 @@ public class RendererUtils
 
         if (!valueType.isArray())
         {
-            throw new IllegalArgumentException("ValueBinding for UISelectMany must be of type List or Array");
+            throw new IllegalArgumentException("ValueBinding for UISelectMany : "+getPathToComponent(component)+" must be of type List or Array");
         }
 
         Class arrayComponentType = valueType.getComponentType();
@@ -354,8 +406,8 @@ public class RendererUtils
         // why isAssignableFrom with additional getClass method call if isInstance does the same?
         if (compClass != null && !(compClass.isInstance(uiComponent)))
         {
-            throw new IllegalArgumentException("uiComponent is instanceof "
-                + uiComponent.getClass().getName()+" and not of "+compClass.getName()+" as it should be");
+            throw new IllegalArgumentException("uiComponent : "+getPathToComponent(uiComponent)+
+                    " is not instance of "+compClass.getName()+" as it should be");
         }
     }
 
@@ -430,16 +482,15 @@ public class RendererUtils
             UIComponent child = (UIComponent)children.next();
             if (child instanceof UISelectItem)
             {
-                Object value = getValue( child );
+                Object value = ((UISelectItem) child).getValue();
                 if (value != null)
                 {
                     //get SelectItem from model via value binding
                     if (!(value instanceof SelectItem))
                     {
-                        FacesContext facesContext = FacesContext.getCurrentInstance();
                         ValueBinding binding = ((UISelectItem) child).getValueBinding("value");
                         throw new IllegalArgumentException("Value binding '"+(binding==null?null:binding.getExpressionString())
-                                +"' of UISelectItem with id " + child.getClientId(facesContext) + " does not reference an Object of type SelectItem");
+                                +"' of UISelectItem : " + getPathToComponent(child) + " does not reference an Object of type SelectItem");
                     }
                     list.add(value);
                 }
@@ -483,10 +534,9 @@ public class RendererUtils
                         Object item = it.next();
                         if (!(item instanceof SelectItem))
                         {
-                            FacesContext facesContext = FacesContext.getCurrentInstance();
                             ValueBinding binding = items.getValueBinding("value");
                             throw new IllegalArgumentException("Collection referenced by UISelectItems with binding '"+
-                                    binding.getExpressionString()+"' and id " + child.getClientId(facesContext) + " does not contain Objects of type SelectItem");
+                                    binding.getExpressionString()+"' and Component-Path : " + getPathToComponent(child) + " does not contain Objects of type SelectItem");
                         }
                         list.add(item);
                     }
@@ -502,16 +552,15 @@ public class RendererUtils
                 else
                 {
                     ValueBinding binding = items.getValueBinding("value");
-                    FacesContext facesContext = FacesContext.getCurrentInstance();
+
                     throw new IllegalArgumentException("Value binding '"+
-                            (binding==null?null:binding.getExpressionString())+"'of UISelectItems with id " + child.getClientId(facesContext) + " does not reference an Object of type SelectItem, SelectItem[], Collection or Map but of type : "+((value==null)?null:value.getClass().getName()));
+                            (binding==null?null:binding.getExpressionString())+"'of UISelectItems with component-path " + getPathToComponent(child) + " does not reference an Object of type SelectItem, SelectItem[], Collection or Map but of type : "+((value==null)?null:value.getClass().getName()));
                 }
             }
             else
             {
-                FacesContext facesContext = FacesContext.getCurrentInstance();
-                log.error("Invalid child with id " + child.getClientId(facesContext) + "of component with id : "+uiComponent.getClientId(facesContext)
-                        +" : must be UISelectItem or UISelectItems, is of type : "+((child==null)?"null":child.getClass().getName()));
+                //todo: may other objects than selectItems be nested or not?
+                //log.error("Invalid component : " + getPathToComponent(child) + " : must be UISelectItem or UISelectItems, is of type : "+((child==null)?"null":child.getClass().getName()));
             }
         }
 
@@ -543,7 +592,7 @@ public class RendererUtils
             }
             catch (IllegalArgumentException e)
             {
-                throw new IllegalArgumentException("Submitted value of UISelectMany component with id " + uiSelectMany.getClientId(FacesContext.getCurrentInstance()) + " is not of type Array or List");
+                throw new IllegalArgumentException("Submitted value of UISelectMany component with path : " + getPathToComponent(uiSelectMany) + " is not of type Array or List");
             }
         }
     }
@@ -573,7 +622,7 @@ public class RendererUtils
             }
             catch (IllegalArgumentException e)
             {
-                throw new IllegalArgumentException("Value of UISelectMany component with id " + uiSelectMany.getClientId(FacesContext.getCurrentInstance()) + " is not of type Array or List");
+                throw new IllegalArgumentException("Value of UISelectMany component with path : " + getPathToComponent(uiSelectMany) + " is not of type Array or List");
             }
         }
     }
@@ -630,7 +679,7 @@ public class RendererUtils
         }
         else
         {
-            throw new IllegalArgumentException("Value of UISelectMany component with id " + uiSelectMany.getClientId(FacesContext.getCurrentInstance()) + " is not of type Array or List");
+            throw new IllegalArgumentException("Value of UISelectMany component with path : " + getPathToComponent(uiSelectMany) + " is not of type Array or List");
         }
     }
 
@@ -643,7 +692,8 @@ public class RendererUtils
     {
         if (!(submittedValue instanceof String))
         {
-            throw new IllegalArgumentException("Submitted value of type String expected");
+            throw new IllegalArgumentException("Submitted value of type String for component : "+
+                    getPathToComponent(output)+"expected");
         }
 
         Converter converter;
@@ -676,7 +726,8 @@ public class RendererUtils
     {
         if (!(submittedValue instanceof String[]))
         {
-            throw new ConverterException("Submitted value of type String[] expected");
+            throw new ConverterException("Submitted value of type String[] for component : "+getPathToComponent(selectMany)+
+                    "expected");
         }
         return _SharedRendererUtils.getConvertedUISelectManyValue(facesContext,
                                                                   selectMany,

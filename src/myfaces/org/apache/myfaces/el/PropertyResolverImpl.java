@@ -38,6 +38,9 @@ import java.util.Map;
  * @author Anton Koinov
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.31  2005/01/09 18:15:12  mmarinschek
+ * small changes - better error handling, label renderer supports more hooks for sub-classes
+ *
  * Revision 1.30  2004/12/03 08:41:45  manolito
  * MYFACES-44 / PropertyResolverImpl has special logic for UIComponents
  *
