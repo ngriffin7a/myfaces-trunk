@@ -42,6 +42,9 @@ import net.sourceforge.myfaces.component.html.ext.HtmlPanelGroup;
  * @author <a href="mailto:oliver@rossmueller.com">Oliver Rossmueller</a>
  * @version $Revision$ $Date$
  *          $Log$
+ *          Revision 1.19  2004/07/26 22:55:10  o_rossmueller
+ *          use ids instead of clientIds
+ *
  *          Revision 1.18  2004/07/25 11:08:02  o_rossmueller
  *          use HtmlTree class name for PREVIOUS_VIEW_ROOT constant
  *
@@ -714,8 +717,7 @@ public class HtmlTree
         }
         HtmlTree other = (HtmlTree) obj;
 
-        FacesContext context = FacesContext.getCurrentInstance();
-        return other.getClientId(context).equals(getClientId(context));
+        return other.getId().equals(getId());
     }
 
 
