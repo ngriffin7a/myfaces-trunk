@@ -205,6 +205,12 @@
         <managed-bean-class>org.apache.myfaces.examples.misc.TestCheckBox</managed-bean-class>
         <managed-bean-scope>request</managed-bean-scope>
     </managed-bean>
+    
+	<managed-bean>
+        <managed-bean-name>testCheckList</managed-bean-name>
+        <managed-bean-class>org.apache.myfaces.examples.misc.TestCheckBoxList</managed-bean-class>
+        <managed-bean-scope>request</managed-bean-scope>
+    </managed-bean>
 
     <managed-bean>
         <managed-bean-name>testRadioButton</managed-bean-name>

@@ -88,13 +88,28 @@ managed beans used:
 							<f:selectItem itemValue="0" itemLabel="First Choice" />
 							<f:selectItem itemValue="1" itemLabel="Second Choice" />
                         </x:selectOneRadio>
+                        
 	                    <f:verbatim><br/><br/></f:verbatim>
+
+	                    <x:dataTable value="#{testCheckList.testCheckBoxes}"
+	                    			var="checkBox"
+	                    			preserveDataModel="true"
+	                    			rowIndexVar="rowNumber">
+							<h:column>
+								<f:facet name="header">
+									<h:outputText value="Check boxes list" />
+								</f:facet>
+								<h:selectBooleanCheckbox value="#{checkBox.checked}"/>
+								<h:outputText value="Check box #{rowNumber}"/>
+							</h:column>
+		                </x:dataTable>
+		                
+						<f:verbatim><br/><br/></f:verbatim>
+
                         <h:inputText id="inp3"/><f:verbatim><br/></f:verbatim>
-                        <h:inputText id="inp4"/><f:verbatim><br/></f:verbatim>
-                        <h:inputText id="inp5"/><f:verbatim><br/></f:verbatim>
                     </x:panelTab>
 
-                    <f:verbatim><br></f:verbatim>
+                    <f:verbatim><br/><hr/><br/></f:verbatim>
 
                     <h:selectBooleanCheckbox value="#{tabbedPaneBean.tab1Visible}"/>
                     <h:outputText value="#{example_messages['tabbed_visible1']}"/>
