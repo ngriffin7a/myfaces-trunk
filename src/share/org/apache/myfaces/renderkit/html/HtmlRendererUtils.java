@@ -40,6 +40,9 @@ import java.util.*;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.12  2004/06/16 23:51:15  o_rossmueller
+ * fix #970747: force separate end tag for empty select list
+ *
  * Revision 1.11  2004/06/03 12:57:03  o_rossmueller
  * modified link renderer to use one hidden field for all links according to 1.1 renderkit docs
  * added onclick=clear_XXX to button
@@ -382,7 +385,8 @@ public final class HtmlRendererUtils
 
         renderSelectOptions(facesContext, uiComponent, converter, lookupSet, lookupSubmittedValue,
                             selectItemList);
-
+        // bug #970747: force separate end tag
+        writer.writeText("", null);
         writer.endElement(HTML.SELECT_ELEM);
     }
 
