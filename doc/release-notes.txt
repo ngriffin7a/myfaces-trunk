@@ -14,6 +14,7 @@ Changes in Release 1.0.5 beta
 * bug #952385  	decorator only for Viewhandler available
 * bug #957938 	map-entries in faces-config.xml
 * bug #970747	Incorrect rendering of <select> tag
+* bug #972165	<h:selectBooleanCheckbox> and disabled attribute
 
 ----------------------------------------------------------------------
 Changes in Release 1.0.4 beta

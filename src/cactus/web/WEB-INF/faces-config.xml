@@ -22,6 +22,17 @@
     </managed-bean>
 
     <managed-bean>
+        <description>This bean is used in the cactus test for bug 972165</description>
+        <managed-bean-name>bug972165Bean</managed-bean-name>
+        <managed-bean-class>net.sourceforge.myfaces.renderkit.html.Bug972165Bean</managed-bean-class>
+        <managed-bean-scope>request</managed-bean-scope>
+        <managed-property>
+            <property-name>checkDisabled</property-name>
+            <value>true</value>
+        </managed-property>
+    </managed-bean>
+
+    <managed-bean>
         <description>This bean can be used by multiple tests</description>
         <managed-bean-name>commonRequestScopeBean</managed-bean-name>
         <managed-bean-class>net.sourceforge.myfaces.cactus.CommonModelBean</managed-bean-class>

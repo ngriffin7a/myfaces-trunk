@@ -28,6 +28,7 @@ import org.apache.commons.logging.LogFactory;
 
 import javax.faces.FacesException;
 import javax.faces.component.*;
+import javax.faces.component.html.HtmlSelectBooleanCheckbox;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 import javax.faces.convert.Converter;
@@ -40,6 +41,9 @@ import java.util.*;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.13  2004/06/17 00:35:50  o_rossmueller
+ * fix #972165: do not reset disabled html checkboxes (the browser does not send a form value for disabled checkboxes even if value=true)
+ *
  * Revision 1.12  2004/06/16 23:51:15  o_rossmueller
  * fix #970747: force separate end tag for empty select list
  *
@@ -157,7 +161,15 @@ public final class HtmlRendererUtils
             // if there is a submittedValue from a former submit!
             if (((EditableValueHolder)component).getSubmittedValue() == null)
             {
-                ((EditableValueHolder)component).setSubmittedValue(Boolean.FALSE);
+                // bug #972165: for disabled components the browser does not send a form value, so we have to
+                // check this to avoid modification of disabled component
+                if (component instanceof HtmlSelectBooleanCheckbox) {
+                    if (! ((HtmlSelectBooleanCheckbox)component).isDisabled()) {
+                        ((EditableValueHolder)component).setSubmittedValue(Boolean.FALSE);
+                    }
+                } else {
+                    ((EditableValueHolder)component).setSubmittedValue(Boolean.FALSE);
+                }
             }
         }
     }
