@@ -74,6 +74,18 @@ public class DateConverter
                     }
                     catch (ParseException ex4)
                     {
+                        try
+                        {
+                            DateFormat format = ConverterUtils.getDateFormat(
+                                    component, context.getLocale());
+                            format.setTimeZone(
+                                    ConverterUtils.getTimeZone(component));
+
+                            return format.parse(value);
+                        }
+                        catch (ParseException ex5)
+                        {
+                        }
                     }
                 }
             }
