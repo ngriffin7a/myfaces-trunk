@@ -34,6 +34,9 @@ import java.util.*;
  * @author Anton Koinov (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.5  2004/08/10 08:23:13  manolito
+ * trivial javadoc changes only
+ *
  * Revision 1.4  2004/07/01 22:01:13  mwessendorf
  * ASF switch
  *
@@ -272,10 +275,10 @@ public abstract class BiLevelCacheMap implements Map
      * Implementing this method is prefered to guarantee that there will be only
      * one instance per key ever created. Calling put() to add items in a multi-
      * threaded situation will require external synchronization to prevent two
-     * isntances for the same key, which defeats the perpose of this cache 
-     * (put() is useful when initiazlization is done during startup and items 
+     * instances for the same key, which defeats the purpose of this cache
+     * (put() is useful when initialization is done during startup and items
      * are not added during execution or when (temporarily) having possibly two 
-     * or more instances of for the same key is not of concearn).<br>
+     * or more instances of the same key is not of concern).<br>
      * 
      * @param key lookup key
      * @return new instace for the requested key
