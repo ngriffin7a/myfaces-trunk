@@ -23,21 +23,25 @@
             <x:navigationMenuItem id="nav_2_2" itemLabel="#{example_messages['nav_Sample_2']}" action="go_sample2" icon="images/myfaces.gif" />
             <x:navigationMenuItem id="nav_2_3" itemLabel="#{example_messages['nav_Validate']}" action="go_validate" icon="images/myfaces.gif" />
             <x:navigationMenuItem id="nav_2_4" itemLabel="#{example_messages['nav_Components']}" icon="images/component.gif" split="true" >
-                <x:navigationMenuItem id="nav_2_4_1" itemLabel="#{example_messages['nav_dataTable']}" action="go_dataTable" icon="images/myfaces.gif" />
-                <x:navigationMenuItem id="nav_2_4_2" itemLabel="#{example_messages['nav_sortTable']}" action="go_sortTable" icon="images/myfaces.gif" />
-                <x:navigationMenuItem id="nav_2_4_3" itemLabel="#{example_messages['nav_Selectbox']}" action="go_selectbox" icon="images/myfaces.gif" />
-                <x:navigationMenuItem id="nav_2_4_4" itemLabel="#{example_messages['nav_FileUpload']}" action="go_fileupload" icon="images/myfaces.gif" />
-                <x:navigationMenuItem id="nav_2_4_5" itemLabel="#{example_messages['nav_TabbedPane']}" action="go_tabbedPane" icon="images/myfaces.gif" />
-                <x:navigationMenuItem id="nav_2_4_6" itemLabel="#{example_messages['nav_Calendar']}" action="go_calendar" icon="images/myfaces.gif" split="true" />
-                <x:navigationMenuItem id="nav_2_4_6_1" itemLabel="#{example_messages['nav_Popup']}" action="go_popup" icon="images/myfaces.gif" split="true" />
-                <x:navigationMenuItem id="nav_2_4_6_2" itemLabel="#{example_messages['nav_JsListener']}" action="go_jslistener" icon="images/myfaces.gif" split="true" />                
-                <x:navigationMenuItem id="nav_2_4_7" itemLabel="#{example_messages['nav_dataList']}" action="go_dataList" icon="images/myfaces.gif" />
-                <x:navigationMenuItem id="nav_2_4_8" itemLabel="#{example_messages['nav_tree']}" action="go_tree" icon="images/myfaces.gif" />
-                <x:navigationMenuItem id="nav_2_4_9" itemLabel="#{example_messages['nav_treeTable']}" action="go_treeTable" icon="images/myfaces.gif" />
-                <x:navigationMenuItem id="nav_2_4_10" itemLabel="#{example_messages['nav_rssTicker']}" action="go_rssticker" icon="images/myfaces.gif" />
-                <x:navigationMenuItem id="nav_2_4_11" itemLabel="#{example_messages['nav_dataScroller']}" action="go_datascroller" icon="images/myfaces.gif" />
-                <x:navigationMenuItem id="nav_2_4_12" itemLabel="#{example_messages['nav_panelstack']}" action="go_panelstack" icon="images/myfaces.gif" />
-                <x:navigationMenuItem id="nav_2_4_13" itemLabel="#{example_messages['nav_newspaperTable']}" action="go_newspaperTable" icon="images/myfaces.gif" />
+	            <x:navigationMenuItem id="nav_2_4_1" itemLabel="#{example_messages['nav_aliasBean']}" action="go_aliasBean" icon="images/myfaces.gif" />
+                <x:navigationMenuItem id="nav_2_4_2" itemLabel="#{example_messages['nav_dataTable']}" action="go_dataTable" icon="images/myfaces.gif" />
+                <x:navigationMenuItem id="nav_2_4_3" itemLabel="#{example_messages['nav_sortTable']}" action="go_sortTable" icon="images/myfaces.gif" />
+                <x:navigationMenuItem id="nav_2_4_4" itemLabel="#{example_messages['nav_Selectbox']}" action="go_selectbox" icon="images/myfaces.gif" />
+                <x:navigationMenuItem id="nav_2_4_5" itemLabel="#{example_messages['nav_FileUpload']}" action="go_fileupload" icon="images/myfaces.gif" />
+                <x:navigationMenuItem id="nav_2_4_6" itemLabel="#{example_messages['nav_TabbedPane']}" action="go_tabbedPane" icon="images/myfaces.gif" />
+                <x:navigationMenuItem id="nav_2_4_7" itemLabel="#{example_messages['nav_Calendar']}" action="go_calendar" icon="images/myfaces.gif" split="true" />
+                <x:navigationMenuItem id="nav_2_4_71" itemLabel="#{example_messages['nav_Popup']}" action="go_popup" icon="images/myfaces.gif" split="true" />
+                <x:navigationMenuItem id="nav_2_4_72" itemLabel="#{example_messages['nav_JsListener']}" action="go_jslistener" icon="images/myfaces.gif" split="true" />                
+            	<x:navigationMenuItem id="nav_2_4_8" itemLabel="#{example_messages['nav_Date']}" action="go_date" icon="images/myfaces.gif" />
+	            <x:navigationMenuItem id="nav_2_4_81" itemLabel="#{example_messages['nav_HtmlEditor']}" action="go_htmlEditor" icon="images/myfaces.gif" />
+                <x:navigationMenuItem id="nav_2_4_9" itemLabel="#{example_messages['nav_dataList']}" action="go_dataList" icon="images/myfaces.gif" />
+                <x:navigationMenuItem id="nav_2_4_10" itemLabel="#{example_messages['nav_tree']}" action="go_tree" icon="images/myfaces.gif" />
+                <x:navigationMenuItem id="nav_2_4_11" itemLabel="#{example_messages['nav_treeTable']}" action="go_treeTable" icon="images/myfaces.gif" />
+                <x:navigationMenuItem id="nav_2_4_12" itemLabel="#{example_messages['nav_rssTicker']}" action="go_rssticker" icon="images/myfaces.gif" />
+                <x:navigationMenuItem id="nav_2_4_13" itemLabel="#{example_messages['nav_dataScroller']}" action="go_datascroller" icon="images/myfaces.gif" />
+                <x:navigationMenuItem id="nav_2_4_14" itemLabel="#{example_messages['nav_panelstack']}" action="go_panelstack" icon="images/myfaces.gif" />
+	            <x:navigationMenuItem id="nav_2_4_15" itemLabel="#{example_messages['nav_css']}" action="go_css" icon="images/myfaces.gif" />
+                <x:navigationMenuItem id="nav_2_4_16" itemLabel="#{example_messages['nav_newspaperTable']}" action="go_newspaperTable" icon="images/myfaces.gif" />
             </x:navigationMenuItem>
         </x:navigationMenuItem>
         <x:navigationMenuItem id="nav_3" itemLabel="#{example_messages['nav_Documentation']}" >
