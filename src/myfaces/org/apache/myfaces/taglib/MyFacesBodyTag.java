@@ -21,6 +21,7 @@ package net.sourceforge.myfaces.taglib;
 import net.sourceforge.myfaces.component.MyFacesUIOutput;
 import net.sourceforge.myfaces.renderkit.JSFAttr;
 import net.sourceforge.myfaces.renderkit.html.HTML;
+import net.sourceforge.myfaces.util.logging.LogUtil;
 
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
@@ -56,8 +57,21 @@ public abstract class MyFacesBodyTag
 
     public int doStartTag() throws JspException
     {
-        _helper.getUIComponentTagStack().push(this);
-        return super.doStartTag();
+        try
+        {
+            _helper.getUIComponentTagStack().push(this);
+            return super.doStartTag();
+        }
+        catch (RuntimeException e)
+        {
+            LogUtil.getLogger().throwing(this.getClass().getName(), "doStartTag", e);
+            throw e;
+        }
+        catch (JspException e)
+        {
+            LogUtil.getLogger().throwing(this.getClass().getName(), "doStartTag", e);
+            throw e;
+        }
     }
 
     public int getDoStartValue() throws JspException
@@ -77,6 +91,16 @@ public abstract class MyFacesBodyTag
             int ret = super.doEndTag();
             comp.setAttribute(BODY_CONTENT_ATTR, null);
             return ret;
+        }
+        catch (RuntimeException e)
+        {
+            LogUtil.getLogger().throwing(this.getClass().getName(), "doEndTag", e);
+            throw e;
+        }
+        catch (JspException e)
+        {
+            LogUtil.getLogger().throwing(this.getClass().getName(), "doEndTag", e);
+            throw e;
         }
         finally
         {
@@ -102,6 +126,24 @@ public abstract class MyFacesBodyTag
 
 
     //Iteration Tag support
+    public int doAfterBody() throws JspException
+    {
+        try
+        {
+            return getDoAfterBodyValue();
+        }
+        catch (RuntimeException e)
+        {
+            LogUtil.getLogger().throwing(this.getClass().getName(), "doAfterBody", e);
+            throw e;
+        }
+        catch (JspException e)
+        {
+            LogUtil.getLogger().throwing(this.getClass().getName(), "doAfterBody", e);
+            throw e;
+        }
+    }
+
     public int getDoAfterBodyValue() throws JspException
     {
         return Tag.SKIP_BODY;

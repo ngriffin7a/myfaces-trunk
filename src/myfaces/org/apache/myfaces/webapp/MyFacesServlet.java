@@ -22,6 +22,7 @@ import net.sourceforge.myfaces.util.logging.LogUtil;
 
 import javax.faces.webapp.FacesServlet;
 import javax.servlet.*;
+import javax.servlet.jsp.JspFactory;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
@@ -63,6 +64,9 @@ public class MyFacesServlet
             System.setOut(new PrintStream(new ByteArrayOutputStream()));
             _facesServlet.init(servletConfig);
             System.setOut(oldOut);
+
+            //Wrap JspFactory
+            wrapJspFactory();   //make configurable
         }
 
         LogUtil.getLogger().info("MyFacesServlet for context '" + servletConfig.getServletContext().getRealPath("/") + "' initialized.");
@@ -87,5 +91,11 @@ public class MyFacesServlet
             }
             throw new ServletException(e);
         }
+    }
+
+    private void wrapJspFactory()
+    {
+        final JspFactory defaultFactory = JspFactory.getDefaultFactory();
+        JspFactory.setDefaultFactory(new JspFactoryWrapper(defaultFactory));
     }
 }

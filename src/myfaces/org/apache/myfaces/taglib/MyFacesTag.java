@@ -51,8 +51,21 @@ public abstract class MyFacesTag
 
     public int doStartTag() throws JspException
     {
-        _helper.getUIComponentTagStack().push(this);
-        return super.doStartTag();
+        try
+        {
+            _helper.getUIComponentTagStack().push(this);
+            return super.doStartTag();
+        }
+        catch (RuntimeException e)
+        {
+            LogUtil.getLogger().throwing(this.getClass().getName(), "doStartTag", e);
+            throw e;
+        }
+        catch (JspException e)
+        {
+            LogUtil.getLogger().throwing(this.getClass().getName(), "doStartTag", e);
+            throw e;
+        }
     }
 
     public int getDoStartValue() throws JspException
@@ -68,6 +81,16 @@ public abstract class MyFacesTag
         try
         {
             return super.doEndTag();
+        }
+        catch (RuntimeException e)
+        {
+            LogUtil.getLogger().throwing(this.getClass().getName(), "doEndTag", e);
+            throw e;
+        }
+        catch (JspException e)
+        {
+            LogUtil.getLogger().throwing(this.getClass().getName(), "doEndTag", e);
+            throw e;
         }
         finally
         {
@@ -92,10 +115,22 @@ public abstract class MyFacesTag
 
 
     //Iteration Tag support
-    public int doAfterBody()
-        throws JspException
+    public int doAfterBody() throws JspException
     {
-        return getDoAfterBodyValue();
+        try
+        {
+            return getDoAfterBodyValue();
+        }
+        catch (RuntimeException e)
+        {
+            LogUtil.getLogger().throwing(this.getClass().getName(), "doAfterBody", e);
+            throw e;
+        }
+        catch (JspException e)
+        {
+            LogUtil.getLogger().throwing(this.getClass().getName(), "doAfterBody", e);
+            throw e;
+        }
     }
 
     public int getDoAfterBodyValue() throws JspException

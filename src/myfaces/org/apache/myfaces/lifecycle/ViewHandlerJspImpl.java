@@ -100,11 +100,13 @@ public class ViewHandlerJspImpl
         }
         catch(IOException ioe)
         {
+            LogUtil.getLogger().throwing(this.getClass().getName(), "renderView", ioe);
             throw new IOException(ioe.getMessage());
         }
         catch(ServletException se)
         {
-            throw new FacesException(se.getMessage());
+            LogUtil.getLogger().throwing(this.getClass().getName(), "renderView", se);
+            throw new FacesException(se.getMessage(), se);
         }
     }
 
