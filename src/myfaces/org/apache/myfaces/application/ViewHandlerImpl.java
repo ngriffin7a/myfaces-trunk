@@ -70,7 +70,7 @@ public class ViewHandlerImpl
             {
                 Locale supportLocale = (Locale)it.next();
                 // higher priority to a langauage match over an exact match
-                // that occures further down (see Jstl Reference 8.3.1)
+                // that occures further down (see Jstl Reference 1.0 8.3.1)
                 if (locale.getLanguage().equals(supportLocale.getLanguage()) &&
                     (supportLocale.getLanguage() == null ||
                     supportLocale.getLanguage().length() == 0))
