@@ -19,77 +19,29 @@
 package net.sourceforge.myfaces.taglib;
 
 import net.sourceforge.myfaces.component.UIPanel;
-import net.sourceforge.myfaces.renderkit.html.DataRenderer;
+import net.sourceforge.myfaces.renderkit.html.GroupRenderer;
 
 import javax.faces.component.UIComponent;
-import javax.servlet.jsp.JspException;
-import java.io.IOException;
+
 
 /**
  * TODO: description
- * @author Manfred Geiler (latest modification by $Author$)
+ * @author Thomas Spiegl (latest modification by Author)
  * @version $Revision$ $Date$
  */
-public class TableRowTag
-        extends MyFacesTag
+public class GroupTag
+    extends MyFacesTag
 {
     public UIComponent createComponent()
     {
         UIPanel panel = new UIPanel();
+        // donot save State
         panel.setTransient(true);
         return panel;
     }
 
     public String getRendererType()
     {
-        return DataRenderer.TYPE;
+        return GroupRenderer.TYPE;
     }
-
-    public void setVar(String v)
-    {
-        addRequestTimeValue(UIPanel.VAR_ATTR, v);
-    }
-
-    /*
-    private boolean hasNext()
-    {
-        String varAttr = (String)getComponent().getAttribute(UIPanel.VAR_ATTR);
-        Object currentObj = getFacesContext().getServletRequest().getAttribute(varAttr);
-        return currentObj != null;
-    }
-
-    public int doAfterStartTag() throws JspException
-    {
-        if (hasNext())
-        {
-            return EVAL_BODY_INCLUDE;
-        }
-        else
-        {
-            return SKIP_BODY;
-        }
-    }
-
-    public int doAfterAfterBody() throws JspException
-    {
-        try
-        {
-            getComponent().encodeBegin(getFacesContext());
-        }
-        catch (IOException e)
-        {
-            throw new JspException(e);
-        }
-
-        if (hasNext())
-        {
-            return EVAL_BODY_AGAIN;
-        }
-        else
-        {
-            return SKIP_BODY;
-        }
-    }
-    */
-
 }

@@ -19,18 +19,19 @@
 package net.sourceforge.myfaces.taglib;
 
 import net.sourceforge.myfaces.component.UIPanel;
-import net.sourceforge.myfaces.renderkit.html.ListRenderer;
+import net.sourceforge.myfaces.renderkit.html.DataRenderer;
 
 import javax.faces.component.UIComponent;
-
+import javax.servlet.jsp.JspException;
+import java.io.IOException;
 
 /**
  * TODO: description
- * @author Thomas Spiegl (latest modification by Author)
+ * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public class ListTag
-    extends MyFacesTag
+public class ListRowTag
+        extends MyFacesTag
 {
     public UIComponent createComponent()
     {
@@ -38,37 +39,58 @@ public class ListTag
         // donot save State
         panel.setTransient(true);
         return panel;
-
     }
 
     public String getRendererType()
     {
-        return ListRenderer.TYPE;
+        return DataRenderer.TYPE;
     }
 
-    public void setStyle(String value)
+    public void setVar(String v)
     {
-        addRequestTimeValue(UIPanel.CLASS_ATTR, value);
+        addRequestTimeValue(UIPanel.VAR_ATTR, v);
     }
 
-    public void setColumnClasses(String value)
+    /*
+    private boolean hasNext()
     {
-        addRequestTimeValue(UIPanel.COLUMN_CLASSES_ATTR, value);
+        String varAttr = (String)getComponent().getAttribute(UIPanel.VAR_ATTR);
+        Object currentObj = getFacesContext().getServletRequest().getAttribute(varAttr);
+        return currentObj != null;
     }
 
-    public void setRowClasses(String value)
+    public int doAfterStartTag() throws JspException
     {
-        addRequestTimeValue(UIPanel.ROW_CLASSES_ATTR, value);
+        if (hasNext())
+        {
+            return EVAL_BODY_INCLUDE;
+        }
+        else
+        {
+            return SKIP_BODY;
+        }
     }
 
-    public void setFooterClass(String value)
+    public int doAfterAfterBody() throws JspException
     {
-        addRequestTimeValue(UIPanel.FOOTER_CLASS_ATTR, value);
-    }
+        try
+        {
+            getComponent().encodeBegin(getFacesContext());
+        }
+        catch (IOException e)
+        {
+            throw new JspException(e);
+        }
 
-    public void setHeaderClass(String value)
-    {
-        addRequestTimeValue(UIPanel.HEADER_CLASS_ATTR, value);
+        if (hasNext())
+        {
+            return EVAL_BODY_AGAIN;
+        }
+        else
+        {
+            return SKIP_BODY;
+        }
     }
+    */
 
 }

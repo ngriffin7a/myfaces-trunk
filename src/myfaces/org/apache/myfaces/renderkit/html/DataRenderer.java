@@ -27,7 +27,6 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.StringTokenizer;
 
 /**
  * TODO: description
@@ -35,7 +34,7 @@ import java.util.StringTokenizer;
  * @version $Revision$ $Date$
  */
 public class DataRenderer
-        extends HTMLRenderer
+        extends AbstractPanelRenderer
 {
     public static final String ITERATOR_ATTR = DataRenderer.class.getName() + ".ITERATOR";
 
@@ -58,8 +57,18 @@ public class DataRenderer
     public void encodeChildren(FacesContext context, UIComponent component)
         throws IOException
     {
-        encodeSubTree(context, component);
+        ResponseWriter writer = context.getResponseWriter();
+
+        UIComponent parentComponent = component.getParent();
+
+        Styles styles = getStyles(parentComponent);
+
         String varAttr = (String)component.getAttribute(UIPanel.VAR_ATTR);
+
+        Boolean istLastChildComponent = (Boolean)parentComponent.getAttribute(ListRenderer.LAST_COMPONENT);
+
+        Integer actualRow = (Integer)parentComponent.getAttribute(ListRenderer.ACTUAL_ROW);
+        int row = actualRow != null ? actualRow.intValue() : 0;
 
         for (Iterator it = getIterator(context, component); it.hasNext();)
         {
@@ -68,33 +77,19 @@ public class DataRenderer
             // TODO: implement varAttr as a stack? (nested lists)
             context.getServletRequest().setAttribute(varAttr, varObj);
 
-            ResponseWriter writer = context.getResponseWriter();
-
-            UIComponent parentComponent = component.getParent();
-
-            String style = null;
-            if (parentComponent.getComponentType().equals(javax.faces.component.UIPanel.TYPE))
-            {
-                String rowClasses = (String)parentComponent.getAttribute(UIPanel.ROW_CLASSES_ATTR);
-                if (rowClasses != null && rowClasses.length() > 0)
-                {
-                    StringTokenizer tokenizer = new StringTokenizer(rowClasses, ",");
-                    if (tokenizer.hasMoreTokens())
-                    {
-                        style = tokenizer.nextToken();
-                    }
-                    else
-                    {
-                        style = rowClasses;
-                    }
-                }
-            }
 
             writer.write("<tr>");
 
+            int column = 0;
             for (Iterator children = component.getChildren(); children.hasNext();)
             {
                 writer.write("<td");
+                String style = calcStyle(styles,
+                                         row,
+                                         column,
+                                         !it.hasNext() && istLastChildComponent != null && istLastChildComponent.booleanValue());
+
+
                 if (style != null && style.length() > 0)
                 {
                     writer.write(" class=\"");
@@ -103,15 +98,18 @@ public class DataRenderer
                 }
                 writer.write(">");
 
-
                 UIComponent childComponent = (UIComponent)children.next();
                 encodeComponent(context, childComponent);
 
                 writer.write("</td>\n");
+                column++;
             }
 
             writer.write("</tr>");
+            row++;
         }
+
+        parentComponent.setAttribute(ListRenderer.ACTUAL_ROW, new Integer(row));
 
         context.getServletRequest().removeAttribute(varAttr);
     }
@@ -157,5 +155,7 @@ public class DataRenderer
         }
         return iterator;
     }
+
+
 
 }

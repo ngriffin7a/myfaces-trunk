@@ -204,8 +204,8 @@
 
 
     <tag>
-        <name>tr</name>
-        <tagclass>net.sourceforge.myfaces.taglib.TableRowTag</tagclass>
+        <name>listrow</name>
+        <tagclass>net.sourceforge.myfaces.taglib.ListRowTag</tagclass>
         <bodycontent>JSP</bodycontent>
         <attribute>
             <name>id</name>
@@ -436,5 +436,57 @@
             <rtexprvalue>true</rtexprvalue>
         </attribute>
      </tag>
+
+    <tag>
+         <name>grid</name>
+         <tagclass>net.sourceforge.myfaces.taglib.GridTag</tagclass>
+         <bodycontent>JSP</bodycontent>
+         <attribute>
+             <name>id</name>
+             <required>true</required>
+             <rtexprvalue>false</rtexprvalue>
+         </attribute>
+         <attribute>
+             <name>columns</name>
+             <required>true</required>
+             <rtexprvalue>true</rtexprvalue>
+         </attribute>
+         <attribute>
+             <name>style</name>
+             <required>false</required>
+             <rtexprvalue>false</rtexprvalue>
+         </attribute>
+         <attribute>
+             <name>columnClasses</name>
+             <required>false</required>
+             <rtexprvalue>true</rtexprvalue>
+         </attribute>
+        <attribute>
+            <name>rowClasses</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>headerClass</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>footerClass</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+     </tag>
+
+    <tag>
+        <name>group</name>
+        <tagclass>net.sourceforge.myfaces.taglib.GroupTag</tagclass>
+        <bodycontent>JSP</bodycontent>
+        <attribute>
+            <name>id</name>
+            <required>true</required>
+            <rtexprvalue>false</rtexprvalue>
+        </attribute>
+    </tag>
 
 </taglib>

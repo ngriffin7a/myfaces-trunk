@@ -42,12 +42,39 @@
 
             <x:message_list id="messageList" />
 
-            <f:list id="clist" style="standardTable" rowClasses="standard" >
-                <f:tr id="clist.tr" var="country" modelReference="list.countries" >
+            <f:list id="clist"
+                    style="standardTable"
+                    headerClass="standardTable_Header"
+                    footerClass="standardTable_Footer"
+                    rowClasses="standardTable_Row1,standardTable_Row2" >
+                <f:group id="clist.header" >
+                    <f:output_text id="clist.header.name" text="Country"  />
+                    <f:output_text id="clist.header.iso" text="ISO-3166 Code"  />
+                </f:group>
+                <f:listrow id="clist.tr" var="country" modelReference="list.countries" >
                     <f:output_text id="clist.name" modelReference="country.name" />
                     <f:output_text id="clist.isoCode" modelReference="country.isoCode" />
-                </f:tr>
+                </f:listrow>
+                <f:group id="groupList.g1" >
+                    <f:output_text id="groupList.g1.name" text="..."  />
+                    <f:output_text id="groupList.g1.iso" />
+                </f:group>
             </f:list>
+
+            <br>
+
+            <f:list id="groupList" style="standardTable" rowClasses="standard,standardColorA" >
+                <f:group id="groupList.g1" >
+                    <f:output_text id="groupList.g1.name" text="Country1"  />
+                    <f:output_text id="groupList.g1.iso" text="IsoCode1"  />
+                </f:group>
+                <f:group id="groupList.g2" >
+                    <f:output_text id="groupList.g2.name" text="Country2"  />
+                    <f:output_text id="groupList.g2.iso" text="IsoCode2"  />
+                </f:group>
+            </f:list>
+
+            <br>
         </td>
     </tr></table>
 

@@ -33,6 +33,7 @@ public class UIPanel
     public static final String HEADER_CLASS_ATTR = "headerClass";
     public static final String ROW_CLASSES_ATTR = "rowClasses";
     public static final String CLASS_ATTR = "class";
+    public static final String COLUMNS_ATTR = "columns";
 
     private MyFacesComponentDelegate _delegate = new MyFacesComponentDelegate(this);
 

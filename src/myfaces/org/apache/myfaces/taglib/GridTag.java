@@ -19,7 +19,7 @@
 package net.sourceforge.myfaces.taglib;
 
 import net.sourceforge.myfaces.component.UIPanel;
-import net.sourceforge.myfaces.renderkit.html.ListRenderer;
+import net.sourceforge.myfaces.renderkit.html.GridRenderer;
 
 import javax.faces.component.UIComponent;
 
@@ -29,7 +29,7 @@ import javax.faces.component.UIComponent;
  * @author Thomas Spiegl (latest modification by Author)
  * @version $Revision$ $Date$
  */
-public class ListTag
+public class GridTag
     extends MyFacesTag
 {
     public UIComponent createComponent()
@@ -43,7 +43,12 @@ public class ListTag
 
     public String getRendererType()
     {
-        return ListRenderer.TYPE;
+        return GridRenderer.TYPE;
+    }
+
+    public void setColumns(Integer value)
+    {
+        addRequestTimeValue(UIPanel.COLUMNS_ATTR, value);
     }
 
     public void setStyle(String value)

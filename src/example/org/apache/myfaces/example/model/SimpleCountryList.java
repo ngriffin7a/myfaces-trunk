@@ -32,9 +32,12 @@ public class SimpleCountryList
 
     public SimpleCountryList()
     {
-        _countries.add(new SimpleCountry("Austria", "AT"));
-        _countries.add(new SimpleCountry("Germany", "GE"));
-        _countries.add(new SimpleCountry("Italy", "IT"));
+        _countries.add(new SimpleCountry("AUSTRIA", "AT"));
+        _countries.add(new SimpleCountry("AZERBAIJAN", "AZ"));
+        _countries.add(new SimpleCountry("BAHAMAS", "BS"));
+        _countries.add(new SimpleCountry("BAHRAIN", "BH"));
+        _countries.add(new SimpleCountry("BANGLADESH", "BD"));
+        _countries.add(new SimpleCountry("BARBADOS", "BB"));
     }
 
     public Iterator getCountries()

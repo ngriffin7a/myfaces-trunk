@@ -31,14 +31,10 @@ import java.util.Iterator;
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public class ListRenderer
+public class GridRenderer
         extends HTMLRenderer
 {
-    public static final String TYPE = "List";
-
-    public static final String ACTUAL_ROW = ListRenderer.class.getName() + ".actualRow";
-    public static final String LAST_COMPONENT = ListRenderer.class.getName() + ".lastComponent";
-
+    public static final String TYPE = "Grid";
 
     public boolean supportsComponentType(UIComponent uiComponent)
     {
@@ -74,53 +70,18 @@ public class ListRenderer
     public void encodeChildren(FacesContext context, UIComponent uicomponent)
         throws IOException
     {
-        int i = 0;
         for (Iterator children = uicomponent.getChildren(); children.hasNext();)
         {
             UIComponent childComponent = (UIComponent)children.next();
             String rendererType = childComponent.getRendererType();
-
-            // check renderer types
-            if (i == 0)
-            {
-                String headerStyle = (String)uicomponent.getAttribute(UIPanel.HEADER_CLASS_ATTR);
-                if (headerStyle != null && headerStyle.length() > 0)
-                {
-                    // first component should have renderer of type Group
-                    if (!rendererType.equals(GroupRenderer.TYPE))
-                    {
-                        throw new IllegalArgumentException("Illegal UIComponent! If Attribute headerClass is set, the first nested UIComponent " +
-                                                           "must hava renderer type " + GroupRenderer.TYPE);
-
-                    }
-                }
-            }
             if (!rendererType.equals(DataRenderer.TYPE) &&
                 !rendererType.equals(GroupRenderer.TYPE))
             {
                 throw new IllegalArgumentException("Illegal UIComponent! UIComponent nested within a panel component list " +
-                                                   "must have renderer type in (" + DataRenderer.TYPE + ", " + GroupRenderer.TYPE + ")");
+                                                   "must be of type " + DataRenderer.TYPE);
 
             }
-
-            // set actual row
-            uicomponent.setAttribute(ACTUAL_ROW, new Integer(i));
-
-            // is Component the last Component?
-            if (!children.hasNext())
-            {
-                uicomponent.setAttribute(LAST_COMPONENT, Boolean.TRUE);
-            }
-
-            // childComponent may read/write ACTUAL_ROW attribute
             encodeComponent(context, childComponent);
-
-            // if ACTUAL_ROW = i, then goto next row
-            Integer actualRow = (Integer)uicomponent.getAttribute(ACTUAL_ROW);
-            if (actualRow != null && actualRow.intValue() == i)
-            {
-                i++;
-            }
         }
     }
 
