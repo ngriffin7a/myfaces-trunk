@@ -20,7 +20,6 @@ package net.sourceforge.myfaces.taglib;
 
 import net.sourceforge.myfaces.component.CommonComponentAttributes;
 import net.sourceforge.myfaces.renderkit.attr.CommonRendererAttributes;
-import net.sourceforge.myfaces.MyFacesConfig;
 
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
@@ -36,6 +35,7 @@ import javax.servlet.jsp.tagext.Tag;
  */
 public abstract class MyFacesTag
     extends FacesTag
+    implements MyFacesTagBaseIF
 {
     protected MyFacesTagHelper _helper;
 
@@ -129,7 +129,7 @@ public abstract class MyFacesTag
         _helper.setRendererAttribute(attrName, attrValue);
     }
 
-    protected void overrideProperties(UIComponent uiComponent)
+    public void overrideProperties(UIComponent uiComponent)
     {
         super.overrideProperties(uiComponent);
         _helper.overrideProperties(uiComponent);
@@ -229,18 +229,15 @@ public abstract class MyFacesTag
     protected final UIComponent findComponent()
         throws JspException
     {
-        int mode = MyFacesConfig.getStateSavingMode(getFacesContext().getServletContext());
-        if (mode == MyFacesConfig.STATE_SAVING_MODE__CLIENT_MINIMIZED ||
-            mode == MyFacesConfig.STATE_SAVING_MODE__CLIENT_MINIMIZED_ZIPPED)
-        {
-            if (getId() == null)
-            {
-                UIComponent tempComp = createComponent();
-                overrideProperties(tempComp);
-                setId(_helper.getIdFromParsedTree(tempComp));
-            }
-        }
+        _helper.findComponent();
+        boolean b = getCreated();
+        UIComponent c = super.findComponent();
+        setCreated(b);
+        return c;
+    }
 
-        return super.findComponent();
+    public void setCreated(boolean b)
+    {
+        created = b;
     }
 }

@@ -54,7 +54,7 @@ use_faces
 -->
     <tag>
         <name>parameter</name>
-        <tagclass>net.sourceforge.myfaces.taglib.ParamTag</tagclass>
+        <tagclass>net.sourceforge.myfaces.taglib.core.ParameterTag</tagclass>
         <bodycontent>empty</bodycontent>
         <attribute>
             <name>id</name>
@@ -62,12 +62,12 @@ use_faces
             <rtexprvalue>false</rtexprvalue>
         </attribute>
         <attribute>
-            <name>name</name>
+            <name>modelReference</name>
             <required>false</required>
             <rtexprvalue>false</rtexprvalue>
         </attribute>
         <attribute>
-            <name>modelReference</name>
+            <name>name</name>
             <required>false</required>
             <rtexprvalue>false</rtexprvalue>
         </attribute>

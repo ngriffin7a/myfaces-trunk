@@ -80,7 +80,7 @@
                         </h:output_message>
                         &nbsp; / &nbsp;
                         <h:output_message msg="{0} cols" >
-                            <h:parameter value="<%=new Integer(cols)%>"/>
+                            <f:parameter value="<%=new Integer(cols)%>"/>
                         </h:output_message>
                     </h:group>
                     <h:output_text text=""/>

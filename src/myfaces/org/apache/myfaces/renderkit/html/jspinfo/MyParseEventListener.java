@@ -27,6 +27,7 @@ import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.JspCompilationConte
 import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.compiler.*;
 import net.sourceforge.myfaces.taglib.MyFacesBodyTag;
 import net.sourceforge.myfaces.taglib.MyFacesTag;
+import net.sourceforge.myfaces.taglib.MyFacesTagBaseIF;
 import net.sourceforge.myfaces.taglib.core.ActionListenerTag;
 import net.sourceforge.myfaces.util.bean.BeanUtils;
 import net.sourceforge.myfaces.util.logging.LogUtil;
@@ -409,8 +410,9 @@ public class MyParseEventListener
 
             if (attrValue != null)
             {
+                String strValue = ((String)attrValue).trim();
                 if (attrInfo.canBeRequestTime() &&
-                    ((String)attrValue).trim().startsWith("<%"))    //TODO: What about "{" style references?
+                    (strValue.startsWith("<%") || strValue.startsWith("{")))
                 {
                     //Request time value --> ignore
                     continue;
@@ -567,65 +569,72 @@ public class MyParseEventListener
      */
     private void overrideProperties(Object tag, UIComponent comp)
     {
-        try
+        if (tag instanceof MyFacesTagBaseIF)
         {
-            Method m = null;
-            Class c = tag.getClass();
-            while (m == null && c != null && !c.equals(Object.class))
+            ((MyFacesTagBaseIF)tag).overrideProperties(comp);
+        }
+        else
+        {
+            try
             {
-                try
+                Method m = null;
+                Class c = tag.getClass();
+                while (m == null && c != null && !c.equals(Object.class))
                 {
-                    m = c.getDeclaredMethod("overrideProperties",
-                                            new Class[] {UIComponent.class});
-                }
-                catch (NoSuchMethodException e) {}
-                c = c.getSuperclass();
-            }
-
-            if (m == null)
-            {
-                throw new NoSuchMethodException();
-            }
-
-            if (m.isAccessible())
-            {
-                m.invoke(tag, new Object[] {comp});
-            }
-            else
-            {
-                final Method finalM = m;
-                AccessController.doPrivileged(
-                    new PrivilegedAction()
+                    try
                     {
-                        public Object run()
+                        m = c.getDeclaredMethod("overrideProperties",
+                                                new Class[] {UIComponent.class});
+                    }
+                    catch (NoSuchMethodException e) {}
+                    c = c.getSuperclass();
+                }
+
+                if (m == null)
+                {
+                    throw new NoSuchMethodException();
+                }
+
+                if (m.isAccessible())
+                {
+                    m.invoke(tag, new Object[] {comp});
+                }
+                else
+                {
+                    final Method finalM = m;
+                    AccessController.doPrivileged(
+                        new PrivilegedAction()
                         {
-                            finalM.setAccessible(true);
-                            return null;
-                        }
-                    });
-                m.invoke(tag, new Object[]{comp});
-                m.setAccessible(false);
+                            public Object run()
+                            {
+                                finalM.setAccessible(true);
+                                return null;
+                            }
+                        });
+                    m.invoke(tag, new Object[]{comp});
+                    m.setAccessible(false);
+                }
             }
-        }
-        catch (NoSuchMethodException e)
-        {
-            throw new RuntimeException(e);
-        }
-        catch (SecurityException e)
-        {
-            throw new RuntimeException(e);
-        }
-        catch (IllegalAccessException e)
-        {
-            throw new RuntimeException(e);
-        }
-        catch (IllegalArgumentException e)
-        {
-            throw new RuntimeException(e);
-        }
-        catch (InvocationTargetException e)
-        {
-            throw new RuntimeException(e);
+            catch (NoSuchMethodException e)
+            {
+                throw new RuntimeException(e);
+            }
+            catch (SecurityException e)
+            {
+                throw new RuntimeException(e);
+            }
+            catch (IllegalAccessException e)
+            {
+                throw new RuntimeException(e);
+            }
+            catch (IllegalArgumentException e)
+            {
+                throw new RuntimeException(e);
+            }
+            catch (InvocationTargetException e)
+            {
+                throw new RuntimeException(e);
+            }
         }
     }
 

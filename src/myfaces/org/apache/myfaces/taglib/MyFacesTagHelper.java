@@ -22,6 +22,7 @@ import net.sourceforge.myfaces.component.UIComponentUtils;
 import net.sourceforge.myfaces.renderkit.html.jspinfo.JspInfo;
 import net.sourceforge.myfaces.util.bean.BeanUtils;
 import net.sourceforge.myfaces.util.logging.LogUtil;
+import net.sourceforge.myfaces.MyFacesConfig;
 
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
@@ -148,9 +149,6 @@ public class MyFacesTagHelper
 
 
     /**
-     * TODO: Rethink this logic. Better do a findOutAttributeType and
-     *       convert to proper type regardless of value or common attribute.
-     *
      * @param uiComponent
      */
     protected void overrideProperties(UIComponent uiComponent)
@@ -162,35 +160,6 @@ public class MyFacesTagHelper
             for (Iterator it = _attributes.iterator(); it.hasNext();)
             {
                 Attribute attr = (Attribute)it.next();
-                /*
-                if (facesContext != null
-                    && attr.isComponentAttribute
-                    && attr.name.equals(CommonComponentAttributes.VALUE_ATTR))
-                {
-                    Object rtValue = attr.value;
-                    if (rtValue instanceof String)
-                    {
-                        Converter conv = ConverterUtils.findValueConverter(facesContext,
-                                                                      uiComponent);
-                        if (conv != null)
-                        {
-                            UIComponentUtils.convertAndSetValue(facesContext,
-                                                                uiComponent,
-                                                                (String)rtValue,
-                                                                conv,
-                                                                false);    //No error message
-                        }
-                        else
-                        {
-                            UIComponentUtils.setComponentValue(uiComponent, rtValue);
-                        }
-                    }
-                    else
-                    {
-                        UIComponentUtils.setComponentValue(uiComponent, rtValue);
-                    }
-                }
-                else */
                 if (attr.isComponentAttribute)
                 {
                     //Try bean property setter first
@@ -241,36 +210,45 @@ public class MyFacesTagHelper
 
 
 
-
-    protected String getIdFromParsedTree(UIComponent component)
+    protected void findComponent()
     {
-        UIComponent parsedComp = findComponentInParsedTree(getFacesContext(),
-                                                           _tag,
-                                                           component);
-        if (parsedComp != null)
+        int mode = MyFacesConfig.getStateSavingMode(getFacesContext().getServletContext());
+        if (mode != MyFacesConfig.STATE_SAVING_MODE__CLIENT_MINIMIZED &&
+            mode != MyFacesConfig.STATE_SAVING_MODE__CLIENT_MINIMIZED_ZIPPED)
         {
-            return parsedComp.getComponentId();
-            //TODO: Optimize: check if component exists and add it to current parent if not
+            //no "client minimized" mode, standard way of finding and creating components is ok
+            return;
         }
-        else
+
+        if (_tag.getId() != null)
         {
-            throw new IllegalStateException("FacesTag " + _tag.getClass().getName() + ": Corresponding component in parsed tree could not be found!");
-            /*
-            LogUtil.getLogger().severe("FacesTag " + _tag.getClass().getName() + ": Corresponding component in parsed tree could not be found!");
-            return null;
-            */
+            //hardcoded id, nothing special must be done
+            return;
         }
+
+        //We must locate the component, that corresponds to the current tag
+        //in the parsed tree.
+        //First we create a temporary component...
+        UIComponent tempComp = _tag.createComponent();
+        //...and set the hardcoded attributes...
+        ((MyFacesTagBaseIF)_tag).overrideProperties(tempComp);
+
+        //Find an corresponding component in parsed tree and add the
+        //new component if it does not yet exist in the current tree
+        findoutComponentIdAndAdd(getFacesContext(),
+                                  _tag,
+                                  tempComp);
     }
 
 
-    protected static UIComponent findComponentInParsedTree(FacesContext facesContext,
-                                                           FacesTag facesTag,
-                                                           UIComponent compToFind)
+    protected static void findoutComponentIdAndAdd(FacesContext facesContext,
+                                                   FacesTag facesTag,
+                                                   UIComponent newComponent)
     {
         LogUtil.getLogger().entering(Level.FINEST);
-        LogUtil.printComponentToConsole(compToFind, "compToFind");
+        LogUtil.printComponentToConsole(newComponent, "compToFind");
 
-        //determine parent
+        //determine current parent
         Tag parentTag = facesTag.getParent();
         while (parentTag != null &&
                (!(parentTag instanceof FacesTag) ||
@@ -301,23 +279,33 @@ public class MyFacesTagHelper
             if (parsedParent == null)
             {
                 throw new IllegalStateException("Component with clientId " + parentClientId + " not found in parsed tree.");
-                /*
-                Tree parsedTree = JspInfo.getTree(facesContext,
-                                                  facesContext.getTree().getTreeId());
-                parsedParent = parsedTree.getRoot().findComponent(parentClientId);
-                if (parsedParent == null)
-                {
-                    throw new IllegalStateException("Corresponding parsed parent for parent " + parent + " not found!");
-                }
-                */
             }
         }
 
-        return findParsedChild(facesContext,
-                               facesTag,
-                               parsedParent,
-                               parentClientId,
-                               compToFind);
+        //Find corresponding child in parsed tree
+        UIComponent parsedChild = findParsedChild(facesContext,
+                                                  facesTag,
+                                                  parsedParent,
+                                                  parentClientId,
+                                                  newComponent);
+        if (parsedChild == null)
+        {
+            throw new IllegalStateException("FacesTag " + facesTag.getClass().getName() + ": Corresponding component in parsed tree could not be found!");
+        }
+
+        //Parsed component found, get id
+        String id = parsedChild.getComponentId();
+        facesTag.setId(id);
+
+        //Component already in tree?
+        UIComponent findComp = parent.findComponent(id);
+        if (findComp == null)
+        {
+            //add component to tree
+            newComponent.setComponentId(id);
+            parent.addChild(newComponent);
+            ((MyFacesTagBaseIF)facesTag).setCreated(true);
+        }
     }
 
 
@@ -325,7 +313,7 @@ public class MyFacesTagHelper
                                                FacesTag facesTag,
                                                UIComponent parsedParent,
                                                String parentClientId,
-                                               UIComponent compToFind)
+                                               UIComponent newComponent)
     {
         UIComponent foundParsedComp = null;
         int foundIdx = 0;
@@ -333,12 +321,13 @@ public class MyFacesTagHelper
         int lastChildIdx = getLastChildIndexForParent(facesContext,
                                                       parentClientId);
         int startSearchAt = lastChildIdx + 1;
-
         int childCount = parsedParent.getChildCount();
+
+        //search from component next to last found child
         for (int i = startSearchAt; i < childCount; i++)
         {
             UIComponent child = parsedParent.getChild(i);
-            if (equalsParsedChild(facesTag, child, compToFind))
+            if (equalsParsedChild(facesTag, child, newComponent))
             {
                 //found corresponding parsed component
                 foundParsedComp = child;
@@ -349,10 +338,11 @@ public class MyFacesTagHelper
 
         if (foundParsedComp == null && startSearchAt > 0)
         {
+            //search from first child in case this tag is within an iteration tag
             for (int i = 0; i < startSearchAt; i++)
             {
                 UIComponent child = parsedParent.getChild(i);
-                if (equalsParsedChild(facesTag, child, compToFind))
+                if (equalsParsedChild(facesTag, child, newComponent))
                 {
                     //found corresponding parsed component
                     foundParsedComp = child;
@@ -368,9 +358,9 @@ public class MyFacesTagHelper
             if (foundIdx + 1 < childCount)
             {
                 UIComponent child = parsedParent.getChild(foundIdx + 1);
-                if (equalsParsedChild(facesTag, child, compToFind))
+                if (equalsParsedChild(facesTag, child, newComponent))
                 {
-                    LogUtil.getLogger().warning("Component " + UIComponentUtils.toString(compToFind) + " is ambigous. This component must have an id when it is rendered conditional (i.e. within if-Block in JSP, or within conditional JSTL-tag).");
+                    LogUtil.getLogger().warning("Component " + UIComponentUtils.toString(newComponent) + " is ambigous. This component must have an id when it is rendered conditional (i.e. within if-Block in JSP, or within conditional JSTL-tag).");
                 }
             }
 

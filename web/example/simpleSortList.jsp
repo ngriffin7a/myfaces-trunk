@@ -67,7 +67,7 @@
                 <!-- FOOTER -->
                 <h:group>
                     <h:output_text text="..."  />
-                    <h:output_text/>
+                    <h:output_text text=""/>
                 </h:group>
             </h:list>
 

@@ -16,9 +16,10 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package net.sourceforge.myfaces.taglib;
+package net.sourceforge.myfaces.taglib.core;
 
 import net.sourceforge.myfaces.component.UIParameter;
+import net.sourceforge.myfaces.taglib.MyFacesTag;
 
 import javax.faces.component.UIComponent;
 
@@ -27,10 +28,9 @@ import javax.faces.component.UIComponent;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public class ParamTag
+public class ParameterTag
     extends MyFacesTag
 {
-    // TODO: rename to ParameterTag
     //MyFaces tag extensions:
     public UIComponent createComponent()
     {
