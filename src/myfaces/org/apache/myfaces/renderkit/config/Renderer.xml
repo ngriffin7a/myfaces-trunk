@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+
+<!-- TODO DTD -->
+
+<definition>
+
+    <renderer type="Image">
+        <attributes collection="basic" />
+        <attribute name="src" />
+
+        <component type="UIGraphic">
+            <attributes collection="basic" />
+        </component>
+    </renderer>
+
+</definition>
