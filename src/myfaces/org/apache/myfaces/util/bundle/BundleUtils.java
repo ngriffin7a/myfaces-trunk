@@ -19,7 +19,9 @@
 package net.sourceforge.myfaces.util.bundle;
 
 import net.sourceforge.myfaces.util.logging.LogUtil;
+import net.sourceforge.myfaces.context.FacesContextImpl;
 
+import javax.faces.context.FacesContext;
 import java.util.ResourceBundle;
 import java.util.Locale;
 import java.util.MissingResourceException;
@@ -33,22 +35,27 @@ public class BundleUtils
 {
     private BundleUtils() {}
 
-    public static ResourceBundle findResourceBundle(String baseName, Locale inLocale)
+    public static ResourceBundle findResourceBundle(FacesContext facesContext,
+                                                    String bundleName)
     {
+        //TODO: Could be JSTL LocalizationContext bundle?
+
         try
         {
-            return ResourceBundle.getBundle(baseName, inLocale);
+            //Interpret as bundle basename
+            return ResourceBundle.getBundle(bundleName, facesContext.getLocale());
         }
         catch (MissingResourceException e)
         {
-            LogUtil.getLogger().severe("Resource bundle '" + baseName + "' could not be found.");
+            LogUtil.getLogger().severe("Resource bundle '" + bundleName + "' could not be found.");
             return null;
         }
     }
 
-    public static String getString(String bundleName, String key, Locale inLocale)
+    public static String getString(FacesContext facesContext,
+                                   String bundleName, String key)
     {
-        ResourceBundle bundle = findResourceBundle(bundleName, inLocale);
+        ResourceBundle bundle = findResourceBundle(facesContext, bundleName);
         if (bundle != null)
         {
             try

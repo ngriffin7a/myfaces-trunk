@@ -206,7 +206,7 @@ public class NavigationItemRenderer
             }
             else
             {
-                label = BundleUtils.getString(bundle, key, facesContext.getLocale());
+                label = BundleUtils.getString(facesContext, bundle, key);
             }
         }
         else

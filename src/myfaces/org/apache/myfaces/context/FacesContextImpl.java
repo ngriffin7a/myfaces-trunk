@@ -404,41 +404,7 @@ public class FacesContextImpl
      */
     private Object findModelInstance(String modelId)
     {
-        if (_servletcontext == null || _servletrequest == null)
-        {
-            throw new IllegalStateException("No servlet context or request!?");
-        }
-        Object obj;
-
-        //Request context
-        obj = _servletrequest.getAttribute(modelId);
-        if (obj != null)
-        {
-            return obj;
-        }
-
-        //Session context
-        if (_servletrequest instanceof HttpServletRequest)
-        {
-            HttpSession session = ((HttpServletRequest)_servletrequest).getSession(false);
-            if (session != null)
-            {
-                obj = session.getAttribute(modelId);
-                if (obj != null)
-                {
-                    return obj;
-                }
-            }
-        }
-
-        //Application context
-        obj = _servletcontext.getAttribute(modelId);
-        if (obj != null)
-        {
-            return obj;
-        }
-
-        return null;
+        return findBean(this, modelId);
     }
 
     private void setModelInstance(String modelId, Object modelObj)
@@ -478,6 +444,47 @@ public class FacesContextImpl
 
         //FINAL: request scope as default - not yet specified in JSF Spec.
         _servletrequest.setAttribute(modelId, modelObj);
+    }
+
+
+    /**
+     * @return  null, if not found
+     */
+    public static Object findBean(FacesContext facesContext, String modelId)
+    {
+        Object obj;
+
+        //Request context
+        ServletRequest servletrequest = facesContext.getServletRequest();
+        obj = servletrequest.getAttribute(modelId);
+        if (obj != null)
+        {
+            return obj;
+        }
+
+        //Session context
+        if (servletrequest instanceof HttpServletRequest)
+        {
+            HttpSession session = ((HttpServletRequest)servletrequest).getSession(false);
+            if (session != null)
+            {
+                obj = session.getAttribute(modelId);
+                if (obj != null)
+                {
+                    return obj;
+                }
+            }
+        }
+
+        //Application context
+        ServletContext servletcontext = facesContext.getServletContext();
+        obj = servletcontext.getAttribute(modelId);
+        if (obj != null)
+        {
+            return obj;
+        }
+
+        return null;
     }
 
 

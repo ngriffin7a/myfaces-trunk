@@ -78,9 +78,9 @@ public class MessageRenderer
         String key = (String)uiComponent.getAttribute(KEY_ATTR);
         if (key != null)
         {
-            pattern = BundleUtils.getString((String)uiComponent.getAttribute(BUNDLE_ATTR),
-                                            key,
-                                            facesContext.getLocale());
+            pattern = BundleUtils.getString(facesContext,
+                                            (String)uiComponent.getAttribute(BUNDLE_ATTR),
+                                            key);
         }
         else
         {

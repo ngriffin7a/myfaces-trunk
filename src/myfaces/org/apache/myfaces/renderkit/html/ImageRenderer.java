@@ -72,9 +72,9 @@ public class ImageRenderer
         String key = (String)uiComponent.getAttribute(KEY_ATTR);
         if (key != null)
         {
-            value = BundleUtils.getString((String)uiComponent.getAttribute(BUNDLE_ATTR),
-                                          key,
-                                          facesContext.getLocale());
+            value = BundleUtils.getString(facesContext,
+                                          (String)uiComponent.getAttribute(BUNDLE_ATTR),
+                                          key);
         }
         else
         {
