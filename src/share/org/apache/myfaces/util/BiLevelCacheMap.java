@@ -36,6 +36,10 @@ import java.util.*;
  *
  * @author Anton Koinov (latest modification by $Author$)
  * @version $Revision$ $Date$
+ * $Log$
+ * Revision 1.2  2004/04/01 05:37:34  dave0000
+ * Correct L2->L1 merge condition
+ *
  */
 public abstract class BiLevelCacheMap implements Map
 {
@@ -95,11 +99,7 @@ public abstract class BiLevelCacheMap implements Map
     {
         synchronized (_cacheL2) 
         {
-            if (_missCount > 0)
-            {
-                merge(_cacheL2);
-            }
-
+            mergeIfL2NotEmpty();
             return Collections.unmodifiableSet(_cacheL1.entrySet());
         }
     }
@@ -131,12 +131,11 @@ public abstract class BiLevelCacheMap implements Map
                 if (retval != null)
                 {
                     put(key, retval);
+                    mergeIfNeeded();
                 }
             }
-
-            if (retval != null)
+            else
             {
-                // do not merge if no new instance created
                 mergeIfNeeded();
             }
         }
@@ -148,20 +147,25 @@ public abstract class BiLevelCacheMap implements Map
     {
         synchronized (_cacheL2) 
         {
-            if (_missCount > 0)
-            {
-                merge(_cacheL2);
-            }
-
+            mergeIfL2NotEmpty();
             return Collections.unmodifiableSet(_cacheL1.keySet());
         }
     }
 
+    /** 
+     * If key is already in cacheL1, the new value will show with a delay, 
+     * since merge L2->L1 may not happen immediately. To force the merge sooner,
+     * call <code>size()<code>.
+     */
     public Object put(Object key, Object value)
     {
         synchronized (_cacheL2)
         {
             _cacheL2.put(key, value);
+            
+            // not really a miss, but merge to avoid big increase in L2 size
+            // (it cannot be reallocated, it is final)
+            mergeIfNeeded();
         }
         
         return value;
@@ -171,11 +175,10 @@ public abstract class BiLevelCacheMap implements Map
     {
         synchronized (_cacheL2)
         {
-            if (_missCount > 0)
-            {
-                merge(_cacheL2);
-            }
+            mergeIfL2NotEmpty();
             
+            // sepatare merge to avoid increasing L2 size too much
+            // (it cannot be reallocated, it is final)
             merge(map);
         }
     }
@@ -185,9 +188,10 @@ public abstract class BiLevelCacheMap implements Map
     {
         synchronized (_cacheL2)
         {
-            if (_missCount > 0)
+            if (!_cacheL1.containsKey(key) && !_cacheL2.containsKey(key))
             {
-                merge(_cacheL2);
+                // nothing to remove
+                return null;
             }
             
             Object retval;
@@ -196,26 +200,27 @@ public abstract class BiLevelCacheMap implements Map
             {
                 // "dummy" synchronization to guarantee _cacheL1 will be assigned after fully initialized
                 // at least until JVM 1.5 where this should be guaranteed by the volatile keyword
-                // But is this enough (in our particular case) to resolve the issues with DCL?
-                newMap = new HashMap(HashMapUtils.calcCapacity(_cacheL1.size()));
+                newMap = new HashMap(HashMapUtils.calcCapacity(
+                    _cacheL1.size() + _cacheL2.size()));
                 newMap.putAll(_cacheL1);
+                newMap.putAll(_cacheL2);
                 retval = newMap.remove(key);
             }
             
             _cacheL1 = newMap;
+            _cacheL2.clear();
+            _missCount = 0;
             return retval;
         }
     }
 
     public int size()
     {
+        // Note: cannot simply return L1.size + L2.size 
+        //       because there might be overlaping of keys
         synchronized (_cacheL2) 
         {
-            if (_missCount > 0)
-            {
-                merge(_cacheL2);
-            }
-
+            mergeIfL2NotEmpty();
             return _cacheL1.size();
         }
     }
@@ -224,12 +229,16 @@ public abstract class BiLevelCacheMap implements Map
     {
         synchronized (_cacheL2) 
         {
-            if (_missCount > 0)
-            {
-                merge(_cacheL2);
-            }
-
+            mergeIfL2NotEmpty();
             return Collections.unmodifiableCollection(_cacheL1.values());
+        }
+    }
+    
+    private void mergeIfL2NotEmpty() 
+    {
+        if (!_cacheL2.isEmpty())
+        {
+            merge(_cacheL2);
         }
     }
     
