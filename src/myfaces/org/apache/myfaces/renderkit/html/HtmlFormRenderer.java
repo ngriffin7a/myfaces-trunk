@@ -76,7 +76,6 @@ public class HtmlFormRenderer
                               externalContext.encodeActionURL(actionURL),
                               null);
 
-        HTMLUtil.renderStyleClass(writer, htmlForm);
         HTMLUtil.renderHTMLAttributes(writer, htmlForm, HTML.FORM_PASSTHROUGH_ATTRIBUTES);
     }
 

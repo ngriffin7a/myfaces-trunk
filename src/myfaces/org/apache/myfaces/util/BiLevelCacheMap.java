@@ -41,7 +41,8 @@ public abstract class BiLevelCacheMap implements Map
 {
     //~ Instance fields ----------------------------------------------------------------------------
 
-    private Map       _cacheL1;
+    /** To preinitialize <code>_cacheL1</code> with default values use an initialization block */
+    protected Map     _cacheL1;
     private final Map _cacheL2;
     private final int _mergeThreshold;
     private int       _missCount;

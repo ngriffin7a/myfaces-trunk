@@ -64,6 +64,9 @@ import org.xml.sax.*;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
@@ -405,6 +408,19 @@ class MyEntityResolver implements EntityResolver {
 		return isrc;
 	    }
 	}
+    
+    if (systemId != null) {
+        systemId = "/home/ant/workspace/web-myfaces/WEB-INF/" + systemId.substring(systemId.indexOf("entities"));
+        try
+        {
+            InputStream input = new FileInputStream(systemId);
+            return new InputSource(input);
+        } catch (FileNotFoundException e)
+        {
+            throw new SAXException(e);
+        }
+    }
+    
 	Constants.message("jsp.error.parse.xml.invalidPublicId",
 				new Object[]{publicId}, Logger.ERROR);
         return null;

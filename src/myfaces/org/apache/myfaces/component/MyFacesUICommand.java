@@ -37,9 +37,9 @@ import java.util.List;
 public class MyFacesUICommand
     extends javax.faces.component.UICommand
 {
-    public static final String COMMAND_NAME_PROP = "commandName";
+//    public static final String COMMAND_NAME_PROP = "commandName";
     public static final String ACTION_PROP = "action";
-    public static final String ACTION_REF_PROP = "actionRef";
+//    public static final String ACTION_REF_PROP = "actionRef";
     public static final String IMMEDIATE_ACTION_PROP = "immediateAction";
 
     private boolean _immediateAction;

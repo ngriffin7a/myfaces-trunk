@@ -51,7 +51,6 @@ public class StringUtils
     public static boolean isFloatNoExponent(String str)
     {
         int len = str.length();
-
         if (len == 0)
         {
             return false;
@@ -72,7 +71,6 @@ public class StringUtils
         do
         {
             c = str.charAt(i);
-
             if (c == '.')
             {
                 // is this a second dot?
@@ -98,7 +96,6 @@ public class StringUtils
     public static boolean isFloatWithOptionalExponent(String str)
     {
         int len = str.length();
-
         if (len == 0)
         {
             return false;
@@ -120,17 +117,15 @@ public class StringUtils
         do
         {
             c = str.charAt(i);
-
             switch (c)
             {
                 case '.':
 
-                    // is this a second one, are in the exponent?
+                    // is this a second one, are we in the exponent?
                     if (decimalPointFound || exponentFound)
                     {
                         return false;
                     }
-
                     decimalPointFound = true;
 
                     break;
@@ -143,7 +138,6 @@ public class StringUtils
                     {
                         return false;
                     }
-
                     exponentFound = true;
 
                     // check for exponent sign
@@ -157,7 +151,6 @@ public class StringUtils
                     break;
 
                 default:
-
                     if (!Character.isDigit(c))
                     {
                         return false;
@@ -174,7 +167,6 @@ public class StringUtils
     public static boolean isInteger(String str)
     {
         int len = str.length();
-
         if (len == 0)
         {
             return false;
@@ -196,7 +188,6 @@ public class StringUtils
             {
                 return false;
             }
-
             i++;
         }
         while (i < len);
@@ -207,7 +198,6 @@ public class StringUtils
     public static boolean isUnsignedInteger(String str)
     {
         int len = str.length();
-
         if (len == 0)
         {
             return false;
@@ -243,11 +233,7 @@ public class StringUtils
             return null;
         }
 
-        return dequote(
-            str,
-            0,
-            str.length(),
-            quote);
+        return dequote(str, 0, str.length(), quote);
     }
 
     /**
@@ -288,9 +274,7 @@ public class StringUtils
         }
 
         StringBuffer sb     = new StringBuffer(end - begin);
-
         int          _begin = begin; // need begin later
-
         for (; (_end >= 0) && (_end < end); _end = str.indexOf(quote, _begin = _end + 2))
         {
             if (((_end + 1) >= end) || (str.charAt(_end + 1) != quote))
@@ -324,11 +308,7 @@ public class StringUtils
             return null;
         }
 
-        return dequoteFull(
-            str,
-            0,
-            str.length(),
-            quote);
+        return dequoteFull(str, 0, str.length(), quote);
     }
 
     public static String dequoteFull(String str, int begin, int end, char quote)
@@ -346,7 +326,6 @@ public class StringUtils
         }
 
         int _end = end - 1;
-
         if ((str.length() < 2) || (str.charAt(_end) != quote))
         {
             throw new IllegalArgumentException(
@@ -368,23 +347,20 @@ public class StringUtils
             return str;
         }
 
-        int          len = repl.length();
-        StringBuffer out = new StringBuffer(str.length() * 2);
-
+        int          len     = repl.length();
+        int          lendiff = with.length() - repl.length();
+        StringBuffer out     =
+            new StringBuffer((lendiff <= 0) ? str.length() : (str.length() + (10 * lendiff)));
         for (; pos >= 0; pos = str.indexOf(repl, lastindex = pos + len))
         {
             out.append(substring(str, lastindex, pos)).append(with);
         }
 
-        return out.append(substring(
-                str,
-                lastindex,
-                str.length())).toString();
+        return out.append(substring(str, lastindex, str.length())).toString();
     }
 
     public static String replace(String str, char repl, String with)
     {
-        int lastindex = 0;
         int pos = str.indexOf(repl);
 
         // If no replacement needed, return the original string
@@ -394,10 +370,11 @@ public class StringUtils
             return str;
         }
 
-        int          len = str.length();
-
-        StringBuffer out = new StringBuffer(len * 2);
-
+        int          len       = str.length();
+        int          lendiff   = with.length() - 1;
+        StringBuffer out       =
+            new StringBuffer((lendiff <= 0) ? str.length() : (str.length() + (10 * lendiff)));
+        int          lastindex = 0;
         for (; pos >= 0; pos = str.indexOf(repl, lastindex = pos + 1))
         {
             out.append(substring(str, lastindex, pos)).append(with);
@@ -410,7 +387,6 @@ public class StringUtils
     {
         int lastindex = 0;
         int len = repl.length();
-
         for (int index = s.indexOf(repl); index >= 0;
                     index = s.indexOf(repl, lastindex = index + len))
         {
@@ -438,7 +414,6 @@ public class StringUtils
         }
 
         int len = str.length();
-
         if (len == 0)
         {
             return EMPTY_STRING_ARRAY;
@@ -446,7 +421,6 @@ public class StringUtils
 
         int       oldPos = 0;
         ArrayList list = new ArrayList();
-
         for (
             int pos = str.indexOf(separator); pos >= 0;
                     pos = str.indexOf(separator, (oldPos = (pos + 1))))
@@ -480,7 +454,6 @@ public class StringUtils
         }
 
         int len = str.length();
-
         if (len == 0)
         {
             return EMPTY_STRING_ARRAY;
@@ -488,7 +461,6 @@ public class StringUtils
 
         int       oldPos = 0;
         ArrayList list = new ArrayList();
-
         for (int pos = 0; pos < len; oldPos = ++pos)
         {
             // Skip quoted text, if any
@@ -518,9 +490,7 @@ public class StringUtils
             else
             {
                 quoted     = false;
-
                 pos        = str.indexOf(separator, pos);
-
                 if (pos < 0)
                 {
                     pos = len;
@@ -528,9 +498,7 @@ public class StringUtils
             }
 
             list.add(
-                quoted ? dequote(
-                    substring(str, oldPos + 1, pos - 1),
-                    quote) : substring(str, oldPos, pos));
+                quoted ? dequote(str, oldPos + 1, pos - 1, quote) : substring(str, oldPos, pos));
         }
 
         return (String[]) list.toArray(EMPTY_STRING_ARRAY);
@@ -554,22 +522,21 @@ public class StringUtils
         }
 
         int len = str.length();
-
         if (len == 0)
         {
             return EMPTY_STRING_ARRAY;
         }
 
-        int tokenCount = 0;
+        int lastTokenIndex = 0;
 
         // Step 1: how many substrings? We exchange double scan time for less memory allocation
         for (int pos = str.indexOf(separator); pos >= 0; pos = str.indexOf(separator, pos + 1))
         {
-            tokenCount++;
+            lastTokenIndex++;
         }
 
         // Step 2: allocate exact size array
-        String[] list   = new String[++tokenCount];
+        String[] list   = new String[lastTokenIndex + 1];
 
         int      oldPos = 0;
 
@@ -581,7 +548,7 @@ public class StringUtils
             list[i++] = substring(str, oldPos, pos);
         }
 
-        list[tokenCount - 1] = substring(str, oldPos, len);
+        list[lastTokenIndex] = substring(str, oldPos, len);
 
         return list;
     }
@@ -608,7 +575,6 @@ public class StringUtils
         }
 
         int len = str.length();
-
         if (len == 0)
         {
             return EMPTY_STRING_ARRAY;
@@ -616,7 +582,6 @@ public class StringUtils
 
         // Step 1: how many substrings? We exchange double scan time for less memory allocation
         int tokenCount = 0;
-
         for (int pos = 0; pos < len; pos++)
         {
             tokenCount++;
@@ -647,7 +612,6 @@ public class StringUtils
             else
             {
                 pos = str.indexOf(separator, pos);
-
                 if (pos < 0)
                 {
                     break;
@@ -669,7 +633,6 @@ public class StringUtils
         tokenCount--; // we want to stop one token short
 
         int oldPos = 0;
-
         for (int pos = 0, i = 0; i < tokenCount; i++, oldPos = ++pos)
         {
             boolean quoted;
@@ -697,9 +660,7 @@ public class StringUtils
             }
 
             list[i] =
-                quoted ? dequote(
-                    substring(str, oldPos + 1, pos - 1),
-                    quote) : substring(str, oldPos, pos);
+                quoted ? dequote(str, oldPos + 1, pos - 1, quote) : substring(str, oldPos, pos);
         }
 
         list[tokenCount] = dequoteFull(str, oldPos, len, quote);

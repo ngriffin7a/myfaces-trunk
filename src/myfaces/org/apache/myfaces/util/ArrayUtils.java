@@ -130,10 +130,11 @@ public class ArrayUtils
             }
 
             totalLen += arrayLen;
+
+            Class componentType = arrs[i].getClass().getComponentType();
             commonComponentType =
-                (commonComponentType == null) ? arrs[i].getClass().getComponentType()
-                                              : commonClass(
-                    commonComponentType, arrs[i].getClass().getComponentType());
+                (commonComponentType == null) ? componentType
+                                              : commonClass(commonComponentType, componentType);
         }
 
         if (commonComponentType == null)
@@ -148,7 +149,7 @@ public class ArrayUtils
     {
         if (totalLen == 0)
         {
-            // Should we allocate an empty array instead? But what type?
+            // Should we allocate an empty array instead?
             return toArray;
         }
 
@@ -218,7 +219,7 @@ public class ArrayUtils
 //        System.out.println(
 //            concat(new String[] {"a"}, new Integer[] {new Integer(0)}, new Object[] {"b"}));
 //        System.out.println(
-//            concat(String.class, new Object[] {new String[] {"a"}, new Object[] {"b"}}));
+//            concat(new String[0], new Object[] {new String[] {"a"}, new Object[] {"b"}}));
 //        System.out.println(
 //            concat(new Integer[] {new Integer(0)}, new Number[] {new Double(0)}, new int[] {1}));
 //    }

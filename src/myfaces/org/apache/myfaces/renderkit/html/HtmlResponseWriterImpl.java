@@ -53,8 +53,9 @@ public class HtmlResponseWriterImpl
 // currently not used
 //    private UIComponent _currentComponent = null;
     /** 
-     * If null, then the element has been closed. This allows the option of either
-     * explicitly calling endElement() to close the tag or implicitly closing it for empty elements. 
+     * If null, then the element has been closed. This allows empty elements to be either
+     * explicitly closed by calling endElement() (strongly recommeded for avoiding nesting errors)
+     * or implicitly closed by closing an outer element. 
      */
     private String _startElementName;
     
@@ -159,7 +160,7 @@ public class HtmlResponseWriterImpl
         }
         
         // If we are closing an outer element, write the end tag.
-        if (!name.equalsIgnoreCase(_startElementName))
+        if (!name.equals(_startElementName))
         {    
             _writer.write("</");
             _writer.write(name);
