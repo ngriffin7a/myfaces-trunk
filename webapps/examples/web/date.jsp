@@ -62,7 +62,7 @@
                     <h:form>
                         <f:verbatim><p></f:verbatim>
 	                        <h:outputText value="#{example_messages['date_comp_text1']}"/> <h:message for="date1"/>
-	                        <x:inputDate id="date1" value="#{date1}"/>
+	                        <x:inputDate id="date1" value="#{date1}" popupCalendar="true"/>
 	                        <f:verbatim><br></f:verbatim>
 	                        <h:outputText value="#{example_messages['date_comp_text2']} #{date1}"/> <%-- TODO : print date part only --%>
                         <f:verbatim></p></f:verbatim>
