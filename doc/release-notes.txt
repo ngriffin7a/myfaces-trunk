@@ -2,6 +2,9 @@ MyFaces Release Notes
 =====================
 
 ----------------------------------------------------------------------
+Changes in Release 0.4.3
+
+----------------------------------------------------------------------
 Changes in Release 0.4.2
 * Simple EL Support: For Tags derived from MyFacesTag you can use "${expr}"
   Syntax. The given expr is evaluated via ValueBinding.
