@@ -44,4 +44,10 @@ MyFaces Known Issues
   build and reconstitute the whole tree from static information before
   anything is rendered.
 
+* Statically including code by means of the <%@include%> directive is
+  supported. Unfortunatly, there is an annoying issue with the included
+  jasper code, that makes the JSP parser fail, when you include a tag
+  that is not closed within the same include file. We did not find out the
+  reason yet.
+
 TODO... (Many others!)
