@@ -79,7 +79,7 @@
               overwrite="true" >
           <filterset>
             <filter token="contextURL"
-                    value="http://${tomcat.server}:${tomcat.port}/${tomcat.context.path}"/>
+                    value="http://${tomcat.server}:${tomcat.port}${tomcat.context.path}"/>
           </filterset>
         </copy>
     </target>
@@ -126,6 +126,8 @@
         <mkdir dir="${cactus.results.dir}/test-reports/xml"/>
         <mkdir dir="${cactus.results.dir}/test-reports/html"/>
         <junit fork="true" printsummary="${test.printsummary}">
+            <!-- let's hope tomcat has a suitable xerces parser -->
+            <jvmarg value="-Djava.endorsed.dirs=${tomcat.home}/common/endorsed"/>
             <classpath refid="cactus.class.path"/>
       	    <classpath>
               <pathelement path="${cactus.classes.dir}"/>
