@@ -52,7 +52,7 @@ import java.util.StringTokenizer;
 public class TagHashHack
 {
     private static final String TAG_HASH_ATTR = "tagHash";
-    private static final boolean SERIALIZE = true;
+    private static final boolean SERIALIZE = false;
 
     private TagHashHack() {}
 
@@ -137,13 +137,13 @@ public class TagHashHack
             while (st.hasMoreTokens())
             {
                 String token = st.nextToken();
-                int commaIdx = token.indexOf(',');
-                if (commaIdx < 0)
+                int equalIdx = token.indexOf('=');
+                if (equalIdx < 0)
                 {
                     throw new IllegalArgumentException("Invalid tagHash String!");
                 }
-                map.put(token.substring(0, commaIdx),
-                        token.substring(commaIdx + 1));
+                map.put(token.substring(0, equalIdx),
+                        token.substring(equalIdx + 1));
             }
             return map;
         }
