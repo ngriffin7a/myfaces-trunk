@@ -46,6 +46,9 @@ import net.sourceforge.myfaces.util.EnumerationIterator;
  * @author Manfred Geiler (latest modification by $Author$)
  * @author Anton Koinov
  * @version $Revision$ $Date$
+ * 
+ * Revision 1.11 Sylvain Vieujot
+ * Forward the message when an exception is thrown in dispatch
  */
 public class ServletExternalContextImpl
     extends ExternalContext
@@ -333,7 +336,14 @@ public class ServletExternalContextImpl
         }
         catch (ServletException e)
         {
-            throw new FacesException(e);
+        	if (e.getMessage() != null)
+            {
+                throw new FacesException(e.getMessage(), e);
+            }
+            else
+            {
+                throw new FacesException(e);
+            }
         }
     }
 
