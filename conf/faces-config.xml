@@ -191,6 +191,11 @@
   </component>
 
   <component>
+    <component-type>org.apache.myfaces.HtmlCollapsiblePanel</component-type>
+    <component-class>org.apache.myfaces.custom.collapsiblepanel.HtmlCollapsiblePanel</component-class>
+  </component>
+  
+  <component>
     <component-type>org.apache.myfaces.HtmlRadio</component-type>
     <component-class>org.apache.myfaces.custom.radio.HtmlRadio</component-class>
   </component>
@@ -461,6 +466,12 @@
             <renderer-class>org.apache.myfaces.custom.tabbedpane.HtmlTabbedPaneRenderer</renderer-class>
         </renderer>
 
+	  <renderer>
+			<component-family>javax.faces.Panel</component-family>
+			<renderer-type>org.apache.myfaces.CollapsiblePanel</renderer-type>
+			<renderer-class>org.apache.myfaces.custom.collapsiblepanel.HtmlCollapsiblePanelRenderer</renderer-class>
+	  </renderer>
+
       <renderer>
           <component-family>javax.faces.Data</component-family>
           <renderer-type>org.apache.myfaces.List</renderer-type>
@@ -573,5 +584,4 @@
 		<validator-id>org.apache.myfaces.validator.RegExpr</validator-id>
 		<validator-class>org.apache.myfaces.custom.regexprvalidator.RegExprValidator</validator-class>
 	</validator>
-
 </faces-config>
