@@ -26,7 +26,6 @@ import javax.faces.event.FacesListener;
 import javax.faces.event.PhaseId;
 import javax.faces.model.*;
 import javax.servlet.jsp.jstl.sql.Result;
-import java.io.IOException;
 import java.io.Serializable;
 import java.sql.ResultSet;
 import java.util.ArrayList;
@@ -37,6 +36,9 @@ import java.util.List;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.22  2004/05/21 10:39:27  manolito
+ * new renderedIfEmpty attribute in ext. HtmlDataTable component
+ *
  * Revision 1.21  2004/05/18 11:21:11  manolito
  * optimized saving of descendant states: isAllChildrenAndFacetsValid loop no longer needed
  *
@@ -59,7 +61,10 @@ public class UIData
     private String _var = null;
     private Object[] _descendantStates;
     private int _descendantEditableValueHolderCount = -1;
-    transient private boolean _allChildrenAndFacetsValid = true;
+
+    //init to false, so that no descendant states are save for a newly created UIData
+    transient private boolean _saveDescendantStates = false;
+
 
     public void setFooter(UIComponent footer)
     {
@@ -351,132 +356,63 @@ public class UIData
         }
     }
 
-    public void encodeBegin(javax.faces.context.FacesContext context)
-            throws IOException
-    {
-        if (_allChildrenAndFacetsValid)
-        {
-            // refresh the DataModel from the real world (i.e. the model bean)
-            _dataModel = null;
-        }
-        super.encodeBegin(context);
-    }
-
-
-    /*
-    private boolean isAllChildrenAndFacetsValid()
-    {
-        int first = getFirst();
-        int rows = getRows();
-        int last;
-        if (rows == 0)
-        {
-            last = getRowCount();
-        }
-        else
-        {
-            last = first + rows;
-        }
-        try
-        {
-            for (int rowIndex = first; rowIndex < last; rowIndex++)
-            {
-                setRowIndex(rowIndex);
-                if (isRowAvailable())
-                {
-                    for (Iterator it = getFacetsAndChildren(); it.hasNext(); )
-                    {
-                        UIComponent child = (UIComponent)it.next();
-                        if (child instanceof EditableValueHolder &&
-                            !((EditableValueHolder)child).isValid())
-                        {
-                            return false;
-                        }
-                    }
-                }
-            }
-        }
-        finally
-        {
-            setRowIndex(-1);
-        }
-        return true;
-    }
-    */
-
 
     public void processDecodes(FacesContext context)
     {
         if (context == null) throw new NullPointerException("context");
         if (!isRendered()) return;
+        setRowIndex(-1);
+        processFacets(context, PROCESS_DECODES);
+        processColumnFacets(context, PROCESS_DECODES);
+        processColumnChildren(context, PROCESS_DECODES);
+        setRowIndex(-1);
         try
         {
-            setRowIndex(-1);
-            processFacets(context, PROCESS_DECODES);
-            processColumnFacets(context, PROCESS_DECODES);
-            processColumnChildren(context, PROCESS_DECODES);
-            setRowIndex(-1);
-            try
-            {
-                decode(context);
-            }
-            catch (RuntimeException e)
-            {
-                context.renderResponse();
-                throw e;
-            }
+            decode(context);
         }
-        finally
+        catch (RuntimeException e)
         {
-            if (context.getRenderResponse() || context.getResponseComplete())
-            {
-                // one of the children and facets failed during decode
-                _allChildrenAndFacetsValid = false;
-            }
+            context.renderResponse();
+            throw e;
         }
     }
 
-    public void processValidators(javax.faces.context.FacesContext context)
+    public void processValidators(FacesContext context)
     {
         if (context == null) throw new NullPointerException("context");
         if (!isRendered()) return;
-        try
-        {
-            setRowIndex(-1);
-            processFacets(context, PROCESS_VALIDATORS);
-            processColumnFacets(context, PROCESS_VALIDATORS);
-            processColumnChildren(context, PROCESS_VALIDATORS);
-            setRowIndex(-1);
-        }
-        finally
-        {
-            if (context.getRenderResponse() || context.getResponseComplete())
-            {
-                // one of the children and facets failed during validate
-                _allChildrenAndFacetsValid = false;
-            }
-        }
+        setRowIndex(-1);
+        processFacets(context, PROCESS_VALIDATORS);
+        processColumnFacets(context, PROCESS_VALIDATORS);
+        processColumnChildren(context, PROCESS_VALIDATORS);
+        setRowIndex(-1);
     }
 
-    public void processUpdates(javax.faces.context.FacesContext context)
+    public void processUpdates(FacesContext context)
     {
         if (context == null) throw new NullPointerException("context");
-        if (!isRendered()) return;
-        try
+        if (!isRendered())
         {
-            setRowIndex(-1);
-            processFacets(context, PROCESS_UPDATES);
-            processColumnFacets(context, PROCESS_UPDATES);
-            processColumnChildren(context, PROCESS_UPDATES);
-            setRowIndex(-1);
+            // not rendered --> no need to save descendants' state
+            _saveDescendantStates = false;
+            // --> refresh DataModel, i.e. get current data from model when rendering
+            _dataModel = null;
+            return;
         }
-        finally
+
+        setRowIndex(-1);
+        processFacets(context, PROCESS_UPDATES);
+        processColumnFacets(context, PROCESS_UPDATES);
+        processColumnChildren(context, PROCESS_UPDATES);
+        setRowIndex(-1);
+
+        if (!context.getRenderResponse() && !context.getResponseComplete())
         {
-            if (context.getRenderResponse() || context.getResponseComplete())
-            {
-                // one of the children and facets failed during model update
-                _allChildrenAndFacetsValid = false;
-            }
+            // update models for all descendants finished successfully
+            // --> no need to save descendants' state
+            _saveDescendantStates = false;
+            // --> refresh DataModel, i.e. get current data from model when rendering
+            _dataModel = null;
         }
     }
 
@@ -743,8 +679,8 @@ public class UIData
         values[2] = _rows;
         values[3] = _value;
         values[4] = _var;
-        values[5] = !_allChildrenAndFacetsValid ? _descendantStates : null;
-        values[6] = !_allChildrenAndFacetsValid ? new Integer(_descendantEditableValueHolderCount) : INTEGER_MINUS1;
+        values[5] = _saveDescendantStates ? _descendantStates : null;
+        values[6] = _saveDescendantStates ? new Integer(_descendantEditableValueHolderCount) : INTEGER_MINUS1;
         return ((Object) (values));
     }
 

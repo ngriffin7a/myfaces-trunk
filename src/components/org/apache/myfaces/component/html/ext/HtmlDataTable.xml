@@ -2,7 +2,7 @@
 <!DOCTYPE component PUBLIC
   "-//MyFaces//DTD MyFaces component def 1.0//EN"
   "http://myfaces.sourceforge.net/dtd/Component.dtd">
-<component generateStateMethods="false" generateUserRoleMethods="true" >
+<component generateStateMethods="false" >
     <component-class>net.sourceforge.myfaces.component.html.ext.HtmlDataTable</component-class>
     <base-class>javax.faces.component.html.HtmlDataTable</base-class>
     <component-type>net.sourceforge.myfaces.HtmlDataTable</component-type>
@@ -32,5 +32,10 @@
     <field>
         <name>visibleOnUserRole</name>
         <type>java.lang.String</type>
+    </field>
+    <field>
+        <name>renderedIfEmpty</name>
+        <type>boolean</type>
+        <default-value>true</default-value>
     </field>
 </component>

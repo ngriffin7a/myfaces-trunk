@@ -24,7 +24,6 @@ import net.sourceforge.myfaces.component.UserRoleUtils;
 import javax.faces.context.FacesContext;
 import javax.faces.el.ValueBinding;
 import javax.faces.model.DataModel;
-import java.io.IOException;
 import java.sql.ResultSet;
 import java.util.List;
 
@@ -33,6 +32,9 @@ import java.util.List;
  * @author Manfred Geiler
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.5  2004/05/21 10:39:26  manolito
+ * new renderedIfEmpty attribute in ext. HtmlDataTable component
+ *
  * Revision 1.4  2004/05/18 14:31:36  manolito
  * user role support completely moved to components source tree
  *
@@ -45,138 +47,120 @@ public class HtmlDataTable
         implements UserRoleAware
 {
     private static final Class OBJECT_ARRAY_CLASS = (new Object[0]).getClass();
-    transient private Object _localValue = null;
-    transient private boolean _allChildrenAndFacetsValid = true;
 
-    public void encodeBegin(FacesContext context) throws IOException
-    {
-        if (_allChildrenAndFacetsValid)
-        {
-            //Clear local value, so that current data from model bean is used again
-            _localValue = null;
-        }
-        super.encodeBegin(context);
-    }
+    transient private _SerializableDataModel _restoredValue = null;
+    transient private Object _cachedValue = null;
 
-    public void processDecodes(FacesContext context)
+
+    public Object getValue()
     {
-        try
+        if (_cachedValue == null)
         {
-            super.processDecodes(context);
-        }
-        finally
-        {
-            if (context.getRenderResponse() || context.getResponseComplete())
+            if (_restoredValue != null)
             {
-                // one of the children and facets failed during decode
-                _allChildrenAndFacetsValid = false;
+                // if we have a restored value we use this value
+                _cachedValue = _restoredValue;
+            }
+            else
+            {
+                // else get value from model
+                _cachedValue = super.getValue();
             }
         }
+        return _cachedValue;
     }
 
-    public void processValidators(FacesContext context)
+
+    public void setValue(Object value)
     {
-        try
-        {
-            super.processValidators(context);
-        }
-        finally
-        {
-            if (context.getRenderResponse() || context.getResponseComplete())
-            {
-                // one of the children and facets failed during decode
-                _allChildrenAndFacetsValid = false;
-            }
-        }
+        super.setValue(value);
+
+        // clear the restored value
+        _restoredValue = null;
+
+        // and update the cached value
+        _cachedValue = value;
     }
+
 
     public void processUpdates(FacesContext context)
     {
-        try
+        super.processUpdates(context);
+
+        if (_restoredValue != null)
         {
-            super.processUpdates(context);
-
-            if (isPreserveDataModel())
-            {
-                updateModelFromPreservedDataModel(context);
-            }
-
-            if (isPreserveSort())
-            {
-                if (_sortColumn != null)
-                {
-                    ValueBinding vb = getValueBinding("sortColumn");
-                    if (vb != null)
-                    {
-                        vb.setValue(context, _sortColumn);
-                        _sortColumn = null;
-                    }
-                }
-
-                if (_sortAscending != null)
-                {
-                    ValueBinding vb = getValueBinding("sortAscending");
-                    if (vb != null)
-                    {
-                        vb.setValue(context, _sortAscending);
-                        _sortAscending = null;
-                    }
-                }
-            }
-
+            updateModelFromPreservedDataModel(context);
         }
-        finally
+
+        if (isPreserveSort())
         {
-            if (context.getRenderResponse() || context.getResponseComplete())
+            if (_sortColumn != null)
             {
-                // one of the children and facets failed during decode
-                _allChildrenAndFacetsValid = false;
+                ValueBinding vb = getValueBinding("sortColumn");
+                if (vb != null)
+                {
+                    vb.setValue(context, _sortColumn);
+                    _sortColumn = null;
+                }
             }
+
+            if (_sortAscending != null)
+            {
+                ValueBinding vb = getValueBinding("sortAscending");
+                if (vb != null)
+                {
+                    vb.setValue(context, _sortAscending);
+                    _sortAscending = null;
+                }
+            }
+        }
+
+        if (!context.getRenderResponse() && !context.getResponseComplete())
+        {
+            // update models finished successfully
+            // --> clear restored and cached value
+            _restoredValue = null;
+            _cachedValue = null;
         }
     }
 
 
     private void updateModelFromPreservedDataModel(FacesContext context)
     {
-        if (_localValue != null &&
-            _localValue instanceof _SerializableDataModel)
+        ValueBinding vb = getValueBinding("value");
+        if (vb != null && !vb.isReadOnly(context))
         {
-            ValueBinding vb = getValueBinding("value");
-            if (vb != null && !vb.isReadOnly(context))
+            _SerializableDataModel dm = (_SerializableDataModel)_restoredValue;
+            Class type = vb.getType(context);
+            if (DataModel.class.isAssignableFrom(type))
             {
-                _SerializableDataModel dm = (_SerializableDataModel)_localValue;
-                Class type = vb.getType(context);
-                if (DataModel.class.isAssignableFrom(type))
+                vb.setValue(context, dm);
+            }
+            else if (List.class.isAssignableFrom(type))
+            {
+                vb.setValue(context, (List)dm.getWrappedData());
+            }
+            else if (OBJECT_ARRAY_CLASS.isAssignableFrom(type))
+            {
+                List lst = (List)dm.getWrappedData();
+                vb.setValue(context, lst.toArray(new Object[lst.size()]));
+            }
+            else if (ResultSet.class.isAssignableFrom(type))
+            {
+                throw new UnsupportedOperationException(this.getClass().getName() + " UnsupportedOperationException");
+            }
+            else
+            {
+                //Assume scalar data model
+                List lst = (List)dm.getWrappedData();
+                if (lst.size() > 0)
                 {
-                    vb.setValue(context, dm);
-                }
-                else if (List.class.isAssignableFrom(type))
-                {
-                    vb.setValue(context, (List)dm.getWrappedData());
-                }
-                else if (OBJECT_ARRAY_CLASS.isAssignableFrom(type))
-                {
-                    List lst = (List)dm.getWrappedData();
-                    vb.setValue(context, lst.toArray(new Object[lst.size()]));
-                }
-                else if (ResultSet.class.isAssignableFrom(type))
-                {
-                    throw new UnsupportedOperationException(this.getClass().getName() + " UnsupportedOperationException");
+                    vb.setValue(context, lst.get(0));
                 }
                 else
                 {
-                    //Assume scalar data model
-                    List lst = (List)dm.getWrappedData();
-                    if (lst.size() > 0)
-                    {
-                        vb.setValue(context, lst.get(0));
-                    }
-                    else
-                    {
-                        vb.setValue(context, null);
-                    }
+                    vb.setValue(context, null);
                 }
-                //setValue(null); //clear local value
             }
         }
     }
@@ -185,26 +169,18 @@ public class HtmlDataTable
 
     public int getFirst()
     {
-        if (isPreserveDataModel())
+        if (_restoredValue != null)
         {
-            if (_localValue != null &&
-                _localValue instanceof _SerializableDataModel)
-            {
-                return ((_SerializableDataModel)_localValue).getFirst();
-            }
+            return _restoredValue.getFirst();
         }
         return super.getFirst();
     }
 
     public int getRows()
     {
-        if (isPreserveDataModel())
+        if (_restoredValue != null)
         {
-            if (_localValue != null &&
-                _localValue instanceof _SerializableDataModel)
-            {
-                return ((_SerializableDataModel)_localValue).getRows();
-            }
+            return _restoredValue.getRows();
         }
         return super.getRows();
     }
@@ -212,17 +188,24 @@ public class HtmlDataTable
     public Object saveState(FacesContext context)
     {
         boolean preserveSort = isPreserveSort();
-        Object values[] = new Object[6];
+        Object values[] = new Object[7];
         values[0] = super.saveState(context);
         values[1] = _preserveDataModel;
-        values[2] = saveAttachedState(context, isPreserveDataModel() ?
-                                               getSerializableDataModel() :
-                                               null);
+        if (isPreserveDataModel())
+        {
+            values[2] = saveAttachedState(context, getSerializableDataModel());
+        }
+        else
+        {
+            values[2] = null;
+        }
         values[3] = _preserveSort;
         values[4] = preserveSort ? getSortColumn() : _sortColumn;
         values[5] = preserveSort ? Boolean.valueOf(isSortAscending()) : _sortAscending;
+        values[6] = _renderedIfEmpty;
         return ((Object) (values));
     }
+
 
     public void restoreState(FacesContext context, Object state)
     {
@@ -231,17 +214,22 @@ public class HtmlDataTable
         _preserveDataModel = (Boolean)values[1];
         if (isPreserveDataModel())
         {
-            _localValue = restoreAttachedState(context, values[2]);
+            _restoredValue = (_SerializableDataModel)restoreAttachedState(context, values[2]);
+        }
+        else
+        {
+            _restoredValue = null;
         }
         _preserveSort = (Boolean)values[3];
         _sortColumn = (String)values[4];
         _sortAscending = (Boolean)values[5];
+        _renderedIfEmpty = (Boolean)values[6];
     }
 
 
-    public Object getSerializableDataModel()
+    public _SerializableDataModel getSerializableDataModel()
     {
-        Object value = _localValue;
+        Object value = _restoredValue;
         if (value == null)
         {
             value = getValue();
@@ -278,24 +266,18 @@ public class HtmlDataTable
     }
 
 
-    public Object getValue()
+    public boolean isRendered()
     {
-        // if we have a local value (either from restoreState or from former getValue call)
-        // we return this value
-        if (_localValue != null) return _localValue;
-
-        // else get the "real" current value, and again remember it as local value
-        _localValue = super.getValue();
-
-        return _localValue;
+        //do not render if user not in role:
+        if (!UserRoleUtils.isVisibleOnUserRole(this)) return false;
+        //do not render if rendered attribute set to false:
+        if (!super.isRendered()) return false;
+        //do render if empty DataModel does not matter:
+        if (isRenderedIfEmpty()) return true;
+        //only render if current DataModel is not empty:
+        return (getRowCount() > 0);
     }
 
-
-    public void setValue(Object value)
-    {
-        super.setValue(value);
-        _localValue = null;
-    }
 
     //------------------ GENERATED CODE BEGIN (do not modify!) --------------------
 
@@ -303,6 +285,7 @@ public class HtmlDataTable
     private static final boolean DEFAULT_PRESERVEDATAMODEL = false;
     private static final boolean DEFAULT_PRESERVESORT = false;
     private static final boolean DEFAULT_SORTASCENDING = true;
+    private static final boolean DEFAULT_RENDEREDIFEMPTY = true;
 
     private Boolean _preserveDataModel = null;
     private Boolean _preserveSort = null;
@@ -310,6 +293,7 @@ public class HtmlDataTable
     private Boolean _sortAscending = null;
     private String _enabledOnUserRole = null;
     private String _visibleOnUserRole = null;
+    private Boolean _renderedIfEmpty = null;
 
     public HtmlDataTable()
     {
@@ -391,12 +375,20 @@ public class HtmlDataTable
         return vb != null ? (String)vb.getValue(getFacesContext()) : null;
     }
 
-
-    public boolean isRendered()
+    public void setRenderedIfEmpty(boolean renderedIfEmpty)
     {
-        if (!UserRoleUtils.isVisibleOnUserRole(this)) return false;
-        return super.isRendered();
+        _renderedIfEmpty = Boolean.valueOf(renderedIfEmpty);
     }
+
+    public boolean isRenderedIfEmpty()
+    {
+        if (_renderedIfEmpty != null) return _renderedIfEmpty.booleanValue();
+        ValueBinding vb = getValueBinding("renderedIfEmpty");
+        Boolean v = vb != null ? (Boolean)vb.getValue(getFacesContext()) : null;
+        return v != null ? v.booleanValue() : DEFAULT_RENDEREDIFEMPTY;
+    }
+
+
 
     //------------------ GENERATED CODE END ---------------------------------------
 }

@@ -28,6 +28,9 @@ import javax.faces.component.UIComponent;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.6  2004/05/21 10:39:27  manolito
+ * new renderedIfEmpty attribute in ext. HtmlDataTable component
+ *
  * Revision 1.5  2004/05/18 15:07:11  manolito
  * no message
  *
@@ -65,6 +68,7 @@ public class HtmlDataTableTag
     private String _preserveSort;
     private String _enabledOnUserRole;
     private String _visibleOnUserRole;
+    private String _renderedIfEmpty;
 
     protected void setProperties(UIComponent component)
     {
@@ -79,6 +83,7 @@ public class HtmlDataTableTag
         setBooleanProperty(component, "preserveSort", _preserveSort);
         setStringProperty(component, UserRoleAware.ENABLED_ON_USER_ROLE_ATTR, _enabledOnUserRole);
         setStringProperty(component, UserRoleAware.VISIBLE_ON_USER_ROLE_ATTR, _visibleOnUserRole);
+        setBooleanProperty(component, "renderedIfEmpty", _renderedIfEmpty);
     }
 
     public void setPreserveDataModel(String preserveDataModel)
@@ -109,5 +114,10 @@ public class HtmlDataTableTag
     public void setVisibleOnUserRole(String visibleOnUserRole)
     {
         _visibleOnUserRole = visibleOnUserRole;
+    }
+
+    public void setRenderedIfEmpty(String renderedIfEmpty)
+    {
+        _renderedIfEmpty = renderedIfEmpty;
     }
 }

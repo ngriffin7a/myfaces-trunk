@@ -151,6 +151,22 @@
                 Default: true
             </description>
         </attribute>
+        <attribute>
+            <name>renderedIfEmpty</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
+            <description>
+                Indicates whether this table should be rendered if the underlying DataModel is
+                empty.
+                You could as well use rendered="#{not empty bean.list}", but this one causes
+                the getList method of your model bean beeing called up to five times per
+                request, which is not optimal when the list is backed by a DB table.
+                Using renderedIfEmpty="false" solves this problem, because the MyFaces
+                extended HtmlDataTable automatically caches the DataModel and calles the
+                model getter only once per request.
+                Default: true
+            </description>
+        </attribute>
      </tag>
 
     <!-- inputText -->
@@ -546,6 +562,7 @@
         <tag-class>net.sourceforge.myfaces.custom.datatablescroller.HtmlDataTableScrollerTag</tag-class>
         <body-content>JSP</body-content>
         <description>
+            (TODO: not yet ready!)
             Scroller for dataTable
             Must be nested inside footer facet of dataTable OR for attribute must be given
             so that corresponding dataTable can be found
