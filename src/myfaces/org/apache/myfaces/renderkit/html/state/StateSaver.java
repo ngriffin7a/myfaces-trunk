@@ -346,11 +346,15 @@ public class StateSaver
         try
         {
             Class c = BeanUtils.getBeanPropertyType(uiComponent, attrName);
-            conv = ConverterUtils.findConverter(facesContext.getServletContext(), c);
+            if (c != null)
+            {
+                conv = ConverterUtils.findConverter(facesContext.getServletContext(), c);
+            }
         }
         catch (IllegalArgumentException e)
         {
-            LogUtil.getLogger().warning("Component " + uiComponent.getCompoundId() + " does not have a getter method for attribute '" + attrName + "'.");
+            //probably not a component attribute but a render dependent attribute
+            LogUtil.getLogger().info("Component " + uiComponent.getCompoundId() + " does not have a getter method for attribute '" + attrName + "', assuming renderer dependent attribute.");
         }
 
         String strValue;

@@ -22,8 +22,6 @@ import net.sourceforge.myfaces.convert.Converter;
 import net.sourceforge.myfaces.convert.ConverterException;
 import net.sourceforge.myfaces.convert.ConverterUtils;
 import net.sourceforge.myfaces.convert.impl.StringArrayConverter;
-import net.sourceforge.myfaces.util.bean.BeanUtils;
-import net.sourceforge.myfaces.util.logging.LogUtil;
 
 import javax.faces.FacesException;
 import javax.faces.FactoryFinder;
@@ -132,6 +130,7 @@ public class UIComponentUtils
     }
 
 
+    /*
     public static void convertAndSetAttribute(FacesContext facesContext,
                                               UIComponent comp,
                                               String attrName,
@@ -143,12 +142,6 @@ public class UIComponentUtils
         {
             Converter conv = null;
             Class clazz = findOutAttrClassByUIComponent(comp, attrName);
-            /*
-            if (clazz == null && creatorTag != null)
-            {
-                clazz = findOutAttrClassByTag(comp, creatorTag, attrName);
-            }
-            */
 
             if (clazz != null)
             {
@@ -183,8 +176,9 @@ public class UIComponentUtils
             comp.setAttribute(attrName, objValue);
         }
     }
+    */
 
-
+    /*
     protected static Class findOutAttrClassByUIComponent(UIComponent comp, String attrName)
     {
         Class c = null;
@@ -204,6 +198,7 @@ public class UIComponentUtils
 
         return c;
     }
+    */
 
     /*
     protected static Class findOutAttrClassByTag(UIComponent comp, Tag tag, String attrName)
