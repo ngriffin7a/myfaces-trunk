@@ -287,7 +287,7 @@ public class HtmlSelectOneMenu extends UISelectOne
     {
         _readonly = Boolean.valueOf(readonly);
     }
-
+   
     public boolean isReadonly()
     {
         if (_readonly != null) return _readonly.booleanValue();
