@@ -69,11 +69,11 @@ managed beans used:
                 <x:inputCalendar monthYearRowClass="yearMonthHeader" weekRowClass="weekHeader"
                     currentDayCellClass="currentDayCell" value="#{calendar.date}" />
 				</h:form>
-                <f:verbatim><br/><br/></f:verbatim>
+                <f:verbatim><br/></f:verbatim>
 
                 <h:outputText value="#{calendar.date}" />
 
-                <f:verbatim><br/><br/></f:verbatim>
+                <f:verbatim><br/><br/><br/></f:verbatim>
 
                 <h:outputText value="Calendar as a JavaScript popup."/>
 
@@ -81,12 +81,6 @@ managed beans used:
                 <x:inputCalendar monthYearRowClass="yearMonthHeader" weekRowClass="weekHeader"
                     currentDayCellClass="currentDayCell" value="#{calendar.date}" renderAsPopup="true"
                     popupTodayString="#{example_messages['popup_today_string']}" popupWeekString="#{example_messages['popup_week_string']}" />
-                <h:commandButton value="Submit"/>
-				</h:form>
-                <f:verbatim><br/><br/></f:verbatim>
-				<h:form id="calendarForm3">
-                <x:inputCalendar id="xxxyyy3" monthYearRowClass="yearMonthHeader" weekRowClass="weekHeader"
-                    currentDayCellClass="currentDayCell" value="#{calendar.date}" renderAsPopup="true" popupTheme="jscalendar-DB" />
                 <h:commandButton value="Submit"/>
 				</h:form>
 
