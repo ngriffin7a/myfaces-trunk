@@ -19,6 +19,7 @@
 package net.sourceforge.myfaces.context.servlet;
 
 import net.sourceforge.myfaces.util.FacesUtils;
+import net.sourceforge.myfaces.util.NullIterator;
 
 import javax.faces.application.Application;
 import javax.faces.application.FacesMessage;
@@ -108,7 +109,7 @@ public class ServletFacesContextImpl
     {
         if (_messages == null || _messages.isEmpty())
         {
-            return Collections.EMPTY_LIST.iterator();
+            return NullIterator.instance();
         }
 
         return new Iterator()
@@ -154,7 +155,7 @@ public class ServletFacesContextImpl
     {
         if (_messages == null)
         {
-            return Collections.EMPTY_LIST.iterator();
+            return NullIterator.instance();
         }
 
         List lst = new ArrayList();
