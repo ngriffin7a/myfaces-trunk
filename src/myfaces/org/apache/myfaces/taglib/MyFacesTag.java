@@ -22,9 +22,13 @@ import net.sourceforge.myfaces.component.MyFacesComponent;
 import net.sourceforge.myfaces.component.UIComponentUtils;
 import net.sourceforge.myfaces.convert.Converter;
 import net.sourceforge.myfaces.convert.ConverterUtils;
+import net.sourceforge.myfaces.renderkit.html.state.TreeCopier;
+import net.sourceforge.myfaces.renderkit.html.state.JspInfo;
+import net.sourceforge.myfaces.util.logging.LogUtil;
 
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
+import javax.faces.tree.Tree;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
 import javax.servlet.jsp.tagext.Tag;
@@ -218,6 +222,25 @@ public abstract class MyFacesTag
                 find.setRendererType(rendererType);
             }
             peek.addChild(find);
+
+            //automatically create all children from parsed JspInfo:
+            FacesContext facesContext = getFacesContext();
+            Tree staticTree = JspInfo.getStaticTree(facesContext, facesContext.getResponseTree().getTreeId());
+            UIComponent staticComp = null;
+            try
+            {
+                staticComp = staticTree.getRoot().findComponent(find.getCompoundId());
+            }
+            catch (IllegalArgumentException e) {}
+            if (staticComp == null)
+            {
+                LogUtil.getLogger().severe("Component " + find.getCompoundId() + " not found in static (parsed) tree.");
+            }
+            else
+            {
+                TreeCopier tc = new TreeCopier(facesContext);
+                tc.copyStaticSubTree(staticComp, find);
+            }
         }
 
         stack.push(find);
