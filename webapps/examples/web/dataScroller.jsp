@@ -86,10 +86,26 @@ managed beans used:
                        <h:outputText value="#{car.color}" />
                    </h:column>
 
+                    <f:facet name="footer" >
+                        <x:dataScroller id="scroll_1" >
+                            <f:facet name="first">
+                                <h:outputText value="first" />
+                            </f:facet>
+                            <f:facet name="previous">
+                                <h:outputText value="previous" />
+                            </f:facet>
+                            <f:facet name="next">
+                                <h:outputText value="next" />
+                            </f:facet>
+                            <f:facet name="last">
+                                <h:outputText value="last" />
+                            </f:facet>
+                        </x:dataScroller>
+                    </f:facet>
                 </x:dataTable>
-                
-                <x:dataScroller id="scroll" for="data" >
-                    <f:facet name="first">
+
+                <x:dataScroller id="scroll_2" for="data">
+                    <f:facet name="first" >
                         <h:outputText value="first" />
                     </f:facet>
                     <f:facet name="previous">
