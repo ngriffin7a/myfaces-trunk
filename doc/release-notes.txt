@@ -11,6 +11,9 @@ Changes in Release 0.4.2
   instance: fixed.
 * Support for converter attributes "dateStyle", "formatPattern", etc.
 * added Attribute activeItemClass to NavigationTag
+* replaced all usages of Class.forName(s) by Class.forName(s, true,
+  Thread.currentThread().getContextClassLoader()) to (hopefully) resolve the
+  JBoss issues
 
 ----------------------------------------------------------------------
 Changes in Release 0.4.1

@@ -18,9 +18,7 @@
  */
 package net.sourceforge.myfaces.examples.example1;
 
-import javax.faces.FactoryFinder;
 import javax.faces.application.Action;
-import javax.faces.application.ApplicationFactory;
 import javax.faces.component.UIInput;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AbortProcessingException;
@@ -28,6 +26,7 @@ import javax.faces.event.ActionEvent;
 import javax.faces.event.ActionListener;
 import javax.faces.event.PhaseId;
 import javax.faces.tree.Tree;
+import javax.faces.validator.LengthValidator;
 import javax.faces.validator.LongRangeValidator;
 
 /**
@@ -61,12 +60,15 @@ public class ValidationController
         public String invoke()
         {
             FacesContext facesContext = FacesContext.getCurrentInstance();
-            ApplicationFactory af = (ApplicationFactory)FactoryFinder.getFactory(FactoryFinder.APPLICATION_FACTORY);
             Tree tree = facesContext.getTree();
 
             UIInput number1 = (UIInput)tree.getRoot().findComponent("number1");
             number1.clearValidators();
-            number1.addValidator(new LongRangeValidator(20, 5));
+            number1.addValidator(new LongRangeValidator(10, 1));
+
+            UIInput text = (UIInput)tree.getRoot().findComponent("text");
+            text.clearValidators();
+            text.addValidator(new LengthValidator(7, 3));
 
             return "ok";
         }
@@ -76,27 +78,17 @@ public class ValidationController
         public String invoke()
         {
             FacesContext facesContext = FacesContext.getCurrentInstance();
-            ApplicationFactory af = (ApplicationFactory)FactoryFinder.getFactory(FactoryFinder.APPLICATION_FACTORY);
             Tree tree = facesContext.getTree();
 
             UIInput number1 = (UIInput)tree.getRoot().findComponent("number1");
             number1.clearValidators();
 
+            UIInput text = (UIInput)tree.getRoot().findComponent("text");
+            text.clearValidators();
+
             return "ok";
         }
     };
 
-
-    /*
-    public Action getEnableAction()
-    {
-        return ENABLE_ACTION;
-    }
-
-    public Action getDisableAction()
-    {
-        return DISABLE_ACTION;
-    }
-    */
 
 }

@@ -98,15 +98,10 @@ managed beans used:
                     </h:command_hyperlink>
                 </td></tr></table>
 
-                <br>
-                <br>
-
                 <h4>Another Form</h4>
                 <table border="1"><tr><td>
                     <h:form id="form2" formName="ucaseForm">
-                        <h:input_text id="text" valueRef="ucaseForm.text">
-                            <f:validate_length minimum="2" maximum="15" />
-                        </h:input_text>
+                        <h:input_text id="text" valueRef="ucaseForm.text"/>
                         <h:output_errors id="textError" for="text" outputClass="error" /><br>
                         <h:command_button id="ucaseButton" commandName="up" label="Make it uppercase" action="none">
                             <f:action_listener type="net.sourceforge.myfaces.examples.example1.UCaseController" />
