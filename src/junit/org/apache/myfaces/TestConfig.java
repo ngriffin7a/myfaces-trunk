@@ -1,4 +1,4 @@
-/**
+/*
  * MyFaces - the free JSF implementation
  * Copyright (C) 2003  The MyFaces Team (http://myfaces.sourceforge.net)
  *
@@ -18,23 +18,48 @@
  */
 package net.sourceforge.myfaces;
 
+import java.io.IOException;
+
+import java.util.Properties;
+
+
 /**
  * DOCUMENT ME!
  * @author Manfred Geiler (latest modification by $Author$)
+ * @author Anton Koinov
  * @version $Revision$ $Date$
  */
 public class TestConfig
 {
-    private static final String PROJECT_BASE_PATH
-        = "C:/Develop/myfaces.sourceforge/myfaces/";    //TODO: must go to properties file, of course!
+    //~ Static fields/initializers -----------------------------------------------------------------
 
-    private TestConfig() {
-        //disable
-    }
+    private static final String     TEST_PROP_FILE = "test.properties";
+    private static final Properties _configProps = new Properties();
 
-    public static String getWebInfPath()
+    static
     {
-        return PROJECT_BASE_PATH + "conf/";
+        try
+        {
+            _configProps.load(
+                Thread.currentThread().getContextClassLoader().getResourceAsStream(TEST_PROP_FILE));
+        }
+        catch (IOException e)
+        {
+            throw new RuntimeException(e);
+        }
     }
 
+    //~ Constructors -------------------------------------------------------------------------------
+
+    private TestConfig()
+    {
+        // disable
+    }
+
+    //~ Methods ------------------------------------------------------------------------------------
+
+    public static String getContextPath()
+    {
+        return _configProps.getProperty("servletContextPath");
+    }
 }

@@ -177,7 +177,7 @@ public class ApplicationMockImpl
     public ValueBinding getValueBinding(String s)
     throws ReferenceSyntaxException
     {
-        return new ValueBindingImpl(s, this);
+        return new ValueBindingImpl(this, s);
     }
 
     public void setVariableResolver(VariableResolver variableResolver)
@@ -262,6 +262,6 @@ public class ApplicationMockImpl
     public ValueBinding createValueBinding(String arg0)
     throws ReferenceSyntaxException
     {
-        return new ValueBindingImpl(arg0, this);
+        return new ValueBindingImpl(this, arg0);
     }
 }

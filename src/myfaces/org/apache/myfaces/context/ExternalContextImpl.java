@@ -39,6 +39,8 @@ import java.util.*;
 public class ExternalContextImpl
     extends ExternalContext
 {
+    private static final String INIT_PARAMETER_MAP_ATTRIBUTE = InitParameterMap.class.getName();
+    
     private ServletContext _servletContext;
     private ServletRequest _servletRequest;
     private ServletResponse _servletResponse;
@@ -244,10 +246,15 @@ public class ExternalContextImpl
     public Map getInitParameterMap()
     {
         if (_initParameterMap == null)
-         {
-             _initParameterMap = new InitParameterMap(_servletContext);
-         }
-         return _initParameterMap;
+        {
+            // We cache it as an attribute in ServletContext itself (is this circular reference a problem?)
+            if ((_initParameterMap = (Map) _servletContext.getAttribute(INIT_PARAMETER_MAP_ATTRIBUTE)) == null)
+            {    
+                _initParameterMap = new InitParameterMap(_servletContext);
+                _servletContext.setAttribute(INIT_PARAMETER_MAP_ATTRIBUTE, _initParameterMap);
+            }
+        }
+        return _initParameterMap;
     }
 
     public Set getResourcePaths(String s)

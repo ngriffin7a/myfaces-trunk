@@ -31,7 +31,11 @@ import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseStream;
 import javax.faces.context.ResponseWriter;
 import javax.faces.event.FacesEvent;
+import javax.faces.lifecycle.Lifecycle;
 import javax.faces.render.RenderKit;
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 
 /**
@@ -42,7 +46,19 @@ import javax.faces.render.RenderKit;
 public class FacesContextMockImpl
     extends FacesContext
 {
+    private ServletContext _servletContext;
+    private HttpServletRequest _httpServletRequest;
+    private HttpServletResponse _httpServletResponse;
+    private Lifecycle _lifecycle; 
+    
     //~ Methods ------------------------------------------------------------------------------------
+
+    public FacesContextMockImpl(ServletContext context, HttpServletRequest servletRequest, HttpServletResponse servletResponse, Lifecycle lifecycle) {
+        _servletContext = context;
+        _httpServletRequest = servletRequest;
+        _httpServletResponse = servletResponse;
+        _lifecycle = lifecycle;
+    }
 
     public Application getApplication()
     {

@@ -1,4 +1,4 @@
-/**
+/*
  * MyFaces - the free JSF implementation
  * Copyright (C) 2003  The MyFaces Team (http://myfaces.sourceforge.net)
  *
@@ -26,8 +26,10 @@ import javax.servlet.RequestDispatcher;
 import javax.servlet.Servlet;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
+
+import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -36,6 +38,7 @@ import java.util.*;
 /**
  * DOCUMENT ME!
  * @author Manfred Geiler (latest modification by $Author$)
+ * @author Anton Koinov
  * @version $Revision$ $Date$
  */
 public class ServletContextMockImpl
@@ -81,9 +84,12 @@ public class ServletContextMockImpl
     {
         if (s.startsWith("/WEB-INF/"))
         {
-            String webInfPath = TestConfig.getWebInfPath();
-            String fn = webInfPath + s.substring(9);
-            return new URL("file://" + fn);
+            try {
+                return new URL("file://" + 
+                        new File(TestConfig.getContextPath(), s).getCanonicalPath());
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
         else
         {
@@ -96,13 +102,12 @@ public class ServletContextMockImpl
     {
         if (s.startsWith("/WEB-INF/"))
         {
-            String webInfPath = TestConfig.getWebInfPath();
-            String fn = webInfPath + s.substring(9);
             try
             {
-                return new FileInputStream(fn);
+                return new FileInputStream(
+                        new File(TestConfig.getContextPath(), s).getCanonicalFile());
             }
-            catch (FileNotFoundException e)
+            catch (IOException e)
             {
                 throw new RuntimeException(e);
             }

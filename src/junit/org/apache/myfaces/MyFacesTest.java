@@ -31,10 +31,14 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import net.sourceforge.myfaces.application.ApplicationImpl;
 import net.sourceforge.myfaces.application.ApplicationMockImpl;
+import net.sourceforge.myfaces.context.FacesContextMockImpl;
 import net.sourceforge.myfaces.context.ServletContextMockImpl;
 import net.sourceforge.myfaces.context.ServletRequestMockImpl;
 import net.sourceforge.myfaces.context.ServletResponseMockImpl;
+import net.sourceforge.myfaces.el.VariableResolverImpl;
+import net.sourceforge.myfaces.lifecycle.LifecycleImpl;
 
 /**
  * DOCUMENT ME!
@@ -60,15 +64,22 @@ public class MyFacesTest
     protected void setUp() throws Exception
     {
         super.setUp();
-        _application = new ApplicationMockImpl();
         _servletContext = new ServletContextMockImpl();
+        _application = new ApplicationImpl(_servletContext);
+        _application.setVariableResolver(new VariableResolverImpl());
+        
         _httpServletRequest = new ServletRequestMockImpl();
         _httpServletResponse = new ServletResponseMockImpl();
 
 //        FIXME
 //        LifecycleFactory lf = (LifecycleFactory)FactoryFinder.getFactory(FactoryFinder.LIFECYCLE_FACTORY);
 //        _lifecycle = lf.getLifecycle(LifecycleFactory.DEFAULT_LIFECYCLE);
-//
+        _lifecycle = new LifecycleImpl();
+        
+        _facesContext = new FacesContextMockImpl(_servletContext,
+                                            _httpServletRequest,
+                                            _httpServletResponse,
+                                            _lifecycle);
 //        FacesContextFactory fcf = (FacesContextFactory)FactoryFinder.getFactory(FactoryFinder.FACES_CONTEXT_FACTORY);
 //        _facesContext = fcf.getFacesContext(_servletContext,
 //                                            _httpServletRequest,
