@@ -66,9 +66,9 @@ public class ListEntriesConfig
         _valueList.add(actualValue);
     }
 
-    public void setValueClass(Class valueClass)
+    public void setValueClass(String valueClass)
     {
-        _valueClass = valueClass;
+        _valueClass = ConfigUtil.classForName(valueClass);
     }
 
     public Class getValueClass()

@@ -52,12 +52,6 @@ public class FacesUtils
             "javax.faces.application.ApplicationFactory")).getApplication();
     }
 
-//    TODO: upgrade to new spec
-//    public static MessageResources getMessageResources(String name)
-//    {
-//        return getApplication().getMessageResources(name);
-//    }
-//
     public static String getPathInfo(FacesContext ctx)
     {
         return ctx.getExternalContext().getRequestPathInfo();
@@ -75,9 +69,8 @@ public class FacesUtils
 
     public static Renderer getRenderer(FacesContext ctx, String rendererType)
     {
-        return ((RenderKitFactory) FactoryFinder.getFactory(
-            "javax.faces.render.RenderKitFactory")).getRenderKit(ctx.getViewRoot().getRenderKitId())
-                .getRenderer(rendererType);
+        return ((RenderKitFactory) FactoryFinder.getFactory("javax.faces.render.RenderKitFactory")).getRenderKit(
+            ctx.getViewRoot().getRenderKitId()).getRenderer(rendererType);
     }
 
     public static Map getRequestMap()
@@ -120,7 +113,44 @@ public class FacesUtils
         return ctx.getExternalContext().getSessionMap();
     }
 
+    public static boolean isValueBinding(String s)
+    {
+        s = s.trim();
+        return s.startsWith("#{") && s.endsWith("}");
+    }
+
+    public static void setValueRef(Application app, String valueRef, Object value)
+    {
+        app.createValueBinding(valueRef).setValue(FacesContext.getCurrentInstance(), value);
+    }
+
+    public static void setValueRef(FacesContext ctx, String valueRef, Object value)
+    {
+        ctx.getApplication().createValueBinding(valueRef).setValue(ctx, value);
+    }
+
+    public static void setValueRef(String valueRef, Object value)
+    {
+        createValueBinding(valueRef).setValue(FacesContext.getCurrentInstance(), value);
+    }
+
+    public static Object getValueRef(Application app, String valueRef)
+    {
+        return app.createValueBinding(valueRef).getValue(FacesContext.getCurrentInstance());
+    }
+
+    public static Object getValueRef(FacesContext ctx, String valueRef)
+    {
+        return createValueBinding(ctx, valueRef).getValue(ctx);
+    }
+
+    public static Object getValueRef(String valueRef)
+    {
+        return createValueBinding(valueRef).getValue(FacesContext.getCurrentInstance());
+    }
+
     //FIXME
+
     /*
     public static Tree getTree(String treeId)
     {
@@ -148,51 +178,14 @@ public class FacesUtils
         return (TreeFactory) FactoryFinder.getFactory("javax.faces.tree.TreeFactory");
     }
     */
-
-    public static ValueBinding getValueBinding(String valueRef)
+    public static ValueBinding createValueBinding(String valueRef)
     {
         return getApplication().createValueBinding(valueRef);
     }
 
-    public static void setValueRef(
-        Application app, FacesContext ctx, String valueRef, Object value)
+    public static ValueBinding createValueBinding(FacesContext ctx, String valueRef)
     {
-        app.createValueBinding(valueRef).setValue(ctx, value);
-    }
-
-    public static void setValueRef(Application app, String valueRef, Object value)
-    {
-        app.createValueBinding(valueRef).setValue(FacesContext.getCurrentInstance(), value);
-    }
-
-    public static void setValueRef(FacesContext ctx, String valueRef, Object value)
-    {
-        getApplication().createValueBinding(valueRef).setValue(ctx, value);
-    }
-
-    public static void setValueRef(String valueRef, Object value)
-    {
-        getValueBinding(valueRef).setValue(FacesContext.getCurrentInstance(), value);
-    }
-
-    public static Object getValueRef(Application app, FacesContext ctx, String valueRef)
-    {
-        return app.createValueBinding(valueRef).getValue(ctx);
-    }
-
-    public static Object getValueRef(Application app, String valueRef)
-    {
-        return app.createValueBinding(valueRef).getValue(FacesContext.getCurrentInstance());
-    }
-
-    public static Object getValueRef(FacesContext ctx, String valueRef)
-    {
-        return getValueBinding(valueRef).getValue(ctx);
-    }
-
-    public static Object getValueRef(String valueRef)
-    {
-        return getValueBinding(valueRef).getValue(FacesContext.getCurrentInstance());
+        return ctx.getApplication().createValueBinding(valueRef);
     }
 
     public static Object resolveVariable(String name)

@@ -18,84 +18,113 @@
  */
 package net.sourceforge.myfaces.config;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 
 import javax.faces.render.Renderer;
-import java.util.*;
+
 
 /**
  * DOCUMENT ME!
  * @author Manfred Geiler (latest modification by $Author$)
+ * @author Anton Koinov
  * @version $Revision$ $Date$
  */
-public class RendererConfig
-    implements Config
+public class RendererConfig implements Config
 {
-    private static final Log log = LogFactory.getLog(RendererConfig.class);
+    //~ Instance fields ----------------------------------------------------------------------------
 
-    private String _rendererType = null;
-    private String _rendererClass = null;
-    private Map _attributeConfigMap = null;
-    private Set _supportedComponentTypeSet = null;
-    private Set _supportedComponentClassSet = null;
+    private Class  _rendererClass              = null;
+
+// ignore        
+//    private String     _description;
+//    private String     _displayName;
+//    private IconConfig _iconConfig;
+    private Map    _attributeConfigMap         = null;
+    private Set    _supportedComponentClassSet = null;
+    private Set    _supportedComponentTypeSet  = null;
+    private String _rendererType               = null;
+
+    //~ Methods ------------------------------------------------------------------------------------
+
+    public AttributeConfig getAttributeConfig(String attributeName)
+    {
+        return (AttributeConfig) getAttributeConfigMap().get(attributeName);
+    }
+
+    public Iterator getAttributeNames()
+    {
+        return (_attributeConfigMap == null) ? Collections.EMPTY_SET.iterator()
+                                             : _attributeConfigMap.keySet().iterator();
+    }
+
+    public void setDescription(String description)
+    {
+// ignore        
+//        _description = description;
+    }
+
+    public void setDisplayName(String displayName)
+    {
+// ignore        
+//        _displayName = displayName;
+    }
+
+    public void setIconConfig(IconConfig iconConfig)
+    {
+// ignore        
+//        _iconConfig = iconConfig;
+    }
+
+    public void setRendererClass(String rendererClass)
+    {
+        _rendererClass = ConfigUtil.classForName(rendererClass);
+    }
+
+    public Class getRendererClass()
+    {
+        return _rendererClass;
+    }
+
+    public void setRendererType(String rendererType)
+    {
+        _rendererType = rendererType.intern();
+    }
 
     public String getRendererType()
     {
         return _rendererType;
     }
 
-    public void setRendererType(String rendererType)
+    public Iterator getSupportedComponentClassNames()
     {
-        _rendererType = rendererType;
-    }
-
-    public String getRendererClass()
-    {
-        return _rendererClass;
-    }
-
-    public void setRendererClass(String rendererClass)
-    {
-        _rendererClass = rendererClass;
-    }
-
-
-    public void addAttributeConfig(AttributeConfig attributeConfig)
-    {
-        getAttributeConfigMap().put(attributeConfig.getAttributeName(),
-                                    attributeConfig);
-    }
-
-    public AttributeConfig getAttributeConfig(String attributeName)
-    {
-        return (AttributeConfig)getAttributeConfigMap().get(attributeName);
-    }
-
-    public Iterator getAttributeNames()
-    {
-        return _attributeConfigMap == null
-                ? Collections.EMPTY_SET.iterator()
-                : _attributeConfigMap.keySet().iterator();
-    }
-
-    private Map getAttributeConfigMap()
-    {
-        if (_attributeConfigMap == null)
+        if (_supportedComponentClassSet == null)
         {
-            _attributeConfigMap = new HashMap();
+            return Collections.EMPTY_SET.iterator();
         }
-        return _attributeConfigMap;
-    }
 
+        final Iterator it = _supportedComponentClassSet.iterator();
+        return new Iterator()
+            {
+                public boolean hasNext()
+                {
+                    return it.hasNext();
+                }
 
-    public void addSupportedComponentType(SupportedComponentTypeConfig componentType)
-    {
-        if (_supportedComponentTypeSet == null)
-        {
-            _supportedComponentTypeSet = new HashSet();
-        }
-        _supportedComponentTypeSet.add(componentType);
+                public Object next()
+                {
+                    return ((SupportedComponentClassConfig) it.next()).getComponentClass();
+                }
+
+                public void remove()
+                {
+                    it.remove();
+                }
+            };
     }
 
     public Iterator getSupportedComponentTypes()
@@ -104,39 +133,31 @@ public class RendererConfig
         {
             return Collections.EMPTY_SET.iterator();
         }
+
         final Iterator it = _supportedComponentTypeSet.iterator();
-        return new Iterator() {
-            public boolean hasNext()
+        return new Iterator()
             {
-                return it.hasNext();
-            }
+                public boolean hasNext()
+                {
+                    return it.hasNext();
+                }
 
-            public Object next()
-            {
-                return ((SupportedComponentTypeConfig)it.next()).getComponentType();
-            }
+                public Object next()
+                {
+                    return ((SupportedComponentTypeConfig) it.next()).getComponentType();
+                }
 
-            public void remove()
-            {
-                it.remove();
-            }
-        };
-
+                public void remove()
+                {
+                    it.remove();
+                }
+            };
     }
 
-    public boolean supportsComponentType(String componentType)
+    public void addAttributeConfig(AttributeConfig attributeConfig)
     {
-        for (Iterator it = getSupportedComponentTypes(); it.hasNext(); )
-        {
-            String type = (String)it.next();
-            if ( type.equals(componentType))
-            {
-                return true;
-            }
-        }
-        return false;
+        getAttributeConfigMap().put(attributeConfig.getAttributeName(), attributeConfig);
     }
-
 
     public void addSupportedComponentClass(SupportedComponentClassConfig componentClassName)
     {
@@ -156,37 +177,26 @@ public class RendererConfig
         _supportedComponentClassSet.add(new SupportedComponentClassConfig(clazz));
     }
 
-    public Iterator getSupportedComponentClassNames()
+    public void addSupportedComponentType(SupportedComponentTypeConfig componentType)
     {
-        if (_supportedComponentClassSet == null)
+        if (_supportedComponentTypeSet == null)
         {
-            return Collections.EMPTY_SET.iterator();
+            _supportedComponentTypeSet = new HashSet();
         }
-        final Iterator it = _supportedComponentClassSet.iterator();
-        return new Iterator() {
-            public boolean hasNext()
-            {
-                return it.hasNext();
-            }
+        _supportedComponentTypeSet.add(componentType);
+    }
 
-            public Object next()
-            {
-                return ((SupportedComponentClassConfig)it.next()).getComponentClass();
-            }
-
-            public void remove()
-            {
-                it.remove();
-            }
-        };
+    public Renderer newRenderer()
+    {
+        return (Renderer) ConfigUtil.newInstance(getRendererClass());
     }
 
     public boolean supportsComponentClass(Class componentClass)
     {
-        for (Iterator it = getSupportedComponentClassNames(); it.hasNext(); )
+        for (Iterator it = getSupportedComponentClassNames(); it.hasNext();)
         {
-            Class c = (Class)it.next();
-            if ( c.isAssignableFrom(componentClass))
+            Class c = (Class) it.next();
+            if (c.isAssignableFrom(componentClass))
             {
                 return true;
             }
@@ -194,9 +204,25 @@ public class RendererConfig
         return false;
     }
 
-    public Renderer newRenderer()
+    public boolean supportsComponentType(String componentType)
     {
-        return (Renderer)ConfigUtil.newInstance(getRendererClass());
+        for (Iterator it = getSupportedComponentTypes(); it.hasNext();)
+        {
+            String type = (String) it.next();
+            if (type.equals(componentType))
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
+    private Map getAttributeConfigMap()
+    {
+        if (_attributeConfigMap == null)
+        {
+            _attributeConfigMap = new HashMap();
+        }
+        return _attributeConfigMap;
+    }
 }

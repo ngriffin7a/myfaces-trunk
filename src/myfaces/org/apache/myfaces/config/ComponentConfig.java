@@ -1,4 +1,4 @@
-/**
+/*
  * MyFaces - the free JSF implementation
  * Copyright (C) 2003, 2004  The MyFaces Team (http://myfaces.sourceforge.net)
  *
@@ -18,31 +18,37 @@
  */
 package net.sourceforge.myfaces.config;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+
 /**
- * DOCUMENT ME!
  * @author Manfred Geiler (latest modification by $Author$)
+ * @author Anton Koinov
  * @version $Revision$ $Date$
  */
-public class ComponentConfig
-    implements Config
+public class ComponentConfig implements Config
 {
-    private String _componentType;
-    private String _componentClass;
-    private Map _attributes;
-    private Map _properties;
+    //~ Instance fields ----------------------------------------------------------------------------
 
-    public String getComponentType()
+    private List   _propertyConfigList; // List to maintain ordering
+    private Map    _attributeConfigMap;
+    private String _componentClass; // must stay String because of Application.addComponent()
+    private String _componentType;
+
+    //~ Methods ------------------------------------------------------------------------------------
+
+    public Map getAttributeMap()
     {
-        return _componentType;
+        return (_attributeConfigMap == null) ? Collections.EMPTY_MAP : _attributeConfigMap;
     }
 
-    public void setComponentType(String componentType)
+    public void setComponentClass(String componentClass)
     {
-        _componentType = componentType;
+        _componentClass = componentClass.intern();
     }
 
     public String getComponentClass()
@@ -50,37 +56,36 @@ public class ComponentConfig
         return _componentClass;
     }
 
-    public void setComponentClass(String componentClass)
+    public void setComponentType(String componentType)
     {
-        _componentClass = componentClass;
+        _componentType = componentType.intern();
     }
 
-    public void addAttribute(AttributeConfig attribute)
+    public String getComponentType()
     {
-        if (_attributes == null)
+        return _componentType;
+    }
+
+    public List getPropertyConfigList()
+    {
+        return _propertyConfigList;
+    }
+
+    public void addAttributeConfig(AttributeConfig attributeConfig)
+    {
+        if (_attributeConfigMap == null)
         {
-            _attributes = new HashMap();
+            _attributeConfigMap = new HashMap();
         }
-        _attributes.put(attribute.getAttributeName(), attribute);
+        _attributeConfigMap.put(attributeConfig.getAttributeName(), attributeConfig);
     }
 
-    public Map getAttributes()
+    public void addPropertyConfig(PropertyConfig property)
     {
-        return _attributes == null ? Collections.EMPTY_MAP : _attributes;
-    }
-
-    public void addProperty(PropertyConfig property)
-    {
-        if (_properties == null)
+        if (_propertyConfigList == null)
         {
-            _properties = new HashMap();
+            _propertyConfigList = new ArrayList();
         }
-        _properties.put(property.getPropertyName(), property);
+        _propertyConfigList.add(property);
     }
-
-    public Map getProperties()
-    {
-        return _properties == null ? Collections.EMPTY_MAP : _properties;
-    }
-
 }

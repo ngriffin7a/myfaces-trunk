@@ -1,4 +1,4 @@
-/**
+/*
  * MyFaces - the free JSF implementation
  * Copyright (C) 2003, 2004  The MyFaces Team (http://myfaces.sourceforge.net)
  *
@@ -19,11 +19,10 @@
 package net.sourceforge.myfaces.config;
 
 /**
- * TODO
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
 public class ValuesConfig
 {
-    // This is a mark interface only
+    // TODO: MyFaces extension?
 }

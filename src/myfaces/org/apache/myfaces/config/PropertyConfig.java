@@ -1,4 +1,4 @@
-/**
+/*
  * MyFaces - the free JSF implementation
  * Copyright (C) 2003, 2004  The MyFaces Team (http://myfaces.sourceforge.net)
  *
@@ -18,34 +18,66 @@
  */
 package net.sourceforge.myfaces.config;
 
+
 /**
- * DOCUMENT ME!
  * @author Manfred Geiler (latest modification by $Author$)
+ * @author Anton Koinov
  * @version $Revision$ $Date$
  */
-public class PropertyConfig
-    implements Config
+public class PropertyConfig implements Config
 {
+    //~ Instance fields ----------------------------------------------------------------------------
+
+// ignore        
+//    private String _description;
+//    private String _displayName;
+//    private IconConfig _iconConfig;
+    private Class  _propertyClass;
     private String _propertyName;
-    private String _propertyClass;
+
+    //~ Methods ------------------------------------------------------------------------------------
+
+    public void setDescription(String description)
+    {
+// ignore        
+//        _description = description;
+    }
+
+    public void setDisplayName(String displayName)
+    {
+// ignore        
+//        _displayName = displayName;
+    }
+
+    public void setIconConfig(IconConfig iconConfig)
+    {
+// ignore        
+//        _iconConfig = iconConfig;
+    }
+
+    public void setPropertyClass(String propertyClassName)
+    {
+        _propertyClass = ConfigUtil.classForName(propertyClassName);
+    }
+
+    public Class getPropertyClass()
+    {
+        return _propertyClass;
+    }
+
+    public void setPropertyName(String propertyName)
+    {
+        _propertyName = propertyName.intern();
+    }
 
     public String getPropertyName()
     {
         return _propertyName;
     }
 
-    public void setPropertyName(String propertyName)
+    public void setSuggestedValue(Object suggestedValue)
     {
-        _propertyName = propertyName;
-    }
-
-    public String getPropertyClass()
-    {
-        return _propertyClass;
-    }
-
-    public void setPropertyClass(String propertyClass)
-    {
-        _propertyClass = propertyClass;
+// ignore        
+//        _suggestedValue = suggestedValue;
     }
 }

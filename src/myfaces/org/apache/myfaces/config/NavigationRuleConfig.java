@@ -1,4 +1,4 @@
-/**
+/*
  * MyFaces - the free JSF implementation
  * Copyright (C) 2003, 2004  The MyFaces Team (http://myfaces.sourceforge.net)
  *
@@ -22,36 +22,57 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+
 /**
- * DOCUMENT ME!
  * @author Manfred Geiler (latest modification by $Author$)
+ * @author Anton Koinov
  * @version $Revision$ $Date$
  */
-public class NavigationRuleConfig
-    implements Config
+public class NavigationRuleConfig implements Config
 {
-    private String _description = null;
+    //~ Instance fields ----------------------------------------------------------------------------
+
+// ignore        
+//    private String     _description;
+//    private String     _displayName;
+//    private IconConfig _iconConfig;
+    private List   _navigationCaseConfigList = null;
     private String _fromViewId = null;
-    private List _navigationCaseConfigList = null;
+
+    //~ Methods ------------------------------------------------------------------------------------
+
+    public void setDescription(String description)
+    {
+// ignore        
+//        _description = description;
+    }
+
+    public void setDisplayName(String displayName)
+    {
+// ignore        
+//        _displayName = displayName;
+    }
+
+    public void setFromViewId(String fromViewId)
+    {
+        _fromViewId = fromViewId.intern();
+    }
 
     public String getFromViewId()
     {
         return _fromViewId;
     }
 
-    public String getDescription()
+    public void setIconConfig(IconConfig iconConfig)
     {
-        return _description;
+// ignore        
+//        _iconConfig = iconConfig;
     }
 
-    public void setDescription(String description)
+    public List getNavigationCaseConfigList()
     {
-        _description = description;
-    }
-
-    public void setFromViewId(String fromViewId)
-    {
-        _fromViewId = fromViewId;
+        return (_navigationCaseConfigList == null) ? Collections.EMPTY_LIST
+                                                   : _navigationCaseConfigList;
     }
 
     public void addNavigationCaseConfig(NavigationCaseConfig navigationCaseConfig)
@@ -61,12 +82,5 @@ public class NavigationRuleConfig
             _navigationCaseConfigList = new ArrayList();
         }
         _navigationCaseConfigList.add(navigationCaseConfig);
-    }
-
-    public List getNavigationCaseConfigList()
-    {
-        return _navigationCaseConfigList == null
-                ? Collections.EMPTY_LIST
-                : _navigationCaseConfigList;
     }
 }

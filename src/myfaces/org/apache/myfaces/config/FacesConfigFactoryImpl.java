@@ -36,7 +36,6 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
@@ -138,24 +137,12 @@ public class FacesConfigFactoryImpl
     public void setProperty(Object obj, Element elem)
     {
         if (log.isTraceEnabled()) log.trace("setProperty " + obj + " : " + elem);
-        String propName = resolvePropertyName(elem.getNodeName());
 
-        //Look for setXxx or addXxx method
-        /*
-        BeanInfo beanInfo = null;
-        try
-        {
-            beanInfo = Introspector.getBeanInfo(obj.getClass());
-        }
-        catch (IntrospectionException e)
-        {
-            throw new FacesException(e);
-        }
-        */
         Class beanClass = obj.getClass();
-        
-        Object[][] searchPatterns = (Object[][]) _propPatternCache.get(propName);
+        String nodeName = resolvePropertyName(elem.getNodeName());
+        Object[][] searchPatterns = (Object[][]) _propPatternCache.get(nodeName);
         if (searchPatterns == null) {
+            String propName = resolvePropertyName(nodeName);
             String methodNameMiddle = Character.toUpperCase(propName.charAt(0)) + propName.substring(1);
             searchPatterns = new Object [][] {
                     {"add" + methodNameMiddle + "Config", CONFIG_PARAM},
@@ -167,7 +154,7 @@ public class FacesConfigFactoryImpl
                     {"set" + methodNameMiddle, OBJECT_PARAM},
             };
             
-            _propPatternCache.put(propName, searchPatterns);
+            _propPatternCache.put(nodeName, searchPatterns);
         }
         
         Method method = null;
@@ -182,8 +169,8 @@ public class FacesConfigFactoryImpl
 
         if (method == null)
         {
-            //throw new FacesException("Class " + beanClass + " has no set or add method for property '" + propName + "'.");
-            log.error("Class " + beanClass + " has no set or add method for property '" + propName + "'.");
+            //throw new FacesException("Class " + beanClass + " has no set or add method for property '" + nodeName + "'.");
+            log.error("Class " + beanClass + " has no set or add method for '" + nodeName + "'.");
             return;
         }
 
@@ -200,7 +187,7 @@ public class FacesConfigFactoryImpl
         }
         else
         {
-            throw new FacesException("Object " + obj + " has illegal set or add method for property '" + propName + "'.");
+            throw new FacesException("Object " + obj + " has illegal set or add method for '" + nodeName + "'.");
         }
 
     }
@@ -280,15 +267,11 @@ public class FacesConfigFactoryImpl
         {
             return clazz.newInstance();
         }
-        catch (InstantiationException e)
+        catch (Exception e)
         {
-            throw new FacesException(e);
+            throw new FacesException("Unable to instantiate: " + clazz, e);
         }
-        catch (IllegalAccessException e)
-        {
-            throw new FacesException(e);
-        }
-    }
+  }
 
     
     private static void invoke(Object obj, Method method, Object arg)
@@ -297,15 +280,7 @@ public class FacesConfigFactoryImpl
         {
             method.invoke(obj, new Object[] {arg});
         }
-        catch (IllegalAccessException e)
-        {
-            throw new FacesException("base: " + obj.getClass() + "; method: " + method + "; arg: " + arg.getClass(), e);
-        }
-        catch (IllegalArgumentException e)
-        {
-            throw new FacesException("base: " + obj.getClass() + "; method: " + method + "; arg: " + arg.getClass(), e);
-        }
-        catch (InvocationTargetException e)
+        catch (Exception e)
         {
             throw new FacesException("base: " + obj.getClass() + "; method: " + method + "; arg: " + arg.getClass(), e);
         }
@@ -318,15 +293,7 @@ public class FacesConfigFactoryImpl
         {
             method.invoke(obj, new Object[] {lang, arg});
         }
-        catch (IllegalAccessException e)
-        {
-            throw new FacesException("base: " + obj.getClass() + "; method: " + method + "; arg: " + arg.getClass(), e);
-        }
-        catch (IllegalArgumentException e)
-        {
-            throw new FacesException("base: " + obj.getClass() + "; method: " + method + "; arg: " + arg.getClass(), e);
-        }
-        catch (InvocationTargetException e)
+        catch (Exception e)
         {
             throw new FacesException("base: " + obj.getClass() + "; method: " + method + "; arg: " + arg.getClass(), e);
         }

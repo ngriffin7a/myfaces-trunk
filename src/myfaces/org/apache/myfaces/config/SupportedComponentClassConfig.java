@@ -18,39 +18,39 @@
  */
 package net.sourceforge.myfaces.config;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import java.util.HashSet;
 import java.util.Set;
 
+
 /**
- * DOCUMENT ME!
- * 
  * @author Thomas Spiegl (latest modification by $Author$)
+ * @author Anton Koinov
  * @version $Revision$ $Date$
  */
-public class SupportedComponentClassConfig
-        implements Config
+public class SupportedComponentClassConfig implements Config
 {
-    private static final Log log = LogFactory.getLog(SupportedComponentClassConfig.class);
+    //~ Instance fields ----------------------------------------------------------------------------
 
-    private final Set _attributeName = new HashSet();
-    private Class _componentClass;
+    private final Set _attributeName  = new HashSet();
+    private Class     _componentClass;
+
+    //~ Constructors -------------------------------------------------------------------------------
 
     public SupportedComponentClassConfig(Class componentClass)
     {
         _componentClass = componentClass;
     }
 
+    //~ Methods ------------------------------------------------------------------------------------
+
     public Set getAttributeNames()
     {
         return _attributeName;
     }
 
-    public void addAttributeName(String attributeName)
+    public void setComponentClass(String componentClass)
     {
-        _attributeName.add(attributeName);
+        _componentClass = ConfigUtil.classForName(componentClass);
     }
 
     public Class getComponentClass()
@@ -58,15 +58,8 @@ public class SupportedComponentClassConfig
         return _componentClass;
     }
 
-    public void setComponentClass(String componentClass)
+    public void addAttributeName(String attributeName)
     {
-        try
-        {
-            _componentClass = Class.forName(componentClass, true, Thread.currentThread().getContextClassLoader());
-        }
-        catch (ClassNotFoundException e)
-        {
-            log.error("Error in faces-config.xml - Class not found: " + componentClass);
-        }
+        _attributeName.add(attributeName.intern());
     }
 }

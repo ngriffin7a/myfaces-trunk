@@ -1,4 +1,4 @@
-/**
+/*
  * MyFaces - the free JSF implementation
  * Copyright (C) 2003, 2004  The MyFaces Team (http://myfaces.sourceforge.net)
  *
@@ -21,41 +21,77 @@ package net.sourceforge.myfaces.config;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+
+import javax.faces.context.FacesContext;
+import javax.faces.el.EvaluationException;
+
 
 /**
  * Implements the configureation class for managed beans defined with &lt;managed-bean&gt;
  * in faces-config.xml
- *  
+ *
  * @author Manfred Geiler (latest modification by $Author$)
  * @author Anton Koinov
  * @version $Revision$ $Date$
  */
-public class ManagedBeanConfig
-    implements Config
+public class ManagedBeanConfig implements Config
 {
+    //~ Instance fields ----------------------------------------------------------------------------
+
+    private Class  _managedBeanClass;
+
+// ignore        
+//    private String     _description;
+//    private String     _displayName;
+//    private IconConfig _iconConfig;
+    private List   _propertyConfigList;
     private String _managedBeanName;
-    private String _managedBeanClass;
     private String _managedBeanScope;
-    private List _managedPropertyConfigList;
+
+    //~ Methods ------------------------------------------------------------------------------------
+
+    public void setDescription(String description)
+    {
+// ignore        
+//        _description = description;
+    }
+
+    public void setDisplayName(String displayName)
+    {
+// ignore        
+//        _displayName = displayName;
+    }
+
+    public void setIconConfig(IconConfig iconConfig)
+    {
+// ignore        
+//        _iconConfig = iconConfig;
+    }
+
+    public void setManagedBeanClass(String managedBeanClass)
+    {
+        _managedBeanClass = ConfigUtil.classForName(managedBeanClass);
+    }
+
+    public Class getManagedBeanClass()
+    {
+        return _managedBeanClass;
+    }
+
+    public void setManagedBeanName(String managedBeanName)
+    {
+        _managedBeanName = managedBeanName.intern();
+    }
 
     public String getManagedBeanName()
     {
         return _managedBeanName;
     }
 
-    public void setManagedBeanName(String managedBeanName)
+    public void setManagedBeanScope(String managedBeanScope)
     {
-        _managedBeanName = managedBeanName;
-    }
-
-    public String getManagedBeanClass()
-    {
-        return _managedBeanClass;
-    }
-
-    public void setManagedBeanClass(String managedBeanClass)
-    {
-        _managedBeanClass = managedBeanClass;
+        _managedBeanScope = managedBeanScope.intern();
     }
 
     public String getManagedBeanScope()
@@ -63,32 +99,64 @@ public class ManagedBeanConfig
         return _managedBeanScope;
     }
 
-    public void setManagedBeanScope(String managedBeanScope)
+    public List getPropertyConfigList()
     {
-        _managedBeanScope = managedBeanScope;
+        return (_propertyConfigList != null) ? _propertyConfigList : Collections.EMPTY_LIST;
     }
 
-
+    public void addListEntriesConfig(ListEntriesConfig listEntriesConfig)
+    {
+        addToList(listEntriesConfig);
+    }
 
     public void addManagedPropertyConfig(ManagedPropertyConfig propertyConfig)
     {
-        if (_managedPropertyConfigList == null)
+        addToList(propertyConfig);
+    }
+
+    public void addMapEntriesConfig(MapEntriesConfig mapEntriesConfig)
+    {
+        addToList(mapEntriesConfig);
+    }
+
+    public Object createBean(FacesContext facesContext)
+    {
+        Object bean;
+        try
         {
-            _managedPropertyConfigList = new ArrayList();
+            bean = _managedBeanClass.newInstance();
         }
-		_managedPropertyConfigList.add(propertyConfig);
+        catch (Exception e)
+        {
+            throw new EvaluationException("Unable to instantiate: " + _managedBeanClass, e);
+        }
+
+        for (int i = 0, len = _propertyConfigList.size(); i < len; i++)
+        {
+            Object propConfig = _propertyConfigList.get(i);
+            if (propConfig instanceof ManagedPropertyConfig)
+            {
+                ((ManagedPropertyConfig) propConfig).updateBean(facesContext, bean);
+            }
+            else if (propConfig instanceof MapEntriesConfig)
+            {
+                ((MapEntriesConfig) propConfig).updateBean(facesContext, (Map) bean);
+            }
+            else if (propConfig instanceof ListEntriesConfig)
+            {
+                ((ListEntriesConfig) propConfig).updateBean(facesContext, (List) bean);
+            }
+        }
+
+        return bean;
     }
 
-    public List getManagedPropertyConfigList() 
+    private void addToList(Object o)
     {
-        return _managedPropertyConfigList != null
-                ? _managedPropertyConfigList
-                : Collections.EMPTY_LIST;
+        if (_propertyConfigList == null)
+        {
+            _propertyConfigList = new ArrayList();
+        }
+        _propertyConfigList.add(o);
     }
-    
-    public void setDescription(String s) 
-    {
-        // ignore, we do not care
-    }
-
 }

@@ -37,25 +37,25 @@ public class FactoryConfig
     public void setApplicationFactory(String className)
     {
         if (className == null) return;
-        _applicationFactory = className;
+        _applicationFactory = className.intern();
     }
 
     public void setFacesContextFactory(String className)
     {
         if (className == null) return;
-        _facesContextFactory = className;
+        _facesContextFactory = className.intern();
     }
 
     public void setLifecycleFactory(String className)
     {
         if (className == null) return;
-        _lifecycleFactory = className;
+        _lifecycleFactory = className.intern();
     }
 
     public void setRenderKitFactory(String className)
     {
         if (className == null) return;
-        _renderKitFactory = className;
+        _renderKitFactory = className.intern();
     }
 
     public String getApplicationFactory()

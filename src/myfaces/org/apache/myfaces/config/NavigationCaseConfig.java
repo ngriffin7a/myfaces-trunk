@@ -1,4 +1,4 @@
-/**
+/*
  * MyFaces - the free JSF implementation
  * Copyright (C) 2003, 2004  The MyFaces Team (http://myfaces.sourceforge.net)
  *
@@ -19,28 +19,51 @@
 package net.sourceforge.myfaces.config;
 
 
-
 /**
- * DOCUMENT ME!
  * @author Manfred Geiler (latest modification by $Author$)
+ * @author Anton Koinov
  * @version $Revision$ $Date$
  */
-public class NavigationCaseConfig
-    implements Config
+public class NavigationCaseConfig implements Config
 {
-    private String _fromActionRef = null;
-    private String _fromOutcome = null;
-    private String _toViewId = null;
-    private boolean _redirect = false;
+    //~ Instance fields ----------------------------------------------------------------------------
 
-    public String getFromActionRef()
+// ignore        
+//    private String     _description;
+//    private String     _displayName;
+//    private IconConfig _iconConfig;
+    private String  _fromAction  = null;
+    private String  _fromOutcome = null;
+    private String  _toViewId    = null;
+    private boolean _redirect    = false;
+
+    //~ Methods ------------------------------------------------------------------------------------
+
+    public void setDescription(String description)
     {
-        return _fromActionRef;
+// ignore        
+//        _description = description;
     }
 
-    public void setFromActionRef(String fromActionRef)
+    public void setDisplayName(String displayName)
     {
-        _fromActionRef = fromActionRef;
+// ignore        
+//        _displayName = displayName;
+    }
+
+    public void setFromAction(String fromAction)
+    {
+        _fromAction = fromAction.intern();
+    }
+
+    public String getFromAction()
+    {
+        return _fromAction;
+    }
+
+    public void setFromOutcome(String fromOutcome)
+    {
+        _fromOutcome = fromOutcome.intern();
     }
 
     public String getFromOutcome()
@@ -48,19 +71,15 @@ public class NavigationCaseConfig
         return _fromOutcome;
     }
 
-    public void setFromOutcome(String fromOutcome)
+    public void setIconConfig(IconConfig iconConfig)
     {
-        _fromOutcome = fromOutcome;
+// ignore        
+//        _iconConfig = iconConfig;
     }
 
-    public String getToViewId()
+    public void setRedirect(boolean redirect)
     {
-        return _toViewId;
-    }
-
-    public void setToViewId(String toViewId)
-    {
-        _toViewId = toViewId;
+        _redirect = redirect;
     }
 
     public boolean isRedirect()
@@ -68,8 +87,13 @@ public class NavigationCaseConfig
         return _redirect;
     }
 
-    public void setRedirect(boolean redirect)
+    public void setToViewId(String toViewId)
     {
-        _redirect = redirect;
+        _toViewId = toViewId.intern();
+    }
+
+    public String getToViewId()
+    {
+        return _toViewId;
     }
 }

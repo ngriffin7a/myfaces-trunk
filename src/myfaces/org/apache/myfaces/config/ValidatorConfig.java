@@ -1,4 +1,4 @@
-/**
+/*
  * MyFaces - the free JSF implementation
  * Copyright (C) 2003, 2004  The MyFaces Team (http://myfaces.sourceforge.net)
  *
@@ -18,25 +18,64 @@
  */
 package net.sourceforge.myfaces.config;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+
 /**
- * DOCUMENT ME!
  * @author Manfred Geiler (latest modification by $Author$)
+ * @author Anton Koinov
  * @version $Revision$ $Date$
  */
-public class ValidatorConfig
-    implements Config
+public class ValidatorConfig implements Config
 {
-    private String _validatorId;
-    private String _validatorClass;
+    //~ Instance fields ----------------------------------------------------------------------------
 
-    public String getValidatorId()
+    private List   _propertyList; // List to maintaing ordering
+    private Set    _attributeSet;
+    private String _validatorClass; // must stay String because of Application.addValidator()
+    private String _validatorId;
+
+    //~ Methods ------------------------------------------------------------------------------------
+
+    public void setAttribute(Set attribute)
     {
-        return _validatorId;
+        _attributeSet = attribute;
     }
 
-    public void setValidatorId(String validatorId)
+    public Set getAttributeSet()
     {
-        _validatorId = validatorId;
+        return _attributeSet;
+    }
+
+    public void setDescription(String description)
+    {
+// ignore        
+//        _description = description;
+    }
+
+    public void setDisplayName(String displayName)
+    {
+// ignore        
+//        _displayName = displayName;
+    }
+
+    public void setIconConfig(IconConfig iconConfig)
+    {
+// ignore        
+//        _iconConfig = iconConfig;
+    }
+
+    public List getPropertyList()
+    {
+        return _propertyList;
+    }
+
+    public void setValidatorClass(String validatorClass)
+    {
+        _validatorClass = validatorClass.intern();
     }
 
     public String getValidatorClass()
@@ -44,9 +83,31 @@ public class ValidatorConfig
         return _validatorClass;
     }
 
-    public void setValidatorClass(String validatorClass)
+    public void setValidatorId(String validatorId)
     {
-        _validatorClass = validatorClass;
+        _validatorId = validatorId.intern();
     }
 
+    public String getValidatorId()
+    {
+        return _validatorId;
+    }
+
+    public void addAttribute(String attributeName)
+    {
+        if (_attributeSet == null)
+        {
+            _attributeSet = new HashSet();
+        }
+        _attributeSet.add(attributeName);
+    }
+
+    public void addPropertyConfig(PropertyConfig propertyConfig)
+    {
+        if (_propertyList == null)
+        {
+            _propertyList = new ArrayList();
+        }
+        _propertyList.add(propertyConfig);
+    }
 }

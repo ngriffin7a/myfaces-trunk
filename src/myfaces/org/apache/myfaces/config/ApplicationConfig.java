@@ -88,7 +88,7 @@ public class ApplicationConfig
 
     public void setMessageBundle(String messageBundle)
     {
-        _messageBundle = messageBundle;
+        _messageBundle = messageBundle.intern();
     }
     
     public LocaleConfig getLocaleConfig(LocaleConfig localeConfig) 

@@ -31,6 +31,7 @@ import net.sourceforge.myfaces.config.FacesConfig;
 import net.sourceforge.myfaces.config.FacesConfigFactory;
 import net.sourceforge.myfaces.config.NavigationCaseConfig;
 import net.sourceforge.myfaces.config.NavigationRuleConfig;
+import net.sourceforge.myfaces.util.HashMapUtils;
 
 import javax.faces.application.NavigationHandler;
 import javax.faces.application.ViewHandler;
@@ -170,7 +171,7 @@ public class NavigationHandlerImpl
         {
             NavigationCaseConfig caze = (NavigationCaseConfig)casesList.get(i);
             String cazeOutcome = caze.getFromOutcome();
-            String cazeActionRef = caze.getFromActionRef();
+            String cazeActionRef = caze.getFromAction();
             if ((cazeOutcome == null || cazeOutcome.equals(outcome)) &&
                 (cazeActionRef == null || cazeActionRef.equals(actionRef)))
             {
@@ -195,7 +196,7 @@ public class NavigationHandlerImpl
 
             List rules = fc.getNavigationRuleConfigList();
             int rulesSize = rules.size();
-            _cazes = new HashMap(rulesSize);
+            _cazes = new HashMap(HashMapUtils.calcCapacity(rulesSize));
 
             for (int i = 0; i < rulesSize; i++)
             {

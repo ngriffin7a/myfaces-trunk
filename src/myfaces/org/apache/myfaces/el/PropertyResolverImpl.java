@@ -42,8 +42,7 @@ import javax.faces.el.ReferenceSyntaxException;
  * @author Anton Koinov
  * @version $Revision$ $Date$
  */
-public class PropertyResolverImpl
-    extends PropertyResolver
+public class PropertyResolverImpl extends PropertyResolver
 {
     //~ Static fields/initializers -----------------------------------------------------------------
 
@@ -64,9 +63,27 @@ public class PropertyResolverImpl
 
         try
         {
-            m.invoke(
-                base,
-                new Object[] {newValue});
+            m.invoke(base, new Object[] {newValue});
+        }
+        catch (Throwable t)
+        {
+            throw new EvaluationException("Bean: " + base.getClass() + ", property: " + name, t);
+        }
+    }
+
+    public static Object getProperty(Object base, String name)
+    {
+        PropertyDescriptor propertyDescriptor = getPropertyDescriptor(base, name);
+
+        Method             m = propertyDescriptor.getReadMethod();
+        if (m == null)
+        {
+            throw new PropertyNotFoundException("Bean: " + base.getClass() + ", property: " + name);
+        }
+
+        try
+        {
+            return m.invoke(base, NO_ARGS);
         }
         catch (Throwable t)
         {
@@ -81,9 +98,7 @@ public class PropertyResolverImpl
         try
         {
             propertyDescriptor =
-                findPropertyDescriptor(
-                    Introspector.getBeanInfo(base.getClass()),
-                    name);
+                findPropertyDescriptor(Introspector.getBeanInfo(base.getClass()), name);
         }
         catch (IntrospectionException e)
         {
@@ -101,7 +116,6 @@ public class PropertyResolverImpl
         {
             throw new PropertyNotFoundException("Null bean, property: " + name);
         }
-
         if ((name == null) || (name.length() == 0))
         {
             throw new PropertyNotFoundException(
@@ -113,7 +127,6 @@ public class PropertyResolverImpl
         {
             return false;
         }
-
         if (base instanceof UIComponent)
         {
             return true;
@@ -138,7 +151,6 @@ public class PropertyResolverImpl
         {
             return false;
         }
-
         if (base instanceof UIComponent)
         {
             return true;
@@ -155,7 +167,6 @@ public class PropertyResolverImpl
         {
             throw new PropertyNotFoundException("Null bean, property: " + name);
         }
-
         if ((name == null) || (name.length() == 0))
         {
             throw new PropertyNotFoundException(
@@ -168,7 +179,6 @@ public class PropertyResolverImpl
 
             return (value == null) ? Object.class : value.getClass(); // REVISIT: when generics are imlemented in JVM 1.5
         }
-
         if (base instanceof UIComponent)
         {
             return UIComponent.class;
@@ -261,7 +271,6 @@ public class PropertyResolverImpl
         {
             throw new PropertyNotFoundException("Null bean, property: " + name);
         }
-
         if ((name == null) || (name.length() == 0))
         {
             throw new PropertyNotFoundException(
@@ -274,7 +283,6 @@ public class PropertyResolverImpl
 
             return;
         }
-
         if (base instanceof UIComponent)
         {
             throw new PropertyNotFoundException("Bean must not be UIComponent, property: " + name);
@@ -290,12 +298,10 @@ public class PropertyResolverImpl
         {
             return null;
         }
-
         if (base instanceof Map)
         {
             return ((Map) base).get(name);
         }
-
         if (base instanceof UIComponent)
         {
             for (
@@ -314,23 +320,7 @@ public class PropertyResolverImpl
         }
 
         // If none of the special bean types, then process as normal Bean
-        PropertyDescriptor propertyDescriptor = getPropertyDescriptor(base, name);
-
-        Method             m = propertyDescriptor.getReadMethod();
-
-        if (m == null)
-        {
-            throw new PropertyNotFoundException("Bean: " + base.getClass() + ", property: " + name);
-        }
-
-        try
-        {
-            return m.invoke(base, NO_ARGS);
-        }
-        catch (Throwable t)
-        {
-            throw new EvaluationException("Bean: " + base.getClass() + ", property: " + name, t);
-        }
+        return getProperty(base, name);
     }
 
     public Object getValue(Object base, int index)
@@ -377,7 +367,6 @@ public class PropertyResolverImpl
         for (int l = 0, h = propDescriptors.length - 1, i = h >> 1; l <= h; i = (l + h) >> 1)
         {
             int compare = propDescriptors[i].getName().compareTo(propertyName);
-
             if (compare > 0)
             {
                 h = i - 1;

@@ -480,12 +480,12 @@ public class FacesConfig
         }
         else
         {
-            String attrClass = attributeConfig.getAttributeClass();
-            if (attrClass == null)
+            String attributeClassName = attributeConfig.getAttributeClass();
+            if (attributeClassName == null)
             {
                 attributeConfig.setAttributeClass(className);
             }
-            else if (!attrClass.equals(className))
+            else if (!attributeClassName.equals(className))
             {
                 log.warn("Error in faces-config.xml - inconsistency with TLD: Attribute '" + name + "' of renderer '" +  rendererConfig.getRendererType() + "' has different class in Taglib descriptor.");
             }

@@ -22,8 +22,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * DOCUMENT ME!
- * 
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
@@ -40,7 +38,7 @@ public class SupportedComponentTypeConfig
 
     public void addAttributeName(String attributeName)
     {
-        _attributeName.add(attributeName);
+        _attributeName.add(attributeName.intern());
     }
 
     public String getComponentType()
@@ -50,6 +48,6 @@ public class SupportedComponentTypeConfig
 
     public void setComponentType(String componentType)
     {
-        _componentType = componentType;
+        _componentType = componentType.intern();
     }
 }

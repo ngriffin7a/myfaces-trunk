@@ -1,4 +1,4 @@
-/**
+/*
  * MyFaces - the free JSF implementation
  * Copyright (C) 2003, 2004  The MyFaces Team (http://myfaces.sourceforge.net)
  *
@@ -18,25 +18,24 @@
  */
 package net.sourceforge.myfaces.config;
 
+
 /**
- * DOCUMENT ME!
  * @author Manfred Geiler (latest modification by $Author$)
+ * @author Anton Koinov
  * @version $Revision$ $Date$
  */
-public class AttributeConfig
-    implements Config
+public class AttributeConfig implements Config
 {
+    //~ Instance fields ----------------------------------------------------------------------------
+
+    private String _attributeClass; // keep as String for now
     private String _attributeName;
-    private String _attributeClass;
 
-    public String getAttributeName()
-    {
-        return _attributeName;
-    }
+    //~ Methods ------------------------------------------------------------------------------------
 
-    public void setAttributeName(String attributeName)
+    public void setAttributeClass(String attributeClass)
     {
-        _attributeName = attributeName;
+        _attributeClass = attributeClass.intern();
     }
 
     public String getAttributeClass()
@@ -44,8 +43,13 @@ public class AttributeConfig
         return _attributeClass;
     }
 
-    public void setAttributeClass(String attributeClass)
+    public void setAttributeName(String attributeName)
     {
-        _attributeClass = attributeClass;
+        _attributeName = attributeName.intern();
+    }
+
+    public String getAttributeName()
+    {
+        return _attributeName;
     }
 }

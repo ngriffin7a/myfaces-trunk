@@ -21,7 +21,6 @@ package net.sourceforge.myfaces.strict.renderkit.html;
 import net.sourceforge.myfaces.component.UIComponentUtils;
 import net.sourceforge.myfaces.renderkit.JSFAttr;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLUtil;
-import net.sourceforge.myfaces.util.ArrayIterator;
 import net.sourceforge.myfaces.util.FacesUtils;
 import net.sourceforge.myfaces.util.StringUtils;
 
@@ -29,6 +28,9 @@ import javax.faces.FacesException;
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIPanel;
 import javax.faces.context.FacesContext;
+
+import org.apache.commons.collections.iterators.ArrayIterator;
+
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Iterator;

@@ -19,18 +19,14 @@
 package net.sourceforge.myfaces.el;
 
 import net.sourceforge.myfaces.MyFacesFactoryFinder;
-import net.sourceforge.myfaces.config.ConfigUtil;
 import net.sourceforge.myfaces.config.FacesConfig;
 import net.sourceforge.myfaces.config.FacesConfigFactory;
 import net.sourceforge.myfaces.config.ManagedBeanConfig;
-import net.sourceforge.myfaces.config.ManagedPropertyConfig;
-import net.sourceforge.myfaces.util.FacesUtils;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.faces.context.ExternalContext;
@@ -283,71 +279,11 @@ public class VariableResolverImpl
         ManagedBeanConfig  mbc         = facesConfig.getManagedBeanConfig(name);
         if (mbc != null)
         {
-            obj = ConfigUtil.newInstance(mbc.getManagedBeanClass());
-            setManagedBeanProperties(facesContext, obj, mbc);
-
-            Scope scope = (Scope) _scopes.get(mbc.getManagedBeanScope());
-            if (scope != null)
-            {
-                scope.put(externalContext, name, obj);
-            }
-            else
-            {
-                log.error("Managed bean '" + name + "' has illegal scope: " + scope);
-            }
-
-            return obj;
+            return mbc.createBean(facesContext);
         }
 
         log.warn("Variable '" + name + "' could not be resolved.");
-
         return null;
-    }
-
-    protected void setManagedBeanProperties(
-        FacesContext facesContext, Object bean, ManagedBeanConfig mbc)
-    {
-        List managedPropertyConfigList = mbc.getManagedPropertyConfigList();
-        if (managedPropertyConfigList == null)
-        {
-            return;
-        }
-
-        for (int i = 0, len = managedPropertyConfigList.size(); i < len; i++)
-        {
-            ManagedPropertyConfig propConfig =
-                (ManagedPropertyConfig) managedPropertyConfigList.get(i);
-            if (propConfig.getMapEntriesConfig() != null)
-            {
-                setMapEntries(bean, propConfig);
-            }
-            else if (propConfig.getValuesConfig() != null)
-            {
-                setValues(bean, propConfig);
-            }
-
-            Object value;
-            if (propConfig.getValueRef() != null)
-            {
-                value = FacesUtils.getValueRef(facesContext, propConfig.getValueRef());
-            }
-            else
-            {
-                value = propConfig.getValue();
-            }
-
-            PropertyResolverImpl.setProperty(bean, propConfig.getPropertyName(), value);
-        }
-    }
-
-    protected void setMapEntries(Object bean, ManagedPropertyConfig propConfig)
-    {
-        throw new UnsupportedOperationException("Not yet implemented"); // TODO
-    }
-
-    protected void setValues(Object bean, ManagedPropertyConfig propConfig)
-    {
-        throw new UnsupportedOperationException("Not yet implemented"); // TODO
     }
 }
 

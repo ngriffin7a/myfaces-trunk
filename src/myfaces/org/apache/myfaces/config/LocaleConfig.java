@@ -32,20 +32,50 @@ import java.util.Set;
  * @author Anton Koinov (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public class LocaleConfig
-    implements Config
+public class LocaleConfig implements Config
 {
     //~ Static fields/initializers -----------------------------------------------------------------
 
-    private static final Log log      = LogFactory.getLog(LocaleConfig.class);
+    private static final Log log               = LogFactory.getLog(LocaleConfig.class);
 
     //~ Instance fields ----------------------------------------------------------------------------
 
-    private final Set _locales = new HashSet();
+    private final Set _supportedLocales = new HashSet();
+    private Locale    _defaultLocale;
 
     //~ Methods ------------------------------------------------------------------------------------
 
     public void setDefaultLocale(String name)
+    {
+        _defaultLocale = locale(name);
+        _supportedLocales.add(_defaultLocale);
+    }
+
+    public Locale getDefaultLocale()
+    {
+        return _defaultLocale;
+    }
+
+    public Set getSupportedLocales()
+    {
+        return _supportedLocales;
+    }
+
+    public void addSupportedLocale(String name)
+    {
+        Locale locale = locale(name);
+        if (locale != null)
+        {
+            _supportedLocales.add(locale);
+        }
+    }
+
+    public void update(LocaleConfig localeConfig)
+    {
+        _supportedLocales.addAll(localeConfig._supportedLocales);
+    }
+
+    private Locale locale(String name)
     {
         if ((name == null) || (name.length() == 0))
         {
@@ -59,29 +89,17 @@ public class LocaleConfig
         switch (nameComponents.length)
         {
             case 1:
-                _locales.add(new Locale(nameComponents[0]));
-                break;
+                return new Locale(nameComponents[0]);
 
             case 2:
-                _locales.add(new Locale(nameComponents[0], nameComponents[1]));
-                break;
+                return new Locale(nameComponents[0], nameComponents[1]);
 
             case 3:
-                _locales.add(new Locale(nameComponents[0], nameComponents[1], nameComponents[2]));
-                break;
+                return new Locale(nameComponents[0], nameComponents[1], nameComponents[2]);
 
             default:
                 log.error("Invalid default locale name, ignoring: " + name);
         }
-    }
-
-    public Set getDefaultLocales()
-    {
-        return _locales;
-    }
-
-    public void update(LocaleConfig localeConfig)
-    {
-        _locales.addAll(localeConfig._locales);
+        return null;
     }
 }

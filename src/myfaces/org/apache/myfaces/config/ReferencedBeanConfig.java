@@ -1,4 +1,4 @@
-/**
+/*
  * MyFaces - the free JSF implementation
  * Copyright (C) 2003, 2004  The MyFaces Team (http://myfaces.sourceforge.net)
  *
@@ -18,34 +18,60 @@
  */
 package net.sourceforge.myfaces.config;
 
+
 /**
- * DOCUMENT ME!
  * @author Manfred Geiler (latest modification by $Author$)
+ * @author Anton Koinov
  * @version $Revision$ $Date$
  */
-public class ReferencedBeanConfig
-    implements Config
+public class ReferencedBeanConfig implements Config
 {
+    //~ Instance fields ----------------------------------------------------------------------------
+
+// ignore        
+//    private String     _description;
+//    private String     _displayName;
+//    private IconConfig _iconConfig;
+    private Class  _referencedBeanClass = null;
     private String _referencedBeanName = null;
-    private String _referencedBeanClass = null;
 
-    public String getReferencedBeanName()
+    //~ Methods ------------------------------------------------------------------------------------
+
+    public void setDescription(String description)
     {
-        return _referencedBeanName;
+// ignore        
+//        _description = description;
     }
 
-    public void setReferencedBeanName(String referencedBeanName)
+    public void setDisplayName(String displayName)
     {
-        _referencedBeanName = referencedBeanName;
+// ignore        
+//        _displayName = displayName;
     }
 
-    public String getReferencedBeanClass()
+    public void setIconConfig(IconConfig iconConfig)
     {
-        return _referencedBeanClass;
+// ignore        
+//        _iconConfig = iconConfig;
     }
 
     public void setReferencedBeanClass(String referencedBeanClass)
     {
-        _referencedBeanClass = referencedBeanClass;
+        _referencedBeanClass = ConfigUtil.classForName(referencedBeanClass);
+    }
+
+    public Class getReferencedBeanClass()
+    {
+        return _referencedBeanClass;
+    }
+
+    public void setReferencedBeanName(String referencedBeanName)
+    {
+        _referencedBeanName = referencedBeanName.intern();
+    }
+
+    public String getReferencedBeanName()
+    {
+        return _referencedBeanName;
     }
 }

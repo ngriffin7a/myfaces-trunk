@@ -308,6 +308,12 @@ public class MyFacesTagHelper
     }
 
 
+    /**
+     * 
+     * @param attrValue
+     * @return
+     * @deprecated Seems we should now use valueBinding like #{ } instead
+     */
     protected Object evaluateSimpleELExpression(Object attrValue)
     {
         /*

@@ -1,4 +1,4 @@
-/**
+/*
  * MyFaces - the free JSF implementation
  * Copyright (C) 2003, 2004  The MyFaces Team (http://myfaces.sourceforge.net)
  *
@@ -18,44 +18,43 @@
  */
 package net.sourceforge.myfaces.config;
 
-import javax.faces.convert.Converter;
-import java.util.Collections;
+import org.apache.commons.collections.IteratorUtils;
+
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
+import javax.faces.convert.Converter;
+
+
 /**
- * DOCUMENT ME!
  * @author Manfred Geiler (latest modification by $Author$)
+ * @author Anton Koinov
  * @version $Revision$ $Date$
  */
-public class ConverterConfig
-    implements Config
+public class ConverterConfig implements Config
 {
-    private String _converterId;
-    private String _converterForClass;
+    //~ Instance fields ----------------------------------------------------------------------------
+
+    private Class  _converterForClass; // must stay String because of Application.addConverter()
+    private List   _propertyConfigList; // List to maintain ordering
+    private Map    _attributeConfigMap;
     private String _converterClass;
-    private Map _attributeConfigMap;
-    private Map _propertyConfigMap;
+    private String _converterId;
 
-    public String getConverterId()
+    //~ Methods ------------------------------------------------------------------------------------
+
+    public Iterator getAttributeNames()
     {
-        return _converterId;
+        return (_attributeConfigMap == null) ? IteratorUtils.EMPTY_ITERATOR
+                                             : _attributeConfigMap.keySet().iterator();
     }
 
-    public void setConverterId(String converterId)
+    public void setConverterClass(String converterClass)
     {
-        _converterId = converterId;
-    }
-
-    public String getConverterForClass()
-    {
-        return _converterForClass;
-    }
-
-    public void setConverterForClass(String converterForClass)
-    {
-        _converterForClass = converterForClass;
+        _converterClass = converterClass.intern();
     }
 
     public String getConverterClass()
@@ -63,11 +62,30 @@ public class ConverterConfig
         return _converterClass;
     }
 
-    public void setConverterClass(String converterClass)
+    public void setConverterForClass(String converterForClass)
     {
-        _converterClass = converterClass;
+        _converterForClass = ConfigUtil.classForName(converterForClass);
     }
 
+    public Class getConverterForClass()
+    {
+        return _converterForClass;
+    }
+
+    public void setConverterId(String converterId)
+    {
+        _converterId = converterId.intern();
+    }
+
+    public String getConverterId()
+    {
+        return _converterId;
+    }
+
+    public List getProperties()
+    {
+        return _propertyConfigList;
+    }
 
     public void addAttributeConfig(AttributeConfig attributeConfig)
     {
@@ -78,33 +96,17 @@ public class ConverterConfig
         _attributeConfigMap.put(attributeConfig.getAttributeName(), attributeConfig);
     }
 
-    public Iterator getAttributeNames()
-    {
-        return _attributeConfigMap == null
-                ? Collections.EMPTY_SET.iterator()
-                : _attributeConfigMap.keySet().iterator();
-    }
-
-
     public void addPropertyConfig(PropertyConfig propertyConfig)
     {
-        if (_propertyConfigMap == null)
+        if (_propertyConfigList == null)
         {
-            _propertyConfigMap = new HashMap();
+            _propertyConfigList = new ArrayList();
         }
-        _propertyConfigMap.put(propertyConfig.getPropertyName(), propertyConfig);
+        _propertyConfigList.add(propertyConfig);
     }
-
-    public Iterator getPropertyNames()
-    {
-        return _propertyConfigMap == null
-                ? Collections.EMPTY_SET.iterator()
-                : _propertyConfigMap.keySet().iterator();
-    }
-
 
     public Converter newConverter()
     {
-        return (Converter)ConfigUtil.newInstance(_converterClass);
+        return (Converter) ConfigUtil.newInstance(_converterClass);
     }
 }

@@ -37,15 +37,14 @@ import java.util.Set;
  * @author Anton Koinov (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public abstract class BiLevelCacheMap
-    implements Map
+public abstract class BiLevelCacheMap implements Map
 {
     //~ Instance fields ----------------------------------------------------------------------------
 
-    private volatile Map _cacheL1;
-    private final Map    _cacheL2;
-    private final int    _mergeThreshold;
-    private int          _missCount;
+    private Map       _cacheL1;
+    private final Map _cacheL2;
+    private final int _mergeThreshold;
+    private int       _missCount;
 
     //~ Constructors -------------------------------------------------------------------------------
 
@@ -112,7 +111,15 @@ public abstract class BiLevelCacheMap
 
             if (++_missCount >= _mergeThreshold)
             {
-                _cacheL1 = HashMapUtils.merge(_cacheL1, _cacheL2);
+                Map newMap;
+                synchronized (cacheL1)
+                {
+                    // synchronized to guarantee _cacheL1 will be assigned after fully initialized
+                    // at least until JVM 1.5 where this should be possible with the volatile keyword
+                    // But is this enough (in our particular case) to resolve the issues with DCL?
+                    newMap = HashMapUtils.merge(_cacheL1, _cacheL2);
+                }
+                _cacheL1 = newMap;
                 _cacheL2.clear();
                 _missCount = 0;
             }
