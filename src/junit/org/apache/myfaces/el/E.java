@@ -15,6 +15,8 @@
  */
 package net.sourceforge.myfaces.el;
 
+import java.util.HashMap;
+
 /**
  * @author <a href="mailto:matzew@apache.org">Matthias Weﬂendorf</a> 
  */
@@ -22,6 +24,26 @@ public class E {
     
     private String a = "foo";
     private String b = "bar";
+    private HashMap c = null;
+    private Integer d = null;
+    
+    /**
+     * @return Returns the d.
+     */
+    public Integer getD() {
+        return d;
+    }
+    /**
+     * @param d The d to set.
+     */
+    public void setD(Integer d) {
+        this.d = d;
+    }
+    public E(){
+        c = new HashMap();
+        c.put("foo","bar");
+        
+    }
     
     public String getA() {
         return a;
@@ -37,5 +59,11 @@ public class E {
 
     public void setB(String b) {
         this.b = b;
+    }
+    public HashMap getC() {
+        return c;
+    }
+   public void setC(HashMap c) {
+        this.c = c;
     }
 }

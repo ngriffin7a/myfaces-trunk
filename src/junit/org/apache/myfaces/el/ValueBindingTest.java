@@ -27,6 +27,9 @@ import javax.faces.el.ValueBinding;
  * @version $Revision$ $Date$
  * 
  * $Log$
+ * Revision 1.25  2004/09/06 16:21:10  mwessendorf
+ * added TestCase
+ *
  * Revision 1.24  2004/09/02 08:40:18  mwessendorf
  * added TestCase for bug #1018239
  *
@@ -560,6 +563,12 @@ public class ValueBindingTest extends ELBaseTest
         vb = _application.createValueBinding("#{testBean_E.a}#{testBean_E.b}");
         assertEquals("foobar", vb.getValue(_facesContext));
 
+        vb = _application.createValueBinding("#{testBean_E.c['foo']}");
+        assertEquals("bar", vb.getValue(_facesContext));
+
+        vb = _application.createValueBinding("#{!empty testBean_E.d}");
+        assertFalse("false", Boolean.getBoolean(vb.getValue(_facesContext).toString()));
+           
     }
     
     public void testEL () throws Exception{
