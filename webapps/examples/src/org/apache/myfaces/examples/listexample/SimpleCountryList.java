@@ -22,6 +22,8 @@ import javax.faces.component.UIComponent;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
 
 /**
  * DOCUMENT ME!
@@ -109,6 +111,21 @@ public class SimpleCountryList
     public List getCountries()
     {
         return _countries;
+    }
+    
+    public Map getCountryMap()
+    {
+        Map map = new HashMap();
+
+        List li = getCountries();
+
+        for (int i = 0; i < li.size(); i++)
+        {
+            SimpleCountry simpleCountry = (SimpleCountry) li.get(i);
+            map.put(simpleCountry.getIsoCode(),simpleCountry.getName());
+        }
+
+        return map;
     }
 
     public void setCountries(List countries)

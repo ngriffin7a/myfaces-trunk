@@ -62,6 +62,8 @@
                         <x:jsValueChangeListener for="text3" property="value" expressionValue="$srcElem.value" />
                         <x:jsValueChangeListener for="text4" expressionValue="$destElem.innerHTML = $srcElem.value" />
                         <x:jsValueChangeListener for="text5" expressionValue="($srcElem.value=='hide')?$destElem.style.display='none':$destElem.style.display='inline'" />
+                        <x:jsValueSet name="countryMap" value="#{countryList.countryMap}"/>
+                        <x:jsValueChangeListener for="text6" expressionValue="$destElem.innerHTML = countryMap[$srcElem.value]" />
                     </h:inputText>
                     <h:inputText id="text2"/>
                     <h:inputText id="text3"/>
@@ -69,6 +71,10 @@
                     <h:panelGroup id="text5" >
                         <h:outputText value="Hide me - enter hide in first input-field."/>
                     </h:panelGroup>
+                    <h:panelGroup id="text6" >
+                        <h:outputText value="Countryname - enter ISO Code in first input-field (e.g. AT)"/>
+                    </h:panelGroup>
+                    <h:panelGroup/>
                 </h:panelGrid>
             </h:panelGroup>
         </f:facet>

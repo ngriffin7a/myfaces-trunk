@@ -3,20 +3,15 @@
  */
 package org.apache.myfaces.custom.jslistener;
 
-import org.apache.myfaces.custom.updateactionlistener.UpdateActionListener;
-import org.apache.myfaces.renderkit.html.HTML;
-import org.apache.myfaces.renderkit.JSFAttr;
-import org.apache.myfaces.component.html.util.AddResource;
-import org.apache.commons.logging.impl.Jdk14Logger;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.myfaces.component.html.util.AddResource;
 
 import javax.faces.application.Application;
-import javax.faces.component.ActionSource;
 import javax.faces.component.UIComponent;
 import javax.faces.component.UINamingContainer;
 import javax.faces.context.FacesContext;
-import javax.faces.convert.Converter;
+import javax.faces.el.ValueBinding;
 import javax.faces.webapp.UIComponentTag;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.Tag;
@@ -26,6 +21,9 @@ import javax.servlet.jsp.tagext.TagSupport;
  * @author Martin Marinschek (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.2  2004/12/19 00:50:55  mmarinschek
+ * JsValueSetTag
+ *
  * Revision 1.1  2004/12/17 13:19:10  mmarinschek
  * new component jsValueChangeListener
  *
@@ -63,78 +61,107 @@ public class JsValueChangeListenerTag
 
     public int doStartTag() throws JspException
     {
-        if (_for == null) throw new JspException("for attribute not set");
-
-        //Find parent UIComponentTag
-        UIComponentTag componentTag = UIComponentTag.getParentUIComponentTag(pageContext);
-        if (componentTag == null)
+        try
         {
-            throw new JspException("ValueChangeListenerTag has no UIComponentTag ancestor");
-        }
+            if (_for == null) throw new JspException("for attribute not set");
+            if (_expressionValue == null) throw new JspException("expressionValue attribute not set");
 
-        if (componentTag.getCreated())
-        {
-
-            AddResource.addJavaScriptToHeader(
-                    JsValueChangeListenerTag.class, "JSListener.js", true, getFacesContext());
-
-            //Component was just created, so we add the Listener
-            UIComponent component = componentTag.getComponentInstance();
-
-            if(_for!=null)
+            //Find parent UIComponentTag
+            UIComponentTag componentTag = UIComponentTag.getParentUIComponentTag(pageContext);
+            if (componentTag == null)
             {
-                UIComponent forComponent = component.findComponent(_for);
+                throw new JspException("ValueChangeListenerTag has no UIComponentTag ancestor");
+            }
 
-                String forComponentId = null;
+            if (componentTag.getCreated())
+            {
+                String aFor = getValueOrBinding(_for);
+                String expressionValue = getValueOrBinding(_expressionValue);
+                String property = getValueOrBinding(_property);
 
-                if (forComponent == null)
+                AddResource.addJavaScriptToHeader(
+                        JsValueChangeListenerTag.class, "JSListener.js", true, getFacesContext());
+
+                //Component was just created, so we add the Listener
+                UIComponent component = componentTag.getComponentInstance();
+
+                if(aFor!=null)
                 {
-                    if (log.isInfoEnabled())
+                    UIComponent forComponent = component.findComponent(aFor);
+
+                    String forComponentId = null;
+
+                    if (forComponent == null)
                     {
-                        log.info("Unable to find component '" + _for + "' (calling findComponent on component '" + component.getClientId(getFacesContext()) + "') - will try to render component id based on the parent-id (on same level)");
-                    }
-                    if (_for.length() > 0 && _for.charAt(0) == UINamingContainer.SEPARATOR_CHAR)
-                    {
-                        //absolute id path
-                        forComponentId = _for.substring(1);
-                    }
-                    else
-                    {
-                        //relative id path, we assume a component on the same level as the label component
-                        String labelClientId = component.getClientId(getFacesContext());
-                        int colon = labelClientId.lastIndexOf(UINamingContainer.SEPARATOR_CHAR);
-                        if (colon == -1)
+                        if (log.isInfoEnabled())
                         {
-                            forComponentId = _for;
+                            log.info("Unable to find component '" + aFor + "' (calling findComponent on component '" + component.getClientId(getFacesContext()) + "') - will try to render component id based on the parent-id (on same level)");
+                        }
+                        if (aFor.length() > 0 && aFor.charAt(0) == UINamingContainer.SEPARATOR_CHAR)
+                        {
+                            //absolute id path
+                            forComponentId = aFor.substring(1);
                         }
                         else
                         {
-                            forComponentId = labelClientId.substring(0, colon + 1) + _for;
+                            //relative id path, we assume a component on the same level as the label component
+                            String labelClientId = component.getClientId(getFacesContext());
+                            int colon = labelClientId.lastIndexOf(UINamingContainer.SEPARATOR_CHAR);
+                            if (colon == -1)
+                            {
+                                forComponentId = aFor;
+                            }
+                            else
+                            {
+                                forComponentId = labelClientId.substring(0, colon + 1) + aFor;
+                            }
                         }
                     }
+                    else
+                    {
+                        forComponentId = forComponent.getClientId(getFacesContext());
+                    }
+
+                    expressionValue = expressionValue.replaceAll("\\'","\\\\'");
+                    expressionValue = expressionValue.replaceAll("\"","\\\"");
+
+
+                    String methodCall = "orgApacheMyfacesJsListenerSetExpressionProperty('"+
+                            component.getClientId(getFacesContext())+"','"+
+                            forComponentId+"',"+
+                            (property==null?"null":"'"+property+"'")+
+                            ",'"+expressionValue+"');";
+
+
+                    callMethod(component, "onchange",methodCall);
+
                 }
-                else
-                {
-                    forComponentId = forComponent.getClientId(getFacesContext());
-                }
-
-                String expressionValue = _expressionValue.replaceAll("\\'","\\\\'");
-                expressionValue = expressionValue.replaceAll("\"","\\\"");
-
-
-                String methodCall = "orgApacheMyfacesJsListenerSetExpressionProperty('"+
-                        component.getClientId(getFacesContext())+"','"+
-                        forComponentId+"',"+
-                        (_property==null?"null":"'"+_property+"'")+
-                        ",'"+expressionValue+"');";
-
-
-                callMethod(component, "onchange",methodCall);
-
             }
+
+            return Tag.SKIP_BODY;
+        }
+        catch(JspException ex)
+        {
+            log.error("Exception : ",ex);
+            throw ex;
+        }
+    }
+
+    private String getValueOrBinding(String valueOrBinding)
+    {
+        if(valueOrBinding == null)
+            return null;
+
+        String value = valueOrBinding;
+
+        if (UIComponentTag.isValueReference(valueOrBinding))
+        {
+            ValueBinding binding = getApplication().createValueBinding(valueOrBinding);
+            Object val = binding.getValue(getFacesContext());
+            value = (val==null?"":val.toString());
         }
 
-        return Tag.SKIP_BODY;
+        return value;
     }
 
     private void callMethod(UIComponent uiComponent, String propName, String value)
@@ -157,6 +184,11 @@ public class JsValueChangeListenerTag
         }
 
         uiComponent.getAttributes().put(propName, value);
+    }
+
+    protected Application getApplication()
+    {
+        return getFacesContext().getApplication();
     }
 
     protected FacesContext getFacesContext()
