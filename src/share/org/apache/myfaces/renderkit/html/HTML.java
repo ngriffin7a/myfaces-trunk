@@ -24,6 +24,9 @@ import net.sourceforge.myfaces.util.ArrayUtils;
  * @author Anton Koinov
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.12  2004/08/09 08:43:29  manolito
+ * bug #1004867 - h:message has duplicate attributes
+ *
  * Revision 1.11  2004/07/27 06:32:19  tinytoony
  * new calendar component as a popup
  *
@@ -376,16 +379,23 @@ public final class HTML
             INPUT_PASSTHROUGH_ATTRIBUTES_WITHOUT_DISABLED);
 
 
-
+    /*
     public static final String[] MESSAGE_PASSTHROUGH_ATTRIBUTES =
         (String[]) ArrayUtils.concat(
             new String[] {DIR_ATTR, LANG_ATTR, TITLE_ATTR, STYLE_ATTR, STYLE_CLASS_ATTR},
             EVENT_HANDLER_ATTRIBUTES);
+            */
+
+    public static final String[] MESSAGE_PASSTHROUGH_ATTRIBUTES_WITHOUT_TITLE_STYLE_AND_STYLE_CLASS =
+        (String[]) ArrayUtils.concat(
+            new String[] {DIR_ATTR, LANG_ATTR},
+            EVENT_HANDLER_ATTRIBUTES);
+
 
     // selectOne/Many table
     public static final String[] SELECT_TABLE_PASSTHROUGH_ATTRIBUTES =
         new String[] {STYLE_ATTR, STYLE_CLASS_ATTR, BORDER_ATTR};
-    
+
     //HTML attributes needed for renderding only
     public static final String ID_ATTR = "id";
     public static final String NAME_ATTR = "name";
@@ -422,7 +432,7 @@ public final class HTML
     public static final String SCRIPT_ELEM = "script";
     public static final String SCRIPT_LANGUAGE_ATTR = "language";
     public static final String SCRIPT_LANGUAGE_JAVASCRIPT = "JavaScript";
-    
+
     public static final String UL_ELEM = "ul";
     public static final String OL_ELEM = "ol";
     public static final String LI_ELEM = "li";

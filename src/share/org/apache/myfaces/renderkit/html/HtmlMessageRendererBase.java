@@ -33,6 +33,9 @@ import java.util.Map;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.7  2004/08/09 08:43:29  manolito
+ * bug #1004867 - h:message has duplicate attributes
+ *
  * Revision 1.6  2004/07/01 22:00:57  mwessendorf
  * ASF switch
  *
@@ -127,7 +130,7 @@ public abstract class HtmlMessageRendererBase
         ResponseWriter writer = facesContext.getResponseWriter();
 
         boolean span = HtmlRendererUtils.renderHTMLAttributesWithOptionalStartElement(
-                            writer, message, HTML.SPAN_ELEM, HTML.MESSAGE_PASSTHROUGH_ATTRIBUTES);
+                            writer, message, HTML.SPAN_ELEM, HTML.MESSAGE_PASSTHROUGH_ATTRIBUTES_WITHOUT_TITLE_STYLE_AND_STYLE_CLASS);
         span |= HtmlRendererUtils.renderHTMLAttributeWithOptionalStartElement(writer, message, HTML.SPAN_ELEM, HTML.TITLE_ATTR, title, span);
         span |= HtmlRendererUtils.renderHTMLAttributeWithOptionalStartElement(writer, message, HTML.SPAN_ELEM, HTML.STYLE_ATTR, style, span);
         span |= HtmlRendererUtils.renderHTMLAttributeWithOptionalStartElement(writer, message, HTML.SPAN_ELEM, HTML.STYLE_CLASS_ATTR, styleClass, span);
