@@ -3,6 +3,12 @@ MyFaces Release Notes
 
 ----------------------------------------------------------------------
 Changes in Release 1.0.4 alpha
+* bug #951988	myfaces doesn't read faces-config.xml in foo.jars
+* bug #951896	command links broken if ALLOW_JAVASCRIPT=false
+* bug #948629	UpdateActionListener looking for String -> Object converter
+* bug #948626	hiddenInput does not decode and store value
+* bug #948110	h:selectManyCheckbox styleClass handling
+* bug #943587	<h:commandLink> does not recognize target attribute.
 * many bugfixes ;-)
 
 ----------------------------------------------------------------------
