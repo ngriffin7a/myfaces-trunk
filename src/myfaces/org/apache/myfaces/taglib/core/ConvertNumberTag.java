@@ -28,6 +28,10 @@ import javax.servlet.jsp.JspException;
 import java.util.Locale;
 
 /**
+ * $Log$
+ * Revision 1.2  2004/03/26 11:47:10  manolito
+ * NPE fixed
+ *
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
@@ -45,6 +49,11 @@ public class ConvertNumberTag
     private String _minIntegerDigits = null;
     private String _pattern = null;
     private String _type = null;
+
+    public ConvertNumberTag()
+    {
+        setConverterId(NumberConverter.CONVERTER_ID);
+    }
 
     public void setCurrencyCode(String currencyCode)
     {
