@@ -392,6 +392,7 @@ public class HtmlDataScrollerRenderer
             uiText.setValue(text);
             children.add(uiText);
         }
+        scroller.getChildren().add(link);
         return link;
     }
 
@@ -416,6 +417,8 @@ public class HtmlDataScrollerRenderer
         children.add(parameter);
         if (facetComp != null)
             children.add(facetComp);
+        // dirty, cause facet-comp is now child from link & scroller!
+        scroller.getChildren().add(link);
         return link;
     }
 

@@ -84,6 +84,11 @@ managed beans used:
                 <h:commandButton value="Submit"/>
 				</h:form>
                 <f:verbatim><br/><br/></f:verbatim>
+				<h:form id="calendarForm3">
+                <x:inputCalendar id="xxxyyy3" monthYearRowClass="yearMonthHeader" weekRowClass="weekHeader"
+                    currentDayCellClass="currentDayCell" value="#{calendar.date}" renderAsPopup="true" popupTheme="jscalendar-DB" />
+                <h:commandButton value="Submit"/>
+				</h:form>
 
                 <h:outputText value="#{calendar.date}" />
 

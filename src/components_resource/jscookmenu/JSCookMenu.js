@@ -165,13 +165,16 @@ function cmDrawSubMenu (subMenu, prefix, id, orient, nodeProperties)
 		classStr += hasChild ? 'Folder' : 'Item';
 
 		str += '<td class="' + classStr + 'Left">';
-
-		if (item[0] != null && item[0] != _cmNoAction)
+		if (item[0] != null && item[0] != _cmNoAction) {
 			str += item[0];
+	    }
 		else
+		{
 			str += hasChild ? nodeProperties.folderLeft : nodeProperties.itemLeft;
+        }
+        str +=  '</td>';
 
-		str += '<td class="' + classStr + 'Text">' + item[1];
+		str += '<td class="' + classStr + 'Text">' + item[1] + '</td>';
 
 		str += '<td class="' + classStr + 'Right">';
 
