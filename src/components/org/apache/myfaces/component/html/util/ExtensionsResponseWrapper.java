@@ -15,7 +15,11 @@
  */
 package org.apache.myfaces.component.html.util;
 
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
@@ -27,6 +31,9 @@ import org.xml.sax.InputSource;
  * @author Sylvain Vieujot (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.4  2004/12/02 02:13:15  svieujot
+ * *** empty log message ***
+ *
  * Revision 1.3  2004/12/02 02:12:32  svieujot
  * Clean log
  *
