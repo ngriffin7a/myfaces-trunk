@@ -48,7 +48,7 @@ public class HashMapUtils
      */
     public static HashMap merge(Map arg1, Map arg2)
     {
-        HashMap retval = new HashMap(((arg1.size() + arg2.size() + 1) * 4) / 3); // adjust for load factor
+        HashMap retval = new HashMap((((arg1.size() + arg2.size()) * 4) + 3) / 3); // adjust for default load factor
 
         retval.putAll(arg1);
         retval.putAll(arg2);

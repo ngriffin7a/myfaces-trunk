@@ -525,16 +525,16 @@ public class ValueBindingImpl
             }
             if ((indexofOpen < 0) || (indexofClose < indexofOpen))
             {
-                // There is no opening bracket, ot closing is before opening
+                // There is no opening bracket, or closing bracket is before opening
                 return indexofClose;
             }
             else
             {
-                // Closing bracket after opening--we have nested brakets
+                // Closing bracket after opening--we have nested brackets
                 pos = indexOfMatchingClosingBracket(str, indexofOpen) + 1;
 
                 // (pos >= len) will cause indexofClose to be -1 on the next iteration
-                // and properly reported as error 
+                // and properly reported as error, therefore we do not check for this case explicitly
             }
         }
     }
