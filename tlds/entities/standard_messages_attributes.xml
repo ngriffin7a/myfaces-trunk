@@ -3,7 +3,6 @@
         &ui_messages_attributes;
         &html_universal_attributes;
         &html_event_handler_attributes;
-        &user_role_attributes;
         <!-- HtmlMessages attributes -->
         <attribute>
             <name>infoClass</name>

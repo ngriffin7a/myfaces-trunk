@@ -4,7 +4,6 @@
         &html_universal_attributes;
         &html_event_handler_attributes;
         &html_table_attributes;
-        &user_role_attributes;
         <!-- UIData attributes -->
         <attribute>
             <name>value</name>

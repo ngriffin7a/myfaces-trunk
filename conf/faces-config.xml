@@ -39,17 +39,12 @@
 
   <component>
     <component-type>javax.faces.HtmlCommandLink</component-type>
-    <component-class>net.sourceforge.myfaces.component.html.MyFacesHtmlCommandLink</component-class>
+    <component-class>javax.faces.component.html.HtmlCommandLink</component-class>
   </component>
 
   <component>
     <component-type>javax.faces.HtmlDataTable</component-type>
     <component-class>javax.faces.component.html.HtmlDataTable</component-class>
-  </component>
-
-  <component>
-    <component-type>javax.faces.HtmlColumn</component-type>
-    <component-class>javax.faces.component.UIColumn</component-class>
   </component>
 
   <component>
@@ -89,12 +84,7 @@
 
   <component>
     <component-type>javax.faces.HtmlMessages</component-type>
-    <component-class>net.sourceforge.myfaces.component.html.MyFacesHtmlMessages</component-class>
-  </component>
-
-  <component>
-    <component-type>javax.faces.NamingContainer</component-type>
-    <component-class>javax.faces.component.UINamingContainer</component-class>
+    <component-class>javax.faces.component.html.HtmlMessages</component-class>
   </component>
 
   <component>
@@ -256,6 +246,11 @@
 
   <!-- MyFaces extension components -->
   <!-- (in alphabetical order) -->
+
+  <component>
+    <component-type>net.sourceforge.myfaces.HtmlCommandLink</component-type>
+    <component-class>net.sourceforge.myfaces.component.html.MyFacesHtmlCommandLink</component-class>
+  </component>
 
   <component>
     <component-type>net.sourceforge.myfaces.HtmlCommandNavigation</component-type>

@@ -50,9 +50,12 @@
 <!ENTITY ui_select_many_attributes      SYSTEM "entities/ui_select_many_attributes.xml">
 <!ENTITY ui_select_one_attributes       SYSTEM "entities/ui_select_one_attributes.xml">
 <!ENTITY user_role_attributes           SYSTEM "entities/user_role_attributes.xml">
-<!ENTITY standard_data_table_attributes SYSTEM "entities/standard_data_table_attributes.xml">
-<!ENTITY standard_messages_attributes   SYSTEM "entities/standard_messages_attributes.xml">
-<!ENTITY standard_input_text_attributes SYSTEM "entities/standard_input_text_attributes.xml">
+<!ENTITY standard_data_table_attributes      SYSTEM "entities/standard_data_table_attributes.xml">
+<!ENTITY standard_input_text_attributes      SYSTEM "entities/standard_input_text_attributes.xml">
+<!ENTITY standard_messages_attributes        SYSTEM "entities/standard_messages_attributes.xml">
+<!ENTITY standard_output_label_attributes    SYSTEM "entities/standard_output_label_attributes.xml">
+<!ENTITY standard_panel_group_attributes     SYSTEM "entities/standard_panel_group_attributes.xml">
+<!ENTITY standard_select_one_menu_attributes SYSTEM "entities/standard_select_one_menu_attributes.xml">
 ]>
 
 <taglib>
@@ -172,6 +175,7 @@
         </description>
         &standard_data_table_attributes;
         <!-- MyFaces extensions -->
+        &user_role_attributes;
         <attribute>
             <name>preserveDataModel</name>
             <required>false</required>
@@ -258,6 +262,7 @@
         </description>
         &standard_messages_attributes;
         <!-- MyFaces extensions -->
+        &user_role_attributes;
         <attribute>
             <name>showInputLabel</name>
             <required>false</required>
@@ -275,7 +280,19 @@
         </attribute>
     </tag>
 
-<!-- output_navigation -->
+<!-- outputLabel -->
+    <tag>
+        <name>outputLabel</name>
+        <tag-class>net.sourceforge.myfaces.taglib.html.HtmlOutputLabelTag</tag-class>
+        <body-content>JSP</body-content>
+        <description>
+            Extends standard outputLabel by user role support.
+        </description>
+        &standard_output_label_attributes;
+        &user_role_attributes;
+    </tag>
+
+<!-- outputNavigation -->
     <tag>
         <name>outputNavigation</name>
         <tag-class>net.sourceforge.myfaces.taglib.ext.HtmlOutputNavigationTag</tag-class>
@@ -302,7 +319,19 @@
         </attribute>
     </tag>
 
-<!-- panel_layout -->
+<!-- panelGroup -->
+    <tag>
+        <name>panelGroup</name>
+        <tag-class>net.sourceforge.myfaces.taglib.html.HtmlPanelGroupTag</tag-class>
+        <body-content>JSP</body-content>
+        <description>
+            Extends standard panelGroup by user role support.
+        </description>
+        &standard_panel_group_attributes;
+        &user_role_attributes;
+    </tag>
+
+<!-- panelLayout -->
     <tag>
         <name>panelLayout</name>
         <tag-class>net.sourceforge.myfaces.taglib.ext.HtmlPanelLayoutTag</tag-class>
@@ -492,7 +521,7 @@
         </attribute>
     </tag>
 
-<!-- save_state -->
+<!-- saveState -->
     <tag>
         <name>saveState</name>
         <tag-class>net.sourceforge.myfaces.taglib.ext.SaveStateTag</tag-class>
@@ -509,5 +538,16 @@
         </attribute>
     </tag>
 
+<!-- selectOneMenu -->
+    <tag>
+        <name>selectOneMenu</name>
+        <tag-class>net.sourceforge.myfaces.taglib.html.HtmlSelectOneMenuTag</tag-class>
+        <body-content>JSP</body-content>
+        <description>
+            Extends standard selectOneMenu by user role support.
+        </description>
+        &standard_select_one_menu_attributes;
+        &user_role_attributes;
+    </tag>
 
 </taglib>
