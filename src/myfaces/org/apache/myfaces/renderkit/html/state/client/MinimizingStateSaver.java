@@ -132,7 +132,7 @@ public class MinimizingStateSaver
             UIComponent comp = (UIComponent)treeIt.next();
             saveComponentAttributes(facesContext, stateMap, comp);
             saveListeners(facesContext, stateMap, comp);
-            visitedComponents.add(UIComponentUtils.getUniqueComponentId(comp));
+            visitedComponents.add(UIComponentUtils.getUniqueComponentId(facesContext, comp));
         }
 
         saveUnrenderedComponents(facesContext, stateMap, visitedComponents);
@@ -153,7 +153,8 @@ public class MinimizingStateSaver
 
         Tree parsedTree = JspInfo.getTree(facesContext,
                                           facesContext.getTree().getTreeId());
-        saveUnrenderedComponents(parsedTree.getRoot(),
+        saveUnrenderedComponents(facesContext,
+                                 parsedTree.getRoot(),
                                  visitedComponents,
                                  unrenderedComponents);
 
@@ -166,11 +167,12 @@ public class MinimizingStateSaver
     }
 
 
-    private void saveUnrenderedComponents(UIComponent parsedComp,
+    private void saveUnrenderedComponents(FacesContext facesContext,
+                                          UIComponent parsedComp,
                                           Set visitedComponents,
                                           StringBuffer buf)
     {
-        String uniqueId = UIComponentUtils.getUniqueComponentId(parsedComp);
+        String uniqueId = UIComponentUtils.getUniqueComponentId(facesContext, parsedComp);
         if (!visitedComponents.contains(uniqueId))
         {
             if (buf.length() > 0)
@@ -187,7 +189,8 @@ public class MinimizingStateSaver
         for (Iterator it = parsedComp.getChildren(); it.hasNext();)
         {
             //Recursion:
-            saveUnrenderedComponents((UIComponent)it.next(),
+            saveUnrenderedComponents(facesContext,
+                                     (UIComponent)it.next(),
                                      visitedComponents,
                                      buf);
         }
@@ -203,7 +206,7 @@ public class MinimizingStateSaver
                                                                   uiComponent);
         if (parsedComp == null)
         {
-            LogUtil.getLogger().warning("Corresponding parsed component not found for component " + UIComponentUtils.getUniqueComponentId(uiComponent));
+            LogUtil.getLogger().warning("Corresponding parsed component not found for component " + UIComponentUtils.getUniqueComponentId(facesContext, uiComponent));
         }
 
         //Remember all seen attributes of current component, so that
@@ -294,8 +297,9 @@ public class MinimizingStateSaver
     {
         Tree parsedTree = JspInfo.getTree(facesContext,
                                           facesContext.getTree().getTreeId());
-        return UIComponentUtils.findComponentByUniqueId(parsedTree,
-                                               UIComponentUtils.getUniqueComponentId(uiComponent));
+        return UIComponentUtils.findComponentByUniqueId(facesContext,
+                                                        parsedTree,
+                                                        UIComponentUtils.getUniqueComponentId(facesContext, uiComponent));
     }
 
 
@@ -669,7 +673,7 @@ public class MinimizingStateSaver
                                                                                            uiComponent,
                                                                                            listenerType);
                 //String paramValue = ((UIComponent)facesListener).getClientId(facesContext);
-                String paramValue = UIComponentUtils.getUniqueComponentId(((UIComponent)facesListener));
+                String paramValue = UIComponentUtils.getUniqueComponentId(facesContext, (UIComponent)facesListener);
                 saveParameter(stateMap, paramName, paramValue);
             }
             else

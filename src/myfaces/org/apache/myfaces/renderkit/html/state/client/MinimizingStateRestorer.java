@@ -116,7 +116,7 @@ public class MinimizingStateRestorer
         }
 
         //remap tagHash
-        TagHashHack.convertUniqueIdsBackToComponents(tree);
+        TagHashHack.convertUniqueIdsBackToComponents(facesContext, tree);
 
         facesContext.getServletRequest()
             .setAttribute(PREVIOUS_TREE_REQUEST_ATTR, tree);
@@ -459,8 +459,9 @@ public class MinimizingStateRestorer
                 {
                     //Listener is another component, paramValue is the uniqueId
                     //listener = (FacesListener)root.findComponent(paramValue);
-                    listener = (FacesListener)UIComponentUtils.findComponentByUniqueId(facesContext.getTree(),
-                                                                              paramValue);
+                    listener = (FacesListener)UIComponentUtils.findComponentByUniqueId(facesContext,
+                                                                                       facesContext.getTree(),
+                                                                                       paramValue);
                     if (listener == null)
                     {
                         LogUtil.getLogger().severe("Could not find listener component for restored listener of type " + info.listenerType);
@@ -471,8 +472,9 @@ public class MinimizingStateRestorer
                 /*
                 UIComponent uiComponent = root.findComponent(info.uniqueComponentId);
                 */
-                UIComponent uiComponent = UIComponentUtils.findComponentByUniqueId(facesContext.getTree(),
-                                                                          info.uniqueComponentId);
+                UIComponent uiComponent = UIComponentUtils.findComponentByUniqueId(facesContext,
+                                                                                   facesContext.getTree(),
+                                                                                   info.uniqueComponentId);
                 if (uiComponent == null)
                 {
                     LogUtil.getLogger().severe("Could not find component " + info.uniqueComponentId + " to add restored listener of type " + listener.getClass().getName());

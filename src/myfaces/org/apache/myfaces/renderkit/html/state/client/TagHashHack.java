@@ -94,7 +94,7 @@ public class TagHashHack
                 if (comp != null)
                 {
                     saveTagHash.put(entry.getKey(),
-                                    UIComponentUtils.getUniqueComponentId(comp));
+                                    UIComponentUtils.getUniqueComponentId(facesContext, comp));
                 }
                 else
                 {
@@ -174,7 +174,8 @@ public class TagHashHack
     }
 
 
-    public static void convertUniqueIdsBackToComponents(Tree restoredTree)
+    public static void convertUniqueIdsBackToComponents(FacesContext facesContext,
+                                                        Tree restoredTree)
     {
         UIComponent root = restoredTree.getRoot();
         Map restoredTagHash = (Map)root.getAttribute(TAG_HASH_ATTR);
@@ -185,8 +186,9 @@ public class TagHashHack
             {
                 Map.Entry tagHashEntry = (Map.Entry)tagHashIt.next();
                 String uniqueId = (String)tagHashEntry.getValue();
-                UIComponent comp = UIComponentUtils.findComponentByUniqueId(restoredTree,
-                                                                   uniqueId);
+                UIComponent comp = UIComponentUtils.findComponentByUniqueId(facesContext,
+                                                                            restoredTree,
+                                                                            uniqueId);
                 if (comp == null)
                 {
                     LogUtil.getLogger().severe("Could not find component by uniqueId " + uniqueId);

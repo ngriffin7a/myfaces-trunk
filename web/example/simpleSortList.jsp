@@ -1,5 +1,6 @@
 <%@ page session="false"
 %><%@ taglib uri="/WEB-INF/myfaces_basic.tld" prefix="h"
+%><%@ taglib uri="/WEB-INF/myfaces_core.tld" prefix="f"
 %><%@ taglib uri="/WEB-INF/myfaces_ext.tld" prefix="x"
 %><html>
 
@@ -28,7 +29,7 @@
 
 <body>
 
-<h:use_faces>
+<f:use_faces>
 
 <jsp:useBean id="list" class="net.sourceforge.myfaces.examples.listexample.SimpleSortableCarList" scope="request" />
 <x:save_state id="ss1" modelReference="list.sort" />
@@ -75,7 +76,7 @@
         <%@include file="inc/page_footer.jsp" %>
     </x:page_layout>
 
-</h:use_faces>
+</f:use_faces>
 
 </body>
 

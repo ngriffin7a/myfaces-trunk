@@ -20,6 +20,7 @@ package net.sourceforge.myfaces.taglib;
 
 import net.sourceforge.myfaces.component.CommonComponentAttributes;
 import net.sourceforge.myfaces.renderkit.attr.CommonRendererAttributes;
+import net.sourceforge.myfaces.MyFacesConfig;
 
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
@@ -47,20 +48,7 @@ public abstract class MyFacesTag
     public int doStartTag()
         throws JspException
     {
-        int ret = super.doStartTag();
-
-        /*
-        UIComponent comp = getComponent();
-        if (comp.getComponentId() == null)
-        {
-            // find this component in parsed tree
-            UIComponent parent =
-
-
-        }
-        */
-
-        return ret;
+        return super.doStartTag();
     }
 
     public int getDoStartValue() throws JspException
@@ -238,6 +226,21 @@ public abstract class MyFacesTag
     }
 
 
+    protected final UIComponent findComponent()
+        throws JspException
+    {
+        int mode = MyFacesConfig.getStateSavingMode(getFacesContext().getServletContext());
+        if (mode == MyFacesConfig.STATE_SAVING_MODE__CLIENT_MINIMIZED ||
+            mode == MyFacesConfig.STATE_SAVING_MODE__CLIENT_MINIMIZED_ZIPPED)
+        {
+            if (getId() == null)
+            {
+                UIComponent tempComp = createComponent();
+                overrideProperties(tempComp);
+                setId(_helper.getIdFromParsedTree(tempComp));
+            }
+        }
 
-
+        return super.findComponent();
+    }
 }

@@ -63,7 +63,7 @@ public class CallbackSupport
         wrapRenderKit(facesContext);
 
         Map map = getCallbackRendererInfoMap(facesContext);
-        map.put(UIComponentUtils.getUniqueComponentId(component),
+        map.put(UIComponentUtils.getUniqueComponentId(facesContext, component),
                 new CallbackRendererInfo(component,
                                  callbackRenderer,
                                  false));
@@ -84,7 +84,7 @@ public class CallbackSupport
         wrapRenderKit(facesContext);
 
         Map map = getCallbackRendererInfoMap(facesContext);
-        map.put(UIComponentUtils.getUniqueComponentId(component),
+        map.put(UIComponentUtils.getUniqueComponentId(facesContext, component),
                 new CallbackRendererInfo(component,
                                  callbackRenderer,
                                  true));
@@ -96,7 +96,7 @@ public class CallbackSupport
                                               CallbackRenderer callbackRenderer)
     {
         Map map = getCallbackRendererInfoMap(facesContext);
-        map.remove(UIComponentUtils.getUniqueComponentId(component));
+        map.remove(UIComponentUtils.getUniqueComponentId(facesContext, component));
         if (map.isEmpty())
         {
             unwrapRenderKit(facesContext);

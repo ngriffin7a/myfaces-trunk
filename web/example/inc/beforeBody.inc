@@ -1,6 +1,6 @@
 <body>
 
-<h:use_faces>
+<f:use_faces>
 
     <x:page_layout id="page" layout="classic" cssClass="<%=pageLayout%>" >
         <x:page_header id="header" cssClass="pageHeader" >

@@ -1,5 +1,6 @@
 <%@ page session="false"
 %><%@ taglib uri="/WEB-INF/myfaces_basic.tld" prefix="h"
+%><%@ taglib uri="/WEB-INF/myfaces_core.tld" prefix="f"
 %><%@ taglib uri="/WEB-INF/myfaces_ext.tld" prefix="x"
 %><html>
 
@@ -28,7 +29,7 @@
 
 <body>
 
-<h:use_faces>
+<f:use_faces>
 
 <jsp:useBean id="optionsForm" class="net.sourceforge.myfaces.examples.misc.OptionsForm" scope="request" />
 <jsp:useBean id="optionsCtrl" class="net.sourceforge.myfaces.examples.misc.OptionsController" scope="application" />
@@ -66,7 +67,7 @@
         <%@include file="inc/page_footer.jsp" %>
     </x:page_layout>
 
-</h:use_faces>
+</f:use_faces>
 
 </body>
 

@@ -18,7 +18,6 @@
  */
 package net.sourceforge.myfaces.renderkit.html.state.client;
 
-import net.sourceforge.myfaces.renderkit.html.jspinfo.JspInfo;
 import net.sourceforge.myfaces.component.UIComponentUtils;
 
 import javax.faces.FacesException;
@@ -44,7 +43,7 @@ public class RequestParameterNames
                                                              String attributeName)
     {
         //return "SC_" + uiComponent.getClientId(facesContext) + "/" + attributeName;
-        return "SC_" + UIComponentUtils.getUniqueComponentId(uiComponent) + "/" + attributeName;
+        return "SC_" + UIComponentUtils.getUniqueComponentId(facesContext, uiComponent) + "/" + attributeName;
     }
 
     protected static String restoreUIComponentStateParameterAttributeName(FacesContext facesContext,
@@ -52,7 +51,7 @@ public class RequestParameterNames
                                                                           String paramName)
     {
         //String prefix = "SC_" + uiComponent.getClientId(facesContext) + "/";
-        String prefix = "SC_" + UIComponentUtils.getUniqueComponentId(uiComponent) + "/";
+        String prefix = "SC_" + UIComponentUtils.getUniqueComponentId(facesContext, uiComponent) + "/";
         if (paramName.startsWith(prefix))
         {
             return paramName.substring(prefix.length());
@@ -75,7 +74,7 @@ public class RequestParameterNames
         return "SLC_"   //SLC stands for "State of Listener of type Component"
                 + listenerType
                 //+ "_" + uiComponent.getClientId(facesContext)
-                + "_" + UIComponentUtils.getUniqueComponentId(uiComponent)
+                + "_" + UIComponentUtils.getUniqueComponentId(facesContext, uiComponent)
                 + "/" + getNextListenerSerial(facesContext);
     }
 
@@ -86,7 +85,7 @@ public class RequestParameterNames
         return "SLS_"   //SLS stands for "State of Listener of type Serializable"
                 + listenerType
                 //+ "_" + uiComponent.getClientId(facesContext)
-                + "_" + UIComponentUtils.getUniqueComponentId(uiComponent)
+                + "_" + UIComponentUtils.getUniqueComponentId(facesContext, uiComponent)
                 + "/" + getNextListenerSerial(facesContext);
     }
 

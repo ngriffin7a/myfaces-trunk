@@ -20,7 +20,6 @@ package net.sourceforge.myfaces.taglib;
 
 import net.sourceforge.myfaces.component.UIOutput;
 import net.sourceforge.myfaces.renderkit.html.TextRenderer;
-import net.sourceforge.myfaces.renderkit.html.LabelRenderer;
 
 import javax.faces.component.UIComponent;
 
@@ -63,6 +62,4 @@ public class OutputTextTag
     {
         setRendererAttribute(TextRenderer.BUNDLE_ATTR, value);
     }
-
-
 }

@@ -1,10 +1,9 @@
 <%@ page import="java.math.BigDecimal,
                  java.util.Date"%>
 <%@ page session="false"
-%>
-<%@ taglib uri="/WEB-INF/myfaces_basic.tld" prefix="h"
-%>
-<%@ taglib uri="/WEB-INF/myfaces_ext.tld" prefix="x"
+%><%@ taglib uri="/WEB-INF/myfaces_basic.tld" prefix="h"
+%><%@ taglib uri="/WEB-INF/myfaces_core.tld" prefix="f"
+%><%@ taglib uri="/WEB-INF/myfaces_ext.tld" prefix="x"
 %><html>
 
 <!--
@@ -32,7 +31,7 @@
 
 <body>
 
-<h:use_faces>
+<f:use_faces>
 
     <x:page_layout id="page" layoutReference="pageLayout" cssClass="pageLayout" >
         <%@include file="inc/page_header.jsp" %>
@@ -62,7 +61,7 @@
         <%@include file="inc/page_footer.jsp" %>
     </x:page_layout>
 
-</h:use_faces>
+</f:use_faces>
 
 </body>
 

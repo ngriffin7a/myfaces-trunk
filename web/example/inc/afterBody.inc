@@ -3,6 +3,6 @@
         </x:page_footer>
     </x:page_layout>
 
-</h:use_faces>
+</f:use_faces>
 
 </body>

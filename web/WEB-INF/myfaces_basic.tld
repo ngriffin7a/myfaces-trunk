@@ -33,12 +33,6 @@
         Tag library for the MyFaces basic implementation.
     </info>
 
-    <tag>
-        <name>use_faces</name>
-        <tagclass>net.sourceforge.myfaces.taglib.UseFacesTag</tagclass>
-        <bodycontent>JSP</bodycontent>
-    </tag>
-
 <!--
   ======================================================
   form

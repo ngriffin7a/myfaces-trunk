@@ -186,10 +186,7 @@ public class HTTPSessionStateRestorer
             }
 
             //remove children
-            for (int i = 0; i < uiComponent.getChildCount(); i++)
-            {
-                uiComponent.removeChild(0);
-            }
+            uiComponent.clearChildren();
 
             //copy children
             for (int i = 0; i < find.getChildCount(); i++)

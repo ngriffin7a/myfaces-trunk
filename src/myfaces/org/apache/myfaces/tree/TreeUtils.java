@@ -167,7 +167,7 @@ public class TreeUtils
         stream.print('<');
         stream.print(comp.getComponentType());
         printAttribute(stream, comp, CommonComponentAttributes.COMPONENT_ID_ATTR, "id");
-        printAttribute(stream, comp, UIComponentUtils.UNIQUE_COMPONENT_ID, "uniqueId");
+        printAttribute(stream, comp, UIComponentUtils.UNIQUE_COMPONENT_ID_ATTR, "uniqueId");
         printAttribute(stream, comp, CommonComponentAttributes.VALUE_ATTR);
         printAttribute(stream, comp, CommonComponentAttributes.MODEL_REFERENCE_ATTR);
 

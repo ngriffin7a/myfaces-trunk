@@ -20,29 +20,28 @@ package net.sourceforge.myfaces.component;
 
 import net.sourceforge.myfaces.convert.ConverterUtils;
 import net.sourceforge.myfaces.convert.impl.StringArrayConverter;
-import net.sourceforge.myfaces.renderkit.html.state.client.MinimizingStateSaver;
 import net.sourceforge.myfaces.renderkit.html.jspinfo.JspInfo;
+import net.sourceforge.myfaces.renderkit.html.state.client.MinimizingStateSaver;
 import net.sourceforge.myfaces.tree.TreeUtils;
 
 import javax.faces.FacesException;
 import javax.faces.FactoryFinder;
-import javax.faces.tree.Tree;
 import javax.faces.component.UIComponent;
-import javax.faces.component.NamingContainer;
 import javax.faces.context.FacesContext;
 import javax.faces.context.Message;
 import javax.faces.context.MessageResources;
 import javax.faces.context.MessageResourcesFactory;
 import javax.faces.convert.Converter;
 import javax.faces.convert.ConverterException;
+import javax.faces.tree.Tree;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.lang.reflect.Field;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
-import java.util.List;
 import java.util.Iterator;
+import java.util.List;
 
 /**
  * DOCUMENT ME!
@@ -51,8 +50,12 @@ import java.util.Iterator;
  */
 public class UIComponentUtils
 {
-    public static final String UNIQUE_COMPONENT_ID = JspInfo.class.getName() + ".UNIQUE_COMPONENT_ID";
+    public static final String UNIQUE_COMPONENT_ID_ATTR = JspInfo.class.getName() + ".UNIQUE_COMPONENT_ID";
     public static final char UNIQUE_COMPONENT_ID_SEPARATOR_CHAR = ':';
+
+    public static final String NEXT_SIBLING_ATTR = JspInfo.class.getName() + ".NEXT_SIBLING";
+    public static final Object NEXT_SIBLING_NULL_DUMMY = new Object();
+
 
     private UIComponentUtils() {}
 
@@ -313,53 +316,24 @@ public class UIComponentUtils
 
 
 
+    public static String getUniqueComponentId(FacesContext facesContext,
+                                              UIComponent uiComponent)
+    {
+        return uiComponent.getClientId(facesContext);
+    }
+
     /**
      * @param uiComponent
      * @return
+     * @deprecated
      */
     public static String getUniqueComponentId(UIComponent uiComponent)
     {
-        String uniqueId = (String)uiComponent.getAttribute(UNIQUE_COMPONENT_ID);
+        String uniqueId = (String)uiComponent.getAttribute(UNIQUE_COMPONENT_ID_ATTR);
         if (uniqueId != null)
         {
             return uniqueId;
         }
-
-        /*
-        String componentId = uiComponent.getComponentId();
-        if (componentId != null)
-        {
-            UIComponent findNamingContainer = uiComponent.getParent();
-            if (findNamingContainer == null)
-            {
-                //already at root
-                return "";
-            }
-            while (findNamingContainer != null &&
-                   !(findNamingContainer instanceof NamingContainer))
-            {
-                findNamingContainer = findNamingContainer.getParent();
-            }
-            if (findNamingContainer == null)
-            {
-                throw new FacesException("Root is no naming container?!");
-            }
-
-            if (findNamingContainer.getParent() == null)
-            {
-                //NamingContainer is root
-                uniqueId = componentId;
-            }
-            else
-            {
-                uniqueId = getUniqueComponentId(findNamingContainer)
-                            + UIComponent.SEPARATOR_CHAR
-                            + componentId;
-            }
-            uiComponent.setAttribute(JspInfo.UNIQUE_COMPONENT_ID, uniqueId);
-            return uniqueId;
-        }
-        */
 
         //find root
         UIComponent findRoot = uiComponent;
@@ -369,10 +343,10 @@ public class UIComponentUtils
         }
 
         //assign unique component ids:
-        findRoot.setAttribute(UNIQUE_COMPONENT_ID, "");
+        findRoot.setAttribute(UNIQUE_COMPONENT_ID_ATTR, "");
         assignUniqueIdsToChildren(findRoot, "");
 
-        return (String)uiComponent.getAttribute(UNIQUE_COMPONENT_ID);
+        return (String)uiComponent.getAttribute(UNIQUE_COMPONENT_ID_ATTR);
     }
 
     private static void assignUniqueIdsToChildren(UIComponent parent,
@@ -385,7 +359,7 @@ public class UIComponentUtils
             //if (comp.getComponentId() == null)
             //{
                 String uniqueId = parentUniqueId + UNIQUE_COMPONENT_ID_SEPARATOR_CHAR + childIdx;
-                comp.setAttribute(UNIQUE_COMPONENT_ID, uniqueId);
+                comp.setAttribute(UNIQUE_COMPONENT_ID_ATTR, uniqueId);
                 assignUniqueIdsToChildren(comp, uniqueId);
             //}
             //else
@@ -395,8 +369,18 @@ public class UIComponentUtils
         }
     }
 
+    public static UIComponent findComponentByUniqueId(FacesContext facesContext,
+                                                      Tree tree,
+                                                      String uniqueId)
+    {
+        return tree.getRoot().findComponent(uniqueId);
+    }
+
+
+
     /**
      * TODO: We MUST optimize this by a HashMap
+     * @deprecated
      */
     public static UIComponent findComponentByUniqueId(Tree tree, String uniqueId)
     {
@@ -407,6 +391,57 @@ public class UIComponentUtils
             {
                 return comp;
             }
+        }
+        return null;
+    }
+
+
+
+    /**
+     *
+     * @param component
+     * @param saveSibilingAsAttribute   should only be used for static trees
+     * @return
+     */
+    public static UIComponent findNextSibling(UIComponent component,
+                                              boolean saveSibilingAsAttribute)
+    {
+        Object nextSibling = component.getAttribute(NEXT_SIBLING_ATTR);
+        if (nextSibling != null)
+        {
+            return nextSibling == NEXT_SIBLING_NULL_DUMMY
+                        ? null
+                        : (UIComponent)nextSibling;
+        }
+
+        UIComponent parent = component.getParent();
+        if (parent == null)
+        {
+            //root has no sibling
+            return null;
+        }
+
+        boolean currentFound = false;
+        for (Iterator it = parent.getChildren(); it.hasNext();)
+        {
+            UIComponent sibling = (UIComponent)it.next();
+            if (currentFound)
+            {
+                if (saveSibilingAsAttribute)
+                {
+                    component.setAttribute(NEXT_SIBLING_ATTR, sibling);
+                }
+                return sibling;
+            }
+            if (sibling == component)
+            {
+                currentFound = true;
+            }
+        }
+
+        if (saveSibilingAsAttribute)
+        {
+            component.setAttribute(NEXT_SIBLING_ATTR, NEXT_SIBLING_NULL_DUMMY);
         }
         return null;
     }

@@ -1,5 +1,7 @@
 <%@ page session="false"
-%><%@ taglib uri="/WEB-INF/myfaces_basic.tld" prefix="h"
+%>
+<%@ taglib uri="/WEB-INF/myfaces_basic.tld" prefix="h"
+%><%@ taglib uri="/WEB-INF/myfaces_core.tld" prefix="f"
 %><%@ taglib uri="/WEB-INF/myfaces_ext.tld" prefix="x"
 %><html>
 
@@ -25,22 +27,86 @@
 //-->
 
 <%@include file="inc/head.inc" %>
+
 <body>
 
-<h:use_faces>
+<jsp:useBean id="countryList" class="net.sourceforge.myfaces.examples.listexample.SimpleCountryList" scope="request" />
 
-    <x:page_layout id="page" layoutReference="pageLayout" cssClass="pageLayout" >
-        <%@include file="inc/page_header.jsp" %>
-        <%@include file="inc/navigation.jsp"  %>
+<f:use_faces>
 
-<x:page_body id="body" cssClass="pageBody" >
-Body
-</x:page_body>
+            <h:errors id="errors" />
 
-        <%@include file="inc/page_footer.jsp" %>
-    </x:page_layout>
+            <h:group id="gr1">
 
-</h:use_faces>
+                <h:output_text text="test1"/>
+                <%
+                    int x = 0;
+                    if (x == 1)
+                    {
+                %>
+                <h:output_text text="test2"/>
+                <h:output_text text="test3"/>
+                <%
+                     }
+                %>
+                <h:output_text text="test4"/>
+
+            </h:group>
+
+
+
+
+            <% int rows = 0, cols = 2; %>
+            <h:list id="x" cssClass="standardTable"
+                    headerClass="standardTable_Header"
+                    footerClass="standardTable_Footer"
+                    rowClasses="standardTable_Row1,standardTable_Row2"
+                    columnClasses="standardTable_Column,standardTable_ColumnCentered,standardTable_Column" >
+                <!-- HEADER -->
+                <h:group>
+                    <h:output_text text="Country name" />
+                    <h:output_text text="Iso-Code" />
+                    <h:output_text text="Size" />
+                </h:group>
+                <!-- DATA -->
+                <h:listrow var="country" modelReference="countryList.countries" >
+
+                    <h:command_hyperlink>
+                        <h:output_text modelReference="country.name" />
+
+                        <f:parameter name="isoCode" modelReference="country.isoCode" />
+                        <f:parameter name="name" modelReference="country.name" />
+                        <f:parameter name="size" modelReference="country.size" />
+                        <f:action_listener type="net.sourceforge.myfaces.examples.listexample.SimpleCountryController" />
+
+                    </h:command_hyperlink>
+
+                    <h:output_text modelReference="country.isoCode" />
+                    <h:output_text modelReference="country.size" />
+                    <% rows++; %>
+
+                </h:listrow>
+                <!-- FOOTER -->
+                <h:group>
+                    <h:output_text text="take a look at this runtime values ..."/>
+                    <h:group>
+
+                        <h:output_message msg="{0} rows" >
+                            <f:parameter value="<%=new Integer(rows)%>"/>
+                        </h:output_message>
+                        &nbsp; / &nbsp;
+
+                        <h:output_message msg="{0} cols" >
+                            <h:parameter value="<%=new Integer(cols)%>"/>
+                        </h:output_message>
+
+                    </h:group>
+                    <h:output_text text=""/>
+                </h:group>
+            </h:list>
+            <br>
+
+</f:use_faces>
 
 </body>
 

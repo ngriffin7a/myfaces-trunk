@@ -28,7 +28,7 @@
 //-->
 
 <%@include file="inc/head.inc" %>
-<h:use_faces>
+<f:use_faces>
 
     <x:page_layout id="page" layoutReference="pageLayout" cssClass="pageLayout" >
         <%@include file="inc/page_header.jsp" %>
@@ -45,7 +45,7 @@
                     </td>
                 </tr>
             </table>
-            <h:output_message id="today" bundle="net.sourceforge.myfaces.examples.resource.example_messages" key="today" >
+            <h:output_message bundle="net.sourceforge.myfaces.examples.resource.example_messages" key="today" >
                 <f:parameter id="p0" value="<%=new Date()%>" />
             </h:output_message>
         </x:page_body>
@@ -53,7 +53,7 @@
         <%@include file="inc/page_footer.jsp" %>
     </x:page_layout>
 
-</h:use_faces>
+</f:use_faces>
 
 </body>
 

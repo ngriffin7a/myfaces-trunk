@@ -131,24 +131,6 @@ public class NavigationRenderer
             }
         }
 
-        /*
-        TODO:
-        UIComponent oldNavigation = (UIComponent)facesContext.getServletRequest().getAttribute(CURRENT_NAVIGATION_ATTR);
-        if (oldNavigation != null)
-        {
-            //Remove all children:
-            while(uiComponent.getChildCount() > 0)
-            {
-                uiComponent.removeChild(0);
-            }
-
-            //Add all children from old navigation
-            for (Iterator it = oldNavigation.getChildren(); it.hasNext();)
-            {
-                uiComponent.addChild((UIComponent)it.next());
-            }
-        }
-        */
         renderChildren(facesContext, 0, uiComponent.getChildren());
     }
 

@@ -117,6 +117,21 @@ public class JspInfo
     public static FacesTag getCreatorTag(UIComponent uiComponent)
     {
         return (FacesTag)uiComponent.getAttribute(JspInfo.CREATOR_TAG_ATTR);
+        /*
+        Class clazz = (Class)uiComponent.getAttribute(JspInfo.CREATOR_TAG_CLASS_ATTR);
+        try
+        {
+            return (FacesTag)clazz.newInstance();
+        }
+        catch (InstantiationException e)
+        {
+            throw new RuntimeException(e);
+        }
+        catch (IllegalAccessException e)
+        {
+            throw new RuntimeException(e);
+        }
+        */
     }
 
     public static List getActionListenersTypeList(UIComponent uiComponent)

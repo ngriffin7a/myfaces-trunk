@@ -63,6 +63,9 @@ public class MyParseEventListener
     private UIComponent _currentComponent;
     private JspInfo _jspInfo;
 
+    private static final String AUTO_ID_PREFIX = "autoId";
+    private int _autoId;
+
     public MyParseEventListener(JspTreeParser parser,
                                 JspCompilationContext ctxt,
                                 JspInfo jspInfo)
@@ -401,7 +404,7 @@ public class MyParseEventListener
             if (attrValue != null)
             {
                 if (attrInfo.canBeRequestTime() &&
-                    ((String)attrValue).trim().startsWith("<%"))
+                    ((String)attrValue).trim().startsWith("<%"))    //TODO: What about "{" style references?
                 {
                     //Request time value --> ignore
                     continue;
@@ -474,7 +477,9 @@ public class MyParseEventListener
         }
         else
         {
-            LogUtil.getLogger().finest("No component id in '" + ti.getTagName() + "' tag.");
+            String newAutoId = AUTO_ID_PREFIX + (++_autoId);
+            comp.setComponentId(newAutoId);
+            LogUtil.getLogger().finest("Tag '" + ti.getTagName() + "' has no id, assigning auto id '" + newAutoId + "' to component.");
         }
 
         String rendererType = facesTag.getRendererType();
@@ -490,6 +495,7 @@ public class MyParseEventListener
 
         _currentComponent = comp;
 
+        //We created this tag instance ourselves, so we are allowed to keep a reference
         comp.setAttribute(JspInfo.CREATOR_TAG_ATTR, facesTag);
 
         if (comp.getComponentType().equals(UISaveState.TYPE))

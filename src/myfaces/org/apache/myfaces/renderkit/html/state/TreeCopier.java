@@ -18,8 +18,8 @@
  */
 package net.sourceforge.myfaces.renderkit.html.state;
 
-import net.sourceforge.myfaces.component.UIComponentUtils;
 import net.sourceforge.myfaces.component.CommonComponentAttributes;
+import net.sourceforge.myfaces.component.UIComponentUtils;
 import net.sourceforge.myfaces.renderkit.html.jspinfo.JspInfo;
 import net.sourceforge.myfaces.util.bean.BeanUtils;
 import net.sourceforge.myfaces.util.logging.LogUtil;
@@ -70,7 +70,8 @@ public class TreeCopier
 
     public void copyTree(Tree fromTree, Tree toTree)
     {
-        copyComponent(fromTree.getRoot(), toTree, toTree.getRoot());
+        copyComponent(FacesContext.getCurrentInstance(),
+                      fromTree.getRoot(), toTree, toTree.getRoot());
     }
 
     /*
@@ -85,7 +86,8 @@ public class TreeCopier
      * @param fromComp          source components, where attributes and children should be copied from
      * @param toComp            destination component, where attributes and children should be copied to
      */
-    protected void copyComponent(UIComponent fromComp,
+    protected void copyComponent(FacesContext facesContext,
+                                 UIComponent fromComp,
                                  Tree toTree,
                                  UIComponent toComp)
     {
@@ -95,7 +97,7 @@ public class TreeCopier
         for (Iterator it = fromComp.getChildren(); it.hasNext(); childIndex++)
         {
             UIComponent child = (UIComponent)it.next();
-            String uniqueId = UIComponentUtils.getUniqueComponentId(child);
+            String uniqueId = UIComponentUtils.getUniqueComponentId(facesContext, child);
 
             if (_ignoreComponents != null &&
                 _ignoreComponents.contains(uniqueId))
@@ -109,7 +111,7 @@ public class TreeCopier
             {
                 //destination component already exists?
                 //clone = toComp.findComponent(child.getComponentId());
-                clone = UIComponentUtils.findComponentByUniqueId(toTree, uniqueId);
+                clone = UIComponentUtils.findComponentByUniqueId(facesContext, toTree, uniqueId);
             }
             catch (Exception e)
             {
@@ -129,7 +131,7 @@ public class TreeCopier
                 clone.setComponentId(child.getComponentId());
                 toComp.addChild(childIndex, clone);
 
-                copyComponent(child, toTree, clone);    //Recursion
+                copyComponent(facesContext, child, toTree, clone);    //Recursion
             }
         }
     }

@@ -31,7 +31,7 @@
 
 <jsp:useBean id="countryForm" class="net.sourceforge.myfaces.examples.listexample.SimpleCountryForm" scope="request" />
 
-<h:use_faces>
+<f:use_faces>
 
     <x:page_layout id="page" layoutReference="pageLayout" cssClass="pageLayout" >
         <%@include file="inc/page_header.jsp" %>
@@ -52,7 +52,7 @@
         <%@include file="inc/page_footer.jsp" %>
     </x:page_layout>
 
-</h:use_faces>
+</f:use_faces>
 
 </body>
 
