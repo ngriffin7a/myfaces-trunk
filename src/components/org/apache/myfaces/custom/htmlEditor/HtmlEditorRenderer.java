@@ -33,6 +33,9 @@ import org.apache.myfaces.renderkit.html.util.JavascriptUtils;
  * @author Sylvain Vieujot (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.12  2004/12/08 04:13:56  svieujot
+ * Add styleSource and styleClassSource for the htmlEditor source window.
+ *
  * Revision 1.11  2004/12/06 04:26:07  svieujot
  * Make HtmlEditor UserRoleAware.
  *
@@ -140,12 +143,7 @@ public class HtmlEditorRenderer extends Renderer {
 
         		
 		writer.startElement(HTML.DIV_ELEM,null);
-        writer.writeAttribute(HTML.CLASS_ATTR,
-                "kupu-fulleditor"+(editor.getStyleClass()!=null ? " "+editor.getStyleClass() : ""),
-                null);
-        if( editor.getStyle() != null )
-    	    writer.writeAttribute(HTML.STYLE_ATTR, editor.getStyle(), null);
-
+        writer.writeAttribute(HTML.CLASS_ATTR, "kupu-fulleditor", null);
 
         	//
         	// Toolbar
@@ -867,16 +865,24 @@ public class HtmlEditorRenderer extends Renderer {
             	writer.writeAttribute(HTML.FRAMEBORDER_ATTR, "0", null);
             	writer.writeAttribute(HTML.SCROLLING_ATTR, "auto", null);
             	writer.writeAttribute(HTML.SRC_ATTR, "about:blank", null); // Text loaded afterward by javascript
+            	if( editor.getStyleClass() != null )
+            	    writer.writeAttribute(HTML.CLASS_ATTR, editor.getStyleClass(), null);
+                if( editor.getStyle() != null )
+            	    writer.writeAttribute(HTML.STYLE_ATTR, editor.getStyle(), null);
             	writer.endElement(HTML.IFRAME_ELEM);
             	writer.startElement(HTML.TEXTAREA_ELEM, null);
             	writer.writeAttribute(HTML.ID_ATTR, "kupu-editor-textarea", null);
-            	writer.writeAttribute(HTML.STYLE_ATTR, "display: none", null);
+            	if( editor.getStyleClassSource() != null )
+            	    writer.writeAttribute(HTML.CLASS_ATTR, editor.getStyleClassSource(), null);
+            	writer.writeAttribute(HTML.STYLE_ATTR,
+            	        "display: none"+(editor.getStyleSource()==null ? "" : ";"+editor.getStyleSource()), null);
             	writer.endElement(HTML.TEXTAREA_ELEM);
             writer.endElement(HTML.DIV_ELEM);
             
         writer.endElement(HTML.DIV_ELEM); // kupu-fulleditor
         
-        String text = "<html><body>"+(String) editor.getValue()+"</body></html>";
+        String value = (String) editor.getValue();
+        String text = "<html><body>"+(value==null ? "" : value)+"</body></html>";
         String encodedText = text == null ? "" : JavascriptUtils.encodeString( text );
         
         boolean formularMode = editor.isEnableFlexiTools();

@@ -23,6 +23,9 @@ import org.apache.myfaces.taglib.UIComponentTagBase;
  * @author Sylvain Vieujot (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.6  2004/12/08 04:13:56  svieujot
+ * Add styleSource and styleClassSource for the htmlEditor source window.
+ *
  * Revision 1.5  2004/12/04 03:26:28  svieujot
  * Various bug fixes
  *
@@ -37,13 +40,13 @@ import org.apache.myfaces.taglib.UIComponentTagBase;
  *
  * Revision 1.1  2004/12/02 22:28:30  svieujot
  * Add an x:htmlEditor based on the Kupu library.
- *
- *
  */
 public class HtmlEditorTag extends UIComponentTagBase {
     
     private String style;
     private String styleClass;
+    private String styleSource;
+    private String styleClassSource;
     
     private String formularMode;
     
@@ -61,6 +64,8 @@ public class HtmlEditorTag extends UIComponentTagBase {
         
         setStringProperty(component, "style", style);
         setStringProperty(component, "styleClass", styleClass);
+        setStringProperty(component, "styleSource", styleSource);
+        setStringProperty(component, "styleClassSource", styleClassSource);
         
         setBooleanProperty(component, "formularMode", formularMode);
         
@@ -88,6 +93,14 @@ public class HtmlEditorTag extends UIComponentTagBase {
     
     public void setStyleClass(String styleClass){
         this.styleClass = styleClass;
+    }
+    
+    public void setStyleSource(String styleSource){
+        this.styleSource = styleSource;
+    }
+    
+    public void setStyleClassSource(String styleClassSource){
+        this.styleClassSource = styleClassSource;
     }
     
     public void setFormularMode(String formularMode){
