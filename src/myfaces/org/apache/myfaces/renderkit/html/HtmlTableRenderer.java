@@ -37,6 +37,9 @@ import java.util.List;
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.20  2004/08/09 08:01:08  manolito
+ * bug #1004896 - id attribute not rendered
+ *
  * Revision 1.19  2004/07/01 22:05:06  mwessendorf
  * ASF switch
  *
@@ -68,6 +71,7 @@ public class HtmlTableRenderer
 
         HtmlRendererUtils.writePrettyLineSeparator(facesContext);
         writer.startElement(HTML.TABLE_ELEM, uiComponent);
+        writer.writeAttribute(HTML.ID_ATTR, uiComponent.getClientId(facesContext), null);
         HtmlRendererUtils.renderHTMLAttributes(writer, uiComponent, HTML.TABLE_PASSTHROUGH_ATTRIBUTES);
 
         renderFacet(facesContext, writer, (UIData)uiComponent, true);
