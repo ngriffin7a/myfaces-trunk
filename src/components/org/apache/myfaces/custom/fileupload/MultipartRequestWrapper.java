@@ -16,6 +16,8 @@
 package org.apache.myfaces.custom.fileupload;
 
 import org.apache.commons.fileupload.*;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
@@ -26,6 +28,9 @@ import java.util.*;
  * @author Sylvain Vieujot (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.8  2004/11/16 16:25:52  mmarinschek
+ * new popup - component; not yet finished
+ *
  * Revision 1.7  2004/10/13 11:50:57  matze
  * renamed packages to org.apache
  *
@@ -42,22 +47,35 @@ import java.util.*;
 public class MultipartRequestWrapper
 		extends HttpServletRequestWrapper
 {
+    private static Log log = LogFactory.getLog(MultipartRequestWrapper.class);
+
 	HttpServletRequest request = null;
 	HashMap parametersMap = null;
-	FileUpload fileUpload = null;
+	DiskFileUpload fileUpload = null;
 	HashMap fileItems = null;
 	int maxSize;
+    int thresholdSize;
+    String repositoryPath;
 
-	public MultipartRequestWrapper(HttpServletRequest request, int maxSize){
+    public MultipartRequestWrapper(HttpServletRequest request, 
+                                   int maxSize, int thresholdSize,
+                                   String repositoryPath){
 		super( request );
 		this.request = request;
         this.maxSize = maxSize;
+        this.thresholdSize = thresholdSize;
+        this.repositoryPath = repositoryPath;
 	}
 	
 	private void parseRequest() {
-		fileUpload = new FileUpload();
-		fileUpload.setSizeMax(maxSize);
+		fileUpload = new DiskFileUpload();
 		fileUpload.setFileItemFactory(new DefaultFileItemFactory());
+		fileUpload.setSizeMax(maxSize);
+
+        fileUpload.setSizeThreshold(thresholdSize);
+
+        if(repositoryPath != null && repositoryPath.trim().length()>0)
+            fileUpload.setRepositoryPath(repositoryPath);
 
 	    String charset = request.getCharacterEncoding();
 		fileUpload.setHeaderEncoding(charset);
@@ -67,10 +85,16 @@ public class MultipartRequestWrapper
 		try{
 			requestParameters = fileUpload.parseRequest(request);
         } catch (FileUploadBase.SizeLimitExceededException e) {
+
             // TODO: find a way to notify the user about the fact that the uploaded file exceeded size limit
+
+            if(log.isInfoEnabled())
+                log.info("user tried to upload a file that exceeded file-size limitations.",e);
+
             requestParameters = Collections.EMPTY_LIST;
+
 		}catch(FileUploadException fue){
-			// TODO : Log !
+			log.error("Exception while uploading file.", fue);
 			requestParameters = Collections.EMPTY_LIST;
 		}
 

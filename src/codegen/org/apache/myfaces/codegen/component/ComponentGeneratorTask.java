@@ -18,6 +18,8 @@ package org.apache.myfaces.codegen.component;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.taskdefs.MatchingTask;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import java.io.File;
 
@@ -28,11 +30,12 @@ import java.io.File;
 public class ComponentGeneratorTask
         extends MatchingTask
 {
-    //private static final Log log = LogFactory.getLog(ComponentInspectorTask.class);
+    private static final Log log = LogFactory.getLog(ComponentGeneratorTask.class);
 
     private File _basedir;
     private File _destdir;
     private File _velocityLoaderPath;
+    private String _includes;
 
     public File getBasedir()
     {
@@ -42,6 +45,16 @@ public class ComponentGeneratorTask
     public void setBasedir(File basedir)
     {
         _basedir = basedir;
+    }
+
+    public String getIncludes()
+    {
+        return _includes;
+    }
+
+    public void setIncludes(String includes)
+    {
+        _includes = includes;
     }
 
     public File getDestdir()
@@ -66,16 +79,32 @@ public class ComponentGeneratorTask
 
     public void execute() throws BuildException
     {
-        DirectoryScanner ds = getDirectoryScanner(_basedir);
-        ds.scan();
+        log.info("Executing ComponentGeneratorTask: ");
+        log.info("baseDir : "+_basedir);
+        log.info("destDir : "+_destdir);
+        log.info("velocityLoaderPath : "+_velocityLoaderPath);
 
         ComponentGenerator generator = new ComponentGenerator(_destdir, _velocityLoaderPath);
 
-        String[] files = ds.getIncludedFiles();
-        for (int i = 0; i < files.length; i++)
+        if(_includes==null)
         {
-            String xmlFileName = files[i];
-            generator.generate(new File(_basedir, xmlFileName));
+            DirectoryScanner ds = getDirectoryScanner(_basedir);
+            ds.scan();
+
+            String[] files = ds.getIncludedFiles();
+            for (int i = 0; i < files.length; i++)
+            {
+                String xmlFileName = files[i];
+                log.info("on xmlFileName : "+files[i]);
+                generator.generate(new File(_basedir, xmlFileName));
+            }
+        }
+        else
+        {
+            //_includes = _includes.replace('/','\\');
+
+            log.info("on xmlFileName : "+_basedir+"/"+_includes);
+            generator.generate(new File(_basedir, _includes));
         }
     }
 

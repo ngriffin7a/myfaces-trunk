@@ -196,6 +196,11 @@
         <component-class>org.apache.myfaces.custom.panelstack.HtmlPanelStack</component-class>
     </component>
 
+    <component>
+        <component-type>org.apache.myfaces.HtmlPopup</component-type>
+        <component-class>org.apache.myfaces.custom.popup.HtmlPopup</component-class>
+    </component>
+
   <component>
       <component-type>org.apache.myfaces.RssTicker</component-type>
       <component-class>org.apache.myfaces.custom.rssticker.HtmlRssTicker</component-class>
@@ -358,6 +363,12 @@
             <component-family>javax.faces.Input</component-family>
             <renderer-type>org.apache.myfaces.FileUpload</renderer-type>
             <renderer-class>org.apache.myfaces.custom.fileupload.HtmlFileUploadRenderer</renderer-class>
+        </renderer>
+
+        <renderer>
+            <component-family>javax.faces.Panel</component-family>
+            <renderer-type>org.apache.myfaces.Popup</renderer-type>
+            <renderer-class>org.apache.myfaces.custom.popup.HtmlPopupRenderer</renderer-class>
         </renderer>
 
         <renderer>

@@ -1377,6 +1377,20 @@
         </attribute>
     </tag>
 
+    <!-- popup -->
+    <tag>
+        <name>popup</name>
+        <tag-class>org.apache.myfaces.custom.popup.HtmlPopupTag</tag-class>
+        <body-content>JSP</body-content>
+        <description>
+            Renders a popup which displays on a mouse event.
+        </description>
+        &ui_panel_attributes;
+        &html_universal_attributes;
+        &html_event_handler_attributes;
+        &user_role_attributes;
+     </tag>
+
 
 
 <!--     Custom non-component tags     -->

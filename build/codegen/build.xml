@@ -11,9 +11,10 @@
     <property name="components-src.dir" location="${project.dir}/src/components"/>
 
     <!-- Properties -->
-    <property file="build.properties"/>
-    <property file="../build.properties"/>
-    <property file="../build.properties.default"/>
+    <property file="build.local.properties"/>
+    <property file="build.default.properties"/>
+    <property file="../build.local.properties"/>
+    <property file="../build.default.properties"/>
     <property file="../manifest.properties"/>
 
     <!-- Temporary dir. May be overridden in build.properties -->
@@ -26,6 +27,7 @@
         <pathelement location="${ant.jar}"/>
         <pathelement location="${velocity.jar}"/>
         <pathelement location="${sun-jsf-api.jar}"/>
+        <pathelement location="${commons-logging.jar}"/>                
         <pathelement location="${codegen-classes.dir}"/>
     </path>
 

@@ -20,6 +20,7 @@
             <x:commandNavigation id="nav_2_4_5" value="#{example_messages['nav_FileUpload']}" action="go_fileupload" />
             <x:commandNavigation id="nav_2_4_6" value="#{example_messages['nav_TabbedPane']}" action="go_tabbedPane" />
             <x:commandNavigation id="nav_2_4_7" value="#{example_messages['nav_Calendar']}" action="go_calendar" />
+            <x:commandNavigation id="nav_2_4_71" value="#{example_messages['nav_Popup']}" action="go_popup" />
             <x:commandNavigation id="nav_2_4_8" value="#{example_messages['nav_Date']}" action="go_date" />
             <x:commandNavigation id="nav_2_4_9" value="#{example_messages['nav_dataList']}" action="go_dataList" />
             <x:commandNavigation id="nav_2_4_10" value="#{example_messages['nav_tree']}" action="go_tree" />

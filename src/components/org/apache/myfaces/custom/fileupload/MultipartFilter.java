@@ -15,6 +15,8 @@
  */
 package org.apache.myfaces.custom.fileupload;
 
+import org.apache.commons.fileupload.FileUpload;
+
 import java.io.IOException;
 
 import javax.servlet.*;
@@ -29,7 +31,9 @@ public class MultipartFilter
     implements Filter
 {
 
-    private int maxFileSize = 10 * 1024 * 1024; // 10 MB
+    private int maxFileSize = 100 * 1024 * 1024; // 10 MB
+    private int thresholdSize = 1 * 1024 * 1024; // 1 MB
+    private String repositoryPath = null; //standard temp directory
 
 
     /**
@@ -37,7 +41,21 @@ public class MultipartFilter
      */
     public void init(FilterConfig filterConfig)
     {
+
         String param = filterConfig.getInitParameter("maxFileSize");
+
+        maxFileSize = resolveSize(param, maxFileSize);
+
+        param = filterConfig.getInitParameter("thresholdSize");
+
+        thresholdSize = resolveSize(param, thresholdSize);
+
+        repositoryPath = filterConfig.getInitParameter("repositoryPath");
+    }
+
+    private int resolveSize(String param, int defaultValue)
+    {
+        int numberParam = defaultValue;
 
         if (param != null)
         {
@@ -45,7 +63,11 @@ public class MultipartFilter
             int factor = 1;
             String number = param;
 
-            if (param.endsWith("m"))
+            if (param.endsWith("g"))
+            {
+                factor = 1024 * 1024 * 1024;
+                number = param.substring(0, param.length() - 1);
+            } else if (param.endsWith("m"))
             {
                 factor = 1024 * 1024;
                 number = param.substring(0, param.length() - 1);
@@ -55,8 +77,9 @@ public class MultipartFilter
                 number = param.substring(0, param.length() - 1);
             }
 
-            maxFileSize = Integer.parseInt(number) * factor;
+            numberParam = Integer.parseInt(number) * factor;
         }
+        return numberParam;
     }
 
 
@@ -72,17 +95,15 @@ public class MultipartFilter
         }
 
         HttpServletRequest httpRequest = (HttpServletRequest) request;
-        String type = httpRequest.getHeader("Content-Type");
 
         // Process only multipart/form-data requests
-        if (type != null)
-            if (type.startsWith("multipart/form-data"))
-            {
-                HttpServletResponse httpResponse = (HttpServletResponse) response;
-                MultipartRequestWrapper requestWrapper = new MultipartRequestWrapper(httpRequest, maxFileSize);
-                chain.doFilter(requestWrapper, response);
-                return;
-            }
+        if(FileUpload.isMultipartContent(httpRequest))
+        {
+            MultipartRequestWrapper requestWrapper = new MultipartRequestWrapper(
+                    httpRequest, maxFileSize,thresholdSize,repositoryPath);
+            chain.doFilter(requestWrapper, response);
+            return;
+        }
 
         // Standard request
         chain.doFilter(request, response);

@@ -247,7 +247,12 @@
             <from-outcome>go_calendar</from-outcome>
             <to-view-id>/calendar.jsp</to-view-id>
         </navigation-case>
-        
+
+        <navigation-case>
+            <from-outcome>go_popup</from-outcome>
+            <to-view-id>/popup.jsp</to-view-id>
+        </navigation-case>
+
         <navigation-case>
             <from-outcome>go_date</from-outcome>
             <to-view-id>/date.jsp</to-view-id>
