@@ -228,6 +228,17 @@
                 attribute as pattern is created. The format method of this MessageFormat is
                 called with the message summary as the first argument and the label of the
                 associated component (if any) as the second argument.
+                Example: "{0}:" or "{0} in field {1}"
+            </description>
+        </attribute>
+        <attribute>
+            <name>globalSummaryFormat</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
+            <description>
+                Like summaryFormat, but applies to global messages (i.e. messages not associated
+                with a component). If no globalSummaryFormat is given, the summaryFormat is used for
+                global messages.
                 Example: "{0}:"
             </description>
         </attribute>

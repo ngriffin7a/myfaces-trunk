@@ -39,6 +39,7 @@ public class HtmlMessages
     private static final String DEFAULT_RENDERER_TYPE = "net.sourceforge.myfaces.Messages";
 
     private String _summaryFormat = null;
+    private String _globalSummaryFormat = null;
     private String _detailFormat = null;
     private String _enabledOnUserRole = null;
     private String _visibleOnUserRole = null;
@@ -58,6 +59,18 @@ public class HtmlMessages
     {
         if (_summaryFormat != null) return _summaryFormat;
         ValueBinding vb = getValueBinding("summaryFormat");
+        return vb != null ? (String)vb.getValue(getFacesContext()) : null;
+    }
+
+    public void setGlobalSummaryFormat(String globalSummaryFormat)
+    {
+        _globalSummaryFormat = globalSummaryFormat;
+    }
+
+    public String getGlobalSummaryFormat()
+    {
+        if (_globalSummaryFormat != null) return _globalSummaryFormat;
+        ValueBinding vb = getValueBinding("globalSummaryFormat");
         return vb != null ? (String)vb.getValue(getFacesContext()) : null;
     }
 
@@ -106,12 +119,13 @@ public class HtmlMessages
 
     public Object saveState(FacesContext context)
     {
-        Object values[] = new Object[5];
+        Object values[] = new Object[6];
         values[0] = super.saveState(context);
         values[1] = _summaryFormat;
-        values[2] = _detailFormat;
-        values[3] = _enabledOnUserRole;
-        values[4] = _visibleOnUserRole;
+        values[2] = _globalSummaryFormat;
+        values[3] = _detailFormat;
+        values[4] = _enabledOnUserRole;
+        values[5] = _visibleOnUserRole;
         return ((Object) (values));
     }
 
@@ -120,9 +134,10 @@ public class HtmlMessages
         Object values[] = (Object[])state;
         super.restoreState(context, values[0]);
         _summaryFormat = (String)values[1];
-        _detailFormat = (String)values[2];
-        _enabledOnUserRole = (String)values[3];
-        _visibleOnUserRole = (String)values[4];
+        _globalSummaryFormat = (String)values[2];
+        _detailFormat = (String)values[3];
+        _enabledOnUserRole = (String)values[4];
+        _visibleOnUserRole = (String)values[5];
     }
     //------------------ GENERATED CODE END ---------------------------------------
 }

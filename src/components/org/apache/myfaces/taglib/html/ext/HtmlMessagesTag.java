@@ -29,6 +29,9 @@ import javax.faces.component.UIComponent;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.4  2004/04/01 14:34:23  manolito
+ * new globalSummaryFormat attribute
+ *
  * Revision 1.3  2004/04/01 12:57:42  manolito
  * additional extended component classes for user role support
  *
@@ -49,6 +52,7 @@ public class HtmlMessagesTag
     }
 
     private String _summaryFormat;
+    private String _globalSummaryFormat;
     private String _detailFormat;
     private String _enabledOnUserRole;
     private String _visibleOnUserRole;
@@ -58,6 +62,7 @@ public class HtmlMessagesTag
         super.setProperties(component);
 
         setStringProperty(component, "summaryFormat", _summaryFormat);
+        setStringProperty(component, "globalSummaryFormat", _globalSummaryFormat);
         setStringProperty(component, "detailFormat", _detailFormat);
         setStringProperty(component, JSFAttr.ENABLED_ON_USER_ROLE_ATTR, _enabledOnUserRole);
         setStringProperty(component, JSFAttr.VISIBLE_ON_USER_ROLE_ATTR, _visibleOnUserRole);
@@ -66,6 +71,11 @@ public class HtmlMessagesTag
     public void setSummaryFormat(String summaryFormat)
     {
         _summaryFormat = summaryFormat;
+    }
+
+    public void setGlobalSummaryFormat(String globalSummaryFormat)
+    {
+        _globalSummaryFormat = globalSummaryFormat;
     }
 
     public void setDetailFormat(String detailFormat)

@@ -12,6 +12,10 @@
         <type>java.lang.String</type>
     </field>
     <field>
+        <name>globalSummaryFormat</name>
+        <type>java.lang.String</type>
+    </field>
+    <field>
         <name>detailFormat</name>
         <type>java.lang.String</type>
     </field>

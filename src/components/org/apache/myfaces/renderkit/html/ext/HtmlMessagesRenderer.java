@@ -19,6 +19,7 @@
 package net.sourceforge.myfaces.renderkit.html.ext;
 
 import net.sourceforge.myfaces.component.html.ext.HtmlMessage;
+import net.sourceforge.myfaces.component.html.ext.HtmlMessages;
 import net.sourceforge.myfaces.renderkit.html.HtmlMessagesRendererBase;
 
 import javax.faces.application.FacesMessage;
@@ -31,6 +32,9 @@ import java.text.MessageFormat;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.3  2004/04/01 14:34:22  manolito
+ * new globalSummaryFormat attribute
+ *
  * Revision 1.2  2004/03/31 14:51:46  manolito
  * summaryFormat and detailFormat support
  *
@@ -60,15 +64,18 @@ public class HtmlMessagesRenderer
         if (msgSummary == null) return null;
 
         String summaryFormat;
-        if (message instanceof HtmlMessage)
+        if (msgClientId == null)
         {
-            summaryFormat = ((HtmlMessage)message).getSummaryFormat();
+            summaryFormat = getGlobalSummaryFormat(message);
+            if (summaryFormat == null)
+            {
+                summaryFormat = getSummaryFormat(message);
+            }
         }
         else
         {
-            summaryFormat = (String)message.getAttributes().get("summaryFormat");
+            summaryFormat = getSummaryFormat(message);
         }
-
         if (summaryFormat == null) return msgSummary;
 
         String inputLabel = null;
@@ -77,6 +84,31 @@ public class HtmlMessagesRenderer
 
         MessageFormat format = new MessageFormat(summaryFormat, facesContext.getViewRoot().getLocale());
         return format.format(new Object[] {msgSummary, inputLabel});
+    }
+
+
+    private String getSummaryFormat(UIComponent message)
+    {
+        if (message instanceof HtmlMessages)
+        {
+            return ((HtmlMessages)message).getSummaryFormat();
+        }
+        else
+        {
+            return (String)message.getAttributes().get("summaryFormat");
+        }
+    }
+
+    private String getGlobalSummaryFormat(UIComponent message)
+    {
+        if (message instanceof HtmlMessages)
+        {
+            return ((HtmlMessages)message).getGlobalSummaryFormat();
+        }
+        else
+        {
+            return (String)message.getAttributes().get("globalSummaryFormat");
+        }
     }
 
     protected String getDetail(FacesContext facesContext,
