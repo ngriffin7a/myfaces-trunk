@@ -31,6 +31,9 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:oliver@rossmueller.com">Oliver Rossmueller</a>
  *
  * $Log$
+ * Revision 1.5  2004/11/25 08:34:42  matzew
+ * applyed patch MYFACES-26. Thanks to Takashi Okamoto for supporting this.
+ *
  * Revision 1.4  2004/10/13 11:50:59  matze
  * renamed packages to org.apache
  *
@@ -171,8 +174,6 @@ public class DigesterFacesConfigUnmarshallerImpl implements FacesConfigUnmarshal
     {
         InputSource is = new InputSource(in);
         is.setSystemId(systemId);
-        is.setEncoding("ISO-8859-1");
-
         return digester.parse(is);
     }
 
