@@ -83,12 +83,13 @@ public class ServletContextMockImpl
     {
         if (s.startsWith("/WEB-INF/"))
         {
-            try {
-                return new URL("file://" + 
-                        new File(TestConfig.getContextPath(), s).getCanonicalPath());
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
+            return getClass().getClassLoader().getResource(s);
+//            try {
+//                return new URL("file://" + 
+//                        new File(TestConfig.getContextPath(), s).getCanonicalPath());
+//            } catch (IOException e) {
+//                throw new RuntimeException(e);
+//            }
         }
         else
         {
@@ -101,15 +102,17 @@ public class ServletContextMockImpl
     {
         if (s.startsWith("/WEB-INF/"))
         {
-            try
-            {
-                return new FileInputStream(
-                        new File(TestConfig.getContextPath(), s).getCanonicalFile());
-            }
-            catch (IOException e)
-            {
-                throw new RuntimeException(e);
-            }
+            return Thread.currentThread().getContextClassLoader().getResourceAsStream(s.substring(1));
+//            return getClass().getClassLoader().getResourceAsStream(s);
+//            try
+//            {
+//                return new FileInputStream(
+//                        new File(TestConfig.getContextPath(), s).getCanonicalFile());
+//            }
+//            catch (IOException e)
+//            {
+//                throw new RuntimeException(e);
+//            }
         }
         else
         {

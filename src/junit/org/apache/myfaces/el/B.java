@@ -32,6 +32,11 @@ public class B
         return NAME;
     }
 
+    public void setName(String name)
+    {
+        // do nothing. Out test resets the object on every invocation anyway!
+    }
+
     public C getC()
     {
         return new C();

@@ -41,5 +41,10 @@ public class A
     {
         return new B();
     }
+    
+    public Integer getInt()
+    {
+        return new Integer(0);
+    }
 
 }

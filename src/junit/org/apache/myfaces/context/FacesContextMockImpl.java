@@ -27,12 +27,17 @@ import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseStream;
 import javax.faces.context.ResponseWriter;
+import javax.faces.el.VariableResolver;
 import javax.faces.event.FacesEvent;
 import javax.faces.lifecycle.Lifecycle;
 import javax.faces.render.RenderKit;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import net.sourceforge.myfaces.application.ApplicationImpl;
+import net.sourceforge.myfaces.el.VariableResolverImpl;
+
 import java.util.Iterator;
 import java.util.Locale;
 
@@ -51,26 +56,30 @@ public class FacesContextMockImpl
     private HttpServletResponse _httpServletResponse;
     private Lifecycle _lifecycle;
     private ExternalContext _externalContext;
+    private Application _application;
 
     //~ Methods ------------------------------------------------------------------------------------
 
-    public FacesContextMockImpl(ServletContext context, HttpServletRequest servletRequest, HttpServletResponse servletResponse, Lifecycle lifecycle)
+    public FacesContextMockImpl(ServletContext context, 
+        HttpServletRequest servletRequest, HttpServletResponse servletResponse, 
+        Lifecycle lifecycle, Application application)
     {
         _servletContext = context;
         _httpServletRequest = servletRequest;
         _httpServletResponse = servletResponse;
         _lifecycle = lifecycle;
         _externalContext = new ExternalContextMockImpl();
+        _application = application;
     }
 
     public FacesContextMockImpl()
     {
-        this(null, null, null, null);
+        this(null, null, null, null, null);
     }
 
     public Application getApplication()
     {
-        throw new UnsupportedOperationException();
+        return _application;
     }
 
     public Iterator getClientIdsWithMessages()

@@ -20,14 +20,18 @@ package net.sourceforge.myfaces;
 
 import junit.framework.TestCase;
 import net.sourceforge.myfaces.application.ApplicationImpl;
+import net.sourceforge.myfaces.config.FacesConfig;
+import net.sourceforge.myfaces.config.FacesConfigFactory;
 import net.sourceforge.myfaces.context.FacesContextMockImpl;
 import net.sourceforge.myfaces.context.ServletContextMockImpl;
 import net.sourceforge.myfaces.context.ServletRequestMockImpl;
 import net.sourceforge.myfaces.context.ServletResponseMockImpl;
+import net.sourceforge.myfaces.context.servlet.ServletExternalContextImpl;
 import net.sourceforge.myfaces.el.VariableResolverImpl;
 import net.sourceforge.myfaces.lifecycle.LifecycleImpl;
 
 import javax.faces.application.Application;
+import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.lifecycle.Lifecycle;
 import javax.servlet.ServletContext;
@@ -73,7 +77,15 @@ public class MyFacesTest
         _facesContext = new FacesContextMockImpl(_servletContext,
                                             _httpServletRequest,
                                             _httpServletResponse,
-                                            _lifecycle);
+                                            _lifecycle,
+                                            _application);
+        
+        ServletContext servletContext = new ServletContextMockImpl();
+//        FacesConfigFactory fcf = MyFacesFactoryFinder.getFacesConfigFactory(servletContext);
+//        ExternalContext externalContext = new ServletExternalContextImpl(servletContext, null, null);
+//        FacesConfig facesConfig = fcf.getFacesConfig(externalContext);
+//        facesConfig.configureAll(externalContext);
+        
 //        FacesContextFactory fcf = (FacesContextFactory)FactoryFinder.getFactory(FactoryFinder.FACES_CONTEXT_FACTORY);
 //        _facesContext = fcf.getFacesContext(_servletContext,
 //                                            _httpServletRequest,

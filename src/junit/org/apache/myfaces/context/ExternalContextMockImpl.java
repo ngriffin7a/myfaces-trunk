@@ -102,7 +102,7 @@ public class ExternalContextMockImpl extends ExternalContext
 
     public Object getSession(boolean value)
     {
-        throw new UnsupportedOperationException();
+        return null;
     }
 
     public Map getSessionMap()

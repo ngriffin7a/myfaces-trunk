@@ -19,16 +19,23 @@
 package net.sourceforge.myfaces.el;
 
 /**
- * DOCUMENT ME!
  * @author Manfred Geiler (latest modification by $Author$)
+ * @author Anton Koinov
  * @version $Revision$ $Date$
  */
 public class C
 {
-    public static final String NAME = "Dummy object C";
+    public static final String DEFAULT_NAME = "Dummy object C"; 
+    
+    public String _name = DEFAULT_NAME;
 
     public String getName()
     {
-        return NAME;
+        return _name;
+    }
+
+    public void setName(String name)
+    {
+        _name = name;
     }
 }
