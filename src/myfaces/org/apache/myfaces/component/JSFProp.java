@@ -40,5 +40,6 @@ public class JSFProp
 
     protected JSFProp()
     {
+        // disable
     }
 }

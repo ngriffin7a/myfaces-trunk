@@ -32,7 +32,6 @@ import net.sourceforge.myfaces.config.NavigationCaseConfig;
 import net.sourceforge.myfaces.config.NavigationRuleConfig;
 import net.sourceforge.myfaces.util.FacesUtils;
 
-import javax.faces.application.Application;
 import javax.faces.application.NavigationHandler;
 import javax.faces.application.ViewHandler;
 import javax.faces.context.FacesContext;
