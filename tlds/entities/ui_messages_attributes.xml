@@ -1,13 +1,6 @@
         <!-- UIMessages attributes -->
         &ui_component_attributes;
         <attribute>
-            <name>for</name>
-            <required>false</required>
-            <rtexprvalue>false</rtexprvalue>
-            <type>java.lang.String</type>
-            <description>The client identifier of the component for which this component represents associated message(s).</description>
-        </attribute>
-        <attribute>
             <name>showSummary</name>
             <required>false</required>
             <rtexprvalue>false</rtexprvalue>

@@ -40,7 +40,6 @@ public abstract class HtmlMessagesTagBase
     // HTML event handler attributes --> already implemented in HtmlComponentTagBase
 
     // UIMessages attributes
-    private String _for;
     private String _showSummary;
     private String _showDetail;
     private String _globalOnly;
@@ -61,7 +60,6 @@ public abstract class HtmlMessagesTagBase
     {
         super.setProperties(component);
 
-        setStringProperty(component, JSFAttr.FOR_ATTR, _for);
         setBooleanProperty(component, JSFAttr.SHOW_SUMMARY_ATTR, _showSummary);
         setBooleanProperty(component, JSFAttr.SHOW_DETAIL_ATTR, _showDetail);
         setBooleanProperty(component, JSFAttr.GLOBAL_ONLY_ATTR, _globalOnly);
@@ -76,11 +74,6 @@ public abstract class HtmlMessagesTagBase
         setStringProperty(component, JSFAttr.FATAL_STYLE_ATTR, _fatalStyle);
         setStringProperty(component, JSFAttr.LAYOUT_ATTR, _layout);
         setBooleanProperty(component, JSFAttr.TOOLTIP_ATTR, _tooltip);
-    }
-
-    public void setFor(String aFor)
-    {
-        _for = aFor;
     }
 
     public void setShowSummary(String showSummary)
