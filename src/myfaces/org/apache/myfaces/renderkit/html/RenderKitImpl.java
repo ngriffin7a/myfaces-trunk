@@ -49,6 +49,7 @@ public class RenderKitImpl
         //Standard Renderkit
         addRenderer(new FormRenderer());
         addRenderer(new TextRenderer());
+        addRenderer(new DateRenderer());
         addRenderer(new MessageRenderer());
         addRenderer(new SecretRenderer());
         addRenderer(new ButtonRenderer());

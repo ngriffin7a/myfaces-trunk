@@ -53,6 +53,7 @@ public class ConverterFactoryImpl
     {
         _convertersByClass.put(Boolean.TYPE, _convertersById.get("BooleanConverter"));
         _convertersByClass.put(Long.TYPE, _convertersById.get("LongConverter"));
+        _convertersByClass.put(Integer.TYPE, _convertersById.get("IntegerConverter"));
     }
 
 
