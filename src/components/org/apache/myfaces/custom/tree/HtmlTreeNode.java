@@ -31,6 +31,9 @@ import java.util.List;
  * @author <a href="mailto:oliver@rossmueller.com">Oliver Rossmueller</a>
  * @version $Revision$ $Date$
  *          $Log$
+ *          Revision 1.9  2004/10/10 11:17:18  o_rossmueller
+ *          move selection up in tree when a node is removed
+ *
  *          Revision 1.8  2004/07/01 21:53:07  mwessendorf
  *          ASF switch
  *
@@ -267,6 +270,20 @@ public class HtmlTreeNode
         for (int i = children.length - 1; i >= 0; i--)
         {
             translateChildrenPath(pathUpdateIndex, children[i], -1);
+            HtmlTreeNode child = (HtmlTreeNode) childNodes.get(children[i]);
+
+            if (child.isSelected()) {
+                child.setSelected(false);
+                if (children[i] < childNodes.size() - 1) {
+                    ((HtmlTreeNode) childNodes.get(children[i] + 1)).setSelected(true);
+                } else {
+                    if (children[i] > 0) {
+                        ((HtmlTreeNode) childNodes.get(children[i] - 1)).setSelected(true);
+                    } else {
+                        setSelected(true);
+                    }
+                }
+            }
             childNodes.remove(children[i]);
         }
     }
