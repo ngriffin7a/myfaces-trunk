@@ -1,0 +1,20 @@
+        <!-- all standard attributes of the selectOneRadio tag -->
+        &ui_select_one_attributes;
+        &html_universal_attributes;
+        &html_event_handler_attributes;
+        &html_input_radio_attributes;
+        <!-- RadioRenderer attributes -->
+        <attribute>
+            <name>layout</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
+            <type>java.lang.String</type>
+            <description>see JSF Spec. 8.5.10</description>
+        </attribute>
+        <attribute>
+            <name>border</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
+            <type>java.lang.String</type>
+            <description>see JSF Spec. 8.5.10</description>
+        </attribute>

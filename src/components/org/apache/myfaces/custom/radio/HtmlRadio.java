@@ -18,104 +18,26 @@
  */
 package net.sourceforge.myfaces.custom.radio;
 
-import net.sourceforge.myfaces.renderkit.RendererUtils;
-import net.sourceforge.myfaces.renderkit.html.HtmlRendererUtils;
-
 import javax.faces.component.UIComponentBase;
-import javax.faces.component.UISelectOne;
-import javax.faces.component.UIComponent;
-import javax.faces.el.ValueBinding;
 import javax.faces.context.FacesContext;
-import javax.faces.convert.Converter;
-import javax.faces.FacesException;
-import javax.faces.model.SelectItem;
-import java.io.IOException;
-import java.util.List;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import javax.faces.el.ValueBinding;
 
 /**
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
- * $Log:
+ * $Log$
+ * Revision 1.2  2004/03/31 13:26:07  manolito
+ * extended radio renderer
+ *
  */
 public class HtmlRadio
     extends UIComponentBase
 {
-    private static final Log log = LogFactory.getLog(HtmlRadio.class);
+    //private static final Log log = LogFactory.getLog(HtmlRadio.class);
 
     public static final String FOR_ATTR = "for".intern();
     public static final String INDEX_ATTR = "index".intern();
 
-    public void encodeEnd(FacesContext facesContext) throws IOException
-    {
-        if (facesContext == null) throw new NullPointerException("facesContext");
-        if (!isRendered()) return;
-
-        if (_for == null)
-        {
-            log.error("mandatory attribute 'for'");
-            throw new IllegalStateException("mandatory attribute 'for'");
-        }
-        int index = _index.intValue();
-        if (index < 0)
-        {
-            log.error("positive index must be given");
-            throw new IllegalStateException("positive index must be given");
-        }
-
-        UIComponent uiComponent = getParent().findComponent(_for);
-        if (uiComponent == null)
-        {
-            log.error("Could not find component '" + _for + "'");
-            throw new IllegalStateException("Could not find component '" + _for + "'");
-        }
-        if (!(uiComponent instanceof UISelectOne))
-        {
-            log.error("UISelectOne expected");
-            throw new IllegalStateException("UISelectOne expected");
-        }
-
-        UISelectOne uiSelectOne = (UISelectOne)uiComponent;
-        Converter converter;
-        List selectItemList = RendererUtils.getSelectItemList(uiSelectOne);
-        if (index >= selectItemList.size())
-        {
-            log.error("index " + index + " >= " + selectItemList.size());
-            throw new IndexOutOfBoundsException("index " + index + " >= " + selectItemList.size());
-        }
-
-        try
-        {
-            converter = RendererUtils.findUIOutputConverter(facesContext, uiSelectOne);
-        }
-        catch (FacesException e)
-        {
-            log.error("Error finding Converter for component with id " + uiComponent.getClientId(facesContext));
-            converter = null;
-        }
-
-        Object currentValue = uiSelectOne.getValue();
-        SelectItem selectItem = (SelectItem)selectItemList.get(index);
-        Object itemValue = selectItem.getValue();
-        String itemStrValue;
-        if (converter == null)
-        {
-            itemStrValue = itemValue.toString();
-        }
-        else
-        {
-            itemStrValue = converter.getAsString(facesContext, uiSelectOne, itemValue);
-        }
-
-        HtmlRendererUtils.renderRadio(facesContext,
-                                      uiSelectOne,
-                                      itemStrValue,
-                                      selectItem.getLabel(),
-                                      currentValue == null && itemValue == null ||
-                                      currentValue != null && currentValue.equals(itemValue));
-    }
 
     //------------------ GENERATED CODE BEGIN (do not modify!) --------------------
 

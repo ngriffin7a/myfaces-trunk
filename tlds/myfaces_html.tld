@@ -58,7 +58,8 @@
 <!ENTITY standard_messages_attributes        SYSTEM "entities/standard_messages_attributes.xml">
 <!ENTITY standard_output_label_attributes    SYSTEM "entities/standard_output_label_attributes.xml">
 <!ENTITY standard_panel_group_attributes     SYSTEM "entities/standard_panel_group_attributes.xml">
-<!ENTITY standard_select_one_menu_attributes SYSTEM "entities/standard_select_one_menu_attributes.xml">
+<!ENTITY standard_select_one_menu_attributes  SYSTEM "entities/standard_select_one_menu_attributes.xml">
+<!ENTITY standard_select_one_radio_attributes SYSTEM "entities/standard_select_one_radio_attributes.xml">
 ]>
 
 <taglib>
@@ -431,25 +432,7 @@ Start of revised 1.0 conforming tags (in alphabetical order)
         <name>selectOneRadio</name>
         <tag-class>net.sourceforge.myfaces.taglib.html.HtmlSelectOneRadioTag</tag-class>
         <body-content>JSP</body-content>
-        &ui_select_one_attributes;
-        &html_universal_attributes;
-        &html_event_handler_attributes;
-        &html_input_radio_attributes;
-        <!-- RadioRenderer attributes -->
-        <attribute>
-            <name>layout</name>
-            <required>false</required>
-            <rtexprvalue>false</rtexprvalue>
-            <type>java.lang.String</type>
-            <description>see JSF Spec. 8.5.10</description>
-        </attribute>
-        <attribute>
-            <name>border</name>
-            <required>false</required>
-            <rtexprvalue>false</rtexprvalue>
-            <type>java.lang.String</type>
-            <description>see JSF Spec. 8.5.10</description>
-        </attribute>
+        &standard_select_one_radio_attributes;
     </tag>
 
 </taglib>

@@ -60,6 +60,7 @@
 <!ENTITY standard_output_label_attributes    SYSTEM "entities/standard_output_label_attributes.xml">
 <!ENTITY standard_panel_group_attributes     SYSTEM "entities/standard_panel_group_attributes.xml">
 <!ENTITY standard_select_one_menu_attributes SYSTEM "entities/standard_select_one_menu_attributes.xml">
+<!ENTITY standard_select_one_radio_attributes SYSTEM "entities/standard_select_one_radio_attributes.xml">
 ]>
 
 <taglib>
@@ -73,6 +74,7 @@
     </description>
 
 <!--     Extended standard components     -->
+    <!-- TODO: separate user_role attributes from standard tags -->
 
     <!-- commandButton -->
     <tag>
@@ -266,6 +268,19 @@
         &user_role_attributes;
     </tag>
 
+    <!-- selectOneRadio -->
+    <tag>
+        <name>selectOneRadio</name>
+        <tag-class>net.sourceforge.myfaces.taglib.html.ext.HtmlSelectOneRadioTag</tag-class>
+        <body-content>JSP</body-content>
+        <description>
+            Extends standard selectOneRadio by user role support.
+            Additionally this extended selectOneRadio accepts a layout attribute
+            of value "spread" (see custom radio tag).
+        </description>
+        &standard_select_one_radio_attributes;
+        &user_role_attributes;
+    </tag>
 
 
 
@@ -682,19 +697,20 @@
         <tag-class>net.sourceforge.myfaces.custom.radio.HtmlRadioTag</tag-class>
         <body-content>JSP</body-content>
         <description>
-            Radio Button wich gets its content from an UISelectOne. The Radio
-            asks its parent to find an UISelectOne with id = for-attribute.
+            Radio Button which gets its content from an extended selectOneRadio component.
+            The associated selectOneRadio must have the layout attribute "spread".
         </description>
-        &user_role_attributes;
+        &ui_component_attributes;
         &html_universal_attributes;
         &html_event_handler_attributes;
+        &user_role_attributes;
         <!-- HtmlRadio attributes -->
         <attribute>
             <name>for</name>
             <required>true</required>
             <rtexprvalue>false</rtexprvalue>
             <description>
-                 id of the referenced UISelectOne
+                 id of the referenced extended selectOneRadio component
             </description>
         </attribute>
         <attribute>

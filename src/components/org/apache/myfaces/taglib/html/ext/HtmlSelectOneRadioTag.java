@@ -16,17 +16,18 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package net.sourceforge.myfaces.taglib.html;
+package net.sourceforge.myfaces.taglib.html.ext;
+
+import net.sourceforge.myfaces.taglib.html.HtmlInputTagBase;
 
 import javax.faces.component.html.HtmlSelectOneRadio;
-
 
 /**
  * @author Manfred Geiler (latest modification by $Author$)
  * @author Martin Marinschek
  * @version $Revision$ $Date$
  * $Log$
- * Revision 1.9  2004/03/31 13:26:09  manolito
+ * Revision 1.1  2004/03/31 13:26:09  manolito
  * extended radio renderer
  *
  */
@@ -40,6 +41,6 @@ public class HtmlSelectOneRadioTag
 
     protected String getDefaultRendererType()
     {
-        return "javax.faces.Radio";
+        return "net.sourceforge.myfaces.Radio";
     }
 }
