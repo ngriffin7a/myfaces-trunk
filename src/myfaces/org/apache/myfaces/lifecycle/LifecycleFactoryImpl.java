@@ -25,7 +25,7 @@ import java.util.Collections;
 import java.util.Iterator;
 
 /**
- * TODO: description
+ * Spec 1.0 EA - JSF.6.5 LifecycleFactory
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
@@ -37,6 +37,7 @@ public class LifecycleFactoryImpl
 
     public void addLifecycle(String s, Lifecycle lifecycle)
     {
+        //TODO
         throw new UnsupportedOperationException();
     }
 

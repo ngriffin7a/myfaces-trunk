@@ -27,7 +27,7 @@ import javax.faces.context.ResponseWriter;
 import java.io.IOException;
 
 /**
- * TODO: description
+ * see Spec.1.0 EA - JSF.7.6.4 Renderer Types for UIInput Components
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */

@@ -1,7 +1,14 @@
-MyFaces TODO List
-=================
+MyFaces TODOs
+=============
 
-- state_save Tag: property "passOverToNewPages" (to give StateRenderer a hint if a saved
-                    state must be encoded into external links)
+Tasks
+-----
+You can browse all current task at:
+http://sourceforge.net/pm/?group_id=69709
 
-and many many more things...
+
+TODOs (HACKs, FIXMEs, ...)
+--------------------------
+Please use your editors search function to find all "TODO" occurrences...
+
+
