@@ -56,18 +56,18 @@
 package net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.compiler;
 
 //@@@ have specific imports
-import java.io.*;
-import java.net.*;
-import java.util.*;
-
-import javax.servlet.jsp.tagext.TagLibraryInfo;
-import javax.servlet.jsp.tagext.TagInfo;
-
+import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.Constants;
+import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.JasperException;
 import org.xml.sax.*;
-import org.xml.sax.ext.*;
-import org.xml.sax.helpers.*;
+import org.xml.sax.ext.LexicalHandler;
+import org.xml.sax.helpers.AttributesImpl;
+import org.xml.sax.helpers.DefaultHandler;
 
-import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.*;
+import javax.servlet.jsp.tagext.TagInfo;
+import javax.servlet.jsp.tagext.TagLibraryInfo;
+import java.io.InputStream;
+import java.util.Hashtable;
+import java.util.Stack;
 
 /**
  * The SAX (2.0) parser event handler.

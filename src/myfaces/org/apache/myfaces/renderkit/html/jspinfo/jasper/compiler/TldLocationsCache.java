@@ -54,28 +54,22 @@
  */ 
 package net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.compiler;
 
-import java.io.InputStream;
-import java.io.FileNotFoundException;
-import java.io.File;
-import java.io.IOException;
-import java.util.Hashtable;
-import java.util.Enumeration;
-import java.util.Iterator;
-import java.util.Set;
-import java.util.jar.*;
-import java.net.JarURLConnection;
-import java.net.*;
-
-import javax.servlet.ServletContext;
-import javax.servlet.jsp.tagext.TagLibraryInfo;
-import javax.servlet.jsp.tagext.TagInfo;
-import javax.servlet.jsp.tagext.Tag;
-
 import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.Constants;
 import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.JasperException;
 import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.logging.Logger;
 import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.parser.ParserUtils;
 import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.parser.TreeNode;
+
+import javax.servlet.ServletContext;
+import java.io.InputStream;
+import java.net.JarURLConnection;
+import java.net.URL;
+import java.util.Enumeration;
+import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.Set;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
 
 /**
  * A container for all tag libraries that are defined "globally"

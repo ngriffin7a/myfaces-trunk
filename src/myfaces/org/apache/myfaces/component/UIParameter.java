@@ -26,18 +26,9 @@ import javax.faces.component.UIComponentBase;
  * @version $Revision$ $Date$
  */
 public class UIParameter
-    extends UIComponentBase //FINAL: javax.faces.component.UIParameter in final API
+    extends javax.faces.component.UIParameter
 {
     public static final String NAME_ATTR = "name";
-
-    //public static final String TYPE = UIParameter.class.getName();
-    public static final String TYPE = "javax.faces.component.UIParameter";
-
-    public String getComponentType()
-    {
-        return TYPE;
-    }
-
 
     public String getName()
     {

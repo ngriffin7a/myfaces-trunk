@@ -35,7 +35,7 @@
 
     <tag>
         <name>save_state</name>
-        <tagclass>net.sourceforge.myfaces.taglib.SaveStateTag</tagclass>
+        <tagclass>net.sourceforge.myfaces.taglib.ext.SaveStateTag</tagclass>
         <bodycontent>JSP</bodycontent>
         <attribute>
             <name>id</name>

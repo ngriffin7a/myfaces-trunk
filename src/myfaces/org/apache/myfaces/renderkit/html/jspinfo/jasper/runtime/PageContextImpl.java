@@ -61,33 +61,23 @@
 
 package net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.runtime;
 
-import java.io.IOException;
-import java.io.InputStreamReader;
+import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.Constants;
+import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.logging.Logger;
 
+import javax.servlet.*;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpServletResponseWrapper;
+import javax.servlet.http.HttpSession;
+import javax.servlet.jsp.JspFactory;
+import javax.servlet.jsp.JspWriter;
+import javax.servlet.jsp.PageContext;
+import javax.servlet.jsp.tagext.BodyContent;
+import java.io.IOException;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.NoSuchElementException;
 import java.util.Stack;
-
-import javax.servlet.Servlet;
-import javax.servlet.ServletConfig;
-import javax.servlet.ServletContext;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
-import javax.servlet.ServletException;
-
-import javax.servlet.http.HttpSession;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpServletResponseWrapper;
-
-import javax.servlet.jsp.PageContext;
-import javax.servlet.jsp.JspFactory;
-import javax.servlet.jsp.JspWriter;
-import javax.servlet.jsp.tagext.BodyContent;
-
-import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.Constants;
-import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.logging.Logger;
 
 /**
  * Implementation of the PageContext class from the JSP spec.

@@ -60,10 +60,10 @@
  */ 
 package net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.compiler;
 
-import java.io.PrintWriter;
 import java.io.BufferedReader;
-import java.io.StringReader;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringReader;
 
 /**
  * This is what is used to generate servlets. 

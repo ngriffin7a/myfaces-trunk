@@ -54,17 +54,13 @@
  */
 package net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.compiler;
 
-import java.io.*;
-import java.util.*;
-
-import javax.servlet.jsp.tagext.*;
-
-import org.xml.sax.InputSource;
+import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.Constants;
+import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.JasperException;
+import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.JspCompilationContext;
 import org.xml.sax.Attributes;
 
-import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.*;
-
-import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.logging.Logger;
+import java.io.*;
+import java.util.Stack;
 
 /**
  * Controller for the parsing of a JSP page.

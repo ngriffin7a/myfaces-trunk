@@ -22,7 +22,6 @@ import javax.faces.FacesException;
 import javax.faces.context.FacesContext;
 import javax.faces.tree.Tree;
 import javax.faces.tree.TreeFactory;
-import javax.servlet.ServletContext;
 
 /**
  * DOCUMENT ME!

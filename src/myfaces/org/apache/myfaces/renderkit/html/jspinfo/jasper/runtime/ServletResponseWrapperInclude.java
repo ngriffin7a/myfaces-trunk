@@ -61,12 +61,12 @@
 
 package net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.runtime;
 
-import java.lang.IllegalStateException;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpServletResponseWrapper;
+import javax.servlet.jsp.JspWriter;
 import java.io.PrintWriter;
-
-import javax.servlet.*;
-import javax.servlet.http.*;
-import javax.servlet.jsp.*;
 
 /**
  * ServletResponseWrapper used for the JSP 'include' action.

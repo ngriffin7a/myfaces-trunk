@@ -60,19 +60,17 @@
  */ 
 package net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.runtime;
 
+import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.logging.Logger;
+import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.util.SimplePool;
+
 import javax.servlet.Servlet;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
-
-import javax.servlet.jsp.JspFactory;
 import javax.servlet.jsp.JspEngineInfo;
+import javax.servlet.jsp.JspFactory;
 import javax.servlet.jsp.PageContext;
-
 import java.security.AccessController;
 import java.security.PrivilegedAction;
-
-import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.util.SimplePool;
-import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.logging.Logger;
 
 /**
  * Implementation of JspFactory from the spec. Helps create

@@ -65,7 +65,10 @@
 package net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.util;
 
 import java.text.MessageFormat;
-import java.util.*;
+import java.util.Hashtable;
+import java.util.Locale;
+import java.util.MissingResourceException;
+import java.util.ResourceBundle;
 
 /**
  * An internationalization / localization helper class which reduces

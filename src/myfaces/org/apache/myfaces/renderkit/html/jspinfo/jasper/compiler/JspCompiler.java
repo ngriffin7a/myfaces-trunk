@@ -55,15 +55,12 @@
 
 package net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.compiler;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.net.URL;
-
-import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.JspCompilationContext;
-import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.Constants;
 import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.JasperException;
-
+import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.JspCompilationContext;
 import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.logging.Logger;
+
+import java.io.File;
+import java.net.URL;
 
 /**
  * JspCompiler is an implementation of Compiler with a funky code

@@ -56,21 +56,16 @@
  */ 
 package net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.logging;
 
-import java.io.Writer;
-import java.io.PrintWriter;
-import java.io.OutputStreamWriter;
-import java.io.FileWriter;
-import java.io.File;
-import java.io.IOException;
-import java.io.StringWriter;
+import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.core.JasperException;
+import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.util.FastDateFormat;
 
-import java.util.*;
+import javax.servlet.ServletException;
+import java.io.*;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-
-import javax.servlet.ServletException;	// for throwableToString()
-import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.core.JasperException;	// for throwableToString()
-import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.util.FastDateFormat;
+import java.util.Date;
+import java.util.Enumeration;
+import java.util.Hashtable;
 
 /**
  * Interface for a logging object. A logging object provides mechanism

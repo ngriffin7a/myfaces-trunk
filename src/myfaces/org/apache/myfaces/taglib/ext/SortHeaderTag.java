@@ -23,7 +23,6 @@ import net.sourceforge.myfaces.renderkit.html.GroupRenderer;
 import net.sourceforge.myfaces.taglib.MyFacesTag;
 
 import javax.faces.component.UIComponent;
-import javax.servlet.jsp.JspException;
 
 
 /**

@@ -22,9 +22,6 @@ import net.sourceforge.myfaces.component.UIOutput;
 import net.sourceforge.myfaces.renderkit.html.ErrorsRenderer;
 
 import javax.faces.component.UIComponent;
-import javax.servlet.jsp.tagext.TagExtraInfo;
-import javax.servlet.jsp.tagext.VariableInfo;
-import javax.servlet.jsp.tagext.TagData;
 
 
 /**

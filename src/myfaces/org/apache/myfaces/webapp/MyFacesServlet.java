@@ -22,9 +22,9 @@ import net.sourceforge.myfaces.util.logging.LogUtil;
 
 import javax.faces.webapp.FacesServlet;
 import javax.servlet.*;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
-import java.io.ByteArrayOutputStream;
 
 /**
  * DOCUMENT ME!

@@ -59,46 +59,24 @@
 
 package net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.compiler;
 
-import java.net.URL;
-import java.net.MalformedURLException;
-import java.net.JarURLConnection;
-import java.util.Iterator;
-import java.util.zip.ZipInputStream;
-import java.util.zip.ZipEntry;
-import java.util.jar.*;
-import java.util.Enumeration;
-import java.io.ByteArrayOutputStream;
-import java.io.ByteArrayInputStream;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.io.IOException;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.util.Vector;
-import java.util.Hashtable;
-import java.util.Map;
-
-import javax.servlet.jsp.tagext.TagLibraryInfo;
-import javax.servlet.jsp.tagext.TagInfo;
-import javax.servlet.jsp.tagext.TagAttributeInfo;
-import javax.servlet.jsp.tagext.TagExtraInfo;
-import javax.servlet.jsp.tagext.TagLibraryValidator;
-import javax.servlet.jsp.tagext.PageData;
-import javax.servlet.jsp.tagext.VariableInfo;
-import javax.servlet.jsp.tagext.TagVariableInfo;
-import javax.servlet.jsp.tagext.ValidationMessage;
-
-import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.JspCompilationContext;
-import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.JasperException;
 import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.Constants;
-
+import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.JasperException;
+import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.JspCompilationContext;
 import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.logging.Logger;
-
 import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.parser.ParserUtils;
 import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.parser.TreeNode;
+
+import javax.servlet.jsp.tagext.*;
+import java.io.*;
+import java.net.JarURLConnection;
+import java.net.URL;
+import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Vector;
+import java.util.jar.JarFile;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 
 /**

@@ -58,24 +58,7 @@
 
 package net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.compiler;
 
-import java.util.Hashtable;
-import java.util.Vector;
-import java.util.Enumeration;
-import java.util.StringTokenizer;
-import java.io.IOException;
-import java.io.FileNotFoundException;
-import java.io.File;
-import java.io.ObjectOutputStream;
-import java.io.FileOutputStream;
-import java.net.URL;
-import java.net.MalformedURLException;
-
-import javax.servlet.jsp.tagext.TagInfo;
-import javax.servlet.jsp.tagext.TagLibraryInfo;
-
 import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.JasperException;
-import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.Constants;
-import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.JspCompilationContext;
 
 /**
  * Generates original "Jakarta"-style comments

@@ -65,13 +65,11 @@
 
 package net.sourceforge.myfaces.renderkit.html.jspinfo.jasper;
 
+import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.compiler.Compiler;
 import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.compiler.JspReader;
 import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.compiler.ServletWriter;
-import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.compiler.TagLibraries;
-import java.io.IOException;
-import java.net.URL;
+
 import java.net.MalformedURLException;
-import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.compiler.Compiler;
 
 /**
  * A place holder for various things that are used through out the JSP

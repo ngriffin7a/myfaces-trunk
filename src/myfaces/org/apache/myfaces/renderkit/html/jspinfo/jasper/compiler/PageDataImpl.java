@@ -61,9 +61,8 @@
 
 package net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.compiler;
 
-import java.io.InputStream;
-
 import javax.servlet.jsp.tagext.PageData;
+import java.io.InputStream;
 
 /**
  * Implementation of abstract class javax.servlet.jsp.tagext.PageData.

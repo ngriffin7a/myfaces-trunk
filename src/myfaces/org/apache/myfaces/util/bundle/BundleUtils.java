@@ -19,12 +19,10 @@
 package net.sourceforge.myfaces.util.bundle;
 
 import net.sourceforge.myfaces.util.logging.LogUtil;
-import net.sourceforge.myfaces.context.FacesContextImpl;
 
 import javax.faces.context.FacesContext;
-import java.util.ResourceBundle;
-import java.util.Locale;
 import java.util.MissingResourceException;
+import java.util.ResourceBundle;
 
 /**
  * DOCUMENT ME!

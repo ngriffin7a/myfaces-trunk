@@ -61,16 +61,12 @@
 package net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.compiler;
 
 
-import java.util.Vector;
-import java.util.Enumeration;
-import java.util.Hashtable;
+import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.JasperException;
 
 import java.beans.Beans;
-import java.beans.BeanInfo;
-import java.beans.PropertyDescriptor;
-
-import javax.servlet.ServletException;
-import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.JasperException;
+import java.util.Enumeration;
+import java.util.Hashtable;
+import java.util.Vector;
 
 /**
  * Holds instances of {session, application, page}-scoped beans 

@@ -26,9 +26,9 @@ import net.sourceforge.myfaces.renderkit.html.ext.NavigationRenderer;
 
 import javax.faces.FacesException;
 import javax.faces.FactoryFinder;
-import javax.faces.component.UIComponent;
 import javax.faces.component.NamingContainer;
 import javax.faces.component.NamingContainerSupport;
+import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.event.*;
 import javax.faces.tree.Tree;

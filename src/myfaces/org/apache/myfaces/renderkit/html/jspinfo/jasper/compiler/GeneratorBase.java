@@ -61,8 +61,8 @@
 
 package net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.compiler;
 
-import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.JspCompilationContext;
 import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.JasperException;
+import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.JspCompilationContext;
 
 /**
  * Helpful abstract base class that generators can extend. 

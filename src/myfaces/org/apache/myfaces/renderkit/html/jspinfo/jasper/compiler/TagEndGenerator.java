@@ -55,20 +55,11 @@
 
 package net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.compiler;
 
+import org.xml.sax.Attributes;
+
+import javax.servlet.jsp.tagext.*;
 import java.util.Hashtable;
 import java.util.Stack;
-
-import javax.servlet.jsp.tagext.TagLibraryInfo;
-import javax.servlet.jsp.tagext.TagInfo;
-import javax.servlet.jsp.tagext.VariableInfo;
-import javax.servlet.jsp.tagext.TagVariableInfo;
-import javax.servlet.jsp.tagext.TagData;
-import javax.servlet.jsp.tagext.Tag;
-import javax.servlet.jsp.tagext.IterationTag;
-import javax.servlet.jsp.tagext.BodyTag;
-import javax.servlet.jsp.tagext.TryCatchFinally;
-
-import org.xml.sax.Attributes;
 
 /**
  * Custom tag support.

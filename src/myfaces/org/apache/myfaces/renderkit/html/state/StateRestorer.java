@@ -24,30 +24,30 @@ import net.sourceforge.myfaces.convert.Converter;
 import net.sourceforge.myfaces.convert.ConverterException;
 import net.sourceforge.myfaces.convert.ConverterUtils;
 import net.sourceforge.myfaces.convert.impl.StringArrayConverter;
-import net.sourceforge.myfaces.tree.TreeUtils;
-import net.sourceforge.myfaces.util.logging.LogUtil;
-import net.sourceforge.myfaces.util.bean.BeanUtils;
-import net.sourceforge.myfaces.renderkit.html.jspinfo.JspInfo;
 import net.sourceforge.myfaces.renderkit.html.jspinfo.JspBeanInfo;
+import net.sourceforge.myfaces.renderkit.html.jspinfo.JspInfo;
+import net.sourceforge.myfaces.tree.TreeUtils;
+import net.sourceforge.myfaces.util.bean.BeanUtils;
+import net.sourceforge.myfaces.util.logging.LogUtil;
 
 import javax.faces.FacesException;
-import javax.faces.event.FacesListener;
-import javax.faces.event.ActionListener;
-import javax.faces.event.ValueChangedListener;
-import javax.faces.component.UIComponent;
 import javax.faces.component.UICommand;
+import javax.faces.component.UIComponent;
 import javax.faces.component.UIInput;
 import javax.faces.context.FacesContext;
+import javax.faces.event.ActionListener;
+import javax.faces.event.FacesListener;
+import javax.faces.event.ValueChangedListener;
 import javax.faces.tree.Tree;
-import javax.servlet.jsp.PageContext;
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import javax.servlet.jsp.PageContext;
 import java.io.IOException;
 import java.util.Iterator;
+import java.util.Locale;
 import java.util.Map;
 import java.util.StringTokenizer;
-import java.util.Locale;
 
 /**
  * DOCUMENT ME!

@@ -61,14 +61,12 @@
 
 package net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.compiler;
 
-import java.util.Hashtable;
-import java.util.Enumeration;
-import java.io.File;
-
-import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.JasperException;
 import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.Constants;
-
+import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.JasperException;
 import org.xml.sax.Attributes;
+
+import java.util.Enumeration;
+import java.util.Hashtable;
 
 /**
  * Generator for jsp:include.

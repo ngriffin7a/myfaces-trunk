@@ -18,8 +18,8 @@
  */
 package net.sourceforge.myfaces.component.ext;
 
-import net.sourceforge.myfaces.component.UIParameter;
 import net.sourceforge.myfaces.component.UIComponentUtils;
+import net.sourceforge.myfaces.component.UIParameter;
 
 import javax.faces.context.FacesContext;
 import java.io.IOException;
@@ -49,13 +49,14 @@ public class UISaveState
 
     public final boolean isValid()
     {
-        return false;   //model update must not occur!
+        return true;   //model update must not occur!
     }
 
     public void decode(FacesContext context)
         throws IOException
     {
         //all decoding and encoding is done by StateRenderer
+        setValid(true);
     }
 
     public void encodeBegin(FacesContext context)
@@ -74,5 +75,10 @@ public class UISaveState
         throws IOException
     {
         //all decoding and encoding is done by StateRenderer
+    }
+
+    public void updateModel(FacesContext context)
+    {
+        //do not update the model
     }
 }

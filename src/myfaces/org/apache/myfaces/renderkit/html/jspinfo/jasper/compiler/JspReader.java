@@ -56,24 +56,17 @@
 
 package net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.compiler;
 
-import java.io.InputStreamReader;
-import java.io.FileInputStream;
-import java.io.InputStream;
-import java.io.Reader;
-import java.io.CharArrayWriter;
-import java.io.IOException;
-import java.io.FileNotFoundException;
-import java.io.File;
-import java.util.Hashtable;
-import java.util.Vector;
-import java.util.Stack;
-
 import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.Constants;
 import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.JspCompilationContext;
-import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.logging.*;
-
+import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.logging.Logger;
 import org.xml.sax.Attributes;
 import org.xml.sax.helpers.AttributesImpl;
+
+import java.io.CharArrayWriter;
+import java.io.FileNotFoundException;
+import java.io.InputStreamReader;
+import java.util.Hashtable;
+import java.util.Vector;
 
 /**
  * JspReader is an input buffer for the JSP parser. It should allow

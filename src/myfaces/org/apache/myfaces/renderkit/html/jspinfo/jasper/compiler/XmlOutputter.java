@@ -61,15 +61,14 @@
 
 package net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.compiler;
 
-import java.util.Hashtable;
-import java.util.Enumeration;
-import java.io.InputStream;
-import java.io.ByteArrayInputStream;
-
-import javax.servlet.jsp.tagext.PageData;
-
 import org.xml.sax.Attributes;
 import org.xml.sax.helpers.AttributesImpl;
+
+import javax.servlet.jsp.tagext.PageData;
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.util.Enumeration;
+import java.util.Hashtable;
 
 /**
  * Class responsible for generating the XML stream representing

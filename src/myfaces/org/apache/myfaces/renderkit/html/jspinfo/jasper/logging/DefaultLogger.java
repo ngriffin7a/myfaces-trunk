@@ -56,9 +56,8 @@
  */ 
 package net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.logging;
 
-import java.io.Writer;
-import java.io.IOException;
 import javax.servlet.ServletContext;
+import java.io.IOException;
 
 /**
  * Trivial logger that sends all messages to the default sink.  To

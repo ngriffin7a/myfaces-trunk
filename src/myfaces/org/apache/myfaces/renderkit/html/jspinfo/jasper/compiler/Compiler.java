@@ -60,25 +60,13 @@
  */ 
 package net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.compiler;
 
-import java.util.Hashtable;
-import java.io.FileNotFoundException;
-import java.io.File;
-import java.io.PrintWriter;
-import java.io.ByteArrayOutputStream;
-import java.io.FileOutputStream;
-import java.io.OutputStreamWriter;
-import java.io.BufferedReader;
-import java.io.StringReader;
-import java.io.IOException;
-
-import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.JspCompilationContext;
 import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.Constants;
 import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.JasperException;
-import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.compiler.ParseException;
-
+import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.JspCompilationContext;
 import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.logging.Logger;
-
 import org.xml.sax.Attributes;
+
+import java.io.*;
 
 /**
  * If you want to customize JSP compilation aspects, this class is

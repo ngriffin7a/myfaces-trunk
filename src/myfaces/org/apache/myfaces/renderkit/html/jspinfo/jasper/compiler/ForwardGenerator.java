@@ -61,14 +61,13 @@
 
 package net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.compiler;
 
-import java.util.Hashtable;
-import java.util.Enumeration;
-import java.net.URLEncoder;
-
-import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.JasperException;
 import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.Constants;
-
+import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.JasperException;
 import org.xml.sax.Attributes;
+
+import java.net.URLEncoder;
+import java.util.Enumeration;
+import java.util.Hashtable;
 
 /**
  * Generator for <jsp:forward>

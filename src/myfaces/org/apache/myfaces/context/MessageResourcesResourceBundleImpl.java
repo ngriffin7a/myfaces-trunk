@@ -18,15 +18,15 @@
  */
 package net.sourceforge.myfaces.context;
 
-import javax.faces.context.MessageResources;
-import javax.faces.context.Message;
-import javax.faces.context.FacesContext;
-import javax.faces.context.MessageImpl;
 import javax.faces.FacesException;
+import javax.faces.context.FacesContext;
+import javax.faces.context.Message;
+import javax.faces.context.MessageImpl;
+import javax.faces.context.MessageResources;
+import java.text.MessageFormat;
+import java.util.NoSuchElementException;
 import java.util.ResourceBundle;
 import java.util.StringTokenizer;
-import java.util.NoSuchElementException;
-import java.text.MessageFormat;
 
 /**
  * Implementation of a javax.faces.context.MessageResources (see Spec. JSF.5.6).

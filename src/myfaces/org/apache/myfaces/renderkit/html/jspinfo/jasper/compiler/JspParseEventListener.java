@@ -61,29 +61,20 @@
 
 package net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.compiler;
 
-import java.util.Hashtable;
-import java.util.Stack;
-import java.util.Vector;
-import java.util.Enumeration;
-import java.util.StringTokenizer;
-import java.io.IOException;
-import java.io.FileNotFoundException;
-import java.io.File;
-import java.io.ObjectOutputStream;
-import java.io.FileOutputStream;
-import java.net.URL;
-import java.net.MalformedURLException;
+import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.Constants;
+import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.JasperException;
+import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.JspCompilationContext;
+import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.logging.Logger;
+import org.xml.sax.Attributes;
 
 import javax.servlet.jsp.tagext.TagInfo;
 import javax.servlet.jsp.tagext.TagLibraryInfo;
 import javax.servlet.jsp.tagext.ValidationMessage;
-
-import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.JasperException;
-import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.Constants;
-import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.JspCompilationContext;
-import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.logging.Logger;
-
-import org.xml.sax.Attributes;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.util.*;
 
 /**
  * JSP code generator "backend".

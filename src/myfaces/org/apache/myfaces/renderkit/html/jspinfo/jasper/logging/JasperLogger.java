@@ -56,16 +56,10 @@
  */ 
 package net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.logging;
 
-import java.io.Writer;
-import java.io.StringWriter;
-import java.io.PrintWriter;
-import java.security.AccessController;
-import java.security.PrivilegedAction;
-import java.util.Date;
-import javax.servlet.ServletException;
-import javax.servlet.ServletContext;
-
 import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.util.Queue;
+
+import javax.servlet.ServletContext;
+import java.io.Writer;
 //import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.core.JasperException;
 
 /**

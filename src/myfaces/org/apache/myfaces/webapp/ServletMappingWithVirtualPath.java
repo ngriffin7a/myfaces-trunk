@@ -1,10 +1,9 @@
 package net.sourceforge.myfaces.webapp;
 
 import javax.faces.context.FacesContext;
-import javax.servlet.ServletRequest;
 import javax.servlet.ServletContext;
+import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
-import java.net.MalformedURLException;
 
 /**
  * Default ServletMapping for the url-pattern "/faces/*".

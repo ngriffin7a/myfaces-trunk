@@ -27,7 +27,9 @@ import javax.faces.component.UIComponent;
 import javax.faces.component.UIForm;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
-import javax.faces.event.*;
+import javax.faces.event.ApplicationEvent;
+import javax.faces.event.CommandEvent;
+import javax.faces.event.FormEvent;
 import java.io.IOException;
 
 /**
@@ -94,6 +96,8 @@ public class ButtonRenderer
                 }
             }
 
+            uiComponent.setValue(commandName);
+            uiComponent.setValid(true);
 
             //Old event processing:
 
@@ -124,12 +128,16 @@ public class ButtonRenderer
             //New event processing:
             if (uiComponent instanceof UICommand)
             {
-                facesContext.addFacesEvent(new ActionEvent(uiComponent, commandName));
+                ((UICommand)uiComponent).fireActionEvent(facesContext);
             }
             else
             {
                 LogUtil.getLogger().warning("Component " + uiComponent.getClientId(facesContext) + "is no UICommand.");
             }
+        }
+        else
+        {
+            uiComponent.setValid(true);
         }
     }
 
@@ -155,6 +163,7 @@ public class ButtonRenderer
             writer.write("\"");
             writer.write(" value=\"");
             String label = (String)uiComponent.getAttribute(LABEL_ATTR);
+            //TODO: key/bundle instead of label
             if (label == null)
             {
                 label = getStringValue(facesContext, uiComponent);

@@ -61,12 +61,9 @@
 
 package net.sourceforge.myfaces.renderkit.html.jspinfo.jasper;
 
-import java.io.File;
-
-import javax.servlet.ServletConfig;
-import javax.servlet.ServletContext;
-
 import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.compiler.TldLocationsCache;
+
+import java.io.File;
 
 /**
  * A class to hold all init parameters specific to the JSP engine. 

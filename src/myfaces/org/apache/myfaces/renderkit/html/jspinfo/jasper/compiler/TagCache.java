@@ -60,18 +60,15 @@
  */ 
 package net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.compiler;
 
-import java.util.Hashtable;
-
-import java.lang.reflect.Method;
+import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.Constants;
+import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.JasperException;
 
 import java.beans.BeanInfo;
+import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
-import java.beans.PropertyEditor;
-import java.beans.IntrospectionException;
-
-import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.JasperException;
-import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.Constants;
+import java.lang.reflect.Method;
+import java.util.Hashtable;
 
 /**
  * A simple cache to hold results of one-time evaluation for a custom 

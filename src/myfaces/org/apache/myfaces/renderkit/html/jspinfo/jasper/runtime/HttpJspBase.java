@@ -55,19 +55,16 @@
 
 package net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.runtime;
 
-import java.io.IOException;
-import java.io.FileInputStream;
-import java.io.InputStreamReader;
-
-import java.net.URL;
-import java.net.MalformedURLException;
-
-import javax.servlet.*;
-import javax.servlet.http.*;
-import javax.servlet.jsp.*;
-
-import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.JasperException;
 import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.Constants;
+
+import javax.servlet.ServletConfig;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.jsp.HttpJspPage;
+import javax.servlet.jsp.PageContext;
+import java.io.IOException;
 
 /**
  * This is the subclass of all JSP-generated servlets.

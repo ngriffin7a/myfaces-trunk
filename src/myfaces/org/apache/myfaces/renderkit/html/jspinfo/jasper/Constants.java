@@ -56,11 +56,11 @@
 
 package net.sourceforge.myfaces.renderkit.html.jspinfo.jasper;
 
-import java.util.ResourceBundle;
-import java.util.MissingResourceException;
-import java.text.MessageFormat;
-
 import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.logging.Logger;
+
+import java.text.MessageFormat;
+import java.util.MissingResourceException;
+import java.util.ResourceBundle;
 
 /**
  * Some constants and other global data that are used by the compiler and the runtime.

@@ -49,6 +49,7 @@
             <x:save_state id="save1" modelReference="calcForm.number1" />
             <x:save_state id="save2" modelReference="calcForm.number2" />
             <x:save_state id="save3" modelReference="calcForm.result" />
+            <x:save_state id="save4" modelReference="ucaseForm.text" />
 
             <%
                 Date test = new Date();

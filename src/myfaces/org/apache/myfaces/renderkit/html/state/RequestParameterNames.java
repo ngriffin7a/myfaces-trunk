@@ -18,9 +18,9 @@
  */
 package net.sourceforge.myfaces.renderkit.html.state;
 
+import javax.faces.FacesException;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
-import javax.faces.FacesException;
 
 /**
  * DOCUMENT ME!

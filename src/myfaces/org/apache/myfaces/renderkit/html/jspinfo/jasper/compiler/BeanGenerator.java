@@ -58,14 +58,8 @@
 
 package net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.compiler;
 
-import java.util.Hashtable;
-import java.util.Vector;
-import java.util.Enumeration;
-import java.lang.reflect.Method;
-
-import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.JasperException;
 import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.Constants;
-
+import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.JasperException;
 import org.xml.sax.Attributes;
 
 /**

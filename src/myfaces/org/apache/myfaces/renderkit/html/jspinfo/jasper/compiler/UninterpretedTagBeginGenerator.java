@@ -61,9 +61,6 @@
 
 package net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.compiler;
 
-import java.util.Hashtable;
-import java.util.Enumeration;
-
 import org.xml.sax.Attributes;
 
 /**

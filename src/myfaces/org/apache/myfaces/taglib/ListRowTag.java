@@ -22,8 +22,8 @@ import net.sourceforge.myfaces.component.UIComponentUtils;
 import net.sourceforge.myfaces.component.UIPanel;
 import net.sourceforge.myfaces.renderkit.html.DataRenderer;
 
-import javax.faces.component.UIComponent;
 import javax.faces.FacesException;
+import javax.faces.component.UIComponent;
 import javax.servlet.jsp.JspException;
 import java.io.IOException;
 

@@ -61,12 +61,11 @@
 
 package net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.compiler;
 
-import java.util.Stack;
-import java.util.Hashtable;
-
 import javax.servlet.jsp.tagext.TagData;
-import javax.servlet.jsp.tagext.VariableInfo;
 import javax.servlet.jsp.tagext.TagVariableInfo;
+import javax.servlet.jsp.tagext.VariableInfo;
+import java.util.Hashtable;
+import java.util.Stack;
 
 /**
  * Common stuff for use with TagBegin and TagEndGenerators.

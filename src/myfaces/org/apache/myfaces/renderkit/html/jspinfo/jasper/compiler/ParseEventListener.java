@@ -60,15 +60,12 @@
  */ 
 package net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.compiler;
 
-import java.util.Hashtable;
-import java.util.Vector;
+import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.JasperException;
+import org.xml.sax.Attributes;
 
 import javax.servlet.jsp.tagext.TagInfo;
 import javax.servlet.jsp.tagext.TagLibraryInfo;
-
-import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.JasperException;
-
-import org.xml.sax.Attributes;
+import java.util.Hashtable;
 
 /**
  * Interface for the JSP code generation backend. At some point should

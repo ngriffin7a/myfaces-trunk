@@ -62,37 +62,24 @@
 
 package net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.runtime;
 
-import java.io.IOException;
-import java.util.Enumeration;
-
-import java.lang.reflect.Method;
-
-import java.io.Writer;
-import java.io.Reader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-
-import java.beans.PropertyDescriptor;
-import java.beans.IndexedPropertyDescriptor;
-import java.beans.PropertyEditor;
-import java.beans.PropertyEditorManager;
-
-import java.security.AccessController;
-import java.security.PrivilegedExceptionAction;
-import java.security.PrivilegedActionException;
+import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.Constants;
+import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.JasperException;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
-import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.BodyContent;
-
-import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.JasperException;
-import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.Constants;
+import java.beans.PropertyEditor;
+import java.beans.PropertyEditorManager;
+import java.io.IOException;
+import java.lang.reflect.Method;
+import java.security.AccessController;
+import java.security.PrivilegedActionException;
+import java.security.PrivilegedExceptionAction;
+import java.util.Enumeration;
 
 
 /**

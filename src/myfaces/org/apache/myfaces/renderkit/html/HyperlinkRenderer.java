@@ -19,22 +19,20 @@
 package net.sourceforge.myfaces.renderkit.html;
 
 import net.sourceforge.myfaces.MyFacesFactoryFinder;
-import net.sourceforge.myfaces.util.logging.LogUtil;
 import net.sourceforge.myfaces.component.UIParameter;
 import net.sourceforge.myfaces.renderkit.attr.HyperlinkRendererAttributes;
 import net.sourceforge.myfaces.renderkit.html.state.StateRenderer;
+import net.sourceforge.myfaces.util.logging.LogUtil;
 import net.sourceforge.myfaces.webapp.ServletMapping;
 import net.sourceforge.myfaces.webapp.ServletMappingFactory;
 
 import javax.faces.FactoryFinder;
-import javax.faces.event.FacesEvent;
-import javax.faces.event.CommandEvent;
-import javax.faces.event.ApplicationEvent;
-import javax.faces.event.ActionEvent;
 import javax.faces.component.UICommand;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
+import javax.faces.event.ApplicationEvent;
+import javax.faces.event.CommandEvent;
 import javax.faces.render.RenderKit;
 import javax.faces.render.RenderKitFactory;
 import javax.faces.render.Renderer;
@@ -71,6 +69,9 @@ public class HyperlinkRenderer
             //link was clicked
             String commandName = paramValue;
 
+            uiComponent.setValue(paramValue);
+            uiComponent.setValid(true);
+
             //Old event processing:
             ApplicationEvent event = new CommandEvent(uiComponent, commandName);
             facesContext.addApplicationEvent(event);
@@ -78,12 +79,16 @@ public class HyperlinkRenderer
             //New event processing:
             if (uiComponent instanceof UICommand)
             {
-                facesContext.addFacesEvent(new ActionEvent(uiComponent, commandName));
+                ((UICommand)uiComponent).fireActionEvent(facesContext);
             }
             else
             {
                 LogUtil.getLogger().warning("Component " + uiComponent.getClientId(facesContext) + "is no UICommand.");
             }
+        }
+        else
+        {
+            uiComponent.setValid(true);
         }
     }
 

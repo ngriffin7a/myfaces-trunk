@@ -28,7 +28,6 @@ import javax.faces.component.UICommand;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
-import javax.faces.event.ActionEvent;
 import javax.faces.event.ApplicationEvent;
 import javax.faces.event.CommandEvent;
 import java.io.IOException;
@@ -80,7 +79,7 @@ public class SortColumnRenderer
             //New event processing:
             if (uiComponent instanceof UICommand)
             {
-                facesContext.addFacesEvent(new ActionEvent(uiComponent, commandName));
+                ((UICommand)uiComponent).fireActionEvent(facesContext);
             }
             else
             {

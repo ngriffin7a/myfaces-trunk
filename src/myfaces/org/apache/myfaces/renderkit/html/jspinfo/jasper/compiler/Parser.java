@@ -54,24 +54,19 @@
  */
 package net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.compiler;
 
-import java.util.Vector;
-import java.util.Hashtable;
-import java.util.Enumeration;
+import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.Constants;
+import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.JasperException;
+import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.JspCompilationContext;
+import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.logging.Logger;
+import org.xml.sax.Attributes;
 
+import javax.servlet.jsp.tagext.TagInfo;
+import javax.servlet.jsp.tagext.TagLibraryInfo;
 import java.io.CharArrayWriter;
 import java.io.InputStreamReader;
-import java.io.File;
-
-import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.JasperException;
-import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.Constants;
-
-import javax.servlet.jsp.tagext.TagLibraryInfo;
-import javax.servlet.jsp.tagext.TagInfo;
-
-import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.logging.Logger;
-import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.JspCompilationContext;
-
-import org.xml.sax.Attributes;
+import java.util.Enumeration;
+import java.util.Hashtable;
+import java.util.Vector;
 
 /**
  * The class that parses the JSP input and calls the right methods on

@@ -60,13 +60,8 @@
  */ 
 package net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.compiler;
 
-import java.util.Hashtable;
 import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.JasperException;
 import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.runtime.JspRuntimeLibrary;
-import java.lang.reflect.Method;
-
-import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.Constants;
-
 import org.xml.sax.Attributes;
 
 /**

@@ -61,11 +61,11 @@
 
 package net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.compiler;
 
-import java.io.OutputStream;
-import java.io.IOException;
-import java.io.Writer;
-
 import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.Constants;
+
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.Writer;
 
 /**
  * Used to escape unicode characters with \ u's. 

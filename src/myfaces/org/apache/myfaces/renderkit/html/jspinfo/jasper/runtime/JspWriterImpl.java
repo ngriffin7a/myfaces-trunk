@@ -65,13 +65,12 @@
 
 package net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.runtime;
 
-import java.io.IOException;
-import java.io.Writer;
+import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.Constants;
 
 import javax.servlet.ServletResponse;
 import javax.servlet.jsp.JspWriter;
-
-import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.Constants;
+import java.io.IOException;
+import java.io.Writer;
 
 /**
  * Write text to a character-output stream, buffering characters so as

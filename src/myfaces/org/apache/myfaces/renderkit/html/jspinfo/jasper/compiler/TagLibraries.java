@@ -54,17 +54,12 @@
  */ 
 package net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.compiler;
 
-import java.lang.reflect.Constructor;
-
-import java.util.Hashtable;
-import java.util.Enumeration;
-
-import javax.servlet.jsp.tagext.TagLibraryInfo;
-import javax.servlet.jsp.tagext.TagInfo;
-import javax.servlet.jsp.tagext.Tag;
-
 import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.Constants;
 import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.JasperException;
+
+import javax.servlet.jsp.tagext.TagLibraryInfo;
+import java.util.Enumeration;
+import java.util.Hashtable;
 
 
 /**
