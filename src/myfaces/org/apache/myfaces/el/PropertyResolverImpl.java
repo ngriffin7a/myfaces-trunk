@@ -407,7 +407,7 @@ extends PropertyResolver
         // binary search
         for (
             int l = 0, h = propDescriptors.length - 1, i = h / 2; l <= h;
-                    i = (l + h) / 2)
+                    i = (l + h) >> 1)
         {
             int compare = propDescriptors[i].getName().compareTo(propertyName);
 
