@@ -22,6 +22,8 @@ import net.sourceforge.myfaces.util.BiLevelCacheMap;
 import net.sourceforge.myfaces.util.StringUtils;
 
 import org.apache.commons.el.*;
+import org.apache.commons.el.parser.ELParser;
+import org.apache.commons.el.parser.ParseException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -37,6 +39,8 @@ import javax.faces.el.ValueBinding;
 import javax.servlet.jsp.el.ELException;
 import javax.servlet.jsp.el.FunctionMapper;
 import javax.servlet.jsp.el.VariableResolver;
+
+import java.io.StringReader;
 import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Map;
@@ -48,6 +52,10 @@ import java.util.Map;
  * @version $Revision$ $Date$
  * 
  * $Log$
+ * Revision 1.35  2004/04/07 03:21:19  dave0000
+ * fix issue with trim()ing of expression strings
+ * prepare for PropertyResolver integration
+ *
  * Revision 1.34  2004/04/07 01:52:55  dave0000
  * fix set "root" variable - was setting in the wrong scope if new var
  *
@@ -60,56 +68,40 @@ import java.util.Map;
  */
 public class ValueBindingImpl extends ValueBinding implements StateHolder
 {
-    //~ Static fields/initializers -----------------------------------------------------------------
+    //~ Static fields/initializers --------------------------------------------
 
     static final Log log = LogFactory.getLog(ValueBindingImpl.class);
     private static final Logger s_logger = new Logger(System.out);    
     
     private static final FunctionMapper s_functionMapper = new FunctionMapper()
-    {
-        public Method resolveFunction(String prefix, String localName)
         {
-            throw new ReferenceSyntaxException(
-                "Functions not supported in expressions. Function: " 
-                + prefix + ":" + localName);
-        }
-    };
+            public Method resolveFunction(String prefix, String localName)
+            {
+                throw new ReferenceSyntaxException(
+                    "Functions not supported in expressions. Function: " 
+                    + prefix + ":" + localName);
+            }
+        };
     
     static final ExpressionEvaluatorImpl s_expressionEvaluator = 
         new ExpressionEvaluatorImpl();
 
-    /**
-     * Expressions are already cached by JSP EL implementation, 
-     * we cache again to avoid string replacement from #{} to ${} on each request
-     * Overhead is small, only one extra HashMap
-     */
     private static final BiLevelCacheMap s_expressions =
         new BiLevelCacheMap(90)
         {
             protected Object newInstance(Object key)
             {
-                try {
-                    return s_expressionEvaluator.parseExpressionString(
-                        toJspElExpression((String) key));
-                }
-                catch (ELException e)
-                {
-                    if (log.isDebugEnabled()) {
-                        log.debug("Invalid expression: " + key, e);
-                    }
-                    throw new ReferenceSyntaxException("Expression: " + key 
-                        + " -> " + e.getMessage(), e);
-                }
+                return parseExpression(toJspElExpression((String) key));
             }
         };
 
-    //~ Instance fields ----------------------------------------------------------------------------
+    //~ Instance fields -------------------------------------------------------
 
     protected Application _application;
     protected String      _expressionString;
     protected Object      _expression;
 
-    //~ Constructors -------------------------------------------------------------------------------
+    //~ Constructors ----------------------------------------------------------
 
     public ValueBindingImpl(Application application, String expression)
     {
@@ -117,25 +109,19 @@ public class ValueBindingImpl extends ValueBinding implements StateHolder
         {
             throw new NullPointerException("application");
         }
-        if ((expression == null) || ((expression = expression.trim()).length() == 0))
+        
+        // Do not trim(), we support mixed string-bindings
+        if ((expression == null) || (expression.length() == 0))
         {
             throw new ReferenceSyntaxException("Expression: empty or null");
         }
         _application = application;
         _expressionString  = expression;
 
-        Object parsedExpression = s_expressions.get(expression);
-        if (!(parsedExpression instanceof Expression)
-            && !(parsedExpression instanceof ExpressionString))
-        {
-            throw new IllegalStateException("Parsed Expression of unexpected type " 
-                + parsedExpression.getClass().getName()); 
-        }
-        
-        _expression = parsedExpression;
+        _expression = s_expressions.get(expression);
     }
 
-    //~ Methods ------------------------------------------------------------------------------------
+    //~ Methods ---------------------------------------------------------------
 
     public boolean isReadOnly(FacesContext facesContext)
             throws PropertyNotFoundException
@@ -143,10 +129,10 @@ public class ValueBindingImpl extends ValueBinding implements StateHolder
         try
         {
             Object base_ = resolveToBaseAndProperty(facesContext);
-            if (!(base_ instanceof Object[]))
+            if (base_ instanceof String)
             {
                 return VariableResolverImpl.s_standardImplicitObjects
-                    .containsKey(base_.toString());
+                    .containsKey(base_);
             }
             
             Object[] baseAndProperty = (Object[]) base_;
@@ -156,7 +142,8 @@ public class ValueBindingImpl extends ValueBinding implements StateHolder
             Integer index = toIndex(base, property);
             return (index == null)
                 ? _application.getPropertyResolver().isReadOnly(base, property)
-                : _application.getPropertyResolver().isReadOnly(base, index.intValue());
+                : _application.getPropertyResolver()
+                    .isReadOnly(base, index.intValue());
         }
         catch (NotVariableReferenceException e)
         {
@@ -167,12 +154,15 @@ public class ValueBindingImpl extends ValueBinding implements StateHolder
         catch (IndexOutOfBoundsException e) 
         {
             // ArrayIndexOutOfBoundsException also here
-            throw new PropertyNotFoundException("Expression: " + _expressionString, e);
+            throw new PropertyNotFoundException(
+                "Expression: '" + _expressionString + "'", e);
         }
         catch (Exception e)
         {
-            log.error("Cannot determine readonly for expression " + _expressionString, e);
-            throw new EvaluationException("Expression: " + _expressionString, e);
+            log.error("Cannot determine readonly for expression " 
+                + _expressionString, e);
+            throw new EvaluationException(
+                "Expression: '" + _expressionString + "'", e);
         }
     }
 
@@ -182,10 +172,10 @@ public class ValueBindingImpl extends ValueBinding implements StateHolder
         try
         {
             Object base_ = resolveToBaseAndProperty(facesContext);
-            if (!(base_ instanceof Object[]))
+            if (base_ instanceof String)
             {
                 Object val = _application.getVariableResolver()
-                    .resolveVariable(facesContext, base_.toString());
+                    .resolveVariable(facesContext, (String) base_);
                 
                 // Note: if val==null, then there is no variable with this name
                 //       in any scope. Therefore, we will create a new one, so 
@@ -201,18 +191,22 @@ public class ValueBindingImpl extends ValueBinding implements StateHolder
                 Integer index = toIndex(base, property);
                 return (index == null)
                     ? _application.getPropertyResolver().getType(base, property)
-                    : _application.getPropertyResolver().getType(base, index.intValue());
+                    : _application.getPropertyResolver()
+                        .getType(base, index.intValue());
             }
         }
         catch (IndexOutOfBoundsException e) 
         {
             // ArrayIndexOutOfBoundsException also here
-            throw new PropertyNotFoundException("Expression: " + _expressionString, e);
+            throw new PropertyNotFoundException(
+                "Expression: '" + _expressionString + "'", e);
         }
         catch (Exception e)
         {
-            log.error("Cannot get type for expression " + _expressionString, e);
-            throw new EvaluationException("Expression: " + _expressionString, e);
+            log.error("Cannot get type for expression '" + _expressionString 
+                + "'", e);
+            throw new EvaluationException(
+                "Expression: '" + _expressionString + "'", e);
         }
     }
 
@@ -222,13 +216,15 @@ public class ValueBindingImpl extends ValueBinding implements StateHolder
         try
         {
             Object base_ = resolveToBaseAndProperty(facesContext);
-            if (!(base_ instanceof Object[]))
+            if (base_ instanceof String)
             {
-                String name = base_.toString();
-                if (VariableResolverImpl.s_standardImplicitObjects.containsKey(name))
+                String name = (String) base_;
+                if (VariableResolverImpl.s_standardImplicitObjects
+                    .containsKey(name))
                 {
-                    String errorMessage = "Cannot set value of implicit object '" 
-                        + name + "' for expression " + _expressionString; 
+                    String errorMessage = 
+                        "Cannot set value of implicit object '" 
+                        + name + "' for expression '" + _expressionString + "'"; 
                     log.error(errorMessage);
                     throw new ReferenceSyntaxException(errorMessage);
                 }
@@ -244,37 +240,42 @@ public class ValueBindingImpl extends ValueBinding implements StateHolder
                 Integer index = toIndex(base, property);
                 if (index == null)
                 {
-                    _application.getPropertyResolver().setValue(base, property, newValue);
+                    _application.getPropertyResolver().setValue(
+                        base, property, newValue);
                 }
                 else
                 {
-                    _application.getPropertyResolver().setValue(base, index.intValue(), newValue);
+                    _application.getPropertyResolver().setValue(
+                        base, index.intValue(), newValue);
                 }
             }
         }
         catch (IndexOutOfBoundsException e) 
         {
             // ArrayIndexOutOfBoundsException also here
-            throw new PropertyNotFoundException("Expression: " + _expressionString, e);
+            throw new PropertyNotFoundException(
+                "Expression: '" + _expressionString + "'", e);
         }
         catch (Exception e)
         {
             if (newValue == null)
             {
-                log.error("Cannot set value for expression " 
-                    + _expressionString + " to null.", e);
+                log.error("Cannot set value for expression '" 
+                    + _expressionString + "' to null.", e);
             }
             else
             {
-                log.error("Cannot set value for expression " 
-                    + _expressionString + " to a new value of type " 
+                log.error("Cannot set value for expression '" 
+                    + _expressionString + "' to a new value of type " 
                     + newValue.getClass().getName(), e);
             }
-            throw new EvaluationException("Expression: " + _expressionString, e);
+            throw new EvaluationException(
+                "Expression: '" + _expressionString + "'", e);
         }
     }
     
-    private void setValueInScope(FacesContext facesContext, String name, Object newValue)
+    private static void setValueInScope(
+        FacesContext facesContext, String name, Object newValue)
     {
         ExternalContext externalContext = facesContext.getExternalContext();
          
@@ -337,12 +338,15 @@ public class ValueBindingImpl extends ValueBinding implements StateHolder
         catch (IndexOutOfBoundsException e) 
         {
             // ArrayIndexOutOfBoundsException also here
-            throw new PropertyNotFoundException("Expression: " + _expressionString, e);
+            throw new PropertyNotFoundException(
+                "Expression: '" + _expressionString + "'", e);
         }
         catch (Exception e)
         {
-            log.error("Cannot get value for expression " + _expressionString, e);
-            throw new EvaluationException("Expression: " + _expressionString, e);
+            log.error("Cannot get value for expression '" + _expressionString 
+                + "'", e);
+            throw new EvaluationException(
+                "Expression: '" + _expressionString + "'", e);
         }
     }
     
@@ -354,7 +358,8 @@ public class ValueBindingImpl extends ValueBinding implements StateHolder
             throw new NullPointerException("facesContext");
         }
         
-        VariableResolver variableResolver = new ELVariableResolver(facesContext);
+        VariableResolver variableResolver = 
+            new ELVariableResolver(facesContext);
         Object expression_;
         
         if (_expression instanceof Expression)
@@ -363,12 +368,15 @@ public class ValueBindingImpl extends ValueBinding implements StateHolder
             
             while (expression instanceof ConditionalExpression)
             {
-                ConditionalExpression conditionalExpression = ((ConditionalExpression) expression);
-                // first, evaluate the condition (and coerce the result to a boolean value)
+                ConditionalExpression conditionalExpression = 
+                    ((ConditionalExpression) expression);
+                // first, evaluate the condition (and coerce the result to a
+                // boolean value)
                 boolean condition =
                   Coercions.coerceToBoolean(
                       conditionalExpression.getCondition().evaluate(
-                          variableResolver, s_functionMapper, s_logger), s_logger)
+                          variableResolver, s_functionMapper, s_logger), 
+                          s_logger)
                       .booleanValue();
     
                 // then, use this boolean to branch appropriately
@@ -390,9 +398,10 @@ public class ValueBindingImpl extends ValueBinding implements StateHolder
         
         if (!(expression_ instanceof ComplexValue)) {
             // all other cases are not variable references
-            throw new NotVariableReferenceException (
-                "Parsed Expression of unsupported type for this operation. Expression class: " 
-                + _expression.getClass().getName() + ". Expression: " + _expressionString);
+            throw new NotVariableReferenceException(
+                "Parsed Expression of unsupported type for this operation. Expression class: "
+                    + _expression.getClass().getName() + ". Expression: '"
+                    + _expressionString + "'");
         }
         
         ComplexValue complexValue = (ComplexValue) expression_;
@@ -407,7 +416,8 @@ public class ValueBindingImpl extends ValueBinding implements StateHolder
         for (int i = 0; (base != null) && (i < max); i++) 
         {
             ValueSuffix suffix = (ValueSuffix) suffixes.get(i);
-            base = suffix.evaluate(base, variableResolver, s_functionMapper, s_logger);
+            base = suffix.evaluate(base, variableResolver, s_functionMapper,
+                s_logger);
         }
         
         if (base == null)
@@ -442,7 +452,7 @@ public class ValueBindingImpl extends ValueBinding implements StateHolder
     }
 
     /**
-     * Coerces <code>index</code> to Integer for array types, or returns 
+     * Coerces <code>index</code> to Integer for array types, or returns
      * <code>null</code> for non-array types.
      * 
      * @param base Object for the base
@@ -450,9 +460,11 @@ public class ValueBindingImpl extends ValueBinding implements StateHolder
      * @return Integer a valid Integer index, or null if not an array type
      * 
      * @throws ELException if exception occurs trying to coerce to Integer
-     * @throws EvaluationException if base is array type but cannot convert index to Integer
+     * @throws EvaluationException if base is array type but cannot convert
+     *         index to Integer
      */
-    protected Integer toIndex(Object base, Object index) throws ELException, EvaluationException
+    protected Integer toIndex(Object base, Object index) 
+        throws ELException, EvaluationException
     {
         if ((base instanceof List) || (base.getClass().isArray()))
         {
@@ -475,7 +487,7 @@ public class ValueBindingImpl extends ValueBinding implements StateHolder
         return null;
     }
     
-    private Integer coerceToIntegerWrapper(Object base, Object index)
+    private static Integer coerceToIntegerWrapper(Object base, Object index)
         throws EvaluationException, ELException
     {
         Integer integer = Coercions.coerceToInteger(index, s_logger);
@@ -483,7 +495,8 @@ public class ValueBindingImpl extends ValueBinding implements StateHolder
         {
             return integer;
         }
-        throw new ReferenceSyntaxException("Cannot convert index to int for base " 
+        throw new ReferenceSyntaxException(
+            "Cannot convert index to int for base " 
             + base.getClass().getName() + " and index " + index);
     }
 
@@ -532,12 +545,12 @@ public class ValueBindingImpl extends ValueBinding implements StateHolder
     
     /**
      * Return the index of the matching closing brace, skipping over quoted text
-     *
+     * 
      * @param expressionString string to search
      * @param indexofOpeningBrace the location of opening brace to match
-     *
+     * 
      * @return the index of the matching closing brace
-     *
+     * 
      * @throws ReferenceSyntaxException if matching brace cannot be found
      */
     private static int indexOfMatchingClosingBrace(
@@ -552,7 +565,8 @@ public class ValueBindingImpl extends ValueBinding implements StateHolder
             if (i >= len)
             {
                 throw new ReferenceSyntaxException(
-                    "Missing closing brace. Expression: " + expressionString);
+                    "Missing closing brace. Expression: '" 
+                        + expressionString + "'");
             }
     
             int indexofClosingBrace = expressionString.indexOf('}', i);
@@ -563,7 +577,8 @@ public class ValueBindingImpl extends ValueBinding implements StateHolder
             {
                 // No delimiter found
                 throw new ReferenceSyntaxException(
-                    "Missing closing brace. Expression: " + expressionString);
+                    "Missing closing brace. Expression: '" 
+                        + expressionString + "'");
             }
     
             // 1. If quoted literal, find closing quote
@@ -572,10 +587,10 @@ public class ValueBindingImpl extends ValueBinding implements StateHolder
                 i = indexOfMatchingClosingQuote(expressionString, i) + 1;
                 if (i == 0)
                 {
-                    // If no match, -1 + 1 = 0
+                    // Note: if no match, i==0 because -1 + 1 = 0
                     throw new ReferenceSyntaxException(
-                        "Missing closing quote. Expression: "
-                        + expressionString);
+                        "Missing closing quote. Expression: '"
+                            + expressionString + "'");
                 }
             }
             else
@@ -629,13 +644,43 @@ public class ValueBindingImpl extends ValueBinding implements StateHolder
 
         return (escapeCharCount % 2) != 0;
     }
+    
+    /**
+     * 
+     * Gets the parsed form of the given expression string. Returns either a 
+     * Expression, or ExpressionString.
+     */
+    static Object parseExpression(String expressionString)
+    {
+        ELParser parser = new ELParser(new StringReader(expressionString));
+        try
+        {
+            Object expression = parser.ExpressionString();
+            if (!(expression instanceof Expression)
+                && !(expression instanceof ExpressionString))
+            {
+                throw new ReferenceSyntaxException(
+                    "Invalid expression: '" + expressionString
+                        + "'. Parsed Expression of unexpected type " 
+                        + expression.getClass().getName()); 
+            }
+            return expression;
+        }
+        catch (ParseException e)
+        {
+            String msg = "Invalid expression: '" + expressionString + "'"; 
+            log.debug(msg, e);
+            throw new ReferenceSyntaxException(msg, e);
+        }
+    }
 
-    //~ StateHolder implementation ----------------------------------------------------------------------------
+    //~ StateHolder implementation --------------------------------------------
     
     private boolean _transient = false;
 
     /**
-     * Empty constructor, so that new instances can be created when restoring state.
+     * Empty constructor, so that new instances can be created when restoring 
+     * state.
      */
     public ValueBindingImpl()
     {
@@ -666,7 +711,7 @@ public class ValueBindingImpl extends ValueBinding implements StateHolder
         _transient = flag;
     }
     
-    //~ Internal classes ----------------------------------------------------------------------------
+    //~ Internal classes ------------------------------------------------------
 
     public static class ELVariableResolver implements VariableResolver {
         private final FacesContext _facesContext;
@@ -684,11 +729,22 @@ public class ValueBindingImpl extends ValueBinding implements StateHolder
         }
     }
     
-    public static final class NotVariableReferenceException extends ReferenceSyntaxException
+    public static final class NotVariableReferenceException 
+        extends ReferenceSyntaxException
     {
         public NotVariableReferenceException(String message)
         {
             super(message);
+        }
+    }
+    
+    public static class MyArraySuffix extends ArraySuffix
+    {
+        // TODO
+        
+        public MyArraySuffix(ArraySuffix arraySuffix)
+        {
+            super(arraySuffix.getIndex());
         }
     }
 }
