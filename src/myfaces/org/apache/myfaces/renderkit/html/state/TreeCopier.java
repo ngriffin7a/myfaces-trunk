@@ -18,15 +18,16 @@
  */
 package net.sourceforge.myfaces.renderkit.html.state;
 
-import net.sourceforge.myfaces.component.CommonComponentAttributes;
 import net.sourceforge.myfaces.component.UIComponentUtils;
 import net.sourceforge.myfaces.renderkit.html.jspinfo.JspInfo;
+import net.sourceforge.myfaces.util.bean.BeanUtils;
 import net.sourceforge.myfaces.util.logging.LogUtil;
 
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.tree.Tree;
 import javax.faces.webapp.FacesTag;
+import java.beans.PropertyDescriptor;
 import java.util.Iterator;
 import java.util.Set;
 
@@ -168,10 +169,12 @@ public class TreeCopier
             {
                 Object attrValue = fromComp.getAttribute(attrName);
 
-                //TODO: always try bean property setter first!
-                if (attrName.equals(CommonComponentAttributes.COMPONENT_ID_ATTR))
+                PropertyDescriptor pd = BeanUtils.findPropertyDescriptor(toComp, attrName);
+                if (pd != null)
                 {
-                    toComp.setComponentId((String)attrValue);
+                    //We must use setter method if one exists, because some setter methods
+                    //have side effects: e.g. setComponentId() adds id to NamingContainer
+                    BeanUtils.setBeanPropertyValue(toComp, pd, attrValue);
                 }
                 else
                 {

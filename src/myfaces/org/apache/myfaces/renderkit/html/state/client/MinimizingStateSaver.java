@@ -231,7 +231,6 @@ public class MinimizingStateSaver
                                    parsedComp);
 
             visitedAttributes.add(attrName);
-
         }
 
         // Save all attributes, that are set in the parsed tree

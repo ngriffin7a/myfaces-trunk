@@ -28,6 +28,7 @@ import net.sourceforge.myfaces.renderkit.html.state.TreeCopier;
 import net.sourceforge.myfaces.taglib.core.ActionListenerTag;
 import net.sourceforge.myfaces.tree.TreeUtils;
 import net.sourceforge.myfaces.util.logging.LogUtil;
+import net.sourceforge.myfaces.util.bean.BeanUtils;
 
 import javax.faces.FacesException;
 import javax.faces.component.UICommand;
@@ -42,6 +43,7 @@ import javax.faces.event.ValueChangedListener;
 import javax.faces.tree.Tree;
 import java.io.IOException;
 import java.util.*;
+import java.beans.PropertyDescriptor;
 
 /**
  * StateRestorer that restores state info saved by the MinimizingStateSaver.
@@ -278,9 +280,18 @@ public class MinimizingStateRestorer
             }
         }
 
-        uiComponent.setAttribute(attrName, objValue);
+        PropertyDescriptor pd = BeanUtils.findPropertyDescriptor(uiComponent, attrName);
+        if (pd != null)
+        {
+            //We must use setter method if one exists, because some setter methods
+            //have side effects: e.g. setComponentId() adds id to NamingContainer
+            BeanUtils.setBeanPropertyValue(uiComponent, pd, objValue);
+        }
+        else
+        {
+            uiComponent.setAttribute(attrName, objValue);
+        }
     }
-
 
 
 
