@@ -1,0 +1,73 @@
+<attrdesc name="columnClasses"><display-name /><description /></attrdesc>
+<attrdesc name="converter"><display-name /><description /></attrdesc>
+<attrdesc name="dateStyle"><display-name /><description /></attrdesc>
+<attrdesc name="formatPattern"><display-name /><description /></attrdesc>
+<attrdesc name="numberStyle"><display-name /><description /></attrdesc>
+<attrdesc name="rowClasses"><display-name /><description /></attrdesc>
+<attrdesc name="timeStyle"><display-name /><description /></attrdesc>
+<attrdesc name="timezone"><display-name /><description /></attrdesc>
+<attrdesc name="inputClass"><display-name /><description /></attrdesc>
+<attrdesc name="outputClass"><display-name /><description /></attrdesc>
+<attrdesc name="commandClass"><display-name /><description /></attrdesc>
+<attrdesc name="panelClass"><display-name /><description /></attrdesc>
+<collection name="common-renderer">
+    <attribute name="columnClasses" />
+    <attribute name="converter" />
+    <attribute name="dateStyle" />
+    <attribute name="formatPattern" />
+    <attribute name="numberStyle" />
+    <attribute name="rowClasses" />
+    <attribute name="timeStyle" />
+    <attribute name="timezone" />
+    <attribute name="inputClass" />
+    <attribute name="outputClass" />
+    <attribute name="commandClass" />
+    <attribute name="panelClass" />
+</collection>
+<attrdesc name="dir"><display-name /><description /></attrdesc>
+<attrdesc name="lang"><display-name /><description /></attrdesc>
+<attrdesc name="style"><display-name /><description /></attrdesc>
+<attrdesc name="title"><display-name /><description /></attrdesc>
+<collection name="html-universal">
+    <attribute name="dir" />
+    <attribute name="lang" />
+    <attribute name="style" />
+    <attribute name="title" />
+</collection>
+<attrdesc name="onclick"><display-name /><description /></attrdesc>
+<attrdesc name="ondblclick"><display-name /><description /></attrdesc>
+<attrdesc name="onmousedown"><display-name /><description /></attrdesc>
+<attrdesc name="onmouseup"><display-name /><description /></attrdesc>
+<attrdesc name="onmouseover"><display-name /><description /></attrdesc>
+<attrdesc name="onmousemove"><display-name /><description /></attrdesc>
+<attrdesc name="onmouseout"><display-name /><description /></attrdesc>
+<attrdesc name="onkeypress"><display-name /><description /></attrdesc>
+<attrdesc name="onkeydown"><display-name /><description /></attrdesc>
+<attrdesc name="onkeyup"><display-name /><description /></attrdesc>
+<collection name="html-event">
+    <attribute name="onclick" />
+    <attribute name="ondblclick" />
+    <attribute name="onmousedown" />
+    <attribute name="onmouseup" />
+    <attribute name="onmouseover" />
+    <attribute name="onmousemove" />
+    <attribute name="onmouseout" />
+    <attribute name="onkeypress" />
+    <attribute name="onkeydown" />
+    <attribute name="onkeyup" />
+</collection>
+
+<collection name="basic">
+    <attributes ref="html-universal" />
+    <attributes ref="html-event" />
+    <attributes ref="html-event" />
+</collection>
+
+<renderer renderType="Image">
+    <component tpye="UIGraphic">
+        <attribute collection="html-universal" />
+        <attribute collection="html-event" />
+        <attribute collection="common-renderer" />
+    </component>
+</renderer>
+
