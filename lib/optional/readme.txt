@@ -10,4 +10,3 @@ These libraries are only needed for special custom components.
 |-----------------------------|----------------------|
 | jakarta-oro.jar             | RegExprValidator     |
 |-----------------------------|----------------------|
-
