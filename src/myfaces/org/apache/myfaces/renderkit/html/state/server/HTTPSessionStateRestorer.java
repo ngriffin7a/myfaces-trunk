@@ -18,11 +18,12 @@
  */
 package net.sourceforge.myfaces.renderkit.html.state.server;
 
-import net.sourceforge.myfaces.renderkit.html.jspinfo.JspInfoUtils;
-import net.sourceforge.myfaces.renderkit.html.jspinfo.JspInfo;
-import net.sourceforge.myfaces.renderkit.html.jspinfo.JspBeanInfo;
-import net.sourceforge.myfaces.renderkit.html.state.StateRestorer;
 import net.sourceforge.myfaces.MyFacesConfig;
+import net.sourceforge.myfaces.renderkit.html.jspinfo.JspBeanInfo;
+import net.sourceforge.myfaces.renderkit.html.jspinfo.JspInfo;
+import net.sourceforge.myfaces.renderkit.html.jspinfo.JspInfoUtils;
+import net.sourceforge.myfaces.renderkit.html.state.StateRestorer;
+import net.sourceforge.myfaces.renderkit.html.state.ModelValueEntry;
 
 import javax.faces.context.FacesContext;
 import javax.faces.tree.Tree;
@@ -32,6 +33,7 @@ import java.io.IOException;
 import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Collection;
 
 /**
  * DOCUMENT ME!
@@ -68,15 +70,6 @@ public class HTTPSessionStateRestorer
         Tree savedTree = (Tree)session.getAttribute(HTTPSessionStateSaver.TREE_SESSION_ATTR);
         if (savedTree != null)
         {
-            if (savedTree.getTreeId().equals(currentTree.getTreeId()))
-            {
-                //same treeId, set restored tree as new tree in context
-                facesContext.setTree(savedTree);
-            }
-            session.removeAttribute(HTTPSessionStateSaver.TREE_SESSION_ATTR);
-            facesContext.getServletRequest().setAttribute(PREVIOUS_TREE_REQUEST_ATTR,
-                                                          savedTree);
-
             //autocreate request scope beans
             if (MyFacesConfig.isAutoCreateRequestScopeBeans(facesContext.getServletContext()))
             {
@@ -89,27 +82,49 @@ public class HTTPSessionStateRestorer
                                                     (JspBeanInfo)entry.getValue());
                 }
             }
+
+
+            if (savedTree.getTreeId().equals(currentTree.getTreeId()))
+            {
+                //same treeId, set restored tree as new tree in context
+                facesContext.setTree(savedTree);
+
+                //Model values
+                restoreModelValues(facesContext, session, false);
+            }
+            else
+            {
+                //Global model values
+                restoreModelValues(facesContext, session, true);
+            }
+
+            session.removeAttribute(HTTPSessionStateSaver.TREE_SESSION_ATTR);
+            facesContext.getServletRequest().setAttribute(PREVIOUS_TREE_REQUEST_ATTR,
+                                                          savedTree);
         }
 
-        //Model values
-        restoreModelValues(facesContext, session);
     }
 
 
     private void restoreModelValues(FacesContext facesContext,
-                                    HttpSession session)
+                                    HttpSession session,
+                                    boolean onlyGlobal)
     {
-        Map modelValuesMap = (Map)session.getAttribute(HTTPSessionStateSaver.MODEL_VALUES_MAP_SESSION_ATTR);
-        if (modelValuesMap != null)
+        Collection modelValuesColl
+            = (Collection)session.getAttribute(HTTPSessionStateSaver.MODEL_VALUES_COLL_SESSION_ATTR);
+        if (modelValuesColl != null)
         {
-            for (Iterator it = modelValuesMap.entrySet().iterator(); it.hasNext();)
+            for (Iterator it = modelValuesColl.iterator(); it.hasNext();)
             {
-                Map.Entry entry = (Map.Entry)it.next();
-                String modelRef = (String)entry.getKey();
-                JspInfoUtils.checkModelInstance(facesContext, modelRef);
-                facesContext.setModelValue(modelRef, entry.getValue());
+                ModelValueEntry entry = (ModelValueEntry)it.next();
+                if (!onlyGlobal || entry.isGlobal())
+                {
+                    String modelRef = entry.getModelReference();
+                    JspInfoUtils.checkModelInstance(facesContext, modelRef);
+                    facesContext.setModelValue(modelRef, entry.getValue());
+                }
             }
-            session.removeAttribute(HTTPSessionStateSaver.MODEL_VALUES_MAP_SESSION_ATTR);
+            session.removeAttribute(HTTPSessionStateSaver.MODEL_VALUES_COLL_SESSION_ATTR);
         }
     }
 

@@ -19,6 +19,7 @@
 package net.sourceforge.myfaces.renderkit.html.state.client;
 
 import net.sourceforge.myfaces.renderkit.html.jspinfo.JspInfoUtils;
+import net.sourceforge.myfaces.renderkit.html.state.ModelValueEntry;
 import net.sourceforge.myfaces.util.logging.LogUtil;
 
 import javax.faces.component.UIComponent;
@@ -30,9 +31,9 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.Locale;
-import java.util.Map;
 import java.util.zip.GZIPInputStream;
 
 /**
@@ -103,55 +104,35 @@ public class SerializingStateRestorer
             recreateRequestScopeBeans(facesContext);
 
             //restore model values
-            restoreModelValues(facesContext);
+            restoreModelValues(facesContext, false);
+        }
+        else
+        {
+            //restore global model values
+            restoreModelValues(facesContext, true);
         }
     }
 
-    private void restoreModelValues(FacesContext facesContext)
+    private void restoreModelValues(FacesContext facesContext, boolean onlyGlobal)
     {
         UIComponent root = facesContext.getTree().getRoot();
-        Map modelValuesMap = (Map)root.getAttribute(SerializingStateSaver.MODEL_VALUES_MAP_ATTR);
-        if (modelValuesMap != null)
+        Collection modelValuesColl
+            = (Collection)root.getAttribute(SerializingStateSaver.MODEL_VALUES_COLL_ATTR);
+        if (modelValuesColl != null)
         {
-            for (Iterator it = modelValuesMap.entrySet().iterator(); it.hasNext();)
+            for (Iterator it = modelValuesColl.iterator(); it.hasNext();)
             {
-                Map.Entry entry = (Map.Entry)it.next();
-                String modelRef = (String)entry.getKey();
-                JspInfoUtils.checkModelInstance(facesContext, modelRef);
-                facesContext.setModelValue(modelRef, entry.getValue());
+                ModelValueEntry entry = (ModelValueEntry)it.next();
+                if (!onlyGlobal || entry.isGlobal())
+                {
+                    String modelRef = entry.getModelReference();
+                    JspInfoUtils.checkModelInstance(facesContext, modelRef);
+                    facesContext.setModelValue(modelRef, entry.getValue());
+                }
             }
-            root.setAttribute(SerializingStateSaver.MODEL_VALUES_MAP_ATTR, null);
+            root.setAttribute(SerializingStateSaver.MODEL_VALUES_COLL_ATTR, null);
         }
     }
-
-
-    /*
-    public void restoreComponentState(FacesContext facesContext,
-                                      UIComponent uiComponent) throws IOException
-    {
-        Tree savedTree = getPreviousTree(facesContext);
-        if (savedTree == null)
-        {
-            return;
-        }
-
-        String uniqueId = JspInfo.getUniqueComponentId(uiComponent);
-        UIComponent find = JspInfo.findComponentByUniqueId(savedTree,
-                                                           uniqueId);
-        if (find != null)
-        {
-            UIComponent parent = uiComponent.getParent();
-            if (parent == null)
-            {
-                throw new IllegalArgumentException("Root cannot be restored explicitly.");
-            }
-
-            //TODO: Is this allowed?! Better replace all attributes and children?
-            parent.removeChild(uiComponent);
-            parent.addChild(find);
-        }
-    }
-    */
 
 
     protected Tree unzipTree(String zippedTree)

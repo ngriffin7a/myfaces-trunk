@@ -20,6 +20,7 @@ package net.sourceforge.myfaces.renderkit.html.state.client;
 
 import net.sourceforge.myfaces.component.CommonComponentAttributes;
 import net.sourceforge.myfaces.component.UIComponentUtils;
+import net.sourceforge.myfaces.component.ext.UISaveState;
 import net.sourceforge.myfaces.convert.ConverterUtils;
 import net.sourceforge.myfaces.convert.impl.StringArrayConverter;
 import net.sourceforge.myfaces.renderkit.html.jspinfo.JspInfo;
@@ -74,13 +75,18 @@ public class MinimizingStateRestorer
             recreateRequestScopeBeans(facesContext);
 
             //restore model beans and values:
-            restoreModelValues(facesContext, stateMap);
+            restoreModelValues(facesContext, stateMap, false);
 
             //restore previous tree
             restorePreviousTree(facesContext, stateMap, requestTree);
 
             //restore listeners:
             restoreListeners(facesContext, stateMap);
+        }
+        else
+        {
+            //restore global model beans and values:
+            restoreModelValues(facesContext, stateMap, true);
         }
 
         restoreLocale(facesContext, stateMap);
@@ -330,14 +336,20 @@ public class MinimizingStateRestorer
 
 
 
-    protected void restoreModelValues(FacesContext facesContext, Map stateMap)
+    protected void restoreModelValues(FacesContext facesContext,
+                                      Map stateMap,
+                                      boolean onlyGlobal)
     {
         Iterator it = JspInfo.getUISaveStateComponents(facesContext,
                                                        facesContext.getTree().getTreeId());
         while (it.hasNext())
         {
             UIComponent uiSaveState = (UIComponent)it.next();
-            restoreModelValue(facesContext, stateMap, uiSaveState);
+            if (!onlyGlobal ||
+                ((UISaveState)uiSaveState).isGlobal())
+            {
+                restoreModelValue(facesContext, stateMap, uiSaveState);
+            }
         }
     }
 
@@ -447,7 +459,7 @@ public class MinimizingStateRestorer
                 {
                     //Listener is another component, paramValue is the uniqueId
                     //listener = (FacesListener)root.findComponent(paramValue);
-                    listener = (FacesListener)JspInfo.findComponentByUniqueId(facesContext.getTree(),
+                    listener = (FacesListener)UIComponentUtils.findComponentByUniqueId(facesContext.getTree(),
                                                                               paramValue);
                     if (listener == null)
                     {
@@ -459,7 +471,7 @@ public class MinimizingStateRestorer
                 /*
                 UIComponent uiComponent = root.findComponent(info.uniqueComponentId);
                 */
-                UIComponent uiComponent = JspInfo.findComponentByUniqueId(facesContext.getTree(),
+                UIComponent uiComponent = UIComponentUtils.findComponentByUniqueId(facesContext.getTree(),
                                                                           info.uniqueComponentId);
                 if (uiComponent == null)
                 {

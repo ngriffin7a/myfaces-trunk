@@ -37,6 +37,8 @@ public class UISaveState
 {
     public static final String TYPE = UISaveState.class.getName();
 
+    public static final String GLOBAL_ATTR = "global";
+
     public String getComponentType()
     {
         return TYPE;
@@ -50,6 +52,24 @@ public class UISaveState
     public final boolean isValid()
     {
         return true;   //model update must not occur!
+    }
+
+    public boolean isGlobal()
+    {
+        Boolean global = (Boolean)getAttribute(GLOBAL_ATTR);
+        return global != null ? global.booleanValue() : false;
+    }
+
+    public void setGlobal(boolean global)
+    {
+        if (global)
+        {
+            setAttribute(GLOBAL_ATTR, Boolean.TRUE);
+        }
+        else
+        {
+            setAttribute(GLOBAL_ATTR, null);    //false is default
+        }
     }
 
     public void decode(FacesContext context)

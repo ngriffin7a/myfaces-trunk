@@ -16,33 +16,41 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package net.sourceforge.myfaces.taglib.ext;
+package net.sourceforge.myfaces.renderkit.html.state;
 
-import net.sourceforge.myfaces.component.ext.UISaveState;
-import net.sourceforge.myfaces.taglib.MyFacesTag;
-
-import javax.faces.component.UIComponent;
+import java.io.Serializable;
 
 /**
  * DOCUMENT ME!
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public class SaveStateTag
-    extends MyFacesTag
+public class ModelValueEntry
+    implements Serializable
 {
-    public UIComponent createComponent()
+    private String modelReference;
+    private Object value;
+    private boolean global;
+
+    public ModelValueEntry(String modelReference, Object value, boolean global)
     {
-        return new UISaveState();
+        this.modelReference = modelReference;
+        this.value = value;
+        this.global = global;
     }
 
-    public String getRendererType()
+    public String getModelReference()
     {
-        return null;
+        return modelReference;
     }
 
-    public void setGlobal(boolean global)
+    public Object getValue()
     {
-        setComponentAttribute(UISaveState.GLOBAL_ATTR, global);
+        return value;
+    }
+
+    public boolean isGlobal()
+    {
+        return global;
     }
 }

@@ -21,11 +21,14 @@ package net.sourceforge.myfaces.component;
 import net.sourceforge.myfaces.convert.ConverterUtils;
 import net.sourceforge.myfaces.convert.impl.StringArrayConverter;
 import net.sourceforge.myfaces.renderkit.html.state.client.MinimizingStateSaver;
+import net.sourceforge.myfaces.renderkit.html.jspinfo.JspInfo;
 import net.sourceforge.myfaces.tree.TreeUtils;
 
 import javax.faces.FacesException;
 import javax.faces.FactoryFinder;
+import javax.faces.tree.Tree;
 import javax.faces.component.UIComponent;
+import javax.faces.component.NamingContainer;
 import javax.faces.context.FacesContext;
 import javax.faces.context.Message;
 import javax.faces.context.MessageResources;
@@ -39,6 +42,7 @@ import java.lang.reflect.Field;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.util.List;
+import java.util.Iterator;
 
 /**
  * DOCUMENT ME!
@@ -301,6 +305,105 @@ public class UIComponentUtils
     {
         return (attrName.startsWith("javax.") ||
                 attrName.startsWith("net.sourceforge.myfaces."));
+    }
+
+
+
+
+    /**
+     * @param uiComponent
+     * @return
+     */
+    public static String getUniqueComponentId(UIComponent uiComponent)
+    {
+        String uniqueId = (String)uiComponent.getAttribute(JspInfo.UNIQUE_COMPONENT_ID);
+        if (uniqueId != null)
+        {
+            return uniqueId;
+        }
+
+        String componentId = uiComponent.getComponentId();
+        if (componentId != null)
+        {
+            UIComponent findNamingContainer = uiComponent.getParent();
+            if (findNamingContainer == null)
+            {
+                //already at root
+                return "";
+            }
+            while (findNamingContainer != null &&
+                   !(findNamingContainer instanceof NamingContainer))
+            {
+                findNamingContainer = findNamingContainer.getParent();
+            }
+            if (findNamingContainer == null)
+            {
+                throw new FacesException("Root is no naming container?!");
+            }
+
+            if (findNamingContainer.getParent() == null)
+            {
+                //NamingContainer is root
+                uniqueId = componentId;
+            }
+            else
+            {
+                uniqueId = getUniqueComponentId(findNamingContainer)
+                            + UIComponent.SEPARATOR_CHAR
+                            + componentId;
+            }
+            uiComponent.setAttribute(JspInfo.UNIQUE_COMPONENT_ID, uniqueId);
+            return uniqueId;
+        }
+
+        //find root
+        UIComponent findRoot = uiComponent;
+        while (findRoot.getParent() != null)
+        {
+            findRoot = findRoot.getParent();
+        }
+
+        //assign unique component ids:
+        findRoot.setAttribute(JspInfo.UNIQUE_COMPONENT_ID, "");
+        assignUniqueIdsToChildren(findRoot, "");
+
+        return (String)uiComponent.getAttribute(JspInfo.UNIQUE_COMPONENT_ID);
+    }
+
+    private static void assignUniqueIdsToChildren(UIComponent parent,
+                                                  String parentUniqueId)
+    {
+        int childIdx = 0;
+        for (Iterator it = parent.getFacetsAndChildren(); it.hasNext(); childIdx++)
+        {
+            UIComponent comp = (UIComponent)it.next();
+            if (comp.getComponentId() == null)
+            {
+                String uniqueId = parentUniqueId + JspInfo.UNIQUE_COMPONENT_ID_SEPARATOR_CHAR + childIdx;
+                comp.setAttribute(JspInfo.UNIQUE_COMPONENT_ID, uniqueId);
+                assignUniqueIdsToChildren(comp, uniqueId);
+            }
+            else
+            {
+                assignUniqueIdsToChildren(comp, getUniqueComponentId(comp));
+            }
+        }
+    }
+
+    /**
+     * TODO: We should optimize this by a HashMap
+     */
+    public static UIComponent findComponentByUniqueId(Tree tree, String uniqueId)
+    {
+        for (Iterator it = TreeUtils.treeIterator(tree); it.hasNext();)
+        {
+            UIComponent comp = (UIComponent)it.next();
+            if (getUniqueComponentId(comp).equals(uniqueId))
+            {
+                return comp;
+            }
+        }
+        return null;
     }
 
 

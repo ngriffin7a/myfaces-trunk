@@ -19,7 +19,6 @@
 package net.sourceforge.myfaces.renderkit.html.jspinfo;
 
 import net.sourceforge.myfaces.MyFacesConfig;
-import net.sourceforge.myfaces.tree.TreeUtils;
 
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
@@ -180,67 +179,6 @@ public class JspInfo
         }
         return map;
     }
-
-
-
-    /**
-     * TODO: Move to ComponentUtils
-     * @param uiComponent
-     * @return
-     */
-    public static String getUniqueComponentId(UIComponent uiComponent)
-    {
-        String uniqueId = (String)uiComponent.getAttribute(UNIQUE_COMPONENT_ID);
-        if (uniqueId != null)
-        {
-            return uniqueId;
-        }
-
-        //find root
-        UIComponent findRoot = uiComponent;
-        while (findRoot.getParent() != null)
-        {
-            findRoot = findRoot.getParent();
-        }
-
-        //assign unique component ids:
-        findRoot.setAttribute(UNIQUE_COMPONENT_ID, "");
-        assignUniqueIdsToChildren(findRoot, "");
-
-        return (String)uiComponent.getAttribute(UNIQUE_COMPONENT_ID);
-    }
-
-    private static void assignUniqueIdsToChildren(UIComponent parent,
-                                                  String parentUniqueId)
-    {
-        int childIdx = 0;
-        for (Iterator it = parent.getFacetsAndChildren(); it.hasNext(); childIdx++)
-        {
-            String uniqueId = parentUniqueId + UNIQUE_COMPONENT_ID_SEPARATOR_CHAR + childIdx;
-            UIComponent comp = (UIComponent)it.next();
-            comp.setAttribute(UNIQUE_COMPONENT_ID, uniqueId);
-            assignUniqueIdsToChildren(comp, uniqueId);
-        }
-    }
-
-
-
-    /**
-     * TODO: We should optimize this by a HashMap
-     */
-    public static UIComponent findComponentByUniqueId(Tree tree, String uniqueId)
-    {
-        for (Iterator it = TreeUtils.treeIterator(tree); it.hasNext();)
-        {
-            UIComponent comp = (UIComponent)it.next();
-            if (getUniqueComponentId(comp).equals(uniqueId))
-            {
-                return comp;
-            }
-        }
-        return null;
-    }
-
 
 
 }

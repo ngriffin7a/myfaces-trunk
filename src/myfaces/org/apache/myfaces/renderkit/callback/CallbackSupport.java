@@ -19,6 +19,7 @@
 package net.sourceforge.myfaces.renderkit.callback;
 
 import net.sourceforge.myfaces.renderkit.html.jspinfo.JspInfo;
+import net.sourceforge.myfaces.component.UIComponentUtils;
 
 import javax.faces.FactoryFinder;
 import javax.faces.component.UIComponent;
@@ -62,7 +63,7 @@ public class CallbackSupport
         wrapRenderKit(facesContext);
 
         Map map = getCallbackRendererInfoMap(facesContext);
-        map.put(JspInfo.getUniqueComponentId(component),
+        map.put(UIComponentUtils.getUniqueComponentId(component),
                 new CallbackRendererInfo(component,
                                  callbackRenderer,
                                  false));
@@ -83,7 +84,7 @@ public class CallbackSupport
         wrapRenderKit(facesContext);
 
         Map map = getCallbackRendererInfoMap(facesContext);
-        map.put(JspInfo.getUniqueComponentId(component),
+        map.put(UIComponentUtils.getUniqueComponentId(component),
                 new CallbackRendererInfo(component,
                                  callbackRenderer,
                                  true));
@@ -95,7 +96,7 @@ public class CallbackSupport
                                               CallbackRenderer callbackRenderer)
     {
         Map map = getCallbackRendererInfoMap(facesContext);
-        map.remove(JspInfo.getUniqueComponentId(component));
+        map.remove(UIComponentUtils.getUniqueComponentId(component));
         if (map.isEmpty())
         {
             unwrapRenderKit(facesContext);

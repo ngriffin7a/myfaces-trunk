@@ -132,7 +132,7 @@ public class MinimizingStateSaver
             UIComponent comp = (UIComponent)treeIt.next();
             saveComponentAttributes(facesContext, stateMap, comp);
             saveListeners(facesContext, stateMap, comp);
-            visitedComponents.add(JspInfo.getUniqueComponentId(comp));
+            visitedComponents.add(UIComponentUtils.getUniqueComponentId(comp));
         }
 
         saveUnrenderedComponents(facesContext, stateMap, visitedComponents);
@@ -170,7 +170,7 @@ public class MinimizingStateSaver
                                           Set visitedComponents,
                                           StringBuffer buf)
     {
-        String uniqueId = JspInfo.getUniqueComponentId(parsedComp);
+        String uniqueId = UIComponentUtils.getUniqueComponentId(parsedComp);
         if (!visitedComponents.contains(uniqueId))
         {
             if (buf.length() > 0)
@@ -203,7 +203,7 @@ public class MinimizingStateSaver
                                                                   uiComponent);
         if (parsedComp == null)
         {
-            LogUtil.getLogger().warning("Corresponding parsed component not found for component " + JspInfo.getUniqueComponentId(uiComponent));
+            LogUtil.getLogger().warning("Corresponding parsed component not found for component " + UIComponentUtils.getUniqueComponentId(uiComponent));
         }
 
         //Remember all seen attributes of current component, so that
@@ -294,8 +294,8 @@ public class MinimizingStateSaver
     {
         Tree parsedTree = JspInfo.getTree(facesContext,
                                           facesContext.getTree().getTreeId());
-        return JspInfo.findComponentByUniqueId(parsedTree,
-                                               JspInfo.getUniqueComponentId(uiComponent));
+        return UIComponentUtils.findComponentByUniqueId(parsedTree,
+                                               UIComponentUtils.getUniqueComponentId(uiComponent));
     }
 
 
@@ -669,7 +669,7 @@ public class MinimizingStateSaver
                                                                                            uiComponent,
                                                                                            listenerType);
                 //String paramValue = ((UIComponent)facesListener).getClientId(facesContext);
-                String paramValue = JspInfo.getUniqueComponentId(((UIComponent)facesListener));
+                String paramValue = UIComponentUtils.getUniqueComponentId(((UIComponent)facesListener));
                 saveParameter(stateMap, paramName, paramValue);
             }
             else

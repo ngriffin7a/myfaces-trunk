@@ -21,6 +21,7 @@ package net.sourceforge.myfaces.renderkit.html.state.client;
 import net.sourceforge.myfaces.component.ext.UISaveState;
 import net.sourceforge.myfaces.renderkit.html.HTMLRenderer;
 import net.sourceforge.myfaces.renderkit.html.state.StateUtils;
+import net.sourceforge.myfaces.renderkit.html.state.ModelValueEntry;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLEncoder;
 import net.sourceforge.myfaces.tree.TreeUtils;
 import net.sourceforge.myfaces.util.logging.LogUtil;
@@ -31,9 +32,7 @@ import javax.faces.tree.Tree;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeUtility;
 import java.io.*;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
+import java.util.*;
 import java.util.zip.GZIPOutputStream;
 
 /**
@@ -53,8 +52,8 @@ public class SerializingStateSaver
 
     protected static final String CURRENT_LOCALE_ATTR
         = SerializingStateSaver.class.getName() + ".CURRENT_LOCALE";
-    protected static final String MODEL_VALUES_MAP_ATTR
-        = SerializingStateSaver.class.getName() + ".MODEL_VALUES_MAP";
+    protected static final String MODEL_VALUES_COLL_ATTR
+        = SerializingStateSaver.class.getName() + ".MODEL_VALUES_COLL";
 
     protected static final String TREE_REQUEST_PARAM = "_tree";
 
@@ -134,7 +133,7 @@ public class SerializingStateSaver
 
     private void saveModelValues(FacesContext facesContext)
     {
-        Map modelValuesMap = null;
+        Collection modelValuesColl = null;
 
         //look for UISaveState components:
         Iterator it = TreeUtils.treeIterator(facesContext.getTree());
@@ -150,14 +149,16 @@ public class SerializingStateSaver
                 }
                 else
                 {
-                    if (modelValuesMap == null)
+                    if (modelValuesColl == null)
                     {
-                        modelValuesMap = new HashMap();
+                        modelValuesColl = new ArrayList();
                     }
                     Object val = facesContext.getModelValue(modelRef);
                     if (val instanceof Serializable)
                     {
-                        modelValuesMap.put(modelRef, val);
+                        modelValuesColl.add(new ModelValueEntry(modelRef,
+                                                                val,
+                                                                ((UISaveState)comp).isGlobal()));
                     }
                     else
                     {
@@ -167,10 +168,10 @@ public class SerializingStateSaver
             }
         }
 
-        if (modelValuesMap != null)
+        if (modelValuesColl != null)
         {
-            facesContext.getTree().getRoot().setAttribute(MODEL_VALUES_MAP_ATTR,
-                                                          modelValuesMap);
+            facesContext.getTree().getRoot().setAttribute(MODEL_VALUES_COLL_ATTR,
+                                                          modelValuesColl);
         }
     }
 

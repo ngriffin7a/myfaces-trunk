@@ -95,7 +95,7 @@ public class TreeCopier
         for (Iterator it = fromComp.getChildren(); it.hasNext(); childIndex++)
         {
             UIComponent child = (UIComponent)it.next();
-            String uniqueId = JspInfo.getUniqueComponentId(child);
+            String uniqueId = UIComponentUtils.getUniqueComponentId(child);
 
             if (_ignoreComponents != null &&
                 _ignoreComponents.contains(uniqueId))
@@ -109,7 +109,7 @@ public class TreeCopier
             {
                 //destination component already exists?
                 //clone = toComp.findComponent(child.getComponentId());
-                clone = JspInfo.findComponentByUniqueId(toTree, uniqueId);
+                clone = UIComponentUtils.findComponentByUniqueId(toTree, uniqueId);
             }
             catch (Exception e)
             {

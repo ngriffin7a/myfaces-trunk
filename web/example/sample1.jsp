@@ -1,6 +1,6 @@
 <%@ page import="java.math.BigDecimal,
                  java.util.Date"%>
-<%@ page session="true"
+<%@ page session="false"
 %><%@ taglib uri="/WEB-INF/myfaces_basic.tld" prefix="h"
 %><%@ taglib uri="/WEB-INF/myfaces_core.tld" prefix="f"
 %><%@ taglib uri="/WEB-INF/myfaces_ext.tld" prefix="x"
@@ -31,9 +31,9 @@
 
 <body>
 
-<jsp:useBean id="calcForm" class="net.sourceforge.myfaces.examples.example1.CalcForm" scope="session" />
+<jsp:useBean id="calcForm" class="net.sourceforge.myfaces.examples.example1.CalcForm" scope="request" />
 
-<jsp:useBean id="ucaseForm" class="net.sourceforge.myfaces.examples.example1.UCaseForm" scope="session" />
+<jsp:useBean id="ucaseForm" class="net.sourceforge.myfaces.examples.example1.UCaseForm" scope="request" />
 
 <h:use_faces>
 

@@ -20,6 +20,7 @@ package net.sourceforge.myfaces.renderkit.html.state.server;
 
 import net.sourceforge.myfaces.renderkit.html.state.StateSaver;
 import net.sourceforge.myfaces.renderkit.html.state.StateUtils;
+import net.sourceforge.myfaces.renderkit.html.state.ModelValueEntry;
 import net.sourceforge.myfaces.tree.TreeUtils;
 import net.sourceforge.myfaces.component.ext.UISaveState;
 import net.sourceforge.myfaces.util.logging.LogUtil;
@@ -30,9 +31,7 @@ import javax.faces.tree.Tree;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.HashMap;
+import java.util.*;
 
 /**
  * DOCUMENT ME!
@@ -46,8 +45,8 @@ public class HTTPSessionStateSaver
         = HTTPSessionStateSaver.class.getName() + ".TREE";
     protected static final String LOCALE_SESSION_ATTR
         = HTTPSessionStateSaver.class.getName() + ".LOCALE";
-    protected static final String MODEL_VALUES_MAP_SESSION_ATTR
-        = HTTPSessionStateSaver.class.getName() + ".MODEL_VALUES_MAP";
+    protected static final String MODEL_VALUES_COLL_SESSION_ATTR
+        = HTTPSessionStateSaver.class.getName() + ".MODEL_VALUES_COLL";
 
     public void init(FacesContext facesContext) throws IOException
     {
@@ -77,7 +76,7 @@ public class HTTPSessionStateSaver
     private void saveModelValues(FacesContext facesContext,
                                  HttpSession session)
     {
-        Map modelValuesMap = null;
+        Collection modelValuesColl = null;
 
         //look for UISaveState components:
         Iterator it = TreeUtils.treeIterator(facesContext.getTree());
@@ -93,20 +92,29 @@ public class HTTPSessionStateSaver
                 }
                 else
                 {
-                    if (modelValuesMap == null)
+                    if (((UISaveState)comp).isGlobal())
                     {
-                        modelValuesMap = new HashMap();
+
                     }
-                    modelValuesMap.put(modelRef,
-                                       facesContext.getModelValue(modelRef));
+                    else
+                    {
+                        if (modelValuesColl == null)
+                        {
+                            modelValuesColl = new ArrayList();
+                        }
+                        Object v = facesContext.getModelValue(modelRef);
+                        modelValuesColl.add(new ModelValueEntry(modelRef,
+                                                               v,
+                                                               ((UISaveState)comp).isGlobal()));
+                    }
                 }
             }
         }
 
-        if (modelValuesMap != null)
+        if (modelValuesColl != null)
         {
-            session.setAttribute(MODEL_VALUES_MAP_SESSION_ATTR,
-                                 modelValuesMap);
+            session.setAttribute(MODEL_VALUES_COLL_SESSION_ATTR,
+                                 modelValuesColl);
         }
     }
 

@@ -19,6 +19,7 @@
 package net.sourceforge.myfaces.renderkit.html.state.client;
 
 import net.sourceforge.myfaces.MyFacesConfig;
+import net.sourceforge.myfaces.component.UIComponentUtils;
 import net.sourceforge.myfaces.convert.ConverterUtils;
 import net.sourceforge.myfaces.renderkit.html.jspinfo.JspInfo;
 import net.sourceforge.myfaces.util.logging.LogUtil;
@@ -93,7 +94,7 @@ public class TagHashHack
                 if (comp != null)
                 {
                     saveTagHash.put(entry.getKey(),
-                                    JspInfo.getUniqueComponentId(comp));
+                                    UIComponentUtils.getUniqueComponentId(comp));
                 }
                 else
                 {
@@ -184,7 +185,7 @@ public class TagHashHack
             {
                 Map.Entry tagHashEntry = (Map.Entry)tagHashIt.next();
                 String uniqueId = (String)tagHashEntry.getValue();
-                UIComponent comp = JspInfo.findComponentByUniqueId(restoredTree,
+                UIComponent comp = UIComponentUtils.findComponentByUniqueId(restoredTree,
                                                                    uniqueId);
                 if (comp == null)
                 {
