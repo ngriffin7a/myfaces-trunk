@@ -46,6 +46,9 @@ import java.util.List;
 
 /**
  * $Log$
+ * Revision 1.14  2004/12/09 12:18:43  mmarinschek
+ * changes in Calendar-Renderer to check for submitted-value first
+ *
  * Revision 1.13  2004/12/09 05:13:02  svieujot
  * Mark potential bugs where we use the backing bean's value, and do not check for submitted value
  *
@@ -107,7 +110,7 @@ public class HtmlCalendarRenderer
 
         Locale currentLocale = facesContext.getViewRoot().getLocale();
 
-        Date value = (Date) inputCalendar.getValue(); // TODO : Check if restores submitted value.
+        Date value = RendererUtils.getDateValue(inputCalendar);
 
         Calendar timeKeeper = Calendar.getInstance(currentLocale);
         timeKeeper.setTime(value!=null?value:new Date());

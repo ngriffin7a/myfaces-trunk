@@ -36,6 +36,9 @@ import java.util.*;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.15  2004/12/09 12:18:43  mmarinschek
+ * changes in Calendar-Renderer to check for submitted-value first
+ *
  * Revision 1.14  2004/10/13 11:51:01  matze
  * renamed packages to org.apache
  *
@@ -72,6 +75,41 @@ public class RendererUtils
     private static final Log log = LogFactory.getLog(RendererUtils.class);
 
     public static final String SELECT_ITEM_LIST_ATTR = RendererUtils.class.getName() + ".LIST";
+    
+    public static Date getDateValue(UIComponent component)
+    {
+        if (!(component instanceof ValueHolder))
+        {
+            throw new IllegalArgumentException("Component is not a ValueHolder");
+        }
+
+        if (component instanceof EditableValueHolder)
+        {
+            Object submittedValue = ((EditableValueHolder)component).getSubmittedValue();
+            if (submittedValue != null)
+            {
+                if (submittedValue instanceof Date)
+                {
+                    return (Date)submittedValue;
+                }
+                else
+                {
+                    throw new IllegalArgumentException("Expected submitted value of type Date");
+                }
+            }
+        }
+
+        Object value = ((ValueHolder)component).getValue();
+
+        if (value==null || value instanceof Date)
+        {
+            return (Date) value;
+        }
+        else
+        {
+            throw new IllegalArgumentException("Expected submitted value of type Date");
+        }
+    }
 
 
     public static String getStringValue(FacesContext facesContext,
