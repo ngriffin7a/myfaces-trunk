@@ -27,32 +27,31 @@ import java.io.IOException;
  * @author Thomas Spiegl
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.13  2004/03/30 17:47:34  manolito
+ * Message and Messages refactored
+ *
  * Revision 1.12  2004/03/30 13:24:57  manolito
  * refactoring: HtmlComponentTag moved to share and renamed to HtmlComponentTagBase
  *
  */
 public class HtmlMessageRenderer
-        extends HtmlRenderer
+        extends HtmlMessageRendererBase
 {
     //private static final Log log = LogFactory.getLog(HtmlMessageRenderer.class);
-
-    public void encodeBegin(FacesContext facesContext, UIComponent uiComponent)
-            throws IOException
-    {
-    }
-
-    public void encodeChildren(FacesContext facescontext, UIComponent uicomponent)
-            throws IOException
-    {
-    }
 
     public void encodeEnd(FacesContext facesContext, UIComponent component)
             throws IOException
     {
         super.encodeEnd(facesContext, component);   //check for NP
-        HtmlMessageRendererUtils.renderMessage(facesContext,
-                                               component,
-                                               false);  //no non-standard colon separator
+        renderMessage(facesContext, component);
     }
+
+    protected String getSummaryDetailSeparator(FacesContext facesContext,
+                                               UIComponent message,
+                                               String msgClientId)
+    {
+        return " ";
+    }
+
 
 }

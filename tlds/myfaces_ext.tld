@@ -388,22 +388,21 @@
 <!-- message -->
     <tag>
         <name>message</name>
-        <tag-class>net.sourceforge.myfaces.taglib.html.HtmlMessageTag</tag-class>
+        <tag-class>net.sourceforge.myfaces.taglib.html.ext.HtmlMessageTag</tag-class>
         <body-content>JSP</body-content>
         <description>
-            MyFaces extension to the standard messages tag: see showColon attribute
+            MyFaces extension to the standard messages tag: see summaryDetailSeparator attribute
         </description>
         &standard_message_attributes;
         <!-- MyFaces extensions -->
         &user_role_attributes;
         <attribute>
-            <name>showColon</name>
+            <name>summaryDetailSeparator</name>
             <required>false</required>
             <rtexprvalue>false</rtexprvalue>
             <description>
-                If true, a colon and one space character is rendered between
-                the summary and the detail.
-                Default: true
+                Text, that will be rendered between summary and detail.
+                Default: ": "
             </description>
         </attribute>
     </tag>
@@ -411,7 +410,7 @@
 <!-- messages -->
     <tag>
         <name>messages</name>
-        <tag-class>net.sourceforge.myfaces.taglib.ext.MyfacesHtmlMessagesTag</tag-class>
+        <tag-class>net.sourceforge.myfaces.taglib.ext.HtmlMessagesTag</tag-class>
         <body-content>JSP</body-content>
         <description>
             MyFaces extension to the standard messages tag: see showInputLabel attribute
@@ -420,18 +419,30 @@
         <!-- MyFaces extensions -->
         &user_role_attributes;
         <attribute>
-            <name>showInputLabel</name>
+            <name>summaryDetailSeparator</name>
             <required>false</required>
             <rtexprvalue>false</rtexprvalue>
             <description>
-                If true, and showSummary and showDetail are also true, MyFaces tries to find
-                a label for the UIInput that applies to this message.
-                Example: If the summary is "Validation error" and the detail is
-                "Input reqired" the message will than be written in a form like
-                "Validation error in field 'xyz': Input reqired"
-                The "in field 'xyz'" can be customized by altering the according message
-                in the Messages.properties resource.
-                Default: true
+                Text, that will be rendered between summary and detail for all
+                messages that do not apply to a component.
+                Default: ": "
+            </description>
+        </attribute>
+        <attribute>
+            <name>labelFormat</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
+            <description>
+                Text, that will be rendered after the summary for all
+                messages that apply to a component.
+                The renderer tries to find a label for the UIInput that applies to this message.
+                If a label was found, the labelSeparatorFormat text is interpreted as a MessageFormat
+                pattern with the found label text as single argument.
+                Example: summary = "Validation error", labelFormat = " in field {0}"
+                         The text "Validation error in field xyz" will be rendered if "xyz" is
+                         the text of a HtmlOutputLabel component that applies to the component
+                         the current message is associated with.
+                Default: " in {0}"
             </description>
         </attribute>
     </tag>

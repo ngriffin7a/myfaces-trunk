@@ -18,14 +18,18 @@
  */
 package net.sourceforge.myfaces.taglib.html.ext;
 
+import net.sourceforge.myfaces.component.html.ext.HtmlMessage;
 import net.sourceforge.myfaces.taglib.html.HtmlMessageTagBase;
 
-import javax.faces.component.html.HtmlMessage;
+import javax.faces.component.UIComponent;
 
 /**
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.2  2004/03/30 17:47:32  manolito
+ * Message and Messages refactored
+ *
  * Revision 1.1  2004/03/30 13:27:05  manolito
  * extended Message component
  *
@@ -43,6 +47,20 @@ public class HtmlMessageTag
     protected String getDefaultRendererType()
     {
         return "net.sourceforge.myfaces.Message";
+    }
+
+    private String _summaryDetailSeparator;
+
+    protected void setProperties(UIComponent component)
+    {
+        super.setProperties(component);
+
+        setStringProperty(component, "summaryDetailSeparator", _summaryDetailSeparator);
+    }
+
+    public void setSummaryDetailSeparator(String summaryDetailSeparator)
+    {
+        _summaryDetailSeparator = summaryDetailSeparator;
     }
 
 }

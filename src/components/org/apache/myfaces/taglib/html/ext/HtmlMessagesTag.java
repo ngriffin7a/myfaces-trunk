@@ -16,25 +16,26 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package net.sourceforge.myfaces.taglib.ext;
+package net.sourceforge.myfaces.taglib.html.ext;
 
-import net.sourceforge.myfaces.component.html.MyFacesHtmlMessages;
-import net.sourceforge.myfaces.taglib.html.HtmlMessagesTag;
+import net.sourceforge.myfaces.component.html.ext.HtmlMessages;
+import net.sourceforge.myfaces.taglib.html.HtmlMessagesTagBase;
 
 import javax.faces.component.UIComponent;
+
 
 /**
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public class MyfacesHtmlMessagesTag
-        extends HtmlMessagesTag
+public class HtmlMessagesTag
+        extends HtmlMessagesTagBase
 {
-    //private static final Log log = LogFactory.getLog(MyfacesHtmlMessagesTag.class);
+    //private static final Log log = LogFactory.getLog(HtmlOutputFormatTag.class);
 
     public String getComponentType()
     {
-        return MyFacesHtmlMessages.COMPONENT_TYPE;
+        return HtmlMessages.COMPONENT_TYPE;
     }
 
     protected String getDefaultRendererType()
@@ -42,20 +43,25 @@ public class MyfacesHtmlMessagesTag
         return "net.sourceforge.myfaces.Messages";
     }
 
-
-    private String _showInputLabel;
+    private String _summaryDetailSeparator;
+    private String _labelFormat;
 
     protected void setProperties(UIComponent component)
     {
         super.setProperties(component);
 
-        if (_showInputLabel == null) _showInputLabel = "true";
-
-        setBooleanProperty(component, "showInputLabel", _showInputLabel);
+        setStringProperty(component, "summaryDetailSeparator", _summaryDetailSeparator);
+        setStringProperty(component, "labelFormat", _labelFormat);
     }
 
-    public void setShowInputLabel(String showInputLabel)
+    public void setSummaryDetailSeparator(String summaryDetailSeparator)
     {
-        _showInputLabel = showInputLabel;
+        _summaryDetailSeparator = summaryDetailSeparator;
     }
+
+    public void setLabelFormat(String labelFormat)
+    {
+        _labelFormat = labelFormat;
+    }
+
 }

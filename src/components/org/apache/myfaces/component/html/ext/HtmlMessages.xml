@@ -3,14 +3,19 @@
   "-//MyFaces//DTD MyFaces component def 1.0//EN"
   "http://myfaces.sourceforge.net/dtd/Component.dtd">
 <component>
-    <component-class>net.sourceforge.myfaces.component.html.MyFacesHtmlMessages</component-class>
+    <component-class>net.sourceforge.myfaces.component.html.ext.HtmlMessages</component-class>
     <base-class>javax.faces.component.html.HtmlMessages</base-class>
     <component-type>net.sourceforge.myfaces.HtmlMessages</component-type>
     <component-family>javax.faces.Messages</component-family>
     <renderer-type>javax.faces.Messages</renderer-type>
     <field>
-        <name>showInputLabel</name>
-        <type>boolean</type>
-        <default-value>false</default-value>
+        <name>summaryDetailSeparator</name>
+        <type>java.lang.String</type>
+        <default-value>: </default-value>
+    </field>
+    <field>
+        <name>labelFormat</name>
+        <type>java.lang.String</type>
+        <default-value> in {0}</default-value>
     </field>
 </component>

@@ -9,8 +9,8 @@
     <component-family>javax.faces.Message</component-family>
     <renderer-type>javax.faces.Message</renderer-type>
     <field>
-        <name>showColon</name>
-        <type>boolean</type>
-        <default-value>true</default-value>
+        <name>summaryDetailSeparator</name>
+        <type>java.lang.String</type>
+        <default-value>: </default-value>
     </field>
 </component>

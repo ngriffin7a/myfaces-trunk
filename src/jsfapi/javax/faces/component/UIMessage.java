@@ -24,10 +24,14 @@ import javax.faces.el.ValueBinding;
 /**
  * see Javadoc of JSF Specification
  *
- * //TODO: javadoc says default for showDetail is false !?
+ * Javadoc says default for showDetail is false, but Specs say it is true!?
  * 
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
+ * $Log$
+ * Revision 1.6  2004/03/30 17:47:33  manolito
+ * Message and Messages refactored
+ *
  */
 public class UIMessage
         extends UIComponentBase

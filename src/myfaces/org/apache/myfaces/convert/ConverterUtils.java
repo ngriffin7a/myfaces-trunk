@@ -18,7 +18,7 @@
  */
 package net.sourceforge.myfaces.convert;
 
-import net.sourceforge.myfaces.application.MessageUtils;
+import net.sourceforge.myfaces.util.MessageUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 

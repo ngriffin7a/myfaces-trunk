@@ -18,8 +18,8 @@
  */
 package net.sourceforge.myfaces.renderkit.html.ext;
 
-import net.sourceforge.myfaces.renderkit.html.HtmlMessageRendererUtils;
-import net.sourceforge.myfaces.renderkit.html.HtmlRenderer;
+import net.sourceforge.myfaces.component.html.ext.HtmlMessage;
+import net.sourceforge.myfaces.renderkit.html.HtmlMessageRendererBase;
 
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
@@ -29,32 +29,35 @@ import java.io.IOException;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.2  2004/03/30 17:47:32  manolito
+ * Message and Messages refactored
+ *
  * Revision 1.1  2004/03/30 13:27:05  manolito
  * extended Message component
  *
  */
 public class HtmlMessageRenderer
-        extends HtmlRenderer
+        extends HtmlMessageRendererBase
 {
     //private static final Log log = LogFactory.getLog(HtmlMessageRenderer.class);
-
-    public void encodeBegin(FacesContext facesContext, UIComponent uiComponent)
-            throws IOException
-    {
-    }
-
-    public void encodeChildren(FacesContext facescontext, UIComponent uicomponent)
-            throws IOException
-    {
-    }
 
     public void encodeEnd(FacesContext facesContext, UIComponent component)
             throws IOException
     {
         super.encodeEnd(facesContext, component);   //check for NP
-        HtmlMessageRendererUtils.renderMessage(facesContext,
-                                               component,
-                                               true);  //non-standard colon separator
+        renderMessage(facesContext, component);
+    }
+
+    protected String getSummaryDetailSeparator(FacesContext facesContext, UIComponent message, String msgClientId)
+    {
+        if (message instanceof HtmlMessage)
+        {
+            return ((HtmlMessage)message).getSummaryDetailSeparator();
+        }
+        else
+        {
+            return (String)message.getAttributes().get("summaryDetailSeparator");
+        }
     }
 
 }

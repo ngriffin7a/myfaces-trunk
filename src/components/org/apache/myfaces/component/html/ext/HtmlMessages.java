@@ -16,9 +16,8 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package net.sourceforge.myfaces.component.html;
+package net.sourceforge.myfaces.component.html.ext;
 
-import javax.faces.component.html.HtmlMessages;
 import javax.faces.context.FacesContext;
 import javax.faces.el.ValueBinding;
 
@@ -27,19 +26,21 @@ import javax.faces.el.ValueBinding;
  * @author Manfred Geiler
  * @version $Revision$ $Date$
  */
-public class MyFacesHtmlMessages
-    extends HtmlMessages
+public class HtmlMessages
+    extends javax.faces.component.html.HtmlMessages
 {
     //------------------ GENERATED CODE BEGIN (do not modify!) --------------------
 
     public static final String COMPONENT_TYPE = "net.sourceforge.myfaces.HtmlMessages";
     public static final String COMPONENT_FAMILY = "javax.faces.Messages";
     private static final String DEFAULT_RENDERER_TYPE = "javax.faces.Messages";
-    private static final boolean DEFAULT_SHOWINPUTLABEL = false;
+    private static final String DEFAULT_SUMMARYDETAILSEPARATOR = ": ";
+    private static final String DEFAULT_LABELFORMAT = " in {0}";
 
-    private Boolean _showInputLabel = null;
+    private String _summaryDetailSeparator = null;
+    private String _labelFormat = null;
 
-    public MyFacesHtmlMessages()
+    public HtmlMessages()
     {
         setRendererType(DEFAULT_RENDERER_TYPE);
     }
@@ -49,25 +50,37 @@ public class MyFacesHtmlMessages
         return COMPONENT_FAMILY;
     }
 
-    public void setShowInputLabel(boolean showInputLabel)
+    public void setSummaryDetailSeparator(String summaryDetailSeparator)
     {
-        _showInputLabel = Boolean.valueOf(showInputLabel);
+        _summaryDetailSeparator = summaryDetailSeparator;
     }
 
-    public boolean isShowInputLabel()
+    public String getSummaryDetailSeparator()
     {
-        if (_showInputLabel != null) return _showInputLabel.booleanValue();
-        ValueBinding vb = getValueBinding("showInputLabel");
-        Boolean v = vb != null ? (Boolean)vb.getValue(getFacesContext()) : null;
-        return v != null ? v.booleanValue() : DEFAULT_SHOWINPUTLABEL;
+        if (_summaryDetailSeparator != null) return _summaryDetailSeparator;
+        ValueBinding vb = getValueBinding("summaryDetailSeparator");
+        return vb != null ? (String)vb.getValue(getFacesContext()) : DEFAULT_SUMMARYDETAILSEPARATOR;
+    }
+
+    public void setLabelFormat(String labelFormat)
+    {
+        _labelFormat = labelFormat;
+    }
+
+    public String getLabelFormat()
+    {
+        if (_labelFormat != null) return _labelFormat;
+        ValueBinding vb = getValueBinding("labelFormat");
+        return vb != null ? (String)vb.getValue(getFacesContext()) : DEFAULT_LABELFORMAT;
     }
 
 
     public Object saveState(FacesContext context)
     {
-        Object values[] = new Object[2];
+        Object values[] = new Object[3];
         values[0] = super.saveState(context);
-        values[1] = _showInputLabel;
+        values[1] = _summaryDetailSeparator;
+        values[2] = _labelFormat;
         return ((Object) (values));
     }
 
@@ -75,7 +88,8 @@ public class MyFacesHtmlMessages
     {
         Object values[] = (Object[])state;
         super.restoreState(context, values[0]);
-        _showInputLabel = (Boolean)values[1];
+        _summaryDetailSeparator = (String)values[1];
+        _labelFormat = (String)values[2];
     }
     //------------------ GENERATED CODE END ---------------------------------------
 }

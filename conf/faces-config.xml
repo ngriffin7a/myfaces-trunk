@@ -20,7 +20,7 @@
 
   <component>
     <component-type>net.sourceforge.myfaces.HtmlMessages</component-type>
-    <component-class>net.sourceforge.myfaces.component.html.MyFacesHtmlMessages</component-class>
+    <component-class>net.sourceforge.myfaces.component.html.ext.HtmlMessages</component-class>
   </component>
 
   <component>

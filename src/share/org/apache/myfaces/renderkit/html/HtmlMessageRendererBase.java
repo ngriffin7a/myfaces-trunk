@@ -37,26 +37,26 @@ import java.util.Map;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.1  2004/03/30 17:47:36  manolito
+ * Message and Messages refactored
+ *
  * Revision 1.1  2004/03/30 13:24:58  manolito
  * refactoring: HtmlComponentTag moved to share and renamed to HtmlComponentTagBase
  *
  */
-public class HtmlMessageRendererUtils
+public abstract class HtmlMessageRendererBase
+        extends HtmlRenderer
 {
-    //private static final Log log = LogFactory.getLog(HtmlMessageRendererUtils.class);
-
-    private HtmlMessageRendererUtils() {} //no instance allowed
+    //private static final Log log = LogFactory.getLog(HtmlMessageRendererBase.class);
 
 
-    /**
-     * @param facesContext
-     * @param message
-     * @param colonSeparator  if true, a colon will be rendered between summary and detail
-     * @throws IOException
-     */
-    public static void renderMessage(FacesContext facesContext,
-                                     UIComponent message,
-                                     boolean colonSeparator)
+    protected abstract String getSummaryDetailSeparator(FacesContext facesContext,
+                                                        UIComponent message,
+                                                        String msgClientId);
+
+
+    protected void renderMessage(FacesContext facesContext,
+                                 UIComponent message)
             throws IOException
     {
         String forClientId = getFor(message);
@@ -81,37 +81,28 @@ public class HtmlMessageRendererUtils
         // get first message
         FacesMessage facesMessage = (FacesMessage)messageIterator.next();
 
+        // and render it
+        renderSingleFacesMessage(facesContext, message, facesMessage, null);
+    }
+
+
+
+    protected void renderSingleFacesMessage(FacesContext facesContext,
+                                            UIComponent message,
+                                            FacesMessage facesMessage,
+                                            String messageClientId)
+            throws IOException
+    {
         // determine style and style class
-        String[] tmp;
-        if (message instanceof HtmlMessage)
-        {
-            tmp = getStyleAndStyleClass((HtmlMessage)message, facesMessage.getSeverity());
-        }
-        else
-        {
-
-            tmp = getStyleAndStyleClass(message, facesMessage.getSeverity());
-        }
-
-        String style = tmp[0];
-        String styleClass = tmp[1];
+        String[] styleAndClass = getStyleAndStyleClass(message, facesMessage.getSeverity());
+        String style = styleAndClass[0];
+        String styleClass = styleAndClass[1];
 
         String summary = facesMessage.getSummary();
         String detail = facesMessage.getDetail();
 
-        String title;
-        boolean tooltip;
-        if (message instanceof HtmlMessage)
-        {
-            title = ((HtmlMessage)message).getTitle();
-            tooltip = ((HtmlMessage)message).isTooltip();
-        }
-        else
-        {
-            Map attr = message.getAttributes();
-            title = (String)attr.get(JSFAttr.TITLE_ATTR);
-            tooltip = RendererUtils.getBooleanAttribute(message, JSFAttr.TOOLTIP_ATTR, false);
-        }
+        String title = getTitle(message);
+        boolean tooltip = isTooltip(message);
 
         if (title == null && tooltip)
         {
@@ -146,9 +137,15 @@ public class HtmlMessageRendererUtils
         if (showSummary && !(title == null && tooltip))
         {
             writer.writeText(summary, null);
-            if (showDetail && colonSeparator)
+            if (showDetail)
             {
-                writer.writeText(": ", null);
+                String summaryDetailSeparator = getSummaryDetailSeparator(facesContext,
+                                                                          message,
+                                                                          messageClientId);
+                if (summaryDetailSeparator != null)
+                {
+                    writer.writeText(summaryDetailSeparator, null);
+                }
             }
         }
 
@@ -163,86 +160,84 @@ public class HtmlMessageRendererUtils
         }
     }
 
-    private static String[] getStyleAndStyleClass(HtmlMessage htmlMessage,
-                                                  FacesMessage.Severity severity)
+
+    protected String[] getStyleAndStyleClass(UIComponent message,
+                                             FacesMessage.Severity severity)
     {
         String style = null;
         String styleClass = null;
-        if (severity == FacesMessage.SEVERITY_INFO)
+        if (message instanceof HtmlMessage)
         {
-            style = htmlMessage.getInfoStyle();
-            styleClass = htmlMessage.getInfoClass();
-        }
-        else if (severity == FacesMessage.SEVERITY_WARN)
-        {
-            style = htmlMessage.getWarnStyle();
-            styleClass = htmlMessage.getWarnClass();
-        }
-        else if (severity == FacesMessage.SEVERITY_ERROR)
-        {
-            style = htmlMessage.getErrorStyle();
-            styleClass = htmlMessage.getErrorClass();
-        }
-        else if (severity == FacesMessage.SEVERITY_FATAL)
-        {
-            style = htmlMessage.getFatalStyle();
-            styleClass = htmlMessage.getFatalClass();
-        }
+            if (severity == FacesMessage.SEVERITY_INFO)
+            {
+                style = ((HtmlMessage)message).getInfoStyle();
+                styleClass = ((HtmlMessage)message).getInfoClass();
+            }
+            else if (severity == FacesMessage.SEVERITY_WARN)
+            {
+                style = ((HtmlMessage)message).getWarnStyle();
+                styleClass = ((HtmlMessage)message).getWarnClass();
+            }
+            else if (severity == FacesMessage.SEVERITY_ERROR)
+            {
+                style = ((HtmlMessage)message).getErrorStyle();
+                styleClass = ((HtmlMessage)message).getErrorClass();
+            }
+            else if (severity == FacesMessage.SEVERITY_FATAL)
+            {
+                style = ((HtmlMessage)message).getFatalStyle();
+                styleClass = ((HtmlMessage)message).getFatalClass();
+            }
 
-        if (style == null)
-        {
-            style = htmlMessage.getStyle();
-        }
+            if (style == null)
+            {
+                style = ((HtmlMessage)message).getStyle();
+            }
 
-        if (styleClass == null)
+            if (styleClass == null)
+            {
+                styleClass = ((HtmlMessage)message).getStyleClass();
+            }
+        }
+        else
         {
-            styleClass = htmlMessage.getStyleClass();
+            Map attr = message.getAttributes();
+            if (severity == FacesMessage.SEVERITY_INFO)
+            {
+                style = (String)attr.get(JSFAttr.INFO_STYLE_ATTR);
+                styleClass = (String)attr.get(JSFAttr.INFO_CLASS_ATTR);
+            }
+            else if (severity == FacesMessage.SEVERITY_WARN)
+            {
+                style = (String)attr.get(JSFAttr.WARN_STYLE_ATTR);
+                styleClass = (String)attr.get(JSFAttr.WARN_CLASS_ATTR);
+            }
+            else if (severity == FacesMessage.SEVERITY_ERROR)
+            {
+                style = (String)attr.get(JSFAttr.ERROR_STYLE_ATTR);
+                styleClass = (String)attr.get(JSFAttr.ERROR_CLASS_ATTR);
+            }
+            else if (severity == FacesMessage.SEVERITY_FATAL)
+            {
+                style = (String)attr.get(JSFAttr.FATAL_STYLE_ATTR);
+                styleClass = (String)attr.get(JSFAttr.FATAL_CLASS_ATTR);
+            }
+
+            if (style == null)
+            {
+                style = (String)attr.get(JSFAttr.STYLE_CLASS_ATTR);
+            }
+
+            if (styleClass == null)
+            {
+                styleClass = (String)attr.get(JSFAttr.STYLE_CLASS_ATTR);
+            }
         }
 
         return new String[] {style, styleClass};
     }
 
-    private static String[] getStyleAndStyleClass(UIComponent message,
-                                                  FacesMessage.Severity severity)
-    {
-        Map attr = message.getAttributes();
-        String style = null;
-        String styleClass = null;
-        if (severity == FacesMessage.SEVERITY_INFO)
-        {
-            style = (String)attr.get(JSFAttr.INFO_STYLE_ATTR);
-            styleClass = (String)attr.get(JSFAttr.INFO_CLASS_ATTR);
-        }
-        else if (severity == FacesMessage.SEVERITY_WARN)
-        {
-            style = (String)attr.get(JSFAttr.WARN_STYLE_ATTR);
-            styleClass = (String)attr.get(JSFAttr.WARN_CLASS_ATTR);
-        }
-        else if (severity == FacesMessage.SEVERITY_ERROR)
-        {
-            style = (String)attr.get(JSFAttr.ERROR_STYLE_ATTR);
-            styleClass = (String)attr.get(JSFAttr.ERROR_CLASS_ATTR);
-        }
-        else if (severity == FacesMessage.SEVERITY_FATAL)
-        {
-            style = (String)attr.get(JSFAttr.FATAL_STYLE_ATTR);
-            styleClass = (String)attr.get(JSFAttr.FATAL_CLASS_ATTR);
-        }
-
-        if (style == null)
-        {
-            style = (String)attr.get(JSFAttr.STYLE_CLASS_ATTR);
-        }
-
-        if (styleClass == null)
-        {
-            styleClass = (String)attr.get(JSFAttr.STYLE_CLASS_ATTR);
-        }
-
-        return new String[] {style, styleClass};
-    }
-
-    private static String getFor(UIComponent component)
+    protected String getFor(UIComponent component)
     {
         if (component instanceof UIMessage)
         {
@@ -254,7 +249,31 @@ public class HtmlMessageRendererUtils
         }
     }
 
-    private static boolean isShowSummary(UIComponent component)
+    protected String getTitle(UIComponent component)
+    {
+        if (component instanceof HtmlMessage)
+        {
+            return ((HtmlMessage)component).getTitle();
+        }
+        else
+        {
+            return (String)component.getAttributes().get(JSFAttr.TITLE_ATTR);
+        }
+    }
+
+    protected boolean isTooltip(UIComponent component)
+    {
+        if (component instanceof HtmlMessage)
+        {
+            return ((HtmlMessage)component).isTooltip();
+        }
+        else
+        {
+            return RendererUtils.getBooleanAttribute(component, JSFAttr.TOOLTIP_ATTR, false);
+        }
+    }
+
+    protected boolean isShowSummary(UIComponent component)
     {
         if (component instanceof UIMessage)
         {
@@ -266,7 +285,7 @@ public class HtmlMessageRendererUtils
         }
     }
 
-    private static boolean isShowDetail(UIComponent component)
+    protected boolean isShowDetail(UIComponent component)
     {
         if (component instanceof UIMessage)
         {
@@ -277,6 +296,16 @@ public class HtmlMessageRendererUtils
             return RendererUtils.getBooleanAttribute(component, JSFAttr.SHOW_DETAIL_ATTR, false);
         }
     }
+
+
+
+
+
+
+
+
+
+
 
 
 }

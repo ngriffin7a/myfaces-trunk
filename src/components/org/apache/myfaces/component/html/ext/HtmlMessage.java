@@ -25,6 +25,9 @@ import javax.faces.el.ValueBinding;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.2  2004/03/30 17:47:32  manolito
+ * Message and Messages refactored
+ *
  * Revision 1.1  2004/03/30 13:27:04  manolito
  * extended Message component
  *
@@ -37,9 +40,9 @@ public class HtmlMessage
     public static final String COMPONENT_TYPE = "net.sourceforge.myfaces.HtmlMessage";
     public static final String COMPONENT_FAMILY = "javax.faces.Message";
     private static final String DEFAULT_RENDERER_TYPE = "javax.faces.Message";
-    private static final boolean DEFAULT_SHOWCOLON = true;
+    private static final String DEFAULT_SUMMARYDETAILSEPARATOR = ": ";
 
-    private Boolean _showColon = null;
+    private String _summaryDetailSeparator = null;
 
     public HtmlMessage()
     {
@@ -51,17 +54,16 @@ public class HtmlMessage
         return COMPONENT_FAMILY;
     }
 
-    public void setShowColon(boolean showColon)
+    public void setSummaryDetailSeparator(String summaryDetailSeparator)
     {
-        _showColon = Boolean.valueOf(showColon);
+        _summaryDetailSeparator = summaryDetailSeparator;
     }
 
-    public boolean isShowColon()
+    public String getSummaryDetailSeparator()
     {
-        if (_showColon != null) return _showColon.booleanValue();
-        ValueBinding vb = getValueBinding("showColon");
-        Boolean v = vb != null ? (Boolean)vb.getValue(getFacesContext()) : null;
-        return v != null ? v.booleanValue() : DEFAULT_SHOWCOLON;
+        if (_summaryDetailSeparator != null) return _summaryDetailSeparator;
+        ValueBinding vb = getValueBinding("summaryDetailSeparator");
+        return vb != null ? (String)vb.getValue(getFacesContext()) : DEFAULT_SUMMARYDETAILSEPARATOR;
     }
 
 
@@ -69,7 +71,7 @@ public class HtmlMessage
     {
         Object values[] = new Object[2];
         values[0] = super.saveState(context);
-        values[1] = _showColon;
+        values[1] = _summaryDetailSeparator;
         return ((Object) (values));
     }
 
@@ -77,7 +79,7 @@ public class HtmlMessage
     {
         Object values[] = (Object[])state;
         super.restoreState(context, values[0]);
-        _showColon = (Boolean)values[1];
+        _summaryDetailSeparator = (String)values[1];
     }
     //------------------ GENERATED CODE END ---------------------------------------
 }
