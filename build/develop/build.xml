@@ -117,9 +117,6 @@
         <copy todir="${examples.web}">
             <fileset dir="${components_resource.src}"/>
         </copy>
-        <copy todir="${tiles.web}">
-            <fileset dir="${components_resource.src}"/>
-        </copy>
 
 
         <copy file="${project.dir}/conf/develop-web.xml" tofile="${examples.web}/WEB-INF/web.xml" />

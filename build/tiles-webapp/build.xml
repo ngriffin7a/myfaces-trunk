@@ -22,7 +22,7 @@
     <property file="../manifest.properties"/>
 
     <!-- Temporary dir. May be overridden in build.local.properties -->
-    <property name="temp.dir" location="${env.TEMP}"/>
+    <property name="temp.dir" location="${env.TEMP}/tiles-example"/>
 
     <!-- Tomcat -->
     <property name="tomcat.war.file" location="${temp.dir}/myfaces-tiles.war"/>
