@@ -231,7 +231,10 @@ public class ListRenderer
             rendererType.equals(GroupRenderer.TYPE) &&
             getComponentCountAttr(context) > 1 ? true : false;
 
+        int row = incrementRowAttr(context);
+
         String style = calcRowStyle(context,
+                                    row,
                                     isLastChildcomponent);
 
         writer.write("<tr");
@@ -243,27 +246,26 @@ public class ListRenderer
         }
         writer.write(">");
 
-        int row = getActualRowAttr(context).intValue();
+
         afterOpenRow(context, row);
 
-        incrementRowAttr(context);
     }
 
     protected void closeRow(FacesContext context)
         throws IOException
     {
-       int row = getActualRowAttr(context).intValue();
-       if (row > 0)
-       {
-           beforeCloseRow(context, row);
-           context.getResponseWriter().write("</tr>");
-       }
+        int row = getActualRowAttr(context).intValue();
+        if (row >= 0)
+        {
+            beforeCloseRow(context, row);
+            context.getResponseWriter().write("</tr>");
+        }
     }
 
     protected void openColumn(FacesContext context)
         throws IOException
     {
-        int column = getActualColumnAttr(context).intValue();
+        int column = incrementColumnAttr(context);
         beforeOpenColumn(context, column);
 
         ResponseWriter writer = context.getResponseWriter();
@@ -278,8 +280,6 @@ public class ListRenderer
             writer.write("\"");
         }
         writer.write(">");
-
-        incrementColumnAttr(context);
     }
 
     protected void closeColumn(FacesContext context)
@@ -341,13 +341,13 @@ public class ListRenderer
     // count rows and Columns
     //-------------------------------------------------------------
 
-    private static final Integer INITIAL_VALUE = new Integer(0);
+    private static final Integer INITIAL_VALUE = new Integer(-1);
 
     protected int incrementColumnAttr(FacesContext context)
     {
         Integer value = getActualColumnAttr(context);
         context.getServletRequest().setAttribute(ACTUAL_COLUMN_ATTR, new Integer(value.intValue() + 1));
-        return value.intValue();
+        return value.intValue() + 1;
     }
 
     protected void resetColumnAttr(FacesContext context)
@@ -366,7 +366,7 @@ public class ListRenderer
     {
         Integer value = getActualRowAttr(context);
         context.getServletRequest().setAttribute(ACTUAL_ROW_ATTR, new Integer(value.intValue() + 1));
-        return value.intValue();
+        return value.intValue() + 1;
     }
 
     protected Integer getActualRowAttr(FacesContext context)
@@ -384,10 +384,10 @@ public class ListRenderer
      * TODO: refactor see GridRenderer
      */
     private String calcRowStyle(FacesContext context,
+                                int row,
                                 boolean isLastRow)
     {
         String style = null;
-        int row = getActualRowAttr(context).intValue();
 
         Styles styles = getStyles(context);
         if (styles == null)
@@ -423,9 +423,14 @@ public class ListRenderer
         int row = getActualRowAttr(context).intValue();
 
         Styles styles = getStyles(context);
+        if (styles == null)
+        {
+            return null;
+        }
 
-        boolean hasHeaderStyle = styles.getHeaderStyle().length() > 0;
-        if (styles == null || row == 0 && hasHeaderStyle)
+        boolean hasHeaderStyle = styles.getHeaderStyle() != null &&
+                                 styles.getHeaderStyle().length() > 0;
+        if (row == 0 && hasHeaderStyle)
         {
             return null;
         }
