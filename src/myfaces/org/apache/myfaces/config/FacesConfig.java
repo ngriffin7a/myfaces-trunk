@@ -28,7 +28,6 @@ import javax.faces.application.Application;
 import javax.faces.application.ApplicationFactory;
 import javax.faces.application.NavigationHandler;
 import javax.faces.application.ViewHandler;
-import javax.faces.component.UIComponent;
 import javax.faces.context.ExternalContext;
 import javax.faces.el.PropertyResolver;
 import javax.faces.el.VariableResolver;
@@ -288,6 +287,7 @@ public class FacesConfig
             String converterClass = (String) entry.getValue();
             app.addConverter(converterId, converterClass);
         }
+        
         for (Iterator it = _converterTypeMap.entrySet().iterator(); it.hasNext();)
         {
             Entry entry = (Entry) it.next();
@@ -295,6 +295,7 @@ public class FacesConfig
             String converterClass = (String) entry.getValue();
             app.addConverter(targetClass, converterClass);
         }
+        
         for (Iterator it = _componentClassMap.entrySet().iterator(); it.hasNext();)
         {
             Entry entry = (Entry) it.next();
@@ -302,6 +303,7 @@ public class FacesConfig
             String componentClass = (String) entry.getValue();
             app.addComponent(componentType, componentClass);
         }
+        
         for (Iterator it = _validatorClassMap.entrySet().iterator(); it.hasNext();)
         {
             Entry entry = (Entry) it.next();
@@ -382,10 +384,10 @@ public class FacesConfig
                     }
                     else
                     {
-                        UIComponent comp = (UIComponent)ConfigUtil.newInstance(className);
-                        if (!rc.supportsComponentClass(comp.getClass()))
+                        Class clazz = ConfigUtil.classForName(className);
+                        if (!rc.supportsComponentClass(clazz))
                         {
-                            rc.addSupportedComponentClass(comp.getClass());
+                            rc.addSupportedComponentClass(clazz);
                         }
                     }
                 }
