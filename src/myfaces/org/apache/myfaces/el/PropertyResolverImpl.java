@@ -18,6 +18,8 @@
  */
 package net.sourceforge.myfaces.el;
 
+import net.sourceforge.myfaces.util.MethodUtils;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -26,7 +28,6 @@ import javax.faces.el.EvaluationException;
 import javax.faces.el.PropertyNotFoundException;
 import javax.faces.el.PropertyResolver;
 import javax.faces.el.ReferenceSyntaxException;
-
 import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
@@ -43,6 +44,9 @@ import java.util.Map;
  * @author Anton Koinov
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.25  2004/05/18 17:09:29  manolito
+ * resolved the problem with inaccessible methods in private classes that implement a public interface
+ *
  * Revision 1.24  2004/04/26 05:54:59  dave0000
  * Add coercion to ValueBinding (and related changes)
  *
@@ -431,6 +435,15 @@ public class PropertyResolverImpl extends PropertyResolver
                 "Bean: " + base.getClass().getName() + ", property: " + name);
         }
 
+        // Check if the concrete class of this method is accessible and if not
+        // search for a public interface that declares this method
+        m = MethodUtils.getAccessibleMethod(m);
+        if (m == null)
+        {
+            throw new PropertyNotFoundException(
+                "Bean: " + base.getClass().getName() + ", property: " + name + " (not accessible!)");
+        }
+
         try
         {
             m.invoke(base, new Object[] {newValue});
@@ -452,6 +465,15 @@ public class PropertyResolverImpl extends PropertyResolver
         {
             throw new PropertyNotFoundException(
                 "Bean: " + base.getClass().getName() + ", property: " + name);
+        }
+
+        // Check if the concrete class of this method is accessible and if not
+        // search for a public interface that declares this method
+        m = MethodUtils.getAccessibleMethod(m);
+        if (m == null)
+        {
+            throw new PropertyNotFoundException(
+                "Bean: " + base.getClass().getName() + ", property: " + name + " (not accessible!)");
         }
 
         try

@@ -19,6 +19,7 @@
 package net.sourceforge.myfaces.el;
 
 import net.sourceforge.myfaces.el.ValueBindingImpl.NotVariableReferenceException;
+import net.sourceforge.myfaces.util.MethodUtils;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -31,12 +32,16 @@ import javax.faces.event.AbortProcessingException;
 import javax.faces.validator.ValidatorException;
 import javax.servlet.jsp.el.ELException;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 
 /**
  * @author Anton Koinov (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.14  2004/05/18 17:09:29  manolito
+ * resolved the problem with inaccessible methods in private classes that implement a public interface
+ *
  * Revision 1.13  2004/05/11 04:24:10  dave0000
  * Bug 943166: add value coercion to ManagedBeanConfigurator
  *
@@ -113,8 +118,18 @@ public class MethodBindingImpl extends MethodBinding
             Object base = baseAndProperty[0];
             Object property = baseAndProperty[1];
 
-            return base.getClass().getMethod(property.toString(), _argClasses)
-                .invoke(base, args);
+            Method m = base.getClass().getMethod(property.toString(), _argClasses);
+
+            // Check if the concrete class of this method is accessible and if not
+            // search for a public interface that declares this method
+            m = MethodUtils.getAccessibleMethod(m);
+            if (m == null)
+            {
+                throw new MethodNotFoundException(
+                    getExpressionString() + " (not accessible!)");
+            }
+
+            return m.invoke(base, args);
         }
         catch (ReferenceSyntaxException e)
         {
