@@ -31,8 +31,6 @@ public class JSFAttr
     // MyFaces Extended Attributes
     public static final String   ENABLED_ON_USER_ROLE_ATTR      = "enabledOnUserRole";
     public static final String   VISIBLE_ON_USER_ROLE_ATTR      = "visibleOnUserRole";
-    public static final String[] USER_ROLE_ATTRIBUTES           =
-    {ENABLED_ON_USER_ROLE_ATTR, VISIBLE_ON_USER_ROLE_ATTR};
     public static final String   ALT_KEY_ATTR                   = "altKey";
     public static final String   ALT_BUNDLE_ATTR                = "altBundle";
     public static final String   TITLE_KEY_ATTR                 = "titleKey";
@@ -56,33 +54,13 @@ public class JSFAttr
     public static final String   FORM_CLASS_ATTR                = "formClass";
     public static final String   GRAPHIC_CLASS_ATTR             = "graphicClass";
 
-    // Form Attributes
-    public static final String[] FORM_ATTRIBUTES                = {FORM_CLASS_ATTR};
-
     // Common Output Attributes
     public static final String   OUTPUT_CLASS_ATTR              = "outputClass";
     public static final String   FOR_ATTR                       = "for";
 
-    // Ouput_Label Attributes
-    public static final String[] OUTPUT_LABEL_ATTRIBUTES        =
-    {OUTPUT_CLASS_ATTR, FOR_ATTR, KEY_ATTR, BUNDLE_ATTR};
-
     // Ouput_Time Attributes
     public static final String   TIME_STYLE_ATTR                = "timeStyle";
     public static final String   TIMEZONE_ATTR                  = "timezone";
-    public static final String[] OUTPUT_TIME_ATTRIBUTES         =
-    {OUTPUT_CLASS_ATTR, TIME_STYLE_ATTR, TIMEZONE_ATTR};
-
-    // Ouput_Errors Attributes
-    public static final String[] OUTPUT_ERRORS_ATTRIBUTES       = {OUTPUT_CLASS_ATTR, FOR_ATTR};
-
-    // Output_Message Attributes
-    public static final String[] OUTPUT_MESSAGE_ATTRIBUTES      =
-    {OUTPUT_CLASS_ATTR, KEY_ATTR, BUNDLE_ATTR, CONVERTER_ATTR};
-
-    // Graphic_Image Attributes
-    public static final String[] GRAPHIC_IMAGE_ATTRIBUTES       =
-    {GRAPHIC_CLASS_ATTR, KEY_ATTR, BUNDLE_ATTR, ALT_KEY_ATTR, ALT_BUNDLE_ATTR};
 
     // Common Input Attributes
     public static final String   INPUT_CLASS_ATTR               = "inputClass";
@@ -90,24 +68,12 @@ public class JSFAttr
 
     // Input_Secret Attributes
     public static final String   REDISPLAY_ATTR                 = "redisplay";
-    public static final String[] INPUT_SECRET_ATTRIBUTES        =
-    {INPUT_CLASS_ATTR, MAXLENGTH_ATTR, REDISPLAY_ATTR};
-
-    // Input_Hidden Attributes
-    public static final String[] INPUT_HIDDEN_ATTRIBUTES        =
-    {INPUT_CLASS_ATTR, CONVERTER_ATTR};
 
     // Input_Checkbox Attributes
     public static final String   LAYOUT_ATTR                    = "layout";
 
-    // Select_Listbox Attributes
-    public static final String[] SELECT_MANY_LISTBOX_ATTRIBUTES = {SELECT_MANY_CLASS_ATTR};
-    public static final String[] SELECT_ONE_LISTBOX_ATTRIBUTES = {SELECT_ONE_CLASS_ATTR};
-
     // Select_Menu Attributes
     public static final String   SIZE_ATTR                     = "size";
-    public static final String[] SELECT_MANY_MENU_ATTRIBUTES  = {SELECT_MANY_CLASS_ATTR, SIZE_ATTR};
-    public static final String[] SELECT_ONE_MENU_ATTRIBUTES   = {SELECT_ONE_CLASS_ATTR, SIZE_ATTR};
 
     // Common Command Attributes
     public static final String   COMMAND_CLASS_ATTR           = "commandClass";
@@ -116,12 +82,6 @@ public class JSFAttr
 
     // Command_Button Attributes
     public static final String   TYPE_ATTR                    = "type";
-    public static final String[] COMMAND_BUTTON_ATTRIBUTES    =
-    {COMMAND_CLASS_ATTR, LABEL_ATTR, TYPE_ATTR, KEY_ATTR, BUNDLE_ATTR};
-
-    // Command_Hyperlink Attributes
-    public static final String[] COMMAND_HYPERLINK_ATTRIBUTES =
-    {COMMAND_CLASS_ATTR, LABEL_ATTR, KEY_ATTR, BUNDLE_ATTR};
 
     // Common Panel Attributes
     public static final String   PANEL_CLASS_ATTR       = "panelClass";
@@ -130,27 +90,15 @@ public class JSFAttr
     public static final String   COLUMN_CLASSES_ATTR    = "columnClasses";
     public static final String   ROW_CLASSES_ATTR       = "rowClasses";
 
-    // Panel_Group Attributes
-    public static final String[] PANEL_GROUP_ATTRIBUTES = {PANEL_CLASS_ATTR};
-
-    // Panel_List Attributes
-    public static final String[] PANEL_LIST_ATTRIBUTES =
-    {PANEL_CLASS_ATTR, COLUMN_CLASSES_ATTR, FOOTER_CLASS_ATTR, HEADER_CLASS_ATTR, ROW_CLASSES_ATTR};
-
     // Panel_Grid Attributes
     public static final String   COLUMNS_ATTR          = "columns";
-    public static final String[] PANEL_GRID_ATTRIBUTES =
-    {
-        PANEL_CLASS_ATTR, COLUMN_CLASSES_ATTR, COLUMNS_ATTR, FOOTER_CLASS_ATTR, HEADER_CLASS_ATTR,
-        ROW_CLASSES_ATTR
-    };
 
     // Panel_Data Attributes
     public static final String VAR_ATTR                = "var";
 
     //~ Constructors -------------------------------------------------------------------------------
 
-    private JSFAttr()
+    protected JSFAttr()
     {
     }
 }

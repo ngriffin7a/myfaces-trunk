@@ -38,7 +38,7 @@ public class JSFProp
 
     //~ Constructors -------------------------------------------------------------------------------
 
-    private JSFProp()
+    protected JSFProp()
     {
     }
 }
