@@ -15,4 +15,12 @@
         <managed-bean-scope>session</managed-bean-scope>        
     </managed-bean>
 
+    <managed-bean>
+        <description>This bean can be used by multiple tests</description>
+        <managed-bean-name>commonRequestScopeBean</managed-bean-name>
+        <managed-bean-class>net.sourceforge.myfaces.cactus.CommonModelBean</managed-bean-class>
+        <managed-bean-scope>request</managed-bean-scope>
+    </managed-bean>
+
+
 </faces-config>

@@ -19,8 +19,10 @@
 
 package net.sourceforge.myfaces.taglib.html;
 
-import com.meterware.httpunit.HTMLElement;
+import com.meterware.httpunit.WebForm;
 import com.meterware.httpunit.WebResponse;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 import org.apache.cactus.ServletTestCase;
 
@@ -30,28 +32,22 @@ import javax.servlet.RequestDispatcher;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
- * Revision 1.3  2004/04/23 15:12:14  manolito
+ * Revision 1.1  2004/04/23 15:12:14  manolito
  * inputHidden bug reported by Travis
  *
- * Revision 1.2  2004/04/23 13:57:54  manolito
- * bug #940740
- *
- * Revision 1.1  2004/04/23 12:09:02  manolito
- * cactus problems
- *
  */
-public class HtmlSelectBooleanCheckboxTagCactusTest
+public class HtmlInputHiddenTagCactusTest
         extends ServletTestCase
 {
-    //private static final Log log = LogFactory.getLog(HtmlSelectBooleanCheckboxTagCactusTest.class);
+    //private static final Log log = LogFactory.getLog(HtmlInputHiddenTagCactusTest.class);
 
-    public HtmlSelectBooleanCheckboxTagCactusTest(String name) {
+    public HtmlInputHiddenTagCactusTest(String name) {
         super(name);
     }
 
     public void testSimpleRender() throws Exception {
         RequestDispatcher rd = config.getServletContext().getRequestDispatcher(
-                "/HtmlSelectBooleanCheckboxTagCactusTest.jsf");
+                "/HtmlInputHiddenTagCactusTest.jsf");
         // render the page for the first time
         rd.forward(request, response);
     }
@@ -59,7 +55,13 @@ public class HtmlSelectBooleanCheckboxTagCactusTest
     public void endSimpleRender(WebResponse response)
             throws Exception
     {
-        HTMLElement element = response.getElementWithID("testForm:selectBooleanCheckbox1");
-        assertNotNull(element);
+        WebForm form = response.getFormWithID("testForm");
+        Node node = form.getDOMSubtree();
+        NodeList lst = node.getChildNodes();
+        for (int i = 0, len = lst.getLength(); i < len; i++)
+        {
+            Node child = lst.item(i);
+            System.out.println(child.getNodeName());
+        }
     }
 }
