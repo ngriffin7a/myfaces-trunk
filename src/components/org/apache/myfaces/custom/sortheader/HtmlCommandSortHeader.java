@@ -27,7 +27,6 @@ import javax.faces.el.ValueBinding;
 import javax.faces.event.AbortProcessingException;
 import javax.faces.event.ActionEvent;
 import javax.faces.event.FacesEvent;
-import javax.faces.event.PhaseId;
 
 /**
  * @author Manfred Geiler (latest modification by $Author$)
@@ -38,17 +37,18 @@ public class HtmlCommandSortHeader
 {
     private static final Log log = LogFactory.getLog(HtmlCommandSortHeader.class);
 
+    /*
     public boolean isImmediate()
     {
         return true;
     }
+    */
 
     public void broadcast(FacesEvent event) throws AbortProcessingException
     {
         super.broadcast(event);
 
-        if (event instanceof ActionEvent &&
-            event.getPhaseId().equals(PhaseId.APPLY_REQUEST_VALUES))
+        if (event instanceof ActionEvent)
         {
             HtmlDataTable dataTable = findParentDataTable();
             if (dataTable == null)

@@ -536,6 +536,8 @@
             Must be nested inside an extended data_table tag.
             This tag is derived from the standard command_link tag and
             has the additional attributes columnName and arrow.
+            Note: In contrary to normal command links the default for the "immediate"
+            attribute is "true".
         </description>
         &ui_command_attributes;
         &html_universal_attributes;

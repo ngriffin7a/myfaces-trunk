@@ -24,6 +24,9 @@ import javax.faces.component.UIComponent;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.5  2004/08/13 13:34:20  manolito
+ * HtmlCommandSortHeader now supports immediate attribute
+ *
  * Revision 1.4  2004/07/01 21:53:10  mwessendorf
  * ASF switch
  *
@@ -54,6 +57,7 @@ public class HtmlCommandSortHeaderTag
 
     private String _columnName;
     private String _arrow;
+    private boolean _immediateSet;
 
     // User Role support --> already handled by HtmlPanelGroupTag
 
@@ -64,6 +68,12 @@ public class HtmlCommandSortHeaderTag
 
         setStringProperty(component, "columnName", _columnName);
         setBooleanProperty(component, "arrow", _arrow);
+
+        if (!_immediateSet)
+        {
+            //Default of immediate is true (contrary to normal command links)
+            setBooleanProperty(component, "immediate", "true");
+        }
     }
 
     public void setColumnName(String columnName)
@@ -74,5 +84,11 @@ public class HtmlCommandSortHeaderTag
     public void setArrow(String arrow)
     {
         _arrow = arrow;
+    }
+
+    public void setImmediate(String immediate)
+    {
+        super.setImmediate(immediate);
+        _immediateSet = true;
     }
 }
