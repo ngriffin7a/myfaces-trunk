@@ -18,19 +18,37 @@
  */
 package net.sourceforge.myfaces.cbp.designer;
 
+import javax.faces.context.FacesContext;
+
 /**
  * @author Dimitry D'hondt
  *
  */
 public class DesignerContext {
 
-	private static boolean designerActive = false;
+	private static final String design_context = "net.sourceforge.myfaces.designercontext";
 
 	public static boolean inDesignMode() {
-		return designerActive;
+		boolean ret = false;
+		
+		FacesContext ctx = FacesContext.getCurrentInstance();
+		if(ctx != null) {
+			if(ctx.getExternalContext().getSessionMap().get(design_context) != null) {
+				ret = true;
+			}
+		}
+		
+		return ret;
 	}
 	
 	public static void setDesignMode(boolean inDesign) {
-		designerActive = inDesign;
+		FacesContext ctx = FacesContext.getCurrentInstance();
+		if(ctx != null) {
+			if(inDesign) {
+				ctx.getExternalContext().getSessionMap().put(design_context,Boolean.TRUE);
+			} else {
+				ctx.getExternalContext().getSessionMap().remove(design_context);
+			}
+		}		
 	}
 }
