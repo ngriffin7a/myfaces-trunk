@@ -93,7 +93,7 @@
 
 
 
-  <!-- MyFaces "by type" converters -->
+    <!-- additional "by type" converters -->
 
     <converter>
         <converter-for-class>java.math.BigDecimal</converter-for-class>
@@ -106,13 +106,16 @@
     </converter>
 
     <converter>
-        <converter-for-class>[Ljava.lang.String;</converter-for-class>
-        <converter-class>net.sourceforge.myfaces.convert.impl.StringArrayConverter</converter-class>
-    </converter>
-
-    <converter>
         <converter-for-class>java.util.Date</converter-for-class>
         <converter-class>javax.faces.convert.DateTimeConverter</converter-class>
+    </converter>
+
+
+    <!-- non standard converters -->
+
+    <converter>
+        <converter-for-class>[Ljava.lang.String;</converter-for-class>
+        <converter-class>net.sourceforge.myfaces.convert.StringArrayConverter</converter-class>
     </converter>
 
     <converter>
@@ -120,6 +123,7 @@
         <converter-class>net.sourceforge.myfaces.custom.fileupload.UploadedFileConverter</converter-class>
     </converter>
 
+    
 
     <!-- MyFaces Renderkit Extensions -->
 

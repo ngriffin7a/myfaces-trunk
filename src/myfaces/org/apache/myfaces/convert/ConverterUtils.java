@@ -18,28 +18,17 @@
  */
 package net.sourceforge.myfaces.convert;
 
-import net.sourceforge.myfaces.util.MessageUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
-import javax.faces.application.FacesMessage;
-import javax.faces.component.UIComponent;
-import javax.faces.context.FacesContext;
-import javax.faces.convert.Converter;
-import javax.faces.convert.ConverterException;
 
 /**
- * DOCUMENT ME!
+ * TODO: Move to util package and rename to better name
+ *
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
 public class ConverterUtils
 {
-    private static final Log log = LogFactory.getLog(ConverterUtils.class);
-
-    //TODO: Define in Bundle
-    private static final String DEFAULT_CONVERTER_EXCEPTION_MSG_ID
-            = "net.sourceforge.myfaces.convert.Converter.EXCEPTION";
+    //private static final Log log = LogFactory.getLog(ConverterUtils.class);
 
     private ConverterUtils() {}
 
@@ -110,48 +99,6 @@ public class ConverterUtils
         else
         {
             throw new IllegalArgumentException("Cannot convert " + value.toString() + " to double");
-        }
-    }
-
-
-    /**
-     * Converts a String value using the given Converter and handles a
-     * possible ConverterException by adding a FacesMessage to the current FacesContext.
-     * @param facesContext
-     * @param uiComponent
-     * @param converter  Converter to use
-     * @param strValue   String value to convert
-     * @return converted value
-     * @throws ConverterException
-     *
-     * @deprecated 
-     */
-    public static Object getAsObjectWithErrorHandling(FacesContext facesContext,
-                                                      UIComponent uiComponent,
-                                                      Converter converter,
-                                                      String strValue)
-        throws ConverterException
-    {
-        try
-        {
-            return converter.getAsObject(facesContext, uiComponent, strValue);
-        }
-        catch (ConverterException e)
-        {
-            if (log.isInfoEnabled()) log.info("Converter exception", e);
-            FacesMessage msg = e.getFacesMessage();
-            if (msg != null)
-            {
-                facesContext.addMessage(uiComponent.getClientId(facesContext), msg);
-            }
-            else
-            {
-                MessageUtils.addMessage(FacesMessage.SEVERITY_ERROR,
-                                        DEFAULT_CONVERTER_EXCEPTION_MSG_ID,
-                                        null,
-                                        uiComponent.getClientId(facesContext));
-            }
-            throw e;
         }
     }
 
