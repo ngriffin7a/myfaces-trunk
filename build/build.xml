@@ -446,7 +446,7 @@
              inheritall="false"
              target="release"/>
     </target>
--->
+
     <target name="tiles-release"
             description="creates the tiles examples release file myfaces-x.x.x-tiles-example.tgz (don't forget to adjust manifest.properties!)">
         <ant dir="${project.dir}/build/tiles-webapp"
@@ -462,7 +462,7 @@
              inheritall="false"
              target="release"/>
     </target>
-
+-->
     <target name="wap-release"
             description="creates the wap examples release file myfaces-x.x.x-tiles-example.tgz (don't forget to adjust manifest.properties!)">
         <ant dir="${project.dir}/build/wap-webapp"
@@ -470,7 +470,7 @@
              inheritall="false"
              target="release"/>
     </target>
-<!--    
+<!--
     <target name="simple-webapp"
             description="creates the simple examples release file myfaces-x.x.x-tiles-example.tgz (don't forget to adjust manifest.properties!)">
         <ant dir="${project.dir}/build/simple-webapp"
@@ -478,8 +478,8 @@
              inheritall="false"
              target="release"/>
     </target>
--->    
-    <target name="all" depends="release, tiles-release, blank-release, wap-release" description="builds all release files"/>
+-->
+    <target name="all" depends="release, wap-release" description="builds all release files"/>
 
 	<target name="all-tests"
             depends="myfaces-jar"
@@ -741,7 +741,25 @@
 
     <target name="app-dist" depends="myfaces-jar">
 
-        <!-- build simple webapps -->
+        <!-- build blank webapp -->
+        <copy file="${conf.dir}/web.xml" todir="${apps.dir}/blank/web/WEB-INF"/>
+        <ant antfile="build-webapps.xml" inheritall="false" target="war">
+            <property name="webapp.name" value="myfaces-blank-example"/>
+            <property name="myfaces.jar" location="${myfaces.jar}"/>
+            <property name="web.dir" location="${apps.dir}/blank/web"/>
+            <property name="webapp.dist.dir" location="${webapp.dist.dir}"/>
+        </ant>
+
+        <!-- build tiles webapp -->
+        <copy file="${conf.dir}/web.xml" todir="${apps.dir}/tiles/web/WEB-INF"/>
+        <ant antfile="build-webapps.xml" inheritall="false" target="war">
+            <property name="webapp.name" value="myfaces-tiles-example"/>
+            <property name="myfaces.jar" location="${myfaces.jar}"/>
+            <property name="web.dir" location="${apps.dir}/tiles/web"/>
+            <property name="webapp.dist.dir" location="${webapp.dist.dir}"/>
+        </ant>
+
+        <!-- build simple webapp -->
         <copy file="${conf.dir}/web.xml" todir="${apps.dir}/simple/WEB-INF"/>
         <ant antfile="build-webapps.xml" inheritall="false" target="war">
             <property name="webapp.name" value="myfaces-simple-examples"/>
@@ -749,7 +767,8 @@
             <property name="web.dir" location="${apps.dir}/simple"/>
             <property name="webapp.dist.dir" location="${webapp.dist.dir}"/>
         </ant>
-        <!-- build example webapps -->
+
+        <!-- build example webapp -->
         <copy file="${conf.dir}/web.xml" todir="${apps.dir}/examples/WEB-INF"/>
         <ant antfile="build-webapps.xml" inheritall="false" target="war">
             <property name="webapp.name" value="myfaces-examples"/>
