@@ -113,14 +113,20 @@ public class CookieMap extends AbstractAttributeMap
 
     protected Enumeration getAttributeNames()
     {
-        return new CookieNameEnumeration();
+        return new CookieNameEnumeration(_httpServletRequest.getCookies());
     }
     
-    class CookieNameEnumeration implements Enumeration
+    private static class CookieNameEnumeration implements Enumeration
     {
-        private final Cookie[] _cookies = _httpServletRequest.getCookies();
-        int _length = _cookies.length;
-        int _index;
+        private final Cookie[] _cookies;
+        private final int _length;
+        private int _index;
+        
+        public CookieNameEnumeration(Cookie[] cookies)
+        {
+            _cookies = cookies;
+            _length = cookies.length;
+        }
 
         public boolean hasMoreElements()
         {

@@ -33,6 +33,9 @@ import java.util.Set;
  * @version $Revision$ $Date$
  * 
  * $Log$
+ * Revision 1.8  2004/07/03 18:29:18  dave0000
+ * Remove redundant code, small fixes.
+ *
  * Revision 1.7  2004/07/01 22:05:04  mwessendorf
  * ASF switch
  *
@@ -215,7 +218,6 @@ public abstract class AbstractAttributeMap
 
         public Object next()
         {
-            _currentKey = null;
             return _currentKey = _e.nextElement();
         }
     }
@@ -303,16 +305,20 @@ public abstract class AbstractAttributeMap
         }
     }
 
+    /**
+     * Not very efficient since it generates a new instance of <code>Entry</code>
+     * for each element and still internaly uses the <code>KeyIterator</code>.
+     * It is more efficient to use the <code>KeyIterator</code> directly.
+     */
     private class EntryIterator extends KeyIterator
     {
         public Object next()
         {
             super.next();
-            // Must create new Entry every time, since those are supposed to be
-            // immutable
+            // Must create new Entry every time--value of the entry must stay 
+            // linked to the same attribute name
             return new EntrySetEntry(_currentKey);
         }
-        
     }
 
     private class EntrySetEntry implements Entry
