@@ -103,6 +103,13 @@ public class NavigationItemRenderer
 
 
 
+    /**
+     * UINavigationItem components do not render themselves. Method is directly called
+     * by NavigationRenderer.
+     * @param facesContext
+     * @param uiComponent
+     * @throws IOException
+     */
     public void encodeBegin(FacesContext facesContext, UIComponent uiComponent) throws IOException
     {
         ResponseWriter writer = facesContext.getResponseWriter();
@@ -132,6 +139,13 @@ public class NavigationItemRenderer
         }
     }
 
+    /**
+     * UINavigationItem components do not render themselves. Method is directly called
+     * by NavigationRenderer.
+     * @param facesContext
+     * @param uiComponent
+     * @throws IOException
+     */
     public void encodeEnd(FacesContext facesContext, UIComponent uiComponent) throws IOException
     {
         ResponseWriter writer = facesContext.getResponseWriter();
