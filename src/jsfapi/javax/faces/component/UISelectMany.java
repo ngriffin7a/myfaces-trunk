@@ -193,8 +193,8 @@ public class UISelectMany
     public void validate(FacesContext context)
     {
         super.validate(context);
-        //TODO: see javadoc!
-        throw new UnsupportedOperationException(); //TODO
+        //TODO: see javadoc: iterate through UISelectItem and UISelectItems and check
+        //current values against these items
     }
 
     //------------------ GENERATED CODE BEGIN (do not modify!) --------------------

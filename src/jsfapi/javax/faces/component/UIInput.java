@@ -39,8 +39,6 @@ import java.util.List;
 /**
  * see Javadoc of JSF Specification
  *
- * TODO
- *
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */

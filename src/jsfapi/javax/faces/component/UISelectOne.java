@@ -35,7 +35,8 @@ public class UISelectOne
     public void validate(FacesContext context)
     {
         super.validate(context);
-        //TODO: see javadoc!
+        //TODO: see javadoc: iterate through UISelectItem and UISelectItems and check
+        //current value against these items
     }
 
 
