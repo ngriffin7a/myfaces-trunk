@@ -968,7 +968,7 @@
             <rtexprvalue>false</rtexprvalue>
             <description>
             	Allows the user to edit the HTML source code.
-            	default is true.
+            	Default is true.
             </description>
        	</attribute>
 		<attribute>
@@ -977,7 +977,7 @@
             <rtexprvalue>false</rtexprvalue>
             <description>
             	Allows the user to insert external links.
-            	default is true.
+            	Default is true.
             </description>
        	</attribute>
        	<attribute>
@@ -986,16 +986,25 @@
             <rtexprvalue>false</rtexprvalue>
             <description>
             	Show the Kupu Logo in the buttons bar.
-            	default is true.
+            	Default is true.
             </description>
        	</attribute>
+       	<attribute>
+	        <name>showAllToolBoxes</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
+			<description>
+            	Shortcut to avoid setting all the showXXToolBox to true.
+            	Default is false.
+            </description>
+        </attribute>
        	<attribute>
 	        <name>showPropertiesToolBox</name>
             <required>false</required>
             <rtexprvalue>false</rtexprvalue>
 			<description>
             	Show the Properties tool box next to the text.
-            	default is false.
+            	Default is false.
             </description>
         </attribute>
        	<attribute>
@@ -1004,7 +1013,7 @@
             <rtexprvalue>false</rtexprvalue>
 			<description>
             	Show the Links tool box next to the text.
-            	default is false.
+            	Default is false.
             </description>
         </attribute>
        	<attribute>
@@ -1013,7 +1022,7 @@
             <rtexprvalue>false</rtexprvalue>
 			<description>
             	Show the Images tool box next to the text.
-            	default is false.
+            	Default is false.
             </description>
         </attribute>
        	<attribute>
@@ -1022,7 +1031,7 @@
             <rtexprvalue>false</rtexprvalue>
 			<description>
             	Show the Tables tool box next to the text.
-            	default is false.
+            	Default is false.
             </description>
         </attribute>
 		<attribute>
@@ -1031,7 +1040,7 @@
             <rtexprvalue>false</rtexprvalue>
 			<description>
             	Show the Cleanup Expressions tool box next to the text.
-            	default is false.
+            	Default is false.
             </description>
         </attribute>
        	<attribute>
@@ -1040,7 +1049,7 @@
             <rtexprvalue>false</rtexprvalue>
 			<description>
             	Show the Debug tool box next to the text.
-            	default is false.
+            	Default is false.
             </description>
         </attribute>
     </tag>

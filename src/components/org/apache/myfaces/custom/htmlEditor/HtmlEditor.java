@@ -30,6 +30,9 @@ import org.apache.myfaces.renderkit.RendererUtils;
  * @author Sylvain Vieujot (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.20  2005/03/22 02:13:28  svieujot
+ * htmlEditor : Add a showAllToolBoxes short cut.
+ *
  * Revision 1.19  2005/03/15 05:24:03  svieujot
  * Add a fallback textarea mode to the htmlEditor.
  *
@@ -104,6 +107,7 @@ public class HtmlEditor extends HtmlInputText {
     private Boolean _allowExternalLinks;
     private Boolean _addKupuLogo;
     
+	private Boolean _showAllToolBoxes;
     private Boolean _showPropertiesToolBox;
     private Boolean _showLinksToolBox;
     private Boolean _showImagesToolBox;
@@ -142,13 +146,14 @@ public class HtmlEditor extends HtmlInputText {
         
         values[3] = toolBarButtons;
         
-        Boolean toolBoxes[] = new Boolean[6];
-        toolBoxes[0] = _showPropertiesToolBox;
-        toolBoxes[1] = _showLinksToolBox;
-        toolBoxes[2] = _showImagesToolBox;
-        toolBoxes[3] = _showTablesToolBox;
-		toolBoxes[4] = _showCleanupExpressionsToolBox;
-        toolBoxes[5] = _showDebugToolBox;
+        Boolean toolBoxes[] = new Boolean[7];
+		toolBoxes[0] = _showAllToolBoxes;
+        toolBoxes[1] = _showPropertiesToolBox;
+        toolBoxes[2] = _showLinksToolBox;
+        toolBoxes[3] = _showImagesToolBox;
+        toolBoxes[4] = _showTablesToolBox;
+		toolBoxes[5] = _showCleanupExpressionsToolBox;
+        toolBoxes[6] = _showDebugToolBox;
         
         values[4] = toolBoxes;
         
@@ -173,12 +178,13 @@ public class HtmlEditor extends HtmlInputText {
         _addKupuLogo = toolBarButtons[2];
         
         Boolean[] toolBoxes = (Boolean[]) values[4];
-        _showPropertiesToolBox = toolBoxes[0];
-        _showLinksToolBox = toolBoxes[1];
-        _showImagesToolBox = toolBoxes[2];
-        _showTablesToolBox = toolBoxes[3];
-		_showCleanupExpressionsToolBox = toolBoxes[4];
-        _showDebugToolBox = toolBoxes[5];
+		_showAllToolBoxes = toolBoxes[0];
+        _showPropertiesToolBox = toolBoxes[1];
+        _showLinksToolBox = toolBoxes[2];
+        _showImagesToolBox = toolBoxes[3];
+        _showTablesToolBox = toolBoxes[4];
+		_showCleanupExpressionsToolBox = toolBoxes[5];
+        _showDebugToolBox = toolBoxes[6];
     }
     
     public String getStyle(){
@@ -254,7 +260,20 @@ public class HtmlEditor extends HtmlInputText {
         this._addKupuLogo = Boolean.valueOf(addKupuLogo);
     }
     
+	public boolean isShowAllToolBoxes(){
+   		if (_showAllToolBoxes != null)
+   		    return _showAllToolBoxes.booleanValue();
+    	ValueBinding vb = getValueBinding("showAllToolBoxes");
+    	return vb != null ? ((Boolean)vb.getValue(getFacesContext())).booleanValue() : false;
+    }
+    public void setShowAllToolBoxes(boolean showAllToolBoxes){
+        this._showAllToolBoxes = Boolean.valueOf(showAllToolBoxes);
+    }
+	
     public boolean isShowPropertiesToolBox(){
+		if( isShowAllToolBoxes() )
+			return true;
+
    		if (_showPropertiesToolBox != null)
    		    return _showPropertiesToolBox.booleanValue();
     	ValueBinding vb = getValueBinding("showPropertiesToolBox");
@@ -265,6 +284,9 @@ public class HtmlEditor extends HtmlInputText {
     }
     
     public boolean isShowLinksToolBox(){
+		if( isShowAllToolBoxes() )
+			return true;
+
    		if (_showLinksToolBox != null)
    		    return _showLinksToolBox.booleanValue();
     	ValueBinding vb = getValueBinding("showLinksToolBox");
@@ -275,6 +297,9 @@ public class HtmlEditor extends HtmlInputText {
     }
     
     public boolean isShowImagesToolBox(){
+		if( isShowAllToolBoxes() )
+			return true;
+
    		if (_showImagesToolBox != null)
    		    return _showImagesToolBox.booleanValue();
     	ValueBinding vb = getValueBinding("showImagesToolBox");
@@ -285,6 +310,9 @@ public class HtmlEditor extends HtmlInputText {
     }
     
     public boolean isShowTablesToolBox(){
+		if( isShowAllToolBoxes() )
+			return true;
+
    		if (_showTablesToolBox != null)
    		    return _showTablesToolBox.booleanValue();
     	ValueBinding vb = getValueBinding("showTablesToolBox");
@@ -295,6 +323,9 @@ public class HtmlEditor extends HtmlInputText {
     }
 	
 	public boolean isShowCleanupExpressionsToolBox(){
+		if( isShowAllToolBoxes() )
+			return true;
+
    		if (_showCleanupExpressionsToolBox != null)
    		    return _showCleanupExpressionsToolBox.booleanValue();
     	ValueBinding vb = getValueBinding("showCleanupExpressionsToolBox");
@@ -305,6 +336,9 @@ public class HtmlEditor extends HtmlInputText {
     }
     
     public boolean isShowDebugToolBox(){
+		if( isShowAllToolBoxes() )
+			return true;
+
    		if (_showDebugToolBox != null)
    		    return _showDebugToolBox.booleanValue();
     	ValueBinding vb = getValueBinding("showDebugToolBox");
@@ -315,7 +349,8 @@ public class HtmlEditor extends HtmlInputText {
     }
     
     public boolean isShowAnyToolBox(){
-   		return isShowPropertiesToolBox()
+   		return isShowAllToolBoxes()
+   			|| isShowPropertiesToolBox()
    			|| isShowLinksToolBox()
    			|| isShowImagesToolBox()
    			|| isShowTablesToolBox()

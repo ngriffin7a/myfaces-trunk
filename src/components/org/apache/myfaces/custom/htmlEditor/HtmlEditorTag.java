@@ -25,6 +25,9 @@ import org.apache.myfaces.taglib.UIComponentTagBase;
  * @author Sylvain Vieujot (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.16  2005/03/22 02:13:28  svieujot
+ * htmlEditor : Add a showAllToolBoxes short cut.
+ *
  * Revision 1.15  2005/03/18 15:38:15  svieujot
  * Bugfix for weblogic.
  *
@@ -81,7 +84,8 @@ public class HtmlEditorTag extends UIComponentTagBase {
     private String allowEditSource;
     private String allowExternalLinks;
     private String addKupuLogo;
-    
+
+    private String showAllToolBoxes;
     private String showPropertiesToolBox;
     private String showLinksToolBox;
     private String showImagesToolBox;
@@ -106,6 +110,8 @@ public class HtmlEditorTag extends UIComponentTagBase {
         allowEditSource=null;
         allowExternalLinks=null;
         addKupuLogo=null;
+		
+		showAllToolBoxes=null;
         showPropertiesToolBox=null;
         showLinksToolBox=null;
         showImagesToolBox=null;
@@ -134,6 +140,7 @@ public class HtmlEditorTag extends UIComponentTagBase {
         setBooleanProperty(component, "allowExternalLinks", allowExternalLinks);
         setBooleanProperty(component, "addKupuLogo", addKupuLogo);
         
+		setBooleanProperty(component, "showAllToolBoxes", showAllToolBoxes);
         setBooleanProperty(component, "showPropertiesToolBox", showPropertiesToolBox);
         setBooleanProperty(component, "showLinksToolBox", showLinksToolBox);
         setBooleanProperty(component, "showImagesToolBox", showImagesToolBox);
@@ -185,7 +192,11 @@ public class HtmlEditorTag extends UIComponentTagBase {
     public void setAddKupuLogo(String addKupuLogo){
         this.addKupuLogo = addKupuLogo;
     }
-    
+
+	public void setShowAllToolBoxes(String showAllToolBoxes){
+        this.showAllToolBoxes = showAllToolBoxes;
+    }
+
     public void setShowPropertiesToolBox(String showPropertiesToolBox){
         this.showPropertiesToolBox = showPropertiesToolBox;
     }
