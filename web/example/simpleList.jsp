@@ -54,10 +54,8 @@
                 <!-- DATA -->
                 <h:listrow var="country" modelReference="countryList.countries" >
                     <h:output_text modelReference="country.name" />
-                    <h:group>
-                        <a href="#"><h:output_text modelReference="country.isoCode" /></a>
-                        <% rows++; %>
-                    </h:group>
+                    <h:output_text modelReference="country.isoCode" />
+                    <% rows++; %>
                 </h:listrow>
                 <!-- FOOTER -->
                 <h:group>

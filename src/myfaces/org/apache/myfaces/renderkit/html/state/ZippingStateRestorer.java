@@ -107,4 +107,42 @@ public class ZippingStateRestorer
             throw new RuntimeException(e);
         }
     }
+
+
+    /**
+     * TODO: Move to a "ZipUtils" class
+     * @param s
+     * @return
+     */
+    protected static String unzipString(String s)
+    {
+        try
+        {
+            ByteArrayInputStream byteStream = new ByteArrayInputStream(s.getBytes(ZippingStateRenderer.ZIP_CHARSET));
+            InputStream decodedStream = MimeUtility.decode(byteStream, ZippingStateRenderer.ZIP_ENCODING);
+            InputStream unzippedStream = new GZIPInputStream(decodedStream);
+
+            StringBuffer buf = new StringBuffer();
+            int c;
+            while ((c = unzippedStream.read()) != -1)
+            {
+                buf.append((char)c); //TODO: Encoding ?!
+            }
+
+            unzippedStream.close();
+            decodedStream.close();
+            byteStream.close();
+
+            return buf.toString();
+        }
+        catch (IOException e)
+        {
+            throw new RuntimeException(e);
+        }
+        catch (MessagingException e)
+        {
+            throw new RuntimeException(e);
+        }
+    }
+
 }

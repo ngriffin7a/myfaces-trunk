@@ -44,16 +44,14 @@ public class JspInfo
     public static final String CREATOR_TAG_ATTR = JspInfo.class.getName() + ".CREATOR_TAG";
     public static final String ACTION_LISTENERS_TYPE_LIST_ATTR = JspInfo.class.getName() + ".LISTENERS";
 
-    private static final char COMPONENT_ID_SEPARATOR_CHAR = ':';
-
-    private static final String UNIQUE_COMPONENT_ID = JspInfo.class.getName() + ".UNIQUE_COMPONENT";
-    private static final char UNIQUE_COMPONENT_ID_SEPARATOR_CHAR = ':';
+    public static final String UNIQUE_COMPONENT_ID = JspInfo.class.getName() + ".UNIQUE_COMPONENT_ID";
+    public static final char UNIQUE_COMPONENT_ID_SEPARATOR_CHAR = ':';
 
 
     private Tree _tree = null;
     private Map _jspBeanInfosMap = new HashMap();
     private List _saveStateComponents = new ArrayList();
-    private boolean _clientIdsCreated = false;
+    //private boolean _clientIdsCreated = false;
 
     public JspInfo(Tree tree)
     {
@@ -180,123 +178,11 @@ public class JspInfo
 
 
 
-    /*
-    private void checkClientIds(UIComponent comp, int childIndex)
-    {
-        getStaticClientId(comp, childIndex);
-
-        int childCnt = 0;
-        for (Iterator it = comp.getFacetsAndChildren(); it.hasNext(); childCnt++)
-        {
-            checkClientIds((UIComponent)it.next(), childCnt);
-        }
-    }
-
-
-    public static String getStaticClientId(UIComponent uiComponent,
-                                           int childIndex)
-    {
-        String clientId = (String)uiComponent.getAttribute(UIComponent.CLIENT_ID_ATTR);
-        if (clientId != null)
-        {
-            return clientId;
-        }
-
-        //Find namingContainer
-        UIComponent parent = uiComponent.getParent();
-        if (parent == null)
-        {
-            //we have got the root component
-            if (!(uiComponent instanceof NamingContainer))
-            {
-                throw new FacesException("Root is no naming container?!");
-            }
-
-            if (uiComponent.getComponentId() == null)
-            {
-                uiComponent.setComponentId(UIRoot.ROOT_COMPONENT_ID);
-            }
-            clientId = uiComponent.getComponentId();
-        }
-        else
-        {
-            //Find namingContainer
-            UIComponent namingContainer = parent;
-            while (!(namingContainer instanceof NamingContainer))
-            {
-                namingContainer = namingContainer.getParent();
-                if (namingContainer == null)
-                {
-                    throw new FacesException("Root is no naming container?!");
-                }
-            }
-
-            if (uiComponent.getComponentId() == null)
-            {
-                uiComponent.setComponentId(generateComponentId(uiComponent,
-                                                               childIndex));
-            }
-
-            if (namingContainer.getParent() == null)
-            {
-                //NamingContainer is root, so nothing to be prepended
-                clientId = uiComponent.getComponentId();
-            }
-            else
-            {
-                String ncClientId = (String)namingContainer.getAttribute(UIComponent.CLIENT_ID_ATTR);
-                if (ncClientId == null)
-                {
-                    //We assume, that the tree is traversed in normal order and
-                    //that clientIds of parents already have been generated
-                    throw new IllegalStateException("Parent does not have an clientId yet?!");
-                }
-                clientId = ncClientId + UIComponent.SEPARATOR_CHAR + uiComponent.getComponentId();
-            }
-        }
-
-        uiComponent.setAttribute(UIComponent.CLIENT_ID_ATTR, clientId);
-        return clientId;
-    }
-    */
-
     /**
-     * We use our own algorithm to generate unique component IDs. This is,
-     * to make sure that the dynamically created ID is the same as the ID
-     * from the corresponding component in the parsed tree.
+     * TODO: Move to ComponentUtils
+     * @param uiComponent
+     * @return
      */
-    /*
-    protected static String generateComponentId(UIComponent uiComponent,
-                                                int childIndex)
-    {
-        UIComponent parent = uiComponent.getParent();
-        if (parent == null)
-        {
-            //we have the root component
-            String id = uiComponent.getComponentId();
-            return id != null ? id : UIRoot.ROOT_COMPONENT_ID;
-        }
-
-        if (parent instanceof NamingContainer)
-        {
-            return new StringBuffer(COMPONENT_ID_SEPARATOR_CHAR)
-                                            .append(childIndex).toString();
-        }
-
-        String parentId = parent.getComponentId();
-        if (parentId == null)
-        {
-            //We assume, that the tree is traversed in normal order and
-            //that componentIds of parents already have been generated
-            throw new IllegalStateException("Parent does not have an componentId yet?!");
-        }
-
-        return parentId + COMPONENT_ID_SEPARATOR_CHAR + childIndex;
-    }
-    */
-
-
-
     public static String getUniqueComponentId(UIComponent uiComponent)
     {
         String uniqueId = (String)uiComponent.getAttribute(UNIQUE_COMPONENT_ID);

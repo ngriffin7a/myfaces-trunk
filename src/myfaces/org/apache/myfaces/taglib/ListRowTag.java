@@ -67,11 +67,28 @@ public class ListRowTag
         }
     }
 
+    public int getDoStartValue() throws JspException
+    {
+        //is there at least one row?
+        if (hasNext())
+        {
+            //yes
+            return super.getDoStartValue();
+        }
+        else
+        {
+            //no, underlying list is empty
+            return SKIP_BODY;
+        }
+    }
+
 
     public int getDoAfterBodyValue() throws JspException
     {
         try
         {
+            //encodeBegin is responsible for stepping to next row
+            //and render start of new row if we are not yet at the end of the list
             getComponent().encodeBegin(getFacesContext());
         }
         catch (IOException e)
@@ -81,15 +98,4 @@ public class ListRowTag
         return hasNext() ? EVAL_BODY_AGAIN : SKIP_BODY;
     }
 
-    public int getDoStartValue() throws JspException
-    {
-        if (hasNext())
-        {
-            return super.getDoStartValue();
-        }
-        else
-        {
-            return SKIP_BODY;
-        }
-    }
 }

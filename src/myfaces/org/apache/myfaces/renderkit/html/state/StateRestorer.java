@@ -504,7 +504,7 @@ public class StateRestorer
                 = RequestParameterNames.getListenerParameterInfo(paramName);
             if (info != null)
             {
-                UIComponent root = facesContext.getTree().getRoot();
+                //UIComponent root = facesContext.getTree().getRoot();
                 String paramValue = getStateParameter(stateMap, paramName);
                 FacesListener listener;
                 if (info.serializedListener)
@@ -514,8 +514,10 @@ public class StateRestorer
                 }
                 else
                 {
-                    //Listener is another component
-                    listener = (FacesListener)root.findComponent(paramValue);
+                    //Listener is another component, paramValue is the uniqueId
+                    //listener = (FacesListener)root.findComponent(paramValue);
+                    listener = (FacesListener)JspInfo.findComponentByUniqueId(facesContext.getTree(),
+                                                                              paramValue);
                     if (listener == null)
                     {
                         LogUtil.getLogger().severe("Could not find listener component for restored listener of type " + info.listenerType);

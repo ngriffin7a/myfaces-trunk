@@ -51,10 +51,10 @@
                               ascending="<%=true%>"
                               columnReference="list.sort"
                               ascendingReference="list.ascending" >
-                    <x:sortcolumn column="type" cssClass="sortLink" >
+                    <x:sortcolumn id="typeCol" column="type" cssClass="sortLink" >
                         <h:output_text text="Car-Type" />
                     </x:sortcolumn>
-                    <x:sortcolumn column="color" cssClass="sortLink" >
+                    <x:sortcolumn id="colorCol" column="color" cssClass="sortLink" >
                         <h:output_text id="list_header_iso" text="Car-Color"  />
                     </x:sortcolumn>
                 </x:sortheader>

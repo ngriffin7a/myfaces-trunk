@@ -198,7 +198,16 @@ public class StateSaver
                                                                   uiComponent);
         if (parsedComp == null)
         {
-            LogUtil.getLogger().warning("Corresponding parsed component not found for component " + uiComponent.getClientId(facesContext));
+            System.out.println("=============================================");
+            System.out.println("Current Tree:");
+            TreeUtils.printTree(facesContext.getTree());
+            System.out.println("---------------------------------------------");
+            System.out.println("Parsed Tree:");
+            TreeUtils.printTree(JspInfo.getTree(facesContext,
+                                                facesContext.getTree().getTreeId()));
+            System.out.println("=============================================");
+
+            LogUtil.getLogger().warning("Corresponding parsed component not found for component " + JspInfo.getUniqueComponentId(uiComponent));
         }
 
         //Remember all seen attributes of current component, so that
@@ -658,11 +667,12 @@ public class StateSaver
 
             if (facesListener instanceof UIComponent)
             {
-                //Listener is a component, so we only need to save the clientId
+                //Listener is a component, so we only need to save the uniqueId
                 String paramName = RequestParameterNames.getComponentListenerParameterName(facesContext,
                                                                                            uiComponent,
                                                                                            listenerType);
-                String paramValue = ((UIComponent)facesListener).getClientId(facesContext);
+                //String paramValue = ((UIComponent)facesListener).getClientId(facesContext);
+                String paramValue = JspInfo.getUniqueComponentId(((UIComponent)facesListener));
                 saveParameter(stateMap, paramName, paramValue);
             }
             else

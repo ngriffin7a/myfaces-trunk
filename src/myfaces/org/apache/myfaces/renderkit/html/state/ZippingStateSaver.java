@@ -129,4 +129,38 @@ public class ZippingStateSaver
     }
     */
 
+    /**
+     * TODO: Move to a "ZipUtils" class
+     * @param s
+     * @return
+     */
+    protected static String zipString(String s)
+    {
+        try
+        {
+            //OutputStream wos = new WriterOutputStream(origWriter, ZippingStateRenderer.ZIP_CHARSET);
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            OutputStream encStream = MimeUtility.encode(baos, ZippingStateRenderer.ZIP_ENCODING);
+            OutputStream zos = new GZIPOutputStream(encStream);
+            OutputStreamWriter writer = new OutputStreamWriter(zos, ZippingStateRenderer.ZIP_CHARSET);
+
+            writer.write(s);
+
+            writer.close();
+            zos.close();
+            encStream.close();
+            baos.close();
+
+            return baos.toString(ZippingStateRenderer.ZIP_CHARSET);
+        }
+        catch (MessagingException e)
+        {
+            throw new RuntimeException(e);
+        }
+        catch (IOException e)
+        {
+            throw new RuntimeException(e);
+        }
+    }
+
 }

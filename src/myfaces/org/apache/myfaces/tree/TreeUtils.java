@@ -18,9 +18,13 @@
  */
 package net.sourceforge.myfaces.tree;
 
+import net.sourceforge.myfaces.component.CommonComponentAttributes;
+import net.sourceforge.myfaces.renderkit.html.jspinfo.JspInfo;
+
 import javax.faces.component.UIComponent;
 import javax.faces.tree.Tree;
 import java.util.*;
+import java.io.PrintStream;
 
 /**
  * DOCUMENT ME!
@@ -137,5 +141,75 @@ public class TreeUtils
         }
     }
     */
+
+    public static void printTree(Tree tree)
+    {
+        printTree(tree, System.out);
+    }
+
+    public static void printTree(Tree tree, PrintStream stream)
+    {
+        printSubtree(tree.getRoot(), stream, 0);
+    }
+
+    private static void printSubtree(UIComponent comp, PrintStream stream, int depth)
+    {
+        printIndent(stream, depth);
+        stream.print('<');
+        stream.print(comp.getComponentType());
+        printAttribute(stream, comp, CommonComponentAttributes.COMPONENT_ID_ATTR, "id");
+        printAttribute(stream, comp, JspInfo.UNIQUE_COMPONENT_ID, "uniqueId");
+        printAttribute(stream, comp, CommonComponentAttributes.VALUE_ATTR);
+        printAttribute(stream, comp, CommonComponentAttributes.MODEL_REFERENCE_ATTR);
+        Iterator children = comp.getChildren();
+        if (children.hasNext())
+        {
+            stream.println('>');
+            while (children.hasNext())
+            {
+                UIComponent child = (UIComponent)children.next();
+                printSubtree(child, stream, depth + 1);
+            }
+            printIndent(stream, depth);
+            stream.print("</");
+            stream.print(comp.getComponentType());
+            stream.println('>');
+        }
+        else
+        {
+            stream.println("/>");
+        }
+    }
+
+    private static void printAttribute(PrintStream stream,
+                                       UIComponent comp,
+                                       String attrName)
+    {
+        printAttribute(stream, comp, attrName, attrName);
+    }
+
+    private static void printAttribute(PrintStream stream,
+                                       UIComponent comp,
+                                       String attrName,
+                                       String prettyAttrName)
+    {
+        Object v = comp.getAttribute(attrName);
+        if (v != null)
+        {
+            stream.print(' ');
+            stream.print(prettyAttrName);
+            stream.print("=\"");
+            stream.print(v.toString());
+            stream.print("\"");
+        }
+    }
+
+    private static void printIndent(PrintStream stream, int depth)
+    {
+        for (int i = 0; i < depth; i++)
+        {
+            stream.print("  ");
+        }
+    }
 
 }

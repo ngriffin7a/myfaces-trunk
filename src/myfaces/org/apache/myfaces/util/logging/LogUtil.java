@@ -36,15 +36,16 @@ public class LogUtil
 {
     public static final String LOGGER_NAME = "MyFacesLogger";
     private static final Handler CONSOLE_HANDER = new ConsoleHandler();
-    private static Logger _logger = null;
+    private static MyFacesLogger _logger = null;
 
     private LogUtil() {}
 
-    public static Logger getLogger()
+    public static MyFacesLogger getLogger()
     {
         if (_logger == null)
         {
-            _logger = Logger.getLogger(LOGGER_NAME);
+            //_logger = Logger.getLogger(LOGGER_NAME);
+            _logger = new MyFacesLogger();
             synchronized (_logger)
             {
                 if (_logger.getHandlers().length == 0)
@@ -56,6 +57,5 @@ public class LogUtil
         }
         return _logger;
     }
-
 
 }

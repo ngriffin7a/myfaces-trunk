@@ -37,11 +37,19 @@ public abstract class MyFacesTag
     extends FacesTag
 {
     protected MyFacesTagHelper _helper;
+    protected boolean _bodyAgain = false;
 
     public MyFacesTag()
     {
         super();
         _helper = new MyFacesTagHelper(this);
+    }
+
+    public int doStartTag()
+        throws JspException
+    {
+        _bodyAgain = false;
+        return super.doStartTag();
     }
 
     public int getDoStartValue() throws JspException
@@ -60,7 +68,28 @@ public abstract class MyFacesTag
     {
         super.release();
         _helper.release();
+        _bodyAgain = false;
     }
+
+
+    //Iteration Tag support
+    public int doAfterBody()
+        throws JspException
+    {
+        int ret = super.doAfterBody();
+
+        //Reset number of children for next iteration
+        numChildren = 0;
+
+        return ret;
+    }
+
+    public int getDoAfterBodyValue() throws JspException
+    {
+        return Tag.SKIP_BODY;
+    }
+
+
 
 
     //subclass helpers
@@ -196,12 +225,6 @@ public abstract class MyFacesTag
     public void setOnkeyup(String value)
     {
         setRendererAttribute(CommonRendererAttributes.ONKEYUP_ATTR, value);
-    }
-
-    //Iteration Tag support
-    public int getDoAfterBodyValue() throws JspException
-    {
-        return Tag.SKIP_BODY;
     }
 
 }

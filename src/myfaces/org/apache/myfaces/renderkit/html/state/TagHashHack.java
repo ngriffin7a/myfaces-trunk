@@ -52,7 +52,8 @@ import java.util.StringTokenizer;
 public class TagHashHack
 {
     private static final String TAG_HASH_ATTR = "tagHash";
-    private static final boolean SERIALIZE = false;
+    private static final boolean SERIALIZED_MAP = false;
+    private static final boolean ZIP_STRING = true;
 
     private TagHashHack() {}
 
@@ -100,7 +101,7 @@ public class TagHashHack
             return null;
         }
 
-        if (SERIALIZE)
+        if (SERIALIZED_MAP)
         {
             return ConverterUtils.serialize(saveTagHash);
         }
@@ -119,19 +120,30 @@ public class TagHashHack
                 buf.append('=');
                 buf.append((String)entry.getValue());
             }
-            return buf.toString();
+            if (ZIP_STRING)
+            {
+                return ZippingStateSaver.zipString(buf.toString());
+            }
+            else
+            {
+                return buf.toString();
+            }
         }
     }
 
 
     public static Object getAsObjectFromSaved(String attrValue)
     {
-        if (SERIALIZE)
+        if (SERIALIZED_MAP)
         {
             return ConverterUtils.deserialize(attrValue);
         }
         else
         {
+            if (ZIP_STRING)
+            {
+                attrValue = ZippingStateRestorer.unzipString(attrValue);
+            }
             HashMap map = new HashMap();
             StringTokenizer st = new StringTokenizer(attrValue, ",");
             while (st.hasMoreTokens())

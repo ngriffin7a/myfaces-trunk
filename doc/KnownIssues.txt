@@ -1,10 +1,15 @@
 MyFaces Known Issues
 ====================
 
-* Accessing a run-time attribute in a child component during encodeBegin may return an unpredictable result.
-  Reason: Run-time values of component attributes are set by the doStart method of the
-  corresponding Tag. If a component accesses a "non-static" attribute in a child component,
-  this value might not yet be set to the right value.
+* Sun's current implementation of the FacesTag has a bug, that makes problems
+  when you use IterationTag support:
+  For each tag they count the number of children tags in a member "numChildren".
+  Well, they do not reset this member to 0 in doAfterBody(). So, on the
+  next iteration this counter continues counting and components that do
+  not have an id are created again during findComponent().
+  Solution:
+  - Either give every tag within an IterationTag an id,
+  - or subclass all your common tags from MyFacesTag, that fixes this behaviour.
 
 
 TODO... (Many others!)
