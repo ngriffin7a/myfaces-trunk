@@ -45,6 +45,9 @@ import org.apache.myfaces.portlet.MyFacesGenericPortlet;
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.32  2005/01/27 02:38:44  svieujot
+ * Remove portlet-api dependency while keeping portlet support.
+ *
  * Revision 1.31  2005/01/26 17:03:12  matzew
  * MYFACES-86. portlet support provided by Stan Silver (JBoss Group)
  *
@@ -181,12 +184,16 @@ public class JspViewHandlerImpl
 
     public String getActionURL(FacesContext facesContext, String viewId)
     {
-        if (facesContext.getExternalContext().getResponse() instanceof RenderResponse)
-        {
-            RenderResponse response = (RenderResponse)facesContext.getExternalContext().getResponse();
-            PortletURL url = response.createActionURL();
-            url.setParameter(MyFacesGenericPortlet.VIEW_ID, viewId);
-            return url.toString();
+        try{
+            if (facesContext.getExternalContext().getResponse() instanceof RenderResponse)
+            {
+                RenderResponse response = (RenderResponse)facesContext.getExternalContext().getResponse();
+                PortletURL url = response.createActionURL();
+                url.setParameter(MyFacesGenericPortlet.VIEW_ID, viewId);
+                return url.toString();
+            }
+        }catch(NoClassDefFoundError exception){
+            // Portlet api jar isn't in the classpath.
         }
         
         String path = getViewIdPath(facesContext, viewId);
@@ -225,9 +232,13 @@ public class JspViewHandlerImpl
 
         String viewId = facesContext.getViewRoot().getViewId();
 
-        if (externalContext.getRequest() instanceof PortletRequest) {
-            externalContext.dispatch(viewId);
-            return;
+        try{
+            if (externalContext.getRequest() instanceof PortletRequest) {
+                externalContext.dispatch(viewId);
+                return;
+            }
+        }catch(NoClassDefFoundError exception){
+            // Portlet api jar isn't in the classpath.
         }
         
         ServletMapping servletMapping = getServletMapping(externalContext);
@@ -321,8 +332,12 @@ public class JspViewHandlerImpl
 
         ExternalContext externalContext = facescontext.getExternalContext();
         
-        if (externalContext.getRequest() instanceof PortletRequest) {
-            return viewId;
+        try{
+            if (externalContext.getRequest() instanceof PortletRequest) {
+                return viewId;
+            }
+        }catch(NoClassDefFoundError exception){
+            // Portlet api jar isn't in the classpath.
         }
         
         ServletMapping servletMapping = getServletMapping(externalContext);

@@ -46,6 +46,9 @@ import org.apache.myfaces.portlet.MyFacesGenericPortlet;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.43  2005/01/27 02:38:43  svieujot
+ * Remove portlet-api dependency while keeping portlet support.
+ *
  * Revision 1.42  2005/01/26 17:03:11  matzew
  * MYFACES-86. portlet support provided by Stan Silver (JBoss Group)
  *
@@ -312,10 +315,14 @@ public class LifecycleImpl
     {
         ExternalContext externalContext = facesContext.getExternalContext();
 
-        if (externalContext.getRequest() instanceof PortletRequest)
-        {
-            PortletRequest request = (PortletRequest)externalContext.getRequest();
-            return request.getParameter(MyFacesGenericPortlet.VIEW_ID);
+        try{
+            if (externalContext.getRequest() instanceof PortletRequest)
+            {
+                PortletRequest request = (PortletRequest)externalContext.getRequest();
+                return request.getParameter(MyFacesGenericPortlet.VIEW_ID);
+            }
+        }catch(NoClassDefFoundError exception){
+            // Portlet api jar isn't in the classpath.
         }
         
         String viewId = externalContext.getRequestPathInfo();  //getPathInfo
