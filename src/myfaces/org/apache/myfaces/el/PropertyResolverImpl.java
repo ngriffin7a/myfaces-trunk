@@ -1,4 +1,4 @@
-/**
+/*
  * MyFaces - the free JSF implementation
  * Copyright (C) 2003  The MyFaces Team (http://myfaces.sourceforge.net)
  *
@@ -18,34 +18,36 @@
  */
 package net.sourceforge.myfaces.el;
 
-import javax.faces.component.UIComponent;
-import javax.faces.el.EvaluationException;
-import javax.faces.el.PropertyNotFoundException;
-import javax.faces.el.PropertyResolver;
 import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
+
 import java.lang.reflect.Array;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import javax.faces.component.UIComponent;
+import javax.faces.el.EvaluationException;
+import javax.faces.el.PropertyNotFoundException;
+import javax.faces.el.PropertyResolver;
+import javax.faces.el.ReferenceSyntaxException;
+
 
 /**
- * JSF 1.0 PRD2, 5.2.2
- *
  * @author Manfred Geiler (latest modification by $Author$)
  * @author Anton Koinov
  * @version $Revision$ $Date$
  */
 public class PropertyResolverImpl
-extends PropertyResolver
+    extends PropertyResolver
 {
     //~ Static fields/initializers -----------------------------------------------------------------
 
-    private static final Object[] EMPTY_ARGS = {};
+    private static final Object[] NO_ARGS = {};
 
     //~ Methods ------------------------------------------------------------------------------------
 
@@ -66,13 +68,9 @@ extends PropertyResolver
                 base,
                 new Object[] {newValue});
         }
-        catch (IllegalAccessException e)
+        catch (Throwable t)
         {
-            throw new EvaluationException("Bean: " + base.getClass() + ", property: " + name, e);
-        }
-        catch (InvocationTargetException e)
-        {
-            throw new EvaluationException("Bean: " + base.getClass() + ", property: " + name, e);
+            throw new EvaluationException("Bean: " + base.getClass() + ", property: " + name, t);
         }
     }
 
@@ -93,11 +91,6 @@ extends PropertyResolver
                 "Bean: " + base.getClass() + ", property: " + name, e);
         }
 
-        if (propertyDescriptor == null)
-        {
-            throw new PropertyNotFoundException("Bean: " + base.getClass() + ", property: " + name);
-        }
-
         return propertyDescriptor;
     }
 
@@ -106,7 +99,7 @@ extends PropertyResolver
     {
         if (base == null)
         {
-            throw new NullPointerException("Null bean, property: " + name);
+            throw new PropertyNotFoundException("Null bean, property: " + name);
         }
 
         if ((name == null) || (name.length() == 0))
@@ -137,7 +130,7 @@ extends PropertyResolver
     {
         if (base == null)
         {
-            throw new NullPointerException("Null bean, index: " + index);
+            throw new PropertyNotFoundException("Null bean, index: " + index);
         }
 
         // Is there any way to determine whether List.set() will be declined?
@@ -151,7 +144,7 @@ extends PropertyResolver
             return true;
         }
 
-        throw new IllegalArgumentException(
+        throw new ReferenceSyntaxException(
             "Must be array or List. Bean: " + base.getClass() + ", index " + index);
     }
 
@@ -160,7 +153,7 @@ extends PropertyResolver
     {
         if (base == null)
         {
-            throw new NullPointerException("Null bean, property: " + name);
+            throw new PropertyNotFoundException("Null bean, property: " + name);
         }
 
         if ((name == null) || (name.length() == 0))
@@ -178,7 +171,7 @@ extends PropertyResolver
 
         if (base instanceof UIComponent)
         {
-            return ((UIComponent) base).findComponent(name).getClass();
+            return UIComponent.class;
         }
 
         // If none of the special bean types, then process as normal Bean
@@ -192,71 +185,61 @@ extends PropertyResolver
     {
         if (base == null)
         {
-            throw new PropertyNotFoundException("Null bean (getting type of index " + index + ")");
+            throw new PropertyNotFoundException("Null bean, index: " + index);
+        }
+
+        if (base.getClass().isArray())
+        {
+            return base.getClass().getComponentType();
         }
 
         try
         {
             if (base instanceof List)
             {
-                // REVISIT: does it make sense to do this or simply return Object.class?
-                List   l = (List) base;
+                // REVISIT: does it make sense to do this or simply return Object.class? What if the new value is not of the same class?
+                Object value = ((List) base).get(index);
 
-                Object o = l.get(index);
-
-                if (o != null)
-                {
-                    return o.getClass();
-                }
-
-                return Object.class; // until variable datatype in JVM 1.5 is implemented
+                return (value != null) ? value.getClass() : Object.class; // until generics are implemented in JVM 1.5
             }
-
-            if (base.getClass().isArray())
-            {
-                return base.getClass().getComponentType();
-            }
-
-            if (base instanceof UIComponent)
-            {
-                return ((UIComponent) base).getChild(index).getClass();
-            }
-        }
-        catch (IndexOutOfBoundsException e)
-        {
-            throw e;
         }
         catch (Throwable t)
         {
-            return null;
+            throw new PropertyNotFoundException(
+                "Bean: " + base.getClass() + ", index: " + index, t);
         }
 
-        throw new IllegalArgumentException(
+        if (base instanceof UIComponent)
+        {
+            return UIComponent.class;
+        }
+
+        throw new ReferenceSyntaxException(
             "Must be array or List. Bean: " + base.getClass() + ", index " + index);
     }
 
     public void setValue(Object base, int index, Object newValue)
     throws PropertyNotFoundException
     {
-        // TODO: convert newValue to property type
         if (base == null)
         {
-            throw new NullPointerException("Null bean, index: " + index);
+            throw new PropertyNotFoundException("Null bean, index: " + index);
         }
 
-        // Note: IndexOutOfBoundsException will be handled by the access methods
+        // TODO: convert newValue to property type
         try
         {
-            if (base instanceof List)
+            if (base.getClass().isArray())
             {
-                ((List) base).add(index, newValue);
+                Array.set(base, index, newValue);
 
                 return;
             }
 
-            if (base.getClass().isArray())
+            if (base instanceof List)
             {
-                Array.set(base, index, newValue);
+                // REVISIT: should we try to grow the list, if growable type (e.g., ArrayList, etc.), and if not large enough?
+                ((List) base).set(index, newValue);
 
                 return;
             }
@@ -266,7 +249,7 @@ extends PropertyResolver
             throw new PropertyNotFoundException("Bean: " + base.getClass() + ", index " + index, e);
         }
 
-        throw new IllegalArgumentException(
+        throw new ReferenceSyntaxException(
             "Must be array or List. Bean: " + base.getClass() + ", index " + index);
     }
 
@@ -276,7 +259,7 @@ extends PropertyResolver
         // TODO: convert newValue to property type
         if (base == null)
         {
-            throw new NullPointerException("Null bean, property: " + name);
+            throw new PropertyNotFoundException("Null bean, property: " + name);
         }
 
         if ((name == null) || (name.length() == 0))
@@ -294,7 +277,7 @@ extends PropertyResolver
 
         if (base instanceof UIComponent)
         {
-            throw new IllegalArgumentException("Bean must not be UIComponent, property: " + name);
+            throw new PropertyNotFoundException("Bean must not be UIComponent, property: " + name);
         }
 
         // If none of the special bean types, then process as normal Bean
@@ -315,7 +298,19 @@ extends PropertyResolver
 
         if (base instanceof UIComponent)
         {
-            return ((UIComponent) base).findComponent(name);
+            for (
+                Iterator children = ((UIComponent) base).getChildren().iterator();
+                        children.hasNext();)
+            {
+                UIComponent child = (UIComponent) children.next();
+
+                if (name.equals(child.getId()))
+                {
+                    return child;
+                }
+            }
+
+            return null;
         }
 
         // If none of the special bean types, then process as normal Bean
@@ -330,15 +325,11 @@ extends PropertyResolver
 
         try
         {
-            return m.invoke(base, EMPTY_ARGS);
+            return m.invoke(base, NO_ARGS);
         }
-        catch (IllegalAccessException e)
+        catch (Throwable t)
         {
-            throw new EvaluationException("Bean: " + base.getClass() + ", property: " + name, e);
-        }
-        catch (InvocationTargetException e)
-        {
-            throw new EvaluationException("Bean: " + base.getClass() + ", property: " + name, e);
+            throw new EvaluationException("Bean: " + base.getClass() + ", property: " + name, t);
         }
     }
 
@@ -352,19 +343,19 @@ extends PropertyResolver
 
         try
         {
-            if (base instanceof List)
-            {
-                return ((List) base).get(index);
-            }
-
             if (base.getClass().isArray())
             {
                 return Array.get(base, index);
             }
 
+            if (base instanceof List)
+            {
+                return ((List) base).get(index);
+            }
+
             if (base instanceof UIComponent)
             {
-                return ((UIComponent) base).getChild(index);
+                return ((UIComponent) base).getChildren().get(index);
             }
         }
         catch (IndexOutOfBoundsException e)
@@ -373,7 +364,7 @@ extends PropertyResolver
             return null; // (see JSF 1.0, PRD2, 5.1.2.1)
         }
 
-        throw new IllegalArgumentException(
+        throw new ReferenceSyntaxException(
             "Must be array or List. Bean: " + base.getClass() + ", index " + index);
     }
 
@@ -401,6 +392,7 @@ extends PropertyResolver
             }
         }
 
-        return null;
+        throw new PropertyNotFoundException(
+            "Bean: " + beanInfo.getBeanDescriptor().getBeanClass() + ", property: " + propertyName);
     }
 }

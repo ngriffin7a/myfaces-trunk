@@ -1,4 +1,4 @@
-/**
+/*
  * MyFaces - the free JSF implementation
  * Copyright (C) 2003  The MyFaces Team (http://myfaces.sourceforge.net)
  *
@@ -21,22 +21,23 @@ package net.sourceforge.myfaces.el;
 import net.sourceforge.myfaces.MyFacesFactoryFinder;
 import net.sourceforge.myfaces.config.*;
 import net.sourceforge.myfaces.util.FacesUtils;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import javax.faces.application.Application;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.el.ReferenceSyntaxException;
-import javax.faces.el.ValueBinding;
 import javax.faces.el.VariableResolver;
+
 import javax.servlet.ServletContext;
-import javax.servlet.ServletRequest;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-import java.util.List;
+
 
 /**
- * JSF 1.0 PRD2, 5.2.1
  * @author Manfred Geiler (latest modification by $Author$)
  * @author Anton Koinov
  * @version $Revision$ $Date$
@@ -44,103 +45,250 @@ import java.util.List;
 public class VariableResolverImpl
     extends VariableResolver
 {
-    private static final Log log = LogFactory.getLog(VariableResolverImpl.class);
+    //~ Static fields/initializers -----------------------------------------------------------------
+
+    private static final Log log              = LogFactory.getLog(VariableResolverImpl.class);
+    
+    // WARNING: this implementation is thread safe because is does not update/add 
+    //          to IMPLICIT_OBJECTS and SCOPES. If you need to add your own implicit objects/scopes,
+    //          either extend and add more in a static block, or add proper sychronization
+    static final Map         IMPLICIT_OBJECTS = new HashMap(32);
+    static final Map         SCOPES           = new HashMap(16);
+
+    static
+    {
+        IMPLICIT_OBJECTS.put(
+            "applicationScope",
+            new ImplicitObject()
+            {
+                public Object get(FacesContext facesContext)
+                {
+                    return facesContext.getExternalContext().getApplicationMap();
+                }
+            });
+        IMPLICIT_OBJECTS.put(
+            "cookie",
+            new ImplicitObject()
+            {
+                public Object get(FacesContext facesContext)
+                {
+                    return facesContext.getExternalContext().getRequestCookieMap();
+                }
+            });
+        IMPLICIT_OBJECTS.put(
+            "facesContext",
+            new ImplicitObject()
+            {
+                public Object get(FacesContext facesContext)
+                {
+                    return facesContext;
+                }
+            });
+        IMPLICIT_OBJECTS.put(
+            "header",
+            new ImplicitObject()
+            {
+                public Object get(FacesContext facesContext)
+                {
+                    return facesContext.getExternalContext().getRequestHeaderMap();
+                }
+            });
+        IMPLICIT_OBJECTS.put(
+            "headerValues",
+            new ImplicitObject()
+            {
+                public Object get(FacesContext facesContext)
+                {
+                    return facesContext.getExternalContext().getRequestHeaderValuesMap();
+                }
+            });
+        IMPLICIT_OBJECTS.put(
+            "initParam",
+            new ImplicitObject()
+            {
+                public Object get(FacesContext facesContext)
+                {
+                    return facesContext.getExternalContext().getInitParameterMap();
+                }
+            });
+        IMPLICIT_OBJECTS.put(
+            "param",
+            new ImplicitObject()
+            {
+                public Object get(FacesContext facesContext)
+                {
+                    return facesContext.getExternalContext().getRequestParameterMap();
+                }
+            });
+        IMPLICIT_OBJECTS.put(
+            "paramValues",
+            new ImplicitObject()
+            {
+                public Object get(FacesContext facesContext)
+                {
+                    return facesContext.getExternalContext().getRequestParameterValuesMap();
+                }
+            });
+        IMPLICIT_OBJECTS.put(
+            "requestScope",
+            new ImplicitObject()
+            {
+                public Object get(FacesContext facesContext)
+                {
+                    return facesContext.getExternalContext().getRequestMap();
+                }
+            });
+        IMPLICIT_OBJECTS.put(
+            "sessionScope",
+            new ImplicitObject()
+            {
+                public Object get(FacesContext facesContext)
+                {
+                    return facesContext.getExternalContext().getSessionMap();
+                }
+            });
+        IMPLICIT_OBJECTS.put(
+            "view",
+            new ImplicitObject()
+            {
+                public Object get(FacesContext facesContext)
+                {
+                    return facesContext.getViewRoot();
+                }
+            });
+
+        SCOPES.put(
+            "request",
+            new Scope()
+            {
+                public void put(ExternalContext extContext, String name, Object obj)
+                {
+                    extContext.getRequestMap().put(name, obj);
+                }
+            });
+        SCOPES.put(
+            "session",
+            new Scope()
+            {
+                public void put(ExternalContext extContext, String name, Object obj)
+                {
+                    extContext.getSessionMap().put(name, obj);
+                }
+            });
+        SCOPES.put(
+            "application",
+            new Scope()
+            {
+                public void put(ExternalContext extContext, String name, Object obj)
+                {
+                    ((ServletContext) extContext.getContext()).setAttribute(name, obj);
+                }
+            });
+        SCOPES.put(
+            "none",
+            new Scope()
+            {
+                public void put(ExternalContext extContext, String name, Object obj)
+                {
+                    // do nothing
+                }
+            });
+    }
+
+    //~ Methods ------------------------------------------------------------------------------------
 
     public Object resolveVariable(FacesContext facesContext, String name)
     {
-    	if (name == null || name.length() == 0)
-    		throw new ReferenceSyntaxException("Varible name is null");
-    	
-        Object obj;
+        if ((name == null) || (name.length() == 0))
+        {
+            throw new ReferenceSyntaxException("Varible name is null");
+        }
 
         //Implicit objects
-        obj = getImplicitObject(facesContext, name);
-        if (obj != null)
+        ImplicitObject implicitObject = (ImplicitObject) IMPLICIT_OBJECTS.get(name);
+
+        if (implicitObject != null)
         {
-            return obj;
+            return implicitObject.get(facesContext);
         }
+
+        ExternalContext extContext = facesContext.getExternalContext();
 
         //Request context
-        ServletRequest servletrequest
-            = (ServletRequest)facesContext.getExternalContext().getRequest();
-        obj = servletrequest.getAttribute(name);
+        Map    requestMap = extContext.getRequestMap();
+        Object obj = requestMap.get(name);
+
         if (obj != null)
         {
             return obj;
         }
 
-        //Session context
-        if (servletrequest instanceof HttpServletRequest)
+        //Session context (try to get without creating a new session)
+        Object session = extContext.getSession(false);
+
+        if (session != null)
         {
-            HttpSession session = ((HttpServletRequest)servletrequest).getSession(false);
-            if (session != null)
+            obj = extContext.getSessionMap().get(name);
+
+            if (obj != null)
             {
-                obj = session.getAttribute(name);
-                if (obj != null)
-                {
-                    return obj;
-                }
+                return obj;
             }
         }
 
         //Application context
-        ServletContext servletcontext
-            = (ServletContext)facesContext.getExternalContext().getContext();
-        obj = servletcontext.getAttribute(name);
+        ServletContext servletContext = (ServletContext) extContext.getContext();
+        obj = servletContext.getAttribute(name);
+
         if (obj != null)
         {
             return obj;
         }
 
         //ManagedBean
-        FacesConfigFactory fcf = MyFacesFactoryFinder.getFacesConfigFactory(servletcontext);
-        FacesConfig facesConfig = fcf.getFacesConfig(servletcontext);
-        ManagedBeanConfig mbc = facesConfig.getManagedBeanConfig(name);
+        FacesConfigFactory fcf         = MyFacesFactoryFinder.getFacesConfigFactory(servletContext);
+        FacesConfig        facesConfig = fcf.getFacesConfig(servletContext);
+        ManagedBeanConfig  mbc         = facesConfig.getManagedBeanConfig(name);
+
         if (mbc != null)
         {
             obj = ConfigUtil.newInstance(mbc.getManagedBeanClass());
-            String scope = mbc.getManagedBeanScope();
-            if (scope.equals("request"))
+
+            setManagedBeanProperties(facesContext, obj, mbc);
+
+            Scope scope = (Scope) SCOPES.get(mbc.getManagedBeanScope());
+
+            if (scope != null)
             {
-                servletrequest.setAttribute(name, obj);
+                scope.put(extContext, name, obj);
             }
-            else if (scope.equals("session"))
-            {
-                HttpSession session = ((HttpServletRequest)servletrequest).getSession(true);
-                session.setAttribute(name, obj);
-            }
-            else if (scope.equals("application"))
-            {
-                servletcontext.setAttribute(name, obj);
-            }
-            else if (!scope.equals("none"))
+            else
             {
                 log.error("Managed bean '" + name + "' has illegal scope: " + scope);
             }
-
-            setManagedBeanProperties(facesContext, obj, mbc);
 
             return obj;
         }
 
         log.warn("Variable '" + name + "' could not be resolved.");
+
         return null;
     }
 
-
-    protected void setManagedBeanProperties(FacesContext facesContext,
-                                          Object bean,
-                                          ManagedBeanConfig mbc)
+    protected void setManagedBeanProperties(
+        FacesContext facesContext, Object bean, ManagedBeanConfig mbc)
     {
-    	List managedPropertyConfigList = mbc.getManagedPropertyConfigList();
-        
+        List managedPropertyConfigList = mbc.getManagedPropertyConfigList();
+
         if (managedPropertyConfigList == null)
+        {
             return;
-            
+        }
+
         for (int i = 0, len = managedPropertyConfigList.size(); i < len; i++)
         {
-            ManagedPropertyConfig propConfig = 
-            	(ManagedPropertyConfig)managedPropertyConfigList.get(i);
+            ManagedPropertyConfig propConfig =
+                (ManagedPropertyConfig) managedPropertyConfigList.get(i);
 
             if (propConfig.getMapEntriesConfig() != null)
             {
@@ -152,94 +300,48 @@ public class VariableResolverImpl
             }
 
             Object value;
+
             if (propConfig.getValueRef() != null)
             {
-                Application app = FacesUtils.getApplication();
-                ValueBinding vb = app.getValueBinding(propConfig.getValueRef());
-                value = vb.getValue(facesContext);
+                value = FacesUtils.getValueRef(
+                        facesContext,
+                        propConfig.getValueRef());
             }
             else
             {
                 value = propConfig.getValue();
             }
 
-            PropertyResolverImpl.setProperty(bean,
-                propConfig.getPropertyName(), value);
+            PropertyResolverImpl.setProperty(
+                bean,
+                propConfig.getPropertyName(),
+                value);
         }
     }
 
-    protected void setMapEntries(Object bean,
-                               ManagedPropertyConfig propConfig)
+    protected void setMapEntries(Object bean, ManagedPropertyConfig propConfig)
     {
-        throw new UnsupportedOperationException("Not yet implemented"); //TODO
+        throw new UnsupportedOperationException("Not yet implemented"); // TODO
     }
 
-    protected void setValues(Object bean,
-                           ManagedPropertyConfig propConfig)
+    protected void setValues(Object bean, ManagedPropertyConfig propConfig)
     {
-        throw new UnsupportedOperationException("Not yet implemented"); //TODO
+        throw new UnsupportedOperationException("Not yet implemented"); // TODO
     }
+}
 
 
+interface ImplicitObject
+{
+    //~ Methods ------------------------------------------------------------------------------------
 
-    protected Object getImplicitObject(FacesContext facesContext, String name)
-    {
-        if (name.equals("applicationScope"))
-        {
-            return facesContext.getExternalContext().getApplicationMap();
-        }
+    public Object get(FacesContext facesContext);
+}
 
-        if (name.equals("cookie"))
-        {
-            return facesContext.getExternalContext().getRequestCookieMap();
-        }
 
-        if (name.equals("facesContext"))
-        {
-            return facesContext;
-        }
+interface Scope
+{
+    //~ Methods ------------------------------------------------------------------------------------
 
-        if (name.equals("header"))
-        {
-            return facesContext.getExternalContext().getRequestHeaderMap();
-        }
-
-        if (name.equals("headerValues"))
-        {
-            return facesContext.getExternalContext().getRequestHeaderValuesMap();
-        }
-
-        if (name.equals("initParam"))
-        {
-            return facesContext.getExternalContext().getInitParameterMap();
-        }
-
-        if (name.equals("param"))
-        {
-            return facesContext.getExternalContext().getRequestParameterMap();
-        }
-
-        if (name.equals("paramValues"))
-        {
-            return facesContext.getExternalContext().getRequestParameterValuesMap();
-        }
-
-        if (name.equals("requestScope"))
-        {
-            return facesContext.getExternalContext().getRequestMap();
-        }
-
-        if (name.equals("sessionScope"))
-        {
-            return facesContext.getExternalContext().getSessionMap();
-        }
-
-        if (name.equals("tree"))
-        {
-            return facesContext.getTree().getRoot();
-        }
-
-        return null;
-    }
-
+    public void put(ExternalContext extContext, String name, Object obj);
 }

@@ -18,18 +18,19 @@
  */
 package net.sourceforge.myfaces.util;
 
+import net.sourceforge.myfaces.el.VariableResolverImpl;
+
+import java.util.Map;
+
 import javax.faces.FactoryFinder;
 import javax.faces.application.Application;
 import javax.faces.application.ApplicationFactory;
 import javax.faces.context.FacesContext;
-import javax.faces.context.MessageResources;
 import javax.faces.el.ValueBinding;
+import javax.faces.el.VariableResolver;
 import javax.faces.render.RenderKit;
 import javax.faces.render.RenderKitFactory;
 import javax.faces.render.Renderer;
-import javax.faces.tree.Tree;
-import javax.faces.tree.TreeFactory;
-import java.util.Map;
 
 
 /**
@@ -40,6 +41,10 @@ import java.util.Map;
  */
 public class FacesUtils
 {
+    //~ Static fields/initializers -----------------------------------------------------------------
+
+    protected static final VariableResolver _variableResolver = new VariableResolverImpl();
+
     //~ Methods ------------------------------------------------------------------------------------
 
     public static Application getApplication()
@@ -48,11 +53,12 @@ public class FacesUtils
             "javax.faces.application.ApplicationFactory")).getApplication();
     }
 
-    public static MessageResources getMessageResources(String name)
-    {
-        return getApplication().getMessageResources(name);
-    }
-
+//    TODO: upgrade to new spec
+//    public static MessageResources getMessageResources(String name)
+//    {
+//        return getApplication().getMessageResources(name);
+//    }
+//
     public static String getPathInfo(FacesContext ctx)
     {
         return ctx.getExternalContext().getRequestPathInfo();
@@ -99,7 +105,9 @@ public class FacesUtils
 
     public static Object getSession(boolean create)
     {
-        return getSession(FacesContext.getCurrentInstance(), create);
+        return getSession(
+            FacesContext.getCurrentInstance(),
+            create);
     }
 
     public static Object getSession(FacesContext ctx, boolean create)
@@ -148,25 +156,25 @@ public class FacesUtils
 
     public static ValueBinding getValueBinding(String valueRef)
     {
-        return getApplication().getValueBinding(valueRef);
+        return getApplication().createValueBinding(valueRef);
     }
 
     public static void setValueRef(
         Application app, FacesContext ctx, String valueRef, Object value)
     {
-        app.getValueBinding(valueRef).setValue(ctx, value);
+        app.createValueBinding(valueRef).setValue(ctx, value);
     }
 
     public static void setValueRef(Application app, String valueRef, Object value)
     {
-        app.getValueBinding(valueRef).setValue(
+        app.createValueBinding(valueRef).setValue(
             FacesContext.getCurrentInstance(),
             value);
     }
 
     public static void setValueRef(FacesContext ctx, String valueRef, Object value)
     {
-        getApplication().getValueBinding(valueRef).setValue(ctx, value);
+        getApplication().createValueBinding(valueRef).setValue(ctx, value);
     }
 
     public static void setValueRef(String valueRef, Object value)
@@ -178,12 +186,12 @@ public class FacesUtils
 
     public static Object getValueRef(Application app, FacesContext ctx, String valueRef)
     {
-        return app.getValueBinding(valueRef).getValue(ctx);
+        return app.createValueBinding(valueRef).getValue(ctx);
     }
 
     public static Object getValueRef(Application app, String valueRef)
     {
-        return app.getValueBinding(valueRef).getValue(FacesContext.getCurrentInstance());
+        return app.createValueBinding(valueRef).getValue(FacesContext.getCurrentInstance());
     }
 
     public static Object getValueRef(FacesContext ctx, String valueRef)
@@ -194,5 +202,17 @@ public class FacesUtils
     public static Object getValueRef(String valueRef)
     {
         return getValueBinding(valueRef).getValue(FacesContext.getCurrentInstance());
+    }
+
+    public static Object resolveVariable(String name)
+    {
+        return _variableResolver.resolveVariable(
+            FacesContext.getCurrentInstance(),
+            name);
+    }
+
+    public static Object resolveVariable(FacesContext ctx, String name)
+    {
+        return _variableResolver.resolveVariable(ctx, name);
     }
 }

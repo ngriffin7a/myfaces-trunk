@@ -1,4 +1,4 @@
-/**
+/*
  * MyFaces - the free JSF implementation
  * Copyright (C) 2003  The MyFaces Team (http://myfaces.sourceforge.net)
  *
@@ -19,48 +19,60 @@
 package net.sourceforge.myfaces.el;
 
 import net.sourceforge.myfaces.util.StringUtils;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.faces.application.Application;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
-import javax.faces.el.EvaluationException;
 import javax.faces.el.PropertyNotFoundException;
 import javax.faces.el.ReferenceSyntaxException;
 import javax.faces.el.ValueBinding;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
 
 /**
- * JSF 1.0 PRD2, 5.2.3
- *
  * @author Manfred Geiler (latest modification by $Author$)
  * @author Anton Koinov
  * @version $Revision$ $Date$
  */
 public class ValueBindingImpl
-extends ValueBinding
+    extends ValueBinding
 {
     //~ Static fields/initializers -----------------------------------------------------------------
-    private static final Log log = LogFactory.getLog(ValueBindingImpl.class);
 
-    private static final Integer ZERO_FROM_EMPTY  = new Integer(0);
-    private static final Integer ZERO             = new Integer(0);
-    private static final Integer ONE              = new Integer(1);
+    private static final Log log                 = LogFactory.getLog(ValueBindingImpl.class);
+
+    // Cache of commonly used Integer instances
+    static final Integer   ZERO                = new Integer(0);
+    static final Integer   ONE                 = new Integer(1);
+    static final int       INTEGER_CACHE_LOWER = -1000;
+    static final int       INTEGER_CACHE_UPPER = 1000;
+    static final Integer[] INTEGER_CACHE       = createIntegerCache();
 
     //~ Instance fields ----------------------------------------------------------------------------
 
-    protected Application _application;
-    protected String      _reference;
-    protected Object[]    _parsedReference;
+    protected final Application _application;
+    protected final String      _reference;
+    protected final Object[]    _parsedReference;
 
     //~ Constructors -------------------------------------------------------------------------------
 
     public ValueBindingImpl(String reference, Application application)
     {
+        if (application == null)
+        {
+            throw new NullPointerException("application");
+        }
+
+        if ((reference == null) || ((reference=reference.trim()).length() == 0))
+        {
+            throw new ReferenceSyntaxException("Reference: empty or null");
+        }
+
         _application         = application;
         _reference           = reference;
         _parsedReference     = parse(stripBracketsFromModelReference(reference));
@@ -75,7 +87,7 @@ extends ValueBinding
 
         if (base == null)
         {
-            throw new NullPointerException("Null bean, property: " + _reference);
+            throw new PropertyNotFoundException("Reference: " + _reference + ". Null base bean");
         }
 
         int maxIndex = _parsedReference.length - 1;
@@ -95,7 +107,7 @@ extends ValueBinding
 
         if (base == null)
         {
-            throw new NullPointerException("Null bean, property: " + _reference);
+            throw new PropertyNotFoundException("Reference: " + _reference + ". Null base bean");
         }
 
         int maxIndex = _parsedReference.length - 1;
@@ -113,37 +125,36 @@ extends ValueBinding
     {
         try
         {
-            // TODO: allow setting of base class (myfaces extension)
-            Object base = resolve(facesContext);
-
-            if (base == null)
-            {
-                throw new NullPointerException("Null bean, property: " + _reference);
-            }
-
             int maxIndex = _parsedReference.length - 1;
 
             if (maxIndex > 0)
             {
+                Object base = resolve(facesContext);
+
+                if (base == null)
+                {
+                    throw new PropertyNotFoundException(
+                        "Reference: " + _reference + ". Null base bean");
+                }
+
                 setPropertyValue(facesContext, base, _parsedReference[maxIndex], newValue);
             }
             else
             {
-                throw new EvaluationException(
-                    "Setting a model variable not supported, you must specify property name. Variable name: "
-                    + _parsedReference[0]);
+                facesContext.getExternalContext().getRequestMap().put(
+                    _parsedReference[0], newValue);
             }
         }
         catch (RuntimeException ex)
         {
             if (newValue == null)
             {
-                log.error("Exception setting value of reference '" + _reference + "' to null.", ex);
+                log.error("Reference: " + _reference + ", newValue: null", ex);
             }
             else
             {
-                log.error("Exception setting value of reference '" + _reference + "' to object of type '"
-                          + newValue.getClass().getName() + "'.", ex);
+                log.error(
+                    "Reference: " + _reference + ", newValue: " + newValue.getClass().getName(), ex);
             }
 
             throw ex;
@@ -170,11 +181,20 @@ extends ValueBinding
         return base;
     }
 
+    public static Integer integer(int i)
+    {
+        if ((i >= INTEGER_CACHE_LOWER) && (i <= INTEGER_CACHE_UPPER))
+        {
+            return INTEGER_CACHE[i - INTEGER_CACHE_LOWER];
+        }
+
+        return new Integer(i);
+    }
+
     protected boolean isPropertyReadOnly(FacesContext facesContext, Object base, Object name)
     {
-        name = preprocessProperty(facesContext, base, name);
+        name = coerceProperty(facesContext, base, name);
 
-        // Map is a special case, need to use the String property
         return (name instanceof String)
         ? _application.getPropertyResolver().isReadOnly(base, (String) name)
         : _application.getPropertyResolver().isReadOnly(
@@ -184,9 +204,8 @@ extends ValueBinding
 
     protected Class getPropertyType(FacesContext facesContext, Object base, Object name)
     {
-        name = preprocessProperty(facesContext, base, name);
+        name = coerceProperty(facesContext, base, name);
 
-        // Map is a special case, need to use the String property
         return (name instanceof String)
         ? _application.getPropertyResolver().getType(base, (String) name)
         : _application.getPropertyResolver().getType(
@@ -197,9 +216,8 @@ extends ValueBinding
     protected void setPropertyValue(
         FacesContext facesContext, Object base, Object name, Object newValue)
     {
-        name = preprocessProperty(facesContext, base, name);
+        name = coerceProperty(facesContext, base, name);
 
-        // Map is a special case, need to use the String property
         if (name instanceof String)
         {
             _application.getPropertyResolver().setValue(base, (String) name, newValue);
@@ -227,9 +245,9 @@ extends ValueBinding
      */
     protected Object getPropertyValue(FacesContext facesContext, Object base, Object name)
     {
-        name = preprocessProperty(facesContext, base, name);
+        name = coerceProperty(facesContext, base, name);
 
-        if (name == ZERO_FROM_EMPTY)
+        if (name == null)
         {
             return null; // (see JSF 1.0, PRD2, 5.1.2.1)
         }
@@ -239,32 +257,6 @@ extends ValueBinding
         : _application.getPropertyResolver().getValue(
             base,
             ((Integer) name).intValue());
-    }
-
-    protected Object resolve(FacesContext facesContext)
-    {
-        Object base =
-            _application.getVariableResolver().resolveVariable(
-                facesContext, (String) _parsedReference[0]);
-
-        return resolve(facesContext, base, 1);
-    }
-
-    protected Object resolve(FacesContext facesContext, Object base, int start)
-    {
-        for (int i = start, max = _parsedReference.length - 1; i < max; i++)
-        {
-            Object curProperty = _parsedReference[i];
-
-            base = getPropertyValue(facesContext, base, curProperty);
-
-            if (base == null)
-            {
-                return null; // (see JSF 1.0, PRD2, 5.1.2.1)
-            }
-        }
-
-        return base;
     }
 
     /**
@@ -284,16 +276,27 @@ extends ValueBinding
      *
      * @return the name or index of the property
      */
-    private Object coerceProperty(Object base, Object name)
+    protected Object coerceProperty(FacesContext facesContext, Object base, Object name)
     {
-        if ((base == null) || (name == null))
+//        Both guaranteed by caller not to be null
+//        if ((base == null) || (name == null))
+//        {
+//            return null; // (see JSF 1.0, PRD2, 5.1.2.1)
+//        }
+//
+        if (name instanceof ValueBinding)
         {
-            return null; // (see JSF 1.0, PRD2, 5.1.2.1)
+            name = ((ValueBinding) name).getValue(facesContext);
+
+            if (name == null)
+            {
+                return null; // (see JSF 1.0, PRD2, 5.1.2.1)
+            }
         }
 
-        if ((base instanceof List) || (base.getClass().isArray()))
+        if ((base.getClass().isArray()) || (base instanceof List))
         {
-            // Note: ReferenceSyntaxException would be thrown by coerceToInt(), if needed
+            // Note: ReferenceSyntaxException would be thrown by coerceToInteger(), if needed
             return coerceToInteger(name);
         }
 
@@ -309,8 +312,92 @@ extends ValueBinding
             }
         }
 
-        // If none of the special bean types (or Map)
+        // If none of the special bean types (or is Map)
         return coerceToString(name);
+    }
+
+    /**
+     * Coerces the supplied object to String based on coercion rules defined in
+     * JSF 1.0, PRD2, 5.1.2.4
+     *
+     * <p>
+     * Note: null object coerced to empty string--per JSF
+     * </p>
+     *
+     * @param obj the object to coerce
+     *
+     * @return String the String value of <code>obj</code>
+     *
+     * @throws ReferenceSyntaxException on eny error during coercion
+     */
+    protected String coerceToString(Object obj)
+    {
+        if (obj == null)
+        {
+            return "";
+        }
+
+        try
+        {
+            return obj.toString();
+        }
+        catch (Throwable t)
+        {
+            throw new ReferenceSyntaxException(
+                "Reference: " + _reference + ". Unable to coerce " + obj.getClass() + " to String",
+                t);
+        }
+    }
+
+    protected Object resolve(FacesContext facesContext)
+    {
+        Object base =
+            _application.getVariableResolver().resolveVariable(
+                facesContext, (String) _parsedReference[0]);
+
+        return resolve(facesContext, base, 1);
+    }
+
+    protected Object resolve(FacesContext facesContext, Object base, int start)
+    {
+        for (int i = start, max = _parsedReference.length - 1; i < max; i++)
+        {
+            base = getPropertyValue(facesContext, base, _parsedReference[i]);
+
+            if (base == null)
+            {
+                return null; // (see JSF 1.0, PRD2, 5.1.2.1)
+            }
+        }
+
+        return base;
+    }
+
+    private static Integer[] createIntegerCache()
+    {
+        Integer[] integerCache = new Integer[INTEGER_CACHE_UPPER - INTEGER_CACHE_LOWER + 1];
+
+        for (int i = 0, val = INTEGER_CACHE_LOWER; val <= INTEGER_CACHE_UPPER; i++, val++)
+        {
+            integerCache[i] = new Integer(val);
+        }
+
+        integerCache[0]     = ZERO;
+        integerCache[1]     = ONE;
+
+        return integerCache;
+    }
+
+    private boolean isEscaped(String str, int pos)
+    {
+        int escapeCharCount = 0;
+
+        while ((--pos >= 0) && (str.charAt(pos) == '\\'))
+        {
+            escapeCharCount++;
+        }
+
+        return (escapeCharCount % 2) != 0;
     }
 
     /**
@@ -331,7 +418,7 @@ extends ValueBinding
     {
         if (obj == null)
         {
-            return ZERO_FROM_EMPTY; // (see JSF 1.0, PRD2, 5.1.2.4)
+            return ZERO;
         }
 
         if (obj instanceof String)
@@ -340,12 +427,12 @@ extends ValueBinding
 
             if (s.length() == 0)
             {
-                return ZERO_FROM_EMPTY; // (see JSF 1.0, PRD2, 5.1.2.4)
+                return ZERO; // (see JSF 1.0, PRD2, 5.1.2.4)
             }
 
             try
             {
-                return Integer.valueOf(s);
+                return integer(Integer.parseInt(s));
             }
             catch (NumberFormatException e)
             {
@@ -360,183 +447,175 @@ extends ValueBinding
 
         if (obj instanceof Number)
         {
-            return new Integer(((Number) obj).intValue());
+            return integer(((Number) obj).intValue());
         }
 
         if (obj instanceof Character)
         {
-            // REVISIT: per spec, convert to Short first--what's the point of converting to Short to get an int???
-            //			 (see JSF 1.0, PRD2, 5.1.2.4)
-            return new Integer(((Character) obj).charValue());
+            // REVISIT: per spec, convert to Short first. Why? Is conversion Character->Short different somehow than Character->Integer?
+            //           (see JSF 1.0, PRD2, 5.1.2.4)
+            return integer(((Character) obj).charValue());
         }
 
         // WARNING: JSF 1.0, PRD2, 5.1.2.4 requires that we throw ReferenceSyntaxException
-        //   		for Boolean. The following implementation violates the spec
+        //          for Boolean. The following implementation violates the spec
         if (obj instanceof Boolean)
         {
             return ((Boolean) obj).booleanValue() ? ONE : ZERO;
         }
 
-        // JSF spec mentiones about coercion of primitive types,
+        // JSF spec mentions about coercion of primitive types,
         //   we do not handle the primitive numeric types here,
         //   since there is no way to pass those to this function
-        throw new ReferenceSyntaxException("Unable to coerce " + obj.getClass() + " to int");
+        throw new ReferenceSyntaxException(
+            "Reference: " + _reference + "Unable to coerce " + obj.getClass() + " to int");
     }
 
     /**
-     * Coerces the supplied object to String based on coercion rules defined in
-     * JSF 1.0, PRD2, 5.1.2.4
+     * Returns an index converted to the proper class depending on index type
      *
-     * <p>
-     * Note: null object coerced to empty string--per JSF
-     * </p>
-     *
-     * @param obj the object to coerce
-     *
-     * @return String the String value of <code>obj</code>
-     *
-     * @throws ReferenceSyntaxException on eny error during coercion
+     * @param index the index to be processed
+     * @param reference the full reference, only used to give detailed error message
+     * @return String (for a "named" index), Integer (for a numeric index), ValueBinding (for a subexpression)
      */
-    private String coerceToString(Object obj)
+    private Object index(String index)
     {
-        if (obj == null)
-        {
-            return "";
-        }
+        int len = index.length();
 
-        try
-        {
-            return obj.toString();
-        }
-        catch (Throwable t)
+        // Is index empty? (case 'var[]')
+        if (len == 0)
         {
             throw new ReferenceSyntaxException(
-                "Unable to coerce " + obj.getClass() + " to String", t);
+                "Reference: " + _reference + ". Invalid indexed property--empty index");
         }
+
+        char quote = index.charAt(0);
+
+        // Case 1: index is a string literal (if quoted with ' or ")
+        if ((quote == '"') || (quote == '\''))
+        {
+            // One of var["name"] or var['name']
+            // check for cases var[''] (empty index constant) and missing closing quote
+            if ((index.charAt(len - 1) != quote) || ((len - 3) < 0))
+            {
+                throw new ReferenceSyntaxException(
+                    "Reference: " + _reference + ". Invalid indexed property");
+            }
+
+            // NOTE: this is quoted text--must be used exactly as specified--DO NOT trim()
+            return unescape(index.substring(1, len - 1));
+        }
+
+        // Case 2: index is an integer (e.g., for arrays)
+        if (StringUtils.isUnsignedInteger(index))
+        {
+            return integer(Integer.parseInt(index));
+        }
+
+        // If neither of the above, then must be a sub-reference 
+        return _application.createValueBinding("#{" + index + '}');
     }
 
     /**
      * Return the index of the matching (posibly multi-level nested) closing
      * bracket
      *
-     * @param str string to search 
+     * @param str string to search
      * @param indexofOpeningBracket the location of opening bracket to match
      *
      * @return the index of the matching closing bracket
      *
      * @throws ReferenceSyntaxException if matching bracket cannot be found
      */
-    private static int indexOfMatchingClosingBracket(String str, int indexofOpeningBracket)
+    private int indexOfMatchingClosingBracket(String str, int indexofOpeningBracket)
     {
-        int curpos       = indexofOpeningBracket + 1;
+        int len = str.length();
+        int pos = indexofOpeningBracket + 1;
 
-        int nestingDepth = 1;
-        int indexofOpen  = str.indexOf('[', curpos);
-        int indexofClose = str.indexOf(']', curpos);
-
-        for (int i = indexofOpeningBracket, len = str.length(); i < len;)
+        if (pos >= len)
         {
-            if (indexofClose < 0)
-            {
-                throw new ReferenceSyntaxException("Invalid property '" + str + "'--missing ']'");
-            }
+            throw new ReferenceSyntaxException(
+                "Reference: " + _reference
+                + ". Index incorrectly terminated: missing closing bracket");
+        }
 
-            // We check for '\' before the bracket to skip quoted brackets
-            if ((indexofOpen < 0) || (indexofClose < indexofOpen))
-            {
-                if (
-                    ((indexofClose == 0) || (str.charAt(indexofClose - 1) != '\\'))
-                            && (--nestingDepth == 0))
-                {
-                    return indexofClose;
-                }
+        char c = str.charAt(pos);
 
-                i = indexofClose = str.indexOf(']', indexofClose + 1);
+        // 1. If quoted literal, find closing quote
+        if ((c == '"') || (c == '\''))
+        {
+            pos = indexOfMatchingClosingQuote(str, pos, c) + 1;
+
+            if ((pos < len) && (str.charAt(pos) == ']'))
+            {
+                return pos;
             }
             else
             {
-                if ((indexofOpen == 0) || (str.charAt(indexofOpen - 1) != '\\'))
-                {
-                    nestingDepth++;
-                }
-
-                i = indexofOpen = str.indexOf('[', indexofOpen + 1);
+                throw new ReferenceSyntaxException(
+                    "Reference: " + _reference
+                    + ". Index incorrectly terminated: missing closing quote");
             }
         }
 
-        throw new ReferenceSyntaxException("Invalid property '" + str + "'--missing ']'");
-    }
+        // 2. Otherwise, find closing bracket
+        for (;;)
+        {
+            int indexofOpen  = str.indexOf('[', pos);
+            int indexofClose = str.indexOf(']', pos);
 
-    private Object preprocessProperty(FacesContext facesContext, Object base, Object name)
-    {
-        // Map is a special case, need to force property to String
-        return (name instanceof ValueBinding)
-        ? coerceProperty(
-            base,
-            ((ValueBinding) name).getValue(facesContext))
-        : ((base instanceof Map) ? name.toString() : name);
+            if (indexofClose < 0)
+            {
+                // No closing bracket
+                throw new ReferenceSyntaxException(
+                    "Reference: " + _reference
+                    + ". Index incorrectly terminated: missing closing bracket");
+            }
+
+            if ((indexofOpen < 0) || (indexofClose < indexofOpen))
+            {
+                // There is no opening bracket, ot closing is before opening
+                return indexofClose;
+            }
+            else
+            {
+                // Closing bracket after opening--we have nested brakets
+                pos = indexOfMatchingClosingBracket(str, indexofOpen) + 1;
+
+                // (pos >= len) will cause indexofClose to be -1 on the next iteration
+                // and properly reported as error 
+            }
+        }
     }
 
     /**
-     * Strip "${" and "}" from a modelReference, if any
+     * Returns the index of the matching closing quote, checking for escaped quotes
      *
-     * @param modelReference the model reference
-     *
-     * @return the model reference, with "${" and "}" removed
+     * @param str string to scan
+     * @param indexOpeningQuote start from this position in the string
+     * @param quote the quote char
+     * @return -1 if no match, the index of closing quote otherwise
      */
-    private static String stripBracketsFromModelReference(String modelReference)
+    private int indexOfMatchingClosingQuote(String str, int indexOfOpeningQuote, char quote)
     {
-        modelReference = modelReference.trim();
-
-        if (modelReference.startsWith("${") && modelReference.endsWith("}"))
+        for (
+            int pos = str.indexOf(quote, indexOfOpeningQuote + 1); pos >= 0;
+                    pos = str.indexOf(quote, pos + 1))
         {
-            return modelReference.substring(2, modelReference.length() - 1);
-        }
-        else
-        {
-            return modelReference;
-        }
-    }
-
-    private Object getIndex(String reference, int indexofOpeningBracket, int indexofClosingBracket)
-    {
-        char quote = reference.charAt(indexofOpeningBracket + 1);
-
-        // Case 1: index is a string literal (must be quoted with ' or ")
-        if ((quote == '"') || (quote == '\''))
-        {
-            // One of var["name"] or var['name']
-            // check for cases a[''] and no closing quote
-            if (
-                (reference.charAt(indexofClosingBracket - 1) != quote)
-                        || (indexofOpeningBracket >= (indexofClosingBracket - 3)))
+            if (!isEscaped(str, pos))
             {
-                throw new ReferenceSyntaxException("Invalid indexed property: " + reference);
+                return pos;
             }
-
-            return unescape(
-                reference.substring(indexofOpeningBracket + 2, indexofClosingBracket - 1));
         }
 
-        String index = reference.substring(indexofOpeningBracket + 1, indexofClosingBracket);
-
-        // Case 2: index is integer (e.g., for arrays)
-        if (StringUtils.isUnsignedInteger(index))
-        {
-            return Integer.valueOf(index);
-        }
-
-        return _application.getValueBinding(index);
+        // No matching quote found
+        return -1;
     }
 
+    // NOTE: after adding all the functionality, this function has become overly complicated, should rewrite
     private Object[] parse(String reference)
     {
-        if ((reference == null) || (reference.length() == 0))
-        {
-            throw new ReferenceSyntaxException("Invalid reference: " + reference);
-        }
-
-        ArrayList parsedReference = new ArrayList();
+        List parsedReference = new ArrayList();
 
         for (int pos = 0, len = reference.length(); pos < len;)
         {
@@ -548,19 +627,12 @@ extends ValueBinding
                 if ((pos == 0) || (reference.charAt(pos - 1) == '.'))
                 {
                     throw new ReferenceSyntaxException(
-                        "Invalid indexed property '" + reference + "'--'[' following '.'");
+                        "Reference: " + _reference + ". Invalid indexed property '[' following '.'");
                 }
 
-                int indexofClosingBracket = indexOfMatchingClosingBracket(reference, pos);
+                int    indexofClosingBracket = indexOfMatchingClosingBracket(reference, pos);
 
-                // Is index empty? (case 'a.b[]')
-                if (pos == (indexofClosingBracket - 1))
-                {
-                    throw new ReferenceSyntaxException(
-                        "Invalid indexed property '" + reference + "'--empty index");
-                }
-
-                Object index = getIndex(reference, pos, indexofClosingBracket);
+                Object index = index(reference.substring(pos + 1, indexofClosingBracket).trim());
                 parsedReference.add(index);
                 pos = indexofClosingBracket + 1;
 
@@ -584,18 +656,20 @@ extends ValueBinding
             }
 
             // newpos is the end of the property name
-            if (pos == newpos)
+            String propname = reference.substring(pos, newpos).trim();
+
+            if (propname.length() == 0)
             {
                 if (pos == 0)
                 {
                     throw new ReferenceSyntaxException(
-                        "Invalid property '" + reference + "'--starting with '"
+                        "Reference: " + _reference + ". Invalid property starting with '"
                         + reference.charAt(pos) + "'");
                 }
                 else if (reference.charAt(pos - 1) == ']')
                 {
-                    // case 'a[0].b', skip the dot
-                    pos++;
+                    // case 'a[0].b' or 'a[0][1]' (or, whitespace between . and [ or ] and [), skip
+                    pos = (newpos == indexofDot) ? (newpos + 1) : newpos;
 
                     continue;
                 }
@@ -603,18 +677,39 @@ extends ValueBinding
                 {
                     // name is empty (case 'a..b')?
                     throw new ReferenceSyntaxException(
-                        "Invalid property '" + reference + "'--double '.'");
+                        "Reference: " + _reference + ". Invalid property, double '.'");
                 }
             }
 
-            parsedReference.add(reference.substring(pos, newpos));
+            parsedReference.add(propname);
             pos = (newpos == indexofDot) ? (newpos + 1) : newpos;
         }
 
         return parsedReference.toArray();
     }
 
-    private static String unescape(String str)
+    /**
+     * Strip "#{" and "}" from a modelReference, if any
+     *
+     * @param modelReference the model reference
+     *
+     * @return the model reference, with "#{" and "}" removed
+     */
+    private String stripBracketsFromModelReference(String modelReference)
+    {
+        if (modelReference.startsWith("#{") && modelReference.endsWith("}"))
+        {
+            return modelReference.substring(2, modelReference.length() - 1);
+        }
+        else
+        {
+            throw new ReferenceSyntaxException(
+                "Reference: " + _reference + ". Reference must be enclosed in #{ }");
+        }
+    }
+
+    // NOTE: this function MUST NOT trim() the value
+    private String unescape(String str)
     {
         int indexofBackslash = str.indexOf('\\');
 
@@ -624,23 +719,24 @@ extends ValueBinding
         }
 
         int          lastIndex = str.length() - 1;
-        StringBuffer sb     = new StringBuffer(lastIndex);
-        int          curpos = 0;
+        StringBuffer sb  = new StringBuffer(lastIndex);
+        int          pos = 0;
 
         do
         {
             // check for ["ashklhj\"] error
             if (indexofBackslash == lastIndex)
             {
-                throw new ReferenceSyntaxException("'\\' at the end of index string '" + str + "'");
+                throw new ReferenceSyntaxException(
+                    "Reference: " + _reference + ". '\\' at the end of index string '" + str + "'");
             }
 
-            sb.append(str.substring(curpos, indexofBackslash));
-            curpos               = indexofBackslash + 1;
-            indexofBackslash     = str.indexOf('\\', curpos + 1);
+            sb.append(str.substring(pos, indexofBackslash));
+            pos                  = indexofBackslash + 1;
+            indexofBackslash     = str.indexOf('\\', pos + 1);
         }
         while (indexofBackslash >= 0);
 
-        return sb.append(str.substring(curpos)).toString();
+        return sb.append(str.substring(pos)).toString();
     }
 }
