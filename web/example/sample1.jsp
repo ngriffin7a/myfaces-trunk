@@ -39,7 +39,10 @@
     <table border="1"><tr>
         <td valign="top" width="140"><%@ include file="inc/navigation.jsp"  %></td>
         <td align="left" width="640">
-            <!--x:save_state id="sp3" modelReference="calcForm.result" /-->
+
+            <x:save_state id="save1" modelReference="calcForm.number1" />
+            <x:save_state id="save2" modelReference="calcForm.number2" />
+            <x:save_state id="save3" modelReference="calcForm.result" />
 
             <x:message_list id="messageList" />
 

@@ -38,8 +38,6 @@
 
             <x:message_list id="messageList" />
 
-            <!--x:save_state id="stateid" modelReference="q_form.name" /-->
-
             <f:form id="q_form" formName="q_form">
                 <f:textentry_input id="text"
                                    modelReference="q_form.text"

@@ -63,22 +63,22 @@ public class ReconstituteRequestTreePhase
         RenderKitFactory rkFactory = (RenderKitFactory)FactoryFinder.getFactory(FactoryFinder.RENDER_KIT_FACTORY);
         RenderKit renderKit = rkFactory.getRenderKit(facesContext.getResponseTree().getRenderKitId());
 
-        Renderer renderer = null;
+        Renderer stateRenderer = null;
         try
         {
-            renderer = renderKit.getRenderer(StateRenderer.TYPE);
+            stateRenderer = renderKit.getRenderer(StateRenderer.TYPE);
         }
         catch (Exception e)
         {
             //No StateRenderer
         }
 
-        if (renderer != null)
+        if (stateRenderer != null)
         {
             try
             {
-                //LogUtil.logInfo("StateRenderer found, calling decode...");
-                renderer.decode(facesContext, null);
+                LogUtil.getLogger().finest("StateRenderer found, calling decode...");
+                stateRenderer.decode(facesContext, null);
             }
             catch (IOException e)
             {
