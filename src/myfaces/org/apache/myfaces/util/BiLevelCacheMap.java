@@ -43,6 +43,8 @@ import java.util.Set;
 public abstract class BiLevelCacheMap implements Map
 {
     //~ Instance fields ----------------------------------------------------------------------------
+    
+    private static final int INITIAL_SIZE_L1 = 32;
 
     /** To preinitialize <code>_cacheL1</code> with default values use an initialization block */
     protected Map       _cacheL1;
@@ -51,16 +53,14 @@ public abstract class BiLevelCacheMap implements Map
     private final Map   _cacheL2;
     private final int   _mergeThreshold;
     private int         _missCount;
-    private final int   _initialSizeL1;
 
     //~ Constructors -------------------------------------------------------------------------------
 
-    public BiLevelCacheMap(int initialSizeL1, int initialSizeL2, int mergeThreshold)
+    public BiLevelCacheMap(int mergeThreshold)
     {
-        _cacheL1            = new HashMap(initialSizeL1);
-        _cacheL2            = new HashMap(initialSizeL2);
+        _cacheL1            = new HashMap(INITIAL_SIZE_L1);
+        _cacheL2            = new HashMap(HashMapUtils.calcCapacity(mergeThreshold));
         _mergeThreshold     = mergeThreshold;
-        _initialSizeL1      = initialSizeL1;
     }
 
     //~ Methods ------------------------------------------------------------------------------------
@@ -75,7 +75,7 @@ public abstract class BiLevelCacheMap implements Map
     public void clear()
     {
         synchronized (_cacheL2) {
-            _cacheL1 = new HashMap(_initialSizeL1);
+            _cacheL1 = new HashMap(); // dafault size
             _cacheL2.clear();
         }
     }

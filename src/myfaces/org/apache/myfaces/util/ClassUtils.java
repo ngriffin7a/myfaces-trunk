@@ -53,8 +53,8 @@ public class ClassUtils
     
 // Array of void is an invalid type
 //    public static final Class VOID_ARRAY_CLASS    = classForName("[V");
-    public static final Map JAVATYPE_LOOKUP_MAP   =
-        new BiLevelCacheMap(1024, 128, 80)
+    public static final Map s_javatypeLookupMap   =
+        new BiLevelCacheMap(90)
         {
             {
                 // Pre-initialize cache with built-in types 
@@ -120,6 +120,7 @@ public class ClassUtils
             // fallback
             return Class.forName(type, false, ClassUtils.class.getClassLoader());
         }
+// we do not initialize (second param to forName() is false) for faster startup
 //      catch (ExceptionInInitializerError e)
 //      {
 //          log.error("Error in static initializer of class " + type + ": " + e.getMessage(), e);
@@ -129,10 +130,10 @@ public class ClassUtils
 
     public static Class javaTypeToClass(String javaType)
     {
-        Object clazz = JAVATYPE_LOOKUP_MAP.get(javaType);
+        Object clazz = s_javatypeLookupMap.get(javaType);
         if (clazz instanceof String)
         {
-            return classForName(clazz.toString());
+            return classForName((String) clazz);
         }
 
         return (Class) clazz;
@@ -175,15 +176,19 @@ public class ClassUtils
         {
             return null;
         }
-        if (desiredClass.equals(String.class))
-        {
-            return value;
-        }
+// Cannot do this anymore, as value is Object now
+//        if (desiredClass == String.class)
+//        {
+//            return value;
+//        }
         
         try
         {
+            // Use coersion implemented by JSP EL for consistency with EL expressions.
+            // Additionally, it caches some of the coersions.
             return Coercions.coerce(value, desiredClass, s_logger);
 
+// Old code, if we keep the above, should remove it later            
 //            if (desiredClass.equals(Byte.TYPE) || desiredClass.equals(Byte.class))
 //            {
 //                return new Byte(value.trim());
@@ -220,7 +225,7 @@ public class ClassUtils
         }
         catch (ELException e)
         {
-            log.error("NumberFormatException value '" + value + "' type " + desiredClass.getName());
+            log.error("Coersion error value '" + value + "' type " + desiredClass.getName(), e);
             throw new FacesException(e);
         }
     }

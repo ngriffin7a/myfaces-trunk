@@ -71,7 +71,7 @@ public class ValueBindingImpl extends ValueBinding implements StateHolder
      * Overhead is small, only one extra HashMap
      */
     private static final BiLevelCacheMap s_expressions =
-        new BiLevelCacheMap(256, 128, 100)
+        new BiLevelCacheMap(90)
         {
             protected Object newInstance(Object key)
             {

@@ -58,7 +58,7 @@ public class ApplicationImpl
     //~ Instance fields ----------------------------------------------------------------------------
 
     private final Map            _valueBindingCache =
-        new BiLevelCacheMap(256, 128, 100)
+        new BiLevelCacheMap(90)
         {
             protected Object newInstance(Object key)
             {
