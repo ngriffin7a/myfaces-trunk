@@ -36,6 +36,9 @@ import java.util.List;
  * @author Manfred Geiler
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.9  2004/06/22 14:33:29  royalts
+ * no message
+ *
  * Revision 1.8  2004/06/21 16:01:57  royalts
  * setSortAscending(...) and setSortColumn have to update model their own, because processUdates won't be executed.
  *
@@ -264,7 +267,7 @@ public class HtmlDataTable
         }
     }
 
-
+    // TODO: manolito still need this ?? (royalts)
     public int getFirst()
     {
         if (_restoredValue != null)
@@ -274,6 +277,19 @@ public class HtmlDataTable
         return super.getFirst();
     }
 
+    // TODO: manolito still need this ?? (royalts)
+    public void setFirst(int first)
+    {
+        if (_restoredValue != null)
+        {
+            _restoredValue.setFirst(first);
+        }
+        super.setFirst(first);
+    }
+
+    // TODO: manolito still need this ?? (royalts)
+    // getRows(...) without overwriting setRows might couse problems
+    // see setFirst(...)
     public int getRows()
     {
         if (_restoredValue != null)

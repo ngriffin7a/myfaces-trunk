@@ -76,6 +76,11 @@ class _SerializableDataModel
         return _first;
     }
 
+    public void setFirst(int first)
+    {
+        _first = first;
+    }
+
     public int getRows()
     {
         return _rows;
@@ -83,9 +88,10 @@ class _SerializableDataModel
 
     public boolean isRowAvailable()
     {
-        return _rowIndex >= _first && 
+        return _rowIndex >= _first &&
             _rowIndex < _first + _rows &&
-            _rowIndex < _rowCount;
+            _rowIndex < _rowCount &&
+            _list.size() > _rowIndex - _first;
     }
 
     public int getRowCount()
