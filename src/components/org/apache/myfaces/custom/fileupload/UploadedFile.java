@@ -17,6 +17,7 @@ package net.sourceforge.myfaces.custom.fileupload;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Serializable;
 
 
 
@@ -24,6 +25,9 @@ import java.io.InputStream;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  *          $Log$
+ *          Revision 1.6  2004/07/12 03:04:32  svieujot
+ *          Make Serializable to be able to save it in the FacesContext
+ *
  *          Revision 1.5  2004/07/01 21:53:05  mwessendorf
  *          ASF switch
  *
@@ -35,7 +39,7 @@ import java.io.InputStream;
  *          removed default creation of file contents byte array
  *
  */
-public interface UploadedFile
+public interface UploadedFile extends Serializable
 {
 
 
