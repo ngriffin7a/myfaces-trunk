@@ -39,44 +39,63 @@ import javax.servlet.ServletContextListener;
  *
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
+ * $Log$
+ * Revision 1.19  2004/04/16 13:21:39  manolito
+ * Weblogic startup issue
+ *
  */
 public class StartupServletContextListener
         implements ServletContextListener
 {
     private static final Log log = LogFactory.getLog(StartupServletContextListener.class);
-    
-    public static ThreadLocal s_externalContext = new ThreadLocal(); 
+
+    static final String FACES_INIT_DONE
+            = StartupServletContextListener.class.getName() + ".FACES_INIT_DONE";
 
     public void contextInitialized(ServletContextEvent event)
     {
+        initFaces(event.getServletContext());
+    }
+
+    public static void initFaces(ServletContext servletContext)
+    {
         try
         {
-            //TODO: Add default factories to FactoryFinder before parsing config!
-            
-            ServletContext servletContext = event.getServletContext();
-            ExternalContext externalContext = new ServletExternalContextImpl(servletContext,
-                                                                             null,
-                                                                             null);
-            
-            // set in ThreadLocal so that config methods cat use it
-            // TODO: what's this for ?!
-            s_externalContext.set(externalContext);
+            Boolean b = (Boolean)servletContext.getAttribute(FACES_INIT_DONE);
 
-            FacesConfigFactory fcf = MyFacesFactoryFinder.getFacesConfigFactory(externalContext);
-            FacesConfig facesConfig = fcf.getFacesConfig(externalContext);
+            if (b == null || b.booleanValue() == false)
+            {
+                log.trace("Initializing MyFaces");
 
-            new FacesConfigurator(facesConfig, externalContext).configure();
+                //TODO: Add default factories to FactoryFinder before parsing config!
 
-            // parse web.xml
-            WebXml.init(externalContext);
+                ExternalContext externalContext = new ServletExternalContextImpl(servletContext,
+                                                                                 null,
+                                                                                 null);
+
+                FacesConfigFactory fcf = MyFacesFactoryFinder.getFacesConfigFactory(externalContext);
+                FacesConfig facesConfig = fcf.getFacesConfig(externalContext);
+
+                new FacesConfigurator(facesConfig, externalContext).configure();
+
+                // parse web.xml
+                WebXml.init(externalContext);
+
+                servletContext.setAttribute(FACES_INIT_DONE, Boolean.TRUE);
+            }
+            else
+            {
+                log.info("MyFaces already initialized");
+            }
         }
         catch (Exception ex)
         {
             log.error("Error initializing ServletContext", ex);
             ex.printStackTrace();
         }
-        log.info("ServletContext '" + event.getServletContext().getRealPath("/") + "' initialized.");
+        log.info("ServletContext '" + servletContext.getRealPath("/") + "' initialized.");
     }
+
 
     public void contextDestroyed(ServletContextEvent e)
     {

@@ -23,67 +23,46 @@ import org.apache.commons.logging.LogFactory;
 
 import javax.faces.webapp.FacesServlet;
 import javax.servlet.*;
+import java.io.IOException;
 
 /**
- * DOCUMENT ME!
+ * Derived FacesServlet that can be used for debugging purpose
+ * and to fix the Weblogic startup issue (FacesServlet is initialized before ServletContextListener).
+ *
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
+ * $Log$
+ * Revision 1.16  2004/04/16 13:21:39  manolito
+ * Weblogic startup issue
  *
- * @deprecated TODO: remove
  */
 public class MyFacesServlet
-    implements Servlet
+    extends FacesServlet
 {
     private static final Log log = LogFactory.getLog(MyFacesServlet.class);
-
-    private final FacesServlet _facesServlet = new FacesServlet();
-
-    public void destroy()
-    {
-        _facesServlet.destroy();
-    }
-
-    public ServletConfig getServletConfig()
-    {
-        return _facesServlet.getServletConfig();
-    }
-
-    public String getServletInfo()
-    {
-        return _facesServlet.getServletInfo();
-    }
 
     public void init(ServletConfig servletConfig)
         throws ServletException
     {
-        _facesServlet.init(servletConfig);
+        //Check, if ServletContextListener already called
+        ServletContext servletContext = servletConfig.getServletContext();
+        Boolean b = (Boolean)servletContext.getAttribute(StartupServletContextListener.FACES_INIT_DONE);
+        if (b == null || b.booleanValue() == false)
+        {
+            log.warn("ServletContextListener not yet called");
+            StartupServletContextListener.initFaces(servletConfig.getServletContext());
+        }
+        super.init(servletConfig);
         log.info("MyFacesServlet for context '" + servletConfig.getServletContext().getRealPath("/") + "' initialized.");
     }
 
     public void service(ServletRequest request, ServletResponse response)
-        throws ServletException
+            throws IOException,
+                   ServletException
     {
-        try
-        {
-            if (log.isTraceEnabled()) log.trace("MyFacesServlet service start");
-            _facesServlet.service(request, response);
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace(System.err);
-            Throwable t = e.getCause();
-            while (t != null)
-            {
-                System.err.println("Root cause:");
-                t.printStackTrace(System.err);
-                t = t.getCause();
-            }
-            throw new ServletException(e);
-        }
-        finally
-        {
-            if (log.isTraceEnabled()) log.trace("MyFacesServlet service end");
-        }
+        if (log.isTraceEnabled()) log.trace("MyFacesServlet service start");
+        super.service(request, response);
+        if (log.isTraceEnabled()) log.trace("MyFacesServlet service finished");
     }
 
 }
