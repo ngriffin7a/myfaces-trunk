@@ -36,6 +36,9 @@ import java.io.IOException;
  * @author Martin Marinschek
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.16  2005/01/09 09:18:54  mmarinschek
+ * Exception thrown
+ *
  * Revision 1.15  2005/01/09 09:10:56  mmarinschek
  * prepare call-back methods for renderer
  *
@@ -130,6 +133,7 @@ extends HtmlRenderer
     }
 
     protected void encodeBefore(FacesContext facesContext, ResponseWriter writer, UIComponent uiComponent)
+        throws IOException
     {
     }
 
@@ -159,6 +163,7 @@ extends HtmlRenderer
     }
 
     protected void encodeAfter(FacesContext facesContext, ResponseWriter writer, UIComponent uiComponent)
+        throws IOException
     {
     }
 }
