@@ -164,6 +164,15 @@
                 If true, this item will be open.
             </description>
         </attribute>
+        <attribute>
+            <name>active</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>java.lang.String</type>
+            <description>
+                If true, this item will be active.
+            </description>
+        </attribute>
         &ui_component_attributes;
         &ui_command_attributes;
         &html_universal_attributes;

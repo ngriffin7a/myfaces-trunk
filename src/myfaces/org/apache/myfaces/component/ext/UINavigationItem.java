@@ -46,6 +46,7 @@ public class UINavigationItem
     extends MyFacesUICommand
 {
     public static final String OPEN_PROP = "open";
+    public static final String ACTIVE_PROP = "active";
     private boolean _open = false;
     private boolean _reconstituted = false;
     private boolean _active = false;

@@ -67,6 +67,11 @@ public class NavigationItemTag
         setComponentPropertyBoolean(UINavigationItem.OPEN_PROP, b);
     }
 
+    public void setActive(String b)
+    {
+        setComponentPropertyBoolean(UINavigationItem.ACTION_PROP, b);
+    }
+
     // user role attributes --> already implemented in MyFacesTag
 
     // UIComponent attributes --> already implemented in MyFacesTag
