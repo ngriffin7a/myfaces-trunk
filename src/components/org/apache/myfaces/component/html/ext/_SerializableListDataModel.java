@@ -60,6 +60,10 @@ class _SerializableListDataModel
         {
             int size = _rows > 0 && _rows < _rowCount ? _rows : _rowCount;
             _list = new ArrayList(size);
+            if (size > _rowCount - _first)
+            {
+                size = _rowCount - _first;
+            }
             for (int i = 0; i < size; i++)
             {
                 _list.add(list.get(_first + i));
