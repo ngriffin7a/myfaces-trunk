@@ -18,16 +18,12 @@
  */
 package net.sourceforge.myfaces.application;
 
-import net.sourceforge.myfaces.application.jsp.JspStateManagerImpl;
-import net.sourceforge.myfaces.application.jsp.JspViewHandlerImpl;
-import net.sourceforge.myfaces.el.MethodBindingImpl;
-import net.sourceforge.myfaces.el.PropertyResolverImpl;
-import net.sourceforge.myfaces.el.ValueBindingImpl;
-import net.sourceforge.myfaces.el.VariableResolverImpl;
-import net.sourceforge.myfaces.util.BiLevelCacheMap;
-import net.sourceforge.myfaces.util.ClassUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Locale;
+import java.util.Map;
 
 import javax.faces.FacesException;
 import javax.faces.application.Application;
@@ -37,10 +33,24 @@ import javax.faces.application.ViewHandler;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
-import javax.faces.el.*;
+import javax.faces.el.MethodBinding;
+import javax.faces.el.PropertyResolver;
+import javax.faces.el.ReferenceSyntaxException;
+import javax.faces.el.ValueBinding;
+import javax.faces.el.VariableResolver;
 import javax.faces.event.ActionListener;
 import javax.faces.validator.Validator;
-import java.util.*;
+
+import net.sourceforge.myfaces.application.jsp.JspStateManagerImpl;
+import net.sourceforge.myfaces.el.MethodBindingImpl;
+import net.sourceforge.myfaces.el.PropertyResolverImpl;
+import net.sourceforge.myfaces.el.ValueBindingImpl;
+import net.sourceforge.myfaces.el.VariableResolverImpl;
+import net.sourceforge.myfaces.util.BiLevelCacheMap;
+import net.sourceforge.myfaces.util.ClassUtils;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 
 /**
@@ -91,13 +101,14 @@ public class ApplicationImpl
     {
         // set default implementation in constructor
         // pragmatic approach, no syncronizing will be needed in get methods
-        _viewHandler = new JspViewHandlerImpl();
+//        _viewHandler = new JspViewHandlerImpl();
+		_viewHandler = new ViewHandlerSelector();
         _navigationHandler = new NavigationHandlerImpl();
         _variableResolver = new VariableResolverImpl();
         _propertyResolver = new PropertyResolverImpl();
         _actionListener = new ActionListenerImpl();
         _defaultRenderKitId = null;
-        _stateManager = new JspStateManagerImpl(); 
+        _stateManager = new StateManagerSelector(); 
         if (log.isTraceEnabled()) log.trace("New Application instance created");
     }
 

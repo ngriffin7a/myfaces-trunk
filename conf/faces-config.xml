@@ -246,7 +246,6 @@
 
   <!-- MyFaces extension components -->
   <!-- (in alphabetical order) -->
-
   <component>
     <component-type>net.sourceforge.myfaces.HtmlCommandLink</component-type>
     <component-class>net.sourceforge.myfaces.component.html.MyFacesHtmlCommandLink</component-class>
@@ -315,6 +314,21 @@
   <component>
     <component-type>net.sourceforge.myfaces.SaveState</component-type>
     <component-class>net.sourceforge.myfaces.component.ext.UISaveState</component-class>
+  </component>
+  
+  <component>
+    <component-type>net.sourceforge.myfaces.Screen</component-type>
+    <component-class>net.sourceforge.myfaces.component.ext.Screen</component-class>
+  </component>
+
+  <component>
+    <component-type>net.sourceforge.myfaces.Toolbar</component-type>
+    <component-class>net.sourceforge.myfaces.component.ext.Toolbar</component-class>
+  </component>
+
+  <component>
+    <component-type>net.sourceforge.myfaces.Tree</component-type>
+    <component-class>net.sourceforge.myfaces.component.ext.Tree</component-class>
   </component>
 
 
@@ -722,7 +736,23 @@
           <renderer-type>net.sourceforge.myfaces.Messages</renderer-type>
           <renderer-class>net.sourceforge.myfaces.renderkit.html.HtmlMessagesRenderer</renderer-class>
       </renderer>
+      
+      <renderer>
+        <component-family>javax.faces.Form</component-family>
+        <renderer-type>net.sourceforge.myfaces.Screen</renderer-type>
+        <renderer-class>net.sourceforge.myfaces.renderkit.html.ext.ScreenRenderer</renderer-class>
+      </renderer>
 
+      <renderer>
+        <component-family>smile</component-family>
+        <renderer-type>net.sourceforge.myfaces.Toolbar</renderer-type>
+        <renderer-class>net.sourceforge.myfaces.renderkit.html.ext.ToolbarRenderer</renderer-class>
+      </renderer>
+
+      <renderer>
+        <component-family>smile</component-family>
+        <renderer-type>net.sourceforge.myfaces.Tree</renderer-type>
+        <renderer-class>net.sourceforge.myfaces.renderkit.html.ext.TreeRenderer</renderer-class>
+      </renderer>
     </render-kit>
-
 </faces-config>

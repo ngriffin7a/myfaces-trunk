@@ -155,12 +155,14 @@ public class ServletFacesContextImpl
         List lst = new ArrayList();
         for (int i = 0; i < _messages.size(); i++)
         {
-            String savedClientId = (String) _messageClientIds.get(i);
-            if (
-                ((savedClientId == NULL_DUMMY) && (clientId == null))
-                        || savedClientId.equals(clientId))
+            Object savedClientId = _messageClientIds.get(i);
+            if ((savedClientId == NULL_DUMMY) && (clientId == null))
             {
                 lst.add(_messages.get(i));
+            }
+            if(savedClientId instanceof String && ((String)savedClientId).equals(clientId)) 
+            {
+				lst.add(_messages.get(i));
             }
         }
         return lst.iterator();

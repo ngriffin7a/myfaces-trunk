@@ -82,6 +82,16 @@
         </description>
     </context-param>
 
+	<context-param>
+		<param-name>net.sourceforge.smile.descriptor.package</param-name>
+		<param-value>net.sourceforge.myfaces.examples.cbp</param-value>
+		<description>The package where the screen descriptors are located.</description>
+	</context-param>		
+	<context-param>
+		<param-name>net.sourceforge.smile.descriptor.postfix</param-name>
+		<param-value></param-value>
+		<description>The postfix to append to descriptor class names.</description>
+	</context-param>	
 
     <!-- WelcomeFile Filter -->
     <!--

@@ -299,7 +299,7 @@ public class RendererUtils
         if(uiComponent == null)
             throw new NullPointerException("uiComponent may not be null");
 
-        if (compClass != null && !(compClass.isInstance(uiComponent)))
+        if (compClass != null && !(compClass.isAssignableFrom(uiComponent.getClass())))
         {
             throw new IllegalArgumentException("uiComponent is instanceof "
                 + uiComponent.getClass().getName()+" and not of "+compClass.getName()+" as it should be");
