@@ -34,7 +34,7 @@
         <mkdir dir="${temp.dir}/myfaces-jar/classes"/>
         <javac srcdir="${myfaces.src}"
                destdir="${temp.dir}/myfaces-jar/classes"
-               optimize="off"
+               optimize="${javac.optimize}"
                classpathref="project.class.path">
         </javac>
 

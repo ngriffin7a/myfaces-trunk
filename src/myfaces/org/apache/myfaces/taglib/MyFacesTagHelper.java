@@ -97,90 +97,76 @@ public class MyFacesTagHelper
 
     //property helpers
 
-    protected void setComponentPropertyString(String attrName, Object attrValue)
+    protected void setComponentPropertyObject(String attrName, Object attrValue)
     {
         if (_attributes == null)
         {
             _attributes = new HashSet();
         }
-        _attributes.add(new Attribute(attrName, attrValue.toString(), true));
+        _attributes.add(new Attribute(attrName, attrValue, true));
+    }
+
+    protected void setComponentPropertyString(String attrName, Object attrValue)
+    {
+        setComponentPropertyObject(attrName, attrValue.toString());
     }
 
     protected void setComponentPropertyBoolean(String attrName, Object attrValue)
     {
+        if (attrValue instanceof Boolean)
+        {
+            setComponentPropertyObject(attrName, attrValue);
+        }
+        else
+        {
+            setComponentPropertyObject(attrName,
+                                       Boolean.valueOf(attrValue.toString()));
+        }
+    }
+
+
+    protected void setRendererAttributeObject(String attrName, Object attrValue)
+    {
         if (_attributes == null)
         {
             _attributes = new HashSet();
         }
-
-        if (attrValue instanceof Boolean)
-        {
-            _attributes.add(new Attribute(attrName,
-                                          attrValue,
-                                          true));
-        }
-        else
-        {
-            _attributes.add(new Attribute(attrName,
-                                          Boolean.valueOf(attrValue.toString()),
-                                          true));
-        }
+        _attributes.add(new Attribute(attrName, attrValue, false));
     }
 
     protected void setRendererAttributeString(String attrName, Object attrValue)
     {
-        if (_attributes == null)
-        {
-            _attributes = new HashSet();
-        }
-        _attributes.add(new Attribute(attrName, attrValue.toString(), false));
+        setRendererAttributeObject(attrName, attrValue.toString());
     }
 
     protected void setRendererAttributeBoolean(String attrName, Object attrValue)
     {
-        if (_attributes == null)
-        {
-            _attributes = new HashSet();
-        }
-
         if (attrValue instanceof Boolean)
         {
-            _attributes.add(new Attribute(attrName,
-                                          attrValue,
-                                          false));
+            setRendererAttributeObject(attrName, attrValue);
         }
         else
         {
-            _attributes.add(new Attribute(attrName,
-                                          Boolean.valueOf(attrValue.toString()),
-                                          false));
+            setRendererAttributeObject(attrName,
+                                       Boolean.valueOf(attrValue.toString()));
         }
     }
 
     protected void setRendererAttributeInteger(String attrName, Object attrValue)
     {
-        if (_attributes == null)
-        {
-            _attributes = new HashSet();
-        }
-
         if (attrValue instanceof Integer)
         {
-            _attributes.add(new Attribute(attrName,
-                                          attrValue,
-                                          false));
+            setRendererAttributeObject(attrName, attrValue);
         }
         else if (attrValue instanceof Number)
         {
-            _attributes.add(new Attribute(attrName,
-                                          new Integer(((Number)attrValue).intValue()),
-                                          false));
+            setRendererAttributeObject(attrName,
+                                       new Integer(((Number)attrValue).intValue()));
         }
         else
         {
-            _attributes.add(new Attribute(attrName,
-                                          new Integer(attrValue.toString()),
-                                          false));
+            setRendererAttributeObject(attrName,
+                                       new Integer(attrValue.toString()));
         }
     }
 

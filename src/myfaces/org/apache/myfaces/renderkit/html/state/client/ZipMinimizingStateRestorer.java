@@ -63,7 +63,7 @@ public class ZipMinimizingStateRestorer
             int c;
             while ((c = unzippedStream.read()) != -1)
             {
-                buf.append((char)c); //TODO: Encoding ?!
+                buf.append((char)c);
             }
 
             unzippedStream.close();

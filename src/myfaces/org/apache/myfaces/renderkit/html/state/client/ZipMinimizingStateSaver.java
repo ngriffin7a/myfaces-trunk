@@ -81,7 +81,6 @@ public class ZipMinimizingStateSaver
             return s;
         }
 
-        //OutputStream wos = new WriterOutputStream(origWriter, ZippingStateRenderer.ZIP_CHARSET);
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         OutputStream encStream = Base64.getEncoder(baos);
         OutputStream zos = new GZIPOutputStream(encStream);
@@ -113,37 +112,5 @@ public class ZipMinimizingStateSaver
         facesContext.getServletRequest().setAttribute(ZIPPED_PARAMS_ATTR, s);
         return s;
     }
-
-    /*
-    private static class WriterOutputStream
-        extends OutputStream
-    {
-        private Writer _writer;
-        private String _encoding;
-
-        public WriterOutputStream(Writer writer, String encoding)
-        {
-            _writer = writer;
-            _encoding = encoding;
-        }
-
-        private byte[] buf = new byte[1];
-        public void write(int b) throws IOException
-        {
-            buf[0] = (byte)b;
-            _writer.write(new String(buf, _encoding));
-        }
-
-        public void write(byte b[]) throws IOException
-        {
-            _writer.write(new String(b, _encoding));
-        }
-
-        public void write(byte b[], int off, int len) throws IOException
-        {
-            _writer.write(new String(b, off, len, _encoding));
-        }
-    }
-    */
 
 }

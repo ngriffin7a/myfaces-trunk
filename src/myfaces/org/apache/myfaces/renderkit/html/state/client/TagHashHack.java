@@ -102,18 +102,6 @@ public class TagHashHack
             }
         }
 
-        /*
-        if (MyFacesConfig.isJspInfoCaching(facesContext.getServletContext()))
-        {
-            //Save tagHash in parsed tree and do not save in client
-            //FIXME: If there is already a tagHash in the parsed tree, we should
-            //rather merge new entries into the existing map, than replace the
-            //whole map!
-            parsedTree.getRoot().setAttribute(TAG_HASH_ATTR, saveTagHash);
-            return null;
-        }
-        */
-
         if (SERIALIZED_MAP)
         {
             return ConverterUtils.serializeAndEncodeBase64(saveTagHash);

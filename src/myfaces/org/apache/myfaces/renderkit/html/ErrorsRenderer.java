@@ -21,6 +21,7 @@ package net.sourceforge.myfaces.renderkit.html;
 import net.sourceforge.myfaces.renderkit.attr.*;
 import net.sourceforge.myfaces.renderkit.html.attr.HTMLEventHandlerAttributes;
 import net.sourceforge.myfaces.renderkit.html.attr.HTMLUniversalAttributes;
+import net.sourceforge.myfaces.renderkit.html.util.HTMLUtil;
 import net.sourceforge.myfaces.component.UIOutput;
 import net.sourceforge.myfaces.component.CommonComponentAttributes;
 
@@ -35,9 +36,6 @@ import java.util.Iterator;
 /**
  * ErrorsRenderer as specified in JSF.7.6.5
  *
- * TODO: HTML universal and event handler attributes
- * TODO: user role attributes
- *
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
@@ -45,8 +43,8 @@ public class ErrorsRenderer
     extends HTMLRenderer
     implements CommonComponentAttributes,
                CommonRendererAttributes,
-    HTMLUniversalAttributes,
-    HTMLEventHandlerAttributes,
+               HTMLUniversalAttributes,
+               HTMLEventHandlerAttributes,
                ErrorsRendererAttributes,
                UserRoleAttributes
 {
@@ -128,7 +126,13 @@ public class ErrorsRenderer
         {
             if (ulLayout)
             {
-                writer.write("\n<ul>");
+                writer.write("\n<ul");
+
+                HTMLUtil.renderCssClass(writer, uiComponent, OUTPUT_CLASS_ATTR);
+                HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML_UNIVERSAL_ATTRIBUTES);
+                HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML_EVENT_HANDLER_ATTRIBUTES);
+
+                writer.write(">");
                 while (it.hasNext())
                 {
                     Message msg = (Message)it.next();
@@ -144,21 +148,19 @@ public class ErrorsRenderer
             {
                 while (it.hasNext())
                 {
+                    writer.write("<span");
+                    HTMLUtil.renderCssClass(writer, uiComponent, OUTPUT_CLASS_ATTR);
+                    HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML_UNIVERSAL_ATTRIBUTES);
+                    HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML_EVENT_HANDLER_ATTRIBUTES);
+                    writer.write(">");
+
                     Message msg = (Message)it.next();
-                    String cssClass = (String)uiComponent.getAttribute(OUTPUT_CLASS_ATTR);
-                    if (cssClass != null)
-                    {
-                        writer.write("<span class=\"");
-                        writer.write(cssClass);
-                        writer.write("\">");
-                    }
                     writer.write(msg.getSummary());
                     writer.write(": ");
                     writer.write(msg.getDetail());
-                    if (cssClass != null)
-                    {
-                        writer.write("</span>");
-                    }
+
+                    writer.write("</span>");
+
                     if (it.hasNext())
                     {
                         writer.write("<br>");

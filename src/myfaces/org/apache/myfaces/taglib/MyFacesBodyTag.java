@@ -126,6 +126,11 @@ public abstract class MyFacesBodyTag
 
 
     //property helpers
+    protected void setComponentPropertyObject(String attrName, Object attrValue)
+    {
+        _helper.setComponentPropertyObject(attrName, attrValue);
+    }
+
     protected void setComponentPropertyString(String attrName, Object attrValue)
     {
         _helper.setComponentPropertyString(attrName, attrValue);
@@ -134,6 +139,11 @@ public abstract class MyFacesBodyTag
     protected void setComponentPropertyBoolean(String attrName, Object attrValue)
     {
         _helper.setComponentPropertyBoolean(attrName, attrValue);
+    }
+
+    protected void setRendererAttributeObject(String attrName, Object attrValue)
+    {
+        _helper.setRendererAttributeObject(attrName, attrValue);
     }
 
     protected void setRendererAttributeString(String attrName, Object attrValue)
@@ -179,7 +189,7 @@ public abstract class MyFacesBodyTag
      */
     protected void setValue(Object value)
     {
-        setComponentPropertyString(CommonComponentAttributes.VALUE_ATTR, value);
+        setComponentPropertyObject(VALUE_ATTR, value);
     }
 
 
@@ -194,7 +204,7 @@ public abstract class MyFacesBodyTag
         super.setId(s);
     }
 
-    public void setConverter(Object converter)
+    public void setConverter(String converter)
     {
         setRendererAttributeString(CONVERTER_ATTR, converter);
     }

@@ -42,9 +42,9 @@ public class LabelRenderer
     extends HTMLRenderer
     implements CommonComponentAttributes,
                CommonRendererAttributes,
-    HTMLUniversalAttributes,
-    HTMLEventHandlerAttributes,
-    HTMLLabelAttributes,
+               HTMLUniversalAttributes,
+               HTMLEventHandlerAttributes,
+               HTMLLabelAttributes,
                LabelRendererAttributes,
                UserRoleAttributes
 {

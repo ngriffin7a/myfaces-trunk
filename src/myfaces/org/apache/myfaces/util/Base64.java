@@ -25,7 +25,9 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 /**
- * TODO: description
+ * Utility class for Base64 en/decoding.
+ * We route all encoding through this methods, so that we are able to easily
+ * replace the cos.jar lib anytime.
  * @author Manfred Geiler 
  * @version $Revision$ $Date$
  */

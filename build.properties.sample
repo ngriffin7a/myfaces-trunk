@@ -16,3 +16,7 @@ myfaces.jar = ${project.dir}/lib/myfaces.jar
 # Temporary directory
 # (if not set, environment variable "TEMP" will be used)
 #temp.dir = temp
+
+# Compiler optimize
+javac.optimize = on
+

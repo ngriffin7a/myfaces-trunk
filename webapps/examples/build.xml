@@ -50,7 +50,7 @@
         <mkdir dir="${web-inf.classes.dir}"/>
         <javac srcdir="${examples.src}"
                destdir="${web-inf.classes.dir}"
-               optimize="off"
+               optimize="${javac.optimize}"
                classpathref="examples.class.path">
         </javac>
         <copy todir="${web-inf.classes.dir}">

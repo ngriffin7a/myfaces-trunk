@@ -18,16 +18,19 @@
  */
 package net.sourceforge.myfaces.renderkit.html.jspinfo;
 
-import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.JspCompilationContext;
 import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.JasperException;
+import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.JspCompilationContext;
 import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.compiler.TagLibraryInfoImpl;
 import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.compiler.TldLocationsCache;
 import net.sourceforge.myfaces.util.logging.LogUtil;
 
 import javax.servlet.ServletContext;
-import javax.servlet.jsp.tagext.TagLibraryInfo;
-import javax.servlet.jsp.tagext.TagInfo;
 import javax.servlet.jsp.tagext.TagAttributeInfo;
+import javax.servlet.jsp.tagext.TagInfo;
+import javax.servlet.jsp.tagext.TagLibraryInfo;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.WeakHashMap;
 
 /**
  * DOCUMENT ME!
@@ -36,86 +39,96 @@ import javax.servlet.jsp.tagext.TagAttributeInfo;
  */
 public class TLDInfo
 {
-    private ServletContext _servletContext = null;
-    private JspCompilationContext _jspCompilationContext = null;
-    private String _uri = null;
-    private TagLibraryInfo _tagLibraryInfo = null;
-
-    private TLDInfo(ServletContext servletContext, String uri)
-    {
-        _servletContext = servletContext;
-        _jspCompilationContext = new MyJspCompilationContext(servletContext);
-        _uri = uri;
-    }
-
-    public TagLibraryInfo getTagLibraryInfo()
-    {
-        if (_tagLibraryInfo == null)
-        {
-            try
-            {
-                TldLocationsCache locCache = new TldLocationsCache(_servletContext);
-                String[] loc = locCache.getLocation(_uri);
-                _tagLibraryInfo = new TagLibraryInfoImpl(_jspCompilationContext,
-                                                         "dummy",
-                                                         _uri,
-                                                         loc);
-            }
-            catch (JasperException e)
-            {
-                LogUtil.getLogger().severe("Unable to get TagLibraryInfo for library '" + _uri + "'.");
-                throw new RuntimeException(e);
-            }
-        }
-        return _tagLibraryInfo;
-    }
-
-
-
-    /**
-     * TODO: Cache in ServletContext
-     * @param servletContext
-     * @param taglibURI
-     * @return
-     */
-    public static TagLibraryInfo getTagLibraryInfo(ServletContext servletContext,
-                                                   String taglibURI)
-    {
-        return new TLDInfo(servletContext, taglibURI).getTagLibraryInfo();
-    }
-
-    public static TagInfo getTagInfo(ServletContext servletContext,
-                                     String taglibURI,
-                                     String tagName)
-        throws IllegalArgumentException
-    {
-        TagLibraryInfo tagLibraryInfo = getTagLibraryInfo(servletContext,
-                                                          taglibURI);
-        TagInfo[] tags = tagLibraryInfo.getTags();
-        for (int i = 0; i < tags.length; i++)
-        {
-            if (tags[i].getTagName().equals(tagName))
-            {
-                return tags[i];
-            }
-        }
-        throw new IllegalArgumentException("TagInfo for tag '" + tagName + "' in TagLibrary '" + taglibURI + "' not found.");
-    }
+    private static final String TAGLIB_MAP_CONTEXT_ATTR
+        = TLDInfo.class.getName() + ".TAGLIB_MAP";
+    private static final Object LOCK = new Object();
 
     public static TagAttributeInfo getTagAttributeInfo(ServletContext servletContext,
                                                        String taglibURI,
                                                        String tagName,
                                                        String attributeName)
     {
-        TagInfo tagInfo = getTagInfo(servletContext, taglibURI, tagName);
-        TagAttributeInfo[] attrs = tagInfo.getAttributes();
-        for (int i = 0; i < attrs.length; i++)
+        Map taglibMap;
+        synchronized (LOCK)
         {
-            if (attrs[i].getName().equals(attributeName))
+            taglibMap = (Map)servletContext.getAttribute(TAGLIB_MAP_CONTEXT_ATTR);
+            if (taglibMap == null)
             {
-                return attrs[i];
+                taglibMap = new WeakHashMap();
+                servletContext.setAttribute(TAGLIB_MAP_CONTEXT_ATTR, taglibMap);
             }
         }
-        throw new IllegalArgumentException("TagAttributeInfo for attribute '" + attributeName + "' of Tag '" + tagName + "' in TagLibrary '" + taglibURI + "' not found.");
+
+        Map tagMap;
+        synchronized (taglibMap)
+        {
+            tagMap = (Map)taglibMap.get(taglibURI);
+            if (tagMap == null)
+            {
+                tagMap = buildTagMap(servletContext, taglibURI);
+                taglibMap.put(taglibURI, tagMap);
+            }
+        }
+
+        Map tagAttributesMap = (Map)tagMap.get(tagName);
+        if (tagAttributesMap == null)
+        {
+            throw new IllegalArgumentException("TagInfo for tag '" + tagName + "' in TagLibrary '" + taglibURI + "' not found.");
+        }
+
+        TagAttributeInfo tagAttributeInfo
+            = (TagAttributeInfo)tagAttributesMap.get(attributeName);
+        if (tagAttributeInfo == null)
+        {
+            throw new IllegalArgumentException("TagAttributeInfo for attribute '" + attributeName + "' of Tag '" + tagName + "' in TagLibrary '" + taglibURI + "' not found.");
+        }
+        return tagAttributeInfo;
     }
+
+    private static Map buildTagMap(ServletContext servletContext,
+                                   String taglibURI)
+        throws IllegalArgumentException
+    {
+        TagLibraryInfo tagLibraryInfo = getTagLibraryInfo(servletContext,
+                                                          taglibURI);
+        TagInfo[] tags = tagLibraryInfo.getTags();
+        Map tagMap = new HashMap(tags.length);
+        for (int i = 0; i < tags.length; i++)
+        {
+            TagInfo ti = tags[i];
+            TagAttributeInfo[] attrs = ti.getAttributes();
+            Map tagAttributesMap = new HashMap(attrs.length);
+            for (int j = 0; j < attrs.length; j++)
+            {
+                TagAttributeInfo tai = attrs[j];
+                tagAttributesMap.put(tai.getName(), tai);
+            }
+
+            tagMap.put(ti.getTagName(), tagAttributesMap);
+        }
+        return tagMap;
+    }
+
+    private static TagLibraryInfo getTagLibraryInfo(ServletContext servletContext,
+                                                   String taglibURI)
+    {
+        try
+        {
+            TldLocationsCache locCache = new TldLocationsCache(servletContext);
+            String[] loc = locCache.getLocation(taglibURI);
+            JspCompilationContext jspCompilationContext
+                = new MyJspCompilationContext(servletContext);
+            return new TagLibraryInfoImpl(jspCompilationContext,
+                                          "dummy",
+                                          taglibURI,
+                                          loc);
+        }
+        catch (JasperException e)
+        {
+            LogUtil.getLogger().severe("Unable to get TagLibraryInfo for library '" + taglibURI + "': " + e.getMessage());
+            throw new RuntimeException(e);
+        }
+    }
+
+
 }

@@ -131,6 +131,11 @@ public abstract class MyFacesTag
 
 
     //property helpers
+    protected void setComponentPropertyObject(String attrName, Object attrValue)
+    {
+        _helper.setComponentPropertyObject(attrName, attrValue);
+    }
+
     protected void setComponentPropertyString(String attrName, Object attrValue)
     {
         _helper.setComponentPropertyString(attrName, attrValue);
@@ -139,6 +144,11 @@ public abstract class MyFacesTag
     protected void setComponentPropertyBoolean(String attrName, Object attrValue)
     {
         _helper.setComponentPropertyBoolean(attrName, attrValue);
+    }
+
+    protected void setRendererAttributeObject(String attrName, Object attrValue)
+    {
+        _helper.setRendererAttributeObject(attrName, attrValue);
     }
 
     protected void setRendererAttributeString(String attrName, Object attrValue)
@@ -185,7 +195,7 @@ public abstract class MyFacesTag
      */
     protected void setValue(Object value)
     {
-        setComponentPropertyString(VALUE_ATTR, value);
+        setComponentPropertyObject(VALUE_ATTR, value);
     }
 
 

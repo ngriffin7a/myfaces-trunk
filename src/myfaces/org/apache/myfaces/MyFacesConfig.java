@@ -27,7 +27,6 @@ import java.util.logging.Level;
 
 /**
  * Global configuration for MyFaces.
- * TODO: Prefix all web.xml init paremeters with "myfaces_".
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
