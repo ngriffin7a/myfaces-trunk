@@ -25,7 +25,6 @@ import net.sourceforge.myfaces.renderkit.html.util.HTMLUtil;
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIInput;
 import javax.faces.component.UIOutput;
-import javax.faces.component.html.HtmlInputText;
 import javax.faces.component.html.HtmlOutputText;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
@@ -153,9 +152,9 @@ public class HtmlTextRenderer
 
     public Object getConvertedValue(FacesContext facesContext, UIComponent uiComponent, Object submittedValue) throws ConverterException
     {
-        RendererUtils.checkParamValidity(facesContext, uiComponent, UIInput.class);
+        RendererUtils.checkParamValidity(facesContext, uiComponent, UIOutput.class);
         return RendererUtils.getConvertedUIOutputValue(facesContext,
-                                                       (HtmlInputText)uiComponent,
+                                                       (UIOutput)uiComponent,
                                                        submittedValue);
     }
 

@@ -19,8 +19,6 @@
 package net.sourceforge.myfaces.renderkit.html;
 
 import net.sourceforge.myfaces.MyFacesConfig;
-import net.sourceforge.myfaces.application.MessageUtils;
-import net.sourceforge.myfaces.convert.ConverterUtils;
 import net.sourceforge.myfaces.convert.impl.StringArrayConverter;
 import net.sourceforge.myfaces.renderkit.RendererUtils;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLUtil;
@@ -28,12 +26,10 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import javax.faces.FacesException;
-import javax.faces.application.FacesMessage;
 import javax.faces.component.*;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 import javax.faces.convert.Converter;
-import javax.faces.convert.ConverterException;
 import javax.faces.model.SelectItem;
 import java.io.IOException;
 import java.util.*;
@@ -107,64 +103,16 @@ public class HtmlRendererUtils
     {
         Map paramValuesMap = facesContext.getExternalContext().getRequestParameterValuesMap();
         String clientId  = selectMany.getClientId(facesContext);
-        if (!paramValuesMap.containsKey(clientId))
+        if (paramValuesMap.containsKey(clientId))
         {
-            //request parameter not found, nothing to decode
-            return;
-        }
-
-        String[] reqValues = (String[])paramValuesMap.get(clientId);
-
-        Converter converter;
-        try
-        {
-            converter = RendererUtils.findUISelectManyConverter(facesContext, selectMany);
-        }
-        catch (FacesException e)
-        {
-            //TODO: other message?
-            MessageUtils.addMessage(FacesMessage.SEVERITY_ERROR,
-                                    "javax.faces.component.UIInput.CONVERSION",
-                                    null,
-                                    selectMany.getClientId(facesContext));
-            selectMany.setValue(reqValues);
-            selectMany.setValid(false);
-            return;
-        }
-
-        Object[] convertedValues;
-        if (converter == null)
-        {
-            //No conversion needed
-            convertedValues = reqValues;
+            String[] reqValues = (String[])paramValuesMap.get(clientId);
+            selectMany.setSubmittedValue(reqValues);
         }
         else
         {
-            //Conversion
-            convertedValues = new Object[reqValues.length];
-            for (int i = 0; i < reqValues.length; i++)
-            {
-                try
-                {
-                    //TODO: deprecated
-                    convertedValues[i]
-                    = ConverterUtils.getAsObjectWithErrorHandling(facesContext,
-                                                                  selectMany,
-                                                                  converter,
-                                                                  reqValues[i]);
-                }
-                catch (ConverterException e)
-                {
-                    //FacesMessage already handled by getAsObjectWithErrorHandling method
-                    selectMany.setValue(reqValues);
-                    selectMany.setValid(false);
-                    return;
-                }
-            }
+            selectMany.setSubmittedValue(null);
+            return;
         }
-
-        selectMany.setValue(convertedValues);
-        selectMany.setValid(true);
     }
 
 

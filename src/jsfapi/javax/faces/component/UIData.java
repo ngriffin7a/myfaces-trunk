@@ -324,11 +324,29 @@ public class UIData
     public void encodeBegin(javax.faces.context.FacesContext context)
             throws IOException
     {
-        //TODO: ??? javadoc says: ensure that any saved per-row state for our child input components is discarded unless it is needed to rerender the current page with errors
-        _descendantStates = null;
-        _descendantEditableValueHolderCount = -1;
+        if (isAllChildrenAndFacetsValid())
+        {
+            _descendantStates = null;
+            _descendantEditableValueHolderCount = -1;
+        }
         super.encodeBegin(context);
     }
+
+
+    private boolean isAllChildrenAndFacetsValid()
+    {
+        for (Iterator it = getFacetsAndChildren(); it.hasNext(); )
+        {
+            UIComponent child = (UIComponent)it.next();
+            if (child instanceof EditableValueHolder &&
+                !((EditableValueHolder)child).isValid())
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+
 
     public void processDecodes(FacesContext context)
     {

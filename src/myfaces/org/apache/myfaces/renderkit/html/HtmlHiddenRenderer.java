@@ -23,9 +23,10 @@ import net.sourceforge.myfaces.renderkit.RendererUtils;
 
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIInput;
-import javax.faces.component.html.HtmlInputHidden;
+import javax.faces.component.UIOutput;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
+import javax.faces.convert.ConverterException;
 import javax.faces.el.ValueBinding;
 import java.io.IOException;
 
@@ -39,7 +40,7 @@ public class HtmlHiddenRenderer
 extends HtmlRenderer
 {
     public void encodeEnd(FacesContext facesContext, UIComponent uiComponent)
-    throws IOException
+        throws IOException
     {
         RendererUtils.checkParamValidity(facesContext, uiComponent, UIInput.class);
 
@@ -59,5 +60,13 @@ extends HtmlRenderer
         }
         
         writer.endElement(HTML.INPUT_ELEM);
+    }
+
+    public Object getConvertedValue(FacesContext facesContext, UIComponent uiComponent, Object submittedValue) throws ConverterException
+    {
+        RendererUtils.checkParamValidity(facesContext, uiComponent, UIOutput.class);
+        return RendererUtils.getConvertedUIOutputValue(facesContext,
+                                                       (UIOutput)uiComponent,
+                                                       submittedValue);
     }
 }

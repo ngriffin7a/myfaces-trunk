@@ -24,6 +24,7 @@ import net.sourceforge.myfaces.renderkit.html.util.HTMLUtil;
 
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIInput;
+import javax.faces.component.UIOutput;
 import javax.faces.component.html.HtmlInputSecret;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
@@ -85,9 +86,9 @@ public class HtmlSecretRenderer
 
     public Object getConvertedValue(FacesContext facesContext, UIComponent uiComponent, Object submittedValue) throws ConverterException
     {
-        RendererUtils.checkParamValidity(facesContext, uiComponent, UIInput.class);
+        RendererUtils.checkParamValidity(facesContext, uiComponent, UIOutput.class);
         return RendererUtils.getConvertedUIOutputValue(facesContext,
-                                                       (UIInput)uiComponent,
+                                                       (UIOutput)uiComponent,
                                                        submittedValue);
     }
 

@@ -18,8 +18,8 @@
  */
 package net.sourceforge.myfaces.renderkit.html;
 
-import net.sourceforge.myfaces.renderkit.RendererUtils;
 import net.sourceforge.myfaces.renderkit.JSFAttr;
+import net.sourceforge.myfaces.renderkit.RendererUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -27,7 +27,6 @@ import javax.faces.FacesException;
 import javax.faces.component.UIComponent;
 import javax.faces.component.UISelectBoolean;
 import javax.faces.component.UISelectMany;
-import javax.faces.component.html.HtmlSelectBooleanCheckbox;
 import javax.faces.component.html.HtmlSelectManyCheckbox;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
@@ -86,7 +85,6 @@ public class HtmlCheckboxRenderer
         if (selectMany instanceof HtmlSelectManyCheckbox)
         {
             layout = ((HtmlSelectManyCheckbox)selectMany).getLayout();
-
         }
         else
         {
@@ -168,7 +166,7 @@ public class HtmlCheckboxRenderer
                                                     true, //set to FALSE if request param absent,
                                                     EXTERNAL_TRUE_VALUE);
         }
-        else if (uiComponent instanceof HtmlSelectManyCheckbox)
+        else if (uiComponent instanceof UISelectMany)
         {
             HtmlRendererUtils.decodeUISelectMany(facesContext,
                                                  (UISelectMany)uiComponent);
@@ -183,8 +181,19 @@ public class HtmlCheckboxRenderer
     public Object getConvertedValue(FacesContext facesContext, UIComponent uiComponent, Object submittedValue) throws ConverterException
     {
         RendererUtils.checkParamValidity(facesContext, uiComponent, null);
-        return RendererUtils.getConvertedUISelectManyValue(facesContext,
-                                                           (HtmlSelectManyCheckbox)uiComponent,
-                                                           submittedValue);
+        if (uiComponent instanceof UISelectBoolean)
+        {
+            return submittedValue;
+        }
+        else if (uiComponent instanceof UISelectMany)
+        {
+            return RendererUtils.getConvertedUISelectManyValue(facesContext,
+                                                               (UISelectMany)uiComponent,
+                                                               submittedValue);
+        }
+        else
+        {
+            throw new IllegalArgumentException("Unsupported component class " + uiComponent.getClass().getName());
+        }
     }
 }

@@ -18,19 +18,15 @@
  */
 package net.sourceforge.myfaces.component.html;
 
-import javax.faces.component.UIData;
+import net.sourceforge.myfaces.model.SerializableDataModel;
+
 import javax.faces.component.html.HtmlDataTable;
 import javax.faces.context.FacesContext;
 import javax.faces.el.ValueBinding;
 import javax.faces.model.DataModel;
+import javax.servlet.jsp.jstl.sql.Result;
 import java.io.IOException;
-import java.io.Serializable;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.security.AccessController;
-import java.security.PrivilegedAction;
 import java.sql.ResultSet;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -177,7 +173,9 @@ public class MyFacesHtmlDataTable
         Object values[] = new Object[6];
         values[0] = super.saveState(context);
         values[1] = _preserveDataModel;
-        values[2] = isPreserveDataModel() ? getSerializableDataModel() : null;
+        values[2] = saveAttachedState(context, isPreserveDataModel() ?
+                                               getSerializableDataModel() :
+                                               null);
         values[3] = _preserveSort;
         values[4] = preserveSort ? getSortColumn() : _sortColumn;
         values[5] = preserveSort ? Boolean.valueOf(isSortAscending()) : _sortAscending;
@@ -189,171 +187,46 @@ public class MyFacesHtmlDataTable
         Object values[] = (Object[])state;
         super.restoreState(context, values[0]);
         _preserveDataModel = (Boolean)values[1];
-        SerializableDataModel serDataModel = (SerializableDataModel)values[2];
+        if (isPreserveDataModel())
+        {
+            setValue(restoreAttachedState(context, values[2]));
+        }
         _preserveSort = (Boolean)values[3];
         _sortColumn = (String)values[4];
         _sortAscending = (Boolean)values[5];
-
-        if (isPreserveDataModel() && serDataModel != null)
-        {
-            //DataModel was restored
-            setValue(serDataModel);
-        }
     }
 
 
     public Object getSerializableDataModel()
     {
-        // TODO see UIData
-        DataModel dm = getDataModelHack();
-        if (dm == null)
+        Object value = getValue();
+        if (value == null)
         {
             return null;
         }
-        return new SerializableDataModel(getFirst(), getRows(), dm);
-    }
-
-
-    /**
-     * Hack to access the private getDataModel method in UIData superclass
-     * @return
-     */
-    private DataModel getDataModelHack()
-    {
-        try
+        else if (value instanceof DataModel)
         {
-            Method m = null;
-            Class c = UIData.class;
-            m = c.getDeclaredMethod("getDataModel", null);
-            if (m == null)
-            {
-                throw new NoSuchMethodException();
-            }
-
-            DataModel dm;
-            if (m.isAccessible())
-            {
-                dm = (DataModel)m.invoke(this, null);
-            }
-            else
-            {
-                final Method finalM = m;
-                AccessController.doPrivileged(
-                    new PrivilegedAction()
-                    {
-                        public Object run()
-                        {
-                            finalM.setAccessible(true);
-                            return null;
-                        }
-                    });
-                dm = (DataModel)m.invoke(this, null);
-                m.setAccessible(false);
-            }
-
-            return dm;
+            return new SerializableDataModel(getFirst(), getRows(), (DataModel)value);
         }
-        catch (NoSuchMethodException e)
+        else if (value instanceof List)
         {
-            throw new RuntimeException(e);
+            return new SerializableDataModel(getFirst(), getRows(), (List)value);
         }
-        catch (SecurityException e)
+        else if (OBJECT_ARRAY_CLASS.isAssignableFrom(value.getClass()))
         {
-            throw new RuntimeException(e);
+            return new SerializableDataModel(getFirst(), getRows(), (Object[])value);
         }
-        catch (IllegalAccessException e)
+        else if (value instanceof ResultSet)
         {
-            throw new RuntimeException(e);
+            return new SerializableDataModel(getFirst(), getRows(), (ResultSet)value);
         }
-        catch (IllegalArgumentException e)
+        else if (value instanceof Result)
         {
-            throw new RuntimeException(e);
+            return new SerializableDataModel(getFirst(), getRows(), (Result)value);
         }
-        catch (InvocationTargetException e)
+        else
         {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public static class SerializableDataModel
-        extends DataModel
-        implements Serializable
-    {
-        private int _first;
-        private int _rows;
-        private List _list;
-        private int _rowCount;
-
-        private transient int _index = -1;
-
-        public SerializableDataModel(int first, int rows, DataModel dataModel)
-        {
-            _first = first;
-            _rowCount = dataModel.getRowCount();
-            _rows = rows != 0 ? rows : _rowCount - first;
-            _list = new ArrayList(rows);
-            for (int i = 0; i < _rows; i++)
-            {
-                dataModel.setRowIndex(_first + i);
-                if (!dataModel.isRowAvailable()) break;
-                _list.add(dataModel.getRowData());
-            }
-            _index = -1;
-
-            //TODO: take over DataModelListeners
-        }
-
-        public int getFirst()
-        {
-            return _first;
-        }
-
-        public int getRows()
-        {
-            return _rows;
-        }
-
-        public boolean isRowAvailable()
-        {
-            return _index >= _first && _index < _first + _rows;
-        }
-
-        public int getRowCount()
-        {
-            return _rowCount;
-        }
-
-        public Object getRowData()
-        {
-            if (!isRowAvailable())
-            {
-                throw new IllegalStateException();
-            }
-            return _list.get(_index - _first);
-        }
-
-        public int getRowIndex()
-        {
-            return _index;
-        }
-
-        public void setRowIndex(int rowIndex)
-        {
-            if (rowIndex < -1)
-            {
-                throw new IllegalArgumentException();
-            }
-            _index = rowIndex;
-            //TODO: handle DataModelListeners
-        }
-
-        public Object getWrappedData()
-        {
-            return _list;
-        }
-
-        public void setWrappedData(Object obj)
-        {
+            return new SerializableDataModel(getFirst(), getRows(), (Object)value);
         }
     }
 

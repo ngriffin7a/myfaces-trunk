@@ -18,13 +18,14 @@
  */
 package net.sourceforge.myfaces.renderkit.html;
 
-import net.sourceforge.myfaces.renderkit.RendererUtils;
 import net.sourceforge.myfaces.renderkit.JSFAttr;
+import net.sourceforge.myfaces.renderkit.RendererUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import javax.faces.FacesException;
 import javax.faces.component.UIComponent;
+import javax.faces.component.UIOutput;
 import javax.faces.component.UISelectOne;
 import javax.faces.component.html.HtmlSelectOneRadio;
 import javax.faces.context.FacesContext;
@@ -141,9 +142,9 @@ public class HtmlRadioRenderer
 
     public Object getConvertedValue(FacesContext facesContext, UIComponent uiComponent, Object submittedValue) throws ConverterException
     {
-        RendererUtils.checkParamValidity(facesContext, uiComponent, UISelectOne.class);
+        RendererUtils.checkParamValidity(facesContext, uiComponent, UIOutput.class);
         return RendererUtils.getConvertedUIOutputValue(facesContext,
-                                                       (UISelectOne)uiComponent,
+                                                       (UIOutput)uiComponent,
                                                        submittedValue);
     }
 
