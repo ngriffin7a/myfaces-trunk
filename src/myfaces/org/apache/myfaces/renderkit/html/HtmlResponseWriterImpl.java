@@ -36,6 +36,9 @@ import java.util.Set;
  * @author Anton Koinov
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.27  2004/10/05 08:49:15  manolito
+ * #1038697 h:selectOneRadio generates malformed XHTML
+ *
  * Revision 1.26  2004/10/05 08:32:23  manolito
  * #1038716 Empty h:selectManyCheckbox generates malformed HTML
  *
@@ -217,7 +220,8 @@ public class HtmlResponseWriterImpl
             if (_startElementName != null &&
                 !name.equals(_startElementName))
             {
-                log.warn("HTML nesting warning on closing " + name + ": element " + _startElementName + " not explicitly closed");
+                if (log.isWarnEnabled())
+                    log.warn("HTML nesting warning on closing " + name + ": element " + _startElementName + " not explicitly closed");
             }
         }
 
@@ -238,9 +242,17 @@ public class HtmlResponseWriterImpl
         }
         else
         {
-            _writer.write("</");
-            _writer.write(name);
-            _writer.write('>');
+            if (s_emptyHtmlElements.contains(name.toLowerCase()))
+            {
+                if (log.isWarnEnabled())
+                    log.warn("HTML nesting warning on closing " + name + ": This element must not contain nested elements or text in HTML");
+            }
+            else
+            {
+                _writer.write("</");
+                _writer.write(name);
+                _writer.write('>');
+            }
         }
 
         _startElementName = null;
