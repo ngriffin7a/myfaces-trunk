@@ -27,6 +27,9 @@ import java.io.IOException;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.12  2004/07/13 15:43:34  manolito
+ * Bug #990228
+ *
  * Revision 1.11  2004/07/01 22:00:54  mwessendorf
  * ASF switch
  *
@@ -74,7 +77,7 @@ public class FacesServlet
 
     private String getLifecycleId()
     {
-        String lifecycleId = _servletConfig.getInitParameter(LIFECYCLE_ID_ATTR);
+        String lifecycleId = _servletConfig.getServletContext().getInitParameter(LIFECYCLE_ID_ATTR);
         return lifecycleId != null ? lifecycleId : LifecycleFactory.DEFAULT_LIFECYCLE;
     }
 
