@@ -48,6 +48,9 @@ import org.apache.myfaces.renderkit.html.util.JavascriptUtils;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.29  2005/03/16 20:34:36  mmarinschek
+ * fix for MYFACES-89, alien commit for Heath Borders
+ *
  * Revision 1.28  2005/03/15 05:24:03  svieujot
  * Add a fallback textarea mode to the htmlEditor.
  *
@@ -409,7 +412,7 @@ public final class HtmlRendererUtils {
     /**
      * Renders the select options for a <code>UIComponent</code> that is
      * rendered as an HTML select element.
-     * 
+     *
      * @param context
      *            the current <code>FacesContext</code>.
      * @param component
@@ -435,7 +438,7 @@ public final class HtmlRendererUtils {
             SelectItem selectItem = (SelectItem) it.next();
 
             if (selectItem instanceof SelectItemGroup) {
-                writer.startElement(HTML.OPTGROUP_ELEM, null);                
+                writer.startElement(HTML.OPTGROUP_ELEM, null);
                 writer.writeAttribute(HTML.LABEL_ATTR, selectItem.getLabel(),
                         null);
                 SelectItem[] selectItems = ((SelectItemGroup) selectItem)
@@ -460,12 +463,12 @@ public final class HtmlRendererUtils {
                             HTML.SELECTED_ATTR, null);
                 }
 
-                writer.writeText(selectItem.getLabel(), null);
-
                 if (selectItem.isDisabled()) {
                     writer.writeAttribute(HTML.DISABLED_ATTR,
                             HTML.DISABLED_ATTR, null);
                 }
+
+                writer.writeText(selectItem.getLabel(), null);
 
                 writer.endElement(HTML.OPTION_ELEM);
             }
