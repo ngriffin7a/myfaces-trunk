@@ -41,10 +41,14 @@ public class TextEntryInputTag
         return TextRenderer.TYPE;
     }
 
-
     public void setText(String value)
     {
         setValue(value);
+    }
+
+    public void setInputClass(String value)
+    {
+        setRendererAttribute(TextRenderer.INPUT_CLASS_ATTR, value);
     }
 
     public void setAccesskey(String value)

@@ -370,7 +370,7 @@ public class FacesContextImpl
     /**
      * @throws  FacesException if there is no model instance with the given modelId
      */
-    private Object getModelInstance(String modelId) throws FacesException
+    protected Object getModelInstance(String modelId) throws FacesException
     {
         Object obj = findModelInstance(modelId);
         if (obj == null)
