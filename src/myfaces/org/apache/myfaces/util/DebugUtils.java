@@ -65,6 +65,7 @@ public class DebugUtils
         IGNORE_ATTRIBUTES.add("actionListeners");
         IGNORE_ATTRIBUTES.add("valueChangeListeners");
         IGNORE_ATTRIBUTES.add("validators");
+        IGNORE_ATTRIBUTES.add("rowData");
         IGNORE_ATTRIBUTES.add("javax.faces.webapp.COMPONENT_IDS");
         IGNORE_ATTRIBUTES.add("javax.faces.webapp.FACET_NAMES");
         IGNORE_ATTRIBUTES.add("javax.faces.webapp.CURRENT_VIEW_ROOT");
