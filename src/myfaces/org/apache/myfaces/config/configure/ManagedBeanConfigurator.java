@@ -35,28 +35,12 @@ public class ManagedBeanConfigurator
 {
     //private static final Log log = LogFactory.getLog(ManagedBeanConfigurator.class);
 
-    private static final ManagedBeanConfigurator STATIC_INSTANCE = new ManagedBeanConfigurator();
-
     private ManagedBeanConfig _managedBeanConfig;
 
     public ManagedBeanConfigurator(ManagedBeanConfig managedBeanConfig)
     {
         _managedBeanConfig = managedBeanConfig;
     }
-
-    private ManagedBeanConfigurator()
-    {
-    }
-
-    public static void configure(FacesContext facesContext,
-                                 ManagedBeanConfig managedBeanConfig,
-                                 Object bean)
-    {
-        STATIC_INSTANCE._managedBeanConfig = managedBeanConfig;
-
-
-    }
-
 
     public void configure(FacesContext facesContext, Object bean)
     {
