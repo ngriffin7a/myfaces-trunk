@@ -43,7 +43,7 @@ public class OutputTimeTag
         super.overrideProperties(uiComponent);
         if (uiComponent.getConverter() == null)
         {
-            uiComponent.setConverter("Time");
+            uiComponent.setConverter("TimeConverter");
         }
     }
 
