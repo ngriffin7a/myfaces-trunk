@@ -90,41 +90,47 @@ public class JspTreeParser
         throws FacesException
     {
         String absFileName = resolveFileName(fileName);
-
-        InputStream stream = _servletContext.getResourceAsStream(absFileName);
-        if (stream == null)
-        {
-            throw new RuntimeException("File " + absFileName + " not found.");
-        }
-
-        //TODO: find out encoding
-
-        InputStreamReader isr = null;
         try
         {
-            isr = new InputStreamReader(stream, _topFileEncoding);
-        }
-        catch (UnsupportedEncodingException e)
-        {
-            throw new FacesException(e);
-        }
+            InputStream stream = _servletContext.getResourceAsStream(absFileName);
+            if (stream == null)
+            {
+                throw new RuntimeException("File " + absFileName + " not found.");
+            }
 
-        try
-        {
-            Parser p = new Parser(_jspCompilationContext,
-                                  absFileName,
-                                  _topFileEncoding,
-                                  isr,
-                                  _parseEventListener);
-            p.parse();
+            //TODO: find out encoding
+
+            InputStreamReader isr = null;
+            try
+            {
+                isr = new InputStreamReader(stream, _topFileEncoding);
+            }
+            catch (UnsupportedEncodingException e)
+            {
+                throw new FacesException(e);
+            }
+
+            try
+            {
+                Parser p = new Parser(_jspCompilationContext,
+                                      absFileName,
+                                      _topFileEncoding,
+                                      isr,
+                                      _parseEventListener);
+                p.parse();
+            }
+            catch (JasperException e)
+            {
+                throw new FacesException(e);
+            }
+            catch (java.io.FileNotFoundException e)
+            {
+                throw new FacesException(e);
+            }
         }
-        catch (JasperException e)
+        finally
         {
-            throw new FacesException(e);
-        }
-        catch (java.io.FileNotFoundException e)
-        {
-            throw new FacesException(e);
+            baseDirStack.pop();
         }
     }
 

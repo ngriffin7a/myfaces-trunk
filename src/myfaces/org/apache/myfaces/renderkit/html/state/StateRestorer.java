@@ -118,7 +118,10 @@ public class StateRestorer
         throws FacesException
     {
         //restore value:
-        String savedValue = getStateParameter(stateMap, RequestParameterNames.getUIComponentStateParameterName(uiComponent, MyFacesComponent.VALUE_ATTR));
+        String savedValue = getStateParameter(stateMap,
+                                              RequestParameterNames
+                                                .getUIComponentStateParameterName(uiComponent,
+                                                                                  MyFacesComponent.VALUE_ATTR));
         if (savedValue != null)
         {
             Converter conv = ConverterUtils.findConverter(facesContext, uiComponent);
@@ -146,6 +149,18 @@ public class StateRestorer
             if (attrName != null && !attrName.equals(MyFacesComponent.VALUE_ATTR))
             {
                 Object paramValue = entry.getValue();
+
+                if (attrName.equals(MyFacesComponent.STRING_VALUE_ATTR))
+                {
+                    if (paramValue instanceof String[])
+                    {
+                        paramValue = StringArrayConverter.getAsString((String[])paramValue);
+                    }
+                    uiComponent.setAttribute(MyFacesComponent.STRING_VALUE_ATTR, paramValue);
+                    uiComponent.setValue(null);
+                    uiComponent.setValid(false);
+                    continue;
+                }
 
                 Converter conv = null;
                 try

@@ -1,0 +1,104 @@
+<h3>MyFaces Features</h3>
+
+<h4>Saving the full tree and model state information in the client response</h4>
+
+Traditional JSP Applications save their state information within HttpSession 
+objects. This is an easy to use but poor approach:
+<ul>
+  <li>HttpSession objects must have an expiration date (timeout) that prevents the
+    server from running out of memory over the time. The always boring question
+    for web admins: How long should I set the session timout?
+  <li>Server restarting is a thrilling task: Will all objects in active sessions
+    be restored successfully? If implementation classes have changed this task
+    is likely to fail.
+  <li>Running multiple redundant servers is a challenge. You must use cluster
+    environments which are expensive and difficult to handle.
+</ul>
+
+MyFaces has a different approach. It makes it possible to write sophisticated
+applications without any use of the HttpSession. All state information of
+the jsf tree and (optionally the model beans) is encoded to the client
+response in the form of query parameters and hidden inputs in forms.
+
+
+<h4>Support for saving model state</h4>
+
+MyFaces introduces a new Component "UISaveState" with the corresponding Tag
+"&lt;myfaces_ext:save_state&gt;".<br>
+Example (see "sample1.jsp"):
+    <code><pre>
+    ...
+    &lt;jsp:useBean id="calcForm"
+                 class="net.sourceforge.myfaces.example.model.CalcForm"
+                 scope="request" /&gt;
+    ...
+    &lt;f:use_faces&gt;
+        ...
+        &lt;x:save_state id="save1" modelReference="calcForm.number1" /&gt;
+        &lt;x:save_state id="save2" modelReference="calcForm.number2" /&gt;
+        &lt;x:save_state id="save3" modelReference="calcForm.result" /&gt;
+        ...</pre></code>
+The current values of the three properties number1, number2 and result get
+automatically saved within the client response and restored from the
+following client request.
+    
+<p>You can also save the whole bean.<br>
+  Example:
+    <pre><code>
+    ...
+    &lt;jsp:useBean id="calcForm"
+                 class="net.sourceforge.myfaces.example.model.CalcForm"
+                 scope="request" /&gt;
+    ...
+    &lt;f:use_faces>
+        ...
+        &lt;x:save_state id="save1" modelReference="calcForm" /&gt;
+        ...</code></pre>
+The whole bean automatically is saved (serialized) and restored by MyFaces.
+    
+<p>Keep in mind that to be able to save and restore the value of a bean property
+or the bean itself, it must either be serializable or have a type that is
+supported by a Converter (see package myfaces/converter/map).
+    
+
+<h4>State Saving Methods</h4>
+
+MyFaces supports two ways of saving client state information:
+<ul>
+<li>"On the fly"<br>
+    State info is encoded within HREFs and FORMs at once.<br>
+    Drawback: The state of dynamic request time attributes that
+              are calculated during JSP processing will not be
+              saved correctly. Also the state of dynamically added
+              or removed UIComponents will not be saved correctly.
+<li>"Tokens"<br>
+    State info is encoded within HREFs and FORMs as tokens (placeholders)
+    that are replaced by the real state info after the JSP processing
+    of MyFaces tags has finished.<br>
+    Drawback: The usefaces tag must buffer all produced HTML code
+              within it's body (see javax.servlet.jsp.tagext.BodyContent)
+              and must do a search'n'replace before writing the
+              content out to the response stream.
+</ul>
+
+MyFaces supports two methods of encoding the state information:
+<ul>
+<li>"Normal"<br>
+    All state values are encoded as normal URL parameters.<br>
+    i.e. Query parameters in HREFs and hidden inputs in FORMs
+<li>"Zipped"<br>
+    All state values are encoded to a String of key/value pairs
+    that is zipped (GZIP) and encoded to allowed characters (Base64).
+    This String is then written as one query parameter or hidden
+    form input.
+</ul>
+
+
+<h4>UINavigation</h4>
+A simple navigation component to build a vertical menu structure.<br>
+(see web\example\inc\navigation.jsp for an example)
+
+<h4>UIMessageList</h4>
+A very simple component that prints all messages in a &lt;ul&gt; list.<br>
+(see web\example\sample1.jsp for an example)
+

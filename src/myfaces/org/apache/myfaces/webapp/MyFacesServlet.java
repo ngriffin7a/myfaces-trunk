@@ -57,9 +57,10 @@ public class MyFacesServlet
     {
         synchronized (System.out)
         {
-            //Sun's copyright is nice and important, but drives me crazy during testing...
             PrintStream oldOut = System.out;
-            System.setOut(new PrintStream(new ByteArrayOutputStream()));
+            //Sun's copyright is nice and important, but drives me crazy during testing...
+            //Uncomment the following line during development if you feel the same:
+            //System.setOut(new PrintStream(new ByteArrayOutputStream()));
             _facesServlet.init(servletConfig);
             System.setOut(oldOut);
         }

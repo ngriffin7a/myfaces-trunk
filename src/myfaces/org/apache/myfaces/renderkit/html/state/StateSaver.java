@@ -214,8 +214,11 @@ public class StateSaver
                         }
                         else //(attrName.equals(MyFacesComponent.STRING_VALUE_ATTR))
                         {
-                            saveComponentAttribute(facesContext, stateMap, comp,
-                                                   MyFacesComponent.VALUE_ATTR, attrValue);
+                            saveParameter(stateMap,
+                                          RequestParameterNames
+                                            .getUIComponentStateParameterName(comp,
+                                                                              MyFacesComponent.STRING_VALUE_ATTR),
+                                          (String)attrValue);
                         }
                     }
                     else
@@ -240,6 +243,66 @@ public class StateSaver
         }
 
     }
+
+
+    protected void saveComponentValue(FacesContext facesContext,
+                                      Map stateMap,
+                                      UIComponent uiComponent,
+                                      Object attrValue)
+    {
+        Tree parsedTree = JspInfo.getStaticTree(facesContext,
+                                                facesContext.getResponseTree().getTreeId());
+        UIComponent parsedComp = null;
+        try
+        {
+            parsedComp = parsedTree.getRoot().findComponent(uiComponent.getCompoundId());
+        }
+        catch (IllegalArgumentException e)
+        {
+            parsedComp = null;
+        }
+        if (parsedComp != null)
+        {
+            Object parsedValue = parsedComp.getAttribute(MyFacesComponent.VALUE_ATTR);
+            if (parsedValue != null && parsedValue.equals(attrValue))
+            {
+                //current value identical to hardcoded value
+                return;
+            }
+        }
+
+        String strValue;
+        Converter conv = ConverterUtils.findConverter(facesContext, uiComponent);
+        if (conv != null)
+        {
+            try
+            {
+                strValue = conv.getAsString(facesContext, uiComponent, attrValue);
+            }
+            catch (ConverterException e)
+            {
+                throw new FacesException("Error saving state of value of component " + uiComponent.getCompoundId() + ": Converter exception!", e);
+            }
+        }
+        else
+        {
+            if (attrValue instanceof Serializable)
+            {
+                strValue = ConverterUtils.serialize(attrValue);
+            }
+            else
+            {
+                LogUtil.getLogger().warning("Value of component " + uiComponent.getCompoundId() + " is not serializable - cannot save state!");
+                return;
+            }
+        }
+
+        saveParameter(stateMap,
+                      RequestParameterNames.getUIComponentStateParameterName(uiComponent,
+                                                                             MyFacesComponent.VALUE_ATTR),
+                      strValue);
+    }
+
 
     protected void saveComponentAttribute(FacesContext facesContext,
                                           Map stateMap,
@@ -307,76 +370,11 @@ public class StateSaver
 
         }
 
-        saveComponentAttributeState(facesContext, stateMap, uiComponent, attrName, strValue);
-    }
-
-    protected void saveComponentValue(FacesContext facesContext,
-                                      Map stateMap,
-                                      UIComponent uiComponent,
-                                      Object attrValue)
-    {
-        Tree parsedTree = JspInfo.getStaticTree(facesContext,
-                                                facesContext.getResponseTree().getTreeId());
-        UIComponent parsedComp = null;
-        try
-        {
-            parsedComp = parsedTree.getRoot().findComponent(uiComponent.getCompoundId());
-        }
-        catch (IllegalArgumentException e)
-        {
-            parsedComp = null;
-        }
-        if (parsedComp != null)
-        {
-            Object parsedValue = parsedComp.getAttribute(MyFacesComponent.VALUE_ATTR);
-            if (parsedValue != null && parsedValue.equals(attrValue))
-            {
-                //current value identical to hardcoded value
-                return;
-            }
-        }
-
-        String strValue;
-        Converter conv = ConverterUtils.findConverter(facesContext, uiComponent);
-        if (conv != null)
-        {
-            try
-            {
-                strValue = conv.getAsString(facesContext, uiComponent, attrValue);
-            }
-            catch (ConverterException e)
-            {
-                throw new FacesException("Error saving state of value of component " + uiComponent.getCompoundId() + ": Converter exception!", e);
-            }
-        }
-        else
-        {
-            if (attrValue instanceof Serializable)
-            {
-                strValue = ConverterUtils.serialize(attrValue);
-            }
-            else
-            {
-                LogUtil.getLogger().warning("Value of component " + uiComponent.getCompoundId() + " is not serializable - cannot save state!");
-                return;
-            }
-        }
-
-        saveComponentAttributeState(facesContext, stateMap, uiComponent,
-                                    MyFacesComponent.VALUE_ATTR, strValue);
-    }
-
-
-    protected void saveComponentAttributeState(FacesContext facesContext,
-                                                Map stateMap,
-                                                UIComponent uiComponent,
-                                                String attrName,
-                                                String attrValue)
-    {
         saveParameter(stateMap,
                       RequestParameterNames.getUIComponentStateParameterName(uiComponent, attrName),
-                      attrValue);
+                      strValue);
     }
+
 
 
     protected void saveModelValues(FacesContext facesContext, Map stateMap)
@@ -496,7 +494,7 @@ public class StateSaver
             return true;
         }
 
-        //variable?
+        //is it a DataRenderer variable (= "var" attribute of a UIPanel) ?
         String modelRef = comp.getModelReference();
         if (modelRef != null)
         {
