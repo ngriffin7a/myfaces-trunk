@@ -98,53 +98,6 @@
         <pathelement location="${commons-digester.jar}"/>
     </path>
 
-    <target name="myfaces-jar"
-            description="builds the myfaces.jar file"
-            depends="-compile-share,-compile-impl,-compile-components,myfaces-jsf-api-jar,resolve-tld-entities" >
-        <!-- timestamp for the manifest -->
-        <tstamp>
-            <format property="TODAY" pattern="yyyy-MM-dd HH:mm z"/>
-        </tstamp>
-
-        <!-- build the jar -->
-        <jar destfile="${myfaces.jar}">
-            <!-- manifest -->
-            <manifest>
-                <attribute name="Built-By" value="${user.name}"/>
-                <section name="myfaces.apache.org">
-                    <attribute name="Implementation-Title" value="${manifest.impl.title}"/>
-                    <attribute name="Implementation-Version" value="${manifest.impl.version} (${TODAY})"/>
-                    <attribute name="Implementation-Vendor" value="${manifest.impl.vendor}"/>
-                </section>
-            </manifest>
-
-            <!-- classes -->
-            <fileset dir="${share.classes}"
-                     includes="**"
-                     excludes=".dependency-info/**/*"/>
-            <fileset dir="${impl.classes}"
-                     includes="**"
-                     excludes=".dependency-info/**/*"/>
-            <fileset dir="${components.classes}"
-                     includes="**"
-                     excludes=".dependency-info/**/*"/>
-            <!-- properties, DTDs, XMLs -->
-            <fileset dir="${myfaces.src}"
-                     includes="**"
-                     excludes="**/*.java
-                               **/package.html"/>
-            <!-- TLDs -->
-            <zipfileset dir="${resolved-tlds.dir}"
-                        includes="*.tld"
-                        prefix="META-INF/"/>
-            <!-- faces-config.xml -->
-            <zipfileset dir="${project.dir}/conf"
-                        includes="faces-config.xml"
-                        prefix="META-INF/"/>
-        </jar>
-
-    </target>
-
     <target name="myfaces-jsf-api-jar"
             description="builds the myfaces-jsf-api.jar file"
             depends="-compile-api">
@@ -172,9 +125,53 @@
         </jar>
 
     </target>
+	
+    <target name="myfaces-impl-jar"
+            description="builds the myfaces-impl.jar file"
+            depends="-compile-share,-compile-impl,-compile-components,myfaces-jsf-api-jar,resolve-tld-entities" >
+        <!-- timestamp for the manifest -->
+        <tstamp>
+            <format property="TODAY" pattern="yyyy-MM-dd HH:mm z"/>
+        </tstamp>
 
-    <target name="myfaces-components-jar"
-            description="builds the myfaces-components.jar file"
+        <!-- build the jar -->
+        <jar destfile="${myfaces-impl.jar}">
+            <!-- manifest -->
+            <manifest>
+                <attribute name="Built-By" value="${user.name}"/>
+                <section name="myfaces.apache.org">
+                    <attribute name="Implementation-Title" value="${manifest.impl.title}"/>
+                    <attribute name="Implementation-Version" value="${manifest.impl.version} (${TODAY})"/>
+                    <attribute name="Implementation-Vendor" value="${manifest.impl.vendor}"/>
+                </section>
+            </manifest>
+
+            <!-- classes -->
+            <fileset dir="${share.classes}"
+                     includes="**"
+                     excludes=".dependency-info/**/*"/>
+            <fileset dir="${impl.classes}"
+                     includes="**"
+                     excludes=".dependency-info/**/*"/>
+            <!-- properties, DTDs, XMLs -->
+            <fileset dir="${myfaces.src}"
+                     includes="**"
+                     excludes="**/*.java
+                               **/package.html"/>
+            <!-- TLDs -->
+            <zipfileset dir="${resolved-tlds.dir}"
+                        includes="*.tld"
+                        prefix="META-INF/"/>
+            <!-- faces-config.xml -->
+            <zipfileset dir="${project.dir}/conf"
+                        includes="faces-config.xml"
+                        prefix="META-INF/"/>
+        </jar>
+
+    </target>
+
+    <target name="myfaces-extensions-jar"
+            description="builds the myfaces-extensions.jar file"
             depends="-compile-share,
                      -compile-components,
                      resolve-tld-entities" >
@@ -184,7 +181,7 @@
         </tstamp>
 
         <!-- build the jar -->
-        <jar destfile="${myfaces-components.jar}">
+        <jar destfile="${myfaces-extensions.jar}">
             <!-- manifest -->
             <manifest>
                 <attribute name="Built-By" value="${user.name}"/>
@@ -218,6 +215,61 @@
         </jar>
 
     </target>
+	
+    <target name="myfaces-jar"
+            description="builds the myfaces.jar file with the complete myfaces libraries"
+            depends="-compile-share,-compile-impl,-compile-components,myfaces-jsf-api-jar,resolve-tld-entities" >
+        <!-- timestamp for the manifest -->
+        <tstamp>
+            <format property="TODAY" pattern="yyyy-MM-dd HH:mm z"/>
+        </tstamp>
+
+        <!-- build the jar -->
+        <jar destfile="${myfaces.jar}">
+            <!-- manifest -->
+            <manifest>
+                <attribute name="Built-By" value="${user.name}"/>
+                <section name="myfaces.apache.org">
+                    <attribute name="Implementation-Title" value="${manifest.impl.title}"/>
+                    <attribute name="Implementation-Version" value="${manifest.impl.version} (${TODAY})"/>
+                    <attribute name="Implementation-Vendor" value="${manifest.impl.vendor}"/>
+                </section>
+            </manifest>
+
+            <!-- classes -->
+            <fileset dir="${api.classes}"
+                     includes="**"
+                     excludes=".dependency-info/**/*"/>
+            <fileset dir="${share.classes}"
+                     includes="**"
+                     excludes=".dependency-info/**/*"/>
+            <fileset dir="${impl.classes}"
+                     includes="**"
+                     excludes=".dependency-info/**/*"/>
+            <fileset dir="${components.classes}"
+                     includes="**"
+                     excludes=".dependency-info/**/*"/>
+            <!-- properties, DTDs, XMLs -->
+            <fileset dir="${myfaces.src}"
+                     includes="**"
+                     excludes="**/*.java
+                               **/package.html"/>
+            <!-- TLDs -->
+            <zipfileset dir="${resolved-tlds.dir}"
+                        includes="*.tld"
+                        prefix="META-INF/"/>
+            <!-- faces-config.xml -->
+            <zipfileset dir="${project.dir}/conf"
+                        includes="faces-config.xml"
+                        prefix="META-INF/"/>
+            <!-- components_resources -->
+            <zipfileset dir="${components_resource.src}"
+                        includes="**"
+                        prefix="resource"/>
+        	
+        </jar>
+
+    </target>
 
 
     <target name="javadoc"
@@ -243,7 +295,7 @@
 
 
     <target name="bin-release"
-            depends="myfaces-jar, myfaces-jsf-api-jar, myfaces-components-jar, javadoc, tlddoc"
+            depends="myfaces-jsf-api-jar, myfaces-impl-jar, myfaces-extensions-jar, myfaces-jar, javadoc, tlddoc"
             description="creates the binary release file myfaces-x.x.x.tgz (don't forget to adjust manifest.properties!)">
 
         <tar destfile="${project.dir}/myfaces-${manifest.impl.version}.tgz"
@@ -277,9 +329,13 @@
                         prefix="myfaces-${manifest.impl.version}/lib"/>
             <tarfileset file="${commons-collections.jar}"
                         prefix="myfaces-${manifest.impl.version}/lib"/>
-            <tarfileset file="${myfaces-components.jar}"
-            			prefix="myfaces-${manifest.impl.version}/lib" />
             <tarfileset file="${myfaces-jsf-api.jar}"
+            			prefix="myfaces-${manifest.impl.version}/lib" />
+            <tarfileset file="${myfaces-impl.jar}"
+            			prefix="myfaces-${manifest.impl.version}/lib" />
+            <tarfileset file="${myfaces-extensions.jar}"
+            			prefix="myfaces-${manifest.impl.version}/lib" />
+            <tarfileset file="${myfaces.jar}"
             			prefix="myfaces-${manifest.impl.version}/lib" />
         </tar>
     </target>
@@ -359,8 +415,10 @@
     <target name="clean"
         description="deletes all files that were built (including examples and tagunit)">
         <delete quiet="true" failonerror="false" includeEmptyDirs="true">
+            <fileset file="${myfaces-jsf-api.jar}" />
+            <fileset file="${myfaces-impl.jar}" />
+            <fileset file="${myfaces-extentions.jar}" />
             <fileset file="${myfaces.jar}" />
-            <fileset file="${myfaces-components.jar}" />
             <fileset file="${project.dir}/myfaces-*.tgz" />
             <fileset dir="${doc.dir}/javadoc" />
             <fileset dir="${doc.dir}/tlddoc" />

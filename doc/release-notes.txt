@@ -8,6 +8,11 @@ Changes in Release 1.0.8 beta
   the 'old' sf-URI name for backward compatibility
 * i18n support for Brazilian Portuguese; thanks to Rogerio Pereira
 * bug fix #1045363 New <br> and &nbsp; 'feature'
+* refactor the jar files :
+  - myfaces-jsf-api.jar contains the api classes (no change)
+  - myfaces-impl.jar contains the standard jsf implementation
+  - myfaces-extensions.jar contains the myfaces extensions
+  - myfaces.jar containes all the myfaces code, and can be used in place of the 3 above
 ----------------------------------------------------------------------
 Changes in Release 1.0.7 beta
 * new custom component: HtmlPanelStack
