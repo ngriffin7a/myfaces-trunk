@@ -32,6 +32,7 @@ import java.util.Stack;
 /**
  * DOCUMENT ME!
  * @author Manfred Geiler (latest modification by $Author$)
+ * @author Anton Koinov
  * @version $Revision$ $Date$
  */
 public class TreeUtils
@@ -268,7 +269,7 @@ public class TreeUtils
             stream.print(prettyAttrName);
             stream.print("=\"");
             stream.print(v.toString());
-            stream.print("\"");
+            stream.print('"');
         }
     }
 
@@ -302,9 +303,9 @@ public class TreeUtils
         }
         else
         {
-            stream.print("?");
+            stream.print('?');
         }
-        stream.print("\"");
+        stream.print('"');
     }
 
     private static void printIndent(PrintStream stream, int depth)
