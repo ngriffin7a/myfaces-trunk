@@ -27,6 +27,9 @@ import javax.faces.el.ValueBinding;
  * @version $Revision$ $Date$
  * 
  * $Log$
+ * Revision 1.23  2004/09/01 18:25:19  mwessendorf
+ * added TestCase
+ *
  * Revision 1.22  2004/07/27 06:46:59  dave0000
  * cleanup/arange testcases, remove duplicates
  *
@@ -544,5 +547,15 @@ public class ValueBindingTest extends ELBaseTest
 
         vb = _application.createValueBinding("#{testBean_B2.double2}");
         assertEquals(new Double(-2.2), vb.getValue(_facesContext));
+
+        vb = _application.createValueBinding("#{testBean_E.a}");
+        assertEquals("foo", vb.getValue(_facesContext));
+
+        vb = _application.createValueBinding("#{testBean_E.b}");
+        assertEquals("bar", vb.getValue(_facesContext));
+
+        vb = _application.createValueBinding("#{testBean_E.a}#{testBean_E.b}");
+        assertEquals("foobar", vb.getValue(_facesContext));
+
     }
 }

@@ -103,4 +103,11 @@
         <managed-bean-scope>session</managed-bean-scope>
     </managed-bean>
 
+    <managed-bean>
+        <description>Test bean</description>
+        <managed-bean-name>testBean_E</managed-bean-name>
+        <managed-bean-class>net.sourceforge.myfaces.el.E</managed-bean-class>
+        <managed-bean-scope>session</managed-bean-scope>
+    </managed-bean>
+
 </faces-config>
