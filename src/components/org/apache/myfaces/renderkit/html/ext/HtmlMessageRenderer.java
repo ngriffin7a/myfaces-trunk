@@ -42,6 +42,9 @@ import java.util.List;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.9  2005/01/26 17:48:22  mmarinschek
+ * small changes
+ *
  * Revision 1.8  2005/01/26 13:27:16  mmarinschek
  * The x:message tags are now extended to use the column-name as a label for all inputs in an x:dataTable, without having to specify additional information.
  *
@@ -259,11 +262,11 @@ public class HtmlMessageRenderer
 
             for (int i = 0; i < li.size(); i++)
             {
-                UIComponent uiComponent = (UIComponent) li.get(i);
+                UIComponent child = (UIComponent) li.get(i);
 
-                if(uiComponent instanceof HtmlOutputText)
+                if(child instanceof HtmlOutputText)
                 {
-                    String str = RendererUtils.getStringValue(facesContext, component);
+                    String str = RendererUtils.getStringValue(facesContext, child);
 
                     if(str!=null)
                         buf.append(str);

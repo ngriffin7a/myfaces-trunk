@@ -136,7 +136,7 @@ abstract class HtmlDataTableHack
         else
         {
             int rowIndex = getDescendantStatesRowIndex();
-            EditableValueHolderState[] rowState = null;
+            EditableValueHolderState[] rowState;
             // make sure that the underlying data did not change size
             // (i.e. someone added a row to the DataModel)
             // BUG: #925693
@@ -290,7 +290,7 @@ abstract class HtmlDataTableHack
 
     private static Iterator getChildrenAndOptionalFacetsIterator(int level, UIComponent component)
     {
-        Iterator it = null;
+        Iterator it;
 
         if(level>1)
         {
@@ -502,7 +502,7 @@ abstract class HtmlDataTableHack
         values[0] = super.saveState(context);
         values[1] = _saveDescendantStates ? _descendantStates : null;
         values[2] = _saveDescendantStates ? new Integer(_descendantEditableValueHolderCount) : INTEGER_MINUS1;
-        return ((Object) (values));
+        return values;
     }
 
     public void restoreState(FacesContext context, Object state)
