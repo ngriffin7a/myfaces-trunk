@@ -33,17 +33,29 @@ class _MessageUtils
 {
     private static final String DETAIL_SUFFIX = "_detail";
 
-    static void addErrorMessage(FacesContext facesContext,
-                                UIComponent component,
-                                String messageId)
-    {
-        facesContext.addMessage(component.getClientId(facesContext),
-                                getMessage(facesContext,
-                                           facesContext.getViewRoot().getLocale(),
-                                           FacesMessage.SEVERITY_ERROR,
-                                           messageId,
-                                           null));
-    }
+	static void addErrorMessage(FacesContext facesContext,
+								UIComponent component,
+								String messageId)
+	{
+		facesContext.addMessage(component.getClientId(facesContext),
+								getMessage(facesContext,
+										   facesContext.getViewRoot().getLocale(),
+										   FacesMessage.SEVERITY_ERROR,
+										   messageId,
+										   null));
+	}
+
+	static void addErrorMessage(FacesContext facesContext,
+								UIComponent component,
+								String messageId, Object[] args)
+	{
+		facesContext.addMessage(component.getClientId(facesContext),
+								getMessage(facesContext,
+										   facesContext.getViewRoot().getLocale(),
+										   FacesMessage.SEVERITY_ERROR,
+										   messageId,
+										   args));
+	}
 
     static FacesMessage getMessage(FacesContext facesContext,
                                    Locale locale,
