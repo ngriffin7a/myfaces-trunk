@@ -101,5 +101,6 @@ public class JSFAttr
 
     protected JSFAttr()
     {
+        // hide from public view
     }
 }
