@@ -85,6 +85,27 @@ managed beans used:
 				</h:form>
 
                 <h:outputText value="#{calendar.date}" />
+                
+				<h:form id="calendarForm3">
+
+                    <x:dataTable id="data"
+                            styleClass="standardTable"
+                            headerClass="standardTable_Header"
+                            rowClasses="standardTable_Row1,standardTable_Row2"
+                            columnClasses="standardTable_Column,standardTable_ColumnCentered,standardTable_Column"
+                            var="dateHolder"
+                            value="#{calendar.dates}"
+                            preserveDataModel="true">
+                        <h:column>
+                            <x:inputCalendar monthYearRowClass="yearMonthHeader" weekRowClass="weekHeader"
+                                currentDayCellClass="currentDayCell" value="#{dateHolder.date}" renderAsPopup="true"
+                                popupTodayString="#{example_messages['popup_today_string']}" popupWeekString="#{example_messages['popup_week_string']}" />
+                        </h:column>
+                    </x:dataTable>
+
+                    <h:commandButton value="#{example_messages['js_submit']}"/>
+
+				</h:form>
 
             </h:panelGroup>
         </f:facet>

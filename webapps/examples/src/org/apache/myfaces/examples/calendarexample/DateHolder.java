@@ -16,15 +16,19 @@
 package org.apache.myfaces.examples.calendarexample;
 
 import java.util.Date;
+import java.util.List;
+import java.util.ArrayList;
+import java.io.Serializable;
 
 /**
  * DOCUMENT ME!
  * @author Martin Marinschek (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public class DateHolder
+public class DateHolder implements Serializable
 {
     private Date _date = new Date();
+    private transient List _dates;
 
     public Date getDate()
     {
@@ -34,5 +38,23 @@ public class DateHolder
     public void setDate(Date date)
     {
         _date = date;
+    }
+
+    public List getDates()
+    {
+        if(_dates == null)
+        {
+            _dates = new ArrayList();
+
+            for(int i=0; i<3; i++)
+                _dates.add(new DateHolder());
+        }
+
+        return _dates;
+    }
+
+    public void setDates(List dates)
+    {
+        _dates = dates;
     }
 }

@@ -46,6 +46,9 @@ import java.util.List;
 
 /**
  * $Log$
+ * Revision 1.19  2005/02/11 13:24:01  mmarinschek
+ * fix jira 60, showing fix in examples
+ *
  * Revision 1.18  2005/01/17 10:08:44  mmarinschek
  * trying to fix problem with added resources to header; css and js was not changeable by the user anymore...
  *
@@ -173,7 +176,9 @@ public class HtmlCalendarRenderer
             inputCalendar.getChildren().add(inputText);
 
             RendererUtils.renderChild(facesContext, inputText);
-            
+
+            inputCalendar.getChildren().remove(inputText);
+
             ResponseWriter writer = facesContext.getResponseWriter();
             
             writer.startElement(HTML.SCRIPT_ELEM,null);

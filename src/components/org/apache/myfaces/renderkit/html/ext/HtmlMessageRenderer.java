@@ -15,18 +15,16 @@
  */
 package org.apache.myfaces.renderkit.html.ext;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.myfaces.component.html.ext.HtmlMessage;
 import org.apache.myfaces.component.html.ext.HtmlMessages;
 import org.apache.myfaces.renderkit.RendererUtils;
 import org.apache.myfaces.renderkit.html.HtmlMessageRendererBase;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import javax.faces.application.FacesMessage;
-import javax.faces.component.UIComponent;
 import javax.faces.component.UIColumn;
-import javax.faces.component.UIInput;
+import javax.faces.component.UIComponent;
 import javax.faces.component.ValueHolder;
 import javax.faces.component.html.HtmlOutputLabel;
 import javax.faces.component.html.HtmlOutputText;
@@ -35,13 +33,16 @@ import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Map;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.10  2005/02/11 13:24:01  mmarinschek
+ * fix jira 60, showing fix in examples
+ *
  * Revision 1.9  2005/01/26 17:48:22  mmarinschek
  * small changes
  *
