@@ -602,8 +602,10 @@ class ParserXJspSaxHandler
     static final String JSP_SYSTEM_ID = 
         "http://java.sun.com/products/jsp/dtd/jspcore_1_2.dtd";
     static final String JSP_SYSTEM_ID_INTERNAL = 
-        "/org/apache/jasper/resources/jsp12.dtd";
-    
+        //"/org/apache/jasper/resources/jsp12.dtd";
+        //modified for MyFaces:
+        "/net/sourceforge/myfaces/renderkit/html/jspinfo/jasper/resources/jsp12.dtd";
+
     public InputSource resolveEntity(String publicId, String systemId)
 	throws SAXException 
     {

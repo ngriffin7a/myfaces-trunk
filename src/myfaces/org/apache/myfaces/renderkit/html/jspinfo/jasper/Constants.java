@@ -157,12 +157,19 @@ public class Constants {
      */
     public static final String TAGLIB_DTD_PUBLIC_ID_11 = 
 	"-//Sun Microsystems, Inc.//DTD JSP Tag Library 1.1//EN";
-    public static final String TAGLIB_DTD_RESOURCE_PATH_11 = 
-	"/javax/servlet/jsp/resources/web-jsptaglibrary_1_1.dtd";
-    public static final String TAGLIB_DTD_PUBLIC_ID_12 = 
+
+    public static final String TAGLIB_DTD_RESOURCE_PATH_11 =
+	//"/javax/servlet/jsp/resources/web-jsptaglibrary_1_1.dtd";
+    //modified for MyFaces, so that we do not depend on servlet.jar (for BEA Weblogic):
+    "/net/sourceforge/myfaces/renderkit/html/jspinfo/jasper/resources/web-jsptaglibrary_1_1.dtd";
+
+    public static final String TAGLIB_DTD_PUBLIC_ID_12 =
 	"-//Sun Microsystems, Inc.//DTD JSP Tag Library 1.2//EN";
-    public static final String TAGLIB_DTD_RESOURCE_PATH_12 = 
-	"/javax/servlet/jsp/resources/web-jsptaglibrary_1_2.dtd";
+
+    public static final String TAGLIB_DTD_RESOURCE_PATH_12 =
+	//"/javax/servlet/jsp/resources/web-jsptaglibrary_1_2.dtd";
+    //modified for MyFaces, so that we do not depend on servlet.jar (for BEA Weblogic):
+    "/net/sourceforge/myfaces/renderkit/html/jspinfo/jasper/resources/web-jsptaglibrary_1_2.dtd";
 
     /**
      * Public Id and the Resource path (of the cached copy) 
@@ -170,12 +177,19 @@ public class Constants {
      */
     public static final String WEBAPP_DTD_PUBLIC_ID_22 = 
 	"-//Sun Microsystems, Inc.//DTD Web Application 2.2//EN";
-    public static final String WEBAPP_DTD_RESOURCE_PATH_22 = 
-	"/javax/servlet/resources/web-app_2_2.dtd";
-    public static final String WEBAPP_DTD_PUBLIC_ID_23 = 
+
+    public static final String WEBAPP_DTD_RESOURCE_PATH_22 =
+	//"/javax/servlet/resources/web-app_2_2.dtd";
+    //modified for MyFaces, so that we do not depend on servlet.jar (for BEA Weblogic):
+    "/net/sourceforge/myfaces/renderkit/html/jspinfo/jasper/resources/web-app_2_2.dtd";
+
+    public static final String WEBAPP_DTD_PUBLIC_ID_23 =
 	"-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN";
-    public static final String WEBAPP_DTD_RESOURCE_PATH_23 = 
-	"/javax/servlet/resources/web-app_2_3.dtd";
+
+    public static final String WEBAPP_DTD_RESOURCE_PATH_23 =
+	//"/javax/servlet/resources/web-app_2_3.dtd";
+    //modified for MyFaces, so that we do not depend on servlet.jar (for BEA Weblogic):
+    "/net/sourceforge/myfaces/renderkit/html/jspinfo/jasper/resources/web-app_2_3.dtd";
 
     /**
      * List of the Public IDs that we cache, and their
