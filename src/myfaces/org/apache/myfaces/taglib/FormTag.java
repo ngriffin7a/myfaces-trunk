@@ -20,6 +20,7 @@ package net.sourceforge.myfaces.taglib;
 
 import net.sourceforge.myfaces.component.UIForm;
 import net.sourceforge.myfaces.renderkit.html.FormRenderer;
+import net.sourceforge.myfaces.renderkit.attr.FormRendererAttributes;
 
 import javax.faces.component.UIComponent;
 
@@ -43,9 +44,58 @@ public class FormTag
         return FormRenderer.TYPE;
     }
 
-
     public void setFormName(String v)
     {
         setComponentAttribute(UIForm.FORM_NAME_ATTR, v);
     }
+
+    //form tag properties
+
+    public void setAction(String value)
+    {
+        setRendererAttribute(FormRendererAttributes.ACTION_ATTR, value);
+    }
+
+    public void setAccept(String value)
+    {
+        setRendererAttribute(FormRendererAttributes.ACCEPT_ATTR, value);
+    }
+
+    public void setAcceptcharset(String value)
+    {
+        setRendererAttribute(FormRendererAttributes.ACCEPT_CHARSET_ATTR, value);
+    }
+
+    public void setEnctype(String value)
+    {
+        setRendererAttribute(FormRendererAttributes.ENCTYPE_ATTR, value);
+    }
+
+    public void setMethod(String value)
+    {
+        setRendererAttribute(FormRendererAttributes.METHOD_ATTR, value);
+    }
+
+    public void setName(String value)
+    {
+        setRendererAttribute(FormRendererAttributes.NAME_ATTR, value);
+    }
+
+    public void setOnreset(String value)
+    {
+        setRendererAttribute(FormRendererAttributes.ONRESET_ATTR, value);
+    }
+
+    public void setOnsubmit(String value)
+    {
+        setRendererAttribute(FormRendererAttributes.ONSUMBIT_ATTR, value);
+    }
+
+    public void setTarget(String value)
+    {
+        setRendererAttribute(FormRendererAttributes.TARGET_ATTR, value);
+    }
+
+
+
 }

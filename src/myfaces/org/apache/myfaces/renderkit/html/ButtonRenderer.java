@@ -20,6 +20,7 @@ package net.sourceforge.myfaces.renderkit.html;
 
 import net.sourceforge.myfaces.renderkit.attr.ButtonRendererAttributes;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLEncoder;
+import net.sourceforge.myfaces.renderkit.html.util.CommonAttributes;
 import net.sourceforge.myfaces.util.logging.LogUtil;
 
 import javax.faces.component.UICommand;
@@ -141,32 +142,32 @@ public class ButtonRenderer
         }
     }
 
-    public void encodeEnd(FacesContext facesContext, UIComponent uiComponent) throws IOException
+    public void encodeEnd(FacesContext context, UIComponent component) throws IOException
     {
-        ResponseWriter writer = facesContext.getResponseWriter();
+        ResponseWriter writer = context.getResponseWriter();
         boolean hiddenParam = true;
         writer.write("<input type=");
-        String imageSrc = (String)uiComponent.getAttribute(IMAGE_ATTR);
+        String imageSrc = (String)component.getAttribute(IMAGE_ATTR);
         if (imageSrc != null)
         {
             writer.write("\"image\" src=\"");
             writer.write(imageSrc);
             writer.write("\"");
             writer.write(" name=\"");
-            writer.write(uiComponent.getClientId(facesContext));
+            writer.write(component.getClientId(context));
             writer.write("\"");
         }
         else
         {
             writer.write("\"submit\" name=\"");
-            writer.write(uiComponent.getClientId(facesContext));
+            writer.write(component.getClientId(context));
             writer.write("\"");
             writer.write(" value=\"");
-            String label = (String)uiComponent.getAttribute(LABEL_ATTR);
+            String label = (String)component.getAttribute(LABEL_ATTR);
             //TODO: key/bundle instead of label
             if (label == null)
             {
-                label = getStringValue(facesContext, uiComponent);
+                label = getStringValue(context, component);
                 hiddenParam = false;
             }
             writer.write(HTMLEncoder.encode(label, false, false));
@@ -174,7 +175,7 @@ public class ButtonRenderer
         }
 
         //css class:
-        String cssClass = (String)uiComponent.getAttribute(COMMAND_CLASS_ATTR);
+        String cssClass = (String)component.getAttribute(COMMAND_CLASS_ATTR);
         if (cssClass != null)
         {
             writer.write(" class=\"");
@@ -182,14 +183,18 @@ public class ButtonRenderer
             writer.write("\"");
         }
 
+        CommonAttributes.renderEventHandlerAttributes(context, component);
+        CommonAttributes.renderUniversalAttributes(context, component);
+        CommonAttributes.renderAttributes(context, component, ButtonRendererAttributes.COMMON_BUTTON_ATTRIBUTES);
+
         writer.write(">");
 
         if (hiddenParam)
         {
             writer.write("<input type=\"hidden\" name=\"");
-            writer.write(getHiddenValueParamName(facesContext, uiComponent));
+            writer.write(getHiddenValueParamName(context, component));
             writer.write("\" value=\"");
-            String strVal = getStringValue(facesContext, uiComponent);
+            String strVal = getStringValue(context, component);
             writer.write(HTMLEncoder.encode(strVal, false, false));
             writer.write("\">");
         }

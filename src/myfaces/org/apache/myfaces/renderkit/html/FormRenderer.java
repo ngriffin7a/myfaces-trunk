@@ -19,7 +19,9 @@
 package net.sourceforge.myfaces.renderkit.html;
 
 import net.sourceforge.myfaces.MyFacesFactoryFinder;
+import net.sourceforge.myfaces.renderkit.attr.FormRendererAttributes;
 import net.sourceforge.myfaces.renderkit.html.state.StateRenderer;
+import net.sourceforge.myfaces.renderkit.html.util.CommonAttributes;
 import net.sourceforge.myfaces.webapp.ServletMapping;
 import net.sourceforge.myfaces.webapp.ServletMappingFactory;
 
@@ -56,7 +58,11 @@ public class FormRenderer
         ResponseWriter writer = context.getResponseWriter();
         writer.write("<form method=\"post\" action=\"");
         writer.write(getActionStr(context, component));
-        writer.write("\">");
+        writer.write("\"");
+        CommonAttributes.renderEventHandlerAttributes(context, component);
+        CommonAttributes.renderUniversalAttributes(context, component);
+        CommonAttributes.renderAttributes(context, component, FormRendererAttributes.COMMON_FORM_ATTRIBUTES);
+        writer.write(">");
     }
 
     private String getActionStr(FacesContext facesContext, UIComponent form)

@@ -47,13 +47,78 @@ public class TextEntryInputTag
         setValue(value);
     }
 
-    public void setSize(String v)
+    public void setAccesskey(String value)
     {
-        setRendererAttribute(TextRenderer.SIZE_ATTR, v);
+        setRendererAttribute(TextRenderer.ACCESSKEY_ATTR, value);
     }
 
-    public void setMaxLength(String v)
+    public void setAlign(String value)
     {
-        setRendererAttribute(TextRenderer.MAX_LENGTH_ATTR, v);
+        setRendererAttribute(TextRenderer.ALIGN_ATTR, value);
+    }
+
+    public void setAlt(String value)
+    {
+        setRendererAttribute(TextRenderer.ALT_ATTR, value);
+    }
+
+    public void setDatafld(String value)
+    {
+        setRendererAttribute(TextRenderer.DATAFLD_ATTR, value);
+    }
+
+    public void setDdatasrc(String value)
+    {
+        setRendererAttribute(TextRenderer.DATASRC_ATTR, value);
+    }
+
+    public void setDataformatas(String value)
+    {
+        setRendererAttribute(TextRenderer.DATAFORMATAS_ATTR, value);
+    }
+
+    public void setMaxlength(String value)
+    {
+        setRendererAttribute(TextRenderer.MAX_LENGTH_ATTR, value);
+    }
+
+    public void setName(String value)
+    {
+        setRendererAttribute(TextRenderer.NAME_ATTR, value);
+    }
+
+    public void setOnblur(String value)
+    {
+        setRendererAttribute(TextRenderer.ONBLUR_ATTR, value);
+    }
+
+    public void setOnchange(String value)
+    {
+        setRendererAttribute(TextRenderer.ONCHANGE_ATTR, value);
+    }
+
+    public void setOnfocus(String value)
+    {
+        setRendererAttribute(TextRenderer.ONFOCUS_ATTR, value);
+    }
+
+    public void setOnselect(String value)
+    {
+        setRendererAttribute(TextRenderer.ONSELECT_ATTR, value);
+    }
+
+    public void setReadonly(String value)
+    {
+        setRendererAttribute(TextRenderer.READONLY_ATTR, value);
+    }
+
+    public void setSize(String value)
+    {
+        setRendererAttribute(TextRenderer.SIZE_ATTR, value);
+    }
+
+    public void setTabindex(String value)
+    {
+        setRendererAttribute(TextRenderer.TABINDEX_ATTR, value);
     }
 }

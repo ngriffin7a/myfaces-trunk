@@ -28,4 +28,32 @@ public interface HyperlinkRendererAttributes
     extends CommonRendererAttributes
 {
     public static final String HREF_ATTR = "href";
+
+    public static final String ACCESSKEY_ATTR = "accesskey";
+    public static final String CHARSET_ATTR = "charset";
+    public static final String COORDS_ATTR = "coords";
+    public static final String HREFLANG_ATTR = "hreflang";
+    public static final String NAME_ATTR = "name";
+    public static final String REL_ATTR = "rel";
+    public static final String REV_ATTR = "rev";
+    public static final String SHAPE_ATTR = "shape";
+    public static final String TABINDEX_ATTR = "tabindex";
+    public static final String TARGET_ATTR = "target";
+    public static final String TYPE_ATTR = "type";
+
+    public static final String[] COMMON_HYPERLINK_ATTRIBUTES =
+    {
+        ACCESSKEY_ATTR,
+        CHARSET_ATTR,
+        COORDS_ATTR,
+        //HREF_ATTR, href is not a common attribute!
+        HREFLANG_ATTR,
+        NAME_ATTR,
+        REL_ATTR,
+        REV_ATTR,
+        SHAPE_ATTR,
+        TABINDEX_ATTR,
+        TARGET_ATTR,
+        TYPE_ATTR
+    };
 }

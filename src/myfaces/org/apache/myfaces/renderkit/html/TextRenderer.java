@@ -19,6 +19,7 @@
 package net.sourceforge.myfaces.renderkit.html;
 
 import net.sourceforge.myfaces.renderkit.attr.TextRendererAttributes;
+import net.sourceforge.myfaces.renderkit.html.util.CommonAttributes;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLEncoder;
 
 import javax.faces.component.UIComponent;
@@ -70,47 +71,35 @@ public class TextRenderer
         }
     }
 
-    public void renderInput(FacesContext facesContext, UIComponent uiComponent)
+    public void renderInput(FacesContext context, UIComponent component)
             throws IOException
     {
-        ResponseWriter writer = facesContext.getResponseWriter();
+        ResponseWriter writer = context.getResponseWriter();
         writer.write("<input type=\"text\"");
-        String coumpoundId = uiComponent.getClientId(facesContext);
+        String coumpoundId = component.getClientId(context);
         writer.write(" name=\"");
         writer.write(coumpoundId);
         writer.write("\"");
         writer.write(" id=\"");
         writer.write(coumpoundId);
         writer.write("\"");
-        String currentValue = getStringValue(facesContext, uiComponent);
+        String currentValue = getStringValue(context, component);
         if (currentValue != null)
         {
             writer.write(" value=\"");
             writer.write(HTMLEncoder.encode(currentValue, false, false));
             writer.write("\"");
         }
-        String size = (String)uiComponent.getAttribute(SIZE_ATTR);
-        if (size != null)
-        {
-            writer.write(" size=\"");
-            writer.write(size);
-            writer.write("\"");
-        }
-        String maxLength = (String)uiComponent.getAttribute(MAX_LENGTH_ATTR);
-        if (maxLength != null)
-        {
-            writer.write(" maxlength=\"");
-            writer.write(maxLength);
-            writer.write("\"");
-        }
-        String css = (String)uiComponent.getAttribute(INPUT_CLASS_ATTR);
+        String css = (String)component.getAttribute(INPUT_CLASS_ATTR);
         if (css != null)
         {
             writer.write("<span class=\"");
             writer.write(css);
             writer.write("\">");
         }
-
+        CommonAttributes.renderEventHandlerAttributes(context, component);
+        CommonAttributes.renderUniversalAttributes(context, component);
+        CommonAttributes.renderAttributes(context, component, TextRendererAttributes.COMMON_TEXT_ATTRIBUTES);
         writer.write(">");
     }
 

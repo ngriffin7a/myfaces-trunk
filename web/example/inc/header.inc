@@ -6,4 +6,5 @@
 <%
     //String pageLayout = "classic";
     String pageLayout = "navigationRight";
+    String msgBundle = "net.sourceforge.myfaces.example.example_messages";
 %>

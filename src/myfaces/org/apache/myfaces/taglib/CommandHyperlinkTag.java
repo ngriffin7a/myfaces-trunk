@@ -59,8 +59,63 @@ public class CommandHyperlinkTag
         setRendererAttribute(HyperlinkRenderer.HREF_ATTR, v);
     }
 
-    public void setCssClass(String v)
+    public void setCommandClass(String v)
     {
         setRendererAttribute(HyperlinkRenderer.COMMAND_CLASS_ATTR, v);
+    }
+
+    public void setAccesskey(String value)
+    {
+        setRendererAttribute(HyperlinkRenderer.ACCESSKEY_ATTR, value);
+    }
+
+    public void setCharset(String value)
+    {
+        setRendererAttribute(HyperlinkRenderer.CHARSET_ATTR, value);
+    }
+
+    public void setCoords(String value)
+    {
+        setRendererAttribute(HyperlinkRenderer.COORDS_ATTR, value);
+    }
+
+    public void setHreflang(String value)
+    {
+        setRendererAttribute(HyperlinkRenderer.HREFLANG_ATTR, value);
+    }
+
+    public void setName(String value)
+    {
+        setRendererAttribute(HyperlinkRenderer.NAME_ATTR, value);
+    }
+
+    public void setRel(String value)
+    {
+        setRendererAttribute(HyperlinkRenderer.REL_ATTR, value);
+    }
+
+    public void setRev(String value)
+    {
+        setRendererAttribute(HyperlinkRenderer.REV_ATTR, value);
+    }
+
+    public void setShape(String value)
+    {
+        setRendererAttribute(HyperlinkRenderer.SHAPE_ATTR, value);
+    }
+
+    public void setTabindex(String value)
+    {
+        setRendererAttribute(HyperlinkRenderer.TABINDEX_ATTR, value);
+    }
+
+    public void setTarget(String value)
+    {
+        setRendererAttribute(HyperlinkRenderer.TARGET_ATTR, value);
+    }
+
+    public void setType(String value)
+    {
+        setRendererAttribute(HyperlinkRenderer.TYPE_ATTR, value);
     }
 }

@@ -39,6 +39,832 @@
         <bodycontent>JSP</bodycontent>
     </tag>
 
+<!--
+  ======================================================
+  form
+  ======================================================
+ -->
+    <tag>
+        <name>form</name>
+        <tagclass>net.sourceforge.myfaces.taglib.FormTag</tagclass>
+        <bodycontent>JSP</bodycontent>
+        <attribute>
+            <name>id</name>
+            <required>true</required>
+            <rtexprvalue>false</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>formName</name>
+            <required>true</required>
+            <rtexprvalue>false</rtexprvalue>
+        </attribute>
+        <!-- HTML 4.0 form attributes -->
+        <attribute>
+            <name>action</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>accept</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>accept-charset</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>enctype</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>method</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>name</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>onreset</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>onsubmit</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>target</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <!-- HTML 4.0 universal attributes -->
+        <attribute>
+            <name>dir</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+         <attribute>
+             <name>lang</name>
+             <required>false</required>
+             <rtexprvalue>true</rtexprvalue>
+         </attribute>
+         <attribute>
+             <name>style</name>
+             <required>false</required>
+             <rtexprvalue>true</rtexprvalue>
+         </attribute>
+         <attribute>
+             <name>title</name>
+             <required>false</required>
+             <rtexprvalue>true</rtexprvalue>
+         </attribute>
+         <!-- HTML 4.0 event-handler attributes -->
+         <attribute>
+             <name>onclick</name>
+             <required>false</required>
+             <rtexprvalue>true</rtexprvalue>
+         </attribute>
+         <attribute>
+             <name>ondblclick</name>
+             <required>false</required>
+             <rtexprvalue>true</rtexprvalue>
+         </attribute>
+         <attribute>
+             <name>onmousedown</name>
+             <required>false</required>
+             <rtexprvalue>true</rtexprvalue>
+         </attribute>
+         <attribute>
+             <name>onmouseup</name>
+             <required>false</required>
+             <rtexprvalue>true</rtexprvalue>
+         </attribute>
+         <attribute>
+             <name>onmouseover</name>
+             <required>false</required>
+             <rtexprvalue>true</rtexprvalue>
+         </attribute>
+         <attribute>
+             <name>onmousemove</name>
+             <required>false</required>
+             <rtexprvalue>true</rtexprvalue>
+         </attribute>
+         <attribute>
+             <name>onmouseout</name>
+             <required>false</required>
+             <rtexprvalue>true</rtexprvalue>
+         </attribute>
+         <attribute>
+             <name>onkeypress</name>
+             <required>false</required>
+             <rtexprvalue>true</rtexprvalue>
+         </attribute>
+         <attribute>
+             <name>onkeydown</name>
+             <required>false</required>
+             <rtexprvalue>true</rtexprvalue>
+         </attribute>
+         <attribute>
+             <name>onkeyup</name>
+             <required>false</required>
+             <rtexprvalue>true</rtexprvalue>
+         </attribute>
+    </tag>
+
+<!--
+  ======================================================
+  textentry_input
+  ======================================================
+ -->
+    <tag>
+        <name>textentry_input</name>
+        <tagclass>net.sourceforge.myfaces.taglib.TextEntryInputTag</tagclass>
+        <bodycontent>JSP</bodycontent>
+        <attribute>
+            <name>id</name>
+            <required>true</required>
+            <rtexprvalue>false</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>modelReference</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
+        </attribute>
+        <!-- replace HTML 4.0 value attribute by text -->
+        <attribute>
+            <name>text</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <!-- HTML 4.0 rendering attributes -->
+        <attribute>
+            <name>accesskey</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>align</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>alt</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>datafld</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>datasrc</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>dataformatas</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>maxlength</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>name</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>onblur</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>onchange</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>onfocus</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>onselect</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>readonly</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>size</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>tabindex</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <!-- HTML 4.0 universal attributes -->
+        <attribute>
+            <name>dir</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+         <attribute>
+             <name>lang</name>
+             <required>false</required>
+             <rtexprvalue>true</rtexprvalue>
+         </attribute>
+         <attribute>
+             <name>style</name>
+             <required>false</required>
+             <rtexprvalue>true</rtexprvalue>
+         </attribute>
+         <attribute>
+             <name>title</name>
+             <required>false</required>
+             <rtexprvalue>true</rtexprvalue>
+         </attribute>
+         <!-- HTML 4.0 event-handler attributes -->
+         <attribute>
+             <name>onclick</name>
+             <required>false</required>
+             <rtexprvalue>true</rtexprvalue>
+         </attribute>
+         <attribute>
+             <name>ondblclick</name>
+             <required>false</required>
+             <rtexprvalue>true</rtexprvalue>
+         </attribute>
+         <attribute>
+             <name>onmousedown</name>
+             <required>false</required>
+             <rtexprvalue>true</rtexprvalue>
+         </attribute>
+         <attribute>
+             <name>onmouseup</name>
+             <required>false</required>
+             <rtexprvalue>true</rtexprvalue>
+         </attribute>
+         <attribute>
+             <name>onmouseover</name>
+             <required>false</required>
+             <rtexprvalue>true</rtexprvalue>
+         </attribute>
+         <attribute>
+             <name>onmousemove</name>
+             <required>false</required>
+             <rtexprvalue>true</rtexprvalue>
+         </attribute>
+         <attribute>
+             <name>onmouseout</name>
+             <required>false</required>
+             <rtexprvalue>true</rtexprvalue>
+         </attribute>
+         <attribute>
+             <name>onkeypress</name>
+             <required>false</required>
+             <rtexprvalue>true</rtexprvalue>
+         </attribute>
+         <attribute>
+             <name>onkeydown</name>
+             <required>false</required>
+             <rtexprvalue>true</rtexprvalue>
+         </attribute>
+         <attribute>
+             <name>onkeyup</name>
+             <required>false</required>
+             <rtexprvalue>true</rtexprvalue>
+         </attribute>
+    </tag>
+
+<!--
+  ======================================================
+  textentry_secret
+  ======================================================
+ -->
+    <tag>
+        <name>textentry_secret</name>
+        <tagclass>net.sourceforge.myfaces.taglib.TextEntrySecretTag</tagclass>
+        <bodycontent>JSP</bodycontent>
+        <attribute>
+            <name>id</name>
+            <required>true</required>
+            <rtexprvalue>false</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>modelReference</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
+        </attribute>
+        <!-- replace HTML 4.0 value attribute by text -->
+        <attribute>
+            <name>text</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <!-- HTML 4.0 rendering attributes -->
+        <attribute>
+            <name>accesskey</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>align</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>alt</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>datafld</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>datasrc</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>dataformatas</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>maxlength</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>name</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>onblur</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>onchange</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>onfocus</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>onselect</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>readonly</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>size</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>tabindex</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <!-- HTML 4.0 universal attributes -->
+        <attribute>
+            <name>dir</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+         <attribute>
+             <name>lang</name>
+             <required>false</required>
+             <rtexprvalue>true</rtexprvalue>
+         </attribute>
+         <attribute>
+             <name>style</name>
+             <required>false</required>
+             <rtexprvalue>true</rtexprvalue>
+         </attribute>
+         <attribute>
+             <name>title</name>
+             <required>false</required>
+             <rtexprvalue>true</rtexprvalue>
+         </attribute>
+         <!-- HTML 4.0 event-handler attributes -->
+         <attribute>
+             <name>onclick</name>
+             <required>false</required>
+             <rtexprvalue>true</rtexprvalue>
+         </attribute>
+         <attribute>
+             <name>ondblclick</name>
+             <required>false</required>
+             <rtexprvalue>true</rtexprvalue>
+         </attribute>
+         <attribute>
+             <name>onmousedown</name>
+             <required>false</required>
+             <rtexprvalue>true</rtexprvalue>
+         </attribute>
+         <attribute>
+             <name>onmouseup</name>
+             <required>false</required>
+             <rtexprvalue>true</rtexprvalue>
+         </attribute>
+         <attribute>
+             <name>onmouseover</name>
+             <required>false</required>
+             <rtexprvalue>true</rtexprvalue>
+         </attribute>
+         <attribute>
+             <name>onmousemove</name>
+             <required>false</required>
+             <rtexprvalue>true</rtexprvalue>
+         </attribute>
+         <attribute>
+             <name>onmouseout</name>
+             <required>false</required>
+             <rtexprvalue>true</rtexprvalue>
+         </attribute>
+         <attribute>
+             <name>onkeypress</name>
+             <required>false</required>
+             <rtexprvalue>true</rtexprvalue>
+         </attribute>
+         <attribute>
+             <name>onkeydown</name>
+             <required>false</required>
+             <rtexprvalue>true</rtexprvalue>
+         </attribute>
+         <attribute>
+             <name>onkeyup</name>
+             <required>false</required>
+             <rtexprvalue>true</rtexprvalue>
+         </attribute>
+    </tag>
+
+<!--
+  ======================================================
+  command_button
+  ======================================================
+ -->
+    <tag>
+        <name>command_button</name>
+        <tagclass>net.sourceforge.myfaces.taglib.CommandButtonTag</tagclass>
+        <!-- TODO: attributes imageKey, key, bundle, rendered, modelReference -->
+        <attribute>
+            <name>id</name>
+            <required>true</required>
+            <rtexprvalue>false</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>commandReference</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>commandName</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>label</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>commandClass</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <!-- HTML 4.0 rendering attributes -->
+        <attribute>
+            <name>accesskey</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>align</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>alt</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>name</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>onblur</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>onchange</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>onfocus</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>onselect</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>size</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>tabindex</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <!-- HTML 4.0 universal attributes -->
+        <attribute>
+            <name>dir</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+         <attribute>
+             <name>lang</name>
+             <required>false</required>
+             <rtexprvalue>true</rtexprvalue>
+         </attribute>
+         <attribute>
+             <name>style</name>
+             <required>false</required>
+             <rtexprvalue>true</rtexprvalue>
+         </attribute>
+         <attribute>
+             <name>title</name>
+             <required>false</required>
+             <rtexprvalue>true</rtexprvalue>
+         </attribute>
+         <!-- HTML 4.0 event-handler attributes -->
+         <attribute>
+             <name>onclick</name>
+             <required>false</required>
+             <rtexprvalue>true</rtexprvalue>
+         </attribute>
+         <attribute>
+             <name>ondblclick</name>
+             <required>false</required>
+             <rtexprvalue>true</rtexprvalue>
+         </attribute>
+         <attribute>
+             <name>onmousedown</name>
+             <required>false</required>
+             <rtexprvalue>true</rtexprvalue>
+         </attribute>
+         <attribute>
+             <name>onmouseup</name>
+             <required>false</required>
+             <rtexprvalue>true</rtexprvalue>
+         </attribute>
+         <attribute>
+             <name>onmouseover</name>
+             <required>false</required>
+             <rtexprvalue>true</rtexprvalue>
+         </attribute>
+         <attribute>
+             <name>onmousemove</name>
+             <required>false</required>
+             <rtexprvalue>true</rtexprvalue>
+         </attribute>
+         <attribute>
+             <name>onmouseout</name>
+             <required>false</required>
+             <rtexprvalue>true</rtexprvalue>
+         </attribute>
+         <attribute>
+             <name>onkeypress</name>
+             <required>false</required>
+             <rtexprvalue>true</rtexprvalue>
+         </attribute>
+         <attribute>
+             <name>onkeydown</name>
+             <required>false</required>
+             <rtexprvalue>true</rtexprvalue>
+         </attribute>
+         <attribute>
+             <name>onkeyup</name>
+             <required>false</required>
+             <rtexprvalue>true</rtexprvalue>
+         </attribute>
+    </tag>
+
+
+<!--
+  ======================================================
+  hyperlink_button
+  ======================================================
+ -->
+    <tag>
+        <name>command_hyperlink</name>
+        <tagclass>net.sourceforge.myfaces.taglib.CommandHyperlinkTag</tagclass>
+        <bodycontent>JSP</bodycontent>
+        <!-- TODO attributes modelReference, rendered, image, label, key bundle-->
+        <attribute>
+            <name>id</name>
+            <required>true</required>
+            <rtexprvalue>false</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>modelReference</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>commandReference</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>commandName</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>commandClass</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>href</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <!-- HTML 4.0 rendering attributes -->
+        <attribute>
+            <name>accesskey</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>charset</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>coords</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>hreflang</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>name</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>rel</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>rev</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>shape</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>tabindex</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>target</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>type</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <!-- HTML 4.0 universal attributes -->
+        <attribute>
+            <name>dir</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+         <attribute>
+             <name>lang</name>
+             <required>false</required>
+             <rtexprvalue>true</rtexprvalue>
+         </attribute>
+         <attribute>
+             <name>style</name>
+             <required>false</required>
+             <rtexprvalue>true</rtexprvalue>
+         </attribute>
+         <attribute>
+             <name>title</name>
+             <required>false</required>
+             <rtexprvalue>true</rtexprvalue>
+         </attribute>
+         <!-- HTML 4.0 event-handler attributes -->
+         <attribute>
+             <name>onclick</name>
+             <required>false</required>
+             <rtexprvalue>true</rtexprvalue>
+         </attribute>
+         <attribute>
+             <name>ondblclick</name>
+             <required>false</required>
+             <rtexprvalue>true</rtexprvalue>
+         </attribute>
+         <attribute>
+             <name>onmousedown</name>
+             <required>false</required>
+             <rtexprvalue>true</rtexprvalue>
+         </attribute>
+         <attribute>
+             <name>onmouseup</name>
+             <required>false</required>
+             <rtexprvalue>true</rtexprvalue>
+         </attribute>
+         <attribute>
+             <name>onmouseover</name>
+             <required>false</required>
+             <rtexprvalue>true</rtexprvalue>
+         </attribute>
+         <attribute>
+             <name>onmousemove</name>
+             <required>false</required>
+             <rtexprvalue>true</rtexprvalue>
+         </attribute>
+         <attribute>
+             <name>onmouseout</name>
+             <required>false</required>
+             <rtexprvalue>true</rtexprvalue>
+         </attribute>
+         <attribute>
+             <name>onkeypress</name>
+             <required>false</required>
+             <rtexprvalue>true</rtexprvalue>
+         </attribute>
+         <attribute>
+             <name>onkeydown</name>
+             <required>false</required>
+             <rtexprvalue>true</rtexprvalue>
+         </attribute>
+         <attribute>
+             <name>onkeyup</name>
+             <required>false</required>
+             <rtexprvalue>true</rtexprvalue>
+         </attribute>
+    </tag>
+
+
+<!--
+  ======================================================
+  output_text
+  TODO: check attributes
+  ======================================================
+ -->
     <tag>
         <name>output_text</name>
         <tagclass>net.sourceforge.myfaces.taglib.OutputTextTag</tagclass>
@@ -65,6 +891,13 @@
         </attribute>
     </tag>
 
+
+<!--
+  ======================================================
+  message
+  TODO: check attributes
+  ======================================================
+ -->
     <tag>
         <name>message</name>
         <tagclass>net.sourceforge.myfaces.taglib.MessageTag</tagclass>
@@ -102,153 +935,12 @@
     </tag>
 
 
-    <tag>
-        <name>form</name>
-        <tagclass>net.sourceforge.myfaces.taglib.FormTag</tagclass>
-        <bodycontent>JSP</bodycontent>
-        <attribute>
-            <name>id</name>
-            <required>true</required>
-            <rtexprvalue>false</rtexprvalue>
-        </attribute>
-        <attribute>
-            <name>formName</name>
-            <required>true</required>
-            <rtexprvalue>false</rtexprvalue>
-        </attribute>
-    </tag>
-
-    <tag>
-        <name>textentry_input</name>
-        <tagclass>net.sourceforge.myfaces.taglib.TextEntryInputTag</tagclass>
-        <bodycontent>JSP</bodycontent>
-        <attribute>
-            <name>id</name>
-            <required>true</required>
-            <rtexprvalue>false</rtexprvalue>
-        </attribute>
-        <attribute>
-            <name>modelReference</name>
-            <required>false</required>
-            <rtexprvalue>false</rtexprvalue>
-        </attribute>
-        <attribute>
-            <name>text</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-        </attribute>
-        <!-- HTML rendering attributes -->
-        <attribute>
-            <name>size</name>
-            <required>false</required>
-            <rtexprvalue>false</rtexprvalue>
-        </attribute>
-        <attribute>
-            <name>maxLength</name>
-            <required>false</required>
-            <rtexprvalue>false</rtexprvalue>
-        </attribute>
-    </tag>
-
-    <tag>
-        <name>textentry_secret</name>
-        <tagclass>net.sourceforge.myfaces.taglib.TextEntrySecretTag</tagclass>
-        <bodycontent>JSP</bodycontent>
-        <attribute>
-            <name>id</name>
-            <required>true</required>
-            <rtexprvalue>false</rtexprvalue>
-        </attribute>
-        <attribute>
-            <name>modelReference</name>
-            <required>false</required>
-            <rtexprvalue>false</rtexprvalue>
-        </attribute>
-        <attribute>
-            <name>text</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-        </attribute>
-        <!-- HTML rendering attributes -->
-        <attribute>
-            <name>size</name>
-            <required>false</required>
-            <rtexprvalue>false</rtexprvalue>
-        </attribute>
-        <attribute>
-            <name>maxLength</name>
-            <required>false</required>
-            <rtexprvalue>false</rtexprvalue>
-        </attribute>
-    </tag>
-
-    <tag>
-        <name>command_button</name>
-        <tagclass>net.sourceforge.myfaces.taglib.CommandButtonTag</tagclass>
-        <attribute>
-            <name>id</name>
-            <required>true</required>
-            <rtexprvalue>false</rtexprvalue>
-        </attribute>
-        <attribute>
-            <name>commandReference</name>
-            <required>false</required>
-            <rtexprvalue>false</rtexprvalue>
-        </attribute>
-        <attribute>
-            <name>commandName</name>
-            <required>false</required>
-            <rtexprvalue>false</rtexprvalue>
-        </attribute>
-        <attribute>
-            <name>label</name>
-            <required>false</required>
-            <rtexprvalue>false</rtexprvalue>
-        </attribute>
-        <attribute>
-            <name>cssClass</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-        </attribute>
-    </tag>
-
-
-    <tag>
-        <name>command_hyperlink</name>
-        <tagclass>net.sourceforge.myfaces.taglib.CommandHyperlinkTag</tagclass>
-        <bodycontent>JSP</bodycontent>
-        <attribute>
-            <name>id</name>
-            <required>true</required>
-            <rtexprvalue>false</rtexprvalue>
-        </attribute>
-        <attribute>
-            <name>href</name>
-            <required>false</required>
-            <rtexprvalue>false</rtexprvalue>
-        </attribute>
-        <attribute>
-            <name>modelReference</name>
-            <required>false</required>
-            <rtexprvalue>false</rtexprvalue>
-        </attribute>
-        <attribute>
-            <name>commandReference</name>
-            <required>false</required>
-            <rtexprvalue>false</rtexprvalue>
-        </attribute>
-        <attribute>
-            <name>commandName</name>
-            <required>false</required>
-            <rtexprvalue>false</rtexprvalue>
-        </attribute>
-        <attribute>
-            <name>cssClass</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-        </attribute>
-    </tag>
-
+<!--
+  ======================================================
+  parameter
+  TODO: check attributes
+  ======================================================
+ -->
     <tag>
         <name>param</name>  <!-- TODO: Rename to "parameter" -->
         <tagclass>net.sourceforge.myfaces.taglib.ParamTag</tagclass>
@@ -276,9 +968,12 @@
     </tag>
 
 
-    <!--
-        image
-    -->
+<!--
+  ======================================================
+  image
+  TODO: check attributes
+  ======================================================
+ -->
     <tag>
         <name>image</name>
         <tagclass>net.sourceforge.myfaces.taglib.ImageTag</tagclass>
@@ -335,11 +1030,12 @@
         </attribute>
     </tag>
 
-
-
-    <!--
-        selectbox
-    -->
+<!--
+  ======================================================
+  select_box
+  TODO: check attributes
+  ======================================================
+ -->
     <tag>
         <name>selectbox</name>
         <tagclass>net.sourceforge.myfaces.taglib.SelectBoxTag</tagclass>
@@ -366,6 +1062,12 @@
         </attribute>
     </tag>
 
+<!--
+  ======================================================
+  select_box_many
+  TODO: check attributes
+  ======================================================
+ -->
     <tag>
         <name>selectbox_many</name>
         <tagclass>net.sourceforge.myfaces.taglib.SelectBoxManyTag</tagclass>
@@ -392,9 +1094,12 @@
         </attribute>
     </tag>
 
-    <!--
-        listbox
-    -->
+<!--
+  ======================================================
+  list_box
+  TODO: check attributes
+  ======================================================
+ -->
     <tag>
         <name>listbox</name>
         <tagclass>net.sourceforge.myfaces.taglib.ListBoxTag</tagclass>
@@ -416,6 +1121,12 @@
         </attribute>
     </tag>
 
+<!--
+  ======================================================
+  listbox_many
+  TODO: check attributes
+  ======================================================
+ -->
    <tag>
         <name>listbox_many</name>
         <tagclass>net.sourceforge.myfaces.taglib.ListBoxManyTag</tagclass>
@@ -437,6 +1148,12 @@
         </attribute>
     </tag>
 
+<!--
+  ======================================================
+  selectbox_item
+  TODO: check attributes
+  ======================================================
+ -->
     <tag>
         <name>selectbox_item</name>
         <tagclass>net.sourceforge.myfaces.taglib.SelectItemTag</tagclass>
@@ -473,6 +1190,12 @@
         </attribute>
     </tag>
 
+<!--
+  ======================================================
+  selectbox_items
+  TODO: check attributes
+  ======================================================
+ -->
     <tag>
         <name>selectbox_items</name>
         <tagclass>net.sourceforge.myfaces.taglib.SelectItemsTag</tagclass>
@@ -489,9 +1212,12 @@
         </attribute>
     </tag>
 
-    <!--
-        error-List
-    -->
+<!--
+  ======================================================
+  errors
+  TODO: check attributes
+  ======================================================
+ -->
     <tag>
         <name>errors</name>
         <tagclass>net.sourceforge.myfaces.taglib.ErrorsTag</tagclass>
@@ -524,9 +1250,12 @@
         </attribute>
     </tag>
 
-    <!--
-        List
-    -->
+<!--
+  ======================================================
+  list
+  TODO: check attributes
+  ======================================================
+ -->
     <tag>
          <name>list</name>
          <tagclass>net.sourceforge.myfaces.taglib.ListTag</tagclass>
@@ -563,6 +1292,12 @@
         </attribute>
      </tag>
 
+<!--
+  ======================================================
+  listrow
+  TODO: check attributes
+  ======================================================
+ -->
     <tag>
         <name>listrow</name>
         <tagclass>net.sourceforge.myfaces.taglib.ListRowTag</tagclass>
@@ -584,6 +1319,12 @@
         </attribute>
     </tag>
 
+<!--
+  ======================================================
+  grid
+  TODO: check attributes
+  ======================================================
+ -->
     <tag>
          <name>grid</name>
          <tagclass>net.sourceforge.myfaces.taglib.GridTag</tagclass>
@@ -625,9 +1366,12 @@
         </attribute>
      </tag>
 
-    <!--
-        Group
-    -->
+<!--
+  ======================================================
+  group
+  TODO: check attributes
+  ======================================================
+ -->
     <tag>
         <name>group</name>
         <tagclass>net.sourceforge.myfaces.taglib.GroupTag</tagclass>
@@ -640,9 +1384,12 @@
     </tag>
 
 
-    <!--
-        listbox
-    -->
+<!--
+  ======================================================
+  listbox
+  TODO: check attributes
+  ======================================================
+ -->
     <tag>
         <name>listbox</name>
         <tagclass>net.sourceforge.myfaces.taglib.ListBoxTag</tagclass>

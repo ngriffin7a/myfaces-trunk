@@ -125,6 +125,78 @@ public abstract class MyFacesTag
         setRendererAttribute(CommonRendererAttributes.CONVERTER_ATTR, converter);
     }
 
+    //universal tag properties
+    public void setDir(String value)
+    {
+        setRendererAttribute(CommonRendererAttributes.DIR_ATTR, value);
+    }
+
+    public void setLang(String value)
+    {
+        setRendererAttribute(CommonRendererAttributes.LANG_ATTR, value);
+    }
+
+    public void setStyle(String value)
+    {
+        setRendererAttribute(CommonRendererAttributes.STYLE_ATTR, value);
+    }
+
+    public void setTitle(String value)
+    {
+        setRendererAttribute(CommonRendererAttributes.TITLE_ATTR, value);
+    }
+
+
+    //event-hanlder attributes
+    public void setOnClick(String value)
+    {
+        setRendererAttribute(CommonRendererAttributes.ONCLICK_ATTR, value);
+    }
+
+    public void setOndblclick(String value)
+    {
+        setRendererAttribute(CommonRendererAttributes.ONDBLCLICK_ATTR, value);
+    }
+
+    public void setOnmousedown(String value)
+    {
+        setRendererAttribute(CommonRendererAttributes.ONMOUSEDOWN_ATTR, value);
+    }
+
+    public void setOnmouseup(String value)
+    {
+        setRendererAttribute(CommonRendererAttributes.ONMOUSEUP_ATTR, value);
+    }
+
+    public void setOnmouseover(String value)
+    {
+        setRendererAttribute(CommonRendererAttributes.ONMOUSEOVER_ATTR, value);
+    }
+
+    public void setOnmousemove(String value)
+    {
+        setRendererAttribute(CommonRendererAttributes.ONMOUSEMOVE_ATTR, value);
+    }
+
+    public void setOnmouseout(String value)
+    {
+        setRendererAttribute(CommonRendererAttributes.ONMOUSEOUT_ATTR, value);
+    }
+
+    public void setOnkeypress(String value)
+    {
+        setRendererAttribute(CommonRendererAttributes.ONKEYPRESS_ATTR, value);
+    }
+
+    public void setOnkeydown(String value)
+    {
+        setRendererAttribute(CommonRendererAttributes.ONKEYDOWN_ATTR, value);
+    }
+
+    public void setOnkeyup(String value)
+    {
+        setRendererAttribute(CommonRendererAttributes.ONKEYUP_ATTR, value);
+    }
 
     //Iteration Tag support
     public int getDoAfterBodyValue() throws JspException

@@ -111,8 +111,6 @@ public class LifecycleImpl
     public void execute(FacesContext facesContext)
         throws FacesException
     {
-        //TODO: catch AbortProcessingException here?
-
         reconstituteComponentTree(facesContext);
 
         if (applyRequestValues(facesContext))

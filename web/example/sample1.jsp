@@ -61,8 +61,8 @@
             <h4>A Form</h4>
             <table border="1"><tr><td>
                 <h:form id="form1" formName="calcForm">
-                    Number 1: <h:textentry_input id="number1" modelReference="calcForm.number1" maxLength="10" size="25"/><h:input_errors id="number1Error" compoundId="/form1/number1" cssClass="error" /><br>
-                    Number 2: <h:textentry_input id="number2" modelReference="calcForm.number2" maxLength="10" size="25"/><h:input_errors id="number2Error" compoundId="/form1/number2" cssClass="error" /><br>
+                    Number 1: <h:textentry_input id="number1" modelReference="calcForm.number1" maxlength="10" size="25" /><h:input_errors id="number1Error" compoundId="/form1/number1" cssClass="error" /><br>
+                    Number 2: <h:textentry_input id="number2" modelReference="calcForm.number2" maxlength="10" size="25"/><h:input_errors id="number2Error" compoundId="/form1/number2" cssClass="error" /><br>
                     Result: <h:output_text id="result" modelReference="calcForm.result" /><br>
                     <h:command_button id="addButton" commandName="add" commandReference="calcCtrl.calc" label="Add them"/>
                     <h:command_button id="subtractButton" commandName="subtract" commandReference="calcCtrl.calc" label="Subtract them"/><br>

@@ -22,6 +22,7 @@ import net.sourceforge.myfaces.MyFacesFactoryFinder;
 import net.sourceforge.myfaces.component.UIParameter;
 import net.sourceforge.myfaces.renderkit.attr.HyperlinkRendererAttributes;
 import net.sourceforge.myfaces.renderkit.html.state.StateRenderer;
+import net.sourceforge.myfaces.renderkit.html.util.CommonAttributes;
 import net.sourceforge.myfaces.util.logging.LogUtil;
 import net.sourceforge.myfaces.webapp.ServletMapping;
 import net.sourceforge.myfaces.webapp.ServletMappingFactory;
@@ -92,25 +93,25 @@ public class HyperlinkRenderer
         }
     }
 
-    public void encodeBegin(FacesContext facesContext, UIComponent uiComponent) throws IOException
+    public void encodeBegin(FacesContext context, UIComponent component) throws IOException
     {
-        ResponseWriter writer = facesContext.getResponseWriter();
+        ResponseWriter writer = context.getResponseWriter();
         writer.write("<a href=\"");
-        String href = (String)uiComponent.getAttribute(HREF_ATTR);
+        String href = (String)component.getAttribute(HREF_ATTR);
         if (href == null)
         {
             //Modify URL for the faces servlet mapping:
-            ServletContext servletContext = facesContext.getServletContext();
+            ServletContext servletContext = context.getServletContext();
             ServletMappingFactory smf = MyFacesFactoryFinder.getServletMappingFactory(servletContext);
             ServletMapping sm = smf.getServletMapping(servletContext);
-            String treeURL = sm.encodeTreeIdForURL(facesContext, facesContext.getTree().getTreeId());
+            String treeURL = sm.encodeTreeIdForURL(context, context.getTree().getTreeId());
 
-            HttpServletRequest request = (HttpServletRequest)facesContext.getServletRequest();
+            HttpServletRequest request = (HttpServletRequest)context.getServletRequest();
             href = request.getContextPath() + treeURL;
         }
 
         //Encode URL for those still using HttpSessions... ;-)
-        href = ((HttpServletResponse)facesContext.getServletResponse()).encodeURL(href);
+        href = ((HttpServletResponse)context.getServletResponse()).encodeURL(href);
 
         writer.write(href);
 
@@ -123,12 +124,12 @@ public class HyperlinkRenderer
         {
             writer.write('&');
         }
-        writer.write(uiComponent.getClientId(facesContext));
+        writer.write(component.getClientId(context));
         writer.write('=');
-        writer.write(URLEncoder.encode(getStringValue(facesContext, uiComponent), "UTF-8"));
+        writer.write(URLEncoder.encode(getStringValue(context, component), "UTF-8"));
 
         //nested parameters
-        Iterator children = uiComponent.getChildren();
+        Iterator children = component.getChildren();
         while (children.hasNext())
         {
             UIComponent child = (UIComponent)children.next();
@@ -137,31 +138,35 @@ public class HyperlinkRenderer
                 String name = ((UIParameter)child).getName();
                 if (name == null)
                 {
-                    name = child.getClientId(facesContext);
+                    name = child.getClientId(context);
                 }
                 writer.write('&');
                 writer.write(name);
                 writer.write('=');
-                writer.write(URLEncoder.encode(getStringValue(facesContext, child), "UTF-8"));
+                writer.write(URLEncoder.encode(getStringValue(context, child), "UTF-8"));
             }
         }
 
         //state:
         RenderKitFactory rkFactory = (RenderKitFactory)FactoryFinder.getFactory(FactoryFinder.RENDER_KIT_FACTORY);
-        RenderKit renderKit = rkFactory.getRenderKit(facesContext.getTree().getRenderKitId());
+        RenderKit renderKit = rkFactory.getRenderKit(context.getTree().getRenderKitId());
         Renderer renderer = renderKit.getRenderer(StateRenderer.TYPE);
-        renderer.encodeChildren(facesContext, uiComponent);
+        renderer.encodeChildren(context, component);
 
         writer.write("\"");
 
         //css class:
-        String cssClass = (String)uiComponent.getAttribute(COMMAND_CLASS_ATTR);
+        String cssClass = (String)component.getAttribute(COMMAND_CLASS_ATTR);
         if (cssClass != null)
         {
             writer.write(" class=\"");
             writer.write(cssClass);
             writer.write("\"");
         }
+
+        CommonAttributes.renderEventHandlerAttributes(context, component);
+        CommonAttributes.renderUniversalAttributes(context, component);
+        CommonAttributes.renderAttributes(context, component, HyperlinkRendererAttributes.COMMON_HYPERLINK_ATTRIBUTES);
 
         writer.write(">");
     }

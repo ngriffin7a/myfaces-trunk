@@ -18,18 +18,35 @@
  */
 package net.sourceforge.myfaces.renderkit.attr;
 
+import net.sourceforge.myfaces.renderkit.attr.CommonRendererAttributes;
+
 /**
- * Constant definitions for the specified render dependent attributes of the
- * "Button" renderer type.
- * @author Manfred Geiler (latest modification by $Author$)
+ * DOCUMENT ME!
+ * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public interface ButtonRendererAttributes
+public interface FormRendererAttributes
     extends CommonRendererAttributes
 {
-    public static final String TYPE_ATTR = "type";
-    public static final String IMAGE_ATTR = "image";
-    public static final String LABEL_ATTR = "label";
-
-    public static final String[] COMMON_BUTTON_ATTRIBUTES = TextRendererAttributes.COMMON_TEXT_ATTRIBUTES;
+    public static final String ACTION_ATTR = "action";
+    public static final String ACCEPT_ATTR = "accept";
+    public static final String ACCEPT_CHARSET_ATTR = "accept-charset";
+    public static final String ENCTYPE_ATTR = "enctype";
+    public static final String METHOD_ATTR = "method";
+    public static final String NAME_ATTR = "name";
+    public static final String ONRESET_ATTR = "onreset";
+    public static final String ONSUMBIT_ATTR = "onsubmit";
+    public static final String TARGET_ATTR = "target";
+    public static final String[] COMMON_FORM_ATTRIBUTES =
+    {
+        ACTION_ATTR,
+        ACCEPT_ATTR,
+        ACCEPT_CHARSET_ATTR,
+        ENCTYPE_ATTR,
+        METHOD_ATTR,
+        NAME_ATTR,
+        ONRESET_ATTR,
+        ONSUMBIT_ATTR,
+        TARGET_ATTR,
+    };
 }

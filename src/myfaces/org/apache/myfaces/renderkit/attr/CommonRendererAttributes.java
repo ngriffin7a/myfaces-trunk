@@ -40,4 +40,42 @@ public interface CommonRendererAttributes
     public static final String PANEL_CLASS_ATTR = "panelClass";
     public static final String COMMAND_CLASS_ATTR = "commandClass";
     //TODO: continue definitions...
+
+    //universal attributes
+    public static final String DIR_ATTR   = "dir";
+    public static final String LANG_ATTR  = "lang";
+    public static final String STYLE_ATTR = "style";
+    public static final String TITLE_ATTR = "title";
+    public static final String[] UNIVERSAL_ATTRIBUTES =
+    {
+        DIR_ATTR,
+        LANG_ATTR,
+        STYLE_ATTR,
+        TITLE_ATTR,
+    };
+
+    //event-hanlder attributes
+    public static final String ONCLICK_ATTR = "onclick";
+    public static final String ONDBLCLICK_ATTR = "ondblclick";
+    public static final String ONMOUSEDOWN_ATTR = "onmousedown";
+    public static final String ONMOUSEUP_ATTR = "onmouseup";
+    public static final String ONMOUSEOVER_ATTR = "onmouseover";
+    public static final String ONMOUSEMOVE_ATTR = "onmousemove";
+    public static final String ONMOUSEOUT_ATTR = "onmouseout";
+    public static final String ONKEYPRESS_ATTR = "onkeypress";
+    public static final String ONKEYDOWN_ATTR = "onkeydown";
+    public static final String ONKEYUP_ATTR = "onkeyup";
+    public static final String[] EVENT_HANDLER_ATTRIBUTES =
+    {
+        ONCLICK_ATTR,
+        ONDBLCLICK_ATTR,
+        ONMOUSEDOWN_ATTR,
+        ONMOUSEUP_ATTR,
+        ONMOUSEOVER_ATTR,
+        ONMOUSEMOVE_ATTR,
+        ONMOUSEOUT_ATTR,
+        ONKEYPRESS_ATTR,
+        ONKEYDOWN_ATTR,
+        ONKEYUP_ATTR
+    };
 }
