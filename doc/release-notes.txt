@@ -5,6 +5,7 @@ MyFaces Release Notes
 Changes in Release 1.0.6 beta
 * switch to apache license
 * new JspTilesViewHandler for flawless Tiles support
+* bug #995085 graphicImage ignores value attribute
 * bug #992668 selectOneMenu doesn't restore the bean value if it's a primitive
 * bug #992628 StateManager.SerializedView is not static
 * bug #992629 FacesContext.getRenderKit() unimplemented
@@ -20,6 +21,7 @@ Changes in Release 1.0.6 beta
 * changed build.xml - now myfaces-components are shipped via bin-distribution
 * bug #985217 decorator-factory not supported
 * splitting jar-files (myfaces.jar, myfaces-jsf-api.jar, myfaces-components.jar)
+* new EXPERIMENTAL feature to detect JavaScript support of a client browser
 ----------------------------------------------------------------------
 Changes in Release 1.0.5 beta
 * new faces configurator

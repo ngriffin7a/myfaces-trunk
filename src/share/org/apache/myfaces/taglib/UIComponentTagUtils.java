@@ -34,6 +34,9 @@ import javax.faces.webapp.UIComponentTag;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.6  2004/08/06 22:41:00  o_rossmueller
+ * fix #995085: set value of UIGraphic
+ *
  * Revision 1.5  2004/07/01 22:01:21  mwessendorf
  * ASF switch
  *
@@ -150,6 +153,10 @@ public class UIComponentTagUtils
             else if (component instanceof UISelectBoolean)
             {
                 ((UISelectBoolean)component).setValue(Boolean.valueOf(value));
+            }
+            else if (component instanceof UIGraphic)
+            {
+                ((UIGraphic)component).setValue(value);
             }
             //Since many input components are ValueHolders the special components
             //must come first, ValueHolder is the last resort.
