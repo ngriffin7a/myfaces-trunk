@@ -24,7 +24,12 @@ import net.sourceforge.myfaces.component.UserRoleAware;
 import net.sourceforge.myfaces.taglib.html.HtmlOutputTextTagBase;
 
 /**
- * @author mwessendorf
+ * @author mwessendorf (latest modification by $Author$)
+ * @version $Revision$ $Date$
+ * $Log$
+ * Revision 1.2  2004/06/27 22:06:26  mwessendorf
+ * Log
+ *
  *
  */
 public class HtmlRssTickerTag extends HtmlOutputTextTagBase{

@@ -20,7 +20,6 @@ package net.sourceforge.myfaces.custom.rssticker;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.net.URL;
 
 import javax.faces.component.html.HtmlOutputText;
 import javax.faces.context.FacesContext;
@@ -33,7 +32,12 @@ import org.xml.sax.SAXException;
 
 
 /**
- * @author mwessendorf
+ * @author mwessendorf (latest modification by $Author$)
+ * @version $Revision$ $Date$
+ * $Log$
+ * Revision 1.3  2004/06/27 22:06:26  mwessendorf
+ * Log
+ *
  *
  */
 public class HtmlRssTicker extends HtmlOutputText{

@@ -26,7 +26,12 @@ import javax.faces.webapp.ValidatorTag;
 import javax.servlet.jsp.JspException;
 
 /**
- * @author mwessendorf
+ * @author mwessendorf (latest modification by $Author$)
+ * @version $Revision$ $Date$
+ * $Log$
+ * Revision 1.2  2004/06/27 22:06:27  mwessendorf
+ * Log
+ *
  *
  */
 public class ValidateRegExprTag extends ValidatorTag {

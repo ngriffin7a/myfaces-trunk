@@ -30,7 +30,12 @@ import javax.faces.validator.ValidatorException;
 import net.sourceforge.myfaces.util.MessageUtils;
 
 /**
- * @author mwessendorf
+ * @author mwessendorf (latest modification by $Author$)
+ * @version $Revision$ $Date$
+ * $Log$
+ * Revision 1.3  2004/06/27 22:06:26  mwessendorf
+ * Log
+ *
  *
  */
 public class EqualValidator implements Validator, StateHolder {

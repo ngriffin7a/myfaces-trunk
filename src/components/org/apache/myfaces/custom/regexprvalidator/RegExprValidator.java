@@ -30,7 +30,12 @@ import net.sourceforge.myfaces.util.MessageUtils;
 import org.apache.commons.validator.GenericValidator;
 
 /**
- * @author mwessendorf
+ * @author mwessendorf (latest modification by $Author$)
+ * @version $Revision$ $Date$
+ * $Log$
+ * Revision 1.2  2004/06/27 22:06:27  mwessendorf
+ * Log
+ *
  *
  */
 public class RegExprValidator implements Validator, StateHolder {
