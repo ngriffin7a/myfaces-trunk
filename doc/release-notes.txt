@@ -129,4 +129,4 @@ Sun asked me to remove the file "jsf-api.jar" from the public
 distribution. (Release 0.1 will no longer be available)
 
 
-Copyright (C) 2003  The MyFaces Team (http://myfaces.sourceforge.net)
+Copyright (C) 2003, 2004  The MyFaces Team (http://myfaces.sourceforge.net)

@@ -1,6 +1,6 @@
 /*
  * MyFaces - the free JSF implementation
- * Copyright (C) 2003  The MyFaces Team (http://myfaces.sourceforge.net)
+ * Copyright (C) 2003, 2004  The MyFaces Team (http://myfaces.sourceforge.net)
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -37,7 +37,7 @@ public class LifecycleFactoryImpl
 
     public LifecycleFactoryImpl()
     {
-        _lifecycles.put(DEFAULT_LIFECYCLE, new LifecycleImpl());
+        _lifecycles.put(LifecycleFactory.DEFAULT_LIFECYCLE, new LifecycleImpl());
     }
 
     public void addLifecycle(String id, Lifecycle lifecycle)

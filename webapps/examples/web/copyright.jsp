@@ -9,7 +9,7 @@
 <!--
 /**
  * MyFaces - the free JSF implementation
- * Copyright (C) 2003  The MyFaces Team (http://myfaces.sourceforge.net)
+ * Copyright (C) 2003, 2004  The MyFaces Team (http://myfaces.sourceforge.net)
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -46,7 +46,7 @@
             <h:panel_group id="body">
 <p>
  <h3>MyFaces - the free JSF implementation</h3>
- <h4>Copyright (C) 2003  <a href="http://myfaces.sourceforge.net/">The MyFaces Team</a></h4>
+ <h4>Copyright (C) 2003, 2004  <a href="http://myfaces.sourceforge.net/">The MyFaces Team</a></h4>
 <p>
  This library is free software; you can redistribute it and/or
  modify it under the terms of the GNU Lesser General Public

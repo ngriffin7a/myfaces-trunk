@@ -2,7 +2,7 @@
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f"%>
 <f:facet name="footer">
     <h:panel_group id="footer">
-        Copyright (c) 2003  <a href="http://myfaces.sourceforge.net" class="pageFooter">The MyFaces Team</a>
+        Copyright (c) 2003, 2004  <a href="http://myfaces.sourceforge.net" class="pageFooter">The MyFaces Team</a>
         &nbsp;&nbsp;
     </h:panel_group>
 </f:facet>
