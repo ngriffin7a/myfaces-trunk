@@ -19,6 +19,7 @@
 package net.sourceforge.myfaces.renderkit.html.state;
 
 import net.sourceforge.myfaces.util.logging.LogUtil;
+import net.sourceforge.myfaces.renderkit.html.jspinfo.JspInfo;
 
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
@@ -112,8 +113,7 @@ public class TreeCopier
 
     private UIComponent cloneComponent(String fromTreeId, UIComponent toBeCloned)
     {
-        Map tagMap = JspInfo.getCreatorTagsMap(_facesContext, fromTreeId);
-        FacesTag tag = (FacesTag)tagMap.get(toBeCloned.getCompoundId());
+        FacesTag tag = JspInfo.getCreatorTag(_facesContext, fromTreeId, toBeCloned);
         if (tag != null)
         {
             UIComponent clone = tag.createComponent();
