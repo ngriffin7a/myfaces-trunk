@@ -185,15 +185,15 @@ public class HtmlLayout extends UIComponentBase {
 		return family;
 	}
 
-	/**
-	 * @see javax.faces.component.UIComponent#decode(javax.faces.context.FacesContext)
-	 */
-	public void decode(FacesContext ctx) {
-		List children = getChildren();
-		for (Iterator iter = children.iterator(); iter.hasNext();) {
-			UIComponent comp = (UIComponent) iter.next();
-			comp.decode(ctx);
-		}
-	}
+//	/**
+//	 * @see javax.faces.component.UIComponent#decode(javax.faces.context.FacesContext)
+//	 */
+//	public void decode(FacesContext ctx) {
+//		List children = getChildren();
+//		for (Iterator iter = children.iterator(); iter.hasNext();) {
+//			UIComponent comp = (UIComponent) iter.next();
+//			comp.decode(ctx);
+//		}
+//	}
 
 }

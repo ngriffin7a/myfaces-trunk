@@ -18,6 +18,9 @@
  */
 package net.sourceforge.myfaces.config;
 
+import net.sf.cglib.proxy.Enhancer;
+import net.sourceforge.myfaces.cbp.designer.DesignerDecorator;
+import net.sourceforge.myfaces.cbp.designer.DesignerContext;
 import net.sourceforge.myfaces.util.ClassUtils;
 import net.sourceforge.myfaces.util.NullIterator;
 
@@ -195,7 +198,15 @@ public class RendererConfig implements Config
 
     public Renderer newRenderer()
     {
-        return (Renderer) ClassUtils.newInstance(getRendererClass());
+    	Renderer ret = null;
+    	
+		Class rendererClass = getRendererClass();
+		Enhancer enhancer = new Enhancer();
+		enhancer.setSuperclass(rendererClass);
+		enhancer.setCallback(DesignerDecorator.getInstance());
+		ret = (Renderer) enhancer.create();   	
+    	
+        return ret;
     }
 
     public boolean supportsComponentClass(Class componentClass)

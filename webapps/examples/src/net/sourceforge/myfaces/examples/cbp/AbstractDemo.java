@@ -24,9 +24,14 @@ import javax.faces.context.FacesContext;
 import javax.faces.event.AbortProcessingException;
 import javax.faces.event.ActionEvent;
 import javax.faces.event.ActionListener;
+import javax.faces.event.PhaseId;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import net.sourceforge.myfaces.cbp.Page;
 import net.sourceforge.myfaces.cbp.PageUtils;
+import net.sourceforge.myfaces.cbp.designer.DesignerContext;
 import net.sourceforge.myfaces.component.ext.HtmlLayout;
 import net.sourceforge.myfaces.component.ext.Screen;
 
@@ -34,33 +39,33 @@ import net.sourceforge.myfaces.component.ext.Screen;
  * Screen provided as demo application.
  */
 public abstract class AbstractDemo implements Page, ActionListener {
+	private static Log log = LogFactory.getLog(AbstractDemo.class);
 
 	/**
 	 * Construct the common bahaviour, layout, etc..
 	 * for all Demos.
 	 */
-	public void init(FacesContext context,UIComponent root) {
+	public void init(FacesContext context, UIComponent root) {
 		Screen screen = new Screen();
 		screen.setId("testScreen");
 		screen.setTitle("Smile demo application...");
-		PageUtils.addChild(root,screen);
-		
+		PageUtils.addChild(root, screen);
+
 		HtmlLayout template = new HtmlLayout();
 		template.setId("template");
 		template.setResourceName("template.html");
-		PageUtils.addChild(screen,template);
-		
+		PageUtils.addChild(screen, template);
+
 		HtmlCommandButton designButton = new HtmlCommandButton();
 		designButton.setId("designButton");
-		designButton.setValue("design on/off");
+		designButton.setValue("designer on");
 		designButton.addActionListener(this);
-		designButton.setRendered(false);
-		PageUtils.addChild(template,designButton);
-		
+		PageUtils.addChild(template, designButton);
+
 		UIComponent content = createContent();
-		PageUtils.addChild(template,content);
+		PageUtils.addChild(template, content);
 	}
-	
+
 	/**
 	 * This method should be used by a baseclass to create the 
 	 * the content that is to be rendered in the body of the page. 
@@ -70,14 +75,15 @@ public abstract class AbstractDemo implements Page, ActionListener {
 	 * @param content
 	 */
 	protected abstract UIComponent createContent();
-	
+
 	/**
 	 * @see javax.faces.event.ActionListener#processAction(javax.faces.event.ActionEvent)
 	 */
 	public void processAction(ActionEvent event) throws AbortProcessingException {
 		UIComponent source = event.getComponent();
-		if(source.getId().equals("designButton")) {
-//			DesignerContext.setDesignMode(!DesignerContext.inDesignMode());
+		if (source.getId().equals("designButton") && event.getPhaseId().equals(PhaseId.INVOKE_APPLICATION)) {
+			DesignerContext.setDesignMode(!DesignerContext.inDesignMode());
+			log.info("Switched design on/off");
 		}
 	}
 }

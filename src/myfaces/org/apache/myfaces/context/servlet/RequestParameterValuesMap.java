@@ -113,4 +113,26 @@ public class RequestParameterValuesMap extends WrapperBaseMapImpl {
 	public Collection values() {
 		return entrySet();
 	}
+	
+	/**
+	 * @see java.util.Map#containsKey(java.lang.Object)
+	 */
+	public boolean containsKey(Object key) {
+		boolean ret = false;
+
+		if(key instanceof String) {
+			if(req.getParameterValues((String)key) != null) {
+				ret = true;
+			}
+		}
+		
+		return ret;
+	}
+
+	/**
+	 * @see java.util.Map#containsValue(java.lang.Object)
+	 */
+	public boolean containsValue(Object value) {
+		return values().contains(value);
+	}
 }

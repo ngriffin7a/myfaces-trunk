@@ -33,6 +33,7 @@
         <pathelement location="${cos.jar}"/>
         <pathelement location="${commons-logging.jar}"/>
         <pathelement location="${commons-el.jar}"/>
+        <pathelement location="${cglib.jar}"/>
     </path>
 
 
@@ -48,6 +49,7 @@
             <fileset file="${commons-logging.jar}"/>
             <fileset file="${commons-el.jar}"/>
             <fileset file="${log4j.jar}"/>
+            <fileset file="${cglib.jar}"/>
         </copy>
 
         <copy file="${project.dir}/conf/develop-web.xml" tofile="${examples.web}/WEB-INF/web.xml" />
