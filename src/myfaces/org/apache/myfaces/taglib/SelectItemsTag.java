@@ -21,6 +21,7 @@ package net.sourceforge.myfaces.taglib;
 import net.sourceforge.myfaces.component.UISelectItems;
 
 import javax.faces.component.UIComponent;
+import javax.faces.webapp.FacesTag;
 
 /**
  * TODO: description
@@ -28,7 +29,7 @@ import javax.faces.component.UIComponent;
  * @version $Revision$ $Date$
  */
 public class SelectItemsTag
-    extends MyFacesTag
+    extends FacesTag
 {
     public UIComponent createComponent()
     {

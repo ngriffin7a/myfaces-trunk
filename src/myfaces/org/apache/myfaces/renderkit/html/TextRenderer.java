@@ -18,9 +18,8 @@
  */
 package net.sourceforge.myfaces.renderkit.html;
 
-import net.sourceforge.myfaces.renderkit.html.util.HTMLEncoder;
-import net.sourceforge.myfaces.renderkit.html.util.InputRendererHelper;
 import net.sourceforge.myfaces.component.UIInput;
+import net.sourceforge.myfaces.renderkit.html.util.HTMLEncoder;
 
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIOutput;
@@ -101,7 +100,7 @@ public class TextRenderer
             writer.write("\"");
         }
         writer.write(">");
-        InputRendererHelper.renderMessages(facesContext, uiComponent);
+        //InputRendererHelper.renderMessages(facesContext, uiComponent);
     }
 
 

@@ -21,6 +21,7 @@ package net.sourceforge.myfaces.taglib;
 import net.sourceforge.myfaces.component.UIParameter;
 
 import javax.faces.component.UIComponent;
+import javax.faces.webapp.FacesTag;
 
 /**
  * TODO: description
@@ -28,7 +29,7 @@ import javax.faces.component.UIComponent;
  * @version $Revision$ $Date$
  */
 public class ParamTag
-    extends MyFacesTag
+    extends FacesTag
 {
     //MyFaces tag extensions:
     public UIComponent createComponent()
@@ -44,6 +45,6 @@ public class ParamTag
 
     public void setName(String v)
     {
-        addRequestTimeValue(UIParameter.NAME_ATTR, v);
+        setProperty(UIParameter.NAME_ATTR, v);
     }
 }

@@ -35,7 +35,6 @@ import javax.faces.tree.Tree;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.HashMap;
 
 /**
  * TODO: description
@@ -179,9 +178,9 @@ public class StateRestorer
                 try
                 {
                     Class c = BeanUtils.getBeanPropertyType(uiComponent, attrName);
-                    conv = ConverterUtils.findConverter(facesContext, c);
+                    conv = ConverterUtils.findConverter(facesContext.getServletContext(), c);
                 }
-                catch (FacesException e)
+                catch (IllegalArgumentException e)
                 {
                     LogUtil.getLogger().warning("Component " + uiComponent.getCompoundId() + " does not have a getter method for attribute '" + attrName + "'.");
                 }

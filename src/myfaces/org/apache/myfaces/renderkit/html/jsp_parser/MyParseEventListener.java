@@ -19,9 +19,11 @@
 package net.sourceforge.myfaces.renderkit.html.jsp_parser;
 
 import net.sourceforge.myfaces.component.MyFacesComponent;
-import net.sourceforge.myfaces.component.UICommand;
-import net.sourceforge.myfaces.renderkit.html.state.TreeCopier;
-import net.sourceforge.myfaces.taglib.MyFacesTagExtension;
+import net.sourceforge.myfaces.util.bean.BeanUtils;
+import net.sourceforge.myfaces.util.bean.BeanMethod;
+import net.sourceforge.myfaces.util.logging.LogUtil;
+import net.sourceforge.myfaces.convert.ConverterUtils;
+import net.sourceforge.myfaces.convert.Converter;
 import org.apache.jasper.Constants;
 import org.apache.jasper.JasperException;
 import org.apache.jasper.JspCompilationContext;
@@ -29,7 +31,10 @@ import org.apache.jasper.compiler.*;
 import org.xml.sax.Attributes;
 
 import javax.faces.component.UIComponent;
+import javax.faces.component.UIComponentBase;
 import javax.faces.tree.Tree;
+import javax.faces.webapp.FacesTag;
+import javax.faces.FacesException;
 import javax.servlet.jsp.tagext.TagAttributeInfo;
 import javax.servlet.jsp.tagext.TagInfo;
 import javax.servlet.jsp.tagext.TagLibraryInfo;
@@ -304,7 +309,7 @@ public class MyParseEventListener
 
     private HashMap _tagClasses = new HashMap();
     private static final Object NULL_DUMMY = new Object();
-    private MyFacesTagExtension getMyFacesTagExtension(TagInfo ti)
+    private FacesTag getFacesTag(TagInfo ti)
     {
         Object obj = _tagClasses.get(ti.getTagClassName());
         if (obj == NULL_DUMMY)
@@ -313,7 +318,7 @@ public class MyParseEventListener
         }
         else if (obj != null)
         {
-            return (MyFacesTagExtension)obj;
+            return (FacesTag)obj;
         }
 
         Class c;
@@ -326,8 +331,9 @@ public class MyParseEventListener
             throw new RuntimeException("Class for tag " + ti.getTagName() + " not found!", e);
         }
 
-        if (!MyFacesTagExtension.class.isAssignableFrom(c))
+        if (!FacesTag.class.isAssignableFrom(c))
         {
+            LogUtil.getLogger().info("Not a FacesTag.");
             _tagClasses.put(ti.getTagClassName(), NULL_DUMMY);
             return null;
         }
@@ -346,18 +352,17 @@ public class MyParseEventListener
         }
 
         _tagClasses.put(ti.getTagClassName(), obj);
-        return (MyFacesTagExtension)obj;
+        return (FacesTag)obj;
     }
 
-
+    /*
     private void handleTagBegin(String prefix, String shortTagName,
                                 Attributes attrs, TagLibraryInfo tli, TagInfo ti)
     {
-        MyFacesTagExtension tag = getMyFacesTagExtension(ti);
+        FacesTag tag = getFacesTag(ti);
         if (tag != null)
         {
-            //Tag is instanceof MyFacesTagExtension
-            UIComponent comp = tag.createComponent();
+            UIComponent comp = tag.createComponent(); //Tag is instanceof FacesTag
             if (comp != null)
             {
                 comp.setAttribute(TreeCopier.CREATOR_TAG_ATTR, tag);
@@ -416,11 +421,122 @@ public class MyParseEventListener
             }
         }
     }
+    */
+
+    private void handleTagBegin(String prefix, String shortTagName,
+                                Attributes attrs, TagLibraryInfo tli, TagInfo ti)
+    {
+        FacesTag tag = getFacesTag(ti);
+        if (tag != null)
+        {
+            String id = null;
+
+            TagAttributeInfo[] attrInfos = ti.getAttributes();
+            for (int i = 0; i < attrInfos.length; i++)
+            {
+                String attrName = attrInfos[i].getName();
+                Object attrValue = attrs.getValue(attrName);
+
+                if (attrValue != null)
+                {
+                    if (attrInfos[i].canBeRequestTime() &&
+                        ((String)attrValue).trim().startsWith("<%"))
+                    {
+                        //Request time value --> ignore
+                        continue;
+                    }
+
+                    if (attrName.equals(MyFacesComponent.ID_ATTR))
+                    {
+                        id = (String)attrValue;
+                    }
+                    else
+                    {
+                        if (attrValue instanceof String)
+                        {
+                            String stringValue = (String)attrValue;
+
+                            //TODO: We must search the proper set method and do automatic conversion
+                            //as defined in Tag Library Spec
+                            BeanMethod beanMethod = null;
+                            try
+                            {
+                                beanMethod = BeanUtils.getBeanPropertySetMethod(tag, attrName, null);
+                            }
+                            catch (IllegalArgumentException e) {}
+                            if (beanMethod == null)
+                            {
+                                continue;
+                            }
+
+                            Class[] params = beanMethod.getMethod().getParameterTypes();
+                            if (params.length != 1)
+                            {
+                                throw new FacesException("Setter method of attribute " + attrName +" of tag class " + tag.getClass().getName() + " is curious.");
+                            }
+
+                            Class type = params[0];
+                            if (type == String.class)
+                            {
+                                BeanUtils.setBeanProperty(tag, attrName, stringValue);
+                            }
+                            else if (type == Integer.class)
+                            {
+                                BeanUtils.setBeanProperty(tag, attrName, Integer.valueOf(stringValue));
+                            }
+                            //TODO: continue as defined in Table 2-2 of JSP Spec.
+
+                        }
+                        else
+                        {
+                            BeanUtils.setBeanProperty(tag, attrName, attrValue);
+                        }
+                    }
+                }
+            }
+
+            UIComponent comp = tag.createComponent(); //Tag is instanceof FacesTag
+            if (comp == null)
+            {
+                LogUtil.getLogger().warning("Tag class " + tag.getClass().getName() + " did not create a component.");
+                //We set current component to a dummy, so that the
+                //getParent in handleEndTag returns the right component:
+                final UIComponent currComp = _currentComponent;
+                _currentComponent = new UIComponentBase() {
+                    public String getComponentType() {return "DUMMY";}
+                    public UIComponent getParent() {return currComp;}
+                };
+                tag.release();
+                return;
+            }
+
+            if (id != null)
+            {
+                comp.setComponentId(id);
+            }
+            else
+            {
+                LogUtil.getLogger().severe("Missing component id.");
+            }
+
+            String rendererType = tag.getRendererType();
+            if (rendererType != null)
+            {
+                comp.setRendererType(rendererType);
+            }
+
+            tag.overrideProperties(comp);
+            tag.release();
+
+            _currentComponent.addChild(comp);
+            _currentComponent = comp;
+        }
+    }
 
     private void handleTagEnd(String prefix, String shortTagName,
                               Attributes attrs, TagLibraryInfo tli, TagInfo ti)
     {
-        if (getMyFacesTagExtension(ti) != null)
+        if (getFacesTag(ti) != null)
         {
             _currentComponent = _currentComponent.getParent();
         }

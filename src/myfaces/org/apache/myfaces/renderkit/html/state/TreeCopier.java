@@ -19,12 +19,12 @@
 package net.sourceforge.myfaces.renderkit.html.state;
 
 import net.sourceforge.myfaces.component.UIComponentUtils;
-import net.sourceforge.myfaces.taglib.MyFacesTagExtension;
 import net.sourceforge.myfaces.util.logging.LogUtil;
 
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.tree.Tree;
+import javax.faces.webapp.FacesTag;
 import javax.servlet.jsp.tagext.Tag;
 import java.util.Iterator;
 
@@ -111,8 +111,7 @@ public class TreeCopier
 
             if (clone == null)
             {
-                MyFacesTagExtension tag
-                    = (MyFacesTagExtension)child.getAttribute(CREATOR_TAG_ATTR);
+                FacesTag tag = (FacesTag)child.getAttribute(CREATOR_TAG_ATTR);
                 if (tag != null)
                 {
                     clone = tag.createComponent();
@@ -155,7 +154,7 @@ public class TreeCopier
                 Object attrValue = fromComp.getAttribute(attrName);
                 if (staticAttributeConversions)
                 {
-                    if (attrName.equals(HARDCODED_VALUE_ATTR))
+                    if (attrName.equals(HARDCODED_VALUE_ATTR))  //TODO: Obsolete?
                     {
                         UIComponentUtils.convertAndSetValue(_facesContext,
                                                             toComp,

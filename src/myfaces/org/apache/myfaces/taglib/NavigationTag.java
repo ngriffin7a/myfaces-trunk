@@ -22,6 +22,7 @@ import net.sourceforge.myfaces.component.ext.UINavigation;
 import net.sourceforge.myfaces.renderkit.html.ext.NavigationRenderer;
 
 import javax.faces.component.UIComponent;
+import javax.faces.webapp.FacesTag;
 
 /**
  * TODO: description
@@ -29,7 +30,7 @@ import javax.faces.component.UIComponent;
  * @version $Revision$ $Date$
  */
 public class NavigationTag
-        extends MyFacesTag
+        extends FacesTag
 {
     public UIComponent createComponent()
     {

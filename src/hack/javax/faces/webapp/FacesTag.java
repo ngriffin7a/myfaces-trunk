@@ -16,7 +16,7 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package net.sourceforge.myfaces.taglib;
+package javax.faces.webapp;
 
 import net.sourceforge.myfaces.component.MyFacesComponent;
 import net.sourceforge.myfaces.component.UIComponentUtils;
@@ -33,6 +33,7 @@ import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
 import javax.servlet.jsp.tagext.Tag;
 import javax.servlet.jsp.tagext.TagSupport;
+import javax.servlet.jsp.tagext.IterationTag;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -44,39 +45,33 @@ import java.util.Stack;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public abstract class MyFacesTag
-    implements Tag, MyFacesTagExtension
+public abstract class FacesTag
+    extends TagSupport
+    implements Tag, IterationTag
 {
-    protected static final String RENDERING_PARENT = MyFacesTag.class.getName() + ".RENDERING_PARENT";
-    protected Tag _delegation;
     protected PageContext _pageContext;
     protected FacesContext _facesContext;
-    protected String _id;
     private Stack _componentStack;
     private boolean _componentNotFound;
     private boolean _componentOnStack;
-    private Map _requestTimeValues = null;
+    private Map _properties = null;
 
-    public MyFacesTag()
+    public FacesTag()
     {
-        initDelegation();
         init();
-    }
-
-    protected void initDelegation()
-    {
-        _delegation = new TagSupport();
+        LogUtil.getLogger().fine("Yes, our patch is in use!");
     }
 
     protected void init()
     {
         _pageContext = null;
         _facesContext = null;
-        _id = null;
         _componentStack = null;
         _componentNotFound = false;
         _componentOnStack = false;
+        _properties = null;
     }
+
 
     //Delegation methods:
 
@@ -88,15 +83,7 @@ public abstract class MyFacesTag
             return Tag.SKIP_BODY;
         }
 
-        applyRequestTimeValues(component);
-
-        FacesContext facesContext = getFacesContext();
-        UIComponent renderingParent = (UIComponent)facesContext.getServletRequest().getAttribute(RENDERING_PARENT);
-        if (renderingParent != null)
-        {
-            //a parent is rendering, so child must not render itself
-            return Tag.EVAL_BODY_INCLUDE;
-        }
+        overrideProperties(component);
 
         try
         {
@@ -109,14 +96,13 @@ public abstract class MyFacesTag
 
         if (component.getRendersChildren())
         {
-            //remember this renering parent for all children
-            facesContext.getServletRequest().setAttribute(RENDERING_PARENT, component);
+            return SKIP_BODY;
         }
 
-        return doAfterStartTag();
+        return getDoStartValue();
     }
 
-    protected int doAfterStartTag() throws JspException
+    protected int getDoStartValue() throws JspException
     {
         return Tag.EVAL_BODY_INCLUDE;
     }
@@ -126,23 +112,6 @@ public abstract class MyFacesTag
     {
         FacesContext facesContext = getFacesContext();
         UIComponent component = findComponent();
-
-        UIComponent renderingParent = (UIComponent)facesContext.getServletRequest().getAttribute(RENDERING_PARENT);
-        if (renderingParent != null)
-        {
-            if (renderingParent == component)
-            {
-                //it's me!
-                facesContext.getServletRequest().removeAttribute(RENDERING_PARENT);
-            }
-            else
-            {
-                //a parent is rendering, so child must not render itself
-                popComponent();
-                init();
-                return Tag.EVAL_PAGE;
-            }
-        }
 
         try
         {
@@ -158,29 +127,25 @@ public abstract class MyFacesTag
         }
         popComponent();
         init();
-        return Tag.EVAL_PAGE;
+        return getDoEndValue();
     }
 
-
-    public Tag getParent()
+    protected int getDoEndValue() throws JspException
     {
-        return _delegation.getParent();
+        return Tag.EVAL_BODY_INCLUDE;
     }
+
 
     public void release()
     {
-        _delegation.release();
+        super.release();
+        init();
     }
 
     public void setPageContext(PageContext pageContext)
     {
         _pageContext = pageContext;
-        _delegation.setPageContext(pageContext);
-    }
-
-    public void setParent(Tag tag)
-    {
-        _delegation.setParent(tag);
+        super.setPageContext(pageContext);
     }
 
 
@@ -249,8 +214,7 @@ public abstract class MyFacesTag
         return find;
     }
 
-
-    protected UIComponent findChild(UIComponent parent, String childId)
+    private UIComponent findChild(UIComponent parent, String childId)
     {
         for (Iterator it = parent.getChildren(); it.hasNext();)
         {
@@ -263,6 +227,10 @@ public abstract class MyFacesTag
         return null;
     }
 
+
+
+    //JSF API implementation
+
     protected UIComponent getComponent()
     {
         UIComponent comp = findComponent();
@@ -273,46 +241,15 @@ public abstract class MyFacesTag
         return comp;
     }
 
-    public String getId()
-    {
-        return _id;
-    }
-
-    public void setId(String id)
-    {
-        _id = id;
-    }
-
-
-    //MyFaces tag extensions:
     public abstract UIComponent createComponent();
 
     public abstract String getRendererType();
 
 
-    //MyFaces Helpers:
 
-    protected FacesContext getFacesContext()
-    {
-        if (_facesContext == null)
-        {
-            //FacesServlet saves the FacesContext as request attribute:
-            _facesContext = (FacesContext)_pageContext.getAttribute("javax.faces.context.FacesContext",
-                                                                      PageContext.REQUEST_SCOPE);
-            if (_facesContext == null)
-            {
-                throw new IllegalStateException("No faces context!?");
-            }
-        }
-        return _facesContext;
-    }
+    //private helpers
 
-    protected PageContext getPageContext()
-    {
-        return _pageContext;
-    }
-
-    private static final String COMPONENT_STACK_ATTR = MyFacesTag.class.getName() + ".STACK";
+    private static final String COMPONENT_STACK_ATTR = FacesTag.class.getName() + ".STACK";
     private Stack getComponentStack()
     {
         if (_componentStack == null)
@@ -334,44 +271,60 @@ public abstract class MyFacesTag
     }
 
 
-    //request time attributes
-    public void setModelReference(String s)
-    {
-        addRequestTimeValue(MyFacesComponent.MODEL_REFERENCE_ATTR, s);
-    }
+    //subclass helpers
 
-    public void setConverter(String s)
+    protected FacesContext getFacesContext()
     {
-        addRequestTimeValue(MyFacesComponent.CONVERTER_ATTR, s);
-    }
-
-    public void setValue(Object value)
-    {
-        addRequestTimeValue(MyFacesComponent.VALUE_ATTR, value);
-    }
-
-
-    protected void addRequestTimeValue(String attrName, Object attrValue)
-    {
-        if (_requestTimeValues == null)
+        if (_facesContext == null)
         {
-            _requestTimeValues = new HashMap();
+            //FacesServlet saves the FacesContext as request attribute:
+            _facesContext = (FacesContext)_pageContext.getAttribute("javax.faces.context.FacesContext",
+                                                                    PageContext.REQUEST_SCOPE);
+            if (_facesContext == null)
+            {
+                throw new IllegalStateException("No faces context!?");
+            }
         }
-        _requestTimeValues.put(attrName, attrValue);
+        return _facesContext;
     }
 
-    protected void applyRequestTimeValues(UIComponent uiComponent)
+    protected PageContext getPageContext()
     {
-        FacesContext facesContext = getFacesContext();
-        if (_requestTimeValues != null)
+        return _pageContext;
+    }
+
+
+    //property helpers
+
+    protected void setProperty(String attrName, Object attrValue)
+    {
+        if (_properties == null)
         {
-            for (Iterator it = _requestTimeValues.entrySet().iterator(); it.hasNext();)
+            _properties = new HashMap();
+        }
+        _properties.put(attrName, attrValue);
+    }
+
+    public void overrideProperties(UIComponent uiComponent)
+    {
+        FacesContext facesContext = null;
+        if (getPageContext() != null)
+        {
+            facesContext = (FacesContext)getPageContext()
+                                    .getAttribute("javax.faces.context.FacesContext",
+                                                  PageContext.REQUEST_SCOPE);
+        }
+
+        if (_properties != null)
+        {
+            for (Iterator it = _properties.entrySet().iterator(); it.hasNext();)
             {
                 Map.Entry entry = (Map.Entry)it.next();
                 String attrName = (String)entry.getKey();
-                if (attrName.equals(MyFacesComponent.VALUE_ATTR))
+                if (facesContext != null
+                    && attrName.equals(MyFacesComponent.VALUE_ATTR))
                 {
-                    if (uiComponent.currentValue(getFacesContext()) == null)
+                    if (uiComponent.currentValue(facesContext) == null)
                     {
                         Object rtValue = entry.getValue();
                         if (rtValue instanceof String)
@@ -381,10 +334,10 @@ public abstract class MyFacesTag
                             if (conv != null)
                             {
                                 UIComponentUtils.convertAndSetValue(facesContext,
-                                                                             uiComponent,
-                                                                             (String)rtValue,
-                                                                             conv,
-                                                                             false);    //No error message
+                                                                    uiComponent,
+                                                                    (String)rtValue,
+                                                                    conv,
+                                                                    false);    //No error message
                             }
                             else
                             {
@@ -406,6 +359,42 @@ public abstract class MyFacesTag
                 }
             }
         }
+    }
+
+
+    //standard tag properties
+
+    public void setModelReference(String s)
+    {
+        setProperty(MyFacesComponent.MODEL_REFERENCE_ATTR, s);
+    }
+
+    public void setConverter(String s)
+    {
+        setProperty(MyFacesComponent.CONVERTER_ATTR, s);
+    }
+
+    public void setValue(Object value)
+    {
+        setProperty(MyFacesComponent.VALUE_ATTR, value);
+    }
+
+    public void setValue(String value)
+    {
+        setProperty(MyFacesComponent.VALUE_ATTR, value);
+    }
+
+
+    //Iteration Tag support
+
+    public final int doAfterBody() throws JspException
+    {
+        return getDoAfterBodyValue();
+    }
+
+    public int getDoAfterBodyValue() throws JspException
+    {
+        return Tag.SKIP_BODY;
     }
 
 }

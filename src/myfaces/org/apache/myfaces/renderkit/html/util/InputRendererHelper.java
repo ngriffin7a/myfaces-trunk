@@ -43,7 +43,9 @@ public abstract class InputRendererHelper
             while (it.hasNext())
             {
                 Message msg = (Message)it.next();
+                writer.write("<font color=\"red\">");
                 writer.write(msg.getDetail());
+                writer.write("</font>");
             }
         }
     }

@@ -18,18 +18,35 @@
  */
 package net.sourceforge.myfaces.taglib;
 
+import net.sourceforge.myfaces.component.UIOutput;
+import net.sourceforge.myfaces.renderkit.html.ErrorsRenderer;
+
 import javax.faces.component.UIComponent;
-import javax.servlet.jsp.tagext.Tag;
+import javax.faces.webapp.FacesTag;
+
 
 /**
- * Mixin interface that should (must?) be implemented by all FacesTags
- * that are used together with MyFaces.
+ * TODO: description
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public interface MyFacesTagExtension
-    extends Tag
+public class ErrorsTag
+        extends FacesTag
 {
-    public UIComponent createComponent();
-    public String getRendererType();
+    //MyFaces tag extensions:
+    public UIComponent createComponent()
+    {
+        return new UIOutput();
+    }
+
+    public String getRendererType()
+    {
+        return ErrorsRenderer.TYPE;
+    }
+
+    public void setCompoundId(String compoundId)
+    {
+        setProperty(UIOutput.COMPOUND_ID_ATTR, compoundId);
+    }
+
 }

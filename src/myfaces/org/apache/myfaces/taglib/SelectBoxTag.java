@@ -22,6 +22,7 @@ import net.sourceforge.myfaces.component.UISelectOne;
 import net.sourceforge.myfaces.renderkit.html.MenuRenderer;
 
 import javax.faces.component.UIComponent;
+import javax.faces.webapp.FacesTag;
 
 
 /**
@@ -30,7 +31,7 @@ import javax.faces.component.UIComponent;
  * @version $Revision$ $Date$
  */
 public class SelectBoxTag
-    extends MyFacesTag
+    extends FacesTag
 {
     public UIComponent createComponent()
     {
@@ -44,6 +45,6 @@ public class SelectBoxTag
 
     public void setTest(int v)
     {
-        addRequestTimeValue(UISelectOne.SIZE_ATTR, new Integer(v));
+        setProperty(UISelectOne.SIZE_ATTR, new Integer(v));
     }
 }

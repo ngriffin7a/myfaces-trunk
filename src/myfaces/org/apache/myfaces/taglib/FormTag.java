@@ -22,6 +22,7 @@ import net.sourceforge.myfaces.component.UIForm;
 import net.sourceforge.myfaces.renderkit.html.FormRenderer;
 
 import javax.faces.component.UIComponent;
+import javax.faces.webapp.FacesTag;
 
 
 /**
@@ -30,7 +31,7 @@ import javax.faces.component.UIComponent;
  * @version $Revision$ $Date$
  */
 public class FormTag
-        extends MyFacesTag
+        extends FacesTag
 {
     //MyFaces tag extensions:
     public UIComponent createComponent()
@@ -46,6 +47,6 @@ public class FormTag
 
     public void setFormName(String v)
     {
-        addRequestTimeValue(UIForm.FORM_NAME_ATTR, v);
+        setProperty(UIForm.FORM_NAME_ATTR, v);
     }
 }

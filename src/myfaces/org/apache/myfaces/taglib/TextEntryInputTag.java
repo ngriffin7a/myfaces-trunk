@@ -22,6 +22,7 @@ import net.sourceforge.myfaces.component.UIInput;
 import net.sourceforge.myfaces.renderkit.html.TextRenderer;
 
 import javax.faces.component.UIComponent;
+import javax.faces.webapp.FacesTag;
 
 /**
  * TODO: description
@@ -29,7 +30,7 @@ import javax.faces.component.UIComponent;
  * @version $Revision$ $Date$
  */
 public class TextEntryInputTag
-        extends MyFacesTag
+        extends FacesTag
 {
     public UIComponent createComponent()
     {
@@ -49,11 +50,11 @@ public class TextEntryInputTag
 
     public void setSize(String v)
     {
-        addRequestTimeValue(UIInput.SIZE_ATTR, v);
+        setProperty(UIInput.SIZE_ATTR, v);
     }
 
     public void setMaxLength(String v)
     {
-        addRequestTimeValue(UIInput.MAX_LENGTH_ATTR, v);
+        setProperty(UIInput.MAX_LENGTH_ATTR, v);
     }
 }

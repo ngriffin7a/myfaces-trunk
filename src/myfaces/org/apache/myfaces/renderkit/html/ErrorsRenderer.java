@@ -18,8 +18,9 @@
  */
 package net.sourceforge.myfaces.renderkit.html;
 
+import net.sourceforge.myfaces.component.UIOutput;
+
 import javax.faces.component.UIComponent;
-import javax.faces.component.UIOutput;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 import javax.faces.context.Message;
@@ -35,9 +36,6 @@ import java.util.Collections;
 public class ErrorsRenderer
     extends HTMLRenderer
 {
-    //public static final String COMPOUND_ID_ATTR = "compoundId";
-    public static final String COMPOUND_ID_ATTR = "msgCompoundId"; //Error in Spec.: Cannot be "compoundId" because components already have a compoundId property!
-
     public static final String TYPE = "Errors";
     public String getRendererType()
     {
@@ -46,12 +44,12 @@ public class ErrorsRenderer
 
     public boolean supportsComponentType(UIComponent uiComponent)
     {
-        return uiComponent instanceof UIOutput;
+        return uiComponent instanceof javax.faces.component.UIOutput;
     }
 
     public boolean supportsComponentType(String s)
     {
-        return s.equals(UIOutput.TYPE);
+        return s.equals(javax.faces.component.UIOutput.TYPE);
     }
 
     public void encodeBegin(FacesContext facescontext, UIComponent uiComponent)
@@ -64,7 +62,7 @@ public class ErrorsRenderer
     {
         ResponseWriter writer = facesContext.getResponseWriter();
         Iterator it;
-        String compoundId = (String)uiComponent.getAttribute(COMPOUND_ID_ATTR);
+        String compoundId = (String)uiComponent.getAttribute(UIOutput.COMPOUND_ID_ATTR);
         if (compoundId == null)
         {
             it = facesContext.getMessages();

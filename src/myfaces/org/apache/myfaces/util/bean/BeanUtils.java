@@ -83,7 +83,8 @@ public class BeanUtils
             Object nestedBean = beanMethod.getBean();
             int i = property.lastIndexOf('.');
             String propName = (i == -1 ? property : property.substring(i + 1));
-            throw new IllegalArgumentException("Bean " + nestedBean + " (Class " + nestedBean.getClass() + ") does not have a set method for a property '" + propName + "' of type " + newValue == null ? "'unknown'" : newValue.getClass().getName() + ".");
+            String msg = "Bean " + nestedBean + " (Class " + nestedBean.getClass() + ") does not have a set method for a property '" + propName + "' of type " + (newValue == null ? "'unknown'" : newValue.getClass().getName()) + ".";
+            throw new IllegalArgumentException(msg);
         }
 
         try

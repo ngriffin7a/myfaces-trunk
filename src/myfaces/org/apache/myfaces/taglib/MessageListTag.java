@@ -22,6 +22,7 @@ import net.sourceforge.myfaces.component.UIOutput;
 import net.sourceforge.myfaces.renderkit.html.ErrorsRenderer;
 
 import javax.faces.component.UIComponent;
+import javax.faces.webapp.FacesTag;
 
 
 /**
@@ -30,7 +31,7 @@ import javax.faces.component.UIComponent;
  * @version $Revision$ $Date$
  */
 public class MessageListTag
-        extends MyFacesTag
+        extends FacesTag
 {
     //MyFaces tag extensions:
     public UIComponent createComponent()

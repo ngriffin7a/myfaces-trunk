@@ -34,7 +34,7 @@ import java.lang.reflect.Method;
 /**
  * TODO: description
  * @author Manfred Geiler (latest modification by $Author$)
- * @version $Revision$ $Date${DATE} ${TIME} $
+ * @version $Revision$ $Date$
  */
  public class DefaultApplicationHandler
         implements ApplicationHandler

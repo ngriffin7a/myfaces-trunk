@@ -18,19 +18,17 @@
  */
 package net.sourceforge.myfaces.webapp.filter;
 
-import java.io.IOException;
-import java.io.File;
-import javax.servlet.Filter;
-import javax.servlet.FilterChain;
-import javax.servlet.FilterConfig;
-import javax.servlet.RequestDispatcher;
-import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
+import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+
 
 /**
+ *
  * Due to the manner in which the JSP / servlet lifecycle
  * functions, it is not currently possible to specify default
  * welcome files for a web application and map them to the
@@ -39,25 +37,30 @@ import javax.servlet.http.HttpServletRequest;
  * shortcoming, we utilize a servlet Filter which examines
  * the URI of all incoming requests.
  *
- * @author lebowitz (latest modification by $Author$)
+ * @author Robert J. Lebowitz (latest modification by $Author$)
+ * @since February 18th, 2003
  * @version $Revision$ $Date$
  */
-public class MyFacesFilter implements Filter
-{
+public class MyFacesFilter implements Filter {
+    private SAXParserFactory factory;
     private FilterConfig config;
     private ServletContext context;
     private String[] welcomeFiles = new String[0];
     private StringBuffer sb = new StringBuffer();
 
-    public MyFacesFilter()
-    {
+    /**
+     * Creates a new MyFacesFilter object.
+     */
+    public MyFacesFilter() {
+        factory = SAXParserFactory.newInstance();
+        factory.setValidating(true);
+        factory.setNamespaceAware(false);
     }
 
     /**
      * @see javax.servlet.Filter#destroy()
      */
-    public void destroy()
-    {
+    public void destroy() {
         config = null;
         context = null;
         welcomeFiles = null;
@@ -81,82 +84,97 @@ public class MyFacesFilter implements Filter
      * it lacks a suffix following the pattern <b>.<suffix></b>.
      *
      */
-    public void doFilter(
-        ServletRequest request,
-        ServletResponse response,
-        FilterChain chain)
-        throws IOException, ServletException
-    {
-        if (config == null)
-        {
+    public void doFilter(ServletRequest request, ServletResponse response,
+        FilterChain chain) throws IOException, ServletException {
+        if (config == null) {
             return;
         }
-        HttpServletRequest httpRequest = (HttpServletRequest)request;
+
+        HttpServletRequest httpRequest = (HttpServletRequest) request;
         String uri = httpRequest.getRequestURI();
-        //		context.log("URI is " + uri);
-        // if the uri does not contain a suffix, we consider
+
+        // if the uri does not contain a suffix, we consider 
         // it to represent a directory / context, not a file.
         // file has suffix.  No need to search for welcome file
-        if (uri.lastIndexOf('.') > uri.lastIndexOf('/'))
-        {
+        if (uri.lastIndexOf('.') > uri.lastIndexOf('/')) {
             chain.doFilter(request, response);
+
             return;
         }
+
         String contextPath = httpRequest.getContextPath();
         String welcomeFile = null;
         sb.setLength(0);
         sb.append(uri);
-        if (!uri.endsWith("/"))
-        {
+
+        if (!uri.endsWith("/")) {
             sb.append('/');
         }
+
         String baseURI = sb.delete(0, contextPath.length()).toString();
-        for (int i = 0; i < welcomeFiles.length; i++)
-        {
+
+        for (int i = 0; i < welcomeFiles.length; i++) {
             sb.setLength(0);
             sb.append(baseURI).append(welcomeFiles[i]);
+
             File file = new File(context.getRealPath(sb.toString()));
-            //			context.log("Welcome File: " + file.getAbsolutePath());
-            if (file.exists())
-            {
-                if (welcomeFiles[i].endsWith(".jsp"))
-                {
+
+            //            			context.log("Welcome File: " + file.getAbsolutePath());
+            if (file.exists()) {
+                if (welcomeFiles[i].endsWith(".jsp")) {
                     // alter the name of the file we are requesting to
                     // force it through the MyFacesServlet
                     sb.replace(sb.lastIndexOf(".jsp"), sb.length(), ".jsf");
                     welcomeFile = sb.toString();
                 }
+
                 // we have discovered a filename;
                 // stop the loop
                 break;
             }
         }
-        if (welcomeFile == null)
-        {
+
+        if (welcomeFile == null) {
             sb.setLength(0);
             sb.append(baseURI);
             sb.append("index.jsf");
             welcomeFile = sb.toString();
         }
+
         RequestDispatcher rd = httpRequest.getRequestDispatcher(welcomeFile);
         rd.forward(request, response);
+
         return;
     }
 
     /**
      * During the init method, we have to get any predefined welcome files
      * for the current ServletContext.
-     * @throws javax.servlet.ServletException
-     * @param config
+     * @throws ServletException
+     * @param config The filter configuration data
      */
-    public void init(FilterConfig config) throws ServletException
-    {
-        if (config == null)
-        {
+    public void init(FilterConfig config) throws ServletException {
+        if (config == null) {
             return;
         }
+
         this.config = config;
         this.context = config.getServletContext();
-        welcomeFiles = WelcomeFileFactory.getWelcomeFiles(context);
+
+        try {
+            SAXParser parser = factory.newSAXParser();
+            WelcomeFileHandler handler = new WelcomeFileHandler();
+            InputStream is = context.getResourceAsStream("WEB-INF/web.xml");
+
+            if (is == null) {
+                context.log("Unable to get inputstream for web.xml");
+            }
+
+            parser.parse(is, handler);
+            welcomeFiles = handler.getWelcomeFiles();
+            context.log("Number of welcome files: " + welcomeFiles.length);
+        } catch (Exception ex) {
+            throw new ServletException(ex);
+        }
     }
 }

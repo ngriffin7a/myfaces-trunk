@@ -27,6 +27,7 @@ import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeUtility;
+import javax.servlet.ServletContext;
 import java.io.*;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
@@ -46,12 +47,12 @@ public class ConverterUtils
 
     private ConverterUtils() {}
 
-    public static Converter getConverter(FacesContext facesContext, Class c)
+    public static Converter getConverter(ServletContext servletContext, Class c)
         throws IllegalArgumentException
     {
-        ConverterMapFactory convMapFactory = MyFacesFactoryFinder.getConverterMapFactory(facesContext.getServletContext());
+        ConverterMapFactory convMapFactory = MyFacesFactoryFinder.getConverterMapFactory(servletContext);
         String converterId = convMapFactory.getConverterMap().getConverterId(c);
-        ConverterFactory convFactory = MyFacesFactoryFinder.getConverterFactory(facesContext.getServletContext());
+        ConverterFactory convFactory = MyFacesFactoryFinder.getConverterFactory(servletContext);
         return convFactory.getConverter(converterId);
     }
 
@@ -81,12 +82,12 @@ public class ConverterUtils
     }
 
 
-    public static Converter findConverter(FacesContext facesContext,
+    public static Converter findConverter(ServletContext servletContext,
                                           Class c)
     {
         try
         {
-            return getConverter(facesContext, c);
+            return getConverter(servletContext, c);
         }
         catch (IllegalArgumentException e)
         {

@@ -23,6 +23,7 @@ import net.sourceforge.myfaces.component.UICommand;
 import net.sourceforge.myfaces.renderkit.html.ButtonRenderer;
 
 import javax.faces.component.UIComponent;
+import javax.faces.webapp.FacesTag;
 
 
 /**
@@ -31,7 +32,7 @@ import javax.faces.component.UIComponent;
  * @version $Revision$ $Date$
  */
 public class CommandButtonTag
-        extends MyFacesTag
+        extends FacesTag
 {
     //MyFaces tag extensions:
     public UIComponent createComponent()
@@ -47,7 +48,7 @@ public class CommandButtonTag
 
     public void setLabel(String v)
     {
-        addRequestTimeValue(MyFacesComponent.LABEL_ATTR, v);
+        setProperty(MyFacesComponent.LABEL_ATTR, v);
     }
 
     public void setCommandName(String v)
@@ -57,6 +58,6 @@ public class CommandButtonTag
 
     public void setCommandReference(String v)
     {
-        addRequestTimeValue(UICommand.COMMAND_REFERENCE_ATTR, v);
+        setProperty(UICommand.COMMAND_REFERENCE_ATTR, v);
     }
 }

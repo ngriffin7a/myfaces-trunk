@@ -19,9 +19,6 @@
 package net.sourceforge.myfaces.renderkit.html.state;
 
 import net.sourceforge.myfaces.MyFacesConfig;
-import net.sourceforge.myfaces.MyFacesFactoryFinder;
-import net.sourceforge.myfaces.webapp.ServletMappingFactory;
-import net.sourceforge.myfaces.webapp.ServletMapping;
 import net.sourceforge.myfaces.component.MyFacesComponent;
 import net.sourceforge.myfaces.component.UIPanel;
 import net.sourceforge.myfaces.convert.Converter;
@@ -40,14 +37,12 @@ import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 import javax.faces.tree.Tree;
 import javax.servlet.jsp.tagext.BodyContent;
-import javax.servlet.ServletContext;
 import java.io.IOException;
 import java.io.Serializable;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.util.*;
 import java.util.regex.Pattern;
-import java.net.MalformedURLException;
 
 /**
  * TODO: description
@@ -351,9 +346,9 @@ public class StateSaver
         try
         {
             Class c = BeanUtils.getBeanPropertyType(uiComponent, attrName);
-            conv = ConverterUtils.findConverter(facesContext, c);
+            conv = ConverterUtils.findConverter(facesContext.getServletContext(), c);
         }
-        catch (FacesException e)
+        catch (IllegalArgumentException e)
         {
             LogUtil.getLogger().warning("Component " + uiComponent.getCompoundId() + " does not have a getter method for attribute '" + attrName + "'.");
         }

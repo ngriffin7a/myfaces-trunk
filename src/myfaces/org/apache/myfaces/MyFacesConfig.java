@@ -20,6 +20,8 @@ package net.sourceforge.myfaces;
 
 import java.util.logging.Level;
 import java.util.Properties;
+import java.util.Map;
+import java.util.HashMap;
 import java.io.InputStream;
 import java.io.IOException;
 
@@ -30,12 +32,14 @@ import java.io.IOException;
  */
 public class MyFacesConfig
 {
-    private static String _PROPERTY_FILE = "myfaces.properties";
-    private static String _UseJspFileCache = "UseJspFileCache";
-    private static String _UseStateEncodingOnTheFly = "UseStateEncodingOnTheFly";
-    private static String _UseStateZipping = "UseStateZipping";
-    private static String _UseAlwaysSaveComponentValue = "UseAlwaysSaveComponentValue";
-    private static String _UseFileExtensionServletMapping = "UseFileExtensionServletMapping";
+    private static final String _PROPERTY_FILE = "myfaces.properties";
+    private static final String _UseJspFileCache = "UseJspFileCache";
+    private static final String _UseStateEncodingOnTheFly = "UseStateEncodingOnTheFly";
+    private static final String _UseStateZipping = "UseStateZipping";
+    private static final String _UseAlwaysSaveComponentValue = "UseAlwaysSaveComponentValue";
+    private static final String _UseFileExtensionServletMapping = "UseFileExtensionServletMapping";
+    private static final String LOG_LEVEL = "log_level";
+    private static final Level DEFAULT_LOG_LEVEL = Level.INFO;
 
     private MyFacesConfig() {}
 
@@ -111,9 +115,33 @@ public class MyFacesConfig
     }
 
 
+
+    private static final Map LOG_LEVELS = new HashMap();
+    static
+    {
+        LOG_LEVELS.put("FINEST", Level.FINEST);
+        LOG_LEVELS.put("FINER", Level.FINER);
+        LOG_LEVELS.put("FINE", Level.FINE);
+        LOG_LEVELS.put("INFO", Level.INFO);
+        LOG_LEVELS.put("WARNING", Level.WARNING);
+        LOG_LEVELS.put("SEVERE", Level.SEVERE);
+    }
+
     public static Level getLogLevel()
     {
-        return Level.FINEST;
+        String logLevel = getProperty(LOG_LEVEL);
+        if (logLevel == null)
+        {
+            return DEFAULT_LOG_LEVEL;
+        }
+
+        Level level = (Level)LOG_LEVELS.get(logLevel);
+        if (level == null)
+        {
+            return DEFAULT_LOG_LEVEL;
+        }
+
+        return level;
     }
 
     private static final String _TRUE = "true";

@@ -26,5 +26,6 @@ package net.sourceforge.myfaces.component;
 public class UIOutput
     extends javax.faces.component.UIOutput
 {
-
+    //public static final String COMPOUND_ID_ATTR = "compoundId";
+    public static final String COMPOUND_ID_ATTR = "msgCompoundId"; //Error in Spec.: Cannot be "compoundId" because components already have a compoundId property!
 }

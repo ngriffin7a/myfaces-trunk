@@ -34,17 +34,6 @@
     </info>
 
     <tag>
-        <name>message_list</name>
-        <tagclass>net.sourceforge.myfaces.taglib.MessageListTag</tagclass>
-        <bodycontent>empty</bodycontent>
-        <attribute>
-            <name>id</name>
-            <required>true</required>
-            <rtexprvalue>false</rtexprvalue>
-        </attribute>
-    </tag>
-
-    <tag>
         <name>save_state</name>
         <tagclass>net.sourceforge.myfaces.taglib.SaveStateTag</tagclass>
         <bodycontent>JSP</bodycontent>
@@ -92,11 +81,6 @@
         </attribute>
         <attribute>
             <name>treeId</name>
-            <required>false</required>
-            <rtexprvalue>false</rtexprvalue>
-        </attribute>
-        <attribute>
-            <name>commandReference</name>
             <required>false</required>
             <rtexprvalue>false</rtexprvalue>
         </attribute>

@@ -69,6 +69,11 @@ public class JspTreeParser
         return _beanClassesMap;
     }
 
+    public ServletContext getServletContext()
+    {
+        return _servletContext;
+    }
+
     protected void init(String treeId)
     {
         TreeFactory tf = (TreeFactory)FactoryFinder.getFactory(FactoryFinder.TREE_FACTORY);

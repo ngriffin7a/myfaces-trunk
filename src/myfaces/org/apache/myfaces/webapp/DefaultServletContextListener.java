@@ -31,7 +31,7 @@ import javax.servlet.ServletContextListener;
 /**
  * TODO: description
  * @author Manfred Geiler (latest modification by $Author$)
- * @version $Revision$ $Date${DATE} ${TIME} $
+ * @version $Revision$ $Date$
  */
 public class DefaultServletContextListener
         implements ServletContextListener

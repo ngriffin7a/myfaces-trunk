@@ -62,7 +62,7 @@ public class UIComponentUtils
         if (conv == null)
         {
             //default to StringConverter
-            conv = ConverterUtils.getConverter(facesContext, String.class);
+            conv = ConverterUtils.getConverter(facesContext.getServletContext(), String.class);
         }
 
         convertAndSetValue(facesContext, uiComponent, newValue, conv, addErrorMessageOnFail);
@@ -77,7 +77,7 @@ public class UIComponentUtils
         if (conv == null)
         {
             //default to StringConverter
-            conv = ConverterUtils.getConverter(facesContext, String.class);
+            conv = ConverterUtils.getConverter(facesContext.getServletContext(), String.class);
         }
 
         if (conv instanceof StringArrayConverter)
@@ -169,7 +169,7 @@ public class UIComponentUtils
 
             if (clazz != null)
             {
-                conv = ConverterUtils.findConverter(facesContext, clazz);
+                conv = ConverterUtils.findConverter(facesContext.getServletContext(), clazz);
             }
 
             Object objValue;

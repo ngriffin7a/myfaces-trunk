@@ -22,6 +22,7 @@ import net.sourceforge.myfaces.component.UISelectMany;
 import net.sourceforge.myfaces.renderkit.html.MenuRenderer;
 
 import javax.faces.component.UIComponent;
+import javax.faces.webapp.FacesTag;
 
 
 /**
@@ -30,7 +31,7 @@ import javax.faces.component.UIComponent;
  * @version $Revision$ $Date$
  */
 public class SelectBoxManyTag
-    extends MyFacesTag
+    extends FacesTag
 {
     public UIComponent createComponent()
     {
@@ -44,6 +45,6 @@ public class SelectBoxManyTag
 
     public void setSize(int v)
     {
-        addRequestTimeValue(UISelectMany.SIZE_ATTR, new Integer(v));
+        setProperty(UISelectMany.SIZE_ATTR, new Integer(v));
     }
 }

@@ -23,6 +23,7 @@ import net.sourceforge.myfaces.component.ext.UINavigationItem;
 import net.sourceforge.myfaces.renderkit.html.ext.NavigationItemRenderer;
 
 import javax.faces.component.UIComponent;
+import javax.faces.webapp.FacesTag;
 
 /**
  * TODO: description
@@ -30,7 +31,7 @@ import javax.faces.component.UIComponent;
  * @version $Revision$ $Date$
  */
 public class NavigationItemTag
-        extends MyFacesTag
+        extends FacesTag
 {
     public UIComponent createComponent()
     {
@@ -44,16 +45,16 @@ public class NavigationItemTag
 
     public void setLabel(String s)
     {
-        addRequestTimeValue(MyFacesComponent.LABEL_ATTR, s);
+        setProperty(MyFacesComponent.LABEL_ATTR, s);
     }
 
     public void setHref(String s)
     {
-        addRequestTimeValue(UINavigationItem.HREF_ATTR, s);
+        setProperty(UINavigationItem.HREF_ATTR, s);
     }
 
     public void setTreeId(String s)
     {
-        addRequestTimeValue(UINavigationItem.TREE_ID_ATTR, s);
+        setProperty(UINavigationItem.TREE_ID_ATTR, s);
     }
 }

@@ -22,6 +22,7 @@ import net.sourceforge.myfaces.component.MyFacesComponent;
 import net.sourceforge.myfaces.component.UISelectItem;
 
 import javax.faces.component.UIComponent;
+import javax.faces.webapp.FacesTag;
 
 /**
  * TODO: description
@@ -29,7 +30,7 @@ import javax.faces.component.UIComponent;
  * @version $Revision$ $Date$
  */
 public class SelectItemTag
-    extends MyFacesTag
+    extends FacesTag
 {
     public UIComponent createComponent()
     {
@@ -43,16 +44,16 @@ public class SelectItemTag
 
     public void setSelected(String v)
     {
-        addRequestTimeValue(UISelectItem.SELECTED_ATTR, v);
+        setProperty(UISelectItem.SELECTED_ATTR, v);
     }
 
     public void setDescription(String v)
     {
-        addRequestTimeValue(UISelectItem.DESCRIPTION_ATTR, v);
+        setProperty(UISelectItem.DESCRIPTION_ATTR, v);
     }
 
     public void setLabel(String v)
     {
-        addRequestTimeValue(MyFacesComponent.LABEL_ATTR, v);
+        setProperty(MyFacesComponent.LABEL_ATTR, v);
     }
 }

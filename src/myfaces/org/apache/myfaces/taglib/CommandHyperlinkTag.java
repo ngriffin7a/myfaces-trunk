@@ -22,6 +22,7 @@ import net.sourceforge.myfaces.component.UICommand;
 import net.sourceforge.myfaces.renderkit.html.HyperlinkRenderer;
 
 import javax.faces.component.UIComponent;
+import javax.faces.webapp.FacesTag;
 
 
 /**
@@ -30,7 +31,7 @@ import javax.faces.component.UIComponent;
  * @version $Revision$ $Date$
  */
 public class CommandHyperlinkTag
-        extends MyFacesTag
+        extends FacesTag
 {
     //MyFaces tag extensions:
     public UIComponent createComponent()
@@ -51,11 +52,11 @@ public class CommandHyperlinkTag
 
     public void setCommandReference(String v)
     {
-        addRequestTimeValue(UICommand.COMMAND_REFERENCE_ATTR, v);
+        setProperty(UICommand.COMMAND_REFERENCE_ATTR, v);
     }
 
     public void setHref(String v)
     {
-        addRequestTimeValue(UICommand.HREF_ATTR, v);
+        setProperty(UICommand.HREF_ATTR, v);
     }
 }

@@ -16,28 +16,22 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package net.sourceforge.myfaces.taglib;
+package javax.faces.webapp;
 
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.BodyContent;
 import javax.servlet.jsp.tagext.BodyTag;
-import javax.servlet.jsp.tagext.BodyTagSupport;
 
 /**
  * TODO: description
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public abstract class MyFacesBodyTag
-        extends MyFacesIterationTag
+public abstract class FacesBodyTag
+        extends FacesTag
         implements BodyTag
 {
     private BodyContent _bodyContent;
-
-    protected void initDelegation()
-    {
-        _delegation = new BodyTagSupport();
-    }
 
     protected void init()
     {
@@ -45,15 +39,21 @@ public abstract class MyFacesBodyTag
         _bodyContent = null;
     }
 
-    //Delegation:
+
+    protected int getDoStartValue() throws JspException
+    {
+        return EVAL_BODY_BUFFERED;
+    }
+
+
+    //body tag support
+
     public void doInitBody() throws JspException
     {
-        ((BodyTag)_delegation).doInitBody();
     }
 
     public void setBodyContent(BodyContent bodyContent)
     {
-        ((BodyTag)_delegation).setBodyContent(bodyContent);
         _bodyContent = bodyContent;
     }
 
