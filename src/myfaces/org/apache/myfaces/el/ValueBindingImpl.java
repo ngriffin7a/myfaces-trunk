@@ -55,6 +55,11 @@ import org.apache.commons.logging.LogFactory;
  * @version $Revision$ $Date$
  * 
  * $Log$
+ * Revision 1.49  2004/09/20 14:35:48  dave0000
+ * bug 1030875:
+ * getType() should return null if type cannot be determined
+ * isReadOnly() should return false if read-only cannot be determined
+ *
  * Revision 1.48  2004/07/27 06:28:34  dave0000
  * fix issue with getType of literal expressions (and other improvements)
  *
@@ -176,7 +181,6 @@ public class ValueBindingImpl extends ValueBinding implements StateHolder
     //~ Methods ---------------------------------------------------------------
 
     public boolean isReadOnly(FacesContext facesContext)
-            throws PropertyNotFoundException
     {
         try
         {
@@ -203,23 +207,14 @@ public class ValueBindingImpl extends ValueBinding implements StateHolder
             // we cannot write to it but can read it
             return true;
         }
-        catch (IndexOutOfBoundsException e) 
-        {
-            // ArrayIndexOutOfBoundsException also here
-            throw new PropertyNotFoundException(
-                "Expression: '" + _expressionString + "'", e);
-        }
         catch (Exception e)
         {
-            log.error("Cannot determine readonly for expression " 
-                + _expressionString, e);
-            throw new EvaluationException(
-                "Expression: '" + _expressionString + "'", e);
+            // Cannot determine read-only, return false (is this what the spec requires?)
+            return false;
         }
     }
 
     public Class getType(FacesContext facesContext)
-            throws PropertyNotFoundException
     {
         try
         {
@@ -264,7 +259,7 @@ public class ValueBindingImpl extends ValueBinding implements StateHolder
         catch (NotVariableReferenceException e)
         {
             // It is not a value reference, then it probably is an expression
-            // that evaluates to a literal. Get the value and then its class
+            // that evaluates to a literal. Get the value and then it's class
             // Note: we could hadle this case in a more performance efficient manner--
             //       but this case is so rare, that for months no-one detected
             //       the error before this code was added.
@@ -274,22 +269,14 @@ public class ValueBindingImpl extends ValueBinding implements StateHolder
             }
             catch (Exception e1)
             {
-                // cannot determine type, return null
+                // Cannot determine type, return null per JSF spec
                 return null;
             }
         }
-        catch (IndexOutOfBoundsException e) 
-        {
-            // ArrayIndexOutOfBoundsException also here
-            throw new PropertyNotFoundException(
-                "Expression: '" + _expressionString + "'", e);
-        }
         catch (Exception e)
         {
-            log.error("Cannot get type for expression '" + _expressionString 
-                + "'", e);
-            throw new EvaluationException(
-                "Expression: '" + _expressionString + "'", e);
+            // Cannot determine type, return null per JSF spec
+            return null;
         }
     }
 

@@ -40,6 +40,11 @@ import java.util.Map;
  * @author Anton Koinov
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.28  2004/09/20 14:35:48  dave0000
+ * bug 1030875:
+ * getType() should return null if type cannot be determined
+ * isReadOnly() should return false if read-only cannot be determined
+ *
  * Revision 1.27  2004/07/01 22:05:11  mwessendorf
  * ASF switch
  *
@@ -249,21 +254,14 @@ public class PropertyResolverImpl extends PropertyResolver
     }
 
     public boolean isReadOnly(Object base, Object property)
-            throws EvaluationException, PropertyNotFoundException
     {
         try
         {
-            if (base == null)
-            {
-                throw new PropertyNotFoundException(
-                    "Null bean, property: " + property);
-            }
-            if (property == null ||
+            if (base == null || property == null ||
                 property instanceof String && ((String)property).length() == 0)
             {
-                throw new PropertyNotFoundException("Bean: " 
-                    + base.getClass().getName() 
-                    + ", null or empty property property");
+                // Cannot determine read-only, return false (is this what the spec requires?)
+                return false;
             }
 
             // Is there any way to determine whether Map.put() will fail?
@@ -282,29 +280,25 @@ public class PropertyResolverImpl extends PropertyResolver
 
             return propertyDescriptor.getWriteMethod() == null; 
         }
-        catch (RuntimeException e)
+        catch (Exception e)
         {
-            log.error("Exception determining readonly for property " + property 
-                + " of bean " 
-                + base != null ? base.getClass().getName() : "NULL", e);
-            throw e;
+            // Cannot determine read-only, return false (is this what the spec requires?)
+            return false;
         }
     }
 
     public boolean isReadOnly(Object base, int index)
-            throws EvaluationException, PropertyNotFoundException
     {
         try
         {
             if (base == null)
             {
-                throw new PropertyNotFoundException(
-                    "Null bean, index: " + index);
+                // Cannot determine read-only, return false (is this what the spec requires?)
+                return false;
             }
-
-            // Is there any way to determine whether List.set() will fail?
             if (base instanceof List || base.getClass().isArray())
             {
+                // Is there any way to determine whether List.set() will fail?
                 return false;
             }
             if (base instanceof UIComponent)
@@ -312,34 +306,25 @@ public class PropertyResolverImpl extends PropertyResolver
                 return true;
             }
 
-            throw new ReferenceSyntaxException("Must be array or List. Bean: " 
-                + base.getClass().getName() + ", index " + index);
+            // Cannot determine read-only, return false (is this what the spec requires?)
+            return false;
         }
-        catch (RuntimeException e)
+        catch (Exception e)
         {
-            log.error("Exception determining readonly for index " + index 
-                + " of bean " 
-                + base != null ? base.getClass().getName() : "NULL", e);
-            throw e;
+            // Cannot determine read-only, return false (is this what the spec requires?)
+            return false;
         }
     }
 
     public Class getType(Object base, Object property)
-            throws EvaluationException, PropertyNotFoundException
     {
         try
         {
-            if (base == null)
-            {
-                throw new PropertyNotFoundException(
-                    "Null bean, property: " + property);
-            }
-            if (property == null ||
+            if (base == null || property == null ||
                 property instanceof String && ((String)property).length() == 0)
             {
-                throw new PropertyNotFoundException(
-                    "Bean: " + base.getClass().getName() 
-                    + ", null or empty property property");
+                // Cannot determine type, return null per JSF spec
+                return null;
             }
 
             if (base instanceof Map)
@@ -360,24 +345,21 @@ public class PropertyResolverImpl extends PropertyResolver
 
             return propertyDescriptor.getPropertyType();
         }
-        catch (RuntimeException e)
+        catch (Exception e)
         {
-            log.error("Exception determining type of property " + property 
-                + " of bean " 
-                + base != null ? base.getClass().getName() : "NULL", e);
-            throw e;
+            // Cannot determine type, return null per JSF spec
+            return null;
         }
     }
 
     public Class getType(Object base, int index)
-            throws EvaluationException, PropertyNotFoundException
     {
         try
         {
             if (base == null)
             {
-                throw new PropertyNotFoundException(
-                    "Null bean, index: " + index);
+                // Cannot determine type, return null per JSF spec
+                return null;
             }
 
             if (base.getClass().isArray())
@@ -385,24 +367,15 @@ public class PropertyResolverImpl extends PropertyResolver
                 return base.getClass().getComponentType();
             }
 
-            try
+            if (base instanceof List)
             {
-                if (base instanceof List)
-                {
-                    // REVISIT: does it make sense to do this or simply return 
-                    //          Object.class? What if the new value is not of 
-                    //          the old value's class?
-                    Object value = ((List) base).get(index);
+                // REVISIT: does it make sense to do this or simply return 
+                //          Object.class? What if the new value is not of 
+                //          the old value's class?
+                Object value = ((List) base).get(index);
 
-                    // REVISIT: when generics are implemented in JVM 1.5
-                    return (value != null) ? value.getClass() : Object.class;
-                }
-            }
-            catch (Throwable t)
-            {
-                throw new PropertyNotFoundException(
-                    "Bean: " + base.getClass().getName() 
-                    + ", index: " + index, t);
+                // REVISIT: when generics are implemented in JVM 1.5
+                return (value != null) ? value.getClass() : Object.class;
             }
 
             if (base instanceof UIComponent)
@@ -410,15 +383,13 @@ public class PropertyResolverImpl extends PropertyResolver
                 return UIComponent.class;
             }
 
-            throw new ReferenceSyntaxException("Must be array or List. Bean: " 
-                + base.getClass().getName() + ", index " + index);
+            // Cannot determine type, return null per JSF spec
+            return null;
         }
-        catch (RuntimeException e)
+        catch (Exception e)
         {
-            log.error("Exception determining type for index " + index 
-                + " of bean " 
-                + base != null ? base.getClass().getName() : "NULL", e);
-            throw e;
+            // Cannot determine type, return null per JSF spec
+            return null;
         }
     }
 
