@@ -42,6 +42,9 @@ import org.apache.myfaces.renderkit.html.HTML;
  * @author Sylvain Vieujot (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.4  2004/12/01 22:12:51  svieujot
+ * Add xml and xsl content types.
+ *
  * Revision 1.3  2004/12/01 20:29:22  svieujot
  * Add javadoc.
  *
@@ -203,6 +206,10 @@ public class AddResource {
             response.setContentType("image/png");
         else if( lcResourceFileName.endsWith(".jpg") || lcResourceFileName.endsWith(".jpeg") )
             response.setContentType("image/jpeg");
+        else if( lcResourceFileName.endsWith(".xml") )
+            response.setContentType("text/xml");
+        else if( lcResourceFileName.endsWith(".xsl") )
+            response.setContentType("text/xsl");
         
         InputStream is = getResource(componentName, resourceFileName);
         if( is == null ){
