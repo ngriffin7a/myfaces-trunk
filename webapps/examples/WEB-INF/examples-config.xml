@@ -332,8 +332,8 @@
         </navigation-case>
 
         <navigation-case>
-            <from-outcome>go_htmlEditor</from-outcome>
-            <to-view-id>/htmlEditor.jsp</to-view-id>
+            <from-outcome>go_inputHtml</from-outcome>
+            <to-view-id>/inputHtml.jsp</to-view-id>
         </navigation-case>
 
         <navigation-case>
