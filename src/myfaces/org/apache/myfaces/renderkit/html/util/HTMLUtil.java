@@ -193,9 +193,8 @@ public class HTMLUtil
             writer.write('"');
         }
 
-        renderStyleClass(writer, uiComponent);
         renderHTMLAttributes(writer, uiComponent, HTML.SELECT_PASSTHROUGH_ATTRIBUTES);
-        renderDisabledOnUserRole(facesContext, uiComponent);
+        renderDisabledOnUserRole(writer, uiComponent, facesContext);
 
         if (selectMany)
         {
@@ -462,6 +461,26 @@ public class HTMLUtil
         }
 
         return row;
+    }
+
+    public static String addAttributeToHref(String href, String name, String value)
+    {
+        StringBuffer buf = new StringBuffer();
+        buf.append(href);
+
+        if (href.indexOf(HTML.HREF_PATH_FROM_PARAM_SEPARATOR) == -1)
+        {
+            buf.append(HTML.HREF_PATH_FROM_PARAM_SEPARATOR);
+        }
+        else
+        {
+            buf.append(HTML.HEF_PARAM_SEPARATOR);
+        }
+        buf.append(name);
+        buf.append(HTML.HEF_PARAM_NAME_FROM_VALUE_SEPARATOR);
+        buf.append(value);
+
+        return buf.toString();
     }
 
 

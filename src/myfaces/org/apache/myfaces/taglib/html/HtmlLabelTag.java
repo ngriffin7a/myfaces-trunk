@@ -30,17 +30,17 @@ import javax.faces.component.UIComponent;
  * @author Martin Marinschek
  * @version $Revision$ $Date$
  */
-public class HtmlCommandButtonTag
+public class HtmlLabelTag
     extends HtmlComponentTag
 {
     public String getComponentType()
     {
-        return "CommandButton";
+        return "OutputLabel";
     }
 
     public String getDefaultRendererType()
     {
-        return "Button";
+        return "Label";
     }
 
     // UIComponent attributes --> already implemented in MyfacesComponentTag
@@ -51,37 +51,28 @@ public class HtmlCommandButtonTag
 
     // HTML event handler attributes --> already implemented in HtmlComponentTag
 
-    // HTML input attributes relevant for command-button
+    // HTML label attributes
     private String _accesskey;
-    private String _alt;
-    private String _disabled;
     private String _onblur;
-    private String _onchange;
     private String _onfocus;
-    private String _onselect;
-    private String _size;
-    private String _tabindex;
 
-    // UICommand attributes
-    private String _action;
-    private String _image;
+    //HTMLOutputLabel attributes
+    private String _for;
+
+    // UIOutput attributes
+    private String _converter;
 
     protected void setProperties(UIComponent component)
     {
         super.setProperties(component);
 
         setStringProperty(component, HTML.ACCESSKEY_ATTR, _accesskey);
-        setStringProperty(component, HTML.ALT_ATTR, _alt);
-        setBooleanProperty(component, HTML.DISABLED_ATTR, _disabled);
         setStringProperty(component, HTML.ONBLUR_ATTR, _onblur);
-        setStringProperty(component, HTML.ONCHANGE_ATTR, _onchange);
         setStringProperty(component, HTML.ONFOCUS_ATTR, _onfocus);
-        setStringProperty(component, HTML.ONSELECT_ATTR, _onselect);
-        setStringProperty(component, HTML.SIZE_ATTR, _size);
-        setStringProperty(component, HTML.TABINDEX_ATTR, _tabindex);
 
-        setStringProperty(component, JSFAttr.ACTION_ATTR, _action);
-        setStringProperty(component, JSFAttr.IMAGE_ATTR, _image);
+        setStringProperty(component, JSFAttr.CONVERTER_ATTR, _converter);
+
+        setStringProperty(component, JSFAttr.FOR_ATTR, _for);
    }
 
     public void setAccesskey(String accesskey)
@@ -89,24 +80,9 @@ public class HtmlCommandButtonTag
         _accesskey = accesskey;
     }
 
-    public void setAlt(String alt)
-    {
-        _alt = alt;
-    }
-
-    public void setDisabled(String disabled)
-    {
-        _disabled = disabled;
-    }
-
     public void setOnblur(String onblur)
     {
         _onblur = onblur;
-    }
-
-    public void setOnchange(String onchange)
-    {
-        _onchange = onchange;
     }
 
     public void setOnfocus(String onfocus)
@@ -114,28 +90,13 @@ public class HtmlCommandButtonTag
         _onfocus = onfocus;
     }
 
-    public void setOnselect(String onselect)
+    public void setFor(String aFor)
     {
-        _onselect = onselect;
+        _for = aFor;
     }
 
-    public void setSize(String size)
+    public void setConverter(String converter)
     {
-        _size = size;
-    }
-
-    public void setTabindex(String tabindex)
-    {
-        _tabindex = tabindex;
-    }
-
-    public void setAction(String action)
-    {
-        _action = action;
-    }
-
-    public void setImage(String image)
-    {
-        _image = image;
+        _converter = converter;
     }
 }

@@ -140,6 +140,9 @@ public class JSFAttr
     public static final String TITLE_ATTR                  = "title";
     public static final String TOOLTIP_ATTR                = "tooltip";
 
+    // GraphicImage attributes
+    public static final String URL_ATTR                    = "url";
+
 
 
     //~ Constructors -------------------------------------------------------------------------------

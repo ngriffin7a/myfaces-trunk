@@ -89,7 +89,7 @@ public class HtmlInputTextTag
         setStringProperty(component, HTML.DATAFLD_ATTR, _datafld);
         setStringProperty(component, HTML.DATASRC_ATTR, _datasrc);
         setStringProperty(component, HTML.DATAFORMATAS_ATTR, _dataformatas);
-        setStringProperty(component, HTML.DISABLED_ATTR, _disabled);
+        setBooleanProperty(component, HTML.DISABLED_ATTR, _disabled);
         setStringProperty(component, HTML.MAXLENGTH_ATTR, _maxlength);
         setStringProperty(component, HTML.ONBLUR_ATTR, _onblur);
         setStringProperty(component, HTML.ONCHANGE_ATTR, _onchange);

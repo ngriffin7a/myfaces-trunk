@@ -30,17 +30,17 @@ import javax.faces.component.UIComponent;
  * @author Martin Marinschek
  * @version $Revision$ $Date$
  */
-public class HtmlCommandButtonTag
+public class HtmlGraphicImageTag
     extends HtmlComponentTag
 {
     public String getComponentType()
     {
-        return "CommandButton";
+        return "GraphicImage";
     }
 
     public String getDefaultRendererType()
     {
-        return "Button";
+        return "Image";
     }
 
     // UIComponent attributes --> already implemented in MyfacesComponentTag
@@ -51,42 +51,44 @@ public class HtmlCommandButtonTag
 
     // HTML event handler attributes --> already implemented in HtmlComponentTag
 
-    // HTML input attributes relevant for command-button
-    private String _accesskey;
+    // HTML img attributes relevant for graphic-image
+    private String _align;  //not yet in API!
     private String _alt;
-    private String _disabled;
+    private String _height;
+    private String _ismap;
     private String _onblur;
     private String _onchange;
     private String _onfocus;
-    private String _onselect;
-    private String _size;
-    private String _tabindex;
+    private String _usemap;
+    private String _width;
 
-    // UICommand attributes
-    private String _action;
-    private String _image;
+    // HtmlGraphicImage attributes
+    private String _longdesc;
+
+    //UIGraphic attributes
+    private String _url;
 
     protected void setProperties(UIComponent component)
     {
         super.setProperties(component);
 
-        setStringProperty(component, HTML.ACCESSKEY_ATTR, _accesskey);
+        setStringProperty(component, HTML.ALIGN_ATTR, _alt);
         setStringProperty(component, HTML.ALT_ATTR, _alt);
-        setBooleanProperty(component, HTML.DISABLED_ATTR, _disabled);
+        setStringProperty(component, HTML.HEIGHT_ATTR, _height);
+        setBooleanProperty(component, HTML.ISMAP_ATTR, _ismap);
+        setStringProperty(component, HTML.LONGDESC_ATTR, _longdesc);
         setStringProperty(component, HTML.ONBLUR_ATTR, _onblur);
         setStringProperty(component, HTML.ONCHANGE_ATTR, _onchange);
         setStringProperty(component, HTML.ONFOCUS_ATTR, _onfocus);
-        setStringProperty(component, HTML.ONSELECT_ATTR, _onselect);
-        setStringProperty(component, HTML.SIZE_ATTR, _size);
-        setStringProperty(component, HTML.TABINDEX_ATTR, _tabindex);
+        setStringProperty(component, HTML.USEMAP_ATTR, _usemap);
+        setStringProperty(component, HTML.WIDTH_ATTR, _width);
 
-        setStringProperty(component, JSFAttr.ACTION_ATTR, _action);
-        setStringProperty(component, JSFAttr.IMAGE_ATTR, _image);
+        setStringProperty(component, JSFAttr.URL_ATTR, _url);
    }
 
-    public void setAccesskey(String accesskey)
+    public void setAlign(String align)
     {
-        _accesskey = accesskey;
+        _align = align;
     }
 
     public void setAlt(String alt)
@@ -94,9 +96,14 @@ public class HtmlCommandButtonTag
         _alt = alt;
     }
 
-    public void setDisabled(String disabled)
+    public void setHeight(String height)
     {
-        _disabled = disabled;
+        _height = height;
+    }
+
+    public void setIsmap(String ismap)
+    {
+        _ismap = ismap;
     }
 
     public void setOnblur(String onblur)
@@ -114,28 +121,23 @@ public class HtmlCommandButtonTag
         _onfocus = onfocus;
     }
 
-    public void setOnselect(String onselect)
+    public void setUsemap(String usemap)
     {
-        _onselect = onselect;
+        _usemap = usemap;
     }
 
-    public void setSize(String size)
+    public void setWidth(String width)
     {
-        _size = size;
+        _width = width;
     }
 
-    public void setTabindex(String tabindex)
+    public void setLongdesc(String longdesc)
     {
-        _tabindex = tabindex;
+        _longdesc = longdesc;
     }
 
-    public void setAction(String action)
+    public void setUrl(String url)
     {
-        _action = action;
-    }
-
-    public void setImage(String image)
-    {
-        _image = image;
+        _url = url;
     }
 }

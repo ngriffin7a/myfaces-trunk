@@ -173,7 +173,6 @@ public class HTML
         HSPACE_ATTR,
         ISMAP_ATTR,
         LONGDESC_ATTR,
-        SRC_ATTR,
         USEMAP_ATTR,
         VSPACE_ATTR,
         WIDTH_ATTR
@@ -303,7 +302,7 @@ public class HTML
     public static final String INPUT_ELEM = "input";
     public static final String FORM_ELEM = "form";
     public static final String ANCHOR_ELEM = "a";
-    public static final String IMG_ATTR = "img";
+    public static final String IMG_ELEM = "img";
     public static final String LABEL_ELEM = "label";
 
 
@@ -319,23 +318,4 @@ public class HTML
     public static final String HEF_PARAM_SEPARATOR = "&";
     public static final String HEF_PARAM_NAME_FROM_VALUE_SEPARATOR = "=";
 
-    public static String addAttributeToHref(String href, String name, String value)
-    {
-        StringBuffer buf = new StringBuffer();
-        buf.append(href);
-
-        if (href.indexOf(HREF_PATH_FROM_PARAM_SEPARATOR) == -1)
-        {
-            buf.append(HREF_PATH_FROM_PARAM_SEPARATOR);
-        }
-        else
-        {
-            buf.append(HEF_PARAM_SEPARATOR);
-        }
-        buf.append(name);
-        buf.append(HEF_PARAM_NAME_FROM_VALUE_SEPARATOR);
-        buf.append(value);
-
-        return buf.toString();
-    }
 }
