@@ -65,4 +65,15 @@ MyFaces Known Issues
   that is not closed within the same include file. We did not find out the
   reason yet.
 
+* Using session or serializing state saving mode (not in minimizing state saving)
+  and having the "myfaces_DiscardInternalAttributes" option set to true, the
+  number of ActionListeners registered at each command component grows on each
+  submit, causing a growing number of Action.invoke() calls on each request.
+  (This issue was first reported by Andreas Schildbach on the mailing list and
+  the reason was found by Anton Koinov)
+  Will be fixed in 0.4.4, workaround for now is to set the
+  "myfaces_DiscardInternalAttributes" option set to false.
+
+
+
 TODO... (Many others!)

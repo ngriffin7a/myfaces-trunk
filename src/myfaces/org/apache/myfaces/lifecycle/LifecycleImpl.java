@@ -51,7 +51,7 @@ import java.util.Locale;
 import java.util.logging.Level;
 
 /**
- * DOCUMENT ME!
+ * Implements the lifecycle as described in Spec. 1.0 PRD2 Chapter 2
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
@@ -70,14 +70,6 @@ public class LifecycleImpl
         _rkFactory = (RenderKitFactory)FactoryFinder.getFactory(FactoryFinder.RENDER_KIT_FACTORY);
     }
 
-
-    /*
-    public int executePhase(FacesContext facescontext, Phase phase)
-            throws FacesException
-    {
-        throw new UnsupportedOperationException("deprecated!");
-    }
-    */
 
     public ViewHandler getViewHandler()
     {
@@ -413,8 +405,7 @@ public class LifecycleImpl
         }
     }
 
-    private static final String ACTION_LISTENER_FLAG
-        = LifecycleImpl.class.getName() + ".ACTION_LISTENER";
+    public static final String ACTION_LISTENER_FLAG = "ACTION_LISTENER_FLAG";
 
     private void traverseAndRegisterActionListener(ActionListener actionListener,
                                                    UIComponent uiComponent)

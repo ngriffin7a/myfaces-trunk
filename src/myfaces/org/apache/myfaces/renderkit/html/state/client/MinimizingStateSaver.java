@@ -31,6 +31,7 @@ import net.sourceforge.myfaces.renderkit.html.util.HTMLEncoder;
 import net.sourceforge.myfaces.tree.TreeUtils;
 import net.sourceforge.myfaces.util.bean.BeanUtils;
 import net.sourceforge.myfaces.util.logging.LogUtil;
+import net.sourceforge.myfaces.lifecycle.LifecycleImpl;
 
 import javax.faces.FacesException;
 import javax.faces.FactoryFinder;
@@ -83,7 +84,10 @@ public class MinimizingStateSaver
     private static final Set IGNORE_ATTRIBUTES = new HashSet();
     static
     {
-        //IGNORE_ATTRIBUTES.add(CommonComponentProperties.CLIENT_ID_ATTR);
+        //Action listener is not preserved for minimizing state saving,
+        //so the flag, that remembers, if action listener was added must
+        //not be preserved, too.
+        IGNORE_ATTRIBUTES.add(LifecycleImpl.ACTION_LISTENER_FLAG);
     }
 
     private static final Set IGNORE_PROPERTIES = new HashSet();
