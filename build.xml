@@ -160,6 +160,10 @@
             antfile="build.xml"
             inheritall="false"
             target="clean"/>
+        <ant dir="webapps/tagunit"
+            antfile="build.xml"
+            inheritall="false"
+            target="clean"/>
     </target>
 
 </project>
