@@ -70,8 +70,7 @@ public class TreeCopier
 
     public void copyTree(Tree fromTree, Tree toTree)
     {
-        copyComponent(FacesContext.getCurrentInstance(),
-                      fromTree.getRoot(), toTree, toTree.getRoot());
+        copyComponent(fromTree.getRoot(), toTree, toTree.getRoot());
     }
 
     /*
@@ -86,18 +85,16 @@ public class TreeCopier
      * @param fromComp          source components, where attributes and children should be copied from
      * @param toComp            destination component, where attributes and children should be copied to
      */
-    protected void copyComponent(FacesContext facesContext,
-                                 UIComponent fromComp,
+    protected void copyComponent(UIComponent fromComp,
                                  Tree toTree,
                                  UIComponent toComp)
     {
         copyAttributes(fromComp, toComp);
 
-        int childIndex = 0;
-        for (Iterator it = fromComp.getChildren(); it.hasNext(); childIndex++)
+        for (Iterator it = fromComp.getChildren(); it.hasNext();)
         {
             UIComponent child = (UIComponent)it.next();
-            String uniqueId = UIComponentUtils.getUniqueComponentId(facesContext, child);
+            String uniqueId = UIComponentUtils.getUniqueComponentId(_facesContext, child);
 
             if (_ignoreComponents != null &&
                 _ignoreComponents.contains(uniqueId))
@@ -110,8 +107,7 @@ public class TreeCopier
             try
             {
                 //destination component already exists?
-                //clone = toComp.findComponent(child.getComponentId());
-                clone = UIComponentUtils.findComponentByUniqueId(facesContext, toTree, uniqueId);
+                clone = UIComponentUtils.findComponentByUniqueId(_facesContext, toTree, uniqueId);
             }
             catch (Exception e)
             {
@@ -129,9 +125,9 @@ public class TreeCopier
                 clone = cloneComponent(child);
 
                 clone.setComponentId(child.getComponentId());
-                toComp.addChild(childIndex, clone);
+                toComp.addChild(clone);
 
-                copyComponent(facesContext, child, toTree, clone);    //Recursion
+                copyComponent(child, toTree, clone);    //Recursion
             }
         }
     }
