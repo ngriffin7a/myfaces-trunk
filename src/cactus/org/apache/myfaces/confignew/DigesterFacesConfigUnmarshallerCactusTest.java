@@ -81,14 +81,12 @@ public class DigesterFacesConfigUnmarshallerCactusTest extends ServletTestCase
 
         assertEquals(42, config.getComponents().size());
 
-        Component component = (Component) config.getComponents().get("javax.faces.HtmlCommandButton");
+        String componentClass = (String) config.getComponents().get("javax.faces.HtmlCommandButton");
 
-        assertEquals("javax.faces.HtmlCommandButton", component.getComponentType());
-        assertEquals("javax.faces.component.html.HtmlCommandButton", component.getComponentClass());
+        assertEquals("javax.faces.component.html.HtmlCommandButton", componentClass);
 
-        component = (Component) config.getComponents().get("javax.faces.HtmlCommandLink");
-        assertEquals("javax.faces.HtmlCommandLink", component.getComponentType());
-        assertEquals("javax.faces.component.html.HtmlCommandLink", component.getComponentClass());
+        componentClass = (String) config.getComponents().get("javax.faces.HtmlCommandLink");
+        assertEquals("javax.faces.component.html.HtmlCommandLink", componentClass);
 
         assertEquals(28, config.getConverters().size());
         assertEquals(3, config.getValidators().size());
