@@ -36,6 +36,9 @@ import java.io.IOException;
  * @author Martin Marinschek
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.13  2004/12/20 06:13:02  mmarinschek
+ * killed bugs
+ *
  * Revision 1.12  2004/10/13 11:51:00  matze
  * renamed packages to org.apache
  *
@@ -62,6 +65,7 @@ extends HtmlRenderer
         ResponseWriter writer = facesContext.getResponseWriter();
 
         writer.startElement(HTML.LABEL_ELEM, uiComponent);
+        writer.writeAttribute(HTML.ID_ATTR, uiComponent.getClientId(facesContext),null);
         HtmlRendererUtils.renderHTMLAttributes(writer, uiComponent, HTML.LABEL_PASSTHROUGH_ATTRIBUTES);
 
         String forAttr = getFor(uiComponent);

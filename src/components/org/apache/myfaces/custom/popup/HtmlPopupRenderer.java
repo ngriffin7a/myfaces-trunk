@@ -30,6 +30,9 @@ import java.util.List;
  * @author Martin Marinschek (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.10  2004/12/20 06:13:01  mmarinschek
+ * killed bugs
+ *
  * Revision 1.9  2004/12/17 22:06:32  grantsmith
  * Jira MYFACES-57: Changed logging levels to DEBUG from INFO
  *
@@ -141,7 +144,8 @@ public class HtmlPopupRenderer
                                     Integer displayAtDistanceX, Integer displayAtDistanceY)
         throws IOException
     {
-        AddResource.addJavaScriptToHeader(HtmlPopupRenderer.class, "JSPopup.js", true, context);
+        AddResource.addJavaScriptToHeader(
+                HtmlPopupRenderer.class, "JSPopup.js", false, context);
 
         String popupId = (clientId+"Popup").replace(':','_').replaceAll("_",
                 "popupIdSeparator");

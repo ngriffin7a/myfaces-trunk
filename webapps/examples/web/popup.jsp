@@ -56,13 +56,13 @@
             <h:panelGroup id="body">
 
                 <h:panelGrid columns="1">
-                    <x:popup
+                    <x:popup id="x"
                         styleClass="popup"
                         closePopupOnExitingElement="true"
                         closePopupOnExitingPopup="true"
                         displayAtDistanceX="10"
                         displayAtDistanceY="10" >
-                        <h:outputText value="This is the first textual text situation."/>
+                        <h:outputText id="ox" value="This is the first textual text situation."/>
                         <f:facet name="popup">
                             <h:panelGroup>
                                 <h:panelGrid columns="1" >

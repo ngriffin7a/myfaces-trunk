@@ -23,8 +23,10 @@ function orgApacheMyfacesPopupDisplay(ev)
     if(document.all)
     {
         elem = window.event.srcElement;
-        x=window.event.x;
-        y=window.event.y;
+        x=window.event.clientX;
+        x+=orgApacheMyfacesPopupGetScrollingX();
+        y=window.event.clientY;
+        y+=orgApacheMyfacesPopupGetScrollingY();
     }
     else
     {
@@ -58,4 +60,25 @@ function orgApacheMyfacesPopupRedisplay()
     var popupElem = document.getElementById(this.popupId);
     popupElem.style.display="block";
     orgApacheMyfacesPopupCurrentlyOpenedPopup = popupElem;
+}
+
+function orgApacheMyfacesPopupGetScrollingX() {
+    var x = 0;
+
+    if (document.body && document.body.scrollLeft && !isNaN(document.body.scrollLeft)) {
+        x = document.body.scrollLeft;
+    }
+
+    return x;
+}
+
+function orgApacheMyfacesPopupGetScrollingY() {
+
+    var y = 0;
+
+    if (document.body && document.body.scrollTop && !isNaN(document.body.scrollTop)) {
+        y = document.body.scrollTop;
+    }
+
+    return y;
 }
