@@ -26,6 +26,7 @@
 		<ri label="MyFaces and RI" href="risamples.html"/>
 		<tomcat55 label="MyFaces and Tomcat5.5" href="tomcat55.html"/>
 		<portlet label="MyFaces' Portlet Support" href="portlet.html"/>
+		<extensionsFilter label="MyFaces' Extensions Filter" href="extensionsFilter.html"/>
 		<compatibility label="Compatibility" href="compatibility.html"/>
 		<faq label="FAQ" href="faq.html" />
 		<jars label="JARs" href="jars.html" />
