@@ -11,15 +11,24 @@
 
     <section>
       <title>Mailing Lists</title>
-      <p>TODO.
+      <p>Use the links below to send mail to, subscribe, unsubscribe or check the archives of the MyFaces mailing lists.
+      Subcribing and unsubscribing is performed by simply sending a blank email to applicable address (as linked below).
       <br/><br/></p>
       <table>
-
         <tr>
-          <td><link href="mailto:incubator-dev@incubator.apache.org"> MyFaces Developer List</link></td>
+          <td><link href="mailto:myfaces-user@incubator.apache.org"> MyFaces Users List</link></td>
+          <td><link href="mailto:myfaces-user-subscribe@incubator.apache.org"> Subscribe</link></td>
+          <td><link href="mailto:myfaces-user-unsubscribe@incubator.apache.org"> Unsubscribe</link></td>
+          <td><fork href="http://nagoya.apache.org/eyebrowse/SummarizeList?listName=myfaces-user@incubator.apache.org"> Archives</fork></td>
         </tr>
         <tr>
-          <td><link href="mailto:incubator-cvs@apache.org"> CVS List</link></td>
+          <td><link href="mailto:myfaces-dev@incubator.apache.org"> MyFaces Developer List</link></td>
+          <td><link href="mailto:myfaces-dev-subscribe@incubator.apache.org"> Subscribe</link></td>
+          <td><link href="mailto:myfaces-dev-unsubscribe@incubator.apache.org"> Unsubscribe</link></td>
+          <td><fork href="http://nagoya.apache.org/eyebrowse/SummarizeList?listName=myfaces-dev@incubator.apache.org"> Archives</fork></td>
+        </tr>
+	<tr>
+          <td><link href="mailto:myfaces-ppmc@incubator.apache.org"> MyFaces PPMC List</link></td>
         </tr>
       </table>
     </section>
