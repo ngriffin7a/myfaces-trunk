@@ -15,17 +15,31 @@
  */
 package net.sourceforge.myfaces.config.impl.digester;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
 import javax.faces.render.RenderKitFactory;
 
 import net.sourceforge.myfaces.config.FacesConfigDispenser;
-import net.sourceforge.myfaces.config.impl.digester.elements.*;
+import net.sourceforge.myfaces.config.impl.digester.elements.Application;
+import net.sourceforge.myfaces.config.impl.digester.elements.Converter;
+import net.sourceforge.myfaces.config.impl.digester.elements.FacesConfig;
+import net.sourceforge.myfaces.config.impl.digester.elements.Factory;
+import net.sourceforge.myfaces.config.impl.digester.elements.LocaleConfig;
+import net.sourceforge.myfaces.config.impl.digester.elements.RenderKit;
 
 
 /**
  * @author <a href="mailto:oliver@rossmueller.com">Oliver Rossmueller</a>
  *
  * $Log$
+ * Revision 1.2  2004/07/10 13:55:42  mwessendorf
+ * imports
+ *
  * Revision 1.1  2004/07/07 00:25:05  o_rossmueller
  * tidy up config/confignew package (moved confignew classes to package config)
  *
