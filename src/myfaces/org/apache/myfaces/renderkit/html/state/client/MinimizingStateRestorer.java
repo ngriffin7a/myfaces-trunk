@@ -515,8 +515,23 @@ public class MinimizingStateRestorer
 
     protected Set restoreUnrenderedComponents(Map stateMap)
     {
-        String[] values = (String[])stateMap.get(MinimizingStateSaver.UNRENDERED_COMPONENTS_REQUEST_PARAM);
-        if (values == null || values.length == 0)
+        Object obj = stateMap.get(MinimizingStateSaver.UNRENDERED_COMPONENTS_REQUEST_PARAM);
+        if (obj == null)
+        {
+            return Collections.EMPTY_SET;
+        }
+
+        String[] values;
+        if (obj instanceof String)
+        {
+            values = new String[] {(String)obj};
+        }
+        else
+        {
+            values = (String[])obj;
+        }
+
+        if (values.length == 0)
         {
             return Collections.EMPTY_SET;
         }

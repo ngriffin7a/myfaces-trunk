@@ -58,4 +58,9 @@ public class MessageTag
         setRendererAttribute(MessageRenderer.BUNDLE_ATTR, value);
     }
 
+    public void setOutputClass(String value)
+    {
+        setRendererAttribute(MessageRenderer.OUTPUT_CLASS_ATTR, value);
+    }
+
 }

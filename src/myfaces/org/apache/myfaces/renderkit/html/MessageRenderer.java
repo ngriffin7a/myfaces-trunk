@@ -79,6 +79,13 @@ public class MessageRenderer
         throws IOException
     {
         ResponseWriter writer = facesContext.getResponseWriter();
+        String css = (String)uiComponent.getAttribute(OUTPUT_CLASS_ATTR);
+        if (css != null)
+        {
+            writer.write("<span class=\"");
+            writer.write(css);
+            writer.write("\">");
+        }
 
         String pattern;
         String key = (String)uiComponent.getAttribute(KEY_ATTR.getName());
@@ -122,6 +129,11 @@ public class MessageRenderer
         }
 
         writer.write(HTMLEncoder.encode(text, true, true));
+
+        if (css != null)
+        {
+            writer.write("</span>");
+        }
     }
 
 }

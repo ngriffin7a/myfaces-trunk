@@ -21,6 +21,7 @@ package net.sourceforge.myfaces.renderkit.html;
 import net.sourceforge.myfaces.renderkit.attr.TextRendererAttributes;
 import net.sourceforge.myfaces.renderkit.html.util.CommonAttributes;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLEncoder;
+import net.sourceforge.myfaces.util.bundle.BundleUtils;
 
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIInput;
@@ -38,6 +39,9 @@ public class TextRenderer
         extends HTMLRenderer
         implements TextRendererAttributes
 {
+    public static final String KEY_ATTR = "key";
+    public static final String BUNDLE_ATTR = "bundle";
+
     public static final String TYPE = "Text";
 
     public String getRendererType()
@@ -115,7 +119,20 @@ public class TextRenderer
             writer.write(css);
             writer.write("\">");
         }
-        writer.write(HTMLEncoder.encode(getStringValue(facesContext, uiComponent), true, true));
+        String text;
+        String key = (String)uiComponent.getAttribute(KEY_ATTR);
+        if (key != null)
+        {
+            text = BundleUtils.getString(facesContext,
+                                            (String)uiComponent.getAttribute(BUNDLE_ATTR),
+                                            key);
+        }
+        else
+        {
+            text = getStringValue(facesContext, uiComponent);
+        }
+
+        writer.write(HTMLEncoder.encode(text, true, true));
         if (css != null)
         {
             writer.write("</span>");

@@ -70,7 +70,6 @@ public class GridRenderer
                                   UIComponent uiComponent) throws IOException
     {
         UIComponent gridComponent = uiComponent.getParent();
-        System.out.println("COMP: " + uiComponent.getComponentType() + " " + uiComponent.getRendererType());
         int actualColumn = getAttributeValue(gridComponent, COLUMN_COUNT_ATTR);
         int actualRow = getAttributeValue(gridComponent, ROW_COUNT_ATTR);
         int columns = getAttributeValue(gridComponent, COLUMNS_ATTR);
