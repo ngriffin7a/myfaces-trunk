@@ -38,6 +38,9 @@ import java.util.*;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.6  2004/04/07 08:21:10  manolito
+ * handling of select items with label == null
+ *
  * Revision 1.5  2004/04/06 15:33:21  manolito
  * getStringValue must return submitted value if any
  *
@@ -346,7 +349,14 @@ public class RendererUtils
                     String label = ((UISelectItem)child).getItemLabel();
                     String description = ((UISelectItem)child).getItemDescription();
                     boolean disabled = ((UISelectItem)child).isItemDisabled();
-                    list.add(new SelectItem(itemValue, label, description, disabled));
+                    if (label == null)
+                    {
+                        list.add(new SelectItem(itemValue, itemValue.toString(), description, disabled));
+                    }
+                    else
+                    {
+                        list.add(new SelectItem(itemValue, label, description, disabled));
+                    }
                 }
             }
             else if (child instanceof UISelectItems)
