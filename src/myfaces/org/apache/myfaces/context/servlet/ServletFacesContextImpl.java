@@ -27,6 +27,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseStream;
 import javax.faces.context.ResponseWriter;
 import javax.faces.render.RenderKit;
+import javax.faces.render.RenderKitFactory;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
@@ -38,6 +39,9 @@ import java.util.*;
  * @author Anton Koinov
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.16  2004/07/18 21:44:40  o_rossmueller
+ * fix #992629: implemented FacesContext.getRenderKit()
+ *
  * Revision 1.15  2004/07/01 22:05:04  mwessendorf
  * ASF switch
  *
@@ -67,6 +71,7 @@ public class ServletFacesContextImpl
     private UIViewRoot                  _viewRoot;
     private boolean                     _renderResponse   = false;
     private boolean                     _responseComplete = false;
+    private RenderKitFactory            _renderKitFactory;
 
     //~ Constructors -------------------------------------------------------------------------------
 
@@ -76,6 +81,7 @@ public class ServletFacesContextImpl
     {
         _application = ((ApplicationFactory)FactoryFinder.getFactory(FactoryFinder.APPLICATION_FACTORY))
                             .getApplication();
+        _renderKitFactory = (RenderKitFactory) FactoryFinder.getFactory(FactoryFinder.RENDER_KIT_FACTORY);
         _externalContext = new ServletExternalContextImpl(servletContext,
                                                           servletRequest,
                                                           servletResponse);
@@ -175,9 +181,19 @@ public class ServletFacesContextImpl
 
     public RenderKit getRenderKit()
     {
-        //return ???;
-        //FIXME
-        throw new UnsupportedOperationException("not yet implemented");
+         if (getViewRoot() == null)
+         {
+             return null;
+         }
+
+         String renderKitId = getViewRoot().getRenderKitId();
+        
+         if (renderKitId == null)
+         {
+             return null;
+         }
+
+         return _renderKitFactory.getRenderKit(this, renderKitId);
     }
 
     public boolean getRenderResponse()
