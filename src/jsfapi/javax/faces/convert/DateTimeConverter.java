@@ -31,6 +31,9 @@ import java.util.TimeZone;
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.9  2004/04/01 10:47:00  royalts
+ * bugfix in restoreState
+ *
  * Revision 1.8  2004/04/01 10:39:53  royalts
  * implements StateHoder was missing
  *
@@ -184,11 +187,11 @@ public class DateTimeConverter
     {
         Object[] values = (Object[])state;
         _dateStyle = (String)values[0];
-        _locale = (Locale)values[0];
-        _pattern = (String)values[0];
-        _timeStyle = (String)values[0];
-        _timeZone = (TimeZone)values[0];
-        _type = (String)values[0];
+        _locale = (Locale)values[1];
+        _pattern = (String)values[2];
+        _timeStyle = (String)values[3];
+        _timeZone = (TimeZone)values[4];
+        _type = (String)values[5];
     }
 
     public Object saveState(FacesContext facesContext)
