@@ -51,6 +51,7 @@ public class WebXmlParser
     private static final String WEB_XML_PATH = "/WEB-INF/web.xml";
     private static final String DEFAULT_ENCODING = "ISO-8859-1";
 
+    private static final String WEB_APP_2_2_J2EE_SYSTEM_ID = "http://java.sun.com/j2ee/dtds/web-app_2_2.dtd";
     private static final String WEB_APP_2_2_SYSTEM_ID = "http://java.sun.com/dtd/web-app_2_2.dtd";
     private static final String WEB_APP_2_2_RESOURCE  = "javax/servlet/resources/web-app_2_2.dtd";
 
@@ -145,7 +146,8 @@ public class WebXmlParser
                 throw new UnsupportedOperationException("systenId must not be null");
             }
 
-            if (systemId.equals(WebXmlParser.WEB_APP_2_2_SYSTEM_ID))
+            if (systemId.equals(WebXmlParser.WEB_APP_2_2_SYSTEM_ID) ||
+                systemId.equals(WebXmlParser.WEB_APP_2_2_J2EE_SYSTEM_ID))
             {
                 //Load DTD from servlet.jar
                 return createClassloaderInputSource(publicId, WebXmlParser.WEB_APP_2_2_RESOURCE);
