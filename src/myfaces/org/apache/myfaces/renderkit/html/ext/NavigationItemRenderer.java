@@ -24,6 +24,7 @@ import net.sourceforge.myfaces.component.UIComponentUtils;
 import net.sourceforge.myfaces.component.CommonComponentAttributes;
 import net.sourceforge.myfaces.component.ext.UINavigation;
 import net.sourceforge.myfaces.renderkit.attr.ext.NavigationItemRendererAttributes;
+import net.sourceforge.myfaces.renderkit.attr.ext.NavigationRendererAttributes;
 import net.sourceforge.myfaces.renderkit.attr.UserRoleAttributes;
 import net.sourceforge.myfaces.renderkit.attr.CommonRendererAttributes;
 import net.sourceforge.myfaces.renderkit.attr.HyperlinkRendererAttributes;
@@ -190,21 +191,20 @@ public class NavigationItemRenderer
 
         String label;
         String key = (String)uiComponent.getAttribute(KEY_ATTR);
+
+        UIComponent navigationComponent = uiComponent.getParent();
+        while (navigationComponent != null &&
+            !navigationComponent.getRendererType().equals(NavigationRenderer.TYPE))
+        {
+            navigationComponent = navigationComponent.getParent();
+        }
+
         if (key != null)
         {
             String bundle = (String)uiComponent.getAttribute(BUNDLE_ATTR);
-            if (bundle == null)
+            if (bundle == null && navigationComponent != null)
             {
-                UIComponent parent = uiComponent.getParent();
-                while (bundle == null && parent != null)
-                {
-                    if (parent.getRendererType().equals(NavigationRenderer.TYPE))
-                    {
-                        bundle = (String)parent.getAttribute(NavigationRenderer.BUNDLE_ATTR);
-                        break;
-                    }
-                    parent = parent.getParent();
-                }
+                bundle = (String)navigationComponent.getAttribute(NavigationRenderer.BUNDLE_ATTR);
             }
             if (bundle == null)
             {
@@ -224,7 +224,7 @@ public class NavigationItemRenderer
         boolean open = UIComponentUtils.getBooleanAttribute(uiComponent,
                                                             UINavigation.UINavigationItem.OPEN_ATTR,
                                                             false);
-        renderLabel(facesContext, writer, uiComponent, label, open);
+        renderLabel(facesContext, writer, uiComponent, navigationComponent, label, open);
 
         writer.write("</a>");
 
@@ -244,29 +244,36 @@ public class NavigationItemRenderer
 
     /**
      * Convenience method to be overwritten by derived Renderers.
-     * @param facesContext
-     * @param writer
-     * @param uiComponent
-     * @param label
-     * @param open
-     * @throws IOException
-     */
-    protected void renderLabel(FacesContext facesContext, ResponseWriter writer,
-                               UIComponent uiComponent, String label, boolean open)
+      */
+    protected void renderLabel(FacesContext facesContext,
+                               ResponseWriter writer,
+                               UIComponent uiComponent,
+                               UIComponent navigatioComponent,
+                               String label,
+                               boolean open)
         throws IOException
     {
-        if (open)
+        if (navigatioComponent != null)
         {
-            writer.write("<b>");
+            String style = open ? (String)navigatioComponent.getAttribute(NavigationRendererAttributes.OPEN_ITEM_CLASS_ATTR) :
+                    (String)navigatioComponent.getAttribute(NavigationRendererAttributes.ITEM_CLASS_ATTR);;
+            if (style != null)
+            {
+                writer.write("<span class=\"");
+                writer.write(style);
+                writer.write("\">");
+                writer.write(HTMLEncoder.encode(label, true, true));
+                writer.write("</span>");
+            }
+            else
+            {
+                writer.write(HTMLEncoder.encode(label, true, true));
+            }
         }
-
-        writer.write(HTMLEncoder.encode(label, true, true));
-
-        if (open)
+        else
         {
-            writer.write("</b>");
+            writer.write(HTMLEncoder.encode(label, true, true));
         }
-
     }
 
 

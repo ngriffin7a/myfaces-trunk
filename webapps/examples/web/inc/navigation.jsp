@@ -4,8 +4,9 @@
     <x:navigation id="nav"
                   bundle="net.sourceforge.myfaces.examples.resource.example_messages"
                   panelClass="navigation"
-                  levelClasses="navitem1,navitem2,navitem3"
-                  columnClasses="navigation_column" >
+                  levelClasses="navlevel1,navlevel2,navlevel3"
+                  itemClass="navitem"
+                  openItemClass="navitem_open"   >
         <x:navigation_item id="nav-1" key="nav_Home" treeId="/home.jsf" commandClass="navigation_link" />
         <x:navigation_item id="nav-2" key="nav_Examples" commandClass="navigation_link" >
             <x:navigation_item id="nav-2-1" key="nav_Sample_1" treeId="/sample1.jsf" commandClass="navigation_link" />

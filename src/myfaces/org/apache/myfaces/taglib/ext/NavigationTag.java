@@ -138,4 +138,13 @@ public class NavigationTag
         setRendererAttributeString(ROW_CLASSES_ATTR, value);
     }
 
+    public void setOpenItemClass(String s)
+    {
+        setRendererAttributeString(OPEN_ITEM_CLASS_ATTR, s);
+    }
+
+    public void setItemClass(String s)
+    {
+        setRendererAttributeString(ITEM_CLASS_ATTR, s);
+    }
 }

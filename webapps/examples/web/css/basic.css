@@ -117,8 +117,13 @@ a:hover
 	font-size: 12px;
 }
 
-.navigation_column {
+.navitem {
 	white-space : nowrap;
+}
+
+.navitem_open {
+	white-space : nowrap;
+	font-weight : bold;
 }
 
 a.navigation_link {
@@ -130,15 +135,15 @@ a.navigation_link:hover,active {
     color: #FFFFFF;
 }
 
-.navitem1 {
+.navlevel1 {
     margin-left : 0px;
 }
 
-.navitem2 {
+.navlevel2 {
     margin-left : 12px;
 }
 
-.navitem3 {
+.navlevel3 {
     margin-left : 24px;
 }
 

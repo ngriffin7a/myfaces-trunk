@@ -32,12 +32,16 @@ public interface NavigationRendererAttributes
             KeyBundleAttributes
 {
     public static final String LEVEL_CLASSES = "levelClasses";
+    public static final String OPEN_ITEM_CLASS_ATTR = "openItemClass";
+    public static final String ITEM_CLASS_ATTR = "itemClass";
 
     public static final String[] NAVIGATION_ATTRIBUTES = {
         PANEL_CLASS_ATTR,
         BUNDLE_ATTR,
         LEVEL_CLASSES,
         ROW_CLASSES_ATTR,
-        COLUMN_CLASSES_ATTR
+        COLUMN_CLASSES_ATTR,
+        OPEN_ITEM_CLASS_ATTR,
+        ITEM_CLASS_ATTR
     };
 }
