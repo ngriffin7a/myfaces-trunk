@@ -398,8 +398,11 @@ public abstract class UIComponentBase
         {
             Map.Entry entry = (Map.Entry)it.next();
             if (facetMap == null) facetMap = new HashMap();
-            facetMap.put(entry.getKey(),
-                         ((UIComponent)entry.getValue()).processSaveState(context));
+            UIComponent component = (UIComponent)entry.getValue();
+            if (!component.isTransient())
+            {
+                facetMap.put(entry.getKey(), component.processSaveState(context));
+            }
         }
         List childrenList = null;
         if (getChildCount() > 0)
@@ -407,8 +410,11 @@ public abstract class UIComponentBase
             for (Iterator it = getChildren().iterator(); it.hasNext(); )
             {
                 UIComponent child = (UIComponent)it.next();
-                if (childrenList == null) childrenList = new ArrayList(getChildCount());
-                childrenList.add(child.processSaveState(context));
+                if (!child.isTransient())
+                {
+                    if (childrenList == null) childrenList = new ArrayList(getChildCount());
+                    childrenList.add(child.processSaveState(context));
+                }
             }
         }
         return new Object[] {saveState(context),
@@ -427,7 +433,14 @@ public abstract class UIComponentBase
         {
             Map.Entry entry = (Map.Entry)it.next();
             Object facetState = facetMap.get(entry.getKey());
-            ((UIComponent)entry.getValue()).processRestoreState(context, facetState);
+            if (facetState != null)
+            {
+                ((UIComponent)entry.getValue()).processRestoreState(context, facetState);
+            }
+            else
+            {
+                context.getExternalContext().log("No state found to restore facet " + entry.getKey());
+            }
         }
         if (getChildCount() > 0)
         {
@@ -436,7 +449,14 @@ public abstract class UIComponentBase
             {
                 UIComponent child = (UIComponent)it.next();
                 Object childState = childrenList.get(idx++);
-                child.processRestoreState(context, childState);
+                if (childState != null)
+                {
+                    child.processRestoreState(context, childState);
+                }
+                else
+                {
+                    context.getExternalContext().log("No state found to restore child of component " + getId());
+                }
             }
         }
         restoreState(context, myState);
