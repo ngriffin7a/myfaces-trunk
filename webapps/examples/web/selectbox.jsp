@@ -40,6 +40,8 @@ managed beans used:
 
     <f:loadBundle basename="net.sourceforge.myfaces.examples.resource.example_messages" var="example_messages"/>
 
+    <x:saveState value="#{carconf}"/>
+
     <x:panelLayout id="page" layout="#{globalOptions.pageLayout}"
             styleClass="pageLayout"
             headerClass="pageHeader"
@@ -112,7 +114,11 @@ managed beans used:
                                  of the corresponding x:selectOneRadio */%>
                             <x:radio for="discount2" index="0" />
                             <x:radio for="discount2" index="1" />
+
                         </h:panelGrid>
+
+                        <h:outputLabel for="selboolean" value="#{example_messages['sales_tax']}" />
+                        <h:selectBooleanCheckbox id="selboolean" value="#{carconf.salesTax}"/>
 
                         <f:verbatim>&nbsp;</f:verbatim>
                         <h:commandButton action="#{carconf.calcPrice}" value="#{example_messages['button_calcprice']}" />

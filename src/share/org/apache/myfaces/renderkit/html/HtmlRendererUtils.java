@@ -40,6 +40,9 @@ import java.util.*;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.8  2004/05/03 11:34:27  manolito
+ * bug #945118 (Checkbox session state) fixed
+ *
  * Revision 1.7  2004/04/30 09:11:38  manolito
  * no message
  *
@@ -71,6 +74,7 @@ public class HtmlRendererUtils
 
     //private static final String[] EMPTY_STRING_ARRAY = new String[0];
     private static final String LINE_SEPARATOR = System.getProperty("line.separator", "\r\n");
+    private static final String[] EMPTY_STRING_ARRAY = new String[0];
 
     private HtmlRendererUtils() {} //no instance allowed
 
@@ -133,9 +137,13 @@ public class HtmlRendererUtils
         }
         else
         {
-            //request parameter not found, nothing to decode
+            //request parameter not found,
             // we must not reset the submitted value of the component
-            // because there could be a submittedValue from former submits!
+            // if there is a submittedValue from a former submit!
+            if (((EditableValueHolder)component).getSubmittedValue() == null)
+            {
+                ((EditableValueHolder)component).setSubmittedValue(Boolean.FALSE);
+            }
         }
     }
 
@@ -161,9 +169,13 @@ public class HtmlRendererUtils
         }
         else
         {
-            //request parameter not found, nothing to decode
+            //request parameter not found,
             // we must not reset the submitted value of the component
-            // because there could be a submittedValue from former submits!
+            // if there is a submittedValue from a former submit!
+            if (((EditableValueHolder)component).getSubmittedValue() == null)
+            {
+                ((EditableValueHolder)component).setSubmittedValue(EMPTY_STRING_ARRAY);
+            }
         }
     }
 

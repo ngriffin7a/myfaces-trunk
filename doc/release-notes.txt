@@ -4,7 +4,8 @@ MyFaces Release Notes
 ----------------------------------------------------------------------
 Changes in Release 1.0.3 alpha
 * commandLink javascript error bug fixed
-* bug 943210 ("outputLink produces very long URLs that don't work") fixed
+* bug #943210 ("outputLink produces very long URLs that don't work") fixed
+* bug #945118 ("Checkbox session state") fixed
 
 ----------------------------------------------------------------------
 Changes in Release 1.0.2 alpha
