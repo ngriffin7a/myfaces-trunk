@@ -29,6 +29,8 @@ import javax.faces.context.FacesContext;
 public class MyFacesUISelectOne
     extends javax.faces.component.UISelectOne
 {
+    public static final String SELECTED_VALUE_PROP = "selectedValue";
+
     public MyFacesUISelectOne()
     {
         setValid(true);

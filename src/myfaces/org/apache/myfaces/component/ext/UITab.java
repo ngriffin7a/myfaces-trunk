@@ -16,26 +16,33 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package net.sourceforge.myfaces.taglib.ext;
+package net.sourceforge.myfaces.component.ext;
 
-import net.sourceforge.myfaces.renderkit.html.ext.TabRenderer;
-import net.sourceforge.myfaces.taglib.CommandButtonTag;
+import net.sourceforge.myfaces.component.MyFacesUICommand;
+
+import javax.faces.event.FacesEvent;
+import javax.faces.event.PhaseId;
+import javax.faces.event.AbortProcessingException;
+import javax.faces.event.ActionEvent;
+import javax.faces.context.FacesContext;
 
 /**
  * DOCUMENT ME!
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public class TabTag
-    extends CommandButtonTag
+public class UITab
+    extends MyFacesUICommand
 {
-    public String getComponentType()
+    public boolean broadcast(FacesEvent event, PhaseId phaseId) throws AbortProcessingException
     {
-        return "Tab";
-    }
-
-    public String getRendererType()
-    {
-        return TabRenderer.TYPE;
+        if (phaseId == PhaseId.APPLY_REQUEST_VALUES &&
+            event instanceof ActionEvent &&
+            event.getSource() == this)
+        {
+            //Item was clicked --> render immediatly
+            FacesContext.getCurrentInstance().renderResponse();
+        }
+        return super.broadcast(event, phaseId);
     }
 }

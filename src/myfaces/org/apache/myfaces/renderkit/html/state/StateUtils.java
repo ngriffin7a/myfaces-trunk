@@ -19,16 +19,20 @@
 package net.sourceforge.myfaces.renderkit.html.state;
 
 import net.sourceforge.myfaces.MyFacesConfig;
+import net.sourceforge.myfaces.context.FacesContextWrapper;
 import net.sourceforge.myfaces.component.UIComponentUtils;
 import net.sourceforge.myfaces.tree.TreeUtils;
 
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.tree.Tree;
+import javax.faces.convert.Converter;
+import javax.faces.convert.ConverterException;
 import javax.servlet.ServletContext;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * DOCUMENT ME!
@@ -37,6 +41,8 @@ import java.util.List;
  */
 public class StateUtils
 {
+    private static final Locale STATE_SAVING_LOCALE = Locale.US;
+
     private StateUtils() {}
 
     public static void discardInternalAttributes(FacesContext facesContext,
@@ -65,5 +71,35 @@ public class StateUtils
         }
     }
 
+
+    public static String convertObjectToString(FacesContext facesContext,
+                                               Converter conv,
+                                               Object obj)
+        throws ConverterException
+    {
+        return conv.getAsString(wrapFacesContext(facesContext),
+                                facesContext.getTree().getRoot(),
+                                obj);
+    }
+
+    public static Object convertStringToObject(FacesContext facesContext,
+                                               Converter conv,
+                                               String str)
+        throws ConverterException
+    {
+        return conv.getAsObject(wrapFacesContext(facesContext),
+                                facesContext.getTree().getRoot(),
+                                str);
+    }
+
+    private static FacesContext wrapFacesContext(FacesContext facesContext)
+    {
+        return new FacesContextWrapper(facesContext) {
+            public Locale getLocale()
+            {
+                return STATE_SAVING_LOCALE;
+            }
+        };
+    }
 
 }

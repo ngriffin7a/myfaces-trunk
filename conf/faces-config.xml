@@ -116,6 +116,11 @@
       <component-class>net.sourceforge.myfaces.component.ext.UISortHeader</component-class>
     </component>
 
+    <component>
+      <component-type>Tab</component-type>
+      <component-class>net.sourceforge.myfaces.component.ext.UITab</component-class>
+    </component>
+
 
   <!-- standard converters -->
 

@@ -20,9 +20,9 @@ package net.sourceforge.myfaces.renderkit.html.ext;
 
 import net.sourceforge.myfaces.renderkit.html.GroupRenderer;
 
+import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
-import javax.faces.component.UIComponent;
 import java.io.IOException;
 
 /**
@@ -39,14 +39,20 @@ public class TabRenderer
         return TYPE;
     }
 
+    //private static final String SELECTED_ATTR = TabRenderer.class.getName() + ".SELECTED";
+
+
     public void encodeBegin(FacesContext facesContext, UIComponent component)
         throws IOException
     {
+        //component.setAttribute(SELECTED_ATTR, null);
+
         ResponseWriter writer = facesContext.getResponseWriter();
         writer.write(TabbedPaneRenderer.TAB_START_TOKEN);
 
         super.encodeBegin(facesContext, component);
     }
+
 
     public void encodeEnd(FacesContext facesContext, UIComponent component)
         throws IOException
@@ -56,4 +62,41 @@ public class TabRenderer
         ResponseWriter writer = facesContext.getResponseWriter();
         writer.write(TabbedPaneRenderer.TAB_END_TOKEN);
     }
+
+
+    /*
+    protected boolean isSelectedTab(FacesContext facesContext, UIComponent uiTab)
+    {
+        Boolean sel = (Boolean)uiTab.getAttribute(SELECTED_ATTR);
+        if (sel == null)
+        {
+            UIComponent uiTabbedPane = uiTab.getParent();
+            Integer selIdxInteger = (Integer)uiTabbedPane.getAttribute(TabbedPaneRendererAttributes.SELECTED_INDEX_ATTR);
+            int selIdx = (selIdxInteger == null ? 0 : selIdxInteger.intValue());
+
+            int cnt = 0;
+            for (Iterator it = uiTabbedPane.getChildren(); it.hasNext(); )
+            {
+                UIComponent child = (UIComponent)it.next();
+                if (child == uiTab)
+                {
+                    sel = Boolean.valueOf(cnt == selIdx);
+                    break;
+                }
+                if (child.getRendererType().equals(TYPE))
+                {
+                    cnt++;
+                }
+            }
+
+            if (sel == null)
+            {
+                LogUtil.getLogger().warning("Tab " + uiTab.getClientId(facesContext) + " not found in parent TabbedPane " + uiTabbedPane.getClientId(facesContext));
+                sel = Boolean.FALSE;
+            }
+        }
+        return sel.booleanValue();
+    }
+    */
+
 }

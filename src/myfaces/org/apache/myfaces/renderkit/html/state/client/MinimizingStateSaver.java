@@ -18,18 +18,15 @@
  */
 package net.sourceforge.myfaces.renderkit.html.state.client;
 
-import net.sourceforge.myfaces.component.CommonComponentProperties;
-import net.sourceforge.myfaces.component.MyFacesUIOutput;
-import net.sourceforge.myfaces.component.UIComponentHacks;
-import net.sourceforge.myfaces.component.UIComponentUtils;
+import net.sourceforge.myfaces.component.*;
 import net.sourceforge.myfaces.component.ext.UISaveState;
 import net.sourceforge.myfaces.convert.ConverterUtils;
 import net.sourceforge.myfaces.renderkit.html.DataRenderer;
 import net.sourceforge.myfaces.renderkit.html.HTMLRenderer;
 import net.sourceforge.myfaces.renderkit.html.SecretRenderer;
+import net.sourceforge.myfaces.renderkit.html.state.StateUtils;
 import net.sourceforge.myfaces.renderkit.html.jspinfo.JspInfo;
 import net.sourceforge.myfaces.renderkit.html.jspinfo.StaticFacesListener;
-import net.sourceforge.myfaces.renderkit.html.state.StateRenderer;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLEncoder;
 import net.sourceforge.myfaces.tree.TreeUtils;
 import net.sourceforge.myfaces.util.bean.BeanUtils;
@@ -37,12 +34,8 @@ import net.sourceforge.myfaces.util.logging.LogUtil;
 
 import javax.faces.FacesException;
 import javax.faces.FactoryFinder;
-import javax.faces.validator.Validator;
 import javax.faces.application.ApplicationFactory;
-import javax.faces.component.UICommand;
-import javax.faces.component.UIComponent;
-import javax.faces.component.UIOutput;
-import javax.faces.component.UIPanel;
+import javax.faces.component.*;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.convert.ConverterException;
@@ -52,6 +45,7 @@ import javax.faces.event.FacesListener;
 import javax.faces.event.PhaseId;
 import javax.faces.event.ValueChangedListener;
 import javax.faces.tree.Tree;
+import javax.faces.validator.Validator;
 import javax.servlet.ServletRequest;
 import java.beans.BeanInfo;
 import java.beans.PropertyDescriptor;
@@ -89,14 +83,17 @@ public class MinimizingStateSaver
     private static final Set IGNORE_ATTRIBUTES = new HashSet();
     static
     {
-        IGNORE_ATTRIBUTES.add(CommonComponentProperties.CLIENT_ID_ATTR);
+        //IGNORE_ATTRIBUTES.add(CommonComponentProperties.CLIENT_ID_ATTR);
     }
 
     private static final Set IGNORE_PROPERTIES = new HashSet();
     static
     {
         IGNORE_PROPERTIES.add(CommonComponentProperties.PARENT_PROP);
-        IGNORE_PROPERTIES.add(CommonComponentProperties.CLIENT_ID_PROP);
+
+        //not necessary: clientId is no property because getter has FacesContext parameter
+        //IGNORE_PROPERTIES.add(CommonComponentProperties.CLIENT_ID_PROP);
+
 
         //we must save the "valid" attribute
 
@@ -310,6 +307,12 @@ public class MinimizingStateSaver
             conv = ConverterUtils.findValueConverter(facesContext,
                                                      (UIOutput)uiComponent);
         }
+        else if (uiComponent instanceof UISelectOne &&
+                propName.equals(MyFacesUISelectOne.SELECTED_VALUE_PROP))
+        {
+            conv = ConverterUtils.findValueConverter(facesContext,
+                                                     (UIOutput)uiComponent);
+        }
         else
         {
             conv = ConverterUtils.findConverter(propertyDescriptor.getPropertyType());
@@ -321,12 +324,11 @@ public class MinimizingStateSaver
             //lucky, we have a converter  :-)
             try
             {
-                //TODO: Whenever using a converter for state saving we should wrap the facesContext to return a fixed locale and apply a dummy component
-                strValue = conv.getAsString(facesContext, uiComponent, propValue);
+                strValue = StateUtils.convertObjectToString(facesContext, conv, propValue);
             }
             catch (ConverterException e)
             {
-                LogUtil.getLogger().severe("Value of attribute " + propName + " will be lost, because of converter exception saving state of component " + UIComponentUtils.toString(uiComponent) + ".");
+                LogUtil.getLogger().severe("Value of property " + propName + " will be lost, because of converter exception saving state of component " + UIComponentUtils.toString(uiComponent) + ".");
                 return;
             }
         }
@@ -341,13 +343,13 @@ public class MinimizingStateSaver
                 }
                 catch (FacesException e)
                 {
-                    LogUtil.getLogger().severe("Value of attribute " + propName + " of component " + UIComponentUtils.toString(uiComponent) + " will be lost, because of exception during serialization: " + e.getMessage());
+                    LogUtil.getLogger().severe("Value of property " + propName + " of component " + UIComponentUtils.toString(uiComponent) + " will be lost, because of exception during serialization: " + e.getMessage());
                     return;
                 }
             }
             else
             {
-                LogUtil.getLogger().severe("Value of attribute " + propName + " of component " + UIComponentUtils.toString(uiComponent) + " will be lost, because it is of non-serializable type: " + propValue.getClass().getName());
+                LogUtil.getLogger().severe("Value of property " + propName + " of component " + UIComponentUtils.toString(uiComponent) + " will be lost, because it is of non-serializable type: " + propValue.getClass().getName());
                 return;
             }
         }
@@ -471,15 +473,15 @@ public class MinimizingStateSaver
 
         //convert attribute value to String
         String strValue;
-        Converter conv = UIComponentUtils.findConverterForAttribute(facesContext,
-                                                                    uiComponent,
-                                                                    attrName);
+        Converter conv = HTMLRenderer.findConverterForAttribute(facesContext,
+                                                                uiComponent,
+                                                                attrName);
         if (conv != null)
         {
             //lucky, we have a converter  :-)
             try
             {
-                strValue = conv.getAsString(facesContext, uiComponent, attrValue);
+                strValue = StateUtils.convertObjectToString(facesContext, conv, attrValue);
             }
             catch (ConverterException e)
             {
@@ -550,7 +552,7 @@ public class MinimizingStateSaver
             {
                 try
                 {
-                    paramValue = conv.getAsString(facesContext, uiSaveState, propValue);
+                    paramValue = StateUtils.convertObjectToString(facesContext, conv, propValue);
                 }
                 catch (ConverterException e)
                 {
@@ -982,12 +984,11 @@ public class MinimizingStateSaver
         else
         {
             Converter converter = ConverterUtils.getConverter(propDescr.getPropertyType());
-            String strValue = converter.getAsString(facesContext,
-                                                    facesContext.getTree().getRoot(),   //dummy component
-                                                    objVal);
+            String strValue = StateUtils.convertObjectToString(facesContext, converter, objVal);
             BeanUtils.setBeanPropertyValue(validator, propDescr, strValue);
         }
 
     }
+
 
 }

@@ -18,10 +18,8 @@
  */
 package net.sourceforge.myfaces.component;
 
-import net.sourceforge.myfaces.convert.ConversionErrorMessage;
 import net.sourceforge.myfaces.convert.ConverterUtils;
-import net.sourceforge.myfaces.convert.MyFacesConverterException;
-import net.sourceforge.myfaces.convert.impl.StringArrayConverter;
+import net.sourceforge.myfaces.renderkit.html.HTMLRenderer;
 import net.sourceforge.myfaces.tree.TreeUtils;
 import net.sourceforge.myfaces.util.logging.LogUtil;
 
@@ -71,6 +69,7 @@ public class UIComponentUtils
     }
 
 
+    /*
     public static void setComponentValue(javax.faces.component.UIOutput uiOutput,
                                          Object newValue)
     {
@@ -78,7 +77,6 @@ public class UIComponentUtils
         uiOutput.setAttribute(CommonComponentProperties.STRING_VALUE_ATTR, null);
         uiOutput.setValid(true);
     }
-
 
     public static void convertAndSetValue(FacesContext facesContext,
                                           javax.faces.component.UIOutput uiOutput,
@@ -163,6 +161,7 @@ public class UIComponentUtils
             facesContext.addMessage(comp, new ConversionErrorMessage(e.getMessage()));
         }
     }
+    */
 
 
     public static String toString(UIComponent comp)
@@ -194,58 +193,7 @@ public class UIComponentUtils
     public static String getClientId(FacesContext facesContext,
                                      UIComponent uiComponent)
     {
-        String clientId = (String)uiComponent.getAttribute(CommonComponentProperties.CLIENT_ID_ATTR);
-        if (clientId != null)
-        {
-            return clientId;
-        }
-
-        //Find namingContainer
-        UIComponent find = uiComponent.getParent();
-        if (find == null)
-        {
-            //we have got the root component
-            if (!(uiComponent instanceof NamingContainer))
-            {
-                throw new FacesException("Root is no naming container?!");
-            }
-
-            if (uiComponent.getComponentId() == null)
-            {
-                uiComponent.setComponentId(UIRoot.ROOT_COMPONENT_ID);
-            }
-            clientId = uiComponent.getComponentId();
-        }
-        else
-        {
-            while (!(find instanceof NamingContainer))
-            {
-                find = find.getParent();
-                if (find == null)
-                {
-                    throw new FacesException("Root is no naming container?!");
-                }
-            }
-            NamingContainer namingContainer = (NamingContainer)find;
-
-            if (uiComponent.getComponentId() == null)
-            {
-                uiComponent.setComponentId(namingContainer.generateClientId());
-            }
-
-            if (find.getParent() == null)
-            {
-                //NamingContainer is root, so nothing to be prepended
-                clientId = uiComponent.getComponentId();
-            }
-            else
-            {
-                clientId = find.getClientId(facesContext) + UIComponent.SEPARATOR_CHAR + uiComponent.getComponentId();
-            }
-        }
-
-        uiComponent.setAttribute(CommonComponentProperties.CLIENT_ID_ATTR, clientId);
-        return clientId;
+        return HTMLRenderer.getComponentClientId(facesContext, uiComponent);
     }
 
 
@@ -270,13 +218,7 @@ public class UIComponentUtils
     }
 
 
-    /**
-     * DOCUMENT ME!
-     * @param facesContext
-     * @param uiComponent
-     * @param attrName
-     * @return
-     */
+    /*
     public static Converter findConverterForAttribute(FacesContext facesContext,
                                                       UIComponent uiComponent,
                                                       String attrName)
@@ -298,6 +240,7 @@ public class UIComponentUtils
                                                          attrName);
         }
     }
+    */
 
 
 
@@ -475,15 +418,17 @@ public class UIComponentUtils
      * Returns the form inside which the specified <code>uiComponent</code>
      * is nested
      */
-    public static UIForm findForm(FacesContext context, UIComponent uiComponent) {
+    public static UIForm findForm(FacesContext facesContext,
+                                  UIComponent uiComponent)
+    {
         UIComponent parent;
-
-        for (
-            parent = uiComponent.getParent(); parent != null;
-                parent = parent.getParent())
+        for (parent = uiComponent.getParent(); parent != null; parent = parent.getParent())
+        {
             if (parent instanceof UIForm)
+            {
                 break;
-
+            }
+        }
         return (UIForm)parent;
     }
 

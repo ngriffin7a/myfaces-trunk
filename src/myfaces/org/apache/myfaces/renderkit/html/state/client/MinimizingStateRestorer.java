@@ -20,10 +20,13 @@ package net.sourceforge.myfaces.renderkit.html.state.client;
 
 import net.sourceforge.myfaces.component.MyFacesUIOutput;
 import net.sourceforge.myfaces.component.UIComponentUtils;
+import net.sourceforge.myfaces.component.MyFacesUISelectOne;
 import net.sourceforge.myfaces.component.ext.UISaveState;
 import net.sourceforge.myfaces.convert.ConverterUtils;
 import net.sourceforge.myfaces.convert.impl.StringArrayConverter;
 import net.sourceforge.myfaces.renderkit.html.jspinfo.JspInfo;
+import net.sourceforge.myfaces.renderkit.html.HTMLRenderer;
+import net.sourceforge.myfaces.renderkit.html.state.StateUtils;
 import net.sourceforge.myfaces.util.bean.BeanUtils;
 import net.sourceforge.myfaces.util.logging.LogUtil;
 
@@ -31,10 +34,7 @@ import javax.faces.FacesException;
 import javax.faces.FactoryFinder;
 import javax.faces.validator.Validator;
 import javax.faces.application.ApplicationFactory;
-import javax.faces.component.UICommand;
-import javax.faces.component.UIComponent;
-import javax.faces.component.UIInput;
-import javax.faces.component.UIOutput;
+import javax.faces.component.*;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.convert.ConverterException;
@@ -342,6 +342,12 @@ public class MinimizingStateRestorer
             conv = ConverterUtils.findValueConverter(facesContext,
                                                      (UIOutput)uiComponent);
         }
+        else if (uiComponent instanceof UISelectOne &&
+                propName.equals(MyFacesUISelectOne.SELECTED_VALUE_PROP))
+        {
+            conv = ConverterUtils.findValueConverter(facesContext,
+                                                     (UIOutput)uiComponent);
+        }
         else
         {
             conv = ConverterUtils.findConverter(propertyDescriptor.getPropertyType());
@@ -361,9 +367,9 @@ public class MinimizingStateRestorer
             {
                 try
                 {
-                    objValue = conv.getAsObject(facesContext,
-                                                uiComponent,
-                                                strValue);
+                    objValue = StateUtils.convertStringToObject(facesContext,
+                                                                conv,
+                                                                strValue);
                 }
                 catch (ConverterException e)
                 {
@@ -406,9 +412,9 @@ public class MinimizingStateRestorer
         }
 
         //Find proper converter to convert back from external String
-        Converter conv = UIComponentUtils.findConverterForAttribute(facesContext,
-                                                                    uiComponent,
-                                                                    attrName);
+        Converter conv = HTMLRenderer.findConverterForAttribute(facesContext,
+                                                                uiComponent,
+                                                                attrName);
 
         Object objValue;
         if (conv != null)
@@ -424,9 +430,9 @@ public class MinimizingStateRestorer
             {
                 try
                 {
-                    objValue = conv.getAsObject(facesContext,
-                                                uiComponent,
-                                                strValue);
+                    objValue = StateUtils.convertStringToObject(facesContext,
+                                                                conv,
+                                                                strValue);
                 }
                 catch (ConverterException e)
                 {
@@ -505,7 +511,9 @@ public class MinimizingStateRestorer
             {
                 try
                 {
-                    propValue = conv.getAsObject(facesContext, uiSaveState, paramValue);
+                    propValue = StateUtils.convertStringToObject(facesContext,
+                                                                 conv,
+                                                                 paramValue);
                 }
                 catch (ConverterException e)
                 {
@@ -808,9 +816,9 @@ public class MinimizingStateRestorer
         else
         {
             Converter converter = ConverterUtils.getConverter(propDescr.getPropertyType());
-            Object objValue = converter.getAsObject(facesContext,
-                                                    facesContext.getTree().getRoot(),   //dummy component
-                                                    strValue);
+            Object objValue = StateUtils.convertStringToObject(facesContext,
+                                                               converter,
+                                                               strValue);
             BeanUtils.setBeanPropertyValue(validator, propDescr, objValue);
         }
     }

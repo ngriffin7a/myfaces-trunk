@@ -33,7 +33,6 @@ import java.util.Locale;
  * Convenient class to wrap the current FacesContext.
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
- * @deprecated no longer used
  */
 public class FacesContextWrapper
     extends FacesContext

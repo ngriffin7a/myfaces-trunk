@@ -15,11 +15,11 @@ public interface CommonComponentProperties
     public static final String RENDERER_TYPE_PROP = "rendererType";
 
     public static final String VALID_PROP = "valid";
-    public static final String CLIENT_ID_PROP = "clientId";
+    //public static final String CLIENT_ID_PROP = "clientId";
 
     //MyFaces internal
-    public static final String STRING_VALUE_ATTR = "net.sf.myfaces.component.STRING_VALUE";
-    public static final String CLIENT_ID_ATTR = "net.sf.myfaces.component.CLIENT_ID";
+    //public static final String STRING_VALUE_ATTR = "net.sf.myfaces.component.STRING_VALUE";
+    //public static final String CLIENT_ID_ATTR = "net.sf.myfaces.component.CLIENT_ID";
 
     //JSF internal
     //public static final String FACET_PARENT_ATTR = "javax.faces.component.FacetParent";

@@ -439,8 +439,6 @@ public class MyFacesTagHelper
                                       String propertyName,
                                       Object propertyValue)
     {
-        //boolean errorOccured = false;
-
         //Try bean property setter first
         PropertyDescriptor pd = BeanUtils.findBeanPropertyDescriptor(uiComponent,
                                                                  propertyName);
@@ -454,23 +452,13 @@ public class MyFacesTagHelper
             catch (Exception e)
             {
                 LogUtil.getLogger().warning("Exception in property setter of component " + UIComponentUtils.toString(uiComponent) + ": " + e.getMessage() + ". Attribute will be set directly.");
-                //errorOccured = true;
             }
         }
         else
         {
             //Component does not have a matching bean property!
             LogUtil.getLogger().severe("Component " + UIComponentUtils.toString(uiComponent) + " does not have a valid property setter method for property '" + propertyName + "'.");
-            //errorOccured = true;
         }
-
-        /*
-        if (errorOccured)
-        {
-            //Alternativly set by attribute name:
-            uiComponent.setAttribute(propertyName, propertyValue);
-        }
-        */
     }
 
 

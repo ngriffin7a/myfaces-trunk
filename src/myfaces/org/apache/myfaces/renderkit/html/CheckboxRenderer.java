@@ -60,35 +60,6 @@ public class CheckboxRenderer
         return TYPE;
     }
 
-    /*
-    public boolean supportsComponentType(String s)
-    {
-        return s.equals(UISelectBoolean.TYPE) ||
-               s.equals(UISelectMany.TYPE);
-    }
-
-    public boolean supportsComponentType(UIComponent uicomponent)
-    {
-        return uicomponent instanceof UISelectBoolean ||
-               uicomponent instanceof UISelectMany;
-    }
-
-    protected void initAttributeDescriptors()
-    {
-        addAttributeDescriptors(UISelectBoolean.TYPE, TLD_HTML_URI, "selectboolean_checkbox", HTML_UNIVERSAL_ATTRIBUTES);
-        addAttributeDescriptors(UISelectBoolean.TYPE, TLD_HTML_URI, "selectboolean_checkbox", HTML_EVENT_HANDLER_ATTRIBUTES);
-        addAttributeDescriptors(UISelectBoolean.TYPE, TLD_HTML_URI, "selectboolean_checkbox", HTML_INPUT_ATTRIBUTES);
-        addAttributeDescriptors(UISelectBoolean.TYPE, TLD_HTML_URI, "selectboolean_checkbox", SELECT_BOOLEAN_CHECKBOX_ATTRIBUTES);
-        addAttributeDescriptors(UISelectBoolean.TYPE, TLD_HTML_URI, "selectboolean_checkbox", USER_ROLE_ATTRIBUTES);
-
-        addAttributeDescriptors(UISelectMany.TYPE, TLD_HTML_URI, "selectmany_checkbox", HTML_UNIVERSAL_ATTRIBUTES);
-        addAttributeDescriptors(UISelectMany.TYPE, TLD_HTML_URI, "selectmany_checkbox", HTML_EVENT_HANDLER_ATTRIBUTES);
-        addAttributeDescriptors(UISelectMany.TYPE, TLD_HTML_URI, "selectmany_checkbox", HTML_INPUT_ATTRIBUTES);
-        addAttributeDescriptors(UISelectMany.TYPE, TLD_HTML_URI, "selectmany_checkbox", SELECT_MANY_CHECKBOX_ATTRIBUTES);
-        addAttributeDescriptors(UISelectMany.TYPE, TLD_HTML_URI, "selectmany_checkbox", USER_ROLE_ATTRIBUTES);
-    }
-    */
-
 
     public void decode(FacesContext facesContext, UIComponent uiComponent)
         throws IOException
@@ -107,11 +78,7 @@ public class CheckboxRenderer
             String[] newValues = servletRequest.getParameterValues(clientId);
             if (newValues != null)
             {
-                ((UISelectBoolean)uiComponent).setSelected(true);
-            }
-            else
-            {
-                ((UISelectBoolean)uiComponent).setSelected(false);
+                ((UISelectBoolean)uiComponent).setSelected(newValues[0].equals("1"));
             }
             uiComponent.setValid(true);
         }
@@ -155,9 +122,19 @@ public class CheckboxRenderer
         else if (uiComponent instanceof UISelectBoolean)
         {
             Boolean checked = (Boolean)((UISelectBoolean)uiComponent).currentValue(facesContext);
-            String value = getStringValue(facesContext, (UISelectBoolean)uiComponent);
-            drawCheckbox(facesContext, uiComponent, value, null,
+            //String value = getStringValue(facesContext, (UISelectBoolean)uiComponent);
+            drawCheckbox(facesContext, uiComponent, "1", null,
                          checked != null ? checked.booleanValue() : false);
+
+            //We also render a hidden input with the same name and a value of 0.
+            //That way a parameter is always sent when the respective form is
+            //submitted and we can distinguish between "false" (i.e checkbox
+            //was posted unchecked) and "form not submitted" (i.e checkbox not
+            //posted at all).
+            ResponseWriter writer = facesContext.getResponseWriter();
+            writer.write("<input type=\"hidden\" name=\"");
+            writer.write(uiComponent.getClientId(facesContext));
+            writer.write("\" value=\"0\">");
         }
         else
         {

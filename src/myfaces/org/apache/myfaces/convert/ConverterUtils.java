@@ -24,7 +24,6 @@ import net.sourceforge.myfaces.config.*;
 import net.sourceforge.myfaces.renderkit.attr.CommonRendererAttributes;
 import net.sourceforge.myfaces.util.Base64;
 import net.sourceforge.myfaces.util.MyFacesObjectInputStream;
-import net.sourceforge.myfaces.util.bean.BeanUtils;
 import net.sourceforge.myfaces.util.logging.LogUtil;
 
 import javax.faces.FacesException;
@@ -36,7 +35,6 @@ import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.convert.ConverterException;
 import javax.servlet.ServletContext;
-import java.beans.PropertyDescriptor;
 import java.io.*;
 import java.text.*;
 import java.util.Locale;
@@ -175,35 +173,23 @@ public class ConverterUtils
     /**
      * Returns the converter that can be used to convert this attribute
      * of the given UIComponent.
-     * The converter is determined as follows:
-     * <ul>
-     *  <li> if the component has a bean property getter for this attribute,
-     *       return the converter for this property type
-     *  <li> if the component has a rendererType, get the Renderer and
-     *       try to find an AttributeDescriptor. If found, return the converter
-     *       for this attribute's type
-     *  <li> otherwise return null
-     * </ul>
-     *
      * @param facesContext
      * @param uiComponent
      * @param attrName
-     * @return
+     * @return the proper Converter or null if an attribute descriptor could
+     *         not be found
      */
-    public static Converter findPropertyOrAttributeConverter(FacesContext facesContext,
-                                                             UIComponent uiComponent,
-                                                             String attrName)
+    public static Converter findAttributeConverter(FacesContext facesContext,
+                                                   UIComponent uiComponent,
+                                                   String attrName)
     {
-        //Is it a component property?
-        PropertyDescriptor pd = BeanUtils.findBeanPropertyDescriptor(uiComponent,
-                                                                 attrName);
-        if (pd != null)
+        String rendererType = uiComponent.getRendererType();
+        if (rendererType == null)
         {
-            return findConverter(pd.getPropertyType());
+            //Each component must have a rendererType since Spec. 1.0 PRD2
+            LogUtil.getLogger().warning("Component " + UIComponentUtils.toString(uiComponent) + " has no renderer type!");
+            return null;
         }
-
-        //probably not a component property but a render dependent attribute
-        String rendererType = uiComponent.getRendererType();    //Each component must have a rendererType since Spec. 1.0 PRD2
 
         //Lookup the attribute descriptor
         ServletContext servletContext = (ServletContext)facesContext.getExternalContext().getContext();

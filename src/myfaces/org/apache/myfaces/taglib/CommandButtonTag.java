@@ -150,4 +150,10 @@ public class CommandButtonTag
 
 
 
+    // MyFaces extension
+    public void setImmediateAction(String v)
+    {
+        setComponentPropertyBoolean(MyFacesUICommand.IMMEDIATE_ACTION_PROP, v);
+    }
+
 }

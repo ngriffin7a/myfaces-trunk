@@ -90,6 +90,22 @@
         </attribute>
         &user_role_attributes;
 
+        <!-- MyFaces extensions -->
+        <attribute>
+            <name>immediateAction</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
+            <type>java.lang.String</type>
+            <description>
+                This is a MyFaces extension.
+                If set to "true" the lifecycle will immediatly go to the
+                Render Response phase (without validation) if this button was
+                clicked.
+                Convenient if you need a button that should handle navigation
+                without performing validation or model updates.
+            </description>
+        </attribute>
+
         <!-- TODO What about image buttons: attributes imageKey, image, ... -->
     </tag>
 
@@ -112,6 +128,22 @@
         </attribute>
         &key_bundle_attributes;
         &user_role_attributes;
+
+        <!-- MyFaces extensions -->
+        <attribute>
+            <name>immediateAction</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
+            <type>java.lang.String</type>
+            <description>
+                This is a MyFaces extension.
+                If set to "true" the lifecycle will immediatly go to the
+                Render Response phase (without validation) if this button was
+                clicked.
+                Convenient if you need a button that should handle navigation
+                without performing validation or model updates.
+            </description>
+        </attribute>
 
         <!-- TODO attributes image, label-->
     </tag>

@@ -167,6 +167,7 @@ public class UINavigationItem
             //Item was clicked
             toggleOpen();
             handleNavigation();
+            FacesContext.getCurrentInstance().renderResponse();
         }
         return super.broadcast(event, phaseId);
     }

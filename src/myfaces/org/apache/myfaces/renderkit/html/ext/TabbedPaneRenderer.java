@@ -501,11 +501,10 @@ public class TabbedPaneRenderer
                     uiTabbedPane.setAttribute(OLD_SELECTED_INDEX_ATTR,
                                               uiTabbedPane.getAttribute(SELECTED_INDEX_ATTR));
                     uiTabbedPane.setAttribute(SELECTED_INDEX_ATTR, new Integer(tabIdx));
+                    ((UICommand)child).fireActionEvent(facesContext);
                     return;
                 }
                 tabIdx++;
-
-                ((UICommand)child).fireActionEvent(facesContext);
             }
         }
     }

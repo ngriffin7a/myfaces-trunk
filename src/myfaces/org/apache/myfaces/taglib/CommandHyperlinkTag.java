@@ -157,4 +157,10 @@ public class CommandHyperlinkTag
     // user role attributes --> already implemented in MyFacesTag
 
 
+    // MyFaces extension
+    public void setImmediateAction(String v)
+    {
+        setComponentPropertyBoolean(MyFacesUICommand.IMMEDIATE_ACTION_PROP, v);
+    }
+
 }

@@ -20,6 +20,13 @@ package net.sourceforge.myfaces.component;
 
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
+import javax.faces.event.FacesEvent;
+import javax.faces.event.PhaseId;
+import javax.faces.event.AbortProcessingException;
+import javax.faces.event.ActionEvent;
+import javax.faces.application.ApplicationFactory;
+import javax.faces.application.Application;
+import javax.faces.FactoryFinder;
 import java.util.List;
 
 /**
@@ -33,6 +40,9 @@ public class MyFacesUICommand
     public static final String COMMAND_NAME_PROP = "commandName";
     public static final String ACTION_PROP = "action";
     public static final String ACTION_REF_PROP = "actionRef";
+    public static final String IMMEDIATE_ACTION_PROP = "immediateAction";
+
+    private boolean _immediateAction;
 
     public MyFacesUICommand()
     {
@@ -44,6 +54,40 @@ public class MyFacesUICommand
         return listeners;
     }
 
+
+    public boolean isImmediateAction()
+    {
+        return _immediateAction;
+    }
+
+    public void setImmediateAction(boolean immediateAction)
+    {
+        _immediateAction = immediateAction;
+    }
+
+    public boolean broadcast(FacesEvent event, PhaseId phaseId) throws AbortProcessingException
+    {
+        if (isImmediateAction())
+        {
+            if (phaseId == PhaseId.APPLY_REQUEST_VALUES &&
+                event instanceof ActionEvent &&
+                event.getSource() == this)
+            {
+                //Item was clicked --> render immediatly
+                ApplicationFactory af = (ApplicationFactory)FactoryFinder.getFactory(FactoryFinder.APPLICATION_FACTORY);
+                Application application = af.getApplication();
+                application.getActionListener().processAction((ActionEvent)event);
+
+                //handle other listeners
+                super.broadcast(event, phaseId);
+
+                //go to render phase directly
+                FacesContext.getCurrentInstance().renderResponse();
+                return false;
+            }
+        }
+        return super.broadcast(event, phaseId);
+    }
 
 
 //------------------------------------------------------------------------------
