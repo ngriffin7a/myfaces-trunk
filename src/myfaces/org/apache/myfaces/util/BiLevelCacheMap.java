@@ -19,6 +19,7 @@
 package net.sourceforge.myfaces.util;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -34,7 +35,7 @@ import java.util.Set;
  * and L2 cleared.
  * </p>
  * <p>
- * IMPORTANT:entrySet(), keySet(), and values() return snapshot collections.  
+ * IMPORTANT:entrySet(), keySet(), and values() return unmodifiable snapshot collections.  
  * </p>
  *
  * @author Anton Koinov (latest modification by $Author$)
@@ -103,7 +104,7 @@ public abstract class BiLevelCacheMap implements Map
                 merge(_cacheL2);
             }
 
-            return _cacheL1.entrySet();
+            return Collections.unmodifiableSet(_cacheL1.entrySet());
         }
     }
 
@@ -156,7 +157,7 @@ public abstract class BiLevelCacheMap implements Map
                 merge(_cacheL2);
             }
 
-            return _cacheL1.keySet();
+            return Collections.unmodifiableSet(_cacheL1.keySet());
         }
     }
 
@@ -232,7 +233,7 @@ public abstract class BiLevelCacheMap implements Map
                 merge(_cacheL2);
             }
 
-            return _cacheL1.values();
+            return Collections.unmodifiableCollection(_cacheL1.values());
         }
     }
     
