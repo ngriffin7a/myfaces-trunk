@@ -24,6 +24,9 @@ import javax.faces.component.UIComponent;
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.7  2004/08/15 23:30:47  o_rossmueller
+ * fixed typo in setPaginatorActiveColumnClass
+ *
  * Revision 1.6  2004/07/05 13:59:15  royalts
  * added paginator functionality to dataScroller
  *
@@ -87,7 +90,7 @@ public class HtmlDataScrollerTag
     private String _paginatorTableStyle;
     private String _paginatorColumnClass;
     private String _paginatorColumnStyle;
-    private String _paginatorAcitveColumnClass;
+    private String _paginatorActiveColumnClass;
     private String _paginatorActiveColumnStyle;
 
     // User Role support
@@ -120,7 +123,7 @@ public class HtmlDataScrollerTag
         setStringProperty(component, PAGINATOR_TABLE_STYLE_ATTR, _paginatorTableStyle);
         setStringProperty(component, PAGINATOR_COL_CLASS_ATTR, _paginatorColumnClass);
         setStringProperty(component, PAGINATOR_COL_STYLE_ATTR, _paginatorColumnStyle);
-        setStringProperty(component, PAGINATOR_ACTCOL_CLASS_ATTR, _paginatorAcitveColumnClass);
+        setStringProperty(component, PAGINATOR_ACTCOL_CLASS_ATTR, _paginatorActiveColumnClass);
         setStringProperty(component, PAGINATOR_ACTCOL_STYLE_ATTR, _paginatorActiveColumnStyle);
 
         setStringProperty(component, UserRoleAware.ENABLED_ON_USER_ROLE_ATTR, _enabledOnUserRole);
@@ -188,9 +191,9 @@ public class HtmlDataScrollerTag
         _paginatorTableStyle = paginatorTableStyle;
     }
 
-    public void setPaginatorAcitveColumnClass(String paginatorAcitveColumnClass)
+    public void setPaginatorActiveColumnClass(String paginatorActiveColumnClass)
     {
-        _paginatorAcitveColumnClass = paginatorAcitveColumnClass;
+        this._paginatorActiveColumnClass = paginatorActiveColumnClass;
     }
 
     public void setPaginatorActiveColumnStyle(String paginatorActiveColumnStyle)
