@@ -147,7 +147,7 @@ public class UIData
     /**
      * They descendant Component states algorithm we implement here is pretty fast
      * but does not support modification of the components tree during the lifecycle.
-     * TODO: should we have an alternative implementation with a clientId based Map ?
+     * TODO: should we offer an alternative implementation with a clientId based Map ?
      */
     private void saveDescendantComponentStates()
     {
@@ -321,7 +321,7 @@ public class UIData
     public void encodeBegin(javax.faces.context.FacesContext context)
             throws IOException
     {
-        //TODO: ??? ensure that any saved per-row state for our child input components is discarded unless it is needed to rerender the current page with errors
+        //TODO: ??? javadoc says: ensure that any saved per-row state for our child input components is discarded unless it is needed to rerender the current page with errors
         _descendantStates = null;
         _descendantEditableValueHolderCount = -1;
         super.encodeBegin(context);

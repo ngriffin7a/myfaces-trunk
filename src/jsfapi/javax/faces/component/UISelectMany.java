@@ -20,6 +20,11 @@ package javax.faces.component;
 
 import javax.faces.context.FacesContext;
 import javax.faces.el.ValueBinding;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * see Javadoc of JSF Specification
@@ -69,17 +74,127 @@ public class UISelectMany
         }
     }
 
+    /**
+     * TODO: JUnit testing!!!
+     * @return true if Objects are different (!)
+     */
     protected boolean compareValues(Object previous,
                                     Object value)
     {
-        //TODO
-        throw new UnsupportedOperationException();
+        if (previous == null)
+        {
+            // one is null, the other not
+            return value != null;
+        }
+        else if (value == null)
+        {
+            // one is null, the other not
+            return previous != null;
+        }
+        else
+        {
+            if (previous instanceof Object[] &&
+                value instanceof Object[])
+            {
+                return compareObjectArrays((Object[])previous, (Object[])value);
+            }
+            else if (previous instanceof List &&
+                     value instanceof List)
+            {
+                return compareLists((List)previous, (List)value);
+            }
+            else if (previous.getClass().isArray() &&
+                     value.getClass().isArray())
+            {
+                return comparePrimitiveArrays(previous, value);
+            }
+            else
+            {
+                //Objects have different classes
+                return true;
+            }
+        }
     }
+
+    /**
+     * TODO: optimize
+     */
+    private boolean compareObjectArrays(Object[] previous,
+                                        Object[] value)
+    {
+        int length = ((Object[])value).length;
+        if (((Object[])previous).length != length)
+        {
+            //different length
+            return true;
+        }
+        List previousList = new ArrayList(length);
+        for (int i = 0; i < previous.length; i++)
+        {
+            previousList.add(previous[i]);
+        }
+
+        List valueList = new ArrayList(length);
+        for (int i = 0; i < previous.length; i++)
+        {
+            valueList.add(previous[i]);
+        }
+
+        return compareLists(previousList, valueList);
+    }
+
+    private boolean compareLists(List previous, List value)
+    {
+        int length = value.size();
+        if (previous.size() != length)
+        {
+            //different length
+            return true;
+        }
+
+        List tempList = new ArrayList(length);
+        Collections.copy(tempList, previous);
+
+        for (Iterator it = value.iterator(); it.hasNext(); )
+        {
+            Object item = it.next();
+            if (!tempList.remove(item))
+            {
+                //element exists in value list but not in previous list
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private boolean comparePrimitiveArrays(Object previous, Object value)
+    {
+        int length = Array.getLength(value);
+        if (Array.getLength(previous) != length)
+        {
+            //different length
+            return true;
+        }
+
+        List previousList = new ArrayList(length);
+        List valueList = new ArrayList(length);
+        for (int i = 0; i < length; i++)
+        {
+            previousList.add(Array.get(previous, i));
+            valueList.add(Array.get(value, i));
+        }
+
+        return compareLists(previousList, valueList);
+    }
+
+
 
     public void validate(FacesContext context)
     {
         super.validate(context);
         //TODO: see javadoc!
+        throw new UnsupportedOperationException(); //TODO
     }
 
     //------------------ GENERATED CODE BEGIN (do not modify!) --------------------

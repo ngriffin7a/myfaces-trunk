@@ -20,7 +20,12 @@ package javax.faces.component;
 
 import javax.faces.context.FacesContext;
 import javax.faces.el.ValueBinding;
+import javax.faces.event.AbortProcessingException;
+import javax.faces.event.FacesEvent;
+import javax.faces.event.PhaseId;
 import javax.faces.render.RenderKitFactory;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 /**
@@ -33,9 +38,13 @@ public class UIViewRoot
         extends UIComponentBase
 {
     public static final String UNIQUE_ID_PREFIX = "_id";
+    public static final int ANY_PHASE_ORDINAL = PhaseId.ANY_PHASE.getOrdinal();
+
+    private int _uniqueIdCounter = 0;
 
     private String _viewId = null;
     private Locale _locale = null;
+    private List _events = null;
 
     public String getViewId()
     {
@@ -44,38 +53,110 @@ public class UIViewRoot
 
     public void setViewId(String viewId)
     {
+        if (viewId == null) throw new NullPointerException("viewId");
         _viewId = viewId;
     }
 
-    public void queueEvent(javax.faces.event.FacesEvent event)
+    public void queueEvent(FacesEvent event)
     {
-        throw new UnsupportedOperationException(); //TODO
+        if (event == null) throw new NullPointerException("event");
+        if (_events == null)
+        {
+            _events = new ArrayList();
+        }
+        _events.add(event);
     }
 
-    public void processDecodes(javax.faces.context.FacesContext context)
+    private void _broadcastForPhase(PhaseId phaseId)
     {
-        throw new UnsupportedOperationException(); //TODO
+        if (_events == null) return;
+        int phaseIdOrdinal = phaseId.getOrdinal();
+        for (int i = 0; i < _events.size(); i++) //No optimization for size() call here, because List may grow during loop!
+        {
+            FacesEvent event = (FacesEvent)_events.get(i);
+            int ordinal = event.getPhaseId().getOrdinal();
+            if (ordinal == ANY_PHASE_ORDINAL ||
+                ordinal == phaseIdOrdinal)
+            {
+                UIComponent source = event.getComponent();
+                try
+                {
+                    source.broadcast(event);
+                }
+                catch (AbortProcessingException e)
+                {
+                    // we do not abort event processing itself
+                    // javadoc: "no further processing on the _current_ event should be performed"
+                }
+            }
+        }
     }
 
-    public void encodeBegin(javax.faces.context.FacesContext context)
+
+    private void clearEvents()
+    {
+        _events = null;
+    }
+
+
+    public void processDecodes(FacesContext context)
+    {
+        if (context == null) throw new NullPointerException("context");
+        super.processDecodes(context);
+        _broadcastForPhase(PhaseId.ANY_PHASE);
+        _broadcastForPhase(PhaseId.APPLY_REQUEST_VALUES);
+        if (context.getRenderResponse() || context.getResponseComplete())
+        {
+            clearEvents();
+        }
+    }
+
+    public void processValidators(FacesContext context)
+    {
+        if (context == null) throw new NullPointerException("context");
+        super.processValidators(context);
+        _broadcastForPhase(PhaseId.ANY_PHASE);
+        _broadcastForPhase(PhaseId.PROCESS_VALIDATIONS);
+        if (context.getRenderResponse() || context.getResponseComplete())
+        {
+            clearEvents();
+        }
+    }
+
+    public void processUpdates(FacesContext context)
+    {
+        if (context == null) throw new NullPointerException("context");
+        super.processUpdates(context);
+        _broadcastForPhase(PhaseId.ANY_PHASE);
+        _broadcastForPhase(PhaseId.UPDATE_MODEL_VALUES);
+        if (context.getRenderResponse() || context.getResponseComplete())
+        {
+            clearEvents();
+        }
+    }
+
+    public void processApplication(FacesContext context)
+    {
+        if (context == null) throw new NullPointerException("context");
+        _broadcastForPhase(PhaseId.ANY_PHASE);
+        _broadcastForPhase(PhaseId.INVOKE_APPLICATION);
+        if (context.getRenderResponse() || context.getResponseComplete())
+        {
+            clearEvents();
+        }
+    }
+
+    public void encodeBegin(FacesContext context)
             throws java.io.IOException
     {
-        throw new UnsupportedOperationException(); //TODO
+        _uniqueIdCounter = 0;
+        clearEvents();
+        super.encodeBegin(context);
     }
 
-    public void processValidators(javax.faces.context.FacesContext context)
+    public String createUniqueId()
     {
-        throw new UnsupportedOperationException(); //TODO
-    }
-
-    public void processUpdates(javax.faces.context.FacesContext context)
-    {
-        throw new UnsupportedOperationException(); //TODO
-    }
-
-    public void processApplication(javax.faces.context.FacesContext context)
-    {
-        throw new UnsupportedOperationException(); //TODO
+        return UNIQUE_ID_PREFIX + _uniqueIdCounter++;
     }
 
     public Locale getLocale()
@@ -98,7 +179,7 @@ public class UIViewRoot
         }
         else if (locale instanceof String)
         {
-            return new Locale((String)locale);
+            return new Locale((String)locale); //TODO: what do they mean by create Locale from String?
         }
         else
         {

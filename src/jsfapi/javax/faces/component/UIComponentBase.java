@@ -172,7 +172,7 @@ public abstract class UIComponentBase
     public UIComponent findComponent(String expr)
     {
         if (expr == null) throw new NullPointerException("expr");
-        if (expr.length() == 0) throw new IllegalArgumentException("empty expr"); //TODO: ok?
+        if (expr.length() == 0) throw new IllegalArgumentException("empty expr"); //TODO: not specified!
 
         UIComponent findBase;
         if (expr.charAt(0) == NamingContainer.SEPARATOR_CHAR)

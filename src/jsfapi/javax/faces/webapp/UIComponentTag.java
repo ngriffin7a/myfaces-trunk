@@ -19,6 +19,7 @@
 package javax.faces.webapp;
 
 import javax.faces.FactoryFinder;
+import javax.faces.application.Application;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
@@ -30,6 +31,9 @@ import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
 import javax.servlet.jsp.tagext.Tag;
 import java.io.IOException;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
 
 /**
  * DOCUMENT ME!
@@ -39,18 +43,23 @@ import java.io.IOException;
 public abstract class UIComponentTag
         implements Tag
 {
-    protected PageContext pageContext;
+    private static final String FORMER_CHILD_IDS_SET_ATTR = UIComponentTag.class + ".FORMER_CHILD_IDS";
+    private static final String FORMER_FACET_NAMES_SET_ATTR = UIComponentTag.class + ".FORMER_FACET_NAMES";
 
-    private String _binding;
-    private String _id;
-    private String _rendered;
-    private UIComponent _componentInstance;
-    private boolean _created;
-    private UIComponentTag _parentUIComponentTag;
-    private Tag _parent;
-    private FacesContext _facesContext;
-    private String _facetName;
-    private Boolean _suppressed;
+    protected PageContext pageContext = null;
+    private String _binding = null;
+    private String _id = null;
+    private String _rendered = null;
+    private UIComponent _componentInstance = null;
+    private boolean _created = false;
+    private UIComponentTag _parentUIComponentTag = null;
+    private Tag _parent = null;
+    private FacesContext _facesContext = null;
+    private Boolean _suppressed = null;
+    private ResponseWriter _writer = null;
+    private Set _childrenAdded = null;
+    private Set _facetsAdded = null;
+
 
     public UIComponentTag()
     {
@@ -89,7 +98,7 @@ public abstract class UIComponentTag
         return _componentInstance;
     }
 
-    public boolean isCreated()
+    public boolean getCreated()
     {
         return _created;
     }
@@ -135,22 +144,146 @@ public abstract class UIComponentTag
     }
 
     public int doStartTag()
-            throws javax.servlet.jsp.JspException
+            throws JspException
     {
         setupResponseWriter();
-        
-        //TODO
+        FacesContext facesContext = getFacesContext();
+        UIComponent component = findComponent(facesContext);
+        UIComponentTag parentTag = getParentUIComponentTag();
+        if (parentTag != null)
+        {
+            UIComponent parent = parentTag.getComponentInstance();
+            if (parent == null) throw new NullPointerException("No component instance in parent tag");
+            parent.getChildren().add(component);    //TODO: javadoc says something about an addChild method!?
+        }
+        if (!isSuppressed() && !component.getRendersChildren())
+        {
+            try
+            {
+                encodeBegin();
+                _writer.flush();
+            }
+            catch (IOException e)
+            {
+                throw new JspException(e.getMessage(), e);
+            }
+        }
+        return getDoStartValue();
     }
 
     public int doEndTag()
-            throws javax.servlet.jsp.JspException
+            throws JspException
     {
-        //TODO
+        UIComponent component = getComponentInstance();
+        removeFormerChildren(component);
+        removeFormerFacets(component);
+
+        try
+        {
+            if (component.getRendersChildren())
+            {
+                encodeBegin();
+                encodeChildren();
+            }
+            encodeEnd();
+        }
+        catch (IOException e)
+        {
+            throw new JspException(e.getMessage(), e);
+        }
+
+        int retValue = getDoEndValue();
+        internalRelease();
+        return retValue;
+    }
+
+    private void removeFormerChildren(UIComponent component)
+    {
+        Set formerChildIdsSet = (Set)component.getAttributes().get(FORMER_CHILD_IDS_SET_ATTR);
+        if (formerChildIdsSet != null)
+        {
+            for (Iterator iterator = formerChildIdsSet.iterator(); iterator.hasNext();)
+            {
+                String childId = (String)iterator.next();
+                if (_childrenAdded == null || !_childrenAdded.contains(childId))
+                {
+                    UIComponent childToRemove = component.findComponent(childId);
+                    if (childToRemove != null)
+                    {
+                        component.getChildren().remove(childToRemove);
+                    }
+                }
+            }
+            if (_childrenAdded == null)
+            {
+                component.getAttributes().remove(FORMER_CHILD_IDS_SET_ATTR);
+            }
+            else
+            {
+                component.getAttributes().put(FORMER_CHILD_IDS_SET_ATTR, _childrenAdded);
+            }
+        }
+        else
+        {
+            if (_childrenAdded != null)
+            {
+                component.getAttributes().put(FORMER_CHILD_IDS_SET_ATTR, _childrenAdded);
+            }
+        }
+    }
+
+    private void removeFormerFacets(UIComponent component)
+    {
+        Set formerFacetNamesSet = (Set)component.getAttributes().get(FORMER_FACET_NAMES_SET_ATTR);
+        if (formerFacetNamesSet != null)
+        {
+            for (Iterator iterator = formerFacetNamesSet.iterator(); iterator.hasNext();)
+            {
+                String facetName = (String)iterator.next();
+                if (_facetsAdded == null || !_facetsAdded.contains(facetName))
+                {
+                    component.getFacets().remove(facetName);
+                }
+            }
+            if (_facetsAdded == null)
+            {
+                component.getAttributes().remove(FORMER_FACET_NAMES_SET_ATTR);
+            }
+            else
+            {
+                component.getAttributes().put(FORMER_FACET_NAMES_SET_ATTR, _facetsAdded);
+            }
+        }
+        else
+        {
+            if (_facetsAdded != null)
+            {
+                component.getAttributes().put(FORMER_FACET_NAMES_SET_ATTR, _facetsAdded);
+            }
+        }
+    }
+
+
+    private void internalRelease()
+    {
+        _binding = null;
+        _id = null;
+        _rendered = null;
+        _componentInstance = null;
+        _created = false;
+        _parentUIComponentTag = null;
+        _parent = null;
+        _facesContext = null;
+        _suppressed = null;
+        _writer = null;
+        _childrenAdded = null;
+        _facetsAdded = null;
     }
 
     public void release()
     {
-        //TODO
+        pageContext = null;
+        internalRelease();
     }
 
     protected void encodeBegin()
@@ -174,8 +307,107 @@ public abstract class UIComponentTag
     protected UIComponent findComponent(FacesContext context)
             throws JspException
     {
-        //TODO
+        if (_componentInstance != null) return _componentInstance;
+        UIComponentTag parentTag = getParentUIComponentTag();
+        if (parentTag == null)
+        {
+            //This is the root
+            return context.getViewRoot();
+        }
+
+        UIComponent parent = parentTag.getComponentInstance();
+        //TODO: what if parent == null?
+        if (parent == null) throw new IllegalStateException("parent is null?");
+
+        String facetName = getFacetName();
+        if (facetName != null)
+        {
+            //Facet
+            _componentInstance = parent.getFacet(facetName);
+            if (_componentInstance == null)
+            {
+                _componentInstance = createComponentInstance(context);
+                _componentInstance.setId(createUniqueId(context)); //TODO: spec says nothing about facet ids
+            }
+            setProperties(_componentInstance);
+            parent.getFacets().put(facetName, _componentInstance);
+            addFacetNameToParentTag(parentTag, facetName);
+            return _componentInstance;
+        }
+        else
+        {
+            //Child
+            String id = createUniqueId(context);
+            _componentInstance = parent.findComponent(id);
+            if (_componentInstance == null)
+            {
+                _componentInstance = createComponentInstance(context);
+                _componentInstance.setId(createUniqueId(context));
+            }
+            setProperties(_componentInstance);
+            parent.getChildren().add(_componentInstance);
+            addChildIdToParentTag(parentTag, id);
+            return _componentInstance;
+        }
     }
+
+
+    private String createUniqueId(FacesContext context)
+    {
+        String id = getId();
+        if (id != null)
+        {
+            return id;
+        }
+        else
+        {
+            return context.getViewRoot().createUniqueId();
+        }
+    }
+
+    private UIComponent createComponentInstance(FacesContext context)
+    {
+        String componentType = getComponentType();
+        if (componentType == null)
+        {
+            throw new NullPointerException("componentType");
+        }
+
+        if (_binding != null)
+        {
+            Application application = context.getApplication();
+            ValueBinding componentBinding = application.createValueBinding(_binding);
+            UIComponent component = application.createComponent(componentBinding,
+                                                                context,
+                                                                componentType);
+            component.setValueBinding("binding", componentBinding);
+            return component;
+        }
+        else
+        {
+            return context.getApplication().createComponent(componentType);
+        }
+    }
+
+    private void addChildIdToParentTag(UIComponentTag parentTag, String id)
+    {
+        if (parentTag._childrenAdded == null)
+        {
+            parentTag._childrenAdded = new HashSet();
+        }
+        parentTag._childrenAdded.add(id);
+    }
+
+    private void addFacetNameToParentTag(UIComponentTag parentTag, String facetName)
+    {
+        if (parentTag._facetsAdded == null)
+        {
+            parentTag._facetsAdded = new HashSet();
+        }
+        parentTag._facetsAdded.add(facetName);
+    }
+
+
 
 
     protected int getDoStartValue()
@@ -258,8 +490,8 @@ public abstract class UIComponentTag
     protected void setupResponseWriter()
     {
         FacesContext facesContext = getFacesContext();
-        ResponseWriter writer = facesContext.getResponseWriter();
-        if (writer == null)
+        _writer = facesContext.getResponseWriter();
+        if (_writer == null)
         {
             RenderKitFactory renderFactory = (RenderKitFactory)FactoryFinder.getFactory(FactoryFinder.RENDER_KIT_FACTORY);
             RenderKit renderKit = renderFactory.getRenderKit(facesContext,
@@ -267,10 +499,11 @@ public abstract class UIComponentTag
 
             ServletRequest request = (ServletRequest)facesContext.getExternalContext().getRequest();
 
-            writer = renderKit.createResponseWriter(pageContext.getOut(),
+            _writer = renderKit.createResponseWriter(pageContext.getOut(),
                                                     request.getContentType(),
                                                     request.getCharacterEncoding());
-            facesContext.setResponseWriter(writer);
+            facesContext.setResponseWriter(_writer);
         }
     }
+
 }

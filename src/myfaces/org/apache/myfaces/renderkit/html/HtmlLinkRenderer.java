@@ -243,6 +243,7 @@ public class HtmlLinkRenderer
         if (insideForm)
         {
             renderHiddenParam(writer, clientId);
+            //TODO: We must not render duplicate hidden params!
         }
         else
         {

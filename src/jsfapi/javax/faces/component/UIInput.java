@@ -18,15 +18,21 @@
  */
 package javax.faces.component;
 
+import javax.faces.FacesException;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
+import javax.faces.convert.Converter;
+import javax.faces.convert.ConverterException;
+import javax.faces.el.EvaluationException;
 import javax.faces.el.MethodBinding;
 import javax.faces.el.ValueBinding;
 import javax.faces.event.AbortProcessingException;
 import javax.faces.event.FacesEvent;
 import javax.faces.event.ValueChangeEvent;
 import javax.faces.event.ValueChangeListener;
+import javax.faces.render.Renderer;
 import javax.faces.validator.Validator;
+import javax.faces.validator.ValidatorException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -213,19 +219,152 @@ public class UIInput
         }
         catch (RuntimeException e)
         {
-            //TODO: create Message with CONVERSION_MESSAGE_ID
-            context.addMessage(getClientId(context),
-                               new FacesMessage(FacesMessage.SEVERITY_ERROR,
-                                                "Conversion error",
-                                                "Conversion error"));
+            _MessageUtils.addErrorMessage(context, this,CONVERSION_MESSAGE_ID);
             setValid(false);
         }
     }
 
     public void validate(FacesContext context)
     {
-        throw new UnsupportedOperationException(); //TODO
+        if (context == null) throw new NullPointerException("context");
+        Object submittedValue = getSubmittedValue();
+        if (submittedValue == null) return;
+
+        Object convertedValue = getConvertedValue(context, submittedValue);
+        if (!isValid()) return;
+
+        boolean empty = convertedValue == null ||
+                        (convertedValue instanceof String
+                         && ((String)convertedValue).length() == 0);
+        if (isRequired() && empty)
+        {
+            _MessageUtils.addErrorMessage(context, this, REQUIRED_MESSAGE_ID);
+            setValid(false);
+            return;
+        }
+
+        if (!empty)
+        {
+            Validator[] validators = getValidators();
+            for (int i = 0; i < validators.length; i++)
+            {
+                Validator validator = validators[i];
+                try
+                {
+                    validator.validate(context, this, convertedValue);
+                }
+                catch (ValidatorException e)
+                {
+                    setValid(false);
+                    FacesMessage facesMessage = e.getFacesMessage();
+                    if (facesMessage != null)
+                    {
+                        context.addMessage(getClientId(context), facesMessage);
+                    }
+                    else
+                    {
+                        //TODO: specification? add a general message?
+                    }
+                    //TODO: specification? should we abort validation immediately
+                }
+            }
+
+            MethodBinding validatorBinding = getValidator();
+            if (validatorBinding != null)
+            {
+                try
+                {
+                    validatorBinding.invoke(context, new Object[] {context, this, convertedValue});
+                }
+                catch (EvaluationException e)
+                {
+                    setValid(false);
+                    Throwable cause = e.getCause();
+                    if (cause instanceof ValidatorException)
+                    {
+                        FacesMessage facesMessage = ((ValidatorException)cause).getFacesMessage();
+                        if (facesMessage != null)
+                        {
+                            context.addMessage(getClientId(context), facesMessage);
+                        }
+                        else
+                        {
+                            //TODO: specification? add a general message?
+                        }
+                        //TODO: specification? should we abort validation immediately
+                    }
+                    else
+                    {
+                        throw e;
+                    }
+                }
+            }
+        }
+        if (!isValid()) return;
+
+        Object previousValue = getValue();
+        setValue(convertedValue);
+        setSubmittedValue(null);
+        if (compareValues(previousValue, convertedValue))
+        {
+            queueEvent(new ValueChangeEvent(this, previousValue, convertedValue));
+        }
     }
+
+    private Object getConvertedValue(FacesContext context, Object submittedValue)
+    {
+        Renderer renderer = getRenderer(context);
+        if (renderer != null)
+        {
+            return renderer.getConvertedValue(context, this, submittedValue);
+        }
+        else if (submittedValue instanceof String)
+        {
+            Converter converter = _findConverter(context);
+            if (converter != null)
+            {
+                try
+                {
+                    return converter.getAsObject(context, this, (String)submittedValue);
+                }
+                catch (ConverterException e)
+                {
+                    FacesMessage facesMessage = e.getFacesMessage();
+                    if (facesMessage != null)
+                    {
+                        context.addMessage(getClientId(context), facesMessage);
+                    }
+                    else
+                    {
+                        _MessageUtils.addErrorMessage(context, this, CONVERSION_MESSAGE_ID);
+                    }
+                    setValid(false);
+                }
+            }
+        }
+        return submittedValue;
+    }
+
+    private Converter _findConverter(FacesContext context)
+    {
+        Converter converter = getConverter();
+        if (converter != null) return converter;
+        ValueBinding vb = getValueBinding("value");
+        if (vb == null) return null;
+        Class type = vb.getType(context);
+        if (type == null) return null;
+        try
+        {
+            return context.getApplication().createConverter(type);
+        }
+        catch (FacesException e)
+        {
+            //TODO: Ok, to catch and ignore exception?
+            context.getExternalContext().log(e.getMessage());
+            return null;
+        }
+    }
+
 
     protected boolean compareValues(Object previous,
                                     Object value)
