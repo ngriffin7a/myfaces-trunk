@@ -361,7 +361,7 @@ public class HtmlResponseWriterImpl
     {
         return _startElementName != null &&
                (_startElementName.equalsIgnoreCase(HTML.SCRIPT_ELEM)
-               || _startElementName.equalsIgnoreCase(HTML.STYLE_ELEM)));
+               || _startElementName.equalsIgnoreCase(HTML.STYLE_ELEM));
     }
 
 
