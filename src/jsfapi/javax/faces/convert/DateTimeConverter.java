@@ -37,6 +37,15 @@ public class DateTimeConverter
 
     // FIELDS
     public static final String CONVERTER_ID = "javax.faces.DateTime";
+    private static final String TYPE_DATE = "date";
+    private static final String TYPE_TIME = "time";
+    private static final String TYPE_BOTH = "both";
+    private static final String STYLE_DEFAULT = "default";
+    private static final String STYLE_MEDIUM = "medium";
+    private static final String STYLE_SHORT = "short";
+    private static final String STYLE_LONG = "long";
+    private static final String STYLE_FULL = "full";
+    private static final TimeZone DEFAULT_TIME_ZONE = TimeZone.getTimeZone("GMT");
 
     private String _dateStyle;
     private Locale _locale;
@@ -62,12 +71,9 @@ public class DateTimeConverter
             value = value.trim();
             if (value.length() > 0)
             {
-                DateFormat format = getDateFormat(facesContext);
+                DateFormat format = getDateFormat();
                 format.setLenient(true);
-                if (_timeZone != null)
-                {
-                    format.setTimeZone(_timeZone);
-                }
+                format.setTimeZone(getTimeZone());
                 try
                 {
                     return format.parse(value);
@@ -97,11 +103,8 @@ public class DateTimeConverter
             return (String)value;
         }
 
-        DateFormat format = getDateFormat(facesContext);
-        if (_timeZone != null)
-        {
-            format.setTimeZone(_timeZone);
-        }
+        DateFormat format = getDateFormat();
+        format.setTimeZone(getTimeZone());
         try
         {
             return format.format(value);
@@ -112,33 +115,27 @@ public class DateTimeConverter
         }
     }
 
-    private DateFormat getDateFormat(FacesContext facesContext)
+    private DateFormat getDateFormat()
     {
-        Locale lokale = _locale != null ? _locale : facesContext.getViewRoot().getLocale();
-
-        if (_pattern == null && _type == null)
-        {
-            throw new ConverterException("Cannot get DateFormat, either type or pattern needed.");
-        }
-
+        String type = getType();
         DateFormat format = null;
         if (_pattern != null)
         {
-            format = new SimpleDateFormat(_pattern, lokale);
+            format = new SimpleDateFormat(_pattern, getLocale());
         }
-        else if (_type.equals("date"))
+        else if (type.equals(TYPE_DATE))
         {
-            format = DateFormat.getDateInstance(calcStyle(_dateStyle), lokale);
+            format = DateFormat.getDateInstance(calcStyle(getDateStyle()), getLocale());
         }
-        else if (_type.equals("time"))
+        else if (type.equals(TYPE_TIME))
         {
-            format = DateFormat.getTimeInstance(calcStyle(_timeStyle), lokale);
+            format = DateFormat.getTimeInstance(calcStyle(getTimeStyle()), getLocale());
         }
-        else if (_type.equals("both"))
+        else if (type.equals(TYPE_BOTH))
         {
-            format = DateFormat.getDateTimeInstance(calcStyle(_dateStyle),
-                                                    calcStyle(_timeStyle),
-                                                    lokale);
+            format = DateFormat.getDateTimeInstance(calcStyle(getDateStyle()),
+                                                    calcStyle(getTimeStyle()),
+                                                    getLocale());
         }
         else
         {
@@ -149,23 +146,23 @@ public class DateTimeConverter
 
     private int calcStyle(String name)
     {
-        if (name.equals("default"))
+        if (name.equals(STYLE_DEFAULT))
         {
             return DateFormat.DEFAULT;
         }
-        if (name.equals("medium"))
+        if (name.equals(STYLE_MEDIUM))
         {
             return DateFormat.MEDIUM;
         }
-        if (name.equals("short"))
+        if (name.equals(STYLE_SHORT))
         {
             return DateFormat.SHORT;
         }
-        if (name.equals("long"))
+        if (name.equals(STYLE_LONG))
         {
             return DateFormat.LONG;
         }
-        if (name.equals("full"))
+        if (name.equals(STYLE_FULL))
         {
             return DateFormat.FULL;
         }
@@ -200,17 +197,20 @@ public class DateTimeConverter
     // GETTER & SETTER
     public String getDateStyle()
     {
-        return _dateStyle;
+        return _dateStyle != null ? _dateStyle : STYLE_DEFAULT;
     }
 
     public void setDateStyle(String dateStyle)
     {
+        //TODO: validate timeStyle
         _dateStyle = dateStyle;
     }
 
     public Locale getLocale()
     {
-        return _locale;
+        if (_locale != null) return _locale;
+        FacesContext context = FacesContext.getCurrentInstance();
+        return context.getViewRoot().getLocale();
     }
 
     public void setLocale(Locale locale)
@@ -230,17 +230,18 @@ public class DateTimeConverter
 
     public String getTimeStyle()
     {
-        return _timeStyle;
+        return _timeStyle != null ? _timeStyle : STYLE_DEFAULT;
     }
 
     public void setTimeStyle(String timeStyle)
     {
+        //TODO: validate timeStyle
         _timeStyle = timeStyle;
     }
 
     public TimeZone getTimeZone()
     {
-        return _timeZone;
+        return _timeZone != null ? _timeZone : DEFAULT_TIME_ZONE;
     }
 
     public void setTimeZone(TimeZone timeZone)
@@ -260,11 +261,12 @@ public class DateTimeConverter
 
     public String getType()
     {
-        return _type;
+        return _type != null ? _type : TYPE_DATE;
     }
 
     public void setType(String type)
     {
+        //TODO: validate type
         _type = type;
     }
 }

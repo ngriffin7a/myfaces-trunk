@@ -2,10 +2,14 @@ MyFaces Release Notes
 =====================
 
 ----------------------------------------------------------------------
-Changes in Release 1.0 alpha
-* MyFaces has it's own JSF-API Implementation now. Sun's jsf-api.jar will no longer be needed.
+Changes in Release 1.0.0 alpha
+* MyFaces has it's own JSF-API Implementation now!
+  (Sun's jsf-api.jar will no longer be needed)
+* Sun's JSF-RI samples (cardemo, guessNumber) now run with MyFaces!
+  (see Documentation on http://myfaces.sourceforge.net)
+* all core tags implemented now
+* new Calendar component (see examples webapp)  
 * Bugfixes
-* Sun's JSF-RI cardemo sample can now be run with MyFaces (see Documentation on http://myfaces.sourceforge.net)
 
 ----------------------------------------------------------------------
 Changes in Release 0.9.1

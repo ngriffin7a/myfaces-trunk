@@ -92,12 +92,6 @@ managed beans used:
                    <h:outputText value="#{country.isoCode}" />
 
                 </x:dataTable>
-                <x:dataTableScroller for="data" >
-                    <f:facet name="first"><h:outputText value="first" /></f:facet>
-                    <f:facet name="previous"><h:outputText value="previous" /></f:facet>
-                    <f:facet name="next"><h:outputText value="next" /></f:facet>
-                    <f:facet name="last"><h:outputText value="last" /></f:facet>
-                </x:dataTableScroller>
                 <f:verbatim><br></f:verbatim>
 
             </h:panelGroup>

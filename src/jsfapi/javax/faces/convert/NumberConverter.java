@@ -55,14 +55,15 @@ public class NumberConverter
     private int _minIntegerDigits;
     private String _pattern;
     private String _type;
-    private boolean _groupingUsed;
-    private boolean _integerOnly;
+    private boolean _groupingUsed = true;
+    private boolean _integerOnly = false;
     private boolean _transient;
 
     private boolean _maxFractionDigitsSet;
     private boolean _maxIntegerDigitsSet;
     private boolean _minFractionDigitsSet;
     private boolean _minIntegerDigitsSet;
+
 
     // CONSTRUCTORS
     public NumberConverter()
@@ -248,7 +249,9 @@ public class NumberConverter
     // GETTER & SETTER
     public String getCurrencyCode()
     {
-        return _currencyCode;
+        return _currencyCode != null ?
+               _currencyCode :
+               getDecimalFormatSymbols().getInternationalCurrencySymbol();
     }
 
     public void setCurrencyCode(String currencyCode)
@@ -258,7 +261,9 @@ public class NumberConverter
 
     public String getCurrencySymbol()
     {
-        return _currencySymbol;
+        return _currencySymbol != null ?
+               _currencySymbol :
+               getDecimalFormatSymbols().getCurrencySymbol();
     }
 
     public void setCurrencySymbol(String currencySymbol)
@@ -288,7 +293,9 @@ public class NumberConverter
 
     public Locale getLocale()
     {
-        return _locale;
+        if (_locale != null) return _locale;
+        FacesContext context = FacesContext.getCurrentInstance();
+        return context.getViewRoot().getLocale();
     }
 
     public void setLocale(Locale locale)
@@ -367,6 +374,7 @@ public class NumberConverter
 
     public void setType(String type)
     {
+        //TODO: validate type
         _type = type;
     }
 
@@ -420,5 +428,11 @@ public class NumberConverter
             }
         }
         return java14 == 2;
+    }
+
+
+    public DecimalFormatSymbols getDecimalFormatSymbols()
+    {
+        return new DecimalFormatSymbols(getLocale());
     }
 }

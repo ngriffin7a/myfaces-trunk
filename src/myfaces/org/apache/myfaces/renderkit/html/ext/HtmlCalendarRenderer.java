@@ -1,5 +1,6 @@
 package net.sourceforge.myfaces.renderkit.html.ext;
 
+import net.sourceforge.myfaces.component.ext.HtmlInputCalendar;
 import net.sourceforge.myfaces.renderkit.JSFAttr;
 import net.sourceforge.myfaces.renderkit.RendererUtils;
 import net.sourceforge.myfaces.renderkit.html.HTML;
@@ -7,7 +8,6 @@ import net.sourceforge.myfaces.renderkit.html.HtmlLinkRenderer;
 import net.sourceforge.myfaces.renderkit.html.HtmlRenderer;
 import net.sourceforge.myfaces.renderkit.html.HtmlRendererUtils;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLUtil;
-import net.sourceforge.myfaces.component.ext.HtmlInputCalendar;
 
 import javax.faces.component.UICommand;
 import javax.faces.component.UIComponent;
@@ -259,6 +259,7 @@ public class HtmlCalendarRenderer
             throws IOException
     {
         UICommand command = new UICommand();
+        command.setId(facesContext.getViewRoot().createUniqueId());
         command.setValue(content);
 
         UIParameter param = new UIParameter();

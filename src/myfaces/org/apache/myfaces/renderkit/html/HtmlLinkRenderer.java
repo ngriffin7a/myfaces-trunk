@@ -51,8 +51,6 @@ public class HtmlLinkRenderer
         return true;
     }
 
-    private static final String URL_PARAM_VALUE = "1";
-
     public void decode(FacesContext facesContext, UIComponent component)
     {
         RendererUtils.checkParamValidity(facesContext, component, null);
@@ -61,7 +59,7 @@ public class HtmlLinkRenderer
         {
             String clientId = component.getClientId(facesContext);
             String reqValue = (String)facesContext.getExternalContext().getRequestParameterMap().get(clientId);
-            if (reqValue != null && reqValue.equals(URL_PARAM_VALUE))
+            if (reqValue != null && reqValue.equals(clientId))
             {
                 component.queueEvent(new ActionEvent(component));
             }
@@ -196,7 +194,7 @@ public class HtmlLinkRenderer
         String clientId = command.getClientId(facesContext);
         onClick.append(jsForm);
         onClick.append(".elements['").append(clientId).append("']");
-        onClick.append(".value='").append(URL_PARAM_VALUE).append("';");
+        onClick.append(".value='").append(clientId).append("';");
         if (insideForm)
         {
             renderHiddenParam(writer, clientId);
@@ -269,7 +267,7 @@ public class HtmlLinkRenderer
         }
         hrefBuf.append(clientId);
         hrefBuf.append('=');
-        hrefBuf.append(URL_PARAM_VALUE);
+        hrefBuf.append(clientId);
 
         if (command.getChildCount() > 0)
         {
