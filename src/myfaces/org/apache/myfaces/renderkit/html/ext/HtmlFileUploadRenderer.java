@@ -19,11 +19,11 @@
 package net.sourceforge.myfaces.renderkit.html.ext;
 
 import com.oreilly.servlet.MultipartWrapper;
-import net.sourceforge.myfaces.component.ext.UIFileUpload;
-import net.sourceforge.myfaces.component.ext.UploadedFile;
+import net.sourceforge.myfaces.component.ext.HtmlInputFileUpload;
+import net.sourceforge.myfaces.model.UploadedFile;
+import net.sourceforge.myfaces.renderkit.RendererUtils;
 import net.sourceforge.myfaces.renderkit.html.HTML;
 import net.sourceforge.myfaces.renderkit.html.HtmlRenderer;
-import net.sourceforge.myfaces.renderkit.html.util.HTMLEncoder;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLUtil;
 
 import javax.faces.component.UIComponent;
@@ -35,35 +35,42 @@ import java.io.File;
 import java.io.IOException;
 
 /**
- * TODO: Adopt to new spec HtmlFileUploadRenderer
- *
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public class FileUploadRenderer
+public class HtmlFileUploadRenderer
     extends HtmlRenderer
 {
-    public static final String TYPE = "FileUpload";
-
-    public String getRendererType()
+    public void encodeEnd(FacesContext facesContext, UIComponent uiComponent)
+        throws IOException
     {
-        return TYPE;
+        RendererUtils.checkParamValidity(facesContext, uiComponent, HtmlInputFileUpload.class);
+
+        ResponseWriter writer = facesContext.getResponseWriter();
+        writer.startElement(HTML.INPUT_ELEM, uiComponent);
+        writer.writeAttribute(HTML.TYPE_ATTR, "file", null);
+        String clientId = uiComponent.getClientId(facesContext);
+        writer.writeAttribute(HTML.ID_ATTR, clientId, null);
+        writer.writeAttribute(HTML.NAME_ATTR, clientId, null);
+        UploadedFile value = (UploadedFile)((HtmlInputFileUpload)uiComponent).getValue();
+        if (value != null)
+        {
+            writer.writeAttribute(HTML.VALUE_ATTR, value.getFilePath(), null);
+        }
+        HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML.INPUT_FILE_PASSTHROUGH_ATTRIBUTES);
+        writer.endElement(HTML.INPUT_ELEM);
     }
 
 
-
-    public void decode(FacesContext facescontext, UIComponent uiComponent)
+    public void decode(FacesContext facesContext, UIComponent uiComponent)
     {
-        if (!(uiComponent instanceof UIFileUpload))
-        {
-            throw new IllegalArgumentException("Only UIFileUpload type supported.");
-        }
+        RendererUtils.checkParamValidity(facesContext, uiComponent, HtmlInputFileUpload.class);
 
         //MultipartWrapper might have been wrapped again by one or more additional
         //Filters. We try to find the MultipartWrapper, but if a filter has wrapped
         //the ServletRequest with a class other than HttpServletRequestWrapper
         //this will fail.
-        ServletRequest multipartRequest = (ServletRequest)facescontext.getExternalContext().getRequest();
+        ServletRequest multipartRequest = (ServletRequest)facesContext.getExternalContext().getRequest();
         while (multipartRequest != null &&
                !(multipartRequest instanceof MultipartWrapper))
         {
@@ -81,53 +88,18 @@ public class FileUploadRenderer
         {
             MultipartWrapper mpReq = (MultipartWrapper)multipartRequest;
 
-            String paramName = uiComponent.getClientId(facescontext);
+            String paramName = uiComponent.getClientId(facesContext);
             File file = mpReq.getFile(paramName);
             if (file != null)
             {
                 UploadedFile upFile = new UploadedFile(mpReq.getFilesystemName(paramName),
                                                        mpReq.getContentType(paramName),
                                                        file);
-                ((UIFileUpload)uiComponent).setValue(upFile);
-                //FIXME
-                //uiComponent.setValid(true);
+                ((HtmlInputFileUpload)uiComponent).setValue(upFile);
+                ((HtmlInputFileUpload)uiComponent).setValid(true);
             }
         }
     }
 
-    public void encodeEnd(FacesContext facesContext, UIComponent uiComponent)
-        throws IOException
-    {
-        if (!(uiComponent instanceof UIFileUpload))
-        {
-            throw new IllegalArgumentException("Only UIFileUpload type supported.");
-        }
-
-        ResponseWriter writer = facesContext.getResponseWriter();
-        writer.write("<input type=\"file\"");
-        String clientId = uiComponent.getClientId(facesContext);
-        writer.write(" name=\"");
-        writer.write(clientId);
-        writer.write("\"");
-        writer.write(" id=\"");
-        writer.write(clientId);
-        writer.write("\"");
-        //FIXME
-        //UploadedFile value = (UploadedFile)((UIFileUpload)uiComponent).currentValue(facesContext);
-        UploadedFile value = null;
-        if (value != null)
-        {
-            writer.write(" value=\"");
-            writer.write(HTMLEncoder.encode(value.getFilePath(), false, false));
-            writer.write("\"");
-        }
-
-        HTMLUtil.renderStyleClass(writer, uiComponent);
-        HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML.INPUT_PASSTHROUGH_ATTRIBUTES);
-        HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML.INPUT_FILE_UPLOAD_ATTRIBUTES);
-        HTMLUtil.renderDisabledOnUserRole(facesContext, uiComponent);
-
-        writer.write(">");
-    }
 
 }

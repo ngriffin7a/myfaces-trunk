@@ -190,6 +190,21 @@
   <!-- (in alphabetical order) -->
 
   <component>
+    <component-type>CommandNavigation</component-type>
+    <component-class>net.sourceforge.myfaces.component.ext.HtmlCommandNavigation</component-class>
+  </component>
+
+  <component>
+    <component-type>InputFileUpload</component-type>
+    <component-class>net.sourceforge.myfaces.component.ext.HtmlInputFileUpload</component-class>
+  </component>
+
+  <component>
+    <component-type>OutputNavigation</component-type>
+    <component-class>net.sourceforge.myfaces.component.ext.HtmlOutputNavigation</component-class>
+  </component>
+
+  <component>
     <component-type>PanelLayout</component-type>
     <component-class>net.sourceforge.myfaces.component.ext.HtmlPanelLayout</component-class>
   </component>
@@ -200,36 +215,11 @@
   </component>
 
   <component>
-    <component-type>CommandNavigation</component-type>
-    <component-class>net.sourceforge.myfaces.component.ext.HtmlCommandNavigation</component-class>
-  </component>
-
-  <component>
-    <component-type>OutputNavigation</component-type>
-    <component-class>net.sourceforge.myfaces.component.ext.HtmlOutputNavigation</component-class>
-  </component>
-
-  <component>
     <component-type>SaveState</component-type>
     <component-class>net.sourceforge.myfaces.component.ext.UISaveState</component-class>
   </component>
 
     <!--
-    <component>
-      <component-type>FileUpload</component-type>
-      <component-class>net.sourceforge.myfaces.component.ext.UIFileUpload</component-class>
-    </component>
-
-    <component>
-      <component-type>Navigation</component-type>
-      <component-class>net.sourceforge.myfaces.component.ext.UINavigation</component-class>
-    </component>
-
-    <component>
-      <component-type>NavigationItem</component-type>
-      <component-class>net.sourceforge.myfaces.component.ext.UINavigationItem</component-class>
-    </component>
-
     <component>
       <component-type>SortColumn</component-type>
       <component-class>net.sourceforge.myfaces.component.ext.UISortColumn</component-class>
@@ -243,11 +233,6 @@
     <component>
       <component-type>Tab</component-type>
       <component-class>net.sourceforge.myfaces.component.ext.UITab</component-class>
-    </component>
-
-    <component>
-      <component-type>SelectOneRadio</component-type>
-      <component-class>net.sourceforge.myfaces.component.ext.UISelectOneRadio</component-class>
     </component>
     -->
 
@@ -358,7 +343,7 @@
     </converter>
 
     <converter>
-        <converter-for-class>net.sourceforge.myfaces.component.ext.UploadedFile</converter-for-class>
+        <converter-for-class>net.sourceforge.myfaces.model.UploadedFile</converter-for-class>
         <converter-class>net.sourceforge.myfaces.convert.impl.UploadedFileConverter</converter-class>
     </converter>
 
@@ -525,15 +510,13 @@
             <supported-component-type><component-type>PanelNavigation</component-type></supported-component-type>
         </renderer>
 
-    <!--
         <renderer>
             <renderer-type>FileUpload</renderer-type>
-            <renderer-class>net.sourceforge.myfaces.renderkit.html.ext.FileUploadRenderer</renderer-class>
-            <supported-component-type>
-                <component-type>FileUpload</component-type>
-            </supported-component-type>
+            <renderer-class>net.sourceforge.myfaces.renderkit.html.ext.HtmlFileUploadRenderer</renderer-class>
+            <supported-component-type><component-type>InputFileUpload</component-type></supported-component-type>
         </renderer>
 
+    <!--
         <renderer>
             <renderer-type>SortColumn</renderer-type>
             <renderer-class>net.sourceforge.myfaces.renderkit.html.ext.SortColumnRenderer</renderer-class>
@@ -554,11 +537,6 @@
         <renderer>
             <renderer-type>Tab</renderer-type>
             <renderer-class>net.sourceforge.myfaces.renderkit.html.ext.TabRenderer</renderer-class>
-        </renderer>
-
-        <renderer>
-            <renderer-type>State</renderer-type>
-            <renderer-class>net.sourceforge.myfaces.renderkit.html.state.StateRenderer</renderer-class>
         </renderer>
     -->
 

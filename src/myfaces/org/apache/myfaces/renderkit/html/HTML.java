@@ -323,6 +323,10 @@ public class HTML
         ACCEPT_ATTR,
         MAXLENGTH_ATTR
     };
+    public static final String[] INPUT_FILE_PASSTHROUGH_ATTRIBUTES =
+        (String[]) ArrayUtils.concat(
+            INPUT_FILE_UPLOAD_ATTRIBUTES,
+            INPUT_PASSTHROUGH_ATTRIBUTES);
 
 
 

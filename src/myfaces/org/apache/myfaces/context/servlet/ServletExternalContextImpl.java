@@ -53,6 +53,7 @@ public class ServletExternalContextImpl
     private Map _requestCookieMap;
     private Map _initParameterMap;
     private boolean _isHttpServletRequest;
+    private String _requestServletPath;
 
     public ServletExternalContextImpl(ServletContext servletContext,
                                       ServletRequest servletRequest,
@@ -72,6 +73,11 @@ public class ServletExternalContextImpl
         _initParameterMap = null;
         _isHttpServletRequest = (servletRequest != null &&
                                  servletRequest instanceof HttpServletRequest);
+        if (_isHttpServletRequest)
+        {
+            //HACK: MultipartWrapper scrambles the servletPath for some reason !?
+            _requestServletPath = ((HttpServletRequest)servletRequest).getServletPath();
+        }
     }
 
     public void release()
@@ -328,7 +334,9 @@ public class ServletExternalContextImpl
         {
             throw new IllegalArgumentException("Only HttpServletRequest supported");
         }
-        return ((HttpServletRequest)_servletRequest).getServletPath();
+        //return ((HttpServletRequest)_servletRequest).getServletPath();
+        //HACK: see constructor
+        return _requestServletPath;
     }
 
     public String getAuthType()

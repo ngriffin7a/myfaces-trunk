@@ -19,6 +19,7 @@
 package net.sourceforge.myfaces.component.ext;
 
 import net.sourceforge.myfaces.component.MyFacesUIInput;
+import net.sourceforge.myfaces.model.UploadedFile;
 
 /**
  * DOCUMENT ME!

@@ -16,12 +16,11 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package net.sourceforge.myfaces.component.ext;
+package net.sourceforge.myfaces.model;
 
 import java.io.File;
 
 /**
- * TODO: move to model package
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */

@@ -80,6 +80,11 @@ public class HtmlLayoutRenderer
         {
             log.error("Unknown panel layout '" + layout + "'!");
         }
+
+        if (panelLayout.getChildCount() > 0)
+        {
+            log.error("PanelLayout must not have children, only facets allowed!");
+        }
     }
 
     protected void renderClassic(FacesContext facesContext, HtmlPanelLayout panelLayout)

@@ -46,21 +46,25 @@
 
         <f:facet name="body">
             <h:panel_group id="body">
-                <h:output_errors id="messageList" />
 
-                <h4>File upload</h4>
-                <table border="1"><tr><td>
-                    <h:form id="form1" formName="form1" enctype="multipart/form-data" >
-                        Gimme an image:
-                        <x:file_upload id="fileupload"
-                                       accept="image/*"
-                                       valueRef="fileUploadForm.upFile"
-                                       inputClass="fileUploadInput"
-                                       size="100" />
-                        <h:command_button label="load it up" actionRef="fileUploadForm.fileUploadAction" />
+                <h:messages id="messageList" showSummary="true" showDetail="true" />
+
+                <f:verbatim>
+                    <h4>File upload</h4>
+                    <table border="1"><tr><td>
+                </f:verbatim>
+
+                    <h:form id="form1" name="form1" enctype="multipart/form-data" >
+                        <h:output_text value="Gimme an image:"/>
+                        <x:input_fileupload id="fileupload"
+                                            accept="image/*"
+                                            value="#{fileUploadForm.upFile}"
+                                            styleClass="fileUploadInput" />
+                        <h:command_button value="load it up" action="#{fileUploadForm.upload}" />
                     </h:form>
-                </td></tr></table>
 
+                <f:verbatim>
+                    </td></tr></table>
                 <%
                 if (application.getAttribute("fileupload_file") != null)
                 {
@@ -69,6 +73,7 @@
                     <img src="fileupload_showimg.jsp?dummy=<%=Math.random()%>"><%
                 }
                 %>
+                </f:verbatim>
 
             </h:panel_group>
         </f:facet>

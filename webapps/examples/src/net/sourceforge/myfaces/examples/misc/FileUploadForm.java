@@ -18,7 +18,10 @@
  */
 package net.sourceforge.myfaces.examples.misc;
 
-import net.sourceforge.myfaces.component.ext.UploadedFile;
+import net.sourceforge.myfaces.model.UploadedFile;
+
+import javax.faces.context.FacesContext;
+import javax.faces.el.VariableResolver;
 
 /**
  * DOCUMENT ME!
@@ -39,31 +42,21 @@ public class FileUploadForm
         _upFile = upFile;
     }
 
-    /*
-    FIXME
-    public Action getFileUploadAction()
+    public String upload()
     {
-        return new Action() {
-            public String invoke()
-            {
-                FacesContext facesContext = FacesContext.getCurrentInstance();
-                ServletContext servletContext = (ServletContext)facesContext.getExternalContext().getContext();
+        FacesContext facesContext = FacesContext.getCurrentInstance();
 
-                ApplicationFactory af = (ApplicationFactory)FactoryFinder.getFactory(FactoryFinder.APPLICATION_FACTORY);
-                ValueBinding vb = af.getApplication().getValueBinding("fileUploadForm");
-                FileUploadForm form = (FileUploadForm)vb.getValue(facesContext);
+        VariableResolver vr = facesContext.getApplication().getVariableResolver();
+        FileUploadForm form = (FileUploadForm)vr.resolveVariable(facesContext, "fileUploadForm");
 
-                if (form != null)
-                {
-                    UploadedFile upFile = form.getUpFile();
-                    servletContext.setAttribute("fileupload_file", upFile.getFile());
-                    servletContext.setAttribute("fileupload_type", upFile.getContentType());
-                }
+        if (form != null)
+        {
+            UploadedFile upFile = form.getUpFile();
+            facesContext.getExternalContext().getApplicationMap().put("fileupload_file", upFile.getFile());
+            facesContext.getExternalContext().getApplicationMap().put("fileupload_type", upFile.getContentType());
+        }
 
-                return "ok";
-            }
-        };
+        return "ok";
     }
-    */
 
 }

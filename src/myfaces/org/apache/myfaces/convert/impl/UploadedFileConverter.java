@@ -18,7 +18,7 @@
  */
 package net.sourceforge.myfaces.convert.impl;
 
-import net.sourceforge.myfaces.component.ext.UploadedFile;
+import net.sourceforge.myfaces.model.UploadedFile;
 
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
