@@ -48,6 +48,11 @@ public class NavigationHandlerImpl
                                  String actionRef,
                                  String outcome)
     {
+        if (outcome == null)
+        {
+            throw new NullPointerException("Parameter outcome must not be null");
+        }
+
         String treeId = facesContext.getTree().getTreeId();
         Map casesMap = getNavigationCases(facesContext);
 
