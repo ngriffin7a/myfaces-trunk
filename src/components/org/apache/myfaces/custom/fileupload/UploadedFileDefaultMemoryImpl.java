@@ -26,6 +26,9 @@ import java.io.InputStream;
  * @author Sylvain Vieujot (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.4  2004/09/11 02:48:23  svieujot
+ * Remove empty constructor
+ *
  * Revision 1.3  2004/09/03 12:43:57  manolito
  * File item transient in file based UploadedFile and no more empty constructors
  *
@@ -41,14 +44,6 @@ public class UploadedFileDefaultMemoryImpl extends UploadedFileDefaultImplBase
 {
 
     private byte[] bytes;
-
-
-    /*
-    TODO/manolito: Do we need an empty constructor?!
-    public UploadedFileDefaultMemoryImpl()
-    {
-    }
-    */
 
 
     public UploadedFileDefaultMemoryImpl(FileItem fileItem) throws IOException
