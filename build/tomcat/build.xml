@@ -2,10 +2,11 @@
 <project name="myfaces-tomcat" default="list">
 
     <!-- Constants -->
-    <property name="examples.web" location="${basedir}/web"/>
+    <property name="project.dir" location="${basedir}/../.."/>
+    <property name="examples.web" location="${project.dir}/webapps/examples/web"/>
 
     <!-- allow some of the properties to be overridden -->
-    <property file="build-tomcat.properties"/>
+    <property file="build.properties"/>
 
 
     <target name="-prepare">

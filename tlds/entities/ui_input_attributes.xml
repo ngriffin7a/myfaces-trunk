@@ -27,8 +27,6 @@
             <type>java.lang.String</type>
             <description>Converter to be used.</description>
         </attribute>
-        <!-- FIXME: valueChangeListener is a tag in RI but not here so far.
-             should it be?-->
         <attribute>
             <name>valueChangeListener</name>
             <required>false</required>

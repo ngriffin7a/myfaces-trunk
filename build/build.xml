@@ -4,7 +4,7 @@
     <property environment="env"/>
 
     <!-- Constants -->
-    <property name="project.dir" location="${basedir}"/>
+    <property name="project.dir" location="${basedir}/.."/>
     <property name="myfaces.src" location="${project.dir}/src/myfaces"/>
     <property name="tlds.dir" location="${project.dir}/tlds"/>
     <property name="doc.dir" location="${project.dir}/doc"/>
@@ -172,7 +172,7 @@
             <fileset dir="${temp.dir}/myfaces-jar"/>  <!-- in case of interrupted builds -->
             <fileset dir="${resolved-tlds.dir}"/>     <!-- in case of interrupted builds -->
         </delete>
-        <ant dir="webapps/examples"
+        <ant dir="${build.dir}/examples-webapp"
             antfile="build.xml"
             inheritall="false"
             target="clean"/>

@@ -5,17 +5,17 @@
 
     <!-- Constants -->
     <property name="project.dir" location="${basedir}/../.."/>
-    <property name="examples.src" location="${basedir}/src"/>
-    <property name="examples.web" location="${basedir}/web"/>
-    <property name="examples.doc" location="${basedir}/doc"/>
+    <property name="examples.dir" location="${project.dir}/webapps/examples"/>
+    <property name="examples.src" location="${examples.dir}/src"/>
+    <property name="examples.web" location="${examples.dir}/web"/>
+    <property name="examples.doc" location="${examples.dir}/doc"/>
     <property name="web-inf.classes.dir" location="${examples.web}/WEB-INF/classes"/>
     <property name="web-inf.lib.dir" location="${examples.web}/WEB-INF/lib"/>
     <property name="myfaces.doc" location="${project.dir}/doc"/>
 
     <!-- Properties -->
-    <property file="../../build.properties"/>
-    <property file="../../manifest.properties"/>
-    <property file="build.properties"/>
+    <property file="../build.properties"/>
+    <property file="../manifest.properties"/>
 
     <!-- Temporary dir. May be overridden in build.properties -->
     <property name="temp.dir" value="${env.TEMP}"/>
@@ -90,7 +90,7 @@
             <tarfileset dir="${examples.web}"
                         excludes="WEB-INF/lib/jsf-api.jar"
                         prefix="myfaces-${manifest.impl.version}/webapps/examples/web"/>
-            <tarfileset dir="${basedir}"
+            <tarfileset dir="${examples.dir}"
                         includes="*"
                         excludes="*.properties,.cvsignore"
                         prefix="myfaces-${manifest.impl.version}/webapps/examples"/>

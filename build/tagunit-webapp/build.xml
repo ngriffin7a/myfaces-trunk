@@ -11,7 +11,7 @@
 
 
     <!-- Properties -->
-    <property file="../../build.properties"/>
+    <property file="../build.properties"/>
 
     <!-- Temporary dir. May be overridden in build.properties -->
     <property name="temp.dir" value="${env.TEMP}"/>
