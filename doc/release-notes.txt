@@ -2,6 +2,10 @@ MyFaces Release Notes
 =====================
 
 ----------------------------------------------------------------------
+Changes in Release 1.0.9 beta
+* upgrade the components use the ExtensionsFilter
+  this means you don't need to include the myfaces javascripts and style sheets in your app anymore.
+----------------------------------------------------------------------
 Changes in Release 1.0.8 beta
 * move to Apache Incubator (root package is now "org.apache.myfaces")
 * providing a tld for MyFaces custom components, that still contains
@@ -25,8 +29,6 @@ Changes in Release 1.0.8 beta
 * add a validator for ISBN codes (<x:validateISBN/>)
 * new tree table feature contributed by David Le Strat (MYFACES-8)
 * new ExtensionsFilter, replacing the MultipartFilter, and allowing embedded resources in the jar
-* upgrade the components use the ExtensionsFilter
-  this means you don't need to include the myfaces javascripts and style sheets in your app anymore.
 * new x:popup component
 * popup component now uses embeded resources
 * calendar component now uses embeded resources
