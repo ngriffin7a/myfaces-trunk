@@ -1,4 +1,4 @@
-/*
+/**
  * MyFaces - the free JSF implementation
  * Copyright (C) 2003, 2004  The MyFaces Team (http://myfaces.sourceforge.net)
  *
@@ -26,6 +26,11 @@ import javax.faces.el.ValueBinding;
  * @author Manfred Geiler (latest modification by $Author$)
  * @author Anton Koinov
  * @version $Revision$ $Date$
+ * 
+ * $Log$
+ * Revision 1.16  2004/03/30 07:38:11  dave0000
+ * implement mixed string-reference expressions
+ *
  */
 public class ValueBindingTest extends ELBaseTest
 {
@@ -356,6 +361,40 @@ public class ValueBindingTest extends ELBaseTest
             //System.out.println(e.getMessage());
             // we expect this
         }
+    }
+    
+    public void testCompositeExpressions()
+    {
+        ValueBinding vb;
+        Object       r;
+
+        vb     = _application.createValueBinding("This is one #{testmap[\"o\"]['obj']}");
+        r      = vb.getValue(_facesContext);
+        assertEquals("This is one OBJECT", r);
+
+        vb     = _application.createValueBinding("#{ testmap [ \"o\" ] [ 'obj' ] } is the One.");
+        r      = vb.getValue(_facesContext);
+        assertEquals("OBJECT is the One.", r);
+
+        vb     = _application.createValueBinding("Is it really #{testmap.true_}?");
+        r      = vb.getValue(_facesContext);
+        assertEquals("Is it really TRUE_?", r);
+
+        vb     = _application.createValueBinding("#{testmap . true_} or #{testmap.false_}, that's the question!");
+        r      = vb.getValue(_facesContext);
+        assertEquals("TRUE_ or FALSE_, that's the question!", r);
+
+        vb     = _application.createValueBinding("What? #{testmap . true_} or #{testmap.false_}, that's the question!");
+        r      = vb.getValue(_facesContext);
+        assertEquals("What? TRUE_ or FALSE_, that's the question!", r);
+
+        vb     = _application.createValueBinding("What? ${ #{testmap . true_} or #{testmap.false_}, that's the question! }");
+        r      = vb.getValue(_facesContext);
+        assertEquals("What? ${ TRUE_ or FALSE_, that's the question! }", r);
+
+        vb     = _application.createValueBinding("#{ '#{' } What? ${ #{true ? '${' : \"#{\\\\\"} #{testmap . true_} or #{testmap.false_}, that's the question! }");
+        r      = vb.getValue(_facesContext);
+        assertEquals("#{ What? ${ ${ TRUE_ or FALSE_, that's the question! }", r);
     }
 
     public void testIsReadOnly() throws Exception

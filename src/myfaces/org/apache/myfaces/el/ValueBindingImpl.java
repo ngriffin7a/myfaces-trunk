@@ -1,4 +1,4 @@
-/*
+/**
  * MyFaces - the free JSF implementation
  * Copyright (C) 2003, 2004  The MyFaces Team (http://myfaces.sourceforge.net)
  *
@@ -19,6 +19,8 @@
 package net.sourceforge.myfaces.el;
 
 import net.sourceforge.myfaces.util.BiLevelCacheMap;
+import net.sourceforge.myfaces.util.StringUtils;
+
 import org.apache.commons.el.*;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -44,6 +46,11 @@ import java.util.Map;
  * @author Manfred Geiler (latest modification by $Author$)
  * @author Anton Koinov
  * @version $Revision$ $Date$
+ * 
+ * $Log$
+ * Revision 1.32  2004/03/30 07:40:08  dave0000
+ * implement mixed string-reference expressions
+ *
  */
 public class ValueBindingImpl extends ValueBinding implements StateHolder
 {
@@ -77,7 +84,7 @@ public class ValueBindingImpl extends ValueBinding implements StateHolder
             {
                 try {
                     return s_expressionEvaluator.parseExpressionString(
-                        ("${" + stripBracketsFromModelReference((String) key) + '}'));
+                        toJspElExpression((String) key));
                 }
                 catch (ELException e)
                 {
@@ -94,7 +101,7 @@ public class ValueBindingImpl extends ValueBinding implements StateHolder
 
     protected Application _application;
     protected String      _expressionString;
-    protected Expression  _expression;
+    protected Object      _expression;
 
     //~ Constructors -------------------------------------------------------------------------------
 
@@ -106,19 +113,20 @@ public class ValueBindingImpl extends ValueBinding implements StateHolder
         }
         if ((expression == null) || ((expression = expression.trim()).length() == 0))
         {
-            throw new ReferenceSyntaxException("Reference: empty or null");
+            throw new ReferenceSyntaxException("Expression: empty or null");
         }
         _application = application;
         _expressionString  = expression;
 
         Object parsedExpression = s_expressions.get(expression);
-        if (!(parsedExpression instanceof Expression))
+        if (!(parsedExpression instanceof Expression)
+            && !(parsedExpression instanceof ExpressionString))
         {
             throw new IllegalStateException("Parsed Expression of unexpected type " 
                 + parsedExpression.getClass().getName()); 
         }
         
-        _expression    = (Expression) parsedExpression;
+        _expression = parsedExpression;
     }
 
     //~ Methods ------------------------------------------------------------------------------------
@@ -306,9 +314,13 @@ public class ValueBindingImpl extends ValueBinding implements StateHolder
     {
         try
         {
-            return _expression.evaluate (
-                new ELVariableResolver(facesContext),
-                s_functionMapper, s_logger);
+            return _expression instanceof Expression 
+                ? ((Expression) _expression).evaluate (
+                    new ELVariableResolver(facesContext),
+                    s_functionMapper, s_logger)
+                : ((ExpressionString) _expression).evaluate (
+                    new ELVariableResolver(facesContext),
+                    s_functionMapper, s_logger);
         }
         catch (IndexOutOfBoundsException e) 
         {
@@ -331,36 +343,47 @@ public class ValueBindingImpl extends ValueBinding implements StateHolder
         }
         
         VariableResolver variableResolver = new ELVariableResolver(facesContext);
-        Expression expression = _expression;
+        Object expression_;
         
-        while (expression instanceof ConditionalExpression)
+        if (_expression instanceof Expression)
         {
-            ConditionalExpression conditionalExpression = ((ConditionalExpression) expression);
-            // first, evaluate the condition (and coerce the result to a boolean value)
-            boolean condition =
-              Coercions.coerceToBoolean(
-                  conditionalExpression.getCondition().evaluate(
-                      variableResolver, s_functionMapper, s_logger), s_logger)
-                  .booleanValue();
-
-            // then, use this boolean to branch appropriately
-            expression = condition ? conditionalExpression.getTrueBranch()
-                : conditionalExpression.getFalseBranch();
+            Expression expression = (Expression) _expression;
+            
+            while (expression instanceof ConditionalExpression)
+            {
+                ConditionalExpression conditionalExpression = ((ConditionalExpression) expression);
+                // first, evaluate the condition (and coerce the result to a boolean value)
+                boolean condition =
+                  Coercions.coerceToBoolean(
+                      conditionalExpression.getCondition().evaluate(
+                          variableResolver, s_functionMapper, s_logger), s_logger)
+                      .booleanValue();
+    
+                // then, use this boolean to branch appropriately
+                expression = condition ? conditionalExpression.getTrueBranch()
+                    : conditionalExpression.getFalseBranch();
+            }
+    
+            if (expression instanceof NamedValue)
+            {
+                return ((NamedValue) expression).getName();
+            }
+            
+            expression_ = expression;
         }
-
-        if (expression instanceof NamedValue)
+        else
         {
-            return ((NamedValue) expression).getName();
+            expression_ = _expression;
         }
         
-        if (!(expression instanceof ComplexValue)) {
+        if (!(expression_ instanceof ComplexValue)) {
             // all other cases are not variable references
             throw new NotVariableReferenceException (
                 "Parsed Expression of unsupported type for this operation. Expression class: " 
                 + _expression.getClass().getName() + ". Expression: " + _expressionString);
         }
         
-        ComplexValue complexValue = (ComplexValue) expression;
+        ComplexValue complexValue = (ComplexValue) expression_;
         
         // resolve the prefix
         Object base = complexValue.getPrefix()
@@ -453,23 +476,146 @@ public class ValueBindingImpl extends ValueBinding implements StateHolder
     }
 
     /**
-     * Strip "#{" and "}" from a modelReference, if any
+     * Convert ValueBinding syntax #{ } to JSP EL syntax ${ } 
      *
-     * @param expressionString the model reference expression
+     * @param expressionString ValueBinding reference expression
      *
-     * @return the model reference, with "#{" and "}" removed
+     * @return JSP EL compatible expression
      */
-    static String stripBracketsFromModelReference(String expressionString)
+    static String toJspElExpression(String expressionString)
     {
-        if (expressionString.startsWith("#{") && expressionString.endsWith("}"))
-        {
-            return expressionString.substring(2, expressionString.length() - 1);
+        StringBuffer sb = new StringBuffer(expressionString.length());
+        int oldPos = 0;
+        
+        for (int pos = expressionString.indexOf('{'); pos >= 0;
+            pos = expressionString.indexOf('{', oldPos = (pos + 1)))
+        {        
+            sb.append(expressionString.substring(oldPos, pos - 1));
+            
+            if (pos > 0)
+            {
+                if (expressionString.charAt(pos - 1) == '$')
+                {
+                    sb.append("${'${'}");
+                    continue;
+                }
+                else if (expressionString.charAt(pos - 1) == '#')
+                {
+                    sb.append("${");
+                    oldPos = pos + 1;
+                    pos = indexOfMatchingClosingBrace(expressionString, pos);
+                    sb.append(expressionString.substring(oldPos, pos + 1));
+                    continue;
+                }
+            }
+            
+            // Standalone brace
+            sb.append('{');
         }
-        else
+        
+        // Create a new String to shrink mem size since we are caching
+        return new String(
+            sb.append(expressionString.substring(oldPos)).toString());
+    }
+    
+    /**
+     * Return the index of the matching closing brace, skipping over quoted text
+     *
+     * @param expressionString string to search
+     * @param indexofOpeningBrace the location of opening brace to match
+     *
+     * @return the index of the matching closing brace
+     *
+     * @throws ReferenceSyntaxException if matching brace cannot be found
+     */
+    private static int indexOfMatchingClosingBrace(
+        String expressionString, int indexofOpeningBrace)
+    {
+        int len = expressionString.length();
+        int i = indexofOpeningBrace + 1;
+
+        // Loop through quoted strings
+        for (;;)
         {
-            throw new ReferenceSyntaxException(
-                "Reference: " + expressionString + ". Reference must be enclosed in #{ }");
+            if (i >= len)
+            {
+                throw new ReferenceSyntaxException(
+                    "Missing closing brace. Expression: " + expressionString);
+            }
+    
+            int indexofClosingBrace = expressionString.indexOf('}', i);
+            i = StringUtils
+                .minIndex(indexofClosingBrace, findQuote(expressionString, i));
+            
+            if (i < 0)
+            {
+                // No delimiter found
+                throw new ReferenceSyntaxException(
+                    "Missing closing brace. Expression: " + expressionString);
+            }
+    
+            // 1. If quoted literal, find closing quote
+            if (i != indexofClosingBrace)
+            {
+                i = indexOfMatchingClosingQuote(expressionString, i) + 1;
+                if (i == 0)
+                {
+                    // If no match, -1 + 1 = 0
+                    throw new ReferenceSyntaxException(
+                        "Missing closing quote. Expression: "
+                        + expressionString);
+                }
+            }
+            else
+            {
+                // Closing brace 
+                return i;
+            }
         }
+    }
+
+    private static int findQuote(String expressionString, int start)
+    {
+        int indexofSingleQuote = expressionString.indexOf('\'', start);
+        int indexofDoubleQuote = expressionString.indexOf('"', start);
+        return StringUtils.minIndex(indexofSingleQuote, indexofDoubleQuote); 
+    }
+    
+    /**
+     * Returns the index of the matching closing quote,
+     * skipping over escaped quotes
+     *
+     * @param expressionString string to scan
+     * @param indexOfOpeningQuote start from this position in the string
+     * @return -1 if no match, the index of closing quote otherwise
+     */
+    private static int indexOfMatchingClosingQuote(
+        String expressionString, int indexOfOpeningQuote)
+    {
+        char quote = expressionString.charAt(indexOfOpeningQuote);
+        for (
+            int i = expressionString.indexOf(quote, indexOfOpeningQuote + 1);
+                i >= 0; i = expressionString.indexOf(quote, i + 1))
+        {
+            if (!isEscaped(expressionString, i))
+            {
+                return i;
+            }
+        }
+
+        // No matching quote found
+        return -1;
+    }
+    
+    private static boolean isEscaped(String expressionString, int i)
+    {
+        int escapeCharCount = 0;
+        while ((--i >= 0) && (expressionString.charAt(i) == '\\'))
+        {
+            escapeCharCount++;
+        }
+
+        return (escapeCharCount % 2) != 0;
     }
 
     //~ StateHolder implementation ----------------------------------------------------------------------------
