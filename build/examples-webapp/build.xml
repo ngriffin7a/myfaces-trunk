@@ -62,7 +62,7 @@
 
 
     <target name="-compile-and-copy-libs"
-            depends="-myfaces-jar, -copy-components-resource"
+            depends="-myfaces-jar"
             description="compiles the examples java classes to WEB-INF/classes and copies all needed libs to WEB-INF/lib">
         <mkdir dir="${web-inf.classes.dir}"/>
         <javac srcdir="${examples.src}"
@@ -79,13 +79,6 @@
         </copy>
     </target>
 
-    <target name="-copy-components-resource">
-        <copy todir="${examples.web}">
-            <fileset dir="${components_resource.src}"
-                     includes="**"
-                     excludes="CVS" />
-        </copy>
-    </target>
 
     <target name="-war" depends="-compile-and-copy-libs">
         <tstamp>
