@@ -19,8 +19,8 @@
 package net.sourceforge.myfaces.renderkit.html;
 
 import net.sourceforge.myfaces.component.CommonComponentAttributes;
-import net.sourceforge.myfaces.renderkit.attr.DataRendererAttributes;
 import net.sourceforge.myfaces.renderkit.attr.CommonRendererAttributes;
+import net.sourceforge.myfaces.renderkit.attr.DataRendererAttributes;
 
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIPanel;

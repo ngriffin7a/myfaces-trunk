@@ -86,11 +86,6 @@ public class FormRenderer
     public void encodeBegin(FacesContext facesContext, UIComponent uiComponent)
             throws IOException
     {
-        if (!isVisible(facesContext, uiComponent))
-        {
-            return;
-        }
-
         ResponseWriter writer = facesContext.getResponseWriter();
         writer.write("<form method=\"post\" action=\"");
         writer.write(getActionStr(facesContext, uiComponent));
@@ -123,11 +118,6 @@ public class FormRenderer
     public void encodeEnd(FacesContext facesContext, UIComponent uiComponent)
             throws IOException
     {
-        if (!isVisible(facesContext, uiComponent))
-        {
-            return;
-        }
-
         RenderKitFactory rkFactory = (RenderKitFactory)FactoryFinder.getFactory(FactoryFinder.RENDER_KIT_FACTORY);
         RenderKit renderKit = rkFactory.getRenderKit(facesContext.getTree().getRenderKitId());
         Renderer renderer = renderKit.getRenderer(StateRenderer.TYPE);

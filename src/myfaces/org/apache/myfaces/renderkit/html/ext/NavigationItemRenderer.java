@@ -19,19 +19,19 @@
 package net.sourceforge.myfaces.renderkit.html.ext;
 
 import net.sourceforge.myfaces.MyFacesFactoryFinder;
+import net.sourceforge.myfaces.component.CommonComponentAttributes;
 import net.sourceforge.myfaces.component.UICommand;
 import net.sourceforge.myfaces.component.UIComponentUtils;
-import net.sourceforge.myfaces.component.CommonComponentAttributes;
 import net.sourceforge.myfaces.component.ext.UINavigation;
-import net.sourceforge.myfaces.renderkit.attr.ext.NavigationItemRendererAttributes;
-import net.sourceforge.myfaces.renderkit.attr.ext.NavigationRendererAttributes;
-import net.sourceforge.myfaces.renderkit.attr.UserRoleAttributes;
 import net.sourceforge.myfaces.renderkit.attr.CommonRendererAttributes;
 import net.sourceforge.myfaces.renderkit.attr.HyperlinkRendererAttributes;
+import net.sourceforge.myfaces.renderkit.attr.UserRoleAttributes;
+import net.sourceforge.myfaces.renderkit.attr.ext.NavigationItemRendererAttributes;
+import net.sourceforge.myfaces.renderkit.attr.ext.NavigationRendererAttributes;
 import net.sourceforge.myfaces.renderkit.html.HTMLRenderer;
-import net.sourceforge.myfaces.renderkit.html.attr.HTMLUniversalAttributes;
-import net.sourceforge.myfaces.renderkit.html.attr.HTMLEventHandlerAttributes;
 import net.sourceforge.myfaces.renderkit.html.attr.HTMLAnchorAttributes;
+import net.sourceforge.myfaces.renderkit.html.attr.HTMLEventHandlerAttributes;
+import net.sourceforge.myfaces.renderkit.html.attr.HTMLUniversalAttributes;
 import net.sourceforge.myfaces.renderkit.html.state.StateRenderer;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLEncoder;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLUtil;
@@ -131,19 +131,6 @@ public class NavigationItemRenderer
      */
     public void encodeBegin(FacesContext facesContext, UIComponent uiComponent) throws IOException
     {
-        if (!isVisible(facesContext, uiComponent))
-        {
-            //for security reasons we make sure that item is closed
-            Boolean open = (Boolean)uiComponent.getAttribute(UINavigation.UINavigationItem.OPEN_ATTR);
-            if (open != null && open.booleanValue())
-            {
-                uiComponent.setAttribute(UINavigation.UINavigationItem.OPEN_ATTR,
-                                         Boolean.TRUE);
-            }
-            //user not in role, bye bye...
-            return;
-        }
-
         ResponseWriter writer = facesContext.getResponseWriter();
 
         String label = null;

@@ -18,15 +18,17 @@
  */
 package net.sourceforge.myfaces.renderkit.html;
 
-import net.sourceforge.myfaces.renderkit.attr.*;
-import net.sourceforge.myfaces.renderkit.html.util.HTMLEncoder;
-import net.sourceforge.myfaces.renderkit.html.util.HTMLUtil;
+import net.sourceforge.myfaces.component.UIComponentUtils;
+import net.sourceforge.myfaces.renderkit.attr.ButtonRendererAttributes;
+import net.sourceforge.myfaces.renderkit.attr.CommonRendererAttributes;
+import net.sourceforge.myfaces.renderkit.attr.UserRoleAttributes;
 import net.sourceforge.myfaces.renderkit.html.attr.HTMLButtonAttributes;
 import net.sourceforge.myfaces.renderkit.html.attr.HTMLEventHandlerAttributes;
 import net.sourceforge.myfaces.renderkit.html.attr.HTMLUniversalAttributes;
-import net.sourceforge.myfaces.util.logging.LogUtil;
+import net.sourceforge.myfaces.renderkit.html.util.HTMLEncoder;
+import net.sourceforge.myfaces.renderkit.html.util.HTMLUtil;
 import net.sourceforge.myfaces.util.bundle.BundleUtils;
-import net.sourceforge.myfaces.component.UIComponentUtils;
+import net.sourceforge.myfaces.util.logging.LogUtil;
 
 import javax.faces.component.UICommand;
 import javax.faces.component.UIComponent;
@@ -176,11 +178,6 @@ public class ButtonRenderer
 
     public void encodeEnd(FacesContext facesContext, UIComponent uiComponent) throws IOException
     {
-        if (!isVisible(facesContext, uiComponent))
-        {
-            return;
-        }
-
         ResponseWriter writer = facesContext.getResponseWriter();
         boolean hiddenParam = true;
         writer.write("<input type=");

@@ -18,8 +18,8 @@
  */
 package net.sourceforge.myfaces.renderkit.html;
 
-import net.sourceforge.myfaces.renderkit.attr.DateTimeRendererAttributes;
 import net.sourceforge.myfaces.component.UIOutput;
+import net.sourceforge.myfaces.renderkit.attr.DateTimeRendererAttributes;
 
 
 /**

@@ -120,11 +120,6 @@ public class CheckboxRenderer
     public void encodeEnd(FacesContext facesContext, UIComponent uiComponent)
         throws IOException
     {
-        if (!isVisible(facesContext, uiComponent))
-        {
-            return;
-        }
-
         if (uiComponent.getComponentType().equals(UISelectMany.TYPE))
         {
             Set selectedValuesSet

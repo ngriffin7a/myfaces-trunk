@@ -18,11 +18,11 @@
  */
 package net.sourceforge.myfaces.renderkit.html.state.client;
 
+import net.sourceforge.myfaces.MyFacesConfig;
+import net.sourceforge.myfaces.renderkit.html.jspinfo.JspBeanInfo;
 import net.sourceforge.myfaces.renderkit.html.jspinfo.JspInfo;
 import net.sourceforge.myfaces.renderkit.html.jspinfo.JspInfoUtils;
-import net.sourceforge.myfaces.renderkit.html.jspinfo.JspBeanInfo;
 import net.sourceforge.myfaces.renderkit.html.state.StateRestorer;
-import net.sourceforge.myfaces.MyFacesConfig;
 
 import javax.faces.context.FacesContext;
 import java.util.Iterator;

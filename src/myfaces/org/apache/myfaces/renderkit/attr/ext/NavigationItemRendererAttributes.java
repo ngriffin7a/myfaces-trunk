@@ -19,8 +19,8 @@
 package net.sourceforge.myfaces.renderkit.attr.ext;
 
 import net.sourceforge.myfaces.renderkit.attr.CommonRendererAttributes;
-import net.sourceforge.myfaces.renderkit.attr.KeyBundleAttributes;
 import net.sourceforge.myfaces.renderkit.attr.HyperlinkRendererAttributes;
+import net.sourceforge.myfaces.renderkit.attr.KeyBundleAttributes;
 
 /**
  * Constant definitions for the specified render dependent attributes of the

@@ -20,21 +20,21 @@ package net.sourceforge.myfaces.renderkit.html.jspinfo;
 
 import net.sourceforge.myfaces.MyFacesConfig;
 import net.sourceforge.myfaces.MyFacesFactoryFinder;
-import net.sourceforge.myfaces.webapp.ServletMappingFactory;
-import net.sourceforge.myfaces.webapp.ServletMapping;
 import net.sourceforge.myfaces.tree.TreeImpl;
 import net.sourceforge.myfaces.util.logging.LogUtil;
+import net.sourceforge.myfaces.webapp.ServletMapping;
+import net.sourceforge.myfaces.webapp.ServletMappingFactory;
 
+import javax.faces.FacesException;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.tree.Tree;
 import javax.faces.webapp.FacesTag;
-import javax.faces.FacesException;
 import javax.servlet.ServletContext;
-import java.util.*;
-import java.net.URLConnection;
-import java.net.URL;
 import java.io.IOException;
+import java.net.URL;
+import java.net.URLConnection;
+import java.util.*;
 
 /**
  * JspInfo is a helper class that returns useful static information on a JSP. Static means

@@ -23,9 +23,9 @@ import net.sourceforge.myfaces.renderkit.html.ext.*;
 import net.sourceforge.myfaces.renderkit.html.state.StateRenderer;
 
 import javax.faces.component.UIComponent;
+import javax.faces.context.FacesContext;
 import javax.faces.render.RenderKit;
 import javax.faces.render.Renderer;
-import javax.faces.context.FacesContext;
 import java.util.*;
 
 /**

@@ -20,8 +20,8 @@ package net.sourceforge.myfaces.renderkit.html.util;
 
 import net.sourceforge.myfaces.component.UISelectItem;
 import net.sourceforge.myfaces.component.UISelectItems;
-import net.sourceforge.myfaces.util.bundle.BundleUtils;
 import net.sourceforge.myfaces.convert.ConverterUtils;
+import net.sourceforge.myfaces.util.bundle.BundleUtils;
 
 import javax.faces.component.SelectItem;
 import javax.faces.component.UIComponent;
