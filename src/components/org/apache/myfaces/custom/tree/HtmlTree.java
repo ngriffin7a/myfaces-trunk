@@ -42,6 +42,9 @@ import net.sourceforge.myfaces.component.html.ext.HtmlPanelGroup;
  * @author <a href="mailto:oliver@rossmueller.com">Oliver Rossmueller</a>
  * @version $Revision$ $Date$
  *          $Log$
+ *          Revision 1.16  2004/07/18 21:39:34  o_rossmueller
+ *          fix #992452: child icon attributes are restored correctly
+ *
  *          Revision 1.15  2004/07/18 21:36:27  o_rossmueller
  *          fix #991740: getResourceURL for tree image urls
  *
@@ -543,8 +546,8 @@ public class HtmlTree
         Object values[] = (Object[]) state;
         super.restoreState(context, values[0]);
         iconChild = (String) values[1];
-        iconChild = (String) values[2];
-        iconChild = (String) values[3];
+        iconChildFirst = (String) values[2];
+        iconChildLast = (String) values[3];
         iconLine = (String) values[4];
         iconNodeClose = (String) values[5];
         iconNodeCloseFirst = (String) values[6];
