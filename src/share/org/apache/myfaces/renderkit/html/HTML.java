@@ -24,6 +24,9 @@ import org.apache.myfaces.util.ArrayUtils;
  * @author Anton Koinov
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.17  2004/12/02 15:22:06  svieujot
+ * Add IFRAME_ELEM
+ *
  * Revision 1.16  2004/12/02 05:03:14  svieujot
  * Add H1-6 elements
  *
@@ -439,6 +442,7 @@ public final class HTML
     public static final String H4_ELEM = "h4";
     public static final String H5_ELEM = "h5";
     public static final String H6_ELEM = "h6";
+    public static final String IFRAME_ELEM = "iframe";
     public static final String IMG_ELEM = "img";
     public static final String LABEL_ELEM = "label";
     public static final String TABLE_ELEM = "table";
