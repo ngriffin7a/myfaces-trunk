@@ -19,10 +19,9 @@
 
 package net.sourceforge.myfaces.application;
 
-import net.sourceforge.myfaces.MyFacesFactoryFinder;
 import net.sourceforge.myfaces.renderkit.html.state.StateRenderer;
-import net.sourceforge.myfaces.webapp.ServletMapping;
-import net.sourceforge.myfaces.webapp.ServletMappingFactory;
+import net.sourceforge.myfaces.webapp.webxml.ServletMapping;
+import net.sourceforge.myfaces.webapp.webxml.WebXml;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -31,15 +30,16 @@ import javax.faces.FactoryFinder;
 import javax.faces.application.StateManager;
 import javax.faces.application.ViewHandler;
 import javax.faces.component.UIViewRoot;
-import javax.faces.context.FacesContext;
 import javax.faces.context.ExternalContext;
+import javax.faces.context.FacesContext;
 import javax.faces.render.RenderKit;
 import javax.faces.render.RenderKitFactory;
 import javax.faces.render.Renderer;
-import javax.servlet.*;
+import javax.servlet.ServletRequest;
 import java.io.IOException;
 import java.util.Enumeration;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Locale;
 
 /**
@@ -103,15 +103,38 @@ public class ViewHandlerImpl
         return _stateManager;
     }
 
-    public String getViewIdPath(FacesContext facescontext, String s)
+    public String getViewIdPath(FacesContext facescontext, String viewId)
     {
-        // TODO: implement
-        throw new UnsupportedOperationException("not yet implemented.");
+        if (viewId == null)
+        {
+            log.error("ViewId must not be null");
+            throw new NullPointerException("ViewId must not be null");
+        }
+        if (!viewId.startsWith("/"))
+        {
+            log.error("ViewId must start with '/' (viewId = " + viewId + ")");
+            throw new IllegalArgumentException("ViewId must start with '/' (viewId = " + viewId + ")");
+        }
+        String servletPath = facescontext.getExternalContext().getRequestServletPath();
+        WebXml webxml = WebXml.getWebXml(facescontext.getExternalContext());
+        List mappings = webxml.getFacesServletMappings();
+        for (int i = 0, size = mappings.size(); i < size; i++)
+        {
+            ServletMapping mapping = (ServletMapping) mappings.get(i);
+            mapping.getServletClass();
+        }
+
 
     }
 
-    public void renderView(FacesContext facesContext, UIViewRoot viewRoot) throws IOException, FacesException
+    public void renderView(FacesContext facesContext, UIViewRoot viewToRender) throws IOException, FacesException
     {
+        if (viewToRender == null)
+        {
+            log.error("viewToRender must not be null");
+            throw new NullPointerException("viewToRender must not be null");
+        }
+
         // TODO: adapt
         ExternalContext externalContext = facesContext.getExternalContext();
         ServletRequest servletRequest = (ServletRequest)externalContext.getRequest();
@@ -129,7 +152,7 @@ public class ViewHandlerImpl
 
         //Look for a StateRenderer and prepare for state saving
         RenderKitFactory rkFactory = (RenderKitFactory)FactoryFinder.getFactory(FactoryFinder.RENDER_KIT_FACTORY);
-        RenderKit renderKit = rkFactory.getRenderKit(viewRoot.getRenderKitId());
+        RenderKit renderKit = rkFactory.getRenderKit(viewToRender.getRenderKitId());
         Renderer renderer = null;
         try
         {
@@ -153,16 +176,17 @@ public class ViewHandlerImpl
         }
 
         //forward request to JSP page
-        ServletMappingFactory smf = MyFacesFactoryFinder.getServletMappingFactory(externalContext);
-        ServletMapping sm = smf.getServletMapping((ServletContext)externalContext.getContext());
-        String forwardURL = sm.mapViewIdToFilename((ServletContext)externalContext.getContext(),
-                                                   viewRoot.getViewId());
+        //ServletMappingFactory smf = MyFacesFactoryFinder.getServletMappingFactory(externalContext);
+        //ServletMapping sm = smf.getServletMapping((ServletContext)externalContext.getContext());
+        //String forwardURL = sm.mapViewIdToFilename((ServletContext)externalContext.getContext(),
+        //                                           viewToRender.getViewId());
 
-        RequestDispatcher requestDispatcher
-            = servletRequest.getRequestDispatcher(forwardURL);
+        //RequestDispatcher requestDispatcher
+        //    = servletRequest.getRequestDispatcher(forwardURL);
+        /*
         try
         {
-            requestDispatcher.forward(servletRequest,
+            //requestDispatcher.forward(servletRequest,
                                       (ServletResponse)facesContext.getExternalContext().getResponse());
         }
         catch(IOException ioe)
@@ -175,6 +199,7 @@ public class ViewHandlerImpl
             log.error("ServletException in method renderView of class " + this.getClass().getName(), se);
             throw new FacesException(se.getMessage(), se);
         }
+        */
 
     }
 

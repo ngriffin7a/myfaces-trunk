@@ -18,7 +18,6 @@
  */
 package net.sourceforge.myfaces.renderkit.html.ext;
 
-import net.sourceforge.myfaces.MyFacesFactoryFinder;
 import net.sourceforge.myfaces.component.UIComponentUtils;
 import net.sourceforge.myfaces.component.ext.UINavigationItem;
 import net.sourceforge.myfaces.renderkit.JSFAttr;
@@ -29,8 +28,6 @@ import net.sourceforge.myfaces.renderkit.html.state.StateRenderer;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLEncoder;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLUtil;
 import net.sourceforge.myfaces.util.bundle.BundleUtils;
-import net.sourceforge.myfaces.webapp.ServletMapping;
-import net.sourceforge.myfaces.webapp.ServletMappingFactory;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -42,7 +39,6 @@ import javax.faces.render.RenderKit;
 import javax.faces.render.RenderKitFactory;
 import javax.faces.render.Renderer;
 import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
 /**
@@ -95,12 +91,19 @@ extends HyperlinkRenderer
 
         //Modify URL for the faces servlet mapping:
         ServletContext servletContext = (ServletContext)facesContext.getExternalContext().getContext();
+        //TODO: fixme
+        /*
         ServletMappingFactory smf = MyFacesFactoryFinder.getServletMappingFactory(servletContext);
         ServletMapping sm = smf.getServletMapping(servletContext);
         String treeURL = sm.encodeTreeIdForURL(facesContext, facesContext.getTree().getTreeId());
 
         HttpServletRequest request = (HttpServletRequest)facesContext.getExternalContext().getRequest();
         String href = request.getContextPath() + treeURL;
+        */
+        String href = null; // TODO
+        throw new UnsupportedOperationException("fixme");
+
+
 
         //Encode URL
         href = facesContext.getExternalContext().encodeActionURL(href);

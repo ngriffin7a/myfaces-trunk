@@ -18,7 +18,6 @@
  */
 package net.sourceforge.myfaces.renderkit.html.ext;
 
-import net.sourceforge.myfaces.MyFacesFactoryFinder;
 import net.sourceforge.myfaces.renderkit.JSFAttr;
 import net.sourceforge.myfaces.renderkit.attr.ext.TabbedPaneRendererAttributes;
 import net.sourceforge.myfaces.renderkit.html.FormRenderer;
@@ -28,8 +27,6 @@ import net.sourceforge.myfaces.renderkit.html.state.StateRenderer;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLEncoder;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLUtil;
 import net.sourceforge.myfaces.util.bundle.BundleUtils;
-import net.sourceforge.myfaces.webapp.ServletMapping;
-import net.sourceforge.myfaces.webapp.ServletMappingFactory;
 
 import javax.faces.FactoryFinder;
 import javax.faces.application.Message;
@@ -263,6 +260,8 @@ public class TabbedPaneRenderer
         HttpServletRequest request = (HttpServletRequest)facesContext.getExternalContext().getRequest();
 
         ServletContext servletContext = (ServletContext)facesContext.getExternalContext().getContext();
+        //TODO: fixme
+        /*
         ServletMappingFactory smf = MyFacesFactoryFinder.getServletMappingFactory(servletContext);
         ServletMapping sm = smf.getServletMapping(servletContext);
         String treeURL = sm.encodeTreeIdForURL(facesContext, facesContext.getTree().getTreeId());
@@ -273,6 +272,8 @@ public class TabbedPaneRenderer
         action = facesContext.getExternalContext().encodeURL(action);
 
         return action;
+        */
+        throw new UnsupportedOperationException("fixme");
     }
 
 

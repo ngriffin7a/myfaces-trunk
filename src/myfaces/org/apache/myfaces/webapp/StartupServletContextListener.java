@@ -19,6 +19,8 @@
 package net.sourceforge.myfaces.webapp;
 
 import net.sourceforge.myfaces.MyFacesFactoryFinder;
+import net.sourceforge.myfaces.webapp.webxml.WebXml;
+import net.sourceforge.myfaces.webapp.webxml.WebXmlParser;
 import net.sourceforge.myfaces.context.ExternalContextImpl;
 import net.sourceforge.myfaces.config.FacesConfig;
 import net.sourceforge.myfaces.config.FacesConfigFactory;
@@ -56,6 +58,8 @@ public class StartupServletContextListener
             ExternalContext externalContext = new ExternalContextImpl(servletContext, null, null);
             FacesConfig facesConfig = fcf.getFacesConfig(externalContext);
             facesConfig.configureAll();
+            // parse web.xml
+            WebXml.init(externalContext);
         }
         catch (Exception ex)
         {

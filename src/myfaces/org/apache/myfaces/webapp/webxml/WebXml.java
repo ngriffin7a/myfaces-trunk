@@ -98,10 +98,20 @@ public class WebXml
         WebXml webXml = (WebXml)context.getApplicationMap().get(WEB_XML_ATTR);
         if (webXml == null)
         {
-            WebXmlParser parser = new WebXmlParser(context);
-            webXml = parser.parse();
-            context.getApplicationMap().put(WEB_XML_ATTR, webXml);
+            log.error(WebXml.class.getName() + ".init must be called before!");
+            throw new IllegalStateException(WebXml.class.getName() + ".init must be called before!");
         }
         return webXml;
+    }
+
+    /**
+     * should be called when initialising Servlet
+     * @param context
+     */
+    public static void init(ExternalContext context)
+    {
+        WebXmlParser parser = new WebXmlParser(context);
+        WebXml webXml = parser.parse();
+        context.getApplicationMap().put(WEB_XML_ATTR, webXml);
     }
 }

@@ -18,15 +18,12 @@
  */
 package net.sourceforge.myfaces.renderkit.html;
 
-import net.sourceforge.myfaces.MyFacesFactoryFinder;
 import net.sourceforge.myfaces.convert.ConverterUtils;
 import net.sourceforge.myfaces.renderkit.JSFAttr;
 import net.sourceforge.myfaces.renderkit.html.state.StateRenderer;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLEncoder;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLUtil;
 import net.sourceforge.myfaces.util.bundle.BundleUtils;
-import net.sourceforge.myfaces.webapp.ServletMapping;
-import net.sourceforge.myfaces.webapp.ServletMappingFactory;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -176,11 +173,15 @@ public class HyperlinkRenderer
         {
             //Modify URL for the faces servlet mapping:
             ServletContext servletContext = (ServletContext)facesContext.getExternalContext().getContext();
+            //TODO: fixme
+            /*
             ServletMappingFactory smf = MyFacesFactoryFinder.getServletMappingFactory(servletContext);
             ServletMapping sm = smf.getServletMapping(servletContext);
             String treeURL = sm.encodeTreeIdForURL(facesContext, facesContext.getTree().getTreeId());
 
             href = request.getContextPath() + treeURL;
+            */
+            throw new UnsupportedOperationException("fixme");
         }
 
         //Encode URL...

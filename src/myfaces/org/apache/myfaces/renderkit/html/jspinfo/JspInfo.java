@@ -19,10 +19,7 @@
 package net.sourceforge.myfaces.renderkit.html.jspinfo;
 
 import net.sourceforge.myfaces.MyFacesConfig;
-import net.sourceforge.myfaces.MyFacesFactoryFinder;
 import net.sourceforge.myfaces.util.MyFacesObjectInputStream;
-import net.sourceforge.myfaces.webapp.ServletMapping;
-import net.sourceforge.myfaces.webapp.ServletMappingFactory;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -32,20 +29,10 @@ import javax.faces.component.UIViewRoot;
 import javax.faces.context.FacesContext;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletRequest;
-
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.*;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.WeakHashMap;
+import java.util.*;
 
 /**
  * JspInfo is a helper class that returns useful static information on a JSP. Static means
@@ -165,9 +152,13 @@ public class JspInfo
     {
         if (_filePath == null)
         {
+            //TODO: fixme
+            /*
             ServletMappingFactory smf = MyFacesFactoryFinder.getServletMappingFactory(servletContext);
             ServletMapping sm = smf.getServletMapping(servletContext);
             _filePath = sm.mapViewIdToFilename(servletContext, _viewRoot.getViewId());
+            */
+            throw new UnsupportedOperationException("fixme");
         }
         return _filePath;
     }

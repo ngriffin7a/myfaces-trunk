@@ -18,12 +18,9 @@
  */
 package net.sourceforge.myfaces.renderkit.html;
 
-import net.sourceforge.myfaces.MyFacesFactoryFinder;
 import net.sourceforge.myfaces.renderkit.JSFAttr;
 import net.sourceforge.myfaces.renderkit.html.state.StateRenderer;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLUtil;
-import net.sourceforge.myfaces.webapp.ServletMapping;
-import net.sourceforge.myfaces.webapp.ServletMappingFactory;
 
 import javax.faces.FactoryFinder;
 import javax.faces.component.UIComponent;
@@ -103,6 +100,8 @@ extends HTMLRenderer
 
         ServletContext        servletContext =
             (ServletContext) facesContext.getExternalContext().getContext();
+        //TODO: fixme
+        /*
         ServletMappingFactory smf            =
             MyFacesFactoryFinder.getServletMappingFactory(servletContext);
         ServletMapping        sm             = smf.getServletMapping(servletContext);
@@ -115,7 +114,8 @@ extends HTMLRenderer
 
         //Encode URL
         action = facesContext.getExternalContext().encodeURL(action);
-
         return action;
+        */
+        throw new UnsupportedOperationException("fixme");
     }
 }

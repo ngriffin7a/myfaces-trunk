@@ -39,9 +39,6 @@ public class MyFacesConfig
     private static final String PARAM_checkJspModification = "myfaces_CheckJspModification";
     private static final boolean DEFAULT_checkJspModification = true;
 
-    private static final String PARAM_servletMappingMode = "myfaces_ServletMappingMode";
-    private static final String DEFAULT_servletMappingMode = "virtual_path";
-
     private static final String PARAM_logLevel = "myfaces_LogLevel";
     private static final Level  DEFAULT_logLevel = Level.INFO;
     private static final Map LOG_LEVELS = new HashMap();
@@ -91,17 +88,6 @@ public class MyFacesConfig
         return getBooleanInitParameter(servletContext,
                                        PARAM_checkJspModification,
                                        DEFAULT_checkJspModification);
-    }
-
-    /**
-     * @see net.sourceforge.myfaces.webapp.ServletMappingWithExtension
-     * @see net.sourceforge.myfaces.webapp.ServletMappingWithVirtualPath
-     */
-    public static String getServletMappingMode(ServletContext servletContext)
-    {
-        return getStringInitParameter(servletContext,
-                                      PARAM_servletMappingMode,
-                                      DEFAULT_servletMappingMode);
     }
 
     /**

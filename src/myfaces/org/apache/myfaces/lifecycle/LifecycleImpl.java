@@ -18,16 +18,9 @@
  */
 package net.sourceforge.myfaces.lifecycle;
 
-import net.sourceforge.myfaces.MyFacesFactoryFinder;
-import net.sourceforge.myfaces.util.DebugUtils;
-import net.sourceforge.myfaces.config.FacesConfigFactory;
-import net.sourceforge.myfaces.config.FacesConfig;
-import net.sourceforge.myfaces.application.ViewHandlerImpl;
 import net.sourceforge.myfaces.context.FacesContextImpl;
 import net.sourceforge.myfaces.renderkit.html.state.StateRenderer;
-import net.sourceforge.myfaces.webapp.ServletMapping;
-import net.sourceforge.myfaces.webapp.ServletMappingFactory;
-import net.sourceforge.myfaces.webapp.webxml.WebXml;
+import net.sourceforge.myfaces.util.DebugUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -39,14 +32,12 @@ import javax.faces.application.ViewHandler;
 import javax.faces.component.UICommand;
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIViewRoot;
-import javax.faces.context.FacesContext;
 import javax.faces.context.ExternalContext;
+import javax.faces.context.FacesContext;
 import javax.faces.event.*;
 import javax.faces.lifecycle.Lifecycle;
 import javax.faces.render.RenderKit;
-import javax.faces.render.RenderKitFactory;
 import javax.faces.render.Renderer;
-import javax.servlet.ServletContext;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;

@@ -72,7 +72,7 @@ public abstract class FacesConfigFactoryBase
         }
 
         facesConfig = new FacesConfig();
-// FIXME        
+        
         parseFacesConfigFiles(facesConfig, context);
 
         completeRendererComponentClasses(facesConfig);
