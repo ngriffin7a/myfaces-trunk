@@ -166,6 +166,16 @@ public class FactoryFinder
             }
             else if (factory instanceof List)
             {
+                int size = ((List)factory).size();
+                if (size > 0)
+                {
+                    String topFactory = (String) ((List)factory).get(size - 1);
+                    if (implName.equals(topFactory))
+                    {
+                        //Already registered as top factory
+                        return;
+                    }
+                }
                 ((List)factory).add(implName);
             }
             else
