@@ -110,8 +110,10 @@ public class HyperlinkRenderer
 
         //nested parameters
         Iterator children = uiComponent.getChildren();
+
         if (!children.hasNext())
         {
+            // TODO: is this still necessary?
             //no children can mean that the tree is not yet built
             //so, we try the static tree
             Tree staticTree = JspInfo.getStaticTree(facesContext,
