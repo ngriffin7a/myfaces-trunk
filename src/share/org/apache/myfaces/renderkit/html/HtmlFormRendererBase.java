@@ -37,6 +37,9 @@ import java.util.Set;
  * @author Anton Koinov
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.4  2004/04/30 09:11:38  manolito
+ * no message
+ *
  * Revision 1.3  2004/04/29 19:34:38  o_rossmueller
  * javascript for 'target' attribute handling
  *
@@ -105,10 +108,20 @@ public class HtmlFormRendererBase
         if (set != null && !set.isEmpty())
         {
             HtmlRendererUtils.renderHiddenCommandFormParams(writer, set);
+
+            String target;
+            if (component instanceof HtmlForm)
+            {
+                target = ((HtmlForm)component).getTarget();
+            }
+            else
+            {
+                target = (String)component.getAttributes().get(HTML.TARGET_ATTR);
+            }
             HtmlRendererUtils.renderClearHiddenCommandFormParamsFunction(writer,
                                                                          component.getClientId(facesContext),
                                                                          set,
-                                                                         ((HtmlForm)component).getTarget());
+                                                                         target);
         }
 
         writer.endElement(HTML.FORM_ELEM);

@@ -40,6 +40,9 @@ import java.util.*;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.7  2004/04/30 09:11:38  manolito
+ * no message
+ *
  * Revision 1.6  2004/04/29 19:34:38  o_rossmueller
  * javascript for 'target' attribute handling
  *
@@ -665,32 +668,43 @@ public class HtmlRendererUtils
         throws IOException
     {
         //render the clear hidden inputs javascript function
+        String functionName = getClearHiddenCommandFormParamsFunctionName(formName);
         writer.startElement(HTML.SCRIPT_ELEM, null);
         writer.writeAttribute(HTML.TYPE_ATTR, "text/javascript", null);
         writer.write("\n<!--");
         writer.write("\nfunction ");
-        writer.write(getClearHiddenCommandFormParamsFunctionName(formName));
+        writer.write(functionName);
         writer.write("() {");
         if (dummyFormParams != null)
         {
+            writer.write("\n  var f = document.forms['"); writer.write(formName);writer.write("'];");
             for (Iterator it = dummyFormParams.iterator(); it.hasNext(); )
             {
-                writer.write("\n  document.forms['"); writer.write(formName);
-                writer.write("'].elements['"); writer.write((String)it.next());
+                writer.write("\n  f.elements['"); writer.write((String)it.next());
                 writer.write("'].value=null;");
             }
         }
         // clear form target
-        writer.write("\n  document.forms['"); writer.write(formName);
-        writer.write("'].target=");
+        writer.write("\n  f.target=");
         if (formTarget == null || formTarget.length() == 0) {
-            writer.write("null;");
+            //Normally one would think that setting target to null has the
+            //desired effect, but once again IE is different...
+            //Setting target to null causes IE to open a new window!
+            writer.write("'';");
         } else {
             writer.write("'");
             writer.write(formTarget);
             writer.write("';");
         }
         writer.write("\n}");
+
+        //Just to be sure we call this clear method on each load.
+        //Otherwise in the case, that someone submits a form by pressing Enter
+        //within a text input, the hidden inputs won't be cleared!
+        writer.write("\n");
+        writer.write(functionName);
+        writer.write("();");
+
         writer.write("\n//-->\n");
         writer.endElement(HTML.SCRIPT_ELEM);
     }
