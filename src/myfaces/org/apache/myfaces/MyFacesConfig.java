@@ -66,6 +66,8 @@ public class MyFacesConfig
     private static final String PARAM_discardInternalAttributes = "discardInternalAttributes";
     private static final boolean DEFAULT_discardInternalAttributes = true;
 
+    private static final String PARAM_disableJspParser = "disableJspParser";
+    private static final boolean DEFAULT_disableJspParser = false;
 
     private static final String CONFIG_MAP_ATTR = MyFacesConfig.class.getName() + ".MAP";
 
@@ -175,7 +177,7 @@ public class MyFacesConfig
     }
 
     /**
-     * DOCUMENT ME!
+     * See web.xml for documentation!
      */
     public static boolean isAutoCreateRequestScopeBeans(ServletContext servletContext)
     {
@@ -185,7 +187,7 @@ public class MyFacesConfig
     }
 
     /**
-     * DOCUMENT ME!
+     * See web.xml for documentation!
      */
     public static boolean isDiscardInternalAttributes(ServletContext servletContext)
     {
@@ -193,6 +195,18 @@ public class MyFacesConfig
                                        PARAM_discardInternalAttributes,
                                        DEFAULT_discardInternalAttributes);
     }
+
+    /**
+     * See web.xml for documentation!
+     */
+    public static boolean isDisableJspParser(ServletContext servletContext)
+    {
+        return getBooleanInitParameter(servletContext,
+                                       PARAM_disableJspParser,
+                                       DEFAULT_disableJspParser);
+    }
+
+
 
 
 

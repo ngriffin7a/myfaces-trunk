@@ -1,4 +1,4 @@
-<%@ taglib uri="/WEB-INF/myfaces_ext.tld" prefix="x"%>
+<%@ taglib uri="http://myfaces.sourceforge.net/tld/myfaces_ext_0_3.tld" prefix="x"%>
 <x:navigation id="nav" bundle="net.sourceforge.myfaces.examples.resource.example_messages" cssClass="navigation">
     <x:navigation_item id="nav-1" key="nav_Home" treeId="/example/home.jsf" />
     <x:navigation_item id="nav-2" key="nav_Examples" >

@@ -1,7 +1,7 @@
 <%@ page session="false"
-%><%@ taglib uri="/WEB-INF/myfaces_basic.tld" prefix="h"
-%><%@ taglib uri="/WEB-INF/myfaces_core.tld" prefix="f"
-%><%@ taglib uri="/WEB-INF/myfaces_ext.tld" prefix="x"
+%><%@ taglib uri="http://java.sun.com/jsf/html" prefix="h"
+%><%@ taglib uri="http://java.sun.com/jsf/core" prefix="f"
+%><%@ taglib uri="http://myfaces.sourceforge.net/tld/myfaces_ext_0_3.tld" prefix="x"
 %><html>
 
 <%@include file="inc/head.inc" %>

@@ -25,7 +25,6 @@
 
 <web-app>
 
-
     <context-param>
         <!--
         * Init parameter "logLevel"
@@ -105,6 +104,18 @@
         <param-value>true</param-value>
     </context-param>
 
+    <context-param>
+        <!--
+        * Init parameter "disableJspParser"
+        * This parameter is useful for the two state saving modes
+        * "server_session" and "client_serialized" and disables the
+        * jsp parsing completely.
+        * Setting it to true means, that the integrated jsp parser (jasper)
+        * will not be used.
+        -->
+        <param-name>disableJspParser</param-name>
+        <param-value>false</param-value>
+    </context-param>
 
 
     <!-- MyFaces Filter -->
@@ -147,5 +158,20 @@
         <welcome-file>index.jsp</welcome-file>
         <welcome-file>index.html</welcome-file>
     </welcome-file-list>
+
+    <taglib>
+        <taglib-uri>http://java.sun.com/jsf/html</taglib-uri>
+        <taglib-location>/WEB-INF/myfaces_basic.tld</taglib-location>
+    </taglib>
+
+    <taglib>
+        <taglib-uri>http://java.sun.com/jsf/core</taglib-uri>
+        <taglib-location>/WEB-INF/myfaces_core.tld</taglib-location>
+    </taglib>
+
+    <taglib>
+        <taglib-uri>http://myfaces.sourceforge.net/tld/myfaces_ext_0_3.tld</taglib-uri>
+        <taglib-location>/WEB-INF/myfaces_ext.tld</taglib-location>
+    </taglib>
 
 </web-app>

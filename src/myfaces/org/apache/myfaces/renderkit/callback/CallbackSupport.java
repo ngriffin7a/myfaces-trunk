@@ -18,7 +18,6 @@
  */
 package net.sourceforge.myfaces.renderkit.callback;
 
-import net.sourceforge.myfaces.renderkit.html.jspinfo.JspInfo;
 import net.sourceforge.myfaces.component.UIComponentUtils;
 
 import javax.faces.FactoryFinder;

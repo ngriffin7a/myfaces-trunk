@@ -19,6 +19,8 @@
 package net.sourceforge.myfaces.renderkit.html.jspinfo;
 
 import net.sourceforge.myfaces.MyFacesConfig;
+import net.sourceforge.myfaces.tree.TreeImpl;
+import net.sourceforge.myfaces.util.logging.LogUtil;
 
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
@@ -124,21 +126,6 @@ public class JspInfo
     public static FacesTag getCreatorTag(UIComponent uiComponent)
     {
         return (FacesTag)uiComponent.getAttribute(JspInfo.CREATOR_TAG_ATTR);
-        /*
-        Class clazz = (Class)uiComponent.getAttribute(JspInfo.CREATOR_TAG_CLASS_ATTR);
-        try
-        {
-            return (FacesTag)clazz.newInstance();
-        }
-        catch (InstantiationException e)
-        {
-            throw new RuntimeException(e);
-        }
-        catch (IllegalAccessException e)
-        {
-            throw new RuntimeException(e);
-        }
-        */
     }
 
     public static List getActionListenersTypeList(UIComponent uiComponent)
@@ -167,9 +154,17 @@ public class JspInfo
         JspInfo jspInfo = (JspInfo)jspInfoMap.get(treeId);
         if (jspInfo == null)
         {
-            JspTreeParser parser = new JspTreeParser(facesContext.getServletContext());
-            parser.parse(treeId);
-            jspInfo = parser.getJspInfo();
+            if (MyFacesConfig.isDisableJspParser(facesContext.getServletContext()))
+            {
+                LogUtil.getLogger().info("JSP parsing is disabled, JspInfo cannot be applied.");
+                jspInfo = new JspInfo(new TreeImpl(treeId));
+            }
+            else
+            {
+                JspTreeParser parser = new JspTreeParser(facesContext.getServletContext());
+                parser.parse(treeId);
+                jspInfo = parser.getJspInfo();
+            }
             jspInfoMap.put(treeId, jspInfo);
         }
         return jspInfo;

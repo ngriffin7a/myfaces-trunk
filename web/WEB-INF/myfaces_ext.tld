@@ -20,23 +20,23 @@
 -->
 
 <!DOCTYPE taglib
-  PUBLIC "-//Sun Microsystems, Inc.//DTD JSP Tag Library 1.1//EN"
-  "http://java.sun.com/j2ee/dtds/web-jsptaglibrary_1_1.dtd">
+  PUBLIC "-//Sun Microsystems, Inc.//DTD JSP Tag Library 1.2//EN"
+  "http://java.sun.com/dtd/web-jsptaglibrary_1_2.dtd">
 
 <taglib>
 
-    <tlibversion>0.1</tlibversion>
-    <jspversion>1.2</jspversion>
-    <shortname>MyFaces Extension Tag Library</shortname>
-    <uri>http://myfaces.sourceforge.net/tld/myfaces_0_1.tld</uri>
-    <info>
+    <tlib-version>0.3.1</tlib-version>
+    <jsp-version>1.2</jsp-version>
+    <short-name>MyFaces Extension Tag Library</short-name>
+    <uri>http://myfaces.sourceforge.net/tld/myfaces_ext_0_3.tld</uri>
+    <description>
         Tag library for the MyFaces extensions implementation.
-    </info>
+    </description>
 
     <tag>
         <name>save_state</name>
-        <tagclass>net.sourceforge.myfaces.taglib.ext.SaveStateTag</tagclass>
-        <bodycontent>JSP</bodycontent>
+        <tag-class>net.sourceforge.myfaces.taglib.ext.SaveStateTag</tag-class>
+        <body-content>JSP</body-content>
         <attribute>
             <name>id</name>
             <required>false</required>
@@ -56,8 +56,8 @@
 
     <tag>
         <name>navigation</name>
-        <tagclass>net.sourceforge.myfaces.taglib.ext.NavigationTag</tagclass>
-        <bodycontent>JSP</bodycontent>
+        <tag-class>net.sourceforge.myfaces.taglib.ext.NavigationTag</tag-class>
+        <body-content>JSP</body-content>
         <attribute>
             <name>id</name>
             <required>true</required>
@@ -78,8 +78,8 @@
 
     <tag>
         <name>navigation_item</name>
-        <tagclass>net.sourceforge.myfaces.taglib.ext.NavigationItemTag</tagclass>
-        <bodycontent>JSP</bodycontent>
+        <tag-class>net.sourceforge.myfaces.taglib.ext.NavigationItemTag</tag-class>
+        <body-content>JSP</body-content>
         <attribute>
             <name>id</name>
             <required>true</required>
@@ -112,8 +112,8 @@
     -->
      <tag>
          <name>sortheader</name>
-         <tagclass>net.sourceforge.myfaces.taglib.ext.SortHeaderTag</tagclass>
-         <bodycontent>JSP</bodycontent>
+         <tag-class>net.sourceforge.myfaces.taglib.ext.SortHeaderTag</tag-class>
+         <body-content>JSP</body-content>
          <attribute>
              <name>id</name>
              <required>false</required>
@@ -143,8 +143,8 @@
 
     <tag>
         <name>sortcolumn</name>
-        <tagclass>net.sourceforge.myfaces.taglib.ext.SortColumnTag</tagclass>
-        <bodycontent>JSP</bodycontent>
+        <tag-class>net.sourceforge.myfaces.taglib.ext.SortColumnTag</tag-class>
+        <body-content>JSP</body-content>
         <attribute>
             <name>id</name>
             <required>false</required>
@@ -170,8 +170,8 @@
 
     <tag>
         <name>page_layout</name>
-        <tagclass>net.sourceforge.myfaces.taglib.ext.PageLayoutTag</tagclass>
-        <bodycontent>JSP</bodycontent>
+        <tag-class>net.sourceforge.myfaces.taglib.ext.PageLayoutTag</tag-class>
+        <body-content>JSP</body-content>
         <attribute>
             <name>id</name>
             <required>true</required>
@@ -196,8 +196,8 @@
 
     <tag>
         <name>page_header</name>
-        <tagclass>net.sourceforge.myfaces.taglib.ext.PageHeaderTag</tagclass>
-        <bodycontent>JSP</bodycontent>
+        <tag-class>net.sourceforge.myfaces.taglib.ext.PageHeaderTag</tag-class>
+        <body-content>JSP</body-content>
         <attribute>
             <name>id</name>
             <required>true</required>
@@ -212,8 +212,8 @@
 
     <tag>
         <name>page_body</name>
-        <tagclass>net.sourceforge.myfaces.taglib.ext.PageBodyTag</tagclass>
-        <bodycontent>JSP</bodycontent>
+        <tag-class>net.sourceforge.myfaces.taglib.ext.PageBodyTag</tag-class>
+        <body-content>JSP</body-content>
         <attribute>
             <name>id</name>
             <required>true</required>
@@ -228,8 +228,8 @@
 
     <tag>
         <name>page_footer</name>
-        <tagclass>net.sourceforge.myfaces.taglib.ext.PageFooterTag</tagclass>
-        <bodycontent>JSP</bodycontent>
+        <tag-class>net.sourceforge.myfaces.taglib.ext.PageFooterTag</tag-class>
+        <body-content>JSP</body-content>
         <attribute>
             <name>id</name>
             <required>true</required>

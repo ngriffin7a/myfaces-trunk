@@ -151,19 +151,15 @@ public class MyParseEventListener
 
             TagLibraryInfo tl = null;
 
-            /*
             String[] location = _ctxt.getTldLocation(uri);
             if (location == null)
             {
-            */
                 tl = new TagLibraryInfoImpl(_ctxt, prefix, uri);
-            /*
             }
             else
             {
                 tl = new TagLibraryInfoImpl(_ctxt, prefix, uri, location);
             }
-            */
             _tagLibraries.addTagLibrary(prefix, tl);
         }
 

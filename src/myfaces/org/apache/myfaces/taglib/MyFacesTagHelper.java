@@ -278,7 +278,7 @@ public class MyFacesTagHelper
             parsedParent = (UIComponent)componentMap.get(parentClientId);
             if (parsedParent == null)
             {
-                throw new IllegalStateException("Component with clientId " + parentClientId + " not found in parsed tree.");
+                throw new IllegalStateException("Component with clientId '" + parentClientId + "' not found in parsed tree.");
             }
         }
 

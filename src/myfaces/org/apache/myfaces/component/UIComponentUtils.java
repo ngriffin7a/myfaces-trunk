@@ -22,7 +22,6 @@ import net.sourceforge.myfaces.convert.ConversionErrorMessage;
 import net.sourceforge.myfaces.convert.ConverterUtils;
 import net.sourceforge.myfaces.convert.MyFacesConverterException;
 import net.sourceforge.myfaces.convert.impl.StringArrayConverter;
-import net.sourceforge.myfaces.renderkit.html.jspinfo.JspInfo;
 import net.sourceforge.myfaces.renderkit.html.state.client.MinimizingStateSaver;
 import net.sourceforge.myfaces.tree.TreeUtils;
 
@@ -47,9 +46,6 @@ import java.util.List;
  */
 public class UIComponentUtils
 {
-    public static final String UNIQUE_COMPONENT_ID_ATTR = JspInfo.class.getName() + ".UNIQUE_COMPONENT_ID";
-    public static final char UNIQUE_COMPONENT_ID_SEPARATOR_CHAR = ':';
-
     private UIComponentUtils() {}
 
     public static boolean getBooleanAttribute(UIComponent uiComponent,

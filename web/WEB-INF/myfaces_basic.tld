@@ -20,18 +20,18 @@
 -->
 
 <!DOCTYPE taglib
-  PUBLIC "-//Sun Microsystems, Inc.//DTD JSP Tag Library 1.1//EN"
-  "http://java.sun.com/j2ee/dtds/web-jsptaglibrary_1_1.dtd">
+  PUBLIC "-//Sun Microsystems, Inc.//DTD JSP Tag Library 1.2//EN"
+  "http://java.sun.com/dtd/web-jsptaglibrary_1_2.dtd">
 
 <taglib>
 
-    <tlibversion>0.1</tlibversion>
-    <jspversion>1.2</jspversion>
-    <shortname>MyFaces Basic Tag Library</shortname>
-    <uri>http://myfaces.sourceforge.net/tld/myfaces_0_1.tld</uri>
-    <info>
+    <tlib-version>0.3.1</tlib-version>
+    <jsp-version>1.2</jsp-version>
+    <short-name>MyFaces Basic Tag Library</short-name>
+    <uri>http://java.sun.com/jsf/html</uri>
+    <description>
         Tag library for the MyFaces basic implementation.
-    </info>
+    </description>
 
 <!--
   ======================================================
@@ -40,8 +40,8 @@
  -->
     <tag>
         <name>form</name>
-        <tagclass>net.sourceforge.myfaces.taglib.FormTag</tagclass>
-        <bodycontent>JSP</bodycontent>
+        <tag-class>net.sourceforge.myfaces.taglib.FormTag</tag-class>
+        <body-content>JSP</body-content>
         <!-- TODO: attribute formClass -->
         <attribute>
             <name>id</name>
@@ -176,8 +176,8 @@
     <tag>
         <!-- TODO attribute rendered -->
         <name>input_hidden</name>
-        <tagclass>net.sourceforge.myfaces.taglib.InputHiddenTag</tagclass>
-        <bodycontent>JSP</bodycontent>
+        <tag-class>net.sourceforge.myfaces.taglib.InputHiddenTag</tag-class>
+        <body-content>JSP</body-content>
         <attribute>
             <name>id</name>
             <required>true</required>
@@ -214,8 +214,8 @@
         <!-- TODO: rename to 'input_text' -->
         <!-- TODO attributes rendered, converter, inputClass -->
         <name>textentry_input</name>
-        <tagclass>net.sourceforge.myfaces.taglib.TextEntryInputTag</tagclass>
-        <bodycontent>JSP</bodycontent>
+        <tag-class>net.sourceforge.myfaces.taglib.TextEntryInputTag</tag-class>
+        <body-content>JSP</body-content>
         <attribute>
             <name>id</name>
             <required>true</required>
@@ -386,8 +386,8 @@
         <name>textentry_secret</name>
         <!-- TODO: rename to 'input_secret' -->
         <!-- TODO attributes rendered, redisplay, converter, inputClass -->
-        <tagclass>net.sourceforge.myfaces.taglib.TextEntrySecretTag</tagclass>
-        <bodycontent>JSP</bodycontent>
+        <tag-class>net.sourceforge.myfaces.taglib.TextEntrySecretTag</tag-class>
+        <body-content>JSP</body-content>
         <attribute>
             <name>id</name>
             <required>true</required>
@@ -557,7 +557,7 @@
     <tag>
         <name>command_button</name>
         <!-- TODO attributes rendered, modelReference?, imageKey, image -->
-        <tagclass>net.sourceforge.myfaces.taglib.CommandButtonTag</tagclass>
+        <tag-class>net.sourceforge.myfaces.taglib.CommandButtonTag</tag-class>
         <attribute>
             <name>id</name>
             <required>false</required>
@@ -721,8 +721,8 @@
  -->
     <tag>
         <name>command_hyperlink</name>
-        <tagclass>net.sourceforge.myfaces.taglib.CommandHyperlinkTag</tagclass>
-        <bodycontent>JSP</bodycontent>
+        <tag-class>net.sourceforge.myfaces.taglib.CommandHyperlinkTag</tag-class>
+        <body-content>JSP</body-content>
         <!-- TODO attributes modelReference, rendered, image, label-->
         <attribute>
             <name>id</name>
@@ -898,8 +898,8 @@
  -->
     <tag>
         <name>output_label</name>
-        <tagclass>net.sourceforge.myfaces.taglib.OutputLabelTag</tagclass>
-        <bodycontent>JSP</bodycontent>
+        <tag-class>net.sourceforge.myfaces.taglib.OutputLabelTag</tag-class>
+        <body-content>JSP</body-content>
         <attribute>
           <name>id</name>
           <required>false</required>
@@ -1034,8 +1034,8 @@
  -->
     <tag>
         <name>output_text</name>
-        <tagclass>net.sourceforge.myfaces.taglib.OutputTextTag</tagclass>
-        <bodycontent>JSP</bodycontent>
+        <tag-class>net.sourceforge.myfaces.taglib.OutputTextTag</tag-class>
+        <body-content>JSP</body-content>
         <!-- TODO attributes rendered, value -->
         <attribute>
             <name>id</name>
@@ -1083,8 +1083,8 @@
  -->
     <tag>
         <name>output_message</name>
-        <tagclass>net.sourceforge.myfaces.taglib.MessageTag</tagclass>
-        <bodycontent>JSP</bodycontent>
+        <tag-class>net.sourceforge.myfaces.taglib.MessageTag</tag-class>
+        <body-content>JSP</body-content>
         <!-- TODO attributes rendered, value (rename msg?)-->
         <attribute>
             <name>id</name>
@@ -1132,8 +1132,8 @@
     <tag>
         <!-- TODO: rename to 'graphic_image' -->
         <name>image</name>
-        <tagclass>net.sourceforge.myfaces.taglib.ImageTag</tagclass>
-        <bodycontent>JSP</bodycontent>
+        <tag-class>net.sourceforge.myfaces.taglib.ImageTag</tag-class>
+        <body-content>JSP</body-content>
         <!-- TODO attributes rendered, key bundle, outputClass, value -->
         <attribute>
             <name>id</name>
@@ -1307,8 +1307,8 @@
  -->
     <tag>
         <name>selectone_listbox</name>
-        <tagclass>net.sourceforge.myfaces.taglib.SelectOneListboxTag</tagclass>
-        <bodycontent>JSP</bodycontent>
+        <tag-class>net.sourceforge.myfaces.taglib.SelectOneListboxTag</tag-class>
+        <body-content>JSP</body-content>
         <!-- TODO attributes rendered, selectoneClass -->
         <attribute>
             <name>id</name>
@@ -1447,8 +1447,8 @@
  -->
     <tag>
         <name>selectone_menu</name>
-        <tagclass>net.sourceforge.myfaces.taglib.SelectOneMenuTag</tagclass>
-        <bodycontent>JSP</bodycontent>
+        <tag-class>net.sourceforge.myfaces.taglib.SelectOneMenuTag</tag-class>
+        <body-content>JSP</body-content>
         <!-- TODO attributes rendered, selectoneClass -->
         <attribute>
             <name>id</name>
@@ -1592,8 +1592,8 @@
  -->
     <tag>
         <name>selectmany_listbox</name>
-        <tagclass>net.sourceforge.myfaces.taglib.SelectManyListboxTag</tagclass>
-        <bodycontent>JSP</bodycontent>
+        <tag-class>net.sourceforge.myfaces.taglib.SelectManyListboxTag</tag-class>
+        <body-content>JSP</body-content>
         <!-- TODO attributes rendered, selectmanyClass -->
         <attribute>
             <name>id</name>
@@ -1732,8 +1732,8 @@
  -->
     <tag>
         <name>selectmany_menu</name>
-        <tagclass>net.sourceforge.myfaces.taglib.SelectManyMenuTag</tagclass>
-        <bodycontent>JSP</bodycontent>
+        <tag-class>net.sourceforge.myfaces.taglib.SelectManyMenuTag</tag-class>
+        <body-content>JSP</body-content>
         <!-- TODO attributes rendered, selectmanyClass -->
         <attribute>
             <name>id</name>
@@ -1878,8 +1878,8 @@
  -->
     <tag>
         <name>selectitem</name>
-        <tagclass>net.sourceforge.myfaces.taglib.SelectItemTag</tagclass>
-        <bodycontent>JSP</bodycontent>
+        <tag-class>net.sourceforge.myfaces.taglib.SelectItemTag</tag-class>
+        <body-content>JSP</body-content>
         <attribute>
             <name>id</name>
             <required>false</required>
@@ -1930,8 +1930,8 @@
  -->
     <tag>
         <name>selectitems</name>
-        <tagclass>net.sourceforge.myfaces.taglib.SelectItemsTag</tagclass>
-        <bodycontent>JSP</bodycontent>
+        <tag-class>net.sourceforge.myfaces.taglib.SelectItemsTag</tag-class>
+        <body-content>JSP</body-content>
         <attribute>
             <name>id</name>
             <required>false</required>
@@ -1952,8 +1952,8 @@
  -->
     <tag>
         <name>errors</name>
-        <tagclass>net.sourceforge.myfaces.taglib.ErrorsTag</tagclass>
-        <bodycontent>empty</bodycontent>
+        <tag-class>net.sourceforge.myfaces.taglib.ErrorsTag</tag-class>
+        <body-content>empty</body-content>
         <attribute>
             <name>id</name>
             <required>false</required>
@@ -1963,8 +1963,8 @@
 
     <tag>
         <name>input_errors</name>
-        <tagclass>net.sourceforge.myfaces.taglib.ErrorsTag</tagclass>
-        <bodycontent>empty</bodycontent>
+        <tag-class>net.sourceforge.myfaces.taglib.ErrorsTag</tag-class>
+        <body-content>empty</body-content>
         <attribute>
             <name>id</name>
             <required>true</required>
@@ -1990,8 +1990,8 @@
  -->
     <tag>
          <name>list</name>
-         <tagclass>net.sourceforge.myfaces.taglib.ListTag</tagclass>
-         <bodycontent>JSP</bodycontent>
+         <tag-class>net.sourceforge.myfaces.taglib.ListTag</tag-class>
+         <body-content>JSP</body-content>
          <attribute>
              <name>id</name>
              <required>false</required>
@@ -2032,8 +2032,8 @@
  -->
     <tag>
         <name>listrow</name>
-        <tagclass>net.sourceforge.myfaces.taglib.ListRowTag</tagclass>
-        <bodycontent>JSP</bodycontent>
+        <tag-class>net.sourceforge.myfaces.taglib.ListRowTag</tag-class>
+        <body-content>JSP</body-content>
         <attribute>
             <name>id</name>
             <required>false</required>
@@ -2059,8 +2059,8 @@
  -->
     <tag>
          <name>grid</name>
-         <tagclass>net.sourceforge.myfaces.taglib.GridTag</tagclass>
-         <bodycontent>JSP</bodycontent>
+         <tag-class>net.sourceforge.myfaces.taglib.GridTag</tag-class>
+         <body-content>JSP</body-content>
          <attribute>
              <name>id</name>
              <required>false</required>
@@ -2106,8 +2106,8 @@
  -->
     <tag>
         <name>group</name>
-        <tagclass>net.sourceforge.myfaces.taglib.GroupTag</tagclass>
-        <bodycontent>JSP</bodycontent>
+        <tag-class>net.sourceforge.myfaces.taglib.GroupTag</tag-class>
+        <body-content>JSP</body-content>
         <attribute>
             <name>id</name>
             <required>false</required>
@@ -2122,8 +2122,8 @@
  -->
     <tag>
         <name>selectboolean_checkbox</name>
-        <tagclass>net.sourceforge.myfaces.taglib.SelectBooleanCheckboxTag</tagclass>
-        <bodycontent>JSP</bodycontent>
+        <tag-class>net.sourceforge.myfaces.taglib.SelectBooleanCheckboxTag</tag-class>
+        <body-content>JSP</body-content>
         <!-- TODO attributes rendered -->
         <attribute>
             <name>id</name>

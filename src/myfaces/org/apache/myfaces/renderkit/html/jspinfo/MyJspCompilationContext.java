@@ -24,6 +24,7 @@ import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.Options;
 import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.compiler.Compiler;
 import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.compiler.JspReader;
 import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.compiler.ServletWriter;
+import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.compiler.TldLocationsCache;
 
 import javax.servlet.ServletContext;
 import java.io.InputStream;
@@ -39,10 +40,12 @@ public class MyJspCompilationContext
         implements JspCompilationContext
 {
     private ServletContext _servletContext;
+    private TldLocationsCache _tldLocationsCache;
 
     public MyJspCompilationContext(ServletContext servletContext)
     {
         _servletContext = servletContext;
+        _tldLocationsCache = new TldLocationsCache(servletContext);
     }
 
     public Compiler createCompiler() throws JasperException
@@ -122,7 +125,8 @@ public class MyJspCompilationContext
 
     public String[] getTldLocation(String uri) throws JasperException
     {
-        throw new UnsupportedOperationException();
+        String[] location = _tldLocationsCache.getLocation(uri);
+        return location;
     }
 
     public ServletWriter getWriter()
