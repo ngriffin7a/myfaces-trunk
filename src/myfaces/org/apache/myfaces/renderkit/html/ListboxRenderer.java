@@ -43,12 +43,12 @@ public class ListboxRenderer
 
     public boolean supportsComponentType(String s)
     {
-        return s.equals(UISelectOne.TYPE);
+        return s.equals(javax.faces.component.UISelectOne.TYPE);
     }
 
     public boolean supportsComponentType(UIComponent uicomponent)
     {
-        return uicomponent instanceof UISelectOne;
+        return uicomponent instanceof javax.faces.component.UISelectOne;
     }
 
     public void encodeBegin(FacesContext facescontext, UIComponent uicomponent)

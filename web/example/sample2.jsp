@@ -52,10 +52,10 @@
                 <f:command_button id="button1" commandName="quotationOn" commandReference="q_controller.processEvent" label="Add quotes"/>
 
                 <br><br>
-                <f:selectbox_many id="manyoptions" size="8" modelReference="q_form.selectManyValues" >
+                <f:listbox_many id="manyoptions" modelReference="q_form.selectManyValues" >
                     <f:selectbox_item id="item0" value="" label="select the unquote characters" />
                     <f:selectbox_items id="manyItems" modelReference="q_form.selectManyItems" />
-                </f:selectbox_many>
+                </f:listbox_many>
                 <f:command_button id="button2" commandName="quotationOff"  commandReference="q_controller.processEvent" label="Remove quotes"/><br>
 
             </f:form>

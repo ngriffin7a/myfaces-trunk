@@ -401,4 +401,40 @@
     </tag>
 
 
+    <tag>
+         <name>list</name>
+         <tagclass>net.sourceforge.myfaces.taglib.ListTag</tagclass>
+         <bodycontent>JSP</bodycontent>
+         <attribute>
+             <name>id</name>
+             <required>true</required>
+             <rtexprvalue>false</rtexprvalue>
+         </attribute>
+         <attribute>
+             <name>style</name>
+             <required>false</required>
+             <rtexprvalue>false</rtexprvalue>
+         </attribute>
+         <attribute>
+             <name>columnClasses</name>
+             <required>false</required>
+             <rtexprvalue>true</rtexprvalue>
+         </attribute>
+        <attribute>
+            <name>rowClasses</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>headerClass</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>footerClass</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+     </tag>
+
 </taglib>

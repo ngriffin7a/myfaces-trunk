@@ -28,14 +28,13 @@ public class UIPanel
     implements MyFacesComponent
 {
     public static final String VAR_ATTR = "var";
+    public static final String COLUMN_CLASSES_ATTR = "columnClasses";
+    public static final String FOOTER_CLASS_ATTR = "footerClass";
+    public static final String HEADER_CLASS_ATTR = "headerClass";
+    public static final String ROW_CLASSES_ATTR = "rowClasses";
+    public static final String CLASS_ATTR = "class";
 
     private MyFacesComponentDelegate _delegate = new MyFacesComponentDelegate(this);
-
-    public boolean getRendersChildren()
-    {
-        return false;
-    }
-
 
     public boolean isTransient()
     {

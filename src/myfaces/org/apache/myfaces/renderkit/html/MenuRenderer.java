@@ -43,12 +43,12 @@ public class MenuRenderer
 
     public boolean supportsComponentType(String s)
     {
-        return s.equals(UISelectMany.TYPE);
+        return s.equals(javax.faces.component.UISelectMany.TYPE);
     }
 
     public boolean supportsComponentType(UIComponent uicomponent)
     {
-        return uicomponent instanceof UISelectOne;
+        return uicomponent instanceof javax.faces.component.UISelectOne;
     }
 
     public void encodeBegin(FacesContext facescontext, UIComponent uicomponent)

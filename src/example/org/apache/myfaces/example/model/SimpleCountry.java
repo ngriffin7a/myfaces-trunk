@@ -16,41 +16,31 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package net.sourceforge.myfaces.taglib;
-
-import javax.faces.component.UIComponent;
-import javax.faces.context.FacesContext;
-import javax.servlet.jsp.JspException;
-import javax.servlet.jsp.tagext.IterationTag;
-import javax.servlet.jsp.tagext.Tag;
+package net.sourceforge.myfaces.example.model;
 
 /**
  * TODO: description
- * @author Manfred Geiler (latest modification by $Author$)
+ * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public abstract class MyFacesIterationTag
-        extends MyFacesTag
-        implements IterationTag
+public class SimpleCountry
 {
-    public final int doAfterBody() throws JspException
-    {
-        /*
-        FacesContext facesContext = getFacesContext();
+    private String _name;
+    private String _isoCode;
 
-        UIComponent renderingParent = (UIComponent)facesContext.getServletRequest().getAttribute(RENDERING_PARENT);
-        if (renderingParent != null)
-        {
-            //a parent is rendering, so child must not render itself
-            return Tag.SKIP_BODY;
-        }
-        */
-        return doAfterAfterBody();
+    public SimpleCountry(String name, String isoCode)
+    {
+        _name = name;
+        _isoCode = isoCode;
     }
 
-
-    public int doAfterAfterBody() throws JspException
+    public String getName()
     {
-        return Tag.SKIP_BODY;
+        return _name;
+    }
+
+    public String getIsoCode()
+    {
+        return _isoCode;
     }
 }

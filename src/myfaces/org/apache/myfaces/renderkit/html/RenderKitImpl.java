@@ -51,6 +51,7 @@ public class RenderKitImpl
         addRenderer(new ErrorsRenderer());
         addRenderer(new ListboxRenderer());
         addRenderer(new MenuRenderer());
+        addRenderer(new ListRenderer());
 
         //State Handling
         if (MyFacesConfig.isStateZipping())

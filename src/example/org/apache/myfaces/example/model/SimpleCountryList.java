@@ -16,41 +16,29 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package net.sourceforge.myfaces.taglib;
+package net.sourceforge.myfaces.example.model;
 
-import javax.faces.component.UIComponent;
-import javax.faces.context.FacesContext;
-import javax.servlet.jsp.JspException;
-import javax.servlet.jsp.tagext.IterationTag;
-import javax.servlet.jsp.tagext.Tag;
+import java.util.ArrayList;
+import java.util.Iterator;
 
 /**
  * TODO: description
- * @author Manfred Geiler (latest modification by $Author$)
+ * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public abstract class MyFacesIterationTag
-        extends MyFacesTag
-        implements IterationTag
+public class SimpleCountryList
 {
-    public final int doAfterBody() throws JspException
-    {
-        /*
-        FacesContext facesContext = getFacesContext();
+    private ArrayList _countries = new ArrayList();
 
-        UIComponent renderingParent = (UIComponent)facesContext.getServletRequest().getAttribute(RENDERING_PARENT);
-        if (renderingParent != null)
-        {
-            //a parent is rendering, so child must not render itself
-            return Tag.SKIP_BODY;
-        }
-        */
-        return doAfterAfterBody();
+    public SimpleCountryList()
+    {
+        _countries.add(new SimpleCountry("Austria", "AT"));
+        _countries.add(new SimpleCountry("Germany", "GE"));
+        _countries.add(new SimpleCountry("Italy", "IT"));
     }
 
-
-    public int doAfterAfterBody() throws JspException
+    public Iterator getCountries()
     {
-        return Tag.SKIP_BODY;
+        return _countries.iterator();
     }
 }

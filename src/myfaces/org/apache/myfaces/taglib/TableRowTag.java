@@ -31,7 +31,7 @@ import java.io.IOException;
  * @version $Revision$ $Date$
  */
 public class TableRowTag
-        extends MyFacesIterationTag
+        extends MyFacesTag
 {
     public UIComponent createComponent()
     {
@@ -45,7 +45,12 @@ public class TableRowTag
         return DataRenderer.TYPE;
     }
 
+    public void setVar(String v)
+    {
+        addRequestTimeValue(UIPanel.VAR_ATTR, v);
+    }
 
+    /*
     private boolean hasNext()
     {
         String varAttr = (String)getComponent().getAttribute(UIPanel.VAR_ATTR);
@@ -85,13 +90,6 @@ public class TableRowTag
             return SKIP_BODY;
         }
     }
-
-
-
-    public void setVar(String v)
-    {
-        addRequestTimeValue(UIPanel.VAR_ATTR, v);
-    }
-
+    */
 
 }
