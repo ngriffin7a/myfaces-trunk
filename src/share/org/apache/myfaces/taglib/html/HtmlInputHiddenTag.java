@@ -23,6 +23,9 @@ import javax.faces.component.html.HtmlInputHidden;
  * @author Martin Marinschek
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.1  2005/03/30 22:52:28  schof
+ * Fixes MYFACES-146.  Tag needs to be in the shared source codebase because it is also used by extensions jar.  Thanks to Hal Deadman for reporting and investigating this bug.
+ *
  * Revision 1.12  2004/10/13 11:51:00  matze
  * renamed packages to org.apache
  *
