@@ -41,6 +41,9 @@ import java.io.IOException;
  * @author Manfred Geiler
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.18  2004/08/13 13:15:20  manolito
+ * FIXME comment
+ *
  * Revision 1.17  2004/07/21 11:22:40  mwessendorf
  * last modification in effect of Adam Winer bug-report.
  *
@@ -306,6 +309,11 @@ public class JspStateManagerImpl
                                                       String viewId,
                                                       SerializedView serializedView)
     {
+        //FIXME / TODO: What, if user has more than one browser windows open?!
+        // We should at least store the serializedView per viewId and not
+        // only one per session! This would solve the problem for different pages in
+        // two windows but the problem remains for the same page in different browser
+        // windows.
         externalContext.getSessionMap().put(SERIALIZED_VIEW_SESSION_ATTR,
                                             new Object[] {viewId, serializedView});
     }
