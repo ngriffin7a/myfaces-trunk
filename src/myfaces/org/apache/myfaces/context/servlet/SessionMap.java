@@ -18,18 +18,21 @@
  */
 package net.sourceforge.myfaces.context.servlet;
 
-import java.util.Enumeration;
+import net.sourceforge.myfaces.util.NullEnumeration;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-
-import net.sourceforge.myfaces.util.NullEnumeration;
+import java.util.Enumeration;
 
 /**
  * HttpSession attibutes as Map.
  * 
  * @author Anton Koinov (latest modification by $Author$)
  * @version $Revision$ $Date$
+ * $Log$
+ * Revision 1.11  2004/04/16 15:35:59  manolito
+ * Log
+ *
  */
 public class SessionMap extends AbstractAttributeMap
 {

@@ -31,6 +31,10 @@ import java.util.TimeZone;
 /**
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
+ * $Log$
+ * Revision 1.3  2004/04/16 15:35:59  manolito
+ * Log
+ *
  */
 public class ConvertDateTimeTag
         extends ConverterTag
