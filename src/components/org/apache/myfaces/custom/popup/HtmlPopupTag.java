@@ -4,10 +4,7 @@
 package org.apache.myfaces.custom.popup;
 
 import org.apache.myfaces.component.UserRoleAware;
-import org.apache.myfaces.taglib.UIComponentTagBase;
 import org.apache.myfaces.taglib.html.HtmlComponentTagBase;
-import org.apache.myfaces.custom.datascroller.HtmlDataScroller;
-import org.apache.myfaces.custom.datascroller.HtmlDataScrollerRenderer;
 
 import javax.faces.component.UIComponent;
 
@@ -15,6 +12,9 @@ import javax.faces.component.UIComponent;
  * @author Martin Marinschek (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.3  2004/11/25 08:41:25  matzew
+ * removed unused import-statements
+ *
  * Revision 1.2  2004/11/23 23:24:04  mmarinschek
  * Popup tag has now more attributes
  *

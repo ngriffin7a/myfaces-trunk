@@ -25,12 +25,14 @@ import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 import java.io.IOException;
 import java.util.List;
-import java.lang.reflect.InvocationTargetException;
 
 /**
  * @author Martin Marinschek (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.4  2004/11/25 08:41:25  matzew
+ * removed unused import-statements
+ *
  * Revision 1.3  2004/11/23 23:24:04  mmarinschek
  * Popup tag has now more attributes
  *
