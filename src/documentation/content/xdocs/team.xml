@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V1.2//EN" "document-v12.dtd">
+<document>
+ <header>
+  <title>The MyFaces Team</title>
+ </header>
+
+ <body>
+
+  <section>
+  <title>The Commiters</title>
+    <p>
+    This list contains all committers of all times of the MyFaces project.
+    </p>
+    <ul>
+<li>Bill Dudney (bdudney at users.sourceforge.net)</li>
+<li>Anton Koinov (dave0000 at users.sourceforge.net)</li>
+<li>Dan Hodnett (dhodnett at users.sourceforge.net)</li>
+<li>Dimitry D\'hondt (dimitry_dhondt at users.sourceforge.net)</li>
+<li>Grant Smith (grantsmith at users.sourceforge.net)</li>
+<li>Louis Calisi (lcalisi at users.sourceforge.net)</li>
+<li>Manfred Geiler (manolito at users.sourceforge.net)</li>
+<li>Matthias Wessendorf (mwessendorf at users.sourceforge.net)</li>
+<li>Oliver Rossmueller (o_rossmueller at users.sourceforge.net)</li>
+<li>Travis Reeder (prophecyslides at users.sourceforge.net)</li>
+<li>Thomas Spiegl (royalts at users.sourceforge.net)</li>
+<li>Sylvain Vieujot (svieujot at users.sourceforge.net)</li>
+<li>Martin Marinschek (tinytoony at users.sourceforge.net)</li>
+</ul>
+</section>
+</body>
+</document>

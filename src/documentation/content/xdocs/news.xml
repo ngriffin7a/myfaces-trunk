@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V1.2//EN" "http://apache.org/forrest/dtd/document-v12.dtd">
+<document> 
+  <header> 
+    <title>News</title> 
+  </header> 
+  <body>
+     <section>
+      <title>Release 1.0.5 beta</title>
+ <p>Release 1.0.5 beta is a maintenance release.</p>
+
+<p>Improvements in Release 1.0.5 beta:</p>
+<ul>
+<li>New faces configurator (complete implementation, including decorator pattern for delegation!)</li>
+<li>rssticker (Newsfeed component)</li>
+<li>dataScroller (at long last, the ultimative sroller component for UIData!)</li>
+<li>jscookMenu (Renders a Javascript menu based on the excellent JSCookMenu by Heng Yuan - have a look at it!)</li>
+<li>new validators (Regular Expressions, Equal)</li>
+<li>of course many bugs got fixed</li>
+</ul>
+
+</section>
+
+</body>
+</document>

@@ -1,0 +1,53 @@
+<?xml version="1.0"?>
+
+<!--
+Forrest site.xml
+
+This file contains an outline of the site's information content.  It is used to:
+- Generate the website menus (though these can be overridden - see docs)
+- Provide semantic, location-independent aliases for internal 'site:' URIs, eg
+<link href="site:changes"> links to changes.html (or ../changes.html if in
+  subdir).
+- Provide aliases for external URLs in the external-refs section.  Eg, <link
+  href="ext:cocoon"> links to http://xml.apache.org/cocoon/ 
+
+See http://xml.apache.org/forrest/linking.html for more info
+-->
+
+<site label="MyProj" href="" xmlns="http://apache.org/forrest/linkmap/1.0" tab="">
+
+  <about label="About">
+    <index label="Index" href="index.html" description="Welcome to MyFaces"/>
+    <news label="News" href="news.html" description="Welcome to MyFaces"/>
+    <features label="Features" href="features.html" description="Welcome to MyFaces"/>
+    <team label="Team" href="team.html" description="Welcome to MyFaces"/>
+    <!--changes label="Changes" href="changes.html" description="History of Changes" />
+    <todo label="Todo" href="todo.html"  description="Todo List" /-->
+  </about>
+
+
+  <project label="Project" href="project/" tab="samples">
+    <project1 label="Release Builds" href="builds.html"/>
+    <project2 label="CVS" href="cvs.html" />
+    <project3 label="License" href="license.html" />
+
+
+  </project>
+
+  <all>
+    <whole_site_html label="Whole Site HTML" href="site.html"/>
+    <whole_site_html label="Whole Site PDF" href="site.pdf"/>
+  </all>
+
+  <external-refs>
+    <xml.apache.org href="http://xml.apache.org/">
+      <forrest href="forrest/">
+        <validation href="validation.html"/>
+        <webapp href="your-project.html#webapp"/>
+        <document-v11 href="document-v11.html"/>
+      </forrest>
+      <cocoon href="cocoon/"/>
+    </xml.apache.org>
+  </external-refs>
+
+</site>
