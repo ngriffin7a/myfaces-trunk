@@ -3,7 +3,7 @@ MyFaces Release Notes
 
 ----------------------------------------------------------------------
 Changes in Release 1.0.4 alpha
-
+* many bugfixes ;-)
 
 ----------------------------------------------------------------------
 Changes in Release 1.0.3 alpha
