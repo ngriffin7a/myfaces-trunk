@@ -24,34 +24,30 @@ import javax.faces.el.VariableResolver;
 import javax.faces.event.AbortProcessingException;
 import javax.faces.event.ActionEvent;
 import javax.faces.event.ActionListener;
-import javax.faces.event.PhaseId;
 
 /**
  * DOCUMENT ME!
  * @author Manfred Geiler
  * @version $Revision$ $Date$
  */
-public class CalcController
+public class CalcActionListener
     implements ActionListener
 {
     public void processAction(ActionEvent event) throws AbortProcessingException
     {
-        if (event.getPhaseId() == PhaseId.INVOKE_APPLICATION)
-        {
-            FacesContext facesContext = FacesContext.getCurrentInstance();
-            UIComponent component = event.getComponent();
+        FacesContext facesContext = FacesContext.getCurrentInstance();
+        UIComponent component = event.getComponent();
 
-            VariableResolver vr = facesContext.getApplication().getVariableResolver();
-            CalcForm form = (CalcForm)vr.resolveVariable(facesContext, "calcForm");
-            if (component.getId().equals("addButton") ||
-                component.getId().equals("href1"))
-            {
-                form.add();
-            }
-            else
-            {
-                form.subtract();
-            }
+        VariableResolver vr = facesContext.getApplication().getVariableResolver();
+        CalcForm form = (CalcForm)vr.resolveVariable(facesContext, "calcForm");
+        if (component.getId().equals("addButton") ||
+            component.getId().equals("href1"))
+        {
+            form.add();
+        }
+        else
+        {
+            form.subtract();
         }
     }
 

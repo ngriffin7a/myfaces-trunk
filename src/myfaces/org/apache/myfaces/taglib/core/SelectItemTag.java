@@ -56,6 +56,13 @@ public class SelectItemTag
         setStringProperty(component, JSFAttr.ITEM_DESCRIPTION_ATTR, _itemDescription);
         setStringProperty(component, JSFAttr.ITEM_LABEL_ATTR, _itemLabel);
         setStringProperty(component, JSFAttr.ITEM_VALUE_ATTR, _itemValue);
+
+        if (_itemValue == null &&
+            component.getValueBinding("binding") == null &&
+            component.getValueBinding("value") == null)
+        {
+            throw new IllegalArgumentException("SelectItem with no value");
+        }
     }
 
     public void setDisabled(String disabled)

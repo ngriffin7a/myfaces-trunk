@@ -80,18 +80,18 @@ managed beans used:
                     <h:output_text id="result" value="#{calcForm.result}" /><f:verbatim><br></f:verbatim>
 
                     <h:command_button id="addButton" value="Add them" action="none">
-                        <f:action_listener type="net.sourceforge.myfaces.examples.example1.CalcController" ></f:action_listener>
+                        <f:action_listener type="net.sourceforge.myfaces.examples.example1.CalcActionListener" ></f:action_listener>
                     </h:command_button>
                     <h:command_button id="subtractButton" value="Subtract them" action="none">
-                        <f:action_listener type="net.sourceforge.myfaces.examples.example1.CalcController" ></f:action_listener>
+                        <f:action_listener type="net.sourceforge.myfaces.examples.example1.CalcActionListener" ></f:action_listener>
                     </h:command_button>
                     <f:verbatim><br></f:verbatim>
 
                     <h:command_link id="href1" action="none"><f:verbatim>Add them by clicking this link</f:verbatim>
-                        <f:action_listener type="net.sourceforge.myfaces.examples.example1.CalcController" ></f:action_listener>
+                        <f:action_listener type="net.sourceforge.myfaces.examples.example1.CalcActionListener" ></f:action_listener>
                     </h:command_link><f:verbatim><br></f:verbatim>
                     <h:command_link id="href2" action="none"><f:verbatim>Subtract them by clicking this link</f:verbatim>
-                        <f:action_listener type="net.sourceforge.myfaces.examples.example1.CalcController" ></f:action_listener>
+                        <f:action_listener type="net.sourceforge.myfaces.examples.example1.CalcActionListener" ></f:action_listener>
                     </h:command_link>
                 </h:form>
 
@@ -105,10 +105,10 @@ managed beans used:
                     <h:input_text id="text" value="#{ucaseForm.text}"/>
                     <h:message id="textError" for="form2:text" styleClass="error" /><f:verbatim><br></f:verbatim>
                     <h:command_button id="ucaseButton" value="Make it uppercase" action="none">
-                        <f:action_listener type="net.sourceforge.myfaces.examples.example1.UCaseController" />
+                        <f:action_listener type="net.sourceforge.myfaces.examples.example1.UCaseActionListener" />
                     </h:command_button>
                     <h:command_button id="lcaseButton" value="Make it lowercase" action="none">
-                        <f:action_listener type="net.sourceforge.myfaces.examples.example1.UCaseController" />
+                        <f:action_listener type="net.sourceforge.myfaces.examples.example1.UCaseActionListener" />
                     </h:command_button>
                     <f:verbatim><br></f:verbatim>
                 </h:form>

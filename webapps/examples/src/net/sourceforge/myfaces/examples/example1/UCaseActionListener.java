@@ -24,34 +24,29 @@ import javax.faces.el.VariableResolver;
 import javax.faces.event.AbortProcessingException;
 import javax.faces.event.ActionEvent;
 import javax.faces.event.ActionListener;
-import javax.faces.event.PhaseId;
 
 /**
  * DOCUMENT ME!
  * @author Manfred Geiler
  * @version $Revision$ $Date$
  */
-public class UCaseController
+public class UCaseActionListener
     implements ActionListener
 {
     public void processAction(ActionEvent event) throws AbortProcessingException
     {
-        if (event.getPhaseId() == PhaseId.INVOKE_APPLICATION)
+        FacesContext facesContext = FacesContext.getCurrentInstance();
+        UIComponent component = event.getComponent();
+
+        VariableResolver vr = facesContext.getApplication().getVariableResolver();
+        UCaseForm form = (UCaseForm)vr.resolveVariable(facesContext, "ucaseForm");
+        if (component.getId().equals("ucaseButton"))
         {
-            FacesContext facesContext = FacesContext.getCurrentInstance();
-            UIComponent component = event.getComponent();
-
-            VariableResolver vr = facesContext.getApplication().getVariableResolver();
-            UCaseForm form = (UCaseForm)vr.resolveVariable(facesContext, "ucaseForm");
-            if (component.getId().equals("ucaseButton"))
-            {
-                form.uppercase();
-            }
-            else
-            {
-                form.lowercase();
-            }
+            form.uppercase();
         }
-
+        else
+        {
+            form.lowercase();
+        }
     }
 }

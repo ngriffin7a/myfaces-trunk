@@ -27,7 +27,6 @@ import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.model.SelectItem;
 import java.util.Collection;
-import java.util.Iterator;
 
 /**
  * @author Manfred Geiler (latest modification by $Author$)
@@ -116,6 +115,10 @@ public class ComponentUtils
         {
             collection.addAll((Collection)value);
         }
+        /*
+        Iterator not supported by faces API methods
+        e.g. SelectItemsIterator throws IllegalArgumentException, so no need to support it in MyFaces
+        
         else if (value instanceof Iterator)
         {
             Iterator it = (Iterator)value;
@@ -124,6 +127,7 @@ public class ComponentUtils
                 collection.add(it.next());
             }
         }
+        */
         else
         {
             throw new IllegalArgumentException("Unsupported UISelectItems value of type " + value.getClass().getName());

@@ -79,43 +79,59 @@ public class ValueBindingImpl
     //~ Methods ------------------------------------------------------------------------------------
 
     public boolean isReadOnly(FacesContext facesContext)
-    throws PropertyNotFoundException
+            throws PropertyNotFoundException
     {
-        Object base = resolve(facesContext);
-        if (base == null)
+        try
         {
-            throw new PropertyNotFoundException("Reference: " + _reference + ". Null base bean");
-        }
+            Object base = resolve(facesContext);
+            if (base == null)
+            {
+                throw new PropertyNotFoundException("Reference: " + _reference + ". Null base bean");
+            }
 
-        int maxIndex = _parsedReference.length - 1;
-        if (maxIndex > 0)
+            int maxIndex = _parsedReference.length - 1;
+            if (maxIndex > 0)
+            {
+                return isPropertyReadOnly(facesContext, base, _parsedReference[maxIndex]);
+            }
+
+            return true;
+        }
+        catch (RuntimeException e)
         {
-            return isPropertyReadOnly(facesContext, base, _parsedReference[maxIndex]);
+            log.error("Exception determining readonly for value reference " + _reference, e);
+            throw e;
         }
-
-        return true;
     }
 
     public Class getType(FacesContext facesContext)
-    throws PropertyNotFoundException
+            throws PropertyNotFoundException
     {
-        Object base = resolve(facesContext);
-        if (base == null)
+        try
         {
-            throw new PropertyNotFoundException("Reference: " + _reference + ". Null base bean");
-        }
+            Object base = resolve(facesContext);
+            if (base == null)
+            {
+                throw new PropertyNotFoundException("Reference: " + _reference + ". Null base bean");
+            }
 
-        int maxIndex = _parsedReference.length - 1;
-        if (maxIndex > 0)
+            int maxIndex = _parsedReference.length - 1;
+            if (maxIndex > 0)
+            {
+                return getPropertyType(facesContext, base, _parsedReference[maxIndex]);
+            }
+
+            return base.getClass();
+        }
+        catch (RuntimeException e)
         {
-            return getPropertyType(facesContext, base, _parsedReference[maxIndex]);
+            log.error("Exception determining type of value reference " + _reference, e);
+            throw e;
         }
-
-        return base.getClass();
     }
 
     public void setValue(FacesContext facesContext, Object newValue)
-    throws PropertyNotFoundException
+            throws PropertyNotFoundException
     {
         try
         {
@@ -136,47 +152,55 @@ public class ValueBindingImpl
                     _parsedReference[0], newValue);
             }
         }
-        catch (RuntimeException ex)
+        catch (RuntimeException e)
         {
             if (newValue == null)
             {
-                log.error("Reference: " + _reference + ", newValue: null", ex);
+                log.error("Exception setting value of reference " + _reference + " to null", e);
             }
             else
             {
-                log.error(
-                    "Reference: " + _reference + ", newValue: " + newValue.getClass().getName(), ex);
-            }
+                log.error("Exception setting value of reference " + _reference + " to a new value of type " +
+                          newValue.getClass().getName(), e);
 
-            throw ex;
+            }
+            throw e;
         }
     }
 
     public Object getValue(FacesContext facesContext)
-    throws PropertyNotFoundException
+            throws PropertyNotFoundException
     {
-        Object base = resolve(facesContext);
-        if (base == null)
+        try
         {
-            return null;
-        }
+            Object base = resolve(facesContext);
+            if (base == null)
+            {
+                return null;
+            }
 
-        int maxIndex = _parsedReference.length - 1;
-        if (maxIndex > 0)
+            int maxIndex = _parsedReference.length - 1;
+            if (maxIndex > 0)
+            {
+                base = getPropertyValue(facesContext, base, _parsedReference[maxIndex]);
+            }
+
+            return base;
+        }
+        catch (RuntimeException e)
         {
-            base = getPropertyValue(facesContext, base, _parsedReference[maxIndex]);
+            log.error("Exception getting value of reference " + _reference, e);
+            throw e;
         }
-
-        return base;
     }
 
-    public static Integer integer(int i)
+
+    private static Integer integer(int i)
     {
         if ((i >= INTEGER_CACHE_LOWER) && (i <= INTEGER_CACHE_UPPER))
         {
             return INTEGER_CACHE[i - INTEGER_CACHE_LOWER];
         }
-
         return new Integer(i);
     }
 
@@ -189,7 +213,7 @@ public class ValueBindingImpl
         : _application.getPropertyResolver().isReadOnly(base, ((Integer) name).intValue());
     }
 
-    protected Class getPropertyType(FacesContext facesContext, Object base, Object name)
+    private Class getPropertyType(FacesContext facesContext, Object base, Object name)
     {
         name = coerceProperty(facesContext, base, name);
 
@@ -198,8 +222,10 @@ public class ValueBindingImpl
         : _application.getPropertyResolver().getType(base, ((Integer) name).intValue());
     }
 
-    protected void setPropertyValue(
-        FacesContext facesContext, Object base, Object name, Object newValue)
+    private void setPropertyValue(FacesContext facesContext,
+                                  Object base,
+                                  Object name,
+                                  Object newValue)
     {
         name = coerceProperty(facesContext, base, name);
         if (name instanceof String)
@@ -225,7 +251,7 @@ public class ValueBindingImpl
      *
      * @return the value of requested property
      */
-    protected Object getPropertyValue(FacesContext facesContext, Object base, Object name)
+    private Object getPropertyValue(FacesContext facesContext, Object base, Object name)
     {
         name = coerceProperty(facesContext, base, name);
         if (name == null)
@@ -257,7 +283,7 @@ public class ValueBindingImpl
      *
      * @return the name or index of the property
      */
-    protected Object coerceProperty(FacesContext facesContext, Object base, Object name)
+    private Object coerceProperty(FacesContext facesContext, Object base, Object name)
     {
 //        Both guaranteed by caller not to be null
 //        if ((base == null) || (name == null))
@@ -332,7 +358,7 @@ public class ValueBindingImpl
         return resolve(facesContext, base, 1);
     }
 
-    protected Object resolve(FacesContext facesContext, Object base, int start)
+    private Object resolve(FacesContext facesContext, Object base, int start)
     {
         for (int i = start, max = _parsedReference.length - 1; i < max; i++)
         {
@@ -385,7 +411,7 @@ public class ValueBindingImpl
      *
      * @throws ReferenceSyntaxException on eny error during coercion
      */
-    protected Integer coerceToInteger(Object obj)
+    private Integer coerceToInteger(Object obj)
     {
         if (obj == null)
         {

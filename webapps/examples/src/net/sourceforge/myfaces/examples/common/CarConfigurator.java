@@ -24,7 +24,6 @@ import javax.faces.model.SelectItem;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -39,8 +38,8 @@ public class CarConfigurator
     private List _extrasList;
     private BigDecimal _price = new BigDecimal(0);
     private String[] _extras;
-    private String _discount;
-    private String _discount2;
+    private String _discount = "0";
+    private String _discount2 = "0";
     private String _car;
     private String _color;
     private HashMap _priceList = new HashMap();
@@ -93,22 +92,22 @@ public class CarConfigurator
         }
     }
 
-    public Iterator getCars()
+    public List getCars()
     {
         init();
-        return _cars.iterator();
+        return _cars;
     }
 
-    public Iterator getColors()
+    public List getColors()
     {
         init();
-        return _colors.iterator();
+        return _colors;
     }
 
-    public Iterator getExtrasList()
+    public List getExtrasList()
     {
         init();
-        return _extrasList.iterator();
+        return _extrasList;
     }
 
     public String getCar()

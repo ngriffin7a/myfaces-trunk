@@ -29,6 +29,12 @@ import javax.servlet.jsp.tagext.TagSupport;
 import java.util.*;
 
 /**
+ * TODO:
+ * We should find a way to save loaded bundles in the state, because otherwise
+ * on the next request the bundle map will not be present before the render phase
+ * and value bindings that reference to the bundle will always log annoying
+ * "Variable 'xxx' could not be resolved" error messages.
+ *
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */

@@ -5,8 +5,8 @@ MyFaces Release Notes
 Changes in Release 0.9.0
 * Many, many changes to catch up with current Spec. 1.0 Proposed Final Draft
 * Some config parameters abandoned (see migration-0.4-to-0.9.txt)
-* new config parameter "myfaces_allow_javascript"
-* new config parameter "myfaces_pretty_html"
+* new config parameter "myfaces_allow_javascript" (see /conf/web.xml for description)
+* new config parameter "myfaces_pretty_html" (see /conf/web.xml for description)
 
 ----------------------------------------------------------------------
 Changes in Release 0.4.4

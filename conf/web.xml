@@ -46,49 +46,28 @@
         </description>
     </context-param>
 
-
-
     <context-param>
-        <param-name>myfaces_CheckJspModification</param-name>
+        <param-name>myfaces_allow_javascript</param-name>
         <param-value>true</param-value>
         <description>
-            MyFaces needs to parse JSP files when doing the "minimizing state
-            saving" strategy. The parsed infos are (of course) cached in memory.
-            Setting this parameter to true, means that JSP files are checked
-            for modification whenever a parsed info is needed. If the JSP was
-            modified (i.e. has a newer file date than when it was parsed) it is
-            parsed again.
-            In a development environment you should always set this parameter to
-            true. Setting it to false in production might enhance performance.
+            This parameter tells MyFaces if javascript code should be allowed in the
+            rendered HTML output.
+            If javascript is allowed, command_link anchors will have javascript code
+            that submits the corresponding form.
+            If javascript is not allowed, the state saving info and nested parameters
+            will be added as url parameters.
             Default: "true"
         </description>
     </context-param>
 
     <context-param>
-        <param-name>myfaces_StateSavingMode</param-name>
-        <param-value>client_minimized</param-value>
+        <param-name>myfaces_pretty_html</param-name>
+        <param-value>true</param-value>
         <description>
-            Allowed values:
-            "server_session" = tree state is saved in a HTTPSession
-            "client_serialized" = tree is serialized, zipped and saved as url parameter or hidden input
-            "client_minimized" = only those (dynamical) tree and component infos are saved that could not otherwise be restored by parsing the JSP
-            "client_minimized_zipped" = like "client_minimal", but additionally state info is zipped (GZIP), encoded to allowed characters (Base64) written as one query parameter or hidden form input.
-            Default: "client_minimized"
-        </description>
-    </context-param>
-
-    <context-param>
-        <param-name>myfaces_DisableJspParser</param-name>
-        <param-value>false</param-value>
-        <description>
-            This parameter is useful for the two state saving modes
-            "server_session" and "client_serialized" and disables the
-            jsp parsing completely.
-            Setting it to true means, that the integrated jsp parser (jasper)
-            will not be used. Normally you can leave this parameter to false.
-            Set only true when you know what you are doing or when you suspect
-            the integrated jasper to have (unwanted) sideeffects on your servlet
-            container.
+            If true, rendered HTML code will be formatted, so that it is "human readable".
+            i.e. additional line separators and whitespace will be written, that do not
+            influence the HTML code.
+            Default: "true"
         </description>
     </context-param>
 

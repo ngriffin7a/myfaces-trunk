@@ -108,13 +108,6 @@
     </managed-bean>
 
 
-    <!-- Resource Bundle -->
-
-    <managed-bean>
-        <managed-bean-name>example_messages</managed-bean-name>
-        <managed-bean-class>net.sourceforge.myfaces.examples.util.ExampleMessagesResourceBundle</managed-bean-class>
-        <managed-bean-scope>application</managed-bean-scope>
-    </managed-bean>
 
     <navigation-rule>
         <description>
