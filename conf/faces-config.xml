@@ -339,12 +339,12 @@
     
     <!--custom validators based upon jakarta commons validator-->
 	<validator>
-		<validator-id>myfaces.validator.CreditCard</validator-id>
+		<validator-id>net.sourceforge.myfaces.validator.CreditCard</validator-id>
 		<validator-class>net.sourceforge.myfaces.validate.CreditCardValidator</validator-class>
 	</validator>
 
 	<validator>
-		<validator-id>myfaces.validator.Email</validator-id>
+		<validator-id>net.sourceforge.myfaces.validator.Email</validator-id>
 		<validator-class>net.sourceforge.myfaces.validate.EmailValidator</validator-class>
 	</validator>
 

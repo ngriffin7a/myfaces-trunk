@@ -36,12 +36,12 @@ public class EmailValidator implements Validator {
 	/**
 	 * <p>The standard converter id for this converter.</p>
 	 */
-	public static final String 	VALIDATOR_ID 	   = "myfaces.validator.Email";
+	public static final String 	VALIDATOR_ID 	   = "net.sourceforge.myfaces.validator.Email";
 	/**
 	 * <p>The message identifier of the {@link FacesMessage} to be created if
 	 * the maximum length check fails.</p>
 	 */
-	public static final String EMAIL_MESSAGE_ID = "myfaces.Email.INVALID";	
+	public static final String EMAIL_MESSAGE_ID = "net.sourceforge.myfaces.Email.INVALID";	
 	
 	public EmailValidator(){
 	}

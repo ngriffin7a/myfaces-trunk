@@ -36,13 +36,13 @@ public class CreditCardValidator implements Validator,StateHolder {
 	/**
 	 * <p>The standard converter id for this converter.</p>
 	 */
-	public static final String 	VALIDATOR_ID 	   = "myfaces.validator.CreditCard";
+	public static final String 	VALIDATOR_ID 	   = "net.sourceforge.myfaces.validator.CreditCard";
 
 	/**
 	 * <p>The message identifier of the {@link FacesMessage} to be created if
 	 * the creditcard check fails.</p>
 	 */
-	public static final String CREDITCATD_MESSAGE_ID = "myfaces.Creditcard.INVALID";	
+	public static final String CREDITCATD_MESSAGE_ID = "net.sourceforge.myfaces.Creditcard.INVALID";	
 	
 	//private DEFAULT_VALUES
 	private static final boolean DEFAULT_AMEX = true;

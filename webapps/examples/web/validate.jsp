@@ -63,7 +63,7 @@ managed beans used:
 			
 					<h:outputLabel for="form1:email" value="Email" />
                     <h:inputText id="email" value="#{validateForm.email}" required="true">
-                        <f:validator validatorId="myfaces.validator.Email"/>
+                        <f:validator validatorId="net.sourceforge.myfaces.validator.Email"/>
                     </h:inputText>
 					<h:message id="emailError" for="form1:email" styleClass="error" />
 					
