@@ -25,6 +25,9 @@ import javax.faces.component.UIComponent;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.9  2004/09/10 14:15:00  manolito
+ * new previousRowDataVar attribute in extended HtmlDataTable
+ *
  * Revision 1.8  2004/08/20 07:14:41  manolito
  * HtmlDataTable now also supports rowIndexVar and rowCountVar
  *
@@ -74,6 +77,7 @@ public class HtmlDataTableTag
     private String _renderedIfEmpty;
     private String _rowIndexVar;
     private String _rowCountVar;
+    private String _previousRowDataVar;
 
     protected void setProperties(UIComponent component)
     {
@@ -91,6 +95,7 @@ public class HtmlDataTableTag
         setBooleanProperty(component, "renderedIfEmpty", _renderedIfEmpty);
         setStringProperty(component, "rowIndexVar", _rowIndexVar);
         setStringProperty(component, "rowCountVar", _rowCountVar);
+        setStringProperty(component, "previousRowDataVar", _previousRowDataVar);
     }
 
     public void setPreserveDataModel(String preserveDataModel)
@@ -136,5 +141,10 @@ public class HtmlDataTableTag
     public void setRowCountVar(String rowCountVar)
     {
         _rowCountVar = rowCountVar;
+    }
+
+    public void setPreviousRowDataVar(String previousRowDataVar)
+    {
+        _previousRowDataVar = previousRowDataVar;
     }
 }

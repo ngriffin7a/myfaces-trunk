@@ -37,4 +37,8 @@
         <name>rowCountVar</name>
         <type>java.lang.String</type>
     </field>
+    <field>
+        <name>previousRowDataVar</name>
+        <type>java.lang.String</type>
+    </field>
 </component>

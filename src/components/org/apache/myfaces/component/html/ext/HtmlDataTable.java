@@ -40,6 +40,9 @@ import java.util.Map;
  * @author Manfred Geiler
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.13  2004/09/10 14:15:00  manolito
+ * new previousRowDataVar attribute in extended HtmlDataTable
+ *
  * Revision 1.12  2004/08/20 07:14:39  manolito
  * HtmlDataTable now also supports rowIndexVar and rowCountVar
  *
@@ -102,22 +105,40 @@ public class HtmlDataTable
 
     public void setRowIndex(int rowIndex)
     {
-        super.setRowIndex(rowIndex);
         String rowIndexVar = getRowIndexVar();
         String rowCountVar = getRowCountVar();
-        if (rowIndexVar != null || rowCountVar != null)
+        String previousRowDataVar = getPreviousRowDataVar();
+        if (rowIndexVar != null || rowCountVar != null || previousRowDataVar != null)
         {
             Map requestMap = FacesContext.getCurrentInstance().getExternalContext().getRequestMap();
+
+            if (previousRowDataVar != null && rowIndex >= 0) //we only need to provide the previousRowDataVar for a valid rowIndex
+            {
+                if (isRowAvailable())
+                {
+                    //previous row is available
+                    requestMap.put(previousRowDataVar, getRowData());
+                }
+                else
+                {
+                    //no previous row available
+                    requestMap.put(previousRowDataVar, null);
+                }
+            }
+
+            super.setRowIndex(rowIndex);
+
             if (rowIndex >= 0)
             {
                 //regular row index, update request scope variables
                 if (rowIndexVar != null)
                 {
-                    requestMap.put(getRowIndexVar(), new Integer(rowIndex));
+                    requestMap.put(rowIndexVar, new Integer(rowIndex));
                 }
+
                 if (rowCountVar != null)
                 {
-                    requestMap.put(getRowCountVar(), new Integer(getRowCount()));
+                    requestMap.put(rowCountVar, new Integer(getRowCount()));
                 }
             }
             else
@@ -125,13 +146,24 @@ public class HtmlDataTable
                 //rowIndex == -1 means end of loop --> remove request scope variables
                 if (rowIndexVar != null)
                 {
-                    requestMap.remove(getRowIndexVar());
+                    requestMap.remove(rowIndexVar);
                 }
+
                 if (rowCountVar != null)
                 {
-                    requestMap.remove(getRowCountVar());
+                    requestMap.remove(rowCountVar);
+                }
+
+                if (previousRowDataVar != null)
+                {
+                    requestMap.remove(previousRowDataVar);
                 }
             }
+        }
+        else
+        {
+            // no extended var attributes defined, no special treatment
+            super.setRowIndex(rowIndex);
         }
     }
 
@@ -553,6 +585,7 @@ public class HtmlDataTable
     private Boolean _renderedIfEmpty = null;
     private String _rowIndexVar = null;
     private String _rowCountVar = null;
+    private String _previousRowDataVar = null;
 
     public HtmlDataTable()
     {
@@ -643,6 +676,18 @@ public class HtmlDataTable
     {
         if (_rowCountVar != null) return _rowCountVar;
         ValueBinding vb = getValueBinding("rowCountVar");
+        return vb != null ? (String)vb.getValue(getFacesContext()) : null;
+    }
+
+    public void setPreviousRowDataVar(String previousRowDataVar)
+    {
+        _previousRowDataVar = previousRowDataVar;
+    }
+
+    public String getPreviousRowDataVar()
+    {
+        if (_previousRowDataVar != null) return _previousRowDataVar;
+        ValueBinding vb = getValueBinding("previousRowDataVar");
         return vb != null ? (String)vb.getValue(getFacesContext()) : null;
     }
 

@@ -183,6 +183,17 @@
                 similar to the var parameter.
             </description>
         </attribute>
+        <attribute>
+            <name>previousRowDataVar</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
+            <description>
+                A parameter name, under which the previous RowData Object is set in request scope
+                similar to the rowIndexVar and rowCountVar parameters.
+                Mind that the value of this request scope attribute is null in the first row
+                or when isRowAvailable returns false for the previous row.
+            </description>
+        </attribute>
      </tag>
 
     <!-- inputText -->
