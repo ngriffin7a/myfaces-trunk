@@ -37,6 +37,9 @@ import java.util.Set;
  * @author Anton Koinov
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.25  2004/09/09 13:15:44  manolito
+ * For textareas we must *not* map successive spaces to nbsp
+ *
  * Revision 1.24  2004/09/08 15:23:10  manolito
  * Autoscroll feature
  *
@@ -348,8 +351,8 @@ public class HtmlResponseWriterImpl
         }
         else if (isTextarea())
         {
-            // We map successive spaces to &nbsp; but we do *not* map Newlines to <br/>
-            _writer.write(HTMLEncoder.encode(strValue, false, true));
+            // For textareas we must *not* map successive spaces to &nbsp or Newlines to <br/>
+            _writer.write(HTMLEncoder.encode(strValue, false, false));
         }
         else
         {
@@ -377,10 +380,10 @@ public class HtmlResponseWriterImpl
         }
         else if (isTextarea())
         {
-            // We map successive spaces to &nbsp; but we do *not* map Newlines to <br/>
+            // For textareas we must *not* map successive spaces to &nbsp or Newlines to <br/>
             // TODO: Make HTMLEncoder support char arrays directly
             String strValue = new String(cbuf, off, len);
-            _writer.write(HTMLEncoder.encode(strValue, false, true));
+            _writer.write(HTMLEncoder.encode(strValue, false, false));
         }
         else
         {
