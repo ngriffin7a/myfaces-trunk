@@ -56,6 +56,17 @@ public abstract class MyFacesTag
         return Tag.EVAL_BODY_INCLUDE;
     }
 
+    public int doEndTag() throws JspException
+    {
+        try
+        {
+            return super.doEndTag();
+        }
+        finally
+        {
+            _helper.release();
+        }
+    }
 
     public int getDoEndValue() throws JspException
     {
