@@ -35,7 +35,10 @@ public class UISelectBoolean
 
     public boolean isSelected()
     {
-        Boolean value = (Boolean)getValue();
+        Boolean value = (Boolean)getSubmittedValue();
+        if( value == null )
+            value = (Boolean)getValue();
+
         return value != null ? value.booleanValue() : false;
     }
 
