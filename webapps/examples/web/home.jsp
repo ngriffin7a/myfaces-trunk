@@ -31,10 +31,10 @@
 
 <body>
 
-<f:use_faces>
+<f:view>
 
-    <x:page_layout id="page" layout="#{globalOptions.pageLayout}"
-            panelClass="pageLayout"
+    <x:panel_layout id="page" layout="#{globalOptions.pageLayout}"
+            styleClass="pageLayout"
             headerClass="pageHeader"
             navigationClass="pageNavigation"
             bodyClass="pageBody"
@@ -63,9 +63,9 @@
         </f:facet>
 
         <%@include file="inc/page_footer.jsp" %>
-    </x:page_layout>
+    </x:panel_layout>
 
-</f:use_faces>
+</f:view>
 
 </body>
 
