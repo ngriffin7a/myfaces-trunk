@@ -44,14 +44,14 @@ public class ValueBindingImpl
 {
     //~ Static fields/initializers -----------------------------------------------------------------
 
-    private static final Log log                 = LogFactory.getLog(ValueBindingImpl.class);
+    private static final Log    log                 = LogFactory.getLog(ValueBindingImpl.class);
 
     // Cache of commonly used Integer instances
-    static final Integer   ZERO                = new Integer(0);
-    static final Integer   ONE                 = new Integer(1);
-    static final int       INTEGER_CACHE_LOWER = -1000;
-    static final int       INTEGER_CACHE_UPPER = 1000;
-    static final Integer[] INTEGER_CACHE       = createIntegerCache();
+    static final Integer        ZERO                = new Integer(0);
+    static final Integer        ONE                 = new Integer(1);
+    static final int            INTEGER_CACHE_LOWER = -1000;
+    static final int            INTEGER_CACHE_UPPER = 1000;
+    static final Integer[]      INTEGER_CACHE       = createIntegerCache();
 
     //~ Instance fields ----------------------------------------------------------------------------
 
@@ -61,18 +61,16 @@ public class ValueBindingImpl
 
     //~ Constructors -------------------------------------------------------------------------------
 
-    public ValueBindingImpl(String reference, Application application)
+    public ValueBindingImpl(Application application, String reference)
     {
         if (application == null)
         {
             throw new NullPointerException("application");
         }
-
-        if ((reference == null) || ((reference=reference.trim()).length() == 0))
+        if ((reference == null) || ((reference = reference.trim()).length() == 0))
         {
             throw new ReferenceSyntaxException("Reference: empty or null");
         }
-
         _application         = application;
         _reference           = reference;
         _parsedReference     = parse(stripBracketsFromModelReference(reference));
@@ -84,14 +82,12 @@ public class ValueBindingImpl
     throws PropertyNotFoundException
     {
         Object base = resolve(facesContext);
-
         if (base == null)
         {
             throw new PropertyNotFoundException("Reference: " + _reference + ". Null base bean");
         }
 
         int maxIndex = _parsedReference.length - 1;
-
         if (maxIndex > 0)
         {
             return isPropertyReadOnly(facesContext, base, _parsedReference[maxIndex]);
@@ -104,14 +100,12 @@ public class ValueBindingImpl
     throws PropertyNotFoundException
     {
         Object base = resolve(facesContext);
-
         if (base == null)
         {
             throw new PropertyNotFoundException("Reference: " + _reference + ". Null base bean");
         }
 
         int maxIndex = _parsedReference.length - 1;
-
         if (maxIndex > 0)
         {
             return getPropertyType(facesContext, base, _parsedReference[maxIndex]);
@@ -126,17 +120,14 @@ public class ValueBindingImpl
         try
         {
             int maxIndex = _parsedReference.length - 1;
-
             if (maxIndex > 0)
             {
                 Object base = resolve(facesContext);
-
                 if (base == null)
                 {
                     throw new PropertyNotFoundException(
                         "Reference: " + _reference + ". Null base bean");
                 }
-
                 setPropertyValue(facesContext, base, _parsedReference[maxIndex], newValue);
             }
             else
@@ -165,14 +156,12 @@ public class ValueBindingImpl
     throws PropertyNotFoundException
     {
         Object base = resolve(facesContext);
-
         if (base == null)
         {
             return null;
         }
 
         int maxIndex = _parsedReference.length - 1;
-
         if (maxIndex > 0)
         {
             base = getPropertyValue(facesContext, base, _parsedReference[maxIndex]);
@@ -197,9 +186,7 @@ public class ValueBindingImpl
 
         return (name instanceof String)
         ? _application.getPropertyResolver().isReadOnly(base, (String) name)
-        : _application.getPropertyResolver().isReadOnly(
-            base,
-            ((Integer) name).intValue());
+        : _application.getPropertyResolver().isReadOnly(base, ((Integer) name).intValue());
     }
 
     protected Class getPropertyType(FacesContext facesContext, Object base, Object name)
@@ -208,16 +195,13 @@ public class ValueBindingImpl
 
         return (name instanceof String)
         ? _application.getPropertyResolver().getType(base, (String) name)
-        : _application.getPropertyResolver().getType(
-            base,
-            ((Integer) name).intValue());
+        : _application.getPropertyResolver().getType(base, ((Integer) name).intValue());
     }
 
     protected void setPropertyValue(
         FacesContext facesContext, Object base, Object name, Object newValue)
     {
         name = coerceProperty(facesContext, base, name);
-
         if (name instanceof String)
         {
             _application.getPropertyResolver().setValue(base, (String) name, newValue);
@@ -225,9 +209,7 @@ public class ValueBindingImpl
         else
         {
             _application.getPropertyResolver().setValue(
-                base,
-                ((Integer) name).intValue(),
-                newValue);
+                base, ((Integer) name).intValue(), newValue);
         }
     }
 
@@ -246,7 +228,6 @@ public class ValueBindingImpl
     protected Object getPropertyValue(FacesContext facesContext, Object base, Object name)
     {
         name = coerceProperty(facesContext, base, name);
-
         if (name == null)
         {
             return null;
@@ -254,9 +235,7 @@ public class ValueBindingImpl
 
         return (name instanceof String)
         ? _application.getPropertyResolver().getValue(base, (String) name)
-        : _application.getPropertyResolver().getValue(
-            base,
-            ((Integer) name).intValue());
+        : _application.getPropertyResolver().getValue(base, ((Integer) name).intValue());
     }
 
     /**
@@ -268,7 +247,7 @@ public class ValueBindingImpl
      * provide <code>getValue</code> function where the property is of type
      * <code>Object</code>. Therefore, we must decide which
      * <code>getValue</code> function to call. We also need to get the value
-     * of <code>name</code>, when it is a <code>ValueBinding</code> expression 
+     * of <code>name</code>, when it is a <code>ValueBinding</code> expression
      * </p>
      *
      * @param base the bean, which property would be to accessed
@@ -289,13 +268,11 @@ public class ValueBindingImpl
         {
             name = ((ValueBinding) name).getValue(facesContext);
         }
-
         if ((base.getClass().isArray()) || (base instanceof List))
         {
             // Note: ReferenceSyntaxException would be thrown by coerceToInteger(), if needed
             return coerceToInteger(name);
         }
-
         if (base instanceof UIComponent)
         {
             try
@@ -358,7 +335,6 @@ public class ValueBindingImpl
         for (int i = start, max = _parsedReference.length - 1; i < max; i++)
         {
             base = getPropertyValue(facesContext, base, _parsedReference[i]);
-
             if (base == null)
             {
                 return null;
@@ -386,7 +362,6 @@ public class ValueBindingImpl
     private boolean isEscaped(String str, int pos)
     {
         int escapeCharCount = 0;
-
         while ((--pos >= 0) && (str.charAt(pos) == '\\'))
         {
             escapeCharCount++;
@@ -414,11 +389,9 @@ public class ValueBindingImpl
         {
             return ZERO;
         }
-
         if (obj instanceof String)
         {
             String s = (String) obj;
-
             if (s.length() == 0)
             {
                 return ZERO; // empty strings are considered to be 0
@@ -433,22 +406,18 @@ public class ValueBindingImpl
                 throw new ReferenceSyntaxException(e);
             }
         }
-
         if (obj instanceof Integer)
         {
             return (Integer) obj;
         }
-
         if (obj instanceof Number)
         {
             return integer(((Number) obj).intValue());
         }
-
         if (obj instanceof Boolean)
         {
             return ((Boolean) obj).booleanValue() ? ONE : ZERO;
         }
-
         if (obj instanceof Character)
         {
             return integer(((Character) obj).charValue());
@@ -518,7 +487,6 @@ public class ValueBindingImpl
     {
         int len = str.length();
         int pos = indexofOpeningBracket + 1;
-
         if (pos >= len)
         {
             throw new ReferenceSyntaxException(
@@ -532,7 +500,6 @@ public class ValueBindingImpl
         if ((c == '"') || (c == '\''))
         {
             pos = indexOfMatchingClosingQuote(str, pos, c) + 1;
-
             if ((pos < len) && (str.charAt(pos) == ']'))
             {
                 return pos;
@@ -550,7 +517,6 @@ public class ValueBindingImpl
         {
             int indexofOpen  = str.indexOf('[', pos);
             int indexofClose = str.indexOf(']', pos);
-
             if (indexofClose < 0)
             {
                 // No closing bracket
@@ -558,7 +524,6 @@ public class ValueBindingImpl
                     "Reference: " + _reference
                     + ". Index incorrectly terminated: missing closing bracket");
             }
-
             if ((indexofOpen < 0) || (indexofClose < indexofOpen))
             {
                 // There is no opening bracket, ot closing is before opening
@@ -618,7 +583,6 @@ public class ValueBindingImpl
                 }
 
                 int    indexofClosingBracket = indexOfMatchingClosingBracket(reference, pos);
-
                 Object index = index(reference.substring(pos + 1, indexofClosingBracket).trim());
                 parsedReference.add(index);
                 pos = indexofClosingBracket + 1;
@@ -636,7 +600,6 @@ public class ValueBindingImpl
             {
                 newpos = indexofDot;
             }
-
             if ((indexofBracket >= 0) && (indexofBracket < newpos))
             {
                 newpos = indexofBracket;
@@ -644,7 +607,6 @@ public class ValueBindingImpl
 
             // newpos is the end of the property name
             String propname = reference.substring(pos, newpos).trim();
-
             if (propname.length() == 0)
             {
                 if (pos == 0)
@@ -699,7 +661,6 @@ public class ValueBindingImpl
     private String unescape(String str)
     {
         int indexofBackslash = str.indexOf('\\');
-
         if (indexofBackslash < 0)
         {
             return str; // nothing to do
@@ -708,7 +669,6 @@ public class ValueBindingImpl
         int          lastIndex = str.length() - 1;
         StringBuffer sb  = new StringBuffer(lastIndex);
         int          pos = 0;
-
         do
         {
             // check for ["ashklhj\"] error

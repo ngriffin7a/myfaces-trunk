@@ -19,7 +19,11 @@
 package net.sourceforge.myfaces.el;
 
 import net.sourceforge.myfaces.MyFacesFactoryFinder;
-import net.sourceforge.myfaces.config.*;
+import net.sourceforge.myfaces.config.ConfigUtil;
+import net.sourceforge.myfaces.config.FacesConfig;
+import net.sourceforge.myfaces.config.FacesConfigFactory;
+import net.sourceforge.myfaces.config.ManagedBeanConfig;
+import net.sourceforge.myfaces.config.ManagedPropertyConfig;
 import net.sourceforge.myfaces.util.FacesUtils;
 
 import org.apache.commons.logging.Log;
@@ -48,16 +52,42 @@ public class VariableResolverImpl
     //~ Static fields/initializers -----------------------------------------------------------------
 
     private static final Log log              = LogFactory.getLog(VariableResolverImpl.class);
-    
-    // WARNING: this implementation is thread safe because is does not update/add 
-    //          to IMPLICIT_OBJECTS and SCOPES. If you need to add your own implicit objects/scopes,
-    //          either extend and add more in a static block, or add proper sychronization
-    static final Map         IMPLICIT_OBJECTS = new HashMap(32);
-    static final Map         SCOPES           = new HashMap(16);
 
-    static
+    //~ Instance fields ----------------------------------------------------------------------------
+
+    /**
+     * Stores all implicit objects defined for this instance of <code>VariableResolver</code>
+     * <p>
+     * Can store instances of <code>ImplicitObject</code> which have the ability to
+     * dynamically resolve against FacesContext. Can also store any other abject
+     * which itself is the value for the implicit object (this is effect will be
+     * a static object)
+     * </p>
+     * <p>
+     * WARNING: this implementation not serialized as it is thread safe because
+     *          it does not update/add to _implicitObjects after object initialization.
+     *          If you need to add your own implicit objects, either extend and add more
+     *          in an initialization block, or add proper sychronization
+     * </p>
+     */
+    protected final Map _implicitObjects = new HashMap(32);
+
+    /**
+     * Stores all scopes defined for this instance of <code>VariableResolver</code>
+     * <p>
+     * Can store instances of <code>Scope</code> which have the ability to
+     * dynamically resolve against ExterncalContext.
+     * </p>
+     * <p>
+     * WARNING: this implementation not serialized as it is thread safe because
+     *          it does not update/add to _scopes after object initialization.
+     *          If you need to add your own scopes, either extend and add more
+     *          in an initialization block, or add proper sychronization
+     * </p>
+     */
+    protected final Map _scopes = new HashMap(16);
     {
-        IMPLICIT_OBJECTS.put(
+        _implicitObjects.put(
             "applicationScope",
             new ImplicitObject()
             {
@@ -66,7 +96,7 @@ public class VariableResolverImpl
                     return facesContext.getExternalContext().getApplicationMap();
                 }
             });
-        IMPLICIT_OBJECTS.put(
+        _implicitObjects.put(
             "cookie",
             new ImplicitObject()
             {
@@ -75,7 +105,7 @@ public class VariableResolverImpl
                     return facesContext.getExternalContext().getRequestCookieMap();
                 }
             });
-        IMPLICIT_OBJECTS.put(
+        _implicitObjects.put(
             "facesContext",
             new ImplicitObject()
             {
@@ -84,7 +114,7 @@ public class VariableResolverImpl
                     return facesContext;
                 }
             });
-        IMPLICIT_OBJECTS.put(
+        _implicitObjects.put(
             "header",
             new ImplicitObject()
             {
@@ -93,7 +123,7 @@ public class VariableResolverImpl
                     return facesContext.getExternalContext().getRequestHeaderMap();
                 }
             });
-        IMPLICIT_OBJECTS.put(
+        _implicitObjects.put(
             "headerValues",
             new ImplicitObject()
             {
@@ -102,7 +132,7 @@ public class VariableResolverImpl
                     return facesContext.getExternalContext().getRequestHeaderValuesMap();
                 }
             });
-        IMPLICIT_OBJECTS.put(
+        _implicitObjects.put(
             "initParam",
             new ImplicitObject()
             {
@@ -111,7 +141,7 @@ public class VariableResolverImpl
                     return facesContext.getExternalContext().getInitParameterMap();
                 }
             });
-        IMPLICIT_OBJECTS.put(
+        _implicitObjects.put(
             "param",
             new ImplicitObject()
             {
@@ -120,7 +150,7 @@ public class VariableResolverImpl
                     return facesContext.getExternalContext().getRequestParameterMap();
                 }
             });
-        IMPLICIT_OBJECTS.put(
+        _implicitObjects.put(
             "paramValues",
             new ImplicitObject()
             {
@@ -129,7 +159,7 @@ public class VariableResolverImpl
                     return facesContext.getExternalContext().getRequestParameterValuesMap();
                 }
             });
-        IMPLICIT_OBJECTS.put(
+        _implicitObjects.put(
             "requestScope",
             new ImplicitObject()
             {
@@ -138,7 +168,7 @@ public class VariableResolverImpl
                     return facesContext.getExternalContext().getRequestMap();
                 }
             });
-        IMPLICIT_OBJECTS.put(
+        _implicitObjects.put(
             "sessionScope",
             new ImplicitObject()
             {
@@ -147,7 +177,7 @@ public class VariableResolverImpl
                     return facesContext.getExternalContext().getSessionMap();
                 }
             });
-        IMPLICIT_OBJECTS.put(
+        _implicitObjects.put(
             "view",
             new ImplicitObject()
             {
@@ -157,7 +187,7 @@ public class VariableResolverImpl
                 }
             });
 
-        SCOPES.put(
+        _scopes.put(
             "request",
             new Scope()
             {
@@ -166,7 +196,7 @@ public class VariableResolverImpl
                     extContext.getRequestMap().put(name, obj);
                 }
             });
-        SCOPES.put(
+        _scopes.put(
             "session",
             new Scope()
             {
@@ -175,7 +205,7 @@ public class VariableResolverImpl
                     extContext.getSessionMap().put(name, obj);
                 }
             });
-        SCOPES.put(
+        _scopes.put(
             "application",
             new Scope()
             {
@@ -184,7 +214,7 @@ public class VariableResolverImpl
                     ((ServletContext) extContext.getContext()).setAttribute(name, obj);
                 }
             });
-        SCOPES.put(
+        _scopes.put(
             "none",
             new Scope()
             {
@@ -201,20 +231,28 @@ public class VariableResolverImpl
     {
         if ((name == null) || (name.length() == 0))
         {
-            throw new ReferenceSyntaxException("Varible name is null");
+            throw new ReferenceSyntaxException("Varible name is null or empty");
         }
 
-        //Implicit objects
-        ImplicitObject implicitObject = (ImplicitObject) IMPLICIT_OBJECTS.get(name);
-
+        // Implicit objects
+        Object implicitObject = _implicitObjects.get(name);
         if (implicitObject != null)
         {
-            return implicitObject.get(facesContext);
+            if (implicitObject instanceof ImplicitObject)
+            {
+                // a complex runtime object
+                return ((ImplicitObject) implicitObject).get(facesContext);
+            }
+            else
+            {
+                // a simple object
+                return implicitObject;
+            }
         }
 
         ExternalContext extContext = facesContext.getExternalContext();
 
-        //Request context
+        // Request context
         Map    requestMap = extContext.getRequestMap();
         Object obj = requestMap.get(name);
 
@@ -223,7 +261,7 @@ public class VariableResolverImpl
             return obj;
         }
 
-        //Session context (try to get without creating a new session)
+        // Session context (try to get without creating a new session)
         Object session = extContext.getSession(false);
 
         if (session != null)
@@ -236,7 +274,7 @@ public class VariableResolverImpl
             }
         }
 
-        //Application context
+        // Application context
         ServletContext servletContext = (ServletContext) extContext.getContext();
         obj = servletContext.getAttribute(name);
 
@@ -245,7 +283,7 @@ public class VariableResolverImpl
             return obj;
         }
 
-        //ManagedBean
+        // ManagedBean
         FacesConfigFactory fcf         = MyFacesFactoryFinder.getFacesConfigFactory(servletContext);
         FacesConfig        facesConfig = fcf.getFacesConfig(servletContext);
         ManagedBeanConfig  mbc         = facesConfig.getManagedBeanConfig(name);
@@ -256,7 +294,7 @@ public class VariableResolverImpl
 
             setManagedBeanProperties(facesContext, obj, mbc);
 
-            Scope scope = (Scope) SCOPES.get(mbc.getManagedBeanScope());
+            Scope scope = (Scope) _scopes.get(mbc.getManagedBeanScope());
 
             if (scope != null)
             {
@@ -303,19 +341,14 @@ public class VariableResolverImpl
 
             if (propConfig.getValueRef() != null)
             {
-                value = FacesUtils.getValueRef(
-                        facesContext,
-                        propConfig.getValueRef());
+                value = FacesUtils.getValueRef(facesContext, propConfig.getValueRef());
             }
             else
             {
                 value = propConfig.getValue();
             }
 
-            PropertyResolverImpl.setProperty(
-                bean,
-                propConfig.getPropertyName(),
-                value);
+            PropertyResolverImpl.setProperty(bean, propConfig.getPropertyName(), value);
         }
     }
 

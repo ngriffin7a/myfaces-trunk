@@ -44,14 +44,15 @@ public class MethodBindingImpl
 
     public MethodBindingImpl(Application application, String reference, Class[] argClasses)
     {
+        // NOTE: getting ValueBindingImpl through application will utilize the caching
+        //
         // ValueBindingImp will check application == null and ref == null
-        _valueBinding = new ValueBindingImpl(reference, application);
-
+        _valueBinding = (ValueBindingImpl) application.createValueBinding(reference);
         if (_valueBinding._parsedReference.length < 2)
         {
             throw new MethodNotFoundException(
-                "MethodBinding reference must be of form #{var.prop} or #{var['prop']}, cannot be just #{var}. Reference: "
-                + _valueBinding._reference);
+                "Reference: " + _valueBinding._reference
+                + ". MethodBinding reference cannot be just #{var}");
         }
 
         _argClasses = argClasses;
@@ -72,7 +73,6 @@ public class MethodBindingImpl
         }
 
         Object base = _valueBinding.resolve(context);
-
         if (base == null)
         {
             throw new MethodNotFoundException(
@@ -84,7 +84,6 @@ public class MethodBindingImpl
                 context, base,
                 _valueBinding._parsedReference[_valueBinding._parsedReference.length - 1],
                 _argClasses);
-
         return method.getReturnType();
     }
 
@@ -97,7 +96,6 @@ public class MethodBindingImpl
         }
 
         Object base = _valueBinding.resolve(context);
-
         if (base == null)
         {
             throw new MethodNotFoundException(
@@ -127,7 +125,6 @@ public class MethodBindingImpl
         {
             name = ((ValueBinding) name).getValue(facesContext);
         }
-
         if (name == null)
         {
             throw new MethodNotFoundException(
@@ -137,9 +134,7 @@ public class MethodBindingImpl
 
         try
         {
-            return base.getClass().getMethod(
-                _valueBinding.coerceToString(name),
-                argClasses);
+            return base.getClass().getMethod(_valueBinding.coerceToString(name), argClasses);
         }
         catch (Exception e)
         {
