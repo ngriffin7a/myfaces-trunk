@@ -1,4 +1,0 @@
-MyFaces frequently asked questions
-==================================
-
-You will find the current FAQs at http://myfaces.sourceforge.net

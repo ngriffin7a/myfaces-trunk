@@ -1,4 +1,0 @@
-Compatibility
-=============
-
-You will find the current compatibility list at http://myfaces.sourceforge.net
