@@ -43,6 +43,9 @@ import java.util.Map;
  * @author <a href="mailto:oliver@rossmueller.com">Oliver Rossmueller</a>
  * @version $Revision$ $Date$
  *          $Log$
+ *          Revision 1.5  2004/04/22 23:22:33  o_rossmueller
+ *          fix: queueEvent
+ *
  *          Revision 1.4  2004/04/22 22:00:30  o_rossmueller
  *          implemented HtmlTree.expandPath
  *
@@ -447,7 +450,7 @@ public class HtmlTree
             oldPath = HtmlTreeNode.translatePath(selectedPath, getModel(FacesContext.getCurrentInstance()));
         }
         selectedPath = node.getTranslatedPath();
-        broadcast(new TreeSelectionEvent(this, oldPath, node.getPath()));
+        queueEvent(new TreeSelectionEvent(this, oldPath, node.getPath()));
     }
 
 
