@@ -23,6 +23,9 @@ Changes in Release 1.0.7 beta
 * bug #1007065 f:view should tokenize locale attribute
 * bug #1013489 support EL expression at <f:loadBundle>
 * Tiles support: ServletContextListener (JspTilesViewHandlerInitializer) no longer needed
+* outputText (and other components) needed to render a span-tag if they have a custom-set id
+* required HtmlInputFileUpload validates now correctly
+  (and shows a message) if submitted value exists and the value is empty
 
 ----------------------------------------------------------------------
 Changes in Release 1.0.6 beta
