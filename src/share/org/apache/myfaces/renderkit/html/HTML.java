@@ -24,6 +24,9 @@ import org.apache.myfaces.util.ArrayUtils;
  * @author Anton Koinov
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.16  2004/12/02 05:03:14  svieujot
+ * Add H1-6 elements
+ *
  * Revision 1.15  2004/12/02 02:34:41  svieujot
  * Add a BUTTON_ELEM
  *
@@ -430,6 +433,12 @@ public final class HTML
     public static final String TEXTAREA_ELEM = "textarea";
     public static final String FORM_ELEM = "form";
     public static final String ANCHOR_ELEM = "a";
+    public static final String H1_ELEM = "h1";
+    public static final String H2_ELEM = "h2";
+    public static final String H3_ELEM = "h3";
+    public static final String H4_ELEM = "h4";
+    public static final String H5_ELEM = "h5";
+    public static final String H6_ELEM = "h6";
     public static final String IMG_ELEM = "img";
     public static final String LABEL_ELEM = "label";
     public static final String TABLE_ELEM = "table";
