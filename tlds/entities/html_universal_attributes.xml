@@ -3,3 +3,9 @@
         <attribute><name>lang</name>    <required>false</required>  <rtexprvalue>true</rtexprvalue></attribute>
         <attribute><name>style</name>   <required>false</required>  <rtexprvalue>true</rtexprvalue></attribute>
         <attribute><name>title</name>   <required>false</required>  <rtexprvalue>true</rtexprvalue></attribute>
+        <attribute>
+            <name>styleClass</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
+            <description>Corresponds to the HTML class attribute.</description>
+        </attribute>

@@ -33,20 +33,23 @@
 <!ENTITY html_table_attributes          SYSTEM "entities/html_table_attributes.xml">
 <!ENTITY html_textarea_attributes       SYSTEM "entities/html_textarea_attributes.xml">
 <!ENTITY html_universal_attributes      SYSTEM "entities/html_universal_attributes.xml">
+<!ENTITY ui_column_attributes           SYSTEM "entities/ui_column_attributes.xml">
 <!ENTITY ui_command_attributes          SYSTEM "entities/ui_command_attributes.xml">
 <!ENTITY ui_component_attributes        SYSTEM "entities/ui_component_attributes.xml">
+<!ENTITY ui_data_attributes             SYSTEM "entities/ui_data_attributes.xml">
 <!ENTITY ui_form_attributes             SYSTEM "entities/ui_form_attributes.xml">
 <!ENTITY ui_graphic_attributes          SYSTEM "entities/ui_graphic_attributes.xml">
 <!ENTITY ui_input_attributes            SYSTEM "entities/ui_input_attributes.xml">
 <!ENTITY ui_message_attributes          SYSTEM "entities/ui_message_attributes.xml">
+<!ENTITY ui_messages_attributes         SYSTEM "entities/ui_messages_attributes.xml">
 <!ENTITY ui_output_attributes           SYSTEM "entities/ui_output_attributes.xml">
 <!ENTITY ui_panel_attributes            SYSTEM "entities/ui_panel_attributes.xml">
+<!ENTITY ui_parameter_attributes        SYSTEM "entities/ui_parameter_attributes.xml">
 <!ENTITY ui_select_boolean_attributes   SYSTEM "entities/ui_select_boolean_attributes.xml">
 <!ENTITY ui_select_item_attributes      SYSTEM "entities/ui_select_item_attributes.xml">
 <!ENTITY ui_select_items_attributes     SYSTEM "entities/ui_select_items_attributes.xml">
 <!ENTITY ui_select_many_attributes      SYSTEM "entities/ui_select_many_attributes.xml">
 <!ENTITY ui_select_one_attributes       SYSTEM "entities/ui_select_one_attributes.xml">
-<!ENTITY key_bundle_attributes          SYSTEM "entities/key_bundle_attributes.xml">
 <!ENTITY user_role_attributes           SYSTEM "entities/user_role_attributes.xml">
 ]>
 
@@ -60,6 +63,13 @@
         Tag library for the MyFaces basic implementation.
     </description>
 
+
+<!--
+*************************************************************************************
+Start of revised 1.0 conforming tags
+*************************************************************************************
+-->
+
 <!-- output_text -->
     <tag>
         <name>output_text</name>
@@ -69,9 +79,29 @@
         &ui_output_attributes;
         &html_universal_attributes;
         &html_event_handler_attributes;
-        &html_component_attributes;
         &user_role_attributes;
         <!-- HtmlOutputText attributes -->
+        <attribute>
+            <name>escape</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
+            <description>Indicates whether rendered markup should be escaped.</description>
+        </attribute>
+    </tag>
+
+<!-- input_text -->
+    <tag>
+        <name>input_text</name>
+        <tag-class>net.sourceforge.myfaces.taglib.html.HtmlInputTextTag</tag-class>
+        <body-content>JSP</body-content>
+        &ui_component_attributes;
+        &ui_output_attributes;
+        &ui_input_attributes;
+        &html_universal_attributes;
+        &html_event_handler_attributes;
+        &user_role_attributes;
+        &html_input_attributes;
+        <!-- HtmlInputText attributes -->
         <attribute>
             <name>escape</name>
             <required>false</required>
@@ -89,30 +119,8 @@
         &ui_form_attributes;
         &html_universal_attributes;
         &html_event_handler_attributes;
-        &html_component_attributes;
         &html_form_attributes;
         &user_role_attributes;
-    </tag>
-
-<!-- input_text -->
-    <tag>
-        <name>input_text</name>
-        <tag-class>net.sourceforge.myfaces.taglib.html.HtmlInputTextTag</tag-class>
-        <body-content>JSP</body-content>
-        &ui_component_attributes;
-        &ui_input_attributes;
-        &html_input_attributes;
-        &html_universal_attributes;
-        &html_event_handler_attributes;
-        &html_component_attributes;
-        &user_role_attributes;
-        <!-- HtmlInputText attributes -->
-        <attribute>
-            <name>escape</name>
-            <required>false</required>
-            <rtexprvalue>false</rtexprvalue>
-            <description>Indicates whether rendered markup should be escaped.</description>
-        </attribute>
     </tag>
 
 <!-- output_message -->
@@ -210,6 +218,12 @@
 
 
 
+
+<!--
+*************************************************************************************
+Start of legacy (EA4 conforming) tags
+*************************************************************************************
+-->
 
 
 <!-- command_button -->
