@@ -66,7 +66,7 @@ public class MyFacesServlet
             System.setOut(oldOut);
 
             //Wrap JspFactory
-            wrapJspFactory();   //make configurable
+            //wrapJspFactory();   //make configurable
         }
 
         LogUtil.getLogger().info("MyFacesServlet for context '" + servletConfig.getServletContext().getRealPath("/") + "' initialized.");
