@@ -46,9 +46,15 @@
     <!-- Managed Beans for aliasBean.jsp -->
 
     <managed-bean>
-        <managed-bean-name>customerAddress</managed-bean-name>
-        <managed-bean-class>java.util.String</managed-bean-class>
-        <managed-bean-scope>session</managed-bean-scope>
+        <managed-bean-name>aliasTest1</managed-bean-name>
+        <managed-bean-class>org.apache.myfaces.examples.aliasexample.AliasHolder</managed-bean-class>
+        <managed-bean-scope>request</managed-bean-scope>
+    </managed-bean>
+
+    <managed-bean>
+        <managed-bean-name>aliasTest2</managed-bean-name>
+        <managed-bean-class>org.apache.myfaces.examples.aliasexample.AliasHolder</managed-bean-class>
+        <managed-bean-scope>request</managed-bean-scope>
     </managed-bean>
 
     <!-- Managed Beans for selectbox.jsp -->

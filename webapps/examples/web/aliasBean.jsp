@@ -1,4 +1,3 @@
-<%@ page import="java.util.Random"%>
 <%@ page session="false" contentType="text/html;charset=utf-8"%>
 <%@ taglib uri="http://java.sun.com/jsf/html" prefix="h"%>
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f"%>
@@ -52,7 +51,6 @@
 
         <f:facet name="body">
             <h:panelGroup id="body">
-
 				<f:verbatim>
 					<p>
 						Let's suppose you have a subform you use often but with different beans.<br/>
@@ -66,14 +64,25 @@
 						a generic address subforms (ok, this one it a bite simple form, but here is the idea).
 					</p>
 				</f:verbatim>
-				
 
 				<h:form>
-					<x:aliasBean sourceBean="#{customerAddress}" alias="#{address}"/>
-					<f:subview id="simulatedIncludedSubform">
-							<%-- The next tag could be inserted by an %@ include or jsp:include --%>
-	                        <h:inputText value="#{address}"/>
-					</f:subview>
+					<f:verbatim><h2>aliasTest1</h2></f:verbatim>
+					<x:aliasBean sourceBean="#{aliasTest1}" alias="#{holder}">
+						<f:subview id="simulatedIncludedSubform1">
+								<%-- The next tags could be inserted by an %@ include or jsp:include --%>
+								<h:outputLabel for="name" value="Name :"/>
+	    	                    <h:inputText id="name" value="#{holder.name}"/>
+						</f:subview>
+					</x:aliasBean>
+
+					<f:verbatim><h2>aliasTest2</h2></f:verbatim>
+					<x:aliasBean sourceBean="#{aliasTest2}" alias="#{holder}">
+						<f:subview id="simulatedIncludedSubform2">
+								<%-- The next tags could be inserted by an %@ include or jsp:include --%>
+								<h:outputLabel for="name" value="Name :"/>
+	    	                    <h:inputText id="name" value="#{holder.name}"/>
+						</f:subview>
+					</x:aliasBean>
 
 					<h:commandButton/>
 				</h:form>

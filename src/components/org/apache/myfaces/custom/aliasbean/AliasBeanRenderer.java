@@ -19,26 +19,34 @@ import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.render.Renderer;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 /**
  * @author Sylvain Vieujot (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.2  2004/11/14 15:06:35  svieujot
+ * Improve AliasBean to make the alias effective only within the tag body
+ *
  * Revision 1.1  2004/11/08 20:43:15  svieujot
  * Add an x:aliasBean component
  *
  */
 public class AliasBeanRenderer extends Renderer {
+    private static final Log log = LogFactory.getLog(AliasBeanRenderer.class);
 
-    public void encodeEnd(FacesContext facesContext, UIComponent uiComponent) {
-        AliasBean aliasBean = (AliasBean)uiComponent;
+    public void encodeBegin(FacesContext facesContext, UIComponent uiComponent) {
+        log.debug("encodeBegin");
+
+        AliasBean aliasBean = (AliasBean) uiComponent;
         aliasBean.makeAlias(facesContext);
     }
 
-    public void decode(FacesContext facesContext, UIComponent uiComponent) {
-        // noop
-    }
+    public void encodeEnd(FacesContext facesContext, UIComponent uiComponent) {
+        log.debug("encodeEnd");
 
-    public Object getConvertedValue(FacesContext context, UIComponent uiComponent, Object submittedValue) {
-        return null;
+        AliasBean aliasBean = (AliasBean) uiComponent;
+        aliasBean.removeAlias(facesContext);
     }
 }
