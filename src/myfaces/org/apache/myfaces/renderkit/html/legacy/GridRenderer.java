@@ -16,9 +16,10 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package net.sourceforge.myfaces.renderkit.html;
+package net.sourceforge.myfaces.renderkit.html.legacy;
 
 import net.sourceforge.myfaces.renderkit.JSFAttr;
+import net.sourceforge.myfaces.renderkit.html.HtmlRenderer;
 import net.sourceforge.myfaces.renderkit.callback.CallbackRenderer;
 import net.sourceforge.myfaces.renderkit.callback.CallbackSupport;
 
