@@ -23,6 +23,7 @@ import net.sourceforge.myfaces.convert.ConverterException;
 import net.sourceforge.myfaces.convert.ConverterUtils;
 import net.sourceforge.myfaces.convert.impl.StringArrayConverter;
 import net.sourceforge.myfaces.renderkit.html.state.StateRenderer;
+import net.sourceforge.myfaces.MyFacesConfig;
 
 import javax.faces.FacesException;
 import javax.faces.FactoryFinder;
@@ -54,6 +55,13 @@ public class UIComponentUtils
         {
             return b.booleanValue();
         }
+    }
+
+    public static void setBooleanAttribute(UIComponent uiComponent,
+                                           String attribute,
+                                           boolean value)
+    {
+        uiComponent.setAttribute(attribute, value ? Boolean.TRUE : Boolean.FALSE);
     }
 
 
@@ -151,6 +159,20 @@ public class UIComponentUtils
     {
         uiComponent.setAttribute(StateRenderer.TRANSIENT_ATTR,
                                  b ? Boolean.TRUE : Boolean.FALSE);
+    }
+
+
+    public static boolean isTransient(UIComponent uiComponent)
+    {
+        Boolean trans = (Boolean)uiComponent.getAttribute(StateRenderer.TRANSIENT_ATTR);
+        if (trans == null)
+        {
+            return MyFacesConfig.isComponentsTransientByDefault();
+        }
+        else
+        {
+            return trans.booleanValue();
+        }
     }
 
 

@@ -66,3 +66,8 @@ a:hover
 	color: #FF0000;
 }
 
+.sortLink {
+	color: #333366;
+    text-decoration: none;
+}
+

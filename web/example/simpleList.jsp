@@ -41,7 +41,7 @@
 
             <% int rows = 0, cols = 2; %>
             <f:list id="countryList"
-                    style="standardTable"
+                    cssClass="standardTable"
                     headerClass="standardTable_Header"
                     footerClass="standardTable_Footer"
                     rowClasses="standardTable_Row1,standardTable_Row2"
@@ -78,7 +78,7 @@
             <!-- TODO grid does not work anymore -->
             <f:grid id="grid"
                     columns="2"
-                    style="standardTable"
+                    cssClass="standardTable"
                     headerClass="standardTable_Header"
                     footerClass="standardTable_Footer"
                     rowClasses="standardTable_Row1,standardTable_Row2" >

@@ -42,4 +42,9 @@ public class NavigationTag
         return NavigationRenderer.TYPE;
     }
 
+    public void setBundle(String value)
+    {
+        setRendererAttribute(NavigationRenderer.BUNDLE_ATTR, value);
+    }
+
 }

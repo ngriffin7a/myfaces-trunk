@@ -52,7 +52,7 @@ public class ListTag
         return ListRenderer.TYPE;
     }
 
-    public void setStyle(String value)
+    public void setCssClass(String value)
     {
         setRendererAttribute(ListRenderer.PANEL_CLASS_ATTR, value);
     }

@@ -18,10 +18,11 @@
  */
 package net.sourceforge.myfaces.renderkit.html.ext;
 
+import net.sourceforge.myfaces.component.UIComponentUtils;
 import net.sourceforge.myfaces.component.ext.UINavigation;
-import net.sourceforge.myfaces.component.ext.UINavigationItem;
 import net.sourceforge.myfaces.renderkit.html.HTMLRenderer;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLEncoder;
+import net.sourceforge.myfaces.renderkit.attr.ext.NavigationRendererAttributes;
 
 import javax.faces.FacesException;
 import javax.faces.component.UIComponent;
@@ -37,9 +38,9 @@ import java.util.Iterator;
  */
 public class NavigationRenderer
     extends HTMLRenderer
+    implements NavigationRendererAttributes
 {
-    public static final String TYPE = "NavigationRenderer";
-
+    public static final String TYPE = "Navigation";
     public String getRendererType()
     {
         return TYPE;
@@ -82,18 +83,18 @@ public class NavigationRenderer
         while(children.hasNext())
         {
             UIComponent child = (UIComponent)children.next();
-            if (child.getComponentType().equals(UINavigationItem.TYPE))
+            if (child.getRendererType().equals(NavigationItemRenderer.TYPE))
             {
-                renderMenuItem(facesContext, level, (UINavigationItem)child);
+                renderMenuItem(facesContext, level, child);
             }
             else
             {
-                throw new FacesException("Unexpected component of type " + child.getComponentType());
+                throw new FacesException("Unexpected component of renderer type " + child.getRendererType());
             }
         }
     }
 
-    protected void renderMenuItem(FacesContext facesContext, int level, UINavigationItem item)
+    protected void renderMenuItem(FacesContext facesContext, int level, UIComponent item)
         throws IOException
     {
         ResponseWriter writer = facesContext.getResponseWriter();
@@ -108,8 +109,6 @@ public class NavigationRenderer
         }
 
         item.encodeBegin(facesContext);
-        writer.write(HTMLEncoder.encode((String)item.getAttribute(NavigationItemRenderer.LABEL_ATTR),
-                                        true, true));
         item.encodeEnd(facesContext);
 
         if (level > 0)
@@ -118,7 +117,9 @@ public class NavigationRenderer
         }
         writer.write("</td></tr>");
 
-        if (item.isOpen())
+        if (UIComponentUtils.getBooleanAttribute(item,
+                                                 UINavigation.UINavigationItem.OPEN_ATTR,
+                                                 false))
         {
             renderChildren(facesContext, level + 1, item.getChildren());
         }

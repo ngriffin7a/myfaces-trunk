@@ -138,6 +138,9 @@ public abstract class MyFacesTag
         _attributes.add(new Attribute(attrName, attrValue, false));
     }
 
+    //TODO: setComponentAttribute and setRendererAttribute versions with boolean value
+
+
     protected static class Attribute
     {
         public String name;

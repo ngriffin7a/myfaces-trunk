@@ -36,7 +36,7 @@ public class MyFacesConfig
     private static final String _JspInfoApplicationCaching = "JspInfoApplicationCaching";
     private static final String _StateEncodingOnTheFly = "StateEncodingOnTheFly";
     private static final String _StateZipping = "StateZipping";
-    private static final String _AlwaysSaveComponentValue = "AlwaysSaveComponentValue";
+    private static final String _ComponentsTransientByDefault = "ComponentsTransientByDefault";
     private static final String _FileExtensionServletMapping = "FileExtensionServletMapping";
     private static final String LOG_LEVEL = "log_level";
     private static final Level DEFAULT_LOG_LEVEL = Level.INFO;
@@ -93,16 +93,9 @@ public class MyFacesConfig
         return getPropertyAsBoolean(_StateZipping, false);
     }
 
-    /**
-     * Normally MyFaces does not save a component's value when it comes from
-     * the referenced model value. This assumes, that all model beans are able
-     * to save and restore their state themselves.
-     * If there are model beans, that are not clever enough to save their state
-     * you should set this configuration option to true.
-     */
-    public static boolean isAlwaysSaveComponentValue()
+    public static boolean isComponentsTransientByDefault()
     {
-        return getPropertyAsBoolean(_AlwaysSaveComponentValue, true);
+        return getPropertyAsBoolean(_ComponentsTransientByDefault, true);
     }
 
     /**

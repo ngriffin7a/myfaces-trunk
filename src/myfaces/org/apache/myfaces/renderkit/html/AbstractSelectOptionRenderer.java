@@ -170,7 +170,11 @@ public abstract class AbstractSelectOptionRenderer
                     }
                     else if (value instanceof Collection)
                     {
-                        Iterator it = ((Collection)value).iterator();
+                        list.addAll((Collection)value);
+                    }
+                    else if (value instanceof Iterator)
+                    {
+                        Iterator it = (Iterator)value;
                         while (it.hasNext())
                         {
                             list.add(it.next());

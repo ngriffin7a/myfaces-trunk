@@ -40,23 +40,22 @@
             <f:errors id="errors" />
 
             <f:list id="list"
-                    style="standardTable"
+                    cssClass="standardTable"
                     headerClass="standardTable_SortHeader"
                     footerClass="standardTable_Footer"
                     rowClasses="standardTable_Row1,standardTable_Row2" >
                 <!-- SORTHEADER -->
-                <x:sortheader id="list.header" sortCommandReference="controller.sort"
+                <x:sortheader id="list.header" column="type"
+                                               ascending="<%=true%>"
                                                columnReference="list.sort"
                                                ascendingReference="list.ascending" >
-                    <x:sortcolumn id="list.header.col1" column="type">
+                    <x:sortcolumn id="list.header.col1" column="type" cssClass="sortLink" >
                         <f:output_text id="list.header.name" text="Car-Type" />
                     </x:sortcolumn>
-                    <x:sortcolumn id="list.header.col2" column="color" >
+                    <x:sortcolumn id="list.header.col2" column="color" cssClass="sortLink" >
                         <f:output_text id="list.header.iso" text="Car-Color"  />
                     </x:sortcolumn>
                 </x:sortheader>
-                <x:save_state id="s1" modelReference="list.sort" /> <!-- preserve this model value -->
-                <x:save_state id="s2" modelReference="list.ascending" /> <!-- preserve this model value -->
                 <!-- DATA -->
                 <f:listrow id="list.tr" var="car" modelReference="list.cars" >
                     <f:output_text id="list.name" modelReference="car.type" />

@@ -41,6 +41,8 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.StringTokenizer;
+import java.util.Locale;
 
 /**
  * DOCUMENT ME!
@@ -78,6 +80,7 @@ public class StateRestorer
             }
         }
 
+        restoreLocale(facesContext, stateMap);
     }
 
     protected Map getStateMap(FacesContext facesContext)
@@ -406,6 +409,31 @@ public class StateRestorer
 
             default:
                 throw new IllegalArgumentException("Unknown scope " + scope);
+        }
+    }
+
+    protected void restoreLocale(FacesContext facesContext, Map stateMap)
+    {
+        String localeVal = getStateParameter(stateMap, StateRenderer.LOCALE_REQUEST_PARAM);
+        if (localeVal != null)
+        {
+            StringTokenizer st = new StringTokenizer(localeVal, StateRenderer.LOCALE_REQUEST_PARAM_DELIMITER);
+            String language = "";
+            String country = "";
+            String variant = "";
+            if (st.hasMoreTokens())
+            {
+                language = st.nextToken();
+            }
+            if (st.hasMoreTokens())
+            {
+                country = st.nextToken();
+            }
+            if (st.hasMoreTokens())
+            {
+                variant = st.nextToken();
+            }
+            facesContext.setLocale(new Locale(language, country, variant));
         }
     }
 

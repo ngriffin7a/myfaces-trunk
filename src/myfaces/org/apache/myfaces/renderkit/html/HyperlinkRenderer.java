@@ -132,7 +132,18 @@ public class HyperlinkRenderer
         Renderer renderer = renderKit.getRenderer(StateRenderer.TYPE);
         renderer.encodeChildren(facesContext, uiComponent);
 
-        writer.write("\">");
+        writer.write("\"");
+
+        //css class:
+        String cssClass = (String)uiComponent.getAttribute(COMMAND_CLASS_ATTR);
+        if (cssClass != null)
+        {
+            writer.write(" class=\"");
+            writer.write(cssClass);
+            writer.write("\"");
+        }
+
+        writer.write(">");
     }
 
     public void encodeEnd(FacesContext facesContext, UIComponent uiComponent) throws IOException

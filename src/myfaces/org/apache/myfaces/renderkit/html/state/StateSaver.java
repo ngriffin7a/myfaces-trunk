@@ -21,6 +21,7 @@ package net.sourceforge.myfaces.renderkit.html.state;
 import net.sourceforge.myfaces.MyFacesConfig;
 import net.sourceforge.myfaces.component.CommonComponentAttributes;
 import net.sourceforge.myfaces.component.UIPanel;
+import net.sourceforge.myfaces.component.UIComponentUtils;
 import net.sourceforge.myfaces.convert.Converter;
 import net.sourceforge.myfaces.convert.ConverterException;
 import net.sourceforge.myfaces.convert.ConverterUtils;
@@ -152,6 +153,7 @@ public class StateSaver
             saveResponseTreeId(facesContext, map);
             saveComponents(facesContext, map);
             saveModelValues(facesContext, map);
+            saveLocale(facesContext, map);
             facesContext.getServletRequest().setAttribute(STATE_MAP_REQUEST_ATTR, map);
         }
         return map;
@@ -213,7 +215,6 @@ public class StateSaver
             }
 
             if (!valueSeen
-                && MyFacesConfig.isAlwaysSaveComponentValue()
                 && !isIgnoreValue(comp))
             {
                 Object currValue = comp.currentValue(facesContext);
@@ -483,8 +484,7 @@ public class StateSaver
         }
 
         //transient?
-        Boolean trans = (Boolean)comp.getAttribute(StateRenderer.TRANSIENT_ATTR);
-        if (trans != null && trans.booleanValue())
+        if (UIComponentUtils.isTransient(comp))
         {
             return true;
         }
@@ -513,6 +513,19 @@ public class StateSaver
         }
 
         return false;
+    }
+
+
+    protected void saveLocale(FacesContext facesContext, Map stateMap)
+    {
+        Locale locale = facesContext.getLocale();
+        if (!(locale.equals(Locale.getDefault())))
+        {
+            String localeValue = locale.getLanguage() + StateRenderer.LOCALE_REQUEST_PARAM_DELIMITER +
+                                 locale.getCountry() + StateRenderer.LOCALE_REQUEST_PARAM_DELIMITER +
+                                 locale.getVariant();
+            saveParameter(stateMap, StateRenderer.LOCALE_REQUEST_PARAM, localeValue);
+        }
     }
 
 }

@@ -18,7 +18,7 @@
  */
 package net.sourceforge.myfaces.taglib.ext;
 
-import net.sourceforge.myfaces.component.ext.UINavigationItem;
+import net.sourceforge.myfaces.component.ext.UINavigation;
 import net.sourceforge.myfaces.renderkit.html.ext.NavigationItemRenderer;
 import net.sourceforge.myfaces.taglib.MyFacesTag;
 
@@ -34,7 +34,7 @@ public class NavigationItemTag
 {
     public UIComponent createComponent()
     {
-        return new UINavigationItem();
+        return new UINavigation.UINavigationItem();
     }
 
     public String getRendererType()
@@ -47,13 +47,24 @@ public class NavigationItemTag
         setRendererAttribute(NavigationItemRenderer.LABEL_ATTR, s);
     }
 
-    public void setHref(String s)
+    public void setKey(String value)
     {
-        setComponentAttribute(UINavigationItem.HREF_ATTR, s);
+        setRendererAttribute(NavigationItemRenderer.KEY_ATTR, value);
+    }
+
+    public void setBundle(String value)
+    {
+        setRendererAttribute(NavigationItemRenderer.BUNDLE_ATTR, value);
     }
 
     public void setTreeId(String s)
     {
-        setComponentAttribute(UINavigationItem.TREE_ID_ATTR, s);
+        setRendererAttribute(NavigationItemRenderer.TREE_ID_ATTR, s);
+    }
+
+    public void setOpen(boolean b)
+    {
+        setComponentAttribute(UINavigation.UINavigationItem.OPEN_ATTR,
+                              b ? Boolean.TRUE : Boolean.FALSE);
     }
 }

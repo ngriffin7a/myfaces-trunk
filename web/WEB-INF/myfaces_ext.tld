@@ -58,6 +58,12 @@
             <required>true</required>
             <rtexprvalue>false</rtexprvalue>
         </attribute>
+        <!-- default bundle for the navigation items -->
+        <attribute>
+            <name>bundle</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
     </tag>
 
     <tag>
@@ -71,18 +77,23 @@
         </attribute>
         <attribute>
             <name>label</name>
-            <required>true</required>
-            <rtexprvalue>false</rtexprvalue>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
         </attribute>
         <attribute>
-            <name>href</name>
+            <name>key</name>
             <required>false</required>
-            <rtexprvalue>false</rtexprvalue>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>bundle</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
         </attribute>
         <attribute>
             <name>treeId</name>
             <required>false</required>
-            <rtexprvalue>false</rtexprvalue>
+            <rtexprvalue>true</rtexprvalue>
         </attribute>
     </tag>
 
@@ -98,11 +109,16 @@
              <required>true</required>
              <rtexprvalue>false</rtexprvalue>
          </attribute>
-        <attribute>
-            <name>sortCommandReference</name>
-            <required>true</required>
-            <rtexprvalue>false</rtexprvalue>
-        </attribute>
+         <attribute>
+             <name>column</name>    <!-- the sort column (alias for value)-->
+             <required>false</required>
+             <rtexprvalue>true</rtexprvalue>
+         </attribute>
+         <attribute>
+             <name>ascending</name>    <!-- the sort direction -->
+             <required>false</required>
+             <rtexprvalue>true</rtexprvalue>
+         </attribute>
          <attribute>
              <name>columnReference</name>    <!-- reference to the current sort column -->
              <required>true</required>
@@ -127,8 +143,18 @@
        <attribute>
            <name>column</name>
            <required>true</required>
-           <rtexprvalue>false</rtexprvalue>
+           <rtexprvalue>true</rtexprvalue>
        </attribute>
+        <attribute>
+            <name>defaultAscending</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>cssClass</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
    </tag>
 
 </taglib>

@@ -16,48 +16,24 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package net.sourceforge.myfaces.taglib.ext;
+package net.sourceforge.myfaces.example.controller;
 
-import net.sourceforge.myfaces.component.UICommand;
-import net.sourceforge.myfaces.renderkit.html.ext.SortColumnRenderer;
-import net.sourceforge.myfaces.taglib.MyFacesTag;
+import net.sourceforge.myfaces.example.model.OptionsForm;
 
-import javax.faces.component.UIComponent;
-
+import javax.faces.context.FacesContext;
+import javax.faces.event.CommandEvent;
 
 /**
  * DOCUMENT ME!
- * @author Thomas Spiegl (latest modification by Author)
+ * @author Manfred Geiler
  * @version $Revision$ $Date$
  */
-public class SortColumnTag
-    extends MyFacesTag
+public class OptionsController
 {
-    public UIComponent createComponent()
+    public boolean setLocale(FacesContext facesContext, CommandEvent commandEvent)
     {
-        return new UICommand();
+        OptionsForm form = (OptionsForm)facesContext.getModelValue("optionsForm");
+        facesContext.setLocale(form.getLocale());
+        return false;
     }
-
-    public String getRendererType()
-    {
-        return SortColumnRenderer.TYPE;
-    }
-
-    public void setColumn(String v)
-    {
-        setValue(v);
-    }
-
-    public void setDefaultAscending(boolean b)
-    {
-        setRendererAttribute(SortColumnRenderer.DEFAULT_ASCENDING_ATTR,
-                             b ? Boolean.TRUE : Boolean.FALSE);
-    }
-
-    public void setCssClass(String v)
-    {
-        setRendererAttribute(SortColumnRenderer.COMMAND_CLASS_ATTR, v);
-    }
-
 }
-

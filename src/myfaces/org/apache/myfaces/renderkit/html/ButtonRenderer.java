@@ -149,6 +149,16 @@ public class ButtonRenderer
             writer.write(HTMLEncoder.encode(label, false, false));
             writer.write("\"");
         }
+
+        //css class:
+        String cssClass = (String)uiComponent.getAttribute(COMMAND_CLASS_ATTR);
+        if (cssClass != null)
+        {
+            writer.write(" class=\"");
+            writer.write(cssClass);
+            writer.write("\"");
+        }
+
         writer.write(">");
 
         if (hiddenParam)

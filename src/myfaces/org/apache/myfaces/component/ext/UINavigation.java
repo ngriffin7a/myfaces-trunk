@@ -18,8 +18,10 @@
  */
 package net.sourceforge.myfaces.component.ext;
 
+import net.sourceforge.myfaces.component.UIComponentUtils;
 import net.sourceforge.myfaces.component.UIPanel;
-import net.sourceforge.myfaces.util.logging.LogUtil;
+import net.sourceforge.myfaces.component.UICommand;
+import net.sourceforge.myfaces.renderkit.html.ext.NavigationItemRenderer;
 
 import javax.faces.FactoryFinder;
 import javax.faces.component.UIComponent;
@@ -37,13 +39,6 @@ import java.util.Iterator;
 public class UINavigation
     extends UIPanel
 {
-    public static final String TYPE = UINavigation.class.getName();
-
-    public String getComponentType()
-    {
-        return TYPE;
-    }
-
     public boolean getRendersChildren()
     {
         return true;
@@ -55,15 +50,15 @@ public class UINavigation
         public ClickEvent(UIComponent source)
         {
             super(source);
-            if (!(source instanceof UINavigationItem))
+            if (!(source.getRendererType().equals(NavigationItemRenderer.TYPE)))
             {
-                throw new IllegalArgumentException();
+                throw new IllegalArgumentException("Can only accept ClickEvents from NavigationItems.");
             }
         }
 
-        public UINavigationItem getUINavigationItem()
+        public UIComponent getNavigationItemComponent()
         {
-            return (UINavigationItem)super.getSource();
+            return (UIComponent)super.getSource();
         }
     }
 
@@ -71,25 +66,25 @@ public class UINavigation
     {
         if (event instanceof ClickEvent)
         {
-            UINavigationItem item = ((ClickEvent)event).getUINavigationItem();
+            UIComponent item = ((ClickEvent)event).getNavigationItemComponent();
             if (item.getChildCount() > 0)
             {
                 //group
-                if (item.isOpen())
+                if (UIComponentUtils.getBooleanAttribute(item, UINavigationItem.OPEN_ATTR, false))
                 {
                     //close group
                     closeAllChildren(item.getChildren());//close group children
-                    item.setOpen(false);
+                    UIComponentUtils.setBooleanAttribute(item, UINavigationItem.OPEN_ATTR, false);
                 }
                 else
                 {
                     closeAllChildren(this.getChildren());//close all items
-                    item.setOpen(true);
+                    UIComponentUtils.setBooleanAttribute(item, UINavigationItem.OPEN_ATTR, true);
                     //open all parents
                     UIComponent p = item.getParent();
-                    while (p != null && p instanceof UINavigationItem)
+                    while (p != null && p.getRendererType().equals(NavigationItemRenderer.TYPE))
                     {
-                        ((UINavigationItem)p).setOpen(true);
+                        UIComponentUtils.setBooleanAttribute(p, UINavigationItem.OPEN_ATTR, true);
                         p = p.getParent();
                     }
                 }
@@ -98,35 +93,19 @@ public class UINavigation
             {
                 //single item
                 closeAllChildren(item.getParent().getChildren());//close siblings
-                item.setOpen(true);
+                UIComponentUtils.setBooleanAttribute(item, UINavigationItem.OPEN_ATTR, true);
             }
 
-            String treeId = item.getTreeId();
-            String href = item.getHref();
-            if (treeId == null)
-            {
-                if (href != null)
-                {
-                    treeId = href;
-                }
-            }
-            else
-            {
-                if (href != null)
-                {
-                    LogUtil.getLogger().warning("UINavigationItem " + item.getCompoundId() + " has both attributes 'href' and 'treeId'!");
-                }
-            }
-
+            String treeId = (String)item.getAttribute(NavigationItemRenderer.TREE_ID_ATTR);
             if (treeId != null)
             {
                 TreeFactory tf = (TreeFactory)FactoryFinder.getFactory(FactoryFinder.TREE_FACTORY);
                 Tree responseTree = tf.getTree(context.getServletContext(), treeId);
                 responseTree.getRoot().addChild(this);  //HACK(?): Add Navigation, so that response tree has current state info
                 context.setResponseTree(responseTree);
+                return true;
             }
 
-            return true;
         }
         return false;
     }
@@ -135,13 +114,36 @@ public class UINavigation
     {
         while (children.hasNext())
         {
-            UINavigationItem ni = (UINavigationItem)children.next();
-            ni.setOpen(false);
+            UIComponent ni = (UIComponent)children.next();
+            UIComponentUtils.setBooleanAttribute(ni, UINavigationItem.OPEN_ATTR, false);
             if (ni.getChildCount() > 0)
             {
                 closeAllChildren(ni.getChildren());
             }
         }
     }
+
+
+
+    public static class UINavigationItem
+        extends UICommand
+    {
+        public static final String OPEN_ATTR = "open";
+
+        public boolean isOpen()
+        {
+            return UIComponentUtils.getBooleanAttribute(this, OPEN_ATTR, false);
+        }
+
+        public void setOpen(boolean open)
+        {
+            UIComponentUtils.setBooleanAttribute(this, OPEN_ATTR, open);
+        }
+    }
+
+
+
+
+
 
 }

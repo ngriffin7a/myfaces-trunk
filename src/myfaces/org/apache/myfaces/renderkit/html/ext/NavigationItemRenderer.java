@@ -19,9 +19,14 @@
 package net.sourceforge.myfaces.renderkit.html.ext;
 
 import net.sourceforge.myfaces.MyFacesFactoryFinder;
+import net.sourceforge.myfaces.util.bundle.BundleUtils;
+import net.sourceforge.myfaces.util.logging.LogUtil;
+import net.sourceforge.myfaces.component.UICommand;
+import net.sourceforge.myfaces.component.UIComponentUtils;
 import net.sourceforge.myfaces.component.ext.UINavigation;
-import net.sourceforge.myfaces.component.ext.UINavigationItem;
+import net.sourceforge.myfaces.renderkit.attr.ext.NavigationItemRendererAttributes;
 import net.sourceforge.myfaces.renderkit.html.HTMLRenderer;
+import net.sourceforge.myfaces.renderkit.html.util.HTMLEncoder;
 import net.sourceforge.myfaces.renderkit.html.state.StateRenderer;
 import net.sourceforge.myfaces.webapp.ServletMapping;
 import net.sourceforge.myfaces.webapp.ServletMappingFactory;
@@ -48,13 +53,11 @@ import java.io.IOException;
  */
 public class NavigationItemRenderer
     extends HTMLRenderer
+    implements NavigationItemRendererAttributes
 {
-    //renderer dependent attribute
-    public static final String LABEL_ATTR = "label";
-
-    public static final String TYPE = "NavigationItemRenderer";
     private static final String DECODED_ATTR = NavigationItemRenderer.class.getName() + ".DECODED";
 
+    public static final String TYPE = "NavigationItem";
     public String getRendererType()
     {
         return TYPE;
@@ -62,12 +65,12 @@ public class NavigationItemRenderer
 
     public boolean supportsComponentType(String s)
     {
-        return s.equals(UINavigationItem.TYPE);
+        return s.equals(UICommand.TYPE);
     }
 
     public boolean supportsComponentType(UIComponent uiComponent)
     {
-        return uiComponent instanceof UINavigationItem;
+        return uiComponent instanceof javax.faces.component.UICommand;
     }
 
 
@@ -178,10 +181,46 @@ public class NavigationItemRenderer
 
         writer.write("\">");
 
-        if (((UINavigationItem)uiComponent).isOpen())
+        String label;
+        String key = (String)uiComponent.getAttribute(NavigationItemRenderer.KEY_ATTR);
+        if (key != null)
         {
-            writer.write("<b>");
+            String bundle = (String)uiComponent.getAttribute(NavigationItemRenderer.BUNDLE_ATTR);
+            if (bundle == null)
+            {
+                UIComponent parent = uiComponent.getParent();
+                while (bundle == null && parent != null)
+                {
+                    if (parent.getRendererType().equals(NavigationRenderer.TYPE))
+                    {
+                        bundle = (String)parent.getAttribute(NavigationItemRenderer.BUNDLE_ATTR);
+                        break;
+                    }
+                    parent = parent.getParent();
+                }
+            }
+            if (bundle == null)
+            {
+                LogUtil.getLogger().warning("No bundle defined for component " + uiComponent.getCompoundId());
+                label = key;
+            }
+            else
+            {
+                label = BundleUtils.getString(bundle, key, facesContext.getLocale());
+            }
         }
+        else
+        {
+            label = (String)uiComponent.getAttribute(NavigationItemRenderer.LABEL_ATTR);
+        }
+
+        boolean open = UIComponentUtils.getBooleanAttribute(uiComponent,
+                                                            UINavigation.UINavigationItem.OPEN_ATTR,
+                                                            false);
+        renderLabel(facesContext, writer, uiComponent, label, open);
+
+        writer.write("</a>");
+
     }
 
     /**
@@ -193,12 +232,36 @@ public class NavigationItemRenderer
      */
     public void encodeEnd(FacesContext facesContext, UIComponent uiComponent) throws IOException
     {
-        ResponseWriter writer = facesContext.getResponseWriter();
-        if (((UINavigationItem)uiComponent).isOpen())
+    }
+
+
+    /**
+     * Convenience method to be overwritten by derived Renderers.
+     * @param facesContext
+     * @param writer
+     * @param uiComponent
+     * @param label
+     * @param open
+     * @throws IOException
+     */
+    protected void renderLabel(FacesContext facesContext, ResponseWriter writer,
+                               UIComponent uiComponent, String label, boolean open)
+        throws IOException
+    {
+        if (open)
+        {
+            writer.write("<b>");
+        }
+
+        writer.write(HTMLEncoder.encode(label, true, true));
+
+        if (open)
         {
             writer.write("</b>");
         }
-        writer.write("</a>");
+
     }
+
+
 
 }

@@ -16,52 +16,18 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package net.sourceforge.myfaces.taglib;
+package net.sourceforge.myfaces.renderkit.attr.ext;
 
-import net.sourceforge.myfaces.component.UICommand;
-import net.sourceforge.myfaces.renderkit.html.ButtonRenderer;
-
-import javax.faces.component.UIComponent;
-
+import net.sourceforge.myfaces.renderkit.attr.HyperlinkRendererAttributes;
 
 /**
- * DOCUMENT ME!
+ * Constant definitions for the specified render dependent attributes of the
+ * "SortColumn" renderer type.
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public class CommandButtonTag
-        extends MyFacesTag
+public interface SortColumnRendererAttributes
+    extends HyperlinkRendererAttributes
 {
-    //MyFaces tag extensions:
-    public UIComponent createComponent()
-    {
-        return new UICommand();
-    }
-
-    public String getRendererType()
-    {
-        return ButtonRenderer.TYPE;
-    }
-
-
-    public void setLabel(String v)
-    {
-        setRendererAttribute(ButtonRenderer.LABEL_ATTR, v);
-    }
-
-    public void setCommandName(String v)
-    {
-        setValue(v);
-    }
-
-    public void setCommandReference(String v)
-    {
-        setComponentAttribute(UICommand.COMMAND_REFERENCE_ATTR, v);
-    }
-
-    public void setCssClass(String v)
-    {
-        setRendererAttribute(ButtonRenderer.COMMAND_CLASS_ATTR, v);
-    }
-
+    public static final String DEFAULT_ASCENDING_ATTR = "defaultAscending";
 }

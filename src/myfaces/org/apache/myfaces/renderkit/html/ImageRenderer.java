@@ -19,7 +19,7 @@
 package net.sourceforge.myfaces.renderkit.html;
 
 import net.sourceforge.myfaces.renderkit.attr.ImageRendererAttributes;
-import net.sourceforge.myfaces.util.logging.LogUtil;
+import net.sourceforge.myfaces.util.bundle.BundleUtils;
 
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIGraphic;
@@ -27,8 +27,6 @@ import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.ResourceBundle;
-import java.util.MissingResourceException;
 
 /**
  * DOCUMENT ME!
@@ -74,17 +72,9 @@ public class ImageRenderer
         String key = (String)uiComponent.getAttribute(KEY_ATTR);
         if (key != null)
         {
-            String bundle = (String)uiComponent.getAttribute(BUNDLE_ATTR);
-            try
-            {
-                ResourceBundle resBundle = ResourceBundle.getBundle(bundle, facesContext.getLocale());
-                value = resBundle.getString(key);
-            }
-            catch (MissingResourceException e)
-            {
-                LogUtil.getLogger().severe("ResourceBundle '" + bundle + "' could not be found!");
-                value = key;    //at least render an image with a broken url
-            }
+            value = BundleUtils.getString((String)uiComponent.getAttribute(BUNDLE_ATTR),
+                                          key,
+                                          facesContext.getLocale());
         }
         else
         {

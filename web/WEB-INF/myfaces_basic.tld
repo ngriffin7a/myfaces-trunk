@@ -205,6 +205,11 @@
             <required>false</required>
             <rtexprvalue>false</rtexprvalue>
         </attribute>
+        <attribute>
+            <name>cssClass</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
     </tag>
 
 
@@ -236,6 +241,11 @@
             <name>commandName</name>
             <required>false</required>
             <rtexprvalue>false</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>cssClass</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
         </attribute>
     </tag>
 
@@ -502,7 +512,7 @@
              <rtexprvalue>false</rtexprvalue>
          </attribute>
          <attribute>
-             <name>style</name>
+             <name>cssClass</name>
              <required>false</required>
              <rtexprvalue>false</rtexprvalue>
          </attribute>
@@ -564,9 +574,9 @@
              <rtexprvalue>false</rtexprvalue>
          </attribute>
          <attribute>
-             <name>style</name>
+             <name>cssClass</name>
              <required>false</required>
-             <rtexprvalue>false</rtexprvalue>
+             <rtexprvalue>true</rtexprvalue>
          </attribute>
          <attribute>
              <name>columnClasses</name>

@@ -18,11 +18,16 @@
  */
 package net.sourceforge.myfaces.renderkit.html.ext;
 
+import net.sourceforge.myfaces.component.ext.UISortHeader;
+import net.sourceforge.myfaces.renderkit.attr.ext.SortColumnRendererAttributes;
 import net.sourceforge.myfaces.renderkit.html.HyperlinkRenderer;
 
+import javax.faces.FacesException;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
+import javax.faces.event.CommandEvent;
+import javax.faces.event.FacesEvent;
 import java.io.IOException;
 
 /**
@@ -35,14 +40,40 @@ import java.io.IOException;
  */
 public class SortColumnRenderer
     extends HyperlinkRenderer
+    implements SortColumnRendererAttributes
 {
-    public static final String ASCENDING_REFERENCE_ATTR = "ascendingReference";
-
     public static final String TYPE = "SortColumn";
     public String getRendererType()
     {
         return TYPE;
     }
+
+
+    public void decode(FacesContext facesContext, UIComponent uiComponent) throws IOException
+    {
+        //super.decode must not be called, because value never comes from request
+
+        String paramName = uiComponent.getCompoundId();
+        String paramValue = facesContext.getServletRequest().getParameter(paramName);
+        if (paramValue != null)
+        {
+            //link was clicked
+            String commandName = paramValue;    // = columnName
+            FacesEvent event = new CommandEvent(uiComponent, commandName);
+            facesContext.addApplicationEvent(event);
+
+
+            UIComponent uiSortHeader = uiComponent.getParent();
+            if (!(uiSortHeader instanceof UISortHeader))
+            {
+                throw new FacesException("UISortHeader expected.");
+            }
+
+            facesContext.addRequestEvent(uiSortHeader,
+                                         new FacesEvent(uiComponent));
+        }
+    }
+
 
     public void encodeBegin(FacesContext facesContext, UIComponent uiComponent) throws IOException
     {
@@ -72,19 +103,18 @@ public class SortColumnRenderer
     private Boolean getSortAscending(FacesContext facesContext, UIComponent uiComponent)
     {
         UIComponent parent = uiComponent.getParent();
+        if (!(parent instanceof UISortHeader))
+        {
+            throw new FacesException("UISortHeader expected.");
+        }
 
         String column = (String)uiComponent.currentValue(facesContext);
         String currentSortColumn = (String)parent.currentValue(facesContext);
-        String ascendingRef = (String)parent.getAttribute(ASCENDING_REFERENCE_ATTR);
-        if (currentSortColumn == null || ascendingRef == null)
-        {
-            throw new IllegalArgumentException("Parent has no value or ascendingReference attribute");
-        }
+        boolean ascending = ((UISortHeader)parent).currentAscending(facesContext);
 
-        if (column.equals(currentSortColumn))
+        if (currentSortColumn != null && column.equals(currentSortColumn))
         {
-            Boolean asc = (Boolean)facesContext.getModelValue(ascendingRef);
-            return asc;
+            return ascending ? Boolean.TRUE : Boolean.FALSE;
         }
         else
         {

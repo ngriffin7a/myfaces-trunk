@@ -52,7 +52,7 @@ public class GridTag
         setRendererAttribute(GridRenderer.COLUMNS_ATTR, value);
     }
 
-    public void setStyle(String value)
+    public void setCssClass(String value)
     {
         setRendererAttribute(GridRenderer.PANEL_CLASS_ATTR, value);
     }

@@ -21,7 +21,7 @@ package net.sourceforge.myfaces.renderkit.html;
 import net.sourceforge.myfaces.component.UIParameter;
 import net.sourceforge.myfaces.renderkit.attr.MessageRendererAttributes;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLEncoder;
-import net.sourceforge.myfaces.util.logging.LogUtil;
+import net.sourceforge.myfaces.util.bundle.BundleUtils;
 
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIOutput;
@@ -29,7 +29,9 @@ import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 import java.io.IOException;
 import java.text.MessageFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * DOCUMENT ME!
@@ -76,17 +78,9 @@ public class MessageRenderer
         String key = (String)uiComponent.getAttribute(KEY_ATTR);
         if (key != null)
         {
-            String bundle = (String)uiComponent.getAttribute(BUNDLE_ATTR);
-            try
-            {
-                ResourceBundle resBundle = ResourceBundle.getBundle(bundle, facesContext.getLocale());
-                pattern = resBundle.getString(key);
-            }
-            catch (MissingResourceException e)
-            {
-                LogUtil.getLogger().severe("ResourceBundle '" + bundle + "' could not be found!");
-                pattern = key;
-            }
+            pattern = BundleUtils.getString((String)uiComponent.getAttribute(BUNDLE_ATTR),
+                                            key,
+                                            facesContext.getLocale());
         }
         else
         {

@@ -58,4 +58,9 @@ public class CommandHyperlinkTag
     {
         setRendererAttribute(HyperlinkRenderer.HREF_ATTR, v);
     }
+
+    public void setCssClass(String v)
+    {
+        setRendererAttribute(HyperlinkRenderer.COMMAND_CLASS_ATTR, v);
+    }
 }

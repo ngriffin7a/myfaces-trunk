@@ -44,6 +44,7 @@ public class SimpleCarList
 
     public Iterator getCars()
     {
+        sort(getSort(), isAscending());
         return _cars.iterator();
     }
 
