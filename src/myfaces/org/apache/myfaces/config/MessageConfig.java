@@ -18,16 +18,12 @@
  */
 package net.sourceforge.myfaces.config;
 
-import net.sourceforge.myfaces.MyFacesConfig;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import javax.faces.FacesException;
-import javax.faces.application.Message;
-import javax.faces.application.MessageImpl;
+import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
-import javax.servlet.ServletContext;
-import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -48,8 +44,7 @@ public class MessageConfig
 
     private String _messageId;
     private String _messageClass;
-    private int _severity = Message.SEVERITY_ERROR;
-    private Integer _declaredSeverity = null;
+    private FacesMessage.Severity _severity = FacesMessage.SEVERITY_ERROR;
     private Map _summaryMap;
     private Map _detailMap;
 
@@ -78,41 +73,34 @@ public class MessageConfig
     {
         if (severity.equals(SEVERITY_INFO))
         {
-            _severity = Message.SEVERITY_INFO;
+            _severity = FacesMessage.SEVERITY_INFO;
         }
         else if (severity.equals(SEVERITY_WARN))
         {
-            _severity = Message.SEVERITY_WARN;
+            _severity = FacesMessage.SEVERITY_WARN;
         }
         else if (severity.equals(SEVERITY_ERROR))
         {
-            _severity = Message.SEVERITY_ERROR;
+            _severity = FacesMessage.SEVERITY_ERROR;
         }
         else if (severity.equals(SEVERITY_FATAL))
         {
-            _severity = Message.SEVERITY_FATAL;
+            _severity = FacesMessage.SEVERITY_FATAL;
         }
         else
         {
             throw new FacesException("Illegal severity '" + severity + "'.");
         }
-        _declaredSeverity = new Integer(_severity);
     }
 
-    public int getSeverity()
+    public FacesMessage.Severity getSeverity()
     {
         return _severity;
     }
 
-    public void setSeverity(int severity)
+    public void setSeverity(FacesMessage.Severity severity)
     {
         _severity = severity;
-        _declaredSeverity = new Integer(_severity);
-    }
-
-    public Integer getDeclaredSeverity()
-    {
-        return _declaredSeverity;
     }
 
 
@@ -168,12 +156,12 @@ public class MessageConfig
     }
 
 
-    public Message getMessage(FacesContext facesContext, Object[] args)
+    public FacesMessage getMessage(FacesContext facesContext, Object[] args)
     {
         if (_messageClass != null &&
             !_messageClass.equals(MessageImpl.class.getName()))
         {
-            return (Message)ConfigUtil.newInstance(_messageClass);
+            return (FacesMessage)ConfigUtil.newInstance(_messageClass);
         }
 
         String language = facesContext.getLocale().getLanguage();

@@ -1,4 +1,4 @@
-/**
+/*
  * MyFaces - the free JSF implementation
  * Copyright (C) 2003  The MyFaces Team (http://myfaces.sourceforge.net)
  *
@@ -18,23 +18,30 @@
  */
 package net.sourceforge.myfaces.config;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import javax.faces.FacesException;
 import javax.faces.FactoryFinder;
 import javax.faces.component.UIComponent;
-import javax.faces.context.MessageResources;
 import javax.faces.convert.Converter;
+import javax.faces.lifecycle.Lifecycle;
 import javax.faces.render.RenderKit;
 import javax.faces.render.RenderKitFactory;
 import javax.faces.validator.Validator;
-import java.util.*;
 
 
 /**
  * DOCUMENT ME!
  * @author Manfred Geiler (latest modification by $Author$)
+ * @author Anton Koinov
  * @version $Revision$ $Date$
  */
 public class FacesConfig
@@ -43,14 +50,15 @@ public class FacesConfig
     private static final Log log = LogFactory.getLog(FacesConfig.class);
 
     private ApplicationConfig _applicationConfig;
-    private Map _converterMap;
-    private Map _componentClassMap;
-    private Map _messageRessourcesMap;
-    private Map _validatorClassMap;
-    private Map _managedBeanConfigMap;
-    private List _navigationRuleConfigList;
-    private Map _referencedBeanConfigMap;
-    private Map _renderKitConfigMap;
+    private FactoryConfig _factoryConfig;
+    private final Map _converterMap = new HashMap();
+    private final Map _componentClassMap = new HashMap();
+    private final Map _validatorClassMap = new HashMap();
+    private final Map _managedBeanConfigMap = new HashMap();
+    private final List _navigationRuleConfigList = new ArrayList();
+    private final Map _referencedBeanConfigMap = new HashMap();
+    private final Map _renderKitConfigMap = new HashMap();
+    private Lifecycle _lifecycle;
 
 
     public ApplicationConfig getApplicationConfig()
@@ -81,25 +89,7 @@ public class FacesConfig
         }
         else
         {
-            if (applicationConfig.getActionListener() != null)
-            {
-                _applicationConfig.setActionListener(applicationConfig.getActionListener());
-            }
-
-            if (applicationConfig.getNavigationHandler() != null)
-            {
-                _applicationConfig.setNavigationHandler(applicationConfig.getNavigationHandler());
-            }
-
-            if (applicationConfig.getPropertyResolver() != null)
-            {
-                _applicationConfig.setPropertyResolver(applicationConfig.getPropertyResolver());
-            }
-
-            if (applicationConfig.getVariableResolver() != null)
-            {
-                _applicationConfig.setVariableResolver(applicationConfig.getVariableResolver());
-            }
+            _applicationConfig.update(applicationConfig);
         }
     }
 
@@ -133,13 +123,8 @@ public class FacesConfig
 
     private Map getConverterMap()
     {
-        if (_converterMap == null)
-        {
-            _converterMap = new HashMap();
-        }
         return _converterMap;
     }
-
 
 
 
@@ -173,83 +158,8 @@ public class FacesConfig
 
     private Map getComponentClassMap()
     {
-        if (_componentClassMap == null)
-        {
-            _componentClassMap = new HashMap();
-        }
         return _componentClassMap;
     }
-
-
-
-
-    public void addMessageResourcesConfig(MessageResourcesConfig newMessageResourcesConfig)
-    {
-        String id = newMessageResourcesConfig.getMessageResourcesId();
-        MessageResources oldMR = (MessageResources)getMessageResourcesMap().get(id);
-        if (oldMR == null)
-        {
-            if (newMessageResourcesConfig.getMessageResourcesClass() == null ||
-                newMessageResourcesConfig.getMessageResourcesClass().equals(MessageResourcesConfig.class.getName()))
-            {
-                getMessageResourcesMap().put(id, newMessageResourcesConfig);
-            }
-            else
-            {
-                getMessageResourcesMap().put(id, newMessageResourcesConfig.newMessageResources());
-            }
-        }
-        else
-        {
-            if (!(oldMR instanceof MessageResourcesConfig))
-            {
-                throw new FacesException("Duplicate MessageResources id '" + id + "'");
-            }
-
-            MessageResourcesConfig oldMessageResourcesConfig = (MessageResourcesConfig)oldMR;
-            for (Iterator it = newMessageResourcesConfig.getMessageConfigMap().values().iterator(); it.hasNext(); )
-            {
-                MessageConfig mc = (MessageConfig)it.next();
-                oldMessageResourcesConfig.addMessageConfig(mc);
-            }
-        }
-    }
-
-    public void addMessageResources(String id, String messageResourcesClass)
-    {
-        if (getMessageResourcesMap().put(id,
-                                         ConfigUtil.newInstance(messageResourcesClass)) != null)
-        {
-            throw new FacesException("Duplicate MessageResources id '" + id + "'");
-        }
-
-    }
-
-    public MessageResources getMessageResources(String id) throws FacesException
-    {
-        MessageResources mr = (MessageResources)getMessageResourcesMap().get(id);
-        if (mr == null)
-        {
-            throw new FacesException("Unknown MessageResources id '" + id + "'.");
-        }
-        return mr;
-    }
-
-    public Iterator getMessageResourcesIds()
-    {
-        return getMessageResourcesMap().keySet().iterator();
-    }
-
-    private Map getMessageResourcesMap()
-    {
-        if (_messageRessourcesMap == null)
-        {
-            _messageRessourcesMap = new HashMap();
-        }
-        return _messageRessourcesMap;
-    }
-
-
 
     public void addValidatorConfig(ValidatorConfig validatorConfig)
     {
@@ -280,10 +190,6 @@ public class FacesConfig
 
     private Map getValidatorClassMap()
     {
-        if (_validatorClassMap == null)
-        {
-            _validatorClassMap = new HashMap();
-        }
         return _validatorClassMap;
     }
 
@@ -301,10 +207,6 @@ public class FacesConfig
 
     private Map getManagedBeanConfigMap()
     {
-        if (_managedBeanConfigMap == null)
-        {
-            _managedBeanConfigMap = new HashMap();
-        }
         return _managedBeanConfigMap;
     }
 
@@ -312,10 +214,6 @@ public class FacesConfig
 
     public void addNavigationRuleConfig(NavigationRuleConfig navigationRuleConfig)
     {
-        if (_navigationRuleConfigList == null)
-        {
-            _navigationRuleConfigList = new ArrayList();
-        }
         _navigationRuleConfigList.add(navigationRuleConfig);
     }
 
@@ -346,10 +244,6 @@ public class FacesConfig
 
     private Map getReferencedBeanConfigMap()
     {
-        if (_referencedBeanConfigMap == null)
-        {
-            _referencedBeanConfigMap = new HashMap();
-        }
         return _referencedBeanConfigMap;
     }
 
@@ -404,24 +298,13 @@ public class FacesConfig
 
     private Map getRenderKitConfigMap()
     {
-        if (_renderKitConfigMap == null)
-        {
-            _renderKitConfigMap = new HashMap();
-        }
         return _renderKitConfigMap;
     }
-
-
-
-
-
-
 
     public void configureAll()
     {
         configureRenderKits();
     }
-
 
     /**
      * Registers the RenderKits that are defined in this configuration in the
@@ -464,6 +347,36 @@ public class FacesConfig
         }
         return false;
     }
-
-
+    
+    public Lifecycle getLifecycle()
+    {
+        return _lifecycle;
+    }
+    
+    public void setLifecycle(Lifecycle lifecycle)
+    {
+        _lifecycle = lifecycle;
+    }
+    
+    public FactoryConfig getFactoryConfig()
+    {
+        return _factoryConfig;
+    }
+    
+    public void setFactoryConfig(FactoryConfig factoryConfig)
+    {
+        _factoryConfig = factoryConfig;
+    }
+    
+    public void addFactoryConfig(FactoryConfig factoryConfig)
+    {
+        if (_factoryConfig == null)
+        {
+            _factoryConfig = factoryConfig;
+        }
+        else
+        {
+            _factoryConfig.update(factoryConfig);
+        }
+    }
 }

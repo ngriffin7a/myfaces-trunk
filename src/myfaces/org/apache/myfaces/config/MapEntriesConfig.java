@@ -25,4 +25,5 @@ package net.sourceforge.myfaces.config;
  */
 public class MapEntriesConfig
 {
+    // This is a mark interface only
 }

@@ -31,11 +31,10 @@ import javax.servlet.jsp.tagext.Tag;
 import javax.servlet.jsp.tagext.TagAttributeInfo;
 import javax.servlet.jsp.tagext.TagInfo;
 import javax.servlet.jsp.tagext.TagLibraryInfo;
+
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.JarURLConnection;
 import java.net.URL;
-import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.StringTokenizer;
@@ -45,6 +44,7 @@ import java.util.jar.JarFile;
 /**
  * DOCUMENT ME!
  * @author Manfred Geiler (latest modification by $Author$)
+ * @author Anton Koinov
  * @version $Revision$ $Date$
  */
 public abstract class FacesConfigFactoryBase
@@ -70,6 +70,7 @@ public abstract class FacesConfigFactoryBase
         }
 
         facesConfig = new FacesConfig();
+// FIXME        
         parseFacesConfigFiles(facesConfig, servletContext);
 
         completeRendererComponentClasses(facesConfig);
@@ -150,25 +151,17 @@ public abstract class FacesConfigFactoryBase
                 return;
             }
 
-            url = new URL("jar:" + url.toString() + "!/");
-            JarURLConnection conn = (JarURLConnection) url.openConnection();
-            JarFile jarFile = conn.getJarFile();
-            Enumeration entries = jarFile.entries();
-            while (entries.hasMoreElements())
-            {
-                JarEntry entry = (JarEntry) entries.nextElement();
-                String name = entry.getName();
-                if (name.equals("META-INF/faces-config.xml"))
-                {
-                    String systemId = url + name;
-                    log.info("Reading config " + systemId);
-                    InputStream stream = jarFile.getInputStream(entry);
-                    parseStreamConfig(facesConfig, stream, systemId,
-                                      new FacesConfigEntityResolver(jarFile));
-                }
+            JarFile jarFile = new JarFile(url.getPath());
+            JarEntry configFile = jarFile.getJarEntry("META-INF/faces-config.xml");
+            if (configFile != null) {
+                String systemId = url + configFile.getName();
+                log.info("Reading config " + systemId);
+                InputStream stream = jarFile.getInputStream(configFile);
+                parseStreamConfig(facesConfig, stream, systemId,
+                        new FacesConfigEntityResolver(jarFile));
             }
         }
-        catch (java.io.IOException e)
+        catch (IOException e)
         {
             throw new FacesException(e);
         }

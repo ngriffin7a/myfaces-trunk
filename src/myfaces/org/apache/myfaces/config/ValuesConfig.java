@@ -25,4 +25,5 @@ package net.sourceforge.myfaces.config;
  */
 public class ValuesConfig
 {
+    // This is a mark interface only
 }

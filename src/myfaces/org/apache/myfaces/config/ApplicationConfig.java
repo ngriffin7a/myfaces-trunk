@@ -1,4 +1,4 @@
-/**
+/*
  * MyFaces - the free JSF implementation
  * Copyright (C) 2003  The MyFaces Team (http://myfaces.sourceforge.net)
  *
@@ -19,6 +19,7 @@
 package net.sourceforge.myfaces.config;
 
 import javax.faces.application.NavigationHandler;
+import javax.faces.application.ViewHandler;
 import javax.faces.el.PropertyResolver;
 import javax.faces.el.VariableResolver;
 import javax.faces.event.ActionListener;
@@ -26,6 +27,7 @@ import javax.faces.event.ActionListener;
 /**
  * DOCUMENT ME!
  * @author Manfred Geiler (latest modification by $Author$)
+ * @author Anton Koinov
  * @version $Revision$ $Date$
  */
 public class ApplicationConfig
@@ -33,9 +35,12 @@ public class ApplicationConfig
 {
     private ActionListener _actionListener;
     private NavigationHandler _navigationHandler;
+    private ViewHandler _viewHandler;
     private PropertyResolver _propertyResolver;
     private VariableResolver _variableResolver;
-
+    private String _messageBundle;
+    private LocaleConfig _localeConfig;
+    
     public void setActionListener(ActionListener actionListener)
     {
         _actionListener = actionListener;
@@ -74,5 +79,83 @@ public class ApplicationConfig
     public PropertyResolver getPropertyResolver()
     {
         return _propertyResolver;
+    }
+
+    public String getMessageBundle()
+    {
+        return _messageBundle;
+    }
+
+    public void setMessageBundle(String messageBundle)
+    {
+        _messageBundle = messageBundle;
+    }
+    
+    public LocaleConfig getLocaleConfig(LocaleConfig localeConfig) 
+    {
+        return _localeConfig;
+    }
+    
+    public void setLocaleConfig(LocaleConfig localeConfig) {
+        _localeConfig = localeConfig;
+    }
+    
+    public void addLocaleConfig(LocaleConfig localeConfig) {
+        if (_localeConfig == null)
+        {
+            _localeConfig = localeConfig;
+        }
+        else
+        {
+            _localeConfig.update(localeConfig);
+        }
+    }
+    
+    public ViewHandler getViewHandler()
+    {
+        return _viewHandler;
+    }
+    
+    public void setViewHandler(ViewHandler viewHandler)
+    {
+        _viewHandler = viewHandler;
+    }
+    
+    public void update(ApplicationConfig applicationConfig)
+    {
+        if (applicationConfig._actionListener != null)
+        {
+            _actionListener = applicationConfig._actionListener;
+        }
+        
+        if (applicationConfig._localeConfig != null)
+        {
+            _localeConfig = applicationConfig._localeConfig;
+        }
+        
+        if (applicationConfig._messageBundle != null)
+        {
+            _messageBundle = applicationConfig._messageBundle;
+        }
+
+        if (applicationConfig._navigationHandler != null)
+        {
+            _navigationHandler = applicationConfig._navigationHandler;
+        }
+
+        if (applicationConfig._propertyResolver != null)
+        {
+            _propertyResolver = applicationConfig._propertyResolver;
+        }
+
+        if (applicationConfig._variableResolver != null)
+        {
+            _variableResolver = applicationConfig._variableResolver;
+        }
+        
+        if (applicationConfig._viewHandler != null)
+        {
+            _viewHandler = applicationConfig._viewHandler;
+        }
     }
 }

@@ -34,21 +34,25 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * DOCUMENT ME!
  * @author Manfred Geiler (latest modification by $Author$)
+ * @author Anton Koinov
  * @version $Revision$ $Date$
  */
 public class FacesConfigFactoryImpl
     extends FacesConfigFactoryBase
 {
-    private static final Log log = LogFactory.getLog(FacesConfigFactoryImpl.class);
+    static final Log log = LogFactory.getLog(FacesConfigFactoryImpl.class);
+    private Map _propPatternCache;    
 
     public void parseFacesConfig(FacesConfig facesConfig,
                                  InputStream in,
                                  String systemId,
-                                 EntityResolver entityResolver) throws IOException, FacesException
+                                 EntityResolver entityResolver) throws FacesException
     {
         if (in == null)
         {
@@ -98,7 +102,9 @@ public class FacesConfigFactoryImpl
             throw new FacesException("No valid faces-config root element found!");
         }
 
+        _propPatternCache = new HashMap();
         parseChildren(facesConfig, facesConfigElem.getChildNodes());
+        _propPatternCache = null; // free memory
     }
 
 
@@ -126,7 +132,7 @@ public class FacesConfigFactoryImpl
 
     public void setProperty(Object obj, Element elem)
     {
-        //System.out.println("setProperty " + obj + " : " + elem);
+        System.out.println("setProperty " + obj + " : " + elem);
         String propName = resolvePropertyName(elem.getNodeName());
 
         //Look for setXxx or addXxx method
@@ -142,18 +148,23 @@ public class FacesConfigFactoryImpl
         }
         */
         Class beanClass = obj.getClass();
-        String methodNameMiddle = Character.toUpperCase(propName.charAt(0)) + propName.substring(1);
-
-        Object[][] searchPatterns = {
-            {"add" + methodNameMiddle + "Config", CONFIG_PARAM},
-            {"set" + methodNameMiddle + "Config", CONFIG_PARAM},
-            {"add" + methodNameMiddle, LANG_AND_STRING_PARAM},
-            {"add" + methodNameMiddle, STRING_PARAM},
-            {"set" + methodNameMiddle, STRING_PARAM},
-            {"add" + methodNameMiddle, OBJECT_PARAM},
-            {"set" + methodNameMiddle, OBJECT_PARAM},
-        };
-
+        
+        Object[][] searchPatterns = (Object[][]) _propPatternCache.get(propName);
+        if (searchPatterns == null) {
+            String methodNameMiddle = Character.toUpperCase(propName.charAt(0)) + propName.substring(1);
+            searchPatterns = new Object [][] {
+                    {"add" + methodNameMiddle + "Config", CONFIG_PARAM},
+                    {"set" + methodNameMiddle + "Config", CONFIG_PARAM},
+                    {"add" + methodNameMiddle, LANG_AND_STRING_PARAM},
+                    {"add" + methodNameMiddle, STRING_PARAM},
+                    {"set" + methodNameMiddle, STRING_PARAM},
+                    {"add" + methodNameMiddle, OBJECT_PARAM},
+                    {"set" + methodNameMiddle, OBJECT_PARAM},
+            };
+            
+            _propPatternCache.put(propName, searchPatterns);
+        }
+        
         Method method = null;
 
         for (int i = 0; i < searchPatterns.length; i++)
@@ -178,6 +189,7 @@ public class FacesConfigFactoryImpl
         }
         else if (paramTypes.length == 2)
         {
+            // FIXME: should call getAttributeNS()
             String language = elem.getAttribute("xml:lang");
             invokeWithLang(obj, method, language, getElementText(elem));
         }
@@ -233,7 +245,12 @@ public class FacesConfigFactoryImpl
         {
             Config config = (Config)instantiate(propType);
             parseChildren(config, elem.getChildNodes());
-            invoke(obj, propWriteMethod, config);
+            try {
+                invoke(obj, propWriteMethod, config);
+            } catch(Throwable t) {
+                //FIXME
+                log.fatal("Unimplemented for " + elem.getNodeName());
+            }
         }
         else
         {
@@ -390,19 +407,16 @@ public class FacesConfigFactoryImpl
     private static final ErrorHandler ERROR_HANDLER = new ErrorHandler()
     {
         public void warning(SAXParseException exception)
-            throws SAXException
         {
             log.warn(getMessage(exception), exception);
         }
 
         public void error(SAXParseException exception)
-            throws SAXException
         {
             log.error(getMessage(exception), exception);
         }
 
         public void fatalError(SAXParseException exception)
-            throws SAXException
         {
             log.fatal(getMessage(exception), exception);
         }
