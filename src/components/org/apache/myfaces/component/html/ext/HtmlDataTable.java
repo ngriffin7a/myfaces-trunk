@@ -36,6 +36,9 @@ import java.util.List;
  * @author Manfred Geiler
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.8  2004/06/21 16:01:57  royalts
+ * setSortAscending(...) and setSortColumn have to update model their own, because processUdates won't be executed.
+ *
  * Revision 1.7  2004/06/21 14:43:20  manolito
  * no more calls to getRowCount to determine if list is empty before encodeBegin was called
  *
@@ -64,6 +67,8 @@ public class HtmlDataTable
     //Flag to detect if component is rendered for the first time (restoreState sets it to false)
     transient private boolean _firstTimeRendered = true;
 
+    private String _sortColumn = null;
+    private Boolean _sortAscending = null;
 
     public Object getValue()
     {
@@ -389,13 +394,52 @@ public class HtmlDataTable
         }
     }
 
-
     public boolean isRendered()
     {
         if (!UserRoleUtils.isVisibleOnUserRole(this)) return false;
         return super.isRendered();
     }
 
+    public void setSortColumn(String sortColumn)
+    {
+        _sortColumn = sortColumn;
+        // update model is necessary here, because processUpdates is never called
+        // reason: HtmlCommandSortHeader.isImmediate() == true
+        ValueBinding vb = getValueBinding("sortColumn");
+        if (vb != null)
+        {
+            vb.setValue(getFacesContext(), _sortColumn);
+            _sortColumn = null;
+        }
+    }
+
+    public String getSortColumn()
+    {
+        if (_sortColumn != null) return _sortColumn;
+        ValueBinding vb = getValueBinding("sortColumn");
+        return vb != null ? (String)vb.getValue(getFacesContext()) : null;
+    }
+
+    public void setSortAscending(boolean sortAscending)
+    {
+        _sortAscending = Boolean.valueOf(sortAscending);
+        // update model is necessary here, because processUpdates is never called
+        // reason: HtmlCommandSortHeader.isImmediate() == true
+        ValueBinding vb = getValueBinding("sortAscending");
+        if (vb != null)
+        {
+            vb.setValue(getFacesContext(), _sortAscending);
+            _sortAscending = null;
+        }
+    }
+
+    public boolean isSortAscending()
+    {
+        if (_sortAscending != null) return _sortAscending.booleanValue();
+        ValueBinding vb = getValueBinding("sortAscending");
+        Boolean v = vb != null ? (Boolean)vb.getValue(getFacesContext()) : null;
+        return v != null ? v.booleanValue() : DEFAULT_SORTASCENDING;
+    }
 
     //------------------ GENERATED CODE BEGIN (do not modify!) --------------------
 
@@ -407,8 +451,6 @@ public class HtmlDataTable
 
     private Boolean _preserveDataModel = null;
     private Boolean _preserveSort = null;
-    private String _sortColumn = null;
-    private Boolean _sortAscending = null;
     private String _enabledOnUserRole = null;
     private String _visibleOnUserRole = null;
     private Boolean _renderedIfEmpty = null;
@@ -442,31 +484,6 @@ public class HtmlDataTable
         ValueBinding vb = getValueBinding("preserveSort");
         Boolean v = vb != null ? (Boolean)vb.getValue(getFacesContext()) : null;
         return v != null ? v.booleanValue() : DEFAULT_PRESERVESORT;
-    }
-
-    public void setSortColumn(String sortColumn)
-    {
-        _sortColumn = sortColumn;
-    }
-
-    public String getSortColumn()
-    {
-        if (_sortColumn != null) return _sortColumn;
-        ValueBinding vb = getValueBinding("sortColumn");
-        return vb != null ? (String)vb.getValue(getFacesContext()) : null;
-    }
-
-    public void setSortAscending(boolean sortAscending)
-    {
-        _sortAscending = Boolean.valueOf(sortAscending);
-    }
-
-    public boolean isSortAscending()
-    {
-        if (_sortAscending != null) return _sortAscending.booleanValue();
-        ValueBinding vb = getValueBinding("sortAscending");
-        Boolean v = vb != null ? (Boolean)vb.getValue(getFacesContext()) : null;
-        return v != null ? v.booleanValue() : DEFAULT_SORTASCENDING;
     }
 
     public void setEnabledOnUserRole(String enabledOnUserRole)
