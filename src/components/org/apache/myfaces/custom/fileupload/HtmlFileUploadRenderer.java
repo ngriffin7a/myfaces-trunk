@@ -28,6 +28,7 @@ import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 import javax.faces.render.Renderer;
+import javax.faces.convert.ConverterException;
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 import java.io.IOException;
@@ -36,6 +37,9 @@ import java.io.IOException;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.13  2004/09/03 12:32:05  tinytoony
+ * file upload
+ *
  * Revision 1.12  2004/07/14 06:02:48  svieujot
  * FileUpload : split file based and memory based implementation.
  * Use the storage="memory|file" attribute.
@@ -152,25 +156,34 @@ public class HtmlFileUploadRenderer
             FileItem fileItem = mpReq.getFileItem(paramName);
             if (fileItem != null)
             {
-            	if( fileItem.getName() != null )
-            	{
-            		if( fileItem.getName().length() > 0 )
-	            	{
-            			try{
-            				UploadedFile upFile;
-            				String implementation = ((HtmlInputFileUpload) uiComponent).getStorage();
-            				if( implementation == null || ("memory").equals( implementation ) )
-            					upFile = new UploadedFileDefaultMemoryImpl( fileItem );
-            				else
-            					upFile = new UploadedFileDefaultFileImpl( fileItem );
-            				((HtmlInputFileUpload)uiComponent).setSubmittedValue(upFile);
-            				((HtmlInputFileUpload)uiComponent).setValid(true);
-            			}catch(IOException ioe){
-            				log.error(ioe);
-            			}
-	            	}
-            	}
+                try{
+                    UploadedFile upFile;
+                    String implementation = ((HtmlInputFileUpload) uiComponent).getStorage();
+                    if( implementation == null || ("memory").equals( implementation ) )
+                        upFile = new UploadedFileDefaultMemoryImpl( fileItem );
+                    else
+                        upFile = new UploadedFileDefaultFileImpl( fileItem );
+                    ((HtmlInputFileUpload)uiComponent).setSubmittedValue(upFile);
+                    ((HtmlInputFileUpload)uiComponent).setValid(true);
+                }catch(IOException ioe){
+                    log.error(ioe);
+                }
             }
         }
+    }
+
+    public Object getConvertedValue(FacesContext context, UIComponent component, Object submittedValue) throws ConverterException
+    {
+        if(submittedValue instanceof UploadedFile)
+        {
+            UploadedFile file = (UploadedFile) submittedValue;
+
+            if(file.getName()!=null && file.getName().length()>0)
+            {
+                return file;
+            }
+        }
+
+        return null;
     }
 }

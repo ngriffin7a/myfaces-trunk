@@ -68,7 +68,8 @@
                                        accept="image/*"
                                        value="#{fileUploadForm.upFile}"
                                        storage="file"
-                                       styleClass="fileUploadInput" />
+                                       styleClass="fileUploadInput"
+                                       required="true"/>
                     <f:verbatim><br></f:verbatim>
                     <h:outputText value="and give it a name: "/>
                     <h:inputText value="#{fileUploadForm.name}"/>

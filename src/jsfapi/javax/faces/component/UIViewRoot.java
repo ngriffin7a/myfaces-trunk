@@ -32,6 +32,9 @@ import java.util.Iterator;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.14  2004/09/03 12:32:06  tinytoony
+ * file upload
+ *
  * Revision 1.13  2004/08/23 05:13:37  dave0000
  * Externalize String-to-Locale conversion
  *
@@ -58,7 +61,7 @@ public class UIViewRoot
     private int _uniqueIdCounter = 0;
 
     private String _viewId = null;
-    private Locale _locale = null;
+    private Locale _locale = null;     
     private List _events = null;
 
     public String getViewId()
