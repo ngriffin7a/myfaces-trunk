@@ -26,6 +26,9 @@ import javax.faces.el.ValueBinding;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.7  2005/01/16 20:09:53  matzew
+ * added patch form Sean Schofield. forceId for reuse of "legacy JavaScript" (MyFaces-70)
+ *
  * Revision 1.6  2005/01/13 09:24:53  matzew
  * added patch form Sean Schofield. forceId for reuse of "legacy JavaScript" (MyFaces-70)
  *
@@ -50,11 +53,15 @@ public class HtmlInputText
         implements UserRoleAware
 {
         
-    private String clientId;
-    
     public String getClientId(FacesContext context)
     {
-        return HtmlComponentUtils.getClientId(this, getRenderer(context), context);
+        String clientId = HtmlComponentUtils.getClientId(this, getRenderer(context), context);
+        if (clientId == null)
+        {
+            clientId = super.getClientId(context);
+        }
+        
+        return clientId;
     }
     
     //------------------ GENERATED CODE BEGIN (do not modify!) --------------------

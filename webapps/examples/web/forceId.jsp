@@ -72,7 +72,7 @@ managed beans used:
                     <h:message id="forceTwoMessage" for="forceTwo" styleClass="error" />
 
 				<h:panelGroup/>
-			  	<h:commandButton id="button" value="#{example_messages['button_submit']}" action="go_home"/>
+			  	<x:commandLink forceId="true" id="button" value="#{example_messages['button_submit']}" action="go_home"/>
                     <h:panelGroup/>
 
 			    </h:panelGrid>
@@ -85,7 +85,7 @@ managed beans used:
       		<x:inputText id="username" value="#{user.username}" forceId="true"/>
 			<h:outputText value="Password"/>
       		<x:inputText id="passwd" value="#{user.password}" forceId="true"/>
-			<h:commandButton value="update" action="#{user.update}"/>
+			<x:commandButton id="button" forceId="true" value="Update" action="#{user.update}"/>
    			</h:column>
 			</h:dataTable>
 			</h:form>

@@ -53,12 +53,17 @@ public class HtmlComponentUtils
      * @return The clientId to use with the specified component.
      */
     public static String getClientId(UIComponent component, 
-                                        Renderer renderer, 
-                                        FacesContext context)
+                                     Renderer renderer, 
+                                     FacesContext context)
     {
         // see if the originally supplied id should be used 
         Boolean forceValue = (Boolean)component.getAttributes().get(JSFAttr.FORCE_ID_ATTR);
-        boolean forceId = forceValue.booleanValue();
+        boolean forceId = false;
+        
+        if (forceValue != null)
+        {
+            forceId = forceValue.booleanValue();
+        }        
         
         if (forceId && component.getId() != null)
         {
@@ -90,7 +95,7 @@ public class HtmlComponentUtils
         }
         else
         {
-            return component.getClientId(context);
+            return null;
         }
     }
     

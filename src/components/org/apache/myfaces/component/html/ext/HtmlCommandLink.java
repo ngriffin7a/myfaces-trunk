@@ -17,9 +17,11 @@ package org.apache.myfaces.component.html.ext;
 
 import org.apache.myfaces.component.UserRoleAware;
 import org.apache.myfaces.component.UserRoleUtils;
+import org.apache.myfaces.component.html.util.HtmlComponentUtils;
 
 import javax.faces.context.FacesContext;
 import javax.faces.el.ValueBinding;
+
 
 /**
  * @author Thomas Spiegl (latest modification by $Author$)
@@ -30,6 +32,18 @@ public class HtmlCommandLink
         extends javax.faces.component.html.HtmlCommandLink
         implements UserRoleAware
 {
+        
+    public String getClientId(FacesContext context)
+    {
+        String clientId = HtmlComponentUtils.getClientId(this, getRenderer(context), context);
+        if (clientId == null)
+        {
+            clientId = super.getClientId(context);
+        }
+
+        return clientId;
+    }        
+    
     //------------------ GENERATED CODE BEGIN (do not modify!) --------------------
 
     public static final String COMPONENT_TYPE = "org.apache.myfaces.HtmlCommandLink";
