@@ -35,16 +35,14 @@ import javax.faces.event.FacesEvent;
 public class MyFacesHtmlCommandLink
     extends HtmlCommandLink
 {
-    private ValueBinding _actionUpdateProperty;
-
     public ValueBinding getActionUpdateProperty()
     {
-        return _actionUpdateProperty;
+        return getValueBinding("actionUpdateProperty");
     }
 
     public void setActionUpdateProperty(ValueBinding actionUpdateProperty)
     {
-        _actionUpdateProperty = actionUpdateProperty;
+        setValueBinding("actionUpdateProperty", actionUpdateProperty);
     }
 
 
@@ -119,11 +117,10 @@ public class MyFacesHtmlCommandLink
 
     public Object saveState(FacesContext context)
     {
-        Object values[] = new Object[4];
+        Object values[] = new Object[3];
         values[0] = super.saveState(context);
         values[1] = _target;
-        values[2] = saveAttachedState(context, _actionUpdateProperty);
-        values[3] = _actionUpdateValue;
+        values[2] = _actionUpdateValue;
         return ((Object) (values));
     }
 
@@ -132,8 +129,7 @@ public class MyFacesHtmlCommandLink
         Object values[] = (Object[])state;
         super.restoreState(context, values[0]);
         _target = (String)values[1];
-        _actionUpdateProperty = (ValueBinding)restoreAttachedState(context, values[2]);
-        _actionUpdateValue = (String)values[3];
+        _actionUpdateValue = (String)values[2];
     }
     //------------------ GENERATED CODE END ---------------------------------------
 }
