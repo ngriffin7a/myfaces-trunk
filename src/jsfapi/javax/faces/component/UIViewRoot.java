@@ -20,6 +20,7 @@ package javax.faces.component;
 
 import javax.faces.context.FacesContext;
 import javax.faces.el.ValueBinding;
+import java.util.Locale;
 
 /**
  * see Javadoc of JSF Specification
