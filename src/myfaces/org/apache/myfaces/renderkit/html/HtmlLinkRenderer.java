@@ -91,6 +91,7 @@ public class HtmlLinkRenderer
 
     /**
      * Can be overwritten by derived classes to overrule the style class to be used.
+     * TODO: the same for Style
      */
     protected String getStyleClass(FacesContext facesContext, UIComponent link)
     {
