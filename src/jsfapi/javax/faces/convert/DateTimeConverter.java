@@ -32,6 +32,14 @@ public class DateTimeConverter implements Converter {
 	// FIELDS
 	public static final String CONVERTER_ID = "javax.faces.DateTime";
 
+    private String _dateStyle;
+    private Locale _locale;
+    private String _pattern;
+    private String _timeStyle;
+    private TimeZone _timeZone;
+    private String _type;
+    private boolean _transient;
+
 	// CONSTRUCTORS
 	public DateTimeConverter()
     {
@@ -50,48 +58,7 @@ public class DateTimeConverter implements Converter {
 		throw new UnsupportedOperationException();
 	}
 
-	public String getDateStyle()
-	{
-		//TODO
-		throw new UnsupportedOperationException();
-	}
-
-	public Locale getLocale()
-	{
-		//TODO
-		throw new UnsupportedOperationException();
-	}
-
-	public String getPattern()
-	{
-		//TODO
-		throw new UnsupportedOperationException();
-	}
-
-	public String getTimeStyle()
-	{
-		//TODO
-		throw new UnsupportedOperationException();
-	}
-
-	public TimeZone getTimeZone()
-	{
-		//TODO
-		throw new UnsupportedOperationException();
-	}
-
-	public String getType()
-	{
-		//TODO
-		throw new UnsupportedOperationException();
-	}
-
-	public boolean isTransient()
-	{
-		//TODO
-		throw new UnsupportedOperationException();
-	}
-
+    // State restore/save
 	public void restoreState(FacesContext facesContext, Object value)
 	{
 		//TODO
@@ -104,46 +71,74 @@ public class DateTimeConverter implements Converter {
 		throw new UnsupportedOperationException();
 	}
 
-	public void setDateStyle(String value)
-	{
-		//TODO
-		throw new UnsupportedOperationException();
-	}
+    // getter & setter
+    public String getDateStyle()
+    {
+        return _dateStyle;
+    }
 
-	public void setLocale(java.util.Locale locale)
-	{
-		//TODO
-		throw new UnsupportedOperationException();
-	}
+    public void setDateStyle(String dateStyle)
+    {
+        _dateStyle = dateStyle;
+    }
 
-	public void setPattern(String value)
-	{
-		//TODO
-		throw new UnsupportedOperationException();
-	}
+    public Locale getLocale()
+    {
+        return _locale;
+    }
 
-	public void setTimeStyle(String value)
-	{
-		//TODO
-		throw new UnsupportedOperationException();
-	}
+    public void setLocale(Locale locale)
+    {
+        _locale = locale;
+    }
 
-	public void setTimeZone(TimeZone value)
-	{
-		//TODO
-		throw new UnsupportedOperationException();
-	}
+    public String getPattern()
+    {
+        return _pattern;
+    }
 
-	public void setTransient(boolean value)
-	{
-		//TODO
-		throw new UnsupportedOperationException();
-	}
+    public void setPattern(String pattern)
+    {
+        _pattern = pattern;
+    }
 
-	public void setType(String value)
-	{
-		//TODO
-		throw new UnsupportedOperationException();
-	}
+    public String getTimeStyle()
+    {
+        return _timeStyle;
+    }
 
+    public void setTimeStyle(String timeStyle)
+    {
+        _timeStyle = timeStyle;
+    }
+
+    public TimeZone getTimeZone()
+    {
+        return _timeZone;
+    }
+
+    public void setTimeZone(TimeZone timeZone)
+    {
+        _timeZone = timeZone;
+    }
+
+    public boolean isTransient()
+    {
+        return _transient;
+    }
+
+    public void setTransient(boolean aTransient)
+    {
+        _transient = aTransient;
+    }
+
+    public String getType()
+    {
+        return _type;
+    }
+
+    public void setType(String type)
+    {
+        _type = type;
+    }
 }

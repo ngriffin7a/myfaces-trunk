@@ -20,6 +20,7 @@ package javax.faces.convert;
 
 import javax.faces.context.FacesContext;
 import javax.faces.component.UIComponent;
+import java.math.BigInteger;
 
 /**
  * @author Thomas Spiegl (latest modification by $Author$)
@@ -38,14 +39,37 @@ public class BigIntegerConverter implements Converter {
 	// METHODS
 	public Object getAsObject(FacesContext facesContext, UIComponent uiComponent, String value)
 	{
-        //TODO
-        throw new UnsupportedOperationException("not yet implemented");
+        if (facesContext == null) throw new NullPointerException("facesContext");
+        if (uiComponent == null) throw new NullPointerException("uiComponent");
+
+        if (value != null)
+        {
+            value = value.trim();
+            if (value.length() > 0)
+            {
+                try
+                {
+                    return new BigInteger(value.trim());
+                }
+                catch (NumberFormatException e)
+                {
+                    throw new ConverterException("Cannot convert value " + value);
+                }
+            }
+        }
+        return null;
 	}
 
 	public String getAsString(FacesContext facesContext, UIComponent uiComponent, Object value)
 	{
-        //TODO
-        throw new UnsupportedOperationException("not yet implemented");
+        if (facesContext == null) throw new NullPointerException("facesContext");
+        if (uiComponent == null) throw new NullPointerException("uiComponent");
+
+        if (value instanceof String)
+        {
+            return (String)value;
+        }
+        return ((BigInteger)value).toString();
 	}
 
 }

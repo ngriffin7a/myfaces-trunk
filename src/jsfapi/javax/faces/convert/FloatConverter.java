@@ -31,21 +31,43 @@ public class FloatConverter implements Converter {
 	public static final String CONVERTER_ID = "javax.faces.Float";
 
 	// CONSTRUCTORS
-	public FloatConverter(){
-	
+	public FloatConverter()
+    {
 	}
 
-	// METHODS
-	public Object getAsObject(FacesContext facesContext, UIComponent uiComponent, String value)
-	{
-		//TODO
-		throw new UnsupportedOperationException();
-	}
+    // METHODS
+    public Object getAsObject(FacesContext facesContext, UIComponent uiComponent, String value)
+    {
+        if (facesContext == null) throw new NullPointerException("facesContext");
+        if (uiComponent == null) throw new NullPointerException("uiComponent");
 
-	public String getAsString(FacesContext facesContext, UIComponent uiComponent, Object value)
-	{
-		//TODO
-		throw new UnsupportedOperationException();
-	}
+        if (value != null)
+        {
+            value = value.trim();
+            if (value.length() > 0)
+            {
+                try
+                {
+                    Float.valueOf(value);
+                }
+                catch (NumberFormatException e)
+                {
+                    throw new ConverterException("Cannot convert value " + value);
+                }
+            }
+        }
+        return null;
+    }
 
+    public String getAsString(FacesContext facesContext, UIComponent uiComponent, Object value)
+    {
+        if (facesContext == null) throw new NullPointerException("facesContext");
+        if (uiComponent == null) throw new NullPointerException("uiComponent");
+
+        if (value instanceof String)
+        {
+            return (String)value;
+        }
+        return ((Float)value).toString();
+    }
 }

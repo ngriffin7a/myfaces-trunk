@@ -18,8 +18,6 @@
  */
 package javax.faces.convert;
 
-import javax.faces.context.FacesContext;
-import javax.faces.component.UIComponent;
 import javax.faces.FacesException;
 import javax.faces.application.FacesMessage;
 
@@ -30,49 +28,45 @@ import javax.faces.application.FacesMessage;
 public class ConverterException extends FacesException {
 
 	// FIELDS
+    private FacesMessage _facesMessage;
 
 	// CONSTRUCTORS
 	public ConverterException()
     {
-        //TODO
-        throw new UnsupportedOperationException();
+        super();
 	}
 
     public ConverterException(FacesMessage facesMessage)
     {
-        //TODO
-        throw new UnsupportedOperationException();
+        super(facesMessage.getSummary());
+        _facesMessage = facesMessage;
 	}
 
 	public ConverterException(FacesMessage facesMessage, Throwable cause)
     {
-        //TODO
-        throw new UnsupportedOperationException();
+        super(cause);
+        _facesMessage = facesMessage;
 	}
 
-	public ConverterException(String value)
+	public ConverterException(String message)
     {
-        //TODO
-        throw new UnsupportedOperationException();
+        super(message);
 	}
 
-	public ConverterException(String value, Throwable cause)
+	public ConverterException(String message, Throwable cause)
     {
-        //TODO
-        throw new UnsupportedOperationException();
+        super(message, cause);
 	}
 
 	public ConverterException(Throwable cause)
     {
-        //TODO
-        throw new UnsupportedOperationException();
+        super(cause);
 	}
 
 	// METHODS
 	public FacesMessage getFacesMessage()
 	{
-        //TODO
-        throw new UnsupportedOperationException();
+        return _facesMessage;
 	}
 
 }

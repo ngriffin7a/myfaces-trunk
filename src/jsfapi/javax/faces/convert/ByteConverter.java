@@ -33,20 +33,41 @@ public class ByteConverter implements Converter {
 	// CONSTRUCTORS
 	public ByteConverter()
     {
-	
 	}
 
-	// METHODS
-	public Object getAsObject(FacesContext facesContext, UIComponent uiComponent, String value)
-	{
-        //TODO
-        throw new UnsupportedOperationException("not yet implemented");
-	}
+    // METHODS
+    public Object getAsObject(FacesContext facesContext, UIComponent uiComponent, String value)
+    {
+        if (facesContext == null) throw new NullPointerException("facesContext");
+        if (uiComponent == null) throw new NullPointerException("uiComponent");
 
-	public String getAsString(FacesContext facesContext, UIComponent uiComponent, Object value)
-	{
-        //TODO
-        throw new UnsupportedOperationException("not yet implemented");
-	}
+        if (value != null)
+        {
+            value = value.trim();
+            if (value.length() > 0)
+            {
+                try
+                {
+                    Byte.valueOf(value);
+                }
+                catch (NumberFormatException e)
+                {
+                    throw new ConverterException("Cannot convert value " + value);
+                }
+            }
+        }
+        return null;
+    }
 
+    public String getAsString(FacesContext facesContext, UIComponent uiComponent, Object value)
+    {
+        if (facesContext == null) throw new NullPointerException("facesContext");
+        if (uiComponent == null) throw new NullPointerException("uiComponent");
+
+        if (value instanceof String)
+        {
+            return (String)value;
+        }
+        return ((Byte)value).toString();
+    }
 }
