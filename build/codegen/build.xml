@@ -100,6 +100,17 @@
                   velocityLoaderPath="${codgen-src.dir}/net/sourceforge/myfaces/codegen/resource" />
     </target>
 
+
+    <target name="generate-all-components-components" depends="-compile" >
+        <taskdef name="generate" classname="net.sourceforge.myfaces.codegen.component.ComponentGeneratorTask">
+            <classpath refid="codegen.class.path"/>
+        </taskdef>
+        <generate basedir="${components-src.dir}"
+                  includes="net/sourceforge/myfaces/component/html/ext/*.xml"
+                  destdir="${components-src.dir}"
+                  velocityLoaderPath="${codgen-src.dir}/net/sourceforge/myfaces/codegen/resource" />
+    </target>
+
     <target name="generate-single-components-component" depends="-compile" >
         <taskdef name="generate" classname="net.sourceforge.myfaces.codegen.component.ComponentGeneratorTask">
             <classpath refid="codegen.class.path"/>
@@ -109,7 +120,6 @@
                   destdir="${components-src.dir}"
                   velocityLoaderPath="${codgen-src.dir}/net/sourceforge/myfaces/codegen/resource" />
     </target>
-
 
 
     <target name="clean"
