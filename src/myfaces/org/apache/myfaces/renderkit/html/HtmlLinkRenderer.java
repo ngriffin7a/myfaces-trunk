@@ -158,8 +158,6 @@ public class HtmlLinkRenderer
         }
 
         String href = hrefBuf.toString();
-        href = viewHandler.getResourceURL(facesContext, href);//TODO: or getActionURL ?
-
         writer.startElement(HTML.ANCHOR_ELEM, commandLink);
         writer.writeURIAttribute(HTML.HREF_ATTR, href, null);
     }

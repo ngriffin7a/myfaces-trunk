@@ -57,16 +57,13 @@ public class HtmlFormRenderer
         ViewHandler viewHandler = facesContext.getApplication().getViewHandler();
         String viewId = facesContext.getViewRoot().getViewId();
         String clientId = htmlForm.getClientId(facesContext);
-
         String actionURL = viewHandler.getActionURL(facesContext, viewId);
 
         writer.startElement(HTML.FORM_ELEM, htmlForm);
         writer.writeAttribute(HTML.ID_ATTR, convertClientId(facesContext, clientId), null);
         writer.writeAttribute(HTML.NAME_ATTR, MyFacesHtmlForm.getFormName(facesContext, htmlForm), null);
         writer.writeAttribute(HTML.METHOD_ATTR, "post", null);
-        writer.writeAttribute(HTML.ACTION_ATTR,
-                              externalContext.encodeActionURL(actionURL),
-                              null);
+        writer.writeURIAttribute(HTML.ACTION_ATTR, actionURL, null);
 
         HTMLUtil.renderHTMLAttributes(writer, htmlForm, HTML.FORM_PASSTHROUGH_ATTRIBUTES);
         writer.write(""); // forse start element tag to be closed

@@ -248,7 +248,7 @@ public class HtmlTabbedPaneRenderer
         writer.writeAttribute(HTML.NAME_ATTR, tabbedPane.getClientId(facesContext) + AUTO_FORM_SUFFIX, null);
         writer.writeAttribute(HTML.STYLE_ATTR, "display:inline", null);
         writer.writeAttribute(HTML.METHOD_ATTR, "post", null);
-        writer.writeAttribute(HTML.ACTION_ATTR, externalContext.encodeActionURL(actionURL), null);
+        writer.writeURIAttribute(HTML.ACTION_ATTR, actionURL, null);
         writer.flush();
     }
 

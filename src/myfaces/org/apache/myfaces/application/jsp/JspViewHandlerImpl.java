@@ -141,7 +141,16 @@ public class JspViewHandlerImpl
     public String getActionURL(FacesContext facesContext, String viewId)
     {
         String path = getViewIdPath(facesContext, viewId);
-        return getResourceURL(facesContext, path);
+        String url;
+        if (path.length() > 0 && path.charAt(0) == '/')
+        {
+            url = facesContext.getExternalContext().getRequestContextPath() + path;
+        }
+        else
+        {
+            url = path;
+        }
+        return facesContext.getExternalContext().encodeActionURL(url);
     }
 
     public String getResourceURL(FacesContext facesContext, String path)
@@ -156,6 +165,8 @@ public class JspViewHandlerImpl
             url = path;
         }
 
+        return facesContext.getExternalContext().encodeResourceURL(url);
+        /*
         url = facesContext.getExternalContext().encodeResourceURL(url);
         if (facesContext.getApplication().getStateManager().isSavingStateInClient(facesContext))
         {
@@ -172,6 +183,7 @@ public class JspViewHandlerImpl
         {
             return url;
         }
+        */
     }
 
     public void renderView(FacesContext facesContext, UIViewRoot viewToRender)

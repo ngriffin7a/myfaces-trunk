@@ -69,7 +69,7 @@ public class DummyFormResponseWriter
         _responseWriter.writeAttribute(HTML.NAME_ATTR, DUMMY_FORM_NAME, null);
         _responseWriter.writeAttribute(HTML.STYLE_ATTR, "display:inline", null);
         _responseWriter.writeAttribute(HTML.METHOD_ATTR, "post", null);
-        _responseWriter.writeAttribute(HTML.ACTION_ATTR, externalContext.encodeActionURL(actionURL), null);
+        _responseWriter.writeURIAttribute(HTML.ACTION_ATTR, actionURL, null);
         _responseWriter.flush();
         for (Iterator it = _hiddenParams.iterator(); it.hasNext(); )
         {
