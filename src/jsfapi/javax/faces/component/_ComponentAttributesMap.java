@@ -15,20 +15,29 @@
  */
 package javax.faces.component;
 
-import javax.faces.FacesException;
-import javax.faces.context.FacesContext;
 import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.io.Serializable;
 import java.lang.reflect.Method;
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
+
+import javax.faces.FacesException;
+import javax.faces.context.FacesContext;
+import javax.faces.el.ValueBinding;
 
 /**
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.8  2005/01/08 19:59:33  matzew
+ * closed MYFACES-74. Thanks to Heath Borders-Wing
+ *
  * Revision 1.7  2004/07/01 22:00:50  mwessendorf
  * ASF switch
  *
@@ -123,7 +132,14 @@ class _ComponentAttributesMap
         PropertyDescriptor propertyDescriptor = getPropertyDescriptor((String)key);
         if (propertyDescriptor != null)
         {
-            return getComponentProperty(propertyDescriptor);
+            Object value = getComponentProperty(propertyDescriptor);
+            if (value != null)
+            {
+            	return value;
+            }
+            
+            ValueBinding vb = _component.getValueBinding((String) key);
+            return vb != null ? vb.getValue(FacesContext.getCurrentInstance()) : null;
         }
         else
         {
