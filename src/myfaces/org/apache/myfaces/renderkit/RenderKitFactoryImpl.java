@@ -24,11 +24,12 @@ import javax.faces.FacesException;
 import javax.faces.context.FacesContext;
 import javax.faces.render.RenderKit;
 import javax.faces.render.RenderKitFactory;
-import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 /**
- * DOCUMENT ME!
+ * RenderKitFactory implementation as defined in Spec. JSF.7.3
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
@@ -36,27 +37,36 @@ public class RenderKitFactoryImpl
         extends RenderKitFactory
 {
     private static final Object _lock = new Object();
-    private static RenderKit _renderKit = null;
+    private static Map _renderkits = new HashMap();
 
-    public void addRenderKit(String s, RenderKit renderkit)
+    public RenderKitFactoryImpl()
     {
-        throw new UnsupportedOperationException();
+        _renderkits.put(DEFAULT_RENDER_KIT, new RenderKitImpl());
     }
 
-    public RenderKit getRenderKit(String s)
-            throws FacesException
+    public void addRenderKit(String id, RenderKit renderkit)
     {
-        if (!s.equals(DEFAULT_RENDER_KIT))
-        {
-            throw new IllegalArgumentException("Only default renderkit supported!");
-        }
         synchronized (_lock)
         {
-            if (_renderKit == null)
+            if (_renderkits.get(id) != null)
             {
-                _renderKit = new RenderKitImpl();
+                throw new IllegalArgumentException("Renderkit with id '" + id + "' already exists.");
             }
-            return _renderKit;
+            _renderkits.put(id, renderkit);
+        }
+    }
+
+    public RenderKit getRenderKit(String id)
+            throws FacesException
+    {
+        synchronized (_lock)
+        {
+            RenderKit renderkit = (RenderKit)_renderkits.get(id);
+            if (renderkit == null)
+            {
+                throw new IllegalArgumentException("Unknown renderkit '" + id + "'.");
+            }
+            return renderkit;
         }
     }
 
@@ -68,6 +78,6 @@ public class RenderKitFactoryImpl
 
     public Iterator getRenderKitIds()
     {
-        return Collections.singleton(getRenderKit(DEFAULT_RENDER_KIT)).iterator();
+        return _renderkits.keySet().iterator();
     }
 }
