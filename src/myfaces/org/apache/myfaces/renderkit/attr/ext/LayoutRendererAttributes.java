@@ -22,7 +22,7 @@ import net.sourceforge.myfaces.renderkit.attr.CommonRendererAttributes;
 
 /**
  * Constant definitions for the specified render dependent attributes of the
- * "Navigation" renderer type.
+ * "Layout" renderer type.
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
@@ -30,4 +30,10 @@ public interface LayoutRendererAttributes
     extends CommonRendererAttributes
 {
     public static final String LAYOUT_ATTR = "layout";
+
+    public static final String HEADER_CLASS_ATTR = "headerClass";
+    public static final String NAVIGATION_CLASS_ATTR = "navigationClass";
+    public static final String BODY_CLASS_ATTR = "bodyClass";
+    public static final String FOOTER_CLASS_ATTR = "footerClass";
+
 }

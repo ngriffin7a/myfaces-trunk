@@ -20,24 +20,27 @@ package net.sourceforge.myfaces.renderkit.html.ext;
 
 import net.sourceforge.myfaces.renderkit.attr.ext.LayoutRendererAttributes;
 import net.sourceforge.myfaces.renderkit.html.HTMLRenderer;
-import net.sourceforge.myfaces.renderkit.html.util.RenderKitWrapper;
+import net.sourceforge.myfaces.renderkit.html.util.ListenerRenderKit;
+import net.sourceforge.myfaces.renderkit.html.util.RendererListener;
 import net.sourceforge.myfaces.util.logging.LogUtil;
 
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIPanel;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
+import javax.faces.render.Renderer;
 import javax.servlet.jsp.tagext.BodyContent;
 import java.io.IOException;
 
 /**
  * DOCUMENT ME!
- * @author Thomas Spiegl (latest modification by $Author$)
+ * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
 public class LayoutRenderer
     extends HTMLRenderer
-    implements LayoutRendererAttributes
+    implements LayoutRendererAttributes,
+               RendererListener
 {
     static final String HEADER = "LayoutHeader";
     static final String NAVIGATION = "LayoutNavigation";
@@ -70,14 +73,7 @@ public class LayoutRenderer
     public void encodeBegin(FacesContext facesContext, UIComponent uiComponent)
         throws IOException
     {
-        // wrap current renderKit
-        RenderKitWrapper.wrapRenderKit(facesContext,
-                                       uiComponent,
-                                       "LayoutRenderKit");
-        RenderKitWrapper.startChildrenRedirection(facesContext,
-                                                  uiComponent,
-                                                  this,
-                                                  new LayoutChildRenderer());
+        ListenerRenderKit.addChildrenListener(facesContext, uiComponent, this);
     }
 
     public void encodeChildren(FacesContext facesContext, UIComponent uiComponent)
@@ -89,10 +85,7 @@ public class LayoutRenderer
         throws IOException
     {
         writeBody(facesContext, uiComponent);
-
-        // unwrap current renderKit
-        RenderKitWrapper.unwrapRenderKit(facesContext,
-                                         uiComponent);
+        ListenerRenderKit.removeListener(facesContext, uiComponent, this);
     }
 
     protected void writeBody(FacesContext facesContext, UIComponent uiComponent)
@@ -132,6 +125,71 @@ public class LayoutRenderer
     }
 
 
+    public void beforeEncodeBegin(FacesContext facesContext,
+                                  Renderer renderer,
+                                  UIComponent uiComponent)
+        throws IOException
+    {
+        if (uiComponent.getComponentType().equals(UIPanel.TYPE))
+        {
+            ResponseWriter writer = facesContext.getResponseWriter();
+            if (uiComponent.getAttribute(HEADER_CLASS_ATTR) != null)
+            {
+                writer.write(beginToken(LayoutRenderer.HEADER));
+            }
+            else if (uiComponent.getAttribute(NAVIGATION_CLASS_ATTR) != null)
+            {
+                writer.write(beginToken(LayoutRenderer.NAVIGATION));
+            }
+            else if (uiComponent.getAttribute(BODY_CLASS_ATTR) != null)
+            {
+                writer.write(beginToken(LayoutRenderer.BODY));
+            }
+            else if (uiComponent.getAttribute(FOOTER_CLASS_ATTR) != null)
+            {
+                writer.write(beginToken(LayoutRenderer.FOOTER));
+            }
+        }
+    }
+
+    public void afterEncodeEnd(FacesContext facesContext,
+                               Renderer renderer,
+                               UIComponent uiComponent)
+        throws IOException
+    {
+        if (uiComponent.getComponentType().equals(UIPanel.TYPE))
+        {
+            ResponseWriter writer = facesContext.getResponseWriter();
+            if (uiComponent.getAttribute(HEADER_CLASS_ATTR) != null)
+            {
+                writer.write(endToken(LayoutRenderer.HEADER));
+            }
+            else if (uiComponent.getAttribute(NAVIGATION_CLASS_ATTR) != null)
+            {
+                writer.write(endToken(LayoutRenderer.NAVIGATION));
+            }
+            else if (uiComponent.getAttribute(BODY_CLASS_ATTR) != null)
+            {
+                writer.write(endToken(LayoutRenderer.BODY));
+            }
+            else if (uiComponent.getAttribute(FOOTER_CLASS_ATTR) != null)
+            {
+                writer.write(endToken(LayoutRenderer.FOOTER));
+            }
+        }
+    }
+
+    protected static String beginToken(String part)
+    {
+        return "__" + part + "_BEGIN__";
+    }
+
+    protected static String endToken(String part)
+    {
+        return "__" + part + "_END__";
+    }
+
+
     protected void writeClassicLayout(FacesContext facesContext,
                                       BodyContent bodyContent)
         throws IOException
@@ -149,5 +207,7 @@ public class LayoutRenderer
         String bodyString = bodyContent.getString();
         //TODO
     }
+
+
 
 }

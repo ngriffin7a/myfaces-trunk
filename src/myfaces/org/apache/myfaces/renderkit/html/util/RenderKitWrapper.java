@@ -30,6 +30,8 @@ import javax.faces.tree.Tree;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.Stack;
+import java.util.Map;
+import java.util.HashMap;
 
 /**
  * This RenderKit can be used to wrap an existing RenderKit, so that
@@ -44,19 +46,23 @@ import java.util.Stack;
 public class RenderKitWrapper
     extends RenderKit
 {
-    //TODO: Save as Request-attribute
-    private RenderKit _originalRenderKit;
-    //TODO: Save as Request-attribute
-    private Stack _redirectionStack = new Stack();
+    protected static final String ID = RenderKitWrapper.class.getName() + ".ID";
 
-    public RenderKitWrapper(RenderKit originalRenderKit)
+    private Map _rendererWrappers = new HashMap();
+
+    public RenderKitWrapper()
     {
-        _originalRenderKit = originalRenderKit;
     }
 
     public Renderer getRenderer(String rendererType)
     {
-        return new RendererWrapper(rendererType);
+        Renderer rendererWrapper = (Renderer)_rendererWrappers.get(rendererType);
+        if (rendererWrapper == null)
+        {
+            rendererWrapper = new RendererWrapper(rendererType);
+            _rendererWrappers.put(rendererType, rendererWrapper);
+        }
+        return rendererWrapper;
     }
 
     public void addRenderer(String s, Renderer renderer)
@@ -71,49 +77,82 @@ public class RenderKitWrapper
 
     public Iterator getComponentClasses()
     {
-        return _originalRenderKit.getComponentClasses();
+        throw new UnsupportedOperationException();
     }
 
     public Iterator getRendererTypes()
     {
-        return _originalRenderKit.getRendererTypes();
+        throw new UnsupportedOperationException();
     }
 
     public Iterator getRendererTypes(String s)
     {
-        return _originalRenderKit.getRendererTypes(s);
+        throw new UnsupportedOperationException();
     }
 
     public Iterator getRendererTypes(UIComponent uiComponent)
     {
-        return _originalRenderKit.getRendererTypes(uiComponent);
+        throw new UnsupportedOperationException();
     }
 
 
 
-    public void startChildrenRedirection(UIComponent currentComponent,
-                                         Renderer currentRenderer,
-                                         Renderer redirectionRenderer)
+    private static final String REDIRECTION_STACK_ATTR
+        = RenderKitWrapper.class.getName() + ".REDIRECTION_STACK";
+    protected static Stack getRedirectionStack(FacesContext facesContext)
     {
-        _redirectionStack.push(new Redirection(Redirection.START,
-                                               currentComponent,
-                                               currentRenderer,
-                                               redirectionRenderer));
+        Stack stack = (Stack)facesContext.getServletRequest().getAttribute(REDIRECTION_STACK_ATTR);
+        if (stack == null)
+        {
+            stack = new Stack();
+            facesContext.getServletRequest().setAttribute(REDIRECTION_STACK_ATTR,
+                                                          stack);
+        }
+        return stack;
     }
 
 
-    public void suspendChildrenRedirection(UIComponent currentComponent,
-                                           Renderer currentRenderer)
+    private static final String ORIGINAL_RENDER_KIT_ATTR
+        = RenderKitWrapper.class.getName() + ".ORIGINAL_RENDER_KIT";
+    protected static RenderKit getOriginalRenderKit(FacesContext facesContext)
     {
-        _redirectionStack.push(new Redirection(Redirection.SUSPEND,
-                                               currentComponent,
-                                               currentRenderer,
-                                               null));
+        return (RenderKit)facesContext.getServletRequest().getAttribute(ORIGINAL_RENDER_KIT_ATTR);
     }
 
-    public RenderKit getOriginalRenderKit()
+
+
+    public static void startChildrenRedirection(FacesContext facesContext,
+                                                UIComponent currentComponent,
+                                                Renderer currentRenderer,
+                                                Renderer redirectionRenderer)
     {
-        return _originalRenderKit;
+        Stack redirStack = getRedirectionStack(facesContext);
+        redirStack.push(new Redirection(Redirection.START,
+                                        currentComponent,
+                                        currentRenderer,
+                                        redirectionRenderer));
+    }
+
+
+    public static void suspendChildrenRedirection(FacesContext facesContext,
+                                                  UIComponent currentComponent,
+                                                  Renderer currentRenderer)
+    {
+        Stack redirStack = getRedirectionStack(facesContext);
+        if (redirStack.isEmpty())
+        {
+            throw new IllegalStateException();
+        }
+        Redirection currRedir = (Redirection)redirStack.peek();
+        if (currRedir.redirectionType == Redirection.SUSPEND)
+        {
+            //already suspended
+            return;
+        }
+        redirStack.push(new Redirection(Redirection.SUSPEND,
+                                        currentComponent,
+                                        currentRenderer,
+                                        null));
     }
 
 
@@ -154,9 +193,10 @@ public class RenderKitWrapper
 
         public void encodeBegin(FacesContext facesContext, UIComponent uiComponent) throws IOException
         {
-            if (!_redirectionStack.isEmpty())
+            Stack redirectionStack = getRedirectionStack(facesContext);
+            if (!redirectionStack.isEmpty())
             {
-                Redirection redirection = (Redirection)_redirectionStack.peek();
+                Redirection redirection = (Redirection)redirectionStack.peek();
                 if (redirection.redirectingComponent == uiComponent)
                 {
                     if (redirection.redirectingRenderer != null)
@@ -177,16 +217,18 @@ public class RenderKitWrapper
             }
             else
             {
-                _originalRenderKit.getRenderer(_rendererType).encodeBegin(facesContext,
-                                                                          uiComponent);
+                getOriginalRenderKit(facesContext)
+                    .getRenderer(_rendererType).encodeBegin(facesContext,
+                                                            uiComponent);
             }
         }
 
         public void encodeChildren(FacesContext facesContext, UIComponent uiComponent) throws IOException
         {
-            if (!_redirectionStack.isEmpty())
+            Stack redirectionStack = getRedirectionStack(facesContext);
+            if (!redirectionStack.isEmpty())
             {
-                Redirection redirection = (Redirection)_redirectionStack.peek();
+                Redirection redirection = (Redirection)redirectionStack.peek();
                 if (redirection.redirectingComponent == uiComponent)
                 {
                     if (redirection.redirectingRenderer != null)
@@ -207,16 +249,18 @@ public class RenderKitWrapper
             }
             else
             {
-                _originalRenderKit.getRenderer(_rendererType).encodeChildren(facesContext,
-                                                                          uiComponent);
+                getOriginalRenderKit(facesContext)
+                    .getRenderer(_rendererType).encodeChildren(facesContext,
+                                                               uiComponent);
             }
         }
 
         public void encodeEnd(FacesContext facesContext, UIComponent uiComponent) throws IOException
         {
-            if (!_redirectionStack.isEmpty())
+            Stack redirectionStack = getRedirectionStack(facesContext);
+            if (!redirectionStack.isEmpty())
             {
-                Redirection redirection = (Redirection)_redirectionStack.peek();
+                Redirection redirection = (Redirection)redirectionStack.peek();
                 if (redirection.redirectingComponent == uiComponent)
                 {
                     if (redirection.redirectingRenderer != null)
@@ -228,7 +272,8 @@ public class RenderKitWrapper
                     {
                         redirection.redirectingComponent.encodeEnd(facesContext);
                     }
-                    _redirectionStack.pop();
+                    //cancel redirection:
+                    redirectionStack.pop();
                 }
                 else if (redirection.redirectionType == Redirection.START)
                 {
@@ -238,8 +283,9 @@ public class RenderKitWrapper
             }
             else
             {
-                _originalRenderKit.getRenderer(_rendererType).encodeEnd(facesContext,
-                                                                          uiComponent);
+                getOriginalRenderKit(facesContext)
+                    .getRenderer(_rendererType).encodeEnd(facesContext,
+                                                          uiComponent);
             }
         }
 
@@ -281,96 +327,42 @@ public class RenderKitWrapper
 
 
 
-    private static final String ORIGINAL_RENDER_KIT_ID_ATTR
-        = RenderKitWrapper.class.getName() + ".ORIGINAL_RENDER_KIT_ID";
-
-    public static void wrapRenderKit(FacesContext facesContext,
-                                     UIComponent currentComponent,
-                                     String wrapRenderKitId)
+    protected static void wrapRenderKit(FacesContext facesContext)
     {
         Tree tree = facesContext.getResponseTree();
-        RenderKitFactory renderkitFactory = (RenderKitFactory)FactoryFinder.getFactory(FactoryFinder.RENDER_KIT_FACTORY);
         String originalRenderKitId = tree.getRenderKitId();
+
+        if (originalRenderKitId.equals(ID))
+        {
+            //already wrapped
+            return;
+        }
+
+        RenderKitFactory renderkitFactory = (RenderKitFactory)FactoryFinder.getFactory(FactoryFinder.RENDER_KIT_FACTORY);
         RenderKit originalRenderKit = renderkitFactory.getRenderKit(originalRenderKitId,
                                                                     facesContext);
+        //TODO: original renderKit should also be on a stack
+        facesContext.getServletRequest().setAttribute(ORIGINAL_RENDER_KIT_ATTR,
+                                                      originalRenderKit);
 
-        String newRenderKitId = originalRenderKitId + "_" + wrapRenderKitId;
-        // lookup new RenderKit in RenderKitFactory...
-        RenderKit wrapRenderKit = null;
+        // lookup RenderKitWrapper in RenderKitFactory...
+        RenderKit renderKitWrapper = null;
         try
         {
-            wrapRenderKit = renderkitFactory.getRenderKit(newRenderKitId,
-                                                          facesContext);
+            renderKitWrapper = renderkitFactory.getRenderKit(ID, facesContext);
         }
-        catch (FacesException e)
-        {
-        }
+        catch (FacesException e) {}
         // ...and add to RenderKitFactory if not yet registered
-        if (wrapRenderKit == null)
+        if (renderKitWrapper == null)
         {
-            wrapRenderKit = new RenderKitWrapper(originalRenderKit);
-            renderkitFactory.addRenderKit(wrapRenderKitId, wrapRenderKit);
+            renderKitWrapper = new RenderKitWrapper();
+            renderkitFactory.addRenderKit(ID, renderKitWrapper);
         }
 
-        // remember original renderKitId in current component
-        currentComponent.setAttribute(ORIGINAL_RENDER_KIT_ID_ATTR,
-                                      originalRenderKitId);
-
-        // set tree to new renderKitId
-        tree.setRenderKitId(newRenderKitId);
+        // set tree to wrapper
+        tree.setRenderKitId(ID);
     }
 
-
-    public static void unwrapRenderKit(FacesContext facesContext,
-                                       UIComponent currentComponent)
-    {
-        // get original renderKitId via component attribute
-        String originalRenderKitId
-            = (String)currentComponent.getAttribute(ORIGINAL_RENDER_KIT_ID_ATTR);
-
-        // remove attribute
-        currentComponent.setAttribute(ORIGINAL_RENDER_KIT_ID_ATTR, null);
-
-        // set tree to original renderKitId
-        Tree tree = facesContext.getResponseTree();
-        tree.setRenderKitId(originalRenderKitId);
-    }
-
-
-    public static void startChildrenRedirection(FacesContext facesContext,
-                                                UIComponent currentComponent,
-                                                Renderer currentRenderer,
-                                                Renderer redirectionRenderer)
-    {
-        RenderKitFactory renderkitFactory = (RenderKitFactory)FactoryFinder.getFactory(FactoryFinder.RENDER_KIT_FACTORY);
-        RenderKit renderKit = renderkitFactory.getRenderKit(facesContext.getResponseTree().getRenderKitId(),
-                                                            facesContext);
-        if (!(renderKit instanceof RenderKitWrapper))
-        {
-            throw new IllegalStateException();
-        }
-
-        ((RenderKitWrapper)renderKit).startChildrenRedirection(currentComponent,
-                                                               currentRenderer,
-                                                               redirectionRenderer);
-    }
-
-
-    public static void suspendChildrenRedirection(FacesContext facesContext,
-                                                  UIComponent currentComponent,
-                                                  Renderer currentRenderer)
-    {
-        RenderKitFactory renderkitFactory = (RenderKitFactory)FactoryFinder.getFactory(FactoryFinder.RENDER_KIT_FACTORY);
-        RenderKit renderKit = renderkitFactory.getRenderKit(facesContext.getResponseTree().getRenderKitId(),
-                                                            facesContext);
-        if (!(renderKit instanceof RenderKitWrapper))
-        {
-            throw new IllegalStateException();
-        }
-
-        ((RenderKitWrapper)renderKit).suspendChildrenRedirection(currentComponent,
-                                                                 currentRenderer);
-    }
 
 
     public static void originalEncodeBegin(FacesContext facesContext,
@@ -385,7 +377,7 @@ public class RenderKitWrapper
             throw new IllegalStateException();
         }
 
-        Renderer originalRenderer = ((RenderKitWrapper)renderKit).getOriginalRenderKit().getRenderer(uiComponent.getRendererType());
+        Renderer originalRenderer = getOriginalRenderKit(facesContext).getRenderer(uiComponent.getRendererType());
         originalRenderer.encodeBegin(facesContext, uiComponent);
     }
 
@@ -401,7 +393,7 @@ public class RenderKitWrapper
             throw new IllegalStateException();
         }
 
-        Renderer originalRenderer = ((RenderKitWrapper)renderKit).getOriginalRenderKit().getRenderer(uiComponent.getRendererType());
+        Renderer originalRenderer = getOriginalRenderKit(facesContext).getRenderer(uiComponent.getRendererType());
         originalRenderer.encodeChildren(facesContext, uiComponent);
     }
 
@@ -417,7 +409,7 @@ public class RenderKitWrapper
             throw new IllegalStateException();
         }
 
-        Renderer originalRenderer = ((RenderKitWrapper)renderKit).getOriginalRenderKit().getRenderer(uiComponent.getRendererType());
+        Renderer originalRenderer = getOriginalRenderKit(facesContext).getRenderer(uiComponent.getRendererType());
         originalRenderer.encodeEnd(facesContext, uiComponent);
     }
 

@@ -16,21 +16,24 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package net.sourceforge.myfaces.renderkit.attr.ext;
+package net.sourceforge.myfaces.renderkit.html.util;
 
-import net.sourceforge.myfaces.renderkit.attr.CommonRendererAttributes;
+import javax.faces.component.UIComponent;
+import javax.faces.context.FacesContext;
+import javax.faces.render.Renderer;
+import java.io.IOException;
 
 /**
- * Constant definitions for the specified render dependent attributes of the
- * "Navigation" renderer type.
- * @author Manfred Geiler (latest modification by $Author$)
+ * TODO: description
+ * @author Manfred Geiler
  * @version $Revision$ $Date$
  */
-public interface LayoutChildRendererAttributes
-    extends CommonRendererAttributes
+public interface RendererListener
 {
-    public static final String HEADER_CLASS_ATTR = "headerClass";
-    public static final String NAVIGATION_CLASS_ATTR = "navigationClass";
-    public static final String BODY_CLASS_ATTR = "bodyClass";
-    public static final String FOOTER_CLASS_ATTR = "footerClass";
+    public void beforeEncodeBegin(FacesContext facesContext,
+                                  Renderer renderer,
+                                  UIComponent uiComponent) throws IOException;
+    public void afterEncodeEnd(FacesContext facesContext,
+                               Renderer renderer,
+                               UIComponent uiComponent) throws IOException;
 }
