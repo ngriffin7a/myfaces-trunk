@@ -63,9 +63,24 @@ managed beans used:
 
                 <h:messages id="messageList" showSummary="true" showDetail="true" />
 
+                <h:outputText value="Calendar as a form."/>
+
 				<h:form id="calendarForm">
                 <x:inputCalendar monthYearRowClass="yearMonthHeader" weekRowClass="weekHeader"
                     currentDayCellClass="currentDayCell" value="#{calendar.date}" />
+				</h:form>
+                <f:verbatim><br/><br/></f:verbatim>
+
+                <h:outputText value="#{calendar.date}" />
+
+                <f:verbatim><br/><br/></f:verbatim>
+
+                <h:outputText value="Calendar as a JavaScript popup."/>
+
+				<h:form id="calendarForm2">
+                <x:inputCalendar id="xxxyyy" monthYearRowClass="yearMonthHeader" weekRowClass="weekHeader"
+                    currentDayCellClass="currentDayCell" value="#{calendar.date}" renderAsPopup="true"  />
+                <h:commandButton value="Submit"/>
 				</h:form>
                 <f:verbatim><br/><br/></f:verbatim>
 

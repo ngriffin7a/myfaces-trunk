@@ -14,4 +14,8 @@
   <script language="JavaScript" src="jscookmenu/ThemePanel/theme.js"></script>
   <link rel="stylesheet" href="jscookmenu/ThemePanel/theme.css" type="text/css">
 
+  <!-- JSCalendar -->
+  <script language="JavaScript" src="jscalendar/popcalendar.js" type="text/javascript"></script>
+  <link rel="stylesheet" href="jscalendar/jscalendar-WH/theme.css" type="text/css">
+  <link rel="stylesheet" href="jscalendar/jscalendar-DB/theme.css" type="text/css">
 </head>

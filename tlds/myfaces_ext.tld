@@ -353,6 +353,7 @@
         &ui_input_attributes;
         &html_event_handler_attributes;
         &html_universal_attributes;
+        &user_role_attributes;
         <attribute>
             <name>monthYearRowClass</name>
             <required>false</required>
@@ -376,6 +377,30 @@
             <required>false</required>
             <rtexprvalue>false</rtexprvalue>
             <description>CSS class to be used for the cell of the currently selected date.</description>
+        </attribute>
+        <attribute>
+            <name>renderAsPopup</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
+            <description>Render the input-calendar as a java-script popup on client.</description>
+        </attribute>
+        <attribute>
+            <name>popupDateFormat</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
+            <description>Defines the date format used by the java-script popup on client.</description>
+        </attribute>
+        <attribute>
+            <name>popupTheme</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
+            <description>Defines the theme used by the java-script popup on client (essentially, the theme files have to be included in a subfolder of the jscalendar folder in your web-directory, js-calendar-WH is assumed by default).</description>
+        </attribute>
+        <attribute>
+            <name>popupButtonString</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
+            <description>Defines the string displayed on the button which leads to the calendar-popup-window (... by default).</description>
         </attribute>
     </tag>
 

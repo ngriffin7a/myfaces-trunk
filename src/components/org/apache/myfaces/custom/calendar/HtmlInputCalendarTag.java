@@ -24,6 +24,9 @@ import javax.faces.component.UIComponent;
  * @author Martin Marinschek (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.6  2004/07/27 06:28:32  tinytoony
+ * new calendar component as a popup
+ *
  * Revision 1.5  2004/07/01 21:53:11  mwessendorf
  * ASF switch
  *
@@ -72,6 +75,10 @@ public class HtmlInputCalendarTag
     private String _weekRowClass;
     private String _dayCellClass;
     private String _currentDayCellClass;
+    private String _renderAsPopup;
+    private String _popupDateFormat;
+    private String _popupButtonString;
+    private String _popupTheme;
 
     // User Role support
     private String _enabledOnUserRole;
@@ -85,6 +92,10 @@ public class HtmlInputCalendarTag
         setStringProperty(component, "weekRowClass", _weekRowClass);
         setStringProperty(component, "dayCellClass", _dayCellClass);
         setStringProperty(component, "currentDayCellClass", _currentDayCellClass);
+        setBooleanProperty(component,"renderAsPopup",_renderAsPopup);
+        setStringProperty(component,"popupDateFormat",_popupDateFormat);
+        setStringProperty(component,"popupTheme",_popupTheme);
+        setStringProperty(component,"popupButtonString",_popupButtonString);
 
         setStringProperty(component, UserRoleAware.ENABLED_ON_USER_ROLE_ATTR, _enabledOnUserRole);
         setStringProperty(component, UserRoleAware.VISIBLE_ON_USER_ROLE_ATTR, _visibleOnUserRole);
@@ -108,6 +119,26 @@ public class HtmlInputCalendarTag
     public void setCurrentDayCellClass(String currentDayCellClass)
     {
         _currentDayCellClass = currentDayCellClass;
+    }
+
+    public void setRenderAsPopup(String renderAsPopup)
+    {
+        _renderAsPopup = renderAsPopup;
+    }
+
+    public void setPopupDateFormat(String popupDateFormat)
+    {
+        _popupDateFormat = popupDateFormat;
+    }
+
+    public void setPopupButtonString(String popupButtonString)
+    {
+        _popupButtonString = popupButtonString;
+    }
+
+    public void setPopupTheme(String popupTheme)
+    {
+        _popupTheme = popupTheme;
     }
 
     public void setEnabledOnUserRole(String enabledOnUserRole)

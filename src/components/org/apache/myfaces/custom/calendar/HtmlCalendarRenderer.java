@@ -15,6 +15,7 @@
  */
 package net.sourceforge.myfaces.custom.calendar;
 
+import net.sourceforge.myfaces.component.html.ext.HtmlInputText;
 import net.sourceforge.myfaces.renderkit.JSFAttr;
 import net.sourceforge.myfaces.renderkit.RendererUtils;
 import net.sourceforge.myfaces.renderkit.html.HTML;
@@ -35,12 +36,16 @@ import java.io.IOException;
 import java.text.DateFormat;
 import java.text.DateFormatSymbols;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
 /**
  * $Log$
+ * Revision 1.4  2004/07/27 06:28:32  tinytoony
+ * new calendar component as a popup
+ *
  * Revision 1.3  2004/07/01 21:53:11  mwessendorf
  * ASF switch
  *
@@ -72,67 +77,209 @@ public class HtmlCalendarRenderer
         Locale currentLocale = facesContext.getViewRoot().getLocale();
 
         Calendar timeKeeper = Calendar.getInstance(currentLocale);
-        timeKeeper.setTime((Date) ((UIInput) component).getValue());
+        timeKeeper.setTime((Date) inputCalendar.getValue());
 
         DateFormatSymbols symbols = new DateFormatSymbols(currentLocale);
 
         String[] weekdays = mapWeekdays(symbols);
         String[] months = mapMonths(symbols);
 
-        int lastDayInMonth = timeKeeper.getActualMaximum(Calendar.DAY_OF_MONTH);
+        if(inputCalendar.isRenderAsPopup())
+        {
+            String dateFormat = CalendarDateTimeConverter.createJSPopupFormat(facesContext,
+                    inputCalendar.getPopupDateFormat());
 
-        int currentDay = timeKeeper.get(Calendar.DAY_OF_MONTH);
+            Application application = facesContext.getApplication();
+            HtmlInputText inputText = (HtmlInputText) application.createComponent(HtmlInputText.COMPONENT_TYPE);
+            inputText.setId(inputCalendar.getId());
+            inputText.setTransient(true);
+            inputText.setImmediate(inputCalendar.isImmediate());
+            inputText.setValue(getConverter(inputCalendar).getAsString(
+                    facesContext,inputCalendar,inputCalendar.getValue()));
 
-        if (currentDay > lastDayInMonth)
-            currentDay = lastDayInMonth;
+            inputText.setAccesskey(inputCalendar.getAccesskey());
+            inputText.setAlt(inputCalendar.getAlt());
+            inputText.setConverter(inputCalendar.getConverter());
+            inputText.setDir(inputCalendar.getDir());
+            inputText.setDisabled(inputCalendar.isDisabled());
+            inputText.setEnabledOnUserRole(inputCalendar.getEnabledOnUserRole());
+            inputText.setLang(inputCalendar.getLang());
+            inputText.setLocalValueSet(inputCalendar.isLocalValueSet());
+            inputText.setMaxlength(inputCalendar.getMaxlength());
+            inputText.setOnblur(inputCalendar.getOnblur());
+            inputText.setOnchange(inputCalendar.getOnchange());
+            inputText.setOnclick(inputCalendar.getOnclick());
+            inputText.setOndblclick(inputCalendar.getOndblclick());
+            inputText.setOnfocus(inputCalendar.getOnfocus());
+            inputText.setOnkeydown(inputCalendar.getOnkeydown());
+            inputText.setOnkeypress(inputCalendar.getOnkeypress());
+            inputText.setOnkeyup(inputCalendar.getOnkeyup());
+            inputText.setOnmousedown(inputCalendar.getOnmousedown());
+            inputText.setOnmousemove(inputCalendar.getOnmousemove());
+            inputText.setOnmouseout(inputCalendar.getOnmouseout());
+            inputText.setOnmouseover(inputCalendar.getOnmouseover());
+            inputText.setOnmouseup(inputCalendar.getOnmouseup());
+            inputText.setOnselect(inputCalendar.getOnselect());
+            inputText.setReadonly(inputCalendar.isReadonly());
+            inputText.setRendered(inputCalendar.isRendered());
+            inputText.setRequired(inputCalendar.isRequired());
+            inputText.setSize(inputCalendar.getSize());
+            inputText.setStyle(inputCalendar.getStyle());
+            inputText.setStyleClass(inputCalendar.getStyleClass());
+            inputText.setTabindex(inputCalendar.getTabindex());
+            inputText.setTitle(inputCalendar.getTitle());
+            inputText.setValidator(inputCalendar.getValidator());
+            inputText.setVisibleOnUserRole(inputCalendar.getVisibleOnUserRole());
 
-        timeKeeper.set(Calendar.DAY_OF_MONTH, 1);
+            inputCalendar.getChildren().add(inputText);
 
-        int weekDayOfFirstDayOfMonth = mapCalendarDayToCommonDay(timeKeeper.get(Calendar.DAY_OF_WEEK));
+            RendererUtils.renderChild(facesContext, inputText);
 
-        int weekStartsAtDayIndex = mapCalendarDayToCommonDay(timeKeeper.getFirstDayOfWeek());
+            ResponseWriter writer = facesContext.getResponseWriter();
 
-        ResponseWriter writer = facesContext.getResponseWriter();
+            writer.startElement(HTML.SCRIPT_ELEM,null);
+            writer.writeAttribute(HTML.SCRIPT_LANGUAGE_ATTR,HTML.SCRIPT_LANGUAGE_JAVASCRIPT,null);
+            writer.writeText(getLocalizedLanguageScript(months, weekdays,
+                    timeKeeper.getFirstDayOfWeek(), inputCalendar.getPopupTheme()),null);
+            writer.writeText(getScriptBtnText(inputCalendar.getClientId(facesContext),
+                    dateFormat,inputCalendar.getPopupButtonString()),null);
+            writer.endElement(HTML.SCRIPT_ELEM);
 
-        HtmlRendererUtils.writePrettyLineSeparator(facesContext);
-        HtmlRendererUtils.writePrettyLineSeparator(facesContext);
+/*            writer.startElement(HTML.INPUT_ELEM,null);
+            writer.writeAttribute(HTML.TYPE_ATTR,HTML.INPUT_TYPE_BUTTON,null);
+            writer.writeAttribute(HTML.ONCLICK_ATTR,"popUpCalendar(this, "+inputText.getClientId(facesContext)+
+                    ", \\\"dd.mm.yyyy\\\")",null);
+            writer.endElement(HTML.INPUT_TYPE_BUTTON);*/
+        }
+        else
+        {
 
-        writer.startElement(HTML.TABLE_ELEM, component);
-        HtmlRendererUtils.renderHTMLAttributes(writer, component, HTML.UNIVERSAL_ATTRIBUTES);
-        HtmlRendererUtils.renderHTMLAttributes(writer, component, HTML.EVENT_HANDLER_ATTRIBUTES);
-        writer.flush();
+            int lastDayInMonth = timeKeeper.getActualMaximum(Calendar.DAY_OF_MONTH);
 
-        HtmlRendererUtils.writePrettyLineSeparator(facesContext);
+            int currentDay = timeKeeper.get(Calendar.DAY_OF_MONTH);
 
-        writer.startElement(HTML.TR_ELEM, component);
+            if (currentDay > lastDayInMonth)
+                currentDay = lastDayInMonth;
 
-        if(inputCalendar.getMonthYearRowClass() != null)
-            writer.writeAttribute(HTML.CLASS_ATTR, inputCalendar.getMonthYearRowClass(), null);
+            timeKeeper.set(Calendar.DAY_OF_MONTH, 1);
 
-        writeMonthYearHeader(facesContext, writer, inputCalendar, timeKeeper,
-                currentDay, weekdays, months);
+            int weekDayOfFirstDayOfMonth = mapCalendarDayToCommonDay(timeKeeper.get(Calendar.DAY_OF_WEEK));
 
-        writer.endElement(HTML.TR_ELEM);
+            int weekStartsAtDayIndex = mapCalendarDayToCommonDay(timeKeeper.getFirstDayOfWeek());
 
-        HtmlRendererUtils.writePrettyLineSeparator(facesContext);
+            ResponseWriter writer = facesContext.getResponseWriter();
 
-        writer.startElement(HTML.TR_ELEM, component);
+            HtmlRendererUtils.writePrettyLineSeparator(facesContext);
+            HtmlRendererUtils.writePrettyLineSeparator(facesContext);
 
-        if(inputCalendar.getWeekRowClass() != null)
-            writer.writeAttribute(HTML.CLASS_ATTR, inputCalendar.getWeekRowClass(), null);
+            writer.startElement(HTML.TABLE_ELEM, component);
+            HtmlRendererUtils.renderHTMLAttributes(writer, component, HTML.UNIVERSAL_ATTRIBUTES);
+            HtmlRendererUtils.renderHTMLAttributes(writer, component, HTML.EVENT_HANDLER_ATTRIBUTES);
+            writer.flush();
 
-        writeWeekDayNameHeader(weekStartsAtDayIndex, weekdays,
-                facesContext, writer, inputCalendar);
+            HtmlRendererUtils.writePrettyLineSeparator(facesContext);
 
-        writer.endElement(HTML.TR_ELEM);
+            writer.startElement(HTML.TR_ELEM, component);
 
-        HtmlRendererUtils.writePrettyLineSeparator(facesContext);
+            if(inputCalendar.getMonthYearRowClass() != null)
+                writer.writeAttribute(HTML.CLASS_ATTR, inputCalendar.getMonthYearRowClass(), null);
 
-        writeDays(facesContext, writer, inputCalendar, timeKeeper,
-                currentDay, weekStartsAtDayIndex, weekDayOfFirstDayOfMonth,
-                lastDayInMonth, weekdays);
+            writeMonthYearHeader(facesContext, writer, inputCalendar, timeKeeper,
+                    currentDay, weekdays, months);
 
-        writer.endElement(HTML.TABLE_ELEM);
+            writer.endElement(HTML.TR_ELEM);
+
+            HtmlRendererUtils.writePrettyLineSeparator(facesContext);
+
+            writer.startElement(HTML.TR_ELEM, component);
+
+            if(inputCalendar.getWeekRowClass() != null)
+                writer.writeAttribute(HTML.CLASS_ATTR, inputCalendar.getWeekRowClass(), null);
+
+            writeWeekDayNameHeader(weekStartsAtDayIndex, weekdays,
+                    facesContext, writer, inputCalendar);
+
+            writer.endElement(HTML.TR_ELEM);
+
+            HtmlRendererUtils.writePrettyLineSeparator(facesContext);
+
+            writeDays(facesContext, writer, inputCalendar, timeKeeper,
+                    currentDay, weekStartsAtDayIndex, weekDayOfFirstDayOfMonth,
+                    lastDayInMonth, weekdays);
+
+            writer.endElement(HTML.TABLE_ELEM);
+        }
+    }
+
+    private String getLocalizedLanguageScript(String[] months, String[] weekdays, int firstDayOfWeek, String popupTheme)
+    {
+        StringBuffer script = new StringBuffer();
+        defineStringArray(script, "monthName", months);
+        defineStringArray(script, "dayName", weekdays);
+        setIntegerVariable(script, "startAt",firstDayOfWeek);
+        if(popupTheme==null)
+            popupTheme="jscalendar-WH";
+        setStringVariable(script, "imgDir","jscalendar/"+popupTheme+"/");
+        setStringVariable(script, "themePrefix",popupTheme);
+
+        return script.toString();
+    }
+
+    private void setIntegerVariable(StringBuffer script, String name, int value)
+    {
+        script.append(name);
+        script.append(" = ");
+        script.append(value);
+        script.append(";\n");
+    }
+
+    private void setStringVariable(StringBuffer script, String name, String value)
+    {
+        script.append(name);
+        script.append(" = \"");
+        script.append(value);
+        script.append("\";\n");
+    }
+
+    private void defineStringArray(StringBuffer script, String arrayName, String[] array)
+    {
+        script.append(arrayName);
+        script.append(" = new Array(");
+
+        for(int i=0;i<array.length;i++)
+        {
+            if(i!=0)
+                script.append(",");
+
+            script.append("\"");
+            script.append(array[i]);
+            script.append("\"");
+        }
+
+        script.append(");");
+    }
+
+    private String getScriptBtnText(String clientId, String dateFormat, String popupButtonString)
+    {
+
+        StringBuffer script = new StringBuffer();
+        script.append("<!--\n");
+        script.append("if (!document.layers) {\n");
+        script.append("document.write(");
+        script.append("\"<input type='button' onclick='popUpCalendar(this,this.form.elements[\\\"");
+        script.append(clientId);
+        script.append("\\\"],\\\"");
+        script.append(dateFormat);
+        script.append("\\\")' value='");
+        if(popupButtonString==null)
+            popupButtonString="...";
+        script.append(popupButtonString);
+        script.append("'/>\"");
+        script.append(");");
+        script.append("\n}");
+        script.append("\n//-->");
+
+        return script.toString();
     }
 
     private void writeMonthYearHeader(FacesContext facesContext, ResponseWriter writer, UIInput inputComponent, Calendar timeKeeper,
@@ -276,32 +423,31 @@ public class HtmlCalendarRenderer
         else
         {
             writeLink(content, component, facesContext, valueForLink);
-
         }
 
         writer.endElement(HTML.TD_ELEM);
     }
 
-    private void writeLink(String content, UIInput component, FacesContext facesContext, Date valueForLink)
+    private void writeLink(String content,
+                           UIInput component,
+                           FacesContext facesContext,
+                           Date valueForLink)
             throws IOException
     {
-        Converter converter = component.getConverter();
-        if (converter == null)
-        {
-            converter = new CalendarDateTimeConverter();
-        }
+        Converter converter = getConverter(component);
 
         Application application = facesContext.getApplication();
         HtmlCommandLink link
                 = (HtmlCommandLink)application.createComponent(HtmlCommandLink.COMPONENT_TYPE);
         link.setId(component.getId() + "_" + valueForLink.getTime() + "_link");
         link.setTransient(true);
+        link.setImmediate(component.isImmediate());
 
         HtmlOutputText text
                 = (HtmlOutputText)application.createComponent(HtmlOutputText.COMPONENT_TYPE);
         text.setValue(content);
-        link.setId(component.getId() + "_" + valueForLink.getTime() + "_text");
-        link.setTransient(true);
+        text.setId(component.getId() + "_" + valueForLink.getTime() + "_text");
+        text.setTransient(true);
 
         UIParameter parameter
                 = (UIParameter)application.createComponent(UIParameter.COMPONENT_TYPE);
@@ -315,6 +461,17 @@ public class HtmlCalendarRenderer
         link.getChildren().add(text);
 
         RendererUtils.renderChild(facesContext, link);
+    }
+
+    private Converter getConverter(UIInput component)
+    {
+        Converter converter = component.getConverter();
+
+        if (converter == null)
+        {
+            converter = new CalendarDateTimeConverter();
+        }
+        return converter;
     }
 
     private int mapCalendarDayToCommonDay(int day)
@@ -409,8 +566,18 @@ public class HtmlCalendarRenderer
 
         public Object getAsObject(FacesContext facesContext, UIComponent uiComponent, String s)
         {
-            DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT,
-                    facesContext.getViewRoot().getLocale());
+            DateFormat dateFormat = null;
+
+            if(uiComponent instanceof HtmlInputCalendar && ((HtmlInputCalendar) uiComponent).isRenderAsPopup())
+            {
+                String popupDateFormat = ((HtmlInputCalendar) uiComponent).getPopupDateFormat();
+
+                dateFormat = new SimpleDateFormat(createJSPopupFormat(facesContext, popupDateFormat));
+            }
+            else
+            {
+                dateFormat = createStandardDateFormat(facesContext);
+            }
 
             try
             {
@@ -423,14 +590,67 @@ public class HtmlCalendarRenderer
             }
         }
 
+        public static String createJSPopupFormat(FacesContext facesContext, String popupDateFormat)
+        {
+
+            if(popupDateFormat == null)
+            {
+                SimpleDateFormat defaultDateFormat = createStandardDateFormat(facesContext);
+                popupDateFormat = defaultDateFormat.toPattern();
+            }
+
+            StringBuffer jsPopupDateFormat = new StringBuffer();
+
+            for(int i=0;i<popupDateFormat.length();i++)
+            {
+                char c = popupDateFormat.charAt(i);
+
+                if(c=='M')
+                    jsPopupDateFormat.append('M');
+                else if(c=='d')
+                    jsPopupDateFormat.append('d');
+                else if(c=='y')
+                    jsPopupDateFormat.append('y');
+                else if(c==' ')
+                    jsPopupDateFormat.append(' ');
+                else if(c=='.')
+                    jsPopupDateFormat.append('.');
+                else if(c=='/')
+                    jsPopupDateFormat.append('/');
+            }
+            return jsPopupDateFormat.toString().trim();
+        }
+
         public String getAsString(FacesContext facesContext, UIComponent uiComponent, Object o)
         {
             Date date = (Date) o;
 
-            DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT,
-                    facesContext.getViewRoot().getLocale());
+            DateFormat dateFormat = null;
+
+            if(uiComponent instanceof HtmlInputCalendar && ((HtmlInputCalendar) uiComponent).isRenderAsPopup())
+            {
+                String popupDateFormat = ((HtmlInputCalendar) uiComponent).getPopupDateFormat();
+
+                dateFormat = new SimpleDateFormat(createJSPopupFormat(facesContext, popupDateFormat));
+            }
+            else
+            {
+                dateFormat = createStandardDateFormat(facesContext);
+            }
 
             return dateFormat.format(date);
+        }
+
+        private static SimpleDateFormat createStandardDateFormat(FacesContext facesContext)
+        {
+            DateFormat dateFormat;
+            dateFormat = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT,
+                    facesContext.getViewRoot().getLocale());
+
+            if(dateFormat instanceof SimpleDateFormat)
+                return (SimpleDateFormat) dateFormat;
+            else
+                return new SimpleDateFormat("dd.MM.yyyy");
         }
 
     }

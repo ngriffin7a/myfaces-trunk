@@ -24,6 +24,9 @@ import net.sourceforge.myfaces.util.ArrayUtils;
  * @author Anton Koinov
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.11  2004/07/27 06:32:19  tinytoony
+ * new calendar component as a popup
+ *
  * Revision 1.10  2004/07/26 09:19:08  manolito
  * removed onclick from passthrough attributes for ButtonRenderer
  *
@@ -45,7 +48,8 @@ import net.sourceforge.myfaces.util.ArrayUtils;
  */
 public final class HTML
 {
-    private HTML() 
+
+    private HTML()
     {
         // disable instantiation
     } 
@@ -416,6 +420,9 @@ public final class HTML
     public static final String THEAD_ELEM = "thead";
     public static final String STYLE_ELEM = "style";
     public static final String SCRIPT_ELEM = "script";
+    public static final String SCRIPT_LANGUAGE_ATTR = "language";
+    public static final String SCRIPT_LANGUAGE_JAVASCRIPT = "JavaScript";
+    
     public static final String UL_ELEM = "ul";
     public static final String OL_ELEM = "ol";
     public static final String LI_ELEM = "li";
