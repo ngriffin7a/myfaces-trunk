@@ -45,7 +45,6 @@ import javax.faces.tree.Tree;
 import javax.faces.tree.TreeFactory;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletRequest;
-import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.Locale;
@@ -136,10 +135,10 @@ public class LifecycleImpl
         LogUtil.getLogger().entering();
 
         //Set locale
-        HttpServletRequest request = (HttpServletRequest)facesContext.getExternalContext().getRequest();
-        if (request.getLocale() != null)
+        Locale locale = facesContext.getExternalContext().getRequestLocale();
+        if (locale != null)
         {
-            facesContext.setLocale(request.getLocale());
+            facesContext.setLocale(locale);
         }
         else
         {

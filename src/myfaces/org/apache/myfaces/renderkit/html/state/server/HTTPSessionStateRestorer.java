@@ -24,21 +24,24 @@ import net.sourceforge.myfaces.renderkit.html.jspinfo.JspInfo;
 import net.sourceforge.myfaces.renderkit.html.jspinfo.JspInfoUtils;
 import net.sourceforge.myfaces.renderkit.html.state.ModelValueEntry;
 import net.sourceforge.myfaces.renderkit.html.state.StateRestorer;
+import net.sourceforge.myfaces.util.FacesUtils;
+
+import java.io.IOException;
+
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.Locale;
+import java.util.Map;
 
 import javax.faces.FactoryFinder;
 import javax.faces.application.ApplicationFactory;
 import javax.faces.context.FacesContext;
 import javax.faces.el.ValueBinding;
 import javax.faces.tree.Tree;
+
 import javax.servlet.ServletContext;
 import javax.servlet.ServletRequest;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-import java.io.IOException;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.Locale;
-import java.util.Map;
+
 
 /**
  * DOCUMENT ME!
@@ -46,48 +49,62 @@ import java.util.Map;
  * @version $Revision$ $Date$
  */
 public class HTTPSessionStateRestorer
-    implements StateRestorer
+implements StateRestorer
 {
-    protected static final String PREVIOUS_TREE_REQUEST_ATTR
-        = HTTPSessionStateRestorer.class.getName() + ".PREVIOUS_TREE";
+    //~ Static fields/initializers -----------------------------------------------------------------
 
-    public void restoreState(FacesContext facesContext) throws IOException
+    protected static final String PREVIOUS_TREE_REQUEST_ATTR =
+        HTTPSessionStateRestorer.class.getName() + ".PREVIOUS_TREE";
+
+    //~ Methods ------------------------------------------------------------------------------------
+
+    public Tree getPreviousTree(FacesContext facesContext)
     {
-        HttpServletRequest request = (HttpServletRequest)facesContext.getExternalContext().getRequest();
+        return (Tree) ((ServletRequest) facesContext.getExternalContext().getRequest())
+                .getAttribute(PREVIOUS_TREE_REQUEST_ATTR);
+    }
 
-        //get Session
-        HttpSession session = request.getSession(false);
-        if (session == null)
+    public void restoreState(FacesContext facesContext)
+    throws IOException
+    {
+        Map sessionMap = FacesUtils.getSessionMap(facesContext);
+
+        if (sessionMap == null)
         {
             return;
         }
 
         //Locale
-        Locale locale = (Locale)session.getAttribute(HTTPSessionStateSaver.LOCALE_SESSION_ATTR);
+        Locale locale = (Locale) sessionMap.get(HTTPSessionStateSaver.LOCALE_SESSION_ATTR);
+
         if (locale != null)
         {
             facesContext.setLocale(locale);
-            session.removeAttribute(HTTPSessionStateSaver.LOCALE_SESSION_ATTR);
+            sessionMap.remove(HTTPSessionStateSaver.LOCALE_SESSION_ATTR);
         }
 
         //Tree
         Tree currentTree = facesContext.getTree();
-        Tree savedTree = (Tree)session.getAttribute(HTTPSessionStateSaver.TREE_SESSION_ATTR);
+        Tree savedTree = (Tree) sessionMap.get(HTTPSessionStateSaver.TREE_SESSION_ATTR);
+
         if (savedTree != null)
         {
             //autocreate request scope beans
-            if (MyFacesConfig.isAutoCreateRequestScopeBeans(((ServletContext)facesContext.getExternalContext().getContext())))
+            if (
+                MyFacesConfig.isAutoCreateRequestScopeBeans(
+                            ((ServletContext) facesContext.getExternalContext().getContext())))
             {
-                Iterator it = JspInfo.getJspBeanInfos(facesContext,
-                                                      facesContext.getTree().getTreeId());
+                Iterator it =
+                    JspInfo.getJspBeanInfos(
+                        facesContext,
+                        facesContext.getTree().getTreeId());
+
                 while (it.hasNext())
                 {
-                    Map.Entry entry = (Map.Entry)it.next();
-                    JspInfoUtils.checkModelInstance(facesContext,
-                                                    (JspBeanInfo)entry.getValue());
+                    Map.Entry entry = (Map.Entry) it.next();
+                    JspInfoUtils.checkModelInstance(facesContext, (JspBeanInfo) entry.getValue());
                 }
             }
-
 
             if (savedTree.getTreeId().equals(currentTree.getTreeId()))
             {
@@ -95,58 +112,53 @@ public class HTTPSessionStateRestorer
                 facesContext.setTree(savedTree);
 
                 //Model values
-                restoreModelValues(facesContext, session, false);
+                restoreModelValues(facesContext, sessionMap, false);
             }
             else
             {
                 //Global model values
-                restoreModelValues(facesContext, session, true);
+                restoreModelValues(facesContext, sessionMap, true);
             }
 
-            session.removeAttribute(HTTPSessionStateSaver.TREE_SESSION_ATTR);
-            ((ServletRequest)facesContext.getExternalContext().getRequest()).setAttribute(PREVIOUS_TREE_REQUEST_ATTR,
-                                                          savedTree);
+            sessionMap.remove(HTTPSessionStateSaver.TREE_SESSION_ATTR);
+            FacesUtils.getRequestMap(facesContext).put(PREVIOUS_TREE_REQUEST_ATTR, savedTree);
         }
-
     }
 
-
-    private void restoreModelValues(FacesContext facesContext,
-                                    HttpSession session,
-                                    boolean onlyGlobal)
+    private void restoreModelValues(FacesContext facesContext, Map sessionMap, boolean onlyGlobal)
     {
-        if (!MyFacesConfig.isDisableJspParser(((ServletContext)facesContext.getExternalContext().getContext())))
+        if (
+            !MyFacesConfig.isDisableJspParser(
+                        ((ServletContext) facesContext.getExternalContext().getContext())))
         {
-            Collection modelValuesColl
-                = (Collection)session.getAttribute(HTTPSessionStateSaver.MODEL_VALUES_COLL_SESSION_ATTR);
+            Collection modelValuesColl =
+                (Collection) sessionMap.get(HTTPSessionStateSaver.MODEL_VALUES_COLL_SESSION_ATTR);
+
             if (modelValuesColl != null)
             {
                 for (Iterator it = modelValuesColl.iterator(); it.hasNext();)
                 {
-                    ModelValueEntry entry = (ModelValueEntry)it.next();
+                    ModelValueEntry entry = (ModelValueEntry) it.next();
+
                     if (!onlyGlobal || entry.isGlobal())
                     {
                         String modelRef = entry.getModelReference();
                         JspInfoUtils.checkModelInstance(facesContext, modelRef);
 
-                        ApplicationFactory af = (ApplicationFactory)FactoryFinder.getFactory(FactoryFinder.APPLICATION_FACTORY);
-                        ValueBinding vb = af.getApplication().getValueBinding(modelRef);
-                        vb.setValue(facesContext, entry.getValue());
+                        ApplicationFactory af =
+                            (ApplicationFactory) FactoryFinder.getFactory(
+                                FactoryFinder.APPLICATION_FACTORY);
+                        ValueBinding       vb = af.getApplication().getValueBinding(modelRef);
+                        vb.setValue(
+                            facesContext,
+                            entry.getValue());
                     }
                 }
-                session.removeAttribute(HTTPSessionStateSaver.MODEL_VALUES_COLL_SESSION_ATTR);
+
+                sessionMap.remove(HTTPSessionStateSaver.MODEL_VALUES_COLL_SESSION_ATTR);
             }
         }
     }
-
-
-    public Tree getPreviousTree(FacesContext facesContext)
-    {
-        return (Tree)((ServletRequest)facesContext.getExternalContext().getRequest())
-                        .getAttribute(PREVIOUS_TREE_REQUEST_ATTR);
-    }
-
-
 
     /*
     public void restoreComponentState(FacesContext facesContext, UIComponent uiComponent) throws IOException
@@ -207,6 +219,4 @@ public class HTTPSessionStateRestorer
         }
     }
     */
-
-
 }
