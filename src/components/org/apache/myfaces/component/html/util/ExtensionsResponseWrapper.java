@@ -25,14 +25,17 @@ import org.xml.sax.InputSource;
 
 /**
  * @author Sylvain Vieujot (latest modification by $Author$)
- * @version $Revision$ $Date$ $Log$
- * @version $Revision: 1.1 $ $Date: 2004/12/01 20:25:10 $ Revision 1.2  2004/12/02 00:26:58  oros
- * @version $Revision: 1.1 $ $Date: 2004/12/01 20:25:10 $ i18n issues
- * @version $Revision: 1.1 $ $Date: 2004/12/01 20:25:10 $
- * @version $Revision$ $Date$ Revision 1.1  2004/12/01 20:25:10  svieujot
- * @version $Revision$ $Date$ Make the Extensions filter support css and image resources.
- * @version $Revision$ $Date$ Convert the popup calendar to use this new filter.
  * @version $Revision$ $Date$
+ * $Log$
+ * Revision 1.3  2004/12/02 02:12:32  svieujot
+ * Clean log
+ *
+ * Revision 1.2  2004/12/02 00:26:58  oros
+ * i18n issues
+ * 
+ * Revision 1.1  2004/12/01 20:25:10  svieujot
+ * Make the Extensions filter support css and image resources.
+ * Convert the popup calendar to use this new filter.
  * 
  */
 public class ExtensionsResponseWrapper extends HttpServletResponseWrapper {
