@@ -29,6 +29,10 @@
         <type>boolean</type>
     </field>
     <field>
+        <name>popupButtonString</name>
+        <type>java.lang.String</type>
+    </field>
+    <field>
         <name>popupDateFormat</name>
         <type>java.lang.String</type>
     </field>
@@ -41,7 +45,35 @@
         <type>java.lang.String</type>
     </field>
     <field>
-        <name>popupButtonString</name>
+        <name>popupGotoString</name>
         <type>java.lang.String</type>
     </field>
+    <field>
+        <name>popupTodayString</name>
+        <type>java.lang.String</type>
+    </field>
+    <field>
+        <name>popupWeekString</name>
+        <type>java.lang.String</type>
+    </field>
+    <field>
+        <name>popupScrollLeftMessage</name>
+        <type>java.lang.String</type>
+    </field>
+    <field>
+        <name>popupScrollRightMessage</name>
+        <type>java.lang.String</type>
+    </field>
+    <field>
+        <name>popupSelectMonthMessage</name>
+        <type>java.lang.String</type>
+    </field>
+    <field>
+        <name>popupSelectYearMessage</name>
+        <type>java.lang.String</type>
+    </field>
+    <field>
+        <name>popupSelectDateMessage</name>
+        <type>java.lang.String</type>
+    </field>                
 </component>

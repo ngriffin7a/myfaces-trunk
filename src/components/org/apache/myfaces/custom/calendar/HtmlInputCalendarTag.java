@@ -24,6 +24,9 @@ import javax.faces.component.UIComponent;
  * @author Martin Marinschek (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.8  2004/07/28 18:00:47  tinytoony
+ * calendar; revisited again for complete i18
+ *
  * Revision 1.7  2004/07/27 16:48:02  tinytoony
  * new calendar popup, revisited
  *
@@ -81,6 +84,14 @@ public class HtmlInputCalendarTag
     private String _renderAsPopup;
     private String _popupDateFormat;
     private String _popupButtonString;
+    private String _popupGotoString = null;
+    private String _popupTodayString = null;
+    private String _popupWeekString = null;
+    private String _popupScrollLeftMessage = null;
+    private String _popupScrollRightMessage = null;
+    private String _popupSelectMonthMessage = null;
+    private String _popupSelectYearMessage = null;
+    private String _popupSelectDateMessage = null;
 
     // User Role support
     private String _enabledOnUserRole;
@@ -97,6 +108,15 @@ public class HtmlInputCalendarTag
         setBooleanProperty(component,"renderAsPopup",_renderAsPopup);
         setStringProperty(component,"popupDateFormat",_popupDateFormat);
         setStringProperty(component,"popupButtonString",_popupButtonString);
+        setStringProperty(component,"popupGotoString",_popupGotoString);
+        setStringProperty(component,"popupTodayString",_popupTodayString);
+        setStringProperty(component,"popupWeekString",_popupWeekString);
+        setStringProperty(component,"popupScrollLeftMessage",_popupScrollLeftMessage);
+        setStringProperty(component,"popupScrollRightMessage",_popupScrollRightMessage);
+        setStringProperty(component,"popupSelectMonthMessage",_popupSelectMonthMessage);
+        setStringProperty(component,"popupSelectYearMessage",_popupSelectYearMessage);
+        setStringProperty(component,"popupSelectDateMessage",_popupSelectDateMessage);
+
 
         setStringProperty(component, UserRoleAware.ENABLED_ON_USER_ROLE_ATTR, _enabledOnUserRole);
         setStringProperty(component, UserRoleAware.VISIBLE_ON_USER_ROLE_ATTR, _visibleOnUserRole);
@@ -145,5 +165,45 @@ public class HtmlInputCalendarTag
     public void setVisibleOnUserRole(String visibleOnUserRole)
     {
         _visibleOnUserRole = visibleOnUserRole;
+    }
+
+    public void setPopupGotoString(String popupGotoString)
+    {
+        _popupGotoString = popupGotoString;
+    }
+
+    public void setPopupScrollLeftMessage(String popupScrollLeftMessage)
+    {
+        _popupScrollLeftMessage = popupScrollLeftMessage;
+    }
+
+    public void setPopupScrollRightMessage(String popupScrollRightMessage)
+    {
+        _popupScrollRightMessage = popupScrollRightMessage;
+    }
+
+    public void setPopupSelectDateMessage(String popupSelectDateMessage)
+    {
+        _popupSelectDateMessage = popupSelectDateMessage;
+    }
+
+    public void setPopupSelectMonthMessage(String popupSelectMonthMessage)
+    {
+        _popupSelectMonthMessage = popupSelectMonthMessage;
+    }
+
+    public void setPopupSelectYearMessage(String popupSelectYearMessage)
+    {
+        _popupSelectYearMessage = popupSelectYearMessage;
+    }
+
+    public void setPopupTodayString(String popupTodayString)
+    {
+        _popupTodayString = popupTodayString;
+    }
+
+    public void setPopupWeekString(String popupWeekString)
+    {
+        _popupWeekString = popupWeekString;
     }
 }

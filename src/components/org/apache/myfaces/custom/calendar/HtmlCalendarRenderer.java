@@ -43,6 +43,9 @@ import java.util.Locale;
 
 /**
  * $Log$
+ * Revision 1.7  2004/07/28 18:00:47  tinytoony
+ * calendar; revisited again for complete i18
+ *
  * Revision 1.6  2004/07/28 17:13:54  tinytoony
  * new calendar popup, revisited, global variables renamed to help with uniqueness
  *
@@ -148,7 +151,7 @@ public class HtmlCalendarRenderer
             writer.startElement(HTML.SCRIPT_ELEM,null);
             writer.writeAttribute(HTML.SCRIPT_LANGUAGE_ATTR,HTML.SCRIPT_LANGUAGE_JAVASCRIPT,null);
             writer.writeText(getLocalizedLanguageScript(months, weekdays,
-                    timeKeeper.getFirstDayOfWeek()),null);
+                    timeKeeper.getFirstDayOfWeek(),inputCalendar),null);
             writer.writeText(getScriptBtnText(inputCalendar.getClientId(facesContext),
                     dateFormat,inputCalendar.getPopupButtonString()),null);
             writer.endElement(HTML.SCRIPT_ELEM);
@@ -219,13 +222,31 @@ public class HtmlCalendarRenderer
         }
     }
 
-    private String getLocalizedLanguageScript(String[] months, String[] weekdays, int firstDayOfWeek)
+    private String getLocalizedLanguageScript(
+            String[] months, String[] weekdays, int firstDayOfWeek, HtmlInputCalendar inputCalendar)
     {
         StringBuffer script = new StringBuffer();
         script.append("<!--\n");
         defineStringArray(script, "jscalendarMonthName", months);
         defineStringArray(script, "jscalendarDayName", weekdays);
         setIntegerVariable(script, "jscalendarStartAt",firstDayOfWeek);
+
+        if(inputCalendar.getPopupGotoString()!=null)
+            setStringVariable(script, "jscalendarGotoString",inputCalendar.getPopupGotoString());
+        if(inputCalendar.getPopupTodayString()!=null)
+            setStringVariable(script, "jscalendarTodayString",inputCalendar.getPopupTodayString());
+        if(inputCalendar.getPopupWeekString()!=null)
+            setStringVariable(script, "jscalendarWeekString",inputCalendar.getPopupWeekString());
+        if(inputCalendar.getPopupScrollLeftMessage()!=null)
+            setStringVariable(script, "jscalendarScrollLeftMessage",inputCalendar.getPopupScrollLeftMessage());
+        if(inputCalendar.getPopupScrollRightMessage()!=null)
+            setStringVariable(script, "jscalendarScrollRightMessage",inputCalendar.getPopupScrollRightMessage());
+        if(inputCalendar.getPopupSelectMonthMessage()!=null)
+            setStringVariable(script, "jscalendarSelectMonthMessage",inputCalendar.getPopupSelectMonthMessage());
+        if(inputCalendar.getPopupSelectYearMessage()!=null)
+            setStringVariable(script, "jscalendarSelectYearMessage",inputCalendar.getPopupSelectYearMessage());
+        if(inputCalendar.getPopupSelectDateMessage()!=null)
+            setStringVariable(script, "jscalendarSelectDateMessage",inputCalendar.getPopupSelectDateMessage());
 
         return script.toString();
     }
@@ -237,14 +258,14 @@ public class HtmlCalendarRenderer
         script.append(value);
         script.append(";\n");
     }
-/*
+
     private void setStringVariable(StringBuffer script, String name, String value)
     {
         script.append(name);
         script.append(" = \"");
         script.append(value);
         script.append("\";\n");
-    }*/
+    }
 
     private void defineStringArray(StringBuffer script, String arrayName, String[] array)
     {

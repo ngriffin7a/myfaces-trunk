@@ -396,6 +396,54 @@
             <rtexprvalue>false</rtexprvalue>
             <description>Defines the string displayed on the button which leads to the calendar-popup-window (... by default).</description>
         </attribute>
+        <attribute>
+            <name>popupGotoString</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
+            <description>Set the string for "Go To Current Month"</description>
+        </attribute>
+        <attribute>
+            <name>popupTodayString</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
+            <description>Set the string for "Today is"</description>
+        </attribute>
+        <attribute>
+            <name>popupWeekString</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
+            <description>Set the string for "Wk"</description>
+        </attribute>
+        <attribute>
+            <name>popupScrollLeftMessage</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
+            <description>Set the string for scrolling to the left.</description>
+        </attribute>
+        <attribute>
+            <name>popupScrollRightMessage</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
+            <description>Set the string for scrolling to the right.</description>
+        </attribute>
+        <attribute>
+            <name>popupSelectMonthMessage</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
+            <description>Set the string for "Click to select a month".</description>
+        </attribute>
+        <attribute>
+            <name>popupSelectYearMessage</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
+            <description>Set the string for "Click to select a year".</description>
+        </attribute>
+        <attribute>
+            <name>popupSelectDateMessage</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
+            <description>Set the string for "Select [date] as date" (do not replace [date], it will be replaced by the current date).</description>
+        </attribute>
     </tag>
 
     <!-- checkbox -->

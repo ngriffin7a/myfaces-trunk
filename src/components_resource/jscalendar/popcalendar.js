@@ -123,7 +123,7 @@
 			jscalendarImg[i] = new Image
 			jscalendarImg[i].src = jscalendarImgDir + jscalendarImgsrc[i]
 		}
-		document.write ("<div onclick='jscalendarBShow=true' id='calendar'	class='"+jscalendarThemePrefix+"-div-style'><table	width="+((jscalendarShowWeekNumber==1)?250:220)+" class='"+jscalendarThemePrefix+"-table-style'><tr class='"+jscalendarThemePrefix+"-title-background-style'><td><table width='"+((jscalendarShowWeekNumber==1)?248:218)+"'><tr><td class='"+jscalendarThemePrefix+"-title-style'><span id='caption'></span></td><td align=right><a href='javascript:hideCalendar()'><IMG SRC='"+jscalendarImgDir+"close.gif' WIDTH='15' HEIGHT='13' BORDER='0' ALT='Close the Calendar'></a></td></tr></table></td></tr><tr><td class='"+jscalendarThemePrefix+"-body-style'><span id='content'></span></td></tr>")
+		document.write ("<div onclick='jscalendarBShow=true' id='calendar'	class='"+jscalendarThemePrefix+"-div-style'><table	width="+((jscalendarShowWeekNumber==1)?250:220)+" class='"+jscalendarThemePrefix+"-table-style'><tr class='"+jscalendarThemePrefix+"-title-background-style'><td><table width='"+((jscalendarShowWeekNumber==1)?248:218)+"'><tr><td class='"+jscalendarThemePrefix+"-title-style'><span id='caption'></span></td><td align=right><a href='javascript:jscalendarHideCalendar()'><IMG SRC='"+jscalendarImgDir+"close.gif' WIDTH='15' HEIGHT='13' BORDER='0' ALT='Close the Calendar'></a></td></tr></table></td></tr><tr><td class='"+jscalendarThemePrefix+"-body-style'><span id='content'></span></td></tr>")
 			
 		if (jscalendarShowToday==1)
 		{
@@ -135,14 +135,15 @@
 
 	var	jscalendarMonthName =	new	Array("January","February","March","April","May","June","July","August","September","October","November","December")
 	var	jscalendarMonthName2 = new Array("JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC")
+	var	jscalendarDayName;
 
 	if (jscalendarStartAt==0)
 	{
-		dayName = new Array	("Sun","Mon","Tue","Wed","Thu","Fri","Sat")
+		jscalendarDayName = new Array	("Sun","Mon","Tue","Wed","Thu","Fri","Sat")
 	}
 	else
 	{
-		dayName = new Array	("Mon","Tue","Wed","Thu","Fri","Sat","Sun")
+		jscalendarDayName = new Array	("Mon","Tue","Wed","Thu","Fri","Sat","Sun")
 	}
 
 	function jscalendarSwapImage(srcImg, destImg){
@@ -155,7 +156,7 @@
 			if (!jscalendarIe) { jscalendarYearNow += 1900	}
 
 			jscalendarCrossobj=(jscalendarDom)?document.getElementById("calendar").style : jscalendarIe? document.all.calendar : document.calendar
-			hideCalendar()
+			jscalendarHideCalendar()
 
 			jscalendarCrossMonthObj=(jscalendarDom)?document.getElementById("selectMonth").style : jscalendarIe? document.all.selectMonth	: document.selectMonth
 
@@ -166,7 +167,7 @@
 
 			if (jscalendarShowToday==1)
 			{
-				document.getElementById("lblToday").innerHTML =	jscalendarTodayString + " <a onmousemove='window.status=\""+jscalendarGotoString+"\"' onmouseout='window.status=\"\"' title='"+jscalendarGotoString+"' class='"+jscalendarThemePrefix+"-today-style' href='javascript:jscalendarMonthSelected=jscalendarMonthNow;jscalendarYearSelected=jscalendarYearNow;jscalendarConstructCalendar();'>"+dayName[(jscalendarToday.getDay()-jscalendarStartAt==-1)?6:(jscalendarToday.getDay()-jscalendarStartAt)]+", " + jscalendarDateNow + " " + jscalendarMonthName[jscalendarMonthNow].substring(0,3)	+ "	" +	jscalendarYearNow	+ "</a>"
+				document.getElementById("lblToday").innerHTML =	jscalendarTodayString + " <a onmousemove='window.status=\""+jscalendarGotoString+"\"' onmouseout='window.status=\"\"' title='"+jscalendarGotoString+"' class='"+jscalendarThemePrefix+"-today-style' href='javascript:jscalendarMonthSelected=jscalendarMonthNow;jscalendarYearSelected=jscalendarYearNow;jscalendarConstructCalendar();'>"+jscalendarDayName[(jscalendarToday.getDay()-jscalendarStartAt==-1)?6:(jscalendarToday.getDay()-jscalendarStartAt)]+", " + jscalendarDateNow + " " + jscalendarMonthName[jscalendarMonthNow].substring(0,3)	+ "	" +	jscalendarYearNow	+ "</a>"
 			}
 
 			sHTML1 ="<span id='spanLeft'  class='"+jscalendarThemePrefix+"-title-control-normal-style' onmouseover='jscalendarSwapImage(\"changeLeft\",\"left2.gif\");  this.className=\""+jscalendarThemePrefix+"-title-control-select-style\"; window.status=\""+jscalendarScrollLeftMessage+"\"' onclick='javascript:jscalendarDecMonth()' onmouseout='clearInterval(jscalendarIntervalID1);jscalendarSwapImage(\"changeLeft\",\"left1.gif\"); this.className=\""+jscalendarThemePrefix+"-title-control-normal-style\"; window.status=\"\"' onmousedown='clearTimeout(jscalendarTimeoutID1);jscalendarTimeoutID1=setTimeout(\"jscalendarStartDecMonth()\",500)'	onmouseup='clearTimeout(jscalendarTimeoutID1);clearInterval(jscalendarIntervalID1)'>&nbsp<IMG id='changeLeft' SRC='"+jscalendarImgDir+"left1.gif' width=10 height=11 BORDER=0>&nbsp</span>&nbsp;"
@@ -439,7 +440,7 @@
 		}
 
 		for	(i=0; i<7; i++)	{
-			sHTML += "<td width='27' align='right'><B>"+ dayName[i]+"</B></td>"
+			sHTML += "<td width='27' align='right'><B>"+ jscalendarDayName[i]+"</B></td>"
 		}
 		sHTML +="</tr><tr>"
 		
@@ -637,13 +638,13 @@
 		}
 	}
 
-	document.onkeypress = function hidecal1 () { 
+	document.onkeypress = function jscalendarHidecal1 () {
 		if (event.keyCode==27) 
 		{
 			jscalendarHideCalendar()
 		}
 	}
-	document.onclick = function hidecal2 () { 		
+	document.onclick = function jscalendarHidecal2 () {
 		if (!jscalendarBShow)
 		{
 			jscalendarHideCalendar()

@@ -78,8 +78,9 @@ managed beans used:
                 <h:outputText value="Calendar as a JavaScript popup."/>
 
 				<h:form id="calendarForm2">
-                <x:inputCalendar id="xxxyyy" monthYearRowClass="yearMonthHeader" weekRowClass="weekHeader"
-                    currentDayCellClass="currentDayCell" value="#{calendar.date}" renderAsPopup="true"  />
+                <x:inputCalendar monthYearRowClass="yearMonthHeader" weekRowClass="weekHeader"
+                    currentDayCellClass="currentDayCell" value="#{calendar.date}" renderAsPopup="true"
+                    popupTodayString="#{example_messages['popup_today_string']}" popupWeekString="#{example_messages['popup_week_string']}" />
                 <h:commandButton value="Submit"/>
 				</h:form>
                 <f:verbatim><br/><br/></f:verbatim>
