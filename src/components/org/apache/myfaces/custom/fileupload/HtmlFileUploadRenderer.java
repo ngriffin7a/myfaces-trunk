@@ -37,6 +37,10 @@ import java.io.IOException;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.7  2004/05/10 22:17:24  o_rossmueller
+ * max file size configurable by filter init parameter 'maxFileSize'
+ * removed default creation of file contents byte array
+ *
  * Revision 1.6  2004/04/26 13:16:32  manolito
  * Log was missing
  *
@@ -112,16 +116,9 @@ public class HtmlFileUploadRenderer
             	{
             		if( fileItem.getName().length() > 0 )
 	            	{
-		            	try
-                        {
-		            		UploadedFile upFile = new UploadedFile( fileItem );
-		            		((HtmlInputFileUpload)uiComponent).setSubmittedValue(upFile);
-		            		((HtmlInputFileUpload)uiComponent).setValid(true);
-		            	}
-                        catch(IOException ioe)
-                        {
-                            log.error(ioe);
-		            	}
+                     UploadedFile upFile = new UploadedFile( fileItem );
+                     ((HtmlInputFileUpload)uiComponent).setSubmittedValue(upFile);
+                     ((HtmlInputFileUpload)uiComponent).setValid(true);
 	            	}
             	}
             }

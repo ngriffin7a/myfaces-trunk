@@ -27,10 +27,7 @@ import java.util.Map;
 
 import javax.servlet.http.*;
 
-import org.apache.commons.fileupload.DefaultFileItemFactory;
-import org.apache.commons.fileupload.FileItem;
-import org.apache.commons.fileupload.FileUpload;
-import org.apache.commons.fileupload.FileUploadException;
+import org.apache.commons.fileupload.*;
 
 /**
  * @author Sylvain Vieujot (latest modification by $Author$)
@@ -43,22 +40,25 @@ public class MultipartRequestWrapper
 	HashMap parametersMap = null;
 	FileUpload fileUpload = null;
 	HashMap fileItems = null;
-	
-	public MultipartRequestWrapper(HttpServletRequest request){
+	int maxSize;
+
+	public MultipartRequestWrapper(HttpServletRequest request, int maxSize){
 		super( request );
 		this.request = request;
+        this.maxSize = maxSize;
 	}
 	
 	private void parseRequest() {
 		fileUpload = new FileUpload();
-		fileUpload.setSizeMax(10 * 1024 * 1024); // 10Mb
-		// TODO : make this a configurable parameter.
-		// The best would be to be able to specify it in the x:inputFileUpload tag.
+		fileUpload.setSizeMax(maxSize);
 		fileUpload.setFileItemFactory(new DefaultFileItemFactory());
 		
 		List requestParameters = null;
 		try{
 			requestParameters = fileUpload.parseRequest(request);
+        } catch (FileUploadBase.SizeLimitExceededException e) {
+            // TODO: find a way to notify the user about the fact that the uploaded file exceeded size limit
+            requestParameters = Collections.EMPTY_LIST;
 		}catch(FileUploadException fue){
 			// TODO : Log !
 			requestParameters = Collections.EMPTY_LIST;

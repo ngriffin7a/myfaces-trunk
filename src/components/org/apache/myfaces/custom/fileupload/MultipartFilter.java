@@ -23,47 +23,79 @@ import java.io.IOException;
 import javax.servlet.*;
 import javax.servlet.http.*;
 
+
 /**
  * @author Sylvain Vieujot (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
 public class MultipartFilter
-        implements Filter
+    implements Filter
 {
-    /**
-	 * Init method for this filter
-	 */
-    public void init(FilterConfig filterConfig) {
-    }
 
-	/**
-	 * Add the expires Header
-	 */
-    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-    	if(! (response instanceof HttpServletResponse) ){
-    		chain.doFilter(request, response);
-    		return;
-    	}
-    	
-    	HttpServletRequest httpRequest = (HttpServletRequest) request;
-    	String type = httpRequest.getHeader("Content-Type");
-    	
-    	// Process only multipart/form-data requests
-    	if (type != null )
-	    	if( type.startsWith("multipart/form-data") ) {
-	    		HttpServletResponse httpResponse = (HttpServletResponse) response;
-	        	MultipartRequestWrapper requestWrapper = new MultipartRequestWrapper( httpRequest );
-	        	chain.doFilter(requestWrapper, response);
-	        	return;
-	    	}
+    private int maxFileSize = 10 * 1024 * 1024; // 10 MB
 
-	    // Standard request
-	    chain.doFilter(request, response);
-    }
 
     /**
-	 * Destroy method for this filter
-	 */
-    public void destroy() {
+     * Init method for this filter
+     */
+    public void init(FilterConfig filterConfig)
+    {
+        String param = filterConfig.getInitParameter("maxFileSize");
+
+        if (param != null)
+        {
+            param = param.toLowerCase();
+            int factor = 1;
+            String number = param;
+
+            if (param.endsWith("m"))
+            {
+                factor = 1024 * 1024;
+                number = param.substring(0, param.length() - 1);
+            } else if (param.endsWith("k"))
+            {
+                factor = 1024;
+                number = param.substring(0, param.length() - 1);
+            }
+
+            maxFileSize = Integer.parseInt(number) * factor;
+        }
+    }
+
+
+    /**
+     * Add the expires Header
+     */
+    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException
+    {
+        if (!(response instanceof HttpServletResponse))
+        {
+            chain.doFilter(request, response);
+            return;
+        }
+
+        HttpServletRequest httpRequest = (HttpServletRequest) request;
+        String type = httpRequest.getHeader("Content-Type");
+
+        // Process only multipart/form-data requests
+        if (type != null)
+            if (type.startsWith("multipart/form-data"))
+            {
+                HttpServletResponse httpResponse = (HttpServletResponse) response;
+                MultipartRequestWrapper requestWrapper = new MultipartRequestWrapper(httpRequest, maxFileSize);
+                chain.doFilter(requestWrapper, response);
+                return;
+            }
+
+        // Standard request
+        chain.doFilter(request, response);
+    }
+
+
+    /**
+     * Destroy method for this filter
+     */
+    public void destroy()
+    {
     }
 }

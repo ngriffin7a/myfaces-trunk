@@ -18,70 +18,91 @@
  */
 package net.sourceforge.myfaces.custom.fileupload;
 
-import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+
 import org.apache.commons.fileupload.FileItem;
+
 
 /**
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
+ *          $Log$
+ *          Revision 1.3  2004/05/10 22:17:24  o_rossmueller
+ *          max file size configurable by filter init parameter 'maxFileSize'
+ *          removed default creation of file contents byte array
+ *
  */
 public class UploadedFile
 {
+
     private String _name = null;
     private String _contentType = null;
-    protected byte[] _bytes =  null;
-    
-    public UploadedFile(){}
-    
-    public UploadedFile(FileItem fileItem) throws IOException {
-    	int sizeInBytes = (int)fileItem.getSize();
-    	_bytes = new byte[sizeInBytes];
-    	fileItem.getInputStream().read( _bytes );
-    	
-    	if (_bytes.length != 0) {
-    		_name = fileItem.getName();
-    		_contentType = fileItem.getContentType();
-    	}else{
-    		_bytes = null;
-    	}
+    private FileItem fileItem;
+
+
+    public UploadedFile()
+    {
     }
 
 
-	/**
-	 * @return Returns the _bytes.
-	 */
-	public byte[] getBytes() {
-		return _bytes;
-	}
-	/**
-	 * @param _bytes The _bytes to set.
-	 */
-	public void setBytes(byte[] _bytes) {
-		this._bytes = _bytes;
-	}
-	/**
-	 * @return Returns the _contentType.
-	 */
-	public String getContentType() {
-		return _contentType;
-	}
-	/**
-	 * @param type The _contentType to set.
-	 */
-	public void setContentType(String type) {
-		_contentType = type;
-	}
-	/**
-	 * @return Returns the _name.
-	 */
-	public String getName() {
-		return _name;
-	}
-	/**
-	 * @param _name The _name to set.
-	 */
-	public void setName(String _name) {
-		this._name = _name;
-	}
+    public UploadedFile(FileItem fileItem)
+    {
+        this.fileItem = fileItem;
+
+        _name = fileItem.getName();
+        _contentType = fileItem.getContentType();
+    }
+
+
+    /**
+     * Answer the uploaded file contents.
+     *
+     * @return file contents
+     */
+    public byte[] getBytes() throws IOException
+    {
+        byte[] bytes = new byte[(int) fileItem.getSize()];
+        fileItem.getInputStream().read(bytes);
+        return bytes;
+    }
+
+
+    /**
+     * Answer the uploaded file contents input stream
+     *
+     * @return
+     * @throws IOException
+     */
+    public InputStream getInputStream() throws IOException
+    {
+        return fileItem.getInputStream();
+    }
+
+
+    /**
+     * @return Returns the _contentType.
+     */
+    public String getContentType()
+    {
+        return _contentType;
+    }
+
+
+    /**
+     * @return Returns the _name.
+     */
+    public String getName()
+    {
+        return _name;
+    }
+
+
+    /**
+     * Answer the size of this file.
+     * @return
+     */
+    public long getSize() {
+        return fileItem.getSize();
+    }
 }
