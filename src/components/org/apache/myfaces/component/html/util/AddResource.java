@@ -41,6 +41,9 @@ import org.apache.myfaces.renderkit.html.HTML;
  * @author Sylvain Vieujot (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.14  2004/12/06 01:02:02  svieujot
+ * Write the response in the log messages (mainly to debug problems due to filters order).
+ *
  * Revision 1.13  2004/12/03 21:20:09  svieujot
  * Add type="text/css" for inline styles.
  *
@@ -323,7 +326,7 @@ public class AddResource {
 	        }
 	
 	        if( insertPosition < 0 ){
-	            log.warn("Response has no <head> or <body> tag.");
+	            log.warn("Response has no <head> or <body> tag:\n"+originalResponse);
 	            insertPosition = 0;
 	        }
         }
