@@ -43,6 +43,9 @@ import java.util.List;
  * @version $Revision$ $Date$
  *
  *          $Log$
+ *          Revision 1.14  2004/12/24 14:13:16  svieujot
+ *          Upgrade the tree component to use the Extensions filter.
+ *
  *          Revision 1.13  2004/12/22 17:52:54  grantsmith
  *          Jira MYFACES-48: Tree Table Component Fixes & Tree Checkbox Support
  *
@@ -58,6 +61,8 @@ public class HtmlTreeRenderer extends HtmlTableRendererBase
 {
 
     private static final Integer ZERO = new Integer(0);
+    
+    private static final String DEFAULT_IMAGE_ICON_FOLDER = "images/folder.gif";
 
     public boolean getRendersChildren()
     {
@@ -438,7 +443,7 @@ public class HtmlTreeRenderer extends HtmlTableRendererBase
             if (!child.isLeaf(facesContext))
             {
                 // todo: icon provider
-                url = "images/tree/folder.gif";
+                url = HtmlTree.getDefaultImagePath( DEFAULT_IMAGE_ICON_FOLDER );
             }
             else
             {
