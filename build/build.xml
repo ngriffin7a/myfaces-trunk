@@ -30,7 +30,6 @@
 
     <!-- classpath for compiling impl classes -->
     <path id="myfaces.class.path">
-        <!--pathelement location="${sun-jsf-api.jar}"/-->
         <pathelement location="${jsfapi.src}"/>
         <pathelement location="${servlet-api.jar}"/>
         <pathelement location="${jsp-api.jar}"/>
@@ -38,6 +37,17 @@
         <pathelement location="${cos.jar}"/>
         <pathelement location="${commons-logging.jar}"/>
         <pathelement location="${commons-el.jar}"/>
+    </path>
+
+    <!-- classpath for javadoc creation -->
+    <path id="javadoc.class.path">
+        <pathelement location="${servlet-api.jar}"/>
+        <pathelement location="${jsp-api.jar}"/>
+        <pathelement location="${jstl.jar}"/>
+        <pathelement location="${cos.jar}"/>
+        <pathelement location="${commons-logging.jar}"/>
+        <pathelement location="${commons-el.jar}"/>
+        <pathelement location="${myfaces.jar}"/>
     </path>
 
     <target name="myfaces-jar"
@@ -99,12 +109,13 @@
 
 
     <target name="javadoc"
-            description="creates javadoc for MyFaces classes">
+            description="creates javadoc for MyFaces classes"
+            depends="myfaces-jar" >
         <mkdir dir="${doc.dir}/javadoc"/>
         <javadoc sourcepath="${myfaces.src}"
                  destdir="${doc.dir}/javadoc"
                  packagenames="net.sourceforge.myfaces.*"
-                 classpathref="myfaces.class.path"
+                 classpathref="javadoc.class.path"
                  failonerror="true"/>
     </target>
 
