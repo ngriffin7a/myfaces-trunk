@@ -306,6 +306,7 @@
         description="deletes all files that were built (including examples and tagunit)">
         <delete quiet="true" failonerror="false" includeEmptyDirs="true">
             <fileset file="${myfaces.jar}" />
+            <fileset file="${myfaces-components.jar}" />
             <fileset file="${project.dir}/myfaces-*.tgz" />
             <fileset dir="${doc.dir}/javadoc" />
             <fileset dir="${doc.dir}/tlddoc" />

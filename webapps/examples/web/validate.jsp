@@ -78,8 +78,11 @@ managed beans used:
                         <x:validateCreditCard />
                     </h:inputText>
 					<h:message id="creditCardNumberError" for="form1:creditCardNumber" styleClass="error" />
-				
+
+                    <h:panelGroup/>
 				    <h:commandButton id="validateButton" value="Submit" action="#{validateForm.submit}"/>
+                    <h:panelGroup/>
+                    
 			    </h:panelGrid>
 			</h:form>
 			
