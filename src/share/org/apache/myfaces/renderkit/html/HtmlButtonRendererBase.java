@@ -38,6 +38,9 @@ import java.util.Map;
  * @author Anton Koinov
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.2  2004/06/03 11:45:40  o_rossmueller
+ * added check for .y image button suffix according to 1.1 renderkit docs
+ *
  * Revision 1.1  2004/05/18 14:31:39  manolito
  * user role support completely moved to components source tree
  *
@@ -45,7 +48,8 @@ import java.util.Map;
 public class HtmlButtonRendererBase
     extends HtmlRenderer
 {
-    private static final String IMAGE_BUTTON_SUFFIX = ".x";
+    private static final String IMAGE_BUTTON_SUFFIX_X = ".x";
+    private static final String IMAGE_BUTTON_SUFFIX_Y = ".y";
 
     public void decode(FacesContext facesContext, UIComponent uiComponent)
     {
@@ -67,7 +71,7 @@ public class HtmlButtonRendererBase
     {
         String clientId = uiComponent.getClientId(facesContext);
         Map paramMap = facesContext.getExternalContext().getRequestParameterMap();
-        return paramMap.containsKey(clientId) || paramMap.containsKey(clientId + IMAGE_BUTTON_SUFFIX);
+        return paramMap.containsKey(clientId) || paramMap.containsKey(clientId + IMAGE_BUTTON_SUFFIX_X) || paramMap.containsKey(clientId + IMAGE_BUTTON_SUFFIX_Y);
     }
     
     public void encodeEnd(FacesContext facesContext, UIComponent uiComponent)
