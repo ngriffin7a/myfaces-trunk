@@ -1,0 +1,13 @@
+Checklist for tasks related to release of a new version
+=======================================================
+
+- change version in build/manifest.properties and examples/web/inc/page_header.jsp
+- commit everything
+- cvs tag in format "rel_1_0_3"
+- run ant "all"
+- upload files to SF
+- add new release at SF
+- post news at SF
+- post news article in wiki
+- post announcement on Sun JSF forum
+- announce on both mailing lists
