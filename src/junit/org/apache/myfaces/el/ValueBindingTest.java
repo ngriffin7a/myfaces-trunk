@@ -27,6 +27,9 @@ import javax.faces.el.ValueBinding;
  * @version $Revision$ $Date$
  * 
  * $Log$
+ * Revision 1.22  2004/07/27 06:46:59  dave0000
+ * cleanup/arange testcases, remove duplicates
+ *
  * Revision 1.21  2004/07/27 06:28:34  dave0000
  * fix issue with getType of literal expressions (and other improvements)
  *
@@ -455,12 +458,18 @@ public class ValueBindingTest extends ELBaseTest
     {
         ValueBinding vb;
 
+        //-----------------------------------------------------
+        // Literal expression
+        
         vb = _application.createValueBinding("#{'constant literal'}");
         assertSame(String.class, vb.getType(_facesContext));
 
         vb = _application.createValueBinding("#{false && true}");
         assertSame(Boolean.class, vb.getType(_facesContext));
 
+        vb = _application.createValueBinding("#{applicationScope.bean == null}");
+        assertSame(Boolean.class, vb.getType(_facesContext));
+        
         // REVISIT: Should getType of implicit object throw an error, 
         //          return null, or Object.class, or the appropriate Map class?
         vb = _application.createValueBinding("#{cookie}");
@@ -469,33 +478,16 @@ public class ValueBindingTest extends ELBaseTest
         vb = _application.createValueBinding("#{requestScope}");
         assertTrue(Map.class.isAssignableFrom(vb.getType(_facesContext)));
 
-        vb = _application.createValueBinding("#{a.name}");
-        assertSame(String.class, vb.getType(_facesContext));
-
-        vb = _application.createValueBinding("#{theA.theB.name}");
-        assertSame(String.class, vb.getType(_facesContext));
-
-        vb = _application.createValueBinding("#{testmap}");
-        assertTrue(Map.class.isAssignableFrom(vb.getType(_facesContext)));
-
-        vb = _application.createValueBinding("#{testmap.f}");
-        assertSame(Boolean.class, vb.getType(_facesContext));
-
-        vb = _application.createValueBinding("#{ testmap  [  0  ]  [  0  ]}");
-        assertSame(Object.class, vb.getType(_facesContext));
-        
         vb = _application.createValueBinding("#{true ? cookie : max}");
         assertTrue(Map.class.isAssignableFrom(vb.getType(_facesContext)));
 
         // REVISIT: should unknown bean name return type null or Object.class?
         vb = _application.createValueBinding("#{false ? cookie : max}");
         assertSame(Object.class, vb.getType(_facesContext));
-    }
 
-    public void testGetValueType() throws Exception
-    {
-        ValueBinding vb;
-
+        //-----------------------------------------------------
+        // Specific types
+        
         vb = _application.createValueBinding("#{a.name}");
         assertSame(A.NAME.getClass(), vb.getType(_facesContext));
 
@@ -514,15 +506,6 @@ public class ValueBindingTest extends ELBaseTest
 
         vb = _application.createValueBinding("#{nonExistingValueBlahBlahBlah}");
         assertSame(Object.class, vb.getType(_facesContext));
-        
-        try 
-        {
-            _application.createValueBinding("#{cookie}").setValue(_facesContext, null);
-            assertTrue(false);
-        }
-        catch (Exception e) {
-            // ignore, error expected
-        }
     }
     
     public void testManagedBean() throws Exception
