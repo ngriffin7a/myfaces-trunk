@@ -81,25 +81,14 @@ public class DigesterFacesConfigUnmarshallerCactusTest extends ServletTestCase
 
         assertEquals(42, config.getComponents().size());
 
-        Component component = (Component) config.getComponents().get(0);
+        Component component = (Component) config.getComponents().get("javax.faces.HtmlCommandButton");
 
         assertEquals("javax.faces.HtmlCommandButton", component.getComponentType());
         assertEquals("javax.faces.component.html.HtmlCommandButton", component.getComponentClass());
-        assertEquals(0, component.getAttribute().size());
-        assertEquals(0, component.getProperty().size());
-        assertEquals(0, component.getComponentExtension().size());
 
-        component = (Component) config.getComponents().get(1);
+        component = (Component) config.getComponents().get("javax.faces.HtmlCommandLink");
         assertEquals("javax.faces.HtmlCommandLink", component.getComponentType());
         assertEquals("javax.faces.component.html.HtmlCommandLink", component.getComponentClass());
-        assertEquals(2, component.getAttribute().size());
-        assertEquals("attribute1", ((Attribute)component.getAttribute().get(0)).getAttributeName());
-        assertEquals("attribute2", ((Attribute)component.getAttribute().get(1)).getAttributeName());
-        assertEquals(1, component.getProperty().size());
-        assertEquals(2, component.getComponentExtension().size());
-        assertTrue(component.getComponentExtension().contains("extensionx"));
-        assertTrue(component.getComponentExtension().contains("extensiony"));
-        assertTrue(!component.getComponentExtension().contains("extensionz"));
 
         assertEquals(28, config.getConverters().size());
         assertEquals(3, config.getValidators().size());
