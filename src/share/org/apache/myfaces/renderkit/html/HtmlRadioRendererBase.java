@@ -28,6 +28,7 @@ import javax.faces.FacesException;
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIOutput;
 import javax.faces.component.UISelectOne;
+import javax.faces.component.UIInput;
 import javax.faces.component.html.HtmlSelectOneRadio;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
@@ -43,6 +44,9 @@ import java.util.List;
  * @author Thomas Spiegl
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.2  2004/03/31 15:15:58  royalts
+ * no message
+ *
  * Revision 1.1  2004/03/31 13:26:09  manolito
  * extended radio renderer
  *
@@ -145,8 +149,11 @@ public class HtmlRadioRendererBase
 
     public void decode(FacesContext facesContext, UIComponent uiComponent)
     {
-        RendererUtils.checkParamValidity(facesContext, uiComponent, UISelectOne.class);
-        HtmlRendererUtils.decodeUIInput(facesContext, uiComponent);
+        RendererUtils.checkParamValidity(facesContext, uiComponent, null);
+        if (uiComponent instanceof UIInput)
+        {
+            HtmlRendererUtils.decodeUIInput(facesContext, uiComponent);
+        }
     }
 
 

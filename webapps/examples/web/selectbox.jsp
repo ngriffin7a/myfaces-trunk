@@ -90,6 +90,10 @@ managed beans used:
 
                         <f:verbatim>&nbsp;</f:verbatim>
                         <h:panelGrid columns="1"  >
+                            <!-- x:selectOneRadio is an extension of h:selectOneRadio
+                                   if layout="spread" selectitems wont get rendered
+                                   instead x:radio components are getting rendered
+                            -->
                             <x:selectOneRadio id="discount2" value="#{carconf.discount2}" layout="spread" >
                                 <f:selectItem itemValue="0" itemLabel="#{example_messages['discount_2_0']}" />
                                 <f:selectItem itemValue="1" itemLabel="#{example_messages['discount_2_1']}" />
@@ -99,6 +103,9 @@ managed beans used:
                                 <x:radio for="discount2" index="2" /><f:verbatim>&nbsp;</f:verbatim>
                                 <h:inputText value="#{carconf.bandName}" />
                             </h:panelGroup>
+                            <!-- x:radio is a myfaces extension. renders the selectItem at the
+                                 given index (starting with 0). the for attribute must be the id
+                                 of the corresponding x:selectOneRadio -->
                             <x:radio for="discount2" index="0" />
                             <x:radio for="discount2" index="1" />
                         </h:panelGrid>

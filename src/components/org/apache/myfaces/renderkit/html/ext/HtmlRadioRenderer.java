@@ -38,6 +38,9 @@ import java.util.List;
  * @author Thomas Spiegl
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.2  2004/03/31 15:15:59  royalts
+ * no message
+ *
  * Revision 1.1  2004/03/31 13:26:08  manolito
  * extended radio renderer
  *
@@ -133,5 +136,4 @@ public class HtmlRadioRenderer
                                       currentValue == null && itemValue == null ||
                                       currentValue != null && currentValue.equals(itemValue));
     }
-
 }

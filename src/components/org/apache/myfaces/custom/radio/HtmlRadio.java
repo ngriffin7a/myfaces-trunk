@@ -26,6 +26,9 @@ import javax.faces.el.ValueBinding;
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.4  2004/03/31 15:15:58  royalts
+ * no message
+ *
  * Revision 1.3  2004/03/31 13:43:30  royalts
  * no message
  *
