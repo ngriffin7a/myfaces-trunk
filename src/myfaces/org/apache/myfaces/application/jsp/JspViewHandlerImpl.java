@@ -38,6 +38,9 @@ import java.util.*;
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.24  2004/07/16 08:34:01  manolito
+ * cosmetic change
+ *
  * Revision 1.23  2004/07/10 06:35:08  mwessendorf
  * is defaultRenderKitId set in faces-config.xml ?
  *
@@ -378,7 +381,7 @@ public class JspViewHandlerImpl
         WebXml webxml = WebXml.getWebXml(externalContext);
         List mappings = webxml.getFacesServletMappings();
 
-        boolean isExtensionMapping = requestPathInfo == null;
+        boolean isExtensionMapping = (requestPathInfo == null);
 
         for (int i = 0, size = mappings.size(); i < size; i++)
         {
