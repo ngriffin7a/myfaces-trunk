@@ -20,6 +20,8 @@ import org.apache.myfaces.renderkit.RendererUtils;
 import javax.faces.component.html.HtmlPanelGroup;
 import javax.faces.component.UIComponent;
 import javax.faces.component.NamingContainer;
+import javax.faces.component.UINamingContainer;
+import javax.faces.component.UIForm;
 import javax.faces.context.FacesContext;
 import javax.faces.el.EvaluationException;
 import javax.faces.el.MethodBinding;
@@ -33,6 +35,9 @@ import java.util.List;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.10  2005/02/11 16:03:00  mmarinschek
+ * solve bug in tabbed panel when datatable was displayed not on tab, but at the bottom of the datatable...
+ *
  * Revision 1.9  2005/01/24 12:20:11  mmarinschek
  * Changed the TabbedPane component to only decode components which are on the visible tags - other components are not processed in the decode phase. Changed the HtmlRendererUtils back to submit empty strings for components which should be posted back but have null values.
  *
@@ -102,7 +107,7 @@ public class HtmlPanelTabbedPane
 
     private UIComponent getUIComponent(UIComponent uiComponent)
     {
-        if (uiComponent instanceof NamingContainer)
+        if (uiComponent instanceof UINamingContainer || uiComponent instanceof UIForm)
         {
             List children = uiComponent.getChildren();
             for (int i = 0, len = children.size(); i < len; i++)

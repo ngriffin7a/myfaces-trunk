@@ -39,6 +39,9 @@ import java.util.List;
  *
  *
  *          $Log$
+ *          Revision 1.8  2005/02/11 16:03:00  mmarinschek
+ *          solve bug in tabbed panel when datatable was displayed not on tab, but at the bottom of the datatable...
+ *
  *          Revision 1.7  2005/01/19 11:49:20  matzew
  *          MYFACES-83. Refactored HtmlTableRendererBase supported by "power-user" Heath Borders-Wing
  *
@@ -351,8 +354,8 @@ public class HtmlTableRendererBase extends HtmlRenderer
 	 * @param facesContext the <code>FacesContext</code>.
 	 * @param writer the <code>ResponseWriter</code>.
 	 * @param component the <code>UIComponent</code> for whom a table is being rendered.
-	 * @param headerFacet the facet for the header.
-	 * @param headerStyleClass the styleClass of the header.
+	 * @param footerFacet the facet for the footer.
+	 * @param footerStyleClass the styleClass of the footer.
 	 * @param colspan the number of columns the header should span.  Typically, this is
 	 * the number of columns in the table.
 	 * @throws IOException if an exception occurs.
@@ -446,7 +449,7 @@ public class HtmlTableRendererBase extends HtmlRenderer
 	 * @param facesContext the <code>FacesContext</code>.
 	 * @param writer the <code>ResponseWriter</code>.
 	 * @param uiColumn the <code>UIColumn</code>.
-	 * @param footerStyleClass the styleClass of the header facet.
+	 * @param headerStyleClass the styleClass of the header facet.
 	 * @param colspan the colspan for the tableData element in which the header facet
 	 * will be wrapped.
 	 * @throws IOException
@@ -585,6 +588,11 @@ public class HtmlTableRendererBase extends HtmlRenderer
             return _columnStyle.length > 0;
         }
 
+    }
+
+    public void decode(FacesContext context, UIComponent component)
+    {
+        super.decode(context, component);
     }
 
 }

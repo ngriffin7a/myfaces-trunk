@@ -41,6 +41,9 @@ import java.util.Set;
  * @author Anton Koinov
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.16  2005/02/11 16:03:00  mmarinschek
+ * solve bug in tabbed panel when datatable was displayed not on tab, but at the bottom of the datatable...
+ *
  * Revision 1.15  2005/02/08 18:01:01  svieujot
  * Typo.
  *
@@ -222,43 +225,43 @@ public class HtmlCheckboxRendererBase extends HtmlRenderer {
     }
 
     protected boolean isDisabled(FacesContext facesContext,
-            UIComponent uiComponent) {
+            UIComponent component) {
         //TODO: overwrite in extended HtmlCheckboxRenderer and check for
         // enabledOnUserRole
-        if (uiComponent instanceof HtmlSelectBooleanCheckbox) {
-            return ((HtmlSelectBooleanCheckbox) uiComponent).isDisabled();
-        } else if (uiComponent instanceof HtmlSelectManyCheckbox) {
-            return ((HtmlSelectManyCheckbox) uiComponent).isDisabled();
+        if (component instanceof HtmlSelectBooleanCheckbox) {
+            return ((HtmlSelectBooleanCheckbox) component).isDisabled();
+        } else if (component instanceof HtmlSelectManyCheckbox) {
+            return ((HtmlSelectManyCheckbox) component).isDisabled();
         } else {
-            return RendererUtils.getBooleanAttribute(uiComponent,
+            return RendererUtils.getBooleanAttribute(component,
                     HTML.DISABLED_ATTR, false);
         }
     }
 
-    public void decode(FacesContext facesContext, UIComponent uiComponent) {
-        RendererUtils.checkParamValidity(facesContext, uiComponent, null);
-        if (uiComponent instanceof UISelectBoolean) {
-            HtmlRendererUtils.decodeUISelectBoolean(facesContext, uiComponent);
-        } else if (uiComponent instanceof UISelectMany) {
-            HtmlRendererUtils.decodeUISelectMany(facesContext, uiComponent);
+    public void decode(FacesContext facesContext, UIComponent component) {
+        RendererUtils.checkParamValidity(facesContext, component, null);
+        if (component instanceof UISelectBoolean) {
+            HtmlRendererUtils.decodeUISelectBoolean(facesContext, component);
+        } else if (component instanceof UISelectMany) {
+            HtmlRendererUtils.decodeUISelectMany(facesContext, component);
         } else {
             throw new IllegalArgumentException("Unsupported component class "
-                    + uiComponent.getClass().getName());
+                    + component.getClass().getName());
         }
     }
 
     public Object getConvertedValue(FacesContext facesContext,
-            UIComponent uiComponent, Object submittedValue)
+            UIComponent component, Object submittedValue)
             throws ConverterException {
-        RendererUtils.checkParamValidity(facesContext, uiComponent, null);
-        if (uiComponent instanceof UISelectBoolean) {
+        RendererUtils.checkParamValidity(facesContext, component, null);
+        if (component instanceof UISelectBoolean) {
             return submittedValue;
-        } else if (uiComponent instanceof UISelectMany) {
+        } else if (component instanceof UISelectMany) {
             return RendererUtils.getConvertedUISelectManyValue(facesContext,
-                    (UISelectMany) uiComponent, submittedValue);
+                    (UISelectMany) component, submittedValue);
         } else {
             throw new IllegalArgumentException("Unsupported component class "
-                    + uiComponent.getClass().getName());
+                    + component.getClass().getName());
         }
     }
 }
