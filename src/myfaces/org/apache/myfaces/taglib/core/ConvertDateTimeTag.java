@@ -32,6 +32,9 @@ import java.util.TimeZone;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.4  2004/06/27 19:26:18  mwessendorf
+ * added default value, needed by jsf-spec
+ *
  * Revision 1.3  2004/04/16 15:35:59  manolito
  * Log
  *
@@ -39,10 +42,10 @@ import java.util.TimeZone;
 public class ConvertDateTimeTag
         extends ConverterTag
 {
-    private String _dateStyle = null;
+    private String _dateStyle = "default"; // the default value as required by the spec (default in this case)
     private String _locale = null;
     private String _pattern = null;
-    private String _timeStyle = null;
+    private String _timeStyle = "default"; // the default value as required by the spec (default in this case)
     private String _timeZone = null;
     private String _type = null;
 

@@ -29,6 +29,9 @@ import java.util.Locale;
 
 /**
  * $Log$
+ * Revision 1.4  2004/06/27 19:26:18  mwessendorf
+ * added default value, needed by jsf-spec
+ *
  * Revision 1.3  2004/06/26 00:34:23  o_rossmueller
  * fix #979039: default type = number for convertNumber
  *
@@ -43,8 +46,8 @@ public class ConvertNumberTag
 {
     private String _currencyCode = null;
     private String _currencySymbol = null;
-    private String _groupingUsed = null;
-    private String _integerOnly = null;
+    private String _groupingUsed = "true"; // default value as required by the spec
+    private String _integerOnly = "false"; // default value as required by the spec
     private String _locale = null;
     private String _maxFractionDigits = null;
     private String _maxIntegerDigits = null;
