@@ -37,7 +37,7 @@ public class LifecycleFactoryImpl
 
     public LifecycleFactoryImpl()
     {
-        _lifecycles.put(LifecycleFactory.DEFAULT_LIFECYCLE, new LifecycleImpl());
+        addLifecycle(LifecycleFactory.DEFAULT_LIFECYCLE, new LifecycleImpl());
     }
 
     public void addLifecycle(String id, Lifecycle lifecycle)

@@ -18,21 +18,17 @@
  */
 package net.sourceforge.myfaces.webapp;
 
-import net.sourceforge.myfaces.MyFacesFactoryFinder;
-import net.sourceforge.myfaces.config.FacesConfig;
-import net.sourceforge.myfaces.config.FacesConfigFactory;
-import net.sourceforge.myfaces.config.configure.FacesConfigurator;
-import net.sourceforge.myfaces.context.servlet.ServletExternalContextImpl;
-import net.sourceforge.myfaces.webapp.webxml.WebXml;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import javax.faces.FactoryFinder;
 import javax.faces.context.ExternalContext;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
+
+import net.sourceforge.myfaces.confignew.FacesConfigurator;
+import net.sourceforge.myfaces.context.servlet.ServletExternalContextImpl;
+import net.sourceforge.myfaces.webapp.webxml.WebXml;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * TODO: Add listener to myfaces-core.tld instead of web.xml
@@ -40,6 +36,20 @@ import javax.servlet.ServletContextListener;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.21  2004/06/16 23:02:25  o_rossmueller
+ * merged confignew_branch
+ *
+ * Revision 1.20.2.2  2004/06/16 02:07:24  o_rossmueller
+ * get navigation rules from RuntimeConfig
+ * refactored all remaining usages of MyFacesFactoryFinder to use RuntimeConfig
+ *
+ * Revision 1.20.2.1  2004/06/13 15:59:08  o_rossmueller
+ * started integration of new config mechanism:
+ * - factories
+ * - components
+ * - render kits
+ * - managed beans + managed properties (no list/map initialization)
+ *
  * Revision 1.20  2004/04/26 11:28:17  manolito
  * global navigation-rule with no from-view-id NPE bug
  *
@@ -74,11 +84,11 @@ public class StartupServletContextListener
                 ExternalContext externalContext = new ServletExternalContextImpl(servletContext,
                                                                                  null,
                                                                                  null);
-                FacesConfigFactory fcf = MyFacesFactoryFinder.getFacesConfigFactory(externalContext);
-                FacesConfig facesConfig = fcf.getFacesConfig(externalContext);
+//                FacesConfigFactory fcf = MyFacesFactoryFinder.getFacesConfigFactory(externalContext);
+//                FacesConfig facesConfig = fcf.getRuntimeConfig(externalContext);
 
                 //And configure everything
-                new FacesConfigurator(facesConfig, externalContext).configure();
+                new FacesConfigurator(externalContext).configure();
 
                 // parse web.xml
                 WebXml.init(externalContext);

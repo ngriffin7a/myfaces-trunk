@@ -27,12 +27,20 @@ import javax.servlet.*;
 import java.io.IOException;
 
 /**
+<<<<<<< FacesServlet.java
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.9  2004/06/16 23:02:20  o_rossmueller
+ * merged confignew_branch
+ *
  * Revision 1.8  2004/06/14 12:55:23  manolito
  * Added missing CVS Log comment
  *
+=======
+ * @author Manfred Geiler (latest modification by $Author$)
+ * @version $Revision$ $Date$
+>>>>>>> 1.7.2.1
  */
 public class FacesServlet
         implements Servlet
@@ -84,16 +92,6 @@ public class FacesServlet
         //So we can acquire it here once:
         LifecycleFactory lifecycleFactory = (LifecycleFactory)FactoryFinder.getFactory(FactoryFinder.LIFECYCLE_FACTORY);
         _lifecycle = lifecycleFactory.getLifecycle(getLifecycleId());
-
-        // TODO: for newconfig integration
-//        ServletExternalContextImpl externalContext = new ServletExternalContextImpl(_servletConfig.getServletContext(), null, null);
-//        LifecycleConfig lifecycleConfig = LifecycleConfig.getCurrentInstance(externalContext);
-//
-//        for (Iterator iterator = lifecycleConfig.getLifecyclePhaseListeners().iterator(); iterator.hasNext();)
-//        {
-//            PhaseListener listener = (PhaseListener) iterator.next();
-//            _lifecycle.addPhaseListener(listener);
-//        }
     }
 
     public void service(ServletRequest request,

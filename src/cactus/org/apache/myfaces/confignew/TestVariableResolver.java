@@ -1,4 +1,4 @@
-/**
+/*
  * MyFaces - the free JSF implementation
  * Copyright (C) 2003, 2004  The MyFaces Team (http://myfaces.sourceforge.net)
  *
@@ -16,35 +16,38 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package net.sourceforge.myfaces.examples.misc;
+
+package net.sourceforge.myfaces.confignew;
+
+import javax.faces.el.VariableResolver;
+import javax.faces.el.EvaluationException;
+import javax.faces.context.FacesContext;
+
 
 /**
- * Global (dynamically changeable) options for examples application.
- * @author Manfred Geiler (latest modification by $Author$)
- * @version $Revision$ $Date$
+ * @author <a href="mailto:oliver@rossmueller.com">Oliver Rossmueller</a>
  */
-public class GlobalOptions
+public class TestVariableResolver extends VariableResolver
 {
-    private String _pageLayout;
 
-    public String getPageLayout()
+    private VariableResolver delegate;
+
+
+    public TestVariableResolver(VariableResolver delegate)
     {
-        return _pageLayout;
+        this.delegate = delegate;
     }
 
-    public void setPageLayout(String pageLayout)
+
+    // METHODS
+    public Object resolveVariable(FacesContext facesContext, String name) throws EvaluationException
     {
-        _pageLayout = pageLayout;
+        return delegate.resolveVariable(facesContext, name);
     }
 
 
-    public String getNumericAsString() {
-        return "23";
+    public VariableResolver getDelegate()
+    {
+        return delegate;
     }
-
-    
-    public long getNumeric() {
-        return 23L;
-    }
-
 }

@@ -18,30 +18,34 @@
  */
 package net.sourceforge.myfaces.application;
 
-import net.sourceforge.myfaces.MyFacesFactoryFinder;
-import net.sourceforge.myfaces.config.FacesConfig;
-import net.sourceforge.myfaces.config.FacesConfigFactory;
-import net.sourceforge.myfaces.config.NavigationCaseConfig;
-import net.sourceforge.myfaces.config.NavigationRuleConfig;
-import net.sourceforge.myfaces.util.HashMapUtils;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
+import java.io.IOException;
+import java.util.*;
 import javax.faces.FacesException;
 import javax.faces.application.NavigationHandler;
 import javax.faces.application.ViewHandler;
 import javax.faces.component.UIViewRoot;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
-import java.io.IOException;
-import java.util.*;
+
+import net.sourceforge.myfaces.confignew.RuntimeConfig;
+import net.sourceforge.myfaces.confignew.element.NavigationCase;
+import net.sourceforge.myfaces.confignew.element.NavigationRule;
+import net.sourceforge.myfaces.util.HashMapUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * @author Thomas Spiegl (latest modification by $Author$)
  * @author Anton Koinov
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.27  2004/06/16 23:02:21  o_rossmueller
+ * merged confignew_branch
+ *
+ * Revision 1.26.2.1  2004/06/16 02:07:22  o_rossmueller
+ * get navigation rules from RuntimeConfig
+ * refactored all remaining usages of MyFacesFactoryFinder to use RuntimeConfig
+ *
  * Revision 1.26  2004/05/18 12:02:28  manolito
  * getActionURL and getResourceURL must not call encodeActionURL or encodeResourceURL
  *
@@ -59,7 +63,7 @@ public class NavigationHandlerImpl
 
     private static final String ASTERISK = "*";
     
-    private Map _cazes = null;
+    private Map _navigationCases = null;
     private List _wildcardKeys = new ArrayList();
 
     public NavigationHandlerImpl()
@@ -77,7 +81,7 @@ public class NavigationHandlerImpl
 
         String viewId = facesContext.getViewRoot().getViewId();
         Map casesMap = getNavigationCases(facesContext);
-        NavigationCaseConfig navigationCase = null;
+        NavigationCase navigationCase = null;
 
         List casesList = (List)casesMap.get(viewId);
         if (casesList != null)
@@ -161,11 +165,11 @@ public class NavigationHandlerImpl
         }
     }
 
-    private NavigationCaseConfig calcMatchingNavigationCase(List casesList, String actionRef, String outcome)
+    private NavigationCase calcMatchingNavigationCase(List casesList, String actionRef, String outcome)
     {
         for (int i = 0, size = casesList.size(); i < size; i++)
         {
-            NavigationCaseConfig caze = (NavigationCaseConfig)casesList.get(i);
+            NavigationCase caze = (NavigationCase)casesList.get(i);
             String cazeOutcome = caze.getFromOutcome();
             String cazeActionRef = caze.getFromAction();
             if ((cazeOutcome == null || cazeOutcome.equals(outcome)) &&
@@ -184,27 +188,23 @@ public class NavigationHandlerImpl
 
     private Map getNavigationCases(FacesContext facesContext)
     {
-        if (_cazes == null)
+        if (_navigationCases == null)
         {
             synchronized(this) 
             {
-                if (_cazes == null)
+                if (_navigationCases == null)
                 {
                     ExternalContext externalContext = facesContext.getExternalContext();
-                    FacesConfigFactory fcf = MyFacesFactoryFinder.getFacesConfigFactory(externalContext);
-                    FacesConfig fc = fcf.getFacesConfig(externalContext);
+                    RuntimeConfig runtimeConfig = RuntimeConfig.getCurrentInstance(externalContext);
         
-                    List rules = fc.getNavigationRuleConfigList();
+                    Collection rules = runtimeConfig.getNavigationRules();
                     int rulesSize = rules.size();
                     Map cases = new HashMap(HashMapUtils.calcCapacity(rulesSize));
                     List wildcardKeys = new ArrayList();
-        
-                    for (int i = 0; i < rulesSize; i++)
+
+                    for (Iterator iterator = rules.iterator(); iterator.hasNext();)
                     {
-                        NavigationRuleConfig rule = (NavigationRuleConfig)rules.get(i);
-                        List cazeList = rule.getNavigationCaseConfigList();
-                        int sizej = cazeList.size();
-        
+                        NavigationRule rule = (NavigationRule) iterator.next();
                         String fromViewId = rule.getFromViewId();
         
                         //specification 7.4.2 footnote 4 - missing fromViewId is allowed:
@@ -220,19 +220,16 @@ public class NavigationHandlerImpl
                         List list = (List) cases.get(fromViewId);
                         if (list == null)
                         {
-                            list = new ArrayList(sizej);
+                            list = new ArrayList(rule.getNavigationCases());
                             cases.put(fromViewId, list);
                             if (fromViewId.endsWith(ASTERISK))
                             {
                                 wildcardKeys.add(fromViewId);
                             }
+                        } else {
+                            list.addAll(rule.getNavigationCases());
                         }
         
-                        for (int j = 0; j < sizej; j++)
-                        {
-                            NavigationCaseConfig navcase = (NavigationCaseConfig)cazeList.get(j);
-                            list.add(navcase);
-                        }
                     }
                     Collections.sort(wildcardKeys, new KeyComparator());
                         
@@ -242,13 +239,13 @@ public class NavigationHandlerImpl
                         // gives us the peace of mind that some good optimizing compiler
                         // will not rearrange the execution of the assignment to an 
                         // earlier time, before all init code completes
-                        _cazes = cases;
+                        _navigationCases = cases;
                         _wildcardKeys = wildcardKeys;
                     }
                 }
             }
         }
-        return _cazes;
+        return _navigationCases;
     }
 
     private static final class KeyComparator

@@ -21,6 +21,7 @@ package net.sourceforge.myfaces.confignew.impl.digester.elements;
 
 import java.util.ArrayList;
 import java.util.List;
+import javax.faces.el.ValueBinding;
 
 
 /**
@@ -35,6 +36,7 @@ public class ManagedProperty implements net.sourceforge.myfaces.confignew.elemen
     private String value;
     private MapEntries mapEntries;
     private ListEntries listEntries;
+    private ValueBinding valueBinding;
 
 
     public int getType()
@@ -125,4 +127,17 @@ public class ManagedProperty implements net.sourceforge.myfaces.confignew.elemen
     {
         this.value = value;
     }
+
+
+    public ValueBinding getValueBinding()
+    {
+        return valueBinding;
+    }
+
+
+    public void setValueBinding(ValueBinding valueBinding)
+    {
+        this.valueBinding = valueBinding;
+    }
+
 }

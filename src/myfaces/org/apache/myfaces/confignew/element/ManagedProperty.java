@@ -19,10 +19,23 @@
 
 package net.sourceforge.myfaces.confignew.element;
 
+import javax.faces.el.ValueBinding;
+
+
 /**
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.2  2004/06/16 23:02:22  o_rossmueller
+ * merged confignew_branch
+ *
+ * Revision 1.1.2.1  2004/06/13 15:59:06  o_rossmueller
+ * started integration of new config mechanism:
+ * - factories
+ * - components
+ * - render kits
+ * - managed beans + managed properties (no list/map initialization)
+ *
  * Revision 1.1  2004/05/17 14:28:26  manolito
  * new configuration concept
  *
@@ -43,4 +56,8 @@ public interface ManagedProperty
     public MapEntries getMapEntries();
     public String getValue();
     public ListEntries getListEntries();
+
+    // used to cache ValueBinding instances
+    public ValueBinding getValueBinding();
+    public void setValueBinding(ValueBinding valueBinding);
 }

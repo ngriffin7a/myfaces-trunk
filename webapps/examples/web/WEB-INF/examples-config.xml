@@ -13,7 +13,7 @@
     <managed-bean>
         <managed-bean-name>calcForm</managed-bean-name>
         <managed-bean-class>net.sourceforge.myfaces.examples.example1.CalcForm</managed-bean-class>
-        <managed-bean-scope>request</managed-bean-scope>        
+        <managed-bean-scope>request</managed-bean-scope>
     </managed-bean>
 
     <managed-bean>

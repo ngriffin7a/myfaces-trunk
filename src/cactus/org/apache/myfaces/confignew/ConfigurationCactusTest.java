@@ -19,20 +19,28 @@
 
 package net.sourceforge.myfaces.confignew;
 
-import java.io.InputStream;
-import java.util.List;
 import java.util.Iterator;
-
-import javax.faces.application.ViewHandler;
-import javax.faces.application.ApplicationFactory;
 import javax.faces.FactoryFinder;
+import javax.faces.webapp.FacesServlet;
+import javax.faces.lifecycle.Lifecycle;
+import javax.faces.lifecycle.LifecycleFactory;
+import javax.faces.application.ApplicationFactory;
+import javax.faces.application.NavigationHandler;
+import javax.faces.application.StateManager;
+import javax.faces.application.ViewHandler;
+import javax.faces.el.PropertyResolver;
+import javax.faces.el.VariableResolver;
 import javax.faces.event.PhaseListener;
+import javax.servlet.ServletContext;
 
-import org.apache.cactus.ServletTestCase;
-import net.sourceforge.myfaces.confignew.impl.digester.DigesterFacesConfigUnmarshallerImpl;
-import net.sourceforge.myfaces.confignew.impl.digester.elements.*;
-import net.sourceforge.myfaces.context.servlet.ServletExternalContextImpl;
+import net.sourceforge.myfaces.application.NavigationHandlerImpl;
+import net.sourceforge.myfaces.application.jsp.JspStateManagerImpl;
 import net.sourceforge.myfaces.application.jsp.JspViewHandlerImpl;
+import net.sourceforge.myfaces.context.servlet.ServletExternalContextImpl;
+import net.sourceforge.myfaces.el.PropertyResolverImpl;
+import net.sourceforge.myfaces.el.VariableResolverImpl;
+import net.sourceforge.myfaces.confignew.element.ManagedBean;
+import org.apache.cactus.ServletTestCase;
 
 
 public class ConfigurationCactusTest extends ServletTestCase
@@ -59,11 +67,8 @@ public class ConfigurationCactusTest extends ServletTestCase
     public void testConfiguration() throws Exception
     {
         ServletExternalContextImpl externalContext = new ServletExternalContextImpl(request.getSession().getServletContext(), null, null);
-        // This can be removed as soon as newconfig becomes regular config
-        FacesConfigurator configurator = new FacesConfigurator(externalContext);
-        configurator.configure();
 
-        // test if everything is configured correctly
+        // test decorator pattern support
 
         // application factory
         ApplicationFactory applicationFactory = (ApplicationFactory) FactoryFinder.getFactory(FactoryFinder.APPLICATION_FACTORY);
@@ -71,27 +76,75 @@ public class ConfigurationCactusTest extends ServletTestCase
 
         javax.faces.application.Application application = applicationFactory.getApplication();
 
+        assertEquals("messageBundleA", application.getMessageBundle());
+
+        LifecycleFactory lifecycleFactory = (LifecycleFactory) FactoryFinder.getFactory(FactoryFinder.LIFECYCLE_FACTORY);
+        assertEquals(TestLifecycleFactory.class, lifecycleFactory.getClass());
+
         // view handler
         ViewHandler viewHandler = application.getViewHandler();
 
         assertEquals(TestViewHandlerA.class, viewHandler.getClass());
-        assertEquals(((TestViewHandlerA)viewHandler).getDelegate().getClass(), JspViewHandlerImpl.class);
+        assertEquals(TestViewHandlerB.class, ((TestViewHandlerA) viewHandler).getDelegate().getClass());
+        assertEquals(JspViewHandlerImpl.class, ((TestViewHandlerB) ((TestViewHandlerA) viewHandler).getDelegate()).getDelegate().getClass());
+
+        // navigation handler
+        NavigationHandler navigationHandler = application.getNavigationHandler();
+
+        assertEquals(TestNavigationHandler.class, navigationHandler.getClass());
+        assertEquals(NavigationHandlerImpl.class, ((TestNavigationHandler) navigationHandler).getDelegate().getClass());
 
         // state manager
+        StateManager stateManager = application.getStateManager();
 
-        // ...
+        assertEquals(TestStateManager.class, stateManager.getClass());
+        assertEquals(JspStateManagerImpl.class, ((TestStateManager) stateManager).getDelegate().getClass());
+
+        // PropvertyResolver
+        PropertyResolver propertyResolver = application.getPropertyResolver();
+
+        assertEquals(TestPropertyResolver.class, propertyResolver.getClass());
+        assertEquals(PropertyResolverImpl.class, ((TestPropertyResolver) propertyResolver).getDelegate().getClass());
+
+        // VariableResolver
+        VariableResolver variableResolver = application.getVariableResolver();
+
+        assertEquals(TestVariableResolver.class, variableResolver.getClass());
+        assertEquals(VariableResolverImpl.class, ((TestVariableResolver) variableResolver).getDelegate().getClass());
+
 
         // RuntimeConfig
 
-        // LifecycleConfig
-        LifecycleConfig lifecycleConfig = LifecycleConfig.getCurrentInstance(externalContext);
+        RuntimeConfig runtimeConfig = RuntimeConfig.getCurrentInstance(externalContext);
 
-        assertEquals(2, lifecycleConfig.getLifecyclePhaseListeners().size());
-        for (Iterator iterator = lifecycleConfig.getLifecyclePhaseListeners().iterator(); iterator.hasNext();)
+        ManagedBean bean = runtimeConfig.getManagedBean("testMap");
+        assertNotNull(bean);
+        assertNull(runtimeConfig.getManagedBean("doesNotExist"));
+
+        // Lifecycle config
+        ServletContext context = (ServletContext) externalContext.getContext();
+        String lifecycleId = context.getInitParameter(FacesServlet.LIFECYCLE_ID_ATTR);
+
+        if (lifecycleId == null) {
+            lifecycleId = LifecycleFactory.DEFAULT_LIFECYCLE;
+        }
+
+        Lifecycle lifecycle = (Lifecycle) lifecycleFactory.getLifecycle(lifecycleId);
+
+        javax.faces.event.PhaseListener[] phaseListeners = lifecycle.getPhaseListeners();
+
+        assertEquals(2, phaseListeners.length);
+
+        for (int i = 0; i < phaseListeners.length; i++)
         {
-            PhaseListener listener = (PhaseListener) iterator.next();
+            PhaseListener listener = phaseListeners[i];
+
             assertTrue(listener instanceof TestPhaseListenerA || listener instanceof TestPhaseListenerB);
         }
     }
 
+
+    public void testNavigationRules() {
+        // TODO:
+    }
 }

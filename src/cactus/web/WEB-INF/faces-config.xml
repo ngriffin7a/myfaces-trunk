@@ -8,9 +8,7 @@
 
 <faces-config>
 
-    <application>
-        <view-handler>net.sourceforge.myfaces.application.jsp.JspViewHandlerImpl</view-handler>
-    </application>
+    <!-- these settings have precedence over test-config.xml -->
 
     <lifecycle>
         <phase-listener>net.sourceforge.myfaces.confignew.TestPhaseListenerA</phase-listener>
@@ -40,6 +38,7 @@
 
     <application>
         <view-handler>net.sourceforge.myfaces.confignew.TestViewHandlerA</view-handler>
+        <message-bundle>messageBundleA</message-bundle>
     </application>
 
     <lifecycle>
@@ -47,7 +46,7 @@
     </lifecycle>
 
     <factory>
-        <application-factory>net.sourceforge.myfaces.confignew.TestApplicationFactory</application-factory>
+        <lifecycle-factory>net.sourceforge.myfaces.confignew.TestLifecycleFactory</lifecycle-factory>
     </factory>
 
 </faces-config>

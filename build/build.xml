@@ -95,6 +95,9 @@
         <pathelement location="${myfaces.jar}"/>
         <pathelement location="${informa.jar}"/>
         <pathelement location="${jdom.jar}"/>
+        <pathelement location="${commons-beanutils.jar}"/>
+        <pathelement location="${commons-collections.jar}"/>
+        <pathelement location="${commons-digester.jar}"/>
     </path>
 
     <target name="myfaces-jar"

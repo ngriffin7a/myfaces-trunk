@@ -25,6 +25,9 @@
         <pathelement location="${junit.jar}"/>
         <pathelement location="${commons-logging.jar}"/>
         <pathelement location="${junit.classes.dir}"/>
+        <pathelement location="${commons-beanutils.jar}"/>
+        <pathelement location="${commons-collections.jar}"/>
+        <pathelement location="${commons-digester.jar}"/>
     </path>
 
     <target name="junit" depends="-compile-for-junit,-myfaces-jar">

@@ -23,6 +23,8 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import net.sourceforge.myfaces.util.ClassUtils;
+
 
 /**
  * @author <a href="mailto:oliver@rossmueller.com">Oliver Rossmueller</a>
@@ -31,7 +33,8 @@ public class ManagedBean implements net.sourceforge.myfaces.confignew.element.Ma
 {
 
     private String name;
-    private String beanClass;
+    private String beanClassName;
+    private Class beanClass;
     private String scope;
     private List property = new ArrayList();
     private MapEntries mapEntries;
@@ -90,15 +93,27 @@ public class ManagedBean implements net.sourceforge.myfaces.confignew.element.Ma
     }
 
 
-    public String getManagedBeanClass()
+    public String getManagedBeanClassName()
     {
+        return beanClassName;
+    }
+
+
+    public Class getManagedBeanClass()
+    {
+        if (beanClassName == null) {
+            return null;
+        }
+        if (beanClass == null) {
+            beanClass = ClassUtils.classForName(beanClassName);
+        }
         return beanClass;
     }
 
 
     public void setBeanClass(String beanClass)
     {
-        this.beanClass = beanClass;
+        this.beanClassName = beanClass;
     }
 
 

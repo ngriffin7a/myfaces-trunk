@@ -1,4 +1,4 @@
-/**
+/*
  * MyFaces - the free JSF implementation
  * Copyright (C) 2003, 2004  The MyFaces Team (http://myfaces.sourceforge.net)
  *
@@ -16,35 +16,16 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package net.sourceforge.myfaces.examples.misc;
+
+package net.sourceforge.myfaces.confignew;
+
+import net.sourceforge.myfaces.lifecycle.LifecycleFactoryImpl;
+
 
 /**
- * Global (dynamically changeable) options for examples application.
- * @author Manfred Geiler (latest modification by $Author$)
- * @version $Revision$ $Date$
+ * @author <a href="mailto:oliver@rossmueller.com">Oliver Rossmueller</a>
  */
-public class GlobalOptions
+public class TestLifecycleFactory extends LifecycleFactoryImpl
 {
-    private String _pageLayout;
-
-    public String getPageLayout()
-    {
-        return _pageLayout;
-    }
-
-    public void setPageLayout(String pageLayout)
-    {
-        _pageLayout = pageLayout;
-    }
-
-
-    public String getNumericAsString() {
-        return "23";
-    }
-
-    
-    public long getNumeric() {
-        return 23L;
-    }
 
 }

@@ -28,6 +28,14 @@ import java.util.Iterator;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.2  2004/06/16 23:02:23  o_rossmueller
+ * merged confignew_branch
+ *
+ * Revision 1.1.2.1  2004/06/16 01:25:52  o_rossmueller
+ * refactorings: FactoryFinder, decorator creation, dispenser (removed reverse order)
+ * bug fixes
+ * additional tests
+ *
  * Revision 1.1  2004/05/17 14:28:27  manolito
  * new configuration concept
  *
@@ -88,19 +96,19 @@ public interface FacesConfigDispenser
     /** @return Iterator over message bundle names (in reverse order!) */
     public String getMessageBundle();
 
-    /** @return Iterator over NavigationHandler class names (in reverse order!) */
+    /** @return Iterator over NavigationHandler class names */
     public Iterator getNavigationHandlerIterator();
 
-    /** @return Iterator over ViewHandler class names (in reverse order!) */
+    /** @return Iterator over ViewHandler class names */
     public Iterator getViewHandlerIterator();
 
-    /** @return Iterator over StateManager class names (in reverse order!) */
+    /** @return Iterator over StateManager class names*/
     public Iterator getStateManagerIterator();
 
-    /** @return Iterator over PropertyResolver class names (in reverse order!) */
+    /** @return Iterator over PropertyResolver class names */
     public Iterator getPropertyResolverIterator();
 
-    /** @return Iterator over VariableResolver class names (in reverse order!) */
+    /** @return Iterator over VariableResolver class names  */
     public Iterator getVariableResolverIterator();
 
     /** @return the default locale name */
