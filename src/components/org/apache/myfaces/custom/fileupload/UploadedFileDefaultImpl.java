@@ -15,6 +15,7 @@
  */
 package net.sourceforge.myfaces.custom.fileupload;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -25,6 +26,10 @@ import org.apache.commons.fileupload.FileItem;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  *          $Log$
+ *          Revision 1.3  2004/07/12 03:05:54  svieujot
+ *          Switch the FileItem for a byte[] because FileItem isn't serializable :
+ *          java.io.NotSerializableException: org.apache.commons.fileupload.DeferredFileOutputStream
+ *
  *          Revision 1.2  2004/07/01 21:53:05  mwessendorf
  *          ASF switch
  *
@@ -41,7 +46,7 @@ public class UploadedFileDefaultImpl implements UploadedFile
 
     private String _name = null;
     private String _contentType = null;
-    private FileItem fileItem;
+    private byte[] bytes;
 
 
     public UploadedFileDefaultImpl()
@@ -49,12 +54,16 @@ public class UploadedFileDefaultImpl implements UploadedFile
     }
 
 
-    public UploadedFileDefaultImpl(FileItem fileItem)
+    public UploadedFileDefaultImpl(FileItem fileItem) throws IOException
     {
-        this.fileItem = fileItem;
+        int sizeInBytes = (int)fileItem.getSize();
+    	bytes = new byte[sizeInBytes];
+    	fileItem.getInputStream().read(bytes);
 
-        _name = fileItem.getName();
-        _contentType = fileItem.getContentType();
+    	if (bytes.length != 0) {
+    		_name = fileItem.getName();
+    		_contentType = fileItem.getContentType();
+    	}
     }
 
 
@@ -63,10 +72,8 @@ public class UploadedFileDefaultImpl implements UploadedFile
      *
      * @return file contents
      */
-    public byte[] getBytes() throws IOException
+    public byte[] getBytes()
     {
-        byte[] bytes = new byte[(int) fileItem.getSize()];
-        fileItem.getInputStream().read(bytes);
         return bytes;
     }
 
@@ -79,7 +86,7 @@ public class UploadedFileDefaultImpl implements UploadedFile
      */
     public InputStream getInputStream() throws IOException
     {
-        return fileItem.getInputStream();
+    	return new ByteArrayInputStream( bytes );
     }
 
 
@@ -106,6 +113,8 @@ public class UploadedFileDefaultImpl implements UploadedFile
      * @return
      */
     public long getSize() {
-        return fileItem.getSize();
+    	if( bytes == null )
+    		return 0;
+    	return bytes.length;
     }
 }
