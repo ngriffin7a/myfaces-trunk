@@ -8,9 +8,9 @@
         <attributes collection="basic" />
         <attribute name="src" />
 
-        <component type="UIGraphic">
+        <uiComponent type="UIGraphic">
             <attributes collection="basic" />
-        </component>
+        </uiComponent>
     </renderer>
 
 </definition>

@@ -19,13 +19,13 @@
 package net.sourceforge.myfaces.renderkit.config;
 
 import net.sourceforge.myfaces.renderkit.attr.AttrDescrImpl;
+import net.sourceforge.myfaces.util.logging.LogUtil;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import javax.faces.component.AttributeDescriptor;
-import javax.faces.context.FacesContext;
 import java.util.*;
 
 /**
@@ -39,36 +39,30 @@ public class RendererConfiguration
     private static final String RENDERER_RESOURCE =
             "net.sourceforge.myfaces.renderkit.config.".replace('.','/') + "Renderer.xml";
 
-    private static final String ELEMENT_ATTR_DESCR = "attrdesc";
-    private static final String ELEMENT_COLLECTION = "collection";
-    private static final String ELEMENT_DEFINITION = "definition";
-    private static final String ELEMENT_REHDERER = "renderer";
-    private static final String ELEMENT_ATTRIBUTE = "attribute";
-    private static final String ELEMENT_ATTRIBUTES = "attributes";
-    private static final String ELEMENT_COMPONENT = "component";
-    private static final String ATTR_NAME = "name";
-    private static final String ATTR_COLLECTION = "collection";
-    private static final String ATTR_TYPE = "type";
-    private static final String ATTR_VALUE = "value";
-    private static final String ATTRIBUTE_DESCRIPTOR = "attributeDescriptor";
-    private static final String ATTRIBUTE_DESCRIPTOR_ARRAY = "collection";
+    private static final String ELEMENT_ATTR_DESCR  = "attrdesc";
+    private static final String ELEMENT_ATTRIBUTE   = "attribute";
+    private static final String ELEMENT_ATTRIBUTES  = "attributes";
+    private static final String ELEMENT_DEFINITION  = "definition";
+    private static final String ELEMENT_COLLECTION  = "collection";
+    private static final String ELEMENT_COLLECTIONS = "collections";
+    private static final String ELEMENT_COMPONENT   = "uiComponent";
+    private static final String ELEMENT_REHDERER    = "renderer";
+
+
+    private static final String ATTR_NAME           = "name";
+    private static final String ATTR_COLLECTION     = "collection";
+    private static final String ATTR_TYPE           = "type";
 
     private static final int TYPE_ATTRIBUTE_MAP = 0;
     private static final int TYPE_COLLECTION_MAP = 1;
     private static final int TYPE_RENDERER_MAP = 2;
-    private static final int TYPE_COMPONENT_MAP = 3;
 
     private static final Object CLASS_LOCK = RendererConfiguration.class;
 
-    public static AttributeDescriptor[] getAttributeDescriptors(FacesContext context, String rendererType)
+    public static Map getAttributeDescriptor(String rendererType)
     {
         Map rendererMap = getRendererMap();
-        ArrayList list = (ArrayList)rendererMap.get(rendererType);
-        if (list == null || list.size() == 0)
-        {
-            return new AttributeDescriptor[] {};
-        }
-        return (AttributeDescriptor[])list.toArray(new AttributeDescriptor[] {});
+        return (Map)rendererMap.get(rendererType);
     }
 
     private static final Map getAttributeMap()
@@ -86,8 +80,7 @@ public class RendererConfiguration
         return getMap(TYPE_RENDERER_MAP);
     }
 
-    private static Map _rendererMap = null;
-    private static Map _componentMap = null;
+    private static Map _rendererComponentMap = null;
 
     private static Map _attributeMap = null;
     private static Map _collectionMap = null;
@@ -105,8 +98,7 @@ public class RendererConfiguration
                 catch (DocumentParseException e)
                 {
                     _attributeMap = new HashMap(0);
-                    // TODO: log
-                    e.printStackTrace();  //To change body of catch statement use Options | File Templates.
+                    LogUtil.getLogger().warning("Error parsing Document. " + e.getMessage() + ".");
                     return _attributeMap;
                 }
             }
@@ -115,8 +107,7 @@ public class RendererConfiguration
         {
             case TYPE_ATTRIBUTE_MAP: return _attributeMap;
             case TYPE_COLLECTION_MAP: return _collectionMap;
-            case TYPE_RENDERER_MAP: return _rendererMap;
-            case TYPE_COMPONENT_MAP: return _componentMap;
+            case TYPE_RENDERER_MAP: return _rendererComponentMap;
             default: throw new IllegalArgumentException("Type " + type + " unknokn.");
         }
     }
@@ -124,8 +115,8 @@ public class RendererConfiguration
     private static void initRendererMaps()
         throws DocumentParseException
     {
-        _rendererMap = new HashMap();
-        _componentMap = new HashMap();
+        _rendererComponentMap = new HashMap();
+        Map rendererMap = new HashMap();
 
         Map attributeMap = getMap(TYPE_ATTRIBUTE_MAP);
         Map collectionMap = getMap(TYPE_COLLECTION_MAP);
@@ -139,7 +130,7 @@ public class RendererConfiguration
             if (definitionChild.getNodeType() == Node.ELEMENT_NODE &&
                 definitionChild.getNodeName().equals(ELEMENT_REHDERER))
             {
-                ArrayList attributeDescriptions = new ArrayList();
+                ArrayList rendererAttrDescrList = new ArrayList();
                 Element renderer = (Element)definitionChild;
                 String rendererType = renderer.getAttribute(ATTR_TYPE);
 
@@ -150,41 +141,38 @@ public class RendererConfiguration
                     if (rendererChild.getNodeType() == Node.ELEMENT_NODE &&
                         rendererChild.getNodeName().equals(ELEMENT_ATTRIBUTE))
                     {
+                        // attribute
                         Element attribute = (Element)rendererChild;
-                        String attributeName = attribute.getAttribute(ATTR_NAME);
-                        if (attributeName != null && attributeName.length() > 0)
-                        {
-                            AttributeDescriptor descr = (AttributeDescriptor)attributeMap.get(attributeName);
-                            if (descr != null)
-                            {
-                                attributeDescriptions.add(descr);
-                            }
-                            else
-                            {
-                                //TODO: log
-                            }
-                        }
+                        addAttribute(attribute,  attributeMap, rendererAttrDescrList);
                     }
                     else if (rendererChild.getNodeType() == Node.ELEMENT_NODE &&
                           rendererChild.getNodeName().equals(ELEMENT_ATTRIBUTES))
                     {
-                        Element attribute = (Element)rendererChild;
-                        String collectionName = attribute.getAttribute(ATTR_COLLECTION);
-                        if (collectionName != null && collectionName.length() > 0)
+                        // attributes
+                        Element attributes = (Element)rendererChild;
+                        addAttributes(attributes, collectionMap, rendererAttrDescrList);
+                    }
+                    else if (rendererChild.getNodeType() == Node.ELEMENT_NODE &&
+                             rendererChild.getNodeName().equals(ELEMENT_COMPONENT))
+                    {
+                        Element component = (Element)rendererChild;
+                        String componentType = component.getAttribute(ATTR_TYPE);
+                        if (componentType != null && componentType.length() > 0)
                         {
-                            ArrayList descrList = (ArrayList)collectionMap.get(collectionName);
-                            if (descrList != null)
-                            {
-                                attributeDescriptions.addAll(descrList);
-                            }
-                            else
-                            {
-                                //TODO: log
-                            }
+                            rendererMap.put(componentType, getComponentMap(component, attributeMap, collectionMap, rendererAttrDescrList));
+                        }
+                        else
+                        {
+                            LogUtil.getLogger().warning("Attribute " + ATTR_TYPE + " was expected with Element " +
+                                                        component.getNodeName() + " (ElementType = " + ELEMENT_COMPONENT + ".");
                         }
                     }
+                    else if (rendererChild.getNodeType() == Node.ELEMENT_NODE)
+                    {
+                        LogUtil.getLogger().warning("Unknokn Element found: " + rendererChild.getNodeName() + ".");
+                    }
                 }
-                _rendererMap.put(rendererType, attributeDescriptions);
+                _rendererComponentMap.put(rendererType, rendererMap);
             }
         }
     }
@@ -201,80 +189,195 @@ public class RendererConfiguration
         NodeList childNodes = defElement.getChildNodes();
         for (int i = 0, size = childNodes.getLength(); i < size; i++)
         {
-            Node n = childNodes.item(i);
-            if (n.getNodeType() == Node.ELEMENT_NODE)
+            Node definitionNode = childNodes.item(i);
+            if (definitionNode.getNodeType() == Node.ELEMENT_NODE)
             {
-                if (n.getNodeName().equals(ELEMENT_ATTR_DESCR))
+                Element definitionChild = (Element)definitionNode;
+                if (definitionChild.getNodeName().equals(ELEMENT_ATTR_DESCR))
                 {
-                    Element e = (Element)n;
-                    String attributeName = e.getAttribute(ATTR_NAME);
-                    if (attributeName != null && attributeName.length() > 0)
-                    {
-                        String className = e.getAttribute(ATTR_TYPE);
-                        Class c = null;
-                        try
-                        {
-                            c = RendererConfiguration.class.getClassLoader().loadClass(className);
-                        } catch (ClassNotFoundException e1)
-                        {
-                            //TODO: log
-                        }
-                        _attributeMap.put(attributeName,
-                                          c != null ? new AttrDescrImpl(attributeName, c) : new AttrDescrImpl(attributeName));
-                    }
-
+                    // attredesc
+                    String attributeName = definitionChild.getAttribute(ATTR_NAME);
+                    addAttributeDescriptor(definitionChild, _attributeMap, attributeName);
                 }
-                else if (n.getNodeName().equals(ELEMENT_COLLECTION))
+                else if (definitionNode.getNodeName().equals(ELEMENT_COLLECTION))
                 {
-                    Element e = (Element)n;
-                    String collectionName = e.getAttribute(ATTR_NAME);
-                    String collectionType = e.getAttribute(ATTR_TYPE);
-                    if (collectionName != null && collectionName.length() > 0 && collectionType != null)
+                    // collection
+                    String collectionName = definitionChild.getAttribute(ATTR_NAME);
+                    ArrayList attributeDescriptorList = new ArrayList();
+
+                    NodeList collectionChilds = definitionChild.getChildNodes();
+                    for (int y = 0, sizeY = collectionChilds.getLength(); y < sizeY; y++)
                     {
-                        String value = e.getAttribute(ATTR_VALUE);
-                        if (value != null)
+                        Node collectionNodeChild = collectionChilds.item(y);
+                        if (collectionNodeChild.getNodeType() == Node.ELEMENT_NODE)
                         {
-                            StringTokenizer tokenizer = new StringTokenizer(value, ",");
-                            ArrayList descrList = new ArrayList(tokenizer.countTokens());
-                            if (collectionType.equals(ATTRIBUTE_DESCRIPTOR))
+                            Element collectionChild = (Element)collectionNodeChild;
+                            if (collectionChild.getNodeName().equals(ELEMENT_COLLECTIONS))
                             {
-                                for (int y = 0; tokenizer.hasMoreTokens(); y++)
-                                {
-                                    String attributeName = tokenizer.nextToken();
-                                    AttributeDescriptor descr = (AttributeDescriptor)_attributeMap.get(attributeName);
-                                    if (descr == null)
-                                    {
-                                        // TODO: log
-                                    }
-                                    else
-                                    {
-                                        descrList.add(descr);
-                                    }
-                                }
+                                addCollections(collectionChild, attributeDescriptorList);
                             }
-                            else if (collectionType.equals(ATTRIBUTE_DESCRIPTOR_ARRAY))
+                            else if (collectionChild.getNodeName().equals(ELEMENT_ATTR_DESCR))
                             {
-                                for (int y = 0; tokenizer.hasMoreTokens(); y++)
-                                {
-                                    String attributeName = tokenizer.nextToken();
-                                    ArrayList descrArray = (ArrayList)_collectionMap.get(attributeName);
-                                    if (descrArray != null && descrArray.size() > 0)
-                                    {
-                                        descrList.addAll(descrArray);
-                                    }
-                                }
+                                addAttributeDescriptor(collectionChild, attributeDescriptorList);
                             }
                             else
                             {
-                                // TODO: log
+                                LogUtil.getLogger().warning("Unknokn Element found: " + definitionChild.getNodeName() + ".");
                             }
-                            _collectionMap.put(collectionName, descrList);
                         }
                     }
+                    _collectionMap.put(collectionName, attributeDescriptorList);
                 }
             }
         }
     }
+
+    private static Map getComponentMap(Element e, Map attributeMap, Map collectionMap, ArrayList rendererAttributeList)
+    {
+        if (!e.getNodeName().equals(ELEMENT_COMPONENT))
+        {
+            throw new IllegalArgumentException("Element must be of type " + ELEMENT_COMPONENT);
+        }
+
+        ArrayList attributeDescriptorList = new ArrayList();
+
+        NodeList componentChilds = e.getChildNodes();
+        for (int i = 0, size = componentChilds.getLength(); i < size; i++)
+        {
+            Node componentChild = componentChilds.item(i);
+            if (componentChild.getNodeType() == Node.ELEMENT_NODE &&
+                componentChild.getNodeName().equals(ELEMENT_ATTRIBUTE))
+            {
+                // attribute
+                Element attribute = (Element)componentChild;
+                addAttribute(attribute,  attributeMap, attributeDescriptorList);
+            }
+            else if (componentChild.getNodeType() == Node.ELEMENT_NODE &&
+                  componentChild.getNodeName().equals(ELEMENT_ATTRIBUTES))
+            {
+                // attributes
+                Element attributes = (Element)componentChild;
+                addAttributes(attributes, collectionMap, attributeDescriptorList);
+            }
+        }
+
+        for (int i = 0, size= rendererAttributeList.size(); i < size; i++)
+        {
+            attributeDescriptorList.add(rendererAttributeList.get(i));
+        }
+
+        Map map = new HashMap(attributeDescriptorList.size());
+        for (int i = 0, size = attributeDescriptorList.size(); i < size; i++)
+        {
+            AttributeDescriptor descr = (AttributeDescriptor)attributeDescriptorList.get(i);
+            map.put(descr.getName(), descr);
+        }
+        return map;
+    }
+
+    private static void addAttribute(Element attribute, Map attributeMap, List attributeDescriptorList)
+    {
+        // attribute
+        String attributeName = attribute.getAttribute(ATTR_NAME);
+        if (attributeName != null && attributeName.length() > 0)
+        {
+            AttributeDescriptor descr = (AttributeDescriptor)attributeMap.get(attributeName);
+            if (descr != null)
+            {
+                attributeDescriptorList.add(descr);
+            }
+            else
+            {
+                LogUtil.getLogger().warning("AttributeDescriptor for Attribute with name " + attributeName +" not found.");
+            }
+        }
+    }
+
+    private static void addAttributes(Element attribute, Map collectionMap, List attributeDescriptorList)
+    {
+        String collectionName = attribute.getAttribute(ATTR_COLLECTION);
+        if (collectionName != null && collectionName.length() > 0)
+        {
+            ArrayList descrList = (ArrayList)collectionMap.get(collectionName);
+            if (descrList != null)
+            {
+                attributeDescriptorList.addAll(descrList);
+            }
+            else
+            {
+                LogUtil.getLogger().warning("AttributeDescriptors-Collection with name " + collectionName +" not found.");
+            }
+        }
+    }
+
+    private static void addCollections(Element e, List attributeDescriptorList)
+    {
+        if (!e.getNodeName().equals(ELEMENT_COLLECTIONS))
+        {
+            throw new IllegalArgumentException("Element must be of type " + ELEMENT_COLLECTIONS);
+        }
+        Map collectionMap = getCollectionMap();
+
+        String value = DomUtil.getText(e);
+        StringTokenizer tokenizer = new StringTokenizer(value, ",");
+        while (tokenizer.hasMoreTokens())
+        {
+            String collectionName = tokenizer.nextToken().trim();
+            ArrayList list = (ArrayList)collectionMap.get(collectionName);
+            if (list != null && list.size() > 0)
+            {
+                attributeDescriptorList.addAll(list);
+            }
+        }
+    }
+
+    private static void addAttributeDescriptor(Element e, List list)
+    {
+        AttributeDescriptor descr = getAttributeDescriptor(e);
+        if (descr != null)
+        {
+            list.add(descr);
+        }
+    }
+
+    private static void addAttributeDescriptor(Element e, Map map, String key)
+    {
+        AttributeDescriptor descr = getAttributeDescriptor(e);
+        if (descr != null)
+        {
+            map.put(key, descr);
+        }
+    }
+
+    private static AttributeDescriptor getAttributeDescriptor(Element e)
+    {
+        if (!e.getNodeName().equals(ELEMENT_ATTR_DESCR))
+        {
+            throw new IllegalArgumentException("Element must be of type " + ELEMENT_ATTR_DESCR);
+        }
+
+        String attributeName = e.getAttribute(ATTR_NAME);
+        if (attributeName != null && attributeName.length() > 0)
+        {
+            String className = e.getAttribute(ATTR_TYPE);
+            Class c = null;
+            if (className != null && className.length() > 0)
+            {
+                try
+                {
+                    c = RendererConfiguration.class.getClassLoader().loadClass(className);
+                }
+                catch (ClassNotFoundException e1)
+                {
+                    LogUtil.getLogger().warning("Class not found " + className + ".");
+                    return null;
+                }
+            }
+            return c != null ? new AttrDescrImpl(attributeName, c) : new AttrDescrImpl(attributeName);
+        }
+        return null;
+    }
+
 
     public static void main(String[] argv)
     {
@@ -300,27 +403,22 @@ public class RendererConfiguration
             }
         }
 
-        map = getRendererMap();
-        keySet = map.keySet();
+        System.out.println("Renderer: Image");
+        Map rendererMap = getAttributeDescriptor("Image");
+        keySet = rendererMap.keySet();
         for (Iterator it = keySet.iterator(); it.hasNext(); )
         {
-            String rendererName = (String)it.next();
-            System.out.println("Renderer: " + rendererName);
-            ArrayList descrList = (ArrayList)map.get(rendererName);
-            for (int i = 0, size = descrList.size(); i < size; i++)
+            String componentType = (String)it.next();
+            System.out.println("   Component: " + componentType);
+            Map attributeMap = (Map)rendererMap.get(componentType);
+            keySet = attributeMap.keySet();
+            for (Iterator attrIt = keySet.iterator(); attrIt.hasNext(); )
             {
-                AttributeDescriptor descr = (AttributeDescriptor)descrList.get(i);
-                System.out.println("   Attribute: " + descr.getName() + " type: " + descr.getType().getName());
+                AttributeDescriptor descr = (AttributeDescriptor)attributeMap.get(attrIt.next());
+                System.out.println("       Attribute: " + descr.getName() + " type: " + descr.getType().getName());
             }
         }
-
-        AttributeDescriptor[] descr = getAttributeDescriptors(null, "Image");
-        System.out.println("--> Renderer: Image");
-        for (int i = 0; i < descr.length; i++)
-        {
-            System.out.println("   Attribute: " + descr[i].getName() + " type: " + descr[i].getType().getName());
-        }
-
     }
 
 }
+
