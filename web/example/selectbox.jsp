@@ -68,7 +68,7 @@
                 <br>
 
                 <h:command_button id="submit" commandName="calcPrice" key="button_calcprice" bundle="net.sourceforge.myfaces.examples.resource.example_messages">
-                    <f:action_listener type="net.sourceforge.myfaces.examples.components.CarConfiguratorActionListener" ></f:action_listener>
+                    <f:action_listener type="net.sourceforge.myfaces.examples.common.CarConfiguratorActionListener" ></f:action_listener>
                 </h:command_button>
             </h:form>
 

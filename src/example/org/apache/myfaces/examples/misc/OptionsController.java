@@ -16,32 +16,22 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package net.sourceforge.myfaces.examples.diverse.controller;
+package net.sourceforge.myfaces.examples.misc;
 
-import net.sourceforge.myfaces.util.logging.LogUtil;
-
-import javax.faces.event.ActionListener;
-import javax.faces.event.ActionEvent;
-import javax.faces.event.AbortProcessingException;
-import javax.faces.event.PhaseId;
+import javax.faces.context.FacesContext;
+import javax.faces.event.CommandEvent;
 
 /**
  * DOCUMENT ME!
- * @author Manfred Geiler (latest modification by $Author$)
+ * @author Manfred Geiler
  * @version $Revision$ $Date$
  */
-public class ActionListenerTest
-    implements ActionListener
+public class OptionsController
 {
-    public PhaseId getPhaseId()
+    public boolean setLocale(FacesContext facesContext, CommandEvent commandEvent)
     {
-        return PhaseId.PROCESS_VALIDATIONS;
+        OptionsForm form = (OptionsForm)facesContext.getModelValue("optionsForm");
+        facesContext.setLocale(form.getLocale());
+        return false;
     }
-
-    public void processAction(ActionEvent actionevent)
-        throws AbortProcessingException
-    {
-        LogUtil.getLogger().info("***************** ProcessAction was called!");
-    }
-
 }

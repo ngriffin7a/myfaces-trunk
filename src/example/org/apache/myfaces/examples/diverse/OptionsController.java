@@ -16,9 +16,7 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package net.sourceforge.myfaces.examples.diverse.controller;
-
-import net.sourceforge.myfaces.examples.diverse.model.UCaseForm;
+package net.sourceforge.myfaces.examples.diverse;
 
 import javax.faces.context.FacesContext;
 import javax.faces.event.CommandEvent;
@@ -28,19 +26,12 @@ import javax.faces.event.CommandEvent;
  * @author Manfred Geiler
  * @version $Revision$ $Date$
  */
-public class UCaseController
+public class OptionsController
 {
-    public boolean calc(FacesContext facesContext, CommandEvent commandEvent)
+    public boolean setLocale(FacesContext facesContext, CommandEvent commandEvent)
     {
-        UCaseForm form = (UCaseForm)facesContext.getModelValue("ucaseForm");
-        if (commandEvent.getCommandName().equals("up"))
-        {
-            form.uppercase();
-        }
-        else if (commandEvent.getCommandName().equals("low"))
-        {
-            form.lowercase();
-        }
+        OptionsForm form = (OptionsForm)facesContext.getModelValue("optionsForm");
+        facesContext.setLocale(form.getLocale());
         return false;
     }
 }

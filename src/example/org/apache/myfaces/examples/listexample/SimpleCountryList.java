@@ -16,31 +16,33 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package net.sourceforge.myfaces.examples.diverse.model;
+package net.sourceforge.myfaces.examples.listexample;
+
+import net.sourceforge.myfaces.examples.listexample.SimpleCountry;
+
+import java.util.*;
 
 /**
  * DOCUMENT ME!
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public class SimpleCountry
+public class SimpleCountryList
 {
-    private String _name;
-    private String _isoCode;
+    private List _countries = new ArrayList();
 
-    public SimpleCountry(String name, String isoCode)
+    public SimpleCountryList()
     {
-        _name = name;
-        _isoCode = isoCode;
+        _countries.add(new SimpleCountry("AUSTRIA", "AT"));
+        _countries.add(new SimpleCountry("AZERBAIJAN", "AZ"));
+        _countries.add(new SimpleCountry("BAHAMAS", "BS"));
+        _countries.add(new SimpleCountry("BAHRAIN", "BH"));
+        _countries.add(new SimpleCountry("BANGLADESH", "BD"));
+        _countries.add(new SimpleCountry("BARBADOS", "BB"));
     }
 
-    public String getName()
+    public Iterator getCountries()
     {
-        return _name;
-    }
-
-    public String getIsoCode()
-    {
-        return _isoCode;
+        return _countries.iterator();
     }
 }

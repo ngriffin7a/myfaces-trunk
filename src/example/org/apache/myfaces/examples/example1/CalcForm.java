@@ -16,24 +16,61 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package net.sourceforge.myfaces.examples.diverse.controller;
+package net.sourceforge.myfaces.examples.example1;
 
-import net.sourceforge.myfaces.examples.diverse.model.OptionsForm;
-
-import javax.faces.context.FacesContext;
-import javax.faces.event.CommandEvent;
+import java.math.BigDecimal;
+import java.io.Serializable;
 
 /**
  * DOCUMENT ME!
  * @author Manfred Geiler
  * @version $Revision$ $Date$
  */
-public class OptionsController
+public class CalcForm
+    implements Serializable
 {
-    public boolean setLocale(FacesContext facesContext, CommandEvent commandEvent)
+    private BigDecimal number1 = new BigDecimal(0);
+    private BigDecimal number2 = new BigDecimal(0);
+    private BigDecimal result = new BigDecimal(0);
+
+    public void add()
     {
-        OptionsForm form = (OptionsForm)facesContext.getModelValue("optionsForm");
-        facesContext.setLocale(form.getLocale());
-        return false;
+        result = number1.add(number2);
     }
+
+    public void subtract()
+    {
+        result = number1.subtract(number2);
+    }
+
+    public BigDecimal getNumber1()
+    {
+        return number1;
+    }
+
+    public void setNumber1(BigDecimal number1)
+    {
+        this.number1 = number1;
+    }
+
+    public BigDecimal getNumber2()
+    {
+        return number2;
+    }
+
+    public void setNumber2(BigDecimal number2)
+    {
+        this.number2 = number2;
+    }
+
+    public BigDecimal getResult()
+    {
+        return result;
+    }
+
+    public void setResult(BigDecimal result)
+    {
+        this.result = result;
+    }
+
 }

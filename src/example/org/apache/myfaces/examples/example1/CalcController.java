@@ -16,31 +16,31 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package net.sourceforge.myfaces.examples.diverse.model;
+package net.sourceforge.myfaces.examples.example1;
 
-import java.util.*;
+import net.sourceforge.myfaces.examples.example1.CalcForm;
+
+import javax.faces.context.FacesContext;
+import javax.faces.event.CommandEvent;
 
 /**
  * DOCUMENT ME!
- * @author Thomas Spiegl (latest modification by $Author$)
+ * @author Manfred Geiler
  * @version $Revision$ $Date$
  */
-public class SimpleCountryList
+public class CalcController
 {
-    private List _countries = new ArrayList();
-
-    public SimpleCountryList()
+    public boolean calc(FacesContext facesContext, CommandEvent commandEvent)
     {
-        _countries.add(new SimpleCountry("AUSTRIA", "AT"));
-        _countries.add(new SimpleCountry("AZERBAIJAN", "AZ"));
-        _countries.add(new SimpleCountry("BAHAMAS", "BS"));
-        _countries.add(new SimpleCountry("BAHRAIN", "BH"));
-        _countries.add(new SimpleCountry("BANGLADESH", "BD"));
-        _countries.add(new SimpleCountry("BARBADOS", "BB"));
-    }
-
-    public Iterator getCountries()
-    {
-        return _countries.iterator();
+        CalcForm form = (CalcForm)facesContext.getModelValue("calcForm");
+        if (commandEvent.getCommandName().equals("add"))
+        {
+            form.add();
+        }
+        else
+        {
+            form.subtract();
+        }
+        return false;
     }
 }

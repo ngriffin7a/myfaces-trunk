@@ -16,9 +16,9 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package net.sourceforge.myfaces.examples.diverse.controller;
+package net.sourceforge.myfaces.examples.example2;
 
-import net.sourceforge.myfaces.examples.diverse.model.QuotationForm;
+import net.sourceforge.myfaces.examples.example2.QuotationForm;
 
 import javax.faces.context.FacesContext;
 import javax.faces.event.CommandEvent;

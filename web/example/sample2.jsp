@@ -28,8 +28,8 @@
 
 <body>
 
-<jsp:useBean id="q_form" class="net.sourceforge.myfaces.examples.diverse.model.QuotationForm" scope="request" />
-<jsp:useBean id="q_controller" class="net.sourceforge.myfaces.examples.diverse.controller.QuotationController" scope="application" />
+<jsp:useBean id="q_form" class="net.sourceforge.myfaces.examples.example2.QuotationForm" scope="request" />
+<jsp:useBean id="q_controller" class="net.sourceforge.myfaces.examples.example2.QuotationController" scope="application" />
 
 
 <h:use_faces>

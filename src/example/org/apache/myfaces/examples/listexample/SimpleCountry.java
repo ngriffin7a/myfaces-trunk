@@ -16,61 +16,31 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package net.sourceforge.myfaces.examples.diverse.model;
-
-import java.math.BigDecimal;
-import java.io.Serializable;
+package net.sourceforge.myfaces.examples.listexample;
 
 /**
  * DOCUMENT ME!
- * @author Manfred Geiler
+ * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public class CalcForm
-    implements Serializable
+public class SimpleCountry
 {
-    private BigDecimal number1 = new BigDecimal(0);
-    private BigDecimal number2 = new BigDecimal(0);
-    private BigDecimal result = new BigDecimal(0);
+    private String _name;
+    private String _isoCode;
 
-    public void add()
+    public SimpleCountry(String name, String isoCode)
     {
-        result = number1.add(number2);
+        _name = name;
+        _isoCode = isoCode;
     }
 
-    public void subtract()
+    public String getName()
     {
-        result = number1.subtract(number2);
+        return _name;
     }
 
-    public BigDecimal getNumber1()
+    public String getIsoCode()
     {
-        return number1;
+        return _isoCode;
     }
-
-    public void setNumber1(BigDecimal number1)
-    {
-        this.number1 = number1;
-    }
-
-    public BigDecimal getNumber2()
-    {
-        return number2;
-    }
-
-    public void setNumber2(BigDecimal number2)
-    {
-        this.number2 = number2;
-    }
-
-    public BigDecimal getResult()
-    {
-        return result;
-    }
-
-    public void setResult(BigDecimal result)
-    {
-        this.result = result;
-    }
-
 }

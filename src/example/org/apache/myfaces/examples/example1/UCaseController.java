@@ -16,9 +16,9 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package net.sourceforge.myfaces.examples.diverse.controller;
+package net.sourceforge.myfaces.examples.example1;
 
-import net.sourceforge.myfaces.examples.diverse.model.CalcForm;
+import net.sourceforge.myfaces.examples.example1.UCaseForm;
 
 import javax.faces.context.FacesContext;
 import javax.faces.event.CommandEvent;
@@ -28,18 +28,18 @@ import javax.faces.event.CommandEvent;
  * @author Manfred Geiler
  * @version $Revision$ $Date$
  */
-public class CalcController
+public class UCaseController
 {
     public boolean calc(FacesContext facesContext, CommandEvent commandEvent)
     {
-        CalcForm form = (CalcForm)facesContext.getModelValue("calcForm");
-        if (commandEvent.getCommandName().equals("add"))
+        UCaseForm form = (UCaseForm)facesContext.getModelValue("ucaseForm");
+        if (commandEvent.getCommandName().equals("up"))
         {
-            form.add();
+            form.uppercase();
         }
-        else
+        else if (commandEvent.getCommandName().equals("low"))
         {
-            form.subtract();
+            form.lowercase();
         }
         return false;
     }

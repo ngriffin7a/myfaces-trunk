@@ -63,10 +63,10 @@ public class CarConfigurator
             _cars.add(new SelectItem("c4", "Renolt ESP", null));
             _cars.add(new SelectItem("c5", "Greisler V", null));
 
-            _colors.add(new LocalizedSelectItem("black"));
-            _colors.add(new LocalizedSelectItem("blue"));
-            _colors.add(new LocalizedSelectItem("marine"));
-            _colors.add(new LocalizedSelectItem("red"));
+            _colors.add(new LocalizedSelectItem("color_black"));
+            _colors.add(new LocalizedSelectItem("color_blue"));
+            _colors.add(new LocalizedSelectItem("color_marine"));
+            _colors.add(new LocalizedSelectItem("color_red"));
 
             _extrasList.add(new LocalizedSelectItem("extra_aircond"));
             _extrasList.add(new LocalizedSelectItem("extra_sideab"));
@@ -79,10 +79,10 @@ public class CarConfigurator
             _priceList.put("c4", new BigDecimal(25000));
             _priceList.put("c5", new BigDecimal(10000));
 
-            _priceFactorColors.put("black", new BigDecimal(1.15));
-            _priceFactorColors.put("blue", new BigDecimal(1.10));
-            _priceFactorColors.put("marine", new BigDecimal(1.05));
-            _priceFactorColors.put("red", new BigDecimal(1.0));
+            _priceFactorColors.put("color_black", new BigDecimal(1.15));
+            _priceFactorColors.put("color_blue", new BigDecimal(1.10));
+            _priceFactorColors.put("color_marine", new BigDecimal(1.05));
+            _priceFactorColors.put("color_red", new BigDecimal(1.0));
 
             _priceListExtras.put("extra_aircond", new BigDecimal(510));
             _priceListExtras.put("extra_sideab", new BigDecimal(1220));

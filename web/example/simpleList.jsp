@@ -28,7 +28,7 @@
 
 <body>
 
-<jsp:useBean id="countryList" class="net.sourceforge.myfaces.examples.diverse.model.SimpleCountryList" scope="request" />
+<jsp:useBean id="countryList" class="net.sourceforge.myfaces.examples.listexample.SimpleCountryList" scope="request" />
 
 <h:use_faces>
 

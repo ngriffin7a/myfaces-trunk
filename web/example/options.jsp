@@ -30,8 +30,8 @@
 
 <h:use_faces>
 
-<jsp:useBean id="optionsForm" class="net.sourceforge.myfaces.examples.diverse.model.OptionsForm" scope="request" />
-<jsp:useBean id="optionsCtrl" class="net.sourceforge.myfaces.examples.diverse.controller.OptionsController" scope="application" />
+<jsp:useBean id="optionsForm" class="net.sourceforge.myfaces.examples.diverse.OptionsForm" scope="request" />
+<jsp:useBean id="optionsCtrl" class="net.sourceforge.myfaces.examples.diverse.OptionsController" scope="application" />
 <x:save_state id="ss1" modelReference="optionsForm.language" />
 
     <x:page_layout id="page" layoutReference="pageLayout" cssClass="pageLayout" >

@@ -31,11 +31,11 @@
 
 <body>
 
-<jsp:useBean id="calcForm" class="net.sourceforge.myfaces.examples.diverse.model.CalcForm" scope="request" />
-<jsp:useBean id="calcCtrl" class="net.sourceforge.myfaces.examples.diverse.controller.CalcController" scope="application" />
+<jsp:useBean id="calcForm" class="net.sourceforge.myfaces.examples.example1.CalcForm" scope="request" />
+<jsp:useBean id="calcCtrl" class="net.sourceforge.myfaces.examples.example1.CalcController" scope="application" />
 
-<jsp:useBean id="ucaseForm" class="net.sourceforge.myfaces.examples.diverse.model.UCaseForm" scope="request" />
-<jsp:useBean id="ucaseCtrl" class="net.sourceforge.myfaces.examples.diverse.controller.UCaseController" scope="application" />
+<jsp:useBean id="ucaseForm" class="net.sourceforge.myfaces.examples.example1.UCaseForm" scope="request" />
+<jsp:useBean id="ucaseCtrl" class="net.sourceforge.myfaces.examples.example1.UCaseController" scope="application" />
 
 <h:use_faces>
 

@@ -30,7 +30,7 @@
 
 <h:use_faces>
 
-<jsp:useBean id="list" class="net.sourceforge.myfaces.examples.diverse.model.SimpleSortableCarList" scope="request" />
+<jsp:useBean id="list" class="net.sourceforge.myfaces.examples.listexample.SimpleSortableCarList" scope="request" />
 <x:save_state id="ss1" modelReference="list.sort" />
 <x:save_state id="ss2" modelReference="list.ascending" />
 

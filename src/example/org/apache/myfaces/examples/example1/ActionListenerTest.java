@@ -16,42 +16,32 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package net.sourceforge.myfaces.examples.diverse.model;
+package net.sourceforge.myfaces.examples.example1;
 
-import javax.faces.context.FacesContext;
-import javax.faces.event.CommandEvent;
-import javax.faces.event.FacesEvent;
-import java.io.Serializable;
+import net.sourceforge.myfaces.util.logging.LogUtil;
+
+import javax.faces.event.ActionListener;
+import javax.faces.event.ActionEvent;
+import javax.faces.event.AbortProcessingException;
+import javax.faces.event.PhaseId;
 
 /**
  * DOCUMENT ME!
- * @author Manfred Geiler
+ * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public class UCaseForm
-        implements Serializable
+public class ActionListenerTest
+    implements ActionListener
 {
-    private String text = "";
-
-    public void uppercase()
+    public PhaseId getPhaseId()
     {
-        text = text.toUpperCase();
+        return PhaseId.PROCESS_VALIDATIONS;
     }
 
-    public void lowercase()
+    public void processAction(ActionEvent actionevent)
+        throws AbortProcessingException
     {
-        text = text.toLowerCase();
+        LogUtil.getLogger().info("***************** ProcessAction was called!");
     }
-
-    public String getText()
-    {
-        return text;
-    }
-
-    public void setText(String text)
-    {
-        this.text = text;
-    }
-
 
 }
