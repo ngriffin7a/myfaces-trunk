@@ -73,7 +73,7 @@ public class DataRenderer
         Iterator it = getIterator(facesContext, (UIPanel)uiComponent);
 
         // Set ModelValue VAR_ATTR
-        String varAttr = (String)uiComponent.getAttribute(JSFAttr.VAR_ATTR);
+        String varAttr = (String)uiComponent.getAttributes().get(JSFAttr.VAR_ATTR);
         ServletRequest servletRequest = (ServletRequest)facesContext.getExternalContext().getRequest();
         servletRequest.setAttribute(varAttr, it != null && it.hasNext() ? it.next() : null);
     }
@@ -82,10 +82,10 @@ public class DataRenderer
             throws IOException
     {
         //Remove iterator after last row
-         uiComponent.setAttribute(ITERATOR_ATTR, null);
+         uiComponent.getAttributes().put(ITERATOR_ATTR, null);
 
         //Reset ModelValue VAR_ATTR
-        String varAttr = (String)uiComponent.getAttribute(JSFAttr.VAR_ATTR);
+        String varAttr = (String)uiComponent.getAttributes().get(JSFAttr.VAR_ATTR);
         ServletRequest servletRequest = (ServletRequest)facesContext.getExternalContext().getRequest();
         servletRequest.setAttribute(varAttr, null);
     }
@@ -97,7 +97,7 @@ public class DataRenderer
 
     public static Iterator getIterator(FacesContext facesContext, UIPanel uiPanel)
     {
-        Iterator iterator = (Iterator)uiPanel.getAttribute(ITERATOR_ATTR);
+        Iterator iterator = (Iterator)uiPanel.getAttributes().get(ITERATOR_ATTR);
         if (iterator == null)
         {
             Object v = uiPanel.currentValue(facesContext);
@@ -121,7 +121,7 @@ public class DataRenderer
             {
                 throw new IllegalArgumentException("Value of component " + UIComponentUtils.toString(uiPanel) + " is neither collection nor array.");
             }
-            uiPanel.setAttribute(ITERATOR_ATTR, iterator);
+            uiPanel.getAttributes().put(ITERATOR_ATTR, iterator);
         }
         return iterator;
     }

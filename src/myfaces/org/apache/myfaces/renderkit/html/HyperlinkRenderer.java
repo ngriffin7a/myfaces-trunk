@@ -171,7 +171,7 @@ public class HyperlinkRenderer
         }
 
         writer.write("<a href=\"");
-        String href = (String)uiComponent.getAttribute(HTML.HREF_ATTR);
+        String href = (String)uiComponent.getAttributes().get(HTML.HREF_ATTR);
         if (href == null)
         {
             //Modify URL for the faces servlet mapping:
@@ -228,11 +228,11 @@ public class HyperlinkRenderer
         writer.write(">");
 
         //write link text
-        String key = (String)uiComponent.getAttribute(JSFAttr.KEY_ATTR);
+        String key = (String)uiComponent.getAttributes().get(JSFAttr.KEY_ATTR);
         if (key != null)
         {
             String text = BundleUtils.getString(facesContext,
-                                                (String)uiComponent.getAttribute(JSFAttr.BUNDLE_ATTR),
+                                                (String)uiComponent.getAttributes().get(JSFAttr.BUNDLE_ATTR),
                                                 key);
             writer.write(HTMLEncoder.encode(text, true, true));
         }

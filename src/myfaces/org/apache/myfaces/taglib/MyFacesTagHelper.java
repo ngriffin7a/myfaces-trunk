@@ -416,7 +416,7 @@ public class MyFacesTagHelper
                     }
                     else
                     {
-                        uiComponent.setAttribute(attr.name, attr.value);
+                        uiComponent.getAttributes().put(attr.name, attr.value);
                     }
                 }
             }
@@ -445,9 +445,9 @@ public class MyFacesTagHelper
                     else
                     {
                         //override attribute
-                        if (uiComponent.getAttribute(attr.name) == null)
+                        if (uiComponent.getAttributes().put(attr.name) == null)
                         {
-                            uiComponent.setAttribute(attr.name, attr.value);
+                            uiComponent.getAttributes().put(attr.name, attr.value);
                         }
                     }
                 }
@@ -520,9 +520,9 @@ public class MyFacesTagHelper
         if (errorOccured)
         {
             //Alternativly set by attribute name:
-            if (uiComponent.getAttribute(propertyName) == null)
+            if (uiComponent.getAttributes().get(propertyName) == null)
             {
-                uiComponent.setAttribute(propertyName, propertyValue);
+                uiComponent.getAttributes().put(propertyName, propertyValue);
             }
         }
     }
@@ -810,7 +810,7 @@ public class MyFacesTagHelper
                 {
                     UIComponent found = UIComponentUtils.getFacetOrChild(parsedParent,
                                                                          foundIdx);
-                    Object[] jspPos = (Object[])found.getAttribute(JspInfo.JSP_POSITION_ATTR);
+                    Object[] jspPos = (Object[])found.getAttributes().get(JspInfo.JSP_POSITION_ATTR);
                     String pos = "";
                     if (jspPos != null)
                     {
@@ -881,7 +881,7 @@ public class MyFacesTagHelper
             log.trace("parsedChild: " + UIComponentUtils.toString(parsedChild));
         }
 
-        String creatorTagClass = (String)parsedChild.getAttribute(JspInfo.CREATOR_TAG_CLASS_ATTR);
+        String creatorTagClass = (String)parsedChild.getAttributes().get(JspInfo.CREATOR_TAG_CLASS_ATTR);
         if (!(creatorTagClass.equals(_tag.getClass().getName())))
         {
             //different tag class --> certainly not the component to be found
@@ -909,7 +909,7 @@ public class MyFacesTagHelper
             String attrName = (String)attributes.next();
             if (attrName.equals(JspInfo.HARDCODED_ID_ATTR))
             {
-                String hardcodedId = (String)parsedChild.getAttribute(attrName);
+                String hardcodedId = (String)parsedChild.getAttributes().get(attrName);
                 String componentId = compToCompare.getComponentId();
                 if (componentId == null || !componentId.equals(hardcodedId))
                 {
@@ -930,8 +930,8 @@ public class MyFacesTagHelper
                 }
                 else
                 {
-                    Object parsedValue = parsedChild.getAttribute(attrName);
-                    Object actualValue = compToCompare.getAttribute(attrName);
+                    Object parsedValue = parsedChild.getAttributes().get(attrName);
+                    Object actualValue = compToCompare.getAttributes().get(attrName);
                     if (parsedValue == null)
                     {
                         if (actualValue != null)

@@ -52,7 +52,7 @@ public class HTMLUtil
 
     public static int getColspan(UIComponent component)
     {
-        Object value = component.getAttribute(JSFAttr.COLSPAN_ATTR);
+        Object value = component.getAttributes().get(JSFAttr.COLSPAN_ATTR);
         int    count;
 
         count = ((value != null) && (value instanceof Integer)) ? ((Integer) value).intValue() : 1;
@@ -62,7 +62,7 @@ public class HTMLUtil
 
     public static int getColumns(UIComponent component)
     {
-        Object value = component.getAttribute(JSFAttr.COLUMNS_ATTR);
+        Object value = component.getAttributes().get(JSFAttr.COLUMNS_ATTR);
         int    count;
 
         count =
@@ -100,7 +100,7 @@ public class HTMLUtil
     public static void renderCssClass(
         StringBuffer buf, UIComponent uiComponent, String classAttrName)
     {
-        String cssClass = (String) uiComponent.getAttribute(classAttrName);
+        String cssClass = (String) uiComponent.getAttributes().get(classAttrName);
 
         if (cssClass != null && cssClass.length() > 0)
         {
@@ -114,7 +114,7 @@ public class HTMLUtil
         ResponseWriter writer, UIComponent uiComponent, String classAttrName)
     throws IOException
     {
-        String cssClass = (String) uiComponent.getAttribute(classAttrName);
+        String cssClass = (String) uiComponent.getAttributes().get(classAttrName);
 
         if (cssClass != null && cssClass.length() > 0)
         {
@@ -137,7 +137,7 @@ public class HTMLUtil
     public static void renderHTMLAttribute(
         StringBuffer buf, UIComponent component, String rendererAttrName, String htmlAttrName)
     {
-        Object value = component.getAttribute(rendererAttrName);
+        Object value = component.getAttributes().get(rendererAttrName);
 
         if (value != null)
         {
@@ -171,7 +171,7 @@ public class HTMLUtil
         ResponseWriter writer, UIComponent component, String rendererAttrName, String htmlAttrName)
     throws IOException
     {
-        Object value = component.getAttribute(rendererAttrName);
+        Object value = component.getAttributes().get(rendererAttrName);
 
         if (value != null)
         {

@@ -115,7 +115,7 @@ public class SelectItemUtil
     private static List getSelectItemsList(FacesContext facesContext,
                                            UIComponent uiComponent)
     {
-        ArrayList list = (ArrayList)uiComponent.getAttribute(LIST_ATTR);
+        ArrayList list = (ArrayList)uiComponent.getAttributes().get(LIST_ATTR);
         if (list != null)
         {
             return list;

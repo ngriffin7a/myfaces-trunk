@@ -90,9 +90,9 @@ public abstract class MyFacesBodyTag
         try
         {
             UIComponent comp = getComponent();
-            comp.setAttribute(BODY_CONTENT_ATTR, getBodyContent());
+            comp.getAttributes().put(BODY_CONTENT_ATTR, getBodyContent());
             int ret = super.doEndTag();
-            comp.setAttribute(BODY_CONTENT_ATTR, null);
+            comp.getAttributes().put(BODY_CONTENT_ATTR, null);
             return ret;
         }
         catch (RuntimeException e)

@@ -233,7 +233,7 @@ public class LayoutRenderer
         throws IOException
     {
         writer.write("<td colspan=\"" + colSpan +"\"");
-        String cssClass = (String)uiComponent.getAttribute(cssClassAttribute);
+        String cssClass = (String)uiComponent.getAttributes().get(cssClassAttribute);
         if (cssClass != null)
         {
             writer.write(" class=\"" + cssClass + "\"");
@@ -279,7 +279,7 @@ public class LayoutRenderer
     {
         ResponseWriter writer = facesContext.getResponseWriter();
         writer.write("<table");
-        String cssClass = (String)uiComponent.getAttribute(JSFAttr.PANEL_CLASS_ATTR);
+        String cssClass = (String)uiComponent.getAttributes().get(JSFAttr.PANEL_CLASS_ATTR);
         if (cssClass != null)
         {
             writer.write(" class=\"" + cssClass + "\"");
@@ -305,7 +305,7 @@ public class LayoutRenderer
     {
         ResponseWriter writer = facesContext.getResponseWriter();
         writer.write("<table");
-        String cssClass = (String)uiComponent.getAttribute(JSFAttr.PANEL_CLASS_ATTR);
+        String cssClass = (String)uiComponent.getAttributes().get(JSFAttr.PANEL_CLASS_ATTR);
         if (cssClass != null)
         {
             writer.write(" class=\"" + cssClass + "\"");
@@ -331,7 +331,7 @@ public class LayoutRenderer
     {
         ResponseWriter writer = facesContext.getResponseWriter();
         writer.write("<table");
-        String cssClass = (String)uiComponent.getAttribute(JSFAttr.PANEL_CLASS_ATTR);
+        String cssClass = (String)uiComponent.getAttributes().get(JSFAttr.PANEL_CLASS_ATTR);
         if (cssClass != null)
         {
             writer.write(" class=\"" + cssClass + "\"");

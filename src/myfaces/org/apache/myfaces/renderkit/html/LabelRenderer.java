@@ -83,13 +83,13 @@ extends HTMLRenderer
         writer.write('>');
 
         String text;
-        String key = (String) uiComponent.getAttribute(JSFAttr.KEY_ATTR);
+        String key = (String) uiComponent.getAttributes().get(JSFAttr.KEY_ATTR);
 
         if (key != null)
         {
             text =
                 BundleUtils.getString(
-                    facesContext, (String) uiComponent.getAttribute(JSFAttr.BUNDLE_ATTR), key);
+                    facesContext, (String) uiComponent.getAttributes().get(JSFAttr.BUNDLE_ATTR), key);
         }
         else
         {

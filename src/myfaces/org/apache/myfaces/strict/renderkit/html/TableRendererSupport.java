@@ -57,7 +57,7 @@ extends HTMLRenderer
 
         writer.write("\n<table");
 
-        String style = (String) uiComponent.getAttribute(JSFAttr.PANEL_CLASS_ATTR);
+        String style = (String) uiComponent.getAttributes().get(JSFAttr.PANEL_CLASS_ATTR);
 
         if ((style != null) && (style.length() > 0))
         {
@@ -101,7 +101,7 @@ extends HTMLRenderer
 
         if (facet != null)
         {
-            String   footerClass   = (String) component.getAttribute("footerClass");
+            String   footerClass   = (String) component.getAttributes().get("footerClass");
             String[] columnClasses = (footerClass == null) ? null : new String[] {footerClass};
             Iterator children      = facet.getChildren();
 
@@ -125,7 +125,7 @@ extends HTMLRenderer
 
         if (facet != null)
         {
-            String   headerClass   = (String) component.getAttribute("headerClass");
+            String   headerClass   = (String) component.getAttributes().get("headerClass");
             String[] columnClasses = (headerClass == null) ? null : new String[] {headerClass};
             Iterator children      = facet.getChildren();
 

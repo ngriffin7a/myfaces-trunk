@@ -201,12 +201,12 @@ public class TabbedPaneRenderer
         Integer intObj;
         if (facesContext.getMaximumSeverity() >= Message.SEVERITY_INFO)
         {
-            intObj = (Integer)uiTabbedPane.getAttribute(OLD_SELECTED_INDEX_ATTR);
-            uiTabbedPane.setAttribute(SELECTED_INDEX_ATTR, intObj);
+            intObj = (Integer)uiTabbedPane.getAttributes().get(OLD_SELECTED_INDEX_ATTR);
+            uiTabbedPane.getAttributes().put(SELECTED_INDEX_ATTR, intObj);
         }
         else
         {
-            intObj = (Integer)uiTabbedPane.getAttribute(SELECTED_INDEX_ATTR);
+            intObj = (Integer)uiTabbedPane.getAttributes().get(SELECTED_INDEX_ATTR);
         }
         return intObj == null ? 0 : intObj.intValue();
     }
@@ -224,7 +224,7 @@ public class TabbedPaneRenderer
 
     protected String getBgColor(UIComponent uiTabbedPane)
     {
-        String bgColor = (String)uiTabbedPane.getAttribute(HTML.BGCOLOR_ATTR);
+        String bgColor = (String)uiTabbedPane.getAttributes().get(HTML.BGCOLOR_ATTR);
         return bgColor == null ? DEFAULT_BG_COLOR : bgColor;
     }
 
@@ -281,18 +281,18 @@ public class TabbedPaneRenderer
                                    UIComponent uiComponent)
         throws IOException
     {
-        String oldStyle = (String)uiComponent.getAttribute(HTML.STYLE_ATTR);
+        String oldStyle = (String)uiComponent.getAttributes().get(HTML.STYLE_ATTR);
         if (oldStyle == null)
         {
-            uiComponent.setAttribute(HTML.STYLE_ATTR, TABLE_STYLE);
+            uiComponent.getAttributes().put(HTML.STYLE_ATTR, TABLE_STYLE);
         }
         else
         {
-            uiComponent.setAttribute(HTML.STYLE_ATTR, TABLE_STYLE + "; " + oldStyle);
+            uiComponent.getAttributes().put(HTML.STYLE_ATTR, TABLE_STYLE + "; " + oldStyle);
         }
 
-        String oldBgColor = (String)uiComponent.getAttribute(HTML.BGCOLOR_ATTR);
-        uiComponent.setAttribute(HTML.BGCOLOR_ATTR, null);
+        String oldBgColor = (String)uiComponent.getAttributes().get(HTML.BGCOLOR_ATTR);
+        uiComponent.getAttributes().put(HTML.BGCOLOR_ATTR, null);
 
         writer.write("<table cellspacing=\"0\"");
         HTMLUtil.renderCssClass(writer, uiComponent, JSFAttr.PANEL_CLASS_ATTR);
@@ -301,8 +301,8 @@ public class TabbedPaneRenderer
         HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML.TABLE_ATTRIBUTES);
         writer.write(">");
 
-        uiComponent.setAttribute(HTML.STYLE_ATTR, oldStyle);
-        uiComponent.setAttribute(HTML.BGCOLOR_ATTR, oldBgColor);
+        uiComponent.getAttributes().put(HTML.STYLE_ATTR, oldStyle);
+        uiComponent.getAttributes().put(HTML.BGCOLOR_ATTR, oldBgColor);
     }
 
 
@@ -343,16 +343,16 @@ public class TabbedPaneRenderer
         writer.write(" value=\"");
 
         String label;
-        String key = (String)tab.getAttribute(JSFAttr.KEY_ATTR);
+        String key = (String)tab.getAttributes().get(JSFAttr.KEY_ATTR);
         if (key != null)
         {
             label = BundleUtils.getString(facesContext,
-                                          (String)tab.getAttribute(JSFAttr.BUNDLE_ATTR),
+                                          (String)tab.getAttributes().get(JSFAttr.BUNDLE_ATTR),
                                           key);
         }
         else
         {
-            label = (String)tab.getAttribute(JSFAttr.LABEL_ATTR);
+            label = (String)tab.getAttributes().get(JSFAttr.LABEL_ATTR);
         }
         writer.write(HTMLEncoder.encode(label, false, false));
         writer.write("\"");
@@ -367,14 +367,14 @@ public class TabbedPaneRenderer
             style = BUTTON_STYLE_INACTIVE;
         }
 
-        String oldStyle = (String)tab.getAttribute(HTML.STYLE_ATTR);
+        String oldStyle = (String)tab.getAttributes().get(HTML.STYLE_ATTR);
         if (oldStyle == null)
         {
-            tab.setAttribute(HTML.STYLE_ATTR, style);
+            tab.getAttributes().put(HTML.STYLE_ATTR, style);
         }
         else
         {
-            tab.setAttribute(HTML.STYLE_ATTR, active ? style + oldStyle : style + oldStyle);
+            tab.getAttributes().put(HTML.STYLE_ATTR, active ? style + oldStyle : style + oldStyle);
         }
 
         HTMLUtil.renderCssClass(writer, tab, JSFAttr.COMMAND_CLASS_ATTR);//TODO: ?
@@ -384,7 +384,7 @@ public class TabbedPaneRenderer
         HTMLUtil.renderDisabledOnUserRole(facesContext, tab);
         writer.write(">");
 
-        tab.setAttribute(HTML.STYLE_ATTR, oldStyle);
+        tab.getAttributes().put(HTML.STYLE_ATTR, oldStyle);
 
         writer.write("</td>");
     }
@@ -486,9 +486,9 @@ public class TabbedPaneRenderer
                 String paramValue = servletRequest.getParameter(paramName);
                 if (paramValue != null && paramValue.length() > 0)
                 {
-                    uiTabbedPane.setAttribute(OLD_SELECTED_INDEX_ATTR,
-                                              uiTabbedPane.getAttribute(SELECTED_INDEX_ATTR));
-                    uiTabbedPane.setAttribute(SELECTED_INDEX_ATTR, new Integer(tabIdx));
+                    uiTabbedPane.getAttributes().put(OLD_SELECTED_INDEX_ATTR,
+                                              uiTabbedPane.getAttributes().get(SELECTED_INDEX_ATTR));
+                    uiTabbedPane.getAttributes().put(SELECTED_INDEX_ATTR, new Integer(tabIdx));
                     ((UICommand)child).fireActionEvent(facesContext);
                     return;
                 }

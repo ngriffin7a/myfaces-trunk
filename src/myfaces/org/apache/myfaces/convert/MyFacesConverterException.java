@@ -20,10 +20,9 @@ package net.sourceforge.myfaces.convert;
 
 import javax.faces.FactoryFinder;
 import javax.faces.application.ApplicationFactory;
-import javax.faces.application.Message;
+import javax.faces.application.FacesMessage;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
-import javax.faces.context.MessageResources;
 import javax.faces.convert.ConverterException;
 
 /**
@@ -61,7 +60,7 @@ public class MyFacesConverterException
         return getFacesMessage().getDetail();
     }
 
-    public Message getFacesMessage()
+    public FacesMessage getFacesMessage()
     {
         ApplicationFactory af = (ApplicationFactory)FactoryFinder.getFactory(FactoryFinder.APPLICATION_FACTORY);
         MessageResources msgRes = af.getApplication().getMessageResources(MessageResources.FACES_IMPL_MESSAGES);

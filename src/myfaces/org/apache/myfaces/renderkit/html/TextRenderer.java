@@ -114,13 +114,13 @@ extends HTMLRenderer
         }
 
         String text;
-        String key = (String) uiOutput.getAttribute(JSFAttr.KEY_ATTR);
+        String key = (String) uiOutput.getAttributes().get(JSFAttr.KEY_ATTR);
 
         if (key != null)
         {
             text =
                 BundleUtils.getString(
-                    facesContext, (String) uiOutput.getAttribute(JSFAttr.BUNDLE_ATTR), key);
+                    facesContext, (String) uiOutput.getAttributes().get(JSFAttr.BUNDLE_ATTR), key);
         }
         else
         {

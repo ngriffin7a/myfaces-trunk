@@ -97,7 +97,7 @@ extends HTMLRenderer
         //boolean hiddenParam = true;
         writer.write("<input type=");
 
-        String imageSrc = (String) uiComponent.getAttribute(JSFAttr.IMAGE_ATTR);
+        String imageSrc = (String) uiComponent.getAttributes().get(JSFAttr.IMAGE_ATTR);
 
         if (imageSrc != null)
         {
@@ -111,7 +111,7 @@ extends HTMLRenderer
         }
         else
         {
-            String type = (String) uiComponent.getAttribute(JSFAttr.TYPE_ATTR);
+            String type = (String) uiComponent.getAttributes().get(JSFAttr.TYPE_ATTR);
 
             if (type == null)
             {
@@ -127,17 +127,17 @@ extends HTMLRenderer
             writer.write("\" value=\"");
 
             String label;
-            String key = (String) uiComponent.getAttribute(JSFAttr.KEY_ATTR);
+            String key = (String) uiComponent.getAttributes().get(JSFAttr.KEY_ATTR);
 
             if (key != null)
             {
                 label =
                     BundleUtils.getString(
-                        facesContext, (String) uiComponent.getAttribute(JSFAttr.BUNDLE_ATTR), key);
+                        facesContext, (String) uiComponent.getAttributes().get(JSFAttr.BUNDLE_ATTR), key);
             }
             else
             {
-                label = (String) uiComponent.getAttribute(JSFAttr.LABEL_ATTR);
+                label = (String) uiComponent.getAttributes().get(JSFAttr.LABEL_ATTR);
             }
 
             if (label == null)

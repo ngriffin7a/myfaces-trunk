@@ -410,7 +410,7 @@ public class MinimizingStateRestorer
         //is it a null value?
         if (strValue.equals(MinimizingStateSaver.NULL_DUMMY_VALUE))
         {
-            uiComponent.setAttribute(attrName, null);
+            uiComponent.getAttributes().put(attrName, null);
             return;
         }
 
@@ -458,7 +458,7 @@ public class MinimizingStateRestorer
             }
         }
 
-        uiComponent.setAttribute(attrName, objValue);
+        uiComponent.getAttributes().put(attrName, objValue);
     }
 
 

@@ -73,7 +73,7 @@ extends HTMLRenderer
     {
         ResponseWriter writer  = facesContext.getResponseWriter();
         Iterator       it;
-        String         forAttr = (String) uiComponent.getAttribute(JSFAttr.FOR_ATTR);
+        String         forAttr = (String) uiComponent.getAttributes().get(JSFAttr.FOR_ATTR);
 
         if (forAttr == null)
         {
@@ -214,14 +214,14 @@ extends HTMLRenderer
                             && msgComp.getRendererType().equals(LabelRenderer.TYPE))
                 {
                     String labelText;
-                    String key = (String) msgComp.getAttribute(JSFAttr.KEY_ATTR);
+                    String key = (String) msgComp.getAttributes().get(JSFAttr.KEY_ATTR);
 
                     if (key != null)
                     {
                         labelText =
                             BundleUtils.getString(
                                 facesContext,
-                                (String) msgComp.getAttribute(JSFAttr.BUNDLE_ATTR),
+                                (String) msgComp.getAttributes().get(JSFAttr.BUNDLE_ATTR),
                                 key);
                     }
                     else

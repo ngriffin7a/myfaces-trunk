@@ -88,13 +88,13 @@ extends HTMLRenderer
 
         String         value;
 
-        String         key = (String) uiComponent.getAttribute(JSFAttr.KEY_ATTR);
+        String         key = (String) uiComponent.getAttributes().get(JSFAttr.KEY_ATTR);
 
         if (key != null)
         {
             value =
                 BundleUtils.getString(
-                    facesContext, (String) uiComponent.getAttribute(JSFAttr.BUNDLE_ATTR), key);
+                    facesContext, (String) uiComponent.getAttributes().get(JSFAttr.BUNDLE_ATTR), key);
         }
         else
         {
@@ -127,17 +127,17 @@ extends HTMLRenderer
             writer.write('"');
 
             String alt;
-            String altKey = (String) uiComponent.getAttribute(JSFAttr.ALT_KEY_ATTR);
+            String altKey = (String) uiComponent.getAttributes().get(JSFAttr.ALT_KEY_ATTR);
 
             if (altKey != null)
             {
                 alt = BundleUtils.getString(
-                        facesContext, (String) uiComponent.getAttribute(JSFAttr.ALT_BUNDLE_ATTR),
+                        facesContext, (String) uiComponent.getAttributes().get(JSFAttr.ALT_BUNDLE_ATTR),
                         altKey);
             }
             else
             {
-                alt = (String) uiComponent.getAttribute(HTML.ALT_ATTR);
+                alt = (String) uiComponent.getAttributes().get(HTML.ALT_ATTR);
             }
 
             if ((alt != null) && (alt.length() > 0))

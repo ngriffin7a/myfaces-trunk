@@ -117,16 +117,16 @@ extends TableRendererSupport
             return;
         }
 
-        String   varName       = (String) panel.getAttribute(JSFAttr.VAR_ATTR);
+        String   varName       = (String) panel.getAttributes().get(JSFAttr.VAR_ATTR);
         Map      requestMap    = FacesUtils.getRequestMap(context);
         String[] rowClasses    =
             StringUtils.trim(
                 StringUtils.splitShortString(
-                    (String) component.getAttribute(JSFAttr.ROW_CLASSES_ATTR), CLASS_LIST_DELIMITER));
+                    (String) component.getAttributes().get(JSFAttr.ROW_CLASSES_ATTR), CLASS_LIST_DELIMITER));
         String[] columnClasses =
             StringUtils.trim(
                 StringUtils.splitShortString(
-                    (String) component.getAttribute(JSFAttr.COLUMN_CLASSES_ATTR),
+                    (String) component.getAttributes().get(JSFAttr.COLUMN_CLASSES_ATTR),
                     CLASS_LIST_DELIMITER));
 
         // main loop on data iterator

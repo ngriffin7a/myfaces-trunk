@@ -262,7 +262,7 @@ public class TreeUtils
                                        String attrName,
                                        String prettyAttrName)
     {
-        Object v = comp.getAttribute(attrName);
+        Object v = comp.getAttributes().get(attrName);
         if (v != null)
         {
             stream.print(' ');

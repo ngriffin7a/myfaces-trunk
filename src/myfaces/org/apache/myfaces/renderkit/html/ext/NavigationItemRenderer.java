@@ -79,10 +79,10 @@ extends HyperlinkRenderer
         ResponseWriter writer = facesContext.getResponseWriter();
 
         String label = null;
-        String key = (String)uiComponent.getAttribute(JSFAttr.KEY_ATTR);
+        String key = (String)uiComponent.getAttributes().get(JSFAttr.KEY_ATTR);
         if (key == null)
         {
-            label = (String)uiComponent.getAttribute(JSFAttr.LABEL_ATTR);
+            label = (String)uiComponent.getAttributes().get(JSFAttr.LABEL_ATTR);
         }
 
         if (label == null && key == null)
@@ -144,10 +144,10 @@ extends HyperlinkRenderer
 
         if (key != null)
         {
-            String bundle = (String)uiComponent.getAttribute(JSFAttr.BUNDLE_ATTR);
+            String bundle = (String)uiComponent.getAttributes().get(JSFAttr.BUNDLE_ATTR);
             if (bundle == null && navigationComponent != null)
             {
-                bundle = (String)navigationComponent.getAttribute(JSFAttr.BUNDLE_ATTR);
+                bundle = (String)navigationComponent.getAttributes().get(JSFAttr.BUNDLE_ATTR);
             }
             if (bundle == null)
             {
@@ -203,12 +203,12 @@ extends HyperlinkRenderer
             String style;
             if (active)
             {
-                style = (String)navigatioComponent.getAttribute(NavigationRendererAttributes.ACTIVE_ITEM_CLASS_ATTR);
+                style = (String)navigatioComponent.getAttributes().get(NavigationRendererAttributes.ACTIVE_ITEM_CLASS_ATTR);
             }
             else
             {
-                style = open ? (String)navigatioComponent.getAttribute(NavigationRendererAttributes.OPEN_ITEM_CLASS_ATTR) :
-                                    (String)navigatioComponent.getAttribute(NavigationRendererAttributes.ITEM_CLASS_ATTR);;
+                style = open ? (String)navigatioComponent.getAttributes().get(NavigationRendererAttributes.OPEN_ITEM_CLASS_ATTR) :
+                                    (String)navigatioComponent.getAttributes().get(NavigationRendererAttributes.ITEM_CLASS_ATTR);;
             }
             if (style != null)
             {

@@ -39,9 +39,9 @@ extends InputTextTag
     public void overrideProperties(UIComponent uiComponent)
     {
         super.overrideProperties(uiComponent);
-        if (uiComponent.getAttribute(JSFAttr.REDISPLAY_ATTR) == null)
+        if (uiComponent.getAttributes().get(JSFAttr.REDISPLAY_ATTR) == null)
         {
-            uiComponent.setAttribute(JSFAttr.REDISPLAY_ATTR, Boolean.FALSE); //Default (JSF.7.6.4)
+            uiComponent.getAttributes().put(JSFAttr.REDISPLAY_ATTR, Boolean.FALSE); //Default (JSF.7.6.4)
         }
     }
 

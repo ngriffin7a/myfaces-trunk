@@ -518,7 +518,7 @@ public class MyParseEventListener
         if (id != null)
         {
             comp.setComponentId(id);
-            comp.setAttribute(JspInfo.HARDCODED_ID_ATTR, id);
+            comp.getAttributes().put(JspInfo.HARDCODED_ID_ATTR, id);
         }
         else
         {
@@ -547,11 +547,11 @@ public class MyParseEventListener
             comp.setRendererType(rendererType);
         }
 
-        String facetName = (String)_currentComponent.getAttribute(PENDING_FACET_ATTR);
+        String facetName = (String)_currentComponent.getAttributes().get(PENDING_FACET_ATTR);
         if (facetName != null)
         {
             UIComponentUtils.addFacet(_currentComponent, facetName, comp);
-            _currentComponent.setAttribute(PENDING_FACET_ATTR, null);
+            _currentComponent.getAttributes().put().get(PENDING_FACET_ATTR, null);
         }
         else
         {
@@ -566,10 +566,10 @@ public class MyParseEventListener
         _currentComponent = comp;
 
         //Remember the tag class that created this component
-        comp.setAttribute(JspInfo.CREATOR_TAG_CLASS_ATTR, facesTag.getClass().getName());
+        comp.getAttributes().put(JspInfo.CREATOR_TAG_CLASS_ATTR, facesTag.getClass().getName());
 
         //Remember JSP line number
-        comp.setAttribute(JspInfo.JSP_POSITION_ATTR,
+        comp.getAttributes().put(JspInfo.JSP_POSITION_ATTR,
                           new Object[] {filename,
                                         new Integer(startLine),
                                         new Integer(endLine)});
@@ -917,7 +917,7 @@ public class MyParseEventListener
             log.error("facet tag has no " + FACET_NAME_ATTR + " attribute!");
             return;
         }
-        _currentComponent.setAttribute(PENDING_FACET_ATTR, name);
+        _currentComponent.getAttributes().put(PENDING_FACET_ATTR, name);
     }
 
 

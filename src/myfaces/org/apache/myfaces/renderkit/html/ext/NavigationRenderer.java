@@ -66,7 +66,7 @@ public class NavigationRenderer
         HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML.UNIVERSAL_ATTRIBUTES);
         HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML.EVENT_HANDLER_ATTRIBUTES);
         HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML.TABLE_ATTRIBUTES);
-        String panelClass = (String)uiComponent.getAttribute(JSFAttr.PANEL_CLASS_ATTR);
+        String panelClass = (String)uiComponent.getAttributes().get(JSFAttr.PANEL_CLASS_ATTR);
         if (panelClass == null)
         {
             writer.write("border=\"0\"");
@@ -122,17 +122,17 @@ public class NavigationRenderer
 
             if (active)
             {
-                style = (String)uiNavigation.getAttribute(NavigationRendererAttributes.ACTIVE_ITEM_CLASS_ATTR);
+                style = (String)uiNavigation.getAttributes().get(NavigationRendererAttributes.ACTIVE_ITEM_CLASS_ATTR);
             }
             else
             {
-                style = open ? (String)uiNavigation.getAttribute(NavigationRendererAttributes.OPEN_ITEM_CLASS_ATTR) :
-                                    (String)uiNavigation.getAttribute(NavigationRendererAttributes.ITEM_CLASS_ATTR);;
+                style = open ? (String)uiNavigation.getAttributes().get(NavigationRendererAttributes.OPEN_ITEM_CLASS_ATTR) :
+                                    (String)uiNavigation.getAttributes().get(NavigationRendererAttributes.ITEM_CLASS_ATTR);;
             }
         }
         else if (item.getRendererType().equals(NavigationSeparatorRenderer.TYPE))
         {
-            style = (String)uiNavigation.getAttribute(SEPARATOR_CLASS);
+            style = (String)uiNavigation.getAttributes().get(SEPARATOR_CLASS);
         }
 
         if (style != null)

@@ -186,14 +186,14 @@ implements CallbackRenderer
 
     protected Integer getCurrentColumnAttr(FacesContext context)
     {
-        Integer value = (Integer) peekListComponent(context).getAttribute(ACTUAL_COLUMN_ATTR);
+        Integer value = (Integer) peekListComponent(context).getAttributes().get(ACTUAL_COLUMN_ATTR);
 
         return (value == null) ? INITIAL_VALUE : new Integer(value.intValue());
     }
 
     protected Integer getCurrentRowAttr(FacesContext context)
     {
-        Integer value = (Integer) peekListComponent(context).getAttribute(ACTUAL_ROW_ATTR);
+        Integer value = (Integer) peekListComponent(context).getAttributes().get(ACTUAL_ROW_ATTR);
 
         return (value == null) ? INITIAL_VALUE : new Integer(value.intValue());
     }
@@ -307,7 +307,7 @@ implements CallbackRenderer
     protected void incrementColumnAttr(FacesContext context)
     {
         Integer value = getCurrentColumnAttr(context);
-        peekListComponent(context).setAttribute(
+        peekListComponent(context).getAttributes().put(
             ACTUAL_COLUMN_ATTR,
             new Integer(value.intValue() + 1));
     }
@@ -318,7 +318,7 @@ implements CallbackRenderer
     protected void incrementComponentCountAttr(FacesContext context)
     {
         UIComponent listComponent = peekListComponent(context);
-        listComponent.setAttribute(
+        listComponent.getAttributes().put(
             COMPONENT_COUNT_ATTR,
             new Integer(getComponentCountAttr(context) + 1));
     }
@@ -326,7 +326,7 @@ implements CallbackRenderer
     protected int incrementRowAttr(FacesContext context)
     {
         Integer value = getCurrentRowAttr(context);
-        peekListComponent(context).setAttribute(
+        peekListComponent(context).getAttributes().put(
             ACTUAL_ROW_ATTR,
             new Integer(value.intValue() + 1));
 
@@ -408,7 +408,7 @@ implements CallbackRenderer
 
     private String getAttribute(UIComponent parentComponent, String attribute)
     {
-        String attr = (String) parentComponent.getAttribute(attribute);
+        String attr = (String) parentComponent.getAttributes().get(attribute);
 
         return (attr == null) ? "" : attr;
     }
@@ -416,7 +416,7 @@ implements CallbackRenderer
     private String[] getAttributes(UIComponent parentComponent, String attribute)
     {
         String[] attr       = null;
-        String   rowClasses = (String) parentComponent.getAttribute(attribute);
+        String   rowClasses = (String) parentComponent.getAttributes().get(attribute);
 
         if ((rowClasses != null) && (rowClasses.length() > 0))
         {
@@ -444,7 +444,7 @@ implements CallbackRenderer
     private int getComponentCountAttr(FacesContext context)
     {
         UIComponent listComponent = peekListComponent(context);
-        Integer     i = (Integer) listComponent.getAttribute(COMPONENT_COUNT_ATTR);
+        Integer     i = (Integer) listComponent.getAttributes().get(COMPONENT_COUNT_ATTR);
 
         return (i == null) ? 0 : i.intValue();
     }

@@ -65,7 +65,7 @@ public class StateUtils
                 }
                 for (int i = 0, len = lst.size(); i < len; i++)
                 {
-                    comp.setAttribute((String)lst.get(i), null);
+                    comp.getAttributes().put((String)lst.get(i), null);
                 }
             }
         }

@@ -66,7 +66,7 @@ public class RadioRenderer
         {
             SelectItem item = SelectItemUtil.getSelectItem(facesContext, (UISelectItem)uiComponent);
             UISelectOne parent = getParent(facesContext, uiComponent);
-            Integer i = (Integer)parent.getAttribute(ATTR_COUNT);
+            Integer i = (Integer)parent.getAttributes().get(ATTR_COUNT);
             if (i == null)
             {
                 i = new Integer(1);
@@ -75,7 +75,7 @@ public class RadioRenderer
             {
                 i = new Integer(i.intValue() + 1);
             }
-            parent.setAttribute(ATTR_COUNT, i);
+            parent.getAttributes().put(ATTR_COUNT, i);
             renderItem(facesContext, parent, item, isLayoutPageDirection(parent), false, i.intValue());
         }
     }
@@ -209,7 +209,7 @@ public class RadioRenderer
         if (label != null && label.length() > 0)
         {
             ResponseWriter writer = facesContext.getResponseWriter();
-            boolean span = selectOne.getAttribute(JSFAttr.SELECT_ONE_CLASS_ATTR) != null;
+            boolean span = selectOne.getAttributes().get(JSFAttr.SELECT_ONE_CLASS_ATTR) != null;
             beforeRenderLabel(facesContext, selectOne, selectItem, useLayout);
             if (span)
             {
@@ -268,7 +268,7 @@ public class RadioRenderer
 
     protected boolean isLayoutPageDirection(UISelectOne uiComponent)
     {
-        String layout = (String)uiComponent.getAttribute(JSFAttr.LAYOUT_ATTR);
+        String layout = (String)uiComponent.getAttributes().get(JSFAttr.LAYOUT_ATTR);
         return layout != null && layout.toUpperCase().equals(PAGE_DIRECTION) ? true : false;
     }
 }

@@ -157,7 +157,7 @@ public class UISortHeader
             {
                 setColumn(sortColumn);
 
-                Boolean defaultAscending = (Boolean)source.getAttribute(SortColumnRenderer.DEFAULT_ASCENDING_ATTR);
+                Boolean defaultAscending = (Boolean)source.getAttributes().get(SortColumnRenderer.DEFAULT_ASCENDING_ATTR);
                 if (defaultAscending != null)
                 {
                     setAscending(defaultAscending);

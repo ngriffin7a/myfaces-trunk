@@ -113,7 +113,7 @@ extends MyFacesTag
      */
     protected boolean hasNext()
     {
-        String varAttr = (String)getComponent().getAttribute(JSFAttr.VAR_ATTR);
+        String varAttr = (String)getComponent().getAttributes().get(JSFAttr.VAR_ATTR);
         try
         {
             return ((ServletRequest)getFacesContext().getExternalContext().getRequest())

@@ -75,7 +75,7 @@ public class GridRenderer
 
     private int getAttributeValue(UIComponent gridComponent, String attributeName)
     {
-        Integer value = (Integer)gridComponent.getAttribute(attributeName);
+        Integer value = (Integer)gridComponent.getAttributes().get(attributeName);
         return value != null ? value.intValue() : 0;
     }
 
@@ -131,8 +131,8 @@ public class GridRenderer
         actualColumn++;
 
         // save attributes
-        gridComponent.setAttribute(COLUMN_COUNT_ATTR, new Integer(actualColumn));
-        gridComponent.setAttribute(ROW_COUNT_ATTR, new Integer(actualRow));
+        gridComponent.getAttributes().put(COLUMN_COUNT_ATTR, new Integer(actualColumn));
+        gridComponent.getAttributes().put(ROW_COUNT_ATTR, new Integer(actualRow));
     }
 
 
@@ -154,7 +154,7 @@ public class GridRenderer
         ResponseWriter writer = context.getResponseWriter();
 
         writer.write("<table");
-        String style = (String)uiComponent.getAttribute(JSFAttr.PANEL_CLASS_ATTR);
+        String style = (String)uiComponent.getAttributes().get(JSFAttr.PANEL_CLASS_ATTR);
         if (style != null && style.length() > 0)
         {
             writer.write(" class=\"");
@@ -163,8 +163,8 @@ public class GridRenderer
         }
         writer.write(">\n");
 
-        uiComponent.setAttribute(COLUMN_COUNT_ATTR, ZERO);
-        uiComponent.setAttribute(ROW_COUNT_ATTR, ZERO);
+        uiComponent.getAttributes().put(COLUMN_COUNT_ATTR, ZERO);
+        uiComponent.getAttributes().put(ROW_COUNT_ATTR, ZERO);
 
         CallbackSupport.addChildrenCallbackRenderer(context, uiComponent, this);
     }
@@ -188,7 +188,7 @@ public class GridRenderer
                                 boolean isLastRow)
     {
         String style = null;
-        String headerStyle = (String)gridComponent.getAttribute(JSFAttr.HEADER_CLASS_ATTR);
+        String headerStyle = (String)gridComponent.getAttributes().get(JSFAttr.HEADER_CLASS_ATTR);
         boolean hasHeaderStyle = headerStyle != null;
 
         if (actualRow == 0)
@@ -197,7 +197,7 @@ public class GridRenderer
         }
         if (isLastRow && style == null)
         {
-            style = (String)gridComponent.getAttribute(JSFAttr.FOOTER_CLASS_ATTR);
+            style = (String)gridComponent.getAttributes().get(JSFAttr.FOOTER_CLASS_ATTR);
         }
         if (style == null)
         {
@@ -218,7 +218,7 @@ public class GridRenderer
      */
     private String calcColumnStyle(UIComponent gridComponent,  int actualRow, int actualColumn)
     {
-        String headerStyle = (String)gridComponent.getAttribute(JSFAttr.HEADER_CLASS_ATTR);
+        String headerStyle = (String)gridComponent.getAttributes().get(JSFAttr.HEADER_CLASS_ATTR);
         boolean hasHeaderStyle = headerStyle != null;
         if (actualRow == 0 && hasHeaderStyle)
         {
@@ -237,22 +237,22 @@ public class GridRenderer
 
     private String[] getRowClasses(UIComponent gridComponent)
     {
-        String[] rowClasses = (String[])gridComponent.getAttribute(ROW_CLASSES_ATTR_CACHE);
+        String[] rowClasses = (String[])gridComponent.getAttributes().get(ROW_CLASSES_ATTR_CACHE);
         if (rowClasses == null)
         {
             rowClasses = getAttributes(gridComponent, JSFAttr.ROW_CLASSES_ATTR);
-            gridComponent.setAttribute(ROW_CLASSES_ATTR_CACHE, rowClasses);
+            gridComponent.getAttributes().put(ROW_CLASSES_ATTR_CACHE, rowClasses);
         }
         return rowClasses;
     }
 
     private String[] getColumnClasses(UIComponent gridComponent)
     {
-        String[] rowClasses = (String[])gridComponent.getAttribute(COLUMN_CLASSES_ATTR_CACHE);
+        String[] rowClasses = (String[])gridComponent.getAttributes().get(COLUMN_CLASSES_ATTR_CACHE);
         if (rowClasses == null)
         {
             rowClasses = getAttributes(gridComponent, JSFAttr.COLUMN_CLASSES_ATTR);
-            gridComponent.setAttribute(COLUMN_CLASSES_ATTR_CACHE, rowClasses);
+            gridComponent.getAttributes().put(COLUMN_CLASSES_ATTR_CACHE, rowClasses);
         }
         return rowClasses;
     }
@@ -261,7 +261,7 @@ public class GridRenderer
     private String[] getAttributes(UIComponent uiComponent, String attributeName)
     {
         String[] attr = null;
-        Object obj = uiComponent.getAttribute(attributeName);
+        Object obj = uiComponent.getAttributes().get(attributeName);
         if (obj instanceof String[])
         {
             return (String[])obj;

@@ -55,7 +55,7 @@ extends HTMLRenderer
     public void encodeEnd(FacesContext facesContext, UIComponent uiComponent)
     throws IOException
     {
-        String strSize = (String) uiComponent.getAttribute(JSFAttr.SIZE_ATTR);
+        String strSize = (String) uiComponent.getAttributes().get(JSFAttr.SIZE_ATTR);
         int    size;
 
         try

@@ -124,7 +124,7 @@ public class SerializingStateRestorer
     {
         UIComponent root = facesContext.getTree().getRoot();
         Collection modelValuesColl
-            = (Collection)root.getAttribute(SerializingStateSaver.MODEL_VALUES_COLL_ATTR);
+            = (Collection)root.getAttributes().get(SerializingStateSaver.MODEL_VALUES_COLL_ATTR);
         if (modelValuesColl != null)
         {
             for (Iterator it = modelValuesColl.iterator(); it.hasNext();)
@@ -140,7 +140,7 @@ public class SerializingStateRestorer
                     vb.setValue(facesContext, entry.getValue());
                 }
             }
-            root.setAttribute(SerializingStateSaver.MODEL_VALUES_COLL_ATTR, null);
+            root.getAttributes().put(SerializingStateSaver.MODEL_VALUES_COLL_ATTR, null);
         }
     }
 

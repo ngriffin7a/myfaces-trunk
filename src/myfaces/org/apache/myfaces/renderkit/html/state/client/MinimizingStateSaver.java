@@ -391,7 +391,7 @@ public class MinimizingStateSaver
         for (Iterator compIt = attrNames.iterator(); compIt.hasNext();)
         {
             String attrName = (String)compIt.next();
-            Object attrValue = uiComponent.getAttribute(attrName);
+            Object attrValue = uiComponent.getAttributes().get(attrName);
 
             saveComponentAttribute(facesContext,
                                    stateMap,
@@ -458,7 +458,7 @@ public class MinimizingStateSaver
         //compare current value to static value in parsed component
         if (parsedComponent != null)
         {
-            Object parsedValue = parsedComponent.getAttribute(attrName);
+            Object parsedValue = parsedComponent.getAttributes().get(attrName);
             if ((parsedValue != null && parsedValue.equals(attrValue)) ||
                 (parsedValue == null && attrValue == null))
             {
@@ -659,7 +659,7 @@ public class MinimizingStateSaver
         String rendererType = comp.getRendererType();
         if (rendererType != null && rendererType.equals(SecretRenderer.TYPE))
         {
-            Boolean redisplay = (Boolean)comp.getAttribute(JSFAttr.REDISPLAY_ATTR);
+            Boolean redisplay = (Boolean)comp.getAttributes().get(JSFAttr.REDISPLAY_ATTR);
             if (redisplay == null ||   //because false is default
                 !redisplay.booleanValue())
             {
@@ -677,7 +677,7 @@ public class MinimizingStateSaver
             {
                 if (parent instanceof UIPanel)
                 {
-                    String var = (String)parent.getAttribute(JSFAttr.VAR_ATTR);
+                    String var = (String)parent.getAttributes().get(JSFAttr.VAR_ATTR);
                     if (var != null)
                     {
                         if (modelRef.equals(var) ||

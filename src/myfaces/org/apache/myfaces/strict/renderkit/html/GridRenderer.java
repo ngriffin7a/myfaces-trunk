@@ -58,12 +58,12 @@ extends TableRendererSupport
             String[] rowClasses    =
                 StringUtils.trim(
                     StringUtils.splitShortString(
-                        (String) component.getAttribute(JSFAttr.ROW_CLASSES_ATTR),
+                        (String) component.getAttributes().get(JSFAttr.ROW_CLASSES_ATTR),
                         CLASS_LIST_DELIMITER));
             String[] columnClasses =
                 StringUtils.trim(
                     StringUtils.splitShortString(
-                        (String) component.getAttribute(JSFAttr.COLUMN_CLASSES_ATTR),
+                        (String) component.getAttributes().get(JSFAttr.COLUMN_CLASSES_ATTR),
                         CLASS_LIST_DELIMITER));
 
             HTMLUtil.renderTableRows(

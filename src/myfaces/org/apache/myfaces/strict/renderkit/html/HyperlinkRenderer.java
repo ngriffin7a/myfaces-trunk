@@ -106,7 +106,7 @@ public class HyperlinkRenderer
 
         writer.write("<a href=\"");
 
-        String href = (String) uiCommand.getAttribute(HTML.HREF_ATTR);
+        String href = (String) uiCommand.getAttributes().get(HTML.HREF_ATTR);
 
         if (href != null)
         {
@@ -162,7 +162,7 @@ public class HyperlinkRenderer
         writer.write('>');
 
         // write image, if any
-        String image = (String) uiComponent.getAttribute("image");
+        String image = (String) uiComponent.getAttributes().get("image");
 
         if (image != null)
         {
@@ -172,12 +172,12 @@ public class HyperlinkRenderer
         }
 
         //write link text
-        String key  = (String) uiCommand.getAttribute(JSFAttr.KEY_ATTR);
+        String key  = (String) uiCommand.getAttributes().get(JSFAttr.KEY_ATTR);
         String text =
             (key != null)
             ? BundleUtils.getString(
-                facesContext, (String) uiComponent.getAttribute(JSFAttr.BUNDLE_ATTR), key)
-            : (String) uiComponent.getAttribute(JSFAttr.LABEL_ATTR);
+                facesContext, (String) uiComponent.getAttributes().get(JSFAttr.BUNDLE_ATTR), key)
+            : (String) uiComponent.getAttributes().get(JSFAttr.LABEL_ATTR);
 
         writer.write(HTMLEncoder.encode(text, true, true));
 

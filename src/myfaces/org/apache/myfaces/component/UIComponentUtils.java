@@ -52,7 +52,7 @@ public class UIComponentUtils
                                               String attribute,
                                               boolean defaultValue)
     {
-        Boolean b = (Boolean)uiComponent.getAttribute(attribute);
+        Boolean b = (Boolean)uiComponent.getAttributes().get(attribute);
         if (b == null)
         {
             return defaultValue;
@@ -67,7 +67,7 @@ public class UIComponentUtils
                                            String attribute,
                                            boolean value)
     {
-        uiComponent.setAttribute(attribute, value ? Boolean.TRUE : Boolean.FALSE);
+        uiComponent.getAttributes().put(attribute, value ? Boolean.TRUE : Boolean.FALSE);
     }
 
 
@@ -261,7 +261,7 @@ public class UIComponentUtils
 
     private static List getFacetsAndChildrenCollection(UIComponent uiComponent)
     {
-        List lst = (List)uiComponent.getAttribute(FACETS_AND_CHILDREN_COLLECTION_ATTR);
+        List lst = (List)uiComponent.getAttributes().get(FACETS_AND_CHILDREN_COLLECTION_ATTR);
         if (lst == null)
         {
             Iterator it = uiComponent.getFacetsAndChildren();
@@ -270,7 +270,7 @@ public class UIComponentUtils
             {
                 lst.add(it.next());
             }
-            uiComponent.setAttribute(FACETS_AND_CHILDREN_COLLECTION_ATTR, lst);
+            uiComponent.getAttributes().put(FACETS_AND_CHILDREN_COLLECTION_ATTR, lst);
         }
         return lst;
     }
