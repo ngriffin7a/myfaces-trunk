@@ -41,6 +41,9 @@ import org.apache.myfaces.renderkit.html.HTML;
  * @author Sylvain Vieujot (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.11  2004/12/03 20:50:52  svieujot
+ * Minor bugfix, and add <script ... defer="true"> capability.
+ *
  * Revision 1.10  2004/12/03 20:27:51  svieujot
  * Add capability to add inline style to the header.
  *
@@ -109,8 +112,16 @@ public class AddResource {
      * If the script is already has already been referenced, it's added only once. 
      */
     public static void addJavaScriptToHeader(Class componentClass, String resourceFileName, FacesContext context){
+        addJavaScriptToHeader(componentClass, resourceFileName, false, context);
+    }
+    
+    /**
+     * Adds the given Javascript resource to the document Header.
+     * If the script is already has already been referenced, it's added only once. 
+     */
+    public static void addJavaScriptToHeader(Class componentClass, String resourceFileName, boolean defer, FacesContext context){
         AdditionalHeaderInfoToRender jsInfo =
-            new AdditionalHeaderInfoToRender(AdditionalHeaderInfoToRender.TYPE_JS, componentClass, resourceFileName);
+            new AdditionalHeaderInfoToRender(AdditionalHeaderInfoToRender.TYPE_JS, componentClass, resourceFileName, defer);
         getAdditionalHeaderInfoToRender(context).add( jsInfo );
     }
 
@@ -335,20 +346,24 @@ public class AddResource {
         static final int TYPE_CSS_INLINE = 2;
         
         public int type;
+        public boolean deferJS = false;
         public String componentName;
         public String resourceFileName;
         public String inlineText;
-        
-        public AdditionalHeaderInfoToRender(int infoType, String componentName, String resourceFileName) {
-            this.type = infoType;
-            this.componentName = componentName;
-            this.resourceFileName = resourceFileName;
-        }
-        
+
         public AdditionalHeaderInfoToRender(int infoType, Class componentClass, String resourceFileName) {
             this.type = infoType;
             this.componentName = getComponentName(componentClass);
             this.resourceFileName = resourceFileName;
+        }
+        
+        public AdditionalHeaderInfoToRender(int infoType, Class componentClass, String resourceFileName, boolean defer) {
+            if( defer && infoType != TYPE_JS )
+                log.error("Defer can only be used for scripts.");
+            this.type = infoType;
+            this.componentName = getComponentName(componentClass);
+            this.resourceFileName = resourceFileName;
+            this.deferJS = defer;
         }
         
         public AdditionalHeaderInfoToRender(int infoType, String inlineText) {
@@ -359,14 +374,18 @@ public class AddResource {
         }
         
         public int hashCode() {
-            return (componentName+((char)7)+resourceFileName+((char)7)+type).hashCode();
+            return (componentName+((char)7)+resourceFileName+((char)7)+type+((char)7)+inlineText).hashCode();
         }
         
         public String getString(HttpServletRequest request){
             switch (type) {
            case TYPE_JS:
                     return "<script language=\"JavaScript\" "
-                        +"src=\""+getResourceMappedPath(componentName, resourceFileName, request)+"\" type=\"text/javascript\"></script>\n";
+                        +"src=\""+getResourceMappedPath(componentName, resourceFileName, request)+"\" "
+                        +(deferJS ? "defer=\"true\" " : "")
+                        +"type=\"text/javascript\""
+                        +">"
+                        +"</script>\n";
            case TYPE_CSS:
                return "<link rel=\"stylesheet\" "
                	+"href=\""+getResourceMappedPath(componentName, resourceFileName, request)+"\" "
