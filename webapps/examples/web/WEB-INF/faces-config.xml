@@ -22,22 +22,22 @@
   <!-- Standard Components -->
   <component>
     <component-type>Command</component-type>
-    <component-class>net.sourceforge.myfaces.component.UICommand</component-class>
+    <component-class>net.sourceforge.myfaces.component.MyFacesUICommand</component-class>
   </component>
 
   <component>
     <component-type>Form</component-type>
-    <component-class>net.sourceforge.myfaces.component.UIForm</component-class>
+    <component-class>net.sourceforge.myfaces.component.MyFacesUIForm</component-class>
   </component>
 
   <component>
     <component-type>Graphic</component-type>
-    <component-class>net.sourceforge.myfaces.component.UIGraphic</component-class>
+    <component-class>net.sourceforge.myfaces.component.MyFacesUIGraphic</component-class>
   </component>
 
   <component>
     <component-type>Input</component-type>
-    <component-class>net.sourceforge.myfaces.component.UIInput</component-class>
+    <component-class>net.sourceforge.myfaces.component.MyFacesUIInput</component-class>
   </component>
 
   <component>
@@ -47,42 +47,42 @@
 
   <component>
     <component-type>Output</component-type>
-    <component-class>net.sourceforge.myfaces.component.UIOutput</component-class>
+    <component-class>net.sourceforge.myfaces.component.MyFacesUIOutput</component-class>
   </component>
 
   <component>
     <component-type>Panel</component-type>
-    <component-class>net.sourceforge.myfaces.component.UIPanel</component-class>
+    <component-class>net.sourceforge.myfaces.component.MyFacesUIPanel</component-class>
   </component>
 
   <component>
     <component-type>Parameter</component-type>
-    <component-class>net.sourceforge.myfaces.component.UIParameter</component-class>
+    <component-class>net.sourceforge.myfaces.component.MyFacesUIParameter</component-class>
   </component>
 
   <component>
     <component-type>SelectBoolean</component-type>
-    <component-class>net.sourceforge.myfaces.component.UISelectBoolean</component-class>
+    <component-class>net.sourceforge.myfaces.component.MyFacesUISelectBoolean</component-class>
   </component>
 
   <component>
     <component-type>SelectItem</component-type>
-    <component-class>net.sourceforge.myfaces.component.UISelectItem</component-class>
+    <component-class>net.sourceforge.myfaces.component.MyFacesUISelectItem</component-class>
   </component>
 
   <component>
     <component-type>SelectItems</component-type>
-    <component-class>net.sourceforge.myfaces.component.UISelectItems</component-class>
+    <component-class>net.sourceforge.myfaces.component.MyFacesUISelectItems</component-class>
   </component>
 
   <component>
     <component-type>SelectMany</component-type>
-    <component-class>net.sourceforge.myfaces.component.UISelectMany</component-class>
+    <component-class>net.sourceforge.myfaces.component.MyFacesUISelectMany</component-class>
   </component>
 
   <component>
     <component-type>SelectOne</component-type>
-    <component-class>net.sourceforge.myfaces.component.UISelectOne</component-class>
+    <component-class>net.sourceforge.myfaces.component.MyFacesUISelectOne</component-class>
   </component>
 
     <!-- MyFaces Extension Components -->

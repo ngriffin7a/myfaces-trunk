@@ -21,19 +21,20 @@ package net.sourceforge.myfaces.component;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 
-
 /**
- * Derived class from javax.faces.UIForm.
- * @author Manfred Geiler (latest modification by $Author$)
+ * Derived class from javax.faces.UIGraphic.
+ * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public class UIForm
-        extends javax.faces.component.UIForm
+public class MyFacesUIGraphic
+    extends javax.faces.component.UIGraphic
+    //implements CommonComponentProperties
 {
-    public static final String FORM_NAME_PROP = "formName";
+    public static final String URL_PROP = "URL";
 
-    public UIForm()
+    public MyFacesUIGraphic()
     {
+        UIComponentUtils.setTransient(this, true);  //No state to be saved
         setValid(true);
     }
 

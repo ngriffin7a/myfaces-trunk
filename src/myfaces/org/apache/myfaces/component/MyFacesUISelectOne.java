@@ -20,18 +20,44 @@ package net.sourceforge.myfaces.component;
 
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
+import java.util.Iterator;
 
 /**
  * DOCUMENT ME!
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public class UISelectItems
-    extends javax.faces.component.UISelectItems
+public class MyFacesUISelectOne
+    extends javax.faces.component.UISelectOne
 {
-    public UISelectItems()
+    public MyFacesUISelectOne()
     {
         setValid(true);
+    }
+
+    public boolean getRendersSelf()
+    {
+        return false;
+    }
+
+    public boolean getRendersChildren()
+    {
+        return true;
+    }
+
+    public Object getSelectedValue()
+    {
+        throw new UnsupportedOperationException("not supported.");
+    }
+
+    public void setSelectedValue(Object selectedValue)
+    {
+        throw new UnsupportedOperationException("not supported.");
+    }
+
+    protected Iterator getSelectItems(FacesContext context)
+    {
+        throw new UnsupportedOperationException("not supported.");
     }
 
 

@@ -19,7 +19,7 @@
 package net.sourceforge.myfaces.taglib;
 
 import net.sourceforge.myfaces.component.CommonComponentProperties;
-import net.sourceforge.myfaces.component.UIForm;
+import net.sourceforge.myfaces.component.MyFacesUIForm;
 import net.sourceforge.myfaces.renderkit.attr.CommonRendererAttributes;
 import net.sourceforge.myfaces.renderkit.attr.FormRendererAttributes;
 import net.sourceforge.myfaces.renderkit.attr.UserRoleAttributes;
@@ -60,7 +60,7 @@ public class FormTag
 
     public void setFormName(String v)
     {
-        setComponentPropertyString(UIForm.FORM_NAME_PROP, v);
+        setComponentPropertyString(MyFacesUIForm.FORM_NAME_PROP, v);
     }
 
     public void setFormClass(String v)

@@ -194,13 +194,13 @@ public class UIComponentUtils
 
     public static List[] getListeners(UIComponent uiComponent)
     {
-        if (uiComponent instanceof UICommand)
+        if (uiComponent instanceof MyFacesUICommand)
         {
-            return ((UICommand)uiComponent).getListeners();
+            return ((MyFacesUICommand)uiComponent).getListeners();
         }
-        else if (uiComponent instanceof UIInput)
+        else if (uiComponent instanceof MyFacesUIInput)
         {
-            return ((UIInput)uiComponent).getListeners();
+            return ((MyFacesUIInput)uiComponent).getListeners();
         }
         else if (uiComponent instanceof javax.faces.component.UICommand ||
                  uiComponent instanceof javax.faces.component.UIInput)
@@ -393,7 +393,7 @@ public class UIComponentUtils
                                                       String attrName)
     {
         if (uiComponent instanceof javax.faces.component.UIOutput &&
-            attrName.equals(UIOutput.VALUE_PROP))
+            attrName.equals(MyFacesUIOutput.VALUE_PROP))
         {
             return ConverterUtils.findValueConverter(facesContext,
                                                      (javax.faces.component.UIOutput)uiComponent);

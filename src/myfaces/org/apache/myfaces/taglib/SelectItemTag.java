@@ -18,7 +18,7 @@
  */
 package net.sourceforge.myfaces.taglib;
 
-import net.sourceforge.myfaces.component.UISelectItem;
+import net.sourceforge.myfaces.component.MyFacesUISelectItem;
 
 /**
  * DOCUMENT ME!
@@ -46,7 +46,7 @@ public class SelectItemTag
 
     public void setDescription(String v)
     {
-        setComponentPropertyString(UISelectItem.ITEM_DESCRIPTION_PROP, v);
+        setComponentPropertyString(MyFacesUISelectItem.ITEM_DESCRIPTION_PROP, v);
     }
 
     public void setValue(Object value)
@@ -56,16 +56,16 @@ public class SelectItemTag
 
     public void setLabel(String v)
     {
-        setComponentPropertyString(UISelectItem.ITEM_LABEL_PROP, v);
+        setComponentPropertyString(MyFacesUISelectItem.ITEM_LABEL_PROP, v);
     }
 
     public void setKey(String v)
     {
-        setComponentPropertyString(UISelectItem.ITEM_KEY_PROP, v);
+        setComponentPropertyString(MyFacesUISelectItem.ITEM_KEY_PROP, v);
     }
 
     public void setBundle(String v)
     {
-        setComponentPropertyString(UISelectItem.ITEM_BUNDLE_PROP, v);
+        setComponentPropertyString(MyFacesUISelectItem.ITEM_BUNDLE_PROP, v);
     }
 }

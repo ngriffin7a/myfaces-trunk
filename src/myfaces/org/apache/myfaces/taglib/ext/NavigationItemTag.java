@@ -19,7 +19,7 @@
 package net.sourceforge.myfaces.taglib.ext;
 
 import net.sourceforge.myfaces.component.ext.UINavigation;
-import net.sourceforge.myfaces.component.UICommand;
+import net.sourceforge.myfaces.component.MyFacesUICommand;
 import net.sourceforge.myfaces.renderkit.attr.CommonRendererAttributes;
 import net.sourceforge.myfaces.renderkit.attr.HyperlinkRendererAttributes;
 import net.sourceforge.myfaces.renderkit.attr.ext.NavigationItemRendererAttributes;
@@ -90,12 +90,12 @@ public class NavigationItemTag
 
     public void setAction(String v)
     {
-        setComponentPropertyString(UICommand.ACTION_PROP, v);
+        setComponentPropertyString(MyFacesUICommand.ACTION_PROP, v);
     }
 
     public void setActionRef(String v)
     {
-        setComponentPropertyString(UICommand.ACTION_REF_PROP, v);
+        setComponentPropertyString(MyFacesUICommand.ACTION_REF_PROP, v);
     }
 
     // HTML universal attributes --> already implemented in MyFacesTag

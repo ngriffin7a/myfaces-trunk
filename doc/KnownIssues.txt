@@ -27,7 +27,7 @@ MyFaces Known Issues
   - getClientId(FacesContext context)
   - addFacet(String facetName, UIComponent facet) (after calling super.addFacet !)
   - getParent(UIComponent superGetParent)
-  See net.sourceforge.myfaces.component.UISelectBoolean for an example of
+  See net.sourceforge.myfaces.component.MyFacesUISelectBoolean for an example of
   delegation.
 
 

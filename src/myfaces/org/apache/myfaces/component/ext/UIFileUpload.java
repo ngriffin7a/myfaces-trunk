@@ -19,7 +19,7 @@
 package net.sourceforge.myfaces.component.ext;
 
 import net.sourceforge.myfaces.component.UIComponentUtils;
-import net.sourceforge.myfaces.component.UIInput;
+import net.sourceforge.myfaces.component.MyFacesUIInput;
 
 /**
  * DOCUMENT ME!
@@ -27,7 +27,7 @@ import net.sourceforge.myfaces.component.UIInput;
  * @version $Revision$ $Date$
  */
 public class UIFileUpload
-        extends UIInput
+        extends MyFacesUIInput
 {
     public UIFileUpload()
     {

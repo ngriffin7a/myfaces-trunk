@@ -20,34 +20,21 @@ package net.sourceforge.myfaces.component;
 
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
-import java.util.List;
 
 /**
  * DOCUMENT ME!
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public class UICommand
-    extends javax.faces.component.UICommand
-    //implements CommonComponentProperties
+public class MyFacesUIParameter
+    extends javax.faces.component.UIParameter
 {
-    public static final String COMMAND_NAME_PROP = "commandName";
-    public static final String ACTION_PROP = "action";
-    public static final String ACTION_REF_PROP = "actionRef";
+    public static final String NAME_PROP = "name";
 
-    public UICommand()
+    public MyFacesUIParameter()
     {
         setValid(true);
     }
-
-    public List[] getListeners()
-    {
-        return listeners;
-    }
-
-
-
-
 
 
 //------------------------------------------------------------------------------

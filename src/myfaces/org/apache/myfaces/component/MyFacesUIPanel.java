@@ -21,20 +21,25 @@ package net.sourceforge.myfaces.component;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 
+
 /**
  * DOCUMENT ME!
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public class UIOutput
-    extends javax.faces.component.UIOutput
+public class MyFacesUIPanel
+    extends javax.faces.component.UIPanel
+    //implements CommonComponentProperties
 {
-    public static final String VALUE_PROP = "value";
-    public static final String VALUE_REF_PROP = "valueRef";
-
-    public UIOutput()
+    public MyFacesUIPanel()
     {
+        super();
         setValid(true);
+    }
+
+    public boolean getRendersChildren()
+    {
+        return false;
     }
 
 

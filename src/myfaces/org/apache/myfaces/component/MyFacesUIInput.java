@@ -20,30 +20,25 @@ package net.sourceforge.myfaces.component;
 
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
+import java.util.List;
 
 /**
  * DOCUMENT ME!
- * @author Thomas Spiegl (latest modification by $Author$)
+ * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public class UISelectMany
-    extends javax.faces.component.UISelectMany
+public class MyFacesUIInput
+        extends javax.faces.component.UIInput
 {
-    public UISelectMany()
+    public MyFacesUIInput()
     {
         setValid(true);
     }
 
-    public boolean getRendersSelf()
+    public List[] getListeners()
     {
-        return false;
+        return listeners;
     }
-
-    public boolean getRendersChildren()
-    {
-        return true;
-    }
-
 
 
 //------------------------------------------------------------------------------

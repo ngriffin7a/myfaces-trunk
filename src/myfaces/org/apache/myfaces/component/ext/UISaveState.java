@@ -19,7 +19,7 @@
 package net.sourceforge.myfaces.component.ext;
 
 import net.sourceforge.myfaces.component.UIComponentUtils;
-import net.sourceforge.myfaces.component.UIParameter;
+import net.sourceforge.myfaces.component.MyFacesUIParameter;
 
 import javax.faces.context.FacesContext;
 import java.io.IOException;
@@ -33,7 +33,7 @@ import java.io.IOException;
  * @version $Revision$ $Date$
  */
 public class UISaveState
-    extends UIParameter
+    extends MyFacesUIParameter
 {
     public static final String GLOBAL_PROP = "global";
 

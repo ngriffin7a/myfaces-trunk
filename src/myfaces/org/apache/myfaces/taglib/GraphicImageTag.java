@@ -19,7 +19,7 @@
 package net.sourceforge.myfaces.taglib;
 
 import net.sourceforge.myfaces.component.CommonComponentProperties;
-import net.sourceforge.myfaces.component.UIGraphic;
+import net.sourceforge.myfaces.component.MyFacesUIGraphic;
 import net.sourceforge.myfaces.renderkit.attr.CommonRendererAttributes;
 import net.sourceforge.myfaces.renderkit.attr.ImageRendererAttributes;
 import net.sourceforge.myfaces.renderkit.attr.UserRoleAttributes;
@@ -60,7 +60,7 @@ public class GraphicImageTag
 
     public void setUrl(String value)
     {
-        setComponentPropertyString(UIGraphic.URL_PROP, value);
+        setComponentPropertyString(MyFacesUIGraphic.URL_PROP, value);
     }
 
     public void setGraphicClass(String v)

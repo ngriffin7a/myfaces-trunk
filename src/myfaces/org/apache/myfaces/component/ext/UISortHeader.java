@@ -19,6 +19,7 @@
 package net.sourceforge.myfaces.component.ext;
 
 import net.sourceforge.myfaces.component.UIComponentHelper;
+import net.sourceforge.myfaces.component.MyFacesUIOutput;
 import net.sourceforge.myfaces.renderkit.html.ext.SortColumnRenderer;
 
 import javax.faces.FactoryFinder;
@@ -37,7 +38,7 @@ import javax.faces.event.PhaseId;
  * @version $Revision$ $Date$
  */
 public class UISortHeader
-    extends UIOutput
+    extends MyFacesUIOutput
     implements ActionListener
 {
     public static final String ASCENDING_PROP = "ascending";

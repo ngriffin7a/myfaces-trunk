@@ -18,7 +18,7 @@
  */
 package net.sourceforge.myfaces.component.ext;
 
-import net.sourceforge.myfaces.component.UICommand;
+import net.sourceforge.myfaces.component.MyFacesUICommand;
 
 import javax.faces.FacesException;
 import javax.faces.component.UIComponent;
@@ -33,7 +33,7 @@ import javax.faces.event.PhaseId;
  * @version $Revision$ $Date$
  */
 public class UISortColumn
-    extends UICommand
+    extends MyFacesUICommand
 {
     public static final String COLUMN_PROP = "column";
 

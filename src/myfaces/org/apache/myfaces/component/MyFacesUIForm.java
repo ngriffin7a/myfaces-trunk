@@ -21,14 +21,21 @@ package net.sourceforge.myfaces.component;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 
+
 /**
- * DOCUMENT ME!
- * @author Thomas Spiegl (latest modification by $Author$)
+ * Derived class from javax.faces.UIForm.
+ * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public class UISelectBoolean
-    extends javax.faces.component.UISelectBoolean
+public class MyFacesUIForm
+        extends javax.faces.component.UIForm
 {
+    public static final String FORM_NAME_PROP = "formName";
+
+    public MyFacesUIForm()
+    {
+        setValid(true);
+    }
 
 
 //------------------------------------------------------------------------------

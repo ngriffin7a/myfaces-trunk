@@ -18,7 +18,7 @@
  */
 package net.sourceforge.myfaces.taglib.core;
 
-import net.sourceforge.myfaces.component.UIParameter;
+import net.sourceforge.myfaces.component.MyFacesUIParameter;
 import net.sourceforge.myfaces.taglib.MyFacesTag;
 
 /**
@@ -41,7 +41,7 @@ public class ParameterTag
 
     public void setName(String v)
     {
-        setComponentPropertyString(UIParameter.NAME_PROP, v);
+        setComponentPropertyString(MyFacesUIParameter.NAME_PROP, v);
     }
 
     public void setValue(Object value)

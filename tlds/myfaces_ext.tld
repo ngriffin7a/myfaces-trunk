@@ -52,10 +52,10 @@
 
 <taglib>
 
-    <tlib-version>0.3.1</tlib-version>
+    <tlib-version>0.4.0</tlib-version>
     <jsp-version>1.2</jsp-version>
     <short-name>MyFaces Extension Tag Library</short-name>
-    <uri>http://myfaces.sourceforge.net/tld/myfaces_ext_0_3.tld</uri>
+    <uri>http://myfaces.sourceforge.net/tld/myfaces_ext_0_4.tld</uri>
     <description>
         Tag library for the MyFaces extensions implementation.
     </description>

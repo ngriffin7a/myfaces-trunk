@@ -18,27 +18,80 @@
  */
 package net.sourceforge.myfaces.component;
 
+import net.sourceforge.myfaces.convert.ConverterUtils;
+
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
-import java.util.List;
 
 /**
  * DOCUMENT ME!
- * @author Manfred Geiler (latest modification by $Author$)
+ * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public class UIInput
-        extends javax.faces.component.UIInput
+public class MyFacesUISelectItem
+    extends javax.faces.component.UISelectItem
 {
-    public UIInput()
+    public static final String ITEM_DESCRIPTION_PROP = "itemDescription";
+    public static final String ITEM_LABEL_PROP = "itemLabel";
+
+    //MyFaces extension
+    //public static final String SELECTED_ATTR = "selected";
+    public static final String ITEM_KEY_PROP = "itemKey";
+    public static final String ITEM_BUNDLE_PROP = "itemBundle";
+
+    private String _itemKey;
+    private String _itemBundle;
+
+    public MyFacesUISelectItem()
     {
         setValid(true);
     }
 
-    public List[] getListeners()
+    public boolean getRendersSelf()
     {
-        return listeners;
+        return false;
     }
+
+    /**
+     * MyFaces extension: getItemValue returns the currentValue of this
+     * component as a String.
+     */
+    public String getItemValue()
+    {
+        FacesContext facesContext = FacesContext.getCurrentInstance();
+        Object v = currentValue(facesContext);
+        return ConverterUtils.getComponentValueAsString(facesContext, this, v);
+    }
+
+    public void setItemValue(String v)
+    {
+        FacesContext facesContext = FacesContext.getCurrentInstance();
+        setValue(ConverterUtils.getComponentValueAsObject(facesContext,
+                                                          this,
+                                                          v));
+    }
+
+
+    public String getItemKey()
+    {
+        return _itemKey;
+    }
+
+    public void setItemKey(String itemKey)
+    {
+        _itemKey = itemKey;
+    }
+
+    public String getItemBundle()
+    {
+        return _itemBundle;
+    }
+
+    public void setItemBundle(String itemBundle)
+    {
+        _itemBundle = itemBundle;
+    }
+
 
 
 //------------------------------------------------------------------------------

@@ -23,15 +23,13 @@ import javax.faces.context.FacesContext;
 
 /**
  * DOCUMENT ME!
- * @author Manfred Geiler (latest modification by $Author$)
+ * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public class UIParameter
-    extends javax.faces.component.UIParameter
+public class MyFacesUISelectItems
+    extends javax.faces.component.UISelectItems
 {
-    public static final String NAME_PROP = "name";
-
-    public UIParameter()
+    public MyFacesUISelectItems()
     {
         setValid(true);
     }

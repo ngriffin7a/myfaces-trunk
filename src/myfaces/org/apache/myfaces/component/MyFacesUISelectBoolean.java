@@ -21,26 +21,14 @@ package net.sourceforge.myfaces.component;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 
-
 /**
  * DOCUMENT ME!
- * @author Manfred Geiler (latest modification by $Author$)
+ * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public class UIPanel
-    extends javax.faces.component.UIPanel
-    //implements CommonComponentProperties
+public class MyFacesUISelectBoolean
+    extends javax.faces.component.UISelectBoolean
 {
-    public UIPanel()
-    {
-        super();
-        setValid(true);
-    }
-
-    public boolean getRendersChildren()
-    {
-        return false;
-    }
 
 
 //------------------------------------------------------------------------------

@@ -19,6 +19,7 @@
 package net.sourceforge.myfaces.taglib;
 
 import net.sourceforge.myfaces.component.UIComponentUtils;
+import net.sourceforge.myfaces.component.UIRoot;
 import net.sourceforge.myfaces.renderkit.html.HTMLRenderer;
 import net.sourceforge.myfaces.renderkit.html.jspinfo.JspInfo;
 import net.sourceforge.myfaces.util.bean.BeanUtils;
@@ -55,7 +56,6 @@ public class MyFacesTagHelper
 
     private UIComponent _newComponent;
 
-    private static final String ROOT_DUMMY_CLIENT_ID = "ROOT";
 
 
     MyFacesTagHelper(MyFacesTagBaseIF tag)
@@ -234,7 +234,7 @@ public class MyFacesTagHelper
                     Attribute attr = (Attribute)it.next();
                     if (attr.isComponentProperty)
                     {
-                        if (attr.name.equals(net.sourceforge.myfaces.component.UIOutput.VALUE_PROP) &&
+                        if (attr.name.equals(net.sourceforge.myfaces.component.MyFacesUIOutput.VALUE_PROP) &&
                             uiComponent instanceof UIOutput)
                         {
                             overrideComponentValue((UIOutput)uiComponent,
@@ -439,7 +439,7 @@ public class MyFacesTagHelper
         UIComponent parentComp = getParentComponent();
         if (parentComp == null)
         {
-            return ROOT_DUMMY_CLIENT_ID;
+            return UIRoot.ROOT_COMPONENT_ID;
         }
 
         UIComponent parsedParent;

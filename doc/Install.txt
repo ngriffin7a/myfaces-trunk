@@ -22,6 +22,9 @@ HOWTO - Use MyFaces in your own WebApp
 - Copy the lib/myfaces.jar file to the WEB-INF/lib dir of your Webapplication.
 - Copy the lib/cos.jar file to the WEB-INF/lib dir of your Webapplication.
 - Copy the doc/faces.properties file to your WEB-INF/classes directory
+- Copy the doc/faces-config.xml file to your WEB-INF directory
+- Copy the doc/message_resources_en.xml file to your WEB-INF directory
+- Copy the doc/message_resources_de.xml file to your WEB-INF directory (if you need german messages)
 - Configure your webapp's web.xml file (see web.xml.sample)
 - Add the line
     <%@ taglib uri="http://java.sun.com/jsf/html" prefix="h"%>
@@ -30,6 +33,6 @@ HOWTO - Use MyFaces in your own WebApp
     <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f"%>
   to your JSPs to be able to use the core JSF tags.
 - Add the line
-    <%@ taglib uri="http://myfaces.sourceforge.net/tld/myfaces_ext_0_3.tld"
+    <%@ taglib uri="http://myfaces.sourceforge.net/tld/myfaces_ext_0_4.tld"
                prefix="x"%>
   to your JSPs if you want to be able to use the myfaces extensions tags.

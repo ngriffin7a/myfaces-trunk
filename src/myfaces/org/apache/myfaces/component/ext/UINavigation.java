@@ -18,8 +18,8 @@
  */
 package net.sourceforge.myfaces.component.ext;
 
-import net.sourceforge.myfaces.component.UICommand;
-import net.sourceforge.myfaces.component.UIPanel;
+import net.sourceforge.myfaces.component.MyFacesUICommand;
+import net.sourceforge.myfaces.component.MyFacesUIPanel;
 
 import javax.faces.FacesException;
 import javax.faces.FactoryFinder;
@@ -38,7 +38,7 @@ import java.util.Iterator;
  * @version $Revision$ $Date$
  */
 public class UINavigation
-    extends UIPanel
+    extends MyFacesUIPanel
     implements ActionListener,
                NamingContainer
 {
@@ -53,7 +53,7 @@ public class UINavigation
     }
 
     public static class UINavigationItem
-        extends UICommand
+        extends MyFacesUICommand
     {
         public static final String OPEN_PROP = "open";
         private boolean _open;

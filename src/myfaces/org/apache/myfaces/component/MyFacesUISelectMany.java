@@ -20,17 +20,16 @@ package net.sourceforge.myfaces.component;
 
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
-import java.util.Iterator;
 
 /**
  * DOCUMENT ME!
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public class UISelectOne
-    extends javax.faces.component.UISelectOne
+public class MyFacesUISelectMany
+    extends javax.faces.component.UISelectMany
 {
-    public UISelectOne()
+    public MyFacesUISelectMany()
     {
         setValid(true);
     }
@@ -45,20 +44,6 @@ public class UISelectOne
         return true;
     }
 
-    public Object getSelectedValue()
-    {
-        throw new UnsupportedOperationException("not supported.");
-    }
-
-    public void setSelectedValue(Object selectedValue)
-    {
-        throw new UnsupportedOperationException("not supported.");
-    }
-
-    protected Iterator getSelectItems(FacesContext context)
-    {
-        throw new UnsupportedOperationException("not supported.");
-    }
 
 
 //------------------------------------------------------------------------------

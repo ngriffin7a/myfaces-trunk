@@ -19,7 +19,7 @@
 package net.sourceforge.myfaces.taglib;
 
 import net.sourceforge.myfaces.component.CommonComponentProperties;
-import net.sourceforge.myfaces.component.UIOutput;
+import net.sourceforge.myfaces.component.MyFacesUIOutput;
 import net.sourceforge.myfaces.renderkit.attr.CommonRendererAttributes;
 import net.sourceforge.myfaces.renderkit.attr.KeyBundleAttributes;
 import net.sourceforge.myfaces.renderkit.attr.UserRoleAttributes;
@@ -225,7 +225,7 @@ public abstract class MyFacesTag
      */
     protected void setValue(Object value)
     {
-        setComponentPropertyObject(UIOutput.VALUE_PROP, value);
+        setComponentPropertyObject(MyFacesUIOutput.VALUE_PROP, value);
     }
 
 
@@ -247,7 +247,7 @@ public abstract class MyFacesTag
 
     public void setValueRef(String s)
     {
-        setComponentPropertyString(UIOutput.VALUE_REF_PROP, s);
+        setComponentPropertyString(MyFacesUIOutput.VALUE_REF_PROP, s);
     }
 
     public void setRendered(boolean rendered)

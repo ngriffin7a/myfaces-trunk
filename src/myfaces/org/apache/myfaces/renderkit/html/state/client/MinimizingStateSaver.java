@@ -20,6 +20,7 @@ package net.sourceforge.myfaces.renderkit.html.state.client;
 
 import net.sourceforge.myfaces.component.CommonComponentProperties;
 import net.sourceforge.myfaces.component.UIComponentUtils;
+import net.sourceforge.myfaces.component.MyFacesUIOutput;
 import net.sourceforge.myfaces.component.ext.UISaveState;
 import net.sourceforge.myfaces.convert.ConverterUtils;
 import net.sourceforge.myfaces.renderkit.html.DataRenderer;
@@ -537,7 +538,7 @@ public class MinimizingStateSaver
     protected boolean isIgnoreProperty(UIComponent comp, String propName)
     {
         if (comp instanceof UIOutput &&
-            propName.equals(net.sourceforge.myfaces.component.UIOutput.VALUE_PROP))
+            propName.equals(MyFacesUIOutput.VALUE_PROP))
         {
             return isIgnoreValue((UIOutput)comp);
         }

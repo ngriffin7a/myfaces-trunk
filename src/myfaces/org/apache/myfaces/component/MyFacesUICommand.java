@@ -20,23 +20,34 @@ package net.sourceforge.myfaces.component;
 
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
+import java.util.List;
 
 /**
- * Derived class from javax.faces.UIGraphic.
- * @author Thomas Spiegl (latest modification by $Author$)
+ * DOCUMENT ME!
+ * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public class UIGraphic
-    extends javax.faces.component.UIGraphic
+public class MyFacesUICommand
+    extends javax.faces.component.UICommand
     //implements CommonComponentProperties
 {
-    public static final String URL_PROP = "URL";
+    public static final String COMMAND_NAME_PROP = "commandName";
+    public static final String ACTION_PROP = "action";
+    public static final String ACTION_REF_PROP = "actionRef";
 
-    public UIGraphic()
+    public MyFacesUICommand()
     {
-        UIComponentUtils.setTransient(this, true);  //No state to be saved
         setValid(true);
     }
+
+    public List[] getListeners()
+    {
+        return listeners;
+    }
+
+
+
+
 
 
 //------------------------------------------------------------------------------
