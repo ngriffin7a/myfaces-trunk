@@ -38,6 +38,7 @@ import java.util.Set;
 /**
  * Utility methods for rendering HTML tags.
  * @author Thomas Spiegl (latest modification by $Author$)
+ * @author Anton Koinov
  * @version $Revision$ $Date$
  */
 public class HTMLUtil
@@ -57,17 +58,17 @@ public class HTMLUtil
             {
                 if (((Boolean)value).booleanValue())
                 {
-                    buf.append(" ");
+                    buf.append(' ');
                     buf.append(htmlAttrName);
                 }
             }
             else
             {
-                buf.append(" ");
+                buf.append(' ');
                 buf.append(htmlAttrName);
                 buf.append("=\"");
-                buf.append(value.toString());
-                buf.append("\"");
+                buf.append(HTMLEncoder.encode(value.toString(), false, true));
+                buf.append('"');
             }
         }
     }
@@ -85,17 +86,17 @@ public class HTMLUtil
             {
                 if (((Boolean)value).booleanValue())
                 {
-                    writer.write(" ");
+                    writer.write(' ');
                     writer.write(htmlAttrName);
                 }
             }
             else
             {
-                writer.write(" ");
+                writer.write(' ');
                 writer.write(htmlAttrName);
                 writer.write("=\"");
-                writer.write(value.toString());
-                writer.write("\"");
+                writer.write(HTMLEncoder.encode(value.toString(), false, true));
+                writer.write('"');
             }
         }
     }
@@ -138,7 +139,7 @@ public class HTMLUtil
         {
             buf.append(" class=\"");
             buf.append(cssClass);
-            buf.append("\"");
+            buf.append('"');
         }
     }
 
@@ -152,7 +153,7 @@ public class HTMLUtil
         {
             writer.write(" class=\"");
             writer.write(cssClass);
-            writer.write("\"");
+            writer.write('"');
         }
     }
 
@@ -180,13 +181,13 @@ public class HTMLUtil
         writer.write("<select");
         writer.write(" name=\"");
         writer.write(uiComponent.getClientId(facesContext));
-        writer.write("\"");
+        writer.write('"');
 
         if (rendererType.equals(ListboxRenderer.TYPE))
         {
             writer.write(" size=\"");
             writer.write(new Integer(size).toString());
-            writer.write("\"");
+            writer.write('"');
         }
 
         renderCssClass(writer, uiComponent, selectMany
@@ -234,14 +235,14 @@ public class HTMLUtil
                     String itemStrValue = itemObjValue.toString();
                     writer.write(" value=\"");
                     writer.write(HTMLEncoder.encode(itemStrValue, false, false));
-                    writer.write("\"");
+                    writer.write('"');
                     if ((selectMany && selectedValuesSet.contains(itemStrValue)) ||
                         (currentStrValue != null && itemStrValue.equals(currentStrValue)))
                     {
                         writer.write(" selected");
                     }
                 }
-                writer.write(">");
+                writer.write('>');
                 writer.write(HTMLEncoder.encode(item.getLabel(), true, true));
 
                 writer.write("</option>\n");
