@@ -38,10 +38,6 @@ public class StartupServletContextListener
 {
     private static final Log log = LogFactory.getLog(StartupServletContextListener.class);
 
-    public StartupServletContextListener()
-    {
-    }
-
     public void contextInitialized(ServletContextEvent e)
     {
         try
@@ -67,6 +63,7 @@ public class StartupServletContextListener
 
     public void contextDestroyed(ServletContextEvent e)
     {
+        // do nothing 
     }
 
 

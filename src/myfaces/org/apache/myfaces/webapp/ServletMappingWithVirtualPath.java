@@ -2,8 +2,6 @@ package net.sourceforge.myfaces.webapp;
 
 import javax.faces.context.FacesContext;
 import javax.servlet.ServletContext;
-import javax.servlet.ServletRequest;
-import javax.servlet.http.HttpServletRequest;
 
 /**
  * Default ServletMapping for the url-pattern "/faces/*".
@@ -21,15 +19,15 @@ public class ServletMappingWithVirtualPath
     private static final String VIRTUAL_PATH = "/faces";
 
 
-    public String mapTreeIdToFilename(ServletContext servletContext, String treeId)
+    public String mapViewIdToFilename(ServletContext servletContext, String viewId)
     {
         //treeId is already without virtual path ("/faces"), so nothing to do.
-        return treeId;
+        return viewId;
     }
 
-    public String encodeTreeIdForURL(FacesContext facesContext, String treeId)
+    public String encodeViewIdForURL(FacesContext facesContext, String viewId)
     {
-        return VIRTUAL_PATH + treeId;
+        return VIRTUAL_PATH + viewId;
         /*
         String protocolHostPort;
         String absolutePath;
@@ -85,12 +83,8 @@ public class ServletMappingWithVirtualPath
         */
     }
 
-    public String getTreeIdFromRequest(ServletRequest servletRequest)
+    public String getViewIdFromRequest(FacesContext facesContext)
     {
-        if (!(servletRequest instanceof HttpServletRequest))
-        {
-            throw new UnsupportedOperationException("only HttpServletRequest supported");
-        }
-        return ((HttpServletRequest)servletRequest).getPathInfo();
+        return facesContext.getExternalContext().getRequestPathInfo();
     }
 }

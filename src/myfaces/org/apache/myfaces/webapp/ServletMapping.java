@@ -2,7 +2,6 @@ package net.sourceforge.myfaces.webapp;
 
 import javax.faces.context.FacesContext;
 import javax.servlet.ServletContext;
-import javax.servlet.ServletRequest;
 
 /**
  * DOCUMENT ME!
@@ -17,16 +16,16 @@ public interface ServletMapping
      * @see net.sourceforge.myfaces.lifecycle.ViewHandlerJspImpl
      * @see net.sourceforge.myfaces.renderkit.html.jspinfo.JspTreeParser
      */
-    public String mapTreeIdToFilename(ServletContext servletContext, String treeId);
+    public String mapViewIdToFilename(ServletContext servletContext, String viewId);
 
     /**
      * Maps the real URL of a link or form action to an appropriate (virtual) URL that conforms
      * to the servlet mapping in web.xml.
      */
-    public String encodeTreeIdForURL(FacesContext facesContext, String treeId);
+    public String encodeViewIdForURL(FacesContext facesContext, String viewId);
 
     /**
      * Returns treeId that corresponds to the current request.
      */
-    public String getTreeIdFromRequest(ServletRequest request);
+    public String getViewIdFromRequest(FacesContext facesContex);
 }

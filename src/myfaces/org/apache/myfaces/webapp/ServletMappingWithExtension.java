@@ -5,8 +5,6 @@ import org.apache.commons.logging.LogFactory;
 
 import javax.faces.context.FacesContext;
 import javax.servlet.ServletContext;
-import javax.servlet.ServletRequest;
-import javax.servlet.http.HttpServletRequest;
 
 /**
  * ServletMapping for the alternative url-pattern "*.jsf".
@@ -21,24 +19,24 @@ public class ServletMappingWithExtension
     private static final String JSP_EXTENSION = ".jsp";
     private static final String FACES_EXTENSION = ".jsf";
 
-    public String mapTreeIdToFilename(ServletContext servletContext, String treeId)
+    public String mapViewIdToFilename(ServletContext servletContext, String viewId)
     {
-        if (treeId.toLowerCase().endsWith(FACES_EXTENSION))
+        if (viewId.toLowerCase().endsWith(FACES_EXTENSION))
         {
-            return treeId.substring(0, treeId.length() - FACES_EXTENSION.length()) + JSP_EXTENSION;
+            return viewId.substring(0, viewId.length() - FACES_EXTENSION.length()) + JSP_EXTENSION;
         }
         else
         {
-            log.warn("TreeId has invalid extension: " + treeId);
-            return treeId;
+            log.warn("ViewId has invalid extension: " + viewId);
+            return viewId;
         }
     }
 
 
-    public String encodeTreeIdForURL(FacesContext facesContext, String treeId)
+    public String encodeViewIdForURL(FacesContext facesContext, String viewId)
     {
         //treeId already has .jsf extension, nothing to do
-        return treeId;
+        return viewId;
         /*
         if (!isModificationNeeded(facesContext, urlToEncode))
         {
@@ -121,13 +119,8 @@ public class ServletMappingWithExtension
     }
     */
 
-    public String getTreeIdFromRequest(ServletRequest servletRequest)
+    public String getViewIdFromRequest(FacesContext facesContext)
     {
-        if (!(servletRequest instanceof HttpServletRequest))
-        {
-            throw new UnsupportedOperationException("only HttpServletRequest supported");
-        }
-        String treeId = ((HttpServletRequest)servletRequest).getServletPath();
-        return treeId;
+        return facesContext.getExternalContext().getRequestServletPath();
     }
 }

@@ -23,10 +23,13 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import javax.faces.webapp.FacesServlet;
-import javax.servlet.*;
+import javax.servlet.Servlet;
+import javax.servlet.ServletConfig;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
 import javax.servlet.jsp.JspFactory;
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.io.PrintStream;
 
 /**
@@ -79,7 +82,7 @@ public class MyFacesServlet
     }
 
     public void service(ServletRequest request, ServletResponse response)
-        throws IOException, ServletException
+        throws ServletException
     {
         try
         {
