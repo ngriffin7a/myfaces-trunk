@@ -47,7 +47,7 @@ public abstract class MyfacesComponentBodyTag
                 component.getRendersChildren() &&
                 !isBodyContentEmpty())
             {
-                log.warn("Component id " + component.getClientId(context) + " (" + getClass().getName() + " tag) renders it's children, but has embedded JSP or HTML code. Use the <f:verbatim> tag for nested JSP or HTML code!");
+                log.warn("Component with id '" + component.getClientId(context) + "' (" + getClass().getName() + " tag) renders it's children, but has embedded JSP or HTML code. Use the <f:verbatim> tag for nested JSP or HTML code!");
             }
         }
         return super.doEndTag();

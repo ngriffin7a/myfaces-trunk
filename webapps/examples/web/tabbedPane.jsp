@@ -51,34 +51,37 @@ managed beans used:
         <%@include file="inc/page_header.jsp" %>
         <%@include file="inc/navigation.jsp"  %>
 
-        <h:output_errors />
-
         <f:facet name="body">
+
             <h:panel_group id="body">
 
-                <x:tabbed_pane bgcolor="#FFFFCC" >
+                <h:messages id="messageList" showSummary="true" showDetail="true" />
 
-                    <p> A common paragraph </p>
+                <x:panel_tabbedpane bgcolor="#FFFFCC" >
 
-                    <x:tab id="tab1" label="Tab1">
-                        <h:input_text id="inp1"/><br>
-                        <h:input_text id="inp2"/>
-                    </x:tab>
+                    <f:verbatim>
+                        <p> A common paragraph </p>
+                    </f:verbatim>
 
-                    <x:tab id="tab2" label="Tab2">
+                    <x:panel_tab id="tab1" value="Tab1">
+                        <h:input_text id="inp1"/><f:verbatim><br></f:verbatim>
+                        <h:input_text id="inp2" required="true" /><h:message for="inp2" showSummary="false" showDetail="true" />
+                    </x:panel_tab>
+
+                    <x:panel_tab id="tab2" value="Tab2">
                         <h:input_textarea ></h:input_textarea>
-                    </x:tab>
+                    </x:panel_tab>
 
-                    <x:tab id="tab3" label="Tab3">
-                        <h:input_text id="inp3"/><br>
-                        <h:input_text id="inp4"/><br>
-                        <h:input_text id="inp5"/><br>
-                    </x:tab>
+                    <x:panel_tab id="tab3" value="Tab3">
+                        <h:input_text id="inp3"/><f:verbatim><br></f:verbatim>
+                        <h:input_text id="inp4"/><f:verbatim><br></f:verbatim>
+                        <h:input_text id="inp5"/><f:verbatim><br></f:verbatim>
+                    </x:panel_tab>
 
-                    <br>
-                    <h:command_button label="Common submit button" />
+                    <f:verbatim><br></f:verbatim>
+                    <h:command_button value="Common submit button" />
 
-                </x:tabbed_pane>
+                </x:panel_tabbedpane>
 
             </h:panel_group>
         </f:facet>

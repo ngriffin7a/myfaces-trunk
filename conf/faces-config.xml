@@ -215,6 +215,16 @@
   </component>
 
   <component>
+    <component-type>PanelTab</component-type>
+    <component-class>net.sourceforge.myfaces.component.ext.HtmlPanelTab</component-class>
+  </component>
+
+  <component>
+    <component-type>PanelTabbedPane</component-type>
+    <component-class>net.sourceforge.myfaces.component.ext.HtmlPanelTabbedPane</component-class>
+  </component>
+
+  <component>
     <component-type>SaveState</component-type>
     <component-class>net.sourceforge.myfaces.component.ext.UISaveState</component-class>
   </component>
@@ -499,6 +509,12 @@
         <render-kit-id>DEFAULT</render-kit-id>
 
         <renderer>
+            <renderer-type>FileUpload</renderer-type>
+            <renderer-class>net.sourceforge.myfaces.renderkit.html.ext.HtmlFileUploadRenderer</renderer-class>
+            <supported-component-type><component-type>InputFileUpload</component-type></supported-component-type>
+        </renderer>
+
+        <renderer>
             <renderer-type>Layout</renderer-type>
             <renderer-class>net.sourceforge.myfaces.renderkit.html.ext.HtmlLayoutRenderer</renderer-class>
             <supported-component-type><component-type>PanelLayout</component-type></supported-component-type>
@@ -511,9 +527,9 @@
         </renderer>
 
         <renderer>
-            <renderer-type>FileUpload</renderer-type>
-            <renderer-class>net.sourceforge.myfaces.renderkit.html.ext.HtmlFileUploadRenderer</renderer-class>
-            <supported-component-type><component-type>InputFileUpload</component-type></supported-component-type>
+            <renderer-type>TabbedPane</renderer-type>
+            <renderer-class>net.sourceforge.myfaces.renderkit.html.ext.HtmlTabbedPaneRenderer</renderer-class>
+            <supported-component-type><component-type>PanelTabbedPane</component-type></supported-component-type>
         </renderer>
 
     <!--
@@ -523,20 +539,6 @@
             <supported-component-type>
                <component-type>SortColumn</component-type>
             </supported-component-type>
-        </renderer>
-
-        <renderer>
-            <renderer-type>TabbedPane</renderer-type>
-            <renderer-class>net.sourceforge.myfaces.renderkit.html.ext.TabbedPaneRenderer</renderer-class>
-            <attribute>
-                <attribute-name>selectedIndex</attribute-name>
-                <attribute-class>java.lang.Integer</attribute-class>
-            </attribute>
-        </renderer>
-
-        <renderer>
-            <renderer-type>Tab</renderer-type>
-            <renderer-class>net.sourceforge.myfaces.renderkit.html.ext.TabRenderer</renderer-class>
         </renderer>
     -->
 

@@ -48,7 +48,12 @@ public class RendererUtils
     {
         if (!(component instanceof ConvertibleValueHolder))
         {
-            throw new IllegalArgumentException("Not a ConvertibleValueHolder");
+            if (component instanceof ValueHolder)
+            {
+                Object value = ((ValueHolder)component).getValue();
+                return value != null ? value.toString() : "";
+            }
+            throw new IllegalArgumentException("Component is not a ValueHolder");
         }
 
         Object value = ((ConvertibleValueHolder)component).getValue();

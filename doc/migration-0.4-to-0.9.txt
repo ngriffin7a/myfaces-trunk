@@ -60,6 +60,11 @@ Mandatory steps
              panel_list@value
           model bean-property: Iterator is not supported anymore, use java.util.List
 
+* rename <x:tabbed_pane> tags to <x:panel_tabbedpane>
+
+* rename <x:tab> tags to <x:panel_tab> and change attributes:
+    label --> value
+
 
 Optional steps (deprecated features)
 ------------------------------------

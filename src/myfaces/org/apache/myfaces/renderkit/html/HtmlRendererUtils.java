@@ -437,4 +437,13 @@ public class HtmlRendererUtils
         }
     }
 
+    public static void writePrettyIndent(FacesContext facesContext)
+            throws IOException
+    {
+        if (MyFacesConfig.isPrettyHtml(facesContext.getExternalContext()))
+        {
+            facesContext.getResponseWriter().write('\t');
+        }
+    }
+
 }
