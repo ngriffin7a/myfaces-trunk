@@ -32,12 +32,14 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 import javax.faces.FacesException;
+import javax.faces.application.ViewHandler;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Method;
+import java.lang.reflect.Constructor;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -51,14 +53,15 @@ public class FacesConfigFactoryImpl
     extends FacesConfigFactoryBase
 {
     private static final Log log = LogFactory.getLog(FacesConfigFactoryImpl.class);
-
     private Map _propPatternCache;
+    private static FacesConfig facesConfig;
 
     public void parseFacesConfig(FacesConfig facesConfig,
                                  InputStream in,
                                  String systemId,
                                  EntityResolver entityResolver) throws FacesException
     {
+        this.facesConfig = facesConfig;
         if (in == null)
         {
             throw new NullPointerException("InputStream must not be null.");
@@ -154,10 +157,10 @@ public class FacesConfigFactoryImpl
                     {"add" + methodNameMiddle, OBJECT_PARAM},
                     {"set" + methodNameMiddle, OBJECT_PARAM}
             };
-            
+
             _propPatternCache.put(nodeName, searchPatterns);
         }
-        
+
         Method method = null;
 
         for (int i = 0; i < searchPatterns.length; i++)
@@ -258,15 +261,28 @@ public class FacesConfigFactoryImpl
     {
         try
         {
+            // Check to see if the class follows the decorator pattern, too bad all this reflection is in here
+            if(ViewHandler.class.isAssignableFrom(clazz)){
+                log.debug("Decorating view handler: " + clazz);
+                // Now check if decorator pattern is followed
+                try {
+                    Constructor c = clazz.getConstructor(new Class[]{ViewHandler.class});
+                    return c.newInstance(new ViewHandler[]{facesConfig.getApplicationConfig().getViewHandler()});
+                } catch (NoSuchMethodException e) {
+                    // then not a decorator so instantiate normally
+                } catch (SecurityException e) {
+                    throw new FacesException("Unable to instantiate: " + clazz, e);
+                }
+            }
             return clazz.newInstance();
         }
         catch (Exception e)
         {
-            throw new FacesException("Unable to instantiate: " + clazz, e);
+            throw new FacesException("Unable to instantiate:" + clazz, e);
         }
   }
 
-    
+
     private static void invoke(Object obj, Method method, Object arg)
     {
         try
@@ -279,7 +295,7 @@ public class FacesConfigFactoryImpl
         }
     }
 
-    
+
     private static void invokeWithLang(Object obj, Method method, String lang, Object arg)
     {
         try
@@ -292,7 +308,7 @@ public class FacesConfigFactoryImpl
         }
     }
 
-    
+
     public static String resolvePropertyName(String elemName)
     {
         boolean ucase = false;

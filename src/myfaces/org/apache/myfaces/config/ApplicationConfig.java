@@ -18,6 +18,8 @@
  */
 package net.sourceforge.myfaces.config;
 
+import net.sourceforge.myfaces.application.jsp.JspViewHandlerImpl;
+
 import javax.faces.application.NavigationHandler;
 import javax.faces.application.ViewHandler;
 import javax.faces.el.PropertyResolver;
@@ -40,7 +42,11 @@ public class ApplicationConfig
     private PropertyResolver _propertyResolver;
     private VariableResolver _variableResolver;
     private LocaleConfig _localeConfig;
-    
+
+    public ApplicationConfig() {
+        _viewHandler = new JspViewHandlerImpl();
+    }
+
     public void setActionListener(ActionListener actionListener)
     {
         _actionListener = actionListener;
@@ -90,16 +96,16 @@ public class ApplicationConfig
     {
         _messageBundle = messageBundle.intern();
     }
-    
+
     public LocaleConfig getLocaleConfig()
     {
         return _localeConfig;
     }
-    
+
     public void setLocaleConfig(LocaleConfig localeConfig) {
         _localeConfig = localeConfig;
     }
-    
+
     public void addLocaleConfig(LocaleConfig localeConfig) {
         if (_localeConfig == null)
         {
@@ -110,29 +116,29 @@ public class ApplicationConfig
             _localeConfig.update(localeConfig);
         }
     }
-    
+
     public ViewHandler getViewHandler()
     {
         return _viewHandler;
     }
-    
+
     public void setViewHandler(ViewHandler viewHandler)
     {
         _viewHandler = viewHandler;
     }
-    
+
     public void update(ApplicationConfig applicationConfig)
     {
         if (applicationConfig._actionListener != null)
         {
             _actionListener = applicationConfig._actionListener;
         }
-        
+
         if (applicationConfig._localeConfig != null)
         {
             _localeConfig = applicationConfig._localeConfig;
         }
-        
+
         if (applicationConfig._messageBundle != null)
         {
             _messageBundle = applicationConfig._messageBundle;
@@ -152,7 +158,7 @@ public class ApplicationConfig
         {
             _variableResolver = applicationConfig._variableResolver;
         }
-        
+
         if (applicationConfig._viewHandler != null)
         {
             _viewHandler = applicationConfig._viewHandler;
