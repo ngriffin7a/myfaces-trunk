@@ -18,35 +18,17 @@
  */
 package net.sourceforge.myfaces.el;
 
-import net.sourceforge.myfaces.MyFacesTest;
-
-import javax.faces.el.MethodBinding;
 import javax.faces.el.ReferenceSyntaxException;
 import javax.faces.el.ValueBinding;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 
 /**
- * DOCUMENT ME!
  * @author Manfred Geiler (latest modification by $Author$)
  * @author Anton Koinov
  * @version $Revision$ $Date$
  */
-public class ValueBindingTest
-    extends MyFacesTest
+public class ValueBindingTest extends ELBaseTest
 {
-    //~ Instance fields ----------------------------------------------------------------------------
-
-    protected A        _a    = new A();
-    protected A        _theA = new A();
-    protected List     _l    = new ArrayList();
-    protected Map      _m    = new HashMap();
-    protected Object[] _a0;
-    protected Object[] _a1;
-
     //~ Constructors -------------------------------------------------------------------------------
 
     public ValueBindingTest(String name)
@@ -376,38 +358,6 @@ public class ValueBindingTest
         }
     }
 
-    /**
-     * Since test functions are called by name in ascending order, 
-     * this will always be called after testGetValues(). Otherwise testGetValues()
-     * would fail as we modify the values (mind this if you change the function names!)
-     * 
-     * @throws Exception
-     */
-    public void testSetValue() throws Exception
-    {
-        ValueBinding vb;
-
-        vb = _application.createValueBinding("#{theA.theB.name}");
-        vb.setValue(_facesContext, "test");
-
-        vb = _application.createValueBinding("#{testmap.newValue}");
-        vb.setValue(_facesContext, "newValue");
-        assertSame("newValue", vb.getValue(_facesContext));
-
-        vb     = _application.createValueBinding("#{ testmap [ \"o\" ] [ 'obj' ] }");
-        vb.setValue(_facesContext, "NEW_OBJECT");
-        assertSame("NEW_OBJECT", vb.getValue(_facesContext));
-
-        vb = _application.createValueBinding("#{ testmap  [  0  ]  [  0  ]} ");
-        vb.setValue(_facesContext, _theA);
-        assertSame(_theA, vb.getValue(_facesContext));
-        
-        vb     = _application.createValueBinding(
-            "#{testmap.list[4].list[testmap.list[4][1][0][testmap.list[4][0][1]]][0][0]}");
-        vb.setValue(_facesContext, "zzz");
-        assertSame("zzz", vb.getValue(_facesContext));
-    }
-    
     public void testIsReadOnly() throws Exception
     {
         ValueBinding vb;
@@ -476,121 +426,5 @@ public class ValueBindingTest
         catch (Exception e) {
             // ignore, error expected
         }
-    }
-    
-    /**
-     * Should move to its own class, but running out of time--so using the setUp() code here
-     */
-    public void testMethodBindingGetType() throws Exception
-    {
-        MethodBinding mb;
-        
-        mb = _application.createMethodBinding("#{a.getName}", new Class[] {});
-        assertSame(String.class, mb.getType(_facesContext));
-
-        mb = _application.createMethodBinding("#{a.getInt}", new Class[] {});
-        assertSame(Integer.class, mb.getType(_facesContext));
-
-        mb = _application.createMethodBinding("#{theA.theB.getName}", new Class[] {});
-        assertSame(String.class, mb.getType(_facesContext));
-
-        mb = _application.createMethodBinding("#{testmap.toString}", new Class[] {});
-        assertSame(String.class, mb.getType(_facesContext));
-
-        mb = _application.createMethodBinding("#{ testmap  [  0  ]  [  1  ] . toString} ", new Class[] {});
-        assertSame(String.class, mb.getType(_facesContext));
-
-        mb = _application.createMethodBinding("#{true ? a.getName : a.getInt}", new Class[] {});
-        assertSame(String.class, mb.getType(_facesContext));
-
-        mb = _application.createMethodBinding("#{false ? a.getName : a.getInt}", new Class[] {});
-        assertSame(Integer.class, mb.getType(_facesContext));
-
-        try 
-        {
-            mb = _application.createMethodBinding("#{testmap}", new Class[] {});
-            mb.getType(_facesContext);
-            assertTrue(false);
-        }
-        catch (Exception e) {
-            // ignore, error expected
-        }
-    }
-
-    /**
-     * Should move to its own class, but running out of time--so using the setUp() code here
-     */
-    public void testMethodBindingInvoke() throws Exception
-    {
-        MethodBinding mb;
-        
-        mb = _application.createMethodBinding("#{a.getName}", new Class[] {});
-        assertSame(A.NAME, mb.invoke(_facesContext, null));
-
-        mb = _application.createMethodBinding("#{theA.theB.getName}", new Class[] {});
-        assertSame(B.NAME, mb.invoke(_facesContext, null));
-
-        mb = _application.createMethodBinding("#{true ? a.getName : a.getInt}", new Class[] {});
-        assertSame(A.NAME, mb.invoke(_facesContext, null));
-
-        mb = _application.createMethodBinding("#{false ? a.getName : a.getInt}", new Class[] {});
-        assertEquals(new Integer(0), mb.invoke(_facesContext, null));
-
-        mb = _application.createMethodBinding("#{false ? a.getName : true ? a.getInt : zzz}", new Class[] {});
-        assertEquals(new Integer(0), mb.invoke(_facesContext, null));
-    }
-
-    protected void setUp()
-    throws Exception
-    {
-        super.setUp();
-
-        /*
-        _httpServletRequest.setAttribute("theA", _theA);
-        _httpServletRequest.setAttribute("a", _a);
-        */
-        _application.setVariableResolver(
-            new VariableResolverImpl()
-            {
-                {
-                    _implicitObjects.put("theA", _theA);
-                    _implicitObjects.put("a", _a);
-                    _implicitObjects.put("testmap", _m);
-                }
-            });
-
-        // Setup for testNestedObjects()
-        _a0     = new Object[] {new Integer(0), new Integer(1), new Integer(2)};
-        _a1     = new Object[] {_a0, null};
-
-        _l.add(0, _a0);
-        _l.add(1, _a1);
-        _l.add(2, "hello");
-        _l.add(3, new D("testClass"));
-        _l.add(4, _m);
-        _l.add(5, new Boolean(true));
-
-        _m.put(new Integer(0), _a0);
-        _m.put(new Long(0), _a0);
-        _m.put(new Long(1), _a1);
-        _m.put("list", _l);
-        _m.put(new Boolean(true), "TRUE");
-        _m.put(new Boolean(false), "FALSE");
-        _m.put("true_", "TRUE_");
-        _m.put("false_", "FALSE_");
-        _m.put("o", new D("OBJECT"));
-        _m.put("o0", new D(_a0));
-        _m.put("o1", new D(_a1));
-        _m.put("map", _m);
-        _m.put("David's", _m);
-        _m.put("my]bracket[", _m);
-        _m.put("my\\]bracket[", _m);
-        _m.put("my\\\\]bracket[", _m);
-        _m.put("\\]true[", "_TRUE_");
-        _m.put("\\]false[", "_FALSE_");
-        _m.put("f", new Boolean(false));
-        _m.put("t", new Boolean(true));
-
-        // END Setup for testNestedObjects()
     }
 }

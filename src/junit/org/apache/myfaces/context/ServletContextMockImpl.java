@@ -18,7 +18,8 @@
  */
 package net.sourceforge.myfaces.context;
 
-import net.sourceforge.myfaces.TestConfig;
+import net.sourceforge.myfaces.util.IteratorEnumeration;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -26,9 +27,6 @@ import javax.servlet.RequestDispatcher;
 import javax.servlet.Servlet;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -46,6 +44,7 @@ public class ServletContextMockImpl
     private static final Log log = LogFactory.getLog(ServletContextMockImpl.class);
 
     private Map _attributes = new HashMap();
+    private Map _initParameters = new HashMap();
 
     public ServletContext getContext(String s)
     {
@@ -174,12 +173,12 @@ public class ServletContextMockImpl
 
     public String getInitParameter(String s)
     {
-        return null;
+        return (String) _initParameters.get(s);
     }
 
     public Enumeration getInitParameterNames()
     {
-        throw new UnsupportedOperationException();
+        return new IteratorEnumeration(_initParameters.keySet().iterator());
     }
 
     public Object getAttribute(String s)
@@ -189,7 +188,7 @@ public class ServletContextMockImpl
 
     public Enumeration getAttributeNames()
     {
-        throw new UnsupportedOperationException();
+        return new IteratorEnumeration(_attributes.keySet().iterator());
     }
 
     public void setAttribute(String s, Object obj)
@@ -199,7 +198,7 @@ public class ServletContextMockImpl
 
     public void removeAttribute(String s)
     {
-        throw new UnsupportedOperationException();
+        _attributes.remove(s);
     }
 
     public String getServletContextName()

@@ -23,6 +23,9 @@ import javax.servlet.ServletInputStream;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+
+import net.sourceforge.myfaces.util.IteratorEnumeration;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -41,7 +44,13 @@ public class ServletRequestMockImpl
     implements HttpServletRequest
 {
     private Map _attributes = new HashMap();
+    private Cookie[] _cookies;
 
+    public ServletRequestMockImpl(Cookie[] cookies)
+    {
+        _cookies = cookies;
+    }
+    
     public String getAuthType()
     {
         throw new UnsupportedOperationException();
@@ -49,7 +58,7 @@ public class ServletRequestMockImpl
 
     public Cookie[] getCookies()
     {
-        throw new UnsupportedOperationException();
+        return _cookies;
     }
 
     public long getDateHeader(String name)
@@ -134,7 +143,7 @@ public class ServletRequestMockImpl
 
     public String getServletPath()
     {
-        throw new UnsupportedOperationException();
+        return "/myfaces";
     }
 
     public HttpSession getSession(boolean b)
@@ -174,7 +183,7 @@ public class ServletRequestMockImpl
 
     public Enumeration getAttributeNames()
     {
-        throw new UnsupportedOperationException();
+        return new IteratorEnumeration(_attributes.keySet().iterator());
     }
 
     public String getCharacterEncoding()

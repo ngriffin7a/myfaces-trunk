@@ -19,28 +19,25 @@
 package net.sourceforge.myfaces;
 
 import junit.framework.TestCase;
-import net.sourceforge.myfaces.application.ApplicationImpl;
-import net.sourceforge.myfaces.config.FacesConfig;
-import net.sourceforge.myfaces.config.FacesConfigFactory;
-import net.sourceforge.myfaces.context.FacesContextMockImpl;
+import net.sourceforge.myfaces.application.ApplicationFactoryImpl;
 import net.sourceforge.myfaces.context.ServletContextMockImpl;
 import net.sourceforge.myfaces.context.ServletRequestMockImpl;
 import net.sourceforge.myfaces.context.ServletResponseMockImpl;
-import net.sourceforge.myfaces.context.servlet.ServletExternalContextImpl;
-import net.sourceforge.myfaces.el.VariableResolverImpl;
+import net.sourceforge.myfaces.context.servlet.ServletFacesContextImpl;
 import net.sourceforge.myfaces.lifecycle.LifecycleImpl;
 
+import javax.faces.FactoryFinder;
 import javax.faces.application.Application;
-import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.lifecycle.Lifecycle;
 import javax.servlet.ServletContext;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * DOCUMENT ME!
  * @author Manfred Geiler (latest modification by $Author$)
+ * @author Anton Koinov
  * @version $Revision$ $Date$
  */
 public class MyFacesTest
@@ -62,38 +59,23 @@ public class MyFacesTest
     protected void setUp() throws Exception
     {
         super.setUp();
-        _servletContext = new ServletContextMockImpl();
-        _application = new ApplicationImpl();
-        _application.setVariableResolver(new VariableResolverImpl());
         
-        _httpServletRequest = new ServletRequestMockImpl();
-        _httpServletResponse = new ServletResponseMockImpl();
-
+        FactoryFinder.setFactory(FactoryFinder.APPLICATION_FACTORY, 
+            ApplicationFactoryImpl.class.getName());
+        
 //        FIXME
 //        LifecycleFactory lf = (LifecycleFactory)FactoryFinder.getFactory(FactoryFinder.LIFECYCLE_FACTORY);
 //        _lifecycle = lf.getLifecycle(LifecycleFactory.DEFAULT_LIFECYCLE);
         _lifecycle = new LifecycleImpl();
         
-        _facesContext = new FacesContextMockImpl(_servletContext,
-                                            _httpServletRequest,
-                                            _httpServletResponse,
-                                            _lifecycle,
-                                            _application);
-        
-        ServletContext servletContext = new ServletContextMockImpl();
-//        FacesConfigFactory fcf = MyFacesFactoryFinder.getFacesConfigFactory(servletContext);
-//        ExternalContext externalContext = new ServletExternalContextImpl(servletContext, null, null);
-//        FacesConfig facesConfig = fcf.getFacesConfig(externalContext);
-//        facesConfig.configureAll(externalContext);
-        
-//        FacesContextFactory fcf = (FacesContextFactory)FactoryFinder.getFactory(FactoryFinder.FACES_CONTEXT_FACTORY);
-//        _facesContext = fcf.getFacesContext(_servletContext,
-//                                            _httpServletRequest,
-//                                            _httpServletResponse,
-//                                            _lifecycle);
-//
-//        ApplicationFactory af = (ApplicationFactory)FactoryFinder.getFactory(FactoryFinder.APPLICATION_FACTORY);
-//        af.setApplication(_application);
+        _servletContext = new ServletContextMockImpl();
+        _httpServletRequest = new ServletRequestMockImpl(getCookies());
+        _httpServletResponse = new ServletResponseMockImpl();
+
+        _facesContext = new ServletFacesContextImpl(
+            _servletContext, _httpServletRequest, _httpServletResponse);
+
+        _application = _facesContext.getApplication();
     }
 
     protected void tearDown() throws Exception
@@ -105,5 +87,11 @@ public class MyFacesTest
         _httpServletResponse = null;
         _lifecycle = null;
         _facesContext = null;
+    }
+
+    /** override where necessary */
+    protected Cookie[] getCookies()
+    {
+        return new Cookie[0];
     }
 }
