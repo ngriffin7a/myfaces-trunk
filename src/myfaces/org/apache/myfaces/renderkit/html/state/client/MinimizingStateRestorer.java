@@ -398,7 +398,7 @@ public class MinimizingStateRestorer
 //        }
 //
 //        //Find proper converter to convert back from external String
-//        Converter conv = HTMLRenderer.findConverterForAttribute(facesContext,
+//        Converter conv = HtmlRenderer.findConverterForAttribute(facesContext,
 //                                                                uiComponent,
 //                                                                attrName);
 //

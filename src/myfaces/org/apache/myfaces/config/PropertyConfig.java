@@ -18,6 +18,8 @@
  */
 package net.sourceforge.myfaces.config;
 
+import net.sourceforge.myfaces.util.ClassUtils;
+
 
 /**
  * @author Manfred Geiler (latest modification by $Author$)
@@ -57,7 +59,7 @@ public class PropertyConfig implements Config
 
     public void setPropertyClass(String propertyClassName)
     {
-        _propertyClass = ConfigUtil.classForName(propertyClassName);
+        _propertyClass = ClassUtils.javaTypeToClass(propertyClassName);
     }
 
     public Class getPropertyClass()

@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<project name="myfaces-examples-debug" default="compile-for-debug">
+
+    <property environment="env"/>
+
+    <!-- Constants -->
+    <property name="project.dir" location="${basedir}/../.."/>
+    <property name="examples.src" location="${basedir}/src"/>
+    <property name="examples.web" location="${basedir}/web"/>
+    <property name="examples.doc" location="${basedir}/doc"/>
+    <property name="web-inf.classes.dir" location="${examples.web}/WEB-INF/classes"/>
+    <property name="web-inf.lib.dir" location="${examples.web}/WEB-INF/lib"/>
+    <property name="myfaces.doc" location="${project.dir}/doc"/>
+    <property name="myfaces.src" location="${project.dir}/src/myfaces"/>
+    <property name="tlds.dir" location="${project.dir}/tlds"/>
+
+    <!-- Properties -->
+    <property file="../../build.properties"/>
+    <property file="../../manifest.properties"/>
+    <property file="build.properties"/>
+
+    <!-- Temporary dir. May be overridden in build.properties -->
+    <property name="temp.dir" value="${env.TEMP}"/>
+
+
+    <!-- classpath for normal compiling -->
+    <path id="project.class.path">
+        <pathelement location="${jsf-api.jar}"/>
+        <pathelement location="${servlet.jar}"/>
+        <pathelement location="${cos.jar}"/>
+        <pathelement location="${commons-logging.jar}"/>
+    </path>
+
+
+    <target name="prepare-for-debug"
+            description="copies needed config and TLD files">
+ 
+        <mkdir dir="${web-inf.lib.dir}"/>
+
+        <copy todir="${web-inf.lib.dir}">
+            <fileset file="${cos.jar}"/>
+            <fileset file="${jsf-api.jar}"/>
+            <fileset file="${commons-logging.jar}"/>
+            <fileset file="${log4j.jar}"/>
+        </copy>
+
+        <copy file="${project.dir}/conf/develop-web.xml" tofile="${examples.web}/WEB-INF/web.xml" />
+        <copy file="${project.dir}/conf/faces-config.xml" todir="${examples.web}/WEB-INF" />
+
+        <!-- resolve TLD entities (for containers that do not support entities within TLDs) -->
+        <xslt basedir="${tlds.dir}"
+              includes="*.tld"
+              destdir="${web-inf.lib.dir}"
+              style="${tlds.dir}/resolve_entities.xsl"
+              extension=".tld" />
+
+    </target>
+
+
+
+    <target name="compile-for-debug"
+            depends="prepare-for-debug"
+            description="compiles the myfaces and examples java classes to WEB-INF/classes and copies needed config and TLD files">
+        <mkdir dir="${web-inf.classes.dir}"/>
+
+        <javac srcdir="${myfaces.src}"
+               destdir="${web-inf.classes.dir}"
+               optimize="off"
+               classpathref="project.class.path">
+        </javac>
+
+        <copy todir="${web-inf.classes.dir}">
+            <fileset dir="${myfaces.src}"
+                     includes="**"
+                     excludes="**/*.java
+                               **/package.html"/>
+        </copy>
+
+        <javac srcdir="${examples.src}"
+               destdir="${web-inf.classes.dir}"
+               optimize="off"
+               classpathref="project.class.path">
+        </javac>
+
+        <copy todir="${web-inf.classes.dir}">
+            <fileset dir="${examples.src}"
+                     includes="**"
+                     excludes="**/*.java
+                               **/package.html"/>
+        </copy>
+
+    </target>
+
+
+    <target name="clean"
+            description="deletes all files that were built">
+        <delete quiet="true" failonerror="false" includeEmptyDirs="true">
+            <fileset dir="${web-inf.classes.dir}"/>
+            <fileset dir="${web-inf.lib.dir}"/>
+            <fileset file="${examples.web}/WEB-INF/web.xml"/>
+            <fileset file="${examples.web}/WEB-INF/faces-config.xml"/>
+        </delete>
+    </target>
+
+</project>

@@ -33,7 +33,7 @@ import java.io.IOException;
  * @version $Revision$ $Date$
  */
 public class ListboxRenderer
-extends HTMLRenderer
+extends HtmlRenderer
 {
     //~ Static fields/initializers -----------------------------------------------------------------
 

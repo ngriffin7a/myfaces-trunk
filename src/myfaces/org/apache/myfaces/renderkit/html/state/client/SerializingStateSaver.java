@@ -89,7 +89,7 @@ public class SerializingStateSaver
 //        writer.write('&');  //we assume that there were previous parameters
 //        writer.write(TREE_REQUEST_PARAM);
 //        writer.write('=');
-//        writer.write(HTMLRenderer.urlEncode(getSerializedTree(facesContext)));
+//        writer.write(HtmlRenderer.urlEncode(getSerializedTree(facesContext)));
 //    }
 //
 //    protected void writeHiddenInputsState(FacesContext facesContext, Writer writer) throws IOException

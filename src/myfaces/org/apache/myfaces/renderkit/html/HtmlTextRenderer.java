@@ -44,7 +44,7 @@ import java.util.Map;
  * @version $Revision$ $Date$
  */
 public class HtmlTextRenderer
-        extends HTMLRenderer
+        extends HtmlRenderer
 {
     private static final Log log = LogFactory.getLog(HtmlTextRenderer.class);
 
@@ -150,6 +150,11 @@ public class HtmlTextRenderer
     }
 
 
+    /**
+     * TODO: previous value
+     * @param facesContext
+     * @param htmlInput
+     */
     public void decodeInput(FacesContext facesContext, HtmlInputText htmlInput)
     {
         Map paramValuesMap = facesContext.getExternalContext().getRequestParameterValuesMap();

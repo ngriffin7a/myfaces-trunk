@@ -44,7 +44,7 @@ import java.util.Locale;
  * @version $Revision$ $Date$
  */
 public class MessageRenderer
-extends HTMLRenderer
+extends HtmlRenderer
 {
     //~ Static fields/initializers -----------------------------------------------------------------
     private static final Log log = LogFactory.getLog(MessageRenderer.class);

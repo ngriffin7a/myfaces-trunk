@@ -34,7 +34,7 @@ import java.util.Map;
  * @version $Revision$ $Date$
  */
 public class HtmlFormRenderer
-        extends HTMLRenderer
+        extends HtmlRenderer
 {
     //private static final Log log = LogFactory.getLog(HtmlFormRenderer.class);
 

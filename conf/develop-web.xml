@@ -1,0 +1,202 @@
+<?xml version="1.0"?>
+
+<!--
+* MyFaces - the free JSF implementation
+* Copyright (C) 2003, 2004  The MyFaces Team (http://myfaces.sourceforge.net)
+*
+* This library is free software; you can redistribute it and/or
+* modify it under the terms of the GNU Lesser General Public
+* License as published by the Free Software Foundation; either
+* version 2.1 of the License, or (at your option) any later version.
+*
+* This library is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+* Lesser General Public License for more details.
+*
+* You should have received a copy of the GNU Lesser General Public
+* License along with this library; if not, write to the Free Software
+* Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+-->
+
+<!DOCTYPE web-app PUBLIC
+  "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
+  "http://java.sun.com/dtd/web-app_2_3.dtd">
+
+<web-app>
+
+    <description>
+
+        This web.xml can be used during debugging, when there is no myfaces.jar
+        library available.
+
+        The faces-config.xml file (that is normally in the myfaces.jar) must be
+        copied to the /WEB-INF directory of the web context.
+
+        The TLDs (that are normally in the myfaces.jar) must be
+        copied to the /WEB-INF/lib directory of the web context.
+
+    </description>
+
+    <context-param>
+        <param-name>javax.faces.application.CONFIG_FILES</param-name>
+        <param-value>
+            /WEB-INF/faces-config.xml,
+            /WEB-INF/examples-config.xml
+        </param-value>
+        <description>
+            Comma separated list of URIs of (additional) faces config files.
+            (e.g. /WEB-INF/my-config.xml)
+            See JSF 1.0 PRD2, 10.3.2
+        </description>
+    </context-param>
+
+    <context-param>
+        <param-name>myfaces_CheckJspModification</param-name>
+        <param-value>true</param-value>
+        <description>
+            MyFaces needs to parse JSP files when doing the "minimizing state
+            saving" strategy. The parsed infos are (of course) cached in memory.
+            Setting this parameter to true, means that JSP files are checked
+            for modification whenever a parsed info is needed. If the JSP was
+            modified (i.e. has a newer file date than when it was parsed) it is
+            parsed again.
+            In a development environment you should always set this parameter to
+            true. Setting it to false in production might enhance performance.
+            Default: "true"
+        </description>
+    </context-param>
+
+    <context-param>
+        <param-name>myfaces_StateSavingMode</param-name>
+        <param-value>client_minimized</param-value>
+        <description>
+            Allowed values:
+            "server_session" = tree state is saved in a HTTPSession
+            "client_serialized" = tree is serialized, zipped and saved as url parameter or hidden input
+            "client_minimized" = only those (dynamical) tree and component infos are saved that could not otherwise be restored by parsing the JSP
+            "client_minimized_zipped" = like "client_minimal", but additionally state info is zipped (GZIP), encoded to allowed characters (Base64) written as one query parameter or hidden form input.
+            Default: "client_minimized"
+        </description>
+    </context-param>
+
+    <context-param>
+        <param-name>myfaces_DisableJspParser</param-name>
+        <param-value>false</param-value>
+        <description>
+            This parameter is useful for the two state saving modes
+            "server_session" and "client_serialized" and disables the
+            jsp parsing completely.
+            Setting it to true means, that the integrated jsp parser (jasper)
+            will not be used. Normally you can leave this parameter to false.
+            Set only true when you know what you are doing or when you suspect
+            the integrated jasper to have (unwanted) sideeffects on your servlet
+            container.
+        </description>
+    </context-param>
+
+    <!-- WelcomeFile Filter -->
+    <!--
+    <filter>
+        <filter-name>WelcomeFile Filter</filter-name>
+        <filter-class>net.sourceforge.myfaces.webapp.filter.WelcomeFileFilter</filter-class>
+        <description>
+            Due to the manner in which the JSP / servlet lifecycle
+            functions, it is not currently possible to specify default
+            welcome files for a web application and map them to the
+            MyFacesServlet.  Normally they will be mapped to the
+            default servlet for the JSP container.  To offset this
+            shortcoming, we utilize a servlet Filter which examines
+            the URI of all incoming requests.
+        </description>
+    </filter>
+    -->
+
+    <!-- O'Reilly MultiPart Filter -->
+    <filter>
+        <filter-name>multipartFilter</filter-name>
+        <filter-class>com.oreilly.servlet.MultipartFilter</filter-class>
+        <!--
+        <init-param>
+            <param-name>uploadDir</param-name>
+            <param-value>/tmp</param-value>
+            <description>
+                Temporary directory where uploaded files will be written to.
+            </description>
+        </init-param>
+        -->
+    </filter>
+
+
+    <!-- Filter Mappings -->
+
+    <!-- see MyFaces Filter above for a description -->
+    <!--
+    <filter-mapping>
+        <filter-name>WelcomeFile Filter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+    -->
+
+    <filter-mapping>
+        <filter-name>multipartFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
+
+
+    <!-- Listener, that does all the startup work (configuration, init). -->
+    <listener>
+        <listener-class>net.sourceforge.myfaces.webapp.StartupServletContextListener</listener-class>
+    </listener>
+
+
+    <!-- Faces Servlet -->
+    <servlet>
+        <servlet-name>Faces Servlet</servlet-name>
+        <servlet-class>net.sourceforge.myfaces.webapp.MyFacesServlet</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+
+
+    <!-- Faces Servlet Mapping -->
+
+    <!-- virtual path mapping -->
+    <!--
+    <servlet-mapping>
+        <servlet-name>Faces Servlet</servlet-name>
+        <url-pattern>/faces/*</url-pattern>
+    </servlet-mapping>
+    -->
+
+    <!-- extension mapping -->
+    <servlet-mapping>
+        <servlet-name>Faces Servlet</servlet-name>
+        <url-pattern>*.jsf</url-pattern>
+    </servlet-mapping>
+
+
+    <!-- Welcome files -->
+
+    <welcome-file-list>
+        <welcome-file>index.jsp</welcome-file>
+        <welcome-file>index.html</welcome-file>
+    </welcome-file-list>
+
+
+    <taglib>
+        <taglib-uri>http://java.sun.com/jsf/core</taglib-uri>
+        <taglib-location>lib/myfaces_core.tld</taglib-location>
+    </taglib>
+
+    <taglib>
+        <taglib-uri>http://java.sun.com/jsf/html</taglib-uri>
+        <taglib-location>lib/myfaces_html.tld</taglib-location>
+    </taglib>
+
+    <taglib>
+        <taglib-uri>http://myfaces.sourceforge.net/tld/myfaces_ext_0_9.tld</taglib-uri>
+        <taglib-location>lib/myfaces_ext.tld</taglib-location>
+    </taglib>
+
+</web-app>

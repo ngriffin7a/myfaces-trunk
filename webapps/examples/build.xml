@@ -67,7 +67,6 @@
             <fileset file="${myfaces.jar}"/>
             <fileset file="${commons-logging.jar}"/>
             <fileset file="${log4j.jar}"/>
-            <fileset file="${commons-collections.jar}"/>
         </copy>
 
         <copy file="${project.dir}/conf/web.xml" todir="${examples.web}/WEB-INF" />
@@ -108,6 +107,37 @@
             <fileset file="${project.dir}/myfaces-*-examples.tgz"/>
             <fileset file="${examples.web}/WEB-INF/web.xml"/>
         </delete>
+    </target>
+
+
+
+    <target name="prepare-for-debugging"
+            depends="-check-myfaces-jar"
+            description="compiles the examples java classes to WEB-INF/classes and copies all needed libs to WEB-INF/lib">
+        <mkdir dir="${web-inf.classes.dir}"/>
+        <javac srcdir="${examples.src}"
+               destdir="${web-inf.classes.dir}"
+               optimize="${javac.optimize}"
+               classpathref="examples.class.path">
+        </javac>
+        <copy todir="${web-inf.classes.dir}">
+            <fileset dir="${examples.src}"
+                     includes="**"
+                     excludes="**/*.java
+                               **/package.html"/>
+        </copy>
+
+        <mkdir dir="${web-inf.lib.dir}"/>
+        <copy todir="${web-inf.lib.dir}">
+            <fileset file="${cos.jar}"/>
+            <fileset file="${jsf-api.jar}"/>
+            <fileset file="${myfaces.jar}"/>
+            <fileset file="${commons-logging.jar}"/>
+            <fileset file="${log4j.jar}"/>
+        </copy>
+
+        <copy file="${project.dir}/conf/web.xml" todir="${examples.web}/WEB-INF" />
+
     </target>
 
 

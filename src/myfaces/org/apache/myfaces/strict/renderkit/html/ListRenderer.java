@@ -23,14 +23,12 @@ import net.sourceforge.myfaces.renderkit.JSFAttr;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLUtil;
 import net.sourceforge.myfaces.util.FacesUtils;
 import net.sourceforge.myfaces.util.StringUtils;
+import net.sourceforge.myfaces.util.commons.ArrayIterator;
 
 import javax.faces.FacesException;
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIPanel;
 import javax.faces.context.FacesContext;
-
-import org.apache.commons.collections.iterators.ArrayIterator;
-
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Iterator;

@@ -155,7 +155,7 @@ extends Renderer
         }
     }
 
-    /** @deprecated {@link HtmlResponseWriter} does it */
+    /** @deprecated {@link HtmlResponseWriterImpl} does it */
     public static String urlEncode(String s)
     {
         try

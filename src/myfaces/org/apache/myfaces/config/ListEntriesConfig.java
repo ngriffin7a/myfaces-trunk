@@ -19,14 +19,14 @@
 package net.sourceforge.myfaces.config;
 
 import net.sourceforge.myfaces.el.PropertyResolverImpl;
+import net.sourceforge.myfaces.util.ClassUtils;
 import net.sourceforge.myfaces.util.FacesUtils;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.faces.context.FacesContext;
 import javax.faces.el.EvaluationException;
 import javax.faces.el.ValueBinding;
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -68,7 +68,7 @@ public class ListEntriesConfig
 
     public void setValueClass(String valueClass)
     {
-        _valueClass = ConfigUtil.classForName(valueClass);
+        _valueClass = ClassUtils.javaTypeToClass(valueClass);
     }
 
     public Class getValueClass()

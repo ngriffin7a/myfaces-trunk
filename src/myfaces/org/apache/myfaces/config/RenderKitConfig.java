@@ -18,13 +18,13 @@
  */
 package net.sourceforge.myfaces.config;
 
-import net.sourceforge.myfaces.renderkit.html.HTMLRenderKitImpl;
+import net.sourceforge.myfaces.renderkit.html.HtmlRenderKitImpl;
+import net.sourceforge.myfaces.util.ClassUtils;
 import org.apache.commons.logging.LogFactory;
 
 import javax.faces.FacesException;
 import javax.faces.render.RenderKit;
 import javax.faces.render.RenderKitFactory;
-import javax.faces.render.Renderer;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -39,7 +39,7 @@ public class RenderKitConfig implements Config
 {
     //~ Static fields/initializers -----------------------------------------------------------------
 
-    private static final Class DEFAULT_RENDER_KIT_CLASS = HTMLRenderKitImpl.class;
+    private static final Class DEFAULT_RENDER_KIT_CLASS = HtmlRenderKitImpl.class;
 
     //~ Instance fields ----------------------------------------------------------------------------
 
@@ -78,7 +78,7 @@ public class RenderKitConfig implements Config
 
     public void setRenderKitClass(String renderKitClass)
     {
-        _renderKitClass = ConfigUtil.classForName(renderKitClass);
+        _renderKitClass = ClassUtils.classForName(renderKitClass);
     }
 
     public Class getRenderKitClass()
@@ -114,17 +114,6 @@ public class RenderKitConfig implements Config
     public void addRendererConfig(RendererConfig rendererConfig)
     {
         getRendererConfigMap().put(rendererConfig.getRendererType(), rendererConfig);
-    }
-
-    public void configureRenderers(RenderKit renderKit)
-    {
-        for (Iterator it = getRendererTypes(); it.hasNext();)
-        {
-            String         rendererType   = (String) it.next();
-            RendererConfig rendererConfig = getRendererConfig(rendererType);
-            Renderer       renderer       = rendererConfig.newRenderer();
-            renderKit.addRenderer(rendererType, renderer);
-        }
     }
 
     public RenderKit newRenderKit()

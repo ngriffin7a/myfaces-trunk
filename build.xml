@@ -22,7 +22,6 @@
         <pathelement location="${servlet.jar}"/>
         <pathelement location="${cos.jar}"/>
         <pathelement location="${commons-logging.jar}"/>
-        <pathelement location="${commons-collections.jar}"/>
     </path>
 
 

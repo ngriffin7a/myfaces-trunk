@@ -250,7 +250,7 @@
     -->
 
 
-  <!-- standard converters -->
+  <!-- standard converters by id -->
 
     <converter>
         <converter-id>DateTime</converter-id>
@@ -262,75 +262,78 @@
         <converter-class>net.sourceforge.myfaces.convert.impl.NumberConverter</converter-class>
     </converter>
 
+
+    <!-- standard converters by class -->
+
     <converter>
-        <converter-id>java.lang.Boolean</converter-id>
+        <converter-for-class>java.lang.Boolean</converter-for-class>
         <converter-class>net.sourceforge.myfaces.convert.impl.BooleanConverter</converter-class>
     </converter>
     <converter>
-        <converter-id>boolean</converter-id>
+        <converter-for-class>boolean</converter-for-class>
         <converter-class>net.sourceforge.myfaces.convert.impl.BooleanConverter</converter-class>
     </converter>
 
     <converter>
-        <converter-id>java.lang.Byte</converter-id>
+        <converter-for-class>java.lang.Byte</converter-for-class>
         <converter-class>net.sourceforge.myfaces.convert.impl.ByteConverter</converter-class>
     </converter>
     <converter>
-        <converter-id>byte</converter-id>
+        <converter-for-class>byte</converter-for-class>
         <converter-class>net.sourceforge.myfaces.convert.impl.ByteConverter</converter-class>
     </converter>
 
     <converter>
-        <converter-id>java.lang.Character</converter-id>
+        <converter-for-class>java.lang.Character</converter-for-class>
         <converter-class>net.sourceforge.myfaces.convert.impl.CharacterConverter</converter-class>
     </converter>
     <converter>
-        <converter-id>char</converter-id>
+        <converter-for-class>char</converter-for-class>
         <converter-class>net.sourceforge.myfaces.convert.impl.CharacterConverter</converter-class>
     </converter>
 
     <converter>
-        <converter-id>java.lang.Double</converter-id>
+        <converter-for-class>java.lang.Double</converter-for-class>
         <converter-class>net.sourceforge.myfaces.convert.impl.DoubleConverter</converter-class>
     </converter>
     <converter>
-        <converter-id>double</converter-id>
+        <converter-for-class>double</converter-for-class>
         <converter-class>net.sourceforge.myfaces.convert.impl.DoubleConverter</converter-class>
     </converter>
 
     <converter>
-        <converter-id>java.lang.Float</converter-id>
+        <converter-for-class>java.lang.Float</converter-for-class>
         <converter-class>net.sourceforge.myfaces.convert.impl.FloatConverter</converter-class>
     </converter>
     <converter>
-        <converter-id>float</converter-id>
+        <converter-for-class>float</converter-for-class>
         <converter-class>net.sourceforge.myfaces.convert.impl.FloatConverter</converter-class>
     </converter>
 
     <converter>
-        <converter-id>java.lang.Integer</converter-id>
+        <converter-for-class>java.lang.Integer</converter-for-class>
         <converter-class>net.sourceforge.myfaces.convert.impl.IntegerConverter</converter-class>
     </converter>
     <converter>
-        <converter-id>int</converter-id>
+        <converter-for-class>int</converter-for-class>
         <converter-class>net.sourceforge.myfaces.convert.impl.IntegerConverter</converter-class>
     </converter>
 
     <converter>
-        <converter-id>java.lang.Long</converter-id>
+        <converter-for-class>java.lang.Long</converter-for-class>
         <converter-class>net.sourceforge.myfaces.convert.impl.LongConverter</converter-class>
     </converter>
     <converter>
-        <converter-id>long</converter-id>
+        <converter-for-class>long</converter-for-class>
         <converter-class>net.sourceforge.myfaces.convert.impl.LongConverter</converter-class>
     </converter>
 
     <converter>
-        <converter-id>java.lang.Short</converter-id>
+        <converter-for-class>java.lang.Short</converter-for-class>
         <converter-class>net.sourceforge.myfaces.convert.impl.ShortConverter</converter-class>
     </converter>
     <converter>
-        <converter-id>short</converter-id>
+        <converter-for-class>short</converter-for-class>
         <converter-class>net.sourceforge.myfaces.convert.impl.ShortConverter</converter-class>
     </converter>
 
@@ -338,22 +341,22 @@
   <!-- MyFaces converters -->
 
     <converter>
-        <converter-id>java.lang.String</converter-id>
+        <converter-for-class>java.lang.String</converter-for-class>
         <converter-class>net.sourceforge.myfaces.convert.impl.StringConverter</converter-class>
     </converter>
 
     <converter>
-        <converter-id>[Ljava.lang.String;</converter-id>
+        <converter-for-class>[Ljava.lang.String;</converter-for-class>
         <converter-class>net.sourceforge.myfaces.convert.impl.StringArrayConverter</converter-class>
     </converter>
 
     <converter>
-        <converter-id>java.math.BigDecimal</converter-id>
+        <converter-for-class>java.math.BigDecimal</converter-for-class>
         <converter-class>net.sourceforge.myfaces.convert.impl.BigDecimalConverter</converter-class>
     </converter>
 
     <converter>
-        <converter-id>net.sourceforge.myfaces.component.ext.UploadedFile</converter-id>
+        <converter-for-class>net.sourceforge.myfaces.component.ext.UploadedFile</converter-for-class>
         <converter-class>net.sourceforge.myfaces.convert.impl.UploadedFileConverter</converter-class>
     </converter>
 

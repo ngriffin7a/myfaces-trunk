@@ -35,7 +35,7 @@ import java.util.StringTokenizer;
  * @version $Revision$ $Date$
  */
 public class GridRenderer
-    extends HTMLRenderer
+    extends HtmlRenderer
     implements CallbackRenderer
 {
     public static final String TYPE = "Grid";

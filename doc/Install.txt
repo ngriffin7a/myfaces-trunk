@@ -29,6 +29,6 @@ HOWTO - Use MyFaces in your own WebApp
     <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f"%>
   to your JSPs to be able to use the core JSF tags.
 - Add the line
-    <%@ taglib uri="http://myfaces.sourceforge.net/tld/myfaces_ext_0_4.tld"
+    <%@ taglib uri="http://myfaces.sourceforge.net/tld/myfaces_ext_0_9.tld"
                prefix="x"%>
   to your JSPs if you want to be able to use the myfaces extensions tags.

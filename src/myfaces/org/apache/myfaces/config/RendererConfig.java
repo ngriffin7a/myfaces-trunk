@@ -18,15 +18,11 @@
  */
 package net.sourceforge.myfaces.config;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
+import net.sourceforge.myfaces.util.ClassUtils;
+import net.sourceforge.myfaces.util.NullIterator;
 
 import javax.faces.render.Renderer;
-
-import net.sourceforge.myfaces.util.NullIterator;
+import java.util.*;
 
 
 /**
@@ -82,7 +78,7 @@ public class RendererConfig implements Config
 
     public void setRendererClass(String rendererClass)
     {
-        _rendererClass = ConfigUtil.classForName(rendererClass);
+        _rendererClass = ClassUtils.classForName(rendererClass);
     }
 
     public Class getRendererClass()
@@ -188,7 +184,7 @@ public class RendererConfig implements Config
 
     public Renderer newRenderer()
     {
-        return (Renderer) ConfigUtil.newInstance(getRendererClass());
+        return (Renderer) ClassUtils.newInstance(getRendererClass());
     }
 
     public boolean supportsComponentClass(Class componentClass)

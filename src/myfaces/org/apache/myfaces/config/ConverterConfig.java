@@ -18,10 +18,10 @@
  */
 package net.sourceforge.myfaces.config;
 
-import javax.faces.convert.Converter;
-
+import net.sourceforge.myfaces.util.ClassUtils;
 import net.sourceforge.myfaces.util.NullIterator;
 
+import javax.faces.convert.Converter;
 import java.util.*;
 
 
@@ -60,7 +60,7 @@ public class ConverterConfig implements Config
 
     public void setConverterForClass(String converterForClass)
     {
-        _converterForClass = ConfigUtil.classForName(converterForClass);
+        _converterForClass = ClassUtils.javaTypeToClass(converterForClass);
     }
 
     public Class getConverterForClass()
@@ -103,6 +103,6 @@ public class ConverterConfig implements Config
 
     public Converter newConverter()
     {
-        return (Converter) ConfigUtil.newInstance(_converterClass);
+        return (Converter) ClassUtils.newInstance(_converterClass);
     }
 }

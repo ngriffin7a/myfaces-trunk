@@ -126,7 +126,15 @@ public class MessageFactory
         String bundleName = facesContext.getApplication().getMessageBundle();
         if (bundleName != null)
         {
-            return ResourceBundle.getBundle(bundleName, locale, Thread.currentThread().getContextClassLoader());
+            try
+            {
+                return ResourceBundle.getBundle(bundleName, locale, Thread.currentThread().getContextClassLoader());
+            }
+            catch (MissingResourceException e)
+            {
+                log.error("Resource bundle " + bundleName + " could not be found.");
+                return null;
+            }
         }
         else
         {
@@ -136,16 +144,32 @@ public class MessageFactory
 
     private ResourceBundle getMyFacesBundle(Locale locale)
     {
-        return ResourceBundle.getBundle(MYFACES_BUNDLE,
-                                        locale,
-                                        Thread.currentThread().getContextClassLoader());
+        try
+        {
+            return ResourceBundle.getBundle(MYFACES_BUNDLE,
+                                            locale,
+                                            Thread.currentThread().getContextClassLoader());
+        }
+        catch (MissingResourceException e)
+        {
+            log.error("Resource bundle " + MYFACES_BUNDLE + " could not be found.");
+            return null;
+        }
     }
 
     private ResourceBundle getDefaultBundle(Locale locale)
     {
-        return ResourceBundle.getBundle(DEFAULT_BUNDLE,
-                                        locale,
-                                        FacesContext.class.getClassLoader());
+        try
+        {
+            return ResourceBundle.getBundle(DEFAULT_BUNDLE,
+                                            locale,
+                                            FacesContext.class.getClassLoader());
+        }
+        catch (MissingResourceException e)
+        {
+            log.error("Resource bundle " + DEFAULT_BUNDLE + " could not be found.");
+            return null;
+        }
     }
 
 }

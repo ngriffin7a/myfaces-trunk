@@ -188,6 +188,8 @@ public class ConverterUtils
      * @param attrName
      * @return the proper Converter or null if an attribute descriptor could
      *         not be found
+     *
+     * @deprecated
      */
     public static Converter findAttributeConverter(FacesContext facesContext,
                                                    UIComponent uiComponent,
@@ -203,6 +205,8 @@ public class ConverterUtils
 
         //Lookup the attribute descriptor
         ExternalContext externalContext = (ExternalContext)facesContext.getExternalContext();
+
+        //TODO: We should not read the Config directly...
         FacesConfigFactory fcf = MyFacesFactoryFinder.getFacesConfigFactory(externalContext);
         FacesConfig facesConfig = fcf.getFacesConfig(externalContext);
         RenderKitConfig rkc = facesConfig.getRenderKitConfig(facesContext.getViewRoot().getRenderKitId());

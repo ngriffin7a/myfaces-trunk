@@ -19,14 +19,14 @@
 package net.sourceforge.myfaces.config;
 
 import net.sourceforge.myfaces.el.PropertyResolverImpl;
+import net.sourceforge.myfaces.util.ClassUtils;
 import net.sourceforge.myfaces.util.HashMapUtils;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import javax.faces.context.FacesContext;
 import javax.faces.el.EvaluationException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -46,7 +46,7 @@ public class MapEntriesConfig
 
     public void setKeyClass(String keyClass)
     {
-        _keyClass = ConfigUtil.classForName(keyClass);
+        _keyClass = ClassUtils.javaTypeToClass(keyClass);
         for (int i = 0, len = _mapEntryConfigList.size(); i < len; i++)
         {
             ((MapEntryConfig) _mapEntryConfigList.get(i)).keyToClass(_keyClass);

@@ -25,7 +25,7 @@ import net.sourceforge.myfaces.renderkit.attr.ext.NavigationRendererAttributes;
 import net.sourceforge.myfaces.renderkit.callback.CallbackRenderer;
 import net.sourceforge.myfaces.renderkit.callback.CallbackSupport;
 import net.sourceforge.myfaces.renderkit.html.HTML;
-import net.sourceforge.myfaces.renderkit.html.HTMLRenderer;
+import net.sourceforge.myfaces.renderkit.html.HtmlRenderer;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -42,7 +42,7 @@ import java.io.IOException;
  * @version $Revision$ $Date$
  */
 public class NavigationRenderer
-    extends HTMLRenderer
+    extends HtmlRenderer
     implements CallbackRenderer, NavigationRendererAttributes
 {
     private static final Log log = LogFactory.getLog(NavigationRenderer.class);

@@ -18,6 +18,8 @@
  */
 package net.sourceforge.myfaces.config;
 
+import net.sourceforge.myfaces.util.ClassUtils;
+
 
 /**
  * @author Manfred Geiler (latest modification by $Author$)
@@ -57,7 +59,7 @@ public class ReferencedBeanConfig implements Config
 
     public void setReferencedBeanClass(String referencedBeanClass)
     {
-        _referencedBeanClass = ConfigUtil.classForName(referencedBeanClass);
+        _referencedBeanClass = ClassUtils.classForName(referencedBeanClass);
     }
 
     public Class getReferencedBeanClass()

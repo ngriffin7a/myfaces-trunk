@@ -18,6 +18,8 @@
  */
 package net.sourceforge.myfaces.config;
 
+import net.sourceforge.myfaces.util.ClassUtils;
+
 import java.util.HashSet;
 import java.util.Set;
 
@@ -50,7 +52,7 @@ public class SupportedComponentClassConfig implements Config
 
     public void setComponentClass(String componentClass)
     {
-        _componentClass = ConfigUtil.classForName(componentClass);
+        _componentClass = ClassUtils.classForName(componentClass);
     }
 
     public Class getComponentClass()

@@ -22,7 +22,7 @@ import com.oreilly.servlet.MultipartWrapper;
 import net.sourceforge.myfaces.component.ext.UIFileUpload;
 import net.sourceforge.myfaces.component.ext.UploadedFile;
 import net.sourceforge.myfaces.renderkit.html.HTML;
-import net.sourceforge.myfaces.renderkit.html.HTMLRenderer;
+import net.sourceforge.myfaces.renderkit.html.HtmlRenderer;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLEncoder;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLUtil;
 
@@ -40,7 +40,7 @@ import java.io.IOException;
  * @version $Revision$ $Date$
  */
 public class FileUploadRenderer
-    extends HTMLRenderer
+    extends HtmlRenderer
 {
     public static final String TYPE = "FileUpload";
 

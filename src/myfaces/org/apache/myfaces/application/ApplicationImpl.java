@@ -19,12 +19,12 @@
 package net.sourceforge.myfaces.application;
 
 import net.sourceforge.myfaces.application.jsp.JspViewHandlerImpl;
-import net.sourceforge.myfaces.config.ConfigUtil;
 import net.sourceforge.myfaces.el.MethodBindingImpl;
 import net.sourceforge.myfaces.el.PropertyResolverImpl;
 import net.sourceforge.myfaces.el.ValueBindingImpl;
 import net.sourceforge.myfaces.el.VariableResolverImpl;
 import net.sourceforge.myfaces.util.BiLevelCacheMap;
+import net.sourceforge.myfaces.util.ClassUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -260,11 +260,11 @@ public class ApplicationImpl
         
         try
         {
-            _componentClassMap.put(componentType, Class.forName(componentClass));
+            _componentClassMap.put(componentType, ClassUtils.classForName(componentClass));
             if (log.isTraceEnabled()) log.trace("add Component class = " + componentClass +
                                                 " for type = " + componentType);
         }
-        catch (ClassNotFoundException e)
+        catch (FacesException e)
         {
             log.error("Component class " + componentClass + " not found", e);
         }
@@ -286,11 +286,11 @@ public class ApplicationImpl
         
         try
         {
-            _converterMap.put(converterId, ConfigUtil.classForName(converterClass));
+            _converterMap.put(converterId, ClassUtils.classForName(converterClass));
             if (log.isTraceEnabled()) log.trace("add Converter id = " + converterId +
                     " converterClass = " + converterClass);
            }
-        catch (Exception e)
+        catch (FacesException e)
         {
             log.error("Converter class " + converterClass + " not found", e);
         }
@@ -311,11 +311,11 @@ public class ApplicationImpl
         
         try
         {
-            _converterMap.put(targetClass, ConfigUtil.classForName(converterClass));
-            if (log.isTraceEnabled()) log.trace("add Converter for class = " + converterClass +
+            _converterTypeMap.put(targetClass, ClassUtils.classForName(converterClass));
+            if (log.isTraceEnabled()) log.trace("add Converter for class = " + targetClass +
                     " converterClass = " + converterClass);
         }
-        catch (Exception e)
+        catch (FacesException e)
         {
             log.error("Converter class " + converterClass + " not found", e);
         }
@@ -336,7 +336,7 @@ public class ApplicationImpl
         
         try
         {
-            _validatorClassMap.put(validatorId, ConfigUtil.classForName(validatorClass));
+            _validatorClassMap.put(validatorId, ClassUtils.classForName(validatorClass));
             if (log.isTraceEnabled()) log.trace("add Validator id = " + validatorId +
                                             " class = " + validatorClass);
         }
@@ -437,6 +437,7 @@ public class ApplicationImpl
         }
     }
 
+
     public Converter createConverter(Class targetClass)
     {
         if (targetClass == null)
@@ -445,6 +446,18 @@ public class ApplicationImpl
             throw new NullPointerException("createConverter: targetClass = null ist not allowed");
         }
 
+        Converter converter = internalCreateConverter(targetClass);
+        if (converter == null)
+        {
+            throw new FacesException("There is no registered converter for class " + targetClass.getName());
+        }
+
+        return converter;
+    }
+
+
+    private Converter internalCreateConverter(Class targetClass)
+    {
         // Locate a Converter registered for the target class itself.
         Class converterClass = (Class)_converterTypeMap.get(targetClass);
 
@@ -484,11 +497,14 @@ public class ApplicationImpl
         Class superClazz = targetClass.getSuperclass();
         if (superClazz != null)
         {
-            return createConverter(superClazz);
+            return internalCreateConverter(superClazz);
         }
-
-        throw new FacesException("There is no registered converter for class " + targetClass.getName());
+        else
+        {
+            return null;
+        }
     }
+
 
     public synchronized MethodBinding createMethodBinding(String reference, Class[] params)
         throws ReferenceSyntaxException

@@ -21,7 +21,7 @@ package net.sourceforge.myfaces.strict.renderkit.html;
 import net.sourceforge.myfaces.component.UIComponentUtils;
 import net.sourceforge.myfaces.renderkit.JSFAttr;
 import net.sourceforge.myfaces.renderkit.html.HTML;
-import net.sourceforge.myfaces.renderkit.html.HTMLRenderer;
+import net.sourceforge.myfaces.renderkit.html.HtmlRenderer;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLEncoder;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLUtil;
 import net.sourceforge.myfaces.util.FacesUtils;
@@ -51,7 +51,7 @@ import java.util.Map;
  * @version $Revision$ $Date$
  */
 public class HyperlinkRenderer
-    extends HTMLRenderer
+    extends HtmlRenderer
 {
     //~ Static fields/initializers -----------------------------------------------------------------
 

@@ -35,7 +35,7 @@ import java.io.IOException;
  * @version $Revision$ $Date$
  */
 public class TextareaRenderer
-extends HTMLRenderer
+extends HtmlRenderer
 {
     //~ Static fields/initializers -----------------------------------------------------------------
 

@@ -18,6 +18,8 @@
  */
 package net.sourceforge.myfaces.config;
 
+import net.sourceforge.myfaces.util.ClassUtils;
+
 import javax.faces.context.FacesContext;
 import javax.faces.el.EvaluationException;
 import java.util.ArrayList;
@@ -70,7 +72,7 @@ public class ManagedBeanConfig implements Config
 
     public void setManagedBeanClass(String managedBeanClass)
     {
-        _managedBeanClass = ConfigUtil.classForName(managedBeanClass);
+        _managedBeanClass = ClassUtils.classForName(managedBeanClass);
     }
 
     public Class getManagedBeanClass()

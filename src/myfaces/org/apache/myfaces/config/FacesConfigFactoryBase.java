@@ -27,8 +27,10 @@ import javax.faces.context.ExternalContext;
 import javax.servlet.ServletContext;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.JarURLConnection;
 import java.net.URL;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.jar.JarEntry;
@@ -48,26 +50,22 @@ public abstract class FacesConfigFactoryBase
     private static final String CONFIG_FILES_INIT_PARAM
         = "javax.faces.application.CONFIG_FILES";
 
-//    private static final String FACES_CONFIG_ATTR = FacesConfig.class.getName();
+    private static final String FACES_CONFIG_ATTR = FacesConfig.class.getName();
 
 
     public FacesConfig getFacesConfig(ExternalContext context)
     {
-        /*
         Map appMap = context.getApplicationMap();
         FacesConfig facesConfig = (FacesConfig)appMap.get(FACES_CONFIG_ATTR);
         if (facesConfig != null)
         {
             return facesConfig;
         }
-        */
 
-        FacesConfig facesConfig = new FacesConfig();
+        facesConfig = new FacesConfig();
         parseFacesConfigFiles(facesConfig, context);
 
-        /*
         appMap.put(FACES_CONFIG_ATTR, facesConfig);
-        */
         return facesConfig;
     }
 
@@ -101,7 +99,7 @@ public abstract class FacesConfigFactoryBase
             InputStream stream = context.getResourceAsStream(systemId);
             if (stream != null)
             {
-                log.info("Reading config /WEB-INF/faces-config.xml");
+                if (log.isInfoEnabled()) log.info("Reading config /WEB-INF/faces-config.xml");
                 parseStreamConfig(facesConfig, stream, systemId,
                                   new FacesConfigEntityResolver(context));
             }
@@ -115,10 +113,11 @@ public abstract class FacesConfigFactoryBase
                 InputStream stream = context.getResourceAsStream(systemId);
                 if (stream == null)
                 {
-                    throw new FacesException("Resource '" + systemId + "' not found!");
+                    log.error("Faces config resource " + systemId + " not found");
+                    continue;
                 }
 
-                log.info("Reading config " + systemId);
+                if (log.isInfoEnabled()) log.info("Reading config " + systemId);
 
                 parseStreamConfig(facesConfig, stream, systemId,
                                   new FacesConfigEntityResolver(context));
@@ -142,17 +141,26 @@ public abstract class FacesConfigFactoryBase
             URL url = servletContext.getResource(jarPath);
             if (url == null)
             {
+                log.error("Resource " + jarPath + " not found");
                 return;
             }
 
-            JarFile jarFile = new JarFile(url.getPath());
+            url = new URL("jar:" + url.toString() + "!/"); //This is for Tomcat 4.x compatibility!
+            JarURLConnection conn = (JarURLConnection) url.openConnection();
+            JarFile jarFile = conn.getJarFile();
             JarEntry configFile = jarFile.getJarEntry("META-INF/faces-config.xml");
-            if (configFile != null) {
-                String systemId = url + configFile.getName();
-                log.info("Reading config " + systemId);
+            if (configFile != null)
+            {
+                if (log.isDebugEnabled()) log.debug("faces-config.xml found in jar " + jarPath);
                 InputStream stream = jarFile.getInputStream(configFile);
+                String systemId = url + configFile.getName();
+                if (log.isInfoEnabled()) log.info("Reading config " + systemId);
                 parseStreamConfig(facesConfig, stream, systemId,
-                        new FacesConfigEntityResolver(jarFile));
+                                  new FacesConfigEntityResolver(jarFile));
+            }
+            else
+            {
+                if (log.isDebugEnabled()) log.debug("Jar " + jarPath + " contains no faces-config.xml");
             }
         }
         catch (IOException e)
