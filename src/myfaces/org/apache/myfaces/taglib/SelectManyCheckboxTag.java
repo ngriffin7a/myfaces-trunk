@@ -18,12 +18,9 @@
  */
 package net.sourceforge.myfaces.taglib;
 
-import net.sourceforge.myfaces.component.UISelectMany;
 import net.sourceforge.myfaces.renderkit.attr.CheckboxRendererAttributes;
 import net.sourceforge.myfaces.renderkit.html.CheckboxRenderer;
 import net.sourceforge.myfaces.renderkit.html.attr.HTMLInputAttributes;
-
-import javax.faces.component.UIComponent;
 
 
 /**

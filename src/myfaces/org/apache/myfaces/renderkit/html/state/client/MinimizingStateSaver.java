@@ -34,7 +34,6 @@ import net.sourceforge.myfaces.util.logging.LogUtil;
 
 import javax.faces.FacesException;
 import javax.faces.FactoryFinder;
-import javax.faces.el.ValueBinding;
 import javax.faces.application.ApplicationFactory;
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIOutput;
@@ -42,6 +41,7 @@ import javax.faces.component.UIPanel;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.convert.ConverterException;
+import javax.faces.el.ValueBinding;
 import javax.faces.event.ActionListener;
 import javax.faces.event.FacesListener;
 import javax.faces.event.PhaseId;

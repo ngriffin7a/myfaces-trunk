@@ -20,12 +20,12 @@ package net.sourceforge.myfaces.config;
 
 import net.sourceforge.myfaces.renderkit.html.RenderKitImpl;
 
-import javax.faces.render.RenderKitFactory;
 import javax.faces.render.RenderKit;
+import javax.faces.render.RenderKitFactory;
 import javax.faces.render.Renderer;
-import java.util.Map;
-import java.util.Iterator;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 /**
  * DOCUMENT ME!

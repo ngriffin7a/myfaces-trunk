@@ -21,7 +21,6 @@ package net.sourceforge.myfaces.component;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import java.util.List;
-import java.util.Map;
 
 /**
  * DOCUMENT ME!

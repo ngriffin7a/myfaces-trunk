@@ -39,12 +39,6 @@ public class BigDecimalConverter
 {
     private static final String CONVERTER_EXCEPTION_MSG_ID = BigDecimalConverter.class.getName() + ".EXCEPTION";
 
-    private static final String CONVERTER_ID = "BigDecimalConverter";
-    public String getConverterId()
-    {
-        return CONVERTER_ID;
-    }
-
     public Object getAsObject(FacesContext context, UIComponent component, String value)
             throws ConverterException
     {

@@ -23,7 +23,6 @@ package net.sourceforge.myfaces.taglib.core;
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-import javax.faces.validator.RequiredValidator;
 import javax.faces.validator.Validator;
 import javax.faces.webapp.ValidatorTag;
 import javax.servlet.jsp.JspException;

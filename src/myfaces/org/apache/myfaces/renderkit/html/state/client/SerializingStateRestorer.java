@@ -23,12 +23,12 @@ import net.sourceforge.myfaces.renderkit.html.state.ModelValueEntry;
 import net.sourceforge.myfaces.util.Base64;
 import net.sourceforge.myfaces.util.logging.LogUtil;
 
+import javax.faces.FactoryFinder;
+import javax.faces.application.ApplicationFactory;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
-import javax.faces.tree.Tree;
-import javax.faces.application.ApplicationFactory;
-import javax.faces.FactoryFinder;
 import javax.faces.el.ValueBinding;
+import javax.faces.tree.Tree;
 import javax.servlet.ServletRequest;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;

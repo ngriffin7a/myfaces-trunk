@@ -31,12 +31,6 @@ import javax.faces.convert.ConverterException;
 public class StringConverter
     implements Converter
 {
-    private static final String CONVERTER_ID = "StringConverter";
-    public String getConverterId()
-    {
-        return CONVERTER_ID;
-    }
-
     public Object getAsObject(FacesContext context, UIComponent component, String value)
             throws ConverterException
     {

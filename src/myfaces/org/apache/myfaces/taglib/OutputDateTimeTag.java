@@ -18,7 +18,6 @@
  */
 package net.sourceforge.myfaces.taglib;
 
-import net.sourceforge.myfaces.component.UIOutput;
 import net.sourceforge.myfaces.renderkit.attr.DateTimeRendererAttributes;
 import net.sourceforge.myfaces.renderkit.html.DateTimeRenderer;
 

@@ -21,8 +21,6 @@ package net.sourceforge.myfaces.taglib.core;
 import net.sourceforge.myfaces.component.UIParameter;
 import net.sourceforge.myfaces.taglib.MyFacesTag;
 
-import javax.faces.component.UIComponent;
-
 /**
  * DOCUMENT ME!
  * @author Manfred Geiler (latest modification by $Author$)

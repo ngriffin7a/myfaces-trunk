@@ -18,13 +18,13 @@
  */
 package net.sourceforge.myfaces.config;
 
+import javax.faces.FacesException;
 import javax.faces.application.Message;
 import javax.faces.application.MessageImpl;
 import javax.faces.context.FacesContext;
-import javax.faces.FacesException;
 import java.text.MessageFormat;
-import java.util.Map;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * DOCUMENT ME!

@@ -21,8 +21,8 @@ package net.sourceforge.myfaces.renderkit.html.jspinfo;
 import net.sourceforge.myfaces.util.bean.BeanUtils;
 
 import javax.faces.context.FacesContext;
-import javax.servlet.ServletRequest;
 import javax.servlet.ServletContext;
+import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.servlet.jsp.PageContext;

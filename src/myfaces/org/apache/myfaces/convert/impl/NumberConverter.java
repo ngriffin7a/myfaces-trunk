@@ -33,10 +33,10 @@ import java.text.ParseException;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public class IntegerConverter
+public class NumberConverter
     implements Converter
 {
-    private static final String CONVERTER_EXCEPTION_MSG_ID = IntegerConverter.class.getName() + ".EXCEPTION";
+    private static final String CONVERTER_EXCEPTION_MSG_ID = NumberConverter.class.getName() + ".EXCEPTION";
 
     public Object getAsObject(FacesContext context, UIComponent component, String value)
             throws ConverterException
@@ -49,8 +49,7 @@ public class IntegerConverter
         NumberFormat format = ConverterUtils.getNumberFormat(component, context.getLocale());
         try
         {
-            Number n = format.parse(value);
-            return new Integer(n.intValue());
+            return format.parse(value);
         }
         catch (ParseException e)
         {
@@ -71,5 +70,6 @@ public class IntegerConverter
         NumberFormat format = ConverterUtils.getNumberFormat(component, context.getLocale());
         return format.format(value);
     }
+
 
 }

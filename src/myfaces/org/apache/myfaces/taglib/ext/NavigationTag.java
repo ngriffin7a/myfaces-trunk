@@ -18,13 +18,10 @@
  */
 package net.sourceforge.myfaces.taglib.ext;
 
-import net.sourceforge.myfaces.component.ext.UINavigation;
 import net.sourceforge.myfaces.renderkit.attr.ext.NavigationRendererAttributes;
 import net.sourceforge.myfaces.renderkit.html.attr.HTMLTableAttributes;
 import net.sourceforge.myfaces.renderkit.html.ext.NavigationRenderer;
 import net.sourceforge.myfaces.taglib.MyFacesTag;
-
-import javax.faces.component.UIComponent;
 
 /**
  * see "navigation" tag in myfaces_ext.tld

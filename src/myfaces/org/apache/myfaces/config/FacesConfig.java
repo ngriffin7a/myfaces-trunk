@@ -20,11 +20,11 @@ package net.sourceforge.myfaces.config;
 
 import javax.faces.FacesException;
 import javax.faces.FactoryFinder;
-import javax.faces.render.RenderKitFactory;
-import javax.faces.render.RenderKit;
 import javax.faces.component.UIComponent;
 import javax.faces.context.MessageResources;
 import javax.faces.convert.Converter;
+import javax.faces.render.RenderKit;
+import javax.faces.render.RenderKitFactory;
 import javax.faces.validator.Validator;
 import java.util.*;
 

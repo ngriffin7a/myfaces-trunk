@@ -38,12 +38,6 @@ public class LongConverter
 {
     private static final String CONVERTER_EXCEPTION_MSG_ID = LongConverter.class.getName() + ".EXCEPTION";
 
-    private static final String CONVERTER_ID = "LongConverter";
-    public String getConverterId()
-    {
-        return CONVERTER_ID;
-    }
-
     public Object getAsObject(FacesContext context, UIComponent component, String value)
             throws ConverterException
     {

@@ -18,12 +18,9 @@
  */
 package net.sourceforge.myfaces.taglib;
 
-import net.sourceforge.myfaces.component.UIInput;
 import net.sourceforge.myfaces.renderkit.attr.TextareaRendererAttributes;
 import net.sourceforge.myfaces.renderkit.html.TextareaRenderer;
 import net.sourceforge.myfaces.renderkit.html.attr.HTMLTextareaAttributes;
-
-import javax.faces.component.UIComponent;
 
 /**
  * see "input_textarea" tag in myfaces_html.tld

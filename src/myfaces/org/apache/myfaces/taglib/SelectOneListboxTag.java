@@ -18,12 +18,9 @@
  */
 package net.sourceforge.myfaces.taglib;
 
-import net.sourceforge.myfaces.component.UISelectOne;
 import net.sourceforge.myfaces.renderkit.attr.ListboxRendererAttributes;
 import net.sourceforge.myfaces.renderkit.html.ListboxRenderer;
 import net.sourceforge.myfaces.renderkit.html.attr.HTMLSelectAttributes;
-
-import javax.faces.component.UIComponent;
 
 
 /**

@@ -18,12 +18,9 @@
  */
 package net.sourceforge.myfaces.taglib;
 
-import net.sourceforge.myfaces.component.UISelectOne;
 import net.sourceforge.myfaces.renderkit.attr.MenuRendererAttributes;
 import net.sourceforge.myfaces.renderkit.html.MenuRenderer;
 import net.sourceforge.myfaces.renderkit.html.attr.HTMLSelectAttributes;
-
-import javax.faces.component.UIComponent;
 
 
 /**

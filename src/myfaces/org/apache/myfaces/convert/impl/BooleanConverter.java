@@ -37,12 +37,6 @@ public class BooleanConverter
 {
     private static final String CONVERTER_EXCEPTION_MSG_ID = BooleanConverter.class.getName() + ".EXCEPTION";
 
-    private static final String CONVERTER_ID = "BooleanConverter";
-    public String getConverterId()
-    {
-        return CONVERTER_ID;
-    }
-
     private static final Map BOOLEAN_MAP = new HashMap();
     static
     {

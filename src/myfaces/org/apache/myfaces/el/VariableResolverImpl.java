@@ -18,11 +18,11 @@
  */
 package net.sourceforge.myfaces.el;
 
-import net.sourceforge.myfaces.config.FacesConfigFactory;
-import net.sourceforge.myfaces.config.FacesConfig;
-import net.sourceforge.myfaces.config.ManagedBeanConfig;
-import net.sourceforge.myfaces.config.ConfigUtil;
 import net.sourceforge.myfaces.MyFacesFactoryFinder;
+import net.sourceforge.myfaces.config.ConfigUtil;
+import net.sourceforge.myfaces.config.FacesConfig;
+import net.sourceforge.myfaces.config.FacesConfigFactory;
+import net.sourceforge.myfaces.config.ManagedBeanConfig;
 import net.sourceforge.myfaces.util.logging.LogUtil;
 
 import javax.faces.context.FacesContext;

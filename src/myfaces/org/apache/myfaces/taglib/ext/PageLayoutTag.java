@@ -19,7 +19,6 @@
 package net.sourceforge.myfaces.taglib.ext;
 
 import net.sourceforge.myfaces.component.UIComponentUtils;
-import net.sourceforge.myfaces.component.UIPanel;
 import net.sourceforge.myfaces.renderkit.attr.ext.LayoutRendererAttributes;
 import net.sourceforge.myfaces.renderkit.html.attr.HTMLTableAttributes;
 import net.sourceforge.myfaces.renderkit.html.ext.LayoutRenderer;

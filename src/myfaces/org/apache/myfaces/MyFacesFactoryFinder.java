@@ -18,10 +18,12 @@
  */
 package net.sourceforge.myfaces;
 
+import net.sourceforge.myfaces.config.FacesConfig;
+import net.sourceforge.myfaces.config.FacesConfigFactory;
+import net.sourceforge.myfaces.config.FacesConfigFactoryImpl;
 import net.sourceforge.myfaces.webapp.ServletMapping;
 import net.sourceforge.myfaces.webapp.ServletMappingFactory;
 import net.sourceforge.myfaces.webapp.ServletMappingFactoryImpl;
-import net.sourceforge.myfaces.config.*;
 
 import javax.faces.FacesException;
 import javax.servlet.ServletContext;

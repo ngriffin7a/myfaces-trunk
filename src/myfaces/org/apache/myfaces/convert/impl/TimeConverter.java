@@ -38,12 +38,6 @@ public class TimeConverter
 {
     private static final String CONVERTER_EXCEPTION_MSG_ID = TimeConverter.class.getName() + ".EXCEPTION";
 
-    private static final String CONVERTER_ID = "TimeConverter";
-    public String getConverterId()
-    {
-        return CONVERTER_ID;
-    }
-
     public Object getAsObject(FacesContext context, UIComponent component, String value)
             throws ConverterException
     {

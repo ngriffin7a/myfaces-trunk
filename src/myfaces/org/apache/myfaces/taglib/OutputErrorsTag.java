@@ -18,11 +18,8 @@
  */
 package net.sourceforge.myfaces.taglib;
 
-import net.sourceforge.myfaces.component.UIOutput;
 import net.sourceforge.myfaces.renderkit.attr.ErrorsRendererAttributes;
 import net.sourceforge.myfaces.renderkit.html.ErrorsRenderer;
-
-import javax.faces.component.UIComponent;
 
 
 /**

@@ -19,13 +19,10 @@
 package net.sourceforge.myfaces.taglib;
 
 import net.sourceforge.myfaces.component.CommonComponentAttributes;
-import net.sourceforge.myfaces.component.UIInput;
 import net.sourceforge.myfaces.renderkit.attr.CommonRendererAttributes;
 import net.sourceforge.myfaces.renderkit.attr.HiddenRendererAttributes;
 import net.sourceforge.myfaces.renderkit.attr.UserRoleAttributes;
 import net.sourceforge.myfaces.renderkit.html.HiddenRenderer;
-
-import javax.faces.component.UIComponent;
 
 /**
  * see "input_hidden" tag in myfaces_html.tld

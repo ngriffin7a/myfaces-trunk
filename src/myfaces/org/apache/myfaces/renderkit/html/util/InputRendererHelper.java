@@ -18,10 +18,10 @@
  */
 package net.sourceforge.myfaces.renderkit.html.util;
 
+import javax.faces.application.Message;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
-import javax.faces.application.Message;
 import java.io.IOException;
 import java.util.Iterator;
 

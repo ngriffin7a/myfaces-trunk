@@ -22,8 +22,8 @@ import net.sourceforge.myfaces.renderkit.html.state.StateSaver;
 
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
-import javax.servlet.jsp.tagext.BodyContent;
 import javax.servlet.ServletRequest;
+import javax.servlet.jsp.tagext.BodyContent;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;

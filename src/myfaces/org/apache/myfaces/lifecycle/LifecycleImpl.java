@@ -27,15 +27,15 @@ import net.sourceforge.myfaces.webapp.ServletMappingFactory;
 
 import javax.faces.FacesException;
 import javax.faces.FactoryFinder;
-import javax.faces.application.Message;
 import javax.faces.application.ApplicationFactory;
-import javax.faces.component.UIComponent;
+import javax.faces.application.Message;
 import javax.faces.component.UICommand;
+import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AbortProcessingException;
+import javax.faces.event.ActionListener;
 import javax.faces.event.FacesEvent;
 import javax.faces.event.PhaseId;
-import javax.faces.event.ActionListener;
 import javax.faces.lifecycle.Lifecycle;
 import javax.faces.lifecycle.ViewHandler;
 import javax.faces.render.RenderKit;

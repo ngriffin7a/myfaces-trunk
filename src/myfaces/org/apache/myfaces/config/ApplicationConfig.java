@@ -18,10 +18,10 @@
  */
 package net.sourceforge.myfaces.config;
 
-import javax.faces.event.ActionListener;
 import javax.faces.application.NavigationHandler;
 import javax.faces.el.PropertyResolver;
 import javax.faces.el.VariableResolver;
+import javax.faces.event.ActionListener;
 
 /**
  * DOCUMENT ME!

@@ -34,12 +34,6 @@ import java.util.StringTokenizer;
 public class StringArrayConverter
     implements Converter
 {
-    private static final String CONVERTER_ID = "StringArrayConverter";
-    public String getConverterId()
-    {
-        return CONVERTER_ID;
-    }
-
     public Object getAsObject(FacesContext context, UIComponent component, String value)
         throws ConverterException
     {

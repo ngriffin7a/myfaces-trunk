@@ -27,11 +27,11 @@ import net.sourceforge.myfaces.tree.TreeUtils;
 import net.sourceforge.myfaces.util.Base64;
 import net.sourceforge.myfaces.util.logging.LogUtil;
 
+import javax.faces.FactoryFinder;
+import javax.faces.application.ApplicationFactory;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.tree.Tree;
-import javax.faces.application.ApplicationFactory;
-import javax.faces.FactoryFinder;
 import javax.servlet.ServletRequest;
 import java.io.*;
 import java.util.ArrayList;

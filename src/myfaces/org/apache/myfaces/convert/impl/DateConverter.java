@@ -39,12 +39,6 @@ public class DateConverter
 {
     private static final String CONVERTER_EXCEPTION_MSG_ID = DateConverter.class.getName() + ".EXCEPTION";
 
-    private static final String CONVERTER_ID = "DateConverter";
-    public String getConverterId()
-    {
-        return CONVERTER_ID;
-    }
-
     public Object getAsObject(FacesContext context, UIComponent component, String value)
             throws ConverterException
     {
