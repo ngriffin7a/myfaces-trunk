@@ -18,7 +18,9 @@
  */
 package net.sourceforge.myfaces.custom.datalist;
 
+import java.util.Iterator;
 import javax.faces.component.UIData;
+import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.el.ValueBinding;
 
@@ -29,6 +31,39 @@ import javax.faces.el.ValueBinding;
 public class HtmlDataList
         extends UIData
 {
+
+    public void processDecodes(FacesContext context)
+    {
+        int first = getFirst();
+        int rows = getRows();
+        int last;
+        if (rows == 0)
+        {
+            last = getRowCount();
+        }
+        else
+        {
+            last = first + rows;
+        }
+        for (int rowIndex = first; rowIndex < last; rowIndex++)
+        {
+            setRowIndex(rowIndex);
+            if (isRowAvailable())
+            {
+                for (Iterator it = getChildren().iterator(); it.hasNext();)
+                {
+                    UIComponent child = (UIComponent)it.next();
+                    if (!child.isRendered())
+                    {
+                        continue;
+                    }
+                    child.processDecodes(context);
+                }
+            }
+        }
+    }
+
+
     //------------------ GENERATED CODE BEGIN (do not modify!) --------------------
 
     public static final String COMPONENT_TYPE = "net.sourceforge.myfaces.HtmlDataList";
