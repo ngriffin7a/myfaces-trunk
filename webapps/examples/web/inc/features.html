@@ -17,7 +17,7 @@ objects. This is an easy to use but poor approach:
 
 MyFaces has a different approach. It makes it possible to write sophisticated
 applications without any use of the HttpSession. All state information of
-the jsf tree and (optionally the model beans) is encoded to the client
+the jsf tree and (optionally the model beans) can be encoded to the client
 response in the form of query parameters and hidden inputs in forms.
 
 
@@ -34,9 +34,9 @@ Example (see "sample1.jsp"):
     ...
     &lt;f:use_faces&gt;
         ...
-        &lt;x:save_state id="save1" valueRef="calcForm.number1" /&gt;
-        &lt;x:save_state id="save2" valueRef="calcForm.number2" /&gt;
-        &lt;x:save_state id="save3" valueRef="calcForm.result" /&gt;
+        &lt;x:save_state id="save1" modelReference="calcForm.number1" /&gt;
+        &lt;x:save_state id="save2" modelReference="calcForm.number2" /&gt;
+        &lt;x:save_state id="save3" modelReference="calcForm.result" /&gt;
         ...</pre></code>
 The current values of the three properties number1, number2 and result get
 automatically saved within the client response and restored from the
@@ -52,7 +52,7 @@ following client request.
     ...
     &lt;f:use_faces>
         ...
-        &lt;x:save_state id="save1" valueRef="calcForm" /&gt;
+        &lt;x:save_state id="save1" modelReference="calcForm" /&gt;
         ...</code></pre>
 The whole bean automatically is saved (serialized) and restored by MyFaces.
 
@@ -62,7 +62,7 @@ supported by a Converter (see package myfaces/converter/map).
 
 
 <h4>State Saving</h4>
-Release 0.3.1 offers 4 different state saving features:
+MyFaces offers 4 different state saving features:
 <ol>
 <li>"server_session"<br>
 Tree state is saved in a HTTPSession comparable to Sun's default saving with saveStateInClient = false.
@@ -115,3 +115,9 @@ MyFaces ListRenderer does not render it's children, but rather lets child compon
 and embedded HTML or JSP code the chance to render. This is achieved by our magic
 CallbackRenderer support.
 (see list examples)
+
+<h4>UIFileUpload</h4>
+Convenient component for uploading files to web applications.
+
+<h4>Tabbed pane</h4>
+A swing like tabbed pane renderer.

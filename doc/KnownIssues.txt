@@ -1,6 +1,12 @@
 MyFaces Known Issues
 ====================
 
+* Right after starting a myfaces application the following message is logged:
+    WARNING: Error in faces-config.xml - inconsistency with TLD: Attribute
+    'selectedIndex' of renderer 'TabbedPane' has different class in Taglib
+    descriptor.
+  You can safely ignore this message.
+
 * There is a known issue for Sun's current implementation of the FacesTag,
   that makes problems when you use IterationTag support or you have conditional
   Tags. Please subclass all your own tag classes from MyFacesTag, that fixes
