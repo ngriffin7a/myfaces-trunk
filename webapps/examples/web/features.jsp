@@ -43,7 +43,11 @@
             footerClass="pageFooter" >
 
         <%@include file="inc/page_header.jsp" %>
-        <%@include file="inc/navigation.jsp"  %>
+        <f:facet name="navigation">
+            <f:subview id="menu" >
+                <jsp:include page="inc/navigation.jsp" />
+            </f:subview>
+        </f:facet>
 
         <f:facet name="body">
             <h:panelGroup id="body">
