@@ -1,0 +1,11 @@
+<!-- validator min/max attributes -->
+      <attribute>
+        <name>maximum</name>
+        <required>false</required>
+        <rtexprvalue>false</rtexprvalue>
+      </attribute>
+      <attribute>
+        <name>minimum</name>
+        <required>false</required>
+        <rtexprvalue>false</rtexprvalue>
+      </attribute>

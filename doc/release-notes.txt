@@ -4,6 +4,7 @@ MyFaces Release Notes
 ----------------------------------------------------------------------
 Changes in Release 0.3.3
 * Stylesheet support for navigation-menu along with implementing a lots of other common attributes
+* Validators added
 
 ----------------------------------------------------------------------
 Changes in Release 0.3.2

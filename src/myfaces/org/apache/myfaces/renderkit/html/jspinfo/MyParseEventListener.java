@@ -35,12 +35,14 @@ import net.sourceforge.myfaces.util.logging.LogUtil;
 import org.xml.sax.Attributes;
 
 import javax.faces.FacesException;
+import javax.faces.validator.Validator;
 import javax.faces.component.NamingContainer;
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIComponentBase;
 import javax.faces.context.FacesContext;
 import javax.faces.webapp.FacesTag;
 import javax.faces.webapp.FacetTag;
+import javax.faces.webapp.ValidatorTag;
 import javax.servlet.jsp.PageContext;
 import javax.servlet.jsp.tagext.Tag;
 import javax.servlet.jsp.tagext.TagAttributeInfo;
@@ -53,10 +55,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Hashtable;
-import java.util.List;
+import java.util.*;
 
 /**
  * DOCUMENT ME!
@@ -346,6 +345,7 @@ public class MyParseEventListener
 
         if (FacesTag.class.isAssignableFrom(c) ||
             ActionListenerTag.class.isAssignableFrom(c) ||
+            ValidatorTag.class.isAssignableFrom(c) ||
             FacetTag.class.isAssignableFrom(c))
         {
             try
@@ -388,6 +388,10 @@ public class MyParseEventListener
         else if (tag instanceof ActionListenerTag)
         {
             handleActionListenerTag(ti, (ActionListenerTag)tag, attrs);
+        }
+        else if (tag instanceof ValidatorTag)
+        {
+            handleValidatorTag(ti, (ValidatorTag)tag, attrs);
         }
         else if (tag instanceof FacetTag)
         {
@@ -836,6 +840,89 @@ public class MyParseEventListener
         lst.add(type);
     }
 
+    private void handleValidatorTag(TagInfo ti,
+                                    ValidatorTag validatorTag,
+                                    Attributes attributes)
+    {
+        BeanInfo beanInfo = BeanUtils.getBeanInfo(validatorTag);
+
+        for (int i = 0, size = attributes.getLength(); i < size; i++)
+        {
+            String attrName = attributes.getLocalName(i);
+            String attrValue = attributes.getValue(i);
+            PropertyDescriptor propDescr = BeanUtils.findPropertyDescriptor(beanInfo, attrName);
+            if (propDescr == null)
+            {
+                throw new RuntimeException("No PropertyDescriptor found for tag property " + attrName);
+            }
+            Object objValue = convertStringToTargetType(propDescr, attrValue);
+            BeanUtils.setBeanPropertyValue(validatorTag, propDescr, objValue);
+        }
+
+        Validator validator;
+        try
+        {
+            Method m = null;
+            Class c = validatorTag.getClass();
+            while (m == null && c != null && !c.equals(Object.class))
+            {
+                try
+                {
+                    m = c.getDeclaredMethod("createValidator",
+                                            null);
+                }
+                catch (NoSuchMethodException e) {}
+                c = c.getSuperclass();
+            }
+
+            if (m == null)
+            {
+                throw new NoSuchMethodException();
+            }
+
+            if (m.isAccessible())
+            {
+                validator = (Validator)m.invoke(validatorTag, null);
+            }
+            else
+            {
+                final Method finalM = m;
+                AccessController.doPrivileged(
+                    new PrivilegedAction()
+                    {
+                        public Object run()
+                        {
+                            finalM.setAccessible(true);
+                            return null;
+                        }
+                    });
+                validator = (Validator)m.invoke(validatorTag, null);
+                m.setAccessible(false);
+            }
+        }
+        catch (NoSuchMethodException e)
+        {
+            throw new RuntimeException(e);
+        }
+        catch (SecurityException e)
+        {
+            throw new RuntimeException(e);
+        }
+        catch (IllegalAccessException e)
+        {
+            throw new RuntimeException(e);
+        }
+        catch (IllegalArgumentException e)
+        {
+            throw new RuntimeException(e);
+        }
+        catch (InvocationTargetException e)
+        {
+            throw new RuntimeException(e);
+        }
+
+        _currentComponent.addValidator(validator);
+    }
 
 
     private static final String FACET_NAME_ATTR = "name";

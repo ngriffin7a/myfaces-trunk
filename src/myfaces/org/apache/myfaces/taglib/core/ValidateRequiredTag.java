@@ -24,8 +24,6 @@ package net.sourceforge.myfaces.taglib.core;
  * @version $Revision$ $Date$
  */
 import javax.faces.webapp.ValidatorTag;
-import javax.faces.webapp.FacesTag;
-import javax.servlet.jsp.JspException;
 
 public class ValidateRequiredTag
     extends ValidatorTag

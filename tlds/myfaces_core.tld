@@ -21,7 +21,9 @@
 
 <!DOCTYPE taglib
   PUBLIC "-//Sun Microsystems, Inc.//DTD JSP Tag Library 1.2//EN"
-  "http://java.sun.com/dtd/web-jsptaglibrary_1_2.dtd">
+  "http://java.sun.com/dtd/web-jsptaglibrary_1_2.dtd" [
+<!ENTITY validator_min_max_attributes   SYSTEM "entities/validator_min_max_attributes.xml">
+]>
 
 <taglib>
 
@@ -128,16 +130,28 @@ use_faces
       <name>validate_length</name>
       <tag-class>net.sourceforge.myfaces.taglib.core.ValidateLengthTag</tag-class>
       <body-content>JSP</body-content>
-      <attribute>
-        <name>maximum</name>
-        <required>false</required>
-        <rtexprvalue>false</rtexprvalue>
-      </attribute>
-      <attribute>
-        <name>minimum</name>
-        <required>false</required>
-        <rtexprvalue>false</rtexprvalue>
-      </attribute>
+      &validator_min_max_attributes;
+    </tag>
+
+    <tag>
+      <name>validate_doublerange</name>
+      <tag-class>net.sourceforge.myfaces.taglib.core.ValidateDoubleRangeTag</tag-class>
+      <body-content>JSP</body-content>
+      &validator_min_max_attributes;
+    </tag>
+
+    <tag>
+      <name>validate_longrange</name>
+      <tag-class>net.sourceforge.myfaces.taglib.core.ValidateLongRangeTag</tag-class>
+      <body-content>JSP</body-content>
+      &validator_min_max_attributes;
+    </tag>
+
+    <tag>
+      <name>validate_stringrange</name>
+      <tag-class>net.sourceforge.myfaces.taglib.core.ValidateStringRangeTag</tag-class>
+      <body-content>JSP</body-content>
+      &validator_min_max_attributes;
     </tag>
 
 </taglib>
