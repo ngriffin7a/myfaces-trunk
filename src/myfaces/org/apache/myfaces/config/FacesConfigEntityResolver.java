@@ -22,9 +22,9 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
 
 import javax.servlet.ServletContext;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.JarURLConnection;
@@ -57,7 +57,7 @@ public class FacesConfigEntityResolver
 
     public InputSource resolveEntity(String publicId,
                                      String systemId)
-        throws SAXException, IOException
+        throws IOException
     {
         InputStream stream;
         if (systemId.equals("http://java.sun.com/dtd/web-facesconfig_1_0.dtd"))
@@ -82,6 +82,11 @@ public class FacesConfigEntityResolver
             {
                 log.fatal("No servletContext !?");
             }
+            
+            if (systemId.startsWith("file:")) {
+                systemId = systemId.substring(7); // remove file://
+            }
+                
             stream = _servletContext.getResourceAsStream(systemId);
         }
 
