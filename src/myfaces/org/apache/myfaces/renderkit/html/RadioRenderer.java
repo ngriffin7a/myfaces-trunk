@@ -60,8 +60,6 @@ public class RadioRenderer
 
         ResponseWriter writer = facesContext.getResponseWriter();
 
-        String coumpoundId = uiComponent.getClientId(facesContext);
-
         Object currentValue = ((UIInput)uiComponent).currentValue(facesContext);
         String currentStrValue = ((currentValue != null) ? currentValue.toString() : null);
         boolean layoutPageDirection = isLayoutPageDirection((UISelectOne)uiComponent);
@@ -76,9 +74,9 @@ public class RadioRenderer
             writer.write("<input type=\"radio\"");
 
             writer.write(" name=\"");
-            writer.write(coumpoundId);
+            writer.write(calcRadioName(facesContext, (UISelectOne)uiComponent));
             writer.write("\" id=\"");
-            writer.write(coumpoundId);
+            writer.write(calcRadioName(facesContext, (UISelectOne)uiComponent));
             writer.write('"');
             Object itemValue = selectItem.getValue();
             if (itemValue != null)
@@ -104,6 +102,16 @@ public class RadioRenderer
             renderLabel(facesContext, (UISelectOne)uiComponent, selectItem);
             afterRenderItem(facesContext, selectItem, i, layoutPageDirection);
         }
+    }
+
+    protected String calcRadioName(FacesContext facesContext, UISelectOne selectOne)
+    {
+        return selectOne.getClientId(facesContext);
+    }
+
+    protected String calcRadioId(FacesContext facesContext, UISelectOne selectOne)
+    {
+        return selectOne.getClientId(facesContext);
     }
 
     protected void beforeRenderLabel(FacesContext facesContext, UISelectOne selectOne, SelectItem item)
