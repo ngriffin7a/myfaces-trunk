@@ -89,7 +89,9 @@ managed beans used:
                 </x:dataTable>
 
                 <h:panelGrid columns="1" styleClass="scrollerTable2" columnClasses="standardTable_ColumnCentered" >
-                    <x:dataScroller id="scroll_2" for="data">
+                    <x:dataScroller id="scroll_2"
+                            for="data"
+                            fastStep="10" >
                         <f:facet name="first" >
                             <h:graphicImage url="images/arrow-first.gif" border="1" />
                         </f:facet>
@@ -101,6 +103,12 @@ managed beans used:
                         </f:facet>
                         <f:facet name="next">
                             <h:graphicImage url="images/arrow-next.gif" border="1" />
+                        </f:facet>
+                        <f:facet name="fastforward">
+                            <h:graphicImage url="images/arrow-ff.gif" border="1" />
+                        </f:facet>
+                        <f:facet name="fastrewind">
+                            <h:graphicImage url="images/arrow-fr.gif" border="1" />
                         </f:facet>
                     </x:dataScroller>
                 </h:panelGrid>

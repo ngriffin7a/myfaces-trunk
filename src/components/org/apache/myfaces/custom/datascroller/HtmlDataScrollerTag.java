@@ -27,6 +27,9 @@ import javax.faces.component.UIComponent;
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.2  2004/06/21 09:46:58  royalts
+ * no message
+ *
  * Revision 1.1  2004/06/18 12:31:41  royalts
  * DataScroller implementation
  *
@@ -48,9 +51,13 @@ public class HtmlDataScrollerTag
 {
     //private static final Log log = LogFactory.getLog(HtmlDataScrollerTag.class);
 
+    private static final String FOR_ATTR = "for".intern();
+    private static final String FAST_STEP_ATTR = "fastStep".intern();
+
 
 
     private String _for;
+    private String _fastStep;
 
     // User Role support
     private String _enabledOnUserRole;
@@ -70,7 +77,8 @@ public class HtmlDataScrollerTag
     {
         super.setProperties(component);
 
-        setStringProperty(component, "for", _for);
+        setStringProperty(component, FOR_ATTR, _for);
+        setIntegerProperty(component, FAST_STEP_ATTR, _fastStep);
 
         setStringProperty(component, UserRoleAware.ENABLED_ON_USER_ROLE_ATTR, _enabledOnUserRole);
         setStringProperty(component, UserRoleAware.VISIBLE_ON_USER_ROLE_ATTR, _visibleOnUserRole);
@@ -79,6 +87,11 @@ public class HtmlDataScrollerTag
     public void setFor(String aFor)
     {
         _for = aFor;
+    }
+
+    public void setFastStep(String fastStep)
+    {
+        _fastStep = fastStep;
     }
 
     public void setEnabledOnUserRole(String enabledOnUserRole)

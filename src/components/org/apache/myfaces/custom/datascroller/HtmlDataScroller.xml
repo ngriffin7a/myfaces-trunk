@@ -12,4 +12,8 @@
         <name>for</name>
         <type>java.lang.String</type>
     </field>
+    <field>
+        <name>fastStep</name>
+        <type>int</type>
+    </field>
 </component>

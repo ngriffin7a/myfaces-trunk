@@ -39,10 +39,12 @@ import java.util.List;
 public class HtmlDataScrollerRenderer
     extends HtmlRenderer
 {
-    private static final String FACET_FIRST     = "first".intern();
-    private static final String FACET_PREVOIUS  = "previous".intern();
-    private static final String FACET_NEXT      = "next".intern();
-    private static final String FACET_LAST      = "last".intern();
+    private static final String FACET_FIRST         = "first".intern();
+    private static final String FACET_PREVOIUS      = "previous".intern();
+    private static final String FACET_NEXT          = "next".intern();
+    private static final String FACET_LAST          = "last".intern();
+    private static final String FACET_FAST_FORWARD  = "fastf".intern();
+    private static final String FACET_FAST_REWIND   = "fastr".intern();
 
     public static final String RENDERER_TYPE = "net.sourceforge.myfaces.DataScroller";
 
@@ -89,22 +91,43 @@ public class HtmlDataScrollerRenderer
             }
             else if (param.equals(FACET_PREVOIUS))
             {
-                int first = uiData.getFirst() - uiData.getRows();
-                if (first >= 0)
-                    uiData.setFirst(first);
+                int previous = uiData.getFirst() - uiData.getRows();
+                if (previous >= 0)
+                    uiData.setFirst(previous);
             }
             else if (param.equals(FACET_NEXT))
             {
-                int first = uiData.getFirst() + uiData.getRows();
-                if (first < uiData.getRowCount())
-                    uiData.setFirst(first);
+                int next = uiData.getFirst() + uiData.getRows();
+                if (next < uiData.getRowCount())
+                    uiData.setFirst(next);
+            }
+            else if (param.equals(FACET_FAST_FORWARD))
+            {
+                int fastStep = scroller.getFastStep();
+                if (fastStep <= 0)
+                    fastStep = 1;
+                int next = uiData.getFirst() + uiData.getRows() * fastStep;
+                int rowcount = uiData.getRowCount();
+                if (next > rowcount)
+                    next = rowcount - uiData.getRows();
+                uiData.setFirst(next);
+            }
+            else if (param.equals(FACET_FAST_REWIND))
+            {
+                int fastStep = scroller.getFastStep();
+                if (fastStep <= 0)
+                    fastStep = 1;
+                int previous = uiData.getFirst() - uiData.getRows() * fastStep;
+                if (previous < 0)
+                    previous = 0;
+                uiData.setFirst(previous);
             }
             else if (param.equals(FACET_LAST))
             {
-                int first = uiData.getRowCount() - uiData.getRows();
-                if (first >= 0)
+                int last = uiData.getRowCount() - uiData.getRows();
+                if (last >= 0)
                 {
-                    uiData.setFirst(first);
+                    uiData.setFirst(last);
                 }
                 else
                 {
@@ -133,6 +156,12 @@ public class HtmlDataScrollerRenderer
             renderFacet(facesContext, scroller, facetComp, FACET_FIRST);
             writer.write("&nbsp;");
         }
+        facetComp = scroller.getFastRewind();
+        if (facetComp != null)
+        {
+            renderFacet(facesContext, scroller, facetComp, FACET_FAST_REWIND);
+            writer.write("&nbsp;");
+        }
         facetComp = scroller.getPrevious();
         if (facetComp != null)
         {
@@ -143,6 +172,12 @@ public class HtmlDataScrollerRenderer
         if (facetComp != null)
         {
             renderFacet(facesContext, scroller, facetComp, FACET_NEXT);
+            writer.write("&nbsp;");
+        }
+        facetComp = scroller.getFastForward();
+        if (facetComp != null)
+        {
+            renderFacet(facesContext, scroller, facetComp, FACET_FAST_FORWARD);
             writer.write("&nbsp;");
         }
         facetComp = scroller.getLast();
