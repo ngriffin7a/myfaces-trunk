@@ -15,6 +15,7 @@
       <ol>
         <li><link href="#what-is">What is MyFaces?</link></li>
         <li><link href="#tomcat5">Does MyFaces work with Tomcat 5.5?</link></li>
+        <li><link href="#extentions">Can I use MyFaces extensions with the JSF RI?</link></li>
       </ol>
 </section>
 
@@ -27,6 +28,11 @@
 	  <dl>
         <dt>Does MyFaces work with Tomcat 5.5?</dt>
         <dd><anchor id="tomcat5" /> Yes, Apache MyFaces works with Tomcat5.5. If you see a blank page in your browser, try to remove the JAR files <code>jsp-2.0.jar</code> and <code>commons-el.jar</code> of the folder <code>WEB-INF/lib</code>.</dd>
+      </dl>	  
+	  <dl>
+        <dt>Can I use MyFaces extensions with the JSF RI?</dt>
+        <dd><anchor id="extentions" /> Yes, most of the Apache MyFaces extentions work with JSF RI. You must only copy <code>myfaces-extentions.jar</code> to your <code>WEB-INF/lib</code> folder. To be able to use the MyFaces extensions add the following line to your JSPs: <source><![CDATA[<%@ taglib uri="http://myfaces.apache.org/extensions" prefix="x"%>]]></source>
+			The current version of our TilesViewHandler will not work with the JSF RI. If you notice other problems please submit a ticket on <link href="../community/issue.html">JIRA</link></dd>
       </dl>	  
  </section>
  
