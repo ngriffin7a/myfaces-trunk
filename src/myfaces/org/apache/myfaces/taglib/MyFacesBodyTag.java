@@ -233,14 +233,6 @@ public abstract class MyFacesBodyTag
         setRendererAttributeObject(CONVERTER_ATTR, converter);
     }
 
-    /**
-     * @deprecated
-     */
-    public void setModelReference(String s)
-    {
-        setComponentPropertyString(UIOutput.VALUE_REF_PROP, s);
-    }
-
     public void setValueRef(String s)
     {
         setComponentPropertyString(UIOutput.VALUE_REF_PROP, s);

@@ -56,6 +56,11 @@ public class PageLayoutTag
 
     // UIPanel attributes
 
+    public void setValue(Object value)
+    {
+        super.setValue(value);
+    }
+
     public void setPanelClass(String v)
     {
         setRendererAttributeString(PANEL_CLASS_ATTR, v);

@@ -18,6 +18,8 @@
  */
 package net.sourceforge.myfaces.config;
 
+import net.sourceforge.myfaces.util.logging.LogUtil;
+
 import javax.faces.render.Renderer;
 import java.util.*;
 
@@ -100,23 +102,83 @@ public class RendererConfig
                 : _componentTypeSet.iterator();
     }
 
+    public boolean supportsComponentType(String componentType)
+    {
+        return _componentTypeSet.contains(componentType);
+    }
 
 
 
-    public void addComponentClass(String componentClass)
+    public void addComponentClass(String componentClassName)
+    {
+        try
+        {
+            if (_componentClassSet == null)
+            {
+                _componentClassSet = new HashSet();
+            }
+            _componentClassSet.add(Class.forName(componentClassName));
+        }
+        catch (ClassNotFoundException e)
+        {
+            LogUtil.getLogger().severe("Error in faces-config.xml - Class not found: " + componentClassName);
+        }
+    }
+
+    public Iterator getComponentClassNames()
     {
         if (_componentClassSet == null)
         {
-            _componentClassSet = new HashSet();
+            return Collections.EMPTY_SET.iterator();
         }
-        _componentClassSet.add(componentClass);
+        final Iterator it = _componentClassSet.iterator();
+        return new Iterator() {
+            public boolean hasNext()
+            {
+                return it.hasNext();
+            }
+
+            public Object next()
+            {
+                return ((Class)it.next()).getName();
+            }
+
+            public void remove()
+            {
+                it.remove();
+            }
+        };
     }
 
-    public Iterator getComponentClasses()
+    Iterator getComponentClasses()
     {
         return _componentClassSet == null
                 ? Collections.EMPTY_SET.iterator()
                 : _componentClassSet.iterator();
+    }
+
+    public boolean supportsComponentClass(Class componentClass)
+    {
+        if (_componentClassSet == null)
+        {
+            return false;
+        }
+
+        if (_componentClassSet.contains(componentClass))
+        {
+            return true;
+        }
+
+        //Is it a derived class?
+        for (Iterator it = _componentClassSet.iterator(); it.hasNext(); )
+        {
+            Class c = (Class)it.next();
+            if (c.isAssignableFrom(componentClass))
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
 

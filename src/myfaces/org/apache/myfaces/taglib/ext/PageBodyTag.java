@@ -41,6 +41,11 @@ public class PageBodyTag
         return GroupRenderer.TYPE;
     }
 
+    public void setValue(Object value)
+    {
+        super.setValue(value);
+    }
+
     public void setPanelClass(String value)
     {
         setRendererAttributeString(PANEL_CLASS_ATTR, value);

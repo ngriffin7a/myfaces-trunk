@@ -18,8 +18,17 @@
  */
 package net.sourceforge.myfaces.config;
 
+import net.sourceforge.myfaces.renderkit.html.jspinfo.TLDInfo;
+import net.sourceforge.myfaces.util.logging.LogUtil;
+
 import javax.faces.FacesException;
+import javax.faces.component.UIComponent;
+import javax.faces.webapp.UIComponentTag;
 import javax.servlet.ServletContext;
+import javax.servlet.jsp.tagext.Tag;
+import javax.servlet.jsp.tagext.TagAttributeInfo;
+import javax.servlet.jsp.tagext.TagInfo;
+import javax.servlet.jsp.tagext.TagLibraryInfo;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.JarURLConnection;
@@ -39,6 +48,9 @@ import java.util.jar.JarFile;
 public abstract class FacesConfigFactoryBase
     implements FacesConfigFactory
 {
+    protected static final String TLD_HTML_URI = "http://java.sun.com/jsf/html";
+    protected static final String TLD_EXT_URI = "http://myfaces.sourceforge.net/tld/myfaces_ext_0_3.tld";
+
     private static final String CONFIG_FILES_INIT_PARAM
         = "javax.faces.application.CONFIG_FILES";
 
@@ -55,6 +67,11 @@ public abstract class FacesConfigFactoryBase
 
         facesConfig = new FacesConfig();
         parseFacesConfigFiles(facesConfig, servletContext);
+
+        completeRendererComponentClasses(facesConfig);
+
+        completeRendererAttributesByTLD(servletContext, facesConfig, TLD_HTML_URI);
+        completeRendererAttributesByTLD(servletContext, facesConfig, TLD_EXT_URI);
 
         servletContext.setAttribute(FACES_CONFIG_ATTR, facesConfig);
         return facesConfig;
@@ -157,5 +174,133 @@ public abstract class FacesConfigFactoryBase
         }
     }
 
+
+
+    /**
+     * Adds for each renderer's componentType the corresponding componentClass
+     * if not already defined.
+     */
+    protected void completeRendererComponentClasses(FacesConfig facesConfig)
+    {
+        for (Iterator rkIt = facesConfig.getRenderKitConfigs(); rkIt.hasNext(); )
+        {
+            RenderKitConfig rkc = (RenderKitConfig)rkIt.next();
+            for (Iterator rendIt = rkc.getRendererConfigs(); rendIt.hasNext(); )
+            {
+                RendererConfig rc = (RendererConfig)rendIt.next();
+                for (Iterator ctIt = rc.getComponentTypes(); ctIt.hasNext(); )
+                {
+                    String compType = (String)ctIt.next();
+                    UIComponent comp = facesConfig.getComponent(compType);
+                    if (!rc.supportsComponentClass(comp.getClass()))
+                    {
+                        rc.addComponentClass(comp.getClass().getName());
+                    }
+                }
+            }
+        }
+
+    }
+
+
+    /**
+     * Reads additional renderer attribute information from the given
+     * Taglib descriptor.
+     */
+    protected void completeRendererAttributesByTLD(ServletContext servletContext,
+                                                   FacesConfig facesConfig,
+                                                   String taglibURI)
+    {
+        TagLibraryInfo tagLibraryInfo = TLDInfo.getTagLibraryInfo(servletContext,
+                                                                  taglibURI);
+        TagInfo[] tagInfos = tagLibraryInfo.getTags();
+        for (int i = 0; i < tagInfos.length; i++)
+        {
+            TagInfo tagInfo = tagInfos[i];
+            completeRendererAttributesByTagInfo(facesConfig, tagInfo);
+        }
+    }
+
+    private void completeRendererAttributesByTagInfo(FacesConfig facesConfig,
+                                                     TagInfo tagInfo)
+    {
+        Tag tag = null;
+        try
+        {
+            Class tagClass = Class.forName(tagInfo.getTagClassName());
+            tag = (Tag)tagClass.newInstance();
+        }
+        catch (ClassNotFoundException e)
+        {
+            throw new FacesException(e);
+        }
+        catch (InstantiationException e)
+        {
+            throw new FacesException(e);
+        }
+        catch (IllegalAccessException e)
+        {
+            throw new FacesException(e);
+        }
+
+        if (!(tag instanceof UIComponentTag))
+        {
+            return;
+        }
+        String rendererType = ((UIComponentTag)tag).getRendererType();
+        TagAttributeInfo[] tagAttributeInfos = tagInfo.getAttributes();
+
+        for (Iterator rkIt = facesConfig.getRenderKitConfigs(); rkIt.hasNext();)
+        {
+            RenderKitConfig rkc = (RenderKitConfig)rkIt.next();
+            RendererConfig rc = rkc.getRendererConfig(rendererType);
+            if (rc != null)
+            {
+                for (int i = 0; i < tagAttributeInfos.length; i++)
+                {
+                    TagAttributeInfo tagAttributeInfo = tagAttributeInfos[i];
+                    addRendererAttribute(rc, tagAttributeInfo);
+                }
+            }
+        }
+    }
+
+    private void addRendererAttribute(RendererConfig rendererConfig,
+                                      TagAttributeInfo tagAttributeInfo)
+    {
+        String name = tagAttributeInfo.getName();
+        if (name.equals("id"))
+        {
+            return;
+        }
+
+        String className = tagAttributeInfo.getTypeName();
+        if (className == null)
+        {
+            className = String.class.getName(); //TODO: or Object?
+        }
+
+        AttributeConfig attributeConfig = rendererConfig.getAttributeConfig(name);
+        if (attributeConfig == null)
+        {
+            attributeConfig = new AttributeConfig();
+            attributeConfig.setAttributeName(name);
+            attributeConfig.setAttributeClass(className);
+            rendererConfig.addAttributeConfig(attributeConfig);
+//System.out.println("Added renderer attribute '" + name + "' for Renderer '" + rendererConfig.getRendererType() + "'.");
+        }
+        else
+        {
+            String attrClass = attributeConfig.getAttributeClass();
+            if (attrClass == null)
+            {
+                attributeConfig.setAttributeClass(className);
+            }
+            else if (!attrClass.equals(className))
+            {
+                LogUtil.getLogger().warning("Error in faces-config.xml - inconsistency with TLD: Attribute '" + name + "' of renderer '" +  rendererConfig.getRendererType() + "' has different class in Taglib descriptor.");
+            }
+        }
+    }
 
 }

@@ -37,4 +37,9 @@ public class SelectItemsTag
     {
         return null;
     }
+
+    public void setValue(Object value)
+    {
+        super.setValue(value);
+    }
 }

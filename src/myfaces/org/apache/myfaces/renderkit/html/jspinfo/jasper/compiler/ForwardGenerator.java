@@ -68,6 +68,7 @@ import org.xml.sax.Attributes;
 import java.net.URLEncoder;
 import java.util.Enumeration;
 import java.util.Hashtable;
+import java.io.UnsupportedEncodingException;
 
 /**
  * Generator for <jsp:forward>
@@ -118,7 +119,14 @@ public class ForwardGenerator
 		    if (JspUtil.isExpression(value[i], isXml))
 			v = JspUtil.getExpr(value[i], isXml);
 		    else
-			v = "\"" + URLEncoder.encode(value[i]) + "\"";
+                try
+                {
+                    v = "\"" + URLEncoder.encode(value[i], "UTF-8") + "\"";
+                }
+                catch (UnsupportedEncodingException e)
+                {
+                    throw new RuntimeException(e);
+                }
 		    writer.println("_jspx_qfStr = _jspx_qfStr + \"" + sep +
 			       key + "=\" +" + v + ";");
 		    sep = '&';			    

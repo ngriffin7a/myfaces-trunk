@@ -88,13 +88,6 @@
         </attribute>
         &user_role_attributes;
 
-        <attribute>
-            <!-- TODO deprecated: commandReference no longer needed in new event model? -->
-            <name>commandReference</name>
-            <required>false</required>
-            <rtexprvalue>false</rtexprvalue>
-        </attribute>
-
         <!-- TODO What about image buttons: attributes imageKey, image, ... -->
     </tag>
 
@@ -118,12 +111,6 @@
         &key_bundle_attributes;
         &user_role_attributes;
 
-        <attribute>
-            <!-- TODO deprecated: commandReference no longer needed in new event model? -->
-            <name>commandReference</name>
-            <required>false</required>
-            <rtexprvalue>false</rtexprvalue>
-        </attribute>
         <!-- TODO attributes image, label-->
     </tag>
 

@@ -109,7 +109,7 @@ public class TLDInfo
         return tagMap;
     }
 
-    private static TagLibraryInfo getTagLibraryInfo(ServletContext servletContext,
+    public static TagLibraryInfo getTagLibraryInfo(ServletContext servletContext,
                                                    String taglibURI)
     {
         try

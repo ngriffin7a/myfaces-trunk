@@ -385,6 +385,11 @@ public class FacesConfig
         return getRenderKitConfigMap().keySet().iterator();
     }
 
+    public Iterator getRenderKitConfigs()
+    {
+        return getRenderKitConfigMap().values().iterator();
+    }
+
     private Map getRenderKitConfigMap()
     {
         if (_renderKitConfigMap == null)

@@ -78,6 +78,11 @@ public class RenderKitConfig
         return getRendererConfigMap().keySet().iterator();
     }
 
+    public Iterator getRendererConfigs()
+    {
+        return getRendererConfigMap().values().iterator();
+    }
+
     private Map getRendererConfigMap()
     {
         if (_rendererConfigMap == null)

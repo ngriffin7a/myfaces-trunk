@@ -56,6 +56,11 @@ public class PanelListTag
 
     // UIPanel attributes
 
+    public void setValue(Object v)
+    {
+        super.setValue(v);
+    }
+
     public void setPanelClass(String v)
     {
         setRendererAttributeString(PANEL_CLASS_ATTR, v);

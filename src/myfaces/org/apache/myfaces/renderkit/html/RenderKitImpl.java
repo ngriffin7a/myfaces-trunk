@@ -148,7 +148,7 @@ public class RenderKitImpl
         throw new UnsupportedOperationException();
     }
 
-    public Iterator getComponentClasses()
+    public Iterator getComponentClassNames()
     {
         throw new UnsupportedOperationException();
     }
