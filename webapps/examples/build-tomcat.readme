@@ -1,17 +1,15 @@
 Building and deploying the example with Ant and Tomcat:
 
-1) download tomcat 4.1.x (we need the catalina-ant.jar file from 4.1)
+1) download tomcat 4.1.x
+  1.a) If you have not already you need to add a user that has the manager and admin roles
 
-2) download and install tomcat 4.0.x (MyFaces only runs with 4.0 yet)
-  2.a) If you have not already you need to add a user that has the manager and admin roles
+2) add the catalina-ant.jar file from Tomcat 4.1 to your ant classpath
+  2.a) You can copy catalina-ant.jar to your ant/lib directory or you can modify the ant script to include the jar.
+  2.b) IntelliJ-users: add it as "Additional Classpath" in the "Build File Properties".
 
-3) add the catalina-ant.jar file from Tomcat 4.1 to your ant classpath
-  3.a) You can copy catalina-ant.jar to your ant/lib directory or you can modify the ant script to include the jar.
-  3.b) IntelliJ-users: add it as "Additional Classpath" in the "Build File Properties".
+3) Copy build.properties.sample file to build.properties and set the values
 
-4) Copy build.properties.sample file to build.properties and set the values
-
-5) Execute the install target to have the examples installed
+4) Execute the install target to have the examples installed
 
 
 

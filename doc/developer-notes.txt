@@ -44,7 +44,8 @@ MyFaces developers guidelines
   Conventions at
   http://java.sun.com/docs/codeconv/html/CodeConvTOC.doc.html
   Well as the initiators of this project we take the liberty to postulate one
-  exception: Opening braces go on the next line!  ;-)
+  exception: Opening braces go on the next line and there is a new line after
+  closing braces before else/catch/finally/while(in do-while)!  ;-)
 
 * Naming is a fundamental concern. The name of a class, method or field should
   tell as much as possible of it's meaning and usage. Avoid short names like
