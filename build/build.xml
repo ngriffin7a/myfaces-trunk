@@ -30,9 +30,9 @@
     <property file="manifest.properties"/>
 
     <property name="release.version" value="${manifest.impl.version}"/>
-    <property name="src.release.bundle" location="${release.dir}/myfaces-${release.version}-src.tgz"/>
-    <property name="bin.release.bundle" location="${release.dir}/myfaces-${release.version}.tgz"/>
-    <property name="app.release.bundle" location="${release.dir}/myfaces-${release.version}-app.tgz"/>
+    <property name="src.release.bundle" value="myfaces-${release.version}-src"/>
+    <property name="bin.release.bundle" value="myfaces-${release.version}"/>
+    <property name="app.release.bundle" value="myfaces-${release.version}-app"/>
 
     <!-- Temporary dir. May be overridden in build.local.properties -->
     <property name="temp.dir" location="${env.TEMP}"/>
@@ -43,7 +43,6 @@
     <property name="xdoclet.classes" location="${temp.dir}/myfaces-xdoclet/classes"/>
     <property name="impl.classes" location="${temp.dir}/myfaces-impl/classes"/>
     <property name="components.classes" location="${temp.dir}/myfaces-components/classes"/>
-
 
     <property name="resolved-tlds.dir" location="${temp.dir}/myfaces-tlds"/>
 
@@ -336,144 +335,113 @@
 		</java>
     </target>
 
+    <target name="prepare-bin-release" depends="prepare">
+
+        <copy todir="${temp.dir}/${bin.release.bundle}/doc">
+            <fileset dir="${doc.dir}"/>
+        </copy>        
+        <copy todir="${temp.dir}/${bin.release.bundle}/conf">
+            <fileset dir="${conf.dir}"/>
+        </copy>        
+        <copy file="${commons-codec.jar}" todir="${temp.dir}/${bin.release.bundle}/lib"/>
+        <copy file="${commons-logging.jar}" todir="${temp.dir}/${bin.release.bundle}/lib"/>        
+        <copy file="${commons-el.jar}" todir="${temp.dir}/${bin.release.bundle}/lib"/>
+        <copy file="${commons-fileupload.jar}" todir="${temp.dir}/${bin.release.bundle}/lib"/>
+        <copy file="${commons-validator.jar}" todir="${temp.dir}/${bin.release.bundle}/lib"/>
+        <copy file="${jakarta-oro.jar}" todir="${temp.dir}/${bin.release.bundle}/lib"/>
+        <copy file="${commons-codec.jar}" todir="${temp.dir}/${bin.release.bundle}/lib"/>
+        <copy file="${jstl.jar}" todir="${temp.dir}/${bin.release.bundle}/lib"/>
+        <copy file="${jsp-2.0.jar}" todir="${temp.dir}/${bin.release.bundle}/lib"/>        
+        <copy file="${commons-digester.jar}" todir="${temp.dir}/${bin.release.bundle}/lib"/>
+        <copy file="${commons-beanutils.jar}" todir="${temp.dir}/${bin.release.bundle}/lib"/>
+        <copy file="${commons-collections.jar}" todir="${temp.dir}/${bin.release.bundle}/lib"/>
+        <copy file="${myfaces-jsf-api.jar}" todir="${temp.dir}/${bin.release.bundle}/lib"/>
+        <copy file="${myfaces-impl.jar}" todir="${temp.dir}/${bin.release.bundle}/lib"/>
+        <copy file="${myfaces-extensions.jar}" todir="${temp.dir}/${bin.release.bundle}/lib"/>        
+        <copy file="${myfaces.jar}" todir="${temp.dir}/${bin.release.bundle}/lib"/>
+        <copy file="${myfaces-wap.jar}" todir="${temp.dir}/${bin.release.bundle}/lib"/>
+        <copy file="${myfaces-xdoclet.jar}" todir="${temp.dir}/${bin.release.bundle}/lib"/>
+        
+    </target>
 
     <target name="bin-release"
-            depends="prepare, myfaces-jsf-api-jar, myfaces-impl-jar, myfaces-extensions-jar, myfaces-jar, myfaces-wap-jar, javadoc, tlddoc"
+            depends="prepare, myfaces-jsf-api-jar, myfaces-impl-jar, myfaces-extensions-jar, myfaces-jar, myfaces-wap-jar, javadoc, tlddoc, prepare-bin-release"
             description="creates the binary release file myfaces-x.x.x.tgz (don't forget to adjust manifest.properties!)">
 
-        <tar destfile="${bin.release.bundle}"
-            compression="gzip" >
-            <tarfileset dir="${doc.dir}"
-                        prefix="myfaces-${manifest.impl.version}/doc"/>
-            <tarfileset dir="${conf.dir}"
-                        includes="web.xml"
-                        prefix="myfaces-${manifest.impl.version}/conf"/>
-            <tarfileset file="${commons-codec.jar}"
-                        prefix="myfaces-${manifest.impl.version}/lib"/>
-            <tarfileset file="${commons-logging.jar}"
-                        prefix="myfaces-${manifest.impl.version}/lib"/>
-            <tarfileset file="${commons-el.jar}"
-                        prefix="myfaces-${manifest.impl.version}/lib"/>
-            <tarfileset file="${commons-fileupload.jar}"
-                        prefix="myfaces-${manifest.impl.version}/lib"/>
-            <tarfileset file="${commons-validator.jar}"
-                        prefix="myfaces-${manifest.impl.version}/lib"/>
-            <tarfileset file="${jakarta-oro.jar}"
-                        prefix="myfaces-${manifest.impl.version}/lib"/>
-            <tarfileset file="${jstl.jar}"
-                        prefix="myfaces-${manifest.impl.version}/lib"/>
-            <tarfileset file="${jsp-2.0.jar}"
-                        prefix="myfaces-${manifest.impl.version}/lib"/>
-            <tarfileset file="${commons-digester.jar}"
-                        prefix="myfaces-${manifest.impl.version}/lib"/>
-            <tarfileset file="${commons-beanutils.jar}"
-                        prefix="myfaces-${manifest.impl.version}/lib"/>
-            <tarfileset file="${commons-collections.jar}"
-                        prefix="myfaces-${manifest.impl.version}/lib"/>
-            <tarfileset file="${myfaces-jsf-api.jar}"
-            			prefix="myfaces-${manifest.impl.version}/lib" />
-            <tarfileset file="${myfaces-impl.jar}"
-            			prefix="myfaces-${manifest.impl.version}/lib" />
-            <tarfileset file="${myfaces-extensions.jar}"
-            			prefix="myfaces-${manifest.impl.version}/lib" />
-            <tarfileset file="${myfaces.jar}"
-              			prefix="myfaces-${manifest.impl.version}/lib" />
-            <tarfileset file="${myfaces-wap.jar}"
-                  		prefix="myfaces-${manifest.impl.version}/lib" />
-            <tarfileset file="${myfaces-xdoclet.jar}"
-                  		prefix="myfaces-${manifest.impl.version}/lib" />
+        <tar destfile="${release.dir}/${bin.release.bundle}.tgz" compression="gzip" >
+             <tarfileset dir="${temp.dir}/${bin.release.bundle}"/>
+        </tar>
+        <zip destfile="${release.dir}/${bin.release.bundle}.zip" compress="true">
+            <zipfileset dir="${temp.dir}/${bin.release.bundle}"/>
+        </zip>
 
-            </tar>
     </target>
 
+    <!-- get all the files in one location so they can be bundled -->
+    <target name="prepare-src-release" depends="prepare">
+        <copy todir="${temp.dir}/${src.release.bundle}/build">
+            <fileset dir="${build.dir}" 
+                     excludes= "**/codegen/**, 
+                                **/develop/**, 
+                                **/temp/**, 
+                                **tmp/**, 
+                                **/nightly/**, 
+                                **/release/**, 
+                                **/dist/**, 
+                                **/site/**, 
+                                **/webapp/**"/>
+        </copy>
+        <copy todir="${temp.dir}/${src.release.bundle}/conf">
+            <fileset dir="${conf.dir}" excludes="develop-web.xml"/>
+        </copy>        
+        <copy todir="${temp.dir}/${src.release.bundle}/doc">
+            <fileset dir="${doc.dir}" excludes="javadoc/**/*,tlddoc/**/*"/>
+        </copy>                
+        <copy todir="${temp.dir}/${src.release.bundle}/src/jsfapi">
+            <fileset dir="${jsfapi.src}"/>
+        </copy>                        
+        <copy todir="${temp.dir}/${src.release.bundle}/src/share">
+            <fileset dir="${share.src}"/>
+        </copy>              
+        <copy todir="${temp.dir}/${src.release.bundle}/src/myfaces">
+            <fileset dir="${myfaces.src}"/>
+        </copy>              
+        <copy todir="${temp.dir}/${src.release.bundle}/src/wml">
+            <fileset dir="${wml.src}"/>
+        </copy>                
+        <copy todir="${temp.dir}/${src.release.bundle}/src/xdoclet">
+            <fileset dir="${xdoclet.src}"/>
+        </copy>                      
+        <copy todir="${temp.dir}/${src.release.bundle}/src/components">
+            <fileset dir="${components.src}"/>
+        </copy>                              
+        <copy todir="${temp.dir}/${src.release.bundle}/src/cactus">
+            <fileset dir="${cactus.src}"/>
+        </copy>                      
+        <copy todir="${temp.dir}/${src.release.bundle}/src/junit">
+            <fileset dir="${junit.src}"/>
+        </copy>                              
+        <copy todir="${temp.dir}/${src.release.bundle}/tlds">
+            <fileset dir="${tlds.dir}"/>
+        </copy>                              
+        <copy todir="${temp.dir}/${src.release.bundle}/webapps">
+            <fileset dir="${apps.dir}" excludes="**/lib/**, **/classes/**"/>
+        </copy>                                      
+    </target>
 
     <target name="src-release"
-            depends="javadoc, tlddoc"
+            depends="prepare-src-release"
             description="creates the source release file myfaces-x.x.x-src.tgz (don't forget to adjust manifest.properties!)">
-        <tar destfile="${src.release.bundle}"
-             compression="gzip">
-            <tarfileset dir="${build.dir}"
-                        includes="**/*"
-                        excludes="**/build.local.properties,
-                                  codegen/**/*,
-                                  develop/**/*,
-                                  temp/**/*,
-                                  nightly/**/*,
-                                  release/**/*,
-                                  dist/**/*"
-                        prefix="myfaces-${manifest.impl.version}/build"/>
-            <tarfileset dir="${conf.dir}"
-                        excludes="develop-web.xml"
-                        prefix="myfaces-${manifest.impl.version}/conf"/>
-            <tarfileset dir="${doc.dir}"
-                        excludes="javadoc/**/*
-                                  tlddoc/**/*"
-                        prefix="myfaces-${manifest.impl.version}/doc"/>
-            <tarfileset dir="${jsfapi.src}"
-                        prefix="myfaces-${manifest.impl.version}/src/jsfapi"/>
-            <tarfileset dir="${share.src}"
-                        prefix="myfaces-${manifest.impl.version}/src/share"/>
-            <tarfileset dir="${myfaces.src}"
-                        prefix="myfaces-${manifest.impl.version}/src/myfaces"/>
- 			<tarfileset dir="${wml.src}"
-               			prefix="myfaces-${manifest.impl.version}/src/wml"/>
-			<tarfileset dir="${xdoclet.src}"
-                        prefix="myfaces-${manifest.impl.version}/src/xdoclet"/>
-            <tarfileset dir="${components.src}"
-                        prefix="myfaces-${manifest.impl.version}/src/components"/>
-            <tarfileset dir="${cactus.src}"
-                        prefix="myfaces-${manifest.impl.version}/src/cactus"/>
-            <tarfileset dir="${junit.src}"
-                        prefix="myfaces-${manifest.impl.version}/src/junit"/>
-            <tarfileset dir="${tlds.dir}"
-                        prefix="myfaces-${manifest.impl.version}/tlds"/>
-            <tarfileset dir="${apps.dir}"
-                        prefix="myfaces-${manifest.impl.version}/webapps"/>
+
+        <tar destfile="${release.dir}/${src.release.bundle}.tgz" compression="gzip">
+             <tarfileset dir="${temp.dir}/${src.release.bundle}"/>
         </tar>
+        <zip destfile="${release.dir}/${src.release.bundle}.zip" compress="true">
+            <zipfileset dir="${temp.dir}/${src.release.bundle}"/>
+        </zip>
+
     </target>
 
-<!--
-    <target name="examples-release"
-            description="creates the examples release file myfaces-x.x.x-examples.tgz (don't forget to adjust manifest.properties!)">
-        <ant dir="${project.dir}/build/examples-webapp"
-             antfile="build.xml"
-             inheritall="false"
-             target="release"/>
-    </target>
-
-    <target name="tiles-release"
-            description="creates the tiles examples release file myfaces-x.x.x-tiles-example.tgz (don't forget to adjust manifest.properties!)">
-        <ant dir="${project.dir}/build/tiles-webapp"
-             antfile="build.xml"
-             inheritall="false"
-             target="release"/>
-    </target>
-
-    <target name="blank-release"
-            description="creates the tiles examples release file myfaces-x.x.x-tiles-example.tgz (don't forget to adjust manifest.properties!)">
-        <ant dir="${project.dir}/build/blank-webapp"
-             antfile="build.xml"
-             inheritall="false"
-             target="release"/>
-    </target>
--->
-<!--    <target name="wap-release"
-            description="creates the wap examples release file myfaces-x.x.x-tiles-example.tgz (don't forget to adjust manifest.properties!)">
-        <ant dir="${project.dir}/build/wap-webapp"
-             antfile="build.xml"
-             inheritall="false"
-             target="release"/>
-    </target>
--->
-<!--
-    <target name="simple-webapp"
-            description="creates the simple examples release file myfaces-x.x.x-tiles-example.tgz (don't forget to adjust manifest.properties!)">
-        <ant dir="${project.dir}/build/simple-webapp"
-             antfile="build.xml"
-             inheritall="false"
-             target="release"/>
-    </target>
--->
     <target name="all" depends="release" description="builds all release files"/>
 
 	<target name="all-tests"
@@ -514,6 +482,7 @@
         <delete dir="${dist.dir}"/>
         <delete dir="${release.dir}"/>
         <delete dir="${resolved-tlds.dir}"/>
+        <delete dir="${temp.dir}"/>
 
         <!-- clean up application build stuff as well -->
         <ant antfile="build-webapps.xml" inheritall="false" target="clean"/>
@@ -788,19 +757,28 @@
 
     <target name="app-release" depends="prepare, app-dist">
 
-        <tar destfile="${app.release.bundle}" compression="gzip" >
+        <tar destfile="${release.dir}/${app.release.bundle}.tgz" compression="gzip" >
             <tarfileset dir="${webapp.dist.dir}"/>
         </tar>
+        
+        <zip destfile="${release.dir}/${app.release.bundle}.zip" compress="true">
+            <zipfileset dir="${webapp.dist.dir}"/>
+        </zip>
 
     </target>
 
     <target name="release" depends="prepare, src-release, bin-release, app-release">
 
         <!-- copy resulting builds to nightly directory -->
-        <copy  file="${src.release.bundle}" todir="${release.dir}"/>
-        <copy file="${bin.release.bundle}" todir="${release.dir}"/>
-        <copy file="${app.release.bundle}" todir="${release.dir}"/>
-
+<!--        
+        <copy file="${release.dir}/${src.release.bundle}.tgz" todir="${release.dir}"/>
+        <copy file="${release.dir}/${bin.release.bundle}.tgz" todir="${release.dir}"/>
+        <copy file="${release.dir}/${app.release.bundle}.tgz" todir="${release.dir}"/>
+        <copy file="${release.dir}/${src.release.bundle}.zip" todir="${release.dir}"/>
+        <copy file="${release.dir}/${bin.release.bundle}.zip" todir="${release.dir}"/>
+        <copy file="${release.dir}/${app.release.bundle}.zip" todir="${release.dir}"/>
+-->
     </target>
 
 </project>
+
