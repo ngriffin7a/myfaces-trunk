@@ -20,7 +20,7 @@ package net.sourceforge.myfaces.taglib;
 
 import net.sourceforge.myfaces.renderkit.attr.GridRendererAttributes;
 import net.sourceforge.myfaces.renderkit.html.GridRenderer;
-import net.sourceforge.myfaces.renderkit.html.attr.HTMLTableAttributes;
+import net.sourceforge.myfaces.renderkit.html.HTML;
 
 
 /**
@@ -30,8 +30,7 @@ import net.sourceforge.myfaces.renderkit.html.attr.HTMLTableAttributes;
  */
 public class PanelGridTag
     extends MyFacesTag
-    implements HTMLTableAttributes,
-               GridRendererAttributes
+    implements GridRendererAttributes
 {
     public String getComponentType()
     {
@@ -65,62 +64,62 @@ public class PanelGridTag
 
     public void setAlign(String value)
     {
-        setRendererAttributeString(ALIGN_ATTR, value);
+        setRendererAttributeString(HTML.ALIGN_ATTR, value);
     }
 
     public void setBgcolor(String value)
     {
-        setRendererAttributeString(BGCOLOR_ATTR, value);
+        setRendererAttributeString(HTML.BGCOLOR_ATTR, value);
     }
 
     public void setBorder(String value)
     {
-        setRendererAttributeString(BORDER_ATTR, value);
+        setRendererAttributeString(HTML.BORDER_ATTR, value);
     }
 
     public void setCellpadding(String value)
     {
-        setRendererAttributeString(CELLPADDING_ATTR, value);
+        setRendererAttributeString(HTML.CELLPADDING_ATTR, value);
     }
 
     public void setCellspacing(String value)
     {
-        setRendererAttributeString(CELLSPACING_ATTR, value);
+        setRendererAttributeString(HTML.CELLSPACING_ATTR, value);
     }
 
     public void setDatafld(String value)
     {
-        setRendererAttributeString(DATAFLD_ATTR, value);
+        setRendererAttributeString(HTML.DATAFLD_ATTR, value);
     }
 
     public void setDatasrc(String value)
     {
-        setRendererAttributeString(DATASRC_ATTR, value);
+        setRendererAttributeString(HTML.DATASRC_ATTR, value);
     }
 
     public void setDataformatas(String value)
     {
-        setRendererAttributeString(DATAFORMATAS_ATTR, value);
+        setRendererAttributeString(HTML.DATAFORMATAS_ATTR, value);
     }
 
     public void setFrame(String value)
     {
-        setRendererAttributeString(FRAME_ATTR, value);
+        setRendererAttributeString(HTML.FRAME_ATTR, value);
     }
 
     public void setRules(String value)
     {
-        setRendererAttributeString(RULES_ATTR, value);
+        setRendererAttributeString(HTML.RULES_ATTR, value);
     }
 
     public void setSummary(String value)
     {
-        setRendererAttributeString(SUMMARY_ATTR, value);
+        setRendererAttributeString(HTML.SUMMARY_ATTR, value);
     }
 
     public void setWidth(String value)
     {
-        setRendererAttributeString(WIDTH_ATTR, value);
+        setRendererAttributeString(HTML.WIDTH_ATTR, value);
     }
 
 

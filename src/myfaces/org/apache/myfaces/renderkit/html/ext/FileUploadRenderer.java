@@ -24,10 +24,8 @@ import net.sourceforge.myfaces.component.ext.UploadedFile;
 import net.sourceforge.myfaces.renderkit.attr.CommonRendererAttributes;
 import net.sourceforge.myfaces.renderkit.attr.UserRoleAttributes;
 import net.sourceforge.myfaces.renderkit.attr.ext.FileUploadRendererAttributes;
+import net.sourceforge.myfaces.renderkit.html.HTML;
 import net.sourceforge.myfaces.renderkit.html.HTMLRenderer;
-import net.sourceforge.myfaces.renderkit.html.attr.HTMLEventHandlerAttributes;
-import net.sourceforge.myfaces.renderkit.html.attr.HTMLInputAttributes;
-import net.sourceforge.myfaces.renderkit.html.attr.HTMLUniversalAttributes;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLEncoder;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLUtil;
 
@@ -47,9 +45,6 @@ import java.io.IOException;
 public class FileUploadRenderer
     extends HTMLRenderer
     implements CommonRendererAttributes,
-               HTMLUniversalAttributes,
-               HTMLEventHandlerAttributes,
-               HTMLInputAttributes,
                FileUploadRendererAttributes,
                UserRoleAttributes
 {
@@ -152,9 +147,9 @@ public class FileUploadRenderer
         }
 
         HTMLUtil.renderCssClass(writer, uiComponent,INPUT_CLASS_ATTR);
-        HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML_UNIVERSAL_ATTRIBUTES);
-        HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML_EVENT_HANDLER_ATTRIBUTES);
-        HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML_INPUT_ATTRIBUTES);
+        HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML.UNIVERSAL_ATTRIBUTES);
+        HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML.EVENT_HANDLER_ATTRIBUTES);
+        HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML.INPUT_ATTRIBUTES);
         HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML_INPUT_FILE_UPLOAD_ATTRIBUTES);
         HTMLUtil.renderDisabledOnUserRole(facesContext, uiComponent);
 

@@ -22,9 +22,6 @@ import net.sourceforge.myfaces.component.CommonComponentProperties;
 import net.sourceforge.myfaces.renderkit.attr.CommonRendererAttributes;
 import net.sourceforge.myfaces.renderkit.attr.MenuRendererAttributes;
 import net.sourceforge.myfaces.renderkit.attr.UserRoleAttributes;
-import net.sourceforge.myfaces.renderkit.html.attr.HTMLEventHandlerAttributes;
-import net.sourceforge.myfaces.renderkit.html.attr.HTMLSelectAttributes;
-import net.sourceforge.myfaces.renderkit.html.attr.HTMLUniversalAttributes;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLUtil;
 
 import javax.faces.component.UIComponent;
@@ -40,9 +37,6 @@ public class MenuRenderer
     extends HTMLRenderer
     implements CommonComponentProperties,
                CommonRendererAttributes,
-               HTMLUniversalAttributes,
-               HTMLEventHandlerAttributes,
-               HTMLSelectAttributes,
                MenuRendererAttributes,
                UserRoleAttributes
 {

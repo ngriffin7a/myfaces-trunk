@@ -25,10 +25,8 @@ import net.sourceforge.myfaces.renderkit.attr.CommonRendererAttributes;
 import net.sourceforge.myfaces.renderkit.attr.ext.NavigationRendererAttributes;
 import net.sourceforge.myfaces.renderkit.callback.CallbackRenderer;
 import net.sourceforge.myfaces.renderkit.callback.CallbackSupport;
+import net.sourceforge.myfaces.renderkit.html.HTML;
 import net.sourceforge.myfaces.renderkit.html.HTMLRenderer;
-import net.sourceforge.myfaces.renderkit.html.attr.HTMLEventHandlerAttributes;
-import net.sourceforge.myfaces.renderkit.html.attr.HTMLTableAttributes;
-import net.sourceforge.myfaces.renderkit.html.attr.HTMLUniversalAttributes;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLUtil;
 import net.sourceforge.myfaces.util.logging.LogUtil;
 
@@ -49,9 +47,6 @@ public class NavigationRenderer
     CallbackRenderer,
         CommonComponentProperties,
         CommonRendererAttributes,
-        HTMLUniversalAttributes,
-        HTMLEventHandlerAttributes,
-        HTMLTableAttributes,
         NavigationRendererAttributes
 {
 
@@ -72,9 +67,9 @@ public class NavigationRenderer
         ResponseWriter writer = facesContext.getResponseWriter();
         writer.write("<table ");
         HTMLUtil.renderCssClass(writer, uiComponent, PANEL_CLASS_ATTR);
-        HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML_UNIVERSAL_ATTRIBUTES);
-        HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML_EVENT_HANDLER_ATTRIBUTES);
-        HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML_TABLE_ATTRIBUTES);
+        HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML.UNIVERSAL_ATTRIBUTES);
+        HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML.EVENT_HANDLER_ATTRIBUTES);
+        HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML.TABLE_ATTRIBUTES);
         String panelClass = (String)uiComponent.getAttribute(PANEL_CLASS_ATTR);
         if (panelClass == null)
         {

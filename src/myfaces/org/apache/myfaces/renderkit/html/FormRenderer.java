@@ -22,9 +22,6 @@ import net.sourceforge.myfaces.MyFacesFactoryFinder;
 import net.sourceforge.myfaces.renderkit.attr.CommonRendererAttributes;
 import net.sourceforge.myfaces.renderkit.attr.FormRendererAttributes;
 import net.sourceforge.myfaces.renderkit.attr.UserRoleAttributes;
-import net.sourceforge.myfaces.renderkit.html.attr.HTMLEventHandlerAttributes;
-import net.sourceforge.myfaces.renderkit.html.attr.HTMLFormAttributes;
-import net.sourceforge.myfaces.renderkit.html.attr.HTMLUniversalAttributes;
 import net.sourceforge.myfaces.renderkit.html.state.StateRenderer;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLUtil;
 import net.sourceforge.myfaces.webapp.ServletMapping;
@@ -50,9 +47,6 @@ import java.io.IOException;
 public class FormRenderer
     extends HTMLRenderer
     implements CommonRendererAttributes,
-               HTMLUniversalAttributes,
-               HTMLEventHandlerAttributes,
-               HTMLFormAttributes,
                FormRendererAttributes,
                UserRoleAttributes
 
@@ -72,9 +66,9 @@ public class FormRenderer
         writer.write(getActionStr(facesContext));
         writer.write("\"");
         HTMLUtil.renderCssClass(writer, uiComponent, FORM_CLASS_ATTR);
-        HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML_UNIVERSAL_ATTRIBUTES);
-        HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML_EVENT_HANDLER_ATTRIBUTES);
-        HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML_FORM_ATTRIBUTES);
+        HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML.UNIVERSAL_ATTRIBUTES);
+        HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML.EVENT_HANDLER_ATTRIBUTES);
+        HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML.FORM_ATTRIBUTES);
         String formName = ((UIForm)uiComponent).getFormName();
         if (formName != null)
         {

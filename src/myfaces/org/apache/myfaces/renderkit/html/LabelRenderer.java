@@ -22,9 +22,6 @@ import net.sourceforge.myfaces.component.CommonComponentProperties;
 import net.sourceforge.myfaces.renderkit.attr.CommonRendererAttributes;
 import net.sourceforge.myfaces.renderkit.attr.LabelRendererAttributes;
 import net.sourceforge.myfaces.renderkit.attr.UserRoleAttributes;
-import net.sourceforge.myfaces.renderkit.html.attr.HTMLEventHandlerAttributes;
-import net.sourceforge.myfaces.renderkit.html.attr.HTMLLabelAttributes;
-import net.sourceforge.myfaces.renderkit.html.attr.HTMLUniversalAttributes;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLEncoder;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLUtil;
 import net.sourceforge.myfaces.util.bundle.BundleUtils;
@@ -44,9 +41,6 @@ public class LabelRenderer
     extends HTMLRenderer
     implements CommonComponentProperties,
                CommonRendererAttributes,
-               HTMLUniversalAttributes,
-               HTMLEventHandlerAttributes,
-               HTMLLabelAttributes,
                LabelRendererAttributes,
                UserRoleAttributes
 {
@@ -87,8 +81,8 @@ public class LabelRenderer
         writer.write("<label");
 
         HTMLUtil.renderCssClass(writer, uiComponent, OUTPUT_CLASS_ATTR);
-        HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML_UNIVERSAL_ATTRIBUTES);
-        HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML_EVENT_HANDLER_ATTRIBUTES);
+        HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML.UNIVERSAL_ATTRIBUTES);
+        HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML.EVENT_HANDLER_ATTRIBUTES);
 
         writer.write(">");
 

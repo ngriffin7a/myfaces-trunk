@@ -20,7 +20,7 @@ package net.sourceforge.myfaces.taglib;
 
 import net.sourceforge.myfaces.renderkit.attr.CheckboxRendererAttributes;
 import net.sourceforge.myfaces.renderkit.html.CheckboxRenderer;
-import net.sourceforge.myfaces.renderkit.html.attr.HTMLInputAttributes;
+import net.sourceforge.myfaces.renderkit.html.HTML;
 
 
 /**
@@ -30,8 +30,7 @@ import net.sourceforge.myfaces.renderkit.html.attr.HTMLInputAttributes;
  */
 public class SelectManyCheckboxTag
     extends MyFacesTag
-    implements HTMLInputAttributes,
-               CheckboxRendererAttributes
+    implements CheckboxRendererAttributes
 {
     public String getComponentType()
     {
@@ -65,72 +64,72 @@ public class SelectManyCheckboxTag
 
     public void setAccesskey(String value)
     {
-        setRendererAttributeString(ACCESSKEY_ATTR, value);
+        setRendererAttributeString(HTML.ACCESSKEY_ATTR, value);
     }
 
     public void setAlign(String value)
     {
-        setRendererAttributeString(ALIGN_ATTR, value);
+        setRendererAttributeString(HTML.ALIGN_ATTR, value);
     }
 
     public void setAlt(String value)
     {
-        setRendererAttributeString(ALT_ATTR, value);
+        setRendererAttributeString(HTML.ALT_ATTR, value);
     }
 
     public void setDatafld(String value)
     {
-        setRendererAttributeString(DATAFLD_ATTR, value);
+        setRendererAttributeString(HTML.DATAFLD_ATTR, value);
     }
 
     public void setDatasrc(String value)
     {
-        setRendererAttributeString(DATASRC_ATTR, value);
+        setRendererAttributeString(HTML.DATASRC_ATTR, value);
     }
 
     public void setDataformatas(String value)
     {
-        setRendererAttributeString(DATAFORMATAS_ATTR, value);
+        setRendererAttributeString(HTML.DATAFORMATAS_ATTR, value);
     }
 
     public void setDisabled(String value)
     {
-        setRendererAttributeBoolean(DISABLED_ATTR, value);
+        setRendererAttributeBoolean(HTML.DISABLED_ATTR, value);
     }
 
     public void setOnblur(String value)
     {
-        setRendererAttributeString(ONBLUR_ATTR, value);
+        setRendererAttributeString(HTML.ONBLUR_ATTR, value);
     }
 
     public void setOnchange(String value)
     {
-        setRendererAttributeString(ONCHANGE_ATTR, value);
+        setRendererAttributeString(HTML.ONCHANGE_ATTR, value);
     }
 
     public void setOnfocus(String value)
     {
-        setRendererAttributeString(ONFOCUS_ATTR, value);
+        setRendererAttributeString(HTML.ONFOCUS_ATTR, value);
     }
 
     public void setOnselect(String value)
     {
-        setRendererAttributeString(ONSELECT_ATTR, value);
+        setRendererAttributeString(HTML.ONSELECT_ATTR, value);
     }
 
     public void setReadonly(String value)
     {
-        setRendererAttributeBoolean(READONLY_ATTR, value);
+        setRendererAttributeBoolean(HTML.READONLY_ATTR, value);
     }
 
     public void setSize(String value)
     {
-        setRendererAttributeString(SIZE_ATTR, value);
+        setRendererAttributeString(HTML.SIZE_ATTR, value);
     }
 
     public void setTabindex(String value)
     {
-        setRendererAttributeString(TABINDEX_ATTR, value);
+        setRendererAttributeString(HTML.TABINDEX_ATTR, value);
     }
 
 

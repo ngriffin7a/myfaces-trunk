@@ -24,9 +24,6 @@ import net.sourceforge.myfaces.renderkit.attr.ListRendererAttributes;
 import net.sourceforge.myfaces.renderkit.attr.UserRoleAttributes;
 import net.sourceforge.myfaces.renderkit.callback.CallbackRenderer;
 import net.sourceforge.myfaces.renderkit.callback.CallbackSupport;
-import net.sourceforge.myfaces.renderkit.html.attr.HTMLEventHandlerAttributes;
-import net.sourceforge.myfaces.renderkit.html.attr.HTMLTableAttributes;
-import net.sourceforge.myfaces.renderkit.html.attr.HTMLUniversalAttributes;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLUtil;
 
 import javax.faces.component.UIComponent;
@@ -50,9 +47,6 @@ public class ListRenderer
     implements CallbackRenderer,
                CommonComponentProperties,
                CommonRendererAttributes,
-               HTMLUniversalAttributes,
-               HTMLEventHandlerAttributes,
-               HTMLTableAttributes,
                ListRendererAttributes,
                UserRoleAttributes
 {
@@ -126,9 +120,9 @@ public class ListRenderer
             pushListComponent(facesContext, uiComponent);
             writer.write("<table");
             HTMLUtil.renderCssClass(writer, uiComponent, PANEL_CLASS_ATTR);
-            HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML_UNIVERSAL_ATTRIBUTES);
-            HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML_EVENT_HANDLER_ATTRIBUTES);
-            HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML_TABLE_ATTRIBUTES);
+            HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML.UNIVERSAL_ATTRIBUTES);
+            HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML.EVENT_HANDLER_ATTRIBUTES);
+            HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML.TABLE_ATTRIBUTES);
             HTMLUtil.renderDisabledOnUserRole(facesContext, uiComponent);
             writer.write(">\n");
         }

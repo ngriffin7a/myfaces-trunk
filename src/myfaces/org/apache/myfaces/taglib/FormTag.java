@@ -24,9 +24,7 @@ import net.sourceforge.myfaces.renderkit.attr.CommonRendererAttributes;
 import net.sourceforge.myfaces.renderkit.attr.FormRendererAttributes;
 import net.sourceforge.myfaces.renderkit.attr.UserRoleAttributes;
 import net.sourceforge.myfaces.renderkit.html.FormRenderer;
-import net.sourceforge.myfaces.renderkit.html.attr.HTMLEventHandlerAttributes;
-import net.sourceforge.myfaces.renderkit.html.attr.HTMLFormAttributes;
-import net.sourceforge.myfaces.renderkit.html.attr.HTMLUniversalAttributes;
+import net.sourceforge.myfaces.renderkit.html.HTML;
 
 
 /**
@@ -38,9 +36,6 @@ public class FormTag
     extends MyFacesTag
     implements CommonComponentProperties,
                CommonRendererAttributes,
-               HTMLUniversalAttributes,
-               HTMLEventHandlerAttributes,
-               HTMLFormAttributes,
                UserRoleAttributes,
                FormRendererAttributes
 {
@@ -77,32 +72,32 @@ public class FormTag
 
     public void setAccept(String value)
     {
-        setRendererAttributeString(ACCEPT_ATTR, value);
+        setRendererAttributeString(HTML.ACCEPT_ATTR, value);
     }
 
     public void setAcceptCharset(String value)
     {
-        setRendererAttributeString(ACCEPT_CHARSET_ATTR, value);
+        setRendererAttributeString(HTML.ACCEPT_CHARSET_ATTR, value);
     }
 
     public void setEnctype(String value)
     {
-        setRendererAttributeString(ENCTYPE_ATTR, value);
+        setRendererAttributeString(HTML.ENCTYPE_ATTR, value);
     }
 
     public void setOnreset(String value)
     {
-        setRendererAttributeString(ONRESET_ATTR, value);
+        setRendererAttributeString(HTML.ONRESET_ATTR, value);
     }
 
     public void setOnsubmit(String value)
     {
-        setRendererAttributeString(ONSUMBIT_ATTR, value);
+        setRendererAttributeString(HTML.ONSUMBIT_ATTR, value);
     }
 
     public void setTarget(String value)
     {
-        setRendererAttributeString(TARGET_ATTR, value);
+        setRendererAttributeString(HTML.TARGET_ATTR, value);
     }
 
     // Form Renderer attributes --> no attributes yet

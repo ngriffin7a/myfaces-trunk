@@ -22,8 +22,6 @@ import net.sourceforge.myfaces.component.CommonComponentProperties;
 import net.sourceforge.myfaces.renderkit.attr.CommonRendererAttributes;
 import net.sourceforge.myfaces.renderkit.attr.MessageRendererAttributes;
 import net.sourceforge.myfaces.renderkit.attr.UserRoleAttributes;
-import net.sourceforge.myfaces.renderkit.html.attr.HTMLEventHandlerAttributes;
-import net.sourceforge.myfaces.renderkit.html.attr.HTMLUniversalAttributes;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLEncoder;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLUtil;
 import net.sourceforge.myfaces.util.bundle.BundleUtils;
@@ -49,8 +47,6 @@ public class MessageRenderer
     extends HTMLRenderer
     implements CommonComponentProperties,
                CommonRendererAttributes,
-               HTMLUniversalAttributes,
-               HTMLEventHandlerAttributes,
                MessageRendererAttributes,
                UserRoleAttributes
 {
@@ -80,8 +76,8 @@ public class MessageRenderer
 
         StringBuffer buf = new StringBuffer();
         HTMLUtil.renderCssClass(buf, uiComponent, OUTPUT_CLASS_ATTR);
-        HTMLUtil.renderHTMLAttributes(buf, uiComponent, HTML_UNIVERSAL_ATTRIBUTES);
-        HTMLUtil.renderHTMLAttributes(buf, uiComponent, HTML_EVENT_HANDLER_ATTRIBUTES);
+        HTMLUtil.renderHTMLAttributes(buf, uiComponent, HTML.UNIVERSAL_ATTRIBUTES);
+        HTMLUtil.renderHTMLAttributes(buf, uiComponent, HTML.EVENT_HANDLER_ATTRIBUTES);
         if (buf.length() > 0)
         {
             writer.write("<span ");

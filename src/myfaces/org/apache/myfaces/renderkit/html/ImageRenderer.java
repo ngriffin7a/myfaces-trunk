@@ -21,9 +21,6 @@ package net.sourceforge.myfaces.renderkit.html;
 import net.sourceforge.myfaces.renderkit.attr.CommonRendererAttributes;
 import net.sourceforge.myfaces.renderkit.attr.ImageRendererAttributes;
 import net.sourceforge.myfaces.renderkit.attr.UserRoleAttributes;
-import net.sourceforge.myfaces.renderkit.html.attr.HTMLEventHandlerAttributes;
-import net.sourceforge.myfaces.renderkit.html.attr.HTMLImgAttributes;
-import net.sourceforge.myfaces.renderkit.html.attr.HTMLUniversalAttributes;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLEncoder;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLUtil;
 import net.sourceforge.myfaces.util.bundle.BundleUtils;
@@ -43,9 +40,6 @@ import java.io.IOException;
 public class ImageRenderer
         extends HTMLRenderer
         implements CommonRendererAttributes,
-    HTMLUniversalAttributes,
-    HTMLEventHandlerAttributes,
-    HTMLImgAttributes,
                    ImageRendererAttributes,
                    UserRoleAttributes
 {
@@ -139,7 +133,7 @@ public class ImageRenderer
             }
             else
             {
-                alt = (String)uiComponent.getAttribute(ALT_ATTR);
+                alt = (String)uiComponent.getAttribute(HTML.ALT_ATTR);
             }
             if (alt != null && alt.length() > 0)
             {
@@ -149,9 +143,9 @@ public class ImageRenderer
             }
 
             HTMLUtil.renderCssClass(writer, uiComponent, GRAPHIC_CLASS_ATTR);
-            HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML_UNIVERSAL_ATTRIBUTES);
-            HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML_EVENT_HANDLER_ATTRIBUTES);
-            HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML_IMG_ATTRUBUTES);
+            HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML.UNIVERSAL_ATTRIBUTES);
+            HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML.EVENT_HANDLER_ATTRIBUTES);
+            HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML.IMG_ATTRUBUTES);
 
             writer.write(">");
         }

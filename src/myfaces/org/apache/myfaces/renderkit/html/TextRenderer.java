@@ -22,9 +22,6 @@ import net.sourceforge.myfaces.component.CommonComponentProperties;
 import net.sourceforge.myfaces.renderkit.attr.CommonRendererAttributes;
 import net.sourceforge.myfaces.renderkit.attr.TextRendererAttributes;
 import net.sourceforge.myfaces.renderkit.attr.UserRoleAttributes;
-import net.sourceforge.myfaces.renderkit.html.attr.HTMLEventHandlerAttributes;
-import net.sourceforge.myfaces.renderkit.html.attr.HTMLInputAttributes;
-import net.sourceforge.myfaces.renderkit.html.attr.HTMLUniversalAttributes;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLEncoder;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLUtil;
 import net.sourceforge.myfaces.util.bundle.BundleUtils;
@@ -45,9 +42,6 @@ public class TextRenderer
     extends HTMLRenderer
     implements CommonComponentProperties,
                CommonRendererAttributes,
-               HTMLUniversalAttributes,
-               HTMLEventHandlerAttributes,
-               HTMLInputAttributes,
                TextRendererAttributes,
                UserRoleAttributes
 {
@@ -92,9 +86,9 @@ public class TextRenderer
         }
 
         HTMLUtil.renderCssClass(writer, uiInput, INPUT_CLASS_ATTR);
-        HTMLUtil.renderHTMLAttributes(writer, uiInput, HTML_UNIVERSAL_ATTRIBUTES);
-        HTMLUtil.renderHTMLAttributes(writer, uiInput, HTML_EVENT_HANDLER_ATTRIBUTES);
-        HTMLUtil.renderHTMLAttributes(writer, uiInput, HTML_INPUT_ATTRIBUTES);
+        HTMLUtil.renderHTMLAttributes(writer, uiInput, HTML.UNIVERSAL_ATTRIBUTES);
+        HTMLUtil.renderHTMLAttributes(writer, uiInput, HTML.EVENT_HANDLER_ATTRIBUTES);
+        HTMLUtil.renderHTMLAttributes(writer, uiInput, HTML.INPUT_ATTRIBUTES);
         HTMLUtil.renderHTMLAttribute(writer, uiInput, MAXLENGTH_ATTR, "maxlength");
         HTMLUtil.renderDisabledOnUserRole(facesContext, uiInput);
 
@@ -109,8 +103,8 @@ public class TextRenderer
 
         StringBuffer buf = new StringBuffer();
         HTMLUtil.renderCssClass(buf, uiOutput, OUTPUT_CLASS_ATTR);
-        HTMLUtil.renderHTMLAttributes(buf, uiOutput, HTML_UNIVERSAL_ATTRIBUTES);
-        HTMLUtil.renderHTMLAttributes(buf, uiOutput, HTML_EVENT_HANDLER_ATTRIBUTES);
+        HTMLUtil.renderHTMLAttributes(buf, uiOutput, HTML.UNIVERSAL_ATTRIBUTES);
+        HTMLUtil.renderHTMLAttributes(buf, uiOutput, HTML.EVENT_HANDLER_ATTRIBUTES);
         if (buf.length() > 0)
         {
             writer.write("<span");

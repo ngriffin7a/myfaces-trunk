@@ -20,15 +20,12 @@ package net.sourceforge.myfaces.renderkit.html.ext;
 
 import net.sourceforge.myfaces.MyFacesFactoryFinder;
 import net.sourceforge.myfaces.component.CommonComponentProperties;
-import net.sourceforge.myfaces.renderkit.attr.CommonRendererAttributes;
 import net.sourceforge.myfaces.renderkit.attr.ButtonRendererAttributes;
+import net.sourceforge.myfaces.renderkit.attr.CommonRendererAttributes;
 import net.sourceforge.myfaces.renderkit.attr.ext.TabbedPaneRendererAttributes;
 import net.sourceforge.myfaces.renderkit.html.FormRenderer;
 import net.sourceforge.myfaces.renderkit.html.GroupRenderer;
-import net.sourceforge.myfaces.renderkit.html.attr.HTMLButtonAttributes;
-import net.sourceforge.myfaces.renderkit.html.attr.HTMLEventHandlerAttributes;
-import net.sourceforge.myfaces.renderkit.html.attr.HTMLTableAttributes;
-import net.sourceforge.myfaces.renderkit.html.attr.HTMLUniversalAttributes;
+import net.sourceforge.myfaces.renderkit.html.HTML;
 import net.sourceforge.myfaces.renderkit.html.state.StateRenderer;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLEncoder;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLUtil;
@@ -38,9 +35,9 @@ import net.sourceforge.myfaces.webapp.ServletMappingFactory;
 
 import javax.faces.FactoryFinder;
 import javax.faces.application.Message;
+import javax.faces.component.UICommand;
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIForm;
-import javax.faces.component.UICommand;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 import javax.faces.render.RenderKit;
@@ -63,10 +60,6 @@ public class TabbedPaneRenderer
     extends GroupRenderer
     implements CommonComponentProperties,
                CommonRendererAttributes,
-               HTMLUniversalAttributes,
-               HTMLEventHandlerAttributes,
-               HTMLTableAttributes,
-               HTMLButtonAttributes,
                TabbedPaneRendererAttributes,
                ButtonRendererAttributes
 {
@@ -236,7 +229,7 @@ public class TabbedPaneRenderer
 
     protected String getBgColor(UIComponent uiTabbedPane)
     {
-        String bgColor = (String)uiTabbedPane.getAttribute(BGCOLOR_ATTR);
+        String bgColor = (String)uiTabbedPane.getAttribute(HTML.BGCOLOR_ATTR);
         return bgColor == null ? DEFAULT_BG_COLOR : bgColor;
     }
 
@@ -293,28 +286,28 @@ public class TabbedPaneRenderer
                                    UIComponent uiComponent)
         throws IOException
     {
-        String oldStyle = (String)uiComponent.getAttribute(STYLE_ATTR);
+        String oldStyle = (String)uiComponent.getAttribute(HTML.STYLE_ATTR);
         if (oldStyle == null)
         {
-            uiComponent.setAttribute(STYLE_ATTR, TABLE_STYLE);
+            uiComponent.setAttribute(HTML.STYLE_ATTR, TABLE_STYLE);
         }
         else
         {
-            uiComponent.setAttribute(STYLE_ATTR, TABLE_STYLE + "; " + oldStyle);
+            uiComponent.setAttribute(HTML.STYLE_ATTR, TABLE_STYLE + "; " + oldStyle);
         }
 
-        String oldBgColor = (String)uiComponent.getAttribute(BGCOLOR_ATTR);
-        uiComponent.setAttribute(BGCOLOR_ATTR, null);
+        String oldBgColor = (String)uiComponent.getAttribute(HTML.BGCOLOR_ATTR);
+        uiComponent.setAttribute(HTML.BGCOLOR_ATTR, null);
 
         writer.write("<table cellspacing=\"0\"");
         HTMLUtil.renderCssClass(writer, uiComponent, PANEL_CLASS_ATTR);
-        HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML_UNIVERSAL_ATTRIBUTES);
-        HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML_EVENT_HANDLER_ATTRIBUTES);
-        HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML_TABLE_ATTRIBUTES);
+        HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML.UNIVERSAL_ATTRIBUTES);
+        HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML.EVENT_HANDLER_ATTRIBUTES);
+        HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML.TABLE_ATTRIBUTES);
         writer.write(">");
 
-        uiComponent.setAttribute(STYLE_ATTR, oldStyle);
-        uiComponent.setAttribute(BGCOLOR_ATTR, oldBgColor);
+        uiComponent.setAttribute(HTML.STYLE_ATTR, oldStyle);
+        uiComponent.setAttribute(HTML.BGCOLOR_ATTR, oldBgColor);
     }
 
 
@@ -379,24 +372,24 @@ public class TabbedPaneRenderer
             style = BUTTON_STYLE_INACTIVE;
         }
 
-        String oldStyle = (String)tab.getAttribute(STYLE_ATTR);
+        String oldStyle = (String)tab.getAttribute(HTML.STYLE_ATTR);
         if (oldStyle == null)
         {
-            tab.setAttribute(STYLE_ATTR, style);
+            tab.setAttribute(HTML.STYLE_ATTR, style);
         }
         else
         {
-            tab.setAttribute(STYLE_ATTR, active ? style + oldStyle : style + oldStyle);
+            tab.setAttribute(HTML.STYLE_ATTR, active ? style + oldStyle : style + oldStyle);
         }
 
         HTMLUtil.renderCssClass(writer, tab, COMMAND_CLASS_ATTR);//TODO: ?
-        HTMLUtil.renderHTMLAttributes(writer, tab, HTML_UNIVERSAL_ATTRIBUTES);
-        HTMLUtil.renderHTMLAttributes(writer, tab, HTML_EVENT_HANDLER_ATTRIBUTES);
-        HTMLUtil.renderHTMLAttributes(writer, tab, HTML_BUTTON_ATTRIBUTES);
+        HTMLUtil.renderHTMLAttributes(writer, tab, HTML.UNIVERSAL_ATTRIBUTES);
+        HTMLUtil.renderHTMLAttributes(writer, tab, HTML.EVENT_HANDLER_ATTRIBUTES);
+        HTMLUtil.renderHTMLAttributes(writer, tab, HTML.BUTTON_ATTRIBUTES);
         HTMLUtil.renderDisabledOnUserRole(facesContext, tab);
         writer.write(">");
 
-        tab.setAttribute(STYLE_ATTR, oldStyle);
+        tab.setAttribute(HTML.STYLE_ATTR, oldStyle);
 
         writer.write("</td>");
     }

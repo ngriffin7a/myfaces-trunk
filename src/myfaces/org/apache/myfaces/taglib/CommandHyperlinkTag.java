@@ -23,10 +23,8 @@ import net.sourceforge.myfaces.component.MyFacesUICommand;
 import net.sourceforge.myfaces.renderkit.attr.CommonRendererAttributes;
 import net.sourceforge.myfaces.renderkit.attr.HyperlinkRendererAttributes;
 import net.sourceforge.myfaces.renderkit.attr.UserRoleAttributes;
+import net.sourceforge.myfaces.renderkit.html.HTML;
 import net.sourceforge.myfaces.renderkit.html.HyperlinkRenderer;
-import net.sourceforge.myfaces.renderkit.html.attr.HTMLAnchorAttributes;
-import net.sourceforge.myfaces.renderkit.html.attr.HTMLEventHandlerAttributes;
-import net.sourceforge.myfaces.renderkit.html.attr.HTMLUniversalAttributes;
 
 import javax.servlet.jsp.JspException;
 
@@ -40,9 +38,6 @@ public class CommandHyperlinkTag
     extends MyFacesBodyTag
     implements CommonComponentProperties,
                CommonRendererAttributes,
-               HTMLUniversalAttributes,
-               HTMLEventHandlerAttributes,
-               HTMLAnchorAttributes,
                UserRoleAttributes,
                HyperlinkRendererAttributes
 {
@@ -94,52 +89,52 @@ public class CommandHyperlinkTag
 
     public void setAccesskey(String value)
     {
-        setRendererAttributeString(ACCESSKEY_ATTR, value);
+        setRendererAttributeString(HTML.ACCESSKEY_ATTR, value);
     }
 
     public void setCharset(String value)
     {
-        setRendererAttributeString(CHARSET_ATTR, value);
+        setRendererAttributeString(HTML.CHARSET_ATTR, value);
     }
 
     public void setCoords(String value)
     {
-        setRendererAttributeString(COORDS_ATTR, value);
+        setRendererAttributeString(HTML.COORDS_ATTR, value);
     }
 
     public void setHreflang(String value)
     {
-        setRendererAttributeString(HREFLANG_ATTR, value);
+        setRendererAttributeString(HTML.HREFLANG_ATTR, value);
     }
 
     public void setRel(String value)
     {
-        setRendererAttributeString(REL_ATTR, value);
+        setRendererAttributeString(HTML.REL_ATTR, value);
     }
 
     public void setRev(String value)
     {
-        setRendererAttributeString(REV_ATTR, value);
+        setRendererAttributeString(HTML.REV_ATTR, value);
     }
 
     public void setShape(String value)
     {
-        setRendererAttributeString(SHAPE_ATTR, value);
+        setRendererAttributeString(HTML.SHAPE_ATTR, value);
     }
 
     public void setTabindex(String value)
     {
-        setRendererAttributeString(TABINDEX_ATTR, value);
+        setRendererAttributeString(HTML.TABINDEX_ATTR, value);
     }
 
     public void setTarget(String value)
     {
-        setRendererAttributeString(TARGET_ATTR, value);
+        setRendererAttributeString(HTML.TARGET_ATTR, value);
     }
 
     public void setType(String value)
     {
-        setRendererAttributeString(TYPE_ATTR, value);
+        setRendererAttributeString(HTML.TYPE_ATTR, value);
     }
 
 

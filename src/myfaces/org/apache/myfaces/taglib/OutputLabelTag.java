@@ -19,8 +19,8 @@
 package net.sourceforge.myfaces.taglib;
 
 import net.sourceforge.myfaces.renderkit.attr.LabelRendererAttributes;
+import net.sourceforge.myfaces.renderkit.html.HTML;
 import net.sourceforge.myfaces.renderkit.html.LabelRenderer;
-import net.sourceforge.myfaces.renderkit.html.attr.HTMLLabelAttributes;
 
 
 /**
@@ -30,8 +30,7 @@ import net.sourceforge.myfaces.renderkit.html.attr.HTMLLabelAttributes;
  */
 public class OutputLabelTag
     extends MyFacesTag
-    implements HTMLLabelAttributes,
-               LabelRendererAttributes
+    implements LabelRendererAttributes
 {
     public String getComponentType()
     {
@@ -69,17 +68,17 @@ public class OutputLabelTag
 
     public void setAccesskey(String value)
     {
-        setRendererAttributeString(ACCESSKEY_ATTR, value);
+        setRendererAttributeString(HTML.ACCESSKEY_ATTR, value);
     }
 
     public void setOnblur(String value)
     {
-        setRendererAttributeString(ONBLUR_ATTR, value);
+        setRendererAttributeString(HTML.ONBLUR_ATTR, value);
     }
 
     public void setOnfocus(String value)
     {
-        setRendererAttributeString(ONFOCUS_ATTR, value);
+        setRendererAttributeString(HTML.ONFOCUS_ATTR, value);
     }
 
     // Label Renderer attributes

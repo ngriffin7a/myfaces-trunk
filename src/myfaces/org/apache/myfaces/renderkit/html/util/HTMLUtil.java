@@ -19,11 +19,9 @@
 package net.sourceforge.myfaces.renderkit.html.util;
 
 import net.sourceforge.myfaces.renderkit.attr.CommonRendererAttributes;
+import net.sourceforge.myfaces.renderkit.html.HTML;
 import net.sourceforge.myfaces.renderkit.html.HTMLRenderer;
 import net.sourceforge.myfaces.renderkit.html.ListboxRenderer;
-import net.sourceforge.myfaces.renderkit.html.attr.HTMLEventHandlerAttributes;
-import net.sourceforge.myfaces.renderkit.html.attr.HTMLSelectAttributes;
-import net.sourceforge.myfaces.renderkit.html.attr.HTMLUniversalAttributes;
 
 import javax.faces.component.SelectItem;
 import javax.faces.component.UIComponent;
@@ -193,9 +191,9 @@ public class HTMLUtil
         renderCssClass(writer, uiComponent, selectMany
                                              ? CommonRendererAttributes.SELECT_MANY_CLASS_ATTR
                                              : CommonRendererAttributes.SELECT_ONE_CLASS_ATTR);
-        renderHTMLAttributes(writer, uiComponent, HTMLUniversalAttributes.HTML_UNIVERSAL_ATTRIBUTES);
-        renderHTMLAttributes(writer, uiComponent, HTMLEventHandlerAttributes.HTML_EVENT_HANDLER_ATTRIBUTES);
-        renderHTMLAttributes(writer, uiComponent, HTMLSelectAttributes.HTML_SELECT_ATTRIBUTES);
+        renderHTMLAttributes(writer, uiComponent, HTML.UNIVERSAL_ATTRIBUTES);
+        renderHTMLAttributes(writer, uiComponent, HTML.EVENT_HANDLER_ATTRIBUTES);
+        renderHTMLAttributes(writer, uiComponent, HTML.SELECT_ATTRIBUTES);
         HTMLUtil.renderDisabledOnUserRole(facesContext, uiComponent);
 
         if (selectMany) writer.write(" multiple ");

@@ -23,10 +23,8 @@ import net.sourceforge.myfaces.component.MyFacesUIGraphic;
 import net.sourceforge.myfaces.renderkit.attr.CommonRendererAttributes;
 import net.sourceforge.myfaces.renderkit.attr.ImageRendererAttributes;
 import net.sourceforge.myfaces.renderkit.attr.UserRoleAttributes;
+import net.sourceforge.myfaces.renderkit.html.HTML;
 import net.sourceforge.myfaces.renderkit.html.ImageRenderer;
-import net.sourceforge.myfaces.renderkit.html.attr.HTMLEventHandlerAttributes;
-import net.sourceforge.myfaces.renderkit.html.attr.HTMLImgAttributes;
-import net.sourceforge.myfaces.renderkit.html.attr.HTMLUniversalAttributes;
 
 
 /**
@@ -38,9 +36,6 @@ public class GraphicImageTag
     extends MyFacesTag
     implements CommonComponentProperties,
                CommonRendererAttributes,
-               HTMLUniversalAttributes,
-               HTMLEventHandlerAttributes,
-               HTMLImgAttributes,
                UserRoleAttributes,
                ImageRendererAttributes
 {
@@ -76,52 +71,52 @@ public class GraphicImageTag
 
     public void setAlign(String value)
     {
-        setRendererAttributeString(ALIGN_ATTR, value);
+        setRendererAttributeString(HTML.ALIGN_ATTR, value);
     }
 
     public void setAlt(String value)
     {
-        setRendererAttributeString(ALT_ATTR, value);
+        setRendererAttributeString(HTML.ALT_ATTR, value);
     }
 
     public void setBorder(String value)
     {
-        setRendererAttributeString(BORDER_ATTR, value);
+        setRendererAttributeString(HTML.BORDER_ATTR, value);
     }
 
     public void setHeight(String value)
     {
-        setRendererAttributeString(HEIGHT_ATTR, value);
+        setRendererAttributeString(HTML.HEIGHT_ATTR, value);
     }
 
     public void setHspace(String value)
     {
-        setRendererAttributeString(HSPACE_ATTR, value);
+        setRendererAttributeString(HTML.HSPACE_ATTR, value);
     }
 
     public void setIsmap(String value)
     {
-        setRendererAttributeString(ISMAP_ATTR, value);
+        setRendererAttributeString(HTML.ISMAP_ATTR, value);
     }
 
     public void setLongdesc(String value)
     {
-        setRendererAttributeString(LONGDESC_ATTR, value);
+        setRendererAttributeString(HTML.LONGDESC_ATTR, value);
     }
 
     public void setUsemap(String value)
     {
-        setRendererAttributeString(USEMAP_ATTR, value);
+        setRendererAttributeString(HTML.USEMAP_ATTR, value);
     }
 
     public void setVspace(String value)
     {
-        setRendererAttributeString(VSPACE_ATTR, value);
+        setRendererAttributeString(HTML.VSPACE_ATTR, value);
     }
 
     public void setWidth(String value)
     {
-        setRendererAttributeString(WIDTH_ATTR, value);
+        setRendererAttributeString(HTML.WIDTH_ATTR, value);
     }
 
 

@@ -19,8 +19,8 @@
 package net.sourceforge.myfaces.taglib;
 
 import net.sourceforge.myfaces.renderkit.attr.MenuRendererAttributes;
+import net.sourceforge.myfaces.renderkit.html.HTML;
 import net.sourceforge.myfaces.renderkit.html.MenuRenderer;
-import net.sourceforge.myfaces.renderkit.html.attr.HTMLSelectAttributes;
 
 
 /**
@@ -30,8 +30,7 @@ import net.sourceforge.myfaces.renderkit.html.attr.HTMLSelectAttributes;
  */
 public class SelectOneMenuTag
     extends MyFacesTag
-    implements HTMLSelectAttributes,
-               MenuRendererAttributes
+    implements MenuRendererAttributes
 {
     public String getComponentType()
     {
@@ -65,42 +64,42 @@ public class SelectOneMenuTag
 
     public void setDatafld(String value)
     {
-        setRendererAttributeString(DATAFLD_ATTR, value);
+        setRendererAttributeString(HTML.DATAFLD_ATTR, value);
     }
 
     public void setDatasrc(String value)
     {
-        setRendererAttributeString(DATASRC_ATTR, value);
+        setRendererAttributeString(HTML.DATASRC_ATTR, value);
     }
 
     public void setDataformatas(String value)
     {
-        setRendererAttributeString(DATAFORMATAS_ATTR, value);
+        setRendererAttributeString(HTML.DATAFORMATAS_ATTR, value);
     }
 
     public void setDisabled(String value)
     {
-        setRendererAttributeBoolean(DISABLED_ATTR, value);
+        setRendererAttributeBoolean(HTML.DISABLED_ATTR, value);
     }
 
     public void setOnblur(String value)
     {
-        setRendererAttributeString(ONBLUR_ATTR, value);
+        setRendererAttributeString(HTML.ONBLUR_ATTR, value);
     }
 
     public void setOnchange(String value)
     {
-        setRendererAttributeString(ONCHANGE_ATTR, value);
+        setRendererAttributeString(HTML.ONCHANGE_ATTR, value);
     }
 
     public void setOnfocus(String value)
     {
-        setRendererAttributeString(ONFOCUS_ATTR, value);
+        setRendererAttributeString(HTML.ONFOCUS_ATTR, value);
     }
 
     public void setTabindex(String value)
     {
-        setRendererAttributeString(TABINDEX_ATTR, value);
+        setRendererAttributeString(HTML.TABINDEX_ATTR, value);
     }
 
     // Menu Renderer attributes

@@ -23,8 +23,7 @@ import net.sourceforge.myfaces.component.MyFacesUIOutput;
 import net.sourceforge.myfaces.renderkit.attr.CommonRendererAttributes;
 import net.sourceforge.myfaces.renderkit.attr.KeyBundleAttributes;
 import net.sourceforge.myfaces.renderkit.attr.UserRoleAttributes;
-import net.sourceforge.myfaces.renderkit.html.attr.HTMLEventHandlerAttributes;
-import net.sourceforge.myfaces.renderkit.html.attr.HTMLUniversalAttributes;
+import net.sourceforge.myfaces.renderkit.html.HTML;
 
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
@@ -48,8 +47,6 @@ public abstract class MyFacesBodyTag
     implements MyFacesTagBaseIF,
                CommonComponentProperties,
                CommonRendererAttributes,
-               HTMLUniversalAttributes,
-               HTMLEventHandlerAttributes,
                KeyBundleAttributes,
                UserRoleAttributes
 {
@@ -287,22 +284,22 @@ public abstract class MyFacesBodyTag
 
     public void setDir(String value)
     {
-        setRendererAttributeString(DIR_ATTR, value);
+        setRendererAttributeString(HTML.DIR_ATTR, value);
     }
 
     public void setLang(String value)
     {
-        setRendererAttributeString(LANG_ATTR, value);
+        setRendererAttributeString(HTML.LANG_ATTR, value);
     }
 
     public void setStyle(String value)
     {
-        setRendererAttributeString(STYLE_ATTR, value);
+        setRendererAttributeString(HTML.STYLE_ATTR, value);
     }
 
     public void setTitle(String value)
     {
-        setRendererAttributeString(TITLE_ATTR, value);
+        setRendererAttributeString(HTML.TITLE_ATTR, value);
     }
 
 
@@ -311,52 +308,52 @@ public abstract class MyFacesBodyTag
 
     public void setOnclick(String value)
     {
-        setRendererAttributeString(ONCLICK_ATTR, value);
+        setRendererAttributeString(HTML.ONCLICK_ATTR, value);
     }
 
     public void setOndblclick(String value)
     {
-        setRendererAttributeString(ONDBLCLICK_ATTR, value);
+        setRendererAttributeString(HTML.ONDBLCLICK_ATTR, value);
     }
 
     public void setOnmousedown(String value)
     {
-        setRendererAttributeString(ONMOUSEDOWN_ATTR, value);
+        setRendererAttributeString(HTML.ONMOUSEDOWN_ATTR, value);
     }
 
     public void setOnmouseup(String value)
     {
-        setRendererAttributeString(ONMOUSEUP_ATTR, value);
+        setRendererAttributeString(HTML.ONMOUSEUP_ATTR, value);
     }
 
     public void setOnmouseover(String value)
     {
-        setRendererAttributeString(ONMOUSEOVER_ATTR, value);
+        setRendererAttributeString(HTML.ONMOUSEOVER_ATTR, value);
     }
 
     public void setOnmousemove(String value)
     {
-        setRendererAttributeString(ONMOUSEMOVE_ATTR, value);
+        setRendererAttributeString(HTML.ONMOUSEMOVE_ATTR, value);
     }
 
     public void setOnmouseout(String value)
     {
-        setRendererAttributeString(ONMOUSEOUT_ATTR, value);
+        setRendererAttributeString(HTML.ONMOUSEOUT_ATTR, value);
     }
 
     public void setOnkeypress(String value)
     {
-        setRendererAttributeString(ONKEYPRESS_ATTR, value);
+        setRendererAttributeString(HTML.ONKEYPRESS_ATTR, value);
     }
 
     public void setOnkeydown(String value)
     {
-        setRendererAttributeString(ONKEYDOWN_ATTR, value);
+        setRendererAttributeString(HTML.ONKEYDOWN_ATTR, value);
     }
 
     public void setOnkeyup(String value)
     {
-        setRendererAttributeString(ONKEYUP_ATTR, value);
+        setRendererAttributeString(HTML.ONKEYUP_ATTR, value);
     }
 
 
