@@ -31,7 +31,12 @@ import net.sourceforge.myfaces.renderkit.html.jspinfo.JspInfo;
 import net.sourceforge.myfaces.renderkit.html.jspinfo.JspBeanInfo;
 
 import javax.faces.FacesException;
+import javax.faces.event.FacesListener;
+import javax.faces.event.ActionListener;
+import javax.faces.event.ValueChangedListener;
 import javax.faces.component.UIComponent;
+import javax.faces.component.UICommand;
+import javax.faces.component.UIInput;
 import javax.faces.context.FacesContext;
 import javax.faces.tree.Tree;
 import javax.servlet.jsp.PageContext;
@@ -78,6 +83,12 @@ public class StateRestorer
                 UIComponent comp = (UIComponent)it.next();
                 restoreComponent(facesContext, stateMap, comp);
             }
+
+            //restore model beans and values:
+            restoreModelValues(facesContext, stateMap);
+
+            //restore listeners:
+            restoreListeners(facesContext, stateMap);
         }
 
         restoreLocale(facesContext, stateMap);
@@ -99,9 +110,9 @@ public class StateRestorer
         return facesContext.getServletRequest().getParameterMap();
     }
 
-    protected String getStateParameter(Map stateMap, String attrName)
+    protected String getStateParameter(Map stateMap, String paramName)
     {
-        String[] values = (String[])stateMap.get(attrName);
+        String[] values = (String[])stateMap.get(paramName);
         if (values == null || values.length == 0)
         {
             return null;
@@ -436,6 +447,65 @@ public class StateRestorer
                 variant = st.nextToken();
             }
             facesContext.setLocale(new Locale(language, country, variant));
+        }
+    }
+
+
+    protected void restoreListeners(FacesContext facesContext, Map stateMap)
+    {
+        for (Iterator it = stateMap.entrySet().iterator(); it.hasNext();)
+        {
+            Map.Entry entry = (Map.Entry)it.next();
+            String paramName = (String)entry.getKey();
+            RequestParameterNames.ListenerParameterInfo info
+                = RequestParameterNames.getListenerParameterInfo(paramName);
+            if (info != null)
+            {
+                UIComponent root = facesContext.getTree().getRoot();
+                String paramValue = getStateParameter(stateMap, paramName);
+                FacesListener listener;
+                if (info.serializedListener)
+                {
+                    //deserialize Listener
+                    listener = (FacesListener)ConverterUtils.deserialize(paramValue);
+                }
+                else
+                {
+                    //Listener is another component
+                    listener = (FacesListener)root.findComponent(paramValue);
+                    //TODO: check null
+                }
+                UIComponent uiComponent = root.findComponent(info.clientId);
+                //TODO: check null
+
+                if (info.listenerType.equals(StateRenderer.LISTENER_TYPE_ACTION))
+                {
+                    if (uiComponent instanceof UICommand)
+                    {
+                        ((UICommand)uiComponent).addActionListener((ActionListener)listener);
+                    }
+                    else
+                    {
+                        throw new FacesException("Expected UICommand component.");
+                    }
+                }
+                else if (info.listenerType.equals(StateRenderer.LISTENER_TYPE_VALUE_CHANGED))
+                {
+                    if (uiComponent instanceof UIInput)
+                    {
+                        ((UIInput)uiComponent).addValueChangedListener((ValueChangedListener)listener);
+                    }
+                    else
+                    {
+                        throw new FacesException("Expected UIInput component.");
+                    }
+                }
+                else
+                {
+                    throw new IllegalArgumentException(info.listenerType);
+                }
+
+            }
         }
     }
 

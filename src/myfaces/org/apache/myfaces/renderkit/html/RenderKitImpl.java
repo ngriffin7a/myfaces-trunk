@@ -39,10 +39,16 @@ import java.util.*;
 public class RenderKitImpl
         extends RenderKit
 {
-    private Map _renderers = new HashMap();
+    private Map _renderers = null;
 
     public RenderKitImpl()
     {
+    }
+
+    private void initAndAddRenderers()
+    {
+        _renderers = new HashMap();
+
         //Standard Renderkit
         addRenderer(new FormRenderer());
         addRenderer(new TextRenderer());
@@ -82,23 +88,16 @@ public class RenderKitImpl
         _renderers.put(r.getRendererType(), r);
     }
 
-    public void addComponentClass(Class class1)
-    {
-        throw new UnsupportedOperationException();
-    }
 
     public void addRenderer(String s, Renderer renderer)
     {
+        if (_renderers == null) initAndAddRenderers();
         _renderers.put(s, renderer);
-    }
-
-    public Iterator getComponentClasses()
-    {
-        throw new UnsupportedOperationException();
     }
 
     public Renderer getRenderer(String rendererType)
     {
+        if (_renderers == null) initAndAddRenderers();
         Renderer renderer = (Renderer)_renderers.get(rendererType);
         if (renderer == null)
         {
@@ -114,6 +113,7 @@ public class RenderKitImpl
 
     public Iterator getRendererTypes(String componentType)
     {
+        if (_renderers == null) initAndAddRenderers();
         List lst = new ArrayList();
         Iterator it = _renderers.entrySet().iterator();
         while (it.hasNext())
@@ -132,4 +132,18 @@ public class RenderKitImpl
     {
         return getRendererTypes(uicomponent.getComponentType());
     }
+
+
+
+    public void addComponentClass(Class class1)
+    {
+        throw new UnsupportedOperationException();
+    }
+
+    public Iterator getComponentClasses()
+    {
+        throw new UnsupportedOperationException();
+    }
+
+
 }

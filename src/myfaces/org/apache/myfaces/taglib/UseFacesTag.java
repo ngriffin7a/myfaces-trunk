@@ -48,7 +48,7 @@ public class UseFacesTag
     {
         //FacesServlet saves the FacesContext as request attribute:
         FacesContext facesContext
-            = (FacesContext)super.pageContext.getAttribute("javax.faces.context.FacesContext",
+            = (FacesContext)super.pageContext.getAttribute(FacesContext.FACES_CONTEXT_ATTR,
                                                            PageContext.REQUEST_SCOPE);
         if (facesContext == null)
         {

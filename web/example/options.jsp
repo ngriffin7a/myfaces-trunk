@@ -45,7 +45,7 @@
             <h4>Options</h4>
             <table border="1"><tr><td>
                 <f:form id="form1" formName="calcForm">
-                    <f:message id="msg.lang" key="option_lang" bundle="net.sourceforge.myfaces.example.example_messages" ></f:message>
+                    <f:message id="msg_lang" key="option_lang" bundle="net.sourceforge.myfaces.example.example_messages" ></f:message>
                     <f:selectbox id="locales" modelReference="optionsForm.language"  >
                         <f:selectbox_items id="available" modelReference="optionsForm.availableLanguages" />
                     </f:selectbox>

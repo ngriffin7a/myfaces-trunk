@@ -19,10 +19,12 @@
 package net.sourceforge.myfaces.taglib.ext;
 
 import net.sourceforge.myfaces.component.UICommand;
+import net.sourceforge.myfaces.component.ext.UISortHeader;
 import net.sourceforge.myfaces.renderkit.html.ext.SortColumnRenderer;
 import net.sourceforge.myfaces.taglib.MyFacesTag;
 
 import javax.faces.component.UIComponent;
+import javax.servlet.jsp.JspException;
 
 
 /**
@@ -57,6 +59,22 @@ public class SortColumnTag
     public void setCssClass(String v)
     {
         setRendererAttribute(SortColumnRenderer.COMMAND_CLASS_ATTR, v);
+    }
+
+
+    public int getDoStartValue() throws JspException
+    {
+        if (getCreated())
+        {
+            UICommand sortColumn = (UICommand)getComponent();
+            UIComponent sortHeader = sortColumn.getParent();
+            if (!(sortHeader instanceof UISortHeader))
+            {
+                throw new JspException("Expected sort header component as parent");
+            }
+            sortColumn.addActionListener((UISortHeader)sortHeader);
+        }
+        return super.getDoStartValue();
     }
 
 }

@@ -63,6 +63,8 @@ public class FacesContextImpl
     private int _maximumSeverity = 0;
     private ResponseStream _responseStream = null;
     private ResponseWriter _responseWriter = null;
+    private boolean _renderResponse = false;
+    private boolean _responseComplete = false;
 
     public FacesContextImpl(ServletContext servletcontext,
                             ServletRequest servletrequest,
@@ -73,6 +75,7 @@ public class FacesContextImpl
         _servletrequest = servletrequest;
         _servletresponse = servletresponse;
         _lifecycle = lifecycle;
+        FacesContext.setCurrentInstance(this);
     }
 
     //JSF.5.1.1
@@ -139,7 +142,7 @@ public class FacesContextImpl
 
     public void release()
     {
-        _tree = null;
+        //Our FacesContextFactory does no pooling yet, so no need to release anything here
     }
 
 
@@ -328,14 +331,37 @@ public class FacesContextImpl
 
     public void renderResponse()
     {
-        //TODO
-        throw new UnsupportedOperationException();
+        _renderResponse = true;
     }
 
     public void responseComplete()
     {
-        //TODO
-        throw new UnsupportedOperationException();
+        _responseComplete = true;
+    }
+
+
+    public static boolean isRenderResponse(FacesContext facesContext)
+    {
+        if (facesContext instanceof FacesContextImpl)
+        {
+            return ((FacesContextImpl)facesContext)._renderResponse;
+        }
+        else
+        {
+            throw new IllegalArgumentException("FacesContext of class " + facesContext.getClass().getName() + " is not supported.");
+        }
+    }
+
+    public static boolean isResponseComplete(FacesContext facesContext)
+    {
+        if (facesContext instanceof FacesContextImpl)
+        {
+            return ((FacesContextImpl)facesContext)._responseComplete;
+        }
+        else
+        {
+            throw new IllegalArgumentException("FacesContext of class " + facesContext.getClass().getName() + " is not supported.");
+        }
     }
 
     //Helpers

@@ -19,6 +19,7 @@
 package net.sourceforge.myfaces.renderkit.html.jspinfo;
 
 import net.sourceforge.myfaces.MyFacesFactoryFinder;
+import net.sourceforge.myfaces.tree.TreeImpl;
 import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.JasperException;
 import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.JspCompilationContext;
 import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.compiler.Parser;
@@ -65,7 +66,7 @@ public class JspTreeParser
 
     protected void init(String treeId)
     {
-        Tree tree = new JspInfoTree(treeId);
+        Tree tree = new TreeImpl(treeId);
 
         _jspInfo = new JspInfo(tree);
 

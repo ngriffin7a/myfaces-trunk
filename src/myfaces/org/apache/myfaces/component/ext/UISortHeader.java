@@ -24,7 +24,7 @@ import net.sourceforge.myfaces.renderkit.html.ext.SortColumnRenderer;
 
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
-import javax.faces.event.FacesEvent;
+import javax.faces.event.*;
 
 /**
  * DOCUMENT ME!
@@ -33,6 +33,7 @@ import javax.faces.event.FacesEvent;
  */
 public class UISortHeader
     extends UIPanel
+    implements ActionListener
 {
     public static final String COLUMN_ATTR = "column";
     public static final String COLUMN_REFERENCE_ATTR = "columnReference";
@@ -80,6 +81,7 @@ public class UISortHeader
         setAttribute(ASCENDING_REFERENCE_ATTR, ascendingReference);
     }
 
+    /*
     public boolean processEvent(FacesContext facesContext, FacesEvent event)
     {
         UIComponent source = (UIComponent)event.getSource();
@@ -111,13 +113,11 @@ public class UISortHeader
         }
         else
         {
-            /*
             TODO: new event processing model
             return super.processEvent(facesContext, event);
-            */
-            return false;
         }
     }
+    */
 
 
     public void updateModel(FacesContext facesContext)
@@ -132,4 +132,43 @@ public class UISortHeader
             //setAttribute(ASCENDING_ATTR, null);
         }
     }
+
+
+
+    public PhaseId getPhaseId()
+    {
+        return PhaseId.APPLY_REQUEST_VALUES;
+    }
+
+    public void processAction(ActionEvent actionevent)
+        throws AbortProcessingException
+    {
+        UIComponent source = actionevent.getComponent();
+        if (source.getRendererType().equals(SortColumnRenderer.TYPE))
+        {
+            FacesContext facesContext = FacesContext.getCurrentInstance();
+            String sortColumn = (String)source.currentValue(facesContext);
+            String currentColumn = (String)currentValue(facesContext);
+            if (sortColumn.equals(currentColumn))
+            {
+                setAscending(!currentAscending(facesContext));
+            }
+            else
+            {
+                setValue(sortColumn);
+                setValid(true);
+
+                Boolean defaultAscending = (Boolean)source.getAttribute(SortColumnRenderer.DEFAULT_ASCENDING_ATTR);
+                if (defaultAscending != null)
+                {
+                    setAscending(defaultAscending.booleanValue());
+                }
+                else
+                {
+                    setAscending(true);
+                }
+            }
+        }
+    }
+
 }

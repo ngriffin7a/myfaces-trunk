@@ -452,10 +452,11 @@ public class MyParseEventListener
                 comp.setRendererType(rendererType);
             }
 
+            _currentComponent.addChild(comp);
+
             overrideProperties(tag, comp);
             tag.release(); //TODO: Do we have to call it really?
 
-            _currentComponent.addChild(comp);
             _currentComponent = comp;
 
             /*

@@ -35,7 +35,11 @@ import net.sourceforge.myfaces.util.logging.LogUtil;
 import net.sourceforge.myfaces.util.bean.BeanUtils;
 
 import javax.faces.FacesException;
+import javax.faces.event.PhaseId;
+import javax.faces.event.FacesListener;
 import javax.faces.component.UIComponent;
+import javax.faces.component.UICommand;
+import javax.faces.component.UIInput;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 import javax.faces.tree.Tree;
@@ -174,6 +178,11 @@ public class StateSaver
         while (treeIt.hasNext())
         {
             UIComponent comp = (UIComponent)treeIt.next();
+
+            /* HACK: we call getClientId() to prevent ConcurrentModificationException in getAttributeNames iterator.
+             * As an alternative we could also copy the attribute names into a temporary List first. */
+            comp.getClientId(facesContext);
+
             boolean valueSeen = false;
 
             for (Iterator compIt = comp.getAttributeNames(); compIt.hasNext();)
@@ -225,6 +234,7 @@ public class StateSaver
                 }
             }
 
+            saveListeners(facesContext, stateMap, comp);
         }
 
     }
@@ -469,6 +479,12 @@ public class StateSaver
         {
             return true;
         }
+        else if (attrName.equals(UIComponent.CLIENT_ID_ATTR) ||
+                 attrName.equals("componentId"))
+        {
+            //Dynamically generated componentId and clientId need not be saved
+            return true;
+        }
         else
         {
             return IGNORE_ATTRIBUTES.contains(attrName);
@@ -532,6 +548,79 @@ public class StateSaver
                                  locale.getVariant();
             saveParameter(stateMap, StateRenderer.LOCALE_REQUEST_PARAM, localeValue);
         }
+    }
+
+
+
+    protected void saveListeners(FacesContext facesContext,
+                                 Map stateMap,
+                                 UIComponent uiComponent)
+    {
+        if (uiComponent instanceof UICommand)
+        {
+            saveListeners(facesContext, stateMap, uiComponent, StateRenderer.LISTENER_TYPE_ACTION);
+        }
+        else if (uiComponent instanceof UIInput)
+        {
+            saveListeners(facesContext, stateMap, uiComponent, StateRenderer.LISTENER_TYPE_VALUE_CHANGED);
+        }
+    }
+
+    protected void saveListeners(FacesContext facesContext,
+                                 Map stateMap,
+                                 UIComponent uiComponent,
+                                 String listenerType)
+    {
+        List[] listeners = UIComponentUtils.getListeners(uiComponent);
+        if (listeners != null)
+        {
+            for (Iterator it = PhaseId.VALUES.iterator(); it.hasNext();)
+            {
+                PhaseId phaseId = (PhaseId)it.next();
+                List phaseListeners = listeners[phaseId.getOrdinal()];
+                if (phaseListeners != null)
+                {
+                    savePhaseListeners(facesContext,
+                                       stateMap,
+                                       uiComponent,
+                                       listenerType,
+                                       phaseId,
+                                       phaseListeners);
+                }
+            }
+        }
+    }
+
+    protected void savePhaseListeners(FacesContext facesContext,
+                                      Map stateMap,
+                                      UIComponent uiComponent,
+                                      String listenerType,
+                                      PhaseId phaseId,
+                                      List phaseListeners)
+    {
+        for (Iterator it = phaseListeners.iterator(); it.hasNext();)
+        {
+            FacesListener facesListener = (FacesListener)it.next();
+            if (facesListener instanceof UIComponent)
+            {
+                //Listener is a component, so we only need to save the clientId
+                String paramName = RequestParameterNames.getComponentListenerParameterName(facesContext,
+                                                                                           uiComponent,
+                                                                                           listenerType);
+                String paramValue = ((UIComponent)facesListener).getClientId(facesContext);
+                saveParameter(stateMap, paramName, paramValue);
+            }
+            else
+            {
+                //Listener is of unknown class, so we must serialize it
+                String paramName = RequestParameterNames.getComponentListenerParameterName(facesContext,
+                                                                                           uiComponent,
+                                                                                           listenerType);
+                String paramValue = ConverterUtils.serialize(facesListener);
+                saveParameter(stateMap, paramName, paramValue);
+            }
+        }
+
     }
 
 }

@@ -18,6 +18,8 @@
  */
 package net.sourceforge.myfaces.component;
 
+import java.util.List;
+
 /**
  * DOCUMENT ME!
  * @author Manfred Geiler (latest modification by $Author$)
@@ -26,4 +28,8 @@ package net.sourceforge.myfaces.component;
 public class UIInput
         extends javax.faces.component.UIInput
 {
+    public List[] getListeners()
+    {
+        return listeners;
+    }
 }

@@ -19,6 +19,7 @@
 package net.sourceforge.myfaces.renderkit.html;
 
 import net.sourceforge.myfaces.MyFacesFactoryFinder;
+import net.sourceforge.myfaces.util.logging.LogUtil;
 import net.sourceforge.myfaces.component.UIParameter;
 import net.sourceforge.myfaces.renderkit.attr.HyperlinkRendererAttributes;
 import net.sourceforge.myfaces.renderkit.html.state.StateRenderer;
@@ -26,6 +27,10 @@ import net.sourceforge.myfaces.webapp.ServletMapping;
 import net.sourceforge.myfaces.webapp.ServletMappingFactory;
 
 import javax.faces.FactoryFinder;
+import javax.faces.event.FacesEvent;
+import javax.faces.event.CommandEvent;
+import javax.faces.event.ApplicationEvent;
+import javax.faces.event.ActionEvent;
 import javax.faces.component.UICommand;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
@@ -65,11 +70,20 @@ public class HyperlinkRenderer
         {
             //link was clicked
             String commandName = paramValue;
-            /*
-            TODO: New event processing model
-            FacesEvent event = new CommandEvent(uiComponent, commandName);
+
+            //Old event processing:
+            ApplicationEvent event = new CommandEvent(uiComponent, commandName);
             facesContext.addApplicationEvent(event);
-            */
+
+            //New event processing:
+            if (uiComponent instanceof UICommand)
+            {
+                facesContext.addFacesEvent(new ActionEvent(uiComponent, commandName));
+            }
+            else
+            {
+                LogUtil.getLogger().warning("Component " + uiComponent.getClientId(facesContext) + "is no UICommand.");
+            }
         }
     }
 

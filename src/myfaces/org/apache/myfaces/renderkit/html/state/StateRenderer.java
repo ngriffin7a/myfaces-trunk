@@ -45,6 +45,8 @@ public class StateRenderer
     public static final String TRANSIENT_ATTR
         = StateRenderer.class.getName() + ".TRANSIENT";
 
+    protected static final String LISTENER_TYPE_ACTION = "Action";
+    protected static final String LISTENER_TYPE_VALUE_CHANGED = "ValueChanged";
 
     protected StateSaver _stateSaver;
     protected StateRestorer _stateRestorer;

@@ -32,6 +32,10 @@ import javax.faces.context.FacesContext;
 import javax.faces.context.Message;
 import javax.faces.context.MessageResources;
 import javax.faces.context.MessageResourcesFactory;
+import java.util.List;
+import java.lang.reflect.Field;
+import java.security.AccessController;
+import java.security.PrivilegedAction;
 
 /**
  * DOCUMENT ME!
@@ -296,5 +300,78 @@ public class UIComponentUtils
         return c;
     }
     */
+
+
+
+    public static List[] getListeners(UIComponent uiComponent)
+    {
+        if (uiComponent instanceof UICommand)
+        {
+            return ((UICommand)uiComponent).getListeners();
+        }
+        else if (uiComponent instanceof UIInput)
+        {
+            return ((UIInput)uiComponent).getListeners();
+        }
+        else if (uiComponent instanceof javax.faces.component.UICommand ||
+                 uiComponent instanceof javax.faces.component.UIInput)
+        {
+            //HACK to get protected field "listeners" from the given UICommand or UIInput:
+            //TODO: try to convince Sun of making listeners public or give us a method to access them
+            try
+            {
+                Field f = null;
+                Class c = uiComponent.getClass();
+                while (f == null && c != null && !c.equals(Object.class))
+                {
+                    try
+                    {
+                        f = c.getDeclaredField("listeners");
+                    }
+                    catch (NoSuchFieldException e)
+                    {
+                    }
+                    c = c.getSuperclass();
+                }
+
+                if (f == null)
+                {
+                    throw new RuntimeException(new NoSuchFieldException());
+                }
+
+                List[] theListeners;
+                if (f.isAccessible())
+                {
+                    theListeners = (List[])f.get(uiComponent);
+                }
+                else
+                {
+                    final Field finalF = f;
+                    AccessController.doPrivileged(
+                        new PrivilegedAction()
+                        {
+                            public Object run()
+                            {
+                                finalF.setAccessible(true);
+                                return null;
+                            }
+                        });
+                    theListeners = (List[])f.get(uiComponent);
+                    f.setAccessible(false);
+                }
+
+                return theListeners;
+            }
+            catch (IllegalAccessException e)
+            {
+                throw new RuntimeException(e);
+            }
+        }
+        else
+        {
+            return null;
+        }
+    }
+
 
 }

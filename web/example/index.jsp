@@ -31,7 +31,7 @@
 
     <x:page_layout id="page" layout="classic" cssClass="<%=pageLayout%>" >
         <x:page_header id="header" cssClass="pageHeader" >
-            <f:image id="logo" url="images/logo_mini.jpg" altKey="alt_logo" altBundle="net.sourceforge.myfaces.example.example_messages" />
+            <f:image id="logo_mini" url="images/logo_mini.jpg" altKey="alt_logo" altBundle="net.sourceforge.myfaces.example.example_messages" />
         </x:page_header>
         <%@ include file="inc/navigation.jsp"  %>
 

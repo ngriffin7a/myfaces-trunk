@@ -18,7 +18,7 @@
  */
 package net.sourceforge.myfaces.component;
 
-import javax.faces.component.UIComponentBase;
+import javax.faces.component.UINamingContainer;
 
 /**
  * DOCUMENT ME!
@@ -26,12 +26,19 @@ import javax.faces.component.UIComponentBase;
  * @version $Revision$ $Date$
  */
 public class UIRoot
-    extends UIComponentBase
+    extends UINamingContainer
 {
     public static final String TYPE = "javax.faces.component.UIRoot";
+    public static final String ROOT_COMPONENT_ID = "theRoot";
+
+    public UIRoot()
+    {
+        setComponentId(ROOT_COMPONENT_ID);
+    }
 
     public String getComponentType()
     {
         return TYPE;
     }
+
 }

@@ -75,7 +75,7 @@ public class MyFacesTagHelper
         if (_facesContext == null)
         {
             //FacesServlet saves the FacesContext as request attribute:
-            _facesContext = (FacesContext)_pageContext.getAttribute("javax.faces.context.FacesContext",
+            _facesContext = (FacesContext)_pageContext.getAttribute(FacesContext.FACES_CONTEXT_ATTR,
                                                                     PageContext.REQUEST_SCOPE);
             if (_facesContext == null)
             {

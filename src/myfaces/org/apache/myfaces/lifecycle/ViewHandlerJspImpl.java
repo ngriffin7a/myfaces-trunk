@@ -58,11 +58,13 @@ public class ViewHandlerJspImpl
         //Build component tree from parsed JspInfo so that all components
         //already exist in case a component needs it's children prior to
         //rendering it's body
+        /*
         Tree staticTree = JspInfo.getTree(facesContext, tree.getTreeId());
         TreeCopier tc = new TreeCopier(facesContext);
         tc.setOverwriteComponents(false);
         tc.setOverwriteAttributes(false);
         tc.copyTree(staticTree, tree);
+        */
 
         //Look for a StateRenderer and prepare for state saving
         RenderKitFactory rkFactory = (RenderKitFactory)FactoryFinder.getFactory(FactoryFinder.RENDER_KIT_FACTORY);

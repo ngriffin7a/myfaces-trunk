@@ -18,16 +18,19 @@
  */
 package net.sourceforge.myfaces.component.ext;
 
+import net.sourceforge.myfaces.component.UICommand;
 import net.sourceforge.myfaces.component.UIComponentUtils;
 import net.sourceforge.myfaces.component.UIPanel;
-import net.sourceforge.myfaces.component.UICommand;
 import net.sourceforge.myfaces.renderkit.html.ext.NavigationItemRenderer;
 import net.sourceforge.myfaces.renderkit.html.ext.NavigationRenderer;
 
+import javax.faces.FacesException;
 import javax.faces.FactoryFinder;
 import javax.faces.component.UIComponent;
+import javax.faces.component.NamingContainer;
+import javax.faces.component.NamingContainerSupport;
 import javax.faces.context.FacesContext;
-import javax.faces.event.FacesEvent;
+import javax.faces.event.*;
 import javax.faces.tree.Tree;
 import javax.faces.tree.TreeFactory;
 import java.util.Iterator;
@@ -39,35 +42,91 @@ import java.util.Iterator;
  */
 public class UINavigation
     extends UIPanel
+    implements ActionListener,
+               NamingContainer
 {
     public UINavigation()
     {
         super(true);
     }
 
-    public static class ClickEvent
-        extends FacesEvent
+
+    public static class UINavigationItem
+        extends UICommand
     {
-        public ClickEvent(UIComponent source)
+        public static final String OPEN_ATTR = "open";
+
+        public boolean isOpen()
         {
-            super(source);
-            if (!(source.getRendererType().equals(NavigationItemRenderer.TYPE)))
-            {
-                throw new IllegalArgumentException("Can only accept ClickEvents from NavigationItems.");
-            }
+            Boolean open = (Boolean)getAttribute(OPEN_ATTR);
+            return open != null && open.booleanValue();
         }
 
-        public UIComponent getNavigationItemComponent()
+        public void setOpen(boolean open)
         {
-            return (UIComponent)super.getSource();
+            setAttribute(OPEN_ATTR, open ? Boolean.TRUE : null);
+        }
+
+        public void setAttribute(String name, Object value)
+        {
+            if (name.equals(OPEN_ATTR))
+            {
+                if (value != null && !((Boolean)value).booleanValue())
+                {
+                    setAttribute(name, null);
+                    return;
+                }
+            }
+            super.setAttribute(name, value);
+        }
+
+        public boolean broadcast(FacesEvent event, PhaseId phaseId)
+            throws AbortProcessingException
+        {
+            if (event instanceof ActionEvent)
+            {
+                //We call processAction directly, so we can avoid having to register
+                //the navigation component as an ActionListener of all it's children
+                UINavigation uiNavigation = findUINavigation();
+                if (uiNavigation == null)
+                {
+                    throw new FacesException("NavigationItem has no navigation ancestor!");
+                }
+                uiNavigation.processAction((ActionEvent)event);
+            }
+            return super.broadcast(event, phaseId);
+        }
+
+        private UINavigation findUINavigation()
+        {
+            UIComponent parent = getParent();
+            while (parent != null)
+            {
+                if (parent instanceof UINavigation)
+                {
+                    return (UINavigation)parent;
+                }
+                parent = parent.getParent();
+            }
+            return null;
         }
     }
 
-    public boolean processEvent(FacesContext context, FacesEvent event)
+
+
+
+    public PhaseId getPhaseId()
     {
-        if (event instanceof ClickEvent)
+        return PhaseId.APPLY_REQUEST_VALUES;
+    }
+
+    public void processAction(ActionEvent actionEvent)
+        throws AbortProcessingException
+    {
+        UIComponent source = actionEvent.getComponent();
+        if (source instanceof UINavigationItem)
         {
-            UIComponent item = ((ClickEvent)event).getNavigationItemComponent();
+            UIComponent item = source;
             if (item.getChildCount() > 0)
             {
                 //group
@@ -100,19 +159,19 @@ public class UINavigation
             String treeId = (String)item.getAttribute(NavigationItemRenderer.TREE_ID_ATTR);
             if (treeId != null)
             {
+                FacesContext facesContext = FacesContext.getCurrentInstance();
                 TreeFactory tf = (TreeFactory)FactoryFinder.getFactory(FactoryFinder.TREE_FACTORY);
-                Tree responseTree = tf.getTree(context, treeId);
-                context.setTree(responseTree);
+                Tree responseTree = tf.getTree(facesContext, treeId);
+                facesContext.setTree(responseTree);
                 //Save current navigation with all it's children in request context, so that
                 //current state of children can be accessed when rendering new tree
-                context.getServletRequest().setAttribute(NavigationRenderer.CURRENT_NAVIGATION_ATTR,
-                                                         this);
-                return true;
+                facesContext.getServletRequest().setAttribute(NavigationRenderer.CURRENT_NAVIGATION_ATTR,
+                                                              this);
+                facesContext.renderResponse();
             }
-
         }
-        return false;
     }
+
 
     private void closeAllChildren(Iterator children)
     {
@@ -129,39 +188,38 @@ public class UINavigation
 
 
 
-    public static class UINavigationItem
-        extends UICommand
+    //NamingContainer
+    private NamingContainer _namingContainer = new NamingContainerSupport();
+
+    public void addComponentToNamespace(UIComponent uicomponent)
     {
-        public static final String OPEN_ATTR = "open";
-
-        public boolean isOpen()
+        String componentId = uicomponent.getComponentId();
+        if (componentId != null)
         {
-            Boolean open = (Boolean)getAttribute(OPEN_ATTR);
-            return open != null && open.booleanValue();
-        }
-
-        public void setOpen(boolean open)
-        {
-            setAttribute(OPEN_ATTR, open ? Boolean.TRUE : null);
-        }
-
-        public void setAttribute(String name, Object value)
-        {
-            if (name.equals(OPEN_ATTR))
+            //HACK: Because there is a bug in the API implementation of UIComponentBase
+            //(removeChild does not call removeComponentFromNamespace) we ignore
+            //components already in namespace
+            if (_namingContainer.findComponentInNamespace(componentId) != null)
             {
-                if (value != null && !((Boolean)value).booleanValue())
-                {
-                    setAttribute(name, null);
-                    return;
-                }
+                return;
             }
-            super.setAttribute(name, value);
         }
+        _namingContainer.addComponentToNamespace(uicomponent);
     }
 
+    public void removeComponentFromNamespace(UIComponent uicomponent)
+    {
+        _namingContainer.removeComponentFromNamespace(uicomponent);
+    }
 
+    public UIComponent findComponentInNamespace(String s)
+    {
+        return _namingContainer.findComponentInNamespace(s);
+    }
 
-
-
+    public String generateClientId()
+    {
+        return _namingContainer.generateClientId();
+    }
 
 }

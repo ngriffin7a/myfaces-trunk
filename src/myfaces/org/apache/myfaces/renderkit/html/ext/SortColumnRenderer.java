@@ -21,13 +21,16 @@ package net.sourceforge.myfaces.renderkit.html.ext;
 import net.sourceforge.myfaces.component.ext.UISortHeader;
 import net.sourceforge.myfaces.renderkit.attr.ext.SortColumnRendererAttributes;
 import net.sourceforge.myfaces.renderkit.html.HyperlinkRenderer;
+import net.sourceforge.myfaces.util.logging.LogUtil;
 
 import javax.faces.FacesException;
+import javax.faces.component.UICommand;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
+import javax.faces.event.ActionEvent;
+import javax.faces.event.ApplicationEvent;
 import javax.faces.event.CommandEvent;
-import javax.faces.event.FacesEvent;
 import java.io.IOException;
 
 /**
@@ -53,33 +56,49 @@ public class SortColumnRenderer
     {
         //super.decode must not be called, because value never comes from request
 
+        uiComponent.setValid(true);
+
         String paramName = uiComponent.getClientId(facesContext);
         String paramValue = facesContext.getServletRequest().getParameter(paramName);
         if (paramValue != null)
         {
             //link was clicked
             String commandName = paramValue;    // = columnName
-            FacesEvent event = new CommandEvent(uiComponent, commandName);
-            //facesContext.addApplicationEvent(event); TODO: new request processing model
 
+            //Old event processing:
+            ApplicationEvent event = new CommandEvent(uiComponent, commandName);
+            facesContext.addApplicationEvent(event);
 
+            /*
             UIComponent uiSortHeader = uiComponent.getParent();
             if (!(uiSortHeader instanceof UISortHeader))
             {
                 throw new FacesException("UISortHeader expected.");
             }
+            */
 
-            /*
-            TODO: new request processing model
-            facesContext.addRequestEvent(uiSortHeader,
-                                         new FacesEvent(uiComponent));
-                                         */
+            //New event processing:
+            if (uiComponent instanceof UICommand)
+            {
+                facesContext.addFacesEvent(new ActionEvent(uiComponent, commandName));
+            }
+            else
+            {
+                LogUtil.getLogger().warning("Component " + uiComponent.getClientId(facesContext) + "is no UICommand.");
+            }
         }
     }
 
 
     public void encodeBegin(FacesContext facesContext, UIComponent uiComponent) throws IOException
     {
+        UIComponent uiSortHeader = uiComponent.getParent();
+        if (!(uiSortHeader instanceof UISortHeader))
+        {
+            throw new FacesException("UISortHeader expected.");
+        }
+
+
         super.encodeBegin(facesContext, uiComponent);
     }
 

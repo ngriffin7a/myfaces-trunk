@@ -46,15 +46,7 @@ public abstract class MyFacesTag
 
     public int getDoStartValue() throws JspException
     {
-        if (getComponent().getRendersChildren())
-        {
-            //No JSP rendering, when this component renders it's children
-            return Tag.SKIP_BODY;
-        }
-        else
-        {
-            return Tag.EVAL_BODY_INCLUDE;
-        }
+        return Tag.EVAL_BODY_INCLUDE;
     }
 
 
@@ -135,11 +127,6 @@ public abstract class MyFacesTag
 
 
     //Iteration Tag support
-    public int doAfterBody() throws JspException
-    {
-        return getDoAfterBodyValue();
-    }
-
     public int getDoAfterBodyValue() throws JspException
     {
         return Tag.SKIP_BODY;

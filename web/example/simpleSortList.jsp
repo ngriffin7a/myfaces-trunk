@@ -29,7 +29,6 @@
 <body>
 
 <jsp:useBean id="list" class="net.sourceforge.myfaces.example.model.SimpleCarList" scope="request" />
-<jsp:useBean id="controller" class="net.sourceforge.myfaces.example.controller.SimpleCarController" scope="application" />
 
 <f:use_faces>
 
@@ -49,26 +48,26 @@
                     footerClass="standardTable_Footer"
                     rowClasses="standardTable_Row1,standardTable_Row2" >
                 <!-- SORTHEADER -->
-                <x:sortheader id="list.header" column="type"
+                <x:sortheader id="list_header" column="type"
                                                ascending="<%=true%>"
                                                columnReference="list.sort"
                                                ascendingReference="list.ascending" >
-                    <x:sortcolumn id="list.header.col1" column="type" cssClass="sortLink" >
-                        <f:output_text id="list.header.name" text="Car-Type" />
+                    <x:sortcolumn id="list_header_col1" column="type" cssClass="sortLink" >
+                        <f:output_text id="list_header_name" text="Car-Type" />
                     </x:sortcolumn>
-                    <x:sortcolumn id="list.header.col2" column="color" cssClass="sortLink" >
-                        <f:output_text id="list.header.iso" text="Car-Color"  />
+                    <x:sortcolumn id="list_header_col2" column="color" cssClass="sortLink" >
+                        <f:output_text id="list_header_iso" text="Car-Color"  />
                     </x:sortcolumn>
                 </x:sortheader>
                 <!-- DATA -->
-                <f:listrow id="list.tr" var="car" modelReference="list.cars" >
-                    <f:output_text id="list.name" modelReference="car.type" />
-                    <f:output_text id="list.isoCode" modelReference="car.color" />
+                <f:listrow id="list_tr" var="car" modelReference="list.cars" >
+                    <f:output_text id="list_name" modelReference="car.type" />
+                    <f:output_text id="list_isoCode" modelReference="car.color" />
                 </f:listrow>
                 <!-- FOOTER -->
-                <f:group id="list.footer" >
-                    <f:output_text id="list.footer.name" text="..."  />
-                    <f:output_text id="list.footer.iso" />
+                <f:group id="list_footer" >
+                    <f:output_text id="list_footer_name" text="..."  />
+                    <f:output_text id="list_footer_iso" />
                 </f:group>
             </f:list>
 

@@ -18,6 +18,13 @@
  */
 package net.sourceforge.myfaces.component;
 
+import javax.faces.component.UIComponent;
+import java.util.List;
+import java.lang.reflect.Method;
+import java.lang.reflect.Field;
+import java.security.AccessController;
+import java.security.PrivilegedAction;
+
 /**
  * DOCUMENT ME!
  * @author Manfred Geiler (latest modification by $Author$)
@@ -67,5 +74,12 @@ public class UICommand
     {
         setAttribute(COMMAND_REFERENCE_ATTR, commandReference);
     }
+
+
+    public List[] getListeners()
+    {
+        return listeners;
+    }
+
 
 }

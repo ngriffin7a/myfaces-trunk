@@ -20,13 +20,14 @@ package net.sourceforge.myfaces.renderkit.html;
 
 import net.sourceforge.myfaces.renderkit.attr.ButtonRendererAttributes;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLEncoder;
+import net.sourceforge.myfaces.util.logging.LogUtil;
 
 import javax.faces.component.UICommand;
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIForm;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
-import javax.faces.event.FacesEvent;
+import javax.faces.event.*;
 import java.io.IOException;
 
 /**
@@ -93,7 +94,10 @@ public class ButtonRenderer
                 }
             }
 
-            FacesEvent event;
+
+            //Old event processing:
+
+            ApplicationEvent appEvent;
 
             //Form suchen
             String formName = null;
@@ -106,19 +110,26 @@ public class ButtonRenderer
                 }
             }
 
-            /*
-            TODO: new event processing
             if (formName == null)
             {
-                event = new CommandEvent(uiComponent, commandName);
+                appEvent = new CommandEvent(uiComponent, commandName);
             }
             else
             {
-                event = new FormEvent(uiComponent, formName, commandName);
+                appEvent = new FormEvent(uiComponent, formName, commandName);
             }
 
-            facesContext.addApplicationEvent(event);
-            */
+            facesContext.addApplicationEvent(appEvent);
+
+            //New event processing:
+            if (uiComponent instanceof UICommand)
+            {
+                facesContext.addFacesEvent(new ActionEvent(uiComponent, commandName));
+            }
+            else
+            {
+                LogUtil.getLogger().warning("Component " + uiComponent.getClientId(facesContext) + "is no UICommand.");
+            }
         }
     }
 
