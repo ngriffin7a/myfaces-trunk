@@ -35,6 +35,9 @@ import java.util.Map;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.4  2004/12/23 13:03:09  mmarinschek
+ * id's not rendered (or not conditionally rendered); changes in jslistener to support both ie and firefox now
+ *
  * Revision 1.3  2004/10/13 11:51:01  matze
  * renamed packages to org.apache
  *
@@ -96,6 +99,7 @@ public abstract class HtmlMessagesRendererBase
         ResponseWriter writer = facesContext.getResponseWriter();
 
         writer.startElement(HTML.UL_ELEM, messages);
+        HtmlRendererUtils.writeIdIfNecessary(writer, messages, facesContext);
 
         while(messagesIterator.hasNext())
         {
@@ -119,6 +123,7 @@ public abstract class HtmlMessagesRendererBase
         ResponseWriter writer = facesContext.getResponseWriter();
 
         writer.startElement(HTML.TABLE_ELEM, messages);
+        HtmlRendererUtils.writeIdIfNecessary(writer, messages, facesContext);
 
         while(messagesIterator.hasNext())
         {

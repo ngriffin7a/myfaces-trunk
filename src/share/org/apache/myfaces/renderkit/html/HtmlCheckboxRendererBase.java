@@ -105,12 +105,11 @@ public class HtmlCheckboxRendererBase extends HtmlRenderer {
         }
 
         ResponseWriter writer = facesContext.getResponseWriter();
-        String clientId = selectMany.getClientId(facesContext);
 
         writer.startElement(HTML.TABLE_ELEM, selectMany);
         HtmlRendererUtils.renderHTMLAttributes(writer, selectMany,
                 HTML.SELECT_TABLE_PASSTHROUGH_ATTRIBUTES);
-        writer.writeAttribute(HTML.ID_ATTR, clientId, null);
+        HtmlRendererUtils.writeIdIfNecessary(writer, selectMany, facesContext);
 
         if (!pageDirectionLayout)
             writer.startElement(HTML.TR_ELEM, selectMany);
@@ -186,7 +185,7 @@ public class HtmlCheckboxRendererBase extends HtmlRenderer {
         writer.writeAttribute(HTML.TYPE_ATTR, HTML.INPUT_TYPE_CHECKBOX, null);
         writer.writeAttribute(HTML.NAME_ATTR, clientId, null);
         if (renderId) {
-            writer.writeAttribute(HTML.ID_ATTR, clientId, null);
+            HtmlRendererUtils.writeIdIfNecessary(writer, uiComponent, facesContext);
         }
 
         if (checked) {

@@ -11,11 +11,6 @@ function orgApacheMyfacesJsListenerSetExpressionProperty(
 
         var srcElem = document.getElementById(srcId);
 
-        if(!srcElem)
-        {
-            srcElem = document.getElementsByName(srcId);
-        }
-
         if(log) logStr+="\n Source-element: "+srcElem;
         if(log) logStr+="\n Type of source-element: "+typeof(srcElem);
         if(log && typeof(srcElem)=='object') logStr+="\n Constructor : " +srcElem.constructor;

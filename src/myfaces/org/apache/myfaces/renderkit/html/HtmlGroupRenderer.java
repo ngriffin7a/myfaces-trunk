@@ -58,7 +58,7 @@ public class HtmlGroupRenderer
 
             writer.startElement(HTML.SPAN_ELEM, component);
 
-            writer.writeAttribute(HTML.ID_ATTR, component.getClientId(context),null);
+            HtmlRendererUtils.writeIdIfNecessary(writer, component, context);
 
             HtmlRendererUtils.renderHTMLAttributes(writer, component, HTML.COMMON_PASSTROUGH_ATTRIBUTES);
         }

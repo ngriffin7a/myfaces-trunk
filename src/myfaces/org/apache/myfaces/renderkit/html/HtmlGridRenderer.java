@@ -35,6 +35,9 @@ import java.util.Iterator;
  * X-CHECKED: tlddoc h:panelGrid 1.0 final
  *
  * $Log$
+ * Revision 1.16  2004/12/23 13:03:08  mmarinschek
+ * id's not rendered (or not conditionally rendered); changes in jslistener to support both ie and firefox now
+ *
  * Revision 1.15  2004/11/21 12:39:09  mmarinschek
  * better Error handling
  *
@@ -118,7 +121,9 @@ public class HtmlGridRenderer
 
         ResponseWriter writer = facesContext.getResponseWriter();
         writer.startElement(HTML.TABLE_ELEM, component);
+        HtmlRendererUtils.writeIdIfNecessary(writer, component, facesContext);
         HtmlRendererUtils.renderHTMLAttributes(writer, component, HTML.TABLE_PASSTHROUGH_ATTRIBUTES);
+
         writer.flush();
 
         renderHeaderOrFooter(facesContext, writer, component, columns, true);   //Header facet

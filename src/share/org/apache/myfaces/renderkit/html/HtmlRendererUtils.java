@@ -317,6 +317,7 @@ public final class HtmlRendererUtils {
         ResponseWriter writer = facesContext.getResponseWriter();
 
         writer.startElement(HTML.SELECT_ELEM, uiComponent);
+        HtmlRendererUtils.writeIdIfNecessary(writer, uiComponent, facesContext);
         writer.writeAttribute(HTML.NAME_ATTR, uiComponent
                 .getClientId(facesContext), null);
 
@@ -418,7 +419,7 @@ public final class HtmlRendererUtils {
             SelectItem selectItem = (SelectItem) it.next();
 
             if (selectItem instanceof SelectItemGroup) {
-                writer.startElement(HTML.OPTGROUP_ELEM, null);
+                writer.startElement(HTML.OPTGROUP_ELEM, null);                
                 writer.writeAttribute(HTML.LABEL_ATTR, selectItem.getLabel(),
                         null);
                 SelectItem[] selectItems = ((SelectItemGroup) selectItem)
@@ -615,6 +616,16 @@ public final class HtmlRendererUtils {
             return true;
         } else {
             return false;
+        }
+    }
+
+    public static void writeIdIfNecessary(ResponseWriter writer, UIComponent component,
+                                          FacesContext facesContext)
+        throws IOException
+    {
+        if(component.getId()!=null && !component.getId().startsWith(UIViewRoot.UNIQUE_ID_PREFIX))
+        {
+            writer.writeAttribute(HTML.ID_ATTR, component.getClientId(facesContext),null);
         }
     }
 

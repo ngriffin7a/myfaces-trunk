@@ -35,6 +35,9 @@ import java.io.IOException;
  * @author Anton Koinov
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.4  2004/12/23 13:03:09  mmarinschek
+ * id's not rendered (or not conditionally rendered); changes in jslistener to support both ie and firefox now
+ *
  * Revision 1.3  2004/10/13 11:51:01  matze
  * renamed packages to org.apache
  *
@@ -59,7 +62,7 @@ public class HtmlSecretRendererBase
 
         String clientId = uiComponent.getClientId(facesContext);
 
-        writer.writeAttribute(HTML.ID_ATTR, clientId, null);
+        HtmlRendererUtils.writeIdIfNecessary(writer, uiComponent, facesContext);
         writer.writeAttribute(HTML.NAME_ATTR, clientId, null);
 
         boolean isRedisplay;

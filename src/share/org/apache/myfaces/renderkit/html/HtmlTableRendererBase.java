@@ -39,6 +39,9 @@ import java.util.List;
  *
  *
  *          $Log$
+ *          Revision 1.6  2004/12/23 13:03:09  mmarinschek
+ *          id's not rendered (or not conditionally rendered); changes in jslistener to support both ie and firefox now
+ *
  *          Revision 1.5  2004/11/26 12:14:10  oros
  *          MYFACES-8: applied tree table patch by David Le Strat
  *
@@ -70,7 +73,7 @@ public class HtmlTableRendererBase extends HtmlRenderer
 
         HtmlRendererUtils.writePrettyLineSeparator(facesContext);
         writer.startElement(HTML.TABLE_ELEM, uiComponent);
-        writer.writeAttribute(HTML.ID_ATTR, uiComponent.getClientId(facesContext), null);
+        HtmlRendererUtils.writeIdIfNecessary(writer, uiComponent, facesContext);
         HtmlRendererUtils.renderHTMLAttributes(writer, uiComponent, HTML.TABLE_PASSTHROUGH_ATTRIBUTES);
 
         renderFacet(facesContext, writer, (UIData) uiComponent, true);

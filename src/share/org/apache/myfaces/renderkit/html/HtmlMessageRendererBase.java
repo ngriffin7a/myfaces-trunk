@@ -34,6 +34,9 @@ import java.util.Map;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.10  2004/12/23 13:03:09  mmarinschek
+ * id's not rendered (or not conditionally rendered); changes in jslistener to support both ie and firefox now
+ *
  * Revision 1.9  2004/10/13 11:51:01  matze
  * renamed packages to org.apache
  *
@@ -145,7 +148,7 @@ public abstract class HtmlMessageRendererBase
 
             writer.startElement(HTML.SPAN_ELEM, message);
 
-            writer.writeAttribute(HTML.ID_ATTR, message.getClientId(facesContext),null);
+            HtmlRendererUtils.writeIdIfNecessary(writer, message, facesContext);
 
             HtmlRendererUtils.renderHTMLAttributes(writer, message, HTML.MESSAGE_PASSTHROUGH_ATTRIBUTES_WITHOUT_TITLE_STYLE_AND_STYLE_CLASS);
         }

@@ -40,6 +40,9 @@ import java.util.List;
  * @author Thomas Spiegl
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.9  2004/12/23 13:03:09  mmarinschek
+ * id's not rendered (or not conditionally rendered); changes in jslistener to support both ie and firefox now
+ *
  * Revision 1.8  2004/10/13 11:51:01  matze
  * renamed packages to org.apache
  *
@@ -104,7 +107,7 @@ public class HtmlRadioRendererBase
         writer.startElement(HTML.TABLE_ELEM, selectOne);
         HtmlRendererUtils.renderHTMLAttributes(writer, selectOne,
                                                HTML.SELECT_TABLE_PASSTHROUGH_ATTRIBUTES);
-        writer.writeAttribute(HTML.ID_ATTR, clientId, null);
+        HtmlRendererUtils.writeIdIfNecessary(writer, uiComponent, facesContext);
 
         if (!pageDirectionLayout) writer.startElement(HTML.TR_ELEM, selectOne);
 

@@ -33,6 +33,9 @@ import java.io.IOException;
  * @author Anton Koinov
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.4  2004/12/23 13:03:09  mmarinschek
+ * id's not rendered (or not conditionally rendered); changes in jslistener to support both ie and firefox now
+ *
  * Revision 1.3  2004/10/13 11:51:01  matze
  * renamed packages to org.apache
  *
@@ -56,7 +59,7 @@ public class HtmlTextareaRendererBase
 
         String clientId = uiComponent.getClientId(facesContext);
         writer.writeAttribute(HTML.NAME_ATTR, clientId, null);
-        writer.writeAttribute(HTML.ID_ATTR, clientId, null);
+        HtmlRendererUtils.writeIdIfNecessary(writer, uiComponent, facesContext);
 
         HtmlRendererUtils.renderHTMLAttributes(writer, uiComponent, HTML.TEXTAREA_PASSTHROUGH_ATTRIBUTES_WITHOUT_DISABLED);
         if (isDisabled(facesContext, uiComponent))

@@ -34,6 +34,9 @@ import java.io.IOException;
  * @author Manfred Geiler
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.9  2004/12/23 13:03:09  mmarinschek
+ * id's not rendered (or not conditionally rendered); changes in jslistener to support both ie and firefox now
+ *
  * Revision 1.8  2004/10/13 11:51:01  matze
  * renamed packages to org.apache
  *
@@ -119,7 +122,7 @@ public class HtmlTextRendererBase
 
                 writer.startElement(HTML.SPAN_ELEM, component);
 
-                writer.writeAttribute(HTML.ID_ATTR, component.getClientId(facesContext),null);
+                HtmlRendererUtils.writeIdIfNecessary(writer, component, facesContext);
 
                 HtmlRendererUtils.renderHTMLAttributes(writer, component, HTML.COMMON_PASSTROUGH_ATTRIBUTES);
 
