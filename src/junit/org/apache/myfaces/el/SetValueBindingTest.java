@@ -52,7 +52,7 @@ public class SetValueBindingTest extends ELBaseTest
         vb.setValue(_facesContext, "NEW_OBJECT");
         assertSame("NEW_OBJECT", vb.getValue(_facesContext));
 
-        vb = _application.createValueBinding("#{ testmap  [  0  ]  [  0  ]} ");
+        vb = _application.createValueBinding("#{ testmap  [  0  ]  [  0  ]}");
         vb.setValue(_facesContext, _theA);
         assertSame(_theA, vb.getValue(_facesContext));
         

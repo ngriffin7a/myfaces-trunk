@@ -53,7 +53,7 @@ public class MethodBindingTest extends ELBaseTest
         mb = _application.createMethodBinding("#{testmap.toString}", new Class[] {});
         assertSame(String.class, mb.getType(_facesContext));
 
-        mb = _application.createMethodBinding("#{ testmap  [  0  ]  [  1  ] . toString} ", new Class[] {});
+        mb = _application.createMethodBinding("#{ testmap  [  0  ]  [  1  ] . toString}", new Class[] {});
         assertSame(String.class, mb.getType(_facesContext));
 
         mb = _application.createMethodBinding("#{true ? a.getName : a.getInt}", new Class[] {});

@@ -28,6 +28,9 @@ import javax.faces.el.ValueBinding;
  * @version $Revision$ $Date$
  * 
  * $Log$
+ * Revision 1.17  2004/04/07 03:54:07  dave0000
+ * fix testcases to match removed trim() on expression string
+ *
  * Revision 1.16  2004/03/30 07:38:11  dave0000
  * implement mixed string-reference expressions
  *
@@ -202,7 +205,7 @@ public class ValueBindingTest extends ELBaseTest
         r      = vb.getValue(_facesContext);
         assertEquals(new Integer(0), r);
 
-        vb     = _application.createValueBinding("#{ testmap  [  0  ]  [  0  ]} ");
+        vb     = _application.createValueBinding("#{ testmap  [  0  ]  [  0  ]}");
         r      = vb.getValue(_facesContext);
         assertEquals(new Integer(0), r);
 
@@ -422,7 +425,7 @@ public class ValueBindingTest extends ELBaseTest
         vb = _application.createValueBinding("#{testmap.f}");
         assertFalse(vb.isReadOnly(_facesContext));
 
-        vb = _application.createValueBinding("#{ testmap  [  0  ]  [  0  ]} ");
+        vb = _application.createValueBinding("#{ testmap  [  0  ]  [  0  ]}");
         assertFalse(vb.isReadOnly(_facesContext));
         
         vb = _application.createValueBinding("#{true ? cookie : max}");
@@ -448,14 +451,13 @@ public class ValueBindingTest extends ELBaseTest
         vb = _application.createValueBinding("#{testmap.f}");
         assertSame(Boolean.class, vb.getType(_facesContext));
 
-        vb = _application.createValueBinding("#{ testmap  [  0  ]  [  1  ]} ");
+        vb = _application.createValueBinding("#{ testmap  [  0  ]  [  1  ]}");
         // Object.class is the _a0 Array Component Type!
         assertSame(Object.class, vb.getType(_facesContext));
 
-// Not supported by mock objects yet        
-//        vb = _application.createValueBinding("#{notExistingValueBlahBlahBlah}");
-//        vb.setValue(_facesContext, new Object());
-//        assertSame(Object.class, vb.getType(_facesContext));
+        vb = _application.createValueBinding("#{nonExistingValueBlahBlahBlah}");
+        vb.setValue(_facesContext, new Object());
+        assertSame(Object.class, vb.getType(_facesContext));
         
         try 
         {
