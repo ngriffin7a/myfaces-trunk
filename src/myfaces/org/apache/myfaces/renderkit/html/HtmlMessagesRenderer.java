@@ -86,7 +86,15 @@ public class HtmlMessagesRenderer
         if (messageIterator.hasNext())
         {
             String layout = htmlMessages.getLayout();
-            if (layout.equalsIgnoreCase(LAYOUT_TABLE))
+            if (layout == null)
+            {
+                if (log.isDebugEnabled())
+                {
+                    log.debug("No messages layout given, using default layout 'list'.");
+                }
+                renderList(facesContext, htmlMessages, messageIterator);
+            }
+            else if (layout.equalsIgnoreCase(LAYOUT_TABLE))
             {
                 renderTable(facesContext, htmlMessages, messageIterator);
             }

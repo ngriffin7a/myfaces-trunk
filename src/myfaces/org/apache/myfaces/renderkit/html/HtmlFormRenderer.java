@@ -105,18 +105,20 @@ public class HtmlFormRenderer
     public void decode(FacesContext facesContext, UIComponent component)
     {
         RendererUtils.checkParamValidity(facesContext, component, HtmlForm.class);
-        
-        if (!HTMLUtil.isDisabled(component))
+
+        /*
+        if (HTMLUtil.isDisabled(component))
         {
             return;
         }
+        */
 
         HtmlForm htmlForm = (HtmlForm)component;
 
         Map paramMap = facesContext.getExternalContext().getRequestParameterMap();
         String submittedValue = (String)paramMap.get(component.getClientId(facesContext) +
                                                      HIDDEN_SUBMIT_INPUT_SUFFIX);
-        if (submittedValue.equals(HIDDEN_SUBMIT_INPUT_VALUE))
+        if (submittedValue != null && submittedValue.equals(HIDDEN_SUBMIT_INPUT_VALUE))
         {
             htmlForm.setSubmitted(true);
         }

@@ -330,22 +330,12 @@ Start of revised 1.0 conforming tags
         &html_event_handler_attributes;
         &html_button_attributes;
         &user_role_attributes;
-
         <!-- HtmlCommandButton attributes -->
         <attribute>
             <name>image</name>
             <required>false</required>
             <rtexprvalue>false</rtexprvalue>
         </attribute>
-
-        <!-- FIXME: still necessary? myfaces extension? there is no label tag for input element,
-        so what does it mean? I haven't got a clue.. Original header: -->
-        <!--ButtonRenderer attributes -->
-        <!--<attribute>
-            <name>label</name>
-            <required>false</required>
-            <rtexprvalue>false</rtexprvalue>
-        </attribute> -->
     </tag>
 
 <!-- command_link -->
@@ -434,7 +424,6 @@ Start of revised 1.0 conforming tags
         &html_textarea_attributes;
         &html_universal_attributes;
         &html_event_handler_attributes;
-        <!-- TextareaRenderer attributes -->
         &user_role_attributes;
    </tag>
 
@@ -450,60 +439,36 @@ Start of revised 1.0 conforming tags
         &user_role_attributes;
     </tag>
 
-
-<!--
-*************************************************************************************
-Start of legacy (EA4 conforming) tags
-*************************************************************************************
--->
-
 <!-- output_label -->
     <tag>
         <name>output_label</name>
-        <tag-class>net.sourceforge.myfaces.taglib.legacy.OutputLabelTag</tag-class>
+        <tag-class>net.sourceforge.myfaces.taglib.html.HtmlOutputLabelTag</tag-class>
         <body-content>JSP</body-content>
         <description>
             In addition to the JSF specification, MyFaces allows it to directly
-            give an output text via "value" or "key" and "bundle".
+            give an output text via the "value" attribute.
         </description>
         &ui_component_attributes;
         &ui_output_attributes;
         &html_universal_attributes;
         &html_event_handler_attributes;
         &html_label_attributes;
+        &user_role_attributes;
         <!-- LabelRenderer attributes -->
         <attribute>
           <name>for</name>
           <required>true</required>
           <rtexprvalue>false</rtexprvalue>
         </attribute>
-        <!-- MyFaces extensions -->
-        &key_bundle_attributes;
-        &user_role_attributes;
     </tag>
 
-<!-- output_time -->
-    <tag>
-        <name>output_time</name>
-        <tag-class>net.sourceforge.myfaces.taglib.legacy.OutputTimeTag</tag-class>
-        <body-content>JSP</body-content>
-        &ui_component_attributes;
-        &ui_output_attributes;
-        &html_universal_attributes;
-        &html_event_handler_attributes;
-        &user_role_attributes;
-        <!-- TimeRenderer attributes -->
-        <attribute>
-            <name>timeStyle</name>
-            <required>false</required>
-            <rtexprvalue>false</rtexprvalue>
-        </attribute>
-        <attribute>
-            <name>timezone</name>
-            <required>false</required>
-            <rtexprvalue>false</rtexprvalue>
-        </attribute>
-    </tag>
+
+
+<!--
+*************************************************************************************
+Start of legacy (EA4 conforming) tags
+*************************************************************************************
+-->
 
 <!-- selectboolean_checkbox -->
     <tag>

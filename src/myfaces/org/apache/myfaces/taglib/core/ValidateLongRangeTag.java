@@ -18,75 +18,97 @@
  */
 package net.sourceforge.myfaces.taglib.core;
 
+import javax.faces.context.FacesContext;
+import javax.faces.el.ValueBinding;
 import javax.faces.validator.LongRangeValidator;
 import javax.faces.validator.Validator;
+import javax.faces.webapp.UIComponentTag;
 import javax.faces.webapp.ValidatorTag;
 import javax.servlet.jsp.JspException;
 
 /**
- * DOCUMENT ME!
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
 public class ValidateLongRangeTag
     extends ValidatorTag
 {
-    private boolean _isMinSet = false;
-    private boolean _isMaxSet = false;
-    private long _minimum;
-    private long _maximum;
+    private String _minimum = null;
+    private String _maximum = null;
 
-    private static final String ID = "LongRange";
-
-    public ValidateLongRangeTag()
-    {
-        _minimum = 0;
-        _maximum = 0;
-    }
+    private static final String VALIDATOR_ID = "LongRange";
 
     public void release()
     {
-        _isMaxSet = false;
-        _isMinSet = false;
-        _minimum = 0;
-        _maximum = 0;
+        super.release();
+        _minimum = null;
+        _maximum = null;
     }
 
-    public long getMinimum()
-    {
-        return _minimum;
-    }
-
-    public void setMinimum(long minimum)
+    public void setMinimum(String minimum)
     {
         _minimum = minimum;
-        _isMinSet = true;
     }
 
-    public long getMaximum()
-    {
-        return _maximum;
-    }
-
-    public void setMaximum(long maximum)
+    public void setMaximum(String maximum)
     {
         _maximum = maximum;
-        _isMaxSet = true;
     }
 
     protected Validator createValidator()
         throws JspException
     {
-        setId(ID);
+        FacesContext facesContext = FacesContext.getCurrentInstance();
+        setValidatorId(VALIDATOR_ID);
         LongRangeValidator validator = (LongRangeValidator)super.createValidator();
-        if(_isMinSet)
+        if (_minimum != null)
         {
-            validator.setMinimum(getMinimum());
+            if (UIComponentTag.isValueReference(_minimum))
+            {
+                ValueBinding vb = facesContext.getApplication().createValueBinding(_minimum);
+                validator.setMinimum(convertToLong(vb.getValue(facesContext)));
+            }
+            else
+            {
+                validator.setMinimum(convertToLong(_minimum));
+            }
         }
-        if(_isMaxSet)
+        if (_maximum != null)
         {
-            validator.setMaximum(getMaximum());
+            if (UIComponentTag.isValueReference(_maximum))
+            {
+                ValueBinding vb = facesContext.getApplication().createValueBinding(_maximum);
+                validator.setMaximum(convertToLong(vb.getValue(facesContext)));
+            }
+            else
+            {
+                validator.setMaximum(convertToLong(_maximum));
+            }
         }
         return validator;
+    }
+
+
+    private long convertToLong(Object value)
+    {
+        if (value instanceof Number)
+        {
+            return ((Number)value).longValue();
+        }
+        else if (value instanceof String)
+        {
+            try
+            {
+                return Long.parseLong((String)value);
+            }
+            catch (NumberFormatException e)
+            {
+                throw new IllegalArgumentException("Cannot convert " + value.toString() + " to long");
+            }
+        }
+        else
+        {
+            throw new IllegalArgumentException("Cannot convert " + value.toString() + " to long");
+        }
     }
 }

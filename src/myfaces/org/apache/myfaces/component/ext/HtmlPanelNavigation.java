@@ -46,6 +46,7 @@ public class HtmlPanelNavigation
     private static final String PREVIOUS_VIEW_ROOT = HtmlPanelNavigation.class.getName() + ".PREVIOUS_VIEW_ROOT";
     private boolean _itemOpenActiveStatesRestored = false;
 
+    private static final int ATTRIBUTE_COUNT = 8;
     private String _itemClass;
     private String _openItemClass;
     private String _activeItemClass;
@@ -153,11 +154,9 @@ public class HtmlPanelNavigation
 
 
 
-    private static final int ATTRIBUTE_COUNT = 9;
-
     public Object saveState(FacesContext context)
     {
-        Object values[] = new Object[ATTRIBUTE_COUNT];
+        Object values[] = new Object[ATTRIBUTE_COUNT + 1];
         int i = 0;
         values[i++] = super.saveState(context);
         values[i++] = _itemClass;
@@ -168,7 +167,7 @@ public class HtmlPanelNavigation
         values[i++] = _openItemStyle;
         values[i++] = _activeItemStyle;
         values[i++] = _separatorStyle;
-        DebugUtils.assertFatal(i == ATTRIBUTE_COUNT, log, "Number of attributes to save differs!");
+        DebugUtils.assertFatal(i == ATTRIBUTE_COUNT + 1, log, "Number of attributes to save differs!");
         return ((Object) (values));
     }
 
@@ -185,7 +184,7 @@ public class HtmlPanelNavigation
         _openItemStyle    = (String)values[i++];
         _activeItemStyle  = (String)values[i++];
         _separatorStyle   = (String)values[i++];
-        DebugUtils.assertFatal(i == ATTRIBUTE_COUNT, log, "Number of attributes to restore differs!");
+        DebugUtils.assertFatal(i == ATTRIBUTE_COUNT + 1, log, "Number of attributes to restore differs!");
     }
 
     public void decode(FacesContext context)

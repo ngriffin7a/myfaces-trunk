@@ -18,6 +18,9 @@
  */
 package net.sourceforge.myfaces.examples.example1;
 
+import javax.faces.component.UIComponent;
+import javax.faces.context.FacesContext;
+import javax.faces.el.VariableResolver;
 import javax.faces.event.AbortProcessingException;
 import javax.faces.event.ActionEvent;
 import javax.faces.event.ActionListener;
@@ -33,49 +36,23 @@ public class CalcController
 {
     public void processAction(ActionEvent event) throws AbortProcessingException
     {
-        /*
-        FIXME
-        String commandName = event.getActionCommand();
-        FacesContext facesContext = FacesContext.getCurrentInstance();
-
-        ApplicationFactory af = (ApplicationFactory)FactoryFinder.getFactory(FactoryFinder.APPLICATION_FACTORY);
-        ValueBinding vb = af.getApplication().getValueBinding("calcForm");
-        CalcForm form = (CalcForm)vb.getValue(facesContext);
-        if (commandName.equals("add"))
-        {
-            form.add();
-        }
-        else
-        {
-            form.subtract();
-        }
-        */
-    }
-
-    public PhaseId getPhaseId()
-    {
-        return PhaseId.INVOKE_APPLICATION;
-    }
-
-
-    /*
-    private static final Action ACTION = new Action() {
-        public String invoke()
+        if (event.getPhaseId() == PhaseId.INVOKE_APPLICATION)
         {
             FacesContext facesContext = FacesContext.getCurrentInstance();
-            ApplicationFactory af = (ApplicationFactory)FactoryFinder.getFactory(FactoryFinder.APPLICATION_FACTORY);
-            ValueBinding vb = af.getApplication().getValueBinding("carconf");
-            CarConfigurator carconf = (CarConfigurator)vb.getValue(facesContext);
-            carconf.calcPrice();
-            return "ok";
+            UIComponent component = event.getComponent();
+
+            VariableResolver vr = facesContext.getApplication().getVariableResolver();
+            CalcForm form = (CalcForm)vr.resolveVariable(facesContext, "calcForm");
+            if (component.getId().equals("addButton") ||
+                component.getId().equals("href1"))
+            {
+                form.add();
+            }
+            else
+            {
+                form.subtract();
+            }
         }
-    };
-
-
-    public Action getAction()
-    {
-        return ACTION;
     }
-    */
 
 }

@@ -18,7 +18,6 @@
  */
 package net.sourceforge.myfaces.renderkit.html;
 
-import net.sourceforge.myfaces.renderkit.JSFAttr;
 import net.sourceforge.myfaces.renderkit.RendererUtils;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLUtil;
 
@@ -26,7 +25,6 @@ import javax.faces.component.UIComponent;
 import javax.faces.component.html.HtmlOutputLabel;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
-import javax.faces.el.ValueBinding;
 import java.io.IOException;
 
 
@@ -45,24 +43,19 @@ extends HtmlRenderer
     {
         RendererUtils.checkParamValidity(facesContext, uiComponent, HtmlOutputLabel.class);
         ResponseWriter writer = facesContext.getResponseWriter();
+        HtmlOutputLabel htmlOutputLabel = (HtmlOutputLabel)uiComponent;
 
         writer.startElement(HTML.LABEL_ELEM, uiComponent);
+        HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML.LABEL_PASSTHROUGH_ATTRIBUTES);
 
-        HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML.COMMON_PASSTROUGH_ATTRIBUTES);
-        
-        // TODO: handle "for" attribute
-        
-        ValueBinding vb = uiComponent.getValueBinding(JSFAttr.VALUE_ATTR);
-        Object value = vb.getValue(facesContext);
-        if(value != null)
+        //MyFaces extension: Render a label text given by value
+        String text = RendererUtils.getStringValue(facesContext, htmlOutputLabel);
+        if(text != null)
         {
-            // REVISIT: should we HtmlEncode the text or not?
-            writer.write(value.toString());
+            writer.writeText(text, "value");
         }
-        else
-        {
-            writer.write(""); // close start tag
-        }
+
+        writer.flush(); // close start tag
     }
 
     public void encodeEnd(FacesContext facesContext, UIComponent uiComponent)

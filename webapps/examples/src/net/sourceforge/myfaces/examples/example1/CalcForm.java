@@ -18,8 +18,8 @@
  */
 package net.sourceforge.myfaces.examples.example1;
 
-import java.math.BigDecimal;
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 /**
  * DOCUMENT ME!
@@ -40,7 +40,6 @@ public class CalcForm
 
     public void subtract()
     {
-        System.out.println("--> subtract!!!.dd.");
         result = number1.subtract(number2);
     }
 

@@ -48,6 +48,9 @@ managed beans used:
             bodyClass="pageBody"
             footerClass="pageFooter" >
 
+        <%@include file="inc/page_header.jsp" %>
+        <%@include file="inc/navigation.jsp"  %>
+
         <f:facet name="body">
             <h:panel_group id="body">
 
@@ -55,69 +58,83 @@ managed beans used:
                 <x:save_state id="save2" value="#{calcForm.number2}" />
                 <x:save_state id="save3" value="#{ucaseForm.text}" />
 
-                <h:messages id="messageList" />
+                <h:messages id="messageList" showSummary="true" showDetail="true" />
 
-                <h4>A Form</h4>
-                <table border="1"><tr><td>
-                    <h:form id="form1" name="calcForm">
-                        <h:output_label for="number1" value="Number 1" />:
-                        <h:input_text id="number1" value="#{calcForm.number1}" maxlength="10" size="25" >
-                           <f:validate_longrange minimum="1" maximum="10" />
-                        </h:input_text>
-                        <h:message id="number1Error" for="number1" styleClass="error" /><br>
+                <f:verbatim>
+                    <h4>A Form</h4>
+                    <table border="1"><tr><td>
+                </f:verbatim>
 
-                        <h:output_label for="number2" value="Number 2" />:
-                        <h:input_text id="number2" value="#{calcForm.number2}" maxlength="10" size="25"/>
-                        <h:message id="number2Error" for="number2" styleClass="error" /><br>
+                <h:form id="form1" name="calcForm">
+                    <h:output_label for="form1:number1" value="Number 1" /><f:verbatim>:</f:verbatim>
+                    <h:input_text id="number1" value="#{calcForm.number1}" maxlength="10" size="25" >
+                       <f:validate_longrange minimum="1" maximum="10" />
+                    </h:input_text>
+                    <h:message id="number1Error" for="form1:number1" styleClass="error" /><f:verbatim><br></f:verbatim>
 
-                        <h:output_label for="result" value="Result" />:
-                        <h:output_text id="result" value="#{calcForm.result}" /><br>
+                    <h:output_label for="form1:number2" value="Number 2" /><f:verbatim>:</f:verbatim>
+                    <h:input_text id="number2" value="#{calcForm.number2}" maxlength="10" size="25"/>
+                    <h:message id="number2Error" for="form1:number2" styleClass="error" /><f:verbatim><br></f:verbatim>
 
-                        <h:command_button id="addButton" value="Add them" action="none">
-                            <f:action_listener type="net.sourceforge.myfaces.examples.example1.CalcController" ></f:action_listener>
-                        </h:command_button>
-                        <h:command_button id="subtractButton" value="Subtract them" action="none">
-                            <f:action_listener type="net.sourceforge.myfaces.examples.example1.CalcController" ></f:action_listener>
-                        </h:command_button>
-                        <br>
-                    </h:form>
+                    <h:output_label for="form1:result" value="Result" /><f:verbatim>:</f:verbatim>
+                    <h:output_text id="result" value="#{calcForm.result}" /><f:verbatim><br></f:verbatim>
 
-                    <h:command_link id="href1" action="none">Add them by clicking this link
+                    <h:command_button id="addButton" value="Add them" action="none">
                         <f:action_listener type="net.sourceforge.myfaces.examples.example1.CalcController" ></f:action_listener>
-                    </h:command_link><br>
-                    <h:command_link id="href2" action="none">Subtract them by clicking this link
+                    </h:command_button>
+                    <h:command_button id="subtractButton" value="Subtract them" action="none">
                         <f:action_listener type="net.sourceforge.myfaces.examples.example1.CalcController" ></f:action_listener>
-                    </h:command_link>
-                </td></tr></table>
+                    </h:command_button>
+                    <f:verbatim><br></f:verbatim>
+                </h:form>
 
-                <h4>Another Form</h4>
-                <table border="1"><tr><td>
-                    <h:form id="form2" name="ucaseForm">
-                        <h:input_text id="text" value="#{ucaseForm.text}"/>
-                        <h:message id="textError" for="text" styleClass="error" /><br>
-                        <h:command_button id="ucaseButton" value="Make it uppercase" action="none">
-                            <f:action_listener type="net.sourceforge.myfaces.examples.example1.UCaseController" />
-                        </h:command_button>
-                        <h:command_button id="lcaseButton" value="Make it lowercase" action="none">
-                            <f:action_listener type="net.sourceforge.myfaces.examples.example1.UCaseController" />
-                        </h:command_button>
-                        <br>
-                    </h:form>
-                </td></tr></table>
+                <h:command_link id="href1" action="none"><f:verbatim>Add them by clicking this link</f:verbatim>
+                    <f:action_listener type="net.sourceforge.myfaces.examples.example1.CalcController" ></f:action_listener>
+                </h:command_link><br>
+                <h:command_link id="href2" action="none"><f:verbatim>Subtract them by clicking this link</f:verbatim>
+                    <f:action_listener type="net.sourceforge.myfaces.examples.example1.CalcController" ></f:action_listener>
+                </h:command_link>
 
-                <h4>Validation</h4>
-                <table border="1"><tr><td>
-                    <h:form id="form3" name="valForm">
-                        <h:command_button id="valEnable" value="Enable validation" action="none" >
-                            <f:action_listener type="net.sourceforge.myfaces.examples.example1.ValidationController" />
-                        </h:command_button>
-                        <h:command_button id="valDisable" value="Disable validation" action="none" >
-                            <f:action_listener type="net.sourceforge.myfaces.examples.example1.ValidationController" />
-                        </h:command_button>
-                    </h:form>
-                </td></tr></table>
+                <f:verbatim>
+                    </td></tr></table>
+                    <h4>Another Form</h4>
+                    <table border="1"><tr><td>
+                </f:verbatim>
 
-        <br><h:command_link id="jump_home" action="#{ucaseForm.jumpHome}" >Go Home</h:command_link>
+                <h:form id="form2" name="ucaseForm">
+                    <h:input_text id="text" value="#{ucaseForm.text}"/>
+                    <h:message id="textError" for="text" styleClass="error" /><f:verbatim><br></f:verbatim>
+                    <h:command_button id="ucaseButton" value="Make it uppercase" action="none">
+                        <f:action_listener type="net.sourceforge.myfaces.examples.example1.UCaseController" />
+                    </h:command_button>
+                    <h:command_button id="lcaseButton" value="Make it lowercase" action="none">
+                        <f:action_listener type="net.sourceforge.myfaces.examples.example1.UCaseController" />
+                    </h:command_button>
+                    <f:verbatim><br></f:verbatim>
+                </h:form>
+
+                <f:verbatim>
+                    </td></tr></table>
+
+                    <h4>Validation</h4>
+                    <table border="1"><tr><td>
+                </f:verbatim>
+
+                <h:form id="form3" name="valForm">
+                    <h:command_button id="valEnable" value="Enable validation" action="none" >
+                        <f:action_listener type="net.sourceforge.myfaces.examples.example1.ValidationController" />
+                    </h:command_button>
+                    <h:command_button id="valDisable" value="Disable validation" action="none" >
+                        <f:action_listener type="net.sourceforge.myfaces.examples.example1.ValidationController" />
+                    </h:command_button>
+                </h:form>
+
+                <f:verbatim>
+                    </td></tr></table>
+                </f:verbatim>
+
+        <f:verbatim><br></f:verbatim>
+        <h:command_link id="jump_home" action="#{ucaseForm.jumpHome}" ><f:verbatim>Go Home</f:verbatim></h:command_link>
 
             </h:panel_group>
         </f:facet>

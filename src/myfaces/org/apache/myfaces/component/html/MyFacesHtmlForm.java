@@ -37,7 +37,7 @@ public class MyFacesHtmlForm
 {
     private static final Log log = LogFactory.getLog(MyFacesHtmlForm.class);
 
-    private static final int ATTRIBUTE_COUNT = 9;
+    private static final int ATTRIBUTE_COUNT = 1;
     private String _name;
 
     public String getName()
@@ -76,11 +76,11 @@ public class MyFacesHtmlForm
 
     public Object saveState(FacesContext context)
     {
-        Object values[] = new Object[ATTRIBUTE_COUNT];
+        Object values[] = new Object[ATTRIBUTE_COUNT + 1];
         int i = 0;
         values[i++] = super.saveState(context);
         values[i++] = _name;
-        DebugUtils.assertFatal(i == ATTRIBUTE_COUNT, log, "Number of attributes to save differs!");
+        DebugUtils.assertFatal(i == ATTRIBUTE_COUNT + 1, log, "Number of attributes to save differs!");
         return ((Object) (values));
     }
 
@@ -90,6 +90,6 @@ public class MyFacesHtmlForm
         int i = 0;
         super.restoreState(context, values[i++]);
         _name = (String)values[i++];
-        DebugUtils.assertFatal(i == ATTRIBUTE_COUNT, log, "Number of attributes to restore differs!");
+        DebugUtils.assertFatal(i == ATTRIBUTE_COUNT + 1, log, "Number of attributes to restore differs!");
     }
 }

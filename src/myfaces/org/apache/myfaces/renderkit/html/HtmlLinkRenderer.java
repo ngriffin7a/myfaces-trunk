@@ -19,6 +19,7 @@
 package net.sourceforge.myfaces.renderkit.html;
 
 import net.sourceforge.myfaces.application.MyfacesViewHandler;
+import net.sourceforge.myfaces.renderkit.JSFAttr;
 import net.sourceforge.myfaces.renderkit.RendererUtils;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLUtil;
 
@@ -158,7 +159,13 @@ public class HtmlLinkRenderer
         writer.startElement(HTML.ANCHOR_ELEM, commandLink);
         writer.writeURIAttribute(HTML.HREF_ATTR, href, null);
         HTMLUtil.renderHTMLAttributes(writer, commandLink, HTML.ANCHOR_PASSTHROUGH_ATTRIBUTES);
-        writer.writeText(commandLink.getValue().toString(), null);
+
+        //MyFaces extension: Render text given by value
+        Object value = commandLink.getValue();
+        if(value != null)
+        {
+            writer.writeText(value.toString(), JSFAttr.VALUE_ATTR);
+        }
     }
    
     

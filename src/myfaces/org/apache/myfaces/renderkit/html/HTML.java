@@ -246,12 +246,18 @@ public class HTML
             COMMON_FIELD_PASSTROUGH_ATTRIBUTES);
     
     // <label>
+    public static final String FOR_ATTR = "for";
     public static final String[] LABEL_ATTRIBUTES =
     {
         ACCESSKEY_ATTR,
         ONBLUR_ATTR,
-        ONFOCUS_ATTR
+        ONFOCUS_ATTR,
+        FOR_ATTR
     };
+    public static final String[] LABEL_PASSTHROUGH_ATTRIBUTES =
+        (String[]) ArrayUtils.concat(
+            LABEL_ATTRIBUTES,
+            COMMON_PASSTROUGH_ATTRIBUTES);
 
     // <select>
     public static final String MULTIPLE_ATTR = "multiple";

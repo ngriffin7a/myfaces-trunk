@@ -19,7 +19,7 @@
 package net.sourceforge.myfaces.taglib.core;
 
 /**
- * DOCUMENT ME!
+ * TODO: refactor for JSF 1.0
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  */

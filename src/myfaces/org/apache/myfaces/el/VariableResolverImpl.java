@@ -279,10 +279,30 @@ public class VariableResolverImpl
         ManagedBeanConfig  mbc         = facesConfig.getManagedBeanConfig(name);
         if (mbc != null)
         {
-            Object bean = ClassUtils.newInstance(mbc.getManagedBeanClass());
+            obj = ClassUtils.newInstance(mbc.getManagedBeanClass());
             ManagedBeanConfigurator configurator = new ManagedBeanConfigurator(mbc);
-            configurator.configure(facesContext, bean);
-            return bean;
+            configurator.configure(facesContext, obj);
+
+            //put in scope
+            String scope = mbc.getManagedBeanScope();
+            if (scope.equals("request"))
+            {
+                externalContext.getRequestMap().put(name, obj);
+            }
+            else if (scope.equals("session"))
+            {
+                externalContext.getSessionMap().put(name, obj);
+            }
+            else if (scope.equals("application"))
+            {
+                externalContext.getApplicationMap().put(name, obj);
+            }
+            else if (!scope.equals("none"))
+            {
+                log.error("Managed bean '" + name + "' has illegal scope: " + scope);
+            }
+
+            return obj;
         }
 
         log.error("Variable '" + name + "' could not be resolved.");
