@@ -67,7 +67,7 @@ public class TreeStructureManager
                     structChildList.add(structChild);
                 }
             }
-            TreeStructComponent[] childArray = (TreeStructComponent[])structChildList.toArray(new TreeStructComponent[childList.size()]);
+            TreeStructComponent[] childArray = (TreeStructComponent[])structChildList.toArray(new TreeStructComponent[structChildList.size()]);
             structComp.setChildren(childArray);
         }
 
