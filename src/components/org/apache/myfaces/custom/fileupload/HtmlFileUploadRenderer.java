@@ -21,6 +21,8 @@ import net.sourceforge.myfaces.renderkit.html.HTML;
 import net.sourceforge.myfaces.renderkit.html.HtmlRendererUtils;
 
 import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
@@ -34,6 +36,9 @@ import java.io.IOException;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.11  2004/07/12 03:06:36  svieujot
+ * Restore error handling due to UploadedFileDefaultImpl changes
+ *
  * Revision 1.10  2004/07/01 21:53:05  mwessendorf
  * ASF switch
  *
@@ -62,7 +67,7 @@ import java.io.IOException;
 public class HtmlFileUploadRenderer
     extends Renderer
 {
-    //private static final Log log = LogFactory.getLog(HtmlFileUploadRenderer.class);
+    private static final Log log = LogFactory.getLog(HtmlFileUploadRenderer.class);
 
     public void encodeEnd(FacesContext facesContext, UIComponent uiComponent)
         throws IOException
@@ -146,9 +151,13 @@ public class HtmlFileUploadRenderer
             	{
             		if( fileItem.getName().length() > 0 )
 	            	{
-                     UploadedFile upFile = new UploadedFileDefaultImpl(fileItem);
-                     ((HtmlInputFileUpload)uiComponent).setSubmittedValue(upFile);
-                     ((HtmlInputFileUpload)uiComponent).setValid(true);
+            			try{
+            					UploadedFile upFile = new UploadedFileDefaultImpl(fileItem);
+            					((HtmlInputFileUpload)uiComponent).setSubmittedValue(upFile);
+            					((HtmlInputFileUpload)uiComponent).setValid(true);
+            			}catch(IOException ioe){
+            				log.error(ioe);
+            			}
 	            	}
             	}
             }
