@@ -25,6 +25,8 @@ import javax.faces.context.ExternalContext;
 import javax.faces.webapp.FacesServlet;
 import java.util.*;
 
+import net.sourceforge.myfaces.webapp.MyFacesServlet;
+
 /**
  * @author gem (latest modification by $Author$)
  * @version $Revision$ $Date$
@@ -47,6 +49,11 @@ public class WebXml
         {
             _servlets.put(servletName, servletClass);
         }
+    }
+
+    boolean containsServlet(String servletName)
+    {
+        return _servlets.containsKey(servletName);
     }
 
     void addServletMapping(String servletName, String urlPattern)
@@ -72,15 +79,22 @@ public class WebXml
             try
             {
                 Class servletClass = Class.forName((String)entry.getValue());
-                if (FacesServlet.class.isAssignableFrom(servletClass))
+                if (MyFacesServlet.class.isAssignableFrom(servletClass) ||
+                    FacesServlet.class.isAssignableFrom(servletClass))
                 {
                     List urlPatterns = (List)_servletMappings.get(servletName);
                     for (Iterator it2 = urlPatterns.iterator(); it2.hasNext(); )
                     {
+                        String urlpattern = (String)it2.next();
                         _facesServletMappings.add(new ServletMapping(servletName,
                                                                      servletClass,
-                                                                     (String)it2.next()));
-                    }
+                                                                     urlpattern));
+                    if (log.isTraceEnabled())
+                        log.trace("adding mapping for servlet + " + servletName + " urlpattern = " + urlpattern);                    }
+                }
+                else
+                {
+                    if (log.isTraceEnabled()) log.trace("ignoring servlet + " + servletName + " " + servletClass + " (no FacesServlet)");
                 }
             }
             catch (ClassNotFoundException e)

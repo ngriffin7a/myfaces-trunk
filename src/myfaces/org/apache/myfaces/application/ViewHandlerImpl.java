@@ -194,82 +194,88 @@ public class ViewHandlerImpl
             log.error("ViewId must start with '/' (viewId = " + viewId + ")");
             throw new IllegalArgumentException("ViewId must start with '/' (viewId = " + viewId + ")");
         }
+
         ExternalContext externalContext = facescontext.getExternalContext();
-        String path = getPath(externalContext);
-        if (path == null)
+        Object[] pathInfo = getPathInfo(externalContext);
+        if (pathInfo == null)
         {
             return viewId;
         }
+        boolean isExtensionMapping = ((Boolean)pathInfo[0]).booleanValue();
+        String path = (String)pathInfo[1];
+
         viewId = viewId.substring(1, viewId.length());
-        if (path.endsWith("*"))
-        {
-            // prefix mapping
-            return path.substring(0, path.length() - 1) + viewId;
-        }
-        else if (path.startsWith("*"))
+        if (isExtensionMapping)
         {
             // extension mapping
-            String extensionMapping = path.substring(2, path.length());
-            if (viewId.endsWith(extensionMapping))
+            if (viewId.endsWith(path))
             {
                 return viewId;
             }
             else
             {
                 int idx = viewId.lastIndexOf(".");
-                return viewId.substring(0, idx + 1) + extensionMapping;
+                return viewId.substring(0, idx) + path;
             }
         }
-        return viewId;
+        else
+        {
+            // prefix mapping
+            return path + "/" + viewId;
+        }
     }
 
-    private String getPath(ExternalContext externalContext)
+    private Object[] getPathInfo(ExternalContext externalContext)
     {
         String servletPath = externalContext.getRequestServletPath();
         String requestPathInfo = externalContext.getRequestPathInfo();
 
+
         WebXml webxml = WebXml.getWebXml(externalContext);
         List mappings = webxml.getFacesServletMappings();
         String path = null;
-        boolean isExtensionMapping = requestPathInfo != null;
+        boolean isExtensionMapping = requestPathInfo == null;
         for (int i = 0, size = mappings.size(); i < size; i++)
         {
             ServletMapping servletMapping = (ServletMapping) mappings.get(i);
             String urlpattern = servletMapping.getUrlPattern();
-            if (urlpattern.endsWith("*"))
+
+            boolean isValidUrlpattern =
+                isExtensionMapping && urlpattern.startsWith("*.") ||
+                !isExtensionMapping && urlpattern.indexOf("/*") >= 0;
+
+            if (isValidUrlpattern)
             {
-                urlpattern = urlpattern.substring(0, urlpattern.length() - 1);
-            }
-            else if (urlpattern.startsWith("*"))
-            {
-                urlpattern = urlpattern.substring(1, urlpattern.length());
+                if (isExtensionMapping)
+                {
+                    String extension = urlpattern.substring(1, urlpattern.length());
+                    if (servletPath.endsWith(extension))
+                    {
+                        path = extension;
+                        break;
+                    }
+                }
+                else
+                {
+                    urlpattern = urlpattern.substring(0, urlpattern.length() - 2);
+                    if (servletPath.equals(urlpattern))
+                    {
+                        path = urlpattern;
+                        break;
+                    }
+                }
             }
 
-            if (isExtensionMapping)
-            {
-                //extension mapping
-                if (servletPath.endsWith(urlpattern))
-                {
-                    path = urlpattern;
-                    break;
-                }
-            }
-            else
-            {
-                //prefix mapping
-                if (servletPath.equals(urlpattern))
-                {
-                    path = urlpattern;
-                    break;
-                }
-            }
+            if (log.isTraceEnabled()) log.trace("ignoring servlet-mapping for urlpattern = " +
+                                                urlpattern + " extenxsionMapping = " + isExtensionMapping);
         }
         if (path == null)
         {
             log.error("could not find pathMapping for servletPath = " + servletPath +
                       " requestPathInfo = " + requestPathInfo);
+            return null;
         }
-        return path;
+        return new Object[] {isExtensionMapping ? Boolean.TRUE : Boolean.FALSE, path};
     }
 
     public void renderView(FacesContext facesContext, UIViewRoot viewToRender) throws IOException, FacesException

@@ -28,13 +28,17 @@
     <servlet>
         <servlet-name>Faces Servlet</servlet-name>
         <servlet-class>net.sourceforge.myfaces.webapp.MyFacesServlet</servlet-class>
-        <load-on-startup>1</load-on-startup>
     </servlet>
 
     <!-- virtual path mapping -->
     <servlet-mapping>
         <servlet-name>Faces Servlet</servlet-name>
-        <url-pattern>/faces/*</url-pattern>
+        <url-pattern>/myfaces/*</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>Faces Servlet</servlet-name>
+        <url-pattern>/*</url-pattern>
     </servlet-mapping>
 
     <!-- extension mapping -->

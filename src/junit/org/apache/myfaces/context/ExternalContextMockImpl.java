@@ -43,6 +43,8 @@ public class ExternalContextMockImpl extends ExternalContext
     private Map _initParameterMap = new HashMap();
     private Principal _principal;
     private Map _resourceMap = new HashMap();
+    private String _requestServletPath;
+    private String _requestPathInfo;
 
     //init methods
     public void addResourceMapping(String systemId, String systemIdMapping)
@@ -53,6 +55,16 @@ public class ExternalContextMockImpl extends ExternalContext
     public void setPrincipal(Principal principal)
     {
         _principal = principal;
+    }
+
+    public void setRequestPathInfo(String requestPathInfo)
+    {
+        _requestPathInfo = requestPathInfo;
+    }
+
+    public void setRequestServletPath(String requestServletPath)
+    {
+        _requestServletPath = requestServletPath;
     }
 
     // constructor
@@ -133,7 +145,7 @@ public class ExternalContextMockImpl extends ExternalContext
 
     public String getRequestPathInfo()
     {
-        throw new UnsupportedOperationException();
+        return _requestPathInfo;
     }
 
     public String getRequestContextPath()
@@ -143,7 +155,7 @@ public class ExternalContextMockImpl extends ExternalContext
 
     public String getRequestServletPath()
     {
-        throw new UnsupportedOperationException();
+        return _requestServletPath;
     }
 
     public Cookie[] getRequestCookies()

@@ -65,7 +65,7 @@ public class MyFacesTest
     {
         super.setUp();
         _servletContext = new ServletContextMockImpl();
-        _application = new ApplicationImpl(_servletContext);
+        _application = new ApplicationImpl(_facesContext.getExternalContext());
         _application.setVariableResolver(new VariableResolverImpl());
         
         _httpServletRequest = new ServletRequestMockImpl();
