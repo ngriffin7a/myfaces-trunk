@@ -18,6 +18,7 @@ package org.apache.myfaces.custom.tree2;
 import javax.faces.context.FacesContext;
 import javax.faces.component.UICommand;
 import javax.faces.component.html.HtmlCommandLink;
+import javax.faces.event.ActionEvent;
 import javax.faces.el.MethodBinding;
 
 import java.util.HashSet;
@@ -38,6 +39,7 @@ public class HtmlTree extends UITreeData
     private UICommand _expandControl;
     private String _varNodeToggler;
     private HashSet _expandedNodes = new HashSet();
+    private String _selectedNodeId;
 
     /**
      * Constructor
@@ -51,10 +53,11 @@ public class HtmlTree extends UITreeData
     // see superclass for documentation
     public Object saveState(FacesContext context)
     {
-        Object values[] = new Object[3];
+        Object values[] = new Object[4];
         values[0] = super.saveState(context);
         values[1] = _expandedNodes;
         values[2] = _varNodeToggler;
+        values[3] = _selectedNodeId;
 
         return ((Object) (values));
     }
@@ -66,6 +69,7 @@ public class HtmlTree extends UITreeData
         super.restoreState(context, values[0]);
         _expandedNodes = (HashSet)values[1];
         setVarNodeToggler((String)values[2]);
+        _selectedNodeId = (String)values[3];
     }
 
     // see superclass for documentation
@@ -135,5 +139,25 @@ public class HtmlTree extends UITreeData
         {
             super.processChildNodes(context, parentNode, processAction);
         }
+    }
+    
+    /**
+     * Implements the {@link ActionListener} interface.  Basically, this method is used to listen for 
+     * node selection events (when a user has clicked on a leaf node.)  
+     * 
+     * @param event ActionEvent
+     */
+    public void setNodeSelected(ActionEvent event)
+    {
+        _selectedNodeId = getNodeId();
+    }
+    
+    /**
+     * Indicates whether or not the current {@link TreeNode} is selected.
+     * @return boolean
+     */
+    public boolean isNodeSelected()
+    {
+        return getNodeId().equals(_selectedNodeId);
     }
 }
