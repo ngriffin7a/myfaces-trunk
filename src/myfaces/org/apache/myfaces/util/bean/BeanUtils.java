@@ -129,7 +129,7 @@ public class BeanUtils
         PropertyDescriptor propertyDescriptor = findPropertyDescriptor(beanInfo, propertyName);
         if (propertyDescriptor == null)
         {
-            throw new IllegalArgumentException("Bean " + bean + " of class " + bean.getClass() + " does not have a property '" + propertyName + ".");
+            throw new IllegalArgumentException("Bean " + bean + " of class " + bean.getClass() + " does not have a property '" + propertyName + "'.");
         }
         return getBeanPropertyValue(bean, propertyDescriptor);
     }
@@ -143,7 +143,15 @@ public class BeanUtils
     public static Object getBeanPropertyValue(Object bean,
                                               PropertyDescriptor propertyDescriptor)
     {
+        if (bean == null)
+        {
+            throw new NullPointerException("Could not get value of property '" + propertyDescriptor.getName() + "' because bean was null.");
+        }
         Method m = propertyDescriptor.getReadMethod();
+        if (m == null)
+        {
+            throw new RuntimeException("Bean " + bean + " does not have a getter method for property '" + propertyDescriptor.getName() + "'.");
+        }
         try
         {
             return m.invoke(bean, EMPTY_ARGS);
@@ -298,7 +306,7 @@ public class BeanUtils
                 return new Object[] {obj, nextProp};
             }
 
-            PropertyDescriptor propDescr = findNestedPropertyDescriptor(obj, nextProp);
+            PropertyDescriptor propDescr = findPropertyDescriptor(obj, nextProp);
             if (propDescr == null)
             {
                 throw new IllegalArgumentException("Bean " + obj + " (Class " + obj.getClass() + ") does not have a property of name '" + nextProp + "'.");
@@ -326,7 +334,7 @@ public class BeanUtils
             obj = newObj;
             if (obj == null)
             {
-                LogUtil.getLogger().info("Nested property '" + nextProp + "' of bean " + bean + " is null.");
+                LogUtil.getLogger().warning("Nested property '" + nextProp + "' of bean " + bean + " is null.");
                 return new Object[2];
             }
         }
