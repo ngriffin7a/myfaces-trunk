@@ -5,6 +5,9 @@
 
     <!-- Constants -->
     <property name="project.dir" location="${basedir}/.."/>
+    <property name="build.dir" location="${project.dir}/build"/>
+    <property name="nightly.dir" location="${build.dir}/nightly"/>
+    <property name="dist.dir" location="${build.dir}/dist"/>
     <property name="release.dir" location="${basedir}/release"/>
     <property name="jsfapi.src" location="${project.dir}/src/jsfapi"/>
     <property name="share.src" location="${project.dir}/src/share"/>
@@ -14,9 +17,6 @@
     <property name="junit.src" location="${project.dir}/src/junit"/>
     <property name="tlds.dir" location="${project.dir}/tlds"/>
     <property name="doc.dir" location="${project.dir}/doc"/>
-    <property name="build.dir" location="${project.dir}/build"/>
-    <property name="nightly.dir" location="${build.dir}/nightly"/>
-    <property name="dist.dir" location="${build.dir}/dist"/>
     <property name="webapp.dist.dir" location="${dist.dir}/webapp"/>
     <property name="conf.dir" location="${project.dir}/conf"/>
     <property name="apps.dir" location="${project.dir}/webapps"/>
@@ -402,7 +402,11 @@
                         includes="**/*"
                         excludes="**/build.local.properties,
                                   codegen/**/*,
-                                  develop/**/*"
+                                  develop/**/*,
+                                  temp/**/*,
+                                  nightly/**/*,
+                                  release/**/*,
+                                  dist/**/*"
                         prefix="myfaces-${manifest.impl.version}/build"/>
             <tarfileset dir="${conf.dir}"
                         excludes="develop-web.xml"
@@ -434,7 +438,7 @@
         </tar>
     </target>
 
-
+<!--
     <target name="examples-release"
             description="creates the examples release file myfaces-x.x.x-examples.tgz (don't forget to adjust manifest.properties!)">
         <ant dir="${project.dir}/build/examples-webapp"
@@ -442,7 +446,7 @@
              inheritall="false"
              target="release"/>
     </target>
-
+-->
     <target name="tiles-release"
             description="creates the tiles examples release file myfaces-x.x.x-tiles-example.tgz (don't forget to adjust manifest.properties!)">
         <ant dir="${project.dir}/build/tiles-webapp"
@@ -466,6 +470,7 @@
              inheritall="false"
              target="release"/>
     </target>
+<!--    
     <target name="simple-webapp"
             description="creates the simple examples release file myfaces-x.x.x-tiles-example.tgz (don't forget to adjust manifest.properties!)">
         <ant dir="${project.dir}/build/simple-webapp"
@@ -473,10 +478,9 @@
              inheritall="false"
              target="release"/>
     </target>
-	<target name="all"
-            depends="bin-release, src-release, examples-release, tiles-release, blank-release, wap-release, simple-webapp"
-            description="builds all release files">
-    </target>
+-->    
+    <target name="all" depends="release, tiles-release, blank-release, wap-release" description="builds all release files"/>
+
 	<target name="all-tests"
             depends="myfaces-jar"
             description="run all the automated tests - tomcat 5.0.18 or better needs to be running on port 8080 for this to work">
@@ -514,6 +518,7 @@
 
         <delete dir="${dist.dir}"/>
         <delete dir="${release.dir}"/>
+        <delete dir="${resolved-tlds.dir}"/>
 
         <!-- clean up application build stuff as well -->
         <ant antfile="build-webapps.xml" inheritall="false" target="clean"/>
@@ -730,6 +735,10 @@
         </xslt>
     </target>
 
+    <target name="prepare">
+        <mkdir dir="${release.dir}"/>
+    </target>
+
     <target name="app-dist" depends="myfaces-jar">
 
         <!-- build simple webapps -->
@@ -749,10 +758,6 @@
             <property name="webapp.dist.dir" location="${webapp.dist.dir}"/>
         </ant>
 
-    </target>
-
-    <target name="prepare">
-        <mkdir dir="${release.dir}"/>
     </target>
 
     <target name="app-release" depends="prepare, app-dist">
