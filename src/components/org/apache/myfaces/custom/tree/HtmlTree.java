@@ -20,24 +20,19 @@
 
 package net.sourceforge.myfaces.custom.tree;
 
-import net.sourceforge.myfaces.custom.tree.model.TreeModel;
-import net.sourceforge.myfaces.custom.tree.model.TreePath;
-import net.sourceforge.myfaces.custom.tree.event.TreeSelectionListener;
-import net.sourceforge.myfaces.custom.tree.event.TreeSelectionEvent;
-import net.sourceforge.myfaces.custom.navigation.HtmlPanelNavigation;
-import net.sourceforge.myfaces.custom.navigation.HtmlCommandNavigation;
-
-import javax.faces.component.html.HtmlForm;
-import javax.faces.component.UIViewRoot;
-import javax.faces.component.UIComponent;
-import javax.faces.context.FacesContext;
-import javax.faces.el.ValueBinding;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.List;
-import java.util.Iterator;
+import javax.faces.component.UIViewRoot;
+import javax.faces.component.html.HtmlForm;
+import javax.faces.context.FacesContext;
+import javax.faces.el.ValueBinding;
 
+import net.sourceforge.myfaces.custom.navigation.HtmlPanelNavigation;
+import net.sourceforge.myfaces.custom.tree.event.TreeSelectionEvent;
+import net.sourceforge.myfaces.custom.tree.event.TreeSelectionListener;
+import net.sourceforge.myfaces.custom.tree.model.TreeModel;
+import net.sourceforge.myfaces.custom.tree.model.TreePath;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -52,6 +47,9 @@ import org.apache.commons.logging.LogFactory;
  * @author <a href="mailto:oliver@rossmueller.com">Oliver Rossmueller</a>
  * @version $Revision$ $Date$
  *          $Log$
+ *          Revision 1.7  2004/04/29 18:48:16  o_rossmueller
+ *          node selection handling
+ *
  *          Revision 1.6  2004/04/23 19:09:34  o_rossmueller
  *          state transition magic
  *
@@ -73,10 +71,6 @@ import org.apache.commons.logging.LogFactory;
 public class HtmlTree
     extends HtmlForm
 {
-
-
-    private static final Log log = LogFactory.getLog(HtmlPanelNavigation.class);
-
 
     private static final String FACET_ROOTNODE = "rootNode";
     private static final String PREVIOUS_VIEW_ROOT = HtmlPanelNavigation.class.getName() + ".PREVIOUS_VIEW_ROOT";
@@ -473,6 +467,16 @@ public class HtmlTree
         return true;
     }
 
+    
+    public TreePath getSelectionPath()
+    {
+        if (selectedPath == null)
+        {
+            return null;
+        }
+        return HtmlTreeNode.translatePath(selectedPath, getModel(FacesContext.getCurrentInstance()));
+    }
+
 
     public void selectionChanged(HtmlTreeNode node)
     {
@@ -609,6 +613,8 @@ public class HtmlTree
             {
                 getRootNode().restoreItemState(node);
             }
+
+            selectedPath = previousTree.selectedPath;
          }
     }
 

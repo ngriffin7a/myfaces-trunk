@@ -32,6 +32,9 @@ import java.util.Map;
  * @author <a href="mailto:oliver@rossmueller.com">Oliver Rossmueller</a>
  * @version $Revision$ $Date$
  *          $Log$
+ *          Revision 1.2  2004/04/29 18:48:07  o_rossmueller
+ *          node selection handling
+ *
  *          Revision 1.1  2004/04/22 10:20:24  manolito
  *          tree component
  *
@@ -51,7 +54,7 @@ public class HtmlTreeNodeRenderer
         {
             HtmlTreeNode node = (HtmlTreeNode)component;
 
-            node.toggleSelected();
+            node.setSelected(true);
         }
     }
 
