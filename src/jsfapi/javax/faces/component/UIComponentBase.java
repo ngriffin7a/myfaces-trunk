@@ -38,6 +38,10 @@ import java.util.*;
  *
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
+ * $Log$
+ * Revision 1.11  2004/05/03 10:28:03  manolito
+ * getClientId automatically creates id now
+ *
  */
 public abstract class UIComponentBase
         extends UIComponent
@@ -90,28 +94,48 @@ public abstract class UIComponentBase
     }
 
     /**
-     * TODO: Can we be sure that the id was already set?
      * @param context
      * @return
      */
     public String getClientId(FacesContext context)
     {
         if (context == null) throw new NullPointerException("context");
+
         if (_clientId != null) return _clientId;
+
+        String id = getId();
+        if (id == null)
+        {
+            //Although this is an error prone side effect, we automatically create a new id
+            //just to be compatible to the RI
+            UIViewRoot viewRoot = context.getViewRoot();
+            if (viewRoot != null)
+            {
+                id = viewRoot.createUniqueId();
+            }
+            else
+            {
+                context.getExternalContext().log("Cannot automatically create an id for component of type " + getClass().getName() + " because there is no viewRoot in the current facesContext!");
+                id = "ERROR";
+            }
+        }
+
         UIComponent namingContainer = _ComponentUtils.findParentNamingContainer(this, false);
         if (namingContainer != null)
         {
-            _clientId = namingContainer.getClientId(context) + NamingContainer.SEPARATOR_CHAR + getId();
+            _clientId = namingContainer.getClientId(context) + NamingContainer.SEPARATOR_CHAR + id;
         }
         else
         {
-            _clientId = getId();
+            _clientId = id;
         }
+
         Renderer renderer = getRenderer(context);
         if (renderer != null)
         {
             _clientId = renderer.convertClientId(context, _clientId);
         }
+
         return _clientId;
     }
 
