@@ -105,6 +105,7 @@
             <fileset dir="${classes.dir}" includes="**"/>
             <fileset dir="${temp.dir}" includes="**"/>
         </delete>
+        <delete dir="${temp.dir}"/>
     </target>
 
     <target name="copy-tld">
@@ -124,6 +125,7 @@
                  packagenames="net.sourceforge.myfaces.*"
                  classpathref="project.class.path"/>
         -->
+        <mkdir dir="${temp.dir}"/>
         <tar destfile="${temp.dir}/myfaces-${manifest.impl.version}.tgz"
              compression="gzip">
             <tarfileset dir="${project.dir}"
