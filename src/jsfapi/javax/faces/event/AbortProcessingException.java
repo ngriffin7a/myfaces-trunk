@@ -32,22 +32,21 @@ public class AbortProcessingException extends FacesException
 	// CONSTRUCTORS
 	public AbortProcessingException()
 	{
-		//TODO
-		throw new UnsupportedOperationException();
+		super();
 	}
+
 	public AbortProcessingException(String message)
 	{
-		//TODO
-		throw new UnsupportedOperationException();
+		super(message);
 	}
+
 	public AbortProcessingException(String message, Throwable cause)
 	{
-		//TODO
-		throw new UnsupportedOperationException();
+		super(message, cause);
 	}
+    
 	public AbortProcessingException(Throwable cause)
 	{
-		//TODO
-		throw new UnsupportedOperationException();
+		super(cause);
 	}
 }

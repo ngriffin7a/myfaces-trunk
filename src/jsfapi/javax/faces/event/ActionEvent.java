@@ -25,7 +25,8 @@ import javax.faces.component.UIComponent;
   * @author Thomas Spiegl (latest modification by $Author$)
   * @version $Revision$ $Date$
 */
-public class ActionEvent extends FacesEvent {
+public class ActionEvent extends FacesEvent
+{
 
 	// FIELDS
 
@@ -33,21 +34,18 @@ public class ActionEvent extends FacesEvent {
 	public ActionEvent(UIComponent uiComponent)
 	{
         super(uiComponent);
-		//TODO
-		throw new UnsupportedOperationException();
+        if (uiComponent == null) throw new IllegalArgumentException("uiComponent");
 	}
 
 	// METHODS
 	public boolean isAppropriateListener(FacesListener facesListeners)
 	{
-		//TODO
-		throw new UnsupportedOperationException();
+		return facesListeners instanceof ActionListener;
 	}
 
 	public void processListener(FacesListener facesListeners)
 	{
-		//TODO
-		throw new UnsupportedOperationException();
+		((ActionListener)facesListeners).processAction(this);
 	}
 
 }

@@ -28,38 +28,36 @@ import javax.faces.component.UIComponent;
 public class ValueChangeEvent extends FacesEvent {
 
 	// FIELDS
+    private Object _oldValue;
+    private Object _newValue;
 
 	// CONSTRUCTORS
 	public ValueChangeEvent(UIComponent uiComponent, Object oldValue, Object newValue)
 	{
         super(uiComponent);
-		//TODO
-		throw new UnsupportedOperationException();
+        if (uiComponent == null) throw new IllegalArgumentException("uiComponent");
+        _oldValue = oldValue;
+        _newValue = newValue;
 	}
 
 	// METHODS
 	public Object getNewValue()
 	{
-		//TODO
-		throw new UnsupportedOperationException();
+		return _newValue;
 	}
 
 	public Object getOldValue()
 	{
-		//TODO
-		throw new UnsupportedOperationException();
+		return _oldValue;
 	}
 
 	public boolean isAppropriateListener(FacesListener facesListeners)
 	{
-		//TODO
-		throw new UnsupportedOperationException();
-	}
+        return facesListeners instanceof ValueChangeListener;
+    }
 
-	public void processListener(FacesListener facesListeners)
-	{
-		//TODO
-		throw new UnsupportedOperationException();
-	}
-
+    public void processListener(FacesListener facesListeners)
+    {
+        ((ValueChangeListener)facesListeners).processValueChange(this);
+    }
 }

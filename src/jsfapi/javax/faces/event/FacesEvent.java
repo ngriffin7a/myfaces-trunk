@@ -20,57 +20,47 @@
 package javax.faces.event;
 
 import javax.faces.component.UIComponent;
+import java.util.EventObject;
 
 /**
   * @author Thomas Spiegl (latest modification by $Author$)
   * @version $Revision$ $Date$
 */
-public abstract class FacesEvent {
-
+public abstract class FacesEvent extends EventObject
+{
 	// FIELDS
+    private PhaseId _phaseId;
 
 	// CONSTRUCTORS
 	public FacesEvent(UIComponent uiComponent)
 	{
-        //TODO
-        throw new UnsupportedOperationException();
+        super(uiComponent);
+        if (uiComponent == null) throw new IllegalArgumentException("uiComponent");
+        _phaseId = PhaseId.ANY_PHASE;
 	}
 
 	// METHODS
+    public abstract boolean isAppropriateListener(FacesListener faceslistener);
+
+    public abstract void processListener(FacesListener faceslistener);
+
 	public UIComponent getComponent()
 	{
-        //TODO
-        throw new UnsupportedOperationException();
-	}
-
-	public PhaseId getPhaseId()
-	{
-        //TODO
-        throw new UnsupportedOperationException();
-	}
-
-	public boolean isAppropriateListener(FacesListener facesListeners)
-	{
-        //TODO
-        throw new UnsupportedOperationException();
-	}
-
-	public void processListener(FacesListener facesListeners)
-	{
-        //TODO
-        throw new UnsupportedOperationException();
+        return (UIComponent)getSource();
 	}
 
 	public void queue()
 	{
-        //TODO
-        throw new UnsupportedOperationException();
+        ((UIComponent)getSource()).queueEvent(this);
 	}
 
-	public void setPhaseId(PhaseId phaseId)
-	{
-        //TODO
-        throw new UnsupportedOperationException();
-	}
+    public PhaseId getPhaseId()
+    {
+        return _phaseId;
+    }
 
+    public void setPhaseId(PhaseId phaseId)
+    {
+        _phaseId = phaseId;
+    }
 }

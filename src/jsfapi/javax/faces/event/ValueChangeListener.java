@@ -25,5 +25,6 @@ package javax.faces.event;
 */
 public interface ValueChangeListener extends FacesListener
 {
-	public void processValueChange(javax.faces.event.ValueChangeEvent event);
+	public void processValueChange(javax.faces.event.ValueChangeEvent event)
+        throws AbortProcessingException;
 }

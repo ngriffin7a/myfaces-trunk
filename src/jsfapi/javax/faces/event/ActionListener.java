@@ -23,7 +23,8 @@ package javax.faces.event;
   * @author Thomas Spiegl (latest modification by $Author$)
   * @version $Revision$ $Date$
 */
-public interface ActionListener extends FacesListener {
+public interface ActionListener extends FacesListener
+{
 
 	void processAction(ActionEvent actionEvent) throws AbortProcessingException;
 }

@@ -36,6 +36,11 @@ public class FacesException
         super(cause);
     }
 
+    public FacesException(String message)
+    {
+        super(message);
+    }
+
     public FacesException(String message,
                           Throwable cause)
     {

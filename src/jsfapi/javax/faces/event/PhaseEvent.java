@@ -21,33 +21,40 @@ package javax.faces.event;
 
 import javax.faces.context.FacesContext;
 import javax.faces.lifecycle.Lifecycle;
+import java.util.EventObject;
 
 /**
   * @author Thomas Spiegl (latest modification by $Author$)
   * @version $Revision$ $Date$
 */
-public class PhaseEvent {
+public class PhaseEvent extends EventObject
+{
 
 	// FIELDS
+    private FacesContext _facesContext;
+    private PhaseId _phaseId;
 
 	// CONSTRUCTORS
 	public PhaseEvent(FacesContext facesContext, PhaseId phaseId, Lifecycle lifecycle)
 	{
-		//TODO
-		throw new UnsupportedOperationException();
+		super(lifecycle);
+        if (facesContext == null) throw new NullPointerException("facesContext");
+        if (phaseId == null) throw new NullPointerException("phaseId");
+        if (lifecycle == null) throw new NullPointerException("lifecycle");
+
+        _facesContext = facesContext;
+        _phaseId = phaseId;
 	}
 
 	// METHODS
 	public FacesContext getFacesContext()
 	{
-		//TODO
-		throw new UnsupportedOperationException();
+		return _facesContext;
 	}
 
 	public PhaseId getPhaseId()
 	{
-		//TODO
-		throw new UnsupportedOperationException();
+		return _phaseId;
 	}
 
 }
