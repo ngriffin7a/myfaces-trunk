@@ -27,6 +27,9 @@ import javax.faces.event.FacesEvent;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.6  2004/08/09 07:28:20  manolito
+ * activeTabStyleClass, inactiveTabStyleClass, activeSubStyleClass, inactiveSubStyleClass, tagContentStyleClass via codegen
+ *
  * Revision 1.5  2004/07/10 17:11:02  o_rossmueller
  * added attributes activeTabStyleClass, inactiveTabStyleClass, activeSubStyleClass, inactiveSubStyleClass, tagContentStyleClass to overwrite style attributes using css
  *
@@ -46,71 +49,6 @@ public class HtmlPanelTabbedPane
     //private static final Log log = LogFactory.getLog(HtmlPanelTabbedPane.class);
 
     private MethodBinding _tabChangeListener = null;
-    private String _activeTabStyleClass;
-    private String _inactiveTabStyleClass;
-    private String _activeSubStyleClass;
-    private String _inactiveSubStyleClass;
-    private String _tabContentStyleClass;
-
-
-    public String getActiveTabStyleClass()
-    {
-        return _activeTabStyleClass;
-    }
-
-
-    public void setActiveTabStyleClass(String activeTabStyleClass)
-    {
-        this._activeTabStyleClass = activeTabStyleClass;
-    }
-
-
-    public String getInactiveTabStyleClass()
-    {
-        return _inactiveTabStyleClass;
-    }
-
-
-    public void setInactiveTabStyleClass(String inactiveTabStyleClass)
-    {
-        this._inactiveTabStyleClass = inactiveTabStyleClass;
-    }
-
-
-    public String getActiveSubStyleClass()
-    {
-        return _activeSubStyleClass;
-    }
-
-
-    public void setActiveSubStyleClass(String _activeSubStyleClass)
-    {
-        this._activeSubStyleClass = _activeSubStyleClass;
-    }
-
-
-    public String getInactiveSubStyleClass()
-    {
-        return _inactiveSubStyleClass;
-    }
-
-
-    public void setInactiveSubStyleClass(String _inactiveSubStyleClass)
-    {
-        this._inactiveSubStyleClass = _inactiveSubStyleClass;
-    }
-
-
-    public String getTabContentStyleClass()
-    {
-        return _tabContentStyleClass;
-    }
-
-
-    public void setTabContentStyleClass(String _tabContentStyleClass)
-    {
-        this._tabContentStyleClass = _tabContentStyleClass;
-    }
 
     //TODO: additional HTML Table attributes (see HtmlPanelTabbedPaneTag)
 
@@ -174,9 +112,15 @@ public class HtmlPanelTabbedPane
     public static final String COMPONENT_TYPE = "net.sourceforge.myfaces.HtmlPanelTabbedPane";
     public static final String COMPONENT_FAMILY = "javax.faces.Panel";
     private static final String DEFAULT_RENDERER_TYPE = "net.sourceforge.myfaces.TabbedPane";
+    private static final int DEFAULT_SELECTEDINDEX = 0;
 
     private Integer _selectedIndex = null;
     private String _bgcolor = null;
+    private String _activeTabStyleClass = null;
+    private String _inactiveTabStyleClass = null;
+    private String _activeSubStyleClass = null;
+    private String _inactiveSubStyleClass = null;
+    private String _tabContentStyleClass = null;
 
     public HtmlPanelTabbedPane()
     {
@@ -198,7 +142,7 @@ public class HtmlPanelTabbedPane
         if (_selectedIndex != null) return _selectedIndex.intValue();
         ValueBinding vb = getValueBinding("selectedIndex");
         Integer v = vb != null ? (Integer)vb.getValue(getFacesContext()) : null;
-        return v != null ? v.intValue() : 0;
+        return v != null ? v.intValue() : DEFAULT_SELECTEDINDEX;
     }
 
     public void setBgcolor(String bgcolor)
@@ -213,6 +157,67 @@ public class HtmlPanelTabbedPane
         return vb != null ? (String)vb.getValue(getFacesContext()) : null;
     }
 
+    public void setActiveTabStyleClass(String activeTabStyleClass)
+    {
+        _activeTabStyleClass = activeTabStyleClass;
+    }
+
+    public String getActiveTabStyleClass()
+    {
+        if (_activeTabStyleClass != null) return _activeTabStyleClass;
+        ValueBinding vb = getValueBinding("activeTabStyleClass");
+        return vb != null ? (String)vb.getValue(getFacesContext()) : null;
+    }
+
+    public void setInactiveTabStyleClass(String inactiveTabStyleClass)
+    {
+        _inactiveTabStyleClass = inactiveTabStyleClass;
+    }
+
+    public String getInactiveTabStyleClass()
+    {
+        if (_inactiveTabStyleClass != null) return _inactiveTabStyleClass;
+        ValueBinding vb = getValueBinding("inactiveTabStyleClass");
+        return vb != null ? (String)vb.getValue(getFacesContext()) : null;
+    }
+
+    public void setActiveSubStyleClass(String activeSubStyleClass)
+    {
+        _activeSubStyleClass = activeSubStyleClass;
+    }
+
+    public String getActiveSubStyleClass()
+    {
+        if (_activeSubStyleClass != null) return _activeSubStyleClass;
+        ValueBinding vb = getValueBinding("activeSubStyleClass");
+        return vb != null ? (String)vb.getValue(getFacesContext()) : null;
+    }
+
+    public void setInactiveSubStyleClass(String inactiveSubStyleClass)
+    {
+        _inactiveSubStyleClass = inactiveSubStyleClass;
+    }
+
+    public String getInactiveSubStyleClass()
+    {
+        if (_inactiveSubStyleClass != null) return _inactiveSubStyleClass;
+        ValueBinding vb = getValueBinding("inactiveSubStyleClass");
+        return vb != null ? (String)vb.getValue(getFacesContext()) : null;
+    }
+
+    public void setTabContentStyleClass(String tabContentStyleClass)
+    {
+        _tabContentStyleClass = tabContentStyleClass;
+    }
+
+    public String getTabContentStyleClass()
+    {
+        if (_tabContentStyleClass != null) return _tabContentStyleClass;
+        ValueBinding vb = getValueBinding("tabContentStyleClass");
+        return vb != null ? (String)vb.getValue(getFacesContext()) : null;
+    }
+
+
 
     public Object saveState(FacesContext context)
     {
@@ -222,8 +227,8 @@ public class HtmlPanelTabbedPane
         values[2] = _bgcolor;
         values[3] = saveAttachedState(context, _tabChangeListener);
         values[4] = _activeTabStyleClass;
-        values[5] = _activeSubStyleClass;
-        values[6] = _inactiveTabStyleClass;
+        values[5] = _inactiveTabStyleClass;
+        values[6] = _activeSubStyleClass;
         values[7] = _inactiveSubStyleClass;
         values[8] = _tabContentStyleClass;
         return ((Object) (values));
@@ -236,11 +241,11 @@ public class HtmlPanelTabbedPane
         _selectedIndex = (Integer)values[1];
         _bgcolor = (String)values[2];
         _tabChangeListener = (MethodBinding)restoreAttachedState(context, values[3]);
-        _activeTabStyleClass = (String) values[4];
-        _activeSubStyleClass = (String) values[5];
-        _inactiveTabStyleClass = (String) values[6];
-        _inactiveSubStyleClass = (String) values[7];
-        _tabContentStyleClass = (String) values[8];
+        _activeTabStyleClass = (String)values[4];
+        _inactiveTabStyleClass = (String)values[5];
+        _activeSubStyleClass = (String)values[6];
+        _inactiveSubStyleClass = (String)values[7];
+        _tabContentStyleClass = (String)values[8];
     }
     //------------------ GENERATED CODE END ---------------------------------------
 }

@@ -21,4 +21,24 @@
         <name>tabChangeListener</name>
         <type>javax.faces.el.MethodBinding</type>
     </field>
+    <field>
+        <name>activeTabStyleClass</name>
+        <type>java.lang.String</type>
+    </field>
+    <field>
+        <name>inactiveTabStyleClass</name>
+        <type>java.lang.String</type>
+    </field>
+    <field>
+        <name>activeSubStyleClass</name>
+        <type>java.lang.String</type>
+    </field>
+    <field>
+        <name>inactiveSubStyleClass</name>
+        <type>java.lang.String</type>
+    </field>
+    <field>
+        <name>tabContentStyleClass</name>
+        <type>java.lang.String</type>
+    </field>
 </component>
