@@ -215,11 +215,11 @@ public class ValueBindingImpl
 
     /**
      * Gets the value of property <code>name</code> from object
-     * <code>base</code>. Call the appropriate
+     * <code>base</code>. Calls the appropriate
      * <code>PropertyResolver.getValue</code> method based on the type (int or
      * String) of <code>name</code>
      *
-     * @param facesContext facesContext to resolve abgainst
+     * @param facesContext facesContext to resolve against
      * @param base the bean whose property to get
      * @param name the name or index of the property
      *
@@ -251,7 +251,7 @@ public class ValueBindingImpl
      * </p>
      *
      * @param facesContext the current context to resolve against
-     * @param base the bean, which property would be to accessed
+     * @param base the bean, whose property will be accessed
      * @param name the property/index to access, will be coerced to String or Integer
      *        as needed
      *
@@ -269,6 +269,7 @@ public class ValueBindingImpl
         {
             name = ((ValueBinding) name).getValue(facesContext);
         }
+        
         if ((base.getClass().isArray()) || (base instanceof List))
         {
             // Note: ReferenceSyntaxException would be thrown by coerceToInteger(), if needed
@@ -384,7 +385,7 @@ public class ValueBindingImpl
      *
      * @throws ReferenceSyntaxException on eny error during coercion
      */
-    private Integer coerceToInteger(Object obj)
+    protected Integer coerceToInteger(Object obj)
     {
         if (obj == null)
         {
@@ -404,7 +405,8 @@ public class ValueBindingImpl
             }
             catch (NumberFormatException e)
             {
-                throw new ReferenceSyntaxException(e);
+                throw new ReferenceSyntaxException(
+                    "Reference: " + _reference + ". Unable to coerce '" + s + "' to int", e);
             }
         }
         if (obj instanceof Integer)
@@ -425,7 +427,7 @@ public class ValueBindingImpl
         }
 
         throw new ReferenceSyntaxException(
-            "Reference: " + _reference + "Unable to coerce " + obj.getClass() + " to int");
+            "Reference: " + _reference + ". Unable to coerce " + obj.getClass() + " to int");
     }
 
     /**
