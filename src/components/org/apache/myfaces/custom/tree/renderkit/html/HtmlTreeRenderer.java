@@ -41,6 +41,9 @@ import java.util.List;
  * @author <a href="mailto:oliver@rossmueller.com">Oliver Rossmueller</a>
  * @version $Revision$ $Date$
  *          $Log$
+ *          Revision 1.2  2004/04/22 12:57:39  o_rossmueller
+ *          fixed leaf node layout
+ *
  *          Revision 1.1  2004/04/22 10:20:24  manolito
  *          tree component
  *
@@ -164,8 +167,6 @@ public class HtmlTreeRenderer
                 }
                 else
                 {
-
-
                     HtmlTreeImageCommandLink expandCollapse = (HtmlTreeImageCommandLink)child.getExpandCollapseCommand(facesContext);
                     expandCollapse.setImage(getLayoutImage(tree, layout[layout.length - 1]));
 
@@ -175,27 +176,32 @@ public class HtmlTreeRenderer
                 writer.endElement(HTML.TD_ELEM);
 
 
+                int labelColSpan = maxLevel - child.getLevel() + 1;
                 // node icon
-
-                writer.startElement(HTML.TD_ELEM, null);
 
                 if (!child.isLeaf(facesContext))
                 {
-
                     // todo: icon provider
                     url = "images/tree/folder.gif";
-
-                    if ((url != null) && (url.length() > 0))
-                    {
-                        writeImageElement(url, facesContext, writer, child);
-                    }
+                } else {
+                    url = null;
                 }
-                writer.endElement(HTML.TD_ELEM);
+
+
+                if ((url != null) && (url.length() > 0))
+                {
+                    writer.startElement(HTML.TD_ELEM, null);
+                    writeImageElement(url, facesContext, writer, child);
+                    writer.endElement(HTML.TD_ELEM);
+                } else {
+                    // no icon, so label has more room
+                    labelColSpan ++;
+                }
 
 
                 // node label
                 writer.startElement(HTML.TD_ELEM, null);
-                writer.writeAttribute(HTML.COLSPAN_ATTR, new Integer(maxLevel - child.getLevel() + 1), null);
+                writer.writeAttribute(HTML.COLSPAN_ATTR, new Integer(labelColSpan), null);
                 if (child.isSelected() && tree.getSelectedNodeClass() != null)
                 {
                     writer.writeAttribute(HTML.CLASS_ATTR, tree.getSelectedNodeClass(), null);
