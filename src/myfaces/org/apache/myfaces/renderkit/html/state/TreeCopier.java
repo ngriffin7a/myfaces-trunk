@@ -68,6 +68,18 @@ public class TreeCopier
         copyComponent(fromTree.getRoot(), toTree.getRoot(), true);
     }
 
+
+    public void copySubTree(UIComponent fromComponent, UIComponent toComponent)
+    {
+        copyComponent(fromComponent, toComponent, false);
+    }
+
+    public void copyStaticSubTree(UIComponent fromComponent, UIComponent toComponent)
+    {
+        copyComponent(fromComponent, toComponent, true);
+    }
+
+
     protected void copyComponent(UIComponent fromComp,
                                  UIComponent toComp,
                                  boolean staticAttributeConversions)
