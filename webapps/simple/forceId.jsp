@@ -65,6 +65,47 @@ managed beans used:
                 <x:commandButton id="button" forceId="true" value="Update" action="#{user.update}"/>
             </h:column>
         </h:dataTable>
+
+        <br/>
+
+        Table data <b>without</b> forceId/forceIdIndex
+        <br/>
+        <h:dataTable value="#{forceIdBean.choices}" var="choice">
+            <h:column>
+                <h:inputText id="widget" value="#{choice}"/>
+            </h:column>
+        </h:dataTable>
+
+        <br/>
+        Table data <b>with</b> forceId/forceIdIndex
+        <br/>        
+        <x:dataTable value="#{forceIdBean.choices}" var="choice">
+            <h:column>
+                <x:inputText id="widget" value="#{choice}" forceId="true" forceIdIndex="true"/>
+            </h:column>            
+        </x:dataTable>        
+        
+        <br/>
+<%-- doesn't work yet (see MYFACES-91) 
+
+        <b>Radio buttons without forceId/forceIdIndex</b>
+        <br/>
+                
+        <h:selectOneRadio id="something" value="#{forceIdBean.currentChoice}">
+            <f:selectItem itemValue="0" itemLabel="foo"/>
+            <f:selectItem itemValue="1" itemLabel="bar"/>
+            <f:selectItem itemValue="2" itemLabel="buzz"/>            
+        </h:selectOneRadio>
+        
+        <b>Radio buttons with forceId/forceIdIndex</b>
+        <br/>
+        
+        <x:selectOneRadio id="something" forceId="true" forceIdIndex="true" value="#{forceIdBean.currentChoice}">
+            <f:selectItem itemValue="0" itemLabel="foo"/>
+            <f:selectItem itemValue="1" itemLabel="bar"/>
+            <f:selectItem itemValue="2" itemLabel="buzz"/>            
+        </x:selectOneRadio>        
+--%>        
     </h:form>
 
 </f:view>

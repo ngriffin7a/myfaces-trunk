@@ -17,7 +17,6 @@ package org.apache.myfaces.examples.tree;
 
 import org.apache.myfaces.custom.tree2.TreeNode;
 import org.apache.myfaces.custom.tree2.TreeNodeBase;
-import java.util.List;
 
 /**
  * Backer bean for use in example.  Basically makes a TreeNode available.
@@ -164,8 +163,3 @@ public class TreeBacker
 
     }
 }
-
-
-
-
-

@@ -15,6 +15,9 @@
  */
 package org.apache.myfaces.examples.forceid;
 
+import javax.faces.component.UISelectItem;
+import java.util.ArrayList;
+
 /**
  * @author <a href="mailto:matzew@apache.org">Matthias Weﬂendorf</a> 
  */
@@ -22,11 +25,17 @@ public class ForceIdBean {
     
     private String valueOne, valueTwo;
     private User users[];
+    private ArrayList choices = new ArrayList();
+    private String currentChoice;
     
     public ForceIdBean(){
         users = new User[2];
         users[0] = new User("MyFaces","secrect");
         users[1] = new User("Tomcat","secrect");
+        
+        choices.add("foo");
+        choices.add("bar");
+        choices.add("buzz");
     }
 
     public String getValueOne() {
@@ -46,5 +55,20 @@ public class ForceIdBean {
     }
     public void setUsers(User[] users) {
         this.users = users;
+    }
+    
+    public ArrayList getChoices()
+    {
+        return choices;
+    }
+    
+    public void setCurrentChoice(String currentChoice)
+    {
+        this.currentChoice = currentChoice;
+    }
+    
+    public String getCurrentChoice()
+    {
+        return currentChoice;
     }
 }
