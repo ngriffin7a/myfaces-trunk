@@ -521,4 +521,12 @@ public class RendererUtils
         return b != null ? b.booleanValue() : defaultValue;
     }
     
+    public static int getIntegerAttribute(UIComponent component,
+                                          String attrName,
+                                          int defaultValue)
+    {
+        Integer i = (Integer)component.getAttributes().get(attrName);
+        return i != null ? i.intValue() : defaultValue;
+    }
+
 }
