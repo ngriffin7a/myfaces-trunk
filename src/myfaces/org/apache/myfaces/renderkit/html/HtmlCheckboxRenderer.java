@@ -21,6 +21,7 @@ package net.sourceforge.myfaces.renderkit.html;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLUtil;
 import net.sourceforge.myfaces.renderkit.html.util.SelectItemUtil;
 import net.sourceforge.myfaces.renderkit.RendererUtils;
+import net.sourceforge.myfaces.renderkit.JSFAttr;
 
 import javax.faces.component.UIComponent;
 import javax.faces.component.UISelectBoolean;
@@ -71,21 +72,16 @@ extends HtmlRenderer
             }
             else
             {
-                //FIXME
-                //String valueRef = ((UISelectBoolean) uiComponent).getValueRef();
-                String valueRef = null;
+                ValueBinding vb = ((UISelectBoolean) uiComponent).getValueBinding(JSFAttr.VALUE_ATTR);
 
-                if (valueRef != null)
+                if (vb != null)
                 {
                     //If there is a model reference, we must beware the model
                     //from being changed later in the update model phase.
                     //Since we cannot avoid the model beeing set, we simply
                     //get the current model value and overwrite the component's
                     //value.
-                    //FIXME
-                    //ValueBinding vb = getApplication().getValueBinding(valueRef);
 
-                    ValueBinding vb = null;
                     ((UISelectBoolean) uiComponent).setValue(vb.getValue(facesContext));
                 }
             }
