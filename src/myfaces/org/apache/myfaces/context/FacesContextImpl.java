@@ -18,9 +18,11 @@
  */
 package net.sourceforge.myfaces.context;
 
-import com.expio.ebiz.util.FacesUtils;
-
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
+import java.util.NoSuchElementException;
 
 import javax.faces.application.Application;
 import javax.faces.application.FacesMessage;
@@ -34,6 +36,8 @@ import javax.faces.render.RenderKit;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
+
+import net.sourceforge.myfaces.util.FacesUtils;
 
 
 /**

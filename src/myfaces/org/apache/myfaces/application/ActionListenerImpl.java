@@ -51,7 +51,7 @@ public class ActionListenerImpl
     throws AbortProcessingException
     {
         FacesContext      facesContext      = FacesContext.getCurrentInstance();
-        Application       application       = FacesUtils.getApplication();
+        Application       application       = facesContext.getApplication();
 
         ActionSource      actionSource      = (ActionSource) actionEvent.getComponent();
         MethodBinding     methodBinding     = actionSource.getAction();
