@@ -18,56 +18,62 @@
  */
 package javax.faces.context;
 
+import javax.faces.component.UIComponent;
+import java.io.IOException;
 import java.io.Writer;
 
 /**
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
+ * $Log$
+ * Revision 1.3  2004/04/01 12:40:11  manolito
+ * imports instead of qualified names
+ *
  */
 public abstract class ResponseWriter
         extends Writer
 {
-    public abstract java.lang.String getContentType();
+    public abstract String getContentType();
 
-    public abstract java.lang.String getCharacterEncoding();
+    public abstract String getCharacterEncoding();
 
     public abstract void flush()
-            throws java.io.IOException;
+            throws IOException;
 
     public abstract void startDocument()
-            throws java.io.IOException;
+            throws IOException;
 
     public abstract void endDocument()
-            throws java.io.IOException;
+            throws IOException;
 
-    public abstract void startElement(java.lang.String name,
-                                      javax.faces.component.UIComponent component)
-            throws java.io.IOException;
+    public abstract void startElement(String name,
+                                      UIComponent component)
+            throws IOException;
 
-    public abstract void endElement(java.lang.String name)
-            throws java.io.IOException;
+    public abstract void endElement(String name)
+            throws IOException;
 
-    public abstract void writeAttribute(java.lang.String name,
-                                        java.lang.Object value,
-                                        java.lang.String property)
-            throws java.io.IOException;
+    public abstract void writeAttribute(String name,
+                                        Object value,
+                                        String property)
+            throws IOException;
 
-    public abstract void writeURIAttribute(java.lang.String name,
-                                           java.lang.Object value,
-                                           java.lang.String property)
-            throws java.io.IOException;
+    public abstract void writeURIAttribute(String name,
+                                           Object value,
+                                           String property)
+            throws IOException;
 
-    public abstract void writeComment(java.lang.Object comment)
-            throws java.io.IOException;
+    public abstract void writeComment(Object comment)
+            throws IOException;
 
-    public abstract void writeText(java.lang.Object text,
-                                   java.lang.String property)
-            throws java.io.IOException;
+    public abstract void writeText(Object text,
+                                   String property)
+            throws IOException;
 
     public abstract void writeText(char[] text,
                                    int off,
                                    int len)
-            throws java.io.IOException;
+            throws IOException;
 
-    public abstract javax.faces.context.ResponseWriter cloneWithWriter(java.io.Writer writer);
+    public abstract ResponseWriter cloneWithWriter(Writer writer);
 }
