@@ -42,6 +42,9 @@ import java.util.Map;
  * @author Anton Koinov
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.23  2004/04/08 13:42:13  royalts
+ * removed main method
+ *
  * Revision 1.22  2004/04/08 05:16:45  dave0000
  * change to always use JSF PropertyResolver (was using JSP PR sometimes)
  *
@@ -500,10 +503,4 @@ public class PropertyResolverImpl extends PropertyResolver
             + ", property: " + propertyName);
     }
     
-    public static void main(String[] args)
-    {
-        Object base = new IndexedProperty();
-        PropertyResolverImpl resolver = new PropertyResolverImpl();
-        System.out.println(resolver.getValue(base, "nonindexed"));
-    }
 }
