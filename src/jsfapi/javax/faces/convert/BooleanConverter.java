@@ -23,6 +23,9 @@ import javax.faces.context.FacesContext;
 
 /**
  * $Log$
+ * Revision 1.8  2004/06/07 13:40:37  mwessendorf
+ * solved Feature Request #966892
+ *
  * Revision 1.7  2004/03/26 12:08:41  manolito
  * Exceptions in getAsString now catched and
  * more relaxed Number casting in all number converters
@@ -62,7 +65,7 @@ public class BooleanConverter
                 {
                     throw new ConverterException(_MessageUtils.getErrorMessage(facesContext,
                                                                                CONVERSION_MESSAGE_ID,
-                                                                               new Object[]{value}), e);
+                                                                               new Object[]{value,uiComponent.getId()}), e);
                 }
             }
         }

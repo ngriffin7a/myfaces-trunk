@@ -32,6 +32,9 @@ import java.util.Locale;
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.10  2004/06/07 13:40:37  mwessendorf
+ * solved Feature Request #966892
+ *
  * Revision 1.9  2004/04/01 10:39:53  royalts
  * implements StateHoder was missing
  *
@@ -100,7 +103,7 @@ public class NumberConverter
                 {
                     throw new ConverterException(_MessageUtils.getErrorMessage(facesContext,
                                                                                CONVERSION_MESSAGE_ID,
-                                                                               new Object[]{value}), e);
+                                                                               new Object[]{uiComponent.getId(),value}), e);
                 }
             }
         }

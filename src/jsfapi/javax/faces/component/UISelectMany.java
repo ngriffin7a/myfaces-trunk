@@ -248,7 +248,7 @@ public class UISelectMany
                          ((Object[])convertedValue).length == 0);
         if (isRequired() && empty)
         {
-            _MessageUtils.addErrorMessage(context, this, REQUIRED_MESSAGE_ID);
+            _MessageUtils.addErrorMessage(context, this, REQUIRED_MESSAGE_ID,new Object[]{getId()});
             setValid(false);
             return;
         }
@@ -296,7 +296,7 @@ public class UISelectMany
             }
             else
             {
-                _MessageUtils.addErrorMessage(context, this, CONVERSION_MESSAGE_ID);
+                _MessageUtils.addErrorMessage(context, this, CONVERSION_MESSAGE_ID,new Object[]{getId()});
             }
             setValid(false);
         }

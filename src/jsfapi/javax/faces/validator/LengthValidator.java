@@ -77,7 +77,7 @@ public class LengthValidator
         {
             if (length < _minimum.intValue())
             {
-                Object[] args = {_minimum};
+                Object[] args = {_minimum,uiComponent.getId()};
                 throw new ValidatorException(_MessageUtils.getErrorMessage(facesContext, MINIMUM_MESSAGE_ID, args));
             }
         }
@@ -86,7 +86,7 @@ public class LengthValidator
         {
             if (length > _maximum.intValue())
             {
-                Object[] args = {_maximum};
+                Object[] args = {_maximum,uiComponent.getId()};
                 throw new ValidatorException(_MessageUtils.getErrorMessage(facesContext, MAXIMUM_MESSAGE_ID, args));
             }
         }

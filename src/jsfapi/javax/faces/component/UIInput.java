@@ -40,6 +40,9 @@ import java.util.List;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.13  2004/06/07 13:40:38  mwessendorf
+ * solved Feature Request #966892
+ *
  * Revision 1.12  2004/05/18 10:39:35  manolito
  * (re)set to valid on decode, so that component automatically gets (re)validated
  *
@@ -242,7 +245,8 @@ public class UIInput
         }
         catch (RuntimeException e)
         {
-            _MessageUtils.addErrorMessage(context, this,CONVERSION_MESSAGE_ID);
+        	//Object[] args = {getId()};
+            _MessageUtils.addErrorMessage(context, this,CONVERSION_MESSAGE_ID,new Object[]{getId()});
             setValid(false);
         }
     }
@@ -261,7 +265,7 @@ public class UIInput
                          && ((String)convertedValue).length() == 0);
         if (isRequired() && empty)
         {
-            _MessageUtils.addErrorMessage(context, this, REQUIRED_MESSAGE_ID);
+            _MessageUtils.addErrorMessage(context, this, REQUIRED_MESSAGE_ID,new Object[]{getId()});
             setValid(false);
             return;
         }
@@ -308,7 +312,7 @@ public class UIInput
             }
             else
             {
-                _MessageUtils.addErrorMessage(context, this, CONVERSION_MESSAGE_ID);
+                _MessageUtils.addErrorMessage(context, this, CONVERSION_MESSAGE_ID,new Object[]{getId()});
             }
             setValid(false);
         }

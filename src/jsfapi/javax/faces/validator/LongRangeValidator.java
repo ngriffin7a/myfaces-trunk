@@ -71,13 +71,13 @@ public class LongRangeValidator
             return;
         }
 
-        double dvalue = parseLongValue(facesContext, value);
+        double dvalue = parseLongValue(facesContext, uiComponent,value);
         if (_minimum != null && _maximum != null)
         {
             if (dvalue < _minimum.longValue() ||
                 dvalue > _maximum.longValue())
             {
-                Object[] args = {_minimum, _maximum};
+                Object[] args = {_minimum, _maximum,uiComponent.getId()};
                 throw new ValidatorException(_MessageUtils.getErrorMessage(facesContext, NOT_IN_RANGE_MESSAGE_ID, args));
             }
         }
@@ -85,7 +85,7 @@ public class LongRangeValidator
         {
             if (dvalue < _minimum.longValue())
             {
-                Object[] args = {_minimum};
+                Object[] args = {_minimum,uiComponent.getId()};
                 throw new ValidatorException(_MessageUtils.getErrorMessage(facesContext, MINIMUM_MESSAGE_ID, args));
             }
         }
@@ -93,13 +93,13 @@ public class LongRangeValidator
         {
             if (dvalue > _maximum.longValue())
             {
-                Object[] args = {_maximum};
+                Object[] args = {_maximum,uiComponent.getId()};
                 throw new ValidatorException(_MessageUtils.getErrorMessage(facesContext, MAXIMUM_MESSAGE_ID, args));
             }
         }
     }
 
-    private long parseLongValue(FacesContext facesContext, Object value)
+    private long parseLongValue(FacesContext facesContext, UIComponent uiComponent, Object value)
         throws ValidatorException
     {
         if (value instanceof Number)
@@ -114,7 +114,8 @@ public class LongRangeValidator
             }
             catch (NumberFormatException e)
             {
-                throw new ValidatorException(_MessageUtils.getErrorMessage(facesContext, TYPE_MESSAGE_ID, null));
+				Object[] args = {uiComponent.getId()};
+                throw new ValidatorException(_MessageUtils.getErrorMessage(facesContext, TYPE_MESSAGE_ID, args));
             }
         }
     }

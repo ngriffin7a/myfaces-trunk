@@ -31,6 +31,9 @@ import java.util.TimeZone;
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.11  2004/06/07 13:40:37  mwessendorf
+ * solved Feature Request #966892
+ *
  * Revision 1.10  2004/04/16 09:08:41  royalts
  * fixed getAsString: getTimeZone() may not be used here!!.
  *
@@ -97,7 +100,7 @@ public class DateTimeConverter
                 {
                     throw new ConverterException(_MessageUtils.getErrorMessage(facesContext,
                                                                                CONVERSION_MESSAGE_ID,
-                                                                               new Object[]{value}), e);
+                                                                               new Object[]{value,uiComponent.getId()}), e);
                 }
             }
         }
