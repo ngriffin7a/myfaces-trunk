@@ -411,6 +411,8 @@
                			prefix="myfaces-${manifest.impl.version}/src/wml"/>
 			<tarfileset dir="${xdoclet.src}"
                         prefix="myfaces-${manifest.impl.version}/src/xdoclet"/>
+            <tarfileset dir="${components.src}"
+                        prefix="myfaces-${manifest.impl.version}/src/components"/>         	
             <tarfileset dir="${cactus.src}"
                         prefix="myfaces-${manifest.impl.version}/src/cactus"/>
             <tarfileset dir="${junit.src}"
