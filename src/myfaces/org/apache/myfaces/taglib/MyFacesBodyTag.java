@@ -71,6 +71,9 @@ public abstract class MyFacesBodyTag
         finally
         {
             _helper.release();
+            id = null;
+            modelReference = null;
+            created = false;
         }
     }
 
