@@ -512,4 +512,13 @@ public class RendererUtils
         }
     }
 
+    
+    public static boolean getBooleanAttribute(UIComponent component,
+                                              String attrName,
+                                              boolean defaultValue)
+    {
+        Boolean b = (Boolean)component.getAttributes().get(attrName);
+        return b != null ? b.booleanValue() : defaultValue;
+    }
+    
 }
