@@ -33,7 +33,7 @@ import java.lang.reflect.Method;
 
 /**
  * TODO: description
- * @author Manfred Geiler
+ * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date${DATE} ${TIME} $
  */
  public class DefaultApplicationHandler

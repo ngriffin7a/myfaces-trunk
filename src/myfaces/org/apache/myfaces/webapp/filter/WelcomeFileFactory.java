@@ -25,8 +25,8 @@ import javax.servlet.ServletContext;
  * a string array of names of suitable welcome files for
  * a particular web application context.
  *
- * @author R.J. Lebowitz
- * @version $Revision$ $Date${DATE} ${TIME} $
+ * @author R.J. Lebowitz (latest modification by $Author$)
+ * @version $Revision$ $Date$
  */
 public class WelcomeFileFactory
 {

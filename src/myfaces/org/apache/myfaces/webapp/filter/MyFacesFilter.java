@@ -39,8 +39,8 @@ import javax.servlet.http.HttpServletRequest;
  * shortcoming, we utilize a servlet Filter which examines
  * the URI of all incoming requests.
  *
- * @author lebowitz
- * @version $Revision$ $Date${DATE} ${TIME} $
+ * @author lebowitz (latest modification by $Author$)
+ * @version $Revision$ $Date$
  */
 public class MyFacesFilter implements Filter
 {

@@ -28,6 +28,11 @@ import javax.faces.lifecycle.LifecycleFactory;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
+/**
+ * TODO: description
+ * @author Manfred Geiler (latest modification by $Author$)
+ * @version $Revision$ $Date${DATE} ${TIME} $
+ */
 public class DefaultServletContextListener
         implements ServletContextListener
 {
