@@ -74,6 +74,10 @@ MyFaces developers guidelines
 /**
  * Very detailed description goes here... ;-)
  *
+ * $Log$
+ * Revision 1.13  2004/03/25 09:14:52  manolito
+ * no message
+ *
  * @author Bug Rogers (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
