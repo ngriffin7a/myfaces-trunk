@@ -3,9 +3,14 @@ package net.sourceforge.myfaces.application.jsp;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import javax.faces.FactoryFinder;
 import javax.faces.application.StateManager;
-import javax.faces.context.FacesContext;
 import javax.faces.component.UIViewRoot;
+import javax.faces.context.ExternalContext;
+import javax.faces.context.FacesContext;
+import javax.faces.render.RenderKit;
+import javax.faces.render.RenderKitFactory;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 /**
@@ -18,6 +23,8 @@ public class JspStateManagerImpl
     extends StateManager
 {
     private static final Log log = LogFactory.getLog(JspStateManagerImpl.class);
+    private static final String VIEW_STATE_SESSION_PARAM
+            = JspStateManagerImpl.class.getName() + ".VIEW_STATE";
 
     public JspStateManagerImpl()
     {
@@ -60,9 +67,25 @@ public class JspStateManagerImpl
         throw new UnsupportedOperationException("not yet implemented.");
     }
 
-    public void writeState(FacesContext facescontext, StateManager.SerializedView serializedview) throws IOException
+    public void writeState(FacesContext facesContext,
+                           StateManager.SerializedView serializedView) throws IOException
     {
-        // TODO: implement
-        throw new UnsupportedOperationException("not yet implemented.");
+        ExternalContext externalContext = facesContext.getExternalContext();
+        String stateSavingMethod = externalContext.getInitParameter(StateManager.STATE_SAVING_METHOD_PARAM_NAME);
+        if (stateSavingMethod.equals(StateManager.STATE_SAVING_METHOD_CLIENT))
+        {
+            //save state in response (client)
+            UIViewRoot uiViewRoot = facesContext.getViewRoot();
+            RenderKitFactory rkFactory = (RenderKitFactory)FactoryFinder.getFactory(FactoryFinder.RENDER_KIT_FACTORY);
+            RenderKit renderKit = rkFactory.getRenderKit(uiViewRoot.getRenderKitId(), facesContext);
+            renderKit.getResponseStateManager().writeState(facesContext, serializedView);
+        }
+        else //TODO: Is it ok to default to server saving?
+        {
+            //save state in server session
+            //JSP specific class, so we may cast:
+            HttpSession session = (HttpSession)externalContext.getSession(true);
+            session.setAttribute(VIEW_STATE_SESSION_PARAM, serializedView);
+        }
     }
 }
