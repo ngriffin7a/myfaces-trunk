@@ -37,6 +37,9 @@ import java.util.Locale;
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.4  2004/08/26 15:34:06  manolito
+ * trivial cosmetic changes
+ *
  * Revision 1.3  2004/08/26 14:25:21  manolito
  * JspTilesViewHandlerInitializer no longer needed, JspTilesViewHandlerImpl is initialized automatically now
  *
@@ -143,11 +146,10 @@ public class JspTilesViewHandlerImpl
         else
         {
             tilesId = tilesId  + TILES_EXTENSION;
-
         }
         ServletRequest request = (ServletRequest)externalContext.getRequest();
         ServletContext servletContext = (ServletContext)externalContext.getContext();
-        ComponentContext tileContext = ComponentContext.getContext(request);
+
         ComponentDefinition definition = null;
         try
         {
@@ -157,13 +159,14 @@ public class JspTilesViewHandlerImpl
                 log.error("could not find tiles-definition with name " + tilesId);
                 throw new NullPointerException("could not find tiles-definition with name " + tilesId);
             }
-
         }
         catch (DefinitionsFactoryException e)
         {
             throw new FacesException(e);
         }
-        if( tileContext == null )
+
+        ComponentContext tileContext = ComponentContext.getContext(request);
+        if (tileContext == null)
         {
             tileContext = new ComponentContext(definition.getAttributes());
             ComponentContext.setContext(tileContext, request);
@@ -172,6 +175,7 @@ public class JspTilesViewHandlerImpl
         {
             tileContext.addMissing(definition.getAttributes());
         }
+
         viewId = definition.getPage();
         externalContext.dispatch(viewId);
     }
