@@ -36,6 +36,9 @@ import org.apache.commons.logging.LogFactory;
  * @author Anton Koinov
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.32  2004/07/27 06:28:34  dave0000
+ * fix issue with getType of literal expressions (and other improvements)
+ *
  * Revision 1.31  2004/07/07 08:34:58  mwessendorf
  * removed unused import-statements
  *
@@ -297,15 +300,11 @@ public class VariableResolverImpl
             return obj;
         }
 
-        // Session context (try to get without creating a new session)
-        Object session = externalContext.getSession(false);
-        if (session != null)
+        // Session context
+        obj = externalContext.getSessionMap().get(name);
+        if (obj != null)
         {
-            obj = externalContext.getSessionMap().get(name);
-            if (obj != null)
-            {
-                return obj;
-            }
+            return obj;
         }
 
         // Application context

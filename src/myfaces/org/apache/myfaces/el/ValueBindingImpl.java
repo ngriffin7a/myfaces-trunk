@@ -41,7 +41,6 @@ import org.apache.commons.el.Coercions;
 import org.apache.commons.el.ComplexValue;
 import org.apache.commons.el.ConditionalExpression;
 import org.apache.commons.el.Expression;
-import org.apache.commons.el.ExpressionEvaluatorImpl;
 import org.apache.commons.el.ExpressionString;
 import org.apache.commons.el.NamedValue;
 import org.apache.commons.el.PropertySuffix;
@@ -56,6 +55,9 @@ import org.apache.commons.logging.LogFactory;
  * @version $Revision$ $Date$
  * 
  * $Log$
+ * Revision 1.48  2004/07/27 06:28:34  dave0000
+ * fix issue with getType of literal expressions (and other improvements)
+ *
  * Revision 1.47  2004/07/07 08:34:58  mwessendorf
  * removed unused import-statements
  *
@@ -115,7 +117,12 @@ public class ValueBindingImpl extends ValueBinding implements StateHolder
     //~ Static fields/initializers --------------------------------------------
 
     static final Log log = LogFactory.getLog(ValueBindingImpl.class);
-    private static final FunctionMapper s_functionMapper = new FunctionMapper()
+    
+    /**
+     * To implement function support, subclass and use a static 
+     * initialization block to assign your own function mapper
+     */
+    protected static FunctionMapper s_functionMapper = new FunctionMapper()
         {
             public Method resolveFunction(String prefix, String localName)
             {
@@ -125,9 +132,6 @@ public class ValueBindingImpl extends ValueBinding implements StateHolder
             }
         };
     
-    static final ExpressionEvaluatorImpl s_expressionEvaluator = 
-        new ExpressionEvaluatorImpl();
-
     private static final BiLevelCacheMap s_expressionCache =
         new BiLevelCacheMap(90)
         {
@@ -257,6 +261,23 @@ public class ValueBindingImpl extends ValueBinding implements StateHolder
                         .getType(base, index.intValue());
             }
         }
+        catch (NotVariableReferenceException e)
+        {
+            // It is not a value reference, then it probably is an expression
+            // that evaluates to a literal. Get the value and then its class
+            // Note: we could hadle this case in a more performance efficient manner--
+            //       but this case is so rare, that for months no-one detected
+            //       the error before this code was added.
+            try 
+            {
+                return getValue(facesContext).getClass();
+            }
+            catch (Exception e1)
+            {
+                // cannot determine type, return null
+                return null;
+            }
+        }
         catch (IndexOutOfBoundsException e) 
         {
             // ArrayIndexOutOfBoundsException also here
@@ -348,86 +369,60 @@ public class ValueBindingImpl extends ValueBinding implements StateHolder
     {
         ExternalContext externalContext = facesContext.getExternalContext();
          
-        Object obj = null;
-        Map scopeMap;
-        Class targetClass = null;
+        // Request context
+        Map scopeMap = externalContext.getRequestMap();
+        Object obj = scopeMap.get(name);
+        if (obj != null)
+        {
+            scopeMap.put(name, coerce(newValue, obj.getClass()));
+            return;
+        }
+
+        // Session context
+        scopeMap = externalContext.getSessionMap();  
+        obj = scopeMap.get(name);
+        if (obj != null)
+        {
+            scopeMap.put(name, coerce(newValue, obj.getClass()));
+            return;
+        }
+
+        // Application context
+        scopeMap = externalContext.getApplicationMap();
+        obj = scopeMap.get(name);
+        if (obj != null)
+        {
+            scopeMap.put(name, coerce(newValue, obj.getClass()));
+            return;
+        }
         
-      findObject: {
-            // Request context
-            scopeMap = externalContext.getRequestMap();
-            obj = scopeMap.get(name);
-            if (obj != null)
+        // Check for ManagedBean
+        ManagedBean mbConfig =
+            getRuntimeConfig(facesContext).getManagedBean(name);
+        if (mbConfig != null)
+        {
+            String scopeName = mbConfig.getManagedBeanScope();
+            
+            // find the scope handler object
+            // Note: this does not handle user-extended _scope values
+            Scope scope = 
+                (Scope) VariableResolverImpl.s_standardScopes.get(scopeName);
+            if (scope != null)
             {
-                targetClass = obj.getClass();
-                break findObject;
-            }
-    
-            // Session context (try to get without creating a new session)
-            Object session = externalContext.getSession(false);
-            if (session != null)
-            {
-                scopeMap = externalContext.getSessionMap();  
-                obj = scopeMap.get(name);
-                if (obj != null)
-                {
-                    targetClass = obj.getClass();
-                    break findObject;
-                }
-            }
-    
-            // Application context
-            scopeMap = externalContext.getApplicationMap();
-            obj = scopeMap.get(name);
-            if (obj != null)
-            {
-                targetClass = obj.getClass();
-                break findObject;
+                scope.put(externalContext, name, 
+                    coerce(newValue, mbConfig.getManagedBeanClass()));
+                return;
             }
             
-            scopeMap = null;
+            log.error("Managed bean '" + name + "' has illegal scope: "
+                + scopeName);
+            externalContext.getRequestMap().put(name, 
+                coerce(newValue, mbConfig.getManagedBeanClass()));
+            return;
         }
         
-        if (scopeMap == null)
-        {
-            // Check for ManagedBean
-            ManagedBean mbConfig =
-                getRuntimeConfig(facesContext).getManagedBean(name);
-            if (mbConfig != null)
-            {
-                targetClass = mbConfig.getManagedBeanClass();
-                
-                String scopeName = mbConfig.getManagedBeanScope();
-                if ("request".equals(scopeName))
-                {
-                    scopeMap = externalContext.getRequestMap();
-                } 
-                else if ("session".equals(scopeName))
-                {
-                    scopeMap = externalContext.getSessionMap();
-                } 
-                else if ("application".equals(scopeName))
-                {
-                    scopeMap = externalContext.getApplicationMap();
-                } 
-                else if ("none".equals(scopeName))
-                {
-                    scopeMap = externalContext.getRequestMap();
-                } 
-                else
-                {
-                    log.error("Managed bean '" + name + "' has illegal scope: "
-                        + scopeName);
-                    scopeMap = externalContext.getRequestMap();
-                }
-            }
-            else
-            {
-                targetClass = Object.class;
-                scopeMap = externalContext.getRequestMap();
-            }
-        }
-        
-        scopeMap.put(name, coerce(newValue, targetClass));
+        // unknown target class, put newValue into request scope without coercion 
+        externalContext.getRequestMap().put(name, newValue);
     }
 
     public Object getValue(FacesContext facesContext)
@@ -475,12 +470,10 @@ public class ValueBindingImpl extends ValueBinding implements StateHolder
         
         VariableResolver variableResolver = 
             new ELVariableResolver(facesContext);
-        Object expression_;
+        Object expression = _expression;
         
-        if (_expression instanceof Expression)
+        if (expression instanceof Expression)
         {
-            Expression expression = (Expression) _expression;
-            
             while (expression instanceof ConditionalExpression)
             {
                 ConditionalExpression conditionalExpression = 
@@ -504,15 +497,9 @@ public class ValueBindingImpl extends ValueBinding implements StateHolder
             {
                 return ((NamedValue) expression).getName();
             }
-            
-            expression_ = expression;
-        }
-        else
-        {
-            expression_ = _expression;
         }
         
-        if (!(expression_ instanceof ComplexValue)) {
+        if (!(expression instanceof ComplexValue)) {
             // all other cases are not variable references
             throw new NotVariableReferenceException(
                 "Parsed Expression of unsupported type for this operation. Expression class: "
@@ -520,7 +507,7 @@ public class ValueBindingImpl extends ValueBinding implements StateHolder
                     + _expressionString + "'");
         }
         
-        ComplexValue complexValue = (ComplexValue) expression_;
+        ComplexValue complexValue = (ComplexValue) expression;
         
         // resolve the prefix
         Object base = complexValue.getPrefix()
@@ -571,10 +558,8 @@ public class ValueBindingImpl extends ValueBinding implements StateHolder
 
     private Object coerce(Object value, Class clazz) throws ELException
     {
-        if (value == null) {
-            return null;
-        }
-        return Coercions.coerce(value, clazz, ELParserHelper.s_logger);
+        return (value == null) ? null
+            : Coercions.coerce(value, clazz, ELParserHelper.s_logger);
     }
     
     protected RuntimeConfig getRuntimeConfig(FacesContext facesContext)

@@ -67,7 +67,10 @@ public class SetValueBindingTest extends ELBaseTest
     {
         ValueBinding vb;
 
-        // set to a new vatiable
+        // --------------------------------------------------
+        // Test setting/updating value in the default request scope
+        
+        // set to a new variable
         vb = _application.createValueBinding("#{newVar}");
         vb.setValue(_facesContext, "test-value");
         assertSame("test-value", vb.getValue(_facesContext));
@@ -75,6 +78,54 @@ public class SetValueBindingTest extends ELBaseTest
         // update existing variable
         vb.setValue(_facesContext, "another-value");
         assertSame("another-value", vb.getValue(_facesContext));
+
+        // make sure it was created in requestScope
+        vb = _application.createValueBinding("#{requestScope.newVar}");
+        assertSame("another-value", vb.getValue(_facesContext));
+        
+        // --------------------------------------------------
+        // Test setting/updating value in a non-default scope
+        
+        // set to a new variable in application scope
+        vb = _application.createValueBinding("#{applicationScope.newVar1}");
+        vb.setValue(_facesContext, "test-value");
+        assertSame("test-value", vb.getValue(_facesContext));
+
+        // update existing variable without providing scope
+        vb = _application.createValueBinding("#{newVar1}");
+        vb.setValue(_facesContext, "another-value");
+        assertSame("another-value", vb.getValue(_facesContext));
+
+        // make sure it was updated in application scope
+        vb = _application.createValueBinding("#{applicationScope.newVar1}");
+        assertSame("another-value", vb.getValue(_facesContext));
+        
+        // --------------------------------------------------
+        // Test setting/updating value with coercion
+        
+        // set to a new variable in session scope
+        vb = _application.createValueBinding("#{sessionScope.newVar2}");
+        vb.setValue(_facesContext, new Integer(123));
+        assertEquals(new Integer(123), vb.getValue(_facesContext));
+
+        // update existing variable without providing scope
+        vb = _application.createValueBinding("#{newVar2}");
+        vb.setValue(_facesContext, new Double(321.123));
+        assertEquals(new Integer(321), vb.getValue(_facesContext));
+
+        // make sure it was updated in session scope
+        vb = _application.createValueBinding("#{sessionScope.newVar2}");
+        assertEquals(new Integer(321), vb.getValue(_facesContext));
+        
+        try
+        {
+            vb.setValue(_facesContext, new B());
+            assertTrue(false);
+        }
+        catch (Exception e)
+        {
+            // expected: error because B cannot be coerced Integer
+        }
     }
     
     public void testSetManagedBean()
@@ -89,10 +140,10 @@ public class SetValueBindingTest extends ELBaseTest
         }
         catch (Exception e)
         {
-            // expected: error because Double cannot be converted to Managed Bean B's class
+            // expected: error because Double cannot be coerced to Managed Bean B's class
         }
 
-        // setValue must not create the bean
+        // The above setValue must not have created the bean
         vb = _application.createValueBinding("#{sessionScope.testBean_B}");
         assertNull(vb.getValue(_facesContext));
 
@@ -101,6 +152,7 @@ public class SetValueBindingTest extends ELBaseTest
         vb = _application.createValueBinding("#{testBean_B}");
         vb.setValue(_facesContext, b);
         
+        // check that the managed bean was created in the correct scope
         vb = _application.createValueBinding("#{sessionScope.testBean_B.name}");
         assertEquals("differentName", vb.getValue(_facesContext));
         
@@ -113,9 +165,9 @@ public class SetValueBindingTest extends ELBaseTest
         ValueBinding vb;
 
         vb = _application.createValueBinding("#{testmap.o.obj}");
-        assertNotSame(vb.getValue(_facesContext), null);
+        assertNotNull(vb.getValue(_facesContext));
         vb.setValue(_facesContext, null);
-        assertSame(vb.getValue(_facesContext), null);
+        assertNull(vb.getValue(_facesContext));
     }
     
     public void testCoercion()

@@ -15,6 +15,8 @@
  */
 package net.sourceforge.myfaces.el;
 
+import java.util.Map;
+
 import javax.faces.el.ReferenceSyntaxException;
 import javax.faces.el.ValueBinding;
 
@@ -25,6 +27,9 @@ import javax.faces.el.ValueBinding;
  * @version $Revision$ $Date$
  * 
  * $Log$
+ * Revision 1.21  2004/07/27 06:28:34  dave0000
+ * fix issue with getType of literal expressions (and other improvements)
+ *
  * Revision 1.20  2004/07/01 22:00:55  mwessendorf
  * ASF switch
  *
@@ -372,7 +377,7 @@ public class ValueBindingTest extends ELBaseTest
         }
     }
     
-    public void testCompositeExpressions()
+    public void testMixedExpressions()
     {
         ValueBinding vb;
         Object       r;
@@ -444,6 +449,47 @@ public class ValueBindingTest extends ELBaseTest
 
         vb = _application.createValueBinding("#{false ? cookie : max}");
         assertFalse(vb.isReadOnly(_facesContext));
+    }
+
+    public void testGetType() throws Exception
+    {
+        ValueBinding vb;
+
+        vb = _application.createValueBinding("#{'constant literal'}");
+        assertSame(String.class, vb.getType(_facesContext));
+
+        vb = _application.createValueBinding("#{false && true}");
+        assertSame(Boolean.class, vb.getType(_facesContext));
+
+        // REVISIT: Should getType of implicit object throw an error, 
+        //          return null, or Object.class, or the appropriate Map class?
+        vb = _application.createValueBinding("#{cookie}");
+        assertTrue(Map.class.isAssignableFrom(vb.getType(_facesContext)));
+
+        vb = _application.createValueBinding("#{requestScope}");
+        assertTrue(Map.class.isAssignableFrom(vb.getType(_facesContext)));
+
+        vb = _application.createValueBinding("#{a.name}");
+        assertSame(String.class, vb.getType(_facesContext));
+
+        vb = _application.createValueBinding("#{theA.theB.name}");
+        assertSame(String.class, vb.getType(_facesContext));
+
+        vb = _application.createValueBinding("#{testmap}");
+        assertTrue(Map.class.isAssignableFrom(vb.getType(_facesContext)));
+
+        vb = _application.createValueBinding("#{testmap.f}");
+        assertSame(Boolean.class, vb.getType(_facesContext));
+
+        vb = _application.createValueBinding("#{ testmap  [  0  ]  [  0  ]}");
+        assertSame(Object.class, vb.getType(_facesContext));
+        
+        vb = _application.createValueBinding("#{true ? cookie : max}");
+        assertTrue(Map.class.isAssignableFrom(vb.getType(_facesContext)));
+
+        // REVISIT: should unknown bean name return type null or Object.class?
+        vb = _application.createValueBinding("#{false ? cookie : max}");
+        assertSame(Object.class, vb.getType(_facesContext));
     }
 
     public void testGetValueType() throws Exception
