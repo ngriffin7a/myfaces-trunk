@@ -1938,7 +1938,7 @@
         </attribute>
         <attribute>
             <name>activeImageUrl</name>
-            <required>true</required>
+            <required>false</required>
             <rtexprvalue>false</rtexprvalue>
             <description>
 				activeImage will be rendered if: swapImage is a direct child of commandNavigation
