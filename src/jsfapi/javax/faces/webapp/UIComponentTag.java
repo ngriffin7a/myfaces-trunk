@@ -36,6 +36,9 @@ import java.util.*;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.26  2005/03/15 18:43:42  matzew
+ * Patch from Stan Silver FOR MYFACES-123
+ *
  * Revision 1.25  2005/03/12 02:17:52  mmarinschek
  * ui component logging enhanced
  *
@@ -646,12 +649,10 @@ public abstract class UIComponentTag
             RenderKitFactory renderFactory = (RenderKitFactory)FactoryFinder.getFactory(FactoryFinder.RENDER_KIT_FACTORY);
             RenderKit renderKit = renderFactory.getRenderKit(facesContext,
                                                              facesContext.getViewRoot().getRenderKitId());
-
-            ServletRequest request = (ServletRequest)facesContext.getExternalContext().getRequest();
-
+            
             _writer = renderKit.createResponseWriter(new _PageContextOutWriter(pageContext),
-                                                     request.getContentType(), //TODO: is this the correct content type?
-                                                     request.getCharacterEncoding());
+                                                     pageContext.getRequest().getContentType(), //TODO: is this the correct content type?
+                                                     pageContext.getRequest().getCharacterEncoding());
             facesContext.setResponseWriter(_writer);
         }
     }
