@@ -54,6 +54,9 @@ import org.apache.myfaces.webapp.webxml.WebXml;
  * @author  Stan Silvert (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.3  2005/04/06 18:23:36  schof
+ * Fixes MYFACES-101.  Used a patch from Stan while @infra sorts out his karma.
+ *
  * Revision 1.2  2005/02/10 20:24:17  matzew
  * closed MYFACES-101 in Jira; Thanks to Stan Silvert (JBoss Group)
  *
@@ -68,10 +71,6 @@ public class MyFacesGenericPortlet extends GenericPortlet
     // PortletRequest parameter
     public static final String VIEW_ID =
         MyFacesGenericPortlet.class.getName() + ".VIEW_ID";
-    
-    // Signifies to MyFaces that the request is coming from a portlet.
-    public static final String PORTLET_REQUEST_FLAG = 
-        MyFacesGenericPortlet.class.getName() + ".PORTLET_REQUEST_FLAG";
     
     // PortletSession attribute
     private static final String CURRENT_FACES_CONTEXT = 
@@ -330,7 +329,7 @@ public class MyFacesGenericPortlet extends GenericPortlet
     
     private void setPortletRequestFlag(PortletRequest request)
     {
-        request.getPortletSession().setAttribute(PORTLET_REQUEST_FLAG, "true");
+        request.getPortletSession().setAttribute(PortletUtil.PORTLET_REQUEST_FLAG, "true");
     }
     
     /**
