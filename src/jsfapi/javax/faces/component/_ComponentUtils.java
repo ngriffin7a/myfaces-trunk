@@ -18,13 +18,10 @@
  */
 package javax.faces.component;
 
-import javax.faces.FacesException;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
-import javax.faces.convert.Converter;
 import javax.faces.el.EvaluationException;
 import javax.faces.el.MethodBinding;
-import javax.faces.el.ValueBinding;
 import javax.faces.validator.Validator;
 import javax.faces.validator.ValidatorException;
 import java.util.Iterator;
@@ -98,30 +95,6 @@ class _ComponentUtils
         }
 
         return null;
-    }
-
-
-    static Converter findConverter(FacesContext context, UIComponent component)
-    {
-        if (component instanceof ValueHolder)
-        {
-            Converter converter = ((ValueHolder)component).getConverter();
-            if (converter != null) return converter;
-        }
-        ValueBinding vb = component.getValueBinding("value");
-        if (vb == null) return null;
-        Class type = vb.getType(context);
-        if (type == null) return null;
-        try
-        {
-            return context.getApplication().createConverter(type);
-        }
-        catch (FacesException e)
-        {
-            //TODO: Ok, to catch and ignore exception?
-            context.getExternalContext().log(e.getMessage());
-            return null;
-        }
     }
 
 

@@ -39,6 +39,9 @@ import java.util.List;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.10  2004/04/06 13:03:35  manolito
+ * x-checked getConvertedValue method in api and impl
+ *
  * Revision 1.9  2004/04/05 15:25:46  manolito
  * no message
  *
@@ -259,34 +262,34 @@ public class UIInput
 
     private Object getConvertedValue(FacesContext context, Object submittedValue)
     {
-        Renderer renderer = getRenderer(context);
-        if (renderer != null)
+        try
         {
-            return renderer.getConvertedValue(context, this, submittedValue);
-        }
-        else if (submittedValue instanceof String)
-        {
-            Converter converter = _ComponentUtils.findConverter(context, this);
-            if (converter != null)
+            Renderer renderer = getRenderer(context);
+            if (renderer != null)
             {
-                try
+                return renderer.getConvertedValue(context, this, submittedValue);
+            }
+            else if (submittedValue instanceof String)
+            {
+                Converter converter = _SharedRendererUtils.findUIOutputConverter(context, this);
+                if (converter != null)
                 {
                     return converter.getAsObject(context, this, (String)submittedValue);
                 }
-                catch (ConverterException e)
-                {
-                    FacesMessage facesMessage = e.getFacesMessage();
-                    if (facesMessage != null)
-                    {
-                        context.addMessage(getClientId(context), facesMessage);
-                    }
-                    else
-                    {
-                        _MessageUtils.addErrorMessage(context, this, CONVERSION_MESSAGE_ID);
-                    }
-                    setValid(false);
-                }
             }
+        }
+        catch (ConverterException e)
+        {
+            FacesMessage facesMessage = e.getFacesMessage();
+            if (facesMessage != null)
+            {
+                context.addMessage(getClientId(context), facesMessage);
+            }
+            else
+            {
+                _MessageUtils.addErrorMessage(context, this, CONVERSION_MESSAGE_ID);
+            }
+            setValid(false);
         }
         return submittedValue;
     }

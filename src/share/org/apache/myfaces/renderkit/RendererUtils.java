@@ -182,40 +182,9 @@ public class RendererUtils
                                                   UIOutput component)
             throws FacesException
     {
-        Converter converter = component.getConverter();
-        if (converter != null)
-        {
-            return converter;
-        }
-        else
-        {
-            //Try to find out by value binding
-            ValueBinding vb = component.getValueBinding("value");
-            if (vb != null)
-            {
-                Class valueType = vb.getType(facesContext);
-                if (String.class.equals(valueType))
-                {
-                    return null;    //No converter needed for String type
-                }
-
-                try
-                {
-                    return facesContext.getApplication().createConverter(valueType);
-                }
-                catch (FacesException e)
-                {
-                    log.error("No Converter for type " + valueType.getName() + " found");
-                    throw e;
-                }
-            }
-            else
-            {
-                //no ValueBinding, assume String type
-                return null;    //No converter needed for String type
-            }
-        }
+        return _SharedRendererUtils.findUIOutputConverter(facesContext, component);
     }
+
 
     /**
      * Find proper Converter for the entries in the associated List or Array of
@@ -224,51 +193,42 @@ public class RendererUtils
      * @throws FacesException if the Converter could not be created
      */
     public static Converter findUISelectManyConverter(FacesContext facesContext,
-                                                           UISelectMany component)
+                                                      UISelectMany component)
     {
         Converter converter = component.getConverter();
-        if (converter != null)
-        {
-            return converter;
-        }
+        if (converter != null) return converter;
 
         //Try to find out by value binding
         ValueBinding vb = component.getValueBinding("value");
-        if (vb != null)
-        {
-            Class valueType = vb.getType(facesContext);
-            if (List.class.isAssignableFrom(valueType))
-            {
-                //According to API Doc of UISelectMany the assumed entry type is String
-                return null;    //No converter needed for String type
-            }
-            else if (valueType.isArray())
-            {
-                Class arrayComponentType = valueType.getComponentType();
-                if (String.class.equals(arrayComponentType))
-                {
-                    return null;    //No converter needed for String type
-                }
+        if (vb == null) return null;
 
-                try
-                {
-                    return facesContext.getApplication().createConverter(arrayComponentType);
-                }
-                catch (FacesException e)
-                {
-                    log.error("No Converter for type " + valueType.getName() + " found");
-                    throw e;
-                }
-            }
-            else
-            {
-                throw new IllegalArgumentException("ValueBinding for UISelectMany must be of type List or Array");
-            }
-        }
-        else
+        Class valueType = vb.getType(facesContext);
+        if (valueType == null) return null;
+
+        if (List.class.isAssignableFrom(valueType))
         {
-            //no ValueBinding, assume String type
-            return null;    //No converter needed for String type
+            //According to API Doc of UISelectMany the assumed entry type for a List is String
+            //--> no converter needed
+            return null;
+        }
+
+        if (!valueType.isArray())
+        {
+            throw new IllegalArgumentException("ValueBinding for UISelectMany must be of type List or Array");
+        }
+
+        Class arrayComponentType = valueType.getComponentType();
+        if (String.class.equals(arrayComponentType)) return null;    //No converter needed for String type
+        if (Object.class.equals(arrayComponentType)) return null;    //There is no converter for Object class
+
+        try
+        {
+            return facesContext.getApplication().createConverter(arrayComponentType);
+        }
+        catch (FacesException e)
+        {
+            log.error("No Converter for type " + arrayComponentType.getName() + " found", e);
+            return null;
         }
     }
 
@@ -591,38 +551,12 @@ public class RendererUtils
         {
             throw new ConverterException("Submitted value of type String[] expected");
         }
-
-        Converter converter;
-        try
-        {
-            converter = findUISelectManyConverter(facesContext, selectMany);
-        }
-        catch (FacesException e)
-        {
-            throw new ConverterException(e);
-        }
-
-        if (converter == null)
-        {
-            //No conversion needed
-            return submittedValue;
-        }
-        else
-        {
-            //convert each item value
-            String[] submittedStrValues = (String[])submittedValue;
-            Object[] convertedValues;
-            convertedValues = new Object[submittedStrValues.length];
-            for (int i = 0; i < submittedStrValues.length; i++)
-            {
-                convertedValues[i]
-                    = converter.getAsObject(facesContext, selectMany, submittedStrValues[i]);
-            }
-            return convertedValues;
-        }
+        return _SharedRendererUtils.getConvertedUISelectManyValue(facesContext,
+                                                                  selectMany,
+                                                                  (String[])submittedValue);
     }
 
-    
+
     public static boolean getBooleanAttribute(UIComponent component,
                                               String attrName,
                                               boolean defaultValue)

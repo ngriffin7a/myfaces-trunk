@@ -20,15 +20,11 @@ package javax.faces.component;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
-import javax.faces.convert.Converter;
 import javax.faces.convert.ConverterException;
 import javax.faces.el.ValueBinding;
 import javax.faces.event.ValueChangeEvent;
 import javax.faces.render.Renderer;
 import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -80,7 +76,6 @@ public class UISelectMany
     }
 
     /**
-     * TODO: JUnit testing!!!
      * @return true if Objects are different (!)
      */
     protected boolean compareValues(Object previous,
@@ -121,9 +116,6 @@ public class UISelectMany
         }
     }
 
-    /**
-     * TODO: optimize
-     */
     private boolean compareObjectArrays(Object[] previous,
                                         Object[] value)
     {
@@ -133,19 +125,33 @@ public class UISelectMany
             //different length
             return true;
         }
-        List previousList = new ArrayList(length);
-        for (int i = 0; i < previous.length; i++)
+
+        boolean[] scoreBoard = new boolean[length];
+        for (int i = 0; i < length; i++)
         {
-            previousList.add(previous[i]);
+            Object p = previous[i];
+            boolean found = false;
+            for (int j = 0; j < length; j++)
+            {
+                if (scoreBoard[j] == false)
+                {
+                    Object v = value[j];
+                    if ((p == null && v == null) ||
+                        (p != null && v != null && p.equals(v)))
+                    {
+                        scoreBoard[j] = true;
+                        found = true;
+                        break;
+                    }
+                }
+            }
+            if (!found)
+            {
+                return true;    //current element of previous array not found in new array
+            }
         }
 
-        List valueList = new ArrayList(length);
-        for (int i = 0; i < previous.length; i++)
-        {
-            valueList.add(previous[i]);
-        }
-
-        return compareLists(previousList, valueList);
+        return false;   // arrays are identical
     }
 
     private boolean compareLists(List previous, List value)
@@ -157,20 +163,32 @@ public class UISelectMany
             return true;
         }
 
-        List tempList = new ArrayList(length);
-        Collections.copy(tempList, previous);
-
-        for (Iterator it = value.iterator(); it.hasNext(); )
+        boolean[] scoreBoard = new boolean[length];
+        for (int i = 0; i < length; i++)
         {
-            Object item = it.next();
-            if (!tempList.remove(item))
+            Object p = previous.get(i);
+            boolean found = false;
+            for (int j = 0; j < length; j++)
             {
-                //element exists in value list but not in previous list
-                return true;
+                if (scoreBoard[j] == false)
+                {
+                    Object v = value.get(j);
+                    if ((p == null && v == null) ||
+                        (p != null && v != null && p.equals(v)))
+                    {
+                        scoreBoard[j] = true;
+                        found = true;
+                        break;
+                    }
+                }
+            }
+            if (!found)
+            {
+                return true;    //current element of previous List not found in new List
             }
         }
 
-        return false;
+        return false;   // Lists are identical
     }
 
     private boolean comparePrimitiveArrays(Object previous, Object value)
@@ -182,15 +200,32 @@ public class UISelectMany
             return true;
         }
 
-        List previousList = new ArrayList(length);
-        List valueList = new ArrayList(length);
+        boolean[] scoreBoard = new boolean[length];
         for (int i = 0; i < length; i++)
         {
-            previousList.add(Array.get(previous, i));
-            valueList.add(Array.get(value, i));
+            Object p = Array.get(previous, i);
+            boolean found = false;
+            for (int j = 0; j < length; j++)
+            {
+                if (scoreBoard[j] == false)
+                {
+                    Object v = Array.get(value, j);
+                    if ((p == null && v == null) ||
+                        (p != null && v != null && p.equals(v)))
+                    {
+                        scoreBoard[j] = true;
+                        found = true;
+                        break;
+                    }
+                }
+            }
+            if (!found)
+            {
+                return true;    //current element of previous array not found in new array
+            }
         }
 
-        return compareLists(previousList, valueList);
+        return false;   // arrays are identical
     }
 
 
@@ -239,42 +274,31 @@ public class UISelectMany
 
     private Object getConvertedValue(FacesContext context, Object submittedValue)
     {
-        Renderer renderer = getRenderer(context);
-        if (renderer != null)
+        try
         {
-            return renderer.getConvertedValue(context, this, submittedValue);
-        }
-        else if (submittedValue instanceof String[])
-        {
-            Converter converter = _ComponentUtils.findConverter(context, this);
-            if (converter != null)
+            Renderer renderer = getRenderer(context);
+            if (renderer != null)
             {
-                try
-                {
-                    int len = ((String[])submittedValue).length;
-                    Object[] convertedValues = new Object[len];
-                    for (int i = 0; i < len; i++)
-                    {
-                        convertedValues[i] = converter.getAsObject(context,
-                                                                   this,
-                                                                   ((String[])submittedValue)[i]);
-                    }
-                    return convertedValues;
-                }
-                catch (ConverterException e)
-                {
-                    FacesMessage facesMessage = e.getFacesMessage();
-                    if (facesMessage != null)
-                    {
-                        context.addMessage(getClientId(context), facesMessage);
-                    }
-                    else
-                    {
-                        _MessageUtils.addErrorMessage(context, this, CONVERSION_MESSAGE_ID);
-                    }
-                    setValid(false);
-                }
+                return renderer.getConvertedValue(context, this, submittedValue);
             }
+            else if (submittedValue instanceof String[])
+            {
+                return _SharedRendererUtils.getConvertedUISelectManyValue(context, this,
+                                                                          (String[])submittedValue);
+            }
+        }
+        catch (ConverterException e)
+        {
+            FacesMessage facesMessage = e.getFacesMessage();
+            if (facesMessage != null)
+            {
+                context.addMessage(getClientId(context), facesMessage);
+            }
+            else
+            {
+                _MessageUtils.addErrorMessage(context, this, CONVERSION_MESSAGE_ID);
+            }
+            setValid(false);
         }
         return submittedValue;
     }
