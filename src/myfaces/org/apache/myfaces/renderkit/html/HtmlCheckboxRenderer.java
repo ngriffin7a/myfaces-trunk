@@ -25,6 +25,10 @@ package net.sourceforge.myfaces.renderkit.html;
  * @author Thomas Spiegl (latest modification by $Author$)
  * @author Anton Koinov
  * @version $Revision$ $Date$
+ * $Log$
+ * Revision 1.19  2004/04/02 13:37:49  manolito
+ * no message
+ *
  */
 public class HtmlCheckboxRenderer
         extends HtmlCheckboxRendererBase

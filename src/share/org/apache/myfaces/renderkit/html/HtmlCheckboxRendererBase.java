@@ -43,6 +43,10 @@ import java.util.Set;
  * @author Thomas Spiegl (latest modification by $Author$)
  * @author Anton Koinov
  * @version $Revision$ $Date$
+ * $Log$
+ * Revision 1.2  2004/04/02 13:37:49  manolito
+ * no message
+ *
  */
 public class HtmlCheckboxRendererBase
         extends HtmlRenderer
