@@ -37,6 +37,10 @@ import java.util.*;
 /**
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
+ * $Log$
+ * Revision 1.5  2004/04/06 15:33:21  manolito
+ * getStringValue must return submitted value if any
+ *
  */
 public class RendererUtils
 {
@@ -53,15 +57,20 @@ public class RendererUtils
             throw new IllegalArgumentException("Component is not a ValueHolder");
         }
 
-        if (component instanceof EditableValueHolder &&
-            !((EditableValueHolder)component).isValid())
+        if (component instanceof EditableValueHolder)
         {
             Object submittedValue = ((EditableValueHolder)component).getSubmittedValue();
-            if (!(submittedValue instanceof String))
+            if (submittedValue != null)
             {
-                throw new IllegalArgumentException("Expected submitted value of type String");
+                if (submittedValue instanceof String)
+                {
+                    return (String)submittedValue;
+                }
+                else
+                {
+                    throw new IllegalArgumentException("Expected submitted value of type String");
+                }
             }
-            return (String)submittedValue; 
         }
 
         Object value = ((ValueHolder)component).getValue();
