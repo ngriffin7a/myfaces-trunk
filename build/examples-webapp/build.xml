@@ -62,7 +62,7 @@
 
 
     <target name="-compile-and-copy-libs"
-            depends="-myfaces-jar, -myfaces-jsf-api-jar, -copy-components-resource"
+            depends="-myfaces-jar, -copy-components-resource"
             description="compiles the examples java classes to WEB-INF/classes and copies all needed libs to WEB-INF/lib">
         <mkdir dir="${web-inf.classes.dir}"/>
         <javac srcdir="${examples.src}"
@@ -112,7 +112,6 @@
             <lib file="${jsp-2.0.jar}"/>
             <lib file="${jstl.jar}"/>
             <lib file="${myfaces.jar}"/>
-            <lib file="${myfaces-jsf-api.jar}"/>
             <lib file="${log4j.jar}"/>
             <classes dir="${web-inf.classes.dir}" />
             <fileset dir="${examples.web}"
