@@ -46,6 +46,9 @@ import org.apache.commons.logging.LogFactory;
  * @author Sylvain Vieujot (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.7  2005/01/27 16:00:30  svieujot
+ * *** empty log message ***
+ *
  * Revision 1.6  2005/01/27 01:59:45  svieujot
  * AliasBean : Change sourceBean attribute for value.
  * Make it work with both beans references ( #{myBean} ), and fix strings as value.
@@ -85,6 +88,10 @@ public class AliasBean extends UIComponentBase {
 
     public String getFamily() {
         return COMPONENT_FAMILY;
+    }
+
+    public void setAlias(String aliasBeanExpression){
+        this._aliasBeanExpression = aliasBeanExpression;
     }
     
     public String getValue(){
@@ -228,6 +235,7 @@ public class AliasBean extends UIComponentBase {
     }
 
     private void makeAlias() {
+        // First, compute the value or reference
         Object value;
         
         ValueBinding valueVB = null;
@@ -247,6 +255,7 @@ public class AliasBean extends UIComponentBase {
             value = valueVB.getValue(_context);
         }
 
+        // Then set the alias to this value
         ValueBinding aliasVB;
         if (_aliasBeanExpression == null) {
             aliasVB = getValueBinding("alias");
