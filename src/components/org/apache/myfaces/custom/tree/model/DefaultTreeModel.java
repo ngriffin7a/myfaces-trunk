@@ -32,6 +32,9 @@ import java.util.Iterator;
  * @author <a href="mailto:oliver@rossmueller.com">Oliver Rossmueller</a>
  * @version $Revision$ $Date$
  *          $Log$
+ *          Revision 1.2  2004/05/04 00:28:17  o_rossmueller
+ *          model event handling
+ *
  *          Revision 1.1  2004/04/22 10:20:24  manolito
  *          tree component
  *
@@ -112,7 +115,7 @@ public class DefaultTreeModel
      */
     public void nodeChanged(TreeNode node)
     {
-        if (!listeners.isEmpty())
+        if (listeners.isEmpty())
         {
             // nobody cares
             return;
@@ -147,7 +150,7 @@ public class DefaultTreeModel
      */
     public void nodesChanged(TreeNode node, int[] childIndices)
     {
-        if (!listeners.isEmpty())
+        if (listeners.isEmpty())
         {
             // nobody cares
             return;
@@ -185,7 +188,7 @@ public class DefaultTreeModel
      */
     public void nodeStructureChanged(TreeNode node)
     {
-        if (!listeners.isEmpty())
+        if (listeners.isEmpty())
         {
             // nobody cares
             return;

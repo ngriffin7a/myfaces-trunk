@@ -21,8 +21,6 @@
 package net.sourceforge.myfaces.custom.tree;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 import javax.faces.component.UIViewRoot;
 import javax.faces.component.html.HtmlForm;
 import javax.faces.context.FacesContext;
@@ -32,9 +30,9 @@ import net.sourceforge.myfaces.custom.navigation.HtmlPanelNavigation;
 import net.sourceforge.myfaces.custom.tree.event.TreeSelectionEvent;
 import net.sourceforge.myfaces.custom.tree.event.TreeSelectionListener;
 import net.sourceforge.myfaces.custom.tree.model.TreeModel;
+import net.sourceforge.myfaces.custom.tree.model.TreeModelEvent;
+import net.sourceforge.myfaces.custom.tree.model.TreeModelListener;
 import net.sourceforge.myfaces.custom.tree.model.TreePath;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 
 /**
@@ -47,6 +45,9 @@ import org.apache.commons.logging.LogFactory;
  * @author <a href="mailto:oliver@rossmueller.com">Oliver Rossmueller</a>
  * @version $Revision$ $Date$
  *          $Log$
+ *          Revision 1.8  2004/05/04 00:28:17  o_rossmueller
+ *          model event handling
+ *
  *          Revision 1.7  2004/04/29 18:48:16  o_rossmueller
  *          node selection handling
  *
@@ -70,6 +71,7 @@ import org.apache.commons.logging.LogFactory;
  */
 public class HtmlTree
     extends HtmlForm
+    implements TreeModelListener
 {
 
     private static final String FACET_ROOTNODE = "rootNode";
@@ -77,7 +79,6 @@ public class HtmlTree
 
 
     private boolean itemStatesRestored = false;
-    private Map expanded = new HashMap();
     private String styleClass;
     private String nodeClass;
     private String selectedNodeClass;
@@ -379,95 +380,44 @@ public class HtmlTree
      *
      * @param path the <code>TreePath</code> identifying a node
      */
-    public void collapsePath(TreePath path)
+    public void collapsePath(TreePath path, FacesContext context)
     {
-        setExpandedState(path, false);
-    }
+        HtmlTreeNode node = findNode(path, context);
 
-
-    /**
-     * Sets the expanded state of this <code>JTree</code>.
-     * If <code>state</code> is
-     * true, all parents of <code>path</code> and path are marked as
-     * expanded. If <code>state</code> is false, all parents of
-     * <code>path</code> are marked EXPANDED, but <code>path</code> itself
-     * is marked collapsed.<p>
-     */
-    protected void setExpandedState(TreePath path, boolean state)
-    {
-        if (path != null)
-        {
-            // Make sure all parents of path are expanded.
-            TreePath parentPath = path.getParentPath();
-
-            while (parentPath != null)
-            {
-                if (isExpanded(parentPath))
-                {
-                    parentPath = null;
-                } else
-                {
-                    expanded.put(parentPath, Boolean.TRUE);
-                    parentPath = parentPath.getParentPath();
-                }
-            }
-
-            if (!state)
-            {
-                // collapse last path.
-                expanded.put(path, Boolean.FALSE);
-//               fireTreeCollapsed(path);
-//               if (removeDescendantSelectedPaths(path, false) &&
-//                  !isPathSelected(path)) {
-//                  // A descendant was selected, select the parent.
-//                  addSelectionPath(path);
-//               }
-//               if (accessibleContext != null) {
-//                  ((AccessibleJTree) accessibleContext).
-//                     fireVisibleDataPropertyChange();
-//               }
-//            }
-            } else
-            {
-                // Expand last path.
-                expanded.put(path, Boolean.TRUE);
-//               fireTreeExpanded(path);
-//               if (accessibleContext != null) {
-//                  ((AccessibleJTree) accessibleContext).
-//                     fireVisibleDataPropertyChange();
-//               }
-//            }
-            }
+        if (node != null) {
+            node.setExpanded(false);
         }
     }
 
 
-    public boolean isExpanded(TreePath path)
+    public boolean isExpanded(TreePath path, FacesContext context)
     {
         if (path == null)
         {
             return false;
         }
 
-        Object value = expanded.get(path);
-
-        if (value == null || !((Boolean) value).booleanValue())
-        {
-            // not expanded
-            return false;
-        }
-
-        // Expanded, check parent
-        TreePath parentPath = path.getParentPath();
-
-        if (parentPath != null)
-        {
-            return isExpanded(parentPath);
-        }
-        return true;
+        return findNode(path, context) != null;
     }
 
-    
+
+    private HtmlTreeNode findNode(TreePath path, FacesContext context)
+    {
+        HtmlTreeNode node = getRootNode();
+        int[] translatedPath = HtmlTreeNode.translatePath(path, getModel(context));
+
+        for (int i = 0; i < translatedPath.length; i++)
+        {
+            if (! node.isExpanded()) {
+                return null;
+            }
+            int index = translatedPath[i];
+            node = (HtmlTreeNode) node.getChildren().get(index);
+        }
+        return node;
+    }
+
+
     public TreePath getSelectionPath()
     {
         if (selectedPath == null)
@@ -566,6 +516,7 @@ public class HtmlTree
 
     public void decode(FacesContext context)
     {
+        getModel(context).addTreeModelListener(this);
         super.decode(context);
 
         //Save the current view root for later reference...
@@ -601,6 +552,13 @@ public class HtmlTree
     }
 
 
+    public void encodeEnd(FacesContext context) throws IOException
+    {
+        getModel(context).removeTreeModelListener(this);
+        super.encodeEnd(context);
+    }
+
+
     public void restoreItemStates(FacesContext facesContext, UIViewRoot previousRoot)
     {
         HtmlTree previousTree = (HtmlTree) previousRoot.findComponent(getClientId(facesContext));
@@ -619,4 +577,50 @@ public class HtmlTree
     }
 
 
+    public void treeNodesChanged(TreeModelEvent e)
+    {
+        TreePath path = e.getTreePath();
+        FacesContext context = FacesContext.getCurrentInstance();
+        HtmlTreeNode node = findNode(path, context);
+
+        if (node != null) {
+            node.childrenChanged(e.getChildIndices(), context);
+        }
+    }
+
+
+    public void treeNodesInserted(TreeModelEvent e)
+    {
+        TreePath path = e.getTreePath();
+        FacesContext context = FacesContext.getCurrentInstance();
+        HtmlTreeNode node = findNode(path, context);
+
+        if (node != null) {
+            node.childrenAdded(e.getChildIndices(), context);
+        }
+    }
+
+
+    public void treeNodesRemoved(TreeModelEvent e)
+    {
+        TreePath path = e.getTreePath();
+        FacesContext context = FacesContext.getCurrentInstance();
+        HtmlTreeNode node = findNode(path, context);
+
+        if (node != null) {
+            node.childrenRemoved(e.getChildIndices());
+        }
+    }
+
+
+    public void treeStructureChanged(TreeModelEvent e)
+    {
+        TreePath path = e.getTreePath();
+        FacesContext context = FacesContext.getCurrentInstance();
+
+        if (isExpanded(path, context)) {
+            collapsePath(path, context);
+            expandPath(path, context);
+        }
+    }
 }

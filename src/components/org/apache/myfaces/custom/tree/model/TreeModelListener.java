@@ -25,12 +25,14 @@ package net.sourceforge.myfaces.custom.tree.model;
  * @author <a href="mailto:oliver@rossmueller.com">Oliver Rossmueller</a>
  * @version $Revision$ $Date$
  *          $Log$
+ *          Revision 1.2  2004/05/04 00:28:17  o_rossmueller
+ *          model event handling
+ *
  *          Revision 1.1  2004/04/22 10:20:24  manolito
  *          tree component
  *
  */
 public interface TreeModelListener
-        extends javax.swing.event.TreeModelListener
 {
     /**
      * <p>Invoked after a node (or a set of siblings) has changed in some
