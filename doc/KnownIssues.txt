@@ -12,7 +12,7 @@ MyFaces Known Issues
   revision of the name. So, you must not use hyphens (or other special
   characters) in id attributes.
   
-* to make the examples webapp war file for a version of tomcat less than 5.5,
-  you have to set the property tomcat.pre.5.5.version=true
+* to make the examples webapp war file for tomcat 5.5,
+  you have to set the property tomcat.pre.5.5.version=false
 
 TODO... (Many others!)
