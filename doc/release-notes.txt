@@ -5,6 +5,7 @@ MyFaces Release Notes
 Changes in Release 0.4.3
 * fixed a bug in the navigation menu: open/active state was lost sometimes.
 * removed Attribute levelClasses from NavigationTag - see NavigationRenderer.indent(...)
+* TextRenderer: empty <span> element (span without attributes) is not rendered anymore
 
 ----------------------------------------------------------------------
 Changes in Release 0.4.2

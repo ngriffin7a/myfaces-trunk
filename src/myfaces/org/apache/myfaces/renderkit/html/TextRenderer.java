@@ -107,12 +107,16 @@ public class TextRenderer
     {
         ResponseWriter writer = facesContext.getResponseWriter();
 
-        // TODO: don't render span when empty
-        writer.write("<span");
-        HTMLUtil.renderCssClass(writer, uiOutput, OUTPUT_CLASS_ATTR);
-        HTMLUtil.renderHTMLAttributes(writer, uiOutput, HTML_UNIVERSAL_ATTRIBUTES);
-        HTMLUtil.renderHTMLAttributes(writer, uiOutput, HTML_EVENT_HANDLER_ATTRIBUTES);
-        writer.write(">");
+        StringBuffer buf = new StringBuffer();
+        HTMLUtil.renderCssClass(buf, uiOutput, OUTPUT_CLASS_ATTR);
+        HTMLUtil.renderHTMLAttributes(buf, uiOutput, HTML_UNIVERSAL_ATTRIBUTES);
+        HTMLUtil.renderHTMLAttributes(buf, uiOutput, HTML_EVENT_HANDLER_ATTRIBUTES);
+        if (buf.length() > 0)
+        {
+            writer.write("<span");
+            writer.write(buf.toString());
+            writer.write(">");
+        }
 
         String text;
         String key = (String)uiOutput.getAttribute(KEY_ATTR);
@@ -129,7 +133,10 @@ public class TextRenderer
 
         writer.write(HTMLEncoder.encode(text, true, true));
 
-        writer.write("</span>");
+        if (buf.length() > 0)
+        {
+            writer.write("</span>");
+        }
     }
 
 }

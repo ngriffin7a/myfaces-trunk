@@ -45,6 +45,32 @@ public class HTMLUtil
     private HTMLUtil() {}   //Utility class
 
 
+    public static void renderHTMLAttribute(StringBuffer buf,
+                                           UIComponent component,
+                                           String rendererAttrName,
+                                           String htmlAttrName)
+        throws IOException
+    {
+        Object value = component.getAttribute(rendererAttrName);
+        if (value != null)
+        {
+            if (value instanceof Boolean &&
+                ((Boolean)value).booleanValue())
+            {
+                buf.append(" ");
+                buf.append(htmlAttrName);
+            }
+            else
+            {
+                buf.append(" ");
+                buf.append(htmlAttrName);
+                buf.append("=\"");
+                buf.append(value.toString());
+                buf.append("\"");
+            }
+        }
+    }
+
     public static void renderHTMLAttribute(ResponseWriter writer,
                                            UIComponent component,
                                            String rendererAttrName,
@@ -71,6 +97,21 @@ public class HTMLUtil
         }
     }
 
+    public static void renderHTMLAttributes(StringBuffer buf,
+                                            UIComponent component,
+                                            String[] attributes)
+        throws IOException
+    {
+        for (int i = 0; i < attributes.length; i++)
+        {
+            String attrName = attributes[i];
+            renderHTMLAttribute(buf,
+                                component,
+                                attrName,
+                                attrName);
+        }
+    }
+
     public static void renderHTMLAttributes(ResponseWriter writer,
                                             UIComponent component,
                                             String[] attributes)
@@ -83,6 +124,19 @@ public class HTMLUtil
                                 component,
                                 attrName,
                                 attrName);
+        }
+    }
+
+    public static void renderCssClass(StringBuffer buf,
+                                      UIComponent uiComponent,
+                                      String classAttrName)
+    {
+        String cssClass = (String)uiComponent.getAttribute(classAttrName);
+        if (cssClass != null)
+        {
+            buf.append(" class=\"");
+            buf.append(cssClass);
+            buf.append("\"");
         }
     }
 
