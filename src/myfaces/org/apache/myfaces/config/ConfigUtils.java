@@ -32,7 +32,9 @@ public class ConfigUtils
 {
     private static final Log log = LogFactory.getLog(ConfigUtils.class);
 
-    private ConfigUtils() {} //utility class, no instance allowed
+    private ConfigUtils() {
+        // utility class, no instance allowed
+    }
 
     /**
      * TODO: Support for common classes.

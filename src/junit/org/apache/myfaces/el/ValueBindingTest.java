@@ -163,6 +163,14 @@ public class ValueBindingTest
         r      = vb.getValue(_facesContext);
         assertEquals("TRUE_", r);
 
+        vb     = _application.createValueBinding("#{testmap[\"true_\"]}");
+        r      = vb.getValue(_facesContext);
+        assertEquals("TRUE_", r);
+
+        vb     = _application.createValueBinding("#{testmap['true_']}");
+        r      = vb.getValue(_facesContext);
+        assertEquals("TRUE_", r);
+
         vb     = _application.createValueBinding("#{testmap[testmap.t]}");
         r      = vb.getValue(_facesContext);
         assertEquals("TRUE", r);
@@ -178,6 +186,30 @@ public class ValueBindingTest
         vb     = _application.createValueBinding("#{testmap[testmap.f]}");
         r      = vb.getValue(_facesContext);
         assertEquals("FALSE", r);
+
+        vb     = _application.createValueBinding("#{testmap['map']}");
+        r      = vb.getValue(_facesContext);
+        assertEquals(_m, r);
+
+        vb     = _application.createValueBinding("#{testmap[\"David's\"]}");
+        r      = vb.getValue(_facesContext);
+        assertEquals(_m, r);
+
+        vb     = _application.createValueBinding("#{testmap['David\\'s']}");
+        r      = vb.getValue(_facesContext);
+        assertEquals(_m, r);
+
+        vb     = _application.createValueBinding("#{testmap['my]bracket[']}");
+        r      = vb.getValue(_facesContext);
+        assertEquals(_m, r);
+
+        vb     = _application.createValueBinding("#{testmap[\"my]bracket[\"]}");
+        r      = vb.getValue(_facesContext);
+        assertEquals(_m, r);
+
+        vb     = _application.createValueBinding("#{testmap[\"my\\\\]bracket[\"]}");
+        r      = vb.getValue(_facesContext);
+        assertEquals(_m, r);
 
         vb     = _application.createValueBinding("#{testmap[0][0]}");
         r      = vb.getValue(_facesContext);
@@ -223,10 +255,9 @@ public class ValueBindingTest
         r      = vb.getValue(_facesContext);
         assertEquals(new Integer(0), r);
 
-// Does not work with JSP EL (need to refactor to its rules)      
-//        vb     = _application.createValueBinding("#{testmap.list[4][testmap.list[4][0][0]][0]}");
-//        r      = vb.getValue(_facesContext);
-//        assertEquals(new Integer(0), r);
+        vb     = _application.createValueBinding("#{testmap.list[4][testmap.list[4][0][0]][0]}");
+        r      = vb.getValue(_facesContext);
+        assertEquals(new Integer(0), r);
 
         vb     = _application.createValueBinding("#{testmap.list[4][1][0][testmap.list[4][0][0]]}");
         r      = vb.getValue(_facesContext);
@@ -242,40 +273,34 @@ public class ValueBindingTest
         r      = vb.getValue(_facesContext);
         assertEquals(new Integer(0), r);
 
-//      Does not work with JSP EL        
-//        vb     = _application.createValueBinding(
-//                "#{testmap['my]bracket[']['\\m\\a\\p'].list[4]['map'][\"list\"][4][1][testmap.map.map.list[4].list[4][1][testmap.list[4].list[testmap.list[4][1][testmap.f][testmap['list'][4][0][1]]][0][0]][0]][0]}");
-//        r      = vb.getValue(_facesContext);
-//        assertEquals(new Integer(0), r);
-//
-//        vb     = _application.createValueBinding(
-//                "#{testmap['my\\]bracket\\[']['\\m\\a\\p'].list[4]['map'][\"list\"][4][1][testmap.map.map.list[4].list[4][1][testmap.list[4].list[testmap.list[4][1][testmap.f][testmap['list'][4][0][1]]][0][0]][0]][0]}");
-//        r      = vb.getValue(_facesContext);
-//        assertEquals(new Integer(0), r);
-//
-//        vb     = _application.createValueBinding(
-//                "#{testmap['my\\\\]bracket\\[']['\\m\\a\\p'].list[4]['map'][\"list\"][4][1][testmap.map.map.list[4].list[4][1][testmap.list[4].list[testmap.list[4][1][testmap.f][testmap['list'][4][0][1]]][0][0]][0]][0]}");
-//        r      = vb.getValue(_facesContext);
-//        assertEquals(new Integer(0), r);
-//
-//        vb     = _application.createValueBinding(
-//                "#{testmap['my\\\\\\]bracket\\[']['\\m\\a\\p'].list[4]['map'][\"list\"][4][1][testmap.map.map.list[4].list[4][1][testmap.list[4].list[testmap.list[4][1][testmap.f][testmap['list'][4][0][1]]][0][0]][0]][0]}");
-//        r      = vb.getValue(_facesContext);
-//        assertEquals(new Integer(0), r);
-//
-//        vb     = _application.createValueBinding("#{testmap[\"\\\\]true\\[\"]}");
-//        r      = vb.getValue(_facesContext);
-//        assertEquals("TRUE", r);
-//
-//        vb     = _application.createValueBinding("#{testmap['\\\\\\]false\\[']}");
-//        r      = vb.getValue(_facesContext);
-//        assertEquals("FALSE", r);
+        vb     = _application.createValueBinding(
+                "#{testmap['my]bracket[']['map'].list[4]['map'][\"list\"][4][1][testmap.map.map.list[4].list[4][1][testmap.list[4].list[testmap.list[4][1][testmap.f][testmap['list'][4][0][1]]][0][0]][0]][0]}");
+        r      = vb.getValue(_facesContext);
+        assertEquals(new Integer(0), r);
+
+        vb     = _application.createValueBinding(
+                "#{testmap['my]bracket[']['map'].list[4]['map'][\"list\"][4][1][testmap.map.map.list[4].list[4][1][testmap.list[4].list[testmap.list[4][1][testmap.f][testmap['list'][4][0][1]]][0][0]][0]][0]}");
+        r      = vb.getValue(_facesContext);
+        assertEquals(new Integer(0), r);
+
+        vb     = _application.createValueBinding(
+                "#{testmap['my\\\\]bracket[']['map'].list[4]['map'][\"list\"][4][1][testmap.map.map.list[4].list[4][1][testmap.list[4].list[testmap.list[4][1][testmap.f][testmap['list'][4][0][1]]][0][0]][0]][0]}");
+        r      = vb.getValue(_facesContext);
+        assertEquals(new Integer(0), r);
+
+        vb     = _application.createValueBinding("#{testmap[\"\\\\]true[\"]}");
+        r      = vb.getValue(_facesContext);
+        assertEquals("_TRUE_", r);
+
+        vb     = _application.createValueBinding("#{testmap['\\\\]false[']}");
+        r      = vb.getValue(_facesContext);
+        assertEquals("_FALSE_", r);
 
         // Now check for error conditions
         try
         {
             vb = _application.createValueBinding(
-                    "#{testmap['my\\\\\\]bracket\\[']['\\m\\a\\p'].list[4]['map'][\"list\"][4][1][testmap.map.map.list[4].list[4][1][testmap.list[4].list[testmap.list[4][1][testmap.f][testmap['list'][4][0][1]]][0][0]][0][0]}");
+                    "#{testmap['my\\\\]bracket[']['map'].list[4]['map'][\"list\"][4][1][testmap.map.map.list[4].list[4][1][testmap.list[4].list[testmap.list[4][1][testmap.f][testmap['list'][4][0][1]]][0][0]][0][0]}");
             assertTrue(false);
         }
         catch (ReferenceSyntaxException e)
@@ -387,6 +412,9 @@ public class ValueBindingTest
     {
         ValueBinding vb;
 
+        vb = _application.createValueBinding("#{'constant literal'}");
+        assertTrue(vb.isReadOnly(_facesContext));
+
         vb = _application.createValueBinding("#{cookie}");
         assertTrue(vb.isReadOnly(_facesContext));
 
@@ -407,7 +435,6 @@ public class ValueBindingTest
 
         vb = _application.createValueBinding("#{ testmap  [  0  ]  [  0  ]} ");
         assertFalse(vb.isReadOnly(_facesContext));
-
         
         vb = _application.createValueBinding("#{true ? cookie : max}");
         assertTrue(vb.isReadOnly(_facesContext));
@@ -433,11 +460,12 @@ public class ValueBindingTest
         assertSame(Boolean.class, vb.getType(_facesContext));
 
         vb = _application.createValueBinding("#{ testmap  [  0  ]  [  1  ]} ");
-        // Object.class is the Array Component Type!
+        // Object.class is the _a0 Array Component Type!
         assertSame(Object.class, vb.getType(_facesContext));
 
 // Not supported by mock objects yet        
 //        vb = _application.createValueBinding("#{notExistingValueBlahBlahBlah}");
+//        vb.setValue(_facesContext, new Object());
 //        assertSame(Object.class, vb.getType(_facesContext));
         
         try 
@@ -542,6 +570,7 @@ public class ValueBindingTest
         _l.add(4, _m);
         _l.add(5, new Boolean(true));
 
+        _m.put(new Integer(0), _a0);
         _m.put(new Long(0), _a0);
         _m.put(new Long(1), _a1);
         _m.put("list", _l);
@@ -553,6 +582,7 @@ public class ValueBindingTest
         _m.put("o0", new D(_a0));
         _m.put("o1", new D(_a1));
         _m.put("map", _m);
+        _m.put("David's", _m);
         _m.put("my]bracket[", _m);
         _m.put("my\\]bracket[", _m);
         _m.put("my\\\\]bracket[", _m);
