@@ -29,6 +29,7 @@ import net.sourceforge.myfaces.MyFacesConfig;
 
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
+import javax.faces.tree.Tree;
 import java.io.IOException;
 
 /**
@@ -115,7 +116,10 @@ public class StateRenderer
         else
         {
             //TODO: can we find a better solution?
+            /*
             _stateRestorer.restoreComponentState(facesContext, comp);
+            */
+            throw new UnsupportedOperationException();
         }
     }
 
@@ -157,6 +161,13 @@ public class StateRenderer
     {
         _stateSaver.release(facesContext);
         LogUtil.printTreeToConsole("Current tree after saving state");
+    }
+
+
+
+    public Tree getPreviousTree(FacesContext facesContext)
+    {
+        return _stateRestorer.getPreviousTree(facesContext);
     }
 
 }

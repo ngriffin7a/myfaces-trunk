@@ -43,6 +43,7 @@ import javax.faces.tree.Tree;
 import javax.faces.tree.TreeFactory;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.Iterator;
@@ -143,17 +144,11 @@ public class LifecycleImpl
         LogUtil.getLogger().entering();
 
         //Create tree
-        HttpServletRequest request = (HttpServletRequest)facesContext.getServletRequest();
-
-        ServletContext servletContext = facesContext.getServletContext();
-        ServletMappingFactory servletMappingFactory = MyFacesFactoryFinder.getServletMappingFactory(servletContext);
-        ServletMapping sm = servletMappingFactory.getServletMapping(servletContext);
-        String treeId = sm.getTreeIdFromRequest(request);
-
-        Tree tree = _treeFactory.getTree(facesContext, treeId);
+        Tree tree = _treeFactory.getTree(facesContext, getTreeId(facesContext));
         facesContext.setTree(tree);
 
         //Set locale
+        HttpServletRequest request = (HttpServletRequest)facesContext.getServletRequest();
         if (request.getLocale() != null)
         {
             facesContext.setLocale(request.getLocale());
@@ -180,13 +175,17 @@ public class LifecycleImpl
         {
             try
             {
-                LogUtil.getLogger().finest("StateRenderer found, calling decode...");
+                LogUtil.getLogger().finest("StateRenderer found, calling decode.");
                 stateRenderer.decode(facesContext, null);
             }
             catch (IOException e)
             {
                 throw new FacesException("Error restoring state", e);
             }
+        }
+        else
+        {
+            LogUtil.getLogger().info("No StateRenderer found, cannot restore tree.");
         }
 
         LogUtil.getLogger().exiting();
@@ -384,6 +383,17 @@ public class LifecycleImpl
                 it.remove();
             }
         }
+    }
+
+
+
+    public static String getTreeId(FacesContext facesContext)
+    {
+        ServletRequest request = facesContext.getServletRequest();
+        ServletContext servletContext = facesContext.getServletContext();
+        ServletMappingFactory servletMappingFactory = MyFacesFactoryFinder.getServletMappingFactory(servletContext);
+        ServletMapping sm = servletMappingFactory.getServletMapping(servletContext);
+        return sm.getTreeIdFromRequest(request);
     }
 
 }

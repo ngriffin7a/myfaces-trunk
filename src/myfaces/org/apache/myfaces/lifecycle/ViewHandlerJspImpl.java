@@ -53,7 +53,7 @@ public class ViewHandlerJspImpl
         ServletContext servletContext = facesContext.getServletContext();
         Tree tree = facesContext.getTree();
 
-        //Build component tree from parsed JspInfo so that all common
+        //Build component tree from parsed JspInfo so that all components
         //already exist in case a component needs it's children prior to
         //rendering it's body
         /*
@@ -80,7 +80,7 @@ public class ViewHandlerJspImpl
         {
             try
             {
-                LogUtil.getLogger().finest("StateRenderer found, calling encodeBegin...");
+                LogUtil.getLogger().finest("StateRenderer found, calling encodeBegin.");
                 renderer.encodeBegin(facesContext, null);
             }
             catch (IOException e)

@@ -52,7 +52,6 @@ public class NavigationItemRenderer
     extends HTMLRenderer
     implements NavigationItemRendererAttributes
 {
-    private static final String DECODED_ATTR = NavigationItemRenderer.class.getName() + ".DECODED";
     public static final String TYPE = "NavigationItem";
 
     protected RenderKitFactory _rkFactory;
@@ -83,7 +82,8 @@ public class NavigationItemRenderer
         //super.decode must not be called, because value never comes from request
 
         //Remember, that we have decoded
-        uiComponent.setAttribute(DECODED_ATTR, Boolean.TRUE);
+        //uiComponent.setAttribute(DECODED_ATTR, Boolean.TRUE);
+
         uiComponent.setValid(true);
 
         //decode
@@ -105,6 +105,7 @@ public class NavigationItemRenderer
      */
     public void encodeBegin(FacesContext facesContext, UIComponent uiComponent) throws IOException
     {
+        /*
         Boolean b = (Boolean)uiComponent.getAttribute(DECODED_ATTR);
         if (b == null || !b.booleanValue())
         {
@@ -125,6 +126,7 @@ public class NavigationItemRenderer
                 stateRenderer.decode(facesContext, uiComponent);
             }
         }
+        */
 
 
         ResponseWriter writer = facesContext.getResponseWriter();

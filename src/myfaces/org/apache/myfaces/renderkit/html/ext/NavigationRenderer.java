@@ -18,15 +18,21 @@
  */
 package net.sourceforge.myfaces.renderkit.html.ext;
 
+import net.sourceforge.myfaces.MyFacesConfig;
 import net.sourceforge.myfaces.component.UIComponentUtils;
 import net.sourceforge.myfaces.component.ext.UINavigation;
 import net.sourceforge.myfaces.renderkit.attr.ext.NavigationRendererAttributes;
 import net.sourceforge.myfaces.renderkit.html.HTMLRenderer;
+import net.sourceforge.myfaces.renderkit.html.state.StateRenderer;
 
 import javax.faces.FacesException;
+import javax.faces.FactoryFinder;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
+import javax.faces.render.RenderKit;
+import javax.faces.render.RenderKitFactory;
+import javax.faces.tree.Tree;
 import java.io.IOException;
 import java.util.Iterator;
 
@@ -39,8 +45,18 @@ public class NavigationRenderer
     extends HTMLRenderer
     implements NavigationRendererAttributes
 {
+    /*
     public static final String CURRENT_NAVIGATION_ATTR
         = NavigationRenderer.class.getName() + ".GET_CHILDREN_FROM_REQUEST";
+        */
+    private static final String DECODED_ATTR = NavigationRenderer.class.getName() + ".DECODED";
+
+    protected RenderKitFactory _rkFactory;
+
+    public NavigationRenderer()
+    {
+        _rkFactory = (RenderKitFactory)FactoryFinder.getFactory(FactoryFinder.RENDER_KIT_FACTORY);
+    }
 
     public static final String TYPE = "Navigation";
     public String getRendererType()
@@ -59,6 +75,14 @@ public class NavigationRenderer
     }
 
 
+    public void decode(FacesContext facesContext, UIComponent uiComponent) throws IOException
+    {
+        super.decode(facesContext, uiComponent);
+
+        //Remember, that we have decoded
+        uiComponent.setAttribute(DECODED_ATTR, Boolean.TRUE);
+    }
+
     public void encodeBegin(FacesContext facesContext, UIComponent uiComponent)
         throws IOException
     {
@@ -76,6 +100,53 @@ public class NavigationRenderer
     public void encodeChildren(FacesContext facesContext, UIComponent uiComponent)
         throws IOException
     {
+        Boolean b = (Boolean)uiComponent.getAttribute(DECODED_ATTR);
+        if (b == null || !b.booleanValue())
+        {
+            //There was no decoding, so we can assume that the state has not been
+            //restored yet and we must restore state for children
+            //from previous tree
+            RenderKit renderKit = _rkFactory.getRenderKit(facesContext.getTree().getRenderKitId());
+            StateRenderer stateRenderer = null;
+            try
+            {
+                //stateRenderer = (StateRenderer)renderKit.getRenderer(StateRenderer.TYPE);
+                //XXX: because of RendererWrapper!
+                int mode = MyFacesConfig.getStateSavingMode(facesContext.getServletContext());
+                stateRenderer = new StateRenderer(mode);
+            }
+            catch (Exception e)
+            {
+                //No StateRenderer
+            }
+            if (stateRenderer != null)
+            {
+                Tree previousTree  = stateRenderer.getPreviousTree(facesContext);
+                if (previousTree != null && previousTree != facesContext.getTree())
+                {
+                    String clientId = uiComponent.getClientId(facesContext);
+                    UIComponent previousNav = previousTree.getRoot().findComponent(clientId);
+                    if (previousNav != null && previousNav != uiComponent)
+                    {
+                        //Remove all children:
+                        for (int i = 0, len = uiComponent.getChildCount(); i < len; i++)
+                        {
+                            uiComponent.removeChild(0);
+                        }
+
+                        //Add all children from previous navigation
+                        for (Iterator it = previousNav.getChildren(); it.hasNext();)
+                        {
+                            UIComponent navItem = (UIComponent)it.next();
+                            uiComponent.addChild(navItem);
+                        }
+                    }
+                }
+            }
+        }
+
+        /*
+        TODO:
         UIComponent oldNavigation = (UIComponent)facesContext.getServletRequest().getAttribute(CURRENT_NAVIGATION_ATTR);
         if (oldNavigation != null)
         {
@@ -91,6 +162,7 @@ public class NavigationRenderer
                 uiComponent.addChild((UIComponent)it.next());
             }
         }
+        */
         renderChildren(facesContext, 0, uiComponent.getChildren());
     }
 

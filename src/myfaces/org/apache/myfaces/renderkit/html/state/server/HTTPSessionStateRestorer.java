@@ -20,7 +20,6 @@ package net.sourceforge.myfaces.renderkit.html.state.server;
 
 import net.sourceforge.myfaces.renderkit.html.state.StateRestorer;
 
-import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.tree.Tree;
 import javax.servlet.http.HttpServletRequest;
@@ -63,9 +62,9 @@ public class HTTPSessionStateRestorer
         }
     }
 
+    /*
     public void restoreComponentState(FacesContext facesContext, UIComponent uiComponent) throws IOException
     {
-        /*
         HttpServletRequest request = (HttpServletRequest)facesContext.getServletRequest();
         HttpSession session = request.getSession(false);
         if (session == null)
@@ -73,7 +72,7 @@ public class HTTPSessionStateRestorer
             return;
         }
         Tree savedTree = (Tree)session.getAttribute(HTTPSessionStateSaver.TREE_SESSION_ATTR);
-        if (savedTree == null)
+        if (savedTree == null || savedTree == facesContext.getTree())
         {
             return;
         }
@@ -83,16 +82,59 @@ public class HTTPSessionStateRestorer
                                                            uniqueId);
         if (find != null)
         {
-            UIComponent parent = uiComponent.getParent();
-            if (parent == null)
+            //remove null attributes
+            for (Iterator it = uiComponent.getAttributeNames(); it.hasNext();)
             {
-                throw new IllegalArgumentException("Root cannot be restored explicitly.");
+                String attrName = (String)it.next();
+                if (find.getAttribute(attrName) == null)
+                {
+                    uiComponent.setAttribute(attrName, null);
+                }
             }
 
-            //TODO: Is this allowed?! Better replace all attributes and children?
-            parent.removeChild(uiComponent);
-            parent.addChild(find);
+            //copy attributes
+            for (Iterator it = find.getAttributeNames(); it.hasNext();)
+            {
+                String attrName = (String)it.next();
+                if (!attrName.equals(CommonComponentAttributes.PARENT_ATTR))
+                {
+                    PropertyDescriptor pd = BeanUtils.findPropertyDescriptor(uiComponent, attrName);
+                    if (pd != null)
+                    {
+                        BeanUtils.setBeanPropertyValue(uiComponent, pd, find.getAttribute(attrName));
+                    }
+                    else
+                    {
+                        uiComponent.setAttribute(attrName, find.getAttribute(attrName));
+                    }
+                }
+            }
+
+            //remove children
+            for (int i = 0; i < uiComponent.getChildCount(); i++)
+            {
+                uiComponent.removeChild(0);
+            }
+
+            //copy children
+            for (int i = 0; i < find.getChildCount(); i++)
+            {
+                uiComponent.addChild(find.getChild(i));
+            }
         }
-        */
+    }
+    */
+
+
+    public Tree getPreviousTree(FacesContext facesContext)
+    {
+        HttpServletRequest request = (HttpServletRequest)facesContext.getServletRequest();
+        HttpSession session = request.getSession(false);
+        if (session == null)
+        {
+            return null;
+        }
+
+        return (Tree)session.getAttribute(HTTPSessionStateSaver.TREE_SESSION_ATTR);
     }
 }

@@ -18,10 +18,8 @@
  */
 package net.sourceforge.myfaces.renderkit.html.state.client;
 
-import net.sourceforge.myfaces.renderkit.html.jspinfo.JspInfo;
 import net.sourceforge.myfaces.util.logging.LogUtil;
 
-import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.tree.Tree;
 import javax.mail.MessagingException;
@@ -45,7 +43,7 @@ public class SerializingStateRestorer
     protected static final String RESTORED_TREE_CONTEXT_ATTR
         = SerializingStateSaver.class.getName() + ".RESTORED_TREE";
 
-    protected Tree getRestoredTree(FacesContext facesContext)
+    public Tree getPreviousTree(FacesContext facesContext)
     {
         Tree restoredTree
             = (Tree)facesContext.getServletRequest()
@@ -70,7 +68,7 @@ public class SerializingStateRestorer
 
     public void restoreState(FacesContext facesContext) throws IOException
     {
-        Tree savedTree = getRestoredTree(facesContext);
+        Tree savedTree = getPreviousTree(facesContext);
         if (savedTree == null)
         {
             return;
@@ -100,10 +98,11 @@ public class SerializingStateRestorer
         }
     }
 
+    /*
     public void restoreComponentState(FacesContext facesContext,
                                       UIComponent uiComponent) throws IOException
     {
-        Tree savedTree = getRestoredTree(facesContext);
+        Tree savedTree = getPreviousTree(facesContext);
         if (savedTree == null)
         {
             return;
@@ -125,6 +124,7 @@ public class SerializingStateRestorer
             parent.addChild(find);
         }
     }
+    */
 
 
     protected Tree unzipTree(String zippedTree)
@@ -156,6 +156,5 @@ public class SerializingStateRestorer
             throw new RuntimeException(e);
         }
     }
-
 
 }

@@ -72,7 +72,7 @@
         * "client_minimized_zipped" = like "client_minimal", but additionally state info is zipped (GZIP), encoded to allowed characters (Base64) written as one query parameter or hidden form input.
         -->
         <param-name>stateSavingMode</param-name>
-        <param-value>server_session</param-value>
+        <param-value>client_minimized</param-value>
     </context-param>
 
 

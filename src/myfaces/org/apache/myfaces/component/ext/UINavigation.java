@@ -22,7 +22,6 @@ import net.sourceforge.myfaces.component.UICommand;
 import net.sourceforge.myfaces.component.UIComponentUtils;
 import net.sourceforge.myfaces.component.UIPanel;
 import net.sourceforge.myfaces.renderkit.html.ext.NavigationItemRenderer;
-import net.sourceforge.myfaces.renderkit.html.ext.NavigationRenderer;
 
 import javax.faces.FacesException;
 import javax.faces.FactoryFinder;
@@ -169,10 +168,14 @@ public class UINavigation
                 TreeFactory tf = (TreeFactory)FactoryFinder.getFactory(FactoryFinder.TREE_FACTORY);
                 Tree responseTree = tf.getTree(facesContext, treeId);
                 facesContext.setTree(responseTree);
+
+                /*
                 //Save current navigation with all it's children in request context, so that
                 //current state of children can be accessed when rendering new tree
                 facesContext.getServletRequest().setAttribute(NavigationRenderer.CURRENT_NAVIGATION_ATTR,
                                                               this);
+                */
+
                 facesContext.renderResponse();
             }
         }
@@ -204,10 +207,11 @@ public class UINavigation
         {
             //HACK: Because there is a bug in the API implementation of UIComponentBase
             //(removeChild does not call removeComponentFromNamespace) we ignore
-            //common already in namespace
-            if (_namingContainer.findComponentInNamespace(componentId) != null)
+            //component already in namespace
+            UIComponent old = _namingContainer.findComponentInNamespace(componentId);
+            if (old != null)
             {
-                return;
+                _namingContainer.removeComponentFromNamespace(old);
             }
         }
         _namingContainer.addComponentToNamespace(uicomponent);

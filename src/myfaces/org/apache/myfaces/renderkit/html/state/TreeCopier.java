@@ -19,6 +19,7 @@
 package net.sourceforge.myfaces.renderkit.html.state;
 
 import net.sourceforge.myfaces.component.UIComponentUtils;
+import net.sourceforge.myfaces.component.CommonComponentAttributes;
 import net.sourceforge.myfaces.renderkit.html.jspinfo.JspInfo;
 import net.sourceforge.myfaces.util.bean.BeanUtils;
 import net.sourceforge.myfaces.util.logging.LogUtil;
@@ -165,20 +166,23 @@ public class TreeCopier
         for (Iterator it = fromComp.getAttributeNames(); it.hasNext();)
         {
             String attrName = (String)it.next();
-            if (_overwriteAttributes || toComp.getAttribute(attrName) == null)
+            if (!attrName.equals(CommonComponentAttributes.PARENT_ATTR))
             {
-                Object attrValue = fromComp.getAttribute(attrName);
+                if (_overwriteAttributes || toComp.getAttribute(attrName) == null)
+                {
+                    Object attrValue = fromComp.getAttribute(attrName);
 
-                PropertyDescriptor pd = BeanUtils.findPropertyDescriptor(toComp, attrName);
-                if (pd != null)
-                {
-                    //We must use setter method if one exists, because some setter methods
-                    //have side effects: e.g. setComponentId() adds id to NamingContainer
-                    BeanUtils.setBeanPropertyValue(toComp, pd, attrValue);
-                }
-                else
-                {
-                    toComp.setAttribute(attrName, attrValue);
+                    PropertyDescriptor pd = BeanUtils.findPropertyDescriptor(toComp, attrName);
+                    if (pd != null && pd.getWriteMethod() != null)
+                    {
+                        //We must use setter method if one exists, because some setter methods
+                        //have side effects: e.g. setComponentId() adds id to NamingContainer
+                        BeanUtils.setBeanPropertyValue(toComp, pd, attrValue);
+                    }
+                    else
+                    {
+                        toComp.setAttribute(attrName, attrValue);
+                    }
                 }
             }
         }

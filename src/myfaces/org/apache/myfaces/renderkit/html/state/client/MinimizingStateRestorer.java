@@ -25,12 +25,14 @@ import net.sourceforge.myfaces.convert.impl.StringArrayConverter;
 import net.sourceforge.myfaces.renderkit.html.jspinfo.JspInfo;
 import net.sourceforge.myfaces.renderkit.html.jspinfo.JspInfoUtils;
 import net.sourceforge.myfaces.renderkit.html.state.TreeCopier;
+import net.sourceforge.myfaces.renderkit.html.state.StateRestorer;
 import net.sourceforge.myfaces.taglib.core.ActionListenerTag;
 import net.sourceforge.myfaces.tree.TreeUtils;
-import net.sourceforge.myfaces.util.logging.LogUtil;
 import net.sourceforge.myfaces.util.bean.BeanUtils;
+import net.sourceforge.myfaces.util.logging.LogUtil;
 
 import javax.faces.FacesException;
+import javax.faces.FactoryFinder;
 import javax.faces.component.UICommand;
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIInput;
@@ -41,9 +43,11 @@ import javax.faces.event.ActionListener;
 import javax.faces.event.FacesListener;
 import javax.faces.event.ValueChangedListener;
 import javax.faces.tree.Tree;
+import javax.faces.tree.TreeFactory;
+import javax.servlet.ServletRequest;
+import java.beans.PropertyDescriptor;
 import java.io.IOException;
 import java.util.*;
-import java.beans.PropertyDescriptor;
 
 /**
  * StateRestorer that restores state info saved by the MinimizingStateSaver.
@@ -54,6 +58,9 @@ import java.beans.PropertyDescriptor;
 public class MinimizingStateRestorer
     extends ClientStateRestorer
 {
+    protected static final String PREVIOUS_TREE_REQUEST_ATTR
+        = MinimizingStateRestorer.class.getName() + ".PREVIOUS_TREE";
+
     private static final String STATE_MAP_REQUEST_ATTR = MinimizingStateRestorer.class.getName() + ".STATE_MAP";
 
     public void restoreState(FacesContext facesContext) throws IOException
@@ -71,29 +78,8 @@ public class MinimizingStateRestorer
             //restore model beans and values:
             restoreModelValues(facesContext, stateMap);
 
-            //restore "hint" about unrendered components
-            Set unrendererComponents = restoreUnrenderedComponents(stateMap);
-
-            //restore tree
-            Tree staticTree = JspInfo.getTree(facesContext, requestTree.getTreeId());
-            TreeCopier treeCopier = new TreeCopier(facesContext);
-            treeCopier.setOverwriteAttributes(false);
-            treeCopier.setOverwriteComponents(false);
-            treeCopier.setIgnoreComponents(unrendererComponents);
-            treeCopier.copyTree(staticTree, requestTree);
-
-            //restore component states
-            for (Iterator it = TreeUtils.treeIterator(requestTree); it.hasNext();)
-            {
-                UIComponent comp = (UIComponent)it.next();
-                restoreComponent(facesContext, stateMap, comp);
-            }
-
-            //remap tagHash
-            TagHashHack.convertUniqueIdsBackToComponents(requestTree);
-
-            //restore model beans and values:
-            restoreModelValues(facesContext, stateMap);
+            //restore previous tree
+            restorePreviousTree(facesContext, stateMap, requestTree);
 
             //restore listeners:
             restoreListeners(facesContext, stateMap);
@@ -101,6 +87,38 @@ public class MinimizingStateRestorer
 
         restoreLocale(facesContext, stateMap);
     }
+
+
+    protected void restorePreviousTree(FacesContext facesContext,
+                                       Map stateMap,
+                                       Tree tree)
+    {
+        //restore "hint" about unrendered components
+        Set unrendererComponents = restoreUnrenderedComponents(stateMap);
+
+        //restore tree
+        Tree staticTree = JspInfo.getTree(facesContext, tree.getTreeId());
+        TreeCopier treeCopier = new TreeCopier(facesContext);
+        treeCopier.setOverwriteAttributes(false);
+        treeCopier.setOverwriteComponents(false);
+        treeCopier.setIgnoreComponents(unrendererComponents);
+        treeCopier.copyTree(staticTree, tree);
+
+        //restore component states
+        for (Iterator it = TreeUtils.treeIterator(tree); it.hasNext();)
+        {
+            UIComponent comp = (UIComponent)it.next();
+            restoreComponent(facesContext, stateMap, comp);
+        }
+
+        //remap tagHash
+        TagHashHack.convertUniqueIdsBackToComponents(tree);
+
+        //save as request attribute
+        facesContext.getServletRequest().setAttribute(PREVIOUS_TREE_REQUEST_ATTR,
+                                                      tree);
+    }
+
 
     protected Map getStateMap(FacesContext facesContext)
     {
@@ -281,7 +299,7 @@ public class MinimizingStateRestorer
         }
 
         PropertyDescriptor pd = BeanUtils.findPropertyDescriptor(uiComponent, attrName);
-        if (pd != null)
+        if (pd != null && pd.getWriteMethod() != null)
         {
             //We must use setter method if one exists, because some setter methods
             //have side effects: e.g. setComponentId() adds id to NamingContainer
@@ -368,6 +386,7 @@ public class MinimizingStateRestorer
     }
 
 
+    /*
     public void restoreComponentState(FacesContext facesContext, UIComponent uiComponent) throws IOException
     {
         //Check model instance and create it, if it does not exist:
@@ -380,6 +399,7 @@ public class MinimizingStateRestorer
         Map stateMap = getStateMap(facesContext);
         restoreComponent(facesContext, stateMap, uiComponent);
     }
+    */
 
 
     protected void restoreLocale(FacesContext facesContext, Map stateMap)
@@ -512,5 +532,28 @@ public class MinimizingStateRestorer
         }
     }
 
+    public Tree getPreviousTree(FacesContext facesContext)
+    {
+        ServletRequest request = facesContext.getServletRequest();
+        Tree tree = (Tree)request.getAttribute(PREVIOUS_TREE_REQUEST_ATTR);
+        if (tree != null)
+        {
+            return tree;
+        }
+
+        Map stateMap = getStateMap(facesContext);
+        String previousTreeId = getStateParameter(stateMap,
+                                                  MinimizingStateSaver.TREE_ID_REQUEST_PARAM);
+        if (previousTreeId == null)
+        {
+            return null;
+        }
+
+        TreeFactory treeFactory = (TreeFactory)FactoryFinder.getFactory(FactoryFinder.TREE_FACTORY);
+        tree = treeFactory.getTree(facesContext, previousTreeId);
+
+        restorePreviousTree(facesContext, stateMap, tree);
+        return tree;
+    }
 
 }

@@ -204,6 +204,10 @@ public class BeanUtils
                                             Object propertyValue)
     {
         Method m = propertyDescriptor.getWriteMethod();
+        if (m == null)
+        {
+            throw new RuntimeException("Bean " + bean + " does not have a setter method for property " + propertyDescriptor.getName());
+        }
         try
         {
             m.invoke(bean, new Object[]{propertyValue});
