@@ -27,6 +27,9 @@ import javax.faces.lifecycle.Lifecycle;
 import javax.faces.lifecycle.LifecycleFactory;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
+import java.util.logging.Handler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * DOCUMENT ME!
@@ -45,7 +48,13 @@ public class DefaultServletContextListener
         try
         {
             //Set logging level
-            LogUtil.getLogger().setLevel(MyFacesConfig.getLogLevel());
+            Level logLevel = MyFacesConfig.getLogLevel();
+            Logger logger = LogUtil.getLogger();
+            while (logger != null)
+            {
+                setLoggerLevel(logger, logLevel);
+                logger = logger.getParent();
+            }
 
             ApplicationHandler handler = new DefaultApplicationHandler();
             LifecycleFactory factory = (LifecycleFactory)FactoryFinder.getFactory(FactoryFinder.LIFECYCLE_FACTORY);
@@ -61,6 +70,17 @@ public class DefaultServletContextListener
 
     public void contextDestroyed(ServletContextEvent e)
     {
+    }
+
+
+    private void setLoggerLevel(Logger logger, Level logLevel)
+    {
+        logger.setLevel(logLevel);
+        Handler[] logHandlers = logger.getHandlers();
+        for (int i = 0; i < logHandlers.length; i++)
+        {
+            logHandlers[i].setLevel(logLevel);
+        }
     }
 
 }

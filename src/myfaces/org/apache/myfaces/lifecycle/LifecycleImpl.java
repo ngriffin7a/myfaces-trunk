@@ -74,41 +74,6 @@ public class LifecycleImpl
         _rkFactory = (RenderKitFactory)FactoryFinder.getFactory(FactoryFinder.RENDER_KIT_FACTORY);
     }
 
-    /*
-    private void initPhases()
-    {
-        _phases = new ArrayList();
-        _phases.add(new ReconstituteComponentTreePhase(this));
-        _phases.add(new ApplyRequestValuesPhase(this));
-        //_phases.add(new HandleRequestEventsPhase(this));
-        _phases.add(new ProcessValidationsPhase(this));
-        _phases.add(new UpdateModelValuesPhase(this));
-        _phases.add(new InvokeApplicationPhase(this));
-        _phases.add(_renderResponsePhase = new RenderResponsePhase(this));
-    }
-    */
-
-
-    /*
-    public void execute(FacesContext facesContext)
-            throws FacesException
-    {
-        for (Iterator it = _phases.iterator(); it.hasNext();)
-        {
-            AbstractPhase phase = (AbstractPhase)it.next();
-            int result = phase.execute(facesContext);
-            if (result == Phase.GOTO_EXIT)
-            {
-                return;
-            }
-            else if (result == Phase.GOTO_RENDER)
-            {
-                _renderResponsePhase.execute(facesContext);
-                return;
-            }
-        }
-    }
-    */
 
     public int executePhase(FacesContext facescontext, Phase phase)
             throws FacesException
@@ -181,6 +146,8 @@ public class LifecycleImpl
     private void reconstituteComponentTree(FacesContext facesContext)
         throws FacesException
     {
+        LogUtil.getLogger().entering("LifecycleImpl", "reconstituteComponentTree");
+
         //Create tree
         HttpServletRequest request = (HttpServletRequest)facesContext.getServletRequest();
 
@@ -228,7 +195,7 @@ public class LifecycleImpl
             }
         }
 
-        //doEventProcessing(facesContext, PhaseId.RECONSTITUTE_REQUEST); TODO: do event processing for reconstitute request phase?
+        LogUtil.getLogger().exiting("LifecycleImpl", "reconstituteComponentTree");
     }
 
 
@@ -239,6 +206,8 @@ public class LifecycleImpl
     private boolean applyRequestValues(FacesContext facesContext)
         throws FacesException
     {
+        LogUtil.getLogger().entering("LifecycleImpl", "applyRequestValues");
+
         UIComponent root = facesContext.getTree().getRoot();
         try
         {
@@ -262,6 +231,7 @@ public class LifecycleImpl
             return true;
         }
 
+        LogUtil.getLogger().exiting("LifecycleImpl", "applyRequestValues");
         return false;
     }
 
@@ -272,6 +242,8 @@ public class LifecycleImpl
      */
     private boolean processValidations(FacesContext facesContext) throws FacesException
     {
+        LogUtil.getLogger().entering("LifecycleImpl", "processValidations");
+
         UIComponent root = facesContext.getTree().getRoot();
         root.processValidators(facesContext);
 
@@ -294,6 +266,7 @@ public class LifecycleImpl
             return true;
         }
 
+        LogUtil.getLogger().exiting("LifecycleImpl", "processValidations");
         return false;
     }
 
@@ -304,6 +277,8 @@ public class LifecycleImpl
      */
     private boolean updateModelValues(FacesContext facesContext) throws FacesException
     {
+        LogUtil.getLogger().entering("LifecycleImpl", "updateModelValues");
+
         UIComponent root = facesContext.getTree().getRoot();
         root.processUpdates(facesContext);
 
@@ -320,6 +295,7 @@ public class LifecycleImpl
             return true;
         }
 
+        LogUtil.getLogger().exiting("LifecycleImpl", "updateModelValues");
         return false;
     }
 
@@ -331,6 +307,8 @@ public class LifecycleImpl
     private boolean invokeApplication(FacesContext facesContext)
         throws FacesException
     {
+        LogUtil.getLogger().entering("LifecycleImpl", "invokeApplication");
+
         int eventsCount = facesContext.getApplicationEventsCount();
         if (eventsCount > 0)
         {
@@ -355,6 +333,7 @@ public class LifecycleImpl
             return true;
         }
 
+        LogUtil.getLogger().exiting("LifecycleImpl", "invokeApplication");
         return false;
     }
 
@@ -364,6 +343,8 @@ public class LifecycleImpl
     private void renderResponse(FacesContext facesContext)
         throws FacesException
     {
+        LogUtil.getLogger().entering("LifecycleImpl", "renderResponse");
+
         try
         {
             getViewHandler().renderView(facesContext);
@@ -376,6 +357,8 @@ public class LifecycleImpl
         {
             throw new FacesException(e.getMessage(), e);
         }
+
+        LogUtil.getLogger().exiting("LifecycleImpl", "renderResponse");
     }
 
 
