@@ -36,6 +36,9 @@ import java.util.List;
  * @author Manfred Geiler
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.7  2004/06/21 14:43:20  manolito
+ * no more calls to getRowCount to determine if list is empty before encodeBegin was called
+ *
  * Revision 1.6  2004/06/21 12:15:29  manolito
  * encodeBegin in UIData examines descendants valid flag recursivly now before refreshing DataModel
  *
@@ -234,7 +237,26 @@ public class HtmlDataTable
             _restoredValue = null;
             _cachedValue = null;
         }
-        super.encodeBegin(context);
+        if (isRenderedIfEmpty() || getRowCount() > 0)
+        {
+            super.encodeBegin(context);
+        }
+    }
+
+    public void encodeChildren(FacesContext context) throws IOException
+    {
+        if (isRenderedIfEmpty() || getRowCount() > 0)
+        {
+            super.encodeChildren(context);
+        }
+    }
+
+    public void encodeEnd(FacesContext context) throws IOException
+    {
+        if (isRenderedIfEmpty() || getRowCount() > 0)
+        {
+            super.encodeEnd(context);
+        }
     }
 
 
@@ -370,14 +392,8 @@ public class HtmlDataTable
 
     public boolean isRendered()
     {
-        //do not render if user not in role:
         if (!UserRoleUtils.isVisibleOnUserRole(this)) return false;
-        //do not render if rendered attribute set to false:
-        if (!super.isRendered()) return false;
-        //do render if empty DataModel does not matter:
-        if (isRenderedIfEmpty()) return true;
-        //only render if current DataModel is not empty:
-        return (getRowCount() > 0);
+        return super.isRendered();
     }
 
 
