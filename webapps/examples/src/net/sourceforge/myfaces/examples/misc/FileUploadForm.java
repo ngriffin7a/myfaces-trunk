@@ -18,6 +18,8 @@
  */
 package net.sourceforge.myfaces.examples.misc;
 
+import java.io.IOException;
+
 import net.sourceforge.myfaces.custom.fileupload.UploadedFile;
 
 import javax.faces.context.FacesContext;
@@ -51,7 +53,7 @@ public class FileUploadForm
         _name = name;
     }
 
-    public String upload()
+    public String upload() throws IOException
     {
         FacesContext facesContext = FacesContext.getCurrentInstance();
         facesContext.getExternalContext().getApplicationMap().put("fileupload_bytes", _upFile.getBytes());
