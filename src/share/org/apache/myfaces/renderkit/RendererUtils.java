@@ -38,6 +38,9 @@ import java.util.*;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.11  2004/06/23 12:42:26  tinytoony
+ * just a tad more information ;)
+ *
  * Revision 1.10  2004/05/18 14:31:40  manolito
  * user role support completely moved to components source tree
  *
@@ -383,7 +386,7 @@ public class RendererUtils
                 else
                 {
                     FacesContext facesContext = FacesContext.getCurrentInstance();
-                    throw new IllegalArgumentException("Value binding of UISelectItems with id " + child.getClientId(facesContext) + " does not reference an Object of type SelectItem, SelectItem[], Collection or Map");
+                    throw new IllegalArgumentException("Value binding of UISelectItems with id " + child.getClientId(facesContext) + " does not reference an Object of type SelectItem, SelectItem[], Collection or Map but of type : "+((value==null)?null:value.getClass().getName()));
                 }
             }
             else
