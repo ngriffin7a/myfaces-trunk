@@ -29,7 +29,7 @@ import javax.faces.context.FacesContext;
 public class HtmlInputCalendar
         extends HtmlInputText
 {
-    //private static final Log log = LogFactory.getLog(HtmlInputFileUpload.class);
+    //private static final Log log = LogFactory.getLog(HtmlInputCalendar.class);
 
     //------------------ GENERATED CODE BEGIN (do not modify!) --------------------
 

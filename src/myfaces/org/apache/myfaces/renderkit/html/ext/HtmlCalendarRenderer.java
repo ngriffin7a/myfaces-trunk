@@ -258,27 +258,22 @@ public class HtmlCalendarRenderer
     private void writeLink(String content, UIInput component, FacesContext facesContext, Date valueForLink)
             throws IOException
     {
-        UICommand command = new UICommand();
-        command.setId(facesContext.getViewRoot().createUniqueId());
-        command.setValue(content);
-
-        UIParameter param = new UIParameter();
-
-        param.setName(component.getId());
 
         Converter converter = new CalendarDateTimeConverter();
 
         if (component.getConverter() != null)
             converter = component.getConverter();
 
+        HtmlRendererUtils.LinkParameter param = new HtmlRendererUtils.LinkParameter();
+        param.setName(component.getId());
         param.setValue(converter.getAsString(facesContext, component, valueForLink));
 
-        command.getChildren().add(param);
+        HtmlRendererUtils.LinkParameter[] params =
+            new HtmlRendererUtils.LinkParameter[]{param};
 
-        HtmlLinkRenderer renderer = new HtmlLinkRenderer();
-
-        renderer.renderCommandLinkStart(facesContext, command);
-        renderer.renderLinkEnd(facesContext, command);
+        HtmlRendererUtils.renderCommandLinkStart(facesContext, component,
+                facesContext.getViewRoot().createUniqueId(), content, null, params);
+        HtmlRendererUtils.renderLinkEnd(facesContext, component);
     }
 
     private int mapCalendarDayToCommonDay(int day)
