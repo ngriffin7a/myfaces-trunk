@@ -1,4 +1,4 @@
-/**
+/*
  * MyFaces - the free JSF implementation
  * Copyright (C) 2003, 2004  The MyFaces Team (http://myfaces.sourceforge.net)
  *
@@ -18,7 +18,6 @@
  */
 package net.sourceforge.myfaces.util;
 
-import net.sourceforge.myfaces.util.bean.BeanUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -30,6 +29,8 @@ import javax.faces.el.ValueBinding;
 import javax.faces.event.FacesListener;
 import javax.faces.validator.Validator;
 import java.beans.BeanInfo;
+import java.beans.IntrospectionException;
+import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -78,22 +79,22 @@ public class DebugUtils
         // hide from public access
     }
 
-    public static void assertError(boolean condition, Log log, String msg)
+    public static void assertError(boolean condition, Log log_, String msg)
             throws FacesException
     {
         if (!condition)
         {
-            log.error(msg);
+            log_.error(msg);
             throw new FacesException(msg);
         }
     }
 
-    public static void assertFatal(boolean condition, Log log, String msg)
+    public static void assertFatal(boolean condition, Log log_, String msg)
         throws FacesException
     {
         if (!condition)
         {
-            log.fatal(msg);
+            log_.fatal(msg);
             throw new FacesException(msg);
         }
     }
@@ -192,7 +193,16 @@ public class DebugUtils
         //HACK: comp.getAttributes() only returns attributes, that are NOT backed
         //by a corresponding component property. So, we must explicitly get the
         //available properties by Introspection:
-        BeanInfo beanInfo = BeanUtils.getBeanInfo(comp);
+        BeanInfo beanInfo;
+        try
+        {
+            beanInfo = Introspector.getBeanInfo(comp.getClass());
+        }
+        catch (IntrospectionException e)
+        {
+            throw new RuntimeException(e);
+        }
+        
         PropertyDescriptor propDescriptors[] = beanInfo.getPropertyDescriptors();
         for (int i = 0; i < propDescriptors.length; i++)
         {
@@ -346,7 +356,7 @@ public class DebugUtils
             {
                 stream.print("[id:");
                 stream.print(((UIComponent)value).getId());
-                stream.print("]");
+                stream.print(']');
             }
             else if (value instanceof MethodBinding)
             {

@@ -125,7 +125,7 @@ public class PropertyResolverImpl extends PropertyResolver
                 return null;
             }
 
-            throw new ReferenceSyntaxException("Must be array or List. Bean: " + base.getClass() + ", index " + index);
+            throw new ReferenceSyntaxException("Must be array or List. Bean: " + base.getClass().getName() + ", index " + index);
         }
         catch (RuntimeException e)
         {
@@ -148,7 +148,7 @@ public class PropertyResolverImpl extends PropertyResolver
             if (property == null ||
                 property instanceof String && ((String)property).length() == 0)
             {
-                throw new PropertyNotFoundException("Bean: " + base.getClass() + ", null or empty property property");
+                throw new PropertyNotFoundException("Bean: " + base.getClass().getName() + ", null or empty property property");
             }
 
             if (base instanceof Map)
@@ -203,10 +203,10 @@ public class PropertyResolverImpl extends PropertyResolver
             }
             catch (IndexOutOfBoundsException e)
             {
-                throw new PropertyNotFoundException("Bean: " + base.getClass() + ", index " + index, e);
+                throw new PropertyNotFoundException("Bean: " + base.getClass().getName() + ", index " + index, e);
             }
 
-            throw new ReferenceSyntaxException("Must be array or List. Bean: " + base.getClass() + ", index " + index);
+            throw new ReferenceSyntaxException("Must be array or List. Bean: " + base.getClass().getName() + ", index " + index);
         }
         catch (RuntimeException e)
         {
@@ -228,7 +228,7 @@ public class PropertyResolverImpl extends PropertyResolver
             if (property == null ||
                 property instanceof String && ((String)property).length() == 0)
             {
-                throw new PropertyNotFoundException("Bean: " + base.getClass() + ", null or empty property property");
+                throw new PropertyNotFoundException("Bean: " + base.getClass().getName() + ", null or empty property property");
             }
 
             // Is there any way to determine whether Map.put() will fail?
@@ -275,7 +275,7 @@ public class PropertyResolverImpl extends PropertyResolver
                 return true;
             }
 
-            throw new ReferenceSyntaxException("Must be array or List. Bean: " + base.getClass() + ", index " + index);
+            throw new ReferenceSyntaxException("Must be array or List. Bean: " + base.getClass().getName() + ", index " + index);
         }
         catch (RuntimeException e)
         {
@@ -297,7 +297,7 @@ public class PropertyResolverImpl extends PropertyResolver
             if (property == null ||
                 property instanceof String && ((String)property).length() == 0)
             {
-                throw new PropertyNotFoundException("Bean: " + base.getClass() + ", null or empty property property");
+                throw new PropertyNotFoundException("Bean: " + base.getClass().getName() + ", null or empty property property");
             }
 
             if (base instanceof Map)
@@ -352,7 +352,7 @@ public class PropertyResolverImpl extends PropertyResolver
             }
             catch (Throwable t)
             {
-                throw new PropertyNotFoundException("Bean: " + base.getClass() + ", index: " + index, t);
+                throw new PropertyNotFoundException("Bean: " + base.getClass().getName() + ", index: " + index, t);
             }
 
             if (base instanceof UIComponent)
@@ -360,7 +360,7 @@ public class PropertyResolverImpl extends PropertyResolver
                 return UIComponent.class;
             }
 
-            throw new ReferenceSyntaxException("Must be array or List. Bean: " + base.getClass() + ", index " + index);
+            throw new ReferenceSyntaxException("Must be array or List. Bean: " + base.getClass().getName() + ", index " + index);
         }
         catch (RuntimeException e)
         {
@@ -373,14 +373,14 @@ public class PropertyResolverImpl extends PropertyResolver
 
     //~ Internal Helper Methods ------------------------------------------------------------
 
-    private static void setProperty(Object base, String name, Object newValue)
+    public static void setProperty(Object base, String name, Object newValue)
     {
         PropertyDescriptor propertyDescriptor = getPropertyDescriptor(base, name);
 
         Method m = propertyDescriptor.getWriteMethod();
         if (m == null)
         {
-            throw new PropertyNotFoundException("Bean: " + base.getClass() + ", property: " + name);
+            throw new PropertyNotFoundException("Bean: " + base.getClass().getName() + ", property: " + name);
         }
 
         try
@@ -389,18 +389,18 @@ public class PropertyResolverImpl extends PropertyResolver
         }
         catch (Throwable t)
         {
-            throw new EvaluationException("Bean: " + base.getClass() + ", property: " + name, t);
+            throw new EvaluationException("Bean: " + base.getClass().getName() + ", property: " + name, t);
         }
     }
 
-    private static Object getProperty(Object base, String name)
+    public static Object getProperty(Object base, String name)
     {
         PropertyDescriptor propertyDescriptor = getPropertyDescriptor(base, name);
 
         Method m = propertyDescriptor.getReadMethod();
         if (m == null)
         {
-            throw new PropertyNotFoundException("Bean: " + base.getClass() + ", property: " + name);
+            throw new PropertyNotFoundException("Bean: " + base.getClass().getName() + ", property: " + name);
         }
 
         try
@@ -409,28 +409,28 @@ public class PropertyResolverImpl extends PropertyResolver
         }
         catch (Throwable t)
         {
-            throw new EvaluationException("Bean: " + base.getClass() + ", property: " + name, t);
+            throw new EvaluationException("Bean: " + base.getClass().getName() + ", property: " + name, t);
         }
     }
 
-    private static PropertyDescriptor getPropertyDescriptor(Object base, String name)
+    public static PropertyDescriptor getPropertyDescriptor(Object base, String name)
     {
         PropertyDescriptor propertyDescriptor;
 
         try
         {
             propertyDescriptor =
-                findPropertyDescriptor(Introspector.getBeanInfo(base.getClass()), name);
+                getPropertyDescriptor(Introspector.getBeanInfo(base.getClass()), name);
         }
         catch (IntrospectionException e)
         {
-            throw new PropertyNotFoundException("Bean: " + base.getClass() + ", property: " + name, e);
+            throw new PropertyNotFoundException("Bean: " + base.getClass().getName() + ", property: " + name, e);
         }
 
         return propertyDescriptor;
     }
 
-    private static PropertyDescriptor findPropertyDescriptor(BeanInfo beanInfo, String propertyName)
+    public static PropertyDescriptor getPropertyDescriptor(BeanInfo beanInfo, String propertyName)
     {
         PropertyDescriptor[] propDescriptors = beanInfo.getPropertyDescriptors();
 
@@ -453,6 +453,6 @@ public class PropertyResolverImpl extends PropertyResolver
             }
         }
 
-        throw new PropertyNotFoundException("Bean: " + beanInfo.getBeanDescriptor().getBeanClass() + ", property: " + propertyName);
+        throw new PropertyNotFoundException("Bean: " + beanInfo.getBeanDescriptor().getBeanClass().getName() + ", property: " + propertyName);
     }
 }

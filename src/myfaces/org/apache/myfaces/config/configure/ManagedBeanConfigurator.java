@@ -19,16 +19,16 @@
 package net.sourceforge.myfaces.config.configure;
 
 import net.sourceforge.myfaces.config.*;
+import net.sourceforge.myfaces.el.PropertyResolverImpl;
 import net.sourceforge.myfaces.util.HashMapUtils;
-import net.sourceforge.myfaces.util.bean.BeanUtils;
 
 import javax.faces.context.FacesContext;
 import javax.faces.el.ValueBinding;
-import java.beans.PropertyDescriptor;
 import java.util.*;
 
 /**
  * @author Manfred Geiler (latest modification by $Author$)
+ * @author Anton Koinov
  * @version $Revision$ $Date$
  */
 public class ManagedBeanConfigurator
@@ -87,18 +87,16 @@ public class ManagedBeanConfigurator
         switch (propertyConfig.getType())
         {
             case ManagedPropertyConfig.TYPE_OBJECT:
-                BeanUtils.setBeanPropertyValue(bean,
-                                               propertyConfig.getPropertyName(),
-                                               propertyConfig.getValue());
+                PropertyResolverImpl.setProperty(bean,
+                        propertyConfig.getPropertyName(), propertyConfig.getValue());
                 break;
 
             case ManagedPropertyConfig.TYPE_VALUE_BINDING:
                 ValueBinding vb = facesContext.getApplication()
                                         .createValueBinding((String)propertyConfig.getValue());
                 ConfigUtils.checkValueBindingType(facesContext, vb, propertyConfig.getPropertyClass());
-                BeanUtils.setBeanPropertyValue(bean,
-                                               propertyConfig.getPropertyName(),
-                                               vb.getValue(facesContext));
+                PropertyResolverImpl.setProperty(bean,
+                        propertyConfig.getPropertyName(), vb.getValue(facesContext));
                 break;
 
             case ManagedPropertyConfig.TYPE_LIST:
@@ -120,24 +118,14 @@ public class ManagedBeanConfigurator
                                  Object bean,
                                  ManagedPropertyConfig propertyConfig)
     {
-        List list = null;
         ListEntriesConfig listEntriesConfig = propertyConfig.getListEntriesConfig();
 
-        PropertyDescriptor pd = BeanUtils.findBeanPropertyDescriptor(bean, propertyConfig.getPropertyName());
-        if (pd == null)
+        List list = (List) PropertyResolverImpl.getProperty(bean, propertyConfig.getPropertyName());
+        if (list == null)
         {
-            throw new IllegalArgumentException("Bean " + _managedBeanConfig.getManagedBeanName() + " does not have a property " + propertyConfig.getPropertyName());
-        }
-        if (pd.getReadMethod() != null)
-        {
-            //bean has getter method, try to get List from property
-            list = (List)BeanUtils.getBeanPropertyValue(bean, pd);
-        }
-
-        if (list != null)
-        {
-            //bean has no getter, or getter returned null, create new ArrayList
+            // list is null, create a new one
             list = new ArrayList(listEntriesConfig.getValues().size());
+            PropertyResolverImpl.setProperty(bean, propertyConfig.getPropertyName(), list);
         }
 
         //add list entries
@@ -178,24 +166,13 @@ public class ManagedBeanConfigurator
                                 Object bean,
                                 ManagedPropertyConfig propertyConfig)
     {
-        Map map = null;
         MapEntriesConfig mapEntriesConfig = propertyConfig.getMapEntriesConfig();
-
-        PropertyDescriptor pd = BeanUtils.findBeanPropertyDescriptor(bean, propertyConfig.getPropertyName());
-        if (pd == null)
+        Map map = (Map) PropertyResolverImpl.getProperty(bean, propertyConfig.getPropertyName());
+        if (map == null)
         {
-            throw new IllegalArgumentException("Bean " + _managedBeanConfig.getManagedBeanName() + " does not have a property " + propertyConfig.getPropertyName());
-        }
-        if (pd.getReadMethod() != null)
-        {
-            //bean has getter method, try to get Map from property
-            map = (Map)BeanUtils.getBeanPropertyValue(bean, pd);
-        }
-
-        if (map != null)
-        {
-            //bean has no getter, or getter returned null, create new HashMap
+            // map is null, create a new one
             map = new HashMap(HashMapUtils.calcCapacity(mapEntriesConfig.getMap().size()));
+            PropertyResolverImpl.setProperty(bean, propertyConfig.getPropertyName(), map);
         }
 
         //add map entries
