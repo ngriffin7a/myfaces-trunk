@@ -7,8 +7,8 @@ These libraries are only needed for special custom components.
 |                             | EmailValidator       |
 |                             | RegExprValidator     |
 |-----------------------------|----------------------|
+| jakarta-oro.jar             | RegExprValidator     |
+|-----------------------------|----------------------|
 | informa.jar                 | RdfTicker            |
 | jdom.jar                    |                      |
-|-----------------------------|----------------------|
-| jakarta-oro.jar             | ???                  |
 |-----------------------------|----------------------|
