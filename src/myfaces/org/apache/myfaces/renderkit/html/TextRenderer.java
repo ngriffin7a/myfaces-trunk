@@ -136,13 +136,13 @@ public class TextRenderer
         throws IOException
     {
         ResponseWriter writer = facesContext.getResponseWriter();
-        String css = (String)uiComponent.getAttribute(OUTPUT_CLASS_ATTR);
-        if (css != null)
-        {
-            writer.write("<span class=\"");
-            writer.write(css);
-            writer.write("\">");
-        }
+
+        writer.write("<span");
+        HTMLUtil.renderCssClass(writer, uiComponent, OUTPUT_CLASS_ATTR);
+        HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML_UNIVERSAL_ATTRIBUTES);
+        HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML_EVENT_HANDLER_ATTRIBUTES);
+        writer.write(">");
+
         String text;
         String key = (String)uiComponent.getAttribute(KEY_ATTR);
         if (key != null)
@@ -157,10 +157,8 @@ public class TextRenderer
         }
 
         writer.write(HTMLEncoder.encode(text, true, true));
-        if (css != null)
-        {
-            writer.write("</span>");
-        }
+
+        writer.write("</span>");
     }
 
 }

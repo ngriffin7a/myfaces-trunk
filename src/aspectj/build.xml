@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<project name="myfaces-aspectj" default="compile">
+
+    <!-- Properties -->
+    <property file="${project.dir}/aspectj/build.properties"/>
+
+    <!-- classpath for compiling -->
+    <path id="aspectj.class.path">
+        <path refid="project.class.path"/>
+        <pathelement location="${aspectjrt.jar}"/>
+    </path>
+
+
+    <taskdef name="ajc"
+             classname="org.aspectj.tools.ant.taskdefs.Ajc"
+             classpath="${aspectj-ant.jar}"/>
+
+    <target name="compile">
+
+        <mkdir dir="${temp.dir}/myfaces-aspectj-src"/>
+        <copy todir="${temp.dir}/myfaces-aspectj-src">
+            <fileset dir="${project.dir}/src/aspectj" includes="**/*.java"/>
+        </copy>
+
+        <replaceregexp match="/\*\x3C(.*?)\*/(.*?)/\*\x3E\*/"
+                       replace="\1" flags="g" >
+            <fileset dir="${temp.dir}/myfaces-aspectj-src" includes="**/*.java"/>
+        </replaceregexp>
+
+        <replaceregexp match="/\*:(.*?)\*/"
+                       replace="\:\1" flags="gs">
+            <fileset dir="${temp.dir}/myfaces-aspectj-src" includes="**/*.java"/>
+        </replaceregexp>
+
+        <ajc srcdir="${myfaces.src};${temp.dir}/myfaces-aspectj-src"
+             destdir="${temp.dir}/myfaces-jar/classes"
+             optimize="${javac.optimize}"
+             classpathref="aspectj.class.path"
+             internalclasspath="${aspectj-ant.jar};${aspectjtools.jar}"
+             preprocess="false"
+             workingdir="${temp.dir}/myfaces-aspectj-work"/>
+
+        <delete quiet="true" failonerror="false" includeEmptyDirs="true">
+            <fileset dir="${temp.dir}/myfaces-aspectj-src" />
+            <fileset dir="${temp.dir}/myfaces-aspectj-work" />
+        </delete>
+
+    </target>
+
+</project>

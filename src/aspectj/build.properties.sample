@@ -1,0 +1,4 @@
+# adapt to use aspectj for performance testing
+aspectj-ant.jar = C:/Programme/aspectj1.0/lib/aspectj-ant.jar
+aspectjtools.jar = C:/Programme/aspectj1.0/lib/aspectjtools.jar
+aspectjrt.jar = C:/Programme/aspectj1.0/lib/aspectjrt.jar

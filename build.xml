@@ -30,13 +30,10 @@
         <!-- temporary dir -->
         <mkdir dir="${temp.dir}/myfaces-jar"/>
 
-        <!-- compile main classes (meanwhile optimize is off for better debugging) -->
+        <!-- compile main classes -->
         <mkdir dir="${temp.dir}/myfaces-jar/classes"/>
-        <javac srcdir="${myfaces.src}"
-               destdir="${temp.dir}/myfaces-jar/classes"
-               optimize="${javac.optimize}"
-               classpathref="project.class.path">
-        </javac>
+        <antcall target="-compile-with-javac"/>
+        <antcall target="-compile-with-aspectj"/>
 
         <!-- timestamp for the manifest -->
         <tstamp>
@@ -174,6 +171,23 @@
             antfile="build.xml"
             inheritall="false"
             target="clean"/>
+    </target>
+
+
+    <target name="-compile-with-javac" unless="use-aspectj">
+        <javac srcdir="${myfaces.src}"
+               destdir="${temp.dir}/myfaces-jar/classes"
+               optimize="${javac.optimize}"
+               classpathref="project.class.path">
+        </javac>
+    </target>
+
+    <target name="-compile-with-aspectj" if="use-aspectj">
+        <ant antfile="${project.dir}/src/aspectj/build.xml"
+             dir="${project.dir}"
+             inheritall="true"
+             inheritrefs="true"
+             target="compile"/>
     </target>
 
 </project>
