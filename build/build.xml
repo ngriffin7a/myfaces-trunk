@@ -442,6 +442,14 @@
              target="release"/>
     </target>
 
+    <target name="blank-release"
+            description="creates the tiles examples release file myfaces-x.x.x-tiles-example.tgz (don't forget to adjust manifest.properties!)">
+        <ant dir="${project.dir}/build/blank-webapp"
+             antfile="build.xml"
+             inheritall="false"
+             target="release"/>
+    </target>
+
     <target name="wap-release"
             description="creates the wap examples release file myfaces-x.x.x-tiles-example.tgz (don't forget to adjust manifest.properties!)">
         <ant dir="${project.dir}/build/wap-webapp"
@@ -450,7 +458,7 @@
              target="release"/>
     </target>	
 	<target name="all"
-            depends="bin-release, src-release, examples-release, tiles-release, wap-release"
+            depends="bin-release, src-release, examples-release, tiles-release, blank-release, wap-release"
             description="builds all release files">
     </target>
 
