@@ -25,6 +25,9 @@ import java.io.IOException;
  * @author Manfred Geiler
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.14  2004/04/13 08:08:08  manolito
+ * NPE bug fix
+ *
  * Revision 1.13  2004/04/06 10:26:03  royalts
  * restoreView(...) returns null if restoredViewId != viewId
  *
@@ -276,6 +279,7 @@ public class JspStateManagerImpl
                                                                  String viewId)
     {
         Object[] ar = (Object[])externalContext.getSessionMap().get(SERIALIZED_VIEW_PARAM);
+        if (ar == null) return null;    // no state information in session
         String savedViewId = (String)ar[0];
         if (viewId == null || viewId.equals(savedViewId))
         {
