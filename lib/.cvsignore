@@ -6,3 +6,5 @@ myfaces-components.jar
 myfaces-jsf-api.jar
 myfaces-impl.jar
 myfaces-extensions.jar
+myfaces-wap.jar
+myfaces-xdoclet.jar
