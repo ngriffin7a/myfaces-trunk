@@ -34,6 +34,9 @@ import java.util.*;
  * @author Anton Koinov
  *
  * $Log$
+ * Revision 1.5  2005/01/05 16:22:57  bdudney
+ * added fail early code so that if you specify a non-existent property in the managed-bean stuff it will fail early instead of a lame error message that leads down a rabit trail.
+ *
  * Revision 1.4  2004/10/13 11:50:59  matze
  * renamed packages to org.apache
  *
@@ -56,7 +59,16 @@ public class ManagedBeanBuilder
         switch (beanConfiguration.getInitMode())
         {
             case ManagedBean.INIT_MODE_PROPERTIES:
-                initializeProperties(facesContext, beanConfiguration.getManagedProperties(), bean);
+                try {
+                  initializeProperties(facesContext, beanConfiguration
+                      .getManagedProperties(), bean);
+                } catch (IllegalArgumentException e) {
+                  throw new IllegalArgumentException(
+                          e.getMessage()
+                              + " for bean '"
+                              + beanConfiguration.getManagedBeanName()
+                              + "' check the configuration to make sure all properties correspond with get/set methods");
+                }
                 break;
 
             case ManagedBean.INIT_MODE_MAP:
@@ -131,6 +143,9 @@ public class ManagedBeanBuilder
             {
                 propertyClass = ClassUtils
                     .simpleJavaTypeToClass(property.getPropertyClass());
+            }
+            if(null == propertyClass) {
+              throw new IllegalArgumentException("unable to find the type of property " + property.getPropertyName());
             }
             Object coercedValue = ClassUtils.convertToType(value, propertyClass);
             propertyResolver.setValue(
