@@ -371,7 +371,14 @@ public class MyFacesTagHelper
                 UIComponent child = parsedParent.getChild(foundIdx + 1);
                 if (equalsParsedChild(facesTag, child, newComponent))
                 {
-                    LogUtil.getLogger().warning("Component " + UIComponentUtils.toString(newComponent) + " is ambigous. This component must have an id when it is rendered conditional (i.e. within if-Block in JSP, or within conditional JSTL-tag).");
+                    UIComponent found = parsedParent.getChild(foundIdx);
+                    Object[] jspPos = (Object[])found.getAttribute(JspInfo.JSP_POSITION_ATTR);
+                    String pos = "";
+                    if (jspPos != null)
+                    {
+                        pos = " in file '" + jspPos[0] + "' (line " + jspPos[1] + " - " + jspPos[2] + ")";
+                    }
+                    LogUtil.getLogger().warning("Component " + UIComponentUtils.toString(newComponent) + pos + " is ambigous. This component must have an id when it is rendered conditional (i.e. within if-Block in JSP, or within conditional JSTL-tag).");
                 }
             }
 

@@ -1382,11 +1382,6 @@
             <rtexprvalue>true</rtexprvalue>
         </attribute>
         <attribute>
-            <name>src</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-        </attribute>
-        <attribute>
             <name>usemap</name>
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>

@@ -271,14 +271,14 @@ public class MyParseEventListener
                                TagLibraryInfo tli, TagInfo ti, boolean hasBody)
             throws JasperException
     {
-        handleTagBegin(prefix, shortTagName, attrs, tli, ti);
+        handleTagBegin(prefix, shortTagName, attrs, tli, ti, start.getFile(), start.getLineNumber(), stop.getLineNumber());
     }
 
     public void handleTagBegin(Mark start, Mark stop, Attributes attrs, String prefix, String shortTagName,
                                TagLibraryInfo tli, TagInfo ti, boolean hasBody, boolean isXml)
             throws JasperException
     {
-        handleTagBegin(prefix, shortTagName, attrs, tli, ti);
+        handleTagBegin(prefix, shortTagName, attrs, tli, ti, start.getFile(), start.getLineNumber(), stop.getLineNumber());
     }
 
     public void handleTagEnd(Mark start, Mark stop, String prefix, String shortTagName,
@@ -309,7 +309,6 @@ public class MyParseEventListener
 
     public void setReader(JspReader reader)
     {
-        //System.out.println("MyParseEventListener.setReader");
     }
 
     public void setTemplateInfo(Mark start, Mark stop)
@@ -371,7 +370,8 @@ public class MyParseEventListener
 
 
     private void handleTagBegin(String prefix, String shortTagName,
-                                Attributes attrs, TagLibraryInfo tli, TagInfo ti)
+                                Attributes attrs, TagLibraryInfo tli, TagInfo ti,
+                                String filename, int startLine, int endLine)
     {
         Tag tag = getTagInstance(ti);
         if (tag == null)
@@ -380,7 +380,7 @@ public class MyParseEventListener
         }
         else if (tag instanceof FacesTag)
         {
-            handleFacesTag(ti, (FacesTag)tag, attrs);
+            handleFacesTag(ti, (FacesTag)tag, attrs, filename, startLine, endLine);
         }
         else if (tag instanceof ActionListenerTag)
         {
@@ -391,7 +391,8 @@ public class MyParseEventListener
 
     private void handleFacesTag(TagInfo ti,
                                 FacesTag facesTag,
-                                Attributes attrs)
+                                Attributes attrs,
+                                String filename, int startLine, int endLine)
     {
         String id = null;
 
@@ -516,6 +517,12 @@ public class MyParseEventListener
 
         //We created this tag instance ourselves, so we are allowed to keep a reference
         comp.setAttribute(JspInfo.CREATOR_TAG_ATTR, facesTag);
+
+        //Remember JSP line number
+        comp.setAttribute(JspInfo.JSP_POSITION_ATTR,
+                          new Object[] {filename,
+                                        new Integer(startLine),
+                                        new Integer(endLine)});
 
         if (comp.getComponentType().equals(UISaveState.TYPE))
         {

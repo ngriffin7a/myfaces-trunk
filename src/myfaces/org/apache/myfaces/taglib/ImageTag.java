@@ -102,11 +102,6 @@ public class ImageTag
         setRendererAttribute(ImageRenderer.LONGDESC_ATTR, value);
     }
 
-    public void setSrc(String value)
-    {
-        setRendererAttribute(ImageRenderer.SRC_ATTR, value);
-    }
-
     public void setUsemap(String value)
     {
         setRendererAttribute(ImageRenderer.USEMAP_ATTR, value);

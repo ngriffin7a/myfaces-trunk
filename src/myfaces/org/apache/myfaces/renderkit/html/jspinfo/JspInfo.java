@@ -43,6 +43,7 @@ import java.util.*;
 public class JspInfo
 {
     public static final String CREATOR_TAG_ATTR = JspInfo.class.getName() + ".CREATOR_TAG";
+    public static final String JSP_POSITION_ATTR = JspInfo.class.getName() + ".JSP_POSITION";
     public static final String ACTION_LISTENERS_TYPE_LIST_ATTR = JspInfo.class.getName() + ".LISTENERS";
     public static final String HARDCODED_ID_ATTR = JspInfo.class.getName() + ".HARDCODED_ID";
 
