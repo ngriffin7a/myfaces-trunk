@@ -25,9 +25,15 @@ import javax.servlet.http.HttpServletRequest;
  * 
  * @author Dimitry D'hondt
  * @author Anton Koinov
+ * @version $Revision$ $Date$
+ * $Log$
+ * Revision 1.8  2004/11/23 12:26:45  manolito
+ * SF-Bug #1071640 fixed
+ *
  */
 public class CookieMap extends AbstractAttributeMap
 {
+    private static final Cookie[] EMPTY_ARRAY = new Cookie[0];
 
     final HttpServletRequest _httpServletRequest;
 
@@ -45,6 +51,7 @@ public class CookieMap extends AbstractAttributeMap
     public boolean containsKey(Object key)
     {
         Cookie[] cookies = _httpServletRequest.getCookies();
+        if (cookies == null) return false;
         for (int i = 0, len = cookies.length; i < len; i++)
         {
             if (cookies[i].getName().equals(key))
@@ -64,6 +71,7 @@ public class CookieMap extends AbstractAttributeMap
         }
 
         Cookie[] cookies = _httpServletRequest.getCookies();
+        if (cookies == null) return false;
         for (int i = 0, len = cookies.length; i < len; i++)
         {
             if (findValue.equals(cookies[i].getValue()))
@@ -88,6 +96,7 @@ public class CookieMap extends AbstractAttributeMap
     protected Object getAttribute(String key)
     {
         Cookie[] cookies = _httpServletRequest.getCookies();
+        if (cookies == null) return null;
         for (int i = 0, len = cookies.length; i < len; i++)
         {
             if (cookies[i].getName().equals(key))
@@ -113,7 +122,15 @@ public class CookieMap extends AbstractAttributeMap
 
     protected Enumeration getAttributeNames()
     {
-        return new CookieNameEnumeration(_httpServletRequest.getCookies());
+        Cookie[] cookies = _httpServletRequest.getCookies();
+        if (cookies == null)
+        {
+            return new CookieNameEnumeration(EMPTY_ARRAY);
+        }
+        else
+        {
+            return new CookieNameEnumeration(cookies);
+        }
     }
     
     private static class CookieNameEnumeration implements Enumeration
