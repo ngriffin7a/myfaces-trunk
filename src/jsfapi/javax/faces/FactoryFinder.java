@@ -16,13 +16,13 @@
 package javax.faces;
 
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-import java.util.*;
 import javax.faces.application.ApplicationFactory;
 import javax.faces.context.FacesContextFactory;
 import javax.faces.lifecycle.LifecycleFactory;
 import javax.faces.render.RenderKitFactory;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.util.*;
 
 /**
  * TODO: The "META-INF/services/" thing
@@ -30,6 +30,9 @@ import javax.faces.render.RenderKitFactory;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.17  2004/07/20 14:56:41  manolito
+ * removed public FactoryFinder method getValidFactoryNames - there is no such method in JSF 1.1 !
+ *
  * Revision 1.16  2004/07/07 08:37:06  mwessendorf
  * final class
  *
@@ -56,41 +59,38 @@ import javax.faces.render.RenderKitFactory;
  */
 public final class FactoryFinder
 {
-
     public static final String APPLICATION_FACTORY = "javax.faces.application.ApplicationFactory";
     public static final String FACES_CONTEXT_FACTORY = "javax.faces.context.FacesContextFactory";
     public static final String LIFECYCLE_FACTORY = "javax.faces.lifecycle.LifecycleFactory";
     public static final String RENDER_KIT_FACTORY = "javax.faces.render.RenderKitFactory";
 
-    private static Set validFactoryNames;
-    private static Map abstractFactoryClasses = new HashMap();
+    private static Map _registeredFactoryNames = new HashMap();
+    private static Map _factories = new HashMap();
 
-    private static final Map _registeredFactoryNames = new HashMap();
-    private static final Map _factories = new HashMap();
-
-
+    private static final Set VALID_FACTORY_NAMES = new HashSet();
+    private static final Map ABSTRACT_FACTORY_CLASSES = new HashMap();
     static {
-        validFactoryNames = new HashSet();
-        validFactoryNames.add(FactoryFinder.APPLICATION_FACTORY);
-        validFactoryNames.add(FactoryFinder.FACES_CONTEXT_FACTORY);
-        validFactoryNames.add(FactoryFinder.LIFECYCLE_FACTORY);
-        validFactoryNames.add(FactoryFinder.RENDER_KIT_FACTORY);
-        validFactoryNames = Collections.unmodifiableSet(validFactoryNames);
+        VALID_FACTORY_NAMES.add(APPLICATION_FACTORY);
+        VALID_FACTORY_NAMES.add(FACES_CONTEXT_FACTORY);
+        VALID_FACTORY_NAMES.add(LIFECYCLE_FACTORY);
+        VALID_FACTORY_NAMES.add(RENDER_KIT_FACTORY);
 
-        abstractFactoryClasses.put(APPLICATION_FACTORY, ApplicationFactory.class);
-        abstractFactoryClasses.put(FACES_CONTEXT_FACTORY, FacesContextFactory.class);
-        abstractFactoryClasses.put(LIFECYCLE_FACTORY, LifecycleFactory.class);
-        abstractFactoryClasses.put(RENDER_KIT_FACTORY, RenderKitFactory.class);
+        ABSTRACT_FACTORY_CLASSES.put(APPLICATION_FACTORY, ApplicationFactory.class);
+        ABSTRACT_FACTORY_CLASSES.put(FACES_CONTEXT_FACTORY, FacesContextFactory.class);
+        ABSTRACT_FACTORY_CLASSES.put(LIFECYCLE_FACTORY, LifecycleFactory.class);
+        ABSTRACT_FACTORY_CLASSES.put(RENDER_KIT_FACTORY, RenderKitFactory.class);
     }
 
     /**
      * The returned set is immutable
      * @return
      */
+    /*
     public static Set getValidFactoryNames() {
-      return validFactoryNames;
+      return VALID_FACTORY_NAMES;
     }
-    
+    */
+
     public static Object getFactory(String factoryName)
             throws FacesException
     {
@@ -100,7 +100,7 @@ public final class FactoryFinder
         if (factoryClassNames == null)
         {
             String message = "No Factories configured for this Application - typically this is because " +
-            "a context listener is not setup in your web.xml.\n" + 
+            "a context listener is not setup in your web.xml.\n" +
             "A typical config looks like this;\n<listener>\n" +
             "  <listener-class>net.sourceforge.myfaces.webapp.StartupServletContextListener</listener-class>\n" +
             "</listener>\n";
@@ -121,7 +121,7 @@ public final class FactoryFinder
 
         if (factory == null) {
             List classNames = (List) factoryClassNames.get(factoryName);
-            factory = newFactoryInstance((Class)abstractFactoryClasses.get(factoryName), classNames.iterator(), classLoader);
+            factory = newFactoryInstance((Class)ABSTRACT_FACTORY_CLASSES.get(factoryName), classNames.iterator(), classLoader);
             factoryMap.put(factoryName, factory);
             return factory;
         }
@@ -241,7 +241,7 @@ public final class FactoryFinder
 
     private static void checkFactoryName(String factoryName)
     {
-        if (! validFactoryNames.contains(factoryName)) {
+        if (! VALID_FACTORY_NAMES.contains(factoryName)) {
             throw new IllegalArgumentException("factoryName '" + factoryName + "'");
         }
     }
