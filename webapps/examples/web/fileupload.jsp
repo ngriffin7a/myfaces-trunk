@@ -34,7 +34,7 @@
 
 <jsp:useBean id="fileUploadForm" class="net.sourceforge.myfaces.examples.misc.FileUploadForm" scope="request" />
 
-    <x:page_layout id="page" layoutReference="pageLayout"
+    <x:page_layout id="page" layoutRef="globalOptions.pageLayout"
             panelClass="pageLayout"
             headerClass="pageHeader"
             navigationClass="pageNavigation"

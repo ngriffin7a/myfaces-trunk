@@ -113,7 +113,7 @@ public abstract class FacesConfigFactoryBase
             while (st.hasMoreTokens())
             {
                 String t = st.nextToken();
-                InputStream stream = servletContext.getResourceAsStream("/WEB-INF/faces-config.xml");
+                InputStream stream = servletContext.getResourceAsStream(t.trim());
                 if (stream == null)
                 {
                     throw new FacesException("Resource '" + t + "' not found!");

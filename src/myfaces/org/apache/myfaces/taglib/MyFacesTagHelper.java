@@ -382,6 +382,8 @@ public class MyFacesTagHelper
 
         if (UIComponentTagHacks.getId(_tag) != null)
         {
+            //TODO: find component by id
+
             //hardcoded id, nothing special must be done --> default method of jsf-api works ok
             return null;
         }

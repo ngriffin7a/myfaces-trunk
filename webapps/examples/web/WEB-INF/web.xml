@@ -26,6 +26,15 @@
 <web-app>
 
     <context-param>
+        <param-name>javax.faces.application.CONFIG_FILES</param-name>
+        <param-value>
+            /WEB-INF/faces-config.xml,
+            /WEB-INF/examples-config.xml
+        </param-value>
+        <description>See JSF 1.0 PRD2, 10.3.2</description>
+    </context-param>
+
+    <context-param>
         <!--
         * Init parameter "myfaces_LogLevel"
         * The log level of the MyFacesLogger.
@@ -73,7 +82,7 @@
         * "client_minimized_zipped" = like "client_minimal", but additionally state info is zipped (GZIP), encoded to allowed characters (Base64) written as one query parameter or hidden form input.
         -->
         <param-name>myfaces_StateSavingMode</param-name>
-        <param-value>client_serialized</param-value>
+        <param-value>server_session</param-value>
     </context-param>
 
     <context-param>

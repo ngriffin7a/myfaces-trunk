@@ -19,18 +19,20 @@
 package net.sourceforge.myfaces.el;
 
 import net.sourceforge.myfaces.MyFacesFactoryFinder;
-import net.sourceforge.myfaces.config.ConfigUtil;
-import net.sourceforge.myfaces.config.FacesConfig;
-import net.sourceforge.myfaces.config.FacesConfigFactory;
-import net.sourceforge.myfaces.config.ManagedBeanConfig;
+import net.sourceforge.myfaces.config.*;
+import net.sourceforge.myfaces.util.bean.BeanUtils;
 import net.sourceforge.myfaces.util.logging.LogUtil;
 
+import javax.faces.FactoryFinder;
+import javax.faces.application.ApplicationFactory;
 import javax.faces.context.FacesContext;
+import javax.faces.el.ValueBinding;
 import javax.faces.el.VariableResolver;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.Iterator;
 
 /**
  * JSF 1.0 PRD2, 5.2.1
@@ -102,9 +104,62 @@ public class VariableResolverImpl
                 LogUtil.getLogger().severe("Managed bean '" + name + "' has illegal scope: " + scope);
             }
 
-            //TODO: managed bean properties
+            setManagedBeanProperties(facesContext, obj, mbc);
+
+            return obj;
         }
 
+        LogUtil.getLogger().info("Variable '" + name + "' could not be resolved.");
         return null;
     }
+
+
+    private void setManagedBeanProperties(FacesContext facesContext,
+                                          Object bean,
+                                          ManagedBeanConfig mbc)
+    {
+        for (Iterator it = mbc.getManagedPropertyNames(); it.hasNext(); )
+        {
+            ManagedPropertyConfig propConfig = mbc.getManagedPropertyConfig((String)it.next());
+
+            if (propConfig.getMapEntriesConfig() != null)
+            {
+                setMapEntries(bean, propConfig);
+            }
+            else if (propConfig.getValuesConfig() != null)
+            {
+                setValues(bean, propConfig);
+            }
+
+            Object value;
+            if (propConfig.getValueRef() != null)
+            {
+                ApplicationFactory af = (ApplicationFactory)FactoryFinder.getFactory(FactoryFinder.APPLICATION_FACTORY);
+                ValueBinding vb = af.getApplication().getValueBinding(propConfig.getValueRef());
+                value = vb.getValue(facesContext);
+            }
+            else
+            {
+                value = propConfig.getValue();
+            }
+
+            BeanUtils.setBeanPropertyValue(bean,
+                                           propConfig.getPropertyName(),
+                                           value);
+        }
+    }
+
+
+    private void setMapEntries(Object bean,
+                               ManagedPropertyConfig propConfig)
+    {
+        throw new UnsupportedOperationException("Not yet implemented"); //TODO
+    }
+
+    private void setValues(Object bean,
+                           ManagedPropertyConfig propConfig)
+    {
+        throw new UnsupportedOperationException("Not yet implemented"); //TODO
+    }
+
 }

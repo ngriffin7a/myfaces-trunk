@@ -33,7 +33,7 @@
 
 <f:use_faces>
 
-    <x:page_layout id="page" layoutReference="pageLayout"
+    <x:page_layout id="page" layoutRef="globalOptions.pageLayout"
             panelClass="pageLayout"
             headerClass="pageHeader"
             navigationClass="pageNavigation"

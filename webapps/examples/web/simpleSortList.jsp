@@ -33,7 +33,7 @@
 
 <jsp:useBean id="list" class="net.sourceforge.myfaces.examples.listexample.SimpleSortableCarList" scope="request" />
 
-    <x:page_layout id="page" layoutReference="pageLayout"
+    <x:page_layout id="page" layoutRef="globalOptions.pageLayout"
             panelClass="pageLayout"
             headerClass="pageHeader"
             navigationClass="pageNavigation"

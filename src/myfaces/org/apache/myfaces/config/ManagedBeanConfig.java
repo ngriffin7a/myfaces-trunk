@@ -18,6 +18,11 @@
  */
 package net.sourceforge.myfaces.config;
 
+import java.util.Map;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Collections;
+
 /**
  * DOCUMENT ME!
  * @author Manfred Geiler (latest modification by $Author$)
@@ -29,6 +34,7 @@ public class ManagedBeanConfig
     private String _managedBeanName;
     private String _managedBeanClass;
     private String _managedBeanScope;
+    private Map _managedPropertyConfigMap;
 
     public String getManagedBeanName()
     {
@@ -59,4 +65,30 @@ public class ManagedBeanConfig
     {
         _managedBeanScope = managedBeanScope;
     }
+
+
+
+    public void addManagedPropertyConfig(ManagedPropertyConfig propertyConfig)
+    {
+        if (_managedPropertyConfigMap == null)
+        {
+            _managedPropertyConfigMap = new HashMap();
+        }
+        _managedPropertyConfigMap.put(propertyConfig.getPropertyName(),
+                                      propertyConfig);
+    }
+
+    public Iterator getManagedPropertyNames()
+    {
+        return _managedPropertyConfigMap == null
+                ? Collections.EMPTY_SET.iterator()
+                : _managedPropertyConfigMap.keySet().iterator();
+    }
+
+    public ManagedPropertyConfig getManagedPropertyConfig(String propertyName)
+    {
+        return (ManagedPropertyConfig)_managedPropertyConfigMap.get(propertyName);
+    }
+
+
 }

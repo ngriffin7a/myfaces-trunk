@@ -68,7 +68,7 @@ public class CommandHyperlinkTag
 
     public void setCommandName(String v)
     {
-        setValue(v);
+        setComponentPropertyString(UICommand.COMMAND_NAME_PROP, v);
     }
 
     public void setCommandClass(String v)

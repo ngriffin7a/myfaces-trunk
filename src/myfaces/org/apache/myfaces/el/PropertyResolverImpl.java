@@ -34,6 +34,11 @@ public class PropertyResolverImpl
 {
     public Class getType(Object obj, String s) throws PropertyNotFoundException
     {
+        if (obj == null)
+        {
+            throw new NullPointerException("Cannot get type of property '" + s + "' for null bean.");
+        }
+
         try
         {
             return BeanUtils.getBeanPropertyType(obj, s);
@@ -46,6 +51,11 @@ public class PropertyResolverImpl
 
     public Object getValue(Object obj, String s) throws PropertyNotFoundException
     {
+        if (obj == null)
+        {
+            throw new NullPointerException("Cannot get value of property '" + s + "' for null bean.");
+        }
+
         try
         {
             return BeanUtils.getBeanPropertyValue(obj, s);
@@ -58,6 +68,11 @@ public class PropertyResolverImpl
 
     public boolean isReadOnly(Object obj, String s) throws PropertyNotFoundException
     {
+        if (obj == null)
+        {
+            throw new NullPointerException("Cannot determine readonly of property '" + s + "' for null bean.");
+        }
+
         PropertyDescriptor pd = BeanUtils.findPropertyDescriptor(obj, s);
         if (pd == null)
         {
