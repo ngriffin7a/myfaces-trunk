@@ -33,7 +33,7 @@ import java.util.Map;
 public class LifecycleFactoryImpl
         extends LifecycleFactory
 {
-    private static final Map _lifecycles = new HashMap();
+    private final Map _lifecycles = new HashMap();
 
     public LifecycleFactoryImpl()
     {

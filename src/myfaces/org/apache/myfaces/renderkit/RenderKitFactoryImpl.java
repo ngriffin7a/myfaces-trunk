@@ -34,6 +34,9 @@ import java.util.Map;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.13  2004/06/23 15:48:01  manolito
+ * Map members now non-static
+ *
  * Revision 1.12  2004/05/18 07:13:32  manolito
  * X-checked against specs: no more synchronization needed, allow replacement of renderKit, no excepetion on unknown id
  *
@@ -43,7 +46,7 @@ public class RenderKitFactoryImpl
 {
     private static final Log log = LogFactory.getLog(RenderKitFactoryImpl.class);
 
-    private static Map _renderkits = new HashMap();
+    private Map _renderkits = new HashMap();
 
     public RenderKitFactoryImpl()
     {
