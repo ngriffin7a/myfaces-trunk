@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.sourceforge.myfaces.config;
+package org.apache.myfaces.config;
 
-import net.sourceforge.myfaces.config.element.*;
-import net.sourceforge.myfaces.util.ClassUtils;
+import org.apache.myfaces.config.element.*;
+import org.apache.myfaces.util.ClassUtils;
 
 import javax.faces.FacesException;
 import javax.faces.application.Application;
@@ -34,6 +34,9 @@ import java.util.*;
  * @author Anton Koinov
  *
  * $Log$
+ * Revision 1.4  2004/10/13 11:50:59  matze
+ * renamed packages to org.apache
+ *
  * Revision 1.3  2004/10/05 22:34:22  dave0000
  * bug 1021656 with related improvements
  *

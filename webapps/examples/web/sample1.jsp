@@ -36,7 +36,7 @@ managed beans used:
 
 <f:view>
 
-    <f:loadBundle basename="net.sourceforge.myfaces.examples.resource.example_messages" var="example_messages"/>
+    <f:loadBundle basename="org.apache.myfaces.examples.resource.example_messages" var="example_messages"/>
 
     <x:panelLayout id="page" layout="#{globalOptions.pageLayout}"
             styleClass="pageLayout"
@@ -97,20 +97,20 @@ managed beans used:
                     <h:outputText id="result" value="#{calcForm.result}" /><f:verbatim><br></f:verbatim>
 
                     <h:commandButton id="addButton" value="#{example_messages['sample1_add']}" action="none">
-                        <f:actionListener type="net.sourceforge.myfaces.examples.example1.CalcActionListener" ></f:actionListener>
+                        <f:actionListener type="org.apache.myfaces.examples.example1.CalcActionListener" ></f:actionListener>
                     </h:commandButton>
                     <h:commandButton id="subtractButton" value="#{example_messages['sample1_sub']}" action="none">
-                        <f:actionListener type="net.sourceforge.myfaces.examples.example1.CalcActionListener" ></f:actionListener>
+                        <f:actionListener type="org.apache.myfaces.examples.example1.CalcActionListener" ></f:actionListener>
                     </h:commandButton>
                     <f:verbatim><br></f:verbatim>
 
                     <h:commandLink id="href1" action="none">
                         <h:outputText value="#{example_messages['sample1_add_link']}"/>
-                        <f:actionListener type="net.sourceforge.myfaces.examples.example1.CalcActionListener" ></f:actionListener>
+                        <f:actionListener type="org.apache.myfaces.examples.example1.CalcActionListener" ></f:actionListener>
                     </h:commandLink><f:verbatim><br></f:verbatim>
                     <h:commandLink id="href2" action="none">
                         <h:outputText value="#{example_messages['sample1_sub_link']}"/>
-                        <f:actionListener type="net.sourceforge.myfaces.examples.example1.CalcActionListener" ></f:actionListener>
+                        <f:actionListener type="org.apache.myfaces.examples.example1.CalcActionListener" ></f:actionListener>
                     </h:commandLink>
                 </h:form>
 
@@ -133,10 +133,10 @@ managed beans used:
                     </h:inputText>
                     <h:message id="textError" for="form2:text" styleClass="error" /><f:verbatim><br></f:verbatim>
                     <h:commandButton id="ucaseButton" value="#{example_messages['sample1_uppercase']}" action="none">
-                        <f:actionListener type="net.sourceforge.myfaces.examples.example1.UCaseActionListener" />
+                        <f:actionListener type="org.apache.myfaces.examples.example1.UCaseActionListener" />
                     </h:commandButton>
                     <h:commandButton id="lcaseButton" value="#{example_messages['sample1_lowercase']}" action="none">
-                        <f:actionListener type="net.sourceforge.myfaces.examples.example1.UCaseActionListener" />
+                        <f:actionListener type="org.apache.myfaces.examples.example1.UCaseActionListener" />
                     </h:commandButton>
                     <f:verbatim><br></f:verbatim>
                 </h:form>

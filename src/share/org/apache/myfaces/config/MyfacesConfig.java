@@ -1,4 +1,4 @@
-package net.sourceforge.myfaces.config;
+package org.apache.myfaces.config;
 
 /**
  * @author Manfred Geiler (latest modification by $Author$)
@@ -23,16 +23,16 @@ public class MyfacesConfig
 
     private static final String APPLICATION_MAP_PARAM_NAME = MyfacesConfig.class.getName();
 
-    private static final String  INIT_PARAM_PRETTY_HTML = "net.sourceforge.myfaces.PRETTY_HTML";
+    private static final String  INIT_PARAM_PRETTY_HTML = "org.apache.myfaces.PRETTY_HTML";
     private static final boolean INIT_PARAM_PRETTY_HTML_DEFAULT = true;
 
-    private static final String  INIT_PARAM_ALLOW_JAVASCRIPT = "net.sourceforge.myfaces.ALLOW_JAVASCRIPT";
+    private static final String  INIT_PARAM_ALLOW_JAVASCRIPT = "org.apache.myfaces.ALLOW_JAVASCRIPT";
     private static final boolean INIT_PARAM_ALLOW_JAVASCRIPT_DEFAULT = true;
 
-    private static final String  INIT_PARAM_DETECT_JAVASCRIPT = "net.sourceforge.myfaces.DETECT_JAVASCRIPT";
+    private static final String  INIT_PARAM_DETECT_JAVASCRIPT = "org.apache.myfaces.DETECT_JAVASCRIPT";
     private static final boolean INIT_PARAM_DETECT_JAVASCRIPT_DEFAULT = false;
 
-    private static final String  INIT_PARAM_AUTO_SCROLL = "net.sourceforge.myfaces.AUTO_SCROLL";
+    private static final String  INIT_PARAM_AUTO_SCROLL = "org.apache.myfaces.AUTO_SCROLL";
     private static final boolean INIT_PARAM_AUTO_SCROLL_DEFAULT = false;
 
     private boolean _prettyHtml;
@@ -107,7 +107,7 @@ public class MyfacesConfig
 
     /**
      * Do not use this in renderers directly!
-     * You should use {@link net.sourceforge.myfaces.renderkit.html.util.JavascriptUtils#isJavascriptAllowed}
+     * You should use {@link org.apache.myfaces.renderkit.html.util.JavascriptUtils#isJavascriptAllowed}
      * to determine if javascript is allowed or not.
      */
     public boolean isAllowJavascript()

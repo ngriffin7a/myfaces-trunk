@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.sourceforge.myfaces.util;
+package org.apache.myfaces.util;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -43,6 +43,9 @@ import java.util.Map;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.17  2004/10/13 11:51:01  matze
+ * renamed packages to org.apache
+ *
  * Revision 1.16  2004/08/27 10:44:51  manolito
  * ignore exception on property read
  *
@@ -82,7 +85,7 @@ public class DebugUtils
     }
 
     private static final String JSF_COMPONENT_PACKAGE = "javax.faces.component.";
-    private static final String MYFACES_COMPONENT_PACKAGE = "net.sourceforge.myfaces.component.";
+    private static final String MYFACES_COMPONENT_PACKAGE = "org.apache.myfaces.component.";
 
 
     private DebugUtils()

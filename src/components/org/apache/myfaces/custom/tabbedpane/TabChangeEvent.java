@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.sourceforge.myfaces.custom.tabbedpane;
+package org.apache.myfaces.custom.tabbedpane;
 
 import javax.faces.component.UIComponent;
 import javax.faces.event.FacesEvent;
@@ -24,6 +24,9 @@ import javax.faces.event.PhaseId;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.4  2004/10/13 11:50:58  matze
+ * renamed packages to org.apache
+ *
  * Revision 1.3  2004/07/01 21:53:05  mwessendorf
  * ASF switch
  *

@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.sourceforge.myfaces.config;
+package org.apache.myfaces.config;
 
-import net.sourceforge.myfaces.application.ApplicationFactoryImpl;
+import org.apache.myfaces.application.ApplicationFactoryImpl;
 
 
 /**

@@ -10,7 +10,7 @@
 
 <faces-config>
     <application>
-        <view-handler>net.sourceforge.myfaces.application.jsp.JspTilesViewHandlerImpl</view-handler>
+        <view-handler>org.apache.myfaces.application.jsp.JspTilesViewHandlerImpl</view-handler>
     </application>
 
     <navigation-rule>

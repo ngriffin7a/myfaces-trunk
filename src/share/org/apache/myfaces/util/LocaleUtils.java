@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.sourceforge.myfaces.util;
+package org.apache.myfaces.util;
 
 import java.util.Locale;
 
@@ -25,6 +25,9 @@ import org.apache.commons.logging.LogFactory;
  * @author Anton Koinov (latest modification by $Author$)
  * @version $Revision$ $Date$
  *          $Log$
+ *          Revision 1.2  2004/10/13 11:51:01  matze
+ *          renamed packages to org.apache
+ *
  *          Revision 1.1  2004/08/23 05:13:39  dave0000
  *          Externalize String-to-Locale conversion
  *

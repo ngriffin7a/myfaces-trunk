@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.sourceforge.myfaces.context.servlet;
+package org.apache.myfaces.context.servlet;
 
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -28,6 +28,9 @@ import javax.servlet.http.HttpSessionContext;
  * @author Anton Koinov (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.3  2004/10/13 11:50:59  matze
+ * renamed packages to org.apache
+ *
  * Revision 1.2  2004/07/01 22:00:57  mwessendorf
  * ASF switch
  *

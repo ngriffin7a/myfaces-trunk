@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.sourceforge.myfaces.custom.tree;
+package org.apache.myfaces.custom.tree;
 
-import net.sourceforge.myfaces.custom.tree.model.TreeModel;
-import net.sourceforge.myfaces.custom.tree.model.TreePath;
+import org.apache.myfaces.custom.tree.model.TreeModel;
+import org.apache.myfaces.custom.tree.model.TreePath;
 
 import javax.faces.component.html.HtmlCommandLink;
 import javax.faces.context.FacesContext;
@@ -31,6 +31,9 @@ import java.util.List;
  * @author <a href="mailto:oliver@rossmueller.com">Oliver Rossmueller</a>
  * @version $Revision$ $Date$
  *          $Log$
+ *          Revision 1.10  2004/10/13 11:50:58  matze
+ *          renamed packages to org.apache
+ *
  *          Revision 1.9  2004/10/10 11:17:18  o_rossmueller
  *          move selection up in tree when a node is removed
  *
@@ -62,9 +65,9 @@ public class HtmlTreeNode
     extends HtmlCommandLink
 {
 
-    private static final String DEFAULT_RENDERER_TYPE = "net.sourceforge.myfaces.HtmlTreeNode";
+    private static final String DEFAULT_RENDERER_TYPE = "org.apache.myfaces.HtmlTreeNode";
 
-    public static final String COMPONENT_TYPE = "net.sourceforge.myfaces.HtmlTreeNode";
+    public static final String COMPONENT_TYPE = "org.apache.myfaces.HtmlTreeNode";
     public static final String EXPAND_COLLAPSE_FACET = "expandCollapse";
 
     public static final int OPEN = 0;

@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.sourceforge.myfaces.renderkit.html;
+package org.apache.myfaces.renderkit.html;
 
-import net.sourceforge.myfaces.renderkit.RendererUtils;
+import org.apache.myfaces.renderkit.RendererUtils;
 
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIViewRoot;

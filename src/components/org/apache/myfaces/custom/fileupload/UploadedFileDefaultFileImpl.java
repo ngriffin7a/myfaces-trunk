@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.sourceforge.myfaces.custom.fileupload;
+package org.apache.myfaces.custom.fileupload;
 
 import org.apache.commons.fileupload.FileItem;
 
@@ -26,6 +26,9 @@ import java.io.InputStream;
  * @author Sylvain Vieujot (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.4  2004/10/13 11:50:57  matze
+ * renamed packages to org.apache
+ *
  * Revision 1.3  2004/09/03 12:43:57  manolito
  * File item transient in file based UploadedFile and no more empty constructors
  *

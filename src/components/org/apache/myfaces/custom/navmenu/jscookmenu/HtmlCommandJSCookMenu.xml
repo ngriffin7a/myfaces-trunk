@@ -3,9 +3,9 @@
   "-//MyFaces//DTD MyFaces component def 1.0//EN"
   "http://myfaces.sourceforge.net/dtd/Component.dtd">
 <component generateUserRoleMethods="true" >
-    <component-class>net.sourceforge.myfaces.custom.navmenu.jscookmenu.HtmlCommandJSCookMenu</component-class>
+    <component-class>org.apache.myfaces.custom.navmenu.jscookmenu.HtmlCommandJSCookMenu</component-class>
     <base-class>javax.faces.component.UICommand</base-class>
-    <component-type>net.sourceforge.myfaces.JSCookMenu</component-type>
+    <component-type>org.apache.myfaces.JSCookMenu</component-type>
     <component-family>javax.faces.Command</component-family>
     <field>
         <name>layout</name>

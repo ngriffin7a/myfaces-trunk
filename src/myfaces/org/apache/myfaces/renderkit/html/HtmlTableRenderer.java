@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.sourceforge.myfaces.renderkit.html;
+package org.apache.myfaces.renderkit.html;
 
 
 
@@ -21,6 +21,9 @@ package net.sourceforge.myfaces.renderkit.html;
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.22  2004/10/13 11:51:00  matze
+ * renamed packages to org.apache
+ *
  * Revision 1.21  2004/08/19 16:21:23  manolito
  * Moved functionality to HtmlTableRendererBase
  *

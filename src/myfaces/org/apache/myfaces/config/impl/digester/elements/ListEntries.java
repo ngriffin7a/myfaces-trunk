@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.sourceforge.myfaces.config.impl.digester.elements;
+package org.apache.myfaces.config.impl.digester.elements;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +23,7 @@ import java.util.Iterator;
 /**
  * @author <a href="mailto:oliver@rossmueller.com">Oliver Rossmueller</a>
  */
-public class ListEntries implements net.sourceforge.myfaces.config.element.ListEntries
+public class ListEntries implements org.apache.myfaces.config.element.ListEntries
 {
 
     private String valueClass;
@@ -55,7 +55,7 @@ public class ListEntries implements net.sourceforge.myfaces.config.element.ListE
     }
 
 
-    public static class Entry implements net.sourceforge.myfaces.config.element.ListEntry {
+    public static class Entry implements org.apache.myfaces.config.element.ListEntry {
         private boolean nullValue;
         private String value;
 

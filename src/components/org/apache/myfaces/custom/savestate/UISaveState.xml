@@ -3,8 +3,8 @@
   "-//MyFaces//DTD MyFaces component def 1.0//EN"
   "http://myfaces.sourceforge.net/dtd/Component.dtd">
 <component generateStateMethods="false" >
-    <component-class>net.sourceforge.myfaces.custom.savestate.UISaveState</component-class>
+    <component-class>org.apache.myfaces.custom.savestate.UISaveState</component-class>
     <base-class>javax.faces.component.UIParameter</base-class>
-    <component-type>net.sourceforge.myfaces.SaveState</component-type>
+    <component-type>org.apache.myfaces.SaveState</component-type>
     <component-family>javax.faces.Parameter</component-family>
 </component>

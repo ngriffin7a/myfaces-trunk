@@ -1,4 +1,4 @@
-package net.sourceforge.myfaces.component.html.ext;
+package org.apache.myfaces.component.html.ext;
 
 import javax.faces.component.EditableValueHolder;
 import javax.faces.component.UIComponent;

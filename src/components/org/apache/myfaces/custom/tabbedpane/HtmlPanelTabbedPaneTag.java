@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.sourceforge.myfaces.custom.tabbedpane;
+package org.apache.myfaces.custom.tabbedpane;
 
-import net.sourceforge.myfaces.renderkit.html.HTML;
-import net.sourceforge.myfaces.taglib.html.ext.HtmlPanelGroupTag;
+import org.apache.myfaces.renderkit.html.HTML;
+import org.apache.myfaces.taglib.html.ext.HtmlPanelGroupTag;
 
 import javax.faces.component.UIComponent;
 
@@ -36,7 +36,7 @@ public class HtmlPanelTabbedPaneTag
 
     public String getRendererType()
     {
-        return "net.sourceforge.myfaces.TabbedPane";
+        return "org.apache.myfaces.TabbedPane";
     }
 
 

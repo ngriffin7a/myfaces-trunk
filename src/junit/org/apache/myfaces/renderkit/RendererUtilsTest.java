@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.sourceforge.myfaces.renderkit;
+package org.apache.myfaces.renderkit;
 
-import net.sourceforge.myfaces.MyFacesBaseTest;
-import net.sourceforge.myfaces.el.ValueBindingImpl;
+import org.apache.myfaces.MyFacesBaseTest;
+import org.apache.myfaces.el.ValueBindingImpl;
 
 import javax.faces.component.UISelectItems;
 import javax.faces.component.UISelectOne;
@@ -29,6 +29,9 @@ import java.util.Map;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.3  2004/10/13 11:50:59  matze
+ * renamed packages to org.apache
+ *
  * Revision 1.2  2004/07/01 22:01:21  mwessendorf
  * ASF switch
  *

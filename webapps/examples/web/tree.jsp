@@ -1,5 +1,5 @@
-<%@ page import="net.sourceforge.myfaces.custom.tree.DefaultMutableTreeNode,
-                 net.sourceforge.myfaces.custom.tree.model.DefaultTreeModel"%>
+<%@ page import="org.apache.myfaces.custom.tree.DefaultMutableTreeNode,
+                 org.apache.myfaces.custom.tree.model.DefaultTreeModel"%>
 <%@ page session="true" contentType="text/html;charset=utf-8"%>
 <%@ taglib uri="http://java.sun.com/jsf/html" prefix="h"%>
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f"%>
@@ -57,7 +57,7 @@
 
 <f:view>
 
-    <f:loadBundle basename="net.sourceforge.myfaces.examples.resource.example_messages" var="example_messages"/>
+    <f:loadBundle basename="org.apache.myfaces.examples.resource.example_messages" var="example_messages"/>
 
     <x:panelLayout id="page" layout="#{globalOptions.pageLayout}"
             styleClass="pageLayout"

@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.sourceforge.myfaces.custom.fileupload;
+package org.apache.myfaces.custom.fileupload;
 
-import net.sourceforge.myfaces.component.UserRoleAware;
-import net.sourceforge.myfaces.component.UserRoleUtils;
+import org.apache.myfaces.component.UserRoleAware;
+import org.apache.myfaces.component.UserRoleUtils;
 
 import javax.faces.component.html.HtmlInputText;
 import javax.faces.context.FacesContext;
@@ -30,9 +30,9 @@ public class HtmlInputFileUpload
         extends HtmlInputText
         implements UserRoleAware
 {
-    public static final String COMPONENT_TYPE = "net.sourceforge.myfaces.HtmlInputFileUpload";
+    public static final String COMPONENT_TYPE = "org.apache.myfaces.HtmlInputFileUpload";
     public static final String COMPONENT_FAMILY = "javax.faces.Input";
-    private static final String DEFAULT_RENDERER_TYPE = "net.sourceforge.myfaces.FileUpload";
+    private static final String DEFAULT_RENDERER_TYPE = "org.apache.myfaces.FileUpload";
 
     private String _accept = null;
     private String _enabledOnUserRole = null;

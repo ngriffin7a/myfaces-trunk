@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.sourceforge.myfaces.taglib.core;
+package org.apache.myfaces.taglib.core;
 
-import net.sourceforge.myfaces.util.ClassUtils;
+import org.apache.myfaces.util.ClassUtils;
 
 import javax.faces.component.ActionSource;
 import javax.faces.component.UIComponent;

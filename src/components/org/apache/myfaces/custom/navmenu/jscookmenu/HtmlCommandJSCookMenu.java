@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.sourceforge.myfaces.custom.navmenu.jscookmenu;
+package org.apache.myfaces.custom.navmenu.jscookmenu;
 
-import net.sourceforge.myfaces.component.UserRoleUtils;
-import net.sourceforge.myfaces.component.UserRoleAware;
+import org.apache.myfaces.component.UserRoleUtils;
+import org.apache.myfaces.component.UserRoleAware;
 
 import javax.faces.component.UICommand;
 import javax.faces.el.ValueBinding;
@@ -26,6 +26,9 @@ import javax.faces.context.FacesContext;
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  *          $Log$
+ *          Revision 1.5  2004/10/13 11:50:57  matze
+ *          renamed packages to org.apache
+ *
  *          Revision 1.4  2004/07/01 21:53:09  mwessendorf
  *          ASF switch
  *
@@ -47,7 +50,7 @@ public class HtmlCommandJSCookMenu
 
     //------------------ GENERATED CODE BEGIN (do not modify!) --------------------
 
-    public static final String COMPONENT_TYPE = "net.sourceforge.myfaces.JSCookMenu";
+    public static final String COMPONENT_TYPE = "org.apache.myfaces.JSCookMenu";
     public static final String COMPONENT_FAMILY = "javax.faces.Command";
 
     private String _layout = null;

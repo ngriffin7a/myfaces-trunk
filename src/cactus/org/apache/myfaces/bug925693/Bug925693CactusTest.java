@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.sourceforge.myfaces.bug925693;
+package org.apache.myfaces.bug925693;
 
 import javax.faces.FactoryFinder;
 import javax.faces.application.Application;

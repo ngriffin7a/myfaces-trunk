@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.sourceforge.myfaces.el;
+package org.apache.myfaces.el;
 
 import java.util.Map;
 
@@ -27,6 +27,9 @@ import javax.faces.el.ValueBinding;
  * @version $Revision$ $Date$
  * 
  * $Log$
+ * Revision 1.30  2004/10/13 11:50:59  matze
+ * renamed packages to org.apache
+ *
  * Revision 1.29  2004/09/28 19:08:26  dave0000
  * commented some non-working testcases
  *

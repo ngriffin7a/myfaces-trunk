@@ -29,7 +29,7 @@
 
 <f:view>
 
-    <f:loadBundle basename="net.sourceforge.myfaces.examples.resource.example_messages" var="example_messages"/>
+    <f:loadBundle basename="org.apache.myfaces.examples.resource.example_messages" var="example_messages"/>
 
     <x:saveState value="#{fileUploadForm.name}"/>
 

@@ -78,7 +78,7 @@
     <!-- commandButton -->
     <tag>
         <name>commandButton</name>
-        <tag-class>net.sourceforge.myfaces.taglib.html.ext.HtmlCommandButtonTag</tag-class>
+        <tag-class>org.apache.myfaces.taglib.html.ext.HtmlCommandButtonTag</tag-class>
         <body-content>JSP</body-content>
         <description>
             Extends standard commandButton by user role support.
@@ -90,7 +90,7 @@
     <!-- commandLink -->
     <tag>
         <name>commandLink</name>
-        <tag-class>net.sourceforge.myfaces.taglib.html.ext.HtmlCommandLinkTag</tag-class>
+        <tag-class>org.apache.myfaces.taglib.html.ext.HtmlCommandLinkTag</tag-class>
         <body-content>JSP</body-content>
         <description>
             Extends standard commandLink by user role support and the HTML target attribute.
@@ -102,7 +102,7 @@
     <!-- dataTable -->
     <tag>
         <name>dataTable</name>
-        <tag-class>net.sourceforge.myfaces.taglib.html.ext.HtmlDataTableTag</tag-class>
+        <tag-class>org.apache.myfaces.taglib.html.ext.HtmlDataTableTag</tag-class>
         <body-content>JSP</body-content>
         <description>
             Extended data_table that adds some additional features to the standard
@@ -199,7 +199,7 @@
     <!-- inputText -->
     <tag>
         <name>inputText</name>
-        <tag-class>net.sourceforge.myfaces.taglib.html.ext.HtmlInputTextTag</tag-class>
+        <tag-class>org.apache.myfaces.taglib.html.ext.HtmlInputTextTag</tag-class>
         <body-content>JSP</body-content>
         <description>
             Extends standard inputText by user role support.
@@ -211,7 +211,7 @@
     <!-- inputTextarea -->
     <tag>
         <name>inputTextarea</name>
-        <tag-class>net.sourceforge.myfaces.taglib.html.ext.HtmlInputTextareaTag</tag-class>
+        <tag-class>org.apache.myfaces.taglib.html.ext.HtmlInputTextareaTag</tag-class>
         <body-content>JSP</body-content>
         <description>
             Extends standard inputTextarea by user role support.
@@ -223,7 +223,7 @@
     <!-- message -->
     <tag>
         <name>message</name>
-        <tag-class>net.sourceforge.myfaces.taglib.html.ext.HtmlMessageTag</tag-class>
+        <tag-class>org.apache.myfaces.taglib.html.ext.HtmlMessageTag</tag-class>
         <body-content>JSP</body-content>
         <description>
             MyFaces extension to the standard messages tag: see summaryDetailSeparator attribute
@@ -260,7 +260,7 @@
     <!-- messages -->
     <tag>
         <name>messages</name>
-        <tag-class>net.sourceforge.myfaces.taglib.html.ext.HtmlMessagesTag</tag-class>
+        <tag-class>org.apache.myfaces.taglib.html.ext.HtmlMessagesTag</tag-class>
         <body-content>JSP</body-content>
         <description>
             MyFaces extension to the standard messages tag: see showInputLabel attribute
@@ -308,7 +308,7 @@
     <!-- outputLabel -->
     <tag>
         <name>outputLabel</name>
-        <tag-class>net.sourceforge.myfaces.taglib.html.ext.HtmlOutputLabelTag</tag-class>
+        <tag-class>org.apache.myfaces.taglib.html.ext.HtmlOutputLabelTag</tag-class>
         <body-content>JSP</body-content>
         <description>
             Extends standard outputLabel by user role support.
@@ -320,7 +320,7 @@
     <!-- outputText -->
     <tag>
         <name>outputText</name>
-        <tag-class>net.sourceforge.myfaces.taglib.html.ext.HtmlOutputTextTag</tag-class>
+        <tag-class>org.apache.myfaces.taglib.html.ext.HtmlOutputTextTag</tag-class>
         <body-content>JSP</body-content>
         <description>
             Extends standard outputText by user role support.
@@ -332,7 +332,7 @@
     <!-- panelGroup -->
     <tag>
         <name>panelGroup</name>
-        <tag-class>net.sourceforge.myfaces.taglib.html.ext.HtmlPanelGroupTag</tag-class>
+        <tag-class>org.apache.myfaces.taglib.html.ext.HtmlPanelGroupTag</tag-class>
         <body-content>JSP</body-content>
         <description>
             Extends standard panelGroup by user role support.
@@ -344,7 +344,7 @@
     <!-- selectOneMenu -->
     <tag>
         <name>selectOneMenu</name>
-        <tag-class>net.sourceforge.myfaces.taglib.html.ext.HtmlSelectOneMenuTag</tag-class>
+        <tag-class>org.apache.myfaces.taglib.html.ext.HtmlSelectOneMenuTag</tag-class>
         <body-content>JSP</body-content>
         <description>
             Extends standard selectOneMenu by user role support.
@@ -356,7 +356,7 @@
     <!-- selectOneRadio -->
     <tag>
         <name>selectOneRadio</name>
-        <tag-class>net.sourceforge.myfaces.taglib.html.ext.HtmlSelectOneRadioTag</tag-class>
+        <tag-class>org.apache.myfaces.taglib.html.ext.HtmlSelectOneRadioTag</tag-class>
         <body-content>JSP</body-content>
         <description>
             Extends standard selectOneRadio by user role support.
@@ -370,7 +370,7 @@
     <!-- selectManyCheckbox -->
     <tag>
         <name>selectManyCheckbox</name>
-        <tag-class>net.sourceforge.myfaces.taglib.html.ext.HtmlSelectManyCheckboxTag</tag-class>
+        <tag-class>org.apache.myfaces.taglib.html.ext.HtmlSelectManyCheckboxTag</tag-class>
         <body-content>JSP</body-content>
         <description>
             Extends standard selectManyCheckbox by user role support.
@@ -387,7 +387,7 @@
     <!-- calendar -->
     <tag>
         <name>inputCalendar</name>
-        <tag-class>net.sourceforge.myfaces.custom.calendar.HtmlInputCalendarTag</tag-class>
+        <tag-class>org.apache.myfaces.custom.calendar.HtmlInputCalendarTag</tag-class>
         <body-content>JSP</body-content>
         <description>
             Provides a calendar.
@@ -491,7 +491,7 @@
     <!-- checkbox -->
     <tag>
         <name>checkbox</name>
-        <tag-class>net.sourceforge.myfaces.custom.checkbox.HtmlCheckboxTag</tag-class>
+        <tag-class>org.apache.myfaces.custom.checkbox.HtmlCheckboxTag</tag-class>
         <body-content>JSP</body-content>
         <description>
             Renders a HTML input of type "checkbox". The associated SelectItem comes from
@@ -524,7 +524,7 @@
     <!-- commandNavigation -->
     <tag>
         <name>commandNavigation</name>
-        <tag-class>net.sourceforge.myfaces.custom.navigation.HtmlCommandNavigationTag</tag-class>
+        <tag-class>org.apache.myfaces.custom.navigation.HtmlCommandNavigationTag</tag-class>
         <body-content>JSP</body-content>
         <description>
             Must be nested inside a panel_navigation action and renders a
@@ -558,7 +558,7 @@
     <!-- commandSortHeader -->
     <tag>
         <name>commandSortHeader</name>
-        <tag-class>net.sourceforge.myfaces.custom.sortheader.HtmlCommandSortHeaderTag</tag-class>
+        <tag-class>org.apache.myfaces.custom.sortheader.HtmlCommandSortHeaderTag</tag-class>
         <body-content>JSP</body-content>
         <description>
             Clickable sort column header.
@@ -600,7 +600,7 @@
     <!-- dataList -->
     <tag>
         <name>dataList</name>
-        <tag-class>net.sourceforge.myfaces.custom.datalist.HtmlDataListTag</tag-class>
+        <tag-class>org.apache.myfaces.custom.datalist.HtmlDataListTag</tag-class>
         <body-content>JSP</body-content>
         <description>
             Similar to dataTable, but does not render a table. Instead the layout
@@ -667,7 +667,7 @@
     <!-- dataTableScroller -->
     <tag>
         <name>dataScroller</name>
-        <tag-class>net.sourceforge.myfaces.custom.datascroller.HtmlDataScrollerTag</tag-class>
+        <tag-class>org.apache.myfaces.custom.datascroller.HtmlDataScrollerTag</tag-class>
         <body-content>JSP</body-content>
         <description>
             Scroller for UIData components eg. dataTable
@@ -790,7 +790,7 @@
     <!-- inputDate -->
     <tag>
         <name>inputDate</name>
-        <tag-class>net.sourceforge.myfaces.custom.date.HtmlInputDateTag</tag-class>
+        <tag-class>org.apache.myfaces.custom.date.HtmlInputDateTag</tag-class>
         <body-content>JSP</body-content>
         &ui_input_attributes;
         &html_universal_attributes;
@@ -807,7 +807,7 @@
     <!-- inputFileUpload -->
     <tag>
         <name>inputFileUpload</name>
-        <tag-class>net.sourceforge.myfaces.custom.fileupload.HtmlInputFileUploadTag</tag-class>
+        <tag-class>org.apache.myfaces.custom.fileupload.HtmlInputFileUploadTag</tag-class>
         <body-content>JSP</body-content>
         <description>
             You must enable the MultiPart Filter to make this component
@@ -835,7 +835,7 @@
     <!-- navigationMenu, jscookMenu -->
     <tag>
         <name>navigationMenuItem</name>
-        <tag-class>net.sourceforge.myfaces.custom.navmenu.HtmlNavigationMenuItemTag</tag-class>
+        <tag-class>org.apache.myfaces.custom.navmenu.HtmlNavigationMenuItemTag</tag-class>
         <body-content>JSP</body-content>
         &ui_select_item_attributes;
         &user_role_attributes;
@@ -858,13 +858,13 @@
     </tag>
     <tag>
         <name>navigationMenuItems</name>
-        <tag-class>net.sourceforge.myfaces.custom.navmenu.HtmlNavigationMenuItemsTag</tag-class>
+        <tag-class>org.apache.myfaces.custom.navmenu.HtmlNavigationMenuItemsTag</tag-class>
         <body-content>empty</body-content>
         &ui_select_items_attributes;
     </tag>
     <tag>
         <name>jscookMenu</name>
-        <tag-class>net.sourceforge.myfaces.custom.navmenu.jscookmenu.HtmlJSCookMenuTag</tag-class>
+        <tag-class>org.apache.myfaces.custom.navmenu.jscookmenu.HtmlJSCookMenuTag</tag-class>
         <body-content>JSP</body-content>
         &ui_component_attributes;
         &user_role_attributes;
@@ -884,7 +884,7 @@
     <!-- panelLayout -->
     <tag>
         <name>panelLayout</name>
-        <tag-class>net.sourceforge.myfaces.custom.layout.HtmlPanelLayoutTag</tag-class>
+        <tag-class>org.apache.myfaces.custom.layout.HtmlPanelLayoutTag</tag-class>
         <body-content>JSP</body-content>
         &ui_panel_attributes;
         &html_universal_attributes;
@@ -956,7 +956,7 @@
     <!-- panelNavigation -->
     <tag>
         <name>panelNavigation</name>
-        <tag-class>net.sourceforge.myfaces.custom.navigation.HtmlPanelNavigationTag</tag-class>
+        <tag-class>org.apache.myfaces.custom.navigation.HtmlPanelNavigationTag</tag-class>
         <body-content>JSP</body-content>
         &ui_panel_attributes;
         &html_universal_attributes;
@@ -1031,7 +1031,7 @@
     <!-- panelTab -->
     <tag>
         <name>panelTab</name>
-        <tag-class>net.sourceforge.myfaces.custom.tabbedpane.HtmlPanelTabTag</tag-class>
+        <tag-class>org.apache.myfaces.custom.tabbedpane.HtmlPanelTabTag</tag-class>
         <body-content>JSP</body-content>
         &ui_panel_attributes;
         &html_universal_attributes;
@@ -1050,7 +1050,7 @@
     <!-- panelTabbedPane -->
     <tag>
         <name>panelTabbedPane</name>
-        <tag-class>net.sourceforge.myfaces.custom.tabbedpane.HtmlPanelTabbedPaneTag</tag-class>
+        <tag-class>org.apache.myfaces.custom.tabbedpane.HtmlPanelTabbedPaneTag</tag-class>
         <body-content>JSP</body-content>
         &ui_panel_attributes;
         &html_universal_attributes;
@@ -1110,7 +1110,7 @@
     <!-- tab change listener -->
     <tag>
         <name>tabChangeListener</name>
-        <tag-class>net.sourceforge.myfaces.custom.tabbedpane.TabChangeListenerTag</tag-class>
+        <tag-class>org.apache.myfaces.custom.tabbedpane.TabChangeListenerTag</tag-class>
         <body-content>empty</body-content>
         <attribute>
             <name>type</name>
@@ -1124,7 +1124,7 @@
 	
 	<tag>
 		<name>stylesheet</name>
-		<tag-class>net.sourceforge.myfaces.custom.stylesheet.StylesheetTag</tag-class>
+		<tag-class>org.apache.myfaces.custom.stylesheet.StylesheetTag</tag-class>
 		<body-content>JSP</body-content>
 		<description>a component, which renders the path to a common CSS-file</description>
 		&ui_component_attributes;
@@ -1143,7 +1143,7 @@
     <!-- radio -->
     <tag>
         <name>radio</name>
-        <tag-class>net.sourceforge.myfaces.custom.radio.HtmlRadioTag</tag-class>
+        <tag-class>org.apache.myfaces.custom.radio.HtmlRadioTag</tag-class>
         <body-content>JSP</body-content>
         <description>
             Renders a HTML input of type "radio". The associated SelectItem comes from
@@ -1176,7 +1176,7 @@
 	<!-- rss ticker component -->
     <tag>
         <name>rssTicker</name>
-        <tag-class>net.sourceforge.myfaces.custom.rssticker.HtmlRssTickerTag</tag-class>
+        <tag-class>org.apache.myfaces.custom.rssticker.HtmlRssTickerTag</tag-class>
         <body-content>JSP</body-content>
         <description>
             Extends standard commandButton by user role support.
@@ -1196,7 +1196,7 @@
    <!-- tree -->
     <tag>
         <name>tree</name>
-        <tag-class>net.sourceforge.myfaces.custom.tree.taglib.TreeTag</tag-class>
+        <tag-class>org.apache.myfaces.custom.tree.taglib.TreeTag</tag-class>
         <body-content>JSP</body-content>
         <attribute>
             <name>id</name>
@@ -1313,7 +1313,7 @@
 
     <tag>
         <name>treeSelectionListener</name>
-        <tag-class>net.sourceforge.myfaces.custom.tree.taglib.TreeSelectionListenerTag</tag-class>
+        <tag-class>org.apache.myfaces.custom.tree.taglib.TreeSelectionListenerTag</tag-class>
         <body-content>empty</body-content>
         <attribute>
             <name>type</name>
@@ -1324,7 +1324,7 @@
 
     <tag>
         <name>iconProvider</name>
-        <tag-class>net.sourceforge.myfaces.custom.tree.taglib.IconProviderTag</tag-class>
+        <tag-class>org.apache.myfaces.custom.tree.taglib.IconProviderTag</tag-class>
         <body-content>empty</body-content>
         <attribute>
             <name>type</name>
@@ -1336,7 +1336,7 @@
     <!-- panelStack -->
     <tag>
         <name>panelStack</name>
-        <tag-class>net.sourceforge.myfaces.custom.panelstack.PanelStackTag</tag-class>
+        <tag-class>org.apache.myfaces.custom.panelstack.PanelStackTag</tag-class>
         <body-content>JSP</body-content>
         <attribute>
             <name>id</name>
@@ -1358,7 +1358,7 @@
     <!-- saveState -->
     <tag>
         <name>saveState</name>
-        <tag-class>net.sourceforge.myfaces.custom.savestate.SaveStateTag</tag-class>
+        <tag-class>org.apache.myfaces.custom.savestate.SaveStateTag</tag-class>
         <body-content>JSP</body-content>
         <attribute>
             <name>id</name>
@@ -1375,10 +1375,10 @@
     <!-- updateActionListener -->
     <tag>
         <name>updateActionListener</name>
-        <tag-class>net.sourceforge.myfaces.custom.updateactionlistener.UpdateActionListenerTag</tag-class>
+        <tag-class>org.apache.myfaces.custom.updateactionlistener.UpdateActionListenerTag</tag-class>
         <body-content>JSP</body-content>
         <description>
-            Registers a net.sourceforge.myfaces.custom.updateactionlistener.UpdateActionListener at the
+            Registers a org.apache.myfaces.custom.updateactionlistener.UpdateActionListener at the
             parent component.
         </description>
         <attribute>
@@ -1405,7 +1405,7 @@
         <!-- creditCard -->
     <tag>
         <name>validateCreditCard</name>
-        <tag-class>net.sourceforge.myfaces.custom.creditcardvalidator.ValidateCreditCardTag</tag-class>
+        <tag-class>org.apache.myfaces.custom.creditcardvalidator.ValidateCreditCardTag</tag-class>
         <body-content>JSP</body-content>
         <description>
 			A custom validator for creditCards, based upons Jakarta Commons.
@@ -1456,7 +1456,7 @@
     <!-- Validator for Email -->
      <tag>
         <name>validateEmail</name>
-        <tag-class>net.sourceforge.myfaces.custom.emailvalidator.ValidateEmailTag</tag-class>
+        <tag-class>org.apache.myfaces.custom.emailvalidator.ValidateEmailTag</tag-class>
         <body-content>JSP</body-content>
         <description>
 			A custom validator for email address format, based upons Jakarta Commons.
@@ -1466,7 +1466,7 @@
     <!-- Validator for Regular Expressions -->
     <tag>
         <name>validateRegExpr</name>
-        <tag-class>net.sourceforge.myfaces.custom.regexprvalidator.ValidateRegExprTag</tag-class>
+        <tag-class>org.apache.myfaces.custom.regexprvalidator.ValidateRegExprTag</tag-class>
         <body-content>JSP</body-content>
         <description>
 			A custom validator for reg. expr., based upons Jakarta Commons.
@@ -1485,7 +1485,7 @@
     <!-- Validator for Equal -->
      <tag>
         <name>validateEqual</name>
-        <tag-class>net.sourceforge.myfaces.custom.equalvalidator.ValidateEqualTag</tag-class>
+        <tag-class>org.apache.myfaces.custom.equalvalidator.ValidateEqualTag</tag-class>
         <body-content>JSP</body-content>
         <description>
 			A custom validator for validations against foreign component values.

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.sourceforge.myfaces.custom.panelstack;
+package org.apache.myfaces.custom.panelstack;
 
 import javax.faces.component.html.HtmlPanelGroup;
 import javax.faces.context.FacesContext;
@@ -29,6 +29,9 @@ import javax.faces.el.ValueBinding;
  * @author <a href="mailto:oliver@rossmueller.com">Oliver Rossmueller</a>
  * @version $Revision$ $Date$
  *          $Log$
+ *          Revision 1.3  2004/10/13 11:50:57  matze
+ *          renamed packages to org.apache
+ *
  *          Revision 1.2  2004/09/01 18:32:55  mwessendorf
  *          Organize Imports
  *
@@ -40,9 +43,9 @@ import javax.faces.el.ValueBinding;
 public class HtmlPanelStack extends HtmlPanelGroup
 {
 
-    public static final String COMPONENT_TYPE = "net.sourceforge.myfaces.HtmlPanelStack";
+    public static final String COMPONENT_TYPE = "org.apache.myfaces.HtmlPanelStack";
     public static final String COMPONENT_FAMILY = "javax.faces.Panel";
-    private static final String DEFAULT_RENDERER_TYPE = "net.sourceforge.myfaces.PanelStack";
+    private static final String DEFAULT_RENDERER_TYPE = "org.apache.myfaces.PanelStack";
 
     private String selectedPanel = null;
 

@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.sourceforge.myfaces.custom.navigation;
+package org.apache.myfaces.custom.navigation;
 
-import net.sourceforge.myfaces.renderkit.html.HTML;
-import net.sourceforge.myfaces.taglib.html.ext.HtmlPanelGroupTag;
+import org.apache.myfaces.renderkit.html.HTML;
+import org.apache.myfaces.taglib.html.ext.HtmlPanelGroupTag;
 
 import javax.faces.component.UIComponent;
 
@@ -35,7 +35,7 @@ public class HtmlPanelNavigationTag
 
     public String getRendererType()
     {
-        return "net.sourceforge.myfaces.Navigation";
+        return "org.apache.myfaces.Navigation";
     }
 
     // UIComponent attributes --> already implemented in UIComponentBodyTagBase

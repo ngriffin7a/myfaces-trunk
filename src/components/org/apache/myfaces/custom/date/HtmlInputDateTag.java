@@ -13,12 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.sourceforge.myfaces.custom.date;
+package org.apache.myfaces.custom.date;
 
 import javax.faces.component.UIComponent;
 
-import net.sourceforge.myfaces.component.UserRoleAware;
-import net.sourceforge.myfaces.taglib.html.HtmlInputTextTagBase;
+import org.apache.myfaces.component.UserRoleAware;
+import org.apache.myfaces.taglib.html.HtmlInputTextTagBase;
 
 /**
  * @author Sylvain Vieujot (latest modification by $Author$)
@@ -32,7 +32,7 @@ public class HtmlInputDateTag extends HtmlInputTextTagBase {
     }
 
     public String getRendererType() {
-        return "net.sourceforge.myfaces.Date";
+        return "org.apache.myfaces.Date";
     }
     
     // HtmlInputDate attributes

@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.sourceforge.myfaces.renderkit;
+package org.apache.myfaces.renderkit;
 
-import net.sourceforge.myfaces.util.HashMapUtils;
+import org.apache.myfaces.util.HashMapUtils;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -36,6 +36,9 @@ import java.util.*;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.14  2004/10/13 11:51:01  matze
+ * renamed packages to org.apache
+ *
  * Revision 1.13  2004/09/06 08:41:49  tinytoony
  * changes to calendar - rendering wrong weekday, check output-text behavior
  *

@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.sourceforge.myfaces.renderkit.html;
+package org.apache.myfaces.renderkit.html;
 
-import net.sourceforge.myfaces.util.ArrayUtils;
+import org.apache.myfaces.util.ArrayUtils;
 
 
 /**
@@ -24,6 +24,9 @@ import net.sourceforge.myfaces.util.ArrayUtils;
  * @author Anton Koinov
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.13  2004/10/13 11:51:01  matze
+ * renamed packages to org.apache
+ *
  * Revision 1.12  2004/08/09 08:43:29  manolito
  * bug #1004867 - h:message has duplicate attributes
  *

@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.sourceforge.myfaces.taglib;
+package org.apache.myfaces.taglib;
 
-import net.sourceforge.myfaces.renderkit.JSFAttr;
+import org.apache.myfaces.renderkit.JSFAttr;
 
 import javax.faces.component.UIComponent;
 import javax.faces.webapp.UIComponentTag;
@@ -24,6 +24,9 @@ import javax.faces.webapp.UIComponentTag;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.7  2004/10/13 11:51:01  matze
+ * renamed packages to org.apache
+ *
  * Revision 1.6  2004/07/01 22:01:21  mwessendorf
  * ASF switch
  *

@@ -13,11 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.sourceforge.myfaces.application.jsp;
+package org.apache.myfaces.application.jsp;
 
-import net.sourceforge.myfaces.util.DebugUtils;
-import net.sourceforge.myfaces.webapp.webxml.ServletMapping;
-import net.sourceforge.myfaces.webapp.webxml.WebXml;
+import org.apache.myfaces.util.DebugUtils;
+import org.apache.myfaces.webapp.webxml.ServletMapping;
+import org.apache.myfaces.webapp.webxml.WebXml;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -41,6 +41,9 @@ import java.util.Locale;
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.30  2004/10/13 11:50:59  matze
+ * renamed packages to org.apache
+ *
  * Revision 1.29  2004/10/05 08:22:55  manolito
  * #1031187 [PATCH] JspViewHandlerImpl: Remove dep on ServletRequest
  *

@@ -13,12 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.sourceforge.myfaces.taglib.core;
+package org.apache.myfaces.taglib.core;
 
-import net.sourceforge.myfaces.application.MyfacesStateManager;
-import net.sourceforge.myfaces.application.jsp.JspViewHandlerImpl;
-import net.sourceforge.myfaces.renderkit.html.HtmlLinkRendererBase;
-import net.sourceforge.myfaces.util.LocaleUtils;
+import org.apache.myfaces.application.MyfacesStateManager;
+import org.apache.myfaces.application.jsp.JspViewHandlerImpl;
+import org.apache.myfaces.renderkit.html.HtmlLinkRendererBase;
+import org.apache.myfaces.util.LocaleUtils;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -43,6 +43,9 @@ import java.util.Locale;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.16  2004/10/13 11:51:00  matze
+ * renamed packages to org.apache
+ *
  * Revision 1.15  2004/09/08 09:30:01  manolito
  * moved javascript detection to ResponseWriter
  *

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.sourceforge.myfaces.custom.date;
+package org.apache.myfaces.custom.date;
 
 import java.io.IOException;
 import java.text.DateFormatSymbols;
@@ -28,16 +28,19 @@ import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 import javax.faces.convert.ConverterException;
 
-import net.sourceforge.myfaces.component.UserRoleUtils;
-import net.sourceforge.myfaces.custom.date.HtmlInputDate.UserData;
-import net.sourceforge.myfaces.renderkit.RendererUtils;
-import net.sourceforge.myfaces.renderkit.html.HTML;
-import net.sourceforge.myfaces.renderkit.html.HtmlRenderer;
-import net.sourceforge.myfaces.renderkit.html.HtmlRendererUtils;
-import net.sourceforge.myfaces.util.MessageUtils;
+import org.apache.myfaces.component.UserRoleUtils;
+import org.apache.myfaces.custom.date.HtmlInputDate.UserData;
+import org.apache.myfaces.renderkit.RendererUtils;
+import org.apache.myfaces.renderkit.html.HTML;
+import org.apache.myfaces.renderkit.html.HtmlRenderer;
+import org.apache.myfaces.renderkit.html.HtmlRendererUtils;
+import org.apache.myfaces.util.MessageUtils;
 
 /**
  * $Log$
+ * Revision 1.9  2004/10/13 11:50:57  matze
+ * renamed packages to org.apache
+ *
  * Revision 1.8  2004/10/04 17:47:55  svieujot
  * Bugfix for bug 1039797 (Missing setter in HtmlInputDateTag), and add User Role support to InputDate.
  *
@@ -71,7 +74,7 @@ public class HtmlDateRenderer extends HtmlRenderer {
 	 * <p>The message identifier of the {@link FacesMessage} to be created if
 	 * the creditcard check fails.</p>
 	 */
-	public static final String DATE_MESSAGE_ID = "net.sourceforge.myfaces.Date.INVALID";	
+	public static final String DATE_MESSAGE_ID = "org.apache.myfaces.Date.INVALID";	
 	
     private static final String ID_DAY_POSTFIX = ".day";
     private static final String ID_MONTH_POSTFIX = ".month";

@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.sourceforge.myfaces.custom.datascroller;
+package org.apache.myfaces.custom.datascroller;
 
-import net.sourceforge.myfaces.component.UserRoleAware;
-import net.sourceforge.myfaces.taglib.UIComponentTagBase;
+import org.apache.myfaces.component.UserRoleAware;
+import org.apache.myfaces.taglib.UIComponentTagBase;
 
 import javax.faces.component.UIComponent;
 
@@ -24,6 +24,9 @@ import javax.faces.component.UIComponent;
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.9  2004/10/13 11:50:57  matze
+ * renamed packages to org.apache
+ *
  * Revision 1.8  2004/10/05 09:22:57  manolito
  * #1019443 no setter method corresponding to TLD declared attribute
  *

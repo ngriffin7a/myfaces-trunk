@@ -3,10 +3,10 @@
   "-//MyFaces//DTD MyFaces component def 1.0//EN"
   "http://myfaces.sourceforge.net/dtd/Component.dtd">
 <component>
-    <component-class>net.sourceforge.myfaces.custom.datalist.HtmlDataList</component-class>
+    <component-class>org.apache.myfaces.custom.datalist.HtmlDataList</component-class>
     <base-class>javax.faces.component.UIData</base-class>
-    <component-type>net.sourceforge.myfaces.HtmlDataList</component-type>
-    <renderer-type>net.sourceforge.myfaces.List</renderer-type>
+    <component-type>org.apache.myfaces.HtmlDataList</component-type>
+    <renderer-type>org.apache.myfaces.List</renderer-type>
     <field>
         <name>layout</name>
         <type>java.lang.String</type>

@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.sourceforge.myfaces.examples.misc;
+package org.apache.myfaces.examples.misc;
 
-import net.sourceforge.myfaces.custom.navmenu.NavigationMenuItem;
-import net.sourceforge.myfaces.examples.util.GuiUtil;
+import org.apache.myfaces.custom.navmenu.NavigationMenuItem;
+import org.apache.myfaces.examples.util.GuiUtil;
 
 /**
  * @author Thomas Spiegl (latest modification by $Author$)

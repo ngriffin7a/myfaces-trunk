@@ -13,14 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.sourceforge.myfaces;
+package org.apache.myfaces;
 
 import junit.framework.TestCase;
-import net.sourceforge.myfaces.context.servlet.ServletContextMockImpl;
-import net.sourceforge.myfaces.context.servlet.ServletFacesContextImpl;
-import net.sourceforge.myfaces.context.servlet.ServletRequestMockImpl;
-import net.sourceforge.myfaces.context.servlet.ServletResponseMockImpl;
-import net.sourceforge.myfaces.webapp.StartupServletContextListener;
+import org.apache.myfaces.context.servlet.ServletContextMockImpl;
+import org.apache.myfaces.context.servlet.ServletFacesContextImpl;
+import org.apache.myfaces.context.servlet.ServletRequestMockImpl;
+import org.apache.myfaces.context.servlet.ServletResponseMockImpl;
+import org.apache.myfaces.webapp.StartupServletContextListener;
 
 import javax.faces.application.Application;
 import javax.faces.context.FacesContext;
@@ -40,7 +40,7 @@ public class MyFacesBaseTest
 {
     //private static final Log log = LogFactory.getLog(MyFacesBaseTest.class);
 
-    private static final String RESOURCE_PATH = "net.sourceforge.myfaces.resource".replace('.', '/');
+    private static final String RESOURCE_PATH = "org.apache.myfaces.resource".replace('.', '/');
 
     protected Application _application;
     protected ServletContext _servletContext;

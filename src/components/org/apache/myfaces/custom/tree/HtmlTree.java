@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.sourceforge.myfaces.custom.tree;
+package org.apache.myfaces.custom.tree;
 
 import java.io.IOException;
 import java.util.*;
@@ -21,13 +21,13 @@ import javax.faces.component.UIViewRoot;
 import javax.faces.context.FacesContext;
 import javax.faces.el.ValueBinding;
 
-import net.sourceforge.myfaces.custom.tree.event.TreeSelectionEvent;
-import net.sourceforge.myfaces.custom.tree.event.TreeSelectionListener;
-import net.sourceforge.myfaces.custom.tree.model.TreeModel;
-import net.sourceforge.myfaces.custom.tree.model.TreeModelEvent;
-import net.sourceforge.myfaces.custom.tree.model.TreeModelListener;
-import net.sourceforge.myfaces.custom.tree.model.TreePath;
-import net.sourceforge.myfaces.component.html.ext.HtmlPanelGroup;
+import org.apache.myfaces.custom.tree.event.TreeSelectionEvent;
+import org.apache.myfaces.custom.tree.event.TreeSelectionListener;
+import org.apache.myfaces.custom.tree.model.TreeModel;
+import org.apache.myfaces.custom.tree.model.TreeModelEvent;
+import org.apache.myfaces.custom.tree.model.TreeModelListener;
+import org.apache.myfaces.custom.tree.model.TreePath;
+import org.apache.myfaces.component.html.ext.HtmlPanelGroup;
 
 
 /**
@@ -40,6 +40,9 @@ import net.sourceforge.myfaces.component.html.ext.HtmlPanelGroup;
  * @author <a href="mailto:oliver@rossmueller.com">Oliver Rossmueller</a>
  * @version $Revision$ $Date$
  *          $Log$
+ *          Revision 1.24  2004/10/13 11:50:58  matze
+ *          renamed packages to org.apache
+ *
  *          Revision 1.23  2004/10/10 21:39:16  o_rossmueller
  *          expandAll/collapseAll (contributed by Hamidreza Sattari <hhreza@yahoo.com>)
  *
@@ -430,7 +433,7 @@ public class HtmlTree
 
     public String getFamily()
     {
-        return "net.sourceforge.myfaces.HtmlTree";
+        return "org.apache.myfaces.HtmlTree";
     }
 
 

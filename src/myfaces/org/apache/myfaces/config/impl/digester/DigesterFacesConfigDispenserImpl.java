@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.sourceforge.myfaces.config.impl.digester;
+package org.apache.myfaces.config.impl.digester;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -24,19 +24,22 @@ import java.util.Map;
 
 import javax.faces.render.RenderKitFactory;
 
-import net.sourceforge.myfaces.config.FacesConfigDispenser;
-import net.sourceforge.myfaces.config.impl.digester.elements.Application;
-import net.sourceforge.myfaces.config.impl.digester.elements.Converter;
-import net.sourceforge.myfaces.config.impl.digester.elements.FacesConfig;
-import net.sourceforge.myfaces.config.impl.digester.elements.Factory;
-import net.sourceforge.myfaces.config.impl.digester.elements.LocaleConfig;
-import net.sourceforge.myfaces.config.impl.digester.elements.RenderKit;
+import org.apache.myfaces.config.FacesConfigDispenser;
+import org.apache.myfaces.config.impl.digester.elements.Application;
+import org.apache.myfaces.config.impl.digester.elements.Converter;
+import org.apache.myfaces.config.impl.digester.elements.FacesConfig;
+import org.apache.myfaces.config.impl.digester.elements.Factory;
+import org.apache.myfaces.config.impl.digester.elements.LocaleConfig;
+import org.apache.myfaces.config.impl.digester.elements.RenderKit;
 
 
 /**
  * @author <a href="mailto:oliver@rossmueller.com">Oliver Rossmueller</a>
  *
  * $Log$
+ * Revision 1.3  2004/10/13 11:50:59  matze
+ * renamed packages to org.apache
+ *
  * Revision 1.2  2004/07/10 13:55:42  mwessendorf
  * imports
  *
@@ -407,7 +410,7 @@ public class DigesterFacesConfigDispenserImpl implements FacesConfigDispenser
 
 
     /**
-     * @return Iterator over {@link net.sourceforge.myfaces.config.element.ManagedBean ManagedBean}s
+     * @return Iterator over {@link org.apache.myfaces.config.element.ManagedBean ManagedBean}s
      */
     public Iterator getManagedBeans()
     {
@@ -416,7 +419,7 @@ public class DigesterFacesConfigDispenserImpl implements FacesConfigDispenser
 
 
     /**
-     * @return Iterator over {@link net.sourceforge.myfaces.config.element.NavigationRule NavigationRule}s
+     * @return Iterator over {@link org.apache.myfaces.config.element.NavigationRule NavigationRule}s
      */
     public Iterator getNavigationRules()
     {
@@ -444,7 +447,7 @@ public class DigesterFacesConfigDispenserImpl implements FacesConfigDispenser
 
 
     /**
-     * @return Iterator over {@link net.sourceforge.myfaces.config.element.Renderer Renderer}s for the given renderKitId
+     * @return Iterator over {@link org.apache.myfaces.config.element.Renderer Renderer}s for the given renderKitId
      */
     public Iterator getRenderers(String renderKitId)
     {

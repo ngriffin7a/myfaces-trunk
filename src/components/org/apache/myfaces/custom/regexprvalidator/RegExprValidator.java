@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.sourceforge.myfaces.custom.regexprvalidator;
+package org.apache.myfaces.custom.regexprvalidator;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.component.StateHolder;
@@ -22,7 +22,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.validator.Validator;
 import javax.faces.validator.ValidatorException;
 
-import net.sourceforge.myfaces.util.MessageUtils;
+import org.apache.myfaces.util.MessageUtils;
 
 import org.apache.commons.validator.GenericValidator;
 
@@ -30,6 +30,9 @@ import org.apache.commons.validator.GenericValidator;
  * @author mwessendorf (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.4  2004/10/13 11:50:57  matze
+ * renamed packages to org.apache
+ *
  * Revision 1.3  2004/07/01 21:53:11  mwessendorf
  * ASF switch
  *
@@ -42,13 +45,13 @@ public class RegExprValidator implements Validator, StateHolder {
 	/**
 	 * <p>The standard converter id for this converter.</p>
 	 */
-	public static final String 	VALIDATOR_ID 	   = "net.sourceforge.myfaces.validator.RegExpr";
+	public static final String 	VALIDATOR_ID 	   = "org.apache.myfaces.validator.RegExpr";
 
 	/**
 	 * <p>The message identifier of the {@link FacesMessage} to be created if
 	 * the creditcard check fails.</p>
 	 */
-	public static final String REGEXPR_MESSAGE_ID = "net.sourceforge.myfaces.Regexpr.INVALID";	
+	public static final String REGEXPR_MESSAGE_ID = "org.apache.myfaces.Regexpr.INVALID";	
 
 	public RegExprValidator(){
 	}

@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.sourceforge.myfaces.context.servlet;
+package org.apache.myfaces.context.servlet;
 
-import net.sourceforge.myfaces.util.NullIterator;
+import org.apache.myfaces.util.NullIterator;
 
 import javax.faces.FactoryFinder;
 import javax.faces.application.Application;
@@ -39,6 +39,9 @@ import java.util.*;
  * @author Anton Koinov
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.17  2004/10/13 11:51:00  matze
+ * renamed packages to org.apache
+ *
  * Revision 1.16  2004/07/18 21:44:40  o_rossmueller
  * fix #992629: implemented FacesContext.getRenderKit()
  *

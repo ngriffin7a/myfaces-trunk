@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.sourceforge.myfaces.util;
+package org.apache.myfaces.util;
 
 import org.apache.commons.el.Coercions;
 import org.apache.commons.el.Logger;
@@ -33,6 +33,9 @@ import java.util.Map;
  * @author Anton Koinov
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.10  2004/10/13 11:51:01  matze
+ * renamed packages to org.apache
+ *
  * Revision 1.9  2004/10/05 22:34:21  dave0000
  * bug 1021656 with related improvements
  *

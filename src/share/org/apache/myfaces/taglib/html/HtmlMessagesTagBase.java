@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.sourceforge.myfaces.taglib.html;
+package org.apache.myfaces.taglib.html;
 
-import net.sourceforge.myfaces.renderkit.JSFAttr;
+import org.apache.myfaces.renderkit.JSFAttr;
 
 import javax.faces.component.UIComponent;
 

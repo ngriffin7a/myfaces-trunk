@@ -1,7 +1,7 @@
     <managed-bean>
         <description>This bean is used to test managed properties</description>
         <managed-bean-name>testAdditional</managed-bean-name>
-        <managed-bean-class>net.sourceforge.myfaces.cactus.TestBean</managed-bean-class>
+        <managed-bean-class>org.apache.myfaces.cactus.TestBean</managed-bean-class>
         <managed-bean-scope>request</managed-bean-scope>
         <managed-property>
             <property-name>numberPrimitiveLong</property-name>

@@ -3,11 +3,11 @@
   "-//MyFaces//DTD MyFaces component def 1.0//EN"
   "http://myfaces.sourceforge.net/dtd/Component.dtd">
 <component>
-    <component-class>net.sourceforge.myfaces.custom.layout.HtmlPanelLayout</component-class>
+    <component-class>org.apache.myfaces.custom.layout.HtmlPanelLayout</component-class>
     <base-class>javax.faces.component.html.HtmlPanelGroup</base-class>
-    <component-type>net.sourceforge.myfaces.HtmlPanelLayout</component-type>
+    <component-type>org.apache.myfaces.HtmlPanelLayout</component-type>
     <component-family>javax.faces.Panel</component-family>
-    <renderer-type>net.sourceforge.myfaces.Layout</renderer-type>
+    <renderer-type>org.apache.myfaces.Layout</renderer-type>
     <field>
         <name>layout</name>
         <type>java.lang.String</type>

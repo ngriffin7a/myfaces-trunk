@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.sourceforge.myfaces.context.servlet;
+package org.apache.myfaces.context.servlet;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -23,7 +23,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
 
-import net.sourceforge.myfaces.MyFacesBaseTest;
+import org.apache.myfaces.MyFacesBaseTest;
 
 /**
  * Test for AbstractAttributeMap core functionality through ApplicationMap.
@@ -32,6 +32,9 @@ import net.sourceforge.myfaces.MyFacesBaseTest;
  * @version $Revision$ $Date$
  * 
  * $Log$
+ * Revision 1.6  2004/10/13 11:50:59  matze
+ * renamed packages to org.apache
+ *
  * Revision 1.5  2004/07/01 22:01:09  mwessendorf
  * ASF switch
  *

@@ -115,7 +115,7 @@ Changes in Release 1.0.3 alpha
 
 ----------------------------------------------------------------------
 Changes in Release 1.0.2 alpha
-* refactored custom components to net.sourceforge.myfaces.custom package
+* refactored custom components to org.apache.myfaces.custom package
 * custom message and messages component with new attributes summaryFormat and detailFormat
 * replaced com.oreilly.servlet lib cos.jar by commons-codec for Base64 encoding
 * fileupload component now uses commons-fileupload instead of com.oreilly.servlet lib cos.jar

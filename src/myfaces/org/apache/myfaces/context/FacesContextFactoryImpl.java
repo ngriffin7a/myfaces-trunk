@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.sourceforge.myfaces.context;
+package org.apache.myfaces.context;
 
-import net.sourceforge.myfaces.context.servlet.ServletFacesContextImpl;
+import org.apache.myfaces.context.servlet.ServletFacesContextImpl;
 
 import javax.faces.FacesException;
 import javax.faces.context.FacesContext;

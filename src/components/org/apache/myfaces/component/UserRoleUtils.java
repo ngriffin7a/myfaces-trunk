@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.sourceforge.myfaces.component;
+package org.apache.myfaces.component;
 
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
@@ -23,6 +23,9 @@ import java.util.StringTokenizer;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.4  2004/10/13 11:50:56  matze
+ * renamed packages to org.apache
+ *
  * Revision 1.3  2004/07/01 21:53:10  mwessendorf
  * ASF switch
  *

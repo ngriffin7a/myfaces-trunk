@@ -13,11 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.sourceforge.myfaces.custom.tree.model;
+package org.apache.myfaces.custom.tree.model;
 
-import net.sourceforge.myfaces.custom.tree.DefaultMutableTreeNode;
-import net.sourceforge.myfaces.custom.tree.MutableTreeNode;
-import net.sourceforge.myfaces.custom.tree.TreeNode;
+import org.apache.myfaces.custom.tree.DefaultMutableTreeNode;
+import org.apache.myfaces.custom.tree.MutableTreeNode;
+import org.apache.myfaces.custom.tree.TreeNode;
 
 import java.util.Iterator;
 import java.util.Collection;
@@ -28,6 +28,9 @@ import java.util.LinkedList;
  * @author <a href="mailto:oliver@rossmueller.com">Oliver Rossmueller</a>
  * @version $Revision$ $Date$
  *          $Log$
+ *          Revision 1.7  2004/10/13 11:50:58  matze
+ *          renamed packages to org.apache
+ *
  *          Revision 1.6  2004/09/01 18:32:57  mwessendorf
  *          Organize Imports
  *

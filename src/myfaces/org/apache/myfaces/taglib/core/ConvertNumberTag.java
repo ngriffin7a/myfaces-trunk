@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.sourceforge.myfaces.taglib.core;
+package org.apache.myfaces.taglib.core;
 
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
@@ -26,6 +26,9 @@ import java.util.Locale;
 
 /**
  * $Log$
+ * Revision 1.6  2004/10/13 11:51:00  matze
+ * renamed packages to org.apache
+ *
  * Revision 1.5  2004/07/01 22:05:03  mwessendorf
  * ASF switch
  *

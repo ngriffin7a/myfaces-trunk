@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.sourceforge.myfaces.component.html.ext;
+package org.apache.myfaces.component.html.ext;
 
-import net.sourceforge.myfaces.component.UserRoleAware;
-import net.sourceforge.myfaces.component.UserRoleUtils;
+import org.apache.myfaces.component.UserRoleAware;
+import org.apache.myfaces.component.UserRoleUtils;
 
 import javax.faces.context.FacesContext;
 import javax.faces.el.ValueBinding;
@@ -32,8 +32,8 @@ public class HtmlMessages
 {
     //------------------ GENERATED CODE BEGIN (do not modify!) --------------------
 
-    public static final String COMPONENT_TYPE = "net.sourceforge.myfaces.HtmlMessages";
-    private static final String DEFAULT_RENDERER_TYPE = "net.sourceforge.myfaces.Messages";
+    public static final String COMPONENT_TYPE = "org.apache.myfaces.HtmlMessages";
+    private static final String DEFAULT_RENDERER_TYPE = "org.apache.myfaces.Messages";
 
     private String _summaryFormat = null;
     private String _globalSummaryFormat = null;

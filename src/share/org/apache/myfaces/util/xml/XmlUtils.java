@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.sourceforge.myfaces.util.xml;
+package org.apache.myfaces.util.xml;
 
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.sourceforge.myfaces.context.servlet;
+package org.apache.myfaces.context.servlet;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.Cookie;

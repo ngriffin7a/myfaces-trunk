@@ -13,12 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.sourceforge.myfaces.renderkit.html;
+package org.apache.myfaces.renderkit.html;
 
-import net.sourceforge.myfaces.config.MyfacesConfig;
-import net.sourceforge.myfaces.renderkit.RendererUtils;
-import net.sourceforge.myfaces.renderkit.html.util.DummyFormUtils;
-import net.sourceforge.myfaces.renderkit.html.util.JavascriptUtils;
+import org.apache.myfaces.config.MyfacesConfig;
+import org.apache.myfaces.renderkit.RendererUtils;
+import org.apache.myfaces.renderkit.html.util.DummyFormUtils;
+import org.apache.myfaces.renderkit.html.util.JavascriptUtils;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -39,6 +39,9 @@ import java.util.*;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.20  2004/10/13 11:51:01  matze
+ * renamed packages to org.apache
+ *
  * Revision 1.19  2004/09/08 09:32:03  manolito
  * MyfacesConfig moved to config package
  *

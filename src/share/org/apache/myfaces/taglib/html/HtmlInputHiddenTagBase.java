@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.sourceforge.myfaces.taglib.html;
+package org.apache.myfaces.taglib.html;
 
 
 
@@ -23,6 +23,9 @@ package net.sourceforge.myfaces.taglib.html;
  * @author Martin Marinschek
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.3  2004/10/13 11:51:01  matze
+ * renamed packages to org.apache
+ *
  * Revision 1.2  2004/07/01 22:01:11  mwessendorf
  * ASF switch
  *

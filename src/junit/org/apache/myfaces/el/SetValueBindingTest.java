@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.sourceforge.myfaces.el;
+package org.apache.myfaces.el;
 
 import javax.faces.el.ValueBinding;
 

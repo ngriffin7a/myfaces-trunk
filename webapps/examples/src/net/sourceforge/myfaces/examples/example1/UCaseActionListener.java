@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.sourceforge.myfaces.examples.example1;
+package org.apache.myfaces.examples.example1;
 
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;

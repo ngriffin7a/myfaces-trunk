@@ -13,13 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.sourceforge.myfaces.config;
+package org.apache.myfaces.config;
 
 
 /**
  * @author <a href="mailto:oliver@rossmueller.com">Oliver Rossmueller</a>
  */
-public class TestHtmlButtonRenderer extends net.sourceforge.myfaces.renderkit.html.HtmlButtonRenderer
+public class TestHtmlButtonRenderer extends org.apache.myfaces.renderkit.html.HtmlButtonRenderer
 {
 
 }

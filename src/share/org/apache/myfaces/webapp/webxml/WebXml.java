@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.sourceforge.myfaces.webapp.webxml;
+package org.apache.myfaces.webapp.webxml;
 
-import net.sourceforge.myfaces.util.ClassUtils;
+import org.apache.myfaces.util.ClassUtils;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -28,11 +28,14 @@ import java.util.*;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.3  2004/10/13 11:51:01  matze
+ * renamed packages to org.apache
+ *
  * Revision 1.2  2004/08/10 10:57:39  manolito
  * fixed StackOverflow in ClassUtils and cleaned up ClassUtils methods
  *
  * Revision 1.1  2004/07/16 15:16:10  royalts
- * moved net.sourceforge.myfaces.webapp.webxml and net.sourceforge.util.xml to share src-tree (needed WebXml for JspTilesViewHandlerImpl)
+ * moved org.apache.myfaces.webapp.webxml and org.apache.util.xml to share src-tree (needed WebXml for JspTilesViewHandlerImpl)
  *
  * Revision 1.10  2004/07/01 22:05:16  mwessendorf
  * ASF switch

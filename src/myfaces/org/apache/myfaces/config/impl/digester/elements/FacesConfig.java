@@ -13,15 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.sourceforge.myfaces.config.impl.digester.elements;
+package org.apache.myfaces.config.impl.digester.elements;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.HashMap;
 import java.util.Map;
 
-import net.sourceforge.myfaces.config.impl.digester.elements.Application;
-import net.sourceforge.myfaces.config.impl.digester.elements.Converter;
+import org.apache.myfaces.config.impl.digester.elements.Application;
+import org.apache.myfaces.config.impl.digester.elements.Converter;
 
 
 /**

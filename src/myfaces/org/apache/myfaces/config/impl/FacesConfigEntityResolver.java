@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.sourceforge.myfaces.config.impl;
+package org.apache.myfaces.config.impl;
 
-import net.sourceforge.myfaces.util.ClassUtils;
+import org.apache.myfaces.util.ClassUtils;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
 
@@ -42,10 +42,10 @@ public class FacesConfigEntityResolver
 
     private static final String FACES_CONFIG_1_0_DTD_SYSTEM_ID = "http://java.sun.com/dtd/web-facesconfig_1_0.dtd";
     private static final String FACES_CONFIG_1_0_DTD_RESOURCE
-            = "net.sourceforge.myfaces.resource".replace('.', '/') + "/web-facesconfig_1_0.dtd";
+            = "org.apache.myfaces.resource".replace('.', '/') + "/web-facesconfig_1_0.dtd";
     private static final String FACES_CONFIG_1_1_DTD_SYSTEM_ID = "http://java.sun.com/dtd/web-facesconfig_1_1.dtd";
     private static final String FACES_CONFIG_1_1_DTD_RESOURCE
-            = "net.sourceforge.myfaces.resource".replace('.', '/') + "/web-facesconfig_1_1.dtd";
+            = "org.apache.myfaces.resource".replace('.', '/') + "/web-facesconfig_1_1.dtd";
 
     private ExternalContext _externalContext = null;
 

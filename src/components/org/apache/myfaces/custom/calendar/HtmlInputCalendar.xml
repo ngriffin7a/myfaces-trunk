@@ -3,11 +3,11 @@
   "-//MyFaces//DTD MyFaces component def 1.0//EN"
   "http://myfaces.sourceforge.net/dtd/Component.dtd">
 <component generateUserRoleMethods="true" >
-    <component-class>net.sourceforge.myfaces.custom.calendar.HtmlInputCalendar</component-class>
+    <component-class>org.apache.myfaces.custom.calendar.HtmlInputCalendar</component-class>
     <base-class>javax.faces.component.UIInput</base-class>
-    <component-type>net.sourceforge.myfaces.HtmlInputCalendar</component-type>
+    <component-type>org.apache.myfaces.HtmlInputCalendar</component-type>
     <component-family>javax.faces.Input</component-family>
-    <renderer-type>net.sourceforge.myfaces.Calendar</renderer-type>
+    <renderer-type>org.apache.myfaces.Calendar</renderer-type>
     <field>
         <name>monthYearRowClass</name>
         <type>java.lang.String</type>

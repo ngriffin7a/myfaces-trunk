@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.sourceforge.myfaces.config;
+package org.apache.myfaces.config;
 
-import net.sourceforge.myfaces.config.element.ManagedBean;
-import net.sourceforge.myfaces.config.element.NavigationRule;
+import org.apache.myfaces.config.element.ManagedBean;
+import org.apache.myfaces.config.element.NavigationRule;
 
 import javax.faces.context.ExternalContext;
 import java.util.*;
@@ -31,6 +31,9 @@ import java.util.*;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.4  2004/10/13 11:50:59  matze
+ * renamed packages to org.apache
+ *
  * Revision 1.3  2004/09/08 09:28:56  manolito
  * moved MyfacesConfig to package config
  *
@@ -80,7 +83,7 @@ public class RuntimeConfig
 
     /**
      * Return the navigation rules that can be used by the NavigationHandler implementation.
-     * @return a Collection of {@link net.sourceforge.myfaces.config.element.NavigationRule NavigationRule}s
+     * @return a Collection of {@link org.apache.myfaces.config.element.NavigationRule NavigationRule}s
      */
     public Collection getNavigationRules()
     {
@@ -94,7 +97,7 @@ public class RuntimeConfig
 
     /**
      * Return the managed bean info that can be used by the VariableResolver implementation.
-     * @return a {@link net.sourceforge.myfaces.config.element.ManagedBean ManagedBean}
+     * @return a {@link org.apache.myfaces.config.element.ManagedBean ManagedBean}
      */
     public ManagedBean getManagedBean(String name)
     {

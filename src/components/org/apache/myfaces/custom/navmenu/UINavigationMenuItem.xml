@@ -3,9 +3,9 @@
   "-//MyFaces//DTD MyFaces component def 1.0//EN"
   "http://myfaces.sourceforge.net/dtd/Component.dtd">
 <component generateUserRoleMethods="true" >
-    <component-class>net.sourceforge.myfaces.custom.navmenu.UINavigationMenuItem</component-class>
+    <component-class>org.apache.myfaces.custom.navmenu.UINavigationMenuItem</component-class>
     <base-class>javax.faces.component.UISelectItem</base-class>
-    <component-type>net.sourceforge.myfaces.NavigationItem</component-type>
+    <component-type>org.apache.myfaces.NavigationItem</component-type>
     <component-family>javax.faces.SelectItem</component-family>
     <field>
         <name>icon</name>

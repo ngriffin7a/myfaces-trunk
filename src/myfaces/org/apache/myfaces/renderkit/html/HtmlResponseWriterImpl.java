@@ -13,13 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.sourceforge.myfaces.renderkit.html;
+package org.apache.myfaces.renderkit.html;
 
-import net.sourceforge.myfaces.config.MyfacesConfig;
-import net.sourceforge.myfaces.renderkit.html.util.DummyFormResponseWriter;
-import net.sourceforge.myfaces.renderkit.html.util.DummyFormUtils;
-import net.sourceforge.myfaces.renderkit.html.util.HTMLEncoder;
-import net.sourceforge.myfaces.renderkit.html.util.JavascriptUtils;
+import org.apache.myfaces.config.MyfacesConfig;
+import org.apache.myfaces.renderkit.html.util.DummyFormResponseWriter;
+import org.apache.myfaces.renderkit.html.util.DummyFormUtils;
+import org.apache.myfaces.renderkit.html.util.HTMLEncoder;
+import org.apache.myfaces.renderkit.html.util.JavascriptUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -36,6 +36,9 @@ import java.util.Set;
  * @author Anton Koinov
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.28  2004/10/13 11:51:00  matze
+ * renamed packages to org.apache
+ *
  * Revision 1.27  2004/10/05 08:49:15  manolito
  * #1038697 h:selectOneRadio generates malformed XHTML
  *

@@ -13,11 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.sourceforge.myfaces.custom.layout;
+package org.apache.myfaces.custom.layout;
 
-import net.sourceforge.myfaces.component.UserRoleAware;
-import net.sourceforge.myfaces.renderkit.html.HTML;
-import net.sourceforge.myfaces.taglib.html.HtmlComponentBodyTagBase;
+import org.apache.myfaces.component.UserRoleAware;
+import org.apache.myfaces.renderkit.html.HTML;
+import org.apache.myfaces.taglib.html.HtmlComponentBodyTagBase;
 
 import javax.faces.component.UIComponent;
 
@@ -25,6 +25,9 @@ import javax.faces.component.UIComponent;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.6  2004/10/13 11:50:57  matze
+ * renamed packages to org.apache
+ *
  * Revision 1.5  2004/07/01 21:53:09  mwessendorf
  * ASF switch
  *
@@ -51,7 +54,7 @@ public class HtmlPanelLayoutTag
 
     public String getRendererType()
     {
-        return "net.sourceforge.myfaces.Layout";
+        return "org.apache.myfaces.Layout";
     }
 
     // UIComponent attributes --> already implemented in UIComponentBodyTagBase

@@ -13,20 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.sourceforge.myfaces.config;
+package org.apache.myfaces.config;
 
-import net.sourceforge.myfaces.application.ApplicationFactoryImpl;
-import net.sourceforge.myfaces.config.element.ManagedBean;
-import net.sourceforge.myfaces.config.element.NavigationRule;
-import net.sourceforge.myfaces.config.element.Renderer;
-import net.sourceforge.myfaces.config.impl.digester.DigesterFacesConfigDispenserImpl;
-import net.sourceforge.myfaces.config.impl.digester.DigesterFacesConfigUnmarshallerImpl;
-import net.sourceforge.myfaces.context.FacesContextFactoryImpl;
-import net.sourceforge.myfaces.lifecycle.LifecycleFactoryImpl;
-import net.sourceforge.myfaces.renderkit.RenderKitFactoryImpl;
-import net.sourceforge.myfaces.renderkit.html.HtmlRenderKitImpl;
-import net.sourceforge.myfaces.util.ClassUtils;
-import net.sourceforge.myfaces.util.LocaleUtils;
+import org.apache.myfaces.application.ApplicationFactoryImpl;
+import org.apache.myfaces.config.element.ManagedBean;
+import org.apache.myfaces.config.element.NavigationRule;
+import org.apache.myfaces.config.element.Renderer;
+import org.apache.myfaces.config.impl.digester.DigesterFacesConfigDispenserImpl;
+import org.apache.myfaces.config.impl.digester.DigesterFacesConfigUnmarshallerImpl;
+import org.apache.myfaces.context.FacesContextFactoryImpl;
+import org.apache.myfaces.lifecycle.LifecycleFactoryImpl;
+import org.apache.myfaces.renderkit.RenderKitFactoryImpl;
+import org.apache.myfaces.renderkit.html.HtmlRenderKitImpl;
+import org.apache.myfaces.util.ClassUtils;
+import org.apache.myfaces.util.LocaleUtils;
 import org.xml.sax.SAXException;
 
 import org.apache.commons.logging.Log;
@@ -63,6 +63,9 @@ import java.util.jar.JarInputStream;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  *          $Log$
+ *          Revision 1.7  2004/10/13 11:50:59  matze
+ *          renamed packages to org.apache
+ *
  *          Revision 1.6  2004/08/23 05:13:39  dave0000
  *          Externalize String-to-Locale conversion
  *
@@ -123,7 +126,7 @@ public class FacesConfigurator
     private static final Log log = LogFactory.getLog(FacesConfigurator.class);
 
     private static final String STANDARD_FACES_CONFIG_RESOURCE
-        = "net.sourceforge.myfaces.resource".replace('.', '/') + "/standard-faces-config.xml";
+        = "org.apache.myfaces.resource".replace('.', '/') + "/standard-faces-config.xml";
 
     public static final String APPLICATION_MAP_LIFECYCLE_KEY = Lifecycle.class.getName();
 

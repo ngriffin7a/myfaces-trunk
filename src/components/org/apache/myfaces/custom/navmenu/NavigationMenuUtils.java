@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.sourceforge.myfaces.custom.navmenu;
+package org.apache.myfaces.custom.navmenu;
 
 import org.apache.commons.logging.LogFactory;
 import org.apache.commons.logging.Log;
@@ -27,6 +27,9 @@ import java.util.*;
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  *          $Log$
+ *          Revision 1.4  2004/10/13 11:50:57  matze
+ *          renamed packages to org.apache
+ *
  *          Revision 1.3  2004/07/05 08:28:25  royalts
  *          added example for <x:navigationMenuItems>
  *

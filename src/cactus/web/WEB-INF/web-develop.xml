@@ -32,7 +32,7 @@
     </context-param>
 
     <context-param>
-        <param-name>net.sourceforge.myfaces.ALLOW_JAVASCRIPT</param-name>
+        <param-name>org.apache.myfaces.ALLOW_JAVASCRIPT</param-name>
         <param-value>true</param-value>
         <description>
             This parameter tells MyFaces if javascript code should be allowed in the
@@ -46,7 +46,7 @@
     </context-param>
 
     <context-param>
-        <param-name>net.sourceforge.myfaces.PRETTY_HTML</param-name>
+        <param-name>org.apache.myfaces.PRETTY_HTML</param-name>
         <param-value>true</param-value>
         <description>
             If true, rendered HTML code will be formatted, so that it is "human readable".
@@ -62,7 +62,7 @@
     <!--
     <filter>
         <filter-name>WelcomeFile Filter</filter-name>
-        <filter-class>net.sourceforge.myfaces.webapp.filter.WelcomeFileFilter</filter-class>
+        <filter-class>org.apache.myfaces.webapp.filter.WelcomeFileFilter</filter-class>
         <description>
             Due to the manner in which the JSP / servlet lifecycle
             functions, it is not currently possible to specify default
@@ -78,7 +78,7 @@
     <!-- O'Reilly MultiPart Filter -->
     <filter>
         <filter-name>multipartFilter</filter-name>
-        <filter-class>net.sourceforge.myfaces.custom.fileupload.MultipartFilter</filter-class>
+        <filter-class>org.apache.myfaces.custom.fileupload.MultipartFilter</filter-class>
     </filter>
 
     <!-- Cactus Filter -->
@@ -102,7 +102,7 @@
 
     <!-- Listener, that does all the startup work (configuration, init). -->
     <listener>
-        <listener-class>net.sourceforge.myfaces.webapp.StartupServletContextListener</listener-class>
+        <listener-class>org.apache.myfaces.webapp.StartupServletContextListener</listener-class>
     </listener>
 
 

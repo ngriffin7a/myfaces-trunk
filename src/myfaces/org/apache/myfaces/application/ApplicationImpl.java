@@ -13,16 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.sourceforge.myfaces.application;
+package org.apache.myfaces.application;
 
-import net.sourceforge.myfaces.application.jsp.JspStateManagerImpl;
-import net.sourceforge.myfaces.application.jsp.JspViewHandlerImpl;
-import net.sourceforge.myfaces.el.MethodBindingImpl;
-import net.sourceforge.myfaces.el.PropertyResolverImpl;
-import net.sourceforge.myfaces.el.ValueBindingImpl;
-import net.sourceforge.myfaces.el.VariableResolverImpl;
-import net.sourceforge.myfaces.util.BiLevelCacheMap;
-import net.sourceforge.myfaces.util.ClassUtils;
+import org.apache.myfaces.application.jsp.JspStateManagerImpl;
+import org.apache.myfaces.application.jsp.JspViewHandlerImpl;
+import org.apache.myfaces.el.MethodBindingImpl;
+import org.apache.myfaces.el.PropertyResolverImpl;
+import org.apache.myfaces.el.ValueBindingImpl;
+import org.apache.myfaces.el.VariableResolverImpl;
+import org.apache.myfaces.util.BiLevelCacheMap;
+import org.apache.myfaces.util.ClassUtils;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -48,6 +48,9 @@ import java.util.*;
  * @author Thomas Spiegl
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.34  2004/10/13 11:50:59  matze
+ * renamed packages to org.apache
+ *
  * Revision 1.33  2004/09/08 07:45:05  mwessendorf
  * set DefaultRenderKitId = "HTML_BASIC"
  *

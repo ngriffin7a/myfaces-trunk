@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.sourceforge.myfaces.custom.layout;
+package org.apache.myfaces.custom.layout;
 
 import javax.faces.component.UIComponent;
 import javax.faces.component.html.HtmlPanelGroup;
@@ -57,9 +57,9 @@ public class HtmlPanelLayout
 
     //------------------ GENERATED CODE BEGIN (do not modify!) --------------------
 
-    public static final String COMPONENT_TYPE = "net.sourceforge.myfaces.HtmlPanelLayout";
+    public static final String COMPONENT_TYPE = "org.apache.myfaces.HtmlPanelLayout";
     public static final String COMPONENT_FAMILY = "javax.faces.Panel";
-    private static final String DEFAULT_RENDERER_TYPE = "net.sourceforge.myfaces.Layout";
+    private static final String DEFAULT_RENDERER_TYPE = "org.apache.myfaces.Layout";
 
     private String _layout = null;
     private String _headerClass = null;

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.sourceforge.myfaces.config.impl.digester.elements;
+package org.apache.myfaces.config.impl.digester.elements;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +23,7 @@ import java.util.Iterator;
 /**
  * @author <a href="mailto:oliver@rossmueller.com">Oliver Rossmueller</a>
  */
-public class MapEntries implements net.sourceforge.myfaces.config.element.MapEntries
+public class MapEntries implements org.apache.myfaces.config.element.MapEntries
 {
 
     private String keyClass;
@@ -65,7 +65,7 @@ public class MapEntries implements net.sourceforge.myfaces.config.element.MapEnt
     }
 
 
-    public static class Entry implements net.sourceforge.myfaces.config.element.MapEntry {
+    public static class Entry implements org.apache.myfaces.config.element.MapEntry {
        String key;
         boolean nullValue = false;
         String value;

@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.sourceforge.myfaces.custom.checkbox;
+package org.apache.myfaces.custom.checkbox;
 
-import net.sourceforge.myfaces.component.UserRoleAware;
-import net.sourceforge.myfaces.taglib.UIComponentTagBase;
+import org.apache.myfaces.component.UserRoleAware;
+import org.apache.myfaces.taglib.UIComponentTagBase;
 
 import javax.faces.component.UIComponent;
 
@@ -24,6 +24,9 @@ import javax.faces.component.UIComponent;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.5  2004/10/13 11:50:57  matze
+ * renamed packages to org.apache
+ *
  * Revision 1.4  2004/07/01 21:53:06  mwessendorf
  * ASF switch
  *

@@ -31,7 +31,7 @@
     <managed-bean>
         <description>This bean is used to provide values for tests using value bindings</description>
         <managed-bean-name>testDataProvider</managed-bean-name>
-        <managed-bean-class>net.sourceforge.myfaces.cactus.TestDataProviderBean</managed-bean-class>
+        <managed-bean-class>org.apache.myfaces.cactus.TestDataProviderBean</managed-bean-class>
         <managed-bean-scope>session</managed-bean-scope>
     </managed-bean>
 
@@ -39,7 +39,7 @@
     <managed-bean>
         <description>This bean is used to test managed properties</description>
         <managed-bean-name>testManagedProperties</managed-bean-name>
-        <managed-bean-class>net.sourceforge.myfaces.cactus.TestBean</managed-bean-class>
+        <managed-bean-class>org.apache.myfaces.cactus.TestBean</managed-bean-class>
         <managed-bean-scope>request</managed-bean-scope>
         <managed-property>
             <property-name>numberPrimitiveLong</property-name>
@@ -129,11 +129,11 @@
 
 
     <application>
-        <view-handler>net.sourceforge.myfaces.config.TestViewHandlerB</view-handler>
-        <navigation-handler>net.sourceforge.myfaces.config.TestNavigationHandler</navigation-handler>
-        <property-resolver>net.sourceforge.myfaces.config.TestPropertyResolver</property-resolver>
-        <variable-resolver>net.sourceforge.myfaces.config.TestVariableResolver</variable-resolver>
-        <state-manager>net.sourceforge.myfaces.config.TestStateManager</state-manager>
+        <view-handler>org.apache.myfaces.config.TestViewHandlerB</view-handler>
+        <navigation-handler>org.apache.myfaces.config.TestNavigationHandler</navigation-handler>
+        <property-resolver>org.apache.myfaces.config.TestPropertyResolver</property-resolver>
+        <variable-resolver>org.apache.myfaces.config.TestVariableResolver</variable-resolver>
+        <state-manager>org.apache.myfaces.config.TestStateManager</state-manager>
     </application>
 
     <application>
@@ -144,7 +144,7 @@
       <renderer>
           <component-family>javax.faces.Command</component-family>
           <renderer-type>javax.faces.Button</renderer-type>
-          <renderer-class>net.sourceforge.myfaces.renderkit.html.HtmlButtonRenderer</renderer-class>
+          <renderer-class>org.apache.myfaces.renderkit.html.HtmlButtonRenderer</renderer-class>
       </renderer>
     </render-kit>
 
@@ -153,7 +153,7 @@
         <renderer>
             <component-family>test.Command</component-family>
             <renderer-type>test.Button</renderer-type>
-            <renderer-class>net.sourceforge.myfaces.renderkit.html.HtmlButtonRenderer</renderer-class>
+            <renderer-class>org.apache.myfaces.renderkit.html.HtmlButtonRenderer</renderer-class>
         </renderer>
     </render-kit>
 

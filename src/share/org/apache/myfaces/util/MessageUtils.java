@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.sourceforge.myfaces.util;
+package org.apache.myfaces.util;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -30,6 +30,9 @@ import java.util.ResourceBundle;
  * @author Manfred Geiler
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.4  2004/10/13 11:51:01  matze
+ * renamed packages to org.apache
+ *
  * Revision 1.3  2004/08/17 12:15:34  manolito
  * NPE when there was no ViewRoot
  *

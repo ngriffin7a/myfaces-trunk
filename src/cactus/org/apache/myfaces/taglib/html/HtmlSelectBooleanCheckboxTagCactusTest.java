@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.sourceforge.myfaces.taglib.html;
+package org.apache.myfaces.taglib.html;
 
 import com.meterware.httpunit.HTMLElement;
 import com.meterware.httpunit.WebResponse;
@@ -26,6 +26,9 @@ import javax.servlet.RequestDispatcher;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.5  2004/10/13 11:50:56  matze
+ * renamed packages to org.apache
+ *
  * Revision 1.4  2004/07/01 21:57:58  mwessendorf
  * ASF switch
  *

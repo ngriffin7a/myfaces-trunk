@@ -28,6 +28,9 @@ import java.util.*;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.19  2004/10/13 11:50:59  matze
+ * renamed packages to org.apache
+ *
  * Revision 1.18  2004/07/20 14:57:27  manolito
  * cosmetic change
  *
@@ -93,7 +96,7 @@ public final class FactoryFinder
             String message = "No Factories configured for this Application - typically this is because " +
             "a context listener is not setup in your web.xml.\n" +
             "A typical config looks like this;\n<listener>\n" +
-            "  <listener-class>net.sourceforge.myfaces.webapp.StartupServletContextListener</listener-class>\n" +
+            "  <listener-class>org.apache.myfaces.webapp.StartupServletContextListener</listener-class>\n" +
             "</listener>\n";
             throw new IllegalStateException(message);
         }

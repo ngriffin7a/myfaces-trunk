@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.sourceforge.myfaces.custom.fileupload;
+package org.apache.myfaces.custom.fileupload;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -25,6 +25,9 @@ import java.io.Serializable;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  *          $Log$
+ *          Revision 1.7  2004/10/13 11:50:57  matze
+ *          renamed packages to org.apache
+ *
  *          Revision 1.6  2004/07/12 03:04:32  svieujot
  *          Make Serializable to be able to save it in the FacesContext
  *

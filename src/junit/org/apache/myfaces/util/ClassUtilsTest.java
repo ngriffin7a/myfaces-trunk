@@ -1,4 +1,4 @@
-package net.sourceforge.myfaces.util;
+package org.apache.myfaces.util;
 
 import junit.framework.TestCase;
 
@@ -6,6 +6,9 @@ import junit.framework.TestCase;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.3  2004/10/13 11:50:59  matze
+ * renamed packages to org.apache
+ *
  * Revision 1.2  2004/10/05 22:34:20  dave0000
  * bug 1021656 with related improvements
  *

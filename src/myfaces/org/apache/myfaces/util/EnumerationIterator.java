@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.sourceforge.myfaces.util;
+package org.apache.myfaces.util;
 
 import java.util.Enumeration;
 import java.util.Iterator;

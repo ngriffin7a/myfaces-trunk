@@ -3,9 +3,9 @@
   "-//MyFaces//DTD MyFaces component def 1.0//EN"
   "http://myfaces.sourceforge.net/dtd/Component.dtd">
 <component>
-    <component-class>net.sourceforge.myfaces.custom.tabbedpane.HtmlPanelTab</component-class>
+    <component-class>org.apache.myfaces.custom.tabbedpane.HtmlPanelTab</component-class>
     <base-class>javax.faces.component.html.HtmlPanelGroup</base-class>
-    <component-type>net.sourceforge.myfaces.HtmlPanelTab</component-type>
+    <component-type>org.apache.myfaces.HtmlPanelTab</component-type>
     <component-family>javax.faces.Panel</component-family>
     <renderer-type>javax.faces.Group</renderer-type>
     <field>

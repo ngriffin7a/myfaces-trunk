@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.sourceforge.myfaces.custom.rssticker;
+package org.apache.myfaces.custom.rssticker;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -35,6 +35,9 @@ import org.xml.sax.SAXException;
  * @author mwessendorf (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.6  2004/10/13 11:50:57  matze
+ * renamed packages to org.apache
+ *
  * Revision 1.5  2004/09/15 07:27:01  mwessendorf
  * RssTicker works now behind a firewall
  *
@@ -49,9 +52,9 @@ import org.xml.sax.SAXException;
 public class HtmlRssTicker extends HtmlOutputText{
 	
     private static final Log log = LogFactory.getLog(HtmlRssTicker.class);
-	public static final String COMPONENT_TYPE = "net.sourceforge.myfaces.RssTicker";
+	public static final String COMPONENT_TYPE = "org.apache.myfaces.RssTicker";
 	public static final String COMPONENT_FAMILY = "javax.faces.Output";
-	private static final String DEFAULT_RENDERER_TYPE = "net.sourceforge.myfaces.Ticker";
+	private static final String DEFAULT_RENDERER_TYPE = "org.apache.myfaces.Ticker";
 
 	//private fields
 	private String _rssUrl = null;

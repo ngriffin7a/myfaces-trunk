@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.sourceforge.myfaces.component.html.ext;
+package org.apache.myfaces.component.html.ext;
 
-import net.sourceforge.myfaces.component.UserRoleAware;
-import net.sourceforge.myfaces.component.UserRoleUtils;
+import org.apache.myfaces.component.UserRoleAware;
+import org.apache.myfaces.component.UserRoleUtils;
 
 import javax.faces.context.FacesContext;
 import javax.faces.el.ValueBinding;
@@ -25,6 +25,9 @@ import javax.faces.el.ValueBinding;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.2  2004/10/13 11:50:56  matze
+ * renamed packages to org.apache
+ *
  * Revision 1.1  2004/08/12 14:24:02  manolito
  * Extended HtmlInputTextarea component
  *
@@ -35,7 +38,7 @@ public class HtmlInputTextarea
 {
     //------------------ GENERATED CODE BEGIN (do not modify!) --------------------
 
-    public static final String COMPONENT_TYPE = "net.sourceforge.myfaces.HtmlInputTextarea";
+    public static final String COMPONENT_TYPE = "org.apache.myfaces.HtmlInputTextarea";
 
     private String _enabledOnUserRole = null;
     private String _visibleOnUserRole = null;

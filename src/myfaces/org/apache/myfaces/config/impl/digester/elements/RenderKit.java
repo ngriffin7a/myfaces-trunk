@@ -13,12 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.sourceforge.myfaces.config.impl.digester.elements;
+package org.apache.myfaces.config.impl.digester.elements;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import net.sourceforge.myfaces.config.impl.digester.elements.Renderer;
+import org.apache.myfaces.config.impl.digester.elements.Renderer;
 
 
 /**

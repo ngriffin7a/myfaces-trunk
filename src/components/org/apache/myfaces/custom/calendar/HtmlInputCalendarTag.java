@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.sourceforge.myfaces.custom.calendar;
+package org.apache.myfaces.custom.calendar;
 
-import net.sourceforge.myfaces.component.UserRoleAware;
-import net.sourceforge.myfaces.taglib.html.HtmlInputTagBase;
+import org.apache.myfaces.component.UserRoleAware;
+import org.apache.myfaces.taglib.html.HtmlInputTagBase;
 
 import javax.faces.component.UIComponent;
 
@@ -24,6 +24,9 @@ import javax.faces.component.UIComponent;
  * @author Martin Marinschek (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.9  2004/10/13 11:50:57  matze
+ * renamed packages to org.apache
+ *
  * Revision 1.8  2004/07/28 18:00:47  tinytoony
  * calendar; revisited again for complete i18
  *
@@ -61,7 +64,7 @@ public class HtmlInputCalendarTag
 
     public String getRendererType()
     {
-        return "net.sourceforge.myfaces.Calendar";
+        return "org.apache.myfaces.Calendar";
     }
 
     // UIComponent attributes --> already implemented in UIComponentTagBase

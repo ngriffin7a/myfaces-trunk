@@ -13,12 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.sourceforge.myfaces.custom.tabbedpane;
+package org.apache.myfaces.custom.tabbedpane;
 
-import net.sourceforge.myfaces.renderkit.RendererUtils;
-import net.sourceforge.myfaces.renderkit.html.HTML;
-import net.sourceforge.myfaces.renderkit.html.HtmlRenderer;
-import net.sourceforge.myfaces.renderkit.html.HtmlRendererUtils;
+import org.apache.myfaces.renderkit.RendererUtils;
+import org.apache.myfaces.renderkit.html.HTML;
+import org.apache.myfaces.renderkit.html.HtmlRenderer;
+import org.apache.myfaces.renderkit.html.HtmlRendererUtils;
 
 import javax.faces.application.ViewHandler;
 import javax.faces.component.NamingContainer;
@@ -34,6 +34,9 @@ import java.util.Map;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.6  2004/10/13 11:50:58  matze
+ * renamed packages to org.apache
+ *
  * Revision 1.5  2004/08/09 10:52:25  manolito
  * RFE #975649 - Enhance HtmlTabbedPaneRenderer (rendered attribute for TabbedPane component)
  *

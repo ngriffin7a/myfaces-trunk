@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.sourceforge.myfaces.component.html.ext;
+package org.apache.myfaces.component.html.ext;
 
-import net.sourceforge.myfaces.component.UserRoleAware;
-import net.sourceforge.myfaces.component.UserRoleUtils;
+import org.apache.myfaces.component.UserRoleAware;
+import org.apache.myfaces.component.UserRoleUtils;
 
 import javax.faces.context.FacesContext;
 import javax.faces.el.ValueBinding;
@@ -25,6 +25,9 @@ import javax.faces.el.ValueBinding;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.8  2004/10/13 11:50:56  matze
+ * renamed packages to org.apache
+ *
  * Revision 1.7  2004/07/01 21:53:05  mwessendorf
  * ASF switch
  *
@@ -53,8 +56,8 @@ public class HtmlMessage
 {
     //------------------ GENERATED CODE BEGIN (do not modify!) --------------------
 
-    public static final String COMPONENT_TYPE = "net.sourceforge.myfaces.HtmlMessage";
-    private static final String DEFAULT_RENDERER_TYPE = "net.sourceforge.myfaces.Message";
+    public static final String COMPONENT_TYPE = "org.apache.myfaces.HtmlMessage";
+    private static final String DEFAULT_RENDERER_TYPE = "org.apache.myfaces.Message";
 
     private String _summaryFormat = null;
     private String _detailFormat = null;

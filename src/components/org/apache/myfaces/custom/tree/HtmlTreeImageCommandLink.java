@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.sourceforge.myfaces.custom.tree;
+package org.apache.myfaces.custom.tree;
 
 import javax.faces.component.html.HtmlCommandLink;
 import javax.faces.context.FacesContext;
@@ -25,6 +25,9 @@ import javax.faces.context.FacesContext;
  * @author <a href="mailto:oliver@rossmueller.com">Oliver Rossmueller</a>
  * @version $Revision$ $Date$
  *          $Log$
+ *          Revision 1.3  2004/10/13 11:50:58  matze
+ *          renamed packages to org.apache
+ *
  *          Revision 1.2  2004/07/01 21:53:07  mwessendorf
  *          ASF switch
  *
@@ -36,8 +39,8 @@ public class HtmlTreeImageCommandLink
         extends HtmlCommandLink
 {
 
-    public static final String COMPONENT_TYPE = "net.sourceforge.myfaces.HtmlTreeImageCommandLink";
-    private static final String DEFAULT_RENDERER_TYPE = "net.sourceforge.myfaces.HtmlTreeImageCommandLink";
+    public static final String COMPONENT_TYPE = "org.apache.myfaces.HtmlTreeImageCommandLink";
+    private static final String DEFAULT_RENDERER_TYPE = "org.apache.myfaces.HtmlTreeImageCommandLink";
 
     private String image;
 
@@ -50,7 +53,7 @@ public class HtmlTreeImageCommandLink
 
     public String getFamily()
     {
-        return "net.sourceforge.myfaces.HtmlTree";
+        return "org.apache.myfaces.HtmlTree";
     }
 
 

@@ -13,12 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.sourceforge.myfaces.application;
+package org.apache.myfaces.application;
 
-import net.sourceforge.myfaces.config.RuntimeConfig;
-import net.sourceforge.myfaces.config.element.NavigationCase;
-import net.sourceforge.myfaces.config.element.NavigationRule;
-import net.sourceforge.myfaces.util.HashMapUtils;
+import org.apache.myfaces.config.RuntimeConfig;
+import org.apache.myfaces.config.element.NavigationCase;
+import org.apache.myfaces.config.element.NavigationRule;
+import org.apache.myfaces.util.HashMapUtils;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -38,6 +38,9 @@ import java.util.*;
  * @author Anton Koinov
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.33  2004/10/13 11:50:59  matze
+ * renamed packages to org.apache
+ *
  * Revision 1.32  2004/08/26 08:03:29  manolito
  * viewId for redirect might already contain a query string, so we must check for ? in url
  *

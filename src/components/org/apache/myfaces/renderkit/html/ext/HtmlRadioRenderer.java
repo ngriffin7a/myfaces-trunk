@@ -13,13 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.sourceforge.myfaces.renderkit.html.ext;
+package org.apache.myfaces.renderkit.html.ext;
 
-import net.sourceforge.myfaces.component.UserRoleUtils;
-import net.sourceforge.myfaces.custom.radio.HtmlRadio;
-import net.sourceforge.myfaces.renderkit.RendererUtils;
-import net.sourceforge.myfaces.renderkit.html.HTML;
-import net.sourceforge.myfaces.renderkit.html.HtmlRadioRendererBase;
+import org.apache.myfaces.component.UserRoleUtils;
+import org.apache.myfaces.custom.radio.HtmlRadio;
+import org.apache.myfaces.renderkit.RendererUtils;
+import org.apache.myfaces.renderkit.html.HTML;
+import org.apache.myfaces.renderkit.html.HtmlRadioRendererBase;
 
 import javax.faces.FacesException;
 import javax.faces.component.UIComponent;
@@ -37,6 +37,9 @@ import java.util.List;
  * @author Thomas Spiegl
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.9  2004/10/13 11:50:59  matze
+ * renamed packages to org.apache
+ *
  * Revision 1.8  2004/08/13 15:47:08  manolito
  * No decode for spread checkbox or radio
  *

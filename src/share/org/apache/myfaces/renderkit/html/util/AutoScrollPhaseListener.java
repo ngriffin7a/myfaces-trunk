@@ -1,4 +1,4 @@
-package net.sourceforge.myfaces.renderkit.html.util;
+package org.apache.myfaces.renderkit.html.util;
 
 /**
  * @author Manfred Geiler (latest modification by $Author$)

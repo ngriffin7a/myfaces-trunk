@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.sourceforge.myfaces.context.servlet;
+package org.apache.myfaces.context.servlet;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -24,7 +24,7 @@ import java.util.Map.Entry;
 
 import javax.servlet.http.Cookie;
 
-import net.sourceforge.myfaces.MyFacesBaseTest;
+import org.apache.myfaces.MyFacesBaseTest;
 
 
 public class CookieMapTest extends MyFacesBaseTest

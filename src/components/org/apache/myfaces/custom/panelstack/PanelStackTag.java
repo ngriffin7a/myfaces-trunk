@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.sourceforge.myfaces.custom.panelstack;
+package org.apache.myfaces.custom.panelstack;
 
-import net.sourceforge.myfaces.taglib.UIComponentTagBase;
+import org.apache.myfaces.taglib.UIComponentTagBase;
 
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
@@ -28,6 +28,9 @@ import javax.servlet.jsp.JspException;
  * @author <a href="mailto:oliver@rossmueller.com">Oliver Rossmueller</a>
  * @version $Revision$ $Date$
  *          $Log$
+ *          Revision 1.3  2004/10/13 11:50:57  matze
+ *          renamed packages to org.apache
+ *
  *          Revision 1.2  2004/09/01 18:32:55  mwessendorf
  *          Organize Imports
  *
@@ -62,13 +65,13 @@ public class PanelStackTag
 
     public String getComponentType()
     {
-        return "net.sourceforge.myfaces.HtmlPanelStack";
+        return "org.apache.myfaces.HtmlPanelStack";
     }
 
 
     public String getRendererType()
     {
-        return "net.sourceforge.myfaces.PanelStack";
+        return "org.apache.myfaces.PanelStack";
     }
 
 

@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.sourceforge.myfaces.renderkit.html;
+package org.apache.myfaces.renderkit.html;
 
-import net.sourceforge.myfaces.renderkit.JSFAttr;
-import net.sourceforge.myfaces.renderkit.RendererUtils;
+import org.apache.myfaces.renderkit.JSFAttr;
+import org.apache.myfaces.renderkit.RendererUtils;
 
 import javax.faces.FacesException;
 import javax.faces.application.FacesMessage;
@@ -34,6 +34,9 @@ import java.util.Map;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.9  2004/10/13 11:51:01  matze
+ * renamed packages to org.apache
+ *
  * Revision 1.8  2004/09/02 17:23:25  tinytoony
  * fix for the span-element for other than the output-text
  *

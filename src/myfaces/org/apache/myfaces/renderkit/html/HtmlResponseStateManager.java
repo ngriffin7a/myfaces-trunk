@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.sourceforge.myfaces.renderkit.html;
+package org.apache.myfaces.renderkit.html;
 
-import net.sourceforge.myfaces.renderkit.MyfacesResponseStateManager;
-import net.sourceforge.myfaces.util.MyFacesObjectInputStream;
+import org.apache.myfaces.renderkit.MyfacesResponseStateManager;
+import org.apache.myfaces.util.MyFacesObjectInputStream;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.logging.Log;
@@ -36,6 +36,9 @@ import java.util.zip.GZIPOutputStream;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.6  2004/10/13 11:51:00  matze
+ * renamed packages to org.apache
+ *
  * Revision 1.5  2004/07/01 22:05:07  mwessendorf
  * ASF switch
  *

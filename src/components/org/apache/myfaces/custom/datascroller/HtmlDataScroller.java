@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.sourceforge.myfaces.custom.datascroller;
+package org.apache.myfaces.custom.datascroller;
 
-import net.sourceforge.myfaces.component.html.ext.HtmlPanelGroup;
+import org.apache.myfaces.component.html.ext.HtmlPanelGroup;
 
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
@@ -106,9 +106,9 @@ public class HtmlDataScroller
 
     //------------------ GENERATED CODE BEGIN (do not modify!) --------------------
 
-    public static final String COMPONENT_TYPE = "net.sourceforge.myfaces.HtmlDataScroller";
+    public static final String COMPONENT_TYPE = "org.apache.myfaces.HtmlDataScroller";
     public static final String COMPONENT_FAMILY = "javax.faces.Panel";
-    private static final String DEFAULT_RENDERER_TYPE = "net.sourceforge.myfaces.DataScroller";
+    private static final String DEFAULT_RENDERER_TYPE = "org.apache.myfaces.DataScroller";
 
     private String _for = null;
     private Integer _fastStep = null;

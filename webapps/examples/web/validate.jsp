@@ -35,7 +35,7 @@ managed beans used:
 
 <f:view>
 
-    <f:loadBundle basename="net.sourceforge.myfaces.examples.resource.example_messages" var="example_messages"/>
+    <f:loadBundle basename="org.apache.myfaces.examples.resource.example_messages" var="example_messages"/>
 
     <x:panelLayout id="page" layout="#{globalOptions.pageLayout}"
             styleClass="pageLayout"
@@ -65,7 +65,7 @@ managed beans used:
 
 					<h:outputLabel for="form1:email" value="#{example_messages['validate_email']}" />
                     <h:inputText id="email" value="#{validateForm.email}" required="true">
-                        <f:validator validatorId="net.sourceforge.myfaces.validator.Email"/>
+                        <f:validator validatorId="org.apache.myfaces.validator.Email"/>
                     </h:inputText>
 					<h:message id="emailError" for="form1:email" styleClass="error" />
 

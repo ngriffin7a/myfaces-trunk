@@ -13,11 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.sourceforge.myfaces.application.jsp;
+package org.apache.myfaces.application.jsp;
 
-import net.sourceforge.myfaces.application.MyfacesStateManager;
-import net.sourceforge.myfaces.application.TreeStructureManager;
-import net.sourceforge.myfaces.renderkit.MyfacesResponseStateManager;
+import org.apache.myfaces.application.MyfacesStateManager;
+import org.apache.myfaces.application.TreeStructureManager;
+import org.apache.myfaces.renderkit.MyfacesResponseStateManager;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -41,6 +41,9 @@ import java.io.IOException;
  * @author Manfred Geiler
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.21  2004/10/13 11:50:59  matze
+ * renamed packages to org.apache
+ *
  * Revision 1.20  2004/08/15 15:35:26  o_rossmueller
  * fix #1008685: hold view state by viewId
  *

@@ -24,10 +24,10 @@
 
   <!-- Initial application element with partial values -->
   <application>
-    <action-listener>net.sourceforge.myfaces.application.ActionListenerImpl</action-listener>
-    <navigation-handler>net.sourceforge.myfaces.application.NavigationHandlerImpl</navigation-handler>
-    <variable-resolver>net.sourceforge.myfaces.el.VariableResolverImpl</variable-resolver>
-    <property-resolver>net.sourceforge.myfaces.el.PropertyResolverImpl</property-resolver>
+    <action-listener>org.apache.myfaces.application.ActionListenerImpl</action-listener>
+    <navigation-handler>org.apache.myfaces.application.NavigationHandlerImpl</navigation-handler>
+    <variable-resolver>org.apache.myfaces.el.VariableResolverImpl</variable-resolver>
+    <property-resolver>org.apache.myfaces.el.PropertyResolverImpl</property-resolver>
     <locale-config>
         <default-locale>en</default-locale>
         <supported-locale>en</supported-locale>
@@ -39,7 +39,7 @@
 
   <lifecycle>
       <!-- This PhaseListener is only necessary if the autoscroll feature is used -->
-      <phase-listener>net.sourceforge.myfaces.renderkit.html.util.AutoScrollPhaseListener</phase-listener>
+      <phase-listener>org.apache.myfaces.renderkit.html.util.AutoScrollPhaseListener</phase-listener>
   </lifecycle>
 
 
@@ -382,152 +382,152 @@
   <!-- standard renderkit -->
   <render-kit>
       <render-kit-id>HTML_BASIC</render-kit-id>
-      <render-kit-class>net.sourceforge.myfaces.renderkit.html.HtmlRenderKitImpl</render-kit-class>
+      <render-kit-class>org.apache.myfaces.renderkit.html.HtmlRenderKitImpl</render-kit-class>
 
       <!-- Standard HTML renderers (see Spec. Table 8-13) -->
 
       <renderer>
           <component-family>javax.faces.Command</component-family>
           <renderer-type>javax.faces.Button</renderer-type>
-          <renderer-class>net.sourceforge.myfaces.renderkit.html.HtmlButtonRenderer</renderer-class>
+          <renderer-class>org.apache.myfaces.renderkit.html.HtmlButtonRenderer</renderer-class>
       </renderer>
 
       <renderer>
           <component-family>javax.faces.SelectBoolean</component-family>
           <renderer-type>javax.faces.Checkbox</renderer-type>
-          <renderer-class>net.sourceforge.myfaces.renderkit.html.HtmlCheckboxRenderer</renderer-class>
+          <renderer-class>org.apache.myfaces.renderkit.html.HtmlCheckboxRenderer</renderer-class>
       </renderer>
 
       <renderer>
           <component-family>javax.faces.SelectMany</component-family>
           <renderer-type>javax.faces.Checkbox</renderer-type>
-          <renderer-class>net.sourceforge.myfaces.renderkit.html.HtmlCheckboxRenderer</renderer-class>
+          <renderer-class>org.apache.myfaces.renderkit.html.HtmlCheckboxRenderer</renderer-class>
       </renderer>
 
       <renderer>
           <component-family>javax.faces.Form</component-family>
           <renderer-type>javax.faces.Form</renderer-type>
-          <renderer-class>net.sourceforge.myfaces.renderkit.html.HtmlFormRenderer</renderer-class>
+          <renderer-class>org.apache.myfaces.renderkit.html.HtmlFormRenderer</renderer-class>
       </renderer>
 
       <renderer>
           <component-family>javax.faces.Panel</component-family>
           <renderer-type>javax.faces.Grid</renderer-type>
-          <renderer-class>net.sourceforge.myfaces.renderkit.html.HtmlGridRenderer</renderer-class>
+          <renderer-class>org.apache.myfaces.renderkit.html.HtmlGridRenderer</renderer-class>
       </renderer>
 
       <renderer>
           <component-family>javax.faces.Panel</component-family>
           <renderer-type>javax.faces.Group</renderer-type>
-          <renderer-class>net.sourceforge.myfaces.renderkit.html.HtmlGroupRenderer</renderer-class>
+          <renderer-class>org.apache.myfaces.renderkit.html.HtmlGroupRenderer</renderer-class>
       </renderer>
 
       <renderer>
           <component-family>javax.faces.Input</component-family>
           <renderer-type>javax.faces.Hidden</renderer-type>
-          <renderer-class>net.sourceforge.myfaces.renderkit.html.HtmlHiddenRenderer</renderer-class>
+          <renderer-class>org.apache.myfaces.renderkit.html.HtmlHiddenRenderer</renderer-class>
       </renderer>
 
       <renderer>
           <component-family>javax.faces.Graphic</component-family>
           <renderer-type>javax.faces.Image</renderer-type>
-          <renderer-class>net.sourceforge.myfaces.renderkit.html.HtmlImageRenderer</renderer-class>
+          <renderer-class>org.apache.myfaces.renderkit.html.HtmlImageRenderer</renderer-class>
       </renderer>
 
       <renderer>
           <component-family>javax.faces.Output</component-family>
           <renderer-type>javax.faces.Label</renderer-type>
-          <renderer-class>net.sourceforge.myfaces.renderkit.html.HtmlLabelRenderer</renderer-class>
+          <renderer-class>org.apache.myfaces.renderkit.html.HtmlLabelRenderer</renderer-class>
       </renderer>
 
       <renderer>
           <component-family>javax.faces.Output</component-family>
           <renderer-type>javax.faces.Link</renderer-type>
-          <renderer-class>net.sourceforge.myfaces.renderkit.html.HtmlLinkRenderer</renderer-class>
+          <renderer-class>org.apache.myfaces.renderkit.html.HtmlLinkRenderer</renderer-class>
       </renderer>
 
       <renderer>
           <component-family>javax.faces.Command</component-family>
           <renderer-type>javax.faces.Link</renderer-type>
-          <renderer-class>net.sourceforge.myfaces.renderkit.html.HtmlLinkRenderer</renderer-class>
+          <renderer-class>org.apache.myfaces.renderkit.html.HtmlLinkRenderer</renderer-class>
       </renderer>
 
       <renderer>
           <component-family>javax.faces.SelectOne</component-family>
           <renderer-type>javax.faces.Listbox</renderer-type>
-          <renderer-class>net.sourceforge.myfaces.renderkit.html.HtmlListboxRenderer</renderer-class>
+          <renderer-class>org.apache.myfaces.renderkit.html.HtmlListboxRenderer</renderer-class>
       </renderer>
 
       <renderer>
           <component-family>javax.faces.SelectMany</component-family>
           <renderer-type>javax.faces.Listbox</renderer-type>
-          <renderer-class>net.sourceforge.myfaces.renderkit.html.HtmlListboxRenderer</renderer-class>
+          <renderer-class>org.apache.myfaces.renderkit.html.HtmlListboxRenderer</renderer-class>
       </renderer>
 
       <renderer>
           <component-family>javax.faces.SelectOne</component-family>
           <renderer-type>javax.faces.Menu</renderer-type>
-          <renderer-class>net.sourceforge.myfaces.renderkit.html.HtmlMenuRenderer</renderer-class>
+          <renderer-class>org.apache.myfaces.renderkit.html.HtmlMenuRenderer</renderer-class>
       </renderer>
 
       <renderer>
           <component-family>javax.faces.SelectMany</component-family>
           <renderer-type>javax.faces.Menu</renderer-type>
-          <renderer-class>net.sourceforge.myfaces.renderkit.html.HtmlMenuRenderer</renderer-class>
+          <renderer-class>org.apache.myfaces.renderkit.html.HtmlMenuRenderer</renderer-class>
       </renderer>
 
       <renderer>
           <component-family>javax.faces.Message</component-family>
           <renderer-type>javax.faces.Message</renderer-type>
-          <renderer-class>net.sourceforge.myfaces.renderkit.html.HtmlMessageRenderer</renderer-class>
+          <renderer-class>org.apache.myfaces.renderkit.html.HtmlMessageRenderer</renderer-class>
       </renderer>
 
       <renderer>
           <component-family>javax.faces.Output</component-family>
           <renderer-type>javax.faces.Format</renderer-type>
-          <renderer-class>net.sourceforge.myfaces.renderkit.html.HtmlFormatRenderer</renderer-class>
+          <renderer-class>org.apache.myfaces.renderkit.html.HtmlFormatRenderer</renderer-class>
       </renderer>
 
       <renderer>
           <component-family>javax.faces.Messages</component-family>
           <renderer-type>javax.faces.Messages</renderer-type>
-          <renderer-class>net.sourceforge.myfaces.renderkit.html.HtmlMessagesRenderer</renderer-class>
+          <renderer-class>org.apache.myfaces.renderkit.html.HtmlMessagesRenderer</renderer-class>
       </renderer>
 
       <renderer>
           <component-family>javax.faces.SelectOne</component-family>
           <renderer-type>javax.faces.Radio</renderer-type>
-          <renderer-class>net.sourceforge.myfaces.renderkit.html.HtmlRadioRenderer</renderer-class>
+          <renderer-class>org.apache.myfaces.renderkit.html.HtmlRadioRenderer</renderer-class>
       </renderer>
 
       <renderer>
           <component-family>javax.faces.Input</component-family>
           <renderer-type>javax.faces.Secret</renderer-type>
-          <renderer-class>net.sourceforge.myfaces.renderkit.html.HtmlSecretRenderer</renderer-class>
+          <renderer-class>org.apache.myfaces.renderkit.html.HtmlSecretRenderer</renderer-class>
       </renderer>
 
       <renderer>
           <component-family>javax.faces.Data</component-family>
           <renderer-type>javax.faces.Table</renderer-type>
-          <renderer-class>net.sourceforge.myfaces.renderkit.html.HtmlTableRenderer</renderer-class>
+          <renderer-class>org.apache.myfaces.renderkit.html.HtmlTableRenderer</renderer-class>
       </renderer>
 
       <renderer>
           <component-family>javax.faces.Input</component-family>
           <renderer-type>javax.faces.Textarea</renderer-type>
-          <renderer-class>net.sourceforge.myfaces.renderkit.html.HtmlTextareaRenderer</renderer-class>
+          <renderer-class>org.apache.myfaces.renderkit.html.HtmlTextareaRenderer</renderer-class>
       </renderer>
 
       <renderer>
           <component-family>javax.faces.Input</component-family>
           <renderer-type>javax.faces.Text</renderer-type>
-          <renderer-class>net.sourceforge.myfaces.renderkit.html.HtmlTextRenderer</renderer-class>
+          <renderer-class>org.apache.myfaces.renderkit.html.HtmlTextRenderer</renderer-class>
       </renderer>
 
       <renderer>
           <component-family>javax.faces.Output</component-family>
           <renderer-type>javax.faces.Text</renderer-type>
-          <renderer-class>net.sourceforge.myfaces.renderkit.html.HtmlTextRenderer</renderer-class>
+          <renderer-class>org.apache.myfaces.renderkit.html.HtmlTextRenderer</renderer-class>
       </renderer>
 
   </render-kit>

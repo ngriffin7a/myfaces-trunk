@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.sourceforge.myfaces.taglib.core;
+package org.apache.myfaces.taglib.core;
 
-import net.sourceforge.myfaces.convert.ConverterUtils;
+import org.apache.myfaces.convert.ConverterUtils;
 
 import javax.faces.context.FacesContext;
 import javax.faces.el.ValueBinding;

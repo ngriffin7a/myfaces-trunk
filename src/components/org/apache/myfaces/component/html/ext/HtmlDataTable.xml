@@ -3,9 +3,9 @@
   "-//MyFaces//DTD MyFaces component def 1.0//EN"
   "http://myfaces.sourceforge.net/dtd/Component.dtd">
 <component generateStateMethods="false" >
-    <component-class>net.sourceforge.myfaces.component.html.ext.HtmlDataTable</component-class>
+    <component-class>org.apache.myfaces.component.html.ext.HtmlDataTable</component-class>
     <base-class>javax.faces.component.html.HtmlDataTable</base-class>
-    <component-type>net.sourceforge.myfaces.HtmlDataTable</component-type>
+    <component-type>org.apache.myfaces.HtmlDataTable</component-type>
     <field>
         <name>preserveDataModel</name>
         <type>boolean</type>

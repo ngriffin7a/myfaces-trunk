@@ -13,14 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.sourceforge.myfaces.custom.savestate;
+package org.apache.myfaces.custom.savestate;
 
-import net.sourceforge.myfaces.taglib.UIComponentTagBase;
+import org.apache.myfaces.taglib.UIComponentTagBase;
 
 /**
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.4  2004/10/13 11:50:57  matze
+ * renamed packages to org.apache
+ *
  * Revision 1.3  2004/07/01 21:53:07  mwessendorf
  * ASF switch
  *

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.sourceforge.myfaces.application;
+package org.apache.myfaces.application;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -26,6 +26,9 @@ import javax.faces.application.ApplicationFactory;
  * @author Thomas Spiegl
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.9  2004/10/13 11:50:59  matze
+ * renamed packages to org.apache
+ *
  * Revision 1.8  2004/07/01 22:05:13  mwessendorf
  * ASF switch
  *

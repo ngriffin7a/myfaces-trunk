@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.sourceforge.myfaces.application;
+package org.apache.myfaces.application;
 
 /**
  * This class exists purely to test the META-INF/services/{factory-name}

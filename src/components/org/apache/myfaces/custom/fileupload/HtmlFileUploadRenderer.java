@@ -13,12 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.sourceforge.myfaces.custom.fileupload;
+package org.apache.myfaces.custom.fileupload;
 
-import net.sourceforge.myfaces.component.UserRoleUtils;
-import net.sourceforge.myfaces.renderkit.RendererUtils;
-import net.sourceforge.myfaces.renderkit.html.HTML;
-import net.sourceforge.myfaces.renderkit.html.HtmlRendererUtils;
+import org.apache.myfaces.component.UserRoleUtils;
+import org.apache.myfaces.renderkit.RendererUtils;
+import org.apache.myfaces.renderkit.html.HTML;
+import org.apache.myfaces.renderkit.html.HtmlRendererUtils;
 
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.logging.Log;
@@ -37,6 +37,9 @@ import java.io.IOException;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.14  2004/10/13 11:50:57  matze
+ * renamed packages to org.apache
+ *
  * Revision 1.13  2004/09/03 12:32:05  tinytoony
  * file upload
  *

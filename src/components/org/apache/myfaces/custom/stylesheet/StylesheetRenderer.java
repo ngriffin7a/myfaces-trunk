@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.sourceforge.myfaces.custom.stylesheet;
+package org.apache.myfaces.custom.stylesheet;
 
 import java.io.IOException;
 
@@ -21,7 +21,7 @@ import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 
-import net.sourceforge.myfaces.renderkit.html.HtmlRenderer;
+import org.apache.myfaces.renderkit.html.HtmlRenderer;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -30,6 +30,9 @@ import org.apache.commons.logging.LogFactory;
  * @author mwessendorf (latest modification by $Author$) 
  * @version $Revision$ $Date$ 
  * $Log$
+ * Revision 1.2  2004/10/13 11:50:58  matze
+ * renamed packages to org.apache
+ *
  * Revision 1.1  2004/08/18 15:36:09  mwessendorf
  * added a new Stylesheet-Component
  * 

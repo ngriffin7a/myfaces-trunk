@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.sourceforge.myfaces.context.servlet;
+package org.apache.myfaces.context.servlet;
 
-import net.sourceforge.myfaces.util.NullEnumeration;
+import org.apache.myfaces.util.NullEnumeration;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -27,6 +27,9 @@ import java.util.Enumeration;
  * @author Anton Koinov (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.13  2004/10/13 11:51:00  matze
+ * renamed packages to org.apache
+ *
  * Revision 1.12  2004/07/01 22:05:04  mwessendorf
  * ASF switch
  *

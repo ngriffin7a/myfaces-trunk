@@ -13,12 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.sourceforge.myfaces.custom.sortheader;
+package org.apache.myfaces.custom.sortheader;
 
-import net.sourceforge.myfaces.component.UserRoleUtils;
-import net.sourceforge.myfaces.component.html.ext.HtmlDataTable;
-import net.sourceforge.myfaces.renderkit.RendererUtils;
-import net.sourceforge.myfaces.renderkit.html.HtmlLinkRendererBase;
+import org.apache.myfaces.component.UserRoleUtils;
+import org.apache.myfaces.component.html.ext.HtmlDataTable;
+import org.apache.myfaces.renderkit.RendererUtils;
+import org.apache.myfaces.renderkit.html.HtmlLinkRendererBase;
 
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
@@ -29,6 +29,9 @@ import java.io.IOException;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.6  2004/10/13 11:50:58  matze
+ * renamed packages to org.apache
+ *
  * Revision 1.5  2004/07/01 21:53:10  mwessendorf
  * ASF switch
  *

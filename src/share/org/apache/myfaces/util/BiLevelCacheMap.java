@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.sourceforge.myfaces.util;
+package org.apache.myfaces.util;
 
 import java.util.*;
 
@@ -34,6 +34,9 @@ import java.util.*;
  * @author Anton Koinov (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.6  2004/10/13 11:51:01  matze
+ * renamed packages to org.apache
+ *
  * Revision 1.5  2004/08/10 08:23:13  manolito
  * trivial javadoc changes only
  *

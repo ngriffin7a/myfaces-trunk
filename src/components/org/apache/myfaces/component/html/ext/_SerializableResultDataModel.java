@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.sourceforge.myfaces.component.html.ext;
+package org.apache.myfaces.component.html.ext;
 
 import java.util.ArrayList;
 import java.util.SortedMap;

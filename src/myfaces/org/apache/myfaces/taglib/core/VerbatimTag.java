@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.sourceforge.myfaces.taglib.core;
+package org.apache.myfaces.taglib.core;
 
-import net.sourceforge.myfaces.renderkit.JSFAttr;
-import net.sourceforge.myfaces.taglib.UIComponentBodyTagBase;
+import org.apache.myfaces.renderkit.JSFAttr;
+import org.apache.myfaces.taglib.UIComponentBodyTagBase;
 
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIOutput;

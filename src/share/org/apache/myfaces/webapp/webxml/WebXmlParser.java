@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.sourceforge.myfaces.webapp.webxml;
+package org.apache.myfaces.webapp.webxml;
 
-import net.sourceforge.myfaces.util.xml.MyFacesErrorHandler;
-import net.sourceforge.myfaces.util.xml.XmlUtils;
+import org.apache.myfaces.util.xml.MyFacesErrorHandler;
+import org.apache.myfaces.util.xml.XmlUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.w3c.dom.Document;
@@ -239,11 +239,11 @@ public class WebXmlParser
             {
                 if (n.getNodeName().equals("servlet-name"))
                 {
-                    servletName = net.sourceforge.myfaces.util.xml.XmlUtils.getElementText((Element)n);
+                    servletName = org.apache.myfaces.util.xml.XmlUtils.getElementText((Element)n);
                 }
                 else if (n.getNodeName().equals("url-pattern"))
                 {
-                    urlPattern = net.sourceforge.myfaces.util.xml.XmlUtils.getElementText((Element)n).trim();
+                    urlPattern = org.apache.myfaces.util.xml.XmlUtils.getElementText((Element)n).trim();
                 }
                 else
                 {

@@ -3,9 +3,9 @@
   "-//MyFaces//DTD MyFaces component def 1.0//EN"
   "http://myfaces.sourceforge.net/dtd/Component.dtd">
 <component generateStateMethods="true" generateUserRoleMethods="true" >
-    <component-class>net.sourceforge.myfaces.component.html.ext.HtmlInputText</component-class>
+    <component-class>org.apache.myfaces.component.html.ext.HtmlInputText</component-class>
     <base-class>javax.faces.component.html.HtmlInputText</base-class>
-    <component-type>net.sourceforge.myfaces.HtmlInputText</component-type>
+    <component-type>org.apache.myfaces.HtmlInputText</component-type>
     <field>
         <name>enabledOnUserRole</name>
         <type>java.lang.String</type>

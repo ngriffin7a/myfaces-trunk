@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.sourceforge.myfaces.renderkit.html.ext;
+package org.apache.myfaces.renderkit.html.ext;
 
-import net.sourceforge.myfaces.component.UserRoleUtils;
-import net.sourceforge.myfaces.renderkit.html.HtmlLinkRendererBase;
+import org.apache.myfaces.component.UserRoleUtils;
+import org.apache.myfaces.renderkit.html.HtmlLinkRendererBase;
 
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIOutput;
@@ -27,6 +27,9 @@ import java.io.IOException;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.4  2004/10/13 11:50:59  matze
+ * renamed packages to org.apache
+ *
  * Revision 1.3  2004/07/01 21:53:06  mwessendorf
  * ASF switch
  *

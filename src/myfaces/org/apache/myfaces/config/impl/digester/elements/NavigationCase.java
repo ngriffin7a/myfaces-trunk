@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.sourceforge.myfaces.config.impl.digester.elements;
+package org.apache.myfaces.config.impl.digester.elements;
 
 
 
@@ -21,7 +21,7 @@ package net.sourceforge.myfaces.config.impl.digester.elements;
 /**
  * @author <a href="mailto:oliver@rossmueller.com">Oliver Rossmueller</a>
  */
-public class NavigationCase implements net.sourceforge.myfaces.config.element.NavigationCase
+public class NavigationCase implements org.apache.myfaces.config.element.NavigationCase
 {
 
     private String fromAction;

@@ -13,16 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.sourceforge.myfaces.custom.tree.renderkit.html;
+package org.apache.myfaces.custom.tree.renderkit.html;
 
-import net.sourceforge.myfaces.custom.tree.HtmlTree;
-import net.sourceforge.myfaces.custom.tree.HtmlTreeImageCommandLink;
-import net.sourceforge.myfaces.custom.tree.HtmlTreeNode;
-import net.sourceforge.myfaces.custom.tree.IconProvider;
-import net.sourceforge.myfaces.renderkit.RendererUtils;
-import net.sourceforge.myfaces.renderkit.html.HTML;
-import net.sourceforge.myfaces.renderkit.html.HtmlRenderer;
-import net.sourceforge.myfaces.renderkit.html.HtmlRendererUtils;
+import org.apache.myfaces.custom.tree.HtmlTree;
+import org.apache.myfaces.custom.tree.HtmlTreeImageCommandLink;
+import org.apache.myfaces.custom.tree.HtmlTreeNode;
+import org.apache.myfaces.custom.tree.IconProvider;
+import org.apache.myfaces.renderkit.RendererUtils;
+import org.apache.myfaces.renderkit.html.HTML;
+import org.apache.myfaces.renderkit.html.HtmlRenderer;
+import org.apache.myfaces.renderkit.html.HtmlRendererUtils;
 
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
@@ -37,6 +37,9 @@ import java.util.List;
  * @author <a href="mailto:oliver@rossmueller.com">Oliver Rossmueller</a>
  * @version $Revision$ $Date$
  *          $Log$
+ *          Revision 1.10  2004/10/13 11:50:58  matze
+ *          renamed packages to org.apache
+ *
  *          Revision 1.9  2004/07/18 21:36:25  o_rossmueller
  *          fix #991740: getResourceURL for tree image urls
  *

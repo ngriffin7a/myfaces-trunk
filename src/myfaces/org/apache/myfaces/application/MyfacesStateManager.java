@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.sourceforge.myfaces.application;
+package org.apache.myfaces.application;
 
 import javax.faces.application.StateManager;
 import javax.faces.context.FacesContext;
@@ -29,7 +29,7 @@ public abstract class MyfacesStateManager
     /**
      * Writes url parameters with the state info to be saved.
      * For every url state marker this method is called once from
-     * {@link net.sourceforge.myfaces.taglib.core.ViewTag#doAfterBody()}.
+     * {@link org.apache.myfaces.taglib.core.ViewTag#doAfterBody()}.
      */
     public abstract void writeStateAsUrlParams(FacesContext facesContext,
                                                SerializedView serializedView) throws IOException;

@@ -1,4 +1,4 @@
-package net.sourceforge.myfaces.examples.misc;
+package org.apache.myfaces.examples.misc;
 
 import java.io.Serializable;
 

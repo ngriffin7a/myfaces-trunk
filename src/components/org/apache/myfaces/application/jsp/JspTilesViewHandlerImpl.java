@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.sourceforge.myfaces.application.jsp;
+package org.apache.myfaces.application.jsp;
 
-import net.sourceforge.myfaces.webapp.webxml.ServletMapping;
-import net.sourceforge.myfaces.webapp.webxml.WebXml;
+import org.apache.myfaces.webapp.webxml.ServletMapping;
+import org.apache.myfaces.webapp.webxml.WebXml;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -37,6 +37,9 @@ import java.util.Locale;
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.6  2004/10/13 11:50:56  matze
+ * renamed packages to org.apache
+ *
  * Revision 1.5  2004/10/04 11:11:46  royalts
  * removed check on urlPattern
  *
@@ -47,10 +50,10 @@ import java.util.Locale;
  * JspTilesViewHandlerInitializer no longer needed, JspTilesViewHandlerImpl is initialized automatically now
  *
  * Revision 1.2  2004/07/19 08:18:19  royalts
- * moved net.sourceforge.myfaces.webapp.webxml and net.sourceforge.util.xml to share src-tree (needed WebXml for JspTilesViewHandlerImpl)
+ * moved org.apache.myfaces.webapp.webxml and org.apache.util.xml to share src-tree (needed WebXml for JspTilesViewHandlerImpl)
  *
  * Revision 1.1  2004/07/16 17:46:46  royalts
- * moved net.sourceforge.myfaces.webapp.webxml and net.sourceforge.util.xml to share src-tree (needed WebXml for JspTilesViewHandlerImpl)
+ * moved org.apache.myfaces.webapp.webxml and org.apache.util.xml to share src-tree (needed WebXml for JspTilesViewHandlerImpl)
  *
  */
 public class JspTilesViewHandlerImpl

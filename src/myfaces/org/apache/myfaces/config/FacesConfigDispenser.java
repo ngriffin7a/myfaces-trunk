@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.sourceforge.myfaces.config;
+package org.apache.myfaces.config;
 
 import java.util.Iterator;
 
@@ -24,6 +24,9 @@ import java.util.Iterator;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.2  2004/10/13 11:50:59  matze
+ * renamed packages to org.apache
+ *
  * Revision 1.1  2004/07/07 00:25:05  o_rossmueller
  * tidy up config/confignew package (moved confignew classes to package config)
  *
@@ -148,12 +151,12 @@ public interface FacesConfigDispenser
 
 
     /**
-     * @return Iterator over {@link net.sourceforge.myfaces.config.element.ManagedBean ManagedBean}s
+     * @return Iterator over {@link org.apache.myfaces.config.element.ManagedBean ManagedBean}s
      */
     public Iterator getManagedBeans();
 
     /**
-     * @return Iterator over {@link net.sourceforge.myfaces.config.element.NavigationRule NavigationRule}s
+     * @return Iterator over {@link org.apache.myfaces.config.element.NavigationRule NavigationRule}s
      */
     public Iterator getNavigationRules();
 
@@ -166,7 +169,7 @@ public interface FacesConfigDispenser
     public String getRenderKitClass(String renderKitId);
 
     /**
-     * @return Iterator over {@link net.sourceforge.myfaces.config.element.Renderer Renderer}s for the given renderKitId
+     * @return Iterator over {@link org.apache.myfaces.config.element.Renderer Renderer}s for the given renderKitId
      */
     public Iterator getRenderers(String renderKitId);
 

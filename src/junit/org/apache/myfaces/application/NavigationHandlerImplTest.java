@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.sourceforge.myfaces.application;
+package org.apache.myfaces.application;
 
-import net.sourceforge.myfaces.MyFacesBaseTest;
+import org.apache.myfaces.MyFacesBaseTest;
 
 import javax.faces.application.NavigationHandler;
 import javax.faces.component.UIViewRoot;
@@ -24,6 +24,9 @@ import javax.faces.component.UIViewRoot;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.3  2004/10/13 11:50:59  matze
+ * renamed packages to org.apache
+ *
  * Revision 1.2  2004/07/01 22:01:14  mwessendorf
  * ASF switch
  *

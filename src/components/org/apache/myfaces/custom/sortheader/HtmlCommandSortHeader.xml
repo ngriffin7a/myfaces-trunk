@@ -3,9 +3,9 @@
   "-//MyFaces//DTD MyFaces component def 1.0//EN"
   "http://myfaces.sourceforge.net/dtd/Component.dtd">
 <component generateStateMethods="false" >
-    <component-class>net.sourceforge.myfaces.custom.sortheader.HtmlCommandSortHeader</component-class>
-    <base-class>net.sourceforge.myfaces.component.html.ext.HtmlCommandLink</base-class>
-    <component-type>net.sourceforge.myfaces.HtmlCommandSortHeader</component-type>
+    <component-class>org.apache.myfaces.custom.sortheader.HtmlCommandSortHeader</component-class>
+    <base-class>org.apache.myfaces.component.html.ext.HtmlCommandLink</base-class>
+    <component-type>org.apache.myfaces.HtmlCommandSortHeader</component-type>
     <component-family>javax.faces.Command</component-family>
     <renderer-type>javax.faces.Link</renderer-type>
     <field>

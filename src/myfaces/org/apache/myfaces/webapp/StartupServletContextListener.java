@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.sourceforge.myfaces.webapp;
+package org.apache.myfaces.webapp;
 
 import javax.faces.FactoryFinder;
 import javax.faces.context.ExternalContext;
@@ -21,9 +21,9 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
-import net.sourceforge.myfaces.config.FacesConfigurator;
-import net.sourceforge.myfaces.context.servlet.ServletExternalContextImpl;
-import net.sourceforge.myfaces.webapp.webxml.WebXml;
+import org.apache.myfaces.config.FacesConfigurator;
+import org.apache.myfaces.context.servlet.ServletExternalContextImpl;
+import org.apache.myfaces.webapp.webxml.WebXml;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -33,11 +33,14 @@ import org.apache.commons.logging.LogFactory;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.28  2004/10/13 11:51:01  matze
+ * renamed packages to org.apache
+ *
  * Revision 1.27  2004/07/16 17:46:26  royalts
- * moved net.sourceforge.myfaces.webapp.webxml and net.sourceforge.util.xml to share src-tree (needed WebXml for JspTilesViewHandlerImpl)
+ * moved org.apache.myfaces.webapp.webxml and org.apache.util.xml to share src-tree (needed WebXml for JspTilesViewHandlerImpl)
  *
  * Revision 1.26  2004/07/16 15:16:10  royalts
- * moved net.sourceforge.myfaces.webapp.webxml and net.sourceforge.util.xml to share src-tree (needed WebXml for JspTilesViewHandlerImpl)
+ * moved org.apache.myfaces.webapp.webxml and org.apache.util.xml to share src-tree (needed WebXml for JspTilesViewHandlerImpl)
  *
  * Revision 1.25  2004/07/07 08:34:57  mwessendorf
  * removed unused import-statements

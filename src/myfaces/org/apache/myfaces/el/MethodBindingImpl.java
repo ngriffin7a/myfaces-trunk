@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.sourceforge.myfaces.el;
+package org.apache.myfaces.el;
 
-import net.sourceforge.myfaces.el.ValueBindingImpl.NotVariableReferenceException;
+import org.apache.myfaces.el.ValueBindingImpl.NotVariableReferenceException;
 
 import org.apache.commons.beanutils.MethodUtils;
 import org.apache.commons.logging.Log;
@@ -36,6 +36,9 @@ import java.lang.reflect.Method;
  * @author Anton Koinov (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.17  2004/10/13 11:51:00  matze
+ * renamed packages to org.apache
+ *
  * Revision 1.16  2004/07/01 22:05:12  mwessendorf
  * ASF switch
  *

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.sourceforge.myfaces.custom.checkbox;
+package org.apache.myfaces.custom.checkbox;
 
 import javax.faces.component.UIComponentBase;
 import javax.faces.context.FacesContext;
@@ -23,6 +23,9 @@ import javax.faces.el.ValueBinding;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.3  2004/10/13 11:50:57  matze
+ * renamed packages to org.apache
+ *
  * Revision 1.2  2004/07/01 21:53:06  mwessendorf
  * ASF switch
  *
@@ -41,9 +44,9 @@ public class HtmlCheckbox
 
     //------------------ GENERATED CODE BEGIN (do not modify!) --------------------
 
-    public static final String COMPONENT_TYPE = "net.sourceforge.myfaces.HtmlCheckbox";
-    public static final String COMPONENT_FAMILY = "net.sourceforge.myfaces.Checkbox";
-    private static final String DEFAULT_RENDERER_TYPE = "net.sourceforge.myfaces.Checkbox";
+    public static final String COMPONENT_TYPE = "org.apache.myfaces.HtmlCheckbox";
+    public static final String COMPONENT_FAMILY = "org.apache.myfaces.Checkbox";
+    private static final String DEFAULT_RENDERER_TYPE = "org.apache.myfaces.Checkbox";
 
     private String _for = null;
     private Integer _index = null;

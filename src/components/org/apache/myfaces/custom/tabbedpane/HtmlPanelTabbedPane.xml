@@ -3,11 +3,11 @@
   "-//MyFaces//DTD MyFaces component def 1.0//EN"
   "http://myfaces.sourceforge.net/dtd/Component.dtd">
 <component>
-    <component-class>net.sourceforge.myfaces.custom.tabbedpane.HtmlPanelTabbedPane</component-class>
+    <component-class>org.apache.myfaces.custom.tabbedpane.HtmlPanelTabbedPane</component-class>
     <base-class>javax.faces.component.html.HtmlPanelGroup</base-class>
-    <component-type>net.sourceforge.myfaces.HtmlPanelTabbedPane</component-type>
+    <component-type>org.apache.myfaces.HtmlPanelTabbedPane</component-type>
     <component-family>javax.faces.Panel</component-family>
-    <renderer-type>net.sourceforge.myfaces.TabbedPane</renderer-type>
+    <renderer-type>org.apache.myfaces.TabbedPane</renderer-type>
     <field>
         <name>selectedIndex</name>
         <type>int</type>

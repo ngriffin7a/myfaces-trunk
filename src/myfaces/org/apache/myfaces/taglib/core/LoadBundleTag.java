@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.sourceforge.myfaces.taglib.core;
+package org.apache.myfaces.taglib.core;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -46,6 +46,9 @@ import org.apache.commons.logging.LogFactory;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.10  2004/10/13 11:51:00  matze
+ * renamed packages to org.apache
+ *
  * Revision 1.9  2004/09/01 18:32:54  mwessendorf
  * Organize Imports
  *

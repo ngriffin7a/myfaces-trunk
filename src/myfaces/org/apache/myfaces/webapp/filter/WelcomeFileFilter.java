@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.sourceforge.myfaces.webapp.filter;
+package org.apache.myfaces.webapp.filter;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.sourceforge.myfaces.custom.date;
+package org.apache.myfaces.custom.date;
 
 import java.io.Serializable;
 import java.text.ParseException;
@@ -31,9 +31,9 @@ import javax.faces.el.ValueBinding;
  * @version $Revision$ $Date$
  */
 public class HtmlInputDate extends UIInput {
-    public static final String COMPONENT_TYPE = "net.sourceforge.myfaces.HtmlInputDate";
+    public static final String COMPONENT_TYPE = "org.apache.myfaces.HtmlInputDate";
     public static final String COMPONENT_FAMILY = "javax.faces.Input";
-    private static final String DEFAULT_RENDERER_TYPE = "net.sourceforge.myfaces.Date";
+    private static final String DEFAULT_RENDERER_TYPE = "org.apache.myfaces.Date";
     private static final boolean DEFAULT_DISABLED = false;
     
     /**

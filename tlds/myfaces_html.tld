@@ -82,7 +82,7 @@ Start of revised 1.0 conforming tags (in alphabetical order)
 <!-- column -->
     <tag>
         <name>column</name>
-        <tag-class>net.sourceforge.myfaces.taglib.html.HtmlColumnTag</tag-class>
+        <tag-class>org.apache.myfaces.taglib.html.HtmlColumnTag</tag-class>
         <body-content>JSP</body-content>
         &ui_component_attributes;
      </tag>
@@ -90,7 +90,7 @@ Start of revised 1.0 conforming tags (in alphabetical order)
 <!-- commandButton -->
     <tag>
         <name>commandButton</name>
-        <tag-class>net.sourceforge.myfaces.taglib.html.HtmlCommandButtonTag</tag-class>
+        <tag-class>org.apache.myfaces.taglib.html.HtmlCommandButtonTag</tag-class>
         <body-content>JSP</body-content>
         &standard_command_button_attributes;
     </tag>
@@ -98,7 +98,7 @@ Start of revised 1.0 conforming tags (in alphabetical order)
 <!-- commandLink -->
     <tag>
         <name>commandLink</name>
-        <tag-class>net.sourceforge.myfaces.taglib.html.HtmlCommandLinkTag</tag-class>
+        <tag-class>org.apache.myfaces.taglib.html.HtmlCommandLinkTag</tag-class>
         <body-content>JSP</body-content>
         &standard_command_link_attributes;
     </tag>
@@ -106,7 +106,7 @@ Start of revised 1.0 conforming tags (in alphabetical order)
 <!-- data_table -->
     <tag>
         <name>dataTable</name>
-        <tag-class>net.sourceforge.myfaces.taglib.html.HtmlDataTableTag</tag-class>
+        <tag-class>org.apache.myfaces.taglib.html.HtmlDataTableTag</tag-class>
         <body-content>JSP</body-content>
         &standard_data_table_attributes;
      </tag>
@@ -114,7 +114,7 @@ Start of revised 1.0 conforming tags (in alphabetical order)
 <!-- form -->
     <tag>
         <name>form</name>
-        <tag-class>net.sourceforge.myfaces.taglib.html.HtmlFormTag</tag-class>
+        <tag-class>org.apache.myfaces.taglib.html.HtmlFormTag</tag-class>
         <body-content>JSP</body-content>
         <description>
             Renders a HTML form element.
@@ -128,7 +128,7 @@ Start of revised 1.0 conforming tags (in alphabetical order)
 <!-- graphic_image -->
     <tag>
         <name>graphicImage</name>
-        <tag-class>net.sourceforge.myfaces.taglib.html.HtmlGraphicImageTag</tag-class>
+        <tag-class>org.apache.myfaces.taglib.html.HtmlGraphicImageTag</tag-class>
         <body-content>JSP</body-content>
         &ui_graphic_attributes;
         &html_universal_attributes;
@@ -139,7 +139,7 @@ Start of revised 1.0 conforming tags (in alphabetical order)
 <!-- input_hidden -->
     <tag>
         <name>inputHidden</name>
-        <tag-class>net.sourceforge.myfaces.taglib.html.HtmlInputHiddenTag</tag-class>
+        <tag-class>org.apache.myfaces.taglib.html.HtmlInputHiddenTag</tag-class>
         <body-content>JSP</body-content>
         &ui_input_attributes;
         <!-- HiddenRenderer attributes -->
@@ -148,7 +148,7 @@ Start of revised 1.0 conforming tags (in alphabetical order)
 <!-- input_secret -->
     <tag>
         <name>inputSecret</name>
-        <tag-class>net.sourceforge.myfaces.taglib.html.HtmlInputSecretTag</tag-class>
+        <tag-class>org.apache.myfaces.taglib.html.HtmlInputSecretTag</tag-class>
         <body-content>JSP</body-content>
         &ui_input_attributes;
         <!-- todo: not all html_input_attributes are used for input_secret
@@ -171,7 +171,7 @@ Start of revised 1.0 conforming tags (in alphabetical order)
 <!-- input_text -->
     <tag>
         <name>inputText</name>
-        <tag-class>net.sourceforge.myfaces.taglib.html.HtmlInputTextTag</tag-class>
+        <tag-class>org.apache.myfaces.taglib.html.HtmlInputTextTag</tag-class>
         <body-content>JSP</body-content>
         <description>
             Renders a HTML input element that is bound to the value (binding)
@@ -183,7 +183,7 @@ Start of revised 1.0 conforming tags (in alphabetical order)
 <!-- input_textarea -->
     <tag>
         <name>inputTextarea</name>
-        <tag-class>net.sourceforge.myfaces.taglib.html.HtmlInputTextareaTag</tag-class>
+        <tag-class>org.apache.myfaces.taglib.html.HtmlInputTextareaTag</tag-class>
         <body-content>JSP</body-content>
         &standard_input_textarea_attributes;
    </tag>
@@ -191,7 +191,7 @@ Start of revised 1.0 conforming tags (in alphabetical order)
 <!-- message -->
     <tag>
         <name>message</name>
-        <tag-class>net.sourceforge.myfaces.taglib.html.HtmlMessageTag</tag-class>
+        <tag-class>org.apache.myfaces.taglib.html.HtmlMessageTag</tag-class>
         <body-content>JSP</body-content>
         <description>
             Renders the first FacesMessage that is assigned to the component
@@ -203,7 +203,7 @@ Start of revised 1.0 conforming tags (in alphabetical order)
 <!-- messages -->
     <tag>
         <name>messages</name>
-        <tag-class>net.sourceforge.myfaces.taglib.html.HtmlMessagesTag</tag-class>
+        <tag-class>org.apache.myfaces.taglib.html.HtmlMessagesTag</tag-class>
         <body-content>JSP</body-content>
         <description>
             Renders all or some FacesMessages depending on the "for" and "globalOnly" attributes:
@@ -218,7 +218,7 @@ Start of revised 1.0 conforming tags (in alphabetical order)
 <!-- outputLabel -->
     <tag>
         <name>outputLabel</name>
-        <tag-class>net.sourceforge.myfaces.taglib.html.HtmlOutputLabelTag</tag-class>
+        <tag-class>org.apache.myfaces.taglib.html.HtmlOutputLabelTag</tag-class>
         <body-content>JSP</body-content>
         <description>
             In addition to the JSF specification, MyFaces allows it to directly
@@ -230,7 +230,7 @@ Start of revised 1.0 conforming tags (in alphabetical order)
 <!-- output_link -->
     <tag>
         <name>outputLink</name>
-        <tag-class>net.sourceforge.myfaces.taglib.html.HtmlOutputLinkTag</tag-class>
+        <tag-class>org.apache.myfaces.taglib.html.HtmlOutputLinkTag</tag-class>
         <body-content>JSP</body-content>
         &ui_output_attributes;
         &html_universal_attributes;
@@ -247,7 +247,7 @@ Start of revised 1.0 conforming tags (in alphabetical order)
 <!-- output_message -->
     <tag>
         <name>outputFormat</name>
-        <tag-class>net.sourceforge.myfaces.taglib.html.HtmlOutputFormatTag</tag-class>
+        <tag-class>org.apache.myfaces.taglib.html.HtmlOutputFormatTag</tag-class>
         <body-content>JSP</body-content>
         <description>
             Takes the value of the associated UIOutput component as a MessageFormat
@@ -271,7 +271,7 @@ Start of revised 1.0 conforming tags (in alphabetical order)
 <!-- output_text -->
     <tag>
         <name>outputText</name>
-        <tag-class>net.sourceforge.myfaces.taglib.html.HtmlOutputTextTag</tag-class>
+        <tag-class>org.apache.myfaces.taglib.html.HtmlOutputTextTag</tag-class>
         <body-content>JSP</body-content>
         <description>
             Renders the value of the associated UIOutput component.
@@ -294,7 +294,7 @@ Start of revised 1.0 conforming tags (in alphabetical order)
 <!-- panel_grid -->
     <tag>
         <name>panelGrid</name>
-        <tag-class>net.sourceforge.myfaces.taglib.html.HtmlPanelGridTag</tag-class>
+        <tag-class>org.apache.myfaces.taglib.html.HtmlPanelGridTag</tag-class>
         <body-content>JSP</body-content>
         &ui_panel_attributes;
         &html_universal_attributes;
@@ -331,7 +331,7 @@ Start of revised 1.0 conforming tags (in alphabetical order)
 <!-- panelGroup -->
     <tag>
         <name>panelGroup</name>
-        <tag-class>net.sourceforge.myfaces.taglib.html.HtmlPanelGroupTag</tag-class>
+        <tag-class>org.apache.myfaces.taglib.html.HtmlPanelGroupTag</tag-class>
         <body-content>JSP</body-content>
         &standard_panel_group_attributes;
     </tag>
@@ -339,7 +339,7 @@ Start of revised 1.0 conforming tags (in alphabetical order)
 <!-- selectboolean_checkbox -->
     <tag>
         <name>selectBooleanCheckbox</name>
-        <tag-class>net.sourceforge.myfaces.taglib.html.HtmlSelectBooleanCheckboxTag</tag-class>
+        <tag-class>org.apache.myfaces.taglib.html.HtmlSelectBooleanCheckboxTag</tag-class>
         <body-content>JSP</body-content>
         &ui_select_boolean_attributes;
         &html_universal_attributes;
@@ -350,7 +350,7 @@ Start of revised 1.0 conforming tags (in alphabetical order)
 <!-- selectManyCheckbox -->
     <tag>
         <name>selectManyCheckbox</name>
-        <tag-class>net.sourceforge.myfaces.taglib.html.HtmlSelectManyCheckboxTag</tag-class>
+        <tag-class>org.apache.myfaces.taglib.html.HtmlSelectManyCheckboxTag</tag-class>
         <body-content>JSP</body-content>
         &standard_select_many_checkbox_attributes;
     </tag>
@@ -358,7 +358,7 @@ Start of revised 1.0 conforming tags (in alphabetical order)
 <!-- selectmany_listbox -->
     <tag>
         <name>selectManyListbox</name>
-        <tag-class>net.sourceforge.myfaces.taglib.html.HtmlSelectManyListboxTag</tag-class>
+        <tag-class>org.apache.myfaces.taglib.html.HtmlSelectManyListboxTag</tag-class>
         <body-content>JSP</body-content>
         &ui_select_many_attributes;
         &html_universal_attributes;
@@ -377,7 +377,7 @@ Start of revised 1.0 conforming tags (in alphabetical order)
 <!-- selectmany_menu -->
     <tag>
         <name>selectManyMenu</name>
-        <tag-class>net.sourceforge.myfaces.taglib.html.HtmlSelectManyMenuTag</tag-class>
+        <tag-class>org.apache.myfaces.taglib.html.HtmlSelectManyMenuTag</tag-class>
         <body-content>JSP</body-content>
         &ui_select_many_attributes;
         &html_universal_attributes;
@@ -388,7 +388,7 @@ Start of revised 1.0 conforming tags (in alphabetical order)
 <!-- selectOneListbox -->
     <tag>
         <name>selectOneListbox</name>
-        <tag-class>net.sourceforge.myfaces.taglib.html.HtmlSelectOneListboxTag</tag-class>
+        <tag-class>org.apache.myfaces.taglib.html.HtmlSelectOneListboxTag</tag-class>
         <body-content>JSP</body-content>
         &ui_select_one_attributes;
         &html_universal_attributes;
@@ -407,7 +407,7 @@ Start of revised 1.0 conforming tags (in alphabetical order)
 <!-- selectOneMenu -->
     <tag>
         <name>selectOneMenu</name>
-        <tag-class>net.sourceforge.myfaces.taglib.html.HtmlSelectOneMenuTag</tag-class>
+        <tag-class>org.apache.myfaces.taglib.html.HtmlSelectOneMenuTag</tag-class>
         <body-content>JSP</body-content>
         &standard_select_one_menu_attributes;
     </tag>
@@ -415,7 +415,7 @@ Start of revised 1.0 conforming tags (in alphabetical order)
 <!-- selectOneRadio -->
     <tag>
         <name>selectOneRadio</name>
-        <tag-class>net.sourceforge.myfaces.taglib.html.HtmlSelectOneRadioTag</tag-class>
+        <tag-class>org.apache.myfaces.taglib.html.HtmlSelectOneRadioTag</tag-class>
         <body-content>JSP</body-content>
         &standard_select_one_radio_attributes;
     </tag>

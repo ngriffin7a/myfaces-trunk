@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.sourceforge.myfaces.custom.navmenu;
+package org.apache.myfaces.custom.navmenu;
 
-import net.sourceforge.myfaces.component.UserRoleUtils;
-import net.sourceforge.myfaces.component.UserRoleAware;
+import org.apache.myfaces.component.UserRoleUtils;
+import org.apache.myfaces.component.UserRoleAware;
 
 import javax.faces.component.UISelectItem;
 import javax.faces.el.ValueBinding;
@@ -26,6 +26,9 @@ import javax.faces.context.FacesContext;
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  *          $Log$
+ *          Revision 1.3  2004/10/13 11:50:57  matze
+ *          renamed packages to org.apache
+ *
  *          Revision 1.2  2004/07/01 21:53:07  mwessendorf
  *          ASF switch
  *
@@ -41,7 +44,7 @@ public class UINavigationMenuItem
 
     //------------------ GENERATED CODE BEGIN (do not modify!) --------------------
 
-    public static final String COMPONENT_TYPE = "net.sourceforge.myfaces.NavigationMenuItem";
+    public static final String COMPONENT_TYPE = "org.apache.myfaces.NavigationMenuItem";
     public static final String COMPONENT_FAMILY = "javax.faces.SelectItem";
 
     private String _icon = null;

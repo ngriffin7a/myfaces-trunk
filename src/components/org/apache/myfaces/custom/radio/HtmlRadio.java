@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.sourceforge.myfaces.custom.radio;
+package org.apache.myfaces.custom.radio;
 
 import javax.faces.component.UIComponentBase;
 import javax.faces.context.FacesContext;
@@ -23,6 +23,9 @@ import javax.faces.el.ValueBinding;
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.7  2004/10/13 11:50:57  matze
+ * renamed packages to org.apache
+ *
  * Revision 1.6  2004/07/01 21:53:08  mwessendorf
  * ASF switch
  *
@@ -50,9 +53,9 @@ public class HtmlRadio
 
     //------------------ GENERATED CODE BEGIN (do not modify!) --------------------
 
-    public static final String COMPONENT_TYPE = "net.sourceforge.myfaces.HtmlRadio";
-    public static final String COMPONENT_FAMILY = "net.sourceforge.myfaces.Radio";
-    private static final String DEFAULT_RENDERER_TYPE = "net.sourceforge.myfaces.Radio";
+    public static final String COMPONENT_TYPE = "org.apache.myfaces.HtmlRadio";
+    public static final String COMPONENT_FAMILY = "org.apache.myfaces.Radio";
+    private static final String DEFAULT_RENDERER_TYPE = "org.apache.myfaces.Radio";
 
     private String _for = null;
     private Integer _index = null;

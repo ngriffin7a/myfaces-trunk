@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.sourceforge.myfaces.config;
+package org.apache.myfaces.config;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,16 +35,16 @@ import javax.faces.render.Renderer;
 import javax.faces.webapp.FacesServlet;
 import javax.servlet.ServletContext;
 
-import net.sourceforge.myfaces.application.NavigationHandlerImpl;
-import net.sourceforge.myfaces.application.jsp.JspStateManagerImpl;
-import net.sourceforge.myfaces.application.jsp.JspViewHandlerImpl;
-import net.sourceforge.myfaces.cactus.MyFacesServletTestCase;
-import net.sourceforge.myfaces.config.element.ManagedBean;
-import net.sourceforge.myfaces.config.element.NavigationCase;
-import net.sourceforge.myfaces.config.element.NavigationRule;
-import net.sourceforge.myfaces.el.PropertyResolverImpl;
-import net.sourceforge.myfaces.el.VariableResolverImpl;
-import net.sourceforge.myfaces.lifecycle.LifecycleFactoryImpl;
+import org.apache.myfaces.application.NavigationHandlerImpl;
+import org.apache.myfaces.application.jsp.JspStateManagerImpl;
+import org.apache.myfaces.application.jsp.JspViewHandlerImpl;
+import org.apache.myfaces.cactus.MyFacesServletTestCase;
+import org.apache.myfaces.config.element.ManagedBean;
+import org.apache.myfaces.config.element.NavigationCase;
+import org.apache.myfaces.config.element.NavigationRule;
+import org.apache.myfaces.el.PropertyResolverImpl;
+import org.apache.myfaces.el.VariableResolverImpl;
+import org.apache.myfaces.lifecycle.LifecycleFactoryImpl;
 
 
 public class ConfigurationCactusTest extends MyFacesServletTestCase
@@ -170,13 +170,13 @@ public class ConfigurationCactusTest extends MyFacesServletTestCase
         RenderKit basicHtml = renderKitFactory.getRenderKit(getContext(), RenderKitFactory.HTML_BASIC_RENDER_KIT);
 
         Renderer renderer = basicHtml.getRenderer("javax.faces.Command", "javax.faces.Button");
-        assertEquals(net.sourceforge.myfaces.renderkit.html.HtmlButtonRenderer.class, renderer.getClass());
+        assertEquals(org.apache.myfaces.renderkit.html.HtmlButtonRenderer.class, renderer.getClass());
 
         RenderKit testRenderKit = renderKitFactory.getRenderKit(getContext(), "TEST_RENDER_KIT");
 
         assertNull(basicHtml.getRenderer("test.Command", "test.Button"));
         renderer = testRenderKit.getRenderer("test.Command", "test.Button");
-        assertEquals(net.sourceforge.myfaces.renderkit.html.HtmlButtonRenderer.class, renderer.getClass());
+        assertEquals(org.apache.myfaces.renderkit.html.HtmlButtonRenderer.class, renderer.getClass());
 
     }
 }

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.sourceforge.myfaces.custom.creditcardvalidator;
+package org.apache.myfaces.custom.creditcardvalidator;
 
 import javax.faces.context.FacesContext;
 import javax.faces.el.ValueBinding;
@@ -26,6 +26,9 @@ import javax.servlet.jsp.JspException;
  * @author mwessendorf (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.4  2004/10/13 11:50:57  matze
+ * renamed packages to org.apache
+ *
  * Revision 1.3  2004/09/15 07:58:59  mwessendorf
  * Custom Validators now work in OC4J - thanks to Daniel Kamakura for supporting this
  *

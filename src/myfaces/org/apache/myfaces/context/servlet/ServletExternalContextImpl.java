@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.sourceforge.myfaces.context.servlet;
+package org.apache.myfaces.context.servlet;
 
-import net.sourceforge.myfaces.util.EnumerationIterator;
+import org.apache.myfaces.util.EnumerationIterator;
 
 import javax.faces.FacesException;
 import javax.faces.application.ViewHandler;

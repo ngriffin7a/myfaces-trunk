@@ -13,11 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.sourceforge.myfaces.renderkit.html;
+package org.apache.myfaces.renderkit.html;
 
-import net.sourceforge.myfaces.config.MyfacesConfig;
-import net.sourceforge.myfaces.renderkit.RendererUtils;
-import net.sourceforge.myfaces.renderkit.html.util.JavascriptUtils;
+import org.apache.myfaces.config.MyfacesConfig;
+import org.apache.myfaces.renderkit.RendererUtils;
+import org.apache.myfaces.renderkit.html.util.JavascriptUtils;
 
 import javax.faces.application.ViewHandler;
 import javax.faces.component.UIComponent;
@@ -36,6 +36,9 @@ import java.util.Set;
  * @author Anton Koinov
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.9  2004/10/13 11:51:01  matze
+ * renamed packages to org.apache
+ *
  * Revision 1.8  2004/09/08 15:23:12  manolito
  * Autoscroll feature
  *

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.sourceforge.myfaces.custom.savestate;
+package org.apache.myfaces.custom.savestate;
 
 import javax.faces.component.UIParameter;
 import javax.faces.context.FacesContext;
@@ -50,7 +50,7 @@ public class UISaveState
 
     //------------------ GENERATED CODE BEGIN (do not modify!) --------------------
 
-    public static final String COMPONENT_TYPE = "net.sourceforge.myfaces.SaveState";
+    public static final String COMPONENT_TYPE = "org.apache.myfaces.SaveState";
     public static final String COMPONENT_FAMILY = "javax.faces.Parameter";
 
 

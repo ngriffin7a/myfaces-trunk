@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.sourceforge.myfaces.lifecycle;
+package org.apache.myfaces.lifecycle;
 
-import net.sourceforge.myfaces.util.DebugUtils;
+import org.apache.myfaces.util.DebugUtils;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -44,6 +44,9 @@ import java.util.List;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.41  2004/10/13 11:51:00  matze
+ * renamed packages to org.apache
+ *
  * Revision 1.40  2004/08/25 13:54:02  manolito
  * Log cvs keyword
  *

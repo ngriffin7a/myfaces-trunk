@@ -13,17 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.sourceforge.myfaces.custom.rssticker;
+package org.apache.myfaces.custom.rssticker;
 
 import javax.faces.component.UIComponent;
 
-import net.sourceforge.myfaces.component.UserRoleAware;
-import net.sourceforge.myfaces.taglib.html.HtmlOutputTextTagBase;
+import org.apache.myfaces.component.UserRoleAware;
+import org.apache.myfaces.taglib.html.HtmlOutputTextTagBase;
 
 /**
  * @author mwessendorf (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.4  2004/10/13 11:50:57  matze
+ * renamed packages to org.apache
+ *
  * Revision 1.3  2004/07/01 21:53:10  mwessendorf
  * ASF switch
  *
@@ -41,7 +44,7 @@ public class HtmlRssTickerTag extends HtmlOutputTextTagBase{
 
 	public String getRendererType()
 	{
-		return "net.sourceforge.myfaces.Ticker";
+		return "org.apache.myfaces.Ticker";
 	}
 
 	//Ticker attribute

@@ -3,9 +3,9 @@
   "-//MyFaces//DTD MyFaces component def 1.0//EN"
   "http://myfaces.sourceforge.net/dtd/Component.dtd">
 <component generateStateMethods="true" generateUserRoleMethods="true" >
-    <component-class>net.sourceforge.myfaces.component.html.ext.HtmlOutputLabel</component-class>
+    <component-class>org.apache.myfaces.component.html.ext.HtmlOutputLabel</component-class>
     <base-class>javax.faces.component.html.HtmlOutputLabel</base-class>
-    <component-type>net.sourceforge.myfaces.HtmlOutputLabel</component-type>
+    <component-type>org.apache.myfaces.HtmlOutputLabel</component-type>
     <field>
         <name>enabledOnUserRole</name>
         <type>java.lang.String</type>

@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.sourceforge.myfaces.custom.datascroller;
+package org.apache.myfaces.custom.datascroller;
 
-import net.sourceforge.myfaces.renderkit.RendererUtils;
-import net.sourceforge.myfaces.renderkit.html.HtmlRenderer;
+import org.apache.myfaces.renderkit.RendererUtils;
+import org.apache.myfaces.renderkit.html.HtmlRenderer;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -37,6 +37,9 @@ import java.util.Map;
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.16  2004/10/13 11:50:57  matze
+ * renamed packages to org.apache
+ *
  * Revision 1.15  2004/09/02 08:57:17  manolito
  * missing setTransient
  *
@@ -57,7 +60,7 @@ public class HtmlDataScrollerRenderer
     protected static final String FACET_FAST_REWIND   = "fastr".intern();
     protected static final String PAGE_NAVIGATION     = "idx".intern();
 
-    public static final String RENDERER_TYPE = "net.sourceforge.myfaces.DataScroller";
+    public static final String RENDERER_TYPE = "org.apache.myfaces.DataScroller";
 
     public boolean getRendersChildren()
     {

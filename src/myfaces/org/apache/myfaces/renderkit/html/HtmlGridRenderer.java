@@ -13,12 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.sourceforge.myfaces.renderkit.html;
+package org.apache.myfaces.renderkit.html;
 
-import net.sourceforge.myfaces.renderkit.JSFAttr;
-import net.sourceforge.myfaces.renderkit.RendererUtils;
-import net.sourceforge.myfaces.util.ArrayUtils;
-import net.sourceforge.myfaces.util.StringUtils;
+import org.apache.myfaces.renderkit.JSFAttr;
+import org.apache.myfaces.renderkit.RendererUtils;
+import org.apache.myfaces.util.ArrayUtils;
+import org.apache.myfaces.util.StringUtils;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -35,6 +35,9 @@ import java.util.Iterator;
  * X-CHECKED: tlddoc h:panelGrid 1.0 final
  *
  * $Log$
+ * Revision 1.14  2004/10/13 11:51:00  matze
+ * renamed packages to org.apache
+ *
  * Revision 1.13  2004/07/01 22:05:07  mwessendorf
  * ASF switch
  *

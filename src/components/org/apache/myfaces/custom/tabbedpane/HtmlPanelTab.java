@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.sourceforge.myfaces.custom.tabbedpane;
+package org.apache.myfaces.custom.tabbedpane;
 
 import javax.faces.component.html.HtmlPanelGroup;
 import javax.faces.context.FacesContext;
@@ -30,7 +30,7 @@ public class HtmlPanelTab
 
     //------------------ GENERATED CODE BEGIN (do not modify!) --------------------
 
-    public static final String COMPONENT_TYPE = "net.sourceforge.myfaces.HtmlPanelTab";
+    public static final String COMPONENT_TYPE = "org.apache.myfaces.HtmlPanelTab";
     public static final String COMPONENT_FAMILY = "javax.faces.Panel";
     private static final String DEFAULT_RENDERER_TYPE = "javax.faces.Group";
 

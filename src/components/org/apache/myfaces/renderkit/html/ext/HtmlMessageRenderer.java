@@ -13,11 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.sourceforge.myfaces.renderkit.html.ext;
+package org.apache.myfaces.renderkit.html.ext;
 
-import net.sourceforge.myfaces.component.html.ext.HtmlMessage;
-import net.sourceforge.myfaces.renderkit.RendererUtils;
-import net.sourceforge.myfaces.renderkit.html.HtmlMessageRendererBase;
+import org.apache.myfaces.component.html.ext.HtmlMessage;
+import org.apache.myfaces.renderkit.RendererUtils;
+import org.apache.myfaces.renderkit.html.HtmlMessageRendererBase;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -36,6 +36,9 @@ import java.util.Map;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.6  2004/10/13 11:50:59  matze
+ * renamed packages to org.apache
+ *
  * Revision 1.5  2004/07/01 21:53:06  mwessendorf
  * ASF switch
  *

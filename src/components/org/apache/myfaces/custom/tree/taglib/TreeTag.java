@@ -13,13 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.sourceforge.myfaces.custom.tree.taglib;
+package org.apache.myfaces.custom.tree.taglib;
 
-import net.sourceforge.myfaces.custom.tree.model.DefaultTreeModel;
-import net.sourceforge.myfaces.custom.tree.model.TreeModel;
-import net.sourceforge.myfaces.custom.tree.model.TreePath;
-import net.sourceforge.myfaces.custom.tree.HtmlTree;
-import net.sourceforge.myfaces.taglib.UIComponentTagBase;
+import org.apache.myfaces.custom.tree.model.DefaultTreeModel;
+import org.apache.myfaces.custom.tree.model.TreeModel;
+import org.apache.myfaces.custom.tree.model.TreePath;
+import org.apache.myfaces.custom.tree.HtmlTree;
+import org.apache.myfaces.taglib.UIComponentTagBase;
 
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
@@ -33,6 +33,9 @@ import javax.servlet.jsp.JspException;
  * @author <a href="mailto:oliver@rossmueller.com">Oliver Rossmueller</a>
  * @version $Revision$ $Date$
  *          $Log$
+ *          Revision 1.7  2004/10/13 11:50:58  matze
+ *          renamed packages to org.apache
+ *
  *          Revision 1.6  2004/08/15 15:28:04  o_rossmueller
  *          new model listener handling to get modified from events which occur outside the scope of a tree request
  *
@@ -81,13 +84,13 @@ public class TreeTag
 
     public String getComponentType()
     {
-        return "net.sourceforge.myfaces.HtmlTree";
+        return "org.apache.myfaces.HtmlTree";
     }
 
 
     public String getRendererType()
     {
-        return "net.sourceforge.myfaces.HtmlTree";
+        return "org.apache.myfaces.HtmlTree";
     }
 
 

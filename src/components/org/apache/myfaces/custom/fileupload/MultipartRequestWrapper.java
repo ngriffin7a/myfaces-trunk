@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.sourceforge.myfaces.custom.fileupload;
+package org.apache.myfaces.custom.fileupload;
 
 import org.apache.commons.fileupload.*;
 
@@ -26,6 +26,9 @@ import java.util.*;
  * @author Sylvain Vieujot (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.7  2004/10/13 11:50:57  matze
+ * renamed packages to org.apache
+ *
  * Revision 1.6  2004/09/09 13:43:59  manolito
  * query string parameters where missing in the parameter map
  *

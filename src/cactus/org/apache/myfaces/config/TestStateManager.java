@@ -12,11 +12,11 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */package net.sourceforge.myfaces.config;
+ */package org.apache.myfaces.config;
 
 import javax.faces.application.StateManager;
 
-import net.sourceforge.myfaces.application.jsp.JspStateManagerImpl;
+import org.apache.myfaces.application.jsp.JspStateManagerImpl;
 
 
 /**

@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.sourceforge.myfaces.el;
+package org.apache.myfaces.el;
 
-import net.sourceforge.myfaces.MyFacesBaseTest;
+import org.apache.myfaces.MyFacesBaseTest;
 
 import java.util.ArrayList;
 import java.util.HashMap;

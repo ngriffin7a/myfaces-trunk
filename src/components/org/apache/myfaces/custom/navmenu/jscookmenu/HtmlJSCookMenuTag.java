@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.sourceforge.myfaces.custom.navmenu.jscookmenu;
+package org.apache.myfaces.custom.navmenu.jscookmenu;
 
-import net.sourceforge.myfaces.taglib.UIComponentTagBase;
-import net.sourceforge.myfaces.component.UserRoleAware;
+import org.apache.myfaces.taglib.UIComponentTagBase;
+import org.apache.myfaces.component.UserRoleAware;
 
 import javax.faces.component.UIComponent;
 
@@ -27,8 +27,8 @@ import javax.faces.component.UIComponent;
 public class HtmlJSCookMenuTag
         extends UIComponentTagBase
 {
-    private static final String COMPONENT_TYPE = "net.sourceforge.myfaces.JSCookMenu".intern();
-    private static final String RENDERER_TYPE = "net.sourceforge.myfaces.JSCookMenu".intern();
+    private static final String COMPONENT_TYPE = "org.apache.myfaces.JSCookMenu".intern();
+    private static final String RENDERER_TYPE = "org.apache.myfaces.JSCookMenu".intern();
 
     private static final String LAYOUT_ATTR = "layout";
     private static final String THEME_ATTR  = "theme";

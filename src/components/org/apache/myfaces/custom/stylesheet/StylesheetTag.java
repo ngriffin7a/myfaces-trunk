@@ -13,16 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.sourceforge.myfaces.custom.stylesheet;
+package org.apache.myfaces.custom.stylesheet;
 
 import javax.faces.component.UIComponent;
 
-import net.sourceforge.myfaces.taglib.html.HtmlOutputTextTagBase;
+import org.apache.myfaces.taglib.html.HtmlOutputTextTagBase;
 
 /**
  * @author mwessendorf (latest modification by $Author$) 
  * @version $Revision$ $Date$ 
  * $Log$
+ * Revision 1.2  2004/10/13 11:50:58  matze
+ * renamed packages to org.apache
+ *
  * Revision 1.1  2004/08/18 15:36:08  mwessendorf
  * added a new Stylesheet-Component
  * 
@@ -43,7 +46,7 @@ public class StylesheetTag extends HtmlOutputTextTagBase {
 
     public String getRendererType() {
 
-        return "net.sourceforge.myfaces.Stylesheet";
+        return "org.apache.myfaces.Stylesheet";
 
     }
 

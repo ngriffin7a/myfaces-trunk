@@ -36,7 +36,7 @@ managed beans used:
 
     <x:saveState id="ss1" value="#{optionsForm.language}" />
 
-    <f:loadBundle basename="net.sourceforge.myfaces.examples.resource.example_messages" var="example_messages"/>
+    <f:loadBundle basename="org.apache.myfaces.examples.resource.example_messages" var="example_messages"/>
 
     <x:panelLayout id="page" layout="#{globalOptions.pageLayout}"
             styleClass="pageLayout"

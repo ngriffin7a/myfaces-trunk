@@ -13,11 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.sourceforge.myfaces.custom.fileupload;
+package org.apache.myfaces.custom.fileupload;
 
-import net.sourceforge.myfaces.component.UserRoleAware;
-import net.sourceforge.myfaces.renderkit.html.HTML;
-import net.sourceforge.myfaces.taglib.html.HtmlInputTagBase;
+import org.apache.myfaces.component.UserRoleAware;
+import org.apache.myfaces.renderkit.html.HTML;
+import org.apache.myfaces.taglib.html.HtmlInputTagBase;
 
 import javax.faces.component.UIComponent;
 
@@ -37,7 +37,7 @@ public class HtmlInputFileUploadTag
 
     public String getRendererType()
     {
-        return "net.sourceforge.myfaces.FileUpload";
+        return "org.apache.myfaces.FileUpload";
     }
 
     // UIComponent attributes --> already implemented in UIComponentTagBase

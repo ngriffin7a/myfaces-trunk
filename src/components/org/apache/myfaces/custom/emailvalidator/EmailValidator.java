@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.sourceforge.myfaces.custom.emailvalidator;
+package org.apache.myfaces.custom.emailvalidator;
 
-import net.sourceforge.myfaces.util.MessageUtils;
+import org.apache.myfaces.util.MessageUtils;
 
 import org.apache.commons.validator.GenericValidator;
 
@@ -29,6 +29,9 @@ import javax.faces.validator.ValidatorException;
  * @author mwessendorf (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.5  2004/10/13 11:50:57  matze
+ * renamed packages to org.apache
+ *
  * Revision 1.4  2004/07/01 21:53:11  mwessendorf
  * ASF switch
  *
@@ -55,12 +58,12 @@ public class EmailValidator implements Validator {
 	/**
 	 * <p>The standard converter id for this converter.</p>
 	 */
-	public static final String 	VALIDATOR_ID 	   = "net.sourceforge.myfaces.validator.Email";
+	public static final String 	VALIDATOR_ID 	   = "org.apache.myfaces.validator.Email";
 	/**
 	 * <p>The message identifier of the {@link FacesMessage} to be created if
 	 * the maximum length check fails.</p>
 	 */
-	public static final String EMAIL_MESSAGE_ID = "net.sourceforge.myfaces.Email.INVALID";	
+	public static final String EMAIL_MESSAGE_ID = "org.apache.myfaces.Email.INVALID";	
 	
 	public EmailValidator(){
 	}

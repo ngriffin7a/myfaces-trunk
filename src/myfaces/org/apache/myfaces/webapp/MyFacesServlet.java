@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.sourceforge.myfaces.webapp;
+package org.apache.myfaces.webapp;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -29,8 +29,11 @@ import java.io.IOException;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.19  2004/10/13 11:51:01  matze
+ * renamed packages to org.apache
+ *
  * Revision 1.18  2004/07/16 15:16:10  royalts
- * moved net.sourceforge.myfaces.webapp.webxml and net.sourceforge.util.xml to share src-tree (needed WebXml for JspTilesViewHandlerImpl)
+ * moved org.apache.myfaces.webapp.webxml and org.apache.util.xml to share src-tree (needed WebXml for JspTilesViewHandlerImpl)
  *
  * Revision 1.17  2004/07/01 22:05:11  mwessendorf
  * ASF switch
@@ -49,11 +52,11 @@ public class MyFacesServlet
     {
         //Check, if ServletContextListener already called
         ServletContext servletContext = servletConfig.getServletContext();
-        Boolean b = (Boolean)servletContext.getAttribute(net.sourceforge.myfaces.webapp.StartupServletContextListener.FACES_INIT_DONE);
+        Boolean b = (Boolean)servletContext.getAttribute(org.apache.myfaces.webapp.StartupServletContextListener.FACES_INIT_DONE);
         if (b == null || b.booleanValue() == false)
         {
             log.warn("ServletContextListener not yet called");
-            net.sourceforge.myfaces.webapp.StartupServletContextListener.initFaces(servletConfig.getServletContext());
+            org.apache.myfaces.webapp.StartupServletContextListener.initFaces(servletConfig.getServletContext());
         }
         super.init(servletConfig);
         log.info("MyFacesServlet for context '" + servletConfig.getServletContext().getRealPath("/") + "' initialized.");

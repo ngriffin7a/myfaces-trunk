@@ -55,7 +55,7 @@
     <managed-bean>
         <description>Test bean</description>
         <managed-bean-name>testBean_B</managed-bean-name>
-        <managed-bean-class>net.sourceforge.myfaces.el.B</managed-bean-class>
+        <managed-bean-class>org.apache.myfaces.el.B</managed-bean-class>
         <managed-bean-scope>session</managed-bean-scope>
 
         <managed-property>
@@ -87,7 +87,7 @@
     <managed-bean>
         <description>Test bean</description>
         <managed-bean-name>testBean_B1</managed-bean-name>
-        <managed-bean-class>net.sourceforge.myfaces.el.B</managed-bean-class>
+        <managed-bean-class>org.apache.myfaces.el.B</managed-bean-class>
         <managed-bean-scope>session</managed-bean-scope>
 
         <managed-property>
@@ -99,14 +99,14 @@
     <managed-bean>
         <description>Test bean</description>
         <managed-bean-name>testBean_B2</managed-bean-name>
-        <managed-bean-class>net.sourceforge.myfaces.el.B</managed-bean-class>
+        <managed-bean-class>org.apache.myfaces.el.B</managed-bean-class>
         <managed-bean-scope>session</managed-bean-scope>
     </managed-bean>
 
     <managed-bean>
         <description>Test bean</description>
         <managed-bean-name>testBean_E</managed-bean-name>
-        <managed-bean-class>net.sourceforge.myfaces.el.E</managed-bean-class>
+        <managed-bean-class>org.apache.myfaces.el.E</managed-bean-class>
         <managed-bean-scope>session</managed-bean-scope>
     </managed-bean>
 

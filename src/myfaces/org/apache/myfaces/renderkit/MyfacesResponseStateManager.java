@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.sourceforge.myfaces.renderkit;
+package org.apache.myfaces.renderkit;
 
 import javax.faces.application.StateManager;
 import javax.faces.context.FacesContext;
@@ -37,8 +37,8 @@ public abstract class MyfacesResponseStateManager
 
     /**
      * Writes url parameters with the state info to be saved.
-     * {@link net.sourceforge.myfaces.application.MyfacesStateManager} delegates calls to
-     * {@link net.sourceforge.myfaces.application.MyfacesStateManager#writeState} to this method.
+     * {@link org.apache.myfaces.application.MyfacesStateManager} delegates calls to
+     * {@link org.apache.myfaces.application.MyfacesStateManager#writeState} to this method.
      */
     public abstract void writeStateAsUrlParams(FacesContext facescontext,
                                                StateManager.SerializedView serializedview) throws IOException;

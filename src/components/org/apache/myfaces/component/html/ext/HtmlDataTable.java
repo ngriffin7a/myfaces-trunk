@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.sourceforge.myfaces.component.html.ext;
+package org.apache.myfaces.component.html.ext;
 
-import net.sourceforge.myfaces.component.UserRoleAware;
-import net.sourceforge.myfaces.component.UserRoleUtils;
+import org.apache.myfaces.component.UserRoleAware;
+import org.apache.myfaces.component.UserRoleUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -39,6 +39,9 @@ import java.util.Map;
  * @author Manfred Geiler
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.15  2004/10/13 11:50:56  matze
+ * renamed packages to org.apache
+ *
  * Revision 1.14  2004/09/13 15:59:44  manolito
  * fixed problems with nested UIData and HtmlDataTable components
  *
@@ -573,7 +576,7 @@ public class HtmlDataTable
 
     //------------------ GENERATED CODE BEGIN (do not modify!) --------------------
 
-    public static final String COMPONENT_TYPE = "net.sourceforge.myfaces.HtmlDataTable";
+    public static final String COMPONENT_TYPE = "org.apache.myfaces.HtmlDataTable";
     private static final boolean DEFAULT_PRESERVEDATAMODEL = false;
     private static final boolean DEFAULT_PRESERVESORT = false;
     private static final boolean DEFAULT_RENDEREDIFEMPTY = true;

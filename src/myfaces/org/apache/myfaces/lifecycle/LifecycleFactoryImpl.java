@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.sourceforge.myfaces.lifecycle;
+package org.apache.myfaces.lifecycle;
 
 import javax.faces.FacesException;
 import javax.faces.lifecycle.Lifecycle;

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.sourceforge.myfaces.custom.datalist;
+package org.apache.myfaces.custom.datalist;
 
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIData;
@@ -100,8 +100,8 @@ public class HtmlDataList
 
     //------------------ GENERATED CODE BEGIN (do not modify!) --------------------
 
-    public static final String COMPONENT_TYPE = "net.sourceforge.myfaces.HtmlDataList";
-    private static final String DEFAULT_RENDERER_TYPE = "net.sourceforge.myfaces.List";
+    public static final String COMPONENT_TYPE = "org.apache.myfaces.HtmlDataList";
+    private static final String DEFAULT_RENDERER_TYPE = "org.apache.myfaces.List";
 
     private String _layout = null;
     private String _rowIndexVar = null;

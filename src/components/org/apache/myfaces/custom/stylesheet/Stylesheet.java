@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.sourceforge.myfaces.custom.stylesheet;
+package org.apache.myfaces.custom.stylesheet;
 
 import javax.faces.component.UIOutput;
 import javax.faces.context.FacesContext;
@@ -27,6 +27,9 @@ import org.apache.commons.logging.LogFactory;
  * @author mwessendorf (latest modification by $Author$) 
  * @version $Revision$ $Date$ 
  * $Log$
+ * Revision 1.3  2004/10/13 11:50:58  matze
+ * renamed packages to org.apache
+ *
  * Revision 1.2  2004/08/22 10:36:50  mwessendorf
  * typo
  *
@@ -37,9 +40,9 @@ import org.apache.commons.logging.LogFactory;
 
 public class Stylesheet extends UIOutput {
 
-	public static final String COMPONENT_TYPE = "net.sourceforge.myfaces.Stylesheet";
+	public static final String COMPONENT_TYPE = "org.apache.myfaces.Stylesheet";
 	public static final String COMPONENT_FAMILY = "javax.faces.Output";
-	private static final String DEFAULT_RENDERER_TYPE = "net.sourceforge.myfaces.Stylesheet";
+	private static final String DEFAULT_RENDERER_TYPE = "org.apache.myfaces.Stylesheet";
 	private static final Log log = LogFactory.getLog(Stylesheet.class);
 	
     private String _path = null;

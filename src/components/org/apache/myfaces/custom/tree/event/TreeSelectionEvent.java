@@ -13,21 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.sourceforge.myfaces.custom.tree.event;
+package org.apache.myfaces.custom.tree.event;
 
 import javax.faces.event.FacesEvent;
 import javax.faces.event.FacesListener;
 import javax.faces.component.UIComponent;
 
-import net.sourceforge.myfaces.custom.tree.model.TreePath;
+import org.apache.myfaces.custom.tree.model.TreePath;
 
 
 /**
- * Event fired by {@link net.sourceforge.myfaces.custom.tree.HtmlTree} on selection changes.
+ * Event fired by {@link org.apache.myfaces.custom.tree.HtmlTree} on selection changes.
  *
  * @author <a href="mailto:oliver@rossmueller.com">Oliver Rossmueller</a>
  * @version $Revision$ $Date$
  *          $Log$
+ *          Revision 1.4  2004/10/13 11:50:58  matze
+ *          renamed packages to org.apache
+ *
  *          Revision 1.3  2004/07/01 21:53:08  mwessendorf
  *          ASF switch
  *

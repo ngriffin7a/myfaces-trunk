@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.sourceforge.myfaces.codegen.component;
+package org.apache.myfaces.codegen.component;
 
-import net.sourceforge.myfaces.codegen.CodeGenerator;
+import org.apache.myfaces.codegen.CodeGenerator;
 import org.apache.velocity.VelocityContext;
 
 import java.io.*;

@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.sourceforge.myfaces.custom.calendar;
+package org.apache.myfaces.custom.calendar;
 
-import net.sourceforge.myfaces.component.UserRoleUtils;
+import org.apache.myfaces.component.UserRoleUtils;
 
 import javax.faces.component.html.HtmlInputText;
 import javax.faces.context.FacesContext;
@@ -32,9 +32,9 @@ public class HtmlInputCalendar
 
     //------------------ GENERATED CODE BEGIN (do not modify!) --------------------
 
-    public static final String COMPONENT_TYPE = "net.sourceforge.myfaces.HtmlInputCalendar";
+    public static final String COMPONENT_TYPE = "org.apache.myfaces.HtmlInputCalendar";
     public static final String COMPONENT_FAMILY = "javax.faces.Input";
-    private static final String DEFAULT_RENDERER_TYPE = "net.sourceforge.myfaces.Calendar";
+    private static final String DEFAULT_RENDERER_TYPE = "org.apache.myfaces.Calendar";
 
     private String _monthYearRowClass = null;
     private String _weekRowClass = null;

@@ -13,15 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.sourceforge.myfaces.config.impl.digester;
+package org.apache.myfaces.config.impl.digester;
 
 import java.io.IOException;
 import java.io.InputStream;
 import javax.faces.context.ExternalContext;
 
-import net.sourceforge.myfaces.config.FacesConfigUnmarshaller;
-import net.sourceforge.myfaces.config.impl.digester.elements.*;
-import net.sourceforge.myfaces.config.impl.FacesConfigEntityResolver;
+import org.apache.myfaces.config.FacesConfigUnmarshaller;
+import org.apache.myfaces.config.impl.digester.elements.*;
+import org.apache.myfaces.config.impl.FacesConfigEntityResolver;
 import org.apache.commons.digester.Digester;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -31,6 +31,9 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:oliver@rossmueller.com">Oliver Rossmueller</a>
  *
  * $Log$
+ * Revision 1.4  2004/10/13 11:50:59  matze
+ * renamed packages to org.apache
+ *
  * Revision 1.3  2004/07/13 23:11:12  o_rossmueller
  * fix #990302: set redirect correctly for navigation case (+ test in ConfigurationTest)
  *

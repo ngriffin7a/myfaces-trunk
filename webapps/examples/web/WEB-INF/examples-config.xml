@@ -12,25 +12,25 @@
 
     <managed-bean>
         <managed-bean-name>calcForm</managed-bean-name>
-        <managed-bean-class>net.sourceforge.myfaces.examples.example1.CalcForm</managed-bean-class>
+        <managed-bean-class>org.apache.myfaces.examples.example1.CalcForm</managed-bean-class>
         <managed-bean-scope>request</managed-bean-scope>
     </managed-bean>
 
     <managed-bean>
         <managed-bean-name>validateForm</managed-bean-name>
-        <managed-bean-class>net.sourceforge.myfaces.examples.validate.ValidateForm</managed-bean-class>
+        <managed-bean-class>org.apache.myfaces.examples.validate.ValidateForm</managed-bean-class>
         <managed-bean-scope>request</managed-bean-scope>
     </managed-bean>
 
     <managed-bean>
         <managed-bean-name>ucaseForm</managed-bean-name>
-        <managed-bean-class>net.sourceforge.myfaces.examples.example1.UCaseForm</managed-bean-class>
+        <managed-bean-class>org.apache.myfaces.examples.example1.UCaseForm</managed-bean-class>
         <managed-bean-scope>request</managed-bean-scope>
     </managed-bean>
 
     <managed-bean>
         <managed-bean-name>validationController</managed-bean-name>
-        <managed-bean-class>net.sourceforge.myfaces.examples.example1.ValidationController</managed-bean-class>
+        <managed-bean-class>org.apache.myfaces.examples.example1.ValidationController</managed-bean-class>
         <managed-bean-scope>application</managed-bean-scope>
     </managed-bean>
 
@@ -39,7 +39,7 @@
 
     <managed-bean>
         <managed-bean-name>q_form</managed-bean-name>
-        <managed-bean-class>net.sourceforge.myfaces.examples.example2.QuotationForm</managed-bean-class>
+        <managed-bean-class>org.apache.myfaces.examples.example2.QuotationForm</managed-bean-class>
         <managed-bean-scope>request</managed-bean-scope>
     </managed-bean>
 
@@ -48,7 +48,7 @@
 
     <managed-bean>
         <managed-bean-name>carconf</managed-bean-name>
-        <managed-bean-class>net.sourceforge.myfaces.examples.common.CarConfigurator</managed-bean-class>
+        <managed-bean-class>org.apache.myfaces.examples.common.CarConfigurator</managed-bean-class>
         <managed-bean-scope>request</managed-bean-scope>
     </managed-bean>
 
@@ -57,7 +57,7 @@
 
     <managed-bean>
         <managed-bean-name>countryList</managed-bean-name>
-        <managed-bean-class>net.sourceforge.myfaces.examples.listexample.SimpleCountryList</managed-bean-class>
+        <managed-bean-class>org.apache.myfaces.examples.listexample.SimpleCountryList</managed-bean-class>
         <managed-bean-scope>session</managed-bean-scope>
     </managed-bean>
 
@@ -66,7 +66,7 @@
 
     <managed-bean>
         <managed-bean-name>list</managed-bean-name>
-        <managed-bean-class>net.sourceforge.myfaces.examples.listexample.SimpleSortableCarList</managed-bean-class>
+        <managed-bean-class>org.apache.myfaces.examples.listexample.SimpleSortableCarList</managed-bean-class>
         <managed-bean-scope>request</managed-bean-scope>
     </managed-bean>
 
@@ -74,7 +74,7 @@
 
     <managed-bean>
         <managed-bean-name>calendar</managed-bean-name>
-        <managed-bean-class>net.sourceforge.myfaces.examples.calendarexample.DateHolder</managed-bean-class>
+        <managed-bean-class>org.apache.myfaces.examples.calendarexample.DateHolder</managed-bean-class>
         <managed-bean-scope>request</managed-bean-scope>
     </managed-bean>
 
@@ -82,7 +82,7 @@
 
     <managed-bean>
         <managed-bean-name>countryForm</managed-bean-name>
-        <managed-bean-class>net.sourceforge.myfaces.examples.listexample.SimpleCountryForm</managed-bean-class>
+        <managed-bean-class>org.apache.myfaces.examples.listexample.SimpleCountryForm</managed-bean-class>
         <managed-bean-scope>request</managed-bean-scope>
     </managed-bean>
     
@@ -112,7 +112,7 @@
 
     <managed-bean>
         <managed-bean-name>fileUploadForm</managed-bean-name>
-        <managed-bean-class>net.sourceforge.myfaces.examples.misc.FileUploadForm</managed-bean-class>
+        <managed-bean-class>org.apache.myfaces.examples.misc.FileUploadForm</managed-bean-class>
         <managed-bean-scope>request</managed-bean-scope>
     </managed-bean>
 
@@ -121,7 +121,7 @@
 
     <managed-bean>
         <managed-bean-name>globalOptions</managed-bean-name>
-        <managed-bean-class>net.sourceforge.myfaces.examples.misc.GlobalOptions</managed-bean-class>
+        <managed-bean-class>org.apache.myfaces.examples.misc.GlobalOptions</managed-bean-class>
         <managed-bean-scope>application</managed-bean-scope>
         <managed-property>
             <property-name>pageLayout</property-name>
@@ -131,13 +131,13 @@
 
     <managed-bean>
         <managed-bean-name>optionsForm</managed-bean-name>
-        <managed-bean-class>net.sourceforge.myfaces.examples.misc.OptionsForm</managed-bean-class>
+        <managed-bean-class>org.apache.myfaces.examples.misc.OptionsForm</managed-bean-class>
         <managed-bean-scope>request</managed-bean-scope>
     </managed-bean>
 
     <managed-bean>
         <managed-bean-name>optionsCtrl</managed-bean-name>
-        <managed-bean-class>net.sourceforge.myfaces.examples.misc.OptionsController</managed-bean-class>
+        <managed-bean-class>org.apache.myfaces.examples.misc.OptionsController</managed-bean-class>
         <managed-bean-scope>application</managed-bean-scope>
     </managed-bean>
 
@@ -145,7 +145,7 @@
 
     <managed-bean>
         <managed-bean-name>scrollerList</managed-bean-name>
-        <managed-bean-class>net.sourceforge.myfaces.examples.listexample.DataScrollerList</managed-bean-class>
+        <managed-bean-class>org.apache.myfaces.examples.listexample.DataScrollerList</managed-bean-class>
         <managed-bean-scope>application</managed-bean-scope>
     </managed-bean>
 
@@ -153,7 +153,7 @@
 
     <managed-bean>
         <managed-bean-name>navigationMenu</managed-bean-name>
-        <managed-bean-class>net.sourceforge.myfaces.examples.misc.NavigationMenu</managed-bean-class>
+        <managed-bean-class>org.apache.myfaces.examples.misc.NavigationMenu</managed-bean-class>
         <managed-bean-scope>application</managed-bean-scope>
     </managed-bean>
 
@@ -161,7 +161,7 @@
 
     <managed-bean>
         <managed-bean-name>tabbedPaneBean</managed-bean-name>
-        <managed-bean-class>net.sourceforge.myfaces.examples.misc.TabbedPaneBean</managed-bean-class>
+        <managed-bean-class>org.apache.myfaces.examples.misc.TabbedPaneBean</managed-bean-class>
         <managed-bean-scope>request</managed-bean-scope>
     </managed-bean>
 

@@ -13,16 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.sourceforge.myfaces.custom.navmenu.jscookmenu;
+package org.apache.myfaces.custom.navmenu.jscookmenu;
 
-import net.sourceforge.myfaces.custom.navmenu.NavigationMenuItem;
-import net.sourceforge.myfaces.custom.navmenu.NavigationMenuUtils;
-import net.sourceforge.myfaces.el.SimpleActionMethodBinding;
-import net.sourceforge.myfaces.renderkit.RendererUtils;
-import net.sourceforge.myfaces.renderkit.html.HtmlRenderer;
-import net.sourceforge.myfaces.renderkit.html.util.DummyFormResponseWriter;
-import net.sourceforge.myfaces.renderkit.html.util.DummyFormUtils;
-import net.sourceforge.myfaces.renderkit.html.util.JavascriptUtils;
+import org.apache.myfaces.custom.navmenu.NavigationMenuItem;
+import org.apache.myfaces.custom.navmenu.NavigationMenuUtils;
+import org.apache.myfaces.el.SimpleActionMethodBinding;
+import org.apache.myfaces.renderkit.RendererUtils;
+import org.apache.myfaces.renderkit.html.HtmlRenderer;
+import org.apache.myfaces.renderkit.html.util.DummyFormResponseWriter;
+import org.apache.myfaces.renderkit.html.util.DummyFormUtils;
+import org.apache.myfaces.renderkit.html.util.JavascriptUtils;
 
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
@@ -38,6 +38,9 @@ import java.util.Map;
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  *          $Log$
+ *          Revision 1.9  2004/10/13 11:50:57  matze
+ *          renamed packages to org.apache
+ *
  *          Revision 1.8  2004/10/05 15:11:43  manolito
  *          #1020264 x:navigationMenuItem icon problem
  *

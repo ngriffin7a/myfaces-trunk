@@ -13,11 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.sourceforge.myfaces.custom.tree.taglib;
+package org.apache.myfaces.custom.tree.taglib;
 
-import net.sourceforge.myfaces.util.ClassUtils;
-import net.sourceforge.myfaces.custom.tree.HtmlTree;
-import net.sourceforge.myfaces.custom.tree.IconProvider;
+import org.apache.myfaces.util.ClassUtils;
+import org.apache.myfaces.custom.tree.HtmlTree;
+import org.apache.myfaces.custom.tree.IconProvider;
 
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
@@ -32,6 +32,9 @@ import javax.servlet.jsp.tagext.TagSupport;
  * @author <a href="mailto:oliver@rossmueller.com">Oliver Rossmueller</a>
  * @version $Revision$ $Date$
  *          $Log$
+ *          Revision 1.3  2004/10/13 11:50:58  matze
+ *          renamed packages to org.apache
+ *
  *          Revision 1.2  2004/07/01 21:53:06  mwessendorf
  *          ASF switch
  *

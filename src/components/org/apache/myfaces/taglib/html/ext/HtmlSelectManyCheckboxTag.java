@@ -13,11 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.sourceforge.myfaces.taglib.html.ext;
+package org.apache.myfaces.taglib.html.ext;
 
-import net.sourceforge.myfaces.component.UserRoleAware;
-import net.sourceforge.myfaces.component.html.ext.HtmlSelectManyCheckbox;
-import net.sourceforge.myfaces.taglib.html.HtmlSelectManyCheckboxTagBase;
+import org.apache.myfaces.component.UserRoleAware;
+import org.apache.myfaces.component.html.ext.HtmlSelectManyCheckbox;
+import org.apache.myfaces.taglib.html.HtmlSelectManyCheckboxTagBase;
 
 import javax.faces.component.UIComponent;
 
@@ -26,6 +26,9 @@ import javax.faces.component.UIComponent;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.5  2004/10/13 11:50:59  matze
+ * renamed packages to org.apache
+ *
  * Revision 1.4  2004/07/01 21:53:06  mwessendorf
  * ASF switch
  *
@@ -49,7 +52,7 @@ public class HtmlSelectManyCheckboxTag
 
     public String getRendererType()
     {
-        return "net.sourceforge.myfaces.Checkbox";
+        return "org.apache.myfaces.Checkbox";
     }
 
     private String _enabledOnUserRole;

@@ -1,1 +1,1 @@
-net.sourceforge.myfaces.config.TestApplicationFactory
+org.apache.myfaces.config.TestApplicationFactory

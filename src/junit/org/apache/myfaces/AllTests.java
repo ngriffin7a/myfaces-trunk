@@ -13,16 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.sourceforge.myfaces;
+package org.apache.myfaces;
 
 import junit.framework.Test;
 import junit.framework.TestSuite;
-import net.sourceforge.myfaces.application.ApplicationTest;
-import net.sourceforge.myfaces.context.servlet.ApplicationMapTest;
-import net.sourceforge.myfaces.context.servlet.CookieMapTest;
-import net.sourceforge.myfaces.el.MethodBindingTest;
-import net.sourceforge.myfaces.el.SetValueBindingTest;
-import net.sourceforge.myfaces.el.ValueBindingTest;
+import org.apache.myfaces.application.ApplicationTest;
+import org.apache.myfaces.context.servlet.ApplicationMapTest;
+import org.apache.myfaces.context.servlet.CookieMapTest;
+import org.apache.myfaces.el.MethodBindingTest;
+import org.apache.myfaces.el.SetValueBindingTest;
+import org.apache.myfaces.el.ValueBindingTest;
 
 
 public class AllTests {
@@ -33,7 +33,7 @@ public class AllTests {
 
     public static Test suite() {
         TestSuite suite = new TestSuite(
-                "Test for net.sourceforge.myfaces.application");
+                "Test for org.apache.myfaces.application");
         
         //$JUnit-BEGIN$
         suite.addTestSuite(ApplicationTest.class);

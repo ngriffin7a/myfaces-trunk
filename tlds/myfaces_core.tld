@@ -44,7 +44,7 @@
 -->
     <tag>
         <name>actionListener</name>
-        <tag-class>net.sourceforge.myfaces.taglib.core.ActionListenerTag</tag-class>
+        <tag-class>org.apache.myfaces.taglib.core.ActionListenerTag</tag-class>
         <body-content>empty</body-content>
         <attribute>
             <name>type</name>
@@ -81,7 +81,7 @@
 -->
     <tag>
         <name>convertDateTime</name>
-        <tag-class>net.sourceforge.myfaces.taglib.core.ConvertDateTimeTag</tag-class>
+        <tag-class>org.apache.myfaces.taglib.core.ConvertDateTimeTag</tag-class>
         <body-content>empty</body-content>
         <attribute>
             <name>dateStyle</name>
@@ -135,7 +135,7 @@
 
     <tag>
         <name>convertNumber</name>
-        <tag-class>net.sourceforge.myfaces.taglib.core.ConvertNumberTag</tag-class>
+        <tag-class>org.apache.myfaces.taglib.core.ConvertNumberTag</tag-class>
         <body-content>empty</body-content>
         <attribute>
             <name>currencyCode</name>
@@ -230,7 +230,7 @@
 -->
     <tag>
         <name>loadBundle</name>
-        <tag-class>net.sourceforge.myfaces.taglib.core.LoadBundleTag</tag-class>
+        <tag-class>org.apache.myfaces.taglib.core.LoadBundleTag</tag-class>
         <body-content>empty</body-content>
         <attribute>
             <name>basename</name>
@@ -251,7 +251,7 @@
 -->
     <tag>
         <name>param</name>
-        <tag-class>net.sourceforge.myfaces.taglib.core.ParamTag</tag-class>
+        <tag-class>org.apache.myfaces.taglib.core.ParamTag</tag-class>
         <body-content>empty</body-content>
         &ui_parameter_attributes;
     </tag>
@@ -263,7 +263,7 @@
 -->
     <tag>
         <name>selectItem</name>
-        <tag-class>net.sourceforge.myfaces.taglib.core.SelectItemTag</tag-class>
+        <tag-class>org.apache.myfaces.taglib.core.SelectItemTag</tag-class>
         <body-content>empty</body-content>
         &ui_select_item_attributes;
     </tag>
@@ -275,7 +275,7 @@
 -->
     <tag>
         <name>selectItems</name>
-        <tag-class>net.sourceforge.myfaces.taglib.core.SelectItemsTag</tag-class>
+        <tag-class>org.apache.myfaces.taglib.core.SelectItemsTag</tag-class>
         <body-content>empty</body-content>
         &ui_select_items_attributes;
     </tag>
@@ -287,7 +287,7 @@
 -->
     <tag>
         <name>subview</name>
-        <tag-class>net.sourceforge.myfaces.taglib.core.SubviewTag</tag-class>
+        <tag-class>org.apache.myfaces.taglib.core.SubviewTag</tag-class>
         <body-content>JSP</body-content>
         <!-- attribute id is required! -->
         <attribute>
@@ -320,21 +320,21 @@
 -->
     <tag>
       <name>validateDoubleRange</name>
-      <tag-class>net.sourceforge.myfaces.taglib.core.ValidateDoubleRangeTag</tag-class>
+      <tag-class>org.apache.myfaces.taglib.core.ValidateDoubleRangeTag</tag-class>
       <body-content>empty</body-content>
       &validator_min_max_attributes;
     </tag>
 
     <tag>
       <name>validateLength</name>
-      <tag-class>net.sourceforge.myfaces.taglib.core.ValidateLengthTag</tag-class>
+      <tag-class>org.apache.myfaces.taglib.core.ValidateLengthTag</tag-class>
       <body-content>empty</body-content>
       &validator_min_max_attributes;
     </tag>
 
     <tag>
       <name>validateLongRange</name>
-      <tag-class>net.sourceforge.myfaces.taglib.core.ValidateLongRangeTag</tag-class>
+      <tag-class>org.apache.myfaces.taglib.core.ValidateLongRangeTag</tag-class>
       <body-content>empty</body-content>
       &validator_min_max_attributes;
     </tag>
@@ -358,7 +358,7 @@
 -->
     <tag>
         <name>valueChangeListener</name>
-        <tag-class>net.sourceforge.myfaces.taglib.core.ValueChangeListenerTag</tag-class>
+        <tag-class>org.apache.myfaces.taglib.core.ValueChangeListenerTag</tag-class>
         <body-content>empty</body-content>
         <attribute>
             <name>type</name>
@@ -374,7 +374,7 @@
 -->
     <tag>
         <name>verbatim</name>
-        <tag-class>net.sourceforge.myfaces.taglib.core.VerbatimTag</tag-class>
+        <tag-class>org.apache.myfaces.taglib.core.VerbatimTag</tag-class>
         <body-content>JSP</body-content>
         <attribute>
             <name>escape</name>
@@ -391,7 +391,7 @@
 -->
     <tag>
         <name>view</name>
-        <tag-class>net.sourceforge.myfaces.taglib.core.ViewTag</tag-class>
+        <tag-class>org.apache.myfaces.taglib.core.ViewTag</tag-class>
         <body-content>JSP</body-content>
         <attribute>
             <name>locale</name>

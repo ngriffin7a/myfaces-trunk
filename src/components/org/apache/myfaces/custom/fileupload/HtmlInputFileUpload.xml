@@ -3,11 +3,11 @@
   "-//MyFaces//DTD MyFaces component def 1.0//EN"
   "http://myfaces.sourceforge.net/dtd/Component.dtd">
 <component generateUserRoleMethods="true" >
-    <component-class>net.sourceforge.myfaces.custom.fileupload.HtmlInputFileUpload</component-class>
+    <component-class>org.apache.myfaces.custom.fileupload.HtmlInputFileUpload</component-class>
     <base-class>javax.faces.component.html.HtmlInputText</base-class>
-    <component-type>net.sourceforge.myfaces.HtmlInputFileUpload</component-type>
+    <component-type>org.apache.myfaces.HtmlInputFileUpload</component-type>
     <component-family>javax.faces.Input</component-family>
-    <renderer-type>net.sourceforge.myfaces.FileUpload</renderer-type>
+    <renderer-type>org.apache.myfaces.FileUpload</renderer-type>
     <field>
         <name>accept</name>
         <type>java.lang.String</type>

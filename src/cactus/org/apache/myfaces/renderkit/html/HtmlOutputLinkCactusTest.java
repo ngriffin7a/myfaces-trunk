@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.sourceforge.myfaces.renderkit.html;
+package org.apache.myfaces.renderkit.html;
 
 import com.meterware.httpunit.WebLink;
 import com.meterware.httpunit.WebResponse;
@@ -26,6 +26,9 @@ import javax.servlet.RequestDispatcher;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.3  2004/10/13 11:50:56  matze
+ * renamed packages to org.apache
+ *
  * Revision 1.2  2004/07/01 21:57:56  mwessendorf
  * ASF switch
  *

@@ -24,13 +24,13 @@
     <!-- Faces Servlet -->
     <servlet>
         <servlet-name>Faces Servlet</servlet-name>
-        <servlet-class>net.sourceforge.myfaces.webapp.MyFacesServlet</servlet-class>
+        <servlet-class>org.apache.myfaces.webapp.MyFacesServlet</servlet-class>
     </servlet>
 
     <!-- Dummy Servlet -->
     <servlet>
         <servlet-name>dummy</servlet-name>
-        <servlet-class>net.sourceforge.myfaces.webapp.DummyServlet</servlet-class>
+        <servlet-class>org.apache.myfaces.webapp.DummyServlet</servlet-class>
     </servlet>
 
     <!-- virtual path mapping -->

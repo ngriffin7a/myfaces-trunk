@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.sourceforge.myfaces.custom.tabbedpane;
+package org.apache.myfaces.custom.tabbedpane;
 
 import javax.faces.component.html.HtmlPanelGroup;
 import javax.faces.context.FacesContext;
@@ -27,6 +27,9 @@ import javax.faces.event.FacesEvent;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.7  2004/10/13 11:50:58  matze
+ * renamed packages to org.apache
+ *
  * Revision 1.6  2004/08/09 07:28:20  manolito
  * activeTabStyleClass, inactiveTabStyleClass, activeSubStyleClass, inactiveSubStyleClass, tagContentStyleClass via codegen
  *
@@ -109,9 +112,9 @@ public class HtmlPanelTabbedPane
 
     //------------------ GENERATED CODE BEGIN (do not modify!) --------------------
 
-    public static final String COMPONENT_TYPE = "net.sourceforge.myfaces.HtmlPanelTabbedPane";
+    public static final String COMPONENT_TYPE = "org.apache.myfaces.HtmlPanelTabbedPane";
     public static final String COMPONENT_FAMILY = "javax.faces.Panel";
-    private static final String DEFAULT_RENDERER_TYPE = "net.sourceforge.myfaces.TabbedPane";
+    private static final String DEFAULT_RENDERER_TYPE = "org.apache.myfaces.TabbedPane";
     private static final int DEFAULT_SELECTEDINDEX = 0;
 
     private Integer _selectedIndex = null;

@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.sourceforge.myfaces.custom.creditcardvalidator;
+package org.apache.myfaces.custom.creditcardvalidator;
 
-import net.sourceforge.myfaces.util.MessageUtils;
+import org.apache.myfaces.util.MessageUtils;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.component.StateHolder;
@@ -28,6 +28,9 @@ import javax.faces.validator.ValidatorException;
  * @author mwessendorf (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.5  2004/10/13 11:50:57  matze
+ * renamed packages to org.apache
+ *
  * Revision 1.4  2004/07/01 21:53:08  mwessendorf
  * ASF switch
  *
@@ -47,13 +50,13 @@ public class CreditCardValidator implements Validator,StateHolder {
 	/**
 	 * <p>The standard converter id for this converter.</p>
 	 */
-	public static final String 	VALIDATOR_ID 	   = "net.sourceforge.myfaces.validator.CreditCard";
+	public static final String 	VALIDATOR_ID 	   = "org.apache.myfaces.validator.CreditCard";
 
 	/**
 	 * <p>The message identifier of the {@link FacesMessage} to be created if
 	 * the creditcard check fails.</p>
 	 */
-	public static final String CREDITCARD_MESSAGE_ID = "net.sourceforge.myfaces.Creditcard.INVALID";	
+	public static final String CREDITCARD_MESSAGE_ID = "org.apache.myfaces.Creditcard.INVALID";	
 	
 	//private DEFAULT_VALUES
 	private static final boolean DEFAULT_AMEX = true;

@@ -13,12 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.sourceforge.myfaces.application.jsp;
+package org.apache.myfaces.application.jsp;
 
-import net.sourceforge.myfaces.MyFacesBaseTest;
-import net.sourceforge.myfaces.context.servlet.ServletContextMockImpl;
-import net.sourceforge.myfaces.context.servlet.ServletFacesContextImpl;
-import net.sourceforge.myfaces.context.servlet.ServletRequestMockImpl;
+import org.apache.myfaces.MyFacesBaseTest;
+import org.apache.myfaces.context.servlet.ServletContextMockImpl;
+import org.apache.myfaces.context.servlet.ServletFacesContextImpl;
+import org.apache.myfaces.context.servlet.ServletRequestMockImpl;
 
 import javax.servlet.ServletContext;
 
@@ -31,7 +31,7 @@ public class JspViewHandlerImplTest
 {
     private static final String WEB_XML_SYSTEM_ID = "/WEB-INF/web.xml";
     private static final String WEB_XML_PATH_TEST = 
-        "net.sourceforge.myfaces.resource".replace('.','/') + "/servletmapping_web.xml";
+        "org.apache.myfaces.resource".replace('.','/') + "/servletmapping_web.xml";
 
     public JspViewHandlerImplTest(String name)
     {

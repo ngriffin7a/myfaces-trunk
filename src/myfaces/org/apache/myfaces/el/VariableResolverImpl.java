@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.sourceforge.myfaces.el;
+package org.apache.myfaces.el;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -23,9 +23,9 @@ import javax.faces.context.FacesContext;
 import javax.faces.el.ReferenceSyntaxException;
 import javax.faces.el.VariableResolver;
 
-import net.sourceforge.myfaces.config.ManagedBeanBuilder;
-import net.sourceforge.myfaces.config.RuntimeConfig;
-import net.sourceforge.myfaces.config.element.ManagedBean;
+import org.apache.myfaces.config.ManagedBeanBuilder;
+import org.apache.myfaces.config.RuntimeConfig;
+import org.apache.myfaces.config.element.ManagedBean;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -36,6 +36,9 @@ import org.apache.commons.logging.LogFactory;
  * @author Anton Koinov
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.33  2004/10/13 11:51:00  matze
+ * renamed packages to org.apache
+ *
  * Revision 1.32  2004/07/27 06:28:34  dave0000
  * fix issue with getType of literal expressions (and other improvements)
  *

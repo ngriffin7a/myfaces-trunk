@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.sourceforge.myfaces.el;
+package org.apache.myfaces.el;
 
 import org.apache.commons.beanutils.MethodUtils;
 import org.apache.commons.logging.Log;
@@ -40,6 +40,9 @@ import java.util.Map;
  * @author Anton Koinov
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.29  2004/10/13 11:51:00  matze
+ * renamed packages to org.apache
+ *
  * Revision 1.28  2004/09/20 14:35:48  dave0000
  * bug 1030875:
  * getType() should return null if type cannot be determined

@@ -13,11 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.sourceforge.myfaces.taglib.html.ext;
+package org.apache.myfaces.taglib.html.ext;
 
-import net.sourceforge.myfaces.component.UserRoleAware;
-import net.sourceforge.myfaces.component.html.ext.HtmlInputText;
-import net.sourceforge.myfaces.taglib.html.HtmlInputTextTagBase;
+import org.apache.myfaces.component.UserRoleAware;
+import org.apache.myfaces.component.html.ext.HtmlInputText;
+import org.apache.myfaces.taglib.html.HtmlInputTextTagBase;
 
 import javax.faces.component.UIComponent;
 
@@ -25,6 +25,9 @@ import javax.faces.component.UIComponent;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.6  2004/10/13 11:50:59  matze
+ * renamed packages to org.apache
+ *
  * Revision 1.5  2004/07/01 21:53:06  mwessendorf
  * ASF switch
  *
@@ -51,7 +54,7 @@ public class HtmlInputTextTag
 
     public String getRendererType()
     {
-        return "net.sourceforge.myfaces.Text";
+        return "org.apache.myfaces.Text";
     }
 
     private String _enabledOnUserRole;

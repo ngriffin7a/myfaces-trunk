@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.sourceforge.myfaces.examples.util;
+package org.apache.myfaces.examples.util;
 
 import javax.faces.context.FacesContext;
 import java.util.Enumeration;
@@ -27,7 +27,7 @@ import java.util.ResourceBundle;
 public class ExampleMessagesResourceBundle
     extends ResourceBundle
 {
-    private static String BUNDLE_NAME = "net.sourceforge.myfaces.examples.resource.example_messages";
+    private static String BUNDLE_NAME = "org.apache.myfaces.examples.resource.example_messages";
 
     protected ResourceBundle getMyBundle()
     {

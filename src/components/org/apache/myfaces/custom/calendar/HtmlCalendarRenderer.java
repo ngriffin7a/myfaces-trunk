@@ -13,14 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.sourceforge.myfaces.custom.calendar;
+package org.apache.myfaces.custom.calendar;
 
-import net.sourceforge.myfaces.component.html.ext.HtmlInputText;
-import net.sourceforge.myfaces.renderkit.JSFAttr;
-import net.sourceforge.myfaces.renderkit.RendererUtils;
-import net.sourceforge.myfaces.renderkit.html.HTML;
-import net.sourceforge.myfaces.renderkit.html.HtmlRenderer;
-import net.sourceforge.myfaces.renderkit.html.HtmlRendererUtils;
+import org.apache.myfaces.component.html.ext.HtmlInputText;
+import org.apache.myfaces.renderkit.JSFAttr;
+import org.apache.myfaces.renderkit.RendererUtils;
+import org.apache.myfaces.renderkit.html.HTML;
+import org.apache.myfaces.renderkit.html.HtmlRenderer;
+import org.apache.myfaces.renderkit.html.HtmlRendererUtils;
 
 import javax.faces.application.Application;
 import javax.faces.component.UIComponent;
@@ -43,6 +43,9 @@ import java.util.Locale;
 
 /**
  * $Log$
+ * Revision 1.9  2004/10/13 11:50:57  matze
+ * renamed packages to org.apache
+ *
  * Revision 1.8  2004/09/06 08:41:48  tinytoony
  * changes to calendar - rendering wrong weekday, check output-text behavior
  *

@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.sourceforge.myfaces.examples.common;
+package org.apache.myfaces.examples.common;
 
-import net.sourceforge.myfaces.examples.util.LocalizedSelectItem;
+import org.apache.myfaces.examples.util.LocalizedSelectItem;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.component.UIComponent;

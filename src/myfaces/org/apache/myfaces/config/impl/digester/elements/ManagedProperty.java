@@ -13,13 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.sourceforge.myfaces.config.impl.digester.elements;
+package org.apache.myfaces.config.impl.digester.elements;
 
 import javax.faces.context.FacesContext;
 import javax.faces.el.ValueBinding;
 import javax.faces.webapp.UIComponentTag;
 
-import net.sourceforge.myfaces.config.impl.digester.elements.ListEntries;
+import org.apache.myfaces.config.impl.digester.elements.ListEntries;
 
 
 /**
@@ -28,11 +28,14 @@ import net.sourceforge.myfaces.config.impl.digester.elements.ListEntries;
  *
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.3  2004/10/13 11:51:00  matze
+ * renamed packages to org.apache
+ *
  * Revision 1.2  2004/10/05 22:34:21  dave0000
  * bug 1021656 with related improvements
  *
  */
-public class ManagedProperty implements net.sourceforge.myfaces.config.element.ManagedProperty
+public class ManagedProperty implements org.apache.myfaces.config.element.ManagedProperty
 {
     private static final ValueBinding DUMMY_VB = new DummyValueBinding();
 
@@ -50,7 +53,7 @@ public class ManagedProperty implements net.sourceforge.myfaces.config.element.M
     }
 
 
-    public net.sourceforge.myfaces.config.element.MapEntries getMapEntries()
+    public org.apache.myfaces.config.element.MapEntries getMapEntries()
     {
         return _mapEntries;
     }
@@ -63,7 +66,7 @@ public class ManagedProperty implements net.sourceforge.myfaces.config.element.M
     }
 
 
-    public net.sourceforge.myfaces.config.element.ListEntries getListEntries()
+    public org.apache.myfaces.config.element.ListEntries getListEntries()
     {
         return _listEntries;
     }

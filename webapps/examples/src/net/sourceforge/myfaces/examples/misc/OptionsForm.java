@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.sourceforge.myfaces.examples.misc;
+package org.apache.myfaces.examples.misc;
 
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;

@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.sourceforge.myfaces.config.impl.digester.elements;
+package org.apache.myfaces.config.impl.digester.elements;
 
-import net.sourceforge.myfaces.util.ClassUtils;
+import org.apache.myfaces.util.ClassUtils;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -25,7 +25,7 @@ import java.util.List;
 /**
  * @author <a href="mailto:oliver@rossmueller.com">Oliver Rossmueller</a>
  */
-public class ManagedBean implements net.sourceforge.myfaces.config.element.ManagedBean
+public class ManagedBean implements org.apache.myfaces.config.element.ManagedBean
 {
 
     private String name;
@@ -53,7 +53,7 @@ public class ManagedBean implements net.sourceforge.myfaces.config.element.Manag
 
 
 
-    public net.sourceforge.myfaces.config.element.MapEntries getMapEntries()
+    public org.apache.myfaces.config.element.MapEntries getMapEntries()
     {
         return mapEntries;
     }
@@ -65,7 +65,7 @@ public class ManagedBean implements net.sourceforge.myfaces.config.element.Manag
     }
 
 
-    public net.sourceforge.myfaces.config.element.ListEntries getListEntries()
+    public org.apache.myfaces.config.element.ListEntries getListEntries()
     {
         return listEntries;
     }

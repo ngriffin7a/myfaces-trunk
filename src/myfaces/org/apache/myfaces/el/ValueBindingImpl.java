@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.sourceforge.myfaces.el;
+package org.apache.myfaces.el;
 
 import java.lang.reflect.Method;
 import java.util.List;
@@ -32,9 +32,9 @@ import javax.servlet.jsp.el.ELException;
 import javax.servlet.jsp.el.FunctionMapper;
 import javax.servlet.jsp.el.VariableResolver;
 
-import net.sourceforge.myfaces.config.RuntimeConfig;
-import net.sourceforge.myfaces.config.element.ManagedBean;
-import net.sourceforge.myfaces.util.BiLevelCacheMap;
+import org.apache.myfaces.config.RuntimeConfig;
+import org.apache.myfaces.config.element.ManagedBean;
+import org.apache.myfaces.util.BiLevelCacheMap;
 
 import org.apache.commons.el.ArraySuffix;
 import org.apache.commons.el.Coercions;
@@ -55,6 +55,9 @@ import org.apache.commons.logging.LogFactory;
  * @version $Revision$ $Date$
  * 
  * $Log$
+ * Revision 1.54  2004/10/13 11:51:00  matze
+ * renamed packages to org.apache
+ *
  * Revision 1.53  2004/10/01 12:01:05  dave0000
  * remove unneeded checks
  *

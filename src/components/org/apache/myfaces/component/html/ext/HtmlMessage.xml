@@ -3,10 +3,10 @@
   "-//MyFaces//DTD MyFaces component def 1.0//EN"
   "http://myfaces.sourceforge.net/dtd/Component.dtd">
 <component generateUserRoleMethods="true" >
-    <component-class>net.sourceforge.myfaces.component.html.ext.HtmlMessage</component-class>
+    <component-class>org.apache.myfaces.component.html.ext.HtmlMessage</component-class>
     <base-class>javax.faces.component.html.HtmlMessage</base-class>
-    <component-type>net.sourceforge.myfaces.HtmlMessage</component-type>
-    <renderer-type>net.sourceforge.myfaces.Message</renderer-type>
+    <component-type>org.apache.myfaces.HtmlMessage</component-type>
+    <renderer-type>org.apache.myfaces.Message</renderer-type>
     <field>
         <name>summaryFormat</name>
         <type>java.lang.String</type>

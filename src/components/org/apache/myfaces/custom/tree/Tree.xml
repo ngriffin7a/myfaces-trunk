@@ -3,11 +3,11 @@
   "-//MyFaces//DTD MyFaces component def 1.0//EN"
   "http://myfaces.sourceforge.net/dtd/Component.dtd">
 <component>
-    <component-class>net.sourceforge.myfaces.custom.tree.HtmlTree</component-class>
+    <component-class>org.apache.myfaces.custom.tree.HtmlTree</component-class>
     <base-class>javax.faces.component.html.HtmlForm</base-class>
-    <component-type>net.sourceforge.myfaces.HtmlTree</component-type>
-    <component-family>net.sourceforge.myfaces.HtmlTree</component-family>
-    <renderer-type>net.sourceforge.myfaces.HtmlTree</renderer-type>
+    <component-type>org.apache.myfaces.HtmlTree</component-type>
+    <component-family>org.apache.myfaces.HtmlTree</component-family>
+    <renderer-type>org.apache.myfaces.HtmlTree</renderer-type>
     <field>
         <name>value</name>
         <type>java.lang.String</type>

@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.sourceforge.myfaces.custom.navigation;
+package org.apache.myfaces.custom.navigation;
 
-import net.sourceforge.myfaces.component.html.ext.HtmlCommandLink;
+import org.apache.myfaces.component.html.ext.HtmlCommandLink;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -230,7 +230,7 @@ public class HtmlCommandNavigation
 
     //------------------ GENERATED CODE BEGIN (do not modify!) --------------------
 
-    public static final String COMPONENT_TYPE = "net.sourceforge.myfaces.HtmlCommandNavigation";
+    public static final String COMPONENT_TYPE = "org.apache.myfaces.HtmlCommandNavigation";
     public static final String COMPONENT_FAMILY = "javax.faces.Command";
     private static final String DEFAULT_RENDERER_TYPE = "javax.faces.Link";
 

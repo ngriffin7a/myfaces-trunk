@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.sourceforge.myfaces.custom.rssticker;
+package org.apache.myfaces.custom.rssticker;
 
 import java.io.IOException;
 
@@ -25,11 +25,11 @@ import javax.faces.context.ResponseWriter;
 import org.apache.commons.digester.rss.Channel;
 import org.apache.commons.digester.rss.Item;
 
-import net.sourceforge.myfaces.renderkit.RendererUtils;
-import net.sourceforge.myfaces.renderkit.html.HTML;
-import net.sourceforge.myfaces.renderkit.html.HtmlRenderer;
-import net.sourceforge.myfaces.renderkit.html.HtmlRendererUtils;
-import net.sourceforge.myfaces.util.MessageUtils;
+import org.apache.myfaces.renderkit.RendererUtils;
+import org.apache.myfaces.renderkit.html.HTML;
+import org.apache.myfaces.renderkit.html.HtmlRenderer;
+import org.apache.myfaces.renderkit.html.HtmlRendererUtils;
+import org.apache.myfaces.util.MessageUtils;
 
 /**
  * @author mwessendorf (latest modification by $Author$)
@@ -43,7 +43,7 @@ import net.sourceforge.myfaces.util.MessageUtils;
  */
 public class HtmlRssTickerRenderer extends HtmlRenderer {
 
-	private static final String 	NO_CONNECTION 	   = "net.sourceforge.myfaces.ticker.NOCONNECTION";
+	private static final String 	NO_CONNECTION 	   = "org.apache.myfaces.ticker.NOCONNECTION";
 
     public void encodeEnd(FacesContext facesContext, UIComponent component)
             throws IOException {

@@ -13,11 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.sourceforge.myfaces.examples.misc;
+package org.apache.myfaces.examples.misc;
 
 import java.io.IOException;
 
-import net.sourceforge.myfaces.custom.fileupload.UploadedFile;
+import org.apache.myfaces.custom.fileupload.UploadedFile;
 
 import javax.faces.context.FacesContext;
 

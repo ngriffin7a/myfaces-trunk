@@ -13,13 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.sourceforge.myfaces.custom.tree.renderkit.html;
+package org.apache.myfaces.custom.tree.renderkit.html;
 
-import net.sourceforge.myfaces.custom.tree.HtmlTreeImageCommandLink;
-import net.sourceforge.myfaces.custom.tree.HtmlTreeNode;
-import net.sourceforge.myfaces.renderkit.html.HTML;
-import net.sourceforge.myfaces.renderkit.html.HtmlLinkRendererBase;
-import net.sourceforge.myfaces.renderkit.html.HtmlRendererUtils;
+import org.apache.myfaces.custom.tree.HtmlTreeImageCommandLink;
+import org.apache.myfaces.custom.tree.HtmlTreeNode;
+import org.apache.myfaces.renderkit.html.HTML;
+import org.apache.myfaces.renderkit.html.HtmlLinkRendererBase;
+import org.apache.myfaces.renderkit.html.HtmlRendererUtils;
 
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
@@ -31,6 +31,9 @@ import java.io.IOException;
  * @author <a href="mailto:oliver@rossmueller.com">Oliver Rossmueller</a>
  * @version $Revision$ $Date$
  *          $Log$
+ *          Revision 1.6  2004/10/13 11:50:58  matze
+ *          renamed packages to org.apache
+ *
  *          Revision 1.5  2004/07/01 21:53:10  mwessendorf
  *          ASF switch
  *

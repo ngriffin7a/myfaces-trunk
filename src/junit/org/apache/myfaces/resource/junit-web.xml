@@ -24,7 +24,7 @@
     <!-- Faces Servlet -->
     <servlet>
         <servlet-name>Faces Servlet</servlet-name>
-        <servlet-class>net.sourceforge.myfaces.webapp.MyFacesServlet</servlet-class>
+        <servlet-class>org.apache.myfaces.webapp.MyFacesServlet</servlet-class>
     </servlet>
 
     <!-- extension mapping -->

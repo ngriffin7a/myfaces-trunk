@@ -13,11 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.sourceforge.myfaces.custom.datalist;
+package org.apache.myfaces.custom.datalist;
 
-import net.sourceforge.myfaces.component.UserRoleAware;
-import net.sourceforge.myfaces.renderkit.JSFAttr;
-import net.sourceforge.myfaces.taglib.html.HtmlComponentBodyTagBase;
+import org.apache.myfaces.component.UserRoleAware;
+import org.apache.myfaces.renderkit.JSFAttr;
+import org.apache.myfaces.taglib.html.HtmlComponentBodyTagBase;
 
 import javax.faces.component.UIComponent;
 
@@ -25,6 +25,9 @@ import javax.faces.component.UIComponent;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.6  2004/10/13 11:50:57  matze
+ * renamed packages to org.apache
+ *
  * Revision 1.5  2004/07/01 21:53:09  mwessendorf
  * ASF switch
  *
@@ -53,7 +56,7 @@ public class HtmlDataListTag
 
     public String getRendererType()
     {
-        return "net.sourceforge.myfaces.List";
+        return "org.apache.myfaces.List";
     }
 
     // UIComponent attributes --> already implemented in UIComponentTagBase

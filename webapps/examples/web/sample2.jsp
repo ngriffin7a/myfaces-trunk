@@ -33,7 +33,7 @@ managed beans used:
 
 <f:view>
 
-    <f:loadBundle basename="net.sourceforge.myfaces.examples.resource.example_messages" var="example_messages"/>
+    <f:loadBundle basename="org.apache.myfaces.examples.resource.example_messages" var="example_messages"/>
 
     <x:panelLayout id="page" layout="#{globalOptions.pageLayout}"
             styleClass="pageLayout"
@@ -71,7 +71,7 @@ managed beans used:
                         <f:selectItems value="#{q_form.selectOneItems}" />
                     </h:selectOneMenu>
                     <h:commandButton id="button1" value="Add quotes" action="none">
-                        <f:actionListener type="net.sourceforge.myfaces.examples.example2.QuotationController" ></f:actionListener>
+                        <f:actionListener type="org.apache.myfaces.examples.example2.QuotationController" ></f:actionListener>
                     </h:commandButton>
 
                     <f:verbatim><br><br></f:verbatim>
@@ -80,7 +80,7 @@ managed beans used:
                         <f:selectItems value="#{q_form.selectManyItems}" />
                     </h:selectManyListbox>
                     <h:commandButton id="button2" value="Remove quotes" action="none"><f:verbatim><br></f:verbatim>
-                        <f:actionListener type="net.sourceforge.myfaces.examples.example2.QuotationController" ></f:actionListener>
+                        <f:actionListener type="org.apache.myfaces.examples.example2.QuotationController" ></f:actionListener>
                     </h:commandButton>
 
                 </h:form>

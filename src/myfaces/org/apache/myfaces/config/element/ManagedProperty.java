@@ -13,11 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.sourceforge.myfaces.config.element;
+package org.apache.myfaces.config.element;
 
 import javax.faces.context.FacesContext;
 
-import net.sourceforge.myfaces.config.element.ListEntries;
+import org.apache.myfaces.config.element.ListEntries;
 
 
 /**
@@ -26,6 +26,9 @@ import net.sourceforge.myfaces.config.element.ListEntries;
 
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.3  2004/10/13 11:50:59  matze
+ * renamed packages to org.apache
+ *
  * Revision 1.2  2004/10/05 22:34:21  dave0000
  * bug 1021656 with related improvements
  *

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.sourceforge.myfaces.renderkit.html;
+package org.apache.myfaces.renderkit.html;
 
 
 
@@ -22,6 +22,9 @@ package net.sourceforge.myfaces.renderkit.html;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.12  2004/10/13 11:51:00  matze
+ * renamed packages to org.apache
+ *
  * Revision 1.11  2004/07/01 22:05:06  mwessendorf
  * ASF switch
  *

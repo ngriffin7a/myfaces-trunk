@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.sourceforge.myfaces.webapp.filter;
+package org.apache.myfaces.webapp.filter;
 
-import net.sourceforge.myfaces.context.servlet.ServletExternalContextImpl;
-import net.sourceforge.myfaces.renderkit.html.util.JavascriptUtils;
+import org.apache.myfaces.context.servlet.ServletExternalContextImpl;
+import org.apache.myfaces.renderkit.html.util.JavascriptUtils;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -35,6 +35,9 @@ import java.io.IOException;
  * @author Oliver Rossmueller (latest modification by $Author$)
  *
  * $Log$
+ * Revision 1.4  2004/10/13 11:51:01  matze
+ * renamed packages to org.apache
+ *
  * Revision 1.3  2004/09/08 09:31:25  manolito
  * moved isJavascriptDetected from MyFacesConfig to JavascriptUtils class
  *

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.sourceforge.myfaces.taglib.core;
+package org.apache.myfaces.taglib.core;
 
 
 
@@ -21,6 +21,9 @@ package net.sourceforge.myfaces.taglib.core;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  *          $Log$
+ *          Revision 1.9  2004/10/13 11:51:00  matze
+ *          renamed packages to org.apache
+ *
  *          Revision 1.8  2004/07/01 22:05:03  mwessendorf
  *          ASF switch
  *

@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.sourceforge.myfaces.renderkit.html.util;
+package org.apache.myfaces.renderkit.html.util;
 
-import net.sourceforge.myfaces.context.ResponseWriterWrapper;
+import org.apache.myfaces.context.ResponseWriterWrapper;
 
 import javax.faces.context.ResponseWriter;
 import java.io.IOException;

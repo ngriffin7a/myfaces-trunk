@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.sourceforge.myfaces.taglib.core;
+package org.apache.myfaces.taglib.core;
 
 import javax.servlet.RequestDispatcher;
 
@@ -26,6 +26,9 @@ import com.meterware.httpunit.WebResponse;
  * @author <a href="mailto:oliver@rossmueller.com">Oliver Rossmueller</a>
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.3  2004/10/13 11:50:56  matze
+ * renamed packages to org.apache
+ *
  * Revision 1.2  2004/07/01 21:57:59  mwessendorf
  * ASF switch
  *

@@ -13,14 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.sourceforge.myfaces.config;
+package org.apache.myfaces.config;
 
 import java.util.List;
 import java.util.Map;
 import javax.faces.el.VariableResolver;
 
-import net.sourceforge.myfaces.cactus.TestBean;
-import net.sourceforge.myfaces.cactus.MyFacesServletTestCase;
+import org.apache.myfaces.cactus.TestBean;
+import org.apache.myfaces.cactus.MyFacesServletTestCase;
 
 
 /**

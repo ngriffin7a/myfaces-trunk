@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.sourceforge.myfaces.application;
+package org.apache.myfaces.application;
 
-import net.sourceforge.myfaces.MyFacesBaseTest;
+import org.apache.myfaces.MyFacesBaseTest;
 
 import javax.faces.application.Application;
 import javax.faces.el.ValueBinding;

@@ -1,4 +1,4 @@
-package net.sourceforge.myfaces.component.html.ext;
+package org.apache.myfaces.component.html.ext;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

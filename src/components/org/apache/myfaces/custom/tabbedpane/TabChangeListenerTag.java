@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.sourceforge.myfaces.custom.tabbedpane;
+package org.apache.myfaces.custom.tabbedpane;
 
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
@@ -23,15 +23,18 @@ import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.Tag;
 import javax.servlet.jsp.tagext.TagSupport;
 
-import net.sourceforge.myfaces.util.ClassUtils;
+import org.apache.myfaces.util.ClassUtils;
 
 
 /**
- * Tag to add a tab change listeners to a {@link net.sourceforge.myfaces.custom.tabbedpane.HtmlPanelTabbedPane]
+ * Tag to add a tab change listeners to a {@link org.apache.myfaces.custom.tabbedpane.HtmlPanelTabbedPane]
  *
  * @author <a href="mailto:oliver@rossmueller.com">Oliver Rossmueller</a>
  * @version $Revision$ $Date$
  *          $Log$
+ *          Revision 1.3  2004/10/13 11:50:58  matze
+ *          renamed packages to org.apache
+ *
  *          Revision 1.2  2004/09/01 18:32:56  mwessendorf
  *          Organize Imports
  *
