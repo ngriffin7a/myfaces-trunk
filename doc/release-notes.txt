@@ -29,6 +29,7 @@ Changes in Release 1.0.8 beta
 * calendar component now uses embeded resources
 * new HTML Editor component (<x:htmlEditor>). Basically, it's an rich text WYSIWYG component.
 * add a popup calendar to the inputDate tag.
+* Some tiles support enhancements
 ----------------------------------------------------------------------
 Changes in Release 1.0.7 beta
 * new custom component: HtmlPanelStack
