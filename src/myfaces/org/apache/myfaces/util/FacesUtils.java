@@ -88,6 +88,26 @@ public class FacesUtils
         return ctx.getExternalContext().getRequestMap();
     }
 
+    public static Map getRequestParameterMap()
+    {
+        return getRequestParameterMap(FacesContext.getCurrentInstance());
+    }
+
+    public static Map getRequestParameterMap(FacesContext ctx)
+    {
+        return ctx.getExternalContext().getRequestParameterMap();
+    }
+
+    public static Object getSession(boolean create)
+    {
+        return getSession(FacesContext.getCurrentInstance(), create);
+    }
+
+    public static Object getSession(FacesContext ctx, boolean create)
+    {
+        return ctx.getExternalContext().getSession(create);
+    }
+
     public static Map getSessionMap()
     {
         return getSessionMap(FacesContext.getCurrentInstance());
