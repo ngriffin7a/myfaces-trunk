@@ -16,7 +16,7 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package net.sourceforge.myfaces.custom.datatablescroller;
+package net.sourceforge.myfaces.custom.datascroller;
 
 import net.sourceforge.myfaces.component.UserRoleAware;
 import net.sourceforge.myfaces.taglib.html.HtmlComponentBodyTagBase;
@@ -27,6 +27,9 @@ import javax.faces.component.UIComponent;
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.1  2004/06/18 12:31:41  royalts
+ * DataScroller implementation
+ *
  * Revision 1.4  2004/05/18 14:31:37  manolito
  * user role support completely moved to components source tree
  *
@@ -40,10 +43,12 @@ import javax.faces.component.UIComponent;
  * custom component refactoring
  *
  */
-public class HtmlDataTableScrollerTag
+public class HtmlDataScrollerTag
         extends HtmlComponentBodyTagBase
 {
-    //private static final Log log = LogFactory.getLog(HtmlDataTableScrollerTag.class);
+    //private static final Log log = LogFactory.getLog(HtmlDataScrollerTag.class);
+
+
 
     private String _for;
 
@@ -53,13 +58,12 @@ public class HtmlDataTableScrollerTag
 
     public String getComponentType()
     {
-        return HtmlDataTableScroller.COMPONENT_TYPE;
+        return HtmlDataScroller.COMPONENT_TYPE;
     }
-
 
     public String getRendererType()
     {
-        return "net.sourceforge.myfaces.TableScroller";
+        return HtmlDataScrollerRenderer.RENDERER_TYPE;
     }
 
     protected void setProperties(UIComponent component)

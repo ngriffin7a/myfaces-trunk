@@ -28,13 +28,25 @@ import java.io.Serializable;
 public class SimpleCar
         implements Serializable
 {
+    private int _id;
     private String _type;
     private String _color;
 
-    public SimpleCar(String type, String color)
+    public SimpleCar(int id, String type, String color)
     {
+        _id = id;
         _type = type;
         _color = color;
+    }
+
+    public int getId()
+    {
+        return _id;
+    }
+
+    public void setId(int id)
+    {
+        _id = id;
     }
 
     public String getType()

@@ -101,8 +101,8 @@
   </component>
 
   <component>
-    <component-type>net.sourceforge.myfaces.HtmlDataTableScroller</component-type>
-    <component-class>net.sourceforge.myfaces.custom.datatablescroller.HtmlDataTableScroller</component-class>
+    <component-type>net.sourceforge.myfaces.HtmlDataScroller</component-type>
+    <component-class>net.sourceforge.myfaces.custom.datascroller.HtmlDataScroller</component-class>
   </component>
 
   <component>
@@ -261,9 +261,9 @@
       </renderer>
 
         <renderer>
-            <component-family>javax.faces.Command</component-family>
-            <renderer-type>net.sourceforge.myfaces.TableScroller</renderer-type>
-            <renderer-class>net.sourceforge.myfaces.custom.datatablescroller.HtmlTableScrollerRenderer</renderer-class>
+            <component-family>javax.faces.Panel</component-family>
+            <renderer-type>net.sourceforge.myfaces.DataScroller</renderer-type>
+            <renderer-class>net.sourceforge.myfaces.custom.datascroller.HtmlDataScrollerRenderer</renderer-class>
         </renderer>
 
         <renderer>

@@ -55,48 +55,53 @@ managed beans used:
         <f:facet name="body">
             <h:panelGroup id="body">
 
-               <h:panelGrid columns="1">
-                   <h:commandLink action="go_country" immediate="true">
-                        <h:outputText value="#{example_messages['new_country']}" styleClass="standard" />
-                   </h:commandLink>
-                   <h:commandLink action="go_edit_table" immediate="true">
-                        <h:outputText value="#{example_messages['country_edit_table']}" styleClass="standard" />
-                   </h:commandLink>
-               </h:panelGrid>
-               <f:verbatim><br></f:verbatim>
-
                 <x:dataTable id="data"
                         styleClass="standardTable"
                         headerClass="standardTable_Header"
                         footerClass="standardTable_Header"
                         rowClasses="standardTable_Row1,standardTable_Row2"
                         columnClasses="standardTable_Column,standardTable_ColumnCentered,standardTable_Column"
-                        var="country"
-                        value="#{countryList.countries}"
+                        var="car"
+                        value="#{scrollerList.list}"
                         preserveDataModel="true"
+                        rows="10"
                    >
                    <h:column>
                        <f:facet name="header">
-                          <h:outputText value="#{example_messages['label_country_name']}" />
                        </f:facet>
-                       <x:commandLink action="go_country" immediate="true" >
-                            <h:outputText value="#{country.name}" />
-                            <!-- for convenience: MyFaces extension. sets id of current row in countryForm -->
-                            <!-- you don't have to implement a custom action! -->
-                            <x:updateActionListener property="#{countryForm.id}" value="#{country.id}" />
-                       </x:commandLink>
+                       <h:outputText value="#{car.id}" />
                    </h:column>
 
                    <h:column>
                        <f:facet name="header">
-                          <h:outputText value="#{example_messages['label_country_iso']}" />
+                          <h:outputText value="#{example_messages['label_cars']}" />
                        </f:facet>
-                       <h:outputText value="#{country.isoCode}" />
+                       <h:outputText value="#{car.type}" />
+                   </h:column>
+
+                   <h:column>
+                       <f:facet name="header">
+                          <h:outputText value="#{example_messages['label_color']}" />
+                       </f:facet>
+                       <h:outputText value="#{car.color}" />
                    </h:column>
 
                 </x:dataTable>
                 
-                <f:verbatim><br></f:verbatim>
+                <x:dataScroller id="scroll" for="data" >
+                    <f:facet name="first">
+                        <h:outputText value="first" />
+                    </f:facet>
+                    <f:facet name="previous">
+                        <h:outputText value="previous" />
+                    </f:facet>
+                    <f:facet name="next">
+                        <h:outputText value="next" />
+                    </f:facet>
+                    <f:facet name="last">
+                        <h:outputText value="last" />
+                    </f:facet>
+                </x:dataScroller>
 
             </h:panelGroup>
         </f:facet>

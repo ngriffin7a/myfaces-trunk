@@ -38,11 +38,11 @@ public class SimpleSortableCarList
         super("type");
 
         _cars = new ArrayList();
-        _cars.add(new SimpleCar("car A", "red"));
-        _cars.add(new SimpleCar("car B", "blue"));
-        _cars.add(new SimpleCar("car C", "green"));
-        _cars.add(new SimpleCar("car D", "yellow"));
-        _cars.add(new SimpleCar("car E", "orange"));
+        _cars.add(new SimpleCar(1, "car A", "red"));
+        _cars.add(new SimpleCar(1, "car B", "blue"));
+        _cars.add(new SimpleCar(1, "car C", "green"));
+        _cars.add(new SimpleCar(1, "car D", "yellow"));
+        _cars.add(new SimpleCar(1, "car E", "orange"));
     }
 
     public List getCars()

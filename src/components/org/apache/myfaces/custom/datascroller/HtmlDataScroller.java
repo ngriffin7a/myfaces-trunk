@@ -16,10 +16,10 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package net.sourceforge.myfaces.custom.datatablescroller;
+package net.sourceforge.myfaces.custom.datascroller;
 
-import javax.faces.component.UICommand;
 import javax.faces.component.UIComponent;
+import javax.faces.component.UIPanel;
 import javax.faces.context.FacesContext;
 import javax.faces.el.ValueBinding;
 
@@ -27,8 +27,8 @@ import javax.faces.el.ValueBinding;
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public class HtmlDataTableScroller
-        extends UICommand
+public class HtmlDataScroller
+        extends UIPanel
 {
     //private static final Log log = LogFactory.getLog(HtmlPanelTabbedPane.class);
 
@@ -37,9 +37,9 @@ public class HtmlDataTableScroller
     private static final String NEXT_FACET_NAME     = "next";
     private static final String PREVIOUS_FACET_NAME = "previous";
 
-    public void setFirst(UIComponent header)
+    public void setFirst(UIComponent first)
     {
-        getFacets().put(FIRST_FACET_NAME, header);
+        getFacets().put(FIRST_FACET_NAME, first);
     }
 
     public UIComponent getFirst()
@@ -47,9 +47,9 @@ public class HtmlDataTableScroller
         return (UIComponent)getFacets().get(FIRST_FACET_NAME);
     }
 
-    public void setLast(UIComponent header)
+    public void setLast(UIComponent last)
     {
-        getFacets().put(LAST_FACET_NAME, header);
+        getFacets().put(LAST_FACET_NAME, last);
     }
 
     public UIComponent getLast()
@@ -57,9 +57,9 @@ public class HtmlDataTableScroller
         return (UIComponent)getFacets().get(LAST_FACET_NAME);
     }
 
-    public void setNext(UIComponent header)
+    public void setNext(UIComponent next)
     {
-        getFacets().put(NEXT_FACET_NAME, header);
+        getFacets().put(NEXT_FACET_NAME, next);
     }
 
     public UIComponent getNext()
@@ -67,9 +67,9 @@ public class HtmlDataTableScroller
         return (UIComponent)getFacets().get(NEXT_FACET_NAME);
     }
 
-    public void setPrevoius(UIComponent header)
+    public void setPrevoius(UIComponent previous)
     {
-        getFacets().put(PREVIOUS_FACET_NAME, header);
+        getFacets().put(PREVIOUS_FACET_NAME, previous);
     }
 
     public UIComponent getPrevious()
@@ -85,13 +85,13 @@ public class HtmlDataTableScroller
 
     //------------------ GENERATED CODE BEGIN (do not modify!) --------------------
 
-    public static final String COMPONENT_TYPE = "net.sourceforge.myfaces.HtmlDataTableScroller";
-    public static final String COMPONENT_FAMILY = "javax.faces.Command";
-    public static final String DEFAULT_RENDERER_TYPE = "net.sourceforge.myfaces.TableScroller";
+    public static final String COMPONENT_TYPE = "net.sourceforge.myfaces.HtmlDataScroller";
+    public static final String COMPONENT_FAMILY = "javax.faces.Panel";
+    private static final String DEFAULT_RENDERER_TYPE = "net.sourceforge.myfaces.DataScroller";
 
     private String _for = null;
 
-    public HtmlDataTableScroller()
+    public HtmlDataScroller()
     {
         setRendererType(DEFAULT_RENDERER_TYPE);
     }
@@ -112,6 +112,8 @@ public class HtmlDataTableScroller
         ValueBinding vb = getValueBinding("for");
         return vb != null ? (String)vb.getValue(getFacesContext()) : null;
     }
+
+
 
     public Object saveState(FacesContext context)
     {

@@ -126,6 +126,14 @@
         <managed-bean-scope>application</managed-bean-scope>
     </managed-bean>
 
+    <!-- Managed Beans for dataScroller.jsp -->
+
+    <managed-bean>
+        <managed-bean-name>scrollerList</managed-bean-name>
+        <managed-bean-class>net.sourceforge.myfaces.examples.listexample.DataScrollerList</managed-bean-class>
+        <managed-bean-scope>application</managed-bean-scope>
+    </managed-bean>
+
 
 
     <navigation-rule>
@@ -221,6 +229,11 @@
             <from-outcome>go_rdfticker</from-outcome>
             <to-view-id>/rdfTicker.jsp</to-view-id>
         </navigation-case>        
+
+        <navigation-case>
+            <from-outcome>go_datascroller</from-outcome>
+            <to-view-id>/dataScroller.jsp</to-view-id>
+        </navigation-case>
 
     </navigation-rule>
 

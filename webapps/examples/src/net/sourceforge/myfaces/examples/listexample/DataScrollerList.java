@@ -1,4 +1,4 @@
-/*
+/**
  * MyFaces - the free JSF implementation
  * Copyright (C) 2003, 2004  The MyFaces Team (http://myfaces.sourceforge.net)
  *
@@ -16,28 +16,34 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package net.sourceforge.myfaces.custom.datatablescroller;
+package net.sourceforge.myfaces.examples.listexample;
 
-import net.sourceforge.myfaces.renderkit.html.HtmlRenderer;
-
-import javax.faces.component.UIComponent;
-import javax.faces.context.FacesContext;
-import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
+ * DOCUMENT ME!
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public class HtmlTableScrollerRenderer
-    extends HtmlRenderer
+public class DataScrollerList
 {
-    public void encodeBegin(FacesContext facesContext, UIComponent uiComponent) throws IOException
+    private List _list = new ArrayList();
+    static
     {
-        super.encodeBegin(facesContext, uiComponent);
     }
 
-    public void encodeEnd(FacesContext facesContext, UIComponent uiComponent) throws IOException
+    public DataScrollerList()
     {
-        super.encodeEnd(facesContext, uiComponent);
+        for (int i = 1; i < 1000; i++)
+        {
+            _list.add(new SimpleCar(i, "Car Type " + i, "blue"));
+        }
     }
+
+    public List getList()
+    {
+        return _list;
+    }
+
 }

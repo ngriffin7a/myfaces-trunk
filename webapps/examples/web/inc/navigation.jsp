@@ -22,6 +22,7 @@
             <x:commandNavigation id="nav_2_4_7" value="#{example_messages['nav_dataList']}" action="go_dataList" />
             <x:commandNavigation id="nav_2_4_8" value="#{example_messages['nav_tree']}" action="go_tree" />
             <x:commandNavigation id="nav_2_4_9" value="#{example_messages['nav_rdfTicker']}" action="go_rdfticker" />
+            <x:commandNavigation id="nav_2_4_10" value="#{example_messages['nva_dataScroller']}" action="go_datascroller" />
         </x:commandNavigation>
     </x:commandNavigation>
     <x:commandNavigation id="nav_3" value="#{example_messages['nav_Documentation']}" >

@@ -558,16 +558,16 @@
 
     <!-- dataTableScroller -->
     <tag>
-        <name>dataTableScroller</name>
-        <tag-class>net.sourceforge.myfaces.custom.datatablescroller.HtmlDataTableScrollerTag</tag-class>
+        <name>dataScroller</name>
+        <tag-class>net.sourceforge.myfaces.custom.datascroller.HtmlDataScrollerTag</tag-class>
         <body-content>JSP</body-content>
         <description>
-            (TODO: not yet ready!)
-            Scroller for dataTable
+            Scroller for UIData components eg. dataTable
             Must be nested inside footer facet of dataTable OR for attribute must be given
-            so that corresponding dataTable can be found
+            so that corresponding uiData can be found
         </description>
         &ui_component_attributes;
+        &user_role_attributes;
         <attribute>
             <name>for</name>
             <required>false</required>
