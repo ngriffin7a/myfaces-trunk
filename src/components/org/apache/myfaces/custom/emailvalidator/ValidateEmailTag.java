@@ -16,35 +16,33 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package net.sourceforge.myfaces.validate.taglib;
+package net.sourceforge.myfaces.custom.emailvalidator;
 
-import javax.faces.context.FacesContext;
 import javax.faces.validator.Validator;
 import javax.faces.webapp.ValidatorTag;
 import javax.servlet.jsp.JspException;
 
-import net.sourceforge.myfaces.validate.EmailValidator;
-
 /**
- * @author mwessendorf
+ * @author mwessendorf (latest modification by $Author$)
+ * @version $Revision$ $Date$
+ * $Log$
+ * Revision 1.1  2004/05/27 14:09:01  manolito
+ * creditcard and email validator refactored
  *
  */
-public class ValidateEmailTag extends ValidatorTag {
+public class ValidateEmailTag extends ValidatorTag
+{
 	
-	/**
-	 * <p>ValidatorId for the correspondent Validator for this Tag.</p>
-	 */
-	public static final String 	VALIDATOR_ID 	   = "myfaces.validator.Email";
-	
-	public ValidateEmailTag(){
-		setValidatorId(VALIDATOR_ID);
+	public ValidateEmailTag()
+    {
+		setValidatorId(EmailValidator.VALIDATOR_ID);
 	}
 
 	/* (non-Javadoc)
 	 * @see javax.faces.webapp.ValidatorTag#createValidator()
 	 */
-	protected Validator createValidator() throws JspException {
-		FacesContext facesContext = FacesContext.getCurrentInstance();
+	protected Validator createValidator() throws JspException
+    {
 		EmailValidator validator = (EmailValidator)super.createValidator();
 		return validator;
 	}

@@ -19,8 +19,8 @@
     <property name="tlds.dir" location="${project.dir}/tlds"/>
 
     <!-- Properties -->
-    <property file="../build.properties"/>
-    <property file="../build.properties.default"/>
+    <property file="../build.local.properties"/>
+    <property file="../build.default.properties"/>
     <property file="../manifest.properties"/>
 
     <!-- Temporary dir. May be overridden in build.properties -->
@@ -65,7 +65,6 @@
         <pathelement location="${commons-logging.jar}"/>
         <pathelement location="${commons-el.jar}"/>
         <pathelement location="${commons-fileupload.jar}"/>
-        <pathelement location="${cos.jar}"/>
     </path>
 
     <path id="examples.class.path">
@@ -89,6 +88,9 @@
             <fileset file="${commons-logging.jar}"/>
             <fileset file="${commons-el.jar}"/>
             <fileset file="${log4j.jar}"/>
+            <fileset file="${commons-fileupload.jar}"/>
+            <fileset file="${commons-validator.jar}"/>
+            <fileset file="${jakarta-oro.jar}"/>
         </copy>
 
         <copy file="${project.dir}/conf/develop-web.xml" tofile="${examples.web}/WEB-INF/web.xml" />

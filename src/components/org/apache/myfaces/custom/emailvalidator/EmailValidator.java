@@ -16,7 +16,11 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package net.sourceforge.myfaces.validate;
+package net.sourceforge.myfaces.custom.emailvalidator;
+
+import net.sourceforge.myfaces.util.MessageUtils;
+
+import org.apache.commons.validator.GenericValidator;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.component.UIComponent;
@@ -24,12 +28,13 @@ import javax.faces.context.FacesContext;
 import javax.faces.validator.Validator;
 import javax.faces.validator.ValidatorException;
 
-import net.sourceforge.myfaces.util.MessageUtils;
-
-import org.apache.commons.validator.GenericValidator;
-
 /**
- * @author mwessendorf
+ * @author mwessendorf (latest modification by $Author$)
+ * @version $Revision$ $Date$
+ * $Log$
+ * Revision 1.1  2004/05/27 14:09:01  manolito
+ * creditcard and email validator refactored
+ *
  */
 public class EmailValidator implements Validator {
 	

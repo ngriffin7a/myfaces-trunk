@@ -16,7 +16,7 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package net.sourceforge.myfaces.validate.taglib;
+package net.sourceforge.myfaces.custom.creditcardvalidator;
 
 import javax.faces.context.FacesContext;
 import javax.faces.el.ValueBinding;
@@ -25,11 +25,12 @@ import javax.faces.webapp.UIComponentTag;
 import javax.faces.webapp.ValidatorTag;
 import javax.servlet.jsp.JspException;
 
-//import net.sourceforge.myfaces.convert.ConverterUtils;
-import net.sourceforge.myfaces.validate.CreditCardValidator;
-
 /**
- * @author mwessendorf
+ * @author mwessendorf (latest modification by $Author$)
+ * @version $Revision$ $Date$
+ * $Log$
+ * Revision 1.1  2004/05/27 14:09:00  manolito
+ * creditcard and email validator refactored
  *
  */
 public class ValidateCreditCardTag extends ValidatorTag {
@@ -40,10 +41,9 @@ public class ValidateCreditCardTag extends ValidatorTag {
 	private String _visa = null;
 	private String _none = null;
 	
-	public static final String 	VALIDATOR_ID 	   = "myfaces.validator.CreditCard";
-
-	public ValidateCreditCardTag(){
-		setValidatorId(VALIDATOR_ID);
+	public ValidateCreditCardTag()
+    {
+		setValidatorId(CreditCardValidator.VALIDATOR_ID);
 	}
 
 	/**

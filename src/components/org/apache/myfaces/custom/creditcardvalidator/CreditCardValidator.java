@@ -16,7 +16,9 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package net.sourceforge.myfaces.validate;
+package net.sourceforge.myfaces.custom.creditcardvalidator;
+
+import net.sourceforge.myfaces.util.MessageUtils;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.component.StateHolder;
@@ -25,10 +27,12 @@ import javax.faces.context.FacesContext;
 import javax.faces.validator.Validator;
 import javax.faces.validator.ValidatorException;
 
-import net.sourceforge.myfaces.util.MessageUtils;
-
 /**
- * @author mwessendorf
+ * @author mwessendorf (latest modification by $Author$)
+ * @version $Revision$ $Date$
+ * $Log$
+ * Revision 1.1  2004/05/27 14:09:00  manolito
+ * creditcard and email validator refactored
  *
  */
 public class CreditCardValidator implements Validator,StateHolder {
