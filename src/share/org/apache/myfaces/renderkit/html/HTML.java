@@ -27,6 +27,9 @@ import net.sourceforge.myfaces.util.ArrayUtils;
  * @author Anton Koinov
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.7  2004/05/29 10:19:55  mwessendorf
+ * made the class FINAL, because has only one private const
+ *
  * Revision 1.6  2004/05/18 14:31:39  manolito
  * user role support completely moved to components source tree
  *
@@ -34,7 +37,7 @@ import net.sourceforge.myfaces.util.ArrayUtils;
  * typing error fixed
  *
  */
-public class HTML
+public final class HTML
 {
     private HTML() 
     {

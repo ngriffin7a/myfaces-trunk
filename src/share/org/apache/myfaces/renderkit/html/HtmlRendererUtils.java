@@ -42,6 +42,9 @@ import java.util.*;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.10  2004/05/29 10:19:54  mwessendorf
+ * made the class FINAL, because has only one private const
+ *
  * Revision 1.9  2004/05/18 14:31:39  manolito
  * user role support completely moved to components source tree
  *
@@ -73,7 +76,7 @@ import java.util.*;
  * added javascript 'return false' to onClick attribute in render link method
  *
  */
-public class HtmlRendererUtils
+public final class HtmlRendererUtils
 {
     private static final Log log = LogFactory.getLog(HtmlRendererUtils.class);
 
