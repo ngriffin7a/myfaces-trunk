@@ -746,7 +746,7 @@ public class MinimizingStateRestorer
         Validator newValidator = null;
         try
         {
-            Class valClass = Class.forName(validatorClass);
+            Class valClass = Class.forName(validatorClass, true, Thread.currentThread().getContextClassLoader());
             newValidator = (Validator)valClass.newInstance();
         }
         catch (ClassNotFoundException e)

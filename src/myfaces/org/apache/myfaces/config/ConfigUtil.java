@@ -57,7 +57,7 @@ public class ConfigUtil
     {
         try
         {
-            return Class.forName(type);
+            return Class.forName(type, true, Thread.currentThread().getContextClassLoader());
         }
         catch (ClassNotFoundException e)
         {
@@ -76,54 +76,46 @@ public class ConfigUtil
             javaType = javaType.substring(0, javaType.length() - 2);
         }
 
-        try
+        if (javaType.equals("byte"))
         {
-            if (javaType.equals("byte"))
-            {
-                return isArray ? Class.forName("[B") : Byte.TYPE;
-            }
-            else if (javaType.equals("char"))
-            {
-                return isArray ? Class.forName("[C") : Character.TYPE;
-            }
-            else if (javaType.equals("double"))
-            {
-                return isArray ? Class.forName("[D") : Double.TYPE;
-            }
-            else if (javaType.equals("float"))
-            {
-                return isArray ? Class.forName("[F") : Float.TYPE;
-            }
-            else if (javaType.equals("int"))
-            {
-                return isArray ? Class.forName("[I") : Integer.TYPE;
-            }
-            else if (javaType.equals("long"))
-            {
-                return isArray ? Class.forName("[J") : Long.TYPE;
-            }
-            else if (javaType.equals("short"))
-            {
-                return isArray ? Class.forName("[S") : Short.TYPE;
-            }
-            else if (javaType.equals("boolean"))
-            {
-                return isArray ? Class.forName("[Z") : Boolean.TYPE;
-            }
-            else if (javaType.equals("void"))
-            {
-                return isArray ? Class.forName("[V") : Void.TYPE;
-            }
-
-            return isArray
-                    ? Class.forName("[L" + javaType + ";")
-                    : Class.forName(javaType);
+            return isArray ? classForName("[B") : Byte.TYPE;
         }
-        catch (ClassNotFoundException e)
+        else if (javaType.equals("char"))
         {
-            throw new FacesException(e);
+            return isArray ? classForName("[C") : Character.TYPE;
+        }
+        else if (javaType.equals("double"))
+        {
+            return isArray ? classForName("[D") : Double.TYPE;
+        }
+        else if (javaType.equals("float"))
+        {
+            return isArray ? classForName("[F") : Float.TYPE;
+        }
+        else if (javaType.equals("int"))
+        {
+            return isArray ? classForName("[I") : Integer.TYPE;
+        }
+        else if (javaType.equals("long"))
+        {
+            return isArray ? classForName("[J") : Long.TYPE;
+        }
+        else if (javaType.equals("short"))
+        {
+            return isArray ? classForName("[S") : Short.TYPE;
+        }
+        else if (javaType.equals("boolean"))
+        {
+            return isArray ? classForName("[Z") : Boolean.TYPE;
+        }
+        else if (javaType.equals("void"))
+        {
+            return isArray ? classForName("[V") : Void.TYPE;
         }
 
+        return isArray
+                ? classForName("[L" + javaType + ";")
+                : classForName(javaType);
     }
 
 

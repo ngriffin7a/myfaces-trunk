@@ -96,7 +96,7 @@ public class ActionListenerTag
             }
             else
             {
-                Class c = Class.forName(type);
+                Class c = Class.forName(type, true, Thread.currentThread().getContextClassLoader());
                 ActionListener al = (ActionListener)c.newInstance();
                 method.invoke(uiComponent, new Object[]{al});
 

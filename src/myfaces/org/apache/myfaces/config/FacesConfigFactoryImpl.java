@@ -239,7 +239,7 @@ public class FacesConfigFactoryImpl
             Class clazz = null;
             try
             {
-                clazz = Class.forName(type);
+                clazz = Class.forName(type, true, Thread.currentThread().getContextClassLoader());
             }
             catch (ClassNotFoundException e)
             {

@@ -63,7 +63,7 @@ public class MyFacesFactoryFinder
 
             try
             {
-                Class c = Class.forName(compFactClass);
+                Class c = Class.forName(compFactClass, true, Thread.currentThread().getContextClassLoader());
                 fact = c.newInstance();
             }
             catch (ClassNotFoundException e)

@@ -76,7 +76,7 @@ public class JspBeanInfo
         {
             try
             {
-                Class clazz = Class.forName(_className);
+                Class clazz = Class.forName(_className, true, Thread.currentThread().getContextClassLoader());
                 return clazz.newInstance();
             }
             catch (ClassNotFoundException e)

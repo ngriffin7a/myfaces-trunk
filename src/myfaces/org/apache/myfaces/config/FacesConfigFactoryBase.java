@@ -241,7 +241,7 @@ public abstract class FacesConfigFactoryBase
         Tag tag = null;
         try
         {
-            Class tagClass = Class.forName(tagInfo.getTagClassName());
+            Class tagClass = Class.forName(tagInfo.getTagClassName(), true, Thread.currentThread().getContextClassLoader());
             tag = (Tag)tagClass.newInstance();
         }
         catch (ClassNotFoundException e)

@@ -342,7 +342,7 @@ public class MyParseEventListener
         Class c;
         try
         {
-            c = Class.forName(ti.getTagClassName());
+            c = Class.forName(ti.getTagClassName(), true, Thread.currentThread().getContextClassLoader());
         }
         catch (ClassNotFoundException e)
         {
@@ -470,7 +470,7 @@ public class MyParseEventListener
                             Class type = null;
                             try
                             {
-                                type = Class.forName(attrInfo.getTypeName());
+                                type = Class.forName(attrInfo.getTypeName(), true, Thread.currentThread().getContextClassLoader());
                             }
                             catch (ClassNotFoundException e)
                             {
@@ -802,7 +802,7 @@ public class MyParseEventListener
         ActionListener actionListener;
         try
         {
-            Class clazz = Class.forName(type);
+            Class clazz = Class.forName(type, true, Thread.currentThread().getContextClassLoader());
             actionListener = (ActionListener)clazz.newInstance();
         }
         catch (ClassNotFoundException e)

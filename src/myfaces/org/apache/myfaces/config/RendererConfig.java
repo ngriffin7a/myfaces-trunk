@@ -117,7 +117,7 @@ public class RendererConfig
             {
                 _componentClassSet = new HashSet();
             }
-            _componentClassSet.add(Class.forName(componentClassName));
+            _componentClassSet.add(Class.forName(componentClassName, true, Thread.currentThread().getContextClassLoader()));
         }
         catch (ClassNotFoundException e)
         {
