@@ -114,6 +114,8 @@ public class HtmlDataScroller
 
     private String _for = null;
     private Integer _fastStep = null;
+    private String _pageIndexVar = null;
+    private String _pageCountVar = null;
 
     public HtmlDataScroller()
     {
@@ -150,14 +152,40 @@ public class HtmlDataScroller
         return v != null ? v.intValue() : Integer.MIN_VALUE;
     }
 
+    public void setPageIndexVar(String pageIndexVar)
+    {
+        _pageIndexVar = pageIndexVar;
+    }
+
+    public String getPageIndexVar()
+    {
+        if (_pageIndexVar != null) return _pageIndexVar;
+        ValueBinding vb = getValueBinding("pageIndexVar");
+        return vb != null ? (String)vb.getValue(getFacesContext()) : null;
+    }
+
+    public void setPageCountVar(String pageCountVar)
+    {
+        _pageCountVar = pageCountVar;
+    }
+
+    public String getPageCountVar()
+    {
+        if (_pageCountVar != null) return _pageCountVar;
+        ValueBinding vb = getValueBinding("pageCountVar");
+        return vb != null ? (String)vb.getValue(getFacesContext()) : null;
+    }
+
 
 
     public Object saveState(FacesContext context)
     {
-        Object values[] = new Object[3];
+        Object values[] = new Object[5];
         values[0] = super.saveState(context);
         values[1] = _for;
         values[2] = _fastStep;
+        values[3] = _pageIndexVar;
+        values[4] = _pageCountVar;
         return ((Object) (values));
     }
 
@@ -167,6 +195,8 @@ public class HtmlDataScroller
         super.restoreState(context, values[0]);
         _for = (String)values[1];
         _fastStep = (Integer)values[2];
+        _pageIndexVar = (String)values[3];
+        _pageCountVar = (String)values[4];
     }
     //------------------ GENERATED CODE END ---------------------------------------
 }

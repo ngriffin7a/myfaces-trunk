@@ -27,6 +27,9 @@ import javax.faces.component.UIComponent;
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.3  2004/06/21 12:15:23  royalts
+ * no message
+ *
  * Revision 1.2  2004/06/21 09:46:58  royalts
  * no message
  *
@@ -53,11 +56,16 @@ public class HtmlDataScrollerTag
 
     private static final String FOR_ATTR = "for".intern();
     private static final String FAST_STEP_ATTR = "fastStep".intern();
+    private static final String PAGE_INDEX_ATTR = "pageIndexVar".intern();
+    private static final String PAGE_COUNT_ATTR = "pageCountVar".intern();
 
 
 
     private String _for;
     private String _fastStep;
+    private String _pageIndexVar;
+    private String _pageCountVar;
+
 
     // User Role support
     private String _enabledOnUserRole;
@@ -79,11 +87,14 @@ public class HtmlDataScrollerTag
 
         setStringProperty(component, FOR_ATTR, _for);
         setIntegerProperty(component, FAST_STEP_ATTR, _fastStep);
+        setStringProperty(component, PAGE_INDEX_ATTR, _pageIndexVar);
+        setStringProperty(component, PAGE_COUNT_ATTR, _pageCountVar);
 
         setStringProperty(component, UserRoleAware.ENABLED_ON_USER_ROLE_ATTR, _enabledOnUserRole);
         setStringProperty(component, UserRoleAware.VISIBLE_ON_USER_ROLE_ATTR, _visibleOnUserRole);
     }
 
+    // datascroller attributes
     public void setFor(String aFor)
     {
         _for = aFor;
@@ -94,6 +105,18 @@ public class HtmlDataScrollerTag
         _fastStep = fastStep;
     }
 
+    public void setPageCountVar(String pageCountVar)
+    {
+        _pageCountVar = pageCountVar;
+    }
+
+    public void setPageIndexVar(String pageIndexVar)
+    {
+        _pageIndexVar = pageIndexVar;
+    }
+
+
+    // userrole attributes
     public void setEnabledOnUserRole(String enabledOnUserRole)
     {
         _enabledOnUserRole = enabledOnUserRole;

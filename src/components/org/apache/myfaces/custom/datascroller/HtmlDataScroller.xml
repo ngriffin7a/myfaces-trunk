@@ -16,4 +16,12 @@
         <name>fastStep</name>
         <type>int</type>
     </field>
+    <field>
+        <name>pageIndexVar</name>
+        <type>java.lang.String</type>
+    </field>
+    <field>
+        <name>pageCountVar</name>
+        <type>java.lang.String</type>
+    </field>
 </component>

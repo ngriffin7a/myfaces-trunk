@@ -18,19 +18,19 @@
  */
 package net.sourceforge.myfaces.custom.datascroller;
 
-import net.sourceforge.myfaces.renderkit.html.HtmlRenderer;
 import net.sourceforge.myfaces.renderkit.RendererUtils;
+import net.sourceforge.myfaces.renderkit.html.HtmlRenderer;
 
+import javax.faces.application.Application;
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIData;
 import javax.faces.component.UIParameter;
 import javax.faces.component.html.HtmlCommandLink;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
-import javax.faces.application.Application;
 import java.io.IOException;
-import java.util.Map;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author Thomas Spiegl (latest modification by $Author$)
@@ -59,27 +59,7 @@ public class HtmlDataScrollerRenderer
 
         HtmlDataScroller scroller = (HtmlDataScroller)component;
 
-        String forStr = scroller.getFor();
-        UIComponent forComp;
-        if (forStr == null)
-        {
-            // DataScroller may be a child of uiData
-            forComp = component.getParent();
-        }
-        else
-        {
-            forComp = component.findComponent(scroller.getFor());
-            if (forComp == null)
-            {
-                throw new IllegalArgumentException("dataScroller's for attribute is mandatory if dataScroller is defined outside of UIData");
-            }
-        }
-        if (!(forComp instanceof UIData))
-        {
-            throw new IllegalArgumentException("uiComponent referenced by attribute tableScroller@for must be of type " + UIData.class.getName());
-        }
-
-        UIData uiData = (UIData)forComp;
+        UIData uiData = findUIData(scroller, component);
 
         Map parameter = context.getExternalContext().getRequestParameterMap();
         String param = (String)parameter.get(component.getClientId(context));
@@ -109,7 +89,7 @@ public class HtmlDataScrollerRenderer
                 int next = uiData.getFirst() + uiData.getRows() * fastStep;
                 int rowcount = uiData.getRowCount();
                 if (next > rowcount)
-                    next = rowcount - uiData.getRows();
+                    next = rowcount - (rowcount % uiData.getRows());
                 uiData.setFirst(next);
             }
             else if (param.equals(FACET_FAST_REWIND))
@@ -124,7 +104,8 @@ public class HtmlDataScrollerRenderer
             }
             else if (param.equals(FACET_LAST))
             {
-                int last = uiData.getRowCount() - uiData.getRows();
+                int rowcount = uiData.getRowCount();
+                int last = rowcount - (rowcount % uiData.getRows());
                 if (last >= 0)
                 {
                     uiData.setFirst(last);
@@ -138,9 +119,80 @@ public class HtmlDataScrollerRenderer
         }
     }
 
+    private UIData findUIData(HtmlDataScroller scroller, UIComponent component)
+    {
+        String forStr = scroller.getFor();
+        UIComponent forComp;
+        if (forStr == null)
+        {
+            // DataScroller may be a child of uiData
+            forComp = component.getParent();
+        }
+        else
+        {
+            forComp = component.findComponent(scroller.getFor());
+            if (forComp == null)
+            {
+                throw new IllegalArgumentException("dataScroller's for attribute is mandatory if dataScroller is defined outside of UIData");
+            }
+        }
+        if (!(forComp instanceof UIData))
+        {
+            throw new IllegalArgumentException("uiComponent referenced by attribute tableScroller@for must be of type " + UIData.class.getName());
+        }
+        return (UIData)forComp;
+    }
+
     public void encodeChildren(FacesContext facescontext, UIComponent uicomponent) throws IOException
     {
-        // nothing to encode
+        RendererUtils.checkParamValidity(facescontext, uicomponent, HtmlDataScroller.class);
+
+        Map requestMap = facescontext.getExternalContext().getRequestMap();
+        HtmlDataScroller scroller = (HtmlDataScroller)uicomponent;
+
+        UIData uiData = findUIData(scroller, uicomponent);
+
+        int rows = uiData.getRows();
+        int pageCount;
+        if (rows > 0)
+        {
+            pageCount = rows <= 0 ? 1 : uiData.getRowCount() / rows;
+            if (uiData.getRowCount() % rows > 0)
+            {
+                pageCount++;
+            }
+        }
+        else
+        {
+            pageCount = 1;
+        }
+
+        String pageCountVar = scroller.getPageCountVar();
+        if (pageCountVar != null)
+        {
+            requestMap.put(pageCountVar, new Integer(pageCount));
+        }
+        String pageIndexVar = scroller.getPageIndexVar();
+        if (pageIndexVar != null)
+        {
+            int pageIndex = uiData.getFirst() / rows + 1;
+            if (uiData.getFirst() % rows > 0)
+            {
+                pageIndex++;
+            }
+            requestMap.put(pageIndexVar, new Integer(pageIndex));
+        }
+
+        RendererUtils.renderChildren(facescontext, uicomponent);
+
+        if (pageCountVar != null)
+        {
+            requestMap.remove(pageCountVar);
+        }
+        if (pageIndexVar != null)
+        {
+            requestMap.remove(pageIndexVar);
+        }
     }
 
     public void encodeEnd(FacesContext facesContext, UIComponent uiComponent) throws IOException
@@ -148,8 +200,8 @@ public class HtmlDataScrollerRenderer
         RendererUtils.checkParamValidity(facesContext, uiComponent, HtmlDataScroller.class);
 
         ResponseWriter writer = facesContext.getResponseWriter();
-
         HtmlDataScroller scroller = (HtmlDataScroller)uiComponent;
+
         UIComponent facetComp = scroller.getFirst();
         if (facetComp != null)
         {
@@ -224,4 +276,5 @@ public class HtmlDataScrollerRenderer
         children.add(facetComp);
         return link;
     }
+
 }
