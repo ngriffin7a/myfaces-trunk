@@ -37,6 +37,9 @@ import java.util.Locale;
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.7  2004/11/08 08:46:45  tomsp
+ * no message
+ *
  * Revision 1.6  2004/10/13 11:50:56  matze
  * renamed packages to org.apache
  *
