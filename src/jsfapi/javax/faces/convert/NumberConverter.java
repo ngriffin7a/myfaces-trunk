@@ -19,6 +19,7 @@
 package javax.faces.convert;
 
 import javax.faces.component.UIComponent;
+import javax.faces.component.StateHolder;
 import javax.faces.context.FacesContext;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
@@ -28,16 +29,19 @@ import java.util.Currency;
 import java.util.Locale;
 
 /**
+ * @author Thomas Spiegl (latest modification by $Author$)
+ * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.9  2004/04/01 10:39:53  royalts
+ * implements StateHoder was missing
+ *
  * Revision 1.8  2004/03/26 12:08:42  manolito
  * Exceptions in getAsString now catched and
  * more relaxed Number casting in all number converters
  *
- * @author Thomas Spiegl (latest modification by $Author$)
- * @version $Revision$ $Date$
  */
 public class NumberConverter
-        implements Converter
+        implements Converter, StateHolder
 {
     private static final String CONVERSION_MESSAGE_ID = "javax.faces.convert.NumberConverter.CONVERSION";
 
