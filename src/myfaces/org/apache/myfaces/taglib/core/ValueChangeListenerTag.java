@@ -1,4 +1,4 @@
-/**
+/*
  * MyFaces - the free JSF implementation
  * Copyright (C) 2003, 2004  The MyFaces Team (http://myfaces.sourceforge.net)
  *
@@ -20,11 +20,11 @@ package net.sourceforge.myfaces.taglib.core;
 
 import net.sourceforge.myfaces.util.ClassUtils;
 
-import javax.faces.component.ActionSource;
+import javax.faces.component.EditableValueHolder;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.el.ValueBinding;
-import javax.faces.event.ActionListener;
+import javax.faces.event.ValueChangeListener;
 import javax.faces.webapp.UIComponentTag;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.Tag;
@@ -34,14 +34,14 @@ import javax.servlet.jsp.tagext.TagSupport;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public class ActionListenerTag
-    extends TagSupport
+public class ValueChangeListenerTag
+        extends TagSupport
 {
-    //private static final Log log = LogFactory.getLog(ActionListenerTag.class);
+    //private static final Log log = LogFactory.getLog(ValueChangeListenerTag.class);
 
     private String _type = null;
 
-    public ActionListenerTag()
+    public ValueChangeListenerTag()
     {
     }
 
@@ -62,14 +62,14 @@ public class ActionListenerTag
         UIComponentTag componentTag = UIComponentTag.getParentUIComponentTag(pageContext);
         if (componentTag == null)
         {
-            throw new JspException("ActionListenerTag has no UIComponentTag ancestor");
+            throw new JspException("ValueChangeListenerTag has no UIComponentTag ancestor");
         }
 
         if (componentTag.getCreated())
         {
             //Component was just created, so we add the Listener
             UIComponent component = componentTag.getComponentInstance();
-            if (component instanceof ActionSource)
+            if (component instanceof EditableValueHolder)
             {
                 String className;
                 if (UIComponentTag.isValueReference(_type))
@@ -82,12 +82,12 @@ public class ActionListenerTag
                 {
                     className = _type;
                 }
-                ActionListener al = (ActionListener)ClassUtils.newInstance(className);
-                ((ActionSource)component).addActionListener(al);
+                ValueChangeListener vcl = (ValueChangeListener)ClassUtils.newInstance(className);
+                ((EditableValueHolder)component).addValueChangeListener(vcl);
             }
             else
             {
-                throw new JspException("Component " + component.getId() + " is no ActionSource");
+                throw new JspException("Component " + component.getId() + " is no EditableValueHolder");
             }
         }
 

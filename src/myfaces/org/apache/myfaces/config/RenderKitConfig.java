@@ -20,9 +20,7 @@ package net.sourceforge.myfaces.config;
 
 import net.sourceforge.myfaces.renderkit.html.HtmlRenderKitImpl;
 import net.sourceforge.myfaces.util.ClassUtils;
-import org.apache.commons.logging.LogFactory;
 
-import javax.faces.FacesException;
 import javax.faces.render.RenderKit;
 import javax.faces.render.RenderKitFactory;
 import java.util.HashMap;
@@ -122,17 +120,7 @@ public class RenderKitConfig implements Config
     public RenderKit newRenderKit()
     {
         Class clazz = (_renderKitClass != null) ? _renderKitClass : DEFAULT_RENDER_KIT_CLASS;
-
-        try
-        {
-            return (RenderKit) clazz.newInstance();
-        }
-        catch (Exception e)
-        {
-            LogFactory.getLog(RenderKitConfig.class).error(
-                "Error in faces-config.xml - Class not found: " + clazz);
-            throw new FacesException(e);
-        }
+        return (RenderKit)ClassUtils.newInstance(clazz);
     }
 
     private Map getRendererConfigMap()

@@ -27,7 +27,7 @@ import javax.faces.component.UIComponent;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public class ParameterTag
+public class ParamTag
     extends MyfacesComponentTag
 {
     public String getComponentType()

@@ -18,16 +18,15 @@
  */
 package net.sourceforge.myfaces.taglib;
 
+import net.sourceforge.myfaces.el.SimpleActionMethodBinding;
 import net.sourceforge.myfaces.renderkit.JSFAttr;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import javax.faces.component.UICommand;
-import javax.faces.component.UIComponent;
-import javax.faces.component.UIParameter;
-import javax.faces.component.ValueHolder;
+import javax.faces.component.*;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
+import javax.faces.el.MethodBinding;
 import javax.faces.el.ValueBinding;
 import javax.faces.webapp.UIComponentTag;
 
@@ -184,6 +183,75 @@ public class MyfacesTagUtils
             else
             {
                 throw new IllegalArgumentException("Attribute " + propName + " must be a value reference");
+            }
+        }
+    }
+
+    public static void setActionProperty(FacesContext context,
+                                         UIComponent component,
+                                         String action)
+    {
+        if (action != null)
+        {
+            if (!(component instanceof UICommand))
+            {
+                throw new IllegalArgumentException("Component " + component.getClientId(context) + " is no UICommand");
+            }
+            MethodBinding mb;
+            if (isValueReference(action))
+            {
+                mb = context.getApplication().createMethodBinding(action, null);
+            }
+            else
+            {
+                mb = new SimpleActionMethodBinding(action);
+            }
+            ((UICommand)component).setAction(mb);
+        }
+    }
+
+    public static void setActionListenerProperty(FacesContext context,
+                                                 UIComponent component,
+                                                 String actionListener)
+    {
+        if (actionListener != null)
+        {
+            if (!(component instanceof ActionSource))
+            {
+                throw new IllegalArgumentException("Component " + component.getClientId(context) + " is no ActionSource");
+            }
+            if (isValueReference(actionListener))
+            {
+                Class args[] = {javax.faces.event.ActionEvent.class};
+                MethodBinding mb = context.getApplication().createMethodBinding(actionListener, args);
+                ((ActionSource)component).setActionListener(mb);
+            }
+            else
+            {
+                log.error("Invalid expression " + actionListener);
+            }
+        }
+    }
+
+    public static void setValueChangedListenerProperty(FacesContext context,
+                                                       UIComponent component,
+                                                       String valueChangedListener)
+    {
+        if (valueChangedListener != null)
+        {
+            if (!(component instanceof EditableValueHolder))
+            {
+                throw new IllegalArgumentException("Component " + component.getClientId(context) + " is no EditableValueHolder");
+            }
+            if (isValueReference(valueChangedListener))
+            {
+                Class args[] = {javax.faces.event.ValueChangeEvent.class};
+                MethodBinding mb = context.getApplication().createMethodBinding(valueChangedListener, args);
+                ((EditableValueHolder)component).setValueChangeListener(mb);
+            }
+            else
+            {
+                log.error("Invalid expression " + valueChangedListener);
             }
         }
     }

@@ -18,16 +18,10 @@
  */
 package net.sourceforge.myfaces.taglib.html;
 
-import net.sourceforge.myfaces.el.SimpleActionMethodBinding;
 import net.sourceforge.myfaces.renderkit.JSFAttr;
 import net.sourceforge.myfaces.renderkit.html.HTML;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
-import javax.faces.component.UICommand;
 import javax.faces.component.UIComponent;
-import javax.faces.context.FacesContext;
-import javax.faces.el.MethodBinding;
 
 
 /**
@@ -39,7 +33,7 @@ import javax.faces.el.MethodBinding;
 public class HtmlCommandButtonTag
     extends HtmlComponentTag
 {
-    private static final Log log = LogFactory.getLog(HtmlCommandButtonTag.class);
+    //private static final Log log = LogFactory.getLog(HtmlCommandButtonTag.class);
 
     public String getComponentType()
     {
@@ -93,37 +87,9 @@ public class HtmlCommandButtonTag
         setStringProperty(component, HTML.SIZE_ATTR, _size);
         setIntegerProperty(component, HTML.TABINDEX_ATTR, _tabindex);
         setStringProperty(component, HTML.TYPE_ATTR, _type);
-
-        if (_action != null)
-        {
-            MethodBinding mb;
-            if (isValueReference(_action))
-            {
-                mb = getFacesContext().getApplication().createMethodBinding(_action, null);
-            }
-            else
-            {
-                mb = new SimpleActionMethodBinding(_action);
-            }
-            ((UICommand)component).setAction(mb);
-        }
-
-        if (_actionListener != null)
-        {
-            if (isValueReference(_actionListener))
-            {
-                Class args[] = {javax.faces.event.ActionEvent.class};
-                MethodBinding mb = FacesContext.getCurrentInstance().getApplication().createMethodBinding(_actionListener, args);
-                ((UICommand)component).setActionListener(mb);
-            }
-            else
-            {
-                log.error("Invalid expression " + _actionListener);
-            }
-        }
-
+        setActionProperty(component, _action);
+        setActionListenerProperty(component, _actionListener);
         setBooleanProperty(component, JSFAttr.IMMEDIATE_ATTR, _immediate);
-
         setStringProperty(component, JSFAttr.IMAGE_ATTR, _image);
    }
 

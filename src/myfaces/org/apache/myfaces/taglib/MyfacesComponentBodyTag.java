@@ -179,17 +179,26 @@ public abstract class MyfacesComponentBodyTag
         MyfacesTagUtils.setConverterIdProperty(getFacesContext(), component, value);
     }
 
-    public void setValueBinding(UIComponent component,
-                                String propName,
-                                String value)
+    protected void setActionProperty(UIComponent component, String action)
     {
-        MyfacesTagUtils.setValueBinding(getFacesContext(), component, propName, value);
+        MyfacesTagUtils.setActionProperty(getFacesContext(), component, action);
+    }
+
+    protected void setActionListenerProperty(UIComponent component, String actionListener)
+    {
+        MyfacesTagUtils.setActionListenerProperty(getFacesContext(), component, actionListener);
     }
 
     protected void setValueChangedListenerProperty(UIComponent component, String valueChangedListener)
     {
-        //TODO:
-        //throw new UnsupportedOperationException("not yet implemented");
+        MyfacesTagUtils.setValueChangedListenerProperty(getFacesContext(), component, valueChangedListener);
+    }
+
+    protected void setValueBinding(UIComponent component,
+                                   String propName,
+                                   String value)
+    {
+        MyfacesTagUtils.setValueBinding(getFacesContext(), component, propName, value);
     }
 
 }
