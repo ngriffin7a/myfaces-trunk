@@ -94,6 +94,15 @@
     <filter>
         <filter-name>multipartFilter</filter-name>
         <filter-class>net.sourceforge.myfaces.custom.fileupload.MultipartFilter</filter-class>
+        <init-param>
+            <param-name>maxFileSize</param-name>
+            <param-value>10m</param-value>
+            <description>Set the size limit for uploaded files.
+                Format: 10 - 10 bytes
+                        10k - 10 KB
+                        10m - 10 MB
+            </description>
+        </init-param>
     </filter>
 
 
