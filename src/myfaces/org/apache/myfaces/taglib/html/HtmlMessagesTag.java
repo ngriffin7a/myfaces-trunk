@@ -65,6 +65,7 @@ public class HtmlMessagesTag
     private String _fatalClass;
     private String _fatalStyle;
     private String _layout;
+    private String _tooltip;
 
     protected void setProperties(UIComponent component)
     {
@@ -84,6 +85,7 @@ public class HtmlMessagesTag
         setStringProperty(component, JSFAttr.FATAL_CLASS_ATTR, _fatalClass);
         setStringProperty(component, JSFAttr.FATAL_STYLE_ATTR, _fatalStyle);
         setStringProperty(component, JSFAttr.LAYOUT_ATTR, _layout);
+        setBooleanProperty(component, JSFAttr.TOOLTIP_ATTR, _tooltip);
     }
 
     public void setFor(String aFor)
@@ -149,5 +151,10 @@ public class HtmlMessagesTag
     public void setLayout(String layout)
     {
         _layout = layout;
+    }
+
+    public void setTooltip(String tooltip)
+    {
+        _tooltip = tooltip;
     }
 }

@@ -50,7 +50,7 @@ import java.net.URLEncoder;
  * @version $Revision$ $Date$
  */
 public abstract class HtmlRenderer
-extends Renderer
+        extends Renderer
 {
     //~ Static fields/initializers -----------------------------------------------------------------
     private static final Log log = LogFactory.getLog(HtmlRenderer.class);

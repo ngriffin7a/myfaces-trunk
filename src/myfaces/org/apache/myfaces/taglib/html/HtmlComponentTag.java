@@ -18,7 +18,6 @@
  */
 package net.sourceforge.myfaces.taglib.html;
 
-import net.sourceforge.myfaces.renderkit.JSFAttr;
 import net.sourceforge.myfaces.renderkit.html.HTML;
 import net.sourceforge.myfaces.taglib.MyfacesComponentTag;
 
@@ -52,10 +51,6 @@ public abstract class HtmlComponentTag
     private String _onmouseover;
     private String _onmouseup;
 
-
-    //Common HtmlRenderer attributes
-    private String _tooltip;
-
     protected void setProperties(UIComponent component)
     {
         super.setProperties(component);
@@ -74,7 +69,6 @@ public abstract class HtmlComponentTag
         setStringProperty(component, HTML.ONKEYPRESS_ATTR, _onkeypress);
         setStringProperty(component, HTML.ONKEYDOWN_ATTR, _onkeydown);
         setStringProperty(component, HTML.ONKEYUP_ATTR, _onkeyup);
-        setStringProperty(component, JSFAttr.TOOLTIP_ATTR, _tooltip);
     }
 
     public void setStyleClass(String styleClass)
@@ -150,10 +144,5 @@ public abstract class HtmlComponentTag
     public void setOnkeyup(String onkeyup)
     {
         _onkeyup = onkeyup;
-    }
-
-    public void setTooltip(String tooltip)
-    {
-        _tooltip = tooltip;
     }
 }

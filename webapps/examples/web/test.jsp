@@ -9,10 +9,13 @@
 
     <p>view start
 
+    <h:messages globalOnly="false" layout="list" showDetail="true" />
+
     <p>
     <h:form id="testform">
         <h:output_text value="#{text['empty_selitem']}" />
         <h:input_text id="testinput" value="#{calcForm.number1}" />
+        <h:message for="testform:testinput" showSummary="false" showDetail="true" />
     </h:form>
 
     <p>view end

@@ -38,7 +38,7 @@ import java.io.IOException;
  * @version $Revision$ $Date$
  */
 public class HtmlSecretRenderer
-extends HtmlRenderer
+        extends HtmlRenderer
 {
     public void encodeEnd(FacesContext facesContext, UIComponent uiComponent)
     throws IOException

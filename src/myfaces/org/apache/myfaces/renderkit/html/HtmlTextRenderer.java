@@ -78,15 +78,26 @@ public class HtmlTextRenderer
     protected void renderOutput(FacesContext facesContext, HtmlOutputText htmlOutput)
         throws IOException
     {
+        String text = RendererUtils.getStringValue(facesContext, htmlOutput);
+        renderOutputText(facesContext, htmlOutput, text, htmlOutput.isEscape());
+    }
+
+
+    public static void renderOutputText(FacesContext facesContext,
+                                        UIComponent component,
+                                        String text,
+                                        boolean escape)
+        throws IOException
+    {
         ResponseWriter writer = facesContext.getResponseWriter();
 
         boolean span = false;
         //Redirect output of span element to temporary writer
         StringWriter buf = new StringWriter();
         ResponseWriter bufWriter = writer.cloneWithWriter(buf);
-        bufWriter.startElement(HTML.SPAN_ELEM, htmlOutput);
-        span |= HTMLUtil.renderHTMLAttributes(bufWriter, htmlOutput, HTML.UNIVERSAL_ATTRIBUTES);
-        span |= HTMLUtil.renderHTMLAttributes(bufWriter, htmlOutput, HTML.EVENT_HANDLER_ATTRIBUTES);
+        bufWriter.startElement(HTML.SPAN_ELEM, component);
+        span |= HTMLUtil.renderHTMLAttributes(bufWriter, component, HTML.UNIVERSAL_ATTRIBUTES);
+        span |= HTMLUtil.renderHTMLAttributes(bufWriter, component, HTML.EVENT_HANDLER_ATTRIBUTES);
         bufWriter.close();
         if (span)
         {
@@ -94,8 +105,7 @@ public class HtmlTextRenderer
             writer.write(buf.toString());
         }
 
-        String text = RendererUtils.getStringValue(facesContext, htmlOutput);
-        if (htmlOutput.isEscape())
+        if (escape)
         {
             writer.writeText(text, JSFAttr.VALUE_ATTR);
         }

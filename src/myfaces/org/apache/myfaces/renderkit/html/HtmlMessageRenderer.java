@@ -21,12 +21,12 @@ package net.sourceforge.myfaces.renderkit.html;
 import net.sourceforge.myfaces.component.html.MyFacesHtmlOutputMessage;
 import net.sourceforge.myfaces.renderkit.JSFAttr;
 import net.sourceforge.myfaces.renderkit.RendererUtils;
-import net.sourceforge.myfaces.renderkit.html.util.HTMLEncoder;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLUtil;
-import net.sourceforge.myfaces.util.bundle.BundleUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
+import javax.faces.application.FacesMessage;
 import javax.faces.component.UIComponent;
-import javax.faces.component.UIOutput;
 import javax.faces.component.UIParameter;
 import javax.faces.component.html.HtmlMessage;
 import javax.faces.component.html.HtmlOutputMessage;
@@ -38,15 +38,17 @@ import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Locale;
 
 /**
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
 public class HtmlMessageRenderer
+        extends HtmlRenderer
 {
-    //private static final Log log = LogFactory.getLog(HtmlMessageRenderer.class);
+    private static final Log log = LogFactory.getLog(HtmlMessageRenderer.class);
+
+    private static final Object[] EMPTY_ARGS = new Object[0];
 
     public void encodeBegin(FacesContext facesContext, UIComponent uiComponent)
             throws IOException
@@ -62,125 +64,129 @@ public class HtmlMessageRenderer
             throws IOException
     {
         RendererUtils.checkParamValidity(facesContext, component, null);
+        if (!RendererUtils.isVisibleOnUserRole(facesContext, component)) return;
 
-        if (RendererUtils.isVisibleOnUserRole(facesContext, component))
+        String text;
+        boolean escape;
+
+        if (component instanceof HtmlOutputMessage)
         {
-            if (component instanceof HtmlMessage)
+            HtmlOutputMessage htmlOutputMessage = (HtmlOutputMessage)component;
+            text = getOutputMessageText(facesContext, htmlOutputMessage);
+            // escape property is missing in HtmlOutputMessage API
+            if (component instanceof MyFacesHtmlOutputMessage)
             {
-                renderMessage(facesContext, (HtmlMessage)component);
-            }
-            else if (component instanceof HtmlOutputMessage)
-            {
-                renderOutputMessage(facesContext, (HtmlOutputMessage)component);
+                escape = (((MyFacesHtmlOutputMessage)component).isEscape());
             }
             else
             {
-                throw new IllegalArgumentException("Unsupported component class " + component.getClass().getName());
+                Boolean b = (Boolean)component.getAttributes().get(JSFAttr.ESCAPE_ATTR);
+                escape = (b == null || b.booleanValue());
             }
+            HtmlTextRenderer.renderOutputText(facesContext, component, text, escape);
         }
-
-        /*
-        ResponseWriter writer = facesContext.getResponseWriter();
-
-        /* FIXME: see HtmlTextRenderer
-        StringBuffer   buf = new StringBuffer();
-        HTMLUtil.renderStyleClass(buf, component);
-        HTMLUtil.renderHTMLAttributes(buf, component, HTML.UNIVERSAL_ATTRIBUTES);
-        HTMLUtil.renderHTMLAttributes(buf, component, HTML.EVENT_HANDLER_ATTRIBUTES);
-
-        if (buf.length() > 0)
+        else if (component instanceof HtmlMessage)
         {
-            writer.write("<span ");
-            writer.write(buf.toString());
-            writer.write(">");
-        }
-        */
-
-        String pattern;
-        String key = (String) component.getAttributes().get(JSFAttr.KEY_ATTR);
-
-        if (key != null)
-        {
-            pattern =
-                BundleUtils.getString(
-                    facesContext, (String) component.getAttributes().get(JSFAttr.BUNDLE_ATTR), key);
+            renderMessage(facesContext, (HtmlMessage)component);
         }
         else
         {
-            pattern = getStringValue(facesContext, (UIOutput) component);
+            throw new IllegalArgumentException("Unsupported component type " + component.getClass().getName());
         }
-
-        //FIXME
-        //Locale locale = facesContext.getLocale;
-        Locale locale = null;
-        MessageFormat format   = new MessageFormat(pattern, locale);
-
-        //nested parameters
-        List     params   = null;
-        //FIXME
-        //Iterator children = component.getChildren();
-        Iterator children = null;
-
-        while (children.hasNext())
-        {
-            UIComponent child = (UIComponent) children.next();
-
-            if (child instanceof UIParameter)
-            {
-                if (params == null)
-                {
-                    params = new ArrayList();
-                }
-
-                //FIXME
-                //params.add(((UIParameter) child).currentValue(facesContext));
-            }
-        }
-
-        String text;
-
-        try
-        {
-            if (params == null)
-            {
-                text = format.format(EMPTY_PARAMS);
-            }
-            else
-            {
-                text = format.format(params.toArray());
-            }
-        }
-        catch (Exception e)
-        {
-            log.error("Error formatting message", e);
-            text = pattern;
-        }
-
-        writer.write(HTMLEncoder.encode(text, true, true));
-
-        /* FIXME
-        if (buf.length() > 0)
-        {
-            writer.write("</span>");
-        }
-        */
     }
 
 
 
-    protected void renderOutputMessage(FacesContext facesContext,
-                                       HtmlOutputMessage htmlOutputMessage)
-        throws IOException
+    private String getOutputMessageText(FacesContext facesContext,
+                                        HtmlOutputMessage htmlOutputMessage)
     {
+        String pattern = RendererUtils.getStringValue(facesContext, htmlOutputMessage);
+        Object[] args;
+
+        List childList = htmlOutputMessage.getChildren();
+        if (childList.isEmpty())
+        {
+            args = EMPTY_ARGS;
+        }
+        else
+        {
+            List argsList = new ArrayList();
+            for (Iterator it = childList.iterator(); it.hasNext(); )
+            {
+                UIComponent child = (UIComponent)it.next();
+                if (child instanceof UIParameter)
+                {
+                    argsList.add(((UIParameter)child).getValue());
+                }
+            }
+            args = argsList.toArray(new Object[argsList.size()]);
+        }
+
+        MessageFormat format = new MessageFormat(pattern, facesContext.getViewRoot().getLocale());
+        try
+        {
+            return format.format(args);
+        }
+        catch (Exception e)
+        {
+            log.error("Error formatting message of component " + htmlOutputMessage.getClientId(facesContext));
+            return "";
+        }
+    }
+
+
+    /**
+     * Identical to {@link HtmlMessagesRenderer#renderSingleMessage} functionality
+     * but methods cannot be combined because of different component types.
+     */
+    private void renderMessage(FacesContext facesContext,
+                               HtmlMessage htmlMessage)
+            throws IOException
+    {
+        String forClientId = htmlMessage.getFor();
+        if (forClientId == null)
+        {
+            throw new NullPointerException("Attribute 'for' of HtmlMessage must not be null");
+        }
+
+        Iterator messageIterator = facesContext.getMessages(forClientId);
+        if (!messageIterator.hasNext())
+        {
+            // No associated message, nothing to render
+            return;
+        }
+
+        // get first message
+        FacesMessage facesMessage = (FacesMessage)messageIterator.next();
+
+        // determine style and style class
+        String[] tmp = getStyleAndStyleClass(htmlMessage, facesMessage.getSeverity());
+        String style = tmp[0];
+        String styleClass = tmp[1];
+
+        String summary = facesMessage.getSummary();
+        String detail = facesMessage.getDetail();
+
+        String title = htmlMessage.getTitle();
+        if (title == null && htmlMessage.isTooltip())
+        {
+            title = summary;
+        }
+
         ResponseWriter writer = facesContext.getResponseWriter();
 
         boolean span = false;
         //Redirect output of span element to temporary writer
         StringWriter buf = new StringWriter();
         ResponseWriter bufWriter = writer.cloneWithWriter(buf);
-        bufWriter.startElement(HTML.SPAN_ELEM, htmlOutputMessage);
-        span |= HTMLUtil.renderHTMLAttributes(bufWriter, htmlOutputMessage, HTML.UNIVERSAL_ATTRIBUTES);
-        span |= HTMLUtil.renderHTMLAttributes(bufWriter, htmlOutputMessage, HTML.EVENT_HANDLER_ATTRIBUTES);
+        bufWriter.startElement(HTML.SPAN_ELEM, htmlMessage);
+        //universal attributes
+        span |= HTMLUtil.renderHTMLAttribute(bufWriter, htmlMessage, HTML.DIR_ATTR, HTML.DIR_ATTR);
+        span |= HTMLUtil.renderHTMLAttribute(bufWriter, htmlMessage, HTML.LANG_ATTR, HTML.LANG_ATTR);
+        span |= HTMLUtil.renderHTMLAttribute(bufWriter, HTML.TITLE_ATTR, HTML.TITLE_ATTR, title);
+        span |= HTMLUtil.renderHTMLAttribute(bufWriter, HTML.STYLE_ATTR, HTML.STYLE_ATTR, style);
+        span |= HTMLUtil.renderHTMLAttribute(bufWriter, HTML.STYLE_CLASS_ATTR, HTML.STYLE_CLASS_ATTR, styleClass);
+        span |= HTMLUtil.renderHTMLAttributes(bufWriter, htmlMessage, HTML.EVENT_HANDLER_ATTRIBUTES);
         bufWriter.close();
         if (span)
         {
@@ -188,25 +194,24 @@ public class HtmlMessageRenderer
             writer.write(buf.toString());
         }
 
-        String text = RendererUtils.getStringValue(facesContext, htmlOutputMessage);
+        boolean showSummary = (htmlMessage.isShowSummary() && summary != null);
+        boolean showDetail = (htmlMessage.isShowDetail() && detail != null);
 
-        boolean escape;
-        if (htmlOutputMessage instanceof MyFacesHtmlOutputMessage)
+        if (showSummary)
         {
-            escape = (((MyFacesHtmlOutputMessage)htmlOutputMessage).isEscape());
+            if (showDetail)
+            {
+                writer.writeText(summary + ": ", null);
+            }
+            else
+            {
+                writer.writeText(summary, null);
+            }
         }
-        else
+
+        if (showDetail)
         {
-            Boolean b = (Boolean)htmlOutputMessage.getAttributes().get(JSFAttr.ESCAPE_ATTR);
-            escape = (b == null || b.booleanValue());
-        }
-        if (escape)
-        {
-            writer.writeText(text, JSFAttr.VALUE_ATTR);
-        }
-        else
-        {
-            writer.write(text);
+            writer.writeText(detail, null);
         }
 
         if (span)
@@ -216,10 +221,44 @@ public class HtmlMessageRenderer
     }
 
 
-    private String getMessageText()
+    private String[] getStyleAndStyleClass(HtmlMessage htmlMessage,
+                                           FacesMessage.Severity severity)
     {
+        String style = null;
+        String styleClass = null;
+        if (severity == FacesMessage.SEVERITY_INFO)
+        {
+            style = htmlMessage.getInfoStyle();
+            styleClass = htmlMessage.getInfoClass();
+        }
+        else if (severity == FacesMessage.SEVERITY_WARN)
+        {
+            style = htmlMessage.getWarnStyle();
+            styleClass = htmlMessage.getWarnClass();
+        }
+        else if (severity == FacesMessage.SEVERITY_ERROR)
+        {
+            style = htmlMessage.getErrorStyle();
+            styleClass = htmlMessage.getErrorClass();
+        }
+        else if (severity == FacesMessage.SEVERITY_FATAL)
+        {
+            style = htmlMessage.getFatalStyle();
+            styleClass = htmlMessage.getFatalClass();
+        }
 
+        if (style == null)
+        {
+            style = htmlMessage.getStyle();
+        }
+
+        if (styleClass == null)
+        {
+            styleClass = htmlMessage.getStyleClass();
+        }
+
+        return new String[] {style, styleClass};
     }
 
-
+    
 }

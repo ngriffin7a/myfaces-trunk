@@ -227,6 +227,14 @@ Start of revised 1.0 conforming tags
             <rtexprvalue>false</rtexprvalue>
             <description>CSS style to be used for messages with severity "FATAL".</description>
         </attribute>
+        <attribute>
+            <name>tooltip</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
+            <description>
+                If true, the message summary will be rendered as a tooltip (i.e. HTML title attribute).
+            </description>
+        </attribute>
     </tag>
 
 <!-- messages -->
@@ -299,7 +307,15 @@ Start of revised 1.0 conforming tags
             <name>layout</name>
             <required>false</required>
             <rtexprvalue>false</rtexprvalue>
-            <description>The layout: "table" or "list".</description>
+            <description>The layout: "table" or "list". Default: list</description>
+        </attribute>
+        <attribute>
+            <name>tooltip</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
+            <description>
+                If true, the message summary will be rendered as a tooltip (i.e. HTML title attribute).
+            </description>
         </attribute>
     </tag>
 

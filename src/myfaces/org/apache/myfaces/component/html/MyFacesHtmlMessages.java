@@ -18,7 +18,10 @@
  */
 package net.sourceforge.myfaces.component.html;
 
+import net.sourceforge.myfaces.renderkit.JSFAttr;
+
 import javax.faces.component.html.HtmlMessages;
+import javax.faces.el.ValueBinding;
 
 /**
  * DOCUMENT ME!
@@ -29,4 +32,20 @@ import javax.faces.component.html.HtmlMessages;
 public class MyFacesHtmlMessages
     extends HtmlMessages
 {
+    // missing in API of HtmlMessages
+    private Boolean _tooltip;
+
+    public boolean isTooltip()
+    {
+        if (_tooltip != null) return _tooltip.booleanValue();
+        ValueBinding vb = getValueBinding(JSFAttr.TOOLTIP_ATTR);
+        return vb != null ?
+               ((Boolean)vb.getValue(getFacesContext())).booleanValue() :
+               true;
+    }
+
+    public void setTooltip(boolean tooltip)
+    {
+        _tooltip = Boolean.valueOf(tooltip);
+    }
 }

@@ -19,11 +19,11 @@
 package net.sourceforge.myfaces.renderkit.html.legacy;
 
 import net.sourceforge.myfaces.renderkit.JSFAttr;
+import net.sourceforge.myfaces.renderkit.html.HTML;
+import net.sourceforge.myfaces.renderkit.html.HtmlRenderer;
 import net.sourceforge.myfaces.renderkit.html.state.StateRenderer;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLEncoder;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLUtil;
-import net.sourceforge.myfaces.renderkit.html.HtmlRenderer;
-import net.sourceforge.myfaces.renderkit.html.HTML;
 import net.sourceforge.myfaces.util.bundle.BundleUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -162,6 +162,7 @@ public class HyperlinkRenderer
         ResponseWriter writer = facesContext.getResponseWriter();
         HttpServletRequest request = (HttpServletRequest)facesContext.getExternalContext().getRequest();
 
+        /*
         if (!isEnabledOnUserRole(facesContext, uiComponent))
         {
             //write out body content
@@ -169,6 +170,7 @@ public class HyperlinkRenderer
             bodyContent.writeOut(writer);
             return;
         }
+        */
 
         writer.write("<a href=\"");
         String href = (String)uiComponent.getAttributes().get(HTML.HREF_ATTR);

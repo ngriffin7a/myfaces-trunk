@@ -18,9 +18,8 @@
  */
 package net.sourceforge.myfaces.renderkit.html.legacy;
 
-import net.sourceforge.myfaces.renderkit.html.util.HTMLUtil;
-import net.sourceforge.myfaces.renderkit.html.util.SelectItemUtil;
 import net.sourceforge.myfaces.renderkit.html.HtmlRenderer;
+import net.sourceforge.myfaces.renderkit.html.util.SelectItemUtil;
 
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
@@ -56,6 +55,6 @@ extends HtmlRenderer
     throws IOException
     {
         int size = SelectItemUtil.getSelectItemsCount(facesContext, uiComponent);
-        HTMLUtil.renderSelect(facesContext, uiComponent, TYPE, size);
+        //FIXME: HTMLUtil.renderSelect(facesContext, uiComponent, TYPE, size);
     }
 }

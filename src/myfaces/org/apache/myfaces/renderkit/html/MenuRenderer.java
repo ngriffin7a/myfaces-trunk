@@ -19,7 +19,6 @@
 package net.sourceforge.myfaces.renderkit.html;
 
 import net.sourceforge.myfaces.renderkit.JSFAttr;
-import net.sourceforge.myfaces.renderkit.html.util.HTMLUtil;
 
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
@@ -67,6 +66,6 @@ extends HtmlRenderer
             size = DEFAULT_SIZE;
         }
 
-        HTMLUtil.renderSelect(facesContext, uiComponent, TYPE, size);
+        //FIXME: HTMLUtil.renderSelect(facesContext, uiComponent, TYPE, size);
     }
 }

@@ -18,14 +18,10 @@
  */
 package net.sourceforge.myfaces.renderkit.html;
 
-import net.sourceforge.myfaces.renderkit.html.util.HTMLEncoder;
-import net.sourceforge.myfaces.renderkit.html.util.HTMLUtil;
-import net.sourceforge.myfaces.renderkit.html.HtmlRenderer;
-import net.sourceforge.myfaces.renderkit.html.HTML;
 import net.sourceforge.myfaces.renderkit.JSFAttr;
+import net.sourceforge.myfaces.renderkit.html.util.HTMLUtil;
 
 import javax.faces.component.UIComponent;
-import javax.faces.component.UIInput;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 import javax.faces.el.ValueBinding;
@@ -39,7 +35,7 @@ import java.io.IOException;
  * @version $Revision$ $Date$
  */
 public class HtmlTextareaRenderer
-extends HtmlRenderer
+        extends HtmlRenderer
 {
     public void encodeEnd(FacesContext facesContext, UIComponent uiComponent)
     throws IOException

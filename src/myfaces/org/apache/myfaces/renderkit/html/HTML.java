@@ -91,9 +91,10 @@ public class HTML
     {
         DIR_ATTR,
         LANG_ATTR,
-        STYLE_ATTR,
         TITLE_ATTR,
+        STYLE_ATTR,
         STYLE_CLASS_ATTR
+        //NOTE: if changed, please verify universal attributes in HtmlMessageRenderer !
     };
 
     //universal, but not the same property-name -

@@ -99,10 +99,12 @@ public class HyperlinkRenderer
         UICommand      uiCommand = (UICommand) uiComponent;
         ResponseWriter writer = facesContext.getResponseWriter();
 
+        /* FIXME
         if (!isEnabledOnUserRole(facesContext, uiCommand))
         {
             return;
         }
+         */
 
         writer.write("<a href=\"");
 

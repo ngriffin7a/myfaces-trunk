@@ -32,6 +32,7 @@ import javax.faces.el.ValueBinding;
 public class MyFacesHtmlOutputMessage
     extends HtmlOutputMessage
 {
+    // missing in API of HtmlOutputMessage
     private Boolean _escape;
 
     public boolean isEscape()

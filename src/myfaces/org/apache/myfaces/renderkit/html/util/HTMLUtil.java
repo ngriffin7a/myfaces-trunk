@@ -27,8 +27,8 @@ import javax.faces.component.UIComponent;
 import javax.faces.component.UISelectMany;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
-import javax.faces.model.SelectItem;
 import javax.faces.el.ValueBinding;
+import javax.faces.model.SelectItem;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.Set;
@@ -123,12 +123,11 @@ public class HTMLUtil
      * @throws IOException
      */
     public static boolean renderHTMLAttribute(ResponseWriter writer,
-                                              UIComponent component,
                                               String rendererAttrName,
-                                              String htmlAttrName)
+                                              String htmlAttrName,
+                                              Object value)
         throws IOException
     {
-        Object value = component.getAttributes().get(rendererAttrName);
         if (!RendererUtils.isDefaultAttributeValue(value))
         {
             writer.writeAttribute(htmlAttrName, value, rendererAttrName);
@@ -138,6 +137,20 @@ public class HTMLUtil
         {
             return false;
         }
+    }
+
+    /**
+     * @return true, if the attribute was written
+     * @throws IOException
+     */
+    public static boolean renderHTMLAttribute(ResponseWriter writer,
+                                              UIComponent component,
+                                              String rendererAttrName,
+                                              String htmlAttrName)
+        throws IOException
+    {
+        Object value = component.getAttributes().get(rendererAttrName);
+        return renderHTMLAttribute(writer, rendererAttrName, htmlAttrName, value);
     }
 
 

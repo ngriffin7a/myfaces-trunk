@@ -64,46 +64,65 @@ public class MessageFactory
                                    String messageId,
                                    Object args[])
     {
-        ResourceBundle bundle;
+        ResourceBundle appBundle;
+        ResourceBundle defBundle;
         String summary;
         String detail;
 
-        bundle = getApplicationBundle(facesContext, locale);
-        summary = getBundleString(bundle, messageId);
-        if (summary == null)
+        appBundle = getApplicationBundle(facesContext, locale);
+        summary = getBundleString(appBundle, messageId);
+        if (summary != null)
         {
-            /*
-            bundle = getMyFacesBundle(locale);
-            summary = getBundleString(bundle, messageId);
-            if (summary == null)
-            {
-            */
-                bundle = getDefaultBundle(locale);
-                summary = getBundleString(bundle, messageId);
-                if (summary == null)
-                {
-                    if (log.isWarnEnabled()) log.warn("No message with id " + messageId + " found in any bundle");
-                    return new FacesMessage(messageId, messageId);
-                }
-            //}
+            detail = getBundleString(appBundle, messageId + DETAIL_SUFFIX);
         }
-
-        detail = getBundleString(bundle, messageId + DETAIL_SUFFIX);
-        if (detail == null)
+        else
         {
-            if (log.isInfoEnabled()) log.info("No detail for message id " + messageId + " found");
-            detail = summary;
+            defBundle = getDefaultBundle(locale);
+            summary = getBundleString(defBundle, messageId);
+            if (summary != null)
+            {
+                detail = getBundleString(defBundle, messageId + DETAIL_SUFFIX);
+            }
+            else
+            {
+                //Try to find detail alone
+                detail = getBundleString(appBundle, messageId + DETAIL_SUFFIX);
+                if (detail != null)
+                {
+                    summary = null;
+                }
+                else
+                {
+                    detail = getBundleString(defBundle, messageId + DETAIL_SUFFIX);
+                    if (detail != null)
+                    {
+                        summary = null;
+                    }
+                    else
+                    {
+                        //Neither detail nor summary found
+                        if (log.isWarnEnabled()) log.warn("No message with id " + messageId + " found in any bundle");
+                        return new FacesMessage(messageId, null);
+                    }
+                }
+            }
         }
 
         if (args != null && args.length > 0)
         {
             MessageFormat format;
 
-            format = new MessageFormat(summary, locale);
-            summary = format.format(args);
+            if (summary != null)
+            {
+                format = new MessageFormat(summary, locale);
+                summary = format.format(args);
+            }
 
-            format = new MessageFormat(detail, locale);
-            detail = format.format(args);
+            if (detail != null)
+            {
+                format = new MessageFormat(detail, locale);
+                detail = format.format(args);
+            }
         }
 
         return new FacesMessage(summary, detail);

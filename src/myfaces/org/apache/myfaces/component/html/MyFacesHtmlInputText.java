@@ -34,6 +34,7 @@ public class MyFacesHtmlInputText
         extends HtmlInputText
         implements UserRoleSupport
 {
+    // MyFaces extensions
     private String _enabledOnUserRole;
     private String _visibleOnUserRole;
 
