@@ -30,7 +30,7 @@
 
 <taglib>
 
-    <tlib-version>0.4.0</tlib-version>
+    <tlib-version>0.9.0</tlib-version>
     <jsp-version>1.2</jsp-version>
     <short-name>MyFaces Basic Core Tag Library</short-name>
     <uri>http://java.sun.com/jsf/core</uri>
@@ -44,12 +44,12 @@
 use_faces
 ======================================================
 -->
+
     <tag>
-        <name>use_faces</name>
-        <tag-class>net.sourceforge.myfaces.taglib.core.UseFacesTag</tag-class>
+        <name>view</name>
+        <tag-class>net.sourceforge.myfaces.taglib.core.ViewTag</tag-class>
         <body-content>JSP</body-content>
     </tag>
-
 
 
 <!--
@@ -138,5 +138,19 @@ use_faces
       <body-content>JSP</body-content>
       &validator_min_max_attributes;
     </tag>
+
+
+<!--
+======================================================
+legacy tags
+======================================================
+-->
+    <tag>
+        <name>use_faces</name>
+        <tag-class>net.sourceforge.myfaces.taglib.legacy.UseFacesTag</tag-class>
+        <body-content>JSP</body-content>
+    </tag>
+
+
 
 </taglib>

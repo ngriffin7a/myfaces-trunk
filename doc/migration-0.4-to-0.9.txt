@@ -1,0 +1,20 @@
+Necessary steps to migrate applications from MyFaces 0.4.x to 0.9.x
+===================================================================
+
+Mandatory steps
+---------------
+
+
+
+
+
+
+Optional steps (deprecated features)
+------------------------------------
+* The following web.xml init parameters can be removed:
+    myfaces_WrapPageContext - did not work with all JSP containers and is obsoltete with Tomcat 5
+    myfaces_DefaultLanguage - no longer needed
+    myfaces_LogLevel - no longer needed
+    myfaces_AutoCreateRequestScopeBeans - no longer needed
+
+* change <f:use_faces> tags to <f:view>

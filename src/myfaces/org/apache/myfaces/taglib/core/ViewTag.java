@@ -58,6 +58,7 @@ public class ViewTag
 
     public int doStartTag() throws JspException
     {
+        if (log.isTraceEnabled()) log.trace("entering ViewTag.doStartTag");
         super.doStartTag();
         FacesContext facesContext = FacesContext.getCurrentInstance();
         ResponseWriter responseWriter = facesContext.getResponseWriter();
@@ -74,10 +75,12 @@ public class ViewTag
         StateManager stateManager = facesContext.getApplication().getViewHandler().getStateManager();
         if (stateManager.isSavingStateInClient(facesContext))
         {
+            if (log.isTraceEnabled()) log.trace("leaving ViewTag.doStartTag");
             return BodyTag.EVAL_BODY_BUFFERED;
         }
         else
         {
+            if (log.isTraceEnabled()) log.trace("leaving ViewTag.doStartTag");
             return BodyTag.EVAL_BODY_INCLUDE;
         }
     }
@@ -89,6 +92,7 @@ public class ViewTag
 
     public int doEndTag() throws JspException
     {
+        if (log.isTraceEnabled()) log.trace("entering ViewTag.doEndTag");
         FacesContext facesContext = FacesContext.getCurrentInstance();
         ResponseWriter responseWriter = facesContext.getResponseWriter();
         try
@@ -108,11 +112,13 @@ public class ViewTag
             stateManager.saveSerializedView(facesContext);
         }
 
+        if (log.isTraceEnabled()) log.trace("leaving ViewTag.doEndTag");
         return super.doEndTag();
     }
 
     public int doAfterBody() throws JspException
     {
+        if (log.isTraceEnabled()) log.trace("entering ViewTag.doAfterBody");
         try
         {
             BodyContent bodyContent = getBodyContent();
@@ -173,6 +179,7 @@ public class ViewTag
             log.error("Error writing body content", e);
             throw new JspException(e);
         }
+        if (log.isTraceEnabled()) log.trace("leaving ViewTag.doAfterBody");
         return super.doAfterBody();
     }
 }
