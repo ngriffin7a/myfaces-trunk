@@ -97,7 +97,7 @@ public class GridRenderer
                                   Renderer renderer,
                                   UIComponent uiComponent) throws IOException
     {
-        UIComponent gridComponent = UIComponentUtils.getParentOrFacetOwner(uiComponent);
+        UIComponent gridComponent = uiComponent.getParent();
         int actualColumn = getAttributeValue(gridComponent, COLUMN_COUNT_ATTR);
         int actualRow = getAttributeValue(gridComponent, ROW_COUNT_ATTR);
         int columns = getAttributeValue(gridComponent, COLUMNS_ATTR);

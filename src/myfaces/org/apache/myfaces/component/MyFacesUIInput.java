@@ -42,26 +42,17 @@ public class MyFacesUIInput
 
 
 //------------------------------------------------------------------------------
-// UIComponentHelper Delegation
-// HACK: Delegation, because UIComponentBase does not support Facets properly.
-//       (getClientId crashes, etc.)
-
-    private UIComponentHelper _uiComponentHelper = new UIComponentHelper(this);
 
     public String getClientId(FacesContext context)
     {
-        return _uiComponentHelper.getClientId(context);
+        return UIComponentUtils.getClientId(context, this);
     }
 
     public void addFacet(String facetName, UIComponent facet)
     {
         super.addFacet(facetName, facet);
-        _uiComponentHelper.addFacet(facetName, facet);
+        UIComponentUtils.ensureComponentInNamingContainer(facet);
     }
 
-    public UIComponent getParent()
-    {
-        return _uiComponentHelper.getParent(super.getParent());
-    }
 //------------------------------------------------------------------------------
 }

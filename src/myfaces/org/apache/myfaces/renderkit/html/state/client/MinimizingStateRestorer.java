@@ -142,8 +142,8 @@ public class MinimizingStateRestorer
         for (int i = 0, len = uiComponent.getChildCount(); i < len; i++)
         {
             UIComponent child = uiComponent.getChild(i);
-            String uniqueId = UIComponentUtils.getUniqueComponentId(facesContext, child);
-            if (unrendererComponents.contains(uniqueId))
+            String clientId = child.getClientId(facesContext);
+            if (unrendererComponents.contains(clientId))
             {
                 UIComponentUtils.removeChild(uiComponent, i);
                 i--;
@@ -160,8 +160,8 @@ public class MinimizingStateRestorer
         {
             String facetName = (String)it.next();
             UIComponent child = uiComponent.getFacet(facetName);
-            String uniqueId = UIComponentUtils.getUniqueComponentId(facesContext, child);
-            if (unrendererComponents.contains(uniqueId))
+            String clientId = child.getClientId(facesContext);
+            if (unrendererComponents.contains(clientId))
             {
                 //we must not remove via Iterator,
                 //because we cannot be sure that it (properly) supports the remove method
@@ -554,7 +554,7 @@ public class MinimizingStateRestorer
                 = RequestParameterNames.getListenerParameterInfo(paramName);
             if (info != null)
             {
-                //UIComponent root = facesContext.getTree().getRoot();
+                UIComponent root = facesContext.getTree().getRoot();
                 String paramValue = getStateParameter(stateMap, paramName);
                 FacesListener listener;
                 if (info.serializedListener)
@@ -565,10 +565,7 @@ public class MinimizingStateRestorer
                 else
                 {
                     //Listener is another component, paramValue is the uniqueId
-                    //listener = (FacesListener)root.findComponent(paramValue);
-                    listener = (FacesListener)UIComponentUtils.findComponentByUniqueId(facesContext,
-                                                                                       facesContext.getTree(),
-                                                                                       paramValue);
+                    listener = (FacesListener)root.findComponent(paramValue);
                     if (listener == null)
                     {
                         LogUtil.getLogger().severe("Could not find listener component for restored listener of type " + info.listenerType);
@@ -576,15 +573,10 @@ public class MinimizingStateRestorer
                     }
                 }
 
-                /*
-                UIComponent uiComponent = root.findComponent(info.uniqueComponentId);
-                */
-                UIComponent uiComponent = UIComponentUtils.findComponentByUniqueId(facesContext,
-                                                                                   facesContext.getTree(),
-                                                                                   info.uniqueComponentId);
+                UIComponent uiComponent = root.findComponent(info.clientId);
                 if (uiComponent == null)
                 {
-                    LogUtil.getLogger().severe("Could not find component " + info.uniqueComponentId + " to add restored listener of type " + listener.getClass().getName());
+                    LogUtil.getLogger().severe("Could not find component " + info.clientId + " to add restored listener of type " + listener.getClass().getName());
                     continue;
                 }
 

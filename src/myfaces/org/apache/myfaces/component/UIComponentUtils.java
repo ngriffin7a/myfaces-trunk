@@ -31,13 +31,9 @@ import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.convert.ConverterException;
-import javax.faces.tree.Tree;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
-import java.lang.reflect.Field;
-import java.security.AccessController;
-import java.security.PrivilegedAction;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -169,6 +165,9 @@ public class UIComponentUtils
     }
 
 
+    /**
+     * @deprecated obsolet?
+     */
     public static void setTransient(UIComponent uiComponent, boolean b)
     {
         uiComponent.setAttribute(MinimizingStateSaver.TRANSIENT_ATTR,
@@ -176,6 +175,9 @@ public class UIComponentUtils
     }
 
 
+    /**
+     * @deprecated obsolet?
+     */
     public static boolean isTransient(UIComponent uiComponent)
     {
         Boolean trans = (Boolean)uiComponent.getAttribute(MinimizingStateSaver.TRANSIENT_ATTR);
@@ -189,79 +191,6 @@ public class UIComponentUtils
             return trans.booleanValue();
         }
     }
-
-
-
-    public static List[] getListeners(UIComponent uiComponent)
-    {
-        if (uiComponent instanceof MyFacesUICommand)
-        {
-            return ((MyFacesUICommand)uiComponent).getListeners();
-        }
-        else if (uiComponent instanceof MyFacesUIInput)
-        {
-            return ((MyFacesUIInput)uiComponent).getListeners();
-        }
-        else if (uiComponent instanceof javax.faces.component.UICommand ||
-                 uiComponent instanceof javax.faces.component.UIInput)
-        {
-            //HACK to get protected field "listeners" from the given UICommand or UIInput:
-            //TODO: try to convince Sun of making listeners public or give us a method to access them
-            try
-            {
-                Field f = null;
-                Class c = uiComponent.getClass();
-                while (f == null && c != null && !c.equals(Object.class))
-                {
-                    try
-                    {
-                        f = c.getDeclaredField("listeners");
-                    }
-                    catch (NoSuchFieldException e)
-                    {
-                    }
-                    c = c.getSuperclass();
-                }
-
-                if (f == null)
-                {
-                    throw new RuntimeException(new NoSuchFieldException());
-                }
-
-                List[] theListeners;
-                if (f.isAccessible())
-                {
-                    theListeners = (List[])f.get(uiComponent);
-                }
-                else
-                {
-                    final Field finalF = f;
-                    AccessController.doPrivileged(
-                        new PrivilegedAction()
-                        {
-                            public Object run()
-                            {
-                                finalF.setAccessible(true);
-                                return null;
-                            }
-                        });
-                    theListeners = (List[])f.get(uiComponent);
-                    f.setAccessible(false);
-                }
-
-                return theListeners;
-            }
-            catch (IllegalAccessException e)
-            {
-                throw new RuntimeException(e);
-            }
-        }
-        else
-        {
-            return null;
-        }
-    }
-
 
 
     public static String toString(UIComponent comp)
@@ -290,19 +219,6 @@ public class UIComponentUtils
 
 
 
-    public static String getUniqueComponentId(FacesContext facesContext,
-                                              UIComponent uiComponent)
-    {
-        return uiComponent.getClientId(facesContext);
-    }
-
-    public static UIComponent findComponentByUniqueId(FacesContext facesContext,
-                                                      Tree tree,
-                                                      String uniqueId)
-    {
-        return tree.getRoot().findComponent(uniqueId);
-    }
-
     public static String getClientId(FacesContext facesContext,
                                      UIComponent uiComponent)
     {
@@ -313,7 +229,7 @@ public class UIComponentUtils
         }
 
         //Find namingContainer
-        UIComponent find = UIComponentUtils.getParentOrFacetOwner(uiComponent);
+        UIComponent find = uiComponent.getParent();
         if (find == null)
         {
             //we have got the root component
@@ -332,7 +248,7 @@ public class UIComponentUtils
         {
             while (!(find instanceof NamingContainer))
             {
-                find = UIComponentUtils.getParentOrFacetOwner(find);
+                find = find.getParent();
                 if (find == null)
                 {
                     throw new FacesException("Root is no naming container?!");
@@ -345,7 +261,7 @@ public class UIComponentUtils
                 uiComponent.setComponentId(namingContainer.generateClientId());
             }
 
-            if (UIComponentUtils.getParentOrFacetOwner(find) == null)
+            if (find.getParent() == null)
             {
                 //NamingContainer is root, so nothing to be prepended
                 clientId = uiComponent.getComponentId();
@@ -364,7 +280,7 @@ public class UIComponentUtils
     public static final NamingContainer findNamingContainer(UIComponent uiComponent)
     {
         //Find namingContainer
-        UIComponent find = getParentOrFacetOwner(uiComponent);
+        UIComponent find = uiComponent.getParent();
         if (find == null)
         {
             //we have got the root component
@@ -372,7 +288,7 @@ public class UIComponentUtils
         }
         while (!(find instanceof NamingContainer))
         {
-            find = UIComponentUtils.getParentOrFacetOwner(find);
+            find = find.getParent();
             if (find == null)
             {
                 throw new FacesException("Root is no naming container?!");
@@ -443,24 +359,6 @@ public class UIComponentUtils
     }
 
 
-
-
-    /**
-     * Returns this component's parent. If this component is not a real
-     * child but a facet, the "facet owner" is returned. This is done by
-     * returning the "javax.faces.component.FacetParent" attribute, which is
-     * set by the addFacet method in UIComponentBase.
-     */
-    public static UIComponent getParentOrFacetOwner(UIComponent uiComponent)
-    {
-        /*
-        UIComponent parent = uiComponent.getParent();
-        return parent != null
-                ? parent
-                : (UIComponent)uiComponent.getAttribute(FACET_PARENT_ATTR);
-                */
-        return uiComponent.getParent();
-    }
 
 
 
@@ -561,4 +459,43 @@ public class UIComponentUtils
         }
     }
 
+
+
+    /**
+     * HACK: {@link javax.faces.component.UIComponentBase#addFacet} does not
+     * add the facet to the naming container. This hack properly adds the
+     * facet to the naming container, so that it can be found via
+     * {@link javax.faces.component.UIComponent#findComponent}.
+     */
+    public static void addFacet(UIComponent comp, String facetName, UIComponent facet)
+    {
+        comp.addFacet(facetName, facet);
+        ensureComponentInNamingContainer(facet);
+    }
+
+
+    public static void ensureComponentInNamingContainer(UIComponent comp)
+    {
+        UIComponent parent = comp.getParent();
+
+        NamingContainer namingContainer;
+        if (parent instanceof NamingContainer)
+        {
+            namingContainer = (NamingContainer)comp;
+        }
+        else
+        {
+            namingContainer = findNamingContainer(parent);
+        }
+
+        if (comp.getComponentId() == null)
+        {
+            comp.setComponentId(namingContainer.generateClientId());
+            namingContainer.addComponentToNamespace(comp);
+        }
+        else if (namingContainer.findComponentInNamespace(comp.getComponentId()) == null)
+        {
+            namingContainer.addComponentToNamespace(comp);
+        }
+    }
 }

@@ -92,7 +92,7 @@ public class ListRenderer
                                   Renderer renderer,
                                   UIComponent uiComponent) throws IOException
     {
-        UIComponent parent = UIComponentUtils.getParentOrFacetOwner(uiComponent);
+        UIComponent parent = uiComponent.getParent();
         String rendererType = uiComponent.getRendererType();
         String parentRendererType = parent.getRendererType();
 
@@ -125,7 +125,7 @@ public class ListRenderer
             else
             {
                 String parentParentRendererType
-                   = UIComponentUtils.getParentOrFacetOwner(parent).getRendererType();
+                   = parent.getParent().getRendererType();
                 if ((parentRendererType.equals(DataRenderer.TYPE) ||
                     parentRendererType.equals(GroupRenderer.TYPE)) &&
                     (parentParentRendererType != null &&
@@ -177,7 +177,7 @@ public class ListRenderer
                                Renderer renderer,
                                UIComponent uiComponent) throws IOException
     {
-        UIComponent parent = UIComponentUtils.getParentOrFacetOwner(uiComponent);
+        UIComponent parent = uiComponent.getParent();
 
         String rendererType = uiComponent.getRendererType();
         String parentRendererType = parent.getRendererType();
@@ -185,7 +185,7 @@ public class ListRenderer
         if (rendererType != null && parentRendererType != null)
         {
             String parentParentRendererType
-                = UIComponentUtils.getParentOrFacetOwner(parent).getRendererType();
+                = parent.getParent().getRendererType();
             if ((parentRendererType.equals(DataRenderer.TYPE) ||
                 parentRendererType.equals(GroupRenderer.TYPE)) &&
                 (parentParentRendererType != null &&
@@ -456,7 +456,7 @@ public class ListRenderer
             if (!listComponent.getRendererType().equals(ListRenderer.TYPE))
             {
                 // Parent should have RenderType "List"
-                listComponent = UIComponentUtils.getParentOrFacetOwner(listComponent);
+                listComponent = listComponent.getParent();
             }
 
             String headerStyle = getAttribute(listComponent, ListRendererAttributes.HEADER_CLASS_ATTR);

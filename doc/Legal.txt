@@ -7,8 +7,8 @@ This product is developed and distributed under the terms of
 - The Apache Software License, Version 1.1 (see license/Apache_Software_License.txt)
 - The JavaServerTM Faces Pre-Release Binary Software Evaluation Agreement
   (see license/JSF_Pre-Release_Binary_Software_Evaluation_Agreement.txt)
-- The JavaServerTM Faces Specification EAD 1.0 License
-  (see license/jsf-1_0-ead-spec-license.html)
+- The JavaServerTM Faces Specification License
+  (see license/jsf-1_0-prd2-spec-license.html)
 
 
 Acknowledgements

@@ -114,7 +114,7 @@ public class LayoutRenderer
     {
         if (uiComponent instanceof UIPanel)
         {
-            UIComponent parent = UIComponentUtils.getParentOrFacetOwner(uiComponent);
+            UIComponent parent = uiComponent.getParent();
             if (uiComponent == parent.getFacet(HEADER_FACET))
             {
                 ResponseWriter writer = facesContext.getResponseWriter();
@@ -145,7 +145,7 @@ public class LayoutRenderer
     {
         if (uiComponent instanceof UIPanel)
         {
-            UIComponent parent = UIComponentUtils.getParentOrFacetOwner(uiComponent);
+            UIComponent parent = uiComponent.getParent();
             if (uiComponent == parent.getFacet(HEADER_FACET))
             {
                 ResponseWriter writer = facesContext.getResponseWriter();

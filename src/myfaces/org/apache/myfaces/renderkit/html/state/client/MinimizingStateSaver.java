@@ -21,6 +21,7 @@ package net.sourceforge.myfaces.renderkit.html.state.client;
 import net.sourceforge.myfaces.component.CommonComponentProperties;
 import net.sourceforge.myfaces.component.UIComponentUtils;
 import net.sourceforge.myfaces.component.MyFacesUIOutput;
+import net.sourceforge.myfaces.component.UIComponentHacks;
 import net.sourceforge.myfaces.component.ext.UISaveState;
 import net.sourceforge.myfaces.convert.ConverterUtils;
 import net.sourceforge.myfaces.renderkit.html.DataRenderer;
@@ -151,12 +152,12 @@ public class MinimizingStateSaver
                                                                       comp);
             if (parsedComp == null)
             {
-                LogUtil.getLogger().warning("Corresponding parsed component not found for component " + UIComponentUtils.getUniqueComponentId(facesContext, comp));
+                LogUtil.getLogger().warning("Corresponding parsed component not found for component " + comp.getClientId(facesContext));
             }
             saveComponentProperties(facesContext, stateMap, comp, parsedComp);
             saveComponentAttributes(facesContext, stateMap, comp, parsedComp);
             saveListeners(facesContext, stateMap, comp, parsedComp);
-            visitedComponents.add(UIComponentUtils.getUniqueComponentId(facesContext, comp));
+            visitedComponents.add(comp.getClientId(facesContext));
         }
 
         saveUnrenderedComponents(facesContext, stateMap, visitedComponents);
@@ -196,14 +197,14 @@ public class MinimizingStateSaver
                                           Set visitedComponents,
                                           StringBuffer buf)
     {
-        String uniqueId = UIComponentUtils.getUniqueComponentId(facesContext, parsedComp);
-        if (!visitedComponents.contains(uniqueId))
+        String clientId = parsedComp.getClientId(facesContext);
+        if (!visitedComponents.contains(clientId))
         {
             if (buf.length() > 0)
             {
                 buf.append(',');
             }
-            buf.append(uniqueId);
+            buf.append(clientId);
 
             //No need to save "unrendered" state of children
             //because they are "unrendered" implicitly
@@ -421,9 +422,7 @@ public class MinimizingStateSaver
     {
         Tree parsedTree = JspInfo.getTree(facesContext,
                                           facesContext.getTree().getTreeId());
-        return UIComponentUtils.findComponentByUniqueId(facesContext,
-                                                        parsedTree,
-                                                        UIComponentUtils.getUniqueComponentId(facesContext, uiComponent));
+        return parsedTree.getRoot().findComponent(uiComponent.getClientId(facesContext));
     }
 
 
@@ -661,16 +660,18 @@ public class MinimizingStateSaver
         }
 
         //transient?
+        /*
         if (UIComponentUtils.isTransient(comp))
         {
             return true;
         }
+        */
 
         //is it a DataRenderer variable (= "var" attribute of a UIPanel) ?
         String modelRef = comp.getValueRef();
         if (modelRef != null)
         {
-            UIComponent parent = UIComponentUtils.getParentOrFacetOwner(comp);
+            UIComponent parent = comp.getParent();
             while (parent != null)
             {
                 if (parent instanceof UIPanel)
@@ -685,7 +686,7 @@ public class MinimizingStateSaver
                         }
                     }
                 }
-                parent = UIComponentUtils.getParentOrFacetOwner(parent);
+                parent = parent.getParent();
             }
         }
 
@@ -714,8 +715,8 @@ public class MinimizingStateSaver
         ApplicationFactory af = (ApplicationFactory)FactoryFinder.getFactory(FactoryFinder.APPLICATION_FACTORY);
         ActionListener actionListener = af.getApplication().getActionListener();
 
-        List[] listeners = UIComponentUtils.getListeners(uiComponent);
-        List[] staticListeners = UIComponentUtils.getListeners(parsedComp);
+        List[] listeners = UIComponentHacks.getListeners(uiComponent);
+        List[] staticListeners = UIComponentHacks.getListeners(parsedComp);
         if (listeners != null)
         {
             for (Iterator it = PhaseId.VALUES.iterator(); it.hasNext();)
@@ -785,7 +786,7 @@ public class MinimizingStateSaver
                 String paramName = RequestParameterNames.getComponentListenerParameterName(facesContext,
                                                                                            uiComponent,
                                                                                            listenerType);
-                String paramValue = UIComponentUtils.getUniqueComponentId(facesContext, (UIComponent)facesListener);
+                String paramValue = ((UIComponent)facesListener).getClientId(facesContext);
                 saveParameter(stateMap, paramName, paramValue);
             }
             else

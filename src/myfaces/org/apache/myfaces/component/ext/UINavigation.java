@@ -159,17 +159,15 @@ public class UINavigation
                 item.setOpen(true);
             }
 
-            //String treeId = (String)item.getAttribute(NavigationItemRenderer.TREE_ID_ATTR);
-            String treeId = ((UINavigationItem)item).getAction();
+            FacesContext facesContext = FacesContext.getCurrentInstance();
+            String treeId = item.getAction();
             if (treeId != null && treeId.length() > 0)
             {
-                FacesContext facesContext = FacesContext.getCurrentInstance();
                 TreeFactory tf = (TreeFactory)FactoryFinder.getFactory(FactoryFinder.TREE_FACTORY);
                 Tree responseTree = tf.getTree(facesContext, treeId);
                 facesContext.setTree(responseTree);
-                facesContext.renderResponse();
             }
-            //TODO: always render response?
+            facesContext.renderResponse();
         }
     }
 

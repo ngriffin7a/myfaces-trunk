@@ -53,7 +53,7 @@ class RendererWrapper
             CallbackRendererInfo callbackInfo = (CallbackRendererInfo)it.next();
             if (!callbackInfo._onlyChildrenAndFacets ||
                 uiComponent == null ||
-                UIComponentUtils.getParentOrFacetOwner(uiComponent) == callbackInfo._component)
+                uiComponent.getParent() == callbackInfo._component)
             {
                 callbackInfo._callbackRenderer
                                 .beforeEncodeBegin(facesContext,
@@ -84,7 +84,7 @@ class RendererWrapper
             CallbackRendererInfo callbackInfo = (CallbackRendererInfo)it.next();
             if (!callbackInfo._onlyChildrenAndFacets ||
                 uiComponent == null ||
-                UIComponentUtils.getParentOrFacetOwner(uiComponent) == callbackInfo._component)
+                uiComponent.getParent() == callbackInfo._component)
             {
                 callbackInfo._callbackRenderer
                     .afterEncodeEnd(facesContext,

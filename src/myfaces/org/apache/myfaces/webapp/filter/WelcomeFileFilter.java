@@ -41,7 +41,7 @@ import java.io.InputStream;
  * @since February 18th, 2003
  * @version $Revision$ $Date$
  */
-public class MyFacesFilter implements Filter {
+public class WelcomeFileFilter implements Filter {
     private SAXParserFactory factory;
     private FilterConfig config;
     private ServletContext context;
@@ -49,9 +49,9 @@ public class MyFacesFilter implements Filter {
     private StringBuffer sb = new StringBuffer();
 
     /**
-     * Creates a new MyFacesFilter object.
+     * Creates a new WelcomeFileFilter object.
      */
-    public MyFacesFilter() {
+    public WelcomeFileFilter() {
         factory = SAXParserFactory.newInstance();
         factory.setValidating(true);
         factory.setNamespaceAware(false);

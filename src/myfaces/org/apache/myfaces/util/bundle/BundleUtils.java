@@ -45,21 +45,6 @@ public class BundleUtils
         ApplicationFactory af = (ApplicationFactory)FactoryFinder.getFactory(FactoryFinder.APPLICATION_FACTORY);
         VariableResolver vr = af.getApplication().getVariableResolver();
         ResourceBundle bundle = (ResourceBundle)vr.resolveVariable(facesContext, bundleName);
-        /*
-        if (bundle == null)
-        {
-            try
-            {
-                //Interpret as bundle basename
-                bundle = ResourceBundle.getBundle(bundleName, facesContext.getLocale());
-            }
-            catch (MissingResourceException e)
-            {
-                LogUtil.getLogger().severe("Resource bundle '" + bundleName + "' could not be found.");
-                bundle = null;
-            }
-        }
-        */
 
         return bundle;
     }

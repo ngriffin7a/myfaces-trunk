@@ -446,7 +446,7 @@ public class MyFacesTagHelper
             }
             else
             {
-                parentComp.addFacet(facetName, newComponent);
+                UIComponentUtils.addFacet(parentComp, facetName, newComponent);
             }
             return newComponent;
         }

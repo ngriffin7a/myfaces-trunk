@@ -63,7 +63,6 @@ public class MyFacesConverterException
 
     public Message getFacesMessage()
     {
-        //TODO: Find a label (= UIOuput with LabelRenderer) for the component and add it as a MessageFormat parameter
         ApplicationFactory af = (ApplicationFactory)FactoryFinder.getFactory(FactoryFinder.APPLICATION_FACTORY);
         MessageResources msgRes = af.getApplication().getMessageResources(MessageResources.FACES_IMPL_MESSAGES);
         return msgRes.getMessage(_facesContext, _messageId);

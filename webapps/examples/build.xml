@@ -66,35 +66,11 @@
             <fileset file="${jsf-api.jar}"/>
             <fileset file="${myfaces.jar}"/>
         </copy>
-    </target>
 
-
-    <!--
-    <target name="web_ss"
-            depends="compile-and-copy-libs"
-            description="copies the examples web application to a new dir and adjusts all options to 'save state in server sessions'." >
-
-        <mkdir dir="${web_ss.dir}"/>
-        <copy todir="${web_ss.dir}">
-            <fileset dir="${examples.web}"
-                     includes="**"
-                     excludes="WEB-INF/web.xml
-                               WEB-INF/web_ss.xml" />
-        </copy>
-        <copy file="${examples.web}/WEB-INF/web_ss.xml"
-              tofile="${web_ss.dir}/WEB-INF/web.xml" />
-
-        <replace dir="${web_ss.dir}" includes="**/*.jsp,**/*.inc">
-            <replacetoken><![CDATA[<%@ page session="false"]]></replacetoken>
-            <replacevalue><![CDATA[<%@ page session="true"]]></replacevalue>
-        </replace>
-        <replace dir="${web_ss.dir}" includes="**/*.jsp,**/*.inc">
-            <replacetoken><![CDATA[scope="request"]]></replacetoken>
-            <replacevalue><![CDATA[scope="session"]]></replacevalue>
-        </replace>
+        <copy file="${project.dir}/conf/web.xml" todir="${examples.web}/WEB-INF" />
 
     </target>
-    -->
+
 
 
     <target name="release"
@@ -117,11 +93,6 @@
                         includes="*"
                         excludes="*.properties,.cvsignore"
                         prefix="myfaces-${manifest.impl.version}/webapps/examples"/>
-            <!--
-            <tarfileset dir="${web_ss.dir}"
-                        excludes="WEB-INF/lib/jsf-api.jar"
-                        prefix="myfaces-${manifest.impl.version}/webapps/examples/web_serversaving"/>
-                        -->
         </tar>
     </target>
 
@@ -132,8 +103,8 @@
         <delete quiet="true" failonerror="false" includeEmptyDirs="true">
             <fileset dir="${web-inf.classes.dir}"/>
             <fileset dir="${web-inf.lib.dir}"/>
-            <!--<fileset dir="${web_ss.dir}"/>-->
             <fileset file="${project.dir}/myfaces-*-examples.tgz"/>
+            <fileset file="${examples.web}/WEB-INF/web.xml"/>
         </delete>
     </target>
 

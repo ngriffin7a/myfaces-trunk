@@ -37,15 +37,4 @@ public class TimeRenderer
         return TYPE;
     }
 
-    /*
-    protected void initAttributeDescriptors()
-    {
-        addAttributeDescriptors(UIOutput.TYPE, TLD_HTML_URI, "output_time", HTML_UNIVERSAL_ATTRIBUTES);
-        addAttributeDescriptors(UIOutput.TYPE, TLD_HTML_URI, "output_time", HTML_EVENT_HANDLER_ATTRIBUTES);
-        addAttributeDescriptors(UIOutput.TYPE, TLD_HTML_URI, "output_time", OUTPUT_TIME_ATTRIBUTES);
-        addAttributeDescriptors(UIOutput.TYPE, TLD_HTML_URI, "output_time", USER_ROLE_ATTRIBUTES);
-        //TODO: input
-    }
-    */
-
 }

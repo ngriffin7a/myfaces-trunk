@@ -9,18 +9,15 @@ and custom component developers.
 ======================================================================
 Component developer guidelines
 
-* Attributes instead of class members
-TODO: still true?
-  MyFaces' StateSaver is only able to save the state of a component, if all
-  important (state relevant) values are stored as component attributes.
-  i.e. Every value that should be saved between requests, must appear in the
-  getAttributeNames() iterator.
-  So, as a rule of thumb: Never store information that is important to the
-  state of a component in a class member, but rather with a call to setAttribute().
-
-  Have in mind, that all attribute names starting with "net.sourceforge.myfaces."
-  or "javax." are regarded temporary attributes and will not be saved!
-
+* Properties and attributes
+  MyFaces' MinimizingStateSaver is only able to save the state of a component,
+  if all important (state relevant) values are stored as bean properties. So,
+  every member field that should be saved between requests, must have a public
+  getter and also a public setter method.
+  Also have in mind, that StateSaver does not save renderer dependent attributes
+  that have names starting with "net.sourceforge.myfaces.", "net.sf.myfaces."
+  or "javax.". These are regarded temporary attributes and will not be saved and
+  restored!
 
 ======================================================================
 MyFaces developers guidelines

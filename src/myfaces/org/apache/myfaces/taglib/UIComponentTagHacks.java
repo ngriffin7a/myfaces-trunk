@@ -26,7 +26,7 @@ import java.security.AccessController;
 import java.security.PrivilegedAction;
 
 /**
- * Misc. hacks for accessing protected fields in UIComponentTags.
+ * Misc. hacks for accessing protected fields in UIComponentTag.
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */

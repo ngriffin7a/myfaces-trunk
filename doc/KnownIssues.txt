@@ -11,24 +11,28 @@ MyFaces Known Issues
   - Either give every tag within an IterationTag an id,
   - or subclass all your common tags from MyFacesTag, that fixes this behaviour.
 
-* Dynamic addition of components as stated in JSF.2.4.2.4 is not (yet) supported
-  when using the "saveStateInClient" feature.
+* Dynamic addition of components as stated in JSF 1.0 PRD 2.4.2.4 is not (yet)
+  supported when using the "saveStateInClient" feature.
 
-* Facet support of JSF API is buggy.
-  1. UIComponentBase causes a NPE when getClientId is called for a Facet,
-     that is not itself a NamingContainer. Reason is, that they try to search
-     the naming container this component (facet) belongs to. But since facets do
-     not have a parent per definition (see JSF.3.1.6) this is subject to fail.
-  2. The addChild methods in UIComponentBase try to find a naming container for
-     the component. This is also subject to fail when called for a facet that is
-     not itself a NamingContainer.
-  Please delegate the following methods of your self-written components to
-  net.sourceforge.myfaces.component.UIComponentHelper to make them "facet-able":
-  - getClientId(FacesContext context)
-  - addFacet(String facetName, UIComponent facet) (after calling super.addFacet !)
-  - getParent(UIComponent superGetParent)
-  See net.sourceforge.myfaces.component.MyFacesUISelectBoolean for an example of
-  delegation.
+* Method "getClientId" in UIComponentBase of current JSF API has a bug (side-effect):
+  It changes the componentId (to the clientId) which is fatal when you
+  have nested naming containers.
+  Please overwrite getClientId in your self-written components and delegate it
+  to UIComponentUtils.getClientId.
+  (see MyFacesUIOutput for example)
 
+* Method "addFacet" in UIComponentBase of current JSF API has a bug:
+  It does not add the facet to the naming container.
+  Please overwrite addFacet in your self-written components and call
+  UIComponentUtils.ensureComponentInNamingContainer after calling the super
+  addFacet method.
+  (see MyFacesUIOutput for example)
+
+* Methods "removeChild", "removeFacet" and "clearChildren" in UIComponentBase
+  of current JSF API have bugs:
+  They do not remove the child from the naming container. So a findComponent
+  will still find the component although it is no longer in tree.
+  Please use the corresponding methods in UIComponentUtils to overcome this
+  issue.
 
 TODO... (Many others!)

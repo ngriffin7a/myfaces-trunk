@@ -94,7 +94,7 @@ public abstract class FacesConfigFactoryBase
             for (Iterator it = jars.iterator(); it.hasNext(); )
             {
                 String path = (String)it.next();
-                if (path.endsWith(".jar"))  //TODO: What about ucase extensions?
+                if (path.toLowerCase().endsWith(".jar"))
                 {
                     parseJarConfig(facesConfig, servletContext, path);
                 }

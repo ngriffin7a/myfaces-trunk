@@ -37,15 +37,4 @@ public class DateRenderer
         return TYPE;
     }
 
-    /*
-    protected void initAttributeDescriptors()
-    {
-        addAttributeDescriptors(UIOutput.TYPE, TLD_HTML_URI, "output_date", HTML_UNIVERSAL_ATTRIBUTES);
-        addAttributeDescriptors(UIOutput.TYPE, TLD_HTML_URI, "output_date", HTML_EVENT_HANDLER_ATTRIBUTES);
-        addAttributeDescriptors(UIOutput.TYPE, TLD_HTML_URI, "output_date", OUTPUT_DATE_ATTRIBUTES);
-        addAttributeDescriptors(UIOutput.TYPE, TLD_HTML_URI, "output_date", USER_ROLE_ATTRIBUTES);
-        //TODO: input
-    }
-    */
-
 }

@@ -37,15 +37,4 @@ public class DateTimeRenderer
         return TYPE;
     }
 
-    /*
-    protected void initAttributeDescriptors()
-    {
-        addAttributeDescriptors(UIOutput.TYPE, TLD_HTML_URI, "output_date_time", HTML_UNIVERSAL_ATTRIBUTES);
-        addAttributeDescriptors(UIOutput.TYPE, TLD_HTML_URI, "output_date_time", HTML_EVENT_HANDLER_ATTRIBUTES);
-        addAttributeDescriptors(UIOutput.TYPE, TLD_HTML_URI, "output_date_time", OUTPUT_DATE_TIME_ATTRIBUTES);
-        addAttributeDescriptors(UIOutput.TYPE, TLD_HTML_URI, "output_date_time", USER_ROLE_ATTRIBUTES);
-        //TODO: input
-    }
-    */
-
 }

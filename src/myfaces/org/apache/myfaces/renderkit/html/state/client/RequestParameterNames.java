@@ -18,8 +18,6 @@
  */
 package net.sourceforge.myfaces.renderkit.html.state.client;
 
-import net.sourceforge.myfaces.component.UIComponentUtils;
-
 import javax.faces.FacesException;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
@@ -43,14 +41,14 @@ public class RequestParameterNames
                                                                  UIComponent uiComponent,
                                                                  String propertyName)
     {
-        return "SCP_" + UIComponentUtils.getUniqueComponentId(facesContext, uiComponent) + "/" + propertyName;
+        return "SCP_" + uiComponent.getClientId(facesContext) + "/" + propertyName;
     }
 
     protected static String restoreUIComponentStateParameterPropName(FacesContext facesContext,
                                                                      UIComponent uiComponent,
                                                                      String paramName)
     {
-        String prefix = "SCP_" + UIComponentUtils.getUniqueComponentId(facesContext, uiComponent) + "/";
+        String prefix = "SCP_" + uiComponent.getClientId(facesContext) + "/";
         if (paramName.startsWith(prefix))
         {
             return paramName.substring(prefix.length());
@@ -65,14 +63,14 @@ public class RequestParameterNames
                                                                  UIComponent uiComponent,
                                                                  String attributeName)
     {
-        return "SCA_" + UIComponentUtils.getUniqueComponentId(facesContext, uiComponent) + "/" + attributeName;
+        return "SCA_" + uiComponent.getClientId(facesContext) + "/" + attributeName;
     }
 
     protected static String restoreUIComponentStateParameterAttrName(FacesContext facesContext,
                                                                      UIComponent uiComponent,
                                                                      String paramName)
     {
-        String prefix = "SCA_" + UIComponentUtils.getUniqueComponentId(facesContext, uiComponent) + "/";
+        String prefix = "SCA_" + uiComponent.getClientId(facesContext) + "/";
         if (paramName.startsWith(prefix))
         {
             return paramName.substring(prefix.length());
@@ -93,7 +91,7 @@ public class RequestParameterNames
         return "SLC_"   //SLC stands for "State of Listener of type Component"
                 + listenerType
                 //+ "_" + uiComponent.getClientId(facesContext)
-                + "_" + UIComponentUtils.getUniqueComponentId(facesContext, uiComponent)
+                + "_" + uiComponent.getClientId(facesContext)
                 + "/" + getNextListenerSerial(facesContext);
     }
 
@@ -104,7 +102,7 @@ public class RequestParameterNames
         return "SLS_"   //SLS stands for "State of Listener of type Serializable"
                 + listenerType
                 //+ "_" + uiComponent.getClientId(facesContext)
-                + "_" + UIComponentUtils.getUniqueComponentId(facesContext, uiComponent)
+                + "_" + uiComponent.getClientId(facesContext)
                 + "/" + getNextListenerSerial(facesContext);
     }
 
@@ -147,7 +145,7 @@ public class RequestParameterNames
 
         int slashIdx = paramName.indexOf('/', underscoreIdx + 1);
         if (slashIdx < 0) throw new FacesException("Curious listener state parameter.");
-        info.uniqueComponentId = paramName.substring(underscoreIdx + 1, slashIdx);
+        info.clientId = paramName.substring(underscoreIdx + 1, slashIdx);
 
         return info;
     }
@@ -157,8 +155,7 @@ public class RequestParameterNames
     {
         public boolean serializedListener;
         public String listenerType;
-        //public String clientId;
-        public String uniqueComponentId;
+        public String clientId;
 
         public ListenerParameterInfo()
         {

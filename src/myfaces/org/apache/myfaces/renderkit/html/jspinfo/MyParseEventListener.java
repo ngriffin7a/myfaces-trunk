@@ -532,7 +532,7 @@ public class MyParseEventListener
                     mode == MyFacesConfig.STATE_SAVING_MODE__CLIENT_MINIMIZED_ZIPPED)
                 {
                     //Only subclasses of MyFacesTag or MyFacesBodyTag can make
-                    //sure that each component without and id is assigned the
+                    //sure that each component without an id is assigned the
                     //proper auto-id from the static tree.
                     throw new FacesException("Tag handler for '" + ti.getTagName() + "' is no subclass of MyFacesTag and has no id. When using state saving mode \"client_minimized\" or \"client_minimized_zipped\" you must assign an id to each non-MyFacesTag!");
                 }
@@ -551,7 +551,7 @@ public class MyParseEventListener
         String facetName = (String)_currentComponent.getAttribute(PENDING_FACET_ATTR);
         if (facetName != null)
         {
-            _currentComponent.addFacet(facetName, comp);
+            UIComponentUtils.addFacet(_currentComponent, facetName, comp);
             _currentComponent.setAttribute(PENDING_FACET_ATTR, null);
         }
         else
@@ -605,10 +605,10 @@ public class MyParseEventListener
 
     private String getClientId(UIComponent comp)
     {
-        UIComponent findContainerComp = UIComponentUtils.getParentOrFacetOwner(comp);
+        UIComponent findContainerComp = comp.getParent();
         while (findContainerComp != null && !(findContainerComp instanceof NamingContainer))
         {
-            findContainerComp = UIComponentUtils.getParentOrFacetOwner(findContainerComp);
+            findContainerComp = findContainerComp.getParent();
         }
         if (findContainerComp == null)
         {
@@ -620,7 +620,7 @@ public class MyParseEventListener
         {
             throw new IllegalStateException("Component has no id?!");
         }
-        if (UIComponentUtils.getParentOrFacetOwner(findContainerComp) == null)
+        if (findContainerComp.getParent() == null)
         {
             //container is root
             return componentId;
@@ -729,7 +729,7 @@ public class MyParseEventListener
         if (tag != null &&
             tag instanceof UIComponentTag)
         {
-            _currentComponent = UIComponentUtils.getParentOrFacetOwner(_currentComponent);
+            _currentComponent = _currentComponent.getParent();
         }
     }
 
