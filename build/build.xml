@@ -189,10 +189,10 @@
             <zipfileset dir="${project.dir}/conf"
                         includes="faces-config.xml"
                         prefix="META-INF/"/>
-            <!-- resources -->
-            <fileset dir="${share.classes}"
-                     includes="**"
-                     excludes=".dependency-info/**/*"/>
+            <!-- components_resources -->
+            <zipfileset dir="${components_resource.src}"
+                        includes="**"
+                        prefix="resource"/>
 
         </jar>
 
@@ -282,6 +282,8 @@
                         prefix="myfaces-${manifest.impl.version}/src/myfaces"/>
             <tarfileset dir="${components.src}"
                         prefix="myfaces-${manifest.impl.version}/src/components"/>
+            <tarfileset dir="${components_resource.src}"
+                        prefix="myfaces-${manifest.impl.version}/src/components_resource"/>
             <tarfileset dir="${cactus.src}"
                         prefix="myfaces-${manifest.impl.version}/src/cactus"/>
             <tarfileset dir="${junit.src}"

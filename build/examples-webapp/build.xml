@@ -14,6 +14,7 @@
     <property name="web-inf.classes.dir" location="${examples.web}/WEB-INF/classes"/>
     <property name="web-inf.lib.dir" location="${examples.web}/WEB-INF/lib"/>
     <property name="myfaces.doc" location="${project.dir}/doc"/>
+    <property name="components_resource.src" location="${project.dir}/src/components_resource"/>
 
     <!-- Properties -->
     <property file="../build.local.properties"/>
@@ -48,6 +49,7 @@
     <target name="clean"
             description="deletes all files that were built">
         <delete quiet="true" failonerror="false" includeEmptyDirs="true">
+            <fileset file="${examples.web}/jscookmenu/**" excludes=".cvsignore,CVS" />
             <fileset dir="${web-inf.classes.dir}"/>
             <fileset dir="${web-inf.lib.dir}"/>
             <fileset file="${project.dir}/myfaces-*-examples.tgz"/>
@@ -59,7 +61,7 @@
 
 
     <target name="-compile-and-copy-libs"
-            depends="-myfaces-jar"
+            depends="-myfaces-jar, -copy-components-resource"
             description="compiles the examples java classes to WEB-INF/classes and copies all needed libs to WEB-INF/lib">
         <mkdir dir="${web-inf.classes.dir}"/>
         <javac srcdir="${examples.src}"
@@ -73,6 +75,14 @@
                      includes="**"
                      excludes="**/*.java
                                **/package.html"/>
+        </copy>
+    </target>
+
+    <target name="-copy-components-resource">
+        <copy todir="${examples.web}">
+            <fileset dir="${components_resource.src}"
+                     includes="**"
+                     excludes="CVS" />
         </copy>
     </target>
 

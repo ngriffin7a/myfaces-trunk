@@ -78,7 +78,7 @@
     </path>
 
     <target name="prepare-for-debug"
-            description="copies needed config and TLD files">
+            description="copies needed config, TLD files and components-resources">
 
         <mkdir dir="${web-inf.lib.dir}"/>
 
