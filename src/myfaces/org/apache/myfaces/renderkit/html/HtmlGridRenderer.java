@@ -21,6 +21,8 @@ package net.sourceforge.myfaces.renderkit.html;
 import net.sourceforge.myfaces.renderkit.JSFAttr;
 import net.sourceforge.myfaces.renderkit.RendererUtils;
 import net.sourceforge.myfaces.util.ArrayUtils;
+import net.sourceforge.myfaces.util.StringUtils;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -31,12 +33,14 @@ import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 import java.io.IOException;
 import java.util.Iterator;
-import java.util.StringTokenizer;
 
 /**
  * X-CHECKED: tlddoc h:panelGrid 1.0 final
  *
  * $Log$
+ * Revision 1.12  2004/06/17 03:57:14  dave0000
+ * Fix order of nested if statements (columns <= 0 check) + misc
+ *
  * Revision 1.11  2004/06/04 00:51:05  o_rossmueller
  * fixed NPE
  *
@@ -72,11 +76,13 @@ public class HtmlGridRenderer
     public void encodeBegin(FacesContext facesContext, UIComponent component)
             throws IOException
     {
+        // all work done in encodeEnd()
     }
 
     public void encodeChildren(FacesContext context, UIComponent component)
         throws IOException
     {
+        // all work done in encodeEnd()
     }
 
     public void encodeEnd(FacesContext facesContext, UIComponent component)
@@ -95,13 +101,13 @@ public class HtmlGridRenderer
             columns = i != null ? i.intValue() : 0;
         }
 
-        if (log.isErrorEnabled())
+        if (columns <= 0)
         {
-            if (columns <= 0)
+            if (log.isErrorEnabled())
             {
                 log.error("Wrong columns attribute for PanelGrid " + component.getClientId(facesContext) + ": " + columns);
-                columns = 1;
             }
+            columns = 1;
         }
 
         ResponseWriter writer = facesContext.getResponseWriter();
@@ -134,19 +140,13 @@ public class HtmlGridRenderer
         writer.startElement(HTML.TR_ELEM, component);
         writer.startElement(header ? HTML.TH_ELEM : HTML.TD_ELEM, component);
 
-        String styleClass;
-        if (component instanceof HtmlPanelGrid)
-        {
-            styleClass = header ?
+        String styleClass = (component instanceof HtmlPanelGrid)
+            ? (header ?
                          ((HtmlPanelGrid)component).getHeaderClass() :
-                         ((HtmlPanelGrid)component).getFooterClass();
-        }
-        else
-        {
-            styleClass = header ?
+                         ((HtmlPanelGrid)component).getFooterClass())
+            : (header ?
                          (String)component.getAttributes().get(JSFAttr.HEADER_CLASS_ATTR) :
-                         (String)component.getAttributes().get(JSFAttr.FOOTER_CLASS_ATTR);
-        }
+                         (String)component.getAttributes().get(JSFAttr.FOOTER_CLASS_ATTR));
         if (styleClass != null)
         {
             writer.writeAttribute(HTML.CLASS_ATTR, styleClass,
@@ -191,41 +191,15 @@ public class HtmlGridRenderer
             rowClasses = (String)component.getAttributes().get(JSFAttr.ROW_CLASSES_ATTR);
         }
 
-        String[] columnClassesArray;
-        int columnClassesCount;
-        if (columnClasses == null)
-        {
-            columnClassesCount = 0;
-            columnClassesArray = ArrayUtils.EMPTY_STRING_ARRAY;
-        }
-        else
-        {
-            StringTokenizer st = new StringTokenizer(columnClasses, ",");
-            columnClassesCount = st.countTokens();
-            columnClassesArray = new String[columnClassesCount];
-            for (int i = 0; i < columnClassesCount; i++)
-            {
-                columnClassesArray[i] = st.nextToken().trim();
-            }
-        }
+        String[] columnClassesArray = (columnClasses == null)
+            ? ArrayUtils.EMPTY_STRING_ARRAY 
+            : StringUtils.trim(StringUtils.splitShortString(columnClasses, ',')); 
+        int columnClassesCount = columnClassesArray.length;
 
-        String[] rowClassesArray;
-        int rowClassesCount;
-        if (rowClasses == null)
-        {
-            rowClassesCount = 0;
-            rowClassesArray = ArrayUtils.EMPTY_STRING_ARRAY;
-        }
-        else
-        {
-            StringTokenizer st = new StringTokenizer(rowClasses, ",");
-            rowClassesCount = st.countTokens();
-            rowClassesArray = new String[rowClassesCount];
-            for (int i = 0; i < rowClassesCount; i++)
-            {
-                rowClassesArray[i] = st.nextToken().trim();
-            }
-        }
+        String[] rowClassesArray = (rowClasses == null)
+            ? ArrayUtils.EMPTY_STRING_ARRAY
+            : StringUtils.trim(StringUtils.splitShortString(rowClasses, ',')); 
+        int rowClassesCount = rowClassesArray.length;
 
         int childCount = component.getChildCount();
         if (childCount > 0)
