@@ -29,7 +29,7 @@
 <body>
 
 <jsp:useBean id="list" class="net.sourceforge.myfaces.example.model.SimpleCarList" scope="request" />
-<jsp:useBean id="controller" class="net.sourceforge.myfaces.example.controller.SimpleCarController" scope="request" />
+<jsp:useBean id="controller" class="net.sourceforge.myfaces.example.controller.SimpleCarController" scope="application" />
 
 <f:use_faces>
 
@@ -45,14 +45,18 @@
                     footerClass="standardTable_Footer"
                     rowClasses="standardTable_Row1,standardTable_Row2" >
                 <!-- SORTHEADER -->
-                <x:sortheader id="list.header" commandReference="controller.sort" modelReference="list.sort" >
-                    <x:sortcolumn id="list.header.col1" commandName="type">
+                <x:sortheader id="list.header" sortCommandReference="controller.sort"
+                                               columnReference="list.sort"
+                                               ascendingReference="list.ascending" >
+                    <x:sortcolumn id="list.header.col1" column="type">
                         <f:output_text id="list.header.name" text="Car-Type" />
                     </x:sortcolumn>
-                    <x:sortcolumn id="list.header.col2" commandName="color" >
+                    <x:sortcolumn id="list.header.col2" column="color" >
                         <f:output_text id="list.header.iso" text="Car-Color"  />
                     </x:sortcolumn>
                 </x:sortheader>
+                <x:save_state id="s1" modelReference="list.sort" /> <!-- preserve this model value -->
+                <x:save_state id="s2" modelReference="list.ascending" /> <!-- preserve this model value -->
                 <!-- DATA -->
                 <f:listrow id="list.tr" var="car" modelReference="list.cars" >
                     <f:output_text id="list.name" modelReference="car.type" />

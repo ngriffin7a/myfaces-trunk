@@ -19,15 +19,12 @@
 package net.sourceforge.myfaces.renderkit.html.jspinfo;
 
 import net.sourceforge.myfaces.MyFacesConfig;
-import net.sourceforge.myfaces.util.logging.LogUtil;
-import net.sourceforge.myfaces.renderkit.html.jspinfo.JspTreeParser;
 
+import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.tree.Tree;
 import javax.faces.webapp.FacesTag;
-import javax.faces.component.UIComponent;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * JspInfo is a helper class that returns useful static information on a JSP. Static means
@@ -43,80 +40,103 @@ import java.util.Map;
  */
 public class JspInfo
 {
-    private Tree _staticTree;
-    private Map _beanTypesMap;
-    private Map _creatorTagsMap;
+    private Tree _tree = null;
+    private Map _jspBeanInfosMap = new HashMap();
+    private Map _creatorTagsMap = new HashMap();
+    private List _saveStateComponents = new ArrayList();
 
-    public JspInfo(Tree staticTree, Map beanTypesMap, Map creatorTagsMap)
+    public JspInfo(Tree tree)
     {
-        _staticTree = staticTree;
-        _beanTypesMap = beanTypesMap;
-        _creatorTagsMap = creatorTagsMap;
+        _tree = tree;
     }
 
-    public Tree getStaticTree()
+    public Tree getTree()
     {
-        return _staticTree;
-    }
-
-    public Map getBeanTypesMap()
-    {
-        return _beanTypesMap;
-    }
-
-    public Map getCreatorTagsMap()
-    {
-        return _creatorTagsMap;
+        return _tree;
     }
 
 
+    public void setJspBeanInfo(String beanId, JspBeanInfo jspBeanInfo)
+    {
+        _jspBeanInfosMap.put(beanId, jspBeanInfo);
+    }
 
-    private static final String JSP_INFO_MAP_ATTR = JspInfo.class.getName() + ".JSP_INFO_MAP";
+    public JspBeanInfo getJspBeanInfo(String beanId)
+    {
+        return (JspBeanInfo)_jspBeanInfosMap.get(beanId);
+    }
 
-    public static Tree getStaticTree(FacesContext facesContext,
+    public Iterator getJspBeanInfos()
+    {
+        return _jspBeanInfosMap.entrySet().iterator();
+    }
+
+
+    public void setCreatorTag(String compoundId, FacesTag tag)
+    {
+        _creatorTagsMap.put(compoundId, tag);
+    }
+
+    public FacesTag getCreatorTag(String compoundId)
+    {
+        return (FacesTag)_creatorTagsMap.get(compoundId);
+    }
+
+
+    public void addUISaveStateComponent(UIComponent uiSaveState)
+    {
+        _saveStateComponents.add(uiSaveState);
+    }
+
+    public Iterator getUISaveStateComponents()
+    {
+        return _saveStateComponents.iterator();
+    }
+
+
+
+
+
+
+    public static Tree getTree(FacesContext facesContext,
                                      String treeId)
     {
-        return getJspInfo(facesContext, treeId).getStaticTree();
+        return getJspInfo(facesContext, treeId).getTree();
     }
 
-    public static String getBeanType(FacesContext facesContext,
-                                     String treeId,
-                                     String beanId)
+    public static JspBeanInfo getJspBeanInfo(FacesContext facesContext,
+                                             String treeId,
+                                             String beanId)
     {
-        Map beanTypesMap = getJspInfo(facesContext, treeId).getBeanTypesMap();
-        if (beanTypesMap == null)
-        {
-            LogUtil.getLogger().severe("No beanTypesMap found for tree " + treeId);
-            return null;
-        }
-        else
-        {
-            return (String)beanTypesMap.get(beanId);
-        }
+        return getJspInfo(facesContext, treeId).getJspBeanInfo(beanId);
+    }
+
+    public static Iterator getJspBeanInfos(FacesContext facesContext,
+                                           String treeId)
+    {
+        return getJspInfo(facesContext, treeId).getJspBeanInfos();
     }
 
     public static FacesTag getCreatorTag(FacesContext facesContext,
                                          String treeId,
                                          String compoundId)
     {
-        Map creatorTagsMap = getJspInfo(facesContext, treeId).getCreatorTagsMap();
-        if (creatorTagsMap == null)
-        {
-            LogUtil.getLogger().severe("No creatorTagsMap found for tree " + treeId);
-            return null;
-        }
-        else
-        {
-            return (FacesTag)creatorTagsMap.get(compoundId);
-        }
+        return getJspInfo(facesContext, treeId).getCreatorTag(compoundId);
     }
 
     public static FacesTag getCreatorTag(FacesContext facesContext,
                                          String treeId,
                                          UIComponent uiComponent)
     {
-        return getCreatorTag(facesContext, treeId, uiComponent.getCompoundId());
+        return getJspInfo(facesContext, treeId).getCreatorTag(uiComponent.getCompoundId());
     }
+
+    public static Iterator getUISaveStateComponents(FacesContext facesContext,
+                                                    String treeId)
+    {
+        return getJspInfo(facesContext, treeId).getUISaveStateComponents();
+    }
+
 
 
     private static JspInfo getJspInfo(FacesContext facesContext,
@@ -128,13 +148,14 @@ public class JspInfo
         {
             JspTreeParser parser = new JspTreeParser(facesContext.getServletContext());
             parser.parse(treeId);
-            jspInfo = new JspInfo(parser.getTree(),
-                                  parser.getBeanClassesMap(),
-                                  parser.getCreatorTagsMap());
+            jspInfo = parser.getJspInfo();
             jspInfoMap.put(treeId, jspInfo);
         }
         return jspInfo;
     }
+
+
+    private static final String JSP_INFO_MAP_ATTR = JspInfo.class.getName() + ".JSP_INFO_MAP";
 
     private static Map getJspInfoMap(FacesContext facesContext)
     {

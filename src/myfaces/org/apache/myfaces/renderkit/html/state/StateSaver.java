@@ -74,38 +74,6 @@ public class StateSaver
 
     public void init(FacesContext facesContext) throws IOException
     {
-        /*
-        if (MyFacesConfig.isStateEncodingOnTheFly())
-        {
-            //state encoding on the fly (without tokens)
-            //means that we must prebuild a new response tree from the parsed JspInfo
-            String requestTreeId = facesContext.getRequestTree().getTreeId();
-            Tree responseTree = facesContext.getResponseTree();
-            String responseTreeId = responseTree.getTreeId();
-            Boolean restored = (Boolean)responseTree.getRoot()
-                                    .getAttribute(StateRenderer.RESTORED_TREE_ATTR);
-            if (!requestTreeId.equals(responseTreeId) ||
-                (restored == null || !restored.booleanValue()))
-            {
-                //we jump to a new tree, so let's prebuild the response tree...
-                Tree staticTree = JspInfo.getStaticTree(facesContext,
-                                                        responseTreeId);
-                TreeCopier treeCopier = new TreeCopier(facesContext);
-                treeCopier.setOverwriteAttributes(true);
-                treeCopier.setOverwriteComponents(true);
-                treeCopier.copyTree(staticTree, facesContext.getResponseTree());
-            }
-        }
-        else
-        {
-            //state encoding with tokens
-            //means we can create the components on the fly
-            //BUT, what about components that rely on underlying child components?
-            //e.g. a UIParameter under a Hyperlink-UICommand would not exist when the
-            // HyperlinkRenderer would need it already during encodeBegin !?
-            //So, should we always prebuild the tree from the static tree before rendering?
-        }
-        */
     }
 
     public void encodeState(FacesContext facesContext, int encodingType) throws IOException
@@ -265,7 +233,7 @@ public class StateSaver
                                       UIComponent uiComponent,
                                       Object attrValue)
     {
-        Tree parsedTree = JspInfo.getStaticTree(facesContext,
+        Tree parsedTree = JspInfo.getTree(facesContext,
                                                 facesContext.getResponseTree().getTreeId());
         UIComponent parsedComp = null;
         try
@@ -325,7 +293,7 @@ public class StateSaver
                                           String attrName,
                                           Object attrValue)
     {
-        Tree parsedTree = JspInfo.getStaticTree(facesContext,
+        Tree parsedTree = JspInfo.getTree(facesContext,
                                                 facesContext.getResponseTree().getTreeId());
         UIComponent parsedComp = null;
         try
@@ -398,7 +366,9 @@ public class StateSaver
 
     protected void saveModelValues(FacesContext facesContext, Map stateMap)
     {
-        for (Iterator it = StateRenderer.getUISaveStateIterator(facesContext.getResponseTree()); it.hasNext();)
+        Iterator it = JspInfo.getUISaveStateComponents(facesContext,
+                                                       facesContext.getResponseTree().getTreeId());
+        while (it.hasNext())
         {
             UIComponent uiSaveState = (UIComponent)it.next();
             saveModelValue(facesContext, stateMap, uiSaveState);

@@ -26,6 +26,8 @@
 	color: #000000;
     background-color: #CCCCCC;
     text-align: center;
+    font-size: medium;
+    font-weight: bold;
 }
 
 .standardTable_Footer {
@@ -59,3 +61,5 @@ a:hover
 	color: #333366;
     text-decoration: underline;
 }
+
+

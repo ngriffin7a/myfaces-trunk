@@ -34,7 +34,7 @@ public class SimpleCarController
     {
         SimpleCarList list = (SimpleCarList)facesContext.getModelValue("list");
 
-        String commandName = commandEvent.getCommandName();
-        list.sort(commandName);
+        String column = commandEvent.getCommandName();
+        list.sort(column);
     }
 }

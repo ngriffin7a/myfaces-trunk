@@ -19,6 +19,7 @@
 package net.sourceforge.myfaces.component.ext;
 
 import net.sourceforge.myfaces.component.UIParameter;
+import net.sourceforge.myfaces.component.UIComponentUtils;
 
 import javax.faces.context.FacesContext;
 import java.io.IOException;
@@ -39,6 +40,11 @@ public class UISaveState
     public String getComponentType()
     {
         return TYPE;
+    }
+
+    public UISaveState()
+    {
+        UIComponentUtils.setTransient(this, true);  //No need to save state of the component itself
     }
 
     public final boolean isValid()

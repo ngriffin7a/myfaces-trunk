@@ -18,9 +18,7 @@
  */
 package net.sourceforge.myfaces.context;
 
-import net.sourceforge.myfaces.renderkit.html.jspinfo.JspInfo;
 import net.sourceforge.myfaces.util.bean.BeanUtils;
-import net.sourceforge.myfaces.util.logging.LogUtil;
 
 import javax.faces.FacesException;
 import javax.faces.component.UIComponent;
@@ -42,6 +40,9 @@ import java.util.*;
 
 /**
  * DOCUMENT ME!
+ *
+ * TODO: Handle model references of ${xxx} style
+ *
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
@@ -248,23 +249,20 @@ public class FacesContextImpl
         int i = modelReference.indexOf('.');
         if (i == -1)
         {
-            return getModelClassFromJspInfo(modelReference);
+            return getModelInstance(modelReference).getClass();
         }
         else
         {
             String objName = modelReference.substring(0, i);
             String propName = modelReference.substring(i + 1);
             Object obj = getModelInstance(objName);
-            if (obj == null)
-            {
-                //exception already thrown
-                return null;
-            }
-
             return BeanUtils.getBeanPropertyType(obj, propName);
         }
     }
 
+    /**
+     * @throws FacesException   if model instance could not be found
+     */
     public Object getModelValue(String modelReference)
             throws FacesException
     {
@@ -278,12 +276,6 @@ public class FacesContextImpl
             String objName = modelReference.substring(0, i);
             String propName = modelReference.substring(i + 1);
             Object obj = getModelInstance(objName);
-            if (obj == null)
-            {
-                //exception already thrown
-                return null;
-            }
-
             return BeanUtils.getBeanPropertyValue(obj, propName);
         }
     }
@@ -295,18 +287,12 @@ public class FacesContextImpl
         if (i == -1)
         {
             setModelInstance(modelReference, value);
-            return;
         }
         else
         {
             String objName = modelReference.substring(0, i);
             String propName = modelReference.substring(i + 1);
             Object obj = getModelInstance(objName);
-            if (obj == null)
-            {
-                return;
-            }
-
             BeanUtils.setBeanPropertyValue(obj, propName, value);
         }
     }
@@ -398,8 +384,25 @@ public class FacesContextImpl
     }
 
 
-    //Spezifische Erweiterungen:
-    private Object getModelInstance(String modelId)
+    //Helpers
+
+    /**
+     * @throws  FacesException if there is no model instance with the given modelId
+     */
+    private Object getModelInstance(String modelId) throws FacesException
+    {
+        Object obj = findModelInstance(modelId);
+        if (obj == null)
+        {
+            throw new FacesException("No model instance '" + modelId + "' found.");
+        }
+        return obj;
+    }
+
+    /**
+     * @return  null, if not found
+     */
+    private Object findModelInstance(String modelId)
     {
         if (_servletcontext == null || _servletrequest == null)
         {
@@ -407,8 +410,8 @@ public class FacesContextImpl
         }
         Object obj;
 
-        //Application context
-        obj = _servletcontext.getAttribute(modelId);
+        //Request context
+        obj = _servletrequest.getAttribute(modelId);
         if (obj != null)
         {
             return obj;
@@ -428,37 +431,14 @@ public class FacesContextImpl
             }
         }
 
-        //Request context
-        obj = _servletrequest.getAttribute(modelId);
+        //Application context
+        obj = _servletcontext.getAttribute(modelId);
         if (obj != null)
         {
             return obj;
         }
 
-        //TODO: What about JSP PageContext?
-
-        Class c = getModelClassFromJspInfo(modelId);
-        if (c == null)
-        {
-            LogUtil.getLogger().severe("Could not determine class of model bean " + modelId);
-            return null;
-        }
-
-        try
-        {
-            obj = c.newInstance();
-        }
-        catch (InstantiationException e)
-        {
-            throw new RuntimeException(e);
-        }
-        catch (IllegalAccessException e)
-        {
-            throw new RuntimeException(e);
-        }
-        _servletrequest.setAttribute(modelId, obj);
-
-        return obj;
+        return null;
     }
 
     private void setModelInstance(String modelId, Object modelObj)
@@ -467,12 +447,11 @@ public class FacesContextImpl
         {
             throw new IllegalStateException("No servlet context or request!?");
         }
-        Object obj;
 
-        //Application context
-        if (_servletcontext.getAttribute(modelId) != null)
+        //Request context
+        if (_servletrequest.getAttribute(modelId) != null)
         {
-            _servletcontext.setAttribute(modelId, modelObj);
+            _servletrequest.setAttribute(modelId, modelObj);
             return;
         }
 
@@ -490,48 +469,16 @@ public class FacesContextImpl
             }
         }
 
-        //TODO: What about JSP PageContext?
+        //Application context
+        if (_servletcontext.getAttribute(modelId) != null)
+        {
+            _servletcontext.setAttribute(modelId, modelObj);
+            return;
+        }
 
-        //Request context (= default context)
+        //FINAL: request scope as default - not yet specified in JSF Spec.
         _servletrequest.setAttribute(modelId, modelObj);
     }
 
-
-    /**
-     * TODO: FacesContextImpl must not be specific to JSP rendering! So, we
-     * should find a better way to find out model types.
-     * @param modelId
-     * @return
-     * @throws FacesException
-     */
-    private Class getModelClassFromJspInfo(String modelId)
-        throws FacesException
-    {
-        String className = null;
-
-        className = JspInfo.getBeanType(this, getRequestTree().getTreeId(), modelId);
-        if (className == null)
-        {
-            String responseTreeId = getResponseTree().getTreeId();
-            if (!responseTreeId.equals(getRequestTree().getTreeId()))
-            {
-                className = JspInfo.getBeanType(this, responseTreeId, modelId);
-            }
-        }
-
-        if (className == null)
-        {
-            return null;
-        }
-
-        try
-        {
-            return Class.forName(className);
-        }
-        catch (ClassNotFoundException e)
-        {
-            throw new FacesException(e);
-        }
-    }
 
 }

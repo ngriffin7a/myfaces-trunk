@@ -23,6 +23,7 @@ import net.sourceforge.myfaces.component.UIPanel;
 import net.sourceforge.myfaces.renderkit.html.DataRenderer;
 
 import javax.faces.component.UIComponent;
+import javax.faces.FacesException;
 import javax.servlet.jsp.JspException;
 import java.io.IOException;
 
@@ -62,7 +63,14 @@ public class ListRowTag
     private boolean hasNext()
     {
         String varAttr = (String)getComponent().getAttribute(DataRenderer.VAR_ATTR);
-        return getFacesContext().getModelValue(varAttr) != null;
+        try
+        {
+            return getFacesContext().getModelValue(varAttr) != null;
+        }
+        catch (FacesException e)
+        {
+            return false;
+        }
     }
 
 

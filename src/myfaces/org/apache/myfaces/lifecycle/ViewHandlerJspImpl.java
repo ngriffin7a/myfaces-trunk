@@ -19,6 +19,7 @@
 package net.sourceforge.myfaces.lifecycle;
 
 import net.sourceforge.myfaces.MyFacesFactoryFinder;
+import net.sourceforge.myfaces.util.logging.LogUtil;
 import net.sourceforge.myfaces.renderkit.html.jspinfo.JspInfo;
 import net.sourceforge.myfaces.renderkit.html.state.StateRenderer;
 import net.sourceforge.myfaces.renderkit.html.state.TreeCopier;
@@ -57,7 +58,7 @@ public class ViewHandlerJspImpl
         //Build component tree from parsed JspInfo so that all components
         //already exist in case a component needs it's children prior to
         //rendering it's body
-        Tree staticTree = JspInfo.getStaticTree(facesContext, facesContext.getResponseTree().getTreeId());
+        Tree staticTree = JspInfo.getTree(facesContext, facesContext.getResponseTree().getTreeId());
         TreeCopier tc = new TreeCopier(facesContext);
         tc.setOverwriteComponents(false);
         tc.setOverwriteAttributes(false);
@@ -79,7 +80,7 @@ public class ViewHandlerJspImpl
         {
             try
             {
-                //LogUtil.logInfo("StateRenderer found, calling encode...");
+                LogUtil.getLogger().finest("StateRenderer found, calling encodeBegin...");
                 renderer.encodeBegin(facesContext, null);
             }
             catch (IOException e)

@@ -20,6 +20,7 @@ package net.sourceforge.myfaces.taglib.ext;
 
 import net.sourceforge.myfaces.component.UICommand;
 import net.sourceforge.myfaces.renderkit.html.GroupRenderer;
+import net.sourceforge.myfaces.renderkit.html.ext.SortColumnRenderer;
 import net.sourceforge.myfaces.taglib.MyFacesTag;
 
 import javax.faces.component.UIComponent;
@@ -43,9 +44,19 @@ public class SortHeaderTag
         return GroupRenderer.TYPE;
     }
 
-    public void setCommandReference(String value)
+    public void setSortCommandReference(String value)
     {
         setComponentAttribute(UICommand.COMMAND_REFERENCE_ATTR, value);
+    }
+
+    public void setColumnReference(String value)
+    {
+        setModelReference(value);
+    }
+
+    public void setAscendingReference(String value)
+    {
+        setRendererAttribute(SortColumnRenderer.ASCENDING_REFERENCE_ATTR, value);
     }
 
 }

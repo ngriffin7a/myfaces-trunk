@@ -19,31 +19,32 @@
 package net.sourceforge.myfaces.renderkit.html.jspinfo;
 
 import net.sourceforge.myfaces.component.CommonComponentAttributes;
-import net.sourceforge.myfaces.util.bean.BeanUtils;
-import net.sourceforge.myfaces.util.logging.LogUtil;
+import net.sourceforge.myfaces.component.ext.UISaveState;
 import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.Constants;
 import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.JasperException;
 import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.JspCompilationContext;
 import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.compiler.*;
+import net.sourceforge.myfaces.util.bean.BeanUtils;
+import net.sourceforge.myfaces.util.logging.LogUtil;
 import org.xml.sax.Attributes;
 
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIComponentBase;
-import javax.faces.tree.Tree;
 import javax.faces.webapp.FacesTag;
 import javax.servlet.jsp.tagext.TagAttributeInfo;
 import javax.servlet.jsp.tagext.TagInfo;
 import javax.servlet.jsp.tagext.TagLibraryInfo;
+import javax.servlet.jsp.PageContext;
 import java.beans.BeanInfo;
 import java.beans.PropertyDescriptor;
 import java.beans.PropertyEditor;
+import java.beans.Beans;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.util.HashMap;
 import java.util.Hashtable;
-import java.util.Map;
 
 /**
  * DOCUMENT ME!
@@ -57,20 +58,16 @@ public class MyParseEventListener
     private JspTreeParser _parser;
     private JspCompilationContext _ctxt;
     private UIComponent _currentComponent;
-    private Map _beanClasses;
-    private Map _creatorTags;
+    private JspInfo _jspInfo;
 
     public MyParseEventListener(JspTreeParser parser,
                                 JspCompilationContext ctxt,
-                                Tree tree,
-                                Map beanClasses,
-                                Map creatorTags)
+                                JspInfo jspInfo)
     {
         _parser = parser;
         _ctxt = ctxt;
-        _currentComponent = tree.getRoot();
-        _beanClasses = beanClasses;
-        _creatorTags = creatorTags;
+        _currentComponent = jspInfo.getTree().getRoot();
+        _jspInfo = jspInfo;
     }
 
     public void beginPageProcessing() throws JasperException
@@ -465,7 +462,12 @@ public class MyParseEventListener
             String compoundId = comp.getCompoundId();
             if (compoundId != null)
             {
-                _creatorTags.put(compoundId, tag);
+                _jspInfo.setCreatorTag(compoundId, tag);
+            }
+
+            if (comp.getComponentType().equals(UISaveState.TYPE))
+            {
+                _jspInfo.addUISaveStateComponent(comp);
             }
         }
     }
@@ -646,15 +648,42 @@ public class MyParseEventListener
             throw new IllegalArgumentException("No id attribute!");
         }
 
-        String cl = attrs.getValue("class");
-        if (cl == null)
+        String className = attrs.getValue("class");
+        String beanName = attrs.getValue("beanName");
+
+        int scope = PageContext.PAGE_SCOPE; //Default as stated in JSP Spec.
+        String scopeValue = attrs.getValue("scope");
+        if (scopeValue != null)
         {
-            throw new IllegalArgumentException("No class attribute!");
+            scopeValue = scopeValue.trim();
+            if (scopeValue.equalsIgnoreCase("page"))
+            {
+                scope = PageContext.PAGE_SCOPE;
+            }
+            else if (scopeValue.equalsIgnoreCase("request"))
+            {
+                scope = PageContext.REQUEST_SCOPE;
+            }
+            else if (scopeValue.equalsIgnoreCase("session"))
+            {
+                scope = PageContext.SESSION_SCOPE;
+            }
+            else if (scopeValue.equalsIgnoreCase("application"))
+            {
+                scope = PageContext.APPLICATION_SCOPE;
+            }
+            else
+            {
+                LogUtil.getLogger().warning("Illegal scope attribute '" + scopeValue + "'. Assuming page scope.");
+            }
         }
 
         //We ignore the scope for convenience, although at the moment it is not
         //necessary to store the type of application or session scope beans.
-        _beanClasses.put(id, cl);
+        _jspInfo.setJspBeanInfo(id, new JspBeanInfo(id,
+                                                    className,
+                                                    beanName,
+                                                    scope));
     }
 
 

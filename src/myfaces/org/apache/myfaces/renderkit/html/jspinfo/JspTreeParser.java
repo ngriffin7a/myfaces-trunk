@@ -18,9 +18,12 @@
  */
 package net.sourceforge.myfaces.renderkit.html.jspinfo;
 
+import net.sourceforge.myfaces.MyFacesFactoryFinder;
 import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.JasperException;
 import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.JspCompilationContext;
 import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.compiler.Parser;
+import net.sourceforge.myfaces.webapp.ServletMapping;
+import net.sourceforge.myfaces.webapp.ServletMappingFactory;
 
 import javax.faces.FacesException;
 import javax.faces.FactoryFinder;
@@ -30,13 +33,7 @@ import javax.servlet.ServletContext;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Stack;
-
-import net.sourceforge.myfaces.webapp.ServletMappingFactory;
-import net.sourceforge.myfaces.webapp.ServletMapping;
-import net.sourceforge.myfaces.MyFacesFactoryFinder;
 
 /**
  * DOCUMENT ME!
@@ -45,33 +42,16 @@ import net.sourceforge.myfaces.MyFacesFactoryFinder;
  */
 public class JspTreeParser
 {
-    private ServletContext _servletContext = null;
-    private Tree _tree = null;
     private String _topFileEncoding = "ISO-8859-1";
-    private Map _beanClassesMap = null;
-    private Map _creatorTagsMap = null;
     private JspCompilationContext _jspCompilationContext = null;
     private MyParseEventListener _parseEventListener = null;
     private Stack baseDirStack = new Stack();
+    private ServletContext _servletContext = null;
+    private JspInfo _jspInfo = null;
 
     public JspTreeParser(ServletContext servletContext)
     {
         _servletContext = servletContext;
-    }
-
-    public Tree getTree()
-    {
-        return _tree;
-    }
-
-    public Map getBeanClassesMap()
-    {
-        return _beanClassesMap;
-    }
-
-    public Map getCreatorTagsMap()
-    {
-        return _creatorTagsMap;
     }
 
     public ServletContext getServletContext()
@@ -79,20 +59,22 @@ public class JspTreeParser
         return _servletContext;
     }
 
+    public JspInfo getJspInfo()
+    {
+        return _jspInfo;
+    }
+
     protected void init(String treeId)
     {
         TreeFactory tf = (TreeFactory)FactoryFinder.getFactory(FactoryFinder.TREE_FACTORY);
-        _tree = tf.getTree(_servletContext, treeId);
+        Tree tree = tf.getTree(_servletContext, treeId);
 
-        _beanClassesMap = new HashMap();
-        _creatorTagsMap = new HashMap();
+        _jspInfo = new JspInfo(tree);
 
         _jspCompilationContext = new MyJspCompilationContext(_servletContext);
         _parseEventListener = new MyParseEventListener(this,
                                                        _jspCompilationContext,
-                                                       _tree,
-                                                       _beanClassesMap,
-                                                       _creatorTagsMap);
+                                                       _jspInfo);
     }
 
 

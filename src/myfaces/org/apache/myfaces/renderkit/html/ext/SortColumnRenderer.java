@@ -20,20 +20,24 @@ package net.sourceforge.myfaces.renderkit.html.ext;
 
 import net.sourceforge.myfaces.renderkit.html.HyperlinkRenderer;
 
+import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
-import javax.faces.component.UIComponent;
-import javax.faces.component.UICommand;
 import java.io.IOException;
 
 /**
  * DOCUMENT ME!
+ *
+ * The value of the associated UICommand
+ *
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
 public class SortColumnRenderer
     extends HyperlinkRenderer
 {
+    public static final String ASCENDING_REFERENCE_ATTR = "ascendingReference";
+
     public static final String TYPE = "SortColumn";
     public String getRendererType()
     {
@@ -49,50 +53,43 @@ public class SortColumnRenderer
     {
         super.encodeEnd(facesContext, uiComponent);
 
-        int sort = getActualSort(facesContext, uiComponent);
-        switch (sort)
+        Boolean asc = getSortAscending(facesContext, uiComponent);
+        if (asc != null)
         {
-            case SORT_COLUMN_ASC:
+            if (asc.booleanValue())
             {
                 ResponseWriter writer = facesContext.getResponseWriter();
                 writer.write("&#x2191;");
-                break;
             }
-            case SORT_COLUMN_DESC:
+            else
             {
                 ResponseWriter writer = facesContext.getResponseWriter();
                 writer.write("&#x2193;");
-                break;
             }
         }
     }
 
-    private static final int NO_SORT_COLUMN = 0;
-    private static final int SORT_COLUMN_ASC = 1;
-    private static final int SORT_COLUMN_DESC = 2;
-
-    private int getActualSort(FacesContext facesContext, UIComponent uiComponent)
+    private Boolean getSortAscending(FacesContext facesContext, UIComponent uiComponent)
     {
-        String modRef = uiComponent.getParent().getModelReference();
-        if (modRef != null)
+        UIComponent parent = uiComponent.getParent();
+
+        String column = (String)uiComponent.currentValue(facesContext);
+        String currentSortColumn = (String)parent.currentValue(facesContext);
+        String ascendingRef = (String)parent.getAttribute(ASCENDING_REFERENCE_ATTR);
+        if (currentSortColumn == null || ascendingRef == null)
         {
-            Object sort = facesContext.getModelValue(modRef);
-            if (uiComponent instanceof UICommand)
-            {
-                String commandName = ((UICommand)uiComponent).getCommandName();
-                if (commandName != null
-                    && sort != null &&
-                    sort.toString().startsWith(commandName))
-                {
-                    if (sort.equals(commandName))
-                    {
-                        return SORT_COLUMN_ASC;
-                    }
-                    return SORT_COLUMN_DESC;
-                }
-            }
+            throw new IllegalArgumentException("Parent has no value or ascendingReference attribute");
         }
-        return NO_SORT_COLUMN;
+
+        if (column.equals(currentSortColumn))
+        {
+            Boolean asc = (Boolean)facesContext.getModelValue(ascendingRef);
+            return asc;
+        }
+        else
+        {
+            return null;
+        }
     }
 
 

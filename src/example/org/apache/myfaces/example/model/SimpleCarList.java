@@ -28,26 +28,28 @@ import java.util.*;
 public class SimpleCarList
     extends SortableList
 {
-    private List _countries = new ArrayList();
+    private List _cars;
 
     public SimpleCarList()
     {
-        _countries.add(new SimpleCar("car A", "red"));
-        _countries.add(new SimpleCar("car B", "blue"));
-        _countries.add(new SimpleCar("car C", "green"));
-        _countries.add(new SimpleCar("car D", "yellow"));
-        _countries.add(new SimpleCar("car E", "orange"));
-        super.setSort("type");
+        super("type");
+
+        _cars = new ArrayList();
+        _cars.add(new SimpleCar("car A", "red"));
+        _cars.add(new SimpleCar("car B", "blue"));
+        _cars.add(new SimpleCar("car C", "green"));
+        _cars.add(new SimpleCar("car D", "yellow"));
+        _cars.add(new SimpleCar("car E", "orange"));
     }
 
     public Iterator getCars()
     {
-        return _countries.iterator();
+        return _cars.iterator();
     }
 
-    protected boolean isColumnAscendingByDefault(String column)
+    protected boolean isDefaultAscending(String sortColumn)
     {
-        return column.equals("type");
+        return true;
     }
 
     protected void sort(final String column, final boolean ascending)
@@ -73,6 +75,6 @@ public class SimpleCarList
                 else return 0;
             }
         };
-        Collections.sort(_countries, comparator);
+        Collections.sort(_cars, comparator);
     }
 }

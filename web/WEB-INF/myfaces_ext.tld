@@ -99,12 +99,17 @@
              <rtexprvalue>false</rtexprvalue>
          </attribute>
         <attribute>
-            <name>commandReference</name>
+            <name>sortCommandReference</name>
             <required>true</required>
             <rtexprvalue>false</rtexprvalue>
         </attribute>
          <attribute>
-             <name>modelReference</name>
+             <name>columnReference</name>    <!-- reference to the current sort column -->
+             <required>true</required>
+             <rtexprvalue>false</rtexprvalue>
+         </attribute>
+         <attribute>
+             <name>ascendingReference</name>    <!-- reference to the current sort direction -->
              <required>true</required>
              <rtexprvalue>false</rtexprvalue>
          </attribute>
@@ -120,7 +125,7 @@
             <rtexprvalue>false</rtexprvalue>
         </attribute>
        <attribute>
-           <name>commandName</name>
+           <name>column</name>
            <required>true</required>
            <rtexprvalue>false</rtexprvalue>
        </attribute>

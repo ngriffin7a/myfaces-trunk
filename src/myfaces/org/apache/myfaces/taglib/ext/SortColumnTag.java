@@ -43,7 +43,7 @@ public class SortColumnTag
         return SortColumnRenderer.TYPE;
     }
 
-    public void setCommandName(String v)
+    public void setColumn(String v)
     {
         setValue(v);
     }

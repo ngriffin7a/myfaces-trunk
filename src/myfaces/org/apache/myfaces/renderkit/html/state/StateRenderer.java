@@ -18,20 +18,14 @@
  */
 package net.sourceforge.myfaces.renderkit.html.state;
 
-import net.sourceforge.myfaces.component.ext.UISaveState;
 import net.sourceforge.myfaces.renderkit.html.FormRenderer;
 import net.sourceforge.myfaces.renderkit.html.HTMLRenderer;
 import net.sourceforge.myfaces.renderkit.html.HyperlinkRenderer;
 import net.sourceforge.myfaces.renderkit.html.ext.NavigationItemRenderer;
-import net.sourceforge.myfaces.tree.TreeUtils;
 
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
-import javax.faces.tree.Tree;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
 
 /**
  * DOCUMENT ME!
@@ -44,9 +38,6 @@ public class StateRenderer
     public static final String TYPE = "StateRenderer";
 
     protected static final String TREE_ID_REQUEST_PARAM = "tId";
-
-    public static final String RESTORED_TREE_ATTR
-        = StateRenderer.class.getName() + ".RESTORED_TREE";
 
     public static final String BODY_CONTENT_REQUEST_ATTR
         = StateRenderer.class.getName() + ".BODY_CONTENT";
@@ -109,7 +100,7 @@ public class StateRenderer
     }
 
     /**
-     * Called directly by RenderResponsePhase
+     * Called directly by ViewHandlerJspImpl
      * @param facesContext
      * @param dummy
      * @throws java.io.IOException
@@ -139,30 +130,12 @@ public class StateRenderer
         }
     }
 
+    /**
+     * Called directly by doAfterBody() in UseFacesTag
+     */
     public void encodeEnd(FacesContext facesContext, UIComponent none) throws IOException
     {
         _stateSaver.release(facesContext);
     }
-
-    /**
-     * TODO: Optimize by anonymous inner class Iterator
-     * Known issues: finds only top level components (= children of root)
-     * @param tree
-     * @return Iterator over all top-level UISaveState components
-     */
-    protected static Iterator getUISaveStateIterator(Tree tree)
-    {
-        List list = new ArrayList();
-        for (Iterator children = TreeUtils.treeIterator(tree); children.hasNext();)
-        {
-            UIComponent child = (UIComponent)children.next();
-            if (child.getComponentType().equals(UISaveState.TYPE))
-            {
-                list.add(child);
-            }
-        }
-        return list.iterator();
-    }
-
 
 }

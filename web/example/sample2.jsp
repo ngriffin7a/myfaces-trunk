@@ -29,7 +29,7 @@
 <body>
 
 <jsp:useBean id="q_form" class="net.sourceforge.myfaces.example.model.QuotationForm" scope="request" />
-<jsp:useBean id="q_controller" class="net.sourceforge.myfaces.example.controller.QuotationController" scope="request" />
+<jsp:useBean id="q_controller" class="net.sourceforge.myfaces.example.controller.QuotationController" scope="application" />
 
 
 <f:use_faces>

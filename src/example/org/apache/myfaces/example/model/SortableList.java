@@ -21,61 +21,52 @@ package net.sourceforge.myfaces.example.model;
 
 
 /**
- * DOCUMENT ME!
+ * Convenient base class for sortable lists.
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
 public abstract class SortableList
 {
     private String _sort;
-    private final static String DESCENDING = "-DESC";
+    private boolean _ascending;
 
-    protected abstract boolean isColumnAscendingByDefault(String column);
+    protected SortableList(String defaultSortColumn)
+    {
+        _sort = defaultSortColumn;
+        _ascending = isDefaultAscending(defaultSortColumn);
+    }
 
+    /**
+     * Sort the list.
+     */
     protected abstract void sort(String column, boolean ascending);
 
-    public void sort(String sortCommand)
+    /**
+     * Is the default sort direction for the given column "ascending" ?
+     */
+    protected abstract boolean isDefaultAscending(String sortColumn);
+
+
+    public void sort(String sortColumn)
     {
-        String sortColumn = getSortColumn();
-
-        if (sortCommand == null)
+        if (sortColumn == null)
         {
-            throw new IllegalArgumentException("Argument sortCommand may not be null.");
+            throw new IllegalArgumentException("Argument sortColumn must not be null.");
         }
 
-        // case 1: first click on a sort column
-        if (_sort == null)
+        if (_sort.equals(sortColumn))
         {
-            // column Ascending by default -> sort descending
-            if (isColumnAscendingByDefault(sortCommand))
-            {
-                _sort = sortCommand + DESCENDING;
-                sort(sortCommand, false);
-            }
-            else
-            {
-                _sort = sortCommand;
-                sort(sortCommand, true);
-            }
+            //current sort equals new sortColumn -> reverse sort order
+            _ascending = !_ascending;
         }
-        // case 2: actual sort equals new sortCommand -> sort descending
-        else if (_sort.equals(sortCommand))
-        {
-            _sort = sortColumn + DESCENDING;
-            sort(sortCommand, false);
-        }
-        // case 3: actual sort equals new sortCommand -> sort ascending
-        else if (sortColumn.equals(sortCommand))
-        {
-            _sort = sortColumn;
-            sort(sortCommand, true);
-        }
-        // case 4: sort another column
         else
         {
-            _sort = sortCommand;
-            sort(sortCommand, true);
+            //sort new column in default direction
+            _sort = sortColumn;
+            _ascending = isDefaultAscending(_sort);
         }
+
+        sort(_sort, _ascending);
     }
 
     public String getSort()
@@ -88,20 +79,13 @@ public abstract class SortableList
         _sort = sort;
     }
 
-    private String getSortColumn()
+    public boolean isAscending()
     {
-        if (_sort == null)
-        {
-            return null;
-        }
+        return _ascending;
+    }
 
-        if (_sort.endsWith(DESCENDING))
-        {
-            return _sort.substring(0, _sort.length() - DESCENDING.length());
-        }
-        else
-        {
-            return _sort;
-        }
+    public void setAscending(boolean ascending)
+    {
+        _ascending = ascending;
     }
 }
