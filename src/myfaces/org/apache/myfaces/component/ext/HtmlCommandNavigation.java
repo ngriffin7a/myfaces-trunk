@@ -44,11 +44,6 @@ public class HtmlCommandNavigation
     private boolean _open = false;
     private boolean _active = false;
 
-    public HtmlCommandNavigation()
-    {
-        super();
-    }
-
     public boolean isImmediate()
     {
         //always immediate
@@ -224,4 +219,25 @@ public class HtmlCommandNavigation
         _active = ((Boolean)values[2]).booleanValue();
     }
 
+
+    //------------------ GENERATED CODE BEGIN (do not modify!) --------------------
+
+    public static final String COMPONENT_TYPE = "net.sourceforge.myfaces.HtmlCommandNavigation";
+    public static final String COMPONENT_FAMILY = "javax.faces.Command";
+    private static final String DEFAULT_RENDERER_TYPE = "javax.faces.Link";
+
+
+    public HtmlCommandNavigation()
+    {
+        setRendererType(DEFAULT_RENDERER_TYPE);
+    }
+
+    public String getFamily()
+    {
+        return COMPONENT_FAMILY;
+    }
+
+
+    //------------------ GENERATED CODE END ---------------------------------------
+    
 }

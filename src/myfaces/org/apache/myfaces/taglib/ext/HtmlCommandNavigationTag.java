@@ -18,6 +18,7 @@
  */
 package net.sourceforge.myfaces.taglib.ext;
 
+import net.sourceforge.myfaces.component.ext.HtmlCommandNavigation;
 import net.sourceforge.myfaces.taglib.html.HtmlCommandLinkTag;
 
 
@@ -31,7 +32,7 @@ public class HtmlCommandNavigationTag
 {
     public String getComponentType()
     {
-        return "net.sourceforge.myfaces.CommandNavigation";
+        return HtmlCommandNavigation.COMPONENT_TYPE;
     }
 
     public String getDefaultRendererType()

@@ -41,7 +41,7 @@ public class HtmlCommandLinkTag
         return HtmlCommandLink.COMPONENT_TYPE;
     }
 
-    public String getDefaultRendererType()
+    protected String getDefaultRendererType()
     {
         return "javax.faces.Link";
     }

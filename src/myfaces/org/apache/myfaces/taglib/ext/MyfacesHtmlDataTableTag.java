@@ -33,7 +33,7 @@ public class MyfacesHtmlDataTableTag
 
     public String getComponentType()
     {
-        return "net.sourceforge.myfaces.DataTable";
+        return "net.sourceforge.myfaces.HtmlDataTable";
     }
 
     protected String getDefaultRendererType()

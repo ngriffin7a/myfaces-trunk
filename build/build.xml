@@ -34,6 +34,7 @@
         <pathelement location="${jsfapi.src}"/>
         <pathelement location="${servlet-api.jar}"/>
         <pathelement location="${jsp-api.jar}"/>
+        <pathelement location="${jstl.jar}"/>
         <pathelement location="${cos.jar}"/>
         <pathelement location="${commons-logging.jar}"/>
         <pathelement location="${commons-el.jar}"/>

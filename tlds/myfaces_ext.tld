@@ -64,6 +64,25 @@
         Enhanced standard JSP actions and custom MyFaces actions.
     </description>
 
+<!-- command_link -->
+    <tag>
+        <name>commandLink</name>
+        <tag-class>net.sourceforge.myfaces.taglib.ext.MyfacesHtmlCommandLinkTag</tag-class>
+        <body-content>JSP</body-content>
+        &ui_component_attributes;
+        &ui_command_attributes;
+        &html_universal_attributes;
+        &html_event_handler_attributes;
+        &html_anchor_attributes;
+        &user_role_attributes;
+        <attribute>
+            <name>target</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
+            <description>MyFaces extension: Sometimes it's convenient to open a new window as a result of an action.</description>
+        </attribute>
+    </tag>
+
 <!-- command_navigation -->
     <tag>
         <name>commandNavigation</name>

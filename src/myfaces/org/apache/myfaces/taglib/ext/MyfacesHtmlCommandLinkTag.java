@@ -18,7 +18,7 @@
  */
 package net.sourceforge.myfaces.taglib.ext;
 
-import net.sourceforge.myfaces.component.ext.HtmlCommandSortHeader;
+import net.sourceforge.myfaces.renderkit.html.HTML;
 import net.sourceforge.myfaces.taglib.html.HtmlCommandLinkTag;
 
 import javax.faces.component.UIComponent;
@@ -27,39 +27,32 @@ import javax.faces.component.UIComponent;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public class HtmlCommandSortHeaderTag
+public class MyfacesHtmlCommandLinkTag
         extends HtmlCommandLinkTag
 {
-    //private static final Log log = LogFactory.getLog(HtmlCommandSortHeaderTag.class);
+    //private static final Log log = LogFactory.getLog(MyfacesHtmlCommandLinkTag.class);
 
     public String getComponentType()
     {
-        return HtmlCommandSortHeader.COMPONENT_TYPE;
+        return "net.sourceforge.myfaces.HtmlCommandLink";
     }
 
-    public String getDefaultRendererType()
+    protected String getDefaultRendererType()
     {
-        return "net.sourceforge.myfaces.SortHeader";
+        return "net.sourceforge.myfaces.Link";
     }
 
-    private String _columnName;
-    private String _arrow;
+    private String _target;
 
     protected void setProperties(UIComponent component)
     {
         super.setProperties(component);
-
-        setStringProperty(component, "columnName", _columnName);
-        setBooleanProperty(component, "arrow", _arrow);
+        setStringProperty(component, HTML.TARGET_ATTR, _target);
     }
 
-    public void setColumnName(String columnName)
+    public void setTarget(String target)
     {
-        _columnName = columnName;
+        _target = target;
     }
 
-    public void setArrow(String arrow)
-    {
-        _arrow = arrow;
-    }
 }

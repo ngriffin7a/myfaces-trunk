@@ -40,36 +40,6 @@ public class HtmlCommandSortHeader
 {
     private static final Log log = LogFactory.getLog(HtmlCommandSortHeader.class);
 
-    private String _columnName;
-    private Boolean _arrow;
-
-    public String getColumnName()
-    {
-        if (_columnName != null) return _columnName;
-        ValueBinding vb = getValueBinding("columnName");
-        return vb != null ? (String)vb.getValue(getFacesContext()) : null;
-    }
-
-    public void setColumnName(String columnName)
-    {
-        _columnName = columnName;
-    }
-
-
-    public boolean getArrow()
-    {
-        if (_arrow != null) return _arrow.booleanValue();
-        ValueBinding vb = getValueBinding("arrow");
-        Boolean b = vb != null ? (Boolean)vb.getValue(getFacesContext()) : null;
-        return b != null ? b.booleanValue() : true;
-    }
-
-    public void setArrow(boolean sortAscending)
-    {
-        _arrow = Boolean.valueOf(sortAscending);
-    }
-
-
     public boolean isImmediate()
     {
         return true;
@@ -138,4 +108,50 @@ public class HtmlCommandSortHeader
         _arrow      = (Boolean)values[2];
     }
 
+    //------------------ GENERATED CODE BEGIN (do not modify!) --------------------
+
+    public static final String COMPONENT_TYPE = "net.sourceforge.myfaces.HtmlCommandSortHeader";
+    public static final String COMPONENT_FAMILY = "javax.faces.Command";
+    private static final String DEFAULT_RENDERER_TYPE = "javax.faces.Link";
+
+    private String _columnName = null;
+    private Boolean _arrow = null;
+
+    public HtmlCommandSortHeader()
+    {
+        setRendererType(DEFAULT_RENDERER_TYPE);
+    }
+
+    public String getFamily()
+    {
+        return COMPONENT_FAMILY;
+    }
+
+    public void setColumnName(String columnName)
+    {
+        _columnName = columnName;
+    }
+
+    public String getColumnName()
+    {
+        if (_columnName != null) return _columnName;
+        ValueBinding vb = getValueBinding("columnName");
+        return vb != null ? (String)vb.getValue(getFacesContext()) : null;
+    }
+
+    public void setArrow(boolean arrow)
+    {
+        _arrow = Boolean.valueOf(arrow);
+    }
+
+    public boolean isArrow()
+    {
+        if (_arrow != null) return _arrow.booleanValue();
+        ValueBinding vb = getValueBinding("arrow");
+        Boolean v = vb != null ? (Boolean)vb.getValue(getFacesContext()) : null;
+        return v != null ? v.booleanValue() : false;
+    }
+
+
+    //------------------ GENERATED CODE END ---------------------------------------
 }

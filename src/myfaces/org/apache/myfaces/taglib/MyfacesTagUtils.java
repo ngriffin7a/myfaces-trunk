@@ -132,6 +132,10 @@ public class MyfacesTagUtils
             {
                 ((UIParameter)component).setValue(value);
             }
+            else if (component instanceof UISelectBoolean)
+            {
+                ((UISelectBoolean)component).setValue(Boolean.valueOf(value));
+            }
             else
             {
                 log.error("Component " + component.getClass().getName() + " is no ValueHolder, cannot set value.");
