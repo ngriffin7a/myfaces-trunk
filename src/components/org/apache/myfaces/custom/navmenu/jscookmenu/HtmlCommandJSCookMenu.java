@@ -29,6 +29,9 @@ import javax.faces.context.FacesContext;
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  *          $Log$
+ *          Revision 1.3  2004/06/24 08:02:10  royalts
+ *          no message
+ *
  *          Revision 1.2  2004/06/23 14:35:18  royalts
  *          no message
  *

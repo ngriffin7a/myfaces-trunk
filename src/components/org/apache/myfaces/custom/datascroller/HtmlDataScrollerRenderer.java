@@ -191,7 +191,6 @@ public class HtmlDataScrollerRenderer
 
         ResponseWriter writer = facesContext.getResponseWriter();
         HtmlDataScroller scroller = (HtmlDataScroller)uiComponent;
-        UIData uiData = findUIData(scroller, uiComponent);
 
         UIComponent facetComp = scroller.getFirst();
         if (facetComp != null)
@@ -292,12 +291,4 @@ public class HtmlDataScrollerRenderer
         return (UIData)forComp;
     }
 
-    private String getLinkParameterId(UIData uiData, HtmlDataScroller scroller)
-    {
-        if (uiData == null)
-        {
-            return scroller.getId();
-        }
-        return uiData.getId();
-    }
 }

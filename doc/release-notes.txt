@@ -2,6 +2,10 @@ MyFaces Release Notes
 =====================
 
 ----------------------------------------------------------------------
+Changes in Release 1.0.6 beta
+
+
+----------------------------------------------------------------------
 Changes in Release 1.0.5 beta
 * new faces configurator
 * new validator (Regular Expressions)

@@ -12,7 +12,7 @@
         <x:commandNavigation id="nav_2_1" value="#{example_messages['nav_Sample_1']}" action="go_sample1" />
         <x:commandNavigation id="nav_2_2" value="#{example_messages['nav_Sample_2']}" action="go_sample2" />
         <x:commandNavigation id="nav_2_3" value="#{example_messages['nav_Validate']}" action="go_validate" />
-        <x:commandNavigation id="nav_2_4" value="#{example_messages['nav_Components']}" immediate="" >
+        <x:commandNavigation id="nav_2_4" value="#{example_messages['nav_Components']}" >
             <x:commandNavigation id="nav_2_4_1" value="#{example_messages['nav_dataTable']}" action="go_dataTable" />
             <x:commandNavigation id="nav_2_4_2" value="#{example_messages['nav_sortTable']}" action="go_sortTable" />
             <x:commandNavigation id="nav_2_4_3" value="#{example_messages['nav_Selectbox']}" action="go_selectbox" />
