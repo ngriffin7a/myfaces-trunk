@@ -105,7 +105,7 @@ class _ComponentUtils
 
             if(uiData.getRowIndex()==-1)
             {
-                return id.startsWith(cmp.getId());
+                return dynamicIdIsEqual(id,cmp.getId());
             }
             else
             {
@@ -114,6 +114,11 @@ class _ComponentUtils
         }
 
         return false;
+    }
+
+    private static boolean dynamicIdIsEqual(String dynamicId, String id)
+    {
+        return dynamicId.matches(id+"_[0-9]*");
     }
 
 
