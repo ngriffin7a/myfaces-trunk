@@ -377,6 +377,7 @@
         <ant dir="${build.dir}/examples-webapp" antfile="build.xml" inheritall="false" target="clean"/>
         <ant dir="${build.dir}/junit" antfile="build.xml" inheritall="false" target="clean"/>
         <ant dir="${build.dir}/tagunit-webapp" antfile="build.xml" inheritall="false" target="clean"/>
+        <ant dir="${build.dir}/develop" antfile="build.xml" inheritall="false" target="clean"/>
     </target>
 
     <target name="-compile-api">

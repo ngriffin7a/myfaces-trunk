@@ -22,6 +22,8 @@
     <property name="tiles.web" location="${tiles.dir}/web"/>
 
     <!-- Properties -->
+    <property file="build.local.properties"/>
+    <property file="build.default.properties"/>
     <property file="../build.local.properties"/>
     <property file="../build.default.properties"/>
     <property file="../manifest.properties"/>
@@ -208,12 +210,24 @@
             <fileset dir="${web-inf.lib.dir}"/>
             <fileset file="${examples.web}/WEB-INF/web.xml"/>
             <fileset file="${examples.web}/WEB-INF/faces-config.xml"/>
+            <fileset file="${examples.web}/jscalendar"/>
+            <fileset file="${examples.web}/jscookmenu"/>
         </delete>
         <delete quiet="true" failonerror="false" includeEmptyDirs="true">
             <fileset dir="${tiles.web}/WEB-INF/classes"/>
             <fileset dir="${tiles.web}/WEB-INF/lib"/>
             <fileset file="${tiles.web}/WEB-INF/web.xml"/>
+            <fileset dir="${tiles.web}/jscalendar"/>
+            <fileset dir="${tiles.web}/jscookmenu"/>
         </delete>
     </target>
+
+    <target name="patch"
+            description="Patch files from a diff file">
+        <patch patchfile="${patchfile}"
+               dir="${patchdir}"
+               ignorewhitespace="true" />
+    </target>
+
 
 </project>
