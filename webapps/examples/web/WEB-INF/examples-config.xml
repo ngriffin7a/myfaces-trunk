@@ -73,6 +73,14 @@
         <managed-bean-class>org.apache.myfaces.examples.listexample.SimpleCountryList</managed-bean-class>
         <managed-bean-scope>session</managed-bean-scope>
     </managed-bean>
+    
+    <!-- Managed Beans for tree.jsp -->
+
+    <managed-bean>
+        <managed-bean-name>treeTable</managed-bean-name>
+        <managed-bean-class>org.apache.myfaces.examples.listexample.TreeTable</managed-bean-class>
+        <managed-bean-scope>session</managed-bean-scope>
+    </managed-bean>
 
 
     <!-- Managed Beans for simpleSortList.jsp -->
@@ -266,6 +274,11 @@
         <navigation-case>
             <from-outcome>go_tree</from-outcome>
             <to-view-id>/tree.jsp</to-view-id>
+        </navigation-case>
+        
+        <navigation-case>
+            <from-outcome>go_treeTable</from-outcome>
+            <to-view-id>/treeTable.jsp</to-view-id>
         </navigation-case>
 
         <navigation-case>

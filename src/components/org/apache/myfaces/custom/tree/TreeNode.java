@@ -18,60 +18,55 @@ package org.apache.myfaces.custom.tree;
 import java.util.Iterator;
 
 /**
- * Defines the requirements for an object that can be used as a tree node for {@link HtmlTree}.
- * (inspired by javax.swing.tree.TreeNode).
- *
- * @author <a href="mailto:oliver@rossmueller.com">Oliver Rossmueller</a>
+ * Defines the requirements for an object that can be used as a tree node for
+ * {@link HtmlTree}. (inspired by javax.swing.tree.TreeNode).
+ * 
+ * @author <a href="mailto:oliver@rossmueller.com">Oliver Rossmueller </a>
  * @version $Revision$ $Date$
+ *
  *          $Log$
- *          Revision 1.3  2004/10/13 11:50:58  matze
- *          renamed packages to org.apache
+ *          Revision 1.4  2004/11/26 12:14:10  oros
+ *          MYFACES-8: applied tree table patch by David Le Strat
  *
- *          Revision 1.2  2004/07/01 21:53:07  mwessendorf
- *          ASF switch
- *
- *          Revision 1.1  2004/04/22 10:20:23  manolito
- *          tree component
- *
+ *  *  
  */
 public interface TreeNode
 {
+
+    /**
+     * @return Gets the user object of this node.
+     */
+    Object getUserObject();
 
     /**
      * Answer the child at the given index.
      */
     TreeNode getChildAt(int childIndex);
 
-
     /**
      * Answer the number of children this node contains.
      */
     int getChildCount();
-
 
     /**
      * Answer the parent of this node.
      */
     TreeNode getParent();
 
-
     /**
      * Answer the index of the given node in this node's children.
      */
     int getIndex(TreeNode node);
-
 
     /**
      * Answer true if this node allows children.
      */
     boolean getAllowsChildren();
 
-
     /**
      * Answer true if this is a leaf node.
      */
     boolean isLeaf();
-
 
     /**
      * Answer the children of the receiver. The base collection is unmodifyable.

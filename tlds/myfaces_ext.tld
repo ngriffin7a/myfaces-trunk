@@ -1235,6 +1235,11 @@
             <rtexprvalue>false</rtexprvalue>
         </attribute>
         <attribute>
+            <name>var</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
+        </attribute>
+        <attribute>
             <name>styleClass</name>
             <required>false</required>
             <rtexprvalue>false</rtexprvalue>
@@ -1246,6 +1251,26 @@
         </attribute>
         <attribute>
             <name>selectedNodeClass</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>headerClass</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>footerClass</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>rowClasses</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>columnClasses</name>
             <required>false</required>
             <rtexprvalue>false</rtexprvalue>
         </attribute>
@@ -1358,7 +1383,15 @@
             <rtexprvalue>false</rtexprvalue>
         </attribute>
     </tag>
-
+    
+    <!-- column -->
+    <tag>
+        <name>treecolumn</name>
+        <tag-class>org.apache.myfaces.custom.tree.taglib.TreeColumnTag</tag-class>
+        <body-content>JSP</body-content>
+        &ui_component_attributes;
+    </tag>
+     
     <!-- panelStack -->
     <tag>
         <name>panelStack</name>

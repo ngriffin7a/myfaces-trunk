@@ -19,46 +19,52 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 
-
 /**
  * Default implementation of {@link MutableTreeNode}.
- *
- * @author <a href="mailto:oliver@rossmueller.com">Oliver Rossmueller</a>
+ * 
+ * @author <a href="mailto:oliver@rossmueller.com">Oliver Rossmueller </a>
  * @version $Revision$ $Date$
- *          $Log$
- *          Revision 1.3  2004/10/13 11:50:58  matze
- *          renamed packages to org.apache
  *
- *          Revision 1.2  2004/07/01 21:53:07  mwessendorf
- *          ASF switch
+ * $Log$
+ * Revision 1.4  2004/11/26 12:14:10  oros
+ * MYFACES-8: applied tree table patch by David Le Strat
  *
- *          Revision 1.1  2004/04/22 10:20:23  manolito
- *          tree component
- *
+ *  
  */
-public class DefaultMutableTreeNode
-        implements MutableTreeNode
+public class DefaultMutableTreeNode implements MutableTreeNode
 {
 
     private ArrayList children = new ArrayList();
+
     private Object userObject;
+
     MutableTreeNode parent;
+
     private boolean allowsChildren = true;
 
-
+    /**
+     * @param userObject The userObject.
+     */
     public DefaultMutableTreeNode(Object userObject)
     {
         this.userObject = userObject;
     }
 
-
+    /**
+     * @param children The children.
+     * @param allowsChildren The allowsChildren.
+     */
     public DefaultMutableTreeNode(ArrayList children, boolean allowsChildren)
     {
         this.children = children;
         this.allowsChildren = allowsChildren;
     }
 
-
+    /**
+     * @param userObject The userobject.
+     * @param parent The parent.
+     * @param allowsChildren The allowsChildren.
+     */
     public DefaultMutableTreeNode(Object userObject, MutableTreeNode parent, boolean allowsChildren)
     {
         this.userObject = userObject;
@@ -66,28 +72,36 @@ public class DefaultMutableTreeNode
         this.allowsChildren = allowsChildren;
     }
 
-
+    /**
+     * @see org.apache.myfaces.custom.tree.MutableTreeNode#insert(org.apache.myfaces.custom.tree.MutableTreeNode)
+     */
     public void insert(MutableTreeNode child)
     {
         children.add(child);
         child.setParent(this);
     }
 
-
+    /**
+     * @see org.apache.myfaces.custom.tree.MutableTreeNode#insert(org.apache.myfaces.custom.tree.MutableTreeNode, int)
+     */
     public void insert(MutableTreeNode child, int index)
     {
         children.add(index, child);
         child.setParent(this);
     }
 
-
+    /**
+     * @see org.apache.myfaces.custom.tree.MutableTreeNode#remove(int)
+     */
     public void remove(int index)
     {
-        MutableTreeNode child = (MutableTreeNode)children.remove(index);
+        MutableTreeNode child = (MutableTreeNode) children.remove(index);
         child.setParent(null);
     }
 
-
+    /**
+     * @see org.apache.myfaces.custom.tree.MutableTreeNode#remove(org.apache.myfaces.custom.tree.MutableTreeNode)
+     */
     public void remove(MutableTreeNode node)
     {
         if (children.remove(node))
@@ -96,19 +110,25 @@ public class DefaultMutableTreeNode
         }
     }
 
-
+    /**
+     * @see org.apache.myfaces.custom.tree.MutableTreeNode#setUserObject(java.lang.Object)
+     */
     public void setUserObject(Object object)
     {
         this.userObject = object;
     }
 
-
+    /**
+     * @see org.apache.myfaces.custom.tree.TreeNode#getUserObject()
+     */
     public Object getUserObject()
     {
         return userObject;
     }
 
-
+    /**
+     * @see org.apache.myfaces.custom.tree.MutableTreeNode#removeFromParent()
+     */
     public void removeFromParent()
     {
         if (parent == null)
@@ -118,55 +138,73 @@ public class DefaultMutableTreeNode
         parent.remove(this);
     }
 
-
+    /**
+     * @see org.apache.myfaces.custom.tree.MutableTreeNode#setParent(org.apache.myfaces.custom.tree.MutableTreeNode)
+     */
     public void setParent(MutableTreeNode parent)
     {
         this.parent = parent;
     }
 
-
+    /**
+     * @see org.apache.myfaces.custom.tree.TreeNode#getChildAt(int)
+     */
     public TreeNode getChildAt(int index)
     {
-        return (TreeNode)children.get(index);
+        return (TreeNode) children.get(index);
     }
 
-
+    /**
+     * @see org.apache.myfaces.custom.tree.TreeNode#getChildCount()
+     */
     public int getChildCount()
     {
         return children.size();
     }
 
-
+    /**
+     * @see org.apache.myfaces.custom.tree.TreeNode#getParent()
+     */
     public TreeNode getParent()
     {
         return parent;
     }
 
-
+    /**
+     * @see org.apache.myfaces.custom.tree.TreeNode#getIndex(org.apache.myfaces.custom.tree.TreeNode)
+     */
     public int getIndex(TreeNode node)
     {
         return children.indexOf(node);
     }
 
-
+    /**
+     * @see org.apache.myfaces.custom.tree.TreeNode#getAllowsChildren()
+     */
     public boolean getAllowsChildren()
     {
         return allowsChildren;
     }
 
-
+    /**
+     * @see org.apache.myfaces.custom.tree.TreeNode#isLeaf()
+     */
     public boolean isLeaf()
     {
         return children.isEmpty();
     }
 
-
+    /**
+     * @see org.apache.myfaces.custom.tree.TreeNode#children()
+     */
     public Iterator children()
     {
         return Collections.unmodifiableCollection(children).iterator();
     }
 
-
+    /**
+     * @see java.lang.Object#toString()
+     */
     public String toString()
     {
         if (userObject != null)

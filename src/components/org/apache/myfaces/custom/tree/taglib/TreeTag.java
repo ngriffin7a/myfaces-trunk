@@ -26,40 +26,24 @@ import javax.faces.context.FacesContext;
 import javax.faces.el.ValueBinding;
 import javax.servlet.jsp.JspException;
 
-
 /**
+ * <p>
  * HtmlTree tag.
+ * </p>
  * 
- * @author <a href="mailto:oliver@rossmueller.com">Oliver Rossmueller</a>
- * @version $Revision$ $Date$
- *          $Log$
- *          Revision 1.7  2004/10/13 11:50:58  matze
- *          renamed packages to org.apache
+ * @author <a href="mailto:oliver@rossmueller.com">Oliver Rossmueller </a>
+ * @version $Revision$ $Date: 2004/10/13 11:50:58
  *
- *          Revision 1.6  2004/08/15 15:28:04  o_rossmueller
- *          new model listener handling to get modified from events which occur outside the scope of a tree request
- *
- *          Revision 1.5  2004/07/01 21:53:06  mwessendorf
- *          ASF switch
- *
- *          Revision 1.4  2004/05/10 01:24:51  o_rossmueller
- *          added iconClass attribute
- *
- *          Revision 1.3  2004/05/05 00:18:57  o_rossmueller
- *          various fixes/modifications in model event handling and tree update
- *
- *          Revision 1.2  2004/04/22 21:59:17  o_rossmueller
- *          added expandRoot attribute
- *
- *          Revision 1.1  2004/04/22 10:20:25  manolito
- *          tree component
- *
+ *          $ $Log$
+ *          $ Revision 1.8  2004/11/26 12:14:10  oros
+ *          $ MYFACES-8: applied tree table patch by David Le Strat
+ *          $
  */
-public class TreeTag
-        extends UIComponentTagBase
+public class TreeTag extends UIComponentTagBase
 {
 
     private String value;
+    private String var;
     private String iconLine;
     private String iconNoline;
     private String iconChild;
@@ -75,6 +59,10 @@ public class TreeTag
     private String iconNodeCloseMiddle;
     private String iconNodeCloseLast;
     private String styleClass;
+    private String rowClasses;
+    private String columnClasses;
+    private String headerClass;
+    private String footerClass;
     private String nodeClass;
     private String selectedNodeClass;
     private String iconClass;
@@ -87,264 +75,300 @@ public class TreeTag
         return "org.apache.myfaces.HtmlTree";
     }
 
-
     public String getRendererType()
     {
         return "org.apache.myfaces.HtmlTree";
     }
-
 
     public String getValue()
     {
         return value;
     }
 
-
     public void setValue(String newValue)
     {
         value = newValue;
     }
 
+    /**
+     * @return Returns the var.
+     */
+    public String getVar()
+    {
+        return var;
+    }
+
+    /**
+     * @param var The var to set.
+     */
+    public void setVar(String var)
+    {
+        this.var = var;
+    }
 
     public String getIconLine()
     {
         return iconLine;
     }
 
-
     public void setIconLine(String iconLine)
     {
         this.iconLine = iconLine;
     }
-
 
     public String getIconNoline()
     {
         return iconNoline;
     }
 
-
     public void setIconNoline(String iconNoline)
     {
         this.iconNoline = iconNoline;
     }
-
 
     public String getIconChild()
     {
         return iconChild;
     }
 
-
     public void setIconChild(String iconChild)
     {
         this.iconChild = iconChild;
     }
 
+    /**
+     * @return Returns the rowClasses.
+     */
+    public String getRowClasses()
+    {
+        return rowClasses;
+    }
+
+    /**
+     * @param rowClasses The rowClasses to set.
+     */
+    public void setRowClasses(String rowClasses)
+    {
+        this.rowClasses = rowClasses;
+    }
+
+    /**
+     * @return Returns the columnClasses.
+     */
+    public String getColumnClasses()
+    {
+        return columnClasses;
+    }
+
+    /**
+     * @param columnClasses The columnClasses to set.
+     */
+    public void setColumnClasses(String columnClasses)
+    {
+        this.columnClasses = columnClasses;
+    }
 
     public String getIconChildFirst()
     {
         return iconChildFirst;
     }
 
-
     public void setIconChildFirst(String iconChildFirst)
     {
         this.iconChildFirst = iconChildFirst;
     }
-
 
     public String getIconChildMiddle()
     {
         return iconChildMiddle;
     }
 
-
     public void setIconChildMiddle(String iconChildMiddle)
     {
         this.iconChildMiddle = iconChildMiddle;
     }
-
 
     public String getIconChildLast()
     {
         return iconChildLast;
     }
 
-
     public void setIconChildLast(String iconChildLast)
     {
         this.iconChildLast = iconChildLast;
     }
-
 
     public String getIconNodeOpen()
     {
         return iconNodeOpen;
     }
 
-
     public void setIconNodeOpen(String iconNodeOpen)
     {
         this.iconNodeOpen = iconNodeOpen;
     }
-
 
     public String getIconNodeOpenFirst()
     {
         return iconNodeOpenFirst;
     }
 
-
     public void setIconNodeOpenFirst(String iconNodeOpenFirst)
     {
         this.iconNodeOpenFirst = iconNodeOpenFirst;
     }
-
 
     public String getIconNodeOpenMiddle()
     {
         return iconNodeOpenMiddle;
     }
 
-
     public void setIconNodeOpenMiddle(String iconNodeOpenMiddle)
     {
         this.iconNodeOpenMiddle = iconNodeOpenMiddle;
     }
-
 
     public String getIconNodeOpenLast()
     {
         return iconNodeOpenLast;
     }
 
-
     public void setIconNodeOpenLast(String iconNodeOpenLast)
     {
         this.iconNodeOpenLast = iconNodeOpenLast;
     }
-
 
     public String getIconNodeClose()
     {
         return iconNodeClose;
     }
 
-
     public void setIconNodeClose(String iconNodeClose)
     {
         this.iconNodeClose = iconNodeClose;
     }
-
 
     public String getIconNodeCloseFirst()
     {
         return iconNodeCloseFirst;
     }
 
-
     public void setIconNodeCloseFirst(String iconNodeCloseFirst)
     {
         this.iconNodeCloseFirst = iconNodeCloseFirst;
     }
-
 
     public String getIconNodeCloseMiddle()
     {
         return iconNodeCloseMiddle;
     }
 
-
     public void setIconNodeCloseMiddle(String iconNodeCloseMiddle)
     {
         this.iconNodeCloseMiddle = iconNodeCloseMiddle;
     }
-
 
     public String getIconNodeCloseLast()
     {
         return iconNodeCloseLast;
     }
 
-
     public void setIconNodeCloseLast(String iconNodeCloseLast)
     {
         this.iconNodeCloseLast = iconNodeCloseLast;
     }
-
 
     public String getStyleClass()
     {
         return styleClass;
     }
 
-
     public void setStyleClass(String styleClass)
     {
         this.styleClass = styleClass;
     }
-
 
     public String getNodeClass()
     {
         return nodeClass;
     }
 
-
     public void setNodeClass(String nodeClass)
     {
         this.nodeClass = nodeClass;
     }
-
 
     public String getSelectedNodeClass()
     {
         return selectedNodeClass;
     }
 
-
     public void setSelectedNodeClass(String selectedNodeClass)
     {
         this.selectedNodeClass = selectedNodeClass;
     }
-
 
     public String getIconClass()
     {
         return iconClass;
     }
 
-
     public void setIconClass(String iconClass)
     {
         this.iconClass = iconClass;
     }
 
+    /**
+     * @return Returns the footerClass.
+     */
+    public String getFooterClass()
+    {
+        return footerClass;
+    }
+
+    /**
+     * @param footerClass The footerClass to set.
+     */
+    public void setFooterClass(String footerClass)
+    {
+        this.footerClass = footerClass;
+    }
+
+    /**
+     * @return Returns the headerClass.
+     */
+    public String getHeaderClass()
+    {
+        return headerClass;
+    }
+
+    /**
+     * @param headerClass The headerClass to set.
+     */
+    public void setHeaderClass(String headerClass)
+    {
+        this.headerClass = headerClass;
+    }
 
     public boolean isExpandRoot()
     {
         return expandRoot;
     }
 
-
     public void setExpandRoot(boolean expandRoot)
     {
         this.expandRoot = expandRoot;
     }
-
 
     public long getExpireListeners()
     {
         return expireListeners;
     }
 
-
     public void setExpireListeners(long expireListeners)
     {
         this.expireListeners = expireListeners;
     }
-
 
     /**
      * Obtain tree model or create a default model.
@@ -356,7 +380,7 @@ public class TreeTag
         if (value != null)
         {
             ValueBinding valueBinding = context.getApplication().createValueBinding(value);
-            TreeModel treeModel = (TreeModel)(valueBinding.getValue(context));
+            TreeModel treeModel = (TreeModel) (valueBinding.getValue(context));
 
             if (treeModel == null)
             {
@@ -373,15 +397,15 @@ public class TreeTag
             // component was created, so expand the root node
             TreeModel model = tree.getModel(context);
 
-            if (model != null) {
-                tree.expandPath(new TreePath(new Object[]{model.getRoot()}), context);
+            if (model != null)
+            {
+                tree.expandPath(new TreePath(new Object[] { model.getRoot() }), context);
             }
         }
 
         tree.addToModelListeners();
         return answer;
     }
-
 
     /**
      * Applies attributes to the tree component
@@ -409,6 +433,7 @@ public class TreeTag
             component.setValueBinding("model", binding);
         }
 
+        setStringProperty(component, "var", var);
         setStringProperty(component, "iconLine", iconLine);
         setStringProperty(component, "iconNoline", iconNoline);
         setStringProperty(component, "iconChild", iconChild);
@@ -424,9 +449,13 @@ public class TreeTag
         setStringProperty(component, "iconNodeCloseMiddle", iconNodeCloseMiddle);
         setStringProperty(component, "iconNodeCloseLast", iconNodeCloseLast);
         setStringProperty(component, "styleClass", styleClass);
+        setStringProperty(component, "rowClasses", rowClasses);
+        setStringProperty(component, "columnClasses", columnClasses);
+        setStringProperty(component, "headerClass", headerClass);
+        setStringProperty(component, "footerClass", footerClass);
         setStringProperty(component, "nodeClass", nodeClass);
         setStringProperty(component, "selectedNodeClass", selectedNodeClass);
         setStringProperty(component, "iconClass", iconClass);
-        ((HtmlTree)component).setExpireListeners(expireListeners);
+        ((HtmlTree) component).setExpireListeners(expireListeners);
     }
 }

@@ -352,13 +352,70 @@ div.titlebar {
     border-style: none;
 }
 
+/*
+   ------------------------------------------------------------
+   Tree component
+   ------------------------------------------------------------
+*/
+
+body, th, td, input, select {
+	font-family: Verdana, Helvetica, Arial, sans-serif;
+}
+
+table, th, td {
+	font-size: small;
+	border: none;
+}
+
+.treeHeader {
+	background-color: #bbb;
+	border: 0.75px solid #fff;
+	padding: 2px 3px;
+	text-align: left;
+}
+
+.treeFooter {
+	padding: 5px;
+	margin: .67em 2px;
+	margin-top: 0;
+	background-color: #ddd;
+	background-image: url(../images/sw_med_rond.gif);
+	background-repeat: no-repeat;
+	background-position: bottom left;
+}
+
+input, .treeFooter {
+	font-size: xx-small;
+	font-size: x-small;
+}
+
+.a td {
+	background: #ddd;
+	border-bottom: 1px solid #fff;
+}
+
+.b td {
+	background: #efefef;
+	border-bottom: 1px solid #fff;
+}
+
+.col1 {
+	border-right: 1px solid #fff;
+	padding: 2px 15px 2px 5px;
+}
+
+.col2 {
+	border-left: 1px solid #fff;
+	padding: 2px 15px 2px 5px;
+}
+
 .tree {
    lineheight: 18px;
    font-family: arial, sans-serif;
 }
 
 .treenode {
-   padding: 2px 2px 2px 5px;
+   padding: 2px 15px 2px 5px;
 }
 
 .treenode a {
@@ -366,7 +423,7 @@ div.titlebar {
 }
 
 .treenodeSelected {
-   padding: 2px 2px 2px 5px;
+   padding: 2px 15px 2px 5px;
 }
 
 .treenodeSelected a {

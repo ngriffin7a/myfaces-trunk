@@ -25,7 +25,12 @@ import javax.faces.context.FacesContext;
 /**
  * @author <a href="mailto:oliver@rossmueller.com">Oliver Rossmueller</a>
  * @version $Revision$ $Date$
+ *
+ * 
  *          $Log$
+ *          Revision 1.8  2004/11/26 12:14:09  oros
+ *          MYFACES-8: applied tree table patch by David Le Strat
+ *
  *          Revision 1.7  2004/10/13 11:50:58  matze
  *          renamed packages to org.apache
  *

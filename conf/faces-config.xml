@@ -175,9 +175,14 @@
       <component-class>org.apache.myfaces.custom.tree.HtmlTreeNode</component-class>
   </component>
 
-   <component>
+  <component>
       <component-type>org.apache.myfaces.HtmlTreeImageCommandLink</component-type>
       <component-class>org.apache.myfaces.custom.tree.HtmlTreeImageCommandLink</component-class>
+  </component>
+
+  <component>
+      <component-type>org.apache.myfaces.HtmlTreeColumn</component-type>
+      <component-class>org.apache.myfaces.custom.tree.HtmlTreeColumn</component-class>
   </component>
 
   <component>
