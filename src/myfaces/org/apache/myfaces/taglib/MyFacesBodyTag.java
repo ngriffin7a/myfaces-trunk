@@ -33,7 +33,6 @@ import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
 import javax.servlet.jsp.tagext.BodyTag;
 import javax.servlet.jsp.tagext.Tag;
-import java.io.IOException;
 
 /**
  * BodyContent is automatically added as an attribute ({@link #BODY_CONTENT_ATTR)
@@ -62,15 +61,6 @@ public abstract class MyFacesBodyTag
     {
         super();
         _helper = new MyFacesTagHelper(this);
-    }
-
-    protected void encodeBegin()
-        throws IOException
-    {
-        if (_helper.isComponentVisible())
-        {
-            super.encodeBegin();
-        }
     }
 
     public int getDoStartValue() throws JspException
@@ -131,7 +121,7 @@ public abstract class MyFacesBodyTag
      */
     protected boolean isSuppressed()
     {
-        return false;
+        return _helper.isSuppressed();
     }
 
 

@@ -34,7 +34,6 @@ import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
 import javax.servlet.jsp.tagext.IterationTag;
 import javax.servlet.jsp.tagext.Tag;
-import java.io.IOException;
 
 /**
  * DOCUMENT ME!
@@ -60,31 +59,11 @@ public abstract class MyFacesTag
         _helper = new MyFacesTagHelper(this);
     }
 
-    public int doStartTag()
-        throws JspException
-    {
-        return super.doStartTag();
-    }
-
-    protected void encodeBegin()
-        throws IOException
-    {
-        if (_helper.isComponentVisible())
-        {
-            super.encodeBegin();
-        }
-    }
-
     public int getDoStartValue() throws JspException
     {
         return _helper.isComponentVisible()
                 ? Tag.EVAL_BODY_INCLUDE
                 : Tag.SKIP_BODY;
-    }
-
-    public int doEndTag() throws JspException
-    {
-        return super.doEndTag();
     }
 
     public int getDoEndValue() throws JspException
@@ -134,7 +113,7 @@ public abstract class MyFacesTag
      */
     protected boolean isSuppressed()
     {
-        return false;
+        return _helper.isSuppressed();
     }
 
 

@@ -56,6 +56,8 @@ public class MyFacesTagHelper
 
     private UIComponent _newComponent;
 
+    private Boolean _suppressed;
+
 
 
     MyFacesTagHelper(MyFacesTagBaseIF tag)
@@ -71,6 +73,7 @@ public class MyFacesTagHelper
         _parentComponentOk = false;
         _parentComponent = null;
         _newComponent = null;
+        _suppressed = null;
     }
 
 
@@ -80,6 +83,26 @@ public class MyFacesTagHelper
                                                _tag.getComponent());
     }
 
+
+    public boolean isSuppressed()
+    {
+        if (_suppressed == null)
+        {
+            UIComponent parent = getParentComponent();
+            while (parent != null)
+            {
+                if (parent.getRendersChildren())
+                {
+                    _suppressed = Boolean.TRUE;
+                    return true;
+                }
+                parent = parent.getParent();
+            }
+
+            _suppressed = Boolean.valueOf(!isComponentVisible());
+        }
+        return _suppressed.booleanValue();
+    }
 
 
     //JSF Spec.

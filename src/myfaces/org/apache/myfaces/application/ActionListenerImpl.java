@@ -58,11 +58,12 @@ public class ActionListenerImpl
             actionRef = uiCommand.getActionRef();
             if (actionRef == null)
             {
-                throw new IllegalArgumentException("Component " + uiCommand.getClientId(facesContext) + " does not have an action or actionRef property!");
+                //throw new IllegalArgumentException("Component " + uiCommand.getClientId(facesContext) + " does not have an action or actionRef property!");
+                return;
             }
 
             Object actionObj = application.getValueBinding(actionRef).getValue(facesContext);
-            if (!(actionObj instanceof Action))
+            if (actionObj == null || !(actionObj instanceof Action))
             {
                 throw new IllegalArgumentException("Referenced value '" + actionRef + "' is not a valid Action!");
             }

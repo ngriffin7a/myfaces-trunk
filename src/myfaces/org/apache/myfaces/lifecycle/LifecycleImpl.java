@@ -244,14 +244,14 @@ public class LifecycleImpl
 
         if (FacesContextImpl.isResponseComplete(facesContext))
         {
-            LogUtil.getLogger().exiting("response complete", Level.INFO);
+            LogUtil.getLogger().exiting("response complete", Level.FINE);
             return true;
         }
 
         if (FacesContextImpl.isRenderResponse(facesContext))
         {
             renderResponse(facesContext);
-            LogUtil.getLogger().exiting("after render response", Level.INFO);
+            LogUtil.getLogger().exiting("after render response", Level.FINE);
             return true;
         }
 
@@ -277,21 +277,21 @@ public class LifecycleImpl
 
         if (FacesContextImpl.isResponseComplete(facesContext))
         {
-            LogUtil.getLogger().exiting("response complete", Level.INFO);
+            LogUtil.getLogger().exiting("response complete", Level.FINE);
             return true;
         }
 
         if (FacesContextImpl.isRenderResponse(facesContext))
         {
             renderResponse(facesContext);
-            LogUtil.getLogger().exiting("after render response", Level.INFO);
+            LogUtil.getLogger().exiting("after render response", Level.FINE);
             return true;
         }
 
         if (getMessageCount(facesContext) > messageCountBefore)
         {
             renderResponse(facesContext);
-            LogUtil.getLogger().exiting("after render response (because of messages during validation)", Level.INFO);
+            LogUtil.getLogger().exiting("after render response (because of messages during validation)", Level.FINE);
             return true;
         }
 
@@ -335,14 +335,14 @@ public class LifecycleImpl
 
         if (FacesContextImpl.isResponseComplete(facesContext))
         {
-            LogUtil.getLogger().exiting("response complete", Level.INFO);
+            LogUtil.getLogger().exiting("response complete", Level.FINE);
             return true;
         }
 
         if (FacesContextImpl.isRenderResponse(facesContext))
         {
             renderResponse(facesContext);
-            LogUtil.getLogger().exiting("after render response", Level.INFO);
+            LogUtil.getLogger().exiting("after render response", Level.FINE);
             return true;
         }
 
@@ -364,7 +364,7 @@ public class LifecycleImpl
 
         if (FacesContextImpl.isResponseComplete(facesContext))
         {
-            LogUtil.getLogger().exiting("response complete", Level.INFO);
+            LogUtil.getLogger().exiting("response complete", Level.FINE);
             return true;
         }
 

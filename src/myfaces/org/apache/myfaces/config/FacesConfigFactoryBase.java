@@ -108,6 +108,7 @@ public abstract class FacesConfigFactoryBase
             InputStream stream = servletContext.getResourceAsStream(systemId);
             if (stream != null)
             {
+                LogUtil.getLogger().info("Reading config /WEB-INF/faces-config.xml");
                 parseStreamConfig(facesConfig, stream, systemId,
                                   new FacesConfigEntityResolver(servletContext));
             }
@@ -124,18 +125,7 @@ public abstract class FacesConfigFactoryBase
                     throw new FacesException("Resource '" + systemId + "' not found!");
                 }
 
-                /*
-                int slash = t.lastIndexOf('/');
-                String baseURI;
-                if (slash >= 0)
-                {
-                    baseURI = t.substring(0, slash + 1);
-                }
-                else
-                {
-                    baseURI = "/";
-                }
-                */
+                LogUtil.getLogger().info("Reading config " + systemId);
 
                 parseStreamConfig(facesConfig, stream, systemId,
                                   new FacesConfigEntityResolver(servletContext));
@@ -167,6 +157,7 @@ public abstract class FacesConfigFactoryBase
                 String name = entry.getName();
                 if (name.equals("META-INF/faces-config.xml"))
                 {
+                    LogUtil.getLogger().info("Reading config " + url + "/" + name);
                     InputStream stream = jarFile.getInputStream(entry);
                     parseStreamConfig(facesConfig, stream, name,
                                       new FacesConfigEntityResolver(jarFile));
