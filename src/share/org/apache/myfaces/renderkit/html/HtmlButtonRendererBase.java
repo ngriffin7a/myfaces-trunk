@@ -15,16 +15,16 @@
  */
 package net.sourceforge.myfaces.renderkit.html;
 
+import net.sourceforge.myfaces.MyFacesConfig;
 import net.sourceforge.myfaces.renderkit.JSFAttr;
 import net.sourceforge.myfaces.renderkit.RendererUtils;
 import net.sourceforge.myfaces.renderkit.html.util.DummyFormResponseWriter;
 import net.sourceforge.myfaces.renderkit.html.util.DummyFormUtils;
-import net.sourceforge.myfaces.MyFacesConfig;
 
 import javax.faces.component.UICommand;
 import javax.faces.component.UIComponent;
-import javax.faces.component.ValueHolder;
 import javax.faces.component.UIForm;
+import javax.faces.component.ValueHolder;
 import javax.faces.component.html.HtmlCommandButton;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
@@ -39,6 +39,9 @@ import java.util.Map;
  * @author Anton Koinov
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.5  2004/07/26 09:19:08  manolito
+ * removed onclick from passthrough attributes for ButtonRenderer
+ *
  * Revision 1.4  2004/07/01 22:00:57  mwessendorf
  * ASF switch
  *
@@ -118,11 +121,17 @@ public class HtmlButtonRendererBase
                 writer.writeAttribute(HTML.VALUE_ATTR, value, null);
             }
         }
-        if (MyFacesConfig.isAllowJavascript(facesContext.getExternalContext()))    {
+        if (MyFacesConfig.isAllowJavascript(facesContext.getExternalContext()))
+        {
             renderClearFormOnClick(uiComponent, facesContext, writer);
+            HtmlRendererUtils.renderHTMLAttributes(writer, uiComponent,
+                                                   HTML.BUTTON_PASSTHROUGH_ATTRIBUTES_WITHOUT_DISABLED_AND_ONCLICK);
         }
-
-        HtmlRendererUtils.renderHTMLAttributes(writer, uiComponent, HTML.BUTTON_PASSTHROUGH_ATTRIBUTES_WITHOUT_DISABLED);
+        else
+        {
+            HtmlRendererUtils.renderHTMLAttributes(writer, uiComponent,
+                                                   HTML.BUTTON_PASSTHROUGH_ATTRIBUTES_WITHOUT_DISABLED);
+        }
 
         if (isDisabled(facesContext, uiComponent))
         {

@@ -24,6 +24,9 @@ import net.sourceforge.myfaces.util.ArrayUtils;
  * @author Anton Koinov
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.10  2004/07/26 09:19:08  manolito
+ * removed onclick from passthrough attributes for ButtonRenderer
+ *
  * Revision 1.9  2004/07/01 22:00:56  mwessendorf
  * ASF switch
  *
@@ -68,9 +71,8 @@ public final class HTML
     public static final String ONKEYPRESS_ATTR  = "onkeypress";
     public static final String ONKEYDOWN_ATTR   = "onkeydown";
     public static final String ONKEYUP_ATTR     = "onkeyup";
-    public static final String[] EVENT_HANDLER_ATTRIBUTES =
+    public static final String[] EVENT_HANDLER_ATTRIBUTES_WITHOUT_ONCLICK =
     {
-        ONCLICK_ATTR,
         ONDBLCLICK_ATTR,
         ONMOUSEDOWN_ATTR,
         ONMOUSEUP_ATTR,
@@ -81,6 +83,10 @@ public final class HTML
         ONKEYDOWN_ATTR,
         ONKEYUP_ATTR
     };
+    public static final String[] EVENT_HANDLER_ATTRIBUTES =
+            (String[]) ArrayUtils.concat(
+                EVENT_HANDLER_ATTRIBUTES_WITHOUT_ONCLICK,
+                new String[] {ONCLICK_ATTR});
 
     // Input field event handler attributes
     public static final String ONFOCUS_ATTR = "onfocus";
@@ -141,9 +147,18 @@ public final class HTML
         (String[]) ArrayUtils.concat(
             EVENT_HANDLER_ATTRIBUTES,
             UNIVERSAL_ATTRIBUTES_WITHOUT_STYLE);
+    public static final String[] COMMON_PASSTROUGH_ATTRIBUTES_WITHOUT_ONCLICK =
+        (String[]) ArrayUtils.concat(
+            EVENT_HANDLER_ATTRIBUTES_WITHOUT_ONCLICK,
+            UNIVERSAL_ATTRIBUTES);
     public static final String[] COMMON_FIELD_PASSTROUGH_ATTRIBUTES_WITHOUT_DISABLED =
         (String[]) ArrayUtils.concat(
             COMMON_PASSTROUGH_ATTRIBUTES,
+            COMMON_FIELD_ATTRIBUTES_WITHOUT_DISABLED,
+            COMMON_FIELD_EVENT_ATTRIBUTES);
+    public static final String[] COMMON_FIELD_PASSTROUGH_ATTRIBUTES_WITHOUT_DISABLED_AND_ONCLICK =
+        (String[]) ArrayUtils.concat(
+            COMMON_PASSTROUGH_ATTRIBUTES_WITHOUT_ONCLICK,
             COMMON_FIELD_ATTRIBUTES_WITHOUT_DISABLED,
             COMMON_FIELD_EVENT_ATTRIBUTES);
 
@@ -269,6 +284,10 @@ public final class HTML
         (String[]) ArrayUtils.concat(
             BUTTON_ATTRIBUTES,
             COMMON_FIELD_PASSTROUGH_ATTRIBUTES_WITHOUT_DISABLED);
+    public static final String[] BUTTON_PASSTHROUGH_ATTRIBUTES_WITHOUT_DISABLED_AND_ONCLICK =
+        (String[]) ArrayUtils.concat(
+            BUTTON_ATTRIBUTES,
+            COMMON_FIELD_PASSTROUGH_ATTRIBUTES_WITHOUT_DISABLED_AND_ONCLICK);
     
     // <label>
     public static final String FOR_ATTR = "for";
