@@ -120,14 +120,6 @@ public abstract class MyFacesTag
 
     //property helpers
 
-    /**
-     * @deprecated use setComponentAttribute or setRendererAttribute instead
-     */
-    protected void setPropertyX(String attrName, Object attrValue)
-    {
-        setRendererAttribute(attrName, attrValue);
-    }
-
     protected void setComponentAttribute(String attrName, Object attrValue)
     {
         if (_attributes == null)
