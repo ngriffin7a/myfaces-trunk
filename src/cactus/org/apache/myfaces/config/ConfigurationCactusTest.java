@@ -45,6 +45,8 @@ import org.apache.myfaces.config.element.NavigationRule;
 import org.apache.myfaces.el.PropertyResolverImpl;
 import org.apache.myfaces.el.VariableResolverImpl;
 import org.apache.myfaces.lifecycle.LifecycleFactoryImpl;
+import org.apache.myfaces.renderkit.html.util.AutoScrollPhaseListener;
+import org.apache.myfaces.component.html.ext.HtmlDataTablePhaseListener;
 
 
 public class ConfigurationCactusTest extends MyFacesServletTestCase
@@ -153,13 +155,13 @@ public class ConfigurationCactusTest extends MyFacesServletTestCase
 
         javax.faces.event.PhaseListener[] phaseListeners = lifecycle.getPhaseListeners();
 
-        assertEquals(2, phaseListeners.length);
+        assertEquals(4, phaseListeners.length);
 
         for (int i = 0; i < phaseListeners.length; i++)
         {
             PhaseListener listener = phaseListeners[i];
 
-            assertTrue(listener instanceof TestPhaseListenerA || listener instanceof TestPhaseListenerB);
+            assertTrue(listener instanceof TestPhaseListenerA || listener instanceof TestPhaseListenerB || listener instanceof AutoScrollPhaseListener || listener instanceof HtmlDataTablePhaseListener);
         }
     }
 
