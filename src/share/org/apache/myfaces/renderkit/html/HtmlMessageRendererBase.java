@@ -22,6 +22,7 @@ import javax.faces.FacesException;
 import javax.faces.application.FacesMessage;
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIMessage;
+import javax.faces.component.UIViewRoot;
 import javax.faces.component.html.HtmlMessage;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
@@ -33,6 +34,9 @@ import java.util.Map;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.8  2004/09/02 17:23:25  tinytoony
+ * fix for the span-element for other than the output-text
+ *
  * Revision 1.7  2004/08/09 08:43:29  manolito
  * bug #1004867 - h:message has duplicate attributes
  *
@@ -129,11 +133,29 @@ public abstract class HtmlMessageRendererBase
 
         ResponseWriter writer = facesContext.getResponseWriter();
 
-        boolean span = HtmlRendererUtils.renderHTMLAttributesWithOptionalStartElement(
-                            writer, message, HTML.SPAN_ELEM, HTML.MESSAGE_PASSTHROUGH_ATTRIBUTES_WITHOUT_TITLE_STYLE_AND_STYLE_CLASS);
+        boolean span = false;
+
+
+        if(message.getId()!=null && !message.getId().startsWith(UIViewRoot.UNIQUE_ID_PREFIX))
+        {
+            span = true;
+
+            writer.startElement(HTML.SPAN_ELEM, message);
+
+            writer.writeAttribute(HTML.ID_ATTR, message.getClientId(facesContext),null);
+
+            HtmlRendererUtils.renderHTMLAttributes(writer, message, HTML.MESSAGE_PASSTHROUGH_ATTRIBUTES_WITHOUT_TITLE_STYLE_AND_STYLE_CLASS);
+        }
+        else
+        {
+            span=HtmlRendererUtils.renderHTMLAttributesWithOptionalStartElement(
+                                writer, message, HTML.SPAN_ELEM, HTML.MESSAGE_PASSTHROUGH_ATTRIBUTES_WITHOUT_TITLE_STYLE_AND_STYLE_CLASS);
+        }
+
         span |= HtmlRendererUtils.renderHTMLAttributeWithOptionalStartElement(writer, message, HTML.SPAN_ELEM, HTML.TITLE_ATTR, title, span);
         span |= HtmlRendererUtils.renderHTMLAttributeWithOptionalStartElement(writer, message, HTML.SPAN_ELEM, HTML.STYLE_ATTR, style, span);
         span |= HtmlRendererUtils.renderHTMLAttributeWithOptionalStartElement(writer, message, HTML.SPAN_ELEM, HTML.STYLE_CLASS_ATTR, styleClass, span);
+
 
         boolean showSummary = isShowSummary(message) && (summary != null);
         boolean showDetail = isShowDetail(message) && (detail != null);

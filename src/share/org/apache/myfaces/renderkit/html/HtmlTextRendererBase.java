@@ -34,6 +34,9 @@ import java.io.IOException;
  * @author Manfred Geiler
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.7  2004/09/02 17:23:25  tinytoony
+ * fix for the span-element for other than the output-text
+ *
  * Revision 1.6  2004/09/02 16:44:38  tinytoony
  * fix for the fix ;) for span-element bug
  *
@@ -134,7 +137,9 @@ public class HtmlTextRendererBase
             }
 
             if(span)
+            {
                 writer.endElement(HTML.SPAN_ELEM);
+            }
         }
     }
 

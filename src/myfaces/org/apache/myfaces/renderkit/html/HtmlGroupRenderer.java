@@ -18,6 +18,7 @@ package net.sourceforge.myfaces.renderkit.html;
 import net.sourceforge.myfaces.renderkit.RendererUtils;
 
 import javax.faces.component.UIComponent;
+import javax.faces.component.UIViewRoot;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 import java.io.IOException;
@@ -49,10 +50,26 @@ public class HtmlGroupRenderer
             throws IOException
     {
         ResponseWriter writer = context.getResponseWriter();
-        boolean span = HtmlRendererUtils.renderHTMLAttributesWithOptionalStartElement(writer,
+        boolean span = false;
+
+        if(component.getId()!=null && !component.getId().startsWith(UIViewRoot.UNIQUE_ID_PREFIX))
+        {
+            span = true;
+
+            writer.startElement(HTML.SPAN_ELEM, component);
+
+            writer.writeAttribute(HTML.ID_ATTR, component.getClientId(context),null);
+
+            HtmlRendererUtils.renderHTMLAttributes(writer, component, HTML.COMMON_PASSTROUGH_ATTRIBUTES);
+        }
+        else
+        {
+            span=HtmlRendererUtils.renderHTMLAttributesWithOptionalStartElement(writer,
                                                                              component,
                                                                              HTML.SPAN_ELEM,
                                                                              HTML.COMMON_PASSTROUGH_ATTRIBUTES);
+        }
+
         RendererUtils.renderChildren(context, component);
         if (span)
         {
