@@ -100,10 +100,7 @@ extends HyperlinkRenderer
         HttpServletRequest request = (HttpServletRequest)facesContext.getExternalContext().getRequest();
         String href = request.getContextPath() + treeURL;
         */
-        String href = null; // TODO
-        throw new UnsupportedOperationException("fixme");
-
-
+        String href = null;
 
         //Encode URL
         href = facesContext.getExternalContext().encodeActionURL(href);

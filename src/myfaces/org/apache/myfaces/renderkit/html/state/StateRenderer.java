@@ -120,9 +120,15 @@ public class StateRenderer
     public void decode(FacesContext facesContext, UIComponent comp)
     {
         if (_stateSaver == null) init(facesContext);
-        _stateRestorer.restoreState(facesContext);
+        try
+        {
+            _stateRestorer.restoreState(facesContext);
+        }
+        catch (IOException e)
+        {
+            log.error("IOException when restoring state.", e);
+        }
         if (log.isTraceEnabled()) DebugUtils.logTree(log, "Current tree after restoring state");
-
         FacesUtils.getRequestMap(facesContext).put(StateRestorer.STATE_RESTORER_REQUEST_ATTR, _stateRestorer);
     }
 
