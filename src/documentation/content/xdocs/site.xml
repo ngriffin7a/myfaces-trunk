@@ -9,11 +9,16 @@
 	<docu href="docs/" label="Documentation" tab="documentation">
 		<faq label="FAQ" href="faq.html" />
 		<jars label="JARs" href="jars.html" />
+		<javadoc label="Java Doc" href="http://incubator.apache.org/myfaces/javadoc/" />
+		<tlddoc label="Taglibs" href="http://incubator.apache.org/myfaces/tlddoc/" />
 		<controlprogramming label="Homepage" href="sf.html" />
 	</docu>
   <community href="community/" label="Community" tab="community">
     <mailinglists label="Mailing Lists" href="mailinglists.html" />
     <contributors label="Contributors" href="contributors.html" />
+    <status label="Status" href="status.html" />
+    <bylaws label="Project Bylaws" href="bylaws.html"/>
+    <wiki label="Wiki" href="http://wiki.apache.org/myfaces"/>
   </community>
 
 </site>

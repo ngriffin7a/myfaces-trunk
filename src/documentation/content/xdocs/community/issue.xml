@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V1.2//EN" "document-v12.dtd">
+
+<document>
+
+<header>
+    <title>Apache MyFaces - Issue Tracking </title>
+</header>
+
+<body>
+
+<section>
+<title>Tracking System</title>
+      <p>MyFaces uses JIRA for issue tracking.</p>
+      
+      <ul>
+        <li><link href="http://issues.apache.org/jira/secure/BrowseProject.jspa?id=10600">here</link></li>
+      </ul>
+</section>
+
+
+
+</body>
+    
+<footer>
+    	<legal>Java, J2EE, and JCP are trademarks or registered trademarks of Sun Microsystems, Inc. in the United States and other countries.<br />
+	&copy; 2004, Apache Software Foundation
+	</legal>
+</footer>
+
+</document>
