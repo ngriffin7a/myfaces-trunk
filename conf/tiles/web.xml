@@ -78,6 +78,18 @@
         </description>
     </context-param>
 
+
+    <!-- Tiles configuration
+         definition files and a listener need to be defined.
+         the listener will initialize JspTilesViewHandlerImpl with tiles definitions.
+    -->
+    <context-param>
+        <param-name>tiles-definitions</param-name>
+        <param-value>/WEB-INF/tiles.xml</param-value>
+    </context-param>
+
+    
+
     <!-- WelcomeFile Filter -->
     <!--
     <filter>
@@ -122,18 +134,6 @@
     <!-- Listener, that does all the startup work (configuration, init). -->
     <listener>
         <listener-class>net.sourceforge.myfaces.webapp.StartupServletContextListener</listener-class>
-    </listener>
-
-    <!-- Tiles configuration
-         definition files and a listener need to be defined.
-         the listener will initialize JspTilesViewHandlerImpl with tiles definitions.
-    -->
-    <context-param>
-        <param-name>tiles-definitions</param-name>
-        <param-value>/WEB-INF/tiles.xml</param-value>
-    </context-param>
-    <listener>
-        <listener-class>net.sourceforge.myfaces.application.jsp.JspTilesViewHandlerInitializer</listener-class>
     </listener>
 
 
