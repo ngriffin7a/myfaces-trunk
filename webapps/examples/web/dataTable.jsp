@@ -73,8 +73,7 @@ managed beans used:
                         columnClasses="standardTable_Column,standardTable_ColumnCentered,standardTable_Column"
                         var="country"
                         value="#{countryList.countries}"
-                        preserveDataModel="true"
-                   >
+                        preserveDataModel="true" >
                    <h:column>
                        <f:facet name="header">
                           <h:outputText value="#{example_messages['label_country_name']}" />

@@ -21,10 +21,14 @@ package net.sourceforge.myfaces.component.html.ext;
 import net.sourceforge.myfaces.component.UserRoleAware;
 import net.sourceforge.myfaces.component.UserRoleUtils;
 
+import javax.faces.component.EditableValueHolder;
+import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.el.ValueBinding;
 import javax.faces.model.DataModel;
+import java.io.IOException;
 import java.sql.ResultSet;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -32,6 +36,9 @@ import java.util.List;
  * @author Manfred Geiler
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.6  2004/06/21 12:15:29  manolito
+ * encodeBegin in UIData examines descendants valid flag recursivly now before refreshing DataModel
+ *
  * Revision 1.5  2004/05/21 10:39:26  manolito
  * new renderedIfEmpty attribute in ext. HtmlDataTable component
  *
@@ -50,6 +57,9 @@ public class HtmlDataTable
 
     transient private _SerializableDataModel _restoredValue = null;
     transient private Object _cachedValue = null;
+
+    //Flag to detect if component is rendered for the first time (restoreState sets it to false)
+    transient private boolean _firstTimeRendered = true;
 
 
     public Object getValue()
@@ -114,14 +124,6 @@ public class HtmlDataTable
                 }
             }
         }
-
-        if (!context.getRenderResponse() && !context.getResponseComplete())
-        {
-            // update models finished successfully
-            // --> clear restored and cached value
-            _restoredValue = null;
-            _cachedValue = null;
-        }
     }
 
 
@@ -166,6 +168,75 @@ public class HtmlDataTable
     }
 
 
+    /**
+     * TODO: We could perhaps optimize this if we know we are derived from MyFaces UIData implementation
+     */
+    private boolean isAllChildrenAndFacetsValid()
+    {
+        int first = getFirst();
+        int rows = getRows();
+        int last;
+        if (rows == 0)
+        {
+            last = getRowCount();
+        }
+        else
+        {
+            last = first + rows;
+        }
+        try
+        {
+            for (int rowIndex = first; rowIndex < last; rowIndex++)
+            {
+                setRowIndex(rowIndex);
+                if (isRowAvailable())
+                {
+                    if (!isAllEditableValueHoldersValidRecursive(getFacetsAndChildren()))
+                    {
+                        return false;
+                    }
+                }
+            }
+        }
+        finally
+        {
+            setRowIndex(-1);
+        }
+        return true;
+    }
+
+
+    private boolean isAllEditableValueHoldersValidRecursive(Iterator facetsAndChildrenIterator)
+    {
+        while (facetsAndChildrenIterator.hasNext())
+        {
+            UIComponent c = (UIComponent)facetsAndChildrenIterator.next();
+            if (c instanceof EditableValueHolder &&
+                !((EditableValueHolder)c).isValid())
+            {
+                return false;
+            }
+            if (!isAllEditableValueHoldersValidRecursive(c.getFacetsAndChildren()))
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+
+
+    public void encodeBegin(FacesContext context) throws IOException
+    {
+        if (_firstTimeRendered || isAllChildrenAndFacetsValid())
+        {
+            // No invalid children
+            // --> clear restored and cached value
+            _restoredValue = null;
+            _cachedValue = null;
+        }
+        super.encodeBegin(context);
+    }
+
 
     public int getFirst()
     {
@@ -184,6 +255,34 @@ public class HtmlDataTable
         }
         return super.getRows();
     }
+
+    public int getRowCount()
+    {
+        if (_restoredValue != null)
+        {
+            return _restoredValue.getRowCount();
+        }
+        return super.getRowCount();
+    }
+
+    public boolean isRowAvailable()
+    {
+        if (_restoredValue != null)
+        {
+            return _restoredValue.isRowAvailable();
+        }
+        return super.isRowAvailable();
+    }
+
+    public Object getRowData()
+    {
+        if (_restoredValue != null)
+        {
+            return _restoredValue.getRowData();
+        }
+        return super.getRowData();
+    }
+
 
     public Object saveState(FacesContext context)
     {
@@ -224,6 +323,9 @@ public class HtmlDataTable
         _sortColumn = (String)values[4];
         _sortAscending = (Boolean)values[5];
         _renderedIfEmpty = (Boolean)values[6];
+
+        // restore state means component was already rendered at least once:
+        _firstTimeRendered = false;
     }
 
 

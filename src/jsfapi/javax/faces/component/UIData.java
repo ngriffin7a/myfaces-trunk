@@ -26,6 +26,7 @@ import javax.faces.event.FacesListener;
 import javax.faces.event.PhaseId;
 import javax.faces.model.*;
 import javax.servlet.jsp.jstl.sql.Result;
+import java.io.IOException;
 import java.io.Serializable;
 import java.sql.ResultSet;
 import java.util.ArrayList;
@@ -36,6 +37,9 @@ import java.util.List;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.24  2004/06/21 12:15:29  manolito
+ * encodeBegin in UIData examines descendants valid flag recursivly now before refreshing DataModel
+ *
  * Revision 1.23  2004/05/27 12:14:55  manolito
  * no message
  *
@@ -65,8 +69,11 @@ public class UIData
     private Object[] _descendantStates;
     private int _descendantEditableValueHolderCount = -1;
 
-    //init to false, so that no descendant states are save for a newly created UIData
+    //init to false, so that no descendant states are saved for a newly created UIData
     transient private boolean _saveDescendantStates = false;
+
+    //Flag to detect if component is rendered for the first time (restoreState sets it to false)
+    transient private boolean _firstTimeRendered = true;
 
 
     public void setFooter(UIComponent footer)
@@ -402,6 +409,75 @@ public class UIData
         }
     }
 
+    public void encodeBegin(FacesContext context)
+            throws IOException
+    {
+        if (_firstTimeRendered || isAllChildrenAndFacetsValid())
+        {
+            _saveDescendantStates = false; // no need to save children states
+            _dataModel = null;  //Refresh DataModel for rendering
+        }
+        else
+        {
+            _saveDescendantStates = true; // save children states (valid flag, submittedValues, etc.)
+        }
+        super.encodeBegin(context);
+    }
+
+
+    private boolean isAllChildrenAndFacetsValid()
+    {
+        int first = getFirst();
+        int rows = getRows();
+        int last;
+        if (rows == 0)
+        {
+            last = getRowCount();
+        }
+        else
+        {
+            last = first + rows;
+        }
+        try
+        {
+            for (int rowIndex = first; rowIndex < last; rowIndex++)
+            {
+                setRowIndex(rowIndex);
+                if (isRowAvailable())
+                {
+                    if (!isAllEditableValueHoldersValidRecursive(getFacetsAndChildren()))
+                    {
+                        return false;
+                    }
+                }
+            }
+        }
+        finally
+        {
+            setRowIndex(-1);
+        }
+        return true;
+    }
+
+
+    private boolean isAllEditableValueHoldersValidRecursive(Iterator facetsAndChildrenIterator)
+    {
+        while (facetsAndChildrenIterator.hasNext())
+        {
+            UIComponent c = (UIComponent)facetsAndChildrenIterator.next();
+            if (c instanceof EditableValueHolder &&
+                !((EditableValueHolder)c).isValid())
+            {
+                return false;
+            }
+            if (!isAllEditableValueHoldersValidRecursive(c.getFacetsAndChildren()))
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+
 
     public void processDecodes(FacesContext context)
     {
@@ -437,29 +513,12 @@ public class UIData
     public void processUpdates(FacesContext context)
     {
         if (context == null) throw new NullPointerException("context");
-        if (!isRendered())
-        {
-            // not rendered --> no need to save descendants' state
-            _saveDescendantStates = false;
-            // --> refresh DataModel, i.e. get current data from model when rendering
-            _dataModel = null;
-            return;
-        }
-
+        if (!isRendered()) return;
         setRowIndex(-1);
         processFacets(context, PROCESS_UPDATES);
         processColumnFacets(context, PROCESS_UPDATES);
         processColumnChildren(context, PROCESS_UPDATES);
         setRowIndex(-1);
-
-        if (!context.getRenderResponse() && !context.getResponseComplete())
-        {
-            // update models for all descendants finished successfully
-            // --> no need to save descendants' state
-            _saveDescendantStates = false;
-            // --> refresh DataModel, i.e. get current data from model when rendering
-            _dataModel = null;
-        }
     }
 
 
@@ -740,6 +799,9 @@ public class UIData
         _var = (String)values[4];
         _descendantStates = (Object[])values[5];
         _descendantEditableValueHolderCount = ((Integer)values[6]).intValue();
+
+        // restore state means component was already rendered at least once:
+        _firstTimeRendered = false;
     }
 
 
