@@ -41,3 +41,6 @@ junit.jar = ${project.dir}/lib/junit.jar
 
 # tlddoc library (only needed for tlddoc creation)
 tlddoc.jar = ${project.dir}/lib/tlddoc.jar
+
+# cglib library
+cglib.jar = ${project.dir}/lib/cglib-full-2.0.jar
