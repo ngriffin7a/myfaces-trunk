@@ -277,6 +277,11 @@
   </component>
 
   <component>
+    <component-type>net.sourceforge.myfaces.HtmlDataList</component-type>
+    <component-class>net.sourceforge.myfaces.component.ext.HtmlDataList</component-class>
+  </component>
+
+  <component>
     <component-type>net.sourceforge.myfaces.HtmlDataTable</component-type>
     <component-class>net.sourceforge.myfaces.component.html.MyFacesHtmlDataTable</component-class>
   </component>
@@ -704,6 +709,12 @@
             <renderer-type>net.sourceforge.myfaces.TabbedPane</renderer-type>
             <renderer-class>net.sourceforge.myfaces.renderkit.html.ext.HtmlTabbedPaneRenderer</renderer-class>
         </renderer>
+
+      <renderer>
+          <component-family>javax.faces.Data</component-family>
+          <renderer-type>net.sourceforge.myfaces.List</renderer-type>
+          <renderer-class>net.sourceforge.myfaces.renderkit.html.ext.HtmlListRenderer</renderer-class>
+      </renderer>
 
       <renderer>
           <component-family>javax.faces.Data</component-family>

@@ -372,6 +372,9 @@ public class HTML
     public static final String THEAD_ELEM = "thead";
     public static final String STYLE_ELEM = "style";
     public static final String SCRIPT_ELEM = "script";
+    public static final String UL_ELEM = "ul";
+    public static final String OL_ELEM = "ol";
+    public static final String LI_ELEM = "li";
 
 
     //HTML simple element constants

@@ -59,8 +59,8 @@ managed beans used:
                    <h:commandLink action="go_country" immediate="true">
                         <h:outputText value="#{example_messages['new_country']}" styleClass="standard" />
                    </h:commandLink>
-                   <h:commandLink action="go_edit_list" immediate="true">
-                        <h:outputText value="#{example_messages['country_edit_list']}" styleClass="standard" />
+                   <h:commandLink action="go_edit_table" immediate="true">
+                        <h:outputText value="#{example_messages['country_edit_table']}" styleClass="standard" />
                    </h:commandLink>
                </h:panelGrid>
                <f:verbatim><br></f:verbatim>

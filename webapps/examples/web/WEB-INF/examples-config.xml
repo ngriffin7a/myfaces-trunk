@@ -143,13 +143,13 @@
         </navigation-case>
 
         <navigation-case>
-            <from-outcome>go_simpleList</from-outcome>
-            <to-view-id>/simpleList.jsp</to-view-id>
+            <from-outcome>go_dataTable</from-outcome>
+            <to-view-id>/dataTable.jsp</to-view-id>
         </navigation-case>
 
         <navigation-case>
-            <from-outcome>go_simpleSortList</from-outcome>
-            <to-view-id>/simpleSortList.jsp</to-view-id>
+            <from-outcome>go_sortTable</from-outcome>
+            <to-view-id>/sortTable.jsp</to-view-id>
         </navigation-case>
 
         <navigation-case>
@@ -170,6 +170,11 @@
         <navigation-case>
             <from-outcome>go_calendar</from-outcome>
             <to-view-id>/calendar.jsp</to-view-id>
+        </navigation-case>
+
+        <navigation-case>
+            <from-outcome>go_dataList</from-outcome>
+            <to-view-id>/dataList.jsp</to-view-id>
         </navigation-case>
 
         <navigation-case>
@@ -203,7 +208,7 @@
     </navigation-rule>
 
     <navigation-rule>
-        <from-view-id>/simpleList.jsp</from-view-id>
+        <from-view-id>/dataTable.jsp</from-view-id>
         <navigation-case>
             <from-outcome>go_country</from-outcome>
             <to-view-id>/countryForm.jsp</to-view-id>
@@ -211,18 +216,18 @@
     </navigation-rule>
 
     <navigation-rule>
-        <from-view-id>/simpleList.jsp</from-view-id>
+        <from-view-id>/dataTable.jsp</from-view-id>
         <navigation-case>
-            <from-outcome>go_edit_list</from-outcome>
-            <to-view-id>/countryListForm.jsp</to-view-id>
+            <from-outcome>go_edit_table</from-outcome>
+            <to-view-id>/countryTableForm.jsp</to-view-id>
         </navigation-case>
     </navigation-rule>
 
     <navigation-rule>
-        <from-view-id>/countryListForm.jsp</from-view-id>
+        <from-view-id>/countryTableForm.jsp</from-view-id>
         <navigation-case>
-            <from-outcome>countryList</from-outcome>
-            <to-view-id>/simpleList.jsp</to-view-id>
+            <from-outcome>go_back</from-outcome>
+            <to-view-id>/dataTable.jsp</to-view-id>
         </navigation-case>
     </navigation-rule>
 
@@ -230,11 +235,11 @@
         <from-view-id>/countryForm.jsp</from-view-id>
         <navigation-case>
             <from-outcome>cancel</from-outcome>
-            <to-view-id>/simpleList.jsp</to-view-id>
+            <to-view-id>/dataTable.jsp</to-view-id>
         </navigation-case>
         <navigation-case>
             <from-outcome>ok_next</from-outcome>
-            <to-view-id>/simpleList.jsp</to-view-id>
+            <to-view-id>/dataTable.jsp</to-view-id>
         </navigation-case>
     </navigation-rule>
 

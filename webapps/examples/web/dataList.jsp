@@ -55,48 +55,38 @@ managed beans used:
         <f:facet name="body">
             <h:panelGroup id="body">
 
-               <h:messages errorClass="error" showSummary="true" showDetail="true" />
-
-                <h:form id="form" style="display:inline" >
-                <x:dataTable id="data"
+               <f:verbatim><br></f:verbatim>
+               <h:outputText value="#{example_messages['dataList_simple']}" styleClass="standard_bold" />
+               <f:verbatim><br></f:verbatim>
+               <x:dataList id="data1"
                         styleClass="standardTable"
-                        headerClass="standardTable_Header"
-                        rowClasses="standardTable_Row1,standardTable_Row2"
-                        columnClasses="standardTable_Column,standardTable_ColumnCentered,standardTable_Column"
                         var="country"
                         value="#{countryList.countries}"
-                        preserveDataModel="true"
+                        layout="simple"
+                        lastRowFlag="lastRow" >
+                    <h:outputText value="#{country.name}" />
+                    <h:outputText value=", " rendered="#{!lastRow}" />
+               </x:dataList>
 
-                   >
-                   <h:column>
-                       <f:facet name="header">
-                          <h:outputText value="#{example_messages['label_country_name']}" />
-                       </f:facet>
-                       <h:inputText id="cname" value="#{country.name}" required="true" />
-                   </h:column>
+               <f:verbatim><br><br></f:verbatim>
+               <h:outputText value="#{example_messages['dataList_ul']}" styleClass="standard_bold" />
+               <x:dataList id="data2"
+                        styleClass="standardTable"
+                        var="country"
+                        value="#{countryList.countries}"
+                        layout="unorderedList">
+                    <h:outputText value="#{country.name}" />
+               </x:dataList>
 
-                   <h:column>
-                       <f:facet name="header">
-                          <h:outputText value="#{example_messages['label_country_iso']}" />
-                       </f:facet>
-                       <h:inputText id="ciso" value="#{country.isoCode}" required="true" >
-                                <f:validateLength maximum="2" minimum="2"/>
-                       </h:inputText>
-
-                   </h:column>
-
-                   <f:facet name="footer">
-                        <h:panelGroup>
-                            <h:commandButton action="countryList" value="#{example_messages['button_save']}" />
-                            <f:verbatim>&nbsp;</f:verbatim>
-                            <h:commandButton action="countryList" immediate="true" value="#{example_messages['button_cancel']}" />
-                            <f:verbatim>&nbsp;</f:verbatim>
-                            <h:commandButton value="#{example_messages['button_apply']}" />
-                        </h:panelGroup>
-                   </f:facet>
-
-                </x:dataTable>
-                </h:form>
+               <f:verbatim><br></f:verbatim>
+               <h:outputText value="#{example_messages['dataList_ol']}" styleClass="standard_bold" />
+               <x:dataList id="data3"
+                        styleClass="standardTable"
+                        var="country"
+                        value="#{countryList.countries}"
+                        layout="orderedList">
+                    <h:outputText value="#{country.name}" />
+               </x:dataList>
 
             </h:panelGroup>
         </f:facet>

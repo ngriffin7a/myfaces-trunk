@@ -12,12 +12,13 @@
         <x:commandNavigation id="nav_2_1" value="#{example_messages['nav_Sample_1']}" action="go_sample1" />
         <x:commandNavigation id="nav_2_2" value="#{example_messages['nav_Sample_2']}" action="go_sample2" />
         <x:commandNavigation id="nav_2_3" value="#{example_messages['nav_Components']}" >
-            <x:commandNavigation id="nav_2_3_1" value="#{example_messages['nav_Simple_list']}" action="go_simpleList" />
-            <x:commandNavigation id="nav_2_3_2" value="#{example_messages['nav_Sortable_list']}" action="go_simpleSortList" />
+            <x:commandNavigation id="nav_2_3_1" value="#{example_messages['nav_dataTable']}" action="go_dataTable" />
+            <x:commandNavigation id="nav_2_3_2" value="#{example_messages['nav_sortTable']}" action="go_sortTable" />
             <x:commandNavigation id="nav_2_3_3" value="#{example_messages['nav_Selectbox']}" action="go_selectbox" />
             <x:commandNavigation id="nav_2_3_4" value="#{example_messages['nav_FileUpload']}" action="go_fileupload" />
             <x:commandNavigation id="nav_2_3_5" value="#{example_messages['nav_TabbedPane']}" action="go_tabbedPane" />
             <x:commandNavigation id="nav_2_3_6" value="#{example_messages['nav_Calendar']}" action="go_calendar" />
+            <x:commandNavigation id="nav_2_3_7" value="#{example_messages['nav_dataList']}" action="go_dataList" />
         </x:commandNavigation>
     </x:commandNavigation>
     <x:commandNavigation id="nav_3" value="#{example_messages['nav_Documentation']}" >

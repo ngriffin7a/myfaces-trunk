@@ -115,7 +115,7 @@ public class HtmlResponseWriterImpl
         // API doc says we should not flush the underlying writer
         //_writer.flush();
         // but rather clear any values buffered by this ResponseWriter:
-        closeStartElementIfNecessary();
+        closeStartTagIfNecessary();
     }
 
     public void startDocument()
@@ -140,14 +140,14 @@ public class HtmlResponseWriterImpl
             throw new NullPointerException("elementName name must not be null");
         }
 
-        closeStartElementIfNecessary();
+        closeStartTagIfNecessary();
         _writer.write('<');
         _writer.write(name);
         _startElementName = name;
         _startTagOpen = true;
     }
 
-    private void closeStartElementIfNecessary() throws IOException
+    private void closeStartTagIfNecessary() throws IOException
     {
         if (_startTagOpen)
         {
@@ -177,18 +177,24 @@ public class HtmlResponseWriterImpl
         {
             // we will get here only if no text was written after the start element was opened
             _writer.write(" />");
+            _startTagOpen = false;
         }
-
-        // If we are closing an outer element, write the end tag.
-        //if (!name.equals(_startElementName))
-        //{
+        else
+        {
             _writer.write("</");
             _writer.write(name);
             _writer.write('>');
-        //}
+        }
 
-        _startTagOpen = false;
-//        _currentComponent = null;
+        if (log.isWarnEnabled())
+        {
+            if (_startElementName != null &&
+                !name.equals(_startElementName))
+            {
+                log.warn("HTML nesting error: element " + _startElementName + " not closed");
+            }
+        }
+        _startElementName = null;
     }
 
     public void writeAttribute(String name, Object value, String componentPropertyName) throws IOException
@@ -285,7 +291,7 @@ public class HtmlResponseWriterImpl
             throw new NullPointerException("comment name must not be null");
         }
 
-        closeStartElementIfNecessary();
+        closeStartTagIfNecessary();
         _writer.write("<!--");
         _writer.write(value.toString());    //TODO: Escaping: must not have "-->" inside!
         _writer.write("-->");
@@ -298,7 +304,7 @@ public class HtmlResponseWriterImpl
             throw new NullPointerException("text name must not be null");
         }
 
-        closeStartElementIfNecessary();
+        closeStartTagIfNecessary();
         if(value == null)
             return;
 
@@ -325,7 +331,7 @@ public class HtmlResponseWriterImpl
             throw new IndexOutOfBoundsException((off + len) + " > " + cbuf.length);
         }
 
-        closeStartElementIfNecessary();
+        closeStartTagIfNecessary();
 
         if (isScriptOrStyle())
         {
@@ -338,6 +344,14 @@ public class HtmlResponseWriterImpl
             _writer.write(HTMLEncoder.encode(strValue, false, false));
         }
     }
+
+    private boolean isScriptOrStyle()
+    {
+        return _startElementName != null &&
+               (_startElementName.equalsIgnoreCase(HTML.SCRIPT_ELEM) ||
+                _startElementName.equalsIgnoreCase(HTML.STYLE_ELEM));
+    }
+
 
     public ResponseWriter cloneWithWriter(Writer writer)
     {
@@ -363,25 +377,25 @@ public class HtmlResponseWriterImpl
 
     public void write(char cbuf[], int off, int len) throws IOException
     {
-        closeStartElementIfNecessary();
+        closeStartTagIfNecessary();
         _writer.write(cbuf, off, len);
     }
 
     public void write(int c) throws IOException
     {
-        closeStartElementIfNecessary();
+        closeStartTagIfNecessary();
         _writer.write(c);
     }
 
     public void write(char cbuf[]) throws IOException
     {
-        closeStartElementIfNecessary();
+        closeStartTagIfNecessary();
         _writer.write(cbuf);
     }
 
     public void write(String str) throws IOException
     {
-        closeStartElementIfNecessary();
+        closeStartTagIfNecessary();
         // empty string commonly used to force the start tag to be closed.
         // in such case, do not call down the writer chain
         if (str.length() > 0)
@@ -392,17 +406,9 @@ public class HtmlResponseWriterImpl
 
     public void write(String str, int off, int len) throws IOException
     {
-        closeStartElementIfNecessary();
+        closeStartTagIfNecessary();
         _writer.write(str, off, len);
     }
-
-    private boolean isScriptOrStyle()
-    {
-        return _startElementName != null &&
-               (_startElementName.equalsIgnoreCase(HTML.SCRIPT_ELEM)
-               || _startElementName.equalsIgnoreCase(HTML.STYLE_ELEM));
-    }
-
 
     // DummyFormResponseWriter support
 
