@@ -19,11 +19,14 @@
 
 package javax.faces.model;
 
+import java.io.Serializable;
+
 /**
   * @author Thomas Spiegl (latest modification by $Author$)
   * @version $Revision$ $Date$
 */
 public class SelectItem
+    implements Serializable
 {
 	// FIELDS
     private Object _value;

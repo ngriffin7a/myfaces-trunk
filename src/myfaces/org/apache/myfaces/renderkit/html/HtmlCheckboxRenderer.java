@@ -182,7 +182,7 @@ public class HtmlCheckboxRenderer
 
     public Object getConvertedValue(FacesContext facesContext, UIComponent uiComponent, Object submittedValue) throws ConverterException
     {
-        RendererUtils.checkParamValidity(facesContext, uiComponent, HtmlSelectManyCheckbox.class);
+        RendererUtils.checkParamValidity(facesContext, uiComponent, null);
         return RendererUtils.getConvertedUISelectManyValue(facesContext,
                                                            (HtmlSelectManyCheckbox)uiComponent,
                                                            submittedValue);

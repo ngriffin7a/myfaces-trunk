@@ -153,7 +153,7 @@ public class HtmlTextRenderer
 
     public Object getConvertedValue(FacesContext facesContext, UIComponent uiComponent, Object submittedValue) throws ConverterException
     {
-        RendererUtils.checkParamValidity(facesContext, uiComponent, HtmlInputText.class);
+        RendererUtils.checkParamValidity(facesContext, uiComponent, UIInput.class);
         return RendererUtils.getConvertedUIOutputValue(facesContext,
                                                        (HtmlInputText)uiComponent,
                                                        submittedValue);

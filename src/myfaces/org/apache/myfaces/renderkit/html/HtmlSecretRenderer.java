@@ -79,13 +79,13 @@ public class HtmlSecretRenderer
 
     public void decode(FacesContext facesContext, UIComponent component)
     {
-        RendererUtils.checkParamValidity(facesContext, component, HtmlInputSecret.class);
+        RendererUtils.checkParamValidity(facesContext, component, UIInput.class);
         HtmlRendererUtils.decodeUIInput(facesContext, (UIInput)component);
     }
 
     public Object getConvertedValue(FacesContext facesContext, UIComponent uiComponent, Object submittedValue) throws ConverterException
     {
-        RendererUtils.checkParamValidity(facesContext, uiComponent, HtmlInputSecret.class);
+        RendererUtils.checkParamValidity(facesContext, uiComponent, UIInput.class);
         return RendererUtils.getConvertedUIOutputValue(facesContext,
                                                        (UIInput)uiComponent,
                                                        submittedValue);

@@ -91,7 +91,7 @@ public class HtmlFormRenderer
 
     public void decode(FacesContext facesContext, UIComponent component)
     {
-        RendererUtils.checkParamValidity(facesContext, component, HtmlForm.class);
+        RendererUtils.checkParamValidity(facesContext, component, UIForm.class);
 
         /*
         if (HTMLUtil.isDisabled(component))

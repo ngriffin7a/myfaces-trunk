@@ -134,14 +134,14 @@ public class HtmlRadioRenderer
 
     public void decode(FacesContext facesContext, UIComponent uiComponent)
     {
-        RendererUtils.checkParamValidity(facesContext, uiComponent, HtmlSelectOneRadio.class);
+        RendererUtils.checkParamValidity(facesContext, uiComponent, UISelectOne.class);
         HtmlRendererUtils.decodeUIInput(facesContext, (UISelectOne)uiComponent);
     }
 
 
     public Object getConvertedValue(FacesContext facesContext, UIComponent uiComponent, Object submittedValue) throws ConverterException
     {
-        RendererUtils.checkParamValidity(facesContext, uiComponent, HtmlSelectOneRadio.class);
+        RendererUtils.checkParamValidity(facesContext, uiComponent, UISelectOne.class);
         return RendererUtils.getConvertedUIOutputValue(facesContext,
                                                        (UISelectOne)uiComponent,
                                                        submittedValue);

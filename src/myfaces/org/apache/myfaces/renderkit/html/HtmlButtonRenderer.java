@@ -100,7 +100,7 @@ extends HtmlRenderer
     public void encodeEnd(FacesContext facesContext, UIComponent uiComponent)
             throws IOException
     {
-        RendererUtils.checkParamValidity(facesContext, uiComponent, HtmlCommandButton.class);
+        RendererUtils.checkParamValidity(facesContext, uiComponent, UICommand.class);
 
         String clientId = uiComponent.getClientId(facesContext);
 
