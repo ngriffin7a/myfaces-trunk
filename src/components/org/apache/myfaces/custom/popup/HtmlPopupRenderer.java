@@ -31,6 +31,9 @@ import java.lang.reflect.InvocationTargetException;
  * @author Martin Marinschek (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.2  2004/11/17 11:25:42  mmarinschek
+ * reviewed version of popup
+ *
  * Revision 1.1  2004/11/16 16:25:52  mmarinschek
  * new popup - component; not yet finished
  *
@@ -68,7 +71,7 @@ public class HtmlPopupRenderer
         String popupId = writePopupScript(
                 facesContext, popup.getClientId(facesContext));
 
-        writeMouseOverAndOutAttribs(popupId, popupFacet.getChildren());
+        //writeMouseOverAndOutAttribs(popupId, popupFacet.getChildren());
 
         writeMouseOverAttribs(popupId, uiComponent.getChildren());
 
@@ -76,9 +79,14 @@ public class HtmlPopupRenderer
 
         ResponseWriter writer = facesContext.getResponseWriter();
 
-        writer.startElement(HTML.DIV_ELEM, uiComponent);
-        writer.writeAttribute(HTML.STYLE_ATTR,"position:absolute;display:none;background:#CCCCCC;",null);
+        writer.startElement(HTML.DIV_ELEM, popup);
+        writer.writeAttribute(HTML.STYLE_ATTR,(popup.getStyle()!=null?(popup.getStyle()+
+                (popup.getStyle().trim().endsWith(";")?"":";")):"")+
+                "position:absolute;display:none;",null);
+        writer.writeAttribute(HTML.CLASS_ATTR,popup.getStyleClass(),null);
         writer.writeAttribute(HTML.ID_ATTR, popup.getClientId(facesContext),null);
+        writer.writeAttribute(HTML.ONMOUSEOVER_ATTR, new String(popupId+".redisplay();"),null);
+        writer.writeAttribute(HTML.ONMOUSEOUT_ATTR, new String(popupId+".hide();"),null);
         RendererUtils.renderChildren(facesContext, popupFacet);
         writer.endElement(HTML.DIV_ELEM);
     }

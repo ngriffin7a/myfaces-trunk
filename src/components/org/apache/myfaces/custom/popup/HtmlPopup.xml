@@ -8,4 +8,12 @@
     <component-type>org.apache.myfaces.HtmlPopup</component-type>
     <component-family>javax.faces.Panel</component-family>
     <renderer-type>org.apache.myfaces.Popup</renderer-type>
+    <field>
+        <name>style</name>
+        <type>String</type>
+    </field>
+    <field>
+        <name>styleClass</name>
+        <type>String</type>
+    </field>
 </component>

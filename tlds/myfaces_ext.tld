@@ -1385,6 +1385,28 @@
         <description>
             Renders a popup which displays on a mouse event.
         </description>
+        <attribute>
+            <name>styleClass</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
+            <description>
+                styleClass for popup.
+                Attention! do not try to overwrite position:absolute;
+                and display:none;
+                Provide a padding for Mozilla-based Browsers
+            </description>
+        </attribute>
+        <attribute>
+            <name>style</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
+            <description>
+                style for popup.
+                Attention! do not try to overwrite position:absolute;
+                and display:none;
+                Provide a padding for Mozilla-based Browsers
+            </description>
+        </attribute>
         &ui_panel_attributes;
         &html_universal_attributes;
         &html_event_handler_attributes;

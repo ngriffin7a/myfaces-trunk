@@ -271,6 +271,37 @@ div.titlebar {
 }
 
 
+/*
+   ------------------------------------------------------------
+   End Calendar component
+   ------------------------------------------------------------
+*/
+
+/*
+   ------------------------------------------------------------
+   Popup component
+   ------------------------------------------------------------
+*/
+
+.popup {
+    background-color: rgb(255,255,225);
+    color: #000000;
+    border: 1px solid #CCCCCC;
+    font-size:smaller;
+    padding: 5px;
+}
+
+.popup table {
+    font-size:smaller;
+}
+
+
+/*
+   ------------------------------------------------------------
+   End popup component
+   ------------------------------------------------------------
+*/
+
 
 .countryFormTable {
 	font-family : verdana, Geneva, Arial, Helvetica, sans-serif;

@@ -55,14 +55,28 @@
 
             <h:panelGroup id="body">
                     
-                <x:popup>
+                <x:popup styleClass="popup">
                     <h:outputText value="text"/>
                     <f:facet name="popup">
                         <h:panelGroup>
+                            <h:panelGrid columns="1" >
                             <h:outputText value="Popup Text"/>
                             <h:outputLink value="http://www.myfaces.org" >
                                 <h:outputText value="MyFaces Homepage"/>
                             </h:outputLink>
+                            <h:outputLink value="http://www.myfaces.org" >
+                                <h:outputText value="MyFaces Homepage"/>
+                            </h:outputLink>
+                            <h:outputLink value="http://www.myfaces.org" >
+                                <h:outputText value="MyFaces Homepage"/>
+                            </h:outputLink>
+                            <h:outputLink value="http://www.myfaces.org" >
+                                <h:outputText value="MyFaces Homepage"/>
+                            </h:outputLink>
+                            <h:outputLink value="http://www.myfaces.org" >
+                                <h:outputText value="MyFaces Homepage"/>
+                            </h:outputLink>                            
+                            </h:panelGrid>
                         </h:panelGroup>
                     </f:facet>
                 </x:popup>
