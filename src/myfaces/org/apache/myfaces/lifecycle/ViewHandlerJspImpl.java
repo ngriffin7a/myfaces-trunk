@@ -57,6 +57,7 @@ public class ViewHandlerJspImpl
     public void renderView(FacesContext facesContext, UIViewRoot viewRoot)
         throws IOException, FacesException
     {
+        //TODO: move code to net.sourceforge.myfaces.application.ViewHanlderImpl
         ServletRequest servletRequest = (ServletRequest)facesContext.getExternalContext().getRequest();
         ServletContext servletContext = (ServletContext)facesContext.getExternalContext().getContext();
 
