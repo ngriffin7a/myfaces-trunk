@@ -63,6 +63,9 @@ import java.util.jar.JarInputStream;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  *          $Log$
+ *          Revision 1.9  2004/12/13 22:20:34  oros
+ *          fix #1046763: close temporary jar file before trying to delete it
+ *
  *          Revision 1.8  2004/11/11 22:46:35  bdudney
  *          added some error reporting
  *
@@ -356,9 +359,9 @@ public class FacesConfigurator
                 }
                 out.close();
 
+                JarFile jarFile = new JarFile(tmp);
                 try
                 {
-                    JarFile jarFile = new JarFile(tmp);
                     JarEntry configFile = jarFile.getJarEntry("META-INF/faces-config.xml");
                     if (configFile != null)
                     {
@@ -370,6 +373,7 @@ public class FacesConfigurator
                     }
                 } finally
                 {
+                    jarFile.close();
                     tmp.delete();
                 }
             } else
