@@ -18,12 +18,16 @@ package org.apache.myfaces.custom.htmlEditor;
 import javax.faces.component.UIComponent;
 
 import org.apache.myfaces.component.UserRoleAware;
+import org.apache.myfaces.renderkit.JSFAttr;
 import org.apache.myfaces.taglib.UIComponentTagBase;
 
 /**
  * @author Sylvain Vieujot (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.15  2005/03/18 15:38:15  svieujot
+ * Bugfix for weblogic.
+ *
  * Revision 1.14  2005/03/15 05:24:03  svieujot
  * Add a fallback textarea mode to the htmlEditor.
  *
@@ -87,6 +91,11 @@ public class HtmlEditorTag extends UIComponentTagBase {
     
     private String enabledOnUserRole;
     private String visibleOnUserRole;
+	
+    private String immediate;
+    private String required;
+    private String validator;
+    private String valueChangeListener;
     
     public void release() {
         super.release();
@@ -105,6 +114,11 @@ public class HtmlEditorTag extends UIComponentTagBase {
         showDebugToolBox=null;
         enabledOnUserRole=null;
         visibleOnUserRole=null;
+		
+		immediate=null;
+        required=null;
+        validator=null;
+        valueChangeListener=null;
     }
     
     protected void setProperties(UIComponent component) {
@@ -129,6 +143,11 @@ public class HtmlEditorTag extends UIComponentTagBase {
         
         setStringProperty(component, UserRoleAware.ENABLED_ON_USER_ROLE_ATTR, enabledOnUserRole);
         setStringProperty(component, UserRoleAware.VISIBLE_ON_USER_ROLE_ATTR, visibleOnUserRole);
+		
+		setBooleanProperty(component, JSFAttr.IMMEDIATE_ATTR, immediate);
+        setBooleanProperty(component, JSFAttr.REQUIRED_ATTR, required);
+        setValidatorProperty(component, validator);
+        setValueChangedListenerProperty(component, valueChangeListener);
     }
     
     public String getComponentType() {
@@ -197,5 +216,21 @@ public class HtmlEditorTag extends UIComponentTagBase {
 
     public void setVisibleOnUserRole(String visibleOnUserRole){
         this.visibleOnUserRole = visibleOnUserRole;
+    }
+	
+	public void setImmediate(String immediate){
+        this.immediate = immediate;
+    }
+
+    public void setRequired(String required){
+        this.required = required;
+    }
+
+    public void setValidator(String validator){
+        this.validator = validator;
+    }
+
+    public void setValueChangeListener(String valueChangeListener){
+        this.valueChangeListener = valueChangeListener;
     }
 }
