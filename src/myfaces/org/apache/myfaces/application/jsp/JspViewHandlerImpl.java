@@ -17,7 +17,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
 
-package net.sourceforge.myfaces.application;
+package net.sourceforge.myfaces.application.jsp;
 
 import net.sourceforge.myfaces.renderkit.html.state.StateRenderer;
 import net.sourceforge.myfaces.webapp.webxml.ServletMapping;
@@ -36,6 +36,7 @@ import javax.faces.render.RenderKit;
 import javax.faces.render.RenderKitFactory;
 import javax.faces.render.Renderer;
 import javax.servlet.ServletRequest;
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.*;
@@ -46,16 +47,16 @@ import java.util.*;
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public class ViewHandlerImpl
+public class JspViewHandlerImpl
     implements ViewHandler
 {
-    private static final Log log = LogFactory.getLog(ViewHandlerImpl.class);
+    private static final Log log = LogFactory.getLog(JspViewHandlerImpl.class);
 
     private StateManager _stateManager;
 
-    public ViewHandlerImpl()
+    public JspViewHandlerImpl()
     {
-        _stateManager = new StateManagerImpl();
+        _stateManager = new JspStateManagerImpl();
         if (log.isTraceEnabled()) log.trace("New ViewHandler instance created");
     }
 
@@ -282,13 +283,16 @@ public class ViewHandlerImpl
     {
         if (viewToRender == null)
         {
-            log.error("viewToRender must not be null");
+            log.fatal("viewToRender must not be null");
             throw new NullPointerException("viewToRender must not be null");
         }
 
-        // TODO: adapt
         ExternalContext externalContext = facesContext.getExternalContext();
-        ServletRequest servletRequest = (ServletRequest)externalContext.getRequest();
+        //Since this is a JSP specific implementation, we are allowed to cast:
+        HttpServletRequest servletRequest = (HttpServletRequest)externalContext.getRequest();
+        
+
+
 
         //Build component tree from parsed JspInfo so that all components
         //already exist in case a component needs it's children prior to

@@ -1,4 +1,4 @@
-package net.sourceforge.myfaces.application;
+package net.sourceforge.myfaces.application.jsp;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -14,12 +14,12 @@ import java.io.IOException;
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public class StateManagerImpl
+public class JspStateManagerImpl
     extends StateManager
 {
-    private static final Log log = LogFactory.getLog(StateManagerImpl.class);
+    private static final Log log = LogFactory.getLog(JspStateManagerImpl.class);
 
-    public StateManagerImpl()
+    public JspStateManagerImpl()
     {
         if (log.isTraceEnabled()) log.trace("New StateManager instance created");
     }
