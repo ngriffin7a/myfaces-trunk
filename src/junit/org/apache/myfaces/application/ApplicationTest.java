@@ -49,7 +49,7 @@ public class ApplicationTest
 
     //~ Methods ------------------------------------------------------------------------------------
 
-    public void testVariableBindingCaching()
+    public void testValueBindingCaching()
     {
         ValueBinding vb;
 
@@ -60,7 +60,7 @@ public class ApplicationTest
         }
     }
         
-    public void testVariableBindingMutithreadedCaching()
+    public void testValueBindingMutithreadedCaching()
     throws InterruptedException
     {
         final Application application = _application;
