@@ -88,5 +88,8 @@ public class ActionListenerImpl
         navigationHandler.handleNavigation(facesContext,
                                            fromAction,
                                            outcome);
+		//Render Response if needed
+		facesContext.renderResponse();
+
     }
 }
