@@ -116,24 +116,28 @@ public class RadioRenderer
     protected void renderLabel(FacesContext facesContext, UISelectOne selectOne, SelectItem item)
         throws IOException
     {
-        ResponseWriter writer = facesContext.getResponseWriter();
-        boolean span = selectOne.getAttribute(JSFAttr.OUTPUT_CLASS_ATTR) != null;
-        beforeRenderLabel(facesContext, selectOne, item);
-        if (span)
+        String label = item.getLabel();
+        if (label != null && label.length() > 0)
         {
-            writer.write("<span ");
-            HTMLUtil.renderCssClass(writer, selectOne, JSFAttr.OUTPUT_CLASS_ATTR);
-            writer.write(">");
+            ResponseWriter writer = facesContext.getResponseWriter();
+            boolean span = selectOne.getAttribute(JSFAttr.SELECT_ONE_CLASS_ATTR) != null;
+            beforeRenderLabel(facesContext, selectOne, item);
+            if (span)
+            {
+                writer.write("<span ");
+                HTMLUtil.renderCssClass(writer, selectOne, JSFAttr.SELECT_ONE_CLASS_ATTR);
+                writer.write(">");
+            }
+            writer.write(HTMLEncoder.encode(
+                    item.getLabel(),
+                    true,
+                    true));
+            if (span)
+            {
+                writer.write("</span>");
+            }
+            afterRenderLabel(facesContext, selectOne, item);
         }
-        writer.write(HTMLEncoder.encode(
-                item.getLabel(),
-                true,
-                true));
-        if (span)
-        {
-            writer.write("</span>");
-        }
-        afterRenderLabel(facesContext, selectOne, item);
     }
 
     protected void afterRenderLabel(FacesContext facesContext, UISelectOne selectOne, SelectItem item)

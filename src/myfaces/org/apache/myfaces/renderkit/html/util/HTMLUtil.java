@@ -104,7 +104,7 @@ public class HTMLUtil
     {
         String cssClass = (String) uiComponent.getAttribute(classAttrName);
 
-        if (cssClass != null)
+        if (cssClass != null && cssClass.length() > 0)
         {
             buf.append(" class=\"");
             buf.append(cssClass);
@@ -118,7 +118,7 @@ public class HTMLUtil
     {
         String cssClass = (String) uiComponent.getAttribute(classAttrName);
 
-        if (cssClass != null)
+        if (cssClass != null && cssClass.length() > 0)
         {
             writer.write(" class=\"");
             writer.write(cssClass);
