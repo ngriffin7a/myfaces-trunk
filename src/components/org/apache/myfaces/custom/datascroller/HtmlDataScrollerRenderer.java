@@ -112,10 +112,12 @@ public class HtmlDataScrollerRenderer
             else if (param.equals(FACET_LAST))
             {
                 int rowcount = uiData.getRowCount();
-                int last = rowcount - (rowcount % uiData.getRows());
-                if (last >= 0)
+                int rows = uiData.getRows();
+                int delta = rowcount % rows;
+                int first = delta > 0 && delta < rows ? rowcount - delta : rowcount - rows;
+                if (first >= 0)
                 {
-                    uiData.setFirst(last);
+                    uiData.setFirst(first);
                 }
                 else
                 {
