@@ -59,7 +59,7 @@ public class StateRestorer
             TreeCopier treeCopier = new TreeCopier(facesContext);
             treeCopier.setOverwriteAttributes(false);
             treeCopier.setOverwriteComponents(false);
-            treeCopier.copyStaticTree(staticTree, requestTree);
+            treeCopier.copyTree(staticTree, requestTree);
 
             for (Iterator it = TreeUtils.treeIterator(requestTree); it.hasNext();)
             {

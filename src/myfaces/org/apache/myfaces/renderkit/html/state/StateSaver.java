@@ -90,7 +90,7 @@ public class StateSaver
                 TreeCopier treeCopier = new TreeCopier(facesContext);
                 treeCopier.setOverwriteAttributes(true);
                 treeCopier.setOverwriteComponents(true);
-                treeCopier.copyStaticTree(staticTree, facesContext.getResponseTree());
+                treeCopier.copyTree(staticTree, facesContext.getResponseTree());
             }
         }
         else

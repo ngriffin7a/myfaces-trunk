@@ -22,7 +22,6 @@ import net.sourceforge.myfaces.convert.Converter;
 import net.sourceforge.myfaces.convert.ConverterException;
 import net.sourceforge.myfaces.convert.ConverterUtils;
 import net.sourceforge.myfaces.convert.impl.StringArrayConverter;
-import net.sourceforge.myfaces.util.bean.BeanMethod;
 import net.sourceforge.myfaces.util.bean.BeanUtils;
 import net.sourceforge.myfaces.util.logging.LogUtil;
 
@@ -33,7 +32,6 @@ import javax.faces.context.FacesContext;
 import javax.faces.context.Message;
 import javax.faces.context.MessageResources;
 import javax.faces.context.MessageResourcesFactory;
-import javax.servlet.jsp.tagext.Tag;
 
 /**
  * TODO: description
@@ -141,31 +139,16 @@ public class UIComponentUtils
                                               boolean deserializeIfNoConverter)
         throws FacesException
     {
-        convertAndSetAttribute(facesContext,
-                               comp,
-                               attrName,
-                               strValue,
-                               deserializeIfNoConverter,
-                               null);
-    }
-
-
-    public static void convertAndSetAttribute(FacesContext facesContext,
-                                              UIComponent comp,
-                                              String attrName,
-                                              String strValue,
-                                              boolean deserializeIfNoConverter,
-                                              Tag creatorTag)
-        throws FacesException
-    {
         if (strValue != null)
         {
             Converter conv = null;
             Class clazz = findOutAttrClassByUIComponent(comp, attrName);
+            /*
             if (clazz == null && creatorTag != null)
             {
                 clazz = findOutAttrClassByTag(comp, creatorTag, attrName);
             }
+            */
 
             if (clazz != null)
             {
@@ -222,6 +205,7 @@ public class UIComponentUtils
         return c;
     }
 
+    /*
     protected static Class findOutAttrClassByTag(UIComponent comp, Tag tag, String attrName)
     {
         Class c = null;
@@ -247,5 +231,6 @@ public class UIComponentUtils
 
         return c;
     }
+    */
 
 }

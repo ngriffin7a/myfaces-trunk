@@ -18,15 +18,14 @@
  */
 package net.sourceforge.myfaces.renderkit.html.state;
 
-import net.sourceforge.myfaces.component.UIComponentUtils;
 import net.sourceforge.myfaces.util.logging.LogUtil;
 
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.tree.Tree;
 import javax.faces.webapp.FacesTag;
-import javax.servlet.jsp.tagext.Tag;
 import java.util.Iterator;
+import java.util.Map;
 
 /**
  * TODO: description
@@ -60,31 +59,22 @@ public class TreeCopier
 
     public void copyTree(Tree fromTree, Tree toTree)
     {
-        copyComponent(fromTree.getRoot(), toTree.getRoot(), false);
+        copyComponent(fromTree.getTreeId(),
+                      fromTree.getRoot(), toTree.getRoot());
     }
 
-    public void copyStaticTree(Tree fromTree, Tree toTree)
+    public void copySubTree(String fromTreeId,
+                            UIComponent fromComponent, UIComponent toComponent)
     {
-        copyComponent(fromTree.getRoot(), toTree.getRoot(), true);
-    }
-
-
-    public void copySubTree(UIComponent fromComponent, UIComponent toComponent)
-    {
-        copyComponent(fromComponent, toComponent, false);
-    }
-
-    public void copyStaticSubTree(UIComponent fromComponent, UIComponent toComponent)
-    {
-        copyComponent(fromComponent, toComponent, true);
+        copyComponent(fromTreeId, fromComponent, toComponent);
     }
 
 
-    protected void copyComponent(UIComponent fromComp,
-                                 UIComponent toComp,
-                                 boolean staticAttributeConversions)
+    protected void copyComponent(String fromTreeId,
+                                 UIComponent fromComp,
+                                 UIComponent toComp)
     {
-        copyAttributes(fromComp, toComp, staticAttributeConversions);
+        copyAttributes(fromComp, toComp);
 
         int childIndex = 0;
         for (Iterator it = fromComp.getChildren(); it.hasNext(); childIndex++)
@@ -95,7 +85,7 @@ public class TreeCopier
             try
             {
                 //destination component already exists?
-                //TODO: Optimize by Set "destinationChildren"
+                //TODO: Optimize by a "destinationChildren"-set
                 clone = toComp.findComponent(child.getComponentId());
             }
             catch (IllegalArgumentException e)
@@ -111,40 +101,46 @@ public class TreeCopier
 
             if (clone == null)
             {
-                FacesTag tag = (FacesTag)child.getAttribute(CREATOR_TAG_ATTR);
-                if (tag != null)
-                {
-                    clone = tag.createComponent();
-                }
-                else
-                {
-                    LogUtil.getLogger().severe("Component " + child.getCompoundId() + " has no '" + CREATOR_TAG_ATTR + "' attribute!");
-                    try
-                    {
-                        clone = (UIComponent)child.getClass().newInstance();
-                    }
-                    catch (InstantiationException e)
-                    {
-                        throw new RuntimeException(e);
-                    }
-                    catch (IllegalAccessException e)
-                    {
-                        throw new RuntimeException(e);
-                    }
-                }
+                clone = cloneComponent(fromTreeId, child);
 
                 clone.setComponentId(child.getComponentId());
                 toComp.addChild(childIndex, clone);
 
-                copyComponent(child, clone, staticAttributeConversions);    //Recursion
+                copyComponent(fromTreeId, child, clone);    //Recursion
             }
+        }
+    }
+
+    private UIComponent cloneComponent(String fromTreeId, UIComponent toBeCloned)
+    {
+        Map tagMap = JspInfo.getCreatorTagsMap(_facesContext, fromTreeId);
+        FacesTag tag = (FacesTag)tagMap.get(toBeCloned.getCompoundId());
+        if (tag != null)
+        {
+            UIComponent clone = tag.createComponent();
+            tag.release();  //TODO: necessary?
+            return clone;
+        }
+
+        LogUtil.getLogger().severe("No creator tag found for component " + toBeCloned.getCompoundId() + ".");
+
+        try
+        {
+            return (UIComponent)toBeCloned.getClass().newInstance();
+        }
+        catch (InstantiationException e)
+        {
+            throw new RuntimeException(e);
+        }
+        catch (IllegalAccessException e)
+        {
+            throw new RuntimeException(e);
         }
     }
 
 
     protected void copyAttributes(UIComponent fromComp,
-                                  UIComponent toComp,
-                                  boolean staticAttributeConversions)
+                                  UIComponent toComp)
     {
         for (Iterator it = fromComp.getAttributeNames(); it.hasNext();)
         {
@@ -152,37 +148,7 @@ public class TreeCopier
             if (_overwriteAttributes || toComp.getAttribute(attrName) == null)
             {
                 Object attrValue = fromComp.getAttribute(attrName);
-                if (staticAttributeConversions)
-                {
-                    if (attrName.equals(HARDCODED_VALUE_ATTR))  //TODO: Obsolete?
-                    {
-                        UIComponentUtils.convertAndSetValue(_facesContext,
-                                                            toComp,
-                                                            (String)attrValue,
-                                                            false); //no converter error message
-                    }
-                    //else if (attrValue instanceof String)
-                    else if (!isIgnoreAttribute(attrName))
-                    {
-                        Tag tag = (Tag)fromComp.getAttribute(CREATOR_TAG_ATTR);
-                        UIComponentUtils.convertAndSetAttribute(_facesContext,
-                                                                toComp,
-                                                                attrName,
-                                                                (String)attrValue,
-                                                                false, //do not deserialize
-                                                                tag);
-                    }
-                    /*
-                    else
-                    {
-                    toComp.setAttribute(attrName, attrValue);
-                    }
-                    */
-                }
-                else
-                {
-                    toComp.setAttribute(attrName, attrValue);
-                }
+                toComp.setAttribute(attrName, attrValue);
             }
         }
     }

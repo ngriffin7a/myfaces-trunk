@@ -28,6 +28,7 @@ import java.util.Map;
 
 /**
  * TODO: description
+ * TODO: Move to more general package (does no longer only serve infos for state saving)
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
@@ -35,12 +36,13 @@ public class JspInfo
 {
     private Tree _staticTree;
     private Map _beanClassesMap;
-    //private Set _variables;
+    private Map _creatorTagsMap;
 
-    public JspInfo(Tree staticTree, Map beanClasses)
+    public JspInfo(Tree staticTree, Map beanClasses, Map creatorTagsMap)
     {
         _staticTree = staticTree;
         _beanClassesMap = beanClasses;
+        _creatorTagsMap = creatorTagsMap;
     }
 
     public Tree getStaticTree()
@@ -53,12 +55,11 @@ public class JspInfo
         return _beanClassesMap;
     }
 
-    /*
-    public Set getVariables()
+    public Map getCreatorTagsMap()
     {
-        return _variables;
+        return _creatorTagsMap;
     }
-    */
+
 
 
     private static final String JSP_INFO_MAP_ATTR = JspInfo.class.getName() + ".JSP_INFO_MAP";
@@ -75,6 +76,12 @@ public class JspInfo
         return getJspInfo(facesContext, treeId).getBeanClassesMap();
     }
 
+    public static Map getCreatorTagsMap(FacesContext facesContext,
+                                        String treeId)
+    {
+        return getJspInfo(facesContext, treeId).getCreatorTagsMap();
+    }
+
 
     private static JspInfo getJspInfo(FacesContext facesContext,
                                       String treeId)
@@ -86,7 +93,8 @@ public class JspInfo
             JspTreeParser parser = new JspTreeParser(facesContext.getServletContext());
             parser.parse(treeId);
             jspInfo = new JspInfo(parser.getTree(),
-                                  parser.getBeanClassesMap());
+                                  parser.getBeanClassesMap(),
+                                  parser.getCreatorTagsMap());
             jspInfoMap.put(treeId, jspInfo);
         }
         return jspInfo;

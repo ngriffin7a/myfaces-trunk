@@ -19,11 +19,7 @@
 package net.sourceforge.myfaces.renderkit.html.jsp_parser;
 
 import net.sourceforge.myfaces.component.MyFacesComponent;
-import net.sourceforge.myfaces.util.bean.BeanUtils;
-import net.sourceforge.myfaces.util.bean.BeanMethod;
 import net.sourceforge.myfaces.util.logging.LogUtil;
-import net.sourceforge.myfaces.convert.ConverterUtils;
-import net.sourceforge.myfaces.convert.Converter;
 import org.apache.jasper.Constants;
 import org.apache.jasper.JasperException;
 import org.apache.jasper.JspCompilationContext;
@@ -34,10 +30,12 @@ import javax.faces.component.UIComponent;
 import javax.faces.component.UIComponentBase;
 import javax.faces.tree.Tree;
 import javax.faces.webapp.FacesTag;
-import javax.faces.FacesException;
 import javax.servlet.jsp.tagext.TagAttributeInfo;
 import javax.servlet.jsp.tagext.TagInfo;
 import javax.servlet.jsp.tagext.TagLibraryInfo;
+import java.beans.*;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Map;
@@ -55,16 +53,19 @@ public class MyParseEventListener
     private JspCompilationContext _ctxt;
     private UIComponent _currentComponent;
     private Map _beanClasses;
+    private Map _creatorTags;
 
     public MyParseEventListener(JspTreeParser parser,
                                 JspCompilationContext ctxt,
                                 Tree tree,
-                                Map beanClasses)
+                                Map beanClasses,
+                                Map creatorTags)
     {
         _parser = parser;
         _ctxt = ctxt;
         _currentComponent = tree.getRoot();
         _beanClasses = beanClasses;
+        _creatorTags = creatorTags;
     }
 
     public void beginPageProcessing() throws JasperException
@@ -431,6 +432,8 @@ public class MyParseEventListener
         {
             String id = null;
 
+            BeanInfo beanInfo = getBeanInfo(tag);
+
             TagAttributeInfo[] attrInfos = ti.getAttributes();
             for (int i = 0; i < attrInfos.length; i++)
             {
@@ -454,43 +457,12 @@ public class MyParseEventListener
                     {
                         if (attrValue instanceof String)
                         {
-                            String stringValue = (String)attrValue;
-
-                            //TODO: We must search the proper set method and do automatic conversion
-                            //as defined in Tag Library Spec
-                            BeanMethod beanMethod = null;
-                            try
-                            {
-                                beanMethod = BeanUtils.getBeanPropertySetMethod(tag, attrName, null);
-                            }
-                            catch (IllegalArgumentException e) {}
-                            if (beanMethod == null)
-                            {
-                                continue;
-                            }
-
-                            Class[] params = beanMethod.getMethod().getParameterTypes();
-                            if (params.length != 1)
-                            {
-                                throw new FacesException("Setter method of attribute " + attrName +" of tag class " + tag.getClass().getName() + " is curious.");
-                            }
-
-                            Class type = params[0];
-                            if (type == String.class)
-                            {
-                                BeanUtils.setBeanProperty(tag, attrName, stringValue);
-                            }
-                            else if (type == Integer.class)
-                            {
-                                BeanUtils.setBeanProperty(tag, attrName, Integer.valueOf(stringValue));
-                            }
-                            //TODO: continue as defined in Table 2-2 of JSP Spec.
-
+                            //TODO: If attrInfos[i].getTypeName() is given use it as the target type
+                            attrValue = convertStringToTargetType(beanInfo,
+                                                                  attrName,
+                                                                  (String)attrValue);
                         }
-                        else
-                        {
-                            BeanUtils.setBeanProperty(tag, attrName, attrValue);
-                        }
+                        setBeanProperty(tag, attrName, attrValue, beanInfo);
                     }
                 }
             }
@@ -526,12 +498,170 @@ public class MyParseEventListener
             }
 
             tag.overrideProperties(comp);
-            tag.release();
+            tag.release(); //TODO: Do we have to call it really?
+
+            String compoundId = comp.getCompoundId();
+            if (compoundId != null)
+            {
+                _creatorTags.put(compoundId, tag);
+            }
 
             _currentComponent.addChild(comp);
             _currentComponent = comp;
         }
     }
+
+
+    private BeanInfo getBeanInfo(Object tagBean)
+    {
+        try
+        {
+            return Introspector.getBeanInfo(tagBean.getClass());
+        }
+        catch (IntrospectionException e)
+        {
+            throw new RuntimeException(e);
+        }
+    }
+
+
+    private void setBeanProperty(Object bean,
+                                 String propertyName,
+                                 Object propertyValue,
+                                 BeanInfo beanInfo)
+    {
+        //find PropertyDescriptor
+        PropertyDescriptor propDescr = findPropertyDescriptor(beanInfo, propertyName);
+        if (propDescr == null)
+        {
+            throw new RuntimeException("No PropertyDescriptor found for property " + propertyName);
+        }
+
+        Method setMethod = propDescr.getWriteMethod();
+        try
+        {
+            setMethod.invoke(bean, new Object[]{propertyValue});
+        }
+        catch (IllegalAccessException e)
+        {
+            throw new RuntimeException(e);
+        }
+        catch (IllegalArgumentException e)
+        {
+            throw new RuntimeException(e);
+        }
+        catch (InvocationTargetException e)
+        {
+            throw new RuntimeException(e);
+        }
+    }
+
+
+    private PropertyDescriptor findPropertyDescriptor(BeanInfo beanInfo, String propertyName)
+    {
+        PropertyDescriptor propDescr = null;
+        PropertyDescriptor propDescriptors[] = beanInfo.getPropertyDescriptors();
+        for (int i = 0; i < propDescriptors.length; i++)
+        {
+            if (propDescriptors[i].getName().equals(propertyName))
+            {
+                return propDescriptors[i];
+            }
+        }
+        return null;
+    }
+
+
+    private Object convertStringToTargetType(BeanInfo beanInfo,
+                                             String propertyName,
+                                             String propertyStringValue)
+    {
+        PropertyDescriptor propDescr = findPropertyDescriptor(beanInfo, propertyName);
+        if (propDescr == null)
+        {
+            throw new RuntimeException("No PropertyDescriptor found for property " + propertyName);
+        }
+
+        Class propertyEditorClass = propDescr.getPropertyEditorClass();
+        if (propertyEditorClass != null)
+        {
+            PropertyEditor pe = null;
+            try
+            {
+                pe = (PropertyEditor)propertyEditorClass.newInstance();
+            }
+            catch (InstantiationException e)
+            {
+                throw new RuntimeException(e);
+            }
+            catch (IllegalAccessException e)
+            {
+                throw new RuntimeException(e);
+            }
+            pe.setAsText(propertyStringValue);
+            return pe.getValue();
+        }
+
+        return convertStringToTargetType(propertyStringValue,
+                                         propDescr.getPropertyType());
+    }
+
+
+    private Object convertStringToTargetType(String s,
+                                             Class targetClass)
+    {
+        if (String.class.isAssignableFrom(targetClass))
+        {
+            //already a String
+            return s;
+        }
+        else if (targetClass.equals(Boolean.TYPE) ||
+            targetClass.equals(Boolean.class))
+        {
+            return Boolean.valueOf(s);
+        }
+        else if (targetClass.equals(Byte.TYPE) ||
+                 targetClass.equals(Byte.class))
+        {
+            return Byte.valueOf(s);
+        }
+        else if (targetClass.equals(Character.TYPE) ||
+                 targetClass.equals(Character.class))
+        {
+            return s.length() > 0 ? new Character(s.charAt(0)) : null;
+        }
+        else if (targetClass.equals(Double.TYPE) ||
+                 targetClass.equals(Double.class))
+        {
+            return Double.valueOf(s);
+        }
+        else if (targetClass.equals(Integer.TYPE) ||
+                 targetClass.equals(Integer.class))
+        {
+            return Integer.valueOf(s);
+        }
+        else if (targetClass.equals(Float.TYPE) ||
+                 targetClass.equals(Float.class))
+        {
+            return Float.valueOf(s);
+        }
+        else if (targetClass.equals(Long.TYPE) ||
+                 targetClass.equals(Long.class))
+        {
+            return Long.valueOf(s);
+        }
+        else if (targetClass.equals(Short.TYPE) ||
+                 targetClass.equals(Short.class))
+        {
+            return Short.valueOf(s);
+        }
+        else
+        {
+            LogUtil.getLogger().severe("Could not convert String '" + s + "' to target type " + targetClass.getName());
+            return s;
+        }
+    }
+
 
     private void handleTagEnd(String prefix, String shortTagName,
                               Attributes attrs, TagLibraryInfo tli, TagInfo ti)

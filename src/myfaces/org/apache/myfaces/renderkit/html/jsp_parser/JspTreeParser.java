@@ -49,7 +49,7 @@ public class JspTreeParser
     private Tree _tree = null;
     private String _topFileEncoding = "ISO-8859-1";
     private Map _beanClassesMap = null;
-//    private Set _variables = null;
+    private Map _creatorTagsMap = null;
     private JspCompilationContext _jspCompilationContext = null;
     private MyParseEventListener _parseEventListener = null;
     private Stack baseDirStack = new Stack();
@@ -69,6 +69,11 @@ public class JspTreeParser
         return _beanClassesMap;
     }
 
+    public Map getCreatorTagsMap()
+    {
+        return _creatorTagsMap;
+    }
+
     public ServletContext getServletContext()
     {
         return _servletContext;
@@ -80,12 +85,14 @@ public class JspTreeParser
         _tree = tf.getTree(_servletContext, treeId);
 
         _beanClassesMap = new HashMap();
+        _creatorTagsMap = new HashMap();
 
         _jspCompilationContext = new MyJspCompilationContext(_servletContext);
         _parseEventListener = new MyParseEventListener(this,
                                                        _jspCompilationContext,
                                                        _tree,
-                                                       _beanClassesMap);
+                                                       _beanClassesMap,
+                                                       _creatorTagsMap);
     }
 
 

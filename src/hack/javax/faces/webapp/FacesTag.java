@@ -204,7 +204,7 @@ public abstract class FacesTag
             else
             {
                 TreeCopier tc = new TreeCopier(facesContext);
-                tc.copyStaticSubTree(staticComp, find);
+                tc.copySubTree(staticTree.getTreeId(), staticComp, find);
             }
         }
 

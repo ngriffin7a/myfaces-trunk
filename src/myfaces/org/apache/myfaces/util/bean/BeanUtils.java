@@ -27,7 +27,7 @@ import java.util.StringTokenizer;
 /**
  * TODO: description
  * TODO: Array/List properties
- * Can this methods be replaced by jakarta-commons-bean library?
+ * TODO: Replace by java.beans.Introspection
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
