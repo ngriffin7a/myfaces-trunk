@@ -37,6 +37,9 @@ import java.util.*;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.16  2004/04/20 10:54:21  royalts
+ * added index check to findComponent
+ *
  * Revision 1.15  2004/03/31 12:48:03  manolito
  * bug: newly created children added always at end
  *
@@ -383,7 +386,16 @@ public abstract class UIComponentTag
                 _componentInstance.setId(id);
                 setProperties(_componentInstance);
                 int index = getAddedChildrenCount(parentTag);
-                parent.getChildren().add(index, _componentInstance);
+                List children = parent.getChildren();
+                if (index < children.size())
+                {
+                    children.add(index, _componentInstance);
+                }
+                else
+                {
+                    // for safety!
+                    children.add(_componentInstance);
+                }
             }
             addChildIdToParentTag(parentTag, id);
             return _componentInstance;
