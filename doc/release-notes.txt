@@ -10,6 +10,7 @@ Changes in Release 1.0.8 beta
 * bug fix #1045363 New <br> and &nbsp; 'feature'
 * bug fix MYFACES-9: store iconChildMiddle in component state
 * bug fix #1006636 VisibleOnUserRole attribute for x:panelTab tag
+* bug fix #1049792 rendered attribute is disabled for commandNavigation
 * refactor the jar files :
   - myfaces-jsf-api.jar contains the api classes (no change)
   - myfaces-impl.jar contains the standard jsf implementation
@@ -19,7 +20,7 @@ Changes in Release 1.0.8 beta
 * add an x:div component
 * add a validator for ISBN codes (<x:validateISBN/>)
 * new tree table feature contributed by David Le Strat (MYFACES-8)
-* new ExtensionsFilter, replacing the MultipartFilter, and allowing embeded resources in the jar
+* new ExtensionsFilter, replacing the MultipartFilter, and allowing embedded resources in the jar
 * popup component now uses embeded resources
 * calendar component now uses embeded resources
 * new HTML Editor component (<x:htmlEditor>). Basically, it's an rich text WYSIWYG component.

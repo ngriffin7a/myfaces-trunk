@@ -78,6 +78,9 @@ public class HtmlCommandNavigation
      */
     public boolean isRendered()
     {
+        if (! super.isRendered()) {
+            return false;
+        }
         UIComponent parent = getParent();
         while (parent != null)
         {
@@ -100,11 +103,6 @@ public class HtmlCommandNavigation
         }
 
         return true;
-    }
-
-    public void setRendered(boolean rendered)
-    {
-        //cannot be set explicitly
     }
 
 
