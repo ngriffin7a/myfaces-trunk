@@ -133,6 +133,7 @@ public class ViewTag
                 {
                     //until now we have written to a buffer
                     ResponseWriter bufferWriter = facesContext.getResponseWriter();
+                    bufferWriter.flush();
                     //now we switch to real output
                     ResponseWriter realWriter = bufferWriter.cloneWithWriter(getPreviousOut());
                     facesContext.setResponseWriter(realWriter);

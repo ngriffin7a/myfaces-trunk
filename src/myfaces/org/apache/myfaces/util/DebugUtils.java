@@ -220,32 +220,42 @@ public class DebugUtils
             }
         }
 
+        boolean mustClose = true;
+        boolean nestedObjects = false;
+
         if (comp instanceof UICommand)
         {
             FacesListener[] listeners = ((UICommand)comp).getActionListeners();
-            for (int i = 0; i < listeners.length; i++)
+            if (listeners != null && listeners.length > 0)
             {
-                FacesListener listener = listeners[i];
-                stream.println();
-                printIndent(stream, indent + 2);
-                stream.print('<');
-                stream.print(listener.getClass().getName());
-                stream.print("/>");
-                printIndent(stream, indent);
+                nestedObjects = true;
+                stream.println('>'); mustClose = false;
+                for (int i = 0; i < listeners.length; i++)
+                {
+                    FacesListener listener = listeners[i];
+                    printIndent(stream, indent + 1);
+                    stream.print('<');
+                    stream.print(listener.getClass().getName());
+                    stream.println("/>");
+                }
             }
         }
+
         if (comp instanceof UIInput)
         {
             FacesListener[] listeners = ((UIInput)comp).getValueChangeListeners();
-            for (int i = 0; i < listeners.length; i++)
+            if (listeners != null && listeners.length > 0)
             {
-                FacesListener listener = listeners[i];
-                stream.println();
-                printIndent(stream, indent + 2);
-                stream.print('<');
-                stream.print(listener.getClass().getName());
-                stream.print("/>");
-                printIndent(stream, indent);
+                nestedObjects = true;
+                stream.println('>'); mustClose = false;
+                for (int i = 0; i < listeners.length; i++)
+                {
+                    FacesListener listener = listeners[i];
+                    printIndent(stream, indent + 1);
+                    stream.print('<');
+                    stream.print(listener.getClass().getName());
+                    stream.println("/>");
+                }
             }
         }
 
@@ -255,7 +265,12 @@ public class DebugUtils
             Map facetsMap = comp.getFacets();
             if (childCount > 0 || !facetsMap.isEmpty())
             {
-                stream.println('>');
+                nestedObjects = true;
+                if (mustClose)
+                {
+                    stream.println('>');
+                    mustClose = false;
+                }
 
                 if (childCount > 0)
                 {
@@ -273,15 +288,21 @@ public class DebugUtils
                                    stream, indent + 1, true,
                                    (String)entry.getKey());
                 }
+            }
+        }
 
+        if (nestedObjects)
+        {
+            if (mustClose)
+            {
+                stream.println("/>");
+            }
+            else
+            {
                 printIndent(stream, indent);
                 stream.print("</");
                 stream.print(compType);
                 stream.println('>');
-            }
-            else
-            {
-                stream.println("/>");
             }
         }
         else

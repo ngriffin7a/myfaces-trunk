@@ -115,7 +115,6 @@ public abstract class UIComponentBase
         return _clientId;
     }
 
-
     public String getId()
     {
         return _id;
@@ -125,6 +124,7 @@ public abstract class UIComponentBase
     {
         //TODO: check id according to javadoc
         _id = id;
+        _clientId = null;
     }
 
     public UIComponent getParent()

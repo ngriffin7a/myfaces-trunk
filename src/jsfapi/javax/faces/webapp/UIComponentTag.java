@@ -44,7 +44,8 @@ public abstract class UIComponentTag
     private static final String FORMER_FACET_NAMES_SET_ATTR = UIComponentTag.class.getName() + ".FORMER_FACET_NAMES";
     private static final String COMPONENT_STACK_ATTR =  UIComponentTag.class.getName() + ".COMPONENT_STACK";
 
-    protected PageContext _pageContext = null;
+    protected PageContext pageContext = null;
+
     private String _binding = null;
     private String _id = null;
     private String _rendered = null;
@@ -113,7 +114,7 @@ public abstract class UIComponentTag
 
     private void popTag()
     {
-        List list = (List)_pageContext.getAttribute(COMPONENT_STACK_ATTR,
+        List list = (List)pageContext.getAttribute(COMPONENT_STACK_ATTR,
                                                     PageContext.REQUEST_SCOPE);
         if (list != null)
         {
@@ -121,7 +122,7 @@ public abstract class UIComponentTag
             list.remove(size -1);
             if (size <= 1)
             {
-                _pageContext.removeAttribute(COMPONENT_STACK_ATTR,
+                pageContext.removeAttribute(COMPONENT_STACK_ATTR,
                                              PageContext.REQUEST_SCOPE);
             }
         }
@@ -129,12 +130,12 @@ public abstract class UIComponentTag
 
     private void pushTag()
     {
-        List list = (List)_pageContext.getAttribute(COMPONENT_STACK_ATTR,
+        List list = (List)pageContext.getAttribute(COMPONENT_STACK_ATTR,
                                                     PageContext.REQUEST_SCOPE);
         if (list == null)
         {
             list = new ArrayList();
-            _pageContext.setAttribute(COMPONENT_STACK_ATTR,
+            pageContext.setAttribute(COMPONENT_STACK_ATTR,
                                       list,
                                       PageContext.REQUEST_SCOPE);
         }
@@ -153,7 +154,7 @@ public abstract class UIComponentTag
 
     public void setPageContext(PageContext pageContext)
     {
-        this._pageContext = pageContext;
+        this.pageContext = pageContext;
     }
 
     public Tag getParent()
@@ -302,7 +303,7 @@ public abstract class UIComponentTag
 
     public void release()
     {
-        _pageContext = null;
+        pageContext = null;
         internalRelease();
     }
 
@@ -328,7 +329,7 @@ public abstract class UIComponentTag
             throws JspException
     {
         if (_componentInstance != null) return _componentInstance;
-        UIComponentTag parentTag = getParentUIComponentTag(_pageContext);
+        UIComponentTag parentTag = getParentUIComponentTag(pageContext);
         if (parentTag == null)
         {
             //This is the root
@@ -347,7 +348,7 @@ public abstract class UIComponentTag
             _componentInstance = parent.getFacet(facetName);
             if (_componentInstance == null)
             {
-System.out.println("UIComponentTag: Facet " + facetName + " not found in parent component " + parent.getClientId(context) + " - creating new");
+//System.out.println("UIComponentTag: Facet " + facetName + " not found in parent component " + parent.getClientId(context) + " - creating new");
                 _componentInstance = createComponentInstance(context);
                 _componentInstance.setId(getOrCreateUniqueId(context)); //TODO: spec says nothing about facet ids
                 setProperties(_componentInstance);
@@ -363,7 +364,7 @@ System.out.println("UIComponentTag: Facet " + facetName + " not found in parent 
             _componentInstance = parent.findComponent(id);
             if (_componentInstance == null)
             {
-System.out.println("UIComponentTag: Child " + id + " not found in parent component " + parent.getClientId(context) + " - creating new");
+//System.out.println("UIComponentTag: Child " + id + " not found in parent component " + parent.getClientId(context) + " - creating new");
                 _componentInstance = createComponentInstance(context);
                 _componentInstance.setId(id);
                 setProperties(_componentInstance);
@@ -525,7 +526,7 @@ System.out.println("UIComponentTag: Child " + id + " not found in parent compone
 
             ServletRequest request = (ServletRequest)facesContext.getExternalContext().getRequest();
 
-            _writer = renderKit.createResponseWriter(_pageContext.getOut(),
+            _writer = renderKit.createResponseWriter(pageContext.getOut(),
                                                      request.getContentType(), //TODO: is this the correct content type?
                                                      request.getCharacterEncoding());
             facesContext.setResponseWriter(_writer);

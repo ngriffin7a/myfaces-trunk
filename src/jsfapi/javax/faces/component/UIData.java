@@ -32,7 +32,6 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author Manfred Geiler (latest modification by $Author$)
@@ -240,10 +239,8 @@ public class UIData
         for (Iterator it = component.getChildren().iterator(); it.hasNext();)
         {
             UIComponent child = (UIComponent)it.next();
-            if (child instanceof EditableValueHolder)
-            {
-                states[counter++].restore((EditableValueHolder)child);
-            }
+            child.setId(child.getId()); //HACK: This assumes that setId always clears the cached clientId. Can we be sure?
+            states[counter++].restore((EditableValueHolder)child);
             restoreDescendantComponentStates(child, states, counter);
         }
     }
@@ -382,9 +379,9 @@ public class UIData
 
     private void processColumnFacets(FacesContext context, int processAction)
     {
-        for (Iterator it = getChildren().iterator(); it.hasNext();)
+        for (Iterator childIter = getChildren().iterator(); childIter.hasNext();)
         {
-            UIComponent child = (UIComponent)it.next();
+            UIComponent child = (UIComponent)childIter.next();
             if (child instanceof UIColumn)
             {
                 if (!child.isRendered())
@@ -392,10 +389,9 @@ public class UIData
                     //Column is not visible
                     continue;
                 }
-                Map facets = child.getFacets();
-                for (Iterator itKeys = facets.keySet().iterator(); itKeys.hasNext();)
+                for (Iterator facetsIter = child.getFacets().values().iterator(); facetsIter.hasNext();)
                 {
-                    UIComponent facet = (UIComponent)facets.get(itKeys.next());
+                    UIComponent facet = (UIComponent)facetsIter.next();
                     process(context, facet, processAction);
                 }
             }
@@ -430,9 +426,9 @@ public class UIData
                             //Column is not visible
                             continue;
                         }
-                        for (Iterator itChildren = child.getChildren().iterator(); itChildren.hasNext();)
+                        for (Iterator columnChildIter = child.getChildren().iterator(); columnChildIter.hasNext();)
                         {
-                            UIComponent columnChild = (UIComponent)itChildren.next();
+                            UIComponent columnChild = (UIComponent)columnChildIter.next();
                             process(context, columnChild, processAction);
                         }
                     }
