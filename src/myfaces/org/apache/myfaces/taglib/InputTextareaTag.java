@@ -19,8 +19,8 @@
 package net.sourceforge.myfaces.taglib;
 
 import net.sourceforge.myfaces.component.UIInput;
-import net.sourceforge.myfaces.renderkit.html.TextRenderer;
 import net.sourceforge.myfaces.renderkit.html.TextareaRenderer;
+import net.sourceforge.myfaces.taglib.common.*;
 
 import javax.faces.component.UIComponent;
 
@@ -30,7 +30,12 @@ import javax.faces.component.UIComponent;
  * @version $Revision$ $Date$
  */
 public class InputTextareaTag
-        extends MyFacesTag
+    extends MyFacesTag
+    implements CommonAttributes,
+               UIInputAttributes,
+               HTMLTextareaAttributes,
+               HTMLUniversalAttributes,
+               HTMLEventHandlerAttributes
 {
     public UIComponent createComponent()
     {
@@ -40,11 +45,6 @@ public class InputTextareaTag
     public String getRendererType()
     {
         return TextareaRenderer.TYPE;
-    }
-
-    public void setText(String value)
-    {
-        setValue(value);
     }
 
     public void setInputClass(String value)
@@ -57,7 +57,7 @@ public class InputTextareaTag
         setRendererAttribute(TextareaRenderer.ACCESSKEY_ATTR, value);
     }
 
-    public void setCols(String value)
+    public void setCols(int value)
     {
         setRendererAttribute(TextareaRenderer.COLS_ATTR, value);
     }
@@ -77,7 +77,7 @@ public class InputTextareaTag
         setRendererAttribute(TextareaRenderer.DATAFORMATAS_ATTR, value);
     }
 
-    public void setDisabled(String value)
+    public void setDisabled(boolean value)
     {
         setRendererAttribute(TextareaRenderer.DISABLED_ATTR, value);
     }
@@ -102,18 +102,25 @@ public class InputTextareaTag
         setRendererAttribute(TextareaRenderer.ONSELECT_ATTR, value);
     }
 
-    public void setReadonly(String value)
+    public void setReadonly(boolean value)
     {
         setRendererAttribute(TextareaRenderer.READONLY_ATTR, value);
     }
 
-    public void setRows(String value)
+    public void setRows(int value)
     {
         setRendererAttribute(TextareaRenderer.ROWS_ATTR, value);
     }
 
-    public void setTabindex(String value)
+    public void setTabindex(int value)
     {
         setRendererAttribute(TextareaRenderer.TABINDEX_ATTR, value);
     }
+
+
+    public void setText(String value)
+    {
+        setValue(value);
+    }
+
 }

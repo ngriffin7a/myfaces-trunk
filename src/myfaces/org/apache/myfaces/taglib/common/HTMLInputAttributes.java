@@ -37,6 +37,7 @@ public interface HTMLInputAttributes
     public void setOnblur(String v);
     public void setOnchange(String v);
     public void setOnfocus(String v);
+    public void setOnselect(String v);
     public void setReadonly(boolean v);
     public void setSize(String v);
     public void setTabindex(int v);

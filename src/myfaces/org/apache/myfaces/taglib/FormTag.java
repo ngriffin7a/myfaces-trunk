@@ -20,7 +20,7 @@ package net.sourceforge.myfaces.taglib;
 
 import net.sourceforge.myfaces.component.UIForm;
 import net.sourceforge.myfaces.renderkit.html.FormRenderer;
-import net.sourceforge.myfaces.taglib.common.JSFUniversalAttributes;
+import net.sourceforge.myfaces.taglib.common.CommonAttributes;
 import net.sourceforge.myfaces.taglib.common.HTMLUniversalAttributes;
 import net.sourceforge.myfaces.taglib.common.HTMLEventHandlerAttributes;
 
@@ -34,7 +34,7 @@ import javax.faces.component.UIComponent;
  */
 public class FormTag
     extends MyFacesTag
-    implements JSFUniversalAttributes,
+    implements CommonAttributes,
                HTMLUniversalAttributes,
                HTMLEventHandlerAttributes
 {
@@ -94,7 +94,5 @@ public class FormTag
     {
         setRendererAttribute(FormRenderer.TARGET_ATTR, value);
     }
-
-
 
 }

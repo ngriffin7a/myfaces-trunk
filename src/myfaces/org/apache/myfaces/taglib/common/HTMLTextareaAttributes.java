@@ -18,17 +18,26 @@
  */
 package net.sourceforge.myfaces.taglib.common;
 
-
-
 /**
- * Convenient mixin interface to make sure that there is a setter for
- * each of the "jsf_universal_attributes"
+ * Convenient mixin interface to make sure that there is a setter for each of
+ * the "html_textarea_attributes"
  * (see entity declaration in myfaces_html.tld).
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public interface JSFUniversalAttributes
+public interface HTMLTextareaAttributes
 {
-    public void setId(String v);
-    public void setRendered(boolean b);
+    public void setAccesskey(String v);
+    public void setCols(int v);
+    public void setDatafld(String v);
+    public void setDatasrc(String v);
+    public void setDataformatas(String v);
+    public void setDisabled(boolean v);
+    public void setOnblur(String v);
+    public void setOnchange(String v);
+    public void setOnfocus(String v);
+    public void setOnselect(String v);
+    public void setReadonly(boolean v);
+    public void setRows(int v);
+    public void setTabindex(int v);
 }
