@@ -18,25 +18,22 @@
  */
 package javax.faces;
 
-import java.lang.reflect.Constructor;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import javax.faces.application.ApplicationFactory;
 import javax.faces.context.FacesContextFactory;
 import javax.faces.lifecycle.LifecycleFactory;
 import javax.faces.render.RenderKitFactory;
+import java.lang.reflect.Constructor;
+import java.util.*;
 
 /**
  * TODO: The "META-INF/services/" thing
  *
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
+ * $Log$
+ * Revision 1.11  2004/04/13 08:25:59  manolito
+ * Log
+ *
  */
 public class FactoryFinder
 {

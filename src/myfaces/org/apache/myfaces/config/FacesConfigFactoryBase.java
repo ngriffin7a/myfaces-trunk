@@ -18,37 +18,34 @@
  */
 package net.sourceforge.myfaces.config;
 
+import net.sourceforge.myfaces.util.ClassUtils;
+import org.xml.sax.EntityResolver;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import javax.faces.FacesException;
+import javax.faces.FactoryFinder;
+import javax.faces.context.ExternalContext;
+import javax.servlet.ServletContext;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.JarURLConnection;
 import java.net.URL;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
-import java.util.StringTokenizer;
+import java.util.*;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
-import javax.faces.FacesException;
-import javax.faces.FactoryFinder;
-import javax.faces.context.ExternalContext;
-import javax.servlet.ServletContext;
-
-import net.sourceforge.myfaces.util.ClassUtils;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.xml.sax.EntityResolver;
-
 /**
- * DOCUMENT ME!
  * @author Manfred Geiler (latest modification by $Author$)
  * @author Anton Koinov
  * @version $Revision$ $Date$
+ * $Log$
+ * Revision 1.25  2004/04/13 08:26:49  manolito
+ * Log
+ *
  */
 public abstract class FacesConfigFactoryBase
     implements FacesConfigFactory

@@ -23,6 +23,10 @@ import javax.faces.FactoryFinder;
 /**
  * @author Anton Koinov (latest modification by $Author$)
  * @version $Revision$ $Date$
+ * $Log$
+ * Revision 1.8  2004/04/13 08:26:49  manolito
+ * Log
+ *
  */
 public class FactoryConfig
     implements Config
