@@ -19,12 +19,14 @@
 package net.sourceforge.myfaces.renderkit.html;
 
 import net.sourceforge.myfaces.renderkit.JSFAttr;
+import net.sourceforge.myfaces.renderkit.RendererUtils;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLUtil;
 
 import javax.faces.component.UIComponent;
+import javax.faces.component.html.HtmlInputSecret;
+import javax.faces.component.html.HtmlInputTextarea;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
-import javax.faces.el.ValueBinding;
 import java.io.IOException;
 
 
@@ -38,8 +40,10 @@ public class HtmlTextareaRenderer
         extends HtmlRenderer
 {
     public void encodeEnd(FacesContext facesContext, UIComponent uiComponent)
-    throws IOException
+            throws IOException
     {
+        RendererUtils.checkParamValidity(facesContext, uiComponent, HtmlInputTextarea.class);
+
         ResponseWriter writer = facesContext.getResponseWriter();
         writer.startElement(HTML.TEXTAREA_ELEM, uiComponent);
 
@@ -47,16 +51,24 @@ public class HtmlTextareaRenderer
         writer.writeAttribute(HTML.NAME_ATTR, clientId, null);
         writer.writeAttribute(HTML.ID_ATTR, clientId, null);
 
+        String strValue = RendererUtils.getStringValue(facesContext, uiComponent);
+        writer.writeText(strValue, JSFAttr.VALUE_ATTR);
+
         HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML.TEXTAREA_PASSTHROUGH_ATTRIBUTES);
         HTMLUtil.renderDisabledOnUserRole(writer, uiComponent, facesContext);
 
-        ValueBinding vb = uiComponent.getValueBinding(JSFAttr.VALUE_ATTR);
-
-        if (vb != null)
-        {
-            writer.writeText(vb.getValue(facesContext), JSFAttr.VALUE_ATTR);
-        }
-
         writer.endElement(HTML.TEXTAREA_ELEM);
     }
+
+    public void decode(FacesContext facesContext, UIComponent component)
+    {
+        RendererUtils.checkParamValidity(facesContext, component, HtmlInputTextarea.class);
+
+        HtmlRendererUtils.decodeInput(facesContext,
+                                      (HtmlInputSecret)component,
+                                      null, //default String conversion
+                                      false, //don't set if request param absent
+                                      null);
+    }
+
 }

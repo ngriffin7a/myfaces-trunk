@@ -1,8 +1,2 @@
 <!-- UISelectBoolean attributes -->
-        <attribute>
-            <name>selected</name>
-            <required>false</required>
-            <rtexprvalue>false</rtexprvalue>
-            <type>java.lang.String</type>
-            <description>Initial boolean value to set when rendered for the first time.</description>
-        </attribute>
+<!-- "selected" attribute is covered by HTML "checked" attribute -->

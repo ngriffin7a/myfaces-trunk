@@ -145,12 +145,6 @@
 ======================================================
 -->
     <tag>
-      <name>validate_required</name>
-      <tag-class>net.sourceforge.myfaces.taglib.core.ValidateRequiredTag</tag-class>
-      <body-content>JSP</body-content>
-    </tag>
-
-    <tag>
       <name>validate_length</name>
       <tag-class>net.sourceforge.myfaces.taglib.core.ValidateLengthTag</tag-class>
       <body-content>JSP</body-content>
@@ -172,10 +166,15 @@
     </tag>
 
     <tag>
-      <name>validate_stringrange</name>
-      <tag-class>net.sourceforge.myfaces.taglib.core.ValidateStringRangeTag</tag-class>
+      <name>validator</name>
+      <tag-class>javax.faces.webapp.ValidatorTag</tag-class>
       <body-content>JSP</body-content>
-      &validator_min_max_attributes;
+      <attribute>
+        <name>validatorId</name>
+        <required>false</required>
+        <rtexprvalue>false</rtexprvalue>
+        <type>java.lang.String</type>
+      </attribute>
     </tag>
 
 <!--

@@ -18,6 +18,8 @@
  */
 package net.sourceforge.myfaces.taglib.core;
 
+import net.sourceforge.myfaces.convert.ConverterUtils;
+
 import javax.faces.context.FacesContext;
 import javax.faces.el.ValueBinding;
 import javax.faces.validator.LongRangeValidator;
@@ -28,6 +30,7 @@ import javax.servlet.jsp.JspException;
 
 /**
  * @author Thomas Spiegl (latest modification by $Author$)
+ * @author Manfred Geiler
  * @version $Revision$ $Date$
  */
 public class ValidateLongRangeTag
@@ -66,11 +69,11 @@ public class ValidateLongRangeTag
             if (UIComponentTag.isValueReference(_minimum))
             {
                 ValueBinding vb = facesContext.getApplication().createValueBinding(_minimum);
-                validator.setMinimum(convertToLong(vb.getValue(facesContext)));
+                validator.setMinimum(ConverterUtils.convertToLong(vb.getValue(facesContext)));
             }
             else
             {
-                validator.setMinimum(convertToLong(_minimum));
+                validator.setMinimum(ConverterUtils.convertToLong(_minimum));
             }
         }
         if (_maximum != null)
@@ -78,37 +81,15 @@ public class ValidateLongRangeTag
             if (UIComponentTag.isValueReference(_maximum))
             {
                 ValueBinding vb = facesContext.getApplication().createValueBinding(_maximum);
-                validator.setMaximum(convertToLong(vb.getValue(facesContext)));
+                validator.setMaximum(ConverterUtils.convertToLong(vb.getValue(facesContext)));
             }
             else
             {
-                validator.setMaximum(convertToLong(_maximum));
+                validator.setMaximum(ConverterUtils.convertToLong(_maximum));
             }
         }
         return validator;
     }
 
 
-    private long convertToLong(Object value)
-    {
-        if (value instanceof Number)
-        {
-            return ((Number)value).longValue();
-        }
-        else if (value instanceof String)
-        {
-            try
-            {
-                return Long.parseLong((String)value);
-            }
-            catch (NumberFormatException e)
-            {
-                throw new IllegalArgumentException("Cannot convert " + value.toString() + " to long");
-            }
-        }
-        else
-        {
-            throw new IllegalArgumentException("Cannot convert " + value.toString() + " to long");
-        }
-    }
 }

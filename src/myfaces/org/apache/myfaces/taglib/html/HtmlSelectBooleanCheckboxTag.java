@@ -64,7 +64,6 @@ public class HtmlSelectBooleanCheckboxTag
     private String _size;
     private String _tabindex;
 
-
     // UIInput attributes
     private String _required;
     private String _validator;

@@ -359,7 +359,6 @@
 
 
   <!-- Standard Validators -->
-
   <validator>
     <validator-id>DoubleRange</validator-id>
     <validator-class>javax.faces.validator.DoubleRangeValidator</validator-class>
@@ -372,17 +371,6 @@
     <validator-id>LongRange</validator-id>
     <validator-class>javax.faces.validator.LongRangeValidator</validator-class>
   </validator>
-<!-- NO LONGER AVAILABLE
-  <validator>
-    <validator-id>Required</validator-id>
-    <validator-class>javax.faces.validator.RequiredValidator</validator-class>
-  </validator>
-  <validator>
-    <validator-id>StringRange</validator-id>
-    <validator-class>javax.faces.validator.StringRangeValidator</validator-class>
-  </validator>
--->
-
 
 
   <!-- standard renderkit -->
@@ -402,6 +390,12 @@
           <renderer-type>Checkbox</renderer-type>
           <renderer-class>net.sourceforge.myfaces.renderkit.html.HtmlCheckboxRenderer</renderer-class>
           <supported-component-type><component-type>SelectBooleanCheckbox</component-type></supported-component-type>
+      </renderer>
+
+      <renderer>
+          <renderer-type>CheckboxList</renderer-type>
+          <renderer-class>net.sourceforge.myfaces.renderkit.html.HtmlCheckboxListRenderer</renderer-class>
+          <supported-component-type><component-type>SelectManyCheckboxList</component-type></supported-component-type>
       </renderer>
 
       <renderer>

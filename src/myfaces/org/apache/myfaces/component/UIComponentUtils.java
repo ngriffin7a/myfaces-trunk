@@ -41,6 +41,8 @@ import java.util.List;
  * @author Manfred Geiler (latest modification by $Author$)
  * @author Anton Koinov
  * @version $Revision$ $Date$
+ *
+ * @deprecated TODO: move all still necessary methods to ComponentUtils
  */
 public class UIComponentUtils
 {

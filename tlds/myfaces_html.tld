@@ -460,19 +460,10 @@ Start of revised 1.0 conforming tags
         </attribute>
     </tag>
 
-
-
-<!--
-*************************************************************************************
-Start of legacy (EA4 conforming) tags
-*************************************************************************************
--->
-
 <!-- selectboolean_checkbox -->
     <tag>
         <name>selectboolean_checkbox</name>
-        <!-- strictly speaking "select_boolean_checkbox", but Sun names it so in ref.impl.-->
-        <tag-class>net.sourceforge.myfaces.taglib.legacy.SelectBooleanCheckboxTag</tag-class>
+        <tag-class>net.sourceforge.myfaces.taglib.html.HtmlSelectBooleanCheckboxTag</tag-class>
         <body-content>JSP</body-content>
         &ui_component_attributes;
         &ui_select_boolean_attributes;
@@ -481,6 +472,14 @@ Start of legacy (EA4 conforming) tags
         &html_input_attributes;
         &user_role_attributes;
     </tag>
+
+
+
+<!--
+*************************************************************************************
+Start of legacy (EA4 conforming) tags
+*************************************************************************************
+-->
 
 <!-- selectmany_checkbox -->
     <tag>

@@ -18,7 +18,6 @@
  */
 package net.sourceforge.myfaces.renderkit.html;
 
-import net.sourceforge.myfaces.component.UIComponentUtils;
 import net.sourceforge.myfaces.renderkit.JSFAttr;
 import net.sourceforge.myfaces.renderkit.RendererUtils;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLUtil;
@@ -27,7 +26,6 @@ import javax.faces.component.UIComponent;
 import javax.faces.component.html.HtmlInputSecret;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
-import javax.faces.el.ValueBinding;
 import java.io.IOException;
 
 
@@ -54,14 +52,10 @@ public class HtmlSecretRenderer
         writer.writeAttribute(HTML.ID_ATTR, clientId, null);
         writer.writeAttribute(HTML.NAME_ATTR, clientId, null);
 
-        if (UIComponentUtils.getBooleanAttribute(uiComponent, JSFAttr.REDISPLAY_ATTR, false))
+        if (((HtmlInputSecret)uiComponent).isRedisplay())
         {
-            ValueBinding vb = uiComponent.getValueBinding(JSFAttr.VALUE_ATTR);
-
-            if (vb != null)
-            {
-                writer.writeAttribute(HTML.VALUE_ATTR, vb.getValue(facesContext), JSFAttr.VALUE_ATTR);
-            }
+            String strValue = RendererUtils.getStringValue(facesContext, uiComponent);
+            writer.writeAttribute(HTML.VALUE_ATTR, strValue, JSFAttr.VALUE_ATTR);
         }
 
         HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML.INPUT_PASSTHROUGH_ATTRIBUTES);
@@ -69,4 +63,17 @@ public class HtmlSecretRenderer
         
         writer.endElement(HTML.INPUT_ELEM);
     }
+
+
+    public void decode(FacesContext facesContext, UIComponent component)
+    {
+        RendererUtils.checkParamValidity(facesContext, component, HtmlInputSecret.class);
+
+        HtmlRendererUtils.decodeInput(facesContext,
+                                      (HtmlInputSecret)component,
+                                      null, //default String conversion
+                                      false, //don't set if request param absent
+                                      null);
+    }
+
 }

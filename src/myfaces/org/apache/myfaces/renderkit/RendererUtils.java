@@ -18,19 +18,20 @@
  */
 package net.sourceforge.myfaces.renderkit;
 
+import net.sourceforge.myfaces.component.ComponentUtils;
 import net.sourceforge.myfaces.component.UserRoleSupport;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import javax.faces.FacesException;
-import javax.faces.component.ConvertibleValueHolder;
-import javax.faces.component.UIComponent;
-import javax.faces.component.UIOutput;
+import javax.faces.component.*;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.el.ValueBinding;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 /**
  * @author Manfred Geiler (latest modification by $Author$)
@@ -39,7 +40,10 @@ import java.util.Iterator;
 public class RendererUtils
 {
     private static final Log log = LogFactory.getLog(RendererUtils.class);
-    
+
+    public static final String SELECT_ITEM_LIST_ATTR = RendererUtils.class.getName() + ".LIST";
+
+
     public static String getStringValue(FacesContext facesContext,
                                         UIComponent component)
     {
@@ -245,5 +249,42 @@ public class RendererUtils
         }
         child.encodeEnd(facesContext);
     }
+
+
+
+    public static List getSelectItemList(UISelectOne uiSelectOne)
+    {
+        return internalGetSelectItemList(uiSelectOne);
+    }
+
+    public static List getSelectItemList(UISelectMany uiSelectMany)
+    {
+        return internalGetSelectItemList(uiSelectMany);
+    }
+
+    private static List internalGetSelectItemList(UIComponent uiComponent)
+    {
+        ArrayList list = (ArrayList)uiComponent.getAttributes().get(SELECT_ITEM_LIST_ATTR);
+        if (list != null)
+        {
+            return list;
+        }
+
+        list = new ArrayList(uiComponent.getChildCount());
+        for(Iterator children = uiComponent.getChildren().iterator(); children.hasNext(); )
+        {
+            UIComponent child = (UIComponent)children.next();
+            if (child instanceof UISelectItem)
+            {
+                list.add(ComponentUtils.getSelectItemFromUISelectItem((UISelectItem)child));
+            }
+            else if (child instanceof UISelectItems)
+            {
+                ComponentUtils.addSelectItemsToCollection((UISelectItems)child, list);
+            }
+        }
+        return list;
+    }
+
 
 }

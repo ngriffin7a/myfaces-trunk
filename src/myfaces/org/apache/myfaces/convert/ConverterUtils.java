@@ -515,4 +515,74 @@ public class ConverterUtils
         }
     }
 
+    public static int convertToInt(Object value)
+    {
+        if (value instanceof Number)
+        {
+            return ((Number)value).intValue();
+        }
+        else if (value instanceof String)
+        {
+            try
+            {
+                return Integer.parseInt((String)value);
+            }
+            catch (NumberFormatException e)
+            {
+                throw new IllegalArgumentException("Cannot convert " + value.toString() + " to int");
+            }
+        }
+        else
+        {
+            throw new IllegalArgumentException("Cannot convert " + value.toString() + " to int");
+        }
+    }
+
+    public static long convertToLong(Object value)
+    {
+        if (value instanceof Number)
+        {
+            return ((Number)value).longValue();
+        }
+        else if (value instanceof String)
+        {
+            try
+            {
+                return Long.parseLong((String)value);
+            }
+            catch (NumberFormatException e)
+            {
+                throw new IllegalArgumentException("Cannot convert " + value.toString() + " to long");
+            }
+        }
+        else
+        {
+            throw new IllegalArgumentException("Cannot convert " + value.toString() + " to long");
+        }
+    }
+
+    public static double convertToDouble(Object value)
+    {
+        if (value instanceof Number)
+        {
+            return ((Number)value).doubleValue();
+        }
+        else if (value instanceof String)
+        {
+            try
+            {
+                return Double.parseDouble((String)value);
+            }
+            catch (NumberFormatException e)
+            {
+                throw new IllegalArgumentException("Cannot convert " + value.toString() + " to double");
+            }
+        }
+        else
+        {
+            throw new IllegalArgumentException("Cannot convert " + value.toString() + " to double");
+        }
+    }
+
+
 }

@@ -22,6 +22,8 @@ import net.sourceforge.myfaces.util.ClassUtils;
 
 import javax.faces.component.ActionSource;
 import javax.faces.component.UIComponent;
+import javax.faces.context.FacesContext;
+import javax.faces.el.ValueBinding;
 import javax.faces.event.ActionListener;
 import javax.faces.webapp.UIComponentTag;
 import javax.servlet.jsp.JspException;
@@ -51,6 +53,11 @@ public class ActionListenerTag
 
     public int doStartTag() throws JspException
     {
+        if (_type == null)
+        {
+            throw new JspException("type attribute not set");
+        }
+
         //Find parent UIComponentTag
         UIComponentTag componentTag = UIComponentTag.getParentUIComponentTag(pageContext);
         if (componentTag == null)
@@ -64,7 +71,18 @@ public class ActionListenerTag
             UIComponent component = componentTag.getComponentInstance();
             if (component instanceof ActionSource)
             {
-                ActionListener al = (ActionListener)ClassUtils.newInstance(_type);
+                String className;
+                if (UIComponentTag.isValueReference(_type))
+                {
+                    FacesContext facesContext = FacesContext.getCurrentInstance();
+                    ValueBinding vb = facesContext.getApplication().createValueBinding(_type);
+                    className = (String)vb.getValue(facesContext);
+                }
+                else
+                {
+                    className = _type;
+                }
+                ActionListener al = (ActionListener)ClassUtils.newInstance(className);
                 ((ActionSource)component).addActionListener(al);
             }
             else

@@ -18,75 +18,77 @@
  */
 package net.sourceforge.myfaces.taglib.core;
 
+import net.sourceforge.myfaces.convert.ConverterUtils;
+
+import javax.faces.context.FacesContext;
+import javax.faces.el.ValueBinding;
 import javax.faces.validator.DoubleRangeValidator;
 import javax.faces.validator.Validator;
+import javax.faces.webapp.UIComponentTag;
 import javax.faces.webapp.ValidatorTag;
 import javax.servlet.jsp.JspException;
 
 /**
- * TODO: refactor for JSF 1.0
  * @author Thomas Spiegl (latest modification by $Author$)
+ * @author Manfred Geiler
  * @version $Revision$ $Date$
  */
 public class ValidateDoubleRangeTag
     extends ValidatorTag
 {
-    private boolean _isMinSet = false;
-    private boolean _isMaxSet = false;
-    private double _minimum;
-    private double _maximum;
+    private static final String VALIDATOR_ID = "DoubleRange";
 
-    private static final String ID = "DoubleRange";
-
-    public ValidateDoubleRangeTag()
-    {
-        _minimum = 0;
-        _maximum = 0;
-    }
+    private String _minimum = null;
+    private String _maximum = null;
 
     public void release()
     {
-        _isMaxSet = false;
-        _isMinSet = false;
-        _minimum = 0;
-        _maximum = 0;
+        _minimum = null;
+        _maximum = null;
     }
 
-    public double getMinimum()
-    {
-        return _minimum;
-    }
-
-    public void setMinimum(double minimum)
+    public void setMinimum(String minimum)
     {
         _minimum = minimum;
-        _isMinSet = true;
     }
 
-    public double getMaximum()
-    {
-        return _maximum;
-    }
-
-    public void setMaximum(double maximum)
+    public void setMaximum(String maximum)
     {
         _maximum = maximum;
-        _isMaxSet = true;
     }
 
     protected Validator createValidator()
         throws JspException
     {
-        setId(ID);
+        FacesContext facesContext = FacesContext.getCurrentInstance();
+        setValidatorId(VALIDATOR_ID);
         DoubleRangeValidator validator = (DoubleRangeValidator)super.createValidator();
-        if(_isMinSet)
+        if (_minimum != null)
         {
-            validator.setMinimum(getMinimum());
+            if (UIComponentTag.isValueReference(_minimum))
+            {
+                ValueBinding vb = facesContext.getApplication().createValueBinding(_minimum);
+                validator.setMinimum(ConverterUtils.convertToDouble(vb.getValue(facesContext)));
+            }
+            else
+            {
+                validator.setMinimum(ConverterUtils.convertToDouble(_minimum));
+            }
         }
-        if(_isMaxSet)
+        if (_maximum != null)
         {
-            validator.setMaximum(getMaximum());
+            if (UIComponentTag.isValueReference(_maximum))
+            {
+                ValueBinding vb = facesContext.getApplication().createValueBinding(_maximum);
+                validator.setMaximum(ConverterUtils.convertToDouble(vb.getValue(facesContext)));
+            }
+            else
+            {
+                validator.setMaximum(ConverterUtils.convertToDouble(_maximum));
+            }
         }
         return validator;
     }
+
+
 }

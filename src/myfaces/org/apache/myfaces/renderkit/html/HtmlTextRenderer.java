@@ -18,25 +18,16 @@
  */
 package net.sourceforge.myfaces.renderkit.html;
 
-import net.sourceforge.myfaces.MyFacesFactoryFinder;
-import net.sourceforge.myfaces.application.MessageFactory;
-import net.sourceforge.myfaces.convert.MyFacesConverterException;
-import net.sourceforge.myfaces.convert.impl.StringArrayConverter;
 import net.sourceforge.myfaces.renderkit.JSFAttr;
 import net.sourceforge.myfaces.renderkit.RendererUtils;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLUtil;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 import javax.faces.component.UIComponent;
 import javax.faces.component.html.HtmlInputText;
 import javax.faces.component.html.HtmlOutputText;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
-import javax.faces.convert.Converter;
-import javax.faces.convert.ConverterException;
 import java.io.IOException;
-import java.util.Map;
 
 /**
  * @author Manfred Geiler (latest modification by $Author$)
@@ -45,11 +36,7 @@ import java.util.Map;
 public class HtmlTextRenderer
         extends HtmlRenderer
 {
-    private static final Log log = LogFactory.getLog(HtmlTextRenderer.class);
-
-    //TODO: Define in Bundle
-    private static final String DEFAULT_CONVERTER_EXCEPTION_MSG_ID
-            = "net.sourceforge.myfaces.convert.Converter.EXCEPTION";
+    //private static final Log log = LogFactory.getLog(HtmlTextRenderer.class);
 
     public void encodeEnd(FacesContext facesContext, UIComponent component)
         throws IOException
@@ -139,7 +126,11 @@ public class HtmlTextRenderer
 
         if (component instanceof HtmlInputText)
         {
-            decodeInput(facesContext, (HtmlInputText)component);
+            HtmlRendererUtils.decodeInput(facesContext,
+                                          (HtmlInputText)component,
+                                          null, //default String conversion
+                                          false, //don't set if request param absent
+                                          null);
         }
         else if (component instanceof HtmlOutputText)
         {
@@ -150,72 +141,5 @@ public class HtmlTextRenderer
             throw new IllegalArgumentException("Unsupported component class " + component.getClass().getName());
         }
     }
-
-
-    /**
-     * TODO: previous value
-     * @param facesContext
-     * @param htmlInput
-     */
-    public void decodeInput(FacesContext facesContext, HtmlInputText htmlInput)
-    {
-        Map paramValuesMap = facesContext.getExternalContext().getRequestParameterValuesMap();
-        String clientId  = htmlInput.getClientId(facesContext);
-        if (paramValuesMap.containsKey(clientId))
-        {
-            String[] newValues = (String[])paramValuesMap.get(clientId);
-            Converter converter = RendererUtils.findValueConverter(facesContext,
-                                                                   htmlInput);
-            if (converter != null)
-            {
-                //Converter found
-                if (converter instanceof StringArrayConverter)
-                {
-                    //Expected type is StringArray --> no conversion necessary
-                    htmlInput.setValue(newValues);
-                    htmlInput.setValid(true);
-                }
-                else
-                {
-                    String strValue = StringArrayConverter.getAsString(newValues, false);
-                    try
-                    {
-                        Object objValue = converter.getAsObject(facesContext,
-                                                                htmlInput,
-                                                                strValue);
-                        htmlInput.setValue(objValue);
-                        htmlInput.setValid(true);
-                    }
-                    catch (ConverterException e)
-                    {
-                        if (log.isInfoEnabled()) log.info("Converter exception", e);
-                        if (e instanceof MyFacesConverterException)
-                        {
-                            facesContext.addMessage(clientId,
-                                                    ((MyFacesConverterException)e).getFacesMessage());
-                            ((MyFacesConverterException)e).release();
-                        }
-                        else
-                        {
-                            MessageFactory mf = MyFacesFactoryFinder.getMessageFactory(facesContext.getExternalContext());
-                            facesContext.addMessage(clientId,
-                                                    mf.getMessage(facesContext, DEFAULT_CONVERTER_EXCEPTION_MSG_ID));
-                        }
-                        htmlInput.setValue(strValue);
-                        htmlInput.setValid(false);
-                    }
-                }
-            }
-            else
-            {
-                //No converter found
-                //We assume String value is the default type
-                String strValue = StringArrayConverter.getAsString(newValues, false);
-                htmlInput.setValue(strValue);
-                htmlInput.setValid(true);
-            }
-        }
-    }
-
 
 }

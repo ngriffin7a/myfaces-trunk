@@ -18,8 +18,7 @@
  */
 package net.sourceforge.myfaces.component;
 
-import javax.faces.component.UIComponent;
-import javax.faces.context.FacesContext;
+
 
 /**
  * DOCUMENT ME!
@@ -29,26 +28,5 @@ import javax.faces.context.FacesContext;
 public class MyFacesUISelectItems
     extends javax.faces.component.UISelectItems
 {
-    public MyFacesUISelectItems()
-    {
-        //FIXME
-        //setValid(true);
-    }
 
-
-//------------------------------------------------------------------------------
-
-    public String getClientId(FacesContext context)
-    {
-        return UIComponentUtils.getClientId(context, this);
-    }
-
-    public void addFacet(String facetName, UIComponent facet)
-    {
-        //FIXME
-        //super.addFacet(facetName, facet);
-        UIComponentUtils.ensureComponentInNamingContainer(facet);
-    }
-
-//------------------------------------------------------------------------------
 }

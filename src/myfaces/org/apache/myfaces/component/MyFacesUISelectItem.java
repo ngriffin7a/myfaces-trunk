@@ -30,6 +30,7 @@ import javax.faces.el.ValueBinding;
 
 /**
  * @author Thomas Spiegl (latest modification by $Author$)
+ * @author Manfred Geiler
  * @version $Revision$ $Date$
  */
 public class MyFacesUISelectItem
@@ -41,7 +42,7 @@ public class MyFacesUISelectItem
     private Boolean _disabled;  // missing in API of UISelectItem
     private static final boolean DISABLED_DEFAULT = false;
 
-    public boolean getDisabled()
+    public boolean isDisabled()
     {
         if (_disabled != null) return _disabled.booleanValue();
         ValueBinding vb = getValueBinding(JSFAttr.DISABLED_ATTR);
@@ -50,11 +51,11 @@ public class MyFacesUISelectItem
                DISABLED_DEFAULT;
     }
 
-    public static boolean getDisabled(UISelectItem uiSelectItem)
+    public static boolean isDisabled(UISelectItem uiSelectItem)
     {
         if (uiSelectItem instanceof MyFacesUISelectItem)
         {
-            return ((MyFacesUISelectItem)uiSelectItem).getDisabled();
+            return ((MyFacesUISelectItem)uiSelectItem).isDisabled();
         }
         else
         {
@@ -86,5 +87,6 @@ public class MyFacesUISelectItem
         _disabled = (Boolean)values[i++];
         DebugUtils.assertFatal(i == ATTRIBUTE_COUNT + 1, log, "Number of attributes to restore differs!");
     }
+
 
 }
