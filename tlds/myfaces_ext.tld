@@ -1139,6 +1139,32 @@
 		</attribute>
 	</tag>
 
+	<!-- div -->
+	
+	<tag>
+		<name>div</name>
+		<tag-class>org.apache.myfaces.custom.div.DivTag</tag-class>
+		<body-content>JSP</body-content>
+		<description>Places a div around its children</description>
+		&ui_component_attributes;
+		<attribute>
+			<name>style</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+			<description>
+				The style to use for this div. Either style or styleClass must be specified but not both.
+			</description>
+		</attribute>
+		<attribute>
+			<name>styleClass</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+			<description>
+				The class to use for this div. Either style or styleClass must be specified but not both.
+			</description>
+		</attribute>
+	</tag>
+
 
     <!-- radio -->
     <tag>

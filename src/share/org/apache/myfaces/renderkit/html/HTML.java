@@ -24,6 +24,9 @@ import org.apache.myfaces.util.ArrayUtils;
  * @author Anton Koinov
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.14  2004/11/08 03:43:20  bdudney
+ * Added a div element. x:div to use, inserts a div with class or style attributes
+ *
  * Revision 1.13  2004/10/13 11:51:01  matze
  * renamed packages to org.apache
  *
@@ -415,6 +418,7 @@ public final class HTML
 
     //HTML element constants
     public static final String SPAN_ELEM = "span";
+    public static final String DIV_ELEM = "div";
     public static final String INPUT_ELEM = "input";
     public static final String SELECT_ELEM = "select";
     public static final String OPTION_ELEM = "option";

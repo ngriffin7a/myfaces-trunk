@@ -36,6 +36,9 @@ import org.apache.commons.logging.LogFactory;
  * @author Anton Koinov
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.34  2004/11/08 03:43:20  bdudney
+ * Added a div element. x:div to use, inserts a div with class or style attributes
+ *
  * Revision 1.33  2004/10/13 11:51:00  matze
  * renamed packages to org.apache
  *
@@ -342,7 +345,7 @@ public class VariableResolverImpl
             return obj;
         }
 
-        log.error("Variable '" + name + "' could not be resolved.");
+        log.warn("Variable '" + name + "' could not be resolved.");
         return null;
     }
 
