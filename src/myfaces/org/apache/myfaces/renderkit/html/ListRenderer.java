@@ -24,8 +24,6 @@ import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.Iterator;
 
 /**
@@ -177,7 +175,7 @@ public class ListRenderer
         {
             Object varObj = it.next();
 
-            // TODO: implement varAttr as a stack? (nested lists)
+            // TODO: does not work with nested lists. (save varAttr in parent-list-component)
             context.getServletRequest().setAttribute(varAttr, varObj);
 
             writer.write("<tr>");
@@ -222,37 +220,6 @@ public class ListRenderer
     {
         ResponseWriter writer = context.getResponseWriter();
         writer.write("</table>\n");
-    }
-
-    private Iterator getIterator(FacesContext facesContext, UIComponent uiComponent)
-    {
-        Iterator iterator = (Iterator)uiComponent.getAttribute(ITERATOR_ATTR);
-        if (iterator == null)
-        {
-            Object v = uiComponent.currentValue(facesContext);
-            if (v instanceof Iterator)
-            {
-                iterator = (Iterator)v;
-            }
-            else if (v instanceof Collection)
-            {
-                iterator = ((Collection)v).iterator();
-            }
-            else if (v instanceof Object[])
-            {
-                iterator = Arrays.asList((Object[])v).iterator();
-            }
-            else if (v instanceof Iterator)
-            {
-                iterator = (Iterator)v;
-            }
-            else
-            {
-                throw new IllegalArgumentException("Value of component " + uiComponent.getCompoundId() + " is neither collection nor array.");
-            }
-            uiComponent.setAttribute(ITERATOR_ATTR, iterator);
-        }
-        return iterator;
     }
 
 }

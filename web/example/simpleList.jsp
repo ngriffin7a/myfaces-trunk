@@ -38,7 +38,8 @@
 
     <table border="1"><tr>
         <td valign="top" width="140"><%@ include file="inc/navigation.jsp"  %></td>
-        <td align="left" width="640">
+        <td align="left" width="640" valign="top">
+            <br>
 
             <f:errors id="errors" />
 
@@ -60,7 +61,6 @@
                     <f:output_text id="countryList.footer.iso" />
                 </f:group>
             </f:list>
-
             <br>
             <f:grid id="grid"
                     columns="2"

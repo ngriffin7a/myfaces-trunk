@@ -32,8 +32,7 @@
 
 <body>
 
-<jsp:useBean id="list" class="net.sourceforge.myfaces.example.model.SimpleCarList" scope="request" />
-<jsp:useBean id="controller" class="net.sourceforge.myfaces.example.controller.SimpleCarController" scope="request" />
+<jsp:useBean id="countryList" class="net.sourceforge.myfaces.example.model.SimpleCountryList" scope="request" />
 
 <f:use_faces>
 
@@ -41,31 +40,19 @@
         <td valign="top" width="140"><%@ include file="inc/navigation.jsp"  %></td>
         <td align="left" width="640" valign="top">
             <br>
+
             <f:errors id="errors" />
 
-            <f:list id="list"
+            <f:jsplist id="countryList"
                     style="standardTable"
-                    headerClass="standardTable_SortHeader"
+                    headerClass="standardTable_Header"
                     footerClass="standardTable_Footer"
                     rowClasses="standardTable_Row1,standardTable_Row2" >
-                <x:sortheader id="list.header" commandReference="controller.sort" modelReference="list.sort" >
-                    <x:sortcolumn id="list.header.col1" commandName="type">
-                        <f:output_text id="list.header.name" text="Car-Type"  />
-                    </x:sortcolumn>
-                    <x:sortcolumn id="list.header.col2" commandName="color" >
-                        <f:output_text id="list.header.iso" text="Car-Color"  />
-                    </x:sortcolumn>
-                </x:sortheader>
-                <f:listrow id="list.tr" var="car" modelReference="list.cars" >
-                    <f:output_text id="list.name" modelReference="car.type" />
-                    <f:output_text id="list.isoCode" modelReference="car.color" />
-                </f:listrow>
-                <f:group id="list.footer" >
-                    <f:output_text id="list.footer.name" text="..."  />
-                    <f:output_text id="list.footer.iso" />
-                </f:group>
-            </f:list>
-
+                <f:jsplistrow id="countryList.tr" var="country" modelReference="countryList.countries" >
+                    <f:output_text id="countryList.name" modelReference="country.name" />
+                    <f:output_text id="countryList.isoCode" modelReference="country.isoCode" />
+                </f:jsplistrow>
+            </f:jsplist>
         </td>
     </tr></table>
 

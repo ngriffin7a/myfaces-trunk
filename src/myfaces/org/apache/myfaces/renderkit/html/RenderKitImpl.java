@@ -54,6 +54,8 @@ public class RenderKitImpl
         addRenderer(new ListRenderer());
         addRenderer(new GroupRenderer());
         addRenderer(new GridRenderer());
+        //TODO: remove
+        addRenderer(new JspListRenderer());
 
         //State Handling
         if (MyFacesConfig.isStateZipping())

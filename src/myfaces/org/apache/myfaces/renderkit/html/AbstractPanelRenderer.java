@@ -22,7 +22,11 @@ import net.sourceforge.myfaces.renderkit.html.HTMLRenderer;
 import net.sourceforge.myfaces.component.UIPanel;
 
 import javax.faces.component.UIComponent;
+import javax.faces.context.FacesContext;
 import java.util.StringTokenizer;
+import java.util.Iterator;
+import java.util.Collection;
+import java.util.Arrays;
 
 /**
  * DOCUMENT ME!
@@ -36,6 +40,12 @@ public abstract class AbstractPanelRenderer
     {
         if (component.getComponentType().equals(javax.faces.component.UIPanel.TYPE))
         {
+            if (!component.getRendererType().equals(ListRenderer.TYPE))
+            {
+                // Parent should have RenderType "List"
+                component = component.getParent();
+            }
+
             String headerStyle = getAttribute(component, UIPanel.HEADER_CLASS_ATTR);
             String footerStyle = getAttribute(component, UIPanel.FOOTER_CLASS_ATTR);
             String[] rowStyle = getAttributes(component, UIPanel.ROW_CLASSES_ATTR);
@@ -111,6 +121,37 @@ public abstract class AbstractPanelRenderer
             attr = new String("");
         }
         return attr;
+    }
+
+    protected Iterator getIterator(FacesContext facesContext, UIComponent uiComponent)
+    {
+        Iterator iterator = (Iterator)uiComponent.getAttribute(ListRenderer.ITERATOR_ATTR);
+        if (iterator == null)
+        {
+            Object v = uiComponent.currentValue(facesContext);
+            if (v instanceof Iterator)
+            {
+                iterator = (Iterator)v;
+            }
+            else if (v instanceof Collection)
+            {
+                iterator = ((Collection)v).iterator();
+            }
+            else if (v instanceof Object[])
+            {
+                iterator = Arrays.asList((Object[])v).iterator();
+            }
+            else if (v instanceof Iterator)
+            {
+                iterator = (Iterator)v;
+            }
+            else
+            {
+                throw new IllegalArgumentException("Value of component " + uiComponent.getCompoundId() + " is neither collection nor array.");
+            }
+            uiComponent.setAttribute(ListRenderer.ITERATOR_ATTR, iterator);
+        }
+        return iterator;
     }
 
     protected static class Styles
