@@ -55,6 +55,10 @@ public class UIForm
     public void processValidators(javax.faces.context.FacesContext context)
     {
         if (context == null) throw new NullPointerException("context");
+        // SF issue #1050022: a form used within a datatable will loose it's submitted state
+        // as UIForm is no EditableValueHolder and therefore it's state is not saved/restored by UIData
+        // to restore the submitted state we call decode here again
+        decode(context);
         if (!isSubmitted()) return;
         for (Iterator it = getFacetsAndChildren(); it.hasNext(); )
         {
@@ -66,6 +70,10 @@ public class UIForm
     public void processUpdates(javax.faces.context.FacesContext context)
     {
         if (context == null) throw new NullPointerException("context");
+        // SF issue #1050022: a form used within a datatable will loose it's submitted state
+        // as UIForm is no EditableValueHolder and therefore it's state is not saved/restored by UIData
+        // to restore the submitted state we call decode here again
+        decode(context);
         if (!isSubmitted()) return;
         for (Iterator it = getFacetsAndChildren(); it.hasNext(); )
         {

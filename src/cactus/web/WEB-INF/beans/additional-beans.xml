@@ -52,3 +52,10 @@
             </map-entries>
         </managed-property>
     </managed-bean>
+
+  <managed-bean>
+    <description>Bug 1050022</description>
+    <managed-bean-name>ArticleThreadTable</managed-bean-name>
+    <managed-bean-class>org.apache.myfaces.cactus.ArticleThreadTableMBean</managed-bean-class>
+    <managed-bean-scope>session</managed-bean-scope>
+  </managed-bean>
