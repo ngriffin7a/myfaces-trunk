@@ -83,13 +83,13 @@ public abstract class HTMLEncoder
                     break;
 
                 //german umlauts
-			    case '\u00E4' : app = "&auml;";  break;     //ä
-			    case '\u00C4' : app = "&Auml;";  break;     //Ä
-			    case '\u00F6' : app = "&ouml;";  break;     //ö
-			    case '\u00D6' : app = "&Ouml;";  break;     //Ö
-			    case '\u00FC' : app = "&uuml;";  break;     //ü
-			    case '\u00DC' : app = "&Uuml;";  break;     //Ü
-			    case '\u00DF' : app = "&szlig;"; break;     //ß
+			    case '\u00E4' : app = "&auml;";  break;
+			    case '\u00C4' : app = "&Auml;";  break;
+			    case '\u00F6' : app = "&ouml;";  break;
+			    case '\u00D6' : app = "&Ouml;";  break;
+			    case '\u00FC' : app = "&uuml;";  break;
+			    case '\u00DC' : app = "&Uuml;";  break;
+			    case '\u00DF' : app = "&szlig;"; break;
 
                 //misc
                 //case 0x80: app = "&euro;"; break;  sometimes euro symbol is ascii 128, should we suport it?
