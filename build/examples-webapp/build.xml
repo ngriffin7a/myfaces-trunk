@@ -53,7 +53,7 @@
             <fileset file="${project.dir}/myfaces-*-examples.tgz"/>
             <fileset file="${examples.web}/WEB-INF/web.xml"/>
             <fileset file="${examples.web}/WEB-INF/faces-config.xml"/>
-            <fileset file="${temp.dir}/myfaces-samples.war" />
+            <fileset file="${temp.dir}/myfaces-examples.war" />
         </delete>
     </target>
 
