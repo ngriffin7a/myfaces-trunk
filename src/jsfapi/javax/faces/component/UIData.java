@@ -27,6 +27,7 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -35,6 +36,10 @@ import java.util.List;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.27  2004/11/26 22:04:57  svieujot
+ * Make UIData work with Collection and not only List.
+ * This allows component like x:dataList to work with Sets, or any type of collection data model.
+ *
  * Revision 1.26  2004/09/13 15:59:44  manolito
  * fixed problems with nested UIData and HtmlDataTable components
  *
@@ -670,6 +675,10 @@ public class UIData
         else if (value instanceof List)
         {
             return new ListDataModel((List)value);
+        }
+        else if (value instanceof Collection)
+        {
+            return new ListDataModel( new ArrayList((Collection)value) );
         }
         else if (OBJECT_ARRAY_CLASS.isAssignableFrom(value.getClass()))
         {
