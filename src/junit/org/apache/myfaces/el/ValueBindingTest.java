@@ -18,12 +18,7 @@
  */
 package net.sourceforge.myfaces.el;
 
-import junit.framework.TestCase;
-import net.sourceforge.myfaces.application.ApplicationMockImpl;
-import net.sourceforge.myfaces.context.FacesContextMockImpl;
-
-import javax.faces.application.Application;
-import javax.faces.context.FacesContext;
+import net.sourceforge.myfaces.MyFacesTest;
 
 /**
  * DOCUMENT ME!
@@ -31,11 +26,10 @@ import javax.faces.context.FacesContext;
  * @version $Revision$ $Date$
  */
 public class ValueBindingTest
-    extends TestCase
+    extends MyFacesTest
 {
-    private Application _application;
-    private FacesContext _facesContext;
-
+    protected A _theA = new A();
+    protected A _a = new A();
 
     public ValueBindingTest(String name)
     {
@@ -45,22 +39,41 @@ public class ValueBindingTest
     protected void setUp() throws Exception
     {
         super.setUp();
-        _application = new ApplicationMockImpl();
-        _facesContext = new FacesContextMockImpl();
+        _httpServletRequest.setAttribute("theA", _theA);
+        _httpServletRequest.setAttribute("A", _a);
     }
 
-    protected void tearDown() throws Exception
+    public void testGetValueWithLongNames() throws Exception
     {
-        super.tearDown();
-        _application = null;
-        _facesContext = null;
+        Object v;
+
+        v = _application.getValueBinding("theA").getValue(_facesContext);
+        assertTrue(v == _theA);
+
+        v = _application.getValueBinding("theA.name").getValue(_facesContext);
+        assertEquals(v, A.NAME);
+
+        v = _application.getValueBinding("theA.theB.name").getValue(_facesContext);
+        assertEquals(v, B.NAME);
+
+        v = _application.getValueBinding("theA.theB.theC.name").getValue(_facesContext);
+        assertEquals(v, C.NAME);
     }
 
-
-    public void testGetValue() throws Exception
+    public void testGetValueWithShortNames() throws Exception
     {
-        //TODO...
+        Object v;
+
+        v = _application.getValueBinding("a").getValue(_facesContext);
+        assertTrue(v == _theA);
+
+        v = _application.getValueBinding("a.name").getValue(_facesContext);
+        assertEquals(v, A.NAME);
+
+        v = _application.getValueBinding("a.b.name").getValue(_facesContext);
+        assertEquals(v, B.NAME);
+
+        v = _application.getValueBinding("a.b.c.name").getValue(_facesContext);
+        assertEquals(v, C.NAME);
     }
-
-
 }

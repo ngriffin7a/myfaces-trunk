@@ -18,6 +18,10 @@
  */
 package net.sourceforge.myfaces.application;
 
+import net.sourceforge.myfaces.el.PropertyResolverImpl;
+import net.sourceforge.myfaces.el.ValueBindingImpl;
+import net.sourceforge.myfaces.el.VariableResolverImpl;
+
 import javax.faces.application.Application;
 import javax.faces.application.NavigationHandler;
 import javax.faces.event.ActionListener;
@@ -33,107 +37,120 @@ import javax.faces.convert.Converter;
 import java.util.Iterator;
 
 /**
- * TODO: liven up this class
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
 public class ApplicationMockImpl
     extends Application
 {
+    private ActionListener _actionListener = new ActionListenerImpl();
+    private NavigationHandler _navigationHandler = new NavigationHandlerImpl();
+    private PropertyResolver _propertyResolver = new PropertyResolverImpl();
+    private VariableResolver _variableResolver = new VariableResolverImpl();
+
     public ActionListener getActionListener()
     {
-        return null;
+        return _actionListener;
     }
 
-    public void setActionListener(ActionListener actionlistener)
+    public void setActionListener(ActionListener actionListener)
     {
+        _actionListener = actionListener;
     }
 
     public NavigationHandler getNavigationHandler()
     {
-        return null;
+        return _navigationHandler;
     }
 
-    public void setNavigationHandler(NavigationHandler navigationhandler)
+    public void setNavigationHandler(NavigationHandler navigationHandler)
     {
+        _navigationHandler = navigationHandler;
     }
 
     public PropertyResolver getPropertyResolver()
     {
-        return null;
+        return _propertyResolver;
     }
 
-    public void setPropertyResolver(PropertyResolver propertyresolver)
+    public void setPropertyResolver(PropertyResolver propertyResolver)
     {
+        _propertyResolver = propertyResolver;
     }
 
     public ValueBinding getValueBinding(String s) throws ReferenceSyntaxException
     {
-        return null;
+        return new ValueBindingImpl(s, this);
     }
 
     public VariableResolver getVariableResolver()
     {
-        return null;
+        return _variableResolver;
     }
 
-    public void setVariableResolver(VariableResolver variableresolver)
+    public void setVariableResolver(VariableResolver variableResolver)
     {
+        _variableResolver = variableResolver;
     }
+
 
     public void addComponent(String s, String s1)
     {
+        throw new UnsupportedOperationException();
     }
 
     public UIComponent getComponent(String s) throws FacesException
     {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     public Iterator getComponentTypes()
     {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     public void addConverter(String s, String s1)
     {
+        throw new UnsupportedOperationException();
     }
 
     public Converter getConverter(String s) throws FacesException
     {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     public Iterator getConverterIds()
     {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     public void addMessageResources(String s, String s1)
     {
+        throw new UnsupportedOperationException();
     }
 
     public MessageResources getMessageResources(String s) throws FacesException
     {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     public Iterator getMessageResourcesIds()
     {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     public void addValidator(String s, String s1)
     {
+        throw new UnsupportedOperationException();
     }
 
     public Validator getValidator(String s) throws FacesException
     {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     public Iterator getValidatorIds()
     {
-        return null;
+        throw new UnsupportedOperationException();
     }
 }

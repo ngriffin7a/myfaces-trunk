@@ -18,10 +18,8 @@
  */
 package net.sourceforge.myfaces.taglib.ext;
 
-import net.sourceforge.myfaces.renderkit.attr.ext.TabbedPaneRendererAttributes;
-import net.sourceforge.myfaces.renderkit.html.attr.HTMLButtonAttributes;
 import net.sourceforge.myfaces.renderkit.html.ext.TabRenderer;
-import net.sourceforge.myfaces.taglib.PanelGroupTag;
+import net.sourceforge.myfaces.taglib.CommandButtonTag;
 
 /**
  * DOCUMENT ME!
@@ -29,88 +27,10 @@ import net.sourceforge.myfaces.taglib.PanelGroupTag;
  * @version $Revision$ $Date$
  */
 public class TabTag
-    extends PanelGroupTag
-    implements TabbedPaneRendererAttributes,
-               HTMLButtonAttributes
+    extends CommandButtonTag
 {
     public String getRendererType()
     {
         return TabRenderer.TYPE;
     }
-
-    // HTML universal attributes --> already implemented in MyFacesTag
-
-    // HTML event handler attributes --> already implemented in MyFacesTag
-
-    // HTML button attributes
-
-    public void setAccesskey(String value)
-    {
-        setRendererAttributeString(ACCESSKEY_ATTR, value);
-    }
-
-    public void setAlign(String value)
-    {
-        setRendererAttributeString(ALIGN_ATTR, value);
-    }
-
-    public void setAlt(String value)
-    {
-        setRendererAttributeString(ALT_ATTR, value);
-    }
-
-    public void setDatafld(String value)
-    {
-        setRendererAttributeString(DATAFLD_ATTR, value);
-    }
-
-    public void setDatasrc(String value)
-    {
-        setRendererAttributeString(DATASRC_ATTR, value);
-    }
-
-    public void setDataformatas(String value)
-    {
-        setRendererAttributeString(DATAFORMATAS_ATTR, value);
-    }
-
-    public void setDisabled(String value)
-    {
-        setRendererAttributeBoolean(DISABLED_ATTR, value);
-    }
-
-    public void setOnblur(String value)
-    {
-        setRendererAttributeString(ONBLUR_ATTR, value);
-    }
-
-    public void setOnchange(String value)
-    {
-        setRendererAttributeString(ONCHANGE_ATTR, value);
-    }
-
-    public void setOnfocus(String value)
-    {
-        setRendererAttributeString(ONFOCUS_ATTR, value);
-    }
-
-    public void setTabindex(String value)
-    {
-        setRendererAttributeString(TABINDEX_ATTR, value);
-    }
-
-
-    // Button Renderer attributes
-
-    public void setLabel(String v)
-    {
-        setRendererAttributeString(LABEL_ATTR, v);
-    }
-
-
-    // key & bundle attributes --> already implemented in MyFacesTag
-
-    // user role attributes --> already implemented in MyFacesTag
-
-
 }

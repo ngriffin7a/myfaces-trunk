@@ -429,6 +429,7 @@
         <tag-class>net.sourceforge.myfaces.taglib.ext.TabTag</tag-class>
         <body-content>JSP</body-content>
         &ui_component_attributes;
+        &ui_command_attributes;
         &html_universal_attributes;
         &html_event_handler_attributes;
         &html_button_attributes;

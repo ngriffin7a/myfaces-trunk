@@ -21,6 +21,7 @@ package net.sourceforge.myfaces.renderkit.html.ext;
 import net.sourceforge.myfaces.MyFacesFactoryFinder;
 import net.sourceforge.myfaces.component.CommonComponentProperties;
 import net.sourceforge.myfaces.renderkit.attr.CommonRendererAttributes;
+import net.sourceforge.myfaces.renderkit.attr.ButtonRendererAttributes;
 import net.sourceforge.myfaces.renderkit.attr.ext.TabbedPaneRendererAttributes;
 import net.sourceforge.myfaces.renderkit.html.FormRenderer;
 import net.sourceforge.myfaces.renderkit.html.GroupRenderer;
@@ -36,8 +37,10 @@ import net.sourceforge.myfaces.webapp.ServletMapping;
 import net.sourceforge.myfaces.webapp.ServletMappingFactory;
 
 import javax.faces.FactoryFinder;
+import javax.faces.application.Message;
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIForm;
+import javax.faces.component.UICommand;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 import javax.faces.render.RenderKit;
@@ -64,8 +67,12 @@ public class TabbedPaneRenderer
                HTMLEventHandlerAttributes,
                HTMLTableAttributes,
                HTMLButtonAttributes,
-               TabbedPaneRendererAttributes
+               TabbedPaneRendererAttributes,
+               ButtonRendererAttributes
 {
+    private static final String OLD_SELECTED_INDEX_ATTR
+        = TabbedPaneRenderer.class.getName() + ".OLD_SELECTED_INDEX";
+
     protected static final String TAB_START_TOKEN = "[TAB-START]";
     protected static final String TAB_END_TOKEN = "[/TAB-END]";
 
@@ -139,7 +146,7 @@ public class TabbedPaneRenderer
     {
         ResponseWriter writer = facesContext.getResponseWriter();
         int tabCount = getTabCount(uiTabbedPane);
-        int selectedIndex = getSelectedIndex(uiTabbedPane);
+        int selectedIndex = getSelectedIndex(facesContext, uiTabbedPane);
 
         boolean hasParentForm = hasParentForm(uiTabbedPane);
 
@@ -201,9 +208,18 @@ public class TabbedPaneRenderer
         return cnt;
     }
 
-    protected int getSelectedIndex(UIComponent uiTabbedPane)
+    protected int getSelectedIndex(FacesContext facesContext, UIComponent uiTabbedPane)
     {
-        Integer intObj = (Integer)uiTabbedPane.getAttribute(SELECTED_INDEX_ATTR);
+        Integer intObj;
+        if (facesContext.getMaximumSeverity() >= Message.SEVERITY_INFO)
+        {
+            intObj = (Integer)uiTabbedPane.getAttribute(OLD_SELECTED_INDEX_ATTR);
+            uiTabbedPane.setAttribute(SELECTED_INDEX_ATTR, intObj);
+        }
+        else
+        {
+            intObj = (Integer)uiTabbedPane.getAttribute(SELECTED_INDEX_ATTR);
+        }
         return intObj == null ? 0 : intObj.intValue();
     }
 
@@ -291,7 +307,7 @@ public class TabbedPaneRenderer
         uiComponent.setAttribute(BGCOLOR_ATTR, null);
 
         writer.write("<table cellspacing=\"0\"");
-        //HTMLUtil.renderCssClass(writer, uiComponent, PANEL_CLASS_ATTR); TODO: TABBED_PANE_CLASS_ATTR
+        HTMLUtil.renderCssClass(writer, uiComponent, PANEL_CLASS_ATTR);
         HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML_UNIVERSAL_ATTRIBUTES);
         HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML_EVENT_HANDLER_ATTRIBUTES);
         HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML_TABLE_ATTRIBUTES);
@@ -466,25 +482,30 @@ public class TabbedPaneRenderer
 
 
 
-    public void decode(FacesContext facesContext, UIComponent uiComponent) throws IOException
+    public void decode(FacesContext facesContext, UIComponent uiTabbedPane) throws IOException
     {
         //super.decode must not be called, because tabbed pane has no value
 
         ServletRequest servletRequest = (ServletRequest)facesContext.getExternalContext().getRequest();
 
         int tabIdx = 0;
-        for (Iterator it = uiComponent.getChildren(); it.hasNext(); )
+        for (Iterator it = uiTabbedPane.getChildren(); it.hasNext(); )
         {
-            if (((UIComponent)it.next()).getRendererType().equals(TabRenderer.TYPE))
+            UIComponent child = (UIComponent)it.next();
+            if (child.getRendererType().equals(TabRenderer.TYPE))
             {
-                String paramName = uiComponent.getClientId(facesContext) + "." + tabIdx;
+                String paramName = uiTabbedPane.getClientId(facesContext) + "." + tabIdx;
                 String paramValue = servletRequest.getParameter(paramName);
                 if (paramValue != null && paramValue.length() > 0)
                 {
-                    uiComponent.setAttribute(SELECTED_INDEX_ATTR, new Integer(tabIdx));
+                    uiTabbedPane.setAttribute(OLD_SELECTED_INDEX_ATTR,
+                                              uiTabbedPane.getAttribute(SELECTED_INDEX_ATTR));
+                    uiTabbedPane.setAttribute(SELECTED_INDEX_ATTR, new Integer(tabIdx));
                     return;
                 }
                 tabIdx++;
+
+                ((UICommand)child).fireActionEvent(facesContext);
             }
         }
     }
