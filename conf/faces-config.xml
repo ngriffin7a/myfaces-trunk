@@ -44,6 +44,11 @@
   </lifecycle>
 
   <component>
+    <component-type>org.apache.myfaces.HtmlInputHidden</component-type>
+    <component-class>org.apache.myfaces.component.html.ext.HtmlInputHidden</component-class>
+  </component>
+
+  <component>
     <component-type>org.apache.myfaces.HtmlInputText</component-type>
     <component-class>org.apache.myfaces.component.html.ext.HtmlInputText</component-class>
   </component>
@@ -99,7 +104,7 @@
     <component-type>org.apache.myfaces.AliasBean</component-type>
     <component-class>org.apache.myfaces.custom.aliasbean.AliasBean</component-class>
   </component>
-  
+
   <component>
     <component-type>org.apache.myfaces.Buffer</component-type>
     <component-class>org.apache.myfaces.custom.buffer.Buffer</component-class>
@@ -194,7 +199,7 @@
     <component-type>org.apache.myfaces.HtmlCollapsiblePanel</component-type>
     <component-class>org.apache.myfaces.custom.collapsiblepanel.HtmlCollapsiblePanel</component-class>
   </component>
-  
+
   <component>
     <component-type>org.apache.myfaces.HtmlRadio</component-type>
     <component-class>org.apache.myfaces.custom.radio.HtmlRadio</component-class>
@@ -390,7 +395,7 @@
             <renderer-type>org.apache.myfaces.AliasBean</renderer-type>
             <renderer-class>org.apache.myfaces.custom.aliasbean.AliasBeanRenderer</renderer-class>
         </renderer>
-        
+
         <renderer>
             <component-family>javax.faces.Data</component-family>
             <renderer-type>org.apache.myfaces.Buffer</renderer-type>

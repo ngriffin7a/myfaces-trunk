@@ -32,15 +32,19 @@ import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 import javax.faces.render.Renderer;
 
-
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 import java.util.Map;
+import java.util.Iterator;
+import java.net.URLDecoder;
+import javax.servlet.http.Cookie;
+import java.util.HashMap;
 
 /**
- * @author <a href="mailto:oliver@rossmueller.com">Oliver Rossmueller </a>
  * @author Sean Schofield
  * @author Chris Barlow
+ * @author <a href="mailto:oliver@rossmueller.com">Oliver Rossmueller </a>
  * @author Hans Bergsten (Some code taken from an example in his O'Reilly JavaServer Faces book. Copied with permission)
  * @version $Revision$ $Date$
  */
@@ -50,6 +54,11 @@ public class HtmlTreeRenderer extends Renderer
     private static final String JAVASCRIPT_ENCODED = "org.apache.myfaces.tree.JAVASCRIPT_ENCODED";
     private static final String NAV_COMMAND = "org.apache.myfaces.tree.NAV_COMMAND";
     private static final String TOGGLE_SPAN = "org.apache.myfaces.tree.TOGGLE_SPAN";
+    private static final String ENCODING = "UTF-8";
+    private static final String ATTRIB_DELIM = ";";
+    private static final String ATTRIB_KEYVAL = "=";
+    private static final String NODE_STATE_EXPANDED = "x";
+    private static final String NODE_STATE_CLOSED = "c";
 
     private static final int NOTHING = 0;
     private static final int CHILDREN = 1;
@@ -68,19 +77,61 @@ public class HtmlTreeRenderer extends Renderer
         super.decode(context, component);
 
         // see if one of the nav nodes was clicked, if so, then toggle appropriate node
+        String nodeId = null;
         HtmlTree tree = (HtmlTree)component;
-        String nodeId = (String)context.getExternalContext().getRequestParameterMap().get(tree.getId() +
-            NamingContainer.SEPARATOR_CHAR + NAV_COMMAND);
-
-        if (nodeId == null || nodeId.equals(""))
-        {
-            return;
-        }
-
         String originalNodeId = tree.getNodeId();
-        tree.setNodeId(nodeId);
-        tree.toggleExpanded();
-        tree.setNodeId(originalNodeId);
+
+        if (getBoolean(component, JSFAttr.CLIENT_SIDE_TOGGLE, true))
+        {
+            Map cookieMap = context.getExternalContext().getRequestCookieMap();
+            Cookie treeCookie = (Cookie)cookieMap.get(component.getId());
+            if (treeCookie == null || treeCookie.getValue() == null)
+            {
+                return;
+            }
+
+            String nodeState = null;
+            Map attrMap = getCookieAttr(treeCookie);
+            Iterator i = attrMap.keySet().iterator();
+            while (i.hasNext())
+            {
+                nodeId = (String)i.next();
+                nodeState = (String)attrMap.get(nodeId);
+
+                if (NODE_STATE_EXPANDED.equals(nodeState))
+                {
+                    tree.setNodeId(nodeId);
+                    if (!tree.isNodeExpanded())
+                    {
+                        tree.toggleExpanded();
+                    }
+                    tree.setNodeId(originalNodeId);
+                }
+                else if (NODE_STATE_CLOSED.equals(nodeState))
+                {
+                    tree.setNodeId(nodeId);
+                    if (tree.isNodeExpanded())
+                    {
+                        tree.toggleExpanded();
+                    }
+                    tree.setNodeId(originalNodeId);
+                }
+            }
+        }
+        else
+        {
+            nodeId = (String)context.getExternalContext().getRequestParameterMap().get(tree.getId() +
+                NamingContainer.SEPARATOR_CHAR + NAV_COMMAND);
+
+            if (nodeId == null || nodeId.equals(""))
+            {
+                return;
+            }
+
+            tree.setNodeId(nodeId);
+            tree.toggleExpanded();
+            tree.setNodeId(originalNodeId);
+        }
     }
 
     public void encodeBegin(FacesContext context, UIComponent component) throws IOException
@@ -100,7 +151,7 @@ public class HtmlTreeRenderer extends Renderer
     public void encodeChildren(FacesContext context, UIComponent component) throws IOException
     {
         // write javascript functions
-        encodeJavascript(context, component);
+        encodeJavascript(context);
 
         // reset the nodeLevel (should already be zero but it can't hurt)
         component.getAttributes().put(NODE_LEVEL, new Integer(0));
@@ -142,37 +193,16 @@ public class HtmlTreeRenderer extends Renderer
         String nodeId = (parentId != null) ? parentId + NamingContainer.SEPARATOR_CHAR + childCount : "0";
         String spanId = TOGGLE_SPAN + nodeId;
 
-        // defaults are to show navigation icons, draw connecting lines and provide client-side toggling of expand/collapse
-        boolean showNav = true;
-        boolean showLines = true;
-        boolean clientSideToggle = true;
+        // set configurable values
+        boolean showNav = getBoolean(tree, JSFAttr.SHOW_NAV, true);
+        boolean showLines = getBoolean(tree, JSFAttr.SHOW_LINES, true);
+        boolean clientSideToggle = getBoolean(tree, JSFAttr.CLIENT_SIDE_TOGGLE, true);
 
-        // override showLines value with tag attribute (if applicable)
-        Boolean booleanAttr = (Boolean)tree.getAttributes().get(JSFAttr.SHOW_LINES);
-        if (booleanAttr != null)
-        {
-            showLines = booleanAttr.booleanValue();
-        }
-
-        // override clientSideToggle value with tag attribute (if applicable)
-        booleanAttr = (Boolean)tree.getAttributes().get(JSFAttr.CLIENT_SIDE_TOGGLE);
-        if (booleanAttr != null)
-        {
-            clientSideToggle = booleanAttr.booleanValue();
-        }
-
-        // override showNav value with tag attribute (if applicable)
-        booleanAttr = (Boolean)tree.getAttributes().get(JSFAttr.SHOW_NAV);
-        if (booleanAttr != null)
-        {
-            showNav = booleanAttr.booleanValue();
-        }
         if (clientSideToggle)
         {
             // we must show the nav icons if client side toggle is enabled (regardless of what user says)
             showNav = true;
         }
-
 
         tree.setNodeId(nodeId);
         TreeNode node = tree.getNode();
@@ -348,14 +378,32 @@ public class HtmlTreeRenderer extends Renderer
 
                 if (node.getChildCount() > 0)
                 {
-                    imageAttrs.put(HTML.ONCLICK_ATTR, "treeNavClick('" + spanId + "', '" + image.getClientId(context) + "', '" +
-                                   navSrc + "', '" + altSrc + "', '" + nodeImageId + "', '" + expandImgSrc + "', '" +
-                                   collapseImgSrc + "');");
+                    String onClick = new StringBuffer()
+                        .append("treeNavClick('")
+                        .append(spanId)
+                        .append("', '")
+                        .append(image.getClientId(context))
+                        .append("', '")
+                        .append(navSrc)
+                        .append("', '")
+                        .append(altSrc)
+                        .append("', '")
+                        .append(nodeImageId)
+                        .append("', '")
+                        .append(expandImgSrc)
+                        .append("', '")
+                        .append(collapseImgSrc)
+                        .append("', '")
+                        .append(tree.getId())
+                        .append("', '")
+                        .append(nodeId)
+                        .append("');")
+                        .toString();
 
+                    imageAttrs.put(HTML.ONCLICK_ATTR, onClick);
                     imageAttrs.put(HTML.STYLE_ATTR, "cursor:hand;cursor:pointer");
                 }
-                image.encodeBegin(context);
-                image.encodeEnd(context);
+                encodeRecursive(context, image);
             }
             else
             {
@@ -371,16 +419,8 @@ public class HtmlTreeRenderer extends Renderer
 
                 tree.getChildren().add(expandControl);
 
-                expandControl.encodeBegin(context);
-                expandControl.encodeChildren(context);
-                expandControl.encodeEnd(context);
+                encodeRecursive(context, expandControl);
             }
-            //out.startElement(HTML.IMG_ELEM, tree);
-            //out.writeURIAttribute(HTML.SRC_ATTR, AddResource.getResourceMappedPath(HtmlTreeRenderer.class, navSrc, context) , null);
-            //out.writeAttribute(HTML.WIDTH_ATTR, "19", null);
-            //out.writeAttribute(HTML.HEIGHT_ATTR, "18", null);
-            //out.writeAttribute(HTML.BORDER_ATTR, "0", null);
-            //out.endElement(HTML.IMG_ELEM);
             out.endElement(HTML.TD_ELEM);
         }
 
@@ -470,10 +510,9 @@ public class HtmlTreeRenderer extends Renderer
      * Encodes any stand-alone javascript functions that are needed.
      *
      * @param context FacesContext
-     * @param component UIComponent
      * @throws IOException
      */
-    private void encodeJavascript(FacesContext context, UIComponent component) throws IOException
+    private void encodeJavascript(FacesContext context) throws IOException
     {
         // check to see if javascript has already been written (which could happen if more than one tree on the same page)
         if (context.getExternalContext().getRequestMap().containsKey(JAVASCRIPT_ENCODED))
@@ -481,40 +520,53 @@ public class HtmlTreeRenderer extends Renderer
             return;
         }
 
-        ResponseWriter out = context.getResponseWriter();
-
-        out.startElement(HTML.SCRIPT_ELEM, component);
-        out.writeAttribute(HTML.SCRIPT_LANGUAGE_ATTR, "javascript", null);
-        HtmlRendererUtils.writePrettyLineSeparator(context);
-
         // render javascript function for client-side toggle (it won't be used if user has opted for server-side toggle)
-        out.writeText("function treeNavClick(spanId, navImageId, image1, image2, nodeImgId, expandImg, collapseImg) {", null);
-        out.writeText("var navSpan = document.getElementById(spanId);", null);
-        out.writeText("var displayStyle = navSpan.style.display;", null);
-        out.writeText("if (displayStyle == 'none') { displayStyle = 'block' } else { displayStyle = 'none'; }", null);
-        out.writeText("navSpan.style.display = displayStyle;", null);
-        out.writeText("var navImage = document.getElementById(navImageId);", null);
-        out.writeText("if (navImage.src.indexOf(image1)>=0) navImage.src = image2; else navImage.src = image1;", null);
-        out.writeText("if (nodeImgId != '') {", null);
-        out.writeText("var nodeImg = document.getElementById(nodeImgId);", null);
-        out.writeText("if (nodeImg.src.indexOf(expandImg) >=0) nodeImg.src = collapseImg; else nodeImg.src = expandImg;}", null);
-        //out.writeText("foo();", null);
-        //out.writeText("setCookie('FOO', spanId, null, null, null, null);", null);
-        out.writeText("}", null);
+        AddResource.addJavaScriptHere(HtmlTreeRenderer.class, "javascript/tree.js", context);
+        AddResource.addJavaScriptHere(HtmlTreeRenderer.class, "javascript/cookieLib.js", context);
+    }
 
-        // render the javascript containing cookie manipulation functions
-        /** @todo consider moving functionality outside component so it can be reusued */
-//        out.writeText("function setCookie(name, value, expires, path, domain, secure) {", null);
-//        out.writeText("var curCookie = name + '=' + escape(value) + ((expires) ? '; expires=' + expires.toGMTString() : ''", null);
-//        out.writeText(" + (path) ? '; path=' + path : '') + ((domain) ? '; domain=' + domain : '') + ", null);
-//        out.writeText("((secure) ? '; secure' : '');document.cookie = curCookie;}", null);
+    /**
+     * Helper method for getting the boolean value of an attribute.  If the attribute is not specified,
+     * then return the default value.
+     *
+     * @param component The component for which the attributes are to be checked.
+     * @param attributeName The name of the boolean attribute.
+     * @param defaultValue The default value of the attribute (to be returned if no value found).
+     * @return boolean
+     */
+    private boolean getBoolean(UIComponent component, String attributeName, boolean defaultValue)
+    {
+        Boolean booleanAttr = (Boolean)component.getAttributes().get(attributeName);
 
-//        out.writeText("function foo() { alert('stuff');", null);
-//        out.writeText("document.cookie = 'ppkcookie1=testcookie; expires=Thu, 2 Aug 2005 20:47:11 UTC; path=/';", null);
-//        out.writeText("}", null);
+        if (booleanAttr == null)
+        {
+            return defaultValue;
+        }
+        else
+        {
+            return booleanAttr.booleanValue();
+        }
+    }
 
-        out.endElement(HTML.SCRIPT_ELEM);
-
-        context.getExternalContext().getRequestMap().put(JAVASCRIPT_ENCODED, Boolean.TRUE);
+    private Map getCookieAttr(Cookie cookie)
+    {
+        Map attribMap = new HashMap();
+        try
+        {
+            String cookieValue = URLDecoder.decode(cookie.getValue(),ENCODING);
+            String[] attribArray = cookieValue.split(ATTRIB_DELIM);
+            for (int j = 0; j < attribArray.length; j++)
+            {
+                int index = attribArray[j].indexOf(ATTRIB_KEYVAL);
+                String name = attribArray[j].substring(0, index);
+                String value = attribArray[j].substring(index + 1);
+                attribMap.put(name, value);
+            }
+        }
+        catch (UnsupportedEncodingException e)
+        {
+            throw new RuntimeException("Error parsing tree cookies", e);
+        }
+        return attribMap;
     }
 }

@@ -361,8 +361,7 @@ public class UITreeData extends UIComponentBase implements NamingContainer
         return _model;
     }
 
-//private
-    protected void processNodes(FacesContext context, int processAction, String parentId, int childLevel)
+    private void processNodes(FacesContext context, int processAction, String parentId, int childLevel)
     {
         UIComponent facet = null;
         setNodeId(parentId != null ? parentId + NamingContainer.SEPARATOR_CHAR + childLevel : "0");

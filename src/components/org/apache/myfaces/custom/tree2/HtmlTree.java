@@ -19,25 +19,23 @@ import javax.faces.context.FacesContext;
 import javax.faces.component.UICommand;
 import javax.faces.component.html.HtmlCommandLink;
 import javax.faces.el.MethodBinding;
-import javax.faces.event.ActionListener;
-import javax.faces.event.ActionEvent;
-//import org.apache.myfaces.component.html.ext.HtmlCommandLink;
-import org.apache.myfaces.renderkit.JSFAttr;
 
 import java.util.HashSet;
 import java.util.Map;
 
 /**
- * @author <a href="mailto:oliver@rossmueller.com">Oliver Rossmueller </a>
+ * Represents "tree data" in an HTML format.  Also provides a mechanism for maintaining expand/collapse
+ * state of the nodes in the tree.
+ *
  * @author Sean Schofield
+ * @author <a href="mailto:oliver@rossmueller.com">Oliver Rossmueller </a>
  * @version $Revision$ $Date$
  */
 public class HtmlTree extends UITreeData
 {
     public static final String COMPONENT_TYPE = "org.apache.myfaces.Tree2";
     private static final String DEFAULT_RENDERER_TYPE = "org.apache.myfaces.Tree2";
-//    private static final String NAV_COMMAND_ID = "NAV_COMMAND_ID";
-    private UICommand expandControl;
+    private UICommand _expandControl;
     private String _varNodeToggler;
     private HashSet _expandedNodes = new HashSet();
 
@@ -47,40 +45,8 @@ public class HtmlTree extends UITreeData
     public HtmlTree()
     {
         setRendererType(DEFAULT_RENDERER_TYPE);
-
-        expandControl = new HtmlCommandLink();
-        //getChildren().add(expandControl);
-//        expandControl.addActionListener(new NodeTogglerListener(this));
-//        expandControl.setImmediate(true);
-//        expandControl.setId(NAV_COMMAND_ID);
-//        Map expandAttr = expandControl.getAttributes();
-//        expandAttr.put(JSFAttr.FORCE_ID_ATTR, "true");
+        _expandControl = new HtmlCommandLink();
     }
-
-//    private static class NodeTogglerListener implements ActionListener
-//    {
-//        private HtmlTree tree;
-//
-//        public NodeTogglerListener(HtmlTree tree)
-//        {
-//            this.tree = tree;
-//        }
-//        public void processAction(ActionEvent e)
-//        {
-//            tree.toggleExpanded();
-//        }
-//    }
-
-//    public void decode(FacesContext context)
-//    {
-//        System.out.println("decoding");
-//    }
-
-//    protected void processNodes(FacesContext context, int processAction, String parentId, int childLevel)
-//    {
-//        super.processNodes(context, processAction, parentId, childLevel);
-//
-//    }
 
     // see superclass for documentation
     public Object saveState(FacesContext context)
@@ -89,7 +55,6 @@ public class HtmlTree extends UITreeData
         values[0] = super.saveState(context);
         values[1] = _expandedNodes;
         values[2] = _varNodeToggler;
-        //values[3] = expandControl.saveState(context);
 
         return ((Object) (values));
     }
@@ -101,8 +66,6 @@ public class HtmlTree extends UITreeData
         super.restoreState(context, values[0]);
         _expandedNodes = (HashSet)values[1];
         setVarNodeToggler((String)values[2]);
-        //expandControl = (UICommand)values[3];
-        //_varNodeToggler = (String)values[2];
     }
 
     // see superclass for documentation
@@ -117,9 +80,15 @@ public class HtmlTree extends UITreeData
         }
     }
 
+    /**
+     * Gets the expand/collapse control that can be used to handle expand/collapse actions.  This methods supports
+     * renderers that are supplying client-side toggling functionality.
+     *
+     * @return UICommand
+     */
     public UICommand getExpandControl()
     {
-        return expandControl;
+        return _expandControl;
     }
 
     public void setVarNodeToggler(String varNodeToggler)
@@ -129,7 +98,7 @@ public class HtmlTree extends UITreeData
         // create a method binding for the expand control
         String bindingString = "#{" + varNodeToggler + ".toggleExpanded}";
         MethodBinding actionBinding = FacesContext.getCurrentInstance().getApplication().createMethodBinding(bindingString, null);
-        expandControl.setAction(actionBinding);
+        _expandControl.setAction(actionBinding);
     }
 
     public String toggleExpanded()
