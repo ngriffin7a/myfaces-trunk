@@ -17,6 +17,8 @@ package org.apache.myfaces.component.html.util;
 
 import org.apache.myfaces.renderkit.JSFAttr;
 import javax.faces.component.UIComponent;
+import javax.faces.component.NamingContainer;
+import javax.faces.component.UIData;
 import javax.faces.context.FacesContext;
 import javax.faces.render.Renderer;
 import java.util.HashMap;
@@ -25,8 +27,8 @@ import java.util.HashMap;
  * <p>Utility class for providing basic functionality to the HTML faces 
  * extended components.<p>
  * 
- * @author not attributable
- * @version 
+ * @author Sean Schofield
+ * @version $Revision$ $Date$
  */
 public class HtmlComponentUtils 
 {
@@ -39,9 +41,20 @@ public class HtmlComponentUtils
     private HtmlComponentUtils() 
     {}
     
-    public static String getClientId(UIComponent component,
-                                     Renderer renderer,
-                                     FacesContext context)
+    /**
+     * Gets the client id associated with the component.  Checks the forceId 
+     * attribute of the component (if present) and uses the orginally supplied 
+     * id value if that attribute is true.  Also performs the required call 
+     * to <code>convertClientId</code> on the {@link Renderer} argument.
+     * 
+     * @param component The component for which the client id is needed.
+     * @param renderer The renderer associated with the component.
+     * @param context Additional context information to help in the request.
+     * @return The clientId to use with the specified component.
+     */
+    public static String getClientId(UIComponent component, 
+                                        Renderer renderer, 
+                                        FacesContext context)
     {
         // see if the originally supplied id should be used 
         Boolean forceValue = (Boolean)component.getAttributes().get(JSFAttr.FORCE_ID_ATTR);
@@ -49,8 +62,23 @@ public class HtmlComponentUtils
         
         if (forceId && component.getId() != null)
         {
-            /** @todo handle "indexed" data values */            
             String clientId = component.getId();
+            
+            /**
+             * See if there is a parent naming container.  If there is ...
+             */
+            UIComponent parentContainer = HtmlComponentUtils.findParentNamingContainer(component, false);
+            if (parentContainer != null)
+            {
+                if (parentContainer instanceof UIData)
+                {
+                    int rowIndex = ((UIData)parentContainer).getRowIndex();
+                    if (rowIndex != -1)
+                    {
+                        clientId = clientId + "[" + rowIndex + "]";
+                    }
+                }
+            }
             
             // JSF spec requires that renderer get a chance to convert the id
             if (renderer != null)
@@ -58,16 +86,6 @@ public class HtmlComponentUtils
                 clientId = renderer.convertClientId(context, clientId);
             }
             
-            // avoid having duplicate id's 
-            HashMap idMap = (HashMap)context.getViewRoot().getAttributes().get(KEY_COMPONENT_ID_MAP);
-            
-            if (idMap == null)
-            {
-                idMap = new HashMap();
-                context.getViewRoot().getAttributes().
-                    put(KEY_COMPONENT_ID_MAP, idMap);
-            }
-
             /**
              * Since components that use this utility are intended to be 
              * rendered in HTML they should conform to the XHTML standard 
@@ -75,14 +93,26 @@ public class HtmlComponentUtils
              * Right now this is pretty much impossible to enforce in the 
              * appropriate Renderer class so its being done here.
              */
+            HashMap idMap = (HashMap)context.getViewRoot().getAttributes().get(KEY_COMPONENT_ID_MAP);
+
+            if (idMap == null)
+            {
+                idMap = new HashMap();
+                context.getViewRoot().getAttributes().put(KEY_COMPONENT_ID_MAP, idMap);
+            }
+
             if (idMap.containsKey(clientId))
             {
                 UIComponent mappedComponent = (UIComponent)idMap.get(clientId);
                 if (component.equals(mappedComponent))
                 {
-                    throw new IllegalArgumentException("Duplicate cliientId not allowed.  View already contains the id: " + 
-                        clientId);
+                    throw new IllegalArgumentException(
+                        "Duplicate cliientId not allowed.  View already contains the id: " + clientId);
                 }
+            }
+            else
+            {
+                idMap.put(clientId, component);
             }
             
             return clientId;
@@ -92,4 +122,41 @@ public class HtmlComponentUtils
             return component.getClientId(context);
         }
     }
+    
+    /**
+     * Locates the {@link NamingContainer} associated with the givem 
+     * {@link UIComponent}.
+     * 
+     * @param component The component whose naming locator needs to be found.
+     * @param returnRootIfNotFound Whether or not the root should be returned 
+     *    if no naming container is found.
+     * @return The parent naming container (or root if applicable).
+     */
+    public static UIComponent findParentNamingContainer(UIComponent component, 
+        boolean returnRootIfNotFound)
+    {
+        UIComponent parent = component.getParent();
+        if (returnRootIfNotFound && parent == null)
+        {
+            return component;
+        }
+        while (parent != null)
+        {
+            if (parent instanceof NamingContainer) return parent;
+            if (returnRootIfNotFound)
+            {
+                UIComponent nextParent = parent.getParent();
+                if (nextParent == null)
+                {
+                    return parent;  //Root
+                }
+                parent = nextParent;
+            }
+            else
+            {
+                parent = parent.getParent();
+            }
+        }
+        return null;
+    }    
 }

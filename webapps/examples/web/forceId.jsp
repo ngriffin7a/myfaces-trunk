@@ -69,13 +69,24 @@ managed beans used:
 
                     <h:outputText id="forceTwoOutput" value="#{example_messages['forceTwo']}"/>
                     <x:inputText id="forceTwo" value="#{forceIdBean.valueTwo}" forceId="true"/>
-                    <h:message id="forceTwoMessage" for="forceTwo" styleClass="error" />
 
 				<h:panelGroup/>
 			  	<h:commandButton id="button" value="#{example_messages['button_submit']}" action="go_home"/>
                     <h:panelGroup/>
 
 			    </h:panelGrid>
+			</h:form>
+			
+			<h:form id="dataTable">
+			<h:dataTable value="#{forceIdBean.users}" var="user">
+		    <h:column>
+			<h:outputText value="Username"/>
+      		<x:inputText id="username" value="#{user.username}" forceId="true"/>
+			<h:outputText value="Password"/>
+      		<x:inputText id="passwd" value="#{user.password}" forceId="true"/>
+			<h:commandButton value="update" action="#{user.update}"/>
+   			</h:column>
+			</h:dataTable>
 			</h:form>
 
             </h:panelGroup>

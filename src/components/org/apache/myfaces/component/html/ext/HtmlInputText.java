@@ -26,6 +26,9 @@ import javax.faces.el.ValueBinding;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.6  2005/01/13 09:24:53  matzew
+ * added patch form Sean Schofield. forceId for reuse of "legacy JavaScript" (MyFaces-70)
+ *
  * Revision 1.5  2005/01/10 08:08:14  matzew
  * added patch form sean schofield. forceId for reuse of "legacy JavaScript" (MyFaces-70)
  *
@@ -51,11 +54,7 @@ public class HtmlInputText
     
     public String getClientId(FacesContext context)
     {
-        if (clientId == null) 
-        {
-            clientId = HtmlComponentUtils.getClientId(this, getRenderer(context), context);
-        }
-        return clientId;
+        return HtmlComponentUtils.getClientId(this, getRenderer(context), context);
     }
     
     //------------------ GENERATED CODE BEGIN (do not modify!) --------------------

@@ -86,7 +86,7 @@
 
     <managed-bean>
         <managed-bean-name>forceIdBean</managed-bean-name>
-        <managed-bean-class>org.apache.myfaces.examples.misc.ForceIdBean</managed-bean-class>
+        <managed-bean-class>org.apache.myfaces.examples.forceid.ForceIdBean</managed-bean-class>
         <managed-bean-scope>session</managed-bean-scope>
     </managed-bean>
 

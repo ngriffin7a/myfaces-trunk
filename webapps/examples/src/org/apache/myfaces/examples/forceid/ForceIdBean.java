@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.myfaces.examples.misc;
+package org.apache.myfaces.examples.forceid;
 
 /**
  * @author <a href="mailto:matzew@apache.org">Matthias Weﬂendorf</a> 
@@ -21,6 +21,13 @@ package org.apache.myfaces.examples.misc;
 public class ForceIdBean {
     
     private String valueOne, valueTwo;
+    private User users[];
+    
+    public ForceIdBean(){
+        users = new User[2];
+        users[0] = new User("MyFaces","secrect");
+        users[1] = new User("Tomcat","secrect");
+    }
 
     public String getValueOne() {
         return valueOne;
@@ -33,5 +40,11 @@ public class ForceIdBean {
     }
     public void setValueTwo(String valueTwo) {
         this.valueTwo = valueTwo;
+    }
+    public User[] getUsers() {
+        return users;
+    }
+    public void setUsers(User[] users) {
+        this.users = users;
     }
 }
