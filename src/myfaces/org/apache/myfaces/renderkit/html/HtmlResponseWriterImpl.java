@@ -35,6 +35,9 @@ import java.util.Set;
  * @author Anton Koinov
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.20  2004/08/18 16:13:06  manolito
+ * writeText method in HtmlResponseWriterImpl now encodes Newlines and successive spaces
+ *
  * Revision 1.19  2004/07/01 22:05:06  mwessendorf
  * ASF switch
  *
@@ -317,7 +320,7 @@ public class HtmlResponseWriterImpl
         }
         else
         {
-            _writer.write(HTMLEncoder.encode(strValue, false, false));
+            _writer.write(HTMLEncoder.encode(strValue, true, true));
         }
     }
 
@@ -342,7 +345,7 @@ public class HtmlResponseWriterImpl
         {
             // TODO: Make HTMLEncoder support char arrays directly
             String strValue = new String(cbuf, off, len);
-            _writer.write(HTMLEncoder.encode(strValue, false, false));
+            _writer.write(HTMLEncoder.encode(strValue, true, true));
         }
     }
 
