@@ -14,7 +14,6 @@
     <property name="web-inf.classes.dir" location="${examples.web}/WEB-INF/classes"/>
     <property name="web-inf.lib.dir" location="${examples.web}/WEB-INF/lib"/>
     <property name="myfaces.doc" location="${project.dir}/doc"/>
-    <property name="components_resource.src" location="${project.dir}/src/components_resource"/>
 
     <!-- Properties -->
     <property file="../build.local.properties"/>

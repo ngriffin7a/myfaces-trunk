@@ -15,7 +15,6 @@
     <property name="share.src" location="${project.dir}/src/share"/>
     <property name="myfaces.src" location="${project.dir}/src/myfaces"/>
     <property name="components.src" location="${project.dir}/src/components"/>
-    <property name="components_resource.src" location="${project.dir}/src/components_resource"/>
     <property name="jsfapi.src" location="${project.dir}/src/jsfapi"/>
     <property name="tlds.dir" location="${project.dir}/tlds"/>
     <property name="tiles.dir" location="${project.dir}/webapps/tiles"/>
@@ -112,10 +111,6 @@
             <fileset file="${commons-fileupload.jar}"/>
             <fileset file="${commons-validator.jar}"/>
             <fileset file="${jakarta-oro.jar}"/>
-        </copy>
-
-        <copy todir="${examples.web}">
-            <fileset dir="${components_resource.src}"/>
         </copy>
 
 
