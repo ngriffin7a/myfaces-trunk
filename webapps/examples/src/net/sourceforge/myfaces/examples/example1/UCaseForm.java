@@ -18,6 +18,7 @@
  */
 package net.sourceforge.myfaces.examples.example1;
 
+import javax.faces.application.Action;
 import java.io.Serializable;
 
 /**
@@ -48,6 +49,17 @@ public class UCaseForm
     public void setText(String text)
     {
         this.text = text;
+    }
+
+    public Action getJumpHome()
+    {
+        return new Action()
+        {
+            public String invoke()
+            {
+                return "jump_home";
+            }
+        };
     }
 
 

@@ -119,7 +119,7 @@ managed beans used:
                     </h:form>
                 </td></tr></table>
 
-        <br><h:command_hyperlink id="jump_home" href="home.jsf" >Go Home</h:command_hyperlink>
+        <br><h:command_hyperlink id="jump_home" actionRef="ucaseForm.jumpHome" >Go Home</h:command_hyperlink>
 
             </h:panel_group>
         </f:facet>
