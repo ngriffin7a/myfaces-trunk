@@ -32,7 +32,6 @@ import javax.faces.FacesException;
 import javax.faces.FactoryFinder;
 import javax.faces.component.UIComponent;
 import javax.faces.convert.Converter;
-import javax.faces.lifecycle.Lifecycle;
 import javax.faces.render.RenderKit;
 import javax.faces.render.RenderKitFactory;
 import javax.faces.validator.Validator;
@@ -51,6 +50,7 @@ public class FacesConfig
 
     private ApplicationConfig _applicationConfig;
     private FactoryConfig _factoryConfig;
+    private LifecycleConfig _lifecycleConfig;
     private final Map _converterMap = new HashMap();
     private final Map _componentClassMap = new HashMap();
     private final Map _validatorClassMap = new HashMap();
@@ -58,7 +58,6 @@ public class FacesConfig
     private final List _navigationRuleConfigList = new ArrayList();
     private final Map _referencedBeanConfigMap = new HashMap();
     private final Map _renderKitConfigMap = new HashMap();
-    private Lifecycle _lifecycle;
 
 
     public ApplicationConfig getApplicationConfig()
@@ -347,17 +346,7 @@ public class FacesConfig
         }
         return false;
     }
-    
-    public Lifecycle getLifecycle()
-    {
-        return _lifecycle;
-    }
-    
-    public void setLifecycle(Lifecycle lifecycle)
-    {
-        _lifecycle = lifecycle;
-    }
-    
+
     public FactoryConfig getFactoryConfig()
     {
         return _factoryConfig;
@@ -379,4 +368,26 @@ public class FacesConfig
             _factoryConfig.update(factoryConfig);
         }
     }
-}
+    
+    public LifecycleConfig getLifecycleConfig()
+    {
+        return _lifecycleConfig;
+    }
+    
+    public void setLifecycleConfig(LifecycleConfig lifecycleConfig)
+    {
+        _lifecycleConfig = lifecycleConfig;
+    }
+
+    public void addLifecycleConfig(LifecycleConfig lifecycleConfig)
+    {
+        if ( _lifecycleConfig == null)
+        {
+            _lifecycleConfig = lifecycleConfig;
+        }
+        else
+        {
+            _lifecycleConfig.update(lifecycleConfig);
+        }
+    }
+    }
