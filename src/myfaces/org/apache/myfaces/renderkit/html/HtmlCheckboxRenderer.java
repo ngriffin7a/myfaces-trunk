@@ -47,9 +47,6 @@ import java.util.Map;
 public class HtmlCheckboxRenderer
 extends HtmlRenderer
 {
-    private static final String CHECKED_VALUE = "checked";
-    private static final String CHECKBOX_INPUT_TYPE = "checkbox";
-    private static final String HIDDEN_INPUT_TYPE = "hidden";
 
     public void decode(FacesContext facesContext, UIComponent uiComponent)
     {
@@ -150,7 +147,7 @@ extends HtmlRenderer
             //posted at all).
             ResponseWriter writer = facesContext.getResponseWriter();
             writer.startElement(HTML.INPUT_ELEM, uiComponent);
-            writer.writeAttribute(HTML.TYPE_ATTR,HIDDEN_INPUT_TYPE,null);
+            writer.writeAttribute(HTML.TYPE_ATTR,HTML.INPUT_TYPE_HIDDEN,null);
             writer.writeAttribute(HTML.NAME_ATTR,uiComponent.getClientId(facesContext),null);
             writer.writeAttribute(HTML.VALUE_ATTR,"0",null);
         }
@@ -175,13 +172,13 @@ extends HtmlRenderer
         ResponseWriter inputElemWriter = writer.cloneWithWriter(buf);
 
         inputElemWriter.startElement(HTML.INPUT_ELEM, uiComponent);
-        inputElemWriter.writeAttribute(HTML.TYPE_ATTR,CHECKBOX_INPUT_TYPE,null);
+        inputElemWriter.writeAttribute(HTML.TYPE_ATTR,HTML.INPUT_TYPE_CHECKBOX,null);
         inputElemWriter.writeAttribute(HTML.NAME_ATTR,clientId,null);
         inputElemWriter.writeAttribute(HTML.ID_ATTR,clientId,null);
 
         if (checked)
         {
-            inputElemWriter.writeAttribute(HTML.CHECKED_ATTR,CHECKED_VALUE,null);
+            inputElemWriter.writeAttribute(HTML.CHECKED_ATTR,HTML.INPUT_CHECKED_VALUE,null);
         }
 
         if ((value != null) && (value.length() > 0))

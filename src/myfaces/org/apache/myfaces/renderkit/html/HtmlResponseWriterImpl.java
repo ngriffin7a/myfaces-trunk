@@ -189,6 +189,10 @@ public class HtmlResponseWriterImpl
     {
         closeStartElementIfNecessary();
         //TODO: do not escape text within script or style
+
+        if(value == null)
+            return;
+
         String strValue = value.toString(); //TODO: Use converter for value
         _writer.write(HTMLEncoder.encode(strValue, false, false));
     }

@@ -428,7 +428,7 @@
 
       <renderer>
           <renderer-type>Checkbox</renderer-type>
-          <renderer-class>net.sourceforge.myfaces.renderkit.html.CheckboxRenderer</renderer-class>
+          <renderer-class>net.sourceforge.myfaces.renderkit.html.legacy.CheckboxRenderer</renderer-class>
             <supported-component-type>
                 <component-type>SelectBoolean</component-type>
             </supported-component-type>
@@ -439,7 +439,7 @@
 
       <renderer>
           <renderer-type>Data</renderer-type>
-          <renderer-class>net.sourceforge.myfaces.renderkit.html.DataRenderer</renderer-class>
+          <renderer-class>net.sourceforge.myfaces.renderkit.html.legacy.DataRenderer</renderer-class>
             <supported-component-type>
                 <component-type>Panel</component-type>
             </supported-component-type>
@@ -447,7 +447,7 @@
 
       <renderer>
           <renderer-type>Date</renderer-type>
-          <renderer-class>net.sourceforge.myfaces.renderkit.html.DateRenderer</renderer-class>
+          <renderer-class>net.sourceforge.myfaces.renderkit.html.legacy.DateRenderer</renderer-class>
             <supported-component-type>
                 <component-type>InputText</component-type>
             </supported-component-type>
@@ -458,7 +458,7 @@
 
       <renderer>
           <renderer-type>DateTime</renderer-type>
-          <renderer-class>net.sourceforge.myfaces.renderkit.html.DateTimeRenderer</renderer-class>
+          <renderer-class>net.sourceforge.myfaces.renderkit.html.legacy.DateTimeRenderer</renderer-class>
             <supported-component-type>
                 <component-type>InputText</component-type>
             </supported-component-type>
@@ -501,7 +501,7 @@
 
       <renderer>
           <renderer-type>Hidden</renderer-type>
-          <renderer-class>net.sourceforge.myfaces.renderkit.html.HiddenRenderer</renderer-class>
+          <renderer-class>net.sourceforge.myfaces.renderkit.html.legacy.HiddenRenderer</renderer-class>
             <supported-component-type>
                 <component-type>Input</component-type>
             </supported-component-type>
@@ -509,7 +509,7 @@
 
       <renderer>
           <renderer-type>Hyperlink</renderer-type>
-          <renderer-class>net.sourceforge.myfaces.renderkit.html.HyperlinkRenderer</renderer-class>
+          <renderer-class>net.sourceforge.myfaces.renderkit.html.legacy.HyperlinkRenderer</renderer-class>
             <supported-component-type>
                 <component-type>Command</component-type>
             </supported-component-type>
@@ -517,7 +517,7 @@
 
       <renderer>
           <renderer-type>Image</renderer-type>
-          <renderer-class>net.sourceforge.myfaces.renderkit.html.ImageRenderer</renderer-class>
+          <renderer-class>net.sourceforge.myfaces.renderkit.html.legacy.ImageRenderer</renderer-class>
             <supported-component-type>
                 <component-type>Graphic</component-type>
             </supported-component-type>
@@ -525,7 +525,7 @@
 
       <renderer>
           <renderer-type>Label</renderer-type>
-          <renderer-class>net.sourceforge.myfaces.renderkit.html.LabelRenderer</renderer-class>
+          <renderer-class>net.sourceforge.myfaces.renderkit.html.legacy.LabelRenderer</renderer-class>
             <supported-component-type>
                 <component-type>Output</component-type>
             </supported-component-type>
@@ -533,7 +533,7 @@
 
       <renderer>
           <renderer-type>Listbox</renderer-type>
-          <renderer-class>net.sourceforge.myfaces.renderkit.html.ListboxRenderer</renderer-class>
+          <renderer-class>net.sourceforge.myfaces.renderkit.html.legacy.ListboxRenderer</renderer-class>
             <supported-component-type>
                 <component-type>SelectOne</component-type>
             </supported-component-type>
@@ -584,7 +584,7 @@
 
       <renderer>
           <renderer-type>Secret</renderer-type>
-          <renderer-class>net.sourceforge.myfaces.renderkit.html.SecretRenderer</renderer-class>
+          <renderer-class>net.sourceforge.myfaces.renderkit.html.legacy.SecretRenderer</renderer-class>
             <supported-component-type>
                 <component-type>Input</component-type>
             </supported-component-type>
@@ -592,7 +592,7 @@
 
       <renderer>
           <renderer-type>Textarea</renderer-type>
-          <renderer-class>net.sourceforge.myfaces.renderkit.html.TextareaRenderer</renderer-class>
+          <renderer-class>net.sourceforge.myfaces.renderkit.html.legacy.TextareaRenderer</renderer-class>
             <supported-component-type>
                 <component-type>InputTextarea</component-type>
             </supported-component-type>
@@ -611,7 +611,7 @@
 
       <renderer>
           <renderer-type>Time</renderer-type>
-          <renderer-class>net.sourceforge.myfaces.renderkit.html.TimeRenderer</renderer-class>
+          <renderer-class>net.sourceforge.myfaces.renderkit.html.legacy.TimeRenderer</renderer-class>
             <supported-component-type>
                 <component-type>Input</component-type>
             </supported-component-type>

@@ -19,7 +19,8 @@
 package net.sourceforge.myfaces.taglib.legacy;
 
 import net.sourceforge.myfaces.renderkit.JSFAttr;
-import net.sourceforge.myfaces.renderkit.html.TimeRenderer;
+import net.sourceforge.myfaces.renderkit.html.legacy.TimeRenderer;
+import net.sourceforge.myfaces.renderkit.html.legacy.TimeRenderer;
 
 import javax.faces.component.UIComponent;
 

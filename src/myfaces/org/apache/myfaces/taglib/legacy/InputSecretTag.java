@@ -19,7 +19,7 @@
 package net.sourceforge.myfaces.taglib.legacy;
 
 import net.sourceforge.myfaces.renderkit.JSFAttr;
-import net.sourceforge.myfaces.renderkit.html.SecretRenderer;
+import net.sourceforge.myfaces.renderkit.html.legacy.SecretRenderer;
 
 import javax.faces.component.UIComponent;
 

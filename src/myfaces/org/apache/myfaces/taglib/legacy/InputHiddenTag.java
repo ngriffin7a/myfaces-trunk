@@ -19,7 +19,7 @@
 package net.sourceforge.myfaces.taglib.legacy;
 
 import net.sourceforge.myfaces.renderkit.JSFAttr;
-import net.sourceforge.myfaces.renderkit.html.HiddenRenderer;
+import net.sourceforge.myfaces.renderkit.html.legacy.HiddenRenderer;
 
 /**
  * see "input_hidden" tag in myfaces_html.tld

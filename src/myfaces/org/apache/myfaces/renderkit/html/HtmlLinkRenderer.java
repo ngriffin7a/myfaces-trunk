@@ -185,8 +185,7 @@ public class HtmlLinkRenderer
 
         String clientId = uiComponent.getClientId(facesContext);
 
-        href = HTML.addAttributeToHref(href, clientId, URL_PARAM_VALUE);
-
+        href = HTMLUtil.addAttributeToHref(href, clientId, URL_PARAM_VALUE);
 
         //value
 

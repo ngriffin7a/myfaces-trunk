@@ -21,13 +21,14 @@ package net.sourceforge.myfaces.renderkit.html.util;
 import net.sourceforge.myfaces.renderkit.JSFAttr;
 import net.sourceforge.myfaces.renderkit.RendererUtils;
 import net.sourceforge.myfaces.renderkit.html.HTML;
-import net.sourceforge.myfaces.renderkit.html.ListboxRenderer;
+import net.sourceforge.myfaces.renderkit.html.legacy.ListboxRenderer;
 
 import javax.faces.component.UIComponent;
 import javax.faces.component.UISelectMany;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 import javax.faces.model.SelectItem;
+import javax.faces.el.ValueBinding;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.Set;
@@ -108,7 +109,7 @@ public class HTMLUtil
         String styleClass = (String) uiComponent.getAttributes().get(JSFAttr.STYLE_CLASS_ATTR);
         if (styleClass != null && styleClass.length() > 0)
         {
-            writer.writeAttribute("class", styleClass, JSFAttr.STYLE_CLASS_ATTR);
+            writer.writeAttribute(HTML.CLASS_ATTR, styleClass, JSFAttr.STYLE_CLASS_ATTR);
             return true;
         }
         else
@@ -156,7 +157,7 @@ public class HTMLUtil
             if (attrName.equals(HTML.STYLE_CLASS_ATTR))
             {
                 //render JSF "styleClass" attribute as "class"
-                if (renderHTMLAttribute(writer, component, attrName, "class"))
+                if (renderHTMLAttribute(writer, component, attrName, HTML.CLASS_ATTR))
                 {
                     somethingDone = true;
                 }
@@ -174,23 +175,19 @@ public class HTMLUtil
 
 
     public static void renderSelect(
-        FacesContext facesContext, UIComponent uiComponent, String rendererType, int size)
+        FacesContext facesContext, UIComponent uiComponent, Class rendererClass, int size)
     throws IOException
     {
         ResponseWriter writer     = facesContext.getResponseWriter();
 
         boolean        selectMany = (uiComponent instanceof UISelectMany);
 
-        writer.write("<select");
-        writer.write(" name=\"");
-        writer.write(uiComponent.getClientId(facesContext));
-        writer.write('"');
+        writer.startElement(HTML.SELECT_ELEM, uiComponent);
+        writer.writeAttribute(HTML.NAME_ATTR, uiComponent.getClientId(facesContext), null);
 
-        if (rendererType.equals(ListboxRenderer.TYPE))
+        if (rendererClass.isAssignableFrom (ListboxRenderer.class))
         {
-            writer.write(" size=\"");
-            writer.write(Integer.toString(size));
-            writer.write('"');
+            writer.writeAttribute(HTML.SIZE_ATTR, Integer.toString(size),null);
         }
 
         renderHTMLAttributes(writer, uiComponent, HTML.SELECT_PASSTHROUGH_ATTRIBUTES);
@@ -198,10 +195,11 @@ public class HTMLUtil
 
         if (selectMany)
         {
-            writer.write(" multiple ");
+            writer.writeAttribute(HTML.MULTIPLE_ATTR, HTML.MULTIPLE_ATTR, null);
         }
 
-        writer.write(">\n");
+        //close started element
+        writer.writeText(null,null);
 
         Iterator it = SelectItemUtil.getSelectItems(facesContext, uiComponent);
 
@@ -218,52 +216,45 @@ public class HTMLUtil
             }
             else
             {
-                //FIXME
-                //Object currentValue = ((UIInput) uiComponent).currentValue(facesContext);
-                Object currentValue = null;
-
-                /*
-                currentStrValue = ConverterUtils.getComponentValueAsString(facesContext,
-                                                                           uiComponent,
-                                                                           currentValue);
-                                                                           */
+                ValueBinding vb = uiComponent.getValueBinding(JSFAttr.VALUE_ATTR);
+                Object currentValue = vb.getValue(facesContext);
                 currentStrValue = ((currentValue != null) ? currentValue.toString() : null);
             }
 
             while (it.hasNext())
             {
                 SelectItem item = (SelectItem) it.next();
-                writer.write("\t\t<option");
+                writer.write("\t\t");
+                writer.startElement(HTML.OPTION_ELEM, uiComponent);
 
                 Object itemObjValue = item.getValue();
 
                 if (itemObjValue != null)
                 {
                     String itemStrValue = itemObjValue.toString();
-                    writer.write(" value=\"");
-                    writer.write(HTMLEncoder.encode(itemStrValue, false, false));
-                    writer.write('"');
+                    writer.writeAttribute(HTML.VALUE_ATTR, itemStrValue, null);
 
                     if (
                         (selectMany && selectedValuesSet.contains(itemStrValue))
                                 || ((currentStrValue != null)
                                 && itemStrValue.equals(currentStrValue)))
                     {
-                        writer.write(" selected=\"selected\"");
+                        writer.writeAttribute(HTML.INPUT_SELECTED_VALUE,
+                                HTML.INPUT_SELECTED_VALUE, null);
                     }
                 }
 
-                writer.write('>');
-                writer.write(HTMLEncoder.encode(
+
+                writer.writeText(HTMLEncoder.encode(
                         item.getLabel(),
                         true,
-                        true));
+                        true),null);
 
-                writer.write("</option>\n");
+                writer.endElement(HTML.OPTION_ELEM);
             }
         }
 
-        writer.write("</select>");
+        writer.endElement(HTML.SELECT_ELEM);
     }
 
 

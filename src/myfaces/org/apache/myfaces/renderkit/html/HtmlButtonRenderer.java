@@ -43,8 +43,6 @@ public class HtmlButtonRenderer
 extends HtmlRenderer
 {
     private static final String IMAGE_BUTTON_SUFFIX = ".x";
-    private static final String SUBMIT_BUTTON_TYPE = "submit";
-    private String IMAGE_BUTTON_TYPE = "image";
 
     public void decode(FacesContext facesContext, UIComponent uiComponent)
     {
@@ -113,7 +111,7 @@ extends HtmlRenderer
 
         if (image != null)
         {
-            writer.writeAttribute(HTML.TYPE_ATTR, IMAGE_BUTTON_TYPE, null);
+            writer.writeAttribute(HTML.TYPE_ATTR, HTML.INPUT_TYPE_IMAGE, null);
             writer.writeAttribute(HTML.SRC_ATTR, image, JSFAttr.IMAGE_ATTR);
         }
         else
@@ -122,10 +120,9 @@ extends HtmlRenderer
 
             if (type == null)
             {
-                type = SUBMIT_BUTTON_TYPE;
+                type = HTML.INPUT_TYPE_SUBMIT;
             }
             writer.writeAttribute(HTML.TYPE_ATTR, type, JSFAttr.TYPE_ATTR);
-            //FIXME: htmlCommand.getTitle() or getValue()? I would think getValue()
             writer.writeAttribute(HTML.VALUE_ATTR, htmlCommand.getValue(), null);
         }
 

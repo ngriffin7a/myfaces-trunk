@@ -16,7 +16,7 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package net.sourceforge.myfaces.renderkit.html;
+package net.sourceforge.myfaces.renderkit.html.legacy;
 
 import net.sourceforge.myfaces.renderkit.html.legacy.TextRenderer;
 
@@ -27,12 +27,12 @@ import net.sourceforge.myfaces.renderkit.html.legacy.TextRenderer;
  * @author Anton Koinov
  * @version $Revision$ $Date$
  */
-public class DateTimeRenderer
+public class TimeRenderer
 extends TextRenderer
 {
     //~ Static fields/initializers -----------------------------------------------------------------
 
-    public static final String TYPE = "DateTime";
+    public static final String TYPE = "Time";
 
     //~ Methods ------------------------------------------------------------------------------------
 

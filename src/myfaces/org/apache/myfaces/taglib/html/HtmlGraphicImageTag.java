@@ -72,7 +72,7 @@ public class HtmlGraphicImageTag
     {
         super.setProperties(component);
 
-        setStringProperty(component, HTML.ALIGN_ATTR, _alt);
+        setStringProperty(component, HTML.ALIGN_ATTR, _align);
         setStringProperty(component, HTML.ALT_ATTR, _alt);
         setStringProperty(component, HTML.HEIGHT_ATTR, _height);
         setBooleanProperty(component, HTML.ISMAP_ATTR, _ismap);

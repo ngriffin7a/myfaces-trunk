@@ -64,6 +64,8 @@ public class HtmlCommandButtonTag
 
     // UICommand attributes
     private String _action;
+
+    //
     private String _image;
 
     protected void setProperties(UIComponent component)

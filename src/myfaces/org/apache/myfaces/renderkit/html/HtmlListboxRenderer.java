@@ -20,6 +20,7 @@ package net.sourceforge.myfaces.renderkit.html;
 
 import net.sourceforge.myfaces.renderkit.html.util.HTMLUtil;
 import net.sourceforge.myfaces.renderkit.html.util.SelectItemUtil;
+import net.sourceforge.myfaces.renderkit.RendererUtils;
 
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
@@ -32,29 +33,15 @@ import java.io.IOException;
  * @author Anton Koinov
  * @version $Revision$ $Date$
  */
-public class ListboxRenderer
+public class HtmlListboxRenderer
 extends HtmlRenderer
 {
-    //~ Static fields/initializers -----------------------------------------------------------------
-
-    public static final String TYPE = "Listbox";
-
-    //~ Methods ------------------------------------------------------------------------------------
-
-    public String getRendererType()
-    {
-        return TYPE;
-    }
-
-    public void encodeBegin(FacesContext facescontext, UIComponent uicomponent)
-    throws IOException
-    {
-    }
-
     public void encodeEnd(FacesContext facesContext, UIComponent uiComponent)
     throws IOException
     {
+        RendererUtils.checkParamValidity(facesContext, uiComponent, null);
+
         int size = SelectItemUtil.getSelectItemsCount(facesContext, uiComponent);
-        HTMLUtil.renderSelect(facesContext, uiComponent, TYPE, size);
+        HTMLUtil.renderSelect(facesContext, uiComponent, HtmlListboxRenderer.class, size);
     }
 }

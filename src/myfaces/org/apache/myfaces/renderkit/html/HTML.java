@@ -28,6 +28,9 @@ import net.sourceforge.myfaces.util.ArrayUtils;
  */
 public class HTML
 {
+    public static final String INPUT_CHECKED_VALUE = "checked";
+    public static final String INPUT_SELECTED_VALUE = "selected";
+
     private HTML() {}
 
     // Common attributes
@@ -92,6 +95,10 @@ public class HTML
         TITLE_ATTR,
         STYLE_CLASS_ATTR
     };
+
+    //universal, but not the same property-name -
+    //styleClass attribute is rendered as such
+    public static final String CLASS_ATTR = "class";
 
     // common form field attributes
     public static final String ACCESSKEY_ATTR   = "accesskey";
@@ -202,6 +209,14 @@ public class HTML
         TABINDEX_ATTR
     };
 
+    //values for input-type attribute
+    public static final String INPUT_TYPE_SUBMIT = "submit";
+    public static final String INPUT_TYPE_IMAGE = "image";
+    public static final String INPUT_TYPE_HIDDEN = "hidden";
+    public static final String INPUT_TYPE_CHECKBOX = "checkbox";
+    public static final String INPUT_TYPE_PASSWORD = "password";
+
+
     // <button>
     public static final String[] BUTTON_ATTRIBUTES =
     {
@@ -227,6 +242,8 @@ public class HTML
     };
 
     // <select>
+    public static final String MULTIPLE_ATTR = "multiple";
+
     public static final String[] SELECT_ATTRIBUTES =
     {
         DATAFLD_ATTR,
@@ -300,6 +317,9 @@ public class HTML
     //HTML element constants
     public static final String SPAN_ELEM = "span";
     public static final String INPUT_ELEM = "input";
+    public static final String SELECT_ELEM = "select";
+    public static final String OPTION_ELEM = "option";
+    public static final String TEXTAREA_ELEM = "textarea";
     public static final String FORM_ELEM = "form";
     public static final String ANCHOR_ELEM = "a";
     public static final String IMG_ELEM = "img";

@@ -16,14 +16,14 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package net.sourceforge.myfaces.renderkit.html;
+package net.sourceforge.myfaces.renderkit.html.legacy;
 
-import net.sourceforge.myfaces.renderkit.html.util.HTMLEncoder;
+import net.sourceforge.myfaces.renderkit.html.util.HTMLUtil;
+import net.sourceforge.myfaces.renderkit.html.util.SelectItemUtil;
+import net.sourceforge.myfaces.renderkit.html.HtmlRenderer;
 
 import javax.faces.component.UIComponent;
-import javax.faces.component.UIInput;
 import javax.faces.context.FacesContext;
-import javax.faces.context.ResponseWriter;
 import java.io.IOException;
 
 
@@ -33,12 +33,12 @@ import java.io.IOException;
  * @author Anton Koinov
  * @version $Revision$ $Date$
  */
-public class HiddenRenderer
+public class ListboxRenderer
 extends HtmlRenderer
 {
     //~ Static fields/initializers -----------------------------------------------------------------
 
-    public static final String TYPE = "Hidden";
+    public static final String TYPE = "Listbox";
 
     //~ Methods ------------------------------------------------------------------------------------
 
@@ -47,45 +47,15 @@ extends HtmlRenderer
         return TYPE;
     }
 
-    /*
-    public boolean supportsComponentType(String s)
+    public void encodeBegin(FacesContext facescontext, UIComponent uicomponent)
+    throws IOException
     {
-        return s.equals(UIInput.TYPE);
     }
 
-    public boolean supportsComponentType(UIComponent uicomponent)
-    {
-        return uicomponent instanceof UIInput;
-    }
-
-    protected void initAttributeDescriptors()
-    {
-        addAttributeDescriptors(UIInput.TYPE, TLD_HTML_URI, "input_hidden", INPUT_HIDDEN_ATTRIBUTES);
-        addAttributeDescriptors(UIInput.TYPE, TLD_HTML_URI, "input_hidden", USER_ROLE_ATTRIBUTES);
-    }
-    */
     public void encodeEnd(FacesContext facesContext, UIComponent uiComponent)
     throws IOException
     {
-        ResponseWriter writer = facesContext.getResponseWriter();
-        writer.write("<input type=\"hidden\"");
-
-        String coumpoundId = uiComponent.getClientId(facesContext);
-        writer.write(" name=\"");
-        writer.write(coumpoundId);
-        writer.write("\" id=\"");
-        writer.write(coumpoundId);
-        writer.write('"');
-
-        String currentValue = getStringValue(facesContext, (UIInput) uiComponent);
-
-        if (currentValue != null)
-        {
-            writer.write(" value=\"");
-            writer.write(HTMLEncoder.encode(currentValue, false, false));
-            writer.write('"');
-        }
-
-        writer.write('>');
+        int size = SelectItemUtil.getSelectItemsCount(facesContext, uiComponent);
+        HTMLUtil.renderSelect(facesContext, uiComponent, TYPE, size);
     }
 }

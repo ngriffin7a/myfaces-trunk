@@ -20,11 +20,15 @@ package net.sourceforge.myfaces.renderkit.html;
 
 import net.sourceforge.myfaces.renderkit.html.util.HTMLEncoder;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLUtil;
+import net.sourceforge.myfaces.renderkit.html.HtmlRenderer;
+import net.sourceforge.myfaces.renderkit.html.HTML;
+import net.sourceforge.myfaces.renderkit.JSFAttr;
 
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIInput;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
+import javax.faces.el.ValueBinding;
 import java.io.IOException;
 
 
@@ -34,68 +38,31 @@ import java.io.IOException;
  * @author Anton Koinov
  * @version $Revision$ $Date$
  */
-public class TextareaRenderer
+public class HtmlTextareaRenderer
 extends HtmlRenderer
 {
-    //~ Static fields/initializers -----------------------------------------------------------------
-
-    public static final String TYPE = "Textarea";
-
-    //~ Methods ------------------------------------------------------------------------------------
-
-    public String getRendererType()
-    {
-        return TYPE;
-    }
-
-    /*
-    public boolean supportsComponentType(String s)
-    {
-        return s.equals(UIInput.TYPE);
-    }
-
-    public boolean supportsComponentType(UIComponent uicomponent)
-    {
-        return uicomponent instanceof UIInput;
-    }
-
-    protected void initAttributeDescriptors()
-    {
-        addAttributeDescriptors(UIInput.TYPE, TLD_HTML_URI, "input_text", HTML_UNIVERSAL_ATTRIBUTES);
-        addAttributeDescriptors(UIInput.TYPE, TLD_HTML_URI, "input_text", HTML_EVENT_HANDLER_ATTRIBUTES);
-        addAttributeDescriptors(UIInput.TYPE, TLD_HTML_URI, "input_text", HTML_TEXTAREA_ATTRIBUTES);
-        addAttributeDescriptors(UIInput.TYPE, TLD_HTML_URI, "input_text", INPUT_TEXTAREA_ATTRIBUTES);
-        addAttributeDescriptors(UIInput.TYPE, TLD_HTML_URI, "input_text", USER_ROLE_ATTRIBUTES);
-    }
-    */
     public void encodeEnd(FacesContext facesContext, UIComponent uiComponent)
     throws IOException
     {
         ResponseWriter writer = facesContext.getResponseWriter();
-        writer.write("<textarea");
+        writer.startElement(HTML.TEXTAREA_ELEM, uiComponent);
 
-        String coumpoundId = uiComponent.getClientId(facesContext);
-        writer.write(" name=\"");
-        writer.write(coumpoundId);
-        writer.write("\" id=\"");
-        writer.write(coumpoundId);
-        writer.write('"');
+        String clientId = uiComponent.getClientId(facesContext);
+        writer.writeAttribute(HTML.NAME_ATTR, clientId, null);
+        writer.writeAttribute(HTML.ID_ATTR, clientId, null);
 
-        HTMLUtil.renderStyleClass(writer, uiComponent);
         HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML.UNIVERSAL_ATTRIBUTES);
         HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML.EVENT_HANDLER_ATTRIBUTES);
         HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML.TEXTAREA_ATTRIBUTES);
-        HTMLUtil.renderDisabledOnUserRole(facesContext, uiComponent);
+        HTMLUtil.renderDisabledOnUserRole(writer, uiComponent, facesContext);
 
-        writer.write('>');
+        ValueBinding vb = uiComponent.getValueBinding(JSFAttr.VALUE_ATTR);
 
-        String currentValue = getStringValue(facesContext, (UIInput) uiComponent);
-
-        if (currentValue != null)
+        if (vb != null)
         {
-            writer.write(HTMLEncoder.encode(currentValue, false, false));
+            writer.writeText(vb.getValue(facesContext), JSFAttr.VALUE_ATTR);
         }
 
-        writer.write("</textarea>");
+        writer.endElement(HTML.TEXTAREA_ELEM);
     }
 }

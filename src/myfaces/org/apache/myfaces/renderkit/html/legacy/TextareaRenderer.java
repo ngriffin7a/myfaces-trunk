@@ -16,12 +16,12 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package net.sourceforge.myfaces.renderkit.html;
+package net.sourceforge.myfaces.renderkit.html.legacy;
 
-import net.sourceforge.myfaces.component.UIComponentUtils;
-import net.sourceforge.myfaces.renderkit.JSFAttr;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLEncoder;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLUtil;
+import net.sourceforge.myfaces.renderkit.html.HtmlRenderer;
+import net.sourceforge.myfaces.renderkit.html.HTML;
 
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIInput;
@@ -31,17 +31,17 @@ import java.io.IOException;
 
 
 /**
- * see Spec.1.0 EA - JSF.7.6.4 Renderer Types for UIInput Components
+ * DOCUMENT ME!
  * @author Manfred Geiler (latest modification by $Author$)
  * @author Anton Koinov
  * @version $Revision$ $Date$
  */
-public class SecretRenderer
+public class TextareaRenderer
 extends HtmlRenderer
 {
     //~ Static fields/initializers -----------------------------------------------------------------
 
-    public static final String TYPE = "Secret";
+    public static final String TYPE = "Textarea";
 
     //~ Methods ------------------------------------------------------------------------------------
 
@@ -50,33 +50,54 @@ extends HtmlRenderer
         return TYPE;
     }
 
+    /*
+    public boolean supportsComponentType(String s)
+    {
+        return s.equals(UIInput.TYPE);
+    }
+
+    public boolean supportsComponentType(UIComponent uicomponent)
+    {
+        return uicomponent instanceof UIInput;
+    }
+
+    protected void initAttributeDescriptors()
+    {
+        addAttributeDescriptors(UIInput.TYPE, TLD_HTML_URI, "input_text", HTML_UNIVERSAL_ATTRIBUTES);
+        addAttributeDescriptors(UIInput.TYPE, TLD_HTML_URI, "input_text", HTML_EVENT_HANDLER_ATTRIBUTES);
+        addAttributeDescriptors(UIInput.TYPE, TLD_HTML_URI, "input_text", HTML_TEXTAREA_ATTRIBUTES);
+        addAttributeDescriptors(UIInput.TYPE, TLD_HTML_URI, "input_text", INPUT_TEXTAREA_ATTRIBUTES);
+        addAttributeDescriptors(UIInput.TYPE, TLD_HTML_URI, "input_text", USER_ROLE_ATTRIBUTES);
+    }
+    */
     public void encodeEnd(FacesContext facesContext, UIComponent uiComponent)
     throws IOException
     {
         ResponseWriter writer = facesContext.getResponseWriter();
-        writer.write("<input type=\"password\" name=\"");
-        writer.write(uiComponent.getClientId(facesContext));
+        writer.write("<textarea");
+
+        String coumpoundId = uiComponent.getClientId(facesContext);
+        writer.write(" name=\"");
+        writer.write(coumpoundId);
+        writer.write("\" id=\"");
+        writer.write(coumpoundId);
         writer.write('"');
-
-        if (UIComponentUtils.getBooleanAttribute(uiComponent, JSFAttr.REDISPLAY_ATTR, false))
-        {
-            String currentValue = getStringValue(facesContext, (UIInput) uiComponent);
-
-            if (currentValue != null)
-            {
-                writer.write(" value=\"");
-                writer.write(HTMLEncoder.encode(currentValue, false, false));
-                writer.write('"');
-            }
-        }
 
         HTMLUtil.renderStyleClass(writer, uiComponent);
         HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML.UNIVERSAL_ATTRIBUTES);
         HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML.EVENT_HANDLER_ATTRIBUTES);
-        HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML.INPUT_ATTRIBUTES);
-        HTMLUtil.renderHTMLAttribute(writer, uiComponent, JSFAttr.MAXLENGTH_ATTR, "maxlength");
+        HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML.TEXTAREA_ATTRIBUTES);
         HTMLUtil.renderDisabledOnUserRole(facesContext, uiComponent);
 
         writer.write('>');
+
+        String currentValue = getStringValue(facesContext, (UIInput) uiComponent);
+
+        if (currentValue != null)
+        {
+            writer.write(HTMLEncoder.encode(currentValue, false, false));
+        }
+
+        writer.write("</textarea>");
     }
 }

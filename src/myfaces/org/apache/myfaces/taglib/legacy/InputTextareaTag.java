@@ -20,7 +20,7 @@ package net.sourceforge.myfaces.taglib.legacy;
 
 import net.sourceforge.myfaces.renderkit.JSFAttr;
 import net.sourceforge.myfaces.renderkit.html.HTML;
-import net.sourceforge.myfaces.renderkit.html.TextareaRenderer;
+import net.sourceforge.myfaces.renderkit.html.legacy.TextareaRenderer;
 
 /**
  * see "input_textarea" tag in myfaces_html.tld
