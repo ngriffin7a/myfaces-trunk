@@ -82,7 +82,8 @@
                 <x:tree id="tree" value="#{treeModel}"
                         styleClass="tree"
                         nodeClass="treenode"
-                        selectedNodeClass="treenodeSelected">
+                        selectedNodeClass="treenodeSelected"
+                        expandRoot="true">
                 </x:tree>
                 <f:verbatim><br></f:verbatim>
 
