@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V1.2//EN" "http://apache.org/forrest/dtd/document-v12.dtd">
-<document> 
-  <header> 
-    <title>Apache MyFaces</title> 
-  </header> 
-  <body> 
+<document>
+  <header>
+    <title>Apache MyFaces</title>
+  </header>
+  <body>
     <section>
       <title>Welcome to The MyFaces Project</title>
       <p>This is the official homepage of the first free open source JavaServer(tm) Faces implementation called "MyFaces".</p>
@@ -15,49 +15,49 @@
       	JavaServer(tm) Faces is a new and upcoming web application framework that accomplishes the MVC paradigm.
       	 It is comparable to the well-known <link href="http://struts.apache.org/">Struts Framework</link> but has features and concepts that are beyond those of Struts.
 Look at <link href="http://java.sun.com/j2ee/javaserverfaces/">Sun's JavaServer(tm) Page</link> to learn more about the <link href="http://www.jcp.org/en/jsr/detail?id=127">Java Specification Request 127</link> and to download the specification. They also provide a useful Tutorial there.
- 	
+
       </p>
     </section>
-	
+
     <section>
-        <title>April 2, 2005 - Nightly builds are now available</title>
+        <title>April 1, 2005 - Nightly builds are now available</title>
         <p>
-            Nightly builds are now available <link href="http://cvs.apache.org/builds/myfaces/nightly">here</link>.  Go ahead and download  
+            Nightly builds are now available <link href="http://cvs.apache.org/builds/myfaces/nightly">here</link>.  Go ahead and download
             them if you wish to use the latest and greatest source code before the next official release.
         </p>
     </section>
     <section>
         <title>March 29, 2005 - MyFaces 1.0.9 RC2 now available</title>
         <p>
-            My Faces 1.0.9 RC2 is now available <link href="http://cvs.apache.org/dist/myfaces/builds/1.0.9/rc2/">here</link>. 
-            Please help us prepare for the official release by testing and providing feedback.  If you think you have found a 
+            My Faces 1.0.9 RC2 is now available <link href="http://cvs.apache.org/dist/myfaces/builds/1.0.9/rc2/">here</link>.
+            Please help us prepare for the official release by testing and providing feedback.  If you think you have found a
             bug, please report it <link href="http://issues.apache.org/jira/secure/BrowseProject.jspa?id=10600">here</link>.
         </p>
-    </section>	
+    </section>
     <section>
         <title>February 24, 2005 - MyFaces is Hot</title>
         <note label="David Geary (JSF Author and Creator of Tiles) Blogs on MyFaces">
             MyFaces is Hot<br/><br/>
             Disclaimer: From now on, we're going to have nothing but fun here!<br/><br/>
-            I like to keep my finger on the pulse as much as I can so that I can track Big Things and Next Big Things. 
-            One of the best ways to do that is to join mailing lists and watch how much traffic appears in your inbox. 
-            Lately, I've taken notice of the traffic on the MyFaces mailing list, which seems to be running neck and 
+            I like to keep my finger on the pulse as much as I can so that I can track Big Things and Next Big Things.
+            One of the best ways to do that is to join mailing lists and watch how much traffic appears in your inbox.
+            Lately, I've taken notice of the traffic on the MyFaces mailing list, which seems to be running neck and
             neck with the Struts developer's mailing list, which means that MyFaces is generating a lot of attention.
             <br/><br/>
             What? Oh no, I haven't joined the Ruby on Rails mailing list yet. 8-)
             <br/><br/>
-            In the early days of JSF (last year), there was very little JSF traction. I think people were suspicious 
-            of anything of that complexity that came out of a JSR, which in general is probably wise, but in this case, 
+            In the early days of JSF (last year), there was very little JSF traction. I think people were suspicious
+            of anything of that complexity that came out of a JSR, which in general is probably wise, but in this case,
             of course, totally unfounded.
             <br/><br/>
-            But lately, I'm seeing quite a surge in interest in JSF. And now that MyFaces is under the Apache umbrella, 
-            I expect big things for it. Kudos to all the folks who have put in so much time and effort for MyFaces, such 
-            as Heath Borders, Matthias Wessendorf, and Sean Schofield (Sean: how the heck can you be in so many places 
-            at once?). Apologies to those I didn't mention; this list is off the top of my head.       
-            <br/><br/>            
+            But lately, I'm seeing quite a surge in interest in JSF. And now that MyFaces is under the Apache umbrella,
+            I expect big things for it. Kudos to all the folks who have put in so much time and effort for MyFaces, such
+            as Heath Borders, Matthias Wessendorf, and Sean Schofield (Sean: how the heck can you be in so many places
+            at once?). Apologies to those I didn't mention; this list is off the top of my head.
+            <br/><br/>
         </note>
         <p>Click <link href="http://www.jroller.com/page/dgeary/20050224#myfaces_is_hot">here</link> to read David Geary's blog.</p>
-    </section>	        
+    </section>
     <section>
         <title>February 23, 2005 - MyFaces is Now a Top Level Apache Project</title>
         <note label="Email to myfaces-dev from ASF Board">
@@ -75,7 +75,7 @@ Look at <link href="http://java.sun.com/j2ee/javaserverfaces/">Sun's JavaServer(
             <br/><br/>
             Anton
         </note>
-    </section>	    
+    </section>
     <section>
         <title>Resources</title>
         <p>If you are new to JavaServer Faces Technology look at the following resources to become familar with JSF:</p>
@@ -84,6 +84,6 @@ Look at <link href="http://java.sun.com/j2ee/javaserverfaces/">Sun's JavaServer(
             <li><link href="http://www.jamesholmes.com/JavaServerFaces/">James Holmes' JSF Resources</link></li>
         </ul>
     </section>
-    
+
   </body>
 </document>

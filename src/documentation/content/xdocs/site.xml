@@ -13,8 +13,8 @@
 	<components href="components/" label="Components" tab="components">
 		<overview label="Overview" href="overview.html"/>
 		<jscookmenu label="JSCook Menu" href="jscookmenu.html"/>
+                <tree label="Tiles Support" href="tiles.html"/>
 		<tree label="Tree2" href="tree2.html"/>
-		<treTable label="Tree Table" href="treeTable.html"/>
 		<validateCreditCard label="validateCreditCard" href="validateCreditCard.html"/>
 		<validateISBN label="validateISBN" href="validateISBN.html"/>
 		<validateRegExpr label="validateRegExpr" href="validateRegExpr.html"/>

@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V1.2//EN" "document-v12.dtd">
+
+<!--
+This is a standard template meant to be used for the documentation of all custom
+components.
+-->
+<document>
+    <!-- component name -->
+    <header>
+        <title>Tiles Support</title>
+    </header>
+    <body>
+        <!-- Description -->
+        <section>
+            <title>Description</title>
+            <p>
+                For better <link href="http://struts.apache.org">struts/tiles</link> support, MyFaces has an integrated JspTilesViewHandler
+                (since release 1.0.6 beta). The main advantage of the ViewHandler is, that tiles-definitions can be sourced out into xml files
+                (up to now using tiles and myfaces you had to definie the layout within jsp-pages).
+            </p>
+            <p>
+                Take a look at the <code>myfaces-tiles-example</code> web application.
+            </p>
+        </section>
+        <!-- screen shot -->
+        <section>
+            <title>Screen Shot</title>
+            <p>Not Available</p>
+        </section>
+        <!-- API -->
+        <section>
+            <title>API</title>
+            <p>Not Applicable</p>
+        </section>
+        <!-- Syntax -->
+        <section>
+            <title>Syntax</title>
+            <p>Not Applicable</p>
+        </section>
+        <!-- Instructions -->
+        <section>
+            <title>Instructions</title>
+            <ul>
+                <li>Configure the JspTilesViewHandler in your faces-config: </li>
+            </ul>
+            <source>
+            &lt;application>
+                &lt;view-handler>net.sourceforge.myfaces.application.jsp.JspTilesViewHandlerImpl&lt;view-handler>
+            &lt;/application>
+            </source>
+            <ul>
+                <li>Add the following lines to your web.xml: </li>
+            </ul>
+            <source>
+            &lt;context-param>
+                &lt;param-name>tiles-definitions&lt;/param-name>
+                &lt;param-value>/WEB-INF/tiles.xml&lt;/param-value>
+            &lt;/context-param>
+            </source>
+            <ul>
+                <li>Define your layout in a tiles-definition file</li>
+            </ul>
+            <ul>
+                <li>When rendering the view, the JspTilesViewHandlerImpl will take the given viewId and compute a tileId by:</li>
+                <ul>
+                    <li>Substituting any extension by ".tiles"</li>
+                </ul>
+                <ul>
+                    <li>Appending ".tiles" if path-mapping is used</li>
+                </ul>
+            </ul>
+            <ul>
+                <li>
+                    Next the ViewHanlder looks up in the tile-definitions for the corresponding definition.
+                    (eg. for viewId = /page1.jsp the lookup would be /page1.tiles)
+                </li>
+            </ul>
+        </section>
+    </body>
+    <footer>
+    	<legal>Java, J2EE, and JCP are trademarks or registered trademarks of Sun Microsystems, Inc. in the United States and other countries.<br />
+	&copy; 2004 - 2005, Apache Software Foundation
+	</legal>
+    </footer>
+
+</document>
