@@ -144,6 +144,12 @@
         <detail xml:lang="en">Specified value is not a valid time.</detail>
     </message>
 
+    <message>
+        <message-id>net.sourceforge.myfaces.convert.impl.NumberConverter.EXCEPTION</message-id>
+        <summary xml:lang="en">Input Error</summary>
+        <detail xml:lang="en">Specified value is not a valid number.</detail>
+    </message>
+
 
     <message>
         <message-id>net.sourceforge.myfaces.renderkit.html.ErrorsRenderer.IN_FIELD</message-id>

@@ -358,6 +358,11 @@
           <severity>ERROR</severity>
       </message>
 
+      <message>
+          <message-id>net.sourceforge.myfaces.convert.impl.NumberConverter.EXCEPTION</message-id>
+          <severity>ERROR</severity>
+      </message>
+
 
       <message>
           <message-id>net.sourceforge.myfaces.renderkit.html.ErrorsRenderer.IN_FIELD</message-id>
