@@ -61,7 +61,8 @@ managed beans used:
                <f:verbatim><br><br>
 </f:verbatim>
 
-                <x:dataTable styleClass="standardTable"
+                <x:dataTable id="data"
+                        styleClass="standardTable"
                         headerClass="standardTable_Header"
                         footerClass="standardTable_Header"
                         rowClasses="standardTable_Row1,standardTable_Row2"
@@ -74,12 +75,9 @@ managed beans used:
                        <f:facet name="header">
                           <h:outputText value="#{example_messages['label_country_name']}" />
                        </f:facet>
-                       <x:commandLink action="go_country"
-                                      actionUpdateProperty="#{countryForm.id}"
-                                      actionUpdateValue="#{country.id}"
-                                      immediate="true" >
+                       <x:commandLink action="go_country" immediate="true" >
                             <h:outputText value="#{country.name}" />
-                            <f:param name="id" value="#{country.id}" />
+                            <x:updateActionListener property="#{countryForm.id}" value="#{country.id}" />
                        </x:commandLink>
                    </h:column>
 
@@ -92,6 +90,12 @@ managed beans used:
                    <h:outputText value="#{country.isoCode}" />
 
                 </x:dataTable>
+                <x:dataTableScroller for="data" >
+                    <f:facet name="first"><h:outputText value="first" /></f:facet>
+                    <f:facet name="previous"><h:outputText value="previous" /></f:facet>
+                    <f:facet name="next"><h:outputText value="next" /></f:facet>
+                    <f:facet name="last"><h:outputText value="last" /></f:facet>
+                </x:dataTableScroller>
                 <f:verbatim><br></f:verbatim>
 
             </h:panelGroup>

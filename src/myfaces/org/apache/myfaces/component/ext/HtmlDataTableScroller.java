@@ -18,34 +18,80 @@
  */
 package net.sourceforge.myfaces.component.ext;
 
-import net.sourceforge.myfaces.event.TabChangeEvent;
-import net.sourceforge.myfaces.event.TabChangeListener;
-
-import javax.faces.component.html.HtmlPanelGroup;
+import javax.faces.component.UICommand;
+import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
-import javax.faces.el.MethodBinding;
 import javax.faces.el.ValueBinding;
-import javax.faces.event.AbortProcessingException;
-import javax.faces.event.FacesEvent;
 
 /**
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public class HtmlTableScroller
-        extends HtmlPanelGroup
+public class HtmlDataTableScroller
+        extends UICommand
 {
     //private static final Log log = LogFactory.getLog(HtmlPanelTabbedPane.class);
 
+    private static final String FIRST_FACET_NAME    = "first";
+    private static final String LAST_FACET_NAME     = "last";
+    private static final String NEXT_FACET_NAME     = "next";
+    private static final String PREVIOUS_FACET_NAME = "previous";
+
+    public void setFirst(UIComponent header)
+    {
+        getFacets().put(FIRST_FACET_NAME, header);
+    }
+
+    public UIComponent getFirst()
+    {
+        return (UIComponent)getFacets().get(FIRST_FACET_NAME);
+    }
+
+    public void setLast(UIComponent header)
+    {
+        getFacets().put(LAST_FACET_NAME, header);
+    }
+
+    public UIComponent getLast()
+    {
+        return (UIComponent)getFacets().get(LAST_FACET_NAME);
+    }
+
+    public void setNext(UIComponent header)
+    {
+        getFacets().put(NEXT_FACET_NAME, header);
+    }
+
+    public UIComponent getNext()
+    {
+        return (UIComponent)getFacets().get(NEXT_FACET_NAME);
+    }
+
+    public void setPrevoius(UIComponent header)
+    {
+        getFacets().put(PREVIOUS_FACET_NAME, header);
+    }
+
+    public UIComponent getPrevious()
+    {
+        return (UIComponent)getFacets().get(PREVIOUS_FACET_NAME);
+    }
+
+    public boolean getRendersChildren()
+    {
+        return true;
+    }
+
+
     //------------------ GENERATED CODE BEGIN (do not modify!) --------------------
 
-    public static final String COMPONENT_TYPE = "net.sourceforge.myfaces.HtmlTableScroller";
+    public static final String COMPONENT_TYPE = "net.sourceforge.myfaces.HtmlDataTableScroller";
     public static final String COMPONENT_FAMILY = "javax.faces.Command";
-    private static final String DEFAULT_RENDERER_TYPE = "net.sourceforge.myfaces.TableScroller";
+    public static final String DEFAULT_RENDERER_TYPE = "net.sourceforge.myfaces.TableScroller";
 
-    private String _forTable = null;
+    private String _for = null;
 
-    public HtmlTableScroller()
+    public HtmlDataTableScroller()
     {
         setRendererType(DEFAULT_RENDERER_TYPE);
     }
@@ -55,24 +101,23 @@ public class HtmlTableScroller
         return COMPONENT_FAMILY;
     }
 
-    public void setForTable(String forTable)
+    public void setFor(String forValue)
     {
-        _forTable = forTable;
+        _for = forValue;
     }
 
-    public String getForTable()
+    public String getFor()
     {
-        if (_forTable != null) return _forTable;
-        ValueBinding vb = getValueBinding("forTable");
+        if (_for != null) return _for;
+        ValueBinding vb = getValueBinding("for");
         return vb != null ? (String)vb.getValue(getFacesContext()) : null;
     }
-
 
     public Object saveState(FacesContext context)
     {
         Object values[] = new Object[2];
         values[0] = super.saveState(context);
-        values[1] = _forTable;
+        values[1] = _for;
         return ((Object) (values));
     }
 
@@ -80,7 +125,7 @@ public class HtmlTableScroller
     {
         Object values[] = (Object[])state;
         super.restoreState(context, values[0]);
-        _forTable = (String)values[1];
+        _for = (String)values[1];
     }
     //------------------ GENERATED CODE END ---------------------------------------
 }

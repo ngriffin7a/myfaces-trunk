@@ -36,7 +36,6 @@ import java.util.List;
 import java.util.StringTokenizer;
 
 /**
- * DOCUMENT ME!
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
@@ -196,7 +195,7 @@ public class HtmlTableRenderer
                                    ResponseWriter writer,
                                    UIData uiData,
                                    String style,
-                                   String columnElemName,
+                                   String colElementName,
                                    boolean hasColumnFacet,
                                    boolean header)
         throws IOException
@@ -219,9 +218,12 @@ public class HtmlTableRenderer
             {
                 UIComponent facet = header ?
                     ((UIColumn)uiComponent).getHeader() : ((UIColumn)uiComponent).getFooter();
-                writer.startElement(columnElemName, uiComponent);
-                renderFacet(facesContext, facet);
-                writer.endElement(columnElemName);
+                writer.startElement(colElementName, uiComponent);
+                if (facet != null)
+                {
+                    RendererUtils.renderChild(facesContext, facet);
+                }
+                writer.endElement(colElementName);
             }
         }
         writer.endElement(HTML.TR_ELEM);
@@ -232,7 +234,7 @@ public class HtmlTableRenderer
                                   UIData uiData,
                                   UIComponent facet,
                                   String style,
-                                  String columnElemName,
+                                  String colElementName,
                                   int colspan)
         throws IOException
     {
@@ -246,25 +248,18 @@ public class HtmlTableRenderer
         {
             writer.writeAttribute(HTML.CLASS_ATTR, style, null);
         }
-        writer.startElement(columnElemName, uiData);
-        if (columnElemName.equals(HTML.TH_ELEM))
+        writer.startElement(colElementName, uiData);
+        if (colElementName.equals(HTML.TH_ELEM))
         {
             writer.writeAttribute(HTML.SCOPE_ATTR, HTML.SCOPE_COLGROUP_VALUE, null);
         }
         writer.writeAttribute(HTML.COLSPAN_ATTR, new Integer(colspan), null);
-        renderFacet(facesContext, facet);
-        writer.endElement(columnElemName);
-        writer.endElement(HTML.TR_ELEM);
-    }
-
-    private static void renderFacet(FacesContext facesContext, UIComponent facet)
-        throws IOException
-    {
-        if (facet == null)
+        if (facet != null)
         {
-            return;
+            RendererUtils.renderChild(facesContext, facet);
         }
-        RendererUtils.renderChild(facesContext, facet);
+        writer.endElement(colElementName);
+        writer.endElement(HTML.TR_ELEM);
     }
 
     private static String getHeaderClass(UIData component)

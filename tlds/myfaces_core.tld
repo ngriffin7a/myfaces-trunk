@@ -238,7 +238,7 @@
         <attribute>
             <name>basename</name>
             <required>true</required>
-            <rtexprvalue>true</rtexprvalue>
+            <rtexprvalue>false</rtexprvalue>
         </attribute>
         <attribute>
             <name>var</name>

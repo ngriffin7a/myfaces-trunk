@@ -226,6 +226,23 @@
         </attribute>
      </tag>
 
+<!-- data_table_scoller -->
+    <tag>
+        <name>dataTableScroller</name>
+        <tag-class>net.sourceforge.myfaces.taglib.ext.HtmlDataTableScrollerTag</tag-class>
+        <body-content>JSP</body-content>
+        <description>
+            Scroller for dataTable
+            Must be nested inside footer facet of dataTable OR for attribute must be given
+            so that corresponding dataTable can be found
+        </description>
+        &ui_component_attributes;
+        <attribute>
+            <name>for</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
+        </attribute>
+     </tag>
 
 <!-- input_fileupload -->
     <tag>
@@ -246,7 +263,7 @@
         <attribute>
             <name>accept</name>
             <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
+            <rtexprvalue>false</rtexprvalue>
         </attribute>
     </tag>
 

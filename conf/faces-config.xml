@@ -278,6 +278,19 @@
   </component>
 
   <component>
+<<<<<<< faces-config.xml
+    <component-type>net.sourceforge.myfaces.HtmlDataTableScroller</component-type>
+    <component-class>net.sourceforge.myfaces.component.ext.HtmlDataTableScroller</component-class>
+  </component>
+
+  <component>
+    <component-type>net.sourceforge.myfaces.HtmlOutputNavigation</component-type>
+    <component-class>net.sourceforge.myfaces.component.ext.HtmlOutputNavigation</component-class>
+  </component>
+
+  <component>
+=======
+>>>>>>> 1.51
     <component-type>net.sourceforge.myfaces.HtmlPanelLayout</component-type>
     <component-class>net.sourceforge.myfaces.component.ext.HtmlPanelLayout</component-class>
   </component>
@@ -635,6 +648,12 @@
     <!-- MyFaces Renderkit Extensions -->
     <render-kit>
         <render-kit-id>HTML_BASIC</render-kit-id>
+
+        <renderer>
+            <component-family>javax.faces.Command</component-family>
+            <renderer-type>net.sourceforge.myfaces.TableScroller</renderer-type>
+            <renderer-class>net.sourceforge.myfaces.renderkit.html.ext.HtmlTableScrollerRenderer</renderer-class>
+        </renderer>
 
         <renderer>
             <component-family>javax.faces.Input</component-family>
