@@ -1,6 +1,13 @@
 MyFaces Known Issues
 ====================
 
+* Problems with Tomcat 4.1.x
+  Symptoms: 1. Every other request throws a ServletException. Doing a browser
+               refresh renders the page.
+            2. ResourceBundle handling is completly broken. Navigation item
+               labels are totally messed.
+  Reason: Not known yet. Perhaps Tomcat's ClassLoader makes problems?
+
 * Sun's current implementation of the FacesTag has a bug, that makes problems
   when you use IterationTag support:
   For each tag they count the number of children tags in a member "numChildren".
