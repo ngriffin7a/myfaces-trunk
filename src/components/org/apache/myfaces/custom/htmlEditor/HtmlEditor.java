@@ -15,12 +15,9 @@
  */
 package org.apache.myfaces.custom.htmlEditor;
 
-import javax.faces.component.UIInput;
 import javax.faces.context.FacesContext;
 import javax.faces.el.ValueBinding;
 
-import org.apache.myfaces.component.UserRoleAware;
-import org.apache.myfaces.component.UserRoleUtils;
 import org.apache.myfaces.component.html.ext.HtmlInputText;
 
 /**
@@ -30,6 +27,9 @@ import org.apache.myfaces.component.html.ext.HtmlInputText;
  * @author Sylvain Vieujot (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.13  2004/12/24 13:21:50  matzew
+ * organized imports
+ *
  * Revision 1.12  2004/12/09 05:16:44  svieujot
  * Simplify by extending html.ext.HtmlInputText instead of extending UIInput and implementing UserRolesAware.
  *

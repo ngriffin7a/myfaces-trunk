@@ -15,9 +15,6 @@
  */
 package org.apache.myfaces.renderkit.html;
 
-import javax.servlet.RequestDispatcher;
-
-import org.apache.cactus.ServletTestCase;
 import org.apache.myfaces.cactus.JspBasedTestCase;
 
 import com.meterware.httpunit.WebResponse;

@@ -19,7 +19,6 @@ import java.io.IOException;
 import java.text.DateFormatSymbols;
 import java.text.ParseException;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.Locale;
 import java.util.Map;
 
@@ -31,7 +30,6 @@ import javax.faces.convert.ConverterException;
 
 import org.apache.myfaces.component.UserRoleUtils;
 import org.apache.myfaces.custom.calendar.HtmlCalendarRenderer;
-import org.apache.myfaces.custom.calendar.HtmlInputCalendar;
 import org.apache.myfaces.custom.calendar.HtmlCalendarRenderer.CalendarDateTimeConverter;
 import org.apache.myfaces.custom.date.HtmlInputDate.UserData;
 import org.apache.myfaces.renderkit.RendererUtils;
@@ -42,6 +40,9 @@ import org.apache.myfaces.util.MessageUtils;
 
 /**
  * $Log$
+ * Revision 1.13  2004/12/24 13:21:51  matzew
+ * organized imports
+ *
  * Revision 1.12  2004/12/10 02:15:19  svieujot
  * New popupCalendar attribute, and implements UserRoleAware.
  *
