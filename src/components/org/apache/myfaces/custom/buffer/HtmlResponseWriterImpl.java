@@ -16,6 +16,7 @@
 package org.apache.myfaces.custom.buffer;
 
 import org.apache.myfaces.config.MyfacesConfig;
+import org.apache.myfaces.renderkit.html.HTML;
 import org.apache.myfaces.renderkit.html.util.DummyFormResponseWriter;
 import org.apache.myfaces.renderkit.html.util.DummyFormUtils;
 import org.apache.myfaces.renderkit.html.util.HTMLEncoder;
@@ -40,6 +41,9 @@ import java.util.Set;
  * @author Anton Koinov
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.3  2005/01/31 17:43:11  svieujot
+ * Bugfix for HtmlResponseWriterImpl.write(str, offset, length).
+ *
  * Revision 1.2  2005/01/31 17:03:54  svieujot
  * Resynchronize the HtmlResponseWriterImpl from the renderkit, and from the x:buffer component.
  *
@@ -468,7 +472,7 @@ public class HtmlResponseWriterImpl
     public void write(String str, int off, int len) throws IOException
     {
         closeStartTagIfNecessary();
-        String strValue = str.substring(off, len);
+        String strValue = str.substring(off, off+len);
         _writer.write(UnicodeEncoder.encode(strValue, false, false));
     }
 
