@@ -25,6 +25,7 @@ import javax.faces.context.FacesContext;
  * DOCUMENT ME!
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
+ * @deprecated TODO: remove
  */
 public class MyFacesUIOutput
     extends javax.faces.component.UIOutput

@@ -24,7 +24,7 @@ import javax.faces.component.html.HtmlMessages;
 import javax.faces.el.ValueBinding;
 
 /**
- * DOCUMENT ME!
+ * TODO: save and restore state!
  * 
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$

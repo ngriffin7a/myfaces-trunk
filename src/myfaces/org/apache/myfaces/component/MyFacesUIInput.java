@@ -26,6 +26,7 @@ import java.util.List;
  * DOCUMENT ME!
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
+ * @deprecated TODO: remove
  */
 public class MyFacesUIInput
         extends javax.faces.component.UIInput

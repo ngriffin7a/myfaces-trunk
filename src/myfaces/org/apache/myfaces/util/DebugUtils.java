@@ -20,6 +20,7 @@ package net.sourceforge.myfaces.util;
 
 import net.sourceforge.myfaces.util.bean.BeanUtils;
 import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import javax.faces.FacesException;
 import javax.faces.component.UIComponent;
@@ -43,6 +44,8 @@ import java.util.Map;
  */
 public class DebugUtils
 {
+    private static final Log log = LogFactory.getLog(DebugUtils.class);
+
     //Attributes that should not be printed
     private static final HashSet IGNORE_ATTRIBUTES;
     static
@@ -91,7 +94,7 @@ public class DebugUtils
 
 
 
-    public static void traceView(Log log, String additionalMsg)
+    public static void traceView(String additionalMsg)
     {
         if (log.isTraceEnabled())
         {
@@ -108,7 +111,7 @@ public class DebugUtils
                 return;
             }
 
-            traceView(log, additionalMsg, viewRoot);
+            traceView(additionalMsg, viewRoot);
         }
     }
 
@@ -116,26 +119,22 @@ public class DebugUtils
      * Be careful, when using this version of traceView:
      * Some component properties (e.g. getRenderer) assume, that there is a
      * valid viewRoot set in the FacesContext!
-     * @param log
      * @param additionalMsg
      * @param viewRoot
      */
-    public static void traceView(Log log, String additionalMsg, UIViewRoot viewRoot)
+    private static void traceView(String additionalMsg, UIViewRoot viewRoot)
     {
-        if (log.isTraceEnabled())
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        PrintStream ps = new PrintStream(baos);
+        if (additionalMsg != null)
         {
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            PrintStream ps = new PrintStream(baos);
-            if (additionalMsg != null)
-            {
-                ps.println(additionalMsg);
-            }
-            ps.println("========================================");
-            printView(viewRoot, ps);
-            ps.println("========================================");
-            ps.close();
-            log.trace(baos.toString());
+            ps.println(additionalMsg);
         }
+        ps.println("========================================");
+        printView(viewRoot, ps);
+        ps.println("========================================");
+        ps.close();
+        log.trace(baos.toString());
     }
 
     public static void printView(UIViewRoot uiViewRoot, PrintStream stream)

@@ -1,4 +1,4 @@
-/**
+/*
  * MyFaces - the free JSF implementation
  * Copyright (C) 2003, 2004  The MyFaces Team (http://myfaces.sourceforge.net)
  *
@@ -16,42 +16,30 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package net.sourceforge.myfaces.component;
+package net.sourceforge.myfaces.taglib.core;
 
-import javax.faces.component.UIComponent;
-import javax.faces.component.UINamingContainer;
-import javax.faces.context.FacesContext;
+import net.sourceforge.myfaces.taglib.MyfacesComponentTag;
 
 /**
- * DOCUMENT ME!
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public class UIRoot
-    extends UINamingContainer
+public class SelectItemsTag
+        extends MyfacesComponentTag
 {
-    public static final String ROOT_COMPONENT_ID = "theRoot";
+    //private static final Log log = LogFactory.getLog(SelectItemsTag.class);
 
-    public UIRoot()
+    public String getComponentType()
     {
-        //FIXME
-        //setComponentId(ROOT_COMPONENT_ID);
-        //setValid(true);
+        return "SelectItems";
     }
 
-//------------------------------------------------------------------------------
-
-    public String getClientId(FacesContext context)
+    protected String getDefaultRendererType()
     {
-        return UIComponentUtils.getClientId(context, this);
+        return null;
     }
 
-    public void addFacet(String facetName, UIComponent facet)
-    {
-        //FIXME
-        //super.addFacet(facetName, facet);
-        UIComponentUtils.ensureComponentInNamingContainer(facet);
-    }
+    // UISelectItems attributes
+    // --> binding, id, value already handled by MyfacesComponentTag
 
-//------------------------------------------------------------------------------
 }

@@ -25,6 +25,8 @@
 <!ENTITY validator_min_max_attributes   SYSTEM "entities/validator_min_max_attributes.xml">
 <!ENTITY ui_component_attributes        SYSTEM "entities/ui_component_attributes.xml">
 <!ENTITY ui_parameter_attributes        SYSTEM "entities/ui_parameter_attributes.xml">
+<!ENTITY ui_select_item_attributes      SYSTEM "entities/ui_select_item_attributes.xml">
+<!ENTITY ui_select_items_attributes     SYSTEM "entities/ui_select_items_attributes.xml">
 ]>
 
 
@@ -121,10 +123,6 @@
         &ui_parameter_attributes;
     </tag>
 
-
-
-    
-
 <!--
 ======================================================
  action_listener
@@ -140,7 +138,6 @@
             <rtexprvalue>false</rtexprvalue>
         </attribute>
     </tag>
-
 
 <!--
 ======================================================
@@ -181,18 +178,29 @@
       &validator_min_max_attributes;
     </tag>
 
-
 <!--
 ======================================================
-legacy tags
+ selectitem
 ======================================================
 -->
     <tag>
-        <name>use_faces</name>
-        <tag-class>net.sourceforge.myfaces.taglib.legacy.UseFacesTag</tag-class>
+        <name>selectitem</name>
+        <tag-class>net.sourceforge.myfaces.taglib.core.SelectItemTag</tag-class>
         <body-content>JSP</body-content>
+        &ui_select_item_attributes;
     </tag>
 
+<!--
+======================================================
+ selectitems
+======================================================
+-->
+    <tag>
+        <name>selectitems</name>
+        <tag-class>net.sourceforge.myfaces.taglib.core.SelectItemsTag</tag-class>
+        <body-content>JSP</body-content>
+        &ui_select_items_attributes;
+    </tag>
 
 
 </taglib>

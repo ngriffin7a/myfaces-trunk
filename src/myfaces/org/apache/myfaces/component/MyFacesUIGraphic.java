@@ -25,6 +25,7 @@ import javax.faces.context.FacesContext;
  * Derived class from javax.faces.UIGraphic.
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
+ * @deprecated TODO: remove
  */
 public class MyFacesUIGraphic
     extends javax.faces.component.UIGraphic

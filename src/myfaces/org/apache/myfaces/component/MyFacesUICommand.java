@@ -30,9 +30,10 @@ import javax.faces.event.PhaseId;
 import java.util.List;
 
 /**
- * DOCUMENT ME!
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
+ *
+ * @deprecated TODO: remove
  */
 public class MyFacesUICommand
     extends javax.faces.component.UICommand

@@ -19,7 +19,6 @@
 package net.sourceforge.myfaces.taglib.legacy;
 
 import net.sourceforge.myfaces.component.UIComponentUtils;
-import net.sourceforge.myfaces.component.UIRoot;
 import net.sourceforge.myfaces.renderkit.html.HtmlRenderer;
 import net.sourceforge.myfaces.renderkit.html.jspinfo.JspInfo;
 import net.sourceforge.myfaces.util.bean.BeanUtils;
@@ -662,7 +661,7 @@ public class MyFacesTagHelper
         UIComponent parentComp = getParentComponent();
         if (parentComp == null)
         {
-            return UIRoot.ROOT_COMPONENT_ID;
+            return null; //FIXME: UIRoot.ROOT_COMPONENT_ID;
         }
 
         UIComponent parsedParent;

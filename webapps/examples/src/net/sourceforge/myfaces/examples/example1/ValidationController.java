@@ -18,10 +18,11 @@
  */
 package net.sourceforge.myfaces.examples.example1;
 
-import javax.faces.event.AbortProcessingException;
-import javax.faces.event.ActionEvent;
-import javax.faces.event.ActionListener;
-import javax.faces.event.PhaseId;
+import javax.faces.component.UIInput;
+import javax.faces.context.FacesContext;
+import javax.faces.validator.LengthValidator;
+import javax.faces.validator.LongRangeValidator;
+import javax.faces.validator.Validator;
 
 /**
  * DOCUMENT ME!
@@ -29,68 +30,55 @@ import javax.faces.event.PhaseId;
  * @version $Revision$ $Date$
  */
 public class ValidationController
-    implements ActionListener
 {
-    public void processAction(ActionEvent event) throws AbortProcessingException
+    public String enableValidation()
     {
-        /*
-        FIXME
-        String commandName = event.getActionCommand();
-        if (commandName.equals("enableVal"))
+        FacesContext facesContext = FacesContext.getCurrentInstance();
+
+        UIInput number1 = (UIInput)facesContext.getViewRoot().findComponent("form1:number1");
+        Validator[] validators = number1.getValidators();
+        if (validators == null || validators.length == 0)
         {
-            ENABLE_ACTION.invoke();
-        }
-        else
-        {
-            DISABLE_ACTION.invoke();
-        }
-        */
-    }
-
-    public PhaseId getPhaseId()
-    {
-        return PhaseId.APPLY_REQUEST_VALUES;
-    }
-
-
-    /*
-    FIXME
-    private static final Action ENABLE_ACTION = new Action() {
-        public String invoke()
-        {
-            FacesContext facesContext = FacesContext.getCurrentInstance();
-            Tree tree = facesContext.getTree();
-
-            UIInput number1 = (UIInput)tree.getRoot().findComponent("number1");
-            number1.clearValidators();
             number1.addValidator(new LongRangeValidator(10, 1));
-
-            UIInput text = (UIInput)tree.getRoot().findComponent("text");
-            text.clearValidators();
-            text.addValidator(new LengthValidator(7, 3));
-
-            return "ok";
         }
-    };
-    */
 
-    /*
-    FIXME
-    private static final Action DISABLE_ACTION = new Action() {
-        public String invoke()
+        UIInput text = (UIInput)facesContext.getViewRoot().findComponent("form2:text");
+        validators = text.getValidators();
+        if (validators == null || validators.length == 0)
         {
-            FacesContext facesContext = FacesContext.getCurrentInstance();
-            Tree tree = facesContext.getTree();
-
-            UIInput number1 = (UIInput)tree.getRoot().findComponent("number1");
-            number1.clearValidators();
-
-            UIInput text = (UIInput)tree.getRoot().findComponent("text");
-            text.clearValidators();
-
-            return "ok";
+            text.addValidator(new LengthValidator(7, 3));
         }
-    };
-    */
+
+        return "ok";
+    }
+
+    public String disableValidation()
+    {
+        FacesContext facesContext = FacesContext.getCurrentInstance();
+
+        UIInput number1 = (UIInput)facesContext.getViewRoot().findComponent("form1:number1");
+        Validator[] validators = number1.getValidators();
+        if (validators != null)
+        {
+            for (int i = 0; i < validators.length; i++)
+            {
+                Validator validator = validators[i];
+                number1.removeValidator(validator);
+            }
+        }
+
+        UIInput text = (UIInput)facesContext.getViewRoot().findComponent("form2:text");
+        validators = text.getValidators();
+        if (validators != null)
+        {
+            for (int i = 0; i < validators.length; i++)
+            {
+                Validator validator = validators[i];
+                text.removeValidator(validator);
+            }
+        }
+
+        return "ok";
+    }
 
 }

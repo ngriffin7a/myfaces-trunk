@@ -123,7 +123,8 @@ public class LifecycleImpl
 
         if (log.isTraceEnabled())
         {
-            DebugUtils.traceView(log, viewCreated ? "Newly created view" : "Restored view");
+            //Note: DebugUtils Logger must also be in trace level
+            DebugUtils.traceView(viewCreated ? "Newly created view" : "Restored view");
         }
 
         if (facesContext.getExternalContext().getRequestParameterMap().isEmpty())
@@ -306,7 +307,8 @@ public class LifecycleImpl
 
         if (log.isTraceEnabled())
         {
-            DebugUtils.traceView(log, "View after rendering");
+            //Note: DebugUtils Logger must also be in trace level
+            DebugUtils.traceView("View after rendering");
         }
 
         if (log.isTraceEnabled()) log.trace("exiting renderResponse in " + LifecycleImpl.class.getName());

@@ -18,100 +18,73 @@
  */
 package net.sourceforge.myfaces.component;
 
-import net.sourceforge.myfaces.convert.ConverterUtils;
+import net.sourceforge.myfaces.renderkit.JSFAttr;
+import net.sourceforge.myfaces.util.DebugUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
-import javax.faces.component.UIComponent;
+import javax.faces.component.UISelectItem;
 import javax.faces.context.FacesContext;
+import javax.faces.el.ValueBinding;
+
 
 /**
- * DOCUMENT ME!
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
 public class MyFacesUISelectItem
-    extends javax.faces.component.UISelectItem
+    extends UISelectItem
 {
-    public static final String ITEM_DESCRIPTION_PROP = "itemDescription";
-    public static final String ITEM_LABEL_PROP = "itemLabel";
+    private static final Log log = LogFactory.getLog(MyFacesUISelectItem.class);
 
-    //MyFaces extension
-    public static final String ITEM_KEY_PROP = "itemKey";
-    public static final String ITEM_BUNDLE_PROP = "itemBundle";
+    private static final int ATTRIBUTE_COUNT = 1;
+    private Boolean _disabled;  // missing in API of UISelectItem
+    private static final boolean DISABLED_DEFAULT = false;
 
-    private String _itemKey;
-    private String _itemBundle;
-
-    public MyFacesUISelectItem()
+    public boolean getDisabled()
     {
-        //FIXME
-        //setValid(true);
+        if (_disabled != null) return _disabled.booleanValue();
+        ValueBinding vb = getValueBinding(JSFAttr.DISABLED_ATTR);
+        return vb != null ?
+               ((Boolean)vb.getValue(getFacesContext())).booleanValue() :
+               DISABLED_DEFAULT;
     }
 
-    public boolean getRendersSelf()
+    public static boolean getDisabled(UISelectItem uiSelectItem)
     {
-        return false;
+        if (uiSelectItem instanceof MyFacesUISelectItem)
+        {
+            return ((MyFacesUISelectItem)uiSelectItem).getDisabled();
+        }
+        else
+        {
+            Boolean boolVal = (Boolean)uiSelectItem.getAttributes().get(JSFAttr.DISABLED_ATTR);
+            return  boolVal != null ? boolVal.booleanValue() : DISABLED_DEFAULT;
+        }
     }
 
-    /**
-     * MyFaces extension: getItemValue returns the currentValue of this
-     * component as a String.
-     */
-    public String getItemValue()
+    public void setDisabled(boolean disabled)
     {
-        FacesContext facesContext = FacesContext.getCurrentInstance();
-        //FIXME
-        //Object v = currentValue(facesContext);
-        //return ConverterUtils.getComponentValueAsString(facesContext, this, v);
-        return null;
+        _disabled = Boolean.valueOf(disabled);
     }
 
-    public void setItemValue(String v)
+    public Object saveState(FacesContext context)
     {
-        FacesContext facesContext = FacesContext.getCurrentInstance();
-        //FIXME
-        /*
-        setValue(ConverterUtils.getComponentValueAsObject(facesContext,
-                                                          this,
-                                                          v));
-                                                          */
+        Object values[] = new Object[ATTRIBUTE_COUNT + 1];
+        int i = 0;
+        values[i++] = super.saveState(context);
+        values[i++] = _disabled;
+        DebugUtils.assertFatal(i == ATTRIBUTE_COUNT + 1, log, "Number of attributes to save differs!");
+        return ((Object) (values));
     }
 
-
-    public String getItemKey()
+    public void restoreState(FacesContext context, Object state)
     {
-        return _itemKey;
+        Object values[] = (Object[])state;
+        int i = 0;
+        super.restoreState(context, values[i++]);
+        _disabled = (Boolean)values[i++];
+        DebugUtils.assertFatal(i == ATTRIBUTE_COUNT + 1, log, "Number of attributes to restore differs!");
     }
 
-    public void setItemKey(String itemKey)
-    {
-        _itemKey = itemKey;
-    }
-
-    public String getItemBundle()
-    {
-        return _itemBundle;
-    }
-
-    public void setItemBundle(String itemBundle)
-    {
-        _itemBundle = itemBundle;
-    }
-
-
-
-//------------------------------------------------------------------------------
-
-    public String getClientId(FacesContext context)
-    {
-        return UIComponentUtils.getClientId(context, this);
-    }
-
-    public void addFacet(String facetName, UIComponent facet)
-    {
-        //FIXME
-        //super.addFacet(facetName, facet);
-        UIComponentUtils.ensureComponentInNamingContainer(facet);
-    }
-
-//------------------------------------------------------------------------------
 }

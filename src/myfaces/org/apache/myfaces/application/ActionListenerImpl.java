@@ -18,6 +18,9 @@
  */
 package net.sourceforge.myfaces.application;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import javax.faces.application.Application;
 import javax.faces.application.NavigationHandler;
 import javax.faces.component.ActionSource;
@@ -36,6 +39,8 @@ import javax.faces.event.ActionListener;
 public class ActionListenerImpl
     implements ActionListener
 {
+    private static final Log log = LogFactory.getLog(ActionListenerImpl.class);
+
     public void processAction(ActionEvent actionEvent) throws AbortProcessingException
     {
         FacesContext facesContext = FacesContext.getCurrentInstance();
@@ -54,7 +59,15 @@ public class ActionListenerImpl
         else
         {
             fromAction = methodBinding.getExpressionString();
-            outcome = (String) methodBinding.invoke(facesContext, null);
+            try
+            {
+                outcome = (String) methodBinding.invoke(facesContext, null);
+            }
+            catch (Exception e)
+            {
+                log.error("Error calling action method of component with id " + actionEvent.getComponent().getClientId(facesContext), e);
+                return;
+            }
         }
 
         NavigationHandler navigationHandler = application.getNavigationHandler();

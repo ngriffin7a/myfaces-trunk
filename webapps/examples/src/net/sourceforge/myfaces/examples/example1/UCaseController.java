@@ -18,6 +18,7 @@
  */
 package net.sourceforge.myfaces.examples.example1;
 
+import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.el.VariableResolver;
 import javax.faces.event.AbortProcessingException;
@@ -35,24 +36,22 @@ public class UCaseController
 {
     public void processAction(ActionEvent event) throws AbortProcessingException
     {
-        String commandName = "?"; //FIXME: event.getActionCommand();
-        FacesContext facesContext = FacesContext.getCurrentInstance();
-
-        VariableResolver vr = facesContext.getApplication().getVariableResolver();
-        UCaseForm form = (UCaseForm)vr.resolveVariable(facesContext, "ucaseForm");
-        if (commandName.equals("up"))
+        if (event.getPhaseId() == PhaseId.INVOKE_APPLICATION)
         {
-            form.uppercase();
-        }
-        else if (commandName.equals("low"))
-        {
-            form.lowercase();
-        }
-    }
+            FacesContext facesContext = FacesContext.getCurrentInstance();
+            UIComponent component = event.getComponent();
 
-    public PhaseId getPhaseId()
-    {
-        return PhaseId.INVOKE_APPLICATION;
-    }
+            VariableResolver vr = facesContext.getApplication().getVariableResolver();
+            UCaseForm form = (UCaseForm)vr.resolveVariable(facesContext, "ucaseForm");
+            if (component.getId().equals("ucaseButton"))
+            {
+                form.uppercase();
+            }
+            else
+            {
+                form.lowercase();
+            }
+        }
 
+    }
 }

@@ -81,7 +81,7 @@ public class HtmlCommandNavigation
     }
 
     /**
-     * @return false, if this item is child of another UINavigationItem, which is closed
+     * @return false, if this item is child of another HtmlCommandNavigation, which is closed
      */
     public boolean isRendered()
     {

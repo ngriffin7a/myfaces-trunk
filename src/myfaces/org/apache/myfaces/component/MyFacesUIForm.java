@@ -26,6 +26,7 @@ import javax.faces.context.FacesContext;
  * Derived class from javax.faces.UIForm.
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
+ * @deprecated TODO: remove
  */
 public class MyFacesUIForm
         extends javax.faces.component.UIForm

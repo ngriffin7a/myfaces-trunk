@@ -21,7 +21,7 @@ package net.sourceforge.myfaces.component.ext;
 import java.io.File;
 
 /**
- * DOCUMENT ME!
+ * TODO: move to model package
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */

@@ -103,7 +103,7 @@ managed beans used:
 
                 <h:form id="form2" name="ucaseForm">
                     <h:input_text id="text" value="#{ucaseForm.text}"/>
-                    <h:message id="textError" for="text" styleClass="error" /><f:verbatim><br></f:verbatim>
+                    <h:message id="textError" for="form2:text" styleClass="error" /><f:verbatim><br></f:verbatim>
                     <h:command_button id="ucaseButton" value="Make it uppercase" action="none">
                         <f:action_listener type="net.sourceforge.myfaces.examples.example1.UCaseController" />
                     </h:command_button>
@@ -121,11 +121,9 @@ managed beans used:
                 </f:verbatim>
 
                 <h:form id="form3" name="valForm">
-                    <h:command_button id="valEnable" value="Enable validation" action="none" >
-                        <f:action_listener type="net.sourceforge.myfaces.examples.example1.ValidationController" />
+                    <h:command_button id="valEnable" value="Enable validation" action="#{validationController.enableValidation}" >
                     </h:command_button>
-                    <h:command_button id="valDisable" value="Disable validation" action="none" >
-                        <f:action_listener type="net.sourceforge.myfaces.examples.example1.ValidationController" />
+                    <h:command_button id="valDisable" value="Disable validation" action="#{validationController.disableValidation}" >
                     </h:command_button>
                 </h:form>
 

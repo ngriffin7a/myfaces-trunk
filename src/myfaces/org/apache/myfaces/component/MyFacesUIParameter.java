@@ -24,6 +24,7 @@ import javax.faces.component.UIParameter;
  * DOCUMENT ME!
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
+ * @deprecated TODO: remove
  */
 public class MyFacesUIParameter
     extends UIParameter

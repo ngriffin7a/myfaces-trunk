@@ -89,7 +89,7 @@ public class MethodBindingImpl
     }
 
     public Object invoke(FacesContext context, Object[] args)
-    throws EvaluationException, MethodNotFoundException
+            throws EvaluationException, MethodNotFoundException
     {
         if (context == null)
         {
@@ -113,14 +113,21 @@ public class MethodBindingImpl
         {
             return method.invoke(base, args);
         }
+        catch (MethodNotFoundException e)
+        {
+            throw e;
+        }
         catch (Exception e)
         {
-            throw new MethodNotFoundException("Reference: " + _valueBinding._reference, e);
+            throw new EvaluationException("Error invoking method binding: " + _valueBinding._reference, e);
         }
     }
 
-    protected Method getMethod(
-        FacesContext facesContext, Object base, Object name, Class[] argClasses)
+    protected Method getMethod(FacesContext facesContext,
+                               Object base,
+                               Object name,
+                               Class[] argClasses)
+        throws MethodNotFoundException
     {
         if (name instanceof ValueBinding)
         {
@@ -137,7 +144,7 @@ public class MethodBindingImpl
         {
             return base.getClass().getMethod(_valueBinding.coerceToString(name), argClasses);
         }
-        catch (Exception e)
+        catch (NoSuchMethodException e)
         {
             throw new MethodNotFoundException(
                 "Reference: " + _valueBinding._reference + ", base: " + base.getClass()

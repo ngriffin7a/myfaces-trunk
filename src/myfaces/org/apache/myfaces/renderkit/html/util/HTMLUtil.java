@@ -126,12 +126,16 @@ public class HTMLUtil
      */
     public static boolean renderHTMLAttribute(ResponseWriter writer,
                                               String rendererAttrName,
-                                              String htmlAttrName,
+                                              String attrName,
                                               Object value)
         throws IOException
     {
         if (!RendererUtils.isDefaultAttributeValue(value))
         {
+            // render JSF "styleClass" attribute as "class"
+            String htmlAttrName = attrName.equals(HTML.STYLE_CLASS_ATTR) ?
+                                  HTML.CLASS_ATTR :
+                                  attrName;
             writer.writeAttribute(htmlAttrName, value, rendererAttrName);
             return true;
         }
@@ -161,19 +165,15 @@ public class HTMLUtil
      * @throws IOException
      */
     public static boolean renderHTMLAttributes(ResponseWriter writer,
-            UIComponent component,
-            String[] attributes)
+                                               UIComponent component,
+                                               String[] attributes)
     throws IOException
     {
         boolean somethingDone = false;
         for (int i = 0, len = attributes.length; i < len; i++)
         {
             String attrName = attributes[i];
-            // render JSF "styleClass" attribute as "class"
-            String htmlAttrName = 
-                attrName.equals(HTML.STYLE_CLASS_ATTR) ? HTML.CLASS_ATTR : attrName;
-
-            if (renderHTMLAttribute(writer, component, attrName, htmlAttrName))
+            if (renderHTMLAttribute(writer, component, attrName, attrName))
             {
                 somethingDone = true;
             }

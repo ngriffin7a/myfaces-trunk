@@ -21,7 +21,10 @@ package net.sourceforge.myfaces.renderkit.html.util;
 import net.sourceforge.myfaces.component.MyFacesUISelectItem;
 import net.sourceforge.myfaces.util.bundle.BundleUtils;
 
-import javax.faces.component.*;
+import javax.faces.component.UIComponent;
+import javax.faces.component.UISelectItem;
+import javax.faces.component.UISelectItems;
+import javax.faces.component.UISelectMany;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 import java.util.*;
@@ -88,7 +91,18 @@ public class SelectItemUtil
 
     public static SelectItem getSelectItem(FacesContext facesContext, UISelectItem uiSelectItem)
     {
+        SelectItem selectItem = (SelectItem)uiSelectItem.getValue();
+        if (selectItem == null)
+        {
+            return new SelectItem(uiSelectItem.getItemValue(),
+                                  uiSelectItem.getItemLabel(),
+                                  uiSelectItem.getItemDescription(),
+                                  uiSelectItem.getD)
+        }
+
         String text;
+
+
         if (uiSelectItem instanceof MyFacesUISelectItem)
         {
             String key = ((MyFacesUISelectItem)uiSelectItem).getItemKey();
