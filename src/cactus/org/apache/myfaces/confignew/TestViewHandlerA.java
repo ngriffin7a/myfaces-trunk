@@ -74,7 +74,7 @@ public class TestViewHandlerA extends ViewHandler
 
     public String getResourceURL(FacesContext context, String path)
     {
-        return delegate.getActionURL(context, path);
+        return delegate.getResourceURL(context, path);
     }
 
 
