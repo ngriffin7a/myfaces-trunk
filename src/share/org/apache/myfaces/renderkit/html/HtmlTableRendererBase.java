@@ -37,6 +37,9 @@ import java.util.List;
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.3  2004/09/03 14:31:52  manolito
+ * render header and footer style class with th/rd instead of tr
+ *
  * Revision 1.2  2004/09/02 13:38:02  manolito
  * protected methods for easier overwriting of header and footer rendering
  *
@@ -314,23 +317,23 @@ public class HtmlTableRendererBase
                                               ResponseWriter writer,
                                               UIData uiData,
                                               UIComponent facet,
-                                              String style,
+                                              String styleClass,
                                               String colElementName,
                                               int colspan)
         throws IOException
     {
         HtmlRendererUtils.writePrettyLineSeparator(facesContext);
         writer.startElement(HTML.TR_ELEM, uiData);
-        if (style != null)
-        {
-            writer.writeAttribute(HTML.CLASS_ATTR, style, null);
-        }
         writer.startElement(colElementName, uiData);
         if (colElementName.equals(HTML.TH_ELEM))
         {
             writer.writeAttribute(HTML.SCOPE_ATTR, HTML.SCOPE_COLGROUP_VALUE, null);
         }
         writer.writeAttribute(HTML.COLSPAN_ATTR, new Integer(colspan), null);
+        if (styleClass != null)
+        {
+            writer.writeAttribute(HTML.CLASS_ATTR, styleClass, null);
+        }
         if (facet != null)
         {
             RendererUtils.renderChild(facesContext, facet);
@@ -344,7 +347,7 @@ public class HtmlTableRendererBase
     private void renderColumnHeaderOrFooterRow(FacesContext facesContext,
                                                ResponseWriter writer,
                                                UIData uiData,
-                                               String style,
+                                               String styleClass,
                                                boolean header)
         throws IOException
     {
@@ -361,14 +364,14 @@ public class HtmlTableRendererBase
                     renderColumnHeaderCell(facesContext,
                                            writer,
                                            (UIColumn)uiComponent,
-                                           style);
+                                           styleClass);
                 }
                 else
                 {
                     renderColumnFooterCell(facesContext,
                                            writer,
                                            (UIColumn)uiComponent,
-                                           style);
+                                           styleClass);
                 }
             }
         }
