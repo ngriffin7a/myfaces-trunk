@@ -547,11 +547,11 @@
           <renderer-class>org.apache.myfaces.custom.tree2.HtmlTreeRenderer</renderer-class>
        </renderer>
        
-       <renderer>
+       <!--renderer>
           <component-family>org.apache.myfaces.HtmlTree2</component-family>
           <renderer-type>org.apache.myfaces.HtmlTreeTable</renderer-type>
           <renderer-class>org.apache.myfaces.custom.tree2.HtmlTreeTableRenderer</renderer-class>
-       </renderer>       
+       </renderer-->       
 
        <renderer>
           <component-family>org.apache.myfaces.HtmlTree</component-family>
