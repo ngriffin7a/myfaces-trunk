@@ -218,7 +218,7 @@
 	
     <target name="myfaces-jar"
             description="builds the myfaces.jar file with the complete myfaces libraries"
-            depends="-compile-share,-compile-impl,-compile-components,myfaces-jsf-api-jar,resolve-tld-entities" >
+            depends="-compile-share,-compile-impl,-compile-components,resolve-tld-entities" >
         <!-- timestamp for the manifest -->
         <tstamp>
             <format property="TODAY" pattern="yyyy-MM-dd HH:mm z"/>
