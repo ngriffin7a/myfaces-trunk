@@ -22,13 +22,14 @@ package org.apache.myfaces.examples.htmleditorexample;
 public class EditorFace {
     
     private String text =
-        "This is a Form where you can enter your name and Job.<br/>" +
-        "Only those fields are editable.<br/>" +
+        "This is a Form where you can enter your name and Story.<br/>" +
+        "Only those fields are editable <small><i>(this isn't 100% secure though)</i></small>." +
         "<p><span><u>Name</u> : [ </span><span editable=\"yes\">_________</span><span> ]</span></p>" +
-        "<p><span><u>Job</u> : [ </span><span editable=\"yes\">_________</span> ]</span></p>" +
-        "<br/>" +
+        "<h3>Type your story between the lines</h3>" +
+        "<hr/>" +
+        "<span editable=\"yes\">bla bla bla ...<br/><br/><br/><br/></span>" +
+        "<hr/>" +
         "<p><i>To edit the all document, disable the <b>formular mode</b> bellow.</i></p>" +
-        "<br/>" +
         "<p><i>Note : formular isn't the default mode, but this is just for the demonstration.</i></p>";
     
     private boolean formularMode = true;
