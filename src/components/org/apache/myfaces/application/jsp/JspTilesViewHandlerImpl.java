@@ -41,6 +41,9 @@ import java.util.Locale;
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.11  2004/12/19 11:42:36  tomsp
+ * removed Nullpointer from renderView when no tiles-definition is found
+ *
  * Revision 1.10  2004/11/11 17:43:07  tomsp
  * no message
  *
@@ -176,10 +179,20 @@ public class JspTilesViewHandlerImpl
         try
         {
             definition = getDefinitionsFactory().getDefinition(tilesId, request, servletContext);
-            if (definition == null)
+            if (definition != null)
             {
-                log.error("could not find tiles-definition with name " + tilesId);
-                throw new NullPointerException("could not find tiles-definition with name " + tilesId);
+                // if tiles-definition could be found set ComponentContext & viewId
+                ComponentContext tileContext = ComponentContext.getContext(request);
+                if (tileContext == null)
+                {
+                    tileContext = new ComponentContext(definition.getAttributes());
+                    ComponentContext.setContext(tileContext, request);
+                }
+                else
+                {
+                    tileContext.addMissing(definition.getAttributes());
+                }
+                viewId = definition.getPage();
             }
         }
         catch (DefinitionsFactoryException e)
@@ -187,18 +200,6 @@ public class JspTilesViewHandlerImpl
             throw new FacesException(e);
         }
 
-        ComponentContext tileContext = ComponentContext.getContext(request);
-        if (tileContext == null)
-        {
-            tileContext = new ComponentContext(definition.getAttributes());
-            ComponentContext.setContext(tileContext, request);
-        }
-        else
-        {
-            tileContext.addMissing(definition.getAttributes());
-        }
-
-        viewId = definition.getPage();
         dispatch(externalContext, viewToRender, viewId);
     }
 
