@@ -20,7 +20,10 @@ package javax.faces.component;
 
 import javax.faces.FacesException;
 import javax.faces.context.FacesContext;
-import java.beans.*;
+import java.beans.BeanInfo;
+import java.beans.IntrospectionException;
+import java.beans.Introspector;
+import java.beans.PropertyDescriptor;
 import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.util.*;
@@ -28,6 +31,10 @@ import java.util.*;
 /**
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
+ * $Log$
+ * Revision 1.6  2004/04/06 06:48:23  manolito
+ * IndexedPropertyDescriptor issue
+ *
  */
 class _ComponentAttributesMap
         implements Map, Serializable
@@ -182,7 +189,7 @@ class _ComponentAttributesMap
             for (int i = 0; i < propertyDescriptors.length; i++)
             {
                 PropertyDescriptor propertyDescriptor = propertyDescriptors[i];
-                if (!(propertyDescriptor instanceof IndexedPropertyDescriptor))
+                if (propertyDescriptor.getReadMethod() != null)
                 {
                     _propertyDescriptorMap.put(propertyDescriptor.getName(),
                                                propertyDescriptor);

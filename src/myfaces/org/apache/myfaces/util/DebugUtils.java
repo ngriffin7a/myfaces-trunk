@@ -28,7 +28,10 @@ import javax.faces.el.MethodBinding;
 import javax.faces.el.ValueBinding;
 import javax.faces.event.FacesListener;
 import javax.faces.validator.Validator;
-import java.beans.*;
+import java.beans.BeanInfo;
+import java.beans.IntrospectionException;
+import java.beans.Introspector;
+import java.beans.PropertyDescriptor;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
@@ -43,6 +46,9 @@ import java.util.Map;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.14  2004/04/06 06:48:23  manolito
+ * IndexedPropertyDescriptor issue
+ *
  * Revision 1.13  2004/04/05 09:10:34  manolito
  * no get call for ignore attributes
  *
@@ -208,7 +214,7 @@ public class DebugUtils
         PropertyDescriptor propDescriptors[] = beanInfo.getPropertyDescriptors();
         for (int i = 0; i < propDescriptors.length; i++)
         {
-            if (!(propDescriptors[i] instanceof IndexedPropertyDescriptor))
+            if (propDescriptors[i].getReadMethod() != null)
             {
                 String name = propDescriptors[i].getName();
                 if (!"id".equals(name))

@@ -41,6 +41,10 @@ import java.util.Map;
  * @author Manfred Geiler (latest modification by $Author$)
  * @author Anton Koinov
  * @version $Revision$ $Date$
+ * $Log$
+ * Revision 1.21  2004/04/06 06:48:23  manolito
+ * IndexedPropertyDescriptor issue
+ *
  */
 public class PropertyResolverImpl extends PropertyResolver
 {
@@ -438,7 +442,6 @@ public class PropertyResolverImpl extends PropertyResolver
         // binary search
         for (int l = 0, h = propDescriptors.length - 1, i = h >> 1; l <= h; i = (l + h) >> 1)
         {
-            //TODO: Exclude IndexedPropertyDescriptor ?
             int compare = propDescriptors[i].getName().compareTo(propertyName);
             if (compare > 0)
             {
