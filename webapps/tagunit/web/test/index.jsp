@@ -10,6 +10,6 @@
   <tagunit:tagLibraryDescriptor jar="myfaces.jar" name="myfaces_core.tld"/>
 </tagunit:testTagLibrary>
 
-<tagunit:testTagLibrary uri="http://myfaces.sourceforge.net/tld/myfaces_ext_0_3.tld">
+<tagunit:testTagLibrary uri="http://myfaces.apache.org/extensions.tld">
   <tagunit:tagLibraryDescriptor jar="myfaces.jar" name="myfaces_ext.tld"/>
 </tagunit:testTagLibrary>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="ISO-8859-1" ?>
 <!DOCTYPE component PUBLIC
   "-//MyFaces//DTD MyFaces component def 1.0//EN"
-  "http://myfaces.sourceforge.net/dtd/Component.dtd">
+  "http://myfaces.apache.org/dtd/Component.dtd">
 <component generateStateMethods="true" generateUserRoleMethods="true" >
     <component-class>org.apache.myfaces.component.html.ext.HtmlSelectManyCheckbox</component-class>
     <base-class>javax.faces.component.html.HtmlSelectManyCheckbox</base-class>

@@ -77,7 +77,7 @@ be used to configure the chosen Forrest skin.
   <group-url>http://incubator.apache.org/</group-url>
   <group-logo>images/incubator-logo.gif</group-logo>
 
-  <!-- optional host logo (e.g. sourceforge logo)
+  <!-- optional host logo (e.g. apache logo)
        skin: forrest-site renders it at the bottom-left corner -->
   <host-url></host-url>
   <host-logo></host-logo>

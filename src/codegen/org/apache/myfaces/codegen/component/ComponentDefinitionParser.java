@@ -202,10 +202,10 @@ public class ComponentDefinitionParser
                 throw new UnsupportedOperationException("systemId must not be null");
             }
 
-            if (systemId.equals("http://myfaces.sourceforge.net/dtd/Component.dtd"))
+            if (systemId.equals("http://myfaces.apache.org/dtd/Component.dtd"))
             {
                 //Load DTD from servlet.jar
-                return createClassloaderInputSource(publicId, "net/sourceforge/myfaces/codegen/resource/Component.dtd");
+                return createClassloaderInputSource(publicId, "org/apache/myfaces/codegen/resource/Component.dtd");
             }
 
             throw new UnsupportedOperationException();

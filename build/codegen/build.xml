@@ -66,7 +66,7 @@
                   includes="javax/faces/component/*.xml,
                             javax/faces/component/html/*.xml"
                   destdir="${jsfapi-src.dir}"
-                  velocityLoaderPath="${codgen-src.dir}/net/sourceforge/myfaces/codegen/resource" />
+                  velocityLoaderPath="${codgen-src.dir}/org/apache/myfaces/codegen/resource" />
     </target>
 
 
@@ -88,7 +88,7 @@
         <generate basedir="${jsfapi-src.dir}"
                   includes="${single-component}.xml"
                   destdir="${jsfapi-src.dir}"
-                  velocityLoaderPath="${codgen-src.dir}/net/sourceforge/myfaces/codegen/resource" />
+                  velocityLoaderPath="${codgen-src.dir}/org/apache/myfaces/codegen/resource" />
     </target>
 
     <target name="generate-single-impl-component" depends="-compile" >
@@ -98,7 +98,7 @@
         <generate basedir="${myfaces-src.dir}"
                   includes="${single-component}.xml"
                   destdir="${myfaces-src.dir}"
-                  velocityLoaderPath="${codgen-src.dir}/net/sourceforge/myfaces/codegen/resource" />
+                  velocityLoaderPath="${codgen-src.dir}/org/apache/myfaces/codegen/resource" />
     </target>
 
 
@@ -107,9 +107,9 @@
             <classpath refid="codegen.class.path"/>
         </taskdef>
         <generate basedir="${components-src.dir}"
-                  includes="net/sourceforge/myfaces/component/html/ext/*.xml"
+                  includes="org/apache/myfaces/component/html/ext/*.xml"
                   destdir="${components-src.dir}"
-                  velocityLoaderPath="${codgen-src.dir}/net/sourceforge/myfaces/codegen/resource" />
+                  velocityLoaderPath="${codgen-src.dir}/org/apache/myfaces/codegen/resource" />
     </target>
 
     <target name="generate-single-components-component" depends="-compile" >
@@ -119,7 +119,7 @@
         <generate basedir="${components-src.dir}"
                   includes="${single-component}.xml"
                   destdir="${components-src.dir}"
-                  velocityLoaderPath="${codgen-src.dir}/net/sourceforge/myfaces/codegen/resource" />
+                  velocityLoaderPath="${codgen-src.dir}/org/apache/myfaces/codegen/resource" />
     </target>
 
 

@@ -148,7 +148,7 @@ Changes in Release 1.0.0 alpha
 * MyFaces has it's own JSF-API Implementation now!
   (Sun's jsf-api.jar will no longer be needed)
 * Sun's JSF-RI samples (cardemo, guessNumber) now run with MyFaces!
-  (see Documentation on http://myfaces.sourceforge.net)
+  (see Documentation on http://www.myfaces.org)
 * all core tags implemented now
 * new Calendar component (see examples webapp)  
 * Bugfixes
@@ -292,4 +292,4 @@ Sun asked me to remove the file "jsf-api.jar" from the public
 distribution. (Release 0.1 will no longer be available)
 
 
-Copyright (C) 2003, 2004  The MyFaces Team (http://myfaces.sourceforge.net)
+Copyright (C) 2003, 2004  The MyFaces Team (http://www.myfaces.org)

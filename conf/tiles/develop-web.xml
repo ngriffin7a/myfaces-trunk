@@ -181,6 +181,11 @@
 
     <taglib>
         <taglib-uri>http://myfaces.sourceforge.net/tld/myfaces_ext_0_9.tld</taglib-uri>
+        <taglib-location>lib/myfaces_ext_sf.tld</taglib-location>
+    </taglib>
+
+    <taglib>
+        <taglib-uri>http://myfaces.apache.org/extensions</taglib-uri>
         <taglib-location>lib/myfaces_ext.tld</taglib-location>
     </taglib>
 

@@ -74,7 +74,7 @@ public class ComponentInspector
             writer.println("<?xml version=\"1.0\" encoding=\"ISO-8859-1\" ?>");
             writer.println("<!DOCTYPE component PUBLIC");
             writer.println("  \"-//MyFaces//DTD MyFaces component def 1.0//EN\"");
-            writer.println("  \"http://myfaces.sourceforge.net/dtd/Component.dtd\">");
+            writer.println("  \"http://myfaces.apache.org/dtd/Component.dtd\">");
             inspectSingleClass(writer, componentClassName, oldComponentDefinition);
             writer.close();
             stringWriter.close();
@@ -312,7 +312,7 @@ public class ComponentInspector
     public static void main(String[] args)
     {
         /*
-        String componentDefFile = "C:\\Develop\\myfaces.sourceforge\\myfaces\\src\\codegen\\net\\sourceforge\\myfaces\\codegen\\resource\\Components.xml";
+        String componentDefFile = "C:\\Develop\\myfaces.apache\\myfaces\\src\\codegen\\org\\apache\\myfaces\\codegen\\resource\\Components.xml";
         File outfile = new File(componentDefFile);
         FileWriter fileWriter = null;
         try

@@ -187,7 +187,7 @@
     </taglib>
 
     <taglib>
-        <taglib-uri>http://myfaces.sourceforge.net/tld/myfaces_ext_0_9.tld</taglib-uri>
+        <taglib-uri>http://myfaces.apache.org/tld/myfaces_ext_1_0.tld</taglib-uri>
         <taglib-location>lib/myfaces_ext.tld</taglib-location>
     </taglib>
 

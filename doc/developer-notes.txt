@@ -61,7 +61,7 @@ MyFaces developers guidelines
 
 * Communication
   - Main communication instrument among MyFaces developers is the MyFaces
-    developer mailing list (myfaces-develop@lists.sourceforge.net).
+    developer mailing list (myfaces-dev@incubator.apache.org).
   - Every active MyFaces developer must subscribe to this list.
 
 * Copyright
@@ -90,6 +90,9 @@ MyFaces developers guidelines
  * @author Bug Rogers (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.16  2004/10/29 15:50:59  mmarinschek
+ * Get rid of many of the outdated references to sourceforge. set myfaces extensions tld uri to http://myfaces.apache.org/extensions
+ *
  * Revision 1.15  2004/07/05 12:52:43  manolito
  * Apache License
  *
