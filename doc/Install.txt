@@ -1,18 +1,22 @@
 MyFaces Installation instructions
 =================================
 
-What you need:
+What you need
+-------------
 - JDK 1.4.0 (or higher)
-- Tomcat 4.0.4
+- Tomcat 4.0.4 (get it from http://jakarta.apache.org/tomcat/index.html)
+- JSF-API (get it from the "JavaServerTM Faces v1.0 Reference Implementation Early Access 2" at http://java.sun.com/j2ee/javaserverfaces/download.html)
 
 
 HOWTO - Run the Example-Applikation
 -----------------------------------
 To run the examples you must add the myfaces context to your Tomcat's configuration in the file conf/server.xml.
+- Unzip all files to a working directory (e.g. "C:\myfaces" on a Win PC).
+- Copy the file "jsf-api.jar" from the "JSF Reference Implementation EA 2" to the directory <myfaces-working-dir>/web/WEB-INF/lib.
 - Add the following lines right after the "Tomcat Manager Context":
 
         <!-- MyFaces Context -->
-        <Context path="/myfaces" docBase="C:\myfaces\web" debug="0" privileged="true" reloadable="true">
+        <Context path="/myfaces" docBase="<myfaces-working-dir>/web" debug="0" privileged="true" reloadable="true">
                                      <!-- |
                                           Adjust to the path of your installation! -->
           <Logger className="org.apache.catalina.logger.FileLogger"
@@ -26,7 +30,8 @@ To run the examples you must add the myfaces context to your Tomcat's configurat
 
 HOWTO - Use MyFaces in your own WebApp
 --------------------------------------
-- Copy all JARs from the myfaces/lib directory to the WEB-INF/lib dir of your (J2EE conform) Webapplication.
+- Copy the file "jsf-api.jar" from the "JSF Reference Implementation EA 2" to the WEB-INF/lib dir of your (J2EE conform) Webapplication.
+- Copy all JARs from the myfaces/lib directory to the WEB-INF/lib dir of your Webapplication.
 - Copy the two TLD files and the file web.xml from the myfaces/WEB-INF dir to the WEB-INF dir of your Webapplication.
 - Add the line
 	<%@ taglib uri="/WEB-INF/myfaces_basic.tld" prefix="f"%>
