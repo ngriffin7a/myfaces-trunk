@@ -5,7 +5,7 @@ What you need
 -------------
 - JDK 1.4.0 (or higher)
 - Tomcat 4.0.4 (or higher) (get it from http://jakarta.apache.org/tomcat/index.html)
-- JSF-API (get it from the "JavaServerTM Faces v1.0 Reference Implementation Early Access 2" at http://java.sun.com/j2ee/javaserverfaces/download.html)
+- JSF-API (get it from the "JavaServerTM Faces v1.0 Reference Implementation Early Access 3" at http://java.sun.com/j2ee/javaserverfaces/download.html)
 
 
 HOWTO - Run the Example-Application
@@ -25,12 +25,12 @@ To run the examples you must add the myfaces context to your Tomcat's configurat
         </Context>
 
 - (Re)start Tomcat
-- Enter "http://localhost:8080/myfaces/example/" into the adress field of your browser and follow the link.
+- Enter "http://localhost:8080/myfaces/example/" into the adress field of your browser.
 
 
 HOWTO - Use MyFaces in your own WebApp
 --------------------------------------
-- Copy the file "jsf-api.jar" from the "JSF Reference Implementation EA 2" to the WEB-INF/lib dir of your (J2EE conform) Webapplication.
+- Copy the file "jsf-api.jar" from the "JSF Reference Implementation EA 3" to the WEB-INF/lib dir of your (J2EE conform) Webapplication.
 - Copy all JARs from the myfaces/lib directory to the WEB-INF/lib dir of your Webapplication.
 - Copy the two TLD files and the file web.xml from the myfaces/WEB-INF dir to the WEB-INF dir of your Webapplication.
 - Add the line

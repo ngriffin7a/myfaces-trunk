@@ -20,7 +20,7 @@
 //-->
 <%@ taglib uri="/WEB-INF/myfaces_ext.tld" prefix="x"%>
 <x:navigation id="nav" bundle="net.sourceforge.myfaces.example.example_messages" cssClass="navigation">
-    <x:navigation_item id="nav-1" key="nav_Home" treeId="/example/index.jsf" />
+    <x:navigation_item id="nav-1" key="nav_Home" treeId="/example/home.jsf" />
     <x:navigation_item id="nav-2" key="nav_Examples" >
         <x:navigation_item id="nav-2-1" key="nav_Sample_1" treeId="/example/sample1.jsf"/>
         <x:navigation_item id="nav-2-2" key="nav_Sample_2" treeId="/example/sample2.jsf"/>
