@@ -1,10 +1,10 @@
 <%@ page import="java.math.BigDecimal,
                  java.util.Date"%>
-<%@ page session="false"
-%><%@ taglib uri="http://java.sun.com/jsf/html" prefix="h"
-%><%@ taglib uri="http://java.sun.com/jsf/core" prefix="f"
-%><%@ taglib uri="http://myfaces.sourceforge.net/tld/myfaces_ext_0_9.tld" prefix="x"
-%><html>
+<%@ page session="false"%>
+<%@ taglib uri="http://java.sun.com/jsf/html" prefix="h"%>
+<%@ taglib uri="http://java.sun.com/jsf/core" prefix="f"%>
+<%@ taglib uri="http://myfaces.sourceforge.net/tld/myfaces_ext_0_9.tld" prefix="x"%>
+<html>
 
 <!--
 /**
@@ -80,7 +80,7 @@
         </f:facet>
 
         <%@include file="inc/page_footer.jsp" %>
-        
+
     </x:panelLayout>
 
 </f:view>

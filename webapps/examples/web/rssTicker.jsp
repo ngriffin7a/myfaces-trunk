@@ -1,10 +1,10 @@
 <%@ page import="java.math.BigDecimal,
                  java.util.Date"%>
-<%@ page session="false"
-%><%@ taglib uri="http://java.sun.com/jsf/html" prefix="h"
-%><%@ taglib uri="http://java.sun.com/jsf/core" prefix="f"
-%><%@ taglib uri="http://myfaces.sourceforge.net/tld/myfaces_ext_0_9.tld" prefix="x"
-%><html>
+<%@ page session="false"%>
+<%@ taglib uri="http://java.sun.com/jsf/html" prefix="h"%>
+<%@ taglib uri="http://java.sun.com/jsf/core" prefix="f"%>
+<%@ taglib uri="http://myfaces.sourceforge.net/tld/myfaces_ext_0_9.tld" prefix="x"%>
+<html>
 
 <%@include file="inc/head.inc" %>
 
@@ -66,8 +66,8 @@ managed beans used:
 			   <h:panelGrid columns="1">
 					<x:rssTicker rssUrl="http://www.jsfcentral.com/jsfcentral_news.rss"/>
 			    </h:panelGrid>
-		
-			
+
+
             </h:panelGroup>
         </f:facet>
 

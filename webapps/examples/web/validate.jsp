@@ -1,10 +1,10 @@
 <%@ page import="java.math.BigDecimal,
                  java.util.Date"%>
-<%@ page session="false"
-%><%@ taglib uri="http://java.sun.com/jsf/html" prefix="h"
-%><%@ taglib uri="http://java.sun.com/jsf/core" prefix="f"
-%><%@ taglib uri="http://myfaces.sourceforge.net/tld/myfaces_ext_0_9.tld" prefix="x"
-%><html>
+<%@ page session="false" %>
+<%@ taglib uri="http://java.sun.com/jsf/html" prefix="h"%>
+<%@ taglib uri="http://java.sun.com/jsf/core" prefix="f"%>
+<%@ taglib uri="http://myfaces.sourceforge.net/tld/myfaces_ext_0_9.tld" prefix="x"%>
+<html>
 
 <%@include file="inc/head.inc" %>
 
@@ -65,19 +65,19 @@ managed beans used:
 
 			<h:form id="form1" name="validateForm">
 			   <h:panelGrid columns="3">
-			
+
 					<h:outputLabel for="form1:email" value="Email" />
                     <h:inputText id="email" value="#{validateForm.email}" required="true">
                         <f:validator validatorId="net.sourceforge.myfaces.validator.Email"/>
                     </h:inputText>
 					<h:message id="emailError" for="form1:email" styleClass="error" />
-					
+
 					<h:outputLabel for="form1:email2" value="Email2" />
                     <h:inputText id="email2" value="#{validateForm.email2}" required="true">
                         <x:validateEmail />
                     </h:inputText>
 					<h:message id="emailError2" for="form1:email2" styleClass="error" />
-					
+
 					<h:outputLabel for="form1:creditCardNumber" value="CreditCard" />
                     <h:inputText id="creditCardNumber" value="#{validateForm.creditCardNumber}" required="true">
                         <x:validateCreditCard />
@@ -103,10 +103,10 @@ managed beans used:
                     <h:panelGroup/>
 				    <h:commandButton id="validateButton" value="Submit" action="#{validateForm.submit}"/>
                     <h:panelGroup/>
-                    
+
 			    </h:panelGrid>
 			</h:form>
-			
+
             </h:panelGroup>
         </f:facet>
 
