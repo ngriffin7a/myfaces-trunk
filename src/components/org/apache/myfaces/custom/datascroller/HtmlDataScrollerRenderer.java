@@ -37,6 +37,9 @@ import java.util.Map;
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.18  2005/01/04 00:28:07  svieujot
+ * dataScroller, add rowsCountVar, displayedRowsCountVar, firstRowIndexVar and lastRowIndexVar attributes.
+ *
  * Revision 1.17  2004/12/18 16:31:21  tomsp
  * fixed issue MYFACES-1
  *
@@ -183,6 +186,30 @@ public class HtmlDataScrollerRenderer
             int pageIndex = getPageIndex(uiData);
             requestMap.put(pageIndexVar, new Integer(pageIndex));
         }
+        String rowsCountVar = scroller.getRowsCountVar();
+        if (rowsCountVar != null)
+        {
+            int rowsCount = uiData.getRowCount();
+            requestMap.put(rowsCountVar, new Integer(rowsCount));
+        }
+        String displayedRowsCountVar = scroller.getDisplayedRowsCountVar();
+        if (displayedRowsCountVar != null)
+        {
+            int displayedRowsCount = uiData.getRows();
+            requestMap.put(displayedRowsCountVar, new Integer(displayedRowsCount));
+        }
+        String firstRowIndexVar = scroller.getFirstRowIndexVar();
+        if (firstRowIndexVar != null)
+        {
+            int firstRowIndex = uiData.getFirst()+1;
+            requestMap.put(firstRowIndexVar, new Integer(firstRowIndex));
+        }
+        String lastRowIndexVar = scroller.getLastRowIndexVar();
+        if (lastRowIndexVar != null)
+        {
+            int lastRowIndex = uiData.getFirst()+uiData.getRows();
+            requestMap.put(lastRowIndexVar, new Integer(lastRowIndex));
+        }
 
         RendererUtils.renderChildren(facescontext, uicomponent);
 
@@ -193,6 +220,22 @@ public class HtmlDataScrollerRenderer
         if (pageIndexVar != null)
         {
             requestMap.remove(pageIndexVar);
+        }
+        if (rowsCountVar != null)
+        {
+            requestMap.remove(rowsCountVar);
+        }
+        if (displayedRowsCountVar != null)
+        {
+            requestMap.remove(displayedRowsCountVar);
+        }
+        if (firstRowIndexVar != null)
+        {
+            requestMap.remove(firstRowIndexVar);
+        }
+        if (lastRowIndexVar != null)
+        {
+            requestMap.remove(lastRowIndexVar);
         }
     }
 

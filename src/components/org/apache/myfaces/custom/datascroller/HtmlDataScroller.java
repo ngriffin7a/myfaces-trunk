@@ -114,6 +114,10 @@ public class HtmlDataScroller
     private Integer _fastStep = null;
     private String _pageIndexVar = null;
     private String _pageCountVar = null;
+    private String _rowsCountVar = null;
+    private String _displayedRowsCountVar = null;
+    private String _firstRowIndexVar = null;
+    private String _lastRowIndexVar = null;
     private String _style = null;
     private String _styleClass = null;
     private String _columnClasses = null;
@@ -184,7 +188,55 @@ public class HtmlDataScroller
         ValueBinding vb = getValueBinding("pageCountVar");
         return vb != null ? (String)vb.getValue(getFacesContext()) : null;
     }
+    
+    public void setRowsCountVar(String rowsCountVar)
+    {
+        _rowsCountVar = rowsCountVar;
+    }
 
+    public String getRowsCountVar()
+    {
+        if (_rowsCountVar != null) return _rowsCountVar;
+        ValueBinding vb = getValueBinding("rowsCountVar");
+        return vb != null ? (String)vb.getValue(getFacesContext()) : null;
+    }
+    
+    public void setDisplayedRowsCountVar(String displayedRowsCountVar)
+    {
+        _displayedRowsCountVar = displayedRowsCountVar;
+    }
+    
+    public String getDisplayedRowsCountVar()
+    {
+        if (_displayedRowsCountVar != null) return _displayedRowsCountVar;
+        ValueBinding vb = getValueBinding("displayedRowsCountVar");
+        return vb != null ? (String)vb.getValue(getFacesContext()) : null;
+    }
+    
+    public void setFirstRowIndexVar(String firstRowIndexVar)
+    {
+        _firstRowIndexVar = firstRowIndexVar;
+    }
+
+    public String getFirstRowIndexVar()
+    {
+        if (_firstRowIndexVar != null) return _firstRowIndexVar;
+        ValueBinding vb = getValueBinding("firstRowIndexVar");
+        return vb != null ? (String)vb.getValue(getFacesContext()) : null;
+    }
+
+    public void setLastRowIndexVar(String lastRowIndexVar)
+    {
+        _lastRowIndexVar = lastRowIndexVar;
+    }
+
+    public String getLastRowIndexVar()
+    {
+        if (_lastRowIndexVar != null) return _lastRowIndexVar;
+        ValueBinding vb = getValueBinding("lastRowIndexVar");
+        return vb != null ? (String)vb.getValue(getFacesContext()) : null;
+    }
+    
     public void setStyle(String style)
     {
         _style = style;
@@ -311,24 +363,28 @@ public class HtmlDataScroller
 
     public Object saveState(FacesContext context)
     {
-        Object values[] = new Object[16];
+        Object values[] = new Object[20];
         values[0] = super.saveState(context);
         values[1] = _for;
         values[2] = _fastStep;
         values[3] = _pageIndexVar;
         values[4] = _pageCountVar;
-        values[5] = _style;
-        values[6] = _styleClass;
-        values[7] = _columnClasses;
-        values[8] = _paginator;
-        values[9] = _paginatorMaxPages;
-        values[10] = _paginatorTableClass;
-        values[11] = _paginatorTableStyle;
-        values[12] = _paginatorColumnClass;
-        values[13] = _paginatorColumnStyle;
-        values[14] = _paginatorActiveColumnClass;
-        values[15] = _paginatorActiveColumnStyle;
-        return ((Object) (values));
+        values[5] = _rowsCountVar;
+        values[6] = _displayedRowsCountVar;
+        values[7] = _firstRowIndexVar;
+        values[8] = _lastRowIndexVar;
+        values[9] = _style;
+        values[10] = _styleClass;
+        values[11] = _columnClasses;
+        values[12] = _paginator;
+        values[13] = _paginatorMaxPages;
+        values[14] = _paginatorTableClass;
+        values[15] = _paginatorTableStyle;
+        values[16] = _paginatorColumnClass;
+        values[17] = _paginatorColumnStyle;
+        values[18] = _paginatorActiveColumnClass;
+        values[19] = _paginatorActiveColumnStyle;
+        return values;
     }
 
     public void restoreState(FacesContext context, Object state)
@@ -339,17 +395,21 @@ public class HtmlDataScroller
         _fastStep = (Integer)values[2];
         _pageIndexVar = (String)values[3];
         _pageCountVar = (String)values[4];
-        _style = (String)values[5];
-        _styleClass = (String)values[6];
-        _columnClasses = (String)values[7];
-        _paginator = (Boolean)values[8];
-        _paginatorMaxPages = (Integer)values[9];
-        _paginatorTableClass = (String)values[10];
-        _paginatorTableStyle = (String)values[11];
-        _paginatorColumnClass = (String)values[12];
-        _paginatorColumnStyle = (String)values[13];
-        _paginatorActiveColumnClass = (String)values[14];
-        _paginatorActiveColumnStyle = (String)values[15];
+        _rowsCountVar = (String)values[5];
+        _displayedRowsCountVar = (String)values[6];
+        _firstRowIndexVar = (String)values[7];
+        _lastRowIndexVar = (String)values[8];
+        _style = (String)values[9];
+        _styleClass = (String)values[10];
+        _columnClasses = (String)values[11];
+        _paginator = (Boolean)values[12];
+        _paginatorMaxPages = (Integer)values[13];
+        _paginatorTableClass = (String)values[14];
+        _paginatorTableStyle = (String)values[15];
+        _paginatorColumnClass = (String)values[16];
+        _paginatorColumnStyle = (String)values[17];
+        _paginatorActiveColumnClass = (String)values[18];
+        _paginatorActiveColumnStyle = (String)values[19];
     }
     //------------------ GENERATED CODE END ---------------------------------------
 }

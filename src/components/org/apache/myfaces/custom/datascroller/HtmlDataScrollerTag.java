@@ -24,6 +24,9 @@ import javax.faces.component.UIComponent;
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.10  2005/01/04 00:28:06  svieujot
+ * dataScroller, add rowsCountVar, displayedRowsCountVar, firstRowIndexVar and lastRowIndexVar attributes.
+ *
  * Revision 1.9  2004/10/13 11:50:57  matze
  * renamed packages to org.apache
  *
@@ -73,6 +76,10 @@ public class HtmlDataScrollerTag
     private static final String FAST_STEP_ATTR          = "fastStep";
     private static final String PAGE_INDEX_ATTR         = "pageIndexVar";
     private static final String PAGE_COUNT_ATTR         = "pageCountVar";
+    private static final String ROWS_COUNT_ATTR         = "rowsCountVar";
+    private static final String DISPLAYED_ROWS_COUNT_ATTR = "displayedRowsCountVar";
+    private static final String FIRST_ROW_INDEX_ATTR    = "firstRowIndexVar";
+    private static final String LAST_ROW_INDEX_ATTR     = "lastRowIndexVar";
     private static final String STYLE_CLASS_ATTR        = "styleClass";
     private static final String STYLE_ATTR              = "style";
     private static final String PAGINATOR_ATTR          = "paginator";
@@ -88,6 +95,10 @@ public class HtmlDataScrollerTag
     private String _fastStep;
     private String _pageIndexVar;
     private String _pageCountVar;
+    private String _rowsCountVar;
+    private String _displayedRowsCountVar;
+    private String _firstRowIndexVar;
+    private String _lastRowIndexVar;
     private String _paginator;
     private String _styleClass;
     private String _style;
@@ -121,6 +132,10 @@ public class HtmlDataScrollerTag
         setIntegerProperty(component, FAST_STEP_ATTR, _fastStep);
         setStringProperty(component, PAGE_INDEX_ATTR, _pageIndexVar);
         setStringProperty(component, PAGE_COUNT_ATTR, _pageCountVar);
+        setStringProperty(component, ROWS_COUNT_ATTR, _rowsCountVar);
+        setStringProperty(component, DISPLAYED_ROWS_COUNT_ATTR, _displayedRowsCountVar);
+        setStringProperty(component, FIRST_ROW_INDEX_ATTR, _firstRowIndexVar);
+        setStringProperty(component, LAST_ROW_INDEX_ATTR, _lastRowIndexVar);
         setStringProperty(component, STYLE_CLASS_ATTR, _styleClass);
         setStringProperty(component, STYLE_ATTR, _style);
         setBooleanProperty(component, PAGINATOR_ATTR, _paginator);
@@ -155,6 +170,26 @@ public class HtmlDataScrollerTag
     public void setPageIndexVar(String pageIndexVar)
     {
         _pageIndexVar = pageIndexVar;
+    }
+    
+    public void setRowsCountVar(String rowsCountVar)
+    {
+        _rowsCountVar = rowsCountVar;
+    }
+    
+    public void setDisplayedRowsCountVar(String displayedRowsCountVar)
+    {
+        _displayedRowsCountVar = displayedRowsCountVar;
+    }
+    
+    public void setFirstRowIndexVar(String firstRowIndexVar)
+    {
+        _firstRowIndexVar = firstRowIndexVar;
+    }
+    
+    public void setLastRowIndexVar(String lastRowIndexVar)
+    {
+        _lastRowIndexVar = lastRowIndexVar;
     }
 
     public void setStyle(String style)

@@ -123,10 +123,18 @@ managed beans used:
                     </x:dataScroller>
                     <x:dataScroller id="scroll_2"
                             for="data"
+                            rowsCountVar="rowsCount"
+                            displayedRowsCountVar="displayedRowsCountVar"
+                            firstRowIndexVar="firstRowIndex"
+                            lastRowIndexVar="lastRowIndex"
                             pageCountVar="pageCount"
                             pageIndexVar="pageIndex"
                             >
                         <h:outputFormat value="#{example_messages['dataScroller_pages']}" styleClass="standard" >
+                            <f:param value="#{rowsCount}" />
+                            <f:param value="#{displayedRowsCountVar}" />
+                            <f:param value="#{firstRowIndex}" />
+                            <f:param value="#{lastRowIndex}" />
                             <f:param value="#{pageIndex}" />
                             <f:param value="#{pageCount}" />
                         </h:outputFormat>

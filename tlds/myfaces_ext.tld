@@ -747,6 +747,42 @@
             </description>
         </attribute>
         <attribute>
+            <name>rowsCountVar</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
+            <description>
+                A parameter name, under which the actual rows count is set in request scope
+                similar to the var parameter.
+            </description>
+        </attribute>
+        <attribute>
+            <name>displayedRowsCountVar</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
+            <description>
+                A parameter name, under which the actual displayed rows count is set in request scope
+                similar to the var parameter.
+            </description>
+        </attribute>
+        <attribute>
+            <name>firstRowIndexVar</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
+            <description>
+                A parameter name, under which the actual first displayed row index is set in request scope
+                similar to the var parameter.
+            </description>
+        </attribute>
+        <attribute>
+            <name>lastRowIndexVar</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
+            <description>
+                A parameter name, under which the actual last displayed row index is set in request scope
+                similar to the var parameter.
+            </description>
+        </attribute>
+        <attribute>
             <name>styleClass</name>
             <required>false</required>
             <rtexprvalue>false</rtexprvalue>
