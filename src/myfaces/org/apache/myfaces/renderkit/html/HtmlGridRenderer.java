@@ -37,6 +37,9 @@ import java.util.StringTokenizer;
  * X-CHECKED: tlddoc h:panelGrid 1.0 final
  *
  * $Log$
+ * Revision 1.10  2004/06/03 23:02:14  o_rossmueller
+ * fix for completion of last row
+ *
  * Revision 1.9  2004/06/03 13:41:08  o_rossmueller
  * fix #962084: render rowClasses
  *
@@ -269,7 +272,7 @@ public class HtmlGridRenderer
 
             if (rowStarted)
             {
-                if (columnIndex < columns)
+                if (columnIndex > 0)
                 {
                     if (log.isWarnEnabled()) log.warn("PanelGrid " + component.getClientId(context) + " has not enough children. Child count should be a multiple of the columns attribute.");
                     //Render empty columns, so that table is correct
