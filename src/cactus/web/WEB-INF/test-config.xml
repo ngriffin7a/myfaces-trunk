@@ -142,4 +142,12 @@
         </renderer>
     </render-kit>
 
+    <navigation-rule>
+        <navigation-case>
+            <from-outcome>Foo</from-outcome>
+            <to-view-id>/Foo.jsp</to-view-id>
+            <redirect />
+        </navigation-case>
+    </navigation-rule>
+
 </faces-config>

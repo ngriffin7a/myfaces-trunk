@@ -31,6 +31,9 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:oliver@rossmueller.com">Oliver Rossmueller</a>
  *
  * $Log$
+ * Revision 1.3  2004/07/13 23:11:12  o_rossmueller
+ * fix #990302: set redirect correctly for navigation case (+ test in ConfigurationTest)
+ *
  * Revision 1.2  2004/07/07 08:34:58  mwessendorf
  * removed unused import-statements
  *
@@ -141,7 +144,7 @@ public class DigesterFacesConfigUnmarshallerImpl implements FacesConfigUnmarshal
         digester.addCallMethod("faces-config/navigation-rule/navigation-case/from-action", "setFromAction", 0);
         digester.addCallMethod("faces-config/navigation-rule/navigation-case/from-outcome", "setFromOutcome", 0);
         digester.addCallMethod("faces-config/navigation-rule/navigation-case/to-view-id", "setToViewId", 0);
-        digester.addCallMethod("faces-config/navigation-rule/navigation-case/redirect", "setRedirect", 0);
+        digester.addCallMethod("faces-config/navigation-rule/navigation-case/redirect", "setRedirect");
 
         digester.addObjectCreate("faces-config/render-kit", RenderKit.class);
         digester.addSetNext("faces-config/render-kit", "addRenderKit");

@@ -27,7 +27,7 @@ public class NavigationCase implements net.sourceforge.myfaces.config.element.Na
     private String fromAction;
     private String fromOutcome;
     private String toViewId;
-    private String redirect;
+    private boolean redirect;
 
 
     public String getFromAction()
@@ -66,14 +66,14 @@ public class NavigationCase implements net.sourceforge.myfaces.config.element.Na
     }
 
 
-    public void setRedirect(String redirect)
+    public void setRedirect()
     {
-        this.redirect = redirect;
+        this.redirect = true;
     }
 
 
     public boolean isRedirect()
     {
-        return Boolean.valueOf(redirect).booleanValue();
+        return redirect;
     }
 }

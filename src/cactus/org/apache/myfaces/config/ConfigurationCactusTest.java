@@ -15,6 +15,9 @@
  */
 package net.sourceforge.myfaces.config;
 
+import java.util.Iterator;
+import java.util.List;
+import java.util.ArrayList;
 import javax.faces.FactoryFinder;
 import javax.faces.context.ExternalContext;
 import javax.faces.render.RenderKitFactory;
@@ -38,6 +41,8 @@ import net.sourceforge.myfaces.application.jsp.JspViewHandlerImpl;
 import net.sourceforge.myfaces.el.PropertyResolverImpl;
 import net.sourceforge.myfaces.el.VariableResolverImpl;
 import net.sourceforge.myfaces.config.element.ManagedBean;
+import net.sourceforge.myfaces.config.element.NavigationRule;
+import net.sourceforge.myfaces.config.element.NavigationCase;
 import net.sourceforge.myfaces.cactus.MyFacesServletTestCase;
 import net.sourceforge.myfaces.lifecycle.LifecycleFactoryImpl;
 import net.sourceforge.myfaces.config.RuntimeConfig;
@@ -125,6 +130,16 @@ public class ConfigurationCactusTest extends MyFacesServletTestCase
         ManagedBean bean = runtimeConfig.getManagedBean("testMap");
         assertNotNull(bean);
         assertNull(runtimeConfig.getManagedBean("doesNotExist"));
+
+        // Navigation rules
+        List navigationRules = new ArrayList(runtimeConfig.getNavigationRules());
+
+        assertEquals(1, navigationRules.size());
+        NavigationRule navRule = (NavigationRule) navigationRules.get(0);
+        NavigationCase navCase = (NavigationCase) navRule.getNavigationCases().iterator().next();
+        assertTrue(navCase.isRedirect());
+        assertEquals("Foo", navCase.getFromOutcome());
+        assertEquals("/Foo.jsp", navCase.getToViewId());
 
         // Lifecycle config
         ServletContext context = (ServletContext) externalContext.getContext();
