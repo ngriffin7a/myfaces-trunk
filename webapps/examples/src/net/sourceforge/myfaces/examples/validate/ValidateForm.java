@@ -10,6 +10,10 @@ public class ValidateForm {
 	private String creditCardNumber = null;
 	private String regExpr = null;
 	
+	private String equal = null;
+	private String equal2 = null;
+	
+	
 
 	public String getEmail() {
 		return email;
@@ -52,6 +56,34 @@ public class ValidateForm {
 	 */
 	public void setRegExpr(String string) {
 		regExpr = string;
+	}
+
+	/**
+	 * @return
+	 */
+	public String getEqual2() {
+		return equal2;
+	}
+
+	/**
+	 * @param string
+	 */
+	public void setEqual2(String string) {
+		equal2 = string;
+	}
+
+	/**
+	 * @return
+	 */
+	public String getEqual() {
+		return equal;
+	}
+
+	/**
+	 * @param string
+	 */
+	public void setEqual(String string) {
+		equal = string;
 	}
 
 }

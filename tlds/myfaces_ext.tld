@@ -1082,6 +1082,7 @@
         </description>
 	</tag>   
 
+    <!-- Validator for Regular Expressions -->
     <tag>
         <name>validateRegExpr</name>
         <tag-class>net.sourceforge.myfaces.custom.regexprvalidator.ValidateRegExprTag</tag-class>
@@ -1100,5 +1101,22 @@
         </attribute>
 	</tag>
 
-
+    <!-- Validator for Equal -->
+     <tag>
+        <name>validateEqual</name>
+        <tag-class>net.sourceforge.myfaces.custom.equalvalidator.ValidateEqualTag</tag-class>
+        <body-content>JSP</body-content>
+        <description>
+			A custom validator for validations against foreign component values.
+        </description>
+   
+        <attribute>
+            <name>for</name>
+            <required>true</required>
+            <rtexprvalue>false</rtexprvalue>
+            <description>
+				the id of the foreign component, which is needed for the validation
+            </description>
+        </attribute>     
+	</tag>   
 </taglib>

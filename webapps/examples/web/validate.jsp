@@ -85,6 +85,16 @@ managed beans used:
                     </h:inputText>
 					<h:message id="regExprValueError" for="form1:regExprValue" styleClass="error" />
 
+					<h:outputLabel for="form1:equal" value="Equal" />
+                    <h:inputText id="equal" value="#{validateForm.equal}" required="true"/>
+					<h:message id="equalError" for="form1:equal" styleClass="error" />
+
+					<h:outputLabel for="form1:equal2" value="Equal2" />
+                    <h:inputText id="equal2" value="#{validateForm.equal2}" required="true">
+                        <x:validateEqual for="form1:equal" />
+                    </h:inputText>
+					<h:message id="equal2Error" for="form1:equal2" styleClass="error" />
+
                     <h:panelGroup/>
 				    <h:commandButton id="validateButton" value="Submit" action="#{validateForm.submit}"/>
                     <h:panelGroup/>
