@@ -5,6 +5,9 @@ MyFaces Release Notes
 Changes in Release 0.4.3
 * fixed a bug in the navigation menu: open/active state was lost sometimes.
 * removed Attribute levelClasses from NavigationTag - see NavigationRenderer.indent(...)
+* Replaced usages of ObjectInputStream by the new derived class
+  MyFacesObjectInputStream to finally fix the JBoss Class.forName issue
+  --> MyFaces now works in JBoss 3.2.1 (thanks to Robert Gothan!)
 * TextRenderer: empty <span> element (span without attributes) is not rendered anymore
 
 ----------------------------------------------------------------------

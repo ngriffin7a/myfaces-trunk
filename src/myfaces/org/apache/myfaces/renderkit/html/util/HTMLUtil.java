@@ -49,7 +49,6 @@ public class HTMLUtil
                                            UIComponent component,
                                            String rendererAttrName,
                                            String htmlAttrName)
-        throws IOException
     {
         Object value = component.getAttribute(rendererAttrName);
         if (value != null)
@@ -100,7 +99,6 @@ public class HTMLUtil
     public static void renderHTMLAttributes(StringBuffer buf,
                                             UIComponent component,
                                             String[] attributes)
-        throws IOException
     {
         for (int i = 0; i < attributes.length; i++)
         {
