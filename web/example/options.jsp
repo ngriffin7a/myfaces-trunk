@@ -33,17 +33,19 @@
 
 <f:use_faces>
 
-    <table border="1"><tr>
-        <td valign="top" width="150"><%@ include file="inc/navigation.jsp"  %></td>
-        <td align="left" width="640" valign="top">
-            <br>
+    <x:page_layout id="page" layout="classic" cssClass="<%=pageLayout%>" >
+        <x:page_header id="header" cssClass="pageHeader" >
+            <f:image id="logo" url="images/logo_mini.jpg" altKey="alt_logo" altBundle="net.sourceforge.myfaces.example.example_messages" />
+        </x:page_header>
+        <%@ include file="inc/navigation.jsp"  %>
 
+        <x:page_body id="body" cssClass="pageBody" >
             <f:errors id="messageList" />
 
             <h4>Options</h4>
             <table border="1"><tr><td>
                 <f:form id="form1" formName="calcForm">
-                    View this page in
+                    <f:message id="msg.lang" key="option_lang" bundle="<%=msgBundle%>" ></f:message>
                     <f:selectbox id="locales" modelReference="optionsForm.language"  >
                         <f:selectbox_items id="available" modelReference="optionsForm.availableLanguages" />
                     </f:selectbox>
@@ -52,8 +54,12 @@
 
             </td></tr></table>
 
-        </td>
-    </tr></table>
+        </x:page_body>
+
+        <x:page_footer id="footer" cssClass="pageFooter" >
+            Copyright (C) 2003  <a href="http://myfaces.sourceforge.net" style="color:#FFFFFF">The MyFaces Team</a>
+        </x:page_footer>
+    </x:page_layout>
 
 </f:use_faces>
 

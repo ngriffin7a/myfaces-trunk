@@ -165,7 +165,13 @@ public class ListenerRenderKit
     }
 
 
-
+    /**
+     * Register a new RendererListener, whose callback-functions are called when rendering each
+     * component in the subtree of the given component.
+     * @param facesContext
+     * @param component
+     * @param listener
+     */
     public static void addListener(FacesContext facesContext,
                                    UIComponent component,
                                    RendererListener listener)
@@ -192,6 +198,13 @@ public class ListenerRenderKit
         }
     }
 
+    /**
+     * Register a new RendererListener, whose callback-functions are called when rendering each
+     * direct child component of the given component.
+     * @param facesContext
+     * @param component
+     * @param listener
+     */
     public static void addChildrenListener(FacesContext facesContext,
                                            UIComponent component,
                                            RendererListener listener)

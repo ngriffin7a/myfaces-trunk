@@ -32,10 +32,13 @@
 
 <f:use_faces>
 
-    <table border="1"><tr>
-        <td valign="top" width="150"><%@ include file="inc/navigation.jsp"  %></td>
-        <td align="left" width="640" valign="top">
-            <br>
+    <x:page_layout id="page" layout="classic" cssClass="<%=pageLayout%>" >
+        <x:page_header id="header" cssClass="pageHeader" >
+            <f:image id="logo" url="images/logo_mini.jpg" altKey="alt_logo" altBundle="net.sourceforge.myfaces.example.example_messages" />
+        </x:page_header>
+        <%@ include file="inc/navigation.jsp"  %>
+
+        <x:page_body id="body" cssClass="pageBody" >
 
             <f:errors id="errors" />
 
@@ -75,25 +78,12 @@
             </f:list>
             <br>
 
-            <!-- TODO grid does not work anymore -->
-            <f:grid id="grid"
-                    columns="2"
-                    cssClass="standardTable"
-                    headerClass="standardTable_Header"
-                    footerClass="standardTable_Footer"
-                    rowClasses="standardTable_Row1,standardTable_Row2" >
-                <f:output_text id="grid.text1" text="Grid Header Column 1" />
-                <f:output_text id="grid.text2" text="Grid Header Column 2" />
-                <f:output_text id="grid.text3" text="row1" />
-                <f:output_text id="grid.text4" text="row1" />
-                <f:output_text id="grid.text5" text="row2" />
-                <f:output_text id="grid.text6" text="row2" />
-                <f:output_text id="grid.text7" text="footer" />
-                <f:output_text id="grid.text8" text="footer" />
-            </f:grid>
+        </x:page_body>
 
-        </td>
-    </tr></table>
+        <x:page_footer id="footer" cssClass="pageFooter" >
+            Copyright (C) 2003  <a href="http://myfaces.sourceforge.net" style="color:#FFFFFF">The MyFaces Team</a>
+        </x:page_footer>
+    </x:page_layout>
 
 </f:use_faces>
 

@@ -34,14 +34,25 @@
 
 <f:use_faces>
 
-    <table border="1"><tr>
-        <td valign="top" width="150" class="standard"><%@ include file="inc/navigation.jsp"  %></td>
-        <td align="left" width="640" valign="top">
+    <x:page_layout id="page" layout="classic" cssClass="<%=pageLayout%>" >
+        <x:page_header id="header" cssClass="pageHeader" >
+            <f:image id="logo" url="images/logo_mini.jpg" altKey="alt_logo" altBundle="net.sourceforge.myfaces.example.example_messages" />
+        </x:page_header>
+        <%@ include file="inc/navigation.jsp"  %>
+
+        <x:page_body id="body" cssClass="pageBody" >
 <h3>Webpages</h3>
  <a href="http://myfaces.sourceforge.net/" target="_blank">Project Homepage</a><br>
  <a href="http://www.sourceforge.net/projects/myfaces" target="_blank">MyFaces@Sourceforge</a><br>
 <h3>Project Members</h3>
  <a href="http://sourceforge.net/project/memberlist.php?group_id=69709">MyFaces Team Members@Sourceforge</a><br>
+
+        </x:page_body>
+
+        <x:page_footer id="footer" cssClass="pageFooter" >
+            Copyright (C) 2003  <a href="http://myfaces.sourceforge.net" style="color:#FFFFFF">The MyFaces Team</a>
+        </x:page_footer>
+    </x:page_layout>
 
 </f:use_faces>
 

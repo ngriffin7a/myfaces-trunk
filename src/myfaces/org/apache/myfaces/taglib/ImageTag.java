@@ -56,4 +56,30 @@ public class ImageTag
     {
         setRendererAttribute(ImageRenderer.BUNDLE_ATTR, value);
     }
+
+    public void setWidth(Integer value)
+    {
+        setRendererAttribute(ImageRenderer.WIDTH_ATTR, value);
+    }
+
+    public void setHeight(Integer value)
+    {
+        setRendererAttribute(ImageRenderer.HEIGHT_ATTR, value);
+    }
+
+    public void setAlt(String value)
+    {
+        setRendererAttribute(ImageRenderer.ALT_ATTR, value);
+    }
+
+    public void setAltKey(String value)
+    {
+        setRendererAttribute(ImageRenderer.ALT_KEY_ATTR, value);
+    }
+
+    public void setAltBundle(String value)
+    {
+        setRendererAttribute(ImageRenderer.ALT_BUNDLE_ATTR, value);
+    }
+
 }

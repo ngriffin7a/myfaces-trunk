@@ -33,6 +33,10 @@ public interface ImageRendererAttributes
 
     public static final String KEY_ATTR = "key";
     public static final String BUNDLE_ATTR = "bundle";
+    public static final String ALT_KEY_ATTR = "altKey";
+    public static final String ALT_BUNDLE_ATTR = "altBundle";
 
-
+    public static final String WIDTH_ATTR = "width";
+    public static final String HEIGHT_ATTR = "height";
+    public static final String ALT_ATTR = "alt";
 }

@@ -132,12 +132,26 @@ public class UINavigation
 
         public boolean isOpen()
         {
-            return UIComponentUtils.getBooleanAttribute(this, OPEN_ATTR, false);
+            Boolean open = (Boolean)getAttribute(OPEN_ATTR);
+            return open != null && open.booleanValue();
         }
 
         public void setOpen(boolean open)
         {
-            UIComponentUtils.setBooleanAttribute(this, OPEN_ATTR, open);
+            setAttribute(OPEN_ATTR, open ? Boolean.TRUE : null);
+        }
+
+        public void setAttribute(String name, Object value)
+        {
+            if (name.equals(OPEN_ATTR))
+            {
+                if (value != null && !((Boolean)value).booleanValue())
+                {
+                    setAttribute(name, null);
+                    return;
+                }
+            }
+            super.setAttribute(name, value);
         }
     }
 

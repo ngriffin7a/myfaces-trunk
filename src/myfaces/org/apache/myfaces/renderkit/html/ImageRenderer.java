@@ -19,6 +19,7 @@
 package net.sourceforge.myfaces.renderkit.html;
 
 import net.sourceforge.myfaces.renderkit.attr.ImageRendererAttributes;
+import net.sourceforge.myfaces.renderkit.html.util.HTMLEncoder;
 import net.sourceforge.myfaces.util.bundle.BundleUtils;
 
 import javax.faces.component.UIComponent;
@@ -102,7 +103,46 @@ public class ImageRenderer
             src = ((HttpServletResponse)facesContext.getServletResponse()).encodeURL(src);
 
             writer.write(src);
-            writer.write("\">");
+            writer.write("\"");
+
+            String alt;
+            String altKey = (String)uiComponent.getAttribute(ALT_KEY_ATTR);
+            if (altKey != null)
+            {
+                alt = BundleUtils.getString(facesContext,
+                                              (String)uiComponent.getAttribute(ALT_BUNDLE_ATTR),
+                                              altKey);
+            }
+            else
+            {
+                alt = (String)uiComponent.getAttribute(ALT_ATTR);
+            }
+            if (alt != null && alt.length() > 0)
+            {
+
+                writer.write(" alt=\"");
+                writer.write(HTMLEncoder.encode(alt, false, false));
+                writer.write("\"");
+            }
+
+            Integer width = (Integer)uiComponent.getAttribute(WIDTH_ATTR);
+            Integer height = (Integer)uiComponent.getAttribute(HEIGHT_ATTR);
+
+            if (width != null)
+            {
+                writer.write(" width=\"");
+                writer.write(HTMLEncoder.encode(width.toString(), false, false));
+                writer.write("\"");
+            }
+
+            if (height != null)
+            {
+                writer.write(" height=\"");
+                writer.write(HTMLEncoder.encode(height.toString(), false, false));
+                writer.write("\"");
+            }
+
+            writer.write(">");
         }
     }
 

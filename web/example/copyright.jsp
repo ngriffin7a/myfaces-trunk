@@ -34,9 +34,13 @@
 
 <f:use_faces>
 
-    <table border="1"><tr>
-        <td valign="top" width="150"><%@ include file="inc/navigation.jsp"  %></td>
-        <td align="center" width="640">
+    <x:page_layout id="page" layout="classic" cssClass="<%=pageLayout%>" >
+        <x:page_header id="header" cssClass="pageHeader" >
+            <f:image id="logo" url="images/logo_mini.jpg" altKey="alt_logo" altBundle="net.sourceforge.myfaces.example.example_messages" />
+        </x:page_header>
+        <%@ include file="inc/navigation.jsp"  %>
+
+        <x:page_body id="body" cssClass="pageBody" >
 <p>
  <h3>MyFaces - the free JSF implementation</h3>
  <h4>Copyright (C) 2003  <a href="http://myfaces.sourceforge.net/">The MyFaces Team</a></h4>
@@ -55,8 +59,12 @@
  License along with this library; if not, write to the Free Software
  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 <p>
-        </td>
-    </tr></table>
+        </x:page_body>
+
+        <x:page_footer id="footer" cssClass="pageFooter" >
+            Copyright (C) 2003  <a href="http://myfaces.sourceforge.net" style="color:#FFFFFF">The MyFaces Team</a>
+        </x:page_footer>
+    </x:page_layout>
 
 </f:use_faces>
 
