@@ -73,6 +73,7 @@ public class HtmlInputFileUploadTag
 
     // HtmlInputFileUpload attributes
     private String _accept;
+    private String _storage;
 
     // User Role support
     private String _enabledOnUserRole;
@@ -82,7 +83,7 @@ public class HtmlInputFileUploadTag
     protected void setProperties(UIComponent component)
     {
         super.setProperties(component);
-
+        
         setStringProperty(component, HTML.ACCESSKEY_ATTR, _accesskey);
         setStringProperty(component, HTML.ALIGN_ATTR, _align);
         setStringProperty(component, HTML.ALT_ATTR, _alt);
@@ -100,9 +101,15 @@ public class HtmlInputFileUploadTag
         setStringProperty(component, HTML.TABINDEX_ATTR, _tabindex);
 
         setStringProperty(component, HTML.ACCEPT_ATTR, _accept);
+        setStringProperty(component, "storage", _storage);
 
         setStringProperty(component, UserRoleAware.ENABLED_ON_USER_ROLE_ATTR, _enabledOnUserRole);
         setStringProperty(component, UserRoleAware.VISIBLE_ON_USER_ROLE_ATTR, _visibleOnUserRole);
+    }
+    
+    public void setStorage(String storage)
+    {
+        _storage = storage;
     }
 
     public void setAccesskey(String accesskey)

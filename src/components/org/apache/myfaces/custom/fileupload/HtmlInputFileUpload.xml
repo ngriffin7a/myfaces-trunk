@@ -20,4 +20,8 @@
         <name>visibleOnUserRole</name>
         <type>java.lang.String</type>
     </field>
+    <field>
+        <name>storage</name>
+        <type>java.lang.String</type>
+    </field>
 </component>

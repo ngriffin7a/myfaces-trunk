@@ -30,7 +30,20 @@ public class HtmlInputFileUpload
         extends HtmlInputText
         implements UserRoleAware
 {
-    //private static final Log log = LogFactory.getLog(HtmlInputFileUpload.class);
+    public static final String COMPONENT_TYPE = "net.sourceforge.myfaces.HtmlInputFileUpload";
+    public static final String COMPONENT_FAMILY = "javax.faces.Input";
+    private static final String DEFAULT_RENDERER_TYPE = "net.sourceforge.myfaces.FileUpload";
+
+    private String _accept = null;
+    private String _enabledOnUserRole = null;
+    private String _visibleOnUserRole = null;
+
+    private String _storage = null;
+
+    public HtmlInputFileUpload()
+    {
+        setRendererType(DEFAULT_RENDERER_TYPE);
+    }
 
     public void setUploadedFile(UploadedFile upFile)
     {
@@ -41,21 +54,17 @@ public class HtmlInputFileUpload
     {
         return (UploadedFile)getValue();
     }
+    
+	public String getStorage() {
+		if (_storage != null) return _storage;
+		ValueBinding vb = getValueBinding("storage");
+		return vb != null ? (String)vb.getValue(getFacesContext()) : null;
 
-    //------------------ GENERATED CODE BEGIN (do not modify!) --------------------
+	}
 
-    public static final String COMPONENT_TYPE = "net.sourceforge.myfaces.HtmlInputFileUpload";
-    public static final String COMPONENT_FAMILY = "javax.faces.Input";
-    private static final String DEFAULT_RENDERER_TYPE = "net.sourceforge.myfaces.FileUpload";
-
-    private String _accept = null;
-    private String _enabledOnUserRole = null;
-    private String _visibleOnUserRole = null;
-
-    public HtmlInputFileUpload()
-    {
-        setRendererType(DEFAULT_RENDERER_TYPE);
-    }
+	public void setStorage(String string) {
+		_storage = string;
+	}
 
     public String getFamily()
     {
@@ -107,11 +116,12 @@ public class HtmlInputFileUpload
 
     public Object saveState(FacesContext context)
     {
-        Object values[] = new Object[4];
+        Object values[] = new Object[5];
         values[0] = super.saveState(context);
         values[1] = _accept;
         values[2] = _enabledOnUserRole;
         values[3] = _visibleOnUserRole;
+        values[4] = _storage;
         return ((Object) (values));
     }
 
@@ -122,6 +132,6 @@ public class HtmlInputFileUpload
         _accept = (String)values[1];
         _enabledOnUserRole = (String)values[2];
         _visibleOnUserRole = (String)values[3];
+        _storage = (String)values[4];
     }
-    //------------------ GENERATED CODE END ---------------------------------------
 }

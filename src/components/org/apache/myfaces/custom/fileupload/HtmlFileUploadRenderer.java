@@ -36,6 +36,11 @@ import java.io.IOException;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.12  2004/07/14 06:02:48  svieujot
+ * FileUpload : split file based and memory based implementation.
+ * Use the storage="memory|file" attribute.
+ * Default is memory because file based implementation fails to serialize.
+ *
  * Revision 1.11  2004/07/12 03:06:36  svieujot
  * Restore error handling due to UploadedFileDefaultImpl changes
  *
@@ -152,9 +157,14 @@ public class HtmlFileUploadRenderer
             		if( fileItem.getName().length() > 0 )
 	            	{
             			try{
-            					UploadedFile upFile = new UploadedFileDefaultImpl(fileItem);
-            					((HtmlInputFileUpload)uiComponent).setSubmittedValue(upFile);
-            					((HtmlInputFileUpload)uiComponent).setValid(true);
+            				UploadedFile upFile;
+            				String implementation = ((HtmlInputFileUpload) uiComponent).getStorage();
+            				if( implementation == null || ("memory").equals( implementation ) )
+            					upFile = new UploadedFileDefaultMemoryImpl( fileItem );
+            				else
+            					upFile = new UploadedFileDefaultFileImpl( fileItem );
+            				((HtmlInputFileUpload)uiComponent).setSubmittedValue(upFile);
+            				((HtmlInputFileUpload)uiComponent).setValid(true);
             			}catch(IOException ioe){
             				log.error(ioe);
             			}

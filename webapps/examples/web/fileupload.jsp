@@ -67,6 +67,7 @@
                         <x:inputFileUpload id="fileupload"
                                            accept="image/*"
                                            value="#{fileUploadForm.upFile}"
+										   storage="file"
                                            styleClass="fileUploadInput" />
                         <f:verbatim><br></f:verbatim>
                         <h:outputText value="and give it a name: "/>

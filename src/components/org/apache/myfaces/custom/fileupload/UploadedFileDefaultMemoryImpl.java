@@ -23,38 +23,28 @@ import org.apache.commons.fileupload.FileItem;
 
 
 /**
- * @author Manfred Geiler (latest modification by $Author$)
+ * @author Sylvain Vieujot (latest modification by $Author$)
  * @version $Revision$ $Date$
  *          $Log$
- *          Revision 1.3  2004/07/12 03:05:54  svieujot
- *          Switch the FileItem for a byte[] because FileItem isn't serializable :
- *          java.io.NotSerializableException: org.apache.commons.fileupload.DeferredFileOutputStream
+ *          Revision 1.1  2004/07/14 06:02:48  svieujot
+ *          FileUpload : split file based and memory based implementation.
+ *          Use the storage="memory|file" attribute.
+ *          Default is memory because file based implementation fails to serialize.
  *
- *          Revision 1.2  2004/07/01 21:53:05  mwessendorf
- *          ASF switch
- *
- *          Revision 1.1  2004/05/24 22:47:21  svieujot
- *          Initial UploadedFile moved to interface. So, UploadedFileDefaultImpl is now the default implementation class.
- *
- *          Revision 1.3  2004/05/10 22:17:24  o_rossmueller
- *          max file size configurable by filter init parameter 'maxFileSize'
- *          removed default creation of file contents byte array
  *
  */
-public class UploadedFileDefaultImpl implements UploadedFile
+public class UploadedFileDefaultMemoryImpl extends UploadedFileDefaultImplBase
 {
 
-    private String _name = null;
-    private String _contentType = null;
     private byte[] bytes;
 
 
-    public UploadedFileDefaultImpl()
+    public UploadedFileDefaultMemoryImpl()
     {
     }
 
 
-    public UploadedFileDefaultImpl(FileItem fileItem) throws IOException
+    public UploadedFileDefaultMemoryImpl(FileItem fileItem) throws IOException
     {
         int sizeInBytes = (int)fileItem.getSize();
     	bytes = new byte[sizeInBytes];
@@ -64,6 +54,7 @@ public class UploadedFileDefaultImpl implements UploadedFile
     		_name = fileItem.getName();
     		_contentType = fileItem.getContentType();
     	}
+System.out.println("MEMORY");
     }
 
 
@@ -87,24 +78,6 @@ public class UploadedFileDefaultImpl implements UploadedFile
     public InputStream getInputStream() throws IOException
     {
     	return new ByteArrayInputStream( bytes );
-    }
-
-
-    /**
-     * @return Returns the _contentType.
-     */
-    public String getContentType()
-    {
-        return _contentType;
-    }
-
-
-    /**
-     * @return Returns the _name.
-     */
-    public String getName()
-    {
-        return _name;
     }
 
 
