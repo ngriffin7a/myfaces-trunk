@@ -30,6 +30,7 @@ Changes in Release 1.0.8 beta
 * new HTML Editor component (<x:htmlEditor>). Basically, it's an rich text WYSIWYG component.
 * add a popup calendar to the inputDate tag.
 * Some tiles support enhancements
+* localization for spanish from Spain (es_es) or catalan (ca / es_ca)
 ----------------------------------------------------------------------
 Changes in Release 1.0.7 beta
 * new custom component: HtmlPanelStack
