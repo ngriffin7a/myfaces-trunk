@@ -229,7 +229,7 @@
         <mkdir dir="${doc.dir}/javadoc"/>
         <javadoc sourcepath="${myfaces.src}"
                  destdir="${doc.dir}/javadoc"
-                 packagenames="net.sourceforge.myfaces.*"
+                 packagenames="org.apache.myfaces.*"
                  classpathref="javadoc.class.path"
                  failonerror="true"/>
     </target>

@@ -44,7 +44,7 @@
     </context-param>
 
     <context-param>
-        <param-name>net.sourceforge.myfaces.ALLOW_JAVASCRIPT</param-name>
+        <param-name>org.apache.myfaces.ALLOW_JAVASCRIPT</param-name>
         <param-value>true</param-value>
         <description>
             This parameter tells MyFaces if javascript code should be allowed in the
@@ -58,7 +58,7 @@
     </context-param>
     
     <context-param>
-        <param-name>net.sourceforge.myfaces.DETECT_JAVASCRIPT</param-name>
+        <param-name>org.apache.myfaces.DETECT_JAVASCRIPT</param-name>
         <param-value>false</param-value>
         <description>
             This parameter tells MyFaces if javascript code should be allowed in the
@@ -78,7 +78,7 @@
     </context-param>
 
     <context-param>
-        <param-name>net.sourceforge.myfaces.PRETTY_HTML</param-name>
+        <param-name>org.apache.myfaces.PRETTY_HTML</param-name>
         <param-value>true</param-value>
         <description>
             If true, rendered HTML code will be formatted, so that it is "human readable".
@@ -89,7 +89,7 @@
     </context-param>
 
     <context-param>
-        <param-name>net.sourceforge.myfaces.AUTO_SCROLL</param-name>
+        <param-name>org.apache.myfaces.AUTO_SCROLL</param-name>
         <param-value>true</param-value>
         <description>
             If true, a javascript function will be rendered that is able to restore the
@@ -105,7 +105,7 @@
     <!--
     <filter>
         <filter-name>WelcomeFile Filter</filter-name>
-        <filter-class>net.sourceforge.myfaces.webapp.filter.WelcomeFileFilter</filter-class>
+        <filter-class>org.apache.myfaces.webapp.filter.WelcomeFileFilter</filter-class>
         <description>
             Due to the manner in which the JSP / servlet lifecycle
             functions, it is not currently possible to specify default
@@ -121,14 +121,14 @@
     <!-- JavaScriptDetector Filter -->
 <!--    <filter>-->
 <!--        <filter-name>javascriptDetector</filter-name>-->
-<!--        <filter-class>net.sourceforge.myfaces.webapp.filter.JavaScriptDetectorFilter</filter-class>-->
+<!--        <filter-class>org.apache.myfaces.webapp.filter.JavaScriptDetectorFilter</filter-class>-->
 <!--    </filter>-->
 
 
     <!-- MultiPart Filter -->
     <filter>
         <filter-name>multipartFilter</filter-name>
-        <filter-class>net.sourceforge.myfaces.custom.fileupload.MultipartFilter</filter-class>
+        <filter-class>org.apache.myfaces.custom.fileupload.MultipartFilter</filter-class>
         <init-param>
             <param-name>maxFileSize</param-name>
             <param-value>10m</param-value>
@@ -166,7 +166,7 @@
 
     <!-- Listener, that does all the startup work (configuration, init). -->
     <listener>
-        <listener-class>net.sourceforge.myfaces.webapp.StartupServletContextListener</listener-class>
+        <listener-class>org.apache.myfaces.webapp.StartupServletContextListener</listener-class>
     </listener>
 
 

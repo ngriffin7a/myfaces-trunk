@@ -47,7 +47,7 @@
 
 
     <target name="inspect-components" depends="-compile" >
-        <taskdef name="inspect" classname="net.sourceforge.myfaces.codegen.component.ComponentInspectorTask">
+        <taskdef name="inspect" classname="org.apache.myfaces.codegen.component.ComponentInspectorTask">
             <classpath refid="codegen.class.path"/>
         </taskdef>
         <inspect basedir="${jsfapi-src.dir}"
@@ -59,7 +59,7 @@
     </target>
 
     <target name="generate-components" depends="-compile" >
-        <taskdef name="generate" classname="net.sourceforge.myfaces.codegen.component.ComponentGeneratorTask">
+        <taskdef name="generate" classname="org.apache.myfaces.codegen.component.ComponentGeneratorTask">
             <classpath refid="codegen.class.path"/>
         </taskdef>
         <generate basedir="${jsfapi-src.dir}"
@@ -72,7 +72,7 @@
 
 
     <target name="inspect-single-component" depends="-compile" >
-        <taskdef name="inspect" classname="net.sourceforge.myfaces.codegen.component.ComponentInspectorTask">
+        <taskdef name="inspect" classname="org.apache.myfaces.codegen.component.ComponentInspectorTask">
             <classpath refid="codegen.class.path"/>
         </taskdef>
         <inspect basedir="${jsfapi-src.dir}"
@@ -82,7 +82,7 @@
     </target>
 
     <target name="generate-single-api-component" depends="-compile" >
-        <taskdef name="generate" classname="net.sourceforge.myfaces.codegen.component.ComponentGeneratorTask">
+        <taskdef name="generate" classname="org.apache.myfaces.codegen.component.ComponentGeneratorTask">
             <classpath refid="codegen.class.path"/>
         </taskdef>
         <generate basedir="${jsfapi-src.dir}"
@@ -92,7 +92,7 @@
     </target>
 
     <target name="generate-single-impl-component" depends="-compile" >
-        <taskdef name="generate" classname="net.sourceforge.myfaces.codegen.component.ComponentGeneratorTask">
+        <taskdef name="generate" classname="org.apache.myfaces.codegen.component.ComponentGeneratorTask">
             <classpath refid="codegen.class.path"/>
         </taskdef>
         <generate basedir="${myfaces-src.dir}"
@@ -103,7 +103,7 @@
 
 
     <target name="generate-all-components-components" depends="-compile" >
-        <taskdef name="generate" classname="net.sourceforge.myfaces.codegen.component.ComponentGeneratorTask">
+        <taskdef name="generate" classname="org.apache.myfaces.codegen.component.ComponentGeneratorTask">
             <classpath refid="codegen.class.path"/>
         </taskdef>
         <generate basedir="${components-src.dir}"
@@ -113,7 +113,7 @@
     </target>
 
     <target name="generate-single-components-component" depends="-compile" >
-        <taskdef name="generate" classname="net.sourceforge.myfaces.codegen.component.ComponentGeneratorTask">
+        <taskdef name="generate" classname="org.apache.myfaces.codegen.component.ComponentGeneratorTask">
             <classpath refid="codegen.class.path"/>
         </taskdef>
         <generate basedir="${components-src.dir}"
