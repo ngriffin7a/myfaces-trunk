@@ -127,7 +127,13 @@
         <managed-bean-scope>request</managed-bean-scope>
     </managed-bean>
 
+    <!-- Managed Beans for htmlEditor.jsp -->
 
+    <managed-bean>
+        <managed-bean-name>editor</managed-bean-name>
+        <managed-bean-class>org.apache.myfaces.examples.htmleditorexample.EditorFace</managed-bean-class>
+        <managed-bean-scope>session</managed-bean-scope>
+    </managed-bean>
 
     <!-- Managed Beans for fileupload.jsp -->
 
@@ -264,6 +270,11 @@
         <navigation-case>
             <from-outcome>go_date</from-outcome>
             <to-view-id>/date.jsp</to-view-id>
+        </navigation-case>
+
+        <navigation-case>
+            <from-outcome>go_htmlEditor</from-outcome>
+            <to-view-id>/htmlEditor.jsp</to-view-id>
         </navigation-case>
 
         <navigation-case>
