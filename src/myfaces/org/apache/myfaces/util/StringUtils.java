@@ -1,4 +1,4 @@
-/*
+/**
  * MyFaces - the free JSF implementation
  * Copyright (C) 2003, 2004  The MyFaces Team (http://myfaces.sourceforge.net)
  *
@@ -31,6 +31,11 @@ import java.util.ArrayList;
  *
  * @author Anton Koinov (latest modification by $Author$)
  * @version $Revision$ $Date$
+ * 
+ * $Log$
+ * Revision 1.7  2004/03/30 07:42:53  dave0000
+ * minIndex()
+ *
  */
 public class StringUtils
 {
@@ -692,5 +697,21 @@ public class StringUtils
         }
 
         return strings;
+    }
+    
+    /** 
+     * Returns the minimum index >= 0, if any
+     * 
+     * <p>
+     * Use to find the first of two characters in a string:<br>
+     * <code>minIndex(s.indexOf('/'), indexOf('\'))</code>
+     * </p> 
+     * 
+     */
+    public static int minIndex(int a, int b)
+    {
+        return (a < 0) ? b 
+            : (b < 0) ? a 
+                : (a < b) ? a : b;
     }
 }
