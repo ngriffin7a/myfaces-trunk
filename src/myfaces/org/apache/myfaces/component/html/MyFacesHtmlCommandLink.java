@@ -34,7 +34,7 @@ public class MyFacesHtmlCommandLink
 
     public static final String COMPONENT_TYPE = "net.sourceforge.myfaces.HtmlCommandLink";
     public static final String COMPONENT_FAMILY = "javax.faces.Command";
-    private static final String DEFAULT_RENDERER_TYPE = "net.sourceforge.myfaces.Link";
+    private static final String DEFAULT_RENDERER_TYPE = "javax.faces.Link";
 
     private String _target = null;
 

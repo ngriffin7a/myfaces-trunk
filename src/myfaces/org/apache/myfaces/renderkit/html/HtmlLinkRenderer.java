@@ -110,7 +110,10 @@ public class HtmlLinkRenderer
                 renderNonJavaScriptAnchorStart(facesContext, writer, command);
             }
 
-            HTMLUtil.renderHTMLAttributes(writer, command, HTML.ANCHOR_PASSTHROUGH_ATTRIBUTES);
+            HTMLUtil.renderHTMLAttributes(writer, command,
+                                          HTML.ANCHOR_PASSTHROUGH_ATTRIBUTES_WITHOUT_STYLE_CLASS);
+            HTMLUtil.renderHTMLAttribute(writer, HTML.STYLE_CLASS_ATTR, HTML.STYLE_CLASS_ATTR,
+                                         getStyleClass(facesContext, command));
         }
 
         //MyFaces extension: Render text given by value
@@ -118,6 +121,22 @@ public class HtmlLinkRenderer
         if(value != null)
         {
             writer.writeText(value.toString(), JSFAttr.VALUE_ATTR);
+        }
+    }
+
+
+    /**
+     * Can be overwritten by derived classes to overrule the style class to be used.
+     */
+    protected String getStyleClass(FacesContext facesContext, UICommand link)
+    {
+        if (link instanceof HtmlCommandLink)
+        {
+            return ((HtmlCommandLink)link).getStyleClass();
+        }
+        else
+        {
+            return (String)link.getAttributes().get(HTML.STYLE_CLASS_ATTR);
         }
     }
 

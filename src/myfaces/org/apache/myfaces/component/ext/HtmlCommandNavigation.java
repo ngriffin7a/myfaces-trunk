@@ -122,14 +122,13 @@ public class HtmlCommandNavigation
         }
         else
         {
-            //close all siblings
-            closeChildren(getParent().getChildren().iterator());
+            UIComponent parent = getParent();
 
-            //open item
-            setOpen(true);
+            //close all siblings
+            closeAllChildren(parent.getChildren().iterator());
 
             //open all parents (to be sure) and search HtmlPanelNavigation
-            UIComponent p = getParent();
+            UIComponent p = parent;
             while (p != null && !(p instanceof HtmlPanelNavigation))
             {
                 if (p instanceof HtmlCommandNavigation)
@@ -138,6 +137,7 @@ public class HtmlCommandNavigation
                 }
                 p = p.getParent();
             }
+            // p is now the HtmlPanelNavigation
 
             if (getChildCount() == 0)
             {
@@ -148,10 +148,16 @@ public class HtmlCommandNavigation
                 }
                 else
                 {
+                    //deactivate all other items
                     deactivateAllChildren(p.getChildren().iterator());
                 }
                 //...activate this item
                 setActive(true);
+            }
+            else
+            {
+                //open item
+                setOpen(true);
             }
         }
     }
@@ -165,15 +171,15 @@ public class HtmlCommandNavigation
             if (ni instanceof HtmlCommandNavigation)
             {
                 ((HtmlCommandNavigation)ni).setActive(false);
-            }
-            if (ni.getChildCount() > 0)
-            {
-                deactivateAllChildren(ni.getChildren().iterator());
+                if (ni.getChildCount() > 0)
+                {
+                    deactivateAllChildren(ni.getChildren().iterator());
+                }
             }
         }
     }
 
-    private static void closeChildren(Iterator children)
+    private static void closeAllChildren(Iterator children)
     {
         while (children.hasNext())
         {
@@ -181,6 +187,10 @@ public class HtmlCommandNavigation
             if (ni instanceof HtmlCommandNavigation)
             {
                 ((HtmlCommandNavigation)ni).setOpen(false);
+                if (ni.getChildCount() > 0)
+                {
+                    closeAllChildren(ni.getChildren().iterator());
+                }
             }
         }
     }

@@ -54,6 +54,9 @@ public abstract class MyfacesComponentBodyTag
         return super.doEndTag();
     }
 
+    /**
+     * TODO: Ignore <!-- --> comments
+     */ 
     private boolean isBodyContentEmpty()
     {
         BodyContent bodyContent = getBodyContent();

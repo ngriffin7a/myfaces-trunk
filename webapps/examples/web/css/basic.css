@@ -92,7 +92,7 @@ a:hover
 .pageNavigation {
     text-align: left;
     vertical-align: top;
-    width: 240px;
+    width: 200px;
     background-color: #E7EFF7;
     border: 1px solid #6392C6;
     padding: 10px;
@@ -125,30 +125,46 @@ a:hover
 
 .navitem {
 	white-space : nowrap;
+    text-decoration : none;
+}
+
+a.navitem:hover,active {
+	white-space : nowrap;
+	text-decoration: none;
+    color: #6392C6;
 }
 
 .navitem_open {
 	white-space : nowrap;
+	text-decoration: none;
 	font-weight : bold;
+}
+
+a.navitem_open:hover,active {
+	white-space : nowrap;
+	text-decoration: none;
+	font-weight : bold;
+    color: #6392C6;
 }
 
 .navitem_active {
-    color: #FFFFFF;
-    background-color: #6392C6;
-	white-space : nowrap;
-	font-weight : bold;
-	width: 100%;
-}
-
-a.navigation_link {
-    text-decoration : none;
-}
-
-a.navigation_link:hover,active {
-    color: #6392C6;
 	white-space : nowrap;
 	text-decoration: none;
+	font-weight : bold;
+    background-color: #6392C6;
+	width: 100%;
+    color: #FFFFFF;
 }
+
+a.navitem_active:hover,active {
+	white-space : nowrap;
+	text-decoration: none;
+	font-weight : bold;
+    background-color: #6392C6;
+	width: 100%;
+    color: #FFFFFF;
+}
+
 
 .navseparator {
     line-height: 12px;

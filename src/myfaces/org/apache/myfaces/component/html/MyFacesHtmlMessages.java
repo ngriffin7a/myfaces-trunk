@@ -34,7 +34,7 @@ public class MyFacesHtmlMessages
 
     public static final String COMPONENT_TYPE = "net.sourceforge.myfaces.HtmlMessages";
     public static final String COMPONENT_FAMILY = "javax.faces.Messages";
-    private static final String DEFAULT_RENDERER_TYPE = "net.sourceforge.myfaces.Messages";
+    private static final String DEFAULT_RENDERER_TYPE = "javax.faces.Messages";
     private static final boolean DEFAULT_SHOWINPUTLABEL = false;
 
     private Boolean _showInputLabel = null;

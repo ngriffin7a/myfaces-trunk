@@ -22,11 +22,13 @@ import net.sourceforge.myfaces.component.ext.HtmlCommandNavigation;
 import net.sourceforge.myfaces.component.ext.HtmlPanelNavigation;
 import net.sourceforge.myfaces.renderkit.RendererUtils;
 import net.sourceforge.myfaces.renderkit.html.HTML;
-import net.sourceforge.myfaces.renderkit.html.HtmlRenderer;
+import net.sourceforge.myfaces.renderkit.html.HtmlLinkRenderer;
+import net.sourceforge.myfaces.renderkit.html.HtmlRendererUtils;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import javax.faces.component.UICommand;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
@@ -39,40 +41,70 @@ import java.util.List;
  * @version $Revision$ $Date$
  */
 public class HtmlNavigationRenderer
-        extends HtmlRenderer
+        extends HtmlLinkRenderer
 {
     private static final Log log = LogFactory.getLog(HtmlNavigationRenderer.class);
+
+    private static final Integer ZERO_INTEGER = new Integer(0);
 
     public boolean getRendersChildren()
     {
         return true;
     }
 
-    public void encodeBegin(FacesContext context, UIComponent component) throws IOException
+    public void decode(FacesContext facesContext, UIComponent component)
     {
+        if (component instanceof HtmlCommandNavigation)
+        {
+            //HtmlCommandNavigation
+            super.decode(facesContext, component);
+        }
     }
 
-    public void encodeChildren(FacesContext context, UIComponent component) throws IOException
+    public void encodeBegin(FacesContext facesContext, UIComponent component) throws IOException
     {
+        if (component instanceof HtmlCommandNavigation)
+        {
+            //HtmlCommandNavigation
+            super.encodeBegin(facesContext, component);
+        }
+    }
+
+    public void encodeChildren(FacesContext facesContext, UIComponent component) throws IOException
+    {
+        if (component instanceof HtmlCommandNavigation)
+        {
+            //HtmlCommandNavigation
+            super.encodeChildren(facesContext, component);
+        }
     }
 
     public void encodeEnd(FacesContext facesContext, UIComponent component) throws IOException
     {
+        if (component instanceof HtmlCommandNavigation)
+        {
+            //HtmlCommandNavigation
+            super.encodeEnd(facesContext, component);
+            return;
+        }
+
         RendererUtils.checkParamValidity(facesContext, component, HtmlPanelNavigation.class);
         ResponseWriter writer = facesContext.getResponseWriter();
         HtmlPanelNavigation panelNav = (HtmlPanelNavigation)component;
 
         if (panelNav.getChildCount() > 0)
         {
+            HtmlRendererUtils.writePrettyLineSeparator(facesContext);
             writer.startElement(HTML.TABLE_ELEM, null);
             HTMLUtil.renderHTMLAttributes(writer, panelNav, HTML.TABLE_PASSTHROUGH_ATTRIBUTES);
             if (panelNav.getStyle() == null && panelNav.getStyleClass() == null)
             {
-                writer.writeAttribute(HTML.BORDER_ATTR, panelNav, null);
+                writer.writeAttribute(HTML.BORDER_ATTR, ZERO_INTEGER, null);
             }
 
             renderChildren(facesContext, writer, panelNav, panelNav.getChildren(), 0);
 
+            HtmlRendererUtils.writePrettyLineSeparator(facesContext);
             writer.endElement(HTML.TABLE_ELEM);
         }
         else
@@ -96,35 +128,64 @@ public class HtmlNavigationRenderer
             if (child instanceof HtmlCommandNavigation)
             {
                 //navigation item
+                HtmlRendererUtils.writePrettyLineSeparator(facesContext);
+
+                String style = getNavigationItemStyle(panelNav, (HtmlCommandNavigation)child);
+                String styleClass = getNavigationItemClass(panelNav, (HtmlCommandNavigation)child);
+
                 writer.startElement(HTML.TR_ELEM, null);
                 writer.startElement(HTML.TD_ELEM, null);
-                writeItemCellAttributes(writer, panelNav, (HtmlCommandNavigation)child);
+                writeStyleAttributes(writer, style, styleClass);
+
+                if (style != null || styleClass != null)
+                {
+                    writer.startElement(HTML.SPAN_ELEM, null);
+                    writeStyleAttributes(writer, style, styleClass);
+                }
                 indent(writer, level);
                 child.encodeBegin(facesContext);
                 child.encodeEnd(facesContext);
+                if (style != null || styleClass != null)
+                {
+                    writer.endElement(HTML.SPAN_ELEM);
+                }
+
+                writer.endElement(HTML.TD_ELEM);
+                writer.endElement(HTML.TR_ELEM);
+
                 if (child.getChildCount() > 0)
                 {
                     renderChildren(facesContext, writer, panelNav, child.getChildren(), level + 1);
                 }
-                writer.endElement(HTML.TD_ELEM);
-                writer.endElement(HTML.TR_ELEM);
             }
             else
             {
-                //unknown
-                //if (log.isWarnEnabled()) log.warn("Unsupported navigation item with id " + child.getClientId(facesContext) + " (renderer type " + child.getRendererType() + ").");
+                //separator
+                HtmlRendererUtils.writePrettyLineSeparator(facesContext);
+
+                String style = panelNav.getSeparatorStyle();
+                String styleClass = panelNav.getSeparatorClass();
+
                 writer.startElement(HTML.TR_ELEM, null);
                 writer.startElement(HTML.TD_ELEM, null);
+                writeStyleAttributes(writer, style, styleClass);
+
+                if (style != null || styleClass != null)
+                {
+                    writer.startElement(HTML.SPAN_ELEM, null);
+                    writeStyleAttributes(writer, style, styleClass);
+                }
                 indent(writer, level);
                 RendererUtils.renderChild(facesContext, child);
+                if (style != null || styleClass != null)
+                {
+                    writer.endElement(HTML.SPAN_ELEM);
+                }
+
                 writer.endElement(HTML.TD_ELEM);
                 writer.endElement(HTML.TR_ELEM);
             }
 
-            if (log.isDebugEnabled())
-            {
-                writer.write("\n");
-            }
         }
     }
 
@@ -141,38 +202,86 @@ public class HtmlNavigationRenderer
     }
 
 
-    protected void writeItemCellAttributes(ResponseWriter writer,
-                                            HtmlPanelNavigation navPanel,
+
+    protected String getNavigationItemStyle(HtmlPanelNavigation navPanel,
                                             HtmlCommandNavigation navItem)
-            throws IOException
     {
-        String style;
-        String styleClass;
         if (navItem.isActive())
         {
-            style = navPanel.getActiveItemStyle();
-            styleClass = navPanel.getActiveItemClass();
+            return navPanel.getActiveItemStyle();
         }
         else if (navItem.isOpen())
         {
-            style = navPanel.getOpenItemStyle();
-            styleClass = navPanel.getOpenItemClass();
+            return navPanel.getOpenItemStyle();
         }
         else
         {
-            style = navPanel.getItemStyle();
-            styleClass = navPanel.getItemClass();
-        }
-
-        if (style != null)
-        {
-            writer.writeAttribute(HTML.STYLE_ATTR, style, null);
-        }
-
-        if (styleClass != null)
-        {
-            writer.writeAttribute(HTML.STYLE_CLASS_ATTR, styleClass, null);
+            return navPanel.getItemStyle();
         }
     }
+
+    protected String getNavigationItemClass(HtmlPanelNavigation navPanel,
+                                            HtmlCommandNavigation navItem)
+    {
+        if (navItem.isActive())
+        {
+            return navPanel.getActiveItemClass();
+        }
+        else if (navItem.isOpen())
+        {
+            return navPanel.getOpenItemClass();
+        }
+        else
+        {
+            return navPanel.getItemClass();
+        }
+    }
+
+
+
+    protected void writeStyleAttributes(ResponseWriter writer,
+                                        String style,
+                                        String styleClass)
+            throws IOException
+    {
+        HTMLUtil.renderHTMLAttribute(writer, HTML.STYLE_ATTR, HTML.STYLE_ATTR, style);
+        HTMLUtil.renderHTMLAttribute(writer, HTML.STYLE_CLASS_ATTR, HTML.STYLE_CLASS_ATTR, styleClass);
+    }
+
+
+
+    protected String getStyleClass(FacesContext facesContext, UICommand link)
+    {
+        if (!(link instanceof HtmlCommandNavigation))
+        {
+            throw new IllegalArgumentException();
+        }
+
+        UIComponent navPanel = link.getParent();
+        while (navPanel != null && !(navPanel instanceof HtmlPanelNavigation))
+        {
+            navPanel = navPanel.getParent();
+        }
+        if (navPanel == null)
+        {
+            throw new IllegalStateException("HtmlCommandNavigation not nested in HtmlPanelNavigation!?");
+        }
+
+        HtmlCommandNavigation navItem = (HtmlCommandNavigation)link;
+        if (navItem.isActive())
+        {
+            return ((HtmlPanelNavigation)navPanel).getActiveItemClass();
+        }
+        else if (navItem.isOpen())
+        {
+            return ((HtmlPanelNavigation)navPanel).getOpenItemClass();
+        }
+        else
+        {
+            return ((HtmlPanelNavigation)navPanel).getItemClass();
+        }
+    }
+
+
 
 }

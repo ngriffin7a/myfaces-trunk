@@ -37,6 +37,6 @@ public class HtmlCommandNavigationTag
 
     protected String getDefaultRendererType()
     {
-        return "javax.faces.Link";
+        return "net.sourceforge.myfaces.Navigation";
     }
 }

@@ -47,7 +47,7 @@ public class HTMLUtil
      * @throws IOException
      */
     public static boolean renderHTMLAttribute(ResponseWriter writer,
-                                              String rendererAttrName,
+                                              String componentProperty,
                                               String attrName,
                                               Object value)
         throws IOException
@@ -58,7 +58,7 @@ public class HTMLUtil
             String htmlAttrName = attrName.equals(HTML.STYLE_CLASS_ATTR) ?
                                   HTML.CLASS_ATTR :
                                   attrName;
-            writer.writeAttribute(htmlAttrName, value, rendererAttrName);
+            writer.writeAttribute(htmlAttrName, value, componentProperty);
             return true;
         }
         else
@@ -73,12 +73,12 @@ public class HTMLUtil
      */
     public static boolean renderHTMLAttribute(ResponseWriter writer,
                                               UIComponent component,
-                                              String rendererAttrName,
+                                              String componentProperty,
                                               String htmlAttrName)
         throws IOException
     {
-        Object value = component.getAttributes().get(rendererAttrName);
-        return renderHTMLAttribute(writer, rendererAttrName, htmlAttrName, value);
+        Object value = component.getAttributes().get(componentProperty);
+        return renderHTMLAttribute(writer, componentProperty, htmlAttrName, value);
     }
 
 

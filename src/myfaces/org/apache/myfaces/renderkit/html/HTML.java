@@ -88,15 +88,18 @@ public class HTML
     public static final String STYLE_ATTR = "style";
     public static final String TITLE_ATTR = "title";
     public static final String STYLE_CLASS_ATTR = "styleClass"; //"class" cannot be used as property name
-    public static final String[] UNIVERSAL_ATTRIBUTES =
+    public static final String[] UNIVERSAL_ATTRIBUTES_WITHOUT_STYLE_CLASS =
     {
         DIR_ATTR,
         LANG_ATTR,
         TITLE_ATTR,
-        STYLE_ATTR,
-        STYLE_CLASS_ATTR
+        STYLE_ATTR
         //NOTE: if changed, please verify universal attributes in HtmlMessageRenderer !
     };
+    public static final String[] UNIVERSAL_ATTRIBUTES =
+            (String[]) ArrayUtils.concat(
+                UNIVERSAL_ATTRIBUTES_WITHOUT_STYLE_CLASS,
+                new String[] {STYLE_CLASS_ATTR});
 
     //universal, but not the same property-name -
     //styleClass attribute is rendered as such
@@ -118,7 +121,11 @@ public class HTML
         (String[]) ArrayUtils.concat(
             EVENT_HANDLER_ATTRIBUTES, 
             UNIVERSAL_ATTRIBUTES);
-    public static final String[] COMMON_FIELD_PASSTROUGH_ATTRIBUTES = 
+    public static final String[] COMMON_PASSTROUGH_ATTRIBUTES_WITHOUT_STYLE_CLASS =
+        (String[]) ArrayUtils.concat(
+            EVENT_HANDLER_ATTRIBUTES,
+            UNIVERSAL_ATTRIBUTES_WITHOUT_STYLE_CLASS);
+    public static final String[] COMMON_FIELD_PASSTROUGH_ATTRIBUTES =
         (String[]) ArrayUtils.concat(
             COMMON_PASSTROUGH_ATTRIBUTES, 
             COMMON_FIELD_ATTRIBUTES,
@@ -151,6 +158,10 @@ public class HTML
         (String[]) ArrayUtils.concat(
             ANCHOR_ATTRIBUTES,
             COMMON_PASSTROUGH_ATTRIBUTES);
+    public static final String[] ANCHOR_PASSTHROUGH_ATTRIBUTES_WITHOUT_STYLE_CLASS =
+        (String[]) ArrayUtils.concat(
+            ANCHOR_ATTRIBUTES,
+            COMMON_PASSTROUGH_ATTRIBUTES_WITHOUT_STYLE_CLASS);
 
     // <form>
     public static final String ACCEPT_CHARSET_ATTR = "accept-charset";

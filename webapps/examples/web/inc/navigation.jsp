@@ -7,25 +7,25 @@
               itemClass="navitem"
               activeItemClass="navitem_active"
               openItemClass="navitem_open"   >
-    <x:commandNavigation id="nav_1" value="#{example_messages['nav_Home']}" action="go_home" styleClass="navigation_link" />
-    <x:commandNavigation id="nav_2" value="#{example_messages['nav_Examples']}" styleClass="navigation_link" >
-        <x:commandNavigation id="nav_2_1" value="#{example_messages['nav_Sample_1']}" action="go_sample1" styleClass="navigation_link" />
-        <x:commandNavigation id="nav_2_2" value="#{example_messages['nav_Sample_2']}" action="go_sample2" styleClass="navigation_link" />
-        <x:commandNavigation id="nav_2_3" value="#{example_messages['nav_Components']}" styleClass="navigation_link" >
-            <x:commandNavigation id="nav_2_3_1" value="#{example_messages['nav_Simple_list']}" action="go_simpleList" styleClass="navigation_link" />
-            <x:commandNavigation id="nav_2_3_2" value="#{example_messages['nav_Sortable_list']}" action="go_simpleSortList" styleClass="navigation_link" />
-            <x:commandNavigation id="nav_2_3_3" value="#{example_messages['nav_Selectbox']}" action="go_selectbox" styleClass="navigation_link" />
-            <x:commandNavigation id="nav_2_3_4" value="#{example_messages['nav_FileUpload']}" action="go_fileupload" styleClass="navigation_link" />
-            <x:commandNavigation id="nav_2_3_5" value="#{example_messages['nav_TabbedPane']}" action="go_tabbedPane" styleClass="navigation_link" />
+    <x:commandNavigation id="nav_1" value="#{example_messages['nav_Home']}" action="go_home" />
+    <x:commandNavigation id="nav_2" value="#{example_messages['nav_Examples']}" >
+        <x:commandNavigation id="nav_2_1" value="#{example_messages['nav_Sample_1']}" action="go_sample1" />
+        <x:commandNavigation id="nav_2_2" value="#{example_messages['nav_Sample_2']}" action="go_sample2" />
+        <x:commandNavigation id="nav_2_3" value="#{example_messages['nav_Components']}" >
+            <x:commandNavigation id="nav_2_3_1" value="#{example_messages['nav_Simple_list']}" action="go_simpleList" />
+            <x:commandNavigation id="nav_2_3_2" value="#{example_messages['nav_Sortable_list']}" action="go_simpleSortList" />
+            <x:commandNavigation id="nav_2_3_3" value="#{example_messages['nav_Selectbox']}" action="go_selectbox" />
+            <x:commandNavigation id="nav_2_3_4" value="#{example_messages['nav_FileUpload']}" action="go_fileupload" />
+            <x:commandNavigation id="nav_2_3_5" value="#{example_messages['nav_TabbedPane']}" action="go_tabbedPane" />
         </x:commandNavigation>
     </x:commandNavigation>
-    <x:commandNavigation id="nav_3" value="#{example_messages['nav_Documentation']}" styleClass="navigation_link" >
-        <x:commandNavigation id="nav_3_1" value="#{example_messages['nav_Features']}" action="go_features" styleClass="navigation_link"/>
+    <x:commandNavigation id="nav_3" value="#{example_messages['nav_Documentation']}" >
+        <x:commandNavigation id="nav_3_1" value="#{example_messages['nav_Features']}" action="go_features"/>
     </x:commandNavigation>
-    <x:commandNavigation id="nav_4" value="#{example_messages['nav_Options']}" action="go_options" styleClass="navigation_link" />
-    <x:outputNavigation/>
-    <x:commandNavigation id="nav_5" value="#{example_messages['nav_Info']}" styleClass="navigation_link" >
-        <x:commandNavigation id="nav_5_1" value="#{example_messages['nav_Contact']}" action="go_contact" styleClass="navigation_link" />
-        <x:commandNavigation id="nav_5_2" value="#{example_messages['nav_Copyright']}" action="go_copyright" styleClass="navigation_link" />
+    <x:commandNavigation id="nav_4" value="#{example_messages['nav_Options']}" action="go_options" />
+    <f:verbatim>&nbsp;</f:verbatim>
+    <x:commandNavigation id="nav_5" value="#{example_messages['nav_Info']}" >
+        <x:commandNavigation id="nav_5_1" value="#{example_messages['nav_Contact']}" action="go_contact" />
+        <x:commandNavigation id="nav_5_2" value="#{example_messages['nav_Copyright']}" action="go_copyright" />
     </x:commandNavigation>
 </x:panelNavigation>

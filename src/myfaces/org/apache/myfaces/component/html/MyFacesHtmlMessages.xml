@@ -7,7 +7,7 @@
     <base-class>javax.faces.component.html.HtmlMessages</base-class>
     <component-type>net.sourceforge.myfaces.HtmlMessages</component-type>
     <component-family>javax.faces.Messages</component-family>
-    <renderer-type>net.sourceforge.myfaces.Messages</renderer-type>
+    <renderer-type>javax.faces.Messages</renderer-type>
     <field>
         <name>showInputLabel</name>
         <type>boolean</type>
