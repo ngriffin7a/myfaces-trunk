@@ -229,8 +229,8 @@ public class HTML
     public static final String INPUT_TYPE_HIDDEN = "hidden";
     public static final String INPUT_TYPE_CHECKBOX = "checkbox";
     public static final String INPUT_TYPE_PASSWORD = "password";
-
-
+    public static final String INPUT_TYPE_TEXT = "text";
+    
     // <button>
     public static final String[] BUTTON_ATTRIBUTES =
     {

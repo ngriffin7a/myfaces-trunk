@@ -62,10 +62,13 @@ extends HtmlRenderer
     private static boolean isSubmitted(FacesContext facesContext, UIComponent uiComponent)
     {
         String clientId = uiComponent.getClientId(facesContext);
-        Map paramValuesMap = facesContext.getExternalContext().getRequestParameterValuesMap();
-        return paramValuesMap.containsKey(clientId) || paramValuesMap.containsKey(clientId + IMAGE_BUTTON_SUFFIX);
+        Map paramMap = facesContext.getExternalContext().getRequestParameterMap();
+        return paramMap.containsKey(clientId) || paramMap.containsKey(clientId + IMAGE_BUTTON_SUFFIX);
         
 // REVISIT: is it needed to check each value?
+//        Map paramValuesMap = facesContext.getExternalContext().getRequestParameterValuesMap();
+//        return paramValuesMap.containsKey(clientId) || paramValuesMap.containsKey(clientId + IMAGE_BUTTON_SUFFIX);
+//        
 //        boolean submitted = false;
 //        
 //        //check if button has been submitted

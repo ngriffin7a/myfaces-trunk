@@ -1,4 +1,4 @@
-/**
+/*
  * MyFaces - the free JSF implementation
  * Copyright (C) 2003, 2004  The MyFaces Team (http://myfaces.sourceforge.net)
  *
@@ -66,5 +66,7 @@ public class HtmlSecretRenderer
 
         HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML.INPUT_PASSTHROUGH_ATTRIBUTES);
         HTMLUtil.renderDisabledOnUserRole(writer, uiComponent, facesContext);
+        
+        writer.endElement(HTML.INPUT_ELEM);
     }
 }

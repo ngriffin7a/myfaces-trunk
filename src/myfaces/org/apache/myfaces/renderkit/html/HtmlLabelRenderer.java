@@ -1,4 +1,4 @@
-/**
+/*
  * MyFaces - the free JSF implementation
  * Copyright (C) 2003, 2004  The MyFaces Team (http://myfaces.sourceforge.net)
  *
@@ -48,15 +48,20 @@ extends HtmlRenderer
 
         writer.startElement(HTML.LABEL_ELEM, uiComponent);
 
-        HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML.UNIVERSAL_ATTRIBUTES);
-        HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML.EVENT_HANDLER_ATTRIBUTES);
-
+        HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML.COMMON_PASSTROUGH_ATTRIBUTES);
+        
+        // TODO: handle "for" attribute
+        
         ValueBinding vb = uiComponent.getValueBinding(JSFAttr.VALUE_ATTR);
         Object value = vb.getValue(facesContext);
-
         if(value != null)
         {
+            // REVISIT: should we HtmlEncode the text or not?
             writer.write(value.toString());
+        }
+        else
+        {
+            writer.write(""); // close start tag
         }
     }
 

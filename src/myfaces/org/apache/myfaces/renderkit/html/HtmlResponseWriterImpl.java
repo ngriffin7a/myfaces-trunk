@@ -155,7 +155,7 @@ public class HtmlResponseWriterImpl
     {
         if(_startElementName != null)
         {
-            // we will get here only if no text was written after the element was open
+            // we will get here only if no text was written after the start element was opened
             _writer.write(" />");
         }
         
@@ -258,7 +258,11 @@ public class HtmlResponseWriterImpl
 
     public void close() throws IOException
     {
-        closeStartElementIfNecessary();
+        if (_startElementName != null)
+        {
+            // we will get here only if no text was written after the start element was opened
+            _writer.write(" />");
+        }
         _writer.close();
     }
 
@@ -283,7 +287,12 @@ public class HtmlResponseWriterImpl
     public void write(String str) throws IOException
     {
         closeStartElementIfNecessary();
-        _writer.write(str);
+        // empty string commonly used to force the start tag to be closed,
+        // do not call down the writer chain
+        if (str.length() > 0)
+        {    
+            _writer.write(str);
+        }
     }
 
     public void write(String str, int off, int len) throws IOException

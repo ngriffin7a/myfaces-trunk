@@ -18,12 +18,10 @@
  */
 package net.sourceforge.myfaces.renderkit.html;
 
-import net.sourceforge.myfaces.renderkit.html.util.HTMLEncoder;
 import net.sourceforge.myfaces.renderkit.RendererUtils;
 import net.sourceforge.myfaces.renderkit.JSFAttr;
 
 import javax.faces.component.UIComponent;
-import javax.faces.component.UIInput;
 import javax.faces.component.html.HtmlInputHidden;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
@@ -51,14 +49,15 @@ extends HtmlRenderer
         writer.writeAttribute(HTML.TYPE_ATTR, HTML.INPUT_TYPE_HIDDEN, null);
 
         String clientId = uiComponent.getClientId(facesContext);        
-        writer.writeAttribute(HTML.NAME_ATTR, clientId, null);
         writer.writeAttribute(HTML.ID_ATTR, clientId, null);
+        writer.writeAttribute(HTML.NAME_ATTR, clientId, null);
 
         ValueBinding vb = uiComponent.getValueBinding(JSFAttr.VALUE_ATTR);
-
         if (vb != null)
         {
             writer.writeAttribute(HTML.VALUE_ATTR, vb.getValue(facesContext), JSFAttr.VALUE_ATTR);
         }
+        
+        writer.endElement(HTML.INPUT_ELEM);
     }
 }

@@ -36,7 +36,6 @@ import javax.faces.context.ResponseWriter;
 import javax.faces.convert.Converter;
 import javax.faces.convert.ConverterException;
 import java.io.IOException;
-import java.io.StringWriter;
 import java.util.Map;
 
 /**
@@ -75,7 +74,7 @@ public class HtmlTextRenderer
     }
 
 
-    protected void renderOutput(FacesContext facesContext, HtmlOutputText htmlOutput)
+    public static void renderOutput(FacesContext facesContext, HtmlOutputText htmlOutput)
         throws IOException
     {
         String text = RendererUtils.getStringValue(facesContext, htmlOutput);
@@ -91,19 +90,8 @@ public class HtmlTextRenderer
     {
         ResponseWriter writer = facesContext.getResponseWriter();
 
-        boolean span = false;
-        //Redirect output of span element to temporary writer
-        StringWriter buf = new StringWriter();
-        ResponseWriter bufWriter = writer.cloneWithWriter(buf);
-        bufWriter.startElement(HTML.SPAN_ELEM, component);
-        span |= HTMLUtil.renderHTMLAttributes(bufWriter, component, HTML.UNIVERSAL_ATTRIBUTES);
-        span |= HTMLUtil.renderHTMLAttributes(bufWriter, component, HTML.EVENT_HANDLER_ATTRIBUTES);
-        bufWriter.close();
-        if (span)
-        {
-            //span attribute was written, so write out span element to real writer
-            writer.write(buf.toString());
-        }
+        boolean span = HTMLUtil.renderHTMLAttributesWithOptionalStartElement(
+                writer, component, HTML.SPAN_ELEM, HTML.COMMON_PASSTROUGH_ATTRIBUTES);
 
         if (escape)
         {
@@ -121,7 +109,7 @@ public class HtmlTextRenderer
     }
 
 
-    protected void renderInput(FacesContext facesContext, HtmlInputText htmlInput)
+    public static void renderInput(FacesContext facesContext, HtmlInputText htmlInput)
         throws IOException
     {
         ResponseWriter writer = facesContext.getResponseWriter();
@@ -132,7 +120,7 @@ public class HtmlTextRenderer
         writer.startElement(HTML.INPUT_ELEM, htmlInput);
         writer.writeAttribute(HTML.ID_ATTR, clientId, null);
         writer.writeAttribute(HTML.NAME_ATTR, clientId, null);
-        writer.writeAttribute(HTML.TYPE_ATTR, "text", null);
+        writer.writeAttribute(HTML.TYPE_ATTR, HTML.INPUT_TYPE_TEXT, null);
         if (value != null)
         {
             writer.writeAttribute(HTML.VALUE_ATTR, value, JSFAttr.VALUE_ATTR);
