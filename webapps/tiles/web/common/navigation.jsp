@@ -11,4 +11,7 @@
     <h:commandLink action="nav_page3">
         <h:outputText value="non-tiles page" />
     </h:commandLink>
+    <h:commandLink action="nav_page4">
+        <h:outputText value="nested tiles" />
+    </h:commandLink>
 </h:panelGrid>
