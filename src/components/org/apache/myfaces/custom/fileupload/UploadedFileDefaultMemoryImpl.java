@@ -26,6 +26,9 @@ import org.apache.commons.fileupload.FileItem;
  * @author Sylvain Vieujot (latest modification by $Author$)
  * @version $Revision$ $Date$
  *          $Log$
+ *          Revision 1.2  2004/07/14 06:10:18  svieujot
+ *          Remove debug messages
+ *
  *          Revision 1.1  2004/07/14 06:02:48  svieujot
  *          FileUpload : split file based and memory based implementation.
  *          Use the storage="memory|file" attribute.
@@ -54,7 +57,6 @@ public class UploadedFileDefaultMemoryImpl extends UploadedFileDefaultImplBase
     		_name = fileItem.getName();
     		_contentType = fileItem.getContentType();
     	}
-System.out.println("MEMORY");
     }
 
 
