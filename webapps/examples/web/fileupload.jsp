@@ -75,11 +75,11 @@
                 <f:verbatim>
                     </td></tr></table>
                 <%
-                if (application.getAttribute("fileupload_file") != null)
+                if (application.getAttribute("fileupload_bytes") != null)
                 {
                     %>
                     <p>The image you loaded up:</p>
-                    <img src="fileupload_showimg.jsp?dummy=<%=Math.random()%>">
+                    <img src="fileupload_showimg.jsp">
                     <br><%
                 }
                 %>

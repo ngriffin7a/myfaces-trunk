@@ -4,18 +4,16 @@
                  java.io.OutputStream"
 %><%@ page session="false"
 %><%
-    File file = (File)application.getAttribute("fileupload_file");
-    if (file != null)
+	response.setHeader("pragma", "no-cache");
+	response.setHeader("Cache-control", "no-cache, no-store, must-revalidate");
+	response.setHeader("Expires", "01 Apr 1995 01:10:10 GMT");
+	
+    byte[] bytes = (byte[])application.getAttribute("fileupload_bytes");
+    if (bytes != null)
     {
         String contentType = (String)application.getAttribute("fileupload_type");
         response.setContentType(contentType);
 
-        InputStream is = new FileInputStream(file);
-        OutputStream os = response.getOutputStream();
-        int b;
-        while ((b = is.read()) != -1)
-        {
-            os.write(b);
-        }
+        response.getOutputStream().write(bytes);
     }
 %>

@@ -63,7 +63,7 @@ public class FileUploadForm
         if (form != null)
         {
             UploadedFile upFile = form.getUpFile();
-            facesContext.getExternalContext().getApplicationMap().put("fileupload_file", upFile.getFile());
+            facesContext.getExternalContext().getApplicationMap().put("fileupload_bytes", upFile.getBytes());
             facesContext.getExternalContext().getApplicationMap().put("fileupload_type", upFile.getContentType());
         }
 
