@@ -71,7 +71,7 @@
             <rtexprvalue>true</rtexprvalue>
         </attribute>
         <attribute>
-            <name>accept-charset</name>
+            <name>acceptCharset</name>
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>
         </attribute>
