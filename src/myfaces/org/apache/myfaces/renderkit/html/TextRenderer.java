@@ -71,14 +71,17 @@ public class TextRenderer
         }
     }
 
-
     public void renderInput(FacesContext facesContext, UIComponent uiComponent)
             throws IOException
     {
         ResponseWriter writer = facesContext.getResponseWriter();
         writer.write("<input type=\"text\"");
+        String coumpoundId = uiComponent.getCompoundId();
         writer.write(" name=\"");
-        writer.write(uiComponent.getCompoundId());
+        writer.write(coumpoundId);
+        writer.write("\"");
+        writer.write(" id=\"");
+        writer.write(coumpoundId);
         writer.write("\"");
         String currentValue = getStringValue(facesContext, uiComponent);
         if (currentValue != null)

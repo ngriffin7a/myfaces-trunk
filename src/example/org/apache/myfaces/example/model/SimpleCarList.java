@@ -37,6 +37,7 @@ public class SimpleCarList
         _countries.add(new SimpleCar("car C", "green"));
         _countries.add(new SimpleCar("car D", "yellow"));
         _countries.add(new SimpleCar("car E", "orange"));
+        super.setSort("type");
     }
 
     public Iterator getCars()

@@ -57,6 +57,7 @@ public class RenderKitImpl
         addRenderer(new DataRenderer());
         addRenderer(new GroupRenderer());
         addRenderer(new GridRenderer());
+        addRenderer(new LabelRenderer());
 
         //State Handling
         if (MyFacesConfig.isStateZipping())
