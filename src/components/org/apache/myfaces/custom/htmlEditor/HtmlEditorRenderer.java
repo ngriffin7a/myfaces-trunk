@@ -35,6 +35,9 @@ import org.apache.myfaces.renderkit.html.util.JavascriptUtils;
  * @author Sylvain Vieujot (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.19  2005/02/05 23:07:45  svieujot
+ * x:htmlEditor Add full page mode (zoom) & bugfixes
+ *
  * Revision 1.18  2005/02/05 18:51:21  svieujot
  * x:htmlEditor : Upgrade to Kupu 1.2rc1, remove formularMode (too experimental), bugfixes.
  *
@@ -116,6 +119,7 @@ public class HtmlEditorRenderer extends HtmlRenderer {
         
         AddResource.addStyleSheet(HtmlEditorRenderer.class, "kupustyles.css", context);
         AddResource.addStyleSheet(HtmlEditorRenderer.class, "kupudrawerstyles.css", context);
+        AddResource.addStyleSheet(HtmlEditorRenderer.class, "myFaces_kupustyles.css", context); // Additional styles fixes.
         
         AddResource.addJavaScriptToHeader(HtmlEditorRenderer.class, "sarissa.js", context);
         AddResource.addJavaScriptToHeader(HtmlEditorRenderer.class, "kupuhelpers.js", context);
@@ -124,7 +128,7 @@ public class HtmlEditorRenderer extends HtmlRenderer {
         AddResource.addJavaScriptToHeader(HtmlEditorRenderer.class, "kupuloggers.js", context);
         AddResource.addJavaScriptToHeader(HtmlEditorRenderer.class, "kupucontentfilters.js", context);
         AddResource.addJavaScriptToHeader(HtmlEditorRenderer.class, "kupucontextmenu.js", context);
-        AddResource.addJavaScriptToHeader(HtmlEditorRenderer.class, "kupuinit_form.js", context);
+        AddResource.addJavaScriptToHeader(HtmlEditorRenderer.class, "myFaces_kupuinit_form.js", context); // Replaces the standard kupuinit_form.js with a few fixes.
         AddResource.addJavaScriptToHeader(HtmlEditorRenderer.class, "kupustart_form.js", context);
         AddResource.addJavaScriptToHeader(HtmlEditorRenderer.class, "kupusourceedit.js", context);
         AddResource.addJavaScriptToHeader(HtmlEditorRenderer.class, "kupudrawers.js", context);
@@ -183,11 +187,19 @@ public class HtmlEditorRenderer extends HtmlRenderer {
     				writer.startElement(HTML.SPAN_ELEM,null);
     				writer.writeAttribute(HTML.CLASS_ATTR, "kupu-tb-buttongroup",null);
         			writer.writeAttribute(HTML.ID_ATTR, "kupu-logo",null);
-        			writer.writeAttribute(HTML.STYLE_ATTR,
-        			        editor.isAddKupuLogo() ? "float: right" : "display: none",
-        			        null);
+        			writer.writeAttribute(HTML.STYLE_ATTR, "float: right", null);
+                        writer.startElement(HTML.BUTTON_ELEM,null);
+                        writer.writeAttribute(HTML.TYPE_ATTR, "button",null);
+                        writer.writeAttribute(HTML.CLASS_ATTR, "kupu-zoom",null);
+                        writer.writeAttribute(HTML.ID_ATTR, "kupu-zoom-button",null);
+                        writer.writeAttribute(HTML.TITLE_ATTR, "zoom: alt-x",null);
+                        writer.writeAttribute(HTML.ACCESSKEY_ATTR, "x",null);
+                            writer.write("&#xA0;");
+                        writer.endElement(HTML.BUTTON_ELEM);
         				writer.startElement(HTML.BUTTON_ELEM,null);
-        				writer.writeAttribute(HTML.TYPE_ATTR, "button",null);
+                        if( ! editor.isAddKupuLogo() )
+                            writer.writeAttribute(HTML.STYLE_ATTR,"display: none",null);
+                        writer.writeAttribute(HTML.TYPE_ATTR, "button",null);
         				writer.writeAttribute(HTML.CLASS_ATTR, "kupu-logo",null);
         				writer.writeAttribute(HTML.TITLE_ATTR, "Kupu 1.2rc1",null);
         				writer.writeAttribute(HTML.ACCESSKEY_ATTR, "k",null);
@@ -347,6 +359,7 @@ public class HtmlEditorRenderer extends HtmlRenderer {
                 	
                 	writer.startElement(HTML.SPAN_ELEM,null);
                 	writer.writeAttribute(HTML.CLASS_ATTR, "kupu-tb-buttongroup", null);
+                    writer.writeAttribute(HTML.ID_ATTR, "kupu-source", null);
                 	if( ! editor.isAllowEditSource().booleanValue() ){
                 	    writer.writeAttribute(HTML.STYLE_ATTR, "display: none", null);
         			}
@@ -410,6 +423,7 @@ public class HtmlEditorRenderer extends HtmlRenderer {
                                     writer.writeAttribute(HTML.ID_ATTR, "kupu-linkdrawer-input", null);
                                     writer.writeAttribute(HTML.CLASS_ATTR, "kupu-toolbox-st", null);
                                     writer.writeAttribute(HTML.TYPE_ATTR, "text", null);
+                                    writer.endElement(HTML.INPUT_ELEM);
                                 writer.endElement(HTML.TD_ELEM);
                                 writer.startElement(HTML.TD_ELEM,null);
                                 writer.writeAttribute(HTML.CLASS_ATTR, "kupu-preview-button", null);
@@ -935,12 +949,17 @@ public class HtmlEditorRenderer extends HtmlRenderer {
             
             // Edit space
             writer.startElement(HTML.DIV_ELEM, null);
-            writer.writeAttribute(HTML.CLASS_ATTR,
-                    "kupu-editorframe"+(editor.getStyleClass()==null ? "" : " "+editor.getStyleClass()), null);
             if( !editor.isShowAnyToolBox() ){
-                writer.writeAttribute(HTML.STYLE_ATTR,
-                        "margin-right: 0.3em"+(editor.getStyle()==null ? "" : ";"+editor.getStyle()), null);
+                writer.writeAttribute(HTML.STYLE_ATTR, "margin-right: 0.3em", null);
             }
+            String tempInlineStyleClass = "";
+            if( editor.getStyle()!=null ){
+                // Convert the style into a style class so that the Zoom works as it's relying on changing the class
+                tempInlineStyleClass =  "kupu_tmpInlineClass"+editor.getId();
+                AddResource.addInlineStyleToHeader(tempInlineStyleClass+"{"+editor.getStyle()+"}",context);
+            }
+            writer.writeAttribute(HTML.CLASS_ATTR,
+                    "kupu-editorframe "+tempInlineStyleClass+(editor.getStyleClass()==null ? "" : " "+editor.getStyleClass()), null);
             	writer.startElement(HTML.IFRAME_ELEM, null);
             	writer.writeAttribute(HTML.ID_ATTR, "kupu-editor", null);
             	writer.writeAttribute(HTML.FRAMEBORDER_ATTR, "0", null);
