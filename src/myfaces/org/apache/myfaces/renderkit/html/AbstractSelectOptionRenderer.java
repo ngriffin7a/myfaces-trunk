@@ -41,6 +41,8 @@ import java.util.Map;
 public abstract class AbstractSelectOptionRenderer
         extends HTMLRenderer
 {
+    public static final String LIST_ATTR = AbstractSelectOptionRenderer.class.getName() + ".LIST";
+
     public void encodeBegin(FacesContext context, UIComponent uicomponent)
             throws IOException
     {
@@ -135,19 +137,19 @@ public abstract class AbstractSelectOptionRenderer
         return getSelectItemsList(context, component).iterator();
     }
 
-    private ArrayList _list = null;
     private ArrayList getSelectItemsList(FacesContext context, UIComponent component)
     {
-        if (_list == null)
+        ArrayList list = (ArrayList)component.getAttribute(LIST_ATTR);
+        if (list == null)
         {
-            _list = new ArrayList(component.getChildCount());
+            list = new ArrayList(component.getChildCount());
             for(Iterator children = component.getChildren(); children.hasNext();)
             {
                 UIComponent child = (UIComponent)children.next();
                 if (child instanceof UISelectItem)
                 {
                     UISelectItem item = (UISelectItem)child;
-                    _list.add(new SelectItem(item.getItemValue(),
+                    list.add(new SelectItem(item.getItemValue(),
                                             item.getItemLabel(),
                                             item.getItemDescription()));
                 }
@@ -156,14 +158,14 @@ public abstract class AbstractSelectOptionRenderer
                     Object value = child.currentValue(context);
                     if (value instanceof UISelectItem)
                     {
-                        _list.add(value);
+                        list.add(value);
                     }
                     else if (value instanceof SelectItem[])
                     {
                         SelectItem items[] = (SelectItem[])value;
                         for(int i = 0; i < items.length; i++)
                         {
-                            _list.add(items[i]);
+                            list.add(items[i]);
                         }
                     }
                     else if (value instanceof Collection)
@@ -171,7 +173,7 @@ public abstract class AbstractSelectOptionRenderer
                         Iterator it = ((Collection)value).iterator();
                         while (it.hasNext())
                         {
-                            _list.add(it.next());
+                            list.add(it.next());
                         }
                     }
                     // TODO: add Collection / remove Map ?? (see API-Doku)
@@ -187,7 +189,7 @@ public abstract class AbstractSelectOptionRenderer
                                 if(label != null)
                                 {
                                     SelectItem item = new SelectItem(key.toString(), label.toString(), null);
-                                    _list.add(item);
+                                    list.add(item);
                                 }
                             }
                         }
@@ -195,6 +197,6 @@ public abstract class AbstractSelectOptionRenderer
                 }
             }
         }
-        return _list;
+        return list;
     }
 }
