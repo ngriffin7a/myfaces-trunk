@@ -38,6 +38,9 @@ import org.apache.myfaces.util.MessageUtils;
 
 /**
  * $Log$
+ * Revision 1.11  2004/12/09 12:54:26  svieujot
+ * Changes to check for submitted-value first
+ *
  * Revision 1.10  2004/12/09 05:13:02  svieujot
  * Mark potential bugs where we use the backing bean's value, and do not check for submitted value
  *
@@ -87,15 +90,10 @@ public class HtmlDateRenderer extends HtmlRenderer {
     private static final String ID_SECONDS_POSTFIX = ".seconds";
     
     protected boolean isDisabled(FacesContext facesContext, UIComponent uiComponent) {
-        if( !UserRoleUtils.isEnabledOnUserRole(uiComponent) ){
+        if( !UserRoleUtils.isEnabledOnUserRole(uiComponent) )
             return false;
-        }else{
-            if( uiComponent instanceof HtmlInputDate ){
-                return ((HtmlInputDate)uiComponent).isDisabled();
-            }else{
-                return RendererUtils.getBooleanAttribute(uiComponent, HTML.DISABLED_ATTR, false);
-            }
-        }
+
+        return ((HtmlInputDate)uiComponent).isDisabled();
     }
     
     public void encodeEnd(FacesContext facesContext, UIComponent uiComponent) throws IOException {
@@ -103,7 +101,9 @@ public class HtmlDateRenderer extends HtmlRenderer {
 
         HtmlInputDate inputDate = (HtmlInputDate) uiComponent;
         Locale currentLocale = facesContext.getViewRoot().getLocale();
-        UserData userData = inputDate.getUserData(currentLocale); // TODO : Check if restores the submitted value
+        UserData userData = (UserData) inputDate.getSubmittedValue();
+        if( userData == null )
+            userData = inputDate.getUserData(currentLocale);
         String type = inputDate.getType();
         String clientId = uiComponent.getClientId(facesContext);
 
@@ -236,7 +236,9 @@ public class HtmlDateRenderer extends HtmlRenderer {
 
         HtmlInputDate inputDate = (HtmlInputDate) uiComponent;
         Locale currentLocale = facesContext.getViewRoot().getLocale();
-        UserData userData = inputDate.getUserData(currentLocale);
+        UserData userData = (UserData) inputDate.getSubmittedValue();
+        if( userData == null )
+            userData = inputDate.getUserData(currentLocale);
         String clientId = inputDate.getClientId(facesContext);
         String type = inputDate.getType();
         Map requestMap = facesContext.getExternalContext().getRequestParameterMap();
