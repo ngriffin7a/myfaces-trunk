@@ -20,11 +20,15 @@ package net.sourceforge.myfaces.renderkit.html;
 
 import net.sourceforge.myfaces.component.UIParameter;
 import net.sourceforge.myfaces.renderkit.html.state.StateRenderer;
+import net.sourceforge.myfaces.renderkit.html.state.JspInfo;
 import net.sourceforge.myfaces.webapp.ServletMappingFactory;
 import net.sourceforge.myfaces.webapp.ServletMapping;
 import net.sourceforge.myfaces.MyFacesFactoryFinder;
+import net.sourceforge.myfaces.MyFacesConfig;
+import net.sourceforge.myfaces.util.logging.LogUtil;
 
 import javax.faces.FactoryFinder;
+import javax.faces.tree.Tree;
 import javax.faces.component.UICommand;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
@@ -106,7 +110,30 @@ public class HyperlinkRenderer
         writer.write(URLEncoder.encode(getStringValue(facesContext, uiComponent), "UTF-8"));
 
         //nested parameters
-        for (Iterator children = uiComponent.getChildren(); children.hasNext();)
+        Iterator children = uiComponent.getChildren();
+        if (!children.hasNext())
+        {
+            //no children can mean that the tree is not yet built
+            //so, we try the static tree
+            Tree staticTree = JspInfo.getStaticTree(facesContext,
+                                                    facesContext.getResponseTree().getTreeId());
+            UIComponent staticComp = null;
+            try
+            {
+                staticComp = staticTree.getRoot().findComponent(uiComponent.getCompoundId());
+            }
+            catch (IllegalArgumentException e) {}
+
+            if (staticComp == null)
+            {
+                LogUtil.getLogger().warning("Component " + uiComponent.getCompoundId() + " not found in static tree!?");
+            }
+            else
+            {
+                children = staticComp.getChildren();
+            }
+        }
+        while (children.hasNext())
         {
             UIComponent child = (UIComponent)children.next();
             if (child instanceof UIParameter)
