@@ -24,18 +24,21 @@ import javax.faces.context.FacesContext;
 import javax.faces.el.EvaluationException;
 import javax.faces.el.MethodBinding;
 import javax.faces.el.MethodNotFoundException;
-import javax.faces.el.ValueBinding;
-import java.lang.reflect.Method;
+import javax.faces.el.ReferenceSyntaxException;
+import javax.servlet.jsp.el.ELException;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 
 /**
  * @author Anton Koinov (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public class MethodBindingImpl
-    extends MethodBinding
-    implements StateHolder
+public class MethodBindingImpl extends MethodBinding implements StateHolder
 {
+    static final Log log = LogFactory.getLog(MethodBindingImpl.class);
+    
     //~ Instance fields ----------------------------------------------------------------------------
 
     ValueBindingImpl _valueBinding;
@@ -45,17 +48,7 @@ public class MethodBindingImpl
 
     public MethodBindingImpl(Application application, String reference, Class[] argClasses)
     {
-        // NOTE: getting ValueBindingImpl through application will utilize the caching
-        //
-        // ValueBindingImp will check application == null and ref == null
-        _valueBinding = (ValueBindingImpl) application.createValueBinding(reference);
-        if (_valueBinding._parsedReference.length < 2)
-        {
-            throw new MethodNotFoundException(
-                "Reference: " + _valueBinding._reference
-                + ". MethodBinding reference cannot be just #{var}");
-        }
-
+        _valueBinding = new ValueBindingImpl(application, reference);
         _argClasses = argClasses;
     }
 
@@ -63,98 +56,73 @@ public class MethodBindingImpl
 
     public String getExpressionString()
     {
-        return _valueBinding._reference;
+        return _valueBinding._expressionString;
     }
 
-    public Class getType(FacesContext context)
+    public Class getType(FacesContext facesContext)
     {
-        if (context == null)
-        {
-            throw new NullPointerException("facesContext");
-        }
-
-        Object base = _valueBinding.resolve(context);
-        if (base == null)
-        {
-            throw new MethodNotFoundException(
-                "Reference: " + _valueBinding._reference + ", base: null");
-        }
-
-        Method method =
-            getMethod(
-                context, base,
-                _valueBinding._parsedReference[_valueBinding._parsedReference.length - 1],
-                _argClasses);
-        return method.getReturnType();
-    }
-
-    public Object invoke(FacesContext context, Object[] args)
-            throws EvaluationException, MethodNotFoundException
-    {
-        if (context == null)
-        {
-            throw new NullPointerException("facesContext");
-        }
-
-        Object base = _valueBinding.resolve(context);
-        if (base == null)
-        {
-            throw new MethodNotFoundException(
-                "Reference: " + _valueBinding._reference + ", base: null");
-        }
-
-        Method method =
-            getMethod(
-                context, base,
-                _valueBinding._parsedReference[_valueBinding._parsedReference.length - 1],
-                _argClasses);
-
         try
         {
-            return method.invoke(base, args);
+            Object[] baseAndProperty = resolveToBaseAndProperty(facesContext);
+            Object base              = baseAndProperty[0];
+            Object property          = baseAndProperty[1];
+            
+            return base.getClass().getMethod(property.toString(), _argClasses)
+                .getReturnType();
         }
-        catch (MethodNotFoundException e)
-        {
+        catch (ReferenceSyntaxException e) {
             throw e;
         }
         catch (Exception e)
         {
-            throw new EvaluationException("Error invoking method binding: " + _valueBinding._reference, e);
+            log.error("Cannot get type for expression " + _valueBinding._expressionString, e);
+            throw new EvaluationException("Expression: " + _valueBinding._expressionString, e);
         }
     }
 
-    protected Method getMethod(FacesContext facesContext,
-                               Object base,
-                               Object name,
-                               Class[] argClasses)
-        throws MethodNotFoundException
+    public Object invoke(FacesContext facesContext, Object[] args)
+            throws EvaluationException, MethodNotFoundException
     {
-        if (name instanceof ValueBinding)
-        {
-            name = ((ValueBinding) name).getValue(facesContext);
-        }
-        if (name == null)
-        {
-            throw new MethodNotFoundException(
-                "Reference: " + _valueBinding._reference + ", base: " + base.getClass()
-                + ", method name resolved to null from: " + ((ValueBindingImpl) name)._reference);
-        }
-
         try
         {
-            return base.getClass().getMethod(_valueBinding.coerceToString(name), argClasses);
+            Object[] baseAndProperty = resolveToBaseAndProperty(facesContext);
+            Object base              = baseAndProperty[0];
+            Object property          = baseAndProperty[1];
+            
+            return base.getClass().getMethod(property.toString(), _argClasses)
+                .invoke(base, args);
         }
-        catch (NoSuchMethodException e)
+        catch (ReferenceSyntaxException e) {
+            throw e;
+        }
+        catch (Exception e)
         {
-            throw new MethodNotFoundException(
-                "Reference: " + _valueBinding._reference + ", base: " + base.getClass()
-                + ", method: " + name.toString(), e);
+            log.error("Cannot get type for expression " + _valueBinding._expressionString, e);
+            throw new EvaluationException("Expression: " + _valueBinding._expressionString, e);
         }
     }
 
-
-    //~ StateHolder support ----------------------------------------------------------------------------
-
+    protected Object[] resolveToBaseAndProperty(FacesContext facesContext) throws ELException 
+    {
+        if (facesContext == null)
+        {
+            throw new NullPointerException("facesContext");
+        }
+        
+        Object base = _valueBinding.resolveToBaseAndProperty(facesContext);
+        if (!(base instanceof Object[]))
+        {
+            log.error("Expression not a valid method binding: " 
+                    + _valueBinding._expressionString);
+            throw new ReferenceSyntaxException("Expression not a valid method binding: " 
+                + _valueBinding._expressionString);
+        }
+        
+        return (Object[]) base;
+    }
+    
+    //~ StateHolder implementation ------------------------------------------------------------------------------------
+    
     private boolean _transient = false;
 
     /**

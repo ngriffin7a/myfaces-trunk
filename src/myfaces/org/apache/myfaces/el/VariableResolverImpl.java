@@ -49,12 +49,115 @@ public class VariableResolverImpl
 
     //~ Instance fields ----------------------------------------------------------------------------
 
+    public static final Map s_standardImplicitObjects = new HashMap(32);
+    static {
+        s_standardImplicitObjects.put(
+            "applicationScope",
+            new ImplicitObject()
+            {
+                public Object get(FacesContext facesContext)
+                {
+                    return facesContext.getExternalContext().getApplicationMap();
+                }
+            });
+        s_standardImplicitObjects.put(
+            "cookie",
+            new ImplicitObject()
+            {
+                public Object get(FacesContext facesContext)
+                {
+                    return facesContext.getExternalContext().getRequestCookieMap();
+                }
+            });
+        s_standardImplicitObjects.put(
+            "facesContext",
+            new ImplicitObject()
+            {
+                public Object get(FacesContext facesContext)
+                {
+                    return facesContext;
+                }
+            });
+        s_standardImplicitObjects.put(
+            "header",
+            new ImplicitObject()
+            {
+                public Object get(FacesContext facesContext)
+                {
+                    return facesContext.getExternalContext().getRequestHeaderMap();
+                }
+            });
+        s_standardImplicitObjects.put(
+            "headerValues",
+            new ImplicitObject()
+            {
+                public Object get(FacesContext facesContext)
+                {
+                    return facesContext.getExternalContext().getRequestHeaderValuesMap();
+                }
+            });
+        s_standardImplicitObjects.put(
+            "initParam",
+            new ImplicitObject()
+            {
+                public Object get(FacesContext facesContext)
+                {
+                    return facesContext.getExternalContext().getInitParameterMap();
+                }
+            });
+        s_standardImplicitObjects.put(
+            "param",
+            new ImplicitObject()
+            {
+                public Object get(FacesContext facesContext)
+                {
+                    return facesContext.getExternalContext().getRequestParameterMap();
+                }
+            });
+        s_standardImplicitObjects.put(
+            "paramValues",
+            new ImplicitObject()
+            {
+                public Object get(FacesContext facesContext)
+                {
+                    return facesContext.getExternalContext().getRequestParameterValuesMap();
+                }
+            });
+        s_standardImplicitObjects.put(
+            "requestScope",
+            new ImplicitObject()
+            {
+                public Object get(FacesContext facesContext)
+                {
+                    return facesContext.getExternalContext().getRequestMap();
+                }
+            });
+        s_standardImplicitObjects.put(
+            "sessionScope",
+            new ImplicitObject()
+            {
+                public Object get(FacesContext facesContext)
+                {
+                    return facesContext.getExternalContext().getSessionMap();
+                }
+            });
+        s_standardImplicitObjects.put(
+            "view",
+            new ImplicitObject()
+            {
+                public Object get(FacesContext facesContext)
+                {
+                    return facesContext.getViewRoot();
+                }
+            });
+    }
+    
     /**
      * Stores all implicit objects defined for this instance of <code>VariableResolver</code>
      * <p>
      * Can store instances of <code>ImplicitObject</code> which have the ability to
      * dynamically resolve against FacesContext. Can also store any other abject
-     * which itself is the value for the implicit object (this is effect will be
+     * which itself is the value for the implicit object (this in effect will be
      * a static object)
      * </p>
      * <p>
@@ -65,7 +168,50 @@ public class VariableResolverImpl
      * </p>
      */
     protected final Map _implicitObjects = new HashMap(32);
+    {
+        _implicitObjects.putAll(s_standardImplicitObjects);
+    }
 
+    protected static final Map s_scopes = new HashMap(16);
+    static {
+        s_scopes.put(
+            "request",
+            new Scope()
+            {
+                public void put(ExternalContext extContext, String name, Object obj)
+                {
+                    extContext.getRequestMap().put(name, obj);
+                }
+            });
+        s_scopes.put(
+            "session",
+            new Scope()
+            {
+                public void put(ExternalContext extContext, String name, Object obj)
+                {
+                    extContext.getSessionMap().put(name, obj);
+                }
+            });
+        s_scopes.put(
+            "application",
+            new Scope()
+            {
+                public void put(ExternalContext extContext, String name, Object obj)
+                {
+                    extContext.getApplicationMap().put(name, obj);
+                }
+            });
+        s_scopes.put(
+            "none",
+            new Scope()
+            {
+                public void put(ExternalContext extContext, String name, Object obj)
+                {
+                    // do nothing
+                }
+            });
+    }
+    
     /**
      * Stores all scopes defined for this instance of <code>VariableResolver</code>
      * <p>
@@ -81,142 +227,7 @@ public class VariableResolverImpl
      */
     protected final Map _scopes = new HashMap(16);
     {
-        _implicitObjects.put(
-            "applicationScope",
-            new ImplicitObject()
-            {
-                public Object get(FacesContext facesContext)
-                {
-                    return facesContext.getExternalContext().getApplicationMap();
-                }
-            });
-        _implicitObjects.put(
-            "cookie",
-            new ImplicitObject()
-            {
-                public Object get(FacesContext facesContext)
-                {
-                    return facesContext.getExternalContext().getRequestCookieMap();
-                }
-            });
-        _implicitObjects.put(
-            "facesContext",
-            new ImplicitObject()
-            {
-                public Object get(FacesContext facesContext)
-                {
-                    return facesContext;
-                }
-            });
-        _implicitObjects.put(
-            "header",
-            new ImplicitObject()
-            {
-                public Object get(FacesContext facesContext)
-                {
-                    return facesContext.getExternalContext().getRequestHeaderMap();
-                }
-            });
-        _implicitObjects.put(
-            "headerValues",
-            new ImplicitObject()
-            {
-                public Object get(FacesContext facesContext)
-                {
-                    return facesContext.getExternalContext().getRequestHeaderValuesMap();
-                }
-            });
-        _implicitObjects.put(
-            "initParam",
-            new ImplicitObject()
-            {
-                public Object get(FacesContext facesContext)
-                {
-                    return facesContext.getExternalContext().getInitParameterMap();
-                }
-            });
-        _implicitObjects.put(
-            "param",
-            new ImplicitObject()
-            {
-                public Object get(FacesContext facesContext)
-                {
-                    return facesContext.getExternalContext().getRequestParameterMap();
-                }
-            });
-        _implicitObjects.put(
-            "paramValues",
-            new ImplicitObject()
-            {
-                public Object get(FacesContext facesContext)
-                {
-                    return facesContext.getExternalContext().getRequestParameterValuesMap();
-                }
-            });
-        _implicitObjects.put(
-            "requestScope",
-            new ImplicitObject()
-            {
-                public Object get(FacesContext facesContext)
-                {
-                    return facesContext.getExternalContext().getRequestMap();
-                }
-            });
-        _implicitObjects.put(
-            "sessionScope",
-            new ImplicitObject()
-            {
-                public Object get(FacesContext facesContext)
-                {
-                    return facesContext.getExternalContext().getSessionMap();
-                }
-            });
-        _implicitObjects.put(
-            "view",
-            new ImplicitObject()
-            {
-                public Object get(FacesContext facesContext)
-                {
-                    return facesContext.getViewRoot();
-                }
-            });
-
-        _scopes.put(
-            "request",
-            new Scope()
-            {
-                public void put(ExternalContext extContext, String name, Object obj)
-                {
-                    extContext.getRequestMap().put(name, obj);
-                }
-            });
-        _scopes.put(
-            "session",
-            new Scope()
-            {
-                public void put(ExternalContext extContext, String name, Object obj)
-                {
-                    extContext.getSessionMap().put(name, obj);
-                }
-            });
-        _scopes.put(
-            "application",
-            new Scope()
-            {
-                public void put(ExternalContext extContext, String name, Object obj)
-                {
-                    extContext.getApplicationMap().put(name, obj);
-                }
-            });
-        _scopes.put(
-            "none",
-            new Scope()
-            {
-                public void put(ExternalContext extContext, String name, Object obj)
-                {
-                    // do nothing
-                }
-            });
+        _scopes.putAll(s_scopes);
     }
 
     //~ Methods ------------------------------------------------------------------------------------
@@ -283,23 +294,18 @@ public class VariableResolverImpl
             ManagedBeanConfigurator configurator = new ManagedBeanConfigurator(mbc);
             configurator.configure(facesContext, obj);
 
-            //put in scope
-            String scope = mbc.getManagedBeanScope();
-            if (scope.equals("request"))
+            // put in scope
+            String scopeKey = mbc.getManagedBeanScope();
+            
+            // find the scope handler object
+            Scope scope = (Scope) _scopes.get(scopeKey);
+            if (scope == null)
             {
-                externalContext.getRequestMap().put(name, obj);
+                log.error("Managed bean '" + name + "' has illegal scope: " + scopeKey);
             }
-            else if (scope.equals("session"))
+            else
             {
-                externalContext.getSessionMap().put(name, obj);
-            }
-            else if (scope.equals("application"))
-            {
-                externalContext.getApplicationMap().put(name, obj);
-            }
-            else if (!scope.equals("none"))
-            {
-                log.error("Managed bean '" + name + "' has illegal scope: " + scope);
+                scope.put(externalContext, name, obj);
             }
 
             return obj;
