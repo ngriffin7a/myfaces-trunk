@@ -18,5 +18,13 @@
 		<li>and serveral intranet apps</li>
 	</ul>
 </section>
+
+<section>
+	<title>The following Frameworks are using Apache MyFaces:</title>
+	<ul>
+		<li>Equinox. See a demo <link href="http://demo.raibledesigns.com/equinox-jsf">here</link></li>
+		<li>Appfuse. See a demo <link href="http://demo.raibledesigns.com/appfuse-jsf">here</link></li>
+	</ul>
+</section>
 </body>
 </document>
