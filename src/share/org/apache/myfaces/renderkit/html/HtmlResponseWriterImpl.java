@@ -13,10 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.myfaces.custom.buffer;
+package org.apache.myfaces.renderkit.html;
 
 import org.apache.myfaces.config.MyfacesConfig;
-import org.apache.myfaces.renderkit.html.HTML;
 import org.apache.myfaces.renderkit.html.util.DummyFormResponseWriter;
 import org.apache.myfaces.renderkit.html.util.DummyFormUtils;
 import org.apache.myfaces.renderkit.html.util.HTMLEncoder;
@@ -35,20 +34,69 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * This is the exact same class as the one from org.apache.myfaces.renderkit.html package.
- * 
  * @author Manfred Geiler (latest modification by $Author$)
  * @author Anton Koinov
  * @version $Revision$ $Date$
  * $Log$
- * Revision 1.3  2005/01/31 17:43:11  svieujot
+ * Revision 1.1  2005/02/01 16:51:48  svieujot
+ * Move the HtmlResponseWriterImpl to the shared sources directory.
+ *
+ * Revision 1.36  2005/01/31 17:43:11  svieujot
  * Bugfix for HtmlResponseWriterImpl.write(str, offset, length).
  *
- * Revision 1.2  2005/01/31 17:03:54  svieujot
+ * Revision 1.35  2005/01/31 17:03:54  svieujot
  * Resynchronize the HtmlResponseWriterImpl from the renderkit, and from the x:buffer component.
  *
- * Revision 1.1  2005/01/04 15:41:06  svieujot
+ * Revision 1.34  2005/01/29 10:04:25  matzew
+ * MYFACES-91 patch by Jason Hoo. Thanks
+ *
+ * Revision 1.33  2005/01/19 13:18:04  mmarinschek
+ * better logging of component information
+ *
+ * Revision 1.32  2005/01/04 15:41:06  svieujot
  * new x:buffer component.
+ *
+ * Revision 1.31  2004/12/27 04:11:11  mmarinschek
+ * Data Table stores the state of facets of children; script tag is rendered with type attribute instead of language attribute, popup works better as a column in a data table
+ *
+ * Revision 1.30  2004/12/17 22:06:32  grantsmith
+ * Jira MYFACES-57: Changed logging levels to DEBUG from INFO
+ *
+ * Revision 1.29  2004/10/24 23:30:35  oros
+ * do not convert newline to <br> and space to &nbps; as this is not required by the spec
+ *
+ * Revision 1.28  2004/10/13 11:51:00  matze
+ * renamed packages to org.apache
+ *
+ * Revision 1.27  2004/10/05 08:49:15  manolito
+ * #1038697 h:selectOneRadio generates malformed XHTML
+ *
+ * Revision 1.26  2004/10/05 08:32:23  manolito
+ * #1038716 Empty h:selectManyCheckbox generates malformed HTML
+ *
+ * Revision 1.25  2004/09/09 13:15:44  manolito
+ * For textareas we must *not* map successive spaces to nbsp
+ *
+ * Revision 1.24  2004/09/08 15:23:10  manolito
+ * Autoscroll feature
+ *
+ * Revision 1.23  2004/09/08 09:30:01  manolito
+ * moved javascript detection to ResponseWriter
+ *
+ * Revision 1.22  2004/08/20 00:13:55  dave0000
+ * remove unused constant
+ *
+ * Revision 1.21  2004/08/18 17:56:58  manolito
+ * no newline to <br/> mapping for TEXTAREA elements
+ *
+ * Revision 1.20  2004/08/18 16:13:06  manolito
+ * writeText method in HtmlResponseWriterImpl now encodes Newlines and successive spaces
+ *
+ * Revision 1.19  2004/07/01 22:05:06  mwessendorf
+ * ASF switch
+ *
+ * Revision 1.18  2004/04/29 14:59:42  manolito
+ * writeURIAttribute no longer adds state saving url parameters
  *
  */
 public class HtmlResponseWriterImpl

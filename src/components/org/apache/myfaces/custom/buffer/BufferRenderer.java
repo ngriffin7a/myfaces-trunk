@@ -30,11 +30,15 @@ import javax.faces.render.Renderer;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.myfaces.renderkit.RendererUtils;
+import org.apache.myfaces.renderkit.html.HtmlResponseWriterImpl;
 
 /**
  * @author Sylvain Vieujot (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.2  2005/02/01 16:51:48  svieujot
+ * Move the HtmlResponseWriterImpl to the shared sources directory.
+ *
  * Revision 1.1  2005/01/04 15:41:06  svieujot
  * new x:buffer component.
  *
