@@ -5,12 +5,12 @@
     <component-type>javax.faces.Graphic</component-type>
     <component-family>javax.faces.Graphic</component-family>
     <renderer-type>javax.faces.Image</renderer-type>
-    <field proprietary="true" saveState="false">
-        <name>url</name>
-        <type>java.lang.String</type>
-    </field>
     <field>
         <name>value</name>
         <type>java.lang.Object</type>
+    </field>
+    <field proprietary="true" saveState="false">
+        <name>url</name>
+        <type>java.lang.String</type>
     </field>
 </component>

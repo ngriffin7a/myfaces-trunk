@@ -16,35 +16,29 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
+
 package javax.faces.component.html;
 
-import javax.faces.component.UICommand;
+import javax.faces.component.UIOutput;
 import javax.faces.context.FacesContext;
 import javax.faces.el.ValueBinding;
 
 /**
- * @author Manfred Geiler (latest modification by $Author$)
+ * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public class HtmlCommandButton
-        extends UICommand
+public class HtmlOutputLabel extends UIOutput
 {
     //------------------ GENERATED CODE BEGIN (do not modify!) --------------------
 
-    public static final String COMPONENT_TYPE = "javax.faces.HtmlCommandButton";
-    private static final String DEFAULT_RENDERER_TYPE = "javax.faces.Button";
-    private static final boolean DEFAULT_DISABLED = false;
-    private static final boolean DEFAULT_READONLY = false;
-    private static final String DEFAULT_TYPE = "submit";
+    public static final String COMPONENT_TYPE = "javax.faces.HtmlOutputLabel";
+    private static final String DEFAULT_RENDERER_TYPE = "javax.faces.Label";
 
     private String _accesskey = null;
-    private String _alt = null;
     private String _dir = null;
-    private Boolean _disabled = null;
-    private String _image = null;
+    private String _for = null;
     private String _lang = null;
     private String _onblur = null;
-    private String _onchange = null;
     private String _onclick = null;
     private String _ondblclick = null;
     private String _onfocus = null;
@@ -56,15 +50,12 @@ public class HtmlCommandButton
     private String _onmouseout = null;
     private String _onmouseover = null;
     private String _onmouseup = null;
-    private String _onselect = null;
-    private Boolean _readonly = null;
     private String _style = null;
     private String _styleClass = null;
     private String _tabindex = null;
     private String _title = null;
-    private String _type = null;
 
-    public HtmlCommandButton()
+    public HtmlOutputLabel()
     {
         setRendererType(DEFAULT_RENDERER_TYPE);
     }
@@ -82,18 +73,6 @@ public class HtmlCommandButton
         return vb != null ? (String)vb.getValue(getFacesContext()) : null;
     }
 
-    public void setAlt(String alt)
-    {
-        _alt = alt;
-    }
-
-    public String getAlt()
-    {
-        if (_alt != null) return _alt;
-        ValueBinding vb = getValueBinding("alt");
-        return vb != null ? (String)vb.getValue(getFacesContext()) : null;
-    }
-
     public void setDir(String dir)
     {
         _dir = dir;
@@ -106,28 +85,15 @@ public class HtmlCommandButton
         return vb != null ? (String)vb.getValue(getFacesContext()) : null;
     }
 
-    public void setDisabled(boolean disabled)
+    public void setFor(String forValue)
     {
-        _disabled = Boolean.valueOf(disabled);
+        _for = forValue;
     }
 
-    public boolean isDisabled()
+    public String getFor()
     {
-        if (_disabled != null) return _disabled.booleanValue();
-        ValueBinding vb = getValueBinding("disabled");
-        Boolean v = vb != null ? (Boolean)vb.getValue(getFacesContext()) : null;
-        return v != null ? v.booleanValue() : DEFAULT_DISABLED;
-    }
-
-    public void setImage(String image)
-    {
-        _image = image;
-    }
-
-    public String getImage()
-    {
-        if (_image != null) return _image;
-        ValueBinding vb = getValueBinding("image");
+        if (_for != null) return _for;
+        ValueBinding vb = getValueBinding("for");
         return vb != null ? (String)vb.getValue(getFacesContext()) : null;
     }
 
@@ -152,18 +118,6 @@ public class HtmlCommandButton
     {
         if (_onblur != null) return _onblur;
         ValueBinding vb = getValueBinding("onblur");
-        return vb != null ? (String)vb.getValue(getFacesContext()) : null;
-    }
-
-    public void setOnchange(String onchange)
-    {
-        _onchange = onchange;
-    }
-
-    public String getOnchange()
-    {
-        if (_onchange != null) return _onchange;
-        ValueBinding vb = getValueBinding("onchange");
         return vb != null ? (String)vb.getValue(getFacesContext()) : null;
     }
 
@@ -299,31 +253,6 @@ public class HtmlCommandButton
         return vb != null ? (String)vb.getValue(getFacesContext()) : null;
     }
 
-    public void setOnselect(String onselect)
-    {
-        _onselect = onselect;
-    }
-
-    public String getOnselect()
-    {
-        if (_onselect != null) return _onselect;
-        ValueBinding vb = getValueBinding("onselect");
-        return vb != null ? (String)vb.getValue(getFacesContext()) : null;
-    }
-
-    public void setReadonly(boolean readonly)
-    {
-        _readonly = Boolean.valueOf(readonly);
-    }
-
-    public boolean isReadonly()
-    {
-        if (_readonly != null) return _readonly.booleanValue();
-        ValueBinding vb = getValueBinding("readonly");
-        Boolean v = vb != null ? (Boolean)vb.getValue(getFacesContext()) : null;
-        return v != null ? v.booleanValue() : DEFAULT_READONLY;
-    }
-
     public void setStyle(String style)
     {
         _style = style;
@@ -372,49 +301,31 @@ public class HtmlCommandButton
         return vb != null ? (String)vb.getValue(getFacesContext()) : null;
     }
 
-    public void setType(String type)
-    {
-        _type = type;
-    }
-
-    public String getType()
-    {
-        if (_type != null) return _type;
-        ValueBinding vb = getValueBinding("type");
-        return vb != null ? (String)vb.getValue(getFacesContext()) : DEFAULT_TYPE;
-    }
-
 
     public Object saveState(FacesContext context)
     {
-        Object values[] = new Object[27];
+        Object values[] = new Object[21];
         values[0] = super.saveState(context);
         values[1] = _accesskey;
-        values[2] = _alt;
-        values[3] = _dir;
-        values[4] = _disabled;
-        values[5] = _image;
-        values[6] = _lang;
-        values[7] = _onblur;
-        values[8] = _onchange;
-        values[9] = _onclick;
-        values[10] = _ondblclick;
-        values[11] = _onfocus;
-        values[12] = _onkeydown;
-        values[13] = _onkeypress;
-        values[14] = _onkeyup;
-        values[15] = _onmousedown;
-        values[16] = _onmousemove;
-        values[17] = _onmouseout;
-        values[18] = _onmouseover;
-        values[19] = _onmouseup;
-        values[20] = _onselect;
-        values[21] = _readonly;
-        values[22] = _style;
-        values[23] = _styleClass;
-        values[24] = _tabindex;
-        values[25] = _title;
-        values[26] = _type;
+        values[2] = _dir;
+        values[3] = _for;
+        values[4] = _lang;
+        values[5] = _onblur;
+        values[6] = _onclick;
+        values[7] = _ondblclick;
+        values[8] = _onfocus;
+        values[9] = _onkeydown;
+        values[10] = _onkeypress;
+        values[11] = _onkeyup;
+        values[12] = _onmousedown;
+        values[13] = _onmousemove;
+        values[14] = _onmouseout;
+        values[15] = _onmouseover;
+        values[16] = _onmouseup;
+        values[17] = _style;
+        values[18] = _styleClass;
+        values[19] = _tabindex;
+        values[20] = _title;
         return ((Object) (values));
     }
 
@@ -423,31 +334,25 @@ public class HtmlCommandButton
         Object values[] = (Object[])state;
         super.restoreState(context, values[0]);
         _accesskey = (String)values[1];
-        _alt = (String)values[2];
-        _dir = (String)values[3];
-        _disabled = (Boolean)values[4];
-        _image = (String)values[5];
-        _lang = (String)values[6];
-        _onblur = (String)values[7];
-        _onchange = (String)values[8];
-        _onclick = (String)values[9];
-        _ondblclick = (String)values[10];
-        _onfocus = (String)values[11];
-        _onkeydown = (String)values[12];
-        _onkeypress = (String)values[13];
-        _onkeyup = (String)values[14];
-        _onmousedown = (String)values[15];
-        _onmousemove = (String)values[16];
-        _onmouseout = (String)values[17];
-        _onmouseover = (String)values[18];
-        _onmouseup = (String)values[19];
-        _onselect = (String)values[20];
-        _readonly = (Boolean)values[21];
-        _style = (String)values[22];
-        _styleClass = (String)values[23];
-        _tabindex = (String)values[24];
-        _title = (String)values[25];
-        _type = (String)values[26];
+        _dir = (String)values[2];
+        _for = (String)values[3];
+        _lang = (String)values[4];
+        _onblur = (String)values[5];
+        _onclick = (String)values[6];
+        _ondblclick = (String)values[7];
+        _onfocus = (String)values[8];
+        _onkeydown = (String)values[9];
+        _onkeypress = (String)values[10];
+        _onkeyup = (String)values[11];
+        _onmousedown = (String)values[12];
+        _onmousemove = (String)values[13];
+        _onmouseout = (String)values[14];
+        _onmouseover = (String)values[15];
+        _onmouseup = (String)values[16];
+        _style = (String)values[17];
+        _styleClass = (String)values[18];
+        _tabindex = (String)values[19];
+        _title = (String)values[20];
     }
     //------------------ GENERATED CODE END ---------------------------------------
 }

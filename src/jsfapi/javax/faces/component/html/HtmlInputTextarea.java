@@ -16,32 +16,32 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
+
 package javax.faces.component.html;
 
-import javax.faces.component.UICommand;
+import javax.faces.component.UIInput;
 import javax.faces.context.FacesContext;
 import javax.faces.el.ValueBinding;
 
 /**
- * @author Manfred Geiler (latest modification by $Author$)
+ * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public class HtmlCommandButton
-        extends UICommand
+public class HtmlInputTextarea extends UIInput
 {
     //------------------ GENERATED CODE BEGIN (do not modify!) --------------------
 
-    public static final String COMPONENT_TYPE = "javax.faces.HtmlCommandButton";
-    private static final String DEFAULT_RENDERER_TYPE = "javax.faces.Button";
+    public static final String COMPONENT_TYPE = "javax.faces.HtmlInputTextarea";
+    private static final String DEFAULT_RENDERER_TYPE = "javax.faces.Textarea";
+    private static final int DEFAULT_COLS = -2147483648;
     private static final boolean DEFAULT_DISABLED = false;
     private static final boolean DEFAULT_READONLY = false;
-    private static final String DEFAULT_TYPE = "submit";
+    private static final int DEFAULT_ROWS = -2147483648;
 
     private String _accesskey = null;
-    private String _alt = null;
+    private Integer _cols = null;
     private String _dir = null;
     private Boolean _disabled = null;
-    private String _image = null;
     private String _lang = null;
     private String _onblur = null;
     private String _onchange = null;
@@ -58,13 +58,13 @@ public class HtmlCommandButton
     private String _onmouseup = null;
     private String _onselect = null;
     private Boolean _readonly = null;
+    private Integer _rows = null;
     private String _style = null;
     private String _styleClass = null;
     private String _tabindex = null;
     private String _title = null;
-    private String _type = null;
 
-    public HtmlCommandButton()
+    public HtmlInputTextarea()
     {
         setRendererType(DEFAULT_RENDERER_TYPE);
     }
@@ -82,16 +82,17 @@ public class HtmlCommandButton
         return vb != null ? (String)vb.getValue(getFacesContext()) : null;
     }
 
-    public void setAlt(String alt)
+    public void setCols(int cols)
     {
-        _alt = alt;
+        _cols = new Integer(cols);
     }
 
-    public String getAlt()
+    public int getCols()
     {
-        if (_alt != null) return _alt;
-        ValueBinding vb = getValueBinding("alt");
-        return vb != null ? (String)vb.getValue(getFacesContext()) : null;
+        if (_cols != null) return _cols.intValue();
+        ValueBinding vb = getValueBinding("cols");
+        Integer v = vb != null ? (Integer)vb.getValue(getFacesContext()) : null;
+        return v != null ? v.intValue() : DEFAULT_COLS;
     }
 
     public void setDir(String dir)
@@ -117,18 +118,6 @@ public class HtmlCommandButton
         ValueBinding vb = getValueBinding("disabled");
         Boolean v = vb != null ? (Boolean)vb.getValue(getFacesContext()) : null;
         return v != null ? v.booleanValue() : DEFAULT_DISABLED;
-    }
-
-    public void setImage(String image)
-    {
-        _image = image;
-    }
-
-    public String getImage()
-    {
-        if (_image != null) return _image;
-        ValueBinding vb = getValueBinding("image");
-        return vb != null ? (String)vb.getValue(getFacesContext()) : null;
     }
 
     public void setLang(String lang)
@@ -324,6 +313,19 @@ public class HtmlCommandButton
         return v != null ? v.booleanValue() : DEFAULT_READONLY;
     }
 
+    public void setRows(int rows)
+    {
+        _rows = new Integer(rows);
+    }
+
+    public int getRows()
+    {
+        if (_rows != null) return _rows.intValue();
+        ValueBinding vb = getValueBinding("rows");
+        Integer v = vb != null ? (Integer)vb.getValue(getFacesContext()) : null;
+        return v != null ? v.intValue() : DEFAULT_ROWS;
+    }
+
     public void setStyle(String style)
     {
         _style = style;
@@ -372,49 +374,36 @@ public class HtmlCommandButton
         return vb != null ? (String)vb.getValue(getFacesContext()) : null;
     }
 
-    public void setType(String type)
-    {
-        _type = type;
-    }
-
-    public String getType()
-    {
-        if (_type != null) return _type;
-        ValueBinding vb = getValueBinding("type");
-        return vb != null ? (String)vb.getValue(getFacesContext()) : DEFAULT_TYPE;
-    }
-
 
     public Object saveState(FacesContext context)
     {
-        Object values[] = new Object[27];
+        Object values[] = new Object[26];
         values[0] = super.saveState(context);
         values[1] = _accesskey;
-        values[2] = _alt;
+        values[2] = _cols;
         values[3] = _dir;
         values[4] = _disabled;
-        values[5] = _image;
-        values[6] = _lang;
-        values[7] = _onblur;
-        values[8] = _onchange;
-        values[9] = _onclick;
-        values[10] = _ondblclick;
-        values[11] = _onfocus;
-        values[12] = _onkeydown;
-        values[13] = _onkeypress;
-        values[14] = _onkeyup;
-        values[15] = _onmousedown;
-        values[16] = _onmousemove;
-        values[17] = _onmouseout;
-        values[18] = _onmouseover;
-        values[19] = _onmouseup;
-        values[20] = _onselect;
-        values[21] = _readonly;
+        values[5] = _lang;
+        values[6] = _onblur;
+        values[7] = _onchange;
+        values[8] = _onclick;
+        values[9] = _ondblclick;
+        values[10] = _onfocus;
+        values[11] = _onkeydown;
+        values[12] = _onkeypress;
+        values[13] = _onkeyup;
+        values[14] = _onmousedown;
+        values[15] = _onmousemove;
+        values[16] = _onmouseout;
+        values[17] = _onmouseover;
+        values[18] = _onmouseup;
+        values[19] = _onselect;
+        values[20] = _readonly;
+        values[21] = _rows;
         values[22] = _style;
         values[23] = _styleClass;
         values[24] = _tabindex;
         values[25] = _title;
-        values[26] = _type;
         return ((Object) (values));
     }
 
@@ -423,31 +412,30 @@ public class HtmlCommandButton
         Object values[] = (Object[])state;
         super.restoreState(context, values[0]);
         _accesskey = (String)values[1];
-        _alt = (String)values[2];
+        _cols = (Integer)values[2];
         _dir = (String)values[3];
         _disabled = (Boolean)values[4];
-        _image = (String)values[5];
-        _lang = (String)values[6];
-        _onblur = (String)values[7];
-        _onchange = (String)values[8];
-        _onclick = (String)values[9];
-        _ondblclick = (String)values[10];
-        _onfocus = (String)values[11];
-        _onkeydown = (String)values[12];
-        _onkeypress = (String)values[13];
-        _onkeyup = (String)values[14];
-        _onmousedown = (String)values[15];
-        _onmousemove = (String)values[16];
-        _onmouseout = (String)values[17];
-        _onmouseover = (String)values[18];
-        _onmouseup = (String)values[19];
-        _onselect = (String)values[20];
-        _readonly = (Boolean)values[21];
+        _lang = (String)values[5];
+        _onblur = (String)values[6];
+        _onchange = (String)values[7];
+        _onclick = (String)values[8];
+        _ondblclick = (String)values[9];
+        _onfocus = (String)values[10];
+        _onkeydown = (String)values[11];
+        _onkeypress = (String)values[12];
+        _onkeyup = (String)values[13];
+        _onmousedown = (String)values[14];
+        _onmousemove = (String)values[15];
+        _onmouseout = (String)values[16];
+        _onmouseover = (String)values[17];
+        _onmouseup = (String)values[18];
+        _onselect = (String)values[19];
+        _readonly = (Boolean)values[20];
+        _rows = (Integer)values[21];
         _style = (String)values[22];
         _styleClass = (String)values[23];
         _tabindex = (String)values[24];
         _title = (String)values[25];
-        _type = (String)values[26];
     }
     //------------------ GENERATED CODE END ---------------------------------------
 }
