@@ -18,11 +18,8 @@
  */
 package net.sourceforge.myfaces.taglib.core;
 
-import net.sourceforge.myfaces.application.MyfacesStateManager;
-import net.sourceforge.myfaces.application.jsp.JspViewHandlerImpl;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
+import java.io.IOException;
+import java.util.Locale;
 import javax.faces.application.StateManager;
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIViewRoot;
@@ -36,8 +33,12 @@ import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.jstl.core.Config;
 import javax.servlet.jsp.tagext.BodyContent;
 import javax.servlet.jsp.tagext.BodyTag;
-import java.io.IOException;
-import java.util.Locale;
+
+import net.sourceforge.myfaces.application.MyfacesStateManager;
+import net.sourceforge.myfaces.application.jsp.JspViewHandlerImpl;
+import net.sourceforge.myfaces.renderkit.html.HtmlLinkRendererBase;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * @author Manfred Geiler (latest modification by $Author$)
@@ -148,7 +149,7 @@ public class ViewTag
 
                     String bodyStr = bodyContent.getString();
                     int form_marker = bodyStr.indexOf(JspViewHandlerImpl.FORM_STATE_MARKER);
-                    int url_marker = bodyStr.indexOf(JspViewHandlerImpl.URL_STATE_MARKER);
+                    int url_marker = bodyStr.indexOf(HtmlLinkRendererBase.URL_STATE_MARKER);
                     int lastMarkerEnd = 0;
                     while (form_marker != -1 || url_marker != -1)
                     {
@@ -173,8 +174,8 @@ public class ViewTag
                             {
                                 log.error("Current StateManager is no MyfacesStateManager and does not support saving state in url parameters.");
                             }
-                            lastMarkerEnd = url_marker + JspViewHandlerImpl.URL_STATE_MARKER_LEN;
-                            url_marker = bodyStr.indexOf(JspViewHandlerImpl.URL_STATE_MARKER, lastMarkerEnd);
+                            lastMarkerEnd = url_marker + HtmlLinkRendererBase.URL_STATE_MARKER_LEN;
+                            url_marker = bodyStr.indexOf(HtmlLinkRendererBase.URL_STATE_MARKER, lastMarkerEnd);
                         }
                     }
                     realWriter.write(bodyStr, lastMarkerEnd, bodyStr.length() - lastMarkerEnd);

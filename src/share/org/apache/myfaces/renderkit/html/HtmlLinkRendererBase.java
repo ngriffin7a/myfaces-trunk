@@ -18,27 +18,30 @@
  */
 package net.sourceforge.myfaces.renderkit.html;
 
-import net.sourceforge.myfaces.MyFacesConfig;
-import net.sourceforge.myfaces.renderkit.JSFAttr;
-import net.sourceforge.myfaces.renderkit.RendererUtils;
-import net.sourceforge.myfaces.renderkit.html.util.DummyFormResponseWriter;
-import net.sourceforge.myfaces.renderkit.html.util.DummyFormUtils;
-
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.util.Iterator;
 import javax.faces.application.ViewHandler;
 import javax.faces.component.*;
 import javax.faces.component.html.HtmlCommandLink;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 import javax.faces.event.ActionEvent;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.util.Iterator;
+
+import net.sourceforge.myfaces.MyFacesConfig;
+import net.sourceforge.myfaces.renderkit.JSFAttr;
+import net.sourceforge.myfaces.renderkit.RendererUtils;
+import net.sourceforge.myfaces.renderkit.html.util.DummyFormResponseWriter;
+import net.sourceforge.myfaces.renderkit.html.util.DummyFormUtils;
 
 /**
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.7  2004/05/12 01:41:32  o_rossmueller
+ * fix #951896: added state params to link URLs for ALLOW_JAVASCRIPT=false
+ *
  * Revision 1.6  2004/05/04 06:36:21  manolito
  * Bugfix #947302
  *
@@ -61,6 +64,9 @@ import java.util.Iterator;
 public abstract class HtmlLinkRendererBase
     extends HtmlRenderer
 {
+
+    public static final String URL_STATE_MARKER      = "JSF_URL_STATE_MARKER=DUMMY";
+    public static final int    URL_STATE_MARKER_LEN  = URL_STATE_MARKER.length();
     //private static final Log log = LogFactory.getLog(HtmlLinkRenderer.class);
 
     public boolean getRendersChildren()
@@ -315,6 +321,8 @@ public abstract class HtmlLinkRendererBase
         hrefBuf.append(clientId);
         hrefBuf.append('=');
         hrefBuf.append(clientId);
+        hrefBuf.append("&");
+        hrefBuf.append(URL_STATE_MARKER);
 
         if (component.getChildCount() > 0)
         {
@@ -322,6 +330,9 @@ public abstract class HtmlLinkRendererBase
                                      false, //not the first url parameter
                                      writer.getCharacterEncoding());
         }
+
+        hrefBuf.append("&");
+        hrefBuf.append(URL_STATE_MARKER);
 
         String href = hrefBuf.toString();
         writer.startElement(HTML.ANCHOR_ELEM, component);

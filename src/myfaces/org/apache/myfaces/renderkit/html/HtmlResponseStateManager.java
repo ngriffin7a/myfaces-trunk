@@ -39,6 +39,9 @@ import java.util.zip.GZIPOutputStream;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.4  2004/05/12 01:41:31  o_rossmueller
+ * fix #951896: added state params to link URLs for ALLOW_JAVASCRIPT=false
+ *
  * Revision 1.3  2004/04/13 08:57:00  manolito
  * commons codec
  *
@@ -172,6 +175,9 @@ public class HtmlResponseStateManager
             log.error("No component states to be saved in client response!");
         }
 
+        if (treeStruct != null || compStates != null) {
+            responseWriter.write('&');
+        }
         writeStateParam(responseWriter, VIEWID_PARAM, facescontext.getViewRoot().getViewId());
     }
 

@@ -42,6 +42,9 @@ import java.util.*;
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.20  2004/05/12 01:41:31  o_rossmueller
+ * fix #951896: added state params to link URLs for ALLOW_JAVASCRIPT=false
+ *
  * Revision 1.19  2004/04/27 07:37:56  manolito
  * bugfix: handleCharacterEncoding must be called before any request parameters are retrieved
  *
@@ -55,8 +58,7 @@ public class JspViewHandlerImpl
     private static final Log log = LogFactory.getLog(JspViewHandlerImpl.class);
     public static final String FORM_STATE_MARKER     = "<!--@@JSF_FORM_STATE_MARKER@@-->";
     public static final int    FORM_STATE_MARKER_LEN = FORM_STATE_MARKER.length();
-    public static final String URL_STATE_MARKER      = "JSF_URL_STATE_MARKER=DUMMY";
-    public static final int    URL_STATE_MARKER_LEN  = URL_STATE_MARKER.length();
+
 
     public JspViewHandlerImpl()
     {
