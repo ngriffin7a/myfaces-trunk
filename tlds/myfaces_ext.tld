@@ -944,6 +944,16 @@
             <rtexprvalue>false</rtexprvalue>
         </attribute>
         <attribute>
+	        <name>fallback</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
+            <description>
+            	Use a text area instead of the javascript HTML editor.
+            	Default is false.
+            	Use with caution.
+            </description>
+        </attribute>
+        <attribute>
 	        <name>type</name>
             <required>false</required>
             <rtexprvalue>false</rtexprvalue>

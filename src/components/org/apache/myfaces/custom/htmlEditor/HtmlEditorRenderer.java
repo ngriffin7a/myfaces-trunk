@@ -16,7 +16,9 @@
 package org.apache.myfaces.custom.htmlEditor;
 
 import java.io.IOException;
+import java.util.Map;
 
+import javax.faces.component.EditableValueHolder;
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIForm;
 import javax.faces.context.FacesContext;
@@ -25,16 +27,21 @@ import javax.faces.convert.ConverterException;
 
 import org.apache.myfaces.component.UserRoleUtils;
 import org.apache.myfaces.component.html.util.AddResource;
+import org.apache.myfaces.renderkit.JSFAttr;
 import org.apache.myfaces.renderkit.RendererUtils;
 import org.apache.myfaces.renderkit.html.HTML;
 import org.apache.myfaces.renderkit.html.HtmlRenderer;
 import org.apache.myfaces.renderkit.html.HtmlRendererUtils;
+import org.apache.myfaces.renderkit.html.util.HTMLEncoder;
 import org.apache.myfaces.renderkit.html.util.JavascriptUtils;
 
 /**
  * @author Sylvain Vieujot (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.25  2005/03/15 05:24:03  svieujot
+ * Add a fallback textarea mode to the htmlEditor.
+ *
  * Revision 1.24  2005/03/09 04:13:52  svieujot
  * htmlEditor : remove unused scripts
  *
@@ -118,11 +125,83 @@ public class HtmlEditorRenderer extends HtmlRenderer {
 
         return ((HtmlEditor)uiComponent).isDisabled();
     }
+	
+	private static boolean useFallback(HtmlEditor editor){
+		// TODO : Handle fallback="auto"
+		return editor.getFallback().equals("true");
+	}
     
     public void encodeEnd(FacesContext context, UIComponent uiComponent) throws IOException {
         RendererUtils.checkParamValidity(context, uiComponent, HtmlEditor.class);
         HtmlEditor editor = (HtmlEditor) uiComponent;
-        String clientId = editor.getClientId(context);
+		if( useFallback(editor) )
+			encodeEndFallBackMode(context, editor);
+		else
+			encodeEndNormalMode(context, editor);
+    }
+	
+	private void encodeEndFallBackMode(FacesContext context, HtmlEditor editor) throws IOException {
+		String clientId = editor.getClientId(context);	
+		// Use only a textarea
+		ResponseWriter writer = context.getResponseWriter();
+        writer.startElement(HTML.TEXTAREA_ELEM, editor);
+
+        writer.writeAttribute(HTML.NAME_ATTR, clientId, null);
+        HtmlRendererUtils.writeIdIfNecessary(writer, editor, context);
+		
+		if( editor.getStyle()!=null )
+            writer.writeAttribute(HTML.STYLE_ATTR, editor.getStyle(), null);
+		if( editor.getStyleClass()!=null )
+            writer.writeAttribute(HTML.STYLE_CLASS_ATTR, editor.getStyleClass(), null);
+
+        if (isDisabled(context, editor))
+            writer.writeAttribute(HTML.DISABLED_ATTR, Boolean.TRUE, null);
+
+        String text = RendererUtils.getStringValue(context, editor);
+        writer.write( htmlToPlainText( text ) );
+
+        writer.endElement(HTML.TEXTAREA_ELEM);
+	}
+	
+	private static String htmlToPlainText(String html){
+		return getHtmlBody( html ).replaceAll("<br.*>","\n");
+	}
+	
+	private static String getHtmlBody(String html){
+		String lcText = html.toLowerCase();
+        int textLength = lcText.length();
+        int bodyStartIndex = 0;
+        while(bodyStartIndex < textLength){
+            bodyStartIndex = lcText.indexOf("<body");
+            if( bodyStartIndex == -1 )
+                break; // not found.
+            
+            bodyStartIndex += 5;
+            char c = lcText.charAt(bodyStartIndex);
+            if( c=='>' ){
+                break;
+            }
+            
+            if( c!=' ' && c!='\t' )
+                continue;
+            
+            bodyStartIndex = lcText.indexOf('>', bodyStartIndex);
+        }
+        bodyStartIndex++;
+        
+        int bodyEndIndex = lcText.lastIndexOf("</body>")-1;
+        
+        if( bodyStartIndex<0 || bodyEndIndex<0
+           || bodyStartIndex > bodyEndIndex
+           || bodyStartIndex>=textLength || bodyEndIndex>=textLength ){
+            return html.trim();
+        }
+        
+        return html.substring(bodyStartIndex, bodyEndIndex+1).trim();
+	}
+	
+	private void encodeEndNormalMode(FacesContext context, HtmlEditor editor) throws IOException {
+		String clientId = editor.getClientId(context);
         String formId;
         {
             UIComponent tmpComponent = editor.getParent();
@@ -1146,7 +1225,25 @@ public class HtmlEditorRenderer extends HtmlRenderer {
 
     public void decode(FacesContext facesContext, UIComponent uiComponent) {
         RendererUtils.checkParamValidity(facesContext, uiComponent, HtmlEditor.class);
-        HtmlRendererUtils.decodeUIInput(facesContext, uiComponent);
+		HtmlEditor editor = (HtmlEditor) uiComponent;
+
+		Map paramMap = facesContext.getExternalContext()
+	            .getRequestParameterMap();
+	    String clientId = uiComponent.getClientId(facesContext);
+	    if (paramMap.containsKey(clientId)) {
+	        //request parameter found, set submittedValue
+			String submitedText = (String)paramMap.get(clientId);
+			String htmlText = ! useFallback(editor) ?
+							submitedText :
+							HTMLEncoder.encode(submitedText, true, true);
+	        ((EditableValueHolder) uiComponent).setSubmittedValue( htmlText );
+	    } else {
+	        //request parameter not found, nothing to decode - set submitted value to empty
+	        //if the component has not been disabled
+	        if(!HtmlRendererUtils.isDisabledOrReadOnly(editor)) {
+	            ((EditableValueHolder) uiComponent).setSubmittedValue( RendererUtils.EMPTY_STRING );
+	        }
+	    }
     }
     
     public Object getConvertedValue(FacesContext facesContext, UIComponent uiComponent, Object submittedValue) throws ConverterException {

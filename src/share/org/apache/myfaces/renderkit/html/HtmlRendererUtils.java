@@ -48,6 +48,9 @@ import org.apache.myfaces.renderkit.html.util.JavascriptUtils;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.28  2005/03/15 05:24:03  svieujot
+ * Add a fallback textarea mode to the htmlEditor.
+ *
  * Revision 1.27  2005/01/24 15:43:13  svieujot
  * Adjust comments.
  *
@@ -196,7 +199,7 @@ public final class HtmlRendererUtils {
         }
     }
 
-    private static boolean isDisabledOrReadOnly(UIComponent component)
+    public static boolean isDisabledOrReadOnly(UIComponent component)
     {
         return isTrue(component.getAttributes().get("disabled")) ||
                     isTrue(component.getAttributes().get("readOnly"));

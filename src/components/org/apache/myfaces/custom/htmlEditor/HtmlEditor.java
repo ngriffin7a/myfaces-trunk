@@ -30,6 +30,9 @@ import org.apache.myfaces.renderkit.RendererUtils;
  * @author Sylvain Vieujot (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.19  2005/03/15 05:24:03  svieujot
+ * Add a fallback textarea mode to the htmlEditor.
+ *
  * Revision 1.18  2005/03/09 04:07:22  svieujot
  * htmlEditor : Kupu 1.2rc2 update
  *
@@ -94,6 +97,7 @@ public class HtmlEditor extends HtmlInputText {
     private String _style;
     private String _styleClass;
     
+	private String _fallback;
     private String _type;
     
     private Boolean _allowEditSource;
@@ -125,7 +129,11 @@ public class HtmlEditor extends HtmlInputText {
         
         values[1] = display;
         
-        values[2] = _type;
+		String[] types = new String[2];
+		types[0] = _fallback;
+		types[1] = _type;
+		
+        values[2] = types;
         
         Boolean toolBarButtons[] = new Boolean[3];
         toolBarButtons[0] = _allowEditSource;
@@ -155,7 +163,9 @@ public class HtmlEditor extends HtmlInputText {
         _style = display[0];
         _styleClass = display[1];
         
-        _type = (String) values[2];
+		String[] types = (String[]) values[2];
+		_fallback = types[0];
+        _type = types[1];
         
         Boolean[] toolBarButtons = (Boolean[]) values[3];
         _allowEditSource = toolBarButtons[0];
@@ -189,6 +199,16 @@ public class HtmlEditor extends HtmlInputText {
     }
     public void setStyleClass(String styleClass){
    		this._styleClass = styleClass;
+    }
+	
+    public String getFallback(){
+        if (_fallback != null)
+            return _fallback;
+        ValueBinding vb = getValueBinding("fallback");
+        return vb != null ? vb.getValue(getFacesContext()).toString() : "false";
+    }
+    public void setFallback(String _fallback){
+        this._fallback = _fallback;
     }
     
     public String getType(){
@@ -331,7 +351,7 @@ public class HtmlEditor extends HtmlInputText {
         
         if( !isHtmlDocument(text) )
             return text.trim();
-        
+     
         // Extract the fragment from the document.
         String lcText = text.toLowerCase();
         int textLength = lcText.length();

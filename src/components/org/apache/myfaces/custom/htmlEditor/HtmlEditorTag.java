@@ -24,6 +24,9 @@ import org.apache.myfaces.taglib.UIComponentTagBase;
  * @author Sylvain Vieujot (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.14  2005/03/15 05:24:03  svieujot
+ * Add a fallback textarea mode to the htmlEditor.
+ *
  * Revision 1.13  2005/03/09 04:07:22  svieujot
  * htmlEditor : Kupu 1.2rc2 update
  *
@@ -67,7 +70,8 @@ public class HtmlEditorTag extends UIComponentTagBase {
     
     private String style;
     private String styleClass;
-    
+
+    private String fallback;
     private String type;
     
     private String allowEditSource;
@@ -88,6 +92,7 @@ public class HtmlEditorTag extends UIComponentTagBase {
         super.release();
         style=null;
         styleClass=null;
+		fallback=null;
         type=null;
         allowEditSource=null;
         allowExternalLinks=null;
@@ -108,6 +113,7 @@ public class HtmlEditorTag extends UIComponentTagBase {
         setStringProperty(component, "style", style);
         setStringProperty(component, "styleClass", styleClass);
         
+		setStringProperty(component, "fallback", fallback);
         setBooleanProperty(component, "type", type);
         
         setBooleanProperty(component, "allowEditSource", allowEditSource);
@@ -139,6 +145,10 @@ public class HtmlEditorTag extends UIComponentTagBase {
     
     public void setStyleClass(String styleClass){
         this.styleClass = styleClass;
+    }
+	
+    public void setFallback(String fallback){
+        this.fallback = fallback;
     }
 
     public void setType(String type){
