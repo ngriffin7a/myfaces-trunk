@@ -14,13 +14,14 @@
     <property name="build.dir" location="${project.dir}/build"/>
     <property name="conf.dir" location="${project.dir}/conf"/>
 
+    <!-- Temporary dir. May be overridden in build.properties -->
+    <property name="temp.dir" location="${env.TEMP}"/>
     <!-- Properties -->
     <property file="build.properties"/>
     <property file="build.properties.default"/>
     <property file="manifest.properties"/>
 
-    <!-- Temporary dir. May be overridden in build.properties -->
-    <property name="temp.dir" location="${env.TEMP}"/>
+
 
     <property name="resolved-tlds.dir" location="${temp.dir}/myfaces-tlds"/>
 

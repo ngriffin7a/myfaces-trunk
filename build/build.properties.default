@@ -11,6 +11,9 @@ jsp-api.jar = ${project.dir}/lib/jsp-2.0.jar
 # File path to JSTL archive
 jstl.jar = ${project.dir}/lib/jstl.jar
 
+# tlddoc library (needed for tlddoc creation)
+tlddoc.jar = ${project.dir}/lib/tlddoc.jar
+
 # File path to commons codec package
 commons-codec.jar = ${project.dir}/lib/commons-codec-1.2.jar
 
