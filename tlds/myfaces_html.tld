@@ -88,6 +88,11 @@
                 Default is "submit".
             </description>
         </attribute>
+        <attribute>
+            <name>image</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
+        </attribute>
         &user_role_attributes;
 
         <!-- MyFaces extensions -->
@@ -705,5 +710,3 @@
 
 
 </taglib>
-
-

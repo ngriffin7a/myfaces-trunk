@@ -154,4 +154,9 @@ public class CommandButtonTag
         setComponentPropertyBoolean(MyFacesUICommand.IMMEDIATE_ACTION_PROP, v);
     }
 
+    public void setImage(String value)
+    {
+        setRendererAttributeString(JSFAttr.IMAGE_ATTR, value);
+    }
+
 }
