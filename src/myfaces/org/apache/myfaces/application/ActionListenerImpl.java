@@ -22,6 +22,13 @@ import javax.faces.event.AbortProcessingException;
 import javax.faces.event.ActionEvent;
 import javax.faces.event.ActionListener;
 import javax.faces.event.PhaseId;
+import javax.faces.component.UICommand;
+import javax.faces.context.FacesContext;
+import javax.faces.application.ApplicationFactory;
+import javax.faces.application.Action;
+import javax.faces.application.Application;
+import javax.faces.application.NavigationHandler;
+import javax.faces.FactoryFinder;
 
 /**
  * @author Manfred Geiler (latest modification by $Author$)
@@ -30,9 +37,42 @@ import javax.faces.event.PhaseId;
 public class ActionListenerImpl
     implements ActionListener
 {
-    public void processAction(ActionEvent actionevent) throws AbortProcessingException
+    public void processAction(ActionEvent actionEvent) throws AbortProcessingException
     {
-        //TODO
+        ApplicationFactory af = (ApplicationFactory)FactoryFinder.getFactory(FactoryFinder.APPLICATION_FACTORY);
+        Application application = af.getApplication();
+
+        FacesContext facesContext = FacesContext.getCurrentInstance();
+
+        String actionRef;
+        String outcome;
+
+        UICommand uiCommand = (UICommand)actionEvent.getComponent();
+        if (uiCommand.getAction() != null)
+        {
+            actionRef = null;
+            outcome = uiCommand.getAction();
+        }
+        else
+        {
+            actionRef = uiCommand.getActionRef();
+            if (actionRef == null)
+            {
+                throw new IllegalArgumentException("Component " + uiCommand.getClientId(facesContext) + " does not have an action or actionRef property!");
+            }
+
+            Object actionObj = application.getValueBinding(actionRef).getValue(facesContext);
+            if (!(actionObj instanceof Action))
+            {
+                throw new IllegalArgumentException("Referenced value '" + actionRef + "' is not a valid Action!");
+            }
+
+            Action action = (Action)actionObj;
+            outcome = action.invoke();
+        }
+
+        NavigationHandler navigationHandler = application.getNavigationHandler();
+        navigationHandler.handleNavigation(facesContext, actionRef, outcome);
     }
 
     public PhaseId getPhaseId()

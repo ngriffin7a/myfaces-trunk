@@ -31,6 +31,6 @@ public class NavigationHandlerImpl
 {
     public void handleNavigation(FacesContext facescontext, String s, String s1)
     {
-        throw new UnsupportedOperationException();         //TODO
+        //TODO
     }
 }
