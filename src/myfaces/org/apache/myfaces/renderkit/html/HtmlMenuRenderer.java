@@ -23,8 +23,6 @@ import net.sourceforge.myfaces.renderkit.RendererUtils;
 import javax.faces.component.UIComponent;
 import javax.faces.component.UISelectMany;
 import javax.faces.component.UISelectOne;
-import javax.faces.component.html.HtmlSelectManyMenu;
-import javax.faces.component.html.HtmlSelectOneMenu;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.ConverterException;
 import java.io.IOException;

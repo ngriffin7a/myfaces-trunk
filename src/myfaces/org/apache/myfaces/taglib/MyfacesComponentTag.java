@@ -18,6 +18,7 @@
  */
 package net.sourceforge.myfaces.taglib;
 
+import net.sourceforge.myfaces.component.UserRoleSupport;
 import net.sourceforge.myfaces.renderkit.JSFAttr;
 
 import javax.faces.component.UIComponent;
@@ -36,6 +37,31 @@ public abstract class MyfacesComponentTag
      * Must be implemented by sub classes.
      */
     protected abstract String getDefaultRendererType();
+
+    /**
+     * Additionally checks for user role.
+     * @return true if baseclass returned true or user is not in role
+     */
+    protected boolean isSuppressed()
+    {
+        if (super.isSuppressed()) return true;
+
+        UIComponent component = getComponentInstance();
+        String userRole;
+        if (component instanceof UserRoleSupport)
+        {
+            userRole = ((UserRoleSupport)component).getVisibleOnUserRole();
+        }
+        else
+        {
+            userRole = (String)component.getAttributes().get(JSFAttr.VISIBLE_ON_USER_ROLE_ATTR);
+        }
+
+        if (userRole == null) return false; //no user role --> not suppressed
+
+        return !getFacesContext().getExternalContext().isUserInRole(userRole);
+    }
+
 
     //UIComponent attributes
     private String _transient;

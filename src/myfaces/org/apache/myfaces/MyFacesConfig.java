@@ -28,6 +28,9 @@ import java.util.Map;
 
 /**
  * Global configuration for MyFaces.
+ *
+ * TODO: rename params to "net.sourceforge.myfaces.XXX" style
+ *
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */

@@ -1,4 +1,4 @@
-<!-- all standard attributes of the outputLabel tag -->
+        <!-- all standard attributes of the outputLabel tag -->
         &ui_component_attributes;
         &ui_output_attributes;
         &html_universal_attributes;

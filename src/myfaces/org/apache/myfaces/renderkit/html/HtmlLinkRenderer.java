@@ -26,11 +26,8 @@ import net.sourceforge.myfaces.renderkit.html.util.DummyFormUtils;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLUtil;
 
 import javax.faces.application.ViewHandler;
-import javax.faces.component.UIComponent;
-import javax.faces.component.UIForm;
-import javax.faces.component.UIParameter;
+import javax.faces.component.*;
 import javax.faces.component.html.HtmlCommandLink;
-import javax.faces.component.html.HtmlOutputLink;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 import javax.faces.event.ActionEvent;
@@ -60,17 +57,16 @@ public class HtmlLinkRenderer
     {
         RendererUtils.checkParamValidity(facesContext, component, null);
 
-        if (component instanceof HtmlCommandLink)
+        if (component instanceof UICommand)
         {
-            HtmlCommandLink commandLink = (HtmlCommandLink)component;
-            String clientId = commandLink.getClientId(facesContext);
+            String clientId = component.getClientId(facesContext);
             String reqValue = (String)facesContext.getExternalContext().getRequestParameterMap().get(clientId);
             if (reqValue != null && reqValue.equals(URL_PARAM_VALUE))
             {
-                commandLink.queueEvent(new ActionEvent(commandLink));
+                component.queueEvent(new ActionEvent(component));
             }
         }
-        else if (component instanceof HtmlOutputLink)
+        else if (component instanceof UIOutput)
         {
             //do nothing
         }
@@ -84,50 +80,156 @@ public class HtmlLinkRenderer
     {
         RendererUtils.checkParamValidity(facesContext, component, null);
 
-        if (RendererUtils.isEnabledOnUserRole(facesContext, component))
+        if (component instanceof UICommand)
         {
-            if (component instanceof HtmlCommandLink)
-            {
-                renderCommandLinkStart(facesContext, (HtmlCommandLink)component);
-            }
-            else if (component instanceof HtmlOutputLink)
-            {
-                renderOutputLinkStart(facesContext, (HtmlOutputLink)component);
-            }
-            else
-            {
-                throw new IllegalArgumentException("Unsupported component class " + component.getClass().getName());
-            }
+            renderCommandLinkStart(facesContext, (UICommand)component);
+        }
+        else if (component instanceof UIOutput)
+        {
+            renderOutputLinkStart(facesContext, (UIOutput)component);
+        }
+        else
+        {
+            throw new IllegalArgumentException("Unsupported component class " + component.getClass().getName());
         }
     }
 
-    public void renderCommandLinkStart(FacesContext facesContext, HtmlCommandLink commandLink)
+    public void renderCommandLinkStart(FacesContext facesContext, UICommand command)
             throws IOException
     {
         ResponseWriter writer = facesContext.getResponseWriter();
 
-        if (MyFacesConfig.isAllowJavascript(facesContext.getExternalContext()))
+        if (RendererUtils.isEnabledOnUserRole(facesContext, command))
         {
-            renderJavaScriptAnchorStart(facesContext, writer, commandLink);
-        }
-        else
-        {
-            renderNonJavaScriptAnchorStart(facesContext, writer, commandLink);
-        }
+            if (MyFacesConfig.isAllowJavascript(facesContext.getExternalContext()))
+            {
+                renderJavaScriptAnchorStart(facesContext, writer, command);
+            }
+            else
+            {
+                renderNonJavaScriptAnchorStart(facesContext, writer, command);
+            }
 
-        HTMLUtil.renderHTMLAttributes(writer, commandLink, HTML.ANCHOR_PASSTHROUGH_ATTRIBUTES);
+            HTMLUtil.renderHTMLAttributes(writer, command, HTML.ANCHOR_PASSTHROUGH_ATTRIBUTES);
+        }
 
         //MyFaces extension: Render text given by value
-        Object value = commandLink.getValue();
+        Object value = command.getValue();
         if(value != null)
         {
             writer.writeText(value.toString(), JSFAttr.VALUE_ATTR);
         }
     }
 
+
+    private void renderJavaScriptAnchorStart(FacesContext facesContext,
+                                             ResponseWriter writer,
+                                             UICommand command)
+        throws IOException
+    {
+        //Find form
+        UIComponent parent = command.getParent();
+        while (parent != null && !(parent instanceof UIForm))
+        {
+            parent = parent.getParent();
+        }
+
+        boolean insideForm;
+        String formName;
+        DummyFormResponseWriter dummyFormResponseWriter;
+        if (parent != null)
+        {
+            //link is nested inside a form
+            UIForm form = (UIForm)parent;
+            formName = form.getClientId(facesContext);
+            insideForm = true;
+            dummyFormResponseWriter = null;
+        }
+        else
+        {
+            //not nested in form, we must add a dummy form at the end of the document
+            formName = DummyFormUtils.DUMMY_FORM_NAME;
+            insideForm = false;
+            dummyFormResponseWriter = DummyFormUtils.getDummyFormResponseWriter(facesContext);
+            dummyFormResponseWriter.setWriteDummyForm(true);
+        }
+
+        StringBuffer onClick = new StringBuffer();
+
+        String commandOnclick;
+        if (command instanceof HtmlCommandLink)
+        {
+            commandOnclick = ((HtmlCommandLink)command).getOnclick();
+        }
+        else
+        {
+            commandOnclick = (String)command.getAttributes().get(HTML.ONCLICK_ATTR);
+        }
+        if (commandOnclick != null)
+        {
+            onClick.append(commandOnclick);
+            onClick.append(';');
+        }
+
+        String jsForm = "document.forms['" + formName + "']";
+
+        //add id parameter for decode
+        String clientId = command.getClientId(facesContext);
+        onClick.append(jsForm);
+        onClick.append(".elements['").append(clientId).append("']");
+        onClick.append(".value='").append(URL_PARAM_VALUE).append("';");
+        if (insideForm)
+        {
+            renderHiddenParam(writer, clientId);
+            //TODO: We must not render duplicate hidden params!
+        }
+        else
+        {
+            dummyFormResponseWriter.addDummyFormParameter(clientId);
+        }
+
+        //add child parameters
+        for (Iterator it = command.getChildren().iterator(); it.hasNext(); )
+        {
+            UIComponent child = (UIComponent)it.next();
+            if (child instanceof UIParameter)
+            {
+                String name = ((UIParameter)child).getName();
+                if (name == null)
+                {
+                    throw new IllegalArgumentException("Unnamed parameter value not allowed within command link.");
+                }
+                Object value = ((UIParameter)child).getValue();
+                onClick.append(jsForm);
+                onClick.append(".elements['").append(name).append("']");
+                //UIParameter is no ValueHolder, so no conversion possible
+                String strParamValue = value != null ? value.toString() : ""; //TODO: Use Converter?
+                onClick.append(".value='").append(strParamValue).append("';");
+
+                if (insideForm)
+                {
+                    renderHiddenParam(writer, name);
+                }
+                else
+                {
+                    dummyFormResponseWriter.addDummyFormParameter(name);
+                }
+            }
+        }
+
+        //submit
+        onClick.append(jsForm);
+        onClick.append(".submit();");
+
+        writer.startElement(HTML.ANCHOR_ELEM, command);
+        writer.writeURIAttribute(HTML.HREF_ATTR, "#", null);
+        writer.writeAttribute(HTML.ONCLICK_ATTR, onClick.toString(), null);
+    }
+
+
     private void renderNonJavaScriptAnchorStart(FacesContext facesContext,
                                                 ResponseWriter writer,
-                                                HtmlCommandLink commandLink)
+                                                UICommand command)
         throws IOException
     {
         ViewHandler viewHandler = facesContext.getApplication().getViewHandler();
@@ -137,7 +239,7 @@ public class HtmlLinkRenderer
         StringBuffer hrefBuf = new StringBuffer(path);
 
         //add clientId parameter for decode
-        String clientId = commandLink.getClientId(facesContext);
+        String clientId = command.getClientId(facesContext);
         if (path.indexOf('?') == -1)
         {
             hrefBuf.append('?');
@@ -150,15 +252,15 @@ public class HtmlLinkRenderer
         hrefBuf.append('=');
         hrefBuf.append(URL_PARAM_VALUE);
 
-        if (commandLink.getChildCount() > 0)
+        if (command.getChildCount() > 0)
         {
-            addChildParametersToHref(commandLink, hrefBuf,
+            addChildParametersToHref(command, hrefBuf,
                                      false, //not the first url parameter
                                      writer.getCharacterEncoding());
         }
 
         String href = hrefBuf.toString();
-        writer.startElement(HTML.ANCHOR_ELEM, commandLink);
+        writer.startElement(HTML.ANCHOR_ELEM, command);
         writer.writeURIAttribute(HTML.HREF_ATTR, href, null);
     }
 
@@ -193,118 +295,24 @@ public class HtmlLinkRenderer
     }
 
 
-    private void renderJavaScriptAnchorStart(FacesContext facesContext,
-                                            ResponseWriter writer,
-                                            HtmlCommandLink commandLink)
-        throws IOException
-    {
-        //Find form
-        UIComponent parent = commandLink.getParent();
-        while (parent != null && !(parent instanceof UIForm))
-        {
-            parent = parent.getParent();
-        }
 
-        boolean insideForm;
-        String formName;
-        DummyFormResponseWriter dummyFormResponseWriter;
-        if (parent != null)
-        {
-            //link is nested inside a form
-            UIForm form = (UIForm)parent;
-            formName = form.getClientId(facesContext);
-            insideForm = true;
-            dummyFormResponseWriter = null;
-        }
-        else
-        {
-            //not nested in form, we must add a dummy form at the end of the document
-            formName = DummyFormUtils.DUMMY_FORM_NAME;
-            insideForm = false;
-            dummyFormResponseWriter = DummyFormUtils.getDummyFormResponseWriter(facesContext);
-            dummyFormResponseWriter.setWriteDummyForm(true);
-        }
-
-        StringBuffer onClick = new StringBuffer();
-        if (commandLink.getOnclick() != null)
-        {
-            onClick.append(commandLink.getOnclick());
-            onClick.append(';');
-        }
-
-        String jsForm = "document.forms['" + formName + "']";
-
-        //add id parameter for decode
-        String clientId = commandLink.getClientId(facesContext);
-        onClick.append(jsForm);
-        onClick.append(".elements['").append(clientId).append("']");
-        onClick.append(".value='").append(URL_PARAM_VALUE).append("';");
-        if (insideForm)
-        {
-            renderHiddenParam(writer, clientId);
-            //TODO: We must not render duplicate hidden params!
-        }
-        else
-        {
-            dummyFormResponseWriter.addDummyFormParameter(clientId);
-        }
-
-        //add child parameters
-        for (Iterator it = commandLink.getChildren().iterator(); it.hasNext(); )
-        {
-            UIComponent child = (UIComponent)it.next();
-            if (child instanceof UIParameter)
-            {
-                String name = ((UIParameter)child).getName();
-                if (name == null)
-                {
-                    throw new IllegalArgumentException("Unnamed parameter value not allowed within command link.");
-                }
-                Object value = ((UIParameter)child).getValue();
-                onClick.append(jsForm);
-                onClick.append(".elements['").append(name).append("']");
-                //UIParameter is no ValueHolder, so no conversion possible
-                String strParamValue = value != null ? value.toString() : ""; //TODO: Use Converter?
-                onClick.append(".value='").append(strParamValue).append("';");
-
-                if (insideForm)
-                {
-                    renderHiddenParam(writer, name);
-                }
-                else
-                {
-                    dummyFormResponseWriter.addDummyFormParameter(name);
-                }
-            }
-        }
-
-        //submit
-        onClick.append(jsForm);
-        onClick.append(".submit();");
-
-        writer.startElement(HTML.ANCHOR_ELEM, commandLink);
-        writer.writeURIAttribute(HTML.HREF_ATTR, "#", null);
-        writer.writeAttribute(HTML.ONCLICK_ATTR, onClick.toString(), null);
-    }
-
-
-    public void renderOutputLinkStart(FacesContext facesContext, HtmlOutputLink outputLink)
+    public void renderOutputLinkStart(FacesContext facesContext, UIOutput output)
             throws IOException
     {
         ResponseWriter writer = facesContext.getResponseWriter();
 
-        if (!RendererUtils.isEnabledOnUserRole(facesContext, outputLink))
+        if (!RendererUtils.isEnabledOnUserRole(facesContext, output))
         {
-            RendererUtils.renderChildren(facesContext, outputLink);
+            RendererUtils.renderChildren(facesContext, output);
             return;
         }
 
         //calculate href
-        String href = RendererUtils.getStringValue(facesContext, outputLink);
-        if (outputLink.getChildCount() > 0)
+        String href = RendererUtils.getStringValue(facesContext, output);
+        if (output.getChildCount() > 0)
         {
             StringBuffer hrefBuf = new StringBuffer(href);
-            addChildParametersToHref(outputLink, hrefBuf,
+            addChildParametersToHref(output, hrefBuf,
                                      (href.indexOf('?') == -1), //first url parameter?
                                      writer.getCharacterEncoding());
             href = hrefBuf.toString();
@@ -312,9 +320,9 @@ public class HtmlLinkRenderer
         href = facesContext.getExternalContext().encodeResourceURL(href);    //TODO: or encodeActionURL ?
 
         //write anchor
-        writer.startElement(HTML.ANCHOR_ELEM, outputLink);
+        writer.startElement(HTML.ANCHOR_ELEM, output);
         writer.writeURIAttribute(HTML.HREF_ATTR, href, null);
-        HTMLUtil.renderHTMLAttributes(writer, outputLink, HTML.ANCHOR_PASSTHROUGH_ATTRIBUTES);
+        HTMLUtil.renderHTMLAttributes(writer, output, HTML.ANCHOR_PASSTHROUGH_ATTRIBUTES);
         writer.flush();
     }
 

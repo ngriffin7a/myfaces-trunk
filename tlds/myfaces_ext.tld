@@ -50,6 +50,8 @@
 <!ENTITY ui_select_many_attributes      SYSTEM "entities/ui_select_many_attributes.xml">
 <!ENTITY ui_select_one_attributes       SYSTEM "entities/ui_select_one_attributes.xml">
 <!ENTITY user_role_attributes           SYSTEM "entities/user_role_attributes.xml">
+<!ENTITY standard_command_button_attributes  SYSTEM "entities/standard_command_button_attributes.xml">
+<!ENTITY standard_command_link_attributes    SYSTEM "entities/standard_command_link_attributes.xml">
 <!ENTITY standard_data_table_attributes      SYSTEM "entities/standard_data_table_attributes.xml">
 <!ENTITY standard_input_text_attributes      SYSTEM "entities/standard_input_text_attributes.xml">
 <!ENTITY standard_messages_attributes        SYSTEM "entities/standard_messages_attributes.xml">
@@ -68,16 +70,27 @@
         Enhanced standard JSP actions and custom MyFaces actions.
     </description>
 
-<!-- command_link -->
+<!-- commandButton -->
+    <tag>
+        <name>commandButton</name>
+        <tag-class>net.sourceforge.myfaces.taglib.html.HtmlCommandButtonTag</tag-class>
+        <body-content>JSP</body-content>
+        <description>
+            Extends standard commandButton by user role support.
+        </description>
+        &standard_command_button_attributes;
+        &user_role_attributes;
+    </tag>
+
+<!-- commandLink -->
     <tag>
         <name>commandLink</name>
-        <tag-class>net.sourceforge.myfaces.taglib.ext.MyfacesHtmlCommandLinkTag</tag-class>
+        <tag-class>net.sourceforge.myfaces.taglib.html.HtmlCommandLinkTag</tag-class>
         <body-content>JSP</body-content>
-        &ui_component_attributes;
-        &ui_command_attributes;
-        &html_universal_attributes;
-        &html_event_handler_attributes;
-        &html_anchor_attributes;
+        <description>
+            Extends standard commandLink by user role support and the HTML target attribute.
+        </description>
+        &standard_command_link_attributes;
         &user_role_attributes;
         <attribute>
             <name>target</name>
@@ -87,7 +100,7 @@
         </attribute>
     </tag>
 
-<!-- command_navigation -->
+<!-- commandNavigation -->
     <tag>
         <name>commandNavigation</name>
         <tag-class>net.sourceforge.myfaces.taglib.ext.HtmlCommandNavigationTag</tag-class>
