@@ -3,11 +3,8 @@ License
 
 This product is developed and distributed under the terms of
 
-- The GNU Lesser General Public License
-   (see license/GNU_Lesser_General_Public_License.html)
-- The Apache Software License, Version 1.1
-   (see license/Apache_Software_License.txt)
-
+- The Apache Software License, Version 2.0
+   (see license/Apache_Software_License_2.0.txt)
 
 Acknowledgements
 ================
