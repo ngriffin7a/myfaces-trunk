@@ -19,6 +19,7 @@ This product includes software developed by:
 - Sun Microsystems, Inc. (http://www.sun.com)
 - The Apache Software Foundation (http://www.apache.org/)
 - Jason Hunter (http://www.servlets.com/cos/)
+- Simon Brown (http://www.tagunit.org)
 
 
 Trademarks
