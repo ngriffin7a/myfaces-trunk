@@ -19,6 +19,7 @@ Changes in Release 0.3.2
 * "image" tag renamed to "graphic_image"
 * "input_errors" tag was removed (see "output_errors")
 * Facet support (see KnownIssues.txt !)
+* Enhanced JspInfo caching. Automatic check for modified JSPs.
 
 ----------------------------------------------------------------------
 Changes in Release 0.3.1

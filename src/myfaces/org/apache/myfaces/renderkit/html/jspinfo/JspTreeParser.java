@@ -18,13 +18,11 @@
  */
 package net.sourceforge.myfaces.renderkit.html.jspinfo;
 
-import net.sourceforge.myfaces.MyFacesFactoryFinder;
 import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.JasperException;
 import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.JspCompilationContext;
 import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.compiler.Parser;
 import net.sourceforge.myfaces.tree.TreeImpl;
-import net.sourceforge.myfaces.webapp.ServletMapping;
-import net.sourceforge.myfaces.webapp.ServletMappingFactory;
+import net.sourceforge.myfaces.util.logging.LogUtil;
 
 import javax.faces.FacesException;
 import javax.faces.tree.Tree;
@@ -33,6 +31,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.Stack;
 
 /**
@@ -45,7 +45,7 @@ public class JspTreeParser
     private String _topFileEncoding = "ISO-8859-1";
     private JspCompilationContext _jspCompilationContext = null;
     private MyParseEventListener _parseEventListener = null;
-    private Stack baseDirStack = new Stack();
+    private Stack _baseDirStack = new Stack();
     private ServletContext _servletContext = null;
     private JspInfo _jspInfo = null;
 
@@ -82,26 +82,47 @@ public class JspTreeParser
     {
         init(treeId);
 
-        ServletMappingFactory smf = MyFacesFactoryFinder.getServletMappingFactory(_servletContext);
-        ServletMapping sm = smf.getServletMapping(_servletContext);
-        String fileName = sm.mapTreeIdToFilename(_servletContext, treeId);
+        String topFileName = _jspInfo.getFilePath(_servletContext);
+        InputStream stream;
+        try
+        {
+            URL url = _servletContext.getResource(topFileName);
+            URLConnection urlConn = url.openConnection();
+            _jspInfo.setLastModified(urlConn.getLastModified());
+            stream = urlConn.getInputStream();
+        }
+        catch (IOException e)
+        {
+            throw new FacesException(e);
+        }
 
-        parseFile(fileName);
+        LogUtil.getLogger().fine("Parsing JSP file '" + topFileName + "'.");
+        parseFile(topFileName, stream);
     }
 
 
-    protected void parseFile(String fileName)
+    protected void parseIncludeFile(String fileName)
         throws FacesException
     {
         String absFileName = resolveFileName(fileName);
+        InputStream stream = _servletContext.getResourceAsStream(absFileName);
+        if (stream == null)
+        {
+            throw new FacesException("File " + absFileName + " not found.");
+        }
+        parseFile(absFileName, stream);
+    }
+
+
+    private void parseFile(String absFileName,
+                           InputStream stream)
+        throws FacesException
+    {
+        String baseDir = absFileName.substring(0,
+                                               absFileName.lastIndexOf("/") + 1);
+        _baseDirStack.push(baseDir);
         try
         {
-            InputStream stream = _servletContext.getResourceAsStream(absFileName);
-            if (stream == null)
-            {
-                throw new RuntimeException("File " + absFileName + " not found.");
-            }
-
             //TODO: find out encoding
 
             InputStreamReader isr = null;
@@ -145,7 +166,7 @@ public class JspTreeParser
         }
         finally
         {
-            baseDirStack.pop();
+            _baseDirStack.pop();
         }
     }
 
@@ -154,6 +175,8 @@ public class JspTreeParser
     /**
      * Copyright (c) 1999 The Apache Software Foundation.
      * (Copied from jasper's ParserController)
+     * Modified by manolito: push is done parseFile
+     *
      * Resolve the name of the file and update
      * baseDirStack() to keep track ot the current
      * base directory for each included file.
@@ -167,9 +190,9 @@ public class JspTreeParser
         boolean isAbsolute = fileName.startsWith("/");
         fileName = isAbsolute
             ? fileName
-            : (String)baseDirStack.peek() + fileName;
-        String baseDir = fileName.substring(0, fileName.lastIndexOf("/") + 1);
-        baseDirStack.push(baseDir);
+            : (String)_baseDirStack.peek() + fileName;
+        //String baseDir = fileName.substring(0, fileName.lastIndexOf("/") + 1);
+        //_baseDirStack.push(baseDir);
         return fileName;
     }
 

@@ -16,13 +16,11 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package net.sourceforge.myfaces.renderkit.html;
+package net.sourceforge.myfaces.renderkit.html.util;
 
 import net.sourceforge.myfaces.component.UISelectMany;
-import net.sourceforge.myfaces.renderkit.attr.*;
-import net.sourceforge.myfaces.renderkit.html.util.CommonAttributes;
-import net.sourceforge.myfaces.renderkit.html.util.HTMLEncoder;
-import net.sourceforge.myfaces.renderkit.html.util.SelectItemHelper;
+import net.sourceforge.myfaces.renderkit.attr.CommonRendererAttributes;
+import net.sourceforge.myfaces.renderkit.html.ListboxRenderer;
 import net.sourceforge.myfaces.renderkit.html.attr.HTMLEventHandlerAttributes;
 import net.sourceforge.myfaces.renderkit.html.attr.HTMLSelectAttributes;
 import net.sourceforge.myfaces.renderkit.html.attr.HTMLUniversalAttributes;
@@ -33,36 +31,32 @@ import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 import java.io.IOException;
 import java.util.Iterator;
+import java.util.Set;
 
 /**
- * Base class for ListboxRenderer and MenuRenderer (= renderers that write a HTML select).
+ * Utility for Renderers that draw a HTML select.
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public abstract class AbstractSelectOptionRenderer
-    extends HTMLRenderer
+public class HTMLSelectUtil
     implements HTMLUniversalAttributes,
-    HTMLEventHandlerAttributes,
-    HTMLSelectAttributes,
+               HTMLEventHandlerAttributes,
+               HTMLSelectAttributes,
                CommonRendererAttributes
 {
+    private HTMLSelectUtil() {} //Utility
 
-    public void encodeBegin(FacesContext context, UIComponent uicomponent)
-            throws IOException
-    {
-    }
-
-    protected void encodeEnd(FacesContext facesContext,
-                          UIComponent uiComponent,
-                          int size,
-                          String rendererType)
-            throws IOException
+    public static void drawHTMLSelect(FacesContext facesContext,
+                                      UIComponent uiComponent,
+                                      String rendererType,
+                                      int size)
+        throws IOException
     {
         ResponseWriter writer = facesContext.getResponseWriter();
 
-        boolean multipleSelect = uiComponent.getComponentType() == UISelectMany.TYPE ? true : false;
+        boolean selectMany = (uiComponent.getComponentType() == UISelectMany.TYPE);
 
-        Iterator it = SelectItemHelper.getSelectItems(facesContext, uiComponent);
+        Iterator it = SelectItemUtil.getSelectItems(facesContext, uiComponent);
         if (it.hasNext())
         {
             writer.write("<select");
@@ -77,30 +71,42 @@ public abstract class AbstractSelectOptionRenderer
                 writer.write("\"");
             }
 
-            CommonAttributes.renderCssClass(writer, uiComponent, multipleSelect
+            CommonAttributes.renderCssClass(writer, uiComponent, selectMany
                                                                  ? SELECT_MANY_CLASS_ATTR
                                                                  : SELECT_ONE_CLASS_ATTR);
             CommonAttributes.renderHTMLAttributes(writer, uiComponent, HTML_UNIVERSAL_ATTRIBUTES);
             CommonAttributes.renderHTMLAttributes(writer, uiComponent, HTML_EVENT_HANDLER_ATTRIBUTES);
             CommonAttributes.renderHTMLAttributes(writer, uiComponent, HTML_SELECT_ATTRIBUTES);
 
-            if (multipleSelect) writer.write(" multiple ");
+            if (selectMany) writer.write(" multiple ");
             writer.write(">\n");
 
-            Object currentValue = uiComponent.currentValue(facesContext);
+            Object currentValue = null;
+            Set selectedValuesSet = null;
+            if (selectMany)
+            {
+                selectedValuesSet
+                    = SelectItemUtil.getSelectedValuesAsStringSet(facesContext,
+                                                                  uiComponent);
+            }
+            else
+            {
+                currentValue = uiComponent.currentValue(facesContext);
+            }
 
             while (it.hasNext())
             {
                 SelectItem item = (SelectItem)it.next();
                 writer.write("\t\t<option");
-                Object value = item.getValue();
-                if (value != null)
+                Object itemObjValue = item.getValue();
+                if (itemObjValue != null)
                 {
-                    String str = value.toString();
+                    String itemStrValue = itemObjValue.toString();
                     writer.write(" value=\"");
-                    writer.write(HTMLEncoder.encode(str, false, false));
+                    writer.write(HTMLEncoder.encode(itemStrValue, false, false));
                     writer.write("\"");
-                    if (SelectItemHelper.isItemSelected(facesContext, uiComponent, currentValue, item))
+                    if ((selectMany && selectedValuesSet.contains(itemStrValue)) ||
+                        (currentValue != null && itemStrValue.equals(currentValue)))
                     {
                         writer.write(" selected");
                     }

@@ -19,6 +19,9 @@
 package net.sourceforge.myfaces.renderkit.html.jspinfo;
 
 import net.sourceforge.myfaces.MyFacesConfig;
+import net.sourceforge.myfaces.MyFacesFactoryFinder;
+import net.sourceforge.myfaces.webapp.ServletMappingFactory;
+import net.sourceforge.myfaces.webapp.ServletMapping;
 import net.sourceforge.myfaces.tree.TreeImpl;
 import net.sourceforge.myfaces.util.logging.LogUtil;
 
@@ -26,7 +29,12 @@ import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.tree.Tree;
 import javax.faces.webapp.FacesTag;
+import javax.faces.FacesException;
+import javax.servlet.ServletContext;
 import java.util.*;
+import java.net.URLConnection;
+import java.net.URL;
+import java.io.IOException;
 
 /**
  * JspInfo is a helper class that returns useful static information on a JSP. Static means
@@ -49,10 +57,12 @@ public class JspInfo
 
 
     private Tree _tree = null;
+    private String _filePath = null;
+    private long _lastModified = 0;
     private Map _jspBeanInfosMap = new HashMap();
     private List _saveStateComponents = new ArrayList();
     private Map _componentMap = new HashMap();
-    //private boolean _clientIdsCreated = false;
+
 
     public JspInfo(Tree tree)
     {
@@ -98,6 +108,40 @@ public class JspInfo
     public Map getComponentMap()
     {
         return _componentMap;
+    }
+
+    public String getFilePath(ServletContext servletContext)
+    {
+        if (_filePath == null)
+        {
+            ServletMappingFactory smf = MyFacesFactoryFinder.getServletMappingFactory(servletContext);
+            ServletMapping sm = smf.getServletMapping(servletContext);
+            _filePath = sm.mapTreeIdToFilename(servletContext, _tree.getTreeId());
+        }
+        return _filePath;
+    }
+
+    public boolean isModified(ServletContext servletContext)
+    {
+        String filePath = getFilePath(servletContext);
+        URLConnection urlConn = null;
+        try
+        {
+            URL url = servletContext.getResource(filePath);
+            urlConn = url.openConnection();
+        }
+        catch (IOException e)
+        {
+            throw new FacesException(e);
+        }
+        //System.out.println("urlConn.getLastModified() = " + urlConn.getLastModified());
+        //System.out.println("_lastModified = " + _lastModified);
+        return urlConn.getLastModified() > _lastModified;
+    }
+
+    public void setLastModified(long lastModified)
+    {
+        _lastModified = lastModified;
     }
 
 
@@ -148,56 +192,71 @@ public class JspInfo
     }
 
 
+    private static final String LAST_JSP_INFO_REQUEST_ATTR
+        = JspInfo.class.getName() + ".LAST_JSP_INFO";
+
     private static JspInfo getJspInfo(FacesContext facesContext,
                                       String treeId)
     {
-        Map jspInfoMap = getJspInfoMap(facesContext);
-        JspInfo jspInfo = (JspInfo)jspInfoMap.get(treeId);
+        ServletContext servletContext = facesContext.getServletContext();
+
+        //Try the last JspInfo in this request
+        JspInfo jspInfo = (JspInfo)facesContext.getServletRequest().getAttribute(LAST_JSP_INFO_REQUEST_ATTR);
+        if (jspInfo != null &&
+            jspInfo.getTree().getTreeId().equals(treeId))
+        {
+            return jspInfo;
+        }
+
+        Map jspInfoMap = getJspInfoMap(servletContext);
+        jspInfo = (JspInfo)jspInfoMap.get(treeId);
+
+        //Check for modification
+        if (jspInfo != null &&
+            MyFacesConfig.isCheckJspModification(servletContext) &&
+            jspInfo.isModified(servletContext))
+        {
+            LogUtil.getLogger().info("JSP file '" + jspInfo.getFilePath(servletContext) + "' was modified, reparsing.");
+            jspInfo = null;
+        }
+
         if (jspInfo == null)
         {
-            if (MyFacesConfig.isDisableJspParser(facesContext.getServletContext()))
+            if (MyFacesConfig.isDisableJspParser(servletContext))
             {
                 LogUtil.getLogger().info("JSP parsing is disabled, JspInfo cannot be applied.");
                 jspInfo = new JspInfo(new TreeImpl(treeId));
             }
             else
             {
-                JspTreeParser parser = new JspTreeParser(facesContext.getServletContext());
+                JspTreeParser parser = new JspTreeParser(servletContext);
                 parser.parse(treeId);
                 jspInfo = parser.getJspInfo();
             }
             jspInfoMap.put(treeId, jspInfo);
         }
+
+        facesContext.getServletRequest().setAttribute(LAST_JSP_INFO_REQUEST_ATTR,
+                                                      jspInfo);
         return jspInfo;
     }
 
 
-    private static final String JSP_INFO_MAP_ATTR = JspInfo.class.getName() + ".JSP_INFO_MAP";
+    private static final String JSP_INFO_MAP_CONTEXT_ATTR
+        = JspInfo.class.getName() + ".JSP_INFO_MAP";
 
-    private static Map getJspInfoMap(FacesContext facesContext)
+    private static Map getJspInfoMap(ServletContext servletContext)
     {
-        Map map;
-        if (MyFacesConfig.isJspInfoCaching(facesContext.getServletContext()))
+        synchronized (servletContext)
         {
-            map = (Map)facesContext.getServletContext().getAttribute(JSP_INFO_MAP_ATTR);
-        }
-        else
-        {
-            map = (Map)facesContext.getServletRequest().getAttribute(JSP_INFO_MAP_ATTR);
-        }
-        if (map == null)
-        {
-            map = new HashMap();
-            if (MyFacesConfig.isJspInfoCaching(facesContext.getServletContext()))
+            Map map = (Map)servletContext.getAttribute(JSP_INFO_MAP_CONTEXT_ATTR);
+            if (map == null)
             {
-                facesContext.getServletContext().setAttribute(JSP_INFO_MAP_ATTR, map);
+                map = new WeakHashMap();
+                servletContext.setAttribute(JSP_INFO_MAP_CONTEXT_ATTR, map);
             }
-            else
-            {
-                facesContext.getServletRequest().setAttribute(JSP_INFO_MAP_ATTR, map);
-            }
+            return map;
         }
-        return map;
     }
 
 

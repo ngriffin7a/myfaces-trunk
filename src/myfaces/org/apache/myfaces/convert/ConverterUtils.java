@@ -203,7 +203,15 @@ public class ConverterUtils
     }
 
 
-    public static Object getAsObject(FacesContext facescontext, UIComponent uicomponent, String value)
+    /**
+     * Tries to find a proper converter for the value attribute of this
+     * component. The found converter is then used to convert the given String
+     * to Object.
+     * @throws ConverterException
+     */
+    public static Object getComponentValueAsObject(FacesContext facescontext,
+                                                   UIComponent uicomponent,
+                                                   String value)
         throws ConverterException
     {
         Converter converter = findValueConverter(facescontext, uicomponent);
@@ -218,7 +226,15 @@ public class ConverterUtils
     }
 
 
-    public static String getAsString(FacesContext facesContext, UIComponent uiComponent, Object obj)
+    /**
+     * Tries to find a proper converter for the value attribute of this
+     * component. The found converter is then used to convert the given Object
+     * to String.
+     * @throws ConverterException
+     */
+    public static String getComponentValueAsString(FacesContext facesContext,
+                                                   UIComponent uiComponent,
+                                                   Object obj)
         throws ConverterException
     {
         if (obj == null)
@@ -226,22 +242,29 @@ public class ConverterUtils
             return null;
         }
 
+        //already a String?
+        if (obj instanceof String)
+        {
+            return (String)obj;
+        }
+
+        //Can we find a "real" value converter
         Converter converter = ConverterUtils.findValueConverter(facesContext, uiComponent);
         if (converter != null)
         {
             return converter.getAsString(facesContext, uiComponent, obj);
         }
-        else
+
+        //Let's try to find a proper converter for this class
+        converter = findConverter(obj.getClass());
+        if (converter != null)
         {
-            if (obj instanceof String)
-            {
-                return (String)obj;
-            }
-            else
-            {
-                throw new IllegalArgumentException("Cannot convert Object to String for component " + UIComponentUtils.toString(uiComponent) + ": No converter found for class " + obj.getClass().getName() + ".");
-            }
+            return converter.getAsString(facesContext, uiComponent, obj);
         }
+
+        //As the last resort we do a toString
+        LogUtil.getLogger().warning("Cannot convert Object to String for component " + UIComponentUtils.toString(uiComponent) + ": No converter found for class " + obj.getClass().getName() + ".");
+        return obj.toString();
     }
 
 

@@ -18,6 +18,8 @@
  */
 package net.sourceforge.myfaces.component;
 
+import net.sourceforge.myfaces.convert.ConverterUtils;
+
 import javax.faces.context.FacesContext;
 import javax.faces.component.UIComponent;
 
@@ -68,14 +70,23 @@ public class UISelectItem
         setAttribute(ITEM_LABEL_ATTR, itemLabel);
     }
 
+    /**
+     * MyFaces extension: getItemValue returns the currentValue of this
+     * component as a String.
+     */
     public String getItemValue()
     {
-        return (String)getAttribute(VALUE_ATTR);
+        FacesContext facesContext = FacesContext.getCurrentInstance();
+        Object v = currentValue(facesContext);
+        return ConverterUtils.getComponentValueAsString(facesContext, this, v);
     }
 
-    public void setItemValue(String itemValue)
+    public void setItemValue(String v)
     {
-        setAttribute(VALUE_ATTR, itemValue);
+        FacesContext facesContext = FacesContext.getCurrentInstance();
+        setValue(ConverterUtils.getComponentValueAsObject(facesContext,
+                                                          this,
+                                                          v));
     }
 
     public String getItemKey()

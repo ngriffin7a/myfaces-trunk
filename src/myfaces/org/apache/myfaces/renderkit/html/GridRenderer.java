@@ -280,7 +280,6 @@ public class GridRenderer
             for (int i = 0; tokenizer.hasMoreTokens(); i++)
             {
                 attr[i] = tokenizer.nextToken().trim();
-                i++;
             }
         }
 

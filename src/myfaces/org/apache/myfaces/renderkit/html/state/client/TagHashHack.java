@@ -18,7 +18,6 @@
  */
 package net.sourceforge.myfaces.renderkit.html.state.client;
 
-import net.sourceforge.myfaces.MyFacesConfig;
 import net.sourceforge.myfaces.component.UIComponentUtils;
 import net.sourceforge.myfaces.convert.ConverterUtils;
 import net.sourceforge.myfaces.renderkit.html.jspinfo.JspInfo;
@@ -103,6 +102,7 @@ public class TagHashHack
             }
         }
 
+        /*
         if (MyFacesConfig.isJspInfoCaching(facesContext.getServletContext()))
         {
             //Save tagHash in parsed tree and do not save in client
@@ -112,6 +112,7 @@ public class TagHashHack
             parsedTree.getRoot().setAttribute(TAG_HASH_ATTR, saveTagHash);
             return null;
         }
+        */
 
         if (SERIALIZED_MAP)
         {

@@ -35,13 +35,13 @@ public class MyFacesConfig
 {
     //private static final String _PROPERTY_FILE = "myfaces.properties";
 
-    private static final String PARAM_jspInfoCaching = "jspInfoCaching";
-    private static final boolean DEFAULT_jspInfoCaching = false;
+    private static final String PARAM_checkJspModification = "myfaces_CheckJspModification";
+    private static final boolean DEFAULT_checkJspModification = true;
 
-    private static final String PARAM_servletMappingMode = "servletMappingMode";
+    private static final String PARAM_servletMappingMode = "myfaces_ServletMappingMode";
     private static final String DEFAULT_servletMappingMode = "virtual_path";
 
-    private static final String PARAM_logLevel = "logLevel";
+    private static final String PARAM_logLevel = "myfaces_LogLevel";
     private static final Level  DEFAULT_logLevel = Level.INFO;
     private static final Map LOG_LEVELS = new HashMap();
     static
@@ -58,16 +58,16 @@ public class MyFacesConfig
     public static final int STATE_SAVING_MODE__CLIENT_SERIALIZED = 2;
     public static final int STATE_SAVING_MODE__CLIENT_MINIMIZED = 3;
     public static final int STATE_SAVING_MODE__CLIENT_MINIMIZED_ZIPPED = 4;
-    private static final String PARAM_stateSavingMode = "stateSavingMode";
+    private static final String PARAM_stateSavingMode = "myfaces_StateSavingMode";
     private static final int DEFAULT_stateSavingMode = STATE_SAVING_MODE__CLIENT_MINIMIZED;
 
-    private static final String PARAM_autoCreateRequestScopeBeans = "autoCreateRequestScopeBeans";
+    private static final String PARAM_autoCreateRequestScopeBeans = "myfaces_AutoCreateRequestScopeBeans";
     private static final boolean DEFAULT_autoCreateRequestScopeBeans = true;
 
-    private static final String PARAM_discardInternalAttributes = "discardInternalAttributes";
+    private static final String PARAM_discardInternalAttributes = "myfaces_DiscardInternalAttributes";
     private static final boolean DEFAULT_discardInternalAttributes = true;
 
-    private static final String PARAM_disableJspParser = "disableJspParser";
+    private static final String PARAM_disableJspParser = "myfaces_DisableJspParser";
     private static final boolean DEFAULT_disableJspParser = false;
 
     private static final String CONFIG_MAP_ATTR = MyFacesConfig.class.getName() + ".MAP";
@@ -77,17 +77,20 @@ public class MyFacesConfig
     private MyFacesConfig() {}
 
     /**
-     * MyFaces needs to parse JSP files when saving state information.
-     * Setting this parameter to true, means that JSP files are cached
-     * in the servlet context (= application in JSP terminology).
-     * During development this should always be set to false, because
-     * otherwise changes in JSPs will not be recognized by MyFaces.
+     * MyFaces needs to parse JSP files when doing the "minimizing state
+     * saving" strategy. The parsed infos are (of course) cached in memory.
+     * Setting this parameter to true, means that JSP files are checked
+     * for modification whenever a parsed info is needed. If the JSP was
+     * modified (i.e. has a newer file date than when it was parsed) it is
+     * parsed again.
+     * In a development environment you should always set this parameter to
+     * true. Setting it to false in production might enhance performance.
      */
-    public static boolean isJspInfoCaching(ServletContext servletContext)
+    public static boolean isCheckJspModification(ServletContext servletContext)
     {
         return getBooleanInitParameter(servletContext,
-                                       PARAM_jspInfoCaching,
-                                       DEFAULT_jspInfoCaching);
+                                       PARAM_checkJspModification,
+                                       DEFAULT_checkJspModification);
     }
 
     /**
@@ -134,7 +137,7 @@ public class MyFacesConfig
     }
 
     /**
-     * See web.xml for documentation!
+     * See web.xml in the examples webapp for documentation!
      */
     public static int getStateSavingMode(ServletContext servletContext)
     {
@@ -178,7 +181,7 @@ public class MyFacesConfig
     }
 
     /**
-     * See web.xml for documentation!
+     * See web.xml in the examples webapp for documentation!
      */
     public static boolean isAutoCreateRequestScopeBeans(ServletContext servletContext)
     {
@@ -188,7 +191,7 @@ public class MyFacesConfig
     }
 
     /**
-     * See web.xml for documentation!
+     * See web.xml in the examples webapp for documentation!
      */
     public static boolean isDiscardInternalAttributes(ServletContext servletContext)
     {
@@ -198,7 +201,7 @@ public class MyFacesConfig
     }
 
     /**
-     * See web.xml for documentation!
+     * See web.xml in the examples webapp for documentation!
      */
     public static boolean isDisableJspParser(ServletContext servletContext)
     {

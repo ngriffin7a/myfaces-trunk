@@ -23,6 +23,7 @@ import net.sourceforge.myfaces.renderkit.attr.*;
 import net.sourceforge.myfaces.renderkit.html.attr.HTMLEventHandlerAttributes;
 import net.sourceforge.myfaces.renderkit.html.attr.HTMLSelectAttributes;
 import net.sourceforge.myfaces.renderkit.html.attr.HTMLUniversalAttributes;
+import net.sourceforge.myfaces.renderkit.html.util.HTMLSelectUtil;
 
 import javax.faces.component.UIComponent;
 import javax.faces.component.UISelectMany;
@@ -36,12 +37,12 @@ import java.io.IOException;
  * @version $Revision$ $Date$
  */
 public class MenuRenderer
-    extends AbstractSelectOptionRenderer
+    extends HTMLRenderer
     implements CommonComponentAttributes,
                CommonRendererAttributes,
-    HTMLUniversalAttributes,
-    HTMLEventHandlerAttributes,
-    HTMLSelectAttributes,
+               HTMLUniversalAttributes,
+               HTMLEventHandlerAttributes,
+               HTMLSelectAttributes,
                MenuRendererAttributes,
                UserRoleAttributes
 {
@@ -102,7 +103,10 @@ public class MenuRenderer
             size = DEFAULT_SIZE;
         }
 
-        super.encodeEnd(facescontext, uicomponent, size, TYPE);
+        HTMLSelectUtil.drawHTMLSelect(facescontext,
+                                      uicomponent,
+                                      TYPE,
+                                      size);
     }
 
 }

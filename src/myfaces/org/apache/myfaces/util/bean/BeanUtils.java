@@ -326,7 +326,7 @@ public class BeanUtils
             obj = newObj;
             if (obj == null)
             {
-                LogUtil.getLogger().info("Nested property '" + nextProp + "' of bean " + obj + " is null.");
+                LogUtil.getLogger().info("Nested property '" + nextProp + "' of bean " + bean + " is null.");
                 return new Object[2];
             }
         }

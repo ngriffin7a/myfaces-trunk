@@ -22,7 +22,8 @@ import net.sourceforge.myfaces.component.CommonComponentAttributes;
 import net.sourceforge.myfaces.component.UISelectMany;
 import net.sourceforge.myfaces.component.UISelectOne;
 import net.sourceforge.myfaces.renderkit.attr.*;
-import net.sourceforge.myfaces.renderkit.html.util.SelectItemHelper;
+import net.sourceforge.myfaces.renderkit.html.util.SelectItemUtil;
+import net.sourceforge.myfaces.renderkit.html.util.HTMLSelectUtil;
 import net.sourceforge.myfaces.renderkit.html.attr.HTMLEventHandlerAttributes;
 import net.sourceforge.myfaces.renderkit.html.attr.HTMLSelectAttributes;
 import net.sourceforge.myfaces.renderkit.html.attr.HTMLUniversalAttributes;
@@ -38,12 +39,12 @@ import java.io.IOException;
  * @version $Revision$ $Date$
  */
 public class ListboxRenderer
-    extends AbstractSelectOptionRenderer
+    extends HTMLRenderer
     implements CommonComponentAttributes,
                CommonRendererAttributes,
-    HTMLUniversalAttributes,
-    HTMLEventHandlerAttributes,
-    HTMLSelectAttributes,
+               HTMLUniversalAttributes,
+               HTMLEventHandlerAttributes,
+               HTMLSelectAttributes,
                ListboxRendererAttributes,
                UserRoleAttributes
 {
@@ -95,8 +96,11 @@ public class ListboxRenderer
     public void encodeEnd(FacesContext facescontext, UIComponent uicomponent)
         throws IOException
     {
-        int size = SelectItemHelper.getSelectItemsCount(facescontext, uicomponent);
-        super.encodeEnd(facescontext, uicomponent, size, TYPE);
+        int size = SelectItemUtil.getSelectItemsCount(facescontext, uicomponent);
+        HTMLSelectUtil.drawHTMLSelect(facescontext,
+                                      uicomponent,
+                                      TYPE,
+                                      size);
     }
 
 }

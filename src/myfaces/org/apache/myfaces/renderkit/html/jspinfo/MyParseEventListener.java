@@ -174,7 +174,7 @@ public class MyParseEventListener
                                            Constants.getString("jsp.error.include.missing.file"));
             }
 
-            _parser.parseFile(file);
+            _parser.parseIncludeFile(file);
         }
 
     }
