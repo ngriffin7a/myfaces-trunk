@@ -128,6 +128,13 @@
         <managed-bean-scope>application</managed-bean-scope>
     </managed-bean>
 
+    <!-- Managed Beans for NavigationMenu -->
+
+    <managed-bean>
+        <managed-bean-name>navigationMenu</managed-bean-name>
+        <managed-bean-class>net.sourceforge.myfaces.examples.misc.NavigationMenu</managed-bean-class>
+        <managed-bean-scope>application</managed-bean-scope>
+    </managed-bean>
 
 
     <navigation-rule>

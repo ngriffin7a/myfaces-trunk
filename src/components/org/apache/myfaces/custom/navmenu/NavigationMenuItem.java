@@ -16,13 +16,14 @@
 package net.sourceforge.myfaces.custom.navmenu;
 
 import javax.faces.model.SelectItem;
-import java.util.Collections;
-import java.util.List;
 
 /**
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  *          $Log$
+ *          Revision 1.3  2004/07/05 08:28:25  royalts
+ *          added example for <x:navigationMenuItems>
+ *
  *          Revision 1.2  2004/07/01 21:53:07  mwessendorf
  *          ASF switch
  *
@@ -36,7 +37,7 @@ public class NavigationMenuItem
     private String _icon;
     private String _action;
     boolean _split;
-    private List _children = Collections.EMPTY_LIST;
+    private NavigationMenuItem[] _navigationMenuItems = null;
 
     public NavigationMenuItem(Object value, String label, String action, String icon, boolean split)
     {
@@ -90,13 +91,13 @@ public class NavigationMenuItem
         _icon = icon;
     }
 
-    public List getChildren()
+    public NavigationMenuItem[] getNavigationMenuItems()
     {
-        return _children;
+        return _navigationMenuItems;
     }
 
-    public void setChildren(List children)
+    public void setNavigationMenuItems(NavigationMenuItem[] navigationMenuItems)
     {
-        _children = children;
+        _navigationMenuItems = navigationMenuItems;
     }
 }

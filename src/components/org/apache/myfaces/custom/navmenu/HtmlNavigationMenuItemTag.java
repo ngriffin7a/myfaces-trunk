@@ -24,6 +24,9 @@ import javax.faces.component.UIComponent;
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  *          $Log$
+ *          Revision 1.3  2004/07/05 08:28:24  royalts
+ *          added example for <x:navigationMenuItems>
+ *
  *          Revision 1.2  2004/07/01 21:53:07  mwessendorf
  *          ASF switch
  *
@@ -62,7 +65,8 @@ public class HtmlNavigationMenuItemTag
         setItemValue("0"); // itemValue not used
         super.setProperties(component);
         setStringProperty(component, ICON_ATTR, _icon);
-        setStringProperty(component, ACTION_ATTR, _action);
+        // set action attribute as String!
+        component.getAttributes().put(ACTION_ATTR, _action);
         setBooleanProperty(component, SPLIT_ATTR, _split);
 
         setStringProperty(component, UserRoleAware.ENABLED_ON_USER_ROLE_ATTR, _enabledOnUserRole);

@@ -37,6 +37,9 @@ import java.util.Map;
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  *          $Log$
+ *          Revision 1.6  2004/07/05 08:28:24  royalts
+ *          added example for <x:navigationMenuItems>
+ *
  *          Revision 1.5  2004/07/01 21:53:09  mwessendorf
  *          ASF switch
  *
@@ -103,20 +106,22 @@ public class HtmlJSCookMenuRenderer
 
             writer.write("\n<script language=\"JavaScript\"><!--\n" +
                          "var myMenu =\n[");
-            encodeNavigationMenuItems(writer, list);
+            encodeNavigationMenuItems(writer,
+                                      (NavigationMenuItem[]) list.toArray(new NavigationMenuItem[list.size()]));
+
             writer.write("];\n" +
                          "--></script>\n");
         }
     }
 
-    private void encodeNavigationMenuItems(ResponseWriter writer, List items)
+    private void encodeNavigationMenuItems(ResponseWriter writer, NavigationMenuItem[] items)
         throws IOException
     {
-        for (int i = 0, size = items.size(); i < size; i++)
+        for (int i = 0; i < items.length; i++)
         {
             if (i > 0)
                 writer.write(",\n");
-            NavigationMenuItem item = (NavigationMenuItem)items.get(i);
+            NavigationMenuItem item = (NavigationMenuItem)items[i];
 
             if (item.isSplit())
             {
@@ -129,11 +134,11 @@ public class HtmlJSCookMenuRenderer
                 "'" + item.getAction() + "'" : "null";
             writer.write("[" + icon + ", '" + item.getLabel() + "', " + action +", '#', null");
 
-            List children = item.getChildren();
-            if (children.size() > 0)
+            NavigationMenuItem[] menuItems = item.getNavigationMenuItems();
+            if (menuItems != null && menuItems.length > 0)
             {
                 writer.write(",");
-                encodeNavigationMenuItems(writer, children);
+                encodeNavigationMenuItems(writer, menuItems);
             }
             writer.write("]");
         }

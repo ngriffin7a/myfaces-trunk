@@ -42,10 +42,7 @@
             <x:navigationMenuItem id="nav_3_1" itemLabel="#{example_messages['nav_Features']}" action="go_features" icon="images/myfaces.gif" />
         </x:navigationMenuItem>
         <x:navigationMenuItem id="nav_4" itemLabel="#{example_messages['nav_Options']}" action="go_options" />
-        <x:navigationMenuItem id="nav_5" itemLabel="#{example_messages['nav_Info']}" split="true" >
-            <x:navigationMenuItem id="nav_5_1" itemLabel="#{example_messages['nav_Contact']}" action="go_contact" icon="jscookmenu/ThemeOffice/help.gif" />
-            <x:navigationMenuItem id="nav_5_2" itemLabel="#{example_messages['nav_Copyright']}" action="go_copyright" icon="jscookmenu/ThemeOffice/help.gif" />
-        </x:navigationMenuItem>
+        <x:navigationMenuItems id="nav_5" value="#{navigationMenu.infoItems}" />
 
     </x:jscookMenu>
 </h:panelGrid>

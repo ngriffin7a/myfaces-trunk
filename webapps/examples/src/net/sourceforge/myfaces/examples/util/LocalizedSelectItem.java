@@ -15,9 +15,7 @@
  */
 package net.sourceforge.myfaces.examples.util;
 
-import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
-import java.util.ResourceBundle;
 
 /**
  * DOCUMENT ME!
@@ -27,21 +25,10 @@ import java.util.ResourceBundle;
 public class LocalizedSelectItem
     extends SelectItem
 {
-    private static String BUNDLE_NAME = "net.sourceforge.myfaces.examples.resource.example_messages";
-
     public LocalizedSelectItem(String key)
     {
         super(key);
-        FacesContext facesContext = FacesContext.getCurrentInstance();
-        ResourceBundle rb = ResourceBundle.getBundle(BUNDLE_NAME, facesContext.getViewRoot().getLocale());
-        String label = rb.getString(key);
-        if (label != null)
-        {
-            setLabel(label);
-        }
-        else
-        {
-            setLabel(key);
-        }
+        String label = GuiUtil.getMessageResource(key, null);
+        setLabel(label);
     }
 }

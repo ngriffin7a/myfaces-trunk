@@ -27,6 +27,9 @@ import java.util.*;
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  *          $Log$
+ *          Revision 1.3  2004/07/05 08:28:25  royalts
+ *          added example for <x:navigationMenuItems>
+ *
  *          Revision 1.2  2004/07/01 21:53:07  mwessendorf
  *          ASF switch
  *
@@ -77,7 +80,8 @@ public class NavigationMenuUtils
                 list.add(item);
                 if (child.getChildCount() > 0)
                 {
-                    item.setChildren(getNavigationMenuItemList(child));
+                    List l = getNavigationMenuItemList(child);
+                    item.setNavigationMenuItems((NavigationMenuItem[]) l.toArray(new NavigationMenuItem[l.size()]));
                 }
             }
             else if (child instanceof UISelectItems)
