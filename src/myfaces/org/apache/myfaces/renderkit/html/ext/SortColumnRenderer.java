@@ -74,8 +74,8 @@ public class SortColumnRenderer
 
     public void encodeEnd(FacesContext facesContext, UIComponent uiComponent) throws IOException
     {
-        encodeSortColumn(facesContext, (UISortColumn)uiComponent, isSortAscending(facesContext,  (UISortColumn)uiComponent));
         super.encodeEnd(facesContext, uiComponent);
+        encodeSortColumn(facesContext, (UISortColumn)uiComponent, isSortAscending(facesContext,  (UISortColumn)uiComponent));
     }
 
     protected void encodeSortColumn(FacesContext facesContext, UISortColumn uiSortColumn, Boolean ascending)
