@@ -28,7 +28,9 @@ public class TestConfig
     private static final String PROJECT_BASE_PATH
         = "C:/Develop/myfaces.sourceforge/myfaces/";    //TODO: must go to properties file, of course!
 
-    private TestConfig() {}
+    private TestConfig() {
+        //disable
+    }
 
     public static String getWebInfPath()
     {

@@ -141,15 +141,18 @@ public class ServletContextMockImpl
 
     public void log(String s)
     {
+        throw new UnsupportedOperationException();
     }
 
     /**@deprecated*/
     public void log(Exception exception, String s)
     {
+        throw new UnsupportedOperationException();
     }
 
     public void log(String s, Throwable throwable)
     {
+        throw new UnsupportedOperationException();
     }
 
     public String getRealPath(String s)

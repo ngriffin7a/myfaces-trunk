@@ -65,17 +65,18 @@ public class MyFacesTest
         _httpServletRequest = new ServletRequestMockImpl();
         _httpServletResponse = new ServletResponseMockImpl();
 
-        LifecycleFactory lf = (LifecycleFactory)FactoryFinder.getFactory(FactoryFinder.LIFECYCLE_FACTORY);
-        _lifecycle = lf.getLifecycle(LifecycleFactory.DEFAULT_LIFECYCLE);
-
-        FacesContextFactory fcf = (FacesContextFactory)FactoryFinder.getFactory(FactoryFinder.FACES_CONTEXT_FACTORY);
-        _facesContext = fcf.getFacesContext(_servletContext,
-                                            _httpServletRequest,
-                                            _httpServletResponse,
-                                            _lifecycle);
-
-        ApplicationFactory af = (ApplicationFactory)FactoryFinder.getFactory(FactoryFinder.APPLICATION_FACTORY);
-        af.setApplication(_application);
+//        FIXME
+//        LifecycleFactory lf = (LifecycleFactory)FactoryFinder.getFactory(FactoryFinder.LIFECYCLE_FACTORY);
+//        _lifecycle = lf.getLifecycle(LifecycleFactory.DEFAULT_LIFECYCLE);
+//
+//        FacesContextFactory fcf = (FacesContextFactory)FactoryFinder.getFactory(FactoryFinder.FACES_CONTEXT_FACTORY);
+//        _facesContext = fcf.getFacesContext(_servletContext,
+//                                            _httpServletRequest,
+//                                            _httpServletResponse,
+//                                            _lifecycle);
+//
+//        ApplicationFactory af = (ApplicationFactory)FactoryFinder.getFactory(FactoryFinder.APPLICATION_FACTORY);
+//        af.setApplication(_application);
     }
 
     protected void tearDown() throws Exception
