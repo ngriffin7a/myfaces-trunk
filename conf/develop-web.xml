@@ -38,7 +38,6 @@
     <context-param>
         <param-name>javax.faces.application.CONFIG_FILES</param-name>
         <param-value>
-            /WEB-INF/faces-config.xml,
             /WEB-INF/examples-config.xml
         </param-value>
         <description>

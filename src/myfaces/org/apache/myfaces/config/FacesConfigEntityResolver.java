@@ -18,6 +18,7 @@
  */
 package net.sourceforge.myfaces.config;
 
+import net.sourceforge.myfaces.util.ClassUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.xml.sax.EntityResolver;
@@ -42,6 +43,10 @@ public class FacesConfigEntityResolver
 {
     private static final Log log = LogFactory.getLog(FacesConfigEntityResolver.class);
 
+    private static final String FACES_CONFIG_DTD_SYSTEM_ID = "http://java.sun.com/dtd/web-facesconfig_1_0.dtd";
+    private static final String FACES_CONFIG_DTD_RESOURCE
+            = "net.sourceforge.myfaces.resource".replace('.', '/') + "/web-facesconfig_1_0.dtd";
+
     private ExternalContext _externalContext = null;
     private JarFile _jarFile = null;
 
@@ -55,15 +60,18 @@ public class FacesConfigEntityResolver
         _jarFile = jarFile;
     }
 
+    public FacesConfigEntityResolver()
+    {
+    }
+
     public InputSource resolveEntity(String publicId,
                                      String systemId)
         throws IOException
     {
         InputStream stream;
-        if (systemId.equals("http://java.sun.com/dtd/web-facesconfig_1_0.dtd"))
+        if (systemId.equals(FACES_CONFIG_DTD_SYSTEM_ID))
         {
-            ClassLoader loader = Thread.currentThread().getContextClassLoader();
-            stream = loader.getResourceAsStream("net/sourceforge/myfaces/resource/web-facesconfig_1_0.dtd");
+            stream = ClassUtils.getResourceAsStream(FACES_CONFIG_DTD_RESOURCE);
         }
         else if (systemId.startsWith("jar:"))
         {
@@ -80,14 +88,15 @@ public class FacesConfigEntityResolver
         {
             if (_externalContext == null)
             {
-                log.fatal("No servletContext !?");
+                stream = ClassUtils.getResourceAsStream(systemId);
             }
-            
-            if (systemId.startsWith("file:")) {
-                systemId = systemId.substring(7); // remove file://
+            else
+            {
+                if (systemId.startsWith("file:")) {
+                    systemId = systemId.substring(7); // remove file://
+                }
+                stream = _externalContext.getResourceAsStream(systemId);
             }
-                
-            stream = _externalContext.getResourceAsStream(systemId);
         }
 
         InputSource is = new InputSource(stream);

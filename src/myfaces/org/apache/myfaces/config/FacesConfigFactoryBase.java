@@ -18,6 +18,7 @@
  */
 package net.sourceforge.myfaces.config;
 
+import net.sourceforge.myfaces.util.ClassUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.xml.sax.EntityResolver;
@@ -47,6 +48,8 @@ public abstract class FacesConfigFactoryBase
 {
     private static final Log log = LogFactory.getLog(FacesConfigFactoryBase.class);
 
+    private static final String STANDARD_FACES_CONFIG_RESOURCE
+        = "net.sourceforge.myfaces.resource".replace('.', '/') + "/standard-faces-config.xml";
     private static final String CONFIG_FILES_INIT_PARAM
         = "javax.faces.application.CONFIG_FILES";
 
@@ -78,6 +81,19 @@ public abstract class FacesConfigFactoryBase
     private void parseFacesConfigFiles(FacesConfig facesConfig, ExternalContext context)
         throws FacesException
     {
+        InputStream stream;
+
+        //First of all load the standard faces-config
+        stream = ClassUtils.getResourceAsStream(STANDARD_FACES_CONFIG_RESOURCE);
+        if (stream == null)
+        {
+            throw new FacesException("Standard faces config " + STANDARD_FACES_CONFIG_RESOURCE + " not found");
+        }
+        if (log.isInfoEnabled()) log.info("Reading standard config " + STANDARD_FACES_CONFIG_RESOURCE);
+        parseStreamConfig(facesConfig, stream, STANDARD_FACES_CONFIG_RESOURCE,
+                          new FacesConfigEntityResolver());
+
+
         //Search through JAR files
         Set jars = context.getResourcePaths("/WEB-INF/lib/");
         if (jars != null)
@@ -92,25 +108,15 @@ public abstract class FacesConfigFactoryBase
             }
         }
 
+        //context initialization parameter config list
         String configFiles = context.getInitParameter(CONFIG_FILES_INIT_PARAM);
-        if (configFiles == null)
-        {
-            String systemId = "/WEB-INF/faces-config.xml";
-            InputStream stream = context.getResourceAsStream(systemId);
-            if (stream != null)
-            {
-                if (log.isInfoEnabled()) log.info("Reading config /WEB-INF/faces-config.xml");
-                parseStreamConfig(facesConfig, stream, systemId,
-                                  new FacesConfigEntityResolver(context));
-            }
-        }
-        else
+        if (configFiles != null)
         {
             StringTokenizer st = new StringTokenizer(configFiles, ",", false);
             while (st.hasMoreTokens())
             {
                 String systemId = st.nextToken().trim();
-                InputStream stream = context.getResourceAsStream(systemId);
+                stream = context.getResourceAsStream(systemId);
                 if (stream == null)
                 {
                     log.error("Faces config resource " + systemId + " not found");
@@ -122,6 +128,16 @@ public abstract class FacesConfigFactoryBase
                 parseStreamConfig(facesConfig, stream, systemId,
                                   new FacesConfigEntityResolver(context));
             }
+        }
+
+        //web application config
+        String systemId = "/WEB-INF/faces-config.xml";
+        stream = context.getResourceAsStream(systemId);
+        if (stream != null)
+        {
+            if (log.isInfoEnabled()) log.info("Reading config /WEB-INF/faces-config.xml");
+            parseStreamConfig(facesConfig, stream, systemId,
+                              new FacesConfigEntityResolver(context));
         }
     }
 
