@@ -19,7 +19,6 @@ import org.apache.commons.beanutils.MethodUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import javax.faces.component.UIComponent;
 import javax.faces.el.EvaluationException;
 import javax.faces.el.PropertyNotFoundException;
 import javax.faces.el.PropertyResolver;
@@ -30,7 +29,6 @@ import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Array;
 import java.lang.reflect.Method;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -40,6 +38,9 @@ import java.util.Map;
  * @author Anton Koinov
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.30  2004/12/03 08:41:45  manolito
+ * MYFACES-44 / PropertyResolverImpl has special logic for UIComponents
+ *
  * Revision 1.29  2004/10/13 11:51:00  matze
  * renamed packages to org.apache
  *
@@ -95,22 +96,6 @@ public class PropertyResolverImpl extends PropertyResolver
             {
                 return ((Map) base).get(property);
             }
-            if (base instanceof UIComponent)
-            {
-                for (Iterator children = 
-                    ((UIComponent) base).getChildren().iterator(); 
-                    children.hasNext();)
-                {
-                    UIComponent child = (UIComponent) children.next();
-
-                    if (property.equals(child.getId()))
-                    {
-                        return child;
-                    }
-                }
-
-                return null;
-            }
 
             // If none of the special bean types, then process as normal Bean
             return getProperty(base, property.toString());
@@ -143,10 +128,6 @@ public class PropertyResolverImpl extends PropertyResolver
                 if (base instanceof List)
                 {
                     return ((List) base).get(index);
-                }
-                if (base instanceof UIComponent)
-                {
-                    return ((UIComponent) base).getChildren().get(index);
                 }
             }
             catch (IndexOutOfBoundsException e)
@@ -190,11 +171,6 @@ public class PropertyResolverImpl extends PropertyResolver
                 ((Map) base).put(property, newValue);
 
                 return;
-            }
-            if (base instanceof UIComponent)
-            {
-                throw new PropertyNotFoundException(
-                    "Bean must not be UIComponent, property: " + property);
             }
 
             // If none of the special bean types, then process as normal Bean
@@ -272,10 +248,6 @@ public class PropertyResolverImpl extends PropertyResolver
             {
                 return false;
             }
-            if (base instanceof UIComponent)
-            {
-                return true;
-            }
 
             // If none of the special bean types, then process as normal Bean
             PropertyDescriptor propertyDescriptor = 
@@ -303,10 +275,6 @@ public class PropertyResolverImpl extends PropertyResolver
             {
                 // Is there any way to determine whether List.set() will fail?
                 return false;
-            }
-            if (base instanceof UIComponent)
-            {
-                return true;
             }
 
             // Cannot determine read-only, return false (is this what the spec requires?)
@@ -336,10 +304,6 @@ public class PropertyResolverImpl extends PropertyResolver
 
                 // REVISIT: when generics are imlemented in JVM 1.5
                 return (value == null) ? Object.class : value.getClass();
-            }
-            if (base instanceof UIComponent)
-            {
-                return UIComponent.class;
             }
 
             // If none of the special bean types, then process as normal Bean
@@ -379,11 +343,6 @@ public class PropertyResolverImpl extends PropertyResolver
 
                 // REVISIT: when generics are implemented in JVM 1.5
                 return (value != null) ? value.getClass() : Object.class;
-            }
-
-            if (base instanceof UIComponent)
-            {
-                return UIComponent.class;
             }
 
             // Cannot determine type, return null per JSF spec
