@@ -24,26 +24,7 @@
   <meta HTTP-EQUIV="Content-Type" CONTENT="text/html;CHARSET=iso-8859-1">
   <title>MyFaces - the free JSF Implementation</title>
 
-  <!-- JSCook Menu -->
-  <script src="jscookmenu/JSCookMenu.js" type="text/javascript"></script>
-  <script type="text/javascript" src="jscookmenu/ThemeOffice/theme.js"></script>
-  <x:stylesheet path="/jscookmenu/ThemeOffice/theme.css" />
-  <script type="text/javascript" src="jscookmenu/ThemeMiniBlack/theme.js"></script>
-  <x:stylesheet path="/jscookmenu/ThemeMiniBlack/theme.css"/>
-  <script type="text/javascript" src="jscookmenu/ThemeIE/theme.js"></script>
-  <x:stylesheet path="/jscookmenu/ThemeIE/theme.css" />
-  <script type="text/javascript" src="jscookmenu/ThemePanel/theme.js"></script>
-  <x:stylesheet path="/jscookmenu/ThemePanel/theme.css" />
-
-  <!-- JSCalendar -->
-  <script src="jscalendar/popcalendar.js" type="text/javascript"></script>
-  <x:stylesheet path="/jscalendar/jscalendar-WH/theme.css"/>
-  <x:stylesheet path="/jscalendar/jscalendar-DB/theme.css"/>
-
-  <!-- JSPopup -->
-  <script src="jspopup/JSPopup.js" type="text/javascript"></script>
-
-<x:stylesheet path="/css/basic.css"/>
+  <x:stylesheet path="/css/basic.css"/>
 </head>
 <body>
 
