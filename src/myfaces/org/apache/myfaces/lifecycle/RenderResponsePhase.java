@@ -19,7 +19,6 @@
 package net.sourceforge.myfaces.lifecycle;
 
 import net.sourceforge.myfaces.renderkit.html.state.StateRenderer;
-import net.sourceforge.myfaces.util.logging.LogUtil;
 
 import javax.faces.FacesException;
 import javax.faces.FactoryFinder;

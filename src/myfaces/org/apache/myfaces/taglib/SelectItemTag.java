@@ -18,8 +18,8 @@
  */
 package net.sourceforge.myfaces.taglib;
 
-import net.sourceforge.myfaces.component.UISelectItem;
 import net.sourceforge.myfaces.component.MyFacesComponent;
+import net.sourceforge.myfaces.component.UISelectItem;
 
 import javax.faces.component.UIComponent;
 

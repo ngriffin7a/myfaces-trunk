@@ -19,19 +19,21 @@
 package net.sourceforge.myfaces.taglib;
 
 import net.sourceforge.myfaces.MyFacesConfig;
-import net.sourceforge.myfaces.util.logging.LogUtil;
 import net.sourceforge.myfaces.renderkit.html.state.StateRenderer;
+import net.sourceforge.myfaces.util.logging.LogUtil;
 
+import javax.faces.FactoryFinder;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
-import javax.faces.webapp.JspResponseWriter;
-import javax.faces.render.RenderKitFactory;
 import javax.faces.render.RenderKit;
+import javax.faces.render.RenderKitFactory;
 import javax.faces.render.Renderer;
-import javax.faces.FactoryFinder;
+import javax.faces.webapp.JspResponseWriter;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
-import javax.servlet.jsp.tagext.*;
+import javax.servlet.jsp.tagext.BodyContent;
+import javax.servlet.jsp.tagext.BodyTag;
+import javax.servlet.jsp.tagext.BodyTagSupport;
 import java.io.IOException;
 
 /**

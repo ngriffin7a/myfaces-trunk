@@ -19,8 +19,8 @@
 package net.sourceforge.myfaces.convert.map;
 
 import javax.faces.FacesException;
-import java.io.InputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Properties;
 
 /**

@@ -18,15 +18,14 @@
  */
 package net.sourceforge.myfaces.convert.impl;
 
+import net.sourceforge.myfaces.convert.Converter;
 import net.sourceforge.myfaces.convert.ConverterException;
 import net.sourceforge.myfaces.convert.ConverterUtils;
-import net.sourceforge.myfaces.convert.Converter;
 
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import java.text.DateFormat;
 import java.text.ParseException;
-import java.util.Date;
 import java.util.Locale;
 
 /**

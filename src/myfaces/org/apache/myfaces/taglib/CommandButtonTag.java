@@ -18,8 +18,8 @@
  */
 package net.sourceforge.myfaces.taglib;
 
-import net.sourceforge.myfaces.component.UICommand;
 import net.sourceforge.myfaces.component.MyFacesComponent;
+import net.sourceforge.myfaces.component.UICommand;
 import net.sourceforge.myfaces.renderkit.html.ButtonRenderer;
 
 import javax.faces.component.UIComponent;

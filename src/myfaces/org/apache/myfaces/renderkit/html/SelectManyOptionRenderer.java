@@ -18,18 +18,12 @@
  */
 package net.sourceforge.myfaces.renderkit.html;
 
-import net.sourceforge.myfaces.component.*;
-import net.sourceforge.myfaces.renderkit.html.util.HTMLEncoder;
+import net.sourceforge.myfaces.component.UISelectMany;
+import net.sourceforge.myfaces.component.UISelectOne;
 
-import javax.faces.context.FacesContext;
-import javax.faces.context.ResponseWriter;
 import javax.faces.component.UIComponent;
-import javax.faces.component.SelectItem;
+import javax.faces.context.FacesContext;
 import java.io.IOException;
-import java.util.Iterator;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Map;
 
 /**
  * TODO: description

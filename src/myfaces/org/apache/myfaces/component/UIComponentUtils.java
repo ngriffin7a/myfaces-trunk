@@ -18,7 +18,10 @@
  */
 package net.sourceforge.myfaces.component;
 
-import net.sourceforge.myfaces.convert.*;
+import net.sourceforge.myfaces.convert.ConversionErrorMessage;
+import net.sourceforge.myfaces.convert.Converter;
+import net.sourceforge.myfaces.convert.ConverterException;
+import net.sourceforge.myfaces.convert.ConverterUtils;
 import net.sourceforge.myfaces.convert.impl.StringArrayConverter;
 import net.sourceforge.myfaces.util.bean.BeanMethod;
 import net.sourceforge.myfaces.util.bean.BeanUtils;
@@ -28,7 +31,6 @@ import javax.faces.FacesException;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.servlet.jsp.tagext.Tag;
-import java.util.logging.Logger;
 
 /**
  * TODO: description

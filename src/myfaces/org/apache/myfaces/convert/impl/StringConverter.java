@@ -18,8 +18,8 @@
  */
 package net.sourceforge.myfaces.convert.impl;
 
-import net.sourceforge.myfaces.convert.ConverterException;
 import net.sourceforge.myfaces.convert.Converter;
+import net.sourceforge.myfaces.convert.ConverterException;
 
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;

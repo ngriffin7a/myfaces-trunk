@@ -18,16 +18,16 @@
  */
 package net.sourceforge.myfaces.renderkit.html.state;
 
-import net.sourceforge.myfaces.renderkit.html.util.HTMLEncoder;
 import net.sourceforge.myfaces.renderkit.html.HTMLRenderer;
+import net.sourceforge.myfaces.renderkit.html.util.HTMLEncoder;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeUtility;
 import java.io.*;
+import java.net.URLEncoder;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.zip.GZIPOutputStream;
-import java.net.URLEncoder;
 
 /**
  * TODO: description

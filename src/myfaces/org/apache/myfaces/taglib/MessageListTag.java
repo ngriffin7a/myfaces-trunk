@@ -19,7 +19,7 @@
 package net.sourceforge.myfaces.taglib;
 
 import net.sourceforge.myfaces.component.ext.UIMessageList;
-import net.sourceforge.myfaces.renderkit.html.MessageListRenderer;
+import net.sourceforge.myfaces.renderkit.html.ext.MessageListRenderer;
 
 import javax.faces.component.UIComponent;
 

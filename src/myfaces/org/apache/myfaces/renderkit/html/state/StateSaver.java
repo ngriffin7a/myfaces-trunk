@@ -38,9 +38,9 @@ import javax.faces.context.ResponseWriter;
 import javax.faces.tree.Tree;
 import javax.servlet.jsp.tagext.BodyContent;
 import java.io.IOException;
+import java.io.Serializable;
 import java.io.StringWriter;
 import java.io.Writer;
-import java.io.Serializable;
 import java.util.*;
 import java.util.regex.Pattern;
 

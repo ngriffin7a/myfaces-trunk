@@ -24,7 +24,6 @@ import javax.faces.webapp.FacesServlet;
 import javax.servlet.*;
 import java.io.IOException;
 import java.io.PrintStream;
-import java.io.ByteArrayOutputStream;
 
 /**
  * TODO: description

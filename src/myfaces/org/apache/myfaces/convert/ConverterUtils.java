@@ -19,12 +19,12 @@
 package net.sourceforge.myfaces.convert;
 
 import net.sourceforge.myfaces.MyFacesFactoryFinder;
-import net.sourceforge.myfaces.convert.map.ConverterMapFactory;
 import net.sourceforge.myfaces.component.MyFacesComponent;
+import net.sourceforge.myfaces.convert.map.ConverterMapFactory;
 
+import javax.faces.FacesException;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
-import javax.faces.FacesException;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeUtility;
 import java.io.*;

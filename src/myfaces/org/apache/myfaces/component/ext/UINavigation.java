@@ -20,12 +20,12 @@ package net.sourceforge.myfaces.component.ext;
 
 import net.sourceforge.myfaces.component.UIPanel;
 
-import javax.faces.component.UIComponent;
-import javax.faces.event.FacesEvent;
-import javax.faces.context.FacesContext;
-import javax.faces.tree.TreeFactory;
-import javax.faces.tree.Tree;
 import javax.faces.FactoryFinder;
+import javax.faces.component.UIComponent;
+import javax.faces.context.FacesContext;
+import javax.faces.event.FacesEvent;
+import javax.faces.tree.Tree;
+import javax.faces.tree.TreeFactory;
 import java.util.Iterator;
 
 /**

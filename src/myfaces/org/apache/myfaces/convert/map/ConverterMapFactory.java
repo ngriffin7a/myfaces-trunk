@@ -18,7 +18,7 @@
  */
 package net.sourceforge.myfaces.convert.map;
 
-import net.sourceforge.myfaces.convert.map.ConverterMap;
+
 
 /**
  * TODO: description
