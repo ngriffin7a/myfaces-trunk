@@ -32,6 +32,7 @@ import net.sourceforge.myfaces.webapp.ServletMappingFactory;
 
 import javax.faces.FactoryFinder;
 import javax.faces.component.UIComponent;
+import javax.faces.component.UIForm;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 import javax.faces.render.RenderKit;
@@ -54,6 +55,7 @@ public class FormRenderer
                HTMLFormAttributes,
                FormRendererAttributes,
                UserRoleAttributes
+
 {
     public static final String TYPE = "Form";
     public String getRendererType()
@@ -94,6 +96,13 @@ public class FormRenderer
         HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML_UNIVERSAL_ATTRIBUTES);
         HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML_EVENT_HANDLER_ATTRIBUTES);
         HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML_FORM_ATTRIBUTES);
+        String formName = ((UIForm)uiComponent).getFormName();
+        if (formName != null)
+        {
+            writer.write(" name=\"");
+            writer.write(formName);
+            writer.write("\"");
+        }
         writer.write(">");
     }
 
