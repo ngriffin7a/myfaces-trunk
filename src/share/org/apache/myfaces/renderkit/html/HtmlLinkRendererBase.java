@@ -39,6 +39,9 @@ import java.util.Iterator;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.13  2004/06/16 23:50:08  o_rossmueller
+ * force separate end tag
+ *
  * Revision 1.12  2004/06/08 01:34:44  o_rossmueller
  * render link value if available as required by JSF 1.1 renderkitdocs
  *
@@ -450,6 +453,8 @@ public abstract class HtmlLinkRendererBase
             throws IOException
     {
         ResponseWriter writer = facesContext.getResponseWriter();
+        // force separate end tag
+        writer.writeText("", null);
         writer.endElement(HTML.ANCHOR_ELEM);
     }
 
