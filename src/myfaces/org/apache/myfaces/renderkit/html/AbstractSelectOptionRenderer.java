@@ -124,21 +124,12 @@ public abstract class AbstractSelectOptionRenderer
         Object itemValue = item.getValue();
         if (itemValue != null && currentValue != null)
         {
-            Converter converter = ConverterUtils.findConverter(itemValue.getClass());
-            if (converter != null)
-            {
-                Object convObj = converter.getAsObject(facesContext, uiComponent, currentValue.toString());
-                if (itemValue.equals(convObj))
-                {
-                    return true;
-                }
-            }
-            else if (currentValue instanceof Object[])
+            if (currentValue instanceof Object[])
             {
                 for (int i = 0; i < ((Object[])currentValue).length; i++)
                 {
                     Object obj = ((Object[])currentValue)[i];
-                    converter = ConverterUtils.findConverter(obj.getClass());
+                    Converter converter = ConverterUtils.findConverter(obj.getClass());
                     if (converter != null)
                     {
                         Object convObj = converter.getAsObject(facesContext, uiComponent, obj.toString());
@@ -153,9 +144,21 @@ public abstract class AbstractSelectOptionRenderer
                     }
                 }
             }
-            else if (itemValue.equals(currentValue))
+            else
             {
-                return true;
+                Converter converter = ConverterUtils.findConverter(currentValue.getClass());
+                if (converter != null)
+                {
+                    Object convObj = converter.getAsObject(facesContext, uiComponent, currentValue.toString());
+                    if (itemValue.equals(convObj))
+                    {
+                        return true;
+                    }
+                }
+                else if (itemValue.equals(currentValue))
+                {
+                    return true;
+                }
             }
         }
         return false;
