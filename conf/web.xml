@@ -125,7 +125,7 @@
 <!--    </filter>-->
 
 
-    <!-- MultiPart Filter -->
+    <!-- Extensions Filter -->
     <filter>
         <filter-name>extensionsFilter</filter-name>
         <filter-class>org.apache.myfaces.component.html.util.ExtensionsFilter</filter-class>
@@ -180,6 +180,10 @@
     <filter-mapping>
         <filter-name>extensionsFilter</filter-name>
         <url-pattern>*.jsf</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>extensionsFilter</filter-name>
+        <url-pattern>/faces/*</url-pattern>
     </filter-mapping>
 
 
