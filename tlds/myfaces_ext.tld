@@ -594,6 +594,86 @@
                 similar to the var parameter.
             </description>
         </attribute>
+        <attribute>
+            <name>styleClass</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
+            <description>
+                styleClass for scroller table
+            </description>
+        </attribute>
+        <attribute>
+            <name>style</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
+            <description>
+                style for scroller table
+            </description>
+        </attribute>
+        <attribute>
+            <name>paginator</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
+            <description>
+                If set true, then the paginator gets rendered
+            </description>
+        </attribute>
+        <attribute>
+            <name>paginatorMaxPages</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
+            <description>
+                The maximum amount of pages to be displayed in the paginator.
+            </description>
+        </attribute>
+        <attribute>
+            <name>paginatorTableClass</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
+            <description>
+                styleclass for pagingator
+            </description>
+        </attribute>
+        <attribute>
+            <name>paginatorTableStyle</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
+            <description>
+                style for pagingator
+            </description>
+        </attribute>
+        <attribute>
+            <name>paginatorColumnClass</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
+            <description>
+                styleClass for paginator's column
+            </description>
+        </attribute>
+        <attribute>
+            <name>paginatorColumnStyle</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
+            <description>
+                style for paginator's column
+            </description>
+        </attribute>
+        <attribute>
+            <name>paginatorActiveColumnClass</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
+            <description>
+                styleClass for paginator's column with pageIndex = currentPageIndex
+            </description>
+        </attribute>
+        <attribute>
+            <name>paginatorActiveColumnStyle</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
+            <description>
+                style for paginator's column with pageIndex = currentPageIndex
+            </description>
+        </attribute>
      </tag>
 
     <!-- inputFileUpload -->

@@ -25,6 +25,7 @@ import javax.faces.component.UIComponent;
 import javax.faces.component.UIData;
 import javax.faces.component.UIParameter;
 import javax.faces.component.html.HtmlCommandLink;
+import javax.faces.component.html.HtmlOutputText;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 import java.io.IOException;
@@ -46,6 +47,7 @@ public class HtmlDataScrollerRenderer
     private static final String FACET_LAST          = "last".intern();
     private static final String FACET_FAST_FORWARD  = "fastf".intern();
     private static final String FACET_FAST_REWIND   = "fastr".intern();
+    private static final String PAGE_NAVIGATION     = "idx".intern();
 
     public static final String RENDERER_TYPE = "net.sourceforge.myfaces.DataScroller";
 
@@ -120,7 +122,20 @@ public class HtmlDataScrollerRenderer
                     uiData.setFirst(0);
                 }
             }
-
+            else if (param.startsWith(PAGE_NAVIGATION))
+            {
+                int index = Integer.parseInt(param.substring(PAGE_NAVIGATION.length(), param.length()));
+                int pageCount = getPageCount(uiData);
+                if (index > pageCount)
+                {
+                    index = pageCount;
+                }
+                else if (index <= 0)
+                {
+                    index = 1;
+                }
+                uiData.setFirst(uiData.getRows() * (index - 1));
+            }
         }
     }
 
@@ -138,35 +153,18 @@ public class HtmlDataScrollerRenderer
             return;
         }
 
-        int rows = uiData.getRows();
-        int pageCount;
-        if (rows > 0)
-        {
-            pageCount = rows <= 0 ? 1 : uiData.getRowCount() / rows;
-            if (uiData.getRowCount() % rows > 0)
-            {
-                pageCount++;
-            }
-        }
-        else
-        {
-            rows = 1;
-            pageCount = 1;
-        }
+
 
         String pageCountVar = scroller.getPageCountVar();
         if (pageCountVar != null)
         {
+            int pageCount = getPageCount(uiData);
             requestMap.put(pageCountVar, new Integer(pageCount));
         }
         String pageIndexVar = scroller.getPageIndexVar();
         if (pageIndexVar != null)
         {
-            int pageIndex = uiData.getFirst() / rows + 1;
-            if (uiData.getFirst() % rows > 0)
-            {
-                pageIndex++;
-            }
+            int pageIndex = getPageIndex(uiData);
             requestMap.put(pageIndexVar, new Integer(pageIndex));
         }
 
@@ -189,41 +187,76 @@ public class HtmlDataScrollerRenderer
         ResponseWriter writer = facesContext.getResponseWriter();
         HtmlDataScroller scroller = (HtmlDataScroller)uiComponent;
 
+        UIData uiData = findUIData(scroller, uiComponent);
+        if (uiData == null)
+        {
+            return;
+        }
+
+        writer.startElement("table", scroller);
+        String styleClass = scroller.getStyleClass();
+        if (styleClass != null)
+        {
+            writer.writeAttribute("class", styleClass, null);
+        }
+        String style = scroller.getStyle();
+        if (style != null)
+        {
+            writer.writeAttribute("style", style, null);
+        }
+        writer.startElement("tr", scroller);
+
         UIComponent facetComp = scroller.getFirst();
         if (facetComp != null)
         {
+            writer.startElement("td", scroller);
             renderFacet(facesContext, scroller, facetComp, FACET_FIRST);
-            writer.write("&nbsp;");
+            writer.endElement("td");
         }
         facetComp = scroller.getFastRewind();
         if (facetComp != null)
         {
+            writer.startElement("td", scroller);
             renderFacet(facesContext, scroller, facetComp, FACET_FAST_REWIND);
-            writer.write("&nbsp;");
+            writer.endElement("td");
         }
         facetComp = scroller.getPrevious();
         if (facetComp != null)
         {
+            writer.startElement("td", scroller);
             renderFacet(facesContext, scroller, facetComp, FACET_PREVOIUS);
-            writer.write("&nbsp;");
+            writer.endElement("td");
+        }
+        if (scroller.isPaginator())
+        {
+            writer.startElement("td", scroller);
+            renderPaginator(facesContext, scroller, uiData);
+            writer.endElement("td");
         }
         facetComp = scroller.getNext();
         if (facetComp != null)
         {
+            writer.startElement("td", scroller);
             renderFacet(facesContext, scroller, facetComp, FACET_NEXT);
-            writer.write("&nbsp;");
+            writer.endElement("td");
         }
         facetComp = scroller.getFastForward();
         if (facetComp != null)
         {
+            writer.startElement("td", scroller);
             renderFacet(facesContext, scroller, facetComp, FACET_FAST_FORWARD);
-            writer.write("&nbsp;");
+            writer.endElement("td");
         }
         facetComp = scroller.getLast();
         if (facetComp != null)
         {
+            writer.startElement("td", scroller);
             renderFacet(facesContext, scroller, facetComp, FACET_LAST);
+            writer.endElement("td");
         }
+
+        writer.endElement("tr");
+        writer.endElement("table");
     }
 
     private void renderFacet(FacesContext facesContext,
@@ -240,11 +273,128 @@ public class HtmlDataScrollerRenderer
         facetComp.encodeEnd(facesContext);
         link.encodeEnd(facesContext);
     }
+    
+    protected void renderPaginator(FacesContext facesContext,
+                                   HtmlDataScroller scroller,
+                                   UIData uiData)
+        throws IOException
+    {
+        ResponseWriter writer = facesContext.getResponseWriter();
 
-    private UIComponent getLink(FacesContext facesContext,
-                                HtmlDataScroller scroller,
-                                UIComponent facetComp,
-                                String facetName)
+        int maxPages = scroller.getPaginatorMaxPages();
+        if (maxPages <= 1)
+        {
+            maxPages = 2;
+        }
+        int pageCount = getPageCount(uiData);
+        if (pageCount <= 1)
+        {
+            return;
+        }
+        int pageIndex = getPageIndex(uiData);
+        int delta = maxPages / 2;
+
+        int pages;
+        int start;
+        if (pageCount > maxPages && pageIndex > delta)
+        {
+            pages = maxPages;
+            start = pageIndex - pages / 2 - 1;
+            if (start + pages > pageCount)
+            {
+                start = pageCount - pages;
+            }
+        }
+        else
+        {
+            pages = pageCount < maxPages ? pageCount : maxPages;
+            start = 0;
+        }
+
+        writer.startElement("table", scroller);
+
+        String styleClass = scroller.getPaginatorTableClass();
+        if (styleClass != null)
+        {
+            writer.writeAttribute("class", styleClass, null);
+        }
+        String style = scroller.getPaginatorTableStyle();
+        if (style != null)
+        {
+            writer.writeAttribute("style", style, null);
+        }
+
+        writer.startElement("tr", scroller);
+
+        for (int i = start, size = start + pages; i < size; i++)
+        {
+            int idx = i + 1;
+            writer.startElement("td", scroller);
+            String cStyleClass;
+            String cStyle;
+            if (idx == pageIndex)
+            {
+                cStyleClass = scroller.getPaginatorActiveColumnClass();
+                cStyle = scroller.getPaginatorActiveColumnStyle();
+            }
+            else
+            {
+                cStyleClass = scroller.getPaginatorColumnClass();
+                cStyle = scroller.getPaginatorColumnStyle();
+            }
+            if (cStyleClass != null)
+            {
+                writer.writeAttribute("class", cStyleClass, null);
+            }
+            if (cStyle != null)
+            {
+                writer.writeAttribute("style", cStyle, null);
+            }
+
+            HtmlCommandLink link = getLink(facesContext, scroller, Integer.toString(idx), idx);
+            link.encodeBegin(facesContext);
+            link.encodeChildren(facesContext);
+            link.encodeEnd(facesContext);
+
+            writer.endElement("td");
+        }
+
+        writer.endElement("tr");
+        writer.endElement("table");
+    }
+
+    protected HtmlCommandLink getLink(FacesContext facesContext,
+                                      HtmlDataScroller scroller,
+                                      String text,
+                                      int pageIndex)
+    {
+        String id = PAGE_NAVIGATION + Integer.toString(pageIndex);
+        Application application = facesContext.getApplication();
+
+        HtmlOutputText uiText =
+            (HtmlOutputText)application.createComponent(HtmlOutputText.COMPONENT_TYPE);
+        uiText.setValue(text);
+
+        HtmlCommandLink link =
+            (HtmlCommandLink)application.createComponent(HtmlCommandLink.COMPONENT_TYPE);
+        link.setId(scroller.getId() + id);
+        link.setTransient(true);
+        UIParameter parameter
+            = (UIParameter)application.createComponent(UIParameter.COMPONENT_TYPE);
+        parameter.setId(scroller.getId() + id + "_param");
+        parameter.setTransient(true);
+        parameter.setName(scroller.getClientId(facesContext));
+        parameter.setValue(id);
+        List children = link.getChildren();
+        children.add(parameter);
+        children.add(uiText);
+        return link;
+    }
+
+    protected HtmlCommandLink getLink(FacesContext facesContext,
+                                      HtmlDataScroller scroller,
+                                      UIComponent facetComp,
+                                      String facetName)
     {
         Application application = facesContext.getApplication();
 
@@ -262,6 +412,37 @@ public class HtmlDataScrollerRenderer
         children.add(parameter);
         children.add(facetComp);
         return link;
+    }
+
+    protected int getPageIndex(UIData uiData)
+    {
+        int rows = uiData.getRows();
+        int pageIndex = uiData.getFirst() / rows + 1;
+        if (uiData.getFirst() % rows > 0)
+        {
+            pageIndex++;
+        }
+        return pageIndex;
+    }
+
+    protected int getPageCount(UIData uiData)
+    {
+        int rows = uiData.getRows();
+        int pageCount;
+        if (rows > 0)
+        {
+            pageCount = rows <= 0 ? 1 : uiData.getRowCount() / rows;
+            if (uiData.getRowCount() % rows > 0)
+            {
+                pageCount++;
+            }
+        }
+        else
+        {
+            rows = 1;
+            pageCount = 1;
+        }
+        return pageCount;
     }
 
     private UIData findUIData(HtmlDataScroller scroller, UIComponent component)

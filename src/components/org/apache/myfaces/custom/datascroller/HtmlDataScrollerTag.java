@@ -24,6 +24,9 @@ import javax.faces.component.UIComponent;
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.6  2004/07/05 13:59:15  royalts
+ * added paginator functionality to dataScroller
+ *
  * Revision 1.5  2004/07/01 21:53:07  mwessendorf
  * ASF switch
  *
@@ -57,18 +60,35 @@ public class HtmlDataScrollerTag
 {
     //private static final Log log = LogFactory.getLog(HtmlDataScrollerTag.class);
 
-    private static final String FOR_ATTR = "for".intern();
-    private static final String FAST_STEP_ATTR = "fastStep".intern();
-    private static final String PAGE_INDEX_ATTR = "pageIndexVar".intern();
-    private static final String PAGE_COUNT_ATTR = "pageCountVar".intern();
-
-
+    private static final String FOR_ATTR                = "for";
+    private static final String FAST_STEP_ATTR          = "fastStep";
+    private static final String PAGE_INDEX_ATTR         = "pageIndexVar";
+    private static final String PAGE_COUNT_ATTR         = "pageCountVar";
+    private static final String STYLE_CLASS_ATTR        = "styleClass";
+    private static final String STYLE_ATTR              = "style";
+    private static final String PAGINATOR_ATTR          = "paginator";
+    private static final String PAGINATOR_MAX_PAGES_ATTR = "paginatorMaxPages";
+    private static final String PAGINATOR_TABLE_CLASS_ATTR  = "paginatorTableClass";
+    private static final String PAGINATOR_TABLE_STYLE_ATTR  = "paginatorTableStyle";
+    private static final String PAGINATOR_COL_CLASS_ATTR    = "paginatorColumnClass";
+    private static final String PAGINATOR_COL_STYLE_ATTR    = "paginatorColumnStyle";
+    private static final String PAGINATOR_ACTCOL_CLASS_ATTR = "paginatorAcitveColumnClass";
+    private static final String PAGINATOR_ACTCOL_STYLE_ATTR = "paginatorActiveColumnStyle";
 
     private String _for;
     private String _fastStep;
     private String _pageIndexVar;
     private String _pageCountVar;
-
+    private String _paginator;
+    private String _styleClass;
+    private String _style;
+    private String _paginatorMaxPages;
+    private String _paginatorTableClass;
+    private String _paginatorTableStyle;
+    private String _paginatorColumnClass;
+    private String _paginatorColumnStyle;
+    private String _paginatorAcitveColumnClass;
+    private String _paginatorActiveColumnStyle;
 
     // User Role support
     private String _enabledOnUserRole;
@@ -92,6 +112,16 @@ public class HtmlDataScrollerTag
         setIntegerProperty(component, FAST_STEP_ATTR, _fastStep);
         setStringProperty(component, PAGE_INDEX_ATTR, _pageIndexVar);
         setStringProperty(component, PAGE_COUNT_ATTR, _pageCountVar);
+        setStringProperty(component, STYLE_CLASS_ATTR, _styleClass);
+        setStringProperty(component, STYLE_ATTR, _style);
+        setBooleanProperty(component, PAGINATOR_ATTR, _paginator);
+        setIntegerProperty(component, PAGINATOR_MAX_PAGES_ATTR, _paginatorMaxPages);
+        setStringProperty(component, PAGINATOR_TABLE_CLASS_ATTR, _paginatorTableClass);
+        setStringProperty(component, PAGINATOR_TABLE_STYLE_ATTR, _paginatorTableStyle);
+        setStringProperty(component, PAGINATOR_COL_CLASS_ATTR, _paginatorColumnClass);
+        setStringProperty(component, PAGINATOR_COL_STYLE_ATTR, _paginatorColumnStyle);
+        setStringProperty(component, PAGINATOR_ACTCOL_CLASS_ATTR, _paginatorAcitveColumnClass);
+        setStringProperty(component, PAGINATOR_ACTCOL_STYLE_ATTR, _paginatorActiveColumnStyle);
 
         setStringProperty(component, UserRoleAware.ENABLED_ON_USER_ROLE_ATTR, _enabledOnUserRole);
         setStringProperty(component, UserRoleAware.VISIBLE_ON_USER_ROLE_ATTR, _visibleOnUserRole);
@@ -118,6 +148,55 @@ public class HtmlDataScrollerTag
         _pageIndexVar = pageIndexVar;
     }
 
+    public void setStyle(String style)
+    {
+        _style = style;
+    }
+
+    public void setStyleClass(String styleClass)
+    {
+        _styleClass = styleClass;
+    }
+
+    public void setPaginator(String paginator)
+    {
+        _paginator = paginator;
+    }
+
+    public void setPaginatorMaxPages(String paginatorMaxPages)
+    {
+        _paginatorMaxPages = paginatorMaxPages;
+    }
+
+    public void setPaginatorTableClass(String paginatorTableClass)
+    {
+        _paginatorTableClass = paginatorTableClass;
+    }
+
+    public void setPaginatorColumnClass(String paginatorColumnClass)
+    {
+        _paginatorColumnClass = paginatorColumnClass;
+    }
+
+    public void setPaginatorColumnStyle(String paginatorColumnStyle)
+    {
+        _paginatorColumnStyle = paginatorColumnStyle;
+    }
+
+    public void setPaginatorTableStyle(String paginatorTableStyle)
+    {
+        _paginatorTableStyle = paginatorTableStyle;
+    }
+
+    public void setPaginatorAcitveColumnClass(String paginatorAcitveColumnClass)
+    {
+        _paginatorAcitveColumnClass = paginatorAcitveColumnClass;
+    }
+
+    public void setPaginatorActiveColumnStyle(String paginatorActiveColumnStyle)
+    {
+        _paginatorActiveColumnStyle = paginatorActiveColumnStyle;
+    }
 
     // userrole attributes
     public void setEnabledOnUserRole(String enabledOnUserRole)

@@ -114,6 +114,17 @@ public class HtmlDataScroller
     private Integer _fastStep = null;
     private String _pageIndexVar = null;
     private String _pageCountVar = null;
+    private String _style = null;
+    private String _styleClass = null;
+    private String _columnClasses = null;
+    private Boolean _paginator = null;
+    private Integer _paginatorMaxPages = null;
+    private String _paginatorTableClass = null;
+    private String _paginatorTableStyle = null;
+    private String _paginatorColumnClass = null;
+    private String _paginatorColumnStyle = null;
+    private String _paginatorActiveColumnClass = null;
+    private String _paginatorActiveColumnStyle = null;
 
     public HtmlDataScroller()
     {
@@ -174,16 +185,161 @@ public class HtmlDataScroller
         return vb != null ? (String)vb.getValue(getFacesContext()) : null;
     }
 
+    public void setStyle(String style)
+    {
+        _style = style;
+    }
+
+    public String getStyle()
+    {
+        if (_style != null) return _style;
+        ValueBinding vb = getValueBinding("style");
+        return vb != null ? (String)vb.getValue(getFacesContext()) : null;
+    }
+
+    public void setStyleClass(String styleClass)
+    {
+        _styleClass = styleClass;
+    }
+
+    public String getStyleClass()
+    {
+        if (_styleClass != null) return _styleClass;
+        ValueBinding vb = getValueBinding("styleClass");
+        return vb != null ? (String)vb.getValue(getFacesContext()) : null;
+    }
+
+    public void setColumnClasses(String columnClasses)
+    {
+        _columnClasses = columnClasses;
+    }
+
+    public String getColumnClasses()
+    {
+        if (_columnClasses != null) return _columnClasses;
+        ValueBinding vb = getValueBinding("columnClasses");
+        return vb != null ? (String)vb.getValue(getFacesContext()) : null;
+    }
+
+    public void setPaginator(boolean paginator)
+    {
+        _paginator = Boolean.valueOf(paginator);
+    }
+
+    public boolean isPaginator()
+    {
+        if (_paginator != null) return _paginator.booleanValue();
+        ValueBinding vb = getValueBinding("paginator");
+        Boolean v = vb != null ? (Boolean)vb.getValue(getFacesContext()) : null;
+        return v != null ? v.booleanValue() : false;
+    }
+
+    public void setPaginatorMaxPages(int paginatorMaxPages)
+    {
+        _paginatorMaxPages = new Integer(paginatorMaxPages);
+    }
+
+    public int getPaginatorMaxPages()
+    {
+        if (_paginatorMaxPages != null) return _paginatorMaxPages.intValue();
+        ValueBinding vb = getValueBinding("paginatorMaxPages");
+        Integer v = vb != null ? (Integer)vb.getValue(getFacesContext()) : null;
+        return v != null ? v.intValue() : Integer.MIN_VALUE;
+    }
+
+    public void setPaginatorTableClass(String paginatorTableClass)
+    {
+        _paginatorTableClass = paginatorTableClass;
+    }
+
+    public String getPaginatorTableClass()
+    {
+        if (_paginatorTableClass != null) return _paginatorTableClass;
+        ValueBinding vb = getValueBinding("paginatorTableClass");
+        return vb != null ? (String)vb.getValue(getFacesContext()) : null;
+    }
+
+    public void setPaginatorTableStyle(String paginatorTableStyle)
+    {
+        _paginatorTableStyle = paginatorTableStyle;
+    }
+
+    public String getPaginatorTableStyle()
+    {
+        if (_paginatorTableStyle != null) return _paginatorTableStyle;
+        ValueBinding vb = getValueBinding("paginatorTableStyle");
+        return vb != null ? (String)vb.getValue(getFacesContext()) : null;
+    }
+
+    public void setPaginatorColumnClass(String paginatorColumnClass)
+    {
+        _paginatorColumnClass = paginatorColumnClass;
+    }
+
+    public String getPaginatorColumnClass()
+    {
+        if (_paginatorColumnClass != null) return _paginatorColumnClass;
+        ValueBinding vb = getValueBinding("paginatorColumnClass");
+        return vb != null ? (String)vb.getValue(getFacesContext()) : null;
+    }
+
+    public void setPaginatorColumnStyle(String paginatorColumnStyle)
+    {
+        _paginatorColumnStyle = paginatorColumnStyle;
+    }
+
+    public String getPaginatorColumnStyle()
+    {
+        if (_paginatorColumnStyle != null) return _paginatorColumnStyle;
+        ValueBinding vb = getValueBinding("paginatorColumnStyle");
+        return vb != null ? (String)vb.getValue(getFacesContext()) : null;
+    }
+
+    public void setPaginatorActiveColumnClass(String paginatorActiveColumnClass)
+    {
+        _paginatorActiveColumnClass = paginatorActiveColumnClass;
+    }
+
+    public String getPaginatorActiveColumnClass()
+    {
+        if (_paginatorActiveColumnClass != null) return _paginatorActiveColumnClass;
+        ValueBinding vb = getValueBinding("paginatorActiveColumnClass");
+        return vb != null ? (String)vb.getValue(getFacesContext()) : null;
+    }
+
+    public void setPaginatorActiveColumnStyle(String paginatorActiveColumnStyle)
+    {
+        _paginatorActiveColumnStyle = paginatorActiveColumnStyle;
+    }
+
+    public String getPaginatorActiveColumnStyle()
+    {
+        if (_paginatorActiveColumnStyle != null) return _paginatorActiveColumnStyle;
+        ValueBinding vb = getValueBinding("paginatorActiveColumnStyle");
+        return vb != null ? (String)vb.getValue(getFacesContext()) : null;
+    }
+
 
 
     public Object saveState(FacesContext context)
     {
-        Object values[] = new Object[5];
+        Object values[] = new Object[16];
         values[0] = super.saveState(context);
         values[1] = _for;
         values[2] = _fastStep;
         values[3] = _pageIndexVar;
         values[4] = _pageCountVar;
+        values[5] = _style;
+        values[6] = _styleClass;
+        values[7] = _columnClasses;
+        values[8] = _paginator;
+        values[9] = _paginatorMaxPages;
+        values[10] = _paginatorTableClass;
+        values[11] = _paginatorTableStyle;
+        values[12] = _paginatorColumnClass;
+        values[13] = _paginatorColumnStyle;
+        values[14] = _paginatorActiveColumnClass;
+        values[15] = _paginatorActiveColumnStyle;
         return ((Object) (values));
     }
 
@@ -195,6 +351,17 @@ public class HtmlDataScroller
         _fastStep = (Integer)values[2];
         _pageIndexVar = (String)values[3];
         _pageCountVar = (String)values[4];
+        _style = (String)values[5];
+        _styleClass = (String)values[6];
+        _columnClasses = (String)values[7];
+        _paginator = (Boolean)values[8];
+        _paginatorMaxPages = (Integer)values[9];
+        _paginatorTableClass = (String)values[10];
+        _paginatorTableStyle = (String)values[11];
+        _paginatorColumnClass = (String)values[12];
+        _paginatorColumnStyle = (String)values[13];
+        _paginatorActiveColumnClass = (String)values[14];
+        _paginatorActiveColumnStyle = (String)values[15];
     }
     //------------------ GENERATED CODE END ---------------------------------------
 }

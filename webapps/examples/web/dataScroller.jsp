@@ -95,7 +95,13 @@ managed beans used:
                             for="data"
                             fastStep="10"
                             pageCountVar="pageCount"
-                            pageIndexVar="pageIndex" >
+                            pageIndexVar="pageIndex"
+                            styleClass="scroller"
+                            paginator="true"
+                            paginatorMaxPages="9"
+                            paginatorTableClass="paginator"
+                            paginatorActiveColumnStyle="font-weight:bold;"
+                            >
                         <f:facet name="first" >
                             <h:graphicImage url="images/arrow-first.gif" border="1" />
                         </f:facet>
@@ -118,8 +124,9 @@ managed beans used:
                     <x:dataScroller id="scroll_2"
                             for="data"
                             pageCountVar="pageCount"
-                            pageIndexVar="pageIndex" >
-                        <h:outputFormat value="#{example_messages['dataScroller_pages']}" >
+                            pageIndexVar="pageIndex"
+                            >
+                        <h:outputFormat value="#{example_messages['dataScroller_pages']}" styleClass="standard" >
                             <f:param value="#{pageIndex}" />
                             <f:param value="#{pageCount}" />
                         </h:outputFormat>

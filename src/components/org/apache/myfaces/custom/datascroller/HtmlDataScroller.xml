@@ -24,4 +24,44 @@
         <name>pageCountVar</name>
         <type>java.lang.String</type>
     </field>
+    <field>
+        <name>style</name>
+        <type>String</type>
+    </field>
+    <field>
+        <name>styleClass</name>
+        <type>String</type>
+    </field>
+    <field>
+        <name>paginator</name>
+        <type>boolean</type>
+    </field>
+    <field>
+        <name>paginatorMaxPages</name>
+        <type>int</type>
+    </field>
+    <field>
+        <name>paginatorTableClass</name>
+        <type>String</type>
+    </field>
+    <field>
+        <name>paginatorTableStyle</name>
+        <type>String</type>
+    </field>
+    <field>
+        <name>paginatorColumnClass</name>
+        <type>String</type>
+    </field>
+    <field>
+        <name>paginatorColumnStyle</name>
+        <type>String</type>
+    </field>
+    <field>
+        <name>paginatorActiveColumnClass</name>
+        <type>String</type>
+    </field>
+    <field>
+        <name>paginatorActiveColumnStyle</name>
+        <type>String</type>
+    </field>
 </component>
