@@ -498,6 +498,34 @@ public class ApplicationImpl
             }
         }
 
+        //   locate converter for primitive types
+        if (targetClass == Long.TYPE)
+        {
+            return internalCreateConverter(Long.class);
+        } else if (targetClass == Boolean.TYPE)
+        {
+            return internalCreateConverter(Boolean.class);
+        } else if (targetClass == Double.TYPE)
+        {
+            return internalCreateConverter(Double.class);
+        } else if (targetClass == Byte.TYPE)
+        {
+            return internalCreateConverter(Byte.class);
+        } else if (targetClass == Short.TYPE)
+        {
+            return internalCreateConverter(Short.class);
+        } else if (targetClass == Integer.TYPE)
+        {
+            return internalCreateConverter(Integer.class);
+        } else if (targetClass == Float.TYPE)
+        {
+            return internalCreateConverter(Float.class);
+        } else if (targetClass == Character.TYPE)
+        {
+            return internalCreateConverter(Character.class);
+        }
+
+
         //Locate a Converter registered for the superclass (if any) of the target class,
         // recursively working up the inheritance hierarchy.
         Class superClazz = targetClass.getSuperclass();
@@ -509,6 +537,7 @@ public class ApplicationImpl
         {
             return null;
         }
+
     }
 
 
