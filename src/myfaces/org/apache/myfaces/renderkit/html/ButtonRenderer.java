@@ -183,8 +183,8 @@ public class ButtonRenderer
             writer.write("\"");
         }
 
-        CommonAttributes.renderEventHandlerAttributes(context, component);
-        CommonAttributes.renderUniversalAttributes(context, component);
+        CommonAttributes.renderHTMLEventHandlerAttributes(context, component);
+        CommonAttributes.renderUniversalHTMLAttributes(context, component);
         CommonAttributes.renderAttributes(context, component, ButtonRendererAttributes.COMMON_BUTTON_ATTRIBUTES);
 
         writer.write(">");

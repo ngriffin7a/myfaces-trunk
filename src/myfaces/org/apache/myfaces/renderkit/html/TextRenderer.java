@@ -97,8 +97,8 @@ public class TextRenderer
             writer.write(css);
             writer.write("\">");
         }
-        CommonAttributes.renderEventHandlerAttributes(context, component);
-        CommonAttributes.renderUniversalAttributes(context, component);
+        CommonAttributes.renderHTMLEventHandlerAttributes(context, component);
+        CommonAttributes.renderUniversalHTMLAttributes(context, component);
         CommonAttributes.renderAttributes(context, component, TextRendererAttributes.COMMON_TEXT_ATTRIBUTES);
         writer.write(">");
     }

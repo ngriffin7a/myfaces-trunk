@@ -36,7 +36,33 @@ public interface ImageRendererAttributes
     public static final String ALT_KEY_ATTR = "altKey";
     public static final String ALT_BUNDLE_ATTR = "altBundle";
 
-    public static final String WIDTH_ATTR = "width";
-    public static final String HEIGHT_ATTR = "height";
+    public static final String ALIGN_ATTR = "align";
     public static final String ALT_ATTR = "alt";
+    public static final String BORDER_ATTR = "border";
+    public static final String HEIGHT_ATTR = "height";
+    public static final String HSPACE_ATTR = "hspace";
+    public static final String ISMAP_ATTR = "ismap";
+    public static final String LONGDESC_ATTR = "longdesc";
+    public static final String NAME_ATTR = "name";
+    public static final String SRC_ATTR = "src";
+    public static final String USEMAP_ATTR = "usemap";
+    public static final String VSPACE_ATTR = "vspace";
+    public static final String WIDTH_ATTR = "width";
+    public static final String[] COMMON_IMAGE_ATTRUBUTES =
+    {
+        ALIGN_ATTR,
+        //ALT_ATTR, alt attribute is not a common image attribute (see ImageRenderer)
+        BORDER_ATTR,
+        HEIGHT_ATTR,
+        HSPACE_ATTR,
+        ISMAP_ATTR,
+        LONGDESC_ATTR,
+        NAME_ATTR,
+        SRC_ATTR,
+        USEMAP_ATTR,
+        VSPACE_ATTR,
+        WIDTH_ATTR
+    };
+
+
 }

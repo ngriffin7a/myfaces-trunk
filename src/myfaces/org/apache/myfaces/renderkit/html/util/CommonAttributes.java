@@ -32,13 +32,13 @@ import java.io.IOException;
  */
 public class CommonAttributes
 {
-    public static void renderUniversalAttributes(FacesContext context, UIComponent component)
+    public static void renderUniversalHTMLAttributes(FacesContext context, UIComponent component)
         throws IOException
     {
         renderAttributes(context, component, CommonRendererAttributes.UNIVERSAL_ATTRIBUTES);
     }
 
-    public static void renderEventHandlerAttributes(FacesContext context, UIComponent component)
+    public static void renderHTMLEventHandlerAttributes(FacesContext context, UIComponent component)
         throws IOException
     {
         renderAttributes(context, component, CommonRendererAttributes.EVENT_HANDLER_ATTRIBUTES);

@@ -37,6 +37,11 @@ public class AttrDescrImpl
     private String _name;
     private Class _type;
 
+    public AttrDescrImpl(String name)
+    {
+        this(name, String.class);
+    }
+
     public AttrDescrImpl(String name, Class type)
     {
         _name = name;

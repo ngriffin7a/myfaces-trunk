@@ -59,8 +59,8 @@ public class FormRenderer
         writer.write("<form method=\"post\" action=\"");
         writer.write(getActionStr(context, component));
         writer.write("\"");
-        CommonAttributes.renderEventHandlerAttributes(context, component);
-        CommonAttributes.renderUniversalAttributes(context, component);
+        CommonAttributes.renderHTMLEventHandlerAttributes(context, component);
+        CommonAttributes.renderUniversalHTMLAttributes(context, component);
         CommonAttributes.renderAttributes(context, component, FormRendererAttributes.COMMON_FORM_ATTRIBUTES);
         writer.write(">");
     }

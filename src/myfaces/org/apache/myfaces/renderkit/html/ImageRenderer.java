@@ -20,6 +20,7 @@ package net.sourceforge.myfaces.renderkit.html;
 
 import net.sourceforge.myfaces.renderkit.attr.ImageRendererAttributes;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLEncoder;
+import net.sourceforge.myfaces.renderkit.html.util.CommonAttributes;
 import net.sourceforge.myfaces.util.bundle.BundleUtils;
 
 import javax.faces.component.UIComponent;
@@ -64,22 +65,22 @@ public class ImageRenderer
     {
     }
 
-    public void encodeEnd(FacesContext facesContext, UIComponent uiComponent) throws IOException
+    public void encodeEnd(FacesContext context, UIComponent component) throws IOException
     {
-        javax.faces.context.ResponseWriter writer = facesContext.getResponseWriter();
+        javax.faces.context.ResponseWriter writer = context.getResponseWriter();
 
         String value;
 
-        String key = (String)uiComponent.getAttribute(KEY_ATTR);
+        String key = (String)component.getAttribute(KEY_ATTR);
         if (key != null)
         {
-            value = BundleUtils.getString(facesContext,
-                                          (String)uiComponent.getAttribute(BUNDLE_ATTR),
+            value = BundleUtils.getString(context,
+                                          (String)component.getAttribute(BUNDLE_ATTR),
                                           key);
         }
         else
         {
-            value = getStringValue(facesContext, uiComponent);
+            value = getStringValue(context, component);
         }
 
         if (value != null && value.length() > 0)
@@ -89,7 +90,7 @@ public class ImageRenderer
             String src;
             if (value.startsWith("/"))
             {
-                HttpServletRequest request = (HttpServletRequest)facesContext.getServletRequest();
+                HttpServletRequest request = (HttpServletRequest)context.getServletRequest();
                 src = request.getContextPath() + value;
             }
             else
@@ -100,47 +101,33 @@ public class ImageRenderer
             //Encode URL for those still using HttpSessions... ;-)
             //Although this is an image url, encodeURL is no nonsense, because the
             //actual image url could also be a dynamic servlet request:
-            src = ((HttpServletResponse)facesContext.getServletResponse()).encodeURL(src);
+            src = ((HttpServletResponse)context.getServletResponse()).encodeURL(src);
 
             writer.write(src);
             writer.write("\"");
 
             String alt;
-            String altKey = (String)uiComponent.getAttribute(ALT_KEY_ATTR);
+            String altKey = (String)component.getAttribute(ALT_KEY_ATTR);
             if (altKey != null)
             {
-                alt = BundleUtils.getString(facesContext,
-                                              (String)uiComponent.getAttribute(ALT_BUNDLE_ATTR),
+                alt = BundleUtils.getString(context,
+                                              (String)component.getAttribute(ALT_BUNDLE_ATTR),
                                               altKey);
             }
             else
             {
-                alt = (String)uiComponent.getAttribute(ALT_ATTR);
+                alt = (String)component.getAttribute(ALT_ATTR);
             }
             if (alt != null && alt.length() > 0)
             {
-
                 writer.write(" alt=\"");
                 writer.write(HTMLEncoder.encode(alt, false, false));
                 writer.write("\"");
             }
 
-            Integer width = (Integer)uiComponent.getAttribute(WIDTH_ATTR);
-            Integer height = (Integer)uiComponent.getAttribute(HEIGHT_ATTR);
-
-            if (width != null)
-            {
-                writer.write(" width=\"");
-                writer.write(HTMLEncoder.encode(width.toString(), false, false));
-                writer.write("\"");
-            }
-
-            if (height != null)
-            {
-                writer.write(" height=\"");
-                writer.write(HTMLEncoder.encode(height.toString(), false, false));
-                writer.write("\"");
-            }
+            CommonAttributes.renderHTMLEventHandlerAttributes(context, component);
+            CommonAttributes.renderUniversalHTMLAttributes(context, component);
+            CommonAttributes.renderAttributes(context, component, ImageRendererAttributes.COMMON_IMAGE_ATTRUBUTES);
 
             writer.write(">");
         }

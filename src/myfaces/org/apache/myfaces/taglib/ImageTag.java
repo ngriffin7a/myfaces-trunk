@@ -57,19 +57,9 @@ public class ImageTag
         setRendererAttribute(ImageRenderer.BUNDLE_ATTR, value);
     }
 
-    public void setWidth(Integer value)
-    {
-        setRendererAttribute(ImageRenderer.WIDTH_ATTR, value);
-    }
-
-    public void setHeight(Integer value)
-    {
-        setRendererAttribute(ImageRenderer.HEIGHT_ATTR, value);
-    }
-
     public void setAlt(String value)
     {
-        setRendererAttribute(ImageRenderer.ALT_ATTR, value);
+        setRendererAttribute("alt", value);
     }
 
     public void setAltKey(String value)
@@ -82,4 +72,58 @@ public class ImageTag
         setRendererAttribute(ImageRenderer.ALT_BUNDLE_ATTR, value);
     }
 
+    public void setAlign(String value)
+    {
+        setRendererAttribute(ImageRenderer.ALIGN_ATTR, value);
+    }
+
+    public void setBorder(String value)
+    {
+        setRendererAttribute(ImageRenderer.BORDER_ATTR, value);
+    }
+
+    public void setHeight(String value)
+    {
+        setRendererAttribute(ImageRenderer.HEIGHT_ATTR, value);
+    }
+
+    public void setHspace(String value)
+    {
+        setRendererAttribute(ImageRenderer.HSPACE_ATTR, value);
+    }
+
+    public void setIsmap(String value)
+    {
+        setRendererAttribute(ImageRenderer.ISMAP_ATTR, value);
+    }
+
+    public void setLongdesc(String value)
+    {
+        setRendererAttribute(ImageRenderer.LONGDESC_ATTR, value);
+    }
+
+    public void setName(String value)
+    {
+        setRendererAttribute(ImageRenderer.NAME_ATTR, value);
+    }
+
+    public void setSrc(String value)
+    {
+        setRendererAttribute(ImageRenderer.SRC_ATTR, value);
+    }
+
+    public void setUsemap(String value)
+    {
+        setRendererAttribute(ImageRenderer.USEMAP_ATTR, value);
+    }
+
+    public void setVspace(String value)
+    {
+        setRendererAttribute(ImageRenderer.VSPACE_ATTR, value);
+    }
+
+    public void setWidth(String value)
+    {
+        setRendererAttribute(ImageRenderer.WIDTH_ATTR, value);
+    }
 }
