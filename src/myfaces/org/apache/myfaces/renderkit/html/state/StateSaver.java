@@ -346,6 +346,8 @@ public class StateSaver
         }
         else
         {
+            //TODO: get attribute type by AttributeDescriptor
+
             if (attrValue instanceof Serializable)
             {
                 strValue = ConverterUtils.serialize(attrValue);
