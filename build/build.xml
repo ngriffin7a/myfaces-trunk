@@ -311,8 +311,6 @@
             <tarfileset dir="${conf.dir}"
                         includes="web.xml"
                         prefix="myfaces-${manifest.impl.version}/conf"/>
-            <tarfileset file="${myfaces.jar}"
-                        prefix="myfaces-${manifest.impl.version}/lib"/>
             <tarfileset file="${commons-codec.jar}"
                         prefix="myfaces-${manifest.impl.version}/lib"/>
             <tarfileset file="${commons-logging.jar}"
