@@ -35,7 +35,7 @@ public class HtmlSelectManyListbox extends UISelectMany
     private static final String DEFAULT_RENDERER_TYPE = "javax.faces.Listbox";
     private static final boolean DEFAULT_DISABLED = false;
     private static final boolean DEFAULT_READONLY = false;
-    private static final int DEFAULT_SIZE = -2147483648;
+    private static final int DEFAULT_SIZE = Integer.MIN_VALUE;
 
     private String _accesskey = null;
     private String _dir = null;

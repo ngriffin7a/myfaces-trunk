@@ -28,6 +28,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.el.MethodBinding;
 import javax.faces.el.ValueBinding;
 import javax.faces.event.FacesListener;
+import javax.faces.validator.Validator;
 import java.beans.BeanInfo;
 import java.beans.PropertyDescriptor;
 import java.io.ByteArrayOutputStream;
@@ -62,6 +63,7 @@ public class DebugUtils
         IGNORE_ATTRIBUTES.add("parent");
         IGNORE_ATTRIBUTES.add("actionListeners");
         IGNORE_ATTRIBUTES.add("valueChangeListeners");
+        IGNORE_ATTRIBUTES.add("validators");
         IGNORE_ATTRIBUTES.add("javax.faces.webapp.COMPONENT_IDS");
         IGNORE_ATTRIBUTES.add("javax.faces.webapp.FACET_NAMES");
         IGNORE_ATTRIBUTES.add("javax.faces.webapp.CURRENT_VIEW_ROOT");
@@ -254,6 +256,21 @@ public class DebugUtils
                     printIndent(stream, indent + 1);
                     stream.print('<');
                     stream.print(listener.getClass().getName());
+                    stream.println("/>");
+                }
+            }
+
+            Validator[] validators = ((UIInput)comp).getValidators();
+            if (validators != null && validators.length > 0)
+            {
+                nestedObjects = true;
+                stream.println('>'); mustClose = false;
+                for (int i = 0; i < validators.length; i++)
+                {
+                    Validator validator = validators[i];
+                    printIndent(stream, indent + 1);
+                    stream.print('<');
+                    stream.print(validator.getClass().getName());
                     stream.println("/>");
                 }
             }

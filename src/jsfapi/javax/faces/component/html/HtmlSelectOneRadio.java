@@ -33,7 +33,7 @@ public class HtmlSelectOneRadio extends UISelectOne
 
     public static final String COMPONENT_TYPE = "javax.faces.HtmlSelectOneRadio";
     private static final String DEFAULT_RENDERER_TYPE = "javax.faces.Radio";
-    private static final int DEFAULT_BORDER = -2147483648;
+    private static final int DEFAULT_BORDER = Integer.MIN_VALUE;
     private static final boolean DEFAULT_DISABLED = false;
     private static final boolean DEFAULT_READONLY = false;
 

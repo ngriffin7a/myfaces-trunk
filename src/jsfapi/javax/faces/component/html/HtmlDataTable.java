@@ -33,7 +33,7 @@ public class HtmlDataTable extends UIData
 
     public static final String COMPONENT_TYPE = "javax.faces.HtmlDataTable";
     private static final String DEFAULT_RENDERER_TYPE = "javax.faces.Table";
-    private static final int DEFAULT_BORDER = -2147483648;
+    private static final int DEFAULT_BORDER = Integer.MIN_VALUE;
 
     private String _bgcolor = null;
     private Integer _border = null;

@@ -33,10 +33,10 @@ public class HtmlInputTextarea extends UIInput
 
     public static final String COMPONENT_TYPE = "javax.faces.HtmlInputTextarea";
     private static final String DEFAULT_RENDERER_TYPE = "javax.faces.Textarea";
-    private static final int DEFAULT_COLS = -2147483648;
+    private static final int DEFAULT_COLS = Integer.MIN_VALUE;
     private static final boolean DEFAULT_DISABLED = false;
     private static final boolean DEFAULT_READONLY = false;
-    private static final int DEFAULT_ROWS = -2147483648;
+    private static final int DEFAULT_ROWS = Integer.MIN_VALUE;
 
     private String _accesskey = null;
     private Integer _cols = null;

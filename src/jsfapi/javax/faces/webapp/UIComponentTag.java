@@ -345,12 +345,13 @@ public abstract class UIComponentTag
         if (facetName != null)
         {
             //Facet
+            String id = getOrCreateUniqueId(context);
             _componentInstance = parent.getFacet(facetName);
             if (_componentInstance == null)
             {
 //System.out.println("UIComponentTag: Facet " + facetName + " not found in parent component " + parent.getClientId(context) + " - creating new");
                 _componentInstance = createComponentInstance(context);
-                _componentInstance.setId(getOrCreateUniqueId(context)); //TODO: spec says nothing about facet ids
+                _componentInstance.setId(id); //TODO: spec says nothing about facet ids
                 setProperties(_componentInstance);
                 parent.getFacets().put(facetName, _componentInstance);
             }

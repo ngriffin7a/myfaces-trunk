@@ -84,7 +84,7 @@ managed beans used:
                    </h:column>
 
                 </x:dataTable>
-                <br>
+                <f:verbatim><br></f:verbatim>
 
             </h:panelGroup>
         </f:facet>

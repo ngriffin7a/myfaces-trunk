@@ -156,6 +156,14 @@ public class FieldDef
             {
                 return '\"' + _defaultValue + '\"';
             }
+            else if (_defaultValue.equals("-2147483648") && _qualifiedType.equals("int"))
+            {
+                return "Integer.MIN_VALUE";
+            }
+            else if (_defaultValue.equals("-2147483648") && _qualifiedType.equals("int"))
+            {
+                return "Integer.MIN_VALUE";
+            }
             else
             {
                 return _defaultValue;

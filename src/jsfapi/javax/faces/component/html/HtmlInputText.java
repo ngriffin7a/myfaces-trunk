@@ -34,9 +34,9 @@ public class HtmlInputText extends UIInput
     public static final String COMPONENT_TYPE = "javax.faces.HtmlInputText";
     private static final String DEFAULT_RENDERER_TYPE = "javax.faces.Text";
     private static final boolean DEFAULT_DISABLED = false;
-    private static final int DEFAULT_MAXLENGTH = -2147483648;
+    private static final int DEFAULT_MAXLENGTH = Integer.MIN_VALUE;
     private static final boolean DEFAULT_READONLY = false;
-    private static final int DEFAULT_SIZE = -2147483648;
+    private static final int DEFAULT_SIZE = Integer.MIN_VALUE;
 
     private String _accesskey = null;
     private String _alt = null;

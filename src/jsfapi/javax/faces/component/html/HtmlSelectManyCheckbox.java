@@ -33,7 +33,7 @@ public class HtmlSelectManyCheckbox extends UISelectMany
 
     public static final String COMPONENT_TYPE = "javax.faces.HtmlSelectManyCheckbox";
     private static final String DEFAULT_RENDERER_TYPE = "javax.faces.Checkbox";
-    private static final int DEFAULT_BORDER = -2147483648;
+    private static final int DEFAULT_BORDER = Integer.MIN_VALUE;
     private static final boolean DEFAULT_DISABLED = false;
     private static final boolean DEFAULT_READONLY = false;
 

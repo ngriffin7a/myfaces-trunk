@@ -81,7 +81,8 @@ public class LengthValidator
                 throw new ValidatorException(_MessageUtils.getErrorMessage(facesContext, MINIMUM_MESSAGE_ID, args));
             }
         }
-        else if (_maximum != null)
+        
+        if (_maximum != null)
         {
             if (length > _maximum.intValue())
             {

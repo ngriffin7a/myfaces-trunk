@@ -33,8 +33,8 @@ public class HtmlPanelGrid extends UIPanel
 
     public static final String COMPONENT_TYPE = "javax.faces.HtmlPanelGrid";
     private static final String DEFAULT_RENDERER_TYPE = "javax.faces.Grid";
-    private static final int DEFAULT_BORDER = -2147483648;
-    private static final int DEFAULT_COLUMNS = -2147483648;
+    private static final int DEFAULT_BORDER = Integer.MIN_VALUE;
+    private static final int DEFAULT_COLUMNS = Integer.MIN_VALUE;
 
     private String _bgcolor = null;
     private Integer _border = null;
