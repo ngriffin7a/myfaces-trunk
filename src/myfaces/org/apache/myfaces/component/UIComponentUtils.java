@@ -141,7 +141,7 @@ public class UIComponentUtils
     {
         MessageResourcesFactory msgResFactory = (MessageResourcesFactory)FactoryFinder.getFactory(FactoryFinder.MESSAGE_RESOURCES_FACTORY);
         MessageResources msgRes = msgResFactory.getMessageResources(MessageResourcesFactory.FACES_IMPL_MESSAGES);
-        //TODO: Determine a label for the component and add it as a MessageFormat parameter
+        //TODO: Find a label (= UIOuput with LabelRenderer) for the component and add it as a MessageFormat parameter
         Message msg = msgRes.getMessage(facesContext, messageId);
         facesContext.addMessage(comp, msg);
     }

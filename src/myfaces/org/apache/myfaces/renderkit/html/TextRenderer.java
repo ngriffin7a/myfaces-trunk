@@ -104,6 +104,14 @@ public class TextRenderer
             writer.write(maxLength);
             writer.write("\"");
         }
+        String css = (String)uiComponent.getAttribute(INPUT_CLASS_ATTR);
+        if (css != null)
+        {
+            writer.write("<span class=\"");
+            writer.write(css);
+            writer.write("\">");
+        }
+
         writer.write(">");
     }
 
@@ -112,7 +120,18 @@ public class TextRenderer
         throws IOException
     {
         ResponseWriter writer = facesContext.getResponseWriter();
+        String css = (String)uiComponent.getAttribute(OUTPUT_CLASS_ATTR);
+        if (css != null)
+        {
+            writer.write("<span class=\"");
+            writer.write(css);
+            writer.write("\">");
+        }
         writer.write(HTMLEncoder.encode(getStringValue(facesContext, uiComponent), true, true));
+        if (css != null)
+        {
+            writer.write("</span>");
+        }
     }
 
 }
