@@ -86,7 +86,7 @@ public class HtmlSelectManyMenuTag
         setStringProperty(component, HTML.ONCHANGE_ATTR, _onchange);
         setStringProperty(component, HTML.ONFOCUS_ATTR, _onfocus);
         setStringProperty(component, HTML.ONSELECT_ATTR, _onselect);
-        setIntegerProperty(component, HTML.TABINDEX_ATTR, _tabindex);
+        setStringProperty(component, HTML.TABINDEX_ATTR, _tabindex);
 
         setIntegerProperty(component, HTML.BORDER_ATTR, _border);
    }

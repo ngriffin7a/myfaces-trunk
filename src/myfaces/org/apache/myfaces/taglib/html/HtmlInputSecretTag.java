@@ -97,7 +97,7 @@ public class HtmlInputSecretTag
         setStringProperty(component, HTML.ONSELECT_ATTR, _onselect);
         setBooleanProperty(component, HTML.READONLY_ATTR, _readonly);
         setIntegerProperty(component, HTML.SIZE_ATTR, _size);
-        setIntegerProperty(component, HTML.TABINDEX_ATTR, _tabindex);
+        setStringProperty(component, HTML.TABINDEX_ATTR, _tabindex);
 
         setBooleanProperty(component, JSFAttr.REDISPLAY_ATTR, _redisplay);
    }

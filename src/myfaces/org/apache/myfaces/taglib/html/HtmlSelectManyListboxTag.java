@@ -85,7 +85,7 @@ public class HtmlSelectManyListboxTag
         setStringProperty(component, HTML.ONFOCUS_ATTR, _onfocus);
         setStringProperty(component, HTML.ONSELECT_ATTR, _onselect);
         setIntegerProperty(component, HTML.SIZE_ATTR, _size);
-        setIntegerProperty(component, HTML.TABINDEX_ATTR, _tabindex);
+        setStringProperty(component, HTML.TABINDEX_ATTR, _tabindex);
    }
 
     public void setDatafld(String datafld)

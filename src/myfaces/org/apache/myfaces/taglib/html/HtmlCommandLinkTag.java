@@ -88,7 +88,7 @@ public class HtmlCommandLinkTag
         setStringProperty(component, HTML.REL_ATTR, _rel);
         setStringProperty(component, HTML.REV_ATTR, _rev);
         setStringProperty(component, HTML.SHAPE_ATTR, _shape);
-        setIntegerProperty(component, HTML.TABINDEX_ATTR, _tabindex);
+        setStringProperty(component, HTML.TABINDEX_ATTR, _tabindex);
         setStringProperty(component, HTML.TYPE_ATTR, _type);
         setStringProperty(component, HTML.ONBLUR_ATTR, _onblur);
         setStringProperty(component, HTML.ONFOCUS_ATTR, _onfocus);

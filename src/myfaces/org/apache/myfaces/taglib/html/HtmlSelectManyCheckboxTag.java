@@ -100,7 +100,7 @@ public class HtmlSelectManyCheckboxTag
         setStringProperty(component, HTML.ONSELECT_ATTR, _onselect);
         setBooleanProperty(component, HTML.READONLY_ATTR, _readonly);
         setIntegerProperty(component, HTML.SIZE_ATTR, _size);
-        setIntegerProperty(component, HTML.TABINDEX_ATTR, _tabindex);
+        setStringProperty(component, HTML.TABINDEX_ATTR, _tabindex);
 
         setStringProperty(component, JSFAttr.DISABLED_CLASS_ATTR, _disabledClass);
         setStringProperty(component, JSFAttr.ENABLED_CLASS_ATTR, _enabledClass);

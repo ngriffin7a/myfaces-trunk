@@ -92,7 +92,7 @@ public class HtmlInputTextareaTag
         setStringProperty(component, HTML.ONSELECT_ATTR, _onselect);
         setBooleanProperty(component, HTML.READONLY_ATTR, _readonly);
         setIntegerProperty(component, HTML.ROWS_ATTR, _rows);
-        setIntegerProperty(component, HTML.TABINDEX_ATTR, _tabindex);
+        setStringProperty(component, HTML.TABINDEX_ATTR, _tabindex);
 
         setStringProperty(component, HTML.ALT_ATTR, _alt);
     }
