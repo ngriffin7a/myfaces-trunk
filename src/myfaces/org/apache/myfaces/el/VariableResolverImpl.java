@@ -172,9 +172,9 @@ public class VariableResolverImpl
         _implicitObjects.putAll(s_standardImplicitObjects);
     }
 
-    protected static final Map s_defaultScopes = new HashMap(16);
+    protected static final Map s_standardScopes = new HashMap(16);
     static {
-        s_defaultScopes.put(
+        s_standardScopes.put(
             "request",
             new Scope()
             {
@@ -183,7 +183,7 @@ public class VariableResolverImpl
                     extContext.getRequestMap().put(name, obj);
                 }
             });
-        s_defaultScopes.put(
+        s_standardScopes.put(
             "session",
             new Scope()
             {
@@ -192,7 +192,7 @@ public class VariableResolverImpl
                     extContext.getSessionMap().put(name, obj);
                 }
             });
-        s_defaultScopes.put(
+        s_standardScopes.put(
             "application",
             new Scope()
             {
@@ -201,7 +201,7 @@ public class VariableResolverImpl
                     extContext.getApplicationMap().put(name, obj);
                 }
             });
-        s_defaultScopes.put(
+        s_standardScopes.put(
             "none",
             new Scope()
             {
@@ -227,7 +227,7 @@ public class VariableResolverImpl
      */
     protected final Map _scopes = new HashMap(16);
     {
-        _scopes.putAll(s_defaultScopes);
+        _scopes.putAll(s_standardScopes);
     }
 
     //~ Methods ------------------------------------------------------------------------------------

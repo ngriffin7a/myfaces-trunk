@@ -24,6 +24,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.el.EvaluationException;
 import javax.faces.el.MethodBinding;
 import javax.faces.el.MethodNotFoundException;
+import javax.faces.el.PropertyNotFoundException;
 import javax.faces.el.ReferenceSyntaxException;
 import javax.servlet.jsp.el.ELException;
 
@@ -77,6 +78,11 @@ public class MethodBindingImpl extends MethodBinding implements StateHolder
         catch (ReferenceSyntaxException e) {
             throw e;
         }
+        catch (IndexOutOfBoundsException e) 
+        {
+            // ArrayIndexOutOfBoundsException also here
+            throw new PropertyNotFoundException("Expression: " + getExpressionString(), e);
+        }
         catch (Exception e)
         {
             log.error("Cannot get type for expression " + getExpressionString(), e);
@@ -98,6 +104,11 @@ public class MethodBindingImpl extends MethodBinding implements StateHolder
         }
         catch (ReferenceSyntaxException e) {
             throw e;
+        }
+        catch (IndexOutOfBoundsException e) 
+        {
+            // ArrayIndexOutOfBoundsException also here
+            throw new PropertyNotFoundException("Expression: " + getExpressionString(), e);
         }
         catch (Exception e)
         {

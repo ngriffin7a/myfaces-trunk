@@ -150,6 +150,11 @@ public class ValueBindingImpl extends ValueBinding implements StateHolder
             // we cannot write to it but can read it
             return true;
         }
+        catch (IndexOutOfBoundsException e) 
+        {
+            // ArrayIndexOutOfBoundsException also here
+            throw new PropertyNotFoundException("Expression: " + _expressionString, e);
+        }
         catch (Exception e)
         {
             log.error("Cannot determine readonly for expression " + _expressionString, e);
@@ -182,6 +187,11 @@ public class ValueBindingImpl extends ValueBinding implements StateHolder
             return (index == null)
                 ? _application.getPropertyResolver().getType(base, property)
                 : _application.getPropertyResolver().getType(base, index.intValue());
+        }
+        catch (IndexOutOfBoundsException e) 
+        {
+            // ArrayIndexOutOfBoundsException also here
+            throw new PropertyNotFoundException("Expression: " + _expressionString, e);
         }
         catch (Exception e)
         {
@@ -223,6 +233,11 @@ public class ValueBindingImpl extends ValueBinding implements StateHolder
             {
                 _application.getPropertyResolver().setValue(base, index.intValue(), newValue);
             }
+        }
+        catch (IndexOutOfBoundsException e) 
+        {
+            // ArrayIndexOutOfBoundsException also here
+            throw new PropertyNotFoundException("Expression: " + _expressionString, e);
         }
         catch (Exception e)
         {
@@ -295,6 +310,11 @@ public class ValueBindingImpl extends ValueBinding implements StateHolder
                 new ELVariableResolver(facesContext),
                 s_functionMapper, s_logger);
         }
+        catch (IndexOutOfBoundsException e) 
+        {
+            // ArrayIndexOutOfBoundsException also here
+            throw new PropertyNotFoundException("Expression: " + _expressionString, e);
+        }
         catch (Exception e)
         {
             log.error("Cannot get value for expression " + _expressionString, e);
@@ -349,10 +369,15 @@ public class ValueBindingImpl extends ValueBinding implements StateHolder
         // Resolve and apply the suffixes
         List suffixes = complexValue.getSuffixes();
         int max = (suffixes == null) ? -1 : suffixes.size() - 1;
-        for (int i = 0; i < max; i++) 
+        for (int i = 0; (base != null) && (i < max); i++) 
         {
             ValueSuffix suffix = (ValueSuffix) suffixes.get(i);
             base = suffix.evaluate(base, variableResolver, s_functionMapper, s_logger);
+        }
+        
+        if (base == null)
+        {
+            throw new PropertyNotFoundException("Base is null");
         }
         
         // Resolve the last suffix
@@ -373,7 +398,12 @@ public class ValueBindingImpl extends ValueBinding implements StateHolder
             }
         }
         
-        return (index == null) ? base : new Object[] {base, index};
+        if (index == null)
+        {
+            throw new PropertyNotFoundException("Index is null");
+        }
+        
+        return new Object[] {base, index};
     }
 
     /**
@@ -418,7 +448,7 @@ public class ValueBindingImpl extends ValueBinding implements StateHolder
         {
             return integer;
         }
-        throw new EvaluationException("Cannot convert index to int for base " 
+        throw new ReferenceSyntaxException("Cannot convert index to int for base " 
             + base.getClass().getName() + " and index " + index);
     }
 
