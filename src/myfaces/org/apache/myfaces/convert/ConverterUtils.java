@@ -72,6 +72,10 @@ public class ConverterUtils
         if (modelRef != null)
         {
             Class c = facesContext.getModelType(modelRef);
+            if (c == null)
+            {
+                throw new IllegalArgumentException("Could not find ModelDefinition for ModelReference " + modelRef);
+            }
             ConverterMapFactory convMapFactory = MyFacesFactoryFinder.getConverterMapFactory(facesContext.getServletContext());
             converterId = convMapFactory.getConverterMap().getConverterId(c);
             ConverterFactory convFactory = MyFacesFactoryFinder.getConverterFactory(facesContext.getServletContext());
