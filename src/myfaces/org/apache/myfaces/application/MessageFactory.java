@@ -37,7 +37,7 @@ public class MessageFactory
     private static final Log log = LogFactory.getLog(MessageFactory.class);
 
     private static final String DEFAULT_BUNDLE = "javax.faces.Messages";
-    private static final String MYFACES_BUNDLE = "net.sourceforge.myfaces.resource.Messages";
+    //private static final String MYFACES_BUNDLE = "net.sourceforge.myfaces.resource.Messages";
     private static final String DETAIL_SUFFIX = "_detail";
 
     public FacesMessage getMessage(FacesContext facesContext,
@@ -72,10 +72,12 @@ public class MessageFactory
         summary = getBundleString(bundle, messageId);
         if (summary == null)
         {
+            /*
             bundle = getMyFacesBundle(locale);
             summary = getBundleString(bundle, messageId);
             if (summary == null)
             {
+            */
                 bundle = getDefaultBundle(locale);
                 summary = getBundleString(bundle, messageId);
                 if (summary == null)
@@ -83,7 +85,7 @@ public class MessageFactory
                     if (log.isWarnEnabled()) log.warn("No message with id " + messageId + " found in any bundle");
                     return new FacesMessage(messageId, messageId);
                 }
-            }
+            //}
         }
 
         detail = getBundleString(bundle, messageId + DETAIL_SUFFIX);
@@ -142,6 +144,7 @@ public class MessageFactory
         }
     }
 
+    /*
     private ResourceBundle getMyFacesBundle(Locale locale)
     {
         try
@@ -156,6 +159,7 @@ public class MessageFactory
             return null;
         }
     }
+    */
 
     private ResourceBundle getDefaultBundle(Locale locale)
     {

@@ -18,15 +18,10 @@
  */
 package net.sourceforge.myfaces.component.html;
 
-import net.sourceforge.myfaces.MyFacesFactoryFinder;
-import net.sourceforge.myfaces.application.MessageFactory;
 import net.sourceforge.myfaces.component.UserRoleSupport;
 import net.sourceforge.myfaces.renderkit.JSFAttr;
 
-import javax.faces.FacesException;
-import javax.faces.application.FacesMessage;
 import javax.faces.component.html.HtmlInputText;
-import javax.faces.context.FacesContext;
 import javax.faces.el.ValueBinding;
 
 /**
@@ -64,45 +59,6 @@ public class MyFacesHtmlInputText
     public void setVisibleOnUserRole(String visibleOnUserRole)
     {
         _visibleOnUserRole = visibleOnUserRole;
-    }
-
-
-
-    public void updateModel(FacesContext context)
-    {
-        if (context == null) throw new NullPointerException();
-        if (!isValid()) return;
-        ValueBinding vb = getValueBinding("value");
-        if(vb != null)
-        {
-            try
-            {
-                vb.setValue(context, getLocalValue());
-                setValue(null);
-                return;
-            }
-            catch(FacesException e)
-            {
-                MessageFactory mf = MyFacesFactoryFinder.getMessageFactory(context.getExternalContext());
-                FacesMessage message = mf.getMessage(context, "javax.faces.component.UIInput.CONVERSION");
-                context.addMessage(getClientId(context), message);
-                setValid(false);
-            }
-            catch(IllegalArgumentException e)
-            {
-                MessageFactory mf = MyFacesFactoryFinder.getMessageFactory(context.getExternalContext());
-                FacesMessage message = mf.getMessage(context, "javax.faces.component.UIInput.CONVERSION");
-                context.addMessage(getClientId(context), message);
-                setValid(false);
-            }
-            catch(Exception e)
-            {
-                MessageFactory mf = MyFacesFactoryFinder.getMessageFactory(context.getExternalContext());
-                FacesMessage message = mf.getMessage(context, "javax.faces.component.UIInput.CONVERSION");
-                context.addMessage(getClientId(context), message);
-                setValid(false);
-            }
-        }
     }
 
 }

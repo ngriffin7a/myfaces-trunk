@@ -61,6 +61,7 @@
     <target name="compile-for-debug"
             depends="prepare-for-debug"
             description="compiles the myfaces and examples java classes to WEB-INF/classes and copies needed config and TLD files">
+
         <mkdir dir="${web-inf.classes.dir}"/>
 
         <javac srcdir="${myfaces.src}"
