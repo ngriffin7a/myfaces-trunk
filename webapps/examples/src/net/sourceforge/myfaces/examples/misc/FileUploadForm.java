@@ -21,10 +21,8 @@ package net.sourceforge.myfaces.examples.misc;
 import net.sourceforge.myfaces.custom.fileupload.UploadedFile;
 
 import javax.faces.context.FacesContext;
-import javax.faces.el.VariableResolver;
 
 /**
- * DOCUMENT ME!
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
@@ -56,17 +54,8 @@ public class FileUploadForm
     public String upload()
     {
         FacesContext facesContext = FacesContext.getCurrentInstance();
-
-        VariableResolver vr = facesContext.getApplication().getVariableResolver();
-        FileUploadForm form = (FileUploadForm)vr.resolveVariable(facesContext, "fileUploadForm");
-
-        if (form != null)
-        {
-            UploadedFile upFile = form.getUpFile();
-            facesContext.getExternalContext().getApplicationMap().put("fileupload_bytes", upFile.getBytes());
-            facesContext.getExternalContext().getApplicationMap().put("fileupload_type", upFile.getContentType());
-        }
-
+        facesContext.getExternalContext().getApplicationMap().put("fileupload_bytes", _upFile.getBytes());
+        facesContext.getExternalContext().getApplicationMap().put("fileupload_type", _upFile.getContentType());
         return "ok";
     }
 
