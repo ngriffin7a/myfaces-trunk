@@ -49,9 +49,9 @@
                     columnClasses="standardTable_Column,standardTable_ColumnCentered,standardTable_Column" >
                 <!-- HEADER -->
                 <h:group>
-                    <h:output_text text="Country name" />
-                    <h:output_text text="Iso-Code" />
-                    <h:output_text text="Size" />
+                    <h:output_text value="Country name" />
+                    <h:output_text value="Iso-Code" />
+                    <h:output_text value="Size" />
                 </h:group>
                 <!-- DATA -->
                 <h:listrow var="country" modelReference="countryList.countries" >
@@ -73,17 +73,17 @@
                 </h:listrow>
                 <!-- FOOTER -->
                 <h:group>
-                    <h:output_text text="take a look at this runtime values ..."/>
+                    <h:output_text value="take a look at this runtime values ..."/>
                     <h:group>
-                        <h:output_message id="rows_msg" msg="{0} rows" >
+                        <h:output_message id="rows_msg" value="{0} rows" >
                             <f:parameter value="<%=new Integer(rows)%>"/>
                         </h:output_message>
                         &nbsp; / &nbsp;
-                        <h:output_message id="cols_msg" msg="{0} cols" >
+                        <h:output_message id="cols_msg" value="{0} cols" >
                             <f:parameter value="<%=new Integer(cols)%>"/>
                         </h:output_message>
                     </h:group>
-                    <h:output_text text=""/>
+                    <h:output_text value=""/>
                 </h:group>
             </h:list>
             <br>

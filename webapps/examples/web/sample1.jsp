@@ -51,7 +51,7 @@
             <%
                 Date test = new Date();
             %>
-            You entered this page on <h:output_text id="test" text="<%=test.toString()%>" /><br>
+            You entered this page on <h:output_text id="test" value="<%=test.toString()%>" /><br>
 
             <h:errors id="messageList" />
 

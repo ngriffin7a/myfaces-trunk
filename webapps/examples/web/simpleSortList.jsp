@@ -53,10 +53,10 @@
                               columnReference="list.sort"
                               ascendingReference="list.ascending" >
                     <x:sortcolumn column="type" cssClass="sortLink" >
-                        <h:output_text text="Car-Type" />
+                        <h:output_text value="Car-Type" />
                     </x:sortcolumn>
                     <x:sortcolumn column="color" cssClass="sortLink" >
-                        <h:output_text id="list_header_iso" text="Car-Color"  />
+                        <h:output_text id="list_header_iso" value="Car-Color"  />
                     </x:sortcolumn>
                 </x:sortheader>
                 <!-- DATA -->
@@ -66,8 +66,8 @@
                 </h:listrow>
                 <!-- FOOTER -->
                 <h:group>
-                    <h:output_text text="..."  />
-                    <h:output_text text=""/>
+                    <h:output_text value="..."  />
+                    <h:output_text value=""/>
                 </h:group>
             </h:list>
 
