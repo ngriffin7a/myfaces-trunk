@@ -56,6 +56,7 @@ public class LifecycleImpl
 
     public LifecycleImpl()
     {
+        // hide from public access
     }
 
     public void execute(FacesContext facesContext)

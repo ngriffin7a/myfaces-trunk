@@ -136,6 +136,7 @@ public class ServletExternalContextImpl
             }
             
             _sessionMap = new SessionMap((HttpServletRequest) _servletRequest);
+// FIXME:remove if not needed
 //            HttpSession session = ((HttpSession)getSession(false));
 //            if (session != null)
 //            {
