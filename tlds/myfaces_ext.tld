@@ -895,7 +895,7 @@
             <rtexprvalue>false</rtexprvalue>
         </attribute>
     </tag>
-     
+
     <!-- inputDate -->
     <tag>
         <name>inputDate</name>
@@ -1244,7 +1244,7 @@
 
 
 	<!-- stylesheet -->
-	
+
 	<tag>
 		<name>stylesheet</name>
 		<tag-class>org.apache.myfaces.custom.stylesheet.StylesheetTag</tag-class>
@@ -1263,7 +1263,7 @@
 	</tag>
 
 	<!-- div -->
-	
+
 	<tag>
 		<name>div</name>
 		<tag-class>org.apache.myfaces.custom.div.DivTag</tag-class>
@@ -1341,7 +1341,7 @@
 			</description>
 		</attribute>
 	</tag>
-	
+
    <!-- tree -->
     <tag>
         <name>tree</name>
@@ -1501,15 +1501,44 @@
             <rtexprvalue>false</rtexprvalue>
         </attribute>
     </tag>
-    
-    <!-- column -->
+
+    <!-- tree column -->
     <tag>
-        <name>treecolumn</name>
+        <name>treeColumn</name>
         <tag-class>org.apache.myfaces.custom.tree.taglib.TreeColumnTag</tag-class>
         <body-content>JSP</body-content>
+        <description>
+            Renders a HTML input of type "treeColumn". This tag outlines the column where
+            the tree structure will be render as part of the tree table.
+        </description>
         &ui_component_attributes;
     </tag>
-     
+
+    <!-- tree checkbox -->
+    <tag>
+        <name>treeCheckbox</name>
+        <tag-class>org.apache.myfaces.custom.tree.taglib.TreeCheckboxTag</tag-class>
+        <body-content>empty</body-content>
+        <description>
+            Renders a HTML input of type "treeCheckbox". The associated comes from
+            the treeCheckbox itemLabel and itemValue.  The selected items come from an extended
+            selectManyCheckbox component with layout "spread". The selectManyCheckbox
+            is referenced by the "for" attribute.
+            All HTML pass-through attributes for this input are taken from the associated
+            selectManyCheckbox.
+        </description>
+        &ui_select_item_attributes;
+        <!-- HtmlTreeCheckbox attributes -->
+        <attribute>
+            <name>for</name>
+            <required>true</required>
+            <rtexprvalue>false</rtexprvalue>
+            <description>
+                id of the referenced extended selectManyCheckbox component
+            </description>
+        </attribute>
+    </tag>
+
     <!-- panelStack -->
     <tag>
         <name>panelStack</name>
@@ -1621,8 +1650,8 @@
             </description>
         </attribute>
      </tag>
-     
-     
+
+
 
 <!--     Custom non-component tags     -->
 
@@ -1694,7 +1723,7 @@
 
 <!-- validators -->
 
-    
+
         <!-- creditCard -->
     <tag>
         <name>validateCreditCard</name>
@@ -1745,7 +1774,7 @@
             </description>
         </attribute>
     </tag>
-    
+
     <!-- Validator for Email -->
      <tag>
         <name>validateEmail</name>
@@ -1754,7 +1783,7 @@
         <description>
 			A custom validator for email address format, based upons Jakarta Commons.
         </description>
-	</tag>   
+	</tag>
 
     <!-- Validator for ISBN -->
      <tag>
@@ -1764,7 +1793,7 @@
         <description>
 			A custom validator for isbn codes, based upons Jakarta Commons.
         </description>
-	</tag>   
+	</tag>
 
     <!-- Validator for Regular Expressions -->
     <tag>
@@ -1793,7 +1822,7 @@
         <description>
 			A custom validator for validations against foreign component values.
         </description>
-   
+
         <attribute>
             <name>for</name>
             <required>true</required>
@@ -1801,6 +1830,6 @@
             <description>
 				the id of the foreign component, which is needed for the validation
             </description>
-        </attribute>     
-	</tag>   
+        </attribute>
+	</tag>
 </taglib>

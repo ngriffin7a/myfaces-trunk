@@ -1,12 +1,12 @@
 /*
  * Copyright 2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -31,6 +31,9 @@ import java.io.IOException;
  * @author <a href="mailto:oliver@rossmueller.com">Oliver Rossmueller</a>
  * @version $Revision$ $Date$
  *          $Log$
+ *          Revision 1.7  2004/12/22 17:52:54  grantsmith
+ *          Jira MYFACES-48: Tree Table Component Fixes & Tree Checkbox Support
+ *
  *          Revision 1.6  2004/10/13 11:50:58  matze
  *          renamed packages to org.apache
  *
@@ -88,21 +91,21 @@ public class HtmlTreeImageCommandLinkRenderer
         {
             ResponseWriter writer = facesContext.getResponseWriter();
             writer.startElement(HTML.IMG_ELEM, component);
-
-            String src;
-            if (url.startsWith(HTML.HREF_PATH_SEPARATOR))
-            {
-                String path = facesContext.getExternalContext().getRequestContextPath();
-                src = path + url;
-            }
-            else
-            {
-                src = url;
-            }
+            String src = facesContext.getApplication().getViewHandler().getResourceURL(facesContext, url);
+            //String src;
+            //if (url.startsWith(HTML.HREF_PATH_SEPARATOR))
+            //{
+            //    String path = facesContext.getExternalContext().getRequestContextPath();
+            //    src = path + url;
+            //}
+            //else
+            //{
+            //    src = url;
+            //}
             //Encode URL
             //Although this is an url url, encodeURL is no nonsense, because the
             //actual url url could also be a dynamic servlet request:
-            src = facesContext.getExternalContext().encodeResourceURL(src);
+            //src = facesContext.getExternalContext().encodeResourceURL(src);
             writer.writeAttribute(HTML.SRC_ATTR, src, null);
             writer.writeAttribute(HTML.BORDER_ATTR, ZERO, null);
 

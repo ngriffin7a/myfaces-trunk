@@ -72,12 +72,12 @@
                 </f:facet>
                	<h:outputText value="#{treeItem.isoCode}" />
             </h:column>
-	        <x:treecolumn>
+	        <x:treeColumn>
 	        	<f:facet name="header">
                 	<h:outputText value="Header 2" />
                 </f:facet>
 	        	<h:outputText value="#{treeItem.name}" />
-	        </x:treecolumn>
+	        </x:treeColumn>
 	        <h:column>
 	        	<f:facet name="header">
                 	<h:outputText value="Header 3" />

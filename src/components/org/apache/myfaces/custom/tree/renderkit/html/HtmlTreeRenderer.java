@@ -1,12 +1,12 @@
 /*
  * Copyright 2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -43,12 +43,15 @@ import java.util.List;
  * @version $Revision$ $Date$
  *
  *          $Log$
+ *          Revision 1.13  2004/12/22 17:52:54  grantsmith
+ *          Jira MYFACES-48: Tree Table Component Fixes & Tree Checkbox Support
+ *
  *          Revision 1.12  2004/11/26 12:46:38  oros
  *          cleanup: removed unused iconChild attribute
  *
  *          Revision 1.11  2004/11/26 12:14:09  oros
  *          MYFACES-8: applied tree table patch by David Le Strat
- * 
+ *
  *
  */
 public class HtmlTreeRenderer extends HtmlTableRendererBase
@@ -105,7 +108,7 @@ public class HtmlTreeRenderer extends HtmlTableRendererBase
      * <p>
      * Overrides super renderFacet to render the {@link HtmlTree} facets.
      * <p>
-     * 
+     *
      * @param facesContext The facesContext
      * @param writer The writer.
      * @param component The component.
@@ -140,7 +143,7 @@ public class HtmlTreeRenderer extends HtmlTableRendererBase
                     hasColumnFacet = header ? ((UIColumn) uiComponent).getHeader() != null : ((UIColumn) uiComponent)
                             .getFooter() != null;
                 }
-            }    
+            }
         }
 
         UIComponent facet = header ? (UIComponent) component.getFacets().get(HEADER_FACET_NAME)
@@ -171,7 +174,7 @@ public class HtmlTreeRenderer extends HtmlTableRendererBase
             writer.endElement(elemName);
         }
     }
-    
+
     protected void renderColumnHeaderRow(FacesContext facesContext, ResponseWriter writer, UIComponent component,
             String headerStyleClass, int maxLevel) throws IOException
     {
@@ -183,7 +186,7 @@ public class HtmlTreeRenderer extends HtmlTableRendererBase
     {
         renderColumnHeaderOrFooterRow(facesContext, writer, component, footerStyleClass, false, maxLevel);
     }
-    
+
     private void renderColumnHeaderOrFooterRow(FacesContext facesContext, ResponseWriter writer, UIComponent component,
             String styleClass, boolean header, int maxLevel) throws IOException
     {
@@ -215,7 +218,7 @@ public class HtmlTreeRenderer extends HtmlTableRendererBase
                 {
                     renderColumnFooterCell(facesContext, writer, (UIColumn) uiComponent, styleClass, maxLevel + 3);
                 }
-            }        
+            }
         }
         writer.endElement(HTML.TR_ELEM);
     }
@@ -224,7 +227,7 @@ public class HtmlTreeRenderer extends HtmlTableRendererBase
      * <p>
      * Renders the children.
      * </p>
-     * 
+     *
      * @param facesContext The facesContext.
      * @param writer The writer.
      * @param tree The tree component.
@@ -243,7 +246,7 @@ public class HtmlTreeRenderer extends HtmlTableRendererBase
      * <p>
      * Renders the children given the rowClassIndex.
      * </p>
-     * 
+     *
      * @param facesContext The facesContext.
      * @param writer The writer.
      * @param tree The tree component.
@@ -292,7 +295,7 @@ public class HtmlTreeRenderer extends HtmlTableRendererBase
 
             if (null != tree.getVar())
             {
-                facesContext.getExternalContext().getRequestMap().put(tree.getVar(),
+                facesContext.getExternalContext().getSessionMap().put(tree.getVar(),
                         ((TreeNode) child.getUserObject()).getUserObject());
             }
 
@@ -348,7 +351,7 @@ public class HtmlTreeRenderer extends HtmlTableRendererBase
      * <p>
      * Render the column where the tree is displayed.
      * </p>
-     * 
+     *
      * @param facesContext The facesContext.
      * @param writer The writer.
      * @param component The component that will contain the tree. Null for
@@ -373,29 +376,30 @@ public class HtmlTreeRenderer extends HtmlTableRendererBase
 
             if ((url != null) && (url.length() > 0))
             {
-                writer.startElement(HTML.IMG_ELEM, child);
+                //writer.startElement(HTML.IMG_ELEM, child);
 
-                String src;
-                if (url.startsWith(HTML.HREF_PATH_SEPARATOR))
-                {
-                    String path = facesContext.getExternalContext().getRequestContextPath();
-                    src = path + url;
-                }
-                else
-                {
-                    src = url;
-                }
+                //String src;
+                //if (url.startsWith(HTML.HREF_PATH_SEPARATOR))
+                //{
+                //    String path = facesContext.getExternalContext().getRequestContextPath();
+                //    src = path + url;
+                //}
+                //else
+                //{
+                //    src = url;
+                //}
                 //Encode URL
                 //Although this is an url url, encodeURL is no nonsense,
                 // because the
                 //actual url url could also be a dynamic servlet request:
-                src = facesContext.getExternalContext().encodeResourceURL(src);
-                writer.writeAttribute(HTML.SRC_ATTR, src, null);
-                writer.writeAttribute(HTML.BORDER_ATTR, ZERO, null);
+                //src = facesContext.getExternalContext().encodeResourceURL(src);
+                //writer.writeAttribute(HTML.SRC_ATTR, src, null);
+                //writer.writeAttribute(HTML.BORDER_ATTR, ZERO, null);
 
-                HtmlRendererUtils.renderHTMLAttributes(writer, child, HTML.IMG_PASSTHROUGH_ATTRIBUTES);
+                //HtmlRendererUtils.renderHTMLAttributes(writer, child, HTML.IMG_PASSTHROUGH_ATTRIBUTES);
 
-                writer.endElement(HTML.IMG_ELEM);
+                //writer.endElement(HTML.IMG_ELEM);
+                writeImageElement(url, facesContext, writer, child);
             }
             writer.endElement(HTML.TD_ELEM);
 
@@ -479,7 +483,8 @@ public class HtmlTreeRenderer extends HtmlTableRendererBase
         {
             for (int k = 0; k < componentChildren.size(); k++)
             {
-                RendererUtils.renderChild(facesContext, (UIComponent) componentChildren.get(k));
+                UIComponent componentChild = (UIComponent) componentChildren.get(k);
+                RendererUtils.renderChild(facesContext, componentChild);
             }
         }
         else
