@@ -95,21 +95,36 @@ public class ExtensionsFilter implements Filter {
 
         HttpServletRequest httpRequest = (HttpServletRequest) request;
 
-        // Process only multipart/form-data requests
-        if (FileUpload.isMultipartContent(httpRequest)) {
-            MultipartRequestWrapper requestWrapper = new MultipartRequestWrapper(httpRequest, uploadMaxFileSize, uploadThresholdSize, uploadRepositoryPath);
-            chain.doFilter(requestWrapper, response);
-            return;
-        }
-
-        // Serve myFaces internal resources 
+        // Serve myFaces internal resources files 
         if( AddResource.isResourceMappedPath( httpRequest ) ){
             AddResource.serveResource(httpRequest, response);
             return;
         }
         
+        HttpServletRequest extendedRequest = httpRequest;
+        
+        // For multipart/form-data requests
+        if (FileUpload.isMultipartContent(httpRequest)) {
+            extendedRequest = new MultipartRequestWrapper(httpRequest, uploadMaxFileSize, uploadThresholdSize, uploadRepositoryPath);
+        }
+
+        if( !(response instanceof HttpServletResponse)){
+            chain.doFilter(extendedRequest, response);
+            return;
+        }
+        
+        ExtensionsResponseWrapper extendedResponse = new ExtensionsResponseWrapper((HttpServletResponse) response);
+        
         // Standard request
-        chain.doFilter(request, response);
+        chain.doFilter(extendedRequest, extendedResponse);
+        
+        if( ! AddResource.hasAdditionalHeaderInfoToRender(extendedRequest) ){
+            response.getWriter().write( extendedResponse.toString() );
+            return;
+        }
+        
+        // Some headerInfo has to be added
+        AddResource.writeWithFullHeader(extendedRequest, extendedResponse, (HttpServletResponse)response);
     }
     
     /**

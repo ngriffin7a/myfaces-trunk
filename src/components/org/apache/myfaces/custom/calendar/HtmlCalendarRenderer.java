@@ -16,6 +16,7 @@
 package org.apache.myfaces.custom.calendar;
 
 import org.apache.myfaces.component.html.ext.HtmlInputText;
+import org.apache.myfaces.component.html.util.AddResource;
 import org.apache.myfaces.renderkit.JSFAttr;
 import org.apache.myfaces.renderkit.RendererUtils;
 import org.apache.myfaces.renderkit.html.HTML;
@@ -44,6 +45,10 @@ import java.util.List;
 
 /**
  * $Log$
+ * Revision 1.11  2004/12/01 20:25:10  svieujot
+ * Make the Extensions filter support css and image resources.
+ * Convert the popup calendar to use this new filter.
+ *
  * Revision 1.10  2004/11/29 13:57:56  mmarinschek
  * changes for input-calendar bugs
  *
@@ -107,6 +112,12 @@ public class HtmlCalendarRenderer
 
         if(inputCalendar.isRenderAsPopup())
         {
+            // Add the javascript and CSS pages
+            AddResource.addStyleSheet(HtmlCalendarRenderer.class, "WH/theme.css", facesContext);
+            AddResource.addStyleSheet(HtmlCalendarRenderer.class, "DB/theme.css", facesContext);
+            AddResource.addJavaScriptOncePerPage(HtmlCalendarRenderer.class, "popcalendar.js", facesContext,
+                    "jscalendarSetImageDirectory("+AddResource.getResourceMappedPath(HtmlCalendarRenderer.class, "DB", facesContext)+")");
+            
             String dateFormat = CalendarDateTimeConverter.createJSPopupFormat(facesContext,
                     inputCalendar.getPopupDateFormat());
 

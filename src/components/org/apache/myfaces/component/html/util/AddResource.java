@@ -18,11 +18,16 @@ package org.apache.myfaces.component.html.util;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.PrintWriter;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
 
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -36,6 +41,10 @@ import org.apache.myfaces.renderkit.html.HTML;
  * @author Sylvain Vieujot (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.2  2004/12/01 20:25:10  svieujot
+ * Make the Extensions filter support css and image resources.
+ * Convert the popup calendar to use this new filter.
+ *
  * Revision 1.1  2004/12/01 16:32:03  svieujot
  * Convert the Multipart filter in an ExtensionsFilter that provides an additional facility to include resources in a page.
  * Tested only with javascript resources right now, but should work fine with images too.
@@ -51,7 +60,13 @@ public class AddResource {
     
     private static final String RESOURCE_MAP_PATH = "/myFacesExtensionResource";
     
+    private static final String ADDITIONAL_HEADER_INFO_REQUEST_ATTRUBITE_NAME = "myFacesHeaderResource2Render";
+    
     public static void addJavaScript(Class componentClass, String resourceFileName, FacesContext context) throws IOException{
+        addJavaScript(componentClass, resourceFileName, context, null);
+    }
+    
+    public static void addJavaScript(Class componentClass, String resourceFileName, FacesContext context, String scriptBody) throws IOException{
         ResponseWriter writer = context.getResponseWriter();
         
         writer.startElement(HTML.SCRIPT_ELEM,null);
@@ -59,13 +74,20 @@ public class AddResource {
         writer.writeURIAttribute(HTML.SRC_ATTR,
                 getResourceMappedPath(componentClass,resourceFileName, context),
                 null);
+        
+        if( scriptBody != null )
+            writer.writeText(scriptBody, null);
 
         writer.endElement(HTML.SCRIPT_ELEM);
     }
     
     public static void addJavaScriptOncePerPage(Class componentClass, String resourceFileName, FacesContext context) throws IOException{
+        addJavaScriptOncePerPage(componentClass, resourceFileName, context, null);
+    }
+
+    public static void addJavaScriptOncePerPage(Class componentClass, String resourceFileName, FacesContext context, String scriptBody) throws IOException{
         HttpServletRequest request = (HttpServletRequest) context.getExternalContext().getRequest();
-        String javascriptRenderedAttributeName = "myFacesResourceRendered"+(componentClass.hashCode()+resourceFileName.hashCode());
+        String javascriptRenderedAttributeName = "myFacesResourceRendered"+(componentClass.hashCode()+(resourceFileName+scriptBody).hashCode());
         
         if( request.getAttribute(javascriptRenderedAttributeName) == null ){
             addJavaScript(componentClass, resourceFileName, context);
@@ -73,10 +95,37 @@ public class AddResource {
         }
     }
     
-    private static String getResourceMappedPath(Class componentClass, String ressourceFileName, FacesContext context){
-        String contextPath = ((HttpServletRequest)context.getExternalContext().getRequest()).getContextPath(); 
-        return contextPath+getAddRessourceMaping()+"?component="+getComponentName(componentClass)
-        		+"&resource="+ressourceFileName;
+    public static void addStyleSheet(Class componentClass, String resourceFileName, FacesContext context){
+        AdditionalHeaderInfoToRender cssInfo = new AdditionalHeaderInfoToRender(AdditionalHeaderInfoToRender.TYPE_CSS, componentClass, resourceFileName);
+        getAdditionalHeaderInfoToRender(context).add( cssInfo );
+    }
+    
+    private static Set getAdditionalHeaderInfoToRender(FacesContext context){
+        HttpServletRequest request = (HttpServletRequest) context.getExternalContext().getRequest();
+        return getAdditionalHeaderInfoToRender( request );
+    }
+    
+    private static Set getAdditionalHeaderInfoToRender(HttpServletRequest request){
+        Set set = (Set) request.getAttribute(ADDITIONAL_HEADER_INFO_REQUEST_ATTRUBITE_NAME);
+        if( set == null ){
+            set = new HashSet();
+            request.setAttribute(ADDITIONAL_HEADER_INFO_REQUEST_ATTRUBITE_NAME, set);
+        }
+        
+        return set;
+    }
+    
+    public static String getResourceMappedPath(Class componentClass, String resourceFileName, FacesContext context){
+        return getResourceMappedPath(
+                getComponentName(componentClass),
+                resourceFileName,
+                (HttpServletRequest)context.getExternalContext().getRequest());
+    }
+    
+    private static String getResourceMappedPath(String componentName, String resourceFileName, HttpServletRequest request){
+        String contextPath = request.getContextPath(); 
+        return contextPath+getAddRessourceMaping()+"?component="+componentName
+        		+"&resource="+resourceFileName;
     }
     
     private static String getAddRessourceMaping(){
@@ -129,8 +178,18 @@ public class AddResource {
         String componentName = request.getParameter("component");
         String resourceFileName = request.getParameter("resource");
         
-        if( resourceFileName.endsWith(".js") )
+        String lcResourceFileName = resourceFileName.toLowerCase();
+        
+        if( lcResourceFileName.endsWith(".js") )
             response.setContentType("text/javascript");
+        else if( lcResourceFileName.endsWith(".css") )
+            response.setContentType("text/css");
+        else if( lcResourceFileName.endsWith(".gif") )
+            response.setContentType("image/gif");
+        else if( lcResourceFileName.endsWith(".png") )
+            response.setContentType("image/png");
+        else if( lcResourceFileName.endsWith(".jpg") || lcResourceFileName.endsWith(".jpeg") )
+            response.setContentType("image/jpeg");
         
         InputStream is = getResource(componentName, resourceFileName);
         if( is == null ){
@@ -142,5 +201,80 @@ public class AddResource {
             os.write(c);
 
         os.close();
+    }
+    
+    static public boolean hasAdditionalHeaderInfoToRender(HttpServletRequest request){
+        return request.getAttribute(ADDITIONAL_HEADER_INFO_REQUEST_ATTRUBITE_NAME) != null;
+    }
+    
+    static public void writeWithFullHeader(HttpServletRequest request,
+            ExtensionsResponseWrapper responseWrapper,
+            HttpServletResponse response) throws IOException{
+        
+        String initialResponse = responseWrapper.toString();
+        String lcInitialResponse = initialResponse.toLowerCase();
+        
+        boolean addHeaderTags = false;
+        int insertPosition = lcInitialResponse.indexOf( "</head>" );
+        
+        if( insertPosition < 0 ){
+            insertPosition = lcInitialResponse.indexOf( "<body " );
+            addHeaderTags = true;
+        }
+        
+        if( insertPosition < 0 ){
+            log.warn("Response has not <head> or <body> tags.");
+            insertPosition = 0;
+        }
+        
+        PrintWriter writer = response.getWriter();
+        
+        if( insertPosition > 0 )
+            writer.write( initialResponse.substring(0, insertPosition) );
+        if( addHeaderTags )
+            writer.write("<head>");
+        
+        for(Iterator i = getAdditionalHeaderInfoToRender(request).iterator(); i.hasNext() ;){
+            AdditionalHeaderInfoToRender headerInfo = (AdditionalHeaderInfoToRender) i.next();
+            writer.write( headerInfo.getString(request) );
+        }
+        
+        if( addHeaderTags )
+            writer.write("</head>");
+        
+        writer.write( initialResponse.substring(insertPosition) );
+    }
+    
+    private static class AdditionalHeaderInfoToRender{
+        public static final int TYPE_CSS = 0;
+        public String componentName;
+        public String resourceFileName;
+        public int type;
+        
+        public AdditionalHeaderInfoToRender(int infoType, String componentName, String resourceFileName) {
+            this.componentName = componentName;
+            this.resourceFileName = resourceFileName;
+            this.type = infoType;
+        }
+        
+        public AdditionalHeaderInfoToRender(int infoType, Class componentClass, String resourceFileName) {
+            this.componentName = getComponentName(componentClass);
+            this.resourceFileName = resourceFileName;
+            this.type = infoType;
+        }
+        
+        public int hashCode() {
+            return (componentName+((char)7)+resourceFileName+((char)7)+type).hashCode();
+        }
+        
+        public String getString(HttpServletRequest request){
+            if( type == TYPE_CSS )
+                return "<link rel=\"stylesheet\" "
+                	+"href=\""+getResourceMappedPath(componentName, resourceFileName, request)+"\" "
+                	+"type=\"text/css\"/>\n";
+            
+            log.warn("Unknown type:"+type);
+            return "<link href=\""+"\"/>\n";
+        }
     }
 }
