@@ -90,7 +90,6 @@ public class VariableResolverImpl
         }
 
         //ManagedBean
-        // REVISIT: shouldn't we get the registered factory finder?
         FacesConfigFactory fcf = MyFacesFactoryFinder.getFacesConfigFactory(servletcontext);
         FacesConfig facesConfig = fcf.getFacesConfig(servletcontext);
         ManagedBeanConfig mbc = facesConfig.getManagedBeanConfig(name);
