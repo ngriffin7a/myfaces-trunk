@@ -38,6 +38,9 @@ import java.util.Map;
  * @author <a href="mailto:oliver@rossmueller.com">Oliver Rossmueller</a>
  * @version $Revision$ $Date$
  *          $Log$
+ *          Revision 1.3  2004/08/15 23:16:36  o_rossmueller
+ *          do not overwrite decode
+ *
  *          Revision 1.2  2004/08/15 23:12:54  o_rossmueller
  *          processDecodes on selected child
  *
@@ -47,37 +50,6 @@ import java.util.Map;
  */
 public class HtmlPanelStackRenderer extends HtmlRenderer
 {
-
-    public void decode(FacesContext context, UIComponent component)
-    {
-        HtmlPanelStack panelStack = (HtmlPanelStack) component;
-        String selectedPanel = panelStack.getSelectedPanel();
-        UIComponent child = null;
-
-        if (selectedPanel == null)
-        {
-            // render the first child
-            if (panelStack.getChildCount() > 0) {
-                child = (UIComponent) panelStack.getChildren().get(0);
-            }
-        } else
-        {
-            // render the selected child
-            child = panelStack.findComponent(selectedPanel);
-            if (child == null)
-            {
-                // if not found, render the first child
-                if (panelStack.getChildCount() > 0) {
-                    child = (UIComponent) panelStack.getChildren().get(0);
-                }
-            }
-        }
-
-        if (child != null)
-        {
-            child.processDecodes(context);
-        }
-    }
 
 
     public void encodeBegin(FacesContext facesContext, UIComponent uiComponent) throws IOException
