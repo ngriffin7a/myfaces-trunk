@@ -46,6 +46,9 @@ import org.apache.commons.logging.LogFactory;
  * @author Sylvain Vieujot (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.9  2005/03/10 22:42:26  svieujot
+ * Close MYFACES-125 thanks to Mathias Broekelmann.
+ *
  * Revision 1.8  2005/03/10 15:11:00  svieujot
  * Fix MYFACES-125 thanks to Mathias Broekelmann.
  *
@@ -221,9 +224,7 @@ public class AliasBean extends UIComponentBase {
     }
 
     public void queueEvent(FacesEvent event) {
-		makeAlias();
 		super.queueEvent(new FacesEventWrapper(event, this));
-		removeAlias();
     }
 
     public void broadcast(FacesEvent event) throws AbortProcessingException {
