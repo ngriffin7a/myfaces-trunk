@@ -24,6 +24,9 @@ import javax.faces.component.UIComponent;
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.8  2004/10/05 09:22:57  manolito
+ * #1019443 no setter method corresponding to TLD declared attribute
+ *
  * Revision 1.7  2004/08/15 23:30:47  o_rossmueller
  * fixed typo in setPaginatorActiveColumnClass
  *
@@ -75,7 +78,7 @@ public class HtmlDataScrollerTag
     private static final String PAGINATOR_TABLE_STYLE_ATTR  = "paginatorTableStyle";
     private static final String PAGINATOR_COL_CLASS_ATTR    = "paginatorColumnClass";
     private static final String PAGINATOR_COL_STYLE_ATTR    = "paginatorColumnStyle";
-    private static final String PAGINATOR_ACTCOL_CLASS_ATTR = "paginatorAcitveColumnClass";
+    private static final String PAGINATOR_ACTCOL_CLASS_ATTR = "paginatorActiveColumnClass";
     private static final String PAGINATOR_ACTCOL_STYLE_ATTR = "paginatorActiveColumnStyle";
 
     private String _for;
