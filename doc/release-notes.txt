@@ -10,7 +10,7 @@ javax.faces.CONFIG_FILES. You have to modify your web.xml accordingly,
 otherwise your config files will no longer be found and parsed.
 
 * new renderedIfEmpty attribute for extended <x:dataTable> component (see tlddocs)
- *bug #959926	<h:selectOneRadio and styleClass
+* bug #959926	<h:selectOneRadio and styleClass
 * bug #953783	h:commandLink renders value as text
 * bug #955135	graphicImage tag
 * bug #952453	Class FacesConfigFactoryBase search for wrong context-param
