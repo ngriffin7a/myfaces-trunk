@@ -33,8 +33,12 @@ import java.io.IOException;
 
 /**
  * @author Thomas Spiegl (latest modification by $Author$)
+ * @author Manfred Geiler
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.2  2004/05/25 07:33:06  manolito
+ * no longer depends on specific component classes
+ *
  * Revision 1.1  2004/05/18 14:31:39  manolito
  * user role support completely moved to components source tree
  *
@@ -51,11 +55,11 @@ public class HtmlTextRendererBase
 
         if (component instanceof UIInput)
         {
-            renderInput(facesContext, (UIInput)component);
+            renderInput(facesContext, component);
         }
         else if (component instanceof UIOutput)
         {
-            renderOutput(facesContext, (UIOutput)component);
+            renderOutput(facesContext, component);
         }
         else
         {
@@ -64,21 +68,21 @@ public class HtmlTextRendererBase
     }
 
 
-    protected static void renderOutput(FacesContext facesContext, UIOutput uiOutput)
+    protected static void renderOutput(FacesContext facesContext, UIComponent component)
         throws IOException
     {
-        String text = RendererUtils.getStringValue(facesContext, uiOutput);
+        String text = RendererUtils.getStringValue(facesContext, component);
         boolean escape;
-        if (uiOutput instanceof HtmlOutputText)
+        if (component instanceof HtmlOutputText)
         {
-            escape = ((HtmlOutputText)uiOutput).isEscape();
+            escape = ((HtmlOutputText)component).isEscape();
         }
         else
         {
-            escape = RendererUtils.getBooleanAttribute(uiOutput, JSFAttr.ESCAPE_ATTR,
+            escape = RendererUtils.getBooleanAttribute(component, JSFAttr.ESCAPE_ATTR,
                                                        true); //default is to escape
         }
-        renderOutputText(facesContext, uiOutput, text, escape);
+        renderOutputText(facesContext, component, text, escape);
     }
 
 
@@ -112,15 +116,15 @@ public class HtmlTextRendererBase
     }
 
 
-    protected void renderInput(FacesContext facesContext, UIInput uiInput)
+    protected void renderInput(FacesContext facesContext, UIComponent component)
         throws IOException
     {
         ResponseWriter writer = facesContext.getResponseWriter();
 
-        String clientId = uiInput.getClientId(facesContext);
-        String value = RendererUtils.getStringValue(facesContext, uiInput);
+        String clientId = component.getClientId(facesContext);
+        String value = RendererUtils.getStringValue(facesContext, component);
 
-        writer.startElement(HTML.INPUT_ELEM, uiInput);
+        writer.startElement(HTML.INPUT_ELEM, component);
         writer.writeAttribute(HTML.ID_ATTR, clientId, null);
         writer.writeAttribute(HTML.NAME_ATTR, clientId, null);
         writer.writeAttribute(HTML.TYPE_ATTR, HTML.INPUT_TYPE_TEXT, null);
@@ -129,8 +133,8 @@ public class HtmlTextRendererBase
             writer.writeAttribute(HTML.VALUE_ATTR, value, JSFAttr.VALUE_ATTR);
         }
 
-        HtmlRendererUtils.renderHTMLAttributes(writer, uiInput, HTML.INPUT_PASSTHROUGH_ATTRIBUTES_WITHOUT_DISABLED);
-        if (isDisabled(facesContext, uiInput))
+        HtmlRendererUtils.renderHTMLAttributes(writer, component, HTML.INPUT_PASSTHROUGH_ATTRIBUTES_WITHOUT_DISABLED);
+        if (isDisabled(facesContext, component))
         {
             writer.writeAttribute(HTML.DISABLED_ATTR, Boolean.TRUE, null);
         }
@@ -138,16 +142,16 @@ public class HtmlTextRendererBase
         writer.endElement(HTML.INPUT_ELEM);
     }
 
-    protected boolean isDisabled(FacesContext facesContext, UIComponent uiComponent)
+    protected boolean isDisabled(FacesContext facesContext, UIComponent component)
     {
         //TODO: overwrite in extended HtmlTextRenderer and check for enabledOnUserRole
-        if (uiComponent instanceof HtmlInputText)
+        if (component instanceof HtmlInputText)
         {
-            return ((HtmlInputText)uiComponent).isDisabled();
+            return ((HtmlInputText)component).isDisabled();
         }
         else
         {
-            return RendererUtils.getBooleanAttribute(uiComponent, HTML.DISABLED_ATTR, false);
+            return RendererUtils.getBooleanAttribute(component, HTML.DISABLED_ATTR, false);
         }
     }
 
@@ -171,11 +175,11 @@ public class HtmlTextRendererBase
     }
 
 
-    public Object getConvertedValue(FacesContext facesContext, UIComponent uiComponent, Object submittedValue) throws ConverterException
+    public Object getConvertedValue(FacesContext facesContext, UIComponent component, Object submittedValue) throws ConverterException
     {
-        RendererUtils.checkParamValidity(facesContext, uiComponent, UIOutput.class);
+        RendererUtils.checkParamValidity(facesContext, component, UIOutput.class);
         return RendererUtils.getConvertedUIOutputValue(facesContext,
-                                                       (UIOutput)uiComponent,
+                                                       (UIOutput)component,
                                                        submittedValue);
     }
 
