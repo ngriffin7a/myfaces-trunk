@@ -22,6 +22,8 @@ Changes in Release 1.0.7 beta
 * bug #1012909 support Oracle ADF
 * bug #1007065 f:view should tokenize locale attribute
 * bug #1013489 support EL expression at <f:loadBundle>
+* Tiles support: ServletContextListener (JspTilesViewHandlerInitializer) no longer needed
+
 ----------------------------------------------------------------------
 Changes in Release 1.0.6 beta
 * switch to apache license
