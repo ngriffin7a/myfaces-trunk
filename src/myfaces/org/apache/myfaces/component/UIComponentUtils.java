@@ -87,7 +87,7 @@ public class UIComponentUtils
         if (conv == null)
         {
             //default to StringConverter
-            conv = ConverterUtils.getConverter(facesContext.getServletContext(), String.class);
+            conv = ConverterUtils.getConverter(String.class);
         }
 
         convertAndSetValue(facesContext, uiComponent, newValue, conv, addErrorMessageOnFail);
@@ -102,7 +102,7 @@ public class UIComponentUtils
         if (conv == null)
         {
             //default to StringConverter
-            conv = ConverterUtils.getConverter(facesContext.getServletContext(), String.class);
+            conv = ConverterUtils.getConverter(String.class);
         }
 
         if (conv instanceof StringArrayConverter)

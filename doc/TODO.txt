@@ -3,7 +3,7 @@ MyFaces TODOs
 
 Tasks
 -----
-You can browse all current task at:
+You can browse all current tasks at:
 http://sourceforge.net/pm/?group_id=69709
 
 

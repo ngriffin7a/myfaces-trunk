@@ -84,44 +84,6 @@ public class UISortHeader
         setAttribute(ASCENDING_REFERENCE_ATTR, ascendingReference);
     }
 
-    /*
-    public boolean processEvent(FacesContext facesContext, FacesEvent event)
-    {
-        UIComponent source = (UIComponent)event.getSource();
-        if (source.getRendererType().equals(SortColumnRenderer.TYPE))
-        {
-            String sortColumn = (String)source.currentValue(facesContext);
-            String currentColumn = (String)currentValue(facesContext);
-            if (sortColumn.equals(currentColumn))
-            {
-                setAscending(!currentAscending(facesContext));
-            }
-            else
-            {
-                setValue(sortColumn);
-                setValid(true);
-
-                Boolean defaultAscending = (Boolean)source.getAttribute(SortColumnRenderer.DEFAULT_ASCENDING_ATTR);
-                if (defaultAscending != null)
-                {
-                    setAscending(defaultAscending.booleanValue());
-                }
-                else
-                {
-                    setAscending(true);
-                }
-
-            }
-            return false; //do not jump to RenderPhase
-        }
-        else
-        {
-            TODO: new event processing model
-            return super.processEvent(facesContext, event);
-        }
-    }
-    */
-
 
     public void updateModel(FacesContext facesContext)
     {

@@ -18,15 +18,11 @@
  */
 package net.sourceforge.myfaces;
 
-import net.sourceforge.myfaces.convert.ConverterFactoryImpl;
-import net.sourceforge.myfaces.convert.map.ConverterMapFactory;
-import net.sourceforge.myfaces.convert.map.ConverterMapFactoryImpl;
 import net.sourceforge.myfaces.webapp.ServletMapping;
 import net.sourceforge.myfaces.webapp.ServletMappingFactory;
 import net.sourceforge.myfaces.webapp.ServletMappingFactoryImpl;
 
 import javax.faces.FacesException;
-import javax.faces.convert.ConverterFactory;
 import javax.servlet.ServletContext;
 import java.util.HashMap;
 
@@ -37,15 +33,11 @@ import java.util.HashMap;
  */
 public class MyFacesFactoryFinder
 {
-    public static final String CONVERTER_FACTORY = ConverterFactory.class.getName();
-    public static final String CONVERTER_MAP_FACTORY = ConverterMapFactory.class.getName();
     public static final String SERVLET_MAPPING_FACTORY = ServletMapping.class.getName();
 
     private static final HashMap DEFAULT_FACTORIES = new HashMap();
     static
     {
-        DEFAULT_FACTORIES.put(CONVERTER_FACTORY, ConverterFactoryImpl.class.getName());
-        DEFAULT_FACTORIES.put(CONVERTER_MAP_FACTORY, ConverterMapFactoryImpl.class.getName());
         DEFAULT_FACTORIES.put(SERVLET_MAPPING_FACTORY, ServletMappingFactoryImpl.class.getName());
     }
 
@@ -89,18 +81,6 @@ public class MyFacesFactoryFinder
         return fact;
     }
 
-
-    public static ConverterFactory getConverterFactory(ServletContext servletContext)
-            throws FacesException
-    {
-        return (ConverterFactory)getFactory(servletContext, CONVERTER_FACTORY);
-    }
-
-    public static ConverterMapFactory getConverterMapFactory(ServletContext servletContext)
-        throws FacesException
-    {
-        return (ConverterMapFactory)getFactory(servletContext, CONVERTER_MAP_FACTORY);
-    }
 
     public static ServletMappingFactory getServletMappingFactory(ServletContext servletContext)
         throws FacesException

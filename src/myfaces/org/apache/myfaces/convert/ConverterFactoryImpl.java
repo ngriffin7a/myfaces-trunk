@@ -19,8 +19,8 @@
 package net.sourceforge.myfaces.convert;
 
 import javax.faces.FacesException;
-import javax.faces.convert.ConverterFactory;
 import javax.faces.convert.Converter;
+import javax.faces.convert.ConverterFactory;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
@@ -38,39 +38,30 @@ public class ConverterFactoryImpl
 {
     private static final String CONVERTER_PROPS =
         "net.sourceforge.myfaces.convert.converter".replace('.', '/') + ".properties";
-    private HashMap _converters = new HashMap();
+    private static final String CONV_MAP_PROPS =
+        "net.sourceforge.myfaces.convert.converterMap".replace('.', '/') + ".properties";
+
+    private Map _convertersById;
+    private Map _convertersByClass;
 
     public ConverterFactoryImpl()
     {
         read();
     }
 
-    protected void read()
+    protected synchronized void read()
     {
-        ClassLoader loader = Thread.currentThread().getContextClassLoader();
-        InputStream stream = loader.getResourceAsStream(CONVERTER_PROPS);
-        if (stream == null)
-        {
-            throw new FacesException("File " + CONVERTER_PROPS + " not found.");
-        }
-        Properties converterProps = new Properties();
-        try
-        {
-            converterProps.load(stream);
-        }
-        catch (IOException e)
-        {
-            throw new FacesException("Error reading file " + CONVERTER_PROPS + ".");
-        }
+        Properties converterProps = loadProperties(CONVERTER_PROPS);
 
-        //Materialize
+        //Materialize and store converters
+        _convertersById = new HashMap();
         for (Iterator it = converterProps.entrySet().iterator(); it.hasNext();)
         {
             Map.Entry entry = (Map.Entry)it.next();
             try
             {
                 Class c = Class.forName((String)entry.getValue());
-                _converters.put(entry.getKey(), c.newInstance());
+                _convertersById.put(entry.getKey(), c.newInstance());
             }
             catch (ClassNotFoundException e)
             {
@@ -85,15 +76,59 @@ public class ConverterFactoryImpl
                 throw new FacesException(e);
             }
         }
+
+        //Map classes to converters
+        Properties converterMapProps = loadProperties(CONV_MAP_PROPS);
+        _convertersByClass = new HashMap();
+        for (Iterator it = converterMapProps.entrySet().iterator(); it.hasNext();)
+        {
+            Map.Entry entry = (Map.Entry)it.next();
+            Converter conv = (Converter)_convertersById.get(entry.getValue());
+            if (conv == null)
+            {
+                throw new RuntimeException("Error in converter map: converter " + (String)entry.getValue() + " not found!");
+            }
+            try
+            {
+                Class c = Class.forName((String)entry.getKey());
+                _convertersByClass.put(entry.getKey(), conv);
+            }
+            catch (ClassNotFoundException e)
+            {
+                throw new FacesException(e);
+            }
+        }
     }
+
+    protected Properties loadProperties(String fileName)
+    {
+        ClassLoader loader = Thread.currentThread().getContextClassLoader();
+        InputStream stream = loader.getResourceAsStream(fileName);
+        if (stream == null)
+        {
+            throw new FacesException("File " + fileName + " not found.");
+        }
+        Properties props = new Properties();
+        try
+        {
+            props.load(stream);
+        }
+        catch (IOException e)
+        {
+            throw new FacesException("Error reading file " + fileName + ".");
+        }
+        return props;
+    }
+
+
 
     public void addConverter(String id, Converter converter)
     {
-        synchronized (_converters)
+        synchronized (_convertersById)
         {
-            if (_converters.put(id, converter) != null)
+            if (_convertersById.put(id, converter) != null)
             {
-                throw new RuntimeException("Duplicate converter " + id);
+                throw new IllegalArgumentException("Duplicate converter " + id);
             }
         }
     }
@@ -101,7 +136,7 @@ public class ConverterFactoryImpl
     public Converter getConverter(String id)
             throws IllegalArgumentException
     {
-        Converter conv = (Converter)_converters.get(id);
+        Converter conv = (Converter)_convertersById.get(id);
         if (conv == null)
         {
             throw new IllegalArgumentException("No converter with id '" + id + "' found!");
@@ -111,26 +146,34 @@ public class ConverterFactoryImpl
 
     public Iterator getConverterIds()
     {
-        return _converters.keySet().iterator();
+        return _convertersById.keySet().iterator();
     }
 
 
 
-    public void addConverter(Class class1, Converter converter)
+    public void addConverter(Class clazz, Converter converter)
     {
-        //TODO
-        throw new UnsupportedOperationException();
+        synchronized (_convertersByClass)
+        {
+            if (_convertersById.put(clazz, converter) != null)
+            {
+                throw new IllegalArgumentException("Duplicate converter for class " + clazz.getName());
+            }
+        }
     }
 
-    public Converter getConverter(Class class1)
+    public Converter getConverter(Class clazz)
     {
-        //TODO
-        throw new UnsupportedOperationException();
+        Converter conv = (Converter)_convertersByClass.get(clazz);
+        if (conv == null)
+        {
+            throw new IllegalArgumentException("No converter for class " + clazz.getName() + "' found!");
+        }
+        return conv;
     }
 
     public Iterator getConverterClasses()
     {
-        //TODO
-        throw new UnsupportedOperationException();
+        return _convertersByClass.keySet().iterator();
     }
 }

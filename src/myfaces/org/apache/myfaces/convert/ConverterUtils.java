@@ -18,26 +18,23 @@
  */
 package net.sourceforge.myfaces.convert;
 
-import net.sourceforge.myfaces.MyFacesFactoryFinder;
+import net.sourceforge.myfaces.renderkit.attr.CommonRendererAttributes;
 import net.sourceforge.myfaces.util.bean.BeanUtils;
 import net.sourceforge.myfaces.util.logging.LogUtil;
-import net.sourceforge.myfaces.convert.map.ConverterMapFactory;
-import net.sourceforge.myfaces.renderkit.attr.CommonRendererAttributes;
 
 import javax.faces.FacesException;
 import javax.faces.FactoryFinder;
-import javax.faces.render.RenderKit;
-import javax.faces.render.Renderer;
-import javax.faces.render.RenderKitFactory;
-import javax.faces.convert.Converter;
-import javax.faces.convert.ConverterFactory;
-import javax.faces.convert.ConverterException;
-import javax.faces.component.UIComponent;
 import javax.faces.component.AttributeDescriptor;
+import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
+import javax.faces.convert.Converter;
+import javax.faces.convert.ConverterException;
+import javax.faces.convert.ConverterFactory;
+import javax.faces.render.RenderKit;
+import javax.faces.render.RenderKitFactory;
+import javax.faces.render.Renderer;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeUtility;
-import javax.servlet.ServletContext;
 import java.io.*;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
@@ -57,21 +54,18 @@ public class ConverterUtils
 
     private ConverterUtils() {}
 
-    public static Converter getConverter(ServletContext servletContext, Class c)
+    public static Converter getConverter(Class c)
         throws IllegalArgumentException
     {
-        ConverterMapFactory convMapFactory = MyFacesFactoryFinder.getConverterMapFactory(servletContext);
-        String converterId = convMapFactory.getConverterMap().getConverterId(c);
-        ConverterFactory convFactory = MyFacesFactoryFinder.getConverterFactory(servletContext);
-        return convFactory.getConverter(converterId);
+        ConverterFactory convFactory = (ConverterFactory)FactoryFinder.getFactory(FactoryFinder.CONVERTER_FACTORY);
+        return convFactory.getConverter(c);
     }
 
-    public static Converter findConverter(ServletContext servletContext,
-                                          Class c)
+    public static Converter findConverter(Class c)
     {
         try
         {
-            return getConverter(servletContext, c);
+            return getConverter(c);
         }
         catch (IllegalArgumentException e)
         {
@@ -95,7 +89,7 @@ public class ConverterUtils
         String converterId = (String)converterAttr;
         if (converterId != null)
         {
-            ConverterFactory convFactory = MyFacesFactoryFinder.getConverterFactory(facesContext.getServletContext());
+            ConverterFactory convFactory = (ConverterFactory)FactoryFinder.getFactory(FactoryFinder.CONVERTER_FACTORY);
             return convFactory.getConverter(converterId);
         }
 
@@ -107,10 +101,8 @@ public class ConverterUtils
             {
                 throw new IllegalArgumentException("Could not find ModelDefinition for ModelReference " + modelRef);
             }
-            ConverterMapFactory convMapFactory = MyFacesFactoryFinder.getConverterMapFactory(facesContext.getServletContext());
-            converterId = convMapFactory.getConverterMap().getConverterId(c);
-            ConverterFactory convFactory = MyFacesFactoryFinder.getConverterFactory(facesContext.getServletContext());
-            return convFactory.getConverter(converterId);
+            ConverterFactory convFactory = (ConverterFactory)FactoryFinder.getFactory(FactoryFinder.CONVERTER_FACTORY);
+            return convFactory.getConverter(c);
         }
 
         return null;
@@ -141,7 +133,7 @@ public class ConverterUtils
             Class c = BeanUtils.getBeanPropertyType(uiComponent, attrName);
             if (c != null)
             {
-                conv = ConverterUtils.findConverter(facesContext.getServletContext(), c);
+                conv = ConverterUtils.findConverter(c);
             }
         }
         catch (IllegalArgumentException e)
@@ -158,8 +150,7 @@ public class ConverterUtils
                                                                                 attrName);
                 if (attrDescr != null)
                 {
-                    conv = ConverterUtils.findConverter(facesContext.getServletContext(),
-                                                        attrDescr.getType());
+                    conv = ConverterUtils.findConverter(attrDescr.getType());
                 }
                 else
                 {

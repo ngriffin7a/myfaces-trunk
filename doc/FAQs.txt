@@ -1,0 +1,42 @@
+MyFaces frequently asked questions
+
+======================================================================
+1. MyFaces user FAQs
+
+
+======================================================================
+2. Component developer FAQs
+
+
+======================================================================
+3. MyFaces developer FAQs
+
+Q: Why does MyFaces include it's own JSP parser (i.e. Tomcat's "jasper")?
+A:
+Minimal state saving in the client instead of using servlet sessions is
+a basic idea of MyFaces.
+Well, to accomplish this, we use the following paradigm:
+- We only save state of things (tree hierarchy, components, attributes)
+that we could not restore otherwise during the next request.
+Or the other way round:
+- We do not put any information in hidden inputs or URL parameters, that
+we could get from otherwhere when doing the "reconstitute tree".
+
+Mind, that each browser request is independent of anything that happened
+before (at least as long as we do not use servlet sessions). Now, the
+main task of the "reconstitute tree" phase is to restore the component
+tree to the state it had during the last "render response". Where can we
+get such information? Well, most things we need to know about the tree
+sits in the corresponding JSP. But, how can we get it? There is no other
+way, than to parse the JSP.
+Ok, we parse the JSP for our purposes. The servlet container (Tomcat)
+parses the JSP again when compiling it. Sounds horrible. It is not:
+MyFaces has an option (for production), that makes it cache the parsed
+information for each JSP.
+
+So, we do depend on a JSP parser. We do not (really) depend on the
+jasper parser: the "jspinfo" package capsulates the parser fully. All
+jasper classes where refactored to reside in the subpackage "jasper", so
+there can also be no naming conflicts with the real Tomcat environment.
+----------------------------------------------------------------------
+
