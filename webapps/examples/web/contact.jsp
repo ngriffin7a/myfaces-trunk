@@ -33,11 +33,11 @@
 
 <f:use_faces>
 
-    <x:page_layout id="page" layoutReference="pageLayout" cssClass="pageLayout" >
+    <x:page_layout id="page" layoutReference="pageLayout" panelClass="pageLayout" >
         <%@include file="inc/page_header.jsp" %>
         <%@include file="inc/navigation.jsp"  %>
 
-        <x:page_body id="body" cssClass="pageBody" >
+        <x:page_body id="body" panelClass="pageBody" >
 <h3>Webpages</h3>
  <a href="http://myfaces.sourceforge.net/" target="_blank">Project Homepage</a><br>
  <a href="http://www.sourceforge.net/projects/myfaces" target="_blank">MyFaces@Sourceforge</a><br>

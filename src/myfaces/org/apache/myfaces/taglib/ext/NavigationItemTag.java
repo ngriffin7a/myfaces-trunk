@@ -20,17 +20,19 @@ package net.sourceforge.myfaces.taglib.ext;
 
 import net.sourceforge.myfaces.component.ext.UINavigation;
 import net.sourceforge.myfaces.renderkit.html.ext.NavigationItemRenderer;
+import net.sourceforge.myfaces.renderkit.attr.ext.NavigationItemRendererAttributes;
 import net.sourceforge.myfaces.taglib.MyFacesTag;
 
 import javax.faces.component.UIComponent;
 
 /**
- * DOCUMENT ME!
+ * see "navigation_item" tag in myfaces_ext.tld
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
 public class NavigationItemTag
-        extends MyFacesTag
+    extends MyFacesTag
+    implements NavigationItemRendererAttributes
 {
     public UIComponent createComponent()
     {
@@ -44,18 +46,10 @@ public class NavigationItemTag
 
     public void setLabel(String s)
     {
-        setRendererAttribute(NavigationItemRenderer.LABEL_ATTR, s);
+        setRendererAttribute(LABEL_ATTR, s);
     }
 
-    public void setKey(String value)
-    {
-        setRendererAttribute(NavigationItemRenderer.KEY_ATTR, value);
-    }
-
-    public void setBundle(String value)
-    {
-        setRendererAttribute(NavigationItemRenderer.BUNDLE_ATTR, value);
-    }
+    // key and bundle attributes --> already implemented in MyFacesTag
 
     public void setTreeId(String s)
     {
@@ -68,8 +62,10 @@ public class NavigationItemTag
                               b ? Boolean.TRUE : Boolean.FALSE);
     }
 
-    public void setUserRole(String userRole)
+    public void setOpen(Boolean b)
     {
-        setRendererAttribute(NavigationItemRenderer.USER_ROLE_ATTR, userRole);
+        setComponentProperty(UINavigation.UINavigationItem.OPEN_ATTR, b);
     }
+
+    // user role attributes --> already implemented in MyFacesTag
 }

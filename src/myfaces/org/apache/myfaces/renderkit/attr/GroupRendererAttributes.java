@@ -16,34 +16,18 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package net.sourceforge.myfaces.taglib;
-
-import net.sourceforge.myfaces.component.UIComponentUtils;
-import net.sourceforge.myfaces.component.UIPanel;
-import net.sourceforge.myfaces.renderkit.html.GroupRenderer;
-
-import javax.faces.component.UIComponent;
-
-
+package net.sourceforge.myfaces.renderkit.attr;
 
 /**
- * DOCUMENT ME!
- * @author Thomas Spiegl (latest modification by Author)
+ * Constant definitions for the specified render dependent attributes of the
+ * "Group" renderer type.
+ * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public class GroupTag
-    extends MyFacesTag
+public interface GroupRendererAttributes
+    extends CommonRendererAttributes
 {
-    public UIComponent createComponent()
-    {
-        UIPanel panel = new UIPanel(false);
-        // donot save State
-        UIComponentUtils.setTransient(panel, true);
-        return panel;
-    }
-
-    public String getRendererType()
-    {
-        return GroupRenderer.TYPE;
-    }
+    public static final String[] PANEL_GROUP_ATTRIBUTES = {
+        PANEL_CLASS_ATTR
+    };
 }

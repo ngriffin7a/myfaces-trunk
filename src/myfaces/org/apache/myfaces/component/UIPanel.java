@@ -18,6 +18,9 @@
  */
 package net.sourceforge.myfaces.component;
 
+import javax.faces.component.UIComponent;
+
+
 /**
  * DOCUMENT ME!
  * @author Manfred Geiler (latest modification by $Author$)
@@ -51,5 +54,17 @@ public class UIPanel
         {
             return super.getAttribute(s);
         }
+    }
+
+
+
+
+    /**
+     * HACK: to make getClientId work
+     */
+    public void addFacet(String facetName, UIComponent facet)
+    {
+        super.addFacet(facetName, facet);
+        facet.setAttribute("parent", this);
     }
 }

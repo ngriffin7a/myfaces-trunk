@@ -19,6 +19,7 @@
 package net.sourceforge.myfaces.renderkit.attr.ext;
 
 import net.sourceforge.myfaces.renderkit.attr.CommonRendererAttributes;
+import net.sourceforge.myfaces.renderkit.attr.KeyBundleAttributes;
 
 /**
  * Constant definitions for the specified render dependent attributes of the
@@ -27,11 +28,17 @@ import net.sourceforge.myfaces.renderkit.attr.CommonRendererAttributes;
  * @version $Revision$ $Date$
  */
 public interface NavigationItemRendererAttributes
-    extends CommonRendererAttributes
+    extends CommonRendererAttributes,
+            KeyBundleAttributes
 {
     public static final String TREE_ID_ATTR = "treeId";
     public static final String LABEL_ATTR = "label";
-    public static final String KEY_ATTR = "key";
-    public static final String BUNDLE_ATTR = "bundle";
-    public static final String USER_ROLE_ATTR = "userRole";
+
+    public static final String[] NAVIGATION_ITEM_ATTRIBUTES = {
+        TREE_ID_ATTR,
+        LABEL_ATTR,
+        KEY_ATTR,
+        BUNDLE_ATTR
+    };
+
 }

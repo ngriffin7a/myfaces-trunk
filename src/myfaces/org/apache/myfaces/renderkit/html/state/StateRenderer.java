@@ -87,7 +87,9 @@ public class StateRenderer
         return false;
     }
 
-
+    protected void initAttributeDescriptors()
+    {
+    }
 
 
     /**

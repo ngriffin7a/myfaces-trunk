@@ -20,6 +20,7 @@ package net.sourceforge.myfaces.renderkit.html.jspinfo;
 
 import net.sourceforge.myfaces.MyFacesConfig;
 import net.sourceforge.myfaces.component.CommonComponentAttributes;
+import net.sourceforge.myfaces.component.UIComponentUtils;
 import net.sourceforge.myfaces.component.ext.UISaveState;
 import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.Constants;
 import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.JasperException;
@@ -39,6 +40,7 @@ import javax.faces.component.UIComponent;
 import javax.faces.component.UIComponentBase;
 import javax.faces.context.FacesContext;
 import javax.faces.webapp.FacesTag;
+import javax.faces.webapp.FacetTag;
 import javax.servlet.jsp.PageContext;
 import javax.servlet.jsp.tagext.Tag;
 import javax.servlet.jsp.tagext.TagAttributeInfo;
@@ -343,7 +345,8 @@ public class MyParseEventListener
         }
 
         if (FacesTag.class.isAssignableFrom(c) ||
-            ActionListenerTag.class.isAssignableFrom(c))
+            ActionListenerTag.class.isAssignableFrom(c) ||
+            FacetTag.class.isAssignableFrom(c))
         {
             try
             {
@@ -385,6 +388,10 @@ public class MyParseEventListener
         else if (tag instanceof ActionListenerTag)
         {
             handleActionListenerTag(ti, (ActionListenerTag)tag, attrs);
+        }
+        else if (tag instanceof FacetTag)
+        {
+            handleFacetTag(attrs);
         }
     }
 
@@ -508,7 +515,22 @@ public class MyParseEventListener
             comp.setRendererType(rendererType);
         }
 
-        _currentComponent.addChild(comp);
+        String facetName = (String)_currentComponent.getAttribute(PENDING_FACET_ATTR);
+        if (facetName != null)
+        {
+            /*
+            if (!(_currentComponent instanceof NamingContainer))
+            {
+                LogUtil.getLogger().severe("Component " + UIComponentUtils.toString(_currentComponent) + " is a facet (named '" + facetName + "'), but is no NamingContainer. Facets always must be NamingContainers because they have no parent!");
+            }
+            */
+            _currentComponent.addFacet(facetName, comp);
+            _currentComponent.setAttribute(PENDING_FACET_ATTR, null);
+        }
+        else
+        {
+            _currentComponent.addChild(comp);
+        }
 
         if (facesTag instanceof MyFacesTagBaseIF)
         {
@@ -812,6 +834,22 @@ public class MyParseEventListener
         }
 
         lst.add(type);
+    }
+
+
+
+    private static final String FACET_NAME_ATTR = "name";
+    private static final String PENDING_FACET_ATTR = "pending_facet";
+
+    private void handleFacetTag(Attributes attrs)
+    {
+        String name = attrs.getValue(FACET_NAME_ATTR);
+        if (name == null)
+        {
+            LogUtil.getLogger().severe("facet tag has no " + FACET_NAME_ATTR + " attribute!");
+            return;
+        }
+        _currentComponent.setAttribute(PENDING_FACET_ATTR, name);
     }
 
 }

@@ -200,7 +200,7 @@ public abstract class MyFacesTag
         super.setId(s);
     }
 
-    public void setConverter(Object converter)
+    public void setConverter(String converter)
     {
         setRendererAttribute(CONVERTER_ATTR, converter);
     }

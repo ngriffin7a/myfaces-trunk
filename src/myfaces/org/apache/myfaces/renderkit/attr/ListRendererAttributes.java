@@ -29,4 +29,13 @@ public interface ListRendererAttributes
 {
     public static final String FOOTER_CLASS_ATTR = "footerClass";
     public static final String HEADER_CLASS_ATTR = "headerClass";
+
+    public static final String[] PANEL_LIST_ATTRIBUTES = {
+        PANEL_CLASS_ATTR,
+        COLUMN_CLASSES_ATTR,
+        FOOTER_CLASS_ATTR,
+        HEADER_CLASS_ATTR,
+        ROW_CLASSES_ATTR
+    };
+
 }

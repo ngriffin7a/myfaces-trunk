@@ -91,7 +91,7 @@ public class TreeCopier
     {
         copyAttributes(fromComp, toComp);
 
-        for (Iterator it = fromComp.getChildren(); it.hasNext();)
+        for (Iterator it = fromComp.getFacetsAndChildren(); it.hasNext();)
         {
             UIComponent child = (UIComponent)it.next();
             String uniqueId = UIComponentUtils.getUniqueComponentId(_facesContext, child);

@@ -18,16 +18,22 @@
  */
 package net.sourceforge.myfaces.renderkit.html.ext;
 
+import net.sourceforge.myfaces.component.CommonComponentAttributes;
 import net.sourceforge.myfaces.component.UIComponentUtils;
 import net.sourceforge.myfaces.component.ext.UINavigation;
+import net.sourceforge.myfaces.renderkit.attr.CommonRendererAttributes;
 import net.sourceforge.myfaces.renderkit.attr.ext.NavigationRendererAttributes;
 import net.sourceforge.myfaces.renderkit.html.HTMLRenderer;
+import net.sourceforge.myfaces.renderkit.html.attr.HTMLEventHandlerAttributes;
+import net.sourceforge.myfaces.renderkit.html.attr.HTMLTableAttributes;
+import net.sourceforge.myfaces.renderkit.html.attr.HTMLUniversalAttributes;
 import net.sourceforge.myfaces.renderkit.html.state.StateRestorer;
 import net.sourceforge.myfaces.tree.TreeUtils;
 
 import javax.faces.FacesException;
 import javax.faces.FactoryFinder;
 import javax.faces.component.UIComponent;
+import javax.faces.component.UIPanel;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 import javax.faces.render.RenderKitFactory;
@@ -42,7 +48,13 @@ import java.util.Iterator;
  */
 public class NavigationRenderer
     extends HTMLRenderer
-    implements NavigationRendererAttributes
+    implements
+        CommonComponentAttributes,
+        CommonRendererAttributes,
+        HTMLUniversalAttributes,
+        HTMLEventHandlerAttributes,
+        HTMLTableAttributes,
+        NavigationRendererAttributes
 {
     /*
     public static final String CURRENT_NAVIGATION_ATTR
@@ -72,6 +84,15 @@ public class NavigationRenderer
     {
         return uiComponent instanceof UINavigation;
     }
+
+    protected void initAttributeDescriptors()
+    {
+        addAttributeDescriptors(UIPanel.TYPE, TLD_EXT_URI, "navigation", HTML_UNIVERSAL_ATTRIBUTES);
+        addAttributeDescriptors(UIPanel.TYPE, TLD_EXT_URI, "navigation", HTML_EVENT_HANDLER_ATTRIBUTES);
+        addAttributeDescriptors(UIPanel.TYPE, TLD_EXT_URI, "navigation", HTML_TABLE_ATTRIBUTES);
+        addAttributeDescriptors(UIPanel.TYPE, TLD_EXT_URI, "navigation", NAVIGATION_ATTRIBUTES);
+    }
+
 
 
     public void decode(FacesContext facesContext, UIComponent uiComponent) throws IOException

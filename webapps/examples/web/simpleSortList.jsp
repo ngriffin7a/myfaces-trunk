@@ -35,15 +35,15 @@
 <!--x:save_state id="ss1" modelReference="list.sort" /-->
 <!--x:save_state id="ss2" modelReference="list.ascending" /-->
 
-    <x:page_layout id="page" layoutReference="pageLayout" cssClass="pageLayout" >
+    <x:page_layout id="page" layoutReference="pageLayout" panelClass="pageLayout" >
         <%@include file="inc/page_header.jsp" %>
         <%@include file="inc/navigation.jsp"  %>
 
-        <x:page_body id="body" cssClass="pageBody" >
+        <x:page_body id="body" panelClass="pageBody" >
 
             <h:output_errors id="errors" />
 
-            <h:list cssClass="standardTable"
+            <h:panel_list panelClass="standardTable"
                     headerClass="standardTable_SortHeader"
                     footerClass="standardTable_Footer"
                     rowClasses="standardTable_Row1,standardTable_Row2" >
@@ -60,16 +60,16 @@
                     </x:sortcolumn>
                 </x:sortheader>
                 <!-- DATA -->
-                <h:listrow var="car" modelReference="list.cars" >
+                <h:panel_data var="car" modelReference="list.cars" >
                     <h:output_text modelReference="car.type" />
                     <h:output_text modelReference="car.color" />
-                </h:listrow>
+                </h:panel_data>
                 <!-- FOOTER -->
-                <h:group>
+                <h:panel_group>
                     <h:output_text value="..."  />
                     <h:output_text value=""/>
-                </h:group>
-            </h:list>
+                </h:panel_group>
+            </h:panel_list>
 
         </x:page_body>
 

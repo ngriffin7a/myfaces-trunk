@@ -20,18 +20,21 @@ package net.sourceforge.myfaces.taglib;
 
 import net.sourceforge.myfaces.component.UIComponentUtils;
 import net.sourceforge.myfaces.component.UIPanel;
-import net.sourceforge.myfaces.renderkit.html.GridRenderer;
+import net.sourceforge.myfaces.renderkit.html.GroupRenderer;
+import net.sourceforge.myfaces.renderkit.attr.GroupRendererAttributes;
 
 import javax.faces.component.UIComponent;
 
 
+
 /**
- * DOCUMENT ME!
+ * see "panel_group" tag in myfaces_html.tld
  * @author Thomas Spiegl (latest modification by Author)
  * @version $Revision$ $Date$
  */
-public class GridTag
+public class PanelGroupTag
     extends MyFacesTag
+    implements GroupRendererAttributes
 {
     public UIComponent createComponent()
     {
@@ -39,42 +42,22 @@ public class GridTag
         // donot save State
         UIComponentUtils.setTransient(panel, true);
         return panel;
-
     }
 
     public String getRendererType()
     {
-        return GridRenderer.TYPE;
+        return GroupRenderer.TYPE;
     }
 
-    public void setColumns(Integer value)
+    // UIComponent attributes --> already implemented in MyFacesTag
+
+    // UIPanel attributes
+
+    public void setPanelClass(String v)
     {
-        setRendererAttribute(GridRenderer.COLUMNS_ATTR, value);
+        setRendererAttribute(PANEL_CLASS_ATTR, v);
     }
 
-    public void setCssClass(String value)
-    {
-        setRendererAttribute(GridRenderer.PANEL_CLASS_ATTR, value);
-    }
-
-    public void setColumnClasses(String value)
-    {
-        setRendererAttribute(GridRenderer.COLUMN_CLASSES_ATTR, value);
-    }
-
-    public void setRowClasses(String value)
-    {
-        setRendererAttribute(GridRenderer.ROW_CLASSES_ATTR, value);
-    }
-
-    public void setFooterClass(String value)
-    {
-        setRendererAttribute(GridRenderer.FOOTER_CLASS_ATTR, value);
-    }
-
-    public void setHeaderClass(String value)
-    {
-        setRendererAttribute(GridRenderer.HEADER_CLASS_ATTR, value);
-    }
+    // Group Renderer attributes  --> none
 
 }

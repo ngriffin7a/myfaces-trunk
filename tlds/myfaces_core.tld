@@ -95,4 +95,21 @@ use_faces
         </attribute>
     </tag>
 
+<!--
+======================================================
+ facet
+======================================================
+-->
+    <tag>
+        <name>facet</name>
+        <tag-class>javax.faces.webapp.FacetTag</tag-class>
+        <body-content>JSP</body-content>
+        <attribute>
+            <name>name</name>
+            <required>true</required>
+            <rtexprvalue>false</rtexprvalue>
+            <description>Name of the facet to be created.</description>
+        </attribute>
+    </tag>
+
 </taglib>

@@ -26,6 +26,7 @@ import net.sourceforge.myfaces.renderkit.html.attr.HTMLUniversalAttributes;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.webapp.FacesBodyTag;
+import javax.faces.webapp.FacesTag;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
 import javax.servlet.jsp.tagext.BodyTag;

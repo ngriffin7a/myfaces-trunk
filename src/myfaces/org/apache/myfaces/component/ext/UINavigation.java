@@ -25,9 +25,9 @@ import net.sourceforge.myfaces.renderkit.html.ext.NavigationItemRenderer;
 
 import javax.faces.FacesException;
 import javax.faces.FactoryFinder;
+import javax.faces.component.UIComponent;
 import javax.faces.component.NamingContainer;
 import javax.faces.component.NamingContainerSupport;
-import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.event.*;
 import javax.faces.tree.Tree;
@@ -197,7 +197,7 @@ public class UINavigation
 
 
 
-    //NamingContainer
+    //NamingContainer Support
     private NamingContainer _namingContainer = new NamingContainerSupport();
 
     public void addComponentToNamespace(UIComponent uicomponent)
@@ -231,5 +231,8 @@ public class UINavigation
     {
         return _namingContainer.generateClientId();
     }
+
+
+
 
 }

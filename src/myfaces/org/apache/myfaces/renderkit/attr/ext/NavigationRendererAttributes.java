@@ -19,6 +19,7 @@
 package net.sourceforge.myfaces.renderkit.attr.ext;
 
 import net.sourceforge.myfaces.renderkit.attr.CommonRendererAttributes;
+import net.sourceforge.myfaces.renderkit.attr.KeyBundleAttributes;
 
 /**
  * Constant definitions for the specified render dependent attributes of the
@@ -27,7 +28,11 @@ import net.sourceforge.myfaces.renderkit.attr.CommonRendererAttributes;
  * @version $Revision$ $Date$
  */
 public interface NavigationRendererAttributes
-    extends CommonRendererAttributes
+    extends CommonRendererAttributes,
+            KeyBundleAttributes
 {
-    public static final String BUNDLE_ATTR = "bundle";
+    public static final String[] NAVIGATION_ATTRIBUTES = {
+        PANEL_CLASS_ATTR,
+        BUNDLE_ATTR
+    };
 }

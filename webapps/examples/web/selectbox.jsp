@@ -35,14 +35,14 @@
 
 <f:use_faces>
 
-    <x:page_layout id="page" layoutReference="pageLayout" cssClass="pageLayout" >
+    <x:page_layout id="page" layoutReference="pageLayout" panelClass="pageLayout" >
         <%@include file="inc/page_header.jsp" %>
         <%@include file="inc/navigation.jsp"  %>
 
-        <x:page_body id="body" cssClass="pageBody" >
+        <x:page_body id="body" panelClass="pageBody" >
             <h:form formName="formName">
 
-                <h:grid columns="2">
+                <h:panel_grid columns="2">
 
                     <h:output_label for="selone_lb" key="label_cars" bundle="net.sourceforge.myfaces.examples.resource.example_messages"></h:output_label>
                     <h:selectone_listbox modelReference="carconf.car" >
@@ -62,18 +62,18 @@
                     </h:selectmany_checkbox>
 
                     <h:output_text value="" />
-                    <h:group >
+                    <h:panel_group >
                         <br>
                         <h:selectboolean_checkbox id="cb1" modelReference="carconf.discount"></h:selectboolean_checkbox>
                         <h:output_label for="cb1" key="discount_1" bundle="net.sourceforge.myfaces.examples.resource.example_messages"></h:output_label>
-                    </h:group>
+                    </h:panel_group>
 
                     <h:output_text value="" />
                     <h:command_button commandName="calcPrice" key="button_calcprice" bundle="net.sourceforge.myfaces.examples.resource.example_messages">
                         <f:action_listener type="net.sourceforge.myfaces.examples.common.CarConfiguratorActionListener" ></f:action_listener>
                     </h:command_button>
 
-                </h:grid>
+                </h:panel_grid>
             </h:form>
 
             <h:output_message key="msg_price" bundle="net.sourceforge.myfaces.examples.resource.example_messages" >

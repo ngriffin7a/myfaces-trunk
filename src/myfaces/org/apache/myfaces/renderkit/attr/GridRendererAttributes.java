@@ -30,4 +30,14 @@ public interface GridRendererAttributes
     public static final String COLUMNS_ATTR = "columns";
     public static final String FOOTER_CLASS_ATTR = "footerClass";
     public static final String HEADER_CLASS_ATTR = "headerClass";
+
+    public static final String[] PANEL_GRID_ATTRIBUTES = {
+        PANEL_CLASS_ATTR,
+        COLUMN_CLASSES_ATTR,
+        COLUMNS_ATTR,
+        FOOTER_CLASS_ATTR,
+        HEADER_CLASS_ATTR,
+        ROW_CLASSES_ATTR
+    };
+
 }

@@ -454,7 +454,7 @@ public class MyFacesTagHelper
         int lastChildIdx = getLastChildIndexForParent(facesContext,
                                                       parentClientId);
         int startSearchAt = lastChildIdx + 1;
-        int childCount = parsedParent.getChildCount();
+        int childCount = parsedParent.getChildCount();  //TODO: Also search within Facets !
 
         //search from component next to last found child
         for (int i = startSearchAt; i < childCount; i++)

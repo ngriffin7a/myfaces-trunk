@@ -33,4 +33,12 @@ public interface LayoutRendererAttributes
     public static final String NAVIGATION_CLASS_ATTR = "navigationClass";
     public static final String BODY_CLASS_ATTR = "bodyClass";
     public static final String FOOTER_CLASS_ATTR = "footerClass";
+
+    public static final String[] PAGE_LAYOUT_ATTRIBUTES = {
+        PANEL_CLASS_ATTR,
+        HEADER_CLASS_ATTR,
+        NAVIGATION_CLASS_ATTR,
+        BODY_CLASS_ATTR,
+        FOOTER_CLASS_ATTR
+    };
 }

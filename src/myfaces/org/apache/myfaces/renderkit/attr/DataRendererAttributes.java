@@ -28,4 +28,10 @@ public interface DataRendererAttributes
     extends CommonRendererAttributes
 {
     public static final String VAR_ATTR = "var";
+
+    public static final String[] PANEL_DATA_ATTRIBUTES = {
+        PANEL_CLASS_ATTR,
+        VAR_ATTR
+    };
+
 }

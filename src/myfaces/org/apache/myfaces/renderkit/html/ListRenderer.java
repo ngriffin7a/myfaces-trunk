@@ -18,12 +18,19 @@
  */
 package net.sourceforge.myfaces.renderkit.html;
 
+import net.sourceforge.myfaces.component.CommonComponentAttributes;
+import net.sourceforge.myfaces.component.UIComponentUtils;
+import net.sourceforge.myfaces.renderkit.attr.CommonRendererAttributes;
 import net.sourceforge.myfaces.renderkit.attr.ListRendererAttributes;
+import net.sourceforge.myfaces.renderkit.attr.UserRoleAttributes;
 import net.sourceforge.myfaces.renderkit.callback.CallbackRenderer;
 import net.sourceforge.myfaces.renderkit.callback.CallbackSupport;
-import net.sourceforge.myfaces.component.UIComponentUtils;
+import net.sourceforge.myfaces.renderkit.html.attr.HTMLEventHandlerAttributes;
+import net.sourceforge.myfaces.renderkit.html.attr.HTMLTableAttributes;
+import net.sourceforge.myfaces.renderkit.html.attr.HTMLUniversalAttributes;
 
 import javax.faces.component.UIComponent;
+import javax.faces.component.UIPanel;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 import javax.faces.render.Renderer;
@@ -37,14 +44,26 @@ import java.util.*;
  * @version $Revision$ $Date$
  */
 public class ListRenderer
-        extends HTMLRenderer
-        implements CallbackRenderer, ListRendererAttributes
+    extends HTMLRenderer
+    implements CallbackRenderer,
+               CommonComponentAttributes,
+               CommonRendererAttributes,
+               HTMLUniversalAttributes,
+               HTMLEventHandlerAttributes,
+               HTMLTableAttributes,
+               ListRendererAttributes,
+               UserRoleAttributes
 {
     public static final String TYPE = "List";
     private static final String ITERATOR_ATTR = ListRenderer.class.getName() + ".iterator";
     private static final String ACTUAL_ROW_ATTR = ListRenderer.class.getName() + ".actrow";
     private static final String ACTUAL_COLUMN_ATTR = ListRenderer.class.getName() + ".actcol";
     private static final String COMPONENT_COUNT_ATTR = ListRenderer.class.getName() + ".compcount";
+
+    public String getRendererType()
+    {
+        return TYPE;
+    }
 
     public boolean supportsComponentType(UIComponent uiComponent)
     {
@@ -56,10 +75,15 @@ public class ListRenderer
         return s.equals(javax.faces.component.UIPanel.TYPE);
     }
 
-    public String getRendererType()
+    protected void initAttributeDescriptors()
     {
-        return TYPE;
+        addAttributeDescriptors(UIPanel.TYPE, TLD_HTML_URI, "panel_list", HTML_UNIVERSAL_ATTRIBUTES);
+        addAttributeDescriptors(UIPanel.TYPE, TLD_HTML_URI, "panel_list", HTML_EVENT_HANDLER_ATTRIBUTES);
+        addAttributeDescriptors(UIPanel.TYPE, TLD_HTML_URI, "panel_list", HTML_TABLE_ATTRIBUTES);
+        addAttributeDescriptors(UIPanel.TYPE, TLD_HTML_URI, "panel_list", PANEL_LIST_ATTRIBUTES);
+        addAttributeDescriptors(UIPanel.TYPE, TLD_HTML_URI, "panel_list", USER_ROLE_ATTRIBUTES);
     }
+
 
     public void beforeEncodeBegin(FacesContext facesContext,
                                   Renderer renderer,

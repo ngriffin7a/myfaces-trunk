@@ -82,9 +82,9 @@ public class TreeUtils
             if (_next == null && _mayHaveNext)
             {
                 //has child?
-                if (_current.getChildCount() > 0)
+                Iterator children = _current.getFacetsAndChildren();
+                if (children.hasNext())
                 {
-                    Iterator children = _current.getFacetsAndChildren();
                     _next = (UIComponent)children.next();
                     //push siblings
                     _stack.push(children);
@@ -184,7 +184,7 @@ public class TreeUtils
 
         if (recursive)
         {
-            Iterator children = comp.getChildren();
+            Iterator children = comp.getFacetsAndChildren();
             if (children.hasNext())
             {
                 stream.println('>');

@@ -28,8 +28,10 @@ public interface KeyBundleAttributes
     public static final String KEY_ATTR     = "key";
     public static final String BUNDLE_ATTR  = "bundle";
 
+    /*
     public static final String[] KEY_BUNDLE_ATTRIBUTES = {
         KEY_ATTR,
         BUNDLE_ATTR
     };
+    */
 }

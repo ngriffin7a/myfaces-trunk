@@ -16,35 +16,41 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package net.sourceforge.myfaces.taglib.ext;
+package net.sourceforge.myfaces.taglib;
 
-import net.sourceforge.myfaces.component.ext.UINavigation;
-import net.sourceforge.myfaces.renderkit.html.ext.NavigationRenderer;
+import net.sourceforge.myfaces.component.UIComponentUtils;
+import net.sourceforge.myfaces.component.UIPanel;
+import net.sourceforge.myfaces.renderkit.attr.ListRendererAttributes;
+import net.sourceforge.myfaces.renderkit.html.ListRenderer;
 import net.sourceforge.myfaces.renderkit.html.attr.HTMLTableAttributes;
-import net.sourceforge.myfaces.renderkit.attr.ext.NavigationRendererAttributes;
-import net.sourceforge.myfaces.taglib.MyFacesTag;
 
 import javax.faces.component.UIComponent;
 
+
 /**
- * see "navigation" tag in myfaces_ext.tld
- * @author Manfred Geiler (latest modification by $Author$)
+ * see "panel_list" tag in myfaces_html.tld
+ * @author Thomas Spiegl (latest modification by Author)
  * @version $Revision$ $Date$
  */
-public class NavigationTag
+public class PanelListTag
     extends MyFacesTag
-    implements NavigationRendererAttributes,
-               HTMLTableAttributes
+    implements HTMLTableAttributes,
+               ListRendererAttributes
 {
     public UIComponent createComponent()
     {
-        return new UINavigation();
+        UIPanel panel = new UIPanel(false);
+        // do not save State
+        UIComponentUtils.setTransient(panel, true);
+        return panel;
     }
 
     public String getRendererType()
     {
-        return NavigationRenderer.TYPE;
+        return ListRenderer.TYPE;
     }
+
+    // UIComponent attributes --> already implemented in MyFacesTag
 
     // UIPanel attributes
 
@@ -119,5 +125,28 @@ public class NavigationTag
         setRendererAttribute(WIDTH_ATTR, value);
     }
 
-    // bundle attributes --> already implemented in MyFacesTag
+
+    // List Renderer attributes
+
+    public void setColumnClasses(String value)
+    {
+        setRendererAttribute(COLUMN_CLASSES_ATTR, value);
+    }
+
+    public void setFooterClass(String value)
+    {
+        setRendererAttribute(FOOTER_CLASS_ATTR, value);
+    }
+
+    public void setHeaderClass(String value)
+    {
+        setRendererAttribute(HEADER_CLASS_ATTR, value);
+    }
+
+    public void setRowClasses(String value)
+    {
+        setRendererAttribute(ROW_CLASSES_ATTR, value);
+    }
+
+    // user role attributes --> already implemented in MyFacesTag
 }

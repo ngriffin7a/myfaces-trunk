@@ -33,7 +33,7 @@
         * "FINEST", "FINER", "FINE", "INFO", "WARNING", "SEVERE"
         -->
         <param-name>logLevel</param-name>
-        <param-value>INFO</param-value>
+        <param-value>FINEST</param-value>
     </context-param>
 
     <context-param>

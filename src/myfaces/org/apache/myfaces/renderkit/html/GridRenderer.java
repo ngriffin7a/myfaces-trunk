@@ -19,10 +19,17 @@
 package net.sourceforge.myfaces.renderkit.html;
 
 import net.sourceforge.myfaces.renderkit.attr.GridRendererAttributes;
+import net.sourceforge.myfaces.renderkit.attr.CommonRendererAttributes;
+import net.sourceforge.myfaces.renderkit.attr.UserRoleAttributes;
 import net.sourceforge.myfaces.renderkit.callback.CallbackRenderer;
 import net.sourceforge.myfaces.renderkit.callback.CallbackSupport;
+import net.sourceforge.myfaces.renderkit.html.attr.HTMLUniversalAttributes;
+import net.sourceforge.myfaces.renderkit.html.attr.HTMLEventHandlerAttributes;
+import net.sourceforge.myfaces.renderkit.html.attr.HTMLTableAttributes;
+import net.sourceforge.myfaces.component.CommonComponentAttributes;
 
 import javax.faces.component.UIComponent;
+import javax.faces.component.UIPanel;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 import javax.faces.render.Renderer;
@@ -35,14 +42,26 @@ import java.util.StringTokenizer;
  * @version $Revision$ $Date$
  */
 public class GridRenderer
-        extends HTMLRenderer
-        implements CallbackRenderer, GridRendererAttributes
+    extends HTMLRenderer
+    implements CallbackRenderer,
+               CommonComponentAttributes,
+               CommonRendererAttributes,
+               HTMLUniversalAttributes,
+               HTMLEventHandlerAttributes,
+               HTMLTableAttributes,
+               GridRendererAttributes,
+               UserRoleAttributes
 {
     public static final String TYPE = "Grid";
     private static final String COLUMN_COUNT_ATTR = GridRenderer.class.getName() + ".colcount";
     private static final String STYLES_ATTR = GridRenderer.class.getName() + ".styles";
     private static final String ROW_COUNT_ATTR = GridRenderer.class.getName() + ".rowcount";
     private static final Integer ZERO = new Integer(0);
+
+    public String getRendererType()
+    {
+        return TYPE;
+    }
 
     public boolean supportsComponentType(UIComponent uiComponent)
     {
@@ -54,10 +73,16 @@ public class GridRenderer
         return s.equals(javax.faces.component.UIPanel.TYPE);
     }
 
-    public String getRendererType()
+    protected void initAttributeDescriptors()
     {
-        return TYPE;
+        addAttributeDescriptors(UIPanel.TYPE, TLD_HTML_URI, "panel_grid", HTML_UNIVERSAL_ATTRIBUTES);
+        addAttributeDescriptors(UIPanel.TYPE, TLD_HTML_URI, "panel_grid", HTML_EVENT_HANDLER_ATTRIBUTES);
+        addAttributeDescriptors(UIPanel.TYPE, TLD_HTML_URI, "panel_grid", HTML_TABLE_ATTRIBUTES);
+        addAttributeDescriptors(UIPanel.TYPE, TLD_HTML_URI, "panel_grid", PANEL_GRID_ATTRIBUTES);
+        addAttributeDescriptors(UIPanel.TYPE, TLD_HTML_URI, "panel_grid", USER_ROLE_ATTRIBUTES);
     }
+
+
 
     private int getAttributeValue(UIComponent gridComponent, String attributeName)
     {

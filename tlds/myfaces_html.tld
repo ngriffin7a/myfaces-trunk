@@ -30,6 +30,7 @@
 <!ENTITY html_input_attributes          SYSTEM "entities/html_input_attributes.xml">
 <!ENTITY html_label_attributes          SYSTEM "entities/html_label_attributes.xml">
 <!ENTITY html_select_attributes         SYSTEM "entities/html_select_attributes.xml">
+<!ENTITY html_table_attributes          SYSTEM "entities/html_table_attributes.xml">
 <!ENTITY html_textarea_attributes       SYSTEM "entities/html_textarea_attributes.xml">
 <!ENTITY html_universal_attributes      SYSTEM "entities/html_universal_attributes.xml">
 <!ENTITY ui_command_attributes          SYSTEM "entities/ui_command_attributes.xml">
@@ -38,6 +39,7 @@
 <!ENTITY ui_graphic_attributes          SYSTEM "entities/ui_graphic_attributes.xml">
 <!ENTITY ui_input_attributes            SYSTEM "entities/ui_input_attributes.xml">
 <!ENTITY ui_output_attributes           SYSTEM "entities/ui_output_attributes.xml">
+<!ENTITY ui_panel_attributes            SYSTEM "entities/ui_panel_attributes.xml">
 <!ENTITY ui_select_boolean_attributes   SYSTEM "entities/ui_select_boolean_attributes.xml">
 <!ENTITY ui_select_many_attributes      SYSTEM "entities/ui_select_many_attributes.xml">
 <!ENTITY ui_select_one_attributes       SYSTEM "entities/ui_select_one_attributes.xml">
@@ -545,25 +547,104 @@
     </tag>
 
 <!-- selectone_radio -->
+    <!-- TODO -->
 
+<!-- panel_data -->
+    <tag>
+        <name>panel_data</name>
+        <tag-class>net.sourceforge.myfaces.taglib.PanelDataTag</tag-class>
+        <body-content>JSP</body-content>
+        &ui_component_attributes;
+        &ui_panel_attributes;
+        <!-- Data Renderer attributes -->
+        <attribute>
+            <name>var</name>
+            <required>true</required>
+            <rtexprvalue>false</rtexprvalue>
+        </attribute>
+    </tag>
 
+<!-- panel_grid -->
+    <tag>
+        <name>panel_grid</name>
+        <tag-class>net.sourceforge.myfaces.taglib.PanelGridTag</tag-class>
+        <body-content>JSP</body-content>
+        &ui_component_attributes;
+        &ui_panel_attributes;
+        &html_universal_attributes;
+        &html_event_handler_attributes;
+        &html_table_attributes;
+        &user_role_attributes;
+        <!-- Grid Renderer attributes -->
+        <attribute>
+            <name>columnClasses</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>columns</name>
+            <required>true</required>
+            <rtexprvalue>false</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>footerClass</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>headerClass</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>rowClasses</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
+        </attribute>
+     </tag>
 
-<!-- TODO: refactor from here... -->
+<!-- panel_group -->
+    <tag>
+        <name>panel_group</name>
+        <tag-class>net.sourceforge.myfaces.taglib.PanelGroupTag</tag-class>
+        <body-content>JSP</body-content>
+        &ui_component_attributes;
+        &ui_panel_attributes;
+    </tag>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+<!-- panel_list -->
+    <tag>
+        <name>panel_list</name>
+        <tag-class>net.sourceforge.myfaces.taglib.PanelListTag</tag-class>
+        <body-content>JSP</body-content>
+        &ui_component_attributes;
+        &ui_panel_attributes;
+        &html_universal_attributes;
+        &html_event_handler_attributes;
+        &html_table_attributes;
+        &user_role_attributes;
+        <!-- List Renderer attributes -->
+        <attribute>
+            <name>columnClasses</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>footerClass</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>headerClass</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>rowClasses</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
+        </attribute>
+     </tag>
 
 <!-- selectitem -->
     <tag>
@@ -601,119 +682,6 @@
         <body-content>JSP</body-content>
         &ui_component_attributes;
     </tag>
-
-<!--
-  ======================================================
-  list
-  TODO: check attributes
-  ======================================================
- -->
-    <tag>
-         <name>list</name>
-         <tag-class>net.sourceforge.myfaces.taglib.ListTag</tag-class>
-         <body-content>JSP</body-content>
-         &ui_component_attributes;
-         <attribute>
-             <name>cssClass</name>
-             <required>false</required>
-             <rtexprvalue>false</rtexprvalue>
-         </attribute>
-         <attribute>
-             <name>columnClasses</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
-        <attribute>
-            <name>rowClasses</name>
-            <required>false</required>
-            <rtexprvalue>false</rtexprvalue>
-        </attribute>
-        <attribute>
-            <name>headerClass</name>
-            <required>false</required>
-            <rtexprvalue>false</rtexprvalue>
-        </attribute>
-        <attribute>
-            <name>footerClass</name>
-            <required>false</required>
-            <rtexprvalue>false</rtexprvalue>
-        </attribute>
-     </tag>
-
-<!--
-  ======================================================
-  listrow
-  TODO: check attributes
-  ======================================================
- -->
-    <tag>
-        <name>listrow</name>
-        <tag-class>net.sourceforge.myfaces.taglib.ListRowTag</tag-class>
-        <body-content>JSP</body-content>
-        &ui_component_attributes;
-        <attribute>
-            <name>var</name>
-            <required>true</required>
-            <rtexprvalue>false</rtexprvalue>
-        </attribute>
-    </tag>
-
-<!--
-  ======================================================
-  grid
-  TODO: check attributes
-  ======================================================
- -->
-    <tag>
-         <name>grid</name>
-         <tag-class>net.sourceforge.myfaces.taglib.GridTag</tag-class>
-         <body-content>JSP</body-content>
-         &ui_component_attributes;
-         <attribute>
-             <name>columns</name>
-             <required>true</required>
-             <rtexprvalue>false</rtexprvalue>
-         </attribute>
-         <attribute>
-             <name>cssClass</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
-         <attribute>
-             <name>columnClasses</name>
-             <required>false</required>
-             <rtexprvalue>false</rtexprvalue>
-         </attribute>
-        <attribute>
-            <name>rowClasses</name>
-            <required>false</required>
-            <rtexprvalue>false</rtexprvalue>
-        </attribute>
-        <attribute>
-            <name>headerClass</name>
-            <required>false</required>
-            <rtexprvalue>false</rtexprvalue>
-        </attribute>
-        <attribute>
-            <name>footerClass</name>
-            <required>false</required>
-            <rtexprvalue>false</rtexprvalue>
-        </attribute>
-     </tag>
-
-<!--
-  ======================================================
-  group
-  TODO: check attributes
-  ======================================================
- -->
-    <tag>
-        <name>group</name>
-        <tag-class>net.sourceforge.myfaces.taglib.GroupTag</tag-class>
-        <body-content>JSP</body-content>
-        &ui_component_attributes;
-    </tag>
-
 
 
 </taglib>

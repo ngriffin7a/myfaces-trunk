@@ -18,9 +18,12 @@
  */
 package net.sourceforge.myfaces.renderkit.html;
 
-import net.sourceforge.myfaces.component.UIPanel;
+import net.sourceforge.myfaces.component.CommonComponentAttributes;
+import net.sourceforge.myfaces.renderkit.attr.CommonRendererAttributes;
+import net.sourceforge.myfaces.renderkit.attr.GroupRendererAttributes;
 
 import javax.faces.component.UIComponent;
+import javax.faces.component.UIPanel;
 import javax.faces.context.FacesContext;
 import java.io.IOException;
 
@@ -30,7 +33,10 @@ import java.io.IOException;
  * @version $Revision$ $Date$
  */
 public class GroupRenderer
-        extends AbstractPanelRenderer
+    extends AbstractPanelRenderer
+    implements CommonComponentAttributes,
+               CommonRendererAttributes,
+               GroupRendererAttributes
 {
     public static final String TYPE = "Group";
     public String getRendererType()
@@ -47,6 +53,13 @@ public class GroupRenderer
     {
         return uicomponent instanceof UIPanel;
     }
+
+    protected void initAttributeDescriptors()
+    {
+        addAttributeDescriptors(UIPanel.TYPE, TLD_HTML_URI, "panel_group", PANEL_GROUP_ATTRIBUTES);
+    }
+
+
 
     public void encodeBegin(FacesContext context, UIComponent component)
             throws IOException

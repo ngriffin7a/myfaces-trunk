@@ -18,10 +18,12 @@
  */
 package net.sourceforge.myfaces.renderkit.html;
 
-import net.sourceforge.myfaces.component.UIPanel;
+import net.sourceforge.myfaces.component.CommonComponentAttributes;
 import net.sourceforge.myfaces.renderkit.attr.DataRendererAttributes;
+import net.sourceforge.myfaces.renderkit.attr.CommonRendererAttributes;
 
 import javax.faces.component.UIComponent;
+import javax.faces.component.UIPanel;
 import javax.faces.context.FacesContext;
 import java.io.IOException;
 
@@ -31,8 +33,10 @@ import java.io.IOException;
  * @version $Revision$ $Date$
  */
 public class DataRenderer
-        extends AbstractPanelRenderer
-        implements DataRendererAttributes
+    extends AbstractPanelRenderer
+    implements CommonComponentAttributes,
+               CommonRendererAttributes,
+               DataRendererAttributes
 {
     public static final String ITERATOR_ATTR = DataRenderer.class.getName() + ".ITERATOR";
 
@@ -51,6 +55,13 @@ public class DataRenderer
     {
         return uicomponent instanceof UIPanel;
     }
+
+    protected void initAttributeDescriptors()
+    {
+        addAttributeDescriptors(UIPanel.TYPE, TLD_HTML_URI, "panel_data", PANEL_DATA_ATTRIBUTES);
+    }
+
+
 
     public void encodeBegin(FacesContext context, UIComponent component)
             throws IOException

@@ -186,7 +186,7 @@ public class MinimizingStateSaver
             return;
         }
 
-        for (Iterator it = parsedComp.getChildren(); it.hasNext();)
+        for (Iterator it = parsedComp.getFacetsAndChildren(); it.hasNext();)
         {
             //Recursion:
             saveUnrenderedComponents(facesContext,

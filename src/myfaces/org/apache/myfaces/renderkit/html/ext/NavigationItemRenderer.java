@@ -23,6 +23,7 @@ import net.sourceforge.myfaces.component.UICommand;
 import net.sourceforge.myfaces.component.UIComponentUtils;
 import net.sourceforge.myfaces.component.ext.UINavigation;
 import net.sourceforge.myfaces.renderkit.attr.ext.NavigationItemRendererAttributes;
+import net.sourceforge.myfaces.renderkit.attr.UserRoleAttributes;
 import net.sourceforge.myfaces.renderkit.html.HTMLRenderer;
 import net.sourceforge.myfaces.renderkit.html.state.StateRenderer;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLEncoder;
@@ -50,7 +51,8 @@ import java.io.IOException;
  */
 public class NavigationItemRenderer
     extends HTMLRenderer
-    implements NavigationItemRendererAttributes
+    implements NavigationItemRendererAttributes,
+               UserRoleAttributes
 {
     public static final String TYPE = "NavigationItem";
 
@@ -75,6 +77,13 @@ public class NavigationItemRenderer
     {
         return uiComponent instanceof javax.faces.component.UICommand;
     }
+
+    protected void initAttributeDescriptors()
+    {
+        addAttributeDescriptors(UICommand.TYPE, TLD_EXT_URI, "navigation_item", NAVIGATION_ITEM_ATTRIBUTES);
+        addAttributeDescriptors(UICommand.TYPE, TLD_EXT_URI, "navigation_item", USER_ROLE_ATTRIBUTES);
+    }
+
 
 
     public void decode(FacesContext facesContext, UIComponent uiComponent) throws IOException
@@ -105,7 +114,7 @@ public class NavigationItemRenderer
      */
     public void encodeBegin(FacesContext facesContext, UIComponent uiComponent) throws IOException
     {
-        String userRole = (String)uiComponent.getAttribute(USER_ROLE_ATTR);
+        String userRole = (String)uiComponent.getAttribute(VISIBLE_ON_USER_ROLE_ATTR);
         if (userRole != null)
         {
             //is user in role?
@@ -161,10 +170,10 @@ public class NavigationItemRenderer
         writer.write("\">");
 
         String label;
-        String key = (String)uiComponent.getAttribute(NavigationItemRenderer.KEY_ATTR);
+        String key = (String)uiComponent.getAttribute(KEY_ATTR);
         if (key != null)
         {
-            String bundle = (String)uiComponent.getAttribute(NavigationItemRenderer.BUNDLE_ATTR);
+            String bundle = (String)uiComponent.getAttribute(BUNDLE_ATTR);
             if (bundle == null)
             {
                 UIComponent parent = uiComponent.getParent();
@@ -172,7 +181,7 @@ public class NavigationItemRenderer
                 {
                     if (parent.getRendererType().equals(NavigationRenderer.TYPE))
                     {
-                        bundle = (String)parent.getAttribute(NavigationItemRenderer.BUNDLE_ATTR);
+                        bundle = (String)parent.getAttribute(NavigationRenderer.BUNDLE_ATTR);
                         break;
                     }
                     parent = parent.getParent();
@@ -190,7 +199,7 @@ public class NavigationItemRenderer
         }
         else
         {
-            label = (String)uiComponent.getAttribute(NavigationItemRenderer.LABEL_ATTR);
+            label = (String)uiComponent.getAttribute(LABEL_ATTR);
         }
 
         boolean open = UIComponentUtils.getBooleanAttribute(uiComponent,

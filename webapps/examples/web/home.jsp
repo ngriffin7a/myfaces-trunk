@@ -28,27 +28,36 @@
 //-->
 
 <%@include file="inc/head.inc" %>
+
+<body>
+
 <f:use_faces>
 
-    <x:page_layout id="page" layoutReference="pageLayout" cssClass="pageLayout" >
+    <x:page_layout id="page" layoutReference="pageLayout" panelClass="pageLayout"
+            headerClass="pageHeader"
+            navigationClass="pageNavigation"
+            bodyClass="pageBody"
+            footerClass="pageFooter" >
         <%@include file="inc/page_header.jsp" %>
         <%@include file="inc/navigation.jsp"  %>
 
-        <x:page_body id="body" cssClass="pageBody" >
-            <table border="0">
-                <tr>
-                    <td valign="middle">
-                        <h:output_message id="welcome" bundle="net.sourceforge.myfaces.examples.resource.example_messages" key="welcome" />
-                    </td>
-                    <td valign="middle">
-                        <h:graphic_image id="logo" url="images/logo.jpg"/>
-                    </td>
-                </tr>
-            </table>
-            <h:output_message bundle="net.sourceforge.myfaces.examples.resource.example_messages" key="today" >
-                <f:parameter id="p0" value="<%=new Date()%>" />
-            </h:output_message>
-        </x:page_body>
+        <f:facet name="body">
+            <h:panel_group id="body">
+                <table border="0">
+                    <tr>
+                        <td valign="middle">
+                            <h:output_message id="welcome" bundle="net.sourceforge.myfaces.examples.resource.example_messages" key="welcome" />
+                        </td>
+                        <td valign="middle">
+                            <h:graphic_image id="logo" url="images/logo.jpg"/>
+                        </td>
+                    </tr>
+                </table>
+                <h:output_message bundle="net.sourceforge.myfaces.examples.resource.example_messages" key="today" >
+                    <f:parameter id="p0" value="<%=new Date()%>" />
+                </h:output_message>
+            </h:panel_group>
+        </f:facet>
 
         <%@include file="inc/page_footer.jsp" %>
     </x:page_layout>

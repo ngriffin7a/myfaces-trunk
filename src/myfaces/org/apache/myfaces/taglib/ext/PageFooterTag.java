@@ -19,7 +19,6 @@
 package net.sourceforge.myfaces.taglib.ext;
 
 import net.sourceforge.myfaces.component.UIPanel;
-import net.sourceforge.myfaces.renderkit.attr.ext.LayoutRendererAttributes;
 import net.sourceforge.myfaces.renderkit.html.GroupRenderer;
 import net.sourceforge.myfaces.taglib.MyFacesTag;
 
@@ -43,9 +42,8 @@ public class PageFooterTag
         return GroupRenderer.TYPE;
     }
 
-    public void setCssClass(String value)
+    public void setPanelClass(String value)
     {
-        setRendererAttribute(LayoutRendererAttributes.FOOTER_CLASS_ATTR, value);
+        setRendererAttribute(PANEL_CLASS_ATTR, value);
     }
-
 }

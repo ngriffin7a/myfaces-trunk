@@ -85,7 +85,7 @@ a:hover
     background-color: #CCCCFF;
 }
 
-.navigation {
+.pageNavigation {
     text-align: left;
     vertical-align: top;
     width: 200px;
@@ -109,6 +109,14 @@ a:hover
     background-color: #333366;
     color: #FFFFFF;
 }
+
+
+
+.navigation {
+	font-family : verdana, Geneva, Arial, Helvetica, sans-serif;
+	font-size: 12px;
+}
+
 
 
 .fileUploadInput {

@@ -19,9 +19,15 @@
 package net.sourceforge.myfaces.renderkit.html.ext;
 
 import net.sourceforge.myfaces.renderkit.attr.ext.LayoutRendererAttributes;
+import net.sourceforge.myfaces.renderkit.attr.CommonRendererAttributes;
 import net.sourceforge.myfaces.renderkit.callback.CallbackSupport;
+import net.sourceforge.myfaces.renderkit.callback.CallbackRenderer;
 import net.sourceforge.myfaces.renderkit.html.HTMLRenderer;
+import net.sourceforge.myfaces.renderkit.html.attr.HTMLUniversalAttributes;
+import net.sourceforge.myfaces.renderkit.html.attr.HTMLEventHandlerAttributes;
+import net.sourceforge.myfaces.renderkit.html.attr.HTMLTableAttributes;
 import net.sourceforge.myfaces.util.logging.LogUtil;
+import net.sourceforge.myfaces.component.CommonComponentAttributes;
 
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIPanel;
@@ -39,8 +45,13 @@ import java.util.Iterator;
  */
 public class LayoutRenderer
     extends HTMLRenderer
-    implements LayoutRendererAttributes,
-    net.sourceforge.myfaces.renderkit.callback.CallbackRenderer
+    implements CallbackRenderer,
+               CommonComponentAttributes,
+               CommonRendererAttributes,
+               HTMLUniversalAttributes,
+               HTMLEventHandlerAttributes,
+               HTMLTableAttributes,
+               LayoutRendererAttributes
 {
     static final String HEADER = "LayoutHeader";
     static final String NAVIGATION = "LayoutNavigation";
@@ -56,13 +67,19 @@ public class LayoutRenderer
     public static final String NAV_RIGHT_LAYOUT = "navigationRight";
     public static final String UPSIDE_DOWN_LAYOUT = "upsideDown";
 
+    public static final String HEADER_FACET = "header";
+    public static final String NAVIGATION_FACET = "navigation";
+    public static final String BODY_FACET = "body";
+    public static final String FOOTER_FACET = "footer";
+
+
+
 
     public static final String TYPE = "Layout";
     public String getRendererType()
     {
         return TYPE;
     }
-
 
     public boolean supportsComponentType(UIComponent component)
     {
@@ -73,6 +90,16 @@ public class LayoutRenderer
     {
         return s.equals(UIPanel.TYPE);
     }
+
+    protected void initAttributeDescriptors()
+    {
+        addAttributeDescriptors(UIPanel.TYPE, TLD_EXT_URI, "page_layout", HTML_UNIVERSAL_ATTRIBUTES);
+        addAttributeDescriptors(UIPanel.TYPE, TLD_EXT_URI, "page_layout", HTML_EVENT_HANDLER_ATTRIBUTES);
+        addAttributeDescriptors(UIPanel.TYPE, TLD_EXT_URI, "page_layout", HTML_TABLE_ATTRIBUTES);
+        addAttributeDescriptors(UIPanel.TYPE, TLD_EXT_URI, "page_layout", PAGE_LAYOUT_ATTRIBUTES);
+    }
+
+
 
     public void encodeBegin(FacesContext facesContext, UIComponent uiComponent)
         throws IOException
@@ -88,23 +115,25 @@ public class LayoutRenderer
     {
         if (uiComponent.getComponentType().equals(UIPanel.TYPE))
         {
-            ResponseWriter writer = facesContext.getResponseWriter();
-            if (uiComponent.getAttribute(HEADER_CLASS_ATTR) != null)
+            UIComponent parent = uiComponent.getParent();
+            if (uiComponent == parent.getFacet(HEADER_FACET))
             {
+                ResponseWriter writer = facesContext.getResponseWriter();
                 writer.write(beginToken(LayoutRenderer.HEADER));
             }
-            else if (uiComponent.getAttribute(NAVIGATION_CLASS_ATTR) != null ||
-                     (uiComponent.getRendererType() != null &&
-                      uiComponent.getRendererType().equals(NavigationRenderer.TYPE)))
+            else if (uiComponent == parent.getFacet(NAVIGATION_FACET))
             {
+                ResponseWriter writer = facesContext.getResponseWriter();
                 writer.write(beginToken(LayoutRenderer.NAVIGATION));
             }
-            else if (uiComponent.getAttribute(BODY_CLASS_ATTR) != null)
+            else if (uiComponent == parent.getFacet(BODY_FACET))
             {
+                ResponseWriter writer = facesContext.getResponseWriter();
                 writer.write(beginToken(LayoutRenderer.BODY));
             }
-            else if (uiComponent.getAttribute(FOOTER_CLASS_ATTR) != null)
+            else if (uiComponent == parent.getFacet(FOOTER_FACET))
             {
+                ResponseWriter writer = facesContext.getResponseWriter();
                 writer.write(beginToken(LayoutRenderer.FOOTER));
             }
         }
@@ -117,23 +146,25 @@ public class LayoutRenderer
     {
         if (uiComponent.getComponentType().equals(UIPanel.TYPE))
         {
-            ResponseWriter writer = facesContext.getResponseWriter();
-            if (uiComponent.getAttribute(HEADER_CLASS_ATTR) != null)
+            UIComponent parent = uiComponent.getParent();
+            if (uiComponent == parent.getFacet(HEADER_FACET))
             {
+                ResponseWriter writer = facesContext.getResponseWriter();
                 writer.write(endToken(LayoutRenderer.HEADER));
             }
-            else if (uiComponent.getAttribute(NAVIGATION_CLASS_ATTR) != null ||
-                (uiComponent.getRendererType() != null &&
-                uiComponent.getRendererType().equals(NavigationRenderer.TYPE)))
+            else if (uiComponent == parent.getFacet(NAVIGATION_FACET))
             {
+                ResponseWriter writer = facesContext.getResponseWriter();
                 writer.write(endToken(LayoutRenderer.NAVIGATION));
             }
-            else if (uiComponent.getAttribute(BODY_CLASS_ATTR) != null)
+            else if (uiComponent == parent.getFacet(BODY_FACET))
             {
+                ResponseWriter writer = facesContext.getResponseWriter();
                 writer.write(endToken(LayoutRenderer.BODY));
             }
-            else if (uiComponent.getAttribute(FOOTER_CLASS_ATTR) != null)
+            else if (uiComponent == parent.getFacet(FOOTER_FACET))
             {
+                ResponseWriter writer = facesContext.getResponseWriter();
                 writer.write(endToken(LayoutRenderer.FOOTER));
             }
         }
@@ -206,6 +237,7 @@ public class LayoutRenderer
     }
 
 
+    /*
     protected String findChildClassAttribute(UIComponent uiComponent,
                                              String cssClassAttribute)
     {
@@ -219,6 +251,7 @@ public class LayoutRenderer
         }
         return null;
     }
+    */
 
 
     protected void writePartAsTd(ResponseWriter writer,
@@ -230,7 +263,7 @@ public class LayoutRenderer
         throws IOException
     {
         writer.write("<td colspan=\"" + colSpan +"\"");
-        String cssClass = findChildClassAttribute(uiComponent, cssClassAttribute);
+        String cssClass = (String)uiComponent.getAttribute(cssClassAttribute);
         if (cssClass != null)
         {
             writer.write(" class=\"" + cssClass + "\"");
