@@ -26,6 +26,10 @@ import java.util.Date;
 import java.util.Locale;
 
 /**
+ * $Log$
+ * Revision 1.6  2004/03/29 15:06:17  manolito
+ * no longer depends on specific LinkRenderer
+ *
  * @author Martin Marinschek (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
@@ -258,24 +262,6 @@ public class HtmlCalendarRenderer
     private void writeLink(String content, UIInput component, FacesContext facesContext, Date valueForLink)
             throws IOException
     {
-        /*
-        Converter converter = new CalendarDateTimeConverter();
-
-        if (component.getConverter() != null)
-            converter = component.getConverter();
-
-        HtmlRendererUtils.LinkParameter param = new HtmlRendererUtils.LinkParameter();
-        param.setName(component.getId());
-        param.setValue(converter.getAsString(facesContext, component, valueForLink));
-
-        HtmlRendererUtils.LinkParameter[] params =
-            new HtmlRendererUtils.LinkParameter[]{param};
-
-        HtmlRendererUtils.renderCommandLinkStart(facesContext, component,
-                facesContext.getViewRoot().createUniqueId(), content, null, params);
-        HtmlRendererUtils.renderLinkEnd(facesContext, component);
-        */
-
         Converter converter = component.getConverter();
         if (converter == null)
         {
