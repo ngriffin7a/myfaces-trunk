@@ -43,6 +43,10 @@ import java.util.List;
  * Implements the lifecycle as described in Spec. 1.0 PFD Chapter 2
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
+ * $Log$
+ * Revision 1.40  2004/08/25 13:54:02  manolito
+ * Log cvs keyword
+ *
  */
 public class LifecycleImpl
         extends Lifecycle
