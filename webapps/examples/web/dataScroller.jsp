@@ -89,9 +89,11 @@ managed beans used:
                 </x:dataTable>
 
                 <h:panelGrid columns="1" styleClass="scrollerTable2" columnClasses="standardTable_ColumnCentered" >
-                    <x:dataScroller id="scroll_2"
+                    <x:dataScroller id="scroll_1"
                             for="data"
-                            fastStep="10" >
+                            fastStep="10"
+                            pageCountVar="pageCount"
+                            pageIndexVar="pageIndex" >
                         <f:facet name="first" >
                             <h:graphicImage url="images/arrow-first.gif" border="1" />
                         </f:facet>
@@ -111,8 +113,16 @@ managed beans used:
                             <h:graphicImage url="images/arrow-fr.gif" border="1" />
                         </f:facet>
                     </x:dataScroller>
+                    <x:dataScroller id="scroll_2"
+                            for="data"
+                            pageCountVar="pageCount"
+                            pageIndexVar="pageIndex" >
+                        <h:outputFormat value="#{example_messages['dataScroller_pages']}" >
+                            <f:param value="#{pageIndex}" />
+                            <f:param value="#{pageCount}" />
+                        </h:outputFormat>
+                    </x:dataScroller>
                 </h:panelGrid>
-
 
             </h:panelGroup>
         </f:facet>

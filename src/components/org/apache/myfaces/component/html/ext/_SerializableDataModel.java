@@ -83,7 +83,9 @@ class _SerializableDataModel
 
     public boolean isRowAvailable()
     {
-        return _rowIndex >= _first && _rowIndex < _first + _rows;
+        return _rowIndex >= _first && 
+            _rowIndex < _first + _rows &&
+            _rowIndex < _rowCount;
     }
 
     public int getRowCount()

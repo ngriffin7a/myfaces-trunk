@@ -579,6 +579,25 @@
             <rtexprvalue>false</rtexprvalue>
             <description>step (pages) used for fastforward and fastrewind</description>
         </attribute>
+        <attribute>
+            <name>pageIndexVar</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
+            <description>
+                A parameter name, under which the actual page index is set in request scope
+                similar to the var parameter.
+            </description>
+        </attribute>
+        <attribute>
+            <name>pageCountVar</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
+            <description>
+                A parameter name, under which the actual page count is set in request scope
+                similar to the var parameter.
+            </description>
+        </attribute>
+        pageIndexVar
      </tag>
 
     <!-- inputFileUpload -->

@@ -35,7 +35,7 @@ public class DataScrollerList
 
     public DataScrollerList()
     {
-        for (int i = 1; i < 1000; i++)
+        for (int i = 1; i < 995; i++)
         {
             _list.add(new SimpleCar(i, "Car Type " + i, "blue"));
         }

@@ -164,7 +164,7 @@ public class HtmlListRenderer
             return (String)component.getAttributes().get(JSFAttr.LAYOUT_ATTR);
         }
     }
-
+    
     private String getRowIndexVar(UIComponent component)
     {
         if (component instanceof HtmlDataList)
