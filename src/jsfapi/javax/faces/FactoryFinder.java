@@ -77,7 +77,12 @@ public class FactoryFinder
         Object[] factoryStacks = (Object[])_classLoaderFactoriesMap.get(classLoader);
         if (factoryStacks == null)
         {
-            throw new IllegalStateException("no factories configured for this application");
+            String message = "No Factories configured for this Application - typically this is because " +
+            "a context listener is not setup in your web.xml.\n" + 
+            "A typical config looks like this;\n<listener>\n" +
+            "  <listener-class>net.sourceforge.myfaces.webapp.StartupServletContextListener</listener-class>\n" +
+            "</listener>\n";
+            throw new IllegalStateException(message);
         }
         Object factory = factoryStacks[factoryIdx];
         if (factory == null)
