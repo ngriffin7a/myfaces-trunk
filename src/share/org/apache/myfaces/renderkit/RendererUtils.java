@@ -38,6 +38,9 @@ import java.util.*;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.7  2004/04/28 08:17:11  tinytoony
+ * child is of type added to exception message
+ *
  * Revision 1.6  2004/04/07 08:21:10  manolito
  * handling of select items with label == null
  *
@@ -403,7 +406,7 @@ public class RendererUtils
             else
             {
                 FacesContext facesContext = FacesContext.getCurrentInstance();
-                log.error("Invalid child with id " + child.getClientId(facesContext) + ": must be UISelectItem or UISelectItems");
+                log.error("Invalid child with id " + child.getClientId(facesContext) + ": must be UISelectItem or UISelectItems, is of type : "+child==null?null:child.getClass().getName());
             }
         }
 
