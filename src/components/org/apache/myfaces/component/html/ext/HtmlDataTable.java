@@ -25,18 +25,24 @@ import javax.faces.component.EditableValueHolder;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.el.ValueBinding;
+import javax.faces.event.AbortProcessingException;
+import javax.faces.event.FacesEvent;
 import javax.faces.model.DataModel;
 import javax.faces.render.Renderer;
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author Thomas Spiegl (latest modification by $Author$)
  * @author Manfred Geiler
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.12  2004/08/20 07:14:39  manolito
+ * HtmlDataTable now also supports rowIndexVar and rowCountVar
+ *
  * Revision 1.11  2004/08/10 13:29:59  manolito
  * full revision of extended HtmlDataTable so that there is no more cache problem
  *
@@ -71,6 +77,7 @@ public class HtmlDataTable
 {
     private static final Log log = LogFactory.getLog(HtmlDataTable.class);
 
+    private static final boolean DEFAULT_SORTASCENDING = true;
     private static final Class OBJECT_ARRAY_CLASS = (new Object[0]).getClass();
 
     private transient boolean _isDataModelRestored = false;
@@ -84,39 +91,6 @@ public class HtmlDataTable
     private String _sortColumn = null;
     private Boolean _sortAscending = null;
 
-    /*
-    public Object getValue()
-    {
-        if (_cachedValue == null)
-        {
-            if (_restoredValue != null)
-            {
-                // if we have a restored value we use this value
-                _cachedValue = _restoredValue;
-            }
-            else
-            {
-                // else get value from model
-                _cachedValue = super.getValue();
-            }
-        }
-        return _cachedValue;
-    }
-    */
-
-
-    /*
-    public void setValue(Object value)
-    {
-        super.setValue(value);
-
-        // clear the restored value
-        //_restoredDataModel = null;
-
-        // and update the cached value
-        //_cachedValue = value;
-    }
-    */
 
     public void setValue(Object value)
     {
@@ -125,6 +99,67 @@ public class HtmlDataTable
         super.setValue(value);
     }
 
+
+    public void setRowIndex(int rowIndex)
+    {
+        super.setRowIndex(rowIndex);
+        String rowIndexVar = getRowIndexVar();
+        String rowCountVar = getRowCountVar();
+        if (rowIndexVar != null || rowCountVar != null)
+        {
+            Map requestMap = FacesContext.getCurrentInstance().getExternalContext().getRequestMap();
+            if (rowIndex >= 0)
+            {
+                //regular row index, update request scope variables
+                if (rowIndexVar != null)
+                {
+                    requestMap.put(getRowIndexVar(), new Integer(rowIndex));
+                }
+                if (rowCountVar != null)
+                {
+                    requestMap.put(getRowCountVar(), new Integer(getRowCount()));
+                }
+            }
+            else
+            {
+                //rowIndex == -1 means end of loop --> remove request scope variables
+                if (rowIndexVar != null)
+                {
+                    requestMap.remove(getRowIndexVar());
+                }
+                if (rowCountVar != null)
+                {
+                    requestMap.remove(getRowCountVar());
+                }
+            }
+        }
+    }
+
+
+    public void processRestoreState(FacesContext context, Object state)
+    {
+        super.processRestoreState(context, state);
+    }
+
+    public void processDecodes(FacesContext context)
+    {
+        super.processDecodes(context);
+    }
+
+    public void processValidators(FacesContext context)
+    {
+        super.processValidators(context);
+    }
+
+    public Object processSaveState(FacesContext context)
+    {
+        return super.processSaveState(context);
+    }
+
+    public void broadcast(FacesEvent event) throws AbortProcessingException
+    {
+        super.broadcast(event);
+    }
 
     public void processUpdates(FacesContext context)
     {
@@ -360,7 +395,7 @@ public class HtmlDataTable
     public Object saveState(FacesContext context)
     {
         boolean preserveSort = isPreserveSort();
-        Object values[] = new Object[7];
+        Object values[] = new Object[9];
         values[0] = super.saveState(context);
         values[1] = _preserveDataModel;
         if (isPreserveDataModel())
@@ -375,6 +410,8 @@ public class HtmlDataTable
         values[4] = preserveSort ? getSortColumn() : _sortColumn;
         values[5] = preserveSort ? Boolean.valueOf(isSortAscending()) : _sortAscending;
         values[6] = _renderedIfEmpty;
+        values[7] = _rowCountVar;
+        values[8] = _rowIndexVar;
         return ((Object) (values));
     }
 
@@ -398,6 +435,8 @@ public class HtmlDataTable
         _sortColumn = (String)values[4];
         _sortAscending = (Boolean)values[5];
         _renderedIfEmpty = (Boolean)values[6];
+        _rowCountVar = (String)values[7];
+        _rowIndexVar = (String)values[8];
 
         // restore state means component was already rendered at least once:
         _firstTimeRendered = false;
@@ -505,7 +544,6 @@ public class HtmlDataTable
     public static final String COMPONENT_TYPE = "net.sourceforge.myfaces.HtmlDataTable";
     private static final boolean DEFAULT_PRESERVEDATAMODEL = false;
     private static final boolean DEFAULT_PRESERVESORT = false;
-    private static final boolean DEFAULT_SORTASCENDING = true;
     private static final boolean DEFAULT_RENDEREDIFEMPTY = true;
 
     private Boolean _preserveDataModel = null;
@@ -513,6 +551,8 @@ public class HtmlDataTable
     private String _enabledOnUserRole = null;
     private String _visibleOnUserRole = null;
     private Boolean _renderedIfEmpty = null;
+    private String _rowIndexVar = null;
+    private String _rowCountVar = null;
 
     public HtmlDataTable()
     {
@@ -580,6 +620,30 @@ public class HtmlDataTable
         ValueBinding vb = getValueBinding("renderedIfEmpty");
         Boolean v = vb != null ? (Boolean)vb.getValue(getFacesContext()) : null;
         return v != null ? v.booleanValue() : DEFAULT_RENDEREDIFEMPTY;
+    }
+
+    public void setRowIndexVar(String rowIndexVar)
+    {
+        _rowIndexVar = rowIndexVar;
+    }
+
+    public String getRowIndexVar()
+    {
+        if (_rowIndexVar != null) return _rowIndexVar;
+        ValueBinding vb = getValueBinding("rowIndexVar");
+        return vb != null ? (String)vb.getValue(getFacesContext()) : null;
+    }
+
+    public void setRowCountVar(String rowCountVar)
+    {
+        _rowCountVar = rowCountVar;
+    }
+
+    public String getRowCountVar()
+    {
+        if (_rowCountVar != null) return _rowCountVar;
+        ValueBinding vb = getValueBinding("rowCountVar");
+        return vb != null ? (String)vb.getValue(getFacesContext()) : null;
     }
 
 

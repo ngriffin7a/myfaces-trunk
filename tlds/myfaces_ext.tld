@@ -165,6 +165,24 @@
                 Default: true
             </description>
         </attribute>
+        <attribute>
+            <name>rowIndexVar</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
+            <description>
+                A parameter name, under which the current rowIndex is set in request scope
+                similar to the var parameter.
+            </description>
+        </attribute>
+        <attribute>
+            <name>rowCountVar</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
+            <description>
+                A parameter name, under which the rowCount is set in request scope
+                similar to the var parameter.
+            </description>
+        </attribute>
      </tag>
 
     <!-- inputText -->

@@ -258,6 +258,12 @@
         </renderer>
 
         <renderer>
+            <component-family>javax.faces.Data</component-family>
+            <renderer-type>net.sourceforge.myfaces.Table</renderer-type>
+            <renderer-class>net.sourceforge.myfaces.renderkit.html.ext.HtmlTableRenderer</renderer-class>
+        </renderer>
+
+        <renderer>
             <component-family>javax.faces.Input</component-family>
             <renderer-type>net.sourceforge.myfaces.Text</renderer-type>
             <renderer-class>net.sourceforge.myfaces.renderkit.html.ext.HtmlTextRenderer</renderer-class>

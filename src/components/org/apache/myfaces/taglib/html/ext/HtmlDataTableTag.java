@@ -25,6 +25,9 @@ import javax.faces.component.UIComponent;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.8  2004/08/20 07:14:41  manolito
+ * HtmlDataTable now also supports rowIndexVar and rowCountVar
+ *
  * Revision 1.7  2004/07/01 21:53:06  mwessendorf
  * ASF switch
  *
@@ -59,7 +62,7 @@ public class HtmlDataTableTag
 
     public String getRendererType()
     {
-        return "javax.faces.Table";
+        return "net.sourceforge.myfaces.Table";
     }
 
     private String _preserveDataModel;
@@ -69,6 +72,8 @@ public class HtmlDataTableTag
     private String _enabledOnUserRole;
     private String _visibleOnUserRole;
     private String _renderedIfEmpty;
+    private String _rowIndexVar;
+    private String _rowCountVar;
 
     protected void setProperties(UIComponent component)
     {
@@ -84,6 +89,8 @@ public class HtmlDataTableTag
         setStringProperty(component, UserRoleAware.ENABLED_ON_USER_ROLE_ATTR, _enabledOnUserRole);
         setStringProperty(component, UserRoleAware.VISIBLE_ON_USER_ROLE_ATTR, _visibleOnUserRole);
         setBooleanProperty(component, "renderedIfEmpty", _renderedIfEmpty);
+        setStringProperty(component, "rowIndexVar", _rowIndexVar);
+        setStringProperty(component, "rowCountVar", _rowCountVar);
     }
 
     public void setPreserveDataModel(String preserveDataModel)
@@ -119,5 +126,15 @@ public class HtmlDataTableTag
     public void setRenderedIfEmpty(String renderedIfEmpty)
     {
         _renderedIfEmpty = renderedIfEmpty;
+    }
+
+    public void setRowIndexVar(String rowIndexVar)
+    {
+        _rowIndexVar = rowIndexVar;
+    }
+
+    public void setRowCountVar(String rowCountVar)
+    {
+        _rowCountVar = rowCountVar;
     }
 }

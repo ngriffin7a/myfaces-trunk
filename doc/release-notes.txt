@@ -7,6 +7,10 @@ Changes in Release 1.0.7 beta
 * new custom component: Stylesheet
 * new extended HtmlInputTextarea component (with user role support)
 * Japanese translation
+* writeText method in default ResponseWriter now maps newlines to <br/> and
+  successive spaces to &nbsp; entities
+* corrected some problems with rowIndexVar and rowCountVar in HtmlDataList
+* extended HtmlDataTable now also supports rowIndexVar and rowCountVar 
 * bug #998464 request charset handling is invalid
 * bug #1001511 fileupload compponent don't support setHeaderEncoding
 * bug #1008043 applied patch for ServletExternalContextImpl by Takashi Okamoto

@@ -29,4 +29,12 @@
         <type>boolean</type>
         <default-value>true</default-value>
     </field>
+    <field>
+        <name>rowIndexVar</name>
+        <type>java.lang.String</type>
+    </field>
+    <field>
+        <name>rowCountVar</name>
+        <type>java.lang.String</type>
+    </field>
 </component>
