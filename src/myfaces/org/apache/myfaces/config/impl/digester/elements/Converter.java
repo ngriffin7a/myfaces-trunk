@@ -15,6 +15,11 @@
  */
 package org.apache.myfaces.config.impl.digester.elements;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Iterator;
+import java.util.Collections;
+
 
 /**
  * @author <a href="mailto:oliver@rossmueller.com">Oliver Rossmueller</a>
@@ -25,6 +30,8 @@ public class Converter
     private String converterId;
     private String forClass;
     private String converterClass;
+    private List _properties = null;
+    private List _attributes = null;
 
 
     public String getConverterId()
@@ -60,5 +67,37 @@ public class Converter
     public void setConverterClass(String converterClass)
     {
         this.converterClass = converterClass;
+    }
+
+    public void addProperty(Property value)
+    {
+        if(_properties==null)
+            _properties = new ArrayList();
+
+        _properties.add(value);
+    }
+
+    public Iterator getProperties()
+    {
+        if(_properties==null)
+            return Collections.EMPTY_LIST.iterator();
+
+        return _properties.iterator();
+    }
+    
+    public void addAttribute(Attribute value)
+    {
+        if(_attributes == null)
+            _attributes = new ArrayList();
+
+        _attributes.add(value);
+    }
+
+    public Iterator getAttributes()
+    {
+        if(_attributes==null)
+            return Collections.EMPTY_LIST.iterator();
+
+        return _attributes.iterator();
     }
 }

@@ -37,6 +37,9 @@ import java.util.List;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.16  2005/03/04 00:28:45  mmarinschek
+ * Changes in configuration due to missing Attribute/Property classes for the converter; not building in the functionality yet except for part of the converter properties
+ *
  * Revision 1.15  2005/01/22 16:47:17  mmarinschek
  * fixing bug with validation not called if the submitted value is empty; an empty string is submitted instead if the component is enabled.
  *
@@ -254,6 +257,26 @@ public class UIInput
         }
     }
 
+    protected void validateValue(FacesContext context,Object convertedValue)
+    {
+        boolean empty = convertedValue == null ||
+                        (convertedValue instanceof String
+                         && ((String)convertedValue).length() == 0);
+
+        if (isRequired() && empty)
+        {
+            _MessageUtils.addErrorMessage(context, this, REQUIRED_MESSAGE_ID,new Object[]{getId()});
+            setValid(false);
+            return;
+        }
+
+        if (!empty)
+        {
+            _ComponentUtils.callValidators(context, this, convertedValue);
+        }
+
+    }
+
     public void validate(FacesContext context)
     {
         if (context == null) throw new NullPointerException("context");
@@ -266,22 +289,11 @@ public class UIInput
         }
 
         Object convertedValue = getConvertedValue(context, submittedValue);
+
         if (!isValid()) return;
 
-        boolean empty = convertedValue == null ||
-                        (convertedValue instanceof String
-                         && ((String)convertedValue).length() == 0);
-        if (isRequired() && empty)
-        {
-            _MessageUtils.addErrorMessage(context, this, REQUIRED_MESSAGE_ID,new Object[]{getId()});
-            setValid(false);
-            return;
-        }
+        validateValue(context, convertedValue);
 
-        if (!empty)
-        {
-            _ComponentUtils.callValidators(context, this, convertedValue);
-        }
         if (!isValid()) return;
 
         Object previousValue = getValue();
@@ -293,7 +305,7 @@ public class UIInput
         }
     }
 
-    private Object getConvertedValue(FacesContext context, Object submittedValue)
+    protected Object getConvertedValue(FacesContext context, Object submittedValue)
     {
         try
         {

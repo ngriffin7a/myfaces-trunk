@@ -31,6 +31,9 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:oliver@rossmueller.com">Oliver Rossmueller</a>
  *
  * $Log$
+ * Revision 1.6  2005/03/04 00:28:45  mmarinschek
+ * Changes in configuration due to missing Attribute/Property classes for the converter; not building in the functionality yet except for part of the converter properties
+ *
  * Revision 1.5  2004/11/25 08:34:42  matzew
  * applyed patch MYFACES-26. Thanks to Takashi Okamoto for supporting this.
  *
@@ -93,6 +96,26 @@ public class DigesterFacesConfigUnmarshallerImpl implements FacesConfigUnmarshal
         digester.addCallMethod("faces-config/converter/converter-id", "setConverterId", 0);
         digester.addCallMethod("faces-config/converter/converter-for-class", "setForClass", 0);
         digester.addCallMethod("faces-config/converter/converter-class", "setConverterClass", 0);
+        digester.addObjectCreate("faces-config/converter/attribute",Attribute.class);
+        digester.addSetNext("faces-config/converter/attribute","addAttribute");        
+        digester.addCallMethod("faces-config/converter/attribute/description", "addDescription", 0);
+        digester.addCallMethod("faces-config/converter/attribute/display-name", "addDisplayName", 0);
+        digester.addCallMethod("faces-config/converter/attribute/icon", "addIcon", 0);
+        digester.addCallMethod("faces-config/converter/attribute/attribute-name", "setAttributeName", 0);
+        digester.addCallMethod("faces-config/converter/attribute/attribute-class", "setAttributeClass", 0);
+        digester.addCallMethod("faces-config/converter/attribute/default-value", "setDefaultValue", 0);
+        digester.addCallMethod("faces-config/converter/attribute/suggested-value", "setSuggestedValue", 0);
+        digester.addCallMethod("faces-config/converter/attribute/attribute-extension", "addAttributeExtension", 0);
+        digester.addObjectCreate("faces-config/converter/property",Property.class);
+        digester.addSetNext("faces-config/converter/property","addProperty");
+        digester.addCallMethod("faces-config/converter/property/description", "addDescription", 0);
+        digester.addCallMethod("faces-config/converter/property/display-name", "addDisplayName", 0);
+        digester.addCallMethod("faces-config/converter/property/icon", "addIcon", 0);
+        digester.addCallMethod("faces-config/converter/property/property-name", "setPropertyName", 0);
+        digester.addCallMethod("faces-config/converter/property/property-class", "setPropertyClass", 0);
+        digester.addCallMethod("faces-config/converter/property/default-value", "setDefaultValue", 0);
+        digester.addCallMethod("faces-config/converter/property/suggested-value", "setSuggestedValue", 0);
+        digester.addCallMethod("faces-config/converter/property/property-extension", "addPropertyExtension", 0);
 
         digester.addObjectCreate("faces-config/managed-bean", ManagedBean.class);
         digester.addSetNext("faces-config/managed-bean", "addManagedBean");

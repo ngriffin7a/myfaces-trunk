@@ -30,6 +30,9 @@ import java.util.List;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.16  2005/03/04 00:28:45  mmarinschek
+ * Changes in configuration due to missing Attribute/Property classes for the converter; not building in the functionality yet except for part of the converter properties
+ *
  * Revision 1.15  2005/01/23 22:06:33  svieujot
  * Bugfix :  When no value were submitted, default values were set.
  * This caused a bug when the component wasn't displayed (for example if it was in a TabPanel's Tab that wasn't displayed).
@@ -294,7 +297,7 @@ public class UISelectMany
     }
 
 
-    private Object getConvertedValue(FacesContext context, Object submittedValue)
+    protected Object getConvertedValue(FacesContext context, Object submittedValue)
     {
         try
         {

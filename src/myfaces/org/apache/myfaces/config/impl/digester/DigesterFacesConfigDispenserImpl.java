@@ -37,6 +37,9 @@ import org.apache.myfaces.config.impl.digester.elements.RenderKit;
  * @author <a href="mailto:oliver@rossmueller.com">Oliver Rossmueller</a>
  *
  * $Log$
+ * Revision 1.4  2005/03/04 00:28:45  mmarinschek
+ * Changes in configuration due to missing Attribute/Property classes for the converter; not building in the functionality yet except for part of the converter properties
+ *
  * Revision 1.3  2004/10/13 11:50:59  matze
  * renamed packages to org.apache
  *
@@ -69,6 +72,7 @@ public class DigesterFacesConfigDispenserImpl implements FacesConfigDispenser
     private List variableResolver = new ArrayList();
     private Map converterById = new HashMap();
     private Map converterByClass = new HashMap();
+    private Map converterConfigurationByClassName = new HashMap();
     private Map renderKits = new HashMap();
     private List managedBeans = new ArrayList();
     private List navigationRules = new ArrayList();
@@ -123,10 +127,13 @@ public class DigesterFacesConfigDispenserImpl implements FacesConfigDispenser
             if (converter.getConverterId() != null)
             {
                 converterById.put(converter.getConverterId(), converter.getConverterClass());
-            } else
+            }
+            else
             {
                 converterByClass.put(converter.getForClass(), converter.getConverterClass());
             }
+
+            converterConfigurationByClassName.put(converter.getConverterClass(),converter);
         }
 
         for (Iterator iterator = config.getRenderKits().iterator(); iterator.hasNext();)
@@ -370,6 +377,16 @@ public class DigesterFacesConfigDispenserImpl implements FacesConfigDispenser
     public Iterator getConverterClasses()
     {
         return converterByClass.keySet().iterator();
+    }
+
+    public Iterator getConverterConfigurationByClassName()
+    {
+        return converterConfigurationByClassName.keySet().iterator();
+    }
+
+    public Converter getConverterConfiguration(String converterClassName)
+    {
+        return (Converter) converterConfigurationByClassName.get(converterClassName);
     }
 
 

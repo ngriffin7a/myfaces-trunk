@@ -56,6 +56,7 @@ import javax.faces.webapp.FacesServlet;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.myfaces.application.ApplicationFactoryImpl;
+import org.apache.myfaces.application.ApplicationImpl;
 import org.apache.myfaces.config.element.ManagedBean;
 import org.apache.myfaces.config.element.NavigationRule;
 import org.apache.myfaces.config.element.Renderer;
@@ -78,6 +79,9 @@ import org.xml.sax.SAXException;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  *          $Log$
+ *          Revision 1.11  2005/03/04 00:28:45  mmarinschek
+ *          Changes in configuration due to missing Attribute/Property classes for the converter; not building in the functionality yet except for part of the converter properties
+ *
  *          Revision 1.10  2005/01/26 17:03:11  matzew
  *          MYFACES-86. portlet support provided by Stan Silver (JBoss Group)
  *
@@ -518,6 +522,17 @@ public class FacesConfigurator
             catch(Exception ex)
             {
                 log.error("Converter could not be added. Reason:",ex);
+            }
+        }
+
+        if(application instanceof ApplicationImpl)
+        {
+            for (Iterator it = _dispenser.getConverterConfigurationByClassName(); it.hasNext();)
+            {
+                String converterClassName = (String) it.next();
+
+                ((ApplicationImpl) application).addConverterConfiguration(converterClassName,
+                    _dispenser.getConverterConfiguration(converterClassName));
             }
         }
 

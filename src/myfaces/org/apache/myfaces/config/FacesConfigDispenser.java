@@ -15,6 +15,8 @@
  */
 package org.apache.myfaces.config;
 
+import org.apache.myfaces.config.impl.digester.elements.Converter;
+
 import java.util.Iterator;
 
 /**
@@ -24,6 +26,9 @@ import java.util.Iterator;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.3  2005/03/04 00:28:45  mmarinschek
+ * Changes in configuration due to missing Attribute/Property classes for the converter; not building in the functionality yet except for part of the converter properties
+ *
  * Revision 1.2  2004/10/13 11:50:59  matze
  * renamed packages to org.apache
  *
@@ -135,6 +140,12 @@ public interface FacesConfigDispenser
 
     /** @return Iterator over all classes with an associated converter  */
     public Iterator getConverterClasses();
+
+    /** @return Iterator over the config classes for the converters  */
+    Iterator getConverterConfigurationByClassName();
+
+    /** delivers a converter-configuration for one class-name */
+    Converter getConverterConfiguration(String converterClassName);
 
     /** @return converter class that belongs to the given converter id */
     public String getConverterClassById(String converterId);

@@ -23,9 +23,11 @@ import org.apache.myfaces.el.ValueBindingImpl;
 import org.apache.myfaces.el.VariableResolverImpl;
 import org.apache.myfaces.util.BiLevelCacheMap;
 import org.apache.myfaces.util.ClassUtils;
+import org.apache.myfaces.config.impl.digester.elements.Property;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.commons.beanutils.BeanUtils;
 
 import javax.faces.FacesException;
 import javax.faces.application.Application;
@@ -48,6 +50,9 @@ import java.util.*;
  * @author Thomas Spiegl
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.36  2005/03/04 00:28:45  mmarinschek
+ * Changes in configuration due to missing Attribute/Property classes for the converter; not building in the functionality yet except for part of the converter properties
+ *
  * Revision 1.35  2004/12/03 08:46:09  manolito
  * MYFACES-45 / ApplicationImpl does not correctly traverse a Class' hierarchy to create a Converter
  *
@@ -96,8 +101,9 @@ public class ApplicationImpl
     private StateManager         _stateManager;
 
     // components, converters, and validators can be added at runtime--must synchronize
-    private final Map _converterMap = Collections.synchronizedMap(new HashMap());
-    private final Map _converterTypeMap = Collections.synchronizedMap(new HashMap());
+    private final Map _converterIdToClassMap = Collections.synchronizedMap(new HashMap());
+    private final Map _converterClassToClassMap = Collections.synchronizedMap(new HashMap());
+    private final Map _converterClassNameToConfigurationMap = Collections.synchronizedMap(new HashMap());
     private final Map _componentClassMap = Collections.synchronizedMap(new HashMap());
     private final Map _validatorClassMap = Collections.synchronizedMap(new HashMap());
 
@@ -143,12 +149,12 @@ public class ApplicationImpl
 
     public Iterator getConverterIds()
     {
-        return _converterMap.keySet().iterator();
+        return _converterIdToClassMap.keySet().iterator();
     }
 
     public Iterator getConverterTypes()
     {
-        return _converterTypeMap.keySet().iterator();
+        return _converterClassToClassMap.keySet().iterator();
     }
 
     public void setDefaultLocale(Locale locale)
@@ -309,7 +315,7 @@ public class ApplicationImpl
         
         try
         {
-            _converterMap.put(converterId, ClassUtils.simpleClassForName(converterClass));
+            _converterIdToClassMap.put(converterId, ClassUtils.simpleClassForName(converterClass));
             if (log.isTraceEnabled()) log.trace("add Converter id = " + converterId +
                     " converterClass = " + converterClass);
            }
@@ -334,7 +340,7 @@ public class ApplicationImpl
         
         try
         {
-            _converterTypeMap.put(targetClass, ClassUtils.simpleClassForName(converterClass));
+            _converterClassToClassMap.put(targetClass, ClassUtils.simpleClassForName(converterClass));
             if (log.isTraceEnabled()) log.trace("add Converter for class = " + targetClass +
                     " converterClass = " + converterClass);
         }
@@ -342,6 +348,23 @@ public class ApplicationImpl
         {
             log.error("Converter class " + converterClass + " not found", e);
         }
+    }
+
+    public void addConverterConfiguration(String converterClassName,
+                                          org.apache.myfaces.config.impl.digester.elements.Converter configuration)
+    {
+        if ((converterClassName == null) || (converterClassName.length() == 0))
+        {
+            log.error("addConverterConfiguration: converterClassName = null is not allowed");
+            throw new NullPointerException("addConverterConfiguration: converterClassName = null ist not allowed");
+        }
+        if ((configuration == null))
+        {
+            log.error("addConverterConfiguration: configuration = null is not allowed");
+            throw new NullPointerException("addConverterConfiguration: configuration = null ist not allowed");
+        }
+
+        _converterClassNameToConfigurationMap.put(converterClassName, configuration);
     }
 
     public void addValidator(String validatorId, String validatorClass)
@@ -442,7 +465,7 @@ public class ApplicationImpl
             throw new NullPointerException("createConverter: converterId = null ist not allowed");
         }
 
-        Class converterClass = (Class) _converterMap.get(converterId);
+        Class converterClass = (Class) _converterIdToClassMap.get(converterId);
         if (converterClass == null)
         {
             log.error("Unknown converter id '" + converterId + "'.");
@@ -482,7 +505,7 @@ public class ApplicationImpl
     private Converter internalCreateConverter(Class targetClass)
     {
         // Locate a Converter registered for the target class itself.
-        Class converterClass = (Class)_converterTypeMap.get(targetClass);
+        Class converterClass = (Class)_converterClassToClassMap.get(targetClass);
 
         //Locate a Converter registered for interfaces that are
         // implemented by the target class (directly or indirectly).
@@ -507,7 +530,30 @@ public class ApplicationImpl
         {
             try
             {
-                return (Converter) converterClass.newInstance();
+                Converter converter = (Converter) converterClass.newInstance();
+
+                org.apache.myfaces.config.impl.digester.elements.Converter converterConfig =
+                        (org.apache.myfaces.config.impl.digester.elements.Converter)
+                            _converterClassNameToConfigurationMap.get(converterClass.getName());
+
+                Iterator it = converterConfig.getProperties();
+
+                while (it.hasNext())
+                {
+                    Property property = (Property) it.next();
+
+                    try
+                    {
+                        BeanUtils.setProperty(converter,property.getPropertyName(),property.getDefaultValue());
+                    }
+                    catch(Throwable th)
+                    {
+                        log.error("Initializing converter : "+converterClass.getName()+" with property : "+
+                                property.getPropertyName()+" and value : "+property.getDefaultValue()+" failed.");
+                    }
+                }
+
+                return converter;
             }
             catch (Exception e)
             {
