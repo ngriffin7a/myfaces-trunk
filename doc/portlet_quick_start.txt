@@ -1,0 +1,41 @@
+/*
+ * Copyright 2005 The Apache Software Foundation.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+How to create a JSF Portlet using MyFaces:
+
+1. Make sure your JSF MyFaces application runs as a stand-alone servlet.
+2. Remove any redirects from your faces-config.xml.  Portlets can not handle these.
+3. Create a Portlet WAR as per the instructions for your Portlet container.  Make sure it contains everything that was included in step 1.
+4. Update your portlet.xml file as follows:
+
+<!-- You must use this Portlet impl class -->
+<portlet-class>org.apache.myfaces.portlet.MyFacesGenericPortlet</portlet-class>
+
+<!-- The "home page" of your JSF application -->
+<!-- This is a required param.               -->
+<init-param>
+   <name>default-view</name>
+   <value>/some_view_id_from_faces-config</value>
+</init-param>
+
+<!-- A class name that implements org.apache.myfaces.portlet.DefaultViewSelector -->
+<!-- This optional param is used if your want to choose different default views  -->
+<!-- based on some condition.  You still must specify default-view above, but    -->
+<!-- this impl will take precedence.                                             -->
+<init-param>
+   <name>default-view-selector</name>
+   <value>com.foo.MyViewSelector</value>
+</init-param>
