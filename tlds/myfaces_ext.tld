@@ -1772,8 +1772,8 @@
         <tag-class>org.apache.myfaces.custom.aliasbean.AliasBeanTag</tag-class>
         <body-content>JSP</body-content>
         <description>
-            A tage that defines a new bean (alias) with a given value.<br/>
-            This allows you to design a subform with a fictive bean and to include it in all the pages where you use it.
+            A tage that defines a new bean (alias) with a given value. <br/>
+            This allows you to design a subform with a fictive bean and to include it in all the pages where you use it.<br/>
 			You just need to make an alias to the real bean named after the fictive bean before including the subform.
         </description>
         <attribute>
@@ -1794,7 +1794,7 @@
             <required>true</required>
             <rtexprvalue>false</rtexprvalue>
             <description>
-                The value that the alias can be set to.<br/>
+                The value that the alias can be set to. <br/>
 				This can be a string (like <code>"toto"</code>) or a reference to an existing bean (like <code>"#{myBean.member1}"</code>).
             </description>
         </attribute>
