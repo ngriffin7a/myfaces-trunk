@@ -197,7 +197,6 @@
                 in the same data_table.
                 The sortColumn attribute of the embedding data_table reflects the current
                 sort column (see extended data_table).
-                Default: true
             </description>
         </attribute>
         <attribute>
