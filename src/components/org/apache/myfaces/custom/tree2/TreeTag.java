@@ -23,7 +23,6 @@ import javax.faces.el.ValueBinding;
 import org.apache.myfaces.renderkit.JSFAttr;
 
 /**
- * @author <a href="mailto:oliver@rossmueller.com">Oliver Rossmueller </a>
  * @author Sean Schofield
  * @version $Revision$ $Date$
  */

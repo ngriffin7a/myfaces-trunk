@@ -23,7 +23,6 @@ import java.io.Serializable;
  * Defines the requirements for an object that can be used as a tree node for
  * use in a {@link UITreeData} component. (inspired by javax.swing.tree.TreeNode).
  *
- * @author <a href="mailto:oliver@rossmueller.com">Oliver Rossmueller </a>
  * @author Sean Schofield
  * @version $Revision$ $Date$
  */

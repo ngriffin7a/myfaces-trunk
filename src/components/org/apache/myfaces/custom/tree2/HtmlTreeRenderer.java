@@ -44,7 +44,6 @@ import java.util.HashMap;
 /**
  * @author Sean Schofield
  * @author Chris Barlow
- * @author <a href="mailto:oliver@rossmueller.com">Oliver Rossmueller </a>
  * @author Hans Bergsten (Some code taken from an example in his O'Reilly JavaServer Faces book. Copied with permission)
  * @version $Revision$ $Date$
  */
@@ -219,7 +218,7 @@ public class HtmlTreeRenderer extends Renderer
         boolean clientSideToggle = getBoolean(tree, JSFAttr.CLIENT_SIDE_TOGGLE, true);
 
         String nodeId = (parentId != null) ? parentId + NamingContainer.SEPARATOR_CHAR + childCount : ROOT_NODE_ID;
-        String spanId = TOGGLE_SPAN + nodeId;
+        String spanId = TOGGLE_SPAN + ":" + tree.getId() + ":" + nodeId;
 
         tree.setNodeId(nodeId);
         TreeNode node = tree.getNode();
@@ -369,7 +368,7 @@ public class HtmlTreeRenderer extends Renderer
     {
         TreeNode node = tree.getNode();
         String nodeId = tree.getNodeId();
-        String spanId = TOGGLE_SPAN + nodeId;
+        String spanId = TOGGLE_SPAN + ":" + tree.getId() + ":" + nodeId;//TOGGLE_SPAN + nodeId;
         boolean showLines = getBoolean(tree, JSFAttr.SHOW_LINES, true);
         boolean clientSideToggle = getBoolean(tree, JSFAttr.CLIENT_SIDE_TOGGLE, true);
         UIComponent nodeTypeFacet = tree.getFacet(node.getType());

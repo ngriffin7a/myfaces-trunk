@@ -31,7 +31,6 @@ import java.io.IOException;
  * state of the nodes in the tree.
  *
  * @author Sean Schofield
- * @author <a href="mailto:oliver@rossmueller.com">Oliver Rossmueller </a>
  * @version $Revision$ $Date$
  */
 public class HtmlTree extends UITreeData
