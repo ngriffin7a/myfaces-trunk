@@ -81,9 +81,11 @@ class _ComponentAttributesMap
         }
     }
 
+    /**
+     * @param value  null is allowed
+     */
     public boolean containsValue(Object value)
     {
-        checkValue(value);
         return _attributes.containsValue(value);
     }
 
@@ -136,10 +138,13 @@ class _ComponentAttributesMap
         return _attributes.remove(key);
     }
 
+    /**
+     * @param key   String, null is not allowed
+     * @param value null is allowed
+     */
     public Object put(Object key, Object value)
     {
         checkKey(key);
-        checkValue(value);
         PropertyDescriptor propertyDescriptor = getPropertyDescriptor((String)key);
         if (propertyDescriptor != null)
         {
@@ -237,12 +242,6 @@ class _ComponentAttributesMap
         if (key == null) throw new NullPointerException("key");
         if (!(key instanceof String)) throw new ClassCastException("key is not a String");
     }
-
-    private void checkValue(Object value)
-    {
-        if (value == null) throw new NullPointerException("value");
-    }
-
 
     Map getUnderlyingMap()
     {
