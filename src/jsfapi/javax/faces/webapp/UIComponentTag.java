@@ -34,6 +34,10 @@ import java.io.IOException;
 import java.util.*;
 
 /**
+ * $Log$
+ * Revision 1.13  2004/03/26 11:48:33  manolito
+ * additional NPE check
+ *
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
@@ -147,6 +151,7 @@ public abstract class UIComponentTag
 
     public static boolean isValueReference(String value)
     {
+        if (value == null) throw new NullPointerException("value");
         int start = value.indexOf("#{");
         int end = value.lastIndexOf('}');
         return (start != -1 && end != -1 && start < end);
