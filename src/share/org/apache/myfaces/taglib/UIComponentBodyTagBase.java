@@ -19,6 +19,7 @@
 package net.sourceforge.myfaces.taglib;
 
 import net.sourceforge.myfaces.renderkit.JSFAttr;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -33,6 +34,9 @@ import java.io.Reader;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.4  2004/04/01 09:33:43  manolito
+ * user role support removed
+ *
  * Revision 1.3  2004/03/31 11:14:28  royalts
  * no message
  *
@@ -100,40 +104,8 @@ public abstract class UIComponentBodyTagBase
      */
     protected abstract String getDefaultRendererType();
 
-    /**
-     * Additionally checks for user role.
-     * @return true if baseclass returned true or user is not in role
-     */
-    protected boolean isSuppressed()
-    {
-        if (super.isSuppressed()) return true;
-
-        UIComponent component = getComponentInstance();
-        String userRole;
-        /*
-        TODO: optimize extended standard components by implementing UserRoleSupport
-        if (component instanceof UserRoleSupport)
-        {
-            userRole = ((UserRoleSupport)component).getVisibleOnUserRole();
-        }
-        else
-        {
-        */
-            userRole = (String)component.getAttributes().get(JSFAttr.VISIBLE_ON_USER_ROLE_ATTR);
-        //}
-
-        if (userRole == null) return false; //no user role --> not suppressed
-
-        return !getFacesContext().getExternalContext().isUserInRole(userRole);
-    }
-
-
     //UIComponent attributes
     private String _transient;
-
-    //user role attributes (Myfaces extension)
-    private String _enabledOnUserRole;
-    private String _visibleOnUserRole;
 
     //Special UIComponent attributes (ValueHolder, ConvertibleValueHolder)
     private String _rendererType;
@@ -146,9 +118,6 @@ public abstract class UIComponentBodyTagBase
         super.setProperties(component);
 
         setBooleanProperty(component, JSFAttr.TRANSIENT_ATTR, _transient);
-
-        setStringProperty(component, JSFAttr.ENABLED_ON_USER_ROLE_ATTR, _enabledOnUserRole);
-        setStringProperty(component, JSFAttr.VISIBLE_ON_USER_ROLE_ATTR, _visibleOnUserRole);
 
         //rendererType already handled by UIComponentTag
 
@@ -174,16 +143,6 @@ public abstract class UIComponentBodyTagBase
     public void setValue(String value)
     {
         _value = value;
-    }
-
-    public void setEnabledOnUserRole(String enabledOnUserRole)
-    {
-        _enabledOnUserRole = enabledOnUserRole;
-    }
-
-    public void setVisibleOnUserRole(String visibleOnUserRole)
-    {
-        _visibleOnUserRole = visibleOnUserRole;
     }
 
     public void setConverter(String converter)
