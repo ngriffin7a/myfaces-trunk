@@ -11,7 +11,9 @@
     <h:commandLink action="nav_page3">
         <h:outputText value="non-tiles page" />
     </h:commandLink>
-    <h:commandLink action="nav_page4">
-        <h:outputText value="nested tiles" />
-    </h:commandLink>
+    <h:form id="button">
+        <h:commandButton value="nested Tiles" action="nav_page4">
+            <f:actionListener type="org.apache.myfaces.tiles.example.DemoActionListener"/>
+        </h:commandButton>
+    </h:form>
 </h:panelGrid>

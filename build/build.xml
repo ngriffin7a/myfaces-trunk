@@ -15,6 +15,7 @@
     <property name="doc.dir" location="${project.dir}/doc"/>
     <property name="build.dir" location="${project.dir}/build"/>
     <property name="conf.dir" location="${project.dir}/conf"/>
+    <property name="apps.dir" location="${project.dir}/webapps"/>
 
 
     <!-- Properties -->
@@ -373,6 +374,8 @@
                         prefix="myfaces-${manifest.impl.version}/src/junit"/>
             <tarfileset dir="${tlds.dir}"
                         prefix="myfaces-${manifest.impl.version}/tlds"/>
+            <tarfileset dir="${apps.dir}"
+                        prefix="myfaces-${manifest.impl.version}/webapps"/>
         </tar>
     </target>
 

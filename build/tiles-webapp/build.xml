@@ -60,9 +60,22 @@
 
 
     <target name="-compile-and-copy-libs"
-            depends="-myfaces-jar, -myfaces-jsf-api-jar"
+            depends="-myfaces-jar"
             description="compiles the tiles java classes to WEB-INF/classes and copies all needed libs to WEB-INF/lib">
         <mkdir dir="${web-inf.classes.dir}" />
+        <javac srcdir="${tiles.src}"
+               destdir="${web-inf.classes.dir}"
+               optimize="${javac.optimize}"
+               debug="${javac.debug}"
+               classpathref="tiles.class.path">
+        </javac>
+        <copy todir="${web-inf.classes.dir}">
+            <fileset dir="${tiles.src}"
+                     includes="**"
+                     excludes="**/*.java
+                               **/package.html"/>
+        </copy>
+
     </target>
 
     <target name="-war" depends="-compile-and-copy-libs">
@@ -88,7 +101,7 @@
             <lib file="${jstl.jar}"/>
             <lib file="${myfaces.jar}"/>
             <lib file="${struts.jar}"/>
-            <lib file="${myfaces-jsf-api.jar}"/>
+            <!--lib file="${myfaces-jsf-api.jar}"/-->
             <classes dir="${web-inf.classes.dir}" />
             <fileset dir="${tiles.web}"
                      excludes="WEB-INF/classes/**,
