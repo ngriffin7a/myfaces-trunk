@@ -33,17 +33,20 @@ import java.util.ArrayList;
  * @version $Revision$ $Date$
  * 
  * $Log$
+ * Revision 1.8  2004/06/17 03:51:22  dave0000
+ * Use EMPTY_STRING_ARRAY from ArrayUtils
+ *
  * Revision 1.7  2004/03/30 07:42:53  dave0000
  * minIndex()
  *
  */
 public class StringUtils
 {
-    //~ Static fields/initializers -----------------------------------------------------------------
-
-    public static final String   EMPTY_STRING       = "";
-    public static final String[] EMPTY_STRING_ARRAY = {};
-
+    private StringUtils()
+    {
+        // utility class, no instantiation
+    }
+    
     //~ Methods ------------------------------------------------------------------------------------
 
     /**
@@ -267,32 +270,34 @@ public class StringUtils
         // Is there anything to dequote?
         if (begin == end)
         {
-            return EMPTY_STRING;
+            return "";
         }
 
-        int _end = str.indexOf(quote, begin);
+        int end_ = str.indexOf(quote, begin);
 
         // If no quotes, return the original string
         // and save StringBuffer allocation/char copying
-        if (_end < 0)
+        if (end_ < 0)
         {
             return str.substring(begin, end);
         }
 
         StringBuffer sb     = new StringBuffer(end - begin);
-        int          _begin = begin; // need begin later
-        for (; (_end >= 0) && (_end < end); _end = str.indexOf(quote, _begin = _end + 2))
+        int          begin_ = begin; // need begin later
+        for (; (end_ >= 0) && (end_ < end); 
+            end_ = str.indexOf(quote, begin_ = end_ + 2))
         {
-            if (((_end + 1) >= end) || (str.charAt(_end + 1) != quote))
+            if (((end_ + 1) >= end) || (str.charAt(end_ + 1) != quote))
             {
                 throw new IllegalArgumentException(
-                    "Internal quote not doubled in string '" + str.substring(begin, end) + "'");
+                    "Internal quote not doubled in string '" 
+                    + str.substring(begin, end) + "'");
             }
 
-            sb.append(substring(str, _begin, _end)).append(quote);
+            sb.append(substring(str, begin_, end_)).append(quote);
         }
 
-        return sb.append(substring(str, _begin, end)).toString();
+        return sb.append(substring(str, begin_, end)).toString();
     }
 
     /**
@@ -322,7 +327,7 @@ public class StringUtils
         // If empty substring, return empty string
         if (begin == end)
         {
-            return EMPTY_STRING;
+            return "";
         }
 
         // If not quoted, return string
@@ -335,7 +340,8 @@ public class StringUtils
         if ((str.length() < 2) || (str.charAt(_end) != quote))
         {
             throw new IllegalArgumentException(
-                "Closing quote missing in string '" + substring(str, begin, end) + "'");
+                "Closing quote missing in string '" 
+                + substring(str, begin, end) + "'");
         }
 
         return dequote(str, begin + 1, _end, quote);
@@ -356,7 +362,8 @@ public class StringUtils
         int          len     = repl.length();
         int          lendiff = with.length() - repl.length();
         StringBuffer out     =
-            new StringBuffer((lendiff <= 0) ? str.length() : (str.length() + (10 * lendiff)));
+            new StringBuffer((lendiff <= 0) ? str.length() 
+                : (str.length() + (10 * lendiff)));
         for (; pos >= 0; pos = str.indexOf(repl, lastindex = pos + len))
         {
             out.append(substring(str, lastindex, pos)).append(with);
@@ -379,7 +386,8 @@ public class StringUtils
         int          len       = str.length();
         int          lendiff   = with.length() - 1;
         StringBuffer out       =
-            new StringBuffer((lendiff <= 0) ? str.length() : (str.length() + (10 * lendiff)));
+            new StringBuffer((lendiff <= 0) ? str.length() 
+                : (str.length() + (10 * lendiff)));
         int          lastindex = 0;
         for (; pos >= 0; pos = str.indexOf(repl, lastindex = pos + 1))
         {
@@ -389,7 +397,8 @@ public class StringUtils
         return out.append(substring(str, lastindex, len)).toString();
     }
 
-    public static StringBuffer replace(StringBuffer out, String s, String repl, String with)
+    public static StringBuffer replace(
+        StringBuffer out, String s, String repl, String with)
     {
         int lastindex = 0;
         int len = repl.length();
@@ -422,7 +431,7 @@ public class StringUtils
         int len = str.length();
         if (len == 0)
         {
-            return EMPTY_STRING_ARRAY;
+            return ArrayUtils.EMPTY_STRING_ARRAY;
         }
 
         int       oldPos = 0;
@@ -436,7 +445,7 @@ public class StringUtils
 
         list.add(substring(str, oldPos, len));
 
-        return (String[]) list.toArray(EMPTY_STRING_ARRAY);
+        return (String[]) list.toArray(ArrayUtils.EMPTY_STRING_ARRAY);
     }
 
     /**
@@ -452,7 +461,8 @@ public class StringUtils
      *
      * @throws IllegalArgumentException DOCUMENT ME!
      */
-    public static String[] splitLongString(String str, char separator, char quote)
+    public static String[] splitLongString(
+        String str, char separator, char quote)
     {
         if (str == null)
         {
@@ -462,7 +472,7 @@ public class StringUtils
         int len = str.length();
         if (len == 0)
         {
-            return EMPTY_STRING_ARRAY;
+            return ArrayUtils.EMPTY_STRING_ARRAY;
         }
 
         int       oldPos = 0;
@@ -490,7 +500,8 @@ public class StringUtils
                 if ((pos < len) && (str.charAt(pos) != separator))
                 {
                     throw new IllegalArgumentException(
-                        "Separator must follow closing quote in string '" + str + "'");
+                        "Separator must follow closing quote in string '" 
+                        + str + "'");
                 }
             }
             else
@@ -504,10 +515,11 @@ public class StringUtils
             }
 
             list.add(
-                quoted ? dequote(str, oldPos + 1, pos - 1, quote) : substring(str, oldPos, pos));
+                quoted ? dequote(str, oldPos + 1, pos - 1, quote) 
+                    : substring(str, oldPos, pos));
         }
 
-        return (String[]) list.toArray(EMPTY_STRING_ARRAY);
+        return (String[]) list.toArray(ArrayUtils.EMPTY_STRING_ARRAY);
     }
 
     /**
@@ -530,13 +542,15 @@ public class StringUtils
         int len = str.length();
         if (len == 0)
         {
-            return EMPTY_STRING_ARRAY;
+            return ArrayUtils.EMPTY_STRING_ARRAY;
         }
 
         int lastTokenIndex = 0;
 
-        // Step 1: how many substrings? We exchange double scan time for less memory allocation
-        for (int pos = str.indexOf(separator); pos >= 0; pos = str.indexOf(separator, pos + 1))
+        // Step 1: how many substrings? 
+        //      We exchange double scan time for less memory allocation
+        for (int pos = str.indexOf(separator); 
+            pos >= 0; pos = str.indexOf(separator, pos + 1))
         {
             lastTokenIndex++;
         }
@@ -573,7 +587,8 @@ public class StringUtils
      *
      * @throws IllegalArgumentException DOCUMENT ME!
      */
-    public static String[] splitShortString(String str, char separator, char quote)
+    public static String[] splitShortString(
+        String str, char separator, char quote)
     {
         if (str == null)
         {
@@ -583,10 +598,11 @@ public class StringUtils
         int len = str.length();
         if (len == 0)
         {
-            return EMPTY_STRING_ARRAY;
+            return ArrayUtils.EMPTY_STRING_ARRAY;
         }
 
-        // Step 1: how many substrings? We exchange double scan time for less memory allocation
+        // Step 1: how many substrings? 
+        //      We exchange double scan time for less memory allocation
         int tokenCount = 0;
         for (int pos = 0; pos < len; pos++)
         {
@@ -612,7 +628,8 @@ public class StringUtils
                 if ((pos < len) && (str.charAt(pos) != separator))
                 {
                     throw new IllegalArgumentException(
-                        "Separator must follow closing quote in strng '" + str + "'");
+                        "Separator must follow closing quote in strng '" 
+                        + str + "'");
                 }
             }
             else
@@ -635,7 +652,8 @@ public class StringUtils
         String[] list = new String[tokenCount];
 
         // Step 3: retrieve substrings 
-        // Note: on this pass we do not check for correctness, since we have already done so
+        // Note: on this pass we do not check for correctness, 
+        //       since we have already done so
         tokenCount--; // we want to stop one token short
 
         int oldPos = 0;
@@ -656,7 +674,8 @@ public class StringUtils
                 if (str.charAt(pos) != separator)
                 {
                     throw new IllegalArgumentException(
-                        "Separator must follow closing quote in strng '" + str + "'");
+                        "Separator must follow closing quote in strng '" 
+                        + str + "'");
                 }
             }
             else
@@ -666,7 +685,8 @@ public class StringUtils
             }
 
             list[i] =
-                quoted ? dequote(str, oldPos + 1, pos - 1, quote) : substring(str, oldPos, pos);
+                quoted ? dequote(str, oldPos + 1, pos - 1, quote) 
+                    : substring(str, oldPos, pos);
         }
 
         list[tokenCount] = dequoteFull(str, oldPos, len, quote);
@@ -678,7 +698,7 @@ public class StringUtils
     {
         if (begin == end)
         {
-            return EMPTY_STRING;
+            return "";
         }
 
         return str.substring(begin, end);
