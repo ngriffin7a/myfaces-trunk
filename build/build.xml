@@ -27,8 +27,9 @@
     <property file="build.default.properties"/>
     <property file="manifest.properties"/>
 
-    <property name="src.release.bundle" location="${project.dir}/myfaces-${manifest.impl.version}-src.tgz"/>
-    <property name="bin.release.bundle" location="${project.dir}/myfaces-${manifest.impl.version}.tgz"/>
+    <property name="release.version" value="${manifest.impl.version}"/>
+    <property name="src.release.bundle" location="${project.dir}/myfaces-${release.version}-src.tgz"/>
+    <property name="bin.release.bundle" location="${project.dir}/myfaces-${release.version}.tgz"/>
 
     <!-- Temporary dir. May be overridden in build.local.properties -->
     <property name="temp.dir" location="${env.TEMP}"/>
@@ -465,7 +466,6 @@
             depends="bin-release, src-release, examples-release, tiles-release, blank-release, wap-release"
             description="builds all release files">
     </target>
-
 	<target name="all-tests"
             depends="myfaces-jar"
             description="run all the automated tests - tomcat 5.0.18 or better needs to be running on port 8080 for this to work">
@@ -704,12 +704,19 @@
         </xslt>
     </target>
 
-    <target name="nightly" depends="src-release,bin-release">
+    <target name="nightly" depends="src-release, bin-release"> <!-- todo: add webapps release -->
 
         <!-- copy resulting builds to nightly directory -->
         <copy  file="${src.release.bundle}" todir="${nightly.dir}"/>
-        <echo message="nightly.dir: ${nightly.dir}"/>
         <copy file="${bin.release.bundle}" todir="${nightly.dir}" flatten="true"/>
+
+    </target>
+
+    <target name="release" depends="src-release, bin-release"> <!-- todo: add webapps release -->
+
+        <!-- copy resulting builds to nightly directory -->
+        <copy  file="${src.release.bundle}" todir="${release.dir}"/>
+        <copy file="${bin.release.bundle}" todir="${release.dir}" flatten="true"/>
 
     </target>
 
