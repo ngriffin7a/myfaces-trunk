@@ -69,7 +69,7 @@ public class HtmlFormatRenderer
         {
             isEscape = RendererUtils.getBooleanAttribute(component, JSFAttr.ESCAPE_ATTR, true);
         }
-        HtmlTextRenderer.renderOutputText(facesContext, component, text, isEscape);
+        HtmlTextRendererBase.renderOutputText(facesContext, component, text, isEscape);
     }
 
     private String getOutputFormatText(FacesContext facesContext,
