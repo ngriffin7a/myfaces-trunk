@@ -84,7 +84,7 @@ public class TreeCopier
                 //destination component already exists?
                 clone = toComp.findComponent(child.getComponentId());
             }
-            catch (IllegalArgumentException e)
+            catch (Exception e)
             {
                 clone = null;
             }
@@ -147,22 +147,5 @@ public class TreeCopier
         }
     }
 
-
-
-    protected boolean isIgnoreAttribute(String attrName)
-    {
-        if (attrName.startsWith("net.sourceforge.myfaces."))
-        {
-            return true;
-        }
-        else if (attrName.startsWith("javax."))
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-    }
 
 }

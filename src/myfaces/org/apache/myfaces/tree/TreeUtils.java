@@ -20,9 +20,7 @@ package net.sourceforge.myfaces.tree;
 
 import javax.faces.component.UIComponent;
 import javax.faces.tree.Tree;
-import java.util.Iterator;
-import java.util.NoSuchElementException;
-import java.util.Stack;
+import java.util.*;
 
 /**
  * DOCUMENT ME!
@@ -33,45 +31,15 @@ public class TreeUtils
 {
     private TreeUtils() {}
 
-    /*
-    public static UIComponent findComponentById(Tree tree, String componentId)
-    {
-        return findComponentById(tree.getRoot(), componentId);
-    }
-
-    public static UIComponent findComponentById(UIComponent root, String componentId)
-    {
-        if (root == null)
-        {
-            return null;
-        }
-        if (root.getComponentId().equals(componentId))
-        {
-            return root;
-        }
-        for (Iterator it = root.getChildren(); it.hasNext();)
-        {
-            //Recursion:
-            UIComponent find = findComponentById((UIComponent)it.next(),
-                                                 componentId);
-            if (find != null)
-            {
-                return find;
-            }
-        }
-        return null;
-    }
-    */
-
-
     public static Iterator treeIterator(Tree tree)
     {
-        return new TreeIterator(tree);
+        return treeIterator(tree.getRoot());
     }
 
     public static Iterator treeIterator(UIComponent root)
     {
         return new TreeIterator(root);
+        //return getSimpleIterator(root);
     }
 
     private static class TreeIterator
@@ -81,11 +49,6 @@ public class TreeUtils
         private boolean _mayHaveNext = true;
         private UIComponent _current = null;
         private Stack _stack = new Stack();
-
-        public TreeIterator(Tree tree)
-        {
-            this(tree.getRoot());
-        }
 
         public TreeIterator(UIComponent root)
         {
@@ -116,7 +79,7 @@ public class TreeUtils
                 //has child?
                 if (_current.getChildCount() > 0)
                 {
-                    Iterator children = _current.getChildren();
+                    Iterator children = _current.getFacetsAndChildren();
                     _next = (UIComponent)children.next();
                     //push siblings
                     _stack.push(children);
@@ -154,5 +117,25 @@ public class TreeUtils
             throw new UnsupportedOperationException();
         }
     }
+
+
+
+    /*
+    private static Iterator getSimpleIterator(UIComponent comp)
+    {
+        List list = new ArrayList();
+        addComponentToList(list, comp);
+        return list.iterator();
+    }
+
+    private static void addComponentToList(List list, UIComponent comp)
+    {
+        list.add(comp);
+        for (Iterator it = comp.getFacetsAndChildren(); it.hasNext();)
+        {
+            addComponentToList(list, (UIComponent)it.next());
+        }
+    }
+    */
 
 }

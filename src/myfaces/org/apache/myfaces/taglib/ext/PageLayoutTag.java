@@ -45,7 +45,7 @@ public class PageLayoutTag
 
     public void setLayout(String value)
     {
-        setRendererAttribute(LayoutRenderer.LAYOUT_ATTR, value);
+        setRendererAttribute(LayoutRenderer.LAYOUT_ATTR.getName(), value);
     }
 
     public void setCssClass(String value)

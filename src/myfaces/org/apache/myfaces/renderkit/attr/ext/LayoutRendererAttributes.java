@@ -19,6 +19,9 @@
 package net.sourceforge.myfaces.renderkit.attr.ext;
 
 import net.sourceforge.myfaces.renderkit.attr.CommonRendererAttributes;
+import net.sourceforge.myfaces.renderkit.attr.AttrDescrImpl;
+
+import javax.faces.component.AttributeDescriptor;
 
 /**
  * Constant definitions for the specified render dependent attributes of the
@@ -29,7 +32,7 @@ import net.sourceforge.myfaces.renderkit.attr.CommonRendererAttributes;
 public interface LayoutRendererAttributes
     extends CommonRendererAttributes
 {
-    public static final String LAYOUT_ATTR = "layout";
+    public static final AttributeDescriptor LAYOUT_ATTR = new AttrDescrImpl("layout");
 
     public static final String HEADER_CLASS_ATTR = "headerClass";
     public static final String NAVIGATION_CLASS_ATTR = "navigationClass";

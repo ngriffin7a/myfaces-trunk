@@ -70,6 +70,7 @@ public class LayoutRenderer
     {
         super();
         addAttributeDescriptor(UIPanel.TYPE, PANEL_CLASS_ATTR);
+        addAttributeDescriptor(UIPanel.TYPE, LAYOUT_ATTR);
     }
 
     public boolean supportsComponentType(UIComponent component)
@@ -186,7 +187,7 @@ public class LayoutRenderer
             throw new IllegalStateException("No BodyContent!?");
         }
 
-        String layout = (String)uiComponent.getAttribute(LAYOUT_ATTR);
+        String layout = (String)uiComponent.getAttribute(LAYOUT_ATTR.getName());
         if (layout == null)
         {
             LogUtil.getLogger().severe("No layout attribute!");

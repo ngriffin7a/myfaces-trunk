@@ -32,6 +32,7 @@ import javax.servlet.jsp.PageContext;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
+import java.io.Serializable;
 
 /**
  * DOCUMENT ME!
@@ -39,6 +40,7 @@ import java.util.Set;
  * @version $Revision$ $Date$
  */
 public class MyFacesTagHelper
+    implements Serializable
 {
     private FacesTag _tag;
     private Set _attributes = null;

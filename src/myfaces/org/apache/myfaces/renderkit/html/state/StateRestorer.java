@@ -80,6 +80,22 @@ public class StateRestorer
                 restoreComponent(facesContext, stateMap, comp);
             }
 
+            //remap tagHash
+            UIComponent root = requestTree.getRoot();
+            Map restoredTagHash = (Map)root.getAttribute("tagHash");
+            if (restoredTagHash != null)
+            {
+                Map realTagHash = new HashMap();
+                for (Iterator tagHashIt = restoredTagHash.entrySet().iterator(); tagHashIt.hasNext();)
+                {
+                    Map.Entry tagHashEntry = (Map.Entry)tagHashIt.next();
+                    String clientId = (String)tagHashEntry.getValue();
+                    realTagHash.put(tagHashEntry.getKey(),
+                                    root.findComponent(clientId));
+                }
+                root.setAttribute("tagHash", realTagHash);
+            }
+
             //restore model beans and values:
             restoreModelValues(facesContext, stateMap);
 
@@ -202,48 +218,61 @@ public class StateRestorer
                     continue;
                 }
 
-                Converter conv = ConverterUtils.findAttributeConverter(facesContext,
-                                                                       uiComponent,
-                                                                       attrName);
                 Object objValue;
-                if (conv != null)
+                if (uiComponent.getParent() == null && attrName.equals("tagHash"))
                 {
-                    if (conv instanceof StringArrayConverter)
-                    {
-                        if (paramValue instanceof String[])
-                        {
-                            objValue = paramValue;
-                        }
-                        else
-                        {
-                            objValue = new String[] {(String)paramValue};
-                        }
-                    }
-                    else
-                    {
-                        try
-                        {
-                            if (paramValue instanceof String[])
-                            {
-                                paramValue = StringArrayConverter.getAsString((String[])paramValue);
-                            }
-                            objValue = conv.getAsObject(facesContext,
-                                                        facesContext.getTree().getRoot(), //dummy UIComponent
-                                                        (String)paramValue);
-                        }
-                        catch (ConverterException e)
-                        {
-                            throw new FacesException("Error restoring state of attribute '" + attrName + "' of component " + uiComponent.getClientId(facesContext) + ": Converter exception!", e);
-                        }
-                    }
-                }
-                else
-                {
+                    //Always deserialize tagHash
                     if (paramValue instanceof String[])
                     {
                         paramValue = StringArrayConverter.getAsString((String[])paramValue);
                     }
                     objValue = ConverterUtils.deserialize((String)paramValue);
+                }
+                else
+                {
+                    Converter conv;
+                    conv = ConverterUtils.findAttributeConverter(facesContext,
+                                                                 uiComponent,
+                                                                 attrName);
+                    if (conv != null)
+                    {
+                        if (conv instanceof StringArrayConverter)
+                        {
+                            if (paramValue instanceof String[])
+                            {
+                                objValue = paramValue;
+                            }
+                            else
+                            {
+                                objValue = new String[] {(String)paramValue};
+                            }
+                        }
+                        else
+                        {
+                            try
+                            {
+                                if (paramValue instanceof String[])
+                                {
+                                    paramValue = StringArrayConverter.getAsString((String[])paramValue);
+                                }
+                                objValue = conv.getAsObject(facesContext,
+                                                            facesContext.getTree().getRoot(), //dummy UIComponent
+                                                            (String)paramValue);
+                            }
+                            catch (ConverterException e)
+                            {
+                                throw new FacesException("Error restoring state of attribute '" + attrName + "' of component " + uiComponent.getClientId(facesContext) + ": Converter exception!", e);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        if (paramValue instanceof String[])
+                        {
+                            paramValue = StringArrayConverter.getAsString((String[])paramValue);
+                        }
+                        objValue = ConverterUtils.deserialize((String)paramValue);
+                    }
                 }
 
                 uiComponent.setAttribute(attrName, objValue);

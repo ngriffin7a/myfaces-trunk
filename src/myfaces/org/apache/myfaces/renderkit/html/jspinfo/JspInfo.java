@@ -19,6 +19,7 @@
 package net.sourceforge.myfaces.renderkit.html.jspinfo;
 
 import net.sourceforge.myfaces.MyFacesConfig;
+import net.sourceforge.myfaces.tree.TreeUtils;
 
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
@@ -45,8 +46,8 @@ public class JspInfo
 
     private Tree _tree = null;
     private Map _jspBeanInfosMap = new HashMap();
-    //private Map _creatorTagsMap = new HashMap();
     private List _saveStateComponents = new ArrayList();
+    private boolean _clientIdsCreated = false;
 
     public JspInfo(Tree tree)
     {
@@ -55,6 +56,21 @@ public class JspInfo
 
     public Tree getTree()
     {
+        return _tree;
+    }
+
+    /**
+     * This version automatically creates clientIds for all components in the tree
+     * prior to returning the tree.
+     * @param facesContext
+     * @return
+     */
+    public Tree getTree(FacesContext facesContext)
+    {
+        if (!_clientIdsCreated)
+        {
+            createClientIds(facesContext);
+        }
         return _tree;
     }
 
@@ -72,6 +88,21 @@ public class JspInfo
     public Iterator getJspBeanInfos()
     {
         return _jspBeanInfosMap.entrySet().iterator();
+    }
+
+    protected boolean isClientIdsCreated()
+    {
+        return _clientIdsCreated;
+    }
+
+    protected void createClientIds(FacesContext facesContext)
+    {
+        for (Iterator it = TreeUtils.treeIterator(_tree); it.hasNext();)
+        {
+            UIComponent comp = (UIComponent)it.next();
+            comp.getClientId(facesContext);
+        }
+        _clientIdsCreated = true;
     }
 
 
@@ -106,7 +137,7 @@ public class JspInfo
     public static Tree getTree(FacesContext facesContext,
                                      String treeId)
     {
-        return getJspInfo(facesContext, treeId).getTree();
+        return getJspInfo(facesContext, treeId).getTree(facesContext);
     }
 
     public static JspBeanInfo getJspBeanInfo(FacesContext facesContext,

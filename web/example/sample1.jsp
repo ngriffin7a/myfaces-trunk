@@ -39,7 +39,7 @@
 
 <h:use_faces>
 
-    <x:page_layout id="page" layout="classic" cssClass="<%=pageLayout%>" >
+    <x:page_layout id="page" layout="<%=pageLayout%>" cssClass="pageLayout" >
         <x:page_header id="header" cssClass="pageHeader" >
             <h:image id="logo" url="images/logo_mini.jpg" altKey="alt_logo" altBundle="net.sourceforge.myfaces.example.example_messages" />
         </x:page_header>
@@ -71,8 +71,8 @@
                     <h:command_button id="subtractButton" commandName="subtract" commandReference="calcCtrl.calc" label="Subtract them"/><br>
                 </h:form>
 
-                <h:command_hyperlink id="href1" commandName="add" commandReference="calcCtrl.calc">Add them by use of a link</h:command_hyperlink><br>
-                <h:command_hyperlink id="href2" commandName="subtract" commandReference="calcCtrl.calc">Subtract them by use of a link</h:command_hyperlink>
+                <h:command_hyperlink id="href1" commandName="add" commandReference="calcCtrl.calc">Add them by clicking this link</h:command_hyperlink><br>
+                <h:command_hyperlink id="href2" commandName="subtract" commandReference="calcCtrl.calc">Subtract them by clicking this link</h:command_hyperlink>
             </td></tr></table>
 
             <br>

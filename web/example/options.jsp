@@ -33,7 +33,7 @@
 
 <h:use_faces>
 
-    <x:page_layout id="page" layout="classic" cssClass="<%=pageLayout%>" >
+    <x:page_layout id="page" layout="<%=pageLayout%>" cssClass="pageLayout" >
         <x:page_header id="header" cssClass="pageHeader" >
             <h:image id="logo" url="images/logo_mini.jpg" altKey="alt_logo" altBundle="net.sourceforge.myfaces.example.example_messages" />
         </x:page_header>
@@ -45,10 +45,17 @@
             <h4>Options</h4>
             <table border="1"><tr><td>
                 <h:form id="form1" formName="calcForm">
-                    <h:message id="msg_lang" key="option_lang" bundle="net.sourceforge.myfaces.example.example_messages" ></h:message>
-                    <h:selectbox id="locales" modelReference="optionsForm.language"  >
+                    <h:message key="option_lang" bundle="net.sourceforge.myfaces.example.example_messages" />
+                    <h:selectbox id="locale" modelReference="optionsForm.language"  >
                         <h:selectbox_items id="available" modelReference="optionsForm.availableLanguages" />
-                    </h:selectbox>
+                    </h:selectbox><br>
+
+                    <!--h:message id="layout_label" key="option_layout" bundle="net.sourceforge.myfaces.example.example_messages" /-->
+                    <h:selectbox id="layout" modelReference="pageLayout"  >
+                        <h:selectbox_item id="item101" label="Classic" value="classic" />
+                        <h:selectbox_item id="item102" label="Navigation right" value="navigationRight" />
+                    </h:selectbox><br>
+
                     <h:command_button id="apply" commandName="apply" commandReference="optionsCtrl.setLocale" label="Apply"/>
                 </h:form>
 

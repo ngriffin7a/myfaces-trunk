@@ -906,7 +906,7 @@
         <!-- TODO attributes rendered, value (rename msg?), outputClass-->
         <attribute>
             <name>id</name>
-            <required>true</required>
+            <required>false</required>
             <rtexprvalue>false</rtexprvalue>
         </attribute>
         <attribute>

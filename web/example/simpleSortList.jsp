@@ -32,7 +32,7 @@
 
 <h:use_faces>
 
-    <x:page_layout id="page" layout="classic" cssClass="<%=pageLayout%>" >
+    <x:page_layout id="page" layout="<%=pageLayout%>" cssClass="pageLayout" >
         <x:page_header id="header" cssClass="pageHeader" >
             <h:image id="logo" url="images/logo_mini.jpg" altKey="alt_logo" altBundle="net.sourceforge.myfaces.example.example_messages" />
         </x:page_header>

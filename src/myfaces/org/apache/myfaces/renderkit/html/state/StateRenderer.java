@@ -35,8 +35,8 @@ public class StateRenderer
 {
     public static final String TYPE = "StateRenderer";
 
-    protected static final String TREE_ID_REQUEST_PARAM = "tId";
-    protected static final String LOCALE_REQUEST_PARAM = "locale";
+    protected static final String TREE_ID_REQUEST_PARAM = "_tId";
+    protected static final String LOCALE_REQUEST_PARAM = "_locale";
     protected static final String LOCALE_REQUEST_PARAM_DELIMITER = "_";
 
     public static final String BODY_CONTENT_REQUEST_ATTR

@@ -474,7 +474,7 @@ public class MyParseEventListener
         }
         else
         {
-            LogUtil.getLogger().severe("Missing component id.");
+            LogUtil.getLogger().finest("No component id in '" + ti.getTagName() + "' tag.");
         }
 
         String rendererType = facesTag.getRendererType();

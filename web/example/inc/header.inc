@@ -4,7 +4,13 @@
   <Link rel="stylesheet" type="text/css" href="css/basic.css">
 </head>
 <%
-    //String pageLayout = "classic";
-    String pageLayout = "navigationRight";
+    String pageLayout = (String)application.getAttribute("pageLayout");
+    if (pageLayout == null)
+    {
+        pageLayout = "classic";
+        //pageLayout = "navigationRight";
+        application.setAttribute("pageLayout", pageLayout);
+    }
+
     String msgBundle = "net.sourceforge.myfaces.example.example_messages";
 %>

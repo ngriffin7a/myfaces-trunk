@@ -34,6 +34,7 @@ import net.sourceforge.myfaces.util.logging.LogUtil;
 
 import javax.faces.FacesException;
 import javax.faces.component.UIComponent;
+import javax.faces.component.UIOutput;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 import javax.faces.convert.Converter;
@@ -173,10 +174,14 @@ public class StateSaver
 
     protected void saveComponents(FacesContext facesContext, Map stateMap)
     {
+        LogUtil.getLogger().entering("StateSaver", "saveComponents");
+
         Iterator treeIt = TreeUtils.treeIterator(facesContext.getTree());
         while (treeIt.hasNext())
         {
             UIComponent comp = (UIComponent)treeIt.next();
+
+            //System.out.println("Saving " + comp.toString());
 
             /* HACK: we call getClientId() to prevent ConcurrentModificationException in getAttributeNames iterator.
              * As an alternative we could also copy the attribute names into a temporary List first. */
@@ -188,7 +193,7 @@ public class StateSaver
             {
                 String attrName = (String)compIt.next();
                 Object attrValue = comp.getAttribute(attrName);
-                if (attrValue != null && !isIgnoreAttribute(attrName))
+                if (attrValue != null && !isIgnoreAttribute(comp, attrName))
                 {
                     if (attrName.equals(CommonComponentAttributes.VALUE_ATTR) ||
                         attrName.equals(CommonComponentAttributes.STRING_VALUE_ATTR))
@@ -236,6 +241,7 @@ public class StateSaver
             saveListeners(facesContext, stateMap, comp);
         }
 
+        LogUtil.getLogger().exiting("StateSaver", "saveComponents");
     }
 
 
@@ -245,7 +251,7 @@ public class StateSaver
                                       Object attrValue)
     {
         Tree parsedTree = JspInfo.getTree(facesContext,
-                                                facesContext.getTree().getTreeId());
+                                          facesContext.getTree().getTreeId());
         UIComponent parsedComp = null;
         try
         {
@@ -307,54 +313,88 @@ public class StateSaver
     {
         Tree parsedTree = JspInfo.getTree(facesContext,
                                           facesContext.getTree().getTreeId());
-        UIComponent parsedComp = null;
-        try
+        String strValue;
+
+        if (uiComponent.getParent() == null &&
+            attrName.equals("tagHash"))
         {
-            parsedComp = parsedTree.getRoot().findComponent(uiComponent.getClientId(facesContext));
-        }
-        catch (IllegalArgumentException e)
-        {
-            parsedComp = null;
-        }
-        if (parsedComp != null)
-        {
-            Object parsedValue = parsedComp.getAttribute(attrName);
-            if (parsedValue != null && parsedValue.equals(attrValue))
+            if (MyFacesConfig.isJspInfoApplicationCaching() &&
+                parsedTree.getRoot().getAttribute("tagHash") != null)
             {
-                //current attribute identical to hardcoded attribute
+                //Already in parsed tree
                 return;
             }
-        }
 
-        Converter conv = ConverterUtils.findAttributeConverter(facesContext,
-                                                               uiComponent,
-                                                               attrName);
-        String strValue;
-        if (conv != null)
-        {
-            try
+            //Remap each tagKey to the clientId instead of the component
+            Map tagHash = (Map)attrValue;
+            Map saveTagHash = new HashMap();
+            for (Iterator it = tagHash.entrySet().iterator(); it.hasNext();)
             {
-                strValue = conv.getAsString(facesContext,
-                                            facesContext.getTree().getRoot(), //dummy UIComponent
-                                            attrValue);
+                Map.Entry entry = (Map.Entry)it.next();
+                UIComponent comp = (UIComponent)entry.getValue();
+                saveTagHash.put(entry.getKey(),
+                                comp.getClientId(facesContext));
             }
-            catch (ConverterException e)
+
+            if (MyFacesConfig.isJspInfoApplicationCaching())
             {
-                throw new FacesException("Error saving state of attribute '" + attrName + "' of component " + uiComponent.getClientId(facesContext) + ": Converter exception!", e);
+                //Save tagHash in parsed tree
+                parsedTree.getRoot().setAttribute("tagHash", saveTagHash);
+                return;
             }
+
+            strValue = ConverterUtils.serialize(saveTagHash);
         }
         else
         {
-            if (attrValue instanceof Serializable)
+            UIComponent parsedComp = null;
+            try
             {
-                strValue = ConverterUtils.serialize(attrValue);
+                parsedComp = parsedTree.getRoot().findComponent(uiComponent.getClientId(facesContext));
+            }
+            catch (IllegalArgumentException e)
+            {
+                parsedComp = null;
+            }
+            if (parsedComp != null)
+            {
+                Object parsedValue = parsedComp.getAttribute(attrName);
+                if (parsedValue != null && parsedValue.equals(attrValue))
+                {
+                    //current attribute identical to hardcoded attribute
+                    return;
+                }
+            }
+
+            Converter conv = ConverterUtils.findAttributeConverter(facesContext,
+                                                                   uiComponent,
+                                                                   attrName);
+            if (conv != null)
+            {
+                try
+                {
+                    strValue = conv.getAsString(facesContext,
+                                                facesContext.getTree().getRoot(), //dummy UIComponent
+                                                attrValue);
+                }
+                catch (ConverterException e)
+                {
+                    throw new FacesException("Error saving state of attribute '" + attrName + "' of component " + uiComponent.getClientId(facesContext) + ": Converter exception!", e);
+                }
             }
             else
             {
-                LogUtil.getLogger().warning("Attribute '" + attrName + "' of component " + uiComponent.getClientId(facesContext) + " is not serializable - cannot save state!");
-                return;
-            }
+                if (attrValue instanceof Serializable)
+                {
+                    strValue = ConverterUtils.serialize(attrValue);
+                }
+                else
+                {
+                    LogUtil.getLogger().warning("Attribute '" + attrName + "' of component " + uiComponent.getClientId(facesContext) + " is not serializable - cannot save state!");
+                    return;
+                }
 
+            }
         }
 
         saveParameter(stateMap,
@@ -454,7 +494,7 @@ public class StateSaver
     }
 
 
-    protected boolean isIgnoreAttribute(String attrName)
+    protected boolean isIgnoreAttribute(UIComponent comp, String attrName)
     {
         if (attrName.startsWith("net.sourceforge.myfaces."))
         {
@@ -470,6 +510,13 @@ public class StateSaver
             //Dynamically generated componentId and clientId need not be saved
             return true;
         }
+        /*
+        else if (comp.getParent() == null && attrName.equals("tagHash"))
+        {
+            //Sun sometimes puts an attribute "tagHash" in the root element that is not serializable!
+            return true;
+        }
+        */
         else
         {
             return IGNORE_ATTRIBUTES.contains(attrName);
@@ -478,8 +525,16 @@ public class StateSaver
 
     protected boolean isIgnoreValue(UIComponent comp)
     {
+        if (comp.getComponentType().equals(UIOutput.TYPE) ||
+            comp instanceof UIOutput)
+        {
+            //Output values must not be saved
+            return true;
+        }
+
         //Secret with redisplay == false?
-        if (comp.getComponentType().equals(SecretRenderer.TYPE))
+        String rendererType = comp.getRendererType();
+        if (rendererType != null && rendererType.equals(SecretRenderer.TYPE))
         {
             Boolean redisplay = (Boolean)comp.getAttribute(SecretRenderer.REDISPLAY_ATTR);
             if (redisplay == null   //because false is default
