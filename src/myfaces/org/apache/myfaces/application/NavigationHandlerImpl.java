@@ -37,6 +37,9 @@ import javax.faces.application.ViewHandler;
 import javax.faces.context.FacesContext;
 import javax.servlet.ServletContext;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 /**
  * DOCUMENT ME!
  * @author Thomas Spiegl (latest modification by $Author$)
@@ -46,10 +49,17 @@ import javax.servlet.ServletContext;
 public class NavigationHandlerImpl
     extends NavigationHandler
 {
+    private static final Log log = LogFactory.getLog(NavigationHandlerImpl.class);
+
     private static final String ASTERISK = "*";
     
     private static Map _cazes;
     private static List _wildcardKeys = new ArrayList();
+
+    public NavigationHandlerImpl()
+    {
+        if (log.isTraceEnabled()) log.trace("New NavigationHandler instance created");        
+    }
 
     public void handleNavigation(FacesContext facesContext, String fromAction, String outcome)
     {

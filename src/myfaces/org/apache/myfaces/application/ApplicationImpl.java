@@ -47,16 +47,22 @@ import javax.faces.validator.Validator;
 
 import javax.servlet.ServletContext;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 
 /**
  * DOCUMENT ME!
  * @author Manfred Geiler (latest modification by $Author$)
  * @author Anton Koinov
+ * @author Thomas Spiegl
  * @version $Revision$ $Date$
  */
 public class ApplicationImpl
     extends Application
 {
+    private static final Log log = LogFactory.getLog(ApplicationImpl.class);
+
     //~ Instance fields ----------------------------------------------------------------------------
 
     private final FacesConfig    _facesConfig;
@@ -83,6 +89,7 @@ public class ApplicationImpl
 
         FacesConfigFactory fcf = MyFacesFactoryFinder.getFacesConfigFactory(_servletContext);
         _facesConfig = fcf.getFacesConfig(_servletContext);
+        if (log.isTraceEnabled()) log.trace("New Application instance created");
     }
 
     //~ Methods ------------------------------------------------------------------------------------
@@ -255,8 +262,7 @@ public class ApplicationImpl
         {
             throw new NullPointerException("converterClass");
         }
-
-        // FIXME Auto-generated method stub
+        getFacesConfig().addConverter(targetClass, converterClass);
     }
 
     public void addValidator(String validatorId, String validatorClass)
@@ -325,9 +331,7 @@ public class ApplicationImpl
         {
             throw new NullPointerException("targetClass");
         }
-
-        // FIXME Auto-generated method stub
-        return null;
+        return getFacesConfig().getConverter(targetClass);
     }
 
     public synchronized MethodBinding createMethodBinding(String reference, Class[] params)

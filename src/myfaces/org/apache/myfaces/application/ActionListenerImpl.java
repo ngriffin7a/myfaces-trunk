@@ -28,8 +28,6 @@ import javax.faces.event.ActionEvent;
 import javax.faces.event.ActionListener;
 import javax.faces.event.PhaseId;
 
-import net.sourceforge.myfaces.util.FacesUtils;
-
 
 /**
  * @author Manfred Geiler (latest modification by $Author$)

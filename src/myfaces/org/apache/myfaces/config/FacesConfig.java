@@ -41,6 +41,7 @@ import javax.faces.validator.Validator;
  * DOCUMENT ME!
  * @author Manfred Geiler (latest modification by $Author$)
  * @author Anton Koinov
+ * @author Thomas Spiegl
  * @version $Revision$ $Date$
  */
 public class FacesConfig
@@ -52,6 +53,7 @@ public class FacesConfig
     private FactoryConfig _factoryConfig;
     private LifecycleConfig _lifecycleConfig;
     private final Map _converterMap = new HashMap();
+    private final Map _converterTypeMap = new HashMap();
     private final Map _componentClassMap = new HashMap();
     private final Map _validatorClassMap = new HashMap();
     private final Map _managedBeanConfigMap = new HashMap();
@@ -99,6 +101,12 @@ public class FacesConfig
                               converterConfig.newConverter());
     }
 
+    public void addConverter(Class targetClass, String converterClass)
+    {
+        Converter converter = (Converter)ConfigUtil.newInstance(converterClass);
+        _converterTypeMap.put(targetClass, converter);
+    }
+
     public void addConverter(String converterId, String converterClass)
     {
         Converter converter = (Converter)ConfigUtil.newInstance(converterClass);
@@ -110,7 +118,19 @@ public class FacesConfig
         Converter converter = (Converter)getConverterMap().get(converterId);
         if (converter == null)
         {
+            if (log.isErrorEnabled()) log.error("Unknown converter id '" + converterId + "'.");
             throw new FacesException("Unknown converter id '" + converterId + "'.");
+        }
+        return converter;
+    }
+
+    public Converter getConverter(Class targetClass) throws FacesException
+    {
+        Converter converter = (Converter)getConverterTypeMap().get(targetClass);
+        if (converter == null)
+        {
+            if (log.isErrorEnabled()) log.error("Unknown converter targetClass '" + targetClass.getName() + "'.");
+            throw new FacesException("Unknown converter targetClass '" + targetClass.getName() + "'.");
         }
         return converter;
     }
@@ -120,13 +140,20 @@ public class FacesConfig
         return getConverterMap().keySet().iterator();
     }
 
+    public Iterator getConverterTypes()
+    {
+        return getConverterTypeMap().keySet().iterator();
+    }
+
     private Map getConverterMap()
     {
         return _converterMap;
     }
 
-
-
+    private Map getConverterTypeMap()
+    {
+        return _converterTypeMap;
+    }
 
     public void addComponentConfig(ComponentConfig componentConfig)
     {
