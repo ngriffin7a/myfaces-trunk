@@ -107,7 +107,11 @@ public class LoadBundleTag
 
         public Object get(Object key)
         {
-            return _bundle.getObject(key.toString());
+            try {
+                return _bundle.getObject(key.toString());
+            } catch (Exception e) {
+                return "MISSING: " + key + " :MISSING";
+            }
         }
 
         public boolean isEmpty()
