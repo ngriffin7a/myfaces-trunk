@@ -22,3 +22,8 @@
             <required>false</required>
             <rtexprvalue>false</rtexprvalue>
         </attribute>
+        <attribute>
+            <name>target</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
+        </attribute>

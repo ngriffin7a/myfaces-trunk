@@ -28,6 +28,9 @@ import javax.faces.component.UIComponent;
  * @author Martin Marinschek
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.2  2004/04/29 18:51:35  o_rossmueller
+ * moved 'target' attribute to standard htmlCommandLink
+ *
  * Revision 1.1  2004/03/31 11:58:44  manolito
  * custom component refactoring
  *
@@ -55,6 +58,7 @@ public abstract class HtmlCommandLinkTagBase
     private String _shape;
     private String _tabindex;
     private String _type;
+    private String _target;
     //HtmlCommandLink Attributes
     //FIXME: is mentioned in JSF API, but is no official anchor-attribute of HTML 4.0... what to do?
     private String _onblur;
@@ -81,6 +85,7 @@ public abstract class HtmlCommandLinkTagBase
         setStringProperty(component, HTML.TYPE_ATTR, _type);
         setStringProperty(component, HTML.ONBLUR_ATTR, _onblur);
         setStringProperty(component, HTML.ONFOCUS_ATTR, _onfocus);
+        setStringProperty(component, HTML.TARGET_ATTR, _target);
         setActionProperty(component, _action);
         setActionListenerProperty(component, _actionListener);
         setBooleanProperty(component, JSFAttr.IMMEDIATE_ATTR, _immediate);
@@ -154,5 +159,11 @@ public abstract class HtmlCommandLinkTagBase
     public void setActionListener(String actionListener)
     {
         _actionListener = actionListener;
+    }
+
+
+    public void setTarget(String target)
+    {
+        this._target = target;
     }
 }

@@ -100,12 +100,6 @@
         </description>
         &standard_command_link_attributes;
         &user_role_attributes;
-        <attribute>
-            <name>target</name>
-            <required>false</required>
-            <rtexprvalue>false</rtexprvalue>
-            <description>MyFaces extension: Sometimes it's convenient to open a new window as a result of an action.</description>
-        </attribute>
     </tag>
 
     <!-- dataTable -->

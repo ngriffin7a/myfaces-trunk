@@ -29,6 +29,9 @@ import javax.faces.component.UIComponent;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.4  2004/04/29 18:51:20  o_rossmueller
+ * moved 'target' attribute to standard htmlCommandLink
+ *
  * Revision 1.3  2004/04/05 11:04:55  manolito
  * setter for renderer type removed, no more default renderer type needed
  *
@@ -54,7 +57,6 @@ public class HtmlCommandLinkTag
         return "net.sourceforge.myfaces.Link";
     }
 
-    private String _target;
 
     // User Role support
     private String _enabledOnUserRole;
@@ -64,16 +66,11 @@ public class HtmlCommandLinkTag
     protected void setProperties(UIComponent component)
     {
         super.setProperties(component);
-        setStringProperty(component, HTML.TARGET_ATTR, _target);
         setStringProperty(component, JSFAttr.ENABLED_ON_USER_ROLE_ATTR, _enabledOnUserRole);
         setStringProperty(component, JSFAttr.VISIBLE_ON_USER_ROLE_ATTR, _visibleOnUserRole);
 
     }
 
-    public void setTarget(String target)
-    {
-        _target = target;
-    }
 
     public void setEnabledOnUserRole(String enabledOnUserRole)
     {
