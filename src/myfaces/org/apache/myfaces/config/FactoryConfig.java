@@ -18,13 +18,6 @@
  */
 package net.sourceforge.myfaces.config;
 
-import javax.faces.application.ApplicationFactory;
-import javax.faces.context.FacesContextFactory;
-import javax.faces.lifecycle.LifecycleFactory;
-import javax.faces.render.RenderKitFactory;
-import javax.faces.FactoryFinder;
-
-
 /**
  * @author Anton Koinov (latest modification by $Author$)
  * @version $Revision$ $Date$

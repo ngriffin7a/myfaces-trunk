@@ -1,4 +1,4 @@
-/**
+/*
  * MyFaces - the free JSF implementation
  * Copyright (C) 2003  The MyFaces Team (http://myfaces.sourceforge.net)
  *
@@ -30,7 +30,6 @@ import net.sourceforge.myfaces.config.FacesConfig;
 import net.sourceforge.myfaces.config.FacesConfigFactory;
 import net.sourceforge.myfaces.config.NavigationCaseConfig;
 import net.sourceforge.myfaces.config.NavigationRuleConfig;
-import net.sourceforge.myfaces.util.FacesUtils;
 
 import javax.faces.application.NavigationHandler;
 import javax.faces.application.ViewHandler;
