@@ -507,6 +507,9 @@
 				<include name="**/*.class"/>
         	</fileset>
         </delete>
+        
+        <!-- clean up application build stuff as well -->
+        <ant antfile="build-webapps.xml" inheritall="false" target="clean"/>        
     </target>
 
     <target name="clean-all"
@@ -719,13 +722,33 @@
             </xmlcatalog>
         </xslt>
     </target>
+    
+    <target name="app-release" depends="myfaces-jar">
+
+        <!-- build simple webapps -->        
+        <copy file="${conf.dir}/web.xml" todir="${apps.dir}/simple/WEB-INF"/>
+        <ant antfile="build-webapps.xml" inheritall="false" target="war">
+            <property name="webapp.name" value="myfaces-simple-examples"/>
+            <property name="myfaces.jar" location="${myfaces.jar}"/>
+            <property name="web.dir" location="${apps.dir}/simple"/>
+        </ant>
+        
+        <!-- build example webapps -->        
+        <copy file="${conf.dir}/web.xml" todir="${apps.dir}/examples/WEB-INF"/>
+        <ant antfile="build-webapps.xml" inheritall="false" target="war">
+            <property name="webapp.name" value="myfaces-examples"/>
+            <property name="myfaces.jar" location="${myfaces.jar}"/>
+            <property name="web.dir" location="${apps.dir}/examples"/>
+        </ant>
+        
+    </target>
 
     <target name="nightly" depends="src-release, bin-release"> <!-- todo: add webapps release -->
 
         <!-- copy resulting builds to nightly directory -->
         <copy  file="${src.release.bundle}" todir="${nightly.dir}"/>
         <copy file="${bin.release.bundle}" todir="${nightly.dir}" flatten="true"/>
-
+                
     </target>
 
     <target name="release" depends="src-release, bin-release"> <!-- todo: add webapps release -->

@@ -88,7 +88,7 @@
                     <br/>
                 </f:verbatim>
 
-              <x:tree2 value="#{treeBacker.treeData}" var="node" varNodeToggler="t">
+              <x:tree2 value="#{treeBacker.treeData}" id="client-tree" var="node" varNodeToggler="t">
                 <f:facet name="person">
                   <h:panelGroup>
                     <f:facet name="expand">
@@ -141,7 +141,7 @@
                 </f:verbatim>
 
               <!-- Expand/Collapse Handled By Server -->
-              <x:tree2 value="#{treeBacker.treeData}" var="node" varNodeToggler="t" clientSideToggle="false">
+              <x:tree2 value="#{treeBacker.treeData}" id="server-tree" var="node" varNodeToggler="t" clientSideToggle="false">
                 <f:facet name="person">
                   <h:panelGroup>
                     <h:commandLink immediate="true" action="#{t.toggleExpanded}">

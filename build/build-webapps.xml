@@ -1,0 +1,102 @@
+<?xml version="1.0"?>
+
+<project name="Apache MyFaces Build Script: Simple Examples" default="war" basedir=".">
+
+    <!-- define build properties -->
+    <property name="project.dir" location="${basedir}/.."/>
+    <property name="src.dir" value="${project.dir}/webapps/src"/>
+    <property name="lib.dir" value="${project.dir}/lib"/>
+    <property name="optional.lib.dir" value="${lib.dir}/optional"/>
+    <property name="build.dir" value="temp/${webapp.name}"/>
+    <property name="build.classes" value="${build.dir}/classes"/>
+    <property name="build.web.lib" value="${build.dir}/web/lib"/>
+    <property name="jar.file" value="${webapp.name}.jar"/>
+    <property name="build.web.lib" value="${build.dir}/web/lib"/>
+    <property name="webapp.dist.dir" value="${build.dir}/dist"/>
+    <property name="war.file" value="${webapp.dist.dir}/${webapp.name}.war"/>
+
+    <!-- clean -->
+    <target name="clean" description="Remove all generated files">
+        <delete dir="${build.dir}"/>
+        <delete dir="${build.classes}"/>
+        <delete dir="${webapp.dist.dir}"/>
+    </target>
+
+    <target name="prepare">
+
+        <!-- create required directories -->
+        <mkdir dir="${build.dir}"/>
+        <mkdir dir="${webapp.dist.dir}"/>
+        <mkdir dir="${build.classes}"/>
+        <mkdir dir="${build.web.lib}"/>
+
+        <!-- classpath for <javac>-->
+        <path id="project.classpath">
+            <pathelement location="${build.classes}"/>
+            <fileset dir="${lib.dir}">
+                <include name="*.jar"/>
+            </fileset>
+            <fileset dir="${optional.lib.dir}">
+                <include name="*.jar"/>
+            </fileset>            
+        </path>
+
+    </target>
+
+    <!-- compile source code -->
+    <target name="compile" depends="prepare" description="Compiles all example source code">
+        <!-- compile regular classes -->
+        <javac srcdir="${src.dir}" destdir="${build.classes}" deprecation="on" debug="on">
+            <classpath refid="project.classpath"/>
+        </javac>
+    </target>
+
+    <!-- put newly compiled classes into a jar file -->
+    <target name="jar" depends="compile">
+        <jar jarfile="${build.web.lib}/${jar.file}">
+            <!-- include all compiled classes -->
+            <fileset dir="${build.classes}" includes="**/*.class"/>
+            <!-- include all property files -->
+            <fileset id="properties" dir="${src.dir}" includes="**/*.properties"/>
+        </jar>
+    </target>
+
+    <!-- build war file -->
+    <target name="war" depends="jar">
+
+        <!-- copy supporting jars needed for WAR file in a temp distribution lib directory -->
+        <copy todir="${build.web.lib}">
+
+            <!-- include most files in the project's lib directory in the WAR -->
+            <fileset dir="${lib.dir}">
+                <include name="commons*.jar"/>
+                <include name="portlet*.jar"/>
+            </fileset>
+            <fileset dir="${optional.lib.dir}">
+                <include name="log4j*.jar"/>
+                <include name="struts.jar"/>     
+                <include name="commons*.jar"/>
+            </fileset>
+
+        </copy>
+        
+        <copy todir="${build.web.lib}" file="${myfaces.jar}"/>
+
+        <war warfile="${war.file}" webxml="${web.dir}/WEB-INF/web.xml">
+            <fileset dir="${web.dir}">
+                <exclude name="WEB-INF/classes/**"/>
+                <exclude name="WEB-INF/lib/**"/>
+                <exclude name="WEB-INF/web.xml"/>
+            </fileset>
+            <lib dir="${build.web.lib}"/>
+
+            <!-- include all property files -->
+            <!--
+            <classes dir="${src.dir}" includes="**/*.properties"/>
+            -->
+        </war>
+
+    </target>
+
+</project>
+
