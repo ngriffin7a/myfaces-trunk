@@ -45,7 +45,7 @@ import java.util.Iterator;
  * @version $Revision$ $Date$
  */
 public class RadioRenderer
-    extends HtmlRenderer
+    extends HTMLRenderer
     implements CallbackRenderer
 {
     private static final Log log = LogFactory.getLog(RadioRenderer.class);

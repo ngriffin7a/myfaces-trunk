@@ -40,7 +40,7 @@ import java.util.Set;
  * @version $Revision$ $Date$
  */
 public class CheckboxRenderer
-extends HtmlRenderer
+extends HTMLRenderer
 {
     //~ Static fields/initializers -----------------------------------------------------------------
 

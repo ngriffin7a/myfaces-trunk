@@ -28,7 +28,7 @@ import java.io.IOException;
  * @version $Revision$ $Date$
  */
 public class GroupRenderer
-    extends HtmlRenderer
+    extends HTMLRenderer
 {
     public static final String TYPE = "Group";
     public String getRendererType()

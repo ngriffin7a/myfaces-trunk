@@ -35,7 +35,7 @@ import java.io.StringWriter;
  * @version $Revision$ $Date$
  */
 public class HtmlTextRenderer
-        extends HtmlRenderer
+        extends HTMLRenderer
 {
     //private static final Log log = LogFactory.getLog(HtmlTextRenderer.class);
 

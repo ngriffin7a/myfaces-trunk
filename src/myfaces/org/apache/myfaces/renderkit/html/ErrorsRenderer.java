@@ -44,7 +44,7 @@ import java.util.Map;
  * @version $Revision$ $Date$
  */
 public class ErrorsRenderer
-extends HtmlRenderer
+extends HTMLRenderer
 {
     //~ Static fields/initializers -----------------------------------------------------------------
     private static final Log log = LogFactory.getLog(ErrorsRenderer.class);

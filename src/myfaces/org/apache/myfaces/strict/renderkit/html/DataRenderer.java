@@ -18,7 +18,7 @@
  */
 package net.sourceforge.myfaces.strict.renderkit.html;
 
-import net.sourceforge.myfaces.renderkit.html.HtmlRenderer;
+import net.sourceforge.myfaces.renderkit.html.HTMLRenderer;
 
 import javax.faces.FacesException;
 import javax.faces.component.UIComponent;
@@ -33,7 +33,7 @@ import java.io.IOException;
  * @version $Revision$ $Date$
  */
 public class DataRenderer
-extends HtmlRenderer
+extends HTMLRenderer
 {
     //~ Static fields/initializers -----------------------------------------------------------------
 

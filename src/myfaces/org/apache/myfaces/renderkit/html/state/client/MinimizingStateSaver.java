@@ -457,7 +457,7 @@ public class MinimizingStateSaver
 //
 //        //convert attribute value to String
 //        String strValue;
-//        Converter conv = HtmlRenderer.findConverterForAttribute(facesContext,
+//        Converter conv = HTMLRenderer.findConverterForAttribute(facesContext,
 //                                                                uiComponent,
 //                                                                attrName);
 //        if (conv != null)
@@ -584,7 +584,7 @@ public class MinimizingStateSaver
 //            writer.write('&');  //we assume that there were previous parameters
 //            writer.write((String)entry.getKey());
 //            writer.write('=');
-//            writer.write(HtmlRenderer.urlEncode((String)entry.getValue()));
+//            writer.write(HTMLRenderer.urlEncode((String)entry.getValue()));
 //        }
 //    }
 //

@@ -34,7 +34,7 @@ import java.io.IOException;
  * @version $Revision$ $Date$
  */
 public class HiddenRenderer
-extends HtmlRenderer
+extends HTMLRenderer
 {
     //~ Static fields/initializers -----------------------------------------------------------------
 

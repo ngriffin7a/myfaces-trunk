@@ -19,7 +19,7 @@
 package net.sourceforge.myfaces.strict.renderkit.html;
 
 import net.sourceforge.myfaces.renderkit.JSFAttr;
-import net.sourceforge.myfaces.renderkit.html.HtmlRenderer;
+import net.sourceforge.myfaces.renderkit.html.HTMLRenderer;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLUtil;
 
 import javax.faces.component.UIComponent;
@@ -36,7 +36,7 @@ import java.util.Iterator;
  * @version $Revision$ $Date$
  */
 public abstract class TableRendererSupport
-extends HtmlRenderer
+extends HTMLRenderer
 {
     //~ Static fields/initializers -----------------------------------------------------------------
 

@@ -53,7 +53,7 @@ import java.util.Iterator;
  * @version $Revision$ $Date$
  */
 public class HyperlinkRenderer
-    extends HtmlRenderer
+    extends HTMLRenderer
 {
     private static final Log log = LogFactory.getLog(HyperlinkRenderer.class);
 

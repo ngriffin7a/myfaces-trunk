@@ -18,7 +18,7 @@
  */
 package net.sourceforge.myfaces.config;
 
-import net.sourceforge.myfaces.renderkit.html.HtmlRenderKitImpl;
+import net.sourceforge.myfaces.renderkit.html.HTMLRenderKitImpl;
 import org.apache.commons.logging.LogFactory;
 
 import javax.faces.FacesException;
@@ -39,7 +39,7 @@ public class RenderKitConfig implements Config
 {
     //~ Static fields/initializers -----------------------------------------------------------------
 
-    private static final Class DEFAULT_RENDER_KIT_CLASS = HtmlRenderKitImpl.class;
+    private static final Class DEFAULT_RENDER_KIT_CLASS = HTMLRenderKitImpl.class;
 
     //~ Instance fields ----------------------------------------------------------------------------
 
