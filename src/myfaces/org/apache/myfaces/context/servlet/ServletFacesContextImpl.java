@@ -250,8 +250,11 @@ public class ServletFacesContextImpl
 
     public void release()
     {
-        _externalContext.release();
-        _externalContext = null;
+        if (_externalContext != null)
+        {
+            _externalContext.release();
+            _externalContext = null;
+        }
 
         _messageClientIds     = null;
         _messages             = null;
