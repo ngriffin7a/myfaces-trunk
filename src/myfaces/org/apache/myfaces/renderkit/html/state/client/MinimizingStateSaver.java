@@ -466,6 +466,12 @@ public class MinimizingStateSaver
                           RequestParameterNames.getModelValueStateParameterName(modelRef),
                           paramValue);
         }
+        else
+        {
+            saveParameter(stateMap,
+                          RequestParameterNames.getModelValueStateParameterName(modelRef),
+                          NULL_DUMMY_VALUE);
+        }
     }
 
 
@@ -674,7 +680,6 @@ public class MinimizingStateSaver
                 String paramName = RequestParameterNames.getComponentListenerParameterName(facesContext,
                                                                                            uiComponent,
                                                                                            listenerType);
-                //String paramValue = ((UIComponent)facesListener).getClientId(facesContext);
                 String paramValue = UIComponentUtils.getUniqueComponentId(facesContext, (UIComponent)facesListener);
                 saveParameter(stateMap, paramName, paramValue);
             }

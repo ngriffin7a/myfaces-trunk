@@ -432,6 +432,12 @@ public class MinimizingStateRestorer
         String paramValue = getStateParameter(stateMap, paramName);
         if (paramValue != null)
         {
+            if (paramValue.equals(MinimizingStateSaver.NULL_DUMMY_VALUE))
+            {
+                facesContext.setModelValue(modelRef, null);
+                return;
+            }
+
             Object propValue;
             Converter conv = ConverterUtils.findValueConverter(facesContext, uiSaveState);
             if (conv != null)

@@ -18,13 +18,11 @@
  */
 package net.sourceforge.myfaces.taglib.ext;
 
-import net.sourceforge.myfaces.component.UICommand;
-import net.sourceforge.myfaces.component.ext.UISortHeader;
+import net.sourceforge.myfaces.component.ext.UISortColumn;
 import net.sourceforge.myfaces.renderkit.html.ext.SortColumnRenderer;
 import net.sourceforge.myfaces.taglib.MyFacesBodyTag;
 
 import javax.faces.component.UIComponent;
-import javax.servlet.jsp.JspException;
 
 
 /**
@@ -37,7 +35,8 @@ public class SortColumnTag
 {
     public UIComponent createComponent()
     {
-        return new UICommand();
+        //return new UICommand();
+        return new UISortColumn();
     }
 
     public String getRendererType()
@@ -61,6 +60,7 @@ public class SortColumnTag
     }
 
 
+    /*
     public int getDoStartValue() throws JspException
     {
         if (getCreated())
@@ -76,6 +76,7 @@ public class SortColumnTag
         }
         return super.getDoStartValue();
     }
+    */
 
 }
 
