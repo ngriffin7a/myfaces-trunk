@@ -157,9 +157,10 @@ public abstract class FacesConfigFactoryBase
                 String name = entry.getName();
                 if (name.equals("META-INF/faces-config.xml"))
                 {
-                    LogUtil.getLogger().info("Reading config " + url + "/" + name);
+                    String systemId = url + name;
+                    LogUtil.getLogger().info("Reading config " + systemId);
                     InputStream stream = jarFile.getInputStream(entry);
-                    parseStreamConfig(facesConfig, stream, name,
+                    parseStreamConfig(facesConfig, stream, systemId,
                                       new FacesConfigEntityResolver(jarFile));
                 }
             }

@@ -85,6 +85,6 @@ information for each JSP.
 So, we do depend on a JSP parser. We do not (really) depend on the
 jasper parser: the "jspinfo" package capsulates the parser fully. All
 jasper classes where refactored to reside in the subpackage "jasper", so
-there can also be no naming conflicts with the real Tomcat environment.
+there should also be no naming conflicts with the real Tomcat environment.
 ----------------------------------------------------------------------
 

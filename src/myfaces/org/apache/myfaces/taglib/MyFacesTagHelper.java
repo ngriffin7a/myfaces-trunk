@@ -48,8 +48,8 @@ public class MyFacesTagHelper
 {
     private MyFacesTagBaseIF _tag;
     private Set _attributes = null;
-    protected PageContext _pageContext;
     protected FacesContext _facesContext;
+    protected PageContext _pageContext;
 
     private boolean _parentComponentOk = false;
     private UIComponent _parentComponent;

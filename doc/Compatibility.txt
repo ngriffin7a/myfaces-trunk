@@ -6,6 +6,7 @@ Java
 
 Servlet Container
 - Tomcat 4.0.x
+- Tomcat 4.1.x
 - JRun 4 SP1a
 
 JSF API

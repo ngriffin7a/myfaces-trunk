@@ -66,6 +66,21 @@ public abstract class MyFacesTag
                 : Tag.SKIP_BODY;
     }
 
+
+    public int doEndTag() throws JspException
+    {
+        try
+        {
+            return super.doEndTag();
+        }
+        finally
+        {
+            _helper.release();
+            setId(null);
+            setRendered(true);
+        }
+    }
+
     public int getDoEndValue() throws JspException
     {
         return Tag.EVAL_PAGE;

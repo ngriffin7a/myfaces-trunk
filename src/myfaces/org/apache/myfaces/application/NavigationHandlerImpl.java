@@ -81,6 +81,7 @@ public class NavigationHandlerImpl
                         if (casesList != null)
                         {
                             newTreeId = getTreeId(casesList, actionRef, outcome);
+                            if (newTreeId != null) break;
                         }
                     }
                 }
@@ -90,6 +91,7 @@ public class NavigationHandlerImpl
                     if (casesList != null)
                     {
                         newTreeId = getTreeId(casesList, actionRef, outcome);
+                        if (newTreeId != null) break;
                     }
                 }
             }
@@ -109,9 +111,8 @@ public class NavigationHandlerImpl
             NavigationCaseConfig caze = (NavigationCaseConfig)casesList.get(i);
             String cazeOutcome = caze.getFromOutcome();
             String cazeActionRef = caze.getFromActionRef();
-
-            if (!((cazeOutcome != null && !cazeOutcome.equals(outcome)) ||
-                (cazeActionRef != null && !cazeActionRef.equals(actionRef))))
+            if ((cazeOutcome == null || cazeOutcome.equals(outcome)) &&
+                (cazeActionRef == null || cazeActionRef.equals(actionRef)))
             {
                 return caze.getToTreeId();
             }

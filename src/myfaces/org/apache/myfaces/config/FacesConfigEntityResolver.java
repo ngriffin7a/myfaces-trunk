@@ -27,6 +27,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
+import java.net.URL;
+import java.net.JarURLConnection;
+
+import net.sourceforge.myfaces.util.logging.LogUtil;
 
 /**
  * DOCUMENT ME!
@@ -59,18 +63,24 @@ public class FacesConfigEntityResolver
             ClassLoader loader = Thread.currentThread().getContextClassLoader();
             stream = loader.getResourceAsStream("net/sourceforge/myfaces/resource/web-facesconfig_1_0.dtd");
         }
-        else if (_servletContext != null)
+        else if (systemId.startsWith("jar:"))
         {
-            stream = _servletContext.getResourceAsStream(systemId);
-        }
-        else if (_jarFile != null)
-        {
-            JarEntry jarEntry = _jarFile.getJarEntry(systemId);
+            URL url = new URL(systemId);
+            JarURLConnection conn = (JarURLConnection) url.openConnection();
+            JarEntry jarEntry = conn.getJarEntry();
+            if (jarEntry == null)
+            {
+                LogUtil.getLogger().severe("JAR entry '" + systemId + "' not found.");
+            }
             stream = _jarFile.getInputStream(jarEntry);
         }
         else
         {
-            return null;
+            if (_servletContext == null)
+            {
+                LogUtil.getLogger().severe("No servletContext !?");
+            }
+            stream = _servletContext.getResourceAsStream(systemId);
         }
 
         InputSource is = new InputSource(stream);

@@ -581,7 +581,8 @@ public class MinimizingStateSaver
     {
         if (map.get(paramName) != null)
         {
-            throw new IllegalStateException("Duplicate state parameter " + paramName);
+            //throw new IllegalStateException("Duplicate state parameter " + paramName);
+            LogUtil.getLogger().warning("Duplicate state parameter " + paramName);
         }
         map.put(paramName, paramValue);
     }

@@ -175,7 +175,7 @@
 
 
     <navigation-rule>
-        <from-tree-id>/sample1.jsp</from-tree-id>
+        <from-tree-id>/sample1.jsf</from-tree-id>
 
         <navigation-case>
             <from-outcome>jump_home</from-outcome>

@@ -47,6 +47,14 @@ public class FacesConfigFactoryImpl
                                  String systemId,
                                  EntityResolver entityResolver) throws IOException, FacesException
     {
+        if (in == null)
+        {
+            throw new NullPointerException("InputStream must not be null.");
+        }
+        if (systemId == null)
+        {
+            throw new NullPointerException("systemId must not be null.");
+        }
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
         dbf.setIgnoringComments(true);
         dbf.setValidating(true);
@@ -81,9 +89,10 @@ public class FacesConfigFactoryImpl
         }
 
         Element facesConfigElem = document.getDocumentElement();
-        if (!facesConfigElem.getNodeName().equals("faces-config"))
+        if (facesConfigElem == null ||
+            !facesConfigElem.getNodeName().equals("faces-config"))
         {
-            throw new FacesException("Root is not a faces-config element ?!");
+            throw new FacesException("No valid faces-config root element found!");
         }
 
         parseChildren(facesConfig, facesConfigElem.getChildNodes());

@@ -1,17 +1,12 @@
 MyFaces Known Issues
 ====================
 
-* Sun's current implementation of the FacesTag has a bug, that makes problems
-  when you use IterationTag support:
-  For each tag they count the number of children tags in a member "numChildren".
-  Well, they do not reset this member to 0 in doAfterBody(). So, on the
-  next iteration this counter continues counting and components that do
-  not have an id are created again during findComponent().
-  Solution:
-  - Either give every tag within an IterationTag an id,
-  - or subclass all your common tags from MyFacesTag, that fixes this behaviour.
+* There is a known issue for Sun's current implementation of the FacesTag,
+  that makes problems when you use IterationTag support or you have conditional
+  Tags. Please subclass all your own tag classes from MyFacesTag, that fixes
+  this behaviour.
 
-* Dynamic addition of components as stated in JSF 1.0 PRD 2.4.2.4 is not (yet)
+* Dynamic addition of components as stated in JSF 1.0 PRD2 2.4.2.4 is not (yet)
   supported when using the "saveStateInClient" feature.
 
 * Method "getClientId" in UIComponentBase of current JSF API has a bug (side-effect):
@@ -34,5 +29,11 @@ MyFaces Known Issues
   will still find the component although it is no longer in tree.
   Please use the corresponding methods in UIComponentUtils to overcome this
   issue.
+
+* id attributes in Tomcat 5:
+  Tomcat 5 tries to translate id attributes of tags to java variables without
+  revision of the name. So, you must not use hyphens (or other special
+  characters) in id attributes.
+
 
 TODO... (Many others!)

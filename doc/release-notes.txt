@@ -6,6 +6,8 @@ Changes in Release 0.4.1
 * VariableResolverImpl resolves implicit objects
 * <navigation_item> does no longer have a treeId. Use action attribute and
   appropriate NavigationRules instead.
+* fixed Tomcat 4.1.x Tag related issues
+* fixed FacesConfigEntityResolver to be more "compatible"
 
 ----------------------------------------------------------------------
 Changes in Release 0.4.0
