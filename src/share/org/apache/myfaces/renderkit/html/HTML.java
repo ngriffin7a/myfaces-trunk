@@ -24,6 +24,9 @@ import org.apache.myfaces.util.ArrayUtils;
  * @author Anton Koinov
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.22  2005/02/28 20:40:15  svieujot
+ * closed MYFACES-112
+ *
  * Revision 1.21  2005/02/16 00:50:37  oros
  * SF issue #1043331: replaced all &nbsp; by the corresponding numeric entity &#160; so safari users will be happy, too, with MyFaces output
  *
@@ -401,8 +404,7 @@ public final class HTML
     // <input type=file>
     public static final String[] INPUT_FILE_UPLOAD_ATTRIBUTES =
     {
-        ACCEPT_ATTR,
-        MAXLENGTH_ATTR
+        ACCEPT_ATTR
     };
     public static final String[] INPUT_FILE_PASSTHROUGH_ATTRIBUTES_WITHOUT_DISABLED =
         (String[]) ArrayUtils.concat(
