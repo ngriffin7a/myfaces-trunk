@@ -39,6 +39,9 @@ import java.util.Map;
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  *          $Log$
+ *          Revision 1.2  2004/06/23 13:50:18  royalts
+ *          no message
+ *
  *          Revision 1.1  2004/06/23 13:44:31  royalts
  *          no message
  *
@@ -56,18 +59,21 @@ public class HtmlJSCookMenuRenderer
 
         Map parameter = context.getExternalContext().getRequestParameterMap();
         String actionParam = (String)parameter.get(JSCOOK_ACTION_PARAM);
-        MethodBinding mb;
-        if (UIComponentTag.isValueReference(actionParam))
+        if (actionParam != null)
         {
-            mb = context.getApplication().createMethodBinding(actionParam, null);
-        }
-        else
-        {
-            mb = new SimpleActionMethodBinding(actionParam);
-        }
-        ((HtmlCommandJSCookMenu)component).setAction(mb);
+            MethodBinding mb;
+            if (UIComponentTag.isValueReference(actionParam))
+            {
+                mb = context.getApplication().createMethodBinding(actionParam, null);
+            }
+            else
+            {
+                mb = new SimpleActionMethodBinding(actionParam);
+            }
+            ((HtmlCommandJSCookMenu)component).setAction(mb);
 
-        component.queueEvent(new ActionEvent(component));
+            component.queueEvent(new ActionEvent(component));
+        }
     }
 
     public boolean getRendersChildren()
