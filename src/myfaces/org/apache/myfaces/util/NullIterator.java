@@ -53,6 +53,6 @@ public final class NullIterator implements Iterator
 
     public void remove()
     {
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException(this.getClass().getName() + " UnsupportedOperationException");
     }
 }

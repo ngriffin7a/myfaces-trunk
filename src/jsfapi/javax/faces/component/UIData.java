@@ -586,7 +586,7 @@ public class UIData
         public void setWrappedData(Object obj)
         {
             if (obj == null) return; //Clearing is allowed
-            throw new UnsupportedOperationException();
+            throw new UnsupportedOperationException(this.getClass().getName() + " UnsupportedOperationException");
         }
     };
 

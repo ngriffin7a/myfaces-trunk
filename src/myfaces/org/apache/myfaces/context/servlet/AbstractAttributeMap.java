@@ -62,7 +62,7 @@ public abstract class AbstractAttributeMap
 
     public boolean containsValue(Object value)
     {
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException(this.getClass().getName() + " UnsupportedOperationException");
     }
 
     public Object get(Object key)
@@ -95,22 +95,22 @@ public abstract class AbstractAttributeMap
 
     public void clear()
     {
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException(this.getClass().getName() + " UnsupportedOperationException");
     }
 
     public Set keySet()
     {
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException(this.getClass().getName() + " UnsupportedOperationException");
     }
 
     public Collection values()
     {
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException(this.getClass().getName() + " UnsupportedOperationException");
     }
 
     public Set entrySet()
     {
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException(this.getClass().getName() + " UnsupportedOperationException");
     }
 
 }

@@ -60,27 +60,27 @@ public abstract class BiLevelCacheMap implements Map
 
     public boolean isEmpty()
     {
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException(this.getClass().getName() + " UnsupportedOperationException");
     }
 
     public void clear()
     {
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException(this.getClass().getName() + " UnsupportedOperationException");
     }
 
     public boolean containsKey(Object key)
     {
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException(this.getClass().getName() + " UnsupportedOperationException");
     }
 
     public boolean containsValue(Object value)
     {
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException(this.getClass().getName() + " UnsupportedOperationException");
     }
 
     public Set entrySet()
     {
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException(this.getClass().getName() + " UnsupportedOperationException");
     }
 
     public Object get(Object key)
@@ -130,32 +130,32 @@ public abstract class BiLevelCacheMap implements Map
 
     public Set keySet()
     {
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException(this.getClass().getName() + " UnsupportedOperationException");
     }
 
     public Object put(Object key, Object value)
     {
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException(this.getClass().getName() + " UnsupportedOperationException");
     }
 
     public void putAll(Map t)
     {
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException(this.getClass().getName() + " UnsupportedOperationException");
     }
 
     public Object remove(Object key)
     {
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException(this.getClass().getName() + " UnsupportedOperationException");
     }
 
     public int size()
     {
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException(this.getClass().getName() + " UnsupportedOperationException");
     }
 
     public Collection values()
     {
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException(this.getClass().getName() + " UnsupportedOperationException");
     }
 
     protected abstract Object newInstance(Object key);

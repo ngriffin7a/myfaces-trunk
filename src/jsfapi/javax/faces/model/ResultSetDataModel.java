@@ -31,56 +31,56 @@ public class ResultSetDataModel extends DataModel
     public ResultSetDataModel()
     {
         //TODO
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException(this.getClass().getName() + " UnsupportedOperationException");
     }
 
     public ResultSetDataModel(java.sql.ResultSet result)
     {
         //TODO
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException(this.getClass().getName() + " UnsupportedOperationException");
     }
 
     // METHODS
     public int getRowCount()
     {
         //TODO
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException(this.getClass().getName() + " UnsupportedOperationException");
     }
 
     public Object getRowData()
     {
         //TODO
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException(this.getClass().getName() + " UnsupportedOperationException");
     }
 
     public int getRowIndex()
     {
         //TODO
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException(this.getClass().getName() + " UnsupportedOperationException");
     }
 
     public Object getWrappedData()
     {
         //TODO
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException(this.getClass().getName() + " UnsupportedOperationException");
     }
 
     public boolean isRowAvailable()
     {
         //TODO
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException(this.getClass().getName() + " UnsupportedOperationException");
     }
 
     public void setRowIndex(int rowIndex)
     {
         //TODO
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException(this.getClass().getName() + " UnsupportedOperationException");
     }
 
     public void setWrappedData(Object data)
     {
         //TODO
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException(this.getClass().getName() + " UnsupportedOperationException");
     }
 
 }

@@ -110,6 +110,6 @@ public class ViewIterator
 
     public void remove()
     {
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException(this.getClass().getName() + " UnsupportedOperationException");
     }
 }

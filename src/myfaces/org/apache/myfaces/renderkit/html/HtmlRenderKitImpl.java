@@ -111,6 +111,6 @@ public class HtmlRenderKitImpl
 
     public ResponseStream createResponseStream(OutputStream outputstream)
     {
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException(this.getClass().getName() + " UnsupportedOperationException");
     }
 }

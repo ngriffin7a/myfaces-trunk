@@ -22,6 +22,7 @@ import net.sourceforge.myfaces.renderkit.html.HTML;
 import net.sourceforge.myfaces.taglib.html.HtmlComponentBodyTag;
 
 import javax.faces.component.UIComponent;
+import javax.servlet.jsp.JspException;
 
 /**
  * DOCUMENT ME!

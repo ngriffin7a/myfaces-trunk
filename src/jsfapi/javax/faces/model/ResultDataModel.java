@@ -42,7 +42,6 @@ public class ResultDataModel extends DataModel
     {
         if (result == null) throw new NullPointerException("result");
         setWrappedData(result);
-        throw new UnsupportedOperationException();
     }
 
     // METHODS

@@ -393,7 +393,7 @@ public class HtmlMessagesRenderer
 
         public void remove()
         {
-            throw new UnsupportedOperationException();
+            throw new UnsupportedOperationException(this.getClass().getName() + " UnsupportedOperationException");
         }
 
         public String getClientId()

@@ -133,7 +133,7 @@ public class MyFacesHtmlDataTable
                 }
                 else if (ResultSet.class.isAssignableFrom(type))
                 {
-                    throw new UnsupportedOperationException();
+                    throw new UnsupportedOperationException(this.getClass().getName() + " UnsupportedOperationException");
                 }
                 else
                 {
@@ -360,13 +360,13 @@ public class MyFacesHtmlDataTable
 
         public Object getWrappedData()
         {
-            //throw new UnsupportedOperationException();
+            //throw new UnsupportedOperationException(this.getClass().getName() + " UnsupportedOperationException");
             return _list;
         }
 
         public void setWrappedData(Object obj)
         {
-            throw new UnsupportedOperationException();
+            //throw new UnsupportedOperationException(this.getClass().getName() + " UnsupportedOperationException");
         }
     }
 

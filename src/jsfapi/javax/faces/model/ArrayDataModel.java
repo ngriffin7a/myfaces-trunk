@@ -39,7 +39,6 @@ public class ArrayDataModel extends DataModel
 	{
         if (array == null) throw new NullPointerException("array");
 		setWrappedData(array);
-		throw new UnsupportedOperationException();
 	}
 
 	// METHODS

@@ -166,7 +166,7 @@ public class LoadBundleTag
 
                     public Object setValue(Object value)
                     {
-                        throw new UnsupportedOperationException();
+                        throw new UnsupportedOperationException(this.getClass().getName() + " UnsupportedOperationException");
                     }
                 });
             }
@@ -188,22 +188,22 @@ public class LoadBundleTag
 
         public Object remove(Object key)
         {
-            throw new UnsupportedOperationException();
+            throw new UnsupportedOperationException(this.getClass().getName() + " UnsupportedOperationException");
         }
 
         public void putAll(Map t)
         {
-            throw new UnsupportedOperationException();
+            throw new UnsupportedOperationException(this.getClass().getName() + " UnsupportedOperationException");
         }
 
         public Object put(Object key, Object value)
         {
-            throw new UnsupportedOperationException();
+            throw new UnsupportedOperationException(this.getClass().getName() + " UnsupportedOperationException");
         }
 
         public void clear()
         {
-            throw new UnsupportedOperationException();
+            throw new UnsupportedOperationException(this.getClass().getName() + " UnsupportedOperationException");
         }
 
     }

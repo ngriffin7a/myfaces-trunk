@@ -188,7 +188,7 @@ public class ServletExternalContextImpl
             }
 
             public void remove() {
-                throw new UnsupportedOperationException();
+                throw new UnsupportedOperationException(this.getClass().getName() + " UnsupportedOperationException");
             }
         };
         return it;

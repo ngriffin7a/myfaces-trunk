@@ -43,12 +43,12 @@ public class RequestHeaderMap
 
     protected void setAttribute(String name, Object newVal)
     {
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException(this.getClass().getName() + " UnsupportedOperationException");
     }
 
     protected void removeAttribute(String name)
     {
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException(this.getClass().getName() + " UnsupportedOperationException");
     }
 
     protected Enumeration getAttributeNames()

@@ -113,7 +113,7 @@ public class ServletFacesContextImpl
 
                 public void remove()
                 {
-                    throw new UnsupportedOperationException();
+                    throw new UnsupportedOperationException(this.getClass().getName() + " UnsupportedOperationException");
                 }
 
                 public boolean hasNext()

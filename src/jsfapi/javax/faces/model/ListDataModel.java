@@ -42,7 +42,6 @@ public class ListDataModel extends DataModel
     {
         if (list == null) throw new NullPointerException("list");
         setWrappedData(list);
-        throw new UnsupportedOperationException();
     }
 
     // METHODS
