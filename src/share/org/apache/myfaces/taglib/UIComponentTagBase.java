@@ -1,12 +1,12 @@
 /*
  * Copyright 2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -24,6 +24,9 @@ import javax.faces.webapp.UIComponentTag;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.13  2005/03/07 09:06:51  matzew
+ * Patch for the new tree form Sean Schofield
+ *
  * Revision 1.12  2005/02/18 17:19:30  matzew
  * added release() to tag clazzes.
  *
@@ -66,7 +69,10 @@ public abstract class UIComponentTagBase
     //UIComponent attributes
     private String _forceId;
     private String _forceIdIndex = "true";
-    
+    private String _javascriptLocation;
+    private String _imageLocation;
+    private String _styleLocation;
+
     //Special UIComponent attributes (ValueHolder, ConvertibleValueHolder)
     private String _value;
     private String _converter;
@@ -82,13 +88,16 @@ public abstract class UIComponentTagBase
         _value=null;
         _converter=null;
     }
-    
+
     protected void setProperties(UIComponent component)
     {
         super.setProperties(component);
 
         setBooleanProperty(component, JSFAttr.FORCE_ID_ATTR, _forceId);
         setBooleanProperty(component, JSFAttr.FORCE_ID_INDEX_ATTR, _forceIdIndex);
+        if (_javascriptLocation != null) setStringProperty(component, JSFAttr.JAVASCRIPT_LOCATION, _javascriptLocation);
+        if (_imageLocation != null) setStringProperty(component, JSFAttr.IMAGE_LOCATION, _imageLocation);
+        if (_styleLocation != null) setStringProperty(component, JSFAttr.STYLE_LOCATION, _styleLocation);
 
         //rendererType already handled by UIComponentTag
 
@@ -97,27 +106,27 @@ public abstract class UIComponentTagBase
     }
 
     /**
-     * Sets the forceId attribute of the tag.  NOTE: Not every tag that extends this class will 
-     * actually make use of this attribute.  Check the TLD to see which components actually 
+     * Sets the forceId attribute of the tag.  NOTE: Not every tag that extends this class will
+     * actually make use of this attribute.  Check the TLD to see which components actually
      * implement it.
-     * 
+     *
      * @param aForceId The value of the forceId attribute.
      */
     public void setForceId(String aForceId)
     {
         _forceId = aForceId;
     }
-    
+
     /**
-     * Sets the forceIdIndex attribute of the tag.  NOTE: Not every tag that extends this class will 
+     * Sets the forceIdIndex attribute of the tag.  NOTE: Not every tag that extends this class will
      * actually make use of this attribute.  Check the TLD to see which components actually implement it.
-     * 
+     *
      * @param aForceIdIndex The value of the forceIdIndex attribute.
      */
     public void setForceIdIndex(String aForceIdIndex)
     {
         _forceIdIndex = aForceIdIndex;
-    }    
+    }
 
     public void setValue(String value)
     {
@@ -130,6 +139,38 @@ public abstract class UIComponentTagBase
     }
 
 
+    /**
+     * Sets the javascript location attribute of the tag.  NOTE: Not every tag that extends this class will
+     * actually make use of this attribute.  Check the TLD to see which components actually implement it.
+     *
+     * @param aJavascriptLocation The alternate javascript location to use.
+     */
+    public void setJavascriptLocation(String aJavascriptLocation)
+    {
+        _javascriptLocation = aJavascriptLocation;
+    }
+
+    /**
+     * Sets the image location attribute of the tag.  NOTE: Not every tag that extends this class will
+     * actually make use of this attribute.  Check the TLD to see which components actually implement it.
+     *
+     * @param aImageLocation The alternate image location to use.
+     */
+    public void setImageLocation(String aImageLocation)
+    {
+        _imageLocation = aImageLocation;
+    }
+
+    /**
+     * Sets the style location attribute of the tag.  NOTE: Not every tag that extends this class will
+     * actually make use of this attribute.  Check the TLD to see which components actually implement it.
+     *
+     * @param aStyleLocation The alternate style location to use.
+     */
+    public void setStyleLocation(String aStyleLocation)
+    {
+        _styleLocation = aStyleLocation;
+    }
 
     // sub class helpers
 
@@ -187,3 +228,4 @@ public abstract class UIComponentTagBase
 
 
 }
+

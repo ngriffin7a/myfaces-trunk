@@ -120,6 +120,11 @@ public class JSFAttr
     public static final String SHOW_LINES                  = "org.apache.myfaces.tree.SHOW_LINES";
     public static final String CLIENT_SIDE_TOGGLE          = "org.apache.myfaces.tree.CLIENT_SIDE_TOGGLE";
 
+    // Alternate locations (instead of using AddResource)
+    public static final String JAVASCRIPT_LOCATION         = "org.apache.myfaces.JAVASCRIPT_LOCATION";
+    public static final String IMAGE_LOCATION              = "org.apache.myfaces.IMAGE_LOCATION";
+    public static final String STYLE_LOCATION              = "org.apache.myfaces.STYLE_LOCATION";
+
     //~ Myfaces Extensions -------------------------------------------------------------------------------
 
     // UISortData attributes
