@@ -32,6 +32,9 @@ import java.util.List;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.6  2005/04/06 19:39:30  manolito
+ * MYFACES-157 patch removed, not necessary because of MYFACES-149 fix
+ *
  * Revision 1.5  2005/04/06 10:21:55  manolito
  * MYFACES-149 fix for NullPointerException in _SharedRendererUtils.getConvertedUISelectManyValue
  *
@@ -118,7 +121,7 @@ class _SharedRendererUtils
                 // expected type is a List
                 // --> according to javadoc of UISelectMany we assume that the element type
                 //     is java.lang.String, and copy the String array to a new List
-                int len = submittedValue != null ? submittedValue.length : 0;
+                int len = submittedValue.length;
                 List lst = new ArrayList(len);
                 for (int i = 0; i < len; i++)
                 {
@@ -151,7 +154,7 @@ class _SharedRendererUtils
         {
             // ...but have no idea of expected type
             // --> so let's convert it to an Object array
-            int len = submittedValue != null ? submittedValue.length : 0;
+            int len = submittedValue.length;
             Object[] convertedValues = new Object[len];
             for (int i = 0; i < len; i++)
             {
@@ -166,7 +169,7 @@ class _SharedRendererUtils
             // Curious case: According to specs we should assume, that the element type
             // of this List is java.lang.String. But there is a Converter set for this
             // component. Because the user must know what he is doing, we will convert the values.
-            int len = submittedValue != null ? submittedValue.length : 0;
+            int len = submittedValue.length;
             List lst = new ArrayList(len);
             for (int i = 0; i < len; i++)
             {
@@ -183,7 +186,7 @@ class _SharedRendererUtils
         if (arrayComponentType.isPrimitive())
         {
             //primitive array
-            int len = submittedValue != null ? submittedValue.length : 0;
+            int len = submittedValue.length;
             Object convertedValues = Array.newInstance(arrayComponentType, len);
             for (int i = 0; i < len; i++)
             {
@@ -195,7 +198,7 @@ class _SharedRendererUtils
         else
         {
             //Object array
-            int len = submittedValue != null ? submittedValue.length : 0;
+            int len = submittedValue.length;
             Object[] convertedValues = new Object[len];
             for (int i = 0; i < len; i++)
             {
