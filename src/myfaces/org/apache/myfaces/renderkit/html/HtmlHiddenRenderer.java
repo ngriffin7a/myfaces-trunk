@@ -27,11 +27,14 @@ import javax.faces.component.UIOutput;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 import javax.faces.convert.ConverterException;
-import javax.faces.el.ValueBinding;
 import java.io.IOException;
 
 
 /**
+ * $Log$
+ * Revision 1.7  2004/03/26 13:34:04  manolito
+ * fixed value attribute output
+ *
  * @author Thomas Spiegl (latest modification by $Author$)
  * @author Anton Koinov
  * @version $Revision$ $Date$
@@ -53,10 +56,10 @@ extends HtmlRenderer
         writer.writeAttribute(HTML.ID_ATTR, clientId, null);
         writer.writeAttribute(HTML.NAME_ATTR, clientId, null);
 
-        ValueBinding vb = uiComponent.getValueBinding(JSFAttr.VALUE_ATTR);
-        if (vb != null)
+        String value = RendererUtils.getStringValue(facesContext, uiComponent);
+        if (value != null)
         {
-            writer.writeAttribute(HTML.VALUE_ATTR, vb.getValue(facesContext), JSFAttr.VALUE_ATTR);
+            writer.writeAttribute(HTML.VALUE_ATTR, value, JSFAttr.VALUE_ATTR);
         }
         
         writer.endElement(HTML.INPUT_ELEM);
