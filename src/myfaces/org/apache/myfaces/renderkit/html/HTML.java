@@ -20,10 +20,6 @@ package net.sourceforge.myfaces.renderkit.html;
 
 import net.sourceforge.myfaces.util.ArrayUtils;
 
-import javax.faces.context.ResponseWriter;
-import java.io.IOException;
-
-
 
 /**
  * Constant declarations for HTML rendering.
@@ -32,7 +28,6 @@ import java.io.IOException;
  */
 public class HTML
 {
-
     private HTML() {}
 
     // Common attributes
@@ -308,6 +303,9 @@ public class HTML
     public static final String INPUT_ELEM = "input";
     public static final String FORM_ELEM = "form";
     public static final String ANCHOR_ELEM = "a";
+    public static final String IMG_ELEM = "img";
+    public static final String LABEL_ELEM = "label";
+
 
     //HTML simple element constants
     public static final String BR_ELEM = "<br>";
@@ -316,9 +314,10 @@ public class HTML
     //HTML entities
     public static final String NBSP_ENTITY = "&nbsp;";
 
-    public static final char HREF_PATH_FROM_PARAM_SEPARATOR = '?';
-    public static final char HEF_PARAM_SEPARATOR = '&';
-    public static final char HEF_PARAM_NAME_FROM_VALUE_SEPARATOR = '=';
+    public static final String HREF_PATH_SEPARATOR = "/";
+    public static final String HREF_PATH_FROM_PARAM_SEPARATOR = "?";
+    public static final String HEF_PARAM_SEPARATOR = "&";
+    public static final String HEF_PARAM_NAME_FROM_VALUE_SEPARATOR = "=";
 
     public static String addAttributeToHref(String href, String name, String value)
     {

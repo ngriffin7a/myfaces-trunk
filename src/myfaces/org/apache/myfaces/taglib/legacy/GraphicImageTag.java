@@ -21,7 +21,8 @@ package net.sourceforge.myfaces.taglib.legacy;
 import net.sourceforge.myfaces.component.MyFacesUIGraphic;
 import net.sourceforge.myfaces.renderkit.JSFAttr;
 import net.sourceforge.myfaces.renderkit.html.HTML;
-import net.sourceforge.myfaces.renderkit.html.ImageRenderer;
+import net.sourceforge.myfaces.renderkit.html.legacy.ImageRenderer;
+import net.sourceforge.myfaces.renderkit.html.legacy.ImageRenderer;
 
 
 /**

@@ -31,15 +31,20 @@ public class JSFAttr
     // MyFaces Extended Attributes
     public static final String   ENABLED_ON_USER_ROLE_ATTR      = "enabledOnUserRole";
     public static final String   VISIBLE_ON_USER_ROLE_ATTR      = "visibleOnUserRole";
-    public static final String   ALT_KEY_ATTR                   = "altKey";
-    public static final String   ALT_BUNDLE_ATTR                = "altBundle";
-    public static final String   TITLE_KEY_ATTR                 = "titleKey";
-    public static final String   TITLE_BUNDLE_ATTR              = "titleBundle";
 
     // Key/Bundle attributes
-    /**@deprecated */
+    /**@deprecated directly access attribute instead and use value binding mechanism */
+    public static final String   ALT_KEY_ATTR                   = "altKey";
+    /**@deprecated directly access attribute instead and use value binding mechanism */
+    public static final String   ALT_BUNDLE_ATTR                = "altBundle";
+    /**@deprecated directly access attribute instead and use value binding mechanism */
+    public static final String   TITLE_KEY_ATTR                 = "titleKey";
+    /**@deprecated directly access attribute instead and use value binding mechanism */
+    public static final String   TITLE_BUNDLE_ATTR              = "titleBundle";
+    // Key/Bundle attributes
+    /**@deprecated directly access attribute instead and use value binding mechanism */
     public static final String   KEY_ATTR                       = "key";
-    /**@deprecated */
+    /**@deprecated directly access attribute instead and use value binding mechanism */
     public static final String   BUNDLE_ATTR                    = "bundle";
 
     // Common Attributes

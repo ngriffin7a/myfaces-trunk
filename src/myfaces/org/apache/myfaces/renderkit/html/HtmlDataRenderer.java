@@ -89,9 +89,8 @@ public class HtmlDataRenderer
         Iterator iterator = (Iterator)uiPanel.getAttributes().get(ITERATOR_ATTR);
         if (iterator == null)
         {
-            //FIXME
-            //Object v = uiPanel.currentValue(facesContext);
-            Object v = null;
+            Object v = uiPanel.getValue();
+
             if (v == null)
             {
                 return null;
