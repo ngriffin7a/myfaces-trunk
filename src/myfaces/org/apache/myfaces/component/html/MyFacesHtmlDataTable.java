@@ -21,6 +21,7 @@ package net.sourceforge.myfaces.component.html;
 import javax.faces.component.UIData;
 import javax.faces.component.html.HtmlDataTable;
 import javax.faces.context.FacesContext;
+import javax.faces.el.ValueBinding;
 import javax.faces.model.DataModel;
 import java.io.IOException;
 import java.io.Serializable;
@@ -28,6 +29,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
+import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,6 +42,9 @@ import java.util.List;
 public class MyFacesHtmlDataTable
     extends HtmlDataTable
 {
+
+    private static final Class OBJECT_ARRAY_CLASS = (new Object[0]).getClass();
+
     private boolean _preserveDataModel = true;
 
 
@@ -48,9 +53,10 @@ public class MyFacesHtmlDataTable
         if (_preserveDataModel)
         {
             Object value = getLocalValue();
-            if (value instanceof SerializableDataModel)
+            if (value instanceof SerializableDataModel &&
+                getValueBinding("value") != null)
             {
-                //Clear local value, so that current data from model is used from now on
+                //Clear local value, so that current data from model bean is used from now on
                 setValue(null);
             }
         }
@@ -65,13 +71,74 @@ public class MyFacesHtmlDataTable
             Object value = getLocalValue();
             if (value instanceof SerializableDataModel)
             {
-                //TODO: We should somehow update the list or array in the model
+                ValueBinding vb = getValueBinding("value");
+                if (vb != null && !vb.isReadOnly(context))
+                {
+                    SerializableDataModel dm = (SerializableDataModel)value;
+                    Class type = vb.getType(context);
+                    if (DataModel.class.isAssignableFrom(type))
+                    {
+                        vb.setValue(context, dm);
+                    }
+                    else if (List.class.isAssignableFrom(type))
+                    {
+                        vb.setValue(context, (List)dm.getWrappedData());
+                    }
+                    else if (OBJECT_ARRAY_CLASS.isAssignableFrom(type))
+                    {
+                        List lst = (List)dm.getWrappedData();
+                        vb.setValue(context, lst.toArray(new Object[lst.size()]));
+                    }
+                    else if (ResultSet.class.isAssignableFrom(type))
+                    {
+                        throw new UnsupportedOperationException();
+                    }
+                    else
+                    {
+                        //Assume scalar data model
+                        List lst = (List)dm.getWrappedData();
+                        if (lst.size() > 0)
+                        {
+                            vb.setValue(context, lst.get(0));
+                        }
+                        else
+                        {
+                            vb.setValue(context, null);
+                        }
+                    }
+                    setValue(null); //clear local value
+                }
             }
         }
 
         super.processUpdates(context);
     }
 
+    public int getFirst()
+    {
+        if (_preserveDataModel)
+        {
+            Object value = getLocalValue();
+            if (value instanceof SerializableDataModel)
+            {
+                return ((SerializableDataModel)value).getFirst();
+            }
+        }
+        return super.getFirst();
+    }
+
+    public int getRows()
+    {
+        if (_preserveDataModel)
+        {
+            Object value = getLocalValue();
+            if (value instanceof SerializableDataModel)
+            {
+                return ((SerializableDataModel)value).getRows();
+            }
+        }
+        return super.getRows();
+    }
 
     public Object saveState(FacesContext context)
     {
@@ -242,7 +309,8 @@ public class MyFacesHtmlDataTable
 
         public Object getWrappedData()
         {
-            throw new UnsupportedOperationException();
+            //throw new UnsupportedOperationException();
+            return _list;
         }
 
         public void setWrappedData(Object obj)
