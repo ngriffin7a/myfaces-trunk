@@ -40,9 +40,12 @@ import net.sourceforge.myfaces.component.html.ext.HtmlPanelGroup;
  * @author <a href="mailto:oliver@rossmueller.com">Oliver Rossmueller</a>
  * @version $Revision$ $Date$
  *          $Log$
- *          Revision 1.22  2004/10/10 11:21:18  o_rossmueller
+ *          Revision 1.23  2004/10/10 21:39:16  o_rossmueller
  *          expandAll/collapseAll (contributed by Hamidreza Sattari <hhreza@yahoo.com>)
  *
+ *          Revision 1.22  2004/10/10 11:21:18  o_rossmueller
+ *          expandAll/collapseAll (contributed by Hamidreza Sattari <hhreza@yahoo.com>)
+ *          <p/>
  *          Revision 1.21  2004/09/01 18:32:54  mwessendorf
  *          Organize Imports
  *          <p/>
@@ -823,6 +826,7 @@ public class HtmlTree
     {
         HtmlTreeNode root = getRootNode();
         FacesContext context = FacesContext.getCurrentInstance();
+        collapsePath(root.getPath(), context);
         for (int i = 0; i < root.getChildren().size(); i++)
         {
             HtmlTreeNode child = (HtmlTreeNode) (root.getChildren().get(i));
@@ -854,6 +858,7 @@ public class HtmlTree
     {
         HtmlTreeNode root = getRootNode();
         FacesContext context = FacesContext.getCurrentInstance();
+        expandPath(root.getPath(), context);
         for (int i = 0; i < root.getChildren().size(); i++)
         {
             HtmlTreeNode child = (HtmlTreeNode) (root.getChildren().get(i));
@@ -863,8 +868,6 @@ public class HtmlTree
                 expandChildren(context, child);
             }
         }
-
-
     }
 
 
@@ -879,7 +882,6 @@ public class HtmlTree
                 expandChildren(context, child);
             }
         }
-
     }
 
 
