@@ -37,7 +37,7 @@ import javax.faces.context.FacesContext;
  * @version $Revision$ $Date$
  */
 public class GridRenderer
-//extends TableRendererSupport
+extends TableRendererSupport
 {
     //~ Static fields/initializers -----------------------------------------------------------------
 
@@ -50,7 +50,6 @@ public class GridRenderer
         return TYPE;
     }
 
-    /*
     protected void renderBody(FacesContext context, UIComponent component, int columns)
     throws IOException
     {
@@ -73,5 +72,4 @@ public class GridRenderer
                 context, children, columns, rowClasses, columnClasses, "td", "tbody", 0);
         }
     }
-    */
 }
