@@ -1,12 +1,12 @@
 /*
  * Copyright 2005 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -63,7 +63,6 @@ public class UITreeData extends UIComponentBase implements NamingContainer
     private String _nodeId;
     private Map _saved = new HashMap();
 
-
     /**
      * Constructor
      */
@@ -78,7 +77,6 @@ public class UITreeData extends UIComponentBase implements NamingContainer
     {
         return COMPONENT_FAMILY;
     }
-
 
     // see superclass for documentation
     public Object saveState(FacesContext context)
@@ -96,10 +94,10 @@ public class UITreeData extends UIComponentBase implements NamingContainer
     {
         Object values[] = (Object[]) state;
         super.restoreState(context, values[0]);
-        _value = (TreeNode) values[1];
-        _var = (String) values[2];
-    }
 
+        _value = (TreeNode)values[1];
+        _var = (String)values[2];
+    }
 
     public void queueEvent(FacesEvent event)
     {
@@ -141,7 +139,6 @@ public class UITreeData extends UIComponentBase implements NamingContainer
         decode(context);
     }
 
-
     // see superclass for documentation
     public void processValidators(FacesContext context)
     {
@@ -165,7 +162,6 @@ public class UITreeData extends UIComponentBase implements NamingContainer
         setNodeId(null);
     }
 
-
     // see superclass for documentation
     public String getClientId(FacesContext context)
     {
@@ -178,7 +174,6 @@ public class UITreeData extends UIComponentBase implements NamingContainer
             return ownClientId;
         }
     }
-
 
     // see superclass for documentation
     public void setValueBinding(String name, ValueBinding binding)
@@ -193,14 +188,13 @@ public class UITreeData extends UIComponentBase implements NamingContainer
         super.setValueBinding(name, binding);
     }
 
-
     // see superclass for documentation
     public void encodeBegin(FacesContext context) throws IOException
     {
         /**
-         * The renderer will handle most of the encoding, but if there are any 
-         * error messages queued for the components (validation errors), we 
-         * do want to keep the saved state so that we can render the node with 
+         * The renderer will handle most of the encoding, but if there are any
+         * error messages queued for the components (validation errors), we
+         * do want to keep the saved state so that we can render the node with
          * the invalid value.
          */
         if (!keepSaved(context))
@@ -210,7 +204,6 @@ public class UITreeData extends UIComponentBase implements NamingContainer
 
         super.encodeBegin(context);
     }
-
 
     /**
      * Sets the value of the TreeData.
@@ -236,7 +229,6 @@ public class UITreeData extends UIComponentBase implements NamingContainer
         return vb != null ? vb.getValue(getFacesContext()) : null;
     }
 
-
     /**
      * Set the request-scope attribute under which the data object for the current node wil be exposed
      * when iterating.
@@ -259,7 +251,6 @@ public class UITreeData extends UIComponentBase implements NamingContainer
     {
         return _var;
     }
-
 
     /**
      * Calls through to the {@link TreeModel} and returns the current {@link TreeNode} or <code>null</code>.
@@ -329,7 +320,6 @@ public class UITreeData extends UIComponentBase implements NamingContainer
         return getDataModel().getPathInformation(nodeId);
     }
 
-
     /**
      * Indicates whether or not the specified {@link TreeNode} is the last child in the <code>List</code>
      * of children.  If the node id provided corresponds to the root node, this returns <code>true</code>.
@@ -341,7 +331,6 @@ public class UITreeData extends UIComponentBase implements NamingContainer
     {
         return getDataModel().isLastChild(nodeId);
     }
-
 
     /**
      * Returns a previously cached {@link TreeModel}, if any, or sets the cache variable to either the
@@ -372,8 +361,8 @@ public class UITreeData extends UIComponentBase implements NamingContainer
         return _model;
     }
 
-
-    private void processNodes(FacesContext context, int processAction, String parentId, int childLevel)
+//private
+    protected void processNodes(FacesContext context, int processAction, String parentId, int childLevel)
     {
         UIComponent facet = null;
         setNodeId(parentId != null ? parentId + NamingContainer.SEPARATOR_CHAR + childLevel : "0");
@@ -407,7 +396,6 @@ public class UITreeData extends UIComponentBase implements NamingContainer
         processChildNodes(context, node, processAction);
     }
 
-
     /**
      * Process the child nodes of the supplied parent @{link TreeNode}.  This method is protected so that
      * it can be overriden by a subclass that may want to control how child nodes are processed.
@@ -429,7 +417,6 @@ public class UITreeData extends UIComponentBase implements NamingContainer
         }
     }
 
-
     /**
      * To support using input components for the nodes (e.g., input fields, checkboxes, and selection
      * lists) while still only using one set of components for all nodes, the state held by the components
@@ -445,7 +432,6 @@ public class UITreeData extends UIComponentBase implements NamingContainer
             saveDescendantState(facet, context);
         }
     }
-
 
     /**
      * Overloaded helper method for the no argument version of this method.
@@ -493,7 +479,6 @@ public class UITreeData extends UIComponentBase implements NamingContainer
         }
     }
 
-
     /**
      * Overloaded helper method for the no argument version of this method.
      *
@@ -523,10 +508,9 @@ public class UITreeData extends UIComponentBase implements NamingContainer
         List kids = component.getChildren();
         for (int i = 0; i < kids.size(); i++)
         {
-            restoreDescendantState((UIComponent) kids.get(i), context);
+            restoreDescendantState((UIComponent)kids.get(i), context);
         }
     }
-
 
     /**
      * A regular bean with accessor methods for all state variables.
@@ -543,55 +527,46 @@ public class UITreeData extends UIComponentBase implements NamingContainer
         private Object value;
         private boolean localValueSet;
 
-
         Object getSubmittedValue()
         {
             return submittedValue;
         }
-
 
         void setSubmittedValue(Object submittedValue)
         {
             this.submittedValue = submittedValue;
         }
 
-
         boolean isValid()
         {
             return valid;
         }
-
 
         void setValid(boolean valid)
         {
             this.valid = valid;
         }
 
-
         Object getValue()
         {
             return value;
         }
-
 
         void setValue(Object value)
         {
             this.value = value;
         }
 
-
         boolean isLocalValueSet()
         {
             return localValueSet;
         }
-
 
         void setLocalValueSet(boolean localValueSet)
         {
             this.localValueSet = localValueSet;
         }
     }
-
 
     /**
      * Inner class used to wrap the original events produced by child components in the tree.
@@ -640,7 +615,7 @@ public class UITreeData extends UIComponentBase implements NamingContainer
 
         public boolean isAppropriateListener(FacesListener faceslistener)
         {
-            // this event type is only intended for wrapping a real event 
+            // this event type is only intended for wrapping a real event
             return false;
         }
 
@@ -662,7 +637,6 @@ public class UITreeData extends UIComponentBase implements NamingContainer
             return _nodeId;
         }
     }
-
 
     /**
      * Returns true if there is an error message queued for at least one of the nodes.
