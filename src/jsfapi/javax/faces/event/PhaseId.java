@@ -23,9 +23,13 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 /**
-  * @author Thomas Spiegl (latest modification by $Author$)
-  * @version $Revision$ $Date$
-*/
+ * @author Thomas Spiegl (latest modification by $Author$)
+ * @version $Revision$ $Date$
+ * $Log$
+ * Revision 1.3  2004/05/21 10:38:01  manolito
+ * trivial change in toString
+ *
+ */
 public class PhaseId {
 
 	// FIELDS
@@ -84,7 +88,7 @@ public class PhaseId {
 
 	public String toString()
 	{
-		return _name + _ordinal;
+		return _name + "(" + _ordinal + ")";
 	}
 
 }
