@@ -31,6 +31,9 @@ import java.util.TimeZone;
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.10  2004/04/16 09:08:41  royalts
+ * fixed getAsString: getTimeZone() may not be used here!!.
+ *
  * Revision 1.9  2004/04/01 10:47:00  royalts
  * bugfix in restoreState
  *
@@ -116,7 +119,10 @@ public class DateTimeConverter
         }
 
         DateFormat format = getDateFormat();
-        format.setTimeZone(getTimeZone());
+        if (_timeZone != null)
+        {
+            format.setTimeZone(_timeZone);
+        }
         try
         {
             return format.format(value);
