@@ -41,6 +41,10 @@ import java.util.Set;
  * @author Anton Koinov
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.14  2005/01/18 22:43:05  svieujot
+ * Fix some bugs where converter wasn't used to determine selected values.
+ * This caused for examples the list, checkbox and radio based components to bug when the backing bean value type is a primitive.
+ *
  * Revision 1.13  2005/01/07 01:54:36  svieujot
  * radioRenderer wasn't looking at the submitted value.
  *
@@ -129,11 +133,11 @@ public class HtmlCheckboxRendererBase extends HtmlRenderer {
             converter = null;
         }
 
-        Set lookupSet = RendererUtils.getSubmittedValuesAsSet(selectMany);
+        Set lookupSet = RendererUtils.getSubmittedValuesAsSet(facesContext, selectMany, converter, selectMany);
         boolean useSubmittedValues = lookupSet != null;
 
         if (!useSubmittedValues) {
-            lookupSet = RendererUtils.getSelectedValuesAsSet(selectMany);
+            lookupSet = RendererUtils.getSelectedValuesAsSet(facesContext, selectMany, converter, selectMany);
         }
 
         for (Iterator it = RendererUtils.getSelectItemList(selectMany)

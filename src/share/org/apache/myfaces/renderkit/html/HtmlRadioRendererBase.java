@@ -40,6 +40,10 @@ import java.util.List;
  * @author Thomas Spiegl
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.11  2005/01/18 22:43:05  svieujot
+ * Fix some bugs where converter wasn't used to determine selected values.
+ * This caused for examples the list, checkbox and radio based components to bug when the backing bean value type is a primitive.
+ *
  * Revision 1.10  2005/01/18 20:49:48  svieujot
  * Set default layout to lineDirection, according to Spec.
  *
@@ -127,6 +131,7 @@ public class HtmlRadioRendererBase
         }
 
         Object currentValue = selectOne.getValue();
+        String currentValueStr = currentValue==null ? null : converter.getAsString(facesContext, selectOne, currentValue);
 
         for (Iterator it = selectItemList.iterator(); it.hasNext(); )
         {
@@ -151,7 +156,7 @@ public class HtmlRadioRendererBase
                         itemStrValue,
                         selectItem.getLabel(),
                         currentValue == null && itemValue == null ||
-                        currentValue != null && currentValue.equals(itemValue),
+                        currentValueStr != null && currentValueStr.equals(itemStrValue),
                         false);
             writer.endElement(HTML.LABEL_ELEM);
             writer.endElement(HTML.TD_ELEM);

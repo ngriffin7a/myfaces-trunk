@@ -60,7 +60,6 @@ public class HtmlTreeCheckboxRenderer extends HtmlCheckboxRendererBase
         }
 
         UISelectMany uiSelectMany = (UISelectMany) uiComponent;
-        Set lookupSet = RendererUtils.getSelectedValuesAsSet(uiSelectMany);
 
         Converter converter;
         try
@@ -71,6 +70,8 @@ public class HtmlTreeCheckboxRenderer extends HtmlCheckboxRendererBase
         {
             converter = null;
         }
+        
+        Set lookupSet = RendererUtils.getSelectedValuesAsSet(context, component, converter, uiSelectMany);
 
         Object itemValue = checkbox.getItemValue();
         String itemStrValue = null;
@@ -86,7 +87,7 @@ public class HtmlTreeCheckboxRenderer extends HtmlCheckboxRendererBase
             itemStrValue = converter.getAsString(context, uiSelectMany, itemValue);
         }
 
-        renderCheckbox(context, uiSelectMany, itemStrValue, checkbox.getItemLabel(), lookupSet.contains(itemValue),
+        renderCheckbox(context, uiSelectMany, itemStrValue, checkbox.getItemLabel(), lookupSet.contains(itemStrValue),
                 true);
     }
 

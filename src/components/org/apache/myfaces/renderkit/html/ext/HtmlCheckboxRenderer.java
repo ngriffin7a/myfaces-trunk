@@ -35,6 +35,10 @@ import java.util.Set;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.8  2005/01/18 22:43:05  svieujot
+ * Fix some bugs where converter wasn't used to determine selected values.
+ * This caused for examples the list, checkbox and radio based components to bug when the backing bean value type is a primitive.
+ *
  * Revision 1.7  2004/10/13 11:50:59  matze
  * renamed packages to org.apache
  *
@@ -145,13 +149,13 @@ public class HtmlCheckboxRenderer
         }
 
         //TODO: we must cache this Set!
-        Set lookupSet = RendererUtils.getSelectedValuesAsSet(uiSelectMany);
+        Set lookupSet = RendererUtils.getSelectedValuesAsSet(facesContext, uiComponent, converter, uiSelectMany);
 
         renderCheckbox(facesContext,
                        uiSelectMany,
                        itemStrValue,
                        selectItem.getLabel(),
-                       lookupSet.contains(itemValue), true);
+                       lookupSet.contains(itemStrValue), true);
     }
 
 

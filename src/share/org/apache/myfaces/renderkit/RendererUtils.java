@@ -37,6 +37,10 @@ import java.util.*;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.20  2005/01/18 22:43:05  svieujot
+ * Fix some bugs where converter wasn't used to determine selected values.
+ * This caused for examples the list, checkbox and radio based components to bug when the backing bean value type is a primitive.
+ *
  * Revision 1.19  2005/01/09 18:15:12  mmarinschek
  * small changes - better error handling, label renderer supports more hooks for sub-classes
  *
@@ -577,24 +581,15 @@ public class RendererUtils
      * @param uiSelectMany
      * @return Set containing all currently selected values
      */
-    public static Set getSubmittedValuesAsSet(UISelectMany uiSelectMany)
+    public static Set getSubmittedValuesAsSet(FacesContext context, UIComponent component, Converter converter, UISelectMany uiSelectMany)
     {
         Object submittedValues = uiSelectMany.getSubmittedValue();
         if (submittedValues == null)
         {
             return null;
         }
-        else
-        {
-            try
-            {
-                return internalSubmittedOrSelectedValuesAsSet(uiSelectMany, submittedValues);
-            }
-            catch (IllegalArgumentException e)
-            {
-                throw new IllegalArgumentException("Submitted value of UISelectMany component with path : " + getPathToComponent(uiSelectMany) + " is not of type Array or List");
-            }
-        }
+
+        return internalSubmittedOrSelectedValuesAsSet(context, component, converter, uiSelectMany, submittedValues);
     }
 
 
@@ -607,28 +602,52 @@ public class RendererUtils
      * @param uiSelectMany
      * @return Set containing all currently selected values
      */
-    public static Set getSelectedValuesAsSet(UISelectMany uiSelectMany)
+    public static Set getSelectedValuesAsSet(FacesContext context, UIComponent component, Converter converter, UISelectMany uiSelectMany)
     {
         Object selectedValues = uiSelectMany.getValue();
-        if (selectedValues == null)
-        {
-            return Collections.EMPTY_SET;
-        }
-        else
-        {
-            try
-            {
-                return internalSubmittedOrSelectedValuesAsSet(uiSelectMany, selectedValues);
+
+        return internalSubmittedOrSelectedValuesAsSet(context, component, converter, uiSelectMany, selectedValues);
+    }
+    
+    
+    /**
+     * Convenient utility method that returns the currently given value as String,
+     * using the given converter.
+     * Especially usefull for dealing with primitive types.
+     */
+    public static String getConvertedStringValue(FacesContext context,
+            UIComponent component, Converter converter, Object value) {
+        if (converter == null) {
+            if (value == null) {
+                return "";
+            } else if (value instanceof String) {
+                return (String) value;
+            } else {
+                throw new IllegalArgumentException(
+                        "Value is no String and component "
+                                + component.getClientId(context)
+                                + " does not have a Converter");
             }
-            catch (IllegalArgumentException e)
-            {
-                throw new IllegalArgumentException("Value of UISelectMany component with path : " + getPathToComponent(uiSelectMany) + " is not of type Array or List");
-            }
         }
+
+        return converter.getAsString(context, component, value);
+    }
+    
+    
+    /**
+     * Convenient utility method that returns the currently given SelectItem value
+     * as String, using the given converter.
+     * Especially usefull for dealing with primitive types.
+     */
+    public static String getConvertedStringValue(FacesContext context,
+            UIComponent component, Converter converter, SelectItem selectItem) {
+        return getConvertedStringValue(context, component, converter, selectItem.getValue());
     }
 
-    private static Set internalSubmittedOrSelectedValuesAsSet(UISelectMany uiSelectMany,
-                                                              Object values)
+    
+    private static Set internalSubmittedOrSelectedValuesAsSet(FacesContext context,
+            UIComponent component, Converter converter, UISelectMany uiSelectMany,
+            Object values)
     {
         if (values == null)
         {
@@ -642,15 +661,13 @@ public class RendererUtils
             {
                 return Collections.EMPTY_SET;
             }
-            else
+
+            HashSet set = new HashSet(HashMapUtils.calcCapacity(ar.length));
+            for (int i = 0; i < ar.length; i++)
             {
-                HashSet set = new HashSet(HashMapUtils.calcCapacity(ar.length));
-                for (int i = 0; i < ar.length; i++)
-                {
-                    set.add(ar[i]);
-                }
-                return set;
+                set.add( getConvertedStringValue(context, component, converter, ar[i]) );
             }
+            return set;
         }
         else if (values.getClass().isArray())
         {
@@ -659,7 +676,7 @@ public class RendererUtils
             HashSet set = new HashSet(HashMapUtils.calcCapacity(len));
             for (int i = 0; i < len; i++)
             {
-                set.add(Array.get(values, i));
+                set.add( getConvertedStringValue(context, component, converter, Array.get(values,i)) );
             }
             return set;
         }
@@ -673,7 +690,9 @@ public class RendererUtils
             else
             {
                 HashSet set = new HashSet(HashMapUtils.calcCapacity(lst.size()));
-                set.addAll(lst);
+                for(Iterator i =lst.iterator(); i.hasNext(); )
+                    set.add( getConvertedStringValue(context, component, converter, i.next()) );
+                
                 return set;
             }
         }

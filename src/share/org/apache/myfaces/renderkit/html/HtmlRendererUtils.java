@@ -365,11 +365,11 @@ public final class HtmlRendererUtils {
         boolean useSubmittedValue;
         if (selectMany) {
             UISelectMany uiSelectMany = (UISelectMany) uiComponent;
-            lookupSet = RendererUtils.getSubmittedValuesAsSet(uiSelectMany);
+            lookupSet = RendererUtils.getSubmittedValuesAsSet(facesContext, uiComponent, converter, uiSelectMany);
             useSubmittedValue = lookupSet != null;
 
             if (!useSubmittedValue) {
-                lookupSet = RendererUtils.getSelectedValuesAsSet(uiSelectMany);
+                lookupSet = RendererUtils.getSelectedValuesAsSet(facesContext, uiComponent, converter, uiSelectMany);
             }
         } else {
             UISelectOne uiSelectOne = (UISelectOne) uiComponent;
@@ -379,8 +379,10 @@ public final class HtmlRendererUtils {
             if (!useSubmittedValue) {
                 lookup = uiSelectOne.getValue();
             }
+            
+            String lookupString = RendererUtils.getConvertedStringValue(facesContext, uiComponent, converter, lookup);
 
-            lookupSet = Collections.singleton(lookup);
+            lookupSet = Collections.singleton(lookupString);
         }
 
         renderSelectOptions(facesContext, uiComponent, converter, lookupSet,
@@ -429,7 +431,7 @@ public final class HtmlRendererUtils {
                 writer.endElement(HTML.OPTGROUP_ELEM);
             } else {
                 Object itemValue = selectItem.getValue();
-                String itemStrValue = getItemStringValue(context, component,
+                String itemStrValue = RendererUtils.getConvertedStringValue(context, component,
                         converter, selectItem);
 
                 writer.write("\t\t");
@@ -453,27 +455,6 @@ public final class HtmlRendererUtils {
 
                 writer.endElement(HTML.OPTION_ELEM);
             }
-        }
-    }
-
-    private static String getItemStringValue(FacesContext context,
-            UIComponent component, Converter converter, SelectItem selectItem) {
-        Object itemValue = selectItem.getValue();
-        if (converter == null) {
-            if (itemValue == null) {
-                return "";
-            } else if (itemValue instanceof String) {
-                return (String) itemValue;
-            } else {
-                throw new IllegalArgumentException(
-                        "Item value of SelectItem with label "
-                                + selectItem.getLabel()
-                                + " is no String and parent component "
-                                + component.getClientId(context)
-                                + " does not have a Converter");
-            }
-        } else {
-            return converter.getAsString(context, component, itemValue);
         }
     }
 
