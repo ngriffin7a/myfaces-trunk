@@ -26,6 +26,10 @@ import javax.faces.event.PhaseId;
 /**
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
+ * $Log$
+ * Revision 1.2  2004/04/06 15:32:14  manolito
+ * correct phase is APPLY_REQUEST_VALUES
+ *
  */
 public class TabChangeEvent
         extends FacesEvent
@@ -40,7 +44,7 @@ public class TabChangeEvent
         super(component);
         _oldTabIndex = oldTabIndex;
         _newTabIndex = newTabIndex;
-        setPhaseId(PhaseId.INVOKE_APPLICATION);
+        setPhaseId(PhaseId.APPLY_REQUEST_VALUES);
     }
 
     public int getOldTabIndex()
