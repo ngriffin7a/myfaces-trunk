@@ -87,6 +87,10 @@ public class JspTreeParser
         try
         {
             URL url = _servletContext.getResource(topFileName);
+            if (url == null)
+            {
+                throw new FacesException("JspTreeParser: File '" + topFileName + "' not found.");
+            }
             URLConnection urlConn = url.openConnection();
             _jspInfo.setLastModified(urlConn.getLastModified());
             stream = urlConn.getInputStream();
