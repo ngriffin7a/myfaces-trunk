@@ -28,10 +28,8 @@ import net.sourceforge.myfaces.taglib.MyFacesBodyTag;
  * DOCUMENT ME!
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
- *
- * @deprecated panel_group with facet should be used
  */
-public class TabbedPaneTag
+public class  TabbedPaneTag
 extends MyFacesBodyTag
 implements TabbedPaneRendererAttributes
 {
