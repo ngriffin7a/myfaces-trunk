@@ -32,6 +32,9 @@ import java.util.Map;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.5  2004/08/09 11:47:09  manolito
+ * CSS style support also for non OL or UL layout
+ *
  * Revision 1.4  2004/08/09 09:10:39  manolito
  * RFE #990814 - dataList component ignores styleClass attribute
  *
@@ -69,6 +72,13 @@ public class HtmlListRenderer
                 writer.startElement(HTML.OL_ELEM, uiComponent);
                 HtmlRendererUtils.renderHTMLAttributes(writer, uiComponent,
                                                        HTML.COMMON_PASSTROUGH_ATTRIBUTES);
+            }
+            else
+            {
+                HtmlRendererUtils.renderHTMLAttributesWithOptionalStartElement(writer,
+                                                                               uiComponent,
+                                                                               HTML.SPAN_ELEM,
+                                                                               HTML.COMMON_PASSTROUGH_ATTRIBUTES);
             }
         }
     }
@@ -153,6 +163,13 @@ public class HtmlListRenderer
             else if (layout.equals(LAYOUT_OL))
             {
                 writer.endElement(HTML.OL_ELEM);
+            }
+            else
+            {
+                HtmlRendererUtils.renderOptionalEndElement(writer,
+                                                           uiComponent,
+                                                           HTML.SPAN_ELEM,
+                                                           HTML.COMMON_PASSTROUGH_ATTRIBUTES);
             }
         }
     }

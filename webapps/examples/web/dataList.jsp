@@ -61,7 +61,7 @@ managed beans used:
                <h:outputText value="#{example_messages['dataList_simple']}" styleClass="standard_bold" />
                <f:verbatim><br></f:verbatim>
                <x:dataList id="data1"
-                        styleClass="standardTable"
+                        styleClass="standardList"
                         var="country"
                         value="#{countryList.countries}"
                         layout="simple"
@@ -74,7 +74,7 @@ managed beans used:
                <f:verbatim><br><br></f:verbatim>
                <h:outputText value="#{example_messages['dataList_ul']}" styleClass="standard_bold" />
                <x:dataList id="data2"
-                        styleClass="standardTable"
+                        styleClass="standardList"
                         var="country"
                         value="#{countryList.countries}"
                         layout="unorderedList">
@@ -84,7 +84,7 @@ managed beans used:
                <f:verbatim><br></f:verbatim>
                <h:outputText value="#{example_messages['dataList_ol']}" styleClass="standard_bold" />
                <x:dataList id="data3"
-                        styleClass="standardTable"
+                        styleClass="standardList"
                         var="country"
                         value="#{countryList.countries}"
                         layout="orderedList">

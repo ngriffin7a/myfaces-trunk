@@ -17,8 +17,8 @@ package net.sourceforge.myfaces.renderkit.html;
 
 import net.sourceforge.myfaces.MyFacesConfig;
 import net.sourceforge.myfaces.renderkit.RendererUtils;
-import net.sourceforge.myfaces.renderkit.html.util.JavascriptUtils;
 import net.sourceforge.myfaces.renderkit.html.util.DummyFormUtils;
+import net.sourceforge.myfaces.renderkit.html.util.JavascriptUtils;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -39,6 +39,9 @@ import java.util.*;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.18  2004/08/09 11:47:09  manolito
+ * CSS style support also for non OL or UL layout
+ *
  * Revision 1.17  2004/07/18 22:45:11  o_rossmueller
  * fix #992668: convert values to string for 'selected' comparision
  *
@@ -684,7 +687,35 @@ public final class HtmlRendererUtils
         }
         return startElementWritten;
     }
-    
+
+    public static boolean renderOptionalEndElement(ResponseWriter writer,
+                                                   UIComponent component,
+                                                   String elementName,
+                                                   String[] attributes)
+            throws IOException
+    {
+        boolean endElementNeeded = false;
+        for (int i = 0, len = attributes.length; i < len; i++)
+        {
+            String attrName = attributes[i];
+            Object value = component.getAttributes().get(attrName);
+            if (!RendererUtils.isDefaultAttributeValue(value))
+            {
+                endElementNeeded = true;
+                break;
+            }
+        }
+        if (endElementNeeded)
+        {
+            writer.endElement(elementName);
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
 
     public static class LinkParameter
     {
