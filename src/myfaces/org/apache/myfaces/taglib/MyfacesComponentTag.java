@@ -129,4 +129,17 @@ public abstract class MyfacesComponentTag
         MyfacesTagUtils.setConverterIdProperty(context, component, value);
     }
 
+    public void setValueBinding(UIComponent component,
+                                String propName,
+                                String value)
+    {
+        MyfacesTagUtils.setValueBinding(context, component, propName, value);
+    }
+
+    protected void setValueChangedListenerProperty(UIComponent component, String valueChangedListener)
+    {
+        //TODO:
+        throw new UnsupportedOperationException("not yet implemented");
+    }
+
 }

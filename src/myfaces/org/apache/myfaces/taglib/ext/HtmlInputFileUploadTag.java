@@ -74,6 +74,7 @@ public class HtmlInputFileUploadTag
     // UIInput attributes
     private String _required;
     private String _validator;
+    private String _valueChangeListener;
 
     // HtmlInputFileUpload attributes
     private String _accept;
@@ -101,6 +102,7 @@ public class HtmlInputFileUploadTag
 
         setBooleanProperty(component, JSFAttr.REQUIRED_ATTR, _required);
         setStringProperty(component, JSFAttr.VALIDATOR_ATTR, _validator);
+        setValueChangedListenerProperty(component, _valueChangeListener);
 
         setStringProperty(component, HTML.ACCEPT_ATTR, _accept);
     }
@@ -188,6 +190,11 @@ public class HtmlInputFileUploadTag
     public void setValidator(String validator)
     {
         _validator = validator;
+    }
+
+    public void setValueChangeListener(String valueChangeListener)
+    {
+        _valueChangeListener = valueChangeListener;
     }
 
     public void setAccept(String accept)

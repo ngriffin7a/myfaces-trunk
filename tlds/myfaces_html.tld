@@ -28,6 +28,8 @@
 <!ENTITY html_form_attributes           SYSTEM "entities/html_form_attributes.xml">
 <!ENTITY html_img_attributes            SYSTEM "entities/html_img_attributes.xml">
 <!ENTITY html_input_attributes          SYSTEM "entities/html_input_attributes.xml">
+<!ENTITY html_input_checkbox_attributes SYSTEM "entities/html_input_checkbox_attributes.xml">
+<!ENTITY html_input_radio_attributes    SYSTEM "entities/html_input_radio_attributes.xml">
 <!ENTITY html_label_attributes          SYSTEM "entities/html_label_attributes.xml">
 <!ENTITY html_select_attributes         SYSTEM "entities/html_select_attributes.xml">
 <!ENTITY html_table_attributes          SYSTEM "entities/html_table_attributes.xml">
@@ -464,7 +466,7 @@ Start of revised 1.0 conforming tags (in alphabetical order)
         &ui_select_boolean_attributes;
         &html_universal_attributes;
         &html_event_handler_attributes;
-        &html_input_attributes;
+        &html_input_checkbox_attributes;
         &user_role_attributes;
     </tag>
 
@@ -477,7 +479,7 @@ Start of revised 1.0 conforming tags (in alphabetical order)
         &ui_select_many_attributes;
         &html_universal_attributes;
         &html_event_handler_attributes;
-        &html_input_attributes;
+        &html_input_checkbox_attributes;
         &user_role_attributes;
         <!-- CheckboxListRenderer attributes -->
         <attribute>
@@ -567,7 +569,7 @@ Start of revised 1.0 conforming tags (in alphabetical order)
         &ui_select_one_attributes;
         &html_universal_attributes;
         &html_event_handler_attributes;
-        &html_input_attributes;
+        &html_input_radio_attributes;
         &user_role_attributes;
         <!-- RadioRenderer attributes -->
         <attribute>

@@ -73,6 +73,7 @@ public class HtmlInputTextTag
     // UIInput attributes
     private String _required;
     private String _validator;
+    private String _valueChangeListener;
 
     // HtmlInputText attributes
     private String _escape;
@@ -101,6 +102,7 @@ public class HtmlInputTextTag
 
         setBooleanProperty(component, JSFAttr.REQUIRED_ATTR, _required);
         setStringProperty(component, JSFAttr.VALIDATOR_ATTR, _validator);
+        setValueChangedListenerProperty(component, _valueChangeListener);
 
         setBooleanProperty(component, JSFAttr.ESCAPE_ATTR, _escape);
     }
@@ -188,6 +190,11 @@ public class HtmlInputTextTag
     public void setValidator(String validator)
     {
         _validator = validator;
+    }
+
+    public void setValueChangeListener(String valueChangeListener)
+    {
+        _valueChangeListener = valueChangeListener;
     }
 
     public void setEscape(String escape)

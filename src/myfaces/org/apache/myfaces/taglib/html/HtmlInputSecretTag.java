@@ -53,7 +53,11 @@ public class HtmlInputSecretTag
 
     // HTML input attributes relevant for password-input
     private String _accesskey;
+    private String _align;
     private String _alt;
+    private String _datafld;
+    private String _datasrc;
+    private String _dataformatas;
     private String _disabled;
     private String _maxlength;
     private String _onblur;
@@ -70,6 +74,7 @@ public class HtmlInputSecretTag
     // UIInput attributes
     private String _required;
     private String _validator;
+    private String _valueChangeListener;
 
     // HTMLInputSecret attributes
     private String _redisplay;
@@ -79,7 +84,11 @@ public class HtmlInputSecretTag
         super.setProperties(component);
 
         setStringProperty(component, HTML.ACCESSKEY_ATTR, _accesskey);
+        setStringProperty(component, HTML.ALIGN_ATTR, _align);
         setStringProperty(component, HTML.ALT_ATTR, _alt);
+        setStringProperty(component, HTML.DATAFLD_ATTR, _datafld);
+        setStringProperty(component, HTML.DATASRC_ATTR, _datasrc);
+        setStringProperty(component, HTML.DATAFORMATAS_ATTR, _dataformatas);
         setBooleanProperty(component, HTML.DISABLED_ATTR, _disabled);
         setIntegerProperty(component, HTML.MAXLENGTH_ATTR, _maxlength);
         setStringProperty(component, HTML.ONBLUR_ATTR, _onblur);
@@ -92,6 +101,7 @@ public class HtmlInputSecretTag
 
         setBooleanProperty(component, JSFAttr.REQUIRED_ATTR, _required);
         setStringProperty(component, JSFAttr.VALIDATOR_ATTR, _validator);
+        setValueChangedListenerProperty(component, _valueChangeListener);
 
         setBooleanProperty(component, JSFAttr.REDISPLAY_ATTR, _redisplay);
    }
@@ -101,9 +111,29 @@ public class HtmlInputSecretTag
         _accesskey = accesskey;
     }
 
+    public void setAlign(String align)
+    {
+        _align = align;
+    }
+
     public void setAlt(String alt)
     {
         _alt = alt;
+    }
+
+    public void setDatafld(String datafld)
+    {
+        _datafld = datafld;
+    }
+
+    public void setDatasrc(String datasrc)
+    {
+        _datasrc = datasrc;
+    }
+
+    public void setDataformatas(String dataformatas)
+    {
+        _dataformatas = dataformatas;
     }
 
     public void setDisabled(String disabled)
@@ -159,6 +189,11 @@ public class HtmlInputSecretTag
     public void setValidator(String validator)
     {
         _validator = validator;
+    }
+
+    public void setValueChangeListener(String valueChangeListener)
+    {
+        _valueChangeListener = valueChangeListener;
     }
 
     public void setRedisplay(String redisplay)

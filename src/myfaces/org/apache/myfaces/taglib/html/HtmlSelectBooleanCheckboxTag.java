@@ -55,13 +55,15 @@ public class HtmlSelectBooleanCheckboxTag
     private String _accesskey;
     private String _alt;
     private String _checked;
+    private String _datafld;
+    private String _datasrc;
+    private String _dataformatas;
     private String _disabled;
     private String _onblur;
     private String _onchange;
     private String _onfocus;
     private String _onselect;
     private String _readonly;
-    private String _size;
     private String _tabindex;
 
     // UIInput attributes
@@ -78,13 +80,15 @@ public class HtmlSelectBooleanCheckboxTag
         setStringProperty(component, HTML.ACCESSKEY_ATTR, _accesskey);
         setStringProperty(component, HTML.ALT_ATTR, _alt);
         setBooleanProperty(component, HTML.CHECKED_ATTR, _checked);
+        setStringProperty(component, HTML.DATAFLD_ATTR, _datafld);
+        setStringProperty(component, HTML.DATASRC_ATTR, _datasrc);
+        setStringProperty(component, HTML.DATAFORMATAS_ATTR, _dataformatas);
         setBooleanProperty(component, HTML.DISABLED_ATTR, _disabled);
         setStringProperty(component, HTML.ONBLUR_ATTR, _onblur);
         setStringProperty(component, HTML.ONCHANGE_ATTR, _onchange);
         setStringProperty(component, HTML.ONFOCUS_ATTR, _onfocus);
         setStringProperty(component, HTML.ONSELECT_ATTR, _onselect);
         setBooleanProperty(component, HTML.READONLY_ATTR, _readonly);
-        setIntegerProperty(component, HTML.SIZE_ATTR, _size);
         setIntegerProperty(component, HTML.TABINDEX_ATTR, _tabindex);
 
         setBooleanProperty(component, JSFAttr.REQUIRED_ATTR, _required);
@@ -104,6 +108,21 @@ public class HtmlSelectBooleanCheckboxTag
     public void setChecked(String checked)
     {
         _checked = checked;
+    }
+
+    public void setDatafld(String datafld)
+    {
+        _datafld = datafld;
+    }
+
+    public void setDatasrc(String datasrc)
+    {
+        _datasrc = datasrc;
+    }
+
+    public void setDataformatas(String dataformatas)
+    {
+        _dataformatas = dataformatas;
     }
 
     public void setDisabled(String disabled)
@@ -134,11 +153,6 @@ public class HtmlSelectBooleanCheckboxTag
     public void setReadonly(String readonly)
     {
         _readonly = readonly;
-    }
-
-    public void setSize(String size)
-    {
-        _size = size;
     }
 
     public void setTabindex(String tabindex)

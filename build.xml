@@ -8,6 +8,7 @@
     <property name="myfaces.src" location="${project.dir}/src/myfaces"/>
     <property name="tlds.dir" location="${project.dir}/tlds"/>
     <property name="doc.dir" location="${project.dir}/doc"/>
+    <property name="build.dir" location="${project.dir}/build"/>
 
     <!-- Properties -->
     <property file="build.properties"/>
@@ -175,7 +176,7 @@
             antfile="build.xml"
             inheritall="false"
             target="clean"/>
-        <ant dir="webapps/tagunit"
+        <ant dir="${build.dir}/tagunit-webapp"
             antfile="build.xml"
             inheritall="false"
             target="clean"/>

@@ -51,7 +51,12 @@
               includes="*.tld"
               destdir="${web-inf.lib.dir}"
               style="${tlds.dir}/resolve_entities.xsl"
-              extension=".tld" />
+              extension=".tld">
+             <xmlcatalog>
+                 <dtd publicId="-//Sun Microsystems, Inc.//DTD JSP Tag Library 1.2//EN"
+                      location="${tlds.dir}/web-jsptaglibrary_1_2.dtd"/>
+             </xmlcatalog>
+        </xslt>
 
     </target>
 

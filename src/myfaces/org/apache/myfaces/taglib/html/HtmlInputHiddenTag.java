@@ -19,7 +19,6 @@
 package net.sourceforge.myfaces.taglib.html;
 
 import net.sourceforge.myfaces.renderkit.JSFAttr;
-import net.sourceforge.myfaces.renderkit.html.HTML;
 
 import javax.faces.component.UIComponent;
 
@@ -60,6 +59,7 @@ public class HtmlInputHiddenTag
     // UIInput attributes
     private String _required;
     private String _validator;
+    private String _valueChangeListener;
 
     protected void setProperties(UIComponent component)
     {
@@ -67,6 +67,7 @@ public class HtmlInputHiddenTag
 
         setBooleanProperty(component, JSFAttr.REQUIRED_ATTR, _required);
         setStringProperty(component, JSFAttr.VALIDATOR_ATTR, _validator);
+        setValueChangedListenerProperty(component, _valueChangeListener);
     }
 
     public void setRequired(String required)
@@ -77,5 +78,10 @@ public class HtmlInputHiddenTag
     public void setValidator(String validator)
     {
         _validator = validator;
+    }
+
+    public void setValueChangeListener(String valueChangeListener)
+    {
+        _valueChangeListener = valueChangeListener;
     }
 }

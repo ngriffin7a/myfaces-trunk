@@ -71,6 +71,7 @@ public class HtmlInputTextareaTag
     // UIInput attributes
     private String _required;
     private String _validator;
+    private String _valueChangeListener;
 
     //HtmlTextArea attributes
     // FIXME: is in RI, but not in HTML 4.0. what to do?
@@ -96,6 +97,7 @@ public class HtmlInputTextareaTag
 
         setBooleanProperty(component, JSFAttr.REQUIRED_ATTR, _required);
         setStringProperty(component, JSFAttr.VALIDATOR_ATTR, _validator);
+        setValueChangedListenerProperty(component, _valueChangeListener);
 
         setStringProperty(component, HTML.ALT_ATTR, _alt);
     }
@@ -173,6 +175,11 @@ public class HtmlInputTextareaTag
     public void setRequired(String required)
     {
         _required = required;
+    }
+
+    public void setValueChangeListener(String valueChangeListener)
+    {
+        _valueChangeListener = valueChangeListener;
     }
 
     public void setValidator(String validator)

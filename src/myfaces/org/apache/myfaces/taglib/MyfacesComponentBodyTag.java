@@ -186,4 +186,10 @@ public abstract class MyfacesComponentBodyTag
         MyfacesTagUtils.setValueBinding(context, component, propName, value);
     }
 
+    protected void setValueChangedListenerProperty(UIComponent component, String valueChangedListener)
+    {
+        //TODO:
+        throw new UnsupportedOperationException("not yet implemented");
+    }
+
 }

@@ -52,6 +52,9 @@ public class HtmlSelectManyListboxTag
     // HTML event handler attributes --> already implemented in HtmlComponentTag
 
     // HTML input attributes relevant for checkbox-input
+    private String _datafld;
+    private String _datasrc;
+    private String _dataformatas;
     private String _disabled;
     private String _name;
     private String _onblur;
@@ -72,6 +75,9 @@ public class HtmlSelectManyListboxTag
     {
         super.setProperties(component);
 
+        setStringProperty(component, HTML.DATAFLD_ATTR, _datafld);
+        setStringProperty(component, HTML.DATASRC_ATTR, _datasrc);
+        setStringProperty(component, HTML.DATAFORMATAS_ATTR, _dataformatas);
         setBooleanProperty(component, HTML.DISABLED_ATTR, _disabled);
         setStringProperty(component, HTML.NAME_ATTR, _name);
         setStringProperty(component, HTML.ONBLUR_ATTR, _onblur);
@@ -84,6 +90,21 @@ public class HtmlSelectManyListboxTag
         setBooleanProperty(component, JSFAttr.REQUIRED_ATTR, _required);
         setStringProperty(component, JSFAttr.VALIDATOR_ATTR, _validator);
    }
+
+    public void setDatafld(String datafld)
+    {
+        _datafld = datafld;
+    }
+
+    public void setDatasrc(String datasrc)
+    {
+        _datasrc = datasrc;
+    }
+
+    public void setDataformatas(String dataformatas)
+    {
+        _dataformatas = dataformatas;
+    }
 
     public void setDisabled(String disabled)
     {
