@@ -100,7 +100,11 @@ public class DataRenderer
         if (iterator == null)
         {
             Object v = uiComponent.currentValue(facesContext);
-            if (v instanceof Iterator)
+            if (v == null)
+            {
+                return null;
+            }
+            else if (v instanceof Iterator)
             {
                 iterator = (Iterator)v;
             }
