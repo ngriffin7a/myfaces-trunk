@@ -384,18 +384,6 @@ public class FacesConfig
         _factoryConfig = factoryConfig;
     }
     
-    public void addFactoryConfig(FactoryConfig factoryConfig)
-    {
-        if (_factoryConfig == null)
-        {
-            _factoryConfig = factoryConfig;
-        }
-        else
-        {
-            _factoryConfig.update(factoryConfig);
-        }
-    }
-
     public LifecycleConfig getLifecycleConfig()
     {
         return _lifecycleConfig;

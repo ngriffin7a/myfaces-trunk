@@ -22,6 +22,7 @@ import javax.faces.application.ApplicationFactory;
 import javax.faces.context.FacesContextFactory;
 import javax.faces.lifecycle.LifecycleFactory;
 import javax.faces.render.RenderKitFactory;
+import javax.faces.FactoryFinder;
 
 
 /**
@@ -33,73 +34,38 @@ public class FactoryConfig
 {
     //~ Instance fields ----------------------------------------------------------------------------
 
-    private ApplicationFactory  _applicationFactory;
-    private FacesContextFactory _facesContextFactory;
-    private LifecycleFactory    _lifecycleFactory;
-    private RenderKitFactory    _renderKitFactory;
+    private String  _applicationFactory;
+    private String _facesContextFactory;
+    private String _lifecycleFactory;
+    private String _renderKitFactory;
 
     //~ Methods ------------------------------------------------------------------------------------
 
-    public void setApplicationFactory(ApplicationFactory applicationFactory)
+    public void setApplicationFactory(String className)
     {
-        _applicationFactory = applicationFactory;
+        setFactory(FactoryFinder.APPLICATION_FACTORY, className);
     }
 
-    public ApplicationFactory getApplicationFactory()
+    public void setFacesContextFactory(String className)
     {
-        return _applicationFactory;
+        setFactory(FactoryFinder.APPLICATION_FACTORY, className);
     }
 
-    public void setFacesContextFactory(FacesContextFactory facesContextFactory)
+    public void setLifecycleFactory(String className)
     {
-        _facesContextFactory = facesContextFactory;
+        setFactory(FactoryFinder.APPLICATION_FACTORY, className);
     }
 
-    public FacesContextFactory getFacesContextFactory()
+    public void setRenderKitFactory(String className)
     {
-        return _facesContextFactory;
+        setFactory(FactoryFinder.APPLICATION_FACTORY, className);
     }
 
-    public void setLifecycleFactory(LifecycleFactory lifecycleFactory)
+    private void setFactory(String factoryName, String className)
     {
-        _lifecycleFactory = lifecycleFactory;
-    }
-
-    public LifecycleFactory getLifecycleFactory()
-    {
-        return _lifecycleFactory;
-    }
-
-    public void setRenderKitFactory(RenderKitFactory renderKitFactory)
-    {
-        _renderKitFactory = renderKitFactory;
-    }
-
-    public RenderKitFactory getRenderKitFactory()
-    {
-        return _renderKitFactory;
-    }
-
-    public void update(FactoryConfig factoryConfig)
-    {
-        if (factoryConfig._applicationFactory != null)
+        if (className != null)
         {
-            _applicationFactory = factoryConfig._applicationFactory;
-        }
-
-        if (factoryConfig._facesContextFactory != null)
-        {
-            _facesContextFactory = factoryConfig._facesContextFactory;
-        }
-
-        if (factoryConfig._lifecycleFactory != null)
-        {
-            _lifecycleFactory = factoryConfig._lifecycleFactory;
-        }
-
-        if (factoryConfig._renderKitFactory != null)
-        {
-            _renderKitFactory = factoryConfig._renderKitFactory;
+            FactoryFinder.setFactory(factoryName, className);
         }
     }
 }

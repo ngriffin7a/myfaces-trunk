@@ -46,7 +46,7 @@ public class SupportedComponentClassConfig
     {
         try
         {
-            _componentClass = Class.forName(componentClass, true, Thread.currentThread().getContextClassLoader()));
+            _componentClass = Class.forName(componentClass, true, Thread.currentThread().getContextClassLoader());
         }
         catch (ClassNotFoundException e)
         {

@@ -18,7 +18,7 @@
  */
 package net.sourceforge.myfaces.config;
 
-import javax.servlet.ServletContext;
+import javax.faces.context.ExternalContext;
 
 /**
  * DOCUMENT ME!
@@ -27,5 +27,5 @@ import javax.servlet.ServletContext;
  */
 public interface FacesConfigFactory
 {
-    public FacesConfig getFacesConfig(ServletContext servletContext);
+    public FacesConfig getFacesConfig(ExternalContext servletContext);
 }

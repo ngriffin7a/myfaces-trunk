@@ -18,6 +18,9 @@
  */
 package net.sourceforge.myfaces.config;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import javax.faces.FacesException;
 
 /**
@@ -27,6 +30,8 @@ import javax.faces.FacesException;
  */
 public class ConfigUtil
 {
+    private static final Log log = LogFactory.getLog(ConfigUtil.class);
+
     public static Object newInstance(String type) throws FacesException
     {
         if (type == null)
@@ -45,10 +50,12 @@ public class ConfigUtil
         }
         catch (InstantiationException e)
         {
+            log.error(e.getMessage(), e);
             throw new FacesException(e);
         }
         catch (IllegalAccessException e)
         {
+            log.error(e.getMessage(), e);
             throw new FacesException(e);
         }
     }
@@ -61,6 +68,7 @@ public class ConfigUtil
         }
         catch (ClassNotFoundException e)
         {
+            log.error(e.getMessage(), e);
             throw new FacesException(e);
         }
     }

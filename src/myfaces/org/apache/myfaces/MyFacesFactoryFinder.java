@@ -25,6 +25,7 @@ import net.sourceforge.myfaces.webapp.ServletMappingFactory;
 import net.sourceforge.myfaces.webapp.ServletMappingFactoryImpl;
 
 import javax.faces.FacesException;
+import javax.faces.context.ExternalContext;
 import javax.servlet.ServletContext;
 import java.util.HashMap;
 
@@ -45,9 +46,10 @@ public class MyFacesFactoryFinder
         DEFAULT_FACTORIES.put(FACES_CONFIG_FACTORY, FacesConfigFactoryImpl.class.getName());
     }
 
-    private static Object getFactory(ServletContext servletContext, String factoryName)
+    private static Object getFactory(ExternalContext context, String factoryName)
             throws FacesException
     {
+        ServletContext servletContext = (ServletContext)context;
         Object fact = servletContext.getAttribute(factoryName);
         if (fact == null)
         {
@@ -86,16 +88,16 @@ public class MyFacesFactoryFinder
     }
 
 
-    public static ServletMappingFactory getServletMappingFactory(ServletContext servletContext)
+    public static ServletMappingFactory getServletMappingFactory(ExternalContext context)
         throws FacesException
     {
-        return (ServletMappingFactory)getFactory(servletContext, SERVLET_MAPPING_FACTORY);
+        return (ServletMappingFactory)getFactory(context, SERVLET_MAPPING_FACTORY);
     }
 
-    public static FacesConfigFactory getFacesConfigFactory(ServletContext servletContext)
+    public static FacesConfigFactory getFacesConfigFactory(ExternalContext context)
         throws FacesException
     {
-        return (FacesConfigFactory)getFactory(servletContext, FACES_CONFIG_FACTORY);
+        return (FacesConfigFactory)getFactory(context, FACES_CONFIG_FACTORY);
     }
 
 }

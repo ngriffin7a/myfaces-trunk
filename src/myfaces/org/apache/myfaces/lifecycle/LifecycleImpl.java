@@ -19,6 +19,8 @@
 package net.sourceforge.myfaces.lifecycle;
 
 import net.sourceforge.myfaces.MyFacesFactoryFinder;
+import net.sourceforge.myfaces.config.FacesConfigFactory;
+import net.sourceforge.myfaces.config.FacesConfig;
 import net.sourceforge.myfaces.application.ViewHandlerImpl;
 import net.sourceforge.myfaces.context.FacesContextImpl;
 import net.sourceforge.myfaces.renderkit.html.state.StateRenderer;
@@ -34,7 +36,9 @@ import javax.faces.application.FacesMessage;
 import javax.faces.application.ViewHandler;
 import javax.faces.component.UICommand;
 import javax.faces.component.UIComponent;
+import javax.faces.component.UIViewRoot;
 import javax.faces.context.FacesContext;
+import javax.faces.context.ExternalContext;
 import javax.faces.event.*;
 import javax.faces.lifecycle.Lifecycle;
 import javax.faces.render.RenderKit;
@@ -125,18 +129,17 @@ public class LifecycleImpl
     {
         if (log.isTraceEnabled()) log.trace("entering reconstituteComponentTree in " + LifecycleImpl.class.getName());
 
+        UIViewRoot viewRoot = facesContext.getViewRoot();
+
         //Set locale
         Locale locale = facesContext.getExternalContext().getRequestLocale();
         if (locale != null)
         {
-            facesContext.setLocale(locale);
-        }
-        else
-        {
-            facesContext.setLocale(Locale.getDefault());
+            facesContext.getViewRoot().setLocale(locale);
         }
 
         //Create tree
+        ViewHandler viewHandler
         Tree tree = _treeFactory.getViewRoot(facesContext, getViewId(facesContext));
         facesContext.setTree(tree);
 

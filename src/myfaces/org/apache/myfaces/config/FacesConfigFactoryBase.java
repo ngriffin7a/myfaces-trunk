@@ -24,6 +24,7 @@ import org.apache.commons.logging.LogFactory;
 import org.xml.sax.EntityResolver;
 
 import javax.faces.FacesException;
+import javax.faces.context.ExternalContext;
 import javax.faces.component.UIComponent;
 import javax.faces.webapp.UIComponentTag;
 import javax.servlet.ServletContext;
@@ -61,8 +62,9 @@ public abstract class FacesConfigFactoryBase
     private static final String FACES_CONFIG_ATTR = FacesConfig.class.getName();
 
 
-    public FacesConfig getFacesConfig(ServletContext servletContext)
+    public FacesConfig getFacesConfig(ExternalContext context)
     {
+        ServletContext servletContext = (ServletContext)context;
         FacesConfig facesConfig = (FacesConfig)servletContext.getAttribute(FACES_CONFIG_ATTR);
         if (facesConfig != null)
         {

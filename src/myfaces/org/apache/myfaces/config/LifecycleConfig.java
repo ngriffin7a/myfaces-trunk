@@ -33,7 +33,6 @@ import java.util.*;
 public class LifecycleConfig
     implements Config
 {
-    private static final Log log = LogFactory.getLog(LifecycleConfig.class);
     //~ Instance fields ----------------------------------------------------------------------------
 
     private ArrayList _phaseListeners;
@@ -48,29 +47,13 @@ public class LifecycleConfig
         }
     }
 
-    public void addPhaseListener(String phaseListener)
+    public void addPhaseListener(PhaseListener phaseListener)
     {
-        try
-        {
-            Class clazz = Class.forName(phaseListener, true, Thread.currentThread().getContextClassLoader());
-            if (PhaseListener.class.isAssignableFrom(clazz))
+            if (_phaseListeners == null)
             {
-                if (_phaseListeners == null)
-                {
-                    _phaseListeners = new ArrayList();
-                }
-                _phaseListeners.add(clazz);
+                _phaseListeners = new ArrayList();
             }
-            else
-            {
-                log.error("Error in faces-config.xml - Class " + phaseListener +
-                    " must be an instance of " + PhaseListener.class.getName());
-            }
-        }
-        catch (ClassNotFoundException e)
-        {
-            log.error("Error in faces-config.xml - Class not found: " + phaseListener);
-        }
+            _phaseListeners.add(phaseListener);
     }
 
     public Iterator getPhaseListenerClasses()
