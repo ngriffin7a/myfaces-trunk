@@ -1,5 +1,6 @@
 <%@ page session="false"
 %><%@ taglib uri="/WEB-INF/myfaces_basic.tld" prefix="h"
+%><%@ taglib uri="/WEB-INF/myfaces_core.tld" prefix="f"
 %><%@ taglib uri="/WEB-INF/myfaces_ext.tld" prefix="x"
 %><html>
 
@@ -29,7 +30,6 @@
 <body>
 
 <jsp:useBean id="q_form" class="net.sourceforge.myfaces.examples.example2.QuotationForm" scope="request" />
-<jsp:useBean id="q_controller" class="net.sourceforge.myfaces.examples.example2.QuotationController" scope="application" />
 
 
 <h:use_faces>
@@ -53,14 +53,18 @@
                     <h:selectitem id="item2" value="'" label="Single" />
                     <h:selectitems id="moreItems" modelReference="q_form.selectOneItems" />
                 </h:selectone_menu>
-                <h:command_button id="button1" commandName="quotationOn" commandReference="q_controller.processEvent" label="Add quotes"/>
+                <h:command_button id="button1" commandName="quotationOn" label="Add quotes">
+                    <f:action_listener type="net.sourceforge.myfaces.examples.example2.QuotationController" ></f:action_listener>
+                </h:command_button>
 
                 <br><br>
                 <h:selectmany_listbox id="manyoptions" modelReference="q_form.selectManyValues" >
                     <h:selectitem id="item0" value="" label="select the unquote characters" />
                     <h:selectitems id="manyItems" modelReference="q_form.selectManyItems" />
                 </h:selectmany_listbox>
-                <h:command_button id="button2" commandName="quotationOff"  commandReference="q_controller.processEvent" label="Remove quotes"/><br>
+                <h:command_button id="button2" commandName="quotationOff" label="Remove quotes"><br>
+                    <f:action_listener type="net.sourceforge.myfaces.examples.example2.QuotationController" ></f:action_listener>
+                </h:command_button>
 
             </h:form>
 

@@ -40,7 +40,7 @@
         <%@include file="inc/navigation.jsp"  %>
 
         <x:page_body id="body" cssClass="pageBody" >
-            <h:form formName="formName" >
+            <h:form formName="formName">
 
                 <h:output_label for="selone_lb" key="label_cars" bundle="net.sourceforge.myfaces.examples.resource.example_messages"></h:output_label>
                 <h:selectone_listbox modelReference="carconf.car" >

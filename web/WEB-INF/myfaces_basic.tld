@@ -532,6 +532,7 @@
             <required>false</required>
             <rtexprvalue>false</rtexprvalue>
         </attribute>
+        <!-- TODO commandReference still needed? -->
         <attribute>
             <name>commandReference</name>
             <required>false</required>
@@ -702,6 +703,7 @@
             <required>false</required>
             <rtexprvalue>false</rtexprvalue>
         </attribute>
+        <!-- TODO commandReference still needed? -->
         <attribute>
             <name>commandReference</name>
             <required>false</required>

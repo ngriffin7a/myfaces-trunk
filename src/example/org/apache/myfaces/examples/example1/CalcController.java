@@ -21,7 +21,7 @@ package net.sourceforge.myfaces.examples.example1;
 import net.sourceforge.myfaces.examples.example1.CalcForm;
 
 import javax.faces.context.FacesContext;
-import javax.faces.event.CommandEvent;
+import javax.faces.event.*;
 
 /**
  * DOCUMENT ME!
@@ -29,11 +29,15 @@ import javax.faces.event.CommandEvent;
  * @version $Revision$ $Date$
  */
 public class CalcController
+    implements ActionListener
 {
-    public boolean calc(FacesContext facesContext, CommandEvent commandEvent)
+    public void processAction(ActionEvent event) throws AbortProcessingException
     {
+        String commandName = event.getActionCommand();
+        FacesContext facesContext = FacesContext.getCurrentInstance();
+
         CalcForm form = (CalcForm)facesContext.getModelValue("calcForm");
-        if (commandEvent.getCommandName().equals("add"))
+        if (commandName.equals("add"))
         {
             form.add();
         }
@@ -41,6 +45,11 @@ public class CalcController
         {
             form.subtract();
         }
-        return false;
     }
+
+    public PhaseId getPhaseId()
+    {
+        return PhaseId.UPDATE_MODEL_VALUES;
+    }
+
 }

@@ -32,10 +32,8 @@
 <body>
 
 <jsp:useBean id="calcForm" class="net.sourceforge.myfaces.examples.example1.CalcForm" scope="request" />
-<jsp:useBean id="calcCtrl" class="net.sourceforge.myfaces.examples.example1.CalcController" scope="application" />
 
 <jsp:useBean id="ucaseForm" class="net.sourceforge.myfaces.examples.example1.UCaseForm" scope="request" />
-<jsp:useBean id="ucaseCtrl" class="net.sourceforge.myfaces.examples.example1.UCaseController" scope="application" />
 
 <h:use_faces>
 
@@ -63,14 +61,21 @@
                     Number 1: <h:textentry_input id="number1" modelReference="calcForm.number1" maxlength="10" size="25" /><h:input_errors id="number1Error" clientId="form1.number1" cssClass="error" /><br>
                     Number 2: <h:textentry_input id="number2" modelReference="calcForm.number2" maxlength="10" size="25"/><h:input_errors id="number2Error" clientId="form1.number2" cssClass="error" /><br>
                     Result: <h:output_text id="result" modelReference="calcForm.result" /><br>
-                    <h:command_button id="addButton" commandName="add" commandReference="calcCtrl.calc" label="Add them">
-                        <f:action_listener type="net.sourceforge.myfaces.examples.example1.ActionListenerTest" ></f:action_listener>
+                    <h:command_button id="addButton" commandName="add" label="Add them">
+                        <f:action_listener type="net.sourceforge.myfaces.examples.example1.CalcController" ></f:action_listener>
                     </h:command_button>
-                    <h:command_button id="subtractButton" commandName="subtract" commandReference="calcCtrl.calc" label="Subtract them"/><br>
+                    <h:command_button id="subtractButton" commandName="subtract" label="Subtract them">
+                        <f:action_listener type="net.sourceforge.myfaces.examples.example1.CalcController" ></f:action_listener>
+                    </h:command_button>
+                    <br>
                 </h:form>
 
-                <h:command_hyperlink id="href1" commandName="add" commandReference="calcCtrl.calc">Add them by clicking this link</h:command_hyperlink><br>
-                <h:command_hyperlink id="href2" commandName="subtract" commandReference="calcCtrl.calc">Subtract them by clicking this link</h:command_hyperlink>
+                <h:command_hyperlink id="href1" commandName="add">Add them by clicking this link
+                    <f:action_listener type="net.sourceforge.myfaces.examples.example1.CalcController" ></f:action_listener>
+                </h:command_hyperlink><br>
+                <h:command_hyperlink id="href2" commandName="subtract">Subtract them by clicking this link
+                    <f:action_listener type="net.sourceforge.myfaces.examples.example1.CalcController" ></f:action_listener>
+                </h:command_hyperlink>
             </td></tr></table>
 
             <br>
@@ -80,8 +85,13 @@
             <table border="1"><tr><td>
                 <h:form id="form2" formName="ucaseForm">
                     <h:textentry_input id="text" modelReference="ucaseForm.text" /><br>
-                    <h:command_button id="ucaseButton" commandName="up" commandReference="ucaseCtrl.calc" label="Make it uppercase" />
-                    <h:command_button id="lcaseButton" commandName="low" commandReference="ucaseCtrl.calc" label="Make it lowercase" /><br>
+                    <h:command_button id="ucaseButton" commandName="up" label="Make it uppercase">
+                        <f:action_listener type="net.sourceforge.myfaces.examples.example1.UCaseController" ></f:action_listener>
+                    </h:command_button>
+                    <h:command_button id="lcaseButton" commandName="low" label="Make it lowercase" >
+                        <f:action_listener type="net.sourceforge.myfaces.examples.example1.UCaseController" ></f:action_listener>
+                    </h:command_button>
+                    <br>
                 </h:form>
             </td></tr></table>
 

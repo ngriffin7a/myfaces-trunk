@@ -21,7 +21,7 @@ package net.sourceforge.myfaces.examples.example2;
 import net.sourceforge.myfaces.examples.example2.QuotationForm;
 
 import javax.faces.context.FacesContext;
-import javax.faces.event.CommandEvent;
+import javax.faces.event.*;
 
 /**
  * DOCUMENT ME!
@@ -29,14 +29,12 @@ import javax.faces.event.CommandEvent;
  * @version $Revision$ $Date$
  */
 public class QuotationController
+    implements ActionListener
 {
-    public void processEvent(FacesContext facesContext, CommandEvent commandEvent)
+    public void processAction(ActionEvent event) throws AbortProcessingException
     {
-        String commandName = commandEvent.getCommandName();
-        if (commandName == null)
-        {
-            throw new IllegalArgumentException("Command must not be null.");
-        }
+        String commandName = event.getActionCommand();
+        FacesContext facesContext = FacesContext.getCurrentInstance();
 
         QuotationForm form = (QuotationForm)facesContext.getModelValue("q_form");
 
@@ -52,5 +50,9 @@ public class QuotationController
         {
             throw new IllegalArgumentException("Unknown Command " + commandName);
         }
+    }
+    public PhaseId getPhaseId()
+    {
+        return PhaseId.UPDATE_MODEL_VALUES;
     }
 }

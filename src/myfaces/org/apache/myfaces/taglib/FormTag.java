@@ -60,7 +60,7 @@ public class FormTag
         setRendererAttribute(FormRenderer.ACCEPT_ATTR, value);
     }
 
-    public void setAcceptcharset(String value)
+    public void setAcceptCharset(String value)
     {
         setRendererAttribute(FormRenderer.ACCEPT_CHARSET_ATTR, value);
     }

@@ -177,7 +177,7 @@ public abstract class MyFacesTag
 
 
     //event-hanlder attributes
-    public void setOnClick(String value)
+    public void setOnclick(String value)
     {
         setRendererAttribute(CommonRendererAttributes.ONCLICK_ATTR, value);
     }

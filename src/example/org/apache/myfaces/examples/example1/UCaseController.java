@@ -21,7 +21,7 @@ package net.sourceforge.myfaces.examples.example1;
 import net.sourceforge.myfaces.examples.example1.UCaseForm;
 
 import javax.faces.context.FacesContext;
-import javax.faces.event.CommandEvent;
+import javax.faces.event.*;
 
 /**
  * DOCUMENT ME!
@@ -29,18 +29,26 @@ import javax.faces.event.CommandEvent;
  * @version $Revision$ $Date$
  */
 public class UCaseController
+    implements ActionListener
 {
-    public boolean calc(FacesContext facesContext, CommandEvent commandEvent)
+    public void processAction(ActionEvent event) throws AbortProcessingException
     {
+        String commandName = event.getActionCommand();
+        FacesContext facesContext = FacesContext.getCurrentInstance();
+
         UCaseForm form = (UCaseForm)facesContext.getModelValue("ucaseForm");
-        if (commandEvent.getCommandName().equals("up"))
+        if (commandName.equals("up"))
         {
             form.uppercase();
         }
-        else if (commandEvent.getCommandName().equals("low"))
+        else if (commandName.equals("low"))
         {
             form.lowercase();
         }
-        return false;
     }
+    public PhaseId getPhaseId()
+    {
+        return PhaseId.UPDATE_MODEL_VALUES;
+    }
+
 }

@@ -67,7 +67,7 @@ public class TextEntryInputTag
         setRendererAttribute(TextRenderer.DATAFLD_ATTR, value);
     }
 
-    public void setDdatasrc(String value)
+    public void setDatasrc(String value)
     {
         setRendererAttribute(TextRenderer.DATASRC_ATTR, value);
     }
