@@ -24,14 +24,11 @@ import net.sourceforge.myfaces.component.ext.UISaveState;
 import net.sourceforge.myfaces.convert.ConverterUtils;
 import net.sourceforge.myfaces.convert.impl.StringArrayConverter;
 import net.sourceforge.myfaces.renderkit.html.jspinfo.JspInfo;
-import net.sourceforge.myfaces.renderkit.html.state.TreeCopier;
 import net.sourceforge.myfaces.taglib.core.ActionListenerTag;
-import net.sourceforge.myfaces.tree.TreeUtils;
 import net.sourceforge.myfaces.util.bean.BeanUtils;
 import net.sourceforge.myfaces.util.logging.LogUtil;
 
 import javax.faces.FacesException;
-import javax.faces.FactoryFinder;
 import javax.faces.component.UICommand;
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIInput;
@@ -42,7 +39,6 @@ import javax.faces.event.ActionListener;
 import javax.faces.event.FacesListener;
 import javax.faces.event.ValueChangedListener;
 import javax.faces.tree.Tree;
-import javax.faces.tree.TreeFactory;
 import javax.servlet.ServletRequest;
 import java.beans.PropertyDescriptor;
 import java.io.IOException;
@@ -64,12 +60,12 @@ public class MinimizingStateRestorer
 
     public void restoreState(FacesContext facesContext) throws IOException
     {
-        Tree requestTree = facesContext.getTree();
+        String requestTreeId = facesContext.getTree().getTreeId();
         Map stateMap = getStateMap(facesContext);
 
         String previousTreeId = getStateParameter(stateMap,
                                                   MinimizingStateSaver.TREE_ID_REQUEST_PARAM);
-        if (previousTreeId != null && requestTree.getTreeId().equals(previousTreeId))
+        if (previousTreeId != null && requestTreeId.equals(previousTreeId))
         {
             //recreate beans of "request" scope
             recreateRequestScopeBeans(facesContext);
@@ -78,7 +74,8 @@ public class MinimizingStateRestorer
             restoreModelValues(facesContext, stateMap, false);
 
             //restore previous tree
-            restorePreviousTree(facesContext, stateMap, requestTree);
+            Tree tree = restorePreviousTree(facesContext, stateMap, requestTreeId);
+            facesContext.setTree(tree);
 
             //restore listeners:
             restoreListeners(facesContext, stateMap);
@@ -93,13 +90,14 @@ public class MinimizingStateRestorer
     }
 
 
-    protected void restorePreviousTree(FacesContext facesContext,
+    protected Tree restorePreviousTree(FacesContext facesContext,
                                        Map stateMap,
-                                       Tree tree)
+                                       String treeId)
     {
         //restore "hint" about unrendered components
         Set unrendererComponents = restoreUnrenderedComponents(stateMap);
 
+        /*
         //restore tree
         Tree staticTree = JspInfo.getTree(facesContext, tree.getTreeId());
         TreeCopier treeCopier = new TreeCopier(facesContext);
@@ -112,15 +110,80 @@ public class MinimizingStateRestorer
         for (Iterator it = TreeUtils.treeIterator(tree); it.hasNext();)
         {
             UIComponent comp = (UIComponent)it.next();
+            String uniqueId = UIComponentUtils.getUniqueComponentId(facesContext, comp);
             restoreComponent(facesContext, stateMap, comp);
         }
+        */
+
+        //restore tree
+        Tree tree = JspInfo.getTreeClone(facesContext, treeId);
+
+        //restore component states and remove previously unrendered components
+        traverseTree(facesContext, stateMap, unrendererComponents, tree.getRoot());
 
         //remap tagHash
         TagHashHack.convertUniqueIdsBackToComponents(facesContext, tree);
 
         facesContext.getServletRequest()
             .setAttribute(PREVIOUS_TREE_REQUEST_ATTR, tree);
+        return tree;
     }
+
+
+    private void traverseTree(FacesContext facesContext,
+                              Map stateMap,
+                              Set unrendererComponents,
+                              UIComponent uiComponent)
+    {
+        restoreComponent(facesContext, stateMap, uiComponent);
+
+        for (int i = 0, len = uiComponent.getChildCount(); i < len; i++)
+        {
+            UIComponent child = uiComponent.getChild(i);
+            String uniqueId = UIComponentUtils.getUniqueComponentId(facesContext, child);
+            if (unrendererComponents.contains(uniqueId))
+            {
+                uiComponent.removeChild(i);
+                i--;
+                len--;
+            }
+            else
+            {
+                traverseTree(facesContext, stateMap, unrendererComponents, child);
+            }
+        }
+
+        List facetsToBeRemoved = null;
+        for (Iterator it = uiComponent.getFacetNames(); it.hasNext(); )
+        {
+            String facetName = (String)it.next();
+            UIComponent child = uiComponent.getFacet(facetName);
+            String uniqueId = UIComponentUtils.getUniqueComponentId(facesContext, child);
+            if (unrendererComponents.contains(uniqueId))
+            {
+                //we must not remove via Iterator,
+                //because we cannot be sure that it (properly) supports the remove method
+                if (facetsToBeRemoved == null)
+                {
+                    facetsToBeRemoved = new ArrayList();
+                }
+                facetsToBeRemoved.add(facetName);
+            }
+            else
+            {
+                traverseTree(facesContext, stateMap, unrendererComponents, child);
+            }
+        }
+
+        if (facetsToBeRemoved != null)
+        {
+            for (int i = 0; i < facetsToBeRemoved.size(); i++)
+            {
+                uiComponent.removeFacet((String)facetsToBeRemoved.get(i));
+            }
+        }
+    }
+
 
 
     protected Map getStateMap(FacesContext facesContext)
@@ -566,11 +629,15 @@ public class MinimizingStateRestorer
             return null;
         }
 
+        /*
         TreeFactory treeFactory = (TreeFactory)FactoryFinder.getFactory(FactoryFinder.TREE_FACTORY);
         tree = treeFactory.getTree(facesContext, previousTreeId);
 
         restorePreviousTree(facesContext, stateMap, tree);
         return tree;
+        */
+
+        return restorePreviousTree(facesContext, stateMap, previousTreeId);
     }
 
 }

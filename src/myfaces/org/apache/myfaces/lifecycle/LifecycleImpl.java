@@ -143,10 +143,6 @@ public class LifecycleImpl
     {
         LogUtil.getLogger().entering();
 
-        //Create tree
-        Tree tree = _treeFactory.getTree(facesContext, getTreeId(facesContext));
-        facesContext.setTree(tree);
-
         //Set locale
         HttpServletRequest request = (HttpServletRequest)facesContext.getServletRequest();
         if (request.getLocale() != null)
@@ -157,6 +153,10 @@ public class LifecycleImpl
         {
             facesContext.setLocale(Locale.getDefault());
         }
+
+        //Create tree
+        Tree tree = _treeFactory.getTree(facesContext, getTreeId(facesContext));
+        facesContext.setTree(tree);
 
         //Restore state
         RenderKit renderKit = _rkFactory.getRenderKit(tree.getRenderKitId());

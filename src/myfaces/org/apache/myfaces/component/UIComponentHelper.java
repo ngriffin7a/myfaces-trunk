@@ -21,6 +21,7 @@ package net.sourceforge.myfaces.component;
 import javax.faces.context.FacesContext;
 import javax.faces.component.UIComponent;
 import javax.faces.component.NamingContainer;
+import java.io.Serializable;
 
 /**
  * DOCUMENT ME!
@@ -28,7 +29,7 @@ import javax.faces.component.NamingContainer;
  * @version $Revision$ $Date$
  */
 public class UIComponentHelper
-    implements CommonComponentAttributes
+    implements CommonComponentAttributes, Serializable
 {
     private UIComponent _uiComponent;
 

@@ -31,7 +31,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.tree.Tree;
 import javax.faces.webapp.FacesTag;
 import javax.servlet.ServletContext;
-import java.io.IOException;
+import java.io.*;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.*;
@@ -62,7 +62,7 @@ public class JspInfo
     private Map _jspBeanInfosMap = new HashMap();
     private List _saveStateComponents = new ArrayList();
     private Map _componentMap = new HashMap();
-
+    private byte[] _serializedTree = null;
 
     public JspInfo(Tree tree)
     {
@@ -72,6 +72,44 @@ public class JspInfo
     public Tree getTree()
     {
         return _tree;
+    }
+
+    public Tree getTreeClone()
+    {
+        if (_serializedTree == null)
+        {
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            try
+            {
+                ObjectOutputStream oos = new ObjectOutputStream(baos);
+                oos.writeObject(_tree);
+                oos.close();
+                baos.close();
+            }
+            catch (IOException e)
+            {
+                LogUtil.getLogger().severe(e.getMessage());
+                throw new RuntimeException(e);
+            }
+            _serializedTree = baos.toByteArray();
+        }
+
+        try
+        {
+            ByteArrayInputStream bais = new ByteArrayInputStream(_serializedTree);
+            ObjectInputStream ois = new ObjectInputStream(bais);
+            return (Tree)ois.readObject();
+        }
+        catch (IOException e)
+        {
+            LogUtil.getLogger().severe(e.getMessage());
+            throw new RuntimeException(e);
+        }
+        catch (ClassNotFoundException e)
+        {
+            LogUtil.getLogger().severe(e.getMessage());
+            throw new RuntimeException(e);
+        }
     }
 
     public void setJspBeanInfo(String beanId, JspBeanInfo jspBeanInfo)
@@ -150,9 +188,15 @@ public class JspInfo
 
 
     public static Tree getTree(FacesContext facesContext,
-                                     String treeId)
+                               String treeId)
     {
         return getJspInfo(facesContext, treeId).getTree();
+    }
+
+    public static Tree getTreeClone(FacesContext facesContext,
+                                    String treeId)
+    {
+        return getJspInfo(facesContext, treeId).getTreeClone();
     }
 
     public static JspBeanInfo getJspBeanInfo(FacesContext facesContext,
