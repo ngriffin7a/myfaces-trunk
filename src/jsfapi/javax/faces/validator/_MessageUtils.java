@@ -16,7 +16,7 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package javax.faces.component;
+package javax.faces.validator;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
@@ -33,16 +33,15 @@ class _MessageUtils
 {
     private static final String DETAIL_SUFFIX = "_detail";
 
-    static void addErrorMessage(FacesContext facesContext,
-                                UIComponent component,
-                                String messageId)
+    static FacesMessage getErrorMessage(FacesContext facesContext,
+                                        String messageId,
+                                        Object args[])
     {
-        facesContext.addMessage(component.getClientId(facesContext),
-                                getMessage(facesContext,
-                                           facesContext.getViewRoot().getLocale(),
-                                           FacesMessage.SEVERITY_ERROR,
-                                           messageId,
-                                           null));
+        return getMessage(facesContext,
+                          facesContext.getViewRoot().getLocale(),
+                          FacesMessage.SEVERITY_ERROR,
+                          messageId,
+                          args);
     }
 
     static FacesMessage getMessage(FacesContext facesContext,

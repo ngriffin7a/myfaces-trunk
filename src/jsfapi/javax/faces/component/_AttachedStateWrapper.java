@@ -49,7 +49,7 @@ class _AttachedStateWrapper
         return _class;
     }
 
-    public Serializable getWrappedStateObject()
+    public Object getWrappedStateObject()
     {
         return _wrappedStateObject;
     }

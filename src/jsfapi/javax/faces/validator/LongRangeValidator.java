@@ -78,8 +78,7 @@ public class LongRangeValidator
                 dvalue > _maximum.longValue())
             {
                 Object[] args = {_minimum, _maximum};
-                throw new ValidatorException(
-                    MessageFactory.getMessage(facesContext, NOT_IN_RANGE_MESSAGE_ID, args));
+                throw new ValidatorException(_MessageUtils.getErrorMessage(facesContext, NOT_IN_RANGE_MESSAGE_ID, args));
             }
         }
         else if (_minimum != null)
@@ -87,8 +86,7 @@ public class LongRangeValidator
             if (dvalue < _minimum.longValue())
             {
                 Object[] args = {_minimum};
-                throw new ValidatorException(
-                    MessageFactory.getMessage(facesContext, MINIMUM_MESSAGE_ID, args));
+                throw new ValidatorException(_MessageUtils.getErrorMessage(facesContext, MINIMUM_MESSAGE_ID, args));
             }
         }
         else if (_maximum != null)
@@ -96,8 +94,7 @@ public class LongRangeValidator
             if (dvalue > _maximum.longValue())
             {
                 Object[] args = {_maximum};
-                throw new ValidatorException(
-                    MessageFactory.getMessage(facesContext, MAXIMUM_MESSAGE_ID, args));
+                throw new ValidatorException(_MessageUtils.getErrorMessage(facesContext, MAXIMUM_MESSAGE_ID, args));
             }
         }
     }
@@ -117,7 +114,7 @@ public class LongRangeValidator
             }
             catch (NumberFormatException e)
             {
-                throw new ValidatorException(MessageFactory.getMessage(facesContext, TYPE_MESSAGE_ID));
+                throw new ValidatorException(_MessageUtils.getErrorMessage(facesContext, TYPE_MESSAGE_ID, null));
             }
         }
     }

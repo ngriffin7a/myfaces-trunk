@@ -38,7 +38,7 @@ public class ListDataModel extends DataModel
         super();
     }
 
-    public ListDataModel(Object[] list)
+    public ListDataModel(List list)
     {
         if (list == null) throw new NullPointerException("list");
         setWrappedData(list);

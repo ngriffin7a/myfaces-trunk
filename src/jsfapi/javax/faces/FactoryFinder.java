@@ -29,10 +29,7 @@ import java.util.Map;
 import java.util.Stack;
 
 /**
- * TODO:
- * - The "META-INF/services/" thing: is it done by configuration reader?
- * - Who calls the setFactory method, and is it guaranteed that this is done in the right order?
- * - Does spec explicitly say, that reading faces-config is not the job of the FactoryFinder?
+ * TODO: The "META-INF/services/" thing
  *
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$

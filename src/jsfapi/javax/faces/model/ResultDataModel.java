@@ -38,7 +38,7 @@ public class ResultDataModel extends DataModel
         super();
     }
 
-    public ResultDataModel(Result[] result)
+    public ResultDataModel(Result result)
     {
         if (result == null) throw new NullPointerException("result");
         setWrappedData(result);

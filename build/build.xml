@@ -6,6 +6,7 @@
     <!-- Constants -->
     <property name="project.dir" location="${basedir}/.."/>
     <property name="myfaces.src" location="${project.dir}/src/myfaces"/>
+    <property name="jsfapi.src" location="${project.dir}/src/jsfapi"/>
     <property name="tlds.dir" location="${project.dir}/tlds"/>
     <property name="doc.dir" location="${project.dir}/doc"/>
     <property name="build.dir" location="${project.dir}/build"/>
@@ -20,15 +21,23 @@
 
     <property name="resolved-tlds.dir" location="${temp.dir}/myfaces-tlds"/>
 
-    <!-- classpath for normal compiling -->
-    <path id="project.class.path">
-        <pathelement location="${sun-jsf-api.jar}"/>
+    <!-- classpath for compiling api classes -->
+    <path id="jsfapi.class.path">
+        <!--pathelement location="${sun-jsf-api.jar}"/-->
+        <pathelement location="${servlet-api.jar}"/>
+        <pathelement location="${jsp-api.jar}"/>
+        <pathelement location="${jstl.jar}"/>
+    </path>
+
+    <!-- classpath for compiling impl classes -->
+    <path id="myfaces.class.path">
+        <!--pathelement location="${sun-jsf-api.jar}"/-->
+        <pathelement location="${jsfapi.src}"/>
         <pathelement location="${servlet-api.jar}"/>
         <pathelement location="${jsp-api.jar}"/>
         <pathelement location="${cos.jar}"/>
         <pathelement location="${commons-logging.jar}"/>
     </path>
-
 
     <target name="myfaces-jar"
             description="builds the myfaces.jar file"
@@ -37,9 +46,9 @@
         <!-- temporary dir -->
         <mkdir dir="${temp.dir}/myfaces-jar"/>
 
-        <!-- compile main classes -->
-        <mkdir dir="${temp.dir}/myfaces-jar/classes"/>
-        <antcall target="-compile-with-javac"/>
+        <!-- compile classes -->
+        <antcall target="-compile-api"/>
+        <antcall target="-compile-impl"/>
 
         <!-- timestamp for the manifest -->
         <tstamp>
@@ -88,13 +97,13 @@
     </target>
 
 
-    <target name="apidoc"
+    <target name="javadoc"
             description="creates javadoc for MyFaces classes">
         <mkdir dir="${doc.dir}/javadoc"/>
         <javadoc sourcepath="${myfaces.src}"
                  destdir="${doc.dir}/javadoc"
                  packagenames="net.sourceforge.myfaces.*"
-                 classpathref="project.class.path"
+                 classpathref="myfaces.class.path"
                  failonerror="true"/>
     </target>
 
@@ -109,7 +118,7 @@
     </target>
 
     <target name="bin-release"
-            depends="myfaces-jar, apidoc, tlddoc"
+            depends="myfaces-jar, javadoc, tlddoc"
             description="creates the binary release file myfaces-x.x.x.tgz (don't forget to adjust manifest.properties!)">
         <tar destfile="${project.dir}/myfaces-${manifest.impl.version}.tgz"
              compression="gzip">
@@ -126,7 +135,7 @@
 
 
     <target name="src-release"
-            depends="apidoc, tlddoc"
+            depends="javadoc, tlddoc"
             description="creates the source release file myfaces-x.x.x-src.tgz (don't forget to adjust manifest.properties!)">
         <tar destfile="${project.dir}/myfaces-${manifest.impl.version}-src.tgz"
              compression="gzip">
@@ -182,11 +191,21 @@
     </target>
 
 
-    <target name="-compile-with-javac">
+    <target name="-compile-api">
+        <mkdir dir="${temp.dir}/myfaces-jar/classes"/>
+        <javac srcdir="${jsfapi.src}"
+               destdir="${temp.dir}/myfaces-jar/classes"
+               optimize="${javac.optimize}"
+               classpathref="jsfapi.class.path">
+        </javac>
+    </target>
+
+    <target name="-compile-impl">
+        <mkdir dir="${temp.dir}/myfaces-jar/classes"/>
         <javac srcdir="${myfaces.src}"
                destdir="${temp.dir}/myfaces-jar/classes"
                optimize="${javac.optimize}"
-               classpathref="project.class.path">
+               classpathref="myfaces.class.path">
         </javac>
     </target>
 

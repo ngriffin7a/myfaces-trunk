@@ -6,6 +6,9 @@ servlet-api.jar = ${project.dir}/lib/servlet-api.jar
 # File path to JSP API archive version 2.0
 jsp-api.jar = ${project.dir}/lib/jsp-api.jar
 
+# File path to JSP API archive version 2.0
+jstl.jar = ${project.dir}/lib/jstl.jar
+
 # File path to com.oreilly.servlet package
 cos.jar = ${project.dir}/lib/cos.jar
 
@@ -19,7 +22,7 @@ commons-el.jar = ${project.dir}/lib/commons-el.jar
 # (not included, please download from http://java.sun.com/j2ee/javaserverfaces/download.html)
 sun-jsf-api.jar = ${project.dir}/lib/jsf-api.jar
 
-# Destination file path of MyFaces archive to be created
+# Destination file path of MyFaces implementation archive to be created
 myfaces.jar = ${project.dir}/lib/myfaces.jar
 
 # Temporary directory

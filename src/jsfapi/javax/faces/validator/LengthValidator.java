@@ -79,8 +79,7 @@ public class LengthValidator
                 length > _maximum.intValue())
             {
                 Object[] args = {_minimum, _maximum};
-                throw new ValidatorException(
-                    MessageFactory.getMessage(facesContext, NOT_IN_RANGE_MESSAGE_ID, args));
+                throw new ValidatorException(_MessageUtils.getErrorMessage(facesContext, NOT_IN_RANGE_MESSAGE_ID, args));
             }
         }
         else if (_minimum != null)
@@ -88,8 +87,7 @@ public class LengthValidator
             if (length < _minimum.intValue())
             {
                 Object[] args = {_minimum};
-                throw new ValidatorException(
-                    MessageFactory.getMessage(facesContext, MINIMUM_MESSAGE_ID, args));
+                throw new ValidatorException(_MessageUtils.getErrorMessage(facesContext, MINIMUM_MESSAGE_ID, args));
             }
         }
         else if (_maximum != null)
@@ -97,8 +95,7 @@ public class LengthValidator
             if (length > _maximum.intValue())
             {
                 Object[] args = {_maximum};
-                throw new ValidatorException(
-                    MessageFactory.getMessage(facesContext, MAXIMUM_MESSAGE_ID, args));
+                throw new ValidatorException(_MessageUtils.getErrorMessage(facesContext, MAXIMUM_MESSAGE_ID, args));
             }
         }
 
