@@ -591,7 +591,7 @@ public class MyFacesTagHelper
                     //child with if was found
                     findComp = c;
                     //childIndex is needed for tags that extend UIComponentTag directly
-                    UIComponentTagHacks.setChildIndex(getParentUIComponentTag(), i + 1);
+                    UIComponentTagHacks.setChildIndex(_tag.getParentUIComponentTag(), i + 1);
                     break;
                 }
             }

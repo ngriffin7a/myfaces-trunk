@@ -324,4 +324,61 @@ public class UIComponentTagHacks
     }
 
 
+    /**
+     * Hack to set the private "childIndex" field.
+     */
+    public static void setChildIndex(Object tag, int newValue)
+    {
+        try
+        {
+            Field f = null;
+            Class c = tag.getClass();
+            while (f == null && c != null && !c.equals(Object.class))
+            {
+                try
+                {
+                    f = c.getDeclaredField("childIndex");
+                }
+                catch (NoSuchFieldException e)
+                {
+                }
+                c = c.getSuperclass();
+            }
+
+            if (f == null)
+            {
+                throw new RuntimeException(new NoSuchFieldException());
+            }
+
+            if (f.isAccessible())
+            {
+                f.set(tag, new Integer(newValue));
+            }
+            else
+            {
+                try
+                {
+                    final Field finalF = f;
+                    AccessController.doPrivileged(
+                        new PrivilegedAction()
+                        {
+                            public Object run()
+                            {
+                                finalF.setAccessible(true);
+                                return null;
+                            }
+                        });
+                    f.set(tag, new Integer(newValue));
+                }
+                finally
+                {
+                    f.setAccessible(false);
+                }
+            }
+        }
+        catch (IllegalAccessException e)
+        {
+            throw new RuntimeException(e);
+        }
+    }
 }

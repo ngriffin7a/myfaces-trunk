@@ -5,6 +5,8 @@ MyFaces Release Notes
 Changes in Release 0.4.4
 * added "rendererType" attribute to tag library for all components.
 * added RadioRenderer & selectone_radio tag (see carconfigurator example)
+* new hack to make MyFaces more compatible (tags that extend UIComponentTag
+  directly should work better)
 
 ----------------------------------------------------------------------
 Changes in Release 0.4.3
