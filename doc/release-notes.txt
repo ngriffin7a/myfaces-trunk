@@ -2,9 +2,13 @@ MyFaces Release Notes
 =====================
 
 ----------------------------------------------------------------------
+Changes in Release 1.0.2 alpha
+* refactored fileupload component to net.sourceforge.myfaces.custom.fileupload package
+
+----------------------------------------------------------------------
 Changes in Release 1.0.1 alpha
 * new DataList component (dynamical List based on UIData - see examples webapp)
-* new (speadsheet like) editable table example (see master/detail example in examples webapp) 
+* new (speadsheet like) editable table example (see master/detail example in examples webapp)
 * x-checked various Renderers for Specs (tlddoc) compliance
 * serious bug in UIData fixed
 * server state saving bug fixed

@@ -8,6 +8,7 @@
     <property name="codgen-src.dir" location="${project.dir}/src/codegen"/>
     <property name="jsfapi-src.dir" location="${project.dir}/src/jsfapi"/>
     <property name="myfaces-src.dir" location="${project.dir}/src/myfaces"/>
+    <property name="components-src.dir" location="${project.dir}/src/components"/>
 
     <!-- Properties -->
     <property file="../build.properties"/>
@@ -96,6 +97,16 @@
         <generate basedir="${myfaces-src.dir}"
                   includes="${single-component}.xml"
                   destdir="${myfaces-src.dir}"
+                  velocityLoaderPath="${codgen-src.dir}/net/sourceforge/myfaces/codegen/resource" />
+    </target>
+
+    <target name="generate-single-components-component" depends="-compile" >
+        <taskdef name="generate" classname="net.sourceforge.myfaces.codegen.component.ComponentGeneratorTask">
+            <classpath refid="codegen.class.path"/>
+        </taskdef>
+        <generate basedir="${components-src.dir}"
+                  includes="${single-component}.xml"
+                  destdir="${components-src.dir}"
                   velocityLoaderPath="${codgen-src.dir}/net/sourceforge/myfaces/codegen/resource" />
     </target>
 
