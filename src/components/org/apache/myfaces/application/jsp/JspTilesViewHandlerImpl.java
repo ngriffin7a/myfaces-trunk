@@ -15,31 +15,31 @@
  */
 package net.sourceforge.myfaces.application.jsp;
 
+import net.sourceforge.myfaces.webapp.webxml.ServletMapping;
+import net.sourceforge.myfaces.webapp.webxml.WebXml;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.struts.tiles.DefinitionsFactory;
-import org.apache.struts.tiles.ComponentContext;
-import org.apache.struts.tiles.ComponentDefinition;
-import org.apache.struts.tiles.DefinitionsFactoryException;
+import org.apache.struts.tiles.*;
 
-import javax.faces.application.ViewHandler;
-import javax.faces.context.FacesContext;
-import javax.faces.context.ExternalContext;
-import javax.faces.component.UIViewRoot;
 import javax.faces.FacesException;
-import javax.servlet.ServletRequest;
+import javax.faces.application.ViewHandler;
+import javax.faces.component.UIViewRoot;
+import javax.faces.context.ExternalContext;
+import javax.faces.context.FacesContext;
 import javax.servlet.ServletContext;
-import java.util.Locale;
-import java.util.List;
+import javax.servlet.ServletRequest;
 import java.io.IOException;
-
-import net.sourceforge.myfaces.webapp.webxml.WebXml;
-import net.sourceforge.myfaces.webapp.webxml.ServletMapping;
+import java.util.List;
+import java.util.Locale;
 
 /**
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.3  2004/08/26 14:25:21  manolito
+ * JspTilesViewHandlerInitializer no longer needed, JspTilesViewHandlerImpl is initialized automatically now
+ *
  * Revision 1.2  2004/07/19 08:18:19  royalts
  * moved net.sourceforge.myfaces.webapp.webxml and net.sourceforge.util.xml to share src-tree (needed WebXml for JspTilesViewHandlerImpl)
  *
@@ -54,6 +54,7 @@ public class JspTilesViewHandlerImpl
 
     private static final Log log = LogFactory.getLog(JspTilesViewHandlerImpl.class);
     private static final String TILES_EXTENSION = ".tiles";
+    private static final String TILES_DEF_ATTR = "tiles-definitions";
 
     private DefinitionsFactory _definitionsFactory;
 
@@ -67,19 +68,43 @@ public class JspTilesViewHandlerImpl
         _definitionsFactory = definitionsFactory;
     }
 
+    public DefinitionsFactory getDefinitionsFactory()
+    {
+        if (_definitionsFactory == null)
+        {
+            if (log.isDebugEnabled()) log.debug("JspTilesViewHandlerImpl init");
+            ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
+            String tilesDefinitions = context.getInitParameter("tiles-definitions");
+            if (tilesDefinitions == null)
+            {
+                log.fatal("No Tiles definition found. Specify Definition files by adding "
+                          + TILES_DEF_ATTR + " param in your web.xml");
+                return null;
+            }
+
+            DefinitionsFactoryConfig factoryConfig = new DefinitionsFactoryConfig();
+            factoryConfig.setDefinitionConfigFiles(tilesDefinitions);
+            try
+            {
+                if (log.isDebugEnabled()) log.debug("Reading tiles definitions");
+                _definitionsFactory = TilesUtil.createDefinitionsFactory((ServletContext)context.getContext(),
+                                                                        factoryConfig);
+            }
+            catch (DefinitionsFactoryException e)
+            {
+                log.fatal("Error reading tiles definitions", e);
+                return null;
+            }
+        }
+        return _definitionsFactory;
+    }
+
     public void renderView(FacesContext facesContext, UIViewRoot viewToRender) throws IOException, FacesException
     {
         if (viewToRender == null)
         {
             log.fatal("viewToRender must not be null");
             throw new NullPointerException("viewToRender must not be null");
-        }
-        if (_definitionsFactory == null)
-        {
-            log.fatal("JspTilesViewHandlerImpl not initialized. " +
-                      "Check if you added the "  + JspTilesViewHandlerInitializer.class.getName() +
-                      " ServletContextListener to your web.xml. ");
-            throw new NullPointerException("Tiles DefinitionsFactory must not be null");
         }
 
         ExternalContext externalContext = facesContext.getExternalContext();
@@ -126,7 +151,7 @@ public class JspTilesViewHandlerImpl
         ComponentDefinition definition = null;
         try
         {
-            definition = _definitionsFactory.getDefinition(tilesId, request, servletContext);
+            definition = getDefinitionsFactory().getDefinition(tilesId, request, servletContext);
             if (definition == null)
             {
                 log.error("could not find tiles-definition with name " + tilesId);
