@@ -78,8 +78,7 @@ public class EqualValidator implements Validator, StateHolder {
 
 		Object[] args = {uiComponent.getId(),foreignComp.getId()};
 
-		
-		if(foreignComp==null || !foreignComp.getValue().toString().equals(value.toString())  )
+		if(foreignComp.getValue()==null || !foreignComp.getValue().toString().equals(value.toString())  )
 			throw new ValidatorException(MessageUtils.getMessage(FacesMessage.SEVERITY_ERROR,EQUAL_MESSAGE_ID, args));
 		
 	}
