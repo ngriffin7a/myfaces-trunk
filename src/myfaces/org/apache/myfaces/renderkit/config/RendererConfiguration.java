@@ -19,7 +19,6 @@
 package net.sourceforge.myfaces.renderkit.config;
 
 import net.sourceforge.myfaces.renderkit.attr.AttrDescrImpl;
-import net.sourceforge.myfaces.renderkit.attr.DocumentParseException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;

@@ -39,8 +39,6 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.IOException;
 
-import net.sourceforge.myfaces.renderkit.attr.DocumentParseException;
-
 /**
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
