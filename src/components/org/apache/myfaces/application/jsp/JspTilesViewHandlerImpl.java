@@ -29,6 +29,10 @@ import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
@@ -37,6 +41,9 @@ import java.util.Locale;
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.8  2004/11/08 09:09:42  tomsp
+ * no message
+ *
  * Revision 1.7  2004/11/08 08:46:45  tomsp
  * no message
  *
@@ -118,10 +125,11 @@ public class JspTilesViewHandlerImpl
 
         String viewId = facesContext.getViewRoot().getViewId();
         ServletMapping servletMapping = getServletMapping(externalContext);
+
+        String defaultSuffix = externalContext.getInitParameter(ViewHandler.DEFAULT_SUFFIX_PARAM_NAME);
+        String suffix = defaultSuffix != null ? defaultSuffix : ViewHandler.DEFAULT_SUFFIX;
         if (servletMapping.isExtensionMapping())
         {
-            String defaultSuffix = externalContext.getInitParameter(ViewHandler.DEFAULT_SUFFIX_PARAM_NAME);
-            String suffix = defaultSuffix != null ? defaultSuffix : ViewHandler.DEFAULT_SUFFIX;
             if (!viewId.endsWith(suffix))
             {
                 int dot = viewId.lastIndexOf('.');
@@ -138,8 +146,12 @@ public class JspTilesViewHandlerImpl
                 facesContext.getViewRoot().setViewId(viewId);
             }
         }
-
-        if (log.isTraceEnabled()) log.trace("Dispatching to " + viewId);
+        else if (!viewId.endsWith(suffix))
+        {
+            // path-mapping used, but suffix is no default-suffix
+            dispatch(externalContext, viewToRender, viewId);
+            return;
+        }
 
         String tilesId = viewId;
         int idx = tilesId.indexOf(".");
@@ -182,6 +194,35 @@ public class JspTilesViewHandlerImpl
 
         viewId = definition.getPage();
         externalContext.dispatch(viewId);
+
+        dispatch(externalContext, viewToRender, viewId);
+    }
+
+    private void dispatch(ExternalContext externalContext, UIViewRoot viewToRender, String viewId)
+        throws IOException
+    {
+        if (log.isTraceEnabled()) log.trace("Dispatching to " + viewId);
+
+        // handle character encoding as of section 2.5.2.2 of JSF 1.1
+        if (externalContext.getResponse() instanceof ServletResponse) {
+            ServletResponse response = (ServletResponse) externalContext.getResponse();
+            response.setLocale(viewToRender.getLocale());
+        }
+
+        externalContext.dispatch(viewId);
+
+        // handle character encoding as of section 2.5.2.2 of JSF 1.1
+        if (externalContext.getRequest() instanceof HttpServletRequest) {
+            HttpServletResponse response = (HttpServletResponse) externalContext.getResponse();
+            HttpServletRequest request = (HttpServletRequest) externalContext.getRequest();
+            HttpSession session = request.getSession(false);
+
+            if (session != null) {
+                session.setAttribute(ViewHandler.CHARACTER_ENCODING_KEY, response.getCharacterEncoding());
+            }
+        }
+
+
     }
 
     private static ServletMapping getServletMapping(ExternalContext externalContext)
