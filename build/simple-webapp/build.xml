@@ -2,13 +2,13 @@
 <!DOCTYPE project [
     <!ENTITY tomcat-build SYSTEM "file:../tomcat/tomcat-build.xmlf">
 ]>
-<project name="myfaces-examples" default="run-examples">
+<project name="simple-webapp" default="run-examples">
 
     <property environment="env"/>
 
     <!-- Constants -->
     <property name="project.dir" location="${basedir}/../.."/>
-    <property name="examples.dir" location="${project.dir}/webapps/examples"/>
+    <property name="examples.dir" location="${project.dir}/webapps/simple"/>
     <property name="examples.src" location="${project.dir}/webapps/src"/>
     <property name="examples.web" location="${examples.dir}"/>
     <property name="web-inf.classes.dir" location="${examples.web}/WEB-INF/classes"/>
@@ -24,7 +24,7 @@
     <property name="temp.dir" location="${env.TEMP}"/>
 
     <!-- Tomcat -->
-    <property name="tomcat.war.file" location="${temp.dir}/myfaces-examples.war"/>
+    <property name="tomcat.war.file" location="${temp.dir}/simple-webapp.war"/>
     <property name="tomcat.context.path" value="/myfaces"/>
 
 
@@ -101,7 +101,7 @@
             <format property="TODAY" pattern="yyyy-MM-dd HH:mm" locale="en"/>
         </tstamp>
 		
-        <war destfile="${temp.dir}/myfaces-examples.war"
+        <war destfile="${temp.dir}/simple-webapp.war"
              webxml="${project.dir}/conf/web.xml">
             <manifest>
                 <section name="${manifest.section}">
@@ -134,7 +134,7 @@
             depends="-compile-and-copy-libs, -war"
             description="creates the examples release file myfaces-x.x.x-examples.tgz (don't forget to adjust manifest.properties!)">
 
-        <tar destfile="${project.dir}/myfaces-${manifest.impl.version}-examples.tgz"
+        <tar destfile="${project.dir}/myfaces-${manifest.impl.version}-simple-example.tgz"
              compression="gzip">
             <tarfileset dir="${myfaces.doc}"
                         excludes="javadoc/**/*
@@ -147,9 +147,9 @@
             <tarfileset dir="${examples.web}"
                         excludes="WEB-INF/classes/**/*,
                                   WEB-INF/lib/**/*"
-                        prefix="myfaces-${manifest.impl.version}/webapps/examples/"/>
+                        prefix="myfaces-${manifest.impl.version}/webapps/simple"/>
             <tarfileset dir="${temp.dir}"
-                        includes="myfaces-examples.war"
+                        includes="simple-webapp.war"
                         prefix="myfaces-${manifest.impl.version}"/>
         </tar>
     </target>

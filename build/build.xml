@@ -462,8 +462,15 @@
              inheritall="false"
              target="release"/>
     </target>
+    <target name="simple-webapp"
+            description="creates the simple examples release file myfaces-x.x.x-tiles-example.tgz (don't forget to adjust manifest.properties!)">
+        <ant dir="${project.dir}/build/simple-webapp"
+             antfile="build.xml"
+             inheritall="false"
+             target="release"/>
+    </target>	
 	<target name="all"
-            depends="bin-release, src-release, examples-release, tiles-release, blank-release, wap-release"
+            depends="bin-release, src-release, examples-release, tiles-release, blank-release, wap-release, simple-webapp"
             description="builds all release files">
     </target>
 	<target name="all-tests"
