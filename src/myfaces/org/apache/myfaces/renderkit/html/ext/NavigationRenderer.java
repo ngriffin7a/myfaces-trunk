@@ -37,7 +37,6 @@ import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 import javax.faces.render.Renderer;
 import java.io.IOException;
-import java.util.StringTokenizer;
 
 /**
  * DOCUMENT ME!
@@ -56,7 +55,6 @@ public class NavigationRenderer
         NavigationRendererAttributes
 {
 
-    private static final String LEVEL_CLASSES_CACHE = NavigationRenderer.class.getName() + ".itemClasses";
 
     public NavigationRenderer()
     {
@@ -114,25 +112,59 @@ public class NavigationRenderer
             return;
         }
 
-        writer.write("\n<tr><td");
-        String tdClass = null;
+        writer.write("\n<tr>");
+        openColumn(writer, findNav, item, level);
+    }
+
+    protected void openColumn(ResponseWriter writer, UIComponent uiNavigation, UIComponent item,  int level)
+        throws IOException
+    {
+        writer.write("<td");
+
+        String style = null;
+
         if (item instanceof UINavigationItem)
         {
-            tdClass = calcLevelClass((UINavigation)findNav, level);
+
+            boolean open = ((UINavigationItem)item).isOpen();
+            boolean active = ((UINavigationItem)item).isActive();
+
+            if (active)
+            {
+                style = (String)uiNavigation.getAttribute(NavigationRendererAttributes.ACTIVE_ITEM_CLASS_ATTR);
+            }
+            else
+            {
+                style = open ? (String)uiNavigation.getAttribute(NavigationRendererAttributes.OPEN_ITEM_CLASS_ATTR) :
+                                    (String)uiNavigation.getAttribute(NavigationRendererAttributes.ITEM_CLASS_ATTR);;
+            }
         }
         else if (item.getRendererType().equals(NavigationSeparatorRenderer.TYPE))
         {
-            tdClass = (String)findNav.getAttribute(SEPARATOR_CLASS);
+            style = (String)uiNavigation.getAttribute(SEPARATOR_CLASS);
         }
-        if (tdClass != null)
+
+        if (style != null)
         {
             writer.write(" class=\"");
-            writer.write(tdClass);
+            writer.write(style);
             writer.write("\"");
         }
+
         writer.write(">");
+        indent(writer, level);
     }
 
+    protected void indent(ResponseWriter writer, int level)
+        throws IOException
+    {
+        StringBuffer buf = new StringBuffer();
+        for (int i = 0; i < level; i++)
+        {
+            buf.append("&nbsp;&nbsp;&nbsp;&nbsp;");
+        }
+        writer.write(buf.toString());
+    }
 
     public void afterEncodeEnd(FacesContext facesContext,
                                Renderer renderer,
@@ -154,6 +186,8 @@ public class NavigationRenderer
 
 
 
+    /*
+    private static final String LEVEL_CLASSES_CACHE = NavigationRenderer.class.getName() + ".itemClasses";
     private static final String DELIMITER = ",";
     private static final String[] DUMMY = {};
     private String calcLevelClass(UINavigation navigation, int level)
@@ -185,5 +219,6 @@ public class NavigationRenderer
         }
         return levelClasses[level % levelClasses.length];
     }
+    */
 
 }

@@ -115,6 +115,7 @@
                 The CSS class of the active navigation item.
             </description>
         </attribute>
+        <!--
         <attribute>
             <name>levelClasses</name>
             <required>false</required>
@@ -124,6 +125,7 @@
                 for the different item levels.
             </description>
         </attribute>
+        -->
         <attribute>
             <name>separatorClass</name>
             <required>false</required>

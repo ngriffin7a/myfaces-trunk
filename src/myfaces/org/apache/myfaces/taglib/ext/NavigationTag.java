@@ -125,10 +125,12 @@ public class NavigationTag
 
     // Navigation Renderer attributes
 
+    /*
     public void setLevelClasses(String value)
     {
         setRendererAttributeString(LEVEL_CLASSES, value);
     }
+    */
 
     public void setOpenItemClass(String s)
     {

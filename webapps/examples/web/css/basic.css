@@ -120,6 +120,7 @@ a:hover
 .navigation {
 	font-family : verdana, Geneva, Arial, Helvetica, sans-serif;
 	font-size: 12px;
+    width: 100%;
 }
 
 .navitem {
@@ -136,6 +137,7 @@ a:hover
     background-color: #6392C6;
 	white-space : nowrap;
 	font-weight : bold;
+	width: 100%;
 }
 
 a.navigation_link {
@@ -143,22 +145,9 @@ a.navigation_link {
 }
 
 a.navigation_link:hover,active {
-    color: #FFFFFF;
-    background-color: #6392C6;
+    color: #6392C6;
 	white-space : nowrap;
 	text-decoration: none;
-}
-
-.navlevel1 {
-    padding-left : 0px;
-}
-
-.navlevel2 {
-    padding-left : 12px;
-}
-
-.navlevel3 {
-    padding-left : 24px;
 }
 
 .navseparator {

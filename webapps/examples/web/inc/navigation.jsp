@@ -5,7 +5,6 @@
     <x:navigation id="nav"
                   bundle="example_messages"
                   panelClass="navigation"
-                  levelClasses="navlevel1,navlevel2,navlevel3"
                   separatorClass="navseparator"
                   itemClass="navitem"
                   activeItemClass="navitem_active"
