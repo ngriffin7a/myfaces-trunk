@@ -27,6 +27,7 @@ import javax.faces.render.RenderKitFactory;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Iterator;
 
 /**
  * see Javadoc of JSF Specification
@@ -34,6 +35,10 @@ import java.util.Locale;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.10  2004/06/08 02:37:50  o_rossmueller
+ * fix #967991: remove event from queue after broadcase
+ * abort event procession on AbortProcessingException
+ *
  * Revision 1.9  2004/05/12 07:57:40  manolito
  * Log in javadoc header
  *
@@ -74,10 +79,13 @@ public class UIViewRoot
     private void _broadcastForPhase(PhaseId phaseId)
     {
         if (_events == null) return;
+
+        boolean abort = false;
+
         int phaseIdOrdinal = phaseId.getOrdinal();
-        for (int i = 0; i < _events.size(); i++) //No optimization for size() call here, because List may grow during loop!
+        for (Iterator iterator = _events.iterator(); iterator.hasNext();)
         {
-            FacesEvent event = (FacesEvent)_events.get(i);
+            FacesEvent event = (FacesEvent) iterator.next();
             int ordinal = event.getPhaseId().getOrdinal();
             if (ordinal == ANY_PHASE_ORDINAL ||
                 ordinal == phaseIdOrdinal)
@@ -89,10 +97,20 @@ public class UIViewRoot
                 }
                 catch (AbortProcessingException e)
                 {
-                    // we do not abort event processing itself
-                    // javadoc: "no further processing on the _current_ event should be performed"
+                    // abort event processing
+                    // Page 3-30 of JSF 1.1 spec: "Throw an AbortProcessingException, to tell the JSF implementation
+                    //  that no further broadcast of this event, or any further events, should take place."
+                    abort = true;
+                    break;
+                } finally {
+                    iterator.remove();
                 }
             }
+        }
+
+        if (abort) {
+            // TODO: abort processing of any event of any phase or just of any event of the current phase???
+            clearEvents();
         }
     }
 
