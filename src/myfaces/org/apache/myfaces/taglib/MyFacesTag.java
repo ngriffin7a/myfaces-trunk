@@ -23,6 +23,8 @@ import net.sourceforge.myfaces.component.UIComponentUtils;
 import net.sourceforge.myfaces.convert.Converter;
 import net.sourceforge.myfaces.convert.ConverterUtils;
 import net.sourceforge.myfaces.renderkit.attr.CommonRendererAttributes;
+import net.sourceforge.myfaces.util.bean.BeanUtils;
+import net.sourceforge.myfaces.util.logging.LogUtil;
 
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
@@ -30,9 +32,9 @@ import javax.faces.webapp.FacesTag;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
 import javax.servlet.jsp.tagext.Tag;
-import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
-import java.util.Map;
+import java.util.Set;
 
 /**
  * DOCUMENT ME!
@@ -44,7 +46,7 @@ public abstract class MyFacesTag
 {
     protected PageContext _pageContext;
     protected FacesContext _facesContext;
-    private Map _properties = null;
+    private Set _attributes = null;
 
     public MyFacesTag()
     {
@@ -53,7 +55,7 @@ public abstract class MyFacesTag
 
     protected void init()
     {
-        _properties = null;
+        _attributes = null;
     }
 
 
@@ -118,14 +120,46 @@ public abstract class MyFacesTag
 
     //property helpers
 
-    protected void setProperty(String attrName, Object attrValue)
+    /**
+     * @deprecated use setComponentAttribute or setRendererAttribute instead
+     */
+    protected void setPropertyX(String attrName, Object attrValue)
     {
-        if (_properties == null)
-        {
-            _properties = new HashMap();
-        }
-        _properties.put(attrName, attrValue);
+        setRendererAttribute(attrName, attrValue);
     }
+
+    protected void setComponentAttribute(String attrName, Object attrValue)
+    {
+        if (_attributes == null)
+        {
+            _attributes = new HashSet();
+        }
+        _attributes.add(new Attribute(attrName, attrValue, true));
+    }
+
+    protected void setRendererAttribute(String attrName, Object attrValue)
+    {
+        if (_attributes == null)
+        {
+            _attributes = new HashSet();
+        }
+        _attributes.add(new Attribute(attrName, attrValue, false));
+    }
+
+    protected static class Attribute
+    {
+        public String name;
+        public Object value;
+        public boolean isComponentAttribute;
+
+        public Attribute(String name, Object value, boolean isComponentAttribute)
+        {
+            this.name = name;
+            this.value = value;
+            this.isComponentAttribute = isComponentAttribute;
+        }
+    }
+
 
     protected void overrideProperties(UIComponent uiComponent)
     {
@@ -139,18 +173,18 @@ public abstract class MyFacesTag
                                                   PageContext.REQUEST_SCOPE);
         }
 
-        if (_properties != null)
+        if (_attributes != null)
         {
-            for (Iterator it = _properties.entrySet().iterator(); it.hasNext();)
+            for (Iterator it = _attributes.iterator(); it.hasNext();)
             {
-                Map.Entry entry = (Map.Entry)it.next();
-                String attrName = (String)entry.getKey();
+                Attribute attr = (Attribute)it.next();
                 if (facesContext != null
-                    && attrName.equals(CommonComponentAttributes.VALUE_ATTR))
+                    && attr.isComponentAttribute
+                    && attr.name.equals(CommonComponentAttributes.VALUE_ATTR))
                 {
                     if (uiComponent.currentValue(facesContext) == null)
                     {
-                        Object rtValue = entry.getValue();
+                        Object rtValue = attr.value;
                         if (rtValue instanceof String)
                         {
                             Converter conv = ConverterUtils.findConverter(facesContext,
@@ -174,11 +208,32 @@ public abstract class MyFacesTag
                         }
                     }
                 }
+                else if (attr.isComponentAttribute)
+                {
+                    //Try bean property setter first
+                    try
+                    {
+                        if (BeanUtils.getBeanPropertyValue(uiComponent, attr.name) == null)
+                        {
+                            BeanUtils.setBeanPropertyValue(uiComponent, attr.name, attr.value);
+                        }
+                    }
+                    catch (IllegalArgumentException e)
+                    {
+                        //Component does not have this property!
+                        LogUtil.getLogger().severe("Component " + uiComponent.getCompoundId() + " does not have valid property setter and getter methods for property '" + attr.name + "'.");
+                        //Alternativly set by attribute name:
+                        if (uiComponent.getAttribute(attr.name) == null)
+                        {
+                            uiComponent.setAttribute(attr.name, attr.value);
+                        }
+                    }
+                }
                 else
                 {
-                    if (uiComponent.getAttribute(attrName) == null)
+                    if (uiComponent.getAttribute(attr.name) == null)
                     {
-                        uiComponent.setAttribute(attrName, entry.getValue());
+                        uiComponent.setAttribute(attr.name, attr.value);
                     }
                 }
             }
@@ -190,17 +245,17 @@ public abstract class MyFacesTag
 
     public void setModelReference(String s)
     {
-        setProperty(CommonComponentAttributes.MODEL_REFERENCE_ATTR, s);
+        setComponentAttribute(CommonComponentAttributes.MODEL_REFERENCE_ATTR, s);
     }
 
     public void setValue(Object value)
     {
-        setProperty(CommonComponentAttributes.VALUE_ATTR, value);
+        setComponentAttribute(CommonComponentAttributes.VALUE_ATTR, value);
     }
 
     public void setConverter(Object converter)
     {
-        setProperty(CommonRendererAttributes.CONVERTER_ATTR, converter);
+        setRendererAttribute(CommonRendererAttributes.CONVERTER_ATTR, converter);
     }
 
 

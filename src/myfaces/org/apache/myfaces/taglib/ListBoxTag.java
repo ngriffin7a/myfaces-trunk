@@ -22,7 +22,6 @@ import net.sourceforge.myfaces.component.UISelectOne;
 import net.sourceforge.myfaces.renderkit.html.ListboxRenderer;
 
 import javax.faces.component.UIComponent;
-import javax.faces.webapp.FacesTag;
 
 
 /**
@@ -41,10 +40,5 @@ public class ListBoxTag
     public String getRendererType()
     {
         return ListboxRenderer.TYPE;
-    }
-
-    public void setTest(int v)
-    {
-        setProperty(UISelectOne.SIZE_ATTR, new Integer(v));
     }
 }

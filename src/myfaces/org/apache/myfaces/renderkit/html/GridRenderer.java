@@ -18,7 +18,6 @@
  */
 package net.sourceforge.myfaces.renderkit.html;
 
-import net.sourceforge.myfaces.component.UIPanel;
 import net.sourceforge.myfaces.renderkit.attr.GridRendererAttributes;
 
 import javax.faces.component.UIComponent;
@@ -60,7 +59,7 @@ public class GridRenderer
         ResponseWriter writer = context.getResponseWriter();
 
         writer.write("<table");
-        String style = (String)uicomponent.getAttribute(UIPanel.CLASS_ATTR);
+        String style = (String)uicomponent.getAttribute(PANEL_CLASS_ATTR);
         if (style != null && style.length() > 0)
         {
             writer.write(" class=\"");
@@ -77,7 +76,7 @@ public class GridRenderer
 
         Styles styles = getStyles(uicomponent);
 
-        Integer obj = (Integer)uicomponent.getAttribute(UIPanel.COLUMNS_ATTR);
+        Integer obj = (Integer)uicomponent.getAttribute(COLUMNS_ATTR);
 
         int max_columns = obj != null ? obj.intValue() : 1;
         ArrayList componentList = new ArrayList(max_columns);

@@ -42,16 +42,16 @@ public class SelectItemTag
 
     public void setSelected(String v)
     {
-        setProperty(UISelectItem.SELECTED_ATTR, v);
+        setComponentAttribute(UISelectItem.SELECTED_ATTR, v);
     }
 
     public void setDescription(String v)
     {
-        setProperty(UISelectItem.ITEM_DESCRIPTION_ATTR, v);
+        setComponentAttribute(UISelectItem.ITEM_DESCRIPTION_ATTR, v);
     }
 
     public void setLabel(String v)
     {
-        setProperty(UISelectItem.ITEM_LABEL_ATTR, v);
+        setComponentAttribute(UISelectItem.ITEM_LABEL_ATTR, v);
     }
 }

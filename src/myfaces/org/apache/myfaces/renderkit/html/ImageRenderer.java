@@ -24,6 +24,7 @@ import javax.faces.component.UIComponent;
 import javax.faces.component.UIGraphic;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
@@ -63,13 +64,23 @@ public class ImageRenderer
             {
                 writer.write("<img src=\"");
 
+                String src;
                 if (strValue.startsWith("/"))
                 {
                     HttpServletRequest request = (HttpServletRequest)facesContext.getServletRequest();
-                    writer.write(request.getContextPath());
+                    src = request.getContextPath() + strValue;
+                }
+                else
+                {
+                    src = strValue;
                 }
 
-                writer.write(strValue);
+                //Encode URL for those still using HttpSessions... ;-)
+                //Although this is an image url, encodeURL is no nonsense, because the
+                //actual image url could also be a dynamic servlet request:
+                src = ((HttpServletResponse)facesContext.getServletResponse()).encodeURL(src);
+
+                writer.write(src);
                 writer.write("\">");
             }
         }

@@ -49,32 +49,32 @@ public class GridTag
 
     public void setColumns(Integer value)
     {
-        setProperty(UIPanel.COLUMNS_ATTR, value);
+        setRendererAttribute(GridRenderer.COLUMNS_ATTR, value);
     }
 
     public void setStyle(String value)
     {
-        setProperty(UIPanel.CLASS_ATTR, value);
+        setRendererAttribute(GridRenderer.PANEL_CLASS_ATTR, value);
     }
 
     public void setColumnClasses(String value)
     {
-        setProperty(GridRenderer.COLUMN_CLASSES_ATTR, value);
+        setRendererAttribute(GridRenderer.COLUMN_CLASSES_ATTR, value);
     }
 
     public void setRowClasses(String value)
     {
-        setProperty(GridRenderer.ROW_CLASSES_ATTR, value);
+        setRendererAttribute(GridRenderer.ROW_CLASSES_ATTR, value);
     }
 
     public void setFooterClass(String value)
     {
-        setProperty(GridRenderer.FOOTER_CLASS_ATTR, value);
+        setRendererAttribute(GridRenderer.FOOTER_CLASS_ATTR, value);
     }
 
     public void setHeaderClass(String value)
     {
-        setProperty(GridRenderer.HEADER_CLASS_ATTR, value);
+        setRendererAttribute(GridRenderer.HEADER_CLASS_ATTR, value);
     }
 
 }

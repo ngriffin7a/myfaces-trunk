@@ -49,11 +49,11 @@ public class TextEntryInputTag
 
     public void setSize(String v)
     {
-        setProperty(TextRenderer.SIZE_ATTR, v);
+        setRendererAttribute(TextRenderer.SIZE_ATTR, v);
     }
 
     public void setMaxLength(String v)
     {
-        setProperty(TextRenderer.MAX_LENGTH_ATTR, v);
+        setRendererAttribute(TextRenderer.MAX_LENGTH_ATTR, v);
     }
 }

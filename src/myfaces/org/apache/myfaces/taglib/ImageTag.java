@@ -18,13 +18,10 @@
  */
 package net.sourceforge.myfaces.taglib;
 
-import net.sourceforge.myfaces.component.UISelectOne;
 import net.sourceforge.myfaces.component.UIGraphic;
-import net.sourceforge.myfaces.renderkit.html.MenuRenderer;
 import net.sourceforge.myfaces.renderkit.html.ImageRenderer;
 
 import javax.faces.component.UIComponent;
-import javax.faces.webapp.FacesTag;
 
 
 /**
@@ -45,13 +42,18 @@ public class ImageTag
         return ImageRenderer.TYPE;
     }
 
-    public void setKey(String value)
+    public void setUrl(String value)
     {
-        setProperty(ImageRenderer.KEY_ATTR, value);
+        setComponentAttribute(UIGraphic.URL_ATTR, value);
     }
 
-    public void setBundel(String value)
+    public void setKey(String value)
     {
-        setProperty(ImageRenderer.BUNDEL_ATTR, value);
+        setRendererAttribute(ImageRenderer.KEY_ATTR, value);
+    }
+
+    public void setBundle(String value)
+    {
+        setRendererAttribute(ImageRenderer.BUNDLE_ATTR, value);
     }
 }

@@ -21,7 +21,6 @@ package net.sourceforge.myfaces.taglib;
 import net.sourceforge.myfaces.component.UISelectItems;
 
 import javax.faces.component.UIComponent;
-import javax.faces.webapp.FacesTag;
 
 /**
  * DOCUMENT ME!

@@ -18,8 +18,8 @@
  */
 package net.sourceforge.myfaces.taglib;
 
-import net.sourceforge.myfaces.component.UIPanel;
 import net.sourceforge.myfaces.component.UIComponentUtils;
+import net.sourceforge.myfaces.component.UIPanel;
 import net.sourceforge.myfaces.renderkit.html.DataRenderer;
 
 import javax.faces.component.UIComponent;
@@ -56,12 +56,12 @@ public class JspListRowTag
 
     public void setVar(String v)
     {
-        setProperty(UIPanel.VAR_ATTR, v);
+        setRendererAttribute(DataRenderer.VAR_ATTR, v);
     }
 
     private boolean hasNext()
     {
-        Object currentObj = getComponent().getAttribute(UIPanel.VAR_ATTR);
+        Object currentObj = getComponent().getAttribute(DataRenderer.VAR_ATTR);
         return currentObj != null;
     }
 

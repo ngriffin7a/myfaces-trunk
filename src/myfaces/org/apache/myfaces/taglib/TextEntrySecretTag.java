@@ -44,7 +44,7 @@ public class TextEntrySecretTag
 
     public void setRedisplay(boolean b)
     {
-        setProperty(SecretRenderer.REDISPLAY_ATTR,
-                    b ? Boolean.TRUE : Boolean.FALSE);
+        setRendererAttribute(SecretRenderer.REDISPLAY_ATTR,
+                             b ? Boolean.TRUE : Boolean.FALSE);
     }
 }

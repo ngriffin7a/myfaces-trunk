@@ -27,6 +27,8 @@ public class UIGraphic
     extends javax.faces.component.UIGraphic
     implements CommonComponentAttributes
 {
+    public static final String URL_ATTR = "url";
+
     public UIGraphic()
     {
         UIComponentUtils.setTransient(this, true);

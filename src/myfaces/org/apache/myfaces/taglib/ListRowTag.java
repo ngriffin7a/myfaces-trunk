@@ -47,7 +47,7 @@ public class ListRowTag
 
     public void setVar(String v)
     {
-        setProperty(UIPanel.VAR_ATTR, v);
+        setRendererAttribute(DataRenderer.VAR_ATTR, v);
     }
 
     /*

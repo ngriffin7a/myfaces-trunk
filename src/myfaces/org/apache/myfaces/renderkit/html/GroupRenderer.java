@@ -22,10 +22,7 @@ import net.sourceforge.myfaces.component.UIPanel;
 
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
-import javax.faces.context.ResponseWriter;
 import java.io.IOException;
-import java.util.StringTokenizer;
-import java.util.Iterator;
 
 /**
  * DOCUMENT ME!

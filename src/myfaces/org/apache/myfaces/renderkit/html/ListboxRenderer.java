@@ -18,8 +18,9 @@
  */
 package net.sourceforge.myfaces.renderkit.html;
 
-import net.sourceforge.myfaces.component.UISelectOne;
 import net.sourceforge.myfaces.component.UISelectMany;
+import net.sourceforge.myfaces.component.UISelectOne;
+import net.sourceforge.myfaces.renderkit.attr.ListboxRendererAttributes;
 
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
@@ -33,6 +34,7 @@ import java.io.IOException;
  */
 public class ListboxRenderer
         extends AbstractSelectOptionRenderer
+        implements ListboxRendererAttributes
 {
     public static final String TYPE = "Listbox";
 

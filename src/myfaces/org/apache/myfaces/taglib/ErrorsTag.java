@@ -45,7 +45,7 @@ public class ErrorsTag
 
     public void setCompoundId(String compoundId)
     {
-        setProperty(ErrorsRenderer.COMPOUND_ID_ATTR, compoundId);
+        setRendererAttribute(ErrorsRenderer.COMPOUND_ID_ATTR, compoundId);
     }
 
 }

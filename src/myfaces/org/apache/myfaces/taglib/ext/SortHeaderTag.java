@@ -18,7 +18,6 @@
  */
 package net.sourceforge.myfaces.taglib.ext;
 
-import net.sourceforge.myfaces.component.UIPanel;
 import net.sourceforge.myfaces.component.UICommand;
 import net.sourceforge.myfaces.renderkit.html.GroupRenderer;
 import net.sourceforge.myfaces.taglib.MyFacesTag;
@@ -46,7 +45,7 @@ public class SortHeaderTag
 
     public void setCommandReference(String value)
     {
-        setProperty(UICommand.COMMAND_REFERENCE_ATTR, value);
+        setComponentAttribute(UICommand.COMMAND_REFERENCE_ATTR, value);
     }
 
 }

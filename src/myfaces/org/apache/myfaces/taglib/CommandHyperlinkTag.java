@@ -51,11 +51,11 @@ public class CommandHyperlinkTag
 
     public void setCommandReference(String v)
     {
-        setProperty(UICommand.COMMAND_REFERENCE_ATTR, v);
+        setComponentAttribute(UICommand.COMMAND_REFERENCE_ATTR, v);
     }
 
     public void setHref(String v)
     {
-        setProperty(HyperlinkRenderer.HREF_ATTR, v);
+        setRendererAttribute(HyperlinkRenderer.HREF_ATTR, v);
     }
 }

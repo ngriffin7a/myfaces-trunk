@@ -22,7 +22,6 @@ import net.sourceforge.myfaces.component.UIForm;
 import net.sourceforge.myfaces.renderkit.html.FormRenderer;
 
 import javax.faces.component.UIComponent;
-import javax.faces.webapp.FacesTag;
 
 
 /**
@@ -47,6 +46,6 @@ public class FormTag
 
     public void setFormName(String v)
     {
-        setProperty(UIForm.FORM_NAME_ATTR, v);
+        setComponentAttribute(UIForm.FORM_NAME_ATTR, v);
     }
 }

@@ -22,7 +22,6 @@ import net.sourceforge.myfaces.component.UISelectMany;
 import net.sourceforge.myfaces.renderkit.html.ListboxRenderer;
 
 import javax.faces.component.UIComponent;
-import javax.faces.webapp.FacesTag;
 
 
 /**
@@ -45,6 +44,6 @@ public class ListBoxManyTag
 
     public void setSize(int v)
     {
-        setProperty(UISelectMany.SIZE_ATTR, new Integer(v));
+        setRendererAttribute(UISelectMany.SIZE_ATTR, new Integer(v));
     }
 }

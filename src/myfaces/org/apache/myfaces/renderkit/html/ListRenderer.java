@@ -18,7 +18,6 @@
  */
 package net.sourceforge.myfaces.renderkit.html;
 
-import net.sourceforge.myfaces.component.UIPanel;
 import net.sourceforge.myfaces.renderkit.attr.ListRendererAttributes;
 
 import javax.faces.component.UIComponent;
@@ -61,7 +60,7 @@ public class ListRenderer
         ResponseWriter writer = context.getResponseWriter();
 
         writer.write("<table");
-        String style = (String)uicomponent.getAttribute(UIPanel.CLASS_ATTR);
+        String style = (String)uicomponent.getAttribute(PANEL_CLASS_ATTR);
         if (style != null && style.length() > 0)
         {
             writer.write(" class=\"");
@@ -171,7 +170,7 @@ public class ListRenderer
     {
         ResponseWriter writer = context.getResponseWriter();
 
-        String varAttr = (String)dataComponent.getAttribute(UIPanel.VAR_ATTR);
+        String varAttr = (String)dataComponent.getAttribute(DataRenderer.VAR_ATTR);
 
         for (Iterator it = getIterator(context, dataComponent); it.hasNext();)
         {

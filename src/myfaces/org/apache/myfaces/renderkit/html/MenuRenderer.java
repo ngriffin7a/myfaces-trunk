@@ -20,6 +20,7 @@ package net.sourceforge.myfaces.renderkit.html;
 
 import net.sourceforge.myfaces.component.UISelectMany;
 import net.sourceforge.myfaces.component.UISelectOne;
+import net.sourceforge.myfaces.renderkit.attr.MenuRendererAttributes;
 
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
@@ -32,6 +33,7 @@ import java.io.IOException;
  */
 public class MenuRenderer
         extends AbstractSelectOptionRenderer
+        implements MenuRendererAttributes
 {
     public static final String TYPE = "Menu";
     private static final int DEFAULT_SIZE = 1;

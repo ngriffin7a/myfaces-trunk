@@ -26,6 +26,7 @@ import net.sourceforge.myfaces.convert.ConverterException;
 import net.sourceforge.myfaces.convert.ConverterUtils;
 import net.sourceforge.myfaces.renderkit.html.HTMLRenderer;
 import net.sourceforge.myfaces.renderkit.html.SecretRenderer;
+import net.sourceforge.myfaces.renderkit.html.DataRenderer;
 import net.sourceforge.myfaces.renderkit.html.jspinfo.JspInfo;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLEncoder;
 import net.sourceforge.myfaces.tree.TreeUtils;
@@ -527,7 +528,7 @@ public class StateSaver
             {
                 if (parent.getComponentType().equals(UIPanel.TYPE))
                 {
-                    String var = (String)parent.getAttribute(UIPanel.VAR_ATTR);
+                    String var = (String)parent.getAttribute(DataRenderer.VAR_ATTR);
                     if (var != null)
                     {
                         if (modelRef.equals(var) ||

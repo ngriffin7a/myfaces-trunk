@@ -32,7 +32,7 @@ public interface ImageRendererAttributes
     public static final String LABEL_ATTR = "label";
 
     public static final String KEY_ATTR = "key";
-    public static final String BUNDEL_ATTR = "bundel";
+    public static final String BUNDLE_ATTR = "bundle";
 
 
 }

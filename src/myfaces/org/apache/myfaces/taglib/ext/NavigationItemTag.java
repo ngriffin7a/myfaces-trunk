@@ -44,16 +44,16 @@ public class NavigationItemTag
 
     public void setLabel(String s)
     {
-        setProperty(NavigationItemRenderer.LABEL_ATTR, s);
+        setRendererAttribute(NavigationItemRenderer.LABEL_ATTR, s);
     }
 
     public void setHref(String s)
     {
-        setProperty(UINavigationItem.HREF_ATTR, s);
+        setComponentAttribute(UINavigationItem.HREF_ATTR, s);
     }
 
     public void setTreeId(String s)
     {
-        setProperty(UINavigationItem.TREE_ID_ATTR, s);
+        setComponentAttribute(UINavigationItem.TREE_ID_ATTR, s);
     }
 }

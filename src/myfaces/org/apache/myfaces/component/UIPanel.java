@@ -27,7 +27,5 @@ public class UIPanel
     extends javax.faces.component.UIPanel
     implements CommonComponentAttributes
 {
-    public static final String VAR_ATTR = "var";
-    public static final String CLASS_ATTR = "class";
-    public static final String COLUMNS_ATTR = "columns";
+
 }

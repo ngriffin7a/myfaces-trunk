@@ -21,7 +21,6 @@ package net.sourceforge.myfaces.taglib;
 import net.sourceforge.myfaces.component.UIParameter;
 
 import javax.faces.component.UIComponent;
-import javax.faces.webapp.FacesTag;
 
 /**
  * DOCUMENT ME!
@@ -45,6 +44,6 @@ public class ParamTag
 
     public void setName(String v)
     {
-        setProperty(UIParameter.NAME_ATTR, v);
+        setComponentAttribute(UIParameter.NAME_ATTR, v);
     }
 }

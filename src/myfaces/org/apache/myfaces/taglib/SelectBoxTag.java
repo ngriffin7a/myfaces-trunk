@@ -22,7 +22,6 @@ import net.sourceforge.myfaces.component.UISelectOne;
 import net.sourceforge.myfaces.renderkit.html.MenuRenderer;
 
 import javax.faces.component.UIComponent;
-import javax.faces.webapp.FacesTag;
 
 
 /**
@@ -43,8 +42,8 @@ public class SelectBoxTag
         return MenuRenderer.TYPE;
     }
 
-    public void setTest(int v)
+    public void setSize(int v)
     {
-        setProperty(UISelectOne.SIZE_ATTR, new Integer(v));
+        setRendererAttribute(UISelectOne.SIZE_ATTR, new Integer(v));
     }
 }

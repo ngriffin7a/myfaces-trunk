@@ -18,7 +18,6 @@
  */
 package net.sourceforge.myfaces.renderkit.html;
 
-import net.sourceforge.myfaces.component.UIPanel;
 import net.sourceforge.myfaces.renderkit.attr.ListRendererAttributes;
 
 import javax.faces.FactoryFinder;
@@ -70,7 +69,7 @@ public class JspListRenderer
         if (uicomponent.getRendererType().equals(JspListRenderer.TYPE))
         {
             writer.write("<table");
-            String style = (String)uicomponent.getAttribute(UIPanel.CLASS_ATTR);
+            String style = (String)uicomponent.getAttribute(PANEL_CLASS_ATTR);
             if (style != null && style.length() > 0)
             {
                 writer.write(" class=\"");
@@ -87,14 +86,14 @@ public class JspListRenderer
 
             if (it.hasNext())
             {
-                uicomponent.setAttribute(UIPanel.VAR_ATTR, it.next());
+                uicomponent.setAttribute(DataRenderer.VAR_ATTR, it.next());
 
                 writer.write("<tr>");
 
             }
             else
             {
-                uicomponent.setAttribute(UIPanel.VAR_ATTR, null);
+                uicomponent.setAttribute(DataRenderer.VAR_ATTR, null);
             }
 
         }

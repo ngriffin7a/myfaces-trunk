@@ -16,27 +16,16 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package net.sourceforge.myfaces.taglib;
-
-import net.sourceforge.myfaces.component.ext.UISaveState;
-
-import javax.faces.component.UIComponent;
+package net.sourceforge.myfaces.renderkit.attr;
 
 /**
- * DOCUMENT ME!
+ * Constant definitions for the specified render dependent attributes of the
+ * "Menu" renderer type.
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public class SaveStateTag
-    extends MyFacesTag
+public interface MenuRendererAttributes
+    extends CommonRendererAttributes
 {
-    public UIComponent createComponent()
-    {
-        return new UISaveState();
-    }
-
-    public String getRendererType()
-    {
-        return null;
-    }
+    public static final String SIZE_ATTR = "size";
 }

@@ -35,12 +35,9 @@
     <!-- path to the "jsf-api.jar" file -->
     <property name="jsf-api.file" value="${web-inf.dir}/lib/jsf-api.jar"/>
 
-
     <!-- Classpath fuer's Kompilieren -->
     <path id="project.class.path">
         <pathelement location="${jsf-api.file}" />
-        <pathelement location="${web-inf.dir}/lib/jasper-compiler.jar"/>
-        <pathelement location="${web-inf.dir}/lib/jasper-runtime.jar"/>
         <pathelement location="${web-inf.dir}/lib/mail.jar"/>
         <pathelement location="${lib.dir}/servlet.jar"/>
     </path>

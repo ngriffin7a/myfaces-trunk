@@ -49,27 +49,27 @@ public class ListTag
 
     public void setStyle(String value)
     {
-        setProperty(ListRenderer.PANEL_CLASS_ATTR, value);
+        setRendererAttribute(ListRenderer.PANEL_CLASS_ATTR, value);
     }
 
     public void setColumnClasses(String value)
     {
-        setProperty(ListRenderer.COLUMN_CLASSES_ATTR, value);
+        setRendererAttribute(ListRenderer.COLUMN_CLASSES_ATTR, value);
     }
 
     public void setRowClasses(String value)
     {
-        setProperty(ListRenderer.ROW_CLASSES_ATTR, value);
+        setRendererAttribute(ListRenderer.ROW_CLASSES_ATTR, value);
     }
 
     public void setFooterClass(String value)
     {
-        setProperty(ListRenderer.FOOTER_CLASS_ATTR, value);
+        setRendererAttribute(ListRenderer.FOOTER_CLASS_ATTR, value);
     }
 
     public void setHeaderClass(String value)
     {
-        setProperty(ListRenderer.HEADER_CLASS_ATTR, value);
+        setRendererAttribute(ListRenderer.HEADER_CLASS_ATTR, value);
     }
 
 }

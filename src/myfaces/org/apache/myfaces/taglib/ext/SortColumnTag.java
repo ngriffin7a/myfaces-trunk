@@ -18,9 +18,7 @@
  */
 package net.sourceforge.myfaces.taglib.ext;
 
-import net.sourceforge.myfaces.component.UIPanel;
 import net.sourceforge.myfaces.component.UICommand;
-import net.sourceforge.myfaces.renderkit.html.GroupRenderer;
 import net.sourceforge.myfaces.renderkit.html.HyperlinkRenderer;
 import net.sourceforge.myfaces.taglib.MyFacesTag;
 

@@ -46,7 +46,7 @@ public class CommandButtonTag
 
     public void setLabel(String v)
     {
-        setProperty(ButtonRenderer.LABEL_ATTR, v);
+        setRendererAttribute(ButtonRenderer.LABEL_ATTR, v);
     }
 
     public void setCommandName(String v)
@@ -56,6 +56,6 @@ public class CommandButtonTag
 
     public void setCommandReference(String v)
     {
-        setProperty(UICommand.COMMAND_REFERENCE_ATTR, v);
+        setComponentAttribute(UICommand.COMMAND_REFERENCE_ATTR, v);
     }
 }
