@@ -1,3 +1,7 @@
+mail.jar = <path to Java Mail API archiv version 1.1>
+servlet.jar = <path to Java Servlet API archiv version 2.3>
+jsf-api.jar = <path to JavaServer Faces API archiv version 1.0 EA3>
+
 tomcat.manager.url=<url to the manager on tomcat>
 tomcat.admin.user=<user name that has admin & manager rights on tomcat>
 tomcat.admin.passwd=<manager passwd>

@@ -1,2 +1,0 @@
-These libraries are needed to COMPILE MyFaces.
-The Libraries that are needed to RUN the MyFaces examples or to use MyFaces in a Webapplication are in the directory web/WEB-INF/lib.

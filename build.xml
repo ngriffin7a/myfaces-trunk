@@ -31,14 +31,23 @@
     <!-- path to the "jsf-api.jar" file -->
     <property name="jsf-api.file" value="${web-inf.dir}/lib/jsf-api.jar"/>
 
+    <!-- path to the "jsf-api.jar" file -->
+    <property name="jsf-api.jar" value="must be specified in build.properties"/>
+
+    <!-- path to the "mail.jar" file -->
+    <property name="mail.jar" value="must be specified in build.properties"/>
+
+    <!-- path to the "servlet.jar" file -->
+    <property name="servlet.jar" value="must be specified in build.properties"/>
+
     <!-- allow some of the properties to be overridden -->
     <property file="build.properties"/>
 
     <!-- classpath for compiling -->
     <path id="project.class.path">
-        <pathelement location="${jsf-api.file}" />
-        <pathelement location="${web-inf.dir}/lib/mail.jar"/>
-        <pathelement location="${lib.dir}/servlet.jar"/>
+        <pathelement location="${jsf-api.jar}" />
+        <pathelement location="${mail.jar}"/>
+        <pathelement location="${servlet.jar}"/>
     </path>
 
     <target name="compile">
