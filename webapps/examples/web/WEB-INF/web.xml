@@ -182,21 +182,4 @@
     </welcome-file-list>
 
 
-    <!--
-    <taglib>
-        <taglib-uri>http://java.sun.com/jsf/html</taglib-uri>
-        <taglib-location>../../../../tlds/myfaces_html.tld</taglib-location>
-    </taglib>
-
-    <taglib>
-        <taglib-uri>http://java.sun.com/jsf/core</taglib-uri>
-        <taglib-location>../../../../tlds/myfaces_core.tld</taglib-location>
-    </taglib>
-
-    <taglib>
-        <taglib-uri>http://myfaces.sourceforge.net/tld/myfaces_ext_0_3.tld</taglib-uri>
-        <taglib-location>../../../../tlds/myfaces_ext.tld</taglib-location>
-    </taglib>
-    -->
-
 </web-app>

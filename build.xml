@@ -100,6 +100,8 @@
     <target name="bin-release"
             depends="myfaces-jar, apidoc"
             description="creates the binary release file myfaces-x.x.x.tgz (don't forget to adjust manifest.properties!)">
+        <copy file="${project.dir}/webapps/examples/web/WEB-INF/web.xml"
+              tofile="${doc.dir}/web.xml.sample"/>
         <tar destfile="myfaces-${manifest.impl.version}.tgz"
              compression="gzip">
             <tarfileset dir="${doc.dir}"
@@ -109,12 +111,15 @@
             <tarfileset file="${cos.jar}"
                         prefix="myfaces-${manifest.impl.version}/lib"/>
         </tar>
+        <delete file="${doc.dir}/web.xml.sample"/>
     </target>
 
 
     <target name="src-release"
             depends="apidoc"
             description="creates the source release file myfaces-x.x.x-src.tgz (don't forget to adjust manifest.properties!)">
+        <copy file="${project.dir}/webapps/examples/web/WEB-INF/web.xml"
+              tofile="${doc.dir}/web.xml.sample"/>
         <tar destfile="myfaces-${manifest.impl.version}-src.tgz"
              compression="gzip">
             <tarfileset dir="${doc.dir}"
@@ -130,15 +135,19 @@
                                   *.tgz"
                         prefix="myfaces-${manifest.impl.version}"/>
         </tar>
+        <delete file="${doc.dir}/web.xml.sample"/>
     </target>
 
 
     <target name="examples-release"
             description="creates the examples release file myfaces-x.x.x-examples.tgz (don't forget to adjust manifest.properties!)">
+        <copy file="${project.dir}/webapps/examples/web/WEB-INF/web.xml"
+              tofile="${doc.dir}/web.xml.sample"/>
         <ant dir="webapps/examples"
              antfile="build.xml"
              inheritall="false"
              target="release"/>
+        <delete file="${doc.dir}/web.xml.sample"/>
     </target>
 
 
@@ -153,6 +162,7 @@
         <delete quiet="true" failonerror="false" includeEmptyDirs="true">
             <fileset file="${myfaces.jar}" />
             <fileset file="myfaces-*.tgz" />
+            <fileset file="${doc.dir}/web.xml.sample" />
             <fileset dir="${doc.dir}/api" />
             <fileset dir="${temp.dir}/myfaces-jar"/>    <!-- in case of interrupted builds -->
         </delete>

@@ -11,7 +11,7 @@ Changes in Release 0.3.2
    - Base64 encoding instead of MimeUtility from mail.jar
    - MultiPartFilter for the new UIFileUpload
 * removed mail.jar: was only needed for Base64-Encoding
-* web-application "tagunit" added, can be used for testing myfaces-taglibs
+* web-application "tagunit" added (only CVS), can be used for testing myfaces-taglibs
 * "enabledOnUserRole" and "visibleOnUserRole" attributes for miscellaneous input
   and command components
 * "setBundle" tag
