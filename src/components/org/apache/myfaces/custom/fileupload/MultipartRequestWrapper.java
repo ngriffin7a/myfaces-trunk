@@ -15,27 +15,20 @@
  */
 package net.sourceforge.myfaces.custom.fileupload;
 
-import java.io.UnsupportedEncodingException;
-import java.util.Collections;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import org.apache.commons.fileupload.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
-
-import org.apache.commons.fileupload.DefaultFileItemFactory;
-import org.apache.commons.fileupload.FileItem;
-import org.apache.commons.fileupload.FileUpload;
-import org.apache.commons.fileupload.FileUploadBase;
-import org.apache.commons.fileupload.FileUploadException;
+import java.io.UnsupportedEncodingException;
+import java.util.*;
 
 /**
  * @author Sylvain Vieujot (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.6  2004/09/09 13:43:59  manolito
+ * query string parameters where missing in the parameter map
+ *
  * Revision 1.5  2004/08/16 18:06:47  svieujot
  * Another bug fix for bug #1001511. Patch submitted by Takashi Okamoto.
  *
@@ -62,11 +55,11 @@ public class MultipartRequestWrapper
 		fileUpload = new FileUpload();
 		fileUpload.setSizeMax(maxSize);
 		fileUpload.setFileItemFactory(new DefaultFileItemFactory());
-		
+
 	    String charset = request.getCharacterEncoding();
 		fileUpload.setHeaderEncoding(charset);
 
-		
+
 		List requestParameters = null;
 		try{
 			requestParameters = fileUpload.parseRequest(request);
@@ -77,19 +70,19 @@ public class MultipartRequestWrapper
 			// TODO : Log !
 			requestParameters = Collections.EMPTY_LIST;
 		}
-		
+
 		parametersMap = new HashMap( requestParameters.size() );
 		fileItems = new HashMap();
 
-    	for (Iterator iter = requestParameters.iterator(); iter.hasNext(); ){ 
+    	for (Iterator iter = requestParameters.iterator(); iter.hasNext(); ){
     		FileItem fileItem = (FileItem) iter.next();
 
     		if (fileItem.isFormField()) {
     			String name = fileItem.getFieldName();
-    			
+
     			// The following code avoids commons-fileupload charset problem.
     			// After fixing commons-fileupload, this code should be
-    			// 
+    			//
     			// 	String value = fileItem.getString();
     			//
     			String value = null;
@@ -102,7 +95,7 @@ public class MultipartRequestWrapper
     			        value = fileItem.getString();
     			    }
     			}
-    			
+
     			addTextParameter(name, value);
     		} else { // fileItem is a File
    				if (fileItem.getName() != null) {
@@ -110,8 +103,17 @@ public class MultipartRequestWrapper
    				}
     		}
     	}
-    	
-    	//Add the request parameters like http://www.myWebsite.com/clients/edit-jsf.jsf?unid=ff808081fbdce95b00fbdceabf370001
+
+    	//Add the query string paramters
+        for (Iterator it = request.getParameterMap().entrySet().iterator(); it.hasNext(); )
+        {
+            Map.Entry entry = (Map.Entry)it.next();
+            String[] valuesArray = (String[])entry.getValue();
+            for (int i = 0; i < valuesArray.length; i++)
+            {
+                addTextParameter((String)entry.getKey(), valuesArray[i]);
+            }
+        }
 	}
 	
 	private void addTextParameter(String name, String value){
