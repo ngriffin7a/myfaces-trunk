@@ -67,7 +67,7 @@
 
     <target name="release"
             depends="compile-and-copy-libs"
-            description="creates the examples release file myfaces-x.x.x-examples.tgz (don't forget to adjust manifest.properties!)">
+            description="creates the examples release file myfaces-x.x.x-examples.tar.gz (don't forget to adjust manifest.properties!)">
 
         <mkdir dir="${temp.dir}"/>
 
@@ -95,7 +95,7 @@
                                WEB-INF/web.xml " />
         </war>
 
-        <tar destfile="${project.dir}/myfaces-${manifest.impl.version}-examples.tgz"
+        <tar destfile="${project.dir}/myfaces-${manifest.impl.version}-examples.tar.gz"
              compression="gzip">
             <tarfileset dir="${myfaces.doc}"
                         excludes="javadoc/**/*
@@ -119,7 +119,7 @@
         <delete quiet="true" failonerror="false" includeEmptyDirs="true">
             <fileset dir="${web-inf.classes.dir}"/>
             <fileset dir="${web-inf.lib.dir}"/>
-            <fileset file="${project.dir}/myfaces-*-examples.tgz"/>
+            <fileset file="${project.dir}/myfaces-*-examples.tar.gz"/>
             <fileset file="${examples.web}/WEB-INF/web.xml"/>
             <fileset file="${examples.web}/WEB-INF/faces-config.xml"/>
             <fileset file="${temp.dir}/myfaces-samples.war" />
