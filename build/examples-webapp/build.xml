@@ -93,6 +93,8 @@
             <lib file="${commons-el.jar}"/>
             <lib file="${commons-fileupload.jar}"/>
             <lib file="${commons-logging.jar}"/>
+            <lib file="${commons-validator.jar}"/>
+            <lib file="${jakarta-oro.jar}"/>
             <lib file="${jsp-api.jar}"/>
             <lib file="${jstl.jar}"/>
             <lib file="${myfaces.jar}"/>
