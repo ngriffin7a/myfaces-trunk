@@ -24,6 +24,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.io.IOException;
 
 import net.sourceforge.myfaces.MyFacesFactoryFinder;
 import net.sourceforge.myfaces.config.FacesConfig;
@@ -35,6 +36,8 @@ import javax.faces.application.NavigationHandler;
 import javax.faces.application.ViewHandler;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ExternalContext;
+import javax.faces.FacesException;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -67,59 +70,101 @@ public class NavigationHandlerImpl
             // stay on current ViewRoot
             return;
         }
-        
+
         String viewId = facesContext.getViewRoot().getViewId();
         Map casesMap = getNavigationCases(facesContext);
-        String newViewId = null;
+        NavigationCaseConfig navigationCase = null;
 
         // Exact match
         List casesList = (List)casesMap.get(viewId);
         if (casesList != null)
         {
-            newViewId = getViewId(casesList, fromAction, outcome);
+            navigationCase = calcMatchingNavigationCase(casesList, fromAction, outcome);
         }
 
-        if (newViewId == null)
+        if (navigationCase == null)
         {
             // Wildcard match
             List keys = getSortedWildcardKeys();
-            for (int i = 0, size = keys.size(); i < size && newViewId == null; i++)
+            for (int i = 0, size = keys.size(); i < size; i++)
             {
-                String fromTreeId = (String)keys.get(i);
-                if (fromTreeId.length() > 2)
+                String fromViewId = (String)keys.get(i);
+                if (fromViewId.length() > 2)
                 {
-                    String prefix = fromTreeId.substring(0, fromTreeId.length() - 2);
+                    String prefix = fromViewId.substring(0, fromViewId.length() - 2);
                     if (viewId.startsWith(prefix))
                     {
-                        casesList = (List)casesMap.get(fromTreeId);
+                        casesList = (List)casesMap.get(fromViewId);
                         if (casesList != null)
                         {
-                            newViewId = getViewId(casesList, fromAction, outcome);
-                            if (newViewId != null) break;
+                            navigationCase = calcMatchingNavigationCase(casesList, fromAction, outcome);
+                            if (navigationCase != null) break;
                         }
                     }
                 }
                 else
                 {
-                    casesList = (List)casesMap.get(fromTreeId);
+                    casesList = (List)casesMap.get(fromViewId);
                     if (casesList != null)
                     {
-                        newViewId = getViewId(casesList, fromAction, outcome);
-                        if (newViewId != null) break;
+                        navigationCase = calcMatchingNavigationCase(casesList, fromAction, outcome);
+                        if (navigationCase != null) break;
                     }
                 }
             }
         }
-
-        if (newViewId != null)
+        
+        if (navigationCase != null)
         {
-            ViewHandler viewHandler = facesContext.getApplication().getViewHandler();
-            facesContext.setViewRoot(viewHandler.createView(facesContext, newViewId));
+            if (log.isTraceEnabled())
+                log.trace("handleNavigation fromAction=" + fromAction + " outcome=" + outcome +
+                          " toViewId =" + navigationCase.getToViewId() +
+                          " redirect=" + navigationCase.isRedirect());
+            if (navigationCase.isRedirect())
+            {
+                ExternalContext externalContext = facesContext.getExternalContext();
+                Object responseObj = (HttpServletResponse)externalContext.getResponse();
+                if (responseObj instanceof HttpServletResponse)
+                {
+                    HttpServletResponse response = (HttpServletResponse)externalContext.getResponse();
+
+                    ViewHandler viewHandler = facesContext.getApplication().getViewHandler();
+                    String redirectPath =
+                        externalContext.getRequestContextPath() +
+                        viewHandler.getViewIdPath(facesContext, navigationCase.getToViewId());
+                    try
+                    {
+                        response.sendRedirect(redirectPath);
+                    }
+                    catch (IOException e)
+                    {
+                        throw new FacesException(e.getMessage(), e);
+                    }
+                }
+                else
+                {
+                    log.warn("Response is no HttpServletResponse. No redirection to "
+                             + navigationCase.getToViewId());
+                }
+            }
+            else
+            {
+                ViewHandler viewHandler = facesContext.getApplication().getViewHandler();
+                facesContext.setViewRoot(viewHandler.createView(facesContext,
+                                                                navigationCase.getToViewId()));
+            }
         }
-        // Otherwise stay on current ViewRoot
+        else
+        {
+            // no navigationcase found, stay on current ViewRoot
+            if (log.isTraceEnabled())
+                log.trace("handleNavigation fromAction=" + fromAction + " outcome=" + outcome +
+                          " no matching navigation-case found, staying on current ViewRoot");
+
+        }
     }
 
-    private String getViewId(List casesList, String actionRef, String outcome)
+    private NavigationCaseConfig calcMatchingNavigationCase(List casesList, String actionRef, String outcome)
     {
         for (int i = 0, size = casesList.size(); i < size; i++)
         {
@@ -129,7 +174,7 @@ public class NavigationHandlerImpl
             if ((cazeOutcome == null || cazeOutcome.equals(outcome)) &&
                 (cazeActionRef == null || cazeActionRef.equals(actionRef)))
             {
-                return caze.getToViewId();
+                return caze;
             }
         }
         return null;
@@ -158,15 +203,15 @@ public class NavigationHandlerImpl
                 List cazes = rule.getNavigationCaseConfigList();
                 int sizej = cazes.size();
 
-                String fromTreeId = rule.getFromViewId();
-                List list = (List)_cazes.get(fromTreeId);
+                String fromViewId = rule.getFromViewId();
+                List list = (List)_cazes.get(fromViewId);
                 if (list == null)
                 {
                     list = new ArrayList(sizej);
-                    _cazes.put(fromTreeId, list);
-                    if (fromTreeId.endsWith(ASTERISK))
+                    _cazes.put(fromViewId, list);
+                    if (fromViewId.endsWith(ASTERISK))
                     {
-                        _wildcardKeys.add(fromTreeId);
+                        _wildcardKeys.add(fromViewId);
                     }
                 }
 
