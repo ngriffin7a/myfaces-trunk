@@ -45,18 +45,4 @@ public class UISelectMany
         return true;
     }
 
-    public Object[] getSelectedValues()
-    {
-        throw new UnsupportedOperationException("not supported.");
-    }
-
-    public void setSelectedValues(Object selectedValues[])
-    {
-        throw new UnsupportedOperationException("not supported.");
-    }
-
-    protected Iterator getSelectItems(FacesContext context)
-    {
-        throw new UnsupportedOperationException("not supported.");
-    }
 }

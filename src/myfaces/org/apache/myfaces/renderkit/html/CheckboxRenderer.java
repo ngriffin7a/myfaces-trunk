@@ -18,16 +18,20 @@
  */
 package net.sourceforge.myfaces.renderkit.html;
 
+import net.sourceforge.myfaces.component.UIComponentUtils;
 import net.sourceforge.myfaces.renderkit.attr.CheckboxRendererAttributes;
 import net.sourceforge.myfaces.renderkit.html.util.CommonAttributes;
-import net.sourceforge.myfaces.component.UIComponentUtils;
+import net.sourceforge.myfaces.renderkit.html.util.SelectItemHelper;
 import net.sourceforge.myfaces.util.logging.LogUtil;
 
+import javax.faces.component.SelectItem;
 import javax.faces.component.UIComponent;
 import javax.faces.component.UISelectBoolean;
+import javax.faces.component.UISelectMany;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 import java.io.IOException;
+import java.util.Iterator;
 
 /**
  * DOCUMENT ME!
@@ -57,6 +61,13 @@ public class CheckboxRenderer
     public void decode(FacesContext facescontext, UIComponent uicomponent)
         throws IOException
     {
+        if (uicomponent.getComponentType().equals(UISelectMany.TYPE))
+        {
+            String clientId = uicomponent.getClientId(facescontext);
+            String[] newValues = facescontext.getServletRequest().getParameterValues(clientId);
+            ((UISelectMany)uicomponent).setSelectedValues(newValues);
+            uicomponent.setValid(true);
+        }
         if (uicomponent.getComponentType().equals(UISelectBoolean.TYPE))
         {
             String clientId = uicomponent.getClientId(facescontext);
@@ -78,41 +89,40 @@ public class CheckboxRenderer
 
     }
 
-    public void encodeBegin(FacesContext facesContext, UIComponent uiComponent)
+    public void encodeEnd(FacesContext facesContext, UIComponent uiComponent)
         throws IOException
     {
-        if (uiComponent.getComponentType().equals(UISelectBoolean.TYPE))
+        if (uiComponent.getComponentType().equals(UISelectMany.TYPE))
         {
-            ResponseWriter writer = facesContext.getResponseWriter();
-            writer.write("<input type=\"checkbox\"");
-            writer.write(" name=\"");
-            writer.write(uiComponent.getClientId(facesContext));
-            writer.write("\"");
-            writer.write(" id=\"");
-            writer.write(uiComponent.getClientId(facesContext));
-            writer.write("\"");
+            Object currentValue = uiComponent.currentValue(facesContext);
 
-            Boolean selected = (Boolean)uiComponent.currentValue(facesContext);
-            if(selected != null && selected.booleanValue())
+            boolean breakLine = false;
+            for (Iterator it = SelectItemHelper.getSelectItems(facesContext, uiComponent); it.hasNext(); )
             {
-                writer.write(" checked ");
-            }
+                if (breakLine)
+                {
+                    ResponseWriter writer = facesContext.getResponseWriter();
+                    writer.write("<br>");
+                }
+                else
+                {
+                    breakLine = true;
+                }
+                SelectItem selectItem = (SelectItem)it.next();
 
-            writer.write(" value=\"");
-            writer.write("1");
-            writer.write("\"");
+                boolean checked = SelectItemHelper.isItemSelected(facesContext, uiComponent, currentValue, selectItem);
 
-            String css = (String)uiComponent.getAttribute(SELECT_BOOLEAN_CLASS_ATTR);
-            if (css != null)
-            {
-                writer.write(" class=\"");
-                writer.write(css);
-                writer.write("\"");
+                Object objValue = selectItem.getValue();
+                String selectItemValue = objValue != null ? objValue.toString() : null;
+
+                drawCheckbox(facesContext, uiComponent, selectItemValue, selectItem.getLabel(), checked);
             }
-            CommonAttributes.renderHTMLEventHandlerAttributes(facesContext, uiComponent);
-            CommonAttributes.renderUniversalHTMLAttributes(facesContext, uiComponent);
-            CommonAttributes.renderAttributes(facesContext, uiComponent, COMMON_CHECKBOX_ATTRIBUTES);
-            writer.write(">");
+        }
+        else if (uiComponent.getComponentType().equals(UISelectBoolean.TYPE))
+        {
+            Boolean checked = (Boolean)uiComponent.currentValue(facesContext);
+            String value = getStringValue(facesContext, uiComponent);
+            drawCheckbox(facesContext, uiComponent, value, null, checked != null ? checked.booleanValue() : false);
         }
         else
         {
@@ -123,4 +133,47 @@ public class CheckboxRenderer
             return;
         }
     }
+
+    private void drawCheckbox(FacesContext facesContext, UIComponent uiComponent, String value, String label, boolean checked)
+        throws IOException
+    {
+        ResponseWriter writer = facesContext.getResponseWriter();
+        writer.write("<input type=\"checkbox\"");
+        writer.write(" name=\"");
+        writer.write(uiComponent.getClientId(facesContext));
+        writer.write("\"");
+        writer.write(" id=\"");
+        writer.write(uiComponent.getClientId(facesContext));
+        writer.write("\"");
+
+        if(checked)
+        {
+            writer.write(" checked ");
+        }
+
+        if (value != null && value.length() > 0)
+        {
+            writer.write(" value=\"");
+            writer.write(value);
+            writer.write("\"");
+        }
+
+        String css = (String)uiComponent.getAttribute(SELECT_BOOLEAN_CLASS_ATTR);
+        if (css != null)
+        {
+            writer.write(" class=\"");
+            writer.write(css);
+            writer.write("\"");
+        }
+        CommonAttributes.renderHTMLEventHandlerAttributes(facesContext, uiComponent);
+        CommonAttributes.renderUniversalHTMLAttributes(facesContext, uiComponent);
+        CommonAttributes.renderAttributes(facesContext, uiComponent, COMMON_CHECKBOX_ATTRIBUTES);
+        writer.write(">");
+        if (label != null && label.length() > 0)
+        {
+            writer.write("&nbsp;");
+            writer.write(label);
+        }
+    }
+
 }

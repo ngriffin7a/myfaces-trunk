@@ -42,13 +42,12 @@
         <x:page_body id="body" cssClass="pageBody" >
             <h:form formName="formName">
 
+                <h:grid columns="2">
+
                 <h:output_label for="selone_lb" key="label_cars" bundle="net.sourceforge.myfaces.examples.resource.example_messages"></h:output_label>
                 <h:selectone_listbox modelReference="carconf.car" >
                     <h:selectitems id="selone_lb_cars" modelReference="carconf.cars" />
                 </h:selectone_listbox>
-
-                <br>
-                <br>
 
                 <h:output_label for="selone_menu" key="label_colors" bundle="net.sourceforge.myfaces.examples.resource.example_messages"></h:output_label>
                 <h:selectone_menu size="3" modelReference="carconf.color" >
@@ -56,26 +55,25 @@
                     <h:selectitems modelReference="carconf.colors" />
                 </h:selectone_menu>
 
-                <br>
-                <br>
-
                 <h:output_label for="selone_menu" key="label_extras" bundle="net.sourceforge.myfaces.examples.resource.example_messages"></h:output_label>
-                <h:selectmany_listbox modelReference="carconf.extras" >
+                <br>
+                <h:selectmany_checkboxlist modelReference="carconf.extras" >
                     <h:selectitems modelReference="carconf.extrasList" />
-                </h:selectmany_listbox>
+                </h:selectmany_checkboxlist>
 
-                <br>
-                <br>
+                <h:group />
+                <h:group>
+                    <br>
+                    <h:selectboolean_checkbox id="cb1" modelReference="carconf.discount"></h:selectboolean_checkbox>
+                    <h:output_label for="cb1" key="discount_1" bundle="net.sourceforge.myfaces.examples.resource.example_messages"></h:output_label>
+                </h:group>
 
-                <h:selectboolean_checkbox id="cb1" modelReference="carconf.discount"></h:selectboolean_checkbox>
-                <h:output_label for="cb1" key="discount_1" bundle="net.sourceforge.myfaces.examples.resource.example_messages"></h:output_label>
-
-                <br>
-                <br>
-
+                <h:group />
                 <h:command_button commandName="calcPrice" key="button_calcprice" bundle="net.sourceforge.myfaces.examples.resource.example_messages">
                     <f:action_listener type="net.sourceforge.myfaces.examples.common.CarConfiguratorActionListener" ></f:action_listener>
                 </h:command_button>
+
+                </h:grid>
             </h:form>
 
             <h:output_message key="msg_price" bundle="net.sourceforge.myfaces.examples.resource.example_messages" >

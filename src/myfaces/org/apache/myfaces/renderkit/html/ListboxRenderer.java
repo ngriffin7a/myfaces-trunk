@@ -21,6 +21,7 @@ package net.sourceforge.myfaces.renderkit.html;
 import net.sourceforge.myfaces.component.UISelectMany;
 import net.sourceforge.myfaces.component.UISelectOne;
 import net.sourceforge.myfaces.renderkit.attr.ListboxRendererAttributes;
+import net.sourceforge.myfaces.renderkit.html.util.SelectItemHelper;
 
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
@@ -67,7 +68,7 @@ public class ListboxRenderer
     public void encodeEnd(FacesContext facescontext, UIComponent uicomponent)
         throws IOException
     {
-        int size = getSelectItemsCount(facescontext, uicomponent);
+        int size = SelectItemHelper.getSelectItemsCount(facescontext, uicomponent);
         super.encodeEnd(facescontext, uicomponent, size, TYPE);
     }
 
