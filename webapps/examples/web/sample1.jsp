@@ -58,7 +58,7 @@ managed beans used:
                 <x:saveState id="save2" value="#{calcForm.number2}" />
                 <x:saveState id="save3" value="#{ucaseForm.text}" />
 
-                <h:messages id="messageList" showSummary="true" showDetail="true" />
+                <h:messages id="messageList" styleClass="error"/>
 
                 <f:verbatim>
                     <h4>A Form</h4>
@@ -74,8 +74,12 @@ managed beans used:
                     </h:inputText>
                     <h:message id="number1Error" for="form1:number1" styleClass="error" /><f:verbatim><br></f:verbatim>
 
-                    <h:outputLabel for="form1:number2" value="Number 2" /><f:verbatim>: </f:verbatim>
-                    <h:inputText id="number2" value="#{calcForm.number2}" maxlength="10" size="25"/>
+                    <h:outputLabel for="form1:number2" value="Number 2" />
+                    <h:outputText value="#{validationController.number2ValidationLabel}"/>
+                    <f:verbatim>: </f:verbatim>
+                    <h:inputText id="number2" value="#{calcForm.number2}" maxlength="10" size="25">
+                       <f:validateLongRange minimum="20" maximum="50" />
+                    </h:inputText>
                     <h:message id="number2Error" for="form1:number2" styleClass="error" /><f:verbatim><br></f:verbatim>
 
                     <h:outputLabel for="form1:result" value="Result" /><f:verbatim>: </f:verbatim>
@@ -107,7 +111,9 @@ managed beans used:
                     <h:outputLabel for="form2:text" value="Text" />
                     <h:outputText value="#{validationController.textValidationLabel}"/>
                     <f:verbatim>: </f:verbatim>
-                    <h:inputText id="text" value="#{ucaseForm.text}"/>
+                    <h:inputText id="text" value="#{ucaseForm.text}">
+                        <f:validateLength minimum="3" maximum="7"/>
+                    </h:inputText>
                     <h:message id="textError" for="form2:text" styleClass="error" /><f:verbatim><br></f:verbatim>
                     <h:commandButton id="ucaseButton" value="Make it uppercase" action="none">
                         <f:actionListener type="net.sourceforge.myfaces.examples.example1.UCaseActionListener" />
@@ -126,10 +132,8 @@ managed beans used:
                 </f:verbatim>
 
                 <h:form id="form3" name="valForm">
-                    <h:commandButton id="valEnable" value="Enable validation" action="#{validationController.enableValidation}" >
-                    </h:commandButton>
-                    <h:commandButton id="valDisable" value="Disable validation" action="#{validationController.disableValidation}" >
-                    </h:commandButton>
+                    <h:commandButton id="valDisable" value="Disable validation" action="#{validationController.disableValidation}" />
+                    <h:commandButton id="valEnable" value="Enable validation" action="#{validationController.enableValidation}" />
                 </h:form>
 
                 <f:verbatim>

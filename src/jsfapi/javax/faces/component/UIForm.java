@@ -27,6 +27,7 @@ import java.util.Iterator;
  */
 public class UIForm
         extends UIComponentBase
+        implements NamingContainer
 {
     //private static final Log log = LogFactory.getLog(UIForm.class);
 
