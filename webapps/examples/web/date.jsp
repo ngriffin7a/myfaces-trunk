@@ -58,30 +58,30 @@
                 <h:messages id="messageList" showSummary="true" showDetail="true" />
 
                 <f:verbatim>
-                    <h4>Date input tag</h4>
+                    <h:outputText ecape="false" value="<h4> #{example_messages['date_comp_header']}</h4>"/>
                 </f:verbatim>
 
                     <h:form>
                         <f:verbatim><p></f:verbatim>
-	                        <h:outputText value="Gimme a date: "/> <h:message for="date1"/>
+	                        <h:outputText value="G#{example_messages['date_comp_text1']}"/> <h:message for="date1"/>
 	                        <x:inputDate id="date1" value="#{date1}"/>
 	                        <f:verbatim><br></f:verbatim>
-	                        <h:outputText value="Date is: #{date1}"/> <%-- TODO : print date part only --%>
+	                        <h:outputText value="#{example_messages['date_comp_text2']} #{date1}"/> <%-- TODO : print date part only --%>
                         <f:verbatim></p></f:verbatim>
                         
-                        <h:outputText value="Gimme a time: "/>
+                        <h:outputText value="#{example_messages['date_comp_text3']}"/>
 	                        <x:inputDate id="date2" value="#{date2}" type="time"/> <h:message for="date2"/>
 	                        <f:verbatim><br></f:verbatim>
-	                        <h:outputText value="Time is: #{date2}"/> <%-- TODO : print time part only --%>
+	                        <h:outputText value="#{example_messages['date_comp_text4']} #{date2}"/> <%-- TODO : print time part only --%>
                         <f:verbatim></p></f:verbatim>
                         
-                        <h:outputText value="Gimme a date & time: "/>
+                        <h:outputText value="#{example_messages['date_comp_text5']}"/>
 	                        <x:inputDate id="date3" value="#{date3}" type="both"/> <h:message for="date3"/>
 	                        <f:verbatim><br></f:verbatim>
-	                        <h:outputText value="Date time is: #{date3}"/>
+	                        <h:outputText value="#{example_messages['date_comp_text6']} #{date3}"/>
                         <f:verbatim></p></f:verbatim>
 
-                        <h:commandButton value="Update texts"/>
+                        <h:commandButton value="#{example_messages['date_comp_button']}"/>
                     </h:form>
 
             </h:panelGroup>
