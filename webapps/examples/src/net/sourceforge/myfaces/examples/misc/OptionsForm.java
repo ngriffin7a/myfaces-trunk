@@ -34,7 +34,8 @@ public class OptionsForm
 {
     private static final List AVAILABLE_LOCALES
         = Arrays.asList(new Locale[] {Locale.ENGLISH,
-                                      Locale.GERMAN});
+                                      Locale.GERMAN,
+                                      Locale.FRENCH});
 
     private Locale _locale = null;
 
