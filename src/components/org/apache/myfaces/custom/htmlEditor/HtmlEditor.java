@@ -26,6 +26,9 @@ import javax.faces.el.ValueBinding;
  * @author Sylvain Vieujot (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.7  2004/12/06 01:03:42  svieujot
+ * Bugfix : getter now use boolean instead of Boolean, and setters created.
+ *
  * Revision 1.6  2004/12/04 22:25:36  svieujot
  * *** empty log message ***
  *
@@ -135,12 +138,18 @@ public class HtmlEditor extends UIInput {
     	ValueBinding vb = getValueBinding("style");
    		return vb != null ? (String)vb.getValue(getFacesContext()) : null;
     }
+    public void setStyle(String style){
+   		this._style = style;
+    }
     
     public String getStyleClass(){
    		if (_styleClass != null)
    		    return _styleClass;
     	ValueBinding vb = getValueBinding("styleClass");
    		return vb != null ? (String)vb.getValue(getFacesContext()) : null;
+    }
+    public void setStyleClass(String styleClass){
+   		this._style = styleClass;
     }
     
     public Boolean isAllowEditSource(){
@@ -150,60 +159,81 @@ public class HtmlEditor extends UIInput {
    		return vb != null ? (Boolean)vb.getValue(getFacesContext()) : Boolean.TRUE;
     }
     
-    public Boolean isAddKupuLogo(){
+    public boolean isAddKupuLogo(){
    		if (_addKupuLogo != null)
-   		    return _addKupuLogo;
+   		    return _addKupuLogo.booleanValue();
    		ValueBinding vb = getValueBinding("addKupuLogo");
-   		return vb != null ? (Boolean)vb.getValue(getFacesContext()) : Boolean.TRUE;
+   		return vb != null ? ((Boolean)vb.getValue(getFacesContext())).booleanValue() : true;
+    }
+    public void setAddKupuLogo(boolean addKupuLogo){
+        this._addKupuLogo = Boolean.valueOf(addKupuLogo);
     }
     
-    public Boolean isShowPropertiesToolBox(){
+    public boolean isShowPropertiesToolBox(){
    		if (_showPropertiesToolBox != null)
-   		    return _showPropertiesToolBox;
+   		    return _showPropertiesToolBox.booleanValue();
     	ValueBinding vb = getValueBinding("showPropertiesToolBox");
-   		return vb != null ? (Boolean)vb.getValue(getFacesContext()) : Boolean.FALSE;
+    	return vb != null ? ((Boolean)vb.getValue(getFacesContext())).booleanValue() : false;
+    }
+    public void setShowPropertiesToolBox(boolean showPropertiesToolBox){
+        this._showPropertiesToolBox = Boolean.valueOf(showPropertiesToolBox);
     }
     
-    public Boolean isShowLinksToolBox(){
+    public boolean isShowLinksToolBox(){
    		if (_showLinksToolBox != null)
-   		    return _showLinksToolBox;
+   		    return _showLinksToolBox.booleanValue();
     	ValueBinding vb = getValueBinding("showLinksToolBox");
-   		return vb != null ? (Boolean)vb.getValue(getFacesContext()) : Boolean.FALSE;
+    	return vb != null ? ((Boolean)vb.getValue(getFacesContext())).booleanValue() : false;
+    }
+    public void setShowLinksToolBox(boolean showLinksToolBox){
+        this._showLinksToolBox = Boolean.valueOf(showLinksToolBox);
     }
     
-    public Boolean isShowImagesToolBox(){
+    public boolean isShowImagesToolBox(){
    		if (_showImagesToolBox != null)
-   		    return _showImagesToolBox;
+   		    return _showImagesToolBox.booleanValue();
     	ValueBinding vb = getValueBinding("showImagesToolBox");
-   		return vb != null ? (Boolean)vb.getValue(getFacesContext()) : Boolean.FALSE;
+    	return vb != null ? ((Boolean)vb.getValue(getFacesContext())).booleanValue() : false;
+    }
+    public void setShowImagesToolBox(boolean showImagesToolBox){
+        this._showImagesToolBox = Boolean.valueOf(showImagesToolBox);
     }
     
-    public Boolean isShowTablesToolBox(){
+    public boolean isShowTablesToolBox(){
    		if (_showTablesToolBox != null)
-   		    return _showTablesToolBox;
+   		    return _showTablesToolBox.booleanValue();
     	ValueBinding vb = getValueBinding("showTablesToolBox");
-   		return vb != null ? (Boolean)vb.getValue(getFacesContext()) : Boolean.FALSE;
+    	return vb != null ? ((Boolean)vb.getValue(getFacesContext())).booleanValue() : false;
+    }
+    public void setShowTablesToolBox(boolean showTablesToolBox){
+        this._showTablesToolBox = Boolean.valueOf(showTablesToolBox);
     }
     
-    public Boolean isShowDebugToolBox(){
+    public boolean isShowDebugToolBox(){
    		if (_showDebugToolBox != null)
-   		    return _showDebugToolBox;
+   		    return _showDebugToolBox.booleanValue();
     	ValueBinding vb = getValueBinding("showDebugToolBox");
-   		return vb != null ? (Boolean)vb.getValue(getFacesContext()) : Boolean.FALSE;
+    	return vb != null ? ((Boolean)vb.getValue(getFacesContext())).booleanValue() : false;
+    }
+    public void setShowDebugToolBox(boolean showTablesToolBox){
+        this._showDebugToolBox = Boolean.valueOf(showTablesToolBox);
     }
     
     public boolean isShowAnyToolBox(){
-   		return isShowPropertiesToolBox().booleanValue()
-   			|| isShowLinksToolBox().booleanValue()
-   			|| isShowImagesToolBox().booleanValue()
-   			|| isShowTablesToolBox().booleanValue()
-   			|| isShowDebugToolBox().booleanValue();
+   		return isShowPropertiesToolBox()
+   			|| isShowLinksToolBox()
+   			|| isShowImagesToolBox()
+   			|| isShowTablesToolBox()
+   			|| isShowDebugToolBox();
     }
     
-    public Boolean isEnableFlexiTools(){
+    public boolean isEnableFlexiTools(){
    		if (_enableFlexiTools != null)
-   		    return _enableFlexiTools;
+   		    return _enableFlexiTools.booleanValue();
     	ValueBinding vb = getValueBinding("formularMode");
-   		return vb != null ? (Boolean)vb.getValue(getFacesContext()) : Boolean.FALSE;
+    	return vb != null ? ((Boolean)vb.getValue(getFacesContext())).booleanValue() : false;
+    }
+    public void setEnableFlexiTools(boolean formularMode){
+        this._enableFlexiTools = Boolean.valueOf(formularMode);
     }
 }

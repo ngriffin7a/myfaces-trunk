@@ -33,6 +33,9 @@ import org.apache.myfaces.renderkit.html.util.JavascriptUtils;
  * @author Sylvain Vieujot (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.10  2004/12/06 01:03:42  svieujot
+ * Bugfix : getter now use boolean instead of Boolean, and setters created.
+ *
  * Revision 1.9  2004/12/04 03:50:44  svieujot
  * Remove bug for IE
  *
@@ -153,7 +156,7 @@ public class HtmlEditorRenderer extends Renderer {
 				writer.writeAttribute(HTML.CLASS_ATTR, "kupu-tb-buttongroup",null);
     			writer.writeAttribute(HTML.ID_ATTR, "kupu=logo",null);
     			writer.writeAttribute(HTML.STYLE_ATTR,
-    			        editor.isAddKupuLogo().booleanValue() ? "float: right" : "display: none",
+    			        editor.isAddKupuLogo() ? "float: right" : "display: none",
     			        null);
     				writer.startElement(HTML.BUTTON_ELEM,null);
     				writer.writeAttribute(HTML.TYPE_ATTR, "button",null);
@@ -590,7 +593,7 @@ public class HtmlEditorRenderer extends Renderer {
             	writer.startElement(HTML.DIV_ELEM, null);
             	writer.writeAttribute(HTML.CLASS_ATTR, "kupu-toolbox", null);
             	writer.writeAttribute(HTML.ID_ATTR, "kupu-toolbox-properties", null);
-            	if( ! editor.isShowPropertiesToolBox().booleanValue() ){
+            	if( ! editor.isShowPropertiesToolBox() ){
             	    writer.writeAttribute(HTML.STYLE_ATTR, "display: none", null);
             	}
             		writer.startElement(HTML.H1_ELEM, null);
@@ -617,7 +620,7 @@ public class HtmlEditorRenderer extends Renderer {
             	writer.startElement(HTML.DIV_ELEM, null);
             	writer.writeAttribute(HTML.CLASS_ATTR, "kupu-toolbox", null);
             	writer.writeAttribute(HTML.ID_ATTR, "kupu-toolbox-links", null);
-            	if( ! editor.isShowLinksToolBox().booleanValue() ){
+            	if( ! editor.isShowLinksToolBox() ){
             	    writer.writeAttribute(HTML.STYLE_ATTR, "display: none", null);
             	}
             		writer.startElement(HTML.H1_ELEM, null);
@@ -663,7 +666,7 @@ public class HtmlEditorRenderer extends Renderer {
             	writer.startElement(HTML.DIV_ELEM, null);
             	writer.writeAttribute(HTML.CLASS_ATTR, "kupu-toolbox", null);
             	writer.writeAttribute(HTML.ID_ATTR, "kupu-toolbox-images", null);
-            	if( ! editor.isShowImagesToolBox().booleanValue() ){
+            	if( ! editor.isShowImagesToolBox() ){
             	    writer.writeAttribute(HTML.STYLE_ATTR, "display: none", null);
             	}
             		writer.startElement(HTML.H1_ELEM, null);
@@ -728,7 +731,7 @@ public class HtmlEditorRenderer extends Renderer {
             	writer.startElement(HTML.DIV_ELEM, null);
             	writer.writeAttribute(HTML.CLASS_ATTR, "kupu-toolbox", null);
             	writer.writeAttribute(HTML.ID_ATTR, "kupu-toolbox-tables", null);
-            	if( ! editor.isShowTablesToolBox().booleanValue() ){
+            	if( ! editor.isShowTablesToolBox() ){
             	    writer.writeAttribute(HTML.STYLE_ATTR, "display: none", null);
             	}
             		writer.startElement(HTML.H1_ELEM, null);
@@ -823,7 +826,7 @@ public class HtmlEditorRenderer extends Renderer {
             	writer.startElement(HTML.DIV_ELEM, null);
             	writer.writeAttribute(HTML.CLASS_ATTR, "kupu-toolbox", null);
             	writer.writeAttribute(HTML.ID_ATTR, "kupu-toolbox-debug", null);
-            	if( ! editor.isShowDebugToolBox().booleanValue() ){
+            	if( ! editor.isShowDebugToolBox() ){
             	    writer.writeAttribute(HTML.STYLE_ATTR, "display: none", null);
             	}
             		writer.startElement(HTML.H1_ELEM, null);
@@ -871,9 +874,9 @@ public class HtmlEditorRenderer extends Renderer {
         String text = "<html><body>"+(String) editor.getValue()+"</body></html>";
         String encodedText = text == null ? "" : JavascriptUtils.encodeString( text );
         
-        Boolean formularMode = editor.isEnableFlexiTools();
+        boolean formularMode = editor.isEnableFlexiTools();
         
-        if( formularMode.booleanValue() )
+        if( formularMode )
             AddResource.addJavaScriptToHeader(HtmlEditorRenderer.class, "flexitools/flexitools.js", context);
         
         AddResource.addJavaScriptToHeader(HtmlEditorRenderer.class, "myFacesUtils.js", context);
