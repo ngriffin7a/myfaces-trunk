@@ -86,7 +86,7 @@ public class HtmlCommandButtonTag
         setStringProperty(component, HTML.ONFOCUS_ATTR, _onfocus);
         setStringProperty(component, HTML.ONSELECT_ATTR, _onselect);
         setStringProperty(component, HTML.SIZE_ATTR, _size);
-        setIntegerProperty(component, HTML.TABINDEX_ATTR, _tabindex);
+        setStringProperty(component, HTML.TABINDEX_ATTR, _tabindex);
         setStringProperty(component, HTML.TYPE_ATTR, _type);
         setActionProperty(component, _action);
         setActionListenerProperty(component, _actionListener);

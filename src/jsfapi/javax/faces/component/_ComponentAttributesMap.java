@@ -19,12 +19,12 @@
 package javax.faces.component;
 
 import javax.faces.FacesException;
+import javax.faces.context.FacesContext;
 import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.io.Serializable;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
 
@@ -204,13 +204,10 @@ class _ComponentAttributesMap
         {
             return readMethod.invoke(_component, EMPTY_ARGS);
         }
-        catch (IllegalAccessException e)
+        catch (Exception e)
         {
-            throw new FacesException(e);
-        }
-        catch (InvocationTargetException e)
-        {
-            throw new FacesException(e);
+            FacesContext facesContext = FacesContext.getCurrentInstance();
+            throw new FacesException("Could not get property " + propertyDescriptor.getName() + " of component " + _component.getClientId(facesContext), e);
         }
     }
 
@@ -226,13 +223,10 @@ class _ComponentAttributesMap
         {
             writeMethod.invoke(_component, new Object[] {value});
         }
-        catch (IllegalAccessException e)
+        catch (Exception e)
         {
-            throw new FacesException(e);
-        }
-        catch (InvocationTargetException e)
-        {
-            throw new FacesException(e);
+            FacesContext facesContext = FacesContext.getCurrentInstance();
+            throw new FacesException("Could not set property " + propertyDescriptor.getName() + " of component " + _component.getClientId(facesContext), e);
         }
     }
 
