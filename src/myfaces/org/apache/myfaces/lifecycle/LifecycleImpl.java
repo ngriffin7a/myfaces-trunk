@@ -228,13 +228,13 @@ public class LifecycleImpl
 
         doEventProcessing(facesContext, PhaseId.APPLY_REQUEST_VALUES);
 
-        if (FacesContextImpl.isResponseComplete(facesContext))
+        if (facesContext.getResponseComplete())
         {
             if (log.isDebugEnabled()) log.debug("exiting applyRequestValues in " + LifecycleImpl.class.getName() + " (response complete)");
             return true;
         }
 
-        if (FacesContextImpl.isRenderResponse(facesContext))
+        if (facesContext.getRenderResponse())
         {
             renderResponse(facesContext);
             if (log.isDebugEnabled()) log.debug("exiting applyRequestValues in " + LifecycleImpl.class.getName() + " (after render response)");
@@ -261,13 +261,13 @@ public class LifecycleImpl
 
         doEventProcessing(facesContext, PhaseId.PROCESS_VALIDATIONS);
 
-        if (FacesContextImpl.isResponseComplete(facesContext))
+        if (facesContext.getResponseComplete())
         {
             if (log.isDebugEnabled()) log.debug("exiting processValidations in " + LifecycleImpl.class.getName() + " (response complete)");
             return true;
         }
 
-        if (FacesContextImpl.isRenderResponse(facesContext))
+        if (facesContext.getRenderResponse())
         {
             renderResponse(facesContext);
             if (log.isDebugEnabled()) log.debug("exiting processValidations in " + LifecycleImpl.class.getName() + " (after render response)");
@@ -319,13 +319,13 @@ public class LifecycleImpl
 
         doEventProcessing(facesContext, PhaseId.UPDATE_MODEL_VALUES);
 
-        if (FacesContextImpl.isResponseComplete(facesContext))
+        if (facesContext.getResponseComplete())
         {
             if (log.isDebugEnabled()) log.debug("exiting updateModelValues in " + LifecycleImpl.class.getName() + " (after render response)");
             return true;
         }
 
-        if (FacesContextImpl.isRenderResponse(facesContext))
+        if (facesContext.getRenderResponse())
         {
             renderResponse(facesContext);
             if (log.isDebugEnabled()) log.debug("exiting updateModelValues in " + LifecycleImpl.class.getName() + " (after render response)");
@@ -348,7 +348,7 @@ public class LifecycleImpl
 
         doEventProcessing(facesContext, PhaseId.INVOKE_APPLICATION);
 
-        if (FacesContextImpl.isResponseComplete(facesContext))
+        if (facesContext.getResponseComplete())
         {
             if (log.isDebugEnabled()) log.debug("exiting invokeApplication in " + LifecycleImpl.class.getName() + " (response complete)");
             return true;

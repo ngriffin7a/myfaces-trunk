@@ -81,7 +81,6 @@ public class FacesContextImpl
 
     //~ Methods ------------------------------------------------------------------------------------
 
-    //JSF 6.1.1
     public ExternalContext getExternalContext()
     {
         return _externalContext;
@@ -103,38 +102,6 @@ public class FacesContextImpl
     public Iterator getMessages()
     {
         return (_messages != null) ? _messages.iterator() : Collections.EMPTY_LIST.iterator();
-    }
-
-    /**
-     * MyFaces utility extension.
-     */
-    public static boolean isRenderResponse(FacesContext facesContext)
-    {
-        if (facesContext instanceof FacesContextImpl)
-        {
-            return ((FacesContextImpl) facesContext)._renderResponse;
-        }
-        else
-        {
-            throw new IllegalArgumentException(
-                "FacesContext of class " + facesContext.getClass().getName() + " is not supported.");
-        }
-    }
-
-    /**
-     * MyFaces utility extension.
-     */
-    public static boolean isResponseComplete(FacesContext facesContext)
-    {
-        if (facesContext instanceof FacesContextImpl)
-        {
-            return ((FacesContextImpl) facesContext)._responseComplete;
-        }
-        else
-        {
-            throw new IllegalArgumentException(
-                "FacesContext of class " + facesContext.getClass().getName() + " is not supported.");
-        }
     }
 
     public Application getApplication()
@@ -291,6 +258,7 @@ public class FacesContextImpl
      */
     public void clearMessages()
     {
+        // TODO: not called from anywhere, should remove
         _messages             = null;
         _messageClientIds     = null;
         _maximumSeverity      = FacesMessage.SEVERITY_INFO;
@@ -308,7 +276,6 @@ public class FacesContextImpl
         FacesContext.setCurrentInstance(null);
     }
 
-    //JSF.6.1.7
     public void renderResponse()
     {
         _renderResponse = true;
