@@ -28,10 +28,10 @@ import org.apache.commons.logging.LogFactory;
 import javax.faces.FactoryFinder;
 import javax.faces.application.ApplicationFactory;
 import javax.faces.component.UIComponent;
+import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.el.ValueBinding;
 import javax.faces.tree.Tree;
-import javax.servlet.ServletRequest;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -39,6 +39,7 @@ import java.io.ObjectInputStream;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Locale;
+import java.util.Map;
 import java.util.zip.GZIPInputStream;
 
 /**
@@ -57,13 +58,14 @@ public class SerializingStateRestorer
 
     public Tree getPreviousTree(FacesContext facesContext)
     {
-        ServletRequest servletRequest = (ServletRequest)facesContext.getExternalContext().getRequest();
+        ExternalContext extContext = facesContext.getExternalContext();
+        Map requestMap = extContext.getRequestMap();
         Tree restoredTree
-            = (Tree)servletRequest.getAttribute(RESTORED_TREE_CONTEXT_ATTR);
+            = (Tree)requestMap.get(RESTORED_TREE_CONTEXT_ATTR);
         if (restoredTree == null)
         {
             String serializedTree
-                = servletRequest.getParameter(SerializingStateSaver.TREE_REQUEST_PARAM);
+                = (String)extContext.getRequestParameterMap().get(SerializingStateSaver.TREE_REQUEST_PARAM);
             if (serializedTree == null)
             {
                 //nothing to restore
@@ -71,8 +73,7 @@ public class SerializingStateRestorer
             }
 
             restoredTree = unzipTree(serializedTree);
-            servletRequest.setAttribute(RESTORED_TREE_CONTEXT_ATTR,
-                                        restoredTree);
+            requestMap.put(RESTORED_TREE_CONTEXT_ATTR, restoredTree);
         }
         return restoredTree;
     }

@@ -24,7 +24,13 @@ import net.sourceforge.myfaces.renderkit.html.HTML;
 import net.sourceforge.myfaces.renderkit.html.HTMLRenderer;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLEncoder;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLUtil;
+import net.sourceforge.myfaces.util.FacesUtils;
 import net.sourceforge.myfaces.util.bundle.BundleUtils;
+
+import java.io.IOException;
+
+import java.util.Iterator;
+import java.util.Map;
 
 import javax.faces.FacesException;
 import javax.faces.component.UICommand;
@@ -33,9 +39,6 @@ import javax.faces.component.UIForm;
 import javax.faces.component.UIParameter;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
-import javax.servlet.ServletRequest;
-import java.io.IOException;
-import java.util.Iterator;
 
 
 /**
@@ -50,7 +53,7 @@ import java.util.Iterator;
  * @version $Revision$ $Date$
  */
 public class HyperlinkRenderer
-extends HTMLRenderer
+    extends HTMLRenderer
 {
     //~ Static fields/initializers -----------------------------------------------------------------
 
@@ -64,16 +67,14 @@ extends HTMLRenderer
     }
 
     public void decode(FacesContext facesContext, UIComponent uiComponent)
-    throws IOException
     {
         //super.decode must not be called, because value never comes from request
-        UICommand      uiCommand      = (UICommand) uiComponent;
+        UICommand uiCommand           = (UICommand) uiComponent;
 
-        ServletRequest servletRequest =
-            (ServletRequest) facesContext.getExternalContext().getRequest();
+        Map       requestParameterMap = FacesUtils.getRequestParameterMap(facesContext);
 
-        String         paramName      = uiCommand.getClientId(facesContext);
-        String         paramValue     = servletRequest.getParameter(paramName);
+        String    paramName           = uiCommand.getClientId(facesContext);
+        String    paramValue          = (String) requestParameterMap.get(paramName);
 
         if ((paramValue != null) && (paramValue.length() > 0))
         {

@@ -25,6 +25,7 @@ import net.sourceforge.myfaces.renderkit.html.state.StateUtils;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLEncoder;
 import net.sourceforge.myfaces.tree.TreeUtils;
 import net.sourceforge.myfaces.util.Base64;
+import net.sourceforge.myfaces.util.FacesUtils;
 import net.sourceforge.myfaces.util.logging.LogUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -34,11 +35,11 @@ import javax.faces.application.ApplicationFactory;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.tree.Tree;
-import javax.servlet.ServletRequest;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.zip.GZIPOutputStream;
 
 /**
@@ -67,8 +68,8 @@ public class SerializingStateSaver
 
     protected String getSerializedTree(FacesContext facesContext)
     {
-        String serializedTree
-            = (String)((ServletRequest)facesContext.getExternalContext().getRequest()).getAttribute(SERIALIZED_TREE_CONTEXT_ATTR);
+        Map requestMap = FacesUtils.getRequestMap(facesContext);
+        String serializedTree = (String)requestMap.get(SERIALIZED_TREE_CONTEXT_ATTR);
         if (serializedTree == null)
         {
             Tree tree = facesContext.getTree();
@@ -86,8 +87,7 @@ public class SerializingStateSaver
 
             //Serialize tree
             serializedTree = zipTree(tree);
-            ((ServletRequest)facesContext.getExternalContext().getRequest()).setAttribute(SERIALIZED_TREE_CONTEXT_ATTR,
-                                                          serializedTree);
+            requestMap.put(SERIALIZED_TREE_CONTEXT_ATTR, serializedTree);
         }
         return serializedTree;
     }
