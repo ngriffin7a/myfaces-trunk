@@ -15,10 +15,7 @@
  */
 package org.apache.myfaces.component.html.util;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.*;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
@@ -29,10 +26,13 @@ import org.xml.sax.InputSource;
 /**
  * @author Sylvain Vieujot (latest modification by $Author$)
  * @version $Revision$ $Date$ $Log$
- * @version $Revision: 1.1 $ $Date: 2004/12/01 16:32:03 $ Revision 1.1  2004/12/01 20:25:10  svieujot
- * @version $Revision: 1.1 $ $Date: 2004/12/01 16:32:03 $ Make the Extensions filter support css and image resources.
- * @version $Revision: 1.1 $ $Date: 2004/12/01 16:32:03 $ Convert the popup calendar to use this new filter.
- * @version $Revision: 1.1 $ $Date: 2004/12/01 16:32:03 $
+ * @version $Revision: 1.1 $ $Date: 2004/12/01 20:25:10 $ Revision 1.2  2004/12/02 00:26:58  oros
+ * @version $Revision: 1.1 $ $Date: 2004/12/01 20:25:10 $ i18n issues
+ * @version $Revision: 1.1 $ $Date: 2004/12/01 20:25:10 $
+ * @version $Revision$ $Date$ Revision 1.1  2004/12/01 20:25:10  svieujot
+ * @version $Revision$ $Date$ Make the Extensions filter support css and image resources.
+ * @version $Revision$ $Date$ Convert the popup calendar to use this new filter.
+ * @version $Revision$ $Date$
  * 
  */
 public class ExtensionsResponseWrapper extends HttpServletResponseWrapper {
@@ -42,17 +42,19 @@ public class ExtensionsResponseWrapper extends HttpServletResponseWrapper {
         super( response );
         output = new ByteArrayOutputStream();
     }
-    
+
+
+    public byte[] getBytes() {
+        return output.toByteArray();
+    }
+
     public String toString(){
-        return output.toString();
-    	//return new String( output.toByteArray() );
-    	/*
     	try{
-    		return output.toString( "UTF-8" ); // convertion
-    	}catch(UnsupportedEncodingException uee){
-    		uee.printStackTrace();
-    		return output.toString();
-    	} */      	
+    		return output.toString(getCharacterEncoding());
+    	}catch(UnsupportedEncodingException e){
+    		// an attempt to set an invalid character encoding would have caused this exception before
+            throw new RuntimeException("Response accepted invalid character encoding " + getCharacterEncoding());
+    	}
     }
     
     /** This method is used by Tomcat.
