@@ -474,7 +474,9 @@ public class ListRenderer
         int column = getActualColumnAttr(context).intValue();
 
         Styles styles = getStyles(context);
-        if (styles == null)
+
+        boolean hasHeaderStyle = styles.getHeaderStyle().length() > 0;
+        if (styles == null || hasHeaderStyle)
         {
             return null;
         }
