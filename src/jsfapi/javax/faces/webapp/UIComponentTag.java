@@ -38,6 +38,9 @@ import java.util.*;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.18  2004/04/20 11:16:23  royalts
+ * no message
+ *
  * Revision 1.17  2004/04/20 11:11:03  royalts
  * no message
  *
@@ -391,7 +394,7 @@ public abstract class UIComponentTag
                 setProperties(_componentInstance);
                 int index = getAddedChildrenCount(parentTag);
                 List children = parent.getChildren();
-                if (index < children.size())
+                if (index <= children.size())
                 {
                     children.add(index, _componentInstance);
                 }
@@ -462,7 +465,7 @@ public abstract class UIComponentTag
         }
         parentTag._facetsAdded.add(facetName);
     }
-
+                             
     private int getAddedChildrenCount(UIComponentTag parentTag)
     {
         return parentTag._childrenAdded != null ?
