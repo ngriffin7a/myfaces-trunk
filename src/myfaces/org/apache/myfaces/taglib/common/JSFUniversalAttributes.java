@@ -16,31 +16,19 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package net.sourceforge.myfaces.renderkit.attr;
+package net.sourceforge.myfaces.taglib.common;
 
-import net.sourceforge.myfaces.renderkit.attr.CommonRendererAttributes;
+
 
 /**
- * DOCUMENT ME!
- * @author Thomas Spiegl (latest modification by $Author$)
+ * Convenient mixin interface to make sure that there is a setter for
+ * each of the "jsf_universal_attributes"
+ * (see entity declaration in myfaces_html.tld).
+ * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public interface FormRendererAttributes
-    extends CommonRendererAttributes
+public interface JSFUniversalAttributes
 {
-    public static final String ACCEPT_ATTR = "accept";
-    public static final String ACCEPT_CHARSET_ATTR = "accept-charset";
-    public static final String ENCTYPE_ATTR = "enctype";
-    public static final String ONRESET_ATTR = "onreset";
-    public static final String ONSUMBIT_ATTR = "onsubmit";
-    public static final String TARGET_ATTR = "target";
-    public static final String[] COMMON_FORM_ATTRIBUTES =
-    {
-        ACCEPT_ATTR,
-        ACCEPT_CHARSET_ATTR,
-        ENCTYPE_ATTR,
-        ONRESET_ATTR,
-        ONSUMBIT_ATTR,
-        TARGET_ATTR,
-    };
+    public void setId(String v);
+    public void setRendered(boolean b);
 }

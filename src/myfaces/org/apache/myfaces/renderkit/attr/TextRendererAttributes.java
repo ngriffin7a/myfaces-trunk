@@ -40,6 +40,7 @@ public interface TextRendererAttributes
     public static final String DATAFLD_ATTR = "datafld";
     public static final String DATASRC_ATTR = "datasrc";
     public static final String DATAFORMATAS_ATTR = "dataformatas";
+    public static final String DISABLED_ATTR = "disabled";
     //public static final String ISMAP_ATTR = "ismap";
     public static final String MAX_LENGTH_ATTR = "maxlength";
     public static final String ONBLUR_ATTR = "onblur";

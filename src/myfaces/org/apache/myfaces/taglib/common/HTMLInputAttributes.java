@@ -16,31 +16,28 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package net.sourceforge.myfaces.renderkit.attr;
-
-import net.sourceforge.myfaces.renderkit.attr.CommonRendererAttributes;
+package net.sourceforge.myfaces.taglib.common;
 
 /**
- * DOCUMENT ME!
- * @author Thomas Spiegl (latest modification by $Author$)
+ * Convenient mixin interface to make sure that there is a setter for each of
+ * the "html_input_attributes"
+ * (see entity declaration in myfaces_html.tld).
+ * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public interface FormRendererAttributes
-    extends CommonRendererAttributes
+public interface HTMLInputAttributes
 {
-    public static final String ACCEPT_ATTR = "accept";
-    public static final String ACCEPT_CHARSET_ATTR = "accept-charset";
-    public static final String ENCTYPE_ATTR = "enctype";
-    public static final String ONRESET_ATTR = "onreset";
-    public static final String ONSUMBIT_ATTR = "onsubmit";
-    public static final String TARGET_ATTR = "target";
-    public static final String[] COMMON_FORM_ATTRIBUTES =
-    {
-        ACCEPT_ATTR,
-        ACCEPT_CHARSET_ATTR,
-        ENCTYPE_ATTR,
-        ONRESET_ATTR,
-        ONSUMBIT_ATTR,
-        TARGET_ATTR,
-    };
+    public void setAccesskey(String v);
+    public void setAlign(String v);
+    public void setAlt(String v);
+    public void setDatafld(String v);
+    public void setDatasrc(String v);
+    public void setDataformatas(String v);
+    public void setDisabled(boolean v);
+    public void setOnblur(String v);
+    public void setOnchange(String v);
+    public void setOnfocus(String v);
+    public void setReadonly(boolean v);
+    public void setSize(String v);
+    public void setTabindex(int v);
 }

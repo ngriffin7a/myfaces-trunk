@@ -133,6 +133,16 @@ public class MyFacesTagHelper
                                       false));
     }
 
+    protected void setRendererAttribute(String attrName, int attrValue)
+    {
+        if (_attributes == null)
+        {
+            _attributes = new HashSet();
+        }
+        _attributes.add(new Attribute(attrName,
+                                      new Integer(attrValue),
+                                      false));
+    }
 
 
     protected static class Attribute

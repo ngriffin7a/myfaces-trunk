@@ -21,7 +21,80 @@
 
 <!DOCTYPE taglib
   PUBLIC "-//Sun Microsystems, Inc.//DTD JSP Tag Library 1.2//EN"
-  "http://java.sun.com/dtd/web-jsptaglibrary_1_2.dtd">
+  "http://java.sun.com/dtd/web-jsptaglibrary_1_2.dtd" [
+    <!ENTITY jsf_universal_attributes "
+        <attribute>
+            <name>id</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
+            <type>java.lang.String</type>
+            <description>Every component can have an unique id. Automatically created if omitted.</description>
+        </attribute>
+        <attribute>
+            <name>rendered</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>java.lang.Boolean</type>
+            <description>If false, this component will not be rendered.</description>
+        </attribute>
+    ">
+    <!ENTITY modelReference_attribute "
+        <attribute>
+            <name>modelReference</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
+            <type>java.lang.String</type>
+            <description>Reference to a bean or a bean property.</description>
+        </attribute>
+    ">
+    <!ENTITY converter_attribute "
+        <attribute><name>converter</name>       <required>false</required>  <rtexprvalue>false</rtexprvalue></attribute>
+    ">
+    <!ENTITY html_event_handler_attributes "
+        <attribute><name>onclick</name>    <required>false</required>  <rtexprvalue>true</rtexprvalue></attribute>
+        <attribute><name>ondblclick</name> <required>false</required>  <rtexprvalue>true</rtexprvalue></attribute>
+        <attribute><name>onmousedown</name><required>false</required>  <rtexprvalue>true</rtexprvalue></attribute>
+        <attribute><name>onmouseup</name>  <required>false</required>  <rtexprvalue>true</rtexprvalue></attribute>
+        <attribute><name>onmouseover</name><required>false</required>  <rtexprvalue>true</rtexprvalue></attribute>
+        <attribute><name>onmousemove</name><required>false</required>  <rtexprvalue>true</rtexprvalue></attribute>
+        <attribute><name>onmouseout</name> <required>false</required>  <rtexprvalue>true</rtexprvalue></attribute>
+        <attribute><name>onkeypress</name> <required>false</required>  <rtexprvalue>true</rtexprvalue></attribute>
+        <attribute><name>onkeydown</name>  <required>false</required>  <rtexprvalue>true</rtexprvalue></attribute>
+        <attribute><name>onkeyup</name>    <required>false</required>  <rtexprvalue>true</rtexprvalue></attribute>
+    ">
+    <!ENTITY html_universal_attributes "
+        <attribute><name>dir</name>     <required>false</required>  <rtexprvalue>true</rtexprvalue></attribute>
+        <attribute><name>lang</name>    <required>false</required>  <rtexprvalue>true</rtexprvalue></attribute>
+        <attribute><name>style</name>   <required>false</required>  <rtexprvalue>true</rtexprvalue></attribute>
+        <attribute><name>title</name>   <required>false</required>  <rtexprvalue>true</rtexprvalue></attribute>
+    ">
+    <!ENTITY html_button_attributes "
+        <attribute><name>accesskey</name>   <required>false</required>  <rtexprvalue>true</rtexprvalue></attribute>
+        <attribute><name>datafld</name>     <required>false</required>  <rtexprvalue>true</rtexprvalue></attribute>
+        <attribute><name>datasrc</name>     <required>false</required>  <rtexprvalue>true</rtexprvalue></attribute>
+        <attribute><name>dataformatas</name><required>false</required>  <rtexprvalue>true</rtexprvalue></attribute>
+        <attribute><name>disabled</name>    <required>false</required>  <rtexprvalue>true</rtexprvalue></attribute>
+        <attribute><name>onblur</name>      <required>false</required>  <rtexprvalue>true</rtexprvalue></attribute>
+        <attribute><name>onchange</name>    <required>false</required>  <rtexprvalue>true</rtexprvalue></attribute>
+        <attribute><name>onfocus</name>     <required>false</required>  <rtexprvalue>true</rtexprvalue></attribute>
+        <attribute><name>tabindex</name>    <required>false</required>  <rtexprvalue>true</rtexprvalue></attribute>
+    ">
+    <!ENTITY html_input_attributes "
+        <attribute><name>accesskey</name>   <required>false</required>  <rtexprvalue>true</rtexprvalue></attribute>
+        <attribute><name>align</name>       <required>false</required>  <rtexprvalue>true</rtexprvalue></attribute>
+        <attribute><name>alt</name>         <required>false</required>  <rtexprvalue>true</rtexprvalue></attribute>
+        <attribute><name>datafld</name>     <required>false</required>  <rtexprvalue>true</rtexprvalue></attribute>
+        <attribute><name>datasrc</name>     <required>false</required>  <rtexprvalue>true</rtexprvalue></attribute>
+        <attribute><name>dataformatas</name><required>false</required>  <rtexprvalue>true</rtexprvalue></attribute>
+        <attribute><name>disabled</name>    <required>false</required>  <rtexprvalue>true</rtexprvalue></attribute>
+        <attribute><name>onblur</name>      <required>false</required>  <rtexprvalue>true</rtexprvalue></attribute>
+        <attribute><name>onchange</name>    <required>false</required>  <rtexprvalue>true</rtexprvalue></attribute>
+        <attribute><name>onfocus</name>     <required>false</required>  <rtexprvalue>true</rtexprvalue></attribute>
+        <attribute><name>readonly</name>    <required>false</required>  <rtexprvalue>true</rtexprvalue></attribute>
+        <attribute><name>size</name>        <required>false</required>  <rtexprvalue>true</rtexprvalue></attribute>
+        <attribute><name>tabindex</name>    <required>false</required>  <rtexprvalue>true</rtexprvalue></attribute>
+    ">
+]>
 
 <taglib>
 
@@ -35,169 +108,40 @@
 
 <!--
   ======================================================
-  form
+    form
   ======================================================
  -->
     <tag>
         <name>form</name>
         <tag-class>net.sourceforge.myfaces.taglib.FormTag</tag-class>
         <body-content>JSP</body-content>
-        <!-- TODO: attribute formClass -->
-        <attribute>
-            <name>id</name>
-            <required>false</required>
-            <rtexprvalue>false</rtexprvalue>
-        </attribute>
-        <attribute>
-            <name>formName</name>
-            <required>true</required>
-            <rtexprvalue>false</rtexprvalue>
-        </attribute>
+        &jsf_universal_attributes;
+        <attribute><name>formName</name>        <required>true</required>   <rtexprvalue>false</rtexprvalue></attribute>
+        <attribute><name>formClass</name>       <required>false</required>  <rtexprvalue>false</rtexprvalue></attribute>
+        &html_universal_attributes;
+        &html_event_handler_attributes;
         <!-- HTML 4.0 form attributes -->
-        <attribute>
-            <name>action</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-        </attribute>
-        <attribute>
-            <name>accept</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-        </attribute>
-        <attribute>
-            <name>acceptCharset</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-        </attribute>
-        <attribute>
-            <name>enctype</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-        </attribute>
-        <attribute>
-            <name>method</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-        </attribute>
-        <attribute>
-            <name>onreset</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-        </attribute>
-        <attribute>
-            <name>onsubmit</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-        </attribute>
-        <attribute>
-            <name>target</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-        </attribute>
-        <!-- HTML 4.0 universal attributes -->
-        <attribute>
-            <name>dir</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-        </attribute>
-         <attribute>
-             <name>lang</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
-         <attribute>
-             <name>style</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
-         <attribute>
-             <name>title</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
-         <!-- HTML 4.0 event-handler attributes -->
-         <attribute>
-             <name>onclick</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
-         <attribute>
-             <name>ondblclick</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
-         <attribute>
-             <name>onmousedown</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
-         <attribute>
-             <name>onmouseup</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
-         <attribute>
-             <name>onmouseover</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
-         <attribute>
-             <name>onmousemove</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
-         <attribute>
-             <name>onmouseout</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
-         <attribute>
-             <name>onkeypress</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
-         <attribute>
-             <name>onkeydown</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
-         <attribute>
-             <name>onkeyup</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
+        <attribute><name>accept</name>          <required>false</required>  <rtexprvalue>true</rtexprvalue></attribute>
+        <attribute><name>acceptCharset</name>   <required>false</required>  <rtexprvalue>true</rtexprvalue></attribute>
+        <attribute><name>enctype</name>         <required>false</required>  <rtexprvalue>true</rtexprvalue></attribute>
+        <attribute><name>onreset</name>         <required>false</required>  <rtexprvalue>true</rtexprvalue></attribute>
+        <attribute><name>onsubmit</name>        <required>false</required>  <rtexprvalue>true</rtexprvalue></attribute>
+        <attribute><name>target</name>          <required>false</required>  <rtexprvalue>true</rtexprvalue></attribute>
     </tag>
 
 <!--
   ======================================================
-  input_hidden
+    input_hidden
   ======================================================
  -->
     <tag>
-        <!-- TODO attribute rendered -->
         <name>input_hidden</name>
         <tag-class>net.sourceforge.myfaces.taglib.InputHiddenTag</tag-class>
         <body-content>JSP</body-content>
-        <attribute>
-            <name>id</name>
-            <required>true</required>
-            <rtexprvalue>false</rtexprvalue>
-        </attribute>
-        <attribute>
-            <name>value</name>
-            <required>false</required>
-            <rtexprvalue>false</rtexprvalue>
-        </attribute>
-        <attribute>
-            <name>modelReference</name>
-            <required>false</required>
-            <rtexprvalue>false</rtexprvalue>
-        </attribute>
-        <attribute>
-            <name>converter</name>
-            <required>false</required>
-            <rtexprvalue>false</rtexprvalue>
-        </attribute>
+        &jsf_universal_attributes;
+        &modelReference_attribute;
+        &converter_attribute;
+        <attribute><name>value</name>           <required>false</required>  <rtexprvalue>false</rtexprvalue></attribute>
     </tag>
 
 <!--
@@ -206,60 +150,20 @@
   ======================================================
  -->
     <tag>
-        <!-- TODO: rename to 'input_text' -->
-        <!-- TODO attributes rendered, converter -->
-        <name>textentry_input</name>
+        <name>textentry_input</name>    <!-- TODO: rename to 'input_text' -->
         <tag-class>net.sourceforge.myfaces.taglib.TextEntryInputTag</tag-class>
         <body-content>JSP</body-content>
-        <attribute>
-            <name>id</name>
-            <required>true</required>
-            <rtexprvalue>false</rtexprvalue>
-        </attribute>
-        <attribute>
-            <name>modelReference</name>
-            <required>false</required>
-            <rtexprvalue>false</rtexprvalue>
-        </attribute>
+        &jsf_universal_attributes;
+        &modelReference_attribute;
+        &converter_attribute;
         <attribute>
             <name>inputClass</name>
             <required>false</required>
             <rtexprvalue>false</rtexprvalue>
         </attribute>
-        <!-- replace HTML 4.0 value attribute by text -->
+        &html_input_attributes;
         <attribute>
-            <name>text</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-        </attribute>
-        <!-- HTML 4.0 rendering attributes -->
-        <attribute>
-            <name>accesskey</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-        </attribute>
-        <attribute>
-            <name>align</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-        </attribute>
-        <attribute>
-            <name>alt</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-        </attribute>
-        <attribute>
-            <name>datafld</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-        </attribute>
-        <attribute>
-            <name>datasrc</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-        </attribute>
-        <attribute>
-            <name>dataformatas</name>
+            <name>text</name>   <!-- TODO: rename to initValue ? -->
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>
         </attribute>
@@ -268,113 +172,8 @@
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>
         </attribute>
-        <attribute>
-            <name>onblur</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-        </attribute>
-        <attribute>
-            <name>onchange</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-        </attribute>
-        <attribute>
-            <name>onfocus</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-        </attribute>
-        <attribute>
-            <name>onselect</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-        </attribute>
-        <attribute>
-            <name>readonly</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-        </attribute>
-        <attribute>
-            <name>size</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-        </attribute>
-        <attribute>
-            <name>tabindex</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-        </attribute>
-        <!-- HTML 4.0 universal attributes -->
-        <attribute>
-            <name>dir</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-        </attribute>
-         <attribute>
-             <name>lang</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
-         <attribute>
-             <name>style</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
-         <attribute>
-             <name>title</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
-         <!-- HTML 4.0 event-handler attributes -->
-         <attribute>
-             <name>onclick</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
-         <attribute>
-             <name>ondblclick</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
-         <attribute>
-             <name>onmousedown</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
-         <attribute>
-             <name>onmouseup</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
-         <attribute>
-             <name>onmouseover</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
-         <attribute>
-             <name>onmousemove</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
-         <attribute>
-             <name>onmouseout</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
-         <attribute>
-             <name>onkeypress</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
-         <attribute>
-             <name>onkeydown</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
-         <attribute>
-             <name>onkeyup</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
+        &html_universal_attributes;
+        &html_event_handler_attributes;
     </tag>
 
 <!--
@@ -383,25 +182,12 @@
   ======================================================
  -->
     <tag>
-        <!-- TODO attribute rendered -->
         <name>input_textarea</name>
         <tag-class>net.sourceforge.myfaces.taglib.InputTextareaTag</tag-class>
         <body-content>JSP</body-content>
-        <attribute>
-            <name>id</name>
-            <required>true</required>
-            <rtexprvalue>false</rtexprvalue>
-        </attribute>
-        <attribute>
-            <name>modelReference</name>
-            <required>false</required>
-            <rtexprvalue>false</rtexprvalue>
-        </attribute>
-        <attribute>
-            <name>converter</name>
-            <required>false</required>
-            <rtexprvalue>false</rtexprvalue>
-        </attribute>
+        &jsf_universal_attributes;
+        &modelReference_attribute;
+        &converter_attribute;
         <attribute>
             <name>inputClass</name>
             <required>false</required>
@@ -479,78 +265,8 @@
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>
         </attribute>
-        <!-- HTML 4.0 universal attributes -->
-        <attribute>
-            <name>dir</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-        </attribute>
-         <attribute>
-             <name>lang</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
-         <attribute>
-             <name>style</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
-         <attribute>
-             <name>title</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
-         <!-- HTML 4.0 event-handler attributes -->
-         <attribute>
-             <name>onclick</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
-         <attribute>
-             <name>ondblclick</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
-         <attribute>
-             <name>onmousedown</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
-         <attribute>
-             <name>onmouseup</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
-         <attribute>
-             <name>onmouseover</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
-         <attribute>
-             <name>onmousemove</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
-         <attribute>
-             <name>onmouseout</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
-         <attribute>
-             <name>onkeypress</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
-         <attribute>
-             <name>onkeydown</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
-         <attribute>
-             <name>onkeyup</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
+        &html_universal_attributes;
+        &html_event_handler_attributes;
    </tag>
 <!--
   ======================================================
@@ -563,16 +279,9 @@
         <!-- TODO attributes rendered, redisplay, converter, inputClass -->
         <tag-class>net.sourceforge.myfaces.taglib.TextEntrySecretTag</tag-class>
         <body-content>JSP</body-content>
-        <attribute>
-            <name>id</name>
-            <required>true</required>
-            <rtexprvalue>false</rtexprvalue>
-        </attribute>
-        <attribute>
-            <name>modelReference</name>
-            <required>false</required>
-            <rtexprvalue>false</rtexprvalue>
-        </attribute>
+        &jsf_universal_attributes;
+        &modelReference_attribute;
+        &converter_attribute;
         <!-- replace HTML 4.0 value attribute by text -->
         <attribute>
             <name>text</name>
@@ -650,78 +359,8 @@
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>
         </attribute>
-        <!-- HTML 4.0 universal attributes -->
-        <attribute>
-            <name>dir</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-        </attribute>
-         <attribute>
-             <name>lang</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
-         <attribute>
-             <name>style</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
-         <attribute>
-             <name>title</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
-         <!-- HTML 4.0 event-handler attributes -->
-         <attribute>
-             <name>onclick</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
-         <attribute>
-             <name>ondblclick</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
-         <attribute>
-             <name>onmousedown</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
-         <attribute>
-             <name>onmouseup</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
-         <attribute>
-             <name>onmouseover</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
-         <attribute>
-             <name>onmousemove</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
-         <attribute>
-             <name>onmouseout</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
-         <attribute>
-             <name>onkeypress</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
-         <attribute>
-             <name>onkeydown</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
-         <attribute>
-             <name>onkeyup</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
+        &html_universal_attributes;
+        &html_event_handler_attributes;
     </tag>
 
 <!--
@@ -733,11 +372,7 @@
         <name>command_button</name>
         <!-- TODO attributes rendered, modelReference?, imageKey, image -->
         <tag-class>net.sourceforge.myfaces.taglib.CommandButtonTag</tag-class>
-        <attribute>
-            <name>id</name>
-            <required>false</required>
-            <rtexprvalue>false</rtexprvalue>
-        </attribute>
+        &jsf_universal_attributes;
         <!-- TODO commandReference still needed? -->
         <attribute>
             <name>commandReference</name>
@@ -815,78 +450,8 @@
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>
         </attribute>
-        <!-- HTML 4.0 universal attributes -->
-        <attribute>
-            <name>dir</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-        </attribute>
-         <attribute>
-             <name>lang</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
-         <attribute>
-             <name>style</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
-         <attribute>
-             <name>title</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
-         <!-- HTML 4.0 event-handler attributes -->
-         <attribute>
-             <name>onclick</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
-         <attribute>
-             <name>ondblclick</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
-         <attribute>
-             <name>onmousedown</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
-         <attribute>
-             <name>onmouseup</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
-         <attribute>
-             <name>onmouseover</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
-         <attribute>
-             <name>onmousemove</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
-         <attribute>
-             <name>onmouseout</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
-         <attribute>
-             <name>onkeypress</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
-         <attribute>
-             <name>onkeydown</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
-         <attribute>
-             <name>onkeyup</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
+        &html_universal_attributes;
+        &html_event_handler_attributes;
     </tag>
 
 <!--
@@ -898,17 +463,10 @@
         <name>command_hyperlink</name>
         <tag-class>net.sourceforge.myfaces.taglib.CommandHyperlinkTag</tag-class>
         <body-content>JSP</body-content>
-        <!-- TODO attributes modelReference, rendered, image, label-->
-        <attribute>
-            <name>id</name>
-            <required>false</required>
-            <rtexprvalue>false</rtexprvalue>
-        </attribute>
-        <attribute>
-            <name>modelReference</name>
-            <required>false</required>
-            <rtexprvalue>false</rtexprvalue>
-        </attribute>
+        <!-- TODO attributes rendered, image, label-->
+        &jsf_universal_attributes;
+        &modelReference_attribute;
+        &converter_attribute;
         <!-- TODO commandReference still needed? -->
         <attribute>
             <name>commandReference</name>
@@ -991,78 +549,8 @@
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>
         </attribute>
-        <!-- HTML 4.0 universal attributes -->
-        <attribute>
-            <name>dir</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-        </attribute>
-         <attribute>
-             <name>lang</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
-         <attribute>
-             <name>style</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
-         <attribute>
-             <name>title</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
-         <!-- HTML 4.0 event-handler attributes -->
-         <attribute>
-             <name>onclick</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
-         <attribute>
-             <name>ondblclick</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
-         <attribute>
-             <name>onmousedown</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
-         <attribute>
-             <name>onmouseup</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
-         <attribute>
-             <name>onmouseover</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
-         <attribute>
-             <name>onmousemove</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
-         <attribute>
-             <name>onmouseout</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
-         <attribute>
-             <name>onkeypress</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
-         <attribute>
-             <name>onkeydown</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
-         <attribute>
-             <name>onkeyup</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
+        &html_universal_attributes;
+        &html_event_handler_attributes;
 
         <!-- MyFaces extensions -->
         <attribute>
@@ -1100,16 +588,7 @@
         <name>output_label</name>
         <tag-class>net.sourceforge.myfaces.taglib.OutputLabelTag</tag-class>
         <body-content>JSP</body-content>
-        <attribute>
-          <name>id</name>
-          <required>false</required>
-          <rtexprvalue>false</rtexprvalue>
-        </attribute>
-        <attribute>
-          <name>rendered</name>
-          <required>false</required>
-          <rtexprvalue>false</rtexprvalue>
-        </attribute>
+        &jsf_universal_attributes;
         <attribute>
           <name>for</name>
           <required>true</required>
@@ -1152,78 +631,8 @@
           <required>false</required>
           <rtexprvalue>true</rtexprvalue>
         </attribute>
-        <!-- HTML 4.0 universal attributes -->
-        <attribute>
-            <name>dir</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-        </attribute>
-         <attribute>
-             <name>lang</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
-         <attribute>
-             <name>style</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
-         <attribute>
-             <name>title</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
-         <!-- HTML 4.0 event-handler attributes -->
-         <attribute>
-             <name>onclick</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
-         <attribute>
-             <name>ondblclick</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
-         <attribute>
-             <name>onmousedown</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
-         <attribute>
-             <name>onmouseup</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
-         <attribute>
-             <name>onmouseover</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
-         <attribute>
-             <name>onmousemove</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
-         <attribute>
-             <name>onmouseout</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
-         <attribute>
-             <name>onkeypress</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
-         <attribute>
-             <name>onkeydown</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
-         <attribute>
-             <name>onkeyup</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
+        &html_universal_attributes;
+        &html_event_handler_attributes;
     </tag>
 
 <!--
@@ -1236,26 +645,13 @@
         <name>output_text</name>
         <tag-class>net.sourceforge.myfaces.taglib.OutputTextTag</tag-class>
         <body-content>JSP</body-content>
-        <!-- TODO attributes rendered, value -->
-        <attribute>
-            <name>id</name>
-            <required>false</required>
-            <rtexprvalue>false</rtexprvalue>
-        </attribute>
-        <attribute>
-            <name>modelReference</name>
-            <required>false</required>
-            <rtexprvalue>false</rtexprvalue>
-        </attribute>
+        &jsf_universal_attributes;
+        &modelReference_attribute;
+        &converter_attribute;
         <attribute>
             <name>text</name>
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>
-        </attribute>
-        <attribute>
-            <name>converter</name>
-            <required>false</required>
-            <rtexprvalue>false</rtexprvalue>
         </attribute>
         <attribute>
             <name>outputClass</name>
@@ -1275,27 +671,19 @@
     </tag>
 
 
-    <!--
-    ======================================================
-    output_text
-    TODO: check attributes
-    ======================================================
+<!--
+======================================================
+output_date
+TODO: check attributes
+======================================================
  -->
     <tag>
         <name>output_date</name>
         <tag-class>net.sourceforge.myfaces.taglib.OutputDateTag</tag-class>
         <body-content>JSP</body-content>
-        <!-- TODO attributes rendered, value -->
-        <attribute>
-            <name>id</name>
-            <required>false</required>
-            <rtexprvalue>false</rtexprvalue>
-        </attribute>
-        <attribute>
-            <name>modelReference</name>
-            <required>false</required>
-            <rtexprvalue>false</rtexprvalue>
-        </attribute>
+        <!-- TODO attributes value -->
+        &jsf_universal_attributes;
+        &modelReference_attribute;
         <attribute>
             <name>outputClass</name>
             <required>false</required>
@@ -1315,6 +703,60 @@
 
 
 
+<!--
+======================================================
+output_date_time
+TODO: check attributes
+======================================================
+ -->
+        <tag>
+            <name>output_date_time</name>
+            <tag-class>net.sourceforge.myfaces.taglib.OutputDateTimeTag</tag-class>
+            <body-content>JSP</body-content>
+            <!-- TODO attributes value -->
+            &jsf_universal_attributes;
+            &modelReference_attribute;
+            <attribute>
+                <name>outputClass</name>
+                <required>false</required>
+                <rtexprvalue>false</rtexprvalue>
+            </attribute>
+            <attribute>
+                <name>dateStyle</name>
+                <required>false</required>
+                <rtexprvalue>false</rtexprvalue>
+            </attribute>
+            <attribute>
+                <name>timeStyle</name>
+                <required>false</required>
+                <rtexprvalue>false</rtexprvalue>
+            </attribute>
+            <attribute>
+                <name>timezone</name>
+                <required>false</required>
+                <rtexprvalue>false</rtexprvalue>
+            </attribute>
+        </tag>
+
+
+<!--
+======================================================
+output_time
+TODO: check attributes
+======================================================
+ -->
+    <tag>
+        <name>output_time</name>
+        <tag-class>net.sourceforge.myfaces.taglib.OutputTimeTag</tag-class>
+        <body-content>JSP</body-content>
+        <!-- TODO attributes value -->
+        &jsf_universal_attributes;
+        &modelReference_attribute;
+        <attribute><name>outputClass</name>     <required>false</required>  <rtexprvalue>false</rtexprvalue></attribute>
+        <attribute><name>dateStyle</name>       <required>false</required>  <rtexprvalue>false</rtexprvalue></attribute>
+        <attribute><name>timeStyle</name>       <required>false</required>  <rtexprvalue>false</rtexprvalue></attribute>
+        <attribute><name>timezone</name>        <required>false</required>  <rtexprvalue>false</rtexprvalue></attribute>
+    </tag>
 
 
 <!--
@@ -1327,22 +769,10 @@
         <name>output_message</name>
         <tag-class>net.sourceforge.myfaces.taglib.MessageTag</tag-class>
         <body-content>JSP</body-content>
-        <!-- TODO attributes rendered, value (rename msg?)-->
-        <attribute>
-            <name>id</name>
-            <required>false</required>
-            <rtexprvalue>false</rtexprvalue>
-        </attribute>
-        <attribute>
-            <name>modelReference</name>
-            <required>false</required>
-            <rtexprvalue>false</rtexprvalue>
-        </attribute>
-        <attribute>
-            <name>converter</name>
-            <required>false</required>
-            <rtexprvalue>false</rtexprvalue>
-        </attribute>
+        <!-- TODO attributes value (rename msg?)-->
+        &jsf_universal_attributes;
+        &modelReference_attribute;
+        &converter_attribute;
         <attribute>
             <name>msg</name>
             <required>false</required>
@@ -1376,17 +806,10 @@
         <name>image</name>
         <tag-class>net.sourceforge.myfaces.taglib.ImageTag</tag-class>
         <body-content>JSP</body-content>
-        <!-- TODO attributes rendered, key bundle, outputClass, value -->
-        <attribute>
-            <name>id</name>
-            <required>true</required>
-            <rtexprvalue>false</rtexprvalue>
-        </attribute>
-        <attribute>
-            <name>modelReference</name>
-            <required>false</required>
-            <rtexprvalue>false</rtexprvalue>
-        </attribute>
+        <!-- TODO attributes  outputClass, value -->
+        &jsf_universal_attributes;
+        &modelReference_attribute;
+        &converter_attribute;
         <attribute>
             <name>url</name>
             <required>false</required>
@@ -1463,78 +886,8 @@
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>
         </attribute>
-        <!-- HTML 4.0 universal attributes -->
-        <attribute>
-            <name>dir</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-        </attribute>
-         <attribute>
-             <name>lang</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
-         <attribute>
-             <name>style</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
-         <attribute>
-             <name>title</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
-         <!-- HTML 4.0 event-handler attributes -->
-         <attribute>
-             <name>onclick</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
-         <attribute>
-             <name>ondblclick</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
-         <attribute>
-             <name>onmousedown</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
-         <attribute>
-             <name>onmouseup</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
-         <attribute>
-             <name>onmouseover</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
-         <attribute>
-             <name>onmousemove</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
-         <attribute>
-             <name>onmouseout</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
-         <attribute>
-             <name>onkeypress</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
-         <attribute>
-             <name>onkeydown</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
-         <attribute>
-             <name>onkeyup</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
+        &html_universal_attributes;
+        &html_event_handler_attributes;
     </tag>
 
 <!--
@@ -1546,17 +899,10 @@
         <name>selectone_listbox</name>
         <tag-class>net.sourceforge.myfaces.taglib.SelectOneListboxTag</tag-class>
         <body-content>JSP</body-content>
-        <!-- TODO attributes rendered, selectoneClass -->
-        <attribute>
-            <name>id</name>
-            <required>false</required>
-            <rtexprvalue>false</rtexprvalue>
-        </attribute>
-        <attribute>
-            <name>modelReference</name>
-            <required>false</required>
-            <rtexprvalue>false</rtexprvalue>
-        </attribute>
+        <!-- TODO attributes selectoneClass -->
+        &jsf_universal_attributes;
+        &modelReference_attribute;
+        &converter_attribute;
         <attribute>
             <name>value</name>
             <required>false</required>
@@ -1603,78 +949,8 @@
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>
         </attribute>
-        <!-- HTML 4.0 universal attributes -->
-        <attribute>
-            <name>dir</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-        </attribute>
-         <attribute>
-             <name>lang</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
-         <attribute>
-             <name>style</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
-         <attribute>
-             <name>title</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
-         <!-- HTML 4.0 event-handler attributes -->
-         <attribute>
-             <name>onclick</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
-         <attribute>
-             <name>ondblclick</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
-         <attribute>
-             <name>onmousedown</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
-         <attribute>
-             <name>onmouseup</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
-         <attribute>
-             <name>onmouseover</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
-         <attribute>
-             <name>onmousemove</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
-         <attribute>
-             <name>onmouseout</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
-         <attribute>
-             <name>onkeypress</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
-         <attribute>
-             <name>onkeydown</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
-         <attribute>
-             <name>onkeyup</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
+        &html_universal_attributes;
+        &html_event_handler_attributes;
     </tag>
 
 <!--
@@ -1686,17 +962,10 @@
         <name>selectone_menu</name>
         <tag-class>net.sourceforge.myfaces.taglib.SelectOneMenuTag</tag-class>
         <body-content>JSP</body-content>
-        <!-- TODO attributes rendered, selectoneClass -->
-        <attribute>
-            <name>id</name>
-            <required>false</required>
-            <rtexprvalue>false</rtexprvalue>
-        </attribute>
-        <attribute>
-            <name>modelReference</name>
-            <required>false</required>
-            <rtexprvalue>false</rtexprvalue>
-        </attribute>
+        <!-- TODO attributes selectoneClass -->
+        &jsf_universal_attributes;
+        &modelReference_attribute;
+        &converter_attribute;
         <attribute>
             <name>value</name>
             <required>false</required>
@@ -1748,78 +1017,8 @@
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>
         </attribute>
-        <!-- HTML 4.0 universal attributes -->
-        <attribute>
-            <name>dir</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-        </attribute>
-         <attribute>
-             <name>lang</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
-         <attribute>
-             <name>style</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
-         <attribute>
-             <name>title</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
-         <!-- HTML 4.0 event-handler attributes -->
-         <attribute>
-             <name>onclick</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
-         <attribute>
-             <name>ondblclick</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
-         <attribute>
-             <name>onmousedown</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
-         <attribute>
-             <name>onmouseup</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
-         <attribute>
-             <name>onmouseover</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
-         <attribute>
-             <name>onmousemove</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
-         <attribute>
-             <name>onmouseout</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
-         <attribute>
-             <name>onkeypress</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
-         <attribute>
-             <name>onkeydown</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
-         <attribute>
-             <name>onkeyup</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
+        &html_universal_attributes;
+        &html_event_handler_attributes;
     </tag>
 
 <!--
@@ -1831,17 +1030,10 @@
         <name>selectmany_listbox</name>
         <tag-class>net.sourceforge.myfaces.taglib.SelectManyListboxTag</tag-class>
         <body-content>JSP</body-content>
-        <!-- TODO attributes rendered, selectmanyClass -->
-        <attribute>
-            <name>id</name>
-            <required>false</required>
-            <rtexprvalue>false</rtexprvalue>
-        </attribute>
-        <attribute>
-            <name>modelReference</name>
-            <required>false</required>
-            <rtexprvalue>false</rtexprvalue>
-        </attribute>
+        <!-- TODO attributes selectmanyClass -->
+        &jsf_universal_attributes;
+        &modelReference_attribute;
+        &converter_attribute;
         <attribute>
             <name>value</name>
             <required>false</required>
@@ -1888,78 +1080,8 @@
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>
         </attribute>
-        <!-- HTML 4.0 universal attributes -->
-        <attribute>
-            <name>dir</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-        </attribute>
-         <attribute>
-             <name>lang</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
-         <attribute>
-             <name>style</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
-         <attribute>
-             <name>title</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
-         <!-- HTML 4.0 event-handler attributes -->
-         <attribute>
-             <name>onclick</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
-         <attribute>
-             <name>ondblclick</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
-         <attribute>
-             <name>onmousedown</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
-         <attribute>
-             <name>onmouseup</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
-         <attribute>
-             <name>onmouseover</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
-         <attribute>
-             <name>onmousemove</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
-         <attribute>
-             <name>onmouseout</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
-         <attribute>
-             <name>onkeypress</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
-         <attribute>
-             <name>onkeydown</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
-         <attribute>
-             <name>onkeyup</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
+        &html_universal_attributes;
+        &html_event_handler_attributes;
     </tag>
 
 <!--
@@ -1971,17 +1093,10 @@
         <name>selectmany_menu</name>
         <tag-class>net.sourceforge.myfaces.taglib.SelectManyMenuTag</tag-class>
         <body-content>JSP</body-content>
-        <!-- TODO attributes rendered, selectmanyClass -->
-        <attribute>
-            <name>id</name>
-            <required>false</required>
-            <rtexprvalue>false</rtexprvalue>
-        </attribute>
-        <attribute>
-            <name>modelReference</name>
-            <required>false</required>
-            <rtexprvalue>false</rtexprvalue>
-        </attribute>
+        <!-- TODO attributes selectmanyClass -->
+        &jsf_universal_attributes;
+        &modelReference_attribute;
+        &converter_attribute;
         <attribute>
             <name>value</name>
             <required>false</required>
@@ -2033,78 +1148,8 @@
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>
         </attribute>
-        <!-- HTML 4.0 universal attributes -->
-        <attribute>
-            <name>dir</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-        </attribute>
-         <attribute>
-             <name>lang</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
-         <attribute>
-             <name>style</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
-         <attribute>
-             <name>title</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
-         <!-- HTML 4.0 event-handler attributes -->
-         <attribute>
-             <name>onclick</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
-         <attribute>
-             <name>ondblclick</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
-         <attribute>
-             <name>onmousedown</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
-         <attribute>
-             <name>onmouseup</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
-         <attribute>
-             <name>onmouseover</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
-         <attribute>
-             <name>onmousemove</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
-         <attribute>
-             <name>onmouseout</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
-         <attribute>
-             <name>onkeypress</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
-         <attribute>
-             <name>onkeydown</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
-         <attribute>
-             <name>onkeyup</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
+        &html_universal_attributes;
+        &html_event_handler_attributes;
     </tag>
 
 <!--
@@ -2117,21 +1162,13 @@
         <name>selectitem</name>
         <tag-class>net.sourceforge.myfaces.taglib.SelectItemTag</tag-class>
         <body-content>JSP</body-content>
-        <attribute>
-            <name>id</name>
-            <required>false</required>
-            <rtexprvalue>false</rtexprvalue>
-        </attribute>
+        &jsf_universal_attributes;
         <attribute>
             <name>selected</name>
             <required>false</required>
             <rtexprvalue>false</rtexprvalue>
         </attribute>
-        <attribute>
-            <name>modelReference</name>
-            <required>false</required>
-            <rtexprvalue>false</rtexprvalue>
-        </attribute>
+        &modelReference_attribute;
         <attribute>
             <name>value</name>
             <required>false</required>
@@ -2169,16 +1206,8 @@
         <name>selectitems</name>
         <tag-class>net.sourceforge.myfaces.taglib.SelectItemsTag</tag-class>
         <body-content>JSP</body-content>
-        <attribute>
-            <name>id</name>
-            <required>false</required>
-            <rtexprvalue>false</rtexprvalue>
-        </attribute>
-        <attribute>
-            <name>modelReference</name>
-            <required>true</required>
-            <rtexprvalue>false</rtexprvalue>
-        </attribute>
+        &jsf_universal_attributes;
+        <attribute><name>modelReference</name>  <required>true</required>   <rtexprvalue>false</rtexprvalue></attribute>
     </tag>
 
 <!--
@@ -2191,22 +1220,14 @@
         <name>errors</name>
         <tag-class>net.sourceforge.myfaces.taglib.ErrorsTag</tag-class>
         <body-content>empty</body-content>
-        <attribute>
-            <name>id</name>
-            <required>false</required>
-            <rtexprvalue>false</rtexprvalue>
-        </attribute>
+        &jsf_universal_attributes;
     </tag>
 
     <tag>
         <name>input_errors</name>
         <tag-class>net.sourceforge.myfaces.taglib.ErrorsTag</tag-class>
         <body-content>empty</body-content>
-        <attribute>
-            <name>id</name>
-            <required>true</required>
-            <rtexprvalue>false</rtexprvalue>
-        </attribute>
+        &jsf_universal_attributes;
         <attribute>
             <name>clientId</name>
             <required>true</required>
@@ -2229,11 +1250,7 @@
          <name>list</name>
          <tag-class>net.sourceforge.myfaces.taglib.ListTag</tag-class>
          <body-content>JSP</body-content>
-         <attribute>
-             <name>id</name>
-             <required>false</required>
-             <rtexprvalue>false</rtexprvalue>
-         </attribute>
+         &jsf_universal_attributes;
          <attribute>
              <name>cssClass</name>
              <required>false</required>
@@ -2271,21 +1288,13 @@
         <name>listrow</name>
         <tag-class>net.sourceforge.myfaces.taglib.ListRowTag</tag-class>
         <body-content>JSP</body-content>
-        <attribute>
-            <name>id</name>
-            <required>false</required>
-            <rtexprvalue>false</rtexprvalue>
-        </attribute>
+        &jsf_universal_attributes;
         <attribute>
             <name>var</name>
             <required>true</required>
             <rtexprvalue>false</rtexprvalue>
         </attribute>
-        <attribute>
-            <name>modelReference</name>
-            <required>false</required>
-            <rtexprvalue>false</rtexprvalue>
-        </attribute>
+        &modelReference_attribute;
     </tag>
 
 <!--
@@ -2298,11 +1307,7 @@
          <name>grid</name>
          <tag-class>net.sourceforge.myfaces.taglib.GridTag</tag-class>
          <body-content>JSP</body-content>
-         <attribute>
-             <name>id</name>
-             <required>false</required>
-             <rtexprvalue>false</rtexprvalue>
-         </attribute>
+         &jsf_universal_attributes;
          <attribute>
              <name>columns</name>
              <required>true</required>
@@ -2345,11 +1350,7 @@
         <name>group</name>
         <tag-class>net.sourceforge.myfaces.taglib.GroupTag</tag-class>
         <body-content>JSP</body-content>
-        <attribute>
-            <name>id</name>
-            <required>false</required>
-            <rtexprvalue>false</rtexprvalue>
-        </attribute>
+        &jsf_universal_attributes;
     </tag>
 
 <!--
@@ -2361,17 +1362,9 @@
         <name>selectboolean_checkbox</name>
         <tag-class>net.sourceforge.myfaces.taglib.SelectBooleanCheckboxTag</tag-class>
         <body-content>JSP</body-content>
-        <!-- TODO attributes rendered -->
-        <attribute>
-            <name>id</name>
-            <required>false</required>
-            <rtexprvalue>false</rtexprvalue>
-        </attribute>
-        <attribute>
-          <name>modelReference</name>
-          <required>false</required>
-          <rtexprvalue>false</rtexprvalue>
-        </attribute>
+        &jsf_universal_attributes;
+        &modelReference_attribute;
+        &converter_attribute;
         <attribute>
             <name>checked</name>
             <required>false</required>
@@ -2463,78 +1456,8 @@
           <required>false</required>
           <rtexprvalue>true</rtexprvalue>
         </attribute>
-        <!-- HTML 4.0 universal attributes -->
-        <attribute>
-            <name>dir</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-        </attribute>
-         <attribute>
-             <name>lang</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
-         <attribute>
-             <name>style</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
-         <attribute>
-             <name>title</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
-         <!-- HTML 4.0 event-handler attributes -->
-         <attribute>
-             <name>onclick</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
-         <attribute>
-             <name>ondblclick</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
-         <attribute>
-             <name>onmousedown</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
-         <attribute>
-             <name>onmouseup</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
-         <attribute>
-             <name>onmouseover</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
-         <attribute>
-             <name>onmousemove</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
-         <attribute>
-             <name>onmouseout</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
-         <attribute>
-             <name>onkeypress</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
-         <attribute>
-             <name>onkeydown</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
-         <attribute>
-             <name>onkeyup</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
+        &html_universal_attributes;
+        &html_event_handler_attributes;
     </tag>
 
 <!--
@@ -2546,17 +1469,9 @@
         <name>selectmany_checkboxlist</name>
         <tag-class>net.sourceforge.myfaces.taglib.SelectManyCheckboxListTag</tag-class>
         <body-content>JSP</body-content>
-        <!-- TODO attributes rendered -->
-        <attribute>
-            <name>id</name>
-            <required>false</required>
-            <rtexprvalue>false</rtexprvalue>
-        </attribute>
-        <attribute>
-          <name>modelReference</name>
-          <required>false</required>
-          <rtexprvalue>false</rtexprvalue>
-        </attribute>
+        &jsf_universal_attributes;
+        &modelReference_attribute;
+        &converter_attribute;
         <attribute>
             <name>checked</name>
             <required>false</required>
@@ -2648,78 +1563,8 @@
           <required>false</required>
           <rtexprvalue>true</rtexprvalue>
         </attribute>
-        <!-- HTML 4.0 universal attributes -->
-        <attribute>
-            <name>dir</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-        </attribute>
-         <attribute>
-             <name>lang</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
-         <attribute>
-             <name>style</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
-         <attribute>
-             <name>title</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
-         <!-- HTML 4.0 event-handler attributes -->
-         <attribute>
-             <name>onclick</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
-         <attribute>
-             <name>ondblclick</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
-         <attribute>
-             <name>onmousedown</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
-         <attribute>
-             <name>onmouseup</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
-         <attribute>
-             <name>onmouseover</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
-         <attribute>
-             <name>onmousemove</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
-         <attribute>
-             <name>onmouseout</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
-         <attribute>
-             <name>onkeypress</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
-         <attribute>
-             <name>onkeydown</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
-         <attribute>
-             <name>onkeyup</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-         </attribute>
+        &html_universal_attributes;
+        &html_event_handler_attributes;
     </tag>
 
 </taglib>

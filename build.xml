@@ -53,6 +53,13 @@
             </section>
         </manifest>
 
+        <!-- resolve TLD entities (for containers that do not support entities within TLDs) -->
+        <xslt basedir="${tlds.dir}"
+              includes="*.tld"
+              destdir="${temp.dir}/myfaces-jar"
+              style="${tlds.dir}/resolve_entities.xsl"
+              extension=".tld" />
+
         <!-- build the jar -->
         <jar destfile="${myfaces.jar}"
              manifest="${temp.dir}/myfaces-jar/MANIFEST.MF">
@@ -66,7 +73,7 @@
                      excludes="**/*.java
                                **/package.html"/>
             <!-- TLDs -->
-            <zipfileset dir="${tlds.dir}"
+            <zipfileset dir="${temp.dir}/myfaces-jar"
                         includes="*.tld"
                         prefix="META-INF/"/>
         </jar>
@@ -154,6 +161,5 @@
             inheritall="false"
             target="clean"/>
     </target>
-
 
 </project>

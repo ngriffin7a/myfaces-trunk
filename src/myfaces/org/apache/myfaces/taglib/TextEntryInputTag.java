@@ -20,6 +20,10 @@ package net.sourceforge.myfaces.taglib;
 
 import net.sourceforge.myfaces.component.UIInput;
 import net.sourceforge.myfaces.renderkit.html.TextRenderer;
+import net.sourceforge.myfaces.taglib.common.JSFUniversalAttributes;
+import net.sourceforge.myfaces.taglib.common.HTMLInputAttributes;
+import net.sourceforge.myfaces.taglib.common.HTMLUniversalAttributes;
+import net.sourceforge.myfaces.taglib.common.HTMLEventHandlerAttributes;
 
 import javax.faces.component.UIComponent;
 
@@ -29,7 +33,11 @@ import javax.faces.component.UIComponent;
  * @version $Revision$ $Date$
  */
 public class TextEntryInputTag
-        extends MyFacesTag
+    extends MyFacesTag
+    implements JSFUniversalAttributes,
+               HTMLInputAttributes,
+               HTMLUniversalAttributes,
+               HTMLEventHandlerAttributes
 {
     public UIComponent createComponent()
     {
@@ -81,6 +89,11 @@ public class TextEntryInputTag
         setRendererAttribute(TextRenderer.DATAFORMATAS_ATTR, value);
     }
 
+    public void setDisabled(boolean value)
+    {
+        setRendererAttribute(TextRenderer.DISABLED_ATTR, value);
+    }
+
     public void setMaxlength(String value)
     {
         setRendererAttribute(TextRenderer.MAX_LENGTH_ATTR, value);
@@ -106,7 +119,7 @@ public class TextEntryInputTag
         setRendererAttribute(TextRenderer.ONSELECT_ATTR, value);
     }
 
-    public void setReadonly(String value)
+    public void setReadonly(boolean value)
     {
         setRendererAttribute(TextRenderer.READONLY_ATTR, value);
     }
@@ -116,7 +129,7 @@ public class TextEntryInputTag
         setRendererAttribute(TextRenderer.SIZE_ATTR, value);
     }
 
-    public void setTabindex(String value)
+    public void setTabindex(int value)
     {
         setRendererAttribute(TextRenderer.TABINDEX_ATTR, value);
     }

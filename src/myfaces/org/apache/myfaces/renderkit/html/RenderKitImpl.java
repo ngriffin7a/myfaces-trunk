@@ -50,6 +50,8 @@ public class RenderKitImpl
         addRenderer(new FormRenderer());
         addRenderer(new TextRenderer());
         addRenderer(new DateRenderer());
+        addRenderer(new DateTimeRenderer());
+        addRenderer(new TimeRenderer());
         addRenderer(new MessageRenderer());
         addRenderer(new SecretRenderer());
         addRenderer(new ButtonRenderer());

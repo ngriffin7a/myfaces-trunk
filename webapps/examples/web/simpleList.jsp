@@ -75,11 +75,11 @@
                 <h:group>
                     <h:output_text text="take a look at this runtime values ..."/>
                     <h:group>
-                        <h:output_message msg="{0} rows" >
+                        <h:output_message id="rows_msg" msg="{0} rows" >
                             <f:parameter value="<%=new Integer(rows)%>"/>
                         </h:output_message>
                         &nbsp; / &nbsp;
-                        <h:output_message msg="{0} cols" >
+                        <h:output_message id="cols_msg" msg="{0} cols" >
                             <f:parameter value="<%=new Integer(cols)%>"/>
                         </h:output_message>
                     </h:group>

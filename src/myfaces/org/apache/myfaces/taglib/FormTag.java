@@ -20,6 +20,9 @@ package net.sourceforge.myfaces.taglib;
 
 import net.sourceforge.myfaces.component.UIForm;
 import net.sourceforge.myfaces.renderkit.html.FormRenderer;
+import net.sourceforge.myfaces.taglib.common.JSFUniversalAttributes;
+import net.sourceforge.myfaces.taglib.common.HTMLUniversalAttributes;
+import net.sourceforge.myfaces.taglib.common.HTMLEventHandlerAttributes;
 
 import javax.faces.component.UIComponent;
 
@@ -30,7 +33,10 @@ import javax.faces.component.UIComponent;
  * @version $Revision$ $Date$
  */
 public class FormTag
-        extends MyFacesTag
+    extends MyFacesTag
+    implements JSFUniversalAttributes,
+               HTMLUniversalAttributes,
+               HTMLEventHandlerAttributes
 {
     //MyFaces tag extensions:
     public UIComponent createComponent()
@@ -43,17 +49,21 @@ public class FormTag
         return FormRenderer.TYPE;
     }
 
+
+    //JSF form attributes
+
     public void setFormName(String v)
     {
         setComponentAttribute(UIForm.FORM_NAME_ATTR, v);
     }
 
-    //form tag properties
-
-    public void setAction(String value)
+    public void setFormClass(String v)
     {
-        setRendererAttribute(FormRenderer.ACTION_ATTR, value);
+        setRendererAttribute(FormRenderer.FORM_CLASS_ATTR, v);
     }
+
+
+    //HTML 4.0 form attributes
 
     public void setAccept(String value)
     {
@@ -68,11 +78,6 @@ public class FormTag
     public void setEnctype(String value)
     {
         setRendererAttribute(FormRenderer.ENCTYPE_ATTR, value);
-    }
-
-    public void setMethod(String value)
-    {
-        setRendererAttribute(FormRenderer.METHOD_ATTR, value);
     }
 
     public void setOnreset(String value)

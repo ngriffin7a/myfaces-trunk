@@ -143,11 +143,19 @@ public abstract class MyFacesTag
         _helper.setRendererAttribute(attrName, attrValue);
     }
 
+    protected void setRendererAttribute(String attrName, int attrValue)
+    {
+        _helper.setRendererAttribute(attrName, attrValue);
+    }
+
     public void overrideProperties(UIComponent uiComponent)
     {
         super.overrideProperties(uiComponent);
         _helper.overrideProperties(uiComponent);
     }
+
+
+    //
 
 
     //standard tag properties
@@ -156,15 +164,20 @@ public abstract class MyFacesTag
         setComponentAttribute(CommonComponentAttributes.MODEL_REFERENCE_ATTR, s);
     }
 
-    public void setValue(Object value)
-    {
-        setComponentAttribute(CommonComponentAttributes.VALUE_ATTR, value);
-    }
-
     public void setConverter(Object converter)
     {
         setRendererAttribute(CommonRendererAttributes.CONVERTER_ATTR, converter);
     }
+
+    /**
+     * Overwrite to make public.
+     * @param value
+     */
+    protected void setValue(Object value)
+    {
+        setComponentAttribute(CommonComponentAttributes.VALUE_ATTR, value);
+    }
+
 
     //universal tag properties
     public void setDir(String value)

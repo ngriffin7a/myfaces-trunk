@@ -18,55 +18,51 @@
  */
 package net.sourceforge.myfaces.taglib;
 
-import net.sourceforge.myfaces.component.UISelectItem;
+import net.sourceforge.myfaces.component.UIOutput;
+import net.sourceforge.myfaces.renderkit.html.DateRenderer;
+import net.sourceforge.myfaces.renderkit.html.DateTimeRenderer;
 
 import javax.faces.component.UIComponent;
 
+
 /**
  * DOCUMENT ME!
- * @author Thomas Spiegl (latest modification by $Author$)
+ * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public class SelectItemTag
-    extends MyFacesTag
+public class OutputDateTimeTag
+        extends MyFacesTag
 {
+    //MyFaces tag extensions:
     public UIComponent createComponent()
     {
-        return new UISelectItem();
+        UIComponent uiComponent = new UIOutput();
+        uiComponent.setConverter("DateTimeConverter");
+        return uiComponent;
     }
 
     public String getRendererType()
     {
-        return null;
+        return DateTimeRenderer.TYPE;
     }
 
-    public void setSelected(String v)
+    public void setOutputClass(String value)
     {
-        setComponentAttribute(UISelectItem.SELECTED_ATTR, v);
+        setRendererAttribute(DateTimeRenderer.OUTPUT_CLASS_ATTR, value);
     }
 
-    public void setDescription(String v)
+    public void setDateStyle(String value)
     {
-        setComponentAttribute(UISelectItem.ITEM_DESCRIPTION_ATTR, v);
+        setRendererAttribute(DateTimeRenderer.DATE_STYLE_ATTR, value);
     }
 
-    public void setValue(Object value)
+    public void setTimeStyle(String value)
     {
-        super.setValue(value);
+        setRendererAttribute(DateTimeRenderer.TIME_STYLE_ATTR, value);
     }
 
-    public void setLabel(String v)
+    public void setTimezone(String value)
     {
-        setComponentAttribute(UISelectItem.ITEM_LABEL_ATTR, v);
-    }
-
-    public void setKey(String v)
-    {
-        setComponentAttribute(UISelectItem.ITEM_KEY_ATTR, v);
-    }
-
-    public void setBundle(String v)
-    {
-        setComponentAttribute(UISelectItem.ITEM_BUNDLE_ATTR, v);
+        setRendererAttribute(DateTimeRenderer.TIMEZONE_ATTR, value);
     }
 }

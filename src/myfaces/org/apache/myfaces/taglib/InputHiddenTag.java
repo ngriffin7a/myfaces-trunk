@@ -19,8 +19,8 @@
 package net.sourceforge.myfaces.taglib;
 
 import net.sourceforge.myfaces.component.UIInput;
-import net.sourceforge.myfaces.renderkit.html.TextRenderer;
 import net.sourceforge.myfaces.renderkit.html.HiddenRenderer;
+import net.sourceforge.myfaces.taglib.common.JSFUniversalAttributes;
 
 import javax.faces.component.UIComponent;
 
@@ -30,7 +30,8 @@ import javax.faces.component.UIComponent;
  * @version $Revision$ $Date$
  */
 public class InputHiddenTag
-        extends MyFacesTag
+    extends MyFacesTag
+    implements JSFUniversalAttributes
 {
     public UIComponent createComponent()
     {
@@ -40,5 +41,10 @@ public class InputHiddenTag
     public String getRendererType()
     {
         return HiddenRenderer.TYPE;
+    }
+
+    public void setValue(Object value)
+    {
+        super.setValue(value);
     }
 }

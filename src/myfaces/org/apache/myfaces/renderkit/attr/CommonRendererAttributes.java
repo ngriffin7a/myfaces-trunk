@@ -41,6 +41,7 @@ public interface CommonRendererAttributes
     public static final String OUTPUT_CLASS_ATTR = "outputClass";
     public static final String COMMAND_CLASS_ATTR = "commandClass";
     public static final String SELECT_BOOLEAN_CLASS_ATTR = "selectBooleanClass";
+    public static final String FORM_CLASS_ATTR = "formClass";
 
     //TODO: use AttributeDescription ...
     public static final AttributeDescriptor PANEL_CLASS_ATTR = new AttrDescrImpl("panelClass", String.class);

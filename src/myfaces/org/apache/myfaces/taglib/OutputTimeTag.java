@@ -18,55 +18,45 @@
  */
 package net.sourceforge.myfaces.taglib;
 
-import net.sourceforge.myfaces.component.UISelectItem;
+import net.sourceforge.myfaces.component.UIOutput;
+import net.sourceforge.myfaces.renderkit.html.TimeRenderer;
 
 import javax.faces.component.UIComponent;
 
+
 /**
  * DOCUMENT ME!
- * @author Thomas Spiegl (latest modification by $Author$)
+ * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public class SelectItemTag
-    extends MyFacesTag
+public class OutputTimeTag
+        extends MyFacesTag
 {
+    //MyFaces tag extensions:
     public UIComponent createComponent()
     {
-        return new UISelectItem();
+        UIComponent uiComponent = new UIOutput();
+        uiComponent.setConverter("TimeConverter");
+        return uiComponent;
     }
 
     public String getRendererType()
     {
-        return null;
+        return TimeRenderer.TYPE;
     }
 
-    public void setSelected(String v)
+    public void setOutputClass(String value)
     {
-        setComponentAttribute(UISelectItem.SELECTED_ATTR, v);
+        setRendererAttribute(TimeRenderer.OUTPUT_CLASS_ATTR, value);
     }
 
-    public void setDescription(String v)
+    public void setTimeStyle(String value)
     {
-        setComponentAttribute(UISelectItem.ITEM_DESCRIPTION_ATTR, v);
+        setRendererAttribute(TimeRenderer.TIME_STYLE_ATTR, value);
     }
 
-    public void setValue(Object value)
+    public void setTimezone(String value)
     {
-        super.setValue(value);
-    }
-
-    public void setLabel(String v)
-    {
-        setComponentAttribute(UISelectItem.ITEM_LABEL_ATTR, v);
-    }
-
-    public void setKey(String v)
-    {
-        setComponentAttribute(UISelectItem.ITEM_KEY_ATTR, v);
-    }
-
-    public void setBundle(String v)
-    {
-        setComponentAttribute(UISelectItem.ITEM_BUNDLE_ATTR, v);
+        setRendererAttribute(TimeRenderer.TIMEZONE_ATTR, value);
     }
 }
