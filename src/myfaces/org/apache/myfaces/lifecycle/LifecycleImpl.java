@@ -18,36 +18,34 @@
  */
 package net.sourceforge.myfaces.lifecycle;
 
-import net.sourceforge.myfaces.context.FacesContextImpl;
-import net.sourceforge.myfaces.renderkit.html.state.StateRenderer;
 import net.sourceforge.myfaces.util.DebugUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import javax.faces.FacesException;
 import javax.faces.FactoryFinder;
+import javax.faces.application.Application;
 import javax.faces.application.ApplicationFactory;
-import javax.faces.application.FacesMessage;
 import javax.faces.application.ViewHandler;
-import javax.faces.component.UICommand;
 import javax.faces.component.UIComponent;
+import javax.faces.component.UIInput;
 import javax.faces.component.UIViewRoot;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
-import javax.faces.event.*;
+import javax.faces.el.ValueBinding;
+import javax.faces.event.PhaseEvent;
+import javax.faces.event.PhaseId;
+import javax.faces.event.PhaseListener;
 import javax.faces.lifecycle.Lifecycle;
-import javax.faces.render.RenderKit;
-import javax.faces.render.Renderer;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Locale;
 
 /**
- * Implements the lifecycle as described in Spec. 1.0 PRD2 Chapter 2
+ * Implements the lifecycle as described in Spec. 1.0 PFD Chapter 2
  * @author Manfred Geiler (latest modification by $Author$)
- * @author Anton Koinov
  * @version $Revision$ $Date$
  */
 public class LifecycleImpl
@@ -56,17 +54,13 @@ public class LifecycleImpl
     private static final Log log = LogFactory.getLog(LifecycleImpl.class);
 
     private final ApplicationFactory _applicationFactory;
-//    private final RenderKitFactory _rkFactory;
-    private final List _phaseListeners = new ArrayList();
+    private List _phaseListenerList = new ArrayList();
+    private PhaseListener[] _phaseListenerArray = null;
 
     public LifecycleImpl()
     {
         _applicationFactory = (ApplicationFactory)FactoryFinder.getFactory(FactoryFinder.APPLICATION_FACTORY);
-// FIXME
-//        _treeFactory = (TreeFactory)FactoryFinder.getFactory(FactoryFinder.TREE_FACTORY);
-//        _rkFactory = (RenderKitFactory)FactoryFinder.getFactory(FactoryFinder.RENDER_KIT_FACTORY);
     }
-
 
     public void execute(FacesContext facesContext)
         throws FacesException
@@ -104,100 +98,49 @@ public class LifecycleImpl
 
     /**
      * Restore View (JSF.2.2.1)
-     * @return true, if response is complete
+     * @return true, if immediate rendering should occur
      */
     private boolean restoreView(FacesContext facesContext)
         throws FacesException
     {
         if (log.isTraceEnabled()) log.trace("entering restoreView in " + LifecycleImpl.class.getName());
 
+        informPhaseListenersBefore(facesContext, PhaseId.RESTORE_VIEW);
+
         // Derive view identifier
         String viewId = deriveViewId(facesContext);
 
-        ViewHandler viewHandler
+        Application application = _applicationFactory.getApplication();
+        ViewHandler viewHandler = application.getViewHandler();
 
-
-        UIViewRoot viewRoot = facesContext.getViewRoot();
-
-        //Set locale
-        Locale locale = facesContext.getExternalContext().getRequestLocale();
-        if (locale != null)
+        UIViewRoot viewRoot = viewHandler.restoreView(facesContext, viewId);
+        if (viewRoot == null)
         {
-            facesContext.getViewRoot().setLocale(locale);
+            viewRoot = viewHandler.createView(facesContext, viewId);
+            facesContext.renderResponse();
         }
 
-        //Create tree
-        Tree tree = _treeFactory.getViewRoot(facesContext, getViewId(facesContext));
-        facesContext.setTree(tree);
-
-        //Restore state
-        RenderKit renderKit = _rkFactory.getRenderKit(tree.getRenderKitId());
-
-        Renderer stateRenderer = null;
-        try
+        if (facesContext.getExternalContext().getRequestParameterMap().isEmpty())
         {
-            stateRenderer = renderKit.getRenderer(StateRenderer.TYPE);
-        }
-        catch (Exception e)
-        {
-            //No StateRenderer
+            //no POST or query parameters
+            facesContext.renderResponse();
         }
 
-        if (stateRenderer != null)
-        {
-            try
-            {
-                log.trace("StateRenderer found, calling decode.");
-                stateRenderer.decode(facesContext, null);
-            }
-            catch (IOException e)
-            {
-                throw new FacesException("Error restoring state", e);
-            }
+        facesContext.setViewRoot(viewRoot);
 
-            //remove messages, that were added during tree restoring
-            Iterator msgIt = facesContext.getMessages();
-            if (msgIt.hasNext())
-            {
-                if (log.isInfoEnabled())
-                {
-                    while (msgIt.hasNext())
-                    {
-                        FacesMessage msg = (FacesMessage)msgIt.next();
-                        log.info("Message, added during reconstituteComponentTree: " + msg.getSummary() + " / " + msg.getDetail());
-                    }
-                }
+        recursivelyHandleComponentReferencesAndSetValid(facesContext, viewRoot);
 
-                if (facesContext instanceof FacesContextImpl)
-                {
-                    ((FacesContextImpl)facesContext).clearMessages();
-                }
-                else
-                {
-                    log.warn("Messages were added during reconstituteComponentTree phase, but could not be removed afterwards, because current context is not instance of FacesContextImpl.");
-                }
-            }
-        }
-        else
-        {
-            log.info("No StateRenderer found, cannot restore tree.");
-        }
+        informPhaseListenersAfter(facesContext, PhaseId.RESTORE_VIEW);
 
-        UIComponent root = facesContext.getViewRoot();
-        try
+        if (facesContext.getRenderResponse())
         {
-            root.processRestoreState(facesContext, ???);
+            renderResponse(facesContext);
+            if (log.isDebugEnabled()) log.debug("exiting restoreView in " + LifecycleImpl.class.getName() + " (after render response)");
+            return true;
         }
-        catch (IOException e)
-        {
-            throw new FacesException(e);
-        }
-
-        ApplicationFactory af = (ApplicationFactory)FactoryFinder.getFactory(FactoryFinder.APPLICATION_FACTORY);
-        ActionListener actionListener = af.getApplication().getActionListener();
-        traverseAndRegisterActionListener(actionListener, root);
 
         if (log.isTraceEnabled()) log.trace("exiting restoreView in " + LifecycleImpl.class.getName());
+        return false;
     }
 
 
@@ -210,10 +153,11 @@ public class LifecycleImpl
     {
         if (log.isTraceEnabled()) log.trace("entering applyRequestValues in " + LifecycleImpl.class.getName());
 
-        UIComponent root = facesContext.getViewRoot();
-        root.processDecodes(facesContext);
+        informPhaseListenersBefore(facesContext, PhaseId.APPLY_REQUEST_VALUES);
 
-        doEventProcessing(facesContext, PhaseId.APPLY_REQUEST_VALUES);
+        facesContext.getViewRoot().processDecodes(facesContext);
+
+        informPhaseListenersAfter(facesContext, PhaseId.APPLY_REQUEST_VALUES);
 
         if (facesContext.getResponseComplete())
         {
@@ -241,12 +185,13 @@ public class LifecycleImpl
     {
         if (log.isTraceEnabled()) log.trace("entering processValidations in " + LifecycleImpl.class.getName());
 
-        int messageCountBefore = getMessageCount(facesContext);
+        informPhaseListenersBefore(facesContext, PhaseId.PROCESS_VALIDATIONS);
 
-        UIComponent root = facesContext.getViewRoot();
-        root.processValidators(facesContext);
+        //int messageCountBefore = getMessageCount(facesContext);
 
-        doEventProcessing(facesContext, PhaseId.PROCESS_VALIDATIONS);
+        facesContext.getViewRoot().processValidators(facesContext);
+
+        informPhaseListenersAfter(facesContext, PhaseId.PROCESS_VALIDATIONS);
 
         if (facesContext.getResponseComplete())
         {
@@ -261,18 +206,21 @@ public class LifecycleImpl
             return true;
         }
 
+        /*
         if (getMessageCount(facesContext) > messageCountBefore)
         {
             renderResponse(facesContext);
             if (log.isDebugEnabled()) log.debug("exiting processValidations in " + LifecycleImpl.class.getName() + " (after render response - because of messages during validation!)");
             return true;
         }
+        */
 
         if (log.isTraceEnabled()) log.trace("exiting processValidations in " + LifecycleImpl.class.getName());
         return false;
     }
 
 
+    /*
     private int getMessageCount(FacesContext facesContext)
     {
         if (facesContext instanceof FacesContextImpl)
@@ -291,6 +239,7 @@ public class LifecycleImpl
             return count;
         }
     }
+    */
 
 
     /**
@@ -301,10 +250,11 @@ public class LifecycleImpl
     {
         if (log.isTraceEnabled()) log.trace("entering updateModelValues in " + LifecycleImpl.class.getName());
 
-        UIComponent root = facesContext.getViewRoot();
-        root.processUpdates(facesContext);
+        informPhaseListenersBefore(facesContext, PhaseId.UPDATE_MODEL_VALUES);
 
-        doEventProcessing(facesContext, PhaseId.UPDATE_MODEL_VALUES);
+        facesContext.getViewRoot().processUpdates(facesContext);
+
+        informPhaseListenersAfter(facesContext, PhaseId.UPDATE_MODEL_VALUES);
 
         if (facesContext.getResponseComplete())
         {
@@ -333,7 +283,11 @@ public class LifecycleImpl
     {
         if (log.isTraceEnabled()) log.trace("entering invokeApplication in " + LifecycleImpl.class.getName());
 
-        doEventProcessing(facesContext, PhaseId.INVOKE_APPLICATION);
+        informPhaseListenersBefore(facesContext, PhaseId.INVOKE_APPLICATION);
+
+        facesContext.getViewRoot().processApplication(facesContext);
+
+        informPhaseListenersAfter(facesContext, PhaseId.INVOKE_APPLICATION);
 
         if (facesContext.getResponseComplete())
         {
@@ -353,61 +307,26 @@ public class LifecycleImpl
     {
         if (log.isTraceEnabled()) log.trace("entering renderResponse in " + LifecycleImpl.class.getName());
 
+        informPhaseListenersBefore(facesContext, PhaseId.RENDER_RESPONSE);
+
+        Application application = _applicationFactory.getApplication();
+        ViewHandler viewHandler = application.getViewHandler();
         try
         {
-            getViewHandler().renderView(facesContext, facesContext.getViewRoot());
+            viewHandler.renderView(facesContext, facesContext.getViewRoot());
         }
         catch (IOException e)
         {
             throw new FacesException(e.getMessage(), e);
         }
 
+        informPhaseListenersAfter(facesContext, PhaseId.RENDER_RESPONSE);
+
         if (log.isTraceEnabled()) log.trace("exiting renderResponse in " + LifecycleImpl.class.getName());
     }
 
 
-    //event processing
-    private void doEventProcessing(FacesContext facesContext, PhaseId phaseId)
-    {
-        for (Iterator it = facesContext.getFacesEvents(); it.hasNext();)
-        {
-            FacesEvent facesEvent = (FacesEvent)it.next();
-            UIComponent comp = facesEvent.getComponent();
-            try
-            {
-                if (!comp.broadcast(facesEvent, phaseId))
-                {
-                    it.remove();
-                }
-            }
-            catch (AbortProcessingException e)
-            {
-                it.remove();
-            }
-        }
-    }
-
-    public static final String ACTION_LISTENER_FLAG = "ACTION_LISTENER_FLAG";
-
-    private void traverseAndRegisterActionListener(ActionListener actionListener,
-                                                   UIComponent uiComponent)
-    {
-        if (uiComponent instanceof UICommand &&
-            uiComponent.getAttributes().get(ACTION_LISTENER_FLAG) == null)
-        {
-            ((UICommand)uiComponent).addActionListener(actionListener);
-            uiComponent.getAttributes().put(ACTION_LISTENER_FLAG, Boolean.TRUE);
-        }
-
-        for (Iterator it = uiComponent.getFacetsAndChildren(); it.hasNext(); )
-        {
-            traverseAndRegisterActionListener(actionListener,
-                                              (UIComponent)it.next());
-        }
-    }
-
-
-    public static String deriveViewId(FacesContext facesContext)
+    private static String deriveViewId(FacesContext facesContext)
     {
         ExternalContext externalContext = facesContext.getExternalContext();
 
@@ -440,15 +359,104 @@ public class LifecycleImpl
     }
 
 
-    public void addPhaseListener(PhaseListener phaseListener) {
-        _phaseListeners.add(phaseListener);
+    private static void recursivelyHandleComponentReferencesAndSetValid(FacesContext facesContext,
+                                                                        UIComponent root)
+    {
+        for (Iterator it = root.getFacetsAndChildren(); it.hasNext(); )
+        {
+            UIComponent component = (UIComponent)it.next();
+
+            ValueBinding binding = component.getValueBinding("binding");    //TODO: constant
+            if (binding != null)
+            {
+                binding.setValue(facesContext, component);
+            }
+
+            if (component instanceof UIInput)
+            {
+                ((UIInput)component).setValid(true);
+            }
+
+            recursivelyHandleComponentReferencesAndSetValid(facesContext, component);
+        }
     }
 
-    public PhaseListener[] getPhaseListeners() {
-        return (PhaseListener[]) _phaseListeners.toArray(new PhaseListener[_phaseListeners.size()]);
+    public void addPhaseListener(PhaseListener phaseListener)
+    {
+        if (_phaseListenerList == null)
+        {
+            _phaseListenerList = new ArrayList();
+            if (_phaseListenerArray != null)
+            {
+                _phaseListenerList.addAll(Arrays.asList(_phaseListenerArray));
+                _phaseListenerArray = null;
+            }
+        }
+        _phaseListenerList.add(phaseListener);
     }
 
-    public void removePhaseListener(PhaseListener phaseListener) {
-        _phaseListeners.remove(phaseListener);
+    public void removePhaseListener(PhaseListener phaseListener)
+    {
+        if (_phaseListenerList == null)
+        {
+            _phaseListenerList = new ArrayList();
+            if (_phaseListenerArray != null)
+            {
+                _phaseListenerList.addAll(Arrays.asList(_phaseListenerArray));
+                _phaseListenerArray = null;
+            }
+        }
+        _phaseListenerList.remove(phaseListener);
     }
+
+    public PhaseListener[] getPhaseListeners()
+    {
+        if (_phaseListenerArray == null)
+        {
+            if (_phaseListenerList == null)
+            {
+                _phaseListenerArray = new PhaseListener[0];
+            }
+            else
+            {
+                _phaseListenerArray = (PhaseListener[])_phaseListenerList.toArray(new PhaseListener[_phaseListenerList.size()]);
+                _phaseListenerList = null;
+            }
+        }
+        return _phaseListenerArray;
+    }
+
+
+    private void informPhaseListenersBefore(FacesContext facesContext, PhaseId phaseId)
+    {
+        PhaseListener[] phaseListeners = getPhaseListeners();
+        for (int i = 0; i < phaseListeners.length; i++)
+        {
+            PhaseListener phaseListener = phaseListeners[i];
+            int listenerPhaseId = phaseListener.getPhaseId().getOrdinal();
+            if (listenerPhaseId == PhaseId.ANY_PHASE.getOrdinal() ||
+                listenerPhaseId == phaseId.getOrdinal())
+            {
+                phaseListener.beforePhase(new PhaseEvent(facesContext, phaseId, this));
+            }
+        }
+
+    }
+
+    private void informPhaseListenersAfter(FacesContext facesContext, PhaseId phaseId)
+    {
+        PhaseListener[] phaseListeners = getPhaseListeners();
+        for (int i = 0; i < phaseListeners.length; i++)
+        {
+            PhaseListener phaseListener = phaseListeners[i];
+            int listenerPhaseId = phaseListener.getPhaseId().getOrdinal();
+            if (listenerPhaseId == PhaseId.ANY_PHASE.getOrdinal() ||
+                listenerPhaseId == phaseId.getOrdinal())
+            {
+                phaseListener.afterPhase(new PhaseEvent(facesContext, phaseId, this));
+            }
+        }
+
+    }
+
 }
