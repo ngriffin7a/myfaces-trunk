@@ -35,6 +35,9 @@ import org.xml.sax.SAXException;
  * @author mwessendorf (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.7  2005/02/22 13:41:10  matzew
+ * added RENDER_TYPE constant
+ *
  * Revision 1.6  2004/10/13 11:50:57  matze
  * renamed packages to org.apache
  *
@@ -54,7 +57,7 @@ public class HtmlRssTicker extends HtmlOutputText{
     private static final Log log = LogFactory.getLog(HtmlRssTicker.class);
 	public static final String COMPONENT_TYPE = "org.apache.myfaces.RssTicker";
 	public static final String COMPONENT_FAMILY = "javax.faces.Output";
-	private static final String DEFAULT_RENDERER_TYPE = "org.apache.myfaces.Ticker";
+	public static final String DEFAULT_RENDERER_TYPE = HtmlRssTickerRenderer.RENDERER_TYPE;
 
 	//private fields
 	private String _rssUrl = null;

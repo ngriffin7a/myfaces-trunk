@@ -43,6 +43,7 @@ import org.apache.myfaces.util.MessageUtils;
  */
 public class HtmlRssTickerRenderer extends HtmlRenderer {
 
+    public static final String RENDERER_TYPE = "org.apache.myfaces.Ticker";
 	private static final String 	NO_CONNECTION 	   = "org.apache.myfaces.ticker.NOCONNECTION";
 
     public void encodeEnd(FacesContext facesContext, UIComponent component)

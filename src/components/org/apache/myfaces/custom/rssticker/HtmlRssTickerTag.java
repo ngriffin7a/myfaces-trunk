@@ -24,6 +24,9 @@ import org.apache.myfaces.taglib.html.HtmlOutputTextTagBase;
  * @author mwessendorf (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.6  2005/02/22 13:41:10  matzew
+ * added RENDER_TYPE constant
+ *
  * Revision 1.5  2005/02/18 17:19:31  matzew
  * added release() to tag clazzes.
  *
@@ -47,7 +50,7 @@ public class HtmlRssTickerTag extends HtmlOutputTextTagBase{
 
 	public String getRendererType()
 	{
-		return "org.apache.myfaces.Ticker";
+		return HtmlRssTickerRenderer.RENDERER_TYPE;
 	}
 
 	//Ticker attribute
