@@ -59,34 +59,57 @@ public class GridRenderer
         return TYPE;
     }
 
+    private int getAttributeValue(UIComponent gridComponent, String attributeName)
+    {
+        Integer value = (Integer)gridComponent.getAttribute(attributeName);
+        return value != null ? value.intValue() : 0;
+    }
+
     public void beforeEncodeBegin(FacesContext facesContext,
                                   Renderer renderer,
                                   UIComponent uiComponent) throws IOException
     {
         UIComponent gridComponent = uiComponent.getParent();
-        Integer actualColumn = (Integer)gridComponent.getAttribute(COLUMN_COUNT_ATTR);
-        Integer actualRow = (Integer)gridComponent.getAttribute(ROW_COUNT_ATTR);
-        Integer columns = (Integer)gridComponent.getAttribute(COLUMNS_ATTR);
-        if (actualColumn != null && columns != null)
+        System.out.println("COMP: " + uiComponent.getComponentType() + " " + uiComponent.getRendererType());
+        int actualColumn = getAttributeValue(gridComponent, COLUMN_COUNT_ATTR);
+        int actualRow = getAttributeValue(gridComponent, ROW_COUNT_ATTR);
+        int columns = getAttributeValue(gridComponent, COLUMNS_ATTR);
+        ResponseWriter writer = facesContext.getResponseWriter();
+
+        // close row
+        if (actualColumn > 0 && actualColumn % columns == 0)
         {
-            ResponseWriter writer = facesContext.getResponseWriter();
-            if (actualColumn.intValue() == 0 ||
-                (actualColumn.intValue()) % columns.intValue() == 0)
-            {
-                writer.write("<tr");
-                String style = calcRowStyle(gridComponent,
-                                            actualRow != null ? actualRow.intValue(): -1,
-                                            actualColumn.intValue());
-                if (style != null && style.length() > 0)
-                {
-                    writer.write(" class=\"");
-                    writer.write(style);
-                    writer.write("\"");
-                }
-                writer.write(">");
-            }
-            writer.write("<td>");
+            // close row
+            writer.write("</tr>\n");
+            // reset actualColumn
+            actualColumn = 0;
+            // add row
+            actualRow++;
         }
+
+        // open row
+        if (actualColumn == 0)
+        {
+            String style = calcRowStyle(gridComponent,
+                                        actualRow,
+                                        actualColumn);
+            writer.write("<tr");
+            if (style != null && style.length() > 0)
+            {
+                writer.write(" class=\"");
+                writer.write(style);
+                writer.write("\"");
+            }
+            writer.write(">");
+        }
+
+        // open column
+        writer.write("<td>");
+        actualColumn++;
+
+        // save attributes
+        gridComponent.setAttribute(COLUMN_COUNT_ATTR, new Integer(actualColumn));
+        gridComponent.setAttribute(ROW_COUNT_ATTR, new Integer(actualRow));
     }
 
     private String calcRowStyle(UIComponent gridComponent, int actualRow, int actualColumn)
@@ -132,23 +155,8 @@ public class GridRenderer
     {
         if (uiComponent != null)
         {
-            UIComponent gridComponent = uiComponent.getParent();
-            Integer actualColumn = (Integer)gridComponent.getAttribute(COLUMN_COUNT_ATTR);
-            Integer columns = (Integer)gridComponent.getAttribute(COLUMNS_ATTR);
-            if (actualColumn != null && columns != null)
-            {
-                ResponseWriter writer = facesContext.getResponseWriter();
-                if (actualColumn.intValue() == 0 ||
-                    (actualColumn.intValue() + 1) % columns.intValue() == 0)
-                {
-                    Integer actualRow = (Integer)gridComponent.getAttribute(ROW_COUNT_ATTR);
-                    gridComponent.setAttribute(ROW_COUNT_ATTR, new Integer(actualRow.intValue() + 1));
-                    gridComponent.setAttribute(COLUMN_COUNT_ATTR, ZERO);
-                    writer.write("</tr>");
-                }
-                writer.write("</td>");
-            }
-            gridComponent.setAttribute(COLUMN_COUNT_ATTR, new Integer(actualColumn.intValue() + 1));
+            ResponseWriter writer = facesContext.getResponseWriter();
+            writer.write("</td>");
         }
     }
 
@@ -177,7 +185,7 @@ public class GridRenderer
             throws IOException
     {
         ResponseWriter writer = facesContext.getResponseWriter();
-        writer.write("</table>\n");
+        writer.write("</tr></table>\n");
 
         CallbackSupport.removeCallbackRenderer(facesContext, uiComponent, this);
 

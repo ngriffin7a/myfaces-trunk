@@ -66,6 +66,7 @@ public class RenderKitImpl
         addRenderer(new GridRenderer());
         addRenderer(new LabelRenderer());
         addRenderer(new CheckboxRenderer());
+        addRenderer(new HiddenRenderer());
 
         //MyFaces Extensions
         addRenderer(new NavigationRenderer());
