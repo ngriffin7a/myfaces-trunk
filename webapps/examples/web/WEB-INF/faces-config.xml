@@ -1,8 +1,11 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="ISO-8859-1" ?>
 
 <!DOCTYPE faces-config PUBLIC
   "-//Sun Microsystems, Inc.//DTD JavaServer Faces Config 1.0//EN"
-  "http://java.sun.com/dtd/web-facesconfig_1_0.dtd">
+  "http://java.sun.com/dtd/web-facesconfig_1_0.dtd" [
+<!ENTITY message_resources_en           SYSTEM "message_resources_en.xml">
+<!ENTITY message_resources_de           SYSTEM "message_resources_de.xml">
+]>
 
 <!-- =========== FULL CONFIGURATION FILE ================================== -->
 
@@ -224,101 +227,137 @@
         <converter-class>net.sourceforge.myfaces.convert.impl.NumberConverter</converter-class>
     </converter>
 
-  <!-- standard message-resources -->
+
+<!-- standard message-resources -->
   <message-resources>
-    <message-resources-id>javax.faces.context.FACES_API_MESSAGES</message-resources-id>
-    <message-resources-class>net.sourceforge.myfaces.context.MessageResourcesImpl</message-resources-class>
-    <message>
-      <message-id>javax.faces.validator.DoubleRangeValidator.LIMIT</message-id>
-      <message-class>javax.faces.application.MessageImpl</message-class>
-    </message>
-    <message>
-      <message-id>javax.faces.validator.DoubleRangeValidator.MAXIMUM</message-id>
-      <message-class>javax.faces.application.MessageImpl</message-class>
-    </message>
-    <message>
-      <message-id>javax.faces.validator.DoubleRangeValidator.MINIMUM</message-id>
-      <message-class>javax.faces.application.MessageImpl</message-class>
-    </message>
-    <message>
-      <message-id>javax.faces.validator.DoubleRangeValidator.TYPE</message-id>
-      <message-class>javax.faces.application.MessageImpl</message-class>
-    </message>
-    <message>
-      <message-id>javax.faces.validator.LengthValidator.LIMIT</message-id>
-      <message-class>javax.faces.application.MessageImpl</message-class>
-    </message>
-    <message>
-      <message-id>javax.faces.validator.LengthValidator.MAXIMUM</message-id>
-      <message-class>javax.faces.application.MessageImpl</message-class>
-    </message>
-    <message>
-      <message-id>javax.faces.validator.LengthValidator.MINIMUM</message-id>
-      <message-class>javax.faces.application.MessageImpl</message-class>
-    </message>
-    <message>
-      <message-id>javax.faces.validator.RequiredValidator.FAILED</message-id>
-      <message-class>javax.faces.application.MessageImpl</message-class>
-    </message>
-    <message>
-      <message-id>javax.faces.validator.LongRangeValidator.LIMIT</message-id>
-      <message-class>javax.faces.application.MessageImpl</message-class>
-    </message>
-    <message>
-      <message-id>javax.faces.validator.LongRangeValidator.MAXIMUM</message-id>
-      <message-class>javax.faces.application.MessageImpl</message-class>
-    </message>
-    <message>
-      <message-id>javax.faces.validator.LongRangeValidator.MINIMUM</message-id>
-      <message-class>javax.faces.application.MessageImpl</message-class>
-    </message>
-    <message>
-      <message-id>javax.faces.validator.LongRangeValidator.TYPE</message-id>
-      <message-class>javax.faces.application.MessageImpl</message-class>
-    </message>
-    <message>
-      <message-id>javax.faces.validator.StringRangeValidator.LIMIT</message-id>
-      <message-class>javax.faces.application.MessageImpl</message-class>
-    </message>
-    <message>
-      <message-id>javax.faces.validator.StringRangeValidator.MAXIMUM</message-id>
-      <message-class>javax.faces.application.MessageImpl</message-class>
-    </message>
-    <message>
-      <message-id>javax.faces.validator.StringRangeValidator.MINIMUM</message-id>
-      <message-class>javax.faces.application.MessageImpl</message-class>
-    </message>
-    <message>
-      <message-id>javax.faces.validator.StringRangeValidator.TYPE</message-id>
-      <message-class>javax.faces.application.MessageImpl</message-class>
-    </message>
-    <message>
-      <message-id>javax.faces.validator.RequiredValidator.FAILED</message-id>
-      <message-class>javax.faces.application.MessageImpl</message-class>
-    </message>
+
+      <message-resources-id>javax.faces.context.FACES_API_MESSAGES</message-resources-id>
+
+      <message>
+          <message-id>javax.faces.validator.DoubleRangeValidator.LIMIT</message-id>
+          <severity>ERROR</severity>
+      </message>
+      <message>
+          <message-id>javax.faces.validator.DoubleRangeValidator.MAXIMUM</message-id>
+          <severity>ERROR</severity>
+      </message>
+      <message>
+          <message-id>javax.faces.validator.DoubleRangeValidator.MINIMUM</message-id>
+          <severity>ERROR</severity>
+      </message>
+      <message>
+          <message-id>javax.faces.validator.DoubleRangeValidator.TYPE</message-id>
+          <severity>ERROR</severity>
+      </message>
+
+      <message>
+          <message-id>javax.faces.validator.LengthValidator.LIMIT</message-id>
+          <severity>ERROR</severity>
+      </message>
+      <message>
+          <message-id>javax.faces.validator.LengthValidator.MAXIMUM</message-id>
+          <severity>ERROR</severity>
+      </message>
+      <message>
+          <message-id>javax.faces.validator.LengthValidator.MINIMUM</message-id>
+          <severity>ERROR</severity>
+      </message>
+
+      <message>
+          <message-id>javax.faces.validator.RequiredValidator.FAILED</message-id>
+          <severity>ERROR</severity>
+      </message>
+
+      <message>
+          <message-id>javax.faces.validator.LongRangeValidator.LIMIT</message-id>
+          <severity>ERROR</severity>
+      </message>
+      <message>
+          <message-id>javax.faces.validator.LongRangeValidator.MAXIMUM</message-id>
+          <severity>ERROR</severity>
+      </message>
+      <message>
+          <message-id>javax.faces.validator.LongRangeValidator.MINIMUM</message-id>
+          <severity>ERROR</severity>
+      </message>
+      <message>
+          <message-id>javax.faces.validator.LongRangeValidator.TYPE</message-id>
+          <severity>ERROR</severity>
+      </message>
+
+      <message>
+          <message-id>javax.faces.validator.StringRangeValidator.LIMIT</message-id>
+          <severity>ERROR</severity>
+      </message>
+      <message>
+          <message-id>javax.faces.validator.StringRangeValidator.MAXIMUM</message-id>
+          <severity>ERROR</severity>
+      </message>
+      <message>
+          <message-id>javax.faces.validator.StringRangeValidator.MINIMUM</message-id>
+          <severity>ERROR</severity>
+      </message>
+      <message>
+          <message-id>javax.faces.validator.StringRangeValidator.TYPE</message-id>
+          <severity>ERROR</severity>
+      </message>
+
   </message-resources>
 
-  <!-- RI messages -->
+
+    <!-- RI messages -->
   <message-resources>
-    <message-resources-id>javax.faces.context.FACES_IMPL_MESSAGES</message-resources-id>
-    <message-resources-class>net.sourceforge.myfaces.context.MessageResourcesImpl</message-resources-class>
-    <message>
-      <message-id>MSG0001</message-id>
-      <message-class>javax.faces.application.MessageImpl</message-class>
-    </message>
-    <message>
-      <message-id>MSG0002</message-id>
-      <message-class>javax.faces.application.MessageImpl</message-class>
-    </message>
-    <message>
-      <message-id>MSG0003</message-id>
-      <message-class>javax.faces.application.MessageImpl</message-class>
-    </message>
-    <message>
-      <message-id>MSG0005</message-id>
-      <message-class>javax.faces.application.MessageImpl</message-class>
-    </message>
+
+      <message-resources-id>javax.faces.context.FACES_IMPL_MESSAGES</message-resources-id>
+
+      <message>
+          <message-id>net.sourceforge.myfaces.convert.impl.BigDecimalConverter.EXCEPTION</message-id>
+          <severity>ERROR</severity>
+      </message>
+
+      <message>
+          <message-id>net.sourceforge.myfaces.convert.impl.LongConverter.EXCEPTION</message-id>
+          <severity>ERROR</severity>
+      </message>
+
+      <message>
+          <message-id>net.sourceforge.myfaces.convert.impl.IntegerConverter.EXCEPTION</message-id>
+          <severity>ERROR</severity>
+      </message>
+
+      <message>
+          <message-id>net.sourceforge.myfaces.convert.impl.BooleanConverter.EXCEPTION</message-id>
+          <severity>ERROR</severity>
+      </message>
+
+      <message>
+          <message-id>net.sourceforge.myfaces.convert.impl.DateConverter.EXCEPTION</message-id>
+          <severity>ERROR</severity>
+      </message>
+
+      <message>
+          <message-id>net.sourceforge.myfaces.convert.impl.DateTimeConverter.EXCEPTION</message-id>
+          <severity>ERROR</severity>
+      </message>
+
+      <message>
+          <message-id>net.sourceforge.myfaces.convert.impl.TimeConverter.EXCEPTION</message-id>
+          <severity>ERROR</severity>
+      </message>
+
+
+      <message>
+          <message-id>net.sourceforge.myfaces.renderkit.html.ErrorsRenderer.IN_FIELD</message-id>
+          <severity>INFO</severity>
+      </message>
+
   </message-resources>
+
+
+  <!-- Message Resources Texts -->
+
+    &message_resources_en;
+    &message_resources_de;
 
   <!-- Standard Validators -->
 

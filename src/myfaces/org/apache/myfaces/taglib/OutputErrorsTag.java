@@ -58,9 +58,9 @@ public class OutputErrorsTag
 
     // Errors Renderer attributes
 
-    public void setClientId(String v)
+    public void setFor(String v)
     {
-        setRendererAttributeString(CLIENT_ID_ATTR, v);
+        setRendererAttributeString(FOR_ATTR, v);
     }
 
     // user role attributes --> already implemented in MyFacesTag

@@ -18,6 +18,8 @@
  */
 package net.sourceforge.myfaces.config;
 
+import net.sourceforge.myfaces.util.logging.LogUtil;
+
 import javax.faces.FacesException;
 import javax.faces.application.Message;
 import javax.faces.application.MessageImpl;
@@ -42,6 +44,7 @@ public class MessageConfig
     private String _messageId;
     private String _messageClass;
     private int _severity = Message.SEVERITY_ERROR;
+    private Integer _declaredSeverity = null;
     private Map _summaryMap;
     private Map _detailMap;
 
@@ -88,6 +91,7 @@ public class MessageConfig
         {
             throw new FacesException("Illegal severity '" + severity + "'.");
         }
+        _declaredSeverity = new Integer(_severity);
     }
 
     public int getSeverity()
@@ -98,6 +102,12 @@ public class MessageConfig
     public void setSeverity(int severity)
     {
         _severity = severity;
+        _declaredSeverity = new Integer(_severity);
+    }
+
+    public Integer getDeclaredSeverity()
+    {
+        return _declaredSeverity;
     }
 
 
@@ -115,6 +125,18 @@ public class MessageConfig
         return _summaryMap;
     }
 
+    public String getSummary(String language)
+    {
+        String s = (String)getSummaryMap().get(language);
+        if (s == null)
+        {
+            LogUtil.getLogger().warning("No summary in language '" + language + "' for message '" + _messageId + "' defined.");
+            return _messageId;
+        }
+        return s;
+    }
+
+
     public void addDetail(String lang, String detail)
     {
         getDetailMap().put(lang, detail);
@@ -129,16 +151,29 @@ public class MessageConfig
         return _detailMap;
     }
 
+    public String getDetail(String language)
+    {
+        String s = (String)getDetailMap().get(language);
+        if (s == null)
+        {
+            LogUtil.getLogger().warning("No detail in language '" + language + "' for message '" + _messageId + "' defined.");
+            return _messageId;
+        }
+        return s;
+    }
+
 
     public Message getMessage(FacesContext facesContext, Object[] args)
     {
-        if (_messageClass != null)
+        if (_messageClass != null &&
+            !_messageClass.equals(MessageImpl.class.getName()))
         {
             return (Message)ConfigUtil.newInstance(_messageClass);
         }
 
-        String summary = (String)getSummaryMap().get(facesContext.getLocale().getLanguage());
-        String detail = (String)getDetailMap().get(facesContext.getLocale().getLanguage());
+        String language = facesContext.getLocale().getLanguage();
+        String summary = getSummary(language);
+        String detail = getDetail(language);
         if (args != null)
         {
             MessageFormat mf = new MessageFormat(summary, facesContext.getLocale());

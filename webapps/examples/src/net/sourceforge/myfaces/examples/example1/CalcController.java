@@ -18,8 +18,11 @@
  */
 package net.sourceforge.myfaces.examples.example1;
 
+import net.sourceforge.myfaces.examples.common.CarConfigurator;
+
 import javax.faces.FactoryFinder;
 import javax.faces.application.ApplicationFactory;
+import javax.faces.application.Action;
 import javax.faces.context.FacesContext;
 import javax.faces.el.ValueBinding;
 import javax.faces.event.AbortProcessingException;
@@ -55,7 +58,28 @@ public class CalcController
 
     public PhaseId getPhaseId()
     {
-        return PhaseId.UPDATE_MODEL_VALUES;
+        return PhaseId.INVOKE_APPLICATION;
     }
+
+
+    /*
+    private static final Action ACTION = new Action() {
+        public String invoke()
+        {
+            FacesContext facesContext = FacesContext.getCurrentInstance();
+            ApplicationFactory af = (ApplicationFactory)FactoryFinder.getFactory(FactoryFinder.APPLICATION_FACTORY);
+            ValueBinding vb = af.getApplication().getValueBinding("carconf");
+            CarConfigurator carconf = (CarConfigurator)vb.getValue(facesContext);
+            carconf.calcPrice();
+            return "ok";
+        }
+    };
+
+
+    public Action getAction()
+    {
+        return ACTION;
+    }
+    */
 
 }

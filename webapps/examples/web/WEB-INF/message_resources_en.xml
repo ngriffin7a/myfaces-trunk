@@ -1,0 +1,148 @@
+<message-resources>
+
+    <message-resources-id>javax.faces.context.FACES_API_MESSAGES</message-resources-id>
+
+    <message>
+        <message-id>javax.faces.validator.DoubleRangeValidator.LIMIT</message-id>
+        <summary xml:lang="en">Validation Error</summary>
+        <detail xml:lang="en">Maximum or minimum attribute not of correct type.</detail>
+    </message>
+    <message>
+        <message-id>javax.faces.validator.DoubleRangeValidator.MAXIMUM</message-id>
+        <summary xml:lang="en">Validation Error</summary>
+        <detail xml:lang="en">Value exceeds allowed maximum of {0}.</detail>
+    </message>
+    <message>
+        <message-id>javax.faces.validator.DoubleRangeValidator.MINIMUM</message-id>
+        <summary xml:lang="en">Validation Error</summary>
+        <detail xml:lang="en">Value is smaller than allowed minimum of {0}.</detail>
+    </message>
+    <message>
+        <message-id>javax.faces.validator.DoubleRangeValidator.TYPE</message-id>
+        <summary xml:lang="en">Validation Error</summary>
+        <detail xml:lang="en">Value not of correct type.</detail>
+    </message>
+
+
+    <message>
+        <message-id>javax.faces.validator.LengthValidator.LIMIT</message-id>
+        <summary xml:lang="en">Validation Error</summary>
+        <detail xml:lang="en">Maximum or minimum attribute not of correct type.</detail>
+    </message>
+    <message>
+        <message-id>javax.faces.validator.LengthValidator.MAXIMUM</message-id>
+        <summary xml:lang="en">Validation Error</summary>
+        <detail xml:lang="en">Value is longer than allowed maximum of {0} characters.</detail>
+    </message>
+    <message>
+        <message-id>javax.faces.validator.LengthValidator.MINIMUM</message-id>
+        <summary xml:lang="en">Validation Error</summary>
+        <detail xml:lang="en">Value is shorter than allowed minimum of {0} characters.</detail>
+    </message>
+
+    <message>
+        <message-id>javax.faces.validator.RequiredValidator.FAILED</message-id>
+        <summary xml:lang="en">Validation Error</summary>
+        <detail xml:lang="en">Value is required.</detail>
+    </message>
+
+    <message>
+        <message-id>javax.faces.validator.LongRangeValidator.LIMIT</message-id>
+        <summary xml:lang="en">Validation Error</summary>
+        <detail xml:lang="en">Maximum or minimum attribute not of correct type.</detail>
+    </message>
+    <message>
+        <message-id>javax.faces.validator.LongRangeValidator.MAXIMUM</message-id>
+        <summary xml:lang="en">Validation Error</summary>
+        <detail xml:lang="en">Value exceeds allowed maximum of {0}.</detail>
+    </message>
+    <message>
+        <message-id>javax.faces.validator.LongRangeValidator.MINIMUM</message-id>
+        <summary xml:lang="en">Validation Error</summary>
+        <detail xml:lang="en">Value is smaller than allowed minimum of {0}.</detail>
+    </message>
+    <message>
+        <message-id>javax.faces.validator.LongRangeValidator.TYPE</message-id>
+        <summary xml:lang="en">Validation Error</summary>
+        <detail xml:lang="en">Value not of correct type.</detail>
+    </message>
+
+    <message>
+        <message-id>javax.faces.validator.StringRangeValidator.LIMIT</message-id>
+        <summary xml:lang="en">Validation Error</summary>
+        <detail xml:lang="en">Maximum or minimum attribute not of correct type.</detail>
+    </message>
+    <message>
+        <message-id>javax.faces.validator.StringRangeValidator.MAXIMUM</message-id>
+        <summary xml:lang="en">Validation Error</summary>
+        <detail xml:lang="en">Value exceeds allowed maximum of {0}.</detail>
+    </message>
+    <message>
+        <message-id>javax.faces.validator.StringRangeValidator.MINIMUM</message-id>
+        <summary xml:lang="en">Validation Error</summary>
+        <detail xml:lang="en">Value is smaller than allowed minimum of {0}.</detail>
+    </message>
+    <message>
+        <message-id>javax.faces.validator.StringRangeValidator.TYPE</message-id>
+        <summary xml:lang="en">Validation Error</summary>
+        <detail xml:lang="en">Value not of correct type.</detail>
+    </message>
+
+  </message-resources>
+
+
+<!-- RI messages -->
+<message-resources>
+
+    <message-resources-id>javax.faces.context.FACES_IMPL_MESSAGES</message-resources-id>
+
+    <message>
+        <message-id>net.sourceforge.myfaces.convert.impl.BigDecimalConverter.EXCEPTION</message-id>
+        <summary xml:lang="en">Input Error</summary>
+        <detail xml:lang="en">Specified value is not a valid number.</detail>
+    </message>
+
+    <message>
+        <message-id>net.sourceforge.myfaces.convert.impl.LongConverter.EXCEPTION</message-id>
+        <summary xml:lang="en">Input Error</summary>
+        <detail xml:lang="en">Specified value is not a valid number.</detail>
+    </message>
+
+    <message>
+        <message-id>net.sourceforge.myfaces.convert.impl.IntegerConverter.EXCEPTION</message-id>
+        <summary xml:lang="en">Input Error</summary>
+        <detail xml:lang="en">Specified value is not a valid number.</detail>
+    </message>
+
+    <message>
+        <message-id>net.sourceforge.myfaces.convert.impl.BooleanConverter.EXCEPTION</message-id>
+        <summary xml:lang="en">Input Error</summary>
+        <detail xml:lang="en">Could not convert '{0}' to Boolean.</detail>
+    </message>
+
+    <message>
+        <message-id>net.sourceforge.myfaces.convert.impl.DateConverter.EXCEPTION</message-id>
+        <summary xml:lang="en">Input Error</summary>
+        <detail xml:lang="en">Specified value is not a valid date.</detail>
+    </message>
+
+    <message>
+        <message-id>net.sourceforge.myfaces.convert.impl.DateTimeConverter.EXCEPTION</message-id>
+        <summary xml:lang="en">Input Error</summary>
+        <detail xml:lang="en">Specified value is not a valid date/time.</detail>
+    </message>
+
+    <message>
+        <message-id>net.sourceforge.myfaces.convert.impl.TimeConverter.EXCEPTION</message-id>
+        <summary xml:lang="en">Input Error</summary>
+        <detail xml:lang="en">Specified value is not a valid time.</detail>
+    </message>
+
+
+    <message>
+        <message-id>net.sourceforge.myfaces.renderkit.html.ErrorsRenderer.IN_FIELD</message-id>
+        <summary xml:lang="en"> in {0}</summary>
+        <detail xml:lang="en"></detail>
+    </message>
+
+</message-resources>

@@ -30,7 +30,7 @@ import javax.servlet.jsp.JspException;
 public class ValidateRequiredTag
     extends ValidatorTag
 {
-    //private static final String TYPE = RequiredValidator.class.getName();
+    private static final String ID = "Required";
 
     public ValidateRequiredTag()
     {
@@ -38,7 +38,7 @@ public class ValidateRequiredTag
 
     protected Validator createValidator() throws JspException
     {
-        //setType(TYPE);
+        setId(ID);
         return super.createValidator();
     }
 }

@@ -31,7 +31,10 @@
 
 <f:use_faces>
 
-<jsp:useBean id="list" class="net.sourceforge.myfaces.examples.listexample.SimpleSortableCarList" scope="request" />
+<!--
+managed beans used:
+    list
+-->
 
     <x:page_layout id="page" layoutRef="globalOptions.pageLayout"
             panelClass="pageLayout"
@@ -64,9 +67,9 @@
                         </x:sortcolumn>
                     </x:sortheader>
                     <!-- DATA -->
-                    <h:panel_data var="car" modelReference="list.cars" >
-                        <h:output_text modelReference="car.type" />
-                        <h:output_text modelReference="car.color" />
+                    <h:panel_data var="car" valueRef="list.cars" >
+                        <h:output_text valueRef="car.type" />
+                        <h:output_text valueRef="car.color" />
                     </h:panel_data>
                     <!-- FOOTER -->
                     <h:panel_group>

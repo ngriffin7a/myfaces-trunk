@@ -29,7 +29,10 @@
 
 <body>
 
-<jsp:useBean id="countryList" class="net.sourceforge.myfaces.examples.listexample.SimpleCountryList" scope="request" />
+<!--
+managed beans used:
+    countryList
+-->
 
 <f:use_faces>
 
@@ -60,20 +63,20 @@
                         <h:output_text value="Size" />
                     </h:panel_group>
                     <!-- DATA -->
-                    <h:panel_data var="country" modelReference="countryList.countries" >
+                    <h:panel_data var="country" valueRef="countryList.countries" >
 
                         <h:command_hyperlink>
-                            <h:output_text modelReference="country.name" />
+                            <h:output_text valueRef="country.name" />
 
-                            <f:parameter name="isoCode" modelReference="country.isoCode" />
-                            <f:parameter name="name" modelReference="country.name" />
-                            <f:parameter name="size" modelReference="country.size" />
+                            <f:parameter name="isoCode" valueRef="country.isoCode" />
+                            <f:parameter name="name" valueRef="country.name" />
+                            <f:parameter name="size" valueRef="country.size" />
                             <f:action_listener type="net.sourceforge.myfaces.examples.listexample.SimpleCountryController" />
 
                         </h:command_hyperlink>
 
-                        <h:output_text modelReference="country.isoCode" />
-                        <h:output_text modelReference="country.size" />
+                        <h:output_text valueRef="country.isoCode" />
+                        <h:output_text valueRef="country.size" />
                         <% rows++; %>
 
                     </h:panel_data>

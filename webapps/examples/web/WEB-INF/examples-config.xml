@@ -8,6 +8,77 @@
 
 <faces-config>
 
+    <!-- Managed Beans for sample1.jsp -->
+
+    <managed-bean>
+        <managed-bean-name>calcForm</managed-bean-name>
+        <managed-bean-class>net.sourceforge.myfaces.examples.example1.CalcForm</managed-bean-class>
+        <managed-bean-scope>request</managed-bean-scope>
+    </managed-bean>
+
+    <managed-bean>
+        <managed-bean-name>ucaseForm</managed-bean-name>
+        <managed-bean-class>net.sourceforge.myfaces.examples.example1.UCaseForm</managed-bean-class>
+        <managed-bean-scope>request</managed-bean-scope>
+    </managed-bean>
+
+
+    <!-- Managed Beans for sample2.jsp -->
+
+    <managed-bean>
+        <managed-bean-name>q_form</managed-bean-name>
+        <managed-bean-class>net.sourceforge.myfaces.examples.example2.QuotationForm</managed-bean-class>
+        <managed-bean-scope>request</managed-bean-scope>
+    </managed-bean>
+
+
+    <!-- Managed Beans for selectbox.jsp -->
+
+    <managed-bean>
+        <managed-bean-name>carconf</managed-bean-name>
+        <managed-bean-class>net.sourceforge.myfaces.examples.common.CarConfigurator</managed-bean-class>
+        <managed-bean-scope>request</managed-bean-scope>
+    </managed-bean>
+
+
+    <!-- Managed Beans for simpleList.jsp -->
+
+    <managed-bean>
+        <managed-bean-name>countryList</managed-bean-name>
+        <managed-bean-class>net.sourceforge.myfaces.examples.listexample.SimpleCountryList</managed-bean-class>
+        <managed-bean-scope>request</managed-bean-scope>
+    </managed-bean>
+
+
+    <!-- Managed Beans for simpleSortList.jsp -->
+
+    <managed-bean>
+        <managed-bean-name>list</managed-bean-name>
+        <managed-bean-class>net.sourceforge.myfaces.examples.listexample.SimpleSortableCarList</managed-bean-class>
+        <managed-bean-scope>request</managed-bean-scope>
+    </managed-bean>
+
+
+    <!-- Managed Beans for countryForm.jsp -->
+
+    <managed-bean>
+        <managed-bean-name>countryForm</managed-bean-name>
+        <managed-bean-class>net.sourceforge.myfaces.examples.listexample.SimpleCountryForm</managed-bean-class>
+        <managed-bean-scope>request</managed-bean-scope>
+    </managed-bean>
+
+
+    <!-- Managed Beans for fileupload.jsp -->
+
+    <managed-bean>
+        <managed-bean-name>fileUploadForm</managed-bean-name>
+        <managed-bean-class>net.sourceforge.myfaces.examples.misc.FileUploadForm</managed-bean-class>
+        <managed-bean-scope>request</managed-bean-scope>
+    </managed-bean>
+
+
+    <!-- Managed Beans for options.jsp -->
+
     <managed-bean>
         <managed-bean-name>globalOptions</managed-bean-name>
         <managed-bean-class>net.sourceforge.myfaces.examples.misc.GlobalOptions</managed-bean-class>

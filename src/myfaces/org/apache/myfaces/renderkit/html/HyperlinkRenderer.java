@@ -51,7 +51,6 @@ import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.tagext.BodyContent;
 import java.io.IOException;
-import java.net.URLEncoder;
 import java.util.Iterator;
 
 /**
@@ -75,6 +74,7 @@ public class HyperlinkRenderer
     public static final String TYPE = "Hyperlink";
 
     private static final String TYPE_SUFFIX = ".TYPE";
+    private static final String URL_PARAM_VALUE = "1";
 
     public String getRendererType()
     {
@@ -111,14 +111,8 @@ public class HyperlinkRenderer
 
         String paramName = uiComponent.getClientId(facesContext);
         String paramValue = ((ServletRequest)facesContext.getExternalContext().getRequest()).getParameter(paramName);
-        if (paramValue != null)
+        if (paramValue != null && paramValue.equals(URL_PARAM_VALUE))
         {
-            //link was clicked
-            /*
-            String commandName = paramValue;
-            uiComponent.setValue(paramValue);
-            */
-
             //nested parameters
             Iterator children = uiComponent.getChildren();
             while (children.hasNext())
@@ -192,8 +186,6 @@ public class HyperlinkRenderer
 
     public void encodeEnd(FacesContext facesContext, UIComponent uiComponent) throws IOException
     {
-        UICommand uiCommand = (UICommand)uiComponent;
-
         ResponseWriter writer = facesContext.getResponseWriter();
         HttpServletRequest request = (HttpServletRequest)facesContext.getExternalContext().getRequest();
 
@@ -234,7 +226,7 @@ public class HyperlinkRenderer
         }
         writer.write(uiComponent.getClientId(facesContext));
         writer.write('=');
-        writer.write(URLEncoder.encode(uiCommand.getCommandName(), "UTF-8"));
+        writer.write(URL_PARAM_VALUE);
 
         //nested parameters
         Iterator children = uiComponent.getChildren();

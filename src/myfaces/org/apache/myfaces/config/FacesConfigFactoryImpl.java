@@ -23,17 +23,13 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.EntityResolver;
-import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
+import org.xml.sax.InputSource;
 
 import javax.faces.FacesException;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import java.beans.BeanInfo;
-import java.beans.IntrospectionException;
-import java.beans.Introspector;
-import java.beans.MethodDescriptor;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
@@ -48,7 +44,9 @@ public class FacesConfigFactoryImpl
     extends FacesConfigFactoryBase
 {
     public void parseFacesConfig(FacesConfig facesConfig,
-                                 InputStream in) throws IOException, FacesException
+                                 InputStream in,
+                                 String systemId,
+                                 EntityResolver entityResolver) throws IOException, FacesException
     {
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
         dbf.setIgnoringComments(true);
@@ -63,12 +61,15 @@ public class FacesConfigFactoryImpl
         {
             throw new FacesException(e);
         }
-        db.setEntityResolver(new MyER());
+        db.setEntityResolver(entityResolver);
 
         Document document;
         try
         {
-            document = db.parse(in);
+            InputSource is = new InputSource(in);
+            is.setEncoding("ISO-8859-1");
+            is.setSystemId(systemId);
+            document = db.parse(is);
         }
         catch (SAXException e)
         {
@@ -89,25 +90,6 @@ public class FacesConfigFactoryImpl
     }
 
 
-    public static class MyER implements EntityResolver
-    {
-        public InputSource resolveEntity(String publicId,
-                                         String systemId)
-            throws SAXException, IOException
-        {
-            if (systemId.equals("http://java.sun.com/dtd/web-facesconfig_1_0.dtd"))
-            {
-                ClassLoader loader = Thread.currentThread().getContextClassLoader();
-                InputStream stream = loader.getResourceAsStream("net/sourceforge/myfaces/resource/web-facesconfig_1_0.dtd");
-                return new InputSource(stream);
-            }
-            else
-            {
-                return null;
-            }
-        }
-    }
-
     public void parseChildren(Object obj, NodeList nodeList)
     {
         for (int i = 0, len = nodeList.getLength(); i < len; i++)
@@ -124,12 +106,19 @@ public class FacesConfigFactoryImpl
         }
     }
 
+
+    private static final Class[] CONFIG_PARAM = new Class[] {Config.class};
+    private static final Class[] STRING_PARAM = new Class[] {String.class};
+    private static final Class[] OBJECT_PARAM = new Class[] {Object.class};
+    private static final Class[] LANG_AND_STRING_PARAM = new Class[] {String.class, String.class};
+
     public void setProperty(Object obj, Element elem)
     {
         //System.out.println("setProperty " + obj + " : " + elem);
         String propName = resolvePropertyName(elem.getNodeName());
 
         //Look for setXxx or addXxx method
+        /*
         BeanInfo beanInfo = null;
         try
         {
@@ -139,24 +128,27 @@ public class FacesConfigFactoryImpl
         {
             throw new FacesException(e);
         }
+        */
+        Class beanClass = obj.getClass();
         String methodNameMiddle = Character.toUpperCase(propName.charAt(0)) + propName.substring(1);
 
         Object[][] searchPatterns = {
-            {"add" + methodNameMiddle + "Config", Config.class},
-            {"set" + methodNameMiddle + "Config", Config.class},
-            {"add" + methodNameMiddle, String.class},
-            {"set" + methodNameMiddle, String.class},
-            {"add" + methodNameMiddle, Object.class},
-            {"set" + methodNameMiddle, Object.class},
+            {"add" + methodNameMiddle + "Config", CONFIG_PARAM},
+            {"set" + methodNameMiddle + "Config", CONFIG_PARAM},
+            {"add" + methodNameMiddle, LANG_AND_STRING_PARAM},
+            {"add" + methodNameMiddle, STRING_PARAM},
+            {"set" + methodNameMiddle, STRING_PARAM},
+            {"add" + methodNameMiddle, OBJECT_PARAM},
+            {"set" + methodNameMiddle, OBJECT_PARAM},
         };
 
         Method method = null;
 
         for (int i = 0; i < searchPatterns.length; i++)
         {
-            method = findWriteMethod(beanInfo,
+            method = findWriteMethod(beanClass,
                                      (String)searchPatterns[i][0],
-                                     (Class)searchPatterns[i][1]);
+                                     (Class[])searchPatterns[i][1]);
             if (method != null) break;
         }
 
@@ -168,31 +160,48 @@ public class FacesConfigFactoryImpl
         }
 
         Class[] paramTypes = method.getParameterTypes();
-        if (paramTypes.length != 1)
+        if (paramTypes.length == 1)
+        {
+            setProperty(obj, elem, paramTypes[0], method);
+        }
+        else if (paramTypes.length == 2)
+        {
+            String language = elem.getAttribute("xml:lang");
+            invokeWithLang(obj, method, language, getElementText(elem));
+        }
+        else
         {
             throw new FacesException("Object " + obj + " has illegal set or add method for property '" + propName + "'.");
         }
 
-        setProperty(obj, elem, paramTypes[0], method);
     }
 
 
-    private Method findWriteMethod(BeanInfo beanInfo, String methodName, Class paramType)
+    private Method findWriteMethod(Class beanClass, String methodName, Class[] withParamTypes)
     {
-        MethodDescriptor[] methodDescriptors = beanInfo.getMethodDescriptors();
-        for (int i = 0; i < methodDescriptors.length; i++)
+        Method[] methods = beanClass.getMethods();
+        for (int i = 0; i < methods.length; i++)
         {
-            String name = methodDescriptors[i].getName();
-            if (name.equals(methodName))
+            Method method = methods[i];
+            if (method.getName().equals(methodName))
             {
-                Method method = methodDescriptors[i].getMethod();
                 Class[] paramTypes = method.getParameterTypes();
-                if (paramTypes.length != 1)
+                if (paramTypes.length != withParamTypes.length)
                 {
                     continue;
                 }
 
-                if (paramType.isAssignableFrom(paramTypes[0]))
+                boolean found = true;
+                for (int j = 0; j < paramTypes.length; j++)
+                {
+                    if (!withParamTypes[j].isAssignableFrom(paramTypes[j]))
+                    {
+                        found = false;
+                        break;
+                    }
+                }
+
+                if (found)
                 {
                     return method;
                 }
@@ -289,6 +298,27 @@ public class FacesConfigFactoryImpl
         }
     }
 
+    private static void invokeWithLang(Object obj, Method method, String lang, Object arg)
+    {
+        try
+        {
+            method.invoke(obj, new Object[] {lang, arg});
+        }
+        catch (IllegalAccessException e)
+        {
+            throw new FacesException(e);
+        }
+        catch (IllegalArgumentException e)
+        {
+            throw new FacesException(e);
+        }
+        catch (InvocationTargetException e)
+        {
+            throw new FacesException(e);
+        }
+    }
+
+
 
     public static String resolvePropertyName(String elemName)
     {
@@ -320,6 +350,7 @@ public class FacesConfigFactoryImpl
 
 
 
+    /*
     public static void main (String[]  args)
 	{
         try
@@ -341,6 +372,7 @@ public class FacesConfigFactoryImpl
             throw new RuntimeException(e);
         }
     }
+    */
 
 
 

@@ -82,7 +82,8 @@ public class UINavigation
         public boolean broadcast(FacesEvent event, PhaseId phaseId)
             throws AbortProcessingException
         {
-            if (event instanceof ActionEvent)
+            if (event instanceof ActionEvent &&
+                phaseId == PhaseId.APPLY_REQUEST_VALUES)
             {
                 //We call processAction directly, so we can avoid having to register
                 //the navigation component as an ActionListener of all it's children

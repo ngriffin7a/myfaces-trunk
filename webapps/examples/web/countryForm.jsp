@@ -29,8 +29,6 @@
 
 <body>
 
-<jsp:useBean id="countryForm" class="net.sourceforge.myfaces.examples.listexample.SimpleCountryForm" scope="request" />
-
 <f:use_faces>
 
     <x:page_layout id="page" layoutRef="globalOptions.pageLayout"
@@ -48,9 +46,9 @@
                 <h:output_errors id="errors" />
 
                 <h:form formName="countryForm">
-                    <h:input_text id="isoCode" modelReference="countryForm.isoCode"></h:input_text><br>
-                    <h:input_text id="name" modelReference="countryForm.name"></h:input_text>
-                    <h:input_text id="size" modelReference="countryForm.size"></h:input_text>
+                    <h:input_text id="isoCode" valueRef="countryForm.isoCode"></h:input_text><br>
+                    <h:input_text id="name" valueRef="countryForm.name"></h:input_text>
+                    <h:input_text id="size" valueRef="countryForm.size"></h:input_text>
                 </h:form>
 
             </h:panel_group>

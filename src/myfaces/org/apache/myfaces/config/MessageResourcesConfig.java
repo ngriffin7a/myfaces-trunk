@@ -72,9 +72,15 @@ public class MessageResourcesConfig
         }
         else
         {
-            if (newMC.getSeverity() != oldMC.getSeverity())
+            if (newMC.getDeclaredSeverity() != null &&
+                oldMC.getDeclaredSeverity() != null &&
+                newMC.getSeverity() != oldMC.getSeverity())
             {
-                LogUtil.getLogger().warning("Message '" + id + "' defined twice with different severities.");
+                LogUtil.getLogger().warning("Message '" + id + "' defined more than once with different severities.");
+            }
+            else if (newMC.getDeclaredSeverity() != null)
+            {
+                oldMC.setSeverity(newMC.getSeverity());
             }
 
             for (Iterator it = newMC.getSummaryMap().entrySet().iterator(); it.hasNext(); )
@@ -146,4 +152,15 @@ public class MessageResourcesConfig
 
         return mc.getMessage(facesContext, args);
     }
+
+
+    public MessageResources newMessageResources()
+    {
+        if (!(_messageConfigMap == null || _messageConfigMap.isEmpty()))
+        {
+            LogUtil.getLogger().warning("Declared messages for MessageResources '" + _messageResourcesId + "' will be ignored, because I don't know how to add Messages to class '" + _messageResourcesClass + "'.");
+        }
+        return (MessageResources)ConfigUtil.newInstance(_messageResourcesClass);
+    }
+
 }

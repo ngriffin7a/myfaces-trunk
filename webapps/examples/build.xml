@@ -69,7 +69,7 @@
     </target>
 
 
-
+    <!--
     <target name="web_ss"
             depends="compile-and-copy-libs"
             description="copies the examples web application to a new dir and adjusts all options to 'save state in server sessions'." >
@@ -94,10 +94,11 @@
         </replace>
 
     </target>
+    -->
 
 
     <target name="release"
-            depends="compile-and-copy-libs, web_ss"
+            depends="compile-and-copy-libs"
             description="creates the examples release file myfaces-x.x.x-examples.tgz (don't forget to adjust manifest.properties!)">
         <tar destfile="${project.dir}/myfaces-${manifest.impl.version}-examples.tgz"
              compression="gzip">
@@ -116,9 +117,11 @@
                         includes="*"
                         excludes="*.properties,.cvsignore"
                         prefix="myfaces-${manifest.impl.version}/webapps/examples"/>
+            <!--
             <tarfileset dir="${web_ss.dir}"
                         excludes="WEB-INF/lib/jsf-api.jar"
                         prefix="myfaces-${manifest.impl.version}/webapps/examples/web_serversaving"/>
+                        -->
         </tar>
     </target>
 
@@ -129,7 +132,7 @@
         <delete quiet="true" failonerror="false" includeEmptyDirs="true">
             <fileset dir="${web-inf.classes.dir}"/>
             <fileset dir="${web-inf.lib.dir}"/>
-            <fileset dir="${web_ss.dir}"/>
+            <!--<fileset dir="${web_ss.dir}"/>-->
             <fileset file="${project.dir}/myfaces-*-examples.tgz"/>
         </delete>
     </target>

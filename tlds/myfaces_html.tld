@@ -340,7 +340,7 @@
             <description>Corresponds to the HTML class attribute.</description>
         </attribute>
         <attribute>
-            <name>clientId</name>
+            <name>for</name>
             <required>false</required>
             <rtexprvalue>false</rtexprvalue>
         </attribute>

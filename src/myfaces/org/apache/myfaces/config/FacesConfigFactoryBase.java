@@ -20,6 +20,7 @@ package net.sourceforge.myfaces.config;
 
 import net.sourceforge.myfaces.renderkit.html.jspinfo.TLDInfo;
 import net.sourceforge.myfaces.util.logging.LogUtil;
+import org.xml.sax.EntityResolver;
 
 import javax.faces.FacesException;
 import javax.faces.component.UIComponent;
@@ -78,7 +79,9 @@ public abstract class FacesConfigFactoryBase
     }
 
     protected abstract void parseFacesConfig(FacesConfig facesConfig,
-                                             InputStream in) throws IOException, FacesException;
+                                             InputStream in,
+                                             String systemId,
+                                             EntityResolver entityResolver) throws IOException, FacesException;
 
 
     private void parseFacesConfigFiles(FacesConfig facesConfig, ServletContext servletContext)
@@ -101,10 +104,12 @@ public abstract class FacesConfigFactoryBase
         String configFiles = servletContext.getInitParameter(CONFIG_FILES_INIT_PARAM);
         if (configFiles == null)
         {
-            InputStream stream = servletContext.getResourceAsStream("/WEB-INF/faces-config.xml");
+            String systemId = "/WEB-INF/faces-config.xml";
+            InputStream stream = servletContext.getResourceAsStream(systemId);
             if (stream != null)
             {
-                parseStreamConfig(facesConfig, stream);
+                parseStreamConfig(facesConfig, stream, systemId,
+                                  new FacesConfigEntityResolver(servletContext));
             }
         }
         else
@@ -112,21 +117,36 @@ public abstract class FacesConfigFactoryBase
             StringTokenizer st = new StringTokenizer(configFiles, ",", false);
             while (st.hasMoreTokens())
             {
-                String t = st.nextToken();
-                InputStream stream = servletContext.getResourceAsStream(t.trim());
+                String systemId = st.nextToken().trim();
+                InputStream stream = servletContext.getResourceAsStream(systemId);
                 if (stream == null)
                 {
-                    throw new FacesException("Resource '" + t + "' not found!");
+                    throw new FacesException("Resource '" + systemId + "' not found!");
                 }
-                parseStreamConfig(facesConfig, stream);
+
+                /*
+                int slash = t.lastIndexOf('/');
+                String baseURI;
+                if (slash >= 0)
+                {
+                    baseURI = t.substring(0, slash + 1);
+                }
+                else
+                {
+                    baseURI = "/";
+                }
+                */
+
+                parseStreamConfig(facesConfig, stream, systemId,
+                                  new FacesConfigEntityResolver(servletContext));
             }
         }
     }
 
 
     private void parseJarConfig(FacesConfig facesConfig,
-                                  ServletContext servletContext,
-                                  String jarPath)
+                                ServletContext servletContext,
+                                String jarPath)
         throws FacesException
     {
         try
@@ -145,12 +165,12 @@ public abstract class FacesConfigFactoryBase
             {
                 JarEntry entry = (JarEntry) entries.nextElement();
                 String name = entry.getName();
-                if (!name.equals("META-INF/faces-config.xml"))
+                if (name.equals("META-INF/faces-config.xml"))
                 {
-                    continue;
+                    InputStream stream = jarFile.getInputStream(entry);
+                    parseStreamConfig(facesConfig, stream, name,
+                                      new FacesConfigEntityResolver(jarFile));
                 }
-                InputStream stream = jarFile.getInputStream(entry);
-                parseStreamConfig(facesConfig, stream);
             }
         }
         catch (java.io.IOException e)
@@ -161,12 +181,14 @@ public abstract class FacesConfigFactoryBase
 
 
     private void parseStreamConfig(FacesConfig facesConfig,
-                                     InputStream stream)
+                                   InputStream stream,
+                                   String baseURI,
+                                   EntityResolver entityResolver)
         throws FacesException
     {
         try
         {
-            parseFacesConfig(facesConfig, stream);
+            parseFacesConfig(facesConfig, stream, baseURI, entityResolver);
         }
         catch (IOException e)
         {

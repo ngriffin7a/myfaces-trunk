@@ -101,14 +101,14 @@ public class ErrorsRenderer
     {
         ResponseWriter writer = facesContext.getResponseWriter();
         Iterator it;
-        String msgClientId = (String)uiComponent.getAttribute(FOR_ATTR);
-        if (msgClientId == null)
+        String forAttr = (String)uiComponent.getAttribute(FOR_ATTR);
+        if (forAttr == null)
         {
             //All messages
             it = facesContext.getMessages();
             renderErrorsList(facesContext, writer, uiComponent, it);
         }
-        else if (msgClientId.length() == 0)
+        else if (forAttr.length() == 0)
         {
             //All component messages
             it = facesContext.getMessages(null);
@@ -120,7 +120,7 @@ public class ErrorsRenderer
             UIComponent comp = null;
             try
             {
-                comp = facesContext.getTree().getRoot().findComponent(msgClientId);
+                comp = facesContext.getTree().getRoot().findComponent(forAttr);
             }
             catch (IllegalArgumentException e) {}
             if (comp != null)
@@ -129,6 +129,7 @@ public class ErrorsRenderer
             }
             else
             {
+                LogUtil.getLogger().warning("Attribute 'for' of component '" + uiComponent.getClientId(facesContext) + "' references unknown component '" + forAttr + "'.");
                 it = Collections.EMPTY_SET.iterator();
             }
             renderSingleComponentErrors(writer, uiComponent, it);

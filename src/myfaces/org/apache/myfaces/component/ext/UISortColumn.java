@@ -35,10 +35,25 @@ import javax.faces.event.PhaseId;
 public class UISortColumn
     extends UICommand
 {
+    public static final String COLUMN_PROP = "column";
+
+    private String _column;
+
+    public String getColumn()
+    {
+        return _column;
+    }
+
+    public void setColumn(String column)
+    {
+        _column = column;
+    }
+
     public boolean broadcast(FacesEvent event, PhaseId phaseId)
         throws AbortProcessingException
     {
-        if (event instanceof ActionEvent)
+        if (event instanceof ActionEvent &&
+            phaseId == PhaseId.APPLY_REQUEST_VALUES)
         {
             //We call processAction directly, so we can avoid having to register
             //the sort header component as an ActionListener of all it's children

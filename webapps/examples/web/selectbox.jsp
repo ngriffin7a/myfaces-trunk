@@ -31,7 +31,10 @@
 
 <body>
 
-<jsp:useBean id="carconf" class="net.sourceforge.myfaces.examples.common.CarConfigurator" scope="request" />
+<!--
+managed beans used:
+    carconf
+-->
 
 <f:use_faces>
 
@@ -51,39 +54,37 @@
                     <h:panel_grid columns="2">
 
                         <h:output_label for="selone_lb" key="label_cars" bundle="net.sourceforge.myfaces.examples.resource.example_messages"></h:output_label>
-                        <h:selectone_listbox modelReference="carconf.car" >
-                            <h:selectitems id="selone_lb_cars" modelReference="carconf.cars" />
+                        <h:selectone_listbox valueRef="carconf.car" >
+                            <h:selectitems id="selone_lb_cars" valueRef="carconf.cars" />
                         </h:selectone_listbox>
 
                         <h:output_label for="selone_menu" key="label_colors" bundle="net.sourceforge.myfaces.examples.resource.example_messages"></h:output_label>
-                        <h:selectone_menu size="3" modelReference="carconf.color" >
+                        <h:selectone_menu size="3" valueRef="carconf.color" >
                             <h:selectitem key="empty_selitem" bundle="net.sourceforge.myfaces.examples.resource.example_messages" ></h:selectitem>
-                            <h:selectitems modelReference="carconf.colors" />
+                            <h:selectitems valueRef="carconf.colors" />
                         </h:selectone_menu>
 
                         <h:output_label for="selone_menu" key="label_extras" bundle="net.sourceforge.myfaces.examples.resource.example_messages"></h:output_label>
                         <br>
-                        <h:selectmany_checkbox modelReference="carconf.extras" >
-                            <h:selectitems modelReference="carconf.extrasList" />
+                        <h:selectmany_checkbox valueRef="carconf.extras" >
+                            <h:selectitems valueRef="carconf.extrasList" />
                         </h:selectmany_checkbox>
 
                         <h:output_text value="" />
                         <h:panel_group >
                             <br>
-                            <h:selectboolean_checkbox id="cb1" modelReference="carconf.discount"></h:selectboolean_checkbox>
+                            <h:selectboolean_checkbox id="cb1" valueRef="carconf.discount"></h:selectboolean_checkbox>
                             <h:output_label for="cb1" key="discount_1" bundle="net.sourceforge.myfaces.examples.resource.example_messages"></h:output_label>
                         </h:panel_group>
 
                         <h:output_text value="" />
-                        <h:command_button commandName="calcPrice" key="button_calcprice" bundle="net.sourceforge.myfaces.examples.resource.example_messages">
-                            <f:action_listener type="net.sourceforge.myfaces.examples.common.CarConfiguratorActionListener" ></f:action_listener>
-                        </h:command_button>
+                        <h:command_button actionRef="carconf.calcPriceAction" key="button_calcprice" bundle="net.sourceforge.myfaces.examples.resource.example_messages"/>
 
                     </h:panel_grid>
                 </h:form>
 
                 <h:output_message key="msg_price" bundle="net.sourceforge.myfaces.examples.resource.example_messages" >
-                    <f:parameter modelReference="carconf.price" />
+                    <f:parameter valueRef="carconf.price" />
                 </h:output_message>
 
             </h:panel_group>

@@ -34,9 +34,9 @@ Example (see "sample1.jsp"):
     ...
     &lt;f:use_faces&gt;
         ...
-        &lt;x:save_state id="save1" modelReference="calcForm.number1" /&gt;
-        &lt;x:save_state id="save2" modelReference="calcForm.number2" /&gt;
-        &lt;x:save_state id="save3" modelReference="calcForm.result" /&gt;
+        &lt;x:save_state id="save1" valueRef="calcForm.number1" /&gt;
+        &lt;x:save_state id="save2" valueRef="calcForm.number2" /&gt;
+        &lt;x:save_state id="save3" valueRef="calcForm.result" /&gt;
         ...</pre></code>
 The current values of the three properties number1, number2 and result get
 automatically saved within the client response and restored from the
@@ -52,7 +52,7 @@ following client request.
     ...
     &lt;f:use_faces>
         ...
-        &lt;x:save_state id="save1" modelReference="calcForm" /&gt;
+        &lt;x:save_state id="save1" valueRef="calcForm" /&gt;
         ...</code></pre>
 The whole bean automatically is saved (serialized) and restored by MyFaces.
 

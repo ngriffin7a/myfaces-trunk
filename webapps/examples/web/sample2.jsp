@@ -29,8 +29,10 @@
 
 <body>
 
-<jsp:useBean id="q_form" class="net.sourceforge.myfaces.examples.example2.QuotationForm" scope="request" />
-
+<!--
+managed beans used:
+    q_form
+-->
 
 <f:use_faces>
 
@@ -51,26 +53,26 @@
                 <h:form id="q_form" formName="q_form">
                     <h:input_textarea id="text"
                                       rows="5"
-                                      modelReference="q_form.text"
+                                      valueRef="q_form.text"
                     />
                     <br>
                     <br>
-                    <h:selectone_menu id="oneoption" modelReference="q_form.quoteChar" >
+                    <h:selectone_menu id="oneoption" valueRef="q_form.quoteChar" >
                         <h:selectitem id="item0" value="" label="select a quote character" />
                         <h:selectitem id="item1" value="\"" label="Double" />
                         <h:selectitem id="item2" value="'" label="Single" />
-                        <h:selectitems id="moreItems" modelReference="q_form.selectOneItems" />
+                        <h:selectitems id="moreItems" valueRef="q_form.selectOneItems" />
                     </h:selectone_menu>
-                    <h:command_button id="button1" commandName="quotationOn" label="Add quotes">
+                    <h:command_button id="button1" commandName="quotationOn" label="Add quotes" action="none">
                         <f:action_listener type="net.sourceforge.myfaces.examples.example2.QuotationController" ></f:action_listener>
                     </h:command_button>
 
                     <br><br>
-                    <h:selectmany_listbox id="manyoptions" modelReference="q_form.selectManyValues" >
+                    <h:selectmany_listbox id="manyoptions" valueRef="q_form.selectManyValues" >
                         <h:selectitem id="item0" value="" label="select the unquote characters" />
-                        <h:selectitems id="manyItems" modelReference="q_form.selectManyItems" />
+                        <h:selectitems id="manyItems" valueRef="q_form.selectManyItems" />
                     </h:selectmany_listbox>
-                    <h:command_button id="button2" commandName="quotationOff" label="Remove quotes"><br>
+                    <h:command_button id="button2" commandName="quotationOff" label="Remove quotes" action="none"><br>
                         <f:action_listener type="net.sourceforge.myfaces.examples.example2.QuotationController" ></f:action_listener>
                     </h:command_button>
 

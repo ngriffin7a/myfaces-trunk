@@ -36,7 +36,7 @@ public class ValidateLengthTag
     private int _minimum;
     private int _maximum;
 
-    //private static final String TYPE = LengthValidator.class.getName();
+    private static final String ID = "Length";
 
     public ValidateLengthTag()
     {
@@ -77,7 +77,7 @@ public class ValidateLengthTag
     protected Validator createValidator()
         throws JspException
     {
-        //setType(TYPE);
+        setId(ID);
         LengthValidator validator = (LengthValidator)super.createValidator();
         if(_isMinSet)
         {

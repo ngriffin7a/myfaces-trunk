@@ -53,7 +53,7 @@ public class UCaseController
     }
     public PhaseId getPhaseId()
     {
-        return PhaseId.UPDATE_MODEL_VALUES;
+        return PhaseId.INVOKE_APPLICATION;
     }
 
 }

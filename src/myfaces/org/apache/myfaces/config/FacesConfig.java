@@ -185,7 +185,15 @@ public class FacesConfig
         MessageResources oldMR = (MessageResources)getMessageResourcesMap().get(id);
         if (oldMR == null)
         {
-            getMessageResourcesMap().put(id, newMessageResourcesConfig);
+            if (newMessageResourcesConfig.getMessageResourcesClass() == null ||
+                newMessageResourcesConfig.getMessageResourcesClass().equals(MessageResourcesConfig.class.getName()))
+            {
+                getMessageResourcesMap().put(id, newMessageResourcesConfig);
+            }
+            else
+            {
+                getMessageResourcesMap().put(id, newMessageResourcesConfig.newMessageResources());
+            }
         }
         else
         {

@@ -20,6 +20,7 @@ package net.sourceforge.myfaces.taglib.ext;
 
 import net.sourceforge.myfaces.renderkit.html.ext.SortColumnRenderer;
 import net.sourceforge.myfaces.taglib.MyFacesBodyTag;
+import net.sourceforge.myfaces.component.ext.UISortColumn;
 
 
 /**
@@ -42,7 +43,7 @@ public class SortColumnTag
 
     public void setColumn(String v)
     {
-        setValue(v);    //TODO: UISortColumn derived from UICommand which no longer has a value property!
+        setComponentPropertyString(UISortColumn.COLUMN_PROP, v);
     }
 
     public void setDefaultAscending(String b)

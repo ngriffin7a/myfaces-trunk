@@ -369,9 +369,6 @@ public class MyFacesTagHelper
      */
     protected UIComponent findComponent()
     {
-        //TODO: deaktivated for testing:
-        //if (1 == 1) return null;
-
         int mode = MyFacesConfig.getStateSavingMode((ServletContext)getFacesContext().getExternalContext().getContext());
         if (mode != MyFacesConfig.STATE_SAVING_MODE__CLIENT_MINIMIZED &&
             mode != MyFacesConfig.STATE_SAVING_MODE__CLIENT_MINIMIZED_ZIPPED)

@@ -31,9 +31,11 @@
 
 <body>
 
-<jsp:useBean id="calcForm" class="net.sourceforge.myfaces.examples.example1.CalcForm" scope="request" />
-
-<jsp:useBean id="ucaseForm" class="net.sourceforge.myfaces.examples.example1.UCaseForm" scope="request" />
+<!--
+managed beans used:
+    calcForm
+    ucaseForm
+-->
 
 <f:use_faces>
 
@@ -51,10 +53,10 @@
         <f:facet name="body">
             <h:panel_group id="body">
 
-                <x:save_state id="save1" modelReference="calcForm.number1" />
-                <x:save_state id="save2" modelReference="calcForm.number2" />
-                <!--x:save_state id="save3" modelReference="calcForm.result" /-->
-                <x:save_state id="save4" modelReference="ucaseForm.text" />
+                <x:save_state id="save1" valueRef="calcForm.number1" />
+                <x:save_state id="save2" valueRef="calcForm.number2" />
+                <!--x:save_state id="save3" valueRef="calcForm.result" /-->
+                <x:save_state id="save4" valueRef="ucaseForm.text" />
 
                 <%
                     Date test = new Date();
@@ -67,31 +69,31 @@
                 <table border="1"><tr><td>
                     <h:form id="form1" formName="calcForm">
                         <h:output_label for="number1" value="Number 1" />:
-                        <h:input_text id="number1" modelReference="calcForm.number1" maxlength="10" size="25" >
+                        <h:input_text id="number1" valueRef="calcForm.number1" maxlength="10" size="25" >
                            <f:validate_longrange minimum="1" maximum="10" />
                         </h:input_text>
-                        <h:output_errors id="number1Error" clientId="number1" outputClass="error" /><br>
+                        <h:output_errors id="number1Error" for="number1" outputClass="error" /><br>
 
                         <h:output_label for="number2" value="Number 2" />:
-                        <h:input_text id="number2" modelReference="calcForm.number2" maxlength="10" size="25"/>
-                        <h:output_errors id="number2Error" clientId="number2" outputClass="error" /><br>
+                        <h:input_text id="number2" valueRef="calcForm.number2" maxlength="10" size="25"/>
+                        <h:output_errors id="number2Error" for="number2" outputClass="error" /><br>
 
                         <h:output_label for="result" value="Result" />:
-                        <h:output_text id="result" modelReference="calcForm.result" /><br>
+                        <h:output_text id="result" valueRef="calcForm.result" /><br>
 
-                        <h:command_button id="addButton" commandName="add" label="Add them">
+                        <h:command_button id="addButton" commandName="add" label="Add them" action="none">
                             <f:action_listener type="net.sourceforge.myfaces.examples.example1.CalcController" ></f:action_listener>
                         </h:command_button>
-                        <h:command_button id="subtractButton" commandName="subtract" label="Subtract them">
+                        <h:command_button id="subtractButton" commandName="subtract" label="Subtract them" action="none">
                             <f:action_listener type="net.sourceforge.myfaces.examples.example1.CalcController" ></f:action_listener>
                         </h:command_button>
                         <br>
                     </h:form>
 
-                    <h:command_hyperlink id="href1" commandName="add">Add them by clicking this link
+                    <h:command_hyperlink id="href1" commandName="add" action="none">Add them by clicking this link
                         <f:action_listener type="net.sourceforge.myfaces.examples.example1.CalcController" ></f:action_listener>
                     </h:command_hyperlink><br>
-                    <h:command_hyperlink id="href2" commandName="subtract">Subtract them by clicking this link
+                    <h:command_hyperlink id="href2" commandName="subtract" action="none">Subtract them by clicking this link
                         <f:action_listener type="net.sourceforge.myfaces.examples.example1.CalcController" ></f:action_listener>
                     </h:command_hyperlink>
                 </td></tr></table>
@@ -102,14 +104,15 @@
                 <h4>Another Form</h4>
                 <table border="1"><tr><td>
                     <h:form id="form2" formName="ucaseForm">
-                        <h:input_text id="text" modelReference="ucaseForm.text">
+                        <h:input_text id="text" valueRef="ucaseForm.text">
                             <f:validate_required />
                             <f:validate_length minimum="2" maximum="15" />
-                        </h:input_text><br>
-                        <h:command_button id="ucaseButton" commandName="up" label="Make it uppercase">
+                        </h:input_text>
+                        <h:output_errors id="textError" for="text" outputClass="error" /><br>
+                        <h:command_button id="ucaseButton" commandName="up" label="Make it uppercase" action="none">
                             <f:action_listener type="net.sourceforge.myfaces.examples.example1.UCaseController" ></f:action_listener>
                         </h:command_button>
-                        <h:command_button id="lcaseButton" commandName="low" label="Make it lowercase" >
+                        <h:command_button id="lcaseButton" commandName="low" label="Make it lowercase" action="none">
                             <f:action_listener type="net.sourceforge.myfaces.examples.example1.UCaseController" ></f:action_listener>
                         </h:command_button>
                         <br>

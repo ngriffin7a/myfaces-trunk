@@ -36,7 +36,7 @@ public class ValidateStringRangeTag
     private String _minimum;
     private String _maximum;
 
-    //private static final String TYPE = StringRangeValidator.class.getName();
+    private static final String ID = "StringRange";
 
     public ValidateStringRangeTag()
     {
@@ -77,7 +77,7 @@ public class ValidateStringRangeTag
     protected Validator createValidator()
         throws JspException
     {
-        //setType(TYPE);
+        setId(ID);
         StringRangeValidator validator = (StringRangeValidator)super.createValidator();
         if(_isMinSet)
         {

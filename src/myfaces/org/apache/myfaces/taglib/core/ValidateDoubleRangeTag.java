@@ -36,7 +36,7 @@ public class ValidateDoubleRangeTag
     private double _minimum;
     private double _maximum;
 
-    //private static final String TYPE = DoubleRangeValidator.class.getName();
+    private static final String ID = "DoubleRange";
 
     public ValidateDoubleRangeTag()
     {
@@ -77,7 +77,7 @@ public class ValidateDoubleRangeTag
     protected Validator createValidator()
         throws JspException
     {
-        //setType(TYPE);
+        setId(ID);
         DoubleRangeValidator validator = (DoubleRangeValidator)super.createValidator();
         if(_isMinSet)
         {

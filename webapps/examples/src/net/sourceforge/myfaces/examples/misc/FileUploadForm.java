@@ -19,7 +19,14 @@
 package net.sourceforge.myfaces.examples.misc;
 
 import net.sourceforge.myfaces.component.ext.UploadedFile;
+import net.sourceforge.myfaces.examples.common.CarConfigurator;
 
+import javax.faces.application.Action;
+import javax.faces.application.ApplicationFactory;
+import javax.faces.context.FacesContext;
+import javax.faces.FactoryFinder;
+import javax.faces.el.ValueBinding;
+import javax.servlet.ServletContext;
 import java.io.File;
 
 /**
@@ -40,4 +47,30 @@ public class FileUploadForm
     {
         _upFile = upFile;
     }
+
+
+    public Action getFileUploadAction()
+    {
+        return new Action() {
+            public String invoke()
+            {
+                FacesContext facesContext = FacesContext.getCurrentInstance();
+                ServletContext servletContext = (ServletContext)facesContext.getExternalContext().getContext();
+
+                ApplicationFactory af = (ApplicationFactory)FactoryFinder.getFactory(FactoryFinder.APPLICATION_FACTORY);
+                ValueBinding vb = af.getApplication().getValueBinding("fileUploadForm");
+                FileUploadForm form = (FileUploadForm)vb.getValue(facesContext);
+
+                if (form != null)
+                {
+                    UploadedFile upFile = form.getUpFile();
+                    servletContext.setAttribute("fileupload_file", upFile.getFile());
+                    servletContext.setAttribute("fileupload_type", upFile.getContentType());
+                }
+
+                return "ok";
+            }
+        };
+    }
+
 }

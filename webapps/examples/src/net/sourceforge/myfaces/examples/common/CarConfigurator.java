@@ -21,6 +21,11 @@ package net.sourceforge.myfaces.examples.common;
 import net.sourceforge.myfaces.examples.util.LocalizedSelectItem;
 
 import javax.faces.component.SelectItem;
+import javax.faces.application.Action;
+import javax.faces.application.ApplicationFactory;
+import javax.faces.FactoryFinder;
+import javax.faces.context.FacesContext;
+import javax.faces.el.ValueBinding;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -197,4 +202,21 @@ public class CarConfigurator
             _price = _price.multiply(new BigDecimal(0.95));
         }
     }
+
+
+    public Action getCalcPriceAction()
+    {
+        return new Action() {
+            public String invoke()
+            {
+                FacesContext facesContext = FacesContext.getCurrentInstance();
+                ApplicationFactory af = (ApplicationFactory)FactoryFinder.getFactory(FactoryFinder.APPLICATION_FACTORY);
+                ValueBinding vb = af.getApplication().getValueBinding("carconf");
+                CarConfigurator carconf = (CarConfigurator)vb.getValue(facesContext);
+                carconf.calcPrice();
+                return "ok";
+            }
+        };
+    }
+
 }
