@@ -37,6 +37,9 @@ import java.util.Map;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.2  2004/03/31 13:25:24  manolito
+ * locale variable renamed
+ *
  * Revision 1.1  2004/03/30 17:47:36  manolito
  * Message and Messages refactored
  *
@@ -59,16 +62,16 @@ public abstract class HtmlMessageRendererBase
                                  UIComponent message)
             throws IOException
     {
-        String forClientId = getFor(message);
-        if (forClientId == null)
+        String forAttr = getFor(message);
+        if (forAttr == null)
         {
             throw new FacesException("Attribute 'for' of UIMessage must not be null");
         }
 
-        UIComponent forComponent = message.findComponent(forClientId);
+        UIComponent forComponent = message.findComponent(forAttr);
         if (forComponent == null)
         {
-            throw new FacesException("Could not render Message. Component '" + forClientId + "' not found.");
+            throw new FacesException("Could not render Message. Component '" + forAttr + "' not found.");
         }
 
         Iterator messageIterator = facesContext.getMessages(forComponent.getClientId(facesContext));
