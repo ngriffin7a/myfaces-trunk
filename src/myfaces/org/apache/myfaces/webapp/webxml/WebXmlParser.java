@@ -110,12 +110,12 @@ public class WebXmlParser
 
 
     private InputSource createContextInputSource(String publicId, String systemId)
-        throws IOException
     {
         InputStream inStream = _context.getResourceAsStream(systemId);
         if (inStream == null)
         {
-            throw new IOException("Unable to find web context resource " + systemId);
+            // there is no such entity
+            return null;
         }
         InputSource is = new InputSource(inStream);
         is.setPublicId(publicId);
@@ -125,12 +125,12 @@ public class WebXmlParser
     }
 
     private InputSource createClassloaderInputSource(String publicId, String systemId)
-        throws IOException
     {
         InputStream inStream = Thread.currentThread().getContextClassLoader().getResourceAsStream(systemId);
         if (inStream == null)
         {
-            throw new IOException("Unable to find classloader resource " + systemId);
+            // there is no such entity
+            return null;
         }
         InputSource is = new InputSource(inStream);
         is.setPublicId(publicId);
