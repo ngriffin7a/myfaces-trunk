@@ -72,13 +72,13 @@ managed beans used:
                         </h:selectOneMenu>
 
                         <h:outputLabel for="selone_menu" value="#{example_messages['label_extras']}" />
-                        <h:selectManyCheckbox value="#{carconf.extras}" >
+                        <h:selectManyCheckbox value="#{carconf.extras}" layout="pageDirection" >
                             <f:selectItems value="#{carconf.extrasList}" />
                         </h:selectManyCheckbox>
 
                         <f:verbatim>&nbsp;</f:verbatim>
                         <h:panelGroup >
-                            <h:selectOneRadio id="r1" value="#{carconf.discount}" layout="PAGE_DIRECTION"  >
+                            <h:selectOneRadio id="r1" value="#{carconf.discount}" layout="pageDirection" >
                                 <f:selectItem itemValue="0" itemLabel="#{example_messages['discount_0']}" />
                                 <f:selectItem itemValue="1" itemLabel="#{example_messages['discount_1']}"  />
                                 <f:selectItem itemValue="2" itemLabel="#{example_messages['discount_2']}"  />
@@ -88,7 +88,7 @@ managed beans used:
                         <f:verbatim>&nbsp;</f:verbatim>
                         <h:panelGroup >
                             <f:verbatim><br></f:verbatim>
-                            <h:selectOneRadio id="r2" value="#{carconf.discount2}" layout="PAGE_DIRECTION"  >
+                            <h:selectOneRadio id="r2" value="#{carconf.discount2}" layout="pageDirection" >
                                 <f:selectItem itemValue="0" itemLabel="#{example_messages['discount_2_0']}" />
                                 <f:selectItem itemValue="1" itemLabel="#{example_messages['discount_2_1']}" />
                             </h:selectOneRadio>

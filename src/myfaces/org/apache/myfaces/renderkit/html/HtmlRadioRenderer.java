@@ -47,8 +47,8 @@ public class HtmlRadioRenderer
 {
     private static final Log log = LogFactory.getLog(HtmlRadioRenderer.class);
 
-    private static final String PAGE_DIRECTION = "PAGE_DIRECTION";
-    private static final String LINE_DIRECTION = "LINE_DIRECTION";
+    private static final String PAGE_DIRECTION = "pageDirection";
+    private static final String LINE_DIRECTION = "lineDirection";
 
     public void encodeEnd(FacesContext facesContext, UIComponent uiComponent) throws IOException
     {

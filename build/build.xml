@@ -142,6 +142,10 @@
                         prefix="myfaces-${manifest.impl.version}/lib"/>
             <tarfileset file="${commons-logging.jar}"
                         prefix="myfaces-${manifest.impl.version}/lib"/>
+            <tarfileset file="${commons-el.jar}"
+                        prefix="myfaces-${manifest.impl.version}/lib"/>
+            <tarfileset file="${jstl.jar}"
+                        prefix="myfaces-${manifest.impl.version}/lib"/>
         </tar>
     </target>
 
@@ -152,6 +156,7 @@
         <tar destfile="${project.dir}/myfaces-${manifest.impl.version}-src.tgz"
              compression="gzip">
             <tarfileset dir="${build.dir}"
+                        excludes="codegen/**/*"
                         prefix="myfaces-${manifest.impl.version}/build"/>
             <tarfileset dir="${conf.dir}"
                         prefix="myfaces-${manifest.impl.version}/conf"/>
@@ -160,6 +165,8 @@
                                   tlddoc/**/*"
                         prefix="myfaces-${manifest.impl.version}/doc"/>
             <tarfileset dir="${myfaces.src}"
+                        prefix="myfaces-${manifest.impl.version}/src/myfaces"/>
+            <tarfileset dir="${jsfapi.src}"
                         prefix="myfaces-${manifest.impl.version}/src/myfaces"/>
             <tarfileset dir="${tlds.dir}"
                         prefix="myfaces-${manifest.impl.version}/tlds"/>

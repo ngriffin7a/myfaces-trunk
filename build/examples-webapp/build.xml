@@ -83,7 +83,7 @@
             </section>
         </manifest>
 
-        <war destfile="${temp.dir}/myfaces-samples.war"
+        <war destfile="${temp.dir}/myfaces-examples.war"
              webxml="${project.dir}/conf/web.xml"
              manifest="${temp.dir}/MANIFEST.MF">
             <lib dir="${project.dir}/lib" excludes="jsp-api.jar, servlet-api.jar" />
@@ -92,7 +92,7 @@
                      excludes="WEB-INF/classes/**,
                                WEB-INF/lib/**,
                                WEB-INF/web.xml " />
-         </war>
+        </war>
 
         <tar destfile="${project.dir}/myfaces-${manifest.impl.version}-examples.tgz"
              compression="gzip">
@@ -103,7 +103,7 @@
             <tarfileset dir="${examples.src}"
                         prefix="myfaces-${manifest.impl.version}/src"/>
             <tarfileset dir="${temp.dir}"
-                        includes="myfaces-samples.war"
+                        includes="myfaces-examples.war"
                         prefix="myfaces-${manifest.impl.version}"/>
             <tarfileset dir="${examples.dir}"
                         includes="*"
