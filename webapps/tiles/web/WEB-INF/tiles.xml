@@ -8,11 +8,11 @@
         <put name="menu" value="/common/navigation.jsp" />
     </definition>
 
-    <definition name="/page1" extends="layout.example" >
+    <definition name="/page1.tiles" extends="layout.example" >
         <put name="body" value="/page1.jsp" />
     </definition>
 
-    <definition name="/page2" extends="layout.example" >
+    <definition name="/page2.tiles" extends="layout.example" >
         <put name="body" value="/page2.jsp" />
     </definition>
 

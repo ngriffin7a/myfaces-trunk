@@ -40,6 +40,9 @@ import net.sourceforge.myfaces.webapp.webxml.ServletMapping;
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.2  2004/07/19 08:18:19  royalts
+ * moved net.sourceforge.myfaces.webapp.webxml and net.sourceforge.util.xml to share src-tree (needed WebXml for JspTilesViewHandlerImpl)
+ *
  * Revision 1.1  2004/07/16 17:46:46  royalts
  * moved net.sourceforge.myfaces.webapp.webxml and net.sourceforge.util.xml to share src-tree (needed WebXml for JspTilesViewHandlerImpl)
  *
@@ -50,6 +53,7 @@ public class JspTilesViewHandlerImpl
     private ViewHandler _viewHandler;
 
     private static final Log log = LogFactory.getLog(JspTilesViewHandlerImpl.class);
+    private static final String TILES_EXTENSION = ".tiles";
 
     private DefinitionsFactory _definitionsFactory;
 
@@ -106,7 +110,16 @@ public class JspTilesViewHandlerImpl
         if (log.isTraceEnabled()) log.trace("Dispatching to " + viewId);
 
         String tilesId = viewId;
-        tilesId = tilesId.substring(0, tilesId.indexOf("."));
+        int idx = tilesId.indexOf(".");
+        if (idx > 0)
+        {
+            tilesId = tilesId.substring(0, tilesId.indexOf(".")) + TILES_EXTENSION;
+        }
+        else
+        {
+            tilesId = tilesId  + TILES_EXTENSION;
+
+        }
         ServletRequest request = (ServletRequest)externalContext.getRequest();
         ServletContext servletContext = (ServletContext)externalContext.getContext();
         ComponentContext tileContext = ComponentContext.getContext(request);
