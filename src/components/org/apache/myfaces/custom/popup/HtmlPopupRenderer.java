@@ -30,6 +30,9 @@ import java.util.List;
  * @author Martin Marinschek (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.12  2005/02/11 13:33:58  mmarinschek
+ * fix jira 15
+ *
  * Revision 1.11  2004/12/27 04:11:11  mmarinschek
  * Data Table stores the state of facets of children; script tag is rendered with type attribute instead of language attribute, popup works better as a column in a data table
  *
@@ -115,7 +118,10 @@ public class HtmlPopupRenderer
         writer.writeAttribute(HTML.STYLE_ATTR,(popup.getStyle()!=null?(popup.getStyle()+
                 (popup.getStyle().trim().endsWith(";")?"":";")):"")+
                 "position:absolute;display:none;",null);
-        writer.writeAttribute(HTML.CLASS_ATTR,popup.getStyleClass(),null);
+        if(popup.getStyleClass()!=null)
+        {
+            writer.writeAttribute(HTML.CLASS_ATTR,popup.getStyleClass(),null);
+        }
         writer.writeAttribute(HTML.ID_ATTR, popup.getClientId(facesContext),null);
         writer.writeAttribute(HTML.ONMOUSEOVER_ATTR, new String(popupId+".redisplay();"),null);
 
