@@ -45,6 +45,7 @@
                 <x:navigationMenuItem id="nav_2_4_16" itemLabel="#{example_messages['nav_newspaperTable']}" action="go_newspaperTable" icon="images/myfaces.gif" />
                 <x:navigationMenuItem id="nav_2_4_17" itemLabel="#{example_messages['nav_swapimage']}" action="go_swapimage" icon="images/myfaces.gif" />
                 <x:navigationMenuItem id="nav_2_4_18" itemLabel="#{example_messages['nav_forceId']}" action="go_forceId" icon="images/myfaces.gif" />
+                <x:navigationMenuItem id="nav_2_4_19" itemLabel="#{example_messages['nav_selectOneCountry']}" action="go_selectOneCountry" icon="images/myfaces.gif" />
             </x:navigationMenuItem>
         </x:navigationMenuItem>
         <x:navigationMenuItem id="nav_3" itemLabel="#{example_messages['nav_Documentation']}" >

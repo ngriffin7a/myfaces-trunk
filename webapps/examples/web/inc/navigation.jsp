@@ -35,6 +35,7 @@
             <x:commandNavigation id="nav_2_4_16" value="#{example_messages['nav_newspaperTable']}" action="go_newspaperTable" />
             <x:commandNavigation id="nav_2_4_17" value="#{example_messages['nav_swapimage']}" action="go_swapimage" />
             <x:commandNavigation id="nav_2_4_18" value="#{example_messages['nav_forceId']}" action="go_forceId" />
+            <x:commandNavigation id="nav_2_4_19" value="#{example_messages['nav_selectOneCountry']}" action="go_selectOneCountry" />
         </x:commandNavigation>
     </x:commandNavigation>
     <x:commandNavigation id="nav_3" value="#{example_messages['nav_Documentation']}" >
