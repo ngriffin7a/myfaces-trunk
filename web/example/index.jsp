@@ -46,7 +46,7 @@
         </table>
 
         <f:message id="today" bundle="net.sourceforge.myfaces.example.example_messages" key="today" >
-            <f:param id="date" value="<%=new Date()%>" />
+            <f:param id="p0" value="<%=new Date()%>" />
         </f:message>
 
         </td>
