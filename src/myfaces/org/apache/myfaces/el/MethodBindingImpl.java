@@ -19,8 +19,8 @@
 package net.sourceforge.myfaces.el;
 
 import net.sourceforge.myfaces.el.ValueBindingImpl.NotVariableReferenceException;
-import net.sourceforge.myfaces.util.MethodUtils;
 
+import org.apache.commons.beanutils.MethodUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -39,6 +39,9 @@ import java.lang.reflect.Method;
  * @author Anton Koinov (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.15  2004/06/23 15:56:16  manolito
+ * removed our own version of commons-beanutils MethodUtils
+ *
  * Revision 1.14  2004/05/18 17:09:29  manolito
  * resolved the problem with inaccessible methods in private classes that implement a public interface
  *

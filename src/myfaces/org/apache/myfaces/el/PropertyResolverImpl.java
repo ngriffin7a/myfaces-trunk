@@ -18,8 +18,7 @@
  */
 package net.sourceforge.myfaces.el;
 
-import net.sourceforge.myfaces.util.MethodUtils;
-
+import org.apache.commons.beanutils.MethodUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -44,6 +43,9 @@ import java.util.Map;
  * @author Anton Koinov
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.26  2004/06/23 15:56:16  manolito
+ * removed our own version of commons-beanutils MethodUtils
+ *
  * Revision 1.25  2004/05/18 17:09:29  manolito
  * resolved the problem with inaccessible methods in private classes that implement a public interface
  *
