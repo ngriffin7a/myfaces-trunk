@@ -22,12 +22,14 @@ import javax.faces.context.ExternalContext;
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.security.Principal;
 import java.util.*;
+import java.lang.reflect.Method;
 
 /**
  * JSF 1.0 PRD2, 6.1.1
@@ -41,6 +43,8 @@ import java.util.*;
 public class ServletExternalContextImpl
     extends ExternalContext
 {
+    public static final String CHARACTER_ENCODING_ATTRIBUTE = "net.sourceforge.myfaces.characterEncoding";
+
     private static final String INIT_PARAMETER_MAP_ATTRIBUTE = InitParameterMap.class.getName();
 
     private ServletContext _servletContext;
@@ -81,10 +85,58 @@ public class ServletExternalContextImpl
         {
             //HACK: MultipartWrapper scrambles the servletPath for some reason in Tomcat 4.1.29 embedded in JBoss 3.2.3!?
             // (this was reported by frederic.auge [frederic.auge@laposte.net])
-            _requestServletPath = ((HttpServletRequest)servletRequest).getServletPath();
-            _requestPathInfo = ((HttpServletRequest)servletRequest).getPathInfo();
+            HttpServletRequest httpServletRequest = (HttpServletRequest)servletRequest;
+
+            _requestServletPath = httpServletRequest.getServletPath();
+            _requestPathInfo = httpServletRequest.getPathInfo();
+
+            // try to set character encoding as described in section 2.5.2.2 of JSF 1.1 spec
+            // we have to use reflection as method setCharacterEncoding is not supported Servlet API <= 2.3
+            try
+            {
+                Method method = servletRequest.getClass().getMethod("setCharacterEncoding", new Class[]{String.class});
+
+                if (method != null) {
+                    String contentType = httpServletRequest.getHeader("Content-Type");
+
+                    String characterEncoding = lookupCharacterEncoding(contentType);
+
+                    if (characterEncoding == null) {
+                        HttpSession session = httpServletRequest.getSession(false);
+
+                        if (session != null) {
+                            characterEncoding = (String) session.getAttribute(CHARACTER_ENCODING_ATTRIBUTE);
+                        }
+
+                        if (characterEncoding != null) {
+                            method.invoke(servletRequest, new Object[]{characterEncoding});
+                        }
+                    }
+                }
+            } catch (Exception e)
+            {
+
+            }
         }
     }
+
+
+    private String lookupCharacterEncoding(String contentType)
+    {
+        int start = contentType.indexOf("charset=");
+
+        if (start == -1) {
+            return null;
+        }
+
+        int end = contentType.indexOf(';', start);
+
+        if (end == -1) {
+            end = contentType.length();
+        }
+        return contentType.substring(start + 8, end).trim();
+    }
+
 
     public void release()
     {

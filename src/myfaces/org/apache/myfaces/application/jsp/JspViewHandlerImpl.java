@@ -18,6 +18,7 @@ package net.sourceforge.myfaces.application.jsp;
 import net.sourceforge.myfaces.util.DebugUtils;
 import net.sourceforge.myfaces.webapp.webxml.ServletMapping;
 import net.sourceforge.myfaces.webapp.webxml.WebXml;
+import net.sourceforge.myfaces.context.servlet.ServletExternalContextImpl;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -30,6 +31,10 @@ import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.render.RenderKitFactory;
 import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.*;
@@ -38,6 +43,9 @@ import java.util.*;
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.25  2004/08/11 22:56:30  o_rossmueller
+ * handle character encoding as described in section 2.5.2.2 of JSF 1.1
+ *
  * Revision 1.24  2004/07/16 08:34:01  manolito
  * cosmetic change
  *
@@ -215,7 +223,24 @@ public class JspViewHandlerImpl
         }
 
         if (log.isTraceEnabled()) log.trace("Dispatching to " + viewId);
+
+        if (externalContext.getResponse() instanceof ServletResponse) {
+            ServletResponse response = (ServletResponse) externalContext.getResponse();
+            response.setLocale(viewToRender.getLocale());
+        }
+
         externalContext.dispatch(viewId);
+
+        if (externalContext.getRequest() instanceof HttpServletRequest) {
+            HttpServletResponse response = (HttpServletResponse) externalContext.getResponse();
+            HttpServletRequest request = (HttpServletRequest) externalContext.getRequest();
+            HttpSession session = request.getSession(false);
+
+            if (session != null) {
+                session.setAttribute(ServletExternalContextImpl.CHARACTER_ENCODING_ATTRIBUTE, response.getCharacterEncoding());
+            }
+        }
+
     }
 
 
