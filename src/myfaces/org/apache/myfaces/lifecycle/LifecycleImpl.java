@@ -62,11 +62,6 @@ public class LifecycleImpl
     private TreeFactory _treeFactory;
     private RenderKitFactory _rkFactory;
 
-    /*
-    private List _phases;
-    private AbstractPhase _renderResponsePhase;
-    */
-
     public LifecycleImpl()
     {
         //initPhases();

@@ -34,7 +34,6 @@ import net.sourceforge.myfaces.util.logging.LogUtil;
 
 import javax.faces.FacesException;
 import javax.faces.component.UIComponent;
-import javax.faces.component.UIOutput;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 import javax.faces.convert.Converter;
@@ -228,6 +227,12 @@ public class StateSaver
                 }
             }
 
+            /*
+            TODO: save currentValue and restore model value on restore ?
+            Saving the currentValue for an UIOutput has side-effects!
+            The value is restored, although it was null. currentValue then want
+            funktion properly, because it always would return the local value!
+
             if (!valueSeen
                 && !isIgnoreValue(comp))
             {
@@ -237,6 +242,7 @@ public class StateSaver
                     saveComponentValue(facesContext, stateMap, comp, currValue);
                 }
             }
+            */
 
             saveListeners(facesContext, stateMap, comp);
         }
@@ -315,35 +321,13 @@ public class StateSaver
                                           facesContext.getTree().getTreeId());
         String strValue;
 
-        if (uiComponent.getParent() == null &&
-            attrName.equals("tagHash"))
+        if (TagHashHack.isTagHashAttribute(uiComponent, attrName))
         {
-            if (MyFacesConfig.isJspInfoApplicationCaching() &&
-                parsedTree.getRoot().getAttribute("tagHash") != null)
+            strValue = TagHashHack.getAsStringToBeSaved(facesContext, (Map)attrValue);
+            if (strValue == null)
             {
-                //Already in parsed tree
                 return;
             }
-
-            //Remap each tagKey to the clientId instead of the component
-            Map tagHash = (Map)attrValue;
-            Map saveTagHash = new HashMap();
-            for (Iterator it = tagHash.entrySet().iterator(); it.hasNext();)
-            {
-                Map.Entry entry = (Map.Entry)it.next();
-                UIComponent comp = (UIComponent)entry.getValue();
-                saveTagHash.put(entry.getKey(),
-                                comp.getClientId(facesContext));
-            }
-
-            if (MyFacesConfig.isJspInfoApplicationCaching())
-            {
-                //Save tagHash in parsed tree
-                parsedTree.getRoot().setAttribute("tagHash", saveTagHash);
-                return;
-            }
-
-            strValue = ConverterUtils.serialize(saveTagHash);
         }
         else
         {
@@ -510,13 +494,6 @@ public class StateSaver
             //Dynamically generated componentId and clientId need not be saved
             return true;
         }
-        /*
-        else if (comp.getParent() == null && attrName.equals("tagHash"))
-        {
-            //Sun sometimes puts an attribute "tagHash" in the root element that is not serializable!
-            return true;
-        }
-        */
         else
         {
             return IGNORE_ATTRIBUTES.contains(attrName);
@@ -525,12 +502,14 @@ public class StateSaver
 
     protected boolean isIgnoreValue(UIComponent comp)
     {
+        /*
         if (comp.getComponentType().equals(UIOutput.TYPE) ||
             comp instanceof UIOutput)
         {
             //Output values must not be saved
             return true;
         }
+        */
 
         //Secret with redisplay == false?
         String rendererType = comp.getRendererType();

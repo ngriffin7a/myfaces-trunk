@@ -3,7 +3,7 @@
 %><%@ taglib uri="/WEB-INF/myfaces_ext.tld" prefix="x"
 %><html>
 
-<%@include file="inc/header.inc" %>
+<%@include file="inc/head.inc" %>
 
 <!--
 /**
@@ -33,11 +33,9 @@
 
 <h:use_faces>
 
-    <x:page_layout id="page" layout="<%=pageLayout%>" cssClass="pageLayout" >
-        <x:page_header id="header" cssClass="pageHeader" >
-            <h:image id="logo" url="images/logo_mini.jpg" altKey="alt_logo" altBundle="net.sourceforge.myfaces.example.example_messages" />
-        </x:page_header>
-        <%@ include file="inc/navigation.jsp"  %>
+    <x:page_layout id="page" layoutReference="pageLayout" cssClass="pageLayout" >
+        <%@include file="inc/page_header.jsp" %>
+        <%@include file="inc/navigation.jsp"  %>
 
         <x:page_body id="body" cssClass="pageBody" >
             <h:errors id="messageList" />
@@ -50,10 +48,11 @@
                         <h:selectbox_items id="available" modelReference="optionsForm.availableLanguages" />
                     </h:selectbox><br>
 
-                    <!--h:message id="layout_label" key="option_layout" bundle="net.sourceforge.myfaces.example.example_messages" /-->
+                    <h:message key="option_layout" bundle="net.sourceforge.myfaces.example.example_messages" />
                     <h:selectbox id="layout" modelReference="pageLayout"  >
                         <h:selectbox_item id="item101" label="Classic" value="classic" />
                         <h:selectbox_item id="item102" label="Navigation right" value="navigationRight" />
+                        <h:selectbox_item id="item103" label="Upside down" value="upsideDown" />
                     </h:selectbox><br>
 
                     <h:command_button id="apply" commandName="apply" commandReference="optionsCtrl.setLocale" label="Apply"/>
@@ -63,9 +62,7 @@
 
         </x:page_body>
 
-        <x:page_footer id="footer" cssClass="pageFooter" >
-            Copyright (C) 2003  <a href="http://myfaces.sourceforge.net" style="color:#FFFFFF">The MyFaces Team</a>
-        </x:page_footer>
+        <%@include file="inc/page_footer.jsp" %>
     </x:page_layout>
 
 </h:use_faces>

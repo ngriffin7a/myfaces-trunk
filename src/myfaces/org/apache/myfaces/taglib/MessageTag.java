@@ -50,7 +50,7 @@ public class MessageTag
 
     public void setKey(String value)
     {
-        setRendererAttribute(MessageRenderer.KEY_ATTR, value);
+        setRendererAttribute(MessageRenderer.KEY_ATTR.getName(), value);
     }
 
     public void setBundle(String value)

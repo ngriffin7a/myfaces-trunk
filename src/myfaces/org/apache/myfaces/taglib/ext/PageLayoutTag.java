@@ -19,6 +19,8 @@
 package net.sourceforge.myfaces.taglib.ext;
 
 import net.sourceforge.myfaces.component.UIPanel;
+import net.sourceforge.myfaces.component.CommonComponentAttributes;
+import net.sourceforge.myfaces.component.UIComponentUtils;
 import net.sourceforge.myfaces.renderkit.html.ext.LayoutRenderer;
 import net.sourceforge.myfaces.taglib.MyFacesBodyTag;
 
@@ -35,7 +37,11 @@ public class PageLayoutTag
 {
     public UIComponent createComponent()
     {
-        return new UIPanel(false);
+        //return new UIPageLayout();
+        UIComponent comp = new UIPanel(false);
+        UIComponentUtils.setTransient(comp, true);
+        comp.setValid(true);
+        return comp;
     }
 
     public String getRendererType()
@@ -45,7 +51,12 @@ public class PageLayoutTag
 
     public void setLayout(String value)
     {
-        setRendererAttribute(LayoutRenderer.LAYOUT_ATTR.getName(), value);
+        setComponentAttribute(CommonComponentAttributes.VALUE_ATTR, value);
+    }
+
+    public void setLayoutReference(String value)
+    {
+        setComponentAttribute(CommonComponentAttributes.MODEL_REFERENCE_ATTR, value);
     }
 
     public void setCssClass(String value)

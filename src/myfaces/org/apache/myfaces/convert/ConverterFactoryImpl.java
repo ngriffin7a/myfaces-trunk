@@ -49,6 +49,13 @@ public class ConverterFactoryImpl
         read();
     }
 
+    protected void mapPrimitives()
+    {
+        _convertersByClass.put(Boolean.TYPE, _convertersById.get("BooleanConverter"));
+        _convertersByClass.put(Long.TYPE, _convertersById.get("LongConverter"));
+    }
+
+
     protected synchronized void read()
     {
         Properties converterProps = loadProperties(CONVERTER_PROPS);
@@ -91,13 +98,15 @@ public class ConverterFactoryImpl
             try
             {
                 Class c = Class.forName((String)entry.getKey());
-                _convertersByClass.put(entry.getKey(), conv);
+                _convertersByClass.put(c, conv);
             }
             catch (ClassNotFoundException e)
             {
                 throw new FacesException(e);
             }
         }
+
+        mapPrimitives();
     }
 
     protected Properties loadProperties(String fileName)

@@ -78,7 +78,8 @@ a:hover
 }
 
 .pageHeader {
-    text-align: left;
+    text-align: center;
+    vertical-align: middle;
     height:1px;
     overflow:visible;
     background-color: #CCCCFF;

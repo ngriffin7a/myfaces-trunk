@@ -16,24 +16,29 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package net.sourceforge.myfaces.renderkit.html.util;
+package net.sourceforge.myfaces.renderkit.callback;
 
 import javax.faces.component.UIComponent;
-import javax.faces.context.FacesContext;
-import javax.faces.render.Renderer;
-import java.io.IOException;
 
 /**
- * TODO: description
- * @author Manfred Geiler
+ * Record of the CallbackRendererInfoMap, that is used by CallbackSupport
+ * to track the registered CallbackRenderers.
+ *
+ * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public interface CallbackRenderer
+class CallbackRendererInfo
 {
-    public void beforeEncodeBegin(FacesContext facesContext,
-                                  Renderer renderer,
-                                  UIComponent uiComponent) throws IOException;
-    public void afterEncodeEnd(FacesContext facesContext,
-                               Renderer renderer,
-                               UIComponent uiComponent) throws IOException;
+    public UIComponent _component;
+    public CallbackRenderer _callbackRenderer;
+    public boolean _onlyChildren;
+
+    public CallbackRendererInfo(UIComponent component,
+                                CallbackRenderer callbackRenderer,
+                                boolean onlyChildren)
+    {
+        _component = component;
+        _callbackRenderer = callbackRenderer;
+        _onlyChildren = onlyChildren;
+    }
 }

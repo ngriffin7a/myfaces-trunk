@@ -397,4 +397,21 @@ public class BeanUtils
         }
     }
 
+
+    /**
+     * Strip "${" and "}" from a modelReference.
+     */
+    public static String stripBracketsFromModelReference(String modelReference)
+    {
+        modelReference = modelReference.trim();
+        if (modelReference.startsWith("${") && modelReference.endsWith("}"))
+        {
+            return modelReference.substring(2, modelReference.length() - 1);
+        }
+        else
+        {
+            return modelReference;
+        }
+    }
+
 }

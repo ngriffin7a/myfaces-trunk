@@ -19,9 +19,8 @@
 package net.sourceforge.myfaces.renderkit.html.ext;
 
 import net.sourceforge.myfaces.renderkit.attr.ext.LayoutRendererAttributes;
+import net.sourceforge.myfaces.renderkit.callback.CallbackSupport;
 import net.sourceforge.myfaces.renderkit.html.HTMLRenderer;
-import net.sourceforge.myfaces.renderkit.html.util.CallbackRenderKit;
-import net.sourceforge.myfaces.renderkit.html.util.CallbackRenderer;
 import net.sourceforge.myfaces.util.logging.LogUtil;
 
 import javax.faces.component.UIComponent;
@@ -41,7 +40,7 @@ import java.util.Iterator;
 public class LayoutRenderer
     extends HTMLRenderer
     implements LayoutRendererAttributes,
-               CallbackRenderer
+    net.sourceforge.myfaces.renderkit.callback.CallbackRenderer
 {
     static final String HEADER = "LayoutHeader";
     static final String NAVIGATION = "LayoutNavigation";
@@ -58,6 +57,7 @@ public class LayoutRenderer
 
     public static final String CLASSIC_LAYOUT = "classic";
     public static final String NAV_RIGHT_LAYOUT = "navigationRight";
+    public static final String UPSIDE_DOWN_LAYOUT = "upsideDown";
 
 
     public static final String TYPE = "Layout";
@@ -70,7 +70,7 @@ public class LayoutRenderer
     {
         super();
         addAttributeDescriptor(UIPanel.TYPE, PANEL_CLASS_ATTR);
-        addAttributeDescriptor(UIPanel.TYPE, LAYOUT_ATTR);
+        //addAttributeDescriptor(UIPanel.TYPE, LAYOUT_ATTR);
     }
 
     public boolean supportsComponentType(UIComponent component)
@@ -86,7 +86,7 @@ public class LayoutRenderer
     public void encodeBegin(FacesContext facesContext, UIComponent uiComponent)
         throws IOException
     {
-        CallbackRenderKit.addChildrenCallbackRenderer(facesContext, uiComponent, this);
+        CallbackSupport.addChildrenCallbackRenderer(facesContext, uiComponent, this);
     }
 
 
@@ -171,7 +171,7 @@ public class LayoutRenderer
         throws IOException
     {
         writeBody(facesContext, uiComponent);
-        CallbackRenderKit.removeCallbackRenderer(facesContext, uiComponent, this);
+        CallbackSupport.removeCallbackRenderer(facesContext, uiComponent, this);
     }
 
 
@@ -187,13 +187,11 @@ public class LayoutRenderer
             throw new IllegalStateException("No BodyContent!?");
         }
 
-        String layout = (String)uiComponent.getAttribute(LAYOUT_ATTR.getName());
+        String layout = (String)uiComponent.currentValue(facesContext);
         if (layout == null)
         {
             LogUtil.getLogger().severe("No layout attribute!");
-            ResponseWriter writer = facesContext.getResponseWriter();
-            bodyContent.writeOut(writer);
-            return;
+            layout = CLASSIC_LAYOUT;
         }
 
         if (layout.equals(CLASSIC_LAYOUT))
@@ -203,6 +201,10 @@ public class LayoutRenderer
         else if (layout.equals(NAV_RIGHT_LAYOUT))
         {
             writeNavRightLayout(facesContext, uiComponent, bodyContent);
+        }
+        else if (layout.equals(UPSIDE_DOWN_LAYOUT))
+        {
+            writeUpsideDownLayout(facesContext, uiComponent, bodyContent);
         }
         else
         {
@@ -325,6 +327,32 @@ public class LayoutRenderer
         writer.write("</tr>");
         writer.write("<tr>");
         writePartAsTd(writer, bodyContent, FOOTER, uiComponent, FOOTER_CLASS_ATTR, 2);
+        writer.write("</tr>");
+        writer.write("</table>");
+    }
+
+    protected void writeUpsideDownLayout(FacesContext facesContext,
+                                         UIComponent uiComponent,
+                                         BodyContent bodyContent)
+        throws IOException
+    {
+        ResponseWriter writer = facesContext.getResponseWriter();
+        writer.write("<table");
+        String cssClass = (String)uiComponent.getAttribute(PANEL_CLASS_ATTR.getName());
+        if (cssClass != null)
+        {
+            writer.write(" class=\"" + cssClass + "\"");
+        }
+        writer.write(">");
+        writer.write("<tr>");
+        writePartAsTd(writer, bodyContent, FOOTER, uiComponent, FOOTER_CLASS_ATTR, 2);
+        writer.write("</tr>");
+        writer.write("<tr>");
+        writePartAsTd(writer, bodyContent, NAVIGATION, uiComponent, NAVIGATION_CLASS_ATTR, 1);
+        writePartAsTd(writer, bodyContent, BODY, uiComponent, BODY_CLASS_ATTR, 1);
+        writer.write("</tr>");
+        writer.write("<tr>");
+        writePartAsTd(writer, bodyContent, HEADER, uiComponent, HEADER_CLASS_ATTR, 2);
         writer.write("</tr>");
         writer.write("</table>");
     }

@@ -486,7 +486,7 @@ public class MyParseEventListener
         _currentComponent.addChild(comp);
 
         overrideProperties(facesTag, comp);
-        facesTag.release(); //TODO: Do we have to call it really?
+        facesTag.release(); //Just to be sure
 
         _currentComponent = comp;
 

@@ -23,6 +23,7 @@ import net.sourceforge.myfaces.component.UIPanel;
 import net.sourceforge.myfaces.renderkit.html.ext.SortColumnRenderer;
 
 import javax.faces.component.UIComponent;
+import javax.faces.component.UIComponentBase;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AbortProcessingException;
 import javax.faces.event.ActionEvent;
@@ -35,7 +36,8 @@ import javax.faces.event.PhaseId;
  * @version $Revision$ $Date$
  */
 public class UISortHeader
-    extends UIPanel
+//    extends UIPanel
+    extends UIComponentBase
     implements ActionListener
 {
     public static final String COLUMN_ATTR = "column";
@@ -43,10 +45,19 @@ public class UISortHeader
     public static final String ASCENDING_ATTR = "ascending";
     public static final String ASCENDING_REFERENCE_ATTR = "ascendingReference";
 
+    public String getComponentType()
+    {
+        return UIPanel.TYPE;
+    }
+
     public UISortHeader()
     {
-        super(false);
+        super();
+
         UIComponentUtils.setTransient(this, false); //Always remember current sort column
+        //TODO: We must always save at least the information if there was a value or not
+        //so that the overrideProperties works well.
+
         setValid(true); //Value is always valid (necessary for updateModel)
     }
 

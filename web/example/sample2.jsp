@@ -24,7 +24,7 @@
  */
 //-->
 
-<%@include file="inc/header.inc" %>
+<%@include file="inc/head.inc" %>
 
 <body>
 
@@ -34,11 +34,9 @@
 
 <h:use_faces>
 
-    <x:page_layout id="page" layout="<%=pageLayout%>" cssClass="pageLayout" >
-        <x:page_header id="header" cssClass="pageHeader" >
-            <h:image id="logo" url="images/logo_mini.jpg" altKey="alt_logo" altBundle="net.sourceforge.myfaces.example.example_messages" />
-        </x:page_header>
-        <%@ include file="inc/navigation.jsp"  %>
+    <x:page_layout id="page" layoutReference="pageLayout" cssClass="pageLayout" >
+        <%@include file="inc/page_header.jsp" %>
+        <%@include file="inc/navigation.jsp"  %>
 
         <x:page_body id="body" cssClass="pageBody" >
 
@@ -68,9 +66,7 @@
 
         </x:page_body>
 
-        <x:page_footer id="footer" cssClass="pageFooter" >
-            Copyright (C) 2003  <a href="http://myfaces.sourceforge.net" style="color:#FFFFFF">The MyFaces Team</a>
-        </x:page_footer>
+        <%@include file="inc/page_footer.jsp" %>
     </x:page_layout>
 
 </h:use_faces>

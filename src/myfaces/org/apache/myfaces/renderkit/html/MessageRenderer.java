@@ -49,6 +49,12 @@ public class MessageRenderer
         return TYPE;
     }
 
+    public MessageRenderer()
+    {
+        super();
+        addAttributeDescriptor(UIOutput.TYPE, KEY_ATTR);
+    }
+
     public boolean supportsComponentType(String s)
     {
         return s.equals(UIOutput.TYPE);
@@ -75,7 +81,7 @@ public class MessageRenderer
         ResponseWriter writer = facesContext.getResponseWriter();
 
         String pattern;
-        String key = (String)uiComponent.getAttribute(KEY_ATTR);
+        String key = (String)uiComponent.getAttribute(KEY_ATTR.getName());
         if (key != null)
         {
             pattern = BundleUtils.getString(facesContext,

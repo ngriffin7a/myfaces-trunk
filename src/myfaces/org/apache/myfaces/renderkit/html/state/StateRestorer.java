@@ -26,6 +26,8 @@ import net.sourceforge.myfaces.renderkit.html.jspinfo.JspBeanInfo;
 import net.sourceforge.myfaces.renderkit.html.jspinfo.JspInfo;
 import net.sourceforge.myfaces.taglib.core.ActionListenerTag;
 import net.sourceforge.myfaces.tree.TreeUtils;
+import net.sourceforge.myfaces.util.bean.BeanUtils;
+import net.sourceforge.myfaces.util.logging.LogUtil;
 
 import javax.faces.FacesException;
 import javax.faces.component.UICommand;
@@ -81,20 +83,7 @@ public class StateRestorer
             }
 
             //remap tagHash
-            UIComponent root = requestTree.getRoot();
-            Map restoredTagHash = (Map)root.getAttribute("tagHash");
-            if (restoredTagHash != null)
-            {
-                Map realTagHash = new HashMap();
-                for (Iterator tagHashIt = restoredTagHash.entrySet().iterator(); tagHashIt.hasNext();)
-                {
-                    Map.Entry tagHashEntry = (Map.Entry)tagHashIt.next();
-                    String clientId = (String)tagHashEntry.getValue();
-                    realTagHash.put(tagHashEntry.getKey(),
-                                    root.findComponent(clientId));
-                }
-                root.setAttribute("tagHash", realTagHash);
-            }
+            TagHashHack.convertClientIdsBackToComponents(requestTree);
 
             //restore model beans and values:
             restoreModelValues(facesContext, stateMap);
@@ -219,14 +208,13 @@ public class StateRestorer
                 }
 
                 Object objValue;
-                if (uiComponent.getParent() == null && attrName.equals("tagHash"))
+                if (TagHashHack.isTagHashAttribute(uiComponent, attrName))
                 {
-                    //Always deserialize tagHash
                     if (paramValue instanceof String[])
                     {
                         paramValue = StringArrayConverter.getAsString((String[])paramValue);
                     }
-                    objValue = ConverterUtils.deserialize((String)paramValue);
+                    objValue = TagHashHack.getAsObjectFromSaved((String)paramValue);
                 }
                 else
                 {
@@ -362,9 +350,10 @@ public class StateRestorer
 
     protected void checkModelInstance(FacesContext facesContext, String modelRef)
     {
+        BeanUtils.stripBracketsFromModelReference(modelRef);
         String modelId;
         int dot = modelRef.indexOf('.');
-        if (dot == -1)    //TODO: Handle also ${} style!
+        if (dot == -1)
         {
             modelId = modelRef;
         }
@@ -513,10 +502,18 @@ public class StateRestorer
                 {
                     //Listener is another component
                     listener = (FacesListener)root.findComponent(paramValue);
-                    //TODO: check null
+                    if (listener == null)
+                    {
+                        LogUtil.getLogger().severe("Could not find listener component for restored listener of type " + listener.getClass().getName());
+                        continue;
+                    }
                 }
                 UIComponent uiComponent = root.findComponent(info.clientId);
-                //TODO: check null
+                if (uiComponent == null)
+                {
+                    LogUtil.getLogger().severe("Could not find component " + info.clientId + " to add restored listener of type " + listener.getClass().getName());
+                    continue;
+                }
 
                 if (info.listenerType.equals(StateRenderer.LISTENER_TYPE_ACTION))
                 {

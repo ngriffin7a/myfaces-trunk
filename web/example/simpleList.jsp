@@ -24,7 +24,7 @@
  */
 //-->
 
-<%@include file="inc/header.inc" %>
+<%@include file="inc/head.inc" %>
 
 <body>
 
@@ -32,11 +32,9 @@
 
 <h:use_faces>
 
-    <x:page_layout id="page" layout="<%=pageLayout%>" cssClass="pageLayout" >
-        <x:page_header id="pageHeader" cssClass="pageHeader" >
-            <h:image id="logo" url="images/logo_mini.jpg" altKey="alt_logo" altBundle="net.sourceforge.myfaces.example.example_messages" />
-        </x:page_header>
-        <%@ include file="inc/navigation.jsp"  %>
+    <x:page_layout id="page" layoutReference="pageLayout" cssClass="pageLayout" >
+        <%@include file="inc/page_header.jsp" %>
+        <%@include file="inc/navigation.jsp"  %>
 
         <x:page_body id="body" cssClass="pageBody" >
 
@@ -50,7 +48,7 @@
                     rowClasses="standardTable_Row1,standardTable_Row2"
                     columnClasses="standardTable_Column,standardTable_ColumnCentered" >
                 <!-- HEADER -->
-                <h:group id="header" >
+                <h:group id="list_header" >
                     <h:output_text id="header_name" text="Country name" />
                     <h:output_text id="header_isoCode" text="Iso-Code" />
                 </h:group>
@@ -63,7 +61,7 @@
                     </h:group>
                 </h:listrow>
                 <!-- FOOTER -->
-                <h:group id="footer" >
+                <h:group id="list_footer" >
                     <h:output_text id="footer_1" text="take a look at this runtime values ..."/>
                     <h:group id="g2" >
                         <h:message id="row_count" msg="{0} rows" >
@@ -80,9 +78,7 @@
 
         </x:page_body>
 
-        <x:page_footer id="pageFooter" cssClass="pageFooter" >
-            Copyright (C) 2003  <a href="http://myfaces.sourceforge.net" style="color:#FFFFFF">The MyFaces Team</a>
-        </x:page_footer>
+        <%@include file="inc/page_footer.jsp" %>
     </x:page_layout>
 
 </h:use_faces>

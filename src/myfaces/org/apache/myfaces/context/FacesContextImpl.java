@@ -42,8 +42,6 @@ import java.util.*;
 /**
  * DOCUMENT ME!
  *
- * TODO: Handle model references of ${xxx} style
- *
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
@@ -235,6 +233,7 @@ public class FacesContextImpl
     public Class getModelType(String modelReference)
             throws FacesException
     {
+        modelReference = BeanUtils.stripBracketsFromModelReference(modelReference);
         int i = modelReference.indexOf('.');
         if (i == -1)
         {
@@ -255,6 +254,7 @@ public class FacesContextImpl
     public Object getModelValue(String modelReference)
             throws FacesException
     {
+        modelReference = BeanUtils.stripBracketsFromModelReference(modelReference);
         int i = modelReference.indexOf('.');
         if (i == -1)
         {
@@ -272,6 +272,7 @@ public class FacesContextImpl
     public void setModelValue(String modelReference, Object value)
             throws FacesException
     {
+        modelReference = BeanUtils.stripBracketsFromModelReference(modelReference);
         int i = modelReference.indexOf('.');
         if (i == -1)
         {
@@ -378,6 +379,7 @@ public class FacesContextImpl
         }
         return obj;
     }
+
 
     /**
      * @return  null, if not found

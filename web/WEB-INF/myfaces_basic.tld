@@ -536,7 +536,6 @@
     <tag>
         <name>command_button</name>
         <tagclass>net.sourceforge.myfaces.taglib.CommandButtonTag</tagclass>
-        <!-- TODO: attributes imageKey, key, bundle, rendered, modelReference -->
         <attribute>
             <name>id</name>
             <required>true</required>
