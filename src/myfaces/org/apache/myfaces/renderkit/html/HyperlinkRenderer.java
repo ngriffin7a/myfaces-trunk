@@ -113,6 +113,7 @@ public class HyperlinkRenderer
         String paramValue = ((ServletRequest)facesContext.getExternalContext().getRequest()).getParameter(paramName);
         if (paramValue != null && paramValue.equals(URL_PARAM_VALUE))
         {
+            /*
             //nested parameters
             Iterator children = uiComponent.getChildren();
             while (children.hasNext())
@@ -123,6 +124,7 @@ public class HyperlinkRenderer
                     decodeNestedParameter(facesContext, uiCommand, (UIParameter)child);
                 }
             }
+            */
 
             uiCommand.fireActionEvent(facesContext);
         }
@@ -289,14 +291,16 @@ public class HyperlinkRenderer
             writer.write(name);
             writer.write('=');
 
+            String strValue;
+
             Converter conv = ConverterUtils.findValueConverter(facesContext, uiParameter);
             if (conv != null)
             {
                 try
                 {
-                    String strValue = conv.getAsString(facesContext, uiParameter, objValue);
-                    writer.write(urlEncode(strValue));
+                    strValue = conv.getAsString(facesContext, uiParameter, objValue);
 
+                    /*
                     if (uiParameter.getAttribute(CONVERTER_ATTR) == null &&
                         uiParameter.getConverter() == null)
                     {
@@ -306,16 +310,21 @@ public class HyperlinkRenderer
                         writer.write('=');
                         writer.write(objValue.getClass().getName());
                     }
+                    */
                 }
                 catch (ConverterException e)
                 {
                     LogUtil.getLogger().severe("Could not convert hyperlink parameter " + name + " to String.");
+                    strValue = objValue.toString();
                 }
             }
             else
             {
-                writer.write(urlEncode(ConverterUtils.serializeAndEncodeBase64(objValue)));
+                //writer.write(urlEncode(ConverterUtils.serializeAndEncodeBase64(objValue)));
+                strValue = objValue.toString();
             }
+
+            writer.write(urlEncode(strValue));
         }
     }
 

@@ -133,6 +133,13 @@
         </description>
     </context-param>
 
+    <context-param>
+        <param-name>myfaces_DefaultLanguage</param-name>
+        <param-value>en</param-value>
+        <description>
+            The default language for message resources.
+        </description>
+    </context-param>
 
     <!-- WelcomeFile Filter -->
     <!--

@@ -19,11 +19,13 @@
 package net.sourceforge.myfaces.config;
 
 import net.sourceforge.myfaces.util.logging.LogUtil;
+import net.sourceforge.myfaces.MyFacesConfig;
 
 import javax.faces.FacesException;
 import javax.faces.application.Message;
 import javax.faces.application.MessageImpl;
 import javax.faces.context.FacesContext;
+import javax.servlet.ServletContext;
 import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.Map;
@@ -172,8 +174,16 @@ public class MessageConfig
         }
 
         String language = facesContext.getLocale().getLanguage();
-        String summary = getSummary(language);
-        String detail = getDetail(language);
+
+        String summary = (String)getSummaryMap().get(language);
+        String detail = (String)getDetailMap().get(language);
+        if (summary == null && detail == null)
+        {
+            String defaultLang = MyFacesConfig.getDefaultLanguage((ServletContext)facesContext.getExternalContext().getContext());
+            summary = getSummary(defaultLang);
+            detail  = getDetail(defaultLang);
+        }
+
         if (args != null)
         {
             MessageFormat mf = new MessageFormat(summary, facesContext.getLocale());
