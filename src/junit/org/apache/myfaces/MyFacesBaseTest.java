@@ -18,14 +18,6 @@
  */
 package net.sourceforge.myfaces;
 
-import junit.framework.TestCase;
-import net.sourceforge.myfaces.application.ApplicationFactoryImpl;
-import net.sourceforge.myfaces.context.ServletContextMockImpl;
-import net.sourceforge.myfaces.context.ServletRequestMockImpl;
-import net.sourceforge.myfaces.context.ServletResponseMockImpl;
-import net.sourceforge.myfaces.context.servlet.ServletFacesContextImpl;
-import net.sourceforge.myfaces.lifecycle.LifecycleImpl;
-
 import javax.faces.FactoryFinder;
 import javax.faces.application.Application;
 import javax.faces.context.FacesContext;
@@ -35,12 +27,20 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import junit.framework.TestCase;
+import net.sourceforge.myfaces.application.ApplicationFactoryImpl;
+import net.sourceforge.myfaces.context.ServletContextMockImpl;
+import net.sourceforge.myfaces.context.ServletRequestMockImpl;
+import net.sourceforge.myfaces.context.ServletResponseMockImpl;
+import net.sourceforge.myfaces.context.servlet.ServletFacesContextImpl;
+import net.sourceforge.myfaces.lifecycle.LifecycleImpl;
+
 /**
  * @author Manfred Geiler (latest modification by $Author$)
  * @author Anton Koinov
  * @version $Revision$ $Date$
  */
-public class MyFacesTest
+public class MyFacesBaseTest
     extends TestCase
 {
     protected Application _application;
@@ -51,7 +51,7 @@ public class MyFacesTest
     protected FacesContext _facesContext;
 
 
-    public MyFacesTest(String name)
+    public MyFacesBaseTest(String name)
     {
         super(name);
     }
@@ -64,8 +64,8 @@ public class MyFacesTest
             ApplicationFactoryImpl.class.getName());
         
 //        FIXME
-//        LifecycleFactory lf = (LifecycleFactory)FactoryFinder.getFactory(FactoryFinder.LIFECYCLE_FACTORY);
-//        _lifecycle = lf.getLifecycle(LifecycleFactory.DEFAULT_LIFECYCLE);
+        //LifecycleFactory lf = (LifecycleFactory)FactoryFinder.getFactory(FactoryFinder.LIFECYCLE_FACTORY);
+        //_lifecycle = lf.getLifecycle(LifecycleFactory.DEFAULT_LIFECYCLE);
         _lifecycle = new LifecycleImpl();
         
         _servletContext = new ServletContextMockImpl();

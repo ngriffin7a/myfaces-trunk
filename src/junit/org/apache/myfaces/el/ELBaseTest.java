@@ -18,7 +18,7 @@
  */
 package net.sourceforge.myfaces.el;
 
-import net.sourceforge.myfaces.MyFacesTest;
+import net.sourceforge.myfaces.MyFacesBaseTest;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -31,7 +31,7 @@ import java.util.Map;
  * @author Anton Koinov
  * @version $Revision$ $Date$
  */
-public class ELBaseTest extends MyFacesTest
+public class ELBaseTest extends MyFacesBaseTest
 {
     //~ Instance fields ----------------------------------------------------------------------------
 

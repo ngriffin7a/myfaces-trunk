@@ -9,10 +9,10 @@ import java.util.Map.Entry;
 
 import javax.servlet.http.Cookie;
 
-import net.sourceforge.myfaces.MyFacesTest;
+import net.sourceforge.myfaces.MyFacesBaseTest;
 
 
-public class CookieMapTest extends MyFacesTest
+public class CookieMapTest extends MyFacesBaseTest
 {
     public CookieMapTest(String name)
     {

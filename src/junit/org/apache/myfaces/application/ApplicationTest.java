@@ -18,7 +18,7 @@
  */
 package net.sourceforge.myfaces.application;
 
-import net.sourceforge.myfaces.MyFacesTest;
+import net.sourceforge.myfaces.MyFacesBaseTest;
 
 import javax.faces.application.Application;
 import javax.faces.el.ValueBinding;
@@ -29,7 +29,7 @@ import java.util.*;
  * @author Anton Koinov (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public class ApplicationTest extends MyFacesTest
+public class ApplicationTest extends MyFacesBaseTest
 {
     //~ Static fields/initializers -----------------------------------------------------------------
 

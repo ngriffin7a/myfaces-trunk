@@ -16,7 +16,9 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package net.sourceforge.myfaces.application;
+package net.sourceforge.myfaces.application.jsp;
+
+import javax.faces.context.FacesContext;
 
 import junit.framework.TestCase;
 import net.sourceforge.myfaces.application.jsp.JspViewHandlerImpl;
@@ -24,14 +26,11 @@ import net.sourceforge.myfaces.context.ExternalContextMockImpl;
 import net.sourceforge.myfaces.context.FacesContextMockImpl;
 import net.sourceforge.myfaces.webapp.webxml.WebXml;
 
-import javax.faces.application.ViewHandler;
-import javax.faces.context.FacesContext;
-
 /**
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public class ViewHandlerTest
+public class JspViewHandlerImplTest
     extends TestCase
 {
     private FacesContext _facesContext;
@@ -49,22 +48,29 @@ public class ViewHandlerTest
         WebXml.init(externalContext);
     }
 
-    public void testViewIdPath() throws Throwable
+    public void testViewIdPathSimple() throws Exception
     {
         testViewIdPath("/myfaces", "/test", "/abc.jsp", "/myfaces/abc.jsp");
+    }
+    public void testViewIdPathNoServletPath() throws Exception {
         testViewIdPath("", "/test.jsf", "/xyz.jsp", "/xyz.jsp");
-
+    }
+    
+    public void testViewIdPathJSFExtensionWithJSP() throws Exception {
         testViewIdPath("/extension/test.jsf", null, "/myfaces/abc.jsp", "/myfaces/abc.jsf");
+    }
+
+    public void testViewIdPathJSFExtension() throws Exception {
         testViewIdPath("/extension/test.jsf", null, "/extension/bde", "/extension/bde.jsf");
     }
 
     private void testViewIdPath(String servletPath, String pathInfo, String viewId, String viewIdexp)
     {
         ExternalContextMockImpl externalContext = (ExternalContextMockImpl)_facesContext.getExternalContext();
-        ViewHandler viewHandler = new JspViewHandlerImpl();
+        JspViewHandlerImpl viewHandler = new JspViewHandlerImpl();
         externalContext.setRequestServletPath(servletPath);
         externalContext.setRequestPathInfo(pathInfo);
-        String viewpath = null; //FIXME: viewHandler.getViewIdPath(_facesContext, viewId);
+        String viewpath = viewHandler.getViewIdPath(_facesContext, viewId);
         assertEquals(viewIdexp, viewpath);
     }
 

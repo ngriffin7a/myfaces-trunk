@@ -8,43 +8,61 @@
     <property name="junit.src" location="${project.dir}/src/junit"/>
 
     <!-- Properties -->
-    <property file="../../build.properties"/>
+    <property file="../../build/build.properties"/>
     <property file="build.properties"/>
 
     <!-- Temporary dir. May be overridden in build.properties -->
-    <property name="temp.dir" value="${env.TEMP}"/>
-
+    <property name="test.results.dir" value="test-results"/>
 
     <!-- classpath for compiling -->
     <path id="junit.class.path">
-        <pathelement location="${jsf-api.jar}"/>
         <pathelement location="${servlet.jar}"/>
+        <pathelement location="${commons-el.jar}"/>
+        <pathelement location="${jsp-api.jar}"/>
         <pathelement location="${myfaces.jar}"/>
         <pathelement location="${junit.jar}"/>
+        <pathelement location="${commons-logging.jar}"/>
+        <pathelement location="${test.results.dir}/junit/classes"/>
     </path>
 
 
     <target name="compile-for-junit">
-        <mkdir dir="${temp.dir}/myfaces-jar/classes"/>
+        <mkdir dir="${test.results.dir}/junit/classes"/>
         <javac srcdir="${project.dir}/src/junit"
-               destdir="${temp.dir}/myfaces-jar/classes"
-               optimize="${javac.optimize}"
+               destdir="${test.results.dir}/junit/classes"
+               debug="true"
                classpathref="junit.class.path">
         </javac>
+    	    <copy todir="${test.results.dir}/junit/classes">
+    	    	  <fileset dir="${project.dir}/src/junit">
+    	    	  	<include name="**/*.xml"/>
+    	    	  </fileset>
+    	    </copy>
     </target>
 
-
-
-
-
-
-    <!-- TODO... -->
-
-    <target name="junit">
-        <junit >
+    <target name="junit" depends="compile-for-junit">
+        <mkdir dir="${test.results.dir}/test-reports/xml"/>
+        <mkdir dir="${test.results.dir}/test-reports/html"/>
+        <junit fork="true">
             <classpath refid="junit.class.path"/>
+            <batchtest toDir="${test.results.dir}/test-reports/xml">
+                <fileset dir="${test.results.dir}/junit/classes">
+                    <include name="**/*Test.class"/>
+                    <exclude name="**/*BaseTest.class"/>
+                	</fileset>
+            </batchtest>
+            <formatter type="xml"/>
         </junit>
+	    <junitreport>
+	        <fileset dir="${test.results.dir}/test-reports/xml">
+		        <include name="TEST-*.xml"/>
+		    </fileset>
+		    <report toDir="${test.results.dir}/test-reports/html"/>
+	    </junitreport>
     </target>
 
+	<target name="clean" description="deletes the generated test reports and compiled tests">
+		<delete dir="${test.results.dir}"/>
+	</target>
 
 </project>

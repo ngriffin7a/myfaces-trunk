@@ -26,7 +26,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
 
-import net.sourceforge.myfaces.MyFacesTest;
+import net.sourceforge.myfaces.MyFacesBaseTest;
 
 /**
  * Test for AbstractAttributeMap core functionality through ApplicationMap.
@@ -35,11 +35,15 @@ import net.sourceforge.myfaces.MyFacesTest;
  * @version $Revision$ $Date$
  * 
  * $Log$
+ * Revision 1.4  2004/04/02 13:57:18  bdudney
+ * cleaned up the tests so they all run and added 
+execution to the build.xml file.
+ *
  * Revision 1.3  2004/03/30 05:38:50  dave0000
  * add copyright statement
  *
  */
-public class ApplicationMapTest extends MyFacesTest
+public class ApplicationMapTest extends MyFacesBaseTest
 {
     private Object _test0 = new Object();
     private Object _test1 = new Object();

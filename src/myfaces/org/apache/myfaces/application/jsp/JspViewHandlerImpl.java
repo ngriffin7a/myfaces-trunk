@@ -304,7 +304,7 @@ public class JspViewHandlerImpl
     }
 
 
-    private String getViewIdPath(FacesContext facescontext, String viewId)
+    protected String getViewIdPath(FacesContext facescontext, String viewId)
     {
         if (viewId == null)
         {
