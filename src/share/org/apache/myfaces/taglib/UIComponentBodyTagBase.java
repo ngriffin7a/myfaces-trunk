@@ -31,6 +31,9 @@ import java.io.Reader;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.14  2005/01/30 15:24:10  matzew
+ * thanks to sean schofield for removing *legacy* attributes of MyFaces
+ *
  * Revision 1.13  2005/01/28 17:19:09  matzew
  * Patch for MYFACES-91 form Sean Schofield
  *
@@ -124,7 +127,6 @@ public abstract class UIComponentBodyTagBase
     //-------- rest is identical to UIComponentTagBase ------------------
 
     //UIComponent attributes
-    private String _transient;
     private String _forceId;
     private String _forceIdIndex = "true";
 
@@ -137,7 +139,6 @@ public abstract class UIComponentBodyTagBase
     {
         super.setProperties(component);
 
-        setBooleanProperty(component, JSFAttr.TRANSIENT_ATTR, _transient);
         setBooleanProperty(component, JSFAttr.FORCE_ID_ATTR, _forceId);
         setBooleanProperty(component, JSFAttr.FORCE_ID_INDEX_ATTR, _forceIdIndex);
 
@@ -147,18 +148,6 @@ public abstract class UIComponentBodyTagBase
         setConverterProperty(component, _converter);
     }
 
-    /**
-     * Sets the transient attribute of the tag.  NOTE: Not every tag that extends this class will 
-     * actually make use of this attribute.  Check the TLD to see which components actually 
-     * implement it.
-     * 
-     * @param aTransient The value of the transient attribute.
-     */
-    public void setTransient(String aTransient)
-    {
-        _transient = aTransient;
-    }
-    
     /**
      * Sets the forceId attribute of the tag.  NOTE: Not every tag that extends this class will 
      * actually make use of this attribute.  Check the TLD to see which components actually 

@@ -24,6 +24,9 @@ import javax.faces.webapp.UIComponentTag;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.11  2005/01/30 15:24:10  matzew
+ * thanks to sean schofield for removing *legacy* attributes of MyFaces
+ *
  * Revision 1.10  2005/01/28 17:19:09  matzew
  * Patch for MYFACES-91 form Sean Schofield
  *
@@ -58,7 +61,6 @@ public abstract class UIComponentTagBase
     //private static final Log log = LogFactory.getLog(UIComponentTagBase.class);
 
     //UIComponent attributes
-    private String _transient;
     private String _forceId;
     private String _forceIdIndex = "true";
     
@@ -71,7 +73,6 @@ public abstract class UIComponentTagBase
     {
         super.setProperties(component);
 
-        setBooleanProperty(component, JSFAttr.TRANSIENT_ATTR, _transient);
         setBooleanProperty(component, JSFAttr.FORCE_ID_ATTR, _forceId);
         setBooleanProperty(component, JSFAttr.FORCE_ID_INDEX_ATTR, _forceIdIndex);
 
@@ -79,18 +80,6 @@ public abstract class UIComponentTagBase
 
         setValueProperty(component, _value);
         setConverterProperty(component, _converter);
-    }
-
-    /**
-     * Sets the transient attribute of the tag.  NOTE: Not every tag that extends this class will 
-     * actually make use of this attribute.  Check the TLD to see which components actually 
-     * implement it.
-     * 
-     * @param aTransient The value of the transient attribute.
-     */
-    public void setTransient(String aTransient)
-    {
-        _transient = aTransient;
     }
 
     /**

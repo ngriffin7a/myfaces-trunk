@@ -31,7 +31,6 @@ public class JSFAttr
     public static final String   BINDING_ATTR                   = "binding";
     public static final String   STYLE_CLASS_ATTR               = "styleClass";
     public static final String   ESCAPE_ATTR                    = "escape";
-    public static final String   TRANSIENT_ATTR                 = "transient";
     public static final String   FORCE_ID_ATTR                  = "forceId";
     public static final String   FORCE_ID_INDEX_ATTR            = "forceIdIndex";
     

@@ -20,14 +20,3 @@
             <type>java.lang.String</type>
             <description>Component binding.</description>
         </attribute>
-
-<!-- UIComponentBase attributes -->
-        <!-- todo: transient is no attribute in RI... addition by myfaces?
-             if yes, please document -->
-        <attribute>
-            <name>transient</name>
-            <required>false</required>
-            <rtexprvalue>false</rtexprvalue>
-            <type>java.lang.String</type>
-            <description>If true, this component will not be saved during state saving.</description>
-        </attribute>

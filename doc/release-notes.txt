@@ -7,6 +7,7 @@ Changes in Release 1.0.9
 * new CollapsiblePanel Component
 * added forceId to <x:inputText for better reuse of legacy JavaScript
 * added russian i18n.
+* closed MYFACES-85 in Jira
 * closed MYFACES-96 in Jira (Jason Hoo)
 * closed MYFACES-91 in Jira 
 * closed MYFACES-79 in Jira 
