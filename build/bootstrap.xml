@@ -8,8 +8,12 @@ through the system path.
 -->
 <project name="Bootstrap Build Script" default="nightly" basedir=".">
 
+    <taskdef name="scp" classname="org.apache.tools.ant.taskdefs.optional.ssh.Scp"/>
+    <taskdef name="sshexec" classname="org.apache.tools.ant.taskdefs.optional.ssh.SSHExec"/>
+
     <!-- use properties file to determine cvs configuration info -->
     <property file="bootstrap.properties"/>
+    <property file="bootstrap.properties.local"/>
     <property name="checkout.dir" value="${project.name}"/>
     <property name="build.dir" value="${basedir}/${project.name}/build"/>
     <property name="temp.dir" value="${build.dir}/temp"/>
@@ -126,6 +130,12 @@ through the system path.
 
         <!-- execute the nightly build file that was just checked out -->
         <ant dir="${build.dir}" target="release" inheritRefs="true"/>
+
+        <!-- publish the nightly build file -->
+        <scp todir="${apache.username}:${apache.password}@cvs.apache.org:/www/cvs.apache.org/builds/myfaces/nightly" trust="yes">
+            <fileset dir="${release.dir}"/>
+        </scp>
+
     </target>
 
     <target name="release" depends="cvs-checkout,cvs-update">
@@ -143,8 +153,3 @@ through the system path.
     </target>
 
 </project>
-
-
-
-
-
