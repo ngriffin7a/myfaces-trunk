@@ -35,6 +35,9 @@ import java.io.IOException;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * 
+ * Revision 1.4 Sylvain Vieujot
+ * Don't change the file bean if no file is uploaded. 
+ * 
  * Revision 1.3 Sylvain Vieujot
  * Fix a null pointer exception in encodeEnd if the file name is null.
  * 
@@ -98,12 +101,18 @@ public class HtmlFileUploadRenderer
             FileItem fileItem = mpReq.getFileItem(paramName);
             if (fileItem != null)
             {
-            	try{
-            		UploadedFile upFile = new UploadedFile( fileItem );
-            		((HtmlInputFileUpload)uiComponent).setValue(upFile);
-            		((HtmlInputFileUpload)uiComponent).setValid(true);
-            	}catch(IOException ioe){
-            		// TODO : Log, and maybe setValid(false) ??
+            	if( fileItem.getName() != null )
+            	{
+            		if( fileItem.getName().length() > 0 )
+	            	{
+		            	try{
+		            		UploadedFile upFile = new UploadedFile( fileItem );
+		            		((HtmlInputFileUpload)uiComponent).setValue(upFile);
+		            		((HtmlInputFileUpload)uiComponent).setValid(true);
+		            	}catch(IOException ioe){
+		            		// TODO : Log, and maybe setValid(false) ??
+		            	}
+	            	}
             	}
             }
         }
