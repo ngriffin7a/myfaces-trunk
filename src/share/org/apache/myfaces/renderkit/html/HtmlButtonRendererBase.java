@@ -20,10 +20,14 @@ package net.sourceforge.myfaces.renderkit.html;
 
 import net.sourceforge.myfaces.renderkit.JSFAttr;
 import net.sourceforge.myfaces.renderkit.RendererUtils;
+import net.sourceforge.myfaces.renderkit.html.util.DummyFormResponseWriter;
+import net.sourceforge.myfaces.renderkit.html.util.DummyFormUtils;
+import net.sourceforge.myfaces.MyFacesConfig;
 
 import javax.faces.component.UICommand;
 import javax.faces.component.UIComponent;
 import javax.faces.component.ValueHolder;
+import javax.faces.component.UIForm;
 import javax.faces.component.html.HtmlCommandButton;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
@@ -38,6 +42,10 @@ import java.util.Map;
  * @author Anton Koinov
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.3  2004/06/03 12:57:03  o_rossmueller
+ * modified link renderer to use one hidden field for all links according to 1.1 renderkit docs
+ * added onclick=clear_XXX to button
+ *
  * Revision 1.2  2004/06/03 11:45:40  o_rossmueller
  * added check for .y image button suffix according to 1.1 renderkit docs
  *
@@ -110,19 +118,72 @@ public class HtmlButtonRendererBase
                 writer.writeAttribute(HTML.VALUE_ATTR, value, null);
             }
         }
+        if (MyFacesConfig.isAllowJavascript(facesContext.getExternalContext()))    {
+            renderClearFormOnClick(uiComponent, facesContext, writer);
+        }
 
         HtmlRendererUtils.renderHTMLAttributes(writer, uiComponent, HTML.BUTTON_PASSTHROUGH_ATTRIBUTES_WITHOUT_DISABLED);
+
         if (isDisabled(facesContext, uiComponent))
         {
             writer.writeAttribute(HTML.DISABLED_ATTR, Boolean.TRUE, null);
         }
 
-        //TODO: We should call the clear_<formName> javascript method on click,
-        //because there could be following scenario:
-        //User clicks commandLink, then browser back, then commandButton
-        //--> hidden input param from commandLink still has a value and gets submitted!
-
         writer.endElement(HTML.INPUT_ELEM);
+    }
+
+
+    private void renderClearFormOnClick(UIComponent uiComponent, FacesContext facesContext, ResponseWriter writer)
+        throws IOException
+    {
+        //Find form
+        UIComponent parent = uiComponent.getParent();
+        while (parent != null && !(parent instanceof UIForm))
+        {
+            parent = parent.getParent();
+        }
+
+        UIForm nestingForm = null;
+        String formName;
+        DummyFormResponseWriter dummyFormResponseWriter;
+        if (parent != null)
+        {
+            //link is nested inside a form
+            nestingForm = (UIForm)parent;
+            formName = nestingForm.getClientId(facesContext);
+            dummyFormResponseWriter = null;
+        }
+        else
+        {
+            //not nested in form, we must add a dummy form at the end of the document
+            formName = DummyFormUtils.DUMMY_FORM_NAME;
+            dummyFormResponseWriter = DummyFormUtils.getDummyFormResponseWriter(facesContext);
+            dummyFormResponseWriter.setWriteDummyForm(true);
+        }
+        StringBuffer onClick = new StringBuffer();
+        String commandOnClick = (String)uiComponent.getAttributes().get(HTML.ONCLICK_ATTR);
+
+        if (commandOnClick != null)
+        {
+            onClick.append(commandOnClick);
+            onClick.append(';');
+        }
+
+        //call the clear_<formName> method
+        onClick.append(HtmlRendererUtils.getClearHiddenCommandFormParamsFunctionName(formName)).append("();");
+
+        //add hidden field for the case there is no commandLink in the form
+        String hiddenFieldName = HtmlRendererUtils.getHiddenCommandLinkFieldName(formName);
+        if (nestingForm != null)
+        {
+            HtmlFormRendererBase.addHiddenCommandParameter(nestingForm, hiddenFieldName);
+        }
+        else
+        {
+            dummyFormResponseWriter.addDummyFormParameter(hiddenFieldName);
+        }
+
+        writer.writeAttribute(HTML.ONCLICK_ATTR, onClick.toString(), null);
     }
 
 

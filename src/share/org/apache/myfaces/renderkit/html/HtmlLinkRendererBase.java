@@ -38,6 +38,10 @@ import java.util.Iterator;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.11  2004/06/03 12:57:03  o_rossmueller
+ * modified link renderer to use one hidden field for all links according to 1.1 renderkit docs
+ * added onclick=clear_XXX to button
+ *
  * Revision 1.10  2004/05/18 14:31:39  manolito
  * user role support completely moved to components source tree
  *
@@ -75,6 +79,7 @@ public abstract class HtmlLinkRendererBase
 
     public static final String URL_STATE_MARKER      = "JSF_URL_STATE_MARKER=DUMMY";
     public static final int    URL_STATE_MARKER_LEN  = URL_STATE_MARKER.length();
+
     //private static final Log log = LogFactory.getLog(HtmlLinkRenderer.class);
 
     public boolean getRendersChildren()
@@ -91,7 +96,7 @@ public abstract class HtmlLinkRendererBase
         if (component instanceof UICommand)
         {
             String clientId = component.getClientId(facesContext);
-            String reqValue = (String)facesContext.getExternalContext().getRequestParameterMap().get(clientId);
+            String reqValue = (String)facesContext.getExternalContext().getRequestParameterMap().get(HtmlRendererUtils.getHiddenCommandLinkFieldName(HtmlRendererUtils.getFormName(component, facesContext)));
             if (reqValue != null && reqValue.equals(clientId))
             {
                 component.queueEvent(new ActionEvent(component));
@@ -106,6 +111,7 @@ public abstract class HtmlLinkRendererBase
             throw new IllegalArgumentException("Unsupported component class " + component.getClass().getName());
         }
     }
+
 
     public void encodeBegin(FacesContext facesContext, UIComponent component) throws IOException
     {
@@ -252,17 +258,17 @@ public abstract class HtmlLinkRendererBase
         String jsForm = "document.forms['" + formName + "']";
 
         //add id parameter for decode
+        String hiddenFieldName = HtmlRendererUtils.getHiddenCommandLinkFieldName(formName);
         onClick.append(jsForm);
-        onClick.append(".elements['").append(clientId).append("']");
+        onClick.append(".elements['").append(hiddenFieldName).append("']");
         onClick.append(".value='").append(clientId).append("';");
         if (nestingForm != null)
         {
-            //renderHiddenParam(writer, clientId);
-            HtmlFormRendererBase.addHiddenCommandParameter(nestingForm, clientId);
+            HtmlFormRendererBase.addHiddenCommandParameter(nestingForm, hiddenFieldName);
         }
         else
         {
-            dummyFormResponseWriter.addDummyFormParameter(clientId);
+            dummyFormResponseWriter.addDummyFormParameter(hiddenFieldName);
         }
 
         //add child parameters
@@ -436,5 +442,6 @@ public abstract class HtmlLinkRendererBase
         ResponseWriter writer = facesContext.getResponseWriter();
         writer.endElement(HTML.ANCHOR_ELEM);
     }
+
 
 }

@@ -21,15 +21,13 @@ package net.sourceforge.myfaces.renderkit.html;
 import net.sourceforge.myfaces.MyFacesConfig;
 import net.sourceforge.myfaces.renderkit.RendererUtils;
 import net.sourceforge.myfaces.renderkit.html.util.JavascriptUtils;
+import net.sourceforge.myfaces.renderkit.html.util.DummyFormUtils;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import javax.faces.FacesException;
-import javax.faces.component.EditableValueHolder;
-import javax.faces.component.UIComponent;
-import javax.faces.component.UISelectMany;
-import javax.faces.component.UISelectOne;
+import javax.faces.component.*;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 import javax.faces.convert.Converter;
@@ -42,6 +40,10 @@ import java.util.*;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.11  2004/06/03 12:57:03  o_rossmueller
+ * modified link renderer to use one hidden field for all links according to 1.1 renderkit docs
+ * added onclick=clear_XXX to button
+ *
  * Revision 1.10  2004/05/29 10:19:54  mwessendorf
  * made the class FINAL, because has only one private const
  *
@@ -83,6 +85,8 @@ public final class HtmlRendererUtils
     //private static final String[] EMPTY_STRING_ARRAY = new String[0];
     private static final String LINE_SEPARATOR = System.getProperty("line.separator", "\r\n");
     private static final String[] EMPTY_STRING_ARRAY = new String[0];
+    private static final String HIDDEN_COMMANDLINK_FIELD_NAME = "_link_hidden_";
+
 
     private HtmlRendererUtils() {} //no instance allowed
 
@@ -738,6 +742,33 @@ public final class HtmlRendererUtils
     public static String getClearHiddenCommandFormParamsFunctionName(String formName)
     {
         return "clear_" + JavascriptUtils.getValidJavascriptName(formName, false);
+    }
+
+
+    public static String getFormName(UIComponent component, FacesContext context) {
+        //Find form
+        UIComponent parent = component.getParent();
+        while (parent != null && !(parent instanceof UIForm))
+        {
+            parent = parent.getParent();
+        }
+
+        if (parent != null)
+        {
+            //link is nested inside a form
+            return ((UIForm)parent).getClientId(context);
+        }
+        else
+        {
+            //not nested in form, we must add a dummy form at the end of the document
+            return DummyFormUtils.DUMMY_FORM_NAME;
+        }
+    }
+
+
+    public static String getHiddenCommandLinkFieldName(String formName)
+    {
+        return formName + NamingContainer.SEPARATOR_CHAR + HIDDEN_COMMANDLINK_FIELD_NAME;
     }
 
 }

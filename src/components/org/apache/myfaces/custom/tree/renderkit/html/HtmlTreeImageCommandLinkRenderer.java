@@ -38,6 +38,10 @@ import java.util.Map;
  * @author <a href="mailto:oliver@rossmueller.com">Oliver Rossmueller</a>
  * @version $Revision$ $Date$
  *          $Log$
+ *          Revision 1.3  2004/06/03 12:57:03  o_rossmueller
+ *          modified link renderer to use one hidden field for all links according to 1.1 renderkit docs
+ *          added onclick=clear_XXX to button
+ *
  *          Revision 1.2  2004/05/27 15:06:39  manolito
  *          bugfix: node labels not rendered any more
  *
@@ -55,11 +59,9 @@ public class HtmlTreeImageCommandLinkRenderer
     public void decode(FacesContext facesContext, UIComponent component)
     {
         super.decode(facesContext, component);
-
-        Map requestParameterMap = facesContext.getExternalContext().getRequestParameterMap();
-        String id = (String)requestParameterMap.get(component.getClientId(facesContext));
-
-        if (id != null && id.length() > 0)
+        String clientId = component.getClientId(facesContext);
+        String reqValue = (String)facesContext.getExternalContext().getRequestParameterMap().get(HtmlRendererUtils.getHiddenCommandLinkFieldName(HtmlRendererUtils.getFormName(component, facesContext)));
+        if (reqValue != null && reqValue.equals(clientId))
         {
             HtmlTreeNode node = (HtmlTreeNode)component.getParent();
 

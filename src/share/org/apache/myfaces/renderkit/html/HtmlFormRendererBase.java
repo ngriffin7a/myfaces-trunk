@@ -37,6 +37,10 @@ import java.util.Set;
  * @author Anton Koinov
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.6  2004/06/03 12:57:03  o_rossmueller
+ * modified link renderer to use one hidden field for all links according to 1.1 renderkit docs
+ * added onclick=clear_XXX to button
+ *
  * Revision 1.5  2004/05/18 12:02:29  manolito
  * getActionURL and getResourceURL must not call encodeActionURL or encodeResourceURL
  *
