@@ -1,12 +1,12 @@
 /*
  * Copyright 2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -37,10 +37,13 @@ import org.apache.myfaces.renderkit.html.HTML;
  * This is a utility class to render link to resources used by custom components.
  * Mostly used to avoid having to include <script src="..."></script>
  * in the head of the pages before using a component.
- *  
+ *
  * @author Sylvain Vieujot (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.20  2005/02/22 08:41:50  matzew
+ * Patch for the new tree component form Sean Schofield
+ *
  * Revision 1.19  2005/02/16 00:50:37  oros
  * SF issue #1043331: replaced all &nbsp; by the corresponding numeric entity &#160; so safari users will be happy, too, with MyFaces output
  *
@@ -104,17 +107,17 @@ import org.apache.myfaces.renderkit.html.HTML;
  * Tested only with javascript resources right now, but should work fine with images too.
  * Some work to do to include css resources.
  * The popup component has been converted to use this new Filter.
- * 
+ *
  */
 public class AddResource {
     private static final Log log = LogFactory.getLog(AddResource.class);
-    
+
     private static final String COMPONENTS_PACKAGE = "org.apache.myfaces.custom.";
-    
-    private static final String RESOURCE_VIRUAL_PATH = "/faces/myFacesExtensionResource";
-    
+
+    private static final String RESOURCE_VIRTUAL_PATH = "/faces/myFacesExtensionResource";
+
     private static final String ADDITIONAL_HEADER_INFO_REQUEST_ATTRUBITE_NAME = "myFacesHeaderResource2Render";
-    
+
     // Methodes to Add resources
 
     /**
@@ -122,7 +125,7 @@ public class AddResource {
      */
     public static void addJavaScriptHere(Class componentClass, String resourceFileName, FacesContext context) throws IOException{
         ResponseWriter writer = context.getResponseWriter();
-        
+
         writer.startElement(HTML.SCRIPT_ELEM,null);
         writer.writeAttribute(HTML.SCRIPT_TYPE_ATTR,HTML.SCRIPT_TYPE_TEXT_JAVASCRIPT,null);
         writer.writeURIAttribute(HTML.SRC_ATTR,
@@ -133,15 +136,15 @@ public class AddResource {
 
     /**
      * Adds the given Javascript resource to the document Header.
-     * If the script is already has already been referenced, it's added only once. 
+     * If the script is already has already been referenced, it's added only once.
      */
     public static void addJavaScriptToHeader(Class componentClass, String resourceFileName, FacesContext context){
         addJavaScriptToHeader(componentClass, resourceFileName, false, context);
     }
-    
+
     /**
      * Adds the given Javascript resource to the document Header.
-     * If the script is already has already been referenced, it's added only once. 
+     * If the script is already has already been referenced, it's added only once.
      */
     public static void addJavaScriptToHeader(Class componentClass, String resourceFileName, boolean defer, FacesContext context){
         AdditionalHeaderInfoToRender jsInfo =
@@ -158,7 +161,7 @@ public class AddResource {
             new AdditionalHeaderInfoToRender(AdditionalHeaderInfoToRender.TYPE_CSS, componentClass, resourceFileName);
         addAdditionalHeaderInfoToRender(context, cssInfo );
     }
-    
+
     /**
      * Adds the given Style Sheet to the document Header.
      * If the style sheet is already has already been referenced, it's added only once.
@@ -168,7 +171,7 @@ public class AddResource {
             new AdditionalHeaderInfoToRender(AdditionalHeaderInfoToRender.TYPE_CSS_INLINE, inlineStyle);
         addAdditionalHeaderInfoToRender(context, cssInfo );
     }
-    
+
     /**
      * Get the Path used to retrieve an internal resource for a custom component.
      * Example : You can use this to initialize javascript scripts so that they know the path of some other resources
@@ -177,31 +180,31 @@ public class AddResource {
      * 	AddResource.addJavaScriptOncePerPage(HtmlCalendarRenderer.class, "popcalendar.js", facesContext,
      * 		"jscalendarSetImageDirectory("+AddResource.getResourceMappedPath(HtmlCalendarRenderer.class, "DB", facesContext)+")");
      * </code>
-     * 
+     *
      * Note : set context to null if you want the path after the application context path.
      */
     public static String getResourceMappedPath(Class componentClass, String resourceFileName, FacesContext context){
         HttpServletRequest request = null;
         if( context != null )
             request = (HttpServletRequest)context.getExternalContext().getRequest();
-        
+
         return getResourceMappedPath(
                 getComponentName(componentClass),
                 resourceFileName,
                 request);
     }
-    
+
     private static String getResourceMappedPath(String componentName, String resourceFileName, HttpServletRequest request){
         String contextPath = "";
         if( request != null )
             contextPath = request.getContextPath();
-        return contextPath+RESOURCE_VIRUAL_PATH+"/"+componentName+'/'+resourceFileName;
+        return contextPath+RESOURCE_VIRTUAL_PATH+"/"+componentName+'/'+resourceFileName;
     }
-    
+
     public static boolean isResourceMappedPath(HttpServletRequest request){
-        return request.getRequestURI().indexOf( RESOURCE_VIRUAL_PATH ) != -1;
+        return request.getRequestURI().indexOf( RESOURCE_VIRTUAL_PATH ) != -1;
     }
-    
+
     /**
      * Decodes the path to return the requested componentName & resourceFileName
      * String[0] == componentName
@@ -209,17 +212,17 @@ public class AddResource {
      */
     private static String[] getResourceInfoFromPath(HttpServletRequest request){
         String uri = request.getRequestURI();
-        String componentNameStartsAfter = RESOURCE_VIRUAL_PATH+'/';
+        String componentNameStartsAfter = RESOURCE_VIRTUAL_PATH+'/';
 
         int posStartComponentName = uri.indexOf( componentNameStartsAfter )+componentNameStartsAfter.length();
         int posEndComponentName = uri.indexOf("/", posStartComponentName);
         String componentName = uri.substring(posStartComponentName, posEndComponentName);
-        
+
         String resourceFileName = uri.substring(posEndComponentName+1);
-        
+
         return new String[]{componentName, resourceFileName};
     }
-        
+
     private static String getComponentName(Class componentClass){
         String name = componentClass.getName();
         if( ! name.startsWith(COMPONENTS_PACKAGE) ){
@@ -227,9 +230,9 @@ public class AddResource {
                     "For security reasons, only components member of the "+COMPONENTS_PACKAGE+" are allowed to add ressources.");
             return null;
         }
-        
+
         name = name.substring( COMPONENTS_PACKAGE.length() );
-        
+
         /*
         int posFirstDot = name.indexOf('.');
         if( posFirstDot > 0 )
@@ -237,11 +240,11 @@ public class AddResource {
             */
         return name;
     }
-    
+
     static Class getComponent(String componentName) throws ClassNotFoundException{
         return Class.forName( COMPONENTS_PACKAGE+componentName );
     }
-    
+
     static private InputStream getResource(String componentName, String resourceFileName) {
         Class component;
         try {
@@ -255,16 +258,16 @@ public class AddResource {
 
         return component.getResourceAsStream( "resource/"+resourceFileName );
     }
-    
+
     static public void serveResource(HttpServletRequest request, ServletResponse response) throws IOException{
         String[] resourceInfo = getResourceInfoFromPath(request);
         String componentName = resourceInfo[0];
         String resourceFileName = resourceInfo[1];
-        
+
         log.debug("Serving resource "+resourceFileName+" for component "+componentName);
-        
+
         String lcResourceFileName = resourceFileName.toLowerCase();
-        
+
         if( lcResourceFileName.endsWith(".js") )
             response.setContentType("text/javascript");
         else if( lcResourceFileName.endsWith(".css") )
@@ -277,7 +280,7 @@ public class AddResource {
             response.setContentType("image/jpeg");
         else if( lcResourceFileName.endsWith(".xml")  || lcResourceFileName.endsWith(".xsl") )
             response.setContentType("text/xml"); // XSL has to be served as XML.
-        
+
         InputStream is = getResource(componentName, resourceFileName);
         if( is == null ){
             throw new IOException("Unable to find resource "+resourceFileName+" for component "+componentName+
@@ -291,19 +294,19 @@ public class AddResource {
 
         os.close();
     }
-    
+
     // Header stuffs
-    
+
     private static Set getAdditionalHeaderInfoToRender(HttpServletRequest request){
         Set set = (Set) request.getAttribute(ADDITIONAL_HEADER_INFO_REQUEST_ATTRUBITE_NAME);
         if( set == null ){
             set = new LinkedHashSet();
             request.setAttribute(ADDITIONAL_HEADER_INFO_REQUEST_ATTRUBITE_NAME, set);
         }
-        
+
         return set;
     }
-    
+
     private static void addAdditionalHeaderInfoToRender(FacesContext context, AdditionalHeaderInfoToRender info){
         HttpServletRequest request = (HttpServletRequest) context.getExternalContext().getRequest();
         Set set = getAdditionalHeaderInfoToRender( request );
@@ -313,33 +316,33 @@ public class AddResource {
     static public boolean hasAdditionalHeaderInfoToRender(HttpServletRequest request){
         return request.getAttribute(ADDITIONAL_HEADER_INFO_REQUEST_ATTRUBITE_NAME) != null;
     }
-    
+
     static public void writeWithFullHeader(HttpServletRequest request,
             ExtensionsResponseWrapper responseWrapper,
             HttpServletResponse response) throws IOException{
-        
+
         String originalResponse = responseWrapper.toString();
 
         // try the most common cases first
         boolean addHeaderTags = false;
         int insertPosition = originalResponse.indexOf( "</head>" );
-        
+
         if( insertPosition < 0 ){
 			insertPosition = originalResponse.indexOf( "</HEAD>" );
-			
+
 	        if( insertPosition < 0 ){
 	            insertPosition = originalResponse.indexOf( "<body" );
 	            addHeaderTags = true;
-	        
+
 		        if( insertPosition < 0 ){
 		        	insertPosition = originalResponse.indexOf( "<BODY" );
 		            addHeaderTags = true;
-		
+
 			        if( insertPosition < 0 ){
 			 	       // the two most common cases head/HEAD and body/BODY did not work, so we try it with lowercase
 			           String lowerCase = originalResponse.toLowerCase(response.getLocale());
 			           insertPosition = lowerCase.indexOf( "</head>" );
-			
+
 			           if( insertPosition < 0 ){
 			    	       insertPosition = lowerCase.indexOf( "<body" );
 			               addHeaderTags = true;
@@ -347,36 +350,36 @@ public class AddResource {
 			        }
 		        }
 	        }
-	
+
 	        if( insertPosition < 0 ){
 	            log.warn("Response has no <head> or <body> tag:\n"+originalResponse);
 	            insertPosition = 0;
 	        }
         }
-                        
+
         PrintWriter writer = response.getWriter();
-        
+
         if( insertPosition > 0 )
             writer.write( originalResponse.substring(0, insertPosition) );
         if( addHeaderTags )
             writer.write("<head>");
-        
+
         for(Iterator i = getAdditionalHeaderInfoToRender(request).iterator(); i.hasNext() ;){
             AdditionalHeaderInfoToRender headerInfo = (AdditionalHeaderInfoToRender) i.next();
             writer.write( headerInfo.getString(request) );
         }
-        
+
         if( addHeaderTags )
             writer.write("</head>");
-        
+
         writer.write( originalResponse.substring(insertPosition) );
     }
-    
+
     private static class AdditionalHeaderInfoToRender{
         static final int TYPE_JS = 0;
         static final int TYPE_CSS = 1;
         static final int TYPE_CSS_INLINE = 2;
-        
+
         public int type;
         public boolean deferJS = false;
         public String componentName;
@@ -388,7 +391,7 @@ public class AddResource {
             this.componentName = getComponentName(componentClass);
             this.resourceFileName = resourceFileName;
         }
-        
+
         public AdditionalHeaderInfoToRender(int infoType, Class componentClass, String resourceFileName, boolean defer) {
             if( defer && infoType != TYPE_JS )
                 log.error("Defer can only be used for scripts.");
@@ -397,14 +400,14 @@ public class AddResource {
             this.resourceFileName = resourceFileName;
             this.deferJS = defer;
         }
-        
+
         public AdditionalHeaderInfoToRender(int infoType, String inlineText) {
             if( infoType != TYPE_CSS_INLINE )
                 log.error("This constructor only supports TYPE_CSS_INLINE");
             this.type = infoType;
             this.inlineText = inlineText;
         }
-        
+
         public int hashCode() {
             return (componentName+((char)7)
                     +resourceFileName+((char)7)
@@ -412,33 +415,33 @@ public class AddResource {
                     +(inlineText+""+((char)7))
                     +(deferJS+"")).hashCode();
         }
-        
+
         public boolean equals(Object obj) {
             if( !(obj instanceof AdditionalHeaderInfoToRender) )
                 return false;
             AdditionalHeaderInfoToRender toCompare = (AdditionalHeaderInfoToRender) obj;
-            
+
             if( type != toCompare.type || deferJS != toCompare.deferJS )
                 return false;
-            
+
             if( componentName == null ){
                 if( toCompare.componentName != null )
                     return false;
             }else if( ! componentName.equals(toCompare.componentName) )
                 return false;
-            		
+
             if( resourceFileName == null ){
                 if( toCompare.resourceFileName != null )
                     return false;
             }else if( ! resourceFileName.equals(toCompare.resourceFileName) )
                 return false;
-            
+
             if( inlineText == null )
                 return toCompare.inlineText == null;
-                
+
             return inlineText.equals(toCompare.inlineText);
         }
-        
+
         public String getString(HttpServletRequest request){
             switch (type) {
            case TYPE_JS:

@@ -284,6 +284,11 @@ public class HtmlTreeRenderer extends Renderer
                     throw new IllegalArgumentException("Invalid bit mask of " + bitMask);
             }
 
+            // adjust navSrc and altSrc so that the images can be retrieved using the extensions filter
+            String navSrcUrl = AddResource.getResourceMappedPath(HtmlTreeRenderer.class, navSrc, null);
+            navSrc = AddResource.getResourceMappedPath(HtmlTreeRenderer.class, navSrc, context);
+            altSrc = AddResource.getResourceMappedPath(HtmlTreeRenderer.class, altSrc, context);
+
             // render nav cell
             out.startElement(HTML.TD_ELEM, tree);
             out.writeAttribute(HTML.WIDTH_ATTR, "19", null);
@@ -299,10 +304,8 @@ public class HtmlTreeRenderer extends Renderer
 
             // add the appropriate image for the nav control
             UIGraphic image = new UIGraphic();
-            image.setUrl(navSrc);
-            //image.setUrl(AddResource.getResourceMappedPath(HtmlTreeRenderer.class,navSrc, context));
+            image.setUrl(navSrcUrl);
             Map imageAttrs = image.getAttributes();
-            //imageAttrs.put(HTML.SRC_ATTR, AddResource.getResourceMappedPath(HtmlTreeRenderer.class, navSrc, context));
             imageAttrs.put(HTML.WIDTH_ATTR, "19");
             imageAttrs.put(HTML.HEIGHT_ATTR, "18");
             imageAttrs.put(HTML.BORDER_ATTR, "0");
