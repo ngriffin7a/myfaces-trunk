@@ -20,10 +20,7 @@ package javax.faces.component;
 
 import javax.faces.FacesException;
 import javax.faces.context.FacesContext;
-import java.beans.BeanInfo;
-import java.beans.IntrospectionException;
-import java.beans.Introspector;
-import java.beans.PropertyDescriptor;
+import java.beans.*;
 import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.util.*;
@@ -185,8 +182,11 @@ class _ComponentAttributesMap
             for (int i = 0; i < propertyDescriptors.length; i++)
             {
                 PropertyDescriptor propertyDescriptor = propertyDescriptors[i];
-                _propertyDescriptorMap.put(propertyDescriptor.getName(),
-                                           propertyDescriptor);
+                if (!(propertyDescriptor instanceof IndexedPropertyDescriptor))
+                {
+                    _propertyDescriptorMap.put(propertyDescriptor.getName(),
+                                               propertyDescriptor);
+                }
             }
         }
         return (PropertyDescriptor)_propertyDescriptorMap.get(key);

@@ -28,10 +28,7 @@ import javax.faces.el.MethodBinding;
 import javax.faces.el.ValueBinding;
 import javax.faces.event.FacesListener;
 import javax.faces.validator.Validator;
-import java.beans.BeanInfo;
-import java.beans.IntrospectionException;
-import java.beans.Introspector;
-import java.beans.PropertyDescriptor;
+import java.beans.*;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
@@ -207,26 +204,29 @@ public class DebugUtils
         PropertyDescriptor propDescriptors[] = beanInfo.getPropertyDescriptors();
         for (int i = 0; i < propDescriptors.length; i++)
         {
-            String name = propDescriptors[i].getName();
-            if (!"id".equals(name))
+            if (!(propDescriptors[i] instanceof IndexedPropertyDescriptor))
             {
-                ValueBinding vb = comp.getValueBinding(name);
-                if (vb != null)
+                String name = propDescriptors[i].getName();
+                if (!"id".equals(name))
                 {
-                    printAttribute(stream, name, vb.getExpressionString());
-                }
-                else
-                {
-                    if (name.equals("value") && comp instanceof ValueHolder)
+                    ValueBinding vb = comp.getValueBinding(name);
+                    if (vb != null)
                     {
-                        //-> localValue
+                        printAttribute(stream, name, vb.getExpressionString());
                     }
                     else
                     {
-                        Object value = comp.getAttributes().get(name);
-                        if (value != null)
+                        if (name.equals("value") && comp instanceof ValueHolder)
                         {
-                            printAttribute(stream, name, value);
+                            //-> localValue
+                        }
+                        else
+                        {
+                            Object value = comp.getAttributes().get(name);
+                            if (value != null)
+                            {
+                                printAttribute(stream, name, value);
+                            }
                         }
                     }
                 }

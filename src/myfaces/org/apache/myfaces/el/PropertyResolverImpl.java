@@ -438,6 +438,7 @@ public class PropertyResolverImpl extends PropertyResolver
         // binary search
         for (int l = 0, h = propDescriptors.length - 1, i = h >> 1; l <= h; i = (l + h) >> 1)
         {
+            //TODO: Exclude IndexedPropertyDescriptor ?
             int compare = propDescriptors[i].getName().compareTo(propertyName);
             if (compare > 0)
             {
