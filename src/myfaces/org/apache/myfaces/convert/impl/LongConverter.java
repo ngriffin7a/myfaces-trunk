@@ -69,7 +69,17 @@ public class LongConverter
         }
         Locale locale = context.getViewRoot().getLocale();
         NumberFormat format = ConverterUtils.getNumberFormat(component, locale);
-        return format.format(value);
+        try
+        {
+            return format.format(value);
+        }
+        catch(IllegalArgumentException ex)
+        {
+            IllegalStateException ex2 = new IllegalStateException("value : "+value.toString()+" could not be formatted.");
+            ex2.initCause(ex);
+
+            throw ex2;
+        }
     }
 
 }
