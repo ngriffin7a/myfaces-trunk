@@ -15,27 +15,32 @@
  */
 package net.sourceforge.myfaces.application;
 
-import java.io.IOException;
-import java.util.*;
+import net.sourceforge.myfaces.config.RuntimeConfig;
+import net.sourceforge.myfaces.config.element.NavigationCase;
+import net.sourceforge.myfaces.config.element.NavigationRule;
+import net.sourceforge.myfaces.util.HashMapUtils;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import javax.faces.FacesException;
 import javax.faces.application.NavigationHandler;
 import javax.faces.application.ViewHandler;
 import javax.faces.component.UIViewRoot;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
-
-import net.sourceforge.myfaces.config.RuntimeConfig;
-import net.sourceforge.myfaces.config.element.NavigationCase;
-import net.sourceforge.myfaces.config.element.NavigationRule;
-import net.sourceforge.myfaces.util.HashMapUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
+import java.util.*;
 
 /**
  * @author Thomas Spiegl (latest modification by $Author$)
  * @author Anton Koinov
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.31  2004/08/26 08:00:58  manolito
+ * add current queryString to url on redirect
+ *
  * Revision 1.30  2004/07/07 08:34:57  mwessendorf
  * removed unused import-statements
  *
@@ -141,6 +146,19 @@ public class NavigationHandlerImpl
                 ExternalContext externalContext = facesContext.getExternalContext();
                 ViewHandler viewHandler = facesContext.getApplication().getViewHandler();
                 String redirectPath = viewHandler.getActionURL(facesContext, navigationCase.getToViewId());
+                Object req = externalContext.getRequest();
+                if (req instanceof HttpServletRequest)
+                {
+                    String queryString = ((HttpServletRequest)req).getQueryString();
+                    if (queryString != null)
+                    {
+                        redirectPath = redirectPath + '?' + queryString;
+                    }
+                }
+                else
+                {
+                    //TODO: What about Portlet requests?
+                }
                 try
                 {
                     externalContext.redirect(externalContext.encodeActionURL(redirectPath));
