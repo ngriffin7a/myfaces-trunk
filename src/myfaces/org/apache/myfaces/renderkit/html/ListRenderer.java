@@ -183,7 +183,6 @@ public class ListRenderer
                     (parentParentRendererType != null &&
                      parentParentRendererType.equals(TYPE)))
                 {
-                    ResponseWriter writer = facesContext.getResponseWriter();
                     closeColumn(facesContext);
                     int column = getActualColumnAttr(facesContext).intValue();
                     afterCloseColumn(facesContext, column -1);
@@ -229,13 +228,11 @@ public class ListRenderer
     public void afterOpenRow(FacesContext facesContext, int row)
         throws IOException
     {
-        ResponseWriter writer = facesContext.getResponseWriter();
     }
 
     public void beforeCloseRow(FacesContext facesContext, int row)
         throws IOException
     {
-        ResponseWriter writer = facesContext.getResponseWriter();
     }
 
     public void beforeOpenColumn(FacesContext facesContext, int column)
