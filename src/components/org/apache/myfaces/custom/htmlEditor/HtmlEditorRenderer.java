@@ -35,6 +35,9 @@ import org.apache.myfaces.renderkit.html.util.JavascriptUtils;
  * @author Sylvain Vieujot (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.22  2005/02/08 14:24:45  svieujot
+ * Temporarily hide unimplemented functionalities (internal images library & internal links library).
+ *
  * Revision 1.21  2005/02/07 01:40:42  svieujot
  * style attribute fix.
  *
@@ -99,8 +102,9 @@ import org.apache.myfaces.renderkit.html.util.JavascriptUtils;
  * Add an x:htmlEditor based on the Kupu library.
  */
 public class HtmlEditorRenderer extends HtmlRenderer {
-    // TODO : Finish Disabled mode
-    // TODO : Fallback on textarea whose content it converted to HTML for non kupu capable browsers (Safari, smartphones, non javascript, ...)
+    // TODO : Finish Disabled mode.
+    // TODO : Fallback on textarea whose content it converted to HTML for non kupu capable browsers (Safari, smartphones, non javascript, ...).
+    // TODO : Make Image & Link Library work.
 
     protected boolean isDisabled(FacesContext facesContext, UIComponent uiComponent) {
         if( !UserRoleUtils.isEnabledOnUserRole(uiComponent) )
@@ -346,8 +350,8 @@ public class HtmlEditorRenderer extends HtmlRenderer {
                     if( ! editor.isAllowExternalLinks() ){
                         writer.writeAttribute(HTML.STYLE_ATTR, "display: none", null);
                     }
-                		writeButton(writer, "kupu-image", "image", null, "kupu-imagelibdrawer-button");
-                		writeButton(writer, "kupu-inthyperlink", "link", null, "kupu-linklibdrawer-button");
+                		writeButton(writer, "kupu-image", "image", null, "kupu-imagelibdrawer-button", false); // TODO : Enable
+                		writeButton(writer, "kupu-inthyperlink", "link", null, "kupu-linklibdrawer-button", false); // TODO : Enable
                 		writeButton(writer, "kupu-exthyperlink", "external link", null, "kupu-linkdrawer-button");
                 		writeButton(writer, "kupu-table", "table", null, "kupu-tabledrawer-button");
                 	writer.endElement(HTML.SPAN_ELEM);
@@ -401,8 +405,6 @@ public class HtmlEditorRenderer extends HtmlRenderer {
                  	writer.writeAttribute(HTML.CLASS_ATTR, "kupu-drawer", null);
                  	writer.endElement(HTML.DIV_ELEM);
              	writer.endElement(HTML.DIV_ELEM);
-             	
-                // TODO : Bug in kupu, Internal Link drawer is missing
                 
                 // External Link drawer
              	writer.startElement(HTML.DIV_ELEM,null);
@@ -532,6 +534,7 @@ public class HtmlEditorRenderer extends HtmlRenderer {
                                  									writer.startElement(HTML.INPUT_ELEM, null);
                                  									writer.writeAttribute(HTML.TYPE_ATTR, "text", null);
                                  									writer.writeAttribute(HTML.ID_ATTR, "kupu-tabledrawer-newrows", null);
+                                                                    writer.writeAttribute(HTML.VALUE_ATTR, "3", null);
                                  									writer.endElement(HTML.INPUT_ELEM);
                                  								writer.endElement(HTML.TD_ELEM);
                                  							writer.endElement(HTML.TR_ELEM);
@@ -545,6 +548,7 @@ public class HtmlEditorRenderer extends HtmlRenderer {
                                  									writer.startElement(HTML.INPUT_ELEM, null);
                                  									writer.writeAttribute(HTML.TYPE_ATTR, "text", null);
                                  									writer.writeAttribute(HTML.ID_ATTR, "kupu-tabledrawer-newcols", null);
+                                                                    writer.writeAttribute(HTML.VALUE_ATTR, "3", null);
                                  									writer.endElement(HTML.INPUT_ELEM);
                                  								writer.endElement(HTML.TD_ELEM);
                              								writer.endElement(HTML.TR_ELEM);
@@ -719,7 +723,7 @@ public class HtmlEditorRenderer extends HtmlRenderer {
             			writer.write("Title:");
             		writer.endElement(HTML.DIV_ELEM);
             		writer.startElement(HTML.INPUT_ELEM, null);
-                    writer.writeAttribute(HTML.CLASS_ATTR, "wide", null); // TODO : Check
+                    writer.writeAttribute(HTML.CLASS_ATTR, "wide", null); // TODO : Check class name. Should be something like kupu-wide in next version. 
             		writer.writeAttribute(HTML.ID_ATTR, "kupu-properties-title", null);
             		writer.endElement(HTML.INPUT_ELEM);
             		writer.startElement(HTML.DIV_ELEM, null);
@@ -1012,6 +1016,10 @@ public class HtmlEditorRenderer extends HtmlRenderer {
     }
     
     static private void writeButton(ResponseWriter writer, String classAttr, String title, String accessKey, String id) throws IOException{
+        writeButton(writer, classAttr, title, accessKey, id, true);
+    }
+
+    static private void writeButton(ResponseWriter writer, String classAttr, String title, String accessKey, String id, boolean display) throws IOException{
 		writer.startElement(HTML.BUTTON_ELEM,null);
 		writer.writeAttribute("xmlns:i18n", "http://xml.zope.org/namespaces/i18n", null);
 		writer.writeAttribute(HTML.TYPE_ATTR, "button", null);
@@ -1019,6 +1027,8 @@ public class HtmlEditorRenderer extends HtmlRenderer {
 		writer.writeAttribute(HTML.ID_ATTR, id, null);
 		writer.writeAttribute(HTML.TITLE_ATTR, title, null);
 		writer.writeAttribute("i18n:attributes", "title", null);
+        if( ! display )
+            writer.writeAttribute(HTML.STYLE_ATTR, "display: none", null);
 		if( accessKey != null ){
 		    writer.writeAttribute(HTML.ACCESSKEY_ATTR, accessKey, null);
 		}
