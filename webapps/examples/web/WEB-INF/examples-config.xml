@@ -149,7 +149,7 @@
     <managed-bean>
         <managed-bean-name>globalOptions</managed-bean-name>
         <managed-bean-class>org.apache.myfaces.examples.misc.GlobalOptions</managed-bean-class>
-        <managed-bean-scope>application</managed-bean-scope>
+        <managed-bean-scope>session</managed-bean-scope>
         <managed-property>
             <property-name>pageLayout</property-name>
             <value>classic</value>
