@@ -22,7 +22,7 @@
 
     <!-- classpath for compiling -->
     <path id="examples.class.path">
-        <pathelement location="${sun-jsf-api.jar}"/>
+        <!--pathelement location="${sun-jsf-api.jar}"/-->
         <pathelement location="${servlet-api.jar}"/>
         <pathelement location="${jsp-api.jar}"/>
         <pathelement location="${myfaces.jar}"/>
@@ -63,7 +63,7 @@
         <mkdir dir="${web-inf.lib.dir}"/>
         <copy todir="${web-inf.lib.dir}">
             <fileset file="${cos.jar}"/>
-            <fileset file="${sun-jsf-api.jar}"/>
+            <!--fileset file="${sun-jsf-api.jar}"/-->
             <fileset file="${myfaces.jar}"/>
             <fileset file="${commons-logging.jar}"/>
             <fileset file="${log4j.jar}"/>
@@ -130,7 +130,7 @@
         <mkdir dir="${web-inf.lib.dir}"/>
         <copy todir="${web-inf.lib.dir}">
             <fileset file="${cos.jar}"/>
-            <fileset file="${sun-jsf-api.jar}"/>
+            <!--fileset file="${sun-jsf-api.jar}"/-->
             <fileset file="${myfaces.jar}"/>
             <fileset file="${commons-logging.jar}"/>
             <fileset file="${log4j.jar}"/>

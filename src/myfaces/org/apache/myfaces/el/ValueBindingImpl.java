@@ -19,17 +19,7 @@
 package net.sourceforge.myfaces.el;
 
 import net.sourceforge.myfaces.util.BiLevelCacheMap;
-
-import org.apache.commons.el.ArraySuffix;
-import org.apache.commons.el.Coercions;
-import org.apache.commons.el.ComplexValue;
-import org.apache.commons.el.ConditionalExpression;
-import org.apache.commons.el.Expression;
-import org.apache.commons.el.ExpressionEvaluatorImpl;
-import org.apache.commons.el.Logger;
-import org.apache.commons.el.NamedValue;
-import org.apache.commons.el.PropertySuffix;
-import org.apache.commons.el.ValueSuffix;
+import org.apache.commons.el.*;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -45,7 +35,6 @@ import javax.faces.el.ValueBinding;
 import javax.servlet.jsp.el.ELException;
 import javax.servlet.jsp.el.FunctionMapper;
 import javax.servlet.jsp.el.VariableResolver;
-
 import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Map;
@@ -436,7 +425,7 @@ public class ValueBindingImpl extends ValueBinding implements StateHolder
     /**
      * Strip "#{" and "}" from a modelReference, if any
      *
-     * @param expression the model reference expression
+     * @param expressionString the model reference expression
      *
      * @return the model reference, with "#{" and "}" removed
      */

@@ -23,7 +23,6 @@
 
     <!-- classpath for compiling api classes -->
     <path id="jsfapi.class.path">
-        <!--pathelement location="${sun-jsf-api.jar}"/-->
         <pathelement location="${servlet-api.jar}"/>
         <pathelement location="${jsp-api.jar}"/>
         <pathelement location="${jstl.jar}"/>
@@ -37,6 +36,7 @@
         <pathelement location="${jsp-api.jar}"/>
         <pathelement location="${cos.jar}"/>
         <pathelement location="${commons-logging.jar}"/>
+        <pathelement location="${commons-el.jar}"/>
     </path>
 
     <target name="myfaces-jar"

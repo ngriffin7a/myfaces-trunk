@@ -13,6 +13,7 @@
     <property name="web-inf.lib.dir" location="${examples.web}/WEB-INF/lib"/>
     <property name="myfaces.doc" location="${project.dir}/doc"/>
     <property name="myfaces.src" location="${project.dir}/src/myfaces"/>
+    <property name="jsfapi.src" location="${project.dir}/src/jsfapi"/>
     <property name="tlds.dir" location="${project.dir}/tlds"/>
 
     <!-- Properties -->
@@ -25,9 +26,10 @@
 
     <!-- classpath for normal compiling -->
     <path id="project.class.path">
-        <pathelement location="${sun-jsf-api.jar}"/>
+        <!--pathelement location="${sun-jsf-api.jar}"/-->
         <pathelement location="${servlet-api.jar}"/>
         <pathelement location="${jsp-api.jar}"/>
+        <pathelement location="${jstl.jar}"/>
         <pathelement location="${cos.jar}"/>
         <pathelement location="${commons-logging.jar}"/>
         <pathelement location="${commons-el.jar}"/>
@@ -41,7 +43,7 @@
 
         <copy todir="${web-inf.lib.dir}">
             <fileset file="${cos.jar}"/>
-            <fileset file="${sun-jsf-api.jar}"/>
+            <!--fileset file="${sun-jsf-api.jar}"/-->
             <fileset file="${commons-logging.jar}"/>
             <fileset file="${log4j.jar}"/>
         </copy>
@@ -70,6 +72,12 @@
             description="compiles the myfaces and examples java classes to WEB-INF/classes and copies needed config and TLD files">
 
         <mkdir dir="${web-inf.classes.dir}"/>
+
+        <javac srcdir="${jsfapi.src}"
+               destdir="${web-inf.classes.dir}"
+               optimize="off"
+               classpathref="project.class.path">
+        </javac>
 
         <javac srcdir="${myfaces.src}"
                destdir="${web-inf.classes.dir}"
