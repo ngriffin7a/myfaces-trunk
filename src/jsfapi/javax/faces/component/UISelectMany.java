@@ -30,6 +30,10 @@ import java.util.List;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.17  2005/03/04 00:41:40  mmarinschek
+ * fixed myfaces-
+ * 116
+ *
  * Revision 1.16  2005/03/04 00:28:45  mmarinschek
  * Changes in configuration due to missing Attribute/Property classes for the converter; not building in the functionality yet except for part of the converter properties
  *
@@ -246,32 +250,13 @@ public class UISelectMany
         return false;   // arrays are identical
     }
 
-
-    /**
-     * First part is identical to super.validate except the empty condition.
-     * Second part: iterate through UISelectItem and UISelectItems and check
-     *              current values against these items
-     */
-    public void validate(FacesContext context)
+    protected void validateValue(FacesContext context, Object convertedValue)
     {
-        if (context == null) throw new NullPointerException("context");
-        Object submittedValue = getSubmittedValue();
-        if (submittedValue == null) return;
-
-        if(submittedValue instanceof String && ((String) submittedValue).length()==0)
-        {
-            submittedValue = null; // TODO : This is a bug, if set to null, you'll get the following error :
-            // java.lang.NullPointerException at org.apache.myfaces.renderkit._SharedRendererUtils.getConvertedUISelectManyValue(_SharedRendererUtils.java:118)
-        }
-
-        Object convertedValue = getConvertedValue(context, submittedValue);
-        if (!isValid()) return;
-
-		boolean empty =
-			convertedValue == null
-				|| ((convertedValue instanceof Object[]) && (((Object[]) convertedValue).length == 0))
-				|| ((convertedValue instanceof List) && ((List) convertedValue).isEmpty());
-		if (isRequired() && empty)
+        boolean empty =
+            convertedValue == null
+                || ((convertedValue instanceof Object[]) && (((Object[]) convertedValue).length == 0))
+                || ((convertedValue instanceof List) && ((List) convertedValue).isEmpty());
+        if (isRequired() && empty)
         {
             _MessageUtils.addErrorMessage(context, this, REQUIRED_MESSAGE_ID,new Object[]{getId()});
             setValid(false);
@@ -282,18 +267,21 @@ public class UISelectMany
         {
             _ComponentUtils.callValidators(context, this, convertedValue);
         }
-        if (!isValid()) return;
 
         //TODO: see javadoc: iterate through UISelectItem and UISelectItems and check
         //current values against these items
+    }
 
-        Object previousValue = getValue();
-        setValue(convertedValue);
-        setSubmittedValue(null);
-        if (compareValues(previousValue, convertedValue))
-        {
-            queueEvent(new ValueChangeEvent(this, previousValue, convertedValue));
-        }
+    /**
+     * First part is identical to super.validate except the empty condition.
+     * Second part: iterate through UISelectItem and UISelectItems and check
+     *              current values against these items
+     */
+    public void validate(FacesContext context)
+    {
+        // TODO : Setting the submitted value to null in the super class causes a bug, if set to null, you'll get the following error :
+        // java.lang.NullPointerException at org.apache.myfaces.renderkit._SharedRendererUtils.getConvertedUISelectManyValue(_SharedRendererUtils.java:118)
+        super.validate(context);
     }
 
 
