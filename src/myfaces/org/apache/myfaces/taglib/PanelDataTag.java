@@ -22,11 +22,16 @@ import net.sourceforge.myfaces.component.UIComponentUtils;
 import net.sourceforge.myfaces.component.UIPanel;
 import net.sourceforge.myfaces.renderkit.html.DataRenderer;
 import net.sourceforge.myfaces.renderkit.attr.DataRendererAttributes;
+import net.sourceforge.myfaces.util.logging.LogUtil;
 
 import javax.faces.FacesException;
+import javax.faces.context.FacesContext;
 import javax.faces.component.UIComponent;
 import javax.servlet.jsp.JspException;
 import java.io.IOException;
+import java.util.Iterator;
+import java.util.Collection;
+import java.util.Arrays;
 
 /**
  * see "panel_data" tag in myfaces_html.tld
@@ -91,7 +96,10 @@ public class PanelDataTag
         {
             //encodeBegin is responsible for stepping to next row
             //and render start of new row if we are not yet at the end of the list
-            getComponent().encodeBegin(getFacesContext());
+            if (hasNext())
+            {
+                getComponent().encodeBegin(getFacesContext());
+            }
         }
         catch (IOException e)
         {
@@ -118,6 +126,7 @@ public class PanelDataTag
         }
         catch (FacesException e)
         {
+            LogUtil.getLogger().warning(e.getMessage());
             return false;
         }
     }

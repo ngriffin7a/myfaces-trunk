@@ -107,17 +107,15 @@ public class ListRenderer
 
                 Iterator it = getIterator(facesContext, uiComponent);
 
-                String varAttr = (String)uiComponent.getAttribute(DataRenderer.VAR_ATTR);
                 if (it.hasNext())
                 {
-                    facesContext.setModelValue(varAttr, it.next());
                     // new row
                     closeRow(facesContext);
                     openRow(facesContext, uiComponent.getRendererType());
                 }
                 else
                 {
-                    facesContext.setModelValue(varAttr, null);
+                    //facesContext.setModelValue(varAttr, null);
                 }
             }
             else if (parentRendererType.equals(ListRenderer.TYPE) &&
@@ -190,29 +188,16 @@ public class ListRenderer
 
         if (rendererType != null && parentRendererType != null)
         {
-            if (parentRendererType.equals(TYPE) &&
-                rendererType.equals(DataRenderer.TYPE))
+            String parentParentRendererType
+                = UIComponentUtils.getParentOrFacetOwner(parent).getRendererType();
+            if ((parentRendererType.equals(DataRenderer.TYPE) ||
+                parentRendererType.equals(GroupRenderer.TYPE)) &&
+                (parentParentRendererType != null &&
+                 parentParentRendererType.equals(TYPE)))
             {
-                //Remove iterator after last row
-                Iterator it = getIterator(facesContext, uiComponent);
-                if (it != null && !it.hasNext())
-                {
-                    uiComponent.setAttribute(ITERATOR_ATTR, null);
-                }
-            }
-            else
-            {
-                String parentParentRendererType
-                    = UIComponentUtils.getParentOrFacetOwner(parent).getRendererType();
-                if ((parentRendererType.equals(DataRenderer.TYPE) ||
-                    parentRendererType.equals(GroupRenderer.TYPE)) &&
-                    (parentParentRendererType != null &&
-                     parentParentRendererType.equals(TYPE)))
-                {
-                    closeColumn(facesContext);
-                    int column = getActualColumnAttr(facesContext).intValue();
-                    afterCloseColumn(facesContext, column -1);
-                }
+                closeColumn(facesContext);
+                int column = getActualColumnAttr(facesContext).intValue();
+                afterCloseColumn(facesContext, column -1);
             }
         }
     }

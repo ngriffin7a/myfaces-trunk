@@ -131,6 +131,7 @@ public class GridRenderer
 
         // open column
         String style = calcColumnStyle(gridComponent,
+                                       actualRow,
                                        actualColumn);
         writer.write("<td");
         if (style != null && style.length() > 0)
@@ -228,8 +229,15 @@ public class GridRenderer
     /**
      * TODO: refactor see ListRenderer
      */
-    private String calcColumnStyle(UIComponent gridComponent, int actualColumn)
+    private String calcColumnStyle(UIComponent gridComponent,  int actualRow, int actualColumn)
     {
+        String headerStyle = (String)gridComponent.getAttribute(HEADER_CLASS_ATTR);
+        boolean hasHeaderStyle = headerStyle != null;
+        if (actualRow == 0 && hasHeaderStyle)
+        {
+            return null;
+        }
+
         String[] columnClasses = getColumnClasses(gridComponent);
 
         if (columnClasses != null && columnClasses.length > 0)
