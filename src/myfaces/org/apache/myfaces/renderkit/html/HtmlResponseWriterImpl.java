@@ -29,11 +29,10 @@ import java.io.Writer;
 import java.net.URLEncoder;
 import java.util.Collections;
 import java.util.Set;
-import java.util.Map;
-import java.util.HashMap;
 
 /**
  * @author Manfred Geiler (latest modification by $Author$)
+ * @author Anton Koinov
  * @version $Revision$ $Date$
  */
 public class HtmlResponseWriterImpl
@@ -46,30 +45,12 @@ public class HtmlResponseWriterImpl
     private static final Set SUPPORTED_CONTENT_TYPES
             = Collections.singleton(DEFAUL_CONTENT_TYPE);
 
-    private static final Map EMPTY_ELEMENTS = new HashMap();
-
-    static
-    {
-        EMPTY_ELEMENTS.put("area", Boolean.TRUE);
-        EMPTY_ELEMENTS.put("br", Boolean.TRUE);
-        EMPTY_ELEMENTS.put("base", Boolean.TRUE);
-        EMPTY_ELEMENTS.put("basefont", Boolean.TRUE);
-        EMPTY_ELEMENTS.put("col", Boolean.TRUE);
-        EMPTY_ELEMENTS.put("frame", Boolean.TRUE);
-        EMPTY_ELEMENTS.put("hr", Boolean.TRUE);
-        EMPTY_ELEMENTS.put("img", Boolean.TRUE);
-        EMPTY_ELEMENTS.put("input", Boolean.TRUE);
-        EMPTY_ELEMENTS.put("isindex", Boolean.TRUE);
-        EMPTY_ELEMENTS.put("link", Boolean.TRUE);
-        EMPTY_ELEMENTS.put("meta", Boolean.TRUE);
-        EMPTY_ELEMENTS.put("param", Boolean.TRUE);
-    }
-
     private Writer _writer;
     private String _contentType;
     private String _characterEncoding;
 
-    private UIComponent _currentComponent = null;
+// currently not used
+//    private UIComponent _currentComponent = null;
     private boolean _startElementMustBeClosed = false;
 
     public HtmlResponseWriterImpl(Writer writer, String contentType, String characterEncoding)
@@ -89,11 +70,6 @@ public class HtmlResponseWriterImpl
         }
     }
 
-    public static boolean isEmptyElement(String name)
-    {
-        return EMPTY_ELEMENTS.containsKey(name);
-    }
-
     public static boolean supportsContentType(String contentType)
     {
         return SUPPORTED_CONTENT_TYPES.contains(contentType);   //TODO: Match according to Section 14.1 of RFC 2616
@@ -111,12 +87,12 @@ public class HtmlResponseWriterImpl
 
     public void flush() throws IOException
     {
-        closeStartElementIfNecessary();
         _writer.flush();
     }
 
-    public void startDocument() throws IOException
+    public void startDocument()
     {
+        // do nothing
     }
 
     public void endDocument() throws IOException
@@ -130,7 +106,7 @@ public class HtmlResponseWriterImpl
         closeStartElementIfNecessary();
         _writer.write('<');
         _writer.write(name);
-        _currentComponent = uiComponent;
+//        _currentComponent = uiComponent;
         _startElementMustBeClosed = true;
     }
 
@@ -147,22 +123,17 @@ public class HtmlResponseWriterImpl
     {
         if(_startElementMustBeClosed)
         {
-            boolean isEmptyElement = isEmptyElement(name);
-
-            if(isEmptyElement)
-            {
-                _writer.write(" />");
-                _startElementMustBeClosed = false;
-                return;
-            }
-            _writer.write(">");
+            // start element would be still open only if no text content was added after it
+            _writer.write(" />");
             _startElementMustBeClosed = false;
         }
-
-        _writer.write("</");
-        _writer.write(name);
-        _writer.write('>');
-        _currentComponent = null;
+        else
+        {    
+            _writer.write("</");
+            _writer.write(name);
+            _writer.write('>');
+        }
+//        _currentComponent = null;
     }
 
     public void writeAttribute(String name, Object value, String componentPropertyName) throws IOException
@@ -180,7 +151,7 @@ public class HtmlResponseWriterImpl
                 _writer.write(name);
                 _writer.write("=\"");
                 _writer.write(name);
-                _writer.write("\"");
+                _writer.write('"');
             }
         }
         else
@@ -190,7 +161,7 @@ public class HtmlResponseWriterImpl
             _writer.write(name);
             _writer.write("=\"");
             _writer.write(HTMLEncoder.encode(strValue, false, false));
-            _writer.write("\"");
+            _writer.write('"');
         }
     }
 
@@ -212,7 +183,7 @@ public class HtmlResponseWriterImpl
         {
             _writer.write(URLEncoder.encode(strValue, _characterEncoding));
         }
-        _writer.write("\"");
+        _writer.write('"');
     }
 
     public void writeComment(Object value) throws IOException
