@@ -36,7 +36,12 @@ import java.io.IOException;
 import java.util.*;
 
 /**
+ * @author Manfred Geiler (latest modification by $Author$)
+ * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.3  2004/04/06 15:34:12  manolito
+ * decode methods must not set submitted value to null
+ *
  * Revision 1.2  2004/04/01 12:43:18  manolito
  * html nesting bug fixed
  *
@@ -46,8 +51,6 @@ import java.util.*;
  * Revision 1.17  2004/03/26 13:39:14  manolito
  * added javascript 'return false' to onClick attribute in render link method
  *
- * @author Manfred Geiler (latest modification by $Author$)
- * @version $Revision$ $Date$
  */
 public class HtmlRendererUtils
 {
@@ -80,7 +83,8 @@ public class HtmlRendererUtils
         else
         {
             //request parameter not found, nothing to decode
-            ((EditableValueHolder)component).setSubmittedValue(null);
+            // we must not reset the submitted value of the component
+            // because there could be a submittedValue from former submits!
         }
     }
 
@@ -116,7 +120,9 @@ public class HtmlRendererUtils
         }
         else
         {
-            ((EditableValueHolder)component).setSubmittedValue(Boolean.FALSE);
+            //request parameter not found, nothing to decode
+            // we must not reset the submitted value of the component
+            // because there could be a submittedValue from former submits!
         }
     }
 
@@ -142,7 +148,9 @@ public class HtmlRendererUtils
         }
         else
         {
-            ((EditableValueHolder)component).setSubmittedValue(EMPTY_STRING_ARRAY);
+            //request parameter not found, nothing to decode
+            // we must not reset the submitted value of the component
+            // because there could be a submittedValue from former submits!
         }
     }
 
@@ -169,7 +177,8 @@ public class HtmlRendererUtils
         else
         {
             //request parameter not found, nothing to decode
-            ((EditableValueHolder)component).setSubmittedValue(null);
+            // we must not reset the submitted value of the component
+            // because there could be a submittedValue from former submits!
         }
     }
 
