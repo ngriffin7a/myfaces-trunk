@@ -19,6 +19,7 @@
 
 package net.sourceforge.myfaces.application.jsp;
 
+import net.sourceforge.myfaces.application.MyfacesViewHandler;
 import net.sourceforge.myfaces.util.DebugUtils;
 import net.sourceforge.myfaces.webapp.webxml.ServletMapping;
 import net.sourceforge.myfaces.webapp.webxml.WebXml;
@@ -43,9 +44,13 @@ import java.util.*;
  * @version $Revision$ $Date$
  */
 public class JspViewHandlerImpl
-    implements ViewHandler
+    implements ViewHandler, MyfacesViewHandler
 {
     private static final Log log = LogFactory.getLog(JspViewHandlerImpl.class);
+    public static final String FORM_STATE_MARKER     = "<!--@@JSF_FORM_STATE_MARKER@@-->";
+    public static final int    FORM_STATE_MARKER_LEN = FORM_STATE_MARKER.length();
+    public static final String URL_STATE_MARKER      = "JSF_URL_STATE_MARKER=DUMMY";
+    public static final int    URL_STATE_MARKER_LEN  = URL_STATE_MARKER.length();
 
     private StateManager _stateManager;
 
@@ -320,9 +325,48 @@ public class JspViewHandlerImpl
     }
 
 
-    public void writeState(FacesContext facescontext) throws IOException
+    /**
+     * Writes a state marker that is replaced later by one or more hidden form
+     * inputs.
+     * @param facesContext
+     * @throws IOException
+     */
+    public void writeState(FacesContext facesContext) throws IOException
     {
-        // TODO: implement
-        throw new UnsupportedOperationException("not yet implemented.");
+        if (getStateManager().isSavingStateInClient(facesContext))
+        {
+            facesContext.getResponseWriter().writeText(FORM_STATE_MARKER, null);
+        }
     }
+
+
+    /**
+     * MyFaces extension: Should be called from HyperlinkRenderers to encode
+     * the href attribute. If client state saving is used, we add a state marker
+     * to the url.
+     * @param facesContext
+     * @param url
+     * @return
+     * @throws IOException
+     */
+    public String encodeURL(FacesContext facesContext, String url) throws IOException
+    {
+        url = facesContext.getExternalContext().encodeResourceURL(url);
+        if (getStateManager().isSavingStateInClient(facesContext))
+        {
+            if (url.indexOf('?') == -1)
+            {
+                return url + '?' + URL_STATE_MARKER;
+            }
+            else
+            {
+                return url + '&' + URL_STATE_MARKER;
+            }
+        }
+        else
+        {
+            return url;
+        }
+    }
+
 }
