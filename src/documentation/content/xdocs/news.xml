@@ -6,18 +6,34 @@
   </header> 
   <body>
      <section>
-      <title>Release 1.0.5 beta</title>
- <p>Release 1.0.5 beta is a maintenance release.</p>
+      <title>Release 1.0.7 beta</title>
 
 <p>Improvements in Release 1.0.5 beta:</p>
 <ul>
-<li>New faces configurator (complete implementation, including decorator pattern for delegation!)</li>
-<li>rssticker (Newsfeed component)</li>
-<li>dataScroller (at long last, the ultimative sroller component for UIData!)</li>
-<li>jscookMenu (Renders a Javascript menu based on the excellent JSCookMenu by Heng Yuan - have a look at it!)</li>
-<li>new validators (Regular Expressions, Equal)</li>
-<li>of course many bugs got fixed</li>
-</ul>
+<li>new custom component: HtmlPanelStack</li>
+<li>new custom component: Stylesheet</li>
+<li>new extended HtmlInputTextarea component (with user role support)</li>
+<li>Japanese translation</li>
+<li>writeText method in default ResponseWriter now maps newlines to XX and
+  successive spaces to &nbsp; entities</li>
+<li>corrected some problems with rowIndexVar and rowCountVar in HtmlDataList</li>
+<li>extended HtmlDataTable now also supports rowIndexVar and rowCountVar </li>
+<li>bug #998464 request charset handling is invalid</li>
+<li>bug #1001511 fileupload compponent don't support setHeaderEncoding</li>
+<li>bug #1008043 applied patch for ServletExternalContextImpl by Takashi Okamoto</li>
+<li>fixed StackOverflow in ClassUtils and cleaned up ClassUtils methods</li>
+<li>full revision of extended HtmlDataTable so that there is no more cache problem</li>
+<li>HtmlCommandSortHeader now supports immediate attribute</li>
+<li>bug fix: No decode for spread checkbox or radio</li>
+<li>bug fix: NPE in MessageUtils when there was no ViewRoot</li>
+<li>bug #1012909 support Oracle ADF</li>
+<li>bug #1007065 f:view should tokenize locale attribute</li>
+<li>bug #1013489 support EL expression at </li>
+<li>tiles support: ServletContextListener (JspTilesViewHandlerInitializer) no longer needed</li>
+<li>outputText (and other components) needed to render a span-tag if they have a custom-set id</li>
+<li>required HtmlInputFileUpload validates now correctly
+  (and shows a message) if submitted value exists and the value is empty	</li></ul>		
+		
 
 </section>
 

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V1.2//EN" "document-v12.dtd">
+
+<document>
+
+<header>
+    <title>Apache MyFaces</title>
+</header>
+
+<body>
+    <section>
+      <title>ASF Committers</title>
+      <table>
+	<tr><td><strong>Username</strong></td><td><strong>Committers</strong></td><td><strong>Affiliation</strong></td></tr>
+		<tr><td>oros</td><td>Oliver Rossm&uuml;ller</td><td/></tr>
+      	<tr><td>manolito</td><td>Manfred Geiler</td><td/></tr>
+      	<tr><td>tomsp</td><td>Thomas Spiegl</td><td></td></tr>
+      	<tr><td>mmarinschek</td><td>Martin Marinschek</td><td /></tr>
+      	<tr><td>matzew</td><td>Matthias We&szlig;endorf</td><td>FH Dortmund, Germany</td></tr>
+      	<tr><td>svieujot</td><td>Sylvain Vieujot</td><td/></tr>
+      	<tr><td>grantsmith</td><td>Grant Smith</td><td/></tr>
+      	<tr><td>bdudney</td><td>Bill Dudney</td><td/></tr>
+      	<tr><td>anton</td><td>Anton Koinov</td><td/></tr>
+      	<tr><td>treeder</td><td>Travis Reeder</td><td/></tr>
+       </table>
+    </section>
+
+    <section>
+    <title>Contributors</title>
+      <table>
+	<tr><td><strong>Name</strong></td></tr>
+		<tr><td>Dimitry D'hondt</td></tr>
+      	<tr><td>Robert J. Lebowitz</td></tr>
+      	<tr><td>Robert Gothan</td></tr>
+      	<tr><td>Christian Rueed</td></tr>
+      	<tr><td>Takashi Okamoto</td></tr>
+      	<tr><td>Spencer Uresk</td></tr>
+      	<tr><td>Louis Calisi</td></tr>
+      	<tr><td>Dan Hodnett</td></tr>
+       </table>
+    </section>
+    
+    <section>
+    <title>Sponsors</title>
+      <table>
+	<tr><td><strong>Name</strong></td><td><strong>Role</strong></td><td><strong>Affiliation</strong></td></tr>
+		<tr><td>Ted Husted</td><td>Champion </td><td>ASF Member, Struts PMC, Jakarta PMC</td></tr>
+      	<tr><td>James Holmes</td><td>Mentor</td><td>Struts PMC, Jakarta PMC</td></tr>
+	</table>
+    <p>as defined in <fork href="http://incubator.apache.org/incubation/Roles_and_Responsibilities.html">http://incubator.apache.org/incubation/Roles_and_Responsibilities.html</fork>
+    </p>
+    </section>	
+	
+    </body>
+    
+    <footer>
+    	<legal>Java, J2EE, and JCP are trademarks or registered trademarks of Sun Microsystems, Inc. in the United States and other countries.<br />
+	&copy; 2004, Apache Software Foundation
+	</legal>
+    </footer>
+
+</document>

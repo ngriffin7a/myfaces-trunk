@@ -10,9 +10,9 @@ be used to configure the chosen Forrest skin.
   <!ENTITY % links.att 'name CDATA #REQUIRED'>
   <!ENTITY % link.att 'name CDATA #REQUIRED href CDATA #REQUIRED'>
   <!ELEMENT skinconfig (disable-search?, disable-print-link?, disable-pdf-link?,
-  disable-xml-link?, disable-compliance-links?, obfuscate-mail-links?, searchsite-domain?, searchsite-name?,
-  project-name, project-description?, project-url, project-logo, group-name?, group-description?, group-url?, group-logo?,
-  host-url?, host-logo?, year?, vendor?, trail?, toc?, credits?)*>
+  disable-xml-link?, disable-compliance-links?, searchsite-domain?, searchsite-name?,
+  project-name, project-url, project-logo, group-name?, group-url?, group-logo?,
+  host-url?, host-logo?, year?, vendor?, trail?, credits?)*>
   <!ELEMENT credits (credit*)>
   <!ELEMENT credit (name, url, image?, width?, height?)>
   <!-- id uniquely identifies the tool, and role indicates its function -->
@@ -23,15 +23,12 @@ be used to configure the chosen Forrest skin.
   <!ELEMENT disable-pdf-link (#PCDATA)>
   <!ELEMENT disable-xml-link (#PCDATA)>    
   <!ELEMENT disable-compliance-links (#PCDATA)>   
-  <!ELEMENT obfuscate-mail-links (#PCDATA)>   
   <!ELEMENT searchsite-domain (#PCDATA)>
   <!ELEMENT searchsite-name (#PCDATA)>  
   <!ELEMENT project-name (#PCDATA)>
-  <!ELEMENT project-description (#PCDATA)>
   <!ELEMENT project-url (#PCDATA)>
   <!ELEMENT project-logo (#PCDATA)>
   <!ELEMENT group-name (#PCDATA)>
-  <!ELEMENT group-description (#PCDATA)>
   <!ELEMENT group-url (#PCDATA)>
   <!ELEMENT group-logo (#PCDATA)>
   <!ELEMENT host-url (#PCDATA)>
@@ -51,48 +48,34 @@ be used to configure the chosen Forrest skin.
   <!ELEMENT image (#PCDATA)>
   <!ELEMENT width (#PCDATA)>
   <!ELEMENT height (#PCDATA)>
-  <!ELEMENT toc EMPTY>
-  <!ATTLIST toc level CDATA #IMPLIED>
   ]>
 
 <skinconfig>
   <!-- Do we want to disable the Google search box? -->
   <disable-search>false</disable-search>
-  <!-- Do we want to disable the print link? If enabled, invalid HTML 4.0.1 -->
+  <!-- Do we want to disable the print link? -->
   <disable-print-link>true</disable-print-link>  
   <!-- Do we want to disable the PDF link? -->
-  <disable-pdf-link>false</disable-pdf-link>
+  <disable-pdf-link>true</disable-pdf-link>
   <!-- Do we want to disable the xml source link? -->
   <disable-xml-link>true</disable-xml-link>
   <!-- Do we want to disable w3c compliance links? -->
-  <disable-compliance-links>false</disable-compliance-links>
-  <!-- Whether to render mailto: links unrecognisable by spam harvesters -->
-  <obfuscate-mail-links>true</obfuscate-mail-links>
-
-  <searchsite-domain>mydomain</searchsite-domain>  
-  <searchsite-name>MyProject</searchsite-name>  
+  <disable-compliance-links>true</disable-compliance-links>
+  
+  <searchsite-domain>incubator.apache.org</searchsite-domain>
+  <searchsite-name>Apache MyFaces</searchsite-name>  
 
   <!-- mandatory project logo
        skin: forrest-site renders it at the top -->
-  <project-name>MyFaces</project-name>
-  <project-description>The free JavaServer(tm) Faces implementation</project-description>
-  <project-url>http://myfaces.org/</project-url>
+  <project-name>Apache MyFaces</project-name>
+  <project-url>http://incubator.apache.org/myfaces</project-url>
   <project-logo>images/logo.jpg</project-logo>
-  <!-- Alternative static image:
-  <project-logo>images/project-logo.gif</project-logo> -->
 
   <!-- optional group logo
        skin: forrest-site renders it at the top-left corner -->
-       
-       
-       <!-- linking to apache -->
-       
-  <!--group-name>MyGroup</group-name>
-  <group-description>MyGroup Description</group-description>
-  <group-url>http://mygroup.org</group-url>
-  <group-logo>images/group.png</group-logo-->
-  <!-- Alternative static image:
-  <group-logo>images/group-logo.gif</group-logo> -->
+  <group-name>Apache Incubator</group-name>
+  <group-url>http://incubator.apache.org/</group-url>
+  <group-logo>images/incubator-logo.gif</group-logo>
 
   <!-- optional host logo (e.g. sourceforge logo)
        skin: forrest-site renders it at the bottom-left corner -->
@@ -101,40 +84,28 @@ be used to configure the chosen Forrest skin.
 
   <!-- The following are used to construct a copyright statement -->
   <year>2004</year>
-  <vendor>MyFaces </vendor>
+  <vendor>The Apache Software Foundation.</vendor>
 
   <!-- Some skins use this to form a 'breadcrumb trail' of links. If you don't
   want these, set the attributes to blank. The DTD purposefully requires them.
   -->
-  
-  <!--
-  	here we should later link to apache...
-  	must be empty if not used...
-  	-->
   <trail>
-    <link1 name="" href=""/>
-    <link2 name="" href=""/>
+    <link1 name="apache" href="http://www.apache.org/"/>
+    <link2 name="myfaces" href="http://incubator.apache.org/myfaces"/>
     <link3 name="" href=""/>
   </trail>
-
-  <!-- Configure how many "section" levels need to be included in the
-  generated Table of Contents (TOC). By default, if no toc element is provided
-  below, then 2 levels are included. Level 0 does not generate any TOC at all.
-  -->
-  <toc level="2"/>
 
   <!-- Credits are typically rendered as a set of small clickable images in the
   page footer -->
   <credits>
-    <credit>
+    <!-- credit>
       <name>Built with Apache Forrest</name>
       <url>http://xml.apache.org/forrest/</url>
       <image>images/built-with-forrest-button.png</image>
       <width>88</width>
       <height>31</height>
-    </credit>
+    </credit -->
     <!-- A credit with @role='pdf' will have its name and url displayed in the
     PDF page's footer. -->
   </credits>
-
 </skinconfig>

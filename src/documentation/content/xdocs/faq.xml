@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V1.2//EN" "document-v12.dtd">
+
+<document>
+
+<header>
+    <title>Apache MyFaces FAQ</title>
+</header>
+
+<body>
+
+<section>
+    <title>Frequently_Asked_Questions</title>
+    <p><strong>General</strong></p>
+      <ol>
+        <li><link href="#what-is">What is MyFaces?</link></li>
+      </ol>
+</section>
+
+<section>
+    <title>General</title>
+      <dl>
+        <dt>What is MyFaces?</dt>
+        <dd><anchor id="what-is" /> MyFaces is a Open Source Implementation of the JavaServer Faces Framework. See the <fork href="http://jcp.org/en/jsr/detail?id=127">JSR 127</fork> for more info.</dd>
+      </dl>
+ </section>
+ 
+     </body>
+    
+    <footer>
+    	<legal>Java, J2EE, and JCP are trademarks or registered trademarks of Sun Microsystems, Inc. in the United States and other countries.<br />
+	&copy; 2004, Apache Software Foundation
+	</legal>
+    </footer>
+
+</document>

@@ -2,7 +2,7 @@
 <!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V1.2//EN" "http://apache.org/forrest/dtd/document-v12.dtd">
 <document> 
   <header> 
-    <title>myfaces.org</title> 
+    <title>Apache MyFaces</title> 
   </header> 
   <body> 
     <section>
@@ -18,6 +18,15 @@ Look at <link href="http://java.sun.com/j2ee/javaserverfaces/">Sun's JavaServer(
  	
       </p>
     </section>
+	
+	    <section>
+     <title>News</title>
+     <anchor id="News"></anchor>
+     <ul>
+       <li>See MyFaces at <fork href="http://www.apachecon.com/">ApacheCon US2004</fork> by Bill Dudney (Wednesday, 17 November 2004).</li>
+     </ul>
+    </section>
+	
     <p>
 <link href="http://www.jsfcentral.com/">JSFCentral</link> is also a good place for more JSF information and resources. 
    </p>  
