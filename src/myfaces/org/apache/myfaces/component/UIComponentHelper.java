@@ -60,21 +60,6 @@ public class UIComponentHelper
         namingContainer.addComponentToNamespace(facet);
     }
 
-    /*
-    public void setComponentId(String componentId)
-    {
-        NamingContainer namingContainer = UIComponentUtils.findNamingContainer(_uiComponent);
-        if (_uiComponent.getComponentId() != null)
-        {
-            //remove component with old id from naming container
-            namingContainer.removeComponentFromNamespace(_uiComponent);
-            _uiComponent.setAttribute(UIComponent.CLIENT_ID_ATTR, null);
-        }
-        _uiComponent.setAttribute(COMPONENT_ID_ATTR, componentId);
-        namingContainer.addComponentToNamespace(_uiComponent);
-    }
-    */
-
     public UIComponent getParent(UIComponent superGetParent)
     {
         UIComponent parent = superGetParent;
