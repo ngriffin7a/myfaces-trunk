@@ -65,7 +65,7 @@
 
 <!-- command_navigation -->
     <tag>
-        <name>command_navigation</name>
+        <name>commandNavigation</name>
         <tag-class>net.sourceforge.myfaces.taglib.ext.HtmlCommandNavigationTag</tag-class>
         <body-content>JSP</body-content>
         <description>
@@ -99,7 +99,7 @@
 
 <!-- command_sortheader -->
     <tag>
-        <name>command_sortheader</name>
+        <name>commandSortHeader</name>
         <tag-class>net.sourceforge.myfaces.taglib.ext.HtmlCommandSortHeaderTag</tag-class>
         <body-content>JSP</body-content>
         <description>
@@ -141,7 +141,7 @@
 
 <!-- data_table -->
     <tag>
-        <name>data_table</name>
+        <name>dataTable</name>
         <tag-class>net.sourceforge.myfaces.taglib.ext.MyfacesHtmlDataTableTag</tag-class>
         <body-content>JSP</body-content>
         <description>
@@ -193,7 +193,7 @@
 
 <!-- input_fileupload -->
     <tag>
-        <name>input_fileupload</name>
+        <name>inputFileUpload</name>
         <tag-class>net.sourceforge.myfaces.taglib.ext.HtmlInputFileUploadTag</tag-class>
         <body-content>JSP</body-content>
         <description>
@@ -244,7 +244,7 @@
 
 <!-- output_navigation -->
     <tag>
-        <name>output_navigation</name>
+        <name>outputNavigation</name>
         <tag-class>net.sourceforge.myfaces.taglib.ext.HtmlOutputNavigationTag</tag-class>
         <body-content>JSP</body-content>
         <description>
@@ -271,7 +271,7 @@
 
 <!-- panel_layout -->
     <tag>
-        <name>panel_layout</name>
+        <name>panelLayout</name>
         <tag-class>net.sourceforge.myfaces.taglib.ext.HtmlPanelLayoutTag</tag-class>
         <body-content>JSP</body-content>
         &ui_component_attributes;
@@ -344,7 +344,7 @@
 
 <!-- panel_navigation -->
     <tag>
-        <name>panel_navigation</name>
+        <name>panelNavigation</name>
         <tag-class>net.sourceforge.myfaces.taglib.ext.HtmlPanelNavigationTag</tag-class>
         <body-content>JSP</body-content>
         &ui_component_attributes;
@@ -420,7 +420,7 @@
 
 <!-- panel_tab -->
     <tag>
-        <name>panel_tab</name>
+        <name>panelTab</name>
         <tag-class>net.sourceforge.myfaces.taglib.ext.HtmlPanelTabTag</tag-class>
         <body-content>JSP</body-content>
         &ui_component_attributes;
@@ -440,7 +440,7 @@
 
 <!-- panel_tabbedpane -->
     <tag>
-        <name>panel_tabbedpane</name>
+        <name>panelTabbedPane</name>
         <tag-class>net.sourceforge.myfaces.taglib.ext.HtmlPanelTabbedPaneTag</tag-class>
         <body-content>JSP</body-content>
         &ui_component_attributes;
@@ -461,7 +461,7 @@
 
 <!-- save_state -->
     <tag>
-        <name>save_state</name>
+        <name>saveState</name>
         <tag-class>net.sourceforge.myfaces.taglib.ext.HtmlSaveStateTag</tag-class>
         <body-content>JSP</body-content>
         <attribute>

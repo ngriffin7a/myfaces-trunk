@@ -1,14 +1,4 @@
-MyFaces is known to work with and was tested with the following environment:
+Compatibility
+=============
 
-Java
-- JDK 1.4.0_01
-- JDK 1.4.1
-
-Servlet Container
-- Tomcat 4.0.x
-- Tomcat 4.1.x
-- JRun 4 SP1a
-- JBoss 3.2.1
-
-JSF API
-- JSF-API from the JavaServerTM Faces v1.0 Reference Implementation Early Access 4
+You will find the current compatibility list at http://myfaces.sourceforge.net

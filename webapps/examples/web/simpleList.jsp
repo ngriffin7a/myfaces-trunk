@@ -38,7 +38,7 @@ managed beans used:
 
     <f:loadBundle basename="net.sourceforge.myfaces.examples.resource.example_messages" var="example_messages"/>
 
-    <x:panel_layout id="page" layout="#{globalOptions.pageLayout}"
+    <x:panelLayout id="page" layout="#{globalOptions.pageLayout}"
             styleClass="pageLayout"
             headerClass="pageHeader"
             navigationClass="pageNavigation"
@@ -49,15 +49,15 @@ managed beans used:
         <%@include file="inc/navigation.jsp"  %>
 
         <f:facet name="body">
-            <h:panel_group id="body">
+            <h:panelGroup id="body">
 
-               <h:command_link action="go_country" immediate="true">
-                    <h:output_text value="#{example_messages['new_country']}" styleClass="standard" />
-               </h:command_link>
+               <h:commandLink action="go_country" immediate="true">
+                    <h:outputText value="#{example_messages['new_country']}" styleClass="standard" />
+               </h:commandLink>
                <f:verbatim><br><br>
 </f:verbatim>
 
-                <x:data_table styleClass="standardTable"
+                <x:dataTable styleClass="standardTable"
                         headerClass="standardTable_Header"
                         footerClass="standardTable_Footer"
                         rowClasses="standardTable_Row1,standardTable_Row2"
@@ -68,30 +68,30 @@ managed beans used:
                    >
                    <h:column>
                        <f:facet name="header">
-                          <h:output_text value="#{example_messages['label_country_name']}" />
+                          <h:outputText value="#{example_messages['label_country_name']}" />
                        </f:facet>
-                       <h:command_link actionListener="#{countryAction.initCountryForm}" action="go_country" immediate="true" >
-                            <h:output_text value="#{country.name}" />
+                       <h:commandLink actionListener="#{countryAction.initCountryForm}" action="go_country" immediate="true" >
+                            <h:outputText value="#{country.name}" />
                             <f:parameter name="id" value="#{country.id}" />
-                       </h:command_link>
+                       </h:commandLink>
                    </h:column>
 
                    <h:column>
                        <f:facet name="header">
-                          <h:output_text value="#{example_messages['label_country_iso']}" />
+                          <h:outputText value="#{example_messages['label_country_iso']}" />
                        </f:facet>
-                       <h:output_text value="#{country.isoCode}" />
+                       <h:outputText value="#{country.isoCode}" />
                    </h:column>
 
-                </x:data_table>
+                </x:dataTable>
                 <br>
 
-            </h:panel_group>
+            </h:panelGroup>
         </f:facet>
 
         <%@include file="inc/page_footer.jsp" %>
 
-    </x:panel_layout>
+    </x:panelLayout>
 
 </f:view>
 

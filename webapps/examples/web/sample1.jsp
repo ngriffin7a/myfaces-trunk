@@ -41,7 +41,7 @@ managed beans used:
 
     <f:loadBundle basename="net.sourceforge.myfaces.examples.resource.example_messages" var="example_messages"/>
 
-    <x:panel_layout id="page" layout="#{globalOptions.pageLayout}"
+    <x:panelLayout id="page" layout="#{globalOptions.pageLayout}"
             styleClass="pageLayout"
             headerClass="pageHeader"
             navigationClass="pageNavigation"
@@ -52,11 +52,11 @@ managed beans used:
         <%@include file="inc/navigation.jsp"  %>
 
         <f:facet name="body">
-            <h:panel_group id="body">
+            <h:panelGroup id="body">
 
-                <x:save_state id="save1" value="#{calcForm.number1}" />
-                <x:save_state id="save2" value="#{calcForm.number2}" />
-                <x:save_state id="save3" value="#{ucaseForm.text}" />
+                <x:saveState id="save1" value="#{calcForm.number1}" />
+                <x:saveState id="save2" value="#{calcForm.number2}" />
+                <x:saveState id="save3" value="#{ucaseForm.text}" />
 
                 <h:messages id="messageList" showSummary="true" showDetail="true" />
 
@@ -66,33 +66,33 @@ managed beans used:
                 </f:verbatim>
 
                 <h:form id="form1" name="calcForm">
-                    <h:output_label for="form1:number1" value="Number 1" /><f:verbatim>: </f:verbatim>
-                    <h:input_text id="number1" value="#{calcForm.number1}" maxlength="10" size="25" >
-                       <f:validate_longrange minimum="1" maximum="10" />
-                    </h:input_text>
+                    <h:outputLabel for="form1:number1" value="Number 1" /><f:verbatim>: </f:verbatim>
+                    <h:inputText id="number1" value="#{calcForm.number1}" maxlength="10" size="25" >
+                       <f:validateLongRange minimum="1" maximum="10" />
+                    </h:inputText>
                     <h:message id="number1Error" for="form1:number1" styleClass="error" /><f:verbatim><br></f:verbatim>
 
-                    <h:output_label for="form1:number2" value="Number 2" /><f:verbatim>: </f:verbatim>
-                    <h:input_text id="number2" value="#{calcForm.number2}" maxlength="10" size="25"/>
+                    <h:outputLabel for="form1:number2" value="Number 2" /><f:verbatim>: </f:verbatim>
+                    <h:inputText id="number2" value="#{calcForm.number2}" maxlength="10" size="25"/>
                     <h:message id="number2Error" for="form1:number2" styleClass="error" /><f:verbatim><br></f:verbatim>
 
-                    <h:output_label for="form1:result" value="Result" /><f:verbatim>: </f:verbatim>
-                    <h:output_text id="result" value="#{calcForm.result}" /><f:verbatim><br></f:verbatim>
+                    <h:outputLabel for="form1:result" value="Result" /><f:verbatim>: </f:verbatim>
+                    <h:outputText id="result" value="#{calcForm.result}" /><f:verbatim><br></f:verbatim>
 
-                    <h:command_button id="addButton" value="Add them" action="none">
-                        <f:action_listener type="net.sourceforge.myfaces.examples.example1.CalcActionListener" ></f:action_listener>
-                    </h:command_button>
-                    <h:command_button id="subtractButton" value="Subtract them" action="none">
-                        <f:action_listener type="net.sourceforge.myfaces.examples.example1.CalcActionListener" ></f:action_listener>
-                    </h:command_button>
+                    <h:commandButton id="addButton" value="Add them" action="none">
+                        <f:actionListener type="net.sourceforge.myfaces.examples.example1.CalcActionListener" ></f:actionListener>
+                    </h:commandButton>
+                    <h:commandButton id="subtractButton" value="Subtract them" action="none">
+                        <f:actionListener type="net.sourceforge.myfaces.examples.example1.CalcActionListener" ></f:actionListener>
+                    </h:commandButton>
                     <f:verbatim><br></f:verbatim>
 
-                    <h:command_link id="href1" action="none"><f:verbatim>Add them by clicking this link</f:verbatim>
-                        <f:action_listener type="net.sourceforge.myfaces.examples.example1.CalcActionListener" ></f:action_listener>
-                    </h:command_link><f:verbatim><br></f:verbatim>
-                    <h:command_link id="href2" action="none"><f:verbatim>Subtract them by clicking this link</f:verbatim>
-                        <f:action_listener type="net.sourceforge.myfaces.examples.example1.CalcActionListener" ></f:action_listener>
-                    </h:command_link>
+                    <h:commandLink id="href1" action="none"><f:verbatim>Add them by clicking this link</f:verbatim>
+                        <f:actionListener type="net.sourceforge.myfaces.examples.example1.CalcActionListener" ></f:actionListener>
+                    </h:commandLink><f:verbatim><br></f:verbatim>
+                    <h:commandLink id="href2" action="none"><f:verbatim>Subtract them by clicking this link</f:verbatim>
+                        <f:actionListener type="net.sourceforge.myfaces.examples.example1.CalcActionListener" ></f:actionListener>
+                    </h:commandLink>
                 </h:form>
 
                 <f:verbatim>
@@ -102,14 +102,14 @@ managed beans used:
                 </f:verbatim>
 
                 <h:form id="form2" name="ucaseForm">
-                    <h:input_text id="text" value="#{ucaseForm.text}"/>
+                    <h:inputText id="text" value="#{ucaseForm.text}"/>
                     <h:message id="textError" for="form2:text" styleClass="error" /><f:verbatim><br></f:verbatim>
-                    <h:command_button id="ucaseButton" value="Make it uppercase" action="none">
-                        <f:action_listener type="net.sourceforge.myfaces.examples.example1.UCaseActionListener" />
-                    </h:command_button>
-                    <h:command_button id="lcaseButton" value="Make it lowercase" action="none">
-                        <f:action_listener type="net.sourceforge.myfaces.examples.example1.UCaseActionListener" />
-                    </h:command_button>
+                    <h:commandButton id="ucaseButton" value="Make it uppercase" action="none">
+                        <f:actionListener type="net.sourceforge.myfaces.examples.example1.UCaseActionListener" />
+                    </h:commandButton>
+                    <h:commandButton id="lcaseButton" value="Make it lowercase" action="none">
+                        <f:actionListener type="net.sourceforge.myfaces.examples.example1.UCaseActionListener" />
+                    </h:commandButton>
                     <f:verbatim><br></f:verbatim>
                 </h:form>
 
@@ -121,10 +121,10 @@ managed beans used:
                 </f:verbatim>
 
                 <h:form id="form3" name="valForm">
-                    <h:command_button id="valEnable" value="Enable validation" action="#{validationController.enableValidation}" >
-                    </h:command_button>
-                    <h:command_button id="valDisable" value="Disable validation" action="#{validationController.disableValidation}" >
-                    </h:command_button>
+                    <h:commandButton id="valEnable" value="Enable validation" action="#{validationController.enableValidation}" >
+                    </h:commandButton>
+                    <h:commandButton id="valDisable" value="Disable validation" action="#{validationController.disableValidation}" >
+                    </h:commandButton>
                 </h:form>
 
                 <f:verbatim>
@@ -132,14 +132,14 @@ managed beans used:
                 </f:verbatim>
 
         <f:verbatim><br></f:verbatim>
-        <h:command_link id="jump_home" action="#{ucaseForm.jumpHome}" ><f:verbatim>Go Home</f:verbatim></h:command_link>
+        <h:commandLink id="jump_home" action="#{ucaseForm.jumpHome}" ><f:verbatim>Go Home</f:verbatim></h:commandLink>
 
-            </h:panel_group>
+            </h:panelGroup>
         </f:facet>
 
         <%@include file="inc/page_footer.jsp" %>
 
-    </x:panel_layout>
+    </x:panelLayout>
 
 </f:view>
 

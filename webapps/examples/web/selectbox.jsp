@@ -40,7 +40,7 @@ managed beans used:
 
     <f:loadBundle basename="net.sourceforge.myfaces.examples.resource.example_messages" var="example_messages"/>
 
-    <x:panel_layout id="page" layout="#{globalOptions.pageLayout}"
+    <x:panelLayout id="page" layout="#{globalOptions.pageLayout}"
             styleClass="pageLayout"
             headerClass="pageHeader"
             navigationClass="pageNavigation"
@@ -51,61 +51,61 @@ managed beans used:
         <%@include file="inc/navigation.jsp"  %>
 
         <f:facet name="body">
-            <h:panel_group id="body">
+            <h:panelGroup id="body">
                 <h:form name="formName">
 
-                    <h:panel_grid columns="2">
+                    <h:panelGrid columns="2">
 
-                        <h:output_label for="selone_lb" value="#{example_messages['label_cars']}" />
-                        <h:selectone_listbox size="3" value="#{carconf.car}" >
-                            <f:selectitems id="selone_lb_cars" value="#{carconf.cars}" />
-                        </h:selectone_listbox>
+                        <h:outputLabel for="selone_lb" value="#{example_messages['label_cars']}" />
+                        <h:selectOneListbox size="3" value="#{carconf.car}" >
+                            <f:selectItems id="selone_lb_cars" value="#{carconf.cars}" />
+                        </h:selectOneListbox>
 
-                        <h:output_label for="selone_menu" value="#{example_messages['label_colors']}" />
-                        <h:selectone_menu value="#{carconf.color}" >
-                            <f:selectitem itemValue="" itemLabel="#{example_messages['empty_selitem']}" />
-                            <f:selectitems value="#{carconf.colors}" />
-                        </h:selectone_menu>
+                        <h:outputLabel for="selone_menu" value="#{example_messages['label_colors']}" />
+                        <h:selectOneMenu value="#{carconf.color}" >
+                            <f:selectItem itemValue="" itemLabel="#{example_messages['empty_selitem']}" />
+                            <f:selectItems value="#{carconf.colors}" />
+                        </h:selectOneMenu>
 
-                        <h:output_label for="selone_menu" value="#{example_messages['label_extras']}" />
-                        <h:selectmany_checkbox value="#{carconf.extras}" >
-                            <f:selectitems value="#{carconf.extrasList}" />
-                        </h:selectmany_checkbox>
-
-                        <f:verbatim>&nbsp;</f:verbatim>
-                        <h:panel_group >
-                            <h:selectone_radio id="r1" value="#{carconf.discount}" layout="PAGE_DIRECTION"  >
-                                <f:selectitem itemValue="0" itemLabel="#{example_messages['discount_0']}" />
-                                <f:selectitem itemValue="1" itemLabel="#{example_messages['discount_1']}"  />
-                                <f:selectitem itemValue="2" itemLabel="#{example_messages['discount_2']}"  />
-                            </h:selectone_radio>
-                        </h:panel_group>
+                        <h:outputLabel for="selone_menu" value="#{example_messages['label_extras']}" />
+                        <h:selectManyCheckbox value="#{carconf.extras}" >
+                            <f:selectItems value="#{carconf.extrasList}" />
+                        </h:selectManyCheckbox>
 
                         <f:verbatim>&nbsp;</f:verbatim>
-                        <h:panel_group >
+                        <h:panelGroup >
+                            <h:selectOneRadio id="r1" value="#{carconf.discount}" layout="PAGE_DIRECTION"  >
+                                <f:selectItem itemValue="0" itemLabel="#{example_messages['discount_0']}" />
+                                <f:selectItem itemValue="1" itemLabel="#{example_messages['discount_1']}"  />
+                                <f:selectItem itemValue="2" itemLabel="#{example_messages['discount_2']}"  />
+                            </h:selectOneRadio>
+                        </h:panelGroup>
+
+                        <f:verbatim>&nbsp;</f:verbatim>
+                        <h:panelGroup >
                             <f:verbatim><br></f:verbatim>
-                            <h:selectone_radio id="r2" value="#{carconf.discount2}" layout="PAGE_DIRECTION"  >
-                                <f:selectitem itemValue="0" itemLabel="#{example_messages['discount_2_0']}" />
-                                <f:selectitem itemValue="1" itemLabel="#{example_messages['discount_2_1']}" />
-                            </h:selectone_radio>
-                        </h:panel_group>
+                            <h:selectOneRadio id="r2" value="#{carconf.discount2}" layout="PAGE_DIRECTION"  >
+                                <f:selectItem itemValue="0" itemLabel="#{example_messages['discount_2_0']}" />
+                                <f:selectItem itemValue="1" itemLabel="#{example_messages['discount_2_1']}" />
+                            </h:selectOneRadio>
+                        </h:panelGroup>
 
                         <f:verbatim>&nbsp;</f:verbatim>
-                        <h:command_button action="#{carconf.calcPrice}" value="#{example_messages['button_calcprice']}" />
+                        <h:commandButton action="#{carconf.calcPrice}" value="#{example_messages['button_calcprice']}" />
 
-                    </h:panel_grid>
+                    </h:panelGrid>
                 </h:form>
 
-                <h:output_format value="#{example_messages['msg_price']}" >
+                <h:outputFormat value="#{example_messages['msg_price']}" >
                     <f:parameter value="#{carconf.price}" />
-                </h:output_format>
+                </h:outputFormat>
 
-            </h:panel_group>
+            </h:panelGroup>
         </f:facet>
 
         <%@include file="inc/page_footer.jsp" %>
 
-    </x:panel_layout>
+    </x:panelLayout>
 
 </f:view>
 

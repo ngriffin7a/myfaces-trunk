@@ -129,7 +129,7 @@
 ======================================================
 -->
     <tag>
-        <name>action_listener</name>
+        <name>actionListener</name>
         <tag-class>net.sourceforge.myfaces.taglib.core.ActionListenerTag</tag-class>
         <body-content>JSP</body-content>
         <attribute>
@@ -145,21 +145,21 @@
 ======================================================
 -->
     <tag>
-      <name>validate_length</name>
+      <name>validateLength</name>
       <tag-class>net.sourceforge.myfaces.taglib.core.ValidateLengthTag</tag-class>
       <body-content>JSP</body-content>
       &validator_min_max_attributes;
     </tag>
 
     <tag>
-      <name>validate_doublerange</name>
+      <name>validateDoubleRange</name>
       <tag-class>net.sourceforge.myfaces.taglib.core.ValidateDoubleRangeTag</tag-class>
       <body-content>JSP</body-content>
       &validator_min_max_attributes;
     </tag>
 
     <tag>
-      <name>validate_longrange</name>
+      <name>validateLongRange</name>
       <tag-class>net.sourceforge.myfaces.taglib.core.ValidateLongRangeTag</tag-class>
       <body-content>JSP</body-content>
       &validator_min_max_attributes;
@@ -183,7 +183,7 @@
 ======================================================
 -->
     <tag>
-        <name>selectitem</name>
+        <name>selectItem</name>
         <tag-class>net.sourceforge.myfaces.taglib.core.SelectItemTag</tag-class>
         <body-content>JSP</body-content>
         &ui_select_item_attributes;
@@ -195,7 +195,7 @@
 ======================================================
 -->
     <tag>
-        <name>selectitems</name>
+        <name>selectItems</name>
         <tag-class>net.sourceforge.myfaces.taglib.core.SelectItemsTag</tag-class>
         <body-content>JSP</body-content>
         &ui_select_items_attributes;

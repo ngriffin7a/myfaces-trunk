@@ -37,11 +37,11 @@ managed beans used:
 
 <f:view>
 
-    <x:save_state id="ss1" value="#{optionsForm.language}" />
+    <x:saveState id="ss1" value="#{optionsForm.language}" />
 
     <f:loadBundle basename="net.sourceforge.myfaces.examples.resource.example_messages" var="example_messages"/>
 
-    <x:panel_layout id="page" layout="#{globalOptions.pageLayout}"
+    <x:panelLayout id="page" layout="#{globalOptions.pageLayout}"
             styleClass="pageLayout"
             headerClass="pageHeader"
             navigationClass="pageNavigation"
@@ -52,7 +52,7 @@ managed beans used:
         <%@include file="inc/navigation.jsp"  %>
 
         <f:facet name="body">
-            <h:panel_group id="body">
+            <h:panelGroup id="body">
                 <h:messages id="messageList" />
 
 <f:verbatim>
@@ -60,33 +60,33 @@ managed beans used:
                 <table border="1"><tr><td>
 </f:verbatim>
                     <h:form id="form1" name="optionsForm">
-                        <h:output_text value="#{example_messages['option_lang']}" />
+                        <h:outputText value="#{example_messages['option_lang']}" />
 <f:verbatim>:&nbsp;</f:verbatim>
-                        <h:selectone_menu id="locale" value="#{optionsForm.language}">
-                            <f:selectitems id="available" value="#{optionsForm.availableLanguages}" />
-                        </h:selectone_menu>
+                        <h:selectOneMenu id="locale" value="#{optionsForm.language}">
+                            <f:selectItems id="available" value="#{optionsForm.availableLanguages}" />
+                        </h:selectOneMenu>
 <f:verbatim><br></f:verbatim>
-                        <h:output_text value="#{example_messages['option_layout']}" />
+                        <h:outputText value="#{example_messages['option_layout']}" />
 <f:verbatim>:&nbsp;</f:verbatim>
-                        <h:selectone_menu id="layout" value="#{globalOptions.pageLayout}"  >
-                            <f:selectitem id="item101" itemLabel="Classic" itemValue="classic" />
-                            <f:selectitem id="item102" itemLabel="Navigation right" itemValue="navigationRight" />
-                            <f:selectitem id="item103" itemLabel="Upside down" itemValue="upsideDown" />
-                        </h:selectone_menu>
+                        <h:selectOneMenu id="layout" value="#{globalOptions.pageLayout}"  >
+                            <f:selectItem id="item101" itemLabel="Classic" itemValue="classic" />
+                            <f:selectItem id="item102" itemLabel="Navigation right" itemValue="navigationRight" />
+                            <f:selectItem id="item103" itemLabel="Upside down" itemValue="upsideDown" />
+                        </h:selectOneMenu>
 <f:verbatim><br></f:verbatim>
-                        <h:command_button id="apply" value="Apply" action="#{optionsCtrl.changeLocale}"/>
+                        <h:commandButton id="apply" value="Apply" action="#{optionsCtrl.changeLocale}"/>
                     </h:form>
 
 <f:verbatim>
                 </td></tr></table>
 </f:verbatim>
 
-            </h:panel_group>
+            </h:panelGroup>
         </f:facet>
 
         <%@include file="inc/page_footer.jsp" %>
 
-    </x:panel_layout>
+    </x:panelLayout>
 
 </f:view>
 

@@ -33,7 +33,7 @@
 
     <f:loadBundle basename="net.sourceforge.myfaces.examples.resource.example_messages" var="example_messages"/>
 
-    <x:panel_layout id="page" layout="#{globalOptions.pageLayout}"
+    <x:panelLayout id="page" layout="#{globalOptions.pageLayout}"
             styleClass="pageLayout"
             headerClass="pageHeader"
             navigationClass="pageNavigation"
@@ -45,44 +45,44 @@
 
 
         <f:facet name="body">
-            <h:panel_group>
+            <h:panelGroup>
             <h:form id="countryForm" name="countryForm">
-                <x:save_state value="#{countryForm.id}" />
-                <h:panel_grid columns="2" styleClass="standardTable" >
-                    <h:output_label for="name" value="#{example_messages['label_country_name']}"/>
-                    <h:panel_group>
-                        <h:input_text id="name" value="#{countryForm.name}" required="true" />
+                <x:saveState value="#{countryForm.id}" />
+                <h:panelGrid columns="2" styleClass="standardTable" >
+                    <h:outputLabel for="name" value="#{example_messages['label_country_name']}"/>
+                    <h:panelGroup>
+                        <h:inputText id="name" value="#{countryForm.name}" required="true" />
                         <h:message for="countryForm:name" styleClass="error" showDetail="true" showSummary="false" />
-                    </h:panel_group>
+                    </h:panelGroup>
 
 
-                    <h:output_label for="isoCode" value="#{example_messages['label_country_iso']}"/>
-                    <h:panel_group>
-                        <h:input_text id="isoCode" value="#{countryForm.isoCode}" required="true">
-                            <f:validate_length maximum="2" minimum="2"/>
-                        </h:input_text>
+                    <h:outputLabel for="isoCode" value="#{example_messages['label_country_iso']}"/>
+                    <h:panelGroup>
+                        <h:inputText id="isoCode" value="#{countryForm.isoCode}" required="true">
+                            <f:validateLength maximum="2" minimum="2"/>
+                        </h:inputText>
                         <h:message for="countryForm:isoCode" styleClass="error" showDetail="true" showSummary="false" />
-                    </h:panel_group>
+                    </h:panelGroup>
 
-                    <h:panel_group/>
-                    <h:panel_group>
-                        <h:command_button action="#{countryForm.save}" value="#{example_messages['button_save']}" />
+                    <h:panelGroup/>
+                    <h:panelGroup>
+                        <h:commandButton action="#{countryForm.save}" value="#{example_messages['button_save']}" />
                         <f:verbatim>&nbsp;</f:verbatim>
-                        <h:command_button action="cancel" immediate="true" value="#{example_messages['button_cancel']}" />
+                        <h:commandButton action="cancel" immediate="true" value="#{example_messages['button_cancel']}" />
                         <f:verbatim>&nbsp;</f:verbatim>
-                        <h:command_button action="#{countryForm.delete}" immediate="true" value="#{example_messages['button_delete']}" />
+                        <h:commandButton action="#{countryForm.delete}" immediate="true" value="#{example_messages['button_delete']}" />
                         <f:verbatim>&nbsp;</f:verbatim>
-                        <h:command_button action="#{countryForm.apply}" value="#{example_messages['button_apply']}" />
-                    </h:panel_group>
+                        <h:commandButton action="#{countryForm.apply}" value="#{example_messages['button_apply']}" />
+                    </h:panelGroup>
 
-                </h:panel_grid>
+                </h:panelGrid>
             </h:form>
-            </h:panel_group>
+            </h:panelGroup>
         </f:facet>
 
         <%@include file="inc/page_footer.jsp" %>
 
-    </x:panel_layout>
+    </x:panelLayout>
 
 </f:view>
 

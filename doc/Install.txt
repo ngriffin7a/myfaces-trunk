@@ -1,4 +1,4 @@
 MyFaces installation instructions
 =================================
 
-You will find the installation instructions at http://myfaces.sourceforge.net.
+You will find the installation instructions at http://myfaces.sourceforge.net

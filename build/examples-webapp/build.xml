@@ -105,6 +105,7 @@
             <fileset dir="${web-inf.lib.dir}"/>
             <fileset file="${project.dir}/myfaces-*-examples.tgz"/>
             <fileset file="${examples.web}/WEB-INF/web.xml"/>
+            <fileset file="${examples.web}/WEB-INF/faces-config.xml"/>
         </delete>
     </target>
 

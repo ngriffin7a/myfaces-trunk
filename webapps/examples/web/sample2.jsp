@@ -38,7 +38,7 @@ managed beans used:
 
     <f:loadBundle basename="net.sourceforge.myfaces.examples.resource.example_messages" var="example_messages"/>
 
-    <x:panel_layout id="page" layout="#{globalOptions.pageLayout}"
+    <x:panelLayout id="page" layout="#{globalOptions.pageLayout}"
             styleClass="pageLayout"
             headerClass="pageHeader"
             navigationClass="pageNavigation"
@@ -49,42 +49,42 @@ managed beans used:
         <%@include file="inc/navigation.jsp"  %>
 
         <f:facet name="body">
-            <h:panel_group id="body">
+            <h:panelGroup id="body">
 
                 <h:messages id="messageList" />
 
                 <h:form id="q_form" name="q_form">
-                    <h:input_textarea id="text"
+                    <h:inputTextarea id="text"
                                       rows="5"
                                       value="#{q_form.text}" required="true" />
                     <f:verbatim><br><br></f:verbatim>
-                    <h:selectone_menu id="oneoption" value="#{q_form.quoteChar}" >
-                        <f:selectitem itemValue="" itemLabel="select a quote character" />
-                        <f:selectitem itemValue="\"" itemLabel="Double" />
-                        <f:selectitem itemValue="'" itemLabel="Single" />
-                        <f:selectitems value="#{q_form.selectOneItems}" />
-                    </h:selectone_menu>
-                    <h:command_button id="button1" value="Add quotes" action="none">
-                        <f:action_listener type="net.sourceforge.myfaces.examples.example2.QuotationController" ></f:action_listener>
-                    </h:command_button>
+                    <h:selectOneMenu id="oneoption" value="#{q_form.quoteChar}" >
+                        <f:selectItem itemValue="" itemLabel="select a quote character" />
+                        <f:selectItem itemValue="\"" itemLabel="Double" />
+                        <f:selectItem itemValue="'" itemLabel="Single" />
+                        <f:selectItems value="#{q_form.selectOneItems}" />
+                    </h:selectOneMenu>
+                    <h:commandButton id="button1" value="Add quotes" action="none">
+                        <f:actionListener type="net.sourceforge.myfaces.examples.example2.QuotationController" ></f:actionListener>
+                    </h:commandButton>
 
                     <f:verbatim><br><br></f:verbatim>
-                    <h:selectmany_listbox id="manyoptions" value="#{q_form.selectManyValues}" >
-                        <f:selectitem itemValue="" itemLabel="select the unquote characters" />
-                        <f:selectitems value="#{q_form.selectManyItems}" />
-                    </h:selectmany_listbox>
-                    <h:command_button id="button2" value="Remove quotes" action="none"><f:verbatim><br></f:verbatim>
-                        <f:action_listener type="net.sourceforge.myfaces.examples.example2.QuotationController" ></f:action_listener>
-                    </h:command_button>
+                    <h:selectManyListbox id="manyoptions" value="#{q_form.selectManyValues}" >
+                        <f:selectItem itemValue="" itemLabel="select the unquote characters" />
+                        <f:selectItems value="#{q_form.selectManyItems}" />
+                    </h:selectManyListbox>
+                    <h:commandButton id="button2" value="Remove quotes" action="none"><f:verbatim><br></f:verbatim>
+                        <f:actionListener type="net.sourceforge.myfaces.examples.example2.QuotationController" ></f:actionListener>
+                    </h:commandButton>
 
                 </h:form>
 
-            </h:panel_group>
+            </h:panelGroup>
         </f:facet>
 
         <%@include file="inc/page_footer.jsp" %>
 
-    </x:panel_layout>
+    </x:panelLayout>
 
 </f:view>
 

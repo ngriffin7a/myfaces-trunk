@@ -41,7 +41,7 @@ managed beans used:
 
     <f:loadBundle basename="net.sourceforge.myfaces.examples.resource.example_messages" var="example_messages"/>
 
-    <x:panel_layout id="page" layout="#{globalOptions.pageLayout}"
+    <x:panelLayout id="page" layout="#{globalOptions.pageLayout}"
             styleClass="pageLayout"
             headerClass="pageHeader"
             navigationClass="pageNavigation"
@@ -53,42 +53,42 @@ managed beans used:
 
         <f:facet name="body">
 
-            <h:panel_group id="body">
+            <h:panelGroup id="body">
 
                 <h:messages id="messageList" showSummary="true" showDetail="true" />
 
-                <x:panel_tabbedpane bgcolor="#FFFFCC" >
+                <x:panelTabbedPane bgcolor="#FFFFCC" >
 
                     <f:verbatim>
                         <p> A common paragraph </p>
                     </f:verbatim>
 
-                    <x:panel_tab id="tab1" label="Tab1">
-                        <h:input_text id="inp1"/><f:verbatim><br></f:verbatim>
-                        <h:input_text id="inp2" required="true" /><h:message for="inp2" showSummary="false" showDetail="true" />
-                    </x:panel_tab>
+                    <x:panelTab id="tab1" label="Tab1">
+                        <h:inputText id="inp1"/><f:verbatim><br></f:verbatim>
+                        <h:inputText id="inp2" required="true" /><h:message for="inp2" showSummary="false" showDetail="true" />
+                    </x:panelTab>
 
-                    <x:panel_tab id="tab2" label="Tab2">
-                        <h:input_textarea ></h:input_textarea>
-                    </x:panel_tab>
+                    <x:panelTab id="tab2" label="Tab2">
+                        <h:inputTextarea ></h:inputTextarea>
+                    </x:panelTab>
 
-                    <x:panel_tab id="tab3" label="Tab3">
-                        <h:input_text id="inp3"/><f:verbatim><br></f:verbatim>
-                        <h:input_text id="inp4"/><f:verbatim><br></f:verbatim>
-                        <h:input_text id="inp5"/><f:verbatim><br></f:verbatim>
-                    </x:panel_tab>
+                    <x:panelTab id="tab3" label="Tab3">
+                        <h:inputText id="inp3"/><f:verbatim><br></f:verbatim>
+                        <h:inputText id="inp4"/><f:verbatim><br></f:verbatim>
+                        <h:inputText id="inp5"/><f:verbatim><br></f:verbatim>
+                    </x:panelTab>
 
                     <f:verbatim><br></f:verbatim>
-                    <h:command_button value="Common submit button" />
+                    <h:commandButton value="Common submit button" />
 
-                </x:panel_tabbedpane>
+                </x:panelTabbedPane>
 
-            </h:panel_group>
+            </h:panelGroup>
         </f:facet>
 
         <%@include file="inc/page_footer.jsp" %>
 
-    </x:panel_layout>
+    </x:panelLayout>
 
 </f:view>
 

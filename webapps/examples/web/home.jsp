@@ -35,7 +35,7 @@
 
     <f:loadBundle basename="net.sourceforge.myfaces.examples.resource.example_messages" var="example_messages"/>
 
-    <x:panel_layout id="page" layout="#{globalOptions.pageLayout}"
+    <x:panelLayout id="page" layout="#{globalOptions.pageLayout}"
             styleClass="pageLayout"
             headerClass="pageHeader"
             navigationClass="pageNavigation"
@@ -46,33 +46,33 @@
         <%@include file="inc/navigation.jsp"  %>
 
         <f:facet name="body">
-            <h:panel_group id="body">
+            <h:panelGroup id="body">
                 <f:verbatim>
                     <table border="0">
                         <tr>
                             <td valign="middle">
                 </f:verbatim>
-                <h:output_format id="welcome" value="#{example_messages['welcome']}" />
+                <h:outputFormat id="welcome" value="#{example_messages['welcome']}" />
                 <f:verbatim>
                             </td>
                             <td valign="middle">
                 </f:verbatim>
-                <h:graphic_image id="logo" url="images/logo.jpg"/>
+                <h:graphicImage id="logo" url="images/logo.jpg"/>
                 <f:verbatim>
                             </td>
                         </tr>
                     </table>
                 </f:verbatim>
-                <h:output_format value="#{example_messages['today']}" >
+                <h:outputFormat value="#{example_messages['today']}" >
                     <% request.setAttribute("currentDate", new Date()); %>
                     <f:parameter id="p0" value="#{currentDate}" />
-                </h:output_format>
-            </h:panel_group>
+                </h:outputFormat>
+            </h:panelGroup>
         </f:facet>
 
         <%@include file="inc/page_footer.jsp" %>
         
-    </x:panel_layout>
+    </x:panelLayout>
 
 </f:view>
 

@@ -38,7 +38,7 @@ managed beans used:
 
     <f:loadBundle basename="net.sourceforge.myfaces.examples.resource.example_messages" var="example_messages"/>
 
-    <x:panel_layout id="page" layout="#{globalOptions.pageLayout}"
+    <x:panelLayout id="page" layout="#{globalOptions.pageLayout}"
             styleClass="pageLayout"
             headerClass="pageHeader"
             navigationClass="pageNavigation"
@@ -49,9 +49,9 @@ managed beans used:
         <%@include file="inc/navigation.jsp"  %>
 
         <f:facet name="body">
-            <h:panel_group id="body">
+            <h:panelGroup id="body">
 
-                <x:data_table styleClass="standardTable"
+                <x:dataTable styleClass="standardTable"
                         headerClass="standardTable_SortHeader"
                         footerClass="standardTable_Footer"
                         rowClasses="standardTable_Row1,standardTable_Row2"
@@ -62,36 +62,36 @@ managed beans used:
 
                     <h:column>
                         <f:facet name="header">
-                            <x:command_sortheader columnName="type">
-                                <h:output_text value="#{example_messages['sort_cartype']}" />
-                            </x:command_sortheader>
+                            <x:commandSortHeader columnName="type">
+                                <h:outputText value="#{example_messages['sort_cartype']}" />
+                            </x:commandSortHeader>
                         </f:facet>
-                        <h:output_text value="#{car.type}" />
+                        <h:outputText value="#{car.type}" />
                         <f:facet name="footer">
-                            <h:output_text id="ftr1" value="(footer 1)"  />
+                            <h:outputText id="ftr1" value="(footer 1)"  />
                         </f:facet>
                     </h:column>
 
                     <h:column>
                         <f:facet name="header">
-                            <x:command_sortheader columnName="color">
-                                <h:output_text value="#{example_messages['sort_carcolor']}" />
-                            </x:command_sortheader>
+                            <x:commandSortHeader columnName="color">
+                                <h:outputText value="#{example_messages['sort_carcolor']}" />
+                            </x:commandSortHeader>
                         </f:facet>
-                        <h:output_text value="#{car.color}" />
+                        <h:outputText value="#{car.color}" />
                         <f:facet name="footer">
-                            <h:output_text id="ftr2" value="(footer 2)"  />
+                            <h:outputText id="ftr2" value="(footer 2)"  />
                         </f:facet>
                     </h:column>
 
-                </x:data_table>
+                </x:dataTable>
 
-            </h:panel_group>
+            </h:panelGroup>
         </f:facet>
 
             <%@include file="inc/page_footer.jsp" %>
 
-    </x:panel_layout>
+    </x:panelLayout>
 
 </f:view>
 
