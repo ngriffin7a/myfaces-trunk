@@ -26,8 +26,11 @@ import net.sourceforge.myfaces.renderkit.attr.CommonRendererAttributes;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public interface LayoutRendererAttributes
+public interface LayoutChildRendererAttributes
     extends CommonRendererAttributes
 {
-    public static final String LAYOUT_ATTR = "layout";
+    public static final String HEADER_CLASS_ATTR = "headerClass";
+    public static final String NAVIGATION_CLASS_ATTR = "navigationClass";
+    public static final String BODY_CLASS_ATTR = "bodyClass";
+    public static final String FOOTER_CLASS_ATTR = "footerClass";
 }

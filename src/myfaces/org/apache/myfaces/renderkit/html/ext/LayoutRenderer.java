@@ -39,10 +39,10 @@ public class LayoutRenderer
     extends HTMLRenderer
     implements LayoutRendererAttributes
 {
-    private static final String HEADER = "LayoutHeader";
-    private static final String NAVIGATION = "LayoutNavigation";
-    private static final String BODY = "LayoutBody";
-    private static final String FOOTER = "LayoutFooter";
+    static final String HEADER = "LayoutHeader";
+    static final String NAVIGATION = "LayoutNavigation";
+    static final String BODY = "LayoutBody";
+    static final String FOOTER = "LayoutFooter";
 
     public static final String BODY_CONTENT_REQUEST_ATTR = LayoutRenderer.class.getName() + ".BODY_CONTENT";
 
@@ -70,92 +70,29 @@ public class LayoutRenderer
     public void encodeBegin(FacesContext facesContext, UIComponent uiComponent)
         throws IOException
     {
-        ResponseWriter writer = facesContext.getResponseWriter();
-
-        String rendererType = uiComponent.getRendererType();
-        if (rendererType != null &&
-            rendererType.equals(LayoutRenderer.TYPE))
-        {
-            // wrap current renderKit
-            RenderKitWrapper.wrapRenderKit(facesContext,
-                                           uiComponent,
-                                           "LayoutRenderKit",
-                                           this);
-            return;
-        }
-        else if (uiComponent.getComponentType().equals(UIPanel.TYPE))
-        {
-            if (uiComponent.getAttribute(HEADER_CLASS_ATTR) != null)
-            {
-                writer.write(beginToken(HEADER));
-            }
-            else if (uiComponent.getAttribute(NAVIGATION_CLASS_ATTR) != null)
-            {
-                writer.write(beginToken(NAVIGATION));
-            }
-            else if (uiComponent.getAttribute(BODY_CLASS_ATTR) != null)
-            {
-                writer.write(beginToken(BODY));
-            }
-            else if (uiComponent.getAttribute(FOOTER_CLASS_ATTR) != null)
-            {
-                writer.write(beginToken(FOOTER));
-            }
-        }
-        RenderKitWrapper.originalEncodeBegin(facesContext, uiComponent);
+        // wrap current renderKit
+        RenderKitWrapper.wrapRenderKit(facesContext,
+                                       uiComponent,
+                                       "LayoutRenderKit");
+        RenderKitWrapper.startChildrenRedirection(facesContext,
+                                                  uiComponent,
+                                                  this,
+                                                  new LayoutChildRenderer());
     }
 
     public void encodeChildren(FacesContext facesContext, UIComponent uiComponent)
         throws IOException
     {
-        RenderKitWrapper.originalEncodeChildren(facesContext, uiComponent);
     }
 
     public void encodeEnd(FacesContext facesContext, UIComponent uiComponent)
         throws IOException
     {
-        ResponseWriter writer = facesContext.getResponseWriter();
+        writeBody(facesContext, uiComponent);
 
-        String rendererType = uiComponent.getRendererType();
-        if (rendererType != null &&
-            rendererType.equals(LayoutRenderer.TYPE))
-        {
-            writeBody(facesContext, uiComponent);
-            // unwrap current renderKit
-            RenderKitWrapper.unwrapRenderKit(facesContext,
-                                             uiComponent);
-            return;
-        }
-        else if (uiComponent.getComponentType().equals(UIPanel.TYPE))
-        {
-            if (uiComponent.getAttribute(HEADER_CLASS_ATTR) != null)
-            {
-                writer.write(endToken(HEADER));
-            }
-            else if (uiComponent.getAttribute(NAVIGATION_CLASS_ATTR) != null)
-            {
-                writer.write(endToken(NAVIGATION));
-            }
-            else if (uiComponent.getAttribute(BODY_CLASS_ATTR) != null)
-            {
-                writer.write(endToken(BODY));
-            }
-            else if (uiComponent.getAttribute(FOOTER_CLASS_ATTR) != null)
-            {
-                writer.write(endToken(FOOTER));
-            }
-        }
-        RenderKitWrapper.originalEncodeBegin(facesContext, uiComponent);
-    }
-
-    protected static String beginToken(String part)
-    {
-        return "__" + part + "_BEGIN__";
-    }
-
-    protected static String endToken(String part)
-    {
-        return "__" + part + "_END__";
+        // unwrap current renderKit
+        RenderKitWrapper.unwrapRenderKit(facesContext,
+                                         uiComponent);
     }
 
     protected void writeBody(FacesContext facesContext, UIComponent uiComponent)

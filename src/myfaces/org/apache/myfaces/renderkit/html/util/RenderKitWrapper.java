@@ -18,17 +18,18 @@
  */
 package net.sourceforge.myfaces.renderkit.html.util;
 
-import javax.faces.component.UIComponent;
-import javax.faces.render.RenderKit;
-import javax.faces.render.Renderer;
-import javax.faces.render.RenderKitFactory;
-import javax.faces.context.FacesContext;
-import javax.faces.tree.Tree;
-import javax.faces.FactoryFinder;
 import javax.faces.FacesException;
-import java.util.Iterator;
-import java.util.Map;
+import javax.faces.FactoryFinder;
+import javax.faces.component.AttributeDescriptor;
+import javax.faces.component.UIComponent;
+import javax.faces.context.FacesContext;
+import javax.faces.render.RenderKit;
+import javax.faces.render.RenderKitFactory;
+import javax.faces.render.Renderer;
+import javax.faces.tree.Tree;
 import java.io.IOException;
+import java.util.Iterator;
+import java.util.Stack;
 
 /**
  * This RenderKit can be used to wrap an existing RenderKit, so that
@@ -43,45 +44,19 @@ import java.io.IOException;
 public class RenderKitWrapper
     extends RenderKit
 {
-    private String _originalRenderKitId;
-    private Map _masterRenderers;
-    private Renderer _defaultMasterRenderer;
+    //TODO: Save as Request-attribute
+    private RenderKit _originalRenderKit;
+    //TODO: Save as Request-attribute
+    private Stack _redirectionStack = new Stack();
 
-    /**
-     * @param originalRenderKitId id of wrapped RenderKit
-     * @param masterRenderer      renderer, that should be returned by getRenderer
-     *                            instead of any of the wrapped renderers
-     */
-    public RenderKitWrapper(String originalRenderKitId,
-                            Renderer masterRenderer)
+    public RenderKitWrapper(RenderKit originalRenderKit)
     {
-        this(originalRenderKitId, null, masterRenderer);
-    }
-
-    /**
-     * @param originalRenderKitId   id of wrapped RenderKit
-     * @param masterRenderers       renderers, that should be returned by getRenderer
-     *                              instead of any of the wrapped renderers
-     * @param defaulMasterRenderer  renderer, that should be returned for all
-     *                              types, not mapped by masterRenderers
-     */
-    public RenderKitWrapper(String originalRenderKitId,
-                            Map masterRenderers,
-                            Renderer defaulMasterRenderer)
-    {
-        _originalRenderKitId = originalRenderKitId;
-        _masterRenderers = masterRenderers;
-        _defaultMasterRenderer = defaulMasterRenderer;
+        _originalRenderKit = originalRenderKit;
     }
 
     public Renderer getRenderer(String rendererType)
     {
-        Renderer renderer = null;
-        if (_masterRenderers != null)
-        {
-            renderer = (Renderer)_masterRenderers.get(rendererType);
-        }
-        return renderer != null ? renderer : _defaultMasterRenderer;
+        return new RendererWrapper(rendererType);
     }
 
     public void addRenderer(String s, Renderer renderer)
@@ -96,60 +71,228 @@ public class RenderKitWrapper
 
     public Iterator getComponentClasses()
     {
-        return getOriginalRenderKit().getComponentClasses();
+        return _originalRenderKit.getComponentClasses();
     }
 
     public Iterator getRendererTypes()
     {
-        return getOriginalRenderKit().getRendererTypes();
+        return _originalRenderKit.getRendererTypes();
     }
 
     public Iterator getRendererTypes(String s)
     {
-        return getOriginalRenderKit().getRendererTypes(s);
+        return _originalRenderKit.getRendererTypes(s);
     }
 
     public Iterator getRendererTypes(UIComponent uiComponent)
     {
-        return getOriginalRenderKit().getRendererTypes(uiComponent);
+        return _originalRenderKit.getRendererTypes(uiComponent);
     }
 
-    public String getOriginalRenderKitId()
+
+
+    public void startChildrenRedirection(UIComponent currentComponent,
+                                         Renderer currentRenderer,
+                                         Renderer redirectionRenderer)
     {
-        return _originalRenderKitId;
+        _redirectionStack.push(new Redirection(Redirection.START,
+                                               currentComponent,
+                                               currentRenderer,
+                                               redirectionRenderer));
+    }
+
+
+    public void suspendChildrenRedirection(UIComponent currentComponent,
+                                           Renderer currentRenderer)
+    {
+        _redirectionStack.push(new Redirection(Redirection.SUSPEND,
+                                               currentComponent,
+                                               currentRenderer,
+                                               null));
     }
 
     public RenderKit getOriginalRenderKit()
     {
-        RenderKitFactory renderkitFactory = (RenderKitFactory)FactoryFinder.getFactory(FactoryFinder.RENDER_KIT_FACTORY);
-        return renderkitFactory.getRenderKit(_originalRenderKitId);
+        return _originalRenderKit;
     }
 
 
 
-    private static final String ORIGINAL_RENDER_KIT_ID_ATTR = RenderKitWrapper.class.getName() + ".ORIGINAL_RENDER_KIT_ID";
 
-    public static void wrapRenderKit(FacesContext facesContext,
-                                     UIComponent currentComponent,
-                                     String wrapRenderKitId,
-                                     Renderer masterRenderer)
+    private static class Redirection
     {
-        wrapRenderKit(facesContext,
-                      currentComponent,
-                      wrapRenderKitId,
-                      null,
-                      masterRenderer);
+        public static final int START = 1;
+        public static final int SUSPEND = 2;
+        public int redirectionType;
+        public UIComponent redirectingComponent;
+        public Renderer redirectingRenderer;
+        public Renderer redirectionRenderer;
+
+        public Redirection(int redirectionType,
+                           UIComponent redirectingComponent,
+                           Renderer redirectingRenderer,
+                           Renderer redirectionRenderer)
+        {
+            this.redirectionType = redirectionType;
+            this.redirectingComponent = redirectingComponent;
+            this.redirectingRenderer = redirectingRenderer;
+            this.redirectionRenderer = redirectionRenderer;
+        }
     }
+
+
+
+    private class RendererWrapper
+        extends Renderer
+    {
+        private String _rendererType;
+
+        public RendererWrapper(String rendererType)
+        {
+            _rendererType = rendererType;
+        }
+
+        public void encodeBegin(FacesContext facesContext, UIComponent uiComponent) throws IOException
+        {
+            if (!_redirectionStack.isEmpty())
+            {
+                Redirection redirection = (Redirection)_redirectionStack.peek();
+                if (redirection.redirectingComponent == uiComponent)
+                {
+                    if (redirection.redirectingRenderer != null)
+                    {
+                        redirection.redirectingRenderer.encodeBegin(facesContext,
+                                                                    uiComponent);
+                    }
+                    else
+                    {
+                        redirection.redirectingComponent.encodeBegin(facesContext);
+                    }
+                }
+                else if (redirection.redirectionType == Redirection.START)
+                {
+                    redirection.redirectionRenderer.encodeBegin(facesContext,
+                                                                uiComponent);
+                }
+            }
+            else
+            {
+                _originalRenderKit.getRenderer(_rendererType).encodeBegin(facesContext,
+                                                                          uiComponent);
+            }
+        }
+
+        public void encodeChildren(FacesContext facesContext, UIComponent uiComponent) throws IOException
+        {
+            if (!_redirectionStack.isEmpty())
+            {
+                Redirection redirection = (Redirection)_redirectionStack.peek();
+                if (redirection.redirectingComponent == uiComponent)
+                {
+                    if (redirection.redirectingRenderer != null)
+                    {
+                        redirection.redirectingRenderer.encodeChildren(facesContext,
+                                                                    uiComponent);
+                    }
+                    else
+                    {
+                        redirection.redirectingComponent.encodeChildren(facesContext);
+                    }
+                }
+                else if (redirection.redirectionType == Redirection.START)
+                {
+                    redirection.redirectionRenderer.encodeChildren(facesContext,
+                                                                uiComponent);
+                }
+            }
+            else
+            {
+                _originalRenderKit.getRenderer(_rendererType).encodeChildren(facesContext,
+                                                                          uiComponent);
+            }
+        }
+
+        public void encodeEnd(FacesContext facesContext, UIComponent uiComponent) throws IOException
+        {
+            if (!_redirectionStack.isEmpty())
+            {
+                Redirection redirection = (Redirection)_redirectionStack.peek();
+                if (redirection.redirectingComponent == uiComponent)
+                {
+                    if (redirection.redirectingRenderer != null)
+                    {
+                        redirection.redirectingRenderer.encodeEnd(facesContext,
+                                                                       uiComponent);
+                    }
+                    else
+                    {
+                        redirection.redirectingComponent.encodeEnd(facesContext);
+                    }
+                    _redirectionStack.pop();
+                }
+                else if (redirection.redirectionType == Redirection.START)
+                {
+                    redirection.redirectionRenderer.encodeEnd(facesContext,
+                                                                uiComponent);
+                }
+            }
+            else
+            {
+                _originalRenderKit.getRenderer(_rendererType).encodeEnd(facesContext,
+                                                                          uiComponent);
+            }
+        }
+
+        public void decode(FacesContext facesContext, UIComponent uiComponent) throws IOException
+        {
+            throw new UnsupportedOperationException();
+        }
+
+        public AttributeDescriptor getAttributeDescriptor(UIComponent uiComponent, String s)
+        {
+            throw new UnsupportedOperationException();
+        }
+
+        public AttributeDescriptor getAttributeDescriptor(String s, String s1)
+        {
+            throw new UnsupportedOperationException();
+        }
+
+        public Iterator getAttributeNames(UIComponent uiComponent)
+        {
+            throw new UnsupportedOperationException();
+        }
+
+        public Iterator getAttributeNames(String s)
+        {
+            throw new UnsupportedOperationException();
+        }
+
+        public boolean supportsComponentType(UIComponent uiComponent)
+        {
+            throw new UnsupportedOperationException();
+        }
+
+        public boolean supportsComponentType(String s)
+        {
+            throw new UnsupportedOperationException();
+        }
+    };
+
+
+
+    private static final String ORIGINAL_RENDER_KIT_ID_ATTR
+        = RenderKitWrapper.class.getName() + ".ORIGINAL_RENDER_KIT_ID";
 
     public static void wrapRenderKit(FacesContext facesContext,
                                      UIComponent currentComponent,
-                                     String wrapRenderKitId,
-                                     Map masterRenderers,
-                                     Renderer defaulMasterRenderer)
+                                     String wrapRenderKitId)
     {
         Tree tree = facesContext.getResponseTree();
         RenderKitFactory renderkitFactory = (RenderKitFactory)FactoryFinder.getFactory(FactoryFinder.RENDER_KIT_FACTORY);
         String originalRenderKitId = tree.getRenderKitId();
+        RenderKit originalRenderKit = renderkitFactory.getRenderKit(originalRenderKitId,
+                                                                    facesContext);
 
         String newRenderKitId = originalRenderKitId + "_" + wrapRenderKitId;
         // lookup new RenderKit in RenderKitFactory...
@@ -165,9 +308,7 @@ public class RenderKitWrapper
         // ...and add to RenderKitFactory if not yet registered
         if (wrapRenderKit == null)
         {
-            wrapRenderKit = new RenderKitWrapper(originalRenderKitId,
-                                                 masterRenderers,
-                                                 defaulMasterRenderer);
+            wrapRenderKit = new RenderKitWrapper(originalRenderKit);
             renderkitFactory.addRenderKit(wrapRenderKitId, wrapRenderKit);
         }
 
@@ -179,11 +320,13 @@ public class RenderKitWrapper
         tree.setRenderKitId(newRenderKitId);
     }
 
+
     public static void unwrapRenderKit(FacesContext facesContext,
                                        UIComponent currentComponent)
     {
-        // get original renderKitId
-        String originalRenderKitId = (String)currentComponent.getAttribute(ORIGINAL_RENDER_KIT_ID_ATTR);
+        // get original renderKitId via component attribute
+        String originalRenderKitId
+            = (String)currentComponent.getAttribute(ORIGINAL_RENDER_KIT_ID_ATTR);
 
         // remove attribute
         currentComponent.setAttribute(ORIGINAL_RENDER_KIT_ID_ATTR, null);
@@ -193,61 +336,89 @@ public class RenderKitWrapper
         tree.setRenderKitId(originalRenderKitId);
     }
 
-    public static RenderKit getOriginalRenderKit(FacesContext facesContext)
+
+    public static void startChildrenRedirection(FacesContext facesContext,
+                                                UIComponent currentComponent,
+                                                Renderer currentRenderer,
+                                                Renderer redirectionRenderer)
     {
-        Tree tree = facesContext.getResponseTree();
-        RenderKitFactory renderKitFactory = (RenderKitFactory)FactoryFinder.getFactory(FactoryFinder.RENDER_KIT_FACTORY);
-        RenderKit renderKit = renderKitFactory.getRenderKit(tree.getRenderKitId(),
+        RenderKitFactory renderkitFactory = (RenderKitFactory)FactoryFinder.getFactory(FactoryFinder.RENDER_KIT_FACTORY);
+        RenderKit renderKit = renderkitFactory.getRenderKit(facesContext.getResponseTree().getRenderKitId(),
                                                             facesContext);
         if (!(renderKit instanceof RenderKitWrapper))
         {
-            throw new IllegalStateException("Current renderKit is not a RenderKitWrapper.");
+            throw new IllegalStateException();
         }
 
-        return renderKitFactory.getRenderKit(((RenderKitWrapper)renderKit).getOriginalRenderKitId(),
-                                             facesContext);
+        ((RenderKitWrapper)renderKit).startChildrenRedirection(currentComponent,
+                                                               currentRenderer,
+                                                               redirectionRenderer);
     }
+
+
+    public static void suspendChildrenRedirection(FacesContext facesContext,
+                                                  UIComponent currentComponent,
+                                                  Renderer currentRenderer)
+    {
+        RenderKitFactory renderkitFactory = (RenderKitFactory)FactoryFinder.getFactory(FactoryFinder.RENDER_KIT_FACTORY);
+        RenderKit renderKit = renderkitFactory.getRenderKit(facesContext.getResponseTree().getRenderKitId(),
+                                                            facesContext);
+        if (!(renderKit instanceof RenderKitWrapper))
+        {
+            throw new IllegalStateException();
+        }
+
+        ((RenderKitWrapper)renderKit).suspendChildrenRedirection(currentComponent,
+                                                                 currentRenderer);
+    }
+
 
     public static void originalEncodeBegin(FacesContext facesContext,
                                            UIComponent uiComponent)
         throws IOException
     {
-        String rendererType = uiComponent.getRendererType();
-        if (rendererType == null)
+        RenderKitFactory renderkitFactory = (RenderKitFactory)FactoryFinder.getFactory(FactoryFinder.RENDER_KIT_FACTORY);
+        RenderKit renderKit = renderkitFactory.getRenderKit(facesContext.getResponseTree().getRenderKitId(),
+                                                            facesContext);
+        if (!(renderKit instanceof RenderKitWrapper))
         {
-            throw new IllegalArgumentException("Component has no renderer type.");
+            throw new IllegalStateException();
         }
-        RenderKit renderKit = getOriginalRenderKit(facesContext);
-        Renderer renderer = renderKit.getRenderer(rendererType);
-        renderer.encodeBegin(facesContext, uiComponent);
+
+        Renderer originalRenderer = ((RenderKitWrapper)renderKit).getOriginalRenderKit().getRenderer(uiComponent.getRendererType());
+        originalRenderer.encodeBegin(facesContext, uiComponent);
     }
 
     public static void originalEncodeChildren(FacesContext facesContext,
-                                              UIComponent uiComponent)
+                                           UIComponent uiComponent)
         throws IOException
     {
-        String rendererType = uiComponent.getRendererType();
-        if (rendererType == null)
+        RenderKitFactory renderkitFactory = (RenderKitFactory)FactoryFinder.getFactory(FactoryFinder.RENDER_KIT_FACTORY);
+        RenderKit renderKit = renderkitFactory.getRenderKit(facesContext.getResponseTree().getRenderKitId(),
+                                                            facesContext);
+        if (!(renderKit instanceof RenderKitWrapper))
         {
-            throw new IllegalArgumentException("Component has no renderer type.");
+            throw new IllegalStateException();
         }
-        RenderKit renderKit = getOriginalRenderKit(facesContext);
-        Renderer renderer = renderKit.getRenderer(rendererType);
-        renderer.encodeChildren(facesContext, uiComponent);
+
+        Renderer originalRenderer = ((RenderKitWrapper)renderKit).getOriginalRenderKit().getRenderer(uiComponent.getRendererType());
+        originalRenderer.encodeChildren(facesContext, uiComponent);
     }
 
     public static void originalEncodeEnd(FacesContext facesContext,
                                            UIComponent uiComponent)
         throws IOException
     {
-        String rendererType = uiComponent.getRendererType();
-        if (rendererType == null)
+        RenderKitFactory renderkitFactory = (RenderKitFactory)FactoryFinder.getFactory(FactoryFinder.RENDER_KIT_FACTORY);
+        RenderKit renderKit = renderkitFactory.getRenderKit(facesContext.getResponseTree().getRenderKitId(),
+                                                            facesContext);
+        if (!(renderKit instanceof RenderKitWrapper))
         {
-            throw new IllegalArgumentException("Component has no renderer type.");
+            throw new IllegalStateException();
         }
-        RenderKit renderKit = getOriginalRenderKit(facesContext);
-        Renderer renderer = renderKit.getRenderer(rendererType);
-        renderer.encodeEnd(facesContext, uiComponent);
+
+        Renderer originalRenderer = ((RenderKitWrapper)renderKit).getOriginalRenderKit().getRenderer(uiComponent.getRendererType());
+        originalRenderer.encodeEnd(facesContext, uiComponent);
     }
 
 }
