@@ -7,7 +7,7 @@
             <description>Initial value to set when rendered for the first time.</description>
         </attribute>
         <attribute>
-            <name>converter</name>
+            <name>converterId</name>
             <required>false</required>
             <rtexprvalue>false</rtexprvalue>
             <type>java.lang.String</type>

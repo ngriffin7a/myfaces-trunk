@@ -75,6 +75,9 @@ Start of revised 1.0 conforming tags
         <name>output_text</name>
         <tag-class>net.sourceforge.myfaces.taglib.html.HtmlOutputTextTag</tag-class>
         <body-content>empty</body-content>
+        <description>
+            Renders the value of the associated UIOutput component.
+        </description>
         &ui_component_attributes;
         &ui_output_attributes;
         &html_universal_attributes;
@@ -85,7 +88,38 @@ Start of revised 1.0 conforming tags
             <name>escape</name>
             <required>false</required>
             <rtexprvalue>false</rtexprvalue>
-            <description>Indicates whether rendered markup should be escaped.</description>
+            <description>
+                Indicates whether rendered markup should be escaped.
+                Default: true
+            </description>
+        </attribute>
+    </tag>
+
+<!-- output_message -->
+    <tag>
+        <name>output_message</name>
+        <tag-class>net.sourceforge.myfaces.taglib.html.HtmlOutputMessageTag</tag-class>
+        <body-content>JSP</body-content>
+        <description>
+            Takes the value of the associated UIOutput component as a MessageFormat
+            pattern and formats embedded parameters with this pattern.
+        </description>
+        &ui_component_attributes;
+        &ui_output_attributes;
+        &html_universal_attributes;
+        &html_event_handler_attributes;
+        &user_role_attributes;
+        <!-- HtmlOutputMessage attributes
+        (API attributes are wrong: OutputMessage has nothing to do with error messages,
+         see description above!) -->
+        <attribute>
+            <name>escape</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
+            <description>
+                Indicates whether rendered markup should be escaped.
+                Default: true
+            </description>
         </attribute>
     </tag>
 
@@ -94,6 +128,10 @@ Start of revised 1.0 conforming tags
         <name>input_text</name>
         <tag-class>net.sourceforge.myfaces.taglib.html.HtmlInputTextTag</tag-class>
         <body-content>JSP</body-content>
+        <description>
+            Renders a HTML input element that is bound to the value (binding)
+            of the associated UIOutput component.
+        </description>
         &ui_component_attributes;
         &ui_output_attributes;
         &ui_input_attributes;
@@ -115,6 +153,9 @@ Start of revised 1.0 conforming tags
         <name>form</name>
         <tag-class>net.sourceforge.myfaces.taglib.html.HtmlFormTag</tag-class>
         <body-content>JSP</body-content>
+        <description>
+            Renders a HTML form element.
+        </description>
         &ui_component_attributes;
         &ui_form_attributes;
         &html_universal_attributes;
@@ -123,41 +164,89 @@ Start of revised 1.0 conforming tags
         &user_role_attributes;
     </tag>
 
-<!-- output_message -->
+<!-- message -->
     <tag>
-        <name>output_message</name>
-        <tag-class>net.sourceforge.myfaces.taglib.html.HtmlOutputMessageTag</tag-class>
+        <name>message</name>
+        <tag-class>net.sourceforge.myfaces.taglib.html.HtmlMessageTag</tag-class>
         <body-content>JSP</body-content>
+        <description>
+            Renders the first FacesMessage that is assigned to the component
+            referenced by the "for" attribute.
+        </description>
         &ui_component_attributes;
         &ui_message_attributes;
         &html_universal_attributes;
         &html_event_handler_attributes;
         &user_role_attributes;
-        <!-- HtmlOutputMessage attributes -->
+        <!-- HtmlMessage attributes -->
+        <attribute>
+            <name>infoClass</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
+            <description>CSS class to be used for messages with severity "INFO".</description>
+        </attribute>
+        <attribute>
+            <name>infoStyle</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
+            <description>CSS style to be used for messages with severity "INFO".</description>
+        </attribute>
+        <attribute>
+            <name>warnClass</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
+            <description>CSS class to be used for messages with severity "WARN".</description>
+        </attribute>
+        <attribute>
+            <name>warnStyle</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
+            <description>CSS style to be used for messages with severity "WARN".</description>
+        </attribute>
         <attribute>
             <name>errorClass</name>
             <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
+            <rtexprvalue>false</rtexprvalue>
             <description>CSS class to be used for messages with severity "ERROR".</description>
         </attribute>
         <attribute>
             <name>errorStyle</name>
             <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
+            <rtexprvalue>false</rtexprvalue>
             <description>CSS style to be used for messages with severity "ERROR".</description>
         </attribute>
         <attribute>
             <name>fatalClass</name>
             <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
+            <rtexprvalue>false</rtexprvalue>
             <description>CSS class to be used for messages with severity "FATAL".</description>
         </attribute>
         <attribute>
             <name>fatalStyle</name>
             <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
+            <rtexprvalue>false</rtexprvalue>
             <description>CSS style to be used for messages with severity "FATAL".</description>
         </attribute>
+    </tag>
+
+<!-- messages -->
+    <tag>
+        <name>messages</name>
+        <tag-class>net.sourceforge.myfaces.taglib.html.HtmlMessagesTag</tag-class>
+        <body-content>JSP</body-content>
+        <description>
+            Renders all or some FacesMessages depending on the "for" and "globalOnly" attributes:
+            - If globalOnly = true, only global messages, that have no associated clientId, will be displayed
+            - else if there is a "for" attribute, only messages, that are assigned to the component referenced
+              by the "for" attribute, are displayed
+            - else all messages are displayed.
+        </description>
+        &ui_component_attributes;
+        &ui_messages_attributes;
+        &html_universal_attributes;
+        &html_event_handler_attributes;
+        &user_role_attributes;
+        <!-- HtmlMessages attributes -->
         <attribute>
             <name>infoClass</name>
             <required>false</required>
@@ -183,34 +272,34 @@ Start of revised 1.0 conforming tags
             <description>CSS style to be used for messages with severity "WARN".</description>
         </attribute>
         <attribute>
-            <name>styleClass</name>
+            <name>errorClass</name>
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>
-            <description>CSS class to be used.</description>
+            <description>CSS class to be used for messages with severity "ERROR".</description>
         </attribute>
         <attribute>
-            <name>style</name>
+            <name>errorStyle</name>
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>
-            <description>CSS style to be used.</description>
+            <description>CSS style to be used for messages with severity "ERROR".</description>
         </attribute>
         <attribute>
-            <name>title</name>
+            <name>fatalClass</name>
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>
-            <description>Title</description>
+            <description>CSS class to be used for messages with severity "FATAL".</description>
         </attribute>
         <attribute>
-            <name>title</name>
+            <name>fatalStyle</name>
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>
-            <description>Title attribute</description>
+            <description>CSS style to be used for messages with severity "FATAL".</description>
         </attribute>
         <attribute>
-            <name>tooltip</name>
+            <name>layout</name>
             <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-            <description>Tooltip attribute</description>
+            <rtexprvalue>false</rtexprvalue>
+            <description>The layout: "table" or "list".</description>
         </attribute>
     </tag>
 

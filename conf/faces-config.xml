@@ -568,7 +568,7 @@
 
       <renderer>
           <renderer-type>Message</renderer-type>
-          <renderer-class>net.sourceforge.myfaces.renderkit.html.MessageRenderer</renderer-class>
+          <renderer-class>net.sourceforge.myfaces.renderkit.html.legacy.MessageRenderer</renderer-class>
           <attribute>
               <attribute-name>key</attribute-name>
               <attribute-class>java.lang.String</attribute-class>

@@ -50,7 +50,7 @@ public class HtmlOutputTextTag
     // HTML event handler attributes --> already implemented in HtmlComponentTag
 
     // UIOutput attributes
-    private String _converter;
+    // value and converterId --> already implemented in MyfacesComponentTag
 
     // HtmlOutputText attributes
     private String _escape;
@@ -60,14 +60,7 @@ public class HtmlOutputTextTag
     {
         super.setProperties(component);
 
-        setStringProperty(component, JSFAttr.CONVERTER_ATTR, _converter);
-
         setBooleanProperty(component, JSFAttr.ESCAPE_ATTR, _escape);
-    }
-
-    public void setConverter(String converter)
-    {
-        _converter = converter;
     }
 
     public void setEscape(String escape)

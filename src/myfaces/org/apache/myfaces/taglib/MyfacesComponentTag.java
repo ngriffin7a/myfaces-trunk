@@ -22,8 +22,11 @@ import net.sourceforge.myfaces.renderkit.JSFAttr;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import javax.faces.component.ConvertibleValueHolder;
 import javax.faces.component.UIComponent;
 import javax.faces.component.ValueHolder;
+import javax.faces.context.FacesContext;
+import javax.faces.convert.Converter;
 import javax.faces.el.ValueBinding;
 import javax.faces.webapp.UIComponentTag;
 
@@ -36,17 +39,38 @@ public abstract class MyfacesComponentTag
 {
     private static final Log log = LogFactory.getLog(MyfacesComponentTag.class);
 
+    /**
+     * Must be implemented by sub classes.
+     */
+    protected abstract String getDefaultRendererType();
+
     //UIComponent attributes
-    private String _rendererType;
     private String _transient;
-    private String _value;
 
     //user role attributes (Myfaces extension)
     private String _enabledOnUserRole;
     private String _visibleOnUserRole;
 
+    //Special UIComponent attributes (ValueHolder, ConvertibleValueHolder)
+    private String _rendererType;
+    private String _value;
+    private String _converterId;
+    //attributes id, rendered and binding are handled by UIComponentTag
 
-    protected abstract String getDefaultRendererType();
+    protected void setProperties(UIComponent component)
+    {
+        super.setProperties(component);
+
+        setBooleanProperty(component, JSFAttr.TRANSIENT_ATTR, _transient);
+
+        setBooleanProperty(component, JSFAttr.ENABLED_ON_USER_ROLE_ATTR, _enabledOnUserRole);
+        setBooleanProperty(component, JSFAttr.VISIBLE_ON_USER_ROLE_ATTR, _visibleOnUserRole);
+
+        //rendererType already handled by UIComponentTag
+
+        setValueProperty(component, _value);
+        setConverterIdProperty(component, _converterId);
+    }
 
     public final String getRendererType()
     {
@@ -57,7 +81,6 @@ public abstract class MyfacesComponentTag
     {
         _rendererType = rendererType;
     }
-
 
     public void setTransient(String aTransient)
     {
@@ -79,35 +102,14 @@ public abstract class MyfacesComponentTag
         _visibleOnUserRole = visibleOnUserRole;
     }
 
-    protected void setProperties(UIComponent component)
+    public void setConverterId(String converterId)
     {
-        super.setProperties(component);
-
-        setBooleanProperty(component, JSFAttr.TRANSIENT_ATTR, _transient);
-        setBooleanProperty(component, JSFAttr.ENABLED_ON_USER_ROLE_ATTR, _enabledOnUserRole);
-        setBooleanProperty(component, JSFAttr.VISIBLE_ON_USER_ROLE_ATTR, _visibleOnUserRole);
-
-        if (_value != null)
-        {
-            if (component instanceof ValueHolder)
-            {
-                if (_value instanceof String && isValueReference((String)_value))
-                {
-                    ValueBinding vb = context.getApplication().createValueBinding((String)_value);
-                    component.setValueBinding("value", vb);
-                }
-                else
-                {
-                    ((ValueHolder)component).setValue(_value);
-                }
-            }
-            else
-            {
-                log.error("Component " + component.getClass().getName() + " is no ValueHolder, cannot set value.");
-            }
-        }
+        _converterId = converterId;
     }
 
+
+
+    // sub class helpers
 
     protected void setStringProperty(UIComponent component, String propName, String value)
     {
@@ -139,6 +141,56 @@ public abstract class MyfacesComponentTag
             {
                 //TODO: More sophisticated way to convert boolean value (yes/no, 1/0, on/off, etc.)
                 component.getAttributes().put(propName, Boolean.valueOf((String)value));
+            }
+        }
+    }
+
+
+    private void setValueProperty(UIComponent component, String value)
+    {
+        if (value != null)
+        {
+            if (component instanceof ValueHolder)
+            {
+                if (isValueReference(value))
+                {
+                    ValueBinding vb = context.getApplication().createValueBinding(value);
+                    component.setValueBinding(JSFAttr.VALUE_ATTR, vb);
+                }
+                else
+                {
+                    ((ValueHolder)component).setValue(value);
+                }
+            }
+            else
+            {
+                log.error("Component " + component.getClass().getName() + " is no ValueHolder, cannot set value.");
+            }
+        }
+    }
+
+
+    private void setConverterIdProperty(UIComponent component, String value)
+    {
+        if (value != null)
+        {
+            if (component instanceof ConvertibleValueHolder)
+            {
+                if (isValueReference(value))
+                {
+                    ValueBinding vb = context.getApplication().createValueBinding(value);
+                    component.setValueBinding(JSFAttr.CONVERTER_ATTR, vb);
+                }
+                else
+                {
+                    FacesContext facesContext = FacesContext.getCurrentInstance();
+                    Converter converter = facesContext.getApplication().createConverter(value);
+                    ((ConvertibleValueHolder)component).setConverter(converter);
+                }
+            }
+            else
+            {
+                log.error("Component " + component.getClass().getName() + " is no ValueHolder, cannot set value.");
             }
         }
     }

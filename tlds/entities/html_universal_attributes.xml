@@ -9,3 +9,12 @@
             <rtexprvalue>false</rtexprvalue>
             <description>Corresponds to the HTML class attribute.</description>
         </attribute>
+        <attribute>
+            <name>tooltip</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <description>
+                Not really a HTML 4.0 attribute, but should be supported by all visible HTML components
+                (by doing javascript or something else...)
+            </description>
+        </attribute>

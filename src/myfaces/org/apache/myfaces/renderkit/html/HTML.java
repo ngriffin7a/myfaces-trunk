@@ -39,7 +39,7 @@ public class HTML
     public static final String WIDTH_ATTR = "width";
     public static final String READONLY_ATTR = "readonly";
     public static final String ACCEPT_ATTR = "accept";
-
+    
     // Common event handler attributes
     public static final String ONCLICK_ATTR     = "onclick";
     public static final String ONDBLCLICK_ATTR  = "ondblclick";

@@ -68,7 +68,7 @@ public class HtmlInputTextTag
     private String _tabindex;
 
     // UIOutput attributes
-    private String _converter;
+    // value and converterId --> already implemented in MyfacesComponentTag
 
     // UIInput attributes
     private String _required;
@@ -98,8 +98,6 @@ public class HtmlInputTextTag
         setStringProperty(component, HTML.READONLY_ATTR, _readonly);
         setStringProperty(component, HTML.SIZE_ATTR, _size);
         setStringProperty(component, HTML.TABINDEX_ATTR, _tabindex);
-
-        setStringProperty(component, JSFAttr.CONVERTER_ATTR, _converter);
 
         setBooleanProperty(component, JSFAttr.REQUIRED_ATTR, _required);
         setStringProperty(component, JSFAttr.VALIDATOR_ATTR, _validator);
@@ -180,11 +178,6 @@ public class HtmlInputTextTag
     public void setTabindex(String tabindex)
     {
         _tabindex = tabindex;
-    }
-
-    public void setConverter(String converter)
-    {
-        _converter = converter;
     }
 
     public void setRequired(String required)

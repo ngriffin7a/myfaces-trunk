@@ -20,3 +20,10 @@
             <type>java.lang.String</type>
             <description>MethodBinding pointing at a method that will be called during Process Validations phase of the request processing lifecycle, to validate the current value of this component.</description>
         </attribute>
+        <attribute>
+            <name>converterId</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
+            <type>java.lang.String</type>
+            <description>Id of Converter to be used.</description>
+        </attribute>

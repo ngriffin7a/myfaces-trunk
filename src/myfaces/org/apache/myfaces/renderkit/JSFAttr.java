@@ -31,8 +31,6 @@ public class JSFAttr
     // MyFaces Extended Attributes
     public static final String   ENABLED_ON_USER_ROLE_ATTR      = "enabledOnUserRole";
     public static final String   VISIBLE_ON_USER_ROLE_ATTR      = "visibleOnUserRole";
-
-    // Key/Bundle attributes
     /**@deprecated directly access attribute instead and use value binding mechanism */
     public static final String   ALT_KEY_ATTR                   = "altKey";
     /**@deprecated directly access attribute instead and use value binding mechanism */
@@ -50,6 +48,7 @@ public class JSFAttr
     // Common Attributes
     public static final String   ID_ATTR                        = "id";
     public static final String   VALUE_ATTR                     = "value";
+    public static final String   BINDING_ATTR                   = "binding";
     public static final String   STYLE_CLASS_ATTR               = "styleClass";
     public static final String   ESCAPE_ATTR                    = "escape";
     public static final String   TRANSIENT_ATTR                 = "transient";
@@ -124,9 +123,10 @@ public class JSFAttr
     // Panel_Data Attributes
     public static final String VAR_ATTR                = "var";
 
-    // UIMessage attributes
+    // UIMessage and UIMessages attributes
     public static final String SHOW_SUMMARY_ATTR            = "showSummary";
     public static final String SHOW_DETAIL_ATTR             = "showDetail";
+    public static final String GLOBAL_ONLY_ATTR             = "globalOnly";
 
     // HtmlOutputMessage attributes
     public static final String ERROR_CLASS_ATTR            = "errorClass";

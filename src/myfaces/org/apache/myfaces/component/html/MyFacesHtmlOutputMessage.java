@@ -18,7 +18,10 @@
  */
 package net.sourceforge.myfaces.component.html;
 
+import net.sourceforge.myfaces.renderkit.JSFAttr;
+
 import javax.faces.component.html.HtmlOutputMessage;
+import javax.faces.el.ValueBinding;
 
 /**
  * DOCUMENT ME!
@@ -29,4 +32,20 @@ import javax.faces.component.html.HtmlOutputMessage;
 public class MyFacesHtmlOutputMessage
     extends HtmlOutputMessage
 {
+    private Boolean _escape;
+
+    public boolean isEscape()
+    {
+        if (_escape != null) return _escape.booleanValue();
+        ValueBinding vb = getValueBinding(JSFAttr.ESCAPE_ATTR);
+        return vb != null ?
+               ((Boolean)vb.getValue(getFacesContext())).booleanValue() :
+               true;
+    }
+
+    public void setEscape(boolean escape)
+    {
+        _escape = Boolean.valueOf(escape);
+    }
+
 }
