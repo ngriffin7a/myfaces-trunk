@@ -33,9 +33,9 @@
 
 <jsp:useBean id="optionsForm" class="net.sourceforge.myfaces.examples.misc.OptionsForm" scope="request" />
 <jsp:useBean id="optionsCtrl" class="net.sourceforge.myfaces.examples.misc.OptionsController" scope="application" />
-<x:save_state id="ss1" modelReference="optionsForm.language" />
+<x:save_state id="ss1" valueRef="optionsForm.language" />
 
-    <x:page_layout id="page" layoutReference="pageLayout"
+    <x:page_layout id="page" layoutRef="pageLayout"
             panelClass="pageLayout"
             headerClass="pageHeader"
             navigationClass="pageNavigation"
@@ -52,12 +52,12 @@
                 <table border="1"><tr><td>
                     <h:form id="form1" formName="calcForm">
                         <h:output_message key="option_lang" bundle="net.sourceforge.myfaces.examples.resource.example_messages" />
-                        <h:selectone_menu id="locale" modelReference="optionsForm.language">
-                            <h:selectitems id="available" modelReference="optionsForm.availableLanguages" />
+                        <h:selectone_menu id="locale" valueRef="optionsForm.language">
+                            <h:selectitems id="available" valueRef="optionsForm.availableLanguages" />
                         </h:selectone_menu><br>
 
                         <h:output_message key="option_layout" bundle="net.sourceforge.myfaces.examples.resource.example_messages" />
-                        <h:selectone_menu id="layout" modelReference="pageLayout"  >
+                        <h:selectone_menu id="layout" valueRef="pageLayout"  >
                             <h:selectitem id="item101" label="Classic" value="classic" />
                             <h:selectitem id="item102" label="Navigation right" value="navigationRight" />
                             <h:selectitem id="item103" label="Upside down" value="upsideDown" />

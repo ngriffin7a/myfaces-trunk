@@ -30,15 +30,17 @@ import javax.faces.context.FacesContext;
  */
 public class UISelectItem
     extends javax.faces.component.UISelectItem
-    implements CommonComponentAttributes
 {
-    public static final String ITEM_DESCRIPTION_ATTR = "itemDescription";
-    public static final String ITEM_LABEL_ATTR = "itemLabel";
+    public static final String ITEM_DESCRIPTION_PROP = "itemDescription";
+    public static final String ITEM_LABEL_PROP = "itemLabel";
 
-    //MyFaces eextension
-    public static final String SELECTED_ATTR = "selected";
-    public static final String ITEM_KEY_ATTR = "itemKey";
-    public static final String ITEM_BUNDLE_ATTR = "itemBundle";
+    //MyFaces extension
+    //public static final String SELECTED_ATTR = "selected";
+    public static final String ITEM_KEY_PROP = "itemKey";
+    public static final String ITEM_BUNDLE_PROP = "itemBundle";
+
+    private String _itemKey;
+    private String _itemBundle;
 
     public UISelectItem()
     {
@@ -48,26 +50,6 @@ public class UISelectItem
     public boolean getRendersSelf()
     {
         return false;
-    }
-
-    public String getItemDescription()
-    {
-        return (String)getAttribute(ITEM_DESCRIPTION_ATTR);
-    }
-
-    public void setItemDescription(String itemDescription)
-    {
-        setAttribute(ITEM_DESCRIPTION_ATTR, itemDescription);
-    }
-
-    public String getItemLabel()
-    {
-        return (String)getAttribute(ITEM_LABEL_ATTR);
-    }
-
-    public void setItemLabel(String itemLabel)
-    {
-        setAttribute(ITEM_LABEL_ATTR, itemLabel);
     }
 
     /**
@@ -89,24 +71,25 @@ public class UISelectItem
                                                           v));
     }
 
+
     public String getItemKey()
     {
-        return (String)getAttribute(ITEM_KEY_ATTR);
+        return _itemKey;
     }
 
-    public void setItemKey(String itemValue)
+    public void setItemKey(String itemKey)
     {
-        setAttribute(ITEM_KEY_ATTR, itemValue);
+        _itemKey = itemKey;
     }
 
     public String getItemBundle()
     {
-        return (String)getAttribute(ITEM_BUNDLE_ATTR);
+        return _itemBundle;
     }
 
-    public void setItemBundle(String itemValue)
+    public void setItemBundle(String itemBundle)
     {
-        setAttribute(ITEM_BUNDLE_ATTR, itemValue);
+        _itemBundle = itemBundle;
     }
 
 

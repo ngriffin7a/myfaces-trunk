@@ -30,7 +30,6 @@ import javax.faces.context.FacesContext;
 public class UIRoot
     extends UINamingContainer
 {
-    public static final String TYPE = "javax.faces.component.UIRoot";
     public static final String ROOT_COMPONENT_ID = "theRoot";
 
     public UIRoot()
@@ -38,13 +37,6 @@ public class UIRoot
         setComponentId(ROOT_COMPONENT_ID);
         setValid(true);
     }
-
-    public String getComponentType()
-    {
-        return TYPE;
-    }
-
-
 
 //------------------------------------------------------------------------------
 // UIComponentHelper Delegation

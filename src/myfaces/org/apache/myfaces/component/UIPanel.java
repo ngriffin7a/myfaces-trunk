@@ -29,7 +29,7 @@ import javax.faces.context.FacesContext;
  */
 public class UIPanel
     extends javax.faces.component.UIPanel
-    //implements CommonComponentAttributes
+    //implements CommonComponentProperties
 {
     public UIPanel()
     {

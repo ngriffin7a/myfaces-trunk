@@ -35,14 +35,9 @@ import java.io.IOException;
 public class UISaveState
     extends UIParameter
 {
-    public static final String TYPE = UISaveState.class.getName();
+    public static final String GLOBAL_PROP = "global";
 
-    public static final String GLOBAL_ATTR = "global";
-
-    public String getComponentType()
-    {
-        return TYPE;
-    }
+    private boolean _global = false;
 
     public UISaveState()
     {
@@ -56,20 +51,12 @@ public class UISaveState
 
     public boolean isGlobal()
     {
-        Boolean global = (Boolean)getAttribute(GLOBAL_ATTR);
-        return global != null ? global.booleanValue() : false;
+        return _global;
     }
 
     public void setGlobal(boolean global)
     {
-        if (global)
-        {
-            setAttribute(GLOBAL_ATTR, Boolean.TRUE);
-        }
-        else
-        {
-            setAttribute(GLOBAL_ATTR, null);    //false is default
-        }
+        _global = global;
     }
 
     public void decode(FacesContext context)

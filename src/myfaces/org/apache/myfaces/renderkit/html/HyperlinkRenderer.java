@@ -19,7 +19,7 @@
 package net.sourceforge.myfaces.renderkit.html;
 
 import net.sourceforge.myfaces.MyFacesFactoryFinder;
-import net.sourceforge.myfaces.component.CommonComponentAttributes;
+import net.sourceforge.myfaces.component.CommonComponentProperties;
 import net.sourceforge.myfaces.convert.ConverterUtils;
 import net.sourceforge.myfaces.renderkit.attr.CommonRendererAttributes;
 import net.sourceforge.myfaces.renderkit.attr.HyperlinkRendererAttributes;
@@ -64,7 +64,7 @@ import java.util.Iterator;
  */
 public class HyperlinkRenderer
     extends HTMLRenderer
-    implements CommonComponentAttributes,
+    implements CommonComponentProperties,
                CommonRendererAttributes,
                HTMLUniversalAttributes,
                HTMLEventHandlerAttributes,
@@ -305,7 +305,8 @@ public class HyperlinkRenderer
                     String strValue = conv.getAsString(facesContext, uiParameter, objValue);
                     writer.write(urlEncode(strValue));
 
-                    if (uiParameter.getAttribute(CONVERTER_ATTR) == null)
+                    if (uiParameter.getAttribute(CONVERTER_ATTR) == null &&
+                        uiParameter.getConverter() == null)
                     {
                         //send type of parameter
                         writer.write('&');

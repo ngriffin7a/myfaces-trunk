@@ -19,6 +19,7 @@
 package net.sourceforge.myfaces.taglib.ext;
 
 import net.sourceforge.myfaces.component.ext.UINavigation;
+import net.sourceforge.myfaces.component.UICommand;
 import net.sourceforge.myfaces.renderkit.attr.CommonRendererAttributes;
 import net.sourceforge.myfaces.renderkit.attr.HyperlinkRendererAttributes;
 import net.sourceforge.myfaces.renderkit.attr.ext.NavigationItemRendererAttributes;
@@ -63,12 +64,12 @@ public class NavigationItemTag
 
     public void setTreeId(String s)
     {
-        setRendererAttributeString(NavigationItemRenderer.TREE_ID_ATTR, s);
+        setComponentPropertyString(UICommand.ACTION_PROP, s);
     }
 
     public void setOpen(String b)
     {
-        setComponentPropertyBoolean(UINavigation.UINavigationItem.OPEN_ATTR, b);
+        setComponentPropertyBoolean(UINavigation.UINavigationItem.OPEN_PROP, b);
     }
 
     // user role attributes --> already implemented in MyFacesTag

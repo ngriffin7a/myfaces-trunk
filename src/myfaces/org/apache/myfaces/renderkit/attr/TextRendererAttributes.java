@@ -18,7 +18,7 @@
  */
 package net.sourceforge.myfaces.renderkit.attr;
 
-import net.sourceforge.myfaces.component.CommonComponentAttributes;
+
 
 
 /**
@@ -29,7 +29,6 @@ import net.sourceforge.myfaces.component.CommonComponentAttributes;
  */
 public interface TextRendererAttributes
     extends CommonRendererAttributes,
-            CommonComponentAttributes,
             KeyBundleAttributes
 {
     public static final String MAX_LENGTH_ATTR = "maxLength";

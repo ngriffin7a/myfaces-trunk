@@ -29,9 +29,11 @@ import java.util.List;
  */
 public class UICommand
     extends javax.faces.component.UICommand
-    //implements CommonComponentAttributes
+    //implements CommonComponentProperties
 {
-    public static final String COMMAND_NAME_ATTR = "commandName";
+    public static final String COMMAND_NAME_PROP = "commandName";
+    public static final String ACTION_PROP = "action";
+    public static final String ACTION_REF_PROP = "actionRef";
 
     public UICommand()
     {

@@ -18,7 +18,6 @@
  */
 package net.sourceforge.myfaces.renderkit.html.state.client;
 
-import net.sourceforge.myfaces.component.CommonComponentAttributes;
 import net.sourceforge.myfaces.component.UIComponentUtils;
 import net.sourceforge.myfaces.component.ext.UISaveState;
 import net.sourceforge.myfaces.convert.ConverterUtils;
@@ -260,8 +259,7 @@ public class MinimizingStateRestorer
         throws FacesException
     {
         //Set valid as default
-        if (uiComponent.getAttribute(CommonComponentAttributes.VALID_ATTR) == null &&
-            uiComponent.isValid())
+        if (uiComponent.isValid())
         {
             //component is valid by default, so no need to set explicitly
         }

@@ -30,7 +30,7 @@ import javax.faces.context.FacesContext;
 public class UIForm
         extends javax.faces.component.UIForm
 {
-    public static final String FORM_NAME_ATTR = "formName";
+    public static final String FORM_NAME_PROP = "formName";
 
     public UIForm()
     {

@@ -18,7 +18,7 @@
  */
 package net.sourceforge.myfaces.taglib;
 
-import net.sourceforge.myfaces.component.CommonComponentAttributes;
+import net.sourceforge.myfaces.component.CommonComponentProperties;
 import net.sourceforge.myfaces.renderkit.attr.CommonRendererAttributes;
 import net.sourceforge.myfaces.renderkit.attr.HyperlinkRendererAttributes;
 import net.sourceforge.myfaces.renderkit.attr.UserRoleAttributes;
@@ -37,7 +37,7 @@ import javax.servlet.jsp.JspException;
  */
 public class CommandHyperlinkTag
     extends MyFacesBodyTag
-    implements CommonComponentAttributes,
+    implements CommonComponentProperties,
                CommonRendererAttributes,
                HTMLUniversalAttributes,
                HTMLEventHandlerAttributes,

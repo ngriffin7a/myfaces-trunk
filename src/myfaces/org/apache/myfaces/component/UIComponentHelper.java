@@ -29,7 +29,7 @@ import java.io.Serializable;
  * @version $Revision$ $Date$
  */
 public class UIComponentHelper
-    implements CommonComponentAttributes, Serializable
+    implements CommonComponentProperties, Serializable
 {
     private UIComponent _uiComponent;
 
@@ -38,6 +38,9 @@ public class UIComponentHelper
         _uiComponent = uiComponent;
     }
 
+    /**
+     * TODO: any longer necessary with EA4 ?
+     */
     public String getClientId(FacesContext context)
     {
         return UIComponentUtils.getClientId(context, _uiComponent);

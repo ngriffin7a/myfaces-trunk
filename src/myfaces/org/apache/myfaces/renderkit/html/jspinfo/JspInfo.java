@@ -29,7 +29,6 @@ import javax.faces.FacesException;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.tree.Tree;
-import javax.faces.webapp.UIComponentTag;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletRequest;
 import java.io.*;
@@ -51,7 +50,7 @@ import java.util.*;
  */
 public class JspInfo
 {
-    public static final String CREATOR_TAG_ATTR = JspInfo.class.getName() + ".CREATOR_TAG";
+    public static final String CREATOR_TAG_CLASS_ATTR = JspInfo.class.getName() + ".CREATOR_TAG_CLASS";
     public static final String JSP_POSITION_ATTR = JspInfo.class.getName() + ".JSP_POSITION";
     public static final String HARDCODED_ID_ATTR = JspInfo.class.getName() + ".HARDCODED_ID";
 
@@ -211,10 +210,13 @@ public class JspInfo
         return getJspInfo(facesContext, treeId).getJspBeanInfos();
     }
 
+
+    /*
     public static UIComponentTag getCreatorTag(UIComponent uiComponent)
     {
         return (UIComponentTag)uiComponent.getAttribute(JspInfo.CREATOR_TAG_ATTR);
     }
+    */
 
 
 

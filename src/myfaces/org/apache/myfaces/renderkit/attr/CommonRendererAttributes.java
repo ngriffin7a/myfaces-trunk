@@ -27,6 +27,9 @@ package net.sourceforge.myfaces.renderkit.attr;
  */
 public interface CommonRendererAttributes
 {
+    public static final String ID_ATTR = "id";
+    public static final String CONVERTER_ATTR = "converter";
+
     public static final String COLUMN_CLASSES_ATTR = "columnClasses";
     public static final String DATE_STYLE_ATTR = "dateStyle";
     public static final String FORMAT_PATTERN_ATTR = "formatPattern";

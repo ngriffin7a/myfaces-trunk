@@ -182,7 +182,7 @@ public class HTTPSessionStateRestorer
             for (Iterator it = find.getAttributeNames(); it.hasNext();)
             {
                 String attrName = (String)it.next();
-                if (!attrName.equals(CommonComponentAttributes.PARENT_ATTR))
+                if (!attrName.equals(CommonComponentProperties.PARENT_ATTR))
                 {
                     PropertyDescriptor pd = BeanUtils.findPropertyDescriptor(uiComponent, attrName);
                     if (pd != null)

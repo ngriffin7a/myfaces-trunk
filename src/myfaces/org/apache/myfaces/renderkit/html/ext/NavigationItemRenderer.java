@@ -19,7 +19,7 @@
 package net.sourceforge.myfaces.renderkit.html.ext;
 
 import net.sourceforge.myfaces.MyFacesFactoryFinder;
-import net.sourceforge.myfaces.component.CommonComponentAttributes;
+import net.sourceforge.myfaces.component.CommonComponentProperties;
 import net.sourceforge.myfaces.component.UICommand;
 import net.sourceforge.myfaces.component.UIComponentUtils;
 import net.sourceforge.myfaces.component.ext.UINavigation;
@@ -59,7 +59,7 @@ import java.io.IOException;
  */
 public class NavigationItemRenderer
     extends HTMLRenderer
-    implements CommonComponentAttributes,
+    implements CommonComponentProperties,
                CommonRendererAttributes,
                HTMLUniversalAttributes,
                HTMLEventHandlerAttributes,
@@ -216,9 +216,7 @@ public class NavigationItemRenderer
             }
         }
 
-        boolean open = UIComponentUtils.getBooleanAttribute(uiComponent,
-                                                            UINavigation.UINavigationItem.OPEN_ATTR,
-                                                            false);
+        boolean open = ((UINavigation.UINavigationItem)uiComponent).isOpen();
         renderLabel(facesContext, writer, uiComponent, navigationComponent, label, open);
 
         writer.write("</a>");

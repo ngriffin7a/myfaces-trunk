@@ -29,6 +29,9 @@ import javax.faces.context.FacesContext;
 public class UIOutput
     extends javax.faces.component.UIOutput
 {
+    public static final String VALUE_PROP = "value";
+    public static final String VALUE_REF_PROP = "valueRef";
+
     public UIOutput()
     {
         setValid(true);

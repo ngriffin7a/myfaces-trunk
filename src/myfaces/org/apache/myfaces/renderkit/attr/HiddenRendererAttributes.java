@@ -18,7 +18,7 @@
  */
 package net.sourceforge.myfaces.renderkit.attr;
 
-import net.sourceforge.myfaces.component.CommonComponentAttributes;
+
 
 /**
  * see JSF 7.4.4
@@ -26,8 +26,7 @@ import net.sourceforge.myfaces.component.CommonComponentAttributes;
  * @version $Revision$ $Date$
  */
 public interface HiddenRendererAttributes
-    extends CommonComponentAttributes,
-            CommonRendererAttributes
+    extends CommonRendererAttributes
 {
     public static final String[] INPUT_HIDDEN_ATTRIBUTES = {
         INPUT_CLASS_ATTR,

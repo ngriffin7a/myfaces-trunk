@@ -29,7 +29,6 @@ import java.util.Iterator;
  */
 public class UISelectOne
     extends javax.faces.component.UISelectOne
-    //implements CommonComponentAttributes
 {
     public UISelectOne()
     {

@@ -18,7 +18,7 @@
  */
 package net.sourceforge.myfaces.renderkit.html.state.client;
 
-import net.sourceforge.myfaces.component.CommonComponentAttributes;
+import net.sourceforge.myfaces.component.CommonComponentProperties;
 import net.sourceforge.myfaces.component.UIComponentUtils;
 import net.sourceforge.myfaces.component.ext.UISaveState;
 import net.sourceforge.myfaces.convert.ConverterUtils;
@@ -85,8 +85,14 @@ public class MinimizingStateSaver
     private static final Set IGNORE_ATTRIBUTES = new HashSet();
     static
     {
-        IGNORE_ATTRIBUTES.add(CommonComponentAttributes.PARENT_ATTR);
-        IGNORE_ATTRIBUTES.add(CommonComponentAttributes.CLIENT_ID_ATTR);
+        IGNORE_ATTRIBUTES.add(CommonComponentProperties.CLIENT_ID_ATTR);
+    }
+
+    private static final Set IGNORE_PROPERTIES = new HashSet();
+    static
+    {
+        IGNORE_PROPERTIES.add(CommonComponentProperties.PARENT_PROP);
+        IGNORE_PROPERTIES.add(CommonComponentProperties.CLIENT_ID_PROP);
 
         //we must save the "valid" attribute
 
@@ -95,7 +101,6 @@ public class MinimizingStateSaver
         //      - we cannot be sure that a dynamically created componentId is
         //        the same when the tree is getting restored.
     }
-
 
     protected Map getStateMap(FacesContext facesContext)
     {
@@ -243,6 +248,10 @@ public class MinimizingStateSaver
             visitedAttributes.add(attrName);
         }
 
+        //TODO: handle all Properties that have a setter and a getter
+
+
+
         // Save all attributes, that are set in the parsed tree
         // but not in the current tree (= removed attributes).
         // Save them by means of a special null dummy value
@@ -266,7 +275,7 @@ public class MinimizingStateSaver
 
 
         //enforce saving of "valid" attribute, if it is null and defaults to false
-        if (!visitedAttributes.contains(CommonComponentAttributes.VALID_ATTR) &&
+        if (!visitedAttributes.contains(CommonComponentProperties.VALID_PROP) &&    //TODO: visitedProperties instead!
             !uiComponent.isValid())
         {
             //"valid" attribute not yet seen, so the internal attribute is null
@@ -278,22 +287,22 @@ public class MinimizingStateSaver
             saveComponentAttribute(facesContext,
                                    stateMap,
                                    uiComponent,
-                                   CommonComponentAttributes.VALID_ATTR,
+                                   CommonComponentProperties.VALID_PROP,
                                    Boolean.FALSE,
                                    null);
-            visitedAttributes.add(CommonComponentAttributes.VALID_ATTR);
+            visitedAttributes.add(CommonComponentProperties.VALID_PROP);
         }
 
         /*
         Problems! e.g. components with modelRef to a var
-        if (!visitedAttributes.contains(CommonComponentAttributes.VALUE_ATTR) &&
+        if (!visitedAttributes.contains(CommonComponentProperties.VALUE_PROP) &&
             uiComponent.getModelReference() != null &&
             !UIComponentUtils.isTransient(uiComponent))
         {
             saveComponentAttribute(facesContext,
                                    stateMap,
                                    uiComponent,
-                                   CommonComponentAttributes.VALUE_ATTR,
+                                   CommonComponentProperties.VALUE_PROP,
                                    uiComponent.currentValue(facesContext),
                                    null);
         }
@@ -332,7 +341,7 @@ public class MinimizingStateSaver
             return;
         }
 
-        if (attrName.equals(CommonComponentAttributes.VALID_ATTR) &&
+        if (attrName.equals(CommonComponentProperties.VALID_PROP) &&
             uiComponent.isValid())
         {
             //No need to save "valid" if true, because MinimizingStateRestorer
@@ -519,14 +528,22 @@ public class MinimizingStateSaver
         {
             return true;
         }
-        else if (attrName.equals(CommonComponentAttributes.VALUE_ATTR) &&
-                 comp instanceof UIOutput)
+        else
+        {
+            return IGNORE_ATTRIBUTES.contains(attrName);
+        }
+    }
+
+    protected boolean isIgnoreProperty(UIComponent comp, String propName)
+    {
+        if (comp instanceof UIOutput &&
+            propName.equals(net.sourceforge.myfaces.component.UIOutput.VALUE_PROP))
         {
             return isIgnoreValue((UIOutput)comp);
         }
         else
         {
-            return IGNORE_ATTRIBUTES.contains(attrName);
+            return IGNORE_PROPERTIES.contains(propName);
         }
     }
 

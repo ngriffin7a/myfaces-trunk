@@ -18,7 +18,7 @@
  */
 package net.sourceforge.myfaces.renderkit.html;
 
-import net.sourceforge.myfaces.component.CommonComponentAttributes;
+import net.sourceforge.myfaces.component.CommonComponentProperties;
 import net.sourceforge.myfaces.component.UIComponentUtils;
 import net.sourceforge.myfaces.renderkit.attr.CommonRendererAttributes;
 import net.sourceforge.myfaces.renderkit.attr.SecretRendererAttributes;
@@ -42,7 +42,7 @@ import java.io.IOException;
  */
 public class SecretRenderer
     extends HTMLRenderer
-    implements CommonComponentAttributes,
+    implements CommonComponentProperties,
                CommonRendererAttributes,
                HTMLUniversalAttributes,
                HTMLEventHandlerAttributes,

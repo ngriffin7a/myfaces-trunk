@@ -18,7 +18,7 @@
  */
 package net.sourceforge.myfaces.renderkit.html;
 
-import net.sourceforge.myfaces.component.CommonComponentAttributes;
+import net.sourceforge.myfaces.component.CommonComponentProperties;
 import net.sourceforge.myfaces.component.UIComponentUtils;
 import net.sourceforge.myfaces.renderkit.attr.CommonRendererAttributes;
 import net.sourceforge.myfaces.renderkit.attr.ListRendererAttributes;
@@ -48,7 +48,7 @@ import java.util.StringTokenizer;
 public class ListRenderer
     extends HTMLRenderer
     implements CallbackRenderer,
-               CommonComponentAttributes,
+               CommonComponentProperties,
                CommonRendererAttributes,
                HTMLUniversalAttributes,
                HTMLEventHandlerAttributes,

@@ -19,16 +19,15 @@
 package net.sourceforge.myfaces.renderkit.html.jspinfo;
 
 import net.sourceforge.myfaces.MyFacesConfig;
-import net.sourceforge.myfaces.component.CommonComponentAttributes;
 import net.sourceforge.myfaces.component.UIComponentUtils;
 import net.sourceforge.myfaces.component.ext.UISaveState;
+import net.sourceforge.myfaces.renderkit.attr.CommonRendererAttributes;
 import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.Constants;
 import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.JasperException;
 import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.JspCompilationContext;
 import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.compiler.*;
 import net.sourceforge.myfaces.taglib.MyFacesBodyTag;
 import net.sourceforge.myfaces.taglib.MyFacesTag;
-import net.sourceforge.myfaces.taglib.MyFacesTagBaseIF;
 import net.sourceforge.myfaces.taglib.UIComponentTagHacks;
 import net.sourceforge.myfaces.taglib.core.ActionListenerTag;
 import net.sourceforge.myfaces.util.bean.BeanUtils;
@@ -41,7 +40,6 @@ import javax.faces.application.ApplicationFactory;
 import javax.faces.component.NamingContainer;
 import javax.faces.component.UICommand;
 import javax.faces.component.UIComponent;
-import javax.faces.component.UIComponentBase;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionListener;
 import javax.faces.validator.Validator;
@@ -453,7 +451,7 @@ public class MyParseEventListener
                     continue;
                 }
 
-                if (attrName.equals(CommonComponentAttributes.ID_ATTR))
+                if (attrName.equals(CommonRendererAttributes.ID_ATTR))
                 {
                     id = (String)attrValue;
                 }
@@ -568,8 +566,8 @@ public class MyParseEventListener
 
         _currentComponent = comp;
 
-        //We created this tag instance ourselves, so we are allowed to keep a reference
-        comp.setAttribute(JspInfo.CREATOR_TAG_ATTR, facesTag);
+        //Remember the tag class that created this component
+        comp.setAttribute(JspInfo.CREATOR_TAG_CLASS_ATTR, facesTag.getClass().getName());
 
         //Remember JSP line number
         comp.setAttribute(JspInfo.JSP_POSITION_ATTR,

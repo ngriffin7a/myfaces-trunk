@@ -29,7 +29,9 @@ import javax.faces.context.FacesContext;
 public class NavigationHandlerImpl
     extends NavigationHandler
 {
-    public void handleNavigation(FacesContext facescontext, String s, String s1)
+    public void handleNavigation(FacesContext facesContext,
+                                 String actionRef,
+                                 String outcome)
     {
         //TODO
     }

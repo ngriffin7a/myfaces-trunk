@@ -18,12 +18,14 @@
  */
 package net.sourceforge.myfaces.taglib;
 
-import net.sourceforge.myfaces.component.CommonComponentAttributes;
+import net.sourceforge.myfaces.component.CommonComponentProperties;
+import net.sourceforge.myfaces.component.UIOutput;
 import net.sourceforge.myfaces.renderkit.attr.CommonRendererAttributes;
 import net.sourceforge.myfaces.renderkit.attr.KeyBundleAttributes;
 import net.sourceforge.myfaces.renderkit.attr.UserRoleAttributes;
 import net.sourceforge.myfaces.renderkit.html.attr.HTMLEventHandlerAttributes;
 import net.sourceforge.myfaces.renderkit.html.attr.HTMLUniversalAttributes;
+import net.sourceforge.myfaces.util.logging.LogUtil;
 
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
@@ -33,7 +35,6 @@ import javax.servlet.jsp.PageContext;
 import javax.servlet.jsp.tagext.IterationTag;
 import javax.servlet.jsp.tagext.Tag;
 import java.io.IOException;
-import java.io.Serializable;
 
 /**
  * DOCUMENT ME!
@@ -44,13 +45,12 @@ public abstract class MyFacesTag
     extends UIComponentTag
     implements IterationTag,
                MyFacesTagBaseIF,
-               CommonComponentAttributes,
+               CommonComponentProperties,
                CommonRendererAttributes,
                HTMLUniversalAttributes,
                HTMLEventHandlerAttributes,
                KeyBundleAttributes,
-               UserRoleAttributes,
-               Serializable    //so that we can serialize a parsed tree with references to the "creator tag"
+               UserRoleAttributes
 {
     protected MyFacesTagHelper _helper;
 
@@ -200,6 +200,10 @@ public abstract class MyFacesTag
         if (c == null)
         {
             c = super.findComponent(getFacesContext());
+            if (getCreated())
+            {
+                LogUtil.getLogger().finest("Component " + getComponent() + " with id " + getComponent().getComponentId() + " was just created by UIComponentTag.");
+            }
         }
         return c;
     }
@@ -216,7 +220,7 @@ public abstract class MyFacesTag
      */
     protected void setValue(Object value)
     {
-        setComponentPropertyObject(VALUE_ATTR, value);
+        setComponentPropertyObject(UIOutput.VALUE_PROP, value);
     }
 
 
@@ -231,9 +235,9 @@ public abstract class MyFacesTag
         super.setId(s);
     }
 
-    public void setConverter(String converter)
+    public void setConverter(Object converter)
     {
-        setRendererAttributeString(CONVERTER_ATTR, converter);
+        setRendererAttributeObject(CONVERTER_ATTR, converter);
     }
 
     /**
@@ -241,12 +245,12 @@ public abstract class MyFacesTag
      */
     public void setModelReference(String s)
     {
-        setComponentPropertyString(VALUE_REF_ATTR, s);
+        setComponentPropertyString(UIOutput.VALUE_REF_PROP, s);
     }
 
     public void setValueRef(String s)
     {
-        setComponentPropertyString(VALUE_REF_ATTR, s);
+        setComponentPropertyString(UIOutput.VALUE_REF_PROP, s);
     }
 
     public void setRendered(boolean rendered)

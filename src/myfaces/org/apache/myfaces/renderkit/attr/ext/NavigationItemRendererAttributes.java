@@ -33,11 +33,11 @@ public interface NavigationItemRendererAttributes
             HyperlinkRendererAttributes,
             KeyBundleAttributes
 {
-    public static final String TREE_ID_ATTR = "treeId";
+    //public static final String TREE_ID_ATTR = "treeId";
     public static final String LABEL_ATTR = "label";
 
     public static final String[] NAVIGATION_ITEM_ATTRIBUTES = {
-        TREE_ID_ATTR,
+        //TREE_ID_ATTR,
         LABEL_ATTR,
         COMMAND_CLASS_ATTR,
         COLUMN_CLASSES_ATTR,

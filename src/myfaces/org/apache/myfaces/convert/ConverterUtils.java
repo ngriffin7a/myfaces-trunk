@@ -19,7 +19,6 @@
 package net.sourceforge.myfaces.convert;
 
 import net.sourceforge.myfaces.MyFacesFactoryFinder;
-import net.sourceforge.myfaces.component.CommonComponentAttributes;
 import net.sourceforge.myfaces.component.UIComponentUtils;
 import net.sourceforge.myfaces.config.*;
 import net.sourceforge.myfaces.renderkit.attr.CommonRendererAttributes;
@@ -116,7 +115,7 @@ public class ConverterUtils
                                               UIOutput uiOutput)
         throws IllegalArgumentException
     {
-        Object converterAttr = uiOutput.getAttribute(CommonComponentAttributes.CONVERTER_ATTR);
+        Object converterAttr = uiOutput.getAttribute(CommonRendererAttributes.CONVERTER_ATTR);
         if (converterAttr != null && converterAttr instanceof Converter)
         {
             //JSF 1.0 PRD2, 8.4

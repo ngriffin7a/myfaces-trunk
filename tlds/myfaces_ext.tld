@@ -43,6 +43,7 @@
 <!ENTITY ui_parameter_attributes        SYSTEM "entities/ui_parameter_attributes.xml">
 <!ENTITY ui_select_boolean_attributes   SYSTEM "entities/ui_select_boolean_attributes.xml">
 <!ENTITY ui_select_item_attributes      SYSTEM "entities/ui_select_item_attributes.xml">
+<!ENTITY ui_select_items_attributes     SYSTEM "entities/ui_select_items_attributes.xml">
 <!ENTITY ui_select_many_attributes      SYSTEM "entities/ui_select_many_attributes.xml">
 <!ENTITY ui_select_one_attributes       SYSTEM "entities/ui_select_one_attributes.xml">
 <!ENTITY key_bundle_attributes          SYSTEM "entities/key_bundle_attributes.xml">
@@ -69,7 +70,7 @@
             <rtexprvalue>false</rtexprvalue>
         </attribute>
         <attribute>
-            <name>modelReference</name>
+            <name>valueRef</name>
             <required>true</required>
             <rtexprvalue>false</rtexprvalue>
         </attribute>

@@ -18,7 +18,7 @@
  */
 package net.sourceforge.myfaces.renderkit.html;
 
-import net.sourceforge.myfaces.component.CommonComponentAttributes;
+import net.sourceforge.myfaces.component.CommonComponentProperties;
 import net.sourceforge.myfaces.component.UIParameter;
 import net.sourceforge.myfaces.renderkit.attr.CommonRendererAttributes;
 import net.sourceforge.myfaces.renderkit.attr.MessageRendererAttributes;
@@ -46,7 +46,7 @@ import java.util.List;
  */
 public class MessageRenderer
     extends HTMLRenderer
-    implements CommonComponentAttributes,
+    implements CommonComponentProperties,
                CommonRendererAttributes,
                HTMLUniversalAttributes,
                HTMLEventHandlerAttributes,

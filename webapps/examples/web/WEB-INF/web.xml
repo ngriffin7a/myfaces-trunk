@@ -73,7 +73,7 @@
         * "client_minimized_zipped" = like "client_minimal", but additionally state info is zipped (GZIP), encoded to allowed characters (Base64) written as one query parameter or hidden form input.
         -->
         <param-name>myfaces_StateSavingMode</param-name>
-        <param-value>client_minimized</param-value>
+        <param-value>client_serialized</param-value>
     </context-param>
 
     <context-param>

@@ -19,7 +19,6 @@
 package net.sourceforge.myfaces.component.ext;
 
 import net.sourceforge.myfaces.component.UIComponentHelper;
-import net.sourceforge.myfaces.component.UIComponentUtils;
 import net.sourceforge.myfaces.renderkit.html.ext.SortColumnRenderer;
 
 import javax.faces.FactoryFinder;
@@ -41,42 +40,44 @@ public class UISortHeader
     extends UIOutput
     implements ActionListener
 {
-    public static final String ASCENDING_ATTR = "ascending";
-    public static final String ASCENDING_REFERENCE_ATTR = "ascendingReference";
+    public static final String ASCENDING_PROP = "ascending";
+    public static final String ASCENDING_REF_PROP = "ascendingRef";
 
-    public boolean isAscending()
+    private Boolean _ascending;
+    private String _ascendingRef;
+
+    public Boolean getAscending()
     {
-        return UIComponentUtils.getBooleanAttribute(this, ASCENDING_ATTR, false);
+        return _ascending;
     }
 
-    public void setAscending(boolean ascending)
+    public void setAscending(Boolean ascending)
     {
-        UIComponentUtils.setBooleanAttribute(this, ASCENDING_ATTR, ascending);
+        _ascending = ascending;
     }
 
-    public boolean currentAscending(FacesContext facesContext)
+    public String getAscendingRef()
     {
-        Boolean asc = (Boolean)getAttribute(ASCENDING_ATTR);
+        return _ascendingRef;
+    }
+
+    public void setAscendingRef(String ascendingRef)
+    {
+        _ascendingRef = ascendingRef;
+    }
+
+    public Boolean currentAscending(FacesContext facesContext)
+    {
+        Boolean asc = getAscending();
         if (asc != null)
         {
-            return asc.booleanValue();
+            return asc;
         }
 
-        String ascRef = getAscendingReference();
+        String ascRef = getAscendingRef();
         ApplicationFactory af = (ApplicationFactory)FactoryFinder.getFactory(FactoryFinder.APPLICATION_FACTORY);
         asc = (Boolean)af.getApplication().getValueBinding(ascRef).getValue(facesContext);
-        return asc.booleanValue();
-    }
-
-
-    public String getAscendingReference()
-    {
-        return (String)getAttribute(ASCENDING_REFERENCE_ATTR);
-    }
-
-    public void setAscendingReference(String ascendingReference)
-    {
-        setAttribute(ASCENDING_REFERENCE_ATTR, ascendingReference);
+        return asc;
     }
 
 
@@ -91,10 +92,10 @@ public class UISortHeader
             af.getApplication().getValueBinding(modelRef).setValue(facesContext, column);
         }
 
-        Boolean asc = (Boolean)getAttribute(ASCENDING_ATTR);
+        Boolean asc = getAscending();
         if (asc != null)
         {
-            String ascRef = getAscendingReference();
+            String ascRef = getAscendingRef();
             af.getApplication().getValueBinding(ascRef).setValue(facesContext, asc);
         }
     }
@@ -117,7 +118,8 @@ public class UISortHeader
             String currentColumn = (String)currentValue(facesContext);
             if (sortColumn.equals(currentColumn))
             {
-                setAscending(!currentAscending(facesContext));
+                boolean currAsc = currentAscending(facesContext).booleanValue();
+                setAscending(Boolean.valueOf(!currAsc));
             }
             else
             {
@@ -126,11 +128,11 @@ public class UISortHeader
                 Boolean defaultAscending = (Boolean)source.getAttribute(SortColumnRenderer.DEFAULT_ASCENDING_ATTR);
                 if (defaultAscending != null)
                 {
-                    setAscending(defaultAscending.booleanValue());
+                    setAscending(defaultAscending);
                 }
                 else
                 {
-                    setAscending(true);
+                    setAscending(Boolean.TRUE);
                 }
             }
         }

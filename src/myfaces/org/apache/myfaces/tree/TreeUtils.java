@@ -18,12 +18,13 @@
  */
 package net.sourceforge.myfaces.tree;
 
-import net.sourceforge.myfaces.component.CommonComponentAttributes;
+import net.sourceforge.myfaces.component.CommonComponentProperties;
 import net.sourceforge.myfaces.util.bean.BeanUtils;
 
 import javax.faces.component.UIComponent;
-import javax.faces.component.UIOutput;
 import javax.faces.tree.Tree;
+import java.beans.BeanInfo;
+import java.beans.PropertyDescriptor;
 import java.io.PrintStream;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
@@ -175,12 +176,33 @@ public class TreeUtils
         stream.print("\"");
         */
 
-        printProperty(stream, comp, CommonComponentAttributes.COMPONENT_ID_ATTR, "id");
-        printProperty(stream, comp, CommonComponentAttributes.RENDERER_TYPE_ATTR, "rendererType");
+        //printProperty(stream, comp, CommonComponentProperties.COMPONENT_ID_ATTR, "id");
+        //printProperty(stream, comp, CommonComponentProperties.RENDERER_TYPE_ATTR, "rendererType");
+        /*
         if (comp instanceof UIOutput)
         {
-            printProperty(stream, comp, CommonComponentAttributes.VALUE_ATTR);
-            printProperty(stream, comp, CommonComponentAttributes.VALUE_REF_ATTR);
+            //printProperty(stream, comp, CommonComponentProperties.VALUE_PROP);
+            //printProperty(stream, comp, CommonComponentProperties.VALUE_REF_PROP);
+            printProperty(stream, comp, net.sourceforge.myfaces.component.UIOutput.VALUE_PROP);
+            printProperty(stream, comp, net.sourceforge.myfaces.component.UIOutput.VALUE_REF_PROP);
+        }
+        if (comp instanceof UICommand)
+        {
+            printProperty(stream, comp, net.sourceforge.myfaces.component.UICommand.ACTION_PROP);
+            printProperty(stream, comp, net.sourceforge.myfaces.component.UICommand.ACTION_REF_PROP);
+        }
+        */
+
+        BeanInfo beanInfo = BeanUtils.getBeanInfo(comp);
+        PropertyDescriptor[] propertyDescriptors = beanInfo.getPropertyDescriptors();
+        for (int i = 0; i < propertyDescriptors.length; i++)
+        {
+            PropertyDescriptor propertyDescriptor = propertyDescriptors[i];
+            if (propertyDescriptor.getReadMethod() != null &&
+                propertyDescriptor.getWriteMethod() != null)
+            {
+                printProperty(stream, comp, propertyDescriptor.getName());
+            }
         }
 
         for (Iterator it = comp.getAttributeNames(); it.hasNext();)

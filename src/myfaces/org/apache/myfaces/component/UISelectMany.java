@@ -28,7 +28,6 @@ import javax.faces.context.FacesContext;
  */
 public class UISelectMany
     extends javax.faces.component.UISelectMany
-    //implements CommonComponentAttributes
 {
     public UISelectMany()
     {

@@ -18,8 +18,7 @@
  */
 package net.sourceforge.myfaces.renderkit.html.ext;
 
-import net.sourceforge.myfaces.component.CommonComponentAttributes;
-import net.sourceforge.myfaces.component.UIComponentUtils;
+import net.sourceforge.myfaces.component.CommonComponentProperties;
 import net.sourceforge.myfaces.component.ext.UINavigation;
 import net.sourceforge.myfaces.renderkit.attr.CommonRendererAttributes;
 import net.sourceforge.myfaces.renderkit.attr.ext.NavigationRendererAttributes;
@@ -51,7 +50,7 @@ import java.util.StringTokenizer;
 public class NavigationRenderer
     extends HTMLRenderer
     implements
-        CommonComponentAttributes,
+        CommonComponentProperties,
         CommonRendererAttributes,
         HTMLUniversalAttributes,
         HTMLEventHandlerAttributes,
@@ -157,11 +156,12 @@ public class NavigationRenderer
                         if (comp instanceof UINavigation.UINavigationItem)
                         {
                             String clientId = comp.getClientId(facesContext);
-                            UIComponent prevNavItem = previousTree.getRoot().findComponent(clientId);
+                            UINavigation.UINavigationItem prevNavItem
+                                = (UINavigation.UINavigationItem)previousTree.getRoot().findComponent(clientId);
                             if (prevNavItem != null)
                             {
-                                Boolean open = (Boolean)prevNavItem.getAttribute(UINavigation.UINavigationItem.OPEN_ATTR);
-                                comp.setAttribute(UINavigation.UINavigationItem.OPEN_ATTR, open);
+                                boolean open = prevNavItem.isOpen();
+                                ((UINavigation.UINavigationItem)comp).setOpen(open);
                             }
                         }
                     }
@@ -181,13 +181,13 @@ public class NavigationRenderer
         while(children.hasNext())
         {
             UIComponent child = (UIComponent)children.next();
-            if (child.getRendererType().equals(NavigationItemRenderer.TYPE))
+            if (child instanceof UINavigation.UINavigationItem)
             {
                 renderMenuItem(facesContext, navigation, level, child);
             }
             else
             {
-                throw new FacesException("Unexpected component of renderer type " + child.getRendererType());
+                throw new FacesException("Unexpected component type " + child.getClass().getName());
             }
         }
     }
@@ -246,9 +246,7 @@ public class NavigationRenderer
         }
         writer.write("</td></tr>");
 
-        if (UIComponentUtils.getBooleanAttribute(item,
-                                                 UINavigation.UINavigationItem.OPEN_ATTR,
-                                                 false))
+        if (((UINavigation.UINavigationItem)item).isOpen())
         {
             renderChildren(facesContext, navigation, level + 1, item.getChildren());
         }

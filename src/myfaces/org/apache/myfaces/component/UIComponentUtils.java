@@ -48,7 +48,7 @@ import java.util.List;
  * @version $Revision$ $Date$
  */
 public class UIComponentUtils
-    implements CommonComponentAttributes
+    implements CommonComponentProperties
 {
     private UIComponentUtils() {}
 
@@ -79,7 +79,7 @@ public class UIComponentUtils
                                          Object newValue)
     {
         uiOutput.setValue(newValue);
-        uiOutput.setAttribute(CommonComponentAttributes.STRING_VALUE_ATTR, null);
+        uiOutput.setAttribute(CommonComponentProperties.STRING_VALUE_ATTR, null);
         uiOutput.setValid(true);
     }
 
@@ -139,7 +139,7 @@ public class UIComponentUtils
         catch (ConverterException e)
         {
             uiOutput.setValue(null);
-            uiOutput.setAttribute(CommonComponentAttributes.STRING_VALUE_ATTR, newValue);
+            uiOutput.setAttribute(CommonComponentProperties.STRING_VALUE_ATTR, newValue);
             uiOutput.setValid(false);
             if (addErrorMessageOnFail)
             {
@@ -305,7 +305,7 @@ public class UIComponentUtils
     public static String getClientId(FacesContext facesContext,
                                      UIComponent uiComponent)
     {
-        String clientId = (String)uiComponent.getAttribute(CommonComponentAttributes.CLIENT_ID_ATTR);
+        String clientId = (String)uiComponent.getAttribute(CommonComponentProperties.CLIENT_ID_ATTR);
         if (clientId != null)
         {
             return clientId;
@@ -355,7 +355,7 @@ public class UIComponentUtils
             }
         }
 
-        uiComponent.setAttribute(CommonComponentAttributes.CLIENT_ID_ATTR, clientId);
+        uiComponent.setAttribute(CommonComponentProperties.CLIENT_ID_ATTR, clientId);
         return clientId;
     }
 
@@ -392,13 +392,13 @@ public class UIComponentUtils
                                                       UIComponent uiComponent,
                                                       String attrName)
     {
-        if (attrName.equals(CommonComponentAttributes.VALUE_ATTR) &&
-            uiComponent instanceof javax.faces.component.UIOutput)
+        if (uiComponent instanceof javax.faces.component.UIOutput &&
+            attrName.equals(UIOutput.VALUE_PROP))
         {
             return ConverterUtils.findValueConverter(facesContext,
                                                      (javax.faces.component.UIOutput)uiComponent);
         }
-        else if (attrName.equals(CommonComponentAttributes.STRING_VALUE_ATTR))
+        else if (attrName.equals(CommonComponentProperties.STRING_VALUE_ATTR))
         {
             return ConverterUtils.getConverter(String.class);
         }

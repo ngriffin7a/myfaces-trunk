@@ -18,7 +18,7 @@
  */
 package net.sourceforge.myfaces.renderkit.attr;
 
-import net.sourceforge.myfaces.component.CommonComponentAttributes;
+
 
 /**
  * Constant definitions for the specified render dependent attributes of the
@@ -27,8 +27,7 @@ import net.sourceforge.myfaces.component.CommonComponentAttributes;
  * @version $Revision$ $Date$
  */
 public interface TextareaRendererAttributes
-    extends CommonComponentAttributes,
-            CommonRendererAttributes
+    extends CommonRendererAttributes
 {
     public static final String[] INPUT_TEXTAREA_ATTRIBUTES = {
         INPUT_CLASS_ATTR,

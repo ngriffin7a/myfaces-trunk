@@ -40,12 +40,13 @@ public class SelectItemTag
 
     public void setSelected(String v)
     {
-        setComponentPropertyString(UISelectItem.SELECTED_ATTR, v);
+        //TODO: deprecated?
+        //setComponentPropertyString(UISelectItem.SELECTED_ATTR, v);
     }
 
     public void setDescription(String v)
     {
-        setComponentPropertyString(UISelectItem.ITEM_DESCRIPTION_ATTR, v);
+        setComponentPropertyString(UISelectItem.ITEM_DESCRIPTION_PROP, v);
     }
 
     public void setValue(Object value)
@@ -55,16 +56,16 @@ public class SelectItemTag
 
     public void setLabel(String v)
     {
-        setComponentPropertyString(UISelectItem.ITEM_LABEL_ATTR, v);
+        setComponentPropertyString(UISelectItem.ITEM_LABEL_PROP, v);
     }
 
     public void setKey(String v)
     {
-        setComponentPropertyString(UISelectItem.ITEM_KEY_ATTR, v);
+        setComponentPropertyString(UISelectItem.ITEM_KEY_PROP, v);
     }
 
     public void setBundle(String v)
     {
-        setComponentPropertyString(UISelectItem.ITEM_BUNDLE_ATTR, v);
+        setComponentPropertyString(UISelectItem.ITEM_BUNDLE_PROP, v);
     }
 }

@@ -18,7 +18,8 @@
  */
 package net.sourceforge.myfaces.taglib;
 
-import net.sourceforge.myfaces.component.CommonComponentAttributes;
+import net.sourceforge.myfaces.component.CommonComponentProperties;
+import net.sourceforge.myfaces.component.UIOutput;
 import net.sourceforge.myfaces.renderkit.attr.CommonRendererAttributes;
 import net.sourceforge.myfaces.renderkit.attr.KeyBundleAttributes;
 import net.sourceforge.myfaces.renderkit.attr.UserRoleAttributes;
@@ -33,7 +34,6 @@ import javax.servlet.jsp.PageContext;
 import javax.servlet.jsp.tagext.BodyTag;
 import javax.servlet.jsp.tagext.Tag;
 import java.io.IOException;
-import java.io.Serializable;
 
 /**
  * BodyContent is automatically added as an attribute ({@link #BODY_CONTENT_ATTR)
@@ -46,13 +46,12 @@ import java.io.Serializable;
 public abstract class MyFacesBodyTag
     extends UIComponentBodyTag
     implements MyFacesTagBaseIF,
-               CommonComponentAttributes,
+               CommonComponentProperties,
                CommonRendererAttributes,
                HTMLUniversalAttributes,
                HTMLEventHandlerAttributes,
                KeyBundleAttributes,
-               UserRoleAttributes,
-               Serializable    //so that we can serialize a parsed tree with references to the "creator tag"
+               UserRoleAttributes
 {
     public static final String BODY_CONTENT_ATTR
         = MyFacesBodyTag.class.getName() + ".BODY_CONTENT";
@@ -214,7 +213,7 @@ public abstract class MyFacesBodyTag
      */
     protected void setValue(Object value)
     {
-        setComponentPropertyObject(VALUE_ATTR, value);
+        setComponentPropertyObject(UIOutput.VALUE_PROP, value);
     }
 
 
@@ -229,9 +228,9 @@ public abstract class MyFacesBodyTag
         super.setId(s);
     }
 
-    public void setConverter(String converter)
+    public void setConverter(Object converter)
     {
-        setRendererAttributeString(CONVERTER_ATTR, converter);
+        setRendererAttributeObject(CONVERTER_ATTR, converter);
     }
 
     /**
@@ -239,12 +238,12 @@ public abstract class MyFacesBodyTag
      */
     public void setModelReference(String s)
     {
-        setComponentPropertyString(VALUE_REF_ATTR, s);
+        setComponentPropertyString(UIOutput.VALUE_REF_PROP, s);
     }
 
     public void setValueRef(String s)
     {
-        setComponentPropertyString(VALUE_REF_ATTR, s);
+        setComponentPropertyString(UIOutput.VALUE_REF_PROP, s);
     }
 
     public void setRendered(boolean rendered)

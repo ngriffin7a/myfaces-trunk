@@ -28,7 +28,7 @@ import javax.faces.context.FacesContext;
  */
 public class UIGraphic
     extends javax.faces.component.UIGraphic
-    //implements CommonComponentAttributes
+    //implements CommonComponentProperties
 {
     public static final String URL_PROP = "URL";
 
