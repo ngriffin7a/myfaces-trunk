@@ -32,6 +32,7 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author Manfred Geiler (latest modification by $Author$)
@@ -391,9 +392,10 @@ public class UIData
                     //Column is not visible
                     continue;
                 }
-                for (Iterator it2 = child.getFacets().keySet().iterator(); it.hasNext();)
+                Map facets = child.getFacets();
+                for (Iterator itKeys = facets.keySet().iterator(); itKeys.hasNext();)
                 {
-                    UIComponent facet = (UIComponent)it2.next();
+                    UIComponent facet = (UIComponent)facets.get(itKeys.next());
                     process(context, facet, processAction);
                 }
             }
@@ -428,9 +430,9 @@ public class UIData
                             //Column is not visible
                             continue;
                         }
-                        for (Iterator it2 = child.getChildren().iterator(); it.hasNext();)
+                        for (Iterator itChildren = child.getChildren().iterator(); itChildren.hasNext();)
                         {
-                            UIComponent columnChild = (UIComponent)it2.next();
+                            UIComponent columnChild = (UIComponent)itChildren.next();
                             process(context, columnChild, processAction);
                         }
                     }
