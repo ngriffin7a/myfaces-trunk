@@ -36,6 +36,9 @@ import java.io.IOException;
  * @author Martin Marinschek
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.15  2005/01/09 09:10:56  mmarinschek
+ * prepare call-back methods for renderer
+ *
  * Revision 1.14  2004/12/23 13:03:08  mmarinschek
  * id's not rendered (or not conditionally rendered); changes in jslistener to support both ie and firefox now
  *
@@ -66,6 +69,8 @@ extends HtmlRenderer
         super.encodeBegin(facesContext, uiComponent);   //check for NP
 
         ResponseWriter writer = facesContext.getResponseWriter();
+
+        encodeBefore(facesContext, writer, uiComponent);
 
         writer.startElement(HTML.LABEL_ELEM, uiComponent);
         HtmlRendererUtils.writeIdIfNecessary(writer, uiComponent, facesContext);
@@ -124,6 +129,10 @@ extends HtmlRenderer
         writer.flush(); // close start tag
     }
 
+    protected void encodeBefore(FacesContext facesContext, ResponseWriter writer, UIComponent uiComponent)
+    {
+    }
+
 
     protected String getFor(UIComponent component)
     {
@@ -145,5 +154,11 @@ extends HtmlRenderer
 
         ResponseWriter writer = facesContext.getResponseWriter();
         writer.endElement(HTML.LABEL_ELEM);
+
+        encodeAfter(facesContext, writer, uiComponent);
+    }
+
+    protected void encodeAfter(FacesContext facesContext, ResponseWriter writer, UIComponent uiComponent)
+    {
     }
 }
