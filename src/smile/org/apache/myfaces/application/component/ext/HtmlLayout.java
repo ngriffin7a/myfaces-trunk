@@ -16,21 +16,18 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package net.sourceforge.myfaces.component.ext;
+package net.sourceforge.myfaces.application.component.ext;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.Iterator;
-import java.util.List;
+import net.sourceforge.myfaces.exception.InvalidAttributeException;
+import net.sourceforge.myfaces.renderkit.RenderUtils;
 
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIComponentBase;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
-
-import net.sourceforge.myfaces.exception.InvalidAttributeException;
-import net.sourceforge.myfaces.renderkit.RenderUtils;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 
 /**
  * @author codehawk

@@ -18,50 +18,48 @@
  */
 package net.sourceforge.myfaces.exception;
 
-import java.io.PrintStream;
-import java.io.PrintWriter;
-
-import javax.faces.FacesException;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import java.io.PrintStream;
+import java.io.PrintWriter;
+
+
 /**
- * @author codehawk
+ * @author Dimitry D'hondt
  *
- * Base class for all exceptions in smile. All SmileExceptions are
- * implicitly FacesExceptions.
+ * Base class for all runtime exceptions in smile.
  * SmileExceptions also support constructors with the causing exception.
  */
-public class SmileException extends FacesException {
+public class SmileRuntimeException extends RuntimeException {
 	private static Log log = LogFactory.getLog(SmileException.class);
 	private String msg = null;
 	private Throwable cause = null;
 
-	public SmileException() {
+	public SmileRuntimeException() {
 		super();
 		log.error("Anonymous exception of type <" + this.getClass().getModifiers() + "> was thrown..");
 	}
 
-	public SmileException(String msg) {
+	public SmileRuntimeException(String msg) {
 		super();
 		this.msg = msg;
-		log.error("<" + this.getClass().getModifiers() + "> thrown with message : " + msg);
+		log.error("<" + this.getClass().getModifiers() + "> thrown with message : " + msg);		
 	}
 	
-	public SmileException(Throwable cause) {
+	public SmileRuntimeException(Throwable cause) {
 		super();
 		this.cause = cause;
-		log.error("Anonymous exception of type <" + this.getClass().getModifiers() + "> was thrown..",cause);
+		log.info("Anonymous exception of type <" + this.getClass().getModifiers() + "> was thrown..",cause);
 	}
 	
-	public SmileException(String msg, Throwable cause) {
+	public SmileRuntimeException(String msg, Throwable cause) {
 		super();
 		this.msg = msg;
 		this.cause = cause;
-		log.error("<" + this.getClass().getModifiers() + "> thrown with message : " + msg,cause);
+		log.error("<" + this.getClass().getModifiers() + "> thrown with message : " + msg,cause);		
 	}
-
+	
 	/**
 	 * @see java.lang.Throwable#printStackTrace()
 	 */

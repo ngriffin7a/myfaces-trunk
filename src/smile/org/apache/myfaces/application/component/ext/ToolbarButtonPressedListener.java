@@ -16,42 +16,15 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package net.sourceforge.myfaces.component.ext;
+package net.sourceforge.myfaces.application.component.ext;
 
-import java.io.IOException;
-
-import javax.faces.component.UIComponentBase;
-import javax.faces.context.FacesContext;
-import javax.faces.context.ResponseWriter;
-
-import net.sourceforge.myfaces.renderkit.RenderUtils;
+import javax.faces.event.FacesListener;
 
 /**
  * @author Dimitry D'hondt
  *
- * Horizontal ruler.
+ * THe event listener interface used for detecting events on the Toolbar buttons.
  */
-public class Ruler extends UIComponentBase {
-	
-
-	public Ruler() {
-		super();
-	}
-	
-	/**
-	 * @see javax.faces.component.UIComponent#encodeChildren(javax.faces.context.FacesContext)
-	 */
-	public void encodeChildren(FacesContext ctx) throws IOException {
-		ResponseWriter out = ctx.getResponseWriter();
-		RenderUtils.ensureAllTagsFinished();
-		
-		out.write("<HR></HR>");
-	}
-
-	/**
-	 * @see javax.faces.component.UIComponent#getFamily()
-	 */
-	public String getFamily() {
-		return RenderUtils.SMILE_FAMILY;
-	}
+public interface ToolbarButtonPressedListener extends FacesListener {
+	void buttonPressed(net.sourceforge.myfaces.application.component.ext.ToolbarButtonPressedEvent e);
 }

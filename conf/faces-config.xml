@@ -315,7 +315,7 @@
     <component-type>net.sourceforge.myfaces.SaveState</component-type>
     <component-class>net.sourceforge.myfaces.component.ext.UISaveState</component-class>
   </component>
-  
+ 
 
   <!-- standard converters by id -->
 

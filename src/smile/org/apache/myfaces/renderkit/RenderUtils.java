@@ -18,10 +18,6 @@
  */
 package net.sourceforge.myfaces.renderkit;
 
-import java.io.IOException;
-import java.util.MissingResourceException;
-import java.util.ResourceBundle;
-
 import javax.faces.FactoryFinder;
 import javax.faces.application.Application;
 import javax.faces.application.ApplicationFactory;
@@ -30,6 +26,9 @@ import javax.faces.component.UIForm;
 import javax.faces.component.UIViewRoot;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
+import java.io.IOException;
+import java.util.MissingResourceException;
+import java.util.ResourceBundle;
 
 /**
  * @author codehawk
@@ -75,12 +74,12 @@ public class RenderUtils {
 		if (bundleAttr == null) {
 			throw new NullPointerException("bundleAttr cannot be null");
 		}		
-		key = RenderUtil.getStringAttribute(component,keyAttr);
-		bundleName = RenderUtil.getStringAttribute(component,bundleAttr);
+		key = net.sourceforge.myfaces.renderkit.RenderUtil.getStringAttribute(component,keyAttr);
+		bundleName = net.sourceforge.myfaces.renderkit.RenderUtil.getStringAttribute(component,bundleAttr);
 		if(bundleName == null)
 		{
 			UIViewRoot root = context.getViewRoot();
-			bundleName = RenderUtil.getStringAttribute(root,bundleAttr);
+			bundleName = net.sourceforge.myfaces.renderkit.RenderUtil.getStringAttribute(root,bundleAttr);
 		}
 		if(null == key || null == bundleName)
 			throw new MissingResourceException("Resource cannot be found", bundleName, key);

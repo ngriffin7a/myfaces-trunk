@@ -16,15 +16,28 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package net.sourceforge.myfaces.component.ext;
+package net.sourceforge.myfaces.application.component.ext;
 
-import javax.faces.event.FacesListener;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import javax.faces.component.html.HtmlOutputLabel;
 
 /**
+ * This class creates an empty component.
+ * It will not render any content.
+ * This is convenient to fill up a cell in a for example
+ * a grid layout, on one row. 
+ * 
  * @author Dimitry D'hondt
- *
- * THe event listener interface used for detecting events on the Toolbar buttons.
  */
-public interface ToolbarButtonPressedListener extends FacesListener {
-	void buttonPressed(ToolbarButtonPressedEvent e);
+public class Dummy extends HtmlOutputLabel {
+	private static Log log = LogFactory.getLog(Dummy.class);
+
+	public Dummy() {
+		setRendererType("javax.faces.Label");
+		setValue("");
+	}
+	
+	
 }

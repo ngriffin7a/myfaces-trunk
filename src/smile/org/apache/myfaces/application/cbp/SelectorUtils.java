@@ -16,13 +16,12 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package net.sourceforge.myfaces.application;
+package net.sourceforge.myfaces.application.cbp;
+
+import net.sourceforge.myfaces.util.ClassUtils;
 
 import javax.faces.component.UIViewRoot;
 import javax.faces.context.FacesContext;
-
-import net.sourceforge.myfaces.application.cbp.StateManagerImpl;
-import net.sourceforge.myfaces.util.ClassUtils;
 
 /**
  * @author Dimitry D'hondt
@@ -154,6 +153,6 @@ public class SelectorUtils
     public static UIViewRoot getCurrentViewRoot(FacesContext facesContext)
     {
         return (UIViewRoot) facesContext.getExternalContext().getSessionMap()
-            .get(StateManagerImpl.SESSION_KEY_CURRENT_VIEW);
+            .get(net.sourceforge.myfaces.application.cbp.CbpStateManagerImpl.SESSION_KEY_CURRENT_VIEW);
     }
 }

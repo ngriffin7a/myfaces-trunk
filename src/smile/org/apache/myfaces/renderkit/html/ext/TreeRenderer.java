@@ -18,20 +18,16 @@
  */
 package net.sourceforge.myfaces.renderkit.html.ext;
 
-import java.io.IOException;
-import java.util.Iterator;
-import java.util.List;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 import javax.faces.render.Renderer;
-
-import net.sourceforge.myfaces.component.ext.Tree;
-import net.sourceforge.myfaces.component.ext.TreeNode;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import java.io.IOException;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * @author Dimitry D'hondt
@@ -49,7 +45,7 @@ public class TreeRenderer extends Renderer {
 	 * @see javax.faces.render.Renderer#decode(javax.faces.context.FacesContext, javax.faces.component.UIComponent)
 	 */
 	public void decode(FacesContext ctx, UIComponent component) {
-		if (component instanceof Tree) {
+		if (component instanceof net.sourceforge.myfaces.application.component.ext.Tree) {
 		} else {	
 			throw new IllegalStateException(
 				"Invalid component type '" + component.getClass().getName() + "' for TreeRenderer. Component '" + component.getId() + "'.");
@@ -67,8 +63,8 @@ public class TreeRenderer extends Renderer {
 		ResponseWriter out = ctx.getResponseWriter();
 		String clientId = component.getClientId(ctx);
 		
-		if (component instanceof Tree) {
-			Tree tree = (Tree) component;
+		if (component instanceof net.sourceforge.myfaces.application.component.ext.Tree) {
+			net.sourceforge.myfaces.application.component.ext.Tree tree = (net.sourceforge.myfaces.application.component.ext.Tree) component;
 
 			out.startElement("table",tree);
 			out.writeAttribute("border","0",null);
@@ -85,11 +81,11 @@ public class TreeRenderer extends Renderer {
 		}
 	}
 	
-	private void renderNodes(List nodes, ResponseWriter out, Tree tree, int level, int maxlevel) throws IOException {
+	private void renderNodes(List nodes, ResponseWriter out, net.sourceforge.myfaces.application.component.ext.Tree tree, int level, int maxlevel) throws IOException {
 		FacesContext ctx = FacesContext.getCurrentInstance();
 		int nodeNr = 1;
 		for (Iterator iter = nodes.iterator(); iter.hasNext();) {
-			TreeNode node = (TreeNode) iter.next();
+			net.sourceforge.myfaces.application.component.ext.TreeNode node = (net.sourceforge.myfaces.application.component.ext.TreeNode) iter.next();
 			int childCount = node.getSubNodes().size();
 			String childrenId = tree.getClientId(ctx) + "_" + level + "_" + nodeNr; 
 			

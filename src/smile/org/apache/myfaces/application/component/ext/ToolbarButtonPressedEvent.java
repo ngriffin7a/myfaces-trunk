@@ -16,7 +16,7 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package net.sourceforge.myfaces.component.ext;
+package net.sourceforge.myfaces.application.component.ext;
 
 import javax.faces.component.UIComponent;
 import javax.faces.event.FacesEvent;
@@ -30,7 +30,7 @@ import javax.faces.event.FacesListener;
  */
 public class ToolbarButtonPressedEvent extends FacesEvent {
 
-	private ToolbarButton button = null;
+	private net.sourceforge.myfaces.application.component.ext.ToolbarButton button = null;
 
 	public ToolbarButtonPressedEvent(UIComponent toolbar) {
 		super(toolbar);
@@ -53,14 +53,14 @@ public class ToolbarButtonPressedEvent extends FacesEvent {
 	/**
 	 * @return
 	 */
-	public ToolbarButton getButton() {
+	public net.sourceforge.myfaces.application.component.ext.ToolbarButton getButton() {
 		return button;
 	}
 
 	/**
 	 * @param i
 	 */
-	public void setButton(ToolbarButton button) {
+	public void setButton(net.sourceforge.myfaces.application.component.ext.ToolbarButton button) {
 		this.button = button;
 	}
 }

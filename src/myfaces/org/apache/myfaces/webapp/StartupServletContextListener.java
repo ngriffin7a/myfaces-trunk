@@ -57,6 +57,7 @@ public class StartupServletContextListener
                                                                              null);
             
             // set in ThreadLocal so that config methods cat use it
+            // TODO: what's this for ?!
             s_externalContext.set(externalContext);
 
             FacesConfigFactory fcf = MyFacesFactoryFinder.getFacesConfigFactory(externalContext);

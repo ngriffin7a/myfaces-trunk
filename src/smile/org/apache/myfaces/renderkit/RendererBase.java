@@ -18,12 +18,11 @@
  */
 package net.sourceforge.myfaces.renderkit;
 
-import java.io.IOException;
-import java.util.MissingResourceException;
-
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.render.Renderer;
+import java.io.IOException;
+import java.util.MissingResourceException;
 
 /**
  * Base class for smile renderers

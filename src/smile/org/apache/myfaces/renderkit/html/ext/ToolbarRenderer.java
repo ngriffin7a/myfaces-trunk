@@ -18,22 +18,16 @@
  */
 package net.sourceforge.myfaces.renderkit.html.ext;
 
-import java.io.IOException;
+import net.sourceforge.myfaces.exception.InternalServerException;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 import javax.faces.event.PhaseId;
 import javax.faces.render.Renderer;
-
-import net.sourceforge.myfaces.component.ext.Toolbar;
-import net.sourceforge.myfaces.component.ext.ToolbarButton;
-import net.sourceforge.myfaces.component.ext.ToolbarButtonPressedEvent;
-import net.sourceforge.myfaces.exception.InternalServerException;
-import net.sourceforge.myfaces.renderkit.RenderUtils;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import java.io.IOException;
 
 /**
  * @author Dimitry D'hondt
@@ -51,14 +45,14 @@ public class ToolbarRenderer extends Renderer {
 	 * @see javax.faces.render.Renderer#decode(javax.faces.context.FacesContext, javax.faces.component.UIComponent)
 	 */
 	public void decode(FacesContext ctx, UIComponent component) {
-		if (component instanceof Toolbar) {
-			Toolbar toolbar = (Toolbar) component;
+		if (component instanceof net.sourceforge.myfaces.application.component.ext.Toolbar) {
+			net.sourceforge.myfaces.application.component.ext.Toolbar toolbar = (net.sourceforge.myfaces.application.component.ext.Toolbar) component;
 			String buttonindexId = toolbar.getClientId(ctx) + "_smile_buttonindex";
 			String inputValue =	(String) ctx.getExternalContext().getRequestParameterMap().get(buttonindexId);
 			if(inputValue.length() > 0) {
 				int index = Integer.parseInt(inputValue);
-				ToolbarButtonPressedEvent event = new ToolbarButtonPressedEvent(toolbar);
-				ToolbarButton button = toolbar.getButton(index);
+				net.sourceforge.myfaces.application.component.ext.ToolbarButtonPressedEvent event = new net.sourceforge.myfaces.application.component.ext.ToolbarButtonPressedEvent(toolbar);
+				net.sourceforge.myfaces.application.component.ext.ToolbarButton button = toolbar.getButton(index);
 				event.setButton(button);
 				event.setPhaseId(PhaseId.INVOKE_APPLICATION);
 				toolbar.queueEvent(event);
@@ -85,11 +79,11 @@ public class ToolbarRenderer extends Renderer {
 		String clientId = component.getClientId(ctx);
 		String align = "left";
 		
-		if (component instanceof Toolbar) {
-			Toolbar toolbar = (Toolbar) component;
+		if (component instanceof net.sourceforge.myfaces.application.component.ext.Toolbar) {
+			net.sourceforge.myfaces.application.component.ext.Toolbar toolbar = (net.sourceforge.myfaces.application.component.ext.Toolbar) component;
 
 			String buttonindexId = toolbar.getClientId(ctx) + "_smile_buttonindex";
-			RenderUtils.renderHiddenField(buttonindexId);
+			net.sourceforge.myfaces.renderkit.RenderUtils.renderHiddenField(buttonindexId);
 
 			out.startElement("table",null);
 //			out.writeAttribute("border","1",null);
@@ -107,7 +101,7 @@ public class ToolbarRenderer extends Renderer {
 			
 			int buttonCount = toolbar.getButtons().size();
 			for (int i = 0; i < buttonCount; i++) {
-				ToolbarButton button = toolbar.getButton(i);
+				net.sourceforge.myfaces.application.component.ext.ToolbarButton button = toolbar.getButton(i);
 				if(button.getUnpressedImageURL() == null || button.getUnpressedImageURL().length() == 0) {
 					log.warn("Toolbar '" + toolbar.getId() + "' contains a button with null, or zero-length unpressed image URL - ignoring button.");
 					continue;
@@ -155,7 +149,7 @@ public class ToolbarRenderer extends Renderer {
 					out.writeAttribute("id",imageId,null);
 					out.writeURIAttribute("src",primaryImage, null);
 					if(primaryImage != null && primaryImage.length() > 0) {
-						String formName = RenderUtils.determineFormName(toolbar);
+						String formName = net.sourceforge.myfaces.renderkit.RenderUtils.determineFormName(toolbar);
 						if(formName == null) {
 							throw new InternalServerException("Toolbars should be nested in a UIForm !");
 						}

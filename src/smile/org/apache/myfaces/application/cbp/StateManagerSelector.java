@@ -16,16 +16,15 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package net.sourceforge.myfaces.application;
+package net.sourceforge.myfaces.application.cbp;
 
-import java.io.IOException;
+import net.sourceforge.myfaces.application.MyfacesStateManager;
+import net.sourceforge.myfaces.application.jsp.JspStateManagerImpl;
 
 import javax.faces.application.StateManager;
 import javax.faces.component.UIViewRoot;
 import javax.faces.context.FacesContext;
-
-import net.sourceforge.myfaces.application.cbp.StateManagerImpl;
-import net.sourceforge.myfaces.application.jsp.JspStateManagerImpl;
+import java.io.IOException;
 
 /**
  * @author Dimitry D'hondt
@@ -41,7 +40,7 @@ public class StateManagerSelector extends MyfacesStateManager
 
     public StateManagerSelector()
     {
-        cbpManager = new StateManagerImpl();
+        cbpManager = new net.sourceforge.myfaces.application.cbp.CbpStateManagerImpl();
         jspManager = new JspStateManagerImpl();
     }
 
@@ -66,7 +65,7 @@ public class StateManagerSelector extends MyfacesStateManager
      */
     public boolean isSavingStateInClient(FacesContext context)
     {
-        return (SelectorUtils.isCurrentPageJSP(context)) 
+        return (net.sourceforge.myfaces.application.cbp.SelectorUtils.isCurrentPageJSP(context))
             ? jspManager.isSavingStateInClient(context) 
             : cbpManager.isSavingStateInClient(context);
     }
@@ -98,7 +97,7 @@ public class StateManagerSelector extends MyfacesStateManager
     public UIViewRoot restoreView(FacesContext context, String viewId,
         String renderKitId)
     {
-        return (SelectorUtils.isCurrentPageJSP(context))
+        return (net.sourceforge.myfaces.application.cbp.SelectorUtils.isCurrentPageJSP(context))
             ? jspManager.restoreView(context, viewId, renderKitId)
             : cbpManager.restoreView(context, viewId, renderKitId);
     }
@@ -108,7 +107,7 @@ public class StateManagerSelector extends MyfacesStateManager
      */
     public SerializedView saveSerializedView(FacesContext context)
     {
-        return (SelectorUtils.isCurrentPageJSP(context))
+        return (net.sourceforge.myfaces.application.cbp.SelectorUtils.isCurrentPageJSP(context))
             ? jspManager.saveSerializedView(context)
             : cbpManager.saveSerializedView(context);
     }
@@ -120,7 +119,7 @@ public class StateManagerSelector extends MyfacesStateManager
     public void writeState(FacesContext context, SerializedView state)
         throws IOException
     {
-        if (SelectorUtils.isCurrentPageJSP(context))
+        if (net.sourceforge.myfaces.application.cbp.SelectorUtils.isCurrentPageJSP(context))
         {
             jspManager.writeState(context, state);
         }
@@ -138,7 +137,7 @@ public class StateManagerSelector extends MyfacesStateManager
         SerializedView serializedView)
         throws IOException
     {
-        if (SelectorUtils.isCurrentPageJSP(facesContext))
+        if (net.sourceforge.myfaces.application.cbp.SelectorUtils.isCurrentPageJSP(facesContext))
         {
             jspManager.writeStateAsUrlParams(facesContext, serializedView);
         }

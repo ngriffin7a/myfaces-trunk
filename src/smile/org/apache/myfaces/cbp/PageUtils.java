@@ -18,33 +18,17 @@
  */
 package net.sourceforge.myfaces.cbp;
 
+import net.sourceforge.myfaces.application.component.ext.Screen;
+
 import javax.faces.FactoryFinder;
 import javax.faces.application.Application;
 import javax.faces.application.ApplicationFactory;
 import javax.faces.application.FacesMessage;
-import javax.faces.component.NamingContainer;
-import javax.faces.component.UIColumn;
-import javax.faces.component.UICommand;
-import javax.faces.component.UIComponent;
-import javax.faces.component.UIData;
-import javax.faces.component.UIForm;
-import javax.faces.component.UIGraphic;
-import javax.faces.component.UIInput;
-import javax.faces.component.UIMessage;
-import javax.faces.component.UIOutput;
-import javax.faces.component.UIPanel;
-import javax.faces.component.UISelectBoolean;
-import javax.faces.component.UISelectItem;
-import javax.faces.component.UISelectItems;
-import javax.faces.component.UISelectMany;
-import javax.faces.component.UISelectOne;
-import javax.faces.component.UIViewRoot;
+import javax.faces.component.*;
 import javax.faces.component.html.HtmlInputText;
 import javax.faces.component.html.HtmlPanelGrid;
 import javax.faces.component.html.HtmlSelectOneMenu;
 import javax.faces.context.FacesContext;
-
-import net.sourceforge.myfaces.component.ext.Screen;
 
 /**
  * @author Dimitry D'hondt

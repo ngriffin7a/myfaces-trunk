@@ -16,25 +16,41 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package net.sourceforge.myfaces.component.ext;
+package net.sourceforge.myfaces.application.component.ext;
+
+import net.sourceforge.myfaces.renderkit.RenderUtils;
+
+import javax.faces.component.UIComponentBase;
+import javax.faces.context.FacesContext;
+import javax.faces.context.ResponseWriter;
+import java.io.IOException;
 
 /**
- * Single point of definition for attributes of components.
- * 
- * @author Dimitry D'hondt.
+ * @author Dimitry D'hondt
+ *
+ * Horizontal ruler.
  */
-public interface Attributes {
-	static final String ATTR_MODEL_REFERENCE = "modelReference";
-	static final String ATTR_RENDERER_TYPE = "rendererType";
-	static final String ATTR_VALUE = "value";
-	static final String ATTR_VALUEREF = "valueRef";
-	static final String ATTR_VALID = "valid";
-	static final String ATTR_PARENT = "parent";
-	static final String ATTR_COMPONENT_ID = "componentId";
-	static final String ATTR_COMPONENT_TYPE = "componentType";
-	static final String ATTR_CONVERTER = "converter";
-	static final String ATTR_CLIENT_ID = "clientId";
-	static final String ATTR_RENDERED = "rendered";
-	static final String ATTR_RENDERS_CHILDREN = "rendersChildren";
-	static final String ATTR_RENDERS_SELF = "rendersSelf";
+public class Ruler extends UIComponentBase {
+	
+
+	public Ruler() {
+		super();
+	}
+	
+	/**
+	 * @see javax.faces.component.UIComponent#encodeChildren(javax.faces.context.FacesContext)
+	 */
+	public void encodeChildren(FacesContext ctx) throws IOException {
+		ResponseWriter out = ctx.getResponseWriter();
+		RenderUtils.ensureAllTagsFinished();
+		
+		out.write("<HR></HR>");
+	}
+
+	/**
+	 * @see javax.faces.component.UIComponent#getFamily()
+	 */
+	public String getFamily() {
+		return RenderUtils.SMILE_FAMILY;
+	}
 }

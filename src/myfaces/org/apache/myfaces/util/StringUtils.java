@@ -29,7 +29,8 @@ import java.util.ArrayList;
  * in exchange for longer more complex code.
  * </p>
  *
- * @author Anton Koinov
+ * @author Anton Koinov (latest modification by $Author$)
+ * @version $Revision$ $Date$
  */
 public class StringUtils
 {

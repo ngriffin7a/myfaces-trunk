@@ -18,20 +18,19 @@
  */
 package net.sourceforge.myfaces.cbp.designer;
 
-import java.lang.reflect.Method;
+import net.sf.cglib.proxy.MethodInterceptor;
+import net.sf.cglib.proxy.MethodProxy;
+import net.sourceforge.myfaces.application.component.ext.Screen;
+import net.sourceforge.myfaces.renderkit.RenderUtil;
+import net.sourceforge.myfaces.renderkit.html.HTML;
+import net.sourceforge.myfaces.renderkit.html.ext.ScreenRenderer;
 
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIForm;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 import javax.faces.render.Renderer;
-
-import net.sf.cglib.proxy.MethodInterceptor;
-import net.sf.cglib.proxy.MethodProxy;
-import net.sourceforge.myfaces.component.ext.Screen;
-import net.sourceforge.myfaces.renderkit.RenderUtil;
-import net.sourceforge.myfaces.renderkit.html.HTML;
-import net.sourceforge.myfaces.renderkit.html.ext.ScreenRenderer;
+import java.lang.reflect.Method;
 
 
 /**

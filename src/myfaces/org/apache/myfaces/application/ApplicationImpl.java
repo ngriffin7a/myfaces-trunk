@@ -18,12 +18,16 @@
  */
 package net.sourceforge.myfaces.application;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Locale;
-import java.util.Map;
+import net.sourceforge.myfaces.application.jsp.JspStateManagerImpl;
+import net.sourceforge.myfaces.application.jsp.JspViewHandlerImpl;
+import net.sourceforge.myfaces.el.MethodBindingImpl;
+import net.sourceforge.myfaces.el.PropertyResolverImpl;
+import net.sourceforge.myfaces.el.ValueBindingImpl;
+import net.sourceforge.myfaces.el.VariableResolverImpl;
+import net.sourceforge.myfaces.util.BiLevelCacheMap;
+import net.sourceforge.myfaces.util.ClassUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import javax.faces.FacesException;
 import javax.faces.application.Application;
@@ -33,23 +37,10 @@ import javax.faces.application.ViewHandler;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
-import javax.faces.el.MethodBinding;
-import javax.faces.el.PropertyResolver;
-import javax.faces.el.ReferenceSyntaxException;
-import javax.faces.el.ValueBinding;
-import javax.faces.el.VariableResolver;
+import javax.faces.el.*;
 import javax.faces.event.ActionListener;
 import javax.faces.validator.Validator;
-
-import net.sourceforge.myfaces.el.MethodBindingImpl;
-import net.sourceforge.myfaces.el.PropertyResolverImpl;
-import net.sourceforge.myfaces.el.ValueBindingImpl;
-import net.sourceforge.myfaces.el.VariableResolverImpl;
-import net.sourceforge.myfaces.util.BiLevelCacheMap;
-import net.sourceforge.myfaces.util.ClassUtils;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import java.util.*;
 
 
 /**
@@ -57,7 +48,6 @@ import org.apache.commons.logging.LogFactory;
  * @author Manfred Geiler (latest modification by $Author$)
  * @author Anton Koinov
  * @author Thomas Spiegl
- * @author Dimitry D'hondt
  * @version $Revision$ $Date$
  */
 public class ApplicationImpl
@@ -91,7 +81,7 @@ public class ApplicationImpl
     // components, converters, and validators can be added at runtime--must synchronize
     private final Map _converterMap = Collections.synchronizedMap(new HashMap());
     private final Map _converterTypeMap = Collections.synchronizedMap(new HashMap());
-//    private final Map _componentClassMap = Collections.synchronizedMap(new HashMap());
+    private final Map _componentClassMap = Collections.synchronizedMap(new HashMap());
     private final Map _validatorClassMap = Collections.synchronizedMap(new HashMap());
 
 
@@ -101,14 +91,13 @@ public class ApplicationImpl
     {
         // set default implementation in constructor
         // pragmatic approach, no syncronizing will be needed in get methods
-//        _viewHandler = new JspViewHandlerImpl();
-		_viewHandler = new ViewHandlerSelector();
+        _viewHandler = new JspViewHandlerImpl();
         _navigationHandler = new NavigationHandlerImpl();
         _variableResolver = new VariableResolverImpl();
         _propertyResolver = new PropertyResolverImpl();
         _actionListener = new ActionListenerImpl();
         _defaultRenderKitId = null;
-        _stateManager = new StateManagerSelector(); 
+        _stateManager = new JspStateManagerImpl();
         if (log.isTraceEnabled()) log.trace("New Application instance created");
     }
 
@@ -132,8 +121,7 @@ public class ApplicationImpl
 
     public Iterator getComponentTypes()
     {
-//        return _componentClassMap.keySet().iterator();
-		return ComponentFactory.getInstance().getComponentTypes();
+        return _componentClassMap.keySet().iterator();
     }
 
     public Iterator getConverterIds()
@@ -276,23 +264,16 @@ public class ApplicationImpl
             throw new NullPointerException("addComponent: component = null is not allowed");
         }
         
-		Class clazz = null;
-		
-		try {
-			clazz = Class.forName(componentClassName);
-		} catch (ClassNotFoundException e) {
-			String msg =
-				"The class <"
-					+ componentClassName
-					+ "> specified for component type <"
-					+ componentType
-					+ "> is not available !";
-			log.error(msg, e);
-//			throw new InternalServerException(msg);
-            return;
-		}
-		
-		ComponentFactory.getInstance().addComponent(componentType, clazz);
+        try
+        {
+            _componentClassMap.put(componentType, ClassUtils.classForName(componentClassName));
+            if (log.isTraceEnabled()) log.trace("add Component class = " + componentClassName +
+                                                " for type = " + componentType);
+        }
+        catch (Exception e)
+        {
+            log.error("Component class " + componentClassName + " not found", e);
+        }
     }
 
     public void addConverter(String converterId, String converterClass)
@@ -379,7 +360,27 @@ public class ApplicationImpl
             log.error("createComponent: componentType = null is not allowed");
             throw new NullPointerException("createComponent: componentType = null is not allowed");
         }
-		return ComponentFactory.getInstance().createComponent(componentType);
+
+        Class componentClass;
+        synchronized (_componentClassMap)
+        {
+            componentClass = (Class) _componentClassMap.get(componentType);
+        }
+        if (componentClass == null)
+        {
+            log.error("Undefined component type " + componentType);
+            throw new FacesException("Undefined component type " + componentType);
+        }
+
+        try
+        {
+            return (UIComponent) componentClass.newInstance();
+        }
+        catch (Exception e)
+        {
+            log.error("Could not instantiate component componentType = " + componentType, e);
+            throw new FacesException("Could not instantiate component componentType = " + componentType, e);
+        }
     }
 
     public UIComponent createComponent(ValueBinding valueBinding,
@@ -403,14 +404,17 @@ public class ApplicationImpl
             throw new NullPointerException("createComponent: componentType = null ist not allowed");
         }
 
-		Object value = valueBinding.getValue(facesContext);
-		if (value != null && value instanceof UIComponent) {
-			return (UIComponent)value;
-		} else {
-			UIComponent component = createComponent(componentType);
-			valueBinding.setValue(facesContext,component);
-			return component;
-		}
+        Object obj = valueBinding.getValue(facesContext);
+        if (obj instanceof UIComponent)
+        {
+            return (UIComponent) obj;
+        }
+        else
+        {
+            UIComponent component = createComponent(componentType);
+            valueBinding.setValue(facesContext, component);
+            return component;
+        }
     }
 
     public Converter createConverter(String converterId)

@@ -18,21 +18,16 @@
  */
 package net.sourceforge.myfaces.renderkit.html.ext;
 
-import java.io.IOException;
-
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 import javax.servlet.http.HttpServletRequest;
-
-import net.sourceforge.myfaces.component.ext.Screen;
-import net.sourceforge.myfaces.renderkit.RenderUtils;
-import net.sourceforge.myfaces.renderkit.RendererBase;
+import java.io.IOException;
 
 /**
  * @author Dimitry D'hondt
  */
-public class ScreenRenderer extends RendererBase {
+public class ScreenRenderer extends net.sourceforge.myfaces.renderkit.RendererBase {
 
 	private String title = null;
 	
@@ -43,10 +38,10 @@ public class ScreenRenderer extends RendererBase {
 	 */
 	public void encodeBegin(FacesContext ctx, UIComponent component ) throws IOException {
 		ResponseWriter out = ctx.getResponseWriter();
-		if (!component.isRendered() || !(component instanceof Screen)) {
+		if (!component.isRendered() || !(component instanceof net.sourceforge.myfaces.application.component.ext.Screen)) {
 			return;
 		}
-		Screen screen = (Screen) component;
+		net.sourceforge.myfaces.application.component.ext.Screen screen = (net.sourceforge.myfaces.application.component.ext.Screen) component;
 		String clientId = screen.getClientId(ctx);
 		
 		out.startElement("html", screen);
@@ -82,7 +77,7 @@ public class ScreenRenderer extends RendererBase {
 		out.write(" ");		
 		out.endElement("script");
 		
-		RenderUtils.ensureAllTagsFinished();
+		net.sourceforge.myfaces.renderkit.RenderUtils.ensureAllTagsFinished();
 //		out.write("<div id=\"overDiv\" style=\"position:absolute; visibility:hidden; z-index:32000;\"></div><script language=\"javascript\" src=\"/smile/overlib.js\"></script>");
 		out.write("<div id=\"overDiv\" style=\"position:absolute; visibility:hidden; z-index:32000;\"></div>");
 
@@ -101,12 +96,12 @@ public class ScreenRenderer extends RendererBase {
 	 * @see javax.faces.component.UIComponent#encodeEnd(javax.faces.context.FacesContext)
 	 */
 	public void encodeEnd(FacesContext ctx, UIComponent component) throws IOException {
-		if (!component.isRendered() || !(component instanceof Screen)) {
+		if (!component.isRendered() || !(component instanceof net.sourceforge.myfaces.application.component.ext.Screen)) {
 			return;
 		}
 
 
-		Screen screen = (Screen) component;
+		net.sourceforge.myfaces.application.component.ext.Screen screen = (net.sourceforge.myfaces.application.component.ext.Screen) component;
 		screen.getEndScript().append("}");
 
 		ResponseWriter out = ctx.getResponseWriter();
@@ -122,7 +117,7 @@ public class ScreenRenderer extends RendererBase {
 
 	public void decode(FacesContext facesContext, UIComponent component)
 	{
-		Screen screen = (Screen) component;
+		net.sourceforge.myfaces.application.component.ext.Screen screen = (net.sourceforge.myfaces.application.component.ext.Screen) component;
 
 		screen.setSubmitted(true);
 	}

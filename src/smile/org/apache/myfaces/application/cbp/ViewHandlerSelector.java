@@ -16,18 +16,16 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package net.sourceforge.myfaces.application;
+package net.sourceforge.myfaces.application.cbp;
 
-import java.io.IOException;
-import java.util.Locale;
+import net.sourceforge.myfaces.application.jsp.JspViewHandlerImpl;
 
 import javax.faces.FacesException;
 import javax.faces.application.ViewHandler;
 import javax.faces.component.UIViewRoot;
 import javax.faces.context.FacesContext;
-
-import net.sourceforge.myfaces.application.cbp.ViewHandlerImpl;
-import net.sourceforge.myfaces.application.jsp.JspViewHandlerImpl;
+import java.io.IOException;
+import java.util.Locale;
 
 /**
  * This class selects the ViewHandler to use, on a per-request basis. Basically
@@ -50,8 +48,8 @@ public class ViewHandlerSelector extends ViewHandler
     public ViewHandlerSelector()
     {
         jspHandler = new JspViewHandlerImpl();
-        cbpHandler = new ViewHandlerImpl();
-        //		stateManager = new StateManagerImpl();
+        cbpHandler = new net.sourceforge.myfaces.application.cbp.CbpViewHandlerImpl();
+        //		stateManager = new CbpStateManagerImpl();
     }
 
     /**
@@ -61,7 +59,7 @@ public class ViewHandlerSelector extends ViewHandler
     public void renderView(FacesContext ctx, UIViewRoot viewRoot)
         throws IOException, FacesException
     {
-        if (!SelectorUtils.isPageJSP(ctx, viewRoot))
+        if (!net.sourceforge.myfaces.application.cbp.SelectorUtils.isPageJSP(ctx, viewRoot))
         {
             cbpHandler.renderView(ctx, viewRoot);
         }
@@ -77,7 +75,7 @@ public class ViewHandlerSelector extends ViewHandler
      */
     public UIViewRoot restoreView(FacesContext ctx, String viewId)
     {
-        return (!SelectorUtils.isPageJSP(ctx, viewId))
+        return (!net.sourceforge.myfaces.application.cbp.SelectorUtils.isPageJSP(ctx, viewId))
             ? cbpHandler.restoreView(ctx, viewId)
             : jspHandler.restoreView(ctx, viewId);
     }
@@ -88,7 +86,7 @@ public class ViewHandlerSelector extends ViewHandler
      */
     public UIViewRoot createView(FacesContext ctx, String viewId)
     {
-        return (!SelectorUtils.isPageJSP(ctx, viewId))
+        return (!net.sourceforge.myfaces.application.cbp.SelectorUtils.isPageJSP(ctx, viewId))
             ? cbpHandler.createView(ctx, viewId)
             : jspHandler.createView(ctx, viewId);
     }
@@ -99,7 +97,7 @@ public class ViewHandlerSelector extends ViewHandler
     public void writeState(FacesContext ctx)
         throws IOException
     {
-        if (!SelectorUtils.isCurrentPageJSP(ctx))
+        if (!net.sourceforge.myfaces.application.cbp.SelectorUtils.isCurrentPageJSP(ctx))
         {
             cbpHandler.writeState(ctx);
         }
@@ -114,7 +112,7 @@ public class ViewHandlerSelector extends ViewHandler
      */
     public Locale calculateLocale(FacesContext ctx)
     {
-        return (!SelectorUtils.isCurrentPageJSP(ctx))
+        return (!net.sourceforge.myfaces.application.cbp.SelectorUtils.isCurrentPageJSP(ctx))
             ? cbpHandler.calculateLocale(ctx)
             : jspHandler.calculateLocale(ctx);
     }
@@ -124,7 +122,7 @@ public class ViewHandlerSelector extends ViewHandler
      */
     public String calculateRenderKitId(FacesContext ctx)
     {
-        return (!SelectorUtils.isCurrentPageJSP(ctx))
+        return (!net.sourceforge.myfaces.application.cbp.SelectorUtils.isCurrentPageJSP(ctx))
             ?  cbpHandler.calculateRenderKitId(ctx)
             :  jspHandler.calculateRenderKitId(ctx);
     }
@@ -135,7 +133,7 @@ public class ViewHandlerSelector extends ViewHandler
      */
     public String getActionURL(FacesContext ctx, String viewId)
     {
-        return (!SelectorUtils.isPageJSP(ctx, viewId))
+        return (!net.sourceforge.myfaces.application.cbp.SelectorUtils.isPageJSP(ctx, viewId))
             ? cbpHandler.getActionURL(ctx, viewId)
             : jspHandler.getActionURL(ctx, viewId);
     }
@@ -146,7 +144,7 @@ public class ViewHandlerSelector extends ViewHandler
      */
     public String getResourceURL(FacesContext ctx, String path)
     {
-        return (!SelectorUtils.isCurrentPageJSP(ctx))
+        return (!net.sourceforge.myfaces.application.cbp.SelectorUtils.isCurrentPageJSP(ctx))
             ? cbpHandler.getResourceURL(ctx, path)
             : jspHandler.getResourceURL(ctx, path);
     }

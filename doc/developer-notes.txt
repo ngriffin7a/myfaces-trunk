@@ -41,6 +41,7 @@ MyFaces developers guidelines
   - Foreign files should only be committed (changed) after consulting and/or
     informing the original author. The same applies for deleting, of course.
     Exception: Trivial changes such as spelling mistakes in comments, etc.
+  - Just to be sure: Don't forget the message(s) on commit  ;-)
 
 * Communication
   - Main communication instrument among MyFaces developers is the MyFaces

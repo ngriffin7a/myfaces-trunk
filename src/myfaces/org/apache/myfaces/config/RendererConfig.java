@@ -18,11 +18,10 @@
  */
 package net.sourceforge.myfaces.config;
 
-import net.sf.cglib.proxy.Enhancer;
-import net.sourceforge.myfaces.MyFacesConfig;
-import net.sourceforge.myfaces.cbp.designer.DesignerDecorator;
 import net.sourceforge.myfaces.util.ClassUtils;
 import net.sourceforge.myfaces.util.NullIterator;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import javax.faces.FacesException;
 import javax.faces.context.ExternalContext;
@@ -37,6 +36,8 @@ import java.util.*;
  */
 public class RendererConfig implements Config
 {
+    private static final Log log = LogFactory.getLog(RendererConfig.class);
+
     //~ Instance fields ----------------------------------------------------------------------------
 
     private Class  _rendererClass              = null;
@@ -200,24 +201,14 @@ public class RendererConfig implements Config
 
     public Renderer newRenderer(ExternalContext externalContext)
     {
-		Class rendererClass = getRendererClass();
-        if (MyFacesConfig.isAllowDesignMode(externalContext))
+        try
         {
-    		Enhancer enhancer = new Enhancer();
-    		enhancer.setSuperclass(rendererClass);
-    		enhancer.setCallback(DesignerDecorator.getInstance());
-    		return (Renderer) enhancer.create();
+            return (Renderer) ClassUtils.newInstance(getRendererClass());
         }
-        else
+        catch (Exception e)
         {
-            try
-            {
-                return (Renderer) rendererClass.newInstance();
-            }
-            catch (Exception e)
-            {
-                throw new FacesException(e);
-            }
+            log.error("Renderer of class " + getRendererClass() + " could not be instantiated", e);
+            throw new FacesException(e);
         }
     }
 

@@ -16,18 +16,7 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package net.sourceforge.myfaces.application;
-
-import java.util.Iterator;
-import java.util.Map;
-
-import javax.faces.FacesException;
-import javax.faces.component.UIComponent;
-import javax.faces.context.ExternalContext;
-import javax.faces.context.FacesContext;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+package net.sourceforge.myfaces.application.cbp;
 
 import net.sf.cglib.proxy.Enhancer;
 import net.sourceforge.myfaces.MyFacesConfig;
@@ -36,6 +25,15 @@ import net.sourceforge.myfaces.exception.InternalServerException;
 import net.sourceforge.myfaces.exception.UnknownComponentException;
 import net.sourceforge.myfaces.util.BiLevelCacheMap;
 import net.sourceforge.myfaces.webapp.StartupServletContextListener;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import javax.faces.FacesException;
+import javax.faces.component.UIComponent;
+import javax.faces.context.ExternalContext;
+import javax.faces.context.FacesContext;
+import java.util.Iterator;
+import java.util.Map;
 
 /**
  * This class is responsible for keeping track of the registered component

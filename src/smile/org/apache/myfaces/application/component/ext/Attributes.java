@@ -16,28 +16,25 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package net.sourceforge.myfaces.component.ext;
-
-import javax.faces.component.html.HtmlOutputLabel;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+package net.sourceforge.myfaces.application.component.ext;
 
 /**
- * This class creates an empty component.
- * It will not render any content.
- * This is convenient to fill up a cell in a for example
- * a grid layout, on one row. 
+ * Single point of definition for attributes of components.
  * 
- * @author Dimitry D'hondt
+ * @author Dimitry D'hondt.
  */
-public class Dummy extends HtmlOutputLabel {
-	private static Log log = LogFactory.getLog(Dummy.class);
-
-	public Dummy() {
-		setRendererType("javax.faces.Label");
-		setValue("");
-	}
-	
-	
+public interface Attributes {
+	static final String ATTR_MODEL_REFERENCE = "modelReference";
+	static final String ATTR_RENDERER_TYPE = "rendererType";
+	static final String ATTR_VALUE = "value";
+	static final String ATTR_VALUEREF = "valueRef";
+	static final String ATTR_VALID = "valid";
+	static final String ATTR_PARENT = "parent";
+	static final String ATTR_COMPONENT_ID = "componentId";
+	static final String ATTR_COMPONENT_TYPE = "componentType";
+	static final String ATTR_CONVERTER = "converter";
+	static final String ATTR_CLIENT_ID = "clientId";
+	static final String ATTR_RENDERED = "rendered";
+	static final String ATTR_RENDERS_CHILDREN = "rendersChildren";
+	static final String ATTR_RENDERS_SELF = "rendersSelf";
 }

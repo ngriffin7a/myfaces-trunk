@@ -18,14 +18,10 @@
  */
 package net.sourceforge.myfaces.application.cbp;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import net.sourceforge.myfaces.exception.ComponentCreationException;
+import net.sourceforge.myfaces.exception.SmileRuntimeException;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import javax.faces.FactoryFinder;
 import javax.faces.application.StateManager;
@@ -35,12 +31,8 @@ import javax.faces.context.FacesContext;
 import javax.faces.render.RenderKit;
 import javax.faces.render.RenderKitFactory;
 import javax.faces.render.ResponseStateManager;
-
-import net.sourceforge.myfaces.exception.ComponentCreationException;
-import net.sourceforge.myfaces.exception.SmileRuntimeException;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import java.io.IOException;
+import java.util.*;
 
 /**
  * Implemenation of the state manager
@@ -50,10 +42,10 @@ import org.apache.commons.logging.LogFactory;
  * @since 0.3
  * @author <a href="mailto:emol@users.sourceforge.net">Edwin Mol</a>
  */
-public class StateManagerImpl extends StateManager {
+public class CbpStateManagerImpl extends StateManager {
 	
 	//TODO check correct save/restore of locale 	
-	private static Log log = LogFactory.getLog(StateManagerImpl.class);
+	private static Log log = LogFactory.getLog(CbpStateManagerImpl.class);
 
 	public static final String SESSION_KEY_CURRENT_VIEW = "net.sourceforge.myfaces.cbp.current_view";
 	

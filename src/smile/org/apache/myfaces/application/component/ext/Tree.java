@@ -16,15 +16,14 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package net.sourceforge.myfaces.component.ext;
+package net.sourceforge.myfaces.application.component.ext;
 
-import java.util.ArrayList;
-import java.util.List;
+import net.sourceforge.myfaces.renderkit.RenderUtils;
 
 import javax.faces.component.UIComponentBase;
 import javax.faces.context.FacesContext;
-
-import net.sourceforge.myfaces.renderkit.RenderUtils;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Dimitry D'hondt
