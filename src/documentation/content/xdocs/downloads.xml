@@ -10,19 +10,23 @@
 <body>
 
 <section>
-<title>Archives</title>
-      <p>MyFaces is still rather new, so we don't have daily  drops yet. 
-      <br /><br /></p>
-      
-      <ul>
-        <li>here are the <link href="http://myfaces.apache.org/builds/">last build</link>.</li>
-      </ul>
+    <title>Releases</title>
+    <p>Use this link for the latest stable release of MyFaces. <br /><br /></p>
+    <ul>
+        <li><link href="http://myfaces.apache.org/builds/">Releases</link>.</li>
+    </ul>
 </section>
 
-
+<section>
+    <title>Nightly Builds</title>
+    <p>Automated builds of the latest source code.  These bundles contain the latest code and should be used at your own risk.<br /><br /></p>
+    <ul>
+        <li><link href="http://cvs.apache.org/builds/myfaces/nightly">Nightly Builds</link>.</li>
+    </ul>
+</section>
 
 </body>
-    
+
 <footer>
     	<legal>Java, J2EE, and JCP are trademarks or registered trademarks of Sun Microsystems, Inc. in the United States and other countries.<br />
 	&copy; 2004, Apache Software Foundation
