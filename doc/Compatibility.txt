@@ -1,4 +1,11 @@
 MyFaces is known to work with and was tested with the following environment:
-- JDK 1.4.0_01 
+
+Java
+- JDK 1.4.0_01
+
+Servlet Container
 - Tomcat 4.0.4 (4.1.x is known NOT to work by now!)
+- JRun 4 SP1a
+
+JSF API
 - JSF-API from the JavaServerTM Faces v1.0 Reference Implementation Early Access 3
