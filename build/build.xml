@@ -161,8 +161,7 @@
 
             <!-- classes -->
             <fileset dir="${api.classes}"
-                     includes="**"
-                     excludes=".dependency-info/**/*"/>
+                     includes="**/*.class"/>
         </jar>
 
     </target>
@@ -189,11 +188,9 @@
 
             <!-- classes -->
             <fileset dir="${share.classes}"
-                     includes="**"
-                     excludes=".dependency-info/**/*"/>
+                     includes="**/*.class"/>
             <fileset dir="${impl.classes}"
-                     includes="**"
-                     excludes=".dependency-info/**/*"/>
+                     includes="**/*.class"/>
             <!-- properties, DTDs, XMLs -->
             <fileset dir="${myfaces.src}"
                      includes="**"
@@ -235,11 +232,9 @@
 
             <!-- classes -->
             <fileset dir="${share.classes}"
-                     includes="**"
-                     excludes=".dependency-info/**/*"/>
+                     includes="**/*.class"/>
             <fileset dir="${components.classes}"
-                     includes="**"
-                     excludes=".dependency-info/**/*"/>
+                     includes="**/*.class"/>
             <!-- TLDs -->
             <zipfileset dir="${resolved-tlds.dir}"
                         includes="myfaces_ext.tld,myfaces_ext_sf.tld"
@@ -249,9 +244,10 @@
                         includes="faces-config.xml"
                         prefix="META-INF/"/>
             <!-- components_resources -->
-        	<fileset dir="${components.src}"
-        			includes="**/resource/**"/>
-
+            <fileset    dir="${components.src}"
+                        includes="**/resource/**"/>
+            <fileset    dir="${components.src}"
+                        includes="**/*.properties"/>
         </jar>
 
     </target>
@@ -278,17 +274,14 @@
 
             <!-- classes -->
             <fileset dir="${api.classes}"
-                     includes="**"
-                     excludes=".dependency-info/**/*"/>
+                     includes="**/*.class"/>
             <fileset dir="${share.classes}"
-                     includes="**"
-                     excludes=".dependency-info/**/*"/>
+                     includes="**/*.class"/>
             <fileset dir="${impl.classes}"
-                     includes="**"
-                     excludes=".dependency-info/**/*"/>
+                     includes="**/*.class"/>
             <fileset dir="${components.classes}"
-                     includes="**"
-                     excludes=".dependency-info/**/*"/>
+                     includes="**/*.class"/>
+                     
             <!-- properties, DTDs, XMLs -->
             <fileset dir="${myfaces.src}"
                      includes="**"
@@ -303,9 +296,10 @@
                         includes="faces-config.xml"
                         prefix="META-INF/"/>
             <!-- components_resources -->
-        	<fileset dir="${components.src}"
-        			includes="**/resource/**"/>
-
+            <fileset    dir="${components.src}"
+                        includes="**/resource/**"/>
+            <fileset    dir="${components.src}"
+                        includes="**/*.properties"/>
         </jar>
 
     </target>
@@ -344,7 +338,7 @@
 
 
     <target name="bin-release"
-            depends="myfaces-jsf-api-jar, myfaces-impl-jar, myfaces-extensions-jar, myfaces-jar, myfaces-wap-jar, javadoc, tlddoc"
+            depends="prepare, myfaces-jsf-api-jar, myfaces-impl-jar, myfaces-extensions-jar, myfaces-jar, myfaces-wap-jar, javadoc, tlddoc"
             description="creates the binary release file myfaces-x.x.x.tgz (don't forget to adjust manifest.properties!)">
 
         <tar destfile="${bin.release.bundle}"
@@ -742,21 +736,23 @@
     <target name="app-dist" depends="myfaces-jar">
 
         <!-- build blank webapp -->
-        <copy file="${conf.dir}/web.xml" todir="${apps.dir}/blank/web/WEB-INF"/>
+        <copy file="${conf.dir}/blank/web.xml" todir="${apps.dir}/blank/web/WEB-INF"/>
         <ant antfile="build-webapps.xml" inheritall="false" target="war">
             <property name="webapp.name" value="myfaces-blank-example"/>
             <property name="myfaces.jar" location="${myfaces.jar}"/>
             <property name="web.dir" location="${apps.dir}/blank/web"/>
             <property name="webapp.dist.dir" location="${webapp.dist.dir}"/>
+            <property name="src.dir" location="${apps.dir}/blank/src"/>
         </ant>
 
         <!-- build tiles webapp -->
-        <copy file="${conf.dir}/web.xml" todir="${apps.dir}/tiles/web/WEB-INF"/>
+        <copy file="${conf.dir}/tiles/web.xml" todir="${apps.dir}/tiles/web/WEB-INF"/>
         <ant antfile="build-webapps.xml" inheritall="false" target="war">
             <property name="webapp.name" value="myfaces-tiles-example"/>
             <property name="myfaces.jar" location="${myfaces.jar}"/>
             <property name="web.dir" location="${apps.dir}/tiles/web"/>
             <property name="webapp.dist.dir" location="${webapp.dist.dir}"/>
+            <property name="src.dir" location="${apps.dir}/tiles/src"/>
         </ant>
 
         <!-- build simple webapp -->
@@ -776,6 +772,16 @@
             <property name="web.dir" location="${apps.dir}/examples"/>
             <property name="webapp.dist.dir" location="${webapp.dist.dir}"/>
         </ant>
+        
+        <!-- build wap webapp -->
+        <copy file="${conf.dir}/wap/web.xml" todir="${apps.dir}/wap/WEB-INF"/>
+        <ant antfile="build-webapps.xml" inheritall="false" target="war">
+            <property name="webapp.name" value="myfaces-wap-example"/>
+            <property name="myfaces.jar" location="${myfaces.jar}"/>
+            <property name="web.dir" location="${apps.dir}/wap"/>
+            <property name="webapp.dist.dir" location="${webapp.dist.dir}"/>
+            <property name="src.dir" location="${apps.dir}/wap/src"/>
+        </ant>        
 
     </target>
 
