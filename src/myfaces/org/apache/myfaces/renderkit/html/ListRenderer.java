@@ -432,6 +432,9 @@ public class ListRenderer
     // Styles
     //-------------------------------------------------------------
 
+    /**
+     * TODO: refactor see GridRenderer
+     */
     private String calcRowStyle(FacesContext context,
                                 boolean isLastRow)
     {
@@ -462,6 +465,9 @@ public class ListRenderer
         return style;
     }
 
+    /**
+     * TODO: refactor see GridRenderer
+     */
     private String calcColumnStyle(FacesContext context)
     {
         String style = null;

@@ -31,8 +31,13 @@ public interface NavigationRendererAttributes
     extends CommonRendererAttributes,
             KeyBundleAttributes
 {
+    public static final String LEVEL_CLASSES = "levelClasses";
+
     public static final String[] NAVIGATION_ATTRIBUTES = {
         PANEL_CLASS_ATTR,
-        BUNDLE_ATTR
+        BUNDLE_ATTR,
+        LEVEL_CLASSES,
+        ROW_CLASSES_ATTR,
+        COLUMN_CLASSES_ATTR
     };
 }

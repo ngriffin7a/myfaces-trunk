@@ -19,8 +19,12 @@
 package net.sourceforge.myfaces.taglib.ext;
 
 import net.sourceforge.myfaces.component.ext.UINavigation;
+import net.sourceforge.myfaces.component.UICommand;
 import net.sourceforge.myfaces.renderkit.html.ext.NavigationItemRenderer;
+import net.sourceforge.myfaces.renderkit.html.attr.HTMLAnchorAttributes;
 import net.sourceforge.myfaces.renderkit.attr.ext.NavigationItemRendererAttributes;
+import net.sourceforge.myfaces.renderkit.attr.HyperlinkRendererAttributes;
+import net.sourceforge.myfaces.renderkit.attr.CommonRendererAttributes;
 import net.sourceforge.myfaces.taglib.MyFacesTag;
 
 import javax.faces.component.UIComponent;
@@ -32,7 +36,11 @@ import javax.faces.component.UIComponent;
  */
 public class NavigationItemTag
     extends MyFacesTag
-    implements NavigationItemRendererAttributes
+    implements NavigationItemRendererAttributes,
+               CommonRendererAttributes,
+               HTMLAnchorAttributes,
+               HyperlinkRendererAttributes
+
 {
     public UIComponent createComponent()
     {
@@ -62,4 +70,97 @@ public class NavigationItemTag
     }
 
     // user role attributes --> already implemented in MyFacesTag
+
+    // UIComponent attributes --> already implemented in MyFacesTag
+
+    // UICommand attributes
+
+    public void setCommandName(String v)
+    {
+        setValue(v);
+    }
+
+    public void setCommandClass(String v)
+    {
+        setRendererAttributeString(COMMAND_CLASS_ATTR, v);
+    }
+
+    // HTML universal attributes --> already implemented in MyFacesTag
+
+    // HTML event handler attributes --> already implemented in MyFacesTag
+
+    // HTML anchor attributes
+
+    public void setAccesskey(String value)
+    {
+        setRendererAttributeString(ACCESSKEY_ATTR, value);
+    }
+
+    public void setCharset(String value)
+    {
+        setRendererAttributeString(CHARSET_ATTR, value);
+    }
+
+    public void setCoords(String value)
+    {
+        setRendererAttributeString(COORDS_ATTR, value);
+    }
+
+    public void setHreflang(String value)
+    {
+        setRendererAttributeString(HREFLANG_ATTR, value);
+    }
+
+    public void setRel(String value)
+    {
+        setRendererAttributeString(REL_ATTR, value);
+    }
+
+    public void setRev(String value)
+    {
+        setRendererAttributeString(REV_ATTR, value);
+    }
+
+    public void setShape(String value)
+    {
+        setRendererAttributeString(SHAPE_ATTR, value);
+    }
+
+    public void setTabindex(String value)
+    {
+        setRendererAttributeString(TABINDEX_ATTR, value);
+    }
+
+    public void setTarget(String value)
+    {
+        setRendererAttributeString(TARGET_ATTR, value);
+    }
+
+    public void setType(String value)
+    {
+        setRendererAttributeString(TYPE_ATTR, value);
+    }
+
+
+
+    // Hyperlink Renderer attributes
+
+    public void setHref(String v)
+    {
+        setRendererAttributeString(HREF_ATTR, v);
+    }
+
+
+    // key and bundle attributes --> already implemented in MyFacesTag
+
+    // user role attributes --> already implemented in MyFacesTag
+
+
+
+
+    public void setCommandReference(String v)
+    {
+        setComponentPropertyString(UICommand.COMMAND_REFERENCE_ATTR, v);
+    }
+
 }

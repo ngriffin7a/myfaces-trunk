@@ -20,6 +20,7 @@ package net.sourceforge.myfaces.renderkit.attr.ext;
 
 import net.sourceforge.myfaces.renderkit.attr.CommonRendererAttributes;
 import net.sourceforge.myfaces.renderkit.attr.KeyBundleAttributes;
+import net.sourceforge.myfaces.renderkit.attr.HyperlinkRendererAttributes;
 
 /**
  * Constant definitions for the specified render dependent attributes of the
@@ -29,6 +30,7 @@ import net.sourceforge.myfaces.renderkit.attr.KeyBundleAttributes;
  */
 public interface NavigationItemRendererAttributes
     extends CommonRendererAttributes,
+            HyperlinkRendererAttributes,
             KeyBundleAttributes
 {
     public static final String TREE_ID_ATTR = "treeId";
@@ -37,6 +39,8 @@ public interface NavigationItemRendererAttributes
     public static final String[] NAVIGATION_ITEM_ATTRIBUTES = {
         TREE_ID_ATTR,
         LABEL_ATTR,
+        COMMAND_CLASS_ATTR,
+        HREF_ATTR,
         KEY_ATTR,
         BUNDLE_ATTR
     };

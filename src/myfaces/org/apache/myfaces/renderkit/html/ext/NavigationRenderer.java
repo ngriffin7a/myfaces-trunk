@@ -28,6 +28,7 @@ import net.sourceforge.myfaces.renderkit.html.attr.HTMLEventHandlerAttributes;
 import net.sourceforge.myfaces.renderkit.html.attr.HTMLTableAttributes;
 import net.sourceforge.myfaces.renderkit.html.attr.HTMLUniversalAttributes;
 import net.sourceforge.myfaces.renderkit.html.state.StateRestorer;
+import net.sourceforge.myfaces.renderkit.html.util.HTMLUtil;
 import net.sourceforge.myfaces.tree.TreeUtils;
 
 import javax.faces.FacesException;
@@ -40,6 +41,7 @@ import javax.faces.render.RenderKitFactory;
 import javax.faces.tree.Tree;
 import java.io.IOException;
 import java.util.Iterator;
+import java.util.StringTokenizer;
 
 /**
  * DOCUMENT ME!
@@ -56,6 +58,11 @@ public class NavigationRenderer
         HTMLTableAttributes,
         NavigationRendererAttributes
 {
+
+    private static final String LEVEL_CLASSES_CACHE = NavigationRenderer.class.getName() + ".itemClasses";
+    private static final String ROW_CLASSES_ATTR_CACHE = NavigationRenderer.class.getName() + ".rowclasses";
+    private static final String COLUMN_CLASSES_ATTR_CACHE = NavigationRenderer .class.getName() + ".colclasses";
+
     /*
     public static final String CURRENT_NAVIGATION_ATTR
         = NavigationRenderer.class.getName() + ".GET_CHILDREN_FROM_REQUEST";
@@ -107,7 +114,17 @@ public class NavigationRenderer
         throws IOException
     {
         ResponseWriter writer = facesContext.getResponseWriter();
-        writer.write("<table border=\"0\">");
+        writer.write("<table ");
+        HTMLUtil.renderCssClass(writer, uiComponent, PANEL_CLASS_ATTR);
+        HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML_UNIVERSAL_ATTRIBUTES);
+        HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML_EVENT_HANDLER_ATTRIBUTES);
+        HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML_TABLE_ATTRIBUTES);
+        String panelClass = (String)uiComponent.getAttribute(PANEL_CLASS_ATTR);
+        if (panelClass == null)
+        {
+            writer.write("border=\"0\"");
+        }
+        writer.write(">");
     }
 
     public void encodeEnd(FacesContext facesContext, UIComponent uiComponent)
@@ -152,10 +169,13 @@ public class NavigationRenderer
             }
         }
 
-        renderChildren(facesContext, 0, uiComponent.getChildren());
+        renderChildren(facesContext, uiComponent, 0, uiComponent.getChildren());
     }
 
-    protected void renderChildren(FacesContext facesContext, int level, Iterator children)
+    protected void renderChildren(FacesContext facesContext,
+                                  UIComponent navigation,
+                                  int level,
+                                  Iterator children)
         throws IOException
     {
         while(children.hasNext())
@@ -163,7 +183,7 @@ public class NavigationRenderer
             UIComponent child = (UIComponent)children.next();
             if (child.getRendererType().equals(NavigationItemRenderer.TYPE))
             {
-                renderMenuItem(facesContext, level, child);
+                renderMenuItem(facesContext, navigation, level, child);
             }
             else
             {
@@ -172,26 +192,61 @@ public class NavigationRenderer
         }
     }
 
-    protected void renderMenuItem(FacesContext facesContext, int level, UIComponent item)
+    protected void renderMenuItem(FacesContext facesContext,
+                                  UIComponent navigation,
+                                  int level,
+                                  UIComponent item)
         throws IOException
     {
         ResponseWriter writer = facesContext.getResponseWriter();
-        writer.write("\n<tr><td>");
-        for (int i = 0; i < level; i++)
+        writer.write("\n<tr");
+        String rowStyle = calcRowStyle(navigation, 0);
+        if (rowStyle != null)
         {
-            writer.write("&nbsp;");
+            writer.write(" class=\"");
+            writer.write(rowStyle);
+            writer.write("\"");
         }
-        if (level > 0)
+        writer.write(">");
+
+        writer.write("<td");
+        String columnStyle = calcColumnStyle(navigation, 0);
+        if (columnStyle != null)
         {
-            writer.write("<font size=\"-" + level + "\">");
+            writer.write(" class=\"");
+            writer.write(columnStyle);
+            writer.write("\"");
         }
+        writer.write(">");
 
-        item.encodeBegin(facesContext);
-        item.encodeEnd(facesContext);
-
-        if (level > 0)
+        String itemClass = getItemClass(navigation, level);
+        if (itemClass != null)
         {
-            writer.write("</font>");
+            writer.write("<span class=\"");
+            writer.write(itemClass);
+            writer.write("\"");
+            writer.write(">");
+            item.encodeBegin(facesContext);
+            item.encodeEnd(facesContext);
+            writer.write("</span>");
+        }
+        else
+        {
+            for (int i = 0; i < level; i++)
+            {
+                writer.write("&nbsp;");
+            }
+            if (level > 0)
+            {
+                writer.write("<font size=\"-" + level + "\">");
+            }
+            item.encodeBegin(facesContext);
+            item.encodeEnd(facesContext);
+
+            if (level > 0)
+            {
+                writer.write("</font>");
+            }
         }
         writer.write("</td></tr>");
 
@@ -199,9 +254,119 @@ public class NavigationRenderer
                                                  UINavigation.UINavigationItem.OPEN_ATTR,
                                                  false))
         {
-            renderChildren(facesContext, level + 1, item.getChildren());
+            renderChildren(facesContext, navigation, level + 1, item.getChildren());
         }
 
+    }
+
+    private static final String DELIMITER = ",";
+    private static final String[] DUMMY = {};
+
+    private String getItemClass(UIComponent navigation, int level)
+    {
+        String[] levelClasses = (String[])navigation.getAttribute(LEVEL_CLASSES_CACHE);
+        if (levelClasses == null)
+        {
+            String levelClassesStr = (String)navigation.getAttribute(LEVEL_CLASSES);
+            if (levelClassesStr != null)
+            {
+                StringTokenizer tokenizer = new StringTokenizer(levelClassesStr, DELIMITER);
+                int size = tokenizer.countTokens();
+                levelClasses = new String[size];
+                for (int i = 0; i < size; i++)
+                {
+                    levelClasses[i] = tokenizer.nextToken();
+                }
+            }
+            else
+            {
+                levelClasses = DUMMY;
+            }
+            navigation.setAttribute(LEVEL_CLASSES_CACHE, levelClasses);
+        }
+        if (levelClasses == DUMMY ||
+            levelClasses.length == 0)
+        {
+            return null;
+        }
+        return levelClasses[level % levelClasses.length];
+    }
+
+
+    private String calcRowStyle(UIComponent navigation,
+                                int actualRow)
+    {
+        String[] rowClasses = getRowClasses(navigation);
+
+        if (rowClasses != null && rowClasses.length > 0)
+        {
+            return rowClasses[actualRow % rowClasses.length];
+        }
+
+        return null;
+    }
+
+
+    private String calcColumnStyle(UIComponent navigation, int actualColumn)
+    {
+        String[] columnClasses = getColumnClasses(navigation);
+
+        if (columnClasses != null && columnClasses.length > 0)
+        {
+            return columnClasses[actualColumn % columnClasses.length];
+        }
+
+        return null;
+    }
+
+    private String[] getRowClasses(UIComponent gridComponent)
+    {
+        String[] rowClasses = (String[])gridComponent.getAttribute(ROW_CLASSES_ATTR_CACHE);
+        if (rowClasses == null)
+        {
+            rowClasses = getAttributes(gridComponent, ROW_CLASSES_ATTR);
+            gridComponent.setAttribute(ROW_CLASSES_ATTR_CACHE, rowClasses);
+        }
+        return rowClasses;
+    }
+
+    private String[] getColumnClasses(UIComponent gridComponent)
+    {
+        String[] rowClasses = (String[])gridComponent.getAttribute(COLUMN_CLASSES_ATTR_CACHE);
+        if (rowClasses == null)
+        {
+            rowClasses = getAttributes(gridComponent, COLUMN_CLASSES_ATTR);
+            gridComponent.setAttribute(COLUMN_CLASSES_ATTR_CACHE, rowClasses);
+        }
+        return rowClasses;
+    }
+
+    private String[] getAttributes(UIComponent uiComponent, String attributeName)
+    {
+        String[] attr = null;
+        Object obj = uiComponent.getAttribute(attributeName);
+        if (obj instanceof String[])
+        {
+            return (String[])obj;
+        }
+        String rowClasses = (String)obj;
+        if (rowClasses != null && rowClasses.length() > 0)
+        {
+            StringTokenizer tokenizer = new StringTokenizer(rowClasses, DELIMITER);
+
+            attr = new String[tokenizer.countTokens()];
+            for (int i = 0; tokenizer.hasMoreTokens(); i++)
+            {
+                attr[i] = tokenizer.nextToken().trim();
+            }
+        }
+
+        if (attr == null)
+        {
+            attr = new String[0];
+        }
+
+        return attr;
     }
 
 

@@ -2,6 +2,10 @@ MyFaces Release Notes
 =====================
 
 ----------------------------------------------------------------------
+Changes in Release 0.3.3
+* Stylesheet support for navigation-menu along with implementing a lots of other common attributes
+
+----------------------------------------------------------------------
 Changes in Release 0.3.2
 
 * some serious bugs fixed (Tomcat 4.1.x issues)

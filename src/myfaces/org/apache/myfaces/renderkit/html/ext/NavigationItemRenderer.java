@@ -21,12 +21,19 @@ package net.sourceforge.myfaces.renderkit.html.ext;
 import net.sourceforge.myfaces.MyFacesFactoryFinder;
 import net.sourceforge.myfaces.component.UICommand;
 import net.sourceforge.myfaces.component.UIComponentUtils;
+import net.sourceforge.myfaces.component.CommonComponentAttributes;
 import net.sourceforge.myfaces.component.ext.UINavigation;
 import net.sourceforge.myfaces.renderkit.attr.ext.NavigationItemRendererAttributes;
 import net.sourceforge.myfaces.renderkit.attr.UserRoleAttributes;
+import net.sourceforge.myfaces.renderkit.attr.CommonRendererAttributes;
+import net.sourceforge.myfaces.renderkit.attr.HyperlinkRendererAttributes;
 import net.sourceforge.myfaces.renderkit.html.HTMLRenderer;
+import net.sourceforge.myfaces.renderkit.html.attr.HTMLUniversalAttributes;
+import net.sourceforge.myfaces.renderkit.html.attr.HTMLEventHandlerAttributes;
+import net.sourceforge.myfaces.renderkit.html.attr.HTMLAnchorAttributes;
 import net.sourceforge.myfaces.renderkit.html.state.StateRenderer;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLEncoder;
+import net.sourceforge.myfaces.renderkit.html.util.HTMLUtil;
 import net.sourceforge.myfaces.util.bundle.BundleUtils;
 import net.sourceforge.myfaces.util.logging.LogUtil;
 import net.sourceforge.myfaces.webapp.ServletMapping;
@@ -51,7 +58,13 @@ import java.io.IOException;
  */
 public class NavigationItemRenderer
     extends HTMLRenderer
-    implements NavigationItemRendererAttributes,
+    implements CommonComponentAttributes,
+               CommonRendererAttributes,
+               HTMLUniversalAttributes,
+               HTMLEventHandlerAttributes,
+               HTMLAnchorAttributes,
+               HyperlinkRendererAttributes,
+               NavigationItemRendererAttributes,
                UserRoleAttributes
 {
     public static final String TYPE = "NavigationItem";
@@ -80,6 +93,9 @@ public class NavigationItemRenderer
 
     protected void initAttributeDescriptors()
     {
+        addAttributeDescriptors(UICommand.TYPE, TLD_EXT_URI, "navigation_item", HTML_UNIVERSAL_ATTRIBUTES);
+        addAttributeDescriptors(UICommand.TYPE, TLD_EXT_URI, "navigation_item", HTML_EVENT_HANDLER_ATTRIBUTES);
+        addAttributeDescriptors(UICommand.TYPE, TLD_EXT_URI, "navigation_item", HTML_ANCHOR_ATTRIBUTES);
         addAttributeDescriptors(UICommand.TYPE, TLD_EXT_URI, "navigation_item", NAVIGATION_ITEM_ATTRIBUTES);
         addAttributeDescriptors(UICommand.TYPE, TLD_EXT_URI, "navigation_item", USER_ROLE_ATTRIBUTES);
     }
@@ -161,7 +177,16 @@ public class NavigationItemRenderer
         Renderer renderer = renderKit.getRenderer(StateRenderer.TYPE);
         renderer.encodeChildren(facesContext, uiComponent);
 
-        writer.write("\">");
+        writer.write("\"");
+
+        // HTML-Attributes
+        // commandClass rendered by NavigationRenderer
+        HTMLUtil.renderCssClass(writer, uiComponent, COMMAND_CLASS_ATTR);
+        HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML_UNIVERSAL_ATTRIBUTES);
+        HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML_EVENT_HANDLER_ATTRIBUTES);
+        HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML_ANCHOR_ATTRIBUTES);
+
+        writer.write(">");
 
         String label;
         String key = (String)uiComponent.getAttribute(KEY_ATTR);

@@ -87,6 +87,11 @@
             <required>true</required>
             <rtexprvalue>false</rtexprvalue>
         </attribute>
+        <attribute>
+            <name>levelClasses</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
+        </attribute>
         &ui_panel_attributes;
         &html_universal_attributes;
         &html_event_handler_attributes;
@@ -97,6 +102,16 @@
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>
         </attribute>
+        <attribute>
+            <name>rowClasses</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>columnClasses</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
+        </attribute>
     </tag>
 
     <tag>
@@ -104,22 +119,7 @@
         <tag-class>net.sourceforge.myfaces.taglib.ext.NavigationItemTag</tag-class>
         <body-content>JSP</body-content>
         <attribute>
-            <name>id</name>
-            <required>true</required>
-            <rtexprvalue>false</rtexprvalue>
-        </attribute>
-        <attribute>
             <name>label</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-        </attribute>
-        <attribute>
-            <name>key</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-        </attribute>
-        <attribute>
-            <name>bundle</name>
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>
         </attribute>
@@ -137,7 +137,19 @@
                 If true, this item will be open.
             </description>
         </attribute>
+        &ui_component_attributes;
+        &ui_command_attributes;
+        &html_universal_attributes;
+        &html_event_handler_attributes;
+        &html_anchor_attributes;
         &user_role_attributes;
+        &key_bundle_attributes;
+        <!-- NavigationItemRenderer attribute -->
+        <attribute>
+            <name>href</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
     </tag>
 
     <!--
