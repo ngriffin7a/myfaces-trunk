@@ -24,6 +24,7 @@ import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Iterator;
 
 /**
@@ -32,7 +33,7 @@ import java.util.Iterator;
  * @version $Revision$ $Date$
  */
 public class GridRenderer
-        extends HTMLRenderer
+        extends AbstractPanelRenderer
 {
     public static final String TYPE = "Grid";
 
@@ -70,18 +71,64 @@ public class GridRenderer
     public void encodeChildren(FacesContext context, UIComponent uicomponent)
         throws IOException
     {
-        for (Iterator children = uicomponent.getChildren(); children.hasNext();)
-        {
-            UIComponent childComponent = (UIComponent)children.next();
-            String rendererType = childComponent.getRendererType();
-            if (!rendererType.equals(DataRenderer.TYPE) &&
-                !rendererType.equals(GroupRenderer.TYPE))
-            {
-                throw new IllegalArgumentException("Illegal UIComponent! UIComponent nested within a panel component list " +
-                                                   "must be of type " + DataRenderer.TYPE);
+        ResponseWriter writer = context.getResponseWriter();
 
+        Styles styles = getStyles(uicomponent);
+
+        Integer obj = (Integer)uicomponent.getAttribute(UIPanel.COLUMNS_ATTR);
+
+        int max_columns = obj != null ? obj.intValue() : 1;
+        ArrayList componentList = new ArrayList(max_columns);
+
+        Iterator children = uicomponent.getChildren();
+
+        int row = 0;
+        int column = 0;
+
+        fillComponentList(componentList, children, max_columns);
+        while (componentList.size() > 0)
+        {
+            column = 0;
+            writer.write("\n<tr>");
+            boolean isLastRow = !children.hasNext();
+
+            for (int i = 0; i < max_columns; i++)
+            {
+                UIComponent childComponent = (UIComponent)componentList.get(i);
+
+                writer.write("<td");
+                String style = calcStyle(styles,
+                                         row,
+                                         column,
+                                         isLastRow);
+
+                if (style != null && style.length() > 0)
+                {
+                    writer.write(" class=\"");
+                    writer.write(style);
+                    writer.write("\"");
+                }
+                writer.write(">");
+
+                encodeComponent(context, childComponent);
+
+                writer.write("</td>\n");
+
+                column++;
             }
-            encodeComponent(context, childComponent);
+
+            row++;
+            writer.write("</tr>");
+            fillComponentList(componentList, children, max_columns);
+        }
+    }
+
+    private void fillComponentList(ArrayList componentList, Iterator it, int elements)
+    {
+        componentList.clear();
+        for (int i = 0; it.hasNext() && i < elements; i++)
+        {
+            componentList.add(it.next());
         }
     }
 

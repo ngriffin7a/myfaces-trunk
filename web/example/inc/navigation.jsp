@@ -24,7 +24,7 @@
     <x:navigation_item id="nav-2" label="Examples" treeId="/example/examples.jsf">
         <x:navigation_item id="nav-2-1" label="Sample 1" treeId="/example/sample1.jsf"/>
         <x:navigation_item id="nav-2-2" label="Sample 2" treeId="/example/sample2.jsf"/>
-        <x:navigation_item id="nav-2-3" label="Simple CountryList" treeId="/example/simpleCountryList.jsf"/>
+        <x:navigation_item id="nav-2-3" label="Simple lists" treeId="/example/simpleList.jsf"/>
     </x:navigation_item>
     <x:navigation_item id="nav-3" label="Documentation" >
         <x:navigation_item id="nav-3-1" label="Features" treeId="/example/features.jsf"/>

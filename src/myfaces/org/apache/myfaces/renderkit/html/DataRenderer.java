@@ -44,6 +44,16 @@ public class DataRenderer
         return TYPE;
     }
 
+    public boolean supportsComponentType(String s)
+    {
+        return s.equals(UIPanel.TYPE);
+    }
+
+    public boolean supportsComponentType(UIComponent uicomponent)
+    {
+        return uicomponent instanceof UIPanel;
+    }
+
     public void encodeBegin(FacesContext context, UIComponent component)
             throws IOException
     {
@@ -57,105 +67,6 @@ public class DataRenderer
     public void encodeChildren(FacesContext context, UIComponent component)
         throws IOException
     {
-        ResponseWriter writer = context.getResponseWriter();
-
-        UIComponent parentComponent = component.getParent();
-
-        Styles styles = getStyles(parentComponent);
-
-        String varAttr = (String)component.getAttribute(UIPanel.VAR_ATTR);
-
-        Boolean istLastChildComponent = (Boolean)parentComponent.getAttribute(ListRenderer.LAST_COMPONENT);
-
-        Integer actualRow = (Integer)parentComponent.getAttribute(ListRenderer.ACTUAL_ROW);
-        int row = actualRow != null ? actualRow.intValue() : 0;
-
-        for (Iterator it = getIterator(context, component); it.hasNext();)
-        {
-            Object varObj = it.next();
-
-            // TODO: implement varAttr as a stack? (nested lists)
-            context.getServletRequest().setAttribute(varAttr, varObj);
-
-
-            writer.write("<tr>");
-
-            int column = 0;
-            for (Iterator children = component.getChildren(); children.hasNext();)
-            {
-                writer.write("<td");
-                String style = calcStyle(styles,
-                                         row,
-                                         column,
-                                         !it.hasNext() && istLastChildComponent != null && istLastChildComponent.booleanValue());
-
-
-                if (style != null && style.length() > 0)
-                {
-                    writer.write(" class=\"");
-                    writer.write(style);
-                    writer.write("\"");
-                }
-                writer.write(">");
-
-                UIComponent childComponent = (UIComponent)children.next();
-                encodeComponent(context, childComponent);
-
-                writer.write("</td>\n");
-                column++;
-            }
-
-            writer.write("</tr>");
-            row++;
-        }
-
-        parentComponent.setAttribute(ListRenderer.ACTUAL_ROW, new Integer(row));
-
-        context.getServletRequest().removeAttribute(varAttr);
+        encodeSubTree(context, component);
     }
-
-    public boolean supportsComponentType(String s)
-    {
-        return s.equals(UIPanel.TYPE);
-    }
-
-    public boolean supportsComponentType(UIComponent uicomponent)
-    {
-        return uicomponent instanceof UIPanel;
-    }
-
-
-    private Iterator getIterator(FacesContext facesContext, UIComponent uiComponent)
-    {
-        Iterator iterator = (Iterator)uiComponent.getAttribute(ITERATOR_ATTR);
-        if (iterator == null)
-        {
-            Object v = uiComponent.currentValue(facesContext);
-            if (v instanceof Iterator)
-            {
-                iterator = (Iterator)v;
-            }
-            else if (v instanceof Collection)
-            {
-                iterator = ((Collection)v).iterator();
-            }
-            else if (v instanceof Object[])
-            {
-                iterator = Arrays.asList((Object[])v).iterator();
-            }
-            else if (v instanceof Iterator)
-            {
-                iterator = (Iterator)v;
-            }
-            else
-            {
-                throw new IllegalArgumentException("Value of component " + uiComponent.getCompoundId() + " is neither collection nor array.");
-            }
-            uiComponent.setAttribute(ITERATOR_ATTR, iterator);
-        }
-        return iterator;
-    }
-
-
-
 }

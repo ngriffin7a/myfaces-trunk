@@ -24,6 +24,8 @@ import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Iterator;
 
 /**
@@ -32,13 +34,11 @@ import java.util.Iterator;
  * @version $Revision$ $Date$
  */
 public class ListRenderer
-        extends HTMLRenderer
+        extends AbstractPanelRenderer
 {
     public static final String TYPE = "List";
 
-    public static final String ACTUAL_ROW = ListRenderer.class.getName() + ".actualRow";
-    public static final String LAST_COMPONENT = ListRenderer.class.getName() + ".lastComponent";
-
+    public static final String ITERATOR_ATTR    = ListRenderer.class.getName() + ".iterator";
 
     public boolean supportsComponentType(UIComponent uiComponent)
     {
@@ -74,55 +74,148 @@ public class ListRenderer
     public void encodeChildren(FacesContext context, UIComponent uicomponent)
         throws IOException
     {
-        int i = 0;
+        int actualRow = 0;
+        boolean listHasHeaderRow = false;
+
+        Styles styles = getStyles(uicomponent);
+
         for (Iterator children = uicomponent.getChildren(); children.hasNext();)
         {
             UIComponent childComponent = (UIComponent)children.next();
             String rendererType = childComponent.getRendererType();
 
-            // check renderer types
-            if (i == 0)
-            {
-                String headerStyle = (String)uicomponent.getAttribute(UIPanel.HEADER_CLASS_ATTR);
-                if (headerStyle != null && headerStyle.length() > 0)
-                {
-                    // first component should have renderer of type Group
-                    if (!rendererType.equals(GroupRenderer.TYPE))
-                    {
-                        throw new IllegalArgumentException("Illegal UIComponent! If Attribute headerClass is set, the first nested UIComponent " +
-                                                           "must hava renderer type " + GroupRenderer.TYPE);
+            // is Component the last Component?
+            boolean isLastComponent = children.hasNext() ? false : true;
 
-                    }
-                }
+            if (rendererType.equals(DataRenderer.TYPE))
+            {
+                actualRow = encodeData(context,
+                                       uicomponent,
+                                       childComponent,
+                                       styles,
+                                       actualRow,
+                                       isLastComponent,
+                                       listHasHeaderRow);
             }
-            if (!rendererType.equals(DataRenderer.TYPE) &&
-                !rendererType.equals(GroupRenderer.TYPE))
+            else if (rendererType.equals(GroupRenderer.TYPE))
+            {
+                if (actualRow == 0)
+                {
+                    listHasHeaderRow = true;
+                }
+                actualRow = encodeGroup(context,
+                                        uicomponent,
+                                        childComponent,
+                                        styles,
+                                        actualRow,
+                                        isLastComponent);
+            }
+            else
             {
                 throw new IllegalArgumentException("Illegal UIComponent! UIComponent nested within a panel component list " +
                                                    "must have renderer type in (" + DataRenderer.TYPE + ", " + GroupRenderer.TYPE + ")");
 
             }
-
-            // set actual row
-            uicomponent.setAttribute(ACTUAL_ROW, new Integer(i));
-
-            // is Component the last Component?
-            if (!children.hasNext())
-            {
-                uicomponent.setAttribute(LAST_COMPONENT, Boolean.TRUE);
-            }
-
-            // childComponent may read/write ACTUAL_ROW attribute
-            encodeComponent(context, childComponent);
-
-            // if ACTUAL_ROW = i, then goto next row
-            Integer actualRow = (Integer)uicomponent.getAttribute(ACTUAL_ROW);
-            if (actualRow != null && actualRow.intValue() == i)
-            {
-                i++;
-            }
         }
     }
+
+    public int encodeGroup(FacesContext context,
+                           UIComponent listComponent,
+                           UIComponent groupComponent,
+                           Styles styles,
+                           int actualRow,
+                           boolean istLastChildComponent)
+        throws IOException
+    {
+        ResponseWriter writer = context.getResponseWriter();
+
+        writer.write("<tr>");
+
+        int column = 0;
+        for (Iterator children = groupComponent.getChildren(); children.hasNext();)
+        {
+            writer.write("<td");
+            String style = calcStyle(styles,
+                                     actualRow,
+                                     column,
+                                     istLastChildComponent);
+
+
+            if (style != null && style.length() > 0)
+            {
+                writer.write(" class=\"");
+                writer.write(style);
+                writer.write("\"");
+            }
+            writer.write(">");
+
+            UIComponent childComponent = (UIComponent)children.next();
+            encodeComponent(context, childComponent);
+
+            writer.write("</td>\n");
+            column++;
+        }
+        writer.write("</tr>");
+
+        return actualRow++;
+    }
+
+    public int encodeData(FacesContext context,
+                          UIComponent listComponent,
+                          UIComponent dataComponent,
+                          Styles styles,
+                          int actualRow,
+                          boolean istLastChildComponent,
+                          boolean listHasHeaderRow)
+        throws IOException
+    {
+        ResponseWriter writer = context.getResponseWriter();
+
+        String varAttr = (String)dataComponent.getAttribute(UIPanel.VAR_ATTR);
+
+        for (Iterator it = getIterator(context, dataComponent); it.hasNext();)
+        {
+            Object varObj = it.next();
+
+            // TODO: implement varAttr as a stack? (nested lists)
+            context.getServletRequest().setAttribute(varAttr, varObj);
+
+            writer.write("<tr>");
+
+            int column = 0;
+            for (Iterator children = dataComponent.getChildren(); children.hasNext();)
+            {
+                writer.write("<td");
+                String style = calcStyle(styles,
+                                         listHasHeaderRow ? actualRow + 1 : actualRow,
+                                         column,
+                                         istLastChildComponent);
+
+                if (style != null && style.length() > 0)
+                {
+                    writer.write(" class=\"");
+                    writer.write(style);
+                    writer.write("\"");
+                }
+                writer.write(">");
+
+                UIComponent childComponent = (UIComponent)children.next();
+                encodeComponent(context, childComponent);
+
+                writer.write("</td>\n");
+                column++;
+            }
+
+            writer.write("</tr>");
+            actualRow++;
+        }
+
+        context.getServletRequest().removeAttribute(varAttr);
+
+        return actualRow;
+    }
+
+
 
     public void encodeEnd(FacesContext context, UIComponent uicomponent)
             throws IOException
@@ -130,4 +223,38 @@ public class ListRenderer
         ResponseWriter writer = context.getResponseWriter();
         writer.write("</table>\n");
     }
+
+    private Iterator getIterator(FacesContext facesContext, UIComponent uiComponent)
+    {
+        Iterator iterator = (Iterator)uiComponent.getAttribute(ITERATOR_ATTR);
+        if (iterator == null)
+        {
+            Object v = uiComponent.currentValue(facesContext);
+            if (v instanceof Iterator)
+            {
+                iterator = (Iterator)v;
+            }
+            else if (v instanceof Collection)
+            {
+                iterator = ((Collection)v).iterator();
+            }
+            else if (v instanceof Object[])
+            {
+                iterator = Arrays.asList((Object[])v).iterator();
+            }
+            else if (v instanceof Iterator)
+            {
+                iterator = (Iterator)v;
+            }
+            else
+            {
+                throw new IllegalArgumentException("Value of component " + uiComponent.getCompoundId() + " is neither collection nor array.");
+            }
+            uiComponent.setAttribute(ITERATOR_ATTR, iterator);
+        }
+        return iterator;
+    }
+
 }
+
+
