@@ -46,6 +46,13 @@ public class VariableResolverImpl
     {
         Object obj;
 
+        //Implicit objects
+        obj = getImplicitObject(facesContext, name);
+        if (obj != null)
+        {
+            return obj;
+        }
+
         //Request context
         ServletRequest servletrequest
             = (ServletRequest)facesContext.getExternalContext().getRequest();
@@ -149,7 +156,6 @@ public class VariableResolverImpl
         }
     }
 
-
     private void setMapEntries(Object bean,
                                ManagedPropertyConfig propConfig)
     {
@@ -160,6 +166,68 @@ public class VariableResolverImpl
                            ManagedPropertyConfig propConfig)
     {
         throw new UnsupportedOperationException("Not yet implemented"); //TODO
+    }
+
+
+
+    protected Object getImplicitObject(FacesContext facesContext, String name)
+    {
+        if (name.equals("applicationScope"))
+        {
+            return facesContext.getExternalContext().getApplicationMap();
+        }
+
+        if (name.equals("cookie"))
+        {
+            return facesContext.getExternalContext().getRequestCookieMap();
+        }
+
+        if (name.equals("facesContext"))
+        {
+            return facesContext;
+        }
+
+        if (name.equals("header"))
+        {
+            return facesContext.getExternalContext().getRequestHeaderMap();
+        }
+
+        if (name.equals("headerValues"))
+        {
+            return facesContext.getExternalContext().getRequestHeaderValuesMap();
+        }
+
+        if (name.equals("initParam"))
+        {
+            return facesContext.getExternalContext().getInitParameterMap();
+        }
+
+        if (name.equals("param"))
+        {
+            return facesContext.getExternalContext().getRequestParameterMap();
+        }
+
+        if (name.equals("paramValues"))
+        {
+            return facesContext.getExternalContext().getRequestParameterValuesMap();
+        }
+
+        if (name.equals("requestScope"))
+        {
+            return facesContext.getExternalContext().getRequestMap();
+        }
+
+        if (name.equals("sessionScope"))
+        {
+            return facesContext.getExternalContext().getSessionMap();
+        }
+
+        if (name.equals("tree"))
+        {
+            return facesContext.getTree().getRoot();
+        }
+
+        return null;
     }
 
 }

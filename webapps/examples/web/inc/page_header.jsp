@@ -5,6 +5,6 @@
         <h:graphic_image id="header_logo" url="images/logo_mini.jpg" altKey="alt_logo" altBundle="example_messages" />
         &nbsp;&nbsp;
         <font size="+1">MyFaces - The free JavaServer&#8482; Faces Implementation</font>
-        <font size="-1">(Version 0.4.0)</font>
+        <font size="-1">(Version 0.4.1)</font>
     </h:panel_group>
 </f:facet>

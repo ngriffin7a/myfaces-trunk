@@ -2,6 +2,10 @@ MyFaces Release Notes
 =====================
 
 ----------------------------------------------------------------------
+Changes in Release 0.4.1
+* VariableResolverImpl resolves implicit objects
+
+----------------------------------------------------------------------
 Changes in Release 0.4.0
 * Many, many changes to catch up with current Spec. 1.0 PRD2 (= Early access release 4)
 
