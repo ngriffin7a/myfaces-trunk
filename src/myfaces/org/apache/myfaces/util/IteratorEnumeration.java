@@ -23,12 +23,15 @@ import java.util.Iterator;
 
 
 /**
- * $Log$
- * Revision 1.2  2004/03/29 09:00:56  manolito
- * copyright header
- *
  * @author Anton Koinov (latest modification by $Author$)
  * @version $Revision$ $Date$
+ * 
+ * $Log$
+ * Revision 1.3  2004/03/30 07:40:24  dave0000
+ * *** empty log message ***
+ *
+ * Revision 1.2  2004/03/29 09:00:56  manolito
+ * copyright header
  */
 public class IteratorEnumeration implements Enumeration
 {
