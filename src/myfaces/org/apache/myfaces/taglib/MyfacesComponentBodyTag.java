@@ -189,7 +189,7 @@ public abstract class MyfacesComponentBodyTag
     protected void setValueChangedListenerProperty(UIComponent component, String valueChangedListener)
     {
         //TODO:
-        throw new UnsupportedOperationException("not yet implemented");
+        //throw new UnsupportedOperationException("not yet implemented");
     }
 
 }
