@@ -28,6 +28,10 @@ import javax.faces.event.FacesEvent;
 /**
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
+ * $Log$
+ * Revision 1.2  2004/04/06 15:36:31  manolito
+ * go to render phase after tab switching
+ *
  */
 public class HtmlPanelTabbedPane
         extends HtmlPanelGroup
@@ -66,6 +70,7 @@ public class HtmlPanelTabbedPane
             if (tabChangeEvent.getComponent() == this)
             {
                 setSelectedIndex(tabChangeEvent.getNewTabIndex());
+                getFacesContext().renderResponse();
             }
         }
         super.broadcast(event);
