@@ -51,7 +51,7 @@
 
     <tag>
         <name>navigation</name>
-        <tagclass>net.sourceforge.myfaces.taglib.NavigationTag</tagclass>
+        <tagclass>net.sourceforge.myfaces.taglib.ext.NavigationTag</tagclass>
         <bodycontent>JSP</bodycontent>
         <attribute>
             <name>id</name>
@@ -62,7 +62,7 @@
 
     <tag>
         <name>navigation_item</name>
-        <tagclass>net.sourceforge.myfaces.taglib.NavigationItemTag</tagclass>
+        <tagclass>net.sourceforge.myfaces.taglib.ext.NavigationItemTag</tagclass>
         <bodycontent>JSP</bodycontent>
         <attribute>
             <name>id</name>
@@ -85,5 +85,45 @@
             <rtexprvalue>false</rtexprvalue>
         </attribute>
     </tag>
+
+    <!--
+        SortHeader
+    -->
+     <tag>
+         <name>sortheader</name>
+         <tagclass>net.sourceforge.myfaces.taglib.ext.SortHeaderTag</tagclass>
+         <bodycontent>JSP</bodycontent>
+         <attribute>
+             <name>id</name>
+             <required>true</required>
+             <rtexprvalue>false</rtexprvalue>
+         </attribute>
+        <attribute>
+            <name>commandReference</name>
+            <required>true</required>
+            <rtexprvalue>false</rtexprvalue>
+        </attribute>
+         <attribute>
+             <name>modelReference</name>
+             <required>true</required>
+             <rtexprvalue>false</rtexprvalue>
+         </attribute>
+    </tag>
+
+    <tag>
+        <name>sortcolumn</name>
+        <tagclass>net.sourceforge.myfaces.taglib.ext.SortColumnTag</tagclass>
+        <bodycontent>JSP</bodycontent>
+        <attribute>
+            <name>id</name>
+            <required>true</required>
+            <rtexprvalue>false</rtexprvalue>
+        </attribute>
+       <attribute>
+           <name>commandName</name>
+           <required>true</required>
+           <rtexprvalue>false</rtexprvalue>
+       </attribute>
+   </tag>
 
 </taglib>

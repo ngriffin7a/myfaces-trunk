@@ -48,6 +48,12 @@ import java.lang.reflect.Method;
             CommandEvent commandEvent = (CommandEvent)facesEvent;
             UIComponent uiComponent = commandEvent.getComponent();
             String commandRef = (String)uiComponent.getAttribute(UICommand.COMMAND_REFERENCE_ATTR);
+            if (commandRef == null)
+            {
+                // look for commandReference Atttribtue at parentComponent
+                UIComponent parentComponent = uiComponent.getParent();
+                commandRef = (String)parentComponent.getAttribute(UICommand.COMMAND_REFERENCE_ATTR);
+            }
             if (commandRef != null)
             {
                 if (invokeControllerMethod(facesContext, commandRef, commandEvent))
@@ -56,7 +62,6 @@ import java.lang.reflect.Method;
                 }
             }
         }
-
         return false;
     }
 

@@ -18,59 +18,29 @@
  */
 package net.sourceforge.myfaces.taglib.ext;
 
-import net.sourceforge.myfaces.component.UIPanel;
-import net.sourceforge.myfaces.renderkit.html.ListRenderer;
+import net.sourceforge.myfaces.component.ext.UINavigation;
+import net.sourceforge.myfaces.renderkit.html.ext.NavigationRenderer;
 import net.sourceforge.myfaces.taglib.MyFacesTag;
 
 import javax.faces.component.UIComponent;
 import javax.faces.webapp.FacesTag;
 
-
 /**
  * DOCUMENT ME!
- * @author Thomas Spiegl (latest modification by Author)
+ * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public class SortListTag
-    extends MyFacesTag
+public class NavigationTag
+        extends MyFacesTag
 {
     public UIComponent createComponent()
     {
-        UIPanel panel = new UIPanel();
-        // donot save State
-        panel.setTransient(true);
-        return panel;
-
+        return new UINavigation();
     }
 
     public String getRendererType()
     {
-        return ListRenderer.TYPE;
-    }
-
-    public void setStyle(String value)
-    {
-        setProperty(UIPanel.CLASS_ATTR, value);
-    }
-
-    public void setColumnClasses(String value)
-    {
-        setProperty(UIPanel.COLUMN_CLASSES_ATTR, value);
-    }
-
-    public void setRowClasses(String value)
-    {
-        setProperty(UIPanel.ROW_CLASSES_ATTR, value);
-    }
-
-    public void setFooterClass(String value)
-    {
-        setProperty(UIPanel.FOOTER_CLASS_ATTR, value);
-    }
-
-    public void setHeaderClass(String value)
-    {
-        setProperty(UIPanel.HEADER_CLASS_ATTR, value);
+        return NavigationRenderer.TYPE;
     }
 
 }

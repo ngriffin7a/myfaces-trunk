@@ -16,33 +16,37 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package net.sourceforge.myfaces.component;
+package net.sourceforge.myfaces.taglib.ext;
+
+import net.sourceforge.myfaces.component.UIPanel;
+import net.sourceforge.myfaces.component.UICommand;
+import net.sourceforge.myfaces.renderkit.html.GroupRenderer;
+import net.sourceforge.myfaces.renderkit.html.HyperlinkRenderer;
+import net.sourceforge.myfaces.taglib.MyFacesTag;
+
+import javax.faces.component.UIComponent;
+
 
 /**
  * DOCUMENT ME!
- * @author Thomas Spiegl (latest modification by $Author$)
+ * @author Thomas Spiegl (latest modification by Author)
  * @version $Revision$ $Date$
  */
-public class UISelectItems
-    extends javax.faces.component.UISelectItems
-    implements MyFacesComponent
+public class SortColumnTag
+    extends MyFacesTag
 {
-    public boolean getRendersSelf()
+    public UIComponent createComponent()
     {
-        return false;
+        return new UICommand();
     }
 
-    //MyFacesComponentDelegate
-    private MyFacesComponentDelegate _delegate = new MyFacesComponentDelegate(this);
-
-    public boolean isTransient()
+    public String getRendererType()
     {
-        return _delegate.isTransient();
+        return HyperlinkRenderer.TYPE;
     }
 
-    public void setTransient(boolean b)
+    public void setCommandName(String v)
     {
-        _delegate.setTransient(b);
+        setValue(v);
     }
-
 }

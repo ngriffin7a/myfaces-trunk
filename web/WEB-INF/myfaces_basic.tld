@@ -306,6 +306,9 @@
         </attribute>
     </tag>
 
+    <!--
+        listbox
+    -->
     <tag>
         <name>listbox</name>
         <tagclass>net.sourceforge.myfaces.taglib.ListBoxTag</tagclass>
@@ -400,7 +403,9 @@
         </attribute>
     </tag>
 
-
+    <!--
+        error-List
+    -->
     <tag>
         <name>errors</name>
         <tagclass>net.sourceforge.myfaces.taglib.ErrorsTag</tagclass>
@@ -428,6 +433,9 @@
         </attribute>
     </tag>
 
+    <!--
+        List
+    -->
     <tag>
          <name>list</name>
          <tagclass>net.sourceforge.myfaces.taglib.ListTag</tagclass>
@@ -450,17 +458,17 @@
         <attribute>
             <name>rowClasses</name>
             <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
+            <rtexprvalue>false</rtexprvalue>
         </attribute>
         <attribute>
             <name>headerClass</name>
             <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
+            <rtexprvalue>false</rtexprvalue>
         </attribute>
         <attribute>
             <name>footerClass</name>
             <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
+            <rtexprvalue>false</rtexprvalue>
         </attribute>
      </tag>
 
@@ -476,7 +484,7 @@
          <attribute>
              <name>columns</name>
              <required>true</required>
-             <rtexprvalue>true</rtexprvalue>
+             <rtexprvalue>false</rtexprvalue>
          </attribute>
          <attribute>
              <name>style</name>
@@ -486,25 +494,28 @@
          <attribute>
              <name>columnClasses</name>
              <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
+             <rtexprvalue>false</rtexprvalue>
          </attribute>
         <attribute>
             <name>rowClasses</name>
             <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
+            <rtexprvalue>false</rtexprvalue>
         </attribute>
         <attribute>
             <name>headerClass</name>
             <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
+            <rtexprvalue>false</rtexprvalue>
         </attribute>
         <attribute>
             <name>footerClass</name>
             <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
+            <rtexprvalue>false</rtexprvalue>
         </attribute>
      </tag>
 
+    <!--
+        Group
+    -->
     <tag>
         <name>group</name>
         <tagclass>net.sourceforge.myfaces.taglib.GroupTag</tagclass>

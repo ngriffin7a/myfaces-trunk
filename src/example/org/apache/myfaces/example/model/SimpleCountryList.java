@@ -18,8 +18,7 @@
  */
 package net.sourceforge.myfaces.example.model;
 
-import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.*;
 
 /**
  * DOCUMENT ME!
@@ -28,7 +27,7 @@ import java.util.Iterator;
  */
 public class SimpleCountryList
 {
-    private ArrayList _countries = new ArrayList();
+    private List _countries = new ArrayList();
 
     public SimpleCountryList()
     {

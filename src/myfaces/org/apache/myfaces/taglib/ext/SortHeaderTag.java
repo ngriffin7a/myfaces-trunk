@@ -16,30 +16,37 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package net.sourceforge.myfaces.taglib;
+package net.sourceforge.myfaces.taglib.ext;
 
-import net.sourceforge.myfaces.component.ext.UINavigation;
-import net.sourceforge.myfaces.renderkit.html.ext.NavigationRenderer;
+import net.sourceforge.myfaces.component.UIPanel;
+import net.sourceforge.myfaces.component.UICommand;
+import net.sourceforge.myfaces.renderkit.html.GroupRenderer;
+import net.sourceforge.myfaces.taglib.MyFacesTag;
 
 import javax.faces.component.UIComponent;
-import javax.faces.webapp.FacesTag;
+
 
 /**
  * DOCUMENT ME!
- * @author Manfred Geiler (latest modification by $Author$)
+ * @author Thomas Spiegl (latest modification by Author)
  * @version $Revision$ $Date$
  */
-public class NavigationTag
-        extends MyFacesTag
+public class SortHeaderTag
+    extends MyFacesTag
 {
     public UIComponent createComponent()
     {
-        return new UINavigation();
+        return new UICommand();
     }
 
     public String getRendererType()
     {
-        return NavigationRenderer.TYPE;
+        return GroupRenderer.TYPE;
+    }
+
+    public void setCommandReference(String value)
+    {
+        setProperty(UICommand.COMMAND_REFERENCE_ATTR, value);
     }
 
 }

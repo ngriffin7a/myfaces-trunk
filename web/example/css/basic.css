@@ -12,6 +12,14 @@
     border: none;
 }
 
+.standardTable_SortHeader {
+	color: #000000;
+    background-color: #CCCCCC;
+    padding: 3;
+    text-align: center;
+    border: 1px solid blue;
+}
+
 .standardTable_Footer {
 	color: #FFFFFF;
     background-color: #666699;

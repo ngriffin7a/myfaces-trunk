@@ -16,33 +16,41 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package net.sourceforge.myfaces.component;
+package net.sourceforge.myfaces.example.model;
 
 /**
  * DOCUMENT ME!
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public class UISelectItems
-    extends javax.faces.component.UISelectItems
-    implements MyFacesComponent
+public class SimpleCar
 {
-    public boolean getRendersSelf()
+    private String _type;
+    private String _color;
+
+    public SimpleCar(String type, String color)
     {
-        return false;
+        _type = type;
+        _color = color;
     }
 
-    //MyFacesComponentDelegate
-    private MyFacesComponentDelegate _delegate = new MyFacesComponentDelegate(this);
-
-    public boolean isTransient()
+    public String getType()
     {
-        return _delegate.isTransient();
+        return _type;
     }
 
-    public void setTransient(boolean b)
+    public void setType(String type)
     {
-        _delegate.setTransient(b);
+        _type = type;
     }
 
+    public String getColor()
+    {
+        return _color;
+    }
+
+    public void setColor(String color)
+    {
+        _color = color;
+    }
 }

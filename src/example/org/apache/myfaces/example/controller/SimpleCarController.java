@@ -16,45 +16,25 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package net.sourceforge.myfaces.taglib;
+package net.sourceforge.myfaces.example.controller;
 
-import net.sourceforge.myfaces.component.MyFacesComponent;
-import net.sourceforge.myfaces.component.ext.UINavigationItem;
-import net.sourceforge.myfaces.renderkit.html.ext.NavigationItemRenderer;
+import net.sourceforge.myfaces.example.model.SimpleCarList;
 
-import javax.faces.component.UIComponent;
-import javax.faces.webapp.FacesTag;
+import javax.faces.context.FacesContext;
+import javax.faces.event.CommandEvent;
 
 /**
  * DOCUMENT ME!
- * @author Manfred Geiler (latest modification by $Author$)
+ * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public class NavigationItemTag
-        extends MyFacesTag
+public class SimpleCarController
 {
-    public UIComponent createComponent()
+    public void sort(FacesContext facesContext, CommandEvent commandEvent)
     {
-        return new UINavigationItem();
-    }
+        SimpleCarList list = (SimpleCarList)facesContext.getModelValue("list");
 
-    public String getRendererType()
-    {
-        return NavigationItemRenderer.TYPE;
-    }
-
-    public void setLabel(String s)
-    {
-        setProperty(MyFacesComponent.LABEL_ATTR, s);
-    }
-
-    public void setHref(String s)
-    {
-        setProperty(UINavigationItem.HREF_ATTR, s);
-    }
-
-    public void setTreeId(String s)
-    {
-        setProperty(UINavigationItem.TREE_ID_ATTR, s);
+        String commandName = commandEvent.getCommandName();
+        list.setSortCommand(commandName);
     }
 }

@@ -16,33 +16,46 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package net.sourceforge.myfaces.component;
+package net.sourceforge.myfaces.taglib.ext;
+
+import net.sourceforge.myfaces.component.MyFacesComponent;
+import net.sourceforge.myfaces.component.ext.UINavigationItem;
+import net.sourceforge.myfaces.renderkit.html.ext.NavigationItemRenderer;
+import net.sourceforge.myfaces.taglib.MyFacesTag;
+
+import javax.faces.component.UIComponent;
+import javax.faces.webapp.FacesTag;
 
 /**
  * DOCUMENT ME!
- * @author Thomas Spiegl (latest modification by $Author$)
+ * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public class UISelectItems
-    extends javax.faces.component.UISelectItems
-    implements MyFacesComponent
+public class NavigationItemTag
+        extends MyFacesTag
 {
-    public boolean getRendersSelf()
+    public UIComponent createComponent()
     {
-        return false;
+        return new UINavigationItem();
     }
 
-    //MyFacesComponentDelegate
-    private MyFacesComponentDelegate _delegate = new MyFacesComponentDelegate(this);
-
-    public boolean isTransient()
+    public String getRendererType()
     {
-        return _delegate.isTransient();
+        return NavigationItemRenderer.TYPE;
     }
 
-    public void setTransient(boolean b)
+    public void setLabel(String s)
     {
-        _delegate.setTransient(b);
+        setProperty(MyFacesComponent.LABEL_ATTR, s);
     }
 
+    public void setHref(String s)
+    {
+        setProperty(UINavigationItem.HREF_ATTR, s);
+    }
+
+    public void setTreeId(String s)
+    {
+        setProperty(UINavigationItem.TREE_ID_ATTR, s);
+    }
 }
