@@ -42,7 +42,6 @@ import java.util.List;
  * @version $Revision$ $Date$
  */
 public class UIComponentUtils
-    implements CommonComponentProperties
 {
     private UIComponentUtils() {}
 

@@ -19,7 +19,6 @@
 package net.sourceforge.myfaces.component.ext;
 
 import net.sourceforge.myfaces.component.MyFacesUIParameter;
-import net.sourceforge.myfaces.component.UIComponentUtils;
 
 import javax.faces.context.FacesContext;
 import java.io.IOException;

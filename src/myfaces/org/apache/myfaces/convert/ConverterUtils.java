@@ -21,7 +21,7 @@ package net.sourceforge.myfaces.convert;
 import net.sourceforge.myfaces.MyFacesFactoryFinder;
 import net.sourceforge.myfaces.component.UIComponentUtils;
 import net.sourceforge.myfaces.config.*;
-import net.sourceforge.myfaces.renderkit.attr.CommonRendererAttributes;
+import net.sourceforge.myfaces.renderkit.JSFAttr;
 import net.sourceforge.myfaces.util.Base64;
 import net.sourceforge.myfaces.util.MyFacesObjectInputStream;
 import net.sourceforge.myfaces.util.logging.LogUtil;
@@ -112,7 +112,7 @@ public class ConverterUtils
                                               UIOutput uiOutput)
         throws IllegalArgumentException
     {
-        Object converterAttr = uiOutput.getAttribute(CommonRendererAttributes.CONVERTER_ATTR);
+        Object converterAttr = uiOutput.getAttribute(JSFAttr.CONVERTER_ATTR);
         if (converterAttr != null && converterAttr instanceof Converter)
         {
             //JSF 1.0 PRD2, 8.4
@@ -275,7 +275,7 @@ public class ConverterUtils
     public static NumberFormat getNumberFormat(UIComponent component, Locale locale)
     {
         NumberFormat format;
-        String numberStyle = (String)component.getAttribute(CommonRendererAttributes.NUMBER_STYLE_ATTR);
+        String numberStyle = (String)component.getAttribute(JSFAttr.NUMBER_STYLE_ATTR);
         if (numberStyle != null)
         {
             if (numberStyle.equalsIgnoreCase(ConverterConstants.NUMBER_STYLE_CURRENCY))
@@ -301,7 +301,7 @@ public class ConverterUtils
         }
         else
         {
-            String pattern = (String)component.getAttribute(CommonRendererAttributes.FORMAT_PATTERN_ATTR);
+            String pattern = (String)component.getAttribute(JSFAttr.FORMAT_PATTERN_ATTR);
             if (pattern != null)
             {
                 format = new DecimalFormat(pattern, new DecimalFormatSymbols(locale));
@@ -319,7 +319,7 @@ public class ConverterUtils
     public static DateFormat getDateFormat(UIComponent component, Locale locale)
     {
         DateFormat format;
-        String pattern = (String)component.getAttribute(CommonRendererAttributes.FORMAT_PATTERN_ATTR);
+        String pattern = (String)component.getAttribute(JSFAttr.FORMAT_PATTERN_ATTR);
         if (pattern != null)
         {
             format = new SimpleDateFormat(pattern, locale);
@@ -336,7 +336,7 @@ public class ConverterUtils
     public static DateFormat getTimeFormat(UIComponent component, Locale locale)
     {
         DateFormat format;
-        String pattern = (String)component.getAttribute(CommonRendererAttributes.FORMAT_PATTERN_ATTR);
+        String pattern = (String)component.getAttribute(JSFAttr.FORMAT_PATTERN_ATTR);
         if (pattern != null)
         {
             format = new SimpleDateFormat(pattern, locale);
@@ -352,7 +352,7 @@ public class ConverterUtils
     public static DateFormat getDateTimeFormat(UIComponent component, Locale locale)
     {
         DateFormat format;
-        String pattern = (String)component.getAttribute(CommonRendererAttributes.FORMAT_PATTERN_ATTR);
+        String pattern = (String)component.getAttribute(JSFAttr.FORMAT_PATTERN_ATTR);
         if (pattern != null)
         {
             format = new SimpleDateFormat(pattern, locale);
@@ -369,7 +369,7 @@ public class ConverterUtils
 
     private static int getDateStyle(UIComponent component)
     {
-        String dateStyle = (String)component.getAttribute(CommonRendererAttributes.DATE_STYLE_ATTR);
+        String dateStyle = (String)component.getAttribute(JSFAttr.DATE_STYLE_ATTR);
         if (dateStyle != null)
         {
             if (dateStyle.equalsIgnoreCase(ConverterConstants.DATE_STYLE_SHORT))
@@ -399,7 +399,7 @@ public class ConverterUtils
 
     private static int getTimeStyle(UIComponent component)
     {
-        String timeStyle = (String)component.getAttribute(CommonRendererAttributes.TIME_STYLE_ATTR);
+        String timeStyle = (String)component.getAttribute(JSFAttr.TIME_STYLE_ATTR);
         if (timeStyle != null)
         {
             if (timeStyle.equalsIgnoreCase(ConverterConstants.TIME_STYLE_SHORT))
@@ -428,7 +428,7 @@ public class ConverterUtils
 
     public static TimeZone getTimeZone(UIComponent component)
     {
-        String tzId = (String)component.getAttribute(CommonRendererAttributes.TIMEZONE_ATTR);
+        String tzId = (String)component.getAttribute(JSFAttr.TIMEZONE_ATTR);
         if (tzId == null)
         {
             return TimeZone.getDefault();
