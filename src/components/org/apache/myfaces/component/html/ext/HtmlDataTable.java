@@ -32,76 +32,116 @@ import java.util.List;
  * @author Thomas Spiegl (latest modification by $Author$)
  * @author Manfred Geiler
  * @version $Revision$ $Date$
+ * $Log$
+ * Revision 1.3  2004/05/18 11:22:44  manolito
+ * optimized local value handling, so that getValue of UIData is only called when needed
+ *
  */
 public class HtmlDataTable
         extends javax.faces.component.html.HtmlDataTable
         implements UserRoleAware
 {
     private static final Class OBJECT_ARRAY_CLASS = (new Object[0]).getClass();
-    private Object _value;
+    transient private Object _localValue = null;
+    transient private boolean _allChildrenAndFacetsValid = true;
 
     public void encodeBegin(FacesContext context) throws IOException
     {
-        if (isPreserveDataModel())
+        if (_allChildrenAndFacetsValid)
         {
-            Object value = getLocalValue();
-            if (value != null &&
-                value instanceof _SerializableDataModel &&
-                getValueBinding("value") != null)
-            {
-                //Clear local value, so that current data from model bean is used from now on
-                setValue(null);
-            }
+            //Clear local value, so that current data from model bean is used again
+            _localValue = null;
         }
         super.encodeBegin(context);
     }
 
+    public void processDecodes(FacesContext context)
+    {
+        try
+        {
+            super.processDecodes(context);
+        }
+        finally
+        {
+            if (context.getRenderResponse() || context.getResponseComplete())
+            {
+                // one of the children and facets failed during decode
+                _allChildrenAndFacetsValid = false;
+            }
+        }
+    }
+
+    public void processValidators(FacesContext context)
+    {
+        try
+        {
+            super.processValidators(context);
+        }
+        finally
+        {
+            if (context.getRenderResponse() || context.getResponseComplete())
+            {
+                // one of the children and facets failed during decode
+                _allChildrenAndFacetsValid = false;
+            }
+        }
+    }
 
     public void processUpdates(FacesContext context)
     {
-        super.processUpdates(context);
-        
-        if (isPreserveDataModel())
+        try
         {
-            updateModelFromPreservedDataModel(context);
-        }
+            super.processUpdates(context);
 
-        if (isPreserveSort())
-        {
-            if (_sortColumn != null)
+            if (isPreserveDataModel())
             {
-                ValueBinding vb = getValueBinding("sortColumn");
-                if (vb != null)
+                updateModelFromPreservedDataModel(context);
+            }
+
+            if (isPreserveSort())
+            {
+                if (_sortColumn != null)
                 {
-                    vb.setValue(context, _sortColumn);
-                    _sortColumn = null;
+                    ValueBinding vb = getValueBinding("sortColumn");
+                    if (vb != null)
+                    {
+                        vb.setValue(context, _sortColumn);
+                        _sortColumn = null;
+                    }
+                }
+
+                if (_sortAscending != null)
+                {
+                    ValueBinding vb = getValueBinding("sortAscending");
+                    if (vb != null)
+                    {
+                        vb.setValue(context, _sortAscending);
+                        _sortAscending = null;
+                    }
                 }
             }
 
-            if (_sortAscending != null)
+        }
+        finally
+        {
+            if (context.getRenderResponse() || context.getResponseComplete())
             {
-                ValueBinding vb = getValueBinding("sortAscending");
-                if (vb != null)
-                {
-                    vb.setValue(context, _sortAscending);
-                    _sortAscending = null;
-                }
+                // one of the children and facets failed during decode
+                _allChildrenAndFacetsValid = false;
             }
         }
-
     }
 
 
     private void updateModelFromPreservedDataModel(FacesContext context)
     {
-        Object value = getLocalValue();
-        if (value != null &&
-            value instanceof _SerializableDataModel)
+        if (_localValue != null &&
+            _localValue instanceof _SerializableDataModel)
         {
             ValueBinding vb = getValueBinding("value");
             if (vb != null && !vb.isReadOnly(context))
             {
-                _SerializableDataModel dm = (_SerializableDataModel)value;
+                _SerializableDataModel dm = (_SerializableDataModel)_localValue;
                 Class type = vb.getType(context);
                 if (DataModel.class.isAssignableFrom(type))
                 {
@@ -133,7 +173,7 @@ public class HtmlDataTable
                         vb.setValue(context, null);
                     }
                 }
-                setValue(null); //clear local value
+                //setValue(null); //clear local value
             }
         }
     }
@@ -144,11 +184,10 @@ public class HtmlDataTable
     {
         if (isPreserveDataModel())
         {
-            Object value = getLocalValue();
-            if (value != null &&
-                value instanceof _SerializableDataModel)
+            if (_localValue != null &&
+                _localValue instanceof _SerializableDataModel)
             {
-                return ((_SerializableDataModel)value).getFirst();
+                return ((_SerializableDataModel)_localValue).getFirst();
             }
         }
         return super.getFirst();
@@ -158,11 +197,10 @@ public class HtmlDataTable
     {
         if (isPreserveDataModel())
         {
-            Object value = getLocalValue();
-            if (value != null &&
-                value instanceof _SerializableDataModel)
+            if (_localValue != null &&
+                _localValue instanceof _SerializableDataModel)
             {
-                return ((_SerializableDataModel)value).getRows();
+                return ((_SerializableDataModel)_localValue).getRows();
             }
         }
         return super.getRows();
@@ -190,7 +228,7 @@ public class HtmlDataTable
         _preserveDataModel = (Boolean)values[1];
         if (isPreserveDataModel())
         {
-            setValue(restoreAttachedState(context, values[2]));
+            _localValue = restoreAttachedState(context, values[2]);
         }
         _preserveSort = (Boolean)values[3];
         _sortColumn = (String)values[4];
@@ -200,7 +238,12 @@ public class HtmlDataTable
 
     public Object getSerializableDataModel()
     {
-        Object value = getValue();
+        Object value = _localValue;
+        if (value == null)
+        {
+            value = getValue();
+        }
+
         if (value == null)
         {
             return null;
@@ -232,21 +275,23 @@ public class HtmlDataTable
     }
 
 
-    public Object getLocalValue()
-    {
-        return _value;
-    }
-
     public Object getValue()
     {
-        if (_value != null) return _value;
-        return super.getValue();
+        // if we have a local value (either from restoreState or from former getValue call)
+        // we return this value
+        if (_localValue != null) return _localValue;
+
+        // else get the "real" current value, and again remember it as local value
+        _localValue = super.getValue();
+
+        return _localValue;
     }
+
 
     public void setValue(Object value)
     {
-        _value = value;
         super.setValue(value);
+        _localValue = null;
     }
 
     //------------------ GENERATED CODE BEGIN (do not modify!) --------------------
