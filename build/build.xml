@@ -252,6 +252,8 @@
                         prefix="myfaces-${manifest.impl.version}/lib"/>
             <tarfileset file="${jakarta-digester.jar}"
                         prefix="myfaces-${manifest.impl.version}/lib"/>
+            <tarfileset file="${myfaces-components.jar}"
+            			prefix="myfaces-${manifest.impl.version}/lib" />
         </tar>
     </target>
 
