@@ -40,6 +40,9 @@ import java.util.List;
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.18  2004/06/22 15:26:04  prophecyslides
+ * headerClass does not apply to the <tr> in spec, so removed it.
+ *
  * Revision 1.17  2004/06/21 23:12:46  prophecyslides
  * headerClass style propogates to the <th> elements, not just the <tr>
  *
@@ -214,10 +217,6 @@ public class HtmlTableRenderer
         }
         HtmlRendererUtils.writePrettyLineSeparator(facesContext);
         writer.startElement(HTML.TR_ELEM, uiData);
-        if (style != null)
-        {
-            writer.writeAttribute(HTML.CLASS_ATTR, style, null);
-        }
         for (Iterator it = uiData.getChildren().iterator(); it.hasNext(); )
         {
             UIComponent uiComponent = (UIComponent)it.next();
