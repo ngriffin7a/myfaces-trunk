@@ -27,6 +27,9 @@ import javax.faces.el.ValueBinding;
  * @version $Revision$ $Date$
  * 
  * $Log$
+ * Revision 1.24  2004/09/02 08:40:18  mwessendorf
+ * added TestCase for bug #1018239
+ *
  * Revision 1.23  2004/09/01 18:25:19  mwessendorf
  * added TestCase
  *
@@ -558,4 +561,18 @@ public class ValueBindingTest extends ELBaseTest
         assertEquals("foobar", vb.getValue(_facesContext));
 
     }
+    
+    public void testEL () throws Exception{
+        ValueBinding vb;
+
+     /*   vb = _application.createValueBinding("#{facesContext}");
+        assertNotNull(vb.getValue(_facesContext));
+     */
+        
+        vb = _application.createValueBinding("#{facesContext.viewRoot.renderKitId}");
+        assertEquals("HTML_BASIC",vb.getValue(_facesContext));
+
+    /*    vb = _application.createValueBinding("#{facesContext.viewRoot.viewId}");
+        assertNotNull(vb.getValue(_facesContext));
+    */}
 }
