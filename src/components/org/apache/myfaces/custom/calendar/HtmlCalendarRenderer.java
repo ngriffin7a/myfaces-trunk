@@ -46,6 +46,9 @@ import java.util.List;
 
 /**
  * $Log$
+ * Revision 1.20  2005/02/11 14:11:04  mmarinschek
+ * fixed jira 97
+ *
  * Revision 1.19  2005/02/11 13:24:01  mmarinschek
  * fix jira 60, showing fix in examples
  *
@@ -668,7 +671,7 @@ public class HtmlCalendarRenderer
         if(converter==null)
             converter = new CalendarDateTimeConverter();
 
-        if (!(submittedValue instanceof String))
+        if (!(submittedValue == null || submittedValue instanceof String))
         {
             throw new IllegalArgumentException("Submitted value of type String expected");
         }

@@ -23,6 +23,10 @@ Changes in Release 1.0.9
 * closed MFACES-104 in Jira
 * closed MYFACES-101 in Jira
 * closed MYFACES-106 in Jira
+* closed MYFACES-60 in Jira
+* closed MYFACES-77 in Jira
+* closed MYFACES-73 in Jira
+* closed MYFACES-97 in Jira
 ----------------------------------------------------------------------
 Changes in Release 1.0.8 beta_RC2
 * added a new RenderKit, that renders WML. Thanks to Jiri Zaloudek for his contribution
