@@ -55,10 +55,10 @@
             <h:panelGroup id="body">
                 <f:verbatim>
                     <h3>Webpages</h3>
-                     <a href="http://myfaces.sourceforge.net/" target="_blank">Project Homepage</a><br>
-                     <a href="http://www.sourceforge.net/projects/myfaces" target="_blank">MyFaces@Sourceforge</a><br>
+                     <a href="http://www.myfaces.org/" target="_blank">Project Homepage</a><br>
+                     <a href="http://www.apache.org" target="_blank">Apache Software Foundation</a><br>
                     <h3>Project Members</h3>
-                     <a href="http://sourceforge.net/project/memberlist.php?group_id=69709">MyFaces Team Members@Sourceforge</a><br>
+                     <a href="http://incubator.apache.org/projects/myfaces.html">MyFaces Team Members@Apache Incubator</a><br>
                 </f:verbatim>
             </h:panelGroup>
         </f:facet>

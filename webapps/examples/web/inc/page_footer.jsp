@@ -3,7 +3,7 @@
         <f:facet name="footer">
             <h:panelGroup id="footer">
                 <f:verbatim>
-                    Copyright (c) 2003, 2004  <a href="http://myfaces.sourceforge.net" class="pageFooter">The MyFaces Team</a>
+                    Copyright (c) 2003, 2004  <a href="http://www.myfaces.org" class="pageFooter">The MyFaces Team</a>
                     &nbsp;&nbsp;
                 </f:verbatim>
             </h:panelGroup>
