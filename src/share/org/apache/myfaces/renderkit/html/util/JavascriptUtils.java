@@ -35,6 +35,9 @@ import java.util.Set;
  * @author Anton Koinov
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.10  2004/12/02 21:31:56  svieujot
+ * Bugfix in encodeString
+ *
  * Revision 1.9  2004/10/13 11:51:01  matze
  * renamed packages to org.apache
  *
@@ -227,9 +230,10 @@ public final class JavascriptUtils
             switch (c)
             {
                 case '\\' : app = "\\";  break;
-                case '\"' : app = "\\\"";  break;
+                case '"' : app = "\\\"";  break;
                 case '\'' : app = "\\'";  break;
                 case '\n' : app = "\\n";  break;
+                case '\r' : app = "\\r";  break;
             }
             if (app != null)
             {
