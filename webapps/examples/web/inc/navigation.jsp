@@ -18,6 +18,7 @@
                 <x:navigation_item id="nav_2_3_2" key="nav_Sortable_list" action="go_simpleSortList" commandClass="navigation_link" />
                 <x:navigation_item id="nav_2_3_3" key="nav_Selectbox" action="go_selectbox" commandClass="navigation_link" />
                 <x:navigation_item id="nav_2_3_4" key="nav_FileUpload" action="go_fileupload" commandClass="navigation_link" />
+                <x:navigation_item id="nav_2_3_5" key="nav_TabbedPane" action="go_tabbedPane" commandClass="navigation_link" />
             </x:navigation_item>
         </x:navigation_item>
         <x:navigation_item id="nav_3" key="nav_Documentation" commandClass="navigation_link" >

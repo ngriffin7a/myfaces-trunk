@@ -158,6 +158,11 @@
         </navigation-case>
 
         <navigation-case>
+            <from-outcome>go_tabbedPane</from-outcome>
+            <to-tree-id>/tabbedPane.jsf</to-tree-id>
+        </navigation-case>
+
+        <navigation-case>
             <from-outcome>go_features</from-outcome>
             <to-tree-id>/features.jsf</to-tree-id>
         </navigation-case>

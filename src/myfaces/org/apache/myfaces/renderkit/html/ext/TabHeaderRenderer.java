@@ -16,7 +16,7 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package net.sourceforge.myfaces.renderkit.html;
+package net.sourceforge.myfaces.renderkit.html.ext;
 
 import net.sourceforge.myfaces.renderkit.attr.ButtonRendererAttributes;
 import net.sourceforge.myfaces.renderkit.attr.CommonRendererAttributes;
@@ -26,6 +26,7 @@ import net.sourceforge.myfaces.renderkit.html.attr.HTMLEventHandlerAttributes;
 import net.sourceforge.myfaces.renderkit.html.attr.HTMLUniversalAttributes;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLEncoder;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLUtil;
+import net.sourceforge.myfaces.renderkit.html.HTMLRenderer;
 import net.sourceforge.myfaces.util.bundle.BundleUtils;
 
 import javax.faces.component.UICommand;
@@ -40,7 +41,7 @@ import java.io.IOException;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public class ButtonRenderer
+public class TabHeaderRenderer
     extends HTMLRenderer
     implements CommonRendererAttributes,
                HTMLUniversalAttributes,
@@ -57,8 +58,6 @@ public class ButtonRenderer
 
     public void decode(FacesContext facesContext, UIComponent uiComponent) throws IOException
     {
-        //super.decode must not be called, because value is handled here
-
         UICommand uiCommand = (UICommand)uiComponent;
 
         ServletRequest servletRequest = (ServletRequest)facesContext.getExternalContext().getRequest();
@@ -134,6 +133,8 @@ public class ButtonRenderer
             }
             if (label == null)
             {
+                //label = getStringValue(facesContext, uiComponent);
+                //hiddenParam = false;
                 label = uiCommand.getCommandName();
             }
             writer.write(HTMLEncoder.encode(label, false, false));

@@ -16,45 +16,54 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package net.sourceforge.myfaces.renderkit.html;
+package net.sourceforge.myfaces.taglib.ext;
 
-import net.sourceforge.myfaces.component.CommonComponentProperties;
+import net.sourceforge.myfaces.renderkit.html.ext.TabbedPaneRenderer;
 import net.sourceforge.myfaces.renderkit.attr.CommonRendererAttributes;
-import net.sourceforge.myfaces.renderkit.attr.GroupRendererAttributes;
-
-import javax.faces.component.UIComponent;
-import javax.faces.context.FacesContext;
-import java.io.IOException;
+import net.sourceforge.myfaces.renderkit.attr.ext.TabbedPaneRendererAttributes;
+import net.sourceforge.myfaces.taglib.MyFacesTag;
 
 /**
  * DOCUMENT ME!
- * @author Thomas Spiegl (latest modification by $Author$)
+ * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
+ *
+ * @deprecated panel_group with facet should be used
  */
-public class GroupRenderer
-    extends HTMLRenderer
-    implements CommonComponentProperties,
-               CommonRendererAttributes,
-               GroupRendererAttributes
+public class TabbedPaneTag
+    extends MyFacesTag
+    implements CommonRendererAttributes,
+               TabbedPaneRendererAttributes
 {
-    public static final String TYPE = "Group";
+    public String getComponentType()
+    {
+        return "TabbedPane";
+    }
+
     public String getRendererType()
     {
-        return TYPE;
+        return TabbedPaneRenderer.TYPE;
     }
 
-    public void encodeBegin(FacesContext context, UIComponent component)
-            throws IOException
+    public void setValue(Object value)
     {
+        super.setValue(value);
     }
 
-    public void encodeEnd(FacesContext context, UIComponent component)
-            throws IOException
+    public void setPanelClass(String value)
     {
+        setRendererAttributeString(PANEL_CLASS_ATTR, value);
     }
 
-    public void encodeChildren(FacesContext context, UIComponent component)
-        throws IOException
+
+    public void setActiveHeaderClass(String value)
     {
+        setRendererAttributeString(ACTIVE_HEADER_CLASS_ATTR, value);
     }
+
+    public void setInactiveHeaderClass(String value)
+    {
+        setRendererAttributeString(INACTIVE_HEADER_CLASS_ATTR, value);
+    }
+
 }

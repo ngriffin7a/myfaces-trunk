@@ -163,3 +163,55 @@ a.navigation_link:hover,active {
 	color: #000000;
     width: 250px;
 }
+
+
+
+.tabbedPane {
+    border-top: 0px none;
+    border-right: 2px outset #CCCCCC;
+    border-bottom: 2px outset #CCCCCC;
+    border-left: 2px outset #CCCCCC;
+    border-spacing: 5px;
+    padding: 20px;
+}
+
+.activeHeaderTab {
+	font-family : verdana, Geneva, Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	color: #000000;
+    width: 150px;
+    text-align: center;
+    background-color: #FFFFFF;
+    border-top: 2px outset #CCCCCC;
+    border-right: 2px outset #CCCCCC;
+    border-bottom: 0px none;
+    border-left: 2px outset #CCCCCC;
+    border-collapse: collapse;
+    padding: 2px;
+}
+
+.inactiveHeaderTab {
+	font-family : verdana, Geneva, Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	color: #000000;
+    width: 150px;
+    text-align: center;
+    background-color: #FFFFFF;
+    border-top: 2px outset #CCCCCC;
+    border-right: 2px outset #CCCCCC;
+    border-bottom: 2px inset #CCCCCC;
+    border-left: 2px outset #CCCCCC;
+    border-collapse: collapse;
+    padding: 2px;
+    margin-top: 6px;
+}
+
+.tabHeader {
+    border-top: 0px none;
+    border-right: 0px none;
+    border-bottom: 0px none;
+    border-left: 0px none;
+    border-style: none;
+    width: 150px;
+    background-color: #FFFFFF;
+}
