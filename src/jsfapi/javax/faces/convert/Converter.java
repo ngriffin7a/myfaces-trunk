@@ -23,6 +23,9 @@ import javax.faces.context.FacesContext;
 
 /**
  * $Log$
+ * Revision 1.6  2004/06/07 12:17:36  mwessendorf
+ * throws now ConverterException
+ *
  * Revision 1.5  2004/03/26 12:08:41  manolito
  * Exceptions in getAsString now catched and
  * more relaxed Number casting in all number converters
@@ -34,9 +37,9 @@ public interface Converter
 {
     Object getAsObject(FacesContext context,
                        UIComponent component,
-                       String value);
+                       String value) throws ConverterException;
 
     String getAsString(FacesContext context,
                        UIComponent component,
-                       Object value);
+                       Object value) throws ConverterException;
 }
