@@ -67,7 +67,7 @@ public class HtmlPanelTabbedPaneTag
     {
         super.setProperties(component);
 
-        setStringProperty(component, "selectedIndex", _selectedIndex);
+        setIntegerProperty(component, "selectedIndex", _selectedIndex);
 
         setStringProperty(component, HTML.ALIGN_ATTR, _align);
         setStringProperty(component, HTML.BGCOLOR_ATTR, _bgcolor);
