@@ -30,7 +30,7 @@ public class FacesConfigFactoryBaseCactusTest extends ServletTestCase {
   }
 
   public void testMetaInfLookup() throws Exception {
-    assertEquals("net.sourceforge.myfaces.application.TestApplicationFactoryImpl",
+    assertEquals("net.sourceforge.myfaces.confignew.TestApplicationFactory",
         FactoryFinder.getFactory(FactoryFinder.APPLICATION_FACTORY).getClass().getName());
     assertEquals("net.sourceforge.myfaces.renderkit.RenderKitFactoryImpl",
         FactoryFinder.getFactory(FactoryFinder.RENDER_KIT_FACTORY).getClass().getName());
