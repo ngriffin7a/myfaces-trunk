@@ -45,6 +45,9 @@ import net.sourceforge.myfaces.custom.tree.model.TreePath;
  * @author <a href="mailto:oliver@rossmueller.com">Oliver Rossmueller</a>
  * @version $Revision$ $Date$
  *          $Log$
+ *          Revision 1.9  2004/05/04 12:19:14  o_rossmueller
+ *          added icon provider
+ *
  *          Revision 1.8  2004/05/04 00:28:17  o_rossmueller
  *          model event handling
  *
@@ -78,6 +81,7 @@ public class HtmlTree
     private static final String PREVIOUS_VIEW_ROOT = HtmlPanelNavigation.class.getName() + ".PREVIOUS_VIEW_ROOT";
 
 
+    private IconProvider iconProvider;
     private boolean itemStatesRestored = false;
     private String styleClass;
     private String nodeClass;
@@ -130,6 +134,18 @@ public class HtmlTree
     public void addTreeSelectionListener(TreeSelectionListener listener)
     {
         addFacesListener(listener);
+    }
+
+
+    public IconProvider getIconProvider()
+    {
+        return iconProvider;
+    }
+
+
+    public void setIconProvider(IconProvider iconProvider)
+    {
+        this.iconProvider = iconProvider;
     }
 
 

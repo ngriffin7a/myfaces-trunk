@@ -23,6 +23,7 @@ package net.sourceforge.myfaces.custom.tree.renderkit.html;
 import net.sourceforge.myfaces.custom.tree.HtmlTree;
 import net.sourceforge.myfaces.custom.tree.HtmlTreeImageCommandLink;
 import net.sourceforge.myfaces.custom.tree.HtmlTreeNode;
+import net.sourceforge.myfaces.custom.tree.IconProvider;
 import net.sourceforge.myfaces.renderkit.RendererUtils;
 import net.sourceforge.myfaces.renderkit.html.HTML;
 import net.sourceforge.myfaces.renderkit.html.HtmlFormRendererBase;
@@ -41,18 +42,20 @@ import java.util.List;
  * @author <a href="mailto:oliver@rossmueller.com">Oliver Rossmueller</a>
  * @version $Revision$ $Date$
  *          $Log$
+ *          Revision 1.4  2004/05/04 12:19:13  o_rossmueller
+ *          added icon provider
+ *
  *          Revision 1.3  2004/04/23 19:09:34  o_rossmueller
  *          state transition magic
- *
+ *          <p/>
  *          Revision 1.2  2004/04/22 12:57:39  o_rossmueller
  *          fixed leaf node layout
- *
+ *          <p/>
  *          Revision 1.1  2004/04/22 10:20:24  manolito
  *          tree component
- *
  */
 public class HtmlTreeRenderer
-        extends HtmlFormRendererBase
+    extends HtmlFormRendererBase
 {
 
     private static final Integer ZERO = new Integer(0);
@@ -64,17 +67,17 @@ public class HtmlTreeRenderer
     }
 
 
-   public void encodeChildren(FacesContext facesContext, UIComponent component) throws IOException
-   {
-      super.encodeChildren(facesContext, component);
-   }
+    public void encodeChildren(FacesContext facesContext, UIComponent component) throws IOException
+    {
+        super.encodeChildren(facesContext, component);
+    }
 
 
     public void encodeEnd(FacesContext facesContext, UIComponent component) throws IOException
     {
         RendererUtils.checkParamValidity(facesContext, component, HtmlTree.class);
         ResponseWriter writer = facesContext.getResponseWriter();
-        HtmlTree tree = (HtmlTree)component;
+        HtmlTree tree = (HtmlTree) component;
 
         HtmlRendererUtils.writePrettyLineSeparator(facesContext);
         writer.startElement(HTML.TABLE_ELEM, null);
@@ -89,7 +92,7 @@ public class HtmlTreeRenderer
         ArrayList childNodes = new ArrayList(1);
         childNodes.add(tree.getRootNode());
 
-        renderChildren(facesContext, writer, tree, childNodes, maxLevel);
+        renderChildren(facesContext, writer, tree, childNodes, maxLevel, tree.getIconProvider());
 
         HtmlRendererUtils.writePrettyLineSeparator(facesContext);
         writer.endElement(HTML.TABLE_ELEM);
@@ -101,134 +104,136 @@ public class HtmlTreeRenderer
                                   ResponseWriter writer,
                                   HtmlTree tree,
                                   List children,
-                                  int maxLevel) throws IOException
+                                  int maxLevel,
+                                  IconProvider iconProvider) throws IOException
     {
         for (Iterator it = children.iterator(); it.hasNext();)
         {
-            HtmlTreeNode child = (HtmlTreeNode)it.next();
+            HtmlTreeNode child = (HtmlTreeNode) it.next();
             if (!child.isRendered())
             {
                 continue;
             }
-            if (child instanceof HtmlTreeNode)
+            HtmlRendererUtils.writePrettyLineSeparator(facesContext);
+
+            writer.startElement(HTML.TR_ELEM, null);
+
+            int[] layout = child.getLayout();
+
+            // tree lines
+            for (int i = 0; i < layout.length - 1; i++)
             {
-                HtmlRendererUtils.writePrettyLineSeparator(facesContext);
-
-                writer.startElement(HTML.TR_ELEM, null);
-
-                int[] layout = child.getLayout();
-
-                // tree lines
-                for (int i = 0; i < layout.length - 1; i++)
-                {
-                    int state = layout[i];
-                    writer.startElement(HTML.TD_ELEM, null);
-                    String url = getLayoutImage(tree, state);
-
-                    if ((url != null) && (url.length() > 0))
-                    {
-                        writer.startElement(HTML.IMG_ELEM, child);
-
-                        String src;
-                        if (url.startsWith(HTML.HREF_PATH_SEPARATOR))
-                        {
-                            String path = facesContext.getExternalContext().getRequestContextPath();
-                            src = path + url;
-                        }
-                        else
-                        {
-                            src = url;
-                        }
-                        //Encode URL
-                        //Although this is an url url, encodeURL is no nonsense, because the
-                        //actual url url could also be a dynamic servlet request:
-                        src = facesContext.getExternalContext().encodeResourceURL(src);
-                        writer.writeAttribute(HTML.SRC_ATTR, src, null);
-                        writer.writeAttribute(HTML.BORDER_ATTR, ZERO, null);
-
-                        HtmlRendererUtils.renderHTMLAttributes(writer, child, HTML.IMG_PASSTHROUGH_ATTRIBUTES);
-
-                        writer.endElement(HTML.IMG_ELEM);
-                    }
-                    writer.endElement(HTML.TD_ELEM);
-
-                }
-
-                // command link
+                int state = layout[i];
                 writer.startElement(HTML.TD_ELEM, null);
-                int state = layout[layout.length - 1];
                 String url = getLayoutImage(tree, state);
 
-                if (state == HtmlTreeNode.CHILD || state == HtmlTreeNode.CHILD_FIRST || state == HtmlTreeNode.CHILD_SINGLE || state == HtmlTreeNode.CHILD_LAST)
+                if ((url != null) && (url.length() > 0))
                 {
-                    // no action, just img
+                    writer.startElement(HTML.IMG_ELEM, child);
 
+                    String src;
+                    if (url.startsWith(HTML.HREF_PATH_SEPARATOR))
+                    {
+                        String path = facesContext.getExternalContext().getRequestContextPath();
+                        src = path + url;
+                    } else
+                    {
+                        src = url;
+                    }
+                    //Encode URL
+                    //Although this is an url url, encodeURL is no nonsense, because the
+                    //actual url url could also be a dynamic servlet request:
+                    src = facesContext.getExternalContext().encodeResourceURL(src);
+                    writer.writeAttribute(HTML.SRC_ATTR, src, null);
+                    writer.writeAttribute(HTML.BORDER_ATTR, ZERO, null);
 
-                    writeImageElement(url, facesContext, writer, child);
+                    HtmlRendererUtils.renderHTMLAttributes(writer, child, HTML.IMG_PASSTHROUGH_ATTRIBUTES);
 
-                }
-                else
-                {
-                    HtmlTreeImageCommandLink expandCollapse = (HtmlTreeImageCommandLink)child.getExpandCollapseCommand(facesContext);
-                    expandCollapse.setImage(getLayoutImage(tree, layout[layout.length - 1]));
-
-                    expandCollapse.encodeBegin(facesContext);
-                    expandCollapse.encodeEnd(facesContext);
+                    writer.endElement(HTML.IMG_ELEM);
                 }
                 writer.endElement(HTML.TD_ELEM);
 
+            }
 
-                int labelColSpan = maxLevel - child.getLevel() + 1;
-                // node icon
+            // command link
+            writer.startElement(HTML.TD_ELEM, null);
+            int state = layout[layout.length - 1];
+            String url = getLayoutImage(tree, state);
 
+            if (state == HtmlTreeNode.CHILD || state == HtmlTreeNode.CHILD_FIRST || state == HtmlTreeNode.CHILD_SINGLE || state == HtmlTreeNode.CHILD_LAST)
+            {
+                // no action, just img
+
+
+                writeImageElement(url, facesContext, writer, child);
+
+            } else
+            {
+                HtmlTreeImageCommandLink expandCollapse = (HtmlTreeImageCommandLink) child.getExpandCollapseCommand(facesContext);
+                expandCollapse.setImage(getLayoutImage(tree, layout[layout.length - 1]));
+
+                expandCollapse.encodeBegin(facesContext);
+                expandCollapse.encodeEnd(facesContext);
+            }
+            writer.endElement(HTML.TD_ELEM);
+
+
+            int labelColSpan = maxLevel - child.getLevel() + 1;
+
+            // node icon
+            if (iconProvider != null)
+            {
+                url = iconProvider.getIconUrl(child.getUserObject(), child.getChildCount(), child.isLeaf(facesContext));
+            } else
+            {
                 if (!child.isLeaf(facesContext))
                 {
                     // todo: icon provider
                     url = "images/tree/folder.gif";
-                } else {
+                } else
+                {
                     url = null;
                 }
+            }
 
-
-                if ((url != null) && (url.length() > 0))
-                {
-                    writer.startElement(HTML.TD_ELEM, null);
-                    writeImageElement(url, facesContext, writer, child);
-                    writer.endElement(HTML.TD_ELEM);
-                } else {
-                    // no icon, so label has more room
-                    labelColSpan ++;
-                }
-
-
-                // node label
+            if ((url != null) && (url.length() > 0))
+            {
                 writer.startElement(HTML.TD_ELEM, null);
-                writer.writeAttribute(HTML.COLSPAN_ATTR, new Integer(labelColSpan), null);
-                if (child.isSelected() && tree.getSelectedNodeClass() != null)
-                {
-                    writer.writeAttribute(HTML.CLASS_ATTR, tree.getSelectedNodeClass(), null);
-                }
-                else if (!child.isSelected() && tree.getNodeClass() != null)
-                {
-                    writer.writeAttribute(HTML.CLASS_ATTR, tree.getNodeClass(), null);
-                }
-                child.encodeBegin(facesContext);
-                child.encodeEnd(facesContext);
+                writeImageElement(url, facesContext, writer, child);
                 writer.endElement(HTML.TD_ELEM);
+            } else
+            {
+                // no icon, so label has more room
+                labelColSpan++;
+            }
 
-                writer.endElement(HTML.TR_ELEM);
 
-                if (child.getChildCount() > 0)
-                {
-                    renderChildren(facesContext, writer, tree, child.getChildren(), maxLevel);
-                }
+            // node label
+            writer.startElement(HTML.TD_ELEM, null);
+            writer.writeAttribute(HTML.COLSPAN_ATTR, new Integer(labelColSpan), null);
+            if (child.isSelected() && tree.getSelectedNodeClass() != null)
+            {
+                writer.writeAttribute(HTML.CLASS_ATTR, tree.getSelectedNodeClass(), null);
+            } else if (!child.isSelected() && tree.getNodeClass() != null)
+            {
+                writer.writeAttribute(HTML.CLASS_ATTR, tree.getNodeClass(), null);
+            }
+            child.encodeBegin(facesContext);
+            child.encodeEnd(facesContext);
+            writer.endElement(HTML.TD_ELEM);
+
+            writer.endElement(HTML.TR_ELEM);
+
+            if (child.getChildCount() > 0)
+            {
+                renderChildren(facesContext, writer, tree, child.getChildren(), maxLevel, iconProvider);
             }
         }
     }
 
 
     private void writeImageElement(String url, FacesContext facesContext, ResponseWriter writer, HtmlTreeNode child)
-            throws IOException
+        throws IOException
     {
         writer.startElement(HTML.IMG_ELEM, child);
         String src;
@@ -236,8 +241,7 @@ public class HtmlTreeRenderer
         {
             String path = facesContext.getExternalContext().getRequestContextPath();
             src = path + url;
-        }
-        else
+        } else
         {
             src = url;
         }
