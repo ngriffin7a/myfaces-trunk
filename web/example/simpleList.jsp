@@ -43,7 +43,7 @@
 
             <f:errors id="errors" />
 
-            <% int i = 0; %>
+            <% int rows = 0, cols = 2; %>
             <f:list id="countryList"
                     style="standardTable"
                     headerClass="standardTable_Header"
@@ -57,15 +57,21 @@
                     <f:output_text id="countryList.name" modelReference="country.name" />
                     <f:group id="g1" >
                         <a href="#"><f:output_text id="countryList.isoCode" modelReference="country.isoCode" /></a>
-                        <% i++; %>
+                        <% rows++; %>
                     </f:group>
                 </f:listrow>
                 <f:group id="footer" >
-                    <f:output_text id="footer.1" text="look at this runntime value ..."/>
+                    <f:output_text id="footer.1" text="look at this runtime values ..."/>
                     <f:group id="g2" >
-                        <f:output_text id="footer.2" text="<%=Integer.toString(i)%>" />
                         &nbsp;
-                        <f:output_text id="footer.3" text="<%=\" rows\"%>" />
+                        <f:message id="row_count" msg="{0} rows" >
+                            <f:param id="rows" value="<%=new Integer(rows)%>"/>
+                        </f:message>
+                        &nbsp; / &nbsp;
+                        <f:message id="col_count" msg="{0} cols" >
+                            <f:param id="cols" value="<%=new Integer(cols)%>"/>
+                        </f:message>
+                        &nbsp;
                     </f:group>
                 </f:group>
             </f:list>
