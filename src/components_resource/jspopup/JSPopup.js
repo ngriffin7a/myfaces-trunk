@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+var orgApacheMyfacesPopupCurrentlyOpenedPopup;
+
 function orgApacheMyfacesPopup(popupId)
 {
     this.popupId = popupId;
@@ -24,6 +26,10 @@ function orgApacheMyfacesPopup(popupId)
 
 function orgApacheMyfacesPopupDisplay(ev)
 {
+
+    if(orgApacheMyfacesPopupCurrentlyOpenedPopup!=null)
+        orgApacheMyfacesPopupCurrentlyOpenedPopup.style.display="none";
+
     var elem;
     var x;
     var y;
@@ -51,6 +57,7 @@ function orgApacheMyfacesPopupDisplay(ev)
         popupElem.style.display="block";
         popupElem.style.left=""+x+"px";
         popupElem.style.top=""+y+"px";
+        orgApacheMyfacesPopupCurrentlyOpenedPopup = popupElem;
     }
 }
 
@@ -64,4 +71,5 @@ function orgApacheMyfacesPopupRedisplay()
 {
     var popupElem = document.getElementById(this.popupId);
     popupElem.style.display="block";
+    orgApacheMyfacesPopupCurrentlyOpenedPopup = popupElem;    
 }

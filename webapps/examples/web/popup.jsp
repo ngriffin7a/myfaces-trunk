@@ -54,33 +54,86 @@
         <f:facet name="body">
 
             <h:panelGroup id="body">
-                    
-                <x:popup styleClass="popup">
-                    <h:outputText value="text"/>
-                    <f:facet name="popup">
-                        <h:panelGroup>
-                            <h:panelGrid columns="1" >
-                            <h:outputText value="Popup Text"/>
-                            <h:outputLink value="http://www.myfaces.org" >
-                                <h:outputText value="MyFaces Homepage"/>
-                            </h:outputLink>
-                            <h:outputLink value="http://www.myfaces.org" >
-                                <h:outputText value="MyFaces Homepage"/>
-                            </h:outputLink>
-                            <h:outputLink value="http://www.myfaces.org" >
-                                <h:outputText value="MyFaces Homepage"/>
-                            </h:outputLink>
-                            <h:outputLink value="http://www.myfaces.org" >
-                                <h:outputText value="MyFaces Homepage"/>
-                            </h:outputLink>
-                            <h:outputLink value="http://www.myfaces.org" >
-                                <h:outputText value="MyFaces Homepage"/>
-                            </h:outputLink>                            
-                            </h:panelGrid>
-                        </h:panelGroup>
-                    </f:facet>
-                </x:popup>
 
+                <h:panelGrid columns="1">
+                    <x:popup styleClass="popup">
+                        <h:outputText value="This is the first textual text situation."/>
+                        <f:facet name="popup">
+                            <h:panelGroup>
+                                <h:panelGrid columns="1" >
+                                <h:outputText value="Popup Text 1"/>
+                                <h:outputLink value="http://www.myfaces.org" >
+                                    <h:outputText value="MyFaces Homepage"/>
+                                </h:outputLink>
+                                <h:outputLink value="http://www.myfaces.org" >
+                                    <h:outputText value="MyFaces Homepage"/>
+                                </h:outputLink>
+                                <h:outputLink value="http://www.myfaces.org" >
+                                    <h:outputText value="MyFaces Homepage"/>
+                                </h:outputLink>
+                                <h:outputLink value="http://www.myfaces.org" >
+                                    <h:outputText value="MyFaces Homepage"/>
+                                </h:outputLink>
+                                <h:outputLink value="http://www.myfaces.org" >
+                                    <h:outputText value="MyFaces Homepage"/>
+                                </h:outputLink>
+                                </h:panelGrid>
+                            </h:panelGroup>
+                        </f:facet>
+                    </x:popup>
+
+                    <x:popup styleClass="popup">
+                        <h:outputText value="This is the second textual text situation."/>
+                        <f:facet name="popup">
+                            <h:panelGroup>
+                                <h:panelGrid columns="1" >
+                                <h:outputText value="Popup Text 2"/>
+                                <h:outputLink value="http://www.myfaces.org" >
+                                    <h:outputText value="MyFaces Homepage"/>
+                                </h:outputLink>
+                                <h:outputLink value="http://www.myfaces.org" >
+                                    <h:outputText value="MyFaces Homepage"/>
+                                </h:outputLink>
+                                <h:outputLink value="http://www.myfaces.org" >
+                                    <h:outputText value="MyFaces Homepage"/>
+                                </h:outputLink>
+                                <h:outputLink value="http://www.myfaces.org" >
+                                    <h:outputText value="MyFaces Homepage"/>
+                                </h:outputLink>
+                                <h:outputLink value="http://www.myfaces.org" >
+                                    <h:outputText value="MyFaces Homepage"/>
+                                </h:outputLink>
+                                </h:panelGrid>
+                            </h:panelGroup>
+                        </f:facet>
+                    </x:popup>
+
+                    <x:popup styleClass="popup">
+                        <h:outputText value="This is the third textual text situation."/>
+                        <f:facet name="popup">
+                            <h:panelGroup>
+                                <h:panelGrid columns="1" >
+                                <h:outputText value="Popup Text 3"/>
+                                <h:outputLink value="http://www.myfaces.org" >
+                                    <h:outputText value="MyFaces Homepage"/>
+                                </h:outputLink>
+                                <h:outputLink value="http://www.myfaces.org" >
+                                    <h:outputText value="MyFaces Homepage"/>
+                                </h:outputLink>
+                                <h:outputLink value="http://www.myfaces.org" >
+                                    <h:outputText value="MyFaces Homepage"/>
+                                </h:outputLink>
+                                <h:outputLink value="http://www.myfaces.org" >
+                                    <h:outputText value="MyFaces Homepage"/>
+                                </h:outputLink>
+                                <h:outputLink value="http://www.myfaces.org" >
+                                    <h:outputText value="MyFaces Homepage"/>
+                                </h:outputLink>
+                                </h:panelGrid>
+                            </h:panelGroup>
+                        </f:facet>
+                    </x:popup>
+                </h:panelGrid>
             </h:panelGroup>
         </f:facet>
 
