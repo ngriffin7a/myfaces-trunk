@@ -34,6 +34,9 @@ import java.io.Reader;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.6  2004/04/01 13:18:39  manolito
+ * warning message
+ *
  * Revision 1.5  2004/04/01 12:57:44  manolito
  * additional extended component classes for user role support
  *
@@ -64,7 +67,7 @@ public abstract class UIComponentBodyTagBase
                 log.warn("Component with id '" + component.getClientId(getFacesContext()) +
                          "' (" + getClass().getName() +
                          " tag) renders it's children, but has embedded JSP or HTML code. Use the <f:verbatim> tag for nested HTML. For comments use <%/* */%> style JSP comments instead of <!-- --> style HTML comments." +
-                         "\n BodyContent:\n" + getBodyContent().getString());
+                         "\n BodyContent:\n" + getBodyContent().getString().trim());
             }
         }
         return super.doEndTag();
