@@ -1,6 +1,6 @@
 /**
  * MyFaces - the free JSF implementation
- * Copyright (C) 2002 Manfred Geiler, Thomas Spiegl
+ * Copyright (C) 2003  The MyFaces Team (http://myfaces.sourceforge.net)
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -18,32 +18,43 @@
  */
 package net.sourceforge.myfaces.lifecycle;
 
+import net.sourceforge.myfaces.MyFacesFactoryFinder;
+import net.sourceforge.myfaces.webapp.ServletMapping;
+import net.sourceforge.myfaces.webapp.ServletMappingFactory;
+
 import javax.faces.context.FacesContext;
 import javax.faces.lifecycle.ViewHandler;
 import javax.faces.tree.Tree;
 import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import java.io.IOException;
 
 /**
  * TODO: description
- * @author Manfred Geiler
+ * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
 public class ViewHandlerImpl
         implements ViewHandler
 {
-    public void renderView(FacesContext context)
+    public void renderView(FacesContext facesContext)
         throws IOException, ServletException
     {
-        ServletRequest request = context.getServletRequest();
-        Tree tree = context.getResponseTree();
+        ServletRequest request = facesContext.getServletRequest();
+        ServletContext servletContext = facesContext.getServletContext();
+        Tree responseTree = facesContext.getResponseTree();
+
+        ServletMappingFactory smf = MyFacesFactoryFinder.getServletMappingFactory(servletContext);
+        ServletMapping sm = smf.getServletMapping(servletContext);
+        String forwardURL = sm.mapTreeIdToFilename(servletContext, responseTree.getTreeId());
+
         RequestDispatcher requestDispatcher
-            = context.getServletRequest().getRequestDispatcher(tree.getTreeId());
+            = facesContext.getServletRequest().getRequestDispatcher(forwardURL);
         try
         {
-            requestDispatcher.forward(request, context.getServletResponse());
+            requestDispatcher.forward(request, facesContext.getServletResponse());
         }
         catch(IOException ioe)
         {

@@ -10,7 +10,7 @@
 <!--
 /**
  * MyFaces - the free JSF implementation
- * Copyright (C) 2002 Manfred Geiler, Thomas Spiegl
+ * Copyright (C) 2003  The MyFaces Team (http://myfaces.sourceforge.net)
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -37,7 +37,7 @@
         <td align="center" width="640">
 <p>
  <h3>MyFaces - the free JSF implementation</h3>
- <h4>Copyright (C) 2002 Manfred Geiler, Thomas Spiegl</h4>
+ <h4>Copyright (C) 2003  <a href="http://myfaces.sourceforge.net/">The MyFaces Team</a></h4>
 <p>
  This library is free software; you can redistribute it and/or
  modify it under the terms of the GNU Lesser General Public

@@ -1,6 +1,6 @@
 /**
  * MyFaces - the free JSF implementation
- * Copyright (C) 2002 Manfred Geiler, Thomas Spiegl
+ * Copyright (C) 2003  The MyFaces Team (http://myfaces.sourceforge.net)
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -18,6 +18,7 @@
  */
 package net.sourceforge.myfaces.webapp;
 
+import net.sourceforge.myfaces.MyFacesConfig;
 import net.sourceforge.myfaces.util.logging.LogUtil;
 
 import javax.faces.FactoryFinder;
@@ -26,7 +27,6 @@ import javax.faces.lifecycle.Lifecycle;
 import javax.faces.lifecycle.LifecycleFactory;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
-import java.util.logging.Level;
 
 public class DefaultServletContextListener
         implements ServletContextListener
@@ -40,7 +40,7 @@ public class DefaultServletContextListener
         try
         {
             //Set logging level
-            LogUtil.getLogger().setLevel(Level.FINE);
+            LogUtil.getLogger().setLevel(MyFacesConfig.getLogLevel());
 
             ApplicationHandler handler = new DefaultApplicationHandler();
             LifecycleFactory factory = (LifecycleFactory)FactoryFinder.getFactory(FactoryFinder.LIFECYCLE_FACTORY);

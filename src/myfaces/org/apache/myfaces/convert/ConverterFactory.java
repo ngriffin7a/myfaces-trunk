@@ -1,6 +1,6 @@
 /**
  * MyFaces - the free JSF implementation
- * Copyright (C) 2002 Manfred Geiler, Thomas Spiegl
+ * Copyright (C) 2003  The MyFaces Team (http://myfaces.sourceforge.net)
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -22,7 +22,7 @@ import java.util.Iterator;
 
 /**
  * HACK: There is no ConverterFactory class in javax.faces yet, therefore here in the meantime...
- * @author Manfred Geiler
+ * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
 public interface ConverterFactory

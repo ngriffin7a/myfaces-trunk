@@ -1,6 +1,6 @@
 /**
  * MyFaces - the free JSF implementation
- * Copyright (C) 2002 Manfred Geiler, Thomas Spiegl
+ * Copyright (C) 2003  The MyFaces Team (http://myfaces.sourceforge.net)
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -18,7 +18,10 @@
  */
 package net.sourceforge.myfaces.renderkit.html;
 
+import net.sourceforge.myfaces.MyFacesFactoryFinder;
 import net.sourceforge.myfaces.renderkit.html.state.StateRenderer;
+import net.sourceforge.myfaces.webapp.ServletMapping;
+import net.sourceforge.myfaces.webapp.ServletMappingFactory;
 
 import javax.faces.FactoryFinder;
 import javax.faces.component.UIComponent;
@@ -28,13 +31,14 @@ import javax.faces.context.ResponseWriter;
 import javax.faces.render.RenderKit;
 import javax.faces.render.RenderKitFactory;
 import javax.faces.render.Renderer;
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
  * TODO: description
- * @author Manfred Geiler
+ * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
 public class FormRenderer
@@ -55,14 +59,23 @@ public class FormRenderer
         writer.write("\">");
     }
 
-    private String getActionStr(FacesContext context, UIComponent form)
+    private String getActionStr(FacesContext facesContext, UIComponent form)
+        throws IOException
     {
-        HttpServletRequest request = (HttpServletRequest)context.getServletRequest();
-        HttpServletResponse response = (HttpServletResponse)context.getServletResponse();
-        StringBuffer sb = new StringBuffer(request.getContextPath());
-        sb.append("/faces");    //TODO: hardcoded?
-        sb.append(context.getResponseTree().getTreeId());
-        return response.encodeURL(sb.toString());
+        HttpServletRequest request = (HttpServletRequest)facesContext.getServletRequest();
+        HttpServletResponse response = (HttpServletResponse)facesContext.getServletResponse();
+
+        ServletContext servletContext = facesContext.getServletContext();
+        ServletMappingFactory smf = MyFacesFactoryFinder.getServletMappingFactory(servletContext);
+        ServletMapping sm = smf.getServletMapping(servletContext);
+        String treeURL = sm.encodeTreeIdForURL(facesContext, facesContext.getResponseTree().getTreeId());
+
+        String action = request.getContextPath() + treeURL;
+
+        //Encode URL for those still using HttpSessions... ;-)
+        action = response.encodeURL(action);
+
+        return action;
     }
 
     public void encodeEnd(FacesContext facesContext, UIComponent component)

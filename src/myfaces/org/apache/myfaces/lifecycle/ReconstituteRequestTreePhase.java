@@ -1,6 +1,6 @@
 /**
  * MyFaces - the free JSF implementation
- * Copyright (C) 2002 Manfred Geiler, Thomas Spiegl
+ * Copyright (C) 2003  The MyFaces Team (http://myfaces.sourceforge.net)
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -20,6 +20,9 @@ package net.sourceforge.myfaces.lifecycle;
 
 import net.sourceforge.myfaces.renderkit.html.state.StateRenderer;
 import net.sourceforge.myfaces.util.logging.LogUtil;
+import net.sourceforge.myfaces.webapp.ServletMappingFactory;
+import net.sourceforge.myfaces.webapp.ServletMapping;
+import net.sourceforge.myfaces.MyFacesFactoryFinder;
 
 import javax.faces.FacesException;
 import javax.faces.FactoryFinder;
@@ -31,11 +34,12 @@ import javax.faces.render.Renderer;
 import javax.faces.tree.Tree;
 import javax.faces.tree.TreeFactory;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.ServletContext;
 import java.io.IOException;
 
 /**
  * TODO: description
- * @author Manfred Geiler
+ * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
 public class ReconstituteRequestTreePhase
@@ -55,7 +59,12 @@ public class ReconstituteRequestTreePhase
     {
         //Create tree
         HttpServletRequest request = (HttpServletRequest)facesContext.getServletRequest();
-        String treeId = request.getPathInfo();
+
+        ServletContext servletContext = facesContext.getServletContext();
+        ServletMappingFactory smf = MyFacesFactoryFinder.getServletMappingFactory(servletContext);
+        ServletMapping sm = smf.getServletMapping(servletContext);
+        String treeId = sm.getTreeIdFromRequest(request);
+
         Tree requestTree = _treeFactory.getTree(facesContext.getServletContext(), treeId);
         facesContext.setRequestTree(requestTree);
 

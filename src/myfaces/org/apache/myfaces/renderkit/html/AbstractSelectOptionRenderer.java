@@ -1,6 +1,6 @@
 /**
  * MyFaces - the free JSF implementation
- * Copyright (C) 2002 Manfred Geiler, Thomas Spiegl
+ * Copyright (C) 2003  The MyFaces Team (http://myfaces.sourceforge.net)
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -36,7 +36,7 @@ import java.util.Map;
 
 /**
  * TODO: description
- * @author Thomas Spiegl
+ * @author Thomas Spiegl (latest modification by Author)
  * @version $Revision$ $Date$
  */
 public abstract class AbstractSelectOptionRenderer

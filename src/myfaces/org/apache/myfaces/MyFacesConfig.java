@@ -1,6 +1,6 @@
 /**
  * MyFaces - the free JSF implementation
- * Copyright (C) 2002 Manfred Geiler, Thomas Spiegl
+ * Copyright (C) 2003  The MyFaces Team (http://myfaces.sourceforge.net)
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -18,10 +18,12 @@
  */
 package net.sourceforge.myfaces;
 
+import java.util.logging.Level;
+
 /**
  * Global configuration for MyFaces.
  * TODO: Get config from a "myfaces.properties" file
- * @author Manfred Geiler
+ * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
 public class MyFacesConfig
@@ -90,4 +92,18 @@ public class MyFacesConfig
         return true;
     }
 
+    /**
+     * @see net.sourceforge.myfaces.webapp.ServletMappingWithExtension
+     * @see net.sourceforge.myfaces.webapp.ServletMappingWithVirtualPath
+     */
+    public static boolean isFileExtensionServletMapping()
+    {
+        return true;
+    }
+
+
+    public static Level getLogLevel()
+    {
+        return Level.FINEST;
+    }
 }

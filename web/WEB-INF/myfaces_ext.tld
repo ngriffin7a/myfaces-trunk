@@ -2,7 +2,7 @@
 
 <!--
 * MyFaces - the free JSF implementation
-* Copyright (C) 2002 Manfred Geiler, Thomas Spiegl
+* Copyright (C) 2003  The MyFaces Team (http://myfaces.sourceforge.net)
 *
 * This library is free software; you can redistribute it and/or
 * modify it under the terms of the GNU Lesser General Public
@@ -83,6 +83,11 @@
         <attribute>
             <name>label</name>
             <required>true</required>
+            <rtexprvalue>false</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>href</name>
+            <required>false</required>
             <rtexprvalue>false</rtexprvalue>
         </attribute>
         <attribute>

@@ -1,6 +1,6 @@
 /**
  * MyFaces - the free JSF implementation
- * Copyright (C) 2002 Manfred Geiler, Thomas Spiegl
+ * Copyright (C) 2003  The MyFaces Team (http://myfaces.sourceforge.net)
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -20,7 +20,7 @@ package net.sourceforge.myfaces.component;
 
 /**
  * TODO: description
- * @author Manfred Geiler 
+ * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
 public class UICommand
@@ -68,6 +68,17 @@ public class UICommand
     public void setCommandReference(String commandReference)
     {
         setAttribute(COMMAND_REFERENCE_ATTR, commandReference);
+    }
+
+
+    public String getHref()
+    {
+        return (String)getAttribute(HREF_ATTR);
+    }
+
+    public void setHref(String href)
+    {
+        setAttribute(HREF_ATTR, href);
     }
 
 

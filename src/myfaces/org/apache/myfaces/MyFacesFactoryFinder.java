@@ -1,6 +1,6 @@
 /**
  * MyFaces - the free JSF implementation
- * Copyright (C) 2002 Manfred Geiler, Thomas Spiegl
+ * Copyright (C) 2003  The MyFaces Team (http://myfaces.sourceforge.net)
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -22,6 +22,9 @@ import net.sourceforge.myfaces.convert.ConverterFactory;
 import net.sourceforge.myfaces.convert.ConverterFactoryImpl;
 import net.sourceforge.myfaces.convert.map.ConverterMapFactory;
 import net.sourceforge.myfaces.convert.map.ConverterMapFactoryImpl;
+import net.sourceforge.myfaces.webapp.ServletMapping;
+import net.sourceforge.myfaces.webapp.ServletMappingFactory;
+import net.sourceforge.myfaces.webapp.ServletMappingFactoryImpl;
 
 import javax.faces.FacesException;
 import javax.servlet.ServletContext;
@@ -29,19 +32,21 @@ import java.util.HashMap;
 
 /**
  * TODO: description
- * @author Manfred Geiler
+ * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
 public class MyFacesFactoryFinder
 {
     public static final String CONVERTER_FACTORY = ConverterFactory.class.getName();
     public static final String CONVERTER_MAP_FACTORY = ConverterMapFactory.class.getName();
+    public static final String SERVLET_MAPPING_FACTORY = ServletMapping.class.getName();
 
     private static final HashMap DEFAULT_FACTORIES = new HashMap();
     static
     {
         DEFAULT_FACTORIES.put(CONVERTER_FACTORY, ConverterFactoryImpl.class.getName());
         DEFAULT_FACTORIES.put(CONVERTER_MAP_FACTORY, ConverterMapFactoryImpl.class.getName());
+        DEFAULT_FACTORIES.put(SERVLET_MAPPING_FACTORY, ServletMappingFactoryImpl.class.getName());
     }
 
     private static Object getFactory(ServletContext servletContext, String factoryName)
@@ -95,6 +100,12 @@ public class MyFacesFactoryFinder
         throws FacesException
     {
         return (ConverterMapFactory)getFactory(servletContext, CONVERTER_MAP_FACTORY);
+    }
+
+    public static ServletMappingFactory getServletMappingFactory(ServletContext servletContext)
+        throws FacesException
+    {
+        return (ServletMappingFactory)getFactory(servletContext, SERVLET_MAPPING_FACTORY);
     }
 
 }

@@ -10,7 +10,7 @@
 <!--
 /**
  * MyFaces - the free JSF implementation
- * Copyright (C) 2002 Manfred Geiler, Thomas Spiegl
+ * Copyright (C) 2003  The MyFaces Team (http://myfaces.sourceforge.net)
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -36,11 +36,10 @@
         <td valign="top" width="140"><%@ include file="inc/navigation.jsp"  %></td>
         <td align="left" width="640">
 <h3>Webpages</h3>
+ <a href="http://myfaces.sourceforge.net/" target="_blank">Project Homepage</a><br>
  <a href="http://www.sourceforge.net/projects/myfaces" target="_blank">MyFaces@Sourceforge</a><br>
- Project Homepage: not yet... (any voluntary contributors?)<br>
 <h3>Project Members</h3>
- <a href="mailto:manolito@users.sourceforge.net">Manfred Geiler</a><br>
- <a href="mailto:royalts@users.sourceforge.net">Thomas Spiegl</a><br>
+ <a href="http://sourceforge.net/project/memberlist.php?group_id=69709">MyFaces Team Members@Sourceforge</a><br>
 
 </f:use_faces>
 

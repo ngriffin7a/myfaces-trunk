@@ -1,6 +1,6 @@
 /**
  * MyFaces - the free JSF implementation
- * Copyright (C) 2002 Manfred Geiler, Thomas Spiegl
+ * Copyright (C) 2003  The MyFaces Team (http://myfaces.sourceforge.net)
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -19,18 +19,25 @@
 package net.sourceforge.myfaces.component.ext;
 
 import net.sourceforge.myfaces.component.UIPanel;
+import net.sourceforge.myfaces.webapp.ServletMappingFactory;
+import net.sourceforge.myfaces.webapp.ServletMapping;
+import net.sourceforge.myfaces.MyFacesFactoryFinder;
+import net.sourceforge.myfaces.util.logging.LogUtil;
 
 import javax.faces.FactoryFinder;
+import javax.faces.FacesException;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.event.FacesEvent;
 import javax.faces.tree.Tree;
 import javax.faces.tree.TreeFactory;
+import javax.servlet.ServletContext;
 import java.util.Iterator;
+import java.net.MalformedURLException;
 
 /**
  * TODO: description
- * @author Manfred Geiler
+ * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
 public class UINavigation
@@ -102,11 +109,27 @@ public class UINavigation
             }
 
             String treeId = item.getTreeId();
+            String href = item.getHref();
+            if (treeId == null)
+            {
+                if (href != null)
+                {
+                    treeId = href;
+                }
+            }
+            else
+            {
+                if (href != null)
+                {
+                    LogUtil.getLogger().warning("UINavigationItem " + item.getCompoundId() + " has both attributes 'href' and 'treeId'!");
+                }
+            }
+
             if (treeId != null)
             {
                 TreeFactory tf = (TreeFactory)FactoryFinder.getFactory(FactoryFinder.TREE_FACTORY);
                 Tree responseTree = tf.getTree(context.getServletContext(), treeId);
-                responseTree.getRoot().addChild(this);
+                responseTree.getRoot().addChild(this);  //HACK(?): Add Navigation, so that response tree has current state info
                 context.setResponseTree(responseTree);
             }
 

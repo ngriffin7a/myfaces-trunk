@@ -2,7 +2,7 @@ package net.sourceforge.myfaces.component;
 
 /**
  * TODO: description
- * @author Manfred Geiler
+ * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
 public interface MyFacesComponent

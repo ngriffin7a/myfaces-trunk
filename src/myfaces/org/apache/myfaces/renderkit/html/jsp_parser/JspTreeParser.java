@@ -1,6 +1,6 @@
 /**
  * MyFaces - the free JSF implementation
- * Copyright (C) 2002 Manfred Geiler, Thomas Spiegl
+ * Copyright (C) 2003  The MyFaces Team (http://myfaces.sourceforge.net)
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -34,9 +34,13 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
 
+import net.sourceforge.myfaces.webapp.ServletMappingFactory;
+import net.sourceforge.myfaces.webapp.ServletMapping;
+import net.sourceforge.myfaces.MyFacesFactoryFinder;
+
 /**
  * TODO: description
- * @author Manfred Geiler
+ * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
 public class JspTreeParser
@@ -84,7 +88,12 @@ public class JspTreeParser
         throws FacesException
     {
         init(treeId);
-        parseFile(treeId);
+
+        ServletMappingFactory smf = MyFacesFactoryFinder.getServletMappingFactory(_servletContext);
+        ServletMapping sm = smf.getServletMapping(_servletContext);
+        String fileName = sm.mapTreeIdToFilename(_servletContext, treeId);
+
+        parseFile(fileName);
     }
 
 

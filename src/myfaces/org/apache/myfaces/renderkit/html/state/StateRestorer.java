@@ -1,6 +1,6 @@
 /**
  * MyFaces - the free JSF implementation
- * Copyright (C) 2002 Manfred Geiler, Thomas Spiegl
+ * Copyright (C) 2003  The MyFaces Team (http://myfaces.sourceforge.net)
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -38,7 +38,7 @@ import java.util.Map;
 
 /**
  * TODO: description
- * @author Manfred Geiler
+ * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
 public class StateRestorer
@@ -49,7 +49,8 @@ public class StateRestorer
         Tree requestTree = facesContext.getRequestTree();
         Map stateMap = restoreStateMap(facesContext);
 
-        String previousTreeId = getStateParameter(stateMap, StateRenderer.TREE_ID_REQUEST_PARAM);
+        String previousTreeId = getStateParameter(stateMap,
+                                                  StateRenderer.TREE_ID_REQUEST_PARAM);
         if (previousTreeId != null && requestTree.getTreeId().equals(previousTreeId))
         {
             //restore tree

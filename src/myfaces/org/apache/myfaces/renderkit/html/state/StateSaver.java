@@ -1,6 +1,6 @@
 /**
  * MyFaces - the free JSF implementation
- * Copyright (C) 2002 Manfred Geiler, Thomas Spiegl
+ * Copyright (C) 2003  The MyFaces Team (http://myfaces.sourceforge.net)
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -19,6 +19,9 @@
 package net.sourceforge.myfaces.renderkit.html.state;
 
 import net.sourceforge.myfaces.MyFacesConfig;
+import net.sourceforge.myfaces.MyFacesFactoryFinder;
+import net.sourceforge.myfaces.webapp.ServletMappingFactory;
+import net.sourceforge.myfaces.webapp.ServletMapping;
 import net.sourceforge.myfaces.component.MyFacesComponent;
 import net.sourceforge.myfaces.component.UIPanel;
 import net.sourceforge.myfaces.convert.Converter;
@@ -37,16 +40,18 @@ import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 import javax.faces.tree.Tree;
 import javax.servlet.jsp.tagext.BodyContent;
+import javax.servlet.ServletContext;
 import java.io.IOException;
 import java.io.Serializable;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.util.*;
 import java.util.regex.Pattern;
+import java.net.MalformedURLException;
 
 /**
  * TODO: description
- * @author Manfred Geiler
+ * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
 public class StateSaver

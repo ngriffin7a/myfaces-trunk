@@ -1,6 +1,6 @@
 /**
  * MyFaces - the free JSF implementation
- * Copyright (C) 2002 Manfred Geiler, Thomas Spiegl
+ * Copyright (C) 2003  The MyFaces Team (http://myfaces.sourceforge.net)
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -20,6 +20,9 @@ package net.sourceforge.myfaces.renderkit.html;
 
 import net.sourceforge.myfaces.component.UIParameter;
 import net.sourceforge.myfaces.renderkit.html.state.StateRenderer;
+import net.sourceforge.myfaces.webapp.ServletMappingFactory;
+import net.sourceforge.myfaces.webapp.ServletMapping;
+import net.sourceforge.myfaces.MyFacesFactoryFinder;
 
 import javax.faces.FactoryFinder;
 import javax.faces.component.UICommand;
@@ -33,13 +36,14 @@ import javax.faces.render.RenderKitFactory;
 import javax.faces.render.Renderer;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.ServletContext;
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.util.Iterator;
 
 /**
  * TODO: description
- * @author Manfred Geiler
+ * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
 public class HyperlinkRenderer
@@ -73,13 +77,19 @@ public class HyperlinkRenderer
         String href = (String)uiComponent.getAttribute(net.sourceforge.myfaces.component.UICommand.HREF_ATTR);
         if (href == null)
         {
+            //Modify URL for the faces servlet mapping:
+            ServletContext servletContext = facesContext.getServletContext();
+            ServletMappingFactory smf = MyFacesFactoryFinder.getServletMappingFactory(servletContext);
+            ServletMapping sm = smf.getServletMapping(servletContext);
+            String treeURL = sm.encodeTreeIdForURL(facesContext, facesContext.getResponseTree().getTreeId());
+
             HttpServletRequest request = (HttpServletRequest)facesContext.getServletRequest();
-            StringBuffer sb = new StringBuffer(request.getContextPath());
-            sb.append("/faces");
-            sb.append(facesContext.getResponseTree().getTreeId());
-            href = sb.toString();
+            href = request.getContextPath() + treeURL;
         }
+
+        //Encode URL for those still using HttpSessions... ;-)
         href = ((HttpServletResponse)facesContext.getServletResponse()).encodeURL(href);
+
         writer.write(href);
 
         //value
