@@ -15,10 +15,10 @@
  */
 package net.sourceforge.myfaces.custom.date;
 
-import net.sourceforge.myfaces.renderkit.html.HTML;
-import net.sourceforge.myfaces.taglib.html.HtmlInputTagBase;
-
 import javax.faces.component.UIComponent;
+
+import net.sourceforge.myfaces.component.UserRoleAware;
+import net.sourceforge.myfaces.taglib.html.HtmlInputTextTagBase;
 
 /**
  * @author Sylvain Vieujot (latest modification by $Author$)
@@ -26,7 +26,7 @@ import javax.faces.component.UIComponent;
  *          HtmlInputCalendarTag.java,v $
  *  
  */
-public class HtmlInputDateTag extends HtmlInputTagBase {
+public class HtmlInputDateTag extends HtmlInputTextTagBase {
     public String getComponentType() {
         return HtmlInputDate.COMPONENT_TYPE;
     }
@@ -38,49 +38,37 @@ public class HtmlInputDateTag extends HtmlInputTagBase {
     // HtmlInputDate attributes
     private String _type;
 
-    private String _disabled;
-    
     // UIComponent attributes --> already implemented in UIComponentTagBase
-
     // HTML universal attributes --> already implemented in HtmlComponentTagBase
-
     // HTML event handler attributes --> already implemented in MyFacesTag
 
     // UIOutput attributes
     // value and converterId --> already implemented in UIComponentTagBase
 
-    // UIInput attributes
-    // --> already implemented in HtmlInputTagBase
+    // UIInput attributes --> already implemented in HtmlInputTagBase
+    // UIHTML Input attributes --> already implemented in HtmlInputTextTagBase
 
     // User Role support
-    /*
     private String _enabledOnUserRole;
-
     private String _visibleOnUserRole;
 
-    public void setEnabledOnUserRole(String enabledOnUserRole) {
-        _enabledOnUserRole = enabledOnUserRole;
-    }
-
-    public void setVisibleOnUserRole(String visibleOnUserRole) {
-        _visibleOnUserRole = visibleOnUserRole;
-    }
-    */
-    
     protected void setProperties(UIComponent component) {
         super.setProperties(component);
 
-        //setStringProperty(component, UserRoleAware.ENABLED_ON_USER_ROLE_ATTR, _enabledOnUserRole);
-        //setStringProperty(component, UserRoleAware.VISIBLE_ON_USER_ROLE_ATTR, _visibleOnUserRole);
+        setStringProperty(component, UserRoleAware.ENABLED_ON_USER_ROLE_ATTR, _enabledOnUserRole);
+        setStringProperty(component, UserRoleAware.VISIBLE_ON_USER_ROLE_ATTR, _visibleOnUserRole);
         setStringProperty(component, "type", _type);
-        setBooleanProperty(component, HTML.DISABLED_ATTR, _disabled);
     }
     
     public void setType(String type){
         _type = type;
     }
     
-    public void setDisabled(String disabled){
-        _disabled = disabled;
+    public void setEnabledOnUserRole(String enabledOnUserRole){
+        _enabledOnUserRole = enabledOnUserRole;
+    }
+
+    public void setVisibleOnUserRole(String visibleOnUserRole){
+        _visibleOnUserRole = visibleOnUserRole;
     }
 }

@@ -38,6 +38,9 @@ import net.sourceforge.myfaces.util.MessageUtils;
 
 /**
  * $Log$
+ * Revision 1.8  2004/10/04 17:47:55  svieujot
+ * Bugfix for bug 1039797 (Missing setter in HtmlInputDateTag), and add User Role support to InputDate.
+ *
  * Revision 1.7  2004/07/30 13:09:04  svieujot
  * Render numbers as 2 digits
  *
@@ -124,7 +127,8 @@ public class HtmlDateRenderer extends HtmlRenderer {
     private static void encodeInputField(UIComponent uiComponent, ResponseWriter writer, String id, String value, int size, boolean disabled)  throws IOException {
         writer.startElement(HTML.INPUT_ELEM, uiComponent);
         HtmlRendererUtils.renderHTMLAttributes(writer, uiComponent, HTML.UNIVERSAL_ATTRIBUTES);
-        HtmlRendererUtils.renderHTMLAttributes(writer, uiComponent, HTML.EVENT_HANDLER_ATTRIBUTES); // TODO Check that
+        HtmlRendererUtils.renderHTMLAttributes(writer, uiComponent, HTML.EVENT_HANDLER_ATTRIBUTES);
+        HtmlRendererUtils.renderHTMLAttributes(writer, uiComponent, HTML.INPUT_ATTRIBUTES);
 
 		if (disabled) {
 		    writer.writeAttribute(HTML.DISABLED_ATTR, Boolean.TRUE, null);
@@ -150,6 +154,8 @@ public class HtmlDateRenderer extends HtmlRenderer {
         writer.startElement(HTML.SELECT_ELEM, uiComponent);
         writer.writeAttribute(HTML.NAME_ATTR, clientId + ID_MONTH_POSTFIX, null);
         writer.writeAttribute(HTML.SIZE_ATTR, "1", null);
+        HtmlRendererUtils.renderHTMLAttributes(writer, uiComponent, HTML.UNIVERSAL_ATTRIBUTES);
+        HtmlRendererUtils.renderHTMLAttributes(writer, uiComponent, HTML.EVENT_HANDLER_ATTRIBUTES);
 
         if (disabled) {
             writer.writeAttribute(HTML.DISABLED_ATTR, Boolean.TRUE, null);
