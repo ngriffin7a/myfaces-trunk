@@ -121,32 +121,32 @@ public class HTMLUtil
 
         boolean selectMany = (uiComponent instanceof UISelectMany);
 
+        writer.write("<select");
+        writer.write(" name=\"");
+        writer.write(uiComponent.getClientId(facesContext));
+        writer.write("\"");
+
+        if (rendererType.equals(ListboxRenderer.TYPE))
+        {
+            writer.write(" size=\"");
+            writer.write(new Integer(size).toString());
+            writer.write("\"");
+        }
+
+        renderCssClass(writer, uiComponent, selectMany
+                                             ? CommonRendererAttributes.SELECT_MANY_CLASS_ATTR
+                                             : CommonRendererAttributes.SELECT_ONE_CLASS_ATTR);
+        renderHTMLAttributes(writer, uiComponent, HTMLUniversalAttributes.HTML_UNIVERSAL_ATTRIBUTES);
+        renderHTMLAttributes(writer, uiComponent, HTMLEventHandlerAttributes.HTML_EVENT_HANDLER_ATTRIBUTES);
+        renderHTMLAttributes(writer, uiComponent, HTMLSelectAttributes.HTML_SELECT_ATTRIBUTES);
+        HTMLUtil.renderDisabledOnUserRole(facesContext, uiComponent);
+
+        if (selectMany) writer.write(" multiple ");
+        writer.write(">\n");
+
         Iterator it = SelectItemUtil.getSelectItems(facesContext, uiComponent);
         if (it.hasNext())
         {
-            writer.write("<select");
-            writer.write(" name=\"");
-            writer.write(uiComponent.getClientId(facesContext));
-            writer.write("\"");
-
-            if (rendererType.equals(ListboxRenderer.TYPE))
-            {
-                writer.write(" size=\"");
-                writer.write(new Integer(size).toString());
-                writer.write("\"");
-            }
-
-            renderCssClass(writer, uiComponent, selectMany
-                                                 ? CommonRendererAttributes.SELECT_MANY_CLASS_ATTR
-                                                 : CommonRendererAttributes.SELECT_ONE_CLASS_ATTR);
-            renderHTMLAttributes(writer, uiComponent, HTMLUniversalAttributes.HTML_UNIVERSAL_ATTRIBUTES);
-            renderHTMLAttributes(writer, uiComponent, HTMLEventHandlerAttributes.HTML_EVENT_HANDLER_ATTRIBUTES);
-            renderHTMLAttributes(writer, uiComponent, HTMLSelectAttributes.HTML_SELECT_ATTRIBUTES);
-            HTMLUtil.renderDisabledOnUserRole(facesContext, uiComponent);
-
-            if (selectMany) writer.write(" multiple ");
-            writer.write(">\n");
-
             String currentStrValue = null;
             Set selectedValuesSet = null;
             if (selectMany)
@@ -191,8 +191,8 @@ public class HTMLUtil
                 writer.write("</option>\n");
             }
 
-            writer.write("</select>");
         }
+        writer.write("</select>");
     }
 
 }
