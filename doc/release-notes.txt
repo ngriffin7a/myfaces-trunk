@@ -4,9 +4,15 @@ MyFaces Release Notes
 ----------------------------------------------------------------------
 Changes in Release 1.0.7 beta
 * new custom component: HtmlPanelStack
+* new extended HtmlInputTextarea component (with user role support)
 * Japanese translation
 * bug #998464 request charset handling is invalid
 * bug #1001511 fileupload compponent don't support setHeaderEncoding
+* bug #1008043 applied patch for ServletExternalContextImpl by Takashi Okamoto
+* fixed StackOverflow in ClassUtils and cleaned up ClassUtils methods
+* full revision of extended HtmlDataTable so that there is no more cache problem
+* HtmlCommandSortHeader now supports immediate attribute
+* bug fix: No decode for spread checkbox or radio
 
 ----------------------------------------------------------------------
 Changes in Release 1.0.6 beta
