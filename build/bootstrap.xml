@@ -131,14 +131,14 @@ through the system path.
         <!-- execute the nightly build file that was just checked out -->
         <ant dir="${build.dir}" target="release" inheritRefs="true"/>
 
-        <!-- publish the nightly build file -->
+        <!-- publish the nightly bundles -->
         <scp todir="${apache.username}:${apache.password}@cvs.apache.org:/www/cvs.apache.org/builds/myfaces/nightly" trust="yes">
             <fileset dir="${release.dir}"/>
         </scp>
 
     </target>
 
-    <target name="release" depends="cvs-checkout,cvs-update">
+    <target name="release" depends="check,cvs-checkout,cvs-update">
 
         <echo message="build.dir: ${build.dir}"/>
         <echo message="building release for ${project.name} ..." level="debug"/>
@@ -150,6 +150,18 @@ through the system path.
         <!-- execute the nightly build file that was just checked out -->
         <ant dir="${build.dir}" target="release" inheritRefs="true"/>
 
+        <!-- publish the release bundles -->
+        <scp todir="${apache.username}:${apache.password}@cvs.apache.org:/www/cvs.apache.org/builds/myfaces/release" trust="yes">
+            <fileset dir="${release.dir}"/>
+        </scp>
+
+    </target>
+    
+    <target name="check">
+        <!-- make sure build.version property was set (externally) -->
+        <fail unless="build.version">
+            The build.version property must be set.  (ex. ant -buildfile bootstrap.xml -Dbuild.version=1_0_9 clean release)
+        </fail>
     </target>
 
 </project>
