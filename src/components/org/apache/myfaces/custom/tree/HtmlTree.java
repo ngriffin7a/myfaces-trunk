@@ -50,6 +50,9 @@ import org.apache.myfaces.custom.tree.model.TreePath;
  * @version $Revision$ $Date$
  *          <p/>
  *          $Log$
+ *          Revision 1.31  2005/03/30 07:41:58  matzew
+ *          closed MYFACES-139. Thanks to Mathias Broekelmann
+ *
  *          Revision 1.30  2005/02/11 00:54:02  svieujot
  *          Revert changes commited to the wrong branch.
  *
@@ -150,7 +153,7 @@ public class HtmlTree extends HtmlPanelGroup implements TreeModelListener
 
     public String createUniqueId(FacesContext context)
     {
-        return getClientId(context) + "_node_" + uniqueIdCounter++;
+        return getClientId(context).replaceAll(":", "_") + "_node_" + uniqueIdCounter++;
     }
 
 
