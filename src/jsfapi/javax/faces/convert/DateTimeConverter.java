@@ -28,6 +28,9 @@ import java.util.TimeZone;
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.13  2004/07/11 05:23:24  svieujot
+ * Remove the DEFAULT_TIME_ZONE
+ *
  * Revision 1.12  2004/07/01 22:00:51  mwessendorf
  * ASF switch
  *
@@ -63,7 +66,6 @@ public class DateTimeConverter
     private static final String STYLE_SHORT = "short";
     private static final String STYLE_LONG = "long";
     private static final String STYLE_FULL = "full";
-    private static final TimeZone DEFAULT_TIME_ZONE = TimeZone.getTimeZone("GMT");
 
     private String _dateStyle;
     private Locale _locale;
@@ -91,7 +93,9 @@ public class DateTimeConverter
             {
                 DateFormat format = getDateFormat();
                 format.setLenient(true);
-                format.setTimeZone(getTimeZone());
+                TimeZone tz = getTimeZone();
+                if( tz != null )
+                	format.setTimeZone( tz );
                 try
                 {
                     return format.parse(value);
@@ -262,7 +266,7 @@ public class DateTimeConverter
 
     public TimeZone getTimeZone()
     {
-        return _timeZone != null ? _timeZone : DEFAULT_TIME_ZONE;
+    	return _timeZone;
     }
 
     public void setTimeZone(TimeZone timeZone)
