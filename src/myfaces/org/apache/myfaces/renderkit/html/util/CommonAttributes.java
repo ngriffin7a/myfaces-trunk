@@ -67,9 +67,20 @@ public class CommonAttributes
                 {
                     writer.write(" ");
                     writer.write(attrName);
-                    writer.write("\"");
+                    writer.write("=\"");
                     writer.write(HTMLEncoder.encode(
                         ((Boolean)value).booleanValue() ? "true" : "false",
+                        false,
+                        false));
+                    writer.write("\"");
+                }
+                else
+                {
+                    writer.write(" ");
+                    writer.write(attrName);
+                    writer.write("=\"");
+                    writer.write(HTMLEncoder.encode(
+                        value.toString(),
                         false,
                         false));
                     writer.write("\"");
