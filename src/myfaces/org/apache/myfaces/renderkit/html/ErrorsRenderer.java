@@ -118,11 +118,20 @@ public class ErrorsRenderer
                 while (it.hasNext())
                 {
                     Message msg = (Message)it.next();
-                    writer.write("\n<font color=\"red\">");
+                    String cssClass = (String)uiComponent.getAttribute(OUTPUT_CLASS_ATTR);
+                    if (cssClass != null)
+                    {
+                        writer.write("<span class=\"");
+                        writer.write(cssClass);
+                        writer.write("\">");
+                    }
                     writer.write(msg.getSummary());
                     writer.write(": ");
                     writer.write(msg.getDetail());
-                    writer.write("</font>");
+                    if (cssClass != null)
+                    {
+                        writer.write("</span>");
+                    }
                     if (it.hasNext())
                     {
                         writer.write("<br>");

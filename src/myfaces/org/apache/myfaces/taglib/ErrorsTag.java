@@ -22,6 +22,9 @@ import net.sourceforge.myfaces.component.UIOutput;
 import net.sourceforge.myfaces.renderkit.html.ErrorsRenderer;
 
 import javax.faces.component.UIComponent;
+import javax.servlet.jsp.tagext.TagExtraInfo;
+import javax.servlet.jsp.tagext.VariableInfo;
+import javax.servlet.jsp.tagext.TagData;
 
 
 /**
@@ -46,6 +49,11 @@ public class ErrorsTag
     public void setCompoundId(String compoundId)
     {
         setRendererAttribute(ErrorsRenderer.COMPOUND_ID_ATTR, compoundId);
+    }
+
+    public void setCssClass(String value)
+    {
+        setRendererAttribute(ErrorsRenderer.OUTPUT_CLASS_ATTR, value);
     }
 
 }
