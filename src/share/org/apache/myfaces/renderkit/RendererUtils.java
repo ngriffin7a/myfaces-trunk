@@ -38,6 +38,9 @@ import java.util.*;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.9  2004/04/28 10:38:33  tinytoony
+ * child is of type added to exception message
+ *
  * Revision 1.8  2004/04/28 10:37:14  tinytoony
  * child is of type added to exception message
  *
@@ -409,7 +412,8 @@ public class RendererUtils
             else
             {
                 FacesContext facesContext = FacesContext.getCurrentInstance();
-                log.error("Invalid child with id " + child.getClientId(facesContext) + ": must be UISelectItem or UISelectItems, is of type "+((child==null)?"null":child.getClass().getName()));
+                log.error("Invalid child with id " + child.getClientId(facesContext) + "of component with id : "+uiComponent.getClientId(facesContext)
+                        +" : must be UISelectItem or UISelectItems, is of type : "+((child==null)?"null":child.getClass().getName()));
             }
         }
 
