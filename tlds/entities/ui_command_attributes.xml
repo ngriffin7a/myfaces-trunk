@@ -13,3 +13,17 @@
             <type>java.lang.String</type>
             <description>Corresponds to the HTML class attribute.</description>
         </attribute>
+        <attribute>
+            <name>action</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>java.lang.String</type>
+            <description>Alternative to get outcome without actionRef.</description>
+        </attribute>
+        <attribute>
+            <name>actionRef</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
+            <type>java.lang.Object</type>
+            <description>Reference to a bean or a bean property that returns an Action.</description>
+        </attribute>

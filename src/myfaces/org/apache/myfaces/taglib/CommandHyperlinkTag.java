@@ -19,6 +19,7 @@
 package net.sourceforge.myfaces.taglib;
 
 import net.sourceforge.myfaces.component.CommonComponentProperties;
+import net.sourceforge.myfaces.component.UICommand;
 import net.sourceforge.myfaces.renderkit.attr.CommonRendererAttributes;
 import net.sourceforge.myfaces.renderkit.attr.HyperlinkRendererAttributes;
 import net.sourceforge.myfaces.renderkit.attr.UserRoleAttributes;
@@ -73,6 +74,16 @@ public class CommandHyperlinkTag
     public void setCommandClass(String v)
     {
         setRendererAttributeString(COMMAND_CLASS_ATTR, v);
+    }
+
+    public void setAction(String v)
+    {
+        setComponentPropertyString(UICommand.ACTION_PROP, v);
+    }
+
+    public void setActionRef(String v)
+    {
+        setComponentPropertyString(UICommand.ACTION_REF_PROP, v);
     }
 
     // HTML universal attributes --> already implemented in MyFacesTag

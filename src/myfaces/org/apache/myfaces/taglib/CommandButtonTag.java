@@ -21,6 +21,7 @@ package net.sourceforge.myfaces.taglib;
 import net.sourceforge.myfaces.renderkit.attr.ButtonRendererAttributes;
 import net.sourceforge.myfaces.renderkit.html.ButtonRenderer;
 import net.sourceforge.myfaces.renderkit.html.attr.HTMLButtonAttributes;
+import net.sourceforge.myfaces.component.UICommand;
 
 
 /**
@@ -55,6 +56,16 @@ public class CommandButtonTag
     public void setCommandClass(String v)
     {
         setRendererAttributeString(COMMAND_CLASS_ATTR, v);
+    }
+
+    public void setAction(String v)
+    {
+        setComponentPropertyString(UICommand.ACTION_PROP, v);
+    }
+
+    public void setActionRef(String v)
+    {
+        setComponentPropertyString(UICommand.ACTION_REF_PROP, v);
     }
 
     // HTML universal attributes --> already implemented in MyFacesTag

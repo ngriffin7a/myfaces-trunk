@@ -64,7 +64,7 @@ public class NavigationItemTag
 
     public void setTreeId(String s)
     {
-        setComponentPropertyString(UICommand.ACTION_PROP, s);
+        setAction(s);
     }
 
     public void setOpen(String b)
@@ -86,6 +86,16 @@ public class NavigationItemTag
     public void setCommandClass(String v)
     {
         setRendererAttributeString(COMMAND_CLASS_ATTR, v);
+    }
+
+    public void setAction(String v)
+    {
+        setComponentPropertyString(UICommand.ACTION_PROP, v);
+    }
+
+    public void setActionRef(String v)
+    {
+        setComponentPropertyString(UICommand.ACTION_REF_PROP, v);
     }
 
     // HTML universal attributes --> already implemented in MyFacesTag

@@ -63,7 +63,7 @@
                             <h:selectitem id="item103" label="Upside down" value="upsideDown" />
                         </h:selectone_menu><br>
 
-                        <h:command_button id="apply" commandName="apply" commandReference="optionsCtrl.setLocale" label="Apply"/>
+                        <h:command_button id="apply" commandName="apply" actionRef="optionsCtrl.localeAction" label="Apply"/>
                     </h:form>
 
                 </td></tr></table>
