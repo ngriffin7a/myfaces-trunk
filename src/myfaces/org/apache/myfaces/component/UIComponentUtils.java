@@ -22,6 +22,7 @@ import net.sourceforge.myfaces.MyFacesConfig;
 import net.sourceforge.myfaces.convert.ConverterUtils;
 import net.sourceforge.myfaces.convert.impl.StringArrayConverter;
 import net.sourceforge.myfaces.renderkit.html.state.StateRenderer;
+import net.sourceforge.myfaces.renderkit.html.state.client.MinimizingStateSaver;
 
 import javax.faces.FacesException;
 import javax.faces.FactoryFinder;
@@ -185,14 +186,14 @@ public class UIComponentUtils
 
     public static void setTransient(UIComponent uiComponent, boolean b)
     {
-        uiComponent.setAttribute(StateRenderer.TRANSIENT_ATTR,
+        uiComponent.setAttribute(MinimizingStateSaver.TRANSIENT_ATTR,
                                  b ? Boolean.TRUE : Boolean.FALSE);
     }
 
 
     public static boolean isTransient(UIComponent uiComponent)
     {
-        Boolean trans = (Boolean)uiComponent.getAttribute(StateRenderer.TRANSIENT_ATTR);
+        Boolean trans = (Boolean)uiComponent.getAttribute(MinimizingStateSaver.TRANSIENT_ATTR);
         if (trans == null)
         {
             return MyFacesConfig.isComponentsTransientByDefault();

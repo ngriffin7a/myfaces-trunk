@@ -16,12 +16,15 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package net.sourceforge.myfaces.renderkit.html.state;
+package net.sourceforge.myfaces.renderkit.html.state.client;
 
 import net.sourceforge.myfaces.MyFacesConfig;
 import net.sourceforge.myfaces.util.logging.LogUtil;
+import net.sourceforge.myfaces.util.zip.ZipUtils;
 import net.sourceforge.myfaces.convert.ConverterUtils;
 import net.sourceforge.myfaces.renderkit.html.jspinfo.JspInfo;
+import net.sourceforge.myfaces.renderkit.html.state.client.ZippingStateRestorer;
+import net.sourceforge.myfaces.renderkit.html.state.client.ZippingStateSaver;
 
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
@@ -129,7 +132,7 @@ public class TagHashHack
             }
             if (ZIP_STRING)
             {
-                return ZippingStateSaver.zipString(buf.toString());
+                return ZipUtils.zipString(buf.toString());
             }
             else
             {
@@ -149,7 +152,7 @@ public class TagHashHack
         {
             if (ZIP_STRING)
             {
-                attrValue = ZippingStateRestorer.unzipString(attrValue);
+                attrValue = ZipUtils.unzipString(attrValue);
             }
             HashMap map = new HashMap();
             StringTokenizer st = new StringTokenizer(attrValue, ",");

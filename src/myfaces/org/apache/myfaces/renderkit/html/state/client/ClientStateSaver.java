@@ -16,24 +16,19 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package net.sourceforge.myfaces.renderkit.html.state;
+package net.sourceforge.myfaces.renderkit.html.state.client;
+
+import net.sourceforge.myfaces.renderkit.html.state.StateRenderer;
+import net.sourceforge.myfaces.renderkit.html.state.StateSaver;
 
 /**
  * DOCUMENT ME!
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public class ZippingStateRenderer
-    extends StateRenderer
+public interface ClientStateSaver
+    extends StateSaver
 {
-    public static final String STATE_PARAM = "zState";
-
-    public static final String ZIP_CHARSET = "ISO-8859-1";
-    public static final String ZIP_ENCODING = "base64";
-
-    protected void init()
-    {
-        _stateSaver = new ZippingStateSaver();
-        _stateRestorer = new ZippingStateRestorer();
-    }
+    public static final String BODY_CONTENT_REQUEST_ATTR
+        = ClientStateSaver.class.getName() + ".BODY_CONTENT";
 }

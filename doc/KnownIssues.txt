@@ -18,5 +18,8 @@ MyFaces Known Issues
   - Either give every tag within an IterationTag an id,
   - or subclass all your common tags from MyFacesTag, that fixes this behaviour.
 
+* Dynamic addition of components as stated in JSF.2.4.2.4 is not (yet) supported
+  when using the "saveStateInClient" feature.
+
 
 TODO... (Many others!)

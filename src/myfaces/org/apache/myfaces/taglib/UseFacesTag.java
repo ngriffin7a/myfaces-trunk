@@ -18,8 +18,8 @@
  */
 package net.sourceforge.myfaces.taglib;
 
-import net.sourceforge.myfaces.MyFacesConfig;
 import net.sourceforge.myfaces.renderkit.html.state.StateRenderer;
+import net.sourceforge.myfaces.renderkit.html.state.client.ClientStateSaver;
 import net.sourceforge.myfaces.util.logging.LogUtil;
 
 import javax.faces.FactoryFinder;
@@ -60,17 +60,8 @@ public class UseFacesTag
 
     public int doStartTag() throws JspException
     {
-        if (MyFacesConfig.isStateEncodingOnTheFly())
-        {
-            ResponseWriter writer = new JspResponseWriter(super.pageContext);
-            getFacesContext().setResponseWriter(writer);
-            return BodyTag.EVAL_BODY_INCLUDE;
-        }
-        else
-        {
-            //ResponseWriter will be set in doInitBody()
-            return BodyTag.EVAL_BODY_BUFFERED;
-        }
+        //ResponseWriter will be set in doInitBody()
+        return BodyTag.EVAL_BODY_BUFFERED;
     }
 
     public void doInitBody() throws JspException
@@ -81,42 +72,35 @@ public class UseFacesTag
 
     public int doAfterBody() throws JspException
     {
-        if (MyFacesConfig.isStateEncodingOnTheFly())
+        FacesContext facesContext = getFacesContext();
+
+        RenderKitFactory rkFactory = (RenderKitFactory)FactoryFinder.getFactory(FactoryFinder.RENDER_KIT_FACTORY);
+        RenderKit renderKit = rkFactory.getRenderKit(facesContext.getTree().getRenderKitId());
+        Renderer renderer = renderKit.getRenderer(StateRenderer.TYPE);
+        if (renderer == null)
         {
-            //nothing to do
+            LogUtil.getLogger().info("UseFacesTag.doAfterBody() - No StateRenderer found.");
+            BodyContent bodyContent = getBodyContent();
+            try
+            {
+                bodyContent.writeOut(bodyContent.getEnclosingWriter());
+            }
+            catch (IOException e)
+            {
+                throw new JspException(e);
+            }
         }
         else
         {
-            FacesContext facesContext = getFacesContext();
-
-            RenderKitFactory rkFactory = (RenderKitFactory)FactoryFinder.getFactory(FactoryFinder.RENDER_KIT_FACTORY);
-            RenderKit renderKit = rkFactory.getRenderKit(facesContext.getTree().getRenderKitId());
-            Renderer renderer = renderKit.getRenderer(StateRenderer.TYPE);
-            if (renderer == null)
+            try
             {
-                LogUtil.getLogger().info("UseFacesTag.doAfterBody() - No StateRenderer found.");
-                BodyContent bodyContent = getBodyContent();
-                try
-                {
-                    bodyContent.writeOut(bodyContent.getEnclosingWriter());
-                }
-                catch (IOException e)
-                {
-                    throw new JspException(e);
-                }
+                facesContext.getServletRequest().setAttribute(ClientStateSaver.BODY_CONTENT_REQUEST_ATTR,
+                                                              getBodyContent());
+                renderer.encodeEnd(facesContext, null);
             }
-            else
+            catch (IOException e)
             {
-                try
-                {
-                    facesContext.getServletRequest().setAttribute(StateRenderer.BODY_CONTENT_REQUEST_ATTR,
-                                                                  getBodyContent());
-                    renderer.encodeEnd(facesContext, null);
-                }
-                catch (IOException e)
-                {
-                    throw new JspException(e);
-                }
+                throw new JspException(e);
             }
         }
 

@@ -16,7 +16,7 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package net.sourceforge.myfaces.renderkit.html.state;
+package net.sourceforge.myfaces.renderkit.html.state.client;
 
 import net.sourceforge.myfaces.renderkit.html.HTMLRenderer;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLEncoder;
@@ -35,12 +35,18 @@ import java.util.zip.GZIPOutputStream;
  * @version $Revision$ $Date$
  */
 public class ZippingStateSaver
-    extends StateSaver
+    extends MinimizingStateSaver
 {
+    public static final String STATE_PARAM = "zState";
+
+    public static final String ZIP_CHARSET = "ISO-8859-1";
+    public static final String ZIP_ENCODING = "base64";
+
+
     protected void writeHiddenInputsState(Writer writer, Map stateMap) throws IOException
     {
         writer.write("\n<input type=\"hidden\" name=\"");
-        writer.write(ZippingStateRenderer.STATE_PARAM);
+        writer.write(STATE_PARAM);
         writer.write("\" value=\"");
         writer.write(HTMLEncoder.encode(getZippedParams(stateMap), false, false));
         writer.write("\">");
@@ -49,7 +55,7 @@ public class ZippingStateSaver
     protected void writeUrlState(Writer writer, Map stateMap) throws IOException
     {
         writer.write('&');  //we assume that there were previous parameters
-        writer.write(ZippingStateRenderer.STATE_PARAM);
+        writer.write(STATE_PARAM);
         writer.write('=');
         writer.write(HTMLRenderer.urlEncode(getZippedParams(stateMap)));
     }
@@ -61,9 +67,9 @@ public class ZippingStateSaver
         {
             //OutputStream wos = new WriterOutputStream(origWriter, ZippingStateRenderer.ZIP_CHARSET);
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            OutputStream encStream = MimeUtility.encode(baos, ZippingStateRenderer.ZIP_ENCODING);
+            OutputStream encStream = MimeUtility.encode(baos, ZIP_ENCODING);
             OutputStream zos = new GZIPOutputStream(encStream);
-            OutputStreamWriter writer = new OutputStreamWriter(zos, ZippingStateRenderer.ZIP_CHARSET);
+            OutputStreamWriter writer = new OutputStreamWriter(zos, ZIP_CHARSET);
 
             boolean first = true;
             for (Iterator entries = stateMap.entrySet().iterator(); entries.hasNext();)
@@ -79,7 +85,7 @@ public class ZippingStateSaver
                 }
                 writer.write((String)entry.getKey());
                 writer.write('=');
-                writer.write(URLEncoder.encode((String)entry.getValue(), ZippingStateRenderer.ZIP_CHARSET));
+                writer.write(URLEncoder.encode((String)entry.getValue(), ZIP_CHARSET));
             }
 
             writer.close();
@@ -87,7 +93,7 @@ public class ZippingStateSaver
             encStream.close();
             baos.close();
 
-            String s = baos.toString(ZippingStateRenderer.ZIP_CHARSET);
+            String s = baos.toString(ZIP_CHARSET);
             return s;
         }
         catch (MessagingException e)
@@ -127,39 +133,5 @@ public class ZippingStateSaver
         }
     }
     */
-
-    /**
-     * TODO: Move to a "ZipUtils" class
-     * @param s
-     * @return
-     */
-    protected static String zipString(String s)
-    {
-        try
-        {
-            //OutputStream wos = new WriterOutputStream(origWriter, ZippingStateRenderer.ZIP_CHARSET);
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            OutputStream encStream = MimeUtility.encode(baos, ZippingStateRenderer.ZIP_ENCODING);
-            OutputStream zos = new GZIPOutputStream(encStream);
-            OutputStreamWriter writer = new OutputStreamWriter(zos, ZippingStateRenderer.ZIP_CHARSET);
-
-            writer.write(s);
-
-            writer.close();
-            zos.close();
-            encStream.close();
-            baos.close();
-
-            return baos.toString(ZippingStateRenderer.ZIP_CHARSET);
-        }
-        catch (MessagingException e)
-        {
-            throw new RuntimeException(e);
-        }
-        catch (IOException e)
-        {
-            throw new RuntimeException(e);
-        }
-    }
 
 }

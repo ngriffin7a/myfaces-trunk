@@ -20,8 +20,13 @@ package net.sourceforge.myfaces.renderkit.html.state;
 
 import net.sourceforge.myfaces.renderkit.html.FormRenderer;
 import net.sourceforge.myfaces.renderkit.html.HTMLRenderer;
+import net.sourceforge.myfaces.renderkit.html.state.client.MinimizingStateSaver;
+import net.sourceforge.myfaces.renderkit.html.state.client.MinimizingStateRestorer;
+import net.sourceforge.myfaces.renderkit.html.state.client.ZippingStateSaver;
+import net.sourceforge.myfaces.renderkit.html.state.client.ZippingStateRestorer;
 import net.sourceforge.myfaces.renderkit.html.jspinfo.JspInfo;
 import net.sourceforge.myfaces.util.logging.LogUtil;
+import net.sourceforge.myfaces.MyFacesConfig;
 
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
@@ -37,36 +42,32 @@ public class StateRenderer
 {
     public static final String TYPE = "StateRenderer";
 
-    protected static final String TREE_ID_REQUEST_PARAM = "_tId";
-    protected static final String LOCALE_REQUEST_PARAM = "_locale";
-    protected static final String LOCALE_REQUEST_PARAM_DELIMITER = "_";
-
-    public static final String BODY_CONTENT_REQUEST_ATTR
-        = StateRenderer.class.getName() + ".BODY_CONTENT";
-
-    public static final String TRANSIENT_ATTR
-        = StateRenderer.class.getName() + ".TRANSIENT";
-
-    protected static final String LISTENER_TYPE_ACTION = "Action";
-    protected static final String LISTENER_TYPE_VALUE_CHANGED = "ValueChanged";
-
-    static final String NULL_DUMMY_VALUE = "__NULL__";
-
-    protected static final String UNRENDERED_COMPONENTS_REQUEST_PARAM = "_unrendered";
-
-
     protected StateSaver _stateSaver;
     protected StateRestorer _stateRestorer;
 
-    public StateRenderer()
+    public StateRenderer(int stateSavingMode)
     {
-        init();
-    }
+        switch (stateSavingMode)
+        {
+            case MyFacesConfig.STATE_SAVING_MODE__SERVER_SESSION:
+                throw new IllegalArgumentException("not yet supported");
 
-    protected void init()
-    {
-        _stateSaver = new StateSaver();
-        _stateRestorer = new StateRestorer();
+            case MyFacesConfig.STATE_SAVING_MODE__CLIENT_SERIALIZED:
+                throw new IllegalArgumentException("not yet supported");
+
+            case MyFacesConfig.STATE_SAVING_MODE__CLIENT_MINIMIZED:
+                _stateSaver = new MinimizingStateSaver();
+                _stateRestorer = new MinimizingStateRestorer();
+                break;
+
+            case MyFacesConfig.STATE_SAVING_MODE__CLIENT_MINIMIZED_ZIPPED:
+                _stateSaver = new ZippingStateSaver();
+                _stateRestorer = new ZippingStateRestorer();
+                break;
+
+            default:
+                throw new IllegalArgumentException("Unknown state saving mode " + stateSavingMode);
+        }
     }
 
     public String getRendererType()
@@ -83,6 +84,8 @@ public class StateRenderer
     {
         return false;
     }
+
+
 
 
     /**

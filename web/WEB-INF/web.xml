@@ -48,20 +48,27 @@
 
     <context-param>
         <!--
-        * Init parameter "servletMappingType"
+        * Init parameter "servletMappingMode"
         * Allowed values:
         * "virtual_path" = classic servlet-mapping as described in the specification.
         * "extension" = alternative ServletMapping for the url-pattern "*.jsf".
         -->
-        <param-name>servletMappingType</param-name>
+        <param-name>servletMappingMode</param-name>
         <param-value>extension</param-value>
         <!--<param-value>virtual_path</param-value>-->
     </context-param>
 
     <context-param>
-        <!-- TODO -->
-        <param-name>saveStateInClient</param-name>
-        <param-value>true</param-value>
+        <!--
+        * Init parameter "stateSavingMode"
+        * Allowed values:
+        * "server_session" = tree state is saved in a HTTPSession
+        * "client_serialized" = tree is serialized, zipped and saved as url parameter or hidden input
+        * "client_minimized" = only those (dynamical) tree and component infos are saved that could not otherwise be restored by parsing the JSP
+        * "client_minimized_zipped" = like "client_minimal", but additionally state info is zipped (GZIP), encoded to allowed characters (Base64) written as one query parameter or hidden form input.
+        -->
+        <param-name>stateSavingMode</param-name>
+        <param-value>client_minimized_zipped</param-value>
     </context-param>
 
 

@@ -18,7 +18,7 @@ public class ServletMappingFactoryImpl
     {
         if (_servletMapping == null)
         {
-            String mapping = MyFacesConfig.getServletMappingType(servletContext);
+            String mapping = MyFacesConfig.getServletMappingMode(servletContext);
             if (mapping.equals(TYPE_EXTENSION))
             {
                 _servletMapping = new ServletMappingWithExtension();

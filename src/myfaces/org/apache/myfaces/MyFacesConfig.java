@@ -37,21 +37,14 @@ public class MyFacesConfig
 {
     private static final String _PROPERTY_FILE = "myfaces.properties";
 
-    private static final String PARAM_JspInfoCaching = "jspInfoCaching";
-    private static final String PARAM_ServletMappingType = "servletMappingType";
-    private static final String DEFAULT_ServletMappingType = "virtual_path";
+    private static final String PARAM_jspInfoCaching = "jspInfoCaching";
+
+    private static final String PARAM_servletMappingMode = "servletMappingMode";
+    private static final String DEFAULT_servletMappingMode = "virtual_path";
+
     private static final String PARAM_logLevel = "logLevel";
     private static final Level  DEFAULT_logLevel = Level.INFO;
-
-
-    //private static final String _StateEncodingOnTheFly = "StateEncodingOnTheFly";
-    private static final String _StateZipping = "StateZipping";
-    private static final String _ComponentsTransientByDefault = "ComponentsTransientByDefault";
-
-    private static final String CONFIG_MAP_ATTR = MyFacesConfig.class.getName() + ".MAP";
-
     private static final Map LOG_LEVELS = new HashMap();
-
     static
     {
         LOG_LEVELS.put("FINEST", Level.FINEST);
@@ -61,6 +54,20 @@ public class MyFacesConfig
         LOG_LEVELS.put("WARNING", Level.WARNING);
         LOG_LEVELS.put("SEVERE", Level.SEVERE);
     }
+
+    public static final int STATE_SAVING_MODE__SERVER_SESSION = 1;
+    public static final int STATE_SAVING_MODE__CLIENT_SERIALIZED = 2;
+    public static final int STATE_SAVING_MODE__CLIENT_MINIMIZED = 3;
+    public static final int STATE_SAVING_MODE__CLIENT_MINIMIZED_ZIPPED = 4;
+    private static final String PARAM_stateSavingMode = "stateSavingMode";
+    private static final int DEFAULT_stateSavingMode = STATE_SAVING_MODE__CLIENT_MINIMIZED;
+
+
+    //private static final String _StateEncodingOnTheFly = "StateEncodingOnTheFly";
+    private static final String _ComponentsTransientByDefault = "ComponentsTransientByDefault";
+
+    private static final String CONFIG_MAP_ATTR = MyFacesConfig.class.getName() + ".MAP";
+
 
 
     private MyFacesConfig() {}
@@ -75,7 +82,7 @@ public class MyFacesConfig
     public static boolean isJspInfoCaching(ServletContext servletContext)
     {
         return getBooleanInitParameter(servletContext,
-                                       PARAM_JspInfoCaching,
+                                       PARAM_jspInfoCaching,
                                        false);
     }
 
@@ -83,15 +90,15 @@ public class MyFacesConfig
      * @see net.sourceforge.myfaces.webapp.ServletMappingWithExtension
      * @see net.sourceforge.myfaces.webapp.ServletMappingWithVirtualPath
      */
-    public static String getServletMappingType(ServletContext servletContext)
+    public static String getServletMappingMode(ServletContext servletContext)
     {
         return getStringInitParameter(servletContext,
-                                      PARAM_ServletMappingType,
-                                      DEFAULT_ServletMappingType);
+                                      PARAM_servletMappingMode,
+                                      DEFAULT_servletMappingMode);
     }
 
     /**
-     *
+     * Get the log level, that should be used by the {@link net.sourceforge.myfaces.util.logging.MyFacesLogger MyFacesLogger}.
      */
     public static Level getLogLevel(ServletContext servletContext)
     {
@@ -120,6 +127,50 @@ public class MyFacesConfig
 
         saveInitParameterInMap(servletContext, PARAM_logLevel, level);
         return level;
+    }
+
+    /**
+     * See web.xml for documentation!
+     */
+    public static int getStateSavingMode(ServletContext servletContext)
+    {
+        Integer mode = (Integer)findInitParameterInMap(servletContext,
+                                                       PARAM_stateSavingMode);
+        if (mode != null)
+        {
+            return mode.intValue();
+        }
+
+        String strValue = servletContext.getInitParameter(PARAM_stateSavingMode);
+        if (strValue == null)
+        {
+            mode = new Integer(DEFAULT_stateSavingMode);
+            LogUtil.getLogger().info("No context init parameter '" + PARAM_stateSavingMode + "' found, using default value " + mode);
+        }
+        else if (strValue.equalsIgnoreCase("server_session"))
+        {
+            mode = new Integer(STATE_SAVING_MODE__SERVER_SESSION);
+        }
+        else if (strValue.equalsIgnoreCase("client_serialized"))
+        {
+            mode = new Integer(STATE_SAVING_MODE__CLIENT_SERIALIZED);
+        }
+        else if (strValue.equalsIgnoreCase("client_minimized"))
+        {
+            mode = new Integer(STATE_SAVING_MODE__CLIENT_MINIMIZED);
+        }
+        else if (strValue.equalsIgnoreCase("client_minimized_zipped"))
+        {
+            mode = new Integer(STATE_SAVING_MODE__CLIENT_MINIMIZED_ZIPPED);
+        }
+        else
+        {
+            mode = new Integer(DEFAULT_stateSavingMode);
+            LogUtil.getLogger().info("Wrong context init parameter '" + PARAM_stateSavingMode + "' (='" + strValue + "'), using default value " + mode);
+        }
+
+        saveInitParameterInMap(servletContext, PARAM_stateSavingMode, mode);
+        return mode.intValue();
     }
 
 
@@ -153,21 +204,6 @@ public class MyFacesConfig
         return false;
     }
 
-    /**
-     * MyFaces supports two methods of encoding the state information:
-     * 1. "Normal"
-     *    All state values are encoded as normal URL parameters.
-     *    i.e. Query parameters in HREFs and hidden inputs in FORMs
-     * 2. "Zipped"
-     *    All state values are encoded to a String of key/value pairs
-     *    that is zipped (GZIP) and encoded to allowed characters (Base64).
-     *    This String is then written as one query parameter or hidden
-     *    form input.
-     */
-    public static boolean isStateZipping()
-    {
-        return getPropertyAsBoolean(_StateZipping, false);
-    }
 
     public static boolean isComponentsTransientByDefault()
     {
@@ -250,7 +286,6 @@ public class MyFacesConfig
         configMap.put(paramName, paramValue);
     }
 
-
     protected static String getStringInitParameter(ServletContext servletContext,
                                                    String paramName,
                                                    String defaultValue)
@@ -273,10 +308,9 @@ public class MyFacesConfig
         return paramValue;
     }
 
-
     protected static boolean getBooleanInitParameter(ServletContext servletContext,
-                                              String paramName,
-                                              boolean defaultValue)
+                                                     String paramName,
+                                                     boolean defaultValue)
     {
         Boolean bParam = (Boolean)findInitParameterInMap(servletContext,
                                                          paramName);
@@ -308,6 +342,5 @@ public class MyFacesConfig
         saveInitParameterInMap(servletContext, paramName, bParam);
         return bParam.booleanValue();
     }
-
 
 }

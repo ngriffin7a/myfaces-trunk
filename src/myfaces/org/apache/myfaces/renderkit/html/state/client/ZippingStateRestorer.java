@@ -16,7 +16,7 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package net.sourceforge.myfaces.renderkit.html.state;
+package net.sourceforge.myfaces.renderkit.html.state.client;
 
 import javax.faces.context.FacesContext;
 import javax.mail.MessagingException;
@@ -37,7 +37,7 @@ import java.util.zip.GZIPInputStream;
  * @version $Revision$ $Date$
  */
 public class ZippingStateRestorer
-    extends StateRestorer
+    extends MinimizingStateRestorer
 {
     protected String getStateParameter(Map stateMap, String attrName)
     {
@@ -46,7 +46,7 @@ public class ZippingStateRestorer
 
     protected Map restoreStateMap(FacesContext facesContext)
     {
-        String stateParam = facesContext.getServletRequest().getParameter(ZippingStateRenderer.STATE_PARAM);
+        String stateParam = facesContext.getServletRequest().getParameter(ZippingStateSaver.STATE_PARAM);
         if (stateParam == null)
         {
             return Collections.EMPTY_MAP;
@@ -54,8 +54,8 @@ public class ZippingStateRestorer
 
         try
         {
-            ByteArrayInputStream byteStream = new ByteArrayInputStream(stateParam.getBytes(ZippingStateRenderer.ZIP_CHARSET));
-            InputStream decodedStream = MimeUtility.decode(byteStream, ZippingStateRenderer.ZIP_ENCODING);
+            ByteArrayInputStream byteStream = new ByteArrayInputStream(stateParam.getBytes(ZippingStateSaver.ZIP_CHARSET));
+            InputStream decodedStream = MimeUtility.decode(byteStream, ZippingStateSaver.ZIP_ENCODING);
             InputStream unzippedStream = new GZIPInputStream(decodedStream);
 
             StringBuffer buf = new StringBuffer();
@@ -90,48 +90,11 @@ public class ZippingStateRestorer
                         }
                     }
                 }
-                paramValue = URLDecoder.decode(paramValue, ZippingStateRenderer.ZIP_CHARSET);
+                paramValue = URLDecoder.decode(paramValue, ZippingStateSaver.ZIP_CHARSET);
                 stateMap.put(paramName, paramValue);
             }
 
             return stateMap;
-        }
-        catch (IOException e)
-        {
-            throw new RuntimeException(e);
-        }
-        catch (MessagingException e)
-        {
-            throw new RuntimeException(e);
-        }
-    }
-
-
-    /**
-     * TODO: Move to a "ZipUtils" class
-     * @param s
-     * @return
-     */
-    protected static String unzipString(String s)
-    {
-        try
-        {
-            ByteArrayInputStream byteStream = new ByteArrayInputStream(s.getBytes(ZippingStateRenderer.ZIP_CHARSET));
-            InputStream decodedStream = MimeUtility.decode(byteStream, ZippingStateRenderer.ZIP_ENCODING);
-            InputStream unzippedStream = new GZIPInputStream(decodedStream);
-
-            StringBuffer buf = new StringBuffer();
-            int c;
-            while ((c = unzippedStream.read()) != -1)
-            {
-                buf.append((char)c); //TODO: Encoding ?!
-            }
-
-            unzippedStream.close();
-            decodedStream.close();
-            byteStream.close();
-
-            return buf.toString();
         }
         catch (IOException e)
         {

@@ -24,11 +24,11 @@ import net.sourceforge.myfaces.renderkit.html.ext.NavigationItemRenderer;
 import net.sourceforge.myfaces.renderkit.html.ext.NavigationRenderer;
 import net.sourceforge.myfaces.renderkit.html.ext.SortColumnRenderer;
 import net.sourceforge.myfaces.renderkit.html.state.StateRenderer;
-import net.sourceforge.myfaces.renderkit.html.state.ZippingStateRenderer;
 
 import javax.faces.component.UIComponent;
 import javax.faces.render.RenderKit;
 import javax.faces.render.Renderer;
+import javax.faces.context.FacesContext;
 import java.util.*;
 
 /**
@@ -67,16 +67,6 @@ public class RenderKitImpl
         addRenderer(new LabelRenderer());
         addRenderer(new CheckboxRenderer());
 
-        //State Handling
-        if (MyFacesConfig.isStateZipping())
-        {
-            addRenderer(new ZippingStateRenderer());
-        }
-        else
-        {
-            addRenderer(new StateRenderer());
-        }
-
         //MyFaces Extensions
         addRenderer(new NavigationRenderer());
         addRenderer(new NavigationItemRenderer());
@@ -102,10 +92,22 @@ public class RenderKitImpl
         Renderer renderer = (Renderer)_renderers.get(rendererType);
         if (renderer == null)
         {
+            if (rendererType.equals(StateRenderer.TYPE))
+            {
+                FacesContext facesContext = FacesContext.getCurrentInstance();
+                if (facesContext != null)
+                {
+                    int mode = MyFacesConfig.getStateSavingMode(facesContext.getServletContext());
+                    renderer = new StateRenderer(mode);
+                    addRenderer(StateRenderer.TYPE, renderer);
+                }
+            }
+
             throw new IllegalArgumentException("Unsupported renderer type: " + rendererType);
         }
         return renderer;
     }
+
 
     public Iterator getRendererTypes()
     {
