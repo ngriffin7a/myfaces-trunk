@@ -24,9 +24,11 @@ import javax.faces.component.UIViewRoot;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 
-import net.sourceforge.myfaces.confignew.RuntimeConfig;
-import net.sourceforge.myfaces.confignew.element.NavigationCase;
-import net.sourceforge.myfaces.confignew.element.NavigationRule;
+import net.sourceforge.myfaces.config.RuntimeConfig;
+import net.sourceforge.myfaces.config.element.NavigationCase;
+import net.sourceforge.myfaces.config.element.NavigationCase;
+import net.sourceforge.myfaces.config.element.NavigationRule;
+import net.sourceforge.myfaces.config.element.NavigationRule;
 import net.sourceforge.myfaces.util.HashMapUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -36,6 +38,9 @@ import org.apache.commons.logging.LogFactory;
  * @author Anton Koinov
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.29  2004/07/07 00:25:04  o_rossmueller
+ * tidy up config/confignew package (moved confignew classes to package config)
+ *
  * Revision 1.28  2004/07/01 22:05:14  mwessendorf
  * ASF switch
  *

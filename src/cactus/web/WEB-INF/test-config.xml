@@ -114,11 +114,11 @@
 
 
     <application>
-        <view-handler>net.sourceforge.myfaces.confignew.TestViewHandlerB</view-handler>
-        <navigation-handler>net.sourceforge.myfaces.confignew.TestNavigationHandler</navigation-handler>
-        <property-resolver>net.sourceforge.myfaces.confignew.TestPropertyResolver</property-resolver>
-        <variable-resolver>net.sourceforge.myfaces.confignew.TestVariableResolver</variable-resolver>
-        <state-manager>net.sourceforge.myfaces.confignew.TestStateManager</state-manager>
+        <view-handler>net.sourceforge.myfaces.config.TestViewHandlerB</view-handler>
+        <navigation-handler>net.sourceforge.myfaces.config.TestNavigationHandler</navigation-handler>
+        <property-resolver>net.sourceforge.myfaces.config.TestPropertyResolver</property-resolver>
+        <variable-resolver>net.sourceforge.myfaces.config.TestVariableResolver</variable-resolver>
+        <state-manager>net.sourceforge.myfaces.config.TestStateManager</state-manager>
     </application>
 
     <application>

@@ -11,7 +11,7 @@
     <!-- these settings have precedence over test-config.xml -->
 
     <lifecycle>
-        <phase-listener>net.sourceforge.myfaces.confignew.TestPhaseListenerA</phase-listener>
+        <phase-listener>net.sourceforge.myfaces.config.TestPhaseListenerA</phase-listener>
     </lifecycle>
 
     <managed-bean>
@@ -61,16 +61,16 @@
 
 
     <application>
-        <view-handler>net.sourceforge.myfaces.confignew.TestViewHandlerA</view-handler>
+        <view-handler>net.sourceforge.myfaces.config.TestViewHandlerA</view-handler>
         <message-bundle>messageBundleA</message-bundle>
     </application>
 
     <lifecycle>
-        <phase-listener>net.sourceforge.myfaces.confignew.TestPhaseListenerB</phase-listener>
+        <phase-listener>net.sourceforge.myfaces.config.TestPhaseListenerB</phase-listener>
     </lifecycle>
 
     <factory>
-        <lifecycle-factory>net.sourceforge.myfaces.confignew.TestLifecycleFactory</lifecycle-factory>
+        <lifecycle-factory>net.sourceforge.myfaces.config.TestLifecycleFactory</lifecycle-factory>
     </factory>
 
 </faces-config>
