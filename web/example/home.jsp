@@ -2,6 +2,7 @@
                  java.util.Date"%>
 <%@ page session="false"
 %><%@ taglib uri="/WEB-INF/myfaces_basic.tld" prefix="h"
+%><%@ taglib uri="/WEB-INF/myfaces_core.tld" prefix="f"
 %><%@ taglib uri="/WEB-INF/myfaces_ext.tld" prefix="x"
 %><html>
 
@@ -45,7 +46,7 @@
                 </tr>
             </table>
             <h:message id="today" bundle="net.sourceforge.myfaces.examples.resource.example_messages" key="today" >
-                <h:parameter id="p0" value="<%=new Date()%>" />
+                <f:parameter id="p0" value="<%=new Date()%>" />
             </h:message>
         </x:page_body>
 

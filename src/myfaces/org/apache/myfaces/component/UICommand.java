@@ -19,6 +19,8 @@
 package net.sourceforge.myfaces.component;
 
 import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * DOCUMENT ME!
@@ -33,6 +35,9 @@ public class UICommand
 
     //MyFaces extensions
     public static final String COMMAND_REFERENCE_ATTR = "commandReference";
+
+    private Map _parameters = null;
+
 
     public UICommand()
     {
@@ -79,6 +84,5 @@ public class UICommand
     {
         return listeners;
     }
-
 
 }

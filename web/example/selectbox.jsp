@@ -79,7 +79,7 @@
             </h:form>
 
             <h:message key="msg_price" bundle="net.sourceforge.myfaces.examples.resource.example_messages" >
-                <h:parameter modelReference="carconf.price" />
+                <f:parameter modelReference="carconf.price" />
             </h:message>
 
 

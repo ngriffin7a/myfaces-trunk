@@ -70,7 +70,6 @@ public class ZippingStateRestorer
             byteStream.close();
 
             String s = buf.toString();
-            System.out.println(s);
 
             Map stateMap = new HashMap();
             StringTokenizer st = new StringTokenizer(s, "=&", true);
@@ -92,7 +91,6 @@ public class ZippingStateRestorer
                     }
                 }
                 paramValue = URLDecoder.decode(paramValue, ZippingStateRenderer.ZIP_CHARSET);
-                System.out.println(paramName + "=" + paramValue);
                 stateMap.put(paramName, paramValue);
             }
 

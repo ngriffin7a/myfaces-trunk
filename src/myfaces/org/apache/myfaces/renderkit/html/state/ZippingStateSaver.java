@@ -88,7 +88,6 @@ public class ZippingStateSaver
             baos.close();
 
             String s = baos.toString(ZippingStateRenderer.ZIP_CHARSET);
-            //System.out.println(s);
             return s;
         }
         catch (MessagingException e)

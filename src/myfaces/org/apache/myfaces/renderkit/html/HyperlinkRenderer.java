@@ -20,18 +20,22 @@ package net.sourceforge.myfaces.renderkit.html;
 
 import net.sourceforge.myfaces.MyFacesFactoryFinder;
 import net.sourceforge.myfaces.component.UIParameter;
+import net.sourceforge.myfaces.convert.ConverterUtils;
 import net.sourceforge.myfaces.renderkit.attr.HyperlinkRendererAttributes;
 import net.sourceforge.myfaces.renderkit.html.state.StateRenderer;
 import net.sourceforge.myfaces.renderkit.html.util.CommonAttributes;
+import net.sourceforge.myfaces.taglib.MyFacesBodyTag;
 import net.sourceforge.myfaces.util.logging.LogUtil;
 import net.sourceforge.myfaces.webapp.ServletMapping;
 import net.sourceforge.myfaces.webapp.ServletMappingFactory;
 
 import javax.faces.FactoryFinder;
-import javax.faces.component.UICommand;
 import javax.faces.component.UIComponent;
+import javax.faces.component.UICommand;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
+import javax.faces.convert.Converter;
+import javax.faces.convert.ConverterException;
 import javax.faces.event.ApplicationEvent;
 import javax.faces.event.CommandEvent;
 import javax.faces.render.RenderKit;
@@ -40,12 +44,16 @@ import javax.faces.render.Renderer;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.jsp.tagext.BodyContent;
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.util.Iterator;
 
 /**
- * DOCUMENT ME!
+ * HyperlinkRenderer-Extension:
+ * MyFaces HyperlinkRenderer decodes nested UIParameters and stores the
+ * values as attributes in the UICommand.
+ *
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
@@ -73,14 +81,24 @@ public class HyperlinkRenderer
             uiComponent.setValue(paramValue);
             uiComponent.setValid(true);
 
+            //nested parameters
+            Iterator children = uiComponent.getChildren();
+            while (children.hasNext())
+            {
+                UIComponent child = (UIComponent)children.next();
+                if (child instanceof UIParameter)
+                {
+                }
+            }
+
             //Old event processing:
             ApplicationEvent event = new CommandEvent(uiComponent, commandName);
             facesContext.addApplicationEvent(event);
 
             //New event processing:
-            if (uiComponent instanceof UICommand)
+            if (uiComponent instanceof javax.faces.component.UICommand)
             {
-                ((UICommand)uiComponent).fireActionEvent(facesContext);
+                ((javax.faces.component.UICommand)uiComponent).fireActionEvent(facesContext);
             }
             else
             {
@@ -93,25 +111,69 @@ public class HyperlinkRenderer
         }
     }
 
-    public void encodeBegin(FacesContext context, UIComponent component) throws IOException
+
+    protected void decodeNestedParameter(FacesContext facesContext,
+                                         UICommand uiCommand,
+                                         UIParameter uiParameter) throws IOException
     {
-        ResponseWriter writer = context.getResponseWriter();
+        String name = uiParameter.getName();
+        if (name == null)
+        {
+            name = uiParameter.getClientId(facesContext);
+        }
+        String strV = facesContext.getServletRequest().getParameter(name);
+        if (strV != null)
+        {
+            Object objValue;
+            //find converter
+            Converter conv = ConverterUtils.findValueConverter(facesContext, uiParameter);
+            if (conv != null)
+            {
+                try
+                {
+                    objValue = conv.getAsObject(facesContext, uiParameter, strV);
+                }
+                catch (ConverterException e)
+                {
+                    objValue = null;
+                    LogUtil.getLogger().severe("Could not reconvert hyperlink parameter " + name + " to Object.");
+                }
+            }
+            else
+            {
+                objValue = ConverterUtils.deserialize(strV);
+            }
+
+            uiCommand.setAttribute(name, objValue);
+        }
+    }
+
+
+    public void encodeBegin(FacesContext context, UIComponent uiComponent) throws IOException
+    {
+        //because of possibly embedded UIParameter components, that would not
+        //yet have been created, everything is done in encodeEnd
+    }
+
+    public void encodeEnd(FacesContext facesContext, UIComponent uiComponent) throws IOException
+    {
+        ResponseWriter writer = facesContext.getResponseWriter();
         writer.write("<a href=\"");
-        String href = (String)component.getAttribute(HREF_ATTR);
+        String href = (String)uiComponent.getAttribute(HREF_ATTR);
         if (href == null)
         {
             //Modify URL for the faces servlet mapping:
-            ServletContext servletContext = context.getServletContext();
+            ServletContext servletContext = facesContext.getServletContext();
             ServletMappingFactory smf = MyFacesFactoryFinder.getServletMappingFactory(servletContext);
             ServletMapping sm = smf.getServletMapping(servletContext);
-            String treeURL = sm.encodeTreeIdForURL(context, context.getTree().getTreeId());
+            String treeURL = sm.encodeTreeIdForURL(facesContext, facesContext.getTree().getTreeId());
 
-            HttpServletRequest request = (HttpServletRequest)context.getServletRequest();
+            HttpServletRequest request = (HttpServletRequest)facesContext.getServletRequest();
             href = request.getContextPath() + treeURL;
         }
 
         //Encode URL for those still using HttpSessions... ;-)
-        href = ((HttpServletResponse)context.getServletResponse()).encodeURL(href);
+        href = ((HttpServletResponse)facesContext.getServletResponse()).encodeURL(href);
 
         writer.write(href);
 
@@ -124,39 +186,31 @@ public class HyperlinkRenderer
         {
             writer.write('&');
         }
-        writer.write(component.getClientId(context));
+        writer.write(uiComponent.getClientId(facesContext));
         writer.write('=');
-        writer.write(URLEncoder.encode(getStringValue(context, component), "UTF-8"));
+        writer.write(URLEncoder.encode(getStringValue(facesContext, uiComponent), "UTF-8"));
 
         //nested parameters
-        Iterator children = component.getChildren();
+        Iterator children = uiComponent.getChildren();
         while (children.hasNext())
         {
             UIComponent child = (UIComponent)children.next();
             if (child instanceof UIParameter)
             {
-                String name = ((UIParameter)child).getName();
-                if (name == null)
-                {
-                    name = child.getClientId(context);
-                }
-                writer.write('&');
-                writer.write(name);
-                writer.write('=');
-                writer.write(URLEncoder.encode(getStringValue(context, child), "UTF-8"));
+                encodeNestedParameter(facesContext, (UIParameter)child);
             }
         }
 
         //state:
         RenderKitFactory rkFactory = (RenderKitFactory)FactoryFinder.getFactory(FactoryFinder.RENDER_KIT_FACTORY);
-        RenderKit renderKit = rkFactory.getRenderKit(context.getTree().getRenderKitId());
+        RenderKit renderKit = rkFactory.getRenderKit(facesContext.getTree().getRenderKitId());
         Renderer renderer = renderKit.getRenderer(StateRenderer.TYPE);
-        renderer.encodeChildren(context, component);
+        renderer.encodeChildren(facesContext, uiComponent);
 
         writer.write("\"");
 
         //css class:
-        String cssClass = (String)component.getAttribute(COMMAND_CLASS_ATTR);
+        String cssClass = (String)uiComponent.getAttribute(COMMAND_CLASS_ATTR);
         if (cssClass != null)
         {
             writer.write(" class=\"");
@@ -164,18 +218,59 @@ public class HyperlinkRenderer
             writer.write("\"");
         }
 
-        CommonAttributes.renderHTMLEventHandlerAttributes(context, component);
-        CommonAttributes.renderUniversalHTMLAttributes(context, component);
-        CommonAttributes.renderAttributes(context, component, HyperlinkRendererAttributes.COMMON_HYPERLINK_ATTRIBUTES);
+        CommonAttributes.renderHTMLEventHandlerAttributes(facesContext, uiComponent);
+        CommonAttributes.renderUniversalHTMLAttributes(facesContext, uiComponent);
+        CommonAttributes.renderAttributes(facesContext, uiComponent, HyperlinkRendererAttributes.COMMON_HYPERLINK_ATTRIBUTES);
 
         writer.write(">");
-    }
 
-    public void encodeEnd(FacesContext facesContext, UIComponent uiComponent) throws IOException
-    {
-        ResponseWriter writer = facesContext.getResponseWriter();
+        //write out body content
+        BodyContent bodyContent = (BodyContent)uiComponent.getAttribute(MyFacesBodyTag.BODY_CONTENT_ATTR);
+        bodyContent.writeOut(writer);
+
+        //close anchor
         writer.write("</a>");
     }
+
+
+    protected void encodeNestedParameter(FacesContext facesContext,
+                                         UIParameter uiParameter) throws IOException
+    {
+        ResponseWriter writer = facesContext.getResponseWriter();
+        Object objValue = uiParameter.currentValue(facesContext);
+        if (objValue != null)
+        {
+            String name = uiParameter.getName();
+            if (name == null)
+            {
+                name = uiParameter.getClientId(facesContext);
+            }
+            writer.write('&');
+            writer.write(name);
+            writer.write('=');
+
+            String strValue;
+            Converter conv = ConverterUtils.findValueConverter(facesContext, uiParameter);
+            if (conv != null)
+            {
+                try
+                {
+                    strValue = conv.getAsString(facesContext, uiParameter, objValue);
+                }
+                catch (ConverterException e)
+                {
+                    strValue = null;
+                    LogUtil.getLogger().severe("Could not convert hyperlink parameter " + name + " to String.");
+                }
+            }
+            else
+            {
+                strValue = ConverterUtils.serialize(objValue);
+            }
+            writer.write(URLEncoder.encode(strValue, "UTF-8"));
+        }
+    }
+
 
     public boolean supportsComponentType(String s)
     {
@@ -184,6 +279,6 @@ public class HyperlinkRenderer
 
     public boolean supportsComponentType(UIComponent uiComponent)
     {
-        return uiComponent instanceof UICommand;
+        return uiComponent instanceof javax.faces.component.UICommand;
     }
 }

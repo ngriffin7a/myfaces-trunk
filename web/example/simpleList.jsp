@@ -1,5 +1,6 @@
 <%@ page session="false"
 %><%@ taglib uri="/WEB-INF/myfaces_basic.tld" prefix="h"
+%><%@ taglib uri="/WEB-INF/myfaces_core.tld" prefix="f"
 %><%@ taglib uri="/WEB-INF/myfaces_ext.tld" prefix="x"
 %><html>
 
@@ -62,11 +63,11 @@
                     <h:output_text text="take a look at this runtime values ..."/>
                     <h:group>
                         <h:message msg="{0} rows" >
-                            <h:parameter value="<%=new Integer(rows)%>"/>
+                            <f:parameter value="<%=new Integer(rows)%>"/>
                         </h:message>
                         &nbsp; / &nbsp;
                         <h:message msg="{0} cols" >
-                            <h:parameter value="<%=new Integer(cols)%>"/>
+                            <f:parameter value="<%=new Integer(cols)%>"/>
                         </h:message>
                     </h:group>
                 </h:group>

@@ -21,7 +21,6 @@ package net.sourceforge.myfaces.convert;
 import net.sourceforge.myfaces.renderkit.attr.CommonRendererAttributes;
 import net.sourceforge.myfaces.util.bean.BeanUtils;
 import net.sourceforge.myfaces.util.logging.LogUtil;
-import net.sourceforge.myfaces.component.CommonComponentAttributes;
 
 import javax.faces.FacesException;
 import javax.faces.FactoryFinder;
@@ -381,11 +380,6 @@ public class ConverterUtils
     public static String serialize(Object obj)
         throws FacesException
     {
-        /*
-        String encodeEol = System.getProperty("mail.mime.encodeeol.strict");
-        System.out.println(encodeEol);
-        System.setProperty("mail.mime.encodeeol.strict", "true");
-        */
         try
         {
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -419,8 +413,6 @@ public class ConverterUtils
     public static Object deserialize(String value)
         throws FacesException
     {
-        //System.out.println("deserialize:" + value);
-
         try
         {
             ByteArrayInputStream bais = new ByteArrayInputStream(value.getBytes(SERIALIZE_CHARSET));

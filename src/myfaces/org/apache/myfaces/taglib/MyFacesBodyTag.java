@@ -30,13 +30,19 @@ import javax.servlet.jsp.tagext.BodyTag;
 import javax.servlet.jsp.tagext.Tag;
 
 /**
- * DOCUMENT ME!
+ * BodyContent is automatically added as an attribute ({@link #BODY_CONTENT_ATTR)
+ * to the associated component. This is a convenient way to get the
+ * BodyContent in the encodeEnd of the corresponding Renderer.
+ *
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
 public abstract class MyFacesBodyTag
     extends FacesBodyTag
 {
+    public static final String BODY_CONTENT_ATTR
+        = MyFacesBodyTag.class.getName() + ".BODY_CONTENT";
+
     protected MyFacesTagHelper _helper;
 
     public MyFacesBodyTag()
@@ -50,6 +56,13 @@ public abstract class MyFacesBodyTag
         return BodyTag.EVAL_BODY_BUFFERED;
     }
 
+
+    public int doEndTag()
+        throws JspException
+    {
+        getComponent().setAttribute(BODY_CONTENT_ATTR, getBodyContent());
+        return super.doEndTag();
+    }
 
     public int getDoEndValue() throws JspException
     {

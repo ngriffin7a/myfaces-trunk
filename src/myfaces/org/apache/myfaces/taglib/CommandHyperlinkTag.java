@@ -22,6 +22,7 @@ import net.sourceforge.myfaces.component.UICommand;
 import net.sourceforge.myfaces.renderkit.html.HyperlinkRenderer;
 
 import javax.faces.component.UIComponent;
+import javax.servlet.jsp.JspException;
 
 
 /**
@@ -30,7 +31,7 @@ import javax.faces.component.UIComponent;
  * @version $Revision$ $Date$
  */
 public class CommandHyperlinkTag
-        extends MyFacesTag
+        extends MyFacesBodyTag
 {
     //MyFaces tag extensions:
     public UIComponent createComponent()
@@ -41,6 +42,14 @@ public class CommandHyperlinkTag
     public String getRendererType()
     {
         return HyperlinkRenderer.TYPE;
+    }
+
+
+    //Iteration Tag support
+    public int getDoAfterBodyValue() throws JspException
+    {
+
+        return super.getDoAfterBodyValue();
     }
 
 

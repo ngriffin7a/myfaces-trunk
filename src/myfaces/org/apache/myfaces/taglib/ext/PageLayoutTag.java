@@ -18,14 +18,13 @@
  */
 package net.sourceforge.myfaces.taglib.ext;
 
-import net.sourceforge.myfaces.component.UIPanel;
 import net.sourceforge.myfaces.component.CommonComponentAttributes;
 import net.sourceforge.myfaces.component.UIComponentUtils;
+import net.sourceforge.myfaces.component.UIPanel;
 import net.sourceforge.myfaces.renderkit.html.ext.LayoutRenderer;
 import net.sourceforge.myfaces.taglib.MyFacesBodyTag;
 
 import javax.faces.component.UIComponent;
-import javax.servlet.jsp.JspException;
 
 /**
  * DOCUMENT ME!
@@ -37,7 +36,6 @@ public class PageLayoutTag
 {
     public UIComponent createComponent()
     {
-        //return new UIPageLayout();
         UIComponent comp = new UIPanel(false);
         UIComponentUtils.setTransient(comp, true);
         comp.setValid(true);
@@ -62,15 +60,6 @@ public class PageLayoutTag
     public void setCssClass(String value)
     {
         setRendererAttribute(LayoutRenderer.PANEL_CLASS_ATTR.getName(), value);
-    }
-
-    public int doAfterBody() throws JspException
-    {
-        getFacesContext().getServletRequest()
-            .setAttribute(LayoutRenderer.BODY_CONTENT_REQUEST_ATTR,
-                          getBodyContent());
-
-        return super.doAfterBody();
     }
 
 }
