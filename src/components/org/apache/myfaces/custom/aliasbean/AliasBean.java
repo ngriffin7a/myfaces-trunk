@@ -44,15 +44,21 @@ import org.apache.commons.logging.LogFactory;
  * generic subforms.
  * 
  * @author Sylvain Vieujot (latest modification by $Author$)
- * @version $Revision$ $Date$ $Log$
- * @version $Revision: 1.4 $ $Date: 2004/11/23 11:03:35 $ Revision 1.5  2005/01/04 15:41:06  svieujot
- * @version $Revision: 1.4 $ $Date: 2004/11/23 11:03:35 $ new x:buffer component.
- * @version $Revision: 1.4 $ $Date: 2004/11/23 11:03:35 $
- * @version $Revision$ $Date$ Revision 1.4  2004/11/23 11:03:35  svieujot
- * @version $Revision$ $Date$ Get ride of the x:aliasBean "permanent" attribute.
  * @version $Revision$ $Date$
- *          Revision 1.3 2004/11/23 04:46:40 svieujot Add an ugly "permanent"
- *          tag to x:aliasBean to handle children events.
+ * $Log$
+ * Revision 1.6  2005/01/27 01:59:45  svieujot
+ * AliasBean : Change sourceBean attribute for value.
+ * Make it work with both beans references ( #{myBean} ), and fix strings as value.
+ * Document tld.
+ *
+ * Revision 1.5  2005/01/04 15:41:06  svieujot
+ * new x:buffer component.
+ *
+ * Revision 1.4  2004/11/23 11:03:35  svieujot
+ * Get ride of the x:aliasBean "permanent" attribute.
+ * 
+ * Revision 1.3 2004/11/23 04:46:40 svieujot Add an ugly "permanent"
+ * tag to x:aliasBean to handle children events.
  * 
  * Revision 1.2 2004/11/14 15:06:36 svieujot Improve AliasBean to make the alias
  * effective only within the tag body
@@ -67,7 +73,7 @@ public class AliasBean extends UIComponentBase {
     public static final String COMPONENT_FAMILY = "javax.faces.Data";
     private static final String DEFAULT_RENDERER_TYPE = "org.apache.myfaces.AliasBean";
 
-    private String _sourceBeanExpression = null;
+    private String _valueExpression = null;
 
     private String _aliasBeanExpression = null;
 
@@ -80,6 +86,16 @@ public class AliasBean extends UIComponentBase {
     public String getFamily() {
         return COMPONENT_FAMILY;
     }
+    
+    public String getValue(){
+        if (_valueExpression != null)
+            return _valueExpression;
+        ValueBinding vb = getValueBinding("value");
+        return vb != null ? (String)vb.getValue(getFacesContext()) : null;
+    }
+    public void setValue(String valueExpression){
+        this._valueExpression = valueExpression;
+    }
 
     public Object saveState(FacesContext context) {
         log.debug("saveState");
@@ -88,7 +104,7 @@ public class AliasBean extends UIComponentBase {
 
         Object values[] = new Object[3];
         values[0] = super.saveState(context);
-        values[1] = _sourceBeanExpression;
+        values[1] = _valueExpression;
         values[2] = _aliasBeanExpression;
         return values;
     }
@@ -100,7 +116,7 @@ public class AliasBean extends UIComponentBase {
 
         Object values[] = (Object[]) state;
         super.restoreState(context, values[0]);
-        _sourceBeanExpression = (String) values[1];
+        _valueExpression = (String) values[1];
         _aliasBeanExpression = (String) values[2];
     }
 
@@ -212,15 +228,24 @@ public class AliasBean extends UIComponentBase {
     }
 
     private void makeAlias() {
-        ValueBinding sourceBeanVB;
-        if (_sourceBeanExpression == null) {
-            sourceBeanVB = getValueBinding("sourceBean");
-            _sourceBeanExpression = sourceBeanVB.getExpressionString();
-        } else {
-            sourceBeanVB = _context.getApplication().createValueBinding(_sourceBeanExpression);
+        Object value;
+        
+        ValueBinding valueVB = null;
+        if (_valueExpression == null) {
+            valueVB = getValueBinding("value");
+            _valueExpression = valueVB.getExpressionString();
         }
 
-        Object _sourceBean = sourceBeanVB.getValue(_context);
+        if( valueVB == null ){
+            if( _valueExpression.startsWith("#{") ){
+                valueVB = _context.getApplication().createValueBinding(_valueExpression);
+                value = valueVB.getValue(_context);
+            }else{
+                value = _valueExpression;
+            }
+        }else{
+            value = valueVB.getValue(_context);
+        }
 
         ValueBinding aliasVB;
         if (_aliasBeanExpression == null) {
@@ -230,9 +255,9 @@ public class AliasBean extends UIComponentBase {
             aliasVB = _context.getApplication().createValueBinding(_aliasBeanExpression);
         }
 
-        aliasVB.setValue(_context, _sourceBean);
+        aliasVB.setValue(_context, value);
 
-        log.debug("makeAlias: " + _sourceBeanExpression + " = " + _aliasBeanExpression);
+        log.debug("makeAlias: " + _valueExpression + " = " + _aliasBeanExpression);
     }
 
     void removeAlias(FacesContext context) {
@@ -241,7 +266,7 @@ public class AliasBean extends UIComponentBase {
     }
 
     private void removeAlias() {
-        log.debug("removeAlias: " + _sourceBeanExpression + " != " + _aliasBeanExpression);
+        log.debug("removeAlias: " + _valueExpression + " != " + _aliasBeanExpression);
 
         ValueBinding aliasVB = getValueBinding("alias");
         aliasVB.setValue(_context, null);

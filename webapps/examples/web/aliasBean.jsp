@@ -67,7 +67,7 @@
 
 				<h:form>
 					<f:verbatim><h2>aliasTest1</h2></f:verbatim>
-					<x:aliasBean sourceBean="#{aliasTest1}" alias="#{holder}">
+					<x:aliasBean alias="#{holder}" value="#{aliasTest1}" >
 						<f:subview id="simulatedIncludedSubform1">
 							<%-- The next tags could be inserted by an %@ include or jsp:include --%>
 							<h:outputLabel for="name" value="Name :"/>
@@ -76,12 +76,21 @@
 					</x:aliasBean>
 
 					<f:verbatim><h2>aliasTest2</h2></f:verbatim>
-					<x:aliasBean sourceBean="#{aliasTest2}" alias="#{holder}">
+					<x:aliasBean alias="#{holder}" value="#{aliasTest2}" >
 						<f:subview id="simulatedIncludedSubform2">
 							<%-- The next tags could be inserted by an %@ include or jsp:include --%>
 							<h:outputLabel for="name" value="Name :"/>
 	    	                <h:inputText id="name" value="#{holder.name}"/>
 							<h:commandButton value="toUpperCase" action="#{holder.toUpperCase}"/>
+						</f:subview>
+					</x:aliasBean>
+					
+					<f:verbatim><h2>aliasTest with fixed string</h2></f:verbatim>
+					<x:aliasBean alias="#{holder}" value="myFixedString" >
+						<f:subview id="simulatedIncludedSubform3">
+							<%-- The next tags could be inserted by an %@ include or jsp:include --%>
+							<h:outputLabel for="string" value="Fixed value :"/>
+	    	                <h:outputText id="string" value="#{holder}"/>
 						</f:subview>
 					</x:aliasBean>
 

@@ -23,6 +23,11 @@ import org.apache.myfaces.taglib.UIComponentTagBase;
  * @author Sylvain Vieujot (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.4  2005/01/27 01:59:45  svieujot
+ * AliasBean : Change sourceBean attribute for value.
+ * Make it work with both beans references ( #{myBean} ), and fix strings as value.
+ * Document tld.
+ *
  * Revision 1.3  2004/11/23 11:03:35  svieujot
  * Get ride of the x:aliasBean "permanent" attribute.
  *
@@ -34,15 +39,15 @@ import org.apache.myfaces.taglib.UIComponentTagBase;
  *
  */
 public class AliasBeanTag extends UIComponentTagBase {
-    
-    private String _sourceBean;
+
     private String _alias;
+    private String _valueExpression;
     
     protected void setProperties(UIComponent component) {
         super.setProperties(component);
 
-        setStringProperty(component, "sourceBean", _sourceBean);
         setStringProperty(component, "alias", _alias);
+        setStringProperty(component, "value", _valueExpression);
     }
     
     public String getComponentType() {
@@ -53,11 +58,11 @@ public class AliasBeanTag extends UIComponentTagBase {
         return null;
     }
     
-    public void setSourceBean(String sourceBean){
-        _sourceBean = sourceBean;
-    }
-    
     public void setAlias(String alias){
         _alias = alias;
+    }
+    
+    public void setValue(String valueExpression){
+        _valueExpression = valueExpression;
     }
 }
