@@ -25,6 +25,7 @@ import net.sourceforge.myfaces.renderkit.attr.UserRoleAttributes;
 import net.sourceforge.myfaces.renderkit.html.attr.HTMLEventHandlerAttributes;
 import net.sourceforge.myfaces.renderkit.html.attr.HTMLUniversalAttributes;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLEncoder;
+import net.sourceforge.myfaces.renderkit.html.util.HTMLUtil;
 import net.sourceforge.myfaces.util.bundle.BundleUtils;
 import net.sourceforge.myfaces.util.logging.LogUtil;
 
@@ -62,28 +63,6 @@ public class MessageRenderer
         return TYPE;
     }
 
-    /*
-    public boolean supportsComponentType(String s)
-    {
-        return s.equals(UIOutput.TYPE);
-    }
-
-    public boolean supportsComponentType(UIComponent uicomponent)
-    {
-        return uicomponent instanceof javax.faces.component.UIOutput;
-    }
-
-    protected void initAttributeDescriptors()
-    {
-        addAttributeDescriptors(UIOutput.TYPE, TLD_HTML_URI, "output_message", HTML_UNIVERSAL_ATTRIBUTES);
-        addAttributeDescriptors(UIOutput.TYPE, TLD_HTML_URI, "output_message", HTML_EVENT_HANDLER_ATTRIBUTES);
-        addAttributeDescriptors(UIOutput.TYPE, TLD_HTML_URI, "output_message", OUTPUT_MESSAGE_ATTRIBUTES);
-        addAttributeDescriptors(UIOutput.TYPE, TLD_HTML_URI, "output_message", USER_ROLE_ATTRIBUTES);
-    }
-    */
-
-
-
     public void encodeBegin(FacesContext facesContext, UIComponent uiComponent)
         throws IOException
     {
@@ -98,11 +77,15 @@ public class MessageRenderer
         throws IOException
     {
         ResponseWriter writer = facesContext.getResponseWriter();
-        String css = (String)uiComponent.getAttribute(OUTPUT_CLASS_ATTR);
-        if (css != null)
+
+        StringBuffer buf = new StringBuffer();
+        HTMLUtil.renderCssClass(buf, uiComponent, OUTPUT_CLASS_ATTR);
+        HTMLUtil.renderHTMLAttributes(buf, uiComponent, HTML_UNIVERSAL_ATTRIBUTES);
+        HTMLUtil.renderHTMLAttributes(buf, uiComponent, HTML_EVENT_HANDLER_ATTRIBUTES);
+        if (buf.length() > 0)
         {
-            writer.write("<span class=\"");
-            writer.write(css);
+            writer.write("<span ");
+            writer.write(buf.toString());
             writer.write("\">");
         }
 
@@ -157,7 +140,7 @@ public class MessageRenderer
 
         writer.write(HTMLEncoder.encode(text, true, true));
 
-        if (css != null)
+        if (buf.length() > 0)
         {
             writer.write("</span>");
         }

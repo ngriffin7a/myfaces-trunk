@@ -20,6 +20,7 @@ package net.sourceforge.myfaces.config;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Collections;
 
 /**
  * Implements the configureation class for managed beans defined with &lt;managed-bean&gt;
@@ -79,7 +80,9 @@ public class ManagedBeanConfig
     }
 
     public List getManagedPropertyConfigList() {
-        return _managedPropertyConfigList;
+        return _managedPropertyConfigList != null
+                ? _managedPropertyConfigList
+                : Collections.EMPTY_LIST;
     }
 
 }
