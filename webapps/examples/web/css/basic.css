@@ -358,6 +358,28 @@ div.titlebar {
    ------------------------------------------------------------
 */
 
+.nodeFolder
+{
+    font-size: 10px;
+    font-family: Verdana, Geneva, sans-serif;
+    text-decoration: none
+}
+.document
+{
+    color: blue;
+    font-size: 10px;
+    font-family: Verdana, Geneva, sans-serif;
+    text-decoration: none
+}
+.childCount
+{
+    color: blue;
+    font-size: 10px;
+    font-family: Verdana, Geneva, sans-serif;
+    text-decoration: none
+}
+
+/*
 body, th, td, input, select {
 	font-family: Verdana, Helvetica, Arial, sans-serif;
 }
@@ -441,3 +463,5 @@ table .selectOneRadio {
 	font-size: 12px;
 	color: #000000;
 }
+
+*/

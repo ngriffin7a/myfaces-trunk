@@ -90,6 +90,14 @@
         <managed-bean-scope>session</managed-bean-scope>
     </managed-bean>
 
+    <!-- Managed Beans for tree2.jsp -->
+
+    <managed-bean>
+        <managed-bean-name>treeBacker</managed-bean-name>
+        <managed-bean-class>org.apache.myfaces.examples.tree.TreeBacker</managed-bean-class>
+        <managed-bean-scope>request</managed-bean-scope>
+    </managed-bean>
+
     <!-- Managed Beans for forceId.jsp -->
 
     <managed-bean>
@@ -329,6 +337,11 @@
             <from-outcome>go_tree</from-outcome>
             <to-view-id>/tree.jsp</to-view-id>
         </navigation-case>
+        
+        <navigation-case>
+            <from-outcome>go_tree2</from-outcome>
+            <to-view-id>/tree2.jsp</to-view-id>
+        </navigation-case>        
         
         <navigation-case>
             <from-outcome>go_treeTable</from-outcome>
