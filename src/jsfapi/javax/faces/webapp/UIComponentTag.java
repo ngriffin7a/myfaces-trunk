@@ -35,6 +35,9 @@ import java.util.*;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.23  2004/08/27 12:47:52  manolito
+ * automatically assign IDs to facets and children of components that where created by binding
+ *
  * Revision 1.22  2004/07/05 23:43:36  o_rossmueller
  * fix #985274: call setProperties for viewRoot
  *
@@ -398,9 +401,7 @@ public abstract class UIComponentTag
             _componentInstance = parent.getFacet(facetName);
             if (_componentInstance == null)
             {
-//System.out.println("UIComponentTag: Facet " + facetName + " not found in parent component " + parent.getClientId(context) + " - creating new");
-                _componentInstance = createComponentInstance(context);
-                _componentInstance.setId(id); //TODO: spec says nothing about facet ids
+                _componentInstance = createComponentInstance(context, id);
                 setProperties(_componentInstance);
                 parent.getFacets().put(facetName, _componentInstance);
             }
@@ -414,9 +415,7 @@ public abstract class UIComponentTag
             _componentInstance = parent.findComponent(id);
             if (_componentInstance == null)
             {
-//System.out.println("UIComponentTag: Child " + id + " not found in parent component " + parent.getClientId(context) + " - creating new");
-                _componentInstance = createComponentInstance(context);
-                _componentInstance.setId(id);
+                _componentInstance = createComponentInstance(context, id);
                 setProperties(_componentInstance);
                 int index = getAddedChildrenCount(parentTag);
                 List children = parent.getChildren();
@@ -448,7 +447,7 @@ public abstract class UIComponentTag
         }
     }
 
-    private UIComponent createComponentInstance(FacesContext context)
+    private UIComponent createComponentInstance(FacesContext context, String id)
     {
         String componentType = getComponentType();
         if (componentType == null)
@@ -463,16 +462,45 @@ public abstract class UIComponentTag
             UIComponent component = application.createComponent(componentBinding,
                                                                 context,
                                                                 componentType);
+            component.setId(id);
             component.setValueBinding("binding", componentBinding);
+            recurseFacetsAndChildrenForId(context, component.getFacetsAndChildren(), id + "_", 0);
             _created = true;
             return component;
         }
         else
         {
+            UIComponent component = context.getApplication().createComponent(componentType);
+            component.setId(id);
             _created = true;
-            return context.getApplication().createComponent(componentType);
+            return component;
         }
     }
+
+    /**
+     * Recurse all facets and children and assign them an unique ID if necessary.
+     * We must *not* use UIViewRoot#createUniqueId here, because this would affect the
+     * order of the created ids upon rerendering the page!
+     */ 
+    private int recurseFacetsAndChildrenForId(FacesContext context,
+                                              Iterator facetsAndChildren,
+                                              String idPrefix,
+                                              int cnt)
+    {
+        while (facetsAndChildren.hasNext())
+        {
+            UIComponent comp = (UIComponent)facetsAndChildren.next();
+            if (comp.getId() == null)
+            {
+                ++cnt;
+                comp.setId(idPrefix + cnt);
+            }
+            cnt = recurseFacetsAndChildrenForId(context, comp.getFacetsAndChildren(), idPrefix, cnt);
+        }
+        return cnt;
+    }
+
+
 
     private void addChildIdToParentTag(UIComponentTag parentTag, String id)
     {
