@@ -116,14 +116,16 @@
                                   tlddoc/**/*"
                         prefix="myfaces-${manifest.impl.version}/doc"/>
             <tarfileset dir="${examples.src}"
-                        prefix="myfaces-${manifest.impl.version}/src"/>
+                        excludes="commons-logging.properties,
+                                  log4j.properties"
+                        prefix="myfaces-${manifest.impl.version}/webapps/examples/src"/>
+            <tarfileset dir="${examples.web}"
+                        excludes="WEB-INF/classes/**/*,
+                                  WEB-INF/lib/**/*"
+                        prefix="myfaces-${manifest.impl.version}/webapps/examples/web"/>
             <tarfileset dir="${temp.dir}"
                         includes="myfaces-examples.war"
                         prefix="myfaces-${manifest.impl.version}"/>
-            <tarfileset dir="${examples.dir}"
-                        includes="*"
-                        excludes="*.properties,.cvsignore"
-                        prefix="myfaces-${manifest.impl.version}/src"/>
         </tar>
     </target>
 
