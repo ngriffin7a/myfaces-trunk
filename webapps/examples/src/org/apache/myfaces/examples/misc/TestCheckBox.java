@@ -12,6 +12,7 @@ import java.io.Serializable;
 public class TestCheckBox implements Serializable
 {
     private boolean checked;
+    private String text;
 
  
     public boolean isChecked() {
@@ -19,5 +20,13 @@ public class TestCheckBox implements Serializable
     }
     public void setChecked(boolean checked) {
         this.checked = checked;
+    }
+    
+    
+    public String getText() {
+        return text;
+    }
+    public void setText(String text) {
+        this.text = text;
     }
 }

@@ -102,6 +102,12 @@ managed beans used:
                                 <h:selectBooleanCheckbox value="#{checkBox.checked}"/>
                                 <h:outputText value="Check box #{rowNumber}"/>
                             </h:column>
+                            <h:column>
+                                <f:facet name="header">
+                                    <h:outputText value="Text" />
+                                </f:facet>
+                                <h:inputText value="#{checkBox.text}"/>
+                            </h:column>
                         </x:dataTable>
 		                
 						<f:verbatim><br/><br/></f:verbatim>
