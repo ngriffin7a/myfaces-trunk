@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
-<project name="myfaces-develop" default="compile-for-debug">
+<project name="myfaces-develop" default="prepare-for-debug">
 
     <property environment="env"/>
 
@@ -20,10 +20,11 @@
 
     <!-- Properties -->
     <property file="../build.properties"/>
+    <property file="../build.properties.default"/>
     <property file="../manifest.properties"/>
 
     <!-- Temporary dir. May be overridden in build.properties -->
-    <property name="temp.dir" value="${env.TEMP}"/>
+    <property name="temp.dir" location="${env.TEMP}"/>
 
     <!-- classpath for compiling api classes -->
     <path id="jsfapi.class.path">

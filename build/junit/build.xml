@@ -1,18 +1,20 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
-<project name="myfaces-junit" default="junit">
+<project name="myfaces-junit" default="junit" >
 
     <property environment="env"/>
 
     <!-- Constants -->
     <property name="project.dir" location="${basedir}/../.."/>
-    <property name="junit.src" location="${project.dir}/src/junit"/>
+    <property name="junit.src.dir" location="${project.dir}/src/junit"/>
 
     <!-- Properties -->
-    <property file="../../build/build.properties"/>
-    <property file="build.properties"/>
+    <property file="../build.properties"/>
+    <property file="../build.properties.default"/>
 
     <!-- Temporary dir. May be overridden in build.properties -->
-    <property name="test.results.dir" value="test-results"/>
+    <property name="temp.dir" location="${env.TEMP}"/>
+    <property name="junit.classes.dir" location="${temp.dir}/myfaces/junit/classes"/>
+    <property name="junit.results.dir" location="${test.results.dir}/junit"/>
 
     <!-- classpath for compiling -->
     <path id="junit.class.path">
@@ -22,47 +24,60 @@
         <pathelement location="${myfaces.jar}"/>
         <pathelement location="${junit.jar}"/>
         <pathelement location="${commons-logging.jar}"/>
-        <pathelement location="${test.results.dir}/junit/classes"/>
+        <pathelement location="${junit.classes.dir}"/>
     </path>
 
-
-    <target name="compile-for-junit">
-        <mkdir dir="${test.results.dir}/junit/classes"/>
-        <javac srcdir="${project.dir}/src/junit"
-               destdir="${test.results.dir}/junit/classes"
-               debug="true"
-               classpathref="junit.class.path">
-        </javac>
-    	    <copy todir="${test.results.dir}/junit/classes">
-    	    	  <fileset dir="${project.dir}/src/junit">
-    	    	  	<include name="**/*.xml"/>
-    	    	  </fileset>
-    	    </copy>
-    </target>
-
-    <target name="junit" depends="compile-for-junit">
-        <mkdir dir="${test.results.dir}/test-reports/xml"/>
-        <mkdir dir="${test.results.dir}/test-reports/html"/>
+    <target name="junit" depends="-compile-for-junit,-myfaces-jar">
+        <mkdir dir="${junit.results.dir}/test-reports/xml"/>
+        <mkdir dir="${junit.results.dir}/test-reports/html"/>
         <junit fork="true">
             <classpath refid="junit.class.path"/>
-            <batchtest toDir="${test.results.dir}/test-reports/xml">
-                <fileset dir="${test.results.dir}/junit/classes">
+            <batchtest toDir="${junit.results.dir}/test-reports/xml">
+                <fileset dir="${junit.classes.dir}">
                     <include name="**/*Test.class"/>
                     <exclude name="**/*BaseTest.class"/>
-                	</fileset>
+                </fileset>
             </batchtest>
             <formatter type="xml"/>
         </junit>
 	    <junitreport>
-	        <fileset dir="${test.results.dir}/test-reports/xml">
+	        <fileset dir="${junit.results.dir}/test-reports/xml">
 		        <include name="TEST-*.xml"/>
 		    </fileset>
-		    <report toDir="${test.results.dir}/test-reports/html"/>
+		    <report toDir="${junit.results.dir}/test-reports/html"/>
 	    </junitreport>
     </target>
 
 	<target name="clean" description="deletes the generated test reports and compiled tests">
-		<delete dir="${test.results.dir}"/>
+		<delete dir="${junit.results.dir}"/>
+		<delete dir="${junit.classes.dir}"/>
 	</target>
+
+
+    <target name="-compile-for-junit" depends="-myfaces-jar" >
+        <mkdir dir="${junit.classes.dir}"/>
+        <javac srcdir="${junit.src.dir}"
+               destdir="${junit.classes.dir}"
+               debug="true"
+               classpathref="junit.class.path">
+        </javac>
+        <copy todir="${junit.classes.dir}">
+              <fileset dir="${junit.src.dir}">
+                <include name="**/*.xml"/>
+              </fileset>
+        </copy>
+    </target>
+
+
+    <target name="-myfaces-jar" description="create myfaces.jar if necessary" >
+        <available file="${myfaces.jar}" property="myfaces.jar.available"/>
+        <antcall target="-create-myfaces-jar"/>
+    </target>
+
+    <target name="-create-myfaces-jar" unless="myfaces.jar.available"
+            description="creates myfaces.jar via main buildfile" >
+        <ant dir="${project.dir}/build" antfile="build.xml" target="myfaces-jar" inheritall="false"/>
+    </target>
+
 
 </project>

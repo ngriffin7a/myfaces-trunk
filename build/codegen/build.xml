@@ -11,12 +11,13 @@
     <property name="components-src.dir" location="${project.dir}/src/components"/>
 
     <!-- Properties -->
-    <property file="../build.properties"/>
-    <property file="../manifest.properties"/>
     <property file="build.properties"/>
+    <property file="../build.properties"/>
+    <property file="../build.properties.default"/>
+    <property file="../manifest.properties"/>
 
     <!-- Temporary dir. May be overridden in build.properties -->
-    <property name="temp.dir" value="${env.TEMP}"/>
+    <property name="temp.dir" location="${env.TEMP}"/>
     <property name="codegen-classes.dir" location="${temp.dir}/myfaces-codegen"/>
 
 

@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
-<project name="myfaces-examples" default="compile-and-copy-libs">
+<!DOCTYPE project [
+    <!ENTITY tomcat-build SYSTEM "file:../tomcat/tomcat-build.xmlf">
+]>
+<project name="myfaces-examples" default="run-examples">
 
     <property environment="env"/>
 
@@ -14,10 +17,15 @@
 
     <!-- Properties -->
     <property file="../build.properties"/>
+    <property file="../build.properties.default"/>
     <property file="../manifest.properties"/>
 
     <!-- Temporary dir. May be overridden in build.properties -->
-    <property name="temp.dir" value="${env.TEMP}"/>
+    <property name="temp.dir" location="${env.TEMP}"/>
+
+    <!-- Tomcat -->
+    <property name="tomcat.war.file" location="${temp.dir}/myfaces-examples.war"/>
+    <property name="tomcat.context.path" value="/myfaces"/>
 
 
     <!-- classpath for compiling -->
@@ -30,23 +38,28 @@
     </path>
 
 
-    <target name="-myfaces-jar" unless="myfaces.jar.available">
-        <!-- creates myfaces.jar via main buildfile if it does not exist -->
-        <ant dir="${project.dir}/build"
-             antfile="build.xml"
-             target="myfaces-jar"
-             inheritall="false"/>
+    <target name="run-examples"
+            description="creates examples war and deploys it" >
+        <ant dir="${project.dir}/build/examples-webapp" antfile="build.xml" target="-war" inheritall="false"/>
+        <antcall target="tomcat-deploy-app"/>
+        <echo message="browse to http://${tomcat.server}:${tomcat.port}${tomcat.context.path}"/>
     </target>
 
-    <target name="-check-myfaces-jar">
-        <!-- check if myfaces.jar exist -->
-        <available file="${myfaces.jar}" property="myfaces.jar.available"/>
-        <antcall target="-myfaces-jar"/>
+    <target name="clean"
+            description="deletes all files that were built">
+        <delete quiet="true" failonerror="false" includeEmptyDirs="true">
+            <fileset dir="${web-inf.classes.dir}"/>
+            <fileset dir="${web-inf.lib.dir}"/>
+            <fileset file="${project.dir}/myfaces-*-examples.tgz"/>
+            <fileset file="${examples.web}/WEB-INF/web.xml"/>
+            <fileset file="${examples.web}/WEB-INF/faces-config.xml"/>
+            <fileset file="${temp.dir}/myfaces-samples.war" />
+        </delete>
     </target>
 
 
-    <target name="compile-and-copy-libs"
-            depends="-check-myfaces-jar"
+    <target name="-compile-and-copy-libs"
+            depends="-myfaces-jar"
             description="compiles the examples java classes to WEB-INF/classes and copies all needed libs to WEB-INF/lib">
         <mkdir dir="${web-inf.classes.dir}"/>
         <javac srcdir="${examples.src}"
@@ -63,28 +76,19 @@
         </copy>
     </target>
 
-    <target name="release"
-            depends="compile-and-copy-libs"
-            description="creates the examples release file myfaces-x.x.x-examples.tgz (don't forget to adjust manifest.properties!)">
-
-        <mkdir dir="${temp.dir}"/>
-
+    <target name="-war" depends="-compile-and-copy-libs">
         <tstamp>
             <format property="TODAY" pattern="yyyy-MM-dd HH:mm" locale="en"/>
         </tstamp>
-
-        <!-- create manifest -->
-        <manifest file="${temp.dir}/MANIFEST.MF">
-            <section name="${manifest.section}">
-                <attribute name="Implementation-Title" value="${manifest.impl.title}"/>
-                <attribute name="Implementation-Version" value="${manifest.impl.version} (${TODAY})"/>
-                <attribute name="Implementation-Vendor" value="${manifest.impl.vendor}"/>
-            </section>
-        </manifest>
-
         <war destfile="${temp.dir}/myfaces-examples.war"
-             webxml="${project.dir}/conf/web.xml"
-             manifest="${temp.dir}/MANIFEST.MF">
+             webxml="${project.dir}/conf/web.xml">
+            <manifest>
+                <section name="${manifest.section}">
+                    <attribute name="Implementation-Title" value="${manifest.impl.title}"/>
+                    <attribute name="Implementation-Version" value="${manifest.impl.version} (${TODAY})"/>
+                    <attribute name="Implementation-Vendor" value="${manifest.impl.vendor}"/>
+                </section>
+            </manifest>
             <lib file="${commons-codec.jar}"/>
             <lib file="${commons-el.jar}"/>
             <lib file="${commons-fileupload.jar}"/>
@@ -99,6 +103,11 @@
                                WEB-INF/lib/**,
                                WEB-INF/web.xml " />
         </war>
+    </target>
+
+    <target name="release"
+            depends="-compile-and-copy-libs, -war"
+            description="creates the examples release file myfaces-x.x.x-examples.tgz (don't forget to adjust manifest.properties!)">
 
         <tar destfile="${project.dir}/myfaces-${manifest.impl.version}-examples.tgz"
              compression="gzip">
@@ -119,20 +128,9 @@
     </target>
 
 
-    <target name="clean"
-            description="deletes all files that were built">
-        <delete quiet="true" failonerror="false" includeEmptyDirs="true">
-            <fileset dir="${web-inf.classes.dir}"/>
-            <fileset dir="${web-inf.lib.dir}"/>
-            <fileset file="${project.dir}/myfaces-*-examples.tgz"/>
-            <fileset file="${examples.web}/WEB-INF/web.xml"/>
-            <fileset file="${examples.web}/WEB-INF/faces-config.xml"/>
-            <fileset file="${temp.dir}/myfaces-samples.war" />
-        </delete>
-    </target>
 
     <target name="prepare-for-debugging"
-            depends="-check-myfaces-jar"
+            depends="-myfaces-jar"
             description="compiles the examples java classes to WEB-INF/classes and copies all needed libs to WEB-INF/lib">
         <mkdir dir="${web-inf.classes.dir}"/>
         <javac srcdir="${examples.src}"
@@ -159,5 +157,19 @@
         <copy file="${project.dir}/conf/web.xml" todir="${examples.web}/WEB-INF" />
 
     </target>
+
+
+    &tomcat-build;
+
+    <target name="-myfaces-jar" description="create myfaces.jar if necessary" >
+        <available file="${myfaces.jar}" property="myfaces.jar.available"/>
+        <antcall target="-create-myfaces-jar"/>
+    </target>
+
+    <target name="-create-myfaces-jar" unless="myfaces.jar.available"
+            description="creates myfaces.jar via main buildfile" >
+        <ant dir="${project.dir}/build" antfile="build.xml" target="myfaces-jar" inheritall="false"/>
+    </target>
+
 
 </project>

@@ -1,48 +1,46 @@
-	<property file="${tomcat.build.dir}/tomcat.properties"/>
 	<taskdef file="${tomcat.build.dir}/TomcatTasks.properties">
         <classpath>
             <pathelement path="${tomcat.home}/server/lib/catalina-ant.jar"/>
         </classpath>
     </taskdef>
 
-    <property name="absolute.temp.dir" location="${temp.dir}"/>
 	<target name="tomcat-deploy-app" description="Deploy the App to Tomcat">
 	        <deploy url="${tomcat.manager.url}"
-            username="${tomcat.username}"
-            password="${tomcat.password}"
-            path="/${webapp.name}"
-            war="file:${absolute.temp.dir}/${webapp.name}.war"/>
+            username="${tomcat.manager.username}"
+            password="${tomcat.manager.password}"
+            path="${tomcat.context.path}"
+            war="file:${tomcat.war.file}"/>
     </target>
 	<target name="tomcat-undeploy-app" description="Undeploy the App from Tomcat">
         <undeploy url="${tomcat.manager.url}"
-            username="${tomcat.username}"
-            password="${tomcat.password}"
-            path="/${webapp.name}"/>
+            username="${tomcat.manager.username}"
+            password="${tomcat.manager.password}"
+            path="${tomcat.context.path}"/>
     </target>
 
     <target name="tomcat-reload-app" description="Reload the App in Tomcat - must be deployed">
         <reload url="${tomcat.manager.url}"
-            username="${tomcat.username}"
-            password="${tomcat.password}"
-            path="/${webapp.name}"/>
+            username="${tomcat.manager.username}"
+            password="${tomcat.manager.password}"
+            path="${tomcat.context.path}"/>
     </target>
 
     <target name="tomcat-start-app" description="Start the App in Tomcat - must be deployed">
         <start url="${tomcat.manager.url}"
-            username="${tomcat.username}"
-            password="${tomcat.password}"
-            path="/${webapp.name}"/>
+            username="${tomcat.manager.username}"
+            password="${tomcat.manager.password}"
+            path="${tomcat.context.path}"/>
     </target>
 
     <target name="tomcat-stop-app" description="Stop the App in Tomcat - must be deployed">
         <stop url="${tomcat.manager.url}"
-            username="${tomcat.username}"
-            password="${tomcat.password}"
-            path="/${webapp.name}"/>
+            username="${tomcat.manager.username}"
+            password="${tomcat.manager.password}"
+            path="${tomcat.context.path}"/>
     </target>
 
     <target name="tomcat-list" description="List Tomcat deployed applications">
         <list url="${tomcat.manager.url}"
-            username="${tomcat.username}"
-            password="${tomcat.password}"/>
+            username="${tomcat.manager.username}"
+            password="${tomcat.manager.password}"/>
     </target>

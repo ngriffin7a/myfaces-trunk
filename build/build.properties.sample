@@ -1,38 +1,6 @@
+# Copy these properties to a file called build.properties and adjust settings to your environment
+
 # Don't forget to use double-backslashes in windows paths!
-
-# File path to Java Servlet API 2.3 and JSP 1.2 archive
-servlet.jar = ${project.dir}/lib/servlet-2.3-jsp-1.2.jar
-
-# File path to JSP 2.0 API archive
-jsp-api.jar = ${project.dir}/lib/jsp-2.0.jar
-
-# File path to JSTL archive
-jstl.jar = ${project.dir}/lib/jstl.jar
-
-# File path to commons codec package
-commons-codec.jar = ${project.dir}/lib/commons-codec-1.2.jar
-
-# File path to com.oreilly.servlet package
-####### deprecated - remove if new fileupload is ready
-cos.jar = ${project.dir}/lib/cos.jar
-
-# File path to commons file upload package
-commons-fileupload.jar = ${project.dir}/lib/commons-fileupload-1.0.jar
-
-# File path to commons codec package
-commons-codec.jar = ${project.dir}/lib/commons-codec-1.2.jar
-
-# File path to commons logging package
-commons-logging.jar = ${project.dir}/lib/commons-logging.jar
-
-# File path to commons el package
-commons-el.jar = ${project.dir}/lib/commons-el.jar
-
-# File path to sun's RI-JSF-API
-sun-jsf-api.jar = ..
-
-# Destination file path of MyFaces implementation archive to be created
-myfaces.jar = ${project.dir}/lib/myfaces.jar
 
 # Temporary directory
 # (if not set, environment variable "TEMP" will be used)
@@ -42,17 +10,15 @@ myfaces.jar = ${project.dir}/lib/myfaces.jar
 javac.optimize = off
 javac.debug = on
 
-# log4j library (only needed for examples application)
-log4j.jar = ${project.dir}/lib/log4j-1.2.8.jar
-
 # junit library (only needed for JUnit testing)
-junit.jar = ${project.dir}/lib/junit.jar
+junit.jar = C:\\Programme\\IntelliJ-IDEA-3.0.4\\lib\\junit.jar
 
-# tlddoc library (only needed for tlddoc creation)
-tlddoc.jar = ${project.dir}/lib/tlddoc.jar
+# tlddoc library (needed for tlddoc creation)
+tlddoc.jar = C:\\Develop\\Tools\\taglibrarydoc-1_1\\tlddoc.jar
 
-# cglib library
-cglib.jar = ${project.dir}/lib/cglib-full-2.0.jar
 
-# Tomcat Build and Deploy Support
-tomcat.build.dir=${project.dir}/build/tomcat
+
+# Properties for Tomcat Server
+tomcat.home=/Users/bdudney/DevTools/jakarta-tomcat-5.0.18
+tomcat.manager.username=admin
+tomcat.manager.password=admin

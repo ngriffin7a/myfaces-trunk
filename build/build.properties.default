@@ -1,0 +1,55 @@
+# These are the default build properties that normally need not be changed
+
+# Don't forget to use double-backslashes in windows paths!
+
+# File path to Java Servlet API 2.3 and JSP 1.2 archive
+servlet.jar = ${project.dir}/lib/servlet-2.3-jsp-1.2.jar
+
+# File path to JSP 2.0 API archive
+jsp-api.jar = ${project.dir}/lib/jsp-2.0.jar
+
+# File path to JSTL archive
+jstl.jar = ${project.dir}/lib/jstl.jar
+
+# File path to commons codec package
+commons-codec.jar = ${project.dir}/lib/commons-codec-1.2.jar
+
+# File path to com.oreilly.servlet package
+####### deprecated - remove if new fileupload is ready
+cos.jar = ${project.dir}/lib/cos.jar
+
+# File path to commons file upload package
+commons-fileupload.jar = ${project.dir}/lib/commons-fileupload-1.0.jar
+
+# File path to commons codec package
+commons-codec.jar = ${project.dir}/lib/commons-codec-1.2.jar
+
+# File path to commons logging package
+commons-logging.jar = ${project.dir}/lib/commons-logging.jar
+
+# File path to commons el package
+commons-el.jar = ${project.dir}/lib/commons-el.jar
+
+# Destination file path of MyFaces implementation archive to be created
+myfaces.jar = ${project.dir}/lib/myfaces.jar
+
+# log4j library (only needed for examples application)
+log4j.jar = ${project.dir}/lib/log4j-1.2.8.jar
+
+# Destination for JUnit test results
+test.results.dir=${project.dir}/test-results
+
+# Cactus libraries dir
+cactus.lib.dir=${project.dir}/lib/cactus-1.5
+
+# Tagunit libraries dir
+tagunit.lib.dir=${project.dir}/lib/tagunit-1.0.1
+
+# Tomcat Build and Deploy Support
+tomcat.build.dir=${project.dir}/build/tomcat
+
+# Properties for Tomcat Server
+# Tomcat home and manager user and password must be set in build.properties (see build.properties.sample)
+tomcat.server=localhost
+tomcat.port=8080
+tomcat.manager.url=http://${tomcat.server}:${tomcat.port}/manager
