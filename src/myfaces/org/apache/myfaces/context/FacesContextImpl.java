@@ -267,12 +267,6 @@ public class FacesContextImpl
             String objName = modelReference.substring(0, i);
             String propName = modelReference.substring(i + 1);
             Object obj = getModelInstance(objName);
-            if (obj == null)
-            {
-                FacesException e = new FacesException("ModelReference " + objName + " could not be found.");
-                LogUtil.getLogger().log(Level.SEVERE, e.getMessage());
-                throw e;
-            }
             return BeanUtils.getBeanPropertyValue(obj, propName);
         }
     }
