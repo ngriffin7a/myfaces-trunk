@@ -27,6 +27,10 @@ import java.util.NoSuchElementException;
  *
  * @author Anton Koinov (latest modification by $Author$)
  * @version $Revision$ $Date$
+ * $Log$
+ * Revision 1.1  2004/03/30 15:37:17  manolito
+ * moved to share
+ *
  */
 public final class NullIterator implements Iterator
 {
