@@ -61,20 +61,6 @@
                 </f:group>
             </f:list>
 
-            <br>
-
-            <f:list id="groupList" style="standardTable" rowClasses="standard,standardColorA" >
-                <f:group id="groupList.g1" >
-                    <f:output_text id="groupList.g1.name" text="Country1"  />
-                    <f:output_text id="groupList.g1.iso" text="IsoCode1"  />
-                </f:group>
-                <f:group id="groupList.g2" >
-                    <f:output_text id="groupList.g2.name" text="Country2"  />
-                    <f:output_text id="groupList.g2.iso" text="IsoCode2"  />
-                </f:group>
-            </f:list>
-
-            <br>
         </td>
     </tr></table>
 
