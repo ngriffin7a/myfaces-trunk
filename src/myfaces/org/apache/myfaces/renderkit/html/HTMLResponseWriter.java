@@ -108,7 +108,7 @@ public class HTMLResponseWriter extends ResponseWriter
     public void flush()
     throws IOException
     {
-        closeTag();
+        _writer.flush();
     }
 
     public void startDocument()
