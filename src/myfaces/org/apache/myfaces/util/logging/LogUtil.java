@@ -25,6 +25,10 @@ import java.util.logging.ConsoleHandler;
 
 /**
  * Utilities (shortcuts) for logging.
+ *
+ * TODO: Convenient methods for debugging, that automatically log
+ * current method and class (be means of Exception and StackTraceElement).
+ *
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */

@@ -66,18 +66,6 @@ public class CallbackSupport
                                  false));
     }
 
-    public static void removeCallbackRenderer(FacesContext facesContext,
-                                              UIComponent component,
-                                              CallbackRenderer callbackRenderer)
-    {
-        Map map = getCallbackRendererInfoMap(facesContext);
-        map.remove(component.getClientId(facesContext));
-        if (map.isEmpty())
-        {
-            unwrapRenderKit(facesContext);
-        }
-    }
-
     /**
      * Register a new CallbackRenderer, whose callback-functions are called when rendering each
      * direct child component of the given component.
@@ -99,6 +87,19 @@ public class CallbackSupport
                                  true));
     }
 
+
+    public static void removeCallbackRenderer(FacesContext facesContext,
+                                              UIComponent component,
+                                              CallbackRenderer callbackRenderer)
+    {
+        Map map = getCallbackRendererInfoMap(facesContext);
+        map.remove(component.getClientId(facesContext));
+        if (map.isEmpty())
+        {
+            unwrapRenderKit(facesContext);
+        }
+    }
+
     public static void removeChildrenCallbackRenderer(FacesContext facesContext,
                                                       UIComponent component,
                                                       CallbackRenderer callbackRenderer)
@@ -118,42 +119,47 @@ public class CallbackSupport
     protected static void wrapRenderKit(FacesContext facesContext)
     {
         Tree tree = facesContext.getTree();
-        String originalRenderKitId = tree.getRenderKitId();
-
-        if (originalRenderKitId.equals(CallbackRenderKit.ID))
+        String currentRenderKitId = tree.getRenderKitId();
+        if (currentRenderKitId.equals(CallbackRenderKit.ID))
         {
             //already wrapped
             return;
         }
 
-        RenderKitFactory renderkitFactory = (RenderKitFactory)FactoryFinder.getFactory(FactoryFinder.RENDER_KIT_FACTORY);
-        RenderKit originalRenderKit = renderkitFactory.getRenderKit(originalRenderKitId,
-                                                                    facesContext);
-        //TODO: original renderKit should also be on a stack, in the meantime we support no nested RenderKits
+        RenderKitFactory renderkitFactory
+            = (RenderKitFactory)FactoryFinder.getFactory(FactoryFinder.RENDER_KIT_FACTORY);
+        RenderKit currentRenderKit = renderkitFactory.getRenderKit(currentRenderKitId,
+                                                                   facesContext);
         if (getOriginalRenderKit(facesContext) != null)
         {
-            throw new IllegalStateException();
+            //RenderKit was already wrapped, but CallbackRenderKit was again replaced
+            //by another RenderKit in the meantime.
+            throw new IllegalStateException("CallbackRenderKit has been replaced by another RenderKit.");
         }
         facesContext.getServletRequest().setAttribute(ORIGINAL_RENDER_KIT_ID_ATTR,
-                                                      originalRenderKitId);
+                                                      currentRenderKitId);
         facesContext.getServletRequest().setAttribute(ORIGINAL_RENDER_KIT_ATTR,
-                                                      originalRenderKit);
+                                                      currentRenderKit);
 
         // lookup CallbackRenderKit in RenderKitFactory...
-        RenderKit callbackRenderKit = null;
-        try
+        synchronized (renderkitFactory)
         {
-            callbackRenderKit = renderkitFactory.getRenderKit(CallbackRenderKit.ID, facesContext);
-        }
-        catch (Exception e) {}
-        // ...and add to RenderKitFactory if not yet registered
-        if (callbackRenderKit == null)
-        {
-            callbackRenderKit = new CallbackRenderKit();
-            renderkitFactory.addRenderKit(CallbackRenderKit.ID, callbackRenderKit);
+            RenderKit callbackRenderKit = null;
+            try
+            {
+                callbackRenderKit = renderkitFactory.getRenderKit(CallbackRenderKit.ID,
+                                                                  facesContext);
+            }
+            catch (Exception e) {}
+            // ...and add to RenderKitFactory if not yet registered
+            if (callbackRenderKit == null)
+            {
+                callbackRenderKit = new CallbackRenderKit();
+                renderkitFactory.addRenderKit(CallbackRenderKit.ID, callbackRenderKit);
+            }
         }
 
-        // set tree to wrapper
+        // set tree to wrapper (= CallbackRenderKit)
         tree.setRenderKitId(CallbackRenderKit.ID);
     }
 

@@ -29,6 +29,7 @@ import javax.faces.tree.Tree;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.StringTokenizer;
 
 /**
  * Sun saves a special Map in the root component, when there are common without an id.
@@ -51,6 +52,7 @@ import java.util.Iterator;
 public class TagHashHack
 {
     private static final String TAG_HASH_ATTR = "tagHash";
+    private static final boolean SERIALIZE = true;
 
     private TagHashHack() {}
 
@@ -71,20 +73,24 @@ public class TagHashHack
         Tree parsedTree = JspInfo.getTree(facesContext,
                                           facesContext.getTree().getTreeId());
 
-        if (parsedTree.getRoot().getAttribute(TAG_HASH_ATTR) != null)
+        Map saveTagHash = (Map)parsedTree.getRoot().getAttribute(TAG_HASH_ATTR);
+        boolean newMap = false;
+        if (saveTagHash == null)
         {
-            //Already in parsed tree
-            return null;
+            saveTagHash = new HashMap();
+            newMap = true;
         }
 
         //Remap each tagKey to the uniqueId instead of the component
-        Map saveTagHash = new HashMap();
         for (Iterator it = tagHash.entrySet().iterator(); it.hasNext();)
         {
             Map.Entry entry = (Map.Entry)it.next();
-            UIComponent comp = (UIComponent)entry.getValue();
-            saveTagHash.put(entry.getKey(),
-                            JspInfo.getUniqueComponentId(comp));
+            if (newMap || !saveTagHash.containsKey(entry.getKey()))
+            {
+                UIComponent comp = (UIComponent)entry.getValue();
+                saveTagHash.put(entry.getKey(),
+                                JspInfo.getUniqueComponentId(comp));
+            }
         }
 
         if (MyFacesConfig.isJspInfoApplicationCaching())
@@ -94,13 +100,53 @@ public class TagHashHack
             return null;
         }
 
-        return ConverterUtils.serialize(saveTagHash);
+        if (SERIALIZE)
+        {
+            return ConverterUtils.serialize(saveTagHash);
+        }
+        else
+        {
+            //Alternative: generate a comma-separated key-value list
+            StringBuffer buf = new StringBuffer();
+            for (Iterator it = saveTagHash.entrySet().iterator(); it.hasNext();)
+            {
+                Map.Entry entry = (Map.Entry)it.next();
+                if (buf.length() > 0)
+                {
+                    buf.append(',');
+                }
+                buf.append((String)entry.getKey());
+                buf.append('=');
+                buf.append((String)entry.getValue());
+            }
+            return buf.toString();
+        }
     }
 
 
     public static Object getAsObjectFromSaved(String attrValue)
     {
-        return ConverterUtils.deserialize(attrValue);
+        if (SERIALIZE)
+        {
+            return ConverterUtils.deserialize(attrValue);
+        }
+        else
+        {
+            HashMap map = new HashMap();
+            StringTokenizer st = new StringTokenizer(attrValue, ",");
+            while (st.hasMoreTokens())
+            {
+                String token = st.nextToken();
+                int commaIdx = token.indexOf(',');
+                if (commaIdx < 0)
+                {
+                    throw new IllegalArgumentException("Invalid tagHash String!");
+                }
+                map.put(token.substring(0, commaIdx),
+                        token.substring(commaIdx + 1));
+            }
+            return map;
+        }
     }
 
 

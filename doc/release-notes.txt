@@ -2,6 +2,12 @@ MyFaces Release Notes
 =====================
 
 ----------------------------------------------------------------------
+Changes in Release 0.3.0
+
+* This is a major release, that has lots of changes to make MyFaces
+  conform to the new EA3 specification.
+
+----------------------------------------------------------------------
 Changes in Release 0.1.4
 
 * tons of adds, changes and fixes to better conform to the specification.

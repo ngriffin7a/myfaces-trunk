@@ -294,8 +294,6 @@ public class StateSaver
 
 
     /**
-     * TODO: Optimize saving of "valid" attribute. (Assume "true" as default and don't save)
-     *
      * @param facesContext
      * @param stateMap
      * @param uiComponent
@@ -326,11 +324,16 @@ public class StateSaver
         //is it Sun's troublesome "tagHash" attribute in the root?
         if (TagHashHack.isTagHashAttribute(uiComponent, attrName))
         {
-            saveParameter(stateMap,
-                          RequestParameterNames.getUIComponentStateParameterName(facesContext,
-                                                                                 uiComponent,
-                                                                                 attrName),
-                          TagHashHack.getAsStringToBeSaved(facesContext, (Map)attrValue));
+            String strValue = TagHashHack.getAsStringToBeSaved(facesContext,
+                                                               (Map)attrValue);
+            if (strValue != null)
+            {
+                saveParameter(stateMap,
+                              RequestParameterNames.getUIComponentStateParameterName(facesContext,
+                                                                                     uiComponent,
+                                                                                     attrName),
+                              strValue);
+            }
             return;
         }
 

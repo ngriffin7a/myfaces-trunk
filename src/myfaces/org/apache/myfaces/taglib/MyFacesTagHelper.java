@@ -147,6 +147,12 @@ public class MyFacesTagHelper
     }
 
 
+    /**
+     * TODO: Rethink this logic. Better do a findOutAttributeType and
+     *       convert to proper type regardless of value or common attribute.
+     *
+     * @param uiComponent
+     */
     protected void overrideProperties(UIComponent uiComponent)
     {
         FacesContext facesContext = null;

@@ -111,7 +111,7 @@ public class UIComponentUtils
         }
         else
         {
-            String s = StringArrayConverter.getAsString(newValues);
+            String s = StringArrayConverter.getAsString(newValues, false);
             convertAndSetValue(facesContext, uiComponent, s, conv, addErrorMessageOnFail);
         }
     }

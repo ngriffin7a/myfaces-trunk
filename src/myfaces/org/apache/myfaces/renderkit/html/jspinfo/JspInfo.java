@@ -335,7 +335,7 @@ public class JspInfo
 
 
     /**
-     * TODO: Can we optimize by a HashMap
+     * TODO: We should optimize this by a HashMap
      */
     public static UIComponent findComponentByUniqueId(Tree tree, String uniqueId)
     {

@@ -141,7 +141,8 @@ public class StateRestorer
     {
         if (paramValue instanceof String[])
         {
-            return StringArrayConverter.getAsString((String[])paramValue);
+            return StringArrayConverter.getAsString((String[])paramValue,
+                                                    false);
         }
         else
         {

@@ -23,10 +23,11 @@ import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.convert.ConverterException;
 import java.util.StringTokenizer;
+import java.net.URLEncoder;
+import java.net.URLDecoder;
+import java.io.UnsupportedEncodingException;
 
 /**
- * TODO: Support for ',' character within StringArray?
- *
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
@@ -42,49 +43,69 @@ public class StringArrayConverter
     public Object getAsObject(FacesContext context, UIComponent component, String value)
         throws ConverterException
     {
-        StringTokenizer tokenizer = new StringTokenizer(value, ",");
-        String[] newValue = new String[tokenizer.countTokens()];
-        for (int i = 0; tokenizer.hasMoreTokens(); i++)
+        try
         {
-            newValue[i] = tokenizer.nextToken();
+            StringTokenizer tokenizer = new StringTokenizer(value, ",");
+            String[] newValue = new String[tokenizer.countTokens()];
+            for (int i = 0; tokenizer.hasMoreTokens(); i++)
+            {
+                newValue[i] = URLDecoder.decode(tokenizer.nextToken(), "UTF-8");
+            }
+            return newValue;
         }
-        return newValue;
+        catch (UnsupportedEncodingException e)
+        {
+            throw new RuntimeException(e);
+        }
     }
 
     public String getAsString(FacesContext context, UIComponent component, Object value)
             throws ConverterException
     {
-        return getAsString((String[])value);
+        return getAsString((String[])value,
+                           true);   //escapeCommas
     }
 
 
-    public static String getAsString(String[] strings)
+    public static String getAsString(String[] strings,
+                                     boolean escapeCommas)
     {
-        if (strings == null || strings.length == 0)
+        try
         {
-            return null;
-        }
-        else if (strings.length == 1)
-        {
-            return strings[0];
-        }
-        else
-        {
-            StringBuffer buf = new StringBuffer();
-            for (int i = 0; i < strings.length; i++)
+            if (strings == null || strings.length == 0)
             {
-                if (i > 0)
-                {
-                    buf.append(',');
-                }
-                String s = strings[i];
-                if (s.indexOf(',') != -1)
-                {
-                    throw new IllegalArgumentException("Commas within StringArrays are not supported!");
-                }
-                buf.append(s);
+                return null;
             }
-            return buf.toString();
+            else if (strings.length == 1)
+            {
+
+                return escapeCommas
+                        ? URLEncoder.encode(strings[0], "UTF-8") //Encode, so that commas within Strings are escaped
+                        : strings[0];
+            }
+            else
+            {
+                StringBuffer buf = new StringBuffer();
+                for (int i = 0; i < strings.length; i++)
+                {
+                    if (i > 0)
+                    {
+                        buf.append(',');
+                    }
+                    String s = strings[i];
+                    if (escapeCommas)
+                    {
+                        //Encode, so that commas within Strings are escaped
+                        s = URLEncoder.encode(s, "UTF-8");
+                    }
+                    buf.append(s);
+                }
+                return buf.toString();
+            }
+        }
+        catch (UnsupportedEncodingException e)
+        {
+            throw new RuntimeException(e);
         }
     }
 

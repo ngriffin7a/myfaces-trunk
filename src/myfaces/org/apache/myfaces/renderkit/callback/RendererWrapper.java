@@ -43,7 +43,6 @@ class RendererWrapper
 
     public void encodeBegin(FacesContext facesContext, UIComponent uiComponent) throws IOException
     {
-        //TODO: uiComponent may be null!
         Renderer renderer = CallbackSupport.getOriginalRenderKit(facesContext)
                                                 .getRenderer(_rendererType);
 
