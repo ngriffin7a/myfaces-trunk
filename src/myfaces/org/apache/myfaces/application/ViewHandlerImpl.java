@@ -37,10 +37,8 @@ import javax.faces.render.RenderKitFactory;
 import javax.faces.render.Renderer;
 import javax.servlet.ServletRequest;
 import java.io.IOException;
-import java.util.Enumeration;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Locale;
+import java.io.UnsupportedEncodingException;
+import java.util.*;
 
 /**
  * DOCUMENT ME!
@@ -58,16 +56,106 @@ public class ViewHandlerImpl
     public ViewHandlerImpl()
     {
         _stateManager = new StateManagerImpl();
-        if (log.isTraceEnabled()) log.trace("New ViewHanldler instance created");
+        if (log.isTraceEnabled()) log.trace("New ViewHandler instance created");
     }
 
-    public Locale calculateLocale(FacesContext facescontext)
+    public UIViewRoot createView(FacesContext facesContext, String viewId)
     {
-        Enumeration locales = ((ServletRequest)facescontext.getExternalContext().getRequest()).getLocales();
+        UIViewRoot uiViewRoot = new UIViewRoot();
+        uiViewRoot.setViewId(viewId);
+        uiViewRoot.setLocale(calculateLocale(facesContext));
+        if (log.isTraceEnabled()) log.trace("Created view " + viewId);
+        return uiViewRoot;
+    }
+
+    public UIViewRoot restoreView(FacesContext facesContext, String viewId)
+    {
+        UIViewRoot viewRoot = getStateManager().restoreView(facesContext, viewId);
+        handleCharacterEncoding(facesContext);
+        return viewRoot;
+    }
+
+    /**
+     * Find character encoding and examine Content-Type header as stated in Spec. 2.5.1.2
+     * @param facesContext
+     */
+    private void handleCharacterEncoding(FacesContext facesContext)
+    {
+        ExternalContext externalContext = facesContext.getExternalContext();
+        String characterEncoding = null;
+
+        String contentType = (String)externalContext.getRequestHeaderMap().get("Content-Type");
+        if (contentType != null)
+        {
+            int charsetFind = contentType.indexOf("charset=");
+            if (charsetFind != -1)
+            {
+                if (charsetFind == 0)
+                {
+                    //charset at beginning of Content-Type, curious
+                    characterEncoding = contentType.substring(8);
+                }
+                else
+                {
+                    char charBefore = contentType.charAt(charsetFind - 1);
+                    if (charBefore == ';' || Character.isWhitespace(charBefore))
+                    {
+                        //Correct charset after mime type
+                        characterEncoding = contentType.substring(charsetFind + 8);
+                    }
+                }
+                if (log.isDebugEnabled()) log.debug("Incoming request has Content-Type header with character encoding " + characterEncoding);
+            }
+            else
+            {
+                if (log.isDebugEnabled()) log.debug("Incoming request has Content-Type header without character encoding: " + contentType);
+            }
+        }
+        else
+        {
+            if (log.isDebugEnabled()) log.debug("Incoming request has no Content-Type header.");
+        }
+
+        if (characterEncoding == null)
+        {
+            Map sessionMap = externalContext.getSessionMap();
+            if (sessionMap != null)
+            {
+                characterEncoding = (String)sessionMap.get(ViewHandler.CHARACTER_ENCODING_KEY);
+                if (log.isDebugEnabled()) log.debug("Got character encoding from session.");
+            }
+        }
+
+        if (characterEncoding != null)
+        {
+            Object request = externalContext.getRequest();
+            if (request instanceof ServletRequest)
+            {
+                try
+                {
+                    ((ServletRequest)request).setCharacterEncoding(characterEncoding);
+                }
+                catch (UnsupportedEncodingException e)
+                {
+                    if (log.isWarnEnabled()) log.warn("Request does not support character encoding " + characterEncoding);
+                }
+            }
+            else
+            {
+                log.error("Request of type " + request.getClass().getName() + " not supported by ViewHandler " + getClass().getName() + ": Could not set character encoding!");
+            }
+        }
+    }
+
+
+    public Locale calculateLocale(FacesContext facesContext)
+    {
+        //TODO: ExternalContext.getLocales()
+        Enumeration locales = ((ServletRequest)facesContext.getExternalContext().getRequest()).getLocales();
         while (locales.hasMoreElements())
         {
             Locale locale = (Locale) locales.nextElement();
-            for (Iterator it = facescontext.getApplication().getSupportedLocales(); it.hasNext();)
+            for (Iterator it = facesContext.getApplication().getSupportedLocales(); it.hasNext();)
             {
                 Locale supportLocale = (Locale)it.next();
                 // higher priority to a langauage match over an exact match
@@ -85,17 +173,8 @@ public class ViewHandlerImpl
             }
         }
 
-        Locale locale = facescontext.getApplication().getDefaultLocale();
+        Locale locale = facesContext.getApplication().getDefaultLocale();
         return locale != null ? locale : Locale.getDefault();
-    }
-
-    public UIViewRoot createView(FacesContext facescontext, String viewId)
-    {
-        UIViewRoot uiViewRoot = new UIViewRoot();
-        uiViewRoot.setViewId(viewId);
-        uiViewRoot.setLocale(calculateLocale(facescontext));
-        if (log.isTraceEnabled()) log.trace("Created view " + viewId);
-        return uiViewRoot;
     }
 
     public StateManager getStateManager()
@@ -267,12 +346,6 @@ public class ViewHandlerImpl
         }
         */
 
-    }
-
-    public UIViewRoot restoreView(FacesContext facescontext, String s)
-    {
-        // TODO: implement
-        throw new UnsupportedOperationException("not yet implemented.");
     }
 
     public void writeState(FacesContext facescontext) throws IOException

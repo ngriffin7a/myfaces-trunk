@@ -138,6 +138,10 @@ public class ExternalContextImpl
             {
                 _sessionMap = new SessionMap(session);
             }
+            else
+            {
+                _sessionMap = Collections.EMPTY_MAP;    //TODO: EMPTY_MAP throws exception on put. Better return an empty HashMap?
+            }
         }
         return _sessionMap;
     }
