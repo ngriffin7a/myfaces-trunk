@@ -19,7 +19,7 @@
     <managed-bean>
         <managed-bean-name>validateForm</managed-bean-name>
         <managed-bean-class>net.sourceforge.myfaces.examples.validate.ValidateForm</managed-bean-class>
-        <managed-bean-scope>request</managed-bean-scope>        
+        <managed-bean-scope>request</managed-bean-scope>
     </managed-bean>
 
     <managed-bean>
@@ -120,12 +120,6 @@
         <managed-bean-scope>application</managed-bean-scope>
     </managed-bean>
 
-    <managed-bean>
-        <managed-bean-name>countryAction</managed-bean-name>
-        <managed-bean-class>net.sourceforge.myfaces.examples.listexample.SimpleCountryAction</managed-bean-class>
-        <managed-bean-scope>application</managed-bean-scope>
-    </managed-bean>
-
     <!-- Managed Beans for dataScroller.jsp -->
 
     <managed-bean>
@@ -223,12 +217,12 @@
         <navigation-case>
             <from-outcome>go_validate</from-outcome>
             <to-view-id>/validate.jsp</to-view-id>
-        </navigation-case>        
+        </navigation-case>
 
         <navigation-case>
             <from-outcome>go_rssticker</from-outcome>
             <to-view-id>/rssTicker.jsp</to-view-id>
-        </navigation-case>        
+        </navigation-case>
 
         <navigation-case>
             <from-outcome>go_datascroller</from-outcome>
@@ -244,7 +238,7 @@
             <to-view-id>/home.jsp</to-view-id>
         </navigation-case>
     </navigation-rule>
-    
+
      <navigation-rule>
         <from-view-id>/validate.jsp</from-view-id>
         <navigation-case>
