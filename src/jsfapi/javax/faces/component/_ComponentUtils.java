@@ -18,6 +18,15 @@
  */
 package javax.faces.component;
 
+import javax.faces.FacesException;
+import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
+import javax.faces.convert.Converter;
+import javax.faces.el.EvaluationException;
+import javax.faces.el.MethodBinding;
+import javax.faces.el.ValueBinding;
+import javax.faces.validator.Validator;
+import javax.faces.validator.ValidatorException;
 import java.util.Iterator;
 
 /**
@@ -89,6 +98,90 @@ class _ComponentUtils
         }
 
         return null;
+    }
+
+
+    static Converter findConverter(FacesContext context, UIComponent component)
+    {
+        if (component instanceof ValueHolder)
+        {
+            Converter converter = ((ValueHolder)component).getConverter();
+            if (converter != null) return converter;
+        }
+        ValueBinding vb = component.getValueBinding("value");
+        if (vb == null) return null;
+        Class type = vb.getType(context);
+        if (type == null) return null;
+        try
+        {
+            return context.getApplication().createConverter(type);
+        }
+        catch (FacesException e)
+        {
+            //TODO: Ok, to catch and ignore exception?
+            context.getExternalContext().log(e.getMessage());
+            return null;
+        }
+    }
+
+
+    static void callValidators(FacesContext context, UIInput input, Object convertedValue)
+    {
+        Validator[] validators = input.getValidators();
+        for (int i = 0; i < validators.length; i++)
+        {
+            Validator validator = validators[i];
+            try
+            {
+                validator.validate(context, input, convertedValue);
+            }
+            catch (ValidatorException e)
+            {
+                input.setValid(false);
+                FacesMessage facesMessage = e.getFacesMessage();
+                if (facesMessage != null)
+                {
+                    context.addMessage(input.getClientId(context), facesMessage);
+                }
+                else
+                {
+                    //TODO: specification? add a general message?
+                }
+                //TODO: specification? should we abort validation immediately
+            }
+        }
+
+        MethodBinding validatorBinding = input.getValidator();
+        if (validatorBinding != null)
+        {
+            try
+            {
+                validatorBinding.invoke(context,
+                                        new Object[] {context, input, convertedValue});
+            }
+            catch (EvaluationException e)
+            {
+                input.setValid(false);
+                Throwable cause = e.getCause();
+                if (cause instanceof ValidatorException)
+                {
+                    FacesMessage facesMessage = ((ValidatorException)cause).getFacesMessage();
+                    if (facesMessage != null)
+                    {
+                        context.addMessage(input.getClientId(context), facesMessage);
+                    }
+                    else
+                    {
+                        //TODO: specification? add a general message?
+                    }
+                    //TODO: specification? should we abort validation immediately
+                }
+                else
+                {
+                    throw e;
+                }
+            }
+        }
     }
 
 

@@ -1,4 +1,5 @@
-<!-- UIParameter attributes -->
+        <!-- UIParameter attributes -->
+        &ui_component_attributes;
         <attribute>
             <name>name</name>
             <required>false</required>

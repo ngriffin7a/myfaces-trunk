@@ -20,6 +20,7 @@ package net.sourceforge.myfaces.taglib.html;
 
 import net.sourceforge.myfaces.renderkit.JSFAttr;
 import net.sourceforge.myfaces.renderkit.html.HTML;
+import net.sourceforge.myfaces.taglib.UIInputTag;
 
 import javax.faces.component.UIComponent;
 import javax.faces.component.html.HtmlSelectOneRadio;
@@ -32,14 +33,14 @@ import javax.faces.component.html.HtmlSelectOneRadio;
  * @version $Revision$ $Date$
  */
 public class HtmlSelectOneRadioTag
-    extends HtmlComponentTag
+        extends UIInputTag
 {
     public String getComponentType()
     {
         return HtmlSelectOneRadio.COMPONENT_TYPE;
     }
 
-    public String getDefaultRendererType()
+    protected String getDefaultRendererType()
     {
         return "javax.faces.Radio";
     }
@@ -67,8 +68,7 @@ public class HtmlSelectOneRadioTag
     private String _tabindex;
 
     // UIInput attributes
-    private String _required;
-    private String _validator;
+    // --> already implemented in UIInputTag
 
     // HTMLSelectOneRadio attributes
     private String _border;
@@ -92,9 +92,6 @@ public class HtmlSelectOneRadioTag
         setStringProperty(component, HTML.ONSELECT_ATTR, _onselect);
         setBooleanProperty(component, HTML.READONLY_ATTR, _readonly);
         setStringProperty(component, HTML.TABINDEX_ATTR, _tabindex);
-
-        setBooleanProperty(component, JSFAttr.REQUIRED_ATTR, _required);
-        setStringProperty(component, JSFAttr.VALIDATOR_ATTR, _validator);
 
         setIntegerProperty(component, JSFAttr.BORDER_ATTR, _border);
         setStringProperty(component, JSFAttr.DISABLED_CLASS_ATTR, _disabledClass);
@@ -165,16 +162,6 @@ public class HtmlSelectOneRadioTag
     public void setTabindex(String tabindex)
     {
         _tabindex = tabindex;
-    }
-
-    public void setRequired(String required)
-    {
-        _required = required;
-    }
-
-    public void setValidator(String validator)
-    {
-        _validator = validator;
     }
 
     public void setDisabledClass(String disabledClass)

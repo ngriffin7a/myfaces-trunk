@@ -18,8 +18,8 @@
  */
 package net.sourceforge.myfaces.taglib.html;
 
-import net.sourceforge.myfaces.renderkit.JSFAttr;
 import net.sourceforge.myfaces.renderkit.html.HTML;
+import net.sourceforge.myfaces.taglib.UIInputTag;
 
 import javax.faces.component.UIComponent;
 import javax.faces.component.html.HtmlSelectBooleanCheckbox;
@@ -32,14 +32,14 @@ import javax.faces.component.html.HtmlSelectBooleanCheckbox;
  * @version $Revision$ $Date$
  */
 public class HtmlSelectBooleanCheckboxTag
-    extends HtmlComponentTag
+        extends UIInputTag
 {
     public String getComponentType()
     {
         return HtmlSelectBooleanCheckbox.COMPONENT_TYPE;
     }
 
-    public String getDefaultRendererType()
+    protected String getDefaultRendererType()
     {
         return "javax.faces.Checkbox";
     }
@@ -68,8 +68,7 @@ public class HtmlSelectBooleanCheckboxTag
     private String _tabindex;
 
     // UIInput attributes
-    private String _required;
-    private String _validator;
+    // --> already implemented in UIInputTag
 
     // UISelectBoolean attributes
     //private String _selected; //is already covered by checked attribute
@@ -91,9 +90,6 @@ public class HtmlSelectBooleanCheckboxTag
         setStringProperty(component, HTML.ONSELECT_ATTR, _onselect);
         setBooleanProperty(component, HTML.READONLY_ATTR, _readonly);
         setIntegerProperty(component, HTML.TABINDEX_ATTR, _tabindex);
-
-        setBooleanProperty(component, JSFAttr.REQUIRED_ATTR, _required);
-        setStringProperty(component, JSFAttr.VALIDATOR_ATTR, _validator);
    }
 
     public void setAccesskey(String accesskey)
@@ -161,13 +157,4 @@ public class HtmlSelectBooleanCheckboxTag
         _tabindex = tabindex;
     }
 
-    public void setRequired(String required)
-    {
-        _required = required;
-    }
-
-    public void setValidator(String validator)
-    {
-        _validator = validator;
-    }
 }

@@ -18,9 +18,8 @@
  */
 package net.sourceforge.myfaces.taglib.html;
 
-import net.sourceforge.myfaces.renderkit.JSFAttr;
+import net.sourceforge.myfaces.taglib.UIInputTag;
 
-import javax.faces.component.UIComponent;
 import javax.faces.component.html.HtmlInputHidden;
 
 
@@ -31,14 +30,14 @@ import javax.faces.component.html.HtmlInputHidden;
  * @version $Revision$ $Date$
  */
 public class HtmlInputHiddenTag
-    extends HtmlComponentTag
+        extends UIInputTag
 {
     public String getComponentType()
     {
         return HtmlInputHidden.COMPONENT_TYPE;
     }
 
-    public String getDefaultRendererType()
+    protected String getDefaultRendererType()
     {
         return "javax.faces.Hidden";
     }
@@ -58,31 +57,6 @@ public class HtmlInputHiddenTag
     // value and converterId --> already implemented in MyfacesComponentTag    
 
     // UIInput attributes
-    private String _required;
-    private String _validator;
-    private String _valueChangeListener;
+    // --> already implemented in UIInputTag
 
-    protected void setProperties(UIComponent component)
-    {
-        super.setProperties(component);
-
-        setBooleanProperty(component, JSFAttr.REQUIRED_ATTR, _required);
-        setStringProperty(component, JSFAttr.VALIDATOR_ATTR, _validator);
-        setValueChangedListenerProperty(component, _valueChangeListener);
-    }
-
-    public void setRequired(String required)
-    {
-        _required = required;
-    }
-
-    public void setValidator(String validator)
-    {
-        _validator = validator;
-    }
-
-    public void setValueChangeListener(String valueChangeListener)
-    {
-        _valueChangeListener = valueChangeListener;
-    }
 }

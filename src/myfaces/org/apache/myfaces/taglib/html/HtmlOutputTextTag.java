@@ -37,7 +37,7 @@ public class HtmlOutputTextTag
         return HtmlOutputText.COMPONENT_TYPE;
     }
 
-    public String getDefaultRendererType()
+    protected String getDefaultRendererType()
     {
         return "javax.faces.Text";
     }

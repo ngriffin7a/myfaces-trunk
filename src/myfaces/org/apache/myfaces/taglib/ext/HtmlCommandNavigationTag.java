@@ -35,7 +35,7 @@ public class HtmlCommandNavigationTag
         return HtmlCommandNavigation.COMPONENT_TYPE;
     }
 
-    public String getDefaultRendererType()
+    protected String getDefaultRendererType()
     {
         return "javax.faces.Link";
     }

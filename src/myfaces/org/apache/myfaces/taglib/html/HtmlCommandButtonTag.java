@@ -41,7 +41,7 @@ public class HtmlCommandButtonTag
         return HtmlCommandButton.COMPONENT_TYPE;
     }
 
-    public String getDefaultRendererType()
+    protected String getDefaultRendererType()
     {
         return "javax.faces.Button";
     }

@@ -33,7 +33,7 @@ public class HtmlSelectOneMenuTag
         return HtmlSelectOneMenu.COMPONENT_TYPE;
     }
 
-    public String getDefaultRendererType()
+    protected String getDefaultRendererType()
     {
         return "javax.faces.Menu";
     }

@@ -1,4 +1,5 @@
-<!-- UIGraphic attributes -->
+        <!-- UIGraphic attributes -->
+        &ui_component_attributes;
         <attribute>
             <name>url</name>
             <required>false</required>

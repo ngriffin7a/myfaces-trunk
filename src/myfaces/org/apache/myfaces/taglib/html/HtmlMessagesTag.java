@@ -37,7 +37,7 @@ public class HtmlMessagesTag
         return HtmlMessages.COMPONENT_TYPE;
     }
 
-    public String getDefaultRendererType()
+    protected String getDefaultRendererType()
     {
         return "javax.faces.Messages";
     }

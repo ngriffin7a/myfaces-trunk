@@ -18,8 +18,13 @@
  */
 package javax.faces.component;
 
+import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
+import javax.faces.convert.Converter;
+import javax.faces.convert.ConverterException;
 import javax.faces.el.ValueBinding;
+import javax.faces.event.ValueChangeEvent;
+import javax.faces.render.Renderer;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -189,13 +194,93 @@ public class UISelectMany
     }
 
 
-
+    /**
+     * First part is identical to super.validate except the empty condition.
+     * Second part: iterate through UISelectItem and UISelectItems and check
+     *              current values against these items
+     */
     public void validate(FacesContext context)
     {
-        super.validate(context);
+        if (context == null) throw new NullPointerException("context");
+        Object submittedValue = getSubmittedValue();
+        if (submittedValue == null) return;
+
+        Object convertedValue = getConvertedValue(context, submittedValue);
+        if (!isValid()) return;
+
+        boolean empty = convertedValue == null ||
+                        (convertedValue instanceof Object[] &&
+                         ((Object[])convertedValue).length == 0);
+        if (isRequired() && empty)
+        {
+            _MessageUtils.addErrorMessage(context, this, REQUIRED_MESSAGE_ID);
+            setValid(false);
+            return;
+        }
+
+        if (!empty)
+        {
+            _ComponentUtils.callValidators(context, this, convertedValue);
+        }
+        if (!isValid()) return;
+
         //TODO: see javadoc: iterate through UISelectItem and UISelectItems and check
         //current values against these items
+
+        Object previousValue = getValue();
+        setValue(convertedValue);
+        setSubmittedValue(null);
+        if (compareValues(previousValue, convertedValue))
+        {
+            queueEvent(new ValueChangeEvent(this, previousValue, convertedValue));
+        }
     }
+
+
+    private Object getConvertedValue(FacesContext context, Object submittedValue)
+    {
+        Renderer renderer = getRenderer(context);
+        if (renderer != null)
+        {
+            return renderer.getConvertedValue(context, this, submittedValue);
+        }
+        else if (submittedValue instanceof String[])
+        {
+            Converter converter = _ComponentUtils.findConverter(context, this);
+            if (converter != null)
+            {
+                try
+                {
+                    int len = ((String[])submittedValue).length;
+                    Object[] convertedValues = new Object[len];
+                    for (int i = 0; i < len; i++)
+                    {
+                        convertedValues[i] = converter.getAsObject(context,
+                                                                   this,
+                                                                   ((String[])submittedValue)[i]);
+                    }
+                    return convertedValues;
+                }
+                catch (ConverterException e)
+                {
+                    FacesMessage facesMessage = e.getFacesMessage();
+                    if (facesMessage != null)
+                    {
+                        context.addMessage(getClientId(context), facesMessage);
+                    }
+                    else
+                    {
+                        _MessageUtils.addErrorMessage(context, this, CONVERSION_MESSAGE_ID);
+                    }
+                    setValid(false);
+                }
+            }
+        }
+        return submittedValue;
+    }
+
+
+
 
     //------------------ GENERATED CODE BEGIN (do not modify!) --------------------
 

@@ -114,7 +114,7 @@
             <name>timeZone</name>
             <required>false</required>
             <rtexprvalue>false</rtexprvalue>
-            <description></description>
+            <description>timeZone</description>
         </attribute>
         <attribute>
             <name>type</name>
@@ -256,7 +256,6 @@
         <name>param</name>
         <tag-class>net.sourceforge.myfaces.taglib.core.ParamTag</tag-class>
         <body-content>empty</body-content>
-        &ui_component_attributes;
         &ui_parameter_attributes;
     </tag>
 

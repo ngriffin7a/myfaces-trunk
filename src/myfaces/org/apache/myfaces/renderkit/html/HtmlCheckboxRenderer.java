@@ -50,8 +50,8 @@ public class HtmlCheckboxRenderer
 {
     private static final Log log = LogFactory.getLog(HtmlCheckboxRenderer.class);
 
-    private static final String PAGE_DIRECTION = "PAGE_DIRECTION";
-    private static final String LINE_DIRECTION = "LINE_DIRECTION";
+    private static final String PAGE_DIRECTION = "pageDirection";
+    private static final String LINE_DIRECTION = "lineDirection";
 
     private static final String EXTERNAL_TRUE_VALUE = "1";
 
@@ -90,7 +90,7 @@ public class HtmlCheckboxRenderer
         {
             layout = (String)selectMany.getAttributes().get(JSFAttr.LAYOUT_ATTR);
         }
-        boolean pageDirectionLayout = true; //TODO: Default to PAGE_DIRECTION ?
+        boolean pageDirectionLayout = false; //Default to lineDirection
         if (layout != null)
         {
             if (layout.equals(PAGE_DIRECTION))

@@ -35,7 +35,7 @@ public class ParamTag
         return "javax.faces.Parameter";
     }
 
-    public String getDefaultRendererType()
+    protected String getDefaultRendererType()
     {
         return null;
     }

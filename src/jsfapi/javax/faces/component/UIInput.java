@@ -18,12 +18,10 @@
  */
 package javax.faces.component;
 
-import javax.faces.FacesException;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.convert.ConverterException;
-import javax.faces.el.EvaluationException;
 import javax.faces.el.MethodBinding;
 import javax.faces.el.ValueBinding;
 import javax.faces.event.AbortProcessingException;
@@ -32,7 +30,6 @@ import javax.faces.event.ValueChangeEvent;
 import javax.faces.event.ValueChangeListener;
 import javax.faces.render.Renderer;
 import javax.faces.validator.Validator;
-import javax.faces.validator.ValidatorException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -243,60 +240,7 @@ public class UIInput
 
         if (!empty)
         {
-            Validator[] validators = getValidators();
-            for (int i = 0; i < validators.length; i++)
-            {
-                Validator validator = validators[i];
-                try
-                {
-                    validator.validate(context, this, convertedValue);
-                }
-                catch (ValidatorException e)
-                {
-                    setValid(false);
-                    FacesMessage facesMessage = e.getFacesMessage();
-                    if (facesMessage != null)
-                    {
-                        context.addMessage(getClientId(context), facesMessage);
-                    }
-                    else
-                    {
-                        //TODO: specification? add a general message?
-                    }
-                    //TODO: specification? should we abort validation immediately
-                }
-            }
-
-            MethodBinding validatorBinding = getValidator();
-            if (validatorBinding != null)
-            {
-                try
-                {
-                    validatorBinding.invoke(context, new Object[] {context, this, convertedValue});
-                }
-                catch (EvaluationException e)
-                {
-                    setValid(false);
-                    Throwable cause = e.getCause();
-                    if (cause instanceof ValidatorException)
-                    {
-                        FacesMessage facesMessage = ((ValidatorException)cause).getFacesMessage();
-                        if (facesMessage != null)
-                        {
-                            context.addMessage(getClientId(context), facesMessage);
-                        }
-                        else
-                        {
-                            //TODO: specification? add a general message?
-                        }
-                        //TODO: specification? should we abort validation immediately
-                    }
-                    else
-                    {
-                        throw e;
-                    }
-                }
-            }
+            _ComponentUtils.callValidators(context, this, convertedValue);
         }
         if (!isValid()) return;
 
@@ -318,7 +262,7 @@ public class UIInput
         }
         else if (submittedValue instanceof String)
         {
-            Converter converter = _findConverter(context);
+            Converter converter = _ComponentUtils.findConverter(context, this);
             if (converter != null)
             {
                 try
@@ -343,25 +287,6 @@ public class UIInput
         return submittedValue;
     }
 
-    private Converter _findConverter(FacesContext context)
-    {
-        Converter converter = getConverter();
-        if (converter != null) return converter;
-        ValueBinding vb = getValueBinding("value");
-        if (vb == null) return null;
-        Class type = vb.getType(context);
-        if (type == null) return null;
-        try
-        {
-            return context.getApplication().createConverter(type);
-        }
-        catch (FacesException e)
-        {
-            //TODO: Ok, to catch and ignore exception?
-            context.getExternalContext().log(e.getMessage());
-            return null;
-        }
-    }
 
 
     protected boolean compareValues(Object previous,

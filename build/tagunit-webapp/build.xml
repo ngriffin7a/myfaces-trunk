@@ -46,7 +46,7 @@
     <target name="-build-myfaces-jar" unless="myfaces.jar.available"
             description="Builds a new myfaces.jar library" >
         <!-- creates myfaces.jar via main buildfile if it does not exist -->
-        <ant dir="../.."
+        <ant dir=".."
              antfile="build.xml"
              target="myfaces-jar"
              inheritall="false"/>

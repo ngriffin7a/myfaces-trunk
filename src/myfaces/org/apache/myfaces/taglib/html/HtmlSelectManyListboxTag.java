@@ -18,8 +18,8 @@
  */
 package net.sourceforge.myfaces.taglib.html;
 
-import net.sourceforge.myfaces.renderkit.JSFAttr;
 import net.sourceforge.myfaces.renderkit.html.HTML;
+import net.sourceforge.myfaces.taglib.UIInputTag;
 
 import javax.faces.component.UIComponent;
 import javax.faces.component.html.HtmlSelectManyListbox;
@@ -32,14 +32,14 @@ import javax.faces.component.html.HtmlSelectManyListbox;
  * @version $Revision$ $Date$
  */
 public class HtmlSelectManyListboxTag
-    extends HtmlComponentTag
+        extends UIInputTag
 {
     public String getComponentType()
     {
         return HtmlSelectManyListbox.COMPONENT_TYPE;
     }
 
-    public String getDefaultRendererType()
+    protected String getDefaultRendererType()
     {
         return "javax.faces.Listbox";
     }
@@ -66,8 +66,7 @@ public class HtmlSelectManyListboxTag
     private String _tabindex;
 
     // UIInput attributes
-    private String _required;
-    private String _validator;
+    // --> already implemented in UIInputTag
 
     // UISelectMany attributes
     //selectedValues cannot be set here, is set in JSP-parsing
@@ -87,9 +86,6 @@ public class HtmlSelectManyListboxTag
         setStringProperty(component, HTML.ONSELECT_ATTR, _onselect);
         setIntegerProperty(component, HTML.SIZE_ATTR, _size);
         setIntegerProperty(component, HTML.TABINDEX_ATTR, _tabindex);
-
-        setBooleanProperty(component, JSFAttr.REQUIRED_ATTR, _required);
-        setStringProperty(component, JSFAttr.VALIDATOR_ATTR, _validator);
    }
 
     public void setDatafld(String datafld)
@@ -145,16 +141,6 @@ public class HtmlSelectManyListboxTag
     public void setTabindex(String tabindex)
     {
         _tabindex = tabindex;
-    }
-
-    public void setRequired(String required)
-    {
-        _required = required;
-    }
-
-    public void setValidator(String validator)
-    {
-        _validator = validator;
     }
 
 }

@@ -37,7 +37,7 @@ public class HtmlPanelLayoutTag
         return HtmlPanelLayout.COMPONENT_TYPE;
     }
 
-    public String getDefaultRendererType()
+    protected String getDefaultRendererType()
     {
         return "net.sourceforge.myfaces.Layout";
     }

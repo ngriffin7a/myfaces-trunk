@@ -37,7 +37,7 @@ public class MyfacesHtmlMessagesTag
         return MyFacesHtmlMessages.COMPONENT_TYPE;
     }
 
-    public String getDefaultRendererType()
+    protected String getDefaultRendererType()
     {
         return "net.sourceforge.myfaces.Messages";
     }

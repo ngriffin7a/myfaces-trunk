@@ -19,9 +19,8 @@
 package net.sourceforge.myfaces.taglib.ext;
 
 import net.sourceforge.myfaces.component.ext.HtmlInputFileUpload;
-import net.sourceforge.myfaces.renderkit.JSFAttr;
 import net.sourceforge.myfaces.renderkit.html.HTML;
-import net.sourceforge.myfaces.taglib.html.HtmlComponentTag;
+import net.sourceforge.myfaces.taglib.UIInputTag;
 
 import javax.faces.component.UIComponent;
 
@@ -30,7 +29,7 @@ import javax.faces.component.UIComponent;
  * @version $Revision$ $Date$
  */
 public class HtmlInputFileUploadTag
-        extends HtmlComponentTag
+        extends UIInputTag
 {
     //private static final Log log = LogFactory.getLog(HtmlInputFileUploadTag.class);
 
@@ -73,9 +72,7 @@ public class HtmlInputFileUploadTag
     // value and converterId --> already implemented in MyfacesComponentTag
 
     // UIInput attributes
-    private String _required;
-    private String _validator;
-    private String _valueChangeListener;
+    // --> already implemented in UIInputTag
 
     // HtmlInputFileUpload attributes
     private String _accept;
@@ -100,10 +97,6 @@ public class HtmlInputFileUploadTag
         setBooleanProperty(component, HTML.READONLY_ATTR, _readonly);
         setIntegerProperty(component, HTML.SIZE_ATTR, _size);
         setIntegerProperty(component, HTML.TABINDEX_ATTR, _tabindex);
-
-        setBooleanProperty(component, JSFAttr.REQUIRED_ATTR, _required);
-        setStringProperty(component, JSFAttr.VALIDATOR_ATTR, _validator);
-        setValueChangedListenerProperty(component, _valueChangeListener);
 
         setStringProperty(component, HTML.ACCEPT_ATTR, _accept);
     }
@@ -181,21 +174,6 @@ public class HtmlInputFileUploadTag
     public void setTabindex(String tabindex)
     {
         _tabindex = tabindex;
-    }
-
-    public void setRequired(String required)
-    {
-        _required = required;
-    }
-
-    public void setValidator(String validator)
-    {
-        _validator = validator;
-    }
-
-    public void setValueChangeListener(String valueChangeListener)
-    {
-        _valueChangeListener = valueChangeListener;
     }
 
     public void setAccept(String accept)

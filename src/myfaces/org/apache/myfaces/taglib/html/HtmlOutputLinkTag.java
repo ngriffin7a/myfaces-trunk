@@ -38,7 +38,7 @@ public class HtmlOutputLinkTag
         return HtmlOutputLink.COMPONENT_TYPE;
     }
 
-    public String getDefaultRendererType()
+    protected String getDefaultRendererType()
     {
         return "javax.faces.Link";
     }

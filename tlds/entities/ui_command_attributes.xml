@@ -1,4 +1,5 @@
-<!-- UICommand attributes -->
+        <!-- UICommand attributes -->
+        &ui_component_attributes;
         <attribute>
             <name>action</name>
             <required>false</required>

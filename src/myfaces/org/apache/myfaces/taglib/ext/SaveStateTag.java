@@ -34,7 +34,7 @@ public class SaveStateTag
         return UISaveState.COMPONENT_TYPE;
     }
 
-    public String getDefaultRendererType()
+    protected String getDefaultRendererType()
     {
         return null;
     }

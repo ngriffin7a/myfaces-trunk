@@ -1,4 +1,5 @@
-<!-- UIMessage attributes -->
+        <!-- UIMessage attributes -->
+        &ui_component_attributes;
         <attribute>
             <name>for</name>
             <required>true</required>

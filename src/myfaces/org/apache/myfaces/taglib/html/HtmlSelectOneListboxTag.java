@@ -33,7 +33,7 @@ public class HtmlSelectOneListboxTag
         return HtmlSelectOneListbox.COMPONENT_TYPE;
     }
 
-    public String getDefaultRendererType()
+    protected String getDefaultRendererType()
     {
         return "javax.faces.Listbox";
     }

@@ -37,7 +37,7 @@ public class HtmlOutputFormatTag
         return HtmlOutputFormat.COMPONENT_TYPE;
     }
 
-    public String getDefaultRendererType()
+    protected String getDefaultRendererType()
     {
         return "javax.faces.Format";
     }

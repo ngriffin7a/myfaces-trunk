@@ -18,8 +18,8 @@
  */
 package net.sourceforge.myfaces.taglib.html;
 
-import net.sourceforge.myfaces.renderkit.JSFAttr;
 import net.sourceforge.myfaces.renderkit.html.HTML;
+import net.sourceforge.myfaces.taglib.UIInputTag;
 
 import javax.faces.component.UIComponent;
 import javax.faces.component.html.HtmlSelectManyMenu;
@@ -32,14 +32,14 @@ import javax.faces.component.html.HtmlSelectManyMenu;
  * @version $Revision$ $Date$
  */
 public class HtmlSelectManyMenuTag
-    extends HtmlComponentTag
+        extends UIInputTag
 {
     public String getComponentType()
     {
         return HtmlSelectManyMenu.COMPONENT_TYPE;
     }
 
-    public String getDefaultRendererType()
+    protected String getDefaultRendererType()
     {
         return "javax.faces.Menu";
     }
@@ -65,8 +65,7 @@ public class HtmlSelectManyMenuTag
     private String _tabindex;
 
     // UIInput attributes
-    private String _required;
-    private String _validator;
+    // --> already implemented in UIInputTag
 
     // UISelectMany attributes
     //selectedValues cannot be set here, is set in JSP-parsing
@@ -89,10 +88,7 @@ public class HtmlSelectManyMenuTag
         setStringProperty(component, HTML.ONSELECT_ATTR, _onselect);
         setIntegerProperty(component, HTML.TABINDEX_ATTR, _tabindex);
 
-        setBooleanProperty(component, JSFAttr.REQUIRED_ATTR, _required);
-        setStringProperty(component, JSFAttr.VALIDATOR_ATTR, _validator);
-
-        setIntegerProperty(component, HTML.BORDER_ATTR, _border);        
+        setIntegerProperty(component, HTML.BORDER_ATTR, _border);
    }
 
     public void setBorder(String border)
@@ -148,16 +144,6 @@ public class HtmlSelectManyMenuTag
     public void setTabindex(String tabindex)
     {
         _tabindex = tabindex;
-    }
-
-    public void setRequired(String required)
-    {
-        _required = required;
-    }
-
-    public void setValidator(String validator)
-    {
-        _validator = validator;
     }
 
 }

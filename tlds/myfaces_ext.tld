@@ -85,7 +85,7 @@
 <!-- commandLink -->
     <tag>
         <name>commandLink</name>
-        <tag-class>net.sourceforge.myfaces.taglib.html.HtmlCommandLinkTag</tag-class>
+        <tag-class>net.sourceforge.myfaces.taglib.ext.MyfacesHtmlCommandLinkTag</tag-class>
         <body-content>JSP</body-content>
         <description>
             Extends standard commandLink by user role support and the HTML target attribute.
@@ -112,7 +112,6 @@
             has equal attributes.
             (Replaces former "navigation_item" tag.)
         </description>
-        &ui_component_attributes;
         &ui_command_attributes;
         &html_universal_attributes;
         &html_event_handler_attributes;
@@ -145,7 +144,6 @@
             This tag is derived from the standard command_link tag and
             has the additional attributes columnName and arrow.
         </description>
-        &ui_component_attributes;
         &ui_command_attributes;
         &html_universal_attributes;
         &html_event_handler_attributes;
@@ -240,7 +238,6 @@
             "enctype" to "multipart/form-data".
             See "examples/web/fileupload.jsp" for an example!
         </description>
-        &ui_component_attributes;
         &ui_input_attributes;
         &html_universal_attributes;
         &html_event_handler_attributes;
@@ -313,7 +310,6 @@
         <description>
             Replaces former "navigation_separator" tag.
         </description>
-        &ui_component_attributes;
         &ui_output_attributes;
         &html_universal_attributes;
         &html_event_handler_attributes;
@@ -349,7 +345,6 @@
         <name>panelLayout</name>
         <tag-class>net.sourceforge.myfaces.taglib.ext.HtmlPanelLayoutTag</tag-class>
         <body-content>JSP</body-content>
-        &ui_component_attributes;
         &ui_panel_attributes;
         &html_universal_attributes;
         &html_event_handler_attributes;
@@ -422,7 +417,6 @@
         <name>panelNavigation</name>
         <tag-class>net.sourceforge.myfaces.taglib.ext.HtmlPanelNavigationTag</tag-class>
         <body-content>JSP</body-content>
-        &ui_component_attributes;
         &ui_panel_attributes;
         &html_universal_attributes;
         &html_event_handler_attributes;
@@ -498,7 +492,6 @@
         <name>panelTab</name>
         <tag-class>net.sourceforge.myfaces.taglib.ext.HtmlPanelTabTag</tag-class>
         <body-content>JSP</body-content>
-        &ui_component_attributes;
         &ui_panel_attributes;
         &html_universal_attributes;
         &html_event_handler_attributes;
@@ -518,7 +511,6 @@
         <name>panelTabbedPane</name>
         <tag-class>net.sourceforge.myfaces.taglib.ext.HtmlPanelTabbedPaneTag</tag-class>
         <body-content>JSP</body-content>
-        &ui_component_attributes;
         &ui_panel_attributes;
         &html_universal_attributes;
         &html_event_handler_attributes;

@@ -61,7 +61,7 @@ managed beans used:
                     <h:panelGrid columns="2">
 
                         <h:outputLabel for="selone_lb" value="#{example_messages['label_cars']}" />
-                        <h:selectOneListbox size="3" value="#{carconf.car}" >
+                        <h:selectOneListbox size="3" value="#{carconf.car}">
                             <f:selectItems id="selone_lb_cars" value="#{carconf.cars}" />
                         </h:selectOneListbox>
 

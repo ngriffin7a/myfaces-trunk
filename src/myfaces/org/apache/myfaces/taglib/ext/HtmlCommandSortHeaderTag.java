@@ -37,7 +37,7 @@ public class HtmlCommandSortHeaderTag
         return HtmlCommandSortHeader.COMPONENT_TYPE;
     }
 
-    public String getDefaultRendererType()
+    protected String getDefaultRendererType()
     {
         return "net.sourceforge.myfaces.SortHeader";
     }

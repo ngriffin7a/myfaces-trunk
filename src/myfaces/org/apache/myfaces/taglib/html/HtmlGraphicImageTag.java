@@ -39,7 +39,7 @@ public class HtmlGraphicImageTag
         return HtmlGraphicImage.COMPONENT_TYPE;
     }
 
-    public String getDefaultRendererType()
+    protected String getDefaultRendererType()
     {
         return "javax.faces.Image";
     }

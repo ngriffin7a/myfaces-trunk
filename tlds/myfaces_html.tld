@@ -117,7 +117,6 @@ Start of revised 1.0 conforming tags (in alphabetical order)
         <description>
             Renders a HTML form element.
         </description>
-        &ui_component_attributes;
         &ui_form_attributes;
         &html_universal_attributes;
         &html_event_handler_attributes;
@@ -129,7 +128,6 @@ Start of revised 1.0 conforming tags (in alphabetical order)
         <name>graphicImage</name>
         <tag-class>net.sourceforge.myfaces.taglib.html.HtmlGraphicImageTag</tag-class>
         <body-content>JSP</body-content>
-        &ui_component_attributes;
         &ui_graphic_attributes;
         &html_universal_attributes;
         &html_event_handler_attributes;
@@ -141,7 +139,6 @@ Start of revised 1.0 conforming tags (in alphabetical order)
         <name>inputHidden</name>
         <tag-class>net.sourceforge.myfaces.taglib.html.HtmlInputHiddenTag</tag-class>
         <body-content>JSP</body-content>
-        &ui_component_attributes;
         &ui_input_attributes;
         <!-- HiddenRenderer attributes -->
     </tag>
@@ -151,7 +148,6 @@ Start of revised 1.0 conforming tags (in alphabetical order)
         <name>inputSecret</name>
         <tag-class>net.sourceforge.myfaces.taglib.html.HtmlInputSecretTag</tag-class>
         <body-content>JSP</body-content>
-        &ui_component_attributes;
         &ui_input_attributes;
         <!-- FIXME: not all html_input_attributes are used for input_secret
             in RI (e.g. datafld, datasrc, ...) -->
@@ -187,7 +183,6 @@ Start of revised 1.0 conforming tags (in alphabetical order)
         <name>inputTextarea</name>
         <tag-class>net.sourceforge.myfaces.taglib.html.HtmlInputTextareaTag</tag-class>
         <body-content>JSP</body-content>
-        &ui_component_attributes;
         &ui_input_attributes;
         &html_textarea_attributes;
         &html_universal_attributes;
@@ -203,7 +198,6 @@ Start of revised 1.0 conforming tags (in alphabetical order)
             Renders the first FacesMessage that is assigned to the component
             referenced by the "for" attribute.
         </description>
-        &ui_component_attributes;
         &ui_message_attributes;
         &html_universal_attributes;
         &html_event_handler_attributes;
@@ -298,7 +292,6 @@ Start of revised 1.0 conforming tags (in alphabetical order)
         <name>outputLink</name>
         <tag-class>net.sourceforge.myfaces.taglib.html.HtmlOutputLinkTag</tag-class>
         <body-content>JSP</body-content>
-        &ui_component_attributes;
         &ui_output_attributes;
         &html_universal_attributes;
         &html_event_handler_attributes;
@@ -320,7 +313,6 @@ Start of revised 1.0 conforming tags (in alphabetical order)
             Takes the value of the associated UIOutput component as a MessageFormat
             pattern and formats embedded parameters with this pattern.
         </description>
-        &ui_component_attributes;
         &ui_output_attributes;
         &html_universal_attributes;
         &html_event_handler_attributes;
@@ -344,7 +336,6 @@ Start of revised 1.0 conforming tags (in alphabetical order)
         <description>
             Renders the value of the associated UIOutput component.
         </description>
-        &ui_component_attributes;
         &ui_output_attributes;
         &html_universal_attributes;
         &html_event_handler_attributes;
@@ -365,7 +356,6 @@ Start of revised 1.0 conforming tags (in alphabetical order)
         <name>panelGrid</name>
         <tag-class>net.sourceforge.myfaces.taglib.html.HtmlPanelGridTag</tag-class>
         <body-content>JSP</body-content>
-        &ui_component_attributes;
         &ui_panel_attributes;
         &html_universal_attributes;
         &html_event_handler_attributes;
@@ -411,7 +401,6 @@ Start of revised 1.0 conforming tags (in alphabetical order)
         <name>selectBooleanCheckbox</name>
         <tag-class>net.sourceforge.myfaces.taglib.html.HtmlSelectBooleanCheckboxTag</tag-class>
         <body-content>JSP</body-content>
-        &ui_component_attributes;
         &ui_select_boolean_attributes;
         &html_universal_attributes;
         &html_event_handler_attributes;
@@ -423,7 +412,6 @@ Start of revised 1.0 conforming tags (in alphabetical order)
         <name>selectManyCheckbox</name>
         <tag-class>net.sourceforge.myfaces.taglib.html.HtmlSelectManyCheckboxTag</tag-class>
         <body-content>JSP</body-content>
-        &ui_component_attributes;
         &ui_select_many_attributes;
         &html_universal_attributes;
         &html_event_handler_attributes;
@@ -444,7 +432,6 @@ Start of revised 1.0 conforming tags (in alphabetical order)
         <name>selectManyListbox</name>
         <tag-class>net.sourceforge.myfaces.taglib.html.HtmlSelectManyListboxTag</tag-class>
         <body-content>JSP</body-content>
-        &ui_component_attributes;
         &ui_select_many_attributes;
         &html_universal_attributes;
         &html_event_handler_attributes;
@@ -464,7 +451,6 @@ Start of revised 1.0 conforming tags (in alphabetical order)
         <name>selectManyMenu</name>
         <tag-class>net.sourceforge.myfaces.taglib.html.HtmlSelectManyMenuTag</tag-class>
         <body-content>JSP</body-content>
-        &ui_component_attributes;
         &ui_select_many_attributes;
         &html_universal_attributes;
         &html_event_handler_attributes;
@@ -476,7 +462,6 @@ Start of revised 1.0 conforming tags (in alphabetical order)
         <name>selectOneListbox</name>
         <tag-class>net.sourceforge.myfaces.taglib.html.HtmlSelectOneListboxTag</tag-class>
         <body-content>JSP</body-content>
-        &ui_component_attributes;
         &ui_select_one_attributes;
         &html_universal_attributes;
         &html_event_handler_attributes;
@@ -504,7 +489,6 @@ Start of revised 1.0 conforming tags (in alphabetical order)
         <name>selectOneRadio</name>
         <tag-class>net.sourceforge.myfaces.taglib.html.HtmlSelectOneRadioTag</tag-class>
         <body-content>JSP</body-content>
-        &ui_component_attributes;
         &ui_select_one_attributes;
         &html_universal_attributes;
         &html_event_handler_attributes;

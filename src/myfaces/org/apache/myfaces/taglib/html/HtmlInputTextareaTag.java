@@ -18,8 +18,8 @@
  */
 package net.sourceforge.myfaces.taglib.html;
 
-import net.sourceforge.myfaces.renderkit.JSFAttr;
 import net.sourceforge.myfaces.renderkit.html.HTML;
+import net.sourceforge.myfaces.taglib.UIInputTag;
 
 import javax.faces.component.UIComponent;
 import javax.faces.component.html.HtmlInputTextarea;
@@ -31,14 +31,14 @@ import javax.faces.component.html.HtmlInputTextarea;
  * @version $Revision$ $Date$
  */
 public class HtmlInputTextareaTag
-    extends HtmlComponentTag
+        extends UIInputTag
 {
     public String getComponentType()
     {
         return HtmlInputTextarea.COMPONENT_TYPE;
     }
 
-    public String getDefaultRendererType()
+    protected String getDefaultRendererType()
     {
         return "javax.faces.Textarea";
     }
@@ -70,9 +70,7 @@ public class HtmlInputTextareaTag
     // value and converter --> already implemented in MyfacesComponentTag
 
     // UIInput attributes
-    private String _required;
-    private String _validator;
-    private String _valueChangeListener;
+    // --> already implemented in UIInputTag
 
     //HtmlTextArea attributes
     // FIXME: is in RI, but not in HTML 4.0. what to do?
@@ -95,10 +93,6 @@ public class HtmlInputTextareaTag
         setBooleanProperty(component, HTML.READONLY_ATTR, _readonly);
         setIntegerProperty(component, HTML.ROWS_ATTR, _rows);
         setIntegerProperty(component, HTML.TABINDEX_ATTR, _tabindex);
-
-        setBooleanProperty(component, JSFAttr.REQUIRED_ATTR, _required);
-        setStringProperty(component, JSFAttr.VALIDATOR_ATTR, _validator);
-        setValueChangedListenerProperty(component, _valueChangeListener);
 
         setStringProperty(component, HTML.ALT_ATTR, _alt);
     }
@@ -173,18 +167,4 @@ public class HtmlInputTextareaTag
         _tabindex = tabindex;
     }
 
-    public void setRequired(String required)
-    {
-        _required = required;
-    }
-
-    public void setValueChangeListener(String valueChangeListener)
-    {
-        _valueChangeListener = valueChangeListener;
-    }
-
-    public void setValidator(String validator)
-    {
-        _validator = validator;
-    }
 }

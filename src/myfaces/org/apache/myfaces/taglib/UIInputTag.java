@@ -16,81 +16,72 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package net.sourceforge.myfaces.taglib.html;
+package net.sourceforge.myfaces.taglib;
 
 import net.sourceforge.myfaces.renderkit.JSFAttr;
-import net.sourceforge.myfaces.renderkit.html.HTML;
+import net.sourceforge.myfaces.taglib.html.HtmlComponentTag;
 
 import javax.faces.component.UIComponent;
-import javax.faces.component.html.HtmlOutputLabel;
+import javax.faces.component.UIInput;
 
 
 /**
- * DOCUMENT ME!
  * @author Manfred Geiler (latest modification by $Author$)
- * @author Martin Marinschek
  * @version $Revision$ $Date$
  */
-public class HtmlOutputLabelTag
+public class UIInputTag
     extends HtmlComponentTag
 {
     public String getComponentType()
     {
-        return HtmlOutputLabel.COMPONENT_TYPE;
+        return UIInput.COMPONENT_TYPE;
     }
 
     protected String getDefaultRendererType()
     {
-        return "javax.faces.Label";
+        return "javax.faces.Text";
     }
 
     // UIComponent attributes --> already implemented in MyfacesComponentTag
 
-    // user role attributes --> already implemented in MyfacesComponentTag
-
-    // HTML universal attributes --> already implemented in HtmlComponentTag
-
-    // HTML event handler attributes --> already implemented in HtmlComponentTag
-
-    // HTML label attributes
-    private String _accesskey;
-    private String _onblur;
-    private String _onfocus;
-
     // UIOutput attributes
     // value and converterId --> already implemented in MyfacesComponentTag
 
-    //HTMLOutputLabel attributes
-    private String _for;
+    // UIInput attributes
+    private String _immediate;
+    private String _required;
+    private String _validator;
+    private String _valueChangeListener;
+
 
     protected void setProperties(UIComponent component)
     {
         super.setProperties(component);
 
-        setStringProperty(component, HTML.ACCESSKEY_ATTR, _accesskey);
-        setStringProperty(component, HTML.ONBLUR_ATTR, _onblur);
-        setStringProperty(component, HTML.ONFOCUS_ATTR, _onfocus);
-
-        setStringProperty(component, JSFAttr.FOR_ATTR, _for);
-   }
-
-    public void setAccesskey(String accesskey)
-    {
-        _accesskey = accesskey;
+        setBooleanProperty(component, JSFAttr.IMMEDIATE_ATTR, _immediate);
+        setBooleanProperty(component, JSFAttr.REQUIRED_ATTR, _required);
+        setStringProperty(component, JSFAttr.VALIDATOR_ATTR, _validator);
+        setValueChangedListenerProperty(component, _valueChangeListener);
     }
 
-    public void setOnblur(String onblur)
+    public void setImmediate(String immediate)
     {
-        _onblur = onblur;
+        _immediate = immediate;
     }
 
-    public void setOnfocus(String onfocus)
+    public void setRequired(String required)
     {
-        _onfocus = onfocus;
+        _required = required;
     }
 
-    public void setFor(String aFor)
+    public void setValidator(String validator)
     {
-        _for = aFor;
+        _validator = validator;
     }
+
+    public void setValueChangeListener(String valueChangeListener)
+    {
+        _valueChangeListener = valueChangeListener;
+    }
+
 }
