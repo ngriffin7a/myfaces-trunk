@@ -77,7 +77,6 @@
         <pathelement location="${commons-validator.jar}"/>
         <pathelement location="${jakarta-oro.jar}"/>
         <pathelement location="${commons-fileupload.jar}"/>
-        <pathelement location="${jdom.jar}"/>
         <pathelement location="${commons-digester.jar}"/>
     </path>
  
@@ -93,7 +92,6 @@
         <pathelement location="${commons-validator.jar}"/>
         <pathelement location="${commons-fileupload.jar}"/>
         <pathelement location="${myfaces.jar}"/>
-        <pathelement location="${jdom.jar}"/>
         <pathelement location="${commons-beanutils.jar}"/>
         <pathelement location="${commons-collections.jar}"/>
         <pathelement location="${commons-digester.jar}"/>
@@ -247,8 +245,6 @@
             <tarfileset file="${jsp-api.jar}"
                         prefix="myfaces-${manifest.impl.version}/lib"/>
             <tarfileset file="${jakarta-digester.jar}"
-                        prefix="myfaces-${manifest.impl.version}/lib"/>
-            <tarfileset file="${jdom.jar}"
                         prefix="myfaces-${manifest.impl.version}/lib"/>
         </tar>
     </target>

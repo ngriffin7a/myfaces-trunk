@@ -5,10 +5,9 @@ These libraries are only needed for special custom components.
 |=============================|======================|
 | commons-validator.jar       | CreditCardValidator  |
 |                             | EmailValidator       |
+|                             | EqualValidator       |
 |                             | RegExprValidator     |
 |-----------------------------|----------------------|
 | jakarta-oro.jar             | RegExprValidator     |
 |-----------------------------|----------------------|
-| informa.jar                 | RdfTicker            |
-| jdom.jar                    |                      |
-|-----------------------------|----------------------|
+
