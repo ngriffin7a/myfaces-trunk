@@ -79,10 +79,16 @@ public class ManagedBeanConfig
 		_managedPropertyConfigList.add(propertyConfig);
     }
 
-    public List getManagedPropertyConfigList() {
+    public List getManagedPropertyConfigList() 
+    {
         return _managedPropertyConfigList != null
                 ? _managedPropertyConfigList
                 : Collections.EMPTY_LIST;
+    }
+    
+    public void setDescription(String s) 
+    {
+        // ignore, we do not care
     }
 
 }
