@@ -1,7 +1,10 @@
 # Don't forget to use double-backslashes in windows paths!
 
-# File path to Java Servlet API archive version 2.3
-servlet.jar = ${project.dir}/lib/servlet.jar
+# File path to Java Servlet API archive version 2.4
+servlet-api.jar = ${project.dir}/lib/servlet-api.jar
+
+# File path to JSP API archive version 2.0
+jsp-api.jar = ${project.dir}/lib/jsp-api.jar
 
 # File path to com.oreilly.servlet package
 cos.jar = ${project.dir}/lib/cos.jar
