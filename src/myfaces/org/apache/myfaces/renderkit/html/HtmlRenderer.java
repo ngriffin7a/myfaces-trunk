@@ -1,6 +1,6 @@
 /**
  * MyFaces - the free JSF implementation
- * Copyright (C) 2003, 2004  The MyFaces Team (http://myfaces.sourceforge.net)
+ * Copyright (C) 2003  The MyFaces Team (http://myfaces.sourceforge.net)
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -19,16 +19,20 @@
 package net.sourceforge.myfaces.renderkit.html;
 
 import net.sourceforge.myfaces.component.UIComponentUtils;
+import net.sourceforge.myfaces.component.UIRoot;
+import net.sourceforge.myfaces.convert.ConversionErrorMessage;
 import net.sourceforge.myfaces.convert.ConverterUtils;
 import net.sourceforge.myfaces.convert.MyFacesConverterException;
 import net.sourceforge.myfaces.convert.impl.StringArrayConverter;
 import net.sourceforge.myfaces.renderkit.JSFAttr;
-import net.sourceforge.myfaces.taglib.legacy.MyFacesBodyTag;
+import net.sourceforge.myfaces.taglib.MyFacesBodyTag;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import javax.faces.FacesException;
-import javax.faces.application.FacesMessage;
+import javax.faces.FactoryFinder;
+import javax.faces.application.Application;
+import javax.faces.application.ApplicationFactory;
 import javax.faces.component.NamingContainer;
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIInput;
@@ -36,10 +40,12 @@ import javax.faces.component.UIOutput;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.convert.ConverterException;
+import javax.faces.el.ValueBinding;
 import javax.faces.render.Renderer;
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.tagext.BodyContent;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
@@ -49,25 +55,20 @@ import java.net.URLEncoder;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public abstract class HtmlRenderer
+public abstract class HTMLRenderer
 extends Renderer
 {
     //~ Static fields/initializers -----------------------------------------------------------------
-    private static final Log log = LogFactory.getLog(HtmlRenderer.class);
+    private static final Log log = LogFactory.getLog(HTMLRenderer.class);
 
     private static final String CLIENT_ID_ATTR          =
-        HtmlRenderer.class.getName() + ".CLIENT_ID";
+        HTMLRenderer.class.getName() + ".CLIENT_ID";
     public static final String  LOCAL_STRING_VALUE_ATTR = "LOCAL_STRING_VALUE";
 
     //~ Methods ------------------------------------------------------------------------------------
 
-    /**
-     * @deprecated Not used any more
-     */
-    public String getRendererType() {return null;}
+    public abstract String getRendererType();
 
-
-    /**@deprecated use {@link net.sourceforge.myfaces.renderkit.RendererUtils#isVisibleOnUserRole(javax.faces.context.FacesContext, javax.faces.component.UIComponent)} */
     public static boolean isComponentVisible(FacesContext facesContext, UIComponent uiComponent)
     {
         if (!uiComponent.isRendered())
@@ -76,7 +77,7 @@ extends Renderer
         }
 
         String userRole =
-            (String) uiComponent.getAttributes().get(JSFAttr.VISIBLE_ON_USER_ROLE_ATTR);
+            (String) uiComponent.getAttribute(JSFAttr.VISIBLE_ON_USER_ROLE_ATTR);
 
         if (userRole == null)
         {
@@ -91,12 +92,10 @@ extends Renderer
         return httpServletRequest.isUserInRole(userRole);
     }
 
-
-    /**@deprecated use {@link net.sourceforge.myfaces.renderkit.RendererUtils#isEnabledOnUserRole(javax.faces.context.FacesContext, javax.faces.component.UIComponent)} */
     public static boolean isEnabledOnUserRole(FacesContext facesContext, UIComponent uiComponent)
     {
         String userRole =
-            (String) uiComponent.getAttributes().get(JSFAttr.ENABLED_ON_USER_ROLE_ATTR);
+            (String) uiComponent.getAttribute(JSFAttr.ENABLED_ON_USER_ROLE_ATTR);
 
         if (userRole == null)
         {
@@ -111,8 +110,8 @@ extends Renderer
         return httpServletRequest.isUserInRole(userRole);
     }
 
-    /*
     public void decode(FacesContext facescontext, UIComponent uicomponent)
+    throws IOException
     {
         if (uicomponent instanceof UIOutput)
         {
@@ -134,13 +133,9 @@ extends Renderer
     throws IOException
     {
     }
-    */
-
 
     /**
      * Finds a proper Converter for the given attribute.
-     *
-     * @deprecated
      */
     public static Converter findConverterForAttribute(
         FacesContext facesContext, UIComponent uiComponent, String attrName)
@@ -155,7 +150,6 @@ extends Renderer
         }
     }
 
-    /** @deprecated {@link HtmlResponseWriterImpl} does it */
     public static String urlEncode(String s)
     {
         try
@@ -170,9 +164,14 @@ extends Renderer
 //        return URLEncoder.encode(s);
     }
 
+    public String getClientId(FacesContext facesContext, UIComponent uiComponent)
+    {
+        return getComponentClientId(facesContext, uiComponent);
+    }
+
     public static String getComponentClientId(FacesContext facesContext, UIComponent uiComponent)
     {
-        String clientId = (String) uiComponent.getAttributes().get(CLIENT_ID_ATTR);
+        String clientId = (String) uiComponent.getAttribute(CLIENT_ID_ATTR);
 
         if (clientId != null)
         {
@@ -190,15 +189,12 @@ extends Renderer
                 throw new FacesException("Root is no naming container?!");
             }
 
-            //FIXME
-            /*
             if (uiComponent.getComponentId() == null)
             {
                 uiComponent.setComponentId(UIRoot.ROOT_COMPONENT_ID);
             }
 
             clientId = uiComponent.getComponentId();
-            */
         }
         else
         {
@@ -214,8 +210,6 @@ extends Renderer
 
             NamingContainer namingContainer = (NamingContainer) find;
 
-            //FIXME
-            /*
             if (uiComponent.getComponentId() == null)
             {
                 uiComponent.setComponentId(namingContainer.generateClientId());
@@ -232,19 +226,28 @@ extends Renderer
                     find.getClientId(facesContext) + UIComponent.SEPARATOR_CHAR
                     + uiComponent.getComponentId();
             }
-            */
         }
 
-        uiComponent.getAttributes().put(CLIENT_ID_ATTR, clientId);
+        uiComponent.setAttribute(CLIENT_ID_ATTR, clientId);
 
         return clientId;
     }
 
+    /**
+     * Helper for derived renderers.
+     */
+    protected Application getApplication()
+    {
+        ApplicationFactory af =
+            (ApplicationFactory) FactoryFinder.getFactory(FactoryFinder.APPLICATION_FACTORY);
+
+        return af.getApplication();
+    }
 
     protected BodyContent getBodyContent(FacesContext facesContext, UIComponent uiComponent)
     {
         BodyContent bodyContent =
-            (BodyContent) uiComponent.getAttributes().get(MyFacesBodyTag.BODY_CONTENT_ATTR);
+            (BodyContent) uiComponent.getAttribute(MyFacesBodyTag.BODY_CONTENT_ATTR);
 
         if (bodyContent == null)
         {
@@ -259,11 +262,10 @@ extends Renderer
      * @param facescontext
      * @param uiOutput
      * @return the current value as a String
-     * @deprecated {@link net.sourceforge.myfaces.renderkit.RendererUtils#getStringValue(javax.faces.context.FacesContext, javax.faces.component.UIComponent)}
      */
     protected String getStringValue(FacesContext facescontext, UIOutput uiOutput)
     {
-        String strValue = (String) uiOutput.getAttributes().get(LOCAL_STRING_VALUE_ATTR);
+        String strValue = (String) uiOutput.getAttribute(LOCAL_STRING_VALUE_ATTR);
 
         if (strValue != null)
         {
@@ -274,8 +276,7 @@ extends Renderer
 
         try
         {
-            //FIXME
-            //objValue = uiOutput.currentValue(facescontext);
+            objValue = uiOutput.currentValue(facescontext);
         }
         catch (Exception e)
         {
@@ -304,7 +305,7 @@ extends Renderer
     protected void setUIOutputValue(UIOutput uiOutput, Object newValue)
     {
         uiOutput.setValue(newValue);
-        uiOutput.getAttributes().put(LOCAL_STRING_VALUE_ATTR, null);
+        uiOutput.setAttribute(LOCAL_STRING_VALUE_ATTR, null);
         uiOutput.setValid(true);
     }
 
@@ -314,14 +315,14 @@ extends Renderer
         if (e instanceof MyFacesConverterException)
         {
             facesContext.addMessage(
-                comp.getClientId(facesContext),
+                comp,
                 ((MyFacesConverterException) e).getFacesMessage());
         }
         else
         {
             facesContext.addMessage(
-                comp.getClientId(facesContext),
-                new FacesMessage(e.getMessage(), e.getMessage()));
+                comp,
+                new ConversionErrorMessage(e.getMessage()));
         }
     }
 
@@ -352,7 +353,7 @@ extends Renderer
             catch (ConverterException e)
             {
                 uiOutput.setValue(null);
-                uiOutput.getAttributes().put(LOCAL_STRING_VALUE_ATTR, s);
+                uiOutput.setAttribute(LOCAL_STRING_VALUE_ATTR, s);
                 uiOutput.setValid(false);
                 addConversionErrorMessage(facesContext, uiOutput, e);
             }
@@ -361,8 +362,6 @@ extends Renderer
 
     /**
      * @return true, if new value was set
-     * 
-     * @deprecated
      */
     protected boolean decodeValue(FacesContext facescontext, UIOutput uiComponent)
     {
@@ -385,8 +384,6 @@ extends Renderer
                 //maintain the component's state
                 if (uiComponent.isValid())
                 {
-                    //FIXME
-                    /*
                     if ((uiComponent.getValueRef() != null) && (uiComponent.getValue() == null))
                     {
                         //HACK: since EA3 release of API the updateModel does also update null values
@@ -396,7 +393,6 @@ extends Renderer
                             getApplication().getValueBinding(uiComponent.getValueRef());
                         uiComponent.setValue(vb.getValue(facescontext));
                     }
-                    */
                 }
                 else
                 {
@@ -405,8 +401,6 @@ extends Renderer
                     //render phase.
                     uiComponent.setValid(true);
 
-                    //FIXME
-                    /*
                     if (uiComponent.getValueRef() != null)
                     {
                         //If there is a model reference, we must beware the model
@@ -418,7 +412,6 @@ extends Renderer
                             getApplication().getValueBinding(uiComponent.getValueRef());
                         uiComponent.setValue(vb.getValue(facescontext));
                     }
-                    */
                 }
             }
 
