@@ -1,12 +1,12 @@
 /*
  * Copyright 2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -15,23 +15,28 @@
  */
 package javax.faces.component;
 
+import java.util.ArrayList;
+import java.util.ConcurrentModificationException;
+import java.util.List;
+import java.util.ListIterator;
+import java.util.Locale;
+
 import javax.faces.context.FacesContext;
 import javax.faces.el.ValueBinding;
 import javax.faces.event.AbortProcessingException;
 import javax.faces.event.FacesEvent;
 import javax.faces.event.PhaseId;
 import javax.faces.render.RenderKitFactory;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-import java.util.Iterator;
 
 /**
  * see Javadoc of JSF Specification
- * 
+ *
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.15  2004/12/07 10:49:27  matzew
+ * closed MAVEN-10, thanks to Christian Rueed for supporting this
+ *
  * Revision 1.14  2004/09/03 12:32:06  tinytoony
  * file upload
  *
@@ -61,7 +66,7 @@ public class UIViewRoot
     private int _uniqueIdCounter = 0;
 
     private String _viewId = null;
-    private Locale _locale = null;     
+    private Locale _locale = null;
     private List _events = null;
 
     public String getViewId()
@@ -92,9 +97,9 @@ public class UIViewRoot
         boolean abort = false;
 
         int phaseIdOrdinal = phaseId.getOrdinal();
-        for (Iterator iterator = _events.iterator(); iterator.hasNext();)
+        for (ListIterator listiterator = _events.listIterator(); listiterator.hasNext();)
         {
-            FacesEvent event = (FacesEvent) iterator.next();
+            FacesEvent event = (FacesEvent) listiterator.next();
             int ordinal = event.getPhaseId().getOrdinal();
             if (ordinal == ANY_PHASE_ORDINAL ||
                 ordinal == phaseIdOrdinal)
@@ -112,7 +117,17 @@ public class UIViewRoot
                     abort = true;
                     break;
                 } finally {
-                    iterator.remove();
+
+	                try
+	                {
+                        listiterator.remove();
+	                }
+	                catch(ConcurrentModificationException cme)
+	                {
+		                int eventIndex = listiterator.previousIndex();
+		                _events.remove(eventIndex);
+		                listiterator = _events.listIterator();
+	                }
                 }
             }
         }
@@ -216,7 +231,7 @@ public class UIViewRoot
 
     /**
      * Create Locale from String representation.
-     * 
+     *
      * @see http://java.sun.com/j2se/1.4.2/docs/api/java/util/Locale.html
      * @param locale locale representation in String.
      * @return Locale instance
@@ -225,7 +240,7 @@ public class UIViewRoot
         int cnt = 0;
         int pos = 0;
         int prev = 0;
-        
+
         // store locale variation.
         // ex. "ja_JP_POSIX"
         //  lv[0] : language(ja)
@@ -238,9 +253,9 @@ public class UIViewRoot
              lv[cnt++] = locale.substring(prev,pos);
              prev = pos + 1;
         }
-        
+
         lv[cnt++] = locale.substring(prev,locale.length());
-        
+
         switch(cnt){
             case 1:
                 // create Locale from language.
