@@ -32,6 +32,10 @@ import java.io.Reader;
 /**
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
+ * $Log$
+ * Revision 1.2  2004/03/30 12:16:08  manolito
+ * header comments
+ *
  */
 public abstract class UIComponentBodyTagBase
         extends UIComponentBodyTag
