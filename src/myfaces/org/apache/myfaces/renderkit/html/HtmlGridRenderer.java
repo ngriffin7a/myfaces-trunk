@@ -37,6 +37,9 @@ import java.util.StringTokenizer;
  * X-CHECKED: tlddoc h:panelGrid 1.0 final
  *
  * $Log$
+ * Revision 1.9  2004/06/03 13:41:08  o_rossmueller
+ * fix #962084: render rowClasses
+ *
  * Revision 1.8  2004/03/31 13:43:29  royalts
  * no message
  *
@@ -170,13 +173,16 @@ public class HtmlGridRenderer
         writer.startElement(HTML.TBODY_ELEM, component);
 
         String columnClasses;
+        String rowClasses;
         if (component instanceof HtmlPanelGrid)
         {
             columnClasses = ((HtmlPanelGrid)component).getColumnClasses();
+            rowClasses =  ((HtmlPanelGrid)component).getRowClasses();
         }
         else
         {
             columnClasses = (String)component.getAttributes().get(JSFAttr.COLUMN_CLASSES_ATTR);
+            rowClasses = (String)component.getAttributes().get(JSFAttr.ROW_CLASSES_ATTR);
         }
 
         String[] columnClassesArray;
@@ -197,17 +203,36 @@ public class HtmlGridRenderer
             }
         }
 
+        String[] rowClassesArray;
+        int rowClassesCount;
+        if (columnClasses == null)
+        {
+            rowClassesCount = 0;
+            rowClassesArray = ArrayUtils.EMPTY_STRING_ARRAY;
+        }
+        else
+        {
+            StringTokenizer st = new StringTokenizer(rowClasses, ",");
+            rowClassesCount = st.countTokens();
+            rowClassesArray = new String[rowClassesCount];
+            for (int i = 0; i < rowClassesCount; i++)
+            {
+                rowClassesArray[i] = st.nextToken().trim();
+            }
+        }
+
         int childCount = component.getChildCount();
         if (childCount > 0)
         {
-            int c = 0;
+            int columnIndex = 0;
+            int rowClassIndex = 0;
             boolean rowStarted = false;
             for (Iterator it = component.getChildren().iterator(); it.hasNext(); )
             {
                 UIComponent child = (UIComponent)it.next();
                 if (child.isRendered())
                 {
-                    if (c == 0)
+                    if (columnIndex == 0)
                     {
                         //start of new/next row
                         if (rowStarted)
@@ -217,31 +242,44 @@ public class HtmlGridRenderer
                             HtmlRendererUtils.writePrettyLineSeparator(context);
                         }
                         writer.startElement(HTML.TR_ELEM, component);
+                        if (rowClassIndex < rowClassesCount) {
+                            writer.writeAttribute(HTML.CLASS_ATTR, rowClassesArray[rowClassIndex], null);
+                        }
                         rowStarted = true;
+                        rowClassIndex++;
+                        if (rowClassIndex == rowClassesCount) {
+                            rowClassIndex = 0;
+                        }
                     }
                     
                     writer.startElement(HTML.TD_ELEM, component);
-                    if (c < columnClassesCount)
+                    if (columnIndex < columnClassesCount)
                     {
-                        writer.writeAttribute(HTML.CLASS_ATTR, columnClassesArray[c], null);
+                        writer.writeAttribute(HTML.CLASS_ATTR, columnClassesArray[columnIndex], null);
                     }
                     RendererUtils.renderChild(context, child);
                     writer.endElement(HTML.TD_ELEM);
 
-                    c++;
-                    if (c >= columns) c = 0;
+                    columnIndex++;
+                    if (columnIndex >= columns) {
+                        columnIndex = 0;
+                    }
                 }
             }
 
             if (rowStarted)
             {
-                if (c > 0)
+                if (columnIndex < columns)
                 {
                     if (log.isWarnEnabled()) log.warn("PanelGrid " + component.getClientId(context) + " has not enough children. Child count should be a multiple of the columns attribute.");
                     //Render empty columns, so that table is correct
-                    for ( ; c < columns; c++)
+                    for ( ; columnIndex < columns; columnIndex++)
                     {
                         writer.startElement(HTML.TD_ELEM, component);
+                        if (columnIndex < columnClassesCount)
+                        {
+                            writer.writeAttribute(HTML.CLASS_ATTR, columnClassesArray[columnIndex], null);
+                        }
                         writer.endElement(HTML.TD_ELEM);
                     }
                 }
