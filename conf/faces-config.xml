@@ -11,6 +11,13 @@
 
 <faces-config>
 
+  <factory>
+    <application-factory>net.sourceforge.myfaces.application.ApplicationFactoryImpl</application-factory>
+    <faces-context-factory>net.sourceforge.myfaces.context.FacesContextFactoryImpl</faces-context-factory>
+    <lifecycle-factory>net.sourceforge.myfaces.lifecycle.LifecycleFactoryImpl</lifecycle-factory>
+    <render-kit-factory>net.sourceforge.myfaces.renderkit.RenderKitFactoryImpl</render-kit-factory>
+  </factory>
+
   <!-- Initial application element with partial values -->
   <application>
     <action-listener>net.sourceforge.myfaces.application.ActionListenerImpl</action-listener>
@@ -21,13 +28,38 @@
 
   <!-- Standard Components -->
   <component>
+    <component-type>Column</component-type>
+    <component-class>javax.faces.component.UIColumn</component-class>
+  </component>
+
+  <component>
     <component-type>Command</component-type>
     <component-class>net.sourceforge.myfaces.component.MyFacesUICommand</component-class>
   </component>
 
   <component>
+    <component-type>CommandButton</component-type>
+    <component-class>net.sourceforge.myfaces.component.html.MyFacesHtmlCommandButton</component-class>
+  </component>
+
+  <component>
+    <component-type>CommandLink</component-type>
+    <component-class>net.sourceforge.myfaces.component.html.MyFacesHtmlCommandLink</component-class>
+  </component>
+
+  <component>
+    <component-type>Data</component-type>
+    <component-class>javax.faces.component.UIData</component-class>
+  </component>
+
+  <component>
+    <component-type>DataTable</component-type>
+    <component-class>net.sourceforge.myfaces.component.html.MyFacesHtmlDataTable</component-class>
+  </component>
+
+  <component>
     <component-type>Form</component-type>
-    <component-class>net.sourceforge.myfaces.component.MyFacesUIForm</component-class>
+    <component-class>net.sourceforge.myfaces.component.html.MyFacesHtmlForm</component-class>
   </component>
 
   <component>
@@ -41,8 +73,23 @@
   </component>
 
   <component>
-    <component-type>NamingContainer</component-type>
-    <component-class>javax.faces.component.UINamingContainer</component-class>
+    <component-type>InputHidden</component-type>
+    <component-class>net.sourceforge.myfaces.component.html.MyFacesHtmlInputHidden</component-class>
+  </component>
+
+  <component>
+    <component-type>InputSecret</component-type>
+    <component-class>net.sourceforge.myfaces.component.html.MyFacesHtmlInputSecret</component-class>
+  </component>
+
+  <component>
+    <component-type>InputText</component-type>
+    <component-class>net.sourceforge.myfaces.component.html.MyFacesHtmlInputText</component-class>
+  </component>
+
+  <component>
+    <component-type>InputTextarea</component-type>
+    <component-class>net.sourceforge.myfaces.component.html.MyFacesHtmlInputTextarea</component-class>
   </component>
 
   <component>
@@ -51,8 +98,33 @@
   </component>
 
   <component>
-    <component-type>Panel</component-type>
-    <component-class>net.sourceforge.myfaces.component.MyFacesUIPanel</component-class>
+    <component-type>OutputLabel</component-type>
+    <component-class>net.sourceforge.myfaces.component.html.MyFacesHtmlOutputLabel</component-class>
+  </component>
+
+  <component>
+    <component-type>OutputLink</component-type>
+    <component-class>net.sourceforge.myfaces.component.html.MyFacesHtmlOutputLink</component-class>
+  </component>
+
+  <component>
+    <component-type>OutputMessage</component-type>
+    <component-class>net.sourceforge.myfaces.component.html.MyFacesHtmlOutputMessage</component-class>
+  </component>
+
+  <component>
+    <component-type>OutputText</component-type>
+    <component-class>net.sourceforge.myfaces.component.html.MyFacesHtmlOutputText</component-class>
+  </component>
+
+  <component>
+    <component-type>PanelGrid</component-type>
+    <component-class>net.sourceforge.myfaces.component.html.MyFacesHtmlPanelGrid</component-class>
+  </component>
+
+  <component>
+    <component-type>PanelGroup</component-type>
+    <component-class>net.sourceforge.myfaces.component.html.MyFacesHtmlPanelGroup</component-class>
   </component>
 
   <component>
@@ -63,6 +135,40 @@
   <component>
     <component-type>SelectBoolean</component-type>
     <component-class>net.sourceforge.myfaces.component.MyFacesUISelectBoolean</component-class>
+  </component>
+
+  <component>
+    <component-type>SelectBooleanCheckbox</component-type>
+    <component-class>net.sourceforge.myfaces.component.html.MyFacesHtmlSelectBooleanCheckbox</component-class>
+  </component>
+  <component>
+    <component-type>SelectManyCheckboxList</component-type>
+    <component-class>net.sourceforge.myfaces.component.html.MyFacesHtmlSelectManyCheckboxList</component-class>
+  </component>
+
+  <component>
+    <component-type>SelectManyListbox</component-type>
+    <component-class>net.sourceforge.myfaces.component.html.MyFacesHtmlSelectManyListbox</component-class>
+  </component>
+
+  <component>
+    <component-type>SelectManyMenu</component-type>
+    <component-class>net.sourceforge.myfaces.component.html.MyFacesHtmlSelectManyMenu</component-class>
+  </component>
+
+  <component>
+    <component-type>SelectOneListbox</component-type>
+    <component-class>net.sourceforge.myfaces.component.html.MyFacesHtmlSelectOneListbox</component-class>
+  </component>
+
+  <component>
+    <component-type>SelectOneMenu</component-type>
+    <component-class>net.sourceforge.myfaces.component.html.MyFacesHtmlSelectOneMenu</component-class>
+  </component>
+
+  <component>
+    <component-type>SelectOneRadio</component-type>
+    <component-class>net.sourceforge.myfaces.component.html.MyFacesHtmlSelectOneRadio</component-class>
   </component>
 
   <component>
@@ -83,6 +189,26 @@
   <component>
     <component-type>SelectOne</component-type>
     <component-class>net.sourceforge.myfaces.component.MyFacesUISelectOne</component-class>
+  </component>
+
+  <component>
+    <component-type>ViewRoot</component-type>
+    <component-class>javax.faces.component.UIViewRoot</component-class>
+  </component>
+
+  <component>
+    <component-type>NamingContainer</component-type>
+    <component-class>javax.faces.component.UINamingContainer</component-class>
+  </component>
+
+  <component>
+    <component-type>Message</component-type>
+    <component-class>net.sourceforge.myfaces.component.html.MyFacesHtmlMessage</component-class>
+  </component>
+
+  <component>
+    <component-type>Messages</component-type>
+    <component-class>net.sourceforge.myfaces.component.html.MyFacesHtmlMessages</component-class>
   </component>
 
     <!-- MyFaces Extension Components -->
@@ -248,8 +374,9 @@
         <converter-class>net.sourceforge.myfaces.convert.impl.UploadedFileConverter</converter-class>
     </converter>
 
-
 <!-- standard message-resources -->
+  <!--TODO: move message-resources-->
+    <!--
   <message-resources>
 
       <message-resources-id>javax.faces.context.FACES_API_MESSAGES</message-resources-id>
@@ -324,9 +451,11 @@
       </message>
 
   </message-resources>
-
+        -->
 
     <!-- RI messages -->
+  <!--TODO: move message-resources-->
+    <!--
   <message-resources>
 
       <message-resources-id>javax.faces.context.FACES_IMPL_MESSAGES</message-resources-id>
@@ -383,12 +512,15 @@
       </message>
 
   </message-resources>
-
+        -->
 
   <!-- Message Resources Texts -->
 
+  <!--TODO: move message-resources-->
+    <!--
     &message_resources_en;
     &message_resources_de;
+    -->
 
   <!-- Standard Validators -->
 
