@@ -51,7 +51,7 @@
                 <!-- SORTHEADER -->
                 <x:sortheader id="list.header" commandReference="controller.sort" modelReference="list.sort" >
                     <x:sortcolumn id="list.header.col1" commandName="type">
-                        <f:output_text id="list.header.name" text="Car-Type"  />
+                        <f:output_text id="list.header.name" text="Car-Type" />
                     </x:sortcolumn>
                     <x:sortcolumn id="list.header.col2" commandName="color" >
                         <f:output_text id="list.header.iso" text="Car-Color"  />

@@ -20,12 +20,10 @@ package net.sourceforge.myfaces.renderkit.html;
 
 import net.sourceforge.myfaces.renderkit.attr.ListRendererAttributes;
 
-import javax.faces.FactoryFinder;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 import javax.faces.render.RenderKit;
-import javax.faces.render.RenderKitFactory;
 import javax.faces.render.Renderer;
 import java.io.IOException;
 import java.util.HashMap;
@@ -65,6 +63,8 @@ public class ListRenderer
 
         if (uicomponent.getRendererType().equals(TYPE))
         {
+            pushListComponent(context, uicomponent);
+
             writer.write("<table");
             String style = (String)uicomponent.getAttribute(PANEL_CLASS_ATTR);
             if (style != null && style.length() > 0)
@@ -84,16 +84,10 @@ public class ListRenderer
                 parent.getRendererType().equals(GroupRenderer.TYPE)) &&
                 parent.getParent().getRendererType().equals(TYPE))
             {
-                writeColumnStart(context, parent);
+                openNewColumn(context);
             }
 
-            // renderer can never be null ;)
-            Renderer renderer = getOriginalRenderer(context, uicomponent);
-
-            // TODO: Refactor
-            restoreRenderKit(context, uicomponent);
-            renderer.encodeBegin(context, uicomponent);
-            storeRenderKit(context, uicomponent);
+            encodeBeginWithOriginalRenderer(context, uicomponent);
         }
     }
 
@@ -103,18 +97,14 @@ public class ListRenderer
 
         if (uicomponent.getRendererType().equals(TYPE))
         {
+            popListComponent(facesContext);
+
             writer.write("</table>\n");
             restoreRenderKit(facesContext, uicomponent);
         }
         else
         {
-            // renderer can never be null ;)
-            // TODO: Refactor
-            restoreRenderKit(facesContext, uicomponent);
-            Renderer renderer = getOriginalRenderer(facesContext, uicomponent);
-            renderer.encodeEnd(facesContext, uicomponent);
-            storeRenderKit(facesContext, uicomponent);
-
+            encodeEndWithOriginalRenderer(facesContext, uicomponent);
 
             UIComponent parent = uicomponent.getParent();
             if ((parent.getRendererType().equals(DataRenderer.TYPE) ||
@@ -130,18 +120,17 @@ public class ListRenderer
     /**
      * Delegates all method-calls except {@link #getRenderer} to the renderKit
      * given in the constructor.
-     *
      */
-    public static class JspListRenderKitImpl
+    public static class ListRenderKitImpl
         extends RenderKit
     {
-        public static final String ID = JspListRenderKitImpl.class.getName();
+        public static final String ID = ListRenderKitImpl.class.getName();
 
         private RenderKit _renderKit;
         private Map _renderers = new HashMap();
         private Renderer _defaultRenderer;
 
-        public JspListRenderKitImpl(RenderKit renderKit)
+        public ListRenderKitImpl(RenderKit renderKit)
         {
             HTMLRenderer renderer = new ListRenderer();
             _renderers.put(renderer.getRendererType(), renderer);
@@ -172,7 +161,11 @@ public class ListRenderer
         }
 
         /**
-         * Returns always an JspListRenderer.
+         * Always returns one out of the following Renderers:<br>
+         * ListRenderer,<br>
+         * JspDataRenderer,<br>
+         * JspGroupRenderer<br>
+         * Default is ListRenderer
          * @param s
          * @return JspListRenderer
          */

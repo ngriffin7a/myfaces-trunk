@@ -65,6 +65,5 @@ public class DataRenderer
     public void encodeChildren(FacesContext context, UIComponent component)
         throws IOException
     {
-        encodeSubTree(context, component);
     }
 }

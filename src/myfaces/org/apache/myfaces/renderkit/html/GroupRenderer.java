@@ -61,6 +61,5 @@ public class GroupRenderer
     public void encodeChildren(FacesContext context, UIComponent component)
         throws IOException
     {
-        encodeSubTree(context, component);
     }
 }

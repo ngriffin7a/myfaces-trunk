@@ -48,7 +48,8 @@
                     style="standardTable"
                     headerClass="standardTable_Header"
                     footerClass="standardTable_Footer"
-                    rowClasses="standardTable_Row1,standardTable_Row2" >
+                    rowClasses="standardTable_Row1,standardTable_Row2"
+                    columnClasses="standardTable_Column,standardTable_ColumnCentered" >
                 <!-- HEADER -->
                 <f:group id="header" >
                     <f:output_text id="header.name" text="Country name" />
@@ -66,7 +67,6 @@
                 <f:group id="footer" >
                     <f:output_text id="footer.1" text="look at this runtime values ..."/>
                     <f:group id="g2" >
-                        &nbsp;
                         <f:message id="row_count" msg="{0} rows" >
                             <f:param id="rows" value="<%=new Integer(rows)%>"/>
                         </f:message>
@@ -74,7 +74,6 @@
                         <f:message id="col_count" msg="{0} cols" >
                             <f:param id="cols" value="<%=new Integer(cols)%>"/>
                         </f:message>
-                        &nbsp;
                     </f:group>
                 </f:group>
             </f:list>

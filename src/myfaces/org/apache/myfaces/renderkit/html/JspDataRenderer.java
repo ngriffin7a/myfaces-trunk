@@ -18,12 +18,12 @@
  */
 package net.sourceforge.myfaces.renderkit.html;
 
-import net.sourceforge.myfaces.component.UIPanel;
-
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Iterator;
 
 /**
@@ -35,6 +35,7 @@ public class JspDataRenderer
     extends AbstractPanelRenderer
 {
     public static final String TYPE = "Data";
+    private static final String ITERATOR_ATTR = JspDataRenderer.class.getName() + ".iterator";
 
     public boolean supportsComponentType(UIComponent uiComponent)
     {
@@ -54,8 +55,21 @@ public class JspDataRenderer
     public void encodeBegin(FacesContext context, UIComponent uicomponent)
             throws IOException
     {
+
         if (uicomponent.getParent().getRendererType().equals(ListRenderer.TYPE))
         {
+            Object obj = uicomponent.getAttribute(ITERATOR_ATTR);
+            if (obj == null)
+            {
+                // first call of encodeBegin
+                incrementComponentCountAttr(context);
+            }
+            else
+            {
+                ResponseWriter writer = context.getResponseWriter();
+                writer.write("</tr>\n");
+            }
+
             Iterator it = getIterator(context, uicomponent);
 
             String varAttr = (String)uicomponent.getAttribute(DataRenderer.VAR_ATTR);
@@ -63,7 +77,7 @@ public class JspDataRenderer
             {
                 context.setModelValue(varAttr, it.next());
                 // new row
-                writeNewRow(context);
+                openNewRow(context);
             }
             else
             {
@@ -79,6 +93,37 @@ public class JspDataRenderer
             ResponseWriter writer = facesContext.getResponseWriter();
             writer.write("</tr>\n");
         }
+    }
+
+    protected Iterator getIterator(FacesContext facesContext, UIComponent uiComponent)
+    {
+        Iterator iterator = (Iterator)uiComponent.getAttribute(ITERATOR_ATTR);
+        if (iterator == null)
+        {
+            Object v = uiComponent.currentValue(facesContext);
+            if (v instanceof Iterator)
+            {
+                iterator = (Iterator)v;
+            }
+            else if (v instanceof Collection)
+            {
+                iterator = ((Collection)v).iterator();
+            }
+            else if (v instanceof Object[])
+            {
+                iterator = Arrays.asList((Object[])v).iterator();
+            }
+            else if (v instanceof Iterator)
+            {
+                iterator = (Iterator)v;
+            }
+            else
+            {
+                throw new IllegalArgumentException("Value of component " + uiComponent.getCompoundId() + " is neither collection nor array.");
+            }
+            uiComponent.setAttribute(ITERATOR_ATTR, iterator);
+        }
+        return iterator;
     }
 
 }

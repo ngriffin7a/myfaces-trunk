@@ -21,18 +21,16 @@ package net.sourceforge.myfaces.renderkit.html;
 import net.sourceforge.myfaces.renderkit.attr.CommonRendererAttributes;
 import net.sourceforge.myfaces.renderkit.attr.ListRendererAttributes;
 
+import javax.faces.FactoryFinder;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
-import javax.faces.render.Renderer;
-import javax.faces.render.RenderKitFactory;
 import javax.faces.render.RenderKit;
-import javax.faces.FactoryFinder;
+import javax.faces.render.RenderKitFactory;
+import javax.faces.render.Renderer;
 import javax.servlet.ServletRequest;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Iterator;
+import java.util.Stack;
 import java.util.StringTokenizer;
 
 /**
@@ -45,64 +43,293 @@ public abstract class AbstractPanelRenderer
         implements CommonRendererAttributes
 {
     private static final String ACTUAL_ROW_ATTR = AbstractPanelRenderer.class.getName() + ".actrow";
-    private static final String COMPONENT_INFO_ATTR = AbstractPanelRenderer.class.getName() + ".components";
-    private static final String ITERATOR_ATTR = AbstractPanelRenderer.class.getName() + ".iterator";
-    public static final String RENDERKIT_ATTR = ListRenderer.class.getName() + ".renderkit";
+    private static final String ACTUAL_COLUMN_ATTR = AbstractPanelRenderer.class.getName() + ".actcol";
+    private static final String RENDERKIT_ATTR = AbstractPanelRenderer.class.getName() + ".renderkit";
+    private static final String COMPONENT_COUNT_ATTR = AbstractPanelRenderer.class.getName() + ".compcount";
 
-    private Styles getStyles(UIComponent component)
+
+    //-------------------------------------------------------------
+    // write methods
+    //-------------------------------------------------------------
+
+    protected void openNewRow(FacesContext context)
+        throws IOException
     {
-        if (component.getComponentType().equals(javax.faces.component.UIPanel.TYPE))
+        UIComponent listComponent = peekListComponent(context);
+
+        ResponseWriter writer = context.getResponseWriter();
+        boolean isLastChildcomponent =
+            listComponent.getChildCount() == getComponentCountAttr(context) ? true : false;
+
+        String style = calcRowStyle(context,
+                                    isLastChildcomponent);
+
+        writer.write("<tr");
+        if (style != null && style.length() > 0)
         {
-            if (!component.getRendererType().equals(ListRenderer.TYPE))
-            {
-                // Parent should have RenderType "List"
-                component = component.getParent();
-            }
-
-            String headerStyle = getAttribute(component, ListRendererAttributes.HEADER_CLASS_ATTR);
-            String footerStyle = getAttribute(component, ListRendererAttributes.FOOTER_CLASS_ATTR);
-            String[] rowStyle = getAttributes(component, ROW_CLASSES_ATTR);
-            String[] columnStyle = getAttributes(component, COLUMN_CLASSES_ATTR);
-
-            return new Styles(headerStyle, rowStyle, columnStyle, footerStyle);
+            writer.write(" class=\"");
+            writer.write(style);
+            writer.write("\"");
         }
-        return null;
+        writer.write(">");
+
+        incrementRowAttr(context);
     }
 
-    private String calcStyle(FacesContext context,
-                             UIComponent listComponent,
-                             boolean isLastColumn)
+    protected void openNewColumn(FacesContext context)
+        throws IOException
+    {
+        ResponseWriter writer = context.getResponseWriter();
+
+        String style = calcColumnStyle(context);
+        writer.write("<td");
+
+        if (style != null && style.length() > 0)
+        {
+            writer.write(" class=\"");
+            writer.write(style);
+            writer.write("\"");
+        }
+        writer.write(">");
+
+        incrementColumnAttr(context);
+    }
+
+    //-------------------------------------------------------------
+    // store / restore RenderKit
+    //-------------------------------------------------------------
+
+    protected void storeRenderKit(FacesContext context, UIComponent uiComponent)
+    {
+
+        UIComponent listComponent = peekListComponent(context);
+        String renderKitId = context.getResponseTree().getRenderKitId();
+
+        RenderKitFactory renderkitFactory = (RenderKitFactory)FactoryFinder.getFactory(FactoryFinder.RENDER_KIT_FACTORY);
+        RenderKit renderKit = renderkitFactory.getRenderKit(renderKitId, context);
+        RenderKit listRenderKit;
+        try
+        {
+            listRenderKit = renderkitFactory.getRenderKit(ListRenderer.ListRenderKitImpl.ID);
+        }
+        catch (Exception e)
+        {
+            listRenderKit = new ListRenderer.ListRenderKitImpl(renderKit);
+            renderkitFactory.addRenderKit(ListRenderer.ListRenderKitImpl.ID, listRenderKit);
+        }
+
+        context.getResponseTree().setRenderKitId(ListRenderer.ListRenderKitImpl.ID);
+
+        listComponent.setAttribute(RENDERKIT_ATTR, renderKitId);
+    }
+
+    protected void restoreRenderKit(FacesContext context, UIComponent uicomponent)
+    {
+        String renderKitId = getOriginalRenderKitId(context, uicomponent);
+        context.getResponseTree().setRenderKitId(renderKitId);
+    }
+
+    private String getOriginalRenderKitId(FacesContext context, UIComponent uicomponent)
+    {
+        if (uicomponent.getRendererType().equals(ListRenderer.TYPE))
+        {
+            return (String)uicomponent.getAttribute(RENDERKIT_ATTR);
+        }
+        else
+        {
+            UIComponent listComponent = peekListComponent(context);
+            return (String)listComponent.getAttribute(RENDERKIT_ATTR);
+        }
+    }
+
+    protected void encodeBeginWithOriginalRenderer(FacesContext context, UIComponent uicomponent)
+        throws IOException
+    {
+        restoreRenderKit(context, uicomponent);
+
+        String renderKitId = context.getResponseTree().getRenderKitId();
+        RenderKitFactory renderkitFactory = (RenderKitFactory)FactoryFinder.getFactory(FactoryFinder.RENDER_KIT_FACTORY);
+        RenderKit renderKit = renderkitFactory.getRenderKit(renderKitId, context);
+        Renderer renderer = renderKit.getRenderer(uicomponent.getRendererType());
+        renderer.encodeBegin(context, uicomponent);
+
+        storeRenderKit(context, uicomponent);
+    }
+
+    protected void encodeEndWithOriginalRenderer(FacesContext context, UIComponent uicomponent)
+        throws IOException
+    {
+        restoreRenderKit(context, uicomponent);
+
+        String renderKitId = context.getResponseTree().getRenderKitId();
+        RenderKitFactory renderkitFactory = (RenderKitFactory)FactoryFinder.getFactory(FactoryFinder.RENDER_KIT_FACTORY);
+        RenderKit renderKit = renderkitFactory.getRenderKit(renderKitId, context);
+        Renderer renderer = renderKit.getRenderer(uicomponent.getRendererType());
+        renderer.encodeEnd(context, uicomponent);
+
+        storeRenderKit(context, uicomponent);
+    }
+
+    //-------------------------------------------------------------
+    // count visited childs of a ListCompoent
+    //-------------------------------------------------------------
+
+    protected void incrementComponentCountAttr(FacesContext context)
+    {
+        UIComponent listComponent = peekListComponent(context);
+        listComponent.setAttribute(COMPONENT_COUNT_ATTR, new Integer(getComponentCountAttr(context) + 1));
+    }
+
+    private int getComponentCountAttr(FacesContext context)
+    {
+        UIComponent listComponent = peekListComponent(context);
+        Integer i = (Integer)listComponent.getAttribute(COMPONENT_COUNT_ATTR);
+        return i == null ? 0 : i.intValue();
+    }
+
+    //-------------------------------------------------------------
+    // stack for ListComponents
+    //-------------------------------------------------------------
+
+    protected void pushListComponent(FacesContext context, UIComponent listComponent)
+    {
+        getListComponentStack(context).push(listComponent);
+    }
+
+    protected void popListComponent(FacesContext context)
+    {
+        getListComponentStack(context).pop();
+    }
+
+    protected UIComponent peekListComponent(FacesContext context)
+    {
+        return (UIComponent)getListComponentStack(context).peek();
+    }
+
+    public static final String LIST_STACK_ATTR = ListRenderer.class.getName() + ".liststack";
+    private Stack getListComponentStack(FacesContext context)
+    {
+        ServletRequest request = context.getServletRequest();
+        Stack stack = (Stack)request.getAttribute(LIST_STACK_ATTR);
+        if (stack == null)
+        {
+            stack = new Stack();
+            request.setAttribute(LIST_STACK_ATTR, stack);
+        }
+        return stack;
+    }
+
+    //-------------------------------------------------------------
+    // count rows and Columns
+    //-------------------------------------------------------------
+
+    private static final Integer INITIAL_VALUE = new Integer(0);
+
+    protected int incrementColumnAttr(FacesContext context)
+    {
+        Integer value = getActualColumnAttr(context);
+        context.getServletRequest().setAttribute(ACTUAL_COLUMN_ATTR, new Integer(value.intValue() + 1));
+        return value.intValue();
+    }
+
+    protected void resetColumnAttr(FacesContext context)
+    {
+        context.getServletRequest().setAttribute(ACTUAL_COLUMN_ATTR, INITIAL_VALUE);
+    }
+
+    protected Integer getActualColumnAttr(FacesContext context)
+    {
+        ServletRequest request = context.getServletRequest();
+        Integer value = (Integer)request.getAttribute(ACTUAL_COLUMN_ATTR);
+        return value == null ? INITIAL_VALUE : new Integer(value.intValue());
+    }
+
+    protected int incrementRowAttr(FacesContext context)
+    {
+        Integer value = getActualRowAttr(context);
+        context.getServletRequest().setAttribute(ACTUAL_ROW_ATTR, new Integer(value.intValue() + 1));
+        return value.intValue();
+    }
+
+    protected Integer getActualRowAttr(FacesContext context)
+    {
+        ServletRequest request = context.getServletRequest();
+        Integer value = (Integer)request.getAttribute(ACTUAL_ROW_ATTR);
+        return value == null ? INITIAL_VALUE : new Integer(value.intValue());
+    }
+
+    //-------------------------------------------------------------
+    // Styles
+    //-------------------------------------------------------------
+
+    private String calcRowStyle(FacesContext context,
+                                boolean isLastRow)
     {
         String style = null;
-        int row = getActualRow(context).intValue();
-        // TODO: implement Column
-        int column = 0;
+        int row = getActualRowAttr(context).intValue();
 
-        Styles styles = getStyles(listComponent);
+        Styles styles = getStyles(context);
         if (styles == null)
         {
             return null;
         }
 
-        if (row == 0 && styles.getHeaderStyle().length() > 0)
+        boolean hasHeaderStyle = styles.getHeaderStyle().length() > 0;
+        if (row == 0 && hasHeaderStyle)
         {
             style = styles.getHeaderStyle();
         }
-        else if (isLastColumn && styles.getFooterStyle().length() > 0)
+        else if (isLastRow && styles.getFooterStyle().length() > 0)
         {
             style = styles.getFooterStyle();
         }
         else if (styles.getRowStyle().length > 0)
         {
-            int i = (row % styles.getRowStyle().length);
+            int ref = hasHeaderStyle ? row - 1 : row;
+            int i = (ref % styles.getRowStyle().length);
             style = styles.getRowStyle()[i];
         }
-        else if (styles.getColumnStyle().length > 0)
+        return style;
+    }
+
+    private String calcColumnStyle(FacesContext context)
+    {
+        String style = null;
+        int column = getActualColumnAttr(context).intValue();
+
+        Styles styles = getStyles(context);
+        if (styles == null)
+        {
+            return null;
+        }
+
+        if (styles.getColumnStyle().length > 0)
         {
             int i = (column % styles.getColumnStyle().length);
             style = styles.getColumnStyle()[i];
         }
         return style;
+    }
+
+    private Styles getStyles(FacesContext context)
+    {
+        UIComponent listComponent = peekListComponent(context);
+        if (listComponent.getComponentType().equals(javax.faces.component.UIPanel.TYPE))
+        {
+            if (!listComponent.getRendererType().equals(ListRenderer.TYPE))
+            {
+                // Parent should have RenderType "List"
+                listComponent = listComponent.getParent();
+            }
+
+            String headerStyle = getAttribute(listComponent, ListRendererAttributes.HEADER_CLASS_ATTR);
+            String footerStyle = getAttribute(listComponent, ListRendererAttributes.FOOTER_CLASS_ATTR);
+            String[] rowStyle = getAttributes(listComponent, ROW_CLASSES_ATTR);
+            String[] columnStyle = getAttributes(listComponent, COLUMN_CLASSES_ATTR);
+
+            return new Styles(headerStyle, rowStyle, columnStyle, footerStyle);
+        }
+        return null;
     }
 
     private String[] getAttributes(UIComponent parentComponent, String attribute)
@@ -140,38 +367,7 @@ public abstract class AbstractPanelRenderer
         return attr;
     }
 
-    protected Iterator getIterator(FacesContext facesContext, UIComponent uiComponent)
-    {
-        Iterator iterator = (Iterator)uiComponent.getAttribute(ITERATOR_ATTR);
-        if (iterator == null)
-        {
-            Object v = uiComponent.currentValue(facesContext);
-            if (v instanceof Iterator)
-            {
-                iterator = (Iterator)v;
-            }
-            else if (v instanceof Collection)
-            {
-                iterator = ((Collection)v).iterator();
-            }
-            else if (v instanceof Object[])
-            {
-                iterator = Arrays.asList((Object[])v).iterator();
-            }
-            else if (v instanceof Iterator)
-            {
-                iterator = (Iterator)v;
-            }
-            else
-            {
-                throw new IllegalArgumentException("Value of component " + uiComponent.getCompoundId() + " is neither collection nor array.");
-            }
-            uiComponent.setAttribute(ITERATOR_ATTR, iterator);
-        }
-        return iterator;
-    }
-
-    protected static class Styles
+    private static class Styles
     {
         private String _headerStyle;
         private String _footerStyle;
@@ -210,185 +406,5 @@ public abstract class AbstractPanelRenderer
         }
 
     }
-
-
-    protected void writeNewRow(FacesContext context)
-        throws IOException
-    {
-        ResponseWriter writer = context.getResponseWriter();
-        setToNextRow(context);
-        writer.write("<tr>");
-    }
-
-    /**
-     * uicomponent must have parent with rendererType = List
-     * @param context
-     * @param uicomponent
-     * @throws IOException
-     */
-    protected void writeColumnStart(FacesContext context,
-                                    UIComponent uicomponent)
-        throws IOException
-    {
-        UIComponent[] componentInfo = findComponentInfo(uicomponent);
-        if (componentInfo == null)
-        {
-            throw new IllegalStateException("UIComponent + " + uicomponent + " must have a antecessor component wiht renderType=" + ListRenderer.TYPE);
-        }
-        UIComponent listComponent = componentInfo[0];
-        UIComponent listComponentsChild = componentInfo[1];
-
-        ResponseWriter writer = context.getResponseWriter();
-
-        String style = calcStyle(context,
-                                 listComponent,
-                                 isChildLastComponent(listComponent, listComponentsChild));
-        writer.write("<td");
-
-        if (style != null && style.length() > 0)
-        {
-            writer.write(" class=\"");
-            writer.write(style);
-            writer.write("\"");
-        }
-        writer.write(">");
-    }
-
-    private boolean isChildLastComponent(UIComponent parent,
-                                         UIComponent child)
-    {
-        for (Iterator it = parent.getChildren(); it.hasNext(); )
-        {
-            UIComponent parentsChild = (UIComponent)it.next();
-            if (parentsChild.getComponentId().equals(child.getComponentId()))
-            {
-                return !it.hasNext() ? true : false;
-            }
-        }
-        throw new IllegalStateException("Component " + child.getComponentId() + " not found as child of component " + parent.getCompoundId());
-    }
-
-    protected UIComponent findListComponent(UIComponent uiComponent)
-    {
-        if (uiComponent.getRendererType().equals(ListRenderer.TYPE))
-        {
-            return uiComponent;
-        }
-        UIComponent[] components = findComponentInfo(uiComponent);
-        if (components == null)
-        {
-            return null;
-        }
-        return components[0];
-    }
-
-    private UIComponent[] findComponentInfo(UIComponent uicomponent)
-    {
-        UIComponent[] components = (UIComponent[])uicomponent.getAttribute(COMPONENT_INFO_ATTR);
-        if (components == null)
-        {
-            components = findListComponentAndChild(uicomponent);
-            if (components != null)
-            {
-                uicomponent.setAttribute(COMPONENT_INFO_ATTR, components);
-            }
-        }
-
-        return components;
-    }
-
-    private UIComponent[] findListComponentAndChild(UIComponent uicomponent)
-    {
-        UIComponent listComponent = uicomponent.getParent();
-        UIComponent listComponentsChild = uicomponent;
-        boolean found = false;
-        while (listComponent != null)
-        {
-            if (listComponent.getRendererType().equals(ListRenderer.TYPE))
-            {
-                found = true;
-                break;
-            }
-            listComponentsChild = listComponent;
-            listComponent = listComponent.getParent();
-        }
-
-        if (!found)
-        {
-            return null;
-        }
-
-        UIComponent[] components = {listComponent, listComponentsChild};
-        return components;
-    }
-
-
-    protected int setToNextRow(FacesContext context)
-    {
-        Integer value = getActualRow(context);
-        context.getServletRequest().setAttribute(ACTUAL_ROW_ATTR, new Integer(value.intValue() + 1));
-        return value.intValue();
-    }
-
-    protected Integer getActualRow(FacesContext context)
-    {
-        ServletRequest request = context.getServletRequest();
-        Integer value = (Integer)request.getAttribute(ACTUAL_ROW_ATTR);
-        return value == null ? new Integer(-1) : new Integer(value.intValue());
-    }
-
-
-    protected void storeRenderKit(FacesContext context, UIComponent uiComponent)
-    {
-
-        UIComponent listComponent = findListComponent(uiComponent);
-        String renderKitId = context.getResponseTree().getRenderKitId();
-
-        RenderKitFactory renderkitFactory = (RenderKitFactory)FactoryFinder.getFactory(FactoryFinder.RENDER_KIT_FACTORY);
-        RenderKit renderKit = renderkitFactory.getRenderKit(renderKitId, context);
-        RenderKit listRenderKit;
-        try
-        {
-            listRenderKit = renderkitFactory.getRenderKit(ListRenderer.JspListRenderKitImpl.ID);
-        }
-        catch (Exception e)
-        {
-            listRenderKit = new ListRenderer.JspListRenderKitImpl(renderKit);
-            renderkitFactory.addRenderKit(ListRenderer.JspListRenderKitImpl.ID, listRenderKit);
-        }
-
-        context.getResponseTree().setRenderKitId(ListRenderer.JspListRenderKitImpl.ID);
-
-        listComponent.setAttribute(RENDERKIT_ATTR, renderKitId);
-    }
-
-    protected void restoreRenderKit(FacesContext context, UIComponent uicomponent)
-    {
-        String renderKitId = getOriginalRenderKitId(context, uicomponent);
-        context.getResponseTree().setRenderKitId(renderKitId);
-    }
-
-
-    protected Renderer getOriginalRenderer(FacesContext context, UIComponent component)
-    {
-        RenderKitFactory renderkitFactory = (RenderKitFactory)FactoryFinder.getFactory(FactoryFinder.RENDER_KIT_FACTORY);
-        RenderKit renderKit = renderkitFactory.getRenderKit(getOriginalRenderKitId(context, component), context);
-        return renderKit.getRenderer(component.getRendererType());
-    }
-
-    protected String getOriginalRenderKitId(FacesContext context, UIComponent uicomponent)
-    {
-        if (uicomponent.getRendererType().equals(ListRenderer.TYPE))
-        {
-            return (String)uicomponent.getAttribute(RENDERKIT_ATTR);
-        }
-        else
-        {
-            UIComponent listComponent = findListComponent(uicomponent);
-            return (String)listComponent.getAttribute(RENDERKIT_ATTR);
-        }
-    }
-
-
 
 }

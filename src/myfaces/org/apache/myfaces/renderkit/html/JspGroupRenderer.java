@@ -21,7 +21,6 @@ package net.sourceforge.myfaces.renderkit.html;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
-import javax.faces.render.Renderer;
 import java.io.IOException;
 
 /**
@@ -56,28 +55,25 @@ public class JspGroupRenderer
 
         if (parent.getRendererType().equals(ListRenderer.TYPE))
         {
+            incrementComponentCountAttr(context);
+
             // new row
-            writeNewRow(context);
+            openNewRow(context);
         }
         else if (parent.getRendererType().equals(JspDataRenderer.TYPE) &&
                  parent.getParent().getRendererType().equals(ListRenderer.TYPE))
         {
-            writeColumnStart(context, uicomponent);
+            openNewColumn(context);
         }
         else
         {
             if (parent.getRendererType().equals(GroupRenderer.TYPE) &&
                 parent.getParent().getRendererType().equals(ListRenderer.TYPE))
             {
-                writeColumnStart(context, parent);
+                openNewColumn(context);
             }
 
-            // renderer can never be null ;)
-            Renderer renderer = getOriginalRenderer(context, uicomponent);
-            // TODO: Refactor
-            restoreRenderKit(context, uicomponent);
-            renderer.encodeBegin(context, uicomponent);
-            storeRenderKit(context, uicomponent);
+            encodeBeginWithOriginalRenderer(context, uicomponent);
         }
     }
 
@@ -97,12 +93,7 @@ public class JspGroupRenderer
         }
         else
         {
-            // renderer can never be null ;)
-            Renderer renderer = getOriginalRenderer(facesContext, uicomponent);
-            // TODO: Refactor
-            restoreRenderKit(facesContext, uicomponent);
-            renderer.encodeEnd(facesContext, uicomponent);
-            storeRenderKit(facesContext, uicomponent);
+            encodeEndWithOriginalRenderer(facesContext, uicomponent);
 
             if ((parent.getRendererType().equals(GroupRenderer.TYPE)) &&
                 parent.getParent().getRendererType().equals(ListRenderer.TYPE))
