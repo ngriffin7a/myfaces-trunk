@@ -52,6 +52,7 @@ public class ServletExternalContextImpl
     private Map _requestHeaderValuesMap;
     private Map _requestCookieMap;
     private Map _initParameterMap;
+    private boolean _isHttpServletRequest;
 
     public ServletExternalContextImpl(ServletContext servletContext,
                                       ServletRequest servletRequest,
@@ -69,11 +70,11 @@ public class ServletExternalContextImpl
         _requestHeaderValuesMap = null;
         _requestCookieMap = null;
         _initParameterMap = null;
+        _isHttpServletRequest = (servletRequest instanceof HttpServletRequest);
     }
 
     public void release()
     {
-        // REVISIT: does not seem to be used, should remove
         _servletContext = null;
         _servletRequest = null;
         _servletResponse = null;
@@ -89,17 +90,13 @@ public class ServletExternalContextImpl
     }
 
 
-
     public Object getSession(boolean create)
     {
-        if (_servletRequest instanceof HttpServletRequest)
-        {
-            return ((HttpServletRequest)_servletRequest).getSession(create);
-        }
-        else
+        if (!_isHttpServletRequest)
         {
             throw new IllegalArgumentException("Only HttpServletRequest supported");
         }
+        return ((HttpServletRequest)_servletRequest).getSession(create);
     }
 
     public Object getContext()
@@ -130,9 +127,9 @@ public class ServletExternalContextImpl
     {
         if (_sessionMap == null)
         {
-            if (!(_servletRequest instanceof HttpServletRequest))
+            if (!_isHttpServletRequest)
             {
-                throw new IllegalStateException("Only HttpServletRequest supported");
+                throw new IllegalArgumentException("Only HttpServletRequest supported");
             }
             _sessionMap = new SessionMap((HttpServletRequest) _servletRequest);
         }
@@ -190,6 +187,10 @@ public class ServletExternalContextImpl
     {
         if (_requestHeaderMap == null)
         {
+            if (!_isHttpServletRequest)
+            {
+                throw new IllegalArgumentException("Only HttpServletRequest supported");
+            }
             _requestHeaderMap = new RequestHeaderMap((HttpServletRequest)_servletRequest);
         }
         return _requestHeaderMap;
@@ -199,6 +200,10 @@ public class ServletExternalContextImpl
     {
         if (_requestHeaderValuesMap == null)
         {
+            if (!_isHttpServletRequest)
+            {
+                throw new IllegalArgumentException("Only HttpServletRequest supported");
+            }
             _requestHeaderValuesMap = new RequestHeaderValuesMap((HttpServletRequest)_servletRequest);
         }
         return _requestHeaderValuesMap;
@@ -208,6 +213,10 @@ public class ServletExternalContextImpl
     {
         if (_requestCookieMap == null)
         {
+            if (!_isHttpServletRequest)
+            {
+                throw new IllegalArgumentException("Only HttpServletRequest supported");
+            }
             Cookie[] cookies = ((HttpServletRequest)_servletRequest).getCookies();
             _requestCookieMap = new HashMap(cookies.length);
             for (int i = 0; i < cookies.length; i++)
@@ -225,11 +234,19 @@ public class ServletExternalContextImpl
 
     public String getRequestPathInfo()
     {
+        if (!_isHttpServletRequest)
+        {
+            throw new IllegalArgumentException("Only HttpServletRequest supported");
+        }
         return ((HttpServletRequest)_servletRequest).getPathInfo();
     }
 
     public String getRequestContextPath()
     {
+        if (!_isHttpServletRequest)
+        {
+            throw new IllegalArgumentException("Only HttpServletRequest supported");
+        }
         return ((HttpServletRequest)_servletRequest).getContextPath();
     }
 
@@ -269,11 +286,19 @@ public class ServletExternalContextImpl
 
     public String encodeActionURL(String s)
     {
+        if (!_isHttpServletRequest)
+        {
+            throw new IllegalArgumentException("Only HttpServletRequest supported");
+        }
         return ((HttpServletResponse)_servletResponse).encodeURL(s);
     }
 
     public String encodeResourceURL(String s)
     {
+        if (!_isHttpServletRequest)
+        {
+            throw new IllegalArgumentException("Only HttpServletRequest supported");
+        }
         return ((HttpServletResponse)_servletResponse).encodeURL(s);
     }
 
@@ -296,23 +321,48 @@ public class ServletExternalContextImpl
         }
     }
 
-    public String getRequestServletPath() {
+    public String getRequestServletPath()
+    {
+        if (!_isHttpServletRequest)
+        {
+            throw new IllegalArgumentException("Only HttpServletRequest supported");
+        }
         return ((HttpServletRequest)_servletRequest).getServletPath();
     }
 
-    public String getAuthType() {
+    public String getAuthType()
+    {
+        if (!_isHttpServletRequest)
+        {
+            throw new IllegalArgumentException("Only HttpServletRequest supported");
+        }
         return ((HttpServletRequest)_servletRequest).getAuthType();
     }
 
-    public String getRemoteUser() {
+    public String getRemoteUser()
+    {
+        if (!_isHttpServletRequest)
+        {
+            throw new IllegalArgumentException("Only HttpServletRequest supported");
+        }
         return ((HttpServletRequest)_servletRequest).getRemoteUser();
     }
 
-    public boolean isUserInRole(String role) {
-        return ((HttpServletRequest)_servletRequest).isUserInRole(role);    
+    public boolean isUserInRole(String role)
+    {
+        if (!_isHttpServletRequest)
+        {
+            throw new IllegalArgumentException("Only HttpServletRequest supported");
+        }
+        return ((HttpServletRequest)_servletRequest).isUserInRole(role);
     }
 
-    public Principal getUserPrincipal() {
+    public Principal getUserPrincipal()
+    {
+        if (!_isHttpServletRequest)
+        {
+            throw new IllegalArgumentException("Only HttpServletRequest supported");
+        }
         return ((HttpServletRequest)_servletRequest).getUserPrincipal();
     }
 

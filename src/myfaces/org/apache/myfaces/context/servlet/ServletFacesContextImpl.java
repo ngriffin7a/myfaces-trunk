@@ -18,26 +18,20 @@
  */
 package net.sourceforge.myfaces.context.servlet;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
-import java.util.NoSuchElementException;
+import net.sourceforge.myfaces.util.FacesUtils;
 
 import javax.faces.application.Application;
 import javax.faces.application.FacesMessage;
 import javax.faces.component.UIViewRoot;
+import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseStream;
 import javax.faces.context.ResponseWriter;
-import javax.faces.context.ExternalContext;
 import javax.faces.render.RenderKit;
-
 import javax.servlet.ServletContext;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
-
-import net.sourceforge.myfaces.util.FacesUtils;
+import java.util.*;
 
 
 /**
@@ -56,16 +50,16 @@ public class ServletFacesContextImpl
 
     //~ Instance fields ----------------------------------------------------------------------------
 
-    List                          _messageClientIds = null;
-    List                          _messages         = null;
-    private Application           _application;
-    private ExternalContext       _externalContext;
-    private ResponseStream        _responseStream   = null;
-    private ResponseWriter        _responseWriter   = null;
-    private FacesMessage.Severity _maximumSeverity  = FacesMessage.SEVERITY_INFO;
-    private UIViewRoot            _viewRoot;
-    private boolean               _renderResponse   = false;
-    private boolean               _responseComplete = false;
+    private List                        _messageClientIds = null;
+    private List                        _messages         = null;
+    private Application                 _application;
+    private ServletExternalContextImpl  _externalContext;
+    private ResponseStream              _responseStream   = null;
+    private ResponseWriter              _responseWriter   = null;
+    private FacesMessage.Severity       _maximumSeverity  = FacesMessage.SEVERITY_INFO;
+    private UIViewRoot                  _viewRoot;
+    private boolean                     _renderResponse   = false;
+    private boolean                     _responseComplete = false;
 
     //~ Constructors -------------------------------------------------------------------------------
 
@@ -269,13 +263,16 @@ public class ServletFacesContextImpl
 
     public void release()
     {
-        _messages             = null;
+        _externalContext.release();
+        _externalContext = null;
+
         _messageClientIds     = null;
-        _maximumSeverity      = FacesMessage.SEVERITY_INFO;
+        _messages             = null;
+        _application          = null;
         _responseStream       = null;
         _responseWriter       = null;
-        _renderResponse       = false;
-        _responseComplete     = false;
+        _viewRoot             = null;
+
         FacesContext.setCurrentInstance(null);
     }
 
