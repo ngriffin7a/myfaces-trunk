@@ -36,6 +36,15 @@ import java.util.*;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.15  2005/03/20 17:26:37  matzew
+ * Component identifiers must obey the following syntax restrictions:
+ *
+ *     * Must not be a zero-length String.
+ *     * First character must be a letter or an underscore ('_').
+ *     * Subsequent characters must be a letter, a digit, an underscore ('_'), or a dash ('-').
+ *
+ * For more see JSF spec.
+ *
  * Revision 1.14  2004/12/27 04:11:11  mmarinschek
  * Data Table stores the state of facets of children; script tag is rendered with type attribute instead of language attribute, popup works better as a column in a data table
  *
@@ -163,7 +172,7 @@ public abstract class UIComponentBase
 
     public void setId(String id)
     {
-        //TODO: check id according to javadoc
+        isIdValid(id);
         _id = id;
         _clientId = null;
     }
@@ -707,6 +716,44 @@ public abstract class UIComponentBase
     }
 
 
+    /**
+     * @param string the component id, that should be a vaild one.
+     */
+    private void isIdValid(String string) {
+
+        //is there any component identifier ?
+        if(string == null)
+            return;
+ 
+        //Component identifiers must obey the following syntax restrictions:
+        //1. Must not be a zero-length String.
+        if(string.length()==0){
+            throw new IllegalArgumentException("component identifier must not be a zero-length String");
+        }
+
+        //let's look at all chars inside of the ID if it is a valid ID!
+        char[] chars = string.toCharArray();
+        for (int i = 0; i < chars.length; i++) {
+            char tmpChar = chars[i];
+
+            //2. First character must be a letter or an underscore ('_').
+            if(i==0){
+                if(!Character.isLetter(tmpChar) &&  tmpChar !='_'){
+                    throw new IllegalArgumentException("component identifier's first character must be a letter or an underscore ('_')! But it is \""+tmpChar+"\"");            
+                }
+            }else{
+
+                //3. Subsequent characters must be a letter, a digit, an underscore ('_'), or a dash ('-').
+                if(!Character.isDigit(tmpChar) && !Character.isLetter(tmpChar) && tmpChar !='-' && tmpChar !='_'){
+                    throw new IllegalArgumentException("Subsequent characters of component identifier must be a letter, a digit, an underscore ('_'), or a dash ('-')! But component identifier contains \""+tmpChar+"\"");            
+                }
+            }
+        }
+        
+    }
+
+    
+    
     //------------------ GENERATED CODE BEGIN (do not modify!) --------------------
 
     private static final boolean DEFAULT_RENDERED = true;
