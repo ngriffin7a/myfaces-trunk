@@ -160,7 +160,7 @@ public class NavigationHandlerImpl
         return _cazes;
     }
 
-    private static class KeyComparator
+    private static final class KeyComparator
         implements Comparator
     {
         public int compare(Object o1, Object o2)
