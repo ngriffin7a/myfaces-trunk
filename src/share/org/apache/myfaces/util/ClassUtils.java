@@ -31,6 +31,9 @@ import java.util.Map;
  * @author Anton Koinov
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.6  2004/07/13 04:59:25  tinytoony
+ * primitive types where not retrieved (call to javaTypeToClass not used)
+ *
  * Revision 1.5  2004/07/13 04:56:55  tinytoony
  * primitive types where not retrieved (call to javaTypeToClass not used)
  *
