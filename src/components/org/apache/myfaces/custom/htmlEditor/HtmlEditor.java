@@ -26,6 +26,9 @@ import javax.faces.el.ValueBinding;
  * @author Sylvain Vieujot (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.6  2004/12/04 22:25:36  svieujot
+ * *** empty log message ***
+ *
  * Revision 1.5  2004/12/04 03:26:28  svieujot
  * Various bug fixes
  *
@@ -152,10 +155,6 @@ public class HtmlEditor extends UIInput {
    		    return _addKupuLogo;
    		ValueBinding vb = getValueBinding("addKupuLogo");
    		return vb != null ? (Boolean)vb.getValue(getFacesContext()) : Boolean.TRUE;
-    }
-    
-    public void setAddKupuLogo(boolean addKupuLogo){
-   		this._addKupuLogo = Boolean.valueOf(addKupuLogo);
     }
     
     public Boolean isShowPropertiesToolBox(){
