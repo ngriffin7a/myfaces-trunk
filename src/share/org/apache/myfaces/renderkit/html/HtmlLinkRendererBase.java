@@ -39,6 +39,9 @@ import net.sourceforge.myfaces.renderkit.html.util.DummyFormUtils;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.8  2004/05/12 01:50:47  o_rossmueller
+ * fix #951896: add state params once is enough ;-)
+ *
  * Revision 1.7  2004/05/12 01:41:32  o_rossmueller
  * fix #951896: added state params to link URLs for ALLOW_JAVASCRIPT=false
  *
@@ -321,8 +324,6 @@ public abstract class HtmlLinkRendererBase
         hrefBuf.append(clientId);
         hrefBuf.append('=');
         hrefBuf.append(clientId);
-        hrefBuf.append("&");
-        hrefBuf.append(URL_STATE_MARKER);
 
         if (component.getChildCount() > 0)
         {
