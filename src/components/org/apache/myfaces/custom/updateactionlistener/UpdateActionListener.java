@@ -33,6 +33,9 @@ import javax.faces.event.ActionListener;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.2  2004/05/05 17:36:32  o_rossmueller
+ * fix #948629: no converter is needed to convert a String value to Object
+ *
  * Revision 1.1  2004/03/31 12:15:28  manolito
  * custom component refactoring
  *
@@ -108,7 +111,7 @@ public class UpdateActionListener
             v instanceof String)
         {
             Class type = updateBinding.getType(context);
-            if (!type.equals(String.class))
+            if (!type.equals(String.class) && ! type.equals(Object.class))
             {
                 Converter converter = getConverter();
                 if (converter == null)
