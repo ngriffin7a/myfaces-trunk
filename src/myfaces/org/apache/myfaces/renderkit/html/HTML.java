@@ -334,7 +334,10 @@ public class HTML
     public static final String METHOD_ATTR = "method";
     public static final String ACTION_ATTR = "action";
     public static final String COLSPAN_ATTR = "colspan";
+    public static final String SCOPE_ATTR = "scope";
 
+    //HTML attributes values
+    public static final String SCOPE_COLGROUP_VALUE = "colgroup";
 
     //HTML element constants
     public static final String SPAN_ELEM = "span";
@@ -348,7 +351,11 @@ public class HTML
     public static final String LABEL_ELEM = "label";
     public static final String TABLE_ELEM = "table";
     public static final String TR_ELEM = "tr";
+    public static final String TH_ELEM = "th";
     public static final String TD_ELEM = "td";
+    public static final String TBODY_ELEM = "tbody";
+    public static final String TFOOT_ELEM = "tfoot";
+    public static final String THEAD_ELEM = "thead";
 
 
     //HTML simple element constants
