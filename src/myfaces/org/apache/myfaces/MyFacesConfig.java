@@ -18,12 +18,12 @@
  */
 package net.sourceforge.myfaces;
 
-import java.util.logging.Level;
-import java.util.Properties;
-import java.util.Map;
-import java.util.HashMap;
-import java.io.InputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Properties;
+import java.util.logging.Level;
 
 /**
  * Global configuration for MyFaces.
@@ -33,11 +33,11 @@ import java.io.IOException;
 public class MyFacesConfig
 {
     private static final String _PROPERTY_FILE = "myfaces.properties";
-    private static final String _UseJspFileCache = "UseJspFileCache";
-    private static final String _UseStateEncodingOnTheFly = "UseStateEncodingOnTheFly";
-    private static final String _UseStateZipping = "UseStateZipping";
-    private static final String _UseAlwaysSaveComponentValue = "UseAlwaysSaveComponentValue";
-    private static final String _UseFileExtensionServletMapping = "UseFileExtensionServletMapping";
+    private static final String _JspInfoApplicationCaching = "JspInfoApplicationCaching";
+    private static final String _StateEncodingOnTheFly = "StateEncodingOnTheFly";
+    private static final String _StateZipping = "StateZipping";
+    private static final String _AlwaysSaveComponentValue = "AlwaysSaveComponentValue";
+    private static final String _FileExtensionServletMapping = "FileExtensionServletMapping";
     private static final String LOG_LEVEL = "log_level";
     private static final Level DEFAULT_LOG_LEVEL = Level.INFO;
 
@@ -52,7 +52,7 @@ public class MyFacesConfig
      */
     public static boolean isJspInfoApplicationCaching()
     {
-        return getPropertyAsBoolean(_UseJspFileCache, false);
+        return getPropertyAsBoolean(_JspInfoApplicationCaching, false);
     }
 
     /**
@@ -74,7 +74,7 @@ public class MyFacesConfig
      */
     public static boolean isStateEncodingOnTheFly()
     {
-        return getPropertyAsBoolean(_UseStateEncodingOnTheFly, false);
+        return getPropertyAsBoolean(_StateEncodingOnTheFly, false);
     }
 
     /**
@@ -90,7 +90,7 @@ public class MyFacesConfig
      */
     public static boolean isStateZipping()
     {
-        return getPropertyAsBoolean(_UseStateZipping, false);
+        return getPropertyAsBoolean(_StateZipping, false);
     }
 
     /**
@@ -102,7 +102,7 @@ public class MyFacesConfig
      */
     public static boolean isAlwaysSaveComponentValue()
     {
-        return getPropertyAsBoolean(_UseAlwaysSaveComponentValue, true);
+        return getPropertyAsBoolean(_AlwaysSaveComponentValue, true);
     }
 
     /**
@@ -111,7 +111,7 @@ public class MyFacesConfig
      */
     public static boolean isFileExtensionServletMapping()
     {
-        return getPropertyAsBoolean(_UseFileExtensionServletMapping, true);
+        return getPropertyAsBoolean(_FileExtensionServletMapping, true);
     }
 
 

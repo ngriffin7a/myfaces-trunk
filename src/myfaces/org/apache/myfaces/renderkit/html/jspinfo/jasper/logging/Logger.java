@@ -98,7 +98,7 @@ public abstract class Logger {
     protected static Hashtable loggers = new Hashtable(5);
     protected static Logger defaultLogger = new DefaultLogger();
     static {
-	defaultLogger.setVerbosityLevel(DEBUG);
+	defaultLogger.setVerbosityLevel(WARNING);
     }
       
 
