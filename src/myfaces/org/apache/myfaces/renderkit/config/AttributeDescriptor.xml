@@ -62,8 +62,8 @@
     <attrdesc name="alt"><display-name /><description /></attrdesc>
     <attrdesc name="align"><display-name /><description /></attrdesc>
     <attrdesc name="border"><display-name /><description /></attrdesc>
-    <attrdesc name="height"><display-name /><description /></attrdesc>
-    <attrdesc name="width"><display-name /><description /></attrdesc>
+    <attrdesc name="height" type="java.lang.Integer"><display-name /><description /></attrdesc>
+    <attrdesc name="width" type="java.lang.Integer"><display-name /><description /></attrdesc>
 
     <!--
       ====================================================
@@ -81,10 +81,10 @@
         <attrdesc name="src"><display-name /><description /></attrdesc>
         <attrdesc name="usemap"><display-name /><description /></attrdesc>
         <attrdesc name="vspace"><display-name /><description /></attrdesc>
-        <attribute ref="alt"></attribute>
-        <attribute ref="align"></attribute>
-        <attribute ref="border"></attribute>
-        <attribute ref="height"></attribute>
-        <attribute ref="width"></attribute>
+        <attribute ref="alt" />
+        <attribute ref="align" />
+        <attribute ref="border" />
+        <attribute ref="height" />
+        <attribute ref="width" />
     </collection>
 </definition>

@@ -12,6 +12,10 @@
             <!-- <attributes collectionRef="basic" /> -->
             <!-- <attribute ref="src" /> -->
         </uiComponent>
+        <uiComponent type="UITESTGraphic">
+            <!-- <attributes collectionRef="basic" /> -->
+            <!-- <attribute ref="src" /> -->
+        </uiComponent>
     </renderer>
 
 </definition>
