@@ -60,8 +60,8 @@ public class ApplicationImpl
     //~ Instance fields ----------------------------------------------------------------------------
 
     private final FacesConfig    _facesConfig;
-    private final Map            _methodBindingChache = new HashMap();
-    private final Map            _valueBindingChache  = new HashMap();
+    private final Map            _methodBindingCache = new HashMap();
+    private final Map            _valueBindingCache  = new HashMap();
     private final ServletContext _servletContext;
     private Collection           _supportedLocales;
     private Locale               _defaultLocale;
@@ -354,12 +354,12 @@ public class ApplicationImpl
 
         // TODO: redesign to avoid synchronization issues
         // FIXME: this caching does not work when overriden functions with different params are used
-        MethodBinding mb = (MethodBinding) _methodBindingChache.get(reference);
+        MethodBinding mb = (MethodBinding) _methodBindingCache.get(reference);
 
         if (mb == null)
         {
             mb = new MethodBindingImpl(this, reference, params);
-            _valueBindingChache.put(reference, mb);
+            _valueBindingCache.put(reference, mb);
         }
 
         return mb;
@@ -385,13 +385,13 @@ public class ApplicationImpl
         }
 
         // TODO: redesign to avoid synchronization issues
-        ValueBinding vb = (ValueBinding) _valueBindingChache.get(reference);
+        ValueBinding vb = (ValueBinding) _valueBindingCache.get(reference);
 
         if (vb == null)
         {
             // Note: we cannot cache VariableResolver and PropertyResolver directly in ValueBinding since those can change through the set methods
             vb = new ValueBindingImpl(reference, this);
-            _valueBindingChache.put(reference, vb);
+            _valueBindingCache.put(reference, vb);
         }
 
         return vb;
