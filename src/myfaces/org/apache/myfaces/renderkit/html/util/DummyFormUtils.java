@@ -49,7 +49,7 @@ public class DummyFormUtils
      * Returns a DummyFormResponseWriter.
      * Replaces current ResponseWriter by a DummyFormResponseWriter if necessary.
      * @param facesContext
-     * @return
+     * @return a DummyFormResponseWriter instance
      */
     public static DummyFormResponseWriter getDummyFormResponseWriter(FacesContext facesContext)
     {

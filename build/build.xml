@@ -120,8 +120,6 @@
                         prefix="myfaces-${manifest.impl.version}/lib"/>
             <tarfileset file="${commons-logging.jar}"
                         prefix="myfaces-${manifest.impl.version}/lib"/>
-            <tarfileset file="${jsf-api.jar}"
-                        prefix="myfaces-${manifest.impl.version}/lib"/>
         </tar>
     </target>
 

@@ -93,9 +93,6 @@ public class JspViewHandlerImpl
     }
 
     /**
-     * @param facesContext
-     * @param viewId
-     * @return
      */
     public UIViewRoot createView(FacesContext facesContext, String viewId)
     {

@@ -124,8 +124,7 @@ public class JspInfo
 
 
     /**
-     * Returns an Iterator over the entry Set (!) of the parsed JspBeanInfos.
-     * @return
+     * @return an Iterator over the entry Set (!) of the parsed JspBeanInfos.
      */
     public Iterator getJspBeanInfos()
     {

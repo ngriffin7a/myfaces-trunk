@@ -51,7 +51,7 @@ public class BeanUtils
      * Since Introspector already caches recent BeanInfos we do not
      * need to cache them ourselves.
      * @param bean
-     * @return
+     * @return the BeanInfo
      */
     public static BeanInfo getBeanInfo(Object bean)
     {
@@ -160,7 +160,7 @@ public class BeanUtils
      * @param bean
      * @param propertyName
      * @param beanInfo
-     * @return
+     * @return value of give bean property
      */
     public static Object getBeanPropertyValue(Object bean,
                                               String propertyName,
@@ -182,7 +182,7 @@ public class BeanUtils
      * Optimized version where PropertyDescriptor already is available.
      * @param bean
      * @param propertyDescriptor
-     * @return
+     * @return value of give bean property
      */
     public static Object getBeanPropertyValue(Object bean,
                                               PropertyDescriptor propertyDescriptor)
@@ -282,7 +282,7 @@ public class BeanUtils
     /**
      * @param bean
      * @param propertyName
-     * @return
+     * @return type of give bean property
      * @throws IllegalArgumentException if the bean has no property with this name
      */
     public static Class getBeanPropertyType(Object bean,
@@ -294,7 +294,7 @@ public class BeanUtils
     /**
      * @param beanClass
      * @param propertyName
-     * @return
+     * @return type of given bean property
      */
     public static Class getPropertyType(Class beanClass,
                                         String propertyName)
@@ -313,7 +313,7 @@ public class BeanUtils
     /**
      * @param beanInfo
      * @param propertyName
-     * @return
+     * @return type of given bean property
      * @throws IllegalArgumentException if the bean has no property with this name
      */
     public static Class getPropertyType(BeanInfo beanInfo,

@@ -25,7 +25,6 @@ import java.util.List;
 /**
  * DOCUMENT ME!
  * @author Thomas Spiegl
- * @version
  */
 public class QuotationForm
 {

@@ -9,13 +9,11 @@ cos.jar = ${project.dir}/lib/cos.jar
 # File path to commons logging package
 commons-logging.jar = ${project.dir}/lib/commons-logging.jar
 
-# File path to log4j library
-log4j.jar = ${project.dir}/lib/log4j-1.2.8.jar
-
-# File path to JavaServer Faces API library
+# File path to JavaServer Faces API version 1.0 final
+# (not included, please download from http://java.sun.com/j2ee/javaserverfaces/download.html)
 jsf-api.jar = ${project.dir}/lib/jsf-api.jar
 
-# File path of MyFaces archive to be created
+# Destination file path of MyFaces archive to be created
 myfaces.jar = ${project.dir}/lib/myfaces.jar
 
 # Temporary directory
@@ -26,14 +24,11 @@ myfaces.jar = ${project.dir}/lib/myfaces.jar
 javac.optimize = off
 
 
+# log4j library (only needed for examples application)
+log4j.jar = ${project.dir}/lib/log4j-1.2.8.jar
 
 # junit library (only needed for JUnit testing)
 junit.jar = ${project.dir}/lib/junit.jar
 
-
-# tlddoc library (needed for tlddoc creation)
+# tlddoc library (only needed for tlddoc creation)
 tlddoc.jar = ${project.dir}/lib/tlddoc.jar
-
-
-# log4j library (only needed for examples application)
-log4j.jar = ${project.dir}/lib/log4j-1.2.8.jar

@@ -49,7 +49,7 @@ public class ValueBindingExpression
     /**
      * @param facesContext
      * @param desiredType   Class, this value binding is checked against, or null for no check
-     * @return
+     * @return the ValueBinding
      */
     public ValueBinding getValueBinding(FacesContext facesContext, Class desiredType)
     {

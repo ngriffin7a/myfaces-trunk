@@ -299,7 +299,7 @@ public class StringUtils
      * @param str input string to dequote
      * @param quote the quoting char
      *
-     * @return
+     * @return dequoted String
      */
     public static String dequoteFull(String str, char quote)
     {

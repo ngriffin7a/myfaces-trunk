@@ -41,8 +41,6 @@ public class ZipUtils
 
 
     /**
-     * @param s
-     * @return
      */
     public static String unzipString(String s)
     {
@@ -72,8 +70,6 @@ public class ZipUtils
     }
 
     /**
-     * @param s
-     * @return
      */
     public static String zipString(String s)
     {
