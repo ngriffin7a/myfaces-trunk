@@ -13,8 +13,6 @@ MyFaces Known Issues
   characters) in id attributes.
   
 * to make the examples webapp war file for a version of tomcat less than 5.5,
-  you need to uncomment the lines including the connons-el.jar and jsp-2.0.jar.
-  Those 2 commented lines can be found around line 100 in the
-  /build/examples-webapp/build.xml file.
+  you have to set the property tomcat.pre.5.5.version=true
 
 TODO... (Many others!)
