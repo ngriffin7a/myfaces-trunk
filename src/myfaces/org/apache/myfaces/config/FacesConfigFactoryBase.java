@@ -40,6 +40,9 @@ import java.util.jar.JarInputStream;
  * @author Anton Koinov
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.30  2004/05/12 13:28:31  o_rossmueller
+ * fix #952453: changed CONFIG_FILES context param to spec-compliant javax.faces.CONFIG_FILES
+ *
  * Revision 1.29  2004/05/12 07:57:43  manolito
  * Log in javadoc header
  *
@@ -67,7 +70,7 @@ public abstract class FacesConfigFactoryBase
     private static final String STANDARD_FACES_CONFIG_RESOURCE
         = "net.sourceforge.myfaces.resource".replace('.', '/') + "/standard-faces-config.xml";
     private static final String CONFIG_FILES_INIT_PARAM
-        = "javax.faces.application.CONFIG_FILES";
+        = "javax.faces.CONFIG_FILES";
 
     private static final String FACES_CONFIG_ATTR = FacesConfig.class.getName();
 

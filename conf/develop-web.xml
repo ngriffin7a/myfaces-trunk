@@ -36,7 +36,7 @@
     <description>debug web.xml</description>
 
     <context-param>
-        <param-name>javax.faces.application.CONFIG_FILES</param-name>
+        <param-name>javax.faces.CONFIG_FILES</param-name>
         <param-value>
             /WEB-INF/examples-config.xml
         </param-value>
