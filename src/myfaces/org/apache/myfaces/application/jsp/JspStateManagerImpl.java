@@ -8,6 +8,7 @@ import org.apache.commons.logging.LogFactory;
 
 import javax.faces.FacesException;
 import javax.faces.FactoryFinder;
+import javax.faces.component.UIComponent;
 import javax.faces.component.UIViewRoot;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
@@ -16,6 +17,7 @@ import javax.faces.render.RenderKitFactory;
 import javax.faces.render.ResponseStateManager;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 /**
@@ -66,6 +68,12 @@ public class JspStateManagerImpl
 
     public SerializedView saveSerializedView(FacesContext facesContext) throws IllegalStateException
     {
+        //Sun's UIComponentBase has a bug:
+        //Component state saving and restoring does not work right if there
+        //are transient components. So, we must remove transient components
+        //before calling viewRoots processSaveState method.
+        removeTransientComponents(facesContext.getViewRoot());
+
         Object treeStruct = getTreeStructureToSave(facesContext);
         Object compStates = getComponentStateToSave(facesContext);
         SerializedView serializedView = new SerializedView(treeStruct, compStates);
@@ -222,5 +230,30 @@ public class JspStateManagerImpl
             sessionMap.put(VIEW_MAP_SESSION_PARAM, viewMap);
         }
         return viewMap;
+    }
+
+
+    protected void removeTransientComponents(UIComponent root)
+    {
+        if (root.getChildCount() > 0)
+        {
+            for (Iterator it = root.getChildren().iterator(); it.hasNext(); )
+            {
+                UIComponent child = (UIComponent)it.next();
+                if (child.isTransient())
+                {
+                    it.remove();
+                }
+            }
+        }
+
+        for (Iterator it = root.getFacets().values().iterator(); it.hasNext(); )
+        {
+            UIComponent facet = (UIComponent)it.next();
+            if (facet.isTransient())
+            {
+                it.remove();
+            }
+        }
     }
 }

@@ -19,6 +19,7 @@
 package net.sourceforge.myfaces.component.html;
 
 import javax.faces.component.html.HtmlMessage;
+import javax.faces.context.FacesContext;
 
 /**
  * DOCUMENT ME!
@@ -29,4 +30,19 @@ import javax.faces.component.html.HtmlMessage;
 public class MyFacesHtmlMessage
     extends HtmlMessage
 {
+
+    /**
+     * TODO: only for debugging, remove later
+     */
+    public Object saveState(FacesContext facesContext) {
+        Object obj = super.saveState(facesContext);    //To change body of overridden methods use File | Settings | File Templates.
+        return obj;
+    }
+
+    /**
+     * TODO: only for debugging, remove later
+     */
+    public void restoreState(FacesContext facesContext, Object object) {
+        super.restoreState(facesContext, object);    //To change body of overridden methods use File | Settings | File Templates.
+    }
 }
