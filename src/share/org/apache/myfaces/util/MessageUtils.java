@@ -30,6 +30,9 @@ import java.util.ResourceBundle;
  * @author Manfred Geiler
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.3  2004/08/17 12:15:34  manolito
+ * NPE when there was no ViewRoot
+ *
  * Revision 1.2  2004/07/01 22:01:13  mwessendorf
  * ASF switch
  *
@@ -69,11 +72,20 @@ public class MessageUtils
                                           Object[] args,
                                           FacesContext facesContext)
     {
+        Locale locale;
+        if (facesContext.getViewRoot() != null)
+        {
+            locale = facesContext.getViewRoot().getLocale();
+        }
+        else
+        {
+            locale = facesContext.getApplication().getDefaultLocale();
+        }
         return internalGetMessage(facesContext,
-                          facesContext.getViewRoot().getLocale(),
-                          severity,
-                          messageId,
-                          args);
+                                  locale,
+                                  severity,
+                                  messageId,
+                                  args);
     }
 
     public static void addMessage(FacesMessage.Severity severity,
