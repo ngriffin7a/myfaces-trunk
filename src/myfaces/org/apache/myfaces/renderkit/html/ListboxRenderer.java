@@ -68,7 +68,7 @@ public class ListboxRenderer
         throws IOException
     {
         int size = getSelectItemsCount(facescontext, uicomponent);
-        super.encodeEnd(facescontext, uicomponent, size);
+        super.encodeEnd(facescontext, uicomponent, size, TYPE);
     }
 
 }

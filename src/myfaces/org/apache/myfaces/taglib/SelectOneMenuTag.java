@@ -20,6 +20,7 @@ package net.sourceforge.myfaces.taglib;
 
 import net.sourceforge.myfaces.component.UISelectOne;
 import net.sourceforge.myfaces.renderkit.html.MenuRenderer;
+import net.sourceforge.myfaces.renderkit.html.MenuRenderer;
 
 import javax.faces.component.UIComponent;
 
@@ -29,7 +30,7 @@ import javax.faces.component.UIComponent;
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public class SelectBoxTag
+public class SelectOneMenuTag
     extends MyFacesTag
 {
     public UIComponent createComponent()
@@ -42,8 +43,49 @@ public class SelectBoxTag
         return MenuRenderer.TYPE;
     }
 
-    public void setSize(int v)
+    public void setSize(String value)
     {
-        setRendererAttribute(UISelectOne.SIZE_ATTR, new Integer(v));
+        setRendererAttribute(MenuRenderer.SIZE_ATTR, value);
     }
+
+    public void setDatafld(String value)
+    {
+        setRendererAttribute(MenuRenderer.DATAFLD_ATTR, value);
+    }
+
+    public void setDatasrc(String value)
+    {
+        setRendererAttribute(MenuRenderer.DATASRC_ATTR, value);
+    }
+
+    public void setDataformatas(String value)
+    {
+        setRendererAttribute(MenuRenderer.DATAFORMATAS_ATTR, value);
+    }
+
+    public void setDisabled(String value)
+    {
+        setRendererAttribute(MenuRenderer.DISABLED_ATTR, value);
+    }
+
+    public void setOnblur(String value)
+    {
+        setRendererAttribute(MenuRenderer.ONBLUR_ATTR, value);
+    }
+
+    public void setOnchange(String value)
+    {
+        setRendererAttribute(MenuRenderer.ONCHANGE_ATTR, value);
+    }
+
+    public void setOnfocus(String value)
+    {
+        setRendererAttribute(MenuRenderer.ONFOCUS_ATTR, value);
+    }
+
+    public void setTabindex(String value)
+    {
+        setRendererAttribute(MenuRenderer.TABINDEX_ATTR, value);
+    }
+
 }

@@ -84,11 +84,6 @@ public class CommandHyperlinkTag
         setRendererAttribute(HyperlinkRenderer.HREFLANG_ATTR, value);
     }
 
-    public void setName(String value)
-    {
-        setRendererAttribute(HyperlinkRenderer.NAME_ATTR, value);
-    }
-
     public void setRel(String value)
     {
         setRendererAttribute(HyperlinkRenderer.REL_ATTR, value);

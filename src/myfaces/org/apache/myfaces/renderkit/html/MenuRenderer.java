@@ -67,10 +67,10 @@ public class MenuRenderer
     public void encodeEnd(FacesContext facescontext, UIComponent uicomponent)
         throws IOException
     {
-        Integer i = (Integer)uicomponent.getAttribute(UISelectOne.SIZE_ATTR);
+        Integer i = (Integer)uicomponent.getAttribute(SIZE_ATTR);
         int size = i != null ? i.intValue() : DEFAULT_SIZE;
 
-        super.encodeEnd(facescontext, uicomponent, size);
+        super.encodeEnd(facescontext, uicomponent, size, TYPE);
     }
 
 }

@@ -29,7 +29,7 @@ import javax.faces.component.UIComponent;
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public class ListBoxTag
+public class SelectOneListboxTag
     extends MyFacesTag
 {
     public UIComponent createComponent()
@@ -41,4 +41,45 @@ public class ListBoxTag
     {
         return ListboxRenderer.TYPE;
     }
+
+    public void setDatafld(String value)
+    {
+        setRendererAttribute(ListboxRenderer.DATAFLD_ATTR, value);
+    }
+
+    public void setDatasrc(String value)
+    {
+        setRendererAttribute(ListboxRenderer.DATASRC_ATTR, value);
+    }
+
+    public void setDataformatas(String value)
+    {
+        setRendererAttribute(ListboxRenderer.DATAFORMATAS_ATTR, value);
+    }
+
+    public void setDisabled(String value)
+    {
+        setRendererAttribute(ListboxRenderer.DISABLED_ATTR, value);
+    }
+
+    public void setOnblur(String value)
+    {
+        setRendererAttribute(ListboxRenderer.ONBLUR_ATTR, value);
+    }
+
+    public void setOnchange(String value)
+    {
+        setRendererAttribute(ListboxRenderer.ONCHANGE_ATTR, value);
+    }
+
+    public void setOnfocus(String value)
+    {
+        setRendererAttribute(ListboxRenderer.ONFOCUS_ATTR, value);
+    }
+
+    public void setTabindex(String value)
+    {
+        setRendererAttribute(ListboxRenderer.TABINDEX_ATTR, value);
+    }
+
 }

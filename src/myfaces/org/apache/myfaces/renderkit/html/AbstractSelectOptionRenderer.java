@@ -22,6 +22,9 @@ import net.sourceforge.myfaces.component.UISelectItem;
 import net.sourceforge.myfaces.component.UISelectItems;
 import net.sourceforge.myfaces.component.UISelectMany;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLEncoder;
+import net.sourceforge.myfaces.renderkit.html.util.CommonAttributes;
+import net.sourceforge.myfaces.renderkit.attr.ListboxRendererAttributes;
+import net.sourceforge.myfaces.renderkit.attr.MenuRendererAttributes;
 
 import javax.faces.component.SelectItem;
 import javax.faces.component.UIComponent;
@@ -48,7 +51,7 @@ public abstract class AbstractSelectOptionRenderer
     {
     }
 
-    public void encodeEnd(FacesContext facesContext, UIComponent uicomponent, int size)
+    public void encodeEnd(FacesContext facesContext, UIComponent uicomponent, int size, String rendererType)
             throws IOException
     {
         ResponseWriter writer = facesContext.getResponseWriter();
@@ -61,14 +64,27 @@ public abstract class AbstractSelectOptionRenderer
             writer.write("<select ");
             writer.write(" name=\"");
             writer.write(uicomponent.getClientId(facesContext));
-            writer.write("\"");
 
-            if (size > 0)
+            CommonAttributes.renderHTMLEventHandlerAttributes(facesContext, uicomponent);
+            CommonAttributes.renderUniversalHTMLAttributes(facesContext, uicomponent);
+            if (rendererType.equals(ListboxRenderer.TYPE))
             {
-                writer.write(" size=\"");
-                writer.write(new Integer(size).toString());
-                writer.write("\"");
+                CommonAttributes.renderAttributes(facesContext,
+                                                  uicomponent,
+                                                  ListboxRendererAttributes.COMMON_LISTBOX_ATTRIBUTES);
             }
+            else if (rendererType.equals(MenuRenderer.TYPE))
+            {
+                CommonAttributes.renderAttributes(facesContext,
+                                                  uicomponent,
+                                                  MenuRendererAttributes.COMMON_MENU_ATTRIBUTES);
+            }
+            else
+            {
+                throw new IllegalArgumentException("Unknown renderer-type " + rendererType);
+            }
+
+            writer.write("\"");
 
             if (multipleSelect) writer.write(" multiple ");
             writer.write(">\n");

@@ -18,6 +18,7 @@
  */
 package net.sourceforge.myfaces.taglib;
 
+import net.sourceforge.myfaces.component.UISelectOne;
 import net.sourceforge.myfaces.component.UISelectMany;
 import net.sourceforge.myfaces.renderkit.html.ListboxRenderer;
 
@@ -29,7 +30,7 @@ import javax.faces.component.UIComponent;
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public class ListBoxManyTag
+public class SelectManyListboxTag
     extends MyFacesTag
 {
     public UIComponent createComponent()
@@ -42,8 +43,44 @@ public class ListBoxManyTag
         return ListboxRenderer.TYPE;
     }
 
-    public void setSize(int v)
+    public void setDatafld(String value)
     {
-        setRendererAttribute(UISelectMany.SIZE_ATTR, new Integer(v));
+        setRendererAttribute(ListboxRenderer.DATAFLD_ATTR, value);
     }
+
+    public void setDatasrc(String value)
+    {
+        setRendererAttribute(ListboxRenderer.DATASRC_ATTR, value);
+    }
+
+    public void setDataformatas(String value)
+    {
+        setRendererAttribute(ListboxRenderer.DATAFORMATAS_ATTR, value);
+    }
+
+    public void setDisabled(String value)
+    {
+        setRendererAttribute(ListboxRenderer.DISABLED_ATTR, value);
+    }
+
+    public void setOnblur(String value)
+    {
+        setRendererAttribute(ListboxRenderer.ONBLUR_ATTR, value);
+    }
+
+    public void setOnchange(String value)
+    {
+        setRendererAttribute(ListboxRenderer.ONCHANGE_ATTR, value);
+    }
+
+    public void setOnfocus(String value)
+    {
+        setRendererAttribute(ListboxRenderer.ONFOCUS_ATTR, value);
+    }
+
+    public void setTabindex(String value)
+    {
+        setRendererAttribute(ListboxRenderer.TABINDEX_ATTR, value);
+    }
+
 }

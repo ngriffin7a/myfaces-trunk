@@ -37,7 +37,6 @@ public interface TextRendererAttributes
     public static final String DATAFORMATAS_ATTR = "dataformatas";
     //public static final String ISMAP_ATTR = "ismap";
     public static final String MAX_LENGTH_ATTR = "maxlength";
-    public static final String NAME_ATTR = "name";
     public static final String ONBLUR_ATTR = "onblur";
     public static final String ONCHANGE_ATTR = "onchange";
     public static final String ONFOCUS_ATTR = "onfocus";
@@ -59,7 +58,6 @@ public interface TextRendererAttributes
         DATAFORMATAS_ATTR,
         //ISMAP_ATTR,
         MAX_LENGTH_ATTR,
-        NAME_ATTR,
         ONBLUR_ATTR,
         ONCHANGE_ATTR,
         ONFOCUS_ATTR,

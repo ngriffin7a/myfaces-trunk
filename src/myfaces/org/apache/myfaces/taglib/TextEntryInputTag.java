@@ -82,11 +82,6 @@ public class TextEntryInputTag
         setRendererAttribute(TextRenderer.MAX_LENGTH_ATTR, value);
     }
 
-    public void setName(String value)
-    {
-        setRendererAttribute(TextRenderer.NAME_ATTR, value);
-    }
-
     public void setOnblur(String value)
     {
         setRendererAttribute(TextRenderer.ONBLUR_ATTR, value);

@@ -30,8 +30,6 @@ public class UISelectOne
     extends javax.faces.component.UISelectOne
     implements CommonComponentAttributes
 {
-    public static final String SIZE_ATTR = "size";
-
     public boolean getRendersSelf()
     {
         return false;
@@ -56,16 +54,4 @@ public class UISelectOne
     {
         throw new UnsupportedOperationException("not supported.");
     }
-
-    public void setSize(int s)
-    {
-        setAttribute(SIZE_ATTR, new Integer(s));
-    }
-
-    public int getSize()
-    {
-        Integer size = (Integer)getAttribute(SIZE_ATTR);
-        return size == null ? 0 : size.intValue();
-    }
-
 }

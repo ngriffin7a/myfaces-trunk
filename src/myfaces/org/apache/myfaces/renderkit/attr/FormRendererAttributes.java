@@ -33,7 +33,6 @@ public interface FormRendererAttributes
     public static final String ACCEPT_CHARSET_ATTR = "accept-charset";
     public static final String ENCTYPE_ATTR = "enctype";
     public static final String METHOD_ATTR = "method";
-    public static final String NAME_ATTR = "name";
     public static final String ONRESET_ATTR = "onreset";
     public static final String ONSUMBIT_ATTR = "onsubmit";
     public static final String TARGET_ATTR = "target";
@@ -44,7 +43,6 @@ public interface FormRendererAttributes
         ACCEPT_CHARSET_ATTR,
         ENCTYPE_ATTR,
         METHOD_ATTR,
-        NAME_ATTR,
         ONRESET_ATTR,
         ONSUMBIT_ATTR,
         TARGET_ATTR,

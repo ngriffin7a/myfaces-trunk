@@ -63,7 +63,7 @@ package net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.compiler;
 /**
  * If a generator wants to output stuff at "file scope" in the
  * generated servlet class, it should implement this interface. The
- * code would go outside the class body. (For example non-public
+ * code would go outside the class body. (For examples non-public
  * support classes can be generated this way)
  *
  * @author Anil K. Vijendran

@@ -345,7 +345,7 @@ public class TagLibraryInfoImpl extends TagLibraryInfo {
                 variableVector.addElement(createVariable(element));
             } else if ("attribute".equals(tname))
                 attributeVector.addElement(createAttribute(element));
-            else if ("example".equals(tname) ||   // Ignored elements
+            else if ("examples".equals(tname) ||   // Ignored elements
 		     false)
                 ;
             else {

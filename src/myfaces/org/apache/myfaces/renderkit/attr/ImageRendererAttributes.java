@@ -43,7 +43,6 @@ public interface ImageRendererAttributes
     public static final String HSPACE_ATTR = "hspace";
     public static final String ISMAP_ATTR = "ismap";
     public static final String LONGDESC_ATTR = "longdesc";
-    public static final String NAME_ATTR = "name";
     public static final String SRC_ATTR = "src";
     public static final String USEMAP_ATTR = "usemap";
     public static final String VSPACE_ATTR = "vspace";
@@ -57,7 +56,6 @@ public interface ImageRendererAttributes
         HSPACE_ATTR,
         ISMAP_ATTR,
         LONGDESC_ATTR,
-        NAME_ATTR,
         SRC_ATTR,
         USEMAP_ATTR,
         VSPACE_ATTR,

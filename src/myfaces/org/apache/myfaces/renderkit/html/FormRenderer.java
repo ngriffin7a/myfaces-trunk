@@ -45,6 +45,7 @@ import java.io.IOException;
  */
 public class FormRenderer
         extends HTMLRenderer
+        implements FormRendererAttributes
 {
     public static final String TYPE = "Form";
     public String getRendererType()

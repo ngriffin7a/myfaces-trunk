@@ -26,13 +26,13 @@ import net.sourceforge.myfaces.util.logging.LogUtil;
 
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
-import javax.faces.webapp.FacesTag;
 import javax.faces.convert.Converter;
+import javax.faces.webapp.FacesTag;
 import javax.servlet.jsp.PageContext;
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
-import java.io.Serializable;
 
 /**
  * DOCUMENT ME!

@@ -33,7 +33,6 @@ public interface HyperlinkRendererAttributes
     public static final String CHARSET_ATTR = "charset";
     public static final String COORDS_ATTR = "coords";
     public static final String HREFLANG_ATTR = "hreflang";
-    public static final String NAME_ATTR = "name";
     public static final String REL_ATTR = "rel";
     public static final String REV_ATTR = "rev";
     public static final String SHAPE_ATTR = "shape";
@@ -48,7 +47,6 @@ public interface HyperlinkRendererAttributes
         COORDS_ATTR,
         //HREF_ATTR, href is not a common attribute!
         HREFLANG_ATTR,
-        NAME_ATTR,
         REL_ATTR,
         REV_ATTR,
         SHAPE_ATTR,
