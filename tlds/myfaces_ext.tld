@@ -258,23 +258,21 @@
             </description>
         </attribute>
         <attribute>
-            <name>firstRowFlag</name>
+            <name>rowIndexVar</name>
             <required>false</required>
             <rtexprvalue>false</rtexprvalue>
             <description>
-                A parameter name, under which a boolean value is set in request scope
-                similar to the var parameter. This boolean value indicates, if the current
-                row is the first rendered row.
+                A parameter name, under which the current rowIndex is set in request scope
+                similar to the var parameter.
             </description>
         </attribute>
         <attribute>
-            <name>lastRowFlag</name>
+            <name>rowCountVar</name>
             <required>false</required>
             <rtexprvalue>false</rtexprvalue>
             <description>
-                A parameter name, under which a boolean value is set in request scope
-                similar to the var parameter. This boolean value indicates, if the current
-                row is the last rendered row.
+                A parameter name, under which the rowCount is set in request scope
+                similar to the var parameter.
             </description>
         </attribute>
      </tag>

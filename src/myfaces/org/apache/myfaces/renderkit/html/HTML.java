@@ -34,9 +34,6 @@ public class HTML
         // disable instantiation
     } 
 
-    public static final String INPUT_CHECKED_VALUE = "checked";
-    public static final String INPUT_SELECTED_VALUE = "selected";
-
     // Common attributes
     public static final String ALIGN_ATTR = "align";
     public static final String DATAFLD_ATTR = "datafld";
@@ -349,6 +346,8 @@ public class HTML
     public static final String ACTION_ATTR = "action";
     public static final String COLSPAN_ATTR = "colspan";
     public static final String SCOPE_ATTR = "scope";
+    public static final String LABEL_ATTR = "label";
+    public static final String SELECTED_ATTR = "selected";
 
     //HTML attributes values
     public static final String SCOPE_COLGROUP_VALUE = "colgroup";
@@ -358,6 +357,7 @@ public class HTML
     public static final String INPUT_ELEM = "input";
     public static final String SELECT_ELEM = "select";
     public static final String OPTION_ELEM = "option";
+    public static final String OPTGROUP_ELEM = "optgroup";
     public static final String TEXTAREA_ELEM = "textarea";
     public static final String FORM_ELEM = "form";
     public static final String ANCHOR_ELEM = "a";

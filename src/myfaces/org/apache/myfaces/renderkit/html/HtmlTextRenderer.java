@@ -94,11 +94,6 @@ public class HtmlTextRenderer
             boolean span = HTMLUtil.renderHTMLAttributesWithOptionalStartElement(
                     writer, component, HTML.SPAN_ELEM, HTML.COMMON_PASSTROUGH_ATTRIBUTES);
 
-            if (span)
-            {
-                writer.startElement(HTML.SPAN_ELEM, component);
-            }
-
             if (escape)
             {
                 writer.writeText(text, JSFAttr.VALUE_ATTR);

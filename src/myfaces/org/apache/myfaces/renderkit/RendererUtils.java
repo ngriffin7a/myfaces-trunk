@@ -18,7 +18,6 @@
  */
 package net.sourceforge.myfaces.renderkit;
 
-import net.sourceforge.myfaces.component.ComponentUtils;
 import net.sourceforge.myfaces.component.UserRoleSupport;
 import net.sourceforge.myfaces.util.HashMapUtils;
 import org.apache.commons.logging.Log;
@@ -30,6 +29,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.convert.ConverterException;
 import javax.faces.el.ValueBinding;
+import javax.faces.model.SelectItem;
 import java.io.IOException;
 import java.util.*;
 
@@ -365,26 +365,119 @@ public class RendererUtils
 
     private static List internalGetSelectItemList(UIComponent uiComponent)
     {
+        /* TODO: Shall we cache the list in a component attribute?
         ArrayList list = (ArrayList)uiComponent.getAttributes().get(SELECT_ITEM_LIST_ATTR);
         if (list != null)
         {
             return list;
         }
+         */
 
-        list = new ArrayList(uiComponent.getChildCount());
-        for(Iterator children = uiComponent.getChildren().iterator(); children.hasNext(); )
+        List list = new ArrayList(uiComponent.getChildCount());
+        for (Iterator children = uiComponent.getChildren().iterator(); children.hasNext(); )
         {
             UIComponent child = (UIComponent)children.next();
             if (child instanceof UISelectItem)
             {
-                list.add(ComponentUtils.getSelectItemFromUISelectItem((UISelectItem)child));
+                Object value = ((UISelectItem)child).getValue();
+                if (value != null)
+                {
+                    //get SelectItem from model via value binding
+                    if (!(value instanceof SelectItem))
+                    {
+                        FacesContext facesContext = FacesContext.getCurrentInstance();
+                        throw new IllegalArgumentException("Value binding of UISelectItem with id " + child.getClientId(facesContext) + " does not reference an Object of type SelectItem");
+                    }
+                    list.add(value);
+                }
+                else
+                {
+                    Object itemValue = ((UISelectItem)child).getItemValue();
+                    String label = ((UISelectItem)child).getItemLabel();
+                    String description = ((UISelectItem)child).getItemDescription();
+                    boolean disabled = ((UISelectItem)child).isItemDisabled();
+                    list.add(new SelectItem(itemValue, label, description, disabled));
+                }
             }
             else if (child instanceof UISelectItems)
             {
-                ComponentUtils.addSelectItemsToCollection((UISelectItems)child, list);
+                Object value = ((UISelectItems)child).getValue();
+                if (value instanceof SelectItem)
+                {
+                    list.add(value);
+                }
+                else if (value instanceof SelectItem[])
+                {
+                    for (int i = 0; i < ((SelectItem[])value).length; i++)
+                    {
+                        list.add(((SelectItem[])value)[i]);
+                    }
+                }
+                else if (value instanceof Collection)
+                {
+                    for (Iterator it = ((Collection)value).iterator(); it.hasNext();)
+                    {
+                        Object item = it.next();
+                        if (!(item instanceof SelectItem))
+                        {
+                            FacesContext facesContext = FacesContext.getCurrentInstance();
+                            throw new IllegalArgumentException("Collection referenced by UISelectItems with id " + child.getClientId(facesContext) + " does not contain Objects of type SelectItem");
+                        }
+                        list.add(item);
+                    }
+                }
+                else if (value instanceof Map)
+                {
+                    for (Iterator it = ((Map)value).entrySet().iterator(); it.hasNext();)
+                    {
+                        Map.Entry entry = (Map.Entry)it.next();
+                        list.add(new SelectItem(entry.getValue(), entry.getKey().toString()));
+                    }
+                }
+                else
+                {
+                    FacesContext facesContext = FacesContext.getCurrentInstance();
+                    throw new IllegalArgumentException("Value binding of UISelectItems with id " + child.getClientId(facesContext) + " does not reference an Object of type SelectItem, SelectItem[], Collection or Map");
+                }
+            }
+            else
+            {
+                FacesContext facesContext = FacesContext.getCurrentInstance();
+                log.error("Invalid child with id " + child.getClientId(facesContext) + ": must be UISelectItem or UISelectItems");
             }
         }
+
         return list;
+    }
+
+
+    /**
+     * Convenient utility method that returns the currently submitted values of
+     * a UISelectMany component as a Set, of which the contains method can then be
+     * easily used to determine if a select item is currently selected.
+     * Calling the contains method of this Set with the renderable (String converted) item value
+     * as argument returns true if this item is selected.
+     * @param uiSelectMany
+     * @return Set containing all currently selected values
+     */
+    public static Set getSubmittedValuesAsSet(UISelectMany uiSelectMany)
+    {
+        Object submittedValues = uiSelectMany.getSubmittedValue();
+        if (submittedValues == null)
+        {
+            return null;
+        }
+        else
+        {
+            try
+            {
+                return internalSubmittedOrSelectedValuesAsSet(uiSelectMany, submittedValues);
+            }
+            catch (IllegalArgumentException e)
+            {
+                throw new IllegalArgumentException("Submitted value of UISelectMany component with id " + uiSelectMany.getClientId(FacesContext.getCurrentInstance()) + " is not of type Array or List");
+            }
+        }
     }
 
 
@@ -392,6 +485,8 @@ public class RendererUtils
      * Convenient utility method that returns the currently selected values of
      * a UISelectMany component as a Set, of which the contains method can then be
      * easily used to determine if a value is currently selected.
+     * Calling the contains method of this Set with the item value
+     * as argument returns true if this item is selected.
      * @param uiSelectMany
      * @return Set containing all currently selected values
      */
@@ -402,10 +497,25 @@ public class RendererUtils
         {
             return Collections.EMPTY_SET;
         }
-
-        if (selectedValues.getClass().isArray())
+        else
         {
-            Object[] ar = (Object[])selectedValues;
+            try
+            {
+                return internalSubmittedOrSelectedValuesAsSet(uiSelectMany, selectedValues);
+            }
+            catch (IllegalArgumentException e)
+            {
+                throw new IllegalArgumentException("Value of UISelectMany component with id " + uiSelectMany.getClientId(FacesContext.getCurrentInstance()) + " is not of type Array or List");
+            }
+        }
+    }
+
+    private static Set internalSubmittedOrSelectedValuesAsSet(UISelectMany uiSelectMany,
+                                                              Object values)
+    {
+        if (values instanceof Object[])
+        {
+            Object[] ar = (Object[])values;
             if (ar.length == 0)
             {
                 return Collections.EMPTY_SET;
@@ -420,9 +530,9 @@ public class RendererUtils
                 return set;
             }
         }
-        else if (selectedValues instanceof List)
+        else if (values instanceof List)
         {
-            List lst = (List)selectedValues;
+            List lst = (List)values;
             if (lst.size() == 0)
             {
                 return Collections.EMPTY_SET;
@@ -440,7 +550,8 @@ public class RendererUtils
         }
     }
 
-    
+
+
     public static Object getConvertedUIOutputValue(FacesContext facesContext,
                                                    UIOutput output,
                                                    Object submittedValue)

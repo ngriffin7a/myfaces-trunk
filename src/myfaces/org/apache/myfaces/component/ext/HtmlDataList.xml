@@ -12,11 +12,11 @@
         <type>java.lang.String</type>
     </field>
     <field>
-        <name>firstRowFlag</name>
+        <name>rowIndexVar</name>
         <type>java.lang.String</type>
     </field>
     <field>
-        <name>lastRowFlag</name>
+        <name>rowCountVar</name>
         <type>java.lang.String</type>
     </field>
 </component>

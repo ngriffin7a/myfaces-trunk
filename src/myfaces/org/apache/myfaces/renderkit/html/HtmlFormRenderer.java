@@ -84,6 +84,7 @@ public class HtmlFormRenderer
         writer.writeAttribute(HTML.NAME_ATTR, component.getClientId(facesContext) +
                                               HIDDEN_SUBMIT_INPUT_SUFFIX, null);
         writer.writeAttribute(HTML.VALUE_ATTR, HIDDEN_SUBMIT_INPUT_VALUE, null);
+        writer.endElement(HTML.INPUT_ELEM);
 
         writer.endElement(HTML.FORM_ELEM);
     }

@@ -23,11 +23,16 @@ import net.sourceforge.myfaces.renderkit.RendererUtils;
 import javax.faces.component.UIComponent;
 import javax.faces.component.UISelectMany;
 import javax.faces.component.UISelectOne;
+import javax.faces.component.html.HtmlSelectManyMenu;
+import javax.faces.component.html.HtmlSelectOneMenu;
 import javax.faces.context.FacesContext;
+import javax.faces.context.ResponseWriter;
 import javax.faces.convert.ConverterException;
 import java.io.IOException;
 
 /**
+ * X-CHECKED: tlddoc of h:selectManyListbox
+ *
  * @author Manfred Geiler (latest modification by $Author$)
  * @author Thomas Spiegl
  * @version $Revision$ $Date$
@@ -37,26 +42,75 @@ public class HtmlMenuRenderer
 {
     //private static final Log log = LogFactory.getLog(HtmlMenuRenderer.class);
 
-    public void encodeEnd(FacesContext facesContext, UIComponent uiComponent)
+    public void encodeEnd(FacesContext facesContext, UIComponent component)
             throws IOException
     {
-        RendererUtils.checkParamValidity(facesContext, uiComponent, null);
+        RendererUtils.checkParamValidity(facesContext, component, null);
 
-        if (uiComponent instanceof UISelectMany)
+        ResponseWriter writer = facesContext.getResponseWriter();
+
+        if (component instanceof UISelectMany)
         {
-            HtmlRendererUtils.renderMenu(facesContext,
-                                         (UISelectMany)uiComponent);
+            String styleClass = getStyleClass((UISelectMany)component);
+            if (styleClass != null)
+            {
+                writer.startElement(HTML.SPAN_ELEM, component);
+                writer.writeAttribute(HTML.CLASS_ATTR, styleClass, HTML.STYLE_CLASS_ATTR);
+            }
+
+            HtmlRendererUtils.renderMenu(facesContext, (UISelectMany)component);
+
+            if (styleClass != null)
+            {
+                writer.endElement(HTML.SPAN_ELEM);
+            }
         }
-        else if (uiComponent instanceof UISelectOne)
+        else if (component instanceof UISelectOne)
         {
-            HtmlRendererUtils.renderMenu(facesContext,
-                                         (UISelectOne)uiComponent);
+            String styleClass = getStyleClass((UISelectOne)component);
+            if (styleClass != null)
+            {
+                writer.startElement(HTML.SPAN_ELEM, component);
+                writer.writeAttribute(HTML.CLASS_ATTR, styleClass, HTML.STYLE_CLASS_ATTR);
+            }
+
+            HtmlRendererUtils.renderMenu(facesContext, (UISelectOne)component);
+
+            if (styleClass != null)
+            {
+                writer.endElement(HTML.SPAN_ELEM);
+            }
         }
         else
         {
-            throw new IllegalArgumentException("Unsupported component class " + uiComponent.getClass().getName());
+            throw new IllegalArgumentException("Unsupported component class " + component.getClass().getName());
         }
     }
+
+    private String getStyleClass(UISelectMany component)
+    {
+        if (component instanceof HtmlSelectManyMenu)
+        {
+            return ((HtmlSelectManyMenu)component).getStyleClass();
+        }
+        else
+        {
+            return (String)component.getAttributes().get(HTML.STYLE_CLASS_ATTR);
+        }
+    }
+
+    private String getStyleClass(UISelectOne component)
+    {
+        if (component instanceof HtmlSelectOneMenu)
+        {
+            return ((HtmlSelectOneMenu)component).getStyleClass();
+        }
+        else
+        {
+            return (String)component.getAttributes().get(HTML.STYLE_CLASS_ATTR);
+        }
+    }
+
 
     public void decode(FacesContext facesContext, UIComponent uiComponent)
     {

@@ -173,7 +173,7 @@ public abstract class UIComponentTag
         setupResponseWriter();
         FacesContext facesContext = getFacesContext();
         UIComponent component = findComponent(facesContext);
-        if (!isSuppressed() && !component.getRendersChildren())
+        if (!component.getRendersChildren() && !isSuppressed())
         {
             try
             {
@@ -469,27 +469,47 @@ public abstract class UIComponentTag
         return isFacet() ? ((FacetTag)_parent).getName() : null;
     }
 
+
     protected boolean isSuppressed()
     {
         if (_suppressed == null)
         {
-            if (isFacet() || !_componentInstance.isRendered())
+            if (isFacet())
             {
+                // facets are always rendered by their parents --> suppressed
                 return (_suppressed = Boolean.TRUE).booleanValue();
             }
-            else
+
+            UIComponent component = getComponentInstance();
+
+            // Does any parent render its children?
+            // (We must determine this first, before calling any isRendered method
+            //  because rendered properties might reference a data var of a nesting UIData,
+            //  which is not set at this time, and would cause a VariableResolver error!)
+            UIComponent parent = component.getParent();
+            while (parent != null)
             {
-                UIComponent parent = _componentInstance.getParent();
-                while (parent != null)
+                if (parent.getRendersChildren())
                 {
-                    if (parent.getRendersChildren() || !parent.isRendered())
-                    {
-                        return (_suppressed = Boolean.TRUE).booleanValue();
-                    }
-                    parent = parent.getParent();
+                    //Yes, parent found, that renders children --> suppressed
+                    return (_suppressed = Boolean.TRUE).booleanValue();
                 }
+                parent = parent.getParent();
             }
-            return (_suppressed = Boolean.FALSE).booleanValue();
+
+            // does component or any parent has a false rendered attribute?
+            while (component != null)
+            {
+                if (!component.isRendered())
+                {
+                    //Yes, component or any parent must not be rendered --> suppressed
+                    return (_suppressed = Boolean.TRUE).booleanValue();
+                }
+                component = component.getParent();
+            }
+
+            // else --> not suppressed
+            _suppressed = Boolean.FALSE;
         }
         return _suppressed.booleanValue();
     }

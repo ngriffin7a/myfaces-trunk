@@ -58,8 +58,8 @@ public class HtmlDataListTag
 
     // HtmlDataList attributes
     private String _layout;
-    private String _firstRowFlag;
-    private String _lastRowFlag;
+    private String _rowIndexVar;
+    private String _rowCountVar;
 
 
     protected void setProperties(UIComponent component)
@@ -71,8 +71,8 @@ public class HtmlDataListTag
         setIntegerProperty(component, JSFAttr.FIRST_ATTR, _first);
 
         setStringProperty(component, JSFAttr.LAYOUT_ATTR, _layout);
-        setStringProperty(component, "firstRowFlag", _firstRowFlag);
-        setStringProperty(component, "lastRowFlag", _lastRowFlag);
+        setStringProperty(component, "rowIndexVar", _rowIndexVar);
+        setStringProperty(component, "rowCountVar", _rowCountVar);
     }
 
     public void setRows(String rows)
@@ -95,13 +95,13 @@ public class HtmlDataListTag
         _layout = layout;
     }
 
-    public void setFirstRowFlag(String firstRowFlag)
+    public void setRowIndexVar(String rowIndexVar)
     {
-        _firstRowFlag = firstRowFlag;
+        _rowIndexVar = rowIndexVar;
     }
 
-    public void setLastRowFlag(String lastRowFlag)
+    public void setRowCountVar(String rowCountVar)
     {
-        _lastRowFlag = lastRowFlag;
+        _rowCountVar = rowCountVar;
     }
 }

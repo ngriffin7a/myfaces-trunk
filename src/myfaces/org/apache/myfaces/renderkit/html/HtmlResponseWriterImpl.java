@@ -173,9 +173,18 @@ public class HtmlResponseWriterImpl
             throw new NullPointerException("elementName name must not be null");
         }
 
+        if (log.isWarnEnabled())
+        {
+            if (_startElementName != null &&
+                !name.equals(_startElementName))
+            {
+                log.warn("HTML nesting warning: element " + _startElementName + " not explicitly closed");
+            }
+        }
+
         if(_startTagOpen)
         {
-            // we will get here only if no text was written after the start element was opened
+            // we will get here only if no text or attribute was written after the start element was opened
             _writer.write(" />");
             _startTagOpen = false;
         }
@@ -186,14 +195,6 @@ public class HtmlResponseWriterImpl
             _writer.write('>');
         }
 
-        if (log.isWarnEnabled())
-        {
-            if (_startElementName != null &&
-                !name.equals(_startElementName))
-            {
-                log.warn("HTML nesting error: element " + _startElementName + " not closed");
-            }
-        }
         _startElementName = null;
     }
 

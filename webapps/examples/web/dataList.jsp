@@ -63,9 +63,10 @@ managed beans used:
                         var="country"
                         value="#{countryList.countries}"
                         layout="simple"
-                        lastRowFlag="lastRow" >
+                        rowCountVar="rowCount"
+                        rowIndexVar="rowIndex" >
                     <h:outputText value="#{country.name}" />
-                    <h:outputText value=", " rendered="#{!lastRow}" />
+                    <h:outputText value=", " rendered="#{rowIndex + 1 < rowCount}" />
                </x:dataList>
 
                <f:verbatim><br><br></f:verbatim>

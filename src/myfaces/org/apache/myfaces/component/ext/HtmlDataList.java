@@ -35,8 +35,8 @@ public class HtmlDataList
     private static final String DEFAULT_RENDERER_TYPE = "net.sourceforge.myfaces.List";
 
     private String _layout = null;
-    private String _firstRowFlag = null;
-    private String _lastRowFlag = null;
+    private String _rowIndexVar = null;
+    private String _rowCountVar = null;
 
     public HtmlDataList()
     {
@@ -56,27 +56,27 @@ public class HtmlDataList
         return vb != null ? (String)vb.getValue(getFacesContext()) : null;
     }
 
-    public void setFirstRowFlag(String firstRowFlag)
+    public void setRowIndexVar(String rowIndexVar)
     {
-        _firstRowFlag = firstRowFlag;
+        _rowIndexVar = rowIndexVar;
     }
 
-    public String getFirstRowFlag()
+    public String getRowIndexVar()
     {
-        if (_firstRowFlag != null) return _firstRowFlag;
-        ValueBinding vb = getValueBinding("firstRowFlag");
+        if (_rowIndexVar != null) return _rowIndexVar;
+        ValueBinding vb = getValueBinding("rowIndexVar");
         return vb != null ? (String)vb.getValue(getFacesContext()) : null;
     }
 
-    public void setLastRowFlag(String lastRowFlag)
+    public void setRowCountVar(String rowCountVar)
     {
-        _lastRowFlag = lastRowFlag;
+        _rowCountVar = rowCountVar;
     }
 
-    public String getLastRowFlag()
+    public String getRowCountVar()
     {
-        if (_lastRowFlag != null) return _lastRowFlag;
-        ValueBinding vb = getValueBinding("lastRowFlag");
+        if (_rowCountVar != null) return _rowCountVar;
+        ValueBinding vb = getValueBinding("rowCountVar");
         return vb != null ? (String)vb.getValue(getFacesContext()) : null;
     }
 
@@ -86,8 +86,8 @@ public class HtmlDataList
         Object values[] = new Object[4];
         values[0] = super.saveState(context);
         values[1] = _layout;
-        values[2] = _firstRowFlag;
-        values[3] = _lastRowFlag;
+        values[2] = _rowIndexVar;
+        values[3] = _rowCountVar;
         return ((Object) (values));
     }
 
@@ -96,8 +96,8 @@ public class HtmlDataList
         Object values[] = (Object[])state;
         super.restoreState(context, values[0]);
         _layout = (String)values[1];
-        _firstRowFlag = (String)values[2];
-        _lastRowFlag = (String)values[3];
+        _rowIndexVar = (String)values[2];
+        _rowCountVar = (String)values[3];
     }
     //------------------ GENERATED CODE END ---------------------------------------
 }

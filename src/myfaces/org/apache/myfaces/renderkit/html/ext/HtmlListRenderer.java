@@ -56,13 +56,16 @@ public class HtmlListRenderer
         ResponseWriter writer = facesContext.getResponseWriter();
         HtmlRendererUtils.writePrettyLineSeparator(facesContext);
         String layout = getLayout(uiComponent);
-        if (layout.equals(LAYOUT_UL))
+        if (layout != null)
         {
-            writer.startElement(HTML.UL_ELEM, uiComponent);
-        }
-        else if (layout.equals(LAYOUT_OL))
-        {
-            writer.startElement(HTML.OL_ELEM, uiComponent);
+            if (layout.equals(LAYOUT_UL))
+            {
+                writer.startElement(HTML.UL_ELEM, uiComponent);
+            }
+            else if (layout.equals(LAYOUT_OL))
+            {
+                writer.startElement(HTML.OL_ELEM, uiComponent);
+            }
         }
     }
 
@@ -72,8 +75,6 @@ public class HtmlListRenderer
 
         UIData uiData = (UIData)component;
         String layout = getLayout(component);
-        String firstRowFlag = getFirstRowFlag(component);
-        String lastRowFlag = getLastRowFlag(component);
         Map requestMap = facesContext.getExternalContext().getRequestMap();
 
         ResponseWriter writer = facesContext.getResponseWriter();
@@ -88,42 +89,47 @@ public class HtmlListRenderer
         int last = first + rows;
         if (last > rowCount) last = rowCount;
 
+        String rowIndexVar = getRowIndexVar(component);
+        String rowCountVar = getRowCountVar(component);
+
+        if (rowCountVar != null)
+        {
+            requestMap.put(rowCountVar, new Integer(rowCount));
+        }
+
         for (int i = first; i < last; i++)
         {
             uiData.setRowIndex(i);
             if (uiData.isRowAvailable())
             {
-                if (firstRowFlag != null)
+                if (rowIndexVar != null)
                 {
-                    requestMap.put(firstRowFlag, Boolean.valueOf(i == first));
-                }
-                if (lastRowFlag != null)
-                {
-                    requestMap.put(lastRowFlag, Boolean.valueOf(i + 1 == last));
+                    requestMap.put(rowIndexVar, new Integer(i));
                 }
 
                 HtmlRendererUtils.writePrettyLineSeparator(facesContext);
-                if (layout.equals(LAYOUT_UL) || (layout.equals(LAYOUT_OL)))
+                if (layout != null && (layout.equals(LAYOUT_UL) || (layout.equals(LAYOUT_OL))))
                 {
                     writer.startElement(HTML.LI_ELEM, component);
                 }
 
                 RendererUtils.renderChildren(facesContext, component);
 
-                if (layout.equals(LAYOUT_UL) || (layout.equals(LAYOUT_OL)))
+                if (layout != null && (layout.equals(LAYOUT_UL) || (layout.equals(LAYOUT_OL))))
                 {
                     writer.endElement(HTML.LI_ELEM);
+                }
+
+                if (rowIndexVar != null)
+                {
+                    requestMap.remove(rowIndexVar);
                 }
             }
         }
 
-        if (firstRowFlag != null)
+        if (rowCountVar != null)
         {
-            requestMap.remove(firstRowFlag);
-        }
-        if (lastRowFlag != null)
-        {
-            requestMap.remove(lastRowFlag);
+            requestMap.remove(rowCountVar);
         }
     }
 
@@ -134,13 +140,16 @@ public class HtmlListRenderer
         ResponseWriter writer = facesContext.getResponseWriter();
         HtmlRendererUtils.writePrettyLineSeparator(facesContext);
         String layout = getLayout(uiComponent);
-        if (layout.equals(LAYOUT_UL))
+        if (layout != null)
         {
-            writer.endElement(HTML.UL_ELEM);
-        }
-        else if (layout.equals(LAYOUT_OL))
-        {
-            writer.endElement(HTML.OL_ELEM);
+            if (layout.equals(LAYOUT_UL))
+            {
+                writer.endElement(HTML.UL_ELEM);
+            }
+            else if (layout.equals(LAYOUT_OL))
+            {
+                writer.endElement(HTML.OL_ELEM);
+            }
         }
     }
 
@@ -157,27 +166,27 @@ public class HtmlListRenderer
         }
     }
 
-    private String getFirstRowFlag(UIComponent component)
+    private String getRowIndexVar(UIComponent component)
     {
         if (component instanceof HtmlDataList)
         {
-            return ((HtmlDataList)component).getFirstRowFlag();
+            return ((HtmlDataList)component).getRowIndexVar();
         }
         else
         {
-            return (String)component.getAttributes().get("firstRowFlag");
+            return (String)component.getAttributes().get("rowIndexVar");
         }
     }
 
-    private String getLastRowFlag(UIComponent component)
+    private String getRowCountVar(UIComponent component)
     {
         if (component instanceof HtmlDataList)
         {
-            return ((HtmlDataList)component).getLastRowFlag();
+            return ((HtmlDataList)component).getRowCountVar();
         }
         else
         {
-            return (String)component.getAttributes().get("lastRowFlag");
+            return (String)component.getAttributes().get("rowCountVar");
         }
     }
 

@@ -35,6 +35,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 import javax.faces.convert.Converter;
 import javax.faces.model.SelectItem;
+import javax.faces.model.SelectItemGroup;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -187,7 +188,7 @@ public class HtmlRendererUtils
 
         if (checked)
         {
-            writer.writeAttribute(HTML.CHECKED_ATTR, HTML.INPUT_CHECKED_VALUE, null);
+            writer.writeAttribute(HTML.CHECKED_ATTR, HTML.CHECKED_ATTR, null);
         }
 
         if ((value != null) && (value.length() > 0))
@@ -249,7 +250,7 @@ public class HtmlRendererUtils
         Converter converter;
         if (selectMany)
         {
-            writer.writeAttribute(HTML.MULTIPLE_ATTR, HTML.MULTIPLE_ATTR, null);
+            writer.writeAttribute(HTML.MULTIPLE_ATTR, "true", null);
             selectItemList = RendererUtils.getSelectItemList((UISelectMany)uiComponent);
             try
             {
@@ -290,45 +291,120 @@ public class HtmlRendererUtils
         HTMLUtil.renderDisabledOnUserRole(writer, uiComponent, facesContext);
 
         Set lookupSet;
+        boolean lookupSubmittedValue;
         if (selectMany)
         {
-            lookupSet = RendererUtils.getSelectedValuesAsSet((UISelectMany)uiComponent);
+            lookupSet = RendererUtils.getSubmittedValuesAsSet((UISelectMany)uiComponent);
+            if (lookupSet != null)
+            {
+                lookupSubmittedValue = true;
+            }
+            else
+            {
+                lookupSubmittedValue = false;
+                lookupSet = RendererUtils.getSelectedValuesAsSet((UISelectMany)uiComponent);
+            }
         }
         else
         {
-            lookupSet = Collections.singleton(((UISelectOne)uiComponent).getValue());
+            Object submittedValue = ((UISelectOne)uiComponent).getSubmittedValue();
+            if (submittedValue != null)
+            {
+                lookupSubmittedValue = true;
+                lookupSet = Collections.singleton(submittedValue);
+            }
+            else
+            {
+                lookupSubmittedValue = false;
+                lookupSet = Collections.singleton(((UISelectOne)uiComponent).getValue());
+            }
         }
+
+        renderSelectOptions(facesContext, uiComponent, converter, lookupSet, lookupSubmittedValue,
+                            selectItemList);
+
+        writer.endElement(HTML.SELECT_ELEM);
+    }
+
+
+    private static void renderSelectOptions(FacesContext context,
+                                            UIComponent component,
+                                            Converter converter,
+                                            Set lookupSet,
+                                            boolean lookupSubmittedValue,
+                                            List selectItemList)
+            throws IOException
+    {
+        ResponseWriter writer = context.getResponseWriter();
 
         for (Iterator it = selectItemList.iterator(); it.hasNext(); )
         {
             SelectItem selectItem = (SelectItem)it.next();
-            Object itemValue = selectItem.getValue();
-            String itemStrValue;
-            if (converter == null)
+
+            if (selectItem instanceof SelectItemGroup)
             {
-                itemStrValue = itemValue.toString();
+                writer.startElement(HTML.OPTGROUP_ELEM, null);
+                writer.writeAttribute(HTML.LABEL_ATTR, selectItem.getLabel(), null);
+                SelectItem[] selectItems = ((SelectItemGroup)selectItem).getSelectItems();
+                renderSelectOptions(context, component, converter, lookupSet, lookupSubmittedValue,
+                                    Arrays.asList(selectItems));
+                writer.endElement(HTML.OPTGROUP_ELEM);
             }
             else
             {
-                itemStrValue = converter.getAsString(facesContext, uiComponent, itemValue);
+                Object itemValue = selectItem.getValue();
+                String itemStrValue = getItemStringValue(context, component, converter, selectItem);
+
+                writer.write("\t\t");
+                writer.startElement(HTML.OPTION_ELEM, null);
+                writer.writeAttribute(HTML.VALUE_ATTR, itemStrValue, null);
+
+                if ((lookupSubmittedValue && lookupSet.contains(itemStrValue)) ||
+                    (!lookupSubmittedValue && lookupSet.contains(itemValue)))
+                {
+                    writer.writeAttribute(HTML.SELECTED_ATTR, HTML.SELECTED_ATTR, null);
+                }
+
+                writer.writeText(selectItem.getLabel(), null);
+
+                if (selectItem.isDisabled())
+                {
+                    writer.writeAttribute(HTML.DISABLED_ATTR, HTML.DISABLED_ATTR, null);
+                }
+
+                writer.endElement(HTML.OPTION_ELEM);
             }
-
-            writer.write("\t\t");
-            writer.startElement(HTML.OPTION_ELEM, uiComponent);
-            writer.writeAttribute(HTML.VALUE_ATTR, itemStrValue, null);
-
-            if (lookupSet.contains(itemValue))
-            {
-                writer.writeAttribute(HTML.INPUT_SELECTED_VALUE, HTML.INPUT_SELECTED_VALUE, null);
-            }
-
-            writer.writeText(selectItem.getLabel(), null);
-
-            writer.endElement(HTML.OPTION_ELEM);
         }
-
-        writer.endElement(HTML.SELECT_ELEM);
     }
+
+    private static String getItemStringValue(FacesContext context,
+                                             UIComponent component,
+                                             Converter converter,
+                                             SelectItem selectItem)
+    {
+        Object itemValue = selectItem.getValue();
+        if (converter == null)
+        {
+            if (itemValue == null)
+            {
+                return "";
+            }
+            else if (itemValue instanceof String)
+            {
+                return (String)itemValue;
+            }
+            else
+            {
+                throw new IllegalArgumentException("Item value of SelectItem with label " + selectItem.getLabel() + " is no String and parent component " + component.getClientId(context) + " does not have a Converter");
+            }
+        }
+        else
+        {
+            return converter.getAsString(context, component, itemValue);
+        }
+    }
+
+
 
 
     public static void renderRadio(FacesContext facesContext,
@@ -349,7 +425,7 @@ public class HtmlRendererUtils
 
         if (checked)
         {
-            writer.writeAttribute(HTML.CHECKED_ATTR, HTML.INPUT_CHECKED_VALUE, null);
+            writer.writeAttribute(HTML.CHECKED_ATTR, HTML.CHECKED_ATTR, null);
         }
 
         if ((value != null) && (value.length() > 0))

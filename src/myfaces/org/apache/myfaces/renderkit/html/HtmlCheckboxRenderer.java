@@ -35,7 +35,6 @@ import javax.faces.convert.ConverterException;
 import javax.faces.model.SelectItem;
 import java.io.IOException;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Set;
 
 
@@ -112,7 +111,6 @@ public class HtmlCheckboxRenderer
         if (!pageDirectionLayout) writer.startElement(HTML.TR_ELEM, selectMany);
 
         Converter converter;
-        List selectItemList = RendererUtils.getSelectItemList(selectMany);
         try
         {
             converter = RendererUtils.findUISelectManyConverter(facesContext, selectMany);
@@ -125,7 +123,7 @@ public class HtmlCheckboxRenderer
 
         Set lookupSet = RendererUtils.getSelectedValuesAsSet(selectMany);
 
-        for (Iterator it = selectItemList.iterator(); it.hasNext(); )
+        for (Iterator it = RendererUtils.getSelectItemList(selectMany).iterator(); it.hasNext(); )
         {
             SelectItem selectItem = (SelectItem)it.next();
             Object itemValue = selectItem.getValue();
