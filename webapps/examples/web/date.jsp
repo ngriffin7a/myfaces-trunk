@@ -58,7 +58,7 @@
                 <h:messages id="messageList" showSummary="true" showDetail="true" />
 
                 <f:verbatim>
-                    <h:outputText ecape="false" value="<h4> #{example_messages['date_comp_header']}</h4>"/>
+                    <h:outputText escape="false" value="<h4> #{example_messages['date_comp_header']}</h4>"/>
                 </f:verbatim>
 
                     <h:form>
