@@ -36,7 +36,7 @@
 
     <context-param>
         <param-name>javax.faces.STATE_SAVING_METHOD</param-name>
-        <param-value>client</param-value>
+        <param-value>server</param-value>
         <description>
             State saving method: "client" or "server" (= default)
             See JSF Specification 2.5.2
@@ -54,6 +54,26 @@
             If javascript is not allowed, the state saving info and nested parameters
             will be added as url parameters.
             Default: "true"
+        </description>
+    </context-param>
+    
+    <context-param>
+        <param-name>net.sourceforge.myfaces.DETECT_JAVASCRIPT</param-name>
+        <param-value>false</param-value>
+        <description>
+            This parameter tells MyFaces if javascript code should be allowed in the
+            rendered HTML output.
+            If javascript is allowed, command_link anchors will have javascript code
+            that submits the corresponding form.
+            If javascript is not allowed, the state saving info and nested parameters
+            will be added as url parameters.
+            Default: "false"
+
+            Setting this param to true should be combined with STATE_SAVING_METHOD "server" for
+            best results.
+
+            This is an EXPERIMENTAL feature. You also have to enable the detector filter/filter mapping below to get
+            JavaScript detection working.
         </description>
     </context-param>
 
@@ -87,6 +107,13 @@
     </filter>
     -->
 
+    <!-- JavaScriptDetector Filter -->
+<!--    <filter>-->
+<!--        <filter-name>javascriptDetector</filter-name>-->
+<!--        <filter-class>net.sourceforge.myfaces.webapp.filter.JavaScriptDetectorFilter</filter-class>-->
+<!--    </filter>-->
+
+
     <!-- MultiPart Filter -->
     <filter>
         <filter-name>multipartFilter</filter-name>
@@ -112,6 +139,12 @@
         <url-pattern>/*</url-pattern>
     </filter-mapping>
     -->
+
+<!--    <filter-mapping>-->
+<!--        <filter-name>javascriptDetector</filter-name>-->
+<!--        <url-pattern>/_javascriptDetector_</url-pattern>-->
+<!--    </filter-mapping>-->
+
 
     <filter-mapping>
         <filter-name>multipartFilter</filter-name>

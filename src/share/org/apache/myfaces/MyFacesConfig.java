@@ -33,6 +33,8 @@ final public class MyFacesConfig
 {
     private static final Log log = LogFactory.getLog(MyFacesConfig.class);
 
+    public static final String USE_JAVASCRIPT = "net.sourceforge.myfaces.UseJavascript";
+
     private static final String PARAM_allowJavascript_legacy = "myfaces_allow_javascript";
     private static final String PARAM_allowJavascript = "net.sourceforge.myfaces.ALLOW_JAVASCRIPT";
     private static final boolean DEFAULT_allowJavascript = true;
@@ -41,20 +43,45 @@ final public class MyFacesConfig
     private static final String PARAM_prettyHtml = "net.sourceforge.myfaces.PRETTY_HTML";
     private static final boolean DEFAULT_prettyHtml = true;
 
+    private static final String PARAM_detectJavascript = "net.sourceforge.myfaces.DETECT_JAVASCRIPT";
+    private static final boolean DEFAULT_detectJavascript = false;
 
     private MyFacesConfig()
     {
         // utility class, no instances allowed
     }
 
+    public static boolean isDetectJavascript(ExternalContext externalContext)
+    {
+       return getBooleanInitParameter(externalContext,
+                                       PARAM_detectJavascript,
+                                       DEFAULT_detectJavascript,
+                                       PARAM_detectJavascript);
+    }
 
     public static boolean isAllowJavascript(ExternalContext externalContext)
     {
+        boolean detect = getBooleanInitParameter(externalContext,
+                                       PARAM_detectJavascript,
+                                       DEFAULT_detectJavascript,
+                                       PARAM_detectJavascript);
+
+        if (detect) {
+            return isJavascriptDetected(externalContext);
+        }
         return getBooleanInitParameter(externalContext,
                                        PARAM_allowJavascript,
                                        DEFAULT_allowJavascript,
                                        PARAM_allowJavascript_legacy);
     }
+
+
+    public static boolean isJavascriptDetected(ExternalContext externalContext)
+    {
+        Boolean sessionValue = (Boolean)externalContext.getSessionMap().get(USE_JAVASCRIPT);
+        return sessionValue == null ? false : sessionValue.booleanValue();
+    }
+
 
     public static boolean isPrettyHtml(ExternalContext externalContext)
     {

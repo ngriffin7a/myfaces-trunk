@@ -18,6 +18,7 @@ package net.sourceforge.myfaces.taglib.core;
 import net.sourceforge.myfaces.application.MyfacesStateManager;
 import net.sourceforge.myfaces.application.jsp.JspViewHandlerImpl;
 import net.sourceforge.myfaces.renderkit.html.HtmlLinkRendererBase;
+import net.sourceforge.myfaces.MyFacesConfig;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -31,6 +32,7 @@ import javax.faces.el.ValueBinding;
 import javax.faces.webapp.UIComponentBodyTag;
 import javax.faces.webapp.UIComponentTag;
 import javax.servlet.ServletRequest;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.jstl.core.Config;
 import javax.servlet.jsp.tagext.BodyContent;
@@ -42,6 +44,9 @@ import java.util.Locale;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.13  2004/08/05 22:10:44  o_rossmueller
+ * EXPERIMENTAL: JavaScript detection
+ *
  * Revision 1.12  2004/07/01 22:05:03  mwessendorf
  * ASF switch
  *
@@ -110,13 +115,18 @@ public class ViewTag
         if (log.isTraceEnabled()) log.trace("entering ViewTag.doEndTag");
         FacesContext facesContext = FacesContext.getCurrentInstance();
         ResponseWriter responseWriter = facesContext.getResponseWriter();
+
         try
         {
             responseWriter.endDocument();
+            javax.faces.context.ExternalContext externalContext = facesContext.getExternalContext();
+            if (MyFacesConfig.isDetectJavascript(externalContext) && ! MyFacesConfig.isJavascriptDetected(externalContext)) {
+                responseWriter.write("<script language=\"JavaScript\">\n<!--\ndocument.location.replace('" + facesContext.getApplication().getViewHandler().getResourceURL(facesContext, "/_javascriptDetector_")  + "?goto=" + facesContext.getApplication().getViewHandler().getActionURL(facesContext, facesContext.getViewRoot().getViewId()) +"');\n//-->\n</script>");
+            }
         }
         catch (IOException e)
         {
-            log.error("Error writing startDocument", e);
+            log.error("Error writing endDocument", e);
             throw new JspException(e);
         }
 
