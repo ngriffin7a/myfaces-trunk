@@ -210,20 +210,23 @@ public class MyFacesTagHelper
 
 
 
-    protected void findComponent()
+    /**
+     * @return component, that was found or created. null, if not handled
+     */
+    protected UIComponent findComponent()
     {
         int mode = MyFacesConfig.getStateSavingMode(getFacesContext().getServletContext());
         if (mode != MyFacesConfig.STATE_SAVING_MODE__CLIENT_MINIMIZED &&
             mode != MyFacesConfig.STATE_SAVING_MODE__CLIENT_MINIMIZED_ZIPPED)
         {
             //no "client minimized" mode, standard way of finding and creating components is ok
-            return;
+            return null;
         }
 
         if (_tag.getId() != null)
         {
-            //hardcoded id, nothing special must be done
-            return;
+            //hardcoded id, nothing special must be done --> default method of jsf-api works ok
+            return null;
         }
 
         //We must locate the component, that corresponds to the current tag
@@ -235,15 +238,15 @@ public class MyFacesTagHelper
 
         //Find an corresponding component in parsed tree and add the
         //new component if it does not yet exist in the current tree
-        findoutComponentIdAndAdd(getFacesContext(),
-                                  _tag,
-                                  tempComp);
+        return findoutComponentIdAndAdd(getFacesContext(),
+                                        _tag,
+                                        tempComp);
     }
 
 
-    protected static void findoutComponentIdAndAdd(FacesContext facesContext,
-                                                   FacesTag facesTag,
-                                                   UIComponent newComponent)
+    protected static UIComponent findoutComponentIdAndAdd(FacesContext facesContext,
+                                                          FacesTag facesTag,
+                                                          UIComponent newComponent)
     {
         LogUtil.getLogger().entering(Level.FINEST);
         LogUtil.printComponentToConsole(newComponent, "compToFind");
@@ -299,12 +302,18 @@ public class MyFacesTagHelper
 
         //Component already in tree?
         UIComponent findComp = parent.findComponent(id);
-        if (findComp == null)
+        if (findComp != null)
+        {
+            ((MyFacesTagBaseIF)facesTag).setCreated(false);
+            return findComp;
+        }
+        else
         {
             //add component to tree
             newComponent.setComponentId(id);
             parent.addChild(newComponent);
             ((MyFacesTagBaseIF)facesTag).setCreated(true);
+            return newComponent;
         }
     }
 

@@ -21,7 +21,6 @@ package net.sourceforge.myfaces.renderkit.html.state;
 import net.sourceforge.myfaces.MyFacesConfig;
 import net.sourceforge.myfaces.renderkit.html.FormRenderer;
 import net.sourceforge.myfaces.renderkit.html.HTMLRenderer;
-import net.sourceforge.myfaces.renderkit.html.jspinfo.JspInfo;
 import net.sourceforge.myfaces.renderkit.html.state.client.*;
 import net.sourceforge.myfaces.renderkit.html.state.server.HTTPSessionStateRestorer;
 import net.sourceforge.myfaces.renderkit.html.state.server.HTTPSessionStateSaver;
@@ -104,9 +103,6 @@ public class StateRenderer
     {
         _stateRestorer.restoreState(facesContext);
         LogUtil.printTreeToConsole("Current tree after restoring state");
-        LogUtil.printTreeToConsole(JspInfo.getTree(facesContext,
-                                                   facesContext.getTree().getTreeId()),
-                                   "Parsed tree");
 
         facesContext.getServletRequest()
             .setAttribute(StateRestorer.STATE_RESTORER_REQUEST_ATTR,

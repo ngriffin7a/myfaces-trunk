@@ -153,10 +153,11 @@ public abstract class MyFacesBodyTag
     protected final UIComponent findComponent()
         throws JspException
     {
-        _helper.findComponent();
-        boolean b = getCreated();
-        UIComponent c = super.findComponent();
-        setCreated(b);
+        UIComponent c = _helper.findComponent();
+        if (c == null)
+        {
+            c = super.findComponent();
+        }
         return c;
     }
 

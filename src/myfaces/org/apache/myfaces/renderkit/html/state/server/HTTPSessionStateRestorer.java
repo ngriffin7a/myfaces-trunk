@@ -110,21 +110,24 @@ public class HTTPSessionStateRestorer
                                     HttpSession session,
                                     boolean onlyGlobal)
     {
-        Collection modelValuesColl
-            = (Collection)session.getAttribute(HTTPSessionStateSaver.MODEL_VALUES_COLL_SESSION_ATTR);
-        if (modelValuesColl != null)
+        if (!MyFacesConfig.isDisableJspParser(facesContext.getServletContext()))
         {
-            for (Iterator it = modelValuesColl.iterator(); it.hasNext();)
+            Collection modelValuesColl
+                = (Collection)session.getAttribute(HTTPSessionStateSaver.MODEL_VALUES_COLL_SESSION_ATTR);
+            if (modelValuesColl != null)
             {
-                ModelValueEntry entry = (ModelValueEntry)it.next();
-                if (!onlyGlobal || entry.isGlobal())
+                for (Iterator it = modelValuesColl.iterator(); it.hasNext();)
                 {
-                    String modelRef = entry.getModelReference();
-                    JspInfoUtils.checkModelInstance(facesContext, modelRef);
-                    facesContext.setModelValue(modelRef, entry.getValue());
+                    ModelValueEntry entry = (ModelValueEntry)it.next();
+                    if (!onlyGlobal || entry.isGlobal())
+                    {
+                        String modelRef = entry.getModelReference();
+                        JspInfoUtils.checkModelInstance(facesContext, modelRef);
+                        facesContext.setModelValue(modelRef, entry.getValue());
+                    }
                 }
+                session.removeAttribute(HTTPSessionStateSaver.MODEL_VALUES_COLL_SESSION_ATTR);
             }
-            session.removeAttribute(HTTPSessionStateSaver.MODEL_VALUES_COLL_SESSION_ATTR);
         }
     }
 
