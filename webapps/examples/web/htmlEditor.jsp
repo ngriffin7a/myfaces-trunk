@@ -61,7 +61,6 @@
 					<x:htmlEditor value="#{editor.text}"
 						formularMode="#{editor.formularMode}"
 						allowEditSource="#{editor.allowEditSource}"
-						addKupuLogo="false"
 						showPropertiesToolBox="#{editor.showPropertiesToolBox}"
 						showLinksToolBox="#{editor.showLinksToolBox}"
 						showImagesToolBox="#{editor.showImagesToolBox}"
