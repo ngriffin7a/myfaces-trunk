@@ -21,10 +21,11 @@ HOWTO - Use MyFaces in your own WebApp
   the WEB-INF/lib dir of your (J2EE conform) Webapplication.
 - Copy the lib/myfaces.jar file to the WEB-INF/lib dir of your Webapplication.
 - Copy the lib/cos.jar file to the WEB-INF/lib dir of your Webapplication.
+- Copy the doc/faces.properties file to your WEB-INF/classes directory
 - Configure your webapp's web.xml file (see web.xml.sample)
 - Add the line
     <%@ taglib uri="http://java.sun.com/jsf/html" prefix="h"%>
-  to your JSPs to be able to use the asic HTML JSF tags.
+  to your JSPs to be able to use the basic HTML JSF tags.
 - Add the line
     <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f"%>
   to your JSPs to be able to use the core JSF tags.
