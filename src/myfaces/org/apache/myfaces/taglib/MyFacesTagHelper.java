@@ -452,7 +452,8 @@ public class MyFacesTagHelper
             if (attrName.equals(JspInfo.HARDCODED_ID_ATTR))
             {
                 String hardcodedId = (String)parsedChild.getAttribute(attrName);
-                if (!compToCompare.getComponentId().equals(hardcodedId))
+                String componentId = compToCompare.getComponentId();
+                if (componentId == null || !componentId.equals(hardcodedId))
                 {
                     LogUtil.getLogger().finest("      diff: hardcoded id / " + compToCompare.getComponentId() + " <> " + hardcodedId);
                     return false;
