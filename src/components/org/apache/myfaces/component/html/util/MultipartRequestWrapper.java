@@ -28,6 +28,9 @@ import java.util.*;
  * @author Sylvain Vieujot (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.2  2004/12/11 21:41:33  svieujot
+ * Add method to get the FileItems.
+ *
  * Revision 1.1  2004/12/01 16:32:03  svieujot
  * Convert the Multipart filter in an ExtensionsFilter that provides an additional facility to include resources in a page.
  * Tested only with javascript resources right now, but should work fine with images too.
@@ -195,5 +198,13 @@ public class MultipartRequestWrapper
 		if( fileItems == null ) parseRequest();
 		
 		return (FileItem) fileItems.get( fieldName );
+	}
+	
+	/**
+	 * Not used internaly by MyFaces, but provides a way to handle the uploaded files
+	 * out of MyFaces.
+	 */
+	public Map getFileItems(){
+	    return fileItems;
 	}
 }
