@@ -65,7 +65,7 @@
                 </f:listrow>
                 <!-- FOOTER -->
                 <f:group id="footer" >
-                    <f:output_text id="footer.1" text="look at this runtime values ..."/>
+                    <f:output_text id="footer.1" text="take a look at this runtime values ..."/>
                     <f:group id="g2" >
                         <f:message id="row_count" msg="{0} rows" >
                             <f:param id="rows" value="<%=new Integer(rows)%>"/>
