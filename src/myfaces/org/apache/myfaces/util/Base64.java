@@ -33,7 +33,10 @@ import java.io.OutputStream;
  */
 public class Base64
 {
-    private Base64() {}
+    private Base64() 
+    {
+        // hide from public access
+    }
 
     public static OutputStream getEncoder(OutputStream os)
     {

@@ -34,7 +34,10 @@ public class ZipUtils
     public static final String ZIP_CHARSET = "ISO-8859-1";
 
 
-    private ZipUtils() {}
+    private ZipUtils() 
+    {
+        // hide from public access
+    }
 
 
     /**

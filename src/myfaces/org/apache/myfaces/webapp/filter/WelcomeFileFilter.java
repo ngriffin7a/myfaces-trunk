@@ -47,9 +47,9 @@ implements Filter
 {
     //~ Instance fields --------------------------------------------------------
 
-    private FilterConfig   config;
-    private ServletContext context;
-    private String[]       welcomeFiles = new String[0];
+    private FilterConfig   _config;
+    private ServletContext _context;
+    private String[]       _welcomeFiles = new String[0];
 
     //~ Methods ----------------------------------------------------------------
 
@@ -58,9 +58,9 @@ implements Filter
      */
     public void destroy()
     {
-        config           = null;
-        context          = null;
-        welcomeFiles     = null;
+        _config           = null;
+        _context          = null;
+        _welcomeFiles     = null;
     }
 
     /**
@@ -84,7 +84,7 @@ implements Filter
         ServletRequest request, ServletResponse response, FilterChain chain)
     throws IOException, ServletException
     {
-        if (config == null)
+        if (_config == null)
         {
             return;
         }
@@ -118,19 +118,19 @@ implements Filter
         // REVISIT: we probably can check for existence once at startup 
         //          and know the exact welcome file by now. Of course, that 
         //          would not work if the files change at runtime, but does it matter?
-        for (int i = 0; i < welcomeFiles.length; i++)
+        for (int i = 0; i < _welcomeFiles.length; i++)
         {
             sb.setLength(0);
-            sb.append(baseURI).append(welcomeFiles[i]);
+            sb.append(baseURI).append(_welcomeFiles[i]);
 
-            File file = new File(context.getRealPath(sb.toString()));
+            File file = new File(_context.getRealPath(sb.toString()));
 
             //            			context.log("Welcome File: " + file.getAbsolutePath());
             if (file.exists())
             {
                 // REVISIT: This will force all "welcome" JSPs through MyFaces. 
                 //           Shouldn't we allow the user to enter *.jsf and check for *.jsp for existence, instead? 
-                if (welcomeFiles[i].endsWith(".jsp"))
+                if (_welcomeFiles[i].endsWith(".jsp"))
                 {
                     // alter the name of the file we are requesting to
                     // force it through the MyFacesServlet
@@ -164,8 +164,8 @@ implements Filter
     /**
      * During the init method, we have to get any predefined welcome files
      * for the current ServletContext.
-     * @throws ServletException
      * @param config The filter configuration data
+     * @throws ServletException
      */
     public void init(FilterConfig config)
     throws ServletException
@@ -175,8 +175,8 @@ implements Filter
             return;
         }
 
-        this.config      = config;
-        this.context     = config.getServletContext();
+        this._config      = config;
+        this._context     = config.getServletContext();
 
         try
         {
@@ -187,16 +187,16 @@ implements Filter
             SAXParser          parser  = factory.newSAXParser();
             WelcomeFileHandler handler = new WelcomeFileHandler();
             InputStream        is      =
-                context.getResourceAsStream("WEB-INF/web.xml");
+                _context.getResourceAsStream("WEB-INF/web.xml");
 
             if (is == null)
             {
-                context.log("Unable to get inputstream for web.xml");
+                _context.log("Unable to get inputstream for web.xml");
             }
 
             parser.parse(is, handler);
-            welcomeFiles = handler.getWelcomeFiles();
-            context.log("Number of welcome files: " + welcomeFiles.length);
+            _welcomeFiles = handler.getWelcomeFiles();
+            _context.log("Number of welcome files: " + _welcomeFiles.length);
         }
         catch (Exception ex)
         {

@@ -36,7 +36,10 @@ import java.io.PrintStream;
  */
 public class DebugUtils
 {
-    private DebugUtils() {}
+    private DebugUtils() 
+    {
+        // hide from public access
+    }
 
     public static void logTree(Log log, String additionalMsg)
     {

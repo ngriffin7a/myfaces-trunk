@@ -43,6 +43,7 @@ public class BeanUtils
 
     private BeanUtils()
     {
+        // hide from public access
     }
 
     /**

@@ -23,7 +23,6 @@ import javax.faces.context.ExternalContext;
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import javax.servlet.http.Cookie;
 import java.io.IOException;
 import java.io.InputStream;
@@ -131,15 +130,21 @@ public class ServletExternalContextImpl
     {
         if (_sessionMap == null)
         {
-            HttpSession session = ((HttpSession)getSession(false));
-            if (session != null)
+            if (!(_servletRequest instanceof HttpServletRequest))
             {
-                _sessionMap = new SessionMap(session);
+                throw new IllegalStateException("Only HttpServletRequest supported");
             }
-            else
-            {
-                _sessionMap = Collections.EMPTY_MAP;    //TODO: EMPTY_MAP throws exception on put. Better return an empty HashMap?
-            }
+            
+            _sessionMap = new SessionMap((HttpServletRequest) _servletRequest);
+//            HttpSession session = ((HttpSession)getSession(false));
+//            if (session != null)
+//            {
+//                _sessionMap = new SessionMap(session);
+//            }
+//            else
+//            {
+//                _sessionMap = Collections.EMPTY_MAP;    //TODO: EMPTY_MAP throws exception on put. Better return an empty HashMap?
+//            }
         }
         return _sessionMap;
     }

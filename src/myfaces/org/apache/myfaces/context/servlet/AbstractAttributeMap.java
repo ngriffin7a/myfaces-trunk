@@ -35,6 +35,7 @@ public abstract class AbstractAttributeMap
 
     AbstractAttributeMap()
     {
+        // hide from public view
     }
 
     public int size()

@@ -42,7 +42,7 @@ public class MyFacesObjectInputStream
     }
 
     protected Class resolveClass(ObjectStreamClass desc)
-        throws IOException, ClassNotFoundException
+        throws ClassNotFoundException
     {
         return Class.forName(desc.getName(),
                              true,

@@ -12,7 +12,10 @@ import javax.faces.FacesException;
  */
 public class XmlUtils
 {
-    private XmlUtils() {}
+    private XmlUtils() 
+    {
+        // hide from public access
+    }
 
     public static String getElementText(Element elem)
     {

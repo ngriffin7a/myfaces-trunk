@@ -30,8 +30,9 @@ public class ArrayUtils
 {
     //~ Constructors -------------------------------------------------------------------------------
 
-    private ArrayUtils()
+    protected ArrayUtils()
     {
+        // hide from public access
     }
 
     //~ Methods ------------------------------------------------------------------------------------

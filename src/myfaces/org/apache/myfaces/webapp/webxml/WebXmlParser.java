@@ -28,7 +28,6 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
 
 import javax.faces.FacesException;
 import javax.faces.context.ExternalContext;
@@ -112,7 +111,7 @@ public class WebXmlParser
 
     public class _EntityResolver implements EntityResolver
     {
-        public InputSource resolveEntity(String publicId, String systemId) throws SAXException, IOException
+        public InputSource resolveEntity(String publicId, String systemId) throws IOException
         {
             if (systemId == null)
             {

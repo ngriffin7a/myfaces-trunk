@@ -35,7 +35,10 @@ public class BundleUtils
 {
     private static final Log log = LogFactory.getLog(BundleUtils.class);
 
-    private BundleUtils() {}
+    private BundleUtils() 
+    {
+        // hide from public access
+    }
 
     public static ResourceBundle findResourceBundle(FacesContext facesContext,
                                                     String bundleName)

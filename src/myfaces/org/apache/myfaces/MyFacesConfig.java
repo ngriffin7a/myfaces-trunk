@@ -71,7 +71,10 @@ public class MyFacesConfig
     private static final String CONFIG_MAP_ATTR = MyFacesConfig.class.getName() + ".MAP";
 
 
-    private MyFacesConfig() {}
+    private MyFacesConfig() 
+    {
+        // hide from public access
+    }
 
     /**
      * MyFaces needs to parse JSP files when doing the "minimizing state

@@ -1,4 +1,4 @@
-/**
+/*
  * MyFaces - the free JSF implementation
  * Copyright (C) 2003, 2004  The MyFaces Team (http://myfaces.sourceforge.net)
  *
@@ -31,7 +31,7 @@ import java.util.NoSuchElementException;
 public class SessionMap
     extends AbstractAttributeMap
 {
-    private HttpServletRequest _request;
+    private final HttpServletRequest _request;
 
     public SessionMap(HttpServletRequest request)
     {
@@ -41,7 +41,7 @@ public class SessionMap
     protected Object getAttribute(String name)
     {
         HttpSession session = _request.getSession(false);
-        return session != null ?
+        return (session != null) ?
                session.getAttribute(name) :
                null;
     }
@@ -54,8 +54,11 @@ public class SessionMap
 
     protected void removeAttribute(String name)
     {
-        HttpSession session = _request.getSession(true);
-        session.removeAttribute(name);
+        HttpSession session = _request.getSession(false);
+        if (session != null)
+        {    
+            session.removeAttribute(name);
+        }
     }
 
     protected Enumeration getAttributeNames()
@@ -79,5 +82,4 @@ public class SessionMap
             throw new NoSuchElementException();
         }
     };
-
 }

@@ -28,7 +28,6 @@ import javax.faces.application.ApplicationFactory;
 import javax.faces.context.FacesContext;
 import javax.faces.el.ValueBinding;
 import javax.faces.el.VariableResolver;
-import javax.faces.render.RenderKit;
 import javax.faces.render.RenderKitFactory;
 import javax.faces.render.Renderer;
 
@@ -76,8 +75,8 @@ public class FacesUtils
 
     public static Renderer getRenderer(FacesContext ctx, String rendererType)
     {
-        return ((RenderKit) ((RenderKitFactory) FactoryFinder.getFactory(
-            "javax.faces.render.RenderKitFactory")).getRenderKit(ctx.getViewRoot().getRenderKitId()))
+        return ((RenderKitFactory) FactoryFinder.getFactory(
+            "javax.faces.render.RenderKitFactory")).getRenderKit(ctx.getViewRoot().getRenderKitId())
                 .getRenderer(rendererType);
     }
 

@@ -431,7 +431,6 @@ public class ValueBindingImpl
      * Returns an index converted to the proper class depending on index type
      *
      * @param index the index to be processed
-     * @param reference the full reference, only used to give detailed error message
      * @return String (for a "named" index), Integer (for a numeric index), ValueBinding (for a subexpression)
      */
     private Object index(String index)
@@ -544,7 +543,7 @@ public class ValueBindingImpl
      * Returns the index of the matching closing quote, checking for escaped quotes
      *
      * @param str string to scan
-     * @param indexOpeningQuote start from this position in the string
+     * @param indexOfOpeningQuote start from this position in the string
      * @param quote the quote char
      * @return -1 if no match, the index of closing quote otherwise
      */
