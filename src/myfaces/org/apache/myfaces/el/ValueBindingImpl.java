@@ -357,7 +357,7 @@ public class ValueBindingImpl extends ValueBinding {
         for (int i = indexofOpeningBracket, len = str.length(); i < len;) {
             if (indexofClose < 0)
                 throw new ReferenceSyntaxException(
-                    "cannot find closing bracket in '" + str + "'");
+                    "Invalid property '" + str + "'--missing ']'");
 
             // We check for '\' before the bracket to skip quoted brackets
             if ((indexofOpen < 0) || (indexofClose < indexofOpen)) {
@@ -377,7 +377,7 @@ public class ValueBindingImpl extends ValueBinding {
         }
 
         throw new ReferenceSyntaxException(
-            "Unmatched bracket in reference '" + str + "'");
+            "Invalid property '" + str + "'--missing ']'");
     }
 
     private Object preprocessProperty(
@@ -418,7 +418,7 @@ public class ValueBindingImpl extends ValueBinding {
                 (reference.charAt(indexofClosingBracket - 1) != quote)
                     || (indexofOpeningBracket >= (indexofClosingBracket - 3)))
                 throw new ReferenceSyntaxException(
-                    "Invalid indexed property '" + reference + "'");
+                    "Invalid indexed property: " + reference);
 
             return unescape(
                 reference.substring(
@@ -464,16 +464,16 @@ public class ValueBindingImpl extends ValueBinding {
                 if ((pos == 0) || (reference.charAt(pos - 1) == '.'))
                     throw new ReferenceSyntaxException(
                         "Invalid indexed property '" + reference
-                        + "'--'[' preceeded by '.'");
+                        + "'--'[' following '.'");
 
                 int indexofClosingBracket =
-                    indexOfMatchingClosingBracket(reference, pos + 1);
+                    indexOfMatchingClosingBracket(reference, pos);
 
                 // Is index empty? (case 'a.b[]')
                 if (pos == (indexofClosingBracket - 1))
                     throw new ReferenceSyntaxException(
                         "Invalid indexed property '" + reference
-                        + "'--index is empty");
+                        + "'--empty index");
 
                 Object index = getIndex(reference, pos, indexofClosingBracket);
                 parsedReference.add(index);
@@ -482,33 +482,33 @@ public class ValueBindingImpl extends ValueBinding {
                 continue;
             }
 
-            /* End of indexed property */
-
             // Not an indexed property, process simple nesting
-            int indexofOpeningBracket = reference.indexOf('[', pos);
+            int newpos = reference.indexOf('[', pos);
             int indexofDot = reference.indexOf('.', pos);
-            int newpos     = len;
 
             // Find the first occurrence of any delim char
-            if (indexofOpeningBracket > 0)
-                newpos = indexofOpeningBracket;
-
-            if ((indexofDot > 0) && (indexofDot < newpos))
+            if ((indexofDot >= 0) && (indexofDot < newpos))
                 newpos = indexofDot;
+                
+            if (newpos < 0)
+                newpos = len;
 
             // newpos is the end of the property name
-            // check for case 'a[0].b', skip the dot
             if (pos == newpos)
-                if ((pos > 0) && (reference.charAt(pos - 1) == ']')) {
+                if (pos == 0)
+                    throw new ReferenceSyntaxException(
+                        "Invalid property '" + reference + "'--starting with '"
+                        + reference.charAt(pos) + "'");
+                else if (reference.charAt(pos - 1) == ']') {
+                    // case 'a[0].b', skip the dot
                     pos++;
 
                     continue;
-                }
+                } else
 
-            // Is name empty (case 'a..b')?
-            if (pos >= (newpos - 1))
-                throw new ReferenceSyntaxException(
-                    "Invalid indexed property '" + reference + "'--double dot");
+                    // name is empty (case 'a..b')?
+                    throw new ReferenceSyntaxException(
+                        "Invalid property '" + reference + "'--double '.'");
 
             parsedReference.add(reference.substring(pos, newpos));
             pos = (newpos == indexofDot) ? (newpos + 1) : newpos;
