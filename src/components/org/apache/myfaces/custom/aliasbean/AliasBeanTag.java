@@ -23,6 +23,9 @@ import org.apache.myfaces.taglib.UIComponentTagBase;
  * @author Sylvain Vieujot (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.3  2004/11/23 11:03:35  svieujot
+ * Get ride of the x:aliasBean "permanent" attribute.
+ *
  * Revision 1.2  2004/11/23 04:46:40  svieujot
  * Add an ugly "permanent" tag to x:aliasBean to handle children events.
  *
@@ -34,14 +37,12 @@ public class AliasBeanTag extends UIComponentTagBase {
     
     private String _sourceBean;
     private String _alias;
-    private String _permanent;
     
     protected void setProperties(UIComponent component) {
         super.setProperties(component);
 
         setStringProperty(component, "sourceBean", _sourceBean);
         setStringProperty(component, "alias", _alias);
-        setBooleanProperty(component, "permanent", _permanent);
     }
     
     public String getComponentType() {
@@ -58,9 +59,5 @@ public class AliasBeanTag extends UIComponentTagBase {
     
     public void setAlias(String alias){
         _alias = alias;
-    }
-    
-    public void setPermanent(String permanent){
-        _permanent = permanent;
     }
 }

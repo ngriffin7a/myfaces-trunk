@@ -76,7 +76,7 @@
 					</x:aliasBean>
 
 					<f:verbatim><h2>aliasTest2</h2></f:verbatim>
-					<x:aliasBean sourceBean="#{aliasTest2}" alias="#{holder}" permanent="true">
+					<x:aliasBean sourceBean="#{aliasTest2}" alias="#{holder}">
 						<f:subview id="simulatedIncludedSubform2">
 							<%-- The next tags could be inserted by an %@ include or jsp:include --%>
 							<h:outputLabel for="name" value="Name :"/>
