@@ -475,12 +475,12 @@ public abstract class UIComponentBase
         if (attachedObject == null) return null;
         if (attachedObject instanceof List)
         {
-            ArrayList lst = new ArrayList();
+            ArrayList lst = new ArrayList(((List)attachedObject).size());
             for (Iterator it = ((List)attachedObject).iterator(); it.hasNext(); )
             {
                 lst.add(saveAttachedState(context, it.next()));
             }
-            return new _AttachedStateWrapper(null, lst);
+            return new _AttachedListStateWrapper(lst);
         }
         else if (attachedObject instanceof StateHolder)
         {
@@ -500,7 +500,7 @@ public abstract class UIComponentBase
         }
         else
         {
-            throw new IllegalArgumentException("Must be StateHolder or Serializable");
+            return new _AttachedStateWrapper(attachedObject.getClass(), null);
         }
     }
 
@@ -510,37 +510,38 @@ public abstract class UIComponentBase
     {
         if (context == null) throw new NullPointerException("context");
         if (stateObj == null) return null;
-        if (stateObj instanceof _AttachedStateWrapper)
+        if (stateObj instanceof _AttachedListStateWrapper)
+        {
+            List lst = ((_AttachedListStateWrapper)stateObj).getWrappedStateList();
+            List restoredList = new ArrayList(lst.size());
+            for (Iterator it = lst.iterator(); it.hasNext(); )
+            {
+                restoredList.add(restoreAttachedState(context, it.next()));
+            }
+            return restoredList;
+        }
+        else if (stateObj instanceof _AttachedStateWrapper)
         {
             Class clazz = ((_AttachedStateWrapper)stateObj).getClazz();
-            if (clazz == null)
+            Object restoredObject = null;
+            try
             {
-                List newList = new ArrayList();
-                List lst = (List)((_AttachedStateWrapper)stateObj).getWrappedStateObject();
-                for (Iterator it = lst.iterator(); it.hasNext(); )
-                {
-                    newList.add(restoreAttachedState(context, it.next()));
-                }
-                return newList;
+                restoredObject = clazz.newInstance();
             }
-            else
+            catch (InstantiationException e)
             {
-                StateHolder stateHolder = null;
-                try
-                {
-                    stateHolder = (StateHolder)clazz.newInstance();
-                }
-                catch (InstantiationException e)
-                {
-                    throw new RuntimeException(e);
-                }
-                catch (IllegalAccessException e)
-                {
-                    throw new RuntimeException(e);
-                }
-                stateHolder.restoreState(context, ((_AttachedStateWrapper)stateObj).getWrappedStateObject());
-                return stateHolder;
+                throw new RuntimeException(e);
             }
+            catch (IllegalAccessException e)
+            {
+                throw new RuntimeException(e);
+            }
+            if (restoredObject instanceof StateHolder)
+            {
+                Object wrappedState = ((_AttachedStateWrapper)stateObj).getWrappedStateObject();
+                ((StateHolder)restoredObject).restoreState(context, wrappedState);
+            }
+            return restoredObject;
         }
         else
         {

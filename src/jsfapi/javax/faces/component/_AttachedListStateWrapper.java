@@ -19,38 +19,24 @@
 package javax.faces.component;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-class _AttachedStateWrapper
+class _AttachedListStateWrapper
         implements Serializable
 {
-    private Class _class;
-    private Object _wrappedStateObject;
+    private List _wrappedStateList;
 
-    /**
-     * @param clazz null means wrappedStateObject is a List of state objects
-     * @param wrappedStateObject
-     */
-    public _AttachedStateWrapper(Class clazz, Object wrappedStateObject)
+    public _AttachedListStateWrapper(List wrappedStateList)
     {
-        if (wrappedStateObject != null && !(wrappedStateObject instanceof Serializable))
-        {
-            throw new IllegalArgumentException("Attached state for Object of type " + clazz + " (Class " + wrappedStateObject.getClass().getName() + ") is not serializable");
-        }
-        _class = clazz;
-        _wrappedStateObject = wrappedStateObject;
+        _wrappedStateList = wrappedStateList;
     }
 
-    public Class getClazz()
+    public List getWrappedStateList()
     {
-        return _class;
-    }
-
-    public Object getWrappedStateObject()
-    {
-        return _wrappedStateObject;
+        return _wrappedStateList;
     }
 }

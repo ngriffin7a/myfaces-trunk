@@ -348,32 +348,32 @@ public abstract class UIComponentTag
             if (_componentInstance == null)
             {
                 _componentInstance = createComponentInstance(context);
-                _componentInstance.setId(createUniqueId(context)); //TODO: spec says nothing about facet ids
+                _componentInstance.setId(getOrCreateUniqueId(context)); //TODO: spec says nothing about facet ids
+                setProperties(_componentInstance);
+                parent.getFacets().put(facetName, _componentInstance);
             }
-            setProperties(_componentInstance);
-            parent.getFacets().put(facetName, _componentInstance);
             addFacetNameToParentTag(parentTag, facetName);
             return _componentInstance;
         }
         else
         {
             //Child
-            String id = createUniqueId(context);
+            String id = getOrCreateUniqueId(context);
             _componentInstance = parent.findComponent(id);
             if (_componentInstance == null)
             {
                 _componentInstance = createComponentInstance(context);
-                _componentInstance.setId(createUniqueId(context));
+                _componentInstance.setId(getOrCreateUniqueId(context));
+                setProperties(_componentInstance);
+                parent.getChildren().add(_componentInstance);
             }
-            setProperties(_componentInstance);
-            parent.getChildren().add(_componentInstance);
             addChildIdToParentTag(parentTag, id);
             return _componentInstance;
         }
     }
 
 
-    private String createUniqueId(FacesContext context)
+    private String getOrCreateUniqueId(FacesContext context)
     {
         String id = getId();
         if (id != null)
@@ -402,10 +402,12 @@ public abstract class UIComponentTag
                                                                 context,
                                                                 componentType);
             component.setValueBinding("binding", componentBinding);
+            _created = true;
             return component;
         }
         else
         {
+            _created = true;
             return context.getApplication().createComponent(componentType);
         }
     }

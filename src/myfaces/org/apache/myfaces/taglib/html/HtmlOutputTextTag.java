@@ -61,6 +61,9 @@ public class HtmlOutputTextTag
         super.setProperties(component);
 
         setBooleanProperty(component, JSFAttr.ESCAPE_ATTR, _escape);
+
+        //TODO: idea: set transient and override setValue method in UIOutput so that
+        //transient is set to false when a new value is set
     }
 
     public void setEscape(String escape)

@@ -19,10 +19,13 @@
 
 package javax.faces.event;
 
+import java.util.EventListener;
+
 /**
   * @author Thomas Spiegl (latest modification by $Author$)
   * @version $Revision$ $Date$
 */
 public interface FacesListener
+        extends EventListener
 {
 }
