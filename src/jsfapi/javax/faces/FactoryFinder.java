@@ -25,11 +25,12 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 
 /**
- * TODO: The "META-INF/services/" thing
- *
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.18  2004/07/20 14:57:27  manolito
+ * cosmetic change
+ *
  * Revision 1.17  2004/07/20 14:56:41  manolito
  * removed public FactoryFinder method getValidFactoryNames - there is no such method in JSF 1.1 !
  *
@@ -80,16 +81,6 @@ public final class FactoryFinder
         ABSTRACT_FACTORY_CLASSES.put(LIFECYCLE_FACTORY, LifecycleFactory.class);
         ABSTRACT_FACTORY_CLASSES.put(RENDER_KIT_FACTORY, RenderKitFactory.class);
     }
-
-    /**
-     * The returned set is immutable
-     * @return
-     */
-    /*
-    public static Set getValidFactoryNames() {
-      return VALID_FACTORY_NAMES;
-    }
-    */
 
     public static Object getFactory(String factoryName)
             throws FacesException
