@@ -17,22 +17,31 @@ package net.sourceforge.myfaces.custom.date;
 
 import java.io.IOException;
 import java.text.DateFormatSymbols;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Map;
 
+import javax.faces.application.FacesMessage;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
+import javax.faces.convert.ConverterException;
+import javax.faces.validator.ValidatorException;
 
 import net.sourceforge.myfaces.renderkit.RendererUtils;
 import net.sourceforge.myfaces.renderkit.html.HTML;
 import net.sourceforge.myfaces.renderkit.html.HtmlRenderer;
 import net.sourceforge.myfaces.renderkit.html.HtmlRendererUtils;
+import net.sourceforge.myfaces.util.MessageUtils;
 
 /**
  * $Log$
+ * Revision 1.4  2004/07/21 20:34:13  svieujot
+ * Add error handling
+ *
  * Revision 1.3  2004/07/18 03:08:23  svieujot
  * inputDate : add a type="date|time|both" similar as f:convertDateTime
  *
@@ -47,12 +56,22 @@ import net.sourceforge.myfaces.renderkit.html.HtmlRendererUtils;
  * @version $Revision$ $Date$
  */
 public class HtmlDateRenderer extends HtmlRenderer {
+	/**
+	 * <p>The message identifier of the {@link FacesMessage} to be created if
+	 * the creditcard check fails.</p>
+	 */
+	public static final String DATE_MESSAGE_ID = "net.sourceforge.myfaces.Date.INVALID";	
+	
     private static final String ID_DAY_POSTFIX = ".day";
     private static final String ID_MONTH_POSTFIX = ".month";
     private static final String ID_YEAR_POSTFIX = ".year";
     private static final String ID_HOURS_POSTFIX = ".hours";
     private static final String ID_MINUTES_POSTFIX = ".minutes";
     private static final String ID_SECONDS_POSTFIX = ".seconds";
+    
+    private static final SimpleDateFormat dateFormat = new SimpleDateFormat( "dd MM yyyy" );
+    private static final SimpleDateFormat hoursFormat = new SimpleDateFormat( "hh mm ss" );
+    private static final SimpleDateFormat fullFormat = new SimpleDateFormat( "dd MM yyyy hh mm ss" );
 
     public void encodeEnd(FacesContext facesContext, UIComponent uiComponent) throws IOException {
         RendererUtils.checkParamValidity(facesContext, uiComponent, HtmlInputDate.class);
@@ -131,7 +150,7 @@ public class HtmlDateRenderer extends HtmlRenderer {
         String[] months = mapMonths(new DateFormatSymbols(currentLocale));
         for (int i = 0; i < months.length; i++) {
             String monthName = months[i];
-            String monthNumber = Integer.toString(i);
+            String monthNumber = Integer.toString(i+1);
 
             writer.write("\t\t");
             writer.startElement(HTML.OPTION_ELEM, null);
@@ -195,13 +214,16 @@ public class HtmlDateRenderer extends HtmlRenderer {
         String clientId = inputDate.getClientId(facesContext);
         String type = inputDate.getType();
         Locale currentLocale = facesContext.getViewRoot().getLocale();
-        Calendar newValue = Calendar.getInstance(currentLocale);
         Map requestMap = facesContext.getExternalContext().getRequestParameterMap();
+        
+        String decodedDate = null;
+        String decodedHours = null;
 
         if( ! type.equals("both") ){
             Date date = inputDate.getDate();
             if( date != null ){  // try to change only the specified part (time or date), and keep the initial value for the not specified part
-                newValue.setTime( date );
+                decodedDate = dateFormat.format( date );
+                decodedHours = hoursFormat.format( date );
             }
         }
 
@@ -209,24 +231,29 @@ public class HtmlDateRenderer extends HtmlRenderer {
             String sDay = (String) requestMap.get(clientId + ID_DAY_POSTFIX);
             String sMonth = (String) requestMap.get(clientId + ID_MONTH_POSTFIX);
             String sYear = (String) requestMap.get(clientId + ID_YEAR_POSTFIX);
-        
-            newValue.set(Calendar.YEAR, Integer.parseInt(sYear));
-            newValue.set(Calendar.DAY_OF_YEAR, 1);
-            newValue.set(Calendar.MONTH, Integer.parseInt(sMonth));
-            newValue.set(Calendar.DAY_OF_MONTH, Integer.parseInt(sDay));
+            
+            decodedDate = sDay+' '+sMonth+' '+sYear;
         }
         
         if( ! type.equals( "date" ) ){
             String sHours = (String) requestMap.get(clientId + ID_HOURS_POSTFIX);
             String sMinutes = (String) requestMap.get(clientId + ID_MINUTES_POSTFIX);
             String sSeconds = (String) requestMap.get(clientId + ID_SECONDS_POSTFIX);
-        
-            newValue.set(Calendar.HOUR_OF_DAY, Integer.parseInt(sHours));
-            newValue.set(Calendar.MINUTE, Integer.parseInt(sMinutes));
-            newValue.set(Calendar.SECOND, Integer.parseInt(sSeconds));            
+
+            decodedHours = sHours+':'+sMinutes+':'+sSeconds;
         }
 
         
-        inputDate.setSubmittedValue(newValue.getTime());
+        inputDate.setSubmittedValue( decodedDate + ' ' + decodedHours );
+    }
+    
+    public Object getConvertedValue(FacesContext context, UIComponent uiComponent, Object submittedValue) throws ConverterException {
+        String dateString = (String) super.getConvertedValue(context, uiComponent, submittedValue);
+            try {
+                return fullFormat.parse( dateString );
+            } catch (ParseException e) {
+                Object[] args = {uiComponent.getId()};
+                throw new ConverterException(MessageUtils.getMessage(FacesMessage.SEVERITY_ERROR, DATE_MESSAGE_ID, args));
+            }
     }
 }
