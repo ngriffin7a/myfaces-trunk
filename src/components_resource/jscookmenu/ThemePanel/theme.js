@@ -1,6 +1,6 @@
 
 // directory of where all the images are
-var cmThemePanelBase = '/~heng/JSCookMenu/ThemePanel/';
+var cmThemePanelBase = 'jscookmenu/ThemePanel/';
 
 var cmThemePanel =
 {

@@ -1,5 +1,5 @@
 
-var cmThemeIEBase = '/~heng/JSCookMenu/ThemeIE/';
+var cmThemeIEBase = 'jscookmenu/ThemeIE/';
 
 var cmThemeIE =
 {
