@@ -36,7 +36,10 @@ import java.io.IOException;
 /**
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
- * 
+ * $Log$
+ * Revision 1.6  2004/04/26 13:16:32  manolito
+ * Log was missing
+ *
  * Revision 1.4 Sylvain Vieujot
  * Don't change the file bean if no file is uploaded. 
  * 
