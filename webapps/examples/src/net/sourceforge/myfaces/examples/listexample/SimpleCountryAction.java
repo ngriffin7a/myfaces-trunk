@@ -31,6 +31,8 @@ import javax.faces.event.AbortProcessingException;
 import javax.faces.event.ActionEvent;
 import java.util.Iterator;
 
+import net.sourceforge.myfaces.component.MyFacesUIParameter;
+
 /**
  * DOCUMENT ME!
  * @author Manfred Geiler
@@ -53,7 +55,18 @@ public class SimpleCountryAction
                 String name = ((UIParameter)child).getName();
                 if (name.equals("id"))
                 {
-                    id = (Long)((UIParameter)child).getValue();
+                    if (child instanceof MyFacesUIParameter)
+                    {
+                        // optimized version.
+                        // read previous value, which is getting restored from state
+                        id = (Long)((MyFacesUIParameter)child).getPrevious();
+                    }
+                    else
+                    {
+                        // read value from model! (SimpleCountryList.getCountries() will be called)
+                        // see behavior of UIData for details
+                        id = (Long)((UIParameter)child).getValue();
+                    }
                 }
             }
         }

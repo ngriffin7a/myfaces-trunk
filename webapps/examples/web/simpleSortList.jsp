@@ -51,31 +51,19 @@ managed beans used:
         <f:facet name="body">
             <h:panel_group id="body">
 
-                <h:output_errors id="errors" />
-
-                <h:panel_list panelClass="standardTable"
+                <x:sort_data_table styleClass="standardTable"
                         headerClass="standardTable_SortHeader"
                         footerClass="standardTable_Footer"
-                        rowClasses="standardTable_Row1,standardTable_Row2" >
-                    <!-- SORTHEADER -->
-                    <x:sortheader column="type"
-                                  ascending="true"
-                                  columnReference="list.sort"
-                                  ascendingReference="list.ascending" >
-                        <x:sortcolumn id="hdr1" column="type" commandClass="sortLink" key="sort_cartype" bundle="example_messages" />
-                        <x:sortcolumn id="hdr2" column="color" commandClass="sortLink" key="sort_carcolor" bundle="example_messages" />
-                    </x:sortheader>
-                    <!-- DATA -->
-                    <h:panel_data var="car" valueRef="list.cars" >
-                        <h:output_text id="col1" valueRef="car.type" />
-                        <h:output_text id="col2" valueRef="car.color" />
-                    </h:panel_data>
-                    <!-- FOOTER -->
-                    <h:panel_group>
-                        <h:output_text id="ftr1" value="..."  />
-                        <h:output_text id="ftr2" value=""/>
-                    </h:panel_group>
-                </h:panel_list>
+                        rowClasses="standardTable_Row1,standardTable_Row2"
+                        var="car"
+                        value="#{list.cars}"
+                        column="test_col"
+                        ascending="test_asc"
+                 >
+                    <h:column>
+                        <h:output_text value="#{car.type}" />
+                    </h:column>
+                </x:sort_data_table>
 
             </h:panel_group>
         </f:facet>

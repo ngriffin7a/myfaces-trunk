@@ -21,6 +21,9 @@ package net.sourceforge.myfaces.taglib.ext;
 import net.sourceforge.myfaces.component.ext.UISortColumn;
 import net.sourceforge.myfaces.renderkit.html.ext.SortColumnRenderer;
 import net.sourceforge.myfaces.taglib.legacy.CommandHyperlinkTag;
+import net.sourceforge.myfaces.taglib.html.HtmlCommandLinkTag;
+
+import javax.faces.component.UIComponent;
 
 
 /**
@@ -29,8 +32,11 @@ import net.sourceforge.myfaces.taglib.legacy.CommandHyperlinkTag;
  * @version $Revision$ $Date$
  */
 public class SortColumnTag
-    extends CommandHyperlinkTag
+    extends HtmlCommandLinkTag
 {
+    private String _column;
+    private String _defaultAscending;
+
     public String getComponentType()
     {
         return "SortColumn";
@@ -41,14 +47,22 @@ public class SortColumnTag
         return SortColumnRenderer.TYPE;
     }
 
+    protected void setProperties(UIComponent component)
+    {
+        super.setProperties(component);
+
+        setStringProperty(component, UISortColumn.COLUMN_PROP, _column);
+        setStringProperty(component, SortColumnRenderer.DEFAULT_ASCENDING_ATTR, _defaultAscending);
+    }
+
     public void setColumn(String v)
     {
-        setComponentPropertyString(UISortColumn.COLUMN_PROP, v);
+        _column = v;
     }
 
     public void setDefaultAscending(String b)
     {
-        setRendererAttributeBoolean(SortColumnRenderer.DEFAULT_ASCENDING_ATTR, b);
+        _defaultAscending = b;
     }
 
     /*

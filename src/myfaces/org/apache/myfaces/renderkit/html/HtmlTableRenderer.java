@@ -194,17 +194,31 @@ public class HtmlTableRenderer
 
         Styles(String rowStyles, String columnStyles)
         {
-            StringTokenizer tokenizer = new StringTokenizer(rowStyles, ",");
-            _rowStyle = new String[tokenizer.countTokens()];
-            for (int i = 0; tokenizer.hasMoreTokens(); i++)
+            if (rowStyles != null)
             {
-                _rowStyle[i] = tokenizer.nextToken().trim();
+                StringTokenizer tokenizer = new StringTokenizer(rowStyles, ",");
+                _rowStyle = new String[tokenizer.countTokens()];
+                for (int i = 0; tokenizer.hasMoreTokens(); i++)
+                {
+                    _rowStyle[i] = tokenizer.nextToken().trim();
+                }
             }
-            tokenizer = new StringTokenizer(columnStyles, ",");
-            _columnStyle = new String[tokenizer.countTokens()];
-            for (int i = 0; tokenizer.hasMoreTokens(); i++)
+            else
             {
-                _columnStyle[i] = tokenizer.nextToken().trim();
+                _rowStyle = new String[0];
+            }
+            if (columnStyles != null)
+            {
+                StringTokenizer tokenizer = new StringTokenizer(columnStyles, ",");
+                _columnStyle = new String[tokenizer.countTokens()];
+                for (int i = 0; tokenizer.hasMoreTokens(); i++)
+                {
+                    _columnStyle[i] = tokenizer.nextToken().trim();
+                }
+            }
+            else
+            {
+                _columnStyle = new String[0];
             }
         }
 

@@ -470,6 +470,12 @@
       </renderer>
 
       <renderer>
+          <renderer-type>Table</renderer-type>
+          <renderer-class>net.sourceforge.myfaces.renderkit.html.HtmlTableRenderer</renderer-class>
+          <supported-component-type><component-type>DataTable</component-type></supported-component-type>
+      </renderer>
+
+      <renderer>
           <renderer-type>Textarea</renderer-type>
           <renderer-class>net.sourceforge.myfaces.renderkit.html.HtmlTextareaRenderer</renderer-class>
           <supported-component-type><component-type>InputTextarea</component-type></supported-component-type>
@@ -482,12 +488,6 @@
           <supported-component-type><component-type>OutputText</component-type></supported-component-type>
       </renderer>
 
-
-      <renderer>
-          <renderer-type>Table</renderer-type>
-          <renderer-class>net.sourceforge.myfaces.renderkit.html.HtmlTableRenderer</renderer-class>
-          <supported-component-type><component-type>DataTable</component-type></supported-component-type>
-      </renderer>
 
       <!-- TODO: other renderers... -->
 

@@ -146,7 +146,7 @@ Start of revised 1.0 conforming tags (in alphabetical order)
             <name>footerClass</name>
             <required>false</required>
             <rtexprvalue>false</rtexprvalue>
-        </attribute>
+        </attribute>          
         <attribute>
             <name>headerClass</name>
             <required>false</required>

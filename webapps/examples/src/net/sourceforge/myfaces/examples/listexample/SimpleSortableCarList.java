@@ -44,10 +44,10 @@ public class SimpleSortableCarList
         _cars.add(new SimpleCar("car E", "orange"));
     }
 
-    public Iterator getCars()
+    public List getCars()
     {
         sort(getSort(), isAscending());
-        return _cars.iterator();
+        return _cars;
     }
 
     protected boolean isDefaultAscending(String sortColumn)

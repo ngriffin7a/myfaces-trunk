@@ -89,6 +89,68 @@
         <!-- TODO attributes image, label - old todo.. still necessary?-->
     </tag>
 
+<!-- data_table -->
+    <tag>
+        <name>sort_data_table</name>
+        <tag-class>net.sourceforge.myfaces.taglib.ext.HtmlSortDataTableTag</tag-class>
+        <body-content>JSP</body-content>
+        &ui_component_attributes;
+        &ui_panel_attributes;
+        &html_universal_attributes;
+        &html_event_handler_attributes;
+        &html_table_attributes;
+        &user_role_attributes;
+        <!-- UIData attributes -->
+        <attribute>
+            <name>var</name>
+            <required>true</required>
+            <rtexprvalue>false</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>rows</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>first</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
+        </attribute>
+        <!-- HtmlSortDataTable attributes -->
+        <attribute>
+            <name>column</name>
+            <required>true</required>
+            <rtexprvalue>false</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>ascending</name>
+            <required>true</required>
+            <rtexprvalue>false</rtexprvalue>
+        </attribute>
+        <!-- TableRenderer attributes -->
+        <attribute>
+            <name>columnClasses</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>footerClass</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>headerClass</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>rowClasses</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
+        </attribute>
+     </tag>
+
+
 <!-- input_fileupload -->
     <tag>
         <name>input_fileupload</name>

@@ -19,14 +19,46 @@
 package net.sourceforge.myfaces.component;
 
 import javax.faces.component.UIParameter;
+import javax.faces.context.FacesContext;
 
 /**
  * DOCUMENT ME!
  * @author Manfred Geiler (latest modification by $Author$)
+ * @author Thomas Spiegl
  * @version $Revision$ $Date$
- * @deprecated TODO: remove
  */
 public class MyFacesUIParameter
     extends UIParameter
 {
+    private Object _previous;
+
+    public void processDecodes(FacesContext context)
+    {
+        super.processDecodes(context);
+    }
+
+    public Object saveState(FacesContext context)
+    {
+        Object[] values = new Object[2];
+        values[0] = super.saveState(context);
+        values[1] = getValue();
+        return values;
+    }
+
+    public void restoreState(FacesContext context, Object state)
+    {
+        Object values[] = (Object[])state;
+        super.restoreState(context, values[0]);
+        _previous = values[1];
+    }
+
+    public Object getPrevious()
+    {
+        return _previous;
+    }
+
+    public void setPrevious(Object previous)
+    {
+        _previous = previous;
+    }
 }

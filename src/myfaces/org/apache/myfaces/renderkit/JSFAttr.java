@@ -158,6 +158,13 @@ public class JSFAttr
     public static final String VAR_ATTR                    = "var";
     public static final String FIRST_ATTR                  = "first";
 
+
+    //~ Myfaces Extensions -------------------------------------------------------------------------------
+
+    // UISortData attributes
+    public static final String COLUMN_ATTR                 = "column";
+    public static final String ASCENDING_ATTR              = "ascending";
+
     //~ Constructors -------------------------------------------------------------------------------
 
     protected JSFAttr()

@@ -47,10 +47,8 @@ Mandatory steps
 * rename <h:selectitem> tags to <f:selectitem> and change attributes:
     label --> itemLabel
 
-<<<<<<< migration-0.4-to-0.9.txt
 * rename <x:file_upload> tags to <x:input_fileupload>
 
-=======
 * tables: see example simpleList.jsp
           removed: <h:panel_data>
           new tag: <h:column> (containing facet header and footer)
@@ -60,9 +58,7 @@ Mandatory steps
           new attributes:
              panel_list@var
              panel_list@value
-
-
->>>>>>> 1.7
+          model bean-property: Iterator is not supported anymore, use java.util.List
 
 
 Optional steps (deprecated features)

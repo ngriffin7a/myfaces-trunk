@@ -18,7 +18,7 @@
  */
 package net.sourceforge.myfaces.examples.listexample;
 
-import java.math.BigDecimal;
+
 
 
 /**
@@ -46,7 +46,7 @@ public class SimpleCountryForm
             SimpleCountry simpleCountry = SimpleCountryList.getSimpleCountry(_id);
             if (simpleCountry == null)
             {
-                throw new IllegalStateException("could not find country with id " + _id);
+                return;
             }
             _name = simpleCountry.getName();
             _isoCode = simpleCountry.getIsoCode();
