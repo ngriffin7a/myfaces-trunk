@@ -1,3 +1,21 @@
+/*
+ * MyFaces - the free JSF implementation
+ * Copyright (C) 2003  The MyFaces Team (http://myfaces.sourceforge.net)
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+ */
 package net.sourceforge.myfaces.application;
 
 import net.sourceforge.myfaces.MyFacesTest;
@@ -6,9 +24,14 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
+import javax.faces.application.Application;
 import javax.faces.el.ValueBinding;
 
 
+/**
+ * @author Anton Koinov (latest modification by $Author$)
+ * @version $Revision$ $Date$
+ */
 public class ApplicationTest
     extends MyFacesTest
 {
@@ -27,7 +50,6 @@ public class ApplicationTest
     //~ Methods ------------------------------------------------------------------------------------
 
     public void testVariableBindingCaching()
-    throws InterruptedException
     {
         ValueBinding vb;
 
@@ -36,7 +58,12 @@ public class ApplicationTest
         {
             assertSame(vb, _application.createValueBinding("#{test}"));
         }
-
+    }
+        
+    public void testVariableBindingMutithreadedCaching()
+    throws InterruptedException
+    {
+        final Application application = _application;
         final Random   random   = new Random();
 
         final String[] varNames = new String[VB_COUNT];
@@ -78,7 +105,7 @@ public class ApplicationTest
                                         i = (start < end) ? (i + 1) : (i - 1))
                             {
                                 String       name = varNames[i];
-                                ValueBinding vb = _application.createValueBinding(varNames[i]);
+                                ValueBinding vb = application.createValueBinding(varNames[i]);
                                 synchronized (vbs)
                                 {
                                     if (vbs.containsKey(name))
