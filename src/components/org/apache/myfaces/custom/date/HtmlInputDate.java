@@ -66,7 +66,6 @@ public class HtmlInputDate extends UIInput {
 		if (_type != null) return _type;
 		ValueBinding vb = getValueBinding("type");
 		return vb != null ? (String)vb.getValue(getFacesContext()) : "date";
-
 	}
 
 	public void setType(String string) {
