@@ -124,4 +124,19 @@ public class ManagedBeanCactusTest extends MyFacesServletTestCase
          assertTrue(map.containsKey("nullValue"));
      }
 
+    public void testBug1007234()
+    {
+        Map map = (Map) variableResolver.resolveVariable(getContext(), "filter");
+
+        assertNotNull(map);
+        assertEquals(1, map.size());
+        assertTrue(map.containsKey("mapping"));
+
+        Map mapping = (Map) map.get("mapping");
+
+        assertEquals(3, mapping.size());
+        assertEquals("primaryErrorDAO", mapping.get("PrimaryError"));
+        assertEquals("transactionLatencyDAO", mapping.get("TransactionLatency"));
+        assertEquals("highWaterMarkDAO", mapping.get("HighWaterMark"));
+    }
 }

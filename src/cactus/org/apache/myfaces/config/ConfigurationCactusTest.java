@@ -180,10 +180,4 @@ public class ConfigurationCactusTest extends MyFacesServletTestCase
         assertEquals(net.sourceforge.myfaces.renderkit.html.HtmlButtonRenderer.class, renderer.getClass());
 
     }
-
-
-    public void testNavigationRules()
-    {
-        // TODO:
-    }
 }

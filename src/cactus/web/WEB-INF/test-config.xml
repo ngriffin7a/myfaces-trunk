@@ -12,7 +12,22 @@
 
     &additional_beans;
 
+    <!-- to test for bug #1007234 -->
+    <managed-bean>
+        <managed-bean-name>filter</managed-bean-name>
+        <managed-bean-class>java.util.HashMap</managed-bean-class>
+        <managed-bean-scope>request</managed-bean-scope>
+        <managed-property>
+            <property-name>mapping</property-name>
+            <map-entries>
+                <map-entry><key>PrimaryError</key><value>primaryErrorDAO</value></map-entry>
+                <map-entry><key>TransactionLatency</key><value>transactionLatencyDAO</value></map-entry>
+                <map-entry><key>HighWaterMark</key><value>highWaterMarkDAO</value></map-entry>
+            </map-entries>
+        </managed-property>
+    </managed-bean>
 
+    
     <managed-bean>
         <description>This bean is used to provide values for tests using value bindings</description>
         <managed-bean-name>testDataProvider</managed-bean-name>
