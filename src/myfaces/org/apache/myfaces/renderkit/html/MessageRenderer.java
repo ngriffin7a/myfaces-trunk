@@ -22,6 +22,7 @@ import net.sourceforge.myfaces.component.UIParameter;
 import net.sourceforge.myfaces.renderkit.attr.MessageRendererAttributes;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLEncoder;
 import net.sourceforge.myfaces.util.bundle.BundleUtils;
+import net.sourceforge.myfaces.util.logging.LogUtil;
 
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIOutput;
@@ -43,6 +44,8 @@ public class MessageRenderer
         implements MessageRendererAttributes
 {
     public static final String TYPE = "Message";
+
+    private static final Object[] EMPTY_PARAMS = new Object[0];
 
     public String getRendererType()
     {
@@ -120,13 +123,21 @@ public class MessageRenderer
         }
 
         String text;
-        if (params == null)
+        try
         {
-            text = format.format(new Object[] {});  //OPTIMIZE: static constant
+            if (params == null)
+            {
+                text = format.format(EMPTY_PARAMS);
+            }
+            else
+            {
+                text = format.format(params.toArray());
+            }
         }
-        else
+        catch (Exception e)
         {
-            text = format.format(params.toArray());
+            LogUtil.getLogger().severe(e.getMessage());
+            text = pattern;
         }
 
         writer.write(HTMLEncoder.encode(text, true, true));

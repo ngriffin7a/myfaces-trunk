@@ -37,7 +37,6 @@ import java.util.logging.Level;
  */
 public class LogUtil
 {
-    public static final String LOGGER_NAME = "MyFacesLogger";
     private static final Handler CONSOLE_HANDER = new ConsoleHandler();
     private static MyFacesLogger _logger = null;
 
