@@ -5,6 +5,6 @@
 <component generateStateMethods="false" >
     <component-class>net.sourceforge.myfaces.component.ext.UISaveState</component-class>
     <base-class>javax.faces.component.UIParameter</base-class>
-    <component-type>net.sourceforge.myfaces.UISaveState</component-type>
+    <component-type>net.sourceforge.myfaces.SaveState</component-type>
     <component-family>javax.faces.Parameter</component-family>
 </component>
