@@ -37,6 +37,9 @@ import java.util.List;
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.2  2004/09/02 13:38:02  manolito
+ * protected methods for easier overwriting of header and footer rendering
+ *
  * Revision 1.1  2004/08/20 07:14:43  manolito
  * HtmlDataTable now also supports rowIndexVar and rowCountVar
  *
@@ -203,6 +206,7 @@ public class HtmlTableRendererBase
         afterTable(facesContext, (UIData)uiComponent);
     }
 
+    
     private void renderFacet(FacesContext facesContext,
                              ResponseWriter writer,
                              UIData uiData,
@@ -230,76 +234,91 @@ public class HtmlTableRendererBase
         {
             // Header or Footer present
             String elemName = header ? HTML.THEAD_ELEM : HTML.TFOOT_ELEM;
-            String columnElemName = header ? HTML.TH_ELEM : HTML.TD_ELEM;
-            String style = header ? getHeaderClass(uiData) : getFooterClass(uiData);
 
             HtmlRendererUtils.writePrettyLineSeparator(facesContext);
             writer.startElement(elemName, uiData);
             if (header)
             {
-                renderTableFacet(facesContext, writer, uiData, facet, style, columnElemName, colspan);
-                renderColumnFacet(facesContext, writer, uiData, style, columnElemName, hasColumnFacet, header);
+                String headerStyleClass = getHeaderClass(uiData);
+                if (facet != null) renderTableHeaderRow(facesContext, writer, uiData, facet, headerStyleClass, colspan);
+                if (hasColumnFacet) renderColumnHeaderRow(facesContext, writer, uiData, headerStyleClass);
             }
             else
             {
-                renderColumnFacet(facesContext, writer, uiData, style, columnElemName, hasColumnFacet, header);
-                renderTableFacet(facesContext, writer, uiData, facet, style, columnElemName, colspan);
+                String footerStyleClass = getFooterClass(uiData);
+                if (hasColumnFacet) renderColumnFooterRow(facesContext, writer, uiData, footerStyleClass);
+                if (facet != null) renderTableFooterRow(facesContext, writer, uiData, facet, footerStyleClass, colspan);
             }
             writer.endElement(elemName);
         }
     }
 
-    private void renderColumnFacet(FacesContext facesContext,
-                                   ResponseWriter writer,
-                                   UIData uiData,
-                                   String style,
-                                   String colElementName,
-                                   boolean hasColumnFacet,
-                                   boolean header)
+        
+    protected void renderTableHeaderRow(FacesContext facesContext,
+                                        ResponseWriter writer,
+                                        UIData uiData,
+                                        UIComponent headerFacet,
+                                        String headerStyleClass,
+                                        int colspan)
         throws IOException
     {
-        if (!hasColumnFacet)
-        {
-            return;
-        }
-        HtmlRendererUtils.writePrettyLineSeparator(facesContext);
-        writer.startElement(HTML.TR_ELEM, uiData);
-        for (Iterator it = uiData.getChildren().iterator(); it.hasNext(); )
-        {
-            UIComponent uiComponent = (UIComponent)it.next();
-            if (uiComponent instanceof UIColumn &&
-                ((UIColumn)uiComponent).isRendered())
-            {
-                UIComponent facet = header ?
-                    ((UIColumn)uiComponent).getHeader() : ((UIColumn)uiComponent).getFooter();
-                writer.startElement(colElementName, uiComponent);
-                if(style != null)
-                {
-                     writer.writeAttribute(HTML.CLASS_ATTR, style, null);
-                }
-                if (facet != null)
-                {
-                    RendererUtils.renderChild(facesContext, facet);
-                }
-                writer.endElement(colElementName);
-            }
-        }
-        writer.endElement(HTML.TR_ELEM);
+        renderTableHeaderOrFooterRow(facesContext,
+                                     writer,
+                                     uiData,
+                                     headerFacet,
+                                     headerStyleClass,
+                                     HTML.TH_ELEM,
+                                     colspan);
+    }
+        
+    protected void renderTableFooterRow(FacesContext facesContext,
+                                        ResponseWriter writer,
+                                        UIData uiData,
+                                        UIComponent footerFacet,
+                                        String footerStyleClass,
+                                        int colspan)
+        throws IOException
+    {
+        renderTableHeaderOrFooterRow(facesContext,
+                         writer,
+                         uiData,
+                         footerFacet,
+                         footerStyleClass,
+                         HTML.TD_ELEM,
+                         colspan);
     }
 
-    private void renderTableFacet(FacesContext facesContext,
-                                  ResponseWriter writer,
-                                  UIData uiData,
-                                  UIComponent facet,
-                                  String style,
-                                  String colElementName,
-                                  int colspan)
+
+    protected void renderColumnHeaderRow(FacesContext facesContext,
+                                      ResponseWriter writer,
+                                      UIData uiData,
+                                      String headerStyleClass)
         throws IOException
     {
-        if (facet == null)
-        {
-            return;
-        }
+        renderColumnHeaderOrFooterRow(facesContext, writer, uiData, headerStyleClass, true);
+    }
+
+    protected void renderColumnFooterRow(FacesContext facesContext,
+                                      ResponseWriter writer,
+                                      UIData uiData,
+                                      String footerStyleClass)
+        throws IOException
+    {
+        renderColumnHeaderOrFooterRow(facesContext, writer, uiData, footerStyleClass, false);
+    }
+
+
+
+
+    private void renderTableHeaderOrFooterRow(FacesContext facesContext,
+                                              ResponseWriter writer,
+                                              UIData uiData,
+                                              UIComponent facet,
+                                              String style,
+                                              String colElementName,
+                                              int colspan)
+        throws IOException
+    {
         HtmlRendererUtils.writePrettyLineSeparator(facesContext);
         writer.startElement(HTML.TR_ELEM, uiData);
         if (style != null)
@@ -319,6 +338,82 @@ public class HtmlTableRendererBase
         writer.endElement(colElementName);
         writer.endElement(HTML.TR_ELEM);
     }
+
+
+
+    private void renderColumnHeaderOrFooterRow(FacesContext facesContext,
+                                               ResponseWriter writer,
+                                               UIData uiData,
+                                               String style,
+                                               boolean header)
+        throws IOException
+    {
+        HtmlRendererUtils.writePrettyLineSeparator(facesContext);
+        writer.startElement(HTML.TR_ELEM, uiData);
+        for (Iterator it = uiData.getChildren().iterator(); it.hasNext(); )
+        {
+            UIComponent uiComponent = (UIComponent)it.next();
+            if (uiComponent instanceof UIColumn &&
+                ((UIColumn)uiComponent).isRendered())
+            {
+                if (header)
+                {
+                    renderColumnHeaderCell(facesContext,
+                                           writer,
+                                           (UIColumn)uiComponent,
+                                           style);
+                }
+                else
+                {
+                    renderColumnFooterCell(facesContext,
+                                           writer,
+                                           (UIColumn)uiComponent,
+                                           style);
+                }
+            }
+        }
+        writer.endElement(HTML.TR_ELEM);
+    }
+
+
+    protected void renderColumnHeaderCell(FacesContext facesContext,
+                                          ResponseWriter writer,
+                                          UIColumn uiColumn,
+                                          String headerStyleClass)
+        throws IOException
+    {
+        writer.startElement(HTML.TH_ELEM, uiColumn);
+        if (headerStyleClass != null)
+        {
+             writer.writeAttribute(HTML.CLASS_ATTR, headerStyleClass, null);
+        }
+        UIComponent facet = uiColumn.getHeader();
+        if (facet != null)
+        {
+            RendererUtils.renderChild(facesContext, facet);
+        }
+        writer.endElement(HTML.TH_ELEM);
+    }
+
+    protected void renderColumnFooterCell(FacesContext facesContext,
+                                          ResponseWriter writer,
+                                          UIColumn uiColumn,
+                                          String footerStyleClass)
+        throws IOException
+    {
+        writer.startElement(HTML.TD_ELEM, uiColumn);
+        if (footerStyleClass != null)
+        {
+             writer.writeAttribute(HTML.CLASS_ATTR, footerStyleClass, null);
+        }
+        UIComponent facet = uiColumn.getFooter();
+        if (facet != null)
+        {
+            RendererUtils.renderChild(facesContext, facet);
+        }
+        writer.endElement(HTML.TD_ELEM);
+    }
+
 
     private static String getHeaderClass(UIData component)
     {
