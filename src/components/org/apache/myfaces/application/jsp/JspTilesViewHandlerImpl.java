@@ -41,6 +41,9 @@ import java.util.Locale;
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.12  2004/12/22 08:12:36  manolito
+ * Use lastIndexOf instead of indexOf as suggested by sean.schofield@gmail.com on mailing list
+ *
  * Revision 1.11  2004/12/19 11:42:36  tomsp
  * removed Nullpointer from renderView when no tiles-definition is found
  *
@@ -163,10 +166,10 @@ public class JspTilesViewHandlerImpl
         }
 
         String tilesId = viewId;
-        int idx = tilesId.indexOf(".");
+        int idx = tilesId.lastIndexOf('.');
         if (idx > 0)
         {
-            tilesId = tilesId.substring(0, tilesId.indexOf(".")) + TILES_EXTENSION;
+            tilesId = tilesId.substring(0, idx) + TILES_EXTENSION;
         }
         else
         {
