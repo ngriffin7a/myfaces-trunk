@@ -16,8 +16,6 @@
 package net.sourceforge.myfaces.webapp.webxml;
 
 import net.sourceforge.myfaces.util.ClassUtils;
-import net.sourceforge.myfaces.webapp.MyFacesServlet;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -29,6 +27,9 @@ import java.util.*;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.1  2004/07/16 15:16:10  royalts
+ * moved net.sourceforge.myfaces.webapp.webxml and net.sourceforge.util.xml to share src-tree (needed WebXml for JspTilesViewHandlerImpl)
+ *
  * Revision 1.10  2004/07/01 22:05:16  mwessendorf
  * ASF switch
  *
@@ -91,8 +92,7 @@ public class WebXml
                 continue;
             }
             Class servletClass = ClassUtils.classForName((String)entry.getValue());
-            if (MyFacesServlet.class.isAssignableFrom(servletClass) ||
-                FacesServlet.class.isAssignableFrom(servletClass))
+            if (FacesServlet.class.isAssignableFrom(servletClass))
             {
                 List urlPatterns = (List)_servletMappings.get(servletName);
                 for (Iterator it2 = urlPatterns.iterator(); it2.hasNext(); )

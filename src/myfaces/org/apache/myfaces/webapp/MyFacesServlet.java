@@ -29,6 +29,9 @@ import java.io.IOException;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.18  2004/07/16 15:16:10  royalts
+ * moved net.sourceforge.myfaces.webapp.webxml and net.sourceforge.util.xml to share src-tree (needed WebXml for JspTilesViewHandlerImpl)
+ *
  * Revision 1.17  2004/07/01 22:05:11  mwessendorf
  * ASF switch
  *
@@ -46,11 +49,11 @@ public class MyFacesServlet
     {
         //Check, if ServletContextListener already called
         ServletContext servletContext = servletConfig.getServletContext();
-        Boolean b = (Boolean)servletContext.getAttribute(StartupServletContextListener.FACES_INIT_DONE);
+        Boolean b = (Boolean)servletContext.getAttribute(net.sourceforge.myfaces.webapp.StartupServletContextListener.FACES_INIT_DONE);
         if (b == null || b.booleanValue() == false)
         {
             log.warn("ServletContextListener not yet called");
-            StartupServletContextListener.initFaces(servletConfig.getServletContext());
+            net.sourceforge.myfaces.webapp.StartupServletContextListener.initFaces(servletConfig.getServletContext());
         }
         super.init(servletConfig);
         log.info("MyFacesServlet for context '" + servletConfig.getServletContext().getRealPath("/") + "' initialized.");

@@ -11,4 +11,6 @@ These libraries are only needed for special custom components.
 |                             | RegExprValidator     |
 |-----------------------------|----------------------|
 | jakarta-oro.jar             | RegExprValidator     |
+|-----------------------------|----------------------|
+| struts.jar                  | tiles support        |
 '-----------------------------'----------------------'

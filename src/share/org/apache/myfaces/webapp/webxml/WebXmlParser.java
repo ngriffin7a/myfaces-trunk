@@ -237,11 +237,11 @@ public class WebXmlParser
             {
                 if (n.getNodeName().equals("servlet-name"))
                 {
-                    servletName = XmlUtils.getElementText((Element)n);
+                    servletName = net.sourceforge.myfaces.util.xml.XmlUtils.getElementText((Element)n);
                 }
                 else if (n.getNodeName().equals("url-pattern"))
                 {
-                    urlPattern = XmlUtils.getElementText((Element)n).trim();
+                    urlPattern = net.sourceforge.myfaces.util.xml.XmlUtils.getElementText((Element)n).trim();
                 }
                 else
                 {
