@@ -3,7 +3,8 @@
     (component-class, base-class, component-type?, component-family?, renderer-type?, field*)>
 <!ATTLIST component
     generateConstructor  (true|false) #IMPLIED
-    generateStateMethods (true|false) #IMPLIED>
+    generateStateMethods (true|false) #IMPLIED
+    generateUserRoleMethods (true|false) #IMPLIED>
 
 <!ELEMENT component-class (#PCDATA)>
 <!ELEMENT base-class (#PCDATA)>

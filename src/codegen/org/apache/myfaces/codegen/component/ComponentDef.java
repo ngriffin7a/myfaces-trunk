@@ -44,6 +44,7 @@ public class ComponentDef
     private Map _fieldsMap;
     private boolean _generateStateMethods = true;
     private boolean _generateConstructor = true;
+    private boolean _generateUserRoleMethods = false;
 
     public ComponentDef()
     {
@@ -233,4 +234,13 @@ public class ComponentDef
         writer.println("</component>");
     }
 
+    public boolean isGenerateUserRoleMethods()
+    {
+        return _generateUserRoleMethods;
+    }
+
+    public void setGenerateUserRoleMethods(boolean generateUserRoleMethods)
+    {
+        _generateUserRoleMethods = generateUserRoleMethods;
+    }
 }

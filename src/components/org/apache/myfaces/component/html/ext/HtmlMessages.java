@@ -18,6 +18,9 @@
  */
 package net.sourceforge.myfaces.component.html.ext;
 
+import net.sourceforge.myfaces.component.UserRoleAware;
+import net.sourceforge.myfaces.component.UserRoleUtils;
+
 import javax.faces.context.FacesContext;
 import javax.faces.el.ValueBinding;
 
@@ -27,7 +30,8 @@ import javax.faces.el.ValueBinding;
  * @version $Revision$ $Date$
  */
 public class HtmlMessages
-    extends javax.faces.component.html.HtmlMessages
+        extends javax.faces.component.html.HtmlMessages
+        implements UserRoleAware
 {
     //------------------ GENERATED CODE BEGIN (do not modify!) --------------------
 
@@ -39,6 +43,8 @@ public class HtmlMessages
 
     private String _summaryDetailSeparator = null;
     private String _labelFormat = null;
+    private String _enabledOnUserRole = null;
+    private String _visibleOnUserRole = null;
 
     public HtmlMessages()
     {
@@ -74,13 +80,45 @@ public class HtmlMessages
         return vb != null ? (String)vb.getValue(getFacesContext()) : DEFAULT_LABELFORMAT;
     }
 
+    public void setEnabledOnUserRole(String enabledOnUserRole)
+    {
+        _enabledOnUserRole = enabledOnUserRole;
+    }
+
+    public String getEnabledOnUserRole()
+    {
+        if (_enabledOnUserRole != null) return _enabledOnUserRole;
+        ValueBinding vb = getValueBinding("enabledOnUserRole");
+        return vb != null ? (String)vb.getValue(getFacesContext()) : null;
+    }
+
+    public void setVisibleOnUserRole(String visibleOnUserRole)
+    {
+        _visibleOnUserRole = visibleOnUserRole;
+    }
+
+    public String getVisibleOnUserRole()
+    {
+        if (_visibleOnUserRole != null) return _visibleOnUserRole;
+        ValueBinding vb = getValueBinding("visibleOnUserRole");
+        return vb != null ? (String)vb.getValue(getFacesContext()) : null;
+    }
+
+
+    public boolean isRendered()
+    {
+        if (!UserRoleUtils.isUserInRole(this)) return false;
+        return super.isRendered();
+    }
 
     public Object saveState(FacesContext context)
     {
-        Object values[] = new Object[3];
+        Object values[] = new Object[5];
         values[0] = super.saveState(context);
         values[1] = _summaryDetailSeparator;
         values[2] = _labelFormat;
+        values[3] = _enabledOnUserRole;
+        values[4] = _visibleOnUserRole;
         return ((Object) (values));
     }
 
@@ -90,6 +128,8 @@ public class HtmlMessages
         super.restoreState(context, values[0]);
         _summaryDetailSeparator = (String)values[1];
         _labelFormat = (String)values[2];
+        _enabledOnUserRole = (String)values[3];
+        _visibleOnUserRole = (String)values[4];
     }
     //------------------ GENERATED CODE END ---------------------------------------
 }

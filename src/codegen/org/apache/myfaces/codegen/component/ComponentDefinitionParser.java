@@ -88,6 +88,12 @@ public class ComponentDefinitionParser
             component.setGenerateStateMethods(Boolean.valueOf(generateStateMethods).booleanValue());
         }
 
+        String generateUserRoleMethods = componentElem.getAttribute("generateUserRoleMethods");
+        if (generateUserRoleMethods != null && generateUserRoleMethods.length() > 0)
+        {
+            component.setGenerateUserRoleMethods(Boolean.valueOf(generateUserRoleMethods).booleanValue());
+        }
+
         NodeList fields = componentElem.getElementsByTagName("field");
         for (int i = 0, len = fields.getLength(); i < len; i++)
         {

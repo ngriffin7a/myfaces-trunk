@@ -37,11 +37,13 @@ import java.util.*;
 
 
 /**
- * DOCUMENT ME!
- *
  * @author Manfred Geiler (latest modification by $Author$)
  * @author Anton Koinov
  * @version $Revision$ $Date$
+ * $Log$
+ * Revision 1.13  2004/03/31 11:58:38  manolito
+ * custom component refactoring
+ *
  */
 public class ServletFacesContextImpl
     extends FacesContext

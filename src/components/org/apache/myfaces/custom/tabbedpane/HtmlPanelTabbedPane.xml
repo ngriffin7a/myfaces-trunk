@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE component PUBLIC
+  "-//MyFaces//DTD MyFaces component def 1.0//EN"
+  "http://myfaces.sourceforge.net/dtd/Component.dtd">
+<component>
+    <component-class>net.sourceforge.myfaces.custom.tabbedpane.HtmlPanelTabbedPane</component-class>
+    <base-class>javax.faces.component.html.HtmlPanelGroup</base-class>
+    <component-type>net.sourceforge.myfaces.HtmlPanelTabbedPane</component-type>
+    <component-family>javax.faces.Panel</component-family>
+    <renderer-type>net.sourceforge.myfaces.TabbedPane</renderer-type>
+    <field>
+        <name>selectedIndex</name>
+        <type>int</type>
+    </field>
+    <field>
+        <name>bgcolor</name>
+        <type>java.lang.String</type>
+    </field>
+    <field generateProperty="false" >
+        <name>tabChangeListener</name>
+        <type>javax.faces.el.MethodBinding</type>
+    </field>
+</component>

@@ -72,10 +72,209 @@
         Enhanced standard JSP actions and custom MyFaces actions.
     </description>
 
-<!-- calendar -->
+<!--     Extended standard components     -->
+
+    <!-- commandButton -->
     <tag>
-        <name>calendar</name>
-        <tag-class>net.sourceforge.myfaces.taglib.ext.HtmlCalendarTag</tag-class>
+        <name>commandButton</name>
+        <tag-class>net.sourceforge.myfaces.taglib.html.HtmlCommandButtonTag</tag-class>
+        <body-content>JSP</body-content>
+        <description>
+            Extends standard commandButton by user role support.
+        </description>
+        &standard_command_button_attributes;
+        &user_role_attributes;
+    </tag>
+
+    <!-- commandLink -->
+    <tag>
+        <name>commandLink</name>
+        <tag-class>net.sourceforge.myfaces.taglib.html.ext.HtmlCommandLinkTag</tag-class>
+        <body-content>JSP</body-content>
+        <description>
+            Extends standard commandLink by user role support and the HTML target attribute.
+        </description>
+        &standard_command_link_attributes;
+        &user_role_attributes;
+        <attribute>
+            <name>target</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
+            <description>MyFaces extension: Sometimes it's convenient to open a new window as a result of an action.</description>
+        </attribute>
+    </tag>
+
+    <!-- dataTable -->
+    <tag>
+        <name>dataTable</name>
+        <tag-class>net.sourceforge.myfaces.taglib.html.ext.HtmlDataTableTag</tag-class>
+        <body-content>JSP</body-content>
+        <description>
+            Extended data_table that adds some additional features to the standard
+            data_table action: see attribute descriptions for preserveDataModel,
+            sortColumn, sortAscending and preserveSort.
+        </description>
+        &standard_data_table_attributes;
+        <!-- MyFaces extensions -->
+        &user_role_attributes;
+        <attribute>
+            <name>preserveDataModel</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
+            <description>
+                Indicates whether the state of the whole DataModel should be saved and
+                restored.
+                Default: true
+            </description>
+        </attribute>
+        <attribute>
+            <name>sortColumn</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
+            <description>
+                Value reference to a model property that gives the current sort column name.
+            </description>
+        </attribute>
+        <attribute>
+            <name>sortAscending</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
+            <description>
+                Value reference to a model property that gives the current sort direction.
+            </description>
+        </attribute>
+        <attribute>
+            <name>preserveSort</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
+            <description>
+                Indicates whether the state of the sortColumn and sortAscending attribute
+                should be saved and restored and written back to the model during the
+                update model phase.
+                Default: true
+            </description>
+        </attribute>
+     </tag>
+
+    <!-- inputText -->
+    <tag>
+        <name>inputText</name>
+        <tag-class>net.sourceforge.myfaces.taglib.html.HtmlInputTextTag</tag-class>
+        <body-content>JSP</body-content>
+        <description>
+            Extends standard inputText by user role support.
+        </description>
+        &standard_input_text_attributes;
+        &user_role_attributes;
+    </tag>
+
+    <!-- message -->
+    <tag>
+        <name>message</name>
+        <tag-class>net.sourceforge.myfaces.taglib.html.ext.HtmlMessageTag</tag-class>
+        <body-content>JSP</body-content>
+        <description>
+            MyFaces extension to the standard messages tag: see summaryDetailSeparator attribute
+        </description>
+        &standard_message_attributes;
+        <!-- MyFaces extensions -->
+        &user_role_attributes;
+        <attribute>
+            <name>summaryDetailSeparator</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
+            <description>
+                Text, that will be rendered between summary and detail.
+                Default: ": "
+            </description>
+        </attribute>
+    </tag>
+
+    <!-- messages -->
+    <tag>
+        <name>messages</name>
+        <tag-class>net.sourceforge.myfaces.taglib.ext.HtmlMessagesTag</tag-class>
+        <body-content>JSP</body-content>
+        <description>
+            MyFaces extension to the standard messages tag: see showInputLabel attribute
+        </description>
+        &standard_messages_attributes;
+        <!-- MyFaces extensions -->
+        &user_role_attributes;
+        <attribute>
+            <name>summaryDetailSeparator</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
+            <description>
+                Text, that will be rendered between summary and detail for all
+                messages that do not apply to a component.
+                Default: ": "
+            </description>
+        </attribute>
+        <attribute>
+            <name>labelFormat</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
+            <description>
+                Text, that will be rendered after the summary for all
+                messages that apply to a component.
+                The renderer tries to find a label for the UIInput that applies to this message.
+                If a label was found, the labelSeparatorFormat text is interpreted as a MessageFormat
+                pattern with the found label text as single argument.
+                Example: summary = "Validation error", labelFormat = " in field {0}"
+                         The text "Validation error in field xyz" will be rendered if "xyz" is
+                         the text of a HtmlOutputLabel component that applies to the component
+                         the current message is associated with.
+                Default: " in {0}"
+            </description>
+        </attribute>
+    </tag>
+
+    <!-- outputLabel -->
+    <tag>
+        <name>outputLabel</name>
+        <tag-class>net.sourceforge.myfaces.taglib.html.HtmlOutputLabelTag</tag-class>
+        <body-content>JSP</body-content>
+        <description>
+            Extends standard outputLabel by user role support.
+        </description>
+        &standard_output_label_attributes;
+        &user_role_attributes;
+    </tag>
+
+    <!-- panelGroup -->
+    <tag>
+        <name>panelGroup</name>
+        <tag-class>net.sourceforge.myfaces.taglib.html.HtmlPanelGroupTag</tag-class>
+        <body-content>JSP</body-content>
+        <description>
+            Extends standard panelGroup by user role support.
+        </description>
+        &standard_panel_group_attributes;
+        &user_role_attributes;
+    </tag>
+
+    <!-- selectOneMenu -->
+    <tag>
+        <name>selectOneMenu</name>
+        <tag-class>net.sourceforge.myfaces.taglib.html.HtmlSelectOneMenuTag</tag-class>
+        <body-content>JSP</body-content>
+        <description>
+            Extends standard selectOneMenu by user role support.
+        </description>
+        &standard_select_one_menu_attributes;
+        &user_role_attributes;
+    </tag>
+
+
+
+
+<!--     Custom components     -->
+
+    <!-- calendar -->
+    <tag>
+        <name>inputCalendar</name>
+        <tag-class>net.sourceforge.myfaces.custom.calendar.HtmlInputCalendarTag</tag-class>
         <body-content>JSP</body-content>
         <description>
             Provides a calendar.
@@ -109,40 +308,10 @@
         </attribute>
     </tag>
 
-<!-- commandButton -->
-    <tag>
-        <name>commandButton</name>
-        <tag-class>net.sourceforge.myfaces.taglib.html.HtmlCommandButtonTag</tag-class>
-        <body-content>JSP</body-content>
-        <description>
-            Extends standard commandButton by user role support.
-        </description>
-        &standard_command_button_attributes;
-        &user_role_attributes;
-    </tag>
-
-<!-- commandLink -->
-    <tag>
-        <name>commandLink</name>
-        <tag-class>net.sourceforge.myfaces.taglib.ext.MyfacesHtmlCommandLinkTag</tag-class>
-        <body-content>JSP</body-content>
-        <description>
-            Extends standard commandLink by user role support and the HTML target attribute.
-        </description>
-        &standard_command_link_attributes;
-        &user_role_attributes;
-        <attribute>
-            <name>target</name>
-            <required>false</required>
-            <rtexprvalue>false</rtexprvalue>
-            <description>MyFaces extension: Sometimes it's convenient to open a new window as a result of an action.</description>
-        </attribute>
-    </tag>
-
-<!-- commandNavigation -->
+    <!-- commandNavigation -->
     <tag>
         <name>commandNavigation</name>
-        <tag-class>net.sourceforge.myfaces.taglib.ext.HtmlCommandNavigationTag</tag-class>
+        <tag-class>net.sourceforge.myfaces.custom.navigation.HtmlCommandNavigationTag</tag-class>
         <body-content>JSP</body-content>
         <description>
             Must be nested inside a panel_navigation action and renders a
@@ -173,10 +342,10 @@
         <!-- TODO attributes image, label - old todo.. still necessary?-->
     </tag>
 
-<!-- command_sortheader -->
+    <!-- commandSortHeader -->
     <tag>
         <name>commandSortHeader</name>
-        <tag-class>net.sourceforge.myfaces.taglib.ext.HtmlCommandSortHeaderTag</tag-class>
+        <tag-class>net.sourceforge.myfaces.custom.sortheader.HtmlCommandSortHeaderTag</tag-class>
         <body-content>JSP</body-content>
         <description>
             Clickable sort column header.
@@ -213,10 +382,10 @@
         </attribute>
     </tag>
 
-<!-- dataList -->
+    <!-- dataList -->
     <tag>
         <name>dataList</name>
-        <tag-class>net.sourceforge.myfaces.taglib.ext.HtmlDataListTag</tag-class>
+        <tag-class>net.sourceforge.myfaces.custom.datalist.HtmlDataListTag</tag-class>
         <body-content>JSP</body-content>
         <description>
             Similar to dataTable, but does not render a table. Instead the layout
@@ -280,62 +449,10 @@
         </attribute>
      </tag>
 
-<!-- dataTable -->
-    <tag>
-        <name>dataTable</name>
-        <tag-class>net.sourceforge.myfaces.taglib.ext.MyfacesHtmlDataTableTag</tag-class>
-        <body-content>JSP</body-content>
-        <description>
-            Extended data_table that adds some additional features to the standard
-            data_table action: see attribute descriptions for preserveDataModel,
-            sortColumn, sortAscending and preserveSort.
-        </description>
-        &standard_data_table_attributes;
-        <!-- MyFaces extensions -->
-        &user_role_attributes;
-        <attribute>
-            <name>preserveDataModel</name>
-            <required>false</required>
-            <rtexprvalue>false</rtexprvalue>
-            <description>
-                Indicates whether the state of the whole DataModel should be saved and
-                restored.
-                Default: true
-            </description>
-        </attribute>
-        <attribute>
-            <name>sortColumn</name>
-            <required>false</required>
-            <rtexprvalue>false</rtexprvalue>
-            <description>
-                Value reference to a model property that gives the current sort column name.
-            </description>
-        </attribute>
-        <attribute>
-            <name>sortAscending</name>
-            <required>false</required>
-            <rtexprvalue>false</rtexprvalue>
-            <description>
-                Value reference to a model property that gives the current sort direction.
-            </description>
-        </attribute>
-        <attribute>
-            <name>preserveSort</name>
-            <required>false</required>
-            <rtexprvalue>false</rtexprvalue>
-            <description>
-                Indicates whether the state of the sortColumn and sortAscending attribute
-                should be saved and restored and written back to the model during the
-                update model phase.
-                Default: true
-            </description>
-        </attribute>
-     </tag>
-
-<!-- data_table_scoller -->
+    <!-- dataTableScroller -->
     <tag>
         <name>dataTableScroller</name>
-        <tag-class>net.sourceforge.myfaces.taglib.ext.HtmlDataTableScrollerTag</tag-class>
+        <tag-class>net.sourceforge.myfaces.custom.datatablescroller.HtmlDataTableScrollerTag</tag-class>
         <body-content>JSP</body-content>
         <description>
             Scroller for dataTable
@@ -350,7 +467,7 @@
         </attribute>
      </tag>
 
-<!-- input_fileupload -->
+    <!-- inputFileUpload -->
     <tag>
         <name>inputFileUpload</name>
         <tag-class>net.sourceforge.myfaces.custom.fileupload.HtmlInputFileUploadTag</tag-class>
@@ -373,108 +490,10 @@
         </attribute>
     </tag>
 
-<!-- input_text -->
-    <tag>
-        <name>inputText</name>
-        <tag-class>net.sourceforge.myfaces.taglib.html.HtmlInputTextTag</tag-class>
-        <body-content>JSP</body-content>
-        <description>
-            Extends standard inputText by user role support.
-        </description>
-        &standard_input_text_attributes;
-        &user_role_attributes;
-    </tag>
-
-<!-- message -->
-    <tag>
-        <name>message</name>
-        <tag-class>net.sourceforge.myfaces.taglib.html.ext.HtmlMessageTag</tag-class>
-        <body-content>JSP</body-content>
-        <description>
-            MyFaces extension to the standard messages tag: see summaryDetailSeparator attribute
-        </description>
-        &standard_message_attributes;
-        <!-- MyFaces extensions -->
-        &user_role_attributes;
-        <attribute>
-            <name>summaryDetailSeparator</name>
-            <required>false</required>
-            <rtexprvalue>false</rtexprvalue>
-            <description>
-                Text, that will be rendered between summary and detail.
-                Default: ": "
-            </description>
-        </attribute>
-    </tag>
-
-<!-- messages -->
-    <tag>
-        <name>messages</name>
-        <tag-class>net.sourceforge.myfaces.taglib.ext.HtmlMessagesTag</tag-class>
-        <body-content>JSP</body-content>
-        <description>
-            MyFaces extension to the standard messages tag: see showInputLabel attribute
-        </description>
-        &standard_messages_attributes;
-        <!-- MyFaces extensions -->
-        &user_role_attributes;
-        <attribute>
-            <name>summaryDetailSeparator</name>
-            <required>false</required>
-            <rtexprvalue>false</rtexprvalue>
-            <description>
-                Text, that will be rendered between summary and detail for all
-                messages that do not apply to a component.
-                Default: ": "
-            </description>
-        </attribute>
-        <attribute>
-            <name>labelFormat</name>
-            <required>false</required>
-            <rtexprvalue>false</rtexprvalue>
-            <description>
-                Text, that will be rendered after the summary for all
-                messages that apply to a component.
-                The renderer tries to find a label for the UIInput that applies to this message.
-                If a label was found, the labelSeparatorFormat text is interpreted as a MessageFormat
-                pattern with the found label text as single argument.
-                Example: summary = "Validation error", labelFormat = " in field {0}"
-                         The text "Validation error in field xyz" will be rendered if "xyz" is
-                         the text of a HtmlOutputLabel component that applies to the component
-                         the current message is associated with.
-                Default: " in {0}"
-            </description>
-        </attribute>
-    </tag>
-
-<!-- outputLabel -->
-    <tag>
-        <name>outputLabel</name>
-        <tag-class>net.sourceforge.myfaces.taglib.html.HtmlOutputLabelTag</tag-class>
-        <body-content>JSP</body-content>
-        <description>
-            Extends standard outputLabel by user role support.
-        </description>
-        &standard_output_label_attributes;
-        &user_role_attributes;
-    </tag>
-
-<!-- panelGroup -->
-    <tag>
-        <name>panelGroup</name>
-        <tag-class>net.sourceforge.myfaces.taglib.html.HtmlPanelGroupTag</tag-class>
-        <body-content>JSP</body-content>
-        <description>
-            Extends standard panelGroup by user role support.
-        </description>
-        &standard_panel_group_attributes;
-        &user_role_attributes;
-    </tag>
-
-<!-- panelLayout -->
+    <!-- panelLayout -->
     <tag>
         <name>panelLayout</name>
-        <tag-class>net.sourceforge.myfaces.taglib.ext.HtmlPanelLayoutTag</tag-class>
+        <tag-class>net.sourceforge.myfaces.custom.layout.HtmlPanelLayoutTag</tag-class>
         <body-content>JSP</body-content>
         &ui_panel_attributes;
         &html_universal_attributes;
@@ -543,10 +562,10 @@
         </attribute>
     </tag>
 
-<!-- panel_navigation -->
+    <!-- panelNavigation -->
     <tag>
         <name>panelNavigation</name>
-        <tag-class>net.sourceforge.myfaces.taglib.ext.HtmlPanelNavigationTag</tag-class>
+        <tag-class>net.sourceforge.myfaces.custom.navigation.HtmlPanelNavigationTag</tag-class>
         <body-content>JSP</body-content>
         &ui_panel_attributes;
         &html_universal_attributes;
@@ -618,10 +637,10 @@
         </attribute>
     </tag>
 
-<!-- panel_tab -->
+    <!-- panelTab -->
     <tag>
         <name>panelTab</name>
-        <tag-class>net.sourceforge.myfaces.taglib.ext.HtmlPanelTabTag</tag-class>
+        <tag-class>net.sourceforge.myfaces.custom.tabbedpane.HtmlPanelTabTag</tag-class>
         <body-content>JSP</body-content>
         &ui_panel_attributes;
         &html_universal_attributes;
@@ -637,10 +656,10 @@
         </attribute>
     </tag>
 
-<!-- panel_tabbedpane -->
+    <!-- panelTabbedPane -->
     <tag>
         <name>panelTabbedPane</name>
-        <tag-class>net.sourceforge.myfaces.taglib.ext.HtmlPanelTabbedPaneTag</tag-class>
+        <tag-class>net.sourceforge.myfaces.custom.tabbedpane.HtmlPanelTabbedPaneTag</tag-class>
         <body-content>JSP</body-content>
         &ui_panel_attributes;
         &html_universal_attributes;
@@ -657,10 +676,44 @@
         </attribute>
     </tag>
 
-<!-- saveState -->
+    <!-- radio -->
+    <tag>
+        <name>radio</name>
+        <tag-class>net.sourceforge.myfaces.custom.radio.HtmlRadioTag</tag-class>
+        <body-content>JSP</body-content>
+        <description>
+            Radio Button wich gets its content from an UISelectOne. The Radio
+            asks its parent to find an UISelectOne with id = for-attribute.
+        </description>
+        &user_role_attributes;
+        &html_universal_attributes;
+        &html_event_handler_attributes;
+        <!-- HtmlRadio attributes -->
+        <attribute>
+            <name>for</name>
+            <required>true</required>
+            <rtexprvalue>false</rtexprvalue>
+            <description>
+                 id of the referenced UISelectOne
+            </description>
+        </attribute>
+        <attribute>
+            <name>index</name>
+            <required>true</required>
+            <rtexprvalue>false</rtexprvalue>
+            <description>
+                n-th SelectItem of refered UISelectOne starting with 0.
+            </description>
+        </attribute>
+    </tag>
+
+
+<!--     Custom non-component tags     -->
+
+    <!-- saveState -->
     <tag>
         <name>saveState</name>
-        <tag-class>net.sourceforge.myfaces.taglib.ext.SaveStateTag</tag-class>
+        <tag-class>net.sourceforge.myfaces.custom.savestate.SaveStateTag</tag-class>
         <body-content>JSP</body-content>
         <attribute>
             <name>id</name>
@@ -674,51 +727,13 @@
         </attribute>
     </tag>
 
-<!-- selectOneMenu -->
-    <tag>
-        <name>selectOneMenu</name>
-        <tag-class>net.sourceforge.myfaces.taglib.html.HtmlSelectOneMenuTag</tag-class>
-        <body-content>JSP</body-content>
-        <description>
-            Extends standard selectOneMenu by user role support.
-        </description>
-        &standard_select_one_menu_attributes;
-        &user_role_attributes;
-    </tag>
-
-<!-- selectOneRadio -->
-    <tag>
-        <name>selectOneRadio</name>
-        <tag-class>net.sourceforge.myfaces.taglib.html.ext.HtmlSelectOneRadioTag</tag-class>
-        <body-content>JSP</body-content>
-        &ui_select_one_attributes;
-        &html_universal_attributes;
-        &html_event_handler_attributes;
-        &html_input_radio_attributes;
-        <!-- RadioRenderer attributes -->
-        <attribute>
-            <name>layout</name>
-            <required>false</required>
-            <rtexprvalue>false</rtexprvalue>
-            <type>java.lang.String</type>
-            <description>see JSF Spec. 8.5.10</description>
-        </attribute>
-        <attribute>
-            <name>border</name>
-            <required>false</required>
-            <rtexprvalue>false</rtexprvalue>
-            <type>java.lang.String</type>
-            <description>see JSF Spec. 8.5.10</description>
-        </attribute>
-    </tag>
-
-<!-- updateActionListener -->
+    <!-- updateActionListener -->
     <tag>
         <name>updateActionListener</name>
-        <tag-class>net.sourceforge.myfaces.taglib.ext.UpdateActionListenerTag</tag-class>
+        <tag-class>net.sourceforge.myfaces.custom.updateactionlistener.UpdateActionListenerTag</tag-class>
         <body-content>JSP</body-content>
         <description>
-            Registers a net.sourceforge.myfaces.event.UpdateActionListener at the
+            Registers a net.sourceforge.myfaces.custom.updateactionlistener.UpdateActionListener at the
             parent component.
         </description>
         <attribute>
@@ -738,41 +753,4 @@
         </attribute>
     </tag>
 
-
-
-
-
-
-
-<!-- radio -->
-    <tag>
-        <name>radio</name>
-        <tag-class>net.sourceforge.myfaces.custom.radio.HtmlRadioTag</tag-class>
-        <body-content>JSP</body-content>
-        <description>
-            Radio Button wich gets its content from an UISelectOne. The Radio
-            asks its parent to find an UISelectOne with id = for-attribute.
-        </description>
-        &user_role_attributes;
-        &html_universal_attributes;
-        &html_event_handler_attributes;
-        <!-- HtmlRadio attributes -->
-        <attribute>
-            <name>for</name>
-            <required>true</required>
-            <rtexprvalue>false</rtexprvalue>
-            <description>
-                 id of the refering UISelectOne
-            </description>
-        </attribute>
-        <attribute>
-            <name>index</name>
-            <required>true</required>
-            <rtexprvalue>false</rtexprvalue>
-            <description>
-                n-th SelectItem of refered UISelectOne starting with 0.
-            </description>
-        </attribute>
-    </tag>
-    
 </taglib>

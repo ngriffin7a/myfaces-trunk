@@ -18,6 +18,9 @@
  */
 package net.sourceforge.myfaces.component.html.ext;
 
+import net.sourceforge.myfaces.component.UserRoleAware;
+import net.sourceforge.myfaces.component.UserRoleUtils;
+
 import javax.faces.context.FacesContext;
 import javax.faces.el.ValueBinding;
 
@@ -25,6 +28,9 @@ import javax.faces.el.ValueBinding;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.3  2004/03/31 11:58:33  manolito
+ * custom component refactoring
+ *
  * Revision 1.2  2004/03/30 17:47:32  manolito
  * Message and Messages refactored
  *
@@ -33,7 +39,8 @@ import javax.faces.el.ValueBinding;
  *
  */
 public class HtmlMessage
-    extends javax.faces.component.html.HtmlMessage
+        extends javax.faces.component.html.HtmlMessage
+        implements UserRoleAware
 {
     //------------------ GENERATED CODE BEGIN (do not modify!) --------------------
 
@@ -43,6 +50,8 @@ public class HtmlMessage
     private static final String DEFAULT_SUMMARYDETAILSEPARATOR = ": ";
 
     private String _summaryDetailSeparator = null;
+    private String _enabledOnUserRole = null;
+    private String _visibleOnUserRole = null;
 
     public HtmlMessage()
     {
@@ -66,12 +75,44 @@ public class HtmlMessage
         return vb != null ? (String)vb.getValue(getFacesContext()) : DEFAULT_SUMMARYDETAILSEPARATOR;
     }
 
+    public void setEnabledOnUserRole(String enabledOnUserRole)
+    {
+        _enabledOnUserRole = enabledOnUserRole;
+    }
+
+    public String getEnabledOnUserRole()
+    {
+        if (_enabledOnUserRole != null) return _enabledOnUserRole;
+        ValueBinding vb = getValueBinding("enabledOnUserRole");
+        return vb != null ? (String)vb.getValue(getFacesContext()) : null;
+    }
+
+    public void setVisibleOnUserRole(String visibleOnUserRole)
+    {
+        _visibleOnUserRole = visibleOnUserRole;
+    }
+
+    public String getVisibleOnUserRole()
+    {
+        if (_visibleOnUserRole != null) return _visibleOnUserRole;
+        ValueBinding vb = getValueBinding("visibleOnUserRole");
+        return vb != null ? (String)vb.getValue(getFacesContext()) : null;
+    }
+
+
+    public boolean isRendered()
+    {
+        if (!UserRoleUtils.isUserInRole(this)) return false;
+        return super.isRendered();
+    }
 
     public Object saveState(FacesContext context)
     {
-        Object values[] = new Object[2];
+        Object values[] = new Object[4];
         values[0] = super.saveState(context);
         values[1] = _summaryDetailSeparator;
+        values[2] = _enabledOnUserRole;
+        values[3] = _visibleOnUserRole;
         return ((Object) (values));
     }
 
@@ -80,6 +121,8 @@ public class HtmlMessage
         Object values[] = (Object[])state;
         super.restoreState(context, values[0]);
         _summaryDetailSeparator = (String)values[1];
+        _enabledOnUserRole = (String)values[2];
+        _visibleOnUserRole = (String)values[3];
     }
     //------------------ GENERATED CODE END ---------------------------------------
 }

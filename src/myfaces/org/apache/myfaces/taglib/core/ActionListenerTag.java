@@ -35,13 +35,13 @@ import javax.servlet.jsp.tagext.TagSupport;
  * @version $Revision$ $Date$
  */
 public class ActionListenerTag
-    extends TagSupport
+        extends TagSupport
 {
     //private static final Log log = LogFactory.getLog(ActionListenerTag.class);
 
     private String _type = null;
 
-    public ActionListenerTag()
+    protected ActionListenerTag()
     {
     }
 
@@ -93,6 +93,4 @@ public class ActionListenerTag
 
         return Tag.SKIP_BODY;
     }
-
-
 }

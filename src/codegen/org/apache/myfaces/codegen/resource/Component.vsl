@@ -85,6 +85,14 @@ $I____#end
 $I__#end
 $I#end
 
+$I#if ($c.isGenerateUserRoleMethods() )
+    public boolean isRendered()
+    {
+        if (!UserRoleUtils.isUserInRole(this)) return false;
+        return super.isRendered();
+    }
+$I#end
+
 $I#if ($c.isGenerateStateMethods() )
 $I__#if ($c.saveStateFields.size() > 0)
     public Object saveState(FacesContext context)
