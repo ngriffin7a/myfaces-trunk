@@ -30,6 +30,12 @@
         <servlet-class>net.sourceforge.myfaces.webapp.MyFacesServlet</servlet-class>
     </servlet>
 
+    <!-- Dummy Servlet -->
+    <servlet>
+        <servlet-name>dummy</servlet-name>
+        <servlet-class>net.sourceforge.myfaces.webapp.DummyServlet</servlet-class>
+    </servlet>
+
     <!-- virtual path mapping -->
     <servlet-mapping>
         <servlet-name>Faces Servlet</servlet-name>
@@ -46,4 +52,11 @@
         <servlet-name>Faces Servlet</servlet-name>
         <url-pattern>*.jsf</url-pattern>
     </servlet-mapping>
+    
+    <!-- Dummy Servlet Mapping -->
+      <servlet-mapping>
+        <servlet-name>dummy</servlet-name>
+        <url-pattern>*.do</url-pattern>
+      </servlet-mapping>
+
 </web-app>

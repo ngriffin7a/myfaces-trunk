@@ -66,7 +66,16 @@ public class JspViewHandlerImplTest
         testViewIdPath("/extension/test.jsf", null, "/extension/bde", "/extension/bde.jsf");
     }
 
-    private void testViewIdPath(String servletPath, String pathInfo, String viewId, String viewIdexp)
+    /*
+    public void testStrutsPath() throws Exception {
+        testViewIdPath("/start.do", null, "/abc.jsp", "/extension/bde.jsf");
+    }
+    */
+
+    private void testViewIdPath(String servletPath,
+                                String pathInfo,
+                                String viewId,
+                                String expectedViewIdPath)
     {
         ((ServletRequestMockImpl)_httpServletRequest).setServletPath(servletPath);
         ((ServletRequestMockImpl)_httpServletRequest).setPathInfo(pathInfo);
@@ -79,7 +88,9 @@ public class JspViewHandlerImplTest
 
         JspViewHandlerImpl viewHandler = new JspViewHandlerImpl();
         String viewpath = viewHandler.getViewIdPath(_facesContext, viewId);
-        assertEquals(viewIdexp, viewpath);
+        assertEquals(expectedViewIdPath, viewpath);
     }
+
+
 
 }
