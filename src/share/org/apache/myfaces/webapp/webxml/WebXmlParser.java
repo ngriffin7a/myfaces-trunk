@@ -143,7 +143,7 @@ public class WebXmlParser
         {
             if (systemId == null)
             {
-                throw new UnsupportedOperationException("systenId must not be null");
+                throw new UnsupportedOperationException("systemId must not be null");
             }
 
             if (systemId.equals(WebXmlParser.WEB_APP_2_2_SYSTEM_ID) ||
