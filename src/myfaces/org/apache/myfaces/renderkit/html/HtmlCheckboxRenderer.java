@@ -43,7 +43,7 @@ extends HtmlRenderer
     {
         RendererUtils.checkParamValidity(facesContext, uiComponent,
                                          UISelectBoolean.class);
-        HtmlRendererUtils.drawCheckbox(facesContext, uiComponent, EXTERNAL_TRUE_VALUE, null,
+        HtmlRendererUtils.renderCheckbox(facesContext, uiComponent, EXTERNAL_TRUE_VALUE, null,
                                        ((UISelectBoolean)uiComponent).isSelected());
     }
 

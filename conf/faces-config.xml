@@ -405,6 +405,12 @@
       </renderer>
 
       <renderer>
+          <renderer-type>Grid</renderer-type>
+          <renderer-class>net.sourceforge.myfaces.renderkit.html.HtmlGridRenderer</renderer-class>
+          <supported-component-type><component-type>PanelGrid</component-type></supported-component-type>
+      </renderer>
+
+      <renderer>
           <renderer-type>Group</renderer-type>
           <renderer-class>net.sourceforge.myfaces.renderkit.html.HtmlGroupRenderer</renderer-class>
           <supported-component-type><component-type>PanelGroup</component-type></supported-component-type>
@@ -459,6 +465,12 @@
           <renderer-type>Messages</renderer-type>
           <renderer-class>net.sourceforge.myfaces.renderkit.html.HtmlMessagesRenderer</renderer-class>
           <supported-component-type><component-type>Messages</component-type></supported-component-type>
+      </renderer>
+
+      <renderer>
+          <renderer-type>Radio</renderer-type>
+          <renderer-class>net.sourceforge.myfaces.renderkit.html.HtmlRadioRenderer</renderer-class>
+          <supported-component-type><component-type>SelectOneRadio</component-type></supported-component-type>
       </renderer>
 
       <renderer>

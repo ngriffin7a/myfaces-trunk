@@ -24,7 +24,6 @@ import net.sourceforge.myfaces.convert.ConverterUtils;
 import net.sourceforge.myfaces.convert.impl.StringArrayConverter;
 import net.sourceforge.myfaces.renderkit.RendererUtils;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLUtil;
-import net.sourceforge.myfaces.util.HashMapUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -225,11 +224,11 @@ public class HtmlRendererUtils
     }
 
 
-    public static void drawCheckbox(FacesContext facesContext,
-                                    UIComponent uiComponent,
-                                    String value,
-                                    String label,
-                                    boolean checked)
+    public static void renderCheckbox(FacesContext facesContext,
+                                      UIComponent uiComponent,
+                                      String value,
+                                      String label,
+                                      boolean checked)
             throws IOException
     {
         String clientId = uiComponent.getClientId(facesContext);
@@ -257,8 +256,10 @@ public class HtmlRendererUtils
         if ((label != null) && (label.length() > 0))
         {
             writer.write(HTML.NBSP_ENTITY);
-            writer.write(label);
+            writer.writeText(label, null);
         }
+
+        writer.endElement(HTML.INPUT_ELEM);
     }
 
 
@@ -346,7 +347,7 @@ public class HtmlRendererUtils
         Set lookupSet;
         if (selectMany)
         {
-            lookupSet = getSelectedValuesAsSet((UISelectMany)uiComponent);
+            lookupSet = RendererUtils.getSelectedValuesAsSet((UISelectMany)uiComponent);
         }
         else
         {
@@ -385,49 +386,42 @@ public class HtmlRendererUtils
     }
 
 
-    private static Set getSelectedValuesAsSet(UISelectMany uiSelectMany)
+    public static void renderRadio(FacesContext facesContext,
+                                   UIInput uiComponent,
+                                   String value,
+                                   String label,
+                                   boolean checked)
+            throws IOException
     {
-        Object selectedValues = uiSelectMany.getValue();
-        if (selectedValues == null)
+        String clientId = uiComponent.getClientId(facesContext);
+
+        ResponseWriter writer = facesContext.getResponseWriter();
+
+        writer.startElement(HTML.INPUT_ELEM, uiComponent);
+        writer.writeAttribute(HTML.TYPE_ATTR, HTML.INPUT_TYPE_RADIO, null);
+        writer.writeAttribute(HTML.NAME_ATTR, clientId, null);
+        writer.writeAttribute(HTML.ID_ATTR, clientId, null);
+
+        if (checked)
         {
-            return Collections.EMPTY_SET;
+            writer.writeAttribute(HTML.CHECKED_ATTR, HTML.INPUT_CHECKED_VALUE, null);
         }
 
-        if (selectedValues.getClass().isArray())
+        if ((value != null) && (value.length() > 0))
         {
-            Object[] ar = (Object[])selectedValues;
-            if (ar.length == 0)
-            {
-                return Collections.EMPTY_SET;
-            }
-            else
-            {
-                HashSet set = new HashSet(HashMapUtils.calcCapacity(ar.length));
-                for (int i = 0; i < ar.length; i++)
-                {
-                    set.add(ar[i]);
-                }
-                return set;
-            }
+            writer.writeAttribute(HTML.VALUE_ATTR, value, null);
         }
-        else if (selectedValues instanceof List)
+
+        HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML.INPUT_PASSTHROUGH_ATTRIBUTES);
+        HTMLUtil.renderDisabledOnUserRole(writer, uiComponent, facesContext);
+
+        if ((label != null) && (label.length() > 0))
         {
-            List lst = (List)selectedValues;
-            if (lst.size() == 0)
-            {
-                return Collections.EMPTY_SET;
-            }
-            else
-            {
-                HashSet set = new HashSet(HashMapUtils.calcCapacity(lst.size()));
-                set.addAll(lst);
-                return set;
-            }
+            writer.write(HTML.NBSP_ENTITY);
+            writer.writeText(label, null);
         }
-        else
-        {
-            throw new IllegalArgumentException("Value of UISelectMany component with id " + uiSelectMany.getClientId(FacesContext.getCurrentInstance()) + " is not of type Array or List");
-        }
+
+        writer.endElement(HTML.INPUT_ELEM);
     }
 
 }

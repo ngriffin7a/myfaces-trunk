@@ -52,56 +52,53 @@ managed beans used:
 
         <f:facet name="body">
             <h:panel_group id="body">
-                <h:form formName="formName">
+                <h:form name="formName">
 
                     <h:panel_grid columns="2">
 
-                        <h:output_label for="selone_lb" key="label_cars" bundle="example_messages"></h:output_label>
-                        <h:selectone_listbox valueRef="carconf.car" >
-                            <h:selectitems id="selone_lb_cars" valueRef="carconf.cars" />
+                        <h:output_label for="selone_lb" value="#{example_messages['label_cars']}" />
+                        <h:selectone_listbox value="#{carconf.car}" >
+                            <f:selectitems id="selone_lb_cars" value="#{carconf.cars}" />
                         </h:selectone_listbox>
 
-                        <h:output_label for="selone_menu" key="label_colors" bundle="example_messages"></h:output_label>
-                        <h:selectone_menu size="3" valueRef="carconf.color" >
-                            <h:selectitem key="empty_selitem" bundle="example_messages" ></h:selectitem>
-                            <h:selectitems valueRef="carconf.colors" />
+                        <h:output_label for="selone_menu" value="#{example_messages['label_colors']}" />
+                        <h:selectone_menu size="3" value="#{carconf.color}" >
+                            <f:selectitem itemValue="#{example_messages['empty_selitem']}" />
+                            <f:selectitems value="#{carconf.colors}" />
                         </h:selectone_menu>
 
-                        <h:output_label for="selone_menu" key="label_extras" bundle="example_messages"></h:output_label>
+                        <h:output_label for="selone_menu" value="#{example_messages['label_extras']}" />
                         <br>
-                        <h:selectmany_checkbox valueRef="carconf.extras" >
-                            <h:selectitems valueRef="carconf.extrasList" />
-                        </h:selectmany_checkbox>
+                        <h:selectmany_checkboxlist value="#{carconf.extras}" >
+                            <f:selectitems value="#{carconf.extrasList}" />
+                        </h:selectmany_checkboxlist>
 
                         <h:output_text value="" />
                         <h:panel_group >
-                            <h:selectone_radio id="r1" valueRef="carconf.discount" layout="PAGE_DIRECTION"  >
-                                <h:selectitem value="0" key="discount_0" bundle="example_messages" selected="true" />
-                                <h:selectitem value="1" key="discount_1" bundle="example_messages"  />
-                                <h:selectitem value="2" key="discount_2" bundle="example_messages"  />
+                            <h:selectone_radio id="r1" value="#{carconf.discount}" layout="PAGE_DIRECTION"  >
+                                <f:selectitem itemValue="0" itemLabel="#{example_messages['discount_0']}" />
+                                <f:selectitem itemValue="1" itemLabel="#{example_messages['discount_1']}"  />
+                                <f:selectitem itemValue="2" itemLabel="#{example_messages['discount_2']}"  />
                             </h:selectone_radio>
-                            <!-- h:output_label for="cb1" key="discount_1" bundle="example_messages"> /h:output_label> -->
                         </h:panel_group>
 
                         <h:output_text value="" />
                         <h:panel_group >
                             <br>
-                            <x:selectone_radio id="r2" valueRef="carconf.discount2" layout="PAGE_DIRECTION"  >
-                                <h:selectitem value="0" key="discount_2_0" bundle="example_messages" selected="true" />
-                                <br><b>
-                                <h:output_message key="radio_hint" bundle="example_messages" /></b>
-                                <h:selectitem value="1" key="discount_2_1" bundle="example_messages"  />
-                            </x:selectone_radio>
-                            <!-- h:output_label for="cb1" key="discount_1" bundle="example_messages"> /h:output_label> -->
+                            <h:selectone_radio id="r2" value="#{carconf.discount2}" layout="PAGE_DIRECTION"  >
+                                <f:selectitem itemValue="0" itemLabel="#{example_messages['discount_2_0']}" />
+                                <!-- TODO: h:output_message key="radio_hint" bundle="example_messages" -->
+                                <f:selectitem itemValue="1" itemLabel="#{example_messages['discount_2_1']}" />
+                            </h:selectone_radio>
                         </h:panel_group>
                         <h:output_text value="" />
-                        <h:command_button actionRef="carconf.calcPriceAction" key="button_calcprice" bundle="example_messages"/>
+                        <h:command_button action="#{carconf.calcPrice}" value="#{example_messages['button_calcprice']}" />
 
                     </h:panel_grid>
                 </h:form>
 
-                <h:output_message key="msg_price" bundle="example_messages" >
-                    <f:parameter valueRef="carconf.price" />
+                <h:output_message value="#{example_messages['msg_price']}" >
+                    <f:parameter value="#{carconf.price}" />
                 </h:output_message>
 
             </h:panel_group>

@@ -20,6 +20,7 @@ package net.sourceforge.myfaces.renderkit;
 
 import net.sourceforge.myfaces.component.ComponentUtils;
 import net.sourceforge.myfaces.component.UserRoleSupport;
+import net.sourceforge.myfaces.util.HashMapUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -29,9 +30,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.el.ValueBinding;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author Manfred Geiler (latest modification by $Author$)
@@ -367,6 +366,59 @@ public class RendererUtils
             }
         }
         return list;
+    }
+
+
+    /**
+     * Convenient utility method that returns the currently selected values of
+     * a UISelectMany component as a Set, of which the contains method can then be
+     * easily used to determine if a value is currently selected.
+     * @param uiSelectMany
+     * @return Set containing all currently selected values
+     */
+    public static Set getSelectedValuesAsSet(UISelectMany uiSelectMany)
+    {
+        Object selectedValues = uiSelectMany.getValue();
+        if (selectedValues == null)
+        {
+            return Collections.EMPTY_SET;
+        }
+
+        if (selectedValues.getClass().isArray())
+        {
+            Object[] ar = (Object[])selectedValues;
+            if (ar.length == 0)
+            {
+                return Collections.EMPTY_SET;
+            }
+            else
+            {
+                HashSet set = new HashSet(HashMapUtils.calcCapacity(ar.length));
+                for (int i = 0; i < ar.length; i++)
+                {
+                    set.add(ar[i]);
+                }
+                return set;
+            }
+        }
+        else if (selectedValues instanceof List)
+        {
+            List lst = (List)selectedValues;
+            if (lst.size() == 0)
+            {
+                return Collections.EMPTY_SET;
+            }
+            else
+            {
+                HashSet set = new HashSet(HashMapUtils.calcCapacity(lst.size()));
+                set.addAll(lst);
+                return set;
+            }
+        }
+        else
+        {
+            throw new IllegalArgumentException("Value of UISelectMany component with id " + uiSelectMany.getClientId(FacesContext.getCurrentInstance()) + " is not of type Array or List");
+        }
     }
 
 

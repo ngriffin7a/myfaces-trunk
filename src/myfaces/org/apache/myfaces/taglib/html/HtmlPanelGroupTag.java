@@ -36,4 +36,13 @@ public class HtmlPanelGroupTag
     {
         return "PanelGroup";
     }
+
+    // UIComponent attributes --> already implemented in MyfacesComponentTag
+
+    // user role attributes --> already implemented in MyfacesComponentTag
+
+    // HTML universal attributes --> already implemented in HtmlComponentTag
+
+    // HTML event handler attributes --> already implemented in HtmlComponentTag
+
 }

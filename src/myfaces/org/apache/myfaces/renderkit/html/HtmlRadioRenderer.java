@@ -1,4 +1,4 @@
-/**
+/*
  * MyFaces - the free JSF implementation
  * Copyright (C) 2003, 2004  The MyFaces Team (http://myfaces.sourceforge.net)
  *
@@ -24,7 +24,7 @@ import org.apache.commons.logging.LogFactory;
 
 import javax.faces.FacesException;
 import javax.faces.component.UIComponent;
-import javax.faces.component.html.HtmlSelectManyCheckboxList;
+import javax.faces.component.html.HtmlSelectOneRadio;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 import javax.faces.convert.Converter;
@@ -32,32 +32,26 @@ import javax.faces.model.SelectItem;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
-
 
 /**
- * DOCUMENT ME!
- * @author Thomas Spiegl (latest modification by $Author$)
- * @author Anton Koinov
+ * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public class HtmlCheckboxListRenderer
+public class HtmlRadioRenderer
         extends HtmlRenderer
 {
-    private static final Log log = LogFactory.getLog(HtmlCheckboxListRenderer.class);
+    private static final Log log = LogFactory.getLog(HtmlRadioRenderer.class);
 
     private static final String PAGE_DIRECTION = "PAGE_DIRECTION";
     private static final String LINE_DIRECTION = "LINE_DIRECTION";
 
-    public void encodeEnd(FacesContext facesContext, UIComponent uiComponent)
-            throws IOException
+    public void encodeEnd(FacesContext facesContext, UIComponent uiComponent) throws IOException
     {
-        RendererUtils.checkParamValidity(facesContext, uiComponent,
-                                         HtmlSelectManyCheckboxList.class);
+        RendererUtils.checkParamValidity(facesContext, uiComponent, HtmlSelectOneRadio.class);
 
-        HtmlSelectManyCheckboxList selectMany = (HtmlSelectManyCheckboxList)uiComponent;
+        HtmlSelectOneRadio selectOne = (HtmlSelectOneRadio)uiComponent;
 
-        String layout = selectMany.getLayout();
+        String layout = selectOne.getLayout();
         boolean pageDirectionLayout = true; //TODO: Default to PAGE_DIRECTION ?
         if (layout != null)
         {
@@ -71,27 +65,27 @@ public class HtmlCheckboxListRenderer
             }
             else
             {
-                log.error("Wrong layout attribute for component " + selectMany.getClientId(facesContext) + ": " + layout);
+                log.error("Wrong layout attribute for component " + selectOne.getClientId(facesContext) + ": " + layout);
             }
         }
 
         ResponseWriter writer = facesContext.getResponseWriter();
-        writer.startElement(HTML.TABLE_ELEM, selectMany);
-        if (!pageDirectionLayout) writer.startElement(HTML.TR_ELEM, selectMany);
+        writer.startElement(HTML.TABLE_ELEM, selectOne);
+        if (!pageDirectionLayout) writer.startElement(HTML.TR_ELEM, selectOne);
 
         Converter converter;
-        List selectItemList = RendererUtils.getSelectItemList(selectMany);
+        List selectItemList = RendererUtils.getSelectItemList(selectOne);
         try
         {
-            converter = RendererUtils.findUISelectManyConverter(facesContext, selectMany);
+            converter = RendererUtils.findUIOutputConverter(facesContext, selectOne);
         }
         catch (FacesException e)
         {
-            log.error("Error finding Converter for component with id " + selectMany.getClientId(facesContext));
+            log.error("Error finding Converter for component with id " + uiComponent.getClientId(facesContext));
             converter = null;
         }
 
-        Set lookupSet = RendererUtils.getSelectedValuesAsSet(selectMany);
+        Object currentValue = selectOne.getValue();
 
         for (Iterator it = selectItemList.iterator(); it.hasNext(); )
         {
@@ -104,17 +98,18 @@ public class HtmlCheckboxListRenderer
             }
             else
             {
-                itemStrValue = converter.getAsString(facesContext, selectMany, itemValue);
+                itemStrValue = converter.getAsString(facesContext, selectOne, itemValue);
             }
 
             writer.write("\t\t");
-            if (pageDirectionLayout) writer.startElement(HTML.TR_ELEM, selectMany);
-            writer.startElement(HTML.TD_ELEM, selectMany);
-            HtmlRendererUtils.renderCheckbox(facesContext,
-                                           selectMany,
-                                           itemStrValue,
-                                           selectItem.getLabel(),
-                                           lookupSet.contains(itemValue));
+            if (pageDirectionLayout) writer.startElement(HTML.TR_ELEM, selectOne);
+            writer.startElement(HTML.TD_ELEM, selectOne);
+            HtmlRendererUtils.renderRadio(facesContext,
+                                          selectOne,
+                                          itemStrValue,
+                                          selectItem.getLabel(),
+                                          currentValue == null && itemValue == null ||
+                                          currentValue != null && currentValue.equals(itemValue));
             writer.endElement(HTML.TD_ELEM);
             if (pageDirectionLayout) writer.endElement(HTML.TR_ELEM);
         }
@@ -126,10 +121,8 @@ public class HtmlCheckboxListRenderer
 
     public void decode(FacesContext facesContext, UIComponent uiComponent)
     {
-        RendererUtils.checkParamValidity(facesContext, uiComponent,
-                                         HtmlSelectManyCheckboxList.class);
-        HtmlRendererUtils.decodeSelectMany(facesContext,
-                                           (HtmlSelectManyCheckboxList)uiComponent);
+        RendererUtils.checkParamValidity(facesContext, uiComponent, HtmlSelectOneRadio.class);
+        HtmlRendererUtils.decodeInput(facesContext, (HtmlSelectOneRadio)uiComponent);
     }
 
 }

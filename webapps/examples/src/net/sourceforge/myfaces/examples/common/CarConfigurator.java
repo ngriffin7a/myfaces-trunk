@@ -171,7 +171,7 @@ public class CarConfigurator
         _discount2 = discount2;
     }
 
-    public void calcPrice()
+    public String calcPrice()
     {
         init();
         String car = getCar();
@@ -180,7 +180,7 @@ public class CarConfigurator
             color == null)
         {
             _price = new BigDecimal(0);
-            return;
+            return "ok";
         }
 
         BigDecimal carprice = (BigDecimal)_priceList.get(car);
@@ -189,7 +189,7 @@ public class CarConfigurator
             colorfactor == null)
         {
             _price = new BigDecimal(0);
-            return;
+            return "ok";
         }
         _price = carprice.multiply(colorfactor);
 
@@ -235,25 +235,8 @@ public class CarConfigurator
             {
             }
         }
-    }
 
-
-    /*
-    FIXME
-    public Action getCalcPriceAction()
-    {
-        return new Action() {
-            public String invoke()
-            {
-                FacesContext facesContext = FacesContext.getCurrentInstance();
-                ApplicationFactory af = (ApplicationFactory)FactoryFinder.getFactory(FactoryFinder.APPLICATION_FACTORY);
-                ValueBinding vb = af.getApplication().getValueBinding("carconf");
-                CarConfigurator carconf = (CarConfigurator)vb.getValue(facesContext);
-                carconf.calcPrice();
-                return "ok";
-            }
-        };
+        return "ok";
     }
-    */
 
 }

@@ -18,8 +18,6 @@
  */
 package net.sourceforge.myfaces.examples.util;
 
-import net.sourceforge.myfaces.util.bundle.BundleUtils;
-
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 
@@ -33,12 +31,8 @@ public class LocalizedSelectItem
 {
     public LocalizedSelectItem(String key)
     {
-        super(key,
-              BundleUtils.getString(FacesContext.getCurrentInstance(),
-                                    "example_messages",
-                                    key),
-              null);
-
+        super(key, FacesContext.getCurrentInstance()
+                            .getApplication().createValueBinding("#{example_messages['" + key + "']}")
+                                .getValue(FacesContext.getCurrentInstance()).toString());
     }
-
 }
