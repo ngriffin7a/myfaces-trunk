@@ -41,13 +41,13 @@ public class HtmlDataScrollerRenderer
 {
     private static final Log log = LogFactory.getLog(HtmlDataScrollerRenderer.class);
 
-    private static final String FACET_FIRST         = "first".intern();
-    private static final String FACET_PREVOIUS      = "previous".intern();
-    private static final String FACET_NEXT          = "next".intern();
-    private static final String FACET_LAST          = "last".intern();
-    private static final String FACET_FAST_FORWARD  = "fastf".intern();
-    private static final String FACET_FAST_REWIND   = "fastr".intern();
-    private static final String PAGE_NAVIGATION     = "idx".intern();
+    protected static final String FACET_FIRST         = "first".intern();
+    protected static final String FACET_PREVOIUS      = "previous".intern();
+    protected static final String FACET_NEXT          = "next".intern();
+    protected static final String FACET_LAST          = "last".intern();
+    protected static final String FACET_FAST_FORWARD  = "fastf".intern();
+    protected static final String FACET_FAST_REWIND   = "fastr".intern();
+    protected static final String PAGE_NAVIGATION     = "idx".intern();
 
     public static final String RENDERER_TYPE = "net.sourceforge.myfaces.DataScroller";
 
@@ -371,10 +371,6 @@ public class HtmlDataScrollerRenderer
         String id = PAGE_NAVIGATION + Integer.toString(pageIndex);
         Application application = facesContext.getApplication();
 
-        HtmlOutputText uiText =
-            (HtmlOutputText)application.createComponent(HtmlOutputText.COMPONENT_TYPE);
-        uiText.setValue(text);
-
         HtmlCommandLink link =
             (HtmlCommandLink)application.createComponent(HtmlCommandLink.COMPONENT_TYPE);
         link.setId(scroller.getId() + id);
@@ -387,7 +383,13 @@ public class HtmlDataScrollerRenderer
         parameter.setValue(id);
         List children = link.getChildren();
         children.add(parameter);
-        children.add(uiText);
+        if (text != null)
+        {
+            HtmlOutputText uiText =
+                (HtmlOutputText)application.createComponent(HtmlOutputText.COMPONENT_TYPE);
+            uiText.setValue(text);
+            children.add(uiText);
+        }
         return link;
     }
 
@@ -404,13 +406,14 @@ public class HtmlDataScrollerRenderer
         link.setTransient(true);
         UIParameter parameter
                 = (UIParameter)application.createComponent(UIParameter.COMPONENT_TYPE);
-        parameter.setId(facetComp.getId() + facetName + "_param");
+        parameter.setId(scroller.getId() + facetName + "_param");
         parameter.setTransient(true);
         parameter.setName(scroller.getClientId(facesContext));
         parameter.setValue(facetName);
         List children = link.getChildren();
         children.add(parameter);
-        children.add(facetComp);
+        if (facetComp != null)
+            children.add(facetComp);
         return link;
     }
 
@@ -445,7 +448,7 @@ public class HtmlDataScrollerRenderer
         return pageCount;
     }
 
-    private UIData findUIData(HtmlDataScroller scroller, UIComponent component)
+    protected UIData findUIData(HtmlDataScroller scroller, UIComponent component)
     {
         String forStr = scroller.getFor();
         UIComponent forComp;
