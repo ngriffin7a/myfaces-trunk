@@ -231,6 +231,11 @@
             <from-outcome>go_aliasBean</from-outcome>
             <to-view-id>/aliasBean.jsp</to-view-id>
         </navigation-case>
+        
+        <navigation-case>
+            <from-outcome>go_buffer</from-outcome>
+            <to-view-id>/buffer.jsp</to-view-id>
+        </navigation-case>
 
         <navigation-case>
             <from-outcome>go_dataTable</from-outcome>

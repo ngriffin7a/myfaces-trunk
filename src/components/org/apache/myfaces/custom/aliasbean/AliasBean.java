@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.faces.component.UIComponent;
-import javax.faces.component.UIInput;
+import javax.faces.component.UIComponentBase;
 import javax.faces.context.FacesContext;
 import javax.faces.el.ValueBinding;
 import javax.faces.event.AbortProcessingException;
@@ -45,9 +45,12 @@ import org.apache.commons.logging.LogFactory;
  * 
  * @author Sylvain Vieujot (latest modification by $Author$)
  * @version $Revision$ $Date$ $Log$
- * @version $Revision: 1.3 $ $Date: 2004/11/23 04:46:40 $ Revision 1.4  2004/11/23 11:03:35  svieujot
- * @version $Revision: 1.3 $ $Date: 2004/11/23 04:46:40 $ Get ride of the x:aliasBean "permanent" attribute.
- * @version $Revision: 1.3 $ $Date: 2004/11/23 04:46:40 $
+ * @version $Revision: 1.4 $ $Date: 2004/11/23 11:03:35 $ Revision 1.5  2005/01/04 15:41:06  svieujot
+ * @version $Revision: 1.4 $ $Date: 2004/11/23 11:03:35 $ new x:buffer component.
+ * @version $Revision: 1.4 $ $Date: 2004/11/23 11:03:35 $
+ * @version $Revision$ $Date$ Revision 1.4  2004/11/23 11:03:35  svieujot
+ * @version $Revision$ $Date$ Get ride of the x:aliasBean "permanent" attribute.
+ * @version $Revision$ $Date$
  *          Revision 1.3 2004/11/23 04:46:40 svieujot Add an ugly "permanent"
  *          tag to x:aliasBean to handle children events.
  * 
@@ -57,11 +60,11 @@ import org.apache.commons.logging.LogFactory;
  * Revision 1.1 2004/11/08 20:43:15 svieujot Add an x:aliasBean component
  * 
  */
-public class AliasBean extends UIInput {
+public class AliasBean extends UIComponentBase {
     private static final Log log = LogFactory.getLog(AliasBean.class);
 
     public static final String COMPONENT_TYPE = "org.apache.myfaces.AliasBean";
-
+    public static final String COMPONENT_FAMILY = "javax.faces.Data";
     private static final String DEFAULT_RENDERER_TYPE = "org.apache.myfaces.AliasBean";
 
     private String _sourceBeanExpression = null;

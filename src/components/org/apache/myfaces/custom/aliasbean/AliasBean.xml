@@ -6,5 +6,5 @@
     <component-class>org.apache.myfaces.custom.aliasbean.AliasBean</component-class>
     <base-class>javax.faces.component.UIInput</base-class>
     <component-type>org.apache.myfaces.AliasBean</component-type>
-    <component-family>javax.faces.Input</component-family>
+    <component-family>javax.faces.Data</component-family>
 </component>

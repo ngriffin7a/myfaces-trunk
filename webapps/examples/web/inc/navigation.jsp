@@ -14,6 +14,7 @@
         <x:commandNavigation id="nav_2_3" value="#{example_messages['nav_Validate']}" action="go_validate" />
         <x:commandNavigation id="nav_2_4" value="#{example_messages['nav_Components']}" >
             <x:commandNavigation id="nav_2_4_1" value="#{example_messages['nav_aliasBean']}" action="go_aliasBean" />
+            <x:commandNavigation id="nav_2_4_1_2" value="#{example_messages['nav_buffer']}" action="go_buffer" />
             <x:commandNavigation id="nav_2_4_2" value="#{example_messages['nav_dataTable']}" action="go_dataTable" />
             <x:commandNavigation id="nav_2_4_3" value="#{example_messages['nav_sortTable']}" action="go_sortTable" />
             <x:commandNavigation id="nav_2_4_4" value="#{example_messages['nav_Selectbox']}" action="go_selectbox" />

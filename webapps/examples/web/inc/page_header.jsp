@@ -24,6 +24,7 @@
             <x:navigationMenuItem id="nav_2_3" itemLabel="#{example_messages['nav_Validate']}" action="go_validate" icon="images/myfaces.gif" />
             <x:navigationMenuItem id="nav_2_4" itemLabel="#{example_messages['nav_Components']}" icon="images/component.gif" split="true" >
 	            <x:navigationMenuItem id="nav_2_4_1" itemLabel="#{example_messages['nav_aliasBean']}" action="go_aliasBean" icon="images/myfaces.gif" />
+  	            <x:navigationMenuItem id="nav_2_4_1_2" itemLabel="#{example_messages['nav_buffer']}" action="go_buffer" icon="images/myfaces.gif" />
                 <x:navigationMenuItem id="nav_2_4_2" itemLabel="#{example_messages['nav_dataTable']}" action="go_dataTable" icon="images/myfaces.gif" />
                 <x:navigationMenuItem id="nav_2_4_3" itemLabel="#{example_messages['nav_sortTable']}" action="go_sortTable" icon="images/myfaces.gif" />
                 <x:navigationMenuItem id="nav_2_4_4" itemLabel="#{example_messages['nav_Selectbox']}" action="go_selectbox" icon="images/myfaces.gif" />

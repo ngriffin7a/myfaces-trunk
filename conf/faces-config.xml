@@ -99,6 +99,11 @@
     <component-type>org.apache.myfaces.AliasBean</component-type>
     <component-class>org.apache.myfaces.custom.aliasbean.AliasBean</component-class>
   </component>
+  
+  <component>
+    <component-type>org.apache.myfaces.Buffer</component-type>
+    <component-class>org.apache.myfaces.custom.buffer.Buffer</component-class>
+  </component>
 
   <component>
     <component-type>org.apache.myfaces.HtmlCheckbox</component-type>
@@ -355,9 +360,15 @@
         <!-- custom component renderers -->
 
         <renderer>
-            <component-family>javax.faces.Input</component-family>
+            <component-family>javax.faces.Data</component-family>
             <renderer-type>org.apache.myfaces.AliasBean</renderer-type>
             <renderer-class>org.apache.myfaces.custom.aliasbean.AliasBeanRenderer</renderer-class>
+        </renderer>
+        
+        <renderer>
+            <component-family>javax.faces.Data</component-family>
+            <renderer-type>org.apache.myfaces.Buffer</renderer-type>
+            <renderer-class>org.apache.myfaces.custom.buffer.BufferRenderer</renderer-class>
         </renderer>
 
 		<renderer>
