@@ -16,6 +16,7 @@ Changes in Release 1.0.8 beta
 * add an x:aliasBean component
 * add an x:div component
 * add a validator for ISBN codes (<x:validateISBN/>)
+* new tree table feature contributed by David Le Strat (MYFACES-8)
 ----------------------------------------------------------------------
 Changes in Release 1.0.7 beta
 * new custom component: HtmlPanelStack
