@@ -38,6 +38,9 @@ import java.util.Map;
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  *          $Log$
+ *          Revision 1.10  2004/12/13 23:14:37  oros
+ *          fix #1044663: handle enabledOnUserRole/visibleOnUserRole, disabled menu items are rendered with null actions
+ *
  *          Revision 1.9  2004/10/13 11:50:57  matze
  *          renamed packages to org.apache
  *
@@ -133,6 +136,10 @@ public class HtmlJSCookMenuRenderer
         {
             NavigationMenuItem item = (NavigationMenuItem)items[i];
 
+            if (! item.isRendered()) {
+                continue;
+            }
+
             if (i > 0)
             {
                 writer.write(",\n");
@@ -158,7 +165,7 @@ public class HtmlJSCookMenuRenderer
             writer.write(", '");
             writer.write(JavascriptUtils.encodeString(item.getLabel()));
             writer.write("', ");
-            if (item.getAction() != null)
+            if (item.getAction() != null && ! item.isDisabled())
             {
                 writer.write("'");
                 writer.write(item.getAction());
@@ -170,12 +177,15 @@ public class HtmlJSCookMenuRenderer
             }
             writer.write(", '#', null");
 
-            NavigationMenuItem[] menuItems = item.getNavigationMenuItems();
-            if (menuItems != null && menuItems.length > 0)
-            {
-                writer.write(",");
-                encodeNavigationMenuItems(context, writer, menuItems);
-            }
+            if (item.isRendered() && ! item.isDisabled()) {
+                // render children only if parent is visible/enabled
+                NavigationMenuItem[] menuItems = item.getNavigationMenuItems();
+                if (menuItems != null && menuItems.length > 0)
+                {
+                    writer.write(",");
+                    encodeNavigationMenuItems(context, writer, menuItems);
+                }
+            };
             writer.write("]");
         }
     }

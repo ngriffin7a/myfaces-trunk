@@ -17,6 +17,7 @@ package org.apache.myfaces.custom.navmenu;
 
 import org.apache.commons.logging.LogFactory;
 import org.apache.commons.logging.Log;
+import org.apache.myfaces.component.UserRoleUtils;
 
 import javax.faces.component.UIComponent;
 import javax.faces.component.UISelectItems;
@@ -27,6 +28,9 @@ import java.util.*;
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  *          $Log$
+ *          Revision 1.5  2004/12/13 23:14:38  oros
+ *          fix #1044663: handle enabledOnUserRole/visibleOnUserRole, disabled menu items are rendered with null actions
+ *
  *          Revision 1.4  2004/10/13 11:50:57  matze
  *          renamed packages to org.apache
  *
@@ -75,7 +79,8 @@ public class NavigationMenuUtils
                     item = new NavigationMenuItem(uiItem.getItemValue(),
                                                   label,
                                                   uiItem.getItemDescription(),
-                                                  uiItem.isItemDisabled(),
+                                                  uiItem.isItemDisabled() || ! UserRoleUtils.isEnabledOnUserRole(uiItem),
+                                                  uiItem.isRendered(),
                                                   uiItem.getAction(),
                                                   uiItem.getIcon(),
                                                   uiItem.isSplit());

@@ -21,6 +21,9 @@ import javax.faces.model.SelectItem;
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  *          $Log$
+ *          Revision 1.6  2004/12/13 23:14:38  oros
+ *          fix #1044663: handle enabledOnUserRole/visibleOnUserRole, disabled menu items are rendered with null actions
+ *
  *          Revision 1.5  2004/10/13 11:50:57  matze
  *          renamed packages to org.apache
  *
@@ -43,6 +46,7 @@ public class NavigationMenuItem
     private String _icon;
     private String _action;
     boolean _split;
+    private boolean rendered = true;
     private NavigationMenuItem[] _navigationMenuItems = null;
 
     public NavigationMenuItem(String label, String action, String icon, boolean split)
@@ -66,6 +70,26 @@ public class NavigationMenuItem
         _icon = icon;
         _split = split;
     }
+
+    public NavigationMenuItem(Object value,
+                              String label,
+                              String description,
+                              boolean disabled,
+                              boolean rendered,
+                              String action,
+                              String icon,
+                              boolean split)
+    {
+        this(value, label, description, disabled, action, icon, split);
+        this.rendered = rendered;
+    }
+
+
+    public boolean isRendered()
+    {
+        return rendered;
+    }
+
 
     public String getAction()
     {
