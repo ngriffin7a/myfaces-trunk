@@ -42,6 +42,10 @@ import java.util.Map;
  *
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
+ * $Log$
+ * Revision 1.13  2004/04/05 09:10:34  manolito
+ * no get call for ignore attributes
+ *
  */
 public class DebugUtils
 {
@@ -220,7 +224,7 @@ public class DebugUtils
                         {
                             //-> localValue
                         }
-                        else
+                        else if (!IGNORE_ATTRIBUTES.contains(name))
                         {
                             Object value = comp.getAttributes().get(name);
                             if (value != null)
