@@ -20,7 +20,6 @@ package net.sourceforge.myfaces.renderkit.html.jspinfo;
 
 import net.sourceforge.myfaces.MyFacesConfig;
 import net.sourceforge.myfaces.MyFacesFactoryFinder;
-import net.sourceforge.myfaces.tree.TreeImpl;
 import net.sourceforge.myfaces.util.MyFacesObjectInputStream;
 import net.sourceforge.myfaces.webapp.ServletMapping;
 import net.sourceforge.myfaces.webapp.ServletMappingFactory;
@@ -29,25 +28,37 @@ import org.apache.commons.logging.LogFactory;
 
 import javax.faces.FacesException;
 import javax.faces.component.UIComponent;
+import javax.faces.component.UIViewRoot;
 import javax.faces.context.FacesContext;
-import javax.faces.tree.Tree;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletRequest;
-import java.io.*;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.WeakHashMap;
 
 /**
  * JspInfo is a helper class that returns useful static information on a JSP. Static means
  * prior to rendering the page.<br>
  * These infos are:
  * <ul>
- *  <li>The full faces tree of all common in that JSP.</li>
+ *  <li>The full faces view of all common in that JSP.</li>
  *  <li>The type of each bean on that page as given in the "class" attribute of the useBean declaration.</li>
  *  <li>The FacesTag, that is responsible to create a component.</li>
  * <ul>
+ * 
  * @author Manfred Geiler (latest modification by $Author$)
+ * @author Anton Koinov
  * @version $Revision$ $Date$
  */
 public class JspInfo
@@ -58,33 +69,33 @@ public class JspInfo
     public static final String JSP_POSITION_ATTR = JspInfo.class.getName() + ".JSP_POSITION";
     public static final String HARDCODED_ID_ATTR = JspInfo.class.getName() + ".HARDCODED_ID";
 
-    private Tree _tree = null;
+    private final UIViewRoot _viewRoot;
     private String _filePath = null;
     private long _lastModified = 0;
     private Map _jspBeanInfosMap = new HashMap();
     private List _saveStateComponents = new ArrayList();
     private Map _componentMap = new HashMap();
-    private byte[] _serializedTree = null;
+    private byte[] _serializedView = null;
 
-    public JspInfo(Tree tree)
+    public JspInfo(UIViewRoot viewRoot)
     {
-        _tree = tree;
+        _viewRoot = viewRoot;
     }
 
-    public Tree getTree()
+    public UIViewRoot getViewRoot()
     {
-        return _tree;
+        return _viewRoot;
     }
 
-    public Tree getTreeClone()
+    public UIViewRoot cloneView()
     {
-        if (_serializedTree == null)
+        if (_serializedView == null)
         {
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             try
             {
                 ObjectOutputStream oos = new ObjectOutputStream(baos);
-                oos.writeObject(_tree);
+                oos.writeObject(_viewRoot);
                 oos.close();
                 baos.close();
             }
@@ -93,14 +104,14 @@ public class JspInfo
                 log.fatal("IOException", e);
                 throw new RuntimeException(e);
             }
-            _serializedTree = baos.toByteArray();
+            _serializedView = baos.toByteArray();
         }
 
         try
         {
-            ByteArrayInputStream bais = new ByteArrayInputStream(_serializedTree);
+            ByteArrayInputStream bais = new ByteArrayInputStream(_serializedView);
             ObjectInputStream ois = new MyFacesObjectInputStream(bais);
-            return (Tree)ois.readObject();
+            return (UIViewRoot)ois.readObject();
         }
         catch (IOException e)
         {
@@ -156,7 +167,7 @@ public class JspInfo
         {
             ServletMappingFactory smf = MyFacesFactoryFinder.getServletMappingFactory(servletContext);
             ServletMapping sm = smf.getServletMapping(servletContext);
-            _filePath = sm.mapTreeIdToFilename(servletContext, _tree.getTreeId());
+            _filePath = sm.mapViewIdToFilename(servletContext, _viewRoot.getViewId());
         }
         return _filePath;
     }
@@ -185,33 +196,29 @@ public class JspInfo
     }
 
 
-
-
-
-
-    public static Tree getTree(FacesContext facesContext,
-                               String treeId)
+    public static UIViewRoot getViewRoot(FacesContext facesContext,
+                               String viewId)
     {
-        return getJspInfo(facesContext, treeId).getTree();
+        return getJspInfo(facesContext, viewId).getViewRoot();
     }
 
-    public static Tree getTreeClone(FacesContext facesContext,
-                                    String treeId)
+    public static UIViewRoot cloneView(FacesContext facesContext,
+                                    String viewId)
     {
-        return getJspInfo(facesContext, treeId).getTreeClone();
+        return getJspInfo(facesContext, viewId).cloneView();
     }
 
     public static JspBeanInfo getJspBeanInfo(FacesContext facesContext,
-                                             String treeId,
+                                             String viewId,
                                              String beanId)
     {
-        return getJspInfo(facesContext, treeId).getJspBeanInfo(beanId);
+        return getJspInfo(facesContext, viewId).getJspBeanInfo(beanId);
     }
 
     public static Iterator getJspBeanInfos(FacesContext facesContext,
-                                           String treeId)
+                                           String viewId)
     {
-        return getJspInfo(facesContext, treeId).getJspBeanInfos();
+        return getJspInfo(facesContext, viewId).getJspBeanInfos();
     }
 
 
@@ -225,15 +232,15 @@ public class JspInfo
 
 
     public static Iterator getUISaveStateComponents(FacesContext facesContext,
-                                                    String treeId)
+                                                    String viewId)
     {
-        return getJspInfo(facesContext, treeId).getUISaveStateComponents();
+        return getJspInfo(facesContext, viewId).getUISaveStateComponents();
     }
 
     public static Map getComponentMap(FacesContext facesContext,
-                                      String treeId)
+                                      String viewId)
     {
-        return getJspInfo(facesContext, treeId).getComponentMap();
+        return getJspInfo(facesContext, viewId).getComponentMap();
     }
 
 
@@ -241,20 +248,20 @@ public class JspInfo
         = JspInfo.class.getName() + ".LAST_JSP_INFO";
 
     private static JspInfo getJspInfo(FacesContext facesContext,
-                                      String treeId)
+                                      String viewId)
     {
         ServletContext servletContext = (ServletContext)facesContext.getExternalContext().getContext();
 
         //Try the last JspInfo in this request
         JspInfo jspInfo = (JspInfo)((ServletRequest)facesContext.getExternalContext().getRequest()).getAttribute(LAST_JSP_INFO_REQUEST_ATTR);
         if (jspInfo != null &&
-            jspInfo.getTree().getTreeId().equals(treeId))
+            jspInfo.getViewRoot().getViewId().equals(viewId))
         {
             return jspInfo;
         }
 
         Map jspInfoMap = getJspInfoMap(servletContext);
-        jspInfo = (JspInfo)jspInfoMap.get(treeId);
+        jspInfo = (JspInfo)jspInfoMap.get(viewId);
 
         //Check for modification
         if (jspInfo != null &&
@@ -270,15 +277,17 @@ public class JspInfo
             if (MyFacesConfig.isDisableJspParser(servletContext))
             {
                 log.warn("JSP parsing is disabled, JspInfo cannot be applied.");
-                jspInfo = new JspInfo(new TreeImpl(treeId));
+                UIViewRoot viewRoot = new UIViewRoot();
+                viewRoot.setViewId(viewId);
+                jspInfo = new JspInfo(viewRoot);
             }
             else
             {
-                JspTreeParser parser = new JspTreeParser(servletContext);
-                parser.parse(treeId);
+                JspViewParser parser = new JspViewParser(servletContext);
+                parser.parse(viewId);
                 jspInfo = parser.getJspInfo();
             }
-            jspInfoMap.put(treeId, jspInfo);
+            jspInfoMap.put(viewId, jspInfo);
         }
 
         ((ServletRequest)facesContext.getExternalContext().getRequest()).setAttribute(LAST_JSP_INFO_REQUEST_ATTR,

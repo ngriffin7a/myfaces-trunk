@@ -21,12 +21,12 @@ package net.sourceforge.myfaces.renderkit.html.jspinfo;
 import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.JasperException;
 import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.JspCompilationContext;
 import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.compiler.Parser;
-import net.sourceforge.myfaces.tree.TreeImpl;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import javax.faces.FacesException;
-import javax.faces.tree.Tree;
+import javax.faces.component.UIViewRoot;
+import javax.faces.render.RenderKitFactory;
 import javax.servlet.ServletContext;
 import java.io.IOException;
 import java.io.InputStream;
@@ -39,11 +39,12 @@ import java.util.Stack;
 /**
  * DOCUMENT ME!
  * @author Manfred Geiler (latest modification by $Author$)
+ * @author Anton Koinov
  * @version $Revision$ $Date$
  */
-public class JspTreeParser
+public class JspViewParser
 {
-    private static final Log log = LogFactory.getLog(JspTreeParser.class);
+    private static final Log log = LogFactory.getLog(JspViewParser.class);
 
     private String _topFileEncoding = "ISO-8859-1";
     private JspCompilationContext _jspCompilationContext = null;
@@ -52,7 +53,7 @@ public class JspTreeParser
     private ServletContext _servletContext = null;
     private JspInfo _jspInfo = null;
 
-    public JspTreeParser(ServletContext servletContext)
+    public JspViewParser(ServletContext servletContext)
     {
         _servletContext = servletContext;
     }
@@ -67,11 +68,13 @@ public class JspTreeParser
         return _jspInfo;
     }
 
-    protected void init(String treeId)
+    protected void init(String viewId)
     {
-        Tree tree = new TreeImpl(treeId);
+        UIViewRoot viewRoot = new UIViewRoot();
+        viewRoot.setViewId(viewId);
+        viewRoot.setRenderKitId(RenderKitFactory.DEFAULT_RENDER_KIT);
 
-        _jspInfo = new JspInfo(tree);
+        _jspInfo = new JspInfo(viewRoot);
 
         _jspCompilationContext = new MyJspCompilationContext(_servletContext);
         _parseEventListener = new MyParseEventListener(this,
