@@ -36,6 +36,9 @@ import java.util.List;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.23  2004/05/27 12:14:55  manolito
+ * no message
+ *
  * Revision 1.22  2004/05/21 10:39:27  manolito
  * new renderedIfEmpty attribute in ext. HtmlDataTable component
  *
@@ -252,35 +255,78 @@ public class UIData
         }
         else if (_descendantEditableValueHolderCount > 0)
         {
-            int rowIndex = getDescendantStatesRowIndex();
+            // There is at least one descendant component to be restored
+
+            // Get zero-based index (instead of -1 based UIData zeroBasedRowIdx):
+            int zeroBasedRowIdx = getDescendantStatesRowIndex();
+
             // Is there a reason to restore the state of a new descendant?
             // BUG: 925693
-            if (rowIndex < _descendantStates.length) {
-                EditableValueHolderState[] rowState = 
-                    (EditableValueHolderState[]) _descendantStates[rowIndex];
-                restoreDescendantComponentStates(this, rowState, 0);
+            // manolito: Yes, descendants for a row not yet saved, must be
+            //           reset to initial row state!
+            int stateRowsCount = _descendantStates.length;
+
+            EditableValueHolderState[] initialStates = null;
+            if (stateRowsCount > 0)
+            {
+                // No state saved yet for this row, let's restore initial values:
+                initialStates = (EditableValueHolderState[]) _descendantStates[0];
+            }
+
+            if (zeroBasedRowIdx < stateRowsCount)
+            {
+                // There is a saved state for this row, so restore these values:
+                EditableValueHolderState[] rowState =
+                    (EditableValueHolderState[]) _descendantStates[zeroBasedRowIdx];
+                restoreDescendantComponentStates(this, rowState, initialStates, 0);
+            }
+            else
+            {
+                // No state saved yet for this row, let's restore initial values:
+                restoreDescendantComponentStates(this, initialStates, initialStates, 0);
             }
         }
         else
         {
-            restoreDescendantComponentStates(this, null, 0);
+            // There are no states to restore, so only recurse to set the
+            // right clientIds for all descendants
+            restoreDescendantComponentStates(this, null, null, 0);
         }
     }
 
     private static int restoreDescendantComponentStates(UIComponent component,
-                                                         EditableValueHolderState[] states,
-                                                         int counter)
+                                                        EditableValueHolderState[] states,
+                                                        EditableValueHolderState[] initialStates,
+                                                        int counter)
     {
         for (Iterator it = component.getChildren().iterator(); it.hasNext();)
         {
             UIComponent child = (UIComponent)it.next();
             //clear this descendant's clientId:
             child.setId(child.getId()); //HACK: This assumes that setId always clears the cached clientId. Can we be sure?
-            if (states != null && child instanceof EditableValueHolder)
+            if (child instanceof EditableValueHolder)
             {
-                states[counter++].restore((EditableValueHolder)child);
+                if (states != null)
+                {
+                    states[counter].restore((EditableValueHolder)child);
+                }
+                else if (initialStates != null)
+                {
+                    initialStates[counter].restore((EditableValueHolder)child);
+                }
+                else
+                {
+                    // No state saved yet and no initial state !?
+                    // Should never be possible, but let's reset the component
+                    // state to null values
+                    ((EditableValueHolder)child).setValue(null);
+                    ((EditableValueHolder)child).setLocalValueSet(false);
+                    ((EditableValueHolder)child).setValid(true);
+                    ((EditableValueHolder)child).setSubmittedValue(null);
+                }
+                counter++;
             }
-            counter = restoreDescendantComponentStates(child, states, counter);
+            counter = restoreDescendantComponentStates(child, states, initialStates, counter);
         }
         return counter;
     }

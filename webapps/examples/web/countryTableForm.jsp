@@ -83,6 +83,10 @@ managed beans used:
 
                    </h:column>
 
+                   <h:column>
+                        <h:selectBooleanCheckbox value="#{country.remove}"/>
+                   </h:column>
+
                    <f:facet name="footer">
                         <h:panelGroup>
                             <h:commandButton action="go_back" value="#{example_messages['button_save']}" />

@@ -33,6 +33,7 @@ public class SimpleCountry
     private String _name;
     private String _isoCode;
     private BigDecimal _size;
+    private boolean _remove = false;
 
     public SimpleCountry(long id, String name, String isoCode, BigDecimal size)
     {
@@ -80,5 +81,15 @@ public class SimpleCountry
     public void setSize(BigDecimal size)
     {
         _size = size;
+    }
+
+    public boolean isRemove()
+    {
+        return _remove;
+    }
+
+    public void setRemove(boolean remove)
+    {
+        _remove = remove;
     }
 }
