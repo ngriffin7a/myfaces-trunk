@@ -162,9 +162,62 @@
     <component-class>net.sourceforge.myfaces.component.html.MyFacesHtmlSelectOneRadio</component-class>
   </component>
 
-
   <!-- Other standard components -->
   <!-- (in alphabetical order) -->
+  <component>
+    <component-type>javax.faces.Column</component-type>
+    <component-class>javax.faces.component.UIColumn</component-class>
+  </component>
+
+  <component>
+    <component-type>javax.faces.Command</component-type>
+    <component-class>javax.faces.component.UICommand</component-class>
+  </component>
+
+  <component>
+    <component-type>javax.faces.Data</component-type>
+    <component-class>javax.faces.component.UIData</component-class>
+  </component>
+
+  <component>
+    <component-type>javax.faces.Form</component-type>
+    <component-class>javax.faces.component.UIForm</component-class>
+  </component>
+
+  <component>
+    <component-type>javax.faces.Graphic</component-type>
+    <component-class>javax.faces.component.UIGraphic</component-class>
+  </component>
+
+  <component>
+    <component-type>javax.faces.Input</component-type>
+    <component-class>javax.faces.component.UIInput</component-class>
+  </component>
+
+  <component>
+    <component-type>javax.faces.Message</component-type>
+    <component-class>javax.faces.component.UIMessage</component-class>
+  </component>
+
+  <component>
+    <component-type>javax.faces.Messages</component-type>
+    <component-class>javax.faces.component.UIMessages</component-class>
+  </component>
+
+  <component>
+    <component-type>javax.faces.NamingContainer</component-type>
+    <component-class>javax.faces.component.UINamingContainer</component-class>
+  </component>
+
+  <component>
+    <component-type>javax.faces.Output</component-type>
+    <component-class>javax.faces.component.UIOutput</component-class>
+  </component>
+
+  <component>
+    <component-type>javax.faces.Panel</component-type>
+    <component-class>javax.faces.component.UIPanel</component-class>
+  </component>
 
   <component>
     <component-type>javax.faces.Parameter</component-type>
@@ -172,8 +225,13 @@
   </component>
 
   <component>
+    <component-type>javax.faces.SelectBoolean</component-type>
+    <component-class>javax.faces.component.UISelectBoolean</component-class>
+  </component>
+
+  <component>
     <component-type>javax.faces.SelectItem</component-type>
-    <component-class>net.sourceforge.myfaces.component.MyFacesUISelectItem</component-class>
+    <component-class>javax.faces.component.UISelectItem</component-class>
   </component>
 
   <component>
@@ -182,10 +240,19 @@
   </component>
 
   <component>
+    <component-type>javax.faces.SelectMany</component-type>
+    <component-class>javax.faces.component.UISelectMany</component-class>
+  </component>
+
+  <component>
+    <component-type>javax.faces.SelectOne</component-type>
+    <component-class>javax.faces.component.UISelectOne</component-class>
+  </component>
+
+  <component>
     <component-type>javax.faces.ViewRoot</component-type>
     <component-class>javax.faces.component.UIViewRoot</component-class>
   </component>
-
 
   <!-- MyFaces extension components -->
   <!-- (in alphabetical order) -->
