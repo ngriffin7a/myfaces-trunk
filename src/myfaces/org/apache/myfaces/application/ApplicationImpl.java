@@ -48,6 +48,9 @@ import java.util.*;
  * @author Thomas Spiegl
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.33  2004/09/08 07:45:05  mwessendorf
+ * set DefaultRenderKitId = "HTML_BASIC"
+ *
  * Revision 1.32  2004/08/10 10:57:37  manolito
  * fixed StackOverflow in ClassUtils and cleaned up ClassUtils methods
  *
@@ -104,7 +107,7 @@ public class ApplicationImpl
         _variableResolver = new VariableResolverImpl();
         _propertyResolver = new PropertyResolverImpl();
         _actionListener = new ActionListenerImpl();
-        _defaultRenderKitId = null;
+        _defaultRenderKitId = "HTML_BASIC";
         _stateManager = new JspStateManagerImpl();
         if (log.isTraceEnabled()) log.trace("New Application instance created");
     }
