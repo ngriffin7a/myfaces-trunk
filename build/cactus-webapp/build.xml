@@ -90,20 +90,25 @@
             <lib file="${commons-el.jar}"/>
         	    <lib file="${commons-logging.jar}"/>
             <lib file="${commons-codec.jar}"/>
-            <lib file="${jsp-api.jar}"/>
+            <lib file="${commons-fileupload.jar}"/>
+            <lib file="${commons-fileupload.jar}"/>
+        	    <lib file="${cos.jar}"/>
             <lib file="${jstl.jar}"/>
             <lib file="${myfaces.jar}"/>
             <lib file="${log4j.jar}"/>
     	        <lib dir="${cactus.lib.dir}">
     	    	        <include name="*.jar"/>
     	    	        <exclude name="cactus-ant-1.5.jar"/>
+    	    	        <exclude name="commons-logging-1.0.3.jar"/>
     	        </lib>
-            <fileset dir="${cactus.web}"
-                     excludes="WEB-INF/**" />
+            <fileset dir="${cactus.web}"/>
         </war>
     	</target>
 
-    <target name="run-cactus-tests" description="run the cactus tests">
+    <target name="refresh-and-run" description="redeploy and run the cactus tests"
+            depends="clean, war, tomcat-undeploy-app, tomcat-deploy-app, tomcat-cactus-tests"/>
+
+	<target name="tomcat-cactus-tests" description="run the cactus tests">
         <mkdir dir="${test.results.dir}/test-reports/xml"/>
         <mkdir dir="${test.results.dir}/test-reports/html"/>
         <junit fork="true">

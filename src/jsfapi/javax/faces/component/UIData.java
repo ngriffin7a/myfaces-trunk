@@ -18,20 +18,26 @@
  */
 package javax.faces.component;
 
-import javax.faces.context.FacesContext;
-import javax.faces.el.ValueBinding;
-import javax.faces.event.AbortProcessingException;
-import javax.faces.event.FacesEvent;
-import javax.faces.event.FacesListener;
-import javax.faces.event.PhaseId;
-import javax.faces.model.*;
-import javax.servlet.jsp.jstl.sql.Result;
 import java.io.IOException;
 import java.io.Serializable;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
+import javax.faces.context.FacesContext;
+import javax.faces.el.ValueBinding;
+import javax.faces.event.AbortProcessingException;
+import javax.faces.event.FacesEvent;
+import javax.faces.event.FacesListener;
+import javax.faces.event.PhaseId;
+import javax.faces.model.ArrayDataModel;
+import javax.faces.model.DataModel;
+import javax.faces.model.ListDataModel;
+import javax.faces.model.ResultDataModel;
+import javax.faces.model.ResultSetDataModel;
+import javax.faces.model.ScalarDataModel;
+import javax.servlet.jsp.jstl.sql.Result;
 
 /**
  * @author Manfred Geiler (latest modification by $Author$)
@@ -148,7 +154,7 @@ public class UIData
     }
 
     /**
-     * They descendant Component states algorithm we implement here is pretty fast
+     * The descendant Component states algorithm we implement here is pretty fast
      * but does not support modification of the components tree during the lifecycle.
      * TODO: should we offer an alternative implementation with a clientId based Map ?
      */
@@ -157,22 +163,7 @@ public class UIData
         if (_descendantEditableValueHolderCount == -1)
         {
             //This is the first time we save the descendant components state
-            List list = new ArrayList();
-            saveDescendantComponentStates(this, list);
-            _descendantEditableValueHolderCount = list.size();
-            if (_descendantEditableValueHolderCount > 0)
-            {
-                EditableValueHolderState[] rowState
-                        = (EditableValueHolderState[])list.toArray(new EditableValueHolderState[list.size()]);
-                int rows = getRows();
-                if (rows <= 0)
-                {
-                    rows = getRowCount() - getFirst();
-                }
-                _descendantStates = new Object[rows + 1];
-                int rowIndex = getDescendantStatesRowIndex();
-                _descendantStates[rowIndex] = rowState;
-            }
+            refreshDescendantDataStates();
         }
         else if (_descendantEditableValueHolderCount == 0)
         {
@@ -182,14 +173,42 @@ public class UIData
         else
         {
             int rowIndex = getDescendantStatesRowIndex();
-            EditableValueHolderState[] rowState
-                    = (EditableValueHolderState[])_descendantStates[rowIndex];
+            EditableValueHolderState[] rowState = null;
+            // make sure that the underlying data did not change size 
+            // (i.e. someone added a row to the DataModel)
+            // BUG: #925693
+            if(rowIndex < _descendantStates.length) {
+                rowState = (EditableValueHolderState[])_descendantStates[rowIndex];
+            } else {
+                // changed size during the lifecycle - should refresh
+                refreshDescendantDataStates();
+                rowState = (EditableValueHolderState[])_descendantStates[rowIndex];
+            }
             if (rowState == null)
             {
                 rowState = new EditableValueHolderState[_descendantEditableValueHolderCount];
                 _descendantStates[rowIndex] = rowState;
             }
             saveDescendantComponentStates(this, rowState, 0);
+        }
+    }
+
+    private void refreshDescendantDataStates() {
+        List list = new ArrayList();
+        saveDescendantComponentStates(this, list);
+        _descendantEditableValueHolderCount = list.size();
+        if (_descendantEditableValueHolderCount > 0)
+        {
+            EditableValueHolderState[] rowState
+                    = (EditableValueHolderState[])list.toArray(new EditableValueHolderState[list.size()]);
+            int rows = getRows();
+            if (rows <= 0)
+            {
+                rows = getRowCount() - getFirst();
+            }
+            _descendantStates = new Object[rows + 1];
+            int rowIndex = getDescendantStatesRowIndex();
+            _descendantStates[rowIndex] = rowState;
         }
     }
 
@@ -231,10 +250,13 @@ public class UIData
         else if (_descendantEditableValueHolderCount > 0)
         {
             int rowIndex = getDescendantStatesRowIndex();
-
-            EditableValueHolderState[] rowState
-                    = (EditableValueHolderState[])_descendantStates[rowIndex];
-            restoreDescendantComponentStates(this, rowState, 0);
+            // Is there a reason to restore the state of a new descendant?
+            // BUG: 925693
+            if (rowIndex < _descendantStates.length) {
+                EditableValueHolderState[] rowState = 
+                    (EditableValueHolderState[]) _descendantStates[rowIndex];
+                restoreDescendantComponentStates(this, rowState, 0);
+            }
         }
         else
         {

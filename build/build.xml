@@ -216,7 +216,36 @@
             description="builds all release files">
     </target>
 
-
+	<target name="all-tests" description="run all the automated tests - tomcat 5.0.18 or better needs to be running on port 8080 for this to work">
+		<ant dir="${project.dir}/build/junit"
+		     antfile="build.xml"
+		     inheritall="false"
+		     target="junit"/>
+		<ant dir="${project.dir}/build/tagunit-webapp"
+		     antfile="build.xml"
+		     inheritall="false"
+		     target="war"/>
+		<ant dir="${project.dir}/build/tagunit-webapp"
+		     antfile="build.xml"
+		     inheritall="false"
+		     target="tomcat-deploy-app"/>
+		<ant dir="${project.dir}/build/tagunit-webapp"
+		     antfile="build.xml"
+		     inheritall="false"
+		     target="tomcat-tagunit-tests"/>
+		<ant dir="${project.dir}/build/cactus-webapp"
+		     antfile="build.xml"
+		     inheritall="false"
+		     target="war"/>
+		<ant dir="${project.dir}/build/cactus-webapp"
+		     antfile="build.xml"
+		     inheritall="false"
+		     target="tomcat-deploy-app"/>
+		<ant dir="${project.dir}/build/cactus-webapp"
+		     antfile="build.xml"
+		     inheritall="false"
+		     target="tomcat-cactus-tests"/>
+    </target>
     <target name="clean"
         description="deletes all files that were built (including examples and tagunit)">
         <delete quiet="true" failonerror="false" includeEmptyDirs="true">

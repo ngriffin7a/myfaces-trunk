@@ -76,6 +76,15 @@ public class WebXml
         {
             Map.Entry entry = (Map.Entry)it.next();
             String servletName = (String)entry.getKey();
+            if(null == entry.getValue()) {
+                // the value is null in the case of jsp files listed as servlets 
+                // in cactus
+                // <servlet>
+                //   <servlet-name>JspRedirector</servlet-name>
+                //   <jsp-file>/jspRedirector.jsp</jsp-file>
+                // </servlet>
+                continue;
+            }
             Class servletClass = ClassUtils.classForName((String)entry.getValue());
             if (MyFacesServlet.class.isAssignableFrom(servletClass) ||
                 FacesServlet.class.isAssignableFrom(servletClass))
