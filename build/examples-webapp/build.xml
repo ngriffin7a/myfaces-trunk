@@ -8,7 +8,6 @@
     <property name="examples.dir" location="${project.dir}/webapps/examples"/>
     <property name="examples.src" location="${examples.dir}/src"/>
     <property name="examples.web" location="${examples.dir}/web"/>
-    <property name="examples.doc" location="${examples.dir}/doc"/>
     <property name="web-inf.classes.dir" location="${examples.web}/WEB-INF/classes"/>
     <property name="web-inf.lib.dir" location="${examples.web}/WEB-INF/lib"/>
     <property name="myfaces.doc" location="${project.dir}/doc"/>
@@ -31,7 +30,7 @@
 
     <target name="-myfaces-jar" unless="myfaces.jar.available">
         <!-- creates myfaces.jar via main buildfile if it does not exist -->
-        <ant dir="../.."
+        <ant dir="${project.dir}/build"
              antfile="build.xml"
              target="myfaces-jar"
              inheritall="false"/>
@@ -81,10 +80,9 @@
         <tar destfile="${project.dir}/myfaces-${manifest.impl.version}-examples.tgz"
              compression="gzip">
             <tarfileset dir="${myfaces.doc}"
-                        excludes="javadoc/**, tlddoc/**"
+                        excludes="javadoc/**/*
+                                  tlddoc/**/*"
                         prefix="myfaces-${manifest.impl.version}/doc"/>
-            <tarfileset dir="${examples.doc}"
-                        prefix="myfaces-${manifest.impl.version}/webapps/examples/doc"/>
             <tarfileset dir="${examples.src}"
                         prefix="myfaces-${manifest.impl.version}/webapps/examples/src"/>
             <tarfileset dir="${examples.web}"

@@ -36,4 +36,4 @@ tlddoc.jar = ${project.dir}/lib/tlddoc.jar
 
 
 # log4j library (only needed for examples application)
-log4j.jar = ${project.dir}/lib/log4j.jar
+log4j.jar = ${project.dir}/lib/log4j-1.2.8.jar

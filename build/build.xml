@@ -9,6 +9,7 @@
     <property name="tlds.dir" location="${project.dir}/tlds"/>
     <property name="doc.dir" location="${project.dir}/doc"/>
     <property name="build.dir" location="${project.dir}/build"/>
+    <property name="conf.dir" location="${project.dir}/conf"/>
 
     <!-- Properties -->
     <property file="build.properties"/>
@@ -109,7 +110,7 @@
     <target name="bin-release"
             depends="myfaces-jar, apidoc, tlddoc"
             description="creates the binary release file myfaces-x.x.x.tgz (don't forget to adjust manifest.properties!)">
-        <tar destfile="myfaces-${manifest.impl.version}.tgz"
+        <tar destfile="${project.dir}/myfaces-${manifest.impl.version}.tgz"
              compression="gzip">
             <tarfileset dir="${doc.dir}"
                         prefix="myfaces-${manifest.impl.version}/doc"/>
@@ -122,29 +123,27 @@
             <tarfileset file="${jsf-api.jar}"
                         prefix="myfaces-${manifest.impl.version}/lib"/>
         </tar>
-        <delete file="${doc.dir}/web.xml.sample"/>
     </target>
 
 
     <target name="src-release"
             depends="apidoc, tlddoc"
             description="creates the source release file myfaces-x.x.x-src.tgz (don't forget to adjust manifest.properties!)">
-        <tar destfile="myfaces-${manifest.impl.version}-src.tgz"
+        <tar destfile="${project.dir}/myfaces-${manifest.impl.version}-src.tgz"
              compression="gzip">
+            <tarfileset dir="${build.dir}"
+                        prefix="myfaces-${manifest.impl.version}/build"/>
+            <tarfileset dir="${conf.dir}"
+                        prefix="myfaces-${manifest.impl.version}/conf"/>
             <tarfileset dir="${doc.dir}"
+                        excludes="javadoc/**/*
+                                  tlddoc/**/*"
                         prefix="myfaces-${manifest.impl.version}/doc"/>
             <tarfileset dir="${myfaces.src}"
                         prefix="myfaces-${manifest.impl.version}/src/myfaces"/>
             <tarfileset dir="${tlds.dir}"
                         prefix="myfaces-${manifest.impl.version}/tlds"/>
-            <tarfileset dir="${project.dir}"
-                        includes="*"
-                        excludes="build.properties,
-                                  .cvsignore,
-                                  *.tgz"
-                        prefix="myfaces-${manifest.impl.version}"/>
         </tar>
-        <delete file="${doc.dir}/web.xml.sample"/>
     </target>
 
 
@@ -154,7 +153,6 @@
              antfile="build.xml"
              inheritall="false"
              target="release"/>
-        <delete file="${doc.dir}/web.xml.sample"/>
     </target>
 
 
@@ -168,8 +166,7 @@
         description="deletes all files that were built (including examples and tagunit)">
         <delete quiet="true" failonerror="false" includeEmptyDirs="true">
             <fileset file="${myfaces.jar}" />
-            <fileset file="myfaces-*.tgz" />
-            <fileset file="${doc.dir}/web.xml.sample" />
+            <fileset file="${project.dir}/myfaces-*.tgz" />
             <fileset dir="${doc.dir}/javadoc" />
             <fileset dir="${doc.dir}/tlddoc" />
             <fileset dir="${temp.dir}/myfaces-jar"/>  <!-- in case of interrupted builds -->
