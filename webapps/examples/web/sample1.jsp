@@ -46,6 +46,8 @@
         <%@include file="inc/page_header.jsp" %>
         <%@include file="inc/navigation.jsp"  %>
 
+        <h:output_errors />
+
         <f:facet name="body">
             <h:panel_group id="body">
 
@@ -92,7 +94,9 @@
                 <h4>Another Form</h4>
                 <table border="1"><tr><td>
                     <h:form id="form2" formName="ucaseForm">
-                        <h:input_text id="text" modelReference="ucaseForm.text" /><br>
+                        <h:input_text id="text" modelReference="ucaseForm.text">
+                            <f:validate_required />
+                        </h:input_text><br>
                         <h:command_button id="ucaseButton" commandName="up" label="Make it uppercase">
                             <f:action_listener type="net.sourceforge.myfaces.examples.example1.UCaseController" ></f:action_listener>
                         </h:command_button>

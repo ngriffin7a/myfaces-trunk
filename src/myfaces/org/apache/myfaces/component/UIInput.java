@@ -40,6 +40,15 @@ public class UIInput
         return listeners;
     }
 
+    public void validate(FacesContext context)
+    {
+        if (getValidators().hasNext())
+        {
+            System.out.println("---->yes");
+        }
+        super.validate(context);
+    }
+
 
 //------------------------------------------------------------------------------
 // UIComponentHelper Delegation
