@@ -43,6 +43,9 @@ import javax.servlet.jsp.jstl.sql.Result;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.30  2005/03/24 16:46:02  matzew
+ * MYFACES-142
+ *
  * Revision 1.29  2005/03/16 20:10:59  mmarinschek
  * fix for MYFACES-38, alien commit for Heath Borders
  *
@@ -412,7 +415,7 @@ public class UIData extends UIComponentBase implements NamingContainer
 					continue;
 				}
 
-				if (child instanceof EditableValueHolder)
+				if (!_firstTimeRendered && child instanceof EditableValueHolder)
 				{
 					EditableValueHolder childEVH = (EditableValueHolder) child;
 					Object state =
@@ -1110,7 +1113,7 @@ public class UIData extends UIComponentBase implements NamingContainer
 		_rowState = (UIDataRowState) values[ROW_STATE_INDEX];
 
 		// restore state means component was already rendered at least once:
-		//        _firstTimeRendered = false;
+		_firstTimeRendered = false;
 	}
 
 	//------------------ GENERATED CODE BEGIN (do not modify!) --------------------
