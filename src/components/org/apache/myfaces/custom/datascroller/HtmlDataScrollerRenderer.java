@@ -17,6 +17,7 @@ package net.sourceforge.myfaces.custom.datascroller;
 
 import net.sourceforge.myfaces.renderkit.RendererUtils;
 import net.sourceforge.myfaces.renderkit.html.HtmlRenderer;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -36,6 +37,9 @@ import java.util.Map;
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.15  2004/09/02 08:57:17  manolito
+ * missing setTransient
+ *
  * Revision 1.14  2004/08/25 16:02:12  manolito
  * Prevent division by zero in getPageIndex
  *
@@ -393,6 +397,7 @@ public class HtmlDataScrollerRenderer
         {
             HtmlOutputText uiText =
                 (HtmlOutputText)application.createComponent(HtmlOutputText.COMPONENT_TYPE);
+            uiText.setTransient(true);
             uiText.setValue(text);
             children.add(uiText);
         }
