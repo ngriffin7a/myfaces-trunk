@@ -26,6 +26,9 @@ import java.util.Locale;
 
 /**
  * $Log$
+ * Revision 1.2  2004/04/20 14:39:12  royalts
+ * writeLink: added text.setValue(content), removed link.setValue(content)
+ *
  * Revision 1.1  2004/03/31 11:58:34  manolito
  * custom component refactoring
  *
@@ -278,9 +281,9 @@ public class HtmlCalendarRenderer
 
         HtmlOutputText text
                 = (HtmlOutputText)application.createComponent(HtmlOutputText.COMPONENT_TYPE);
+        text.setValue(content);
         link.setId(component.getId() + "_" + valueForLink.getTime() + "_text");
         link.setTransient(true);
-        link.setValue(content);
 
         UIParameter parameter
                 = (UIParameter)application.createComponent(UIParameter.COMPONENT_TYPE);
