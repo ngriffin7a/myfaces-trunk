@@ -33,6 +33,9 @@ import org.apache.commons.logging.LogFactory;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.23  2004/07/06 23:46:01  o_rossmueller
+ * tidy up config/confignew package
+ *
  * Revision 1.22  2004/07/01 22:05:11  mwessendorf
  * ASF switch
  *
@@ -81,11 +84,7 @@ public class StartupServletContextListener
                 log.trace("Initializing MyFaces");
 
                 //Load the configuration
-                ExternalContext externalContext = new ServletExternalContextImpl(servletContext,
-                                                                                 null,
-                                                                                 null);
-//                FacesConfigFactory fcf = MyFacesFactoryFinder.getFacesConfigFactory(externalContext);
-//                FacesConfig facesConfig = fcf.getRuntimeConfig(externalContext);
+                ExternalContext externalContext = new ServletExternalContextImpl(servletContext, null, null);
 
                 //And configure everything
                 new FacesConfigurator(externalContext).configure();

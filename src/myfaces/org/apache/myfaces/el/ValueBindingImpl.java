@@ -41,6 +41,9 @@ import org.apache.commons.logging.LogFactory;
  * @version $Revision$ $Date$
  * 
  * $Log$
+ * Revision 1.45  2004/07/06 23:46:01  o_rossmueller
+ * tidy up config/confignew package
+ *
  * Revision 1.44  2004/07/01 22:05:12  mwessendorf
  * ASF switch
  *
@@ -120,7 +123,7 @@ public class ValueBindingImpl extends ValueBinding implements StateHolder
     protected Object      _expression;
     
     /**
-     * FacesConfig is instantiated once per servlet and never changes--we can
+     * RuntimeConfig is instantiated once per servlet and never changes--we can
      * safely cache it
      */
     private RuntimeConfig   _runtimeConfig;
