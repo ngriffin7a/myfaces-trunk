@@ -38,6 +38,9 @@ import java.util.*;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.20  2004/04/26 13:13:52  manolito
+ * always release facesContext
+ *
  * Revision 1.19  2004/04/26 12:01:39  manolito
  * more reluctant releasing of members for Resin compatibility
  *
@@ -67,7 +70,6 @@ public abstract class UIComponentTag
     private static final String COMPONENT_STACK_ATTR =  UIComponentTag.class.getName() + ".COMPONENT_STACK";
 
     protected PageContext pageContext = null;
-    private FacesContext _facesContext = null;
     private Tag _parent = null;
 
     //tag attributes
@@ -75,6 +77,7 @@ public abstract class UIComponentTag
     private String _id = null;
     private String _rendered = null;
 
+    private FacesContext _facesContext = null;
     private UIComponent _componentInstance = null;
     private boolean _created = false;
     private Boolean _suppressed = null;
@@ -92,16 +95,15 @@ public abstract class UIComponentTag
     {
         internalRelease();
 
+        //members, that must/need only be reset when there is no more risk, that the container
+        //wants to reuse this tag
+        pageContext = null;
+        _parent = null;
+
         //reset tag attribute members
         _binding = null;
         _id = null;
         _rendered = null;
-
-        //members, that must/need only be reset when there is no more risk, that the container
-        //wants to reuse this tag
-        pageContext = null;
-        _facesContext = null;
-        _parent = null;
     }
 
 
@@ -109,10 +111,11 @@ public abstract class UIComponentTag
      * Reset any members that apply to the according component instance and
      * must not be reused if the container wants to reuse this tag instance.
      * This method is called when rendering for this tag is finished ( doEndTag() )
-     * or when the released from the container.
+     * or when released by the container.
      */
     private void internalRelease()
     {
+        _facesContext = null;
         _componentInstance = null;
         _created = false;
         _suppressed = null;
