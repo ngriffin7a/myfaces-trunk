@@ -29,7 +29,7 @@ import javax.faces.context.ExternalContext;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public class MyFacesConfig
+final public class MyFacesConfig
 {
     private static final Log log = LogFactory.getLog(MyFacesConfig.class);
 
