@@ -620,6 +620,13 @@ public class UIData
     }
 
 
+    public void setValue(Object value)
+    {
+        _value = value;
+        _dataModel = null;
+    }
+
+
     public Object saveState(FacesContext context)
     {
         Object values[] = new Object[7];
@@ -688,11 +695,6 @@ public class UIData
         ValueBinding vb = getValueBinding("rows");
         Integer v = vb != null ? (Integer)vb.getValue(getFacesContext()) : null;
         return v != null ? v.intValue() : DEFAULT_ROWS;
-    }
-
-    public void setValue(Object value)
-    {
-        _value = value;
     }
 
     public Object getValue()
