@@ -87,8 +87,8 @@ public class ListRenderer
                 else if (it.hasNext())
                 {
                     // new row
-                    closeRow(facesContext);
-                    openRow(facesContext, uiComponent.getRendererType());
+                    closeRow(facesContext, parent, uiComponent);
+                    openRow(facesContext, parent, uiComponent);
                 }
             }
             else if (parentRendererType.equals(ListRenderer.TYPE) &&
@@ -96,8 +96,8 @@ public class ListRenderer
             {
                 incrementComponentCountAttr(facesContext);
                 // new row
-                closeRow(facesContext);
-                openRow(facesContext, uiComponent.getRendererType());
+                closeRow(facesContext, parent, uiComponent);
+                openRow(facesContext, parent, uiComponent);
             }
             else
             {
@@ -108,7 +108,8 @@ public class ListRenderer
                     (parentParentRendererType != null &&
                      parentParentRendererType.equals(TYPE)))
                 {
-                    openColumn(facesContext);
+                    incrementColumnAttr(facesContext);
+                    openColumn(facesContext, uiComponent);
                 }
             }
         }
@@ -141,9 +142,9 @@ public class ListRenderer
 
         if (uicomponent.getRendererType().equals(TYPE))
         {
-            popListComponent(facesContext);
+            UIComponent listComponent  = popListComponent(facesContext);
 
-            closeRow(facesContext);
+            closeRow(facesContext, listComponent, uicomponent);
             writer.write("</table>\n");
             //restoreRenderKit(facesContext, uicomponent);
         }
@@ -168,9 +169,9 @@ public class ListRenderer
                 (parentParentRendererType != null &&
                  parentParentRendererType.equals(TYPE)))
             {
-                closeColumn(facesContext);
-                int column = getActualColumnAttr(facesContext).intValue();
-                afterCloseColumn(facesContext, column -1);
+                closeColumn(facesContext, uiComponent);
+                int column = getCurrentColumnAttr(facesContext).intValue();
+                afterCloseColumn(facesContext, column - 1);
             }
         }
     }
@@ -178,22 +179,22 @@ public class ListRenderer
     //-------------------------------------------------------------
     // protected methods
     //-------------------------------------------------------------
-    public void afterOpenRow(FacesContext facesContext, int row)
+    protected void afterOpenRow(FacesContext facesContext, int row)
         throws IOException
     {
     }
 
-    public void beforeCloseRow(FacesContext facesContext, int row)
+    protected void beforeCloseRow(FacesContext facesContext, int row)
         throws IOException
     {
     }
 
-    public void beforeOpenColumn(FacesContext facesContext, int column)
+    protected void beforeOpenColumn(FacesContext facesContext, int column)
         throws IOException
     {
     }
 
-    public void afterCloseColumn(FacesContext facesContext, int column)
+    protected void afterCloseColumn(FacesContext facesContext, int column)
         throws IOException
     {
     }
@@ -202,9 +203,12 @@ public class ListRenderer
     // write methods
     //-------------------------------------------------------------
 
-    protected void openRow(FacesContext context, String rendererType)
+    protected void openRow(FacesContext context,
+                           UIComponent listComponent,
+                           UIComponent rowComponent)
         throws IOException
     {
+        String rendererType = rowComponent.getRendererType();
         ResponseWriter writer = context.getResponseWriter();
         boolean isLastChildcomponent =
             rendererType.equals(GroupRenderer.TYPE) &&
@@ -213,6 +217,7 @@ public class ListRenderer
         int row = incrementRowAttr(context);
 
         String style = calcRowStyle(context,
+                                    rowComponent,
                                     row,
                                     isLastChildcomponent);
 
@@ -230,10 +235,12 @@ public class ListRenderer
 
     }
 
-    protected void closeRow(FacesContext context)
+    protected void closeRow(FacesContext context,
+                            UIComponent listComponent,
+                            UIComponent rowComponent)
         throws IOException
     {
-        int row = getActualRowAttr(context).intValue();
+        int row = getCurrentRowAttr(context).intValue();
         if (row >= 0)
         {
             beforeCloseRow(context, row);
@@ -241,15 +248,18 @@ public class ListRenderer
         }
     }
 
-    protected void openColumn(FacesContext context)
+    protected void openColumn(FacesContext facesContext,
+                              UIComponent uiComponent)
         throws IOException
     {
-        int column = incrementColumnAttr(context);
-        beforeOpenColumn(context, column);
+        int row = getCurrentRowAttr(facesContext).intValue();
+        int column = getCurrentColumnAttr(facesContext).intValue();
 
-        ResponseWriter writer = context.getResponseWriter();
+        beforeOpenColumn(facesContext, column);
 
-        String style = calcColumnStyle(context);
+        ResponseWriter writer = facesContext.getResponseWriter();
+
+        String style = calcColumnStyle(facesContext, uiComponent, column, row);
         writer.write("<td");
 
         if (style != null && style.length() > 0)
@@ -261,7 +271,8 @@ public class ListRenderer
         writer.write(">");
     }
 
-    protected void closeColumn(FacesContext context)
+    protected void closeColumn(FacesContext context,
+                               UIComponent uiComponent)
         throws IOException
     {
         context.getResponseWriter().write("</td>");
@@ -293,9 +304,9 @@ public class ListRenderer
         getListComponentStack(context).push(listComponent);
     }
 
-    protected void popListComponent(FacesContext context)
+    protected UIComponent popListComponent(FacesContext context)
     {
-        getListComponentStack(context).pop();
+        return (UIComponent)getListComponentStack(context).pop();
     }
 
     protected UIComponent peekListComponent(FacesContext context)
@@ -322,12 +333,11 @@ public class ListRenderer
 
     private static final Integer INITIAL_VALUE = new Integer(-1);
 
-    protected int incrementColumnAttr(FacesContext context)
+    protected void incrementColumnAttr(FacesContext context)
     {
-        Integer value = getActualColumnAttr(context);
+        Integer value = getCurrentColumnAttr(context);
         ServletRequest servletRequest = (ServletRequest)context.getExternalContext().getRequest();
         servletRequest.setAttribute(ACTUAL_COLUMN_ATTR, new Integer(value.intValue() + 1));
-        return value.intValue() + 1;
     }
 
     protected void resetColumnAttr(FacesContext context)
@@ -336,7 +346,7 @@ public class ListRenderer
         servletRequest.setAttribute(ACTUAL_COLUMN_ATTR, INITIAL_VALUE);
     }
 
-    protected Integer getActualColumnAttr(FacesContext context)
+    protected Integer getCurrentColumnAttr(FacesContext context)
     {
         ServletRequest servletRequest = (ServletRequest)context.getExternalContext().getRequest();
         Integer value = (Integer)servletRequest.getAttribute(ACTUAL_COLUMN_ATTR);
@@ -345,13 +355,13 @@ public class ListRenderer
 
     protected int incrementRowAttr(FacesContext context)
     {
-        Integer value = getActualRowAttr(context);
+        Integer value = getCurrentRowAttr(context);
         ServletRequest servletRequest = (ServletRequest)context.getExternalContext().getRequest();
         servletRequest.setAttribute(ACTUAL_ROW_ATTR, new Integer(value.intValue() + 1));
         return value.intValue() + 1;
     }
 
-    protected Integer getActualRowAttr(FacesContext context)
+    protected Integer getCurrentRowAttr(FacesContext context)
     {
         ServletRequest servletRequest = (ServletRequest)context.getExternalContext().getRequest();
         Integer value = (Integer)servletRequest.getAttribute(ACTUAL_ROW_ATTR);
@@ -365,9 +375,10 @@ public class ListRenderer
     /**
      * TODO: refactor see GridRenderer
      */
-    private String calcRowStyle(FacesContext context,
-                                int row,
-                                boolean isLastRow)
+    protected String calcRowStyle(FacesContext context,
+                                  UIComponent rowComponent,
+                                  int row,
+                                  boolean isLastRow)
     {
         String style = null;
 
@@ -398,11 +409,12 @@ public class ListRenderer
     /**
      * TODO: refactor see GridRenderer
      */
-    private String calcColumnStyle(FacesContext context)
+    protected String calcColumnStyle(FacesContext context,
+                                     UIComponent columnComponent,
+                                     int column,
+                                     int row)
     {
         String style = null;
-        int column = getActualColumnAttr(context).intValue();
-        int row = getActualRowAttr(context).intValue();
 
         Styles styles = getStyles(context);
         if (styles == null)

@@ -411,18 +411,6 @@ public class MyParseEventListener
                                       Attributes attrs,
                                       String filename, int startLine, int endLine)
     {
-        /*
-        if (isRootUIComponentTag(facesTag))
-        {
-            //This is the UseFacesTag which represents the root component
-            if (_currentComponent != null)
-            {
-                throw new IllegalStateException("Current component already set?");
-            }
-            _currentComponent = _jspInfo.getTree().getRoot();
-            return;
-        }
-        */
         if (_currentComponent == null)
         {
             //This must be the UseFacesTag, which represents the root component
@@ -445,7 +433,9 @@ public class MyParseEventListener
             {
                 String strValue = ((String)attrValue).trim();
                 if (attrInfo.canBeRequestTime() &&
-                    (strValue.startsWith("<%") || strValue.startsWith("{")))
+                    (strValue.startsWith("<%") ||
+                     strValue.startsWith("{") ||
+                     strValue.indexOf("${") != -1))
                 {
                     //Request time value --> ignore
                     continue;

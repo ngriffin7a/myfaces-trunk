@@ -27,6 +27,7 @@ import net.sourceforge.myfaces.util.logging.LogUtil;
 
 import javax.faces.FactoryFinder;
 import javax.faces.application.ApplicationFactory;
+import javax.faces.application.Application;
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIOutput;
 import javax.faces.context.FacesContext;
@@ -230,6 +231,7 @@ public class MyFacesTagHelper
 
     protected Object evaluateSimpleELExpression(Object attrValue)
     {
+        /*
         if (attrValue != null &&
             attrValue instanceof String &&
             ((String)attrValue).startsWith("${") &&
@@ -244,28 +246,38 @@ public class MyFacesTagHelper
         {
             return attrValue;
         }
+        */
 
-        /*
-        int dollarIdx = attrValue.indexOf("${");
-        if (dollarIdx == -1)
+        if (attrValue == null || !(attrValue instanceof String))
         {
             return attrValue;
         }
 
-
-        StringBuffer buf = new StringBuffer(attrValue.length());
-        buf.append(attrValue.substring(0, dollarIdx));
-        while (dollarIdx >= 0)
+        String strValue = (String)attrValue;
+        int dollarIdx = strValue.indexOf("${");
+        if (dollarIdx == -1)
         {
-            int endIdx = attrValue.indexOf('}', dollarIdx + 2);
+            return strValue;
+        }
+
+        ApplicationFactory af = (ApplicationFactory)FactoryFinder.getFactory(FactoryFinder.APPLICATION_FACTORY);
+        Application application = af.getApplication();
+
+        StringBuffer buf = new StringBuffer(strValue.length());
+        int endIdx = -1;
+        while (dollarIdx != -1)
+        {
+            buf.append(strValue.substring(endIdx + 1, dollarIdx));
+
+            endIdx = strValue.indexOf('}', dollarIdx + 2);
             if (endIdx == -1)
             {
-                LogUtil.getLogger().warning("Illegal EL expression '" + attrValue + "'.");
-                buf.append(attrValue.substring(dollarIdx + 2));
+                LogUtil.getLogger().warning("Illegal EL expression '" + strValue + "'.");
+                buf.append(strValue.substring(dollarIdx));
                 return buf.toString();
             }
 
-            String expr = attrValue.substring(dollarIdx + 2, endIdx);
+            String expr = strValue.substring(dollarIdx + 2, endIdx);
             if (expr.length() > 1 &&
                 (expr.startsWith("'") && expr.endsWith("'")) ||
                 (expr.startsWith("\"") && expr.endsWith("\"")))
@@ -276,11 +288,15 @@ public class MyFacesTagHelper
             else
             {
                 ValueBinding binding = application.getValueBinding(expr);
-
-
+                Object obj = binding.getValue(getFacesContext());
+                buf.append(obj.toString());     //TODO: more sophisticated method for String conversion --> what says JSP Spec. 2.0 ?
             }
+
+            dollarIdx = strValue.indexOf("${", endIdx + 1);
         }
-        */
+        buf.append(strValue.substring(endIdx + 1));
+
+        return buf.toString();
     }
 
 
