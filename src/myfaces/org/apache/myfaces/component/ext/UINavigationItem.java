@@ -20,6 +20,7 @@ package net.sourceforge.myfaces.component.ext;
 
 import net.sourceforge.myfaces.component.MyFacesUICommand;
 import net.sourceforge.myfaces.renderkit.html.state.StateRestorer;
+import net.sourceforge.myfaces.util.logging.LogUtil;
 
 import javax.faces.FactoryFinder;
 import javax.faces.application.Action;
@@ -172,20 +173,23 @@ public class UINavigationItem
 
     public void toggleOpen()
     {
-        if (isOpen() && !isActive())
+        if (isOpen())
         {
-            //close all children
-            closeAllChildren();
-            //close item
-            setOpen(false);
+            if (getChildCount() > 0)
+            {
+                //item is a menu group --> close item
+                setOpen(false);
+            }
         }
         else
         {
-            //close all siblings and children
-            closeAllChildren(getParent().getChildren());
+            //close all siblings
+            closeChildren(getParent().getChildren());
+
             //open item
             setOpen(true);
-            //open all parents (to be sure)
+
+            //open all parents (to be sure) and search UINavigation
             UIComponent p = getParent();
             while (p != null && !(p instanceof UINavigation))
             {
@@ -195,16 +199,42 @@ public class UINavigationItem
                 }
                 p = p.getParent();
             }
+
+            if (getChildCount() == 0)
+            {
+                //item is an end node --> deactivate all other nodes, and then...
+                if (!(p instanceof UINavigation))
+                {
+                    LogUtil.getLogger().severe("UINavigationItem without parent UINavigation ?!");
+                }
+                else
+                {
+                    deactivateAllChildren(p.getChildren());
+                }
+                //...activate this item
+                setActive(true);
+            }
         }
     }
 
 
-    public void closeAllChildren()
+    private static void deactivateAllChildren(Iterator children)
     {
-        closeAllChildren(getChildren());
+        while (children.hasNext())
+        {
+            UIComponent ni = (UIComponent)children.next();
+            if (ni instanceof UINavigationItem)
+            {
+                ((UINavigationItem)ni).setActive(false);
+            }
+            if (ni.getChildCount() > 0)
+            {
+                deactivateAllChildren(ni.getChildren());
+            }
+        }
     }
 
-    private static void closeAllChildren(Iterator children)
+    private static void closeChildren(Iterator children)
     {
         while (children.hasNext())
         {
@@ -212,10 +242,6 @@ public class UINavigationItem
             if (ni instanceof UINavigationItem)
             {
                 ((UINavigationItem)ni).setOpen(false);
-            }
-            if (ni.getChildCount() > 0)
-            {
-                closeAllChildren(ni.getChildren());
             }
         }
     }
