@@ -147,7 +147,7 @@ public class FacesContextImpl
                     if (hasNext())
                     {
                         _nextFound = false;
-                        return _messages.get(_next);
+                        return _messages.get(_next++);
                     }
 
                     throw new NoSuchElementException();
