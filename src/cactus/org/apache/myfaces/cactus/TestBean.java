@@ -130,4 +130,9 @@ public class TestBean
     {
         this.numberPrimitiveInt = numberPrimitiveInt;
     }
+
+
+    public String doAction() {
+        return "ok";
+    }
 }
