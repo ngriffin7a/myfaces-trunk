@@ -38,6 +38,9 @@ import java.util.Map;
  * @author <a href="mailto:oliver@rossmueller.com">Oliver Rossmueller</a>
  * @version $Revision$ $Date$
  *          $Log$
+ *          Revision 1.4  2004/06/09 20:32:16  o_rossmueller
+ *          fix: removed duplicate output of value
+ *
  *          Revision 1.3  2004/06/03 12:57:03  o_rossmueller
  *          modified link renderer to use one hidden field for all links according to 1.1 renderkit docs
  *          added onclick=clear_XXX to button
@@ -79,13 +82,6 @@ public class HtmlTreeImageCommandLinkRenderer
     {
 
         super.renderCommandLinkStart(facesContext, component, clientId, value, style, styleClass);
-
-        // render value as anchor text:
-        if (value != null)
-        {
-            ResponseWriter writer = facesContext.getResponseWriter();
-            writer.writeText(value.toString(), JSFAttr.VALUE_ATTR);
-        }
 
         String url = ((HtmlTreeImageCommandLink)component).getImage();
 
