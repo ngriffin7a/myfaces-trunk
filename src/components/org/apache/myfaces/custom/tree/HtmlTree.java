@@ -16,8 +16,7 @@
 package net.sourceforge.myfaces.custom.tree;
 
 import java.io.IOException;
-import java.util.Collection;
-import java.util.Iterator;
+import java.util.*;
 import javax.faces.component.UIViewRoot;
 import javax.faces.context.FacesContext;
 import javax.faces.el.ValueBinding;
@@ -42,48 +41,51 @@ import net.sourceforge.myfaces.component.html.ext.HtmlPanelGroup;
  * @author <a href="mailto:oliver@rossmueller.com">Oliver Rossmueller</a>
  * @version $Revision$ $Date$
  *          $Log$
+ *          Revision 1.20  2004/08/15 15:28:04  o_rossmueller
+ *          new model listener handling to get modified from events which occur outside the scope of a tree request
+ *
  *          Revision 1.19  2004/07/26 22:55:10  o_rossmueller
  *          use ids instead of clientIds
- *
+ *          <p/>
  *          Revision 1.18  2004/07/25 11:08:02  o_rossmueller
  *          use HtmlTree class name for PREVIOUS_VIEW_ROOT constant
- *
+ *          <p/>
  *          Revision 1.17  2004/07/25 11:06:38  o_rossmueller
  *          made default image paths relative (again)
- *
+ *          <p/>
  *          Revision 1.16  2004/07/18 21:39:34  o_rossmueller
  *          fix #992452: child icon attributes are restored correctly
- *
+ *          <p/>
  *          Revision 1.15  2004/07/18 21:36:27  o_rossmueller
  *          fix #991740: getResourceURL for tree image urls
- *
+ *          <p/>
  *          Revision 1.14  2004/07/11 23:38:57  o_rossmueller
  *          support multiple trees in one view
- *
+ *          <p/>
  *          Revision 1.13  2004/07/01 21:53:07  mwessendorf
  *          ASF switch
- *
+ *          <p/>
  *          Revision 1.12  2004/05/12 02:27:43  o_rossmueller
  *          fix #951896: tree component works for JAVASCRIPT=false, too
- *
+ *          <p/>
  *          Revision 1.11  2004/05/10 01:24:51  o_rossmueller
  *          added iconClass attribute
- *
+ *          <p/>
  *          Revision 1.10  2004/05/05 00:18:57  o_rossmueller
  *          various fixes/modifications in model event handling and tree update
- *
+ *          <p/>
  *          Revision 1.9  2004/05/04 12:19:14  o_rossmueller
  *          added icon provider
- *
+ *          <p/>
  *          Revision 1.8  2004/05/04 00:28:17  o_rossmueller
  *          model event handling
- *
+ *          <p/>
  *          Revision 1.7  2004/04/29 18:48:16  o_rossmueller
  *          node selection handling
- *
+ *          <p/>
  *          Revision 1.6  2004/04/23 19:09:34  o_rossmueller
  *          state transition magic
- *
+ *          <p/>
  *          Revision 1.5  2004/04/22 23:22:33  o_rossmueller
  *          fix: queueEvent
  *          <p/>
@@ -104,8 +106,18 @@ public class HtmlTree
     implements TreeModelListener
 {
 
+    public static final int DEFAULT_EXPIRE_LISTENERS = 8 * 60 * 60 * 1000; // 8 hours
+
+
     private static final String FACET_ROOTNODE = "rootNode";
     private static final String PREVIOUS_VIEW_ROOT = HtmlTree.class.getName() + ".PREVIOUS_VIEW_ROOT";
+
+    private static final int EVENT_CHANGED = 0;
+    private static final int EVENT_INSERTED = 1;
+    private static final int EVENT_REMOVED = 2;
+    private static final int EVENT_STRUCTURE_CHANGED = 3;
+
+    private static int counter = 0;
 
 
     private IconProvider iconProvider;
@@ -130,10 +142,13 @@ public class HtmlTree
     private String iconNodeCloseLast = "images/tree/node_close_last.gif";
     private int uniqueIdCounter = 0;
     private int[] selectedPath;
+    private int internalId;
+    private long expireListeners = DEFAULT_EXPIRE_LISTENERS;
 
 
     public HtmlTree()
     {
+        internalId = counter++;
     }
 
 
@@ -393,6 +408,18 @@ public class HtmlTree
     }
 
 
+    public long getExpireListeners()
+    {
+        return expireListeners;
+    }
+
+
+    public void setExpireListeners(long expireListeners)
+    {
+        this.expireListeners = expireListeners;
+    }
+
+
     public String getFamily()
     {
         return "net.sourceforge.myfaces.HtmlTree";
@@ -440,7 +467,8 @@ public class HtmlTree
     {
         HtmlTreeNode node = findNode(path, context);
 
-        if (node != null) {
+        if (node != null)
+        {
             node.setExpanded(false);
         }
     }
@@ -464,7 +492,8 @@ public class HtmlTree
 
         for (int i = 0; i < translatedPath.length; i++)
         {
-            if (! node.isExpanded()) {
+            if (!node.isExpanded())
+            {
                 return null;
             }
             int index = translatedPath[i];
@@ -493,9 +522,11 @@ public class HtmlTree
             oldPath = HtmlTreeNode.translatePath(selectedPath, getModel(FacesContext.getCurrentInstance()));
         }
         selectedPath = node.getTranslatedPath();
-        if (node.isSelected()) {
+        if (node.isSelected())
+        {
             queueEvent(new TreeSelectionEvent(this, oldPath, node.getPath()));
-        } else {
+        } else
+        {
             queueEvent(new TreeSelectionEvent(this, oldPath, null));
         }
     }
@@ -525,7 +556,7 @@ public class HtmlTree
 
     public Object saveState(FacesContext context)
     {
-        Object values[] = new Object[20];
+        Object values[] = new Object[22];
         values[0] = super.saveState(context);
         values[1] = iconChild;
         values[2] = iconChildFirst;
@@ -546,6 +577,8 @@ public class HtmlTree
         values[17] = new Integer(uniqueIdCounter);
         values[18] = selectedPath;
         values[19] = iconClass;
+        values[20] = new Integer(internalId);
+        values[21] = new Long(expireListeners);
         return ((Object) (values));
     }
 
@@ -572,7 +605,9 @@ public class HtmlTree
         selectedNodeClass = (String) values[16];
         uniqueIdCounter = ((Integer) values[17]).intValue();
         selectedPath = (int[]) values[18];
-        iconClass = (String)values[19];
+        iconClass = (String) values[19];
+        internalId = ((Integer) values[20]).intValue();
+        expireListeners = ((Long) values[21]).longValue();
         addToModelListeners();
     }
 
@@ -611,8 +646,9 @@ public class HtmlTree
 
     public void encodeBegin(FacesContext context) throws IOException
     {
-        removeFromModelListeners();
         addToModelListeners();
+        processModelEvents();
+
         HtmlTreeNode node = getRootNode();
 
         if (node == null)
@@ -640,7 +676,6 @@ public class HtmlTree
     public void encodeEnd(FacesContext context) throws IOException
     {
         super.encodeEnd(context);
-        removeFromModelListeners();
     }
 
 
@@ -658,7 +693,7 @@ public class HtmlTree
             }
 
             selectedPath = previousTree.selectedPath;
-         }
+        }
     }
 
 
@@ -668,7 +703,8 @@ public class HtmlTree
         FacesContext context = FacesContext.getCurrentInstance();
         HtmlTreeNode node = findNode(path, context);
 
-        if (node != null) {
+        if (node != null)
+        {
             node.childrenChanged(e.getChildIndices(), context);
         }
     }
@@ -680,7 +716,8 @@ public class HtmlTree
         FacesContext context = FacesContext.getCurrentInstance();
         HtmlTreeNode node = findNode(path, context);
 
-        if (node != null) {
+        if (node != null)
+        {
             node.childrenAdded(e.getChildIndices(), context);
         }
     }
@@ -692,7 +729,8 @@ public class HtmlTree
         FacesContext context = FacesContext.getCurrentInstance();
         HtmlTreeNode node = findNode(path, context);
 
-        if (node != null) {
+        if (node != null)
+        {
             node.childrenRemoved(e.getChildIndices());
         }
     }
@@ -703,7 +741,8 @@ public class HtmlTree
         TreePath path = e.getTreePath();
         FacesContext context = FacesContext.getCurrentInstance();
 
-        if (isExpanded(path, context)) {
+        if (isExpanded(path, context))
+        {
             collapsePath(path, context);
             expandPath(path, context);
         }
@@ -712,7 +751,8 @@ public class HtmlTree
 
     public boolean equals(Object obj)
     {
-        if (! (obj instanceof HtmlTree)) {
+        if (!(obj instanceof HtmlTree))
+        {
             return false;
         }
         HtmlTree other = (HtmlTree) obj;
@@ -727,21 +767,141 @@ public class HtmlTree
     }
 
 
-    public void addToModelListeners() {
+    public void addToModelListeners()
+    {
         Collection listeners = getModel(FacesContext.getCurrentInstance()).getTreeModelListeners();
+        long currentTime = System.currentTimeMillis();
+        boolean found = false;
 
-        if (! listeners.contains(this)) {
-            listeners.add(this);
+        for (Iterator iterator = listeners.iterator(); iterator.hasNext();)
+        {
+            ModelListener listener = (ModelListener) iterator.next();
+
+            if (listener.getId() == internalId)
+            {
+                found = true;
+            } else if (currentTime - listener.getLastAccessTime() > expireListeners)
+            {
+                iterator.remove();
+            }
+        }
+        if (!found)
+        {
+            listeners.add(new ModelListener(internalId));
         }
     }
 
-    private void removeFromModelListeners() {
+
+    private void processModelEvents()
+    {
         Collection listeners = getModel(FacesContext.getCurrentInstance()).getTreeModelListeners();
+
         for (Iterator iterator = listeners.iterator(); iterator.hasNext();)
         {
-            Object listener = iterator.next();
-            if (listener.equals(this)) {
-                iterator.remove();
+            ModelListener listener = (ModelListener) iterator.next();
+
+            if (listener.getId() == internalId)
+            {
+                for (Iterator events = listener.getEvents().iterator(); events.hasNext();)
+                {
+                    Event event = (Event) events.next();
+                    event.process(this);
+                    events.remove();
+                }
+                break;
+            }
+        }
+    }
+
+
+    private static class ModelListener implements TreeModelListener
+    {
+
+        private long lastAccessTime = System.currentTimeMillis();
+        private LinkedList events = new LinkedList();
+        int id;
+
+
+        public ModelListener(int id)
+        {
+            this.id = id;
+        }
+
+
+        public List getEvents()
+        {
+            lastAccessTime = System.currentTimeMillis();
+            return events;
+        }
+
+
+        public int getId()
+        {
+            return id;
+        }
+
+
+        public long getLastAccessTime()
+        {
+            return lastAccessTime;
+        }
+
+
+        public void treeNodesChanged(TreeModelEvent e)
+        {
+            events.addLast(new Event(EVENT_CHANGED, e));
+        }
+
+
+        public void treeNodesInserted(TreeModelEvent e)
+        {
+            events.addLast(new Event(EVENT_INSERTED, e));
+        }
+
+
+        public void treeNodesRemoved(TreeModelEvent e)
+        {
+            events.addLast(new Event(EVENT_REMOVED, e));
+        }
+
+
+        public void treeStructureChanged(TreeModelEvent e)
+        {
+            events.addLast(new Event(EVENT_STRUCTURE_CHANGED, e));
+        }
+    }
+
+
+    private static class Event
+    {
+
+        private int kind;
+        private TreeModelEvent event;
+
+
+        public Event(int kind, TreeModelEvent event)
+        {
+            this.kind = kind;
+            this.event = event;
+        }
+
+
+        public void process(HtmlTree tree)
+        {
+            switch (kind)
+            {
+                case EVENT_CHANGED:
+                    tree.treeNodesChanged(event);
+                    break;
+                case EVENT_INSERTED:
+                    tree.treeNodesInserted(event);
+                    break;
+                case EVENT_REMOVED:
+                    tree.treeNodesRemoved(event);
+                    break;
+                case EVENT_STRUCTURE_CHANGED:
+                    tree.treeStructureChanged(event);
+                    break;
             }
         }
     }

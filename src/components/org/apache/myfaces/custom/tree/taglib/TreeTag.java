@@ -33,6 +33,9 @@ import javax.servlet.jsp.JspException;
  * @author <a href="mailto:oliver@rossmueller.com">Oliver Rossmueller</a>
  * @version $Revision$ $Date$
  *          $Log$
+ *          Revision 1.6  2004/08/15 15:28:04  o_rossmueller
+ *          new model listener handling to get modified from events which occur outside the scope of a tree request
+ *
  *          Revision 1.5  2004/07/01 21:53:06  mwessendorf
  *          ASF switch
  *
@@ -73,6 +76,7 @@ public class TreeTag
     private String selectedNodeClass;
     private String iconClass;
     private boolean expandRoot;
+    private long expireListeners = HtmlTree.DEFAULT_EXPIRE_LISTENERS;
 
 
     public String getComponentType()
@@ -327,6 +331,18 @@ public class TreeTag
     }
 
 
+    public long getExpireListeners()
+    {
+        return expireListeners;
+    }
+
+
+    public void setExpireListeners(long expireListeners)
+    {
+        this.expireListeners = expireListeners;
+    }
+
+
     /**
      * Obtain tree model or create a default model.
      */
@@ -408,5 +424,6 @@ public class TreeTag
         setStringProperty(component, "nodeClass", nodeClass);
         setStringProperty(component, "selectedNodeClass", selectedNodeClass);
         setStringProperty(component, "iconClass", iconClass);
+        ((HtmlTree)component).setExpireListeners(expireListeners);
     }
 }

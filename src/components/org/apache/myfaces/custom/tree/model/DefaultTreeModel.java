@@ -22,12 +22,16 @@ import net.sourceforge.myfaces.custom.tree.TreeNode;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Collection;
+import java.util.LinkedList;
 
 
 /**
  * @author <a href="mailto:oliver@rossmueller.com">Oliver Rossmueller</a>
  * @version $Revision$ $Date$
  *          $Log$
+ *          Revision 1.5  2004/08/15 15:28:04  o_rossmueller
+ *          new model listener handling to get modified from events which occur outside the scope of a tree request
+ *
  *          Revision 1.4  2004/07/01 21:53:04  mwessendorf
  *          ASF switch
  *
@@ -46,7 +50,7 @@ public class DefaultTreeModel
 {
 
     private TreeNode root;
-    private ArrayList listeners = new ArrayList();
+    private LinkedList listeners = new LinkedList();
 
 
     public DefaultTreeModel()
