@@ -39,7 +39,7 @@ import javax.servlet.ServletContext;
 public class InitParameterMap
     implements Map
 {
-    private ServletContext _servletContext;
+    private final ServletContext _servletContext;
 
     InitParameterMap(ServletContext servletContext)
     {

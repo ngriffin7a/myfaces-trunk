@@ -40,7 +40,7 @@ import javax.servlet.ServletRequest;
 public class RequestMap
     implements Map
 {
-    private ServletRequest _servletRequest;
+    private final ServletRequest _servletRequest;
 
     RequestMap(ServletRequest req)
     {

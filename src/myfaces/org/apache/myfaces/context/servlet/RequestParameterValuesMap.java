@@ -40,7 +40,7 @@ public class RequestParameterValuesMap
     implements Map
 {
 
-    private ServletRequest _servletRequest;
+    private final ServletRequest _servletRequest;
 
     RequestParameterValuesMap(ServletRequest servletRequest)
     {

@@ -41,11 +41,11 @@ public class ApplicationMap
     implements Map
 {
 
-    private ServletContext _servletContext;
+    private final ServletContext _servletContext;
 
-    ApplicationMap(ServletContext ctx)
+    ApplicationMap(ServletContext servletContext)
     {
-        this._servletContext = ctx;
+        _servletContext = servletContext;
     }
 
     /**

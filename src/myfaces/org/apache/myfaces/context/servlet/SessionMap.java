@@ -41,10 +41,12 @@ import javax.servlet.http.HttpSession;
 public class SessionMap
     implements Map
 {
+    private final HttpServletRequest _httpRequest;
     private HttpSession _httpSession;
 
     SessionMap(HttpServletRequest httpRequest)
     {
+        _httpRequest = httpRequest;
         _httpSession = httpRequest.getSession(false);
     }
 
@@ -164,7 +166,7 @@ public class SessionMap
     {
         if (_httpSession == null)
         {
-            return null;
+            _httpSession = _httpRequest.getSession(true);
         }
 
         String key_ = key.toString();
@@ -178,14 +180,16 @@ public class SessionMap
      */
     public void putAll(Map t)
     {
-        if (_httpSession != null)
+        if (_httpSession == null)
         {
-            for (Iterator it = t.entrySet().iterator(); it.hasNext();)
-            {
-                Entry entry = (Entry) it.next();
-                String key = entry.getKey().toString();
-                _httpSession.setAttribute(key, entry.getValue());
-            }
+            _httpSession = _httpRequest.getSession(true);
+        }
+
+        for (Iterator it = t.entrySet().iterator(); it.hasNext();)
+        {
+            Entry entry = (Entry) it.next();
+            String key = entry.getKey().toString();
+            _httpSession.setAttribute(key, entry.getValue());
         }
     }
 

@@ -40,7 +40,7 @@ public class CookieMap
     implements Map
 {
 
-    private HttpServletRequest _httpServletRequest;
+    private final HttpServletRequest _httpServletRequest;
 
     CookieMap(HttpServletRequest httpServletRequest)
     {
@@ -105,7 +105,8 @@ public class CookieMap
         Cookie[] cookies = _httpServletRequest.getCookies();
         for (int i = 0, len = cookies.length; i < len; i++)
         {
-            ret.put(cookies[i].getName(), cookies[i].getValue());
+            Cookie cookie = cookies[i];
+            ret.put(cookie.getName(), cookie.getValue());
         }
 
         return ret.entrySet();
@@ -197,8 +198,7 @@ public class CookieMap
         Cookie[] cookies = _httpServletRequest.getCookies();
         for (int i = 0, len = cookies.length; i < len; i++)
         {
-            Cookie cookie = cookies[i];
-            ret.add(cookie.getValue());
+            ret.add(cookies[i].getValue());
         }
 
         return ret;

@@ -39,7 +39,7 @@ import javax.servlet.http.HttpServletRequest;
 public class RequestHeaderValuesMap
     implements Map
 {
-    private HttpServletRequest _httpServletRequest;
+    private final HttpServletRequest _httpServletRequest;
 
     RequestHeaderValuesMap(HttpServletRequest req)
     {
