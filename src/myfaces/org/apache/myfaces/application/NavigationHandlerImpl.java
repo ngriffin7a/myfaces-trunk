@@ -42,6 +42,9 @@ import java.util.*;
  * @author Anton Koinov
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.25  2004/05/10 04:49:26  dave0000
+ * small optimization improvements
+ *
  * Revision 1.24  2004/04/26 11:28:16  manolito
  * global navigation-rule with no from-view-id NPE bug
  *
@@ -176,54 +179,71 @@ public class NavigationHandlerImpl
         return _wildcardKeys;
     }
 
-    private synchronized Map getNavigationCases(FacesContext facesContext)
+    private Map getNavigationCases(FacesContext facesContext)
     {
         if (_cazes == null)
         {
-            ExternalContext externalContext = facesContext.getExternalContext();
-            FacesConfigFactory fcf = MyFacesFactoryFinder.getFacesConfigFactory(externalContext);
-            FacesConfig fc = fcf.getFacesConfig(externalContext);
-
-            List rules = fc.getNavigationRuleConfigList();
-            int rulesSize = rules.size();
-            _cazes = new HashMap(HashMapUtils.calcCapacity(rulesSize));
-
-            for (int i = 0; i < rulesSize; i++)
+            synchronized(this) 
             {
-                NavigationRuleConfig rule = (NavigationRuleConfig)rules.get(i);
-                List cazes = rule.getNavigationCaseConfigList();
-                int sizej = cazes.size();
-
-                String fromViewId = rule.getFromViewId();
-
-                //specification 7.4.2 footnote 4 - missing fromViewId is allowed:
-                if (fromViewId == null)
+                if (_cazes == null)
                 {
-                    fromViewId = ASTERISK;
-                }
-                else
-                {
-                    fromViewId = fromViewId.trim();
-                }
-
-                List list = (List)_cazes.get(fromViewId);
-                if (list == null)
-                {
-                    list = new ArrayList(sizej);
-                    _cazes.put(fromViewId, list);
-                    if (fromViewId.endsWith(ASTERISK))
+                    ExternalContext externalContext = facesContext.getExternalContext();
+                    FacesConfigFactory fcf = MyFacesFactoryFinder.getFacesConfigFactory(externalContext);
+                    FacesConfig fc = fcf.getFacesConfig(externalContext);
+        
+                    List rules = fc.getNavigationRuleConfigList();
+                    int rulesSize = rules.size();
+                    Map cases = new HashMap(HashMapUtils.calcCapacity(rulesSize));
+                    List wildcardKeys = new ArrayList();
+        
+                    for (int i = 0; i < rulesSize; i++)
                     {
-                        _wildcardKeys.add(fromViewId);
+                        NavigationRuleConfig rule = (NavigationRuleConfig)rules.get(i);
+                        List cazeList = rule.getNavigationCaseConfigList();
+                        int sizej = cazeList.size();
+        
+                        String fromViewId = rule.getFromViewId();
+        
+                        //specification 7.4.2 footnote 4 - missing fromViewId is allowed:
+                        if (fromViewId == null)
+                        {
+                            fromViewId = ASTERISK;
+                        }
+                        else
+                        {
+                            fromViewId = fromViewId.trim();
+                        }
+        
+                        List list = (List) cases.get(fromViewId);
+                        if (list == null)
+                        {
+                            list = new ArrayList(sizej);
+                            cases.put(fromViewId, list);
+                            if (fromViewId.endsWith(ASTERISK))
+                            {
+                                wildcardKeys.add(fromViewId);
+                            }
+                        }
+        
+                        for (int j = 0; j < sizej; j++)
+                        {
+                            NavigationCaseConfig navcase = (NavigationCaseConfig)cazeList.get(j);
+                            list.add(navcase);
+                        }
+                    }
+                    Collections.sort(wildcardKeys, new KeyComparator());
+                        
+                    synchronized (cases)
+                    {
+                        // We do not really need this sychronization at all, but this
+                        // gives us the peace of mind that some good optimizing compiler
+                        // will not rearrange the execution of the assignment to an 
+                        // earlier time, before all init code completes
+                        _cazes = cases;
+                        _wildcardKeys = wildcardKeys;
                     }
                 }
-
-                for (int j = 0; j < sizej; j++)
-                {
-                    NavigationCaseConfig navcase = (NavigationCaseConfig)cazes.get(j);
-                    list.add(navcase);
-                }
             }
-            Collections.sort(_wildcardKeys, new KeyComparator());
         }
         return _cazes;
     }

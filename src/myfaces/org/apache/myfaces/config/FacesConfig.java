@@ -157,9 +157,7 @@ public class FacesConfig
 
     public List getNavigationRuleConfigList()
     {
-        return _navigationRuleConfigList == null
-                ? Collections.EMPTY_LIST
-                : _navigationRuleConfigList;
+        return _navigationRuleConfigList;
     }
 
 
