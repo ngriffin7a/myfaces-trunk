@@ -61,18 +61,18 @@ managed beans used:
                     <h:panelGrid columns="2">
 
                         <h:outputLabel for="selone_lb" value="#{example_messages['label_cars']}" />
-                        <h:selectOneListbox size="3" value="#{carconf.car}">
+                        <h:selectOneListbox id="selone_lb" size="3" value="#{carconf.car}">
                             <f:selectItems id="selone_lb_cars" value="#{carconf.cars}" />
                         </h:selectOneListbox>
 
-                        <h:outputLabel for="selone_menu" value="#{example_messages['label_colors']}" />
-                        <h:selectOneMenu value="#{carconf.color}" >
+                        <h:outputLabel for="selone_menu_colors" value="#{example_messages['label_colors']}" />
+                        <h:selectOneMenu id="selone_menu_colors" value="#{carconf.color}" >
                             <f:selectItem itemValue="" itemLabel="#{example_messages['empty_selitem']}" />
                             <f:selectItems value="#{carconf.colors}" />
                         </h:selectOneMenu>
 
-                        <h:outputLabel for="selone_menu" value="#{example_messages['label_extras']}" />
-                        <h:selectManyCheckbox value="#{carconf.extras}" layout="pageDirection" >
+                        <h:outputLabel for="selone_menu_extras" value="#{example_messages['label_extras']}" />
+                        <h:selectManyCheckbox id="selone_menu_extras" value="#{carconf.extras}" layout="pageDirection" >
                             <f:selectItems value="#{carconf.extrasList}" />
                         </h:selectManyCheckbox>
 

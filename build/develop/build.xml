@@ -49,7 +49,7 @@
         <pathelement location="${servlet.jar}"/>
         <pathelement location="${jsp-api.jar}"/>
         <pathelement location="${jstl.jar}"/>
-        <pathelement location="${cos.jar}"/>    <!-- Base64 classes -->
+        <pathelement location="${commons-codec.jar}"/>    <!-- Base64 classes -->
         <pathelement location="${commons-logging.jar}"/>
         <pathelement location="${commons-el.jar}"/>
     </path>
@@ -61,9 +61,10 @@
         <pathelement location="${servlet.jar}"/>
         <pathelement location="${jsp-api.jar}"/>
         <pathelement location="${jstl.jar}"/>
-        <pathelement location="${cos.jar}"/>
         <pathelement location="${commons-logging.jar}"/>
         <pathelement location="${commons-el.jar}"/>
+        <pathelement location="${commons-fileupload.jar}"/>
+        <pathelement location="${cos.jar}"/>
     </path>
 
     <path id="examples.class.path">
@@ -71,10 +72,8 @@
         <pathelement location="${servlet.jar}"/>
         <pathelement location="${jsp-api.jar}"/>
         <pathelement location="${jstl.jar}"/>
-        <pathelement location="${cos.jar}"/>
         <pathelement location="${commons-logging.jar}"/>
         <pathelement location="${commons-el.jar}"/>
-        <pathelement location="${cglib.jar}"/>
     </path>
 
     <target name="prepare-for-debug"
@@ -83,13 +82,12 @@
         <mkdir dir="${web-inf.lib.dir}"/>
 
         <copy todir="${web-inf.lib.dir}">
-            <fileset file="${cos.jar}"/>
             <fileset file="${jstl.jar}"/>
             <fileset file="${jsp-api.jar}"/>
+            <fileset file="${commons-codec.jar}"/>
             <fileset file="${commons-logging.jar}"/>
             <fileset file="${commons-el.jar}"/>
             <fileset file="${log4j.jar}"/>
-            <fileset file="${cglib.jar}"/>
         </copy>
 
         <copy file="${project.dir}/conf/develop-web.xml" tofile="${examples.web}/WEB-INF/web.xml" />

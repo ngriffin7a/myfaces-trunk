@@ -21,8 +21,11 @@ package net.sourceforge.myfaces.renderkit.html;
 import net.sourceforge.myfaces.renderkit.JSFAttr;
 import net.sourceforge.myfaces.renderkit.RendererUtils;
 
-import javax.faces.FacesException;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import javax.faces.component.UIComponent;
+import javax.faces.component.UINamingContainer;
 import javax.faces.component.ValueHolder;
 import javax.faces.component.html.HtmlOutputLabel;
 import javax.faces.context.FacesContext;
@@ -36,6 +39,9 @@ import java.io.IOException;
  * @author Martin Marinschek
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.10  2004/04/13 10:42:03  manolito
+ * introduced commons codecs and fileupload
+ *
  * Revision 1.9  2004/04/05 15:02:47  manolito
  * for-attribute issues
  *
@@ -43,6 +49,8 @@ import java.io.IOException;
 public class HtmlLabelRenderer
 extends HtmlRenderer
 {
+    private static final Log log = LogFactory.getLog(HtmlLabelRenderer.class);
+
     public void encodeBegin(FacesContext facesContext, UIComponent uiComponent)
             throws IOException
     {
@@ -62,10 +70,34 @@ extends HtmlRenderer
         UIComponent forComponent = uiComponent.findComponent(forAttr);
         if (forComponent == null)
         {
-            throw new FacesException("Unable to find component '" + forAttr + "' (calling findComponent on component '" + uiComponent.getClientId(facesContext) + "')");
+            if (log.isWarnEnabled())
+            {
+                log.warn("Unable to find component '" + forAttr + "' (calling findComponent on component '" + uiComponent.getClientId(facesContext) + "')");
+            }
+            if (forAttr.length() > 0 && forAttr.charAt(0) == UINamingContainer.SEPARATOR_CHAR)
+            {
+                //absolute id path
+                writer.writeAttribute(HTML.FOR_ATTR, forAttr.substring(1), JSFAttr.FOR_ATTR);
+            }
+            else
+            {
+                //relative id path, we assume a component on the same level as the label component
+                String labelClientId = uiComponent.getClientId(facesContext);
+                int colon = labelClientId.lastIndexOf(UINamingContainer.SEPARATOR_CHAR);
+                if (colon == -1)
+                {
+                    writer.writeAttribute(HTML.FOR_ATTR, forAttr, JSFAttr.FOR_ATTR);
+                }
+                else
+                {
+                    writer.writeAttribute(HTML.FOR_ATTR, labelClientId.substring(0, colon + 1) + forAttr, JSFAttr.FOR_ATTR);
+                }
+            }
         }
-
-        writer.writeAttribute(HTML.FOR_ATTR, forComponent.getClientId(facesContext), JSFAttr.FOR_ATTR);
+        else
+        {
+            writer.writeAttribute(HTML.FOR_ATTR, forComponent.getClientId(facesContext), JSFAttr.FOR_ATTR);
+        }
 
 
         //MyFaces extension: Render a label text given by value

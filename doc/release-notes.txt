@@ -4,7 +4,8 @@ MyFaces Release Notes
 ----------------------------------------------------------------------
 Changes in Release 1.0.2 alpha
 * refactored custom components to net.sourceforge.myfaces.custom package
-* custom message and messages component with new attributes summaryFormat and detailFormat  
+* custom message and messages component with new attributes summaryFormat and detailFormat
+* replaces com.oreilly.servlet package cos.jar by commons-codec  
 
 ----------------------------------------------------------------------
 Changes in Release 1.0.1 alpha

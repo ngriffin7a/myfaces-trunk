@@ -44,9 +44,9 @@
              webxml="${basedir}/web.xml"
              manifest="${temp.dir}/MANIFEST.MF">
             <lib file="${temp.dir}/${tests.jar}"/>
+            <lib file="${commons-codec.jar}"/>
             <lib file="${commons-el.jar}"/>
-        	    <lib file="${commons-logging.jar}"/>
-            <lib file="${cos.jar}"/>
+        	<lib file="${commons-logging.jar}"/>
             <lib file="${jsp-api.jar}"/>
             <lib file="${jstl.jar}"/>
             <lib file="${myfaces.jar}"/>

@@ -22,7 +22,6 @@
 
     <!-- classpath for compiling -->
     <path id="examples.class.path">
-        <!--pathelement location="${sun-jsf-api.jar}"/-->
         <pathelement location="${servlet.jar}"/>
         <pathelement location="${jsp-api.jar}"/>
         <pathelement location="${jstl.jar}"/>
@@ -62,7 +61,6 @@
                      excludes="**/*.java
                                **/package.html"/>
         </copy>
-
     </target>
 
     <target name="release"
@@ -87,9 +85,10 @@
         <war destfile="${temp.dir}/myfaces-examples.war"
              webxml="${project.dir}/conf/web.xml"
              manifest="${temp.dir}/MANIFEST.MF">
+            <lib file="${commons-codec.jar}"/>
             <lib file="${commons-el.jar}"/>
+            <lib file="${commons-fileupload.jar}"/>
             <lib file="${commons-logging.jar}"/>
-            <lib file="${cos.jar}"/>
             <lib file="${jsp-api.jar}"/>
             <lib file="${jstl.jar}"/>
             <lib file="${myfaces.jar}"/>
@@ -151,9 +150,8 @@
 
         <mkdir dir="${web-inf.lib.dir}"/>
         <copy todir="${web-inf.lib.dir}">
-            <fileset file="${cos.jar}"/>
-            <!--fileset file="${sun-jsf-api.jar}"/-->
             <fileset file="${myfaces.jar}"/>
+            <fileset file="${commons-codec.jar}"/>
             <fileset file="${commons-logging.jar}"/>
             <fileset file="${log4j.jar}"/>
         </copy>
