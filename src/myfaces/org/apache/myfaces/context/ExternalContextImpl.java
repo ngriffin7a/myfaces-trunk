@@ -29,11 +29,13 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.InputStream;
+import java.security.Principal;
 import java.util.*;
 
 /**
  * JSF 1.0 PRD2, 6.1.1
  * @author Manfred Geiler (latest modification by $Author$)
+ * @author Anton Koinov
  * @version $Revision$ $Date$
  */
 public class ExternalContextImpl
@@ -74,6 +76,7 @@ public class ExternalContextImpl
 
     public void release()
     {
+        // REVISIT: does not seem to be used, should remove
         _servletContext = null;
         _servletRequest = null;
         _servletResponse = null;
@@ -98,7 +101,7 @@ public class ExternalContextImpl
         }
         else
         {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("Only HttpServletRequest supported");
         }
     }
 
@@ -277,11 +280,6 @@ public class ExternalContextImpl
         return ((HttpServletResponse)_servletResponse).encodeURL(s);
     }
 
-    public String encodeURL(String s)
-    {
-        return ((HttpServletResponse)_servletResponse).encodeURL(s);
-    }
-
     public String encodeNamespace(String s)
     {
         return s;
@@ -299,5 +297,33 @@ public class ExternalContextImpl
         {
             throw new FacesException(e);
         }
+    }
+
+    public String getRequestServletPath() {
+        return ((HttpServletRequest)_servletRequest).getServletPath();
+    }
+
+    public String getAuthType() {
+        return ((HttpServletRequest)_servletRequest).getAuthType();
+    }
+
+    public String getRemoteUser() {
+        return ((HttpServletRequest)_servletRequest).getRemoteUser();
+    }
+
+    public boolean isUserInRole(String role) {
+        return ((HttpServletRequest)_servletRequest).isUserInRole(role);    
+    }
+
+    public Principal getUserPrincipal() {
+        return ((HttpServletRequest)_servletRequest).getUserPrincipal();
+    }
+
+    public void log(String message) {
+        _servletContext.log(message);
+    }
+
+    public void log(String message, Throwable t) {
+        _servletContext.log(message, t);
     }
 }
