@@ -70,6 +70,9 @@ import org.xml.sax.SAXException;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.3.2.2  2004/06/15 11:54:22  o_rossmueller
+ * fixed decorator pattern support
+ *
  * Revision 1.3.2.1  2004/06/13 15:59:07  o_rossmueller
  * started integration of new config mechanism:
  * - factories
@@ -408,7 +411,7 @@ public class FacesConfigurator
     private void configureApplication()
     {
         Application application = ((ApplicationFactory) FactoryFinder.getFactory(FactoryFinder.APPLICATION_FACTORY)).getApplication();
-        application.setActionListener((ActionListener) getApplicationObject(ActionListener.class, _dispenser.getActionListenerIterator(), DEFAULT_ACTION_LISTENER_CLASS));
+        application.setActionListener((ActionListener) getApplicationObject(ActionListener.class, _dispenser.getActionListenerIterator(), null));
 
         if (_dispenser.getDefaultLocale() != null)
         {
@@ -426,11 +429,11 @@ public class FacesConfigurator
         }
 
         application.setNavigationHandler((NavigationHandler) getApplicationObject(NavigationHandler.class,
-            _dispenser.getNavigationHandlerIterator(), DEFAULT_NAVIGATION_HANDLER_CLASS));
+            _dispenser.getNavigationHandlerIterator(), application.getNavigationHandler()));
         application.setPropertyResolver((PropertyResolver) getApplicationObject(PropertyResolver.class,
-            _dispenser.getPropertyResolverIterator(), DEFAULT_PROPERTY_RESOLVER_CLASS));
+            _dispenser.getPropertyResolverIterator(), application.getPropertyResolver()));
         application.setStateManager((StateManager) getApplicationObject(StateManager.class,
-            _dispenser.getStateManagerIterator(), DEFAULT_STATE_MANAGER_CLASS));
+            _dispenser.getStateManagerIterator(), application.getStateManager()));
         List locales = new ArrayList();
         for (Iterator it = _dispenser.getSupportedLocalesIterator(); it.hasNext();)
         {
@@ -439,9 +442,9 @@ public class FacesConfigurator
         application.setSupportedLocales(locales);
 
         application.setVariableResolver((VariableResolver) getApplicationObject(VariableResolver.class,
-            _dispenser.getVariableResolverIterator(), DEFAULT_VARIABLE_RESOLVER_CLASS));
+            _dispenser.getVariableResolverIterator(), application.getVariableResolver()));
         application.setViewHandler((ViewHandler) getApplicationObject(ViewHandler.class,
-            _dispenser.getViewHandlerIterator(), DEFAULT_VIEW_HANDLER_CLASS));
+            _dispenser.getViewHandlerIterator(), application.getViewHandler()));
 
         for (Iterator it = _dispenser.getComponentTypes(); it.hasNext();)
         {
@@ -472,61 +475,51 @@ public class FacesConfigurator
         }
     }
 
-    private Object getApplicationObject(Class interfaceClass, Iterator classNamesIterator, String defaultClassName)
+    private Object getApplicationObject(Class interfaceClass, Iterator classNamesIterator, Object defaultObject)
     {
-        if (!classNamesIterator.hasNext())
-        {
-            return ClassUtils.newInstance(defaultClassName);
+        Object current = defaultObject;
 
-        }
-        String implClassName = (String)classNamesIterator.next();
-        Class implClass = ClassUtils.classForName(implClassName);
-
-        // check, if class is of expected interface type
-        if (!interfaceClass.isAssignableFrom(implClass))
+        while (classNamesIterator.hasNext())
         {
-            throw new IllegalArgumentException("Class " + implClassName + " is no " + interfaceClass.getName());
-        }
+            String implClassName = (String) classNamesIterator.next();
+            Class implClass = ClassUtils.classForName(implClassName);
 
-        if (classNamesIterator.hasNext())
-        {
-            // there is a superordinate class,
-            // so let's check if class supports the decorator pattern
+            // check, if class is of expected interface type
+            if (!interfaceClass.isAssignableFrom(implClass))
+            {
+                throw new IllegalArgumentException("Class " + implClassName + " is no " + interfaceClass.getName());
+            }
+
+            // let's check if class supports the decorator pattern
             try
             {
-                Constructor delegationConstructor = implClass.getConstructor(new Class[] {interfaceClass});
+                Constructor delegationConstructor = implClass.getConstructor(new Class[]{interfaceClass});
                 // impl class supports decorator pattern,
-                // get instance of superordinate class
-                Object superObj = getApplicationObject(interfaceClass, classNamesIterator, defaultClassName);
-                // and call constructor with this object as argument
                 try
                 {
-                    return delegationConstructor.newInstance(new Object[] {superObj});
-                }
-                catch (InstantiationException e)
+                    // create new decorator wrapping current
+                    current = delegationConstructor.newInstance(new Object[]{current});
+                } catch (InstantiationException e)
+                {
+                    log.error(e.getMessage(), e);
+                    throw new FacesException(e);
+                } catch (IllegalAccessException e)
+                {
+                    log.error(e.getMessage(), e);
+                    throw new FacesException(e);
+                } catch (InvocationTargetException e)
                 {
                     log.error(e.getMessage(), e);
                     throw new FacesException(e);
                 }
-                catch (IllegalAccessException e)
-                {
-                    log.error(e.getMessage(), e);
-                    throw new FacesException(e);
-                }
-                catch (InvocationTargetException e)
-                {
-                    log.error(e.getMessage(), e);
-                    throw new FacesException(e);
-                }
-            }
-            catch (NoSuchMethodException e)
+            } catch (NoSuchMethodException e)
             {
-                // decorator pattern not supported
+                // no decorator pattern support
+                current = ClassUtils.newInstance(implClass);
             }
         }
 
-        // no superordinate class or decorator pattern not supported
-        return ClassUtils.newInstance(implClass);
+        return current;
     }
 
 
