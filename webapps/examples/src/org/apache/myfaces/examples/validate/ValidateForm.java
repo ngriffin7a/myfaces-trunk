@@ -17,6 +17,11 @@ package org.apache.myfaces.examples.validate;
 
 /**
  * @author mwessendorf
+ * @version $Revision$ $Date$
+ * $Log$
+ * Revision 1.3  2004/11/21 12:39:09  mmarinschek
+ * better Error handling
+ *
  */
 public class ValidateForm {
 

@@ -74,6 +74,7 @@
         <pathelement location="${commons-validator.jar}"/>
         <pathelement location="${jakarta-oro.jar}"/>
         <pathelement location="${struts.jar}"/>
+        <pathelement location="${commons-beanutils.jar}"/>        
         <pathelement location="${commons-fileupload.jar}"/>
         <pathelement location="${commons-digester.jar}"/>
         <pathelement location="${commons-beanutils.jar}"/>
@@ -418,7 +419,7 @@
         <delete quiet="true" failonerror="false" includeEmptyDirs="true">
             <fileset file="${myfaces-jsf-api.jar}" />
             <fileset file="${myfaces-impl.jar}" />
-            <fileset file="${myfaces-extentions.jar}" />
+            <fileset file="${myfaces-extensions.jar}" />
             <fileset file="${myfaces.jar}" />
             <fileset file="${project.dir}/myfaces-*.tgz" />
             <fileset dir="${doc.dir}/javadoc" />

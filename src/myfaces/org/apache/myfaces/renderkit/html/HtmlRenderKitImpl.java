@@ -70,7 +70,7 @@ public class HtmlRenderKitImpl
     }
 
     public void addRenderer(String componentFamily, String rendererType, Renderer renderer)
-    {
+    {                                                          
         _renderers.put(key(componentFamily, rendererType), renderer);
     }
 
