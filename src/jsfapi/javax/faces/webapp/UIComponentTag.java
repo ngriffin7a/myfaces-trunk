@@ -19,6 +19,7 @@
 package javax.faces.webapp;
 
 import javax.faces.FactoryFinder;
+import javax.faces.FacesException;
 import javax.faces.application.Application;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
@@ -37,6 +38,9 @@ import java.util.*;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.17  2004/04/20 11:11:03  royalts
+ * no message
+ *
  * Revision 1.16  2004/04/20 10:54:21  royalts
  * added index check to findComponent
  *
@@ -393,8 +397,7 @@ public abstract class UIComponentTag
                 }
                 else
                 {
-                    // for safety!
-                    children.add(_componentInstance);
+                    throw new FacesException("cannot add component '" + _componentInstance.getId() + "'");
                 }
             }
             addChildIdToParentTag(parentTag, id);
