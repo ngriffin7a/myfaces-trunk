@@ -1,4 +1,4 @@
-/**
+/*
  * MyFaces - the free JSF implementation
  * Copyright (C) 2003, 2004  The MyFaces Team (http://myfaces.sourceforge.net)
  *
@@ -44,8 +44,9 @@ public class HTMLUtil
 {
     //~ Constructors -------------------------------------------------------------------------------
 
-    private HTMLUtil()
+    protected HTMLUtil()
     {
+        // disallow public instantiation
     }
 
     //~ Methods ------------------------------------------------------------------------------------
@@ -164,7 +165,7 @@ public class HTMLUtil
         throws IOException
     {
         boolean somethingDone = false;
-        for (int i = 0; i < attributes.length; i++)
+        for (int i = 0, len = attributes.length; i < len; i++)
         {
             String attrName = attributes[i];
             if (attrName.equals(HTML.STYLE_CLASS_ATTR))
@@ -475,14 +476,22 @@ public class HTMLUtil
         }
         else
         {
-            buf.append(HTML.HEF_PARAM_SEPARATOR);
+            buf.append(HTML.HREF_PARAM_SEPARATOR);
         }
         buf.append(name);
-        buf.append(HTML.HEF_PARAM_NAME_FROM_VALUE_SEPARATOR);
+        buf.append(HTML.HREF_PARAM_NAME_FROM_VALUE_SEPARATOR);
         buf.append(value);
 
         return buf.toString();
     }
 
+    public static boolean isDisabled(UIComponent component)
+    {
+        return "true".equalsIgnoreCase((String) component.getAttributes().get(HTML.DISABLED_ATTR));
+    }
 
+    public static boolean isReadOnly(UIComponent component)
+    {
+        return "true".equalsIgnoreCase((String) component.getAttributes().get(HTML.READONLY_ATTR));
+    }
 }

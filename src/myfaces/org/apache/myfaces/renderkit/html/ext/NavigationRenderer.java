@@ -63,9 +63,7 @@ public class NavigationRenderer
         ResponseWriter writer = facesContext.getResponseWriter();
         writer.write("<table ");
         HTMLUtil.renderStyleClass(writer, uiComponent);
-        HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML.UNIVERSAL_ATTRIBUTES);
-        HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML.EVENT_HANDLER_ATTRIBUTES);
-        HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML.TABLE_ATTRIBUTES);
+        HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML.TABLE_PASSTHROUGH_ATTRIBUTES);
         String panelClass = (String)uiComponent.getAttributes().get(JSFAttr.PANEL_CLASS_ATTR);
         if (panelClass == null)
         {

@@ -69,9 +69,7 @@ extends HtmlRenderer
 
             writer.writeAttribute(HTML.ALT_ATTR, img.getAlt(), null);
 
-            HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML.UNIVERSAL_ATTRIBUTES);
-            HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML.EVENT_HANDLER_ATTRIBUTES);
-            HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML.IMG_ATTRUBUTES);
+            HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML.IMG_PASSTHROUGH_ATTRIBUTES);
         }
     }
 }

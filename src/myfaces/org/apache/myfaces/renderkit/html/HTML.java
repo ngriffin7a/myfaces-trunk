@@ -1,4 +1,4 @@
-/**
+/*
  * MyFaces - the free JSF implementation
  * Copyright (C) 2003, 2004  The MyFaces Team (http://myfaces.sourceforge.net)
  *
@@ -24,14 +24,18 @@ import net.sourceforge.myfaces.util.ArrayUtils;
 /**
  * Constant declarations for HTML rendering.
  * @author Manfred Geiler (latest modification by $Author$)
+ * @author Anton Koinov
  * @version $Revision$ $Date$
  */
 public class HTML
 {
+    protected HTML()
+    {
+        // disable public instantiation
+    }
+
     public static final String INPUT_CHECKED_VALUE = "checked";
     public static final String INPUT_SELECTED_VALUE = "selected";
-
-    private HTML() {}
 
     // Common attributes
     public static final String ALIGN_ATTR = "align";
@@ -146,6 +150,10 @@ public class HTML
         TARGET_ATTR,
         TYPE_ATTR
     };
+    public static final String[] ANCHOR_PASSTHROUGH_ATTRIBUTES =
+        (String[]) ArrayUtils.concat(
+            ANCHOR_ATTRIBUTES,
+            COMMON_PASSTROUGH_ATTRIBUTES);
 
     // <form>
     public static final String ACCEPT_CHARSET_ATTR = "accept-charset";
@@ -161,6 +169,10 @@ public class HTML
         ONSUMBIT_ATTR,
         TARGET_ATTR,
     };
+    public static final String[] FORM_PASSTHROUGH_ATTRIBUTES =
+        (String[]) ArrayUtils.concat(
+            FORM_ATTRIBUTES,
+            COMMON_PASSTROUGH_ATTRIBUTES);
 
     // <img>
     public static final String SRC_ATTR = "src";
@@ -185,6 +197,10 @@ public class HTML
         VSPACE_ATTR,
         WIDTH_ATTR
     };
+    public static final String[] IMG_PASSTHROUGH_ATTRIBUTES =
+        (String[]) ArrayUtils.concat(
+           IMG_ATTRUBUTES,
+           COMMON_PASSTROUGH_ATTRIBUTES);
 
     // <input>
     public static final String SIZE_ATTR = "size";
@@ -192,24 +208,21 @@ public class HTML
     public static final String MAXLENGTH_ATTR = "maxlength";
 
     public static final String[] INPUT_ATTRIBUTES = {
-        ACCESSKEY_ATTR,
         ALIGN_ATTR,
         ALT_ATTR,
         CHECKED_ATTR,
         DATAFLD_ATTR,
         DATASRC_ATTR,
         DATAFORMATAS_ATTR,
-        DISABLED_ATTR,
         MAXLENGTH_ATTR,
-        ONBLUR_ATTR,
-        ONCHANGE_ATTR,
-        ONFOCUS_ATTR,
-        ONSELECT_ATTR,
         READONLY_ATTR,
         SIZE_ATTR,
-        TABINDEX_ATTR
     };
-
+    public static final String[] INPUT_PASSTHROUGH_ATTRIBUTES = 
+        (String[]) ArrayUtils.concat(
+                INPUT_ATTRIBUTES,
+                COMMON_FIELD_PASSTROUGH_ATTRIBUTES);
+        
     //values for input-type attribute
     public static final String INPUT_TYPE_SUBMIT = "submit";
     public static final String INPUT_TYPE_IMAGE = "image";
@@ -221,19 +234,17 @@ public class HTML
     // <button>
     public static final String[] BUTTON_ATTRIBUTES =
     {
-        ACCESSKEY_ATTR,
         ALIGN_ATTR,
         ALT_ATTR,
         DATAFLD_ATTR,
         DATASRC_ATTR,
         DATAFORMATAS_ATTR,
-        DISABLED_ATTR,
-        ONBLUR_ATTR,
-        ONCHANGE_ATTR,
-        ONFOCUS_ATTR,
-        TABINDEX_ATTR,
     };
-
+    public static final String[] BUTTON_PASSTHROUGH_ATTRIBUTES = 
+        (String[]) ArrayUtils.concat(
+            BUTTON_ATTRIBUTES,
+            COMMON_FIELD_PASSTROUGH_ATTRIBUTES);
+    
     // <label>
     public static final String[] LABEL_ATTRIBUTES =
     {
@@ -253,8 +264,8 @@ public class HTML
     };
     public static final String[] SELECT_PASSTHROUGH_ATTRIBUTES =
         (String[]) ArrayUtils.concat(
-            COMMON_FIELD_PASSTROUGH_ATTRIBUTES, 
-            SELECT_ATTRIBUTES);
+            SELECT_ATTRIBUTES,
+            COMMON_FIELD_PASSTROUGH_ATTRIBUTES);
 
     // <table>
     public static final String BGCOLOR_ATTR = "bgcolor";
@@ -277,26 +288,27 @@ public class HTML
         SUMMARY_ATTR,
         WIDTH_ATTR
     };
+    public static final String[] TABLE_PASSTHROUGH_ATTRIBUTES =
+        (String[]) ArrayUtils.concat(
+            TABLE_ATTRIBUTES,
+            COMMON_PASSTROUGH_ATTRIBUTES);
 
     // <textarea>
     public static final String COLS_ATTR = "cols";
     public static final String ROWS_ATTR = "rows";
     public static final String[] TEXTAREA_ATTRIBUTES =
     {
-        ACCESSKEY_ATTR,
         COLS_ATTR,
         DATAFLD_ATTR,
         DATASRC_ATTR,
         DATAFORMATAS_ATTR,
-        DISABLED_ATTR,
-        ONBLUR_ATTR,
-        ONCHANGE_ATTR,
-        ONFOCUS_ATTR,
-        ONSELECT_ATTR,
         READONLY_ATTR,
         ROWS_ATTR,
-        TABINDEX_ATTR,
     };
+    public static final String[] TEXTAREA_PASSTHROUGH_ATTRIBUTES =
+        (String[]) ArrayUtils.concat(
+            TEXTAREA_ATTRIBUTES,
+            COMMON_FIELD_PASSTROUGH_ATTRIBUTES);
 
     // <input type=file>
     public static final String[] INPUT_FILE_UPLOAD_ATTRIBUTES =
@@ -336,7 +348,7 @@ public class HTML
 
     public static final String HREF_PATH_SEPARATOR = "/";
     public static final String HREF_PATH_FROM_PARAM_SEPARATOR = "?";
-    public static final String HEF_PARAM_SEPARATOR = "&";
-    public static final String HEF_PARAM_NAME_FROM_VALUE_SEPARATOR = "=";
+    public static final String HREF_PARAM_SEPARATOR = "&";
+    public static final String HREF_PARAM_NAME_FROM_VALUE_SEPARATOR = "=";
 
 }

@@ -26,7 +26,6 @@ import net.sourceforge.myfaces.renderkit.JSFAttr;
 import javax.faces.component.UIComponent;
 import javax.faces.component.UISelectBoolean;
 import javax.faces.component.UISelectMany;
-import javax.faces.component.UISelectItem;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 import javax.faces.context.ExternalContext;
@@ -180,9 +179,7 @@ extends HtmlRenderer
             writer.writeAttribute(HTML.VALUE_ATTR,value,null);
         }
 
-        HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML.UNIVERSAL_ATTRIBUTES);
-        HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML.EVENT_HANDLER_ATTRIBUTES);
-        HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML.INPUT_ATTRIBUTES);
+        HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML.INPUT_PASSTHROUGH_ATTRIBUTES);
         HTMLUtil.renderDisabledOnUserRole(writer, uiComponent, facesContext);
 
         if ((label != null) && (label.length() > 0))

@@ -187,9 +187,7 @@ public class RadioRenderer
         }
 
         HTMLUtil.renderStyleClass(writer, uiSelectOne);
-        HTMLUtil.renderHTMLAttributes(writer, uiSelectOne, HTML.UNIVERSAL_ATTRIBUTES);
-        HTMLUtil.renderHTMLAttributes(writer, uiSelectOne, HTML.EVENT_HANDLER_ATTRIBUTES);
-        HTMLUtil.renderHTMLAttributes(writer, uiSelectOne, HTML.INPUT_ATTRIBUTES);
+        HTMLUtil.renderHTMLAttributes(writer, uiSelectOne, HTML.INPUT_PASSTHROUGH_ATTRIBUTES);
         HTMLUtil.renderDisabledOnUserRole(facesContext, uiSelectOne);
 
         writer.write('>');

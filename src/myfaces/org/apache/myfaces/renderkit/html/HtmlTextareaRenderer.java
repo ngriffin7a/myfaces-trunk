@@ -47,9 +47,7 @@ public class HtmlTextareaRenderer
         writer.writeAttribute(HTML.NAME_ATTR, clientId, null);
         writer.writeAttribute(HTML.ID_ATTR, clientId, null);
 
-        HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML.UNIVERSAL_ATTRIBUTES);
-        HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML.EVENT_HANDLER_ATTRIBUTES);
-        HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML.TEXTAREA_ATTRIBUTES);
+        HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML.TEXTAREA_PASSTHROUGH_ATTRIBUTES);
         HTMLUtil.renderDisabledOnUserRole(writer, uiComponent, facesContext);
 
         ValueBinding vb = uiComponent.getValueBinding(JSFAttr.VALUE_ATTR);

@@ -1,4 +1,4 @@
-/**
+/*
  * MyFaces - the free JSF implementation
  * Copyright (C) 2003, 2004  The MyFaces Team (http://myfaces.sourceforge.net)
  *
@@ -63,6 +63,11 @@ public class HtmlLinkRenderer
     public void decode(FacesContext facesContext, UIComponent uiComponent)
     {
         RendererUtils.checkParamValidity(facesContext, uiComponent, UICommand.class);
+        
+        if (HTMLUtil.isDisabled(uiComponent))
+        {
+            return;
+        }
 
         UICommand uiCommand = (UICommand) uiComponent;
 
@@ -214,9 +219,7 @@ public class HtmlLinkRenderer
 
         writer.write("\"");
 
-        HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML.UNIVERSAL_ATTRIBUTES);
-        HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML.EVENT_HANDLER_ATTRIBUTES);
-        HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML.ANCHOR_ATTRIBUTES);
+        HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML.ANCHOR_PASSTHROUGH_ATTRIBUTES);
 
         writer.write(">");
 

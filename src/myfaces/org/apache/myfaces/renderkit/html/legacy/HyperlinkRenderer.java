@@ -232,9 +232,7 @@ public class HyperlinkRenderer
         writer.write("\"");
 
         HTMLUtil.renderStyleClass(writer, uiComponent);
-        HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML.UNIVERSAL_ATTRIBUTES);
-        HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML.EVENT_HANDLER_ATTRIBUTES);
-        HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML.ANCHOR_ATTRIBUTES);
+        HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML.ANCHOR_PASSTHROUGH_ATTRIBUTES);
 
         writer.write(">");
 

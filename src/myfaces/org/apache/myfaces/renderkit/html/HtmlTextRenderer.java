@@ -138,9 +138,7 @@ public class HtmlTextRenderer
             writer.writeAttribute(HTML.VALUE_ATTR, value, JSFAttr.VALUE_ATTR);
         }
 
-        HTMLUtil.renderHTMLAttributes(writer, htmlInput, HTML.UNIVERSAL_ATTRIBUTES);
-        HTMLUtil.renderHTMLAttributes(writer, htmlInput, HTML.EVENT_HANDLER_ATTRIBUTES);
-        HTMLUtil.renderHTMLAttributes(writer, htmlInput, HTML.INPUT_ATTRIBUTES);
+        HTMLUtil.renderHTMLAttributes(writer, htmlInput, HTML.INPUT_PASSTHROUGH_ATTRIBUTES);
         HTMLUtil.renderDisabledOnUserRole(writer, htmlInput, facesContext);
 
         writer.endElement(HTML.INPUT_ELEM);

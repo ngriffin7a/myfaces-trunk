@@ -32,6 +32,7 @@ import java.util.Map;
 
 /**
  * @author Manfred Geiler (latest modification by $Author$)
+ * @author Anton Koinov
  * @version $Revision$ $Date$
  */
 public class HtmlFormRenderer
@@ -47,7 +48,7 @@ public class HtmlFormRenderer
             throws IOException
     {
         RendererUtils.checkParamValidity(facesContext, component, HtmlForm.class);
-
+        
         HtmlForm htmlForm = (HtmlForm)component;
 
         ExternalContext externalContext = facesContext.getExternalContext();
@@ -76,9 +77,7 @@ public class HtmlFormRenderer
                               null);
 
         HTMLUtil.renderStyleClass(writer, htmlForm);
-        HTMLUtil.renderHTMLAttributes(writer, htmlForm, HTML.UNIVERSAL_ATTRIBUTES);
-        HTMLUtil.renderHTMLAttributes(writer, htmlForm, HTML.EVENT_HANDLER_ATTRIBUTES);
-        HTMLUtil.renderHTMLAttributes(writer, htmlForm, HTML.FORM_ATTRIBUTES);
+        HTMLUtil.renderHTMLAttributes(writer, htmlForm, HTML.FORM_PASSTHROUGH_ATTRIBUTES);
     }
 
 
@@ -105,6 +104,11 @@ public class HtmlFormRenderer
     public void decode(FacesContext facesContext, UIComponent component)
     {
         RendererUtils.checkParamValidity(facesContext, component, HtmlForm.class);
+        
+        if (!HTMLUtil.isDisabled(component))
+        {
+            return;
+        }
 
         HtmlForm htmlForm = (HtmlForm)component;
 

@@ -65,9 +65,7 @@ extends HtmlRenderer
         writer.write(getActionStr(facesContext));
         writer.write('"');
         HTMLUtil.renderStyleClass(writer, uiComponent);
-        HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML.UNIVERSAL_ATTRIBUTES);
-        HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML.EVENT_HANDLER_ATTRIBUTES);
-        HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML.FORM_ATTRIBUTES);
+        HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML.FORM_PASSTHROUGH_ATTRIBUTES);
 
         //FIXME
         //String formName = ((UIForm) uiComponent).getFormName();

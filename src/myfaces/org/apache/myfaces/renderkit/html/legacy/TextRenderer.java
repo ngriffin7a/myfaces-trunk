@@ -91,9 +91,7 @@ extends HtmlRenderer
         }
 
         HTMLUtil.renderStyleClass(writer, uiInput);
-        HTMLUtil.renderHTMLAttributes(writer, uiInput, HTML.UNIVERSAL_ATTRIBUTES);
-        HTMLUtil.renderHTMLAttributes(writer, uiInput, HTML.EVENT_HANDLER_ATTRIBUTES);
-        HTMLUtil.renderHTMLAttributes(writer, uiInput, HTML.INPUT_ATTRIBUTES);
+        HTMLUtil.renderHTMLAttributes(writer, uiInput, HTML.INPUT_PASSTHROUGH_ATTRIBUTES);
         HTMLUtil.renderHTMLAttribute(writer, uiInput, JSFAttr.MAXLENGTH_ATTR, "maxlength");
         HTMLUtil.renderDisabledOnUserRole(facesContext, uiInput);
 

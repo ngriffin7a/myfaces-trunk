@@ -63,7 +63,7 @@ public class RenderKitFactoryConfigurator
         completeRendererComponentClasses();
 
         completeRendererAttributesByTLD(externalContext, TLD_HTML_URI);
-        completeRendererAttributesByTLD(externalContext, TLD_EXT_URI);
+//        completeRendererAttributesByTLD(externalContext, TLD_EXT_URI);
 
 
         if (log.isDebugEnabled()) log.debug("Configuring RenderKitFactory");

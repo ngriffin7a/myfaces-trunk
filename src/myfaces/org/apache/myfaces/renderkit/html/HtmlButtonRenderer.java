@@ -1,4 +1,4 @@
-/**
+/*
  * MyFaces - the free JSF implementation
  * Copyright (C) 2003, 2004  The MyFaces Team (http://myfaces.sourceforge.net)
  *
@@ -27,7 +27,6 @@ import javax.faces.component.UIComponent;
 import javax.faces.component.html.HtmlCommandButton;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
-import javax.faces.context.ExternalContext;
 import javax.faces.event.ActionEvent;
 import java.io.IOException;
 import java.util.Map;
@@ -49,50 +48,51 @@ extends HtmlRenderer
         RendererUtils.checkParamValidity(facesContext, uiComponent, UICommand.class);
 
         //super.decode must not be called, because value is handled here
-        UICommand      uiCommand      = (UICommand) uiComponent;
-
-        ExternalContext externalContext = facesContext.getExternalContext();
-        String clientId = uiCommand.getClientId(facesContext);
-
-        boolean submitted = isSubmitted(externalContext, clientId);
-
-        if (submitted)
+        if (!HTMLUtil.isDisabled(uiComponent) && !isReset(uiComponent) && isSubmitted(facesContext, uiComponent))
         {
-            uiCommand.queueEvent(new ActionEvent(uiCommand));
+            uiComponent.queueEvent(new ActionEvent(uiComponent));
         }
     }
 
-    private static boolean isSubmitted(ExternalContext externalContext, String clientId)
+    private static boolean isReset(UIComponent uiComponent)
     {
-        boolean submitted = false;
-
-        Map paramValuesMap = externalContext.getRequestParameterValuesMap();
-
-        //check if button has been submitted
-        if(!paramValuesMap.containsKey(clientId))
-        {
-            if(paramValuesMap.containsKey(clientId+IMAGE_BUTTON_SUFFIX))
-            {
-                submitted = true;
-            }
-        }
-        else
-        {
-            String[] newValues = (String[])paramValuesMap.get(clientId);
-
-            if(newValues != null && newValues.length>0)
-            {
-                String firstNewValue = newValues[0];
-
-                if(firstNewValue != null && firstNewValue.length()>0)
-                {
-                    submitted=true;
-                }
-            }
-        }
-        return submitted;
+        return "reset".equalsIgnoreCase((String) uiComponent.getAttributes().get(HTML.TYPE_ATTR));
     }
 
+    private static boolean isSubmitted(FacesContext facesContext, UIComponent uiComponent)
+    {
+        String clientId = uiComponent.getClientId(facesContext);
+        Map paramValuesMap = facesContext.getExternalContext().getRequestParameterValuesMap();
+        return paramValuesMap.containsKey(clientId) || paramValuesMap.containsKey(clientId + IMAGE_BUTTON_SUFFIX);
+        
+// REVISIT: is it needed to check each value?
+//        boolean submitted = false;
+//        
+//        //check if button has been submitted
+//        if(!paramValuesMap.containsKey(clientId))
+//        {
+//            if(paramValuesMap.containsKey(clientId + IMAGE_BUTTON_SUFFIX))
+//            {
+//                submitted = true;
+//            }
+//        }
+//        else
+//        {
+//            String[] newValues = (String[])paramValuesMap.get(clientId);
+//
+//            if(newValues != null && newValues.length>0)
+//            {
+//                String firstNewValue = newValues[0];
+//
+//                if(firstNewValue != null && firstNewValue.length()>0)
+//                {
+//                    submitted = true;
+//                }
+//            }
+//        }
+//        return submitted;
+    }
+    
     public void encodeEnd(FacesContext facesContext, UIComponent uiComponent)
     throws IOException
     {
@@ -106,6 +106,9 @@ extends HtmlRenderer
         //boolean hiddenParam = true;
 
         writer.startElement(HTML.INPUT_ELEM, uiComponent);
+
+        writer.writeAttribute(HTML.ID_ATTR, clientId, null);
+        writer.writeAttribute(HTML.NAME_ATTR, clientId, null);
 
         String image = htmlCommand.getImage();
 
@@ -126,15 +129,11 @@ extends HtmlRenderer
             writer.writeAttribute(HTML.VALUE_ATTR, htmlCommand.getValue(), null);
         }
 
-        writer.writeAttribute(HTML.NAME_ATTR, clientId, null);
-        writer.writeAttribute(HTML.ID_ATTR, clientId, null);
-
-        HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML.UNIVERSAL_ATTRIBUTES);
-        HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML.EVENT_HANDLER_ATTRIBUTES);
-        HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML.BUTTON_ATTRIBUTES);
+        HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML.BUTTON_PASSTHROUGH_ATTRIBUTES);
         HTMLUtil.renderDisabledOnUserRole(writer, uiComponent, facesContext);
 
-
+        writer.endElement(HTML.INPUT_ELEM);
+        
         /*
         if (hiddenParam)
         {

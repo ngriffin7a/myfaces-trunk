@@ -129,9 +129,7 @@ extends HyperlinkRenderer
         // HTML-Attributes
         // commandClass rendered by NavigationRenderer
         HTMLUtil.renderStyleClass(writer, uiComponent);
-        HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML.UNIVERSAL_ATTRIBUTES);
-        HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML.EVENT_HANDLER_ATTRIBUTES);
-        HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML.ANCHOR_ATTRIBUTES);
+        HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML.ANCHOR_PASSTHROUGH_ATTRIBUTES);
 
         writer.write(">");
 

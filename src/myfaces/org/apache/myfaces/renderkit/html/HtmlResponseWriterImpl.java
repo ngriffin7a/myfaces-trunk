@@ -28,6 +28,7 @@ import java.io.IOException;
 import java.io.Writer;
 import java.net.URLEncoder;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -51,7 +52,30 @@ public class HtmlResponseWriterImpl
 
 // currently not used
 //    private UIComponent _currentComponent = null;
-    private boolean _startElementMustBeClosed = false;
+    /** 
+     * If null, then the element has been closed. This allows the option of either
+     * explicitly calling endElement() to close the tag or implicitly closing it for empty elements. 
+     */
+    private String _startElementName;
+    
+    private static final Set EMPTY_ELEMENTS = new HashSet();
+
+    static
+    {
+        EMPTY_ELEMENTS.add("area");
+        EMPTY_ELEMENTS.add("br");
+        EMPTY_ELEMENTS.add("base");
+        EMPTY_ELEMENTS.add("basefont");
+        EMPTY_ELEMENTS.add("col");
+        EMPTY_ELEMENTS.add("frame");
+        EMPTY_ELEMENTS.add("hr");
+        EMPTY_ELEMENTS.add("img");
+        EMPTY_ELEMENTS.add("input");
+        EMPTY_ELEMENTS.add("isindex");
+        EMPTY_ELEMENTS.add("link");
+        EMPTY_ELEMENTS.add("meta");
+        EMPTY_ELEMENTS.add("param");
+    }
 
     public HtmlResponseWriterImpl(Writer writer, String contentType, String characterEncoding)
     {
@@ -107,38 +131,47 @@ public class HtmlResponseWriterImpl
         _writer.write('<');
         _writer.write(name);
 //        _currentComponent = uiComponent;
-        _startElementMustBeClosed = true;
+        _startElementName = name;
     }
 
     private void closeStartElementIfNecessary() throws IOException
     {
-        if (_startElementMustBeClosed)
+        if (_startElementName != null)
         {
-            _writer.write('>');
-            _startElementMustBeClosed = false;
+            if (EMPTY_ELEMENTS.contains(_startElementName))
+            {
+                _writer.write(" />");
+            }
+            else
+            {    
+                _writer.write('>');
+            }
+            _startElementName = null;
         }
     }
 
     public void endElement(String name) throws IOException
     {
-        if(_startElementMustBeClosed)
+        if(_startElementName != null)
         {
-            // start element would be still open only if no text content was added after it
+            // we will get here only if no text was written after the element was open
             _writer.write(" />");
-            _startElementMustBeClosed = false;
         }
-        else
+        
+        // If we are closing an outer element, write the end tag.
+        if (!name.equalsIgnoreCase(_startElementName))
         {    
             _writer.write("</");
             _writer.write(name);
             _writer.write('>');
         }
+        _startElementName = null;
 //        _currentComponent = null;
     }
 
     public void writeAttribute(String name, Object value, String componentPropertyName) throws IOException
     {
-        if (!_startElementMustBeClosed)
+        if (_startElementName == null)
         {
             throw new IllegalStateException("Must be called before the start element is closed");
         }
@@ -167,7 +200,7 @@ public class HtmlResponseWriterImpl
 
     public void writeURIAttribute(String name, Object value, String componentPropertyName) throws IOException
     {
-        if (!_startElementMustBeClosed)
+        if (_startElementName == null)
         {
             throw new IllegalStateException("Must be called before the start element is closed");
         }
