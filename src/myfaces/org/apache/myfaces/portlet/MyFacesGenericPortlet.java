@@ -54,6 +54,9 @@ import org.apache.myfaces.webapp.webxml.WebXml;
  * @author  Stan Silvert (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.2  2005/02/10 20:24:17  matzew
+ * closed MYFACES-101 in Jira; Thanks to Stan Silvert (JBoss Group)
+ *
  * Revision 1.1  2005/01/26 17:03:10  matzew
  * MYFACES-86. portlet support provided by Stan Silver (JBoss Group)
  *
@@ -65,6 +68,10 @@ public class MyFacesGenericPortlet extends GenericPortlet
     // PortletRequest parameter
     public static final String VIEW_ID =
         MyFacesGenericPortlet.class.getName() + ".VIEW_ID";
+    
+    // Signifies to MyFaces that the request is coming from a portlet.
+    public static final String PORTLET_REQUEST_FLAG = 
+        MyFacesGenericPortlet.class.getName() + ".PORTLET_REQUEST_FLAG";
     
     // PortletSession attribute
     private static final String CURRENT_FACES_CONTEXT = 
@@ -198,6 +205,8 @@ public class MyFacesGenericPortlet extends GenericPortlet
         
         if (sessionTimedOut(request)) return;
         
+        setPortletRequestFlag(request);
+        
         FacesContext facesContext = facesContext(request, response);
                 
         try
@@ -319,6 +328,11 @@ public class MyFacesGenericPortlet extends GenericPortlet
         return request.getPortletSession(false) == null;
     }
     
+    private void setPortletRequestFlag(PortletRequest request)
+    {
+        request.getPortletSession().setAttribute(PORTLET_REQUEST_FLAG, "true");
+    }
+    
     /**
      * Render a JSF view.
      */
@@ -332,10 +346,13 @@ public class MyFacesGenericPortlet extends GenericPortlet
         String viewId = request.getParameter(VIEW_ID);
         if ((viewId == null) || sessionTimedOut(request))
         {
+            setPortletRequestFlag(request);
             nonFacesRequest(request,  response);
             return;
         }
        
+        setPortletRequestFlag(request);
+        
         try
         {
             ServletFacesContextImpl facesContext = (ServletFacesContextImpl)request.

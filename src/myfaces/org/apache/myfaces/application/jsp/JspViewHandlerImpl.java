@@ -40,11 +40,15 @@ import javax.portlet.PortletRequest;
 import javax.portlet.PortletURL;
 import javax.portlet.RenderResponse;
 import org.apache.myfaces.portlet.MyFacesGenericPortlet;
+import org.apache.myfaces.portlet.PortletUtil;
 
 /**
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.33  2005/02/10 20:24:17  matzew
+ * closed MYFACES-101 in Jira; Thanks to Stan Silvert (JBoss Group)
+ *
  * Revision 1.32  2005/01/27 02:38:44  svieujot
  * Remove portlet-api dependency while keeping portlet support.
  *
@@ -184,16 +188,12 @@ public class JspViewHandlerImpl
 
     public String getActionURL(FacesContext facesContext, String viewId)
     {
-        try{
-            if (facesContext.getExternalContext().getResponse() instanceof RenderResponse)
-            {
-                RenderResponse response = (RenderResponse)facesContext.getExternalContext().getResponse();
-                PortletURL url = response.createActionURL();
-                url.setParameter(MyFacesGenericPortlet.VIEW_ID, viewId);
-                return url.toString();
-            }
-        }catch(NoClassDefFoundError exception){
-            // Portlet api jar isn't in the classpath.
+        if (PortletUtil.isRenderResponse(facesContext))
+        {
+            RenderResponse response = (RenderResponse)facesContext.getExternalContext().getResponse();
+            PortletURL url = response.createActionURL();
+            url.setParameter(MyFacesGenericPortlet.VIEW_ID, viewId);
+            return url.toString();
         }
         
         String path = getViewIdPath(facesContext, viewId);
@@ -232,13 +232,9 @@ public class JspViewHandlerImpl
 
         String viewId = facesContext.getViewRoot().getViewId();
 
-        try{
-            if (externalContext.getRequest() instanceof PortletRequest) {
-                externalContext.dispatch(viewId);
-                return;
-            }
-        }catch(NoClassDefFoundError exception){
-            // Portlet api jar isn't in the classpath.
+        if (PortletUtil.isPortletRequest(facesContext)) {
+            externalContext.dispatch(viewId);
+            return;
         }
         
         ServletMapping servletMapping = getServletMapping(externalContext);
@@ -330,17 +326,12 @@ public class JspViewHandlerImpl
             throw new IllegalArgumentException("ViewId must start with '/' (viewId = " + viewId + ")");
         }
 
-        ExternalContext externalContext = facescontext.getExternalContext();
-        
-        try{
-            if (externalContext.getRequest() instanceof PortletRequest) {
-                return viewId;
-            }
-        }catch(NoClassDefFoundError exception){
-            // Portlet api jar isn't in the classpath.
+        if (PortletUtil.isPortletRequest(facescontext)) 
+        {
+            return viewId;
         }
         
-        ServletMapping servletMapping = getServletMapping(externalContext);
+        ServletMapping servletMapping = getServletMapping(facescontext.getExternalContext());
 
         if (servletMapping.isExtensionMapping())
         {

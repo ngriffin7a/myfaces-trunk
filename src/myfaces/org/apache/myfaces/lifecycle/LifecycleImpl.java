@@ -40,12 +40,16 @@ import java.util.Iterator;
 import java.util.List;
 import javax.portlet.PortletRequest;
 import org.apache.myfaces.portlet.MyFacesGenericPortlet;
+import org.apache.myfaces.portlet.PortletUtil;
 
 /**
  * Implements the lifecycle as described in Spec. 1.0 PFD Chapter 2
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.44  2005/02/10 20:24:17  matzew
+ * closed MYFACES-101 in Jira; Thanks to Stan Silvert (JBoss Group)
+ *
  * Revision 1.43  2005/01/27 02:38:43  svieujot
  * Remove portlet-api dependency while keeping portlet support.
  *
@@ -314,17 +318,13 @@ public class LifecycleImpl
     private static String deriveViewId(FacesContext facesContext)
     {
         ExternalContext externalContext = facesContext.getExternalContext();
-
-        try{
-            if (externalContext.getRequest() instanceof PortletRequest)
-            {
-                PortletRequest request = (PortletRequest)externalContext.getRequest();
-                return request.getParameter(MyFacesGenericPortlet.VIEW_ID);
-            }
-        }catch(NoClassDefFoundError exception){
-            // Portlet api jar isn't in the classpath.
-        }
         
+        if (PortletUtil.isPortletRequest(facesContext))
+        {
+            PortletRequest request = (PortletRequest)externalContext.getRequest();
+            return request.getParameter(MyFacesGenericPortlet.VIEW_ID);
+        }
+
         String viewId = externalContext.getRequestPathInfo();  //getPathInfo
         if (viewId == null)
         {
