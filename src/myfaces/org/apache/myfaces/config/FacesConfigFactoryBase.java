@@ -177,36 +177,41 @@ public abstract class FacesConfigFactoryBase
 	protected void performMetaInfFactoryConfig(FacesConfig facesConfig,
             ExternalContext context) throws FacesException {
         Set factoryNames = FactoryFinder.getFactoryNames();
-        // keyed on resource names, factory name is the value 
+        // keyed on resource names, factory name is the value
         Map resourceNames = expandFactoryNames(factoryNames);
         //Search for factory files in the jar file
         Set services = context.getResourcePaths(META_INF_SERVICES_LOCATION);
         // retainAll performs the intersection of the factory names that we
         // are looking for the ones found, only the services found that match
         // the expected factory names will be retained
-        services.retainAll(resourceNames.keySet());
-        Iterator itr = services.iterator();
-        FactoryConfig config = new FactoryConfig();
-        while (itr.hasNext()) {
-            String resourceName = (String) itr.next();
-            InputStream is = context.getResourceAsStream(resourceName);
-            InputStreamReader isr = new InputStreamReader(is);
-            BufferedReader br = new BufferedReader(isr);
-            String className = null;
-            try {
-                className = br.readLine();
-            } catch (IOException e) {
-                throw new FacesException("Unable to read class name from file "
-                        + resourceName, e);
+        if (null != services) {
+            services.retainAll(resourceNames.keySet());
+            Iterator itr = services.iterator();
+            FactoryConfig config = new FactoryConfig();
+            while (itr.hasNext()) {
+                String resourceName = (String) itr.next();
+                InputStream is = context.getResourceAsStream(resourceName);
+                InputStreamReader isr = new InputStreamReader(is);
+                BufferedReader br = new BufferedReader(isr);
+                String className = null;
+                try {
+                    className = br.readLine();
+                } catch (IOException e) {
+                    throw new FacesException(
+                            "Unable to read class name from file "
+                                    + resourceName, e);
+                }
+                try {
+                    Class.forName(className);
+                } catch (ClassNotFoundException e) {
+                    throw new FacesException("Unable to find class "
+                            + className, e);
+                }
+                config.setFactory((String) resourceNames.get(resourceName),
+                        className);
             }
-            try {
-                Class.forName(className);
-            } catch (ClassNotFoundException e) {
-                throw new FacesException("Unable to find class " + className, e);
-            }
-            config.setFactory((String)resourceNames.get(resourceName), className);
+            facesConfig.setFactoryConfig(config);
         }
-        facesConfig.setFactoryConfig(config);
     }
 
     private Map expandFactoryNames(Set factoryNames) {
