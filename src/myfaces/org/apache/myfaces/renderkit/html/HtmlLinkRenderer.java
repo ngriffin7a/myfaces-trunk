@@ -353,13 +353,18 @@ public class HtmlLinkRenderer
 
     public void encodeEnd(FacesContext facesContext, UIComponent component) throws IOException
     {
+        renderLinkEnd(facesContext, component);
+    }
+
+    public void renderLinkEnd(FacesContext facesContext, UIComponent component)
+            throws IOException
+    {
         if (RendererUtils.isEnabledOnUserRole(facesContext, component))
         {
             ResponseWriter writer = facesContext.getResponseWriter();
             writer.endElement(HTML.ANCHOR_ELEM);
         }
     }
-
 
 
     private static void renderHiddenParam(ResponseWriter writer, String paramName)

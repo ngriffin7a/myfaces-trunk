@@ -263,6 +263,11 @@
   </component>
 
   <component>
+    <component-type>net.sourceforge.myfaces.HtmlInputCalendar</component-type>
+    <component-class>net.sourceforge.myfaces.component.ext.HtmlInputCalendar</component-class>
+  </component>
+
+  <component>
     <component-type>net.sourceforge.myfaces.HtmlInputFileUpload</component-type>
     <component-class>net.sourceforge.myfaces.component.ext.HtmlInputFileUpload</component-class>
   </component>
@@ -463,6 +468,11 @@
     </converter>
 
     <converter>
+        <converter-for-class>java.util.Date</converter-for-class>
+        <converter-class>javax.faces.convert.DateTimeConverter</converter-class>
+    </converter>
+
+    <converter>
         <converter-for-class>net.sourceforge.myfaces.model.UploadedFile</converter-for-class>
         <converter-class>net.sourceforge.myfaces.convert.impl.UploadedFileConverter</converter-class>
     </converter>
@@ -646,6 +656,13 @@
             <renderer-type>net.sourceforge.myfaces.TableScroller</renderer-type>
             <renderer-class>net.sourceforge.myfaces.renderkit.html.ext.HtmlTableScrollerRenderer</renderer-class>
         </renderer>
+
+        <renderer>
+            <component-family>javax.faces.Input</component-family>
+            <renderer-type>net.sourceforge.myfaces.Calendar</renderer-type>
+            <renderer-class>net.sourceforge.myfaces.renderkit.html.ext.HtmlCalendarRenderer</renderer-class>
+        </renderer>
+
 
         <renderer>
             <component-family>javax.faces.Input</component-family>

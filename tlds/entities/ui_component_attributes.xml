@@ -13,7 +13,7 @@
             <type>java.lang.String</type>
             <description>If false, this component will not be rendered.</description>
         </attribute>
-        <!-- FIXME: rendererType is no attribute in RI... addition by myfaces?
+        <!-- todo: rendererType is no attribute in RI... addition by myfaces?
              if yes, please document -->
         <attribute>
             <name>rendererType</name>
@@ -31,7 +31,7 @@
         </attribute>
 
 <!-- UIComponentBase attributes -->
-        <!-- FIXME: transient is no attribute in RI... addition by myfaces?
+        <!-- todo: transient is no attribute in RI... addition by myfaces?
              if yes, please document -->
         <attribute>
             <name>transient</name>

@@ -1,5 +1,5 @@
 <!-- HTML 4.0 img attributes -->
-        <!-- FIXME: ALIGN is no attribute of JSP API, but attribute in "transitional" HTML 4.0... allow or disallow?-->
+        <!-- todo: ALIGN is no attribute of JSF API, but attribute in "transitional" HTML 4.0... allow or disallow?-->
         <attribute>
             <name>align</name>
             <required>false</required>
@@ -12,7 +12,7 @@
             <rtexprvalue>false</rtexprvalue>
             <type>java.lang.String</type>
         </attribute>
-        <!-- FIXME: BORDER is no attribute of JSP API, but attribute in "transitional" HTML 4.0... allow or disallow? -->
+        <!-- todo: BORDER is no attribute of JSF API, but attribute in "transitional" HTML 4.0... allow or disallow? -->
         <attribute>
             <name>border</name>
             <required>false</required>
@@ -25,7 +25,7 @@
             <rtexprvalue>false</rtexprvalue>
             <type>java.lang.String</type>
         </attribute>
-        <!-- FIXME: HSPACE is no attribute of JSP API, but attribute in "transitional" HTML 4.0... allow or disallow? -->
+        <!-- todo: HSPACE is no attribute of JSF API, but attribute in "transitional" HTML 4.0... allow or disallow? -->
         <attribute>
             <name>hspace</name>
             <required>false</required>
@@ -52,7 +52,7 @@
             <rtexprvalue>false</rtexprvalue>
             <type>java.lang.String</type>
         </attribute>
-        <!-- FIXME: VSPACE is no attribute of JSP API, but attribute in "transitional" HTML 4.0... allow or disallow? -->
+        <!-- todo: VSPACE is no attribute of JSF API, but attribute in "transitional" HTML 4.0... allow or disallow? -->
         <attribute>
             <name>vspace</name>
             <required>false</required>

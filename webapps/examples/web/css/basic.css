@@ -204,3 +204,30 @@ div.titlebar {
   margin: 1px 1px;
   clear: both;
 }
+
+/*
+   ------------------------------------------------------------
+   Calendar component
+   ------------------------------------------------------------
+*/
+
+.yearMonthHeader {
+    background-color: #DDDDDD;
+    color: #000000;
+    text-align: center;
+    border: none;
+    font-weight: bold;
+}
+
+.weekHeader {
+    background-color: #E7E7E7;
+    color: #000000;
+    text-align: center;
+    border: none;
+}
+
+.currentDayCell {
+    background-color: #DDDDDD;
+    color: #000000;
+    border: none;
+}

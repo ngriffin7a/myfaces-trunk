@@ -529,4 +529,18 @@ public class RendererUtils
         return i != null ? i.intValue() : defaultValue;
     }
 
+    public static UIForm findParentForm(UIComponentBase comp)
+    {
+        UIComponent parent = comp.getParent();
+        while (parent != null)
+        {
+            if (parent instanceof UIForm)
+            {
+                return (UIForm)parent;
+            }
+            parent = parent.getParent();
+        }
+        return null;
+    }
+
 }

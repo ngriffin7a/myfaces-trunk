@@ -149,7 +149,7 @@ Start of revised 1.0 conforming tags (in alphabetical order)
         <tag-class>net.sourceforge.myfaces.taglib.html.HtmlInputSecretTag</tag-class>
         <body-content>JSP</body-content>
         &ui_input_attributes;
-        <!-- FIXME: not all html_input_attributes are used for input_secret
+        <!-- todo: not all html_input_attributes are used for input_secret
             in RI (e.g. datafld, datasrc, ...) -->
         &html_input_attributes;
         &html_universal_attributes;

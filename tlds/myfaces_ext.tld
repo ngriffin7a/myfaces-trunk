@@ -70,6 +70,43 @@
         Enhanced standard JSP actions and custom MyFaces actions.
     </description>
 
+<!-- calendar -->
+    <tag>
+        <name>calendar</name>
+        <tag-class>net.sourceforge.myfaces.taglib.ext.HtmlCalendarTag</tag-class>
+        <body-content>JSP</body-content>
+        <description>
+            Provides a calendar.
+        </description>
+        &ui_input_attributes;
+        &html_event_handler_attributes;
+        &html_universal_attributes;
+        <attribute>
+            <name>monthYearRowClass</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
+            <description>CSS class to be used for the header-row showing month and year.</description>
+        </attribute>
+        <attribute>
+            <name>weekRowClass</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
+            <description>CSS class to be used for the header-row showing the week-days.</description>
+        </attribute>
+        <attribute>
+            <name>dayCellClass</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
+            <description>CSS class to be used for the cells showing days.</description>
+        </attribute>
+        <attribute>
+            <name>currentDayCellClass</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
+            <description>CSS class to be used for the cell of the currently selected date.</description>
+        </attribute>
+    </tag>
+
 <!-- commandButton -->
     <tag>
         <name>commandButton</name>
@@ -118,13 +155,13 @@
         &html_anchor_attributes;
         &user_role_attributes;
         <!-- HtmlCommandLink attributes -->
-        <!--FIXME: is in JSP API, but there is no corresponding tag in HTML 4.0.. What to do?-->
+        <!--Todo: is in JSF API, but there is no corresponding tag in HTML 4.0.. What to do?-->
         <attribute>
             <name>onblur</name>
             <required>false</required>
             <rtexprvalue>false</rtexprvalue>
         </attribute>
-        <!--FIXME: is in JSP API, but there is no corresponding tag in HTML 4.0.. What to do?-->
+        <!--Todo: is in JSF API, but there is no corresponding tag in HTML 4.0.. What to do?-->
         <attribute>
             <name>onfocus</name>
             <required>false</required>

@@ -30,6 +30,7 @@ import net.sourceforge.myfaces.renderkit.html.util.HTMLUtil;
 import javax.faces.application.ViewHandler;
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIForm;
+import javax.faces.component.UIComponentBase;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
@@ -130,7 +131,7 @@ public class HtmlTabbedPaneRenderer
             tabbedPane.setBgcolor(DEFAULT_BG_COLOR);
         }
 
-        UIForm parentForm = findParentForm(tabbedPane);
+        UIForm parentForm = RendererUtils.findParentForm(tabbedPane);
         if (parentForm == null)
         {
             writeFormStart(writer, facesContext, tabbedPane);
@@ -215,21 +216,6 @@ public class HtmlTabbedPaneRenderer
                 tabIdx++;
             }
         }
-    }
-
-
-    private UIForm findParentForm(HtmlPanelTabbedPane tabbedPane)
-    {
-        UIComponent parent = tabbedPane.getParent();
-        while (parent != null)
-        {
-            if (parent instanceof UIForm)
-            {
-                return (UIForm)parent;
-            }
-            parent = parent.getParent();
-        }
-        return null;
     }
 
 
