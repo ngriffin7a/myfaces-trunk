@@ -63,7 +63,6 @@ public abstract class MyFacesBodyTag
         _helper = new MyFacesTagHelper(this);
     }
 
-    /*
     protected void encodeBegin()
         throws IOException
     {
@@ -78,12 +77,6 @@ public abstract class MyFacesBodyTag
         return _helper.isComponentVisible()
                 ? BodyTag.EVAL_BODY_BUFFERED
                 : Tag.SKIP_BODY;
-    }
-    */
-
-    public int getDoStartValue() throws JspException
-    {
-        return BodyTag.EVAL_BODY_BUFFERED;
     }
 
 

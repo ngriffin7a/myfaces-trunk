@@ -60,7 +60,6 @@ public abstract class MyFacesTag
         return super.doStartTag();
     }
 
-    /*
     protected void encodeBegin()
         throws IOException
     {
@@ -75,12 +74,6 @@ public abstract class MyFacesTag
         return _helper.isComponentVisible()
                 ? Tag.EVAL_BODY_INCLUDE
                 : Tag.SKIP_BODY;
-    }
-    */
-
-    public int getDoStartValue() throws JspException
-    {
-        return Tag.EVAL_BODY_INCLUDE;
     }
 
     public int doEndTag() throws JspException
