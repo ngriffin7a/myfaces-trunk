@@ -176,7 +176,11 @@ public class ParserUtils {
                 method.invoke(null, new Object[0]);
             */
             factory.setNamespaceAware(true);
-            factory.setValidating(true);
+            
+            // Next line disabled to allow XSD validated config files
+            // In general, since the validation is performed by the main processing, 
+            // it is not really needed here at all
+            // factory.setValidating(true);
             DocumentBuilder builder = factory.newDocumentBuilder();
             builder.setEntityResolver(entityResolver);
             builder.setErrorHandler(errorHandler);
