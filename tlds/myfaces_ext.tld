@@ -65,7 +65,7 @@
 <!ENTITY alt_location_attributes             SYSTEM "entities/alt_location_attributes.xml">
 ]>
 
-<taglib xmlns="http://java.sun.com/xml/ns/j2ee">
+<taglib xmlns="http://java.sun.com/JSP/TagLibraryDescriptor">
 
     <tlib-version>0.9.0</tlib-version>
     <jsp-version>1.2</jsp-version>
