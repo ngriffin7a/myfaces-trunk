@@ -35,10 +35,10 @@ public class NavigationMenu
         menu[0].setNavigationMenuItems(items);
 
         label = GuiUtil.getMessageResource("nav_Contact", null);
-        items[0] = new NavigationMenuItem(label, "go_contact", "jscookmenu/ThemeOffice/help.gif", false);
+        items[0] = new NavigationMenuItem(label, "go_contact", "images/help.gif", false);
 
         label = GuiUtil.getMessageResource("nav_Copyright", null);
-        items[1] = new NavigationMenuItem(label, "go_copyright", "jscookmenu/ThemeOffice/help.gif", false);
+        items[1] = new NavigationMenuItem(label, "go_copyright", "images/help.gif", false);
 
         return menu;
     }

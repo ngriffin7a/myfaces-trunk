@@ -13,11 +13,8 @@
 
 <h:panelGrid id="header_group2" columns="1" styleClass="pageHeader2" columnClasses="pageHeader2col1"  >
     <x:jscookMenu layout="hbr" theme="ThemeOffice" >
-        <%/* if you want to use jscookMenu in your application, you will have to:
-               - add jscookmenu directory to your web directory
-               - add scripts and stylesheets to html-header (see inc/header.inc for details)
-             availaible themes: ThemeIE, ThemeMiniBlack, ThemeOffice, ThemePanel
-             layout: hbr, hbl, hur, hul, vbr, vbl, vur, vul
+        <%/* Availaible jscookMenu themes: ThemeIE, ThemeMiniBlack, ThemeOffice, ThemePanel
+             Availaible jscookMenu layout: hbr, hbl, hur, hul, vbr, vbl, vur, vul
              respect to Heng Yuan http://www.cs.ucla.edu/~heng/JSCookMenu
         */%>
         <x:navigationMenuItem id="nav_1" itemLabel="#{example_messages['nav_Home']}" action="go_home" />
