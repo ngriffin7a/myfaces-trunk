@@ -802,6 +802,7 @@
             <required>false</required>
             <rtexprvalue>false</rtexprvalue>
         </attribute>
+        &user_role_attributes;
         <attribute>
 	        <name>style</name>
             <required>false</required>

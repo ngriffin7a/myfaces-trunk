@@ -33,6 +33,9 @@ import org.apache.myfaces.renderkit.html.util.JavascriptUtils;
  * @author Sylvain Vieujot (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.11  2004/12/06 04:26:07  svieujot
+ * Make HtmlEditor UserRoleAware.
+ *
  * Revision 1.10  2004/12/06 01:03:42  svieujot
  * Bugfix : getter now use boolean instead of Boolean, and setters created.
  *
@@ -64,6 +67,8 @@ import org.apache.myfaces.renderkit.html.util.JavascriptUtils;
  * Add an x:htmlEditor based on the Kupu library.
  */
 public class HtmlEditorRenderer extends Renderer {
+    // TODO : Disabled mode
+    // TODO : Fallback on textarea whose content it converted to HTML for non kupu capable browsers (Safari)
 
     public void encodeEnd(FacesContext context, UIComponent component) throws IOException {
         RendererUtils.checkParamValidity(context, component, HtmlEditor.class);
