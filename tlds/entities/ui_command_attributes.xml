@@ -1,0 +1,15 @@
+<!-- JSF UICommand attributes -->
+        <attribute>
+            <name>commandName</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
+            <type>java.lang.String</type>
+            <description>The command name (see JSF.4.1).</description>
+        </attribute>
+        <attribute>
+            <name>commandClass</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
+            <type>java.lang.String</type>
+            <description>Corresponds to the HTML class attribute.</description>
+        </attribute>

@@ -58,9 +58,9 @@
             <h4>A Form</h4>
             <table border="1"><tr><td>
                 <h:form id="form1" formName="calcForm">
-                    Number 1: <h:textentry_input id="number1" modelReference="calcForm.number1" maxlength="10" size="25" />
+                    Number 1: <h:input_text id="number1" modelReference="calcForm.number1" maxlength="10" size="25" />
                               <h:input_errors id="number1Error" clientId="number1" cssClass="error" /><br>
-                    Number 2: <h:textentry_input id="number2" modelReference="calcForm.number2" maxlength="10" size="25"/>
+                    Number 2: <h:input_text id="number2" modelReference="calcForm.number2" maxlength="10" size="25"/>
                               <h:input_errors id="number2Error" clientId="number2" cssClass="error" /><br>
                     Result: <h:output_text id="result" modelReference="calcForm.result" /><br>
                     <h:command_button id="addButton" commandName="add" label="Add them">
@@ -86,7 +86,7 @@
             <h4>Another Form</h4>
             <table border="1"><tr><td>
                 <h:form id="form2" formName="ucaseForm">
-                    <h:textentry_input id="text" modelReference="ucaseForm.text" /><br>
+                    <h:input_text id="text" modelReference="ucaseForm.text" /><br>
                     <h:command_button id="ucaseButton" commandName="up" label="Make it uppercase">
                         <f:action_listener type="net.sourceforge.myfaces.examples.example1.UCaseController" ></f:action_listener>
                     </h:command_button>

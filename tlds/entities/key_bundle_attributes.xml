@@ -1,0 +1,11 @@
+<!-- key and bundle attributes -->
+        <attribute>
+            <name>key</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>bundle</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
+        </attribute>

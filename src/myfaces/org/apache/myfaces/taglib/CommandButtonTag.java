@@ -30,7 +30,7 @@ import javax.faces.component.UIComponent;
  * @version $Revision$ $Date$
  */
 public class CommandButtonTag
-        extends TextEntryInputTag
+        extends InputTextTag
 {
     //MyFaces tag extensions:
     public UIComponent createComponent()
@@ -56,7 +56,7 @@ public class CommandButtonTag
 
     public void setCommandReference(String v)
     {
-        setComponentAttribute(UICommand.COMMAND_REFERENCE_ATTR, v);
+        setComponentProperty(UICommand.COMMAND_REFERENCE_ATTR, v);
     }
 
     public void setCommandClass(String v)

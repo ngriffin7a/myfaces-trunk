@@ -111,12 +111,12 @@ public abstract class MyFacesBodyTag
     //property helpers
     protected void setComponentAttribute(String attrName, Object attrValue)
     {
-        _helper.setComponentAttribute(attrName, attrValue);
+        _helper.setComponentProperty(attrName, attrValue);
     }
 
     protected void setComponentAttribute(String attrName, boolean attrValue)
     {
-        _helper.setComponentAttribute(attrName, attrValue);
+        _helper.setComponentProperty(attrName, attrValue);
     }
 
     protected void setRendererAttribute(String attrName, Object attrValue)

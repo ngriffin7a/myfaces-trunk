@@ -27,8 +27,8 @@ import javax.faces.component.UIComponent;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public class TextEntrySecretTag
-        extends TextEntryInputTag
+public class InputSecretTag
+        extends InputTextTag
 {
     public UIComponent createComponent()
     {

@@ -123,14 +123,14 @@ public abstract class MyFacesTag
 
 
     //property helpers
-    protected void setComponentAttribute(String attrName, Object attrValue)
+    protected void setComponentProperty(String attrName, Object attrValue)
     {
-        _helper.setComponentAttribute(attrName, attrValue);
+        _helper.setComponentProperty(attrName, attrValue);
     }
 
-    protected void setComponentAttribute(String attrName, boolean attrValue)
+    protected void setComponentProperty(String attrName, boolean attrValue)
     {
-        _helper.setComponentAttribute(attrName, attrValue);
+        _helper.setComponentProperty(attrName, attrValue);
     }
 
     protected void setRendererAttribute(String attrName, Object attrValue)
@@ -161,13 +161,15 @@ public abstract class MyFacesTag
     //standard tag properties
     public void setModelReference(String s)
     {
-        setComponentAttribute(CommonComponentAttributes.MODEL_REFERENCE_ATTR, s);
+        setComponentProperty(CommonComponentAttributes.MODEL_REFERENCE_ATTR, s);
     }
 
+    /*
     public void setConverter(Object converter)
     {
         setRendererAttribute(CommonRendererAttributes.CONVERTER_ATTR, converter);
     }
+    */
 
     /**
      * Overwrite to make public.
@@ -175,7 +177,7 @@ public abstract class MyFacesTag
      */
     protected void setValue(Object value)
     {
-        setComponentAttribute(CommonComponentAttributes.VALUE_ATTR, value);
+        setComponentProperty(CommonComponentAttributes.VALUE_ATTR, value);
     }
 
 

@@ -18,11 +18,12 @@
  */
 package net.sourceforge.myfaces.taglib;
 
+import net.sourceforge.myfaces.MyFacesConfig;
 import net.sourceforge.myfaces.component.UIComponentUtils;
+import net.sourceforge.myfaces.component.CommonComponentAttributes;
 import net.sourceforge.myfaces.renderkit.html.jspinfo.JspInfo;
 import net.sourceforge.myfaces.util.bean.BeanUtils;
 import net.sourceforge.myfaces.util.logging.LogUtil;
-import net.sourceforge.myfaces.MyFacesConfig;
 
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
@@ -79,9 +80,12 @@ public class MyFacesTagHelper
     {
         if (_facesContext == null)
         {
+            /*
             //FacesServlet saves the FacesContext as request attribute:
             _facesContext = (FacesContext)_pageContext.getAttribute(FacesContext.FACES_CONTEXT_ATTR,
                                                                     PageContext.REQUEST_SCOPE);
+            */
+            _facesContext = FacesContext.getCurrentInstance();
             if (_facesContext == null)
             {
                 throw new IllegalStateException("No faces context!?");
@@ -93,7 +97,7 @@ public class MyFacesTagHelper
 
     //property helpers
 
-    protected void setComponentAttribute(String attrName, Object attrValue)
+    protected void setComponentProperty(String attrName, Object attrValue)
     {
         if (_attributes == null)
         {
@@ -102,7 +106,7 @@ public class MyFacesTagHelper
         _attributes.add(new Attribute(attrName, attrValue, true));
     }
 
-    protected void setComponentAttribute(String attrName, boolean attrValue)
+    protected void setComponentProperty(String attrName, boolean attrValue)
     {
         if (_attributes == null)
         {
@@ -149,13 +153,13 @@ public class MyFacesTagHelper
     {
         public String name;
         public Object value;
-        public boolean isComponentAttribute;
+        public boolean isComponentProperty;
 
-        public Attribute(String name, Object value, boolean isComponentAttribute)
+        public Attribute(String name, Object value, boolean isComponentProperty)
         {
             this.name = name;
             this.value = value;
-            this.isComponentAttribute = isComponentAttribute;
+            this.isComponentProperty = isComponentProperty;
         }
     }
 
@@ -165,58 +169,100 @@ public class MyFacesTagHelper
      */
     protected void overrideProperties(UIComponent uiComponent)
     {
-        //FacesContext facesContext = FacesContext.getCurrentInstance();
-
         if (_attributes != null)
         {
             for (Iterator it = _attributes.iterator(); it.hasNext();)
             {
                 Attribute attr = (Attribute)it.next();
-                if (attr.isComponentAttribute)
+                if (attr.isComponentProperty)
                 {
-                    //Try bean property setter first
-                    PropertyDescriptor pd = BeanUtils.findPropertyDescriptor(uiComponent,
-                                                                             attr.name);
-                    if (pd != null &&
-                        pd.getReadMethod() != null &&
-                        pd.getWriteMethod() != null)
+                    if (attr.name.equals(CommonComponentAttributes.VALUE_ATTR))
                     {
-                        try
-                        {
-                            if (BeanUtils.getBeanPropertyValue(uiComponent, pd) == null)
-                            {
-                                BeanUtils.setBeanPropertyValue(uiComponent, pd, attr.value);
-                            }
-                        }
-                        catch (Exception e)
-                        {
-                            LogUtil.getLogger().warning("Exception in property getter or setter of component " + UIComponentUtils.toString(uiComponent) + ": " + e.getMessage() + ". Attribute will be set directly.");
-                            //Alternativly set by attribute name:
-                            if (uiComponent.getAttribute(attr.name) == null)
-                            {
-                                uiComponent.setAttribute(attr.name, attr.value);
-                            }
-                        }
+                        overrideComponentValue(uiComponent,
+                                               attr.value);
                     }
                     else
                     {
-                        //Component does not have this property!
-                        LogUtil.getLogger().severe("Component " + UIComponentUtils.toString(uiComponent) + " does not have valid property setter and getter methods for property '" + attr.name + "'.");
-                        //Alternativly set by attribute name:
-                        if (uiComponent.getAttribute(attr.name) == null)
-                        {
-                            uiComponent.setAttribute(attr.name, attr.value);
-                        }
+                        overrideComponentProperty(uiComponent,
+                                                  attr.name,
+                                                  attr.value);
                     }
                 }
                 else
                 {
+                    //override attribute
                     if (uiComponent.getAttribute(attr.name) == null)
                     {
                         uiComponent.setAttribute(attr.name, attr.value);
                     }
                 }
             }
+        }
+    }
+
+
+    private void overrideComponentProperty(UIComponent uiComponent,
+                                           String propertyName,
+                                           Object propertyValue)
+    {
+        boolean errorOccured = false;
+
+        //Try bean property setter first
+        PropertyDescriptor pd = BeanUtils.findPropertyDescriptor(uiComponent,
+                                                                 propertyName);
+        if (pd != null &&
+            pd.getReadMethod() != null &&
+            pd.getWriteMethod() != null)
+        {
+            try
+            {
+                if (BeanUtils.getBeanPropertyValue(uiComponent, pd) == null)
+                {
+                    BeanUtils.setBeanPropertyValue(uiComponent, pd, propertyValue);
+                }
+            }
+            catch (Exception e)
+            {
+                LogUtil.getLogger().warning("Exception in property getter or setter of component " + UIComponentUtils.toString(uiComponent) + ": " + e.getMessage() + ". Attribute will be set directly.");
+                errorOccured = true;
+            }
+        }
+        else
+        {
+            //Component does not have a matching bean property!
+            LogUtil.getLogger().severe("Component " + UIComponentUtils.toString(uiComponent) + " does not have valid property setter and getter methods for property '" + propertyName + "'.");
+            errorOccured = true;
+        }
+
+        if (errorOccured)
+        {
+            //Alternativly set by attribute name:
+            if (uiComponent.getAttribute(propertyName) == null)
+            {
+                uiComponent.setAttribute(propertyName, propertyValue);
+            }
+        }
+    }
+
+
+    private void overrideComponentValue(UIComponent uiComponent,
+                                        Object propertyValue)
+    {
+        Object currentValue;
+        try
+        {
+            currentValue = uiComponent.currentValue(getFacesContext());
+        }
+        catch (Exception e)
+        {
+            //Exception occured, perhaps model bean does not yet exist?
+            LogUtil.getLogger().warning("Exception occured getting currentValue of component " + UIComponentUtils.toString(uiComponent) + ": " + e.getMessage());
+            currentValue = null;
+        }
+
+        if (currentValue == null)
+        {
+            uiComponent.setValue(propertyValue);
         }
     }
 

@@ -1,0 +1,15 @@
+<!-- JSF UIForm attributes -->
+        <attribute>
+            <name>formName</name>
+            <required>true</required>
+            <rtexprvalue>false</rtexprvalue>
+            <type>java.lang.String</type>
+            <description>The form name (see JSF.4.2).</description>
+        </attribute>
+        <attribute>
+            <name>formClass</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
+            <type>java.lang.String</type>
+            <description>Corresponds to the HTML class attribute.</description>
+        </attribute>

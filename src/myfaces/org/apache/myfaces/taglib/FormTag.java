@@ -54,7 +54,7 @@ public class FormTag
 
     public void setFormName(String v)
     {
-        setComponentAttribute(UIForm.FORM_NAME_ATTR, v);
+        setComponentProperty(UIForm.FORM_NAME_ATTR, v);
     }
 
     public void setFormClass(String v)

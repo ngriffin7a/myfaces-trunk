@@ -43,6 +43,6 @@ public class SaveStateTag
 
     public void setGlobal(boolean global)
     {
-        setComponentAttribute(UISaveState.GLOBAL_ATTR, global);
+        setComponentProperty(UISaveState.GLOBAL_ATTR, global);
     }
 }

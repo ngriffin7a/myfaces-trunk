@@ -1,0 +1,5 @@
+<!-- HTML 4.0 universal attributes -->
+        <attribute><name>dir</name>     <required>false</required>  <rtexprvalue>true</rtexprvalue></attribute>
+        <attribute><name>lang</name>    <required>false</required>  <rtexprvalue>true</rtexprvalue></attribute>
+        <attribute><name>style</name>   <required>false</required>  <rtexprvalue>true</rtexprvalue></attribute>
+        <attribute><name>title</name>   <required>false</required>  <rtexprvalue>true</rtexprvalue></attribute>

@@ -44,7 +44,7 @@ public class ParameterTag
 
     public void setName(String v)
     {
-        setComponentAttribute(UIParameter.NAME_ATTR, v);
+        setComponentProperty(UIParameter.NAME_ATTR, v);
     }
 
     public void setValue(Object value)

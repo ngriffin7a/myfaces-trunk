@@ -50,7 +50,7 @@ public class SortHeaderTag
 
     public void setAscending(boolean b)
     {
-        setComponentAttribute(UISortHeader.ASCENDING_ATTR,
+        setComponentProperty(UISortHeader.ASCENDING_ATTR,
                               b ? Boolean.TRUE : Boolean.FALSE);
     }
 
@@ -61,7 +61,7 @@ public class SortHeaderTag
 
     public void setAscendingReference(String value)
     {
-        setComponentAttribute(UISortHeader.ASCENDING_REFERENCE_ATTR, value);
+        setComponentProperty(UISortHeader.ASCENDING_REFERENCE_ATTR, value);
     }
 
 

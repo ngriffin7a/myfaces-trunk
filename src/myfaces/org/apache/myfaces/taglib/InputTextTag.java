@@ -29,7 +29,7 @@ import javax.faces.component.UIComponent;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public class TextEntryInputTag
+public class InputTextTag
     extends MyFacesTag
     implements CommonAttributes,
                UIInputAttributes,

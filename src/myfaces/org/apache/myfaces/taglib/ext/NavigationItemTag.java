@@ -64,7 +64,7 @@ public class NavigationItemTag
 
     public void setOpen(boolean b)
     {
-        setComponentAttribute(UINavigation.UINavigationItem.OPEN_ATTR,
+        setComponentProperty(UINavigation.UINavigationItem.OPEN_ATTR,
                               b ? Boolean.TRUE : Boolean.FALSE);
     }
 

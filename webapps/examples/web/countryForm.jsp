@@ -42,9 +42,9 @@
             <h:errors id="errors" />
 
             <h:form formName="countryForm">
-                <h:textentry_input id="isoCode" modelReference="countryForm.isoCode"></h:textentry_input><br>
-                <h:textentry_input id="name" modelReference="countryForm.name"></h:textentry_input>
-                <h:textentry_input id="size" modelReference="countryForm.size"></h:textentry_input>
+                <h:input_text id="isoCode" modelReference="countryForm.isoCode"></h:input_text><br>
+                <h:input_text id="name" modelReference="countryForm.name"></h:input_text>
+                <h:input_text id="size" modelReference="countryForm.size"></h:input_text>
             </h:form>
 
         </x:page_body>

@@ -44,7 +44,7 @@ public class ImageTag
 
     public void setUrl(String value)
     {
-        setComponentAttribute(UIGraphic.URL_ATTR, value);
+        setComponentProperty(UIGraphic.URL_ATTR, value);
     }
 
     public void setKey(String value)

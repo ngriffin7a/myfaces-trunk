@@ -9,7 +9,6 @@ public interface CommonComponentAttributes
 {
     //Standard attributes
     public static final String ID_ATTR = "id";
-
     public static final String MODEL_REFERENCE_ATTR = "modelReference";
     public static final String RENDERER_TYPE_ATTR = "rendererType";
     public static final String VALUE_ATTR = "value";

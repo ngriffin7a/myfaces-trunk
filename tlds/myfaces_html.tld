@@ -22,126 +22,17 @@
 <!DOCTYPE taglib
   PUBLIC "-//Sun Microsystems, Inc.//DTD JSP Tag Library 1.2//EN"
   "http://java.sun.com/dtd/web-jsptaglibrary_1_2.dtd" [
-    <!ENTITY common_attributes "
-        <attribute>
-            <name>id</name>
-            <required>false</required>
-            <rtexprvalue>false</rtexprvalue>
-            <type>java.lang.String</type>
-            <description>Every component can have an unique id. Automatically created if omitted.</description>
-        </attribute>
-        <attribute>
-            <name>rendered</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-            <type>java.lang.Boolean</type>
-            <description>If false, this component will not be rendered.</description>
-        </attribute>
-    ">
-    <!ENTITY modelReference_attribute "
-        <attribute>
-            <name>modelReference</name>
-            <required>false</required>
-            <rtexprvalue>false</rtexprvalue>
-            <type>java.lang.String</type>
-            <description>Reference to a bean or a bean property.</description>
-        </attribute>
-    ">
-    <!ENTITY converter_attribute "
-        <attribute><name>converter</name>       <required>false</required>  <rtexprvalue>false</rtexprvalue></attribute>
-    ">
-    <!ENTITY html_event_handler_attributes "
-        <attribute><name>onclick</name>    <required>false</required>  <rtexprvalue>true</rtexprvalue></attribute>
-        <attribute><name>ondblclick</name> <required>false</required>  <rtexprvalue>true</rtexprvalue></attribute>
-        <attribute><name>onmousedown</name><required>false</required>  <rtexprvalue>true</rtexprvalue></attribute>
-        <attribute><name>onmouseup</name>  <required>false</required>  <rtexprvalue>true</rtexprvalue></attribute>
-        <attribute><name>onmouseover</name><required>false</required>  <rtexprvalue>true</rtexprvalue></attribute>
-        <attribute><name>onmousemove</name><required>false</required>  <rtexprvalue>true</rtexprvalue></attribute>
-        <attribute><name>onmouseout</name> <required>false</required>  <rtexprvalue>true</rtexprvalue></attribute>
-        <attribute><name>onkeypress</name> <required>false</required>  <rtexprvalue>true</rtexprvalue></attribute>
-        <attribute><name>onkeydown</name>  <required>false</required>  <rtexprvalue>true</rtexprvalue></attribute>
-        <attribute><name>onkeyup</name>    <required>false</required>  <rtexprvalue>true</rtexprvalue></attribute>
-    ">
-    <!ENTITY html_universal_attributes "
-        <attribute><name>dir</name>     <required>false</required>  <rtexprvalue>true</rtexprvalue></attribute>
-        <attribute><name>lang</name>    <required>false</required>  <rtexprvalue>true</rtexprvalue></attribute>
-        <attribute><name>style</name>   <required>false</required>  <rtexprvalue>true</rtexprvalue></attribute>
-        <attribute><name>title</name>   <required>false</required>  <rtexprvalue>true</rtexprvalue></attribute>
-    ">
-    <!ENTITY html_button_attributes "
-        <attribute><name>accesskey</name>   <required>false</required>  <rtexprvalue>true</rtexprvalue></attribute>
-        <attribute><name>align</name>       <required>false</required>  <rtexprvalue>true</rtexprvalue></attribute>
-        <attribute><name>alt</name>         <required>false</required>  <rtexprvalue>true</rtexprvalue></attribute>
-        <attribute><name>datafld</name>     <required>false</required>  <rtexprvalue>true</rtexprvalue></attribute>
-        <attribute><name>datasrc</name>     <required>false</required>  <rtexprvalue>true</rtexprvalue></attribute>
-        <attribute><name>dataformatas</name><required>false</required>  <rtexprvalue>true</rtexprvalue></attribute>
-        <attribute><name>disabled</name>    <required>false</required>  <rtexprvalue>true</rtexprvalue></attribute>
-        <attribute><name>onblur</name>      <required>false</required>  <rtexprvalue>true</rtexprvalue></attribute>
-        <attribute><name>onchange</name>    <required>false</required>  <rtexprvalue>true</rtexprvalue></attribute>
-        <attribute><name>onfocus</name>     <required>false</required>  <rtexprvalue>true</rtexprvalue></attribute>
-        <attribute><name>tabindex</name>    <required>false</required>  <rtexprvalue>true</rtexprvalue></attribute>
-    ">
-    <!ENTITY html_input_attributes "
-        <attribute><name>accesskey</name>   <required>false</required>  <rtexprvalue>true</rtexprvalue></attribute>
-        <attribute><name>align</name>       <required>false</required>  <rtexprvalue>true</rtexprvalue></attribute>
-        <attribute><name>alt</name>         <required>false</required>  <rtexprvalue>true</rtexprvalue></attribute>
-        <attribute><name>datafld</name>     <required>false</required>  <rtexprvalue>true</rtexprvalue></attribute>
-        <attribute><name>datasrc</name>     <required>false</required>  <rtexprvalue>true</rtexprvalue></attribute>
-        <attribute><name>dataformatas</name><required>false</required>  <rtexprvalue>true</rtexprvalue></attribute>
-        <attribute><name>disabled</name>    <required>false</required>  <rtexprvalue>true</rtexprvalue></attribute>
-        <attribute><name>onblur</name>      <required>false</required>  <rtexprvalue>true</rtexprvalue></attribute>
-        <attribute><name>onchange</name>    <required>false</required>  <rtexprvalue>true</rtexprvalue></attribute>
-        <attribute><name>onfocus</name>     <required>false</required>  <rtexprvalue>true</rtexprvalue></attribute>
-        <attribute><name>onselect</name>    <required>false</required>  <rtexprvalue>true</rtexprvalue></attribute>
-        <attribute><name>readonly</name>    <required>false</required>  <rtexprvalue>true</rtexprvalue></attribute>
-        <attribute><name>size</name>        <required>false</required>  <rtexprvalue>true</rtexprvalue></attribute>
-        <attribute><name>tabindex</name>    <required>false</required>  <rtexprvalue>true</rtexprvalue></attribute>
-    ">
-    <!ENTITY html_textarea_attributes "
-        <attribute><name>accesskey</name>   <required>false</required>  <rtexprvalue>true</rtexprvalue></attribute>
-        <attribute><name>cols</name>        <required>false</required>  <rtexprvalue>true</rtexprvalue></attribute>
-        <attribute><name>datafld</name>     <required>false</required>  <rtexprvalue>true</rtexprvalue></attribute>
-        <attribute><name>datasrc</name>     <required>false</required>  <rtexprvalue>true</rtexprvalue></attribute>
-        <attribute><name>dataformatas</name><required>false</required>  <rtexprvalue>true</rtexprvalue></attribute>
-        <attribute><name>disabled</name>    <required>false</required>  <rtexprvalue>true</rtexprvalue></attribute>
-        <attribute><name>onblur</name>      <required>false</required>  <rtexprvalue>true</rtexprvalue></attribute>
-        <attribute><name>onchange</name>    <required>false</required>  <rtexprvalue>true</rtexprvalue></attribute>
-        <attribute><name>onfocus</name>     <required>false</required>  <rtexprvalue>true</rtexprvalue></attribute>
-        <attribute><name>onselect</name>    <required>false</required>  <rtexprvalue>true</rtexprvalue></attribute>
-        <attribute><name>readonly</name>    <required>false</required>  <rtexprvalue>true</rtexprvalue></attribute>
-        <attribute><name>rows</name>        <required>false</required>  <rtexprvalue>true</rtexprvalue></attribute>
-        <attribute><name>tabindex</name>    <required>false</required>  <rtexprvalue>true</rtexprvalue></attribute>
-    ">
-    <!ENTITY UIInput_attributes "
-        <attribute>
-            <name>inputClass</name>
-            <required>false</required>
-            <rtexprvalue>false</rtexprvalue>
-            <type>java.lang.String</type>
-            <description>Conforms to the HTML class attribute.</description>
-        </attribute>
-    ">
-    <!ENTITY UICommand_attributes "
-        <attribute>
-            <name>commandClass</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-            <type>java.lang.String</type>
-            <description>Conforms to the HTML class attribute.</description>
-        </attribute>
-    ">
-    <!ENTITY key_bundle_attributes "
-        <attribute>
-            <name>key</name>
-            <required>false</required>
-            <rtexprvalue>false</rtexprvalue>
-        </attribute>
-        <attribute>
-            <name>bundle</name>
-            <required>false</required>
-            <rtexprvalue>false</rtexprvalue>
-        </attribute>
-    ">
+<!ENTITY ui_component_attributes        SYSTEM "entities/ui_component_attributes.xml">
+<!ENTITY ui_input_attributes            SYSTEM "entities/ui_input_attributes.xml">
+<!ENTITY ui_command_attributes          SYSTEM "entities/ui_command_attributes.xml">
+<!ENTITY ui_form_attributes             SYSTEM "entities/ui_form_attributes.xml">
+<!ENTITY key_bundle_attributes          SYSTEM "entities/key_bundle_attributes.xml">
+<!ENTITY html_universal_attributes      SYSTEM "entities/html_universal_attributes.xml">
+<!ENTITY html_event_handler_attributes  SYSTEM "entities/html_event_handler_attributes.xml">
+<!ENTITY html_input_attributes          SYSTEM "entities/html_input_attributes.xml">
+<!ENTITY html_button_attributes         SYSTEM "entities/html_button_attributes.xml">
+<!ENTITY html_textarea_attributes       SYSTEM "entities/html_textarea_attributes.xml">
+<!ENTITY html_form_attributes           SYSTEM "entities/html_form_attributes.xml">
 ]>
 
 <taglib>
@@ -154,65 +45,37 @@
         Tag library for the MyFaces basic implementation.
     </description>
 
-<!--
-  ======================================================
-    form
-  ======================================================
- -->
+<!-- form -->
     <tag>
         <name>form</name>
         <tag-class>net.sourceforge.myfaces.taglib.FormTag</tag-class>
         <body-content>JSP</body-content>
-        &common_attributes;
+        &ui_component_attributes;
+        &ui_form_attributes;
         &html_universal_attributes;
         &html_event_handler_attributes;
-        <attribute><name>formName</name>        <required>true</required>   <rtexprvalue>false</rtexprvalue></attribute>
-        <attribute><name>formClass</name>       <required>false</required>  <rtexprvalue>false</rtexprvalue></attribute>
-        <!-- HTML 4.0 form attributes -->
-        <attribute><name>accept</name>          <required>false</required>  <rtexprvalue>true</rtexprvalue></attribute>
-        <attribute><name>acceptCharset</name>   <required>false</required>  <rtexprvalue>true</rtexprvalue></attribute>
-        <attribute><name>enctype</name>         <required>false</required>  <rtexprvalue>true</rtexprvalue></attribute>
-        <attribute><name>onreset</name>         <required>false</required>  <rtexprvalue>true</rtexprvalue></attribute>
-        <attribute><name>onsubmit</name>        <required>false</required>  <rtexprvalue>true</rtexprvalue></attribute>
-        <attribute><name>target</name>          <required>false</required>  <rtexprvalue>true</rtexprvalue></attribute>
+        &html_form_attributes;
     </tag>
 
-<!--
-  ======================================================
-    input_hidden
-  ======================================================
- -->
+<!-- input_hidden -->
     <tag>
         <name>input_hidden</name>
         <tag-class>net.sourceforge.myfaces.taglib.InputHiddenTag</tag-class>
         <body-content>JSP</body-content>
-        &common_attributes;
-        &modelReference_attribute;
-        &converter_attribute;
-        <attribute><name>value</name>           <required>false</required>  <rtexprvalue>false</rtexprvalue></attribute>
+        &ui_component_attributes;
+        &ui_input_attributes;
     </tag>
 
-<!--
-  ======================================================
-  textentry_input
-  ======================================================
- -->
+<!-- input_text -->
     <tag>
-        <name>textentry_input</name>    <!-- TODO: rename to 'input_text' -->
-        <tag-class>net.sourceforge.myfaces.taglib.TextEntryInputTag</tag-class>
+        <name>input_text</name>
+        <tag-class>net.sourceforge.myfaces.taglib.InputTextTag</tag-class>
         <body-content>JSP</body-content>
-        &common_attributes;
-        &modelReference_attribute;
-        &converter_attribute;
-        &UIInput_attributes;
+        &ui_component_attributes;
+        &ui_input_attributes;
         &html_input_attributes;
         &html_universal_attributes;
         &html_event_handler_attributes;
-        <attribute>
-            <name>text</name>   <!-- TODO: rename to initValue ? -->
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-        </attribute>
         <attribute>
             <name>maxlength</name>
             <required>false</required>
@@ -220,115 +83,86 @@
         </attribute>
     </tag>
 
-<!--
-  ======================================================
-  input_textarea
-  ======================================================
- -->
+<!-- input_secret -->
+    <tag>
+        <name>input_secret</name>
+        <tag-class>net.sourceforge.myfaces.taglib.InputSecretTag</tag-class>
+        <body-content>JSP</body-content>
+        &ui_component_attributes;
+        &ui_input_attributes;
+        &html_input_attributes;
+        &html_universal_attributes;
+        &html_event_handler_attributes;
+        <attribute>
+            <name>maxlength</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>java.lang.Integer</type>
+            <description>Corresponds to the HTML maxlength attribute.</description>
+        </attribute>
+        <attribute>
+            <name>redisplay</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
+            <type>java.lang.Boolean</type>
+            <description>
+                If true, the value will be resent (in plaintext) when the form
+                is rerendered (see JSF.7.4.4). Default is false.
+            </description>
+        </attribute>
+    </tag>
+
+<!-- input_textarea -->
     <tag>
         <name>input_textarea</name>
         <tag-class>net.sourceforge.myfaces.taglib.InputTextareaTag</tag-class>
         <body-content>JSP</body-content>
-        &common_attributes;
-        &modelReference_attribute;
-        &converter_attribute;
-        &UIInput_attributes;
+        &ui_component_attributes;
+        &ui_input_attributes;
         &html_textarea_attributes;
         &html_universal_attributes;
         &html_event_handler_attributes;
-        <attribute>
-            <name>text</name>   <!-- TODO: rename to initValue ? -->
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-        </attribute>
    </tag>
-<!--
-  ======================================================
-  textentry_secret
-  ======================================================
- -->
-    <tag>
-        <name>textentry_secret</name>   <!-- TODO: rename to 'input_secret' -->
-        <tag-class>net.sourceforge.myfaces.taglib.TextEntrySecretTag</tag-class>
-        <body-content>JSP</body-content>
-        &common_attributes;
-        &modelReference_attribute;
-        &converter_attribute;
-        &UIInput_attributes;
-        &html_input_attributes;
-        &html_universal_attributes;
-        &html_event_handler_attributes;
-        <!-- replace HTML 4.0 value attribute by text -->
-        <attribute>
-            <name>text</name>   <!-- TODO: rename to initValue ? -->
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-        </attribute>
-        <attribute>
-            <name>maxlength</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-        </attribute>
-        <!-- TODO: redisplay attribute-->
-    </tag>
 
-<!--
-  ======================================================
-  command_button
-  ======================================================
- -->
+<!-- command_button -->
     <tag>
         <name>command_button</name>
-        <!-- TODO attributes modelReference?, imageKey, image -->
         <tag-class>net.sourceforge.myfaces.taglib.CommandButtonTag</tag-class>
-        &common_attributes;
-        &UICommand_attributes;
-        &html_button_attributes;
+        &ui_component_attributes;
+        &ui_command_attributes;
         &html_universal_attributes;
         &html_event_handler_attributes;
-        <attribute>
-            <!-- TODO commandReference no longer needed in new event model? -->
-            <name>commandReference</name>
-            <required>false</required>
-            <rtexprvalue>false</rtexprvalue>
-        </attribute>
-        <attribute>
-            <name>commandName</name>
-            <required>false</required>
-            <rtexprvalue>false</rtexprvalue>
-        </attribute>
+        &html_button_attributes;
         <attribute>
             <name>label</name>
             <required>false</required>
             <rtexprvalue>false</rtexprvalue>
         </attribute>
         &key_bundle_attributes;
+
+        <attribute>
+            <!-- TODO deprecated: commandReference no longer needed in new event model? -->
+            <name>commandReference</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
+        </attribute>
+
+        <!-- TODO What about image buttons: attributes imageKey, image, ... -->
     </tag>
 
-<!--
-  ======================================================
-  hyperlink_button
-  ======================================================
- -->
+<!-- command_hyperlink -->
     <tag>
         <name>command_hyperlink</name>
         <tag-class>net.sourceforge.myfaces.taglib.CommandHyperlinkTag</tag-class>
         <body-content>JSP</body-content>
         <!-- TODO attributes image, label-->
-        &common_attributes;
-        &modelReference_attribute;
-        &converter_attribute;
-        &UICommand_attributes;
+        &ui_component_attributes;
+        &ui_command_attributes;
         &html_universal_attributes;
         &html_event_handler_attributes;
         <attribute>
             <!-- TODO commandReference still needed? -->
             <name>commandReference</name>
-            <required>false</required>
-            <rtexprvalue>false</rtexprvalue>
-        </attribute>
-        <attribute>
-            <name>commandName</name>
             <required>false</required>
             <rtexprvalue>false</rtexprvalue>
         </attribute>
@@ -426,7 +260,7 @@
         <name>output_label</name>
         <tag-class>net.sourceforge.myfaces.taglib.OutputLabelTag</tag-class>
         <body-content>JSP</body-content>
-        &common_attributes;
+        &ui_component_attributes;
         <attribute>
           <name>for</name>
           <required>true</required>
@@ -474,9 +308,7 @@
         <name>output_text</name>
         <tag-class>net.sourceforge.myfaces.taglib.OutputTextTag</tag-class>
         <body-content>JSP</body-content>
-        &common_attributes;
-        &modelReference_attribute;
-        &converter_attribute;
+        &ui_component_attributes;
         <attribute>
             <name>text</name>
             <required>false</required>
@@ -502,8 +334,7 @@ TODO: check attributes
         <tag-class>net.sourceforge.myfaces.taglib.OutputDateTag</tag-class>
         <body-content>JSP</body-content>
         <!-- TODO attributes value -->
-        &common_attributes;
-        &modelReference_attribute;
+        &ui_component_attributes;
         <attribute>
             <name>outputClass</name>
             <required>false</required>
@@ -534,8 +365,7 @@ TODO: check attributes
             <tag-class>net.sourceforge.myfaces.taglib.OutputDateTimeTag</tag-class>
             <body-content>JSP</body-content>
             <!-- TODO attributes value -->
-            &common_attributes;
-            &modelReference_attribute;
+            &ui_component_attributes;
             <attribute>
                 <name>outputClass</name>
                 <required>false</required>
@@ -570,8 +400,7 @@ TODO: check attributes
         <tag-class>net.sourceforge.myfaces.taglib.OutputTimeTag</tag-class>
         <body-content>JSP</body-content>
         <!-- TODO attributes value -->
-        &common_attributes;
-        &modelReference_attribute;
+        &ui_component_attributes;
         <attribute><name>outputClass</name>     <required>false</required>  <rtexprvalue>false</rtexprvalue></attribute>
         <attribute><name>dateStyle</name>       <required>false</required>  <rtexprvalue>false</rtexprvalue></attribute>
         <attribute><name>timeStyle</name>       <required>false</required>  <rtexprvalue>false</rtexprvalue></attribute>
@@ -590,9 +419,7 @@ TODO: check attributes
         <tag-class>net.sourceforge.myfaces.taglib.MessageTag</tag-class>
         <body-content>JSP</body-content>
         <!-- TODO attributes value (rename msg?)-->
-        &common_attributes;
-        &modelReference_attribute;
-        &converter_attribute;
+        &ui_component_attributes;
         <attribute>
             <name>msg</name>
             <required>false</required>
@@ -618,9 +445,7 @@ TODO: check attributes
         <tag-class>net.sourceforge.myfaces.taglib.ImageTag</tag-class>
         <body-content>JSP</body-content>
         <!-- TODO attributes  outputClass, value -->
-        &common_attributes;
-        &modelReference_attribute;
-        &converter_attribute;
+        &ui_component_attributes;
         <attribute>
             <name>url</name>
             <required>false</required>
@@ -702,9 +527,7 @@ TODO: check attributes
         <tag-class>net.sourceforge.myfaces.taglib.SelectOneListboxTag</tag-class>
         <body-content>JSP</body-content>
         <!-- TODO attributes selectoneClass -->
-        &common_attributes;
-        &modelReference_attribute;
-        &converter_attribute;
+        &ui_component_attributes;
         <attribute>
             <name>value</name>
             <required>false</required>
@@ -765,9 +588,7 @@ TODO: check attributes
         <tag-class>net.sourceforge.myfaces.taglib.SelectOneMenuTag</tag-class>
         <body-content>JSP</body-content>
         <!-- TODO attributes selectoneClass -->
-        &common_attributes;
-        &modelReference_attribute;
-        &converter_attribute;
+        &ui_component_attributes;
         <attribute>
             <name>value</name>
             <required>false</required>
@@ -833,9 +654,7 @@ TODO: check attributes
         <tag-class>net.sourceforge.myfaces.taglib.SelectManyListboxTag</tag-class>
         <body-content>JSP</body-content>
         <!-- TODO attributes selectmanyClass -->
-        &common_attributes;
-        &modelReference_attribute;
-        &converter_attribute;
+        &ui_component_attributes;
         <attribute>
             <name>value</name>
             <required>false</required>
@@ -896,9 +715,7 @@ TODO: check attributes
         <tag-class>net.sourceforge.myfaces.taglib.SelectManyMenuTag</tag-class>
         <body-content>JSP</body-content>
         <!-- TODO attributes selectmanyClass -->
-        &common_attributes;
-        &modelReference_attribute;
-        &converter_attribute;
+        &ui_component_attributes;
         <attribute>
             <name>value</name>
             <required>false</required>
@@ -964,13 +781,12 @@ TODO: check attributes
         <name>selectitem</name>
         <tag-class>net.sourceforge.myfaces.taglib.SelectItemTag</tag-class>
         <body-content>JSP</body-content>
-        &common_attributes;
+        &ui_component_attributes;
         <attribute>
             <name>selected</name>
             <required>false</required>
             <rtexprvalue>false</rtexprvalue>
         </attribute>
-        &modelReference_attribute;
         <attribute>
             <name>value</name>
             <required>false</required>
@@ -999,7 +815,7 @@ TODO: check attributes
         <name>selectitems</name>
         <tag-class>net.sourceforge.myfaces.taglib.SelectItemsTag</tag-class>
         <body-content>JSP</body-content>
-        &common_attributes;
+        &ui_component_attributes;
         <attribute><name>modelReference</name>  <required>true</required>   <rtexprvalue>false</rtexprvalue></attribute>
     </tag>
 
@@ -1013,14 +829,14 @@ TODO: check attributes
         <name>errors</name>
         <tag-class>net.sourceforge.myfaces.taglib.ErrorsTag</tag-class>
         <body-content>empty</body-content>
-        &common_attributes;
+        &ui_component_attributes;
     </tag>
 
     <tag>
         <name>input_errors</name>
         <tag-class>net.sourceforge.myfaces.taglib.ErrorsTag</tag-class>
         <body-content>empty</body-content>
-        &common_attributes;
+        &ui_component_attributes;
         <attribute>
             <name>clientId</name>
             <required>true</required>
@@ -1043,7 +859,7 @@ TODO: check attributes
          <name>list</name>
          <tag-class>net.sourceforge.myfaces.taglib.ListTag</tag-class>
          <body-content>JSP</body-content>
-         &common_attributes;
+         &ui_component_attributes;
          <attribute>
              <name>cssClass</name>
              <required>false</required>
@@ -1081,13 +897,12 @@ TODO: check attributes
         <name>listrow</name>
         <tag-class>net.sourceforge.myfaces.taglib.ListRowTag</tag-class>
         <body-content>JSP</body-content>
-        &common_attributes;
+        &ui_component_attributes;
         <attribute>
             <name>var</name>
             <required>true</required>
             <rtexprvalue>false</rtexprvalue>
         </attribute>
-        &modelReference_attribute;
     </tag>
 
 <!--
@@ -1100,7 +915,7 @@ TODO: check attributes
          <name>grid</name>
          <tag-class>net.sourceforge.myfaces.taglib.GridTag</tag-class>
          <body-content>JSP</body-content>
-         &common_attributes;
+         &ui_component_attributes;
          <attribute>
              <name>columns</name>
              <required>true</required>
@@ -1143,7 +958,7 @@ TODO: check attributes
         <name>group</name>
         <tag-class>net.sourceforge.myfaces.taglib.GroupTag</tag-class>
         <body-content>JSP</body-content>
-        &common_attributes;
+        &ui_component_attributes;
     </tag>
 
 <!--
@@ -1155,9 +970,7 @@ TODO: check attributes
         <name>selectboolean_checkbox</name>
         <tag-class>net.sourceforge.myfaces.taglib.SelectBooleanCheckboxTag</tag-class>
         <body-content>JSP</body-content>
-        &common_attributes;
-        &modelReference_attribute;
-        &converter_attribute;
+        &ui_component_attributes;
         <attribute>
             <name>checked</name>
             <required>false</required>
@@ -1253,9 +1066,7 @@ TODO: check attributes
         <name>selectmany_checkboxlist</name>
         <tag-class>net.sourceforge.myfaces.taglib.SelectManyCheckboxListTag</tag-class>
         <body-content>JSP</body-content>
-        &common_attributes;
-        &modelReference_attribute;
-        &converter_attribute;
+        &ui_component_attributes;
         <attribute>
             <name>checked</name>
             <required>false</required>
