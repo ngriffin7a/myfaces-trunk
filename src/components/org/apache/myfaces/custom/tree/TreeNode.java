@@ -15,62 +15,60 @@
  */
 package org.apache.myfaces.custom.tree;
 
-import java.util.Iterator;
+import java.util.List;
+import java.io.Serializable;
 
 /**
  * Defines the requirements for an object that can be used as a tree node for
- * {@link HtmlTree}. (inspired by javax.swing.tree.TreeNode).
+ * use in a {@link UITreeData} component. (inspired by javax.swing.tree.TreeNode).
  * 
  * @author <a href="mailto:oliver@rossmueller.com">Oliver Rossmueller </a>
+ * @author Sean Schofield
  * @version $Revision$ $Date$
- *
- *          $Log$
- *          Revision 1.4  2004/11/26 12:14:10  oros
- *          MYFACES-8: applied tree table patch by David Le Strat
- *
- *  *  
  */
-public interface TreeNode
+public interface TreeNode extends Serializable
 {
+    public boolean isLeaf();
+    
+    public void setLeaf(boolean leaf);
+
+    public List getChildren();
 
     /**
-     * @return Gets the user object of this node.
+     * Gets the type of {@link TreeNode}.
+     * @return The node type
      */
-    Object getUserObject();
-
+    public String getType();
+    
     /**
-     * Answer the child at the given index.
+     * Sets the type of {@link TreeNode}.
+     * @param type The node type
      */
-    TreeNode getChildAt(int childIndex);
-
+    public void setType(String type);
+    
+    public String getDescription();
+    
+    public void setDescription(String description);
+    
     /**
-     * Answer the number of children this node contains.
+     * Sets the identifier associated with the {@link TreeNode}.
+     * @param id The identifier
      */
-    int getChildCount();
-
+    public void setIdentifier(String identifier);
+    
     /**
-     * Answer the parent of this node.
+     * Gets the identifier asociated with the {@link TreeNode}.
+     * @return the identifier
      */
-    TreeNode getParent();
-
+    public String getIdentifier();
+    
+    public void setExpanded(boolean expanded);
+    
+    public boolean isExpanded();
+    
     /**
-     * Answer the index of the given node in this node's children.
+     * Gets the number of children this node has.
+     * @return the number of children
      */
-    int getIndex(TreeNode node);
-
-    /**
-     * Answer true if this node allows children.
-     */
-    boolean getAllowsChildren();
-
-    /**
-     * Answer true if this is a leaf node.
-     */
-    boolean isLeaf();
-
-    /**
-     * Answer the children of the receiver. The base collection is unmodifyable.
-     */
-    Iterator children();
-
+    public int getChildCount();
 }
