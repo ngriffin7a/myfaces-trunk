@@ -81,7 +81,7 @@
         <tar destfile="${project.dir}/myfaces-${manifest.impl.version}-examples.tgz"
              compression="gzip">
             <tarfileset dir="${myfaces.doc}"
-                        excludes="api/**"
+                        excludes="javadoc/**, tlddoc/**"
                         prefix="myfaces-${manifest.impl.version}/doc"/>
             <tarfileset dir="${examples.doc}"
                         prefix="myfaces-${manifest.impl.version}/webapps/examples/doc"/>

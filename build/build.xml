@@ -87,10 +87,10 @@
 
 
     <target name="apidoc"
-            description="creates javadoc for the api">
-        <mkdir dir="${doc.dir}/api"/>
+            description="creates javadoc for MyFaces classes">
+        <mkdir dir="${doc.dir}/javadoc"/>
         <javadoc sourcepath="${myfaces.src}"
-                 destdir="${doc.dir}/api"
+                 destdir="${doc.dir}/javadoc"
                  packagenames="net.sourceforge.myfaces.*"
                  classpathref="project.class.path"
                  failonerror="true"/>
@@ -99,8 +99,9 @@
     <target name="tlddoc"
             description="creates tlddoc for the extension tld"
             depends="-resolve-tld-entities" >
+        <mkdir dir="${doc.dir}/tlddoc"/>
         <java fork="true" jar="${tlddoc.jar}" failonerror="true">
-            <arg line="-d ${doc.dir}/tld"/>
+            <arg line="-d ${doc.dir}/tlddoc"/>
             <arg value="${resolved-tlds.dir}/myfaces_ext.tld"/>
         </java>
     </target>
@@ -149,7 +150,7 @@
 
     <target name="examples-release"
             description="creates the examples release file myfaces-x.x.x-examples.tgz (don't forget to adjust manifest.properties!)">
-        <ant dir="webapps/examples"
+        <ant dir="${project.dir}/build/examples-webapp"
              antfile="build.xml"
              inheritall="false"
              target="release"/>
@@ -169,8 +170,8 @@
             <fileset file="${myfaces.jar}" />
             <fileset file="myfaces-*.tgz" />
             <fileset file="${doc.dir}/web.xml.sample" />
-            <fileset dir="${doc.dir}/api" />
-            <fileset dir="${doc.dir}/tld" />
+            <fileset dir="${doc.dir}/javadoc" />
+            <fileset dir="${doc.dir}/tlddoc" />
             <fileset dir="${temp.dir}/myfaces-jar"/>  <!-- in case of interrupted builds -->
             <fileset dir="${resolved-tlds.dir}"/>     <!-- in case of interrupted builds -->
         </delete>
