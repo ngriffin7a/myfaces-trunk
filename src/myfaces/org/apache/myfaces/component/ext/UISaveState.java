@@ -26,7 +26,7 @@ import java.io.IOException;
 /**
  * This component defines a model value (via the "modelReference" attribute),
  * of which the state has to be saved and restored by the StateRenderer.
- * A UISaveState component is only a parameter for the StateRenderer, it does no rendering
+ * A UISaveState component is only a "parameter" for the StateRenderer, it does no rendering
  * of its own. The decode and encodeXxx methods do nothing.
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$

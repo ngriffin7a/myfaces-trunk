@@ -78,6 +78,7 @@
                 </f:form>
             </td></tr></table>
 
+    <br><f:command_hyperlink id="jump_home" href="index.jsf" >Go Home</f:command_hyperlink>
 
         </td>
     </tr></table>
