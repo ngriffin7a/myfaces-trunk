@@ -1,0 +1,5 @@
+<!-- HTML 4.0 label attributes -->
+        <attribute><name>accesskey</name>   <required>false</required>  <rtexprvalue>true</rtexprvalue></attribute>
+        <!-- "for" is a specific LabelRenderer attribute -->
+        <attribute><name>onblur</name>      <required>false</required>  <rtexprvalue>true</rtexprvalue></attribute>
+        <attribute><name>onfocus</name>     <required>false</required>  <rtexprvalue>true</rtexprvalue></attribute>

@@ -29,7 +29,7 @@ import javax.faces.component.UIComponent;
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public class ImageTag
+public class GraphicImageTag
     extends MyFacesTag
 {
     public UIComponent createComponent()

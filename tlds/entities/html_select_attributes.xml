@@ -8,5 +8,5 @@
         <attribute><name>onblur</name>      <required>false</required>  <rtexprvalue>true</rtexprvalue></attribute>
         <attribute><name>onchange</name>    <required>false</required>  <rtexprvalue>true</rtexprvalue></attribute>
         <attribute><name>onfocus</name>     <required>false</required>  <rtexprvalue>true</rtexprvalue></attribute>
-        <attribute><name>size</name>        <required>false</required>  <rtexprvalue>true</rtexprvalue></attribute>
+        <!-- "size" cannot be set directly for it is a MenuRenderer specific attribute -->
         <attribute><name>tabindex</name>    <required>false</required>  <rtexprvalue>true</rtexprvalue></attribute>

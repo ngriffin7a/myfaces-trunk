@@ -1,0 +1,15 @@
+<!-- JSF UIGraphic attributes -->
+        <attribute>
+            <name>url</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>java.lang.String</type>
+            <description>URL of the image (see JSF.4.3).</description>
+        </attribute>
+        <attribute>
+            <name>graphicClass</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
+            <type>java.lang.String</type>
+            <description>Corresponds to the HTML class attribute.</description>
+        </attribute>
