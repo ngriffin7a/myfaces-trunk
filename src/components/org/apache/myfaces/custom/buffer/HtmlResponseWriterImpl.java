@@ -16,10 +16,12 @@
 package org.apache.myfaces.custom.buffer;
 
 import org.apache.myfaces.config.MyfacesConfig;
-import org.apache.myfaces.renderkit.html.HTML;
 import org.apache.myfaces.renderkit.html.util.DummyFormResponseWriter;
 import org.apache.myfaces.renderkit.html.util.DummyFormUtils;
+import org.apache.myfaces.renderkit.html.util.HTMLEncoder;
 import org.apache.myfaces.renderkit.html.util.JavascriptUtils;
+import org.apache.myfaces.renderkit.html.util.UnicodeEncoder;
+import org.apache.myfaces.renderkit.RendererUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -38,6 +40,9 @@ import java.util.Set;
  * @author Anton Koinov
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.2  2005/01/31 17:03:54  svieujot
+ * Resynchronize the HtmlResponseWriterImpl from the renderkit, and from the x:buffer component.
+ *
  * Revision 1.1  2005/01/04 15:41:06  svieujot
  * new x:buffer component.
  *
@@ -58,9 +63,11 @@ public class HtmlResponseWriterImpl
     private String _contentType;
     private String _characterEncoding;
     private String _startElementName;
+    private UIComponent _startElementUIComponent;
     private boolean _startTagOpen;
 
     private static final Set s_emptyHtmlElements = new HashSet();
+
     static
     {
         s_emptyHtmlElements.add("area");
@@ -161,6 +168,7 @@ public class HtmlResponseWriterImpl
         _writer.write('<');
         _writer.write(name);
         _startElementName = name;
+        _startElementUIComponent = uiComponent;
         _startTagOpen = true;
     }
 
@@ -196,7 +204,9 @@ public class HtmlResponseWriterImpl
                 !name.equals(_startElementName))
             {
                 if (log.isWarnEnabled())
-                    log.warn("HTML nesting warning on closing " + name + ": element " + _startElementName + " not explicitly closed");
+                    log.warn("HTML nesting warning on closing " + name + ": element " + _startElementName +
+                            (_startElementUIComponent==null?"":(" rendered by component : "+
+                            RendererUtils.getPathToComponent(_startElementUIComponent)))+" not explicitly closed");
             }
         }
 
@@ -231,6 +241,7 @@ public class HtmlResponseWriterImpl
         }
 
         _startElementName = null;
+        _startElementUIComponent = null;
     }
 
     public void writeAttribute(String name, Object value, String componentPropertyName) throws IOException
@@ -345,7 +356,7 @@ public class HtmlResponseWriterImpl
 
         if (isScriptOrStyle())
         {
-            _writer.write(strValue);
+            _writer.write(UnicodeEncoder.encode(strValue, false, false));
         }
         else
         {
@@ -368,7 +379,8 @@ public class HtmlResponseWriterImpl
 
         if (isScriptOrStyle())
         {
-            _writer.write(cbuf, off, len);
+            String strValue = new String(cbuf, off, len);
+            _writer.write(UnicodeEncoder.encode(strValue, false, false));
         }
         else if (isTextarea())
         {
@@ -425,7 +437,8 @@ public class HtmlResponseWriterImpl
     public void write(char cbuf[], int off, int len) throws IOException
     {
         closeStartTagIfNecessary();
-        _writer.write(cbuf, off, len);
+        String strValue = new String(cbuf, off, len);
+        _writer.write(UnicodeEncoder.encode(strValue, false, false));
     }
 
     public void write(int c) throws IOException
@@ -437,7 +450,8 @@ public class HtmlResponseWriterImpl
     public void write(char cbuf[]) throws IOException
     {
         closeStartTagIfNecessary();
-        _writer.write(cbuf);
+        String strValue = new String(cbuf);
+        _writer.write(UnicodeEncoder.encode(strValue, false, false));
     }
 
     public void write(String str) throws IOException
@@ -447,14 +461,15 @@ public class HtmlResponseWriterImpl
         // in such case, do not call down the writer chain
         if (str.length() > 0)
         {
-            _writer.write(str);
+            _writer.write(UnicodeEncoder.encode(str, false, false));
         }
     }
 
     public void write(String str, int off, int len) throws IOException
     {
         closeStartTagIfNecessary();
-        _writer.write(str, off, len);
+        String strValue = str.substring(off, len);
+        _writer.write(UnicodeEncoder.encode(strValue, false, false));
     }
 
     // DummyFormResponseWriter support

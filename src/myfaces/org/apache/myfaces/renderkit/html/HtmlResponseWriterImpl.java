@@ -34,10 +34,16 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
+ * When modifying this class, remember to do the same to
+ * org.apache.myfaces.custom.buffer
+ *
  * @author Manfred Geiler (latest modification by $Author$)
  * @author Anton Koinov
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.35  2005/01/31 17:03:54  svieujot
+ * Resynchronize the HtmlResponseWriterImpl from the renderkit, and from the x:buffer component.
+ *
  * Revision 1.34  2005/01/29 10:04:25  matzew
  * MYFACES-91 patch by Jason Hoo. Thanks
  *
