@@ -25,6 +25,10 @@
     <!-- Temporary dir. May be overridden in build.local.properties -->
     <property name="temp.dir" location="${env.TEMP}"/>
 
+    <property name="api.classes" location="${temp.dir}/myfaces-api/classes"/>
+    <property name="share.classes" location="${temp.dir}/myfaces-share/classes"/>
+    <property name="impl.classes" location="${temp.dir}/myfaces-impl/classes"/>
+    <property name="components.classes" location="${temp.dir}/myfaces-components/classes"/>
 
     <property name="resolved-tlds.dir" location="${temp.dir}/myfaces-tlds"/>
 
@@ -37,7 +41,7 @@
 
     <!-- classpath for compiling shared classes -->
     <path id="share.class.path">
-        <pathelement location="${jsfapi.src}"/>
+        <pathelement location="${api.classes}"/>
         <pathelement location="${servlet.jar}"/>
         <pathelement location="${jsp-api.jar}"/>
         <pathelement location="${jstl.jar}"/>
@@ -47,7 +51,8 @@
 
     <!-- classpath for compiling impl classes -->
     <path id="myfaces.class.path">
-        <pathelement location="${jsfapi.src}"/>
+        <pathelement location="${api.classes}"/>
+        <pathelement location="${share.classes}"/>
         <pathelement location="${share.src}"/>
         <pathelement location="${servlet.jar}"/>
         <pathelement location="${jsp-api.jar}"/>
@@ -59,8 +64,8 @@
 
     <!-- classpath for compiling component classes -->
     <path id="components.class.path">
-        <pathelement location="${jsfapi.src}"/>
-        <pathelement location="${share.src}"/>
+        <pathelement location="${api.classes}"/>
+        <pathelement location="${share.classes}"/>
         <pathelement location="${servlet.jar}"/>
         <pathelement location="${jsp-api.jar}"/>
         <pathelement location="${jstl.jar}"/>
@@ -107,7 +112,16 @@
             </manifest>
 
             <!-- classes -->
-            <fileset dir="${temp.dir}/myfaces-jar/classes"
+            <fileset dir="${api.classes}"
+                     includes="**"
+                     excludes=".dependency-info/**/*"/>
+            <fileset dir="${share.classes}"
+                     includes="**"
+                     excludes=".dependency-info/**/*"/>
+            <fileset dir="${impl.classes}"
+                     includes="**"
+                     excludes=".dependency-info/**/*"/>
+            <fileset dir="${components.classes}"
                      includes="**"
                      excludes=".dependency-info/**/*"/>
             <!-- properties, DTDs, XMLs -->
@@ -118,6 +132,64 @@
             <!-- TLDs -->
             <zipfileset dir="${resolved-tlds.dir}"
                         includes="*.tld"
+                        prefix="META-INF/"/>
+            <!-- faces-config.xml -->
+            <zipfileset dir="${project.dir}/conf"
+                        includes="faces-config.xml"
+                        prefix="META-INF/"/>
+            <zipfileset dir="${project.dir}/conf"
+                        includes="message_resources_*.xml"
+                        prefix="META-INF/"/>
+        </jar>
+
+    </target>
+
+    <target name="myfaces-components-jar"
+            description="builds the myfaces-components.jar file"
+            depends="-compile-share,
+                     -compile-impl,
+                     -compile-components,
+                     resolve-tld-entities" >
+        <!-- timestamp for the manifest -->
+        <tstamp>
+            <format property="TODAY_DE" pattern="dd.MM.yyyy HH:mm" locale="de"/>
+        </tstamp>
+
+        <!-- build the jar -->
+        <jar destfile="${myfaces-components.jar}">
+            <!-- manifest -->
+            <manifest>
+                <attribute name="Built-By" value="${user.name}"/>
+                <section name="myfaces.sourceforge.net">
+                    <attribute name="Implementation-Title" value="${manifest.impl.title}"/>
+                    <attribute name="Implementation-Version" value="${manifest.impl.version} ${TODAY_DE}"/>
+                    <attribute name="Implementation-Vendor" value="${manifest.impl.vendor}"/>
+                </section>
+            </manifest>
+
+            <!-- classes -->
+            <fileset dir="${share.classes}"
+                     includes="**"
+                     excludes=".dependency-info/**/*"/>
+            <fileset dir="${components.classes}"
+                     includes="**"
+                     excludes=".dependency-info/**/*"/>
+            <fileset dir="${impl.classes}"
+                     includes="**/net/sourceforge/myfaces/renderkit/html/**"
+                     excludes=".dependency-info/**/*"/>
+            <!-- properties, DTDs, XMLs -->
+            <fileset dir="${myfaces.src}"
+                     includes="**"
+                     excludes="**/*.java,
+                               **/javax/faces/**/*,
+                               **/web-facesconfig_1_0.dtd,
+                               **/standard-faces-config.xml,
+                               **/package.html"/>
+            <!-- TLDs -->
+            <zipfileset dir="${resolved-tlds.dir}"
+                        includes="*.tld"
+                        excludes="**/myfaces_core.tld,
+                                  **/myfaces_html.tld"
                         prefix="META-INF/"/>
             <!-- faces-config.xml -->
             <zipfileset dir="${project.dir}/conf"
@@ -154,7 +226,7 @@
 
 
     <target name="bin-release"
-            depends="myfaces-jar, javadoc, tlddoc"
+            depends="myfaces-jar, myfaces-components-jar, javadoc, tlddoc"
             description="creates the binary release file myfaces-x.x.x.tgz (don't forget to adjust manifest.properties!)">
 
         <tar destfile="${project.dir}/myfaces-${manifest.impl.version}.tgz"
@@ -250,7 +322,10 @@
             <fileset file="${project.dir}/myfaces-*.tgz" />
             <fileset dir="${doc.dir}/javadoc" />
             <fileset dir="${doc.dir}/tlddoc" />
-            <fileset dir="${temp.dir}/myfaces-jar"/>
+            <fileset dir="${api.classes}"/>
+            <fileset dir="${share.classes}"/>
+            <fileset dir="${impl.classes}"/>
+            <fileset dir="${components.classes}"/>
             <fileset dir="${resolved-tlds.dir}"/>     <!-- in case of interrupted builds -->
         </delete>
     </target>
@@ -265,9 +340,9 @@
     </target>
 
     <target name="-compile-api">
-        <mkdir dir="${temp.dir}/myfaces-jar/classes"/>
+        <mkdir dir="${api.classes}"/>
         <javac srcdir="${jsfapi.src}"
-               destdir="${temp.dir}/myfaces-jar/classes"
+               destdir="${api.classes}"
                optimize="${javac.optimize}"
                debug="${javac.debug}"
                classpathref="jsfapi.class.path">
@@ -275,9 +350,9 @@
     </target>
 
     <target name="-compile-share" depends="-compile-api" >
-        <mkdir dir="${temp.dir}/myfaces-jar/classes"/>
+        <mkdir dir="${share.classes}"/>
         <javac srcdir="${share.src}"
-               destdir="${temp.dir}/myfaces-jar/classes"
+               destdir="${share.classes}"
                optimize="${javac.optimize}"
                debug="${javac.debug}"
                classpathref="share.class.path">
@@ -285,9 +360,9 @@
     </target>
 
     <target name="-compile-impl" depends="-compile-api,-compile-share" >
-        <mkdir dir="${temp.dir}/myfaces-jar/classes"/>
+        <mkdir dir="${impl.classes}"/>
         <javac srcdir="${myfaces.src}"
-               destdir="${temp.dir}/myfaces-jar/classes"
+               destdir="${impl.classes}"
                optimize="${javac.optimize}"
                debug="${javac.debug}"
                classpathref="myfaces.class.path">
@@ -295,9 +370,9 @@
     </target>
 
     <target name="-compile-components" depends="-compile-api,-compile-share">
-        <mkdir dir="${temp.dir}/myfaces-jar/classes"/>
+        <mkdir dir="${components.classes}"/>
         <javac srcdir="${components.src}"
-               destdir="${temp.dir}/myfaces-jar/classes"
+               destdir="${components.classes}"
                optimize="${javac.optimize}"
                debug="${javac.debug}"
                classpathref="components.class.path">
