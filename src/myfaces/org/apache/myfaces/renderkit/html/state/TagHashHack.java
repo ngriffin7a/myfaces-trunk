@@ -19,6 +19,7 @@
 package net.sourceforge.myfaces.renderkit.html.state;
 
 import net.sourceforge.myfaces.MyFacesConfig;
+import net.sourceforge.myfaces.util.logging.LogUtil;
 import net.sourceforge.myfaces.convert.ConverterUtils;
 import net.sourceforge.myfaces.renderkit.html.jspinfo.JspInfo;
 
@@ -76,14 +77,14 @@ public class TagHashHack
             return null;
         }
 
-        //Remap each tagKey to the clientId instead of the component
+        //Remap each tagKey to the uniqueId instead of the component
         Map saveTagHash = new HashMap();
         for (Iterator it = tagHash.entrySet().iterator(); it.hasNext();)
         {
             Map.Entry entry = (Map.Entry)it.next();
             UIComponent comp = (UIComponent)entry.getValue();
             saveTagHash.put(entry.getKey(),
-                            comp.getClientId(facesContext));
+                            JspInfo.getUniqueComponentId(comp));
         }
 
         if (MyFacesConfig.isJspInfoApplicationCaching())
@@ -103,7 +104,7 @@ public class TagHashHack
     }
 
 
-    public static void convertClientIdsBackToComponents(Tree restoredTree)
+    public static void convertUniqueIdsBackToComponents(Tree restoredTree)
     {
         UIComponent root = restoredTree.getRoot();
         Map restoredTagHash = (Map)root.getAttribute(TAG_HASH_ATTR);
@@ -113,9 +114,14 @@ public class TagHashHack
             for (Iterator tagHashIt = restoredTagHash.entrySet().iterator(); tagHashIt.hasNext();)
             {
                 Map.Entry tagHashEntry = (Map.Entry)tagHashIt.next();
-                String clientId = (String)tagHashEntry.getValue();
-                realTagHash.put(tagHashEntry.getKey(),
-                                root.findComponent(clientId));
+                String uniqueId = (String)tagHashEntry.getValue();
+                UIComponent comp = JspInfo.findComponentByUniqueId(restoredTree,
+                                                                   uniqueId);
+                if (comp == null)
+                {
+                    LogUtil.getLogger().severe("Could not find component by uniqueId " + uniqueId);
+                }
+                realTagHash.put(tagHashEntry.getKey(), comp);
             }
             root.setAttribute(TAG_HASH_ATTR, realTagHash);
         }

@@ -33,6 +33,7 @@ public class UIPanel
     {
         super();
         _rendersChildren = rendersChildren;
+        setValid(true);
     }
 
     public boolean getRendersChildren()

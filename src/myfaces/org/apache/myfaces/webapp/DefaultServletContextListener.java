@@ -48,9 +48,7 @@ public class DefaultServletContextListener
         try
         {
             //Set logging level
-            Level logLevel = MyFacesConfig.getLogLevel();
-            Logger logger = LogUtil.getLogger();
-            setLoggerLevel(logger, logLevel);
+            setLoggerLevel(LogUtil.getLogger(), MyFacesConfig.getLogLevel());
 
             ApplicationHandler handler = new DefaultApplicationHandler();
             LifecycleFactory factory = (LifecycleFactory)FactoryFinder.getFactory(FactoryFinder.LIFECYCLE_FACTORY);

@@ -27,5 +27,8 @@ public class UISelectItems
     extends javax.faces.component.UISelectItems
     implements CommonComponentAttributes
 {
-
+    public UISelectItems()
+    {
+        setValid(true);
+    }
 }

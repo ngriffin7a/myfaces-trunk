@@ -32,15 +32,26 @@ public class LogUtil
 {
     public static final String LOGGER_NAME = "MyFacesLogger";
     private static final Handler CONSOLE_HANDER = new ConsoleHandler();
-    static
-    {
-        Logger.getLogger(LOGGER_NAME).addHandler(CONSOLE_HANDER);
-    }
+    private static Logger _logger = null;
 
     private LogUtil() {}
 
     public static Logger getLogger()
     {
-        return Logger.getLogger(LOGGER_NAME);
+        if (_logger == null)
+        {
+            _logger = Logger.getLogger(LOGGER_NAME);
+            synchronized (_logger)
+            {
+                if (_logger.getHandlers().length == 0)
+                {
+                    _logger.addHandler(CONSOLE_HANDER);
+                }
+                _logger.setUseParentHandlers(false);
+            }
+        }
+        return _logger;
     }
+
+
 }

@@ -48,6 +48,7 @@ public class UINavigation
     public UINavigation()
     {
         super(true);
+        setValid(true);
     }
 
 
@@ -55,6 +56,11 @@ public class UINavigation
         extends UICommand
     {
         public static final String OPEN_ATTR = "open";
+
+        public UINavigationItem()
+        {
+            setValid(true);
+        }
 
         public boolean isOpen()
         {

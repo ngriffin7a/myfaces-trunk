@@ -56,12 +56,6 @@ public class SecretRenderer
         return uicomponent instanceof UIInput;
     }
 
-    public void decode(FacesContext facescontext, UIComponent uicomponent)
-        throws IOException
-    {
-        super.decode(facescontext, uicomponent);
-    }
-
     public void encodeEnd(FacesContext facesContext, UIComponent uiComponent)
         throws IOException
     {

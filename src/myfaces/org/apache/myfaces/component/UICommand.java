@@ -34,6 +34,10 @@ public class UICommand
     //MyFaces extensions
     public static final String COMMAND_REFERENCE_ATTR = "commandReference";
 
+    public UICommand()
+    {
+        setValid(true);
+    }
 
     public void setAttribute(String name, Object value)
     {

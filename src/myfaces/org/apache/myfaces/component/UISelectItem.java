@@ -33,6 +33,10 @@ public class UISelectItem
     //MyFaces eextension
     public static final String SELECTED_ATTR = "selected";
 
+    public UISelectItem()
+    {
+        setValid(true);
+    }
 
     public boolean getRendersSelf()
     {

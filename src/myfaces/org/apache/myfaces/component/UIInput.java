@@ -28,6 +28,11 @@ import java.util.List;
 public class UIInput
         extends javax.faces.component.UIInput
 {
+    public UIInput()
+    {
+        setValid(true);
+    }
+
     public List[] getListeners()
     {
         return listeners;

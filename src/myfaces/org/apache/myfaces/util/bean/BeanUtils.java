@@ -211,6 +211,12 @@ public class BeanUtils
     }
 
 
+    /**
+     * @param bean
+     * @param propertyName
+     * @return
+     * @throws IllegalArgumentException if the bean has no property with this name
+     */
     public static Class getBeanPropertyType(Object bean,
                                             String propertyName)
     {
@@ -223,6 +229,11 @@ public class BeanUtils
 
     /**
      * Optimized version where BeanInfo already is available.
+     *
+     * @param beanInfo
+     * @param propertyName
+     * @return
+     * @throws IllegalArgumentException if the bean has no property with this name
      */
     public static Class getBeanPropertyType(BeanInfo beanInfo,
                                             String propertyName)

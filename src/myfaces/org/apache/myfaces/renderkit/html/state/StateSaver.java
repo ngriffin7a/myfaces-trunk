@@ -69,13 +69,12 @@ public class StateSaver
 
     private static final String STATE_MAP_REQUEST_ATTR = StateSaver.class.getName() + ".STATE_MAP";
 
-    public static final String DUMMY_VALUE = "NULL";
-
     private static final Set IGNORE_ATTRIBUTES = new HashSet();
     static
     {
         IGNORE_ATTRIBUTES.add(CommonComponentAttributes.PARENT_ATTR);
-        IGNORE_ATTRIBUTES.add(CommonComponentAttributes.VALID_ATTR);
+        IGNORE_ATTRIBUTES.add(CommonComponentAttributes.COMPONENT_ID_ATTR);
+        IGNORE_ATTRIBUTES.add(UIComponent.CLIENT_ID_ATTR);
     }
 
     public void init(FacesContext facesContext) throws IOException
@@ -159,7 +158,8 @@ public class StateSaver
             saveComponents(facesContext, map);
             saveModelValues(facesContext, map);
             saveLocale(facesContext, map);
-            facesContext.getServletRequest().setAttribute(STATE_MAP_REQUEST_ATTR, map);
+            facesContext.getServletRequest()
+                .setAttribute(STATE_MAP_REQUEST_ATTR, map);
         }
         return map;
     }
@@ -178,115 +178,10 @@ public class StateSaver
         LogUtil.getLogger().entering("StateSaver", "saveComponents");
 
         Iterator treeIt = TreeUtils.treeIterator(facesContext.getTree());
-        while (treeIt.hasNext())
+        while(treeIt.hasNext())
         {
             UIComponent comp = (UIComponent)treeIt.next();
-
-            /* HACK: we call getClientId() to prevent ConcurrentModificationException in getAttributeNames iterator.
-              * As an alternative we could also copy the attribute names into a temporary List first. */
-            comp.getClientId(facesContext);
-
-            Tree parsedTree = JspInfo.getTree(facesContext,
-                                              facesContext.getTree().getTreeId());
-            UIComponent parsedComp = null;
-            try
-            {
-                parsedComp = parsedTree.getRoot().findComponent(comp.getClientId(facesContext));
-            }
-            catch (IllegalArgumentException e)
-            {
-                parsedComp = null;
-            }
-
-            //System.out.println("Saving " + comp.toString());
-
-
-            boolean valueSeen = false;
-
-            Set visitedAttributes = new HashSet();
-            for (Iterator compIt = comp.getAttributeNames(); compIt.hasNext();)
-            {
-                String attrName = (String)compIt.next();
-                visitedAttributes.add(attrName);
-                Object attrValue = comp.getAttribute(attrName);
-                if (attrValue != null &&
-                    !isIgnoreAttribute(comp, attrName))
-                {
-                    if (attrName.equals(CommonComponentAttributes.VALUE_ATTR)
-                        || attrName.equals(CommonComponentAttributes.STRING_VALUE_ATTR))
-                    {
-                        valueSeen = true;
-
-                        if (isIgnoreValue(comp))
-                        {
-                            //ignore value
-                            continue;
-                        }
-
-                        if (attrName.equals(CommonComponentAttributes.VALUE_ATTR))
-                        {
-                            saveComponentValue(facesContext, stateMap, comp, attrValue);
-                        }
-                        else //(attrName.equals(CommonComponentAttributes.STRING_VALUE_ATTR))
-                        {
-                            saveParameter(stateMap,
-                                          RequestParameterNames
-                                            .getUIComponentStateParameterName(facesContext,
-                                                                              comp,
-                                                                              CommonComponentAttributes.STRING_VALUE_ATTR),
-                                          (String)attrValue);
-                        }
-                    }
-                    else
-                    {
-                        saveComponentAttribute(facesContext, stateMap, comp,
-                                               attrName, attrValue);
-                    }
-                }
-            }
-
-            // Save all attributes, that are set in the parsed tree
-            // but not in the current tree (= removed attributes).
-            // Save them by means of a special dummy value
-            if (parsedComp != null)
-            {
-                for (Iterator parsedCompIt = parsedComp.getAttributeNames(); parsedCompIt.hasNext();)
-                {
-                    String attrName = (String)parsedCompIt.next();
-                    if (parsedComp.getComponentId().equals("list_header") && attrName.equals("value") )
-                    {
-                        System.out.println("ls");
-                    }
-                    if (!visitedAttributes.contains(attrName) &&
-                        !isIgnoreAttribute(parsedComp, attrName))
-                    {
-                        // save dummy value
-                        saveParameter(stateMap,
-                                      RequestParameterNames.getUIComponentStateParameterName(facesContext,
-                                                                                             comp,
-                                                                                             attrName),
-                                      DUMMY_VALUE);
-                    }
-                }
-            }
-
-            /*
-            TODO: save currentValue and restore model value on restore ?
-            Saving the currentValue for an UIOutput has side-effects!
-            The value is restored, although it was null. currentValue then wont
-            function properly, because it always would return the local value!
-
-            if (!valueSeen
-                && !isIgnoreValue(comp))
-            {
-                Object currValue = comp.currentValue(facesContext);
-                if (currValue != null)
-                {
-                    saveComponentValue(facesContext, stateMap, comp, currValue);
-                }
-            }
-            */
-
+            saveComponentAttributes(facesContext, stateMap, comp);
             saveListeners(facesContext, stateMap, comp);
         }
 
@@ -294,133 +189,211 @@ public class StateSaver
     }
 
 
-    protected void saveComponentValue(FacesContext facesContext,
-                                      Map stateMap,
-                                      UIComponent uiComponent,
-                                      Object attrValue)
+    protected void saveComponentAttributes(FacesContext facesContext,
+                                           Map stateMap,
+                                           UIComponent uiComponent)
+    {
+        //Find corresponding component in parsed tree
+        UIComponent parsedComp = findCorrespondingParsedComponent(facesContext,
+                                                                  uiComponent);
+        if (parsedComp == null)
+        {
+            LogUtil.getLogger().warning("Corresponding parsed component not found for component " + uiComponent.getClientId(facesContext));
+        }
+
+        //Remember all seen attributes of current component, so that
+        //we can find "missing attributes" (i.e attributes that were set to null)
+        //later
+        Set visitedAttributes = new HashSet();
+
+        //step through all attributes of component
+        for (Iterator compIt = uiComponent.getAttributeNames(); compIt.hasNext();)
+        {
+            String attrName = (String)compIt.next();
+            Object attrValue = uiComponent.getAttribute(attrName);
+
+            saveComponentAttribute(facesContext,
+                                   stateMap,
+                                   uiComponent,
+                                   attrName,
+                                   attrValue,
+                                   parsedComp);
+
+            visitedAttributes.add(attrName);
+
+        }
+
+        // Save all attributes, that are set in the parsed tree
+        // but not in the current tree (= removed attributes).
+        // Save them by means of a special dummy value
+        if (parsedComp != null)
+        {
+            for (Iterator parsedCompIt = parsedComp.getAttributeNames(); parsedCompIt.hasNext();)
+            {
+                String attrName = (String)parsedCompIt.next();
+                if (!visitedAttributes.contains(attrName))
+                {
+                    saveComponentAttribute(facesContext,
+                                           stateMap,
+                                           uiComponent,
+                                           attrName,
+                                           null,
+                                           null);
+                    visitedAttributes.add(attrName);
+                }
+            }
+        }
+
+
+        //enforce saving of "valid" attribute, if it is null and defaults to false
+        if (!visitedAttributes.contains(CommonComponentAttributes.VALID_ATTR) &&
+            !uiComponent.isValid())
+        {
+            //"valid" attribute not yet seen, so the internal attribute is null
+            //but there is a default value when we use the property getter.
+            //If valid == false, we must save it, because StateRestorer
+            //always assumes true as the default.
+            //Since normally all components are valid, this can minimize
+            //the number of saved attributes.
+            saveComponentAttribute(facesContext,
+                                   stateMap,
+                                   uiComponent,
+                                   CommonComponentAttributes.VALID_ATTR,
+                                   Boolean.FALSE,
+                                   null);
+        }
+
+
+        /*
+        TODO: save currentValue and restore model value on restore ?
+        Saving the currentValue for an UIOutput has side-effects!
+        The value is restored, although it was null. currentValue then wont
+        function properly, because it always would return the local value!
+
+        if (!valueSeen
+        && !isIgnoreValue(comp))
+        {
+        Object currValue = comp.currentValue(facesContext);
+        if (currValue != null)
+        {
+        saveComponentValue(facesContext, stateMap, comp, currValue);
+        }
+        }
+        */
+    }
+
+
+    protected UIComponent findCorrespondingParsedComponent(FacesContext facesContext,
+                                                           UIComponent uiComponent)
     {
         Tree parsedTree = JspInfo.getTree(facesContext,
                                           facesContext.getTree().getTreeId());
-        UIComponent parsedComp = null;
-        try
+        return JspInfo.findComponentByUniqueId(parsedTree,
+                                               JspInfo.getUniqueComponentId(uiComponent));
+    }
+
+
+    /**
+     * TODO: Optimize saving of "valid" attribute. (Assume "true" as default and don't save)
+     *
+     * @param facesContext
+     * @param stateMap
+     * @param uiComponent
+     * @param attrName
+     * @param attrValue
+     * @param parsedComponent
+     */
+    protected void saveComponentAttribute(FacesContext facesContext,
+                                          Map stateMap,
+                                          UIComponent uiComponent,
+                                          String attrName,
+                                          Object attrValue,
+                                          UIComponent parsedComponent)
+    {
+        if (isIgnoreAttribute(uiComponent, attrName))
         {
-            parsedComp = parsedTree.getRoot().findComponent(uiComponent.getClientId(facesContext));
+            return;
         }
-        catch (IllegalArgumentException e)
+
+        if (attrName.equals(CommonComponentAttributes.VALID_ATTR) &&
+            uiComponent.isValid())
         {
-            parsedComp = null;
+            //No need to save "valid" if true, because StateRestorer
+            //assumes true as default anyway.
+            return;
         }
-        if (parsedComp != null)
+
+        //is it Sun's troublesome "tagHash" attribute in the root?
+        if (TagHashHack.isTagHashAttribute(uiComponent, attrName))
         {
-            Object parsedValue = parsedComp.getAttribute(CommonComponentAttributes.VALUE_ATTR);
-            if (parsedValue != null && parsedValue.equals(attrValue))
+            saveParameter(stateMap,
+                          RequestParameterNames.getUIComponentStateParameterName(facesContext,
+                                                                                 uiComponent,
+                                                                                 attrName),
+                          TagHashHack.getAsStringToBeSaved(facesContext, (Map)attrValue));
+            return;
+        }
+
+        //compare current value to static value in parsed component
+        if (parsedComponent != null)
+        {
+            Object parsedValue = parsedComponent.getAttribute(attrName);
+            if ((parsedValue != null && parsedValue.equals(attrValue)) ||
+                (parsedValue == null && attrValue == null))
             {
-                //current value identical to hardcoded value
+                //current value identical to hardcoded value --> no need to save
                 return;
             }
         }
 
+        //is null value?
+        if (attrValue == null)
+        {
+            saveParameter(stateMap,
+                          RequestParameterNames.getUIComponentStateParameterName(facesContext,
+                                                                                 uiComponent,
+                                                                                 attrName),
+                          StateRenderer.NULL_DUMMY_VALUE);
+            return;
+        }
+
+        //convert attribute value to String
         String strValue;
-        Converter conv = ConverterUtils.findValueConverter(facesContext, uiComponent);
+        Converter conv = findConverterForAttribute(facesContext,
+                                                   uiComponent,
+                                                   attrName);
         if (conv != null)
         {
+            //lucky, we have a converter  :-)
             try
             {
                 strValue = conv.getAsString(facesContext, uiComponent, attrValue);
             }
             catch (ConverterException e)
             {
-                throw new FacesException("Error saving state of value of component " + uiComponent.getClientId(facesContext) + ": Converter exception!", e);
+                LogUtil.getLogger().severe("Value of attribute " + attrName + " will be lost, because of converter exception saving state of component " + uiComponent.getClientId(facesContext) + ".");
+                return;
             }
         }
         else
         {
+            //damn, we could not find a converter  :-(
             if (attrValue instanceof Serializable)
-            {
-                strValue = ConverterUtils.serialize(attrValue);
-            }
-            else
-            {
-                LogUtil.getLogger().warning("Value of component " + uiComponent.getClientId(facesContext) + " is not serializable - cannot save state!");
-                return;
-            }
-        }
-
-        saveParameter(stateMap,
-                      RequestParameterNames.getUIComponentStateParameterName(facesContext,
-                                                                             uiComponent,
-                                                                             CommonComponentAttributes.VALUE_ATTR),
-                      strValue);
-    }
-
-
-    protected void saveComponentAttribute(FacesContext facesContext,
-                                          Map stateMap,
-                                          UIComponent uiComponent,
-                                          String attrName,
-                                          Object attrValue)
-    {
-        Tree parsedTree = JspInfo.getTree(facesContext,
-                                          facesContext.getTree().getTreeId());
-        String strValue;
-
-        if (TagHashHack.isTagHashAttribute(uiComponent, attrName))
-        {
-            strValue = TagHashHack.getAsStringToBeSaved(facesContext, (Map)attrValue);
-            if (strValue == null)
-            {
-                return;
-            }
-        }
-        else
-        {
-            UIComponent parsedComp = null;
-            try
-            {
-                parsedComp = parsedTree.getRoot().findComponent(uiComponent.getClientId(facesContext));
-            }
-            catch (IllegalArgumentException e)
-            {
-                parsedComp = null;
-            }
-            if (parsedComp != null)
-            {
-                Object parsedValue = parsedComp.getAttribute(attrName);
-                if (parsedValue != null && parsedValue.equals(attrValue))
-                {
-                    //current attribute identical to hardcoded attribute
-                    return;
-                }
-            }
-
-            Converter conv = ConverterUtils.findAttributeConverter(facesContext,
-                                                                   uiComponent,
-                                                                   attrName);
-            if (conv != null)
             {
                 try
                 {
-                    strValue = conv.getAsString(facesContext,
-                                                facesContext.getTree().getRoot(), //dummy UIComponent
-                                                attrValue);
+                    strValue = ConverterUtils.serialize(attrValue);
                 }
-                catch (ConverterException e)
+                catch (FacesException e)
                 {
-                    throw new FacesException("Error saving state of attribute '" + attrName + "' of component " + uiComponent.getClientId(facesContext) + ": Converter exception!", e);
+                    LogUtil.getLogger().severe("Value of attribute " + attrName + " of component " + uiComponent.getClientId(facesContext) + " will be lost, because of exception during serialization: " + e.getMessage());
+                    return;
                 }
             }
             else
             {
-                if (attrValue instanceof Serializable)
-                {
-                    strValue = ConverterUtils.serialize(attrValue);
-                }
-                else
-                {
-                    LogUtil.getLogger().warning("Attribute '" + attrName + "' of component " + uiComponent.getClientId(facesContext) + " is not serializable - cannot save state!");
-                    return;
-                }
-
+                LogUtil.getLogger().severe("Value of attribute " + attrName + " of component " + uiComponent.getClientId(facesContext) + " will be lost, because it is of non-serializable type: " + attrValue.getClass().getName());
+                return;
             }
         }
 
@@ -429,6 +402,24 @@ public class StateSaver
                                                                              uiComponent,
                                                                              attrName),
                       strValue);
+    }
+
+
+    protected Converter findConverterForAttribute(FacesContext facesContext,
+                                                  UIComponent uiComponent,
+                                                  String attrName)
+    {
+        if (attrName.equals(CommonComponentAttributes.VALUE_ATTR))
+        {
+            return ConverterUtils.findValueConverter(facesContext,
+                                                     uiComponent);
+        }
+        else
+        {
+            return ConverterUtils.findAttributeConverter(facesContext,
+                                                         uiComponent,
+                                                         attrName);
+        }
     }
 
 
@@ -531,11 +522,9 @@ public class StateSaver
         {
             return true;
         }
-        else if (attrName.equals(UIComponent.CLIENT_ID_ATTR) ||
-                 attrName.equals("componentId"))
+        else if (attrName.equals(CommonComponentAttributes.VALUE_ATTR))
         {
-            //Dynamically generated componentId and clientId need not be saved
-            return true;
+            return isIgnoreValue(comp);
         }
         else
         {
@@ -545,15 +534,6 @@ public class StateSaver
 
     protected boolean isIgnoreValue(UIComponent comp)
     {
-        /*
-        if (comp.getComponentType().equals(UIOutput.TYPE) ||
-            comp instanceof UIOutput)
-        {
-            //Output values must not be saved
-            return true;
-        }
-        */
-
         //Secret with redisplay == false?
         String rendererType = comp.getRendererType();
         if (rendererType != null && rendererType.equals(SecretRenderer.TYPE))
@@ -694,5 +674,6 @@ public class StateSaver
         }
 
     }
+
 
 }

@@ -48,6 +48,8 @@ public class StateRenderer
     protected static final String LISTENER_TYPE_ACTION = "Action";
     protected static final String LISTENER_TYPE_VALUE_CHANGED = "ValueChanged";
 
+    static final String NULL_DUMMY_VALUE = "__NULL__";
+
     protected StateSaver _stateSaver;
     protected StateRestorer _stateRestorer;
 

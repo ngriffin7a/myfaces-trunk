@@ -26,5 +26,8 @@ package net.sourceforge.myfaces.component;
 public class UIOutput
     extends javax.faces.component.UIOutput
 {
-
+    public UIOutput()
+    {
+        setValid(true);
+    }
 }

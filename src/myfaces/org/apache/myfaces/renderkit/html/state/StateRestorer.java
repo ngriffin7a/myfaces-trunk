@@ -19,7 +19,6 @@
 package net.sourceforge.myfaces.renderkit.html.state;
 
 import net.sourceforge.myfaces.component.CommonComponentAttributes;
-import net.sourceforge.myfaces.component.UIComponentUtils;
 import net.sourceforge.myfaces.convert.ConverterUtils;
 import net.sourceforge.myfaces.convert.impl.StringArrayConverter;
 import net.sourceforge.myfaces.renderkit.html.jspinfo.JspBeanInfo;
@@ -83,7 +82,7 @@ public class StateRestorer
             }
 
             //remap tagHash
-            TagHashHack.convertClientIdsBackToComponents(requestTree);
+            TagHashHack.convertUniqueIdsBackToComponents(requestTree);
 
             //restore model beans and values:
             restoreModelValues(facesContext, stateMap);
@@ -138,6 +137,19 @@ public class StateRestorer
         }
     }
 
+    protected String getStateParameterValueAsString(Object paramValue)
+    {
+        if (paramValue instanceof String[])
+        {
+            return StringArrayConverter.getAsString((String[])paramValue);
+        }
+        else
+        {
+            return (String)paramValue;
+        }
+    }
+
+
 
     /**
      * The model reference for each component is checked. If a model bean does not
@@ -159,131 +171,117 @@ public class StateRestorer
             checkModelInstance(facesContext, modelRef);
         }
 
-        //restore value:
-        String savedValue = getStateParameter(stateMap,
-                                              RequestParameterNames
-                                                .getUIComponentStateParameterName(facesContext,
-                                                                                  uiComponent,
-                                                                                  CommonComponentAttributes.VALUE_ATTR));
-        if (savedValue != null)
+        //Set valid as default
+        if (uiComponent.getAttribute(CommonComponentAttributes.VALID_ATTR) == null &&
+            uiComponent.isValid())
         {
-            if (savedValue.equals(StateSaver.DUMMY_VALUE))
-            {
-                UIComponentUtils.setComponentValue(uiComponent, null);
-            }
-            else
-            {
-                Converter conv = ConverterUtils.findValueConverter(facesContext, uiComponent);
-                if (conv != null)
-                {
-                    UIComponentUtils.convertAndSetValue(facesContext,
-                                                                 uiComponent,
-                                                                 savedValue,
-                                                                 conv,
-                                                                 false);    //no error message
-                }
-                else
-                {
-                    Object obj = ConverterUtils.deserialize(savedValue);
-                    UIComponentUtils.setComponentValue(uiComponent, obj);
-                }
-            }
+            //component is valid by default, so no need to set explicitly
+        }
+        else
+        {
+            //StateSaver always saves a "valid" == false, so it will be
+            //set to saved state later anyway.
+            uiComponent.setValid(true);
         }
 
-        //restore other attributes:
+        //restore attributes
         for (Iterator it = stateMap.entrySet().iterator(); it.hasNext();)
         {
             Map.Entry entry = (Map.Entry)it.next();
             String attrName = RequestParameterNames.restoreUIComponentStateParameterAttributeName(facesContext,
                                                                                                   uiComponent,
                                                                                                   (String)entry.getKey());
-            if (attrName != null &&
-                !attrName.equals(CommonComponentAttributes.VALUE_ATTR)) //Value was already restored above
+            if (attrName != null)
             {
-                Object paramValue = entry.getValue();
-
-                if (attrName.equals(CommonComponentAttributes.STRING_VALUE_ATTR))
-                {
-                    if (paramValue instanceof String[])
-                    {
-                        paramValue = StringArrayConverter.getAsString((String[])paramValue);
-                    }
-                    uiComponent.setAttribute(CommonComponentAttributes.STRING_VALUE_ATTR, paramValue);
-                    uiComponent.setValue(null);
-                    uiComponent.setValid(false);
-                    continue;
-                }
-
-                Object objValue;
-                if (TagHashHack.isTagHashAttribute(uiComponent, attrName))
-                {
-                    if (paramValue instanceof String[])
-                    {
-                        paramValue = StringArrayConverter.getAsString((String[])paramValue);
-                    }
-                    objValue = TagHashHack.getAsObjectFromSaved((String)paramValue);
-                }
-                else
-                {
-                    Converter conv;
-                    conv = ConverterUtils.findAttributeConverter(facesContext,
-                                                                 uiComponent,
-                                                                 attrName);
-                    if (conv != null)
-                    {
-                        if (conv instanceof StringArrayConverter)
-                        {
-                            if (paramValue instanceof String[])
-                            {
-                                objValue = paramValue;
-                            }
-                            else
-                            {
-                                objValue = new String[] {(String)paramValue};
-                            }
-                        }
-                        else
-                        {
-                            try
-                            {
-                                if (paramValue instanceof String[])
-                                {
-                                    paramValue = StringArrayConverter.getAsString((String[])paramValue);
-                                }
-                                objValue = conv.getAsObject(facesContext,
-                                                            facesContext.getTree().getRoot(), //dummy UIComponent
-                                                            (String)paramValue);
-                            }
-                            catch (ConverterException e)
-                            {
-                                throw new FacesException("Error restoring state of attribute '" + attrName + "' of component " + uiComponent.getClientId(facesContext) + ": Converter exception!", e);
-                            }
-                        }
-                    }
-                    else
-                    {
-                        if (paramValue instanceof String[])
-                        {
-                            paramValue = StringArrayConverter.getAsString((String[])paramValue);
-                        }
-                        objValue = ConverterUtils.deserialize((String)paramValue);
-                    }
-                }
-
-                if (paramValue instanceof String[])
-                {
-                    paramValue = StringArrayConverter.getAsString((String[])paramValue);
-                }
-
-                if (!((String)paramValue).equals(StateSaver.DUMMY_VALUE))
-                {
-                    uiComponent.setAttribute(attrName, objValue);
-                }
+                restoreComponentAttribute(facesContext,
+                                          uiComponent,
+                                          attrName,
+                                          entry.getValue());
             }
         }
 
         registerTagCreatedActionListeners(facesContext, stateMap, uiComponent);
     }
+
+
+    protected void restoreComponentAttribute(FacesContext facesContext,
+                                             UIComponent uiComponent,
+                                             String attrName,
+                                             Object paramValue)
+    {
+        String strValue = getStateParameterValueAsString(paramValue);
+
+        if (TagHashHack.isTagHashAttribute(uiComponent, attrName))
+        {
+            Object objValue = TagHashHack.getAsObjectFromSaved(strValue);
+            uiComponent.setAttribute(attrName, objValue);
+            return;
+        }
+
+        //is it a null value?
+        if (strValue.equals(StateRenderer.NULL_DUMMY_VALUE))
+        {
+            uiComponent.setAttribute(attrName, null);
+            return;
+        }
+
+        //Find proper converter to convert back from external String
+        Converter conv;
+        if (attrName.equals(CommonComponentAttributes.VALUE_ATTR))
+        {
+            conv = ConverterUtils.findValueConverter(facesContext,
+                                                     uiComponent);
+        }
+        else
+        {
+            conv = ConverterUtils.findAttributeConverter(facesContext,
+                                                         uiComponent,
+                                                         attrName);
+        }
+
+        Object objValue;
+        if (conv != null)
+        {
+            //we have a converter, so StateSaver did convert to String
+            if (conv instanceof StringArrayConverter &&
+                paramValue instanceof String[])
+            {
+                //no need to convert the String value back to StringArray
+                objValue = paramValue;
+            }
+            else
+            {
+                try
+                {
+                    objValue = conv.getAsObject(facesContext,
+                                                uiComponent,
+                                                strValue);
+                }
+                catch (ConverterException e)
+                {
+                    LogUtil.getLogger().severe("Value of attribute " + attrName + " will be lost, because of converter exception restoring state of component " + uiComponent.getClientId(facesContext) + ".");
+                    return;
+                }
+            }
+        }
+        else
+        {
+            //we have no converter, so StateSaver did serialize the value
+            try
+            {
+                objValue = ConverterUtils.deserialize(strValue);
+            }
+            catch (FacesException e)
+            {
+                LogUtil.getLogger().severe("Value of attribute " + attrName + " of component " + uiComponent.getClientId(facesContext) + " will be lost, because of exception during deserialization: " + e.getMessage());
+                return;
+            }
+        }
+
+        uiComponent.setAttribute(attrName, objValue);
+    }
+
+
 
 
     /**
@@ -523,10 +521,15 @@ public class StateRestorer
                         continue;
                     }
                 }
-                UIComponent uiComponent = root.findComponent(info.clientId);
+
+                /*
+                UIComponent uiComponent = root.findComponent(info.uniqueComponentId);
+                */
+                UIComponent uiComponent = JspInfo.findComponentByUniqueId(facesContext.getTree(),
+                                                                          info.uniqueComponentId);
                 if (uiComponent == null)
                 {
-                    LogUtil.getLogger().severe("Could not find component " + info.clientId + " to add restored listener of type " + listener.getClass().getName());
+                    LogUtil.getLogger().severe("Could not find component " + info.uniqueComponentId + " to add restored listener of type " + listener.getClass().getName());
                     continue;
                 }
 

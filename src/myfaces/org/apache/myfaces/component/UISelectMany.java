@@ -30,6 +30,11 @@ public class UISelectMany
     extends javax.faces.component.UISelectMany
     implements CommonComponentAttributes
 {
+    public UISelectMany()
+    {
+        setValid(true);
+    }
+
     public boolean getRendersSelf()
     {
         return false;

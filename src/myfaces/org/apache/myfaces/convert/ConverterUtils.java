@@ -21,6 +21,7 @@ package net.sourceforge.myfaces.convert;
 import net.sourceforge.myfaces.renderkit.attr.CommonRendererAttributes;
 import net.sourceforge.myfaces.util.bean.BeanUtils;
 import net.sourceforge.myfaces.util.logging.LogUtil;
+import net.sourceforge.myfaces.component.CommonComponentAttributes;
 
 import javax.faces.FacesException;
 import javax.faces.FactoryFinder;
@@ -76,8 +77,25 @@ public class ConverterUtils
 
 
 
+    /**
+     * Returns the converter that is responsible for converting the value
+     * of the given UIComponent.
+     * The converter is determined as follows:
+     * <ul>
+     *  <li> if there is a "converter" attribute, return the corresponding converter
+     *  <li> if there is a "modelReference" attribute, find the value type via
+     *       {@link FacesContext#getModelType(String)} and return the converter
+     *       for this type
+     *  <li> otherwise return null
+     * </ul>
+     *
+     * @param facesContext
+     * @param uicomponent
+     * @return
+     * @throws IllegalArgumentException if a converter for this value type cannot be found
+     */
     public static Converter getValueConverter(FacesContext facesContext,
-                                         UIComponent uicomponent)
+                                              UIComponent uicomponent)
         throws IllegalArgumentException
     {
         Object converterAttr = uicomponent.getAttribute(CommonRendererAttributes.CONVERTER_ATTR);
@@ -109,6 +127,13 @@ public class ConverterUtils
     }
 
 
+    /**
+     * Same as {@link #getValueConverter} but never throws IllegalArgumentException.
+     *
+     * @param facesContext
+     * @param uicomponent
+     * @return
+     */
     public static Converter findValueConverter(FacesContext facesContext,
                                                UIComponent uicomponent)
     {
@@ -123,6 +148,24 @@ public class ConverterUtils
     }
 
 
+    /**
+     * Returns the converter that can be used to convert this attribute
+     * of the given UIComponent.
+     * The converter is determined as follows:
+     * <ul>
+     *  <li> if the component has a bean property getter for this attribute,
+     *       return the converter for this property type
+     *  <li> if the component has a rendererType, get the Renderer and
+     *       try to find an AttributeDescriptor. If found, return the converter
+     *       for this attribute's type
+     *  <li> otherwise return null
+     * </ul>
+     *
+     * @param facesContext
+     * @param uiComponent
+     * @param attrName
+     * @return
+     */
     public static Converter findAttributeConverter(FacesContext facesContext,
                                                    UIComponent uiComponent,
                                                    String attrName)
@@ -405,5 +448,65 @@ public class ConverterUtils
             throw new FacesException(e);
         }
     }
+
+
+    /*
+    public static Class findOutAttributeType(FacesContext facesContext,
+                                             UIComponent uiComponent,
+                                             String attrName)
+    {
+        //this is the special "value" attribute
+        if (attrName.equals(CommonComponentAttributes.VALUE_ATTR))
+        {
+            return findOutValueType(facesContext, uiComponent);
+        }
+
+        //is it a renderer dependent attribute and is there an attribute descriptor?
+        String rendererType = uiComponent.getRendererType();
+        if (rendererType != null)
+        {
+            //Lookup the attribute descriptor
+            RenderKitFactory rkFactory = (RenderKitFactory)FactoryFinder.getFactory(FactoryFinder.RENDER_KIT_FACTORY);
+            RenderKit renderKit = rkFactory.getRenderKit(facesContext.getTree().getRenderKitId());
+            Renderer renderer = renderKit.getRenderer(rendererType);
+            AttributeDescriptor attrDescr = renderer.getAttributeDescriptor(uiComponent.getComponentType(),
+                                                                            attrName);
+            if (attrDescr != null)
+            {
+                return attrDescr.getType();
+            }
+        }
+
+        //is it a component attribute and is there a valid property getter?
+        try
+        {
+            return BeanUtils.getBeanPropertyType(uiComponent, attrName);
+        }
+        catch (IllegalArgumentException e) {}
+
+        //no idea, of what type this attribute is  :-(
+        LogUtil.getLogger().info("Could not find out type of attribute " + attrName + " of component " + uiComponent.getClientId(facesContext));
+        return null;
+    }
+
+    public static Class findOutValueType(FacesContext facesContext,
+                                         UIComponent uiComponent)
+    {
+        String modelRef = uiComponent.getModelReference();
+        if (modelRef != null)
+        {
+            Class c = facesContext.getModelType(modelRef);
+            if (c == null)
+            {
+                throw new IllegalArgumentException("Could not find ModelDefinition for ModelReference " + modelRef);
+            }
+            return c;
+        }
+
+        //no idea, of what type values of this component should be  :-(
+        LogUtil.getLogger().info("Could not find out value type of component " + uiComponent.getClientId(facesContext));
+        return null;
+    }
+    */
 
 }

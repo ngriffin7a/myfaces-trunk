@@ -30,6 +30,11 @@ public class UIForm
 {
     public static final String FORM_NAME_ATTR = "formName";
 
+    public UIForm()
+    {
+        setValid(true);
+    }
+
     public void setAttribute(String s, Object o)
     {
         if (s.equals(FORM_NAME_ATTR))

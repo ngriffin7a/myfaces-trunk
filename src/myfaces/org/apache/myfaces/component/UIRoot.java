@@ -34,6 +34,7 @@ public class UIRoot
     public UIRoot()
     {
         setComponentId(ROOT_COMPONENT_ID);
+        setValid(true);
     }
 
     public String getComponentType()

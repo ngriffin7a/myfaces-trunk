@@ -32,5 +32,6 @@ public class UIGraphic
     public UIGraphic()
     {
         UIComponentUtils.setTransient(this, true);  //No state to be saved
+        setValid(true);
     }
 }

@@ -30,6 +30,11 @@ public class UIParameter
 {
     public static final String NAME_ATTR = "name";
 
+    public UIParameter()
+    {
+        setValid(true);
+    }
+
     public String getName()
     {
         return (String)getAttribute(NAME_ATTR);

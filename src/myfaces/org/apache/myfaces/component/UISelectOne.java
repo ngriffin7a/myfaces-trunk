@@ -30,6 +30,11 @@ public class UISelectOne
     extends javax.faces.component.UISelectOne
     implements CommonComponentAttributes
 {
+    public UISelectOne()
+    {
+        setValid(true);
+    }
+
     public boolean getRendersSelf()
     {
         return false;
