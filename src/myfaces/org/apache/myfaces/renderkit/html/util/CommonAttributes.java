@@ -51,7 +51,7 @@ public class CommonAttributes
         for (int i = 0; i < attributes.length; i++)
         {
             String attrName = attributes[i];
-            Object value = (Object)component.getAttribute(attrName);
+            Object value = component.getAttribute(attrName);
             if (value != null)
             {
                 if (value instanceof String &&
