@@ -49,8 +49,8 @@ public class ValueBindingImpl
     // Cache of commonly used Integer instances
     static final Integer        ZERO                = new Integer(0);
     static final Integer        ONE                 = new Integer(1);
-    static final int            INTEGER_CACHE_LOWER = -1000;
-    static final int            INTEGER_CACHE_UPPER = 1000;
+    static final int            INTEGER_CACHE_LOWER = 0; // array/List indexes start from 0
+    static final int            INTEGER_CACHE_UPPER = 100; // unlikely for user to use constant indexes above 100
     static final Integer[]      INTEGER_CACHE       = createIntegerCache();
 
     //~ Instance fields ----------------------------------------------------------------------------
@@ -72,8 +72,8 @@ public class ValueBindingImpl
             throw new ReferenceSyntaxException("Reference: empty or null");
         }
         _application         = application;
-        _reference           = reference;
-        _parsedReference     = parse(stripBracketsFromModelReference(reference));
+        _reference           = reference.intern();
+        _parsedReference     = parse(stripBracketsFromModelReference(_reference).intern());
     }
 
     //~ Methods ------------------------------------------------------------------------------------
@@ -209,7 +209,7 @@ public class ValueBindingImpl
         name = coerceProperty(facesContext, base, name);
 
         return (name instanceof String)
-        ? _application.getPropertyResolver().isReadOnly(base, (String) name)
+        ? _application.getPropertyResolver().isReadOnly(base, name)
         : _application.getPropertyResolver().isReadOnly(base, ((Integer) name).intValue());
     }
 
@@ -218,7 +218,7 @@ public class ValueBindingImpl
         name = coerceProperty(facesContext, base, name);
 
         return (name instanceof String)
-        ? _application.getPropertyResolver().getType(base, (String) name)
+        ? _application.getPropertyResolver().getType(base, name)
         : _application.getPropertyResolver().getType(base, ((Integer) name).intValue());
     }
 
@@ -230,7 +230,7 @@ public class ValueBindingImpl
         name = coerceProperty(facesContext, base, name);
         if (name instanceof String)
         {
-            _application.getPropertyResolver().setValue(base, (String) name, newValue);
+            _application.getPropertyResolver().setValue(base, name, newValue);
         }
         else
         {
@@ -285,6 +285,7 @@ public class ValueBindingImpl
      */
     private Object coerceProperty(FacesContext facesContext, Object base, Object name)
     {
+// FIXME: only bean guaranteed non-null
 //        Both guaranteed by caller not to be null
 //        if ((base == null) || (name == null))
 //        {
@@ -295,10 +296,9 @@ public class ValueBindingImpl
         {
             name = ((ValueBinding) name).getValue(facesContext);
         }
-        
         if ((base.getClass().isArray()) || (base instanceof List))
         {
-            // Note: ReferenceSyntaxException would be thrown by coerceToInteger(), if needed
+            // ReferenceSyntaxException would be thrown by coerceToInteger(), if needed
             return coerceToInteger(name);
         }
         if (base instanceof UIComponent)
@@ -313,7 +313,7 @@ public class ValueBindingImpl
             }
         }
 
-        // If none of the special bean types (or is Map)
+        // If none of the special bean types (or bean is Map)
         return coerceToString(name);
     }
 
@@ -387,10 +387,10 @@ public class ValueBindingImpl
         return integerCache;
     }
 
-    private boolean isEscaped(String str, int pos)
+    private boolean isEscaped(String str, int i)
     {
         int escapeCharCount = 0;
-        while ((--pos >= 0) && (str.charAt(pos) == '\\'))
+        while ((--i >= 0) && (str.charAt(i) == '\\'))
         {
             escapeCharCount++;
         }
@@ -464,6 +464,7 @@ public class ValueBindingImpl
      */
     private Object index(String index)
     {
+        index = index.trim();
         int len = index.length();
 
         // Is index empty? (case 'var[]')
@@ -487,15 +488,15 @@ public class ValueBindingImpl
             }
 
             // NOTE: this is quoted text--must be used exactly as specified--DO NOT trim()
-            return unescape(index.substring(1, len - 1));
+            return unescape(index.substring(1, len - 1)).intern();
         }
 
-        // Case 2: index is an integer (e.g., for arrays)
+        // Case 2: index is a positive integer (e.g., for arrays)
         if (StringUtils.isUnsignedInteger(index))
         {
             return integer(Integer.parseInt(index));
         }
-
+        
         // If neither of the above, then must be a sub-reference 
         return _application.createValueBinding("#{" + index + '}');
     }
@@ -514,23 +515,23 @@ public class ValueBindingImpl
     private int indexOfMatchingClosingBracket(String str, int indexofOpeningBracket)
     {
         int len = str.length();
-        int pos = indexofOpeningBracket + 1;
-        if (pos >= len)
+        int i = indexofOpeningBracket + 1;
+        if (i >= len)
         {
             throw new ReferenceSyntaxException(
                 "Reference: " + _reference
                 + ". Index incorrectly terminated: missing closing bracket");
         }
 
-        char c = str.charAt(pos);
+        char c = str.charAt(i);
 
         // 1. If quoted literal, find closing quote
         if ((c == '"') || (c == '\''))
         {
-            pos = indexOfMatchingClosingQuote(str, pos, c) + 1;
-            if ((pos < len) && (str.charAt(pos) == ']'))
+            i = indexOfMatchingClosingQuote(str, i, c) + 1;
+            if ((i < len) && (str.charAt(i) == ']'))
             {
-                return pos;
+                return i;
             }
             else
             {
@@ -543,8 +544,7 @@ public class ValueBindingImpl
         // 2. Otherwise, find closing bracket
         for (;;)
         {
-            int indexofOpen  = str.indexOf('[', pos);
-            int indexofClose = str.indexOf(']', pos);
+            int indexofClose = str.indexOf(']', i);
             if (indexofClose < 0)
             {
                 // No closing bracket
@@ -552,6 +552,7 @@ public class ValueBindingImpl
                     "Reference: " + _reference
                     + ". Index incorrectly terminated: missing closing bracket");
             }
+            int indexofOpen  = str.indexOf('[', i);
             if ((indexofOpen < 0) || (indexofClose < indexofOpen))
             {
                 // There is no opening bracket, or closing bracket is before opening
@@ -560,16 +561,16 @@ public class ValueBindingImpl
             else
             {
                 // Closing bracket after opening--we have nested brackets
-                pos = indexOfMatchingClosingBracket(str, indexofOpen) + 1;
+                i = indexOfMatchingClosingBracket(str, indexofOpen) + 1;
 
-                // (pos >= len) will cause indexofClose to be -1 on the next iteration
+                // (i >= len) will cause indexofClose to be -1 on the next iteration
                 // and properly reported as error, therefore we do not check for this case explicitly
             }
         }
     }
 
     /**
-     * Returns the index of the matching closing quote, checking for escaped quotes
+     * Returns the index of the matching closing quote, skipping over escaped quotes
      *
      * @param str string to scan
      * @param indexOfOpeningQuote start from this position in the string
@@ -579,12 +580,12 @@ public class ValueBindingImpl
     private int indexOfMatchingClosingQuote(String str, int indexOfOpeningQuote, char quote)
     {
         for (
-            int pos = str.indexOf(quote, indexOfOpeningQuote + 1); pos >= 0;
-                    pos = str.indexOf(quote, pos + 1))
+            int i = str.indexOf(quote, indexOfOpeningQuote + 1); i >= 0;
+                    i = str.indexOf(quote, i + 1))
         {
-            if (!isEscaped(str, pos))
+            if (!isEscaped(str, i))
             {
-                return pos;
+                return i;
             }
         }
 
@@ -592,74 +593,117 @@ public class ValueBindingImpl
         return -1;
     }
 
-    // NOTE: after adding all the functionality, this function has become overly complicated, should rewrite
+    /**
+     * Parses the reference into an array of property token objects.
+     * Each property tocken object can either be a String or an Integer.
+     * 
+     * <p>
+     * NOTE: this parser supports extended (non-JSF comliant) syntax--it allows any
+     * whitespace characters to be inserted in the reference around 
+     * delimiter characters '.', '[', and ']' for readability,
+     * similarly to how it is accepted in modern languages. Drawback is that each
+     * differently formatted reference, even if the same actual reference, will
+     * be cached by Application separately (in other words, whitespace counts when caching). 
+     * Examples:
+     * <pre>
+     *     obj[0]
+     *     obj[ 0 ]
+     *     obj . prop [ "name" ]
+     *     obj[ obj2[0] ]
+     *     obj . prop [ obj2 . prop2 . [ 'name2' ] ]
+     * </pre>
+     * </p> 
+     * 
+     * @param reference unparsed string reference without '#{' and '}'
+     * @return array of parsed tokens
+     */
     private Object[] parse(String reference)
     {
         List parsedReference = new ArrayList();
 
-        for (int pos = 0, len = reference.length(); pos < len;)
+        for (int i = 0, len = reference.length(); i < len;)
         {
-            // Process indexed property
-            if (reference.charAt(pos) == '[')
-            {
-                // check for case like 'a.b.[0]'
-                // Note: case '[0]' is ok as this may not be the first element
-                if ((pos == 0) || (reference.charAt(pos - 1) == '.'))
-                {
-                    throw new ReferenceSyntaxException(
-                        "Reference: " + _reference + ". Invalid indexed property '[' following '.'");
-                }
-
-                int    indexofClosingBracket = indexOfMatchingClosingBracket(reference, pos);
-                Object index = index(reference.substring(pos + 1, indexofClosingBracket).trim());
-                parsedReference.add(index);
-                pos = indexofClosingBracket + 1;
-
-                continue;
-            }
-
-            // Not an indexed property, process simple nesting
-            int indexofBracket = reference.indexOf('[', pos);
-            int indexofDot = reference.indexOf('.', pos);
-            int newpos     = len;
-
             // Find the first occurrence of any delim char
-            if ((indexofDot >= 0) && (indexofDot < newpos))
+            int indexofDelim = len;
+            int indexofDot = reference.indexOf('.', i);
+            if ((indexofDot >= 0) && (indexofDot < indexofDelim))
             {
-                newpos = indexofDot;
+                indexofDelim = indexofDot;
             }
-            if ((indexofBracket >= 0) && (indexofBracket < newpos))
+            int indexofBracket = reference.indexOf('[', i);
+            if ((indexofBracket >= 0) && (indexofBracket < indexofDelim))
             {
-                newpos = indexofBracket;
+                indexofDelim = indexofBracket;
             }
 
-            // newpos is the end of the property name
-            String propname = reference.substring(pos, newpos).trim();
+            String propname = reference.substring(i, indexofDelim).trim();
             if (propname.length() == 0)
             {
-                if (pos == 0)
+                // we have a whitespace substring:
+                //     i is the index of the first WS char
+                //         and the index after the previous delim char (inlc. ']')
+                //     indexofDelim is the index after the last WS char
+                //         and the index of the next delim char
+                // or we have an empty substring:
+                //     i == indexofDelim, and are the index after the previous delim char (incl. ']')
+                //         and the index of the next delim char
+                
+                if (i == 0)
                 {
+                    // reference (sans whitespace) starts with a delim char
                     throw new ReferenceSyntaxException(
                         "Reference: " + _reference + ". Invalid property starting with '"
-                        + reference.charAt(pos) + "'");
+                        + reference.charAt(indexofDelim) + "'");
                 }
-                else if (reference.charAt(pos - 1) == ']')
+                
+                if (indexofDelim == indexofDot) 
                 {
-                    // case 'a[0].b' or 'a[0][1]' (or, whitespace between . and [ or ] and [), skip
-                    pos = (newpos == indexofDot) ? (newpos + 1) : newpos;
+                    if (reference.charAt(i - 1) == ']') 
+                    {
+                        // case '].' (with optional WS between ']' and '.'), skip WS and dot
+                        i = indexofDelim + 1;
+                        continue;
+                    }
 
+                    // name is empty (case 'a..b')
+                    throw new ReferenceSyntaxException(
+                        "Reference: " + _reference + ". Invalid property: contains '..'");
+                }
+
+                if (indexofDelim == indexofBracket) 
+                {
+                    // check for case like '.[' (example 'a.[0]') ignoring optional WS
+                    if (reference.charAt(i - 1) == '.')
+                    {
+                        throw new ReferenceSyntaxException(
+                            "Reference: " + _reference + ". Invalid indexed property: contains '.['");
+                    }
+    
+                    // this is the start of an indexed property (example 'a[0]') with optional WS before it
+                    int indexofClosingBracket = indexOfMatchingClosingBracket(reference, indexofDelim);
+                    parsedReference.add(
+                        index(reference.substring(indexofDelim + 1, indexofClosingBracket)));
+                    i = indexofClosingBracket + 1;
+    
                     continue;
                 }
-                else
-                {
-                    // name is empty (case 'a..b')?
-                    throw new ReferenceSyntaxException(
-                        "Reference: " + _reference + ". Invalid property, double '.'");
+
+                // we have indexofDelim == len
+                
+                // property ends with ']' followed by whitespace
+                if (reference.charAt(i - 1) == ']') {
+                    break;
                 }
+                
+                // property ends with '.' followed by whitespace
+                throw new ReferenceSyntaxException(
+                        "Reference: " + _reference + ". Invalid property: ends with '.'");
             }
 
-            parsedReference.add(propname);
-            pos = (newpos == indexofDot) ? (newpos + 1) : newpos;
+            // simple property (example 'obj.propName')
+            parsedReference.add(propname.intern());
+            // if next delimiter is a dot, skip over it
+            i = (indexofDelim == indexofDot) ? (indexofDelim + 1) : indexofDelim;
         }
 
         return parsedReference.toArray();
@@ -696,7 +740,7 @@ public class ValueBindingImpl
 
         int          lastIndex = str.length() - 1;
         StringBuffer sb  = new StringBuffer(lastIndex);
-        int          pos = 0;
+        int          i = 0;
         do
         {
             // check for ["ashklhj\"] error
@@ -706,15 +750,15 @@ public class ValueBindingImpl
                     "Reference: " + _reference + ". '\\' at the end of index string '" + str + "'");
             }
 
-            sb.append(str.substring(pos, indexofBackslash));
-            pos                  = indexofBackslash + 1;
-            indexofBackslash     = str.indexOf('\\', pos + 1);
+            sb.append(str.substring(i, indexofBackslash));
+            i                  = indexofBackslash + 1;
+            indexofBackslash     = str.indexOf('\\', i + 1);
         }
         while (indexofBackslash >= 0);
 
-        return sb.append(str.substring(pos)).toString();
+        return sb.append(str.substring(i)).toString();
     }
-
+    
 
     //~ StateHolder support ----------------------------------------------------------------------------
 
@@ -730,16 +774,21 @@ public class ValueBindingImpl
         _parsedReference = null;
     }
 
-    public Object saveState(FacesContext facescontext)
+    public Object saveState(FacesContext facesContext)
     {
         return _reference;
     }
 
-    public void restoreState(FacesContext facescontext, Object obj)
+    public void restoreState(FacesContext facesContext, Object obj)
     {
-        _application = facescontext.getApplication();
-        _reference = (String)obj;
-        _parsedReference = parse(stripBracketsFromModelReference(_reference));
+        
+        Application application = facesContext.getApplication();
+        _application = application;
+
+        // utilize Application ValueBinding cache as much as possible (can we do better?)
+        ValueBindingImpl valueBinding = (ValueBindingImpl) application.createValueBinding((String) obj);
+        _reference = valueBinding._reference; // get from there since it is intern()-ed
+        _parsedReference = valueBinding._parsedReference;
     }
 
     public boolean isTransient()
