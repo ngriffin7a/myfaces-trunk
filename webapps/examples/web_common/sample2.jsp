@@ -43,9 +43,11 @@
             <h:errors id="messageList" />
 
             <h:form id="q_form" formName="q_form">
-                <h:textentry_input id="text"
-                                   modelReference="q_form.text"
-                                   size="60" /><br>
+                <h:input_textarea id="text"
+                                  rows="5"
+                                  modelReference="q_form.text"
+                />
+                <br>
                 <br>
                 <h:selectone_menu id="oneoption" modelReference="q_form.quoteChar" >
                     <h:selectitem id="item0" value="" label="select a quote character" />

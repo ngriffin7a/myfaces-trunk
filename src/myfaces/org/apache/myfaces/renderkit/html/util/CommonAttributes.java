@@ -59,7 +59,7 @@ public class CommonAttributes
                 {
                     writer.write(" ");
                     writer.write(attrName);
-                    writer.write("\"");
+                    writer.write("=\"");
                     writer.write(HTMLEncoder.encode((String)value, false, false));
                     writer.write("\"");
                 }
