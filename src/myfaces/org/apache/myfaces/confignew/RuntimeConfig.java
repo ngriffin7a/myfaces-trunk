@@ -23,6 +23,7 @@ import net.sourceforge.myfaces.confignew.element.ManagedBean;
 import net.sourceforge.myfaces.confignew.element.NavigationRule;
 
 import javax.faces.context.ExternalContext;
+import javax.faces.event.PhaseListener;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -34,6 +35,9 @@ import java.util.Map;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.2  2004/06/08 20:50:09  o_rossmueller
+ * completed configurator
+ *
  * Revision 1.1  2004/05/17 14:28:28  manolito
  * new configuration concept
  *
@@ -45,6 +49,7 @@ public class RuntimeConfig
     private Collection _navigationRules = new ArrayList();
     private Map _managedBeans = new HashMap();
 
+
     public static RuntimeConfig getCurrentInstance(ExternalContext externalContext)
     {
         RuntimeConfig runtimeConfig
@@ -52,6 +57,7 @@ public class RuntimeConfig
         if (runtimeConfig == null)
         {
             runtimeConfig = new RuntimeConfig();
+            externalContext.getApplicationMap().put(APPLICATION_MAP_PARAM_NAME, runtimeConfig);            
         }
         return runtimeConfig;
     }

@@ -84,7 +84,7 @@ public class FacesConfig
     }
 
 
-    public void addlifecyclePhaseListener(String value)
+    public void addLifecyclePhaseListener(String value)
     {
         lifecyclePhaseListener.add(value);
     }

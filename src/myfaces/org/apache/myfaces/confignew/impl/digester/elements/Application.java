@@ -88,6 +88,12 @@ public class Application
     }
 
 
+    public void addViewHandler(String handler)
+    {
+        viewHandler.add(handler);
+    }
+
+
     public List getActionListener()
     {
         return actionListener;

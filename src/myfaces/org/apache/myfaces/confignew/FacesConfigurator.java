@@ -19,27 +19,6 @@
 
 package net.sourceforge.myfaces.confignew;
 
-import net.sourceforge.myfaces.confignew.impl.dom.DOMFacesConfigDispenserImpl;
-import net.sourceforge.myfaces.confignew.impl.dom.DOMFacesConfigUnmarshallerImpl;
-import net.sourceforge.myfaces.util.ClassUtils;
-import net.sourceforge.myfaces.util.StringUtils;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.xml.sax.SAXException;
-
-import javax.faces.FacesException;
-import javax.faces.FactoryFinder;
-import javax.faces.application.Application;
-import javax.faces.application.NavigationHandler;
-import javax.faces.application.StateManager;
-import javax.faces.application.ViewHandler;
-import javax.faces.context.ExternalContext;
-import javax.faces.el.PropertyResolver;
-import javax.faces.el.VariableResolver;
-import javax.faces.event.ActionListener;
-import javax.faces.render.RenderKitFactory;
-import javax.servlet.ServletContext;
 import java.io.*;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -47,6 +26,37 @@ import java.util.*;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.jar.JarInputStream;
+import javax.faces.FacesException;
+import javax.faces.FactoryFinder;
+import javax.faces.application.*;
+import javax.faces.context.ExternalContext;
+import javax.faces.el.PropertyResolver;
+import javax.faces.el.VariableResolver;
+import javax.faces.event.ActionListener;
+import javax.faces.event.PhaseListener;
+import javax.faces.render.RenderKit;
+import javax.faces.render.RenderKitFactory;
+import javax.servlet.ServletContext;
+
+import net.sourceforge.myfaces.confignew.element.ManagedBean;
+import net.sourceforge.myfaces.confignew.element.NavigationRule;
+import net.sourceforge.myfaces.confignew.element.Renderer;
+import net.sourceforge.myfaces.confignew.impl.dom.DOMFacesConfigDispenserImpl;
+import net.sourceforge.myfaces.confignew.impl.dom.DOMFacesConfigUnmarshallerImpl;
+import net.sourceforge.myfaces.confignew.impl.digester.DigesterFacesConfigUnmarshallerImpl;
+import net.sourceforge.myfaces.confignew.impl.digester.DigesterFacesConfigDispenserImpl;
+import net.sourceforge.myfaces.renderkit.html.HtmlRenderKitImpl;
+import net.sourceforge.myfaces.util.ClassUtils;
+import net.sourceforge.myfaces.util.StringUtils;
+import net.sourceforge.myfaces.application.jsp.JspStateManagerImpl;
+import net.sourceforge.myfaces.application.jsp.JspViewHandlerImpl;
+import net.sourceforge.myfaces.application.NavigationHandlerImpl;
+import net.sourceforge.myfaces.application.ActionListenerImpl;
+import net.sourceforge.myfaces.el.PropertyResolverImpl;
+import net.sourceforge.myfaces.el.VariableResolverImpl;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.xml.sax.SAXException;
 
 /**
  * Configures everything for a given context.
@@ -56,6 +66,9 @@ import java.util.jar.JarInputStream;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.3  2004/06/08 20:50:09  o_rossmueller
+ * completed configurator
+ *
  * Revision 1.2  2004/06/04 23:51:48  o_rossmueller
  * Digester-based config parser/dispenser
  *
@@ -72,12 +85,21 @@ public class FacesConfigurator
     private static final String CONFIG_FILES_INIT_PARAM
         = "javax.faces.CONFIG_FILES";
 
-
     public static final String META_INF_SERVICES_LOCATION = "/META-INF/services/";
+
+    private static final String DEFAULT_RENDER_KIT_CLASS = HtmlRenderKitImpl.class.getName();
+    private static final String DEFAULT_STATE_MANAGER_CLASS = JspStateManagerImpl.class.getName();
+    private static final String DEFAULT_VIEW_HANDLER_CLASS = JspViewHandlerImpl.class.getName();
+    private static final String DEFAULT_NAVIGATION_HANDLER_CLASS = NavigationHandlerImpl.class.getName();
+    private static final String DEFAULT_PROPERTY_RESOLVER_CLASS = PropertyResolverImpl.class.getName();
+    private static final String DEFAULT_VARIABLE_RESOLVER_CLASS = VariableResolverImpl.class.getName();
+    private static final String DEFAULT_ACTION_LISTENER_CLASS = ActionListenerImpl.class.getName();
+
 
     private ExternalContext _externalContext;
     private FacesConfigUnmarshaller _unmarshaller;
     private FacesConfigDispenser _dispenser;
+
 
     public FacesConfigurator(ExternalContext externalContext)
     {
@@ -89,9 +111,9 @@ public class FacesConfigurator
         throws FacesException
     {
         //TODO: create via Factory !
-        _unmarshaller = new DOMFacesConfigUnmarshallerImpl(_externalContext);
+        _unmarshaller = new DigesterFacesConfigUnmarshallerImpl();
         //TODO: create via Factory !
-        _dispenser = new DOMFacesConfigDispenserImpl();
+        _dispenser = new DigesterFacesConfigDispenserImpl();
 
         try
         {
@@ -369,64 +391,76 @@ public class FacesConfigurator
 
     private void configureApplication()
     {
-        Application application = (Application)FactoryFinder.getFactory(FactoryFinder.APPLICATION_FACTORY);
-        application.setActionListener((ActionListener)getApplicationObject(ActionListener.class,
-                                                                           _dispenser.getActionListenerIterator()));
-        application.setDefaultLocale(locale(_dispenser.getDefaultLocale()));
-        application.setDefaultRenderKitId(_dispenser.getDefaultRenderKitId());
-        application.setMessageBundle(_dispenser.getMessageBundle());
-        application.setNavigationHandler((NavigationHandler)getApplicationObject(NavigationHandler.class,
-                                                                                 _dispenser.getNavigationHandlerIterator()));
-        application.setPropertyResolver((PropertyResolver)getApplicationObject(PropertyResolver.class,
-                                                                               _dispenser.getPropertyResolverIterator()));
-        application.setStateManager((StateManager)getApplicationObject(StateManager.class,
-                                                                       _dispenser.getStateManagerIterator()));
-        List locales = new ArrayList();
-        for (Iterator it = _dispenser.getSupportedLocalesIterator(); it.hasNext(); )
+        Application application = ((ApplicationFactory) FactoryFinder.getFactory(FactoryFinder.APPLICATION_FACTORY)).getApplication();
+        application.setActionListener((ActionListener) getApplicationObject(ActionListener.class, _dispenser.getActionListenerIterator(), DEFAULT_ACTION_LISTENER_CLASS));
+
+        if (_dispenser.getDefaultLocale() != null)
         {
-            locales.add(locale((String)it.next()));
+            application.setDefaultLocale(locale(_dispenser.getDefaultLocale()));
+        }
+
+        if (_dispenser.getDefaultRenderKitId() != null)
+        {
+            application.setDefaultRenderKitId(_dispenser.getDefaultRenderKitId());
+        }
+
+        if (_dispenser.getMessageBundle() != null)
+        {
+            application.setMessageBundle(_dispenser.getMessageBundle());
+        }
+
+        application.setNavigationHandler((NavigationHandler) getApplicationObject(NavigationHandler.class,
+            _dispenser.getNavigationHandlerIterator(), DEFAULT_NAVIGATION_HANDLER_CLASS));
+        application.setPropertyResolver((PropertyResolver) getApplicationObject(PropertyResolver.class,
+            _dispenser.getPropertyResolverIterator(), DEFAULT_PROPERTY_RESOLVER_CLASS));
+        application.setStateManager((StateManager) getApplicationObject(StateManager.class,
+            _dispenser.getStateManagerIterator(), DEFAULT_STATE_MANAGER_CLASS));
+        List locales = new ArrayList();
+        for (Iterator it = _dispenser.getSupportedLocalesIterator(); it.hasNext();)
+        {
+            locales.add(locale((String) it.next()));
         }
         application.setSupportedLocales(locales);
 
-        application.setVariableResolver((VariableResolver)getApplicationObject(VariableResolver.class,
-                                                                               _dispenser.getVariableResolverIterator()));
-        application.setViewHandler((ViewHandler)getApplicationObject(ViewHandler.class,
-                                                                     _dispenser.getViewHandlerIterator()));
+        application.setVariableResolver((VariableResolver) getApplicationObject(VariableResolver.class,
+            _dispenser.getVariableResolverIterator(), DEFAULT_VARIABLE_RESOLVER_CLASS));
+        application.setViewHandler((ViewHandler) getApplicationObject(ViewHandler.class,
+            _dispenser.getViewHandlerIterator(), DEFAULT_VIEW_HANDLER_CLASS));
 
-        for (Iterator it = _dispenser.getComponentTypes(); it.hasNext(); )
+        for (Iterator it = _dispenser.getComponentTypes(); it.hasNext();)
         {
-            String componentType = (String)it.next();
+            String componentType = (String) it.next();
             application.addComponent(componentType,
-                                     _dispenser.getComponentClass(componentType));
+                _dispenser.getComponentClass(componentType));
         }
 
-        for (Iterator it = _dispenser.getConverterIds(); it.hasNext(); )
+        for (Iterator it = _dispenser.getConverterIds(); it.hasNext();)
         {
-            String converterId = (String)it.next();
+            String converterId = (String) it.next();
             application.addConverter(converterId,
-                                     _dispenser.getConverterClassById(converterId));
+                _dispenser.getConverterClassById(converterId));
         }
 
-        for (Iterator it = _dispenser.getConverterClasses(); it.hasNext(); )
+        for (Iterator it = _dispenser.getConverterClasses(); it.hasNext();)
         {
-            String converterClass = (String)it.next();
+            String converterClass = (String) it.next();
             application.addConverter(ClassUtils.classForName(converterClass),
-                                     _dispenser.getConverterClassByClass(converterClass));
+                _dispenser.getConverterClassByClass(converterClass));
         }
 
-        for (Iterator it = _dispenser.getValidatorIds(); it.hasNext(); )
+        for (Iterator it = _dispenser.getValidatorIds(); it.hasNext();)
         {
-            String validatorId = (String)it.next();
+            String validatorId = (String) it.next();
             application.addValidator(validatorId,
-                                     _dispenser.getValidatorClass(validatorId));
+                _dispenser.getValidatorClass(validatorId));
         }
     }
 
-    private Object getApplicationObject(Class interfaceClass, Iterator classNamesIterator)
+    private Object getApplicationObject(Class interfaceClass, Iterator classNamesIterator, String defaultClassName)
     {
         if (!classNamesIterator.hasNext())
         {
-            throw new IllegalStateException("No implementation class for " + interfaceClass.getName() + " defined!");
+            return ClassUtils.newInstance(defaultClassName);
 
         }
         String implClassName = (String)classNamesIterator.next();
@@ -447,7 +481,7 @@ public class FacesConfigurator
                 Constructor delegationConstructor = implClass.getConstructor(new Class[] {interfaceClass});
                 // impl class supports decorator pattern,
                 // get instance of superordinate class
-                Object superObj = getApplicationObject(interfaceClass, classNamesIterator);
+                Object superObj = getApplicationObject(interfaceClass, classNamesIterator, defaultClassName);
                 // and call constructor with this object as argument
                 try
                 {
@@ -485,6 +519,7 @@ public class FacesConfigurator
         if ((name == null) || (name.length() == 0))
         {
             log.error("Default locale name null or empty, ignoring");
+            return null;
         }
 
         char     separator      = (name.indexOf('_') >= 0) ? '_' : '-';
@@ -514,20 +549,58 @@ public class FacesConfigurator
     {
         RuntimeConfig runtimeConfig = RuntimeConfig.getCurrentInstance(_externalContext);
 
-        //TODO: managed-bean
-        //TODO: navigation-rule
+        for (Iterator iterator = _dispenser.getManagedBeans(); iterator.hasNext();)
+        {
+            ManagedBean bean =  (ManagedBean) iterator.next();
+            runtimeConfig.addManagedBean(bean.getManagedBeanName(), bean);
+
+        }
+
+        for (Iterator iterator = _dispenser.getNavigationRules(); iterator.hasNext();)
+        {
+            NavigationRule rule =  (NavigationRule) iterator.next();
+            runtimeConfig.addNavigationRule(rule);
+
+        }
     }
 
     private void configureRenderKits()
     {
-        RenderKitFactory renderKitFactory
-                = (RenderKitFactory)FactoryFinder.getFactory(FactoryFinder.RENDER_KIT_FACTORY);
-        //TODO
+        RenderKitFactory renderKitFactory = (RenderKitFactory) FactoryFinder.getFactory(FactoryFinder.RENDER_KIT_FACTORY);
+
+        for (Iterator iterator = _dispenser.getRenderKitIds(); iterator.hasNext();)
+        {
+            String renderKitId = (String) iterator.next();
+            String renderKitClass = _dispenser.getRenderKitClass(renderKitId);
+
+            if (renderKitClass == null)
+            {
+                renderKitClass = DEFAULT_RENDER_KIT_CLASS;
+            }
+
+            RenderKit renderKit = (RenderKit) ClassUtils.newInstance(renderKitClass);
+
+            for (Iterator renderers = _dispenser.getRenderers(renderKitId); renderers.hasNext();)
+            {
+                Renderer element = (Renderer) renderers.next();
+                javax.faces.render.Renderer renderer = (javax.faces.render.Renderer) ClassUtils.newInstance(element.getRendererClass());
+
+                renderKit.addRenderer(element.getComponentFamily(), element.getRendererType(), renderer);
+            }
+
+            renderKitFactory.addRenderKit(renderKitId, renderKit);
+        }
     }
 
 
     private void configureLifecycle()
     {
-        //TODO
+        LifecycleConfig lifecycleConfig = LifecycleConfig.getCurrentInstance(_externalContext);
+
+        for (Iterator iterator = _dispenser.getLifecyclePhaseListeners(); iterator.hasNext();)
+        {
+            String listenerClassName = (String) iterator.next();
+            lifecycleConfig.addLifecyclePhaseListener((PhaseListener)ClassUtils.newInstance(listenerClassName));
+        }
     }
 }

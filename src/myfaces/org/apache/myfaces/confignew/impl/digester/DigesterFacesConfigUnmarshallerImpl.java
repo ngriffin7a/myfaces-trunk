@@ -142,7 +142,7 @@ public class DigesterFacesConfigUnmarshallerImpl implements FacesConfigUnmarshal
         digester.addCallMethod("faces-config/render-kit/renderer/renderer-type", "setRendererType", 0);
         digester.addCallMethod("faces-config/render-kit/renderer/renderer-class", "setRendererClass", 0);
 
-        digester.addCallMethod("faces-config/lifecycle/phase-listener", "addPhaseListener", 0);
+        digester.addCallMethod("faces-config/lifecycle/phase-listener", "addLifecyclePhaseListener", 0);
 
         digester.addCallMethod("faces-config/validator", "addValidator", 2);
         digester.addCallParam("faces-config/validator/validator-id", 0);
