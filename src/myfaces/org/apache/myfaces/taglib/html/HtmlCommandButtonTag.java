@@ -61,9 +61,11 @@ public class HtmlCommandButtonTag
     private String _onselect;
     private String _size;
     private String _tabindex;
+    private String _type;
 
     // UICommand attributes
     private String _action;
+    private String _immediate;
 
     // HTMLCommandButton attributes
     private String _image;
@@ -80,9 +82,11 @@ public class HtmlCommandButtonTag
         setStringProperty(component, HTML.ONFOCUS_ATTR, _onfocus);
         setStringProperty(component, HTML.ONSELECT_ATTR, _onselect);
         setStringProperty(component, HTML.SIZE_ATTR, _size);
-        setStringProperty(component, HTML.TABINDEX_ATTR, _tabindex);
+        setIntegerProperty(component, HTML.TABINDEX_ATTR, _tabindex);
+        setStringProperty(component, HTML.TYPE_ATTR, _type);
 
         setStringProperty(component, JSFAttr.ACTION_ATTR, _action);
+        setBooleanProperty(component, JSFAttr.IMMEDIATE_ATTR, _immediate);
 
         setStringProperty(component, JSFAttr.IMAGE_ATTR, _image);
    }
@@ -132,9 +136,19 @@ public class HtmlCommandButtonTag
         _tabindex = tabindex;
     }
 
+    public void setType(String type)
+    {
+        _type = type;
+    }
+
     public void setAction(String action)
     {
         _action = action;
+    }
+
+    public void setImmediate(String immediate)
+    {
+        _immediate = immediate;
     }
 
     public void setImage(String image)

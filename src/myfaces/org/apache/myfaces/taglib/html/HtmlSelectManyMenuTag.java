@@ -30,17 +30,17 @@ import javax.faces.component.UIComponent;
  * @author Martin Marinschek
  * @version $Revision$ $Date$
  */
-public class HtmlSelectBooleanCheckboxTag
+public class HtmlSelectManyMenuTag
     extends HtmlComponentTag
 {
     public String getComponentType()
     {
-        return "SelectBooleanCheckbox";
+        return "SelectManyMenu";
     }
 
     public String getDefaultRendererType()
     {
-        return "Checkbox";
+        return "Menu";
     }
 
     // UIComponent attributes --> already implemented in MyfacesComponentTag
@@ -51,65 +51,58 @@ public class HtmlSelectBooleanCheckboxTag
 
     // HTML event handler attributes --> already implemented in HtmlComponentTag
 
-    // HTML input attributes relevant for checkbox-input
-    private String _accesskey;
-    private String _alt;
-    private String _checked;
+    // HTML input attributes relevant for menu
     private String _disabled;
+    private String _name;
     private String _onblur;
     private String _onchange;
     private String _onfocus;
     private String _onselect;
-    private String _readonly;
     private String _size;
     private String _tabindex;
-
 
     // UIInput attributes
     private String _required;
     private String _validator;
 
-    // UISelectBoolean attributes
-    //private String _selected; //is already covered by checked attribute
+    // UISelectMany attributes
+    //selectedValues cannot be set here, is set in JSP-parsing
+
+    //HtmlSelectManyMenu Attributes
+    private String _border;
 
     protected void setProperties(UIComponent component)
     {
         super.setProperties(component);
 
-        setStringProperty(component, HTML.ACCESSKEY_ATTR, _accesskey);
-        setStringProperty(component, HTML.ALT_ATTR, _alt);
-        setBooleanProperty(component, HTML.CHECKED_ATTR, _checked);
         setBooleanProperty(component, HTML.DISABLED_ATTR, _disabled);
+        setStringProperty(component, HTML.NAME_ATTR, _name);
         setStringProperty(component, HTML.ONBLUR_ATTR, _onblur);
         setStringProperty(component, HTML.ONCHANGE_ATTR, _onchange);
         setStringProperty(component, HTML.ONFOCUS_ATTR, _onfocus);
         setStringProperty(component, HTML.ONSELECT_ATTR, _onselect);
-        setBooleanProperty(component, HTML.READONLY_ATTR, _readonly);
         setIntegerProperty(component, HTML.SIZE_ATTR, _size);
         setIntegerProperty(component, HTML.TABINDEX_ATTR, _tabindex);
 
         setBooleanProperty(component, JSFAttr.REQUIRED_ATTR, _required);
         setStringProperty(component, JSFAttr.VALIDATOR_ATTR, _validator);
+
+        setIntegerProperty(component, HTML.BORDER_ATTR, _border);        
    }
 
-    public void setAccesskey(String accesskey)
+    public void setBorder(String border)
     {
-        _accesskey = accesskey;
-    }
-
-    public void setAlt(String alt)
-    {
-        _alt = alt;
-    }
-
-    public void setChecked(String checked)
-    {
-        _checked = checked;
+        _border = border;
     }
 
     public void setDisabled(String disabled)
     {
         _disabled = disabled;
+    }
+
+    public void setName(String name)
+    {
+        _name = name;
     }
 
     public void setOnblur(String onblur)
@@ -132,11 +125,6 @@ public class HtmlSelectBooleanCheckboxTag
         _onselect = onselect;
     }
 
-    public void setReadonly(String readonly)
-    {
-        _readonly = readonly;
-    }
-
     public void setSize(String size)
     {
         _size = size;
@@ -156,4 +144,5 @@ public class HtmlSelectBooleanCheckboxTag
     {
         _validator = validator;
     }
+
 }

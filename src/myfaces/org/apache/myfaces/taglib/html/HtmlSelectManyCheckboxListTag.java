@@ -20,7 +20,6 @@ package net.sourceforge.myfaces.taglib.html;
 
 import net.sourceforge.myfaces.renderkit.JSFAttr;
 import net.sourceforge.myfaces.renderkit.html.HTML;
-import net.sourceforge.myfaces.taglib.html.HtmlComponentTag;
 
 import javax.faces.component.UIComponent;
 
@@ -74,6 +73,12 @@ public class HtmlSelectManyCheckboxListTag
     // HTMLSelectManyAttributes attributes
     private String _disabledClass;
     private String _enabledClass;
+    private String _layout;
+    
+    //FIXME: here there is no border element, in the others
+    // (HTMLSelectOneMenuTag, HtmlSelectOneRadioTag)
+    //  there is... inconsistent...
+    //private String _border;
 
     protected void setProperties(UIComponent component)
     {
@@ -87,14 +92,15 @@ public class HtmlSelectManyCheckboxListTag
         setStringProperty(component, HTML.ONFOCUS_ATTR, _onfocus);
         setStringProperty(component, HTML.ONSELECT_ATTR, _onselect);
         setBooleanProperty(component, HTML.READONLY_ATTR, _readonly);
-        setStringProperty(component, HTML.SIZE_ATTR, _size);
-        setStringProperty(component, HTML.TABINDEX_ATTR, _tabindex);
+        setIntegerProperty(component, HTML.SIZE_ATTR, _size);
+        setIntegerProperty(component, HTML.TABINDEX_ATTR, _tabindex);
 
         setBooleanProperty(component, JSFAttr.REQUIRED_ATTR, _required);
         setStringProperty(component, JSFAttr.VALIDATOR_ATTR, _validator);
 
         setStringProperty(component, JSFAttr.DISABLED_CLASS_ATTR, _disabledClass);
         setStringProperty(component, JSFAttr.ENABLED_CLASS_ATTR, _enabledClass);
+        setStringProperty(component, JSFAttr.LAYOUT_ATTR, _layout);
    }
 
     public void setAccesskey(String accesskey)
@@ -165,5 +171,10 @@ public class HtmlSelectManyCheckboxListTag
     public void setEnabledClass(String enabledClass)
     {
         _enabledClass = enabledClass;
+    }
+
+    public void setLayout(String layout)
+    {
+        _layout = layout;
     }
 }

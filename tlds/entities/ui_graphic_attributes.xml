@@ -1,6 +1,6 @@
 <!-- UIGraphic attributes -->
         <attribute>
-            <name>URL</name>
+            <name>url</name>
             <required>false</required>
             <rtexprvalue>false</rtexprvalue>
             <type>java.lang.String</type>

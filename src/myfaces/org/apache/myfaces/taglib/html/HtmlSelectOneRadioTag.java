@@ -30,17 +30,17 @@ import javax.faces.component.UIComponent;
  * @author Martin Marinschek
  * @version $Revision$ $Date$
  */
-public class HtmlSelectBooleanCheckboxTag
+public class HtmlSelectOneRadioTag
     extends HtmlComponentTag
 {
     public String getComponentType()
     {
-        return "SelectBooleanCheckbox";
+        return "SelectOneRadio";
     }
 
     public String getDefaultRendererType()
     {
-        return "Checkbox";
+        return "Radio";
     }
 
     // UIComponent attributes --> already implemented in MyfacesComponentTag
@@ -51,60 +51,54 @@ public class HtmlSelectBooleanCheckboxTag
 
     // HTML event handler attributes --> already implemented in HtmlComponentTag
 
-    // HTML input attributes relevant for checkbox-input
+    // HTML input attributes relevant for radio
     private String _accesskey;
-    private String _alt;
-    private String _checked;
     private String _disabled;
     private String _onblur;
     private String _onchange;
     private String _onfocus;
     private String _onselect;
-    private String _readonly;
-    private String _size;
     private String _tabindex;
-
 
     // UIInput attributes
     private String _required;
     private String _validator;
 
-    // UISelectBoolean attributes
-    //private String _selected; //is already covered by checked attribute
+    // HTMLSelectOneRadio attributes
+    private String _border;
+    private String _disabledClass;
+    private String _enabledClass;
+    private String _layout;
 
     protected void setProperties(UIComponent component)
     {
         super.setProperties(component);
 
         setStringProperty(component, HTML.ACCESSKEY_ATTR, _accesskey);
-        setStringProperty(component, HTML.ALT_ATTR, _alt);
-        setBooleanProperty(component, HTML.CHECKED_ATTR, _checked);
         setBooleanProperty(component, HTML.DISABLED_ATTR, _disabled);
         setStringProperty(component, HTML.ONBLUR_ATTR, _onblur);
         setStringProperty(component, HTML.ONCHANGE_ATTR, _onchange);
         setStringProperty(component, HTML.ONFOCUS_ATTR, _onfocus);
         setStringProperty(component, HTML.ONSELECT_ATTR, _onselect);
-        setBooleanProperty(component, HTML.READONLY_ATTR, _readonly);
-        setIntegerProperty(component, HTML.SIZE_ATTR, _size);
-        setIntegerProperty(component, HTML.TABINDEX_ATTR, _tabindex);
+        setStringProperty(component, HTML.TABINDEX_ATTR, _tabindex);
 
         setBooleanProperty(component, JSFAttr.REQUIRED_ATTR, _required);
         setStringProperty(component, JSFAttr.VALIDATOR_ATTR, _validator);
-   }
+
+        setIntegerProperty(component, JSFAttr.BORDER_ATTR, _border);
+        setStringProperty(component, JSFAttr.DISABLED_CLASS_ATTR, _disabledClass);
+        setStringProperty(component, JSFAttr.ENABLED_CLASS_ATTR, _enabledClass);
+        setStringProperty(component, JSFAttr.LAYOUT_ATTR, _layout);
+    }
 
     public void setAccesskey(String accesskey)
     {
         _accesskey = accesskey;
     }
 
-    public void setAlt(String alt)
+    public void setBorder(String border)
     {
-        _alt = alt;
-    }
-
-    public void setChecked(String checked)
-    {
-        _checked = checked;
+        _border = border;
     }
 
     public void setDisabled(String disabled)
@@ -132,16 +126,6 @@ public class HtmlSelectBooleanCheckboxTag
         _onselect = onselect;
     }
 
-    public void setReadonly(String readonly)
-    {
-        _readonly = readonly;
-    }
-
-    public void setSize(String size)
-    {
-        _size = size;
-    }
-
     public void setTabindex(String tabindex)
     {
         _tabindex = tabindex;
@@ -155,5 +139,20 @@ public class HtmlSelectBooleanCheckboxTag
     public void setValidator(String validator)
     {
         _validator = validator;
+    }
+
+    public void setDisabledClass(String disabledClass)
+    {
+        _disabledClass = disabledClass;
+    }
+
+    public void setEnabledClass(String enabledClass)
+    {
+        _enabledClass = enabledClass;
+    }
+
+    public void setLayout(String layout)
+    {
+        _layout = layout;
     }
 }

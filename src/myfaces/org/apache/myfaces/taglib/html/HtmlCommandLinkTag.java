@@ -56,8 +56,6 @@ public class HtmlCommandLinkTag
     private String _charset;
     private String _coords;
     private String _hreflang;
-    private String _onblur;
-    private String _onfocus;
     private String _rel;
     private String _rev;
     private String _shape;
@@ -68,6 +66,12 @@ public class HtmlCommandLinkTag
     private String _action;
     private String _immediate;
 
+    //HtmlCommandLink Attributes
+    //FIXME: is mentioned in JSF API, but is no official anchor-attribute of HTML 4.0... what to do?
+    private String _onblur;
+    //FIXME: is mentioned in JSF API, but is no official anchor-attribute of HTML 4.0... what to do?
+    private String _onfocus;
+
     protected void setProperties(UIComponent component)
     {
         super.setProperties(component);
@@ -76,16 +80,17 @@ public class HtmlCommandLinkTag
         setStringProperty(component, HTML.CHARSET_ATTR, _charset);
         setStringProperty(component, HTML.COORDS_ATTR, _coords);
         setStringProperty(component, HTML.HREFLANG_ATTR, _hreflang);
-        setStringProperty(component, HTML.ONBLUR_ATTR, _onblur);
-        setStringProperty(component, HTML.ONFOCUS_ATTR, _onfocus);
         setStringProperty(component, HTML.REL_ATTR, _rel);
         setStringProperty(component, HTML.REV_ATTR, _rev);
         setStringProperty(component, HTML.SHAPE_ATTR, _shape);
-        setStringProperty(component, HTML.TABINDEX_ATTR, _tabindex);
+        setIntegerProperty(component, HTML.TABINDEX_ATTR, _tabindex);
         setStringProperty(component, HTML.TYPE_ATTR, _type);
 
         setStringProperty(component, JSFAttr.ACTION_ATTR, _action);
         setBooleanProperty(component, JSFAttr.IMMEDIATE_ATTR, _immediate);
+
+        setStringProperty(component, HTML.ONBLUR_ATTR, _onblur);
+        setStringProperty(component, HTML.ONFOCUS_ATTR, _onfocus);
    }
 
     public void setAccesskey(String accesskey)

@@ -53,7 +53,7 @@ public class HtmlInputTextTag
     // HTML input attributes
     private String _accesskey;
     private String _align;
-    private String _alt;
+    private String _alt; //FIXME: not in API, HTML 4.0 transitional attribute and not in strict... what to do?
     private String _datafld;
     private String _datasrc;
     private String _dataformatas;
@@ -90,14 +90,14 @@ public class HtmlInputTextTag
         setStringProperty(component, HTML.DATASRC_ATTR, _datasrc);
         setStringProperty(component, HTML.DATAFORMATAS_ATTR, _dataformatas);
         setBooleanProperty(component, HTML.DISABLED_ATTR, _disabled);
-        setStringProperty(component, HTML.MAXLENGTH_ATTR, _maxlength);
+        setIntegerProperty(component, HTML.MAXLENGTH_ATTR, _maxlength);
         setStringProperty(component, HTML.ONBLUR_ATTR, _onblur);
         setStringProperty(component, HTML.ONCHANGE_ATTR, _onchange);
         setStringProperty(component, HTML.ONFOCUS_ATTR, _onfocus);
         setStringProperty(component, HTML.ONSELECT_ATTR, _onselect);
-        setStringProperty(component, HTML.READONLY_ATTR, _readonly);
-        setStringProperty(component, HTML.SIZE_ATTR, _size);
-        setStringProperty(component, HTML.TABINDEX_ATTR, _tabindex);
+        setBooleanProperty(component, HTML.READONLY_ATTR, _readonly);
+        setIntegerProperty(component, HTML.SIZE_ATTR, _size);
+        setIntegerProperty(component, HTML.TABINDEX_ATTR, _tabindex);
 
         setBooleanProperty(component, JSFAttr.REQUIRED_ATTR, _required);
         setStringProperty(component, JSFAttr.VALIDATOR_ATTR, _validator);

@@ -52,11 +52,10 @@ public class HtmlInputTextareaTag
 
     // HTML input attributes
     private String _accesskey;
-    private String _alt;
     private String _cols;
-    private String _datafld; //not in API so far
-    private String _datasrc; //not in API so far
-    private String _dataformatas; //not in API so far
+    private String _datafld; //FIXME: not in RI so far
+    private String _datasrc; //FIXME: not in RI so far
+    private String _dataformatas; //FIXME: not in RI so far
     private String _disabled;
     private String _onblur;
     private String _onchange;
@@ -67,19 +66,22 @@ public class HtmlInputTextareaTag
     private String _tabindex;
 
     // UIOutput attributes
-    // value and converterId --> already implemented in MyfacesComponentTag
+    // value and converter --> already implemented in MyfacesComponentTag
 
     // UIInput attributes
     private String _required;
     private String _validator;
+
+    //HtmlTextArea attributes
+    // FIXME: is in RI, but not in HTML 4.0. what to do?
+    private String _alt;
 
     protected void setProperties(UIComponent component)
     {
         super.setProperties(component);
 
         setStringProperty(component, HTML.ACCESSKEY_ATTR, _accesskey);
-        setStringProperty(component, HTML.ALT_ATTR, _alt);
-        setStringProperty(component, HTML.COLS_ATTR, _cols);
+        setIntegerProperty(component, HTML.COLS_ATTR, _cols);
         setStringProperty(component, HTML.DATAFLD_ATTR, _datafld);
         setStringProperty(component, HTML.DATASRC_ATTR, _datasrc);
         setStringProperty(component, HTML.DATAFORMATAS_ATTR, _dataformatas);
@@ -88,12 +90,14 @@ public class HtmlInputTextareaTag
         setStringProperty(component, HTML.ONCHANGE_ATTR, _onchange);
         setStringProperty(component, HTML.ONFOCUS_ATTR, _onfocus);
         setStringProperty(component, HTML.ONSELECT_ATTR, _onselect);
-        setStringProperty(component, HTML.READONLY_ATTR, _readonly);
-        setStringProperty(component, HTML.ROWS_ATTR, _rows);
-        setStringProperty(component, HTML.TABINDEX_ATTR, _tabindex);
+        setBooleanProperty(component, HTML.READONLY_ATTR, _readonly);
+        setIntegerProperty(component, HTML.ROWS_ATTR, _rows);
+        setIntegerProperty(component, HTML.TABINDEX_ATTR, _tabindex);
 
         setBooleanProperty(component, JSFAttr.REQUIRED_ATTR, _required);
         setStringProperty(component, JSFAttr.VALIDATOR_ATTR, _validator);
+
+        setStringProperty(component, HTML.ALT_ATTR, _alt);
     }
 
     public void setAccesskey(String accesskey)

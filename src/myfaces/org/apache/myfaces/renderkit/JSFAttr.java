@@ -98,7 +98,8 @@ public class JSFAttr
     // Select_Menu Attributes
     public static final String   SIZE_ATTR                     = "size";
 
-    // SelectMany Checkbox List Attributes
+    // SelectMany Checkbox List/ Select One Radio Attributes
+    public static final String BORDER_ATTR                 = "border";
     public static final String DISABLED_CLASS_ATTR         = "disabledClass";
     public static final String ENABLED_CLASS_ATTR          = "enabledClass";
 

@@ -1,13 +1,13 @@
 <!-- HTML 4.0 anchor (=a) attributes -->
-        <attribute><name>accesskey</name>   <required>false</required>  <rtexprvalue>true</rtexprvalue></attribute>
-        <attribute><name>charset</name>     <required>false</required>  <rtexprvalue>true</rtexprvalue></attribute>
-        <attribute><name>coords</name>      <required>false</required>  <rtexprvalue>true</rtexprvalue></attribute>
+        <attribute><name>accesskey</name>   <required>false</required>  <rtexprvalue>false</rtexprvalue><type>java.lang.String</type></attribute>
+        <attribute><name>charset</name>     <required>false</required>  <rtexprvalue>false</rtexprvalue><type>java.lang.String</type></attribute>
+        <attribute><name>coords</name>      <required>false</required>  <rtexprvalue>false</rtexprvalue><type>java.lang.String</type></attribute>
         <!-- "href" is a special HyperlinkRenderer attribute -->
-        <attribute><name>hreflang</name>    <required>false</required>  <rtexprvalue>true</rtexprvalue></attribute>
+        <attribute><name>hreflang</name>    <required>false</required>  <rtexprvalue>false</rtexprvalue><type>java.lang.String</type></attribute>
         <!-- "name" cannot be set by user -->
-        <attribute><name>rel</name>         <required>false</required>  <rtexprvalue>true</rtexprvalue></attribute>
-        <attribute><name>rev</name>         <required>false</required>  <rtexprvalue>true</rtexprvalue></attribute>
-        <attribute><name>shape</name>       <required>false</required>  <rtexprvalue>true</rtexprvalue></attribute>
-        <attribute><name>tabindex</name>    <required>false</required>  <rtexprvalue>true</rtexprvalue></attribute>
-        <attribute><name>target</name>      <required>false</required>  <rtexprvalue>true</rtexprvalue></attribute>
-        <attribute><name>type</name>        <required>false</required>  <rtexprvalue>true</rtexprvalue></attribute>
+        <attribute><name>rel</name>         <required>false</required>  <rtexprvalue>false</rtexprvalue><type>java.lang.String</type></attribute>
+        <attribute><name>rev</name>         <required>false</required>  <rtexprvalue>false</rtexprvalue><type>java.lang.String</type></attribute>
+        <attribute><name>shape</name>       <required>false</required>  <rtexprvalue>false</rtexprvalue><type>java.lang.String</type></attribute>
+        <attribute><name>tabindex</name>    <required>false</required>  <rtexprvalue>false</rtexprvalue><type>int</type>             </attribute>
+        <attribute><name>target</name>      <required>false</required>  <rtexprvalue>false</rtexprvalue><type>java.lang.String</type></attribute>
+        <attribute><name>type</name>        <required>false</required>  <rtexprvalue>false</rtexprvalue><type>java.lang.String</type></attribute>

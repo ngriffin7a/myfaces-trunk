@@ -81,14 +81,14 @@ public class HtmlInputSecretTag
         setStringProperty(component, HTML.ACCESSKEY_ATTR, _accesskey);
         setStringProperty(component, HTML.ALT_ATTR, _alt);
         setBooleanProperty(component, HTML.DISABLED_ATTR, _disabled);
-        setStringProperty(component, HTML.MAXLENGTH_ATTR, _maxlength);
+        setIntegerProperty(component, HTML.MAXLENGTH_ATTR, _maxlength);
         setStringProperty(component, HTML.ONBLUR_ATTR, _onblur);
         setStringProperty(component, HTML.ONCHANGE_ATTR, _onchange);
         setStringProperty(component, HTML.ONFOCUS_ATTR, _onfocus);
         setStringProperty(component, HTML.ONSELECT_ATTR, _onselect);
         setBooleanProperty(component, HTML.READONLY_ATTR, _readonly);
-        setStringProperty(component, HTML.SIZE_ATTR, _size);
-        setStringProperty(component, HTML.TABINDEX_ATTR, _tabindex);
+        setIntegerProperty(component, HTML.SIZE_ATTR, _size);
+        setIntegerProperty(component, HTML.TABINDEX_ATTR, _tabindex);
 
         setBooleanProperty(component, JSFAttr.REQUIRED_ATTR, _required);
         setStringProperty(component, JSFAttr.VALIDATOR_ATTR, _validator);

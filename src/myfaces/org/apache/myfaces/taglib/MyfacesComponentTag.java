@@ -111,6 +111,12 @@ public abstract class MyfacesComponentTag
 
     // sub class helpers
 
+    protected void setIntegerProperty(UIComponent component, String propName, String value)
+    {
+        //FIXME: should handle Integer property different?
+        setStringProperty(component, propName, value);
+    }
+
     protected void setStringProperty(UIComponent component, String propName, String value)
     {
         if (value != null)

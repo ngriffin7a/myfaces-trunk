@@ -1,16 +1,16 @@
 <!-- HTML 4.0 input attributes -->
-        <attribute><name>accesskey</name>   <required>false</required>  <rtexprvalue>true</rtexprvalue></attribute>
-        <attribute><name>align</name>       <required>false</required>  <rtexprvalue>true</rtexprvalue></attribute>
-        <attribute><name>alt</name>         <required>false</required>  <rtexprvalue>true</rtexprvalue></attribute>
-        <attribute><name>datafld</name>     <required>false</required>  <rtexprvalue>true</rtexprvalue></attribute>
-        <attribute><name>datasrc</name>     <required>false</required>  <rtexprvalue>true</rtexprvalue></attribute>
-        <attribute><name>dataformatas</name><required>false</required>  <rtexprvalue>true</rtexprvalue></attribute>
-        <attribute><name>disabled</name>    <required>false</required>  <rtexprvalue>true</rtexprvalue></attribute>
-        <attribute><name>maxlength</name>   <required>false</required>  <rtexprvalue>true</rtexprvalue></attribute>
-        <attribute><name>onblur</name>      <required>false</required>  <rtexprvalue>true</rtexprvalue></attribute>
-        <attribute><name>onchange</name>    <required>false</required>  <rtexprvalue>true</rtexprvalue></attribute>
-        <attribute><name>onfocus</name>     <required>false</required>  <rtexprvalue>true</rtexprvalue></attribute>
-        <attribute><name>onselect</name>    <required>false</required>  <rtexprvalue>true</rtexprvalue></attribute>
-        <attribute><name>readonly</name>    <required>false</required>  <rtexprvalue>true</rtexprvalue></attribute>
-        <attribute><name>size</name>        <required>false</required>  <rtexprvalue>true</rtexprvalue></attribute>
-        <attribute><name>tabindex</name>    <required>false</required>  <rtexprvalue>true</rtexprvalue></attribute>
+        <attribute><name>accesskey</name>   <required>false</required>  <rtexprvalue>false</rtexprvalue><type>java.lang.String</type></attribute>
+        <attribute><name>align</name>       <required>false</required>  <rtexprvalue>false</rtexprvalue><type>java.lang.String</type></attribute>
+        <attribute><name>alt</name>         <required>false</required>  <rtexprvalue>false</rtexprvalue><type>java.lang.String</type></attribute>
+        <attribute><name>datafld</name>     <required>false</required>  <rtexprvalue>false</rtexprvalue><type>java.lang.String</type></attribute>
+        <attribute><name>datasrc</name>     <required>false</required>  <rtexprvalue>false</rtexprvalue><type>java.lang.String</type></attribute>
+        <attribute><name>dataformatas</name><required>false</required>  <rtexprvalue>false</rtexprvalue><type>java.lang.String</type></attribute>
+        <attribute><name>disabled</name>    <required>false</required>  <rtexprvalue>false</rtexprvalue><type>boolean</type>         </attribute>
+        <attribute><name>maxlength</name>   <required>false</required>  <rtexprvalue>false</rtexprvalue><type>int</type>             </attribute>
+        <attribute><name>onblur</name>      <required>false</required>  <rtexprvalue>false</rtexprvalue><type>java.lang.String</type></attribute>
+        <attribute><name>onchange</name>    <required>false</required>  <rtexprvalue>false</rtexprvalue><type>java.lang.String</type></attribute>
+        <attribute><name>onfocus</name>     <required>false</required>  <rtexprvalue>false</rtexprvalue><type>java.lang.String</type></attribute>
+        <attribute><name>onselect</name>    <required>false</required>  <rtexprvalue>false</rtexprvalue><type>java.lang.String</type></attribute>
+        <attribute><name>readonly</name>    <required>false</required>  <rtexprvalue>false</rtexprvalue><type>boolean</type>         </attribute>
+        <attribute><name>size</name>        <required>false</required>  <rtexprvalue>false</rtexprvalue><type>int</type>             </attribute>
+        <attribute><name>tabindex</name>    <required>false</required>  <rtexprvalue>false</rtexprvalue><type>java.lang.String</type></attribute>

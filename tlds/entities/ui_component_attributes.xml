@@ -10,9 +10,11 @@
             <name>rendered</name>
             <required>false</required>
             <rtexprvalue>false</rtexprvalue>
-            <type>java.lang.String</type>
+            <type>boolean</type>
             <description>If false, this component will not be rendered.</description>
         </attribute>
+        <!-- FIXME: rendererType is no attribute in RI... addition by myfaces?
+             if yes, please document -->
         <attribute>
             <name>rendererType</name>
             <required>false</required>
@@ -29,6 +31,8 @@
         </attribute>
 
 <!-- UIComponentBase attributes -->
+        <!-- FIXME: transient is no attribute in RI... addition by myfaces?
+             if yes, please document -->
         <attribute>
             <name>transient</name>
             <required>false</required>

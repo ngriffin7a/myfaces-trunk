@@ -52,21 +52,25 @@ public class HtmlGraphicImageTag
     // HTML event handler attributes --> already implemented in HtmlComponentTag
 
     // HTML img attributes relevant for graphic-image
-    private String _align;  //not yet in API!
+    private String _align;  //FIXME: not in API, HTML 4.0 transitional attribute and not in strict... what to do?
     private String _alt;
+    private String _border; //FIXME: not in API, HTML 4.0 transitional attribute and not in strict... what to do!
     private String _height;
+    private String _hspace; //FIXME: not in API, HTML 4.0 transitional attribute and not in strict... what to do!
     private String _ismap;
+    private String _longdesc;
     private String _onblur;
     private String _onchange;
     private String _onfocus;
     private String _usemap;
+    private String _vspace; //FIXME: not in API, HTML 4.0 transitional attribute and not in strict... what to do!
     private String _width;
 
     //UIGraphic attributes
     private String _url;
 
     // HtmlGraphicImage attributes
-    private String _longdesc;    
+    //none so far
 
     protected void setProperties(UIComponent component)
     {
@@ -74,13 +78,16 @@ public class HtmlGraphicImageTag
 
         setStringProperty(component, HTML.ALIGN_ATTR, _align);
         setStringProperty(component, HTML.ALT_ATTR, _alt);
+        setStringProperty(component, HTML.BORDER_ATTR, _border);
         setStringProperty(component, HTML.HEIGHT_ATTR, _height);
+        setStringProperty(component, HTML.HSPACE_ATTR, _hspace);
         setBooleanProperty(component, HTML.ISMAP_ATTR, _ismap);
         setStringProperty(component, HTML.LONGDESC_ATTR, _longdesc);
         setStringProperty(component, HTML.ONBLUR_ATTR, _onblur);
         setStringProperty(component, HTML.ONCHANGE_ATTR, _onchange);
         setStringProperty(component, HTML.ONFOCUS_ATTR, _onfocus);
         setStringProperty(component, HTML.USEMAP_ATTR, _usemap);
+        setStringProperty(component, HTML.VSPACE_ATTR, _vspace);
         setStringProperty(component, HTML.WIDTH_ATTR, _width);
 
         setStringProperty(component, JSFAttr.URL_ATTR, _url);
@@ -96,14 +103,29 @@ public class HtmlGraphicImageTag
         _alt = alt;
     }
 
+    public void setBorder(String border)
+    {
+        _border = border;
+    }
+
     public void setHeight(String height)
     {
         _height = height;
     }
 
+    public void setHspace(String hspace)
+    {
+        _hspace = hspace;
+    }
+
     public void setIsmap(String ismap)
     {
         _ismap = ismap;
+    }
+
+    public void setLongdesc(String longdesc)
+    {
+        _longdesc = longdesc;
     }
 
     public void setOnblur(String onblur)
@@ -126,14 +148,14 @@ public class HtmlGraphicImageTag
         _usemap = usemap;
     }
 
+    public void setVspace(String vspace)
+    {
+        _vspace = vspace;
+    }
+
     public void setWidth(String width)
     {
         _width = width;
-    }
-
-    public void setLongdesc(String longdesc)
-    {
-        _longdesc = longdesc;
     }
 
     public void setUrl(String url)

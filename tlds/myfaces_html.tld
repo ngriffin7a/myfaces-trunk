@@ -319,202 +319,100 @@ Start of revised 1.0 conforming tags
         </attribute>
     </tag>
 
-
-
-
-
-
-<!--
-*************************************************************************************
-Start of legacy (EA4 conforming) tags
-*************************************************************************************
--->
-
-
 <!-- command_button -->
     <tag>
         <name>command_button</name>
-        <tag-class>net.sourceforge.myfaces.taglib.legacy.CommandButtonTag</tag-class>
+        <tag-class>net.sourceforge.myfaces.taglib.html.HtmlCommandButtonTag</tag-class>
         <body-content>JSP</body-content>
         &ui_component_attributes;
         &ui_command_attributes;
         &html_universal_attributes;
         &html_event_handler_attributes;
         &html_button_attributes;
+        &user_role_attributes;
 
-        <!-- ButtonRenderer attributes -->
-        <attribute>
-            <name>label</name>
-            <required>false</required>
-            <rtexprvalue>false</rtexprvalue>
-        </attribute>
-        &key_bundle_attributes;
-        <attribute>
-            <name>type</name>
-            <required>false</required>
-            <rtexprvalue>false</rtexprvalue>
-            <type>java.lang.String</type>
-            <description>
-                The button type "submit" or "reset" (see JSF.7.4.1).
-                Default is "submit".
-            </description>
-        </attribute>
+        <!-- HtmlCommandButton attributes -->
         <attribute>
             <name>image</name>
             <required>false</required>
             <rtexprvalue>false</rtexprvalue>
         </attribute>
-        &user_role_attributes;
 
-        <!-- MyFaces extensions -->
-        <attribute>
-            <name>immediateAction</name>
+        <!-- FIXME: still necessary? myfaces extension? there is no label tag for input element,
+        so what does it mean? I haven't got a clue.. Original header: -->
+        <!--ButtonRenderer attributes -->
+        <!--<attribute>
+            <name>label</name>
             <required>false</required>
             <rtexprvalue>false</rtexprvalue>
-            <type>java.lang.String</type>
-            <description>
-                This is a MyFaces extension.
-                If set to "true" the lifecycle will immediatly go to the
-                Render Response phase (without validation) if this button was
-                clicked.
-                Convenient if you need a button that should handle navigation
-                without performing validation or model updates.
-            </description>
-        </attribute>
-
-        <!-- TODO What about image buttons: attributes imageKey, image, ... -->
+        </attribute> -->
     </tag>
 
-<!-- command_hyperlink -->
+<!-- command_link -->
     <tag>
-        <name>command_hyperlink</name>
-        <tag-class>net.sourceforge.myfaces.taglib.legacy.CommandHyperlinkTag</tag-class>
+        <name>command_link</name>
+        <tag-class>net.sourceforge.myfaces.taglib.html.CommandLinkTag</tag-class>
         <body-content>JSP</body-content>
         &ui_component_attributes;
         &ui_command_attributes;
         &html_universal_attributes;
         &html_event_handler_attributes;
         &html_anchor_attributes;
-
-        <!-- HyperlinkRenderer attributes -->
-        <attribute>
-            <name>href</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-        </attribute>
-        &key_bundle_attributes;
         &user_role_attributes;
 
-        <!-- MyFaces extensions -->
+        <!-- HtmlCommandLink attributes -->
+        <!--FIXME: is in JSP API, but there is no corresponding tag in HTML 4.0.. What to do?-->
         <attribute>
-            <name>immediateAction</name>
+            <name>onblur</name>
             <required>false</required>
             <rtexprvalue>false</rtexprvalue>
-            <type>java.lang.String</type>
-            <description>
-                This is a MyFaces extension.
-                If set to "true" the lifecycle will immediatly go to the
-                Render Response phase (without validation) if this button was
-                clicked.
-                Convenient if you need a button that should handle navigation
-                without performing validation or model updates.
-            </description>
         </attribute>
-
-        <!-- TODO attributes image, label-->
+        <!--FIXME: is in JSP API, but there is no corresponding tag in HTML 4.0.. What to do?-->
+        <attribute>
+            <name>onfocus</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
+        </attribute>
+        <!-- TODO attributes image, label - old todo.. still necessary?-->
     </tag>
 
 <!-- graphic_image -->
     <tag>
         <name>graphic_image</name>
-        <tag-class>net.sourceforge.myfaces.taglib.legacy.GraphicImageTag</tag-class>
+        <tag-class>net.sourceforge.myfaces.taglib.html.HtmlGraphicImageTag</tag-class>
         <body-content>empty</body-content>
         &ui_component_attributes;
         &ui_graphic_attributes;
         &html_universal_attributes;
         &html_event_handler_attributes;
         &html_img_attributes;
-        &key_bundle_attributes;
-        <attribute>
-            <name>altKey</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-            <type>java.lang.String</type>
-            <description>Resource key for alternate image text.</description>
-        </attribute>
-        <attribute>
-            <name>altBundle</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-            <type>java.lang.String</type>
-            <description>Resource bundle name for alternate image text.</description>
-        </attribute>
         &user_role_attributes;
     </tag>
-
-<!-- image -->
-    <tag>
-        <!-- deprecated: identical to 'graphic_image' -->
-        <name>image</name>
-        <tag-class>net.sourceforge.myfaces.taglib.legacy.GraphicImageTag</tag-class>
-        <body-content>empty</body-content>
-        &ui_component_attributes;
-        &ui_graphic_attributes;
-        &html_universal_attributes;
-        &html_event_handler_attributes;
-        &html_img_attributes;
-        &key_bundle_attributes;
-        <attribute>
-            <name>altKey</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-        </attribute>
-        <attribute>
-            <name>altBundle</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-        </attribute>
-    </tag>
-
-<!-- input_date -->
-    <!-- TODO -->
-
-<!-- input_date_time -->
-    <!-- TODO -->
 
 <!-- input_hidden -->
     <tag>
         <name>input_hidden</name>
-        <tag-class>net.sourceforge.myfaces.taglib.legacy.InputHiddenTag</tag-class>
+        <tag-class>net.sourceforge.myfaces.taglib.html.HtmlInputHiddenTag</tag-class>
         <body-content>empty</body-content>
         &ui_component_attributes;
         &ui_input_attributes;
-        &converter_attributes;
         <!-- HiddenRenderer attributes -->
     </tag>
-
-<!-- input_number -->
-    <!-- TODO -->
 
 <!-- input_secret -->
     <tag>
         <name>input_secret</name>
-        <tag-class>net.sourceforge.myfaces.taglib.legacy.InputSecretTag</tag-class>
+        <tag-class>net.sourceforge.myfaces.taglib.html.HtmlInputSecretTag</tag-class>
         <body-content>JSP</body-content>
         &ui_component_attributes;
         &ui_input_attributes;
-        &converter_attributes;
+        <!-- FIXME: not all html_input_attributes are used for input_secret
+            in RI (e.g. datafld, datasrc, ...) -->
         &html_input_attributes;
         &html_universal_attributes;
         &html_event_handler_attributes;
+        &user_role_attributes;
         <!-- SecretRenderer attributes -->
-        <attribute>
-            <name>maxlength</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-            <type>java.lang.String</type>
-            <description>Corresponds to the HTML maxlength attribute.</description>
-        </attribute>
         <attribute>
             <name>redisplay</name>
             <required>false</required>
@@ -524,17 +422,15 @@ Start of legacy (EA4 conforming) tags
                 is rerendered (see JSF.7.4.4). Default is false.
             </description>
         </attribute>
-        &user_role_attributes;
     </tag>
 
 <!-- input_textarea -->
     <tag>
         <name>input_textarea</name>
-        <tag-class>net.sourceforge.myfaces.taglib.legacy.InputTextareaTag</tag-class>
+        <tag-class>net.sourceforge.myfaces.taglib.html.HtmlInputTextareaTag</tag-class>
         <body-content>JSP</body-content>
         &ui_component_attributes;
         &ui_input_attributes;
-        &converter_attributes;
         &html_textarea_attributes;
         &html_universal_attributes;
         &html_event_handler_attributes;
@@ -542,8 +438,11 @@ Start of legacy (EA4 conforming) tags
         &user_role_attributes;
    </tag>
 
-<!-- input_date_time -->
-    <!-- TODO -->
+<!--
+*************************************************************************************
+Start of legacy (EA4 conforming) tags
+*************************************************************************************
+-->
 
 <!-- output_date -->
     <tag>
