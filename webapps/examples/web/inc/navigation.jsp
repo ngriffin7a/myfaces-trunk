@@ -33,6 +33,7 @@
             <x:commandNavigation id="nav_2_4_14" value="#{example_messages['nav_panelstack']}" action="go_panelstack" />
             <x:commandNavigation id="nav_2_4_15" value="#{example_messages['nav_css']}" action="go_css" />
             <x:commandNavigation id="nav_2_4_16" value="#{example_messages['nav_newspaperTable']}" action="go_newspaperTable" />
+            <x:commandNavigation id="nav_2_4_17" value="#{example_messages['nav_swapimage']}" action="go_swapimage" />
         </x:commandNavigation>
     </x:commandNavigation>
     <x:commandNavigation id="nav_3" value="#{example_messages['nav_Documentation']}" >
