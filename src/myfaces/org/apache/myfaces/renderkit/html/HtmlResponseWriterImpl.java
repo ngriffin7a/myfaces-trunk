@@ -52,13 +52,13 @@ public class HtmlResponseWriterImpl
 
     private boolean _writeDummyForm = false;
     private Set _dummyFormParams = null;
-    
+
     private Writer _writer;
     private String _contentType;
     private String _characterEncoding;
     private String _startElementName;
-    private boolean _startTagOpen; 
-    
+    private boolean _startTagOpen;
+
     private static final Set s_emptyHtmlElements = new HashSet();
     static
     {
@@ -149,12 +149,12 @@ public class HtmlResponseWriterImpl
             if (s_emptyHtmlElements.contains(_startElementName.toLowerCase()))
             {
                 _writer.write(" />");
-                // make null, this will cause NullPointer in some invalid element nestings 
+                // make null, this will cause NullPointer in some invalid element nestings
                 // (better than doing nothing)
                 _startElementName = null;
             }
             else
-            {    
+            {
                 _writer.write('>');
             }
             _startTagOpen = false;
@@ -168,15 +168,15 @@ public class HtmlResponseWriterImpl
             // we will get here only if no text was written after the start element was opened
             _writer.write(" />");
         }
-        
+
         // If we are closing an outer element, write the end tag.
         if (!name.equals(_startElementName))
-        {    
+        {
             _writer.write("</");
             _writer.write(name);
             _writer.write('>');
         }
-        
+
         _startTagOpen = false;
 //        _currentComponent = null;
     }
@@ -273,7 +273,7 @@ public class HtmlResponseWriterImpl
             return;
 
         String strValue = value.toString(); //TODO: Use converter for value?
-        
+
         if (isScriptOrStyle())
         {
             _writer.write(strValue);
@@ -359,12 +359,9 @@ public class HtmlResponseWriterImpl
 
     private boolean isScriptOrStyle()
     {
-        char firstChar = _startElementName.charAt(0); 
-        return (
-            (firstChar == 's' || firstChar == 'S') 
-            && 
-            (_startElementName.equalsIgnoreCase(HTML.SCRIPT_ELEM) 
-                || _startElementName.equalsIgnoreCase(HTML.STYLE_ELEM)));
+        return _startElementName != null &&
+               (_startElementName.equalsIgnoreCase(HTML.SCRIPT_ELEM)
+               || _startElementName.equalsIgnoreCase(HTML.STYLE_ELEM)));
     }
 
 
