@@ -51,6 +51,14 @@ public abstract class ClientStateSaver
     {
     }
 
+    /**
+     * Writes placeholder tokens, that will be replaced later in the
+     * {@link #release} method.
+     *
+     * @param facesContext
+     * @param encodingType
+     * @throws IOException
+     */
     public void encodeState(FacesContext facesContext, int encodingType) throws IOException
     {
         ResponseWriter writer = facesContext.getResponseWriter();

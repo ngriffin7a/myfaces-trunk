@@ -23,6 +23,7 @@ import net.sourceforge.myfaces.renderkit.html.util.HTMLEncoder;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeUtility;
+import javax.faces.context.FacesContext;
 import java.io.*;
 import java.net.URLEncoder;
 import java.util.Iterator;
@@ -35,8 +36,8 @@ import java.util.zip.GZIPOutputStream;
  * encoded to allowed characters (Base64) and written as one query parameter
  * or hidden form input.
  * Meant for production environments, where high HTTP traffic "costs" more than
- * zipping und unzipping.
- * i.e. When running a fast server together with thin clients connected over
+ * zipping und unzipping would slow down the webserver.
+ * i.e. When running a fast server together with (slow) clients connected over
  * Internet (and not LAN).
  *
  * @author Manfred Geiler (latest modification by $Author$)
@@ -50,27 +51,37 @@ public class ZipMinimizingStateSaver
     public static final String ZIP_CHARSET = "ISO-8859-1";
     public static final String ZIP_ENCODING = "base64";
 
+    private static final String ZIPPED_PARAMS_ATTR
+        = ZipMinimizingStateSaver.class.getName() + ".ZIPPED_PARAMS";
 
-    protected void writeHiddenInputsState(Writer writer, Map stateMap) throws IOException
+
+    protected void writeHiddenInputsState(FacesContext facesContext, Writer writer) throws IOException
     {
+        Map stateMap = getStateMap(facesContext);
         writer.write("\n<input type=\"hidden\" name=\"");
         writer.write(STATE_PARAM);
         writer.write("\" value=\"");
-        writer.write(HTMLEncoder.encode(getZippedParams(stateMap), false, false));
+        writer.write(HTMLEncoder.encode(getZippedParams(facesContext, stateMap), false, false));
         writer.write("\">");
     }
 
-    protected void writeUrlState(Writer writer, Map stateMap) throws IOException
+    protected void writeUrlState(FacesContext facesContext, Writer writer) throws IOException
     {
+        Map stateMap = getStateMap(facesContext);
         writer.write('&');  //we assume that there were previous parameters
         writer.write(STATE_PARAM);
         writer.write('=');
-        writer.write(HTMLRenderer.urlEncode(getZippedParams(stateMap)));
+        writer.write(HTMLRenderer.urlEncode(getZippedParams(facesContext, stateMap)));
     }
 
-    protected String getZippedParams(Map stateMap) throws IOException
+    protected String getZippedParams(FacesContext facesContext, Map stateMap) throws IOException
     {
-        //TODO: Cache!
+        String s = (String)facesContext.getServletRequest().getAttribute(ZIPPED_PARAMS_ATTR);
+        if (s != null)
+        {
+            return s;
+        }
+
         try
         {
             //OutputStream wos = new WriterOutputStream(origWriter, ZippingStateRenderer.ZIP_CHARSET);
@@ -101,7 +112,8 @@ public class ZipMinimizingStateSaver
             encStream.close();
             baos.close();
 
-            String s = baos.toString(ZIP_CHARSET);
+            s = baos.toString(ZIP_CHARSET);
+            facesContext.getServletRequest().setAttribute(ZIPPED_PARAMS_ATTR, s);
             return s;
         }
         catch (MessagingException e)

@@ -19,11 +19,20 @@
 package net.sourceforge.myfaces.renderkit.html.state.server;
 
 import net.sourceforge.myfaces.renderkit.html.state.StateSaver;
+import net.sourceforge.myfaces.renderkit.html.state.StateUtils;
+import net.sourceforge.myfaces.tree.TreeUtils;
+import net.sourceforge.myfaces.component.ext.UISaveState;
+import net.sourceforge.myfaces.util.logging.LogUtil;
 
 import javax.faces.context.FacesContext;
+import javax.faces.component.UIComponent;
+import javax.faces.tree.Tree;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.HashMap;
 
 /**
  * DOCUMENT ME!
@@ -37,6 +46,8 @@ public class HTTPSessionStateSaver
         = HTTPSessionStateSaver.class.getName() + ".TREE";
     protected static final String LOCALE_SESSION_ATTR
         = HTTPSessionStateSaver.class.getName() + ".LOCALE";
+    protected static final String MODEL_VALUES_MAP_SESSION_ATTR
+        = HTTPSessionStateSaver.class.getName() + ".MODEL_VALUES_MAP";
 
     public void init(FacesContext facesContext) throws IOException
     {
@@ -50,7 +61,53 @@ public class HTTPSessionStateSaver
     {
         HttpServletRequest request = (HttpServletRequest)facesContext.getServletRequest();
         HttpSession session = request.getSession(true);
-        session.setAttribute(TREE_SESSION_ATTR, facesContext.getTree());
+
+        Tree tree = facesContext.getTree();
+
+        //discard internal attributes ("javax.*" and "net.sourceforge.*")
+        StateUtils.discardInternalAttributes(facesContext, tree);
+
+        session.setAttribute(TREE_SESSION_ATTR, tree);
         session.setAttribute(LOCALE_SESSION_ATTR, facesContext.getLocale());
+
+        saveModelValues(facesContext, session);
     }
+
+
+    private void saveModelValues(FacesContext facesContext,
+                                 HttpSession session)
+    {
+        Map modelValuesMap = null;
+
+        //look for UISaveState components:
+        Iterator it = TreeUtils.treeIterator(facesContext.getTree());
+        while (it.hasNext())
+        {
+            UIComponent comp = (UIComponent)it.next();
+            if (comp.getComponentType().equals(UISaveState.TYPE))
+            {
+                String modelRef = comp.getModelReference();
+                if (modelRef == null)
+                {
+                    LogUtil.getLogger().warning("UISaveState without model reference?!");
+                }
+                else
+                {
+                    if (modelValuesMap == null)
+                    {
+                        modelValuesMap = new HashMap();
+                    }
+                    modelValuesMap.put(modelRef,
+                                       facesContext.getModelValue(modelRef));
+                }
+            }
+        }
+
+        if (modelValuesMap != null)
+        {
+            session.setAttribute(MODEL_VALUES_MAP_SESSION_ATTR,
+                                 modelValuesMap);
+        }
+    }
+
 }

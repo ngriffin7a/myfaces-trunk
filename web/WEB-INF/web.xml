@@ -34,7 +34,7 @@
         * "FINEST", "FINER", "FINE", "INFO", "WARNING", "SEVERE"
         -->
         <param-name>logLevel</param-name>
-        <param-value>FINEST</param-value>
+        <param-value>INFO</param-value>
     </context-param>
 
     <context-param>
@@ -72,10 +72,20 @@
         * "client_minimized_zipped" = like "client_minimal", but additionally state info is zipped (GZIP), encoded to allowed characters (Base64) written as one query parameter or hidden form input.
         -->
         <param-name>stateSavingMode</param-name>
-        <param-value>client_minimized</param-value>
+        <param-value>client_minimized_zipped</param-value>
     </context-param>
 
+    <context-param>
+        <!-- TODO: Documentation -->
+        <param-name>autoCreateRequestScopeBeans</param-name>
+        <param-value>true</param-value>
+    </context-param>
 
+    <context-param>
+        <!-- TODO: Documentation -->
+        <param-name>discardInternalAttributes</param-name>
+        <param-value>true</param-value>
+    </context-param>
 
 
 

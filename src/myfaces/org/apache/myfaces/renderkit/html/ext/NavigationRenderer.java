@@ -18,19 +18,18 @@
  */
 package net.sourceforge.myfaces.renderkit.html.ext;
 
-import net.sourceforge.myfaces.MyFacesConfig;
 import net.sourceforge.myfaces.component.UIComponentUtils;
 import net.sourceforge.myfaces.component.ext.UINavigation;
 import net.sourceforge.myfaces.renderkit.attr.ext.NavigationRendererAttributes;
 import net.sourceforge.myfaces.renderkit.html.HTMLRenderer;
-import net.sourceforge.myfaces.renderkit.html.state.StateRenderer;
+import net.sourceforge.myfaces.renderkit.html.state.StateRestorer;
+import net.sourceforge.myfaces.tree.TreeUtils;
 
 import javax.faces.FacesException;
 import javax.faces.FactoryFinder;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
-import javax.faces.render.RenderKit;
 import javax.faces.render.RenderKitFactory;
 import javax.faces.tree.Tree;
 import java.io.IOException;
@@ -104,41 +103,28 @@ public class NavigationRenderer
         if (b == null || !b.booleanValue())
         {
             //There was no decoding, so we can assume that the state has not been
-            //restored yet and we must restore state for children
-            //from previous tree
-            RenderKit renderKit = _rkFactory.getRenderKit(facesContext.getTree().getRenderKitId());
-            StateRenderer stateRenderer = null;
-            try
+            //restored yet and we must restore open/close state for children from
+            //previous tree.
+            StateRestorer stateRestorer
+                = (StateRestorer)facesContext.getServletRequest()
+                        .getAttribute(StateRestorer.STATE_RESTORER_REQUEST_ATTR);
+            if (stateRestorer != null)
             {
-                //stateRenderer = (StateRenderer)renderKit.getRenderer(StateRenderer.TYPE);
-                //XXX: because of RendererWrapper!
-                int mode = MyFacesConfig.getStateSavingMode(facesContext.getServletContext());
-                stateRenderer = new StateRenderer(mode);
-            }
-            catch (Exception e)
-            {
-                //No StateRenderer
-            }
-            if (stateRenderer != null)
-            {
-                Tree previousTree  = stateRenderer.getPreviousTree(facesContext);
+                Tree previousTree  = stateRestorer.getPreviousTree(facesContext);
                 if (previousTree != null && previousTree != facesContext.getTree())
                 {
-                    String clientId = uiComponent.getClientId(facesContext);
-                    UIComponent previousNav = previousTree.getRoot().findComponent(clientId);
-                    if (previousNav != null && previousNav != uiComponent)
+                    for (Iterator it = TreeUtils.treeIterator(uiComponent); it.hasNext();)
                     {
-                        //Remove all children:
-                        for (int i = 0, len = uiComponent.getChildCount(); i < len; i++)
+                        UIComponent comp = (UIComponent)it.next();
+                        if (comp instanceof UINavigation.UINavigationItem)
                         {
-                            uiComponent.removeChild(0);
-                        }
-
-                        //Add all children from previous navigation
-                        for (Iterator it = previousNav.getChildren(); it.hasNext();)
-                        {
-                            UIComponent navItem = (UIComponent)it.next();
-                            uiComponent.addChild(navItem);
+                            String clientId = comp.getClientId(facesContext);
+                            UIComponent prevNavItem = previousTree.getRoot().findComponent(clientId);
+                            if (prevNavItem != null)
+                            {
+                                Boolean open = (Boolean)prevNavItem.getAttribute(UINavigation.UINavigationItem.OPEN_ATTR);
+                                comp.setAttribute(UINavigation.UINavigationItem.OPEN_ATTR, open);
+                            }
                         }
                     }
                 }

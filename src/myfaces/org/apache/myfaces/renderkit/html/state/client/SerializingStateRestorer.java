@@ -18,8 +18,10 @@
  */
 package net.sourceforge.myfaces.renderkit.html.state.client;
 
+import net.sourceforge.myfaces.renderkit.html.jspinfo.JspInfoUtils;
 import net.sourceforge.myfaces.util.logging.LogUtil;
 
+import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.tree.Tree;
 import javax.mail.MessagingException;
@@ -28,7 +30,9 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
+import java.util.Iterator;
 import java.util.Locale;
+import java.util.Map;
 import java.util.zip.GZIPInputStream;
 
 /**
@@ -85,6 +89,8 @@ public class SerializingStateRestorer
         else
         {
             facesContext.setLocale(savedlocale);
+            savedTree.getRoot().setAttribute(SerializingStateSaver.CURRENT_LOCALE_ATTR,
+                                             null);
         }
 
         Tree currentTree = facesContext.getTree();
@@ -95,8 +101,29 @@ public class SerializingStateRestorer
 
             //recreate beans of "request" scope
             recreateRequestScopeBeans(facesContext);
+
+            //restore model values
+            restoreModelValues(facesContext);
         }
     }
+
+    private void restoreModelValues(FacesContext facesContext)
+    {
+        UIComponent root = facesContext.getTree().getRoot();
+        Map modelValuesMap = (Map)root.getAttribute(SerializingStateSaver.MODEL_VALUES_MAP_ATTR);
+        if (modelValuesMap != null)
+        {
+            for (Iterator it = modelValuesMap.entrySet().iterator(); it.hasNext();)
+            {
+                Map.Entry entry = (Map.Entry)it.next();
+                String modelRef = (String)entry.getKey();
+                JspInfoUtils.checkModelInstance(facesContext, modelRef);
+                facesContext.setModelValue(modelRef, entry.getValue());
+            }
+            root.setAttribute(SerializingStateSaver.MODEL_VALUES_MAP_ATTR, null);
+        }
+    }
+
 
     /*
     public void restoreComponentState(FacesContext facesContext,

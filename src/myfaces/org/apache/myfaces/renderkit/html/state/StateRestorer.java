@@ -19,7 +19,6 @@
 package net.sourceforge.myfaces.renderkit.html.state;
 
 import javax.faces.context.FacesContext;
-import javax.faces.component.UIComponent;
 import javax.faces.tree.Tree;
 import java.io.IOException;
 
@@ -30,10 +29,10 @@ import java.io.IOException;
  */
 public interface StateRestorer
 {
-    public void restoreState(FacesContext facesContext) throws IOException;
+    public static final String STATE_RESTORER_REQUEST_ATTR
+            = StateRenderer.class.getName() + ".STATE_RESTORER";
 
-    //TODO: Doch wieder einfuehren statt getPreviousTree:
-    //public void restoreComponentState(FacesContext facesContext, UIComponent uiComponent) throws IOException;
+    public void restoreState(FacesContext facesContext) throws IOException;
 
     public Tree getPreviousTree(FacesContext facesContext);
 }

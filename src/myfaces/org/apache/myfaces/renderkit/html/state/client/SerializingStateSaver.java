@@ -18,15 +18,22 @@
  */
 package net.sourceforge.myfaces.renderkit.html.state.client;
 
+import net.sourceforge.myfaces.component.ext.UISaveState;
 import net.sourceforge.myfaces.renderkit.html.HTMLRenderer;
+import net.sourceforge.myfaces.renderkit.html.state.StateUtils;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLEncoder;
+import net.sourceforge.myfaces.tree.TreeUtils;
 import net.sourceforge.myfaces.util.logging.LogUtil;
 
+import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.tree.Tree;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeUtility;
 import java.io.*;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 import java.util.zip.GZIPOutputStream;
 
 /**
@@ -46,6 +53,8 @@ public class SerializingStateSaver
 
     protected static final String CURRENT_LOCALE_ATTR
         = SerializingStateSaver.class.getName() + ".CURRENT_LOCALE";
+    protected static final String MODEL_VALUES_MAP_ATTR
+        = SerializingStateSaver.class.getName() + ".MODEL_VALUES_MAP";
 
     protected static final String TREE_REQUEST_PARAM = "_tree";
 
@@ -59,9 +68,16 @@ public class SerializingStateSaver
 
             LogUtil.printTreeToConsole(tree, "Tree to serialize");
 
+            //discard internal attributes ("javax.*" and "net.sourceforge.*")
+            StateUtils.discardInternalAttributes(facesContext, tree);
+
             //Save current locale in root component
             tree.getRoot().setAttribute(CURRENT_LOCALE_ATTR, facesContext.getLocale());
 
+            //Save model values in root component
+            saveModelValues(facesContext);
+
+            //Serialize tree
             serializedTree = zipTree(tree);
             facesContext.getServletRequest().setAttribute(SERIALIZED_TREE_CONTEXT_ATTR,
                                                           serializedTree);
@@ -114,5 +130,49 @@ public class SerializingStateSaver
             throw new RuntimeException(e);
         }
     }
+
+
+    private void saveModelValues(FacesContext facesContext)
+    {
+        Map modelValuesMap = null;
+
+        //look for UISaveState components:
+        Iterator it = TreeUtils.treeIterator(facesContext.getTree());
+        while (it.hasNext())
+        {
+            UIComponent comp = (UIComponent)it.next();
+            if (comp.getComponentType().equals(UISaveState.TYPE))
+            {
+                String modelRef = comp.getModelReference();
+                if (modelRef == null)
+                {
+                    LogUtil.getLogger().warning("UISaveState without model reference?!");
+                }
+                else
+                {
+                    if (modelValuesMap == null)
+                    {
+                        modelValuesMap = new HashMap();
+                    }
+                    Object val = facesContext.getModelValue(modelRef);
+                    if (val instanceof Serializable)
+                    {
+                        modelValuesMap.put(modelRef, val);
+                    }
+                    else
+                    {
+                        LogUtil.getLogger().warning("Value of model reference " + modelRef + " is not serializable, cannot save state of this value!");
+                    }
+                }
+            }
+        }
+
+        if (modelValuesMap != null)
+        {
+            facesContext.getTree().getRoot().setAttribute(MODEL_VALUES_MAP_ATTR,
+                                                          modelValuesMap);
+        }
+    }
+
 
 }

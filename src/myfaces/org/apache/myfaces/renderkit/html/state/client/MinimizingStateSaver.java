@@ -93,16 +93,17 @@ public class MinimizingStateSaver
 
     protected Map getStateMap(FacesContext facesContext)
     {
-        Map map = (Map)facesContext.getServletRequest().getAttribute(STATE_MAP_REQUEST_ATTR);
+        Map map = (Map)facesContext.getServletRequest()
+                            .getAttribute(STATE_MAP_REQUEST_ATTR);
         if (map == null)
         {
             map = new HashMap();
+            facesContext.getServletRequest().setAttribute(STATE_MAP_REQUEST_ATTR,
+                                                          map);
             saveResponseTreeId(facesContext, map);
             saveComponents(facesContext, map);
             saveModelValues(facesContext, map);
             saveLocale(facesContext, map);
-            facesContext.getServletRequest()
-                .setAttribute(STATE_MAP_REQUEST_ATTR, map);
         }
         return map;
     }
@@ -526,11 +527,7 @@ public class MinimizingStateSaver
 
     protected boolean isIgnoreAttribute(UIComponent comp, String attrName)
     {
-        if (attrName.startsWith("net.sourceforge.myfaces."))
-        {
-            return true;
-        }
-        else if (attrName.startsWith("javax."))
+        if (UIComponentUtils.isInternalAttribute(attrName))
         {
             return true;
         }

@@ -18,18 +18,17 @@
  */
 package net.sourceforge.myfaces.renderkit.html.state;
 
+import net.sourceforge.myfaces.MyFacesConfig;
 import net.sourceforge.myfaces.renderkit.html.FormRenderer;
 import net.sourceforge.myfaces.renderkit.html.HTMLRenderer;
-import net.sourceforge.myfaces.renderkit.html.state.client.*;
-import net.sourceforge.myfaces.renderkit.html.state.server.HTTPSessionStateSaver;
-import net.sourceforge.myfaces.renderkit.html.state.server.HTTPSessionStateRestorer;
 import net.sourceforge.myfaces.renderkit.html.jspinfo.JspInfo;
+import net.sourceforge.myfaces.renderkit.html.state.client.*;
+import net.sourceforge.myfaces.renderkit.html.state.server.HTTPSessionStateRestorer;
+import net.sourceforge.myfaces.renderkit.html.state.server.HTTPSessionStateSaver;
 import net.sourceforge.myfaces.util.logging.LogUtil;
-import net.sourceforge.myfaces.MyFacesConfig;
 
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
-import javax.faces.tree.Tree;
 import java.io.IOException;
 
 /**
@@ -93,38 +92,31 @@ public class StateRenderer
 
 
     /**
-     * Method decode is called directly from the ReconstituteComponentTreePhase with a null
-     * UIComponent parameter.
-     * Additionally, Renderers can call this method with a component argument to explicitly
-     * restore the state of a single component. e.g. The NavigationItemRenderer calls this
-     * method for each UINavigationItem to restore state of the Navigation independent of
-     * the tree restoring.
+     * Method decode is called directly from the ReconstituteComponentTreePhase.
+     * The underlying StateRestorer is added as an request attribute named
+     * {@link StateRestorer#STATE_RESTORER_REQUEST_ATTR}.
+     *
      * @param facesContext
      * @param comp  component that should be restored or null if full tree should be restored
      * @throws java.io.IOException
      */
     public void decode(FacesContext facesContext, UIComponent comp) throws IOException
     {
-        if (comp == null)
-        {
-            _stateRestorer.restoreState(facesContext);
-            LogUtil.printTreeToConsole("Current tree after restoring state");
-            LogUtil.printTreeToConsole(JspInfo.getTree(facesContext,
-                                                       facesContext.getTree().getTreeId()),
-                                       "Parsed tree");
-        }
-        else
-        {
-            //TODO: can we find a better solution?
-            /*
-            _stateRestorer.restoreComponentState(facesContext, comp);
-            */
-            throw new UnsupportedOperationException();
-        }
+        _stateRestorer.restoreState(facesContext);
+        LogUtil.printTreeToConsole("Current tree after restoring state");
+        LogUtil.printTreeToConsole(JspInfo.getTree(facesContext,
+                                                   facesContext.getTree().getTreeId()),
+                                   "Parsed tree");
+
+        facesContext.getServletRequest()
+            .setAttribute(StateRestorer.STATE_RESTORER_REQUEST_ATTR,
+                          _stateRestorer);
     }
 
     /**
-     * Called directly by ViewHandlerJspImpl
+     * Called directly by ViewHandlerJspImpl.
+     * {@link StateSaver#init} method of the underlying StateSaver is called.
+     *
      * @param facesContext
      * @param dummy
      * @throws java.io.IOException
@@ -136,6 +128,8 @@ public class StateRenderer
 
     /**
      * Called directly by FormRenderer or HyperlinkRenderer
+     * {@link StateSaver#encodeState} method of the underlying StateSaver is called.
+     *
      * @param facesContext
      * @param commandComponent
      * @throws java.io.IOException
@@ -156,6 +150,7 @@ public class StateRenderer
 
     /**
      * Called directly by doAfterBody() in UseFacesTag
+     * {@link StateSaver#release} method of the underlying StateSaver is called.
      */
     public void encodeEnd(FacesContext facesContext, UIComponent none) throws IOException
     {
@@ -163,11 +158,5 @@ public class StateRenderer
         LogUtil.printTreeToConsole("Current tree after saving state");
     }
 
-
-
-    public Tree getPreviousTree(FacesContext facesContext)
-    {
-        return _stateRestorer.getPreviousTree(facesContext);
-    }
 
 }

@@ -23,9 +23,7 @@ import net.sourceforge.myfaces.component.UIComponentUtils;
 import net.sourceforge.myfaces.convert.ConverterUtils;
 import net.sourceforge.myfaces.convert.impl.StringArrayConverter;
 import net.sourceforge.myfaces.renderkit.html.jspinfo.JspInfo;
-import net.sourceforge.myfaces.renderkit.html.jspinfo.JspInfoUtils;
 import net.sourceforge.myfaces.renderkit.html.state.TreeCopier;
-import net.sourceforge.myfaces.renderkit.html.state.StateRestorer;
 import net.sourceforge.myfaces.taglib.core.ActionListenerTag;
 import net.sourceforge.myfaces.tree.TreeUtils;
 import net.sourceforge.myfaces.util.bean.BeanUtils;
@@ -58,10 +56,10 @@ import java.util.*;
 public class MinimizingStateRestorer
     extends ClientStateRestorer
 {
+    private static final String STATE_MAP_REQUEST_ATTR = MinimizingStateRestorer.class.getName() + ".STATE_MAP";
+
     protected static final String PREVIOUS_TREE_REQUEST_ATTR
         = MinimizingStateRestorer.class.getName() + ".PREVIOUS_TREE";
-
-    private static final String STATE_MAP_REQUEST_ATTR = MinimizingStateRestorer.class.getName() + ".STATE_MAP";
 
     public void restoreState(FacesContext facesContext) throws IOException
     {
@@ -114,9 +112,8 @@ public class MinimizingStateRestorer
         //remap tagHash
         TagHashHack.convertUniqueIdsBackToComponents(tree);
 
-        //save as request attribute
-        facesContext.getServletRequest().setAttribute(PREVIOUS_TREE_REQUEST_ATTR,
-                                                      tree);
+        facesContext.getServletRequest()
+            .setAttribute(PREVIOUS_TREE_REQUEST_ATTR, tree);
     }
 
 

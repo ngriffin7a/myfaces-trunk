@@ -18,14 +18,20 @@
  */
 package net.sourceforge.myfaces.renderkit.html.state.server;
 
+import net.sourceforge.myfaces.renderkit.html.jspinfo.JspInfoUtils;
+import net.sourceforge.myfaces.renderkit.html.jspinfo.JspInfo;
+import net.sourceforge.myfaces.renderkit.html.jspinfo.JspBeanInfo;
 import net.sourceforge.myfaces.renderkit.html.state.StateRestorer;
+import net.sourceforge.myfaces.MyFacesConfig;
 
 import javax.faces.context.FacesContext;
 import javax.faces.tree.Tree;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.Iterator;
 import java.util.Locale;
+import java.util.Map;
 
 /**
  * DOCUMENT ME!
@@ -35,21 +41,29 @@ import java.util.Locale;
 public class HTTPSessionStateRestorer
     implements StateRestorer
 {
+    protected static final String PREVIOUS_TREE_REQUEST_ATTR
+        = HTTPSessionStateRestorer.class.getName() + ".PREVIOUS_TREE";
+
     public void restoreState(FacesContext facesContext) throws IOException
     {
         HttpServletRequest request = (HttpServletRequest)facesContext.getServletRequest();
+
+        //get Session
         HttpSession session = request.getSession(false);
         if (session == null)
         {
             return;
         }
 
+        //Locale
         Locale locale = (Locale)session.getAttribute(HTTPSessionStateSaver.LOCALE_SESSION_ATTR);
         if (locale != null)
         {
             facesContext.setLocale(locale);
+            session.removeAttribute(HTTPSessionStateSaver.LOCALE_SESSION_ATTR);
         }
 
+        //Tree
         Tree currentTree = facesContext.getTree();
         Tree savedTree = (Tree)session.getAttribute(HTTPSessionStateSaver.TREE_SESSION_ATTR);
         if (savedTree != null)
@@ -59,8 +73,54 @@ public class HTTPSessionStateRestorer
                 //same treeId, set restored tree as new tree in context
                 facesContext.setTree(savedTree);
             }
+            session.removeAttribute(HTTPSessionStateSaver.TREE_SESSION_ATTR);
+            facesContext.getServletRequest().setAttribute(PREVIOUS_TREE_REQUEST_ATTR,
+                                                          savedTree);
+
+            //autocreate request scope beans
+            if (MyFacesConfig.isAutoCreateRequestScopeBeans(facesContext.getServletContext()))
+            {
+                Iterator it = JspInfo.getJspBeanInfos(facesContext,
+                                                      facesContext.getTree().getTreeId());
+                while (it.hasNext())
+                {
+                    Map.Entry entry = (Map.Entry)it.next();
+                    JspInfoUtils.checkModelInstance(facesContext,
+                                                    (JspBeanInfo)entry.getValue());
+                }
+            }
+        }
+
+        //Model values
+        restoreModelValues(facesContext, session);
+    }
+
+
+    private void restoreModelValues(FacesContext facesContext,
+                                    HttpSession session)
+    {
+        Map modelValuesMap = (Map)session.getAttribute(HTTPSessionStateSaver.MODEL_VALUES_MAP_SESSION_ATTR);
+        if (modelValuesMap != null)
+        {
+            for (Iterator it = modelValuesMap.entrySet().iterator(); it.hasNext();)
+            {
+                Map.Entry entry = (Map.Entry)it.next();
+                String modelRef = (String)entry.getKey();
+                JspInfoUtils.checkModelInstance(facesContext, modelRef);
+                facesContext.setModelValue(modelRef, entry.getValue());
+            }
+            session.removeAttribute(HTTPSessionStateSaver.MODEL_VALUES_MAP_SESSION_ATTR);
         }
     }
+
+
+    public Tree getPreviousTree(FacesContext facesContext)
+    {
+        return (Tree)facesContext.getServletRequest()
+                        .getAttribute(PREVIOUS_TREE_REQUEST_ATTR);
+    }
+
+
 
     /*
     public void restoreComponentState(FacesContext facesContext, UIComponent uiComponent) throws IOException
@@ -126,15 +186,4 @@ public class HTTPSessionStateRestorer
     */
 
 
-    public Tree getPreviousTree(FacesContext facesContext)
-    {
-        HttpServletRequest request = (HttpServletRequest)facesContext.getServletRequest();
-        HttpSession session = request.getSession(false);
-        if (session == null)
-        {
-            return null;
-        }
-
-        return (Tree)session.getAttribute(HTTPSessionStateSaver.TREE_SESSION_ATTR);
-    }
 }

@@ -21,11 +21,8 @@ package net.sourceforge.myfaces;
 import net.sourceforge.myfaces.util.logging.LogUtil;
 
 import javax.servlet.ServletContext;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Properties;
 import java.util.logging.Level;
 
 /**
@@ -35,9 +32,10 @@ import java.util.logging.Level;
  */
 public class MyFacesConfig
 {
-    private static final String _PROPERTY_FILE = "myfaces.properties";
+    //private static final String _PROPERTY_FILE = "myfaces.properties";
 
     private static final String PARAM_jspInfoCaching = "jspInfoCaching";
+    private static final boolean DEFAULT_jspInfoCaching = false;
 
     private static final String PARAM_servletMappingMode = "servletMappingMode";
     private static final String DEFAULT_servletMappingMode = "virtual_path";
@@ -62,9 +60,12 @@ public class MyFacesConfig
     private static final String PARAM_stateSavingMode = "stateSavingMode";
     private static final int DEFAULT_stateSavingMode = STATE_SAVING_MODE__CLIENT_MINIMIZED;
 
+    private static final String PARAM_autoCreateRequestScopeBeans = "autoCreateRequestScopeBeans";
+    private static final boolean DEFAULT_autoCreateRequestScopeBeans = true;
 
-    //private static final String _StateEncodingOnTheFly = "StateEncodingOnTheFly";
-    private static final String _ComponentsTransientByDefault = "ComponentsTransientByDefault";
+    private static final String PARAM_discardInternalAttributes = "discardInternalAttributes";
+    private static final boolean DEFAULT_discardInternalAttributes = true;
+
 
     private static final String CONFIG_MAP_ATTR = MyFacesConfig.class.getName() + ".MAP";
 
@@ -83,7 +84,7 @@ public class MyFacesConfig
     {
         return getBooleanInitParameter(servletContext,
                                        PARAM_jspInfoCaching,
-                                       false);
+                                       DEFAULT_jspInfoCaching);
     }
 
     /**
@@ -173,49 +174,29 @@ public class MyFacesConfig
         return mode.intValue();
     }
 
-
-
-
-
-
+    /**
+     * DOCUMENT ME!
+     */
+    public static boolean isAutoCreateRequestScopeBeans(ServletContext servletContext)
+    {
+        return getBooleanInitParameter(servletContext,
+                                       PARAM_autoCreateRequestScopeBeans,
+                                       DEFAULT_autoCreateRequestScopeBeans);
+    }
 
     /**
-     * MyFaces supports two ways of saving state information:
-     * 1. "On the fly"
-     *    State info is encoded within HREFs and FORMs at once.
-     *    Drawback: The state of dynamic request time attributes that
-     *              are calculated during JSP processing will not be
-     *              saved correctly. Also the state of dynamically added
-     *              or removed UIComponents will not be saved correctly.
-     * 2. "Tokens"
-     *    State info is encoded within HREFs and FORMs as tokens (placeholders)
-     *    that are replaced by the real state info after the JSP processing
-     *    of MyFaces tags has finished.
-     *    Drawback: The usefaces tag must buffer all produced HTML code
-     *              within it's body (see javax.servlet.jsp.tagext.BodyContent)
-     *              and must do a search'n'replace before writing the
-     *              content out to the response stream.
-     *
-     * @deprecated
+     * DOCUMENT ME!
      */
-    public static boolean isStateEncodingOnTheFly()
+    public static boolean isDiscardInternalAttributes(ServletContext servletContext)
     {
-        //return getPropertyAsBoolean(_StateEncodingOnTheFly, false);
-        return false;
-    }
-
-
-    public static boolean isComponentsTransientByDefault()
-    {
-        return getPropertyAsBoolean(_ComponentsTransientByDefault, true);
+        return getBooleanInitParameter(servletContext,
+                                       PARAM_discardInternalAttributes,
+                                       DEFAULT_discardInternalAttributes);
     }
 
 
 
-
-
-
-
+    /*
     private static final String _TRUE = "true";
     private static boolean getPropertyAsBoolean(String name, boolean defaultValue)
     {
@@ -252,7 +233,7 @@ public class MyFacesConfig
         }
         return _myfacesProperties.getProperty(name);
     }
-
+    */
 
 
 

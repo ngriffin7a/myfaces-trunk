@@ -22,6 +22,7 @@ import net.sourceforge.myfaces.renderkit.html.jspinfo.JspInfo;
 import net.sourceforge.myfaces.renderkit.html.jspinfo.JspInfoUtils;
 import net.sourceforge.myfaces.renderkit.html.jspinfo.JspBeanInfo;
 import net.sourceforge.myfaces.renderkit.html.state.StateRestorer;
+import net.sourceforge.myfaces.MyFacesConfig;
 
 import javax.faces.context.FacesContext;
 import java.util.Iterator;
@@ -38,13 +39,17 @@ public abstract class ClientStateRestorer
 {
     protected void recreateRequestScopeBeans(FacesContext facesContext)
     {
-        Iterator it = JspInfo.getJspBeanInfos(facesContext,
-                                              facesContext.getTree().getTreeId());
-        while (it.hasNext())
+        //autocreate request scope beans
+        if (MyFacesConfig.isAutoCreateRequestScopeBeans(facesContext.getServletContext()))
         {
-            Map.Entry entry = (Map.Entry)it.next();
-            JspInfoUtils.checkModelInstance(facesContext,
-                                            (JspBeanInfo)entry.getValue());
+            Iterator it = JspInfo.getJspBeanInfos(facesContext,
+                                                  facesContext.getTree().getTreeId());
+            while (it.hasNext())
+            {
+                Map.Entry entry = (Map.Entry)it.next();
+                JspInfoUtils.checkModelInstance(facesContext,
+                                                (JspBeanInfo)entry.getValue());
+            }
         }
     }
 }

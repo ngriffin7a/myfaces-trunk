@@ -174,6 +174,17 @@ public class ListRenderer
             {
                 ResponseWriter writer = facesContext.getResponseWriter();
                 writer.write("</tr>\n");
+
+                if (rendererType.equals(DataRenderer.TYPE))
+                {
+                    //Remove iterator after last row
+                    Iterator it = getIterator(facesContext, uiComponent);
+                    if (it != null && !it.hasNext())
+                    {
+                        uiComponent.setAttribute(ITERATOR_ATTR, null);
+                    }
+                }
+
             }
             else
             {

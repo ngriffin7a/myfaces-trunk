@@ -18,7 +18,6 @@
  */
 package net.sourceforge.myfaces.component;
 
-import net.sourceforge.myfaces.MyFacesConfig;
 import net.sourceforge.myfaces.convert.ConverterUtils;
 import net.sourceforge.myfaces.convert.impl.StringArrayConverter;
 import net.sourceforge.myfaces.renderkit.html.state.client.MinimizingStateSaver;
@@ -199,7 +198,8 @@ public class UIComponentUtils
         Boolean trans = (Boolean)uiComponent.getAttribute(MinimizingStateSaver.TRANSIENT_ATTR);
         if (trans == null)
         {
-            return MyFacesConfig.isComponentsTransientByDefault();
+            //return MyFacesConfig.isComponentsTransientByDefault();
+            return true; //Components always transient by default
         }
         else
         {
@@ -295,5 +295,13 @@ public class UIComponentUtils
             throw new RuntimeException(e);
         }
     }
+
+
+    public static boolean isInternalAttribute(String attrName)
+    {
+        return (attrName.startsWith("javax.") ||
+                attrName.startsWith("net.sourceforge.myfaces."));
+    }
+
 
 }
