@@ -112,14 +112,17 @@
             </manifest>
         	<lib dir="${project.dir}/lib" includes="${tomcat.special.include}"/>
             <lib file="${commons-codec.jar}"/>
+            <lib file="${commons-fileupload.jar}"/>
             <lib file="${commons-logging.jar}"/>
+            <lib file="${commons-validator.jar}"/>
             <lib file="${commons-beanutils.jar}"/>
             <lib file="${commons-collections.jar}"/>
             <lib file="${commons-digester.jar}"/>            
+            <lib file="${jakarta-oro.jar}"/>
             <lib file="${jstl.jar}"/>
             <lib file="${myfaces.jar}"/>
-            <!--lib file="${myfaces-jsf-api.jar}"/-->
-            <classes dir="${web-inf.classes.dir}" />
+            <lib file="${log4j.jar}"/>
+        	<classes dir="${web-inf.classes.dir}" />
             <fileset dir="${blank.web}"
                      excludes="WEB-INF/classes/**,
                                WEB-INF/lib/**,
