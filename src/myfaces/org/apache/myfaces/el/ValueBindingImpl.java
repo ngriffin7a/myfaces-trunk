@@ -531,7 +531,7 @@ public class ValueBindingImpl extends ValueBinding {
             // check for ["ashklhj\"] error
             if (indexofBackslash == lastIndex)
                 throw new ReferenceSyntaxException(
-                    "\\ at the end of index string '" + str + "'");
+                    "'\\' at the end of index string '" + str + "'");
 
             sb.append(str.substring(curpos, indexofBackslash));
             curpos               = indexofBackslash + 1;
