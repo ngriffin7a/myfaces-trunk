@@ -21,6 +21,7 @@ package net.sourceforge.myfaces.taglib.core;
 import net.sourceforge.myfaces.MyFacesConfig;
 import net.sourceforge.myfaces.renderkit.html.state.StateRenderer;
 import net.sourceforge.myfaces.renderkit.html.state.client.ClientStateSaver;
+import net.sourceforge.myfaces.taglib.MyFacesBodyTag;
 import net.sourceforge.myfaces.util.logging.LogUtil;
 
 import javax.faces.FactoryFinder;
@@ -30,12 +31,10 @@ import javax.faces.render.RenderKit;
 import javax.faces.render.RenderKitFactory;
 import javax.faces.render.Renderer;
 import javax.faces.webapp.JspResponseWriter;
-import javax.faces.webapp.UIComponentBodyTag;
 import javax.servlet.ServletRequest;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.BodyContent;
 import javax.servlet.jsp.tagext.BodyTag;
-import javax.servlet.jsp.tagext.BodyTagSupport;
 import java.io.IOException;
 
 /**
@@ -45,9 +44,9 @@ import java.io.IOException;
  */
 public class UseFacesTag
     //extends BodyTagSupport
-    extends UIComponentBodyTag
+    extends MyFacesBodyTag
 {
-    protected String getComponentType()
+    public String getComponentType()
     {
         //Should not be called normally
         return "Root";

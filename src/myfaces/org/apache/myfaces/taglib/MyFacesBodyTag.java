@@ -119,6 +119,12 @@ public abstract class MyFacesBodyTag
         return id;
     }
 
+    public String getFacetName()
+    {
+        return super.getFacetName();
+    }
+
+
 
     /**
      * TODO: Why do they suppress facets ?!
@@ -190,13 +196,13 @@ public abstract class MyFacesBodyTag
         _helper.overrideProperties(uiComponent);
     }
 
-    protected final UIComponent findComponent()
+    protected final UIComponent findComponent(FacesContext facesContext)
         throws JspException
     {
         UIComponent c = _helper.findComponent();
         if (c == null)
         {
-            c = super.findComponent(getFacesContext());
+            c = super.findComponent(facesContext);
         }
         return c;
     }

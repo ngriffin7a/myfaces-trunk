@@ -19,6 +19,7 @@
 package net.sourceforge.myfaces.taglib;
 
 import javax.faces.component.UIComponent;
+import javax.servlet.jsp.tagext.Tag;
 
 /**
  * DOCUMENT ME!
@@ -26,9 +27,14 @@ import javax.faces.component.UIComponent;
  * @version $Revision$ $Date$
  */
 public interface MyFacesTagBaseIF
+    extends Tag
 {
     public void overrideProperties(UIComponent uiComponent);
     public void setCreated(boolean b);
     public String getComponentType();
+    public void setId(String id);
     public String getId();
+    public UIComponent getComponent();
+    public boolean getCreated();
+    public String getFacetName();
 }

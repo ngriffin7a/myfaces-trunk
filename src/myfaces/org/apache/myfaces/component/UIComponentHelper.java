@@ -39,7 +39,7 @@ public class UIComponentHelper
     }
 
     /**
-     * TODO: any longer necessary with EA4 ?
+     * TODO: no longer necessary with EA4
      */
     public String getClientId(FacesContext context)
     {
