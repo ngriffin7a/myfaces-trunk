@@ -1,0 +1,24 @@
+MyFaces Release Notes
+=====================
+
+----------------------------------------------------------------------
+Changes in Release 0.1.2
+
+* new features
+    - detailed "Features" page
+
+* cosmetic changes
+    - imports optimized
+    - MessageListRenderer moved to subpackage "ext"
+
+* bug fixes:
+    - state saving and restoring of "stringValue" Attribute fixed
+
+----------------------------------------------------------------------
+Changes in Release 0.1.1
+
+Sun asked me to remove the file "jsf-api.jar" from the public
+distribution. (Release 0.1 will no longer be available)
+
+
+Copyright (c) 2003 Manfred Geiler, et al.

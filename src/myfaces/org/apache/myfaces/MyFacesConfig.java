@@ -56,7 +56,6 @@ public class MyFacesConfig
      *              within it's body (see javax.servlet.jsp.tagext.BodyContent)
      *              and must do a search'n'replace before writing the
      *              content out to the response stream.
-     * @return
      */
     public static boolean isStateEncodingOnTheFly()
     {

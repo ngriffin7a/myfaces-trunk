@@ -252,7 +252,7 @@ public class BeanUtils
      * @param propertyPath
      * @param methodPrefix
      * @param parameterTypes  null means find any method with this name
-     * @return
+     * @return a BeanMethod
      */
     public static BeanMethod findNestedBeanMethod(Object bean,
                                                   String propertyPath,

@@ -138,7 +138,7 @@ public class StateRenderer
      * TODO: Optimize by anonymous inner class Iterator
      * Known issues: finds only top level components (= children of root)
      * @param tree
-     * @return
+     * @return Iterator over all top-level UISaveState components
      */
     protected static Iterator getUISaveStateIterator(Tree tree)
     {
