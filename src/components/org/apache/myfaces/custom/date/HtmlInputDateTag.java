@@ -36,7 +36,8 @@ public class HtmlInputDateTag extends HtmlInputTextTagBase {
     }
     
     // HtmlInputDate attributes
-    private String _type;
+    private String type;
+    private String popupCalendar;
 
     // UIComponent attributes --> already implemented in UIComponentTagBase
     // HTML universal attributes --> already implemented in HtmlComponentTagBase
@@ -49,26 +50,32 @@ public class HtmlInputDateTag extends HtmlInputTextTagBase {
     // UIHTML Input attributes --> already implemented in HtmlInputTextTagBase
 
     // User Role support
-    private String _enabledOnUserRole;
-    private String _visibleOnUserRole;
+    private String enabledOnUserRole;
+    private String visibleOnUserRole;
 
     protected void setProperties(UIComponent component) {
         super.setProperties(component);
 
-        setStringProperty(component, UserRoleAware.ENABLED_ON_USER_ROLE_ATTR, _enabledOnUserRole);
-        setStringProperty(component, UserRoleAware.VISIBLE_ON_USER_ROLE_ATTR, _visibleOnUserRole);
-        setStringProperty(component, "type", _type);
+        setStringProperty(component, "type", type);
+        setBooleanProperty(component, "popupCalendar", popupCalendar);
+        
+        setStringProperty(component, UserRoleAware.ENABLED_ON_USER_ROLE_ATTR, enabledOnUserRole);
+        setStringProperty(component, UserRoleAware.VISIBLE_ON_USER_ROLE_ATTR, visibleOnUserRole);
     }
     
     public void setType(String type){
-        _type = type;
+        this.type = type;
+    }
+    
+    public void setPopupCalendar(String popupCalendar){
+        this.popupCalendar = popupCalendar;
     }
     
     public void setEnabledOnUserRole(String enabledOnUserRole){
-        _enabledOnUserRole = enabledOnUserRole;
+        this.enabledOnUserRole = enabledOnUserRole;
     }
 
     public void setVisibleOnUserRole(String visibleOnUserRole){
-        _visibleOnUserRole = visibleOnUserRole;
+        this.visibleOnUserRole = visibleOnUserRole;
     }
 }

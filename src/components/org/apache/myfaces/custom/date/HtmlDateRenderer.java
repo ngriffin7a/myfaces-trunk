@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.text.DateFormatSymbols;
 import java.text.ParseException;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Locale;
 import java.util.Map;
 
@@ -29,6 +30,9 @@ import javax.faces.context.ResponseWriter;
 import javax.faces.convert.ConverterException;
 
 import org.apache.myfaces.component.UserRoleUtils;
+import org.apache.myfaces.custom.calendar.HtmlCalendarRenderer;
+import org.apache.myfaces.custom.calendar.HtmlInputCalendar;
+import org.apache.myfaces.custom.calendar.HtmlCalendarRenderer.CalendarDateTimeConverter;
 import org.apache.myfaces.custom.date.HtmlInputDate.UserData;
 import org.apache.myfaces.renderkit.RendererUtils;
 import org.apache.myfaces.renderkit.html.HTML;
@@ -38,6 +42,9 @@ import org.apache.myfaces.util.MessageUtils;
 
 /**
  * $Log$
+ * Revision 1.12  2004/12/10 02:15:19  svieujot
+ * New popupCalendar attribute, and implements UserRoleAware.
+ *
  * Revision 1.11  2004/12/09 12:54:26  svieujot
  * Changes to check for submitted-value first
  *
@@ -117,6 +124,9 @@ public class HtmlDateRenderer extends HtmlRenderer {
 	        encodeInputDay(uiComponent, writer, clientId, userData, disabled);
 	        encodeInputMonth(uiComponent, writer, clientId, userData, currentLocale, disabled);
 	        encodeInputYear(uiComponent, writer, clientId, userData, disabled);
+	        
+	        if( inputDate.isPopupCalendar() && ! disabled )
+	            encodePopupCalendarButton(facesContext, writer, clientId, currentLocale);
         }
         if( type.equals("both") ){
             writer.write(" ");
@@ -158,6 +168,7 @@ public class HtmlDateRenderer extends HtmlRenderer {
     private static void encodeInputMonth(UIComponent uiComponent, ResponseWriter writer, String clientId, UserData userData, Locale currentLocale,
             boolean disabled) throws IOException {
         writer.startElement(HTML.SELECT_ELEM, uiComponent);
+        writer.writeAttribute(HTML.ID_ATTR, clientId + ID_MONTH_POSTFIX, null);
         writer.writeAttribute(HTML.NAME_ATTR, clientId + ID_MONTH_POSTFIX, null);
         writer.writeAttribute(HTML.SIZE_ATTR, "1", null);
         HtmlRendererUtils.renderHTMLAttributes(writer, uiComponent, HTML.UNIVERSAL_ATTRIBUTES);
@@ -169,7 +180,7 @@ public class HtmlDateRenderer extends HtmlRenderer {
 
         int selectedMonth = userData.getMonth() == null ? -1 : Integer.parseInt(userData.getMonth())-1;
 
-        String[] months = mapMonths(new DateFormatSymbols(currentLocale));
+        String[] months = HtmlCalendarRenderer.mapMonths(new DateFormatSymbols(currentLocale));
         for (int i = 0; i < months.length; i++) {
             String monthName = months[i];
             String monthNumber = Integer.toString(i+1);
@@ -207,25 +218,28 @@ public class HtmlDateRenderer extends HtmlRenderer {
         encodeInputField(uiComponent, writer, clientId + ID_SECONDS_POSTFIX, userData.getSeconds(), 2, disabled);
     }
     
-    private static String[] mapMonths(DateFormatSymbols symbols) {
-        String[] months = new String[12];
+    private void encodePopupCalendarButton(FacesContext facesContext, ResponseWriter writer, String clientId, Locale currentLocale) throws IOException{
+        HtmlCalendarRenderer.addScriptAndCSSResources(facesContext);
+        
+        DateFormatSymbols symbols = new DateFormatSymbols(currentLocale);
 
-        String[] localeMonths = symbols.getMonths();
+        String localizedLanguageScript = HtmlCalendarRenderer.getLocalizedLanguageScript(
+                							symbols,
+                							HtmlCalendarRenderer.mapMonths(symbols),
+                							Calendar.getInstance(currentLocale).getFirstDayOfWeek(),
+                							null);
+        
+        writer.startElement(HTML.SCRIPT_ELEM,null);
+        writer.writeAttribute(HTML.SCRIPT_LANGUAGE_ATTR,HTML.SCRIPT_LANGUAGE_JAVASCRIPT,null);
+        	writer.write(localizedLanguageScript);
+        	//writer.write("if (!document.layers) {\n");
+        		//writer.write("document.write(\"<input type='button' onclick='jscalendarPopUpCalendarForInputDate(\\\""+clientId+"\\\")' value='...'/>\");");
+            //writer.write("\n}");
 
-        months[0] = localeMonths[Calendar.JANUARY];
-        months[1] = localeMonths[Calendar.FEBRUARY];
-        months[2] = localeMonths[Calendar.MARCH];
-        months[3] = localeMonths[Calendar.APRIL];
-        months[4] = localeMonths[Calendar.MAY];
-        months[5] = localeMonths[Calendar.JUNE];
-        months[6] = localeMonths[Calendar.JULY];
-        months[7] = localeMonths[Calendar.AUGUST];
-        months[8] = localeMonths[Calendar.SEPTEMBER];
-        months[9] = localeMonths[Calendar.OCTOBER];
-        months[10] = localeMonths[Calendar.NOVEMBER];
-        months[11] = localeMonths[Calendar.DECEMBER];
-
-        return months;
+        writer.endElement(HTML.SCRIPT_ELEM);
+        
+        String dateFormat = CalendarDateTimeConverter.createJSPopupFormat(facesContext, null);
+        writer.write("<input type='button' onclick='jscalendarPopUpCalendarForInputDate(\""+clientId+"\",\""+dateFormat+"\")' value='...'/>");
     }
 
     public void decode(FacesContext facesContext, UIComponent uiComponent) {

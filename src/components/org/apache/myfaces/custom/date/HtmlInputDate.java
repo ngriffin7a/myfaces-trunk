@@ -26,15 +26,21 @@ import javax.faces.component.UIInput;
 import javax.faces.context.FacesContext;
 import javax.faces.el.ValueBinding;
 
+import org.apache.myfaces.component.UserRoleAware;
+import org.apache.myfaces.component.UserRoleUtils;
+
 /**
  * @author Sylvain Vieujot (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public class HtmlInputDate extends UIInput {
+public class HtmlInputDate extends UIInput implements UserRoleAware {
     public static final String COMPONENT_TYPE = "org.apache.myfaces.HtmlInputDate";
     public static final String COMPONENT_FAMILY = "javax.faces.Input";
     private static final String DEFAULT_RENDERER_TYPE = "org.apache.myfaces.Date";
     private static final boolean DEFAULT_DISABLED = false;
+    
+    private String _enabledOnUserRole = null;
+    private String _visibleOnUserRole = null;
     
     /**
      * Same as for f:convertDateTime 
@@ -42,6 +48,8 @@ public class HtmlInputDate extends UIInput {
      * Valid values are "date", "time", and "both". Default value is "date".
      */
     private String _type = null;
+    private Boolean _popupCalendar = null;
+    
     
     private Boolean _disabled = null;
     
@@ -67,37 +75,74 @@ public class HtmlInputDate extends UIInput {
 		ValueBinding vb = getValueBinding("type");
 		return vb != null ? (String)vb.getValue(getFacesContext()) : "date";
 	}
-
 	public void setType(String string) {
 		_type = string;
 	}
 	
-    public boolean isDisabled() {
+    public boolean isPopupCalendar(){
+   		if (_popupCalendar != null)
+   		    return _popupCalendar.booleanValue();
+   		ValueBinding vb = getValueBinding("popupCalendar");
+   		return vb != null ? ((Boolean)vb.getValue(getFacesContext())).booleanValue() : false;
+    }
+    public void setPopupCalendar(boolean popupCalendar){
+        this._popupCalendar = Boolean.valueOf(popupCalendar);
+    }
+	
+    public void setEnabledOnUserRole(String enabledOnUserRole){
+        _enabledOnUserRole = enabledOnUserRole;
+    }
+    public String getEnabledOnUserRole(){
+        if (_enabledOnUserRole != null) return _enabledOnUserRole;
+        ValueBinding vb = getValueBinding("enabledOnUserRole");
+        return vb != null ? (String)vb.getValue(getFacesContext()) : null;
+    }
+
+    public void setVisibleOnUserRole(String visibleOnUserRole){
+        _visibleOnUserRole = visibleOnUserRole;
+    }
+    public String getVisibleOnUserRole(){
+        if (_visibleOnUserRole != null) return _visibleOnUserRole;
+        ValueBinding vb = getValueBinding("visibleOnUserRole");
+        return vb != null ? (String)vb.getValue(getFacesContext()) : null;
+    }
+
+    public boolean isRendered(){
+        if (!UserRoleUtils.isVisibleOnUserRole(this)) return false;
+        return super.isRendered();
+    }
+	
+    public boolean isDisabled(){
         if (_disabled != null) return _disabled.booleanValue();
         ValueBinding vb = getValueBinding("disabled");
         Boolean v = vb != null ? (Boolean)vb.getValue(getFacesContext()) : null;
         return v != null ? v.booleanValue() : DEFAULT_DISABLED;
     }
-	
     public void setDisabled(boolean disabled) {
         _disabled = Boolean.valueOf(disabled);
     }
 	
     public Object saveState(FacesContext context) {
-        Object values[] = new Object[4];
+        Object values[] = new Object[7];
         values[0] = super.saveState(context);
         values[1] = _type;
-        values[2] = _disabled;
+        values[2] = _popupCalendar;
         values[3] = _userData;
-        return ((Object) (values));
+        values[4] = _disabled;
+        values[5] = _enabledOnUserRole;
+        values[6] = _visibleOnUserRole;
+        return values;
     }
 
     public void restoreState(FacesContext context, Object state) {
         Object values[] = (Object[])state;
         super.restoreState(context, values[0]);
         _type = (String)values[1];
-        _disabled = (Boolean)values[2];
+        _popupCalendar = (Boolean)values[2];
         _userData = (UserData)values[3];
+        _disabled = (Boolean)values[4];
+        _enabledOnUserRole = (String)values[5];
+        _visibleOnUserRole = (String)values[6];
     }
     
     public static class UserData implements Serializable {
