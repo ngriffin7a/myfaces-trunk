@@ -31,6 +31,9 @@ import java.util.Map;
  * @author Anton Koinov
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.5  2004/07/13 04:56:55  tinytoony
+ * primitive types where not retrieved (call to javaTypeToClass not used)
+ *
  * Revision 1.4  2004/07/01 22:01:13  mwessendorf
  * ASF switch
  *
@@ -126,14 +129,28 @@ public class ClassUtils
     {
         try
         {
-            return Class.forName(type, false, 
+            return Class.forName(type, false,
                 Thread.currentThread().getContextClassLoader());
         }
         catch (ClassNotFoundException ignore)
         {
-            // fallback
-            return Class.forName(type, false, 
-                ClassUtils.class.getClassLoader());
+            try
+            {
+                // fallback
+                return Class.forName(type, false,
+                    ClassUtils.class.getClassLoader());
+            }
+            catch(ClassNotFoundException ignore2)
+            {
+                //final fallback - the calls above are not able to load classes of primitive types
+
+                Class clazz = javaTypeToClass(type);
+
+                if(clazz==null)
+                    throw new ClassNotFoundException(type);
+
+                return clazz;
+            }
         }
 // we do not initialize (second param to forName() is false) for faster startup
 //      catch (ExceptionInInitializerError e)
