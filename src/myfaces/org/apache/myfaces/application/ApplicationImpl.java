@@ -560,7 +560,7 @@ public class ApplicationImpl
         if ((reference == null) || (reference.length() == 0))
         {
             log.error("createValueBinding: reference = null is not allowed");
-            throw new NullPointerException("createValueBinding: reference = null ist not allowed");
+            throw new NullPointerException("createValueBinding: reference = null is not allowed");
         }
         return (ValueBinding) _valueBindingCache.get(reference);
     }
