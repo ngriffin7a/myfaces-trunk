@@ -68,6 +68,7 @@ public class AttributeTag
 
     public void release()
     {
+        super.release();
         _name = null;
         _value = null;
     }

@@ -79,6 +79,7 @@ public class ConverterTag
 
     public void release()
     {
+        super.release();
         _converterId = null;
     }
 

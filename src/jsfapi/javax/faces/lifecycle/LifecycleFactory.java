@@ -27,6 +27,8 @@ import java.util.Iterator;
  */
 public abstract class LifecycleFactory
 {
+    public static final java.lang.String DEFAULT_LIFECYCLE = "DEFAULT";
+
     public abstract void addLifecycle(String lifecycleId,
                                       Lifecycle lifecycle);
 

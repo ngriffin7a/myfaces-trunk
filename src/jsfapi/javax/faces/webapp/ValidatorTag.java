@@ -18,12 +18,79 @@
  */
 package javax.faces.webapp;
 
+import javax.faces.application.Application;
+import javax.faces.component.EditableValueHolder;
+import javax.faces.component.UIComponent;
+import javax.faces.context.FacesContext;
+import javax.faces.el.ValueBinding;
+import javax.faces.validator.Validator;
+import javax.servlet.jsp.JspException;
+import javax.servlet.jsp.tagext.Tag;
+import javax.servlet.jsp.tagext.TagSupport;
+
 /**
  * DOCUMENT ME!
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
 public class ValidatorTag
+        extends TagSupport
 {
-    //TODO
+    private String _validatorId;
+
+    public void setValidatorId(String validatorId)
+    {
+        _validatorId = validatorId;
+    }
+
+    public int doStartTag()
+            throws javax.servlet.jsp.JspException
+    {
+        UIComponentTag componentTag = UIComponentTag.getParentUIComponentTag(pageContext);
+        if (componentTag == null)
+        {
+            throw new JspException("no parent UIComponentTag found");
+        }
+        if (!componentTag.getCreated())
+        {
+            return Tag.SKIP_BODY;
+        }
+
+        Validator validator = createValidator();
+
+        UIComponent component = componentTag.getComponentInstance();
+        if (component == null)
+        {
+            throw new JspException("parent UIComponentTag has no UIComponent");
+        }
+        if (!(component instanceof EditableValueHolder))
+        {
+            throw new JspException("UIComponent is no ValueHolder");
+        }
+        ((EditableValueHolder)component).addValidator(validator);
+
+        return Tag.SKIP_BODY;
+    }
+
+    public void release()
+    {
+        super.release();
+        _validatorId = null;
+    }
+
+    protected Validator createValidator()
+            throws JspException
+    {
+        FacesContext facesContext = FacesContext.getCurrentInstance();
+        Application application = facesContext.getApplication();
+        if (UIComponentTag.isValueReference(_validatorId))
+        {
+            ValueBinding vb = facesContext.getApplication().createValueBinding(_validatorId);
+            return application.createValidator((String)vb.getValue(facesContext));
+        }
+        else
+        {
+            return application.createValidator(_validatorId);
+        }
+    }
 }

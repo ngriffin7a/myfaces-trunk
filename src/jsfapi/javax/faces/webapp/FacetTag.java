@@ -18,12 +18,44 @@
  */
 package javax.faces.webapp;
 
+import javax.servlet.jsp.tagext.Tag;
+import javax.servlet.jsp.tagext.TagSupport;
+
 /**
  * DOCUMENT ME!
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
 public class FacetTag
+        extends TagSupport
 {
-    //TODO
+    private String _name;
+
+    public String getName()
+    {
+        return _name;
+    }
+
+    public void setName(String name)
+    {
+        _name = name;
+    }
+
+    public void release()
+    {
+        super.release();
+        _name = null;
+    }
+
+    public int doStartTag()
+            throws javax.servlet.jsp.JspException
+    {
+        return Tag.EVAL_BODY_INCLUDE;
+    }
+
+    public int doEndTag()
+            throws javax.servlet.jsp.JspException
+    {
+        return Tag.EVAL_PAGE;
+    }
 }

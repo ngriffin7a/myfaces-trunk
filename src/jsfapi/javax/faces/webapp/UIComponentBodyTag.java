@@ -18,12 +18,63 @@
  */
 package javax.faces.webapp;
 
+import javax.servlet.jsp.JspException;
+import javax.servlet.jsp.JspWriter;
+import javax.servlet.jsp.tagext.BodyContent;
+import javax.servlet.jsp.tagext.BodyTag;
+
 /**
  * DOCUMENT ME!
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public class UIComponentBodyTag
+public abstract class UIComponentBodyTag
+        extends UIComponentTag
 {
-    //TODO
+    private BodyContent _bodyContent;
+
+    public int doAfterBody()
+            throws JspException
+    {
+        return getDoAfterBodyValue();
+    }
+
+    public void doInitBody()
+            throws JspException
+    {
+    }
+
+    public void release()
+    {
+        super.release();
+        _bodyContent = null;
+    }
+
+    public BodyContent getBodyContent()
+    {
+        return _bodyContent;
+    }
+
+    public void setBodyContent(BodyContent bodyContent)
+    {
+        _bodyContent = bodyContent;
+    }
+
+    public JspWriter getPreviousOut()
+    {
+        return _bodyContent.getEnclosingWriter();
+    }
+
+    protected int getDoStartValue()
+            throws JspException
+    {
+        return BodyTag.EVAL_BODY_BUFFERED;
+    }
+
+    protected int getDoAfterBodyValue()
+            throws JspException
+    {
+        return BodyTag.SKIP_BODY;
+    }
+
 }
