@@ -35,6 +35,7 @@
         <pathelement location="${jsp-api.jar}"/>
         <pathelement location="${jstl.jar}"/>
         <pathelement location="${myfaces.jar}"/>
+        <pathelement location="${myfaces-jsf-api.jar}"/>        
         <pathelement location="${commons-logging.jar}"/>
         <fileset dir="${cactus.lib.dir}">
             <include name="*.jar"/>
