@@ -46,12 +46,14 @@ public class MyFacesUICommand
 
     public MyFacesUICommand()
     {
-        setValid(true);
+        //setValid(true);
     }
 
     public List[] getListeners()
     {
-        return listeners;
+        //FIXME
+        //return listeners;
+        return null;
     }
 
 
@@ -79,14 +81,17 @@ public class MyFacesUICommand
                 application.getActionListener().processAction((ActionEvent)event);
 
                 //handle other listeners
-                super.broadcast(event, phaseId);
+                // FIXME
+                //super.broadcast(event, phaseId);
 
                 //go to render phase directly
                 FacesContext.getCurrentInstance().renderResponse();
                 return false;
             }
         }
-        return super.broadcast(event, phaseId);
+        //FIXME
+        //return super.broadcast(event, phaseId);
+        return false;
     }
 
 
@@ -99,7 +104,8 @@ public class MyFacesUICommand
 
     public void addFacet(String facetName, UIComponent facet)
     {
-        super.addFacet(facetName, facet);
+        //FIXME
+        //super.addFacet(facetName, facet);
         UIComponentUtils.ensureComponentInNamingContainer(facet);
     }
 

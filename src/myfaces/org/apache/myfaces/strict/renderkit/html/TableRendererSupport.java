@@ -103,7 +103,7 @@ extends HTMLRenderer
         {
             String   footerClass   = (String) component.getAttributes().get("footerClass");
             String[] columnClasses = (footerClass == null) ? null : new String[] {footerClass};
-            Iterator children      = facet.getChildren();
+            Iterator children      = facet.getChildren().iterator();
 
             if ((children != null) && children.hasNext())
             {
@@ -127,7 +127,7 @@ extends HTMLRenderer
         {
             String   headerClass   = (String) component.getAttributes().get("headerClass");
             String[] columnClasses = (headerClass == null) ? null : new String[] {headerClass};
-            Iterator children      = facet.getChildren();
+            Iterator children      = facet.getChildren().iterator();
 
             if ((children != null) && children.hasNext())
             {

@@ -21,7 +21,6 @@ package net.sourceforge.myfaces.component.ext;
 import net.sourceforge.myfaces.component.MyFacesUIPanel;
 
 import javax.faces.component.NamingContainer;
-import javax.faces.component.NamingContainerSupport;
 import javax.faces.component.UIComponent;
 
 /**
@@ -35,7 +34,8 @@ public class UINavigation
 {
     public UINavigation()
     {
-        setValid(true);
+        //FIXME
+        //setValid(true);
     }
 
     public boolean getRendersChildren()
@@ -44,38 +44,50 @@ public class UINavigation
     }
 
     //NamingContainer Support
-    private NamingContainer _namingContainer = new NamingContainerSupport();
+    //FIXME
+    //private NamingContainer _namingContainer = new NamingContainerSupport();
 
     public void addComponentToNamespace(UIComponent uicomponent)
     {
-        String componentId = uicomponent.getComponentId();
+        //FIXME
+        //String componentId = uicomponent.getComponentId();
+        String componentId = null;
         if (componentId != null)
         {
             //HACK: Because there is a bug in the API implementation of UIComponentBase
             //(removeChild does not call removeComponentFromNamespace) we ignore
             //component already in namespace
-            UIComponent old = _namingContainer.findComponentInNamespace(componentId);
+            //FIXME
+            //UIComponent old = _namingContainer.findComponentInNamespace(componentId);
+            UIComponent old = null;
             if (old != null)
             {
-                _namingContainer.removeComponentFromNamespace(old);
+                //FIXME
+                //_namingContainer.removeComponentFromNamespace(old);
             }
         }
-        _namingContainer.addComponentToNamespace(uicomponent);
+        //FIXME
+        //_namingContainer.addComponentToNamespace(uicomponent);
     }
 
     public void removeComponentFromNamespace(UIComponent uicomponent)
     {
-        _namingContainer.removeComponentFromNamespace(uicomponent);
+        //FIXME
+        //_namingContainer.removeComponentFromNamespace(uicomponent);
     }
 
     public UIComponent findComponentInNamespace(String s)
     {
-        return _namingContainer.findComponentInNamespace(s);
+        //FIXME
+        //return _namingContainer.findComponentInNamespace(s);
+        return null;
     }
 
     public String generateClientId()
     {
-        return _namingContainer.generateClientId();
+        //FIXME
+        //return _namingContainer.generateClientId();
+        return null;
     }
 
 }

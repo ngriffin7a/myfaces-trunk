@@ -24,7 +24,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import javax.faces.FactoryFinder;
-import javax.faces.application.Action;
 import javax.faces.application.Application;
 import javax.faces.application.ApplicationFactory;
 import javax.faces.component.UIComponent;
@@ -33,7 +32,6 @@ import javax.faces.event.AbortProcessingException;
 import javax.faces.event.ActionEvent;
 import javax.faces.event.FacesEvent;
 import javax.faces.event.PhaseId;
-import javax.faces.tree.Tree;
 import javax.servlet.ServletRequest;
 import java.io.IOException;
 import java.util.Iterator;
@@ -56,12 +54,14 @@ public class UINavigationItem
 
     public UINavigationItem()
     {
-        setValid(true);
+        //FIXME
+        //setValid(true);
     }
 
     public void reconstitute(FacesContext context) throws IOException
     {
-        super.reconstitute(context);
+        //FIXME
+        //super.reconstitute(context);
         //remember that this item was reconstituted and therefore the open state is ok
         _reconstituted = true;
     }
@@ -106,6 +106,8 @@ public class UINavigationItem
             = (StateRestorer)servletRequest.getAttribute(StateRestorer.STATE_RESTORER_REQUEST_ATTR);
         if (stateRestorer != null)
         {
+            //FIXME
+            /*
             Tree previousTree  = stateRestorer.getPreviousTree(facesContext);
             if (previousTree != null && previousTree != facesContext.getTree())
             {
@@ -118,6 +120,7 @@ public class UINavigationItem
                     setActive(prevNavItem.isActive());
                 }
             }
+            */
         }
         _reconstituted = true;
     }
@@ -189,7 +192,8 @@ public class UINavigationItem
         else
         {
             //close all siblings
-            closeChildren(getParent().getChildren());
+            //FIXME
+            //closeChildren(getParent().getChildren());
 
             //open item
             setOpen(true);
@@ -214,7 +218,7 @@ public class UINavigationItem
                 }
                 else
                 {
-                    deactivateAllChildren(p.getChildren());
+                    deactivateAllChildren(p.getChildren().iterator());
                 }
                 //...activate this item
                 setActive(true);
@@ -234,7 +238,7 @@ public class UINavigationItem
             }
             if (ni.getChildCount() > 0)
             {
-                deactivateAllChildren(ni.getChildren());
+                deactivateAllChildren(ni.getChildren().iterator());
             }
         }
     }
@@ -257,6 +261,8 @@ public class UINavigationItem
         ApplicationFactory af = (ApplicationFactory)FactoryFinder.getFactory(FactoryFinder.APPLICATION_FACTORY);
         Application application = af.getApplication();
 
+        //FIXME
+        /*
         String outcome = getAction();
         if (getActionRef() != null)
         {
@@ -276,6 +282,7 @@ public class UINavigationItem
                                                                 getActionRef(),
                                                                 outcome);
         }
+        */
     }
 
 }

@@ -158,33 +158,44 @@ public class MessageConfig
 
     public FacesMessage getMessage(FacesContext facesContext, Object[] args)
     {
-        if (_messageClass != null &&
-            !_messageClass.equals(MessageImpl.class.getName()))
+        //FIXME
+        /*
+        if (_messageClass != null && !_messageClass.equals(MessageImpl.class.getName()))
         {
             return (FacesMessage)ConfigUtil.newInstance(_messageClass);
         }
+        */
 
-        String language = facesContext.getLocale().getLanguage();
+        //FIXME
+        //String language = facesContext.getLocale().getLanguage();
+        String language = null;
 
         String summary = (String)getSummaryMap().get(language);
         String detail = (String)getDetailMap().get(language);
         if (summary == null && detail == null)
         {
-            String defaultLang = MyFacesConfig.getDefaultLanguage((ServletContext)facesContext.getExternalContext().getContext());
+            //FIXME
+            //String defaultLang = MyFacesConfig.getDefaultLanguage((ServletContext)facesContext.getExternalContext().getContext());
+            String defaultLang = null;
             summary = getSummary(defaultLang);
             detail  = getDetail(defaultLang);
         }
 
         if (args != null)
         {
+            //FIXME
+            /*
             MessageFormat mf = new MessageFormat(summary, facesContext.getLocale());
             summary = mf.format(args);
 
             mf = new MessageFormat(detail, facesContext.getLocale());
             detail = mf.format(args);
+            */
         }
 
-        return new MessageImpl(_severity, summary, detail);
+        //FIXME
+        //return new MessageImpl(_severity, summary, detail);
+        return null;
     }
 
 }

@@ -91,7 +91,7 @@ extends HyperlinkRenderer
 
         //Modify URL for the faces servlet mapping:
         ServletContext servletContext = (ServletContext)facesContext.getExternalContext().getContext();
-        //TODO: fixme
+        //FIXME
         /*
         ServletMappingFactory smf = MyFacesFactoryFinder.getServletMappingFactory(servletContext);
         ServletMapping sm = smf.getServletMapping(servletContext);
@@ -123,7 +123,7 @@ extends HyperlinkRenderer
         writer.write("=1");
 
         //state:
-        RenderKit renderKit = _rkFactory.getRenderKit(facesContext.getTree().getRenderKitId());
+        RenderKit renderKit = _rkFactory.getRenderKit(facesContext.getViewRoot().getRenderKitId());
         Renderer renderer = renderKit.getRenderer(StateRenderer.TYPE);
         renderer.encodeChildren(facesContext, uiComponent);
 

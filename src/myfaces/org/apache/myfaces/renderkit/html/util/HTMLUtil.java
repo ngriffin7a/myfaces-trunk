@@ -23,12 +23,11 @@ import net.sourceforge.myfaces.renderkit.html.HTML;
 import net.sourceforge.myfaces.renderkit.html.HTMLRenderer;
 import net.sourceforge.myfaces.renderkit.html.ListboxRenderer;
 
-import javax.faces.component.SelectItem;
 import javax.faces.component.UIComponent;
-import javax.faces.component.UIInput;
 import javax.faces.component.UISelectMany;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
+import javax.faces.model.SelectItem;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.Set;
@@ -86,7 +85,7 @@ public class HTMLUtil
             UIComponent child;
 
             for (
-                Iterator kids = component.getChildren(); kids.hasNext();
+                Iterator kids = component.getChildren().iterator(); kids.hasNext();
                         encodeChildrenRecursively(context, child))
             {
                 child = (UIComponent) kids.next();
@@ -270,7 +269,9 @@ public class HTMLUtil
             }
             else
             {
-                Object currentValue = ((UIInput) uiComponent).currentValue(facesContext);
+                //FIXME
+                //Object currentValue = ((UIInput) uiComponent).currentValue(facesContext);
+                Object currentValue = null;
 
                 /*
                 currentStrValue = ConverterUtils.getComponentValueAsString(facesContext,

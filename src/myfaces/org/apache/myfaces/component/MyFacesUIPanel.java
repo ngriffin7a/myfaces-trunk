@@ -33,7 +33,8 @@ public class MyFacesUIPanel
     public MyFacesUIPanel()
     {
         super();
-        setValid(true);
+        //FIXME
+        //setValid(true);
     }
 
     public boolean getRendersChildren()
@@ -51,7 +52,8 @@ public class MyFacesUIPanel
 
     public void addFacet(String facetName, UIComponent facet)
     {
-        super.addFacet(facetName, facet);
+        //FIXME
+        //super.addFacet(facetName, facet);
         UIComponentUtils.ensureComponentInNamingContainer(facet);
     }
 

@@ -52,7 +52,8 @@ extends TableRendererSupport
 
     public static Iterator getIterator(FacesContext facesContext, UIPanel uiPanel)
     {
-        Object value = uiPanel.currentValue(facesContext);
+        //Object value = uiPanel.currentValue(facesContext);
+        Object value = null;
 
         if (value == null)
         {
@@ -92,13 +93,16 @@ extends TableRendererSupport
             return;
         }
 
+        //FIXME
+        /*
         if ((component.getChildCount() != 1) || !(component.getChild(0) instanceof UIPanel))
         {
             throw new FacesException("panel_list must have exactly one child tag panel_data");
         }
 
         UIPanel panel = (UIPanel) component.getChild(0);
-
+        */
+        UIPanel panel = null;
         if (!panel.getRendererType().equals(DataRenderer.TYPE))
         {
             throw new FacesException("panel_list must have exactly one child tag panel_data");
@@ -139,7 +143,7 @@ extends TableRendererSupport
 
             // FIXME: clientID must be generated with an index
             // Render data rows
-            Iterator children = panel.getChildren();
+            Iterator children = panel.getChildren().iterator();
 
             if ((children != null) && children.hasNext())
             {

@@ -57,9 +57,9 @@ public class JspInfoUtils
             modelId = modelRef.substring(0, dot);
         }
 
-        JspBeanInfo jspBeanInfo = JspInfo.getJspBeanInfo(facesContext,
-                                                         facesContext.getTree().getTreeId(),
-                                                         modelId);
+        //FIXME
+        //JspBeanInfo jspBeanInfo = JspInfo.getJspBeanInfo(facesContext, facesContext.getTree().getTreeId(), modelId);
+        JspBeanInfo jspBeanInfo = null;
         if (jspBeanInfo == null)
         {
             //There is no JspBeanInfo for that model bean

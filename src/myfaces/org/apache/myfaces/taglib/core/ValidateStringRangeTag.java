@@ -18,7 +18,6 @@
  */
 package net.sourceforge.myfaces.taglib.core;
 
-import javax.faces.validator.StringRangeValidator;
 import javax.faces.validator.Validator;
 import javax.faces.webapp.ValidatorTag;
 import javax.servlet.jsp.JspException;
@@ -78,6 +77,8 @@ public class ValidateStringRangeTag
         throws JspException
     {
         setId(ID);
+        //FIXME
+        /*
         StringRangeValidator validator = (StringRangeValidator)super.createValidator();
         if(_isMinSet)
         {
@@ -88,5 +89,7 @@ public class ValidateStringRangeTag
             validator.setMaximum(getMaximum());
         }
         return validator;
+        */
+        return null;
     }
 }

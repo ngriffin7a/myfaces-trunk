@@ -59,17 +59,22 @@ public class UISortHeader
 
     public String getColumnRef()
     {
-        return getValueRef();
+        //FIXME
+        //return getValueRef();
+        return null;
     }
 
     public void setColumnRef(String columnRef)
     {
-        setValueRef(columnRef);
+        //FIXME
+        //setValueRef(columnRef);
     }
 
     public String currentColumn(FacesContext facesContext)
     {
-        return (String)currentValue(facesContext);
+        //FIXME
+        //return (String)currentValue(facesContext);
+        return null;
     }
 
     public Boolean getAscending()
@@ -102,7 +107,8 @@ public class UISortHeader
 
         String ascRef = getAscendingRef();
         ApplicationFactory af = (ApplicationFactory)FactoryFinder.getFactory(FactoryFinder.APPLICATION_FACTORY);
-        asc = (Boolean)af.getApplication().getValueBinding(ascRef).getValue(facesContext);
+        //FIXME
+        //asc = (Boolean)af.getApplication().getValueBinding(ascRef).getValue(facesContext);
         return asc;
     }
 
@@ -117,7 +123,8 @@ public class UISortHeader
             String columnRef = getColumnRef();
             if (columnRef != null)
             {
-                af.getApplication().getValueBinding(columnRef).setValue(facesContext, column);
+                //FIXME
+                //af.getApplication().getValueBinding(columnRef).setValue(facesContext, column);
             }
         }
 
@@ -127,7 +134,8 @@ public class UISortHeader
             String ascRef = getAscendingRef();
             if (ascRef != null)
             {
-                af.getApplication().getValueBinding(ascRef).setValue(facesContext, asc);
+                //FIXME
+                //af.getApplication().getValueBinding(ascRef).setValue(facesContext, asc);
             }
         }
     }

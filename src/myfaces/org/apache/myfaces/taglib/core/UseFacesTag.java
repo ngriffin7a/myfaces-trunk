@@ -31,7 +31,6 @@ import javax.faces.context.ResponseWriter;
 import javax.faces.render.RenderKit;
 import javax.faces.render.RenderKitFactory;
 import javax.faces.render.Renderer;
-import javax.faces.webapp.JspResponseWriter;
 import javax.servlet.ServletRequest;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.BodyContent;
@@ -87,7 +86,9 @@ public class UseFacesTag
 
     public void doInitBody() throws JspException
     {
-        ResponseWriter writer = new JspResponseWriter(super.pageContext);
+        //FIXME
+        //ResponseWriter writer = new JspResponseWriter(super.pageContext);
+        ResponseWriter writer = null;
         //TODO: think about setting ResponseStream (use an attribute in UseFaces tag?)
         getFacesContext().setResponseWriter(writer);
     }
@@ -99,7 +100,9 @@ public class UseFacesTag
         int mode = MyFacesConfig.getStateSavingMode(super.pageContext.getServletContext());
 
         RenderKitFactory rkFactory = (RenderKitFactory)FactoryFinder.getFactory(FactoryFinder.RENDER_KIT_FACTORY);
-        RenderKit renderKit = rkFactory.getRenderKit(facesContext.getTree().getRenderKitId());
+        //FIXME
+        //RenderKit renderKit = rkFactory.getRenderKit(facesContext.getTree().getRenderKitId());
+        RenderKit renderKit = null;
         Renderer renderer = renderKit.getRenderer(StateRenderer.TYPE);
         if (renderer == null)
         {

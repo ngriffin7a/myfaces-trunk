@@ -23,7 +23,6 @@ import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.render.RenderKit;
 import javax.faces.render.RenderKitFactory;
-import javax.faces.tree.Tree;
 import javax.servlet.ServletRequest;
 import java.util.HashMap;
 import java.util.Map;
@@ -119,8 +118,10 @@ public class CallbackSupport
 
     protected static void wrapRenderKit(FacesContext facesContext)
     {
-        Tree tree = facesContext.getTree();
-        String currentRenderKitId = tree.getRenderKitId();
+        //FIXME
+        //Tree tree = facesContext.getTree();
+        //String currentRenderKitId = tree.getRenderKitId();
+        String currentRenderKitId = null;
         if (currentRenderKitId.equals(CallbackRenderKit.ID))
         {
             //already wrapped
@@ -161,13 +162,15 @@ public class CallbackSupport
         }
 
         // set tree to wrapper (= CallbackRenderKit)
-        tree.setRenderKitId(CallbackRenderKit.ID);
+        //FIXME
+        //tree.setRenderKitId(CallbackRenderKit.ID);
     }
 
     protected static void unwrapRenderKit(FacesContext facesContext)
     {
         String originalRenderKitId = (String)((ServletRequest)facesContext.getExternalContext().getRequest()).getAttribute(ORIGINAL_RENDER_KIT_ID_ATTR);
-        facesContext.getTree().setRenderKitId(originalRenderKitId);
+        //FIXME
+        //facesContext.getTree().setRenderKitId(originalRenderKitId);
         ((ServletRequest)facesContext.getExternalContext().getRequest()).setAttribute(ORIGINAL_RENDER_KIT_ATTR, null);
     }
 

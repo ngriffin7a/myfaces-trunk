@@ -21,10 +21,8 @@ package net.sourceforge.myfaces.config;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import javax.faces.application.Message;
-import javax.faces.application.MessageImpl;
 import javax.faces.context.FacesContext;
-import javax.faces.context.MessageResources;
+import javax.faces.application.FacesMessage;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -35,7 +33,7 @@ import java.util.Map;
  * @version $Revision$ $Date$
  */
 public class MessageResourcesConfig
-    extends MessageResources
+    //FIXME extends MessageResources
     implements Config
 {
     private static final Log log = LogFactory.getLog(MessageResourcesConfig.class);
@@ -75,6 +73,8 @@ public class MessageResourcesConfig
         }
         else
         {
+            //FIXME
+            /*
             if (newMC.getDeclaredSeverity() != null &&
                 oldMC.getDeclaredSeverity() != null &&
                 newMC.getSeverity() != oldMC.getSeverity())
@@ -85,6 +85,7 @@ public class MessageResourcesConfig
             {
                 oldMC.setSeverity(newMC.getSeverity());
             }
+            */
 
             for (Iterator it = newMC.getSummaryMap().entrySet().iterator(); it.hasNext(); )
             {
@@ -112,51 +113,55 @@ public class MessageResourcesConfig
 
 
 
-    public Message getMessage(FacesContext facescontext, String s)
+    public FacesMessage getMessage(FacesContext facescontext, String s)
     {
         return internalGetMessage(facescontext, s, null);
     }
 
-    public Message getMessage(FacesContext facescontext, String s, Object aobj[])
+    public FacesMessage getMessage(FacesContext facescontext, String s, Object aobj[])
     {
         return internalGetMessage(facescontext, s, aobj);
     }
 
-    public Message getMessage(FacesContext facescontext, String s, Object obj)
+    public FacesMessage getMessage(FacesContext facescontext, String s, Object obj)
     {
         return internalGetMessage(facescontext, s, new Object[] {obj});
     }
 
-    public Message getMessage(FacesContext facescontext, String s, Object obj, Object obj1)
+    public FacesMessage getMessage(FacesContext facescontext, String s, Object obj, Object obj1)
     {
         return internalGetMessage(facescontext, s, new Object[] {obj, obj1});
     }
 
-    public Message getMessage(FacesContext facescontext, String s, Object obj, Object obj1, Object obj2)
+    public FacesMessage getMessage(FacesContext facescontext, String s, Object obj, Object obj1, Object obj2)
     {
         return internalGetMessage(facescontext, s, new Object[] {obj, obj1, obj2});
     }
 
-    public Message getMessage(FacesContext facescontext, String s, Object obj, Object obj1, Object obj2, Object obj3)
+    public FacesMessage getMessage(FacesContext facescontext, String s, Object obj, Object obj1, Object obj2, Object obj3)
     {
         return internalGetMessage(facescontext, s, new Object[] {obj, obj1, obj2, obj3});
     }
 
-    private Message internalGetMessage(FacesContext facesContext, String msgId, Object[] args)
+    private FacesMessage internalGetMessage(FacesContext facesContext, String msgId, Object[] args)
     {
         MessageConfig mc = (MessageConfig)getMessageConfigMap().get(msgId);
         if (mc == null)
         {
             log.error("Message with id '" + msgId + "' not found in MessageResources '" + _messageResourcesId + "'.");
+            //FIXME
+            /*
             return new MessageImpl(Message.SEVERITY_ERROR,
                                    "Error " + msgId,
                                    "No detailed description for error + " + msgId);
+                                   */
         }
 
         return mc.getMessage(facesContext, args);
     }
 
-
+    //FIXME
+    /*
     public MessageResources newMessageResources()
     {
         if (!(_messageConfigMap == null || _messageConfigMap.isEmpty()))
@@ -165,5 +170,6 @@ public class MessageResourcesConfig
         }
         return (MessageResources)ConfigUtil.newInstance(_messageResourcesClass);
     }
+    */
 
 }

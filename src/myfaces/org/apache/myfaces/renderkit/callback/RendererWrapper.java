@@ -92,7 +92,7 @@ class RendererWrapper
         }
     }
 
-    public void decode(FacesContext facesContext, UIComponent uiComponent) throws IOException
+    public void decode(FacesContext facesContext, UIComponent uiComponent)
     {
         Renderer renderer = CallbackSupport.getOriginalRenderKit(facesContext).getRenderer(_rendererType);
         renderer.decode(facesContext, uiComponent);
@@ -136,6 +136,8 @@ class RendererWrapper
     public String getClientId(FacesContext facesContext, UIComponent uiComponent)
     {
         Renderer renderer = CallbackSupport.getOriginalRenderKit(facesContext).getRenderer(_rendererType);
-        return renderer.getClientId(facesContext, uiComponent);
+        //FIXME
+        //return renderer.getClientId(facesContext, uiComponent);
+        return null;
     }
 }

@@ -74,7 +74,7 @@ public class MyParseEventListener
     private static final Log log = LogFactory.getLog(MyParseEventListener.class);
 
     private TagLibraries _tagLibraries = new MyTagLibraries();
-    private JspTreeParser _parser;
+    private JspViewParser _parser;
     private JspCompilationContext _ctxt;
     private UIComponent _currentComponent;
     private JspInfo _jspInfo;
@@ -82,7 +82,7 @@ public class MyParseEventListener
     private static final String AUTO_ID_PREFIX = "autoId";
     private int _autoId;
 
-    public MyParseEventListener(JspTreeParser parser,
+    public MyParseEventListener(JspViewParser parser,
                                 JspCompilationContext ctxt,
                                 JspInfo jspInfo)
     {
@@ -423,7 +423,7 @@ public class MyParseEventListener
         if (_currentComponent == null)
         {
             //This must be the UseFacesTag, which represents the root component
-            _currentComponent = _jspInfo.getTree().getRoot();
+            _currentComponent = _jspInfo.getViewRoot();
             return;
         }
 
@@ -490,7 +490,11 @@ public class MyParseEventListener
 
         String componentType = UIComponentTagHacks.getComponentType(facesTag);
         ApplicationFactory af = (ApplicationFactory)FactoryFinder.getFactory(FactoryFinder.APPLICATION_FACTORY);
-        UIComponent comp = af.getApplication().getComponent(componentType);
+        //FIXME
+        //UIComponent comp = af.getApplication().getComponent(componentType);
+        UIComponent comp = null;
+        //FIXME-END
+
         /*
         if (comp == null)
         {
@@ -517,7 +521,8 @@ public class MyParseEventListener
 
         if (id != null)
         {
-            comp.setComponentId(id);
+            //FIXME
+            //comp.setComponentId(id);
             comp.getAttributes().put(JspInfo.HARDCODED_ID_ATTR, id);
         }
         else
@@ -537,7 +542,8 @@ public class MyParseEventListener
                 }
             }
             String newAutoId = AUTO_ID_PREFIX + (++_autoId);
-            comp.setComponentId(newAutoId);
+            //FIXME
+            //comp.setComponentId(newAutoId);
             if (log.isDebugEnabled()) log.debug("Tag '" + ti.getTagName() + "' has no id, assigning auto id '" + newAutoId + "' to component.");
         }
 
@@ -551,11 +557,12 @@ public class MyParseEventListener
         if (facetName != null)
         {
             UIComponentUtils.addFacet(_currentComponent, facetName, comp);
-            _currentComponent.getAttributes().put().get(PENDING_FACET_ATTR, null);
+            _currentComponent.getAttributes().put(PENDING_FACET_ATTR, null);
         }
         else
         {
-            _currentComponent.addChild(comp);
+            //FIXME
+            //_currentComponent.addChild(comp);
         }
 
 
@@ -614,7 +621,9 @@ public class MyParseEventListener
             throw new IllegalArgumentException("Root is no naming container?");
         }
 
-        String componentId = comp.getComponentId();
+        //FIXME
+        //String componentId = comp.getComponentId();
+        String componentId = null;
         if (componentId == null)
         {
             throw new IllegalStateException("Component has no id?!");
@@ -626,7 +635,9 @@ public class MyParseEventListener
         }
         else
         {
-            return getClientId(findContainerComp) + UIComponent.SEPARATOR_CHAR + componentId;
+            //FIXME
+            //return getClientId(findContainerComp) + UIComponent.SEPARATOR_CHAR + componentId;
+            return null;
         }
     }
 
@@ -902,7 +913,8 @@ public class MyParseEventListener
             throw new RuntimeException(e);
         }
 
-        _currentComponent.addValidator(validator);
+        //FIXME
+        //_currentComponent.addValidator(validator);
     }
 
 

@@ -37,7 +37,9 @@ public class StaticActionListenerWrapper
 
     public PhaseId getPhaseId()
     {
-        return _original.getPhaseId();
+        //FIXME
+        //return _original.getPhaseId();
+        return null;
     }
 
     public void processAction(ActionEvent actionevent)

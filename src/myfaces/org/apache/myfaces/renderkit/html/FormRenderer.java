@@ -67,7 +67,9 @@ extends HTMLRenderer
         HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML.EVENT_HANDLER_ATTRIBUTES);
         HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML.FORM_ATTRIBUTES);
 
-        String formName = ((UIForm) uiComponent).getFormName();
+        //FIXME
+        //String formName = ((UIForm) uiComponent).getFormName();
+        String formName = null;
 
         if (formName != null)
         {
@@ -84,8 +86,9 @@ extends HTMLRenderer
     {
         RenderKitFactory rkFactory =
             (RenderKitFactory) FactoryFinder.getFactory(FactoryFinder.RENDER_KIT_FACTORY);
-        RenderKit        renderKit =
-            rkFactory.getRenderKit(facesContext.getTree().getRenderKitId());
+        //FIXME
+        RenderKit        renderKit = null;
+            //rkFactory.getRenderKit(facesContext.getTree().getRenderKitId());
         Renderer         renderer  = renderKit.getRenderer(StateRenderer.TYPE);
         renderer.encodeChildren(facesContext, uiComponent);
 
@@ -100,7 +103,7 @@ extends HTMLRenderer
 
         ServletContext        servletContext =
             (ServletContext) facesContext.getExternalContext().getContext();
-        //TODO: fixme
+        //FIXME
         /*
         ServletMappingFactory smf            =
             MyFacesFactoryFinder.getServletMappingFactory(servletContext);

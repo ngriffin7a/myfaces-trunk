@@ -54,10 +54,10 @@ public class UISaveState
     }
 
     public void decode(FacesContext context)
-        throws IOException
     {
         //all decoding and encoding is done by StateRenderer
-        setValid(true);
+        //FIXME
+        //setValid(true);
     }
 
     public void encodeBegin(FacesContext context)

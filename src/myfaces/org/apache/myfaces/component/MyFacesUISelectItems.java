@@ -31,7 +31,8 @@ public class MyFacesUISelectItems
 {
     public MyFacesUISelectItems()
     {
-        setValid(true);
+        //FIXME
+        //setValid(true);
     }
 
 
@@ -44,7 +45,8 @@ public class MyFacesUISelectItems
 
     public void addFacet(String facetName, UIComponent facet)
     {
-        super.addFacet(facetName, facet);
+        //FIXME
+        //super.addFacet(facetName, facet);
         UIComponentUtils.ensureComponentInNamingContainer(facet);
     }
 

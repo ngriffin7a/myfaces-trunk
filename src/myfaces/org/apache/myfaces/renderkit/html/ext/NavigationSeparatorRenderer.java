@@ -46,7 +46,7 @@ public class NavigationSeparatorRenderer
     }
 
 
-    public void decode(FacesContext facesContext, UIComponent uiComponent) throws IOException
+    public void decode(FacesContext facesContext, UIComponent uiComponent)
     {
     }
 

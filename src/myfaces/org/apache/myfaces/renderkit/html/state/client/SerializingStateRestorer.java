@@ -28,10 +28,10 @@ import org.apache.commons.logging.LogFactory;
 import javax.faces.FactoryFinder;
 import javax.faces.application.ApplicationFactory;
 import javax.faces.component.UIComponent;
+import javax.faces.component.UIViewRoot;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ExternalContext;
 import javax.faces.el.ValueBinding;
-import javax.faces.tree.Tree;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -48,127 +48,138 @@ import java.util.zip.GZIPInputStream;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
+//FIXME
 public class SerializingStateRestorer
     extends ClientStateRestorer
 {
-    private static final Log log = LogFactory.getLog(SerializingStateRestorer.class);
-
-    protected static final String RESTORED_TREE_CONTEXT_ATTR
-        = SerializingStateSaver.class.getName() + ".RESTORED_TREE";
-
-    public Tree getPreviousTree(FacesContext facesContext)
+    public UIViewRoot getPreviousTree(FacesContext facesContext)
     {
-        ExternalContext extContext = facesContext.getExternalContext();
-        Map requestMap = extContext.getRequestMap();
-        Tree restoredTree
-            = (Tree)requestMap.get(RESTORED_TREE_CONTEXT_ATTR);
-        if (restoredTree == null)
-        {
-            String serializedTree
-                = (String)extContext.getRequestParameterMap().get(SerializingStateSaver.TREE_REQUEST_PARAM);
-            if (serializedTree == null)
-            {
-                //nothing to restore
-                return null;
-            }
-
-            restoredTree = unzipTree(serializedTree);
-            requestMap.put(RESTORED_TREE_CONTEXT_ATTR, restoredTree);
-        }
-        return restoredTree;
+        throw new UnsupportedOperationException();
     }
 
     public void restoreState(FacesContext facesContext) throws IOException
     {
-        Tree savedTree = getPreviousTree(facesContext);
-        if (savedTree == null)
-        {
-            return;
-        }
-
-        //restore locale
-        Locale savedlocale
-            = (Locale)savedTree.getRoot()
-                    .getAttribute(SerializingStateSaver.CURRENT_LOCALE_ATTR);
-        if (savedlocale == null)
-        {
-            log.warn("No locale in saved tree?!");
-        }
-        else
-        {
-            facesContext.setLocale(savedlocale);
-            savedTree.getRoot().setAttribute(SerializingStateSaver.CURRENT_LOCALE_ATTR,
-                                             null);
-        }
-
-        Tree currentTree = facesContext.getTree();
-        if (savedTree.getTreeId().equals(currentTree.getTreeId()))
-        {
-            //same treeId, set restored tree as new tree in context
-            facesContext.setTree(savedTree);
-
-            //recreate beans of "request" scope
-            recreateRequestScopeBeans(facesContext);
-
-            //restore model values
-            restoreModelValues(facesContext, false);
-        }
-        else
-        {
-            //restore global model values
-            restoreModelValues(facesContext, true);
-        }
+        throw new UnsupportedOperationException();
     }
 
-    private void restoreModelValues(FacesContext facesContext, boolean onlyGlobal)
-    {
-        UIComponent root = facesContext.getTree().getRoot();
-        Collection modelValuesColl
-            = (Collection)root.getAttributes().get(SerializingStateSaver.MODEL_VALUES_COLL_ATTR);
-        if (modelValuesColl != null)
-        {
-            for (Iterator it = modelValuesColl.iterator(); it.hasNext();)
-            {
-                ModelValueEntry entry = (ModelValueEntry)it.next();
-                if (!onlyGlobal || entry.isGlobal())
-                {
-                    String modelRef = entry.getModelReference();
-                    JspInfoUtils.checkModelInstance(facesContext, modelRef);
-
-                    ApplicationFactory af = (ApplicationFactory)FactoryFinder.getFactory(FactoryFinder.APPLICATION_FACTORY);
-                    ValueBinding vb = af.getApplication().getValueBinding(modelRef);
-                    vb.setValue(facesContext, entry.getValue());
-                }
-            }
-            root.getAttributes().put(SerializingStateSaver.MODEL_VALUES_COLL_ATTR, null);
-        }
-    }
-
-
-    protected Tree unzipTree(String zippedTree)
-    {
-        try
-        {
-            ByteArrayInputStream byteStream = new ByteArrayInputStream(zippedTree.getBytes(ZipMinimizingStateSaver.ZIP_CHARSET));
-            InputStream decodedStream = Base64.getDecoder(byteStream);
-            InputStream unzippedStream = new GZIPInputStream(decodedStream);
-            ObjectInputStream ois = new MyFacesObjectInputStream(unzippedStream);
-            Tree tree = (Tree)ois.readObject();
-            ois.close();
-            unzippedStream.close();
-            decodedStream.close();
-            byteStream.close();
-
-            return tree;
-        }
-        catch (ClassNotFoundException e)
-        {
-            throw new RuntimeException(e);
-        }
-        catch (IOException e)
-        {
-            throw new RuntimeException(e);
-        }
-    }
+//    private static final Log log = LogFactory.getLog(SerializingStateRestorer.class);
+//
+//    protected static final String RESTORED_TREE_CONTEXT_ATTR
+//        = SerializingStateSaver.class.getName() + ".RESTORED_TREE";
+//
+//    public Tree getPreviousTree(FacesContext facesContext)
+//    {
+//        ExternalContext extContext = facesContext.getExternalContext();
+//        Map requestMap = extContext.getRequestMap();
+//        Tree restoredTree
+//            = (Tree)requestMap.get(RESTORED_TREE_CONTEXT_ATTR);
+//        if (restoredTree == null)
+//        {
+//            String serializedTree
+//                = (String)extContext.getRequestParameterMap().get(SerializingStateSaver.TREE_REQUEST_PARAM);
+//            if (serializedTree == null)
+//            {
+//                //nothing to restore
+//                return null;
+//            }
+//
+//            restoredTree = unzipTree(serializedTree);
+//            requestMap.put(RESTORED_TREE_CONTEXT_ATTR, restoredTree);
+//        }
+//        return restoredTree;
+//    }
+//
+//    public void restoreState(FacesContext facesContext) throws IOException
+//    {
+//        Tree savedTree = getPreviousTree(facesContext);
+//        if (savedTree == null)
+//        {
+//            return;
+//        }
+//
+//        //restore locale
+//        Locale savedlocale
+//            = (Locale)savedTree.getRoot()
+//                    .getAttribute(SerializingStateSaver.CURRENT_LOCALE_ATTR);
+//        if (savedlocale == null)
+//        {
+//            log.warn("No locale in saved tree?!");
+//        }
+//        else
+//        {
+//            facesContext.setLocale(savedlocale);
+//            savedTree.getRoot().setAttribute(SerializingStateSaver.CURRENT_LOCALE_ATTR,
+//                                             null);
+//        }
+//
+//        Tree currentTree = facesContext.getTree();
+//        if (savedTree.getTreeId().equals(currentTree.getTreeId()))
+//        {
+//            //same treeId, set restored tree as new tree in context
+//            facesContext.setTree(savedTree);
+//
+//            //recreate beans of "request" scope
+//            recreateRequestScopeBeans(facesContext);
+//
+//            //restore model values
+//            restoreModelValues(facesContext, false);
+//        }
+//        else
+//        {
+//            //restore global model values
+//            restoreModelValues(facesContext, true);
+//        }
+//    }
+//
+//    private void restoreModelValues(FacesContext facesContext, boolean onlyGlobal)
+//    {
+//        UIComponent root = facesContext.getTree().getRoot();
+//        Collection modelValuesColl
+//            = (Collection)root.getAttributes().get(SerializingStateSaver.MODEL_VALUES_COLL_ATTR);
+//        if (modelValuesColl != null)
+//        {
+//            for (Iterator it = modelValuesColl.iterator(); it.hasNext();)
+//            {
+//                ModelValueEntry entry = (ModelValueEntry)it.next();
+//                if (!onlyGlobal || entry.isGlobal())
+//                {
+//                    String modelRef = entry.getModelReference();
+//                    JspInfoUtils.checkModelInstance(facesContext, modelRef);
+//
+//                    ApplicationFactory af = (ApplicationFactory)FactoryFinder.getFactory(FactoryFinder.APPLICATION_FACTORY);
+//                    ValueBinding vb = af.getApplication().getValueBinding(modelRef);
+//                    vb.setValue(facesContext, entry.getValue());
+//                }
+//            }
+//            root.getAttributes().put(SerializingStateSaver.MODEL_VALUES_COLL_ATTR, null);
+//        }
+//    }
+//
+//
+//    protected Tree unzipTree(String zippedTree)
+//    {
+//        try
+//        {
+//            ByteArrayInputStream byteStream = new ByteArrayInputStream(zippedTree.getBytes(ZipMinimizingStateSaver.ZIP_CHARSET));
+//            InputStream decodedStream = Base64.getDecoder(byteStream);
+//            InputStream unzippedStream = new GZIPInputStream(decodedStream);
+//            ObjectInputStream ois = new MyFacesObjectInputStream(unzippedStream);
+//            Tree tree = (Tree)ois.readObject();
+//            ois.close();
+//            unzippedStream.close();
+//            decodedStream.close();
+//            byteStream.close();
+//
+//            return tree;
+//        }
+//        catch (ClassNotFoundException e)
+//        {
+//            throw new RuntimeException(e);
+//        }
+//        catch (IOException e)
+//        {
+//            throw new RuntimeException(e);
+//        }
+//    }
 
 }

@@ -100,7 +100,9 @@ public class DataRenderer
         Iterator iterator = (Iterator)uiPanel.getAttributes().get(ITERATOR_ATTR);
         if (iterator == null)
         {
-            Object v = uiPanel.currentValue(facesContext);
+            //FIXME
+            //Object v = uiPanel.currentValue(facesContext);
+            Object v = null;
             if (v == null)
             {
                 return null;

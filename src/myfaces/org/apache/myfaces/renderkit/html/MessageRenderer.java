@@ -35,6 +35,7 @@ import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 
 
 /**
@@ -100,12 +101,16 @@ extends HTMLRenderer
             pattern = getStringValue(facesContext, (UIOutput) uiComponent);
         }
 
-        MessageFormat format   = new MessageFormat(pattern,
-                facesContext.getLocale());
+        //FIXME
+        //Locale locale = facesContext.getLocale;
+        Locale locale = null;
+        MessageFormat format   = new MessageFormat(pattern, locale);
 
         //nested parameters
         List     params   = null;
-        Iterator children = uiComponent.getChildren();
+        //FIXME
+        //Iterator children = uiComponent.getChildren();
+        Iterator children = null;
 
         while (children.hasNext())
         {
@@ -118,7 +123,8 @@ extends HTMLRenderer
                     params = new ArrayList();
                 }
 
-                params.add(((UIParameter) child).currentValue(facesContext));
+                //FIXME
+                //params.add(((UIParameter) child).currentValue(facesContext));
             }
         }
 

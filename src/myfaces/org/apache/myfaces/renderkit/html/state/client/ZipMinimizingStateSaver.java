@@ -57,7 +57,9 @@ public class ZipMinimizingStateSaver
 
     protected void writeHiddenInputsState(FacesContext facesContext, Writer writer) throws IOException
     {
-        Map stateMap = getStateMap(facesContext);
+        //FIXME
+        //Map stateMap = getStateMap(facesContext);
+        Map stateMap = null;
         writer.write("\n<input type=\"hidden\" name=\"");
         writer.write(STATE_PARAM);
         writer.write("\" value=\"");
@@ -67,8 +69,9 @@ public class ZipMinimizingStateSaver
 
     protected void writeUrlState(FacesContext facesContext, Writer writer) throws IOException
     {
-        Map stateMap = getStateMap(facesContext);
-        writer.write('&');  //we assume that there were previous parameters
+        //FIXME
+        //Map stateMap = getStateMap(facesContext);
+        Map stateMap = null;
         writer.write(STATE_PARAM);
         writer.write('=');
         writer.write(HTMLRenderer.urlEncode(getZippedParams(facesContext, stateMap)));

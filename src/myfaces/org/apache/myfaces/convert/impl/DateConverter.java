@@ -49,7 +49,9 @@ public class DateConverter
             return null;
         }
 
-        Locale locale = context.getLocale();
+        //FIXME
+        //Locale locale = context.getLocale();
+        Locale locale = null;
         try
         {
             return parse(component, value, DateFormat.SHORT, locale);
@@ -77,7 +79,7 @@ public class DateConverter
                         try
                         {
                             DateFormat format = ConverterUtils.getDateFormat(
-                                    component, context.getLocale());
+                                    component, locale);
                             format.setTimeZone(
                                     ConverterUtils.getTimeZone(component));
 
@@ -115,13 +117,19 @@ public class DateConverter
         }
         else if (value instanceof Date)
         {
-            DateFormat format = ConverterUtils.getDateFormat(component, context.getLocale());
+            //FIXME
+            //Locale locale = context.getLocale();
+            Locale locale = null;
+            DateFormat format = ConverterUtils.getDateFormat(component, locale);
             return format.format(value);
         }
         else if (value instanceof Number)
         {
+            //FIXME
+            //Locale locale = context.getLocale();
+            Locale locale = null;
             Date dateValue = new Date(((Number)value).longValue());
-            DateFormat format = ConverterUtils.getDateFormat(component, context.getLocale());
+            DateFormat format = ConverterUtils.getDateFormat(component, locale);
             return format.format(dateValue);
         }
         else

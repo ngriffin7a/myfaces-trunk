@@ -43,7 +43,8 @@ public class MyFacesUISelectItem
 
     public MyFacesUISelectItem()
     {
-        setValid(true);
+        //FIXME
+        //setValid(true);
     }
 
     public boolean getRendersSelf()
@@ -58,16 +59,21 @@ public class MyFacesUISelectItem
     public String getItemValue()
     {
         FacesContext facesContext = FacesContext.getCurrentInstance();
-        Object v = currentValue(facesContext);
-        return ConverterUtils.getComponentValueAsString(facesContext, this, v);
+        //FIXME
+        //Object v = currentValue(facesContext);
+        //return ConverterUtils.getComponentValueAsString(facesContext, this, v);
+        return null;
     }
 
     public void setItemValue(String v)
     {
         FacesContext facesContext = FacesContext.getCurrentInstance();
+        //FIXME
+        /*
         setValue(ConverterUtils.getComponentValueAsObject(facesContext,
                                                           this,
                                                           v));
+                                                          */
     }
 
 
@@ -102,7 +108,8 @@ public class MyFacesUISelectItem
 
     public void addFacet(String facetName, UIComponent facet)
     {
-        super.addFacet(facetName, facet);
+        //FIXME
+        //super.addFacet(facetName, facet);
         UIComponentUtils.ensureComponentInNamingContainer(facet);
     }
 

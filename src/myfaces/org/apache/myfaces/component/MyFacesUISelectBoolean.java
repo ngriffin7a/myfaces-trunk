@@ -40,7 +40,8 @@ public class MyFacesUISelectBoolean
 
     public void addFacet(String facetName, UIComponent facet)
     {
-        super.addFacet(facetName, facet);
+        //FIXME
+        //super.addFacet(facetName, facet);
         UIComponentUtils.ensureComponentInNamingContainer(facet);
     }
 

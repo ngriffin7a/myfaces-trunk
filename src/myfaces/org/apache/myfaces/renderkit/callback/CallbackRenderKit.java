@@ -20,8 +20,13 @@ package net.sourceforge.myfaces.renderkit.callback;
 
 import javax.faces.render.RenderKit;
 import javax.faces.render.Renderer;
+import javax.faces.render.ResponseStateManager;
+import javax.faces.context.ResponseStream;
+import javax.faces.context.ResponseWriter;
 import java.util.HashMap;
 import java.util.Map;
+import java.io.OutputStream;
+import java.io.Writer;
 
 /**
  * Special RenderKit that is installed instead of the current RenderKit when a CallbackRenderer
@@ -41,6 +46,24 @@ public class CallbackRenderKit
 
     public CallbackRenderKit()
     {
+    }
+
+    public ResponseStream createResponseStream(OutputStream outputstream)
+    {
+        //FIXME
+        throw new UnsupportedOperationException("not yet implemented");
+    }
+
+    public ResponseWriter createResponseWriter(Writer writer, String s, String s1)
+    {
+        //FIXME
+        throw new UnsupportedOperationException("not yet implemented");
+    }
+
+    public ResponseStateManager getResponseStateManager()
+    {
+        //FIXME
+        throw new UnsupportedOperationException("not yet implemented");
     }
 
     public Renderer getRenderer(String rendererType)

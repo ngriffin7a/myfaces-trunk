@@ -69,7 +69,7 @@ public class HyperlinkRenderer
     }
 
 
-    public void decode(FacesContext facesContext, UIComponent uiComponent) throws IOException
+    public void decode(FacesContext facesContext, UIComponent uiComponent)
     {
         //super.decode must not be called, because value never comes from request
 
@@ -92,10 +92,12 @@ public class HyperlinkRenderer
             }
             */
 
-            uiCommand.fireActionEvent(facesContext);
+            //FIXME
+            //uiCommand.fireActionEvent(facesContext);
         }
 
-        uiCommand.setValid(true);
+        //FIXME
+        //uiCommand.setValid(true);
     }
 
 
@@ -173,7 +175,7 @@ public class HyperlinkRenderer
         {
             //Modify URL for the faces servlet mapping:
             ServletContext servletContext = (ServletContext)facesContext.getExternalContext().getContext();
-            //TODO: fixme
+            //FIXME
             /*
             ServletMappingFactory smf = MyFacesFactoryFinder.getServletMappingFactory(servletContext);
             ServletMapping sm = smf.getServletMapping(servletContext);
@@ -185,7 +187,8 @@ public class HyperlinkRenderer
         }
 
         //Encode URL...
-        href = facesContext.getExternalContext().encodeURL(href);
+        //FIXME
+        //href = facesContext.getExternalContext().encodeURL(href);
 
         writer.write(href);
 
@@ -203,7 +206,9 @@ public class HyperlinkRenderer
         writer.write(URL_PARAM_VALUE);
 
         //nested parameters
-        Iterator children = uiComponent.getChildren();
+        //FIXME
+        //Iterator children = uiComponent.getChildren();
+        Iterator children = null;
         while (children.hasNext())
         {
             UIComponent child = (UIComponent)children.next();
@@ -215,7 +220,9 @@ public class HyperlinkRenderer
 
         //state:
         RenderKitFactory rkFactory = (RenderKitFactory)FactoryFinder.getFactory(FactoryFinder.RENDER_KIT_FACTORY);
-        RenderKit renderKit = rkFactory.getRenderKit(facesContext.getTree().getRenderKitId());
+        //FIXME
+        //RenderKit renderKit = rkFactory.getRenderKit(facesContext.getTree().getRenderKitId());
+        RenderKit renderKit = null;
         Renderer renderer = renderKit.getRenderer(StateRenderer.TYPE);
         renderer.encodeChildren(facesContext, uiComponent);
 
@@ -240,8 +247,9 @@ public class HyperlinkRenderer
 
         //write out body content
         BodyContent bodyContent = getBodyContent(facesContext, uiComponent);
-        if (bodyCon)
-        bodyContent.writeOut(writer);
+        //FIXME
+        //if (bodyCon)
+        //    bodyContent.writeOut(writer);
 
         //close anchor
         writer.write("</a>");
@@ -252,7 +260,9 @@ public class HyperlinkRenderer
                                          UIParameter uiParameter) throws IOException
     {
         ResponseWriter writer = facesContext.getResponseWriter();
-        Object objValue = uiParameter.currentValue(facesContext);
+        //FIXME
+        //Object objValue = uiParameter.currentValue(facesContext);
+        Object objValue = null;
         if (objValue != null)
         {
             String name = uiParameter.getName();
@@ -266,7 +276,9 @@ public class HyperlinkRenderer
 
             String strValue;
 
-            Converter conv = ConverterUtils.findValueConverter(facesContext, uiParameter);
+            //FIXME
+            //Converter conv = ConverterUtils.findValueConverter(facesContext, uiParameter);
+            Converter conv = null;
             if (conv != null)
             {
                 try

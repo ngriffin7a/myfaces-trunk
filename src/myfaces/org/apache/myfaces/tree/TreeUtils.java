@@ -22,7 +22,6 @@ import net.sourceforge.myfaces.util.bean.BeanUtils;
 
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIViewRoot;
-import javax.faces.tree.Tree;
 import java.beans.BeanInfo;
 import java.beans.PropertyDescriptor;
 import java.io.PrintStream;
@@ -40,9 +39,11 @@ public class TreeUtils
 {
     private TreeUtils() {}
 
-    public static Iterator treeIterator(Tree tree)
+    public static Iterator treeIterator(UIViewRoot tree)
     {
-        return treeIterator(tree.getRoot());
+        //FIXME
+        //return treeIterator(tree.getRoot());
+        return null;
     }
 
     public static Iterator treeIterator(UIComponent root)
@@ -206,11 +207,14 @@ public class TreeUtils
             }
         }
 
+        //FIXME
+        /*
         for (Iterator it = comp.getAttributeNames(); it.hasNext();)
         {
             String attrName = (String)it.next();
             printAttribute(stream, comp, attrName);
         }
+        */
 
         /*
         if (comp instanceof UICommand)

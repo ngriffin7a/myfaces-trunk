@@ -98,7 +98,9 @@ extends HTMLRenderer
         }
         else
         {
-            value = getStringValue(facesContext, (UIGraphic) uiComponent);
+            //FIXME
+            //value = getStringValue(facesContext, (UIGraphic) uiComponent);
+            value = null;
         }
 
         if ((value != null) && (value.length() > 0))

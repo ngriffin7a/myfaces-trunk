@@ -73,7 +73,9 @@ public class ConverterUtils
         ApplicationFactory af = (ApplicationFactory)FactoryFinder.getFactory(FactoryFinder.APPLICATION_FACTORY);
         try
         {
-            return af.getApplication().getConverter(converterId);
+            //FIXME
+            //return af.getApplication().getConverter(converterId);
+            return null;
         }
         catch (FacesException e)
         {
@@ -132,21 +134,28 @@ public class ConverterUtils
         }
         else
         {
-            converterId = uiOutput.getConverter();
+            //FIXME
+            //converterId = uiOutput.getConverter();
+            converterId = null;
         }
 
         if (converterId != null)
         {
             ApplicationFactory af = (ApplicationFactory)FactoryFinder.getFactory(FactoryFinder.APPLICATION_FACTORY);
-            return af.getApplication().getConverter(converterId);
+            //FIXME
+            //return af.getApplication().getConverter(converterId);
         }
 
-        String valueRef = uiOutput.getValueRef();
+        //FIXME
+        //String valueRef = uiOutput.getValueRef();
+        String valueRef = null;
         if (valueRef != null)
         {
             ApplicationFactory af = (ApplicationFactory)FactoryFinder.getFactory(FactoryFinder.APPLICATION_FACTORY);
-            Class c = af.getApplication().getValueBinding(valueRef).getType(facesContext);
-            return af.getApplication().getConverter(c.getName());
+            //FIXME
+            //Class c = af.getApplication().getValueBinding(valueRef).getType(facesContext);
+            //return af.getApplication().getConverter(c.getName());
+            return null;
         }
 
         return null;

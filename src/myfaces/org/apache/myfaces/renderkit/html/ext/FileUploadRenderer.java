@@ -53,7 +53,6 @@ public class FileUploadRenderer
 
 
     public void decode(FacesContext facescontext, UIComponent uiComponent)
-        throws IOException
     {
         if (!(uiComponent instanceof UIFileUpload))
         {
@@ -90,7 +89,8 @@ public class FileUploadRenderer
                                                        mpReq.getContentType(paramName),
                                                        file);
                 ((UIFileUpload)uiComponent).setValue(upFile);
-                uiComponent.setValid(true);
+                //FIXME
+                //uiComponent.setValid(true);
             }
         }
     }
@@ -112,7 +112,9 @@ public class FileUploadRenderer
         writer.write(" id=\"");
         writer.write(clientId);
         writer.write("\"");
-        UploadedFile value = (UploadedFile)((UIFileUpload)uiComponent).currentValue(facesContext);
+        //FIXME
+        //UploadedFile value = (UploadedFile)((UIFileUpload)uiComponent).currentValue(facesContext);
+        UploadedFile value = null;
         if (value != null)
         {
             writer.write(" value=\"");

@@ -28,6 +28,7 @@ import javax.servlet.jsp.tagext.Tag;
 import javax.servlet.jsp.tagext.TagSupport;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
+import java.util.Locale;
 
 /**
  * DOCUMENT ME!
@@ -80,7 +81,10 @@ public class SetBundleTag
         try
         {
             FacesContext facesContext = FacesContext.getCurrentInstance();
-            bundle = ResourceBundle.getBundle(_basename, facesContext.getLocale());
+            //FIXME
+            //Locale locale = facesContext.getLocale();
+            Locale locale = null;
+            bundle = ResourceBundle.getBundle(_basename, locale);
         }
         catch (MissingResourceException e)
         {

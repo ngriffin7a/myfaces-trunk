@@ -78,10 +78,12 @@ public class HyperlinkRenderer
 
         if ((paramValue != null) && (paramValue.length() > 0))
         {
-            uiCommand.fireActionEvent(facesContext);
+            //FIXME
+            //uiCommand.fireActionEvent(facesContext);
         }
 
-        uiCommand.setValid(true);
+        //FIXME
+        //uiCommand.setValid(true);
     }
 
     public void encodeBegin(FacesContext context, UIComponent uiComponent)
@@ -114,7 +116,7 @@ public class HyperlinkRenderer
 
             encodeNestedParameters(
                 facesContext,
-                uiCommand.getChildren(),
+                uiCommand.getChildren().iterator(),
                 href.indexOf('?') < 0);
 
             writer.write('"');
@@ -137,7 +139,9 @@ public class HyperlinkRenderer
                     "'command_hyperlink' must be enclosed in a 'form' tag, or 'href' must be specified");
             }
 
-            String formName = form.getFormName();
+            //FIXME
+            //String formName = form.getFormName();
+            String formName = null;
             writer.write("javascript:var url = document.forms['");
             writer.write(formName);
             writer.write("'].action; url += (url.indexOf('?') >= 0) ? '&' : '?'; url += '");
@@ -146,7 +150,7 @@ public class HyperlinkRenderer
 
             encodeNestedParameters(
                 facesContext,
-                uiCommand.getChildren(),
+                uiCommand.getChildren().iterator(),
                 false);
 
             writer.write("'; document.forms['");
@@ -239,14 +243,17 @@ public class HyperlinkRenderer
         while (it.hasNext())
         {
             UIParameter uiParameter = (UIParameter) it.next();
-            Object      objValue = uiParameter.currentValue(facesContext);
+            //FIXME
+            //Object      objValue = uiParameter.currentValue(facesContext);
+            Object objValue = null;
 
             if (objValue != null)
             {
                 writer.write(firstParam ? '?' : '&');
                 writer.write(UIComponentUtils.getUIParameterName(facesContext, uiParameter));
                 writer.write('=');
-                writer.write(urlEncode(UIComponentUtils.getAsString(facesContext, uiParameter)));
+                //FIXME
+                //writer.write(urlEncode(UIComponentUtils.getAsString(facesContext, uiParameter)));
                 firstParam = false;
             }
         }

@@ -141,7 +141,6 @@ public abstract class MyFacesTag
         return Tag.SKIP_BODY;
     }
 
-
     /**
      * HACK:
      * Tomcat does not call the setParent method for the first tag of a file
@@ -151,12 +150,27 @@ public abstract class MyFacesTag
      */
     public UIComponentTag getParentUIComponentTag()
     {
-        UIComponentTag tag = super.getParentUIComponentTag();
+        //FIXME
+        //UIComponentTag tag = super.getParentUIComponentTag();
+        UIComponentTag tag = null;
         if (tag == null)
         {
             tag = _helper.getParentUIComponentTag();
         }
         return tag;
+    }
+
+
+    public UIComponent getComponent()
+    {
+        //FIXME
+        throw new UnsupportedOperationException("not yet implemented.");
+    }
+
+    public String getDefaultRendererType()
+    {
+        //FIXME
+        throw new UnsupportedOperationException("not yet implemented.");
     }
 
 
@@ -257,7 +271,8 @@ public abstract class MyFacesTag
 
     public void overrideProperties(UIComponent uiComponent)
     {
-        super.overrideProperties(uiComponent);
+        //FIXME
+        //super.overrideProperties(uiComponent);
         _helper.overrideProperties(uiComponent);
     }
 
@@ -270,7 +285,7 @@ public abstract class MyFacesTag
             c = super.findComponent(facesContext);
             if (log.isTraceEnabled() && getCreated())
             {
-                log.trace("Component " + getComponent() + " with id " + getComponent().getComponentId() + " was just created by UIComponentTag.");
+                log.trace("Component " + getComponent() + " with id " + getComponent().getId() + " was just created by UIComponentTag.");
             }
         }
         return c;
@@ -315,12 +330,14 @@ public abstract class MyFacesTag
 
     public void setRendered(boolean rendered)
     {
-        super.setRendered(rendered);
+        //FIXME
+        //super.setRendered(rendered);
     }
 
     public void setRendered(Boolean rendered)
     {
-        super.setRendered(rendered.booleanValue());
+        //FIXME
+        //super.setRendered(rendered.booleanValue());
     }
 
 

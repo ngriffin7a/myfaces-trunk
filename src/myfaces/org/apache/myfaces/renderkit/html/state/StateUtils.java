@@ -24,10 +24,10 @@ import net.sourceforge.myfaces.context.FacesContextWrapper;
 import net.sourceforge.myfaces.tree.TreeUtils;
 
 import javax.faces.component.UIComponent;
+import javax.faces.component.UIViewRoot;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.convert.ConverterException;
-import javax.faces.tree.Tree;
 import javax.servlet.ServletContext;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -46,15 +46,17 @@ public class StateUtils
     private StateUtils() {}
 
     public static void discardInternalAttributes(FacesContext facesContext,
-                                                 Tree tree)
+                                                 UIViewRoot viewRoot)
     {
         if (MyFacesConfig.isDiscardInternalAttributes(((ServletContext)facesContext.getExternalContext().getContext())))
         {
             List lst = new ArrayList();
-            for (Iterator treeIt = TreeUtils.treeIterator(tree); treeIt.hasNext();)
+            for (Iterator treeIt = TreeUtils.treeIterator(viewRoot); treeIt.hasNext();)
             {
                 UIComponent comp = (UIComponent)treeIt.next();
                 lst.clear();
+                //FIXME
+                /*
                 for (Iterator attrIt = comp.getAttributeNames(); attrIt.hasNext();)
                 {
                     String attrName = (String)attrIt.next();
@@ -63,6 +65,7 @@ public class StateUtils
                         lst.add(attrName);
                     }
                 }
+                */
                 for (int i = 0, len = lst.size(); i < len; i++)
                 {
                     comp.getAttributes().put((String)lst.get(i), null);
@@ -78,7 +81,7 @@ public class StateUtils
         throws ConverterException
     {
         return conv.getAsString(wrapFacesContext(facesContext),
-                                facesContext.getTree().getRoot(),
+                                facesContext.getViewRoot(),
                                 obj);
     }
 
@@ -88,7 +91,7 @@ public class StateUtils
         throws ConverterException
     {
         return conv.getAsObject(wrapFacesContext(facesContext),
-                                facesContext.getTree().getRoot(),
+                                facesContext.getViewRoot(),
                                 str);
     }
 

@@ -19,9 +19,8 @@
 package net.sourceforge.myfaces.tree;
 
 import javax.faces.FacesException;
+import javax.faces.component.UIViewRoot;
 import javax.faces.context.FacesContext;
-import javax.faces.tree.Tree;
-import javax.faces.tree.TreeFactory;
 
 /**
  * DOCUMENT ME!
@@ -29,11 +28,13 @@ import javax.faces.tree.TreeFactory;
  * @version $Revision$ $Date$
  */
 public class TreeFactoryImpl
-        extends TreeFactory
+        //FIXME extends TreeFactory
 {
-    public Tree getTree(FacesContext facesContext, String treeId)
+    public UIViewRoot getTree(FacesContext facesContext, String treeId)
             throws FacesException
     {
-        return new TreeImpl(treeId);
+        //FIXME
+        //return new TreeImpl(treeId);
+        return null;
     }
 }

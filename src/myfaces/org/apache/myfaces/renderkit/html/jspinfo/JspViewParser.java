@@ -76,10 +76,13 @@ public class JspViewParser
 
         _jspInfo = new JspInfo(viewRoot);
 
-        _jspCompilationContext = new MyJspCompilationContext(_servletContext);
+        //FIXME
+        /*
+        //_jspCompilationContext = new MyJspCompilationContext(_servletContext);
         _parseEventListener = new MyParseEventListener(this,
                                                        _jspCompilationContext,
                                                        _jspInfo);
+                                                       */
     }
 
 

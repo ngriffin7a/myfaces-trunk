@@ -44,7 +44,7 @@ public abstract class ClientStateRestorer
         if (MyFacesConfig.isAutoCreateRequestScopeBeans(((ServletContext)facesContext.getExternalContext().getContext())))
         {
             Iterator it = JspInfo.getJspBeanInfos(facesContext,
-                                                  facesContext.getTree().getTreeId());
+                                                  facesContext.getViewRoot().getViewId());
             while (it.hasNext())
             {
                 Map.Entry entry = (Map.Entry)it.next();

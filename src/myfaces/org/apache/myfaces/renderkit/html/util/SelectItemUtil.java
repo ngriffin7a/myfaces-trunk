@@ -23,6 +23,7 @@ import net.sourceforge.myfaces.util.bundle.BundleUtils;
 
 import javax.faces.component.*;
 import javax.faces.context.FacesContext;
+import javax.faces.model.SelectItem;
 import java.util.*;
 
 /**
@@ -36,7 +37,9 @@ public class SelectItemUtil
 
     public static void addSelectItems(FacesContext facesContext, UISelectItems uiSelectItems, List list)
     {
-        Object value = uiSelectItems.currentValue(facesContext);
+        //FIXME
+        //Object value = uiSelectItems.currentValue(facesContext);
+        Object value = null;
         if (value instanceof SelectItem)
         {
             list.add(value);
@@ -122,7 +125,7 @@ public class SelectItemUtil
         }
 
         list = new ArrayList(uiComponent.getChildCount());
-        for(Iterator children = uiComponent.getChildren(); children.hasNext();)
+        for(Iterator children = uiComponent.getChildren().iterator(); children.hasNext();)
         {
             UIComponent child = (UIComponent)children.next();
             if (child instanceof UISelectItem)
@@ -151,7 +154,9 @@ public class SelectItemUtil
     public static Set getSelectedValuesAsStringSet(FacesContext facesContext,
                                                    UISelectMany uiSelectMany)
     {
-        Object[] selectedValues = (Object[])uiSelectMany.currentValue(facesContext);
+        //FIXME
+        //Object[] selectedValues = (Object[])uiSelectMany.currentValue(facesContext);
+        Object[] selectedValues = null;
         if (selectedValues == null || selectedValues.length == 0)
         {
             return Collections.EMPTY_SET;

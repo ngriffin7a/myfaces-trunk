@@ -60,7 +60,7 @@ extends HTMLRenderer
             return;
         }
 
-        for (Iterator children = component.getChildren(); children.hasNext();)
+        for (Iterator children = component.getChildren().iterator(); children.hasNext();)
         {
             HTMLUtil.encodeChildrenRecursively(context, (UIComponent) children.next());
         }

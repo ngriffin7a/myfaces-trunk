@@ -22,7 +22,6 @@ import net.sourceforge.myfaces.renderkit.JSFAttr;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLUtil;
 import net.sourceforge.myfaces.renderkit.html.util.SelectItemUtil;
 
-import javax.faces.component.SelectItem;
 import javax.faces.component.UIComponent;
 import javax.faces.component.UISelectBoolean;
 import javax.faces.component.UISelectMany;
@@ -56,7 +55,6 @@ extends HTMLRenderer
     }
 
     public void decode(FacesContext facesContext, UIComponent uiComponent)
-    throws IOException
     {
         ServletRequest servletRequest =
             (ServletRequest) facesContext.getExternalContext().getRequest();
@@ -66,7 +64,8 @@ extends HTMLRenderer
             String   clientId  = uiComponent.getClientId(facesContext);
             String[] newValues = servletRequest.getParameterValues(clientId);
             ((UISelectMany) uiComponent).setSelectedValues(newValues);
-            uiComponent.setValid(true);
+            //FIXME
+            //uiComponent.setValid(true);
         }
         else if (uiComponent instanceof UISelectBoolean)
         {
@@ -79,7 +78,9 @@ extends HTMLRenderer
             }
             else
             {
-                String valueRef = ((UISelectBoolean) uiComponent).getValueRef();
+                //FIXME
+                //String valueRef = ((UISelectBoolean) uiComponent).getValueRef();
+                String valueRef = null;
 
                 if (valueRef != null)
                 {
@@ -88,12 +89,15 @@ extends HTMLRenderer
                     //Since we cannot avoid the model beeing set, we simply
                     //get the current model value and overwrite the component's
                     //value.
-                    ValueBinding vb = getApplication().getValueBinding(valueRef);
+                    //FIXME
+                    //ValueBinding vb = getApplication().getValueBinding(valueRef);
+                    ValueBinding vb = null;
                     ((UISelectBoolean) uiComponent).setValue(vb.getValue(facesContext));
                 }
             }
 
-            uiComponent.setValid(true);
+            //FIXME
+            //uiComponent.setValid(true);
         }
         else
         {
@@ -127,6 +131,8 @@ extends HTMLRenderer
                     breakLine = true;
                 }
 
+                //FIXME
+                /*
                 SelectItem selectItem         = (SelectItem) it.next();
                 String     selectItemStrValue = selectItem.getValue().toString();
                 boolean    checked            = selectedValuesSet.contains(selectItemStrValue);
@@ -136,11 +142,14 @@ extends HTMLRenderer
                     selectItemStrValue,
                     selectItem.getLabel(),
                     checked);
+                    */
             }
         }
         else if (uiComponent instanceof UISelectBoolean)
         {
-            Boolean checked = (Boolean) ((UISelectBoolean) uiComponent).currentValue(facesContext);
+            //FIXME
+            //Boolean checked = (Boolean) ((UISelectBoolean) uiComponent).currentValue(facesContext);
+            Boolean checked = null;
 
             //String value = getStringValue(facesContext, (UISelectBoolean)uiComponent);
             drawCheckbox(

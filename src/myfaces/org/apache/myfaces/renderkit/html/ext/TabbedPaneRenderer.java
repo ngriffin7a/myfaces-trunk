@@ -29,7 +29,7 @@ import net.sourceforge.myfaces.renderkit.html.util.HTMLUtil;
 import net.sourceforge.myfaces.util.bundle.BundleUtils;
 
 import javax.faces.FactoryFinder;
-import javax.faces.application.Message;
+import javax.faces.application.FacesMessage;
 import javax.faces.component.UICommand;
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIForm;
@@ -147,7 +147,9 @@ public class TabbedPaneRenderer
         int tabIdx = 0;
         for (int i = 0, len = uiTabbedPane.getChildCount(); i < len; i++)
         {
-            UIComponent child = uiTabbedPane.getChild(i);
+            //FIXME
+            //UIComponent child = uiTabbedPane.getChild(i);
+            UIComponent child = null;
             if (child.getRendererType().equals(TabRenderer.TYPE))
             {
                 writeHeaderCell(writer, facesContext, uiTabbedPane, child, tabIdx, tabIdx == selectedIndex);
@@ -182,7 +184,7 @@ public class TabbedPaneRenderer
     protected int getTabCount(UIComponent uiTabbedPane)
     {
         int cnt = 0;
-        for (Iterator it = uiTabbedPane.getChildren(); it.hasNext(); )
+        for (Iterator it = uiTabbedPane.getChildren().iterator(); it.hasNext(); )
         {
             UIComponent child = (UIComponent)it.next();
             if (child.getRendererType().equals(TabRenderer.TYPE))
@@ -196,7 +198,7 @@ public class TabbedPaneRenderer
     protected int getSelectedIndex(FacesContext facesContext, UIComponent uiTabbedPane)
     {
         Integer intObj;
-        if (facesContext.getMaximumSeverity() >= Message.SEVERITY_INFO)
+        if (facesContext.getMaximumSeverity().getOrdinal() >= FacesMessage.SEVERITY_INFO.getOrdinal())
         {
             intObj = (Integer)uiTabbedPane.getAttributes().get(OLD_SELECTED_INDEX_ATTR);
             uiTabbedPane.getAttributes().put(SELECTED_INDEX_ATTR, intObj);
@@ -245,7 +247,9 @@ public class TabbedPaneRenderer
     {
         //Encode state as hidden parameters
         RenderKitFactory rkFactory = (RenderKitFactory)FactoryFinder.getFactory(FactoryFinder.RENDER_KIT_FACTORY);
-        RenderKit renderKit = rkFactory.getRenderKit(facesContext.getTree().getRenderKitId());
+        //FIXME
+        //RenderKit renderKit = rkFactory.getRenderKit(facesContext.getTree().getRenderKitId());
+        RenderKit renderKit = null;
         Renderer renderer = renderKit.getRenderer(StateRenderer.TYPE);
         UIComponent dummy = new UIForm();
         dummy.setRendererType(FormRenderer.TYPE);
@@ -260,7 +264,7 @@ public class TabbedPaneRenderer
         HttpServletRequest request = (HttpServletRequest)facesContext.getExternalContext().getRequest();
 
         ServletContext servletContext = (ServletContext)facesContext.getExternalContext().getContext();
-        //TODO: fixme
+        //FIXME
         /*
         ServletMappingFactory smf = MyFacesFactoryFinder.getServletMappingFactory(servletContext);
         ServletMapping sm = smf.getServletMapping(servletContext);
@@ -471,14 +475,14 @@ public class TabbedPaneRenderer
 
 
 
-    public void decode(FacesContext facesContext, UIComponent uiTabbedPane) throws IOException
+    public void decode(FacesContext facesContext, UIComponent uiTabbedPane)
     {
         //super.decode must not be called, because tabbed pane has no value
 
         ServletRequest servletRequest = (ServletRequest)facesContext.getExternalContext().getRequest();
 
         int tabIdx = 0;
-        for (Iterator it = uiTabbedPane.getChildren(); it.hasNext(); )
+        for (Iterator it = uiTabbedPane.getChildren().iterator(); it.hasNext(); )
         {
             UIComponent child = (UIComponent)it.next();
             if (child.getRendererType().equals(TabRenderer.TYPE))
@@ -490,7 +494,8 @@ public class TabbedPaneRenderer
                     uiTabbedPane.getAttributes().put(OLD_SELECTED_INDEX_ATTR,
                                               uiTabbedPane.getAttributes().get(SELECTED_INDEX_ATTR));
                     uiTabbedPane.getAttributes().put(SELECTED_INDEX_ATTR, new Integer(tabIdx));
-                    ((UICommand)child).fireActionEvent(facesContext);
+                    //FIXME
+                    //((UICommand)child).fireActionEvent(facesContext);
                     return;
                 }
                 tabIdx++;

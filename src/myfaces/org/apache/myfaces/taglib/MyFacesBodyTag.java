@@ -153,6 +153,18 @@ public abstract class MyFacesBodyTag
     }
 
 
+    public UIComponent getComponent()
+    {
+        //FIXME
+        throw new UnsupportedOperationException("not yet implemented");
+    }
+
+    public String getDefaultRendererType()
+    {
+        //FIXME
+        throw new UnsupportedOperationException("not yet implemented");
+    }
+
     //Make protected properties accessible:
 
     public abstract String getComponentType();
@@ -211,7 +223,9 @@ public abstract class MyFacesBodyTag
 
     public UIComponentTag getParentUIComponentTag()
     {
-        UIComponentTag tag = super.getParentUIComponentTag();
+        //FIXME
+        //UIComponentTag tag = super.getParentUIComponentTag();
+        UIComponentTag tag = null;
         if (tag == null)
         {
             tag = _helper.getParentUIComponentTag();
@@ -265,7 +279,8 @@ public abstract class MyFacesBodyTag
 
     public void overrideProperties(UIComponent uiComponent)
     {
-        super.overrideProperties(uiComponent);
+        //FIXME
+        //super.overrideProperties(uiComponent);
         _helper.overrideProperties(uiComponent);
     }
 
@@ -319,12 +334,14 @@ public abstract class MyFacesBodyTag
 
     public void setRendered(boolean rendered)
     {
-        super.setRendered(rendered);
+        //FIXME
+        //super.setRendered(rendered);
     }
 
     public void setRendered(Boolean rendered)
     {
-        super.setRendered(rendered.booleanValue());
+        //FIXME
+        //super.setRendered(rendered.booleanValue());
     }
 
 

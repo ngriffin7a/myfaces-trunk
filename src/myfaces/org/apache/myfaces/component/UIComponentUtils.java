@@ -289,7 +289,8 @@ public class UIComponentUtils
     public static void removeChild(UIComponent parent,
                                    UIComponent child)
     {
-        parent.removeChild(child);
+        //FIXME
+        //parent.removeChild(child);
 
         NamingContainer namingContainer;
         if (parent instanceof NamingContainer)
@@ -313,8 +314,9 @@ public class UIComponentUtils
      */
     public static void removeChild(UIComponent parent, int i)
     {
-        UIComponent child = parent.getChild(i);
-        parent.removeChild(i);
+        //FIXME
+        //UIComponent child = parent.getChild(i);
+        //parent.removeChild(i);
 
         NamingContainer namingContainer;
         if (parent instanceof NamingContainer)
@@ -326,7 +328,8 @@ public class UIComponentUtils
             namingContainer = UIComponentUtils.findNamingContainer(parent);
         }
 
-        recursiveRemoveFromNamingContainer(namingContainer, child);
+        //FIXME
+        //recursiveRemoveFromNamingContainer(namingContainer, child);
     }
 
 
@@ -340,7 +343,8 @@ public class UIComponentUtils
     public static void removeFacet(UIComponent parent, String facetName)
     {
         UIComponent facet = parent.getFacet(facetName);
-        parent.removeFacet(facetName);
+        //FIXME
+        //parent.removeFacet(facetName);
 
         NamingContainer namingContainer;
         if (parent instanceof NamingContainer)
@@ -360,7 +364,8 @@ public class UIComponentUtils
     private static void recursiveRemoveFromNamingContainer(NamingContainer namingContainer,
                                                            UIComponent comp)
     {
-        namingContainer.removeComponentFromNamespace(comp);
+        //FIXME
+        //namingContainer.removeComponentFromNamespace(comp);
 
         if (comp instanceof NamingContainer)
         {
@@ -386,7 +391,8 @@ public class UIComponentUtils
      */
     public static void addFacet(UIComponent comp, String facetName, UIComponent facet)
     {
-        comp.addFacet(facetName, facet);
+        //FIXME
+        //comp.addFacet(facetName, facet);
         ensureComponentInNamingContainer(facet);
     }
 
@@ -404,7 +410,8 @@ public class UIComponentUtils
         {
             namingContainer = findNamingContainer(parent);
         }
-
+        //FIXME
+        /*
         if (comp.getComponentId() == null)
         {
             comp.setComponentId(namingContainer.generateClientId());
@@ -414,9 +421,10 @@ public class UIComponentUtils
         {
             namingContainer.addComponentToNamespace(comp);
         }
+        */
     }
 
-    /** 
+    /**
      * Returns the form inside which the specified <code>uiComponent</code>
      * is nested
      */
@@ -441,7 +449,9 @@ public class UIComponentUtils
     public static String getAsString(FacesContext facesContext,
                                      UIOutput uiOutput)
     {
-        Object outputValue = uiOutput.currentValue(facesContext);
+        //FIXME
+        //Object outputValue = uiOutput.currentValue(facesContext);
+        Object outputValue = null;
 
         if (outputValue == null)
         {

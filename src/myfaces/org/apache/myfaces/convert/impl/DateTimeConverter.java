@@ -27,6 +27,7 @@ import javax.faces.convert.Converter;
 import javax.faces.convert.ConverterException;
 import java.text.DateFormat;
 import java.text.ParseException;
+import java.util.Locale;
 
 /**
  * DOCUMENT ME!
@@ -46,7 +47,10 @@ public class DateTimeConverter
             return null;
         }
 
-        DateFormat format = ConverterUtils.getDateTimeFormat(component, context.getLocale());
+        //FIXME
+        //Locale locale = context.getLocale();
+        Locale locale = null;
+        DateFormat format = ConverterUtils.getDateTimeFormat(component, locale);
         try
         {
             return format.parse(value);
@@ -67,7 +71,10 @@ public class DateTimeConverter
         {
             return "";
         }
-        DateFormat format = ConverterUtils.getDateTimeFormat(component, context.getLocale());
+        //FIXME
+        //Locale locale = context.getLocale();
+        Locale locale = null;
+        DateFormat format = ConverterUtils.getDateTimeFormat(component, locale);
         return format.format(value);
     }
 

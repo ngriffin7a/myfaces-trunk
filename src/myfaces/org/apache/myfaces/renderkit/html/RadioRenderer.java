@@ -29,7 +29,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import javax.faces.FacesException;
-import javax.faces.component.SelectItem;
+import javax.faces.model.SelectItem;
 import javax.faces.component.UIComponent;
 import javax.faces.component.UISelectItem;
 import javax.faces.component.UISelectOne;
@@ -100,12 +100,15 @@ public class RadioRenderer
             {
                 for (int i = 1; it.hasNext(); i++)
                 {
+                    //FIXME
+                    /*
                     renderItem(facesContext,
                                (UISelectOne)uiComponent,
                                (SelectItem)it.next(),
                                isLayoutPageDirection((UISelectOne)uiComponent),
                                true,
                                i);
+                               */
                 }
             }
         }
@@ -156,7 +159,9 @@ public class RadioRenderer
 
         String coumpoundId = uiSelectOne.getClientId(facesContext);
 
-        Object currentValue = uiSelectOne.currentValue(facesContext);
+        //FIXME
+        //Object currentValue = uiSelectOne.currentValue(facesContext);
+        Object currentValue = null;
         String currentStrValue = ((currentValue != null) ? currentValue.toString() : null);
 
         beforeRenderItem(facesContext, uiSelectOne, selectItem, isLayoutPageDirection, useLayout, itemCount);
@@ -192,7 +197,10 @@ public class RadioRenderer
         afterRenderItem(facesContext, uiSelectOne, selectItem, isLayoutPageDirection, useLayout);
     }
 
-    protected void beforeRenderLabel(FacesContext facesContext, UISelectOne selectOne, SelectItem selectItem, boolean useLayout)
+    protected void beforeRenderLabel(FacesContext facesContext,
+                                     UISelectOne selectOne,
+                                     SelectItem selectItem,
+                                     boolean useLayout)
         throws IOException
     {
         if (useLayout)
@@ -202,7 +210,10 @@ public class RadioRenderer
         }
     }
 
-    protected void renderLabel(FacesContext facesContext, UISelectOne selectOne, SelectItem selectItem, boolean useLayout)
+    protected void renderLabel(FacesContext facesContext,
+                               UISelectOne selectOne,
+                               SelectItem selectItem,
+                               boolean useLayout)
         throws IOException
     {
         String label = selectItem.getLabel();
@@ -217,10 +228,11 @@ public class RadioRenderer
                 HTMLUtil.renderCssClass(writer, selectOne, JSFAttr.SELECT_ONE_CLASS_ATTR);
                 writer.write(">");
             }
+            label = selectItem.getLabel();
             writer.write(HTMLEncoder.encode(
-                    selectItem.getLabel(),
-                    true,
-                    true));
+                label,
+                true,
+                true));
             if (span)
             {
                 writer.write("</span>");
@@ -229,7 +241,10 @@ public class RadioRenderer
         }
     }
 
-    protected void afterRenderLabel(FacesContext facesContext, UISelectOne selectOne, SelectItem item, boolean useLayout)
+    protected void afterRenderLabel(FacesContext facesContext,
+                                    UISelectOne selectOne,
+                                    SelectItem item,
+                                    boolean useLayout)
         throws IOException
     {
     }

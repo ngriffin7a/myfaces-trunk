@@ -27,6 +27,7 @@ import javax.faces.convert.Converter;
 import javax.faces.convert.ConverterException;
 import java.text.NumberFormat;
 import java.text.ParseException;
+import java.util.Locale;
 
 /**
  * DOCUMENT ME!
@@ -46,7 +47,10 @@ public class LongConverter
             return null;
         }
 
-        NumberFormat format = ConverterUtils.getNumberFormat(component, context.getLocale());
+        //FIXME
+        //Locale locale = context.getLocale();
+        Locale locale = null;
+        NumberFormat format = ConverterUtils.getNumberFormat(component, locale);
         try
         {
             Number n = format.parse(value);
@@ -68,7 +72,10 @@ public class LongConverter
         {
             return "";
         }
-        NumberFormat format = ConverterUtils.getNumberFormat(component, context.getLocale());
+        //FIXME
+        //Locale locale = context.getLocale();
+        Locale locale = null;
+        NumberFormat format = ConverterUtils.getNumberFormat(component, locale);
         return format.format(value);
     }
 

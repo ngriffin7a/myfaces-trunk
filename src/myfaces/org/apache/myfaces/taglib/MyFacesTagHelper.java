@@ -33,7 +33,6 @@ import javax.faces.component.UIComponent;
 import javax.faces.component.UIOutput;
 import javax.faces.context.FacesContext;
 import javax.faces.el.ValueBinding;
-import javax.faces.tree.Tree;
 import javax.faces.webapp.UIComponentTag;
 import javax.servlet.ServletRequest;
 import javax.servlet.jsp.PageContext;
@@ -367,7 +366,9 @@ public class MyFacesTagHelper
             }
             else
             {
-                ValueBinding binding = application.getValueBinding(expr);
+                //FIXME
+                //ValueBinding binding = application.getValueBinding(expr);
+                ValueBinding binding = null;
                 Object obj = binding.getValue(getFacesContext());
                 buf.append(obj.toString());     //TODO: more sophisticated method for String conversion --> what says JSP Spec. 2.0 ?
             }
@@ -445,7 +446,7 @@ public class MyFacesTagHelper
                     else
                     {
                         //override attribute
-                        if (uiComponent.getAttributes().put(attr.name) == null)
+                        if (uiComponent.getAttributes().get(attr.name) == null)
                         {
                             uiComponent.getAttributes().put(attr.name, attr.value);
                         }
@@ -538,7 +539,9 @@ public class MyFacesTagHelper
         Object currentValue;
         try
         {
-            currentValue = uiComponent.currentValue(getFacesContext());
+            //FIXME
+            //currentValue = uiComponent.currentValue(getFacesContext());
+            currentValue = null;
         }
         catch (Exception e)
         {
@@ -573,7 +576,9 @@ public class MyFacesTagHelper
         if (parentComp == null)
         {
             //Root
-            findComp = getFacesContext().getTree().getRoot();
+            //FIXME
+            //findComp = getFacesContext().getTree().getRoot();
+            findComp = null;
         }
         else
         {
@@ -587,6 +592,8 @@ public class MyFacesTagHelper
             findComp = null;
             for (int i = 0; i < parentComp.getChildCount(); i++)
             {
+                //FIXME
+                /*
                 UIComponent c = parentComp.getChild(i);
                 if (id.equals(c.getComponentId()))
                 {
@@ -596,10 +603,13 @@ public class MyFacesTagHelper
                     UIComponentTagHacks.setChildIndex(_tag.getParentUIComponentTag(), i + 1);
                     break;
                 }
+                */
             }
             if (findComp == null)
             {
                 //Perhaps a facet?
+                //FIXME
+                /*
                 for (Iterator it = parentComp.getFacetNames(); it.hasNext(); )
                 {
                     UIComponent c = parentComp.getFacet((String)it.next());
@@ -609,6 +619,7 @@ public class MyFacesTagHelper
                         break;
                     }
                 }
+                */
             }
         }
 
@@ -621,11 +632,13 @@ public class MyFacesTagHelper
         {
             //add component to tree
             UIComponent newComponent = getNewComponent();
-            newComponent.setComponentId(id);
+            //FIXME
+            //newComponent.setComponentId(id);
             String facetName = _tag.getFacetName();
             if (facetName == null)
             {
-                parentComp.addChild(newComponent);
+                //FIXME
+                //parentComp.addChild(newComponent);
             }
             else
             {
@@ -657,13 +670,19 @@ public class MyFacesTagHelper
         if (parentComp.getParent() == null)
         {
             parentClientId = "";    //Root has no clientId
+            //FIXME
+            /*
             Tree parsedTree = JspInfo.getTree(facesContext,
                                               facesContext.getTree().getTreeId());
             parsedParent = parsedTree.getRoot();
+            */
+            parsedParent = null;
         }
         else
         {
             parentClientId = parentComp.getClientId(facesContext);
+            //FIXME
+            /*
             Map componentMap = JspInfo.getComponentMap(facesContext,
                                                        facesContext.getTree().getTreeId());
             parsedParent = (UIComponent)componentMap.get(parentClientId);
@@ -671,6 +690,8 @@ public class MyFacesTagHelper
             {
                 throw new IllegalStateException("Component with clientId '" + parentClientId + "' not found in parsed tree.");
             }
+            */
+            parsedParent = null;
         }
 
         //We create a temporary component...
@@ -686,7 +707,9 @@ public class MyFacesTagHelper
         }
 
         //Parsed component found, get id
-        String id = parsedChild.getComponentId();
+        //FIXME
+        //String id = parsedChild.getComponentId();
+        String id = null;
         _tag.setId(id);
 
         if (log.isTraceEnabled()) log.trace("exiting findoutComponentId in MyFacesTagHelper");
@@ -709,6 +732,8 @@ public class MyFacesTagHelper
             }
             */
             Tag parentTag = _tag.getParentUIComponentTag();
+            //FIXME
+            /*
             while (parentTag != null &&
                    (!(parentTag instanceof UIComponentTag) ||
                     (((UIComponentTag)parentTag).getComponent() == null)))
@@ -722,6 +747,7 @@ public class MyFacesTagHelper
                     parentTag = parentTag.getParent();
                 }
             }
+            */
 
             if (parentTag == null)
             {
@@ -730,7 +756,9 @@ public class MyFacesTagHelper
             else
             {
                 //only parent tags that have a component are searched in loop above
-                _parentComponent = ((UIComponentTag)parentTag).getComponent();
+                //FIXME
+                //_parentComponent = ((UIComponentTag)parentTag).getComponent();
+                _parentComponent = null;
             }
 
             _parentComponentOk = true;
@@ -746,7 +774,8 @@ public class MyFacesTagHelper
             //First we create a temporary component...
             String componentType = UIComponentTagHacks.getComponentType(_tag);
             ApplicationFactory af = (ApplicationFactory)FactoryFinder.getFactory(FactoryFinder.APPLICATION_FACTORY);
-            _newComponent = af.getApplication().getComponent(componentType);
+            //FIXME
+            //_newComponent = af.getApplication().getComponent(componentType);
             //...remember that we have created it (for overrideProperties)...
             _tag.setCreated(true);
             //...and set the hardcoded attributes...
@@ -889,12 +918,15 @@ public class MyFacesTagHelper
         }
 
         //check all hardcoded attributes for equality
+        //FIXME
+        /*
         if (!isEqualAttributes(parsedChild.getAttributeNames(),
                                parsedChild,
                                compToCompare))
         {
             return false;
         }
+        */
 
         return true;
     }
@@ -910,10 +942,12 @@ public class MyFacesTagHelper
             if (attrName.equals(JspInfo.HARDCODED_ID_ATTR))
             {
                 String hardcodedId = (String)parsedChild.getAttributes().get(attrName);
-                String componentId = compToCompare.getComponentId();
+                //FIXME
+                //String componentId = compToCompare.getComponentId();
+                String componentId = null;
                 if (componentId == null || !componentId.equals(hardcodedId))
                 {
-                    if (log.isTraceEnabled()) log.trace("      diff: hardcoded id / " + compToCompare.getComponentId() + " <> " + hardcodedId);
+                    if (log.isTraceEnabled()) log.trace("      diff: hardcoded id / " + compToCompare.getId() + " <> " + hardcodedId);
                     return false;
                 }
             }

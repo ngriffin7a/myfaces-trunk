@@ -51,7 +51,7 @@ extends TableRendererSupport
     protected void renderBody(FacesContext context, UIComponent component, int columns)
     throws IOException
     {
-        Iterator children = component.getChildren();
+        Iterator children = component.getChildren().iterator();
 
         if ((children != null) && children.hasNext())
         {

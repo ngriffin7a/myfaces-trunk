@@ -178,7 +178,9 @@ public class LayoutRenderer
             throw new IllegalStateException("No BodyContent!?");
         }
 
-        String layout = (String)((UIPanel)uiComponent).currentValue(facesContext);
+        //FIXME
+        //String layout = (String)((UIPanel)uiComponent).currentValue(facesContext);
+        String layout = null;
         if (layout == null)
         {
             log.warn("Component " + uiComponent.getClientId(facesContext) + " has no layout attribute!");

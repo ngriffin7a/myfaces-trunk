@@ -179,6 +179,8 @@ public class FacesContextImpl
     public RenderKit getRenderKit()
     {
         //return ???;
+        //FIXME
+        throw new UnsupportedOperationException("not yet implemented");
     }
 
     public boolean getRenderResponse()

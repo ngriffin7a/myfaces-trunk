@@ -34,7 +34,8 @@ public class MyFacesUIForm
 
     public MyFacesUIForm()
     {
-        setValid(true);
+        //FIXME
+        //setValid(true);
     }
 
 
@@ -47,7 +48,8 @@ public class MyFacesUIForm
 
     public void addFacet(String facetName, UIComponent facet)
     {
-        super.addFacet(facetName, facet);
+        //FIXME
+        //super.addFacet(facetName, facet);
         UIComponentUtils.ensureComponentInNamingContainer(facet);
     }
 

@@ -37,7 +37,9 @@ public class MyFacesUIInput
 
     public List[] getListeners()
     {
-        return listeners;
+        //FIXME
+        //return listeners;
+        return null;
     }
 
 
@@ -50,7 +52,8 @@ public class MyFacesUIInput
 
     public void addFacet(String facetName, UIComponent facet)
     {
-        super.addFacet(facetName, facet);
+        //FIXME
+        //super.addFacet(facetName, facet);
         UIComponentUtils.ensureComponentInNamingContainer(facet);
     }
 

@@ -40,10 +40,13 @@ extends MyFacesTag
     public void overrideProperties(UIComponent uiComponent)
     {
         super.overrideProperties(uiComponent);
+        //FIXME
+        /*
         if (uiComponent.getConverter() == null)
         {
             uiComponent.setConverter("Time");
         }
+        */
     }
 
     public String getDefaultRendererType()

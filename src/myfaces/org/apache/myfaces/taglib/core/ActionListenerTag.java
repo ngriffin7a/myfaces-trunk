@@ -73,7 +73,9 @@ public class ActionListenerTag
         if (facesTag.getCreated())
         {
             //Component was just created, so we add the Listener
-            UIComponent component = facesTag.getComponent();
+            //FIXME
+            //UIComponent component = facesTag.getComponent();
+            UIComponent component = null;
             addActionListener(component, _type);
         }
 

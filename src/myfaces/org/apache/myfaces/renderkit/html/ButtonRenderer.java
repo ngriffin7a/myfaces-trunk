@@ -52,7 +52,6 @@ extends HTMLRenderer
     }
 
     public void decode(FacesContext facesContext, UIComponent uiComponent)
-    throws IOException
     {
         //super.decode must not be called, because value is handled here
         UICommand      uiCommand      = (UICommand) uiComponent;
@@ -81,10 +80,12 @@ extends HTMLRenderer
 
         if (submitted)
         {
-            uiCommand.fireActionEvent(facesContext);
+            //FIXME
+            //uiCommand.fireActionEvent(facesContext);
         }
 
-        uiCommand.setValid(true);
+        //FIXME
+        //uiCommand.setValid(true);
     }
 
     public void encodeEnd(FacesContext facesContext, UIComponent uiComponent)
@@ -142,7 +143,8 @@ extends HTMLRenderer
 
             if (label == null)
             {
-                label = uiCommand.getCommandName();
+                //FIXME
+                //label = uiCommand.getCommandName();
             }
 
             writer.write(HTMLEncoder.encode(label, false, false));

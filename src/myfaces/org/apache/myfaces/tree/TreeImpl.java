@@ -22,15 +22,15 @@ import net.sourceforge.myfaces.component.UIRoot;
 
 import javax.faces.component.UIComponent;
 import javax.faces.render.RenderKitFactory;
-import javax.faces.tree.Tree;
 
 /**
  * DOCUMENT ME!
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
+//FIXME
 public class TreeImpl
-        extends Tree
+        //extends Tree
 {
     private String _treeId;
     private String _renderKitId;

@@ -152,7 +152,7 @@ public class JspInfo
     {
         if (_filePath == null)
         {
-            //TODO: fixme
+            //FIXME
             /*
             ServletMappingFactory smf = MyFacesFactoryFinder.getServletMappingFactory(servletContext);
             ServletMapping sm = smf.getServletMapping(servletContext);

@@ -28,10 +28,9 @@ import org.apache.commons.logging.LogFactory;
 
 import javax.faces.FactoryFinder;
 import javax.faces.application.ApplicationFactory;
-import javax.faces.application.Message;
+import javax.faces.application.FacesMessage;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
-import javax.faces.context.MessageResources;
 import javax.faces.context.ResponseWriter;
 import java.io.IOException;
 import java.util.Collections;
@@ -94,7 +93,8 @@ extends HTMLRenderer
 
             try
             {
-                comp = facesContext.getTree().getRoot().findComponent(forAttr);
+                //FIXME
+                //comp = facesContext.getTree().getRoot().findComponent(forAttr);
             }
             catch (IllegalArgumentException e)
             {
@@ -102,7 +102,9 @@ extends HTMLRenderer
 
             if (comp != null)
             {
-                it = facesContext.getMessages(comp);
+                //FIXME
+                //it = facesContext.getMessages(comp);
+                it = null;
             }
             else
             {
@@ -128,6 +130,8 @@ extends HTMLRenderer
         Map msgMap   = new HashMap(); //maps Message --> message component
         Map labelMap = new HashMap(); //maps clientId --> label component
 
+        //FIXME
+        /*
         for (Iterator it = TreeUtils.treeIterator(facesContext.getTree()); it.hasNext();)
         {
             UIComponent comp = (UIComponent) it.next();
@@ -153,6 +157,7 @@ extends HTMLRenderer
                 msgMap.put(msg, comp);
             }
         }
+        */
 
         //now we replace the mapped components by their associated labels
         for (Iterator it = msgMap.entrySet().iterator(); it.hasNext();)
@@ -192,12 +197,15 @@ extends HTMLRenderer
 
         ApplicationFactory af =
             (ApplicationFactory) FactoryFinder.getFactory(FactoryFinder.APPLICATION_FACTORY);
+        //FIXME
+        /*
         MessageResources   mr =
             af.getApplication().getMessageResources(MessageResources.FACES_IMPL_MESSAGES);
+        */
 
         while (it.hasNext())
         {
-            Message msg     = (Message) it.next();
+            FacesMessage msg     = (FacesMessage) it.next();
             String  summary = msg.getSummary();
             String  detail  = msg.getDetail();
 
@@ -243,8 +251,11 @@ extends HTMLRenderer
                     if ((labelText != null) && (labelText.length() > 0))
                     {
                         //special Message " in <label>"
+                        //FIXME
+                        /*
                         labelText =
                             mr.getMessage(facesContext, IN_FIELD_MSG, labelText).getSummary();
+                            */
                         writer.write(HTMLEncoder.encode(labelText, false, true));
                     }
                 }
@@ -280,7 +291,7 @@ extends HTMLRenderer
             HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML.EVENT_HANDLER_ATTRIBUTES);
             writer.write('>');
 
-            Message msg     = (Message) it.next();
+            FacesMessage msg     = (FacesMessage) it.next();
             String  summary = msg.getSummary();
             String  detail  = msg.getDetail();
 

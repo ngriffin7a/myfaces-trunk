@@ -77,7 +77,7 @@ public class FacesUtils
     public static Renderer getRenderer(FacesContext ctx, String rendererType)
     {
         return ((RenderKit) ((RenderKitFactory) FactoryFinder.getFactory(
-            "javax.faces.render.RenderKitFactory")).getRenderKit(ctx.getTree().getRenderKitId()))
+            "javax.faces.render.RenderKitFactory")).getRenderKit(ctx.getViewRoot().getRenderKitId()))
                 .getRenderer(rendererType);
     }
 
@@ -121,6 +121,8 @@ public class FacesUtils
         return ctx.getExternalContext().getSessionMap();
     }
 
+    //FIXME
+    /*
     public static Tree getTree(String treeId)
     {
         return getTreeFactory().getViewRoot(FacesContext.getCurrentInstance(), treeId);
@@ -141,10 +143,12 @@ public class FacesUtils
         return treeFactory.getViewRoot(FacesContext.getCurrentInstance(), treeId);
     }
 
+
     public static TreeFactory getTreeFactory()
     {
         return (TreeFactory) FactoryFinder.getFactory("javax.faces.tree.TreeFactory");
     }
+    */
 
     public static ValueBinding getValueBinding(String valueRef)
     {

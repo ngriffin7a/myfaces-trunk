@@ -117,7 +117,7 @@ public class StateRenderer
      * @param comp  component that should be restored or null if full tree should be restored
      * @throws java.io.IOException
      */
-    public void decode(FacesContext facesContext, UIComponent comp) throws IOException
+    public void decode(FacesContext facesContext, UIComponent comp)
     {
         if (_stateSaver == null) init(facesContext);
         _stateRestorer.restoreState(facesContext);
