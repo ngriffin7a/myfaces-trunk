@@ -38,8 +38,6 @@ import javax.faces.context.ExternalContext;
 import javax.faces.el.ReferenceSyntaxException;
 import javax.faces.el.VariableResolver;
 
-import javax.servlet.ServletContext;
-
 
 /**
  * @author Manfred Geiler (latest modification by $Author$)
@@ -64,7 +62,7 @@ public class VariableResolverImpl
      * a static object)
      * </p>
      * <p>
-     * WARNING: this implementation not serialized as it is thread safe because
+     * WARNING: this implementation is not serialized as it is thread safe because
      *          it does not update/add to _implicitObjects after object initialization.
      *          If you need to add your own implicit objects, either extend and add more
      *          in an initialization block, or add proper sychronization
@@ -79,7 +77,7 @@ public class VariableResolverImpl
      * dynamically resolve against ExterncalContext.
      * </p>
      * <p>
-     * WARNING: this implementation not serialized as it is thread safe because
+     * WARNING: this implementation is not serialized as it is thread safe because
      *          it does not update/add to _scopes after object initialization.
      *          If you need to add your own scopes, either extend and add more
      *          in an initialization block, or add proper sychronization
