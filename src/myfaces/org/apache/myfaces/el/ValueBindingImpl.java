@@ -52,6 +52,9 @@ import java.util.Map;
  * @version $Revision$ $Date$
  * 
  * $Log$
+ * Revision 1.36  2004/04/07 09:46:38  tinytoony
+ * changed exception handling to show root cause
+ *
  * Revision 1.35  2004/04/07 03:21:19  dave0000
  * fix issue with trim()ing of expression strings
  * prepare for PropertyResolver integration
@@ -345,6 +348,12 @@ public class ValueBindingImpl extends ValueBinding implements StateHolder
         {
             log.error("Cannot get value for expression '" + _expressionString 
                 + "'", e);
+
+            if(e instanceof javax.servlet.jsp.el.ELException)
+            {
+                log.error("Root cause for exception : ", ((javax.servlet.jsp.el.ELException) e).getRootCause());
+            }
+
             throw new EvaluationException(
                 "Expression: '" + _expressionString + "'", e);
         }
