@@ -21,6 +21,7 @@ package net.sourceforge.myfaces.renderkit.html;
 import net.sourceforge.myfaces.renderkit.attr.ListRendererAttributes;
 import net.sourceforge.myfaces.renderkit.callback.CallbackRenderer;
 import net.sourceforge.myfaces.renderkit.callback.CallbackSupport;
+import net.sourceforge.myfaces.component.UIComponentUtils;
 
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
@@ -213,7 +214,7 @@ public class ListRenderer
             }
             else
             {
-                throw new IllegalArgumentException("Value of component " + uiComponent.getClientId(facesContext) + " is neither collection nor array.");
+                throw new IllegalArgumentException("Value of component " + UIComponentUtils.toString(uiComponent) + " is neither collection nor array.");
             }
             uiComponent.setAttribute(ITERATOR_ATTR, iterator);
         }

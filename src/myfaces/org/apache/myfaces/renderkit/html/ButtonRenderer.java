@@ -23,6 +23,7 @@ import net.sourceforge.myfaces.renderkit.html.util.HTMLEncoder;
 import net.sourceforge.myfaces.renderkit.html.util.CommonAttributes;
 import net.sourceforge.myfaces.util.logging.LogUtil;
 import net.sourceforge.myfaces.util.bundle.BundleUtils;
+import net.sourceforge.myfaces.component.UIComponentUtils;
 
 import javax.faces.component.UICommand;
 import javax.faces.component.UIComponent;
@@ -134,7 +135,7 @@ public class ButtonRenderer
             }
             else
             {
-                LogUtil.getLogger().warning("Component " + uiComponent.getClientId(facesContext) + "is no UICommand.");
+                LogUtil.getLogger().warning("Component " + UIComponentUtils.toString(uiComponent) + "is no UICommand.");
             }
         }
         else

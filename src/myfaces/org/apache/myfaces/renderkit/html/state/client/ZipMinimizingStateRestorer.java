@@ -32,11 +32,12 @@ import java.util.StringTokenizer;
 import java.util.zip.GZIPInputStream;
 
 /**
- * DOCUMENT ME!
+ * StateRestorer that restores state info saved by the ZipMinimizingStateSaver.
+ *
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public class ZippingStateRestorer
+public class ZipMinimizingStateRestorer
     extends MinimizingStateRestorer
 {
     protected String getStateParameter(Map stateMap, String attrName)
@@ -46,7 +47,7 @@ public class ZippingStateRestorer
 
     protected Map restoreStateMap(FacesContext facesContext)
     {
-        String stateParam = facesContext.getServletRequest().getParameter(ZippingStateSaver.STATE_PARAM);
+        String stateParam = facesContext.getServletRequest().getParameter(ZipMinimizingStateSaver.STATE_PARAM);
         if (stateParam == null)
         {
             return Collections.EMPTY_MAP;
@@ -54,8 +55,8 @@ public class ZippingStateRestorer
 
         try
         {
-            ByteArrayInputStream byteStream = new ByteArrayInputStream(stateParam.getBytes(ZippingStateSaver.ZIP_CHARSET));
-            InputStream decodedStream = MimeUtility.decode(byteStream, ZippingStateSaver.ZIP_ENCODING);
+            ByteArrayInputStream byteStream = new ByteArrayInputStream(stateParam.getBytes(ZipMinimizingStateSaver.ZIP_CHARSET));
+            InputStream decodedStream = MimeUtility.decode(byteStream, ZipMinimizingStateSaver.ZIP_ENCODING);
             InputStream unzippedStream = new GZIPInputStream(decodedStream);
 
             StringBuffer buf = new StringBuffer();
@@ -90,7 +91,7 @@ public class ZippingStateRestorer
                         }
                     }
                 }
-                paramValue = URLDecoder.decode(paramValue, ZippingStateSaver.ZIP_CHARSET);
+                paramValue = URLDecoder.decode(paramValue, ZipMinimizingStateSaver.ZIP_CHARSET);
                 stateMap.put(paramName, paramValue);
             }
 

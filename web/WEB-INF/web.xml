@@ -27,10 +27,14 @@
 
 
     <context-param>
+        <!--
+        * Init parameter "logLevel"
+        * The log level of the MyFacesLogger.
+        * Allowed values are:
+        * "FINEST", "FINER", "FINE", "INFO", "WARNING", "SEVERE"
+        -->
         <param-name>logLevel</param-name>
-        <!--<param-value>INFO</param-value>-->
-        <param-value>FINER</param-value>
-        <!--<param-value>FINEST</param-value>-->
+        <param-value>FINEST</param-value>
     </context-param>
 
     <context-param>
@@ -68,7 +72,7 @@
         * "client_minimized_zipped" = like "client_minimal", but additionally state info is zipped (GZIP), encoded to allowed characters (Base64) written as one query parameter or hidden form input.
         -->
         <param-name>stateSavingMode</param-name>
-        <param-value>client_minimized_zipped</param-value>
+        <param-value>server_session</param-value>
     </context-param>
 
 

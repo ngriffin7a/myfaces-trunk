@@ -21,6 +21,7 @@ package net.sourceforge.myfaces.convert;
 import net.sourceforge.myfaces.renderkit.attr.CommonRendererAttributes;
 import net.sourceforge.myfaces.util.bean.BeanUtils;
 import net.sourceforge.myfaces.util.logging.LogUtil;
+import net.sourceforge.myfaces.component.UIComponentUtils;
 
 import javax.faces.FacesException;
 import javax.faces.FactoryFinder;
@@ -196,12 +197,12 @@ public class ConverterUtils
                 }
                 else
                 {
-                    LogUtil.getLogger().info("Could not find an attribute descriptor for attribute '" + attrName + "' of component " + uiComponent.getClientId(facesContext) + ".");
+                    LogUtil.getLogger().info("Could not find an attribute descriptor for attribute '" + attrName + "' of component " + UIComponentUtils.toString(uiComponent) + ".");
                 }
             }
             else
             {
-                LogUtil.getLogger().info("Component " + uiComponent.getClientId(facesContext) + " has no bean getter method for attribute '" + attrName + "'.");
+                LogUtil.getLogger().info("Component " + UIComponentUtils.toString(uiComponent) + " has no bean getter method for attribute '" + attrName + "'.");
             }
         }
         return conv;
@@ -223,7 +224,7 @@ public class ConverterUtils
     }
 
 
-    public static String getAsString(FacesContext facesContext, UIComponent component, Object obj)
+    public static String getAsString(FacesContext facesContext, UIComponent uiComponent, Object obj)
         throws ConverterException
     {
         if (obj == null)
@@ -231,10 +232,10 @@ public class ConverterUtils
             return null;
         }
 
-        Converter converter = ConverterUtils.findValueConverter(facesContext, component);
+        Converter converter = ConverterUtils.findValueConverter(facesContext, uiComponent);
         if (converter != null)
         {
-            return converter.getAsString(facesContext, component, obj);
+            return converter.getAsString(facesContext, uiComponent, obj);
         }
         else
         {
@@ -244,7 +245,7 @@ public class ConverterUtils
             }
             else
             {
-                throw new IllegalArgumentException("Cannot convert Object to String for component " + component.getClientId(facesContext) + ": No converter found for class " + obj.getClass().getName() + ".");
+                throw new IllegalArgumentException("Cannot convert Object to String for component " + UIComponentUtils.toString(uiComponent) + ": No converter found for class " + obj.getClass().getName() + ".");
             }
         }
     }
@@ -377,7 +378,7 @@ public class ConverterUtils
     private static final String SERIALIZE_CHARSET = "ISO-8859-1";
     private static final String SERIALIZE_ENCODING = "base64";
 
-    public static String serialize(Object obj)
+    public static String serializeAndEncodeBase64(Object obj)
         throws FacesException
     {
         try
@@ -410,7 +411,7 @@ public class ConverterUtils
         }
     }
 
-    public static Object deserialize(String value)
+    public static Object deserializeAndDecodeBase64(String value)
         throws FacesException
     {
         try
@@ -440,65 +441,5 @@ public class ConverterUtils
             throw new FacesException(e);
         }
     }
-
-
-    /*
-    public static Class findOutAttributeType(FacesContext facesContext,
-                                             UIComponent uiComponent,
-                                             String attrName)
-    {
-        //this is the special "value" attribute
-        if (attrName.equals(CommonComponentAttributes.VALUE_ATTR))
-        {
-            return findOutValueType(facesContext, uiComponent);
-        }
-
-        //is it a renderer dependent attribute and is there an attribute descriptor?
-        String rendererType = uiComponent.getRendererType();
-        if (rendererType != null)
-        {
-            //Lookup the attribute descriptor
-            RenderKitFactory rkFactory = (RenderKitFactory)FactoryFinder.getFactory(FactoryFinder.RENDER_KIT_FACTORY);
-            RenderKit renderKit = rkFactory.getRenderKit(facesContext.getTree().getRenderKitId());
-            Renderer renderer = renderKit.getRenderer(rendererType);
-            AttributeDescriptor attrDescr = renderer.getAttributeDescriptor(uiComponent.getComponentType(),
-                                                                            attrName);
-            if (attrDescr != null)
-            {
-                return attrDescr.getType();
-            }
-        }
-
-        //is it a component attribute and is there a valid property getter?
-        try
-        {
-            return BeanUtils.getBeanPropertyType(uiComponent, attrName);
-        }
-        catch (IllegalArgumentException e) {}
-
-        //no idea, of what type this attribute is  :-(
-        LogUtil.getLogger().info("Could not find out type of attribute " + attrName + " of component " + uiComponent.getClientId(facesContext));
-        return null;
-    }
-
-    public static Class findOutValueType(FacesContext facesContext,
-                                         UIComponent uiComponent)
-    {
-        String modelRef = uiComponent.getModelReference();
-        if (modelRef != null)
-        {
-            Class c = facesContext.getModelType(modelRef);
-            if (c == null)
-            {
-                throw new IllegalArgumentException("Could not find ModelDefinition for ModelReference " + modelRef);
-            }
-            return c;
-        }
-
-        //no idea, of what type values of this component should be  :-(
-        LogUtil.getLogger().info("Could not find out value type of component " + uiComponent.getClientId(facesContext));
-        return null;
-    }
-    */
 
 }

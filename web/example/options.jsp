@@ -45,16 +45,16 @@
             <table border="1"><tr><td>
                 <h:form id="form1" formName="calcForm">
                     <h:output_message key="option_lang" bundle="net.sourceforge.myfaces.examples.resource.example_messages" />
-                    <h:selectone_listbox id="locale" modelReference="optionsForm.language"  >
+                    <h:selectone_menu id="locale" modelReference="optionsForm.language">
                         <h:selectitems id="available" modelReference="optionsForm.availableLanguages" />
-                    </h:selectone_listbox><br>
+                    </h:selectone_menu><br>
 
                     <h:output_message key="option_layout" bundle="net.sourceforge.myfaces.examples.resource.example_messages" />
-                    <h:selectone_listbox id="layout" modelReference="pageLayout"  >
+                    <h:selectone_menu id="layout" modelReference="pageLayout"  >
                         <h:selectitem id="item101" label="Classic" value="classic" />
                         <h:selectitem id="item102" label="Navigation right" value="navigationRight" />
                         <h:selectitem id="item103" label="Upside down" value="upsideDown" />
-                    </h:selectone_listbox><br>
+                    </h:selectone_menu><br>
 
                     <h:command_button id="apply" commandName="apply" commandReference="optionsCtrl.setLocale" label="Apply"/>
                 </h:form>

@@ -26,7 +26,6 @@ import net.sourceforge.myfaces.renderkit.html.DataRenderer;
 import net.sourceforge.myfaces.renderkit.html.HTMLRenderer;
 import net.sourceforge.myfaces.renderkit.html.SecretRenderer;
 import net.sourceforge.myfaces.renderkit.html.jspinfo.JspInfo;
-import net.sourceforge.myfaces.renderkit.html.state.StateSaver;
 import net.sourceforge.myfaces.renderkit.html.state.StateRenderer;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLEncoder;
 import net.sourceforge.myfaces.taglib.core.ActionListenerTag;
@@ -36,7 +35,6 @@ import net.sourceforge.myfaces.util.logging.LogUtil;
 import javax.faces.FacesException;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
-import javax.faces.context.ResponseWriter;
 import javax.faces.convert.Converter;
 import javax.faces.convert.ConverterException;
 import javax.faces.event.ActionListener;
@@ -44,29 +42,23 @@ import javax.faces.event.FacesListener;
 import javax.faces.event.PhaseId;
 import javax.faces.event.ValueChangedListener;
 import javax.faces.tree.Tree;
-import javax.servlet.jsp.tagext.BodyContent;
 import java.io.IOException;
 import java.io.Serializable;
-import java.io.StringWriter;
 import java.io.Writer;
 import java.util.*;
-import java.util.regex.Pattern;
 
 /**
- * DOCUMENT ME!
+ * StateSaver for the "client_minimized" state saving mode.
+ * Only those (dynamical) tree and component infos are saved, that could not
+ * otherwise be restored by parsing the JSP.
+ * Parameters are saved in "plaintext", so convenient for debugging purposes.
+ *
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
 public class MinimizingStateSaver
-    implements StateSaver
+    extends ClientStateSaver
 {
-
-    private static final String URL_TOKEN = "__URLSTATE__";
-    private static final String HIDDEN_INPUTS_TOKEN = "__HIDDENINPUTSSTATE__";
-
-    private static final Pattern URL_TOKEN_PATTERN = Pattern.compile(URL_TOKEN);
-    private static final Pattern HIDDEN_INPUTS_TOKEN_PATTERN = Pattern.compile(HIDDEN_INPUTS_TOKEN);
-
     private static final String STATE_MAP_REQUEST_ATTR = MinimizingStateSaver.class.getName() + ".STATE_MAP";
 
     protected static final String TREE_ID_REQUEST_PARAM = "_tId";
@@ -96,82 +88,6 @@ public class MinimizingStateSaver
         //      - static componentId are in parsed tree and are not saved anyway.
         //      - we cannot be sure that a dynamically created componentId is
         //        the same when the tree is getting restored.
-    }
-
-    public void init(FacesContext facesContext) throws IOException
-    {
-    }
-
-    public void encodeState(FacesContext facesContext, int encodingType) throws IOException
-    {
-        /*
-        if (MyFacesConfig.isStateEncodingOnTheFly())
-        {
-            Map stateMap = getStateMap(facesContext);
-            ResponseWriter writer = facesContext.getResponseWriter();
-            switch (encodingType)
-            {
-                case URL_ENCODING:
-                    writeUrlState(writer, stateMap);
-                    break;
-                case HIDDEN_INPUTS_ENCODING:
-                    writeHiddenInputsState(writer, stateMap);
-                    break;
-                default:
-                    throw new IllegalArgumentException("Illegal encoding type " + encodingType);
-            }
-        }
-        else
-        {
-        */
-            ResponseWriter writer = facesContext.getResponseWriter();
-            switch (encodingType)
-            {
-                case StateSaver.URL_ENCODING:
-                    writer.write(URL_TOKEN);
-                    break;
-                case StateSaver.HIDDEN_INPUTS_ENCODING:
-                    writer.write(HIDDEN_INPUTS_TOKEN);
-                    break;
-                default:
-                    throw new IllegalArgumentException("Illegal encoding type " + encodingType);
-            }
-        /*
-        }
-        */
-    }
-
-    public void release(FacesContext facesContext)
-        throws IOException
-    {
-        /*
-        if (MyFacesConfig.isStateEncodingOnTheFly())
-        {
-            return; //nothing to do
-        }
-        */
-
-        BodyContent bodyContent = (BodyContent)facesContext.getServletRequest()
-                                    .getAttribute(ClientStateSaver.BODY_CONTENT_REQUEST_ATTR);
-        if (bodyContent == null)
-        {
-            throw new IllegalStateException("No BodyContent!?");
-        }
-
-        Map stateMap = getStateMap(facesContext);
-
-        StringWriter urlWriter = new StringWriter();
-        writeUrlState(urlWriter, stateMap);
-
-        StringWriter hiddenInputsWriter = new StringWriter();
-        writeHiddenInputsState(hiddenInputsWriter, stateMap);
-
-        String body = bodyContent.getString();
-
-        body = URL_TOKEN_PATTERN.matcher(body).replaceAll(urlWriter.toString());
-        body = HIDDEN_INPUTS_TOKEN_PATTERN.matcher(body).replaceAll(hiddenInputsWriter.toString());
-
-        bodyContent.getEnclosingWriter().write(body);
     }
 
 
@@ -464,7 +380,7 @@ public class MinimizingStateSaver
             }
             catch (ConverterException e)
             {
-                LogUtil.getLogger().severe("Value of attribute " + attrName + " will be lost, because of converter exception saving state of component " + uiComponent.getClientId(facesContext) + ".");
+                LogUtil.getLogger().severe("Value of attribute " + attrName + " will be lost, because of converter exception saving state of component " + UIComponentUtils.toString(uiComponent) + ".");
                 return;
             }
         }
@@ -475,17 +391,17 @@ public class MinimizingStateSaver
             {
                 try
                 {
-                    strValue = ConverterUtils.serialize(attrValue);
+                    strValue = ConverterUtils.serializeAndEncodeBase64(attrValue);
                 }
                 catch (FacesException e)
                 {
-                    LogUtil.getLogger().severe("Value of attribute " + attrName + " of component " + uiComponent.getClientId(facesContext) + " will be lost, because of exception during serialization: " + e.getMessage());
+                    LogUtil.getLogger().severe("Value of attribute " + attrName + " of component " + UIComponentUtils.toString(uiComponent) + " will be lost, because of exception during serialization: " + e.getMessage());
                     return;
                 }
             }
             else
             {
-                LogUtil.getLogger().severe("Value of attribute " + attrName + " of component " + uiComponent.getClientId(facesContext) + " will be lost, because it is of non-serializable type: " + attrValue.getClass().getName());
+                LogUtil.getLogger().severe("Value of attribute " + attrName + " of component " + UIComponentUtils.toString(uiComponent) + " will be lost, because it is of non-serializable type: " + attrValue.getClass().getName());
                 return;
             }
         }
@@ -555,7 +471,7 @@ public class MinimizingStateSaver
             }
             else
             {
-                paramValue = ConverterUtils.serialize(propValue);
+                paramValue = ConverterUtils.serializeAndEncodeBase64(propValue);
             }
 
             saveParameter(stateMap,
@@ -577,8 +493,10 @@ public class MinimizingStateSaver
     }
 
 
-    protected void writeUrlState(Writer writer, Map stateMap) throws IOException
+    protected void writeUrlState(FacesContext facesContext, Writer writer) throws IOException
     {
+        Map stateMap = getStateMap(facesContext);
+
         for (Iterator entries = stateMap.entrySet().iterator(); entries.hasNext();)
         {
             Map.Entry entry = (Map.Entry)entries.next();
@@ -590,8 +508,10 @@ public class MinimizingStateSaver
         }
     }
 
-    protected void writeHiddenInputsState(Writer writer, Map stateMap) throws IOException
+    protected void writeHiddenInputsState(FacesContext facesContext, Writer writer) throws IOException
     {
+        Map stateMap = getStateMap(facesContext);
+
         for (Iterator entries = stateMap.entrySet().iterator(); entries.hasNext();)
         {
             Map.Entry entry = (Map.Entry)entries.next();
@@ -762,7 +682,7 @@ public class MinimizingStateSaver
                 String paramName = RequestParameterNames.getSerializableListenerParameterName(facesContext,
                                                                                               uiComponent,
                                                                                               listenerType);
-                String paramValue = ConverterUtils.serialize(facesListener);
+                String paramValue = ConverterUtils.serializeAndEncodeBase64(facesListener);
                 saveParameter(stateMap, paramName, paramValue);
             }
         }

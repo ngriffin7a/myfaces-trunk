@@ -19,6 +19,7 @@
 package net.sourceforge.myfaces.renderkit.html.ext;
 
 import net.sourceforge.myfaces.component.ext.UISortHeader;
+import net.sourceforge.myfaces.component.UIComponentUtils;
 import net.sourceforge.myfaces.renderkit.attr.ext.SortColumnRendererAttributes;
 import net.sourceforge.myfaces.renderkit.html.HyperlinkRenderer;
 import net.sourceforge.myfaces.util.logging.LogUtil;
@@ -57,7 +58,7 @@ public class SortColumnRenderer
         {
             if (!(uiComponent instanceof UICommand))
             {
-                LogUtil.getLogger().severe("Component " + uiComponent.getClientId(facesContext) + "is no UICommand.");
+                LogUtil.getLogger().severe("Component " + UIComponentUtils.toString(uiComponent) + "is no UICommand.");
                 return;
             }
 

@@ -60,8 +60,11 @@ public abstract class MyFacesBodyTag
     public int doEndTag()
         throws JspException
     {
-        getComponent().setAttribute(BODY_CONTENT_ATTR, getBodyContent());
-        return super.doEndTag();
+        UIComponent comp = getComponent();
+        comp.setAttribute(BODY_CONTENT_ATTR, getBodyContent());
+        int ret = super.doEndTag();
+        comp.setAttribute(BODY_CONTENT_ATTR, null);
+        return ret;
     }
 
     public int getDoEndValue() throws JspException

@@ -21,18 +21,21 @@ package net.sourceforge.myfaces.component;
 import net.sourceforge.myfaces.MyFacesConfig;
 import net.sourceforge.myfaces.convert.ConverterUtils;
 import net.sourceforge.myfaces.convert.impl.StringArrayConverter;
-import net.sourceforge.myfaces.renderkit.html.state.StateRenderer;
 import net.sourceforge.myfaces.renderkit.html.state.client.MinimizingStateSaver;
+import net.sourceforge.myfaces.tree.TreeUtils;
 
 import javax.faces.FacesException;
 import javax.faces.FactoryFinder;
-import javax.faces.convert.Converter;
-import javax.faces.convert.ConverterException;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.context.Message;
 import javax.faces.context.MessageResources;
 import javax.faces.context.MessageResourcesFactory;
+import javax.faces.convert.Converter;
+import javax.faces.convert.ConverterException;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.PrintStream;
 import java.lang.reflect.Field;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
@@ -143,7 +146,7 @@ public class UIComponentUtils
             }
             else
             {
-                throw new FacesException("Error converting value of component " + uiComponent.getClientId(facesContext) + " from String to Object: Converter Exception.", e);
+                throw new FacesException("Error converting value of component " + toString(uiComponent) + " from String to Object: Converter Exception.", e);
             }
         }
     }
@@ -203,105 +206,6 @@ public class UIComponentUtils
             return trans.booleanValue();
         }
     }
-
-
-    /*
-    public static void convertAndSetAttribute(FacesContext facesContext,
-                                              UIComponent comp,
-                                              String attrName,
-                                              String strValue,
-                                              boolean deserializeIfNoConverter)
-        throws FacesException
-    {
-        if (strValue != null)
-        {
-            Converter conv = null;
-            Class clazz = findOutAttrClassByUIComponent(comp, attrName);
-
-            if (clazz != null)
-            {
-                conv = ConverterUtils.findConverter(facesContext.getServletContext(), clazz);
-            }
-
-            Object objValue;
-            if (conv != null)
-            {
-                try
-                {
-                    objValue = conv.getAsObject(facesContext,
-                                                facesContext.getResponseTree().getRoot(), //dummy UIComponent
-                                                strValue);
-                }
-                catch (ConverterException e)
-                {
-                    throw new FacesException("Error setting attribute '" + attrName + "' of component " + comp.getCompoundId() + ": Converter exception!", e);
-                }
-            }
-            else if (deserializeIfNoConverter)
-            {
-                LogUtil.getLogger().finer("No converter found for attribute '" + attrName + "' of component " + comp.getCompoundId() + ": Trying to deserialize.");
-                objValue = ConverterUtils.deserialize(strValue);
-            }
-            else
-            {
-                LogUtil.getLogger().fine("No converter found for attribute '" + attrName + "' of component " + comp.getCompoundId() + ": Assuming String class.");
-                objValue = strValue;
-            }
-
-            comp.setAttribute(attrName, objValue);
-        }
-    }
-    */
-
-    /*
-    protected static Class findOutAttrClassByUIComponent(UIComponent comp, String attrName)
-    {
-        Class c = null;
-        try
-        {
-            c = BeanUtils.getBeanPropertyType(comp, attrName);
-        }
-        catch (IllegalArgumentException e)
-        {
-            c = null;
-        }
-
-        if (c != null)
-        {
-            LogUtil.getLogger().finest("Found out class of attribute '" + attrName + "' of component " + comp.getCompoundId() + ": " + c.getName());
-        }
-
-        return c;
-    }
-    */
-
-    /*
-    protected static Class findOutAttrClassByTag(UIComponent comp, Tag tag, String attrName)
-    {
-        Class c = null;
-        try
-        {
-            BeanMethod beanMethod = BeanUtils.getBeanPropertySetMethod(tag,
-                                                                       attrName,
-                                                                       Object.class);
-            if (beanMethod != null && beanMethod.getMethod() != null)
-            {
-                c = beanMethod.getMethod().getParameterTypes()[0];
-            }
-        }
-        catch (IllegalArgumentException e)
-        {
-            c = null;
-        }
-
-        if (c != null)
-        {
-            LogUtil.getLogger().finest("Found out class of attribute '" + attrName + "' of component " + comp.getCompoundId() + " (by Tag): " + c.getName());
-        }
-
-        return c;
-    }
-    */
 
 
 
@@ -375,5 +279,21 @@ public class UIComponentUtils
         }
     }
 
+
+
+    public static String toString(UIComponent comp)
+    {
+        try
+        {
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            TreeUtils.printComponent(comp, new PrintStream(baos));
+            baos.close();
+            return baos.toString();
+        }
+        catch (IOException e)
+        {
+            throw new RuntimeException(e);
+        }
+    }
 
 }

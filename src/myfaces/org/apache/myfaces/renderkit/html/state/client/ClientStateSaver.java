@@ -18,17 +18,82 @@
  */
 package net.sourceforge.myfaces.renderkit.html.state.client;
 
-import net.sourceforge.myfaces.renderkit.html.state.StateRenderer;
 import net.sourceforge.myfaces.renderkit.html.state.StateSaver;
 
+import javax.faces.context.FacesContext;
+import javax.faces.context.ResponseWriter;
+import javax.servlet.jsp.tagext.BodyContent;
+import java.io.IOException;
+import java.io.StringWriter;
+import java.io.Writer;
+import java.util.regex.Pattern;
+
 /**
- * DOCUMENT ME!
+ * Abstract base class for StateSavers that save state in the client.
+ *
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public interface ClientStateSaver
-    extends StateSaver
+public abstract class ClientStateSaver
+    implements StateSaver
 {
     public static final String BODY_CONTENT_REQUEST_ATTR
         = ClientStateSaver.class.getName() + ".BODY_CONTENT";
+
+    protected static final String URL_TOKEN = "__URLSTATE__";
+    protected static final String HIDDEN_INPUTS_TOKEN = "__HIDDENINPUTSSTATE__";
+
+    protected static final Pattern URL_TOKEN_PATTERN = Pattern.compile(URL_TOKEN);
+    protected static final Pattern HIDDEN_INPUTS_TOKEN_PATTERN = Pattern.compile(HIDDEN_INPUTS_TOKEN);
+
+
+    public void init(FacesContext facesContext) throws IOException
+    {
+    }
+
+    public void encodeState(FacesContext facesContext, int encodingType) throws IOException
+    {
+        ResponseWriter writer = facesContext.getResponseWriter();
+        switch (encodingType)
+        {
+            case StateSaver.URL_ENCODING:
+                writer.write(URL_TOKEN);
+                break;
+            case StateSaver.HIDDEN_INPUTS_ENCODING:
+                writer.write(HIDDEN_INPUTS_TOKEN);
+                break;
+            default:
+                throw new IllegalArgumentException("Illegal encoding type " + encodingType);
+        }
+    }
+
+    public void release(FacesContext facesContext)
+        throws IOException
+    {
+        BodyContent bodyContent = (BodyContent)facesContext.getServletRequest()
+            .getAttribute(ClientStateSaver.BODY_CONTENT_REQUEST_ATTR);
+        if (bodyContent == null)
+        {
+            throw new IllegalStateException("No BodyContent!?");
+        }
+
+        StringWriter urlWriter = new StringWriter();
+        writeUrlState(facesContext, urlWriter);
+
+        StringWriter hiddenInputsWriter = new StringWriter();
+        writeHiddenInputsState(facesContext, hiddenInputsWriter);
+
+        String body = bodyContent.getString();
+
+        body = URL_TOKEN_PATTERN.matcher(body).replaceAll(urlWriter.toString());
+        body = HIDDEN_INPUTS_TOKEN_PATTERN.matcher(body).replaceAll(hiddenInputsWriter.toString());
+
+        bodyContent.getEnclosingWriter().write(body);
+    }
+
+    protected abstract void writeUrlState(FacesContext facesContext, Writer writer) throws IOException;
+
+    protected abstract void writeHiddenInputsState(FacesContext facesContext, Writer writer) throws IOException;
+
+
 }

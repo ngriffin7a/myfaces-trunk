@@ -19,19 +19,17 @@
 package net.sourceforge.myfaces.renderkit.html.state.client;
 
 import net.sourceforge.myfaces.MyFacesConfig;
-import net.sourceforge.myfaces.util.logging.LogUtil;
-import net.sourceforge.myfaces.util.zip.ZipUtils;
 import net.sourceforge.myfaces.convert.ConverterUtils;
 import net.sourceforge.myfaces.renderkit.html.jspinfo.JspInfo;
-import net.sourceforge.myfaces.renderkit.html.state.client.ZippingStateRestorer;
-import net.sourceforge.myfaces.renderkit.html.state.client.ZippingStateSaver;
+import net.sourceforge.myfaces.util.logging.LogUtil;
+import net.sourceforge.myfaces.util.zip.ZipUtils;
 
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.tree.Tree;
-import java.util.Map;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.StringTokenizer;
 
 /**
@@ -107,13 +105,16 @@ public class TagHashHack
         if (MyFacesConfig.isJspInfoCaching(facesContext.getServletContext()))
         {
             //Save tagHash in parsed tree and do not save in client
+            //FIXME: If there is already a tagHash in the parsed tree, we should
+            //rather merge new entries into the existing map, than replacing the
+            //whole map!
             parsedTree.getRoot().setAttribute(TAG_HASH_ATTR, saveTagHash);
             return null;
         }
 
         if (SERIALIZED_MAP)
         {
-            return ConverterUtils.serialize(saveTagHash);
+            return ConverterUtils.serializeAndEncodeBase64(saveTagHash);
         }
         else
         {
@@ -146,7 +147,7 @@ public class TagHashHack
     {
         if (SERIALIZED_MAP)
         {
-            return ConverterUtils.deserialize(attrValue);
+            return ConverterUtils.deserializeAndDecodeBase64(attrValue);
         }
         else
         {

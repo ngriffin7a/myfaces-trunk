@@ -62,18 +62,24 @@ supported by a Converter (see package myfaces/converter/map).
 
 
 <h4>State Saving</h4>
-MyFaces supports two methods of encoding the state information:
-<ul>
-<li>"Normal"<br>
-    All state values are encoded as normal URL parameters.<br>
-    i.e. Query parameters in HREFs and hidden inputs in FORMs
-<li>"Zipped"<br>
-    All state values are encoded to a String of key/value pairs
-    that is zipped (GZIP) and encoded to allowed characters (Base64).
-    This String is then written as one query parameter or hidden
-    form input.
-</ul>
+Release 0.3.1 offers 4 different state saving features:
+<ol>
+<li>"server_session"<br>
+Tree state is saved in a HTTPSession comparable to Sun's default saving with saveStateInClient = false.
+This mode is for all people that can live with HTTPSessions. We are tolerant and do not want to discriminate anybody.  ;-)
 
+<li>"client_serialized"<br>
+Tree is serialized, zipped and saved as url parameter or hidden input (comparable to Sun's saving with saveStateInClient = true but additionally zips the parameter and has also support for url parameters)
+This mode is mainly meant as a proof of concept.
+
+<li>"client_minimized"<br>
+Only those (dynamical) tree and component infos are saved, that could not otherwise be restored by parsing the JSP.
+MyFaces' main feature as we know it. Parameters are saved in "plaintext", so convenient for debugging purposes.
+
+<li>"client_minimized_zipped"<br>
+Like "client_minimal", but additionally state info is zipped (GZIP), encoded to allowed characters (Base64) and written as one query parameter or hidden form input.
+Meant for production environments, where high HTTP traffic "costs" more than zipping und unzipping. i.e. When running a fast server together with thin clients connected over Internet (and not LAN).
+</ol>
 
 <h4>ServletMapping</h4>
 MyFaces supports two methods of mapping requests to the FacesServlet:

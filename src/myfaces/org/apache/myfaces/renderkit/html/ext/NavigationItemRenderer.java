@@ -176,7 +176,7 @@ public class NavigationItemRenderer
             }
             if (bundle == null)
             {
-                LogUtil.getLogger().warning("No bundle defined for component " + uiComponent.getClientId(facesContext));
+                LogUtil.getLogger().warning("No bundle defined for component " + UIComponentUtils.toString(uiComponent));
                 label = key;
             }
             else

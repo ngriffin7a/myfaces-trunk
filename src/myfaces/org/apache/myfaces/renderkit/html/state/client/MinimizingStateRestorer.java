@@ -19,12 +19,11 @@
 package net.sourceforge.myfaces.renderkit.html.state.client;
 
 import net.sourceforge.myfaces.component.CommonComponentAttributes;
+import net.sourceforge.myfaces.component.UIComponentUtils;
 import net.sourceforge.myfaces.convert.ConverterUtils;
 import net.sourceforge.myfaces.convert.impl.StringArrayConverter;
-import net.sourceforge.myfaces.renderkit.html.jspinfo.JspBeanInfo;
 import net.sourceforge.myfaces.renderkit.html.jspinfo.JspInfo;
 import net.sourceforge.myfaces.renderkit.html.jspinfo.JspInfoUtils;
-import net.sourceforge.myfaces.renderkit.html.state.StateRestorer;
 import net.sourceforge.myfaces.renderkit.html.state.TreeCopier;
 import net.sourceforge.myfaces.taglib.core.ActionListenerTag;
 import net.sourceforge.myfaces.tree.TreeUtils;
@@ -45,12 +44,13 @@ import java.io.IOException;
 import java.util.*;
 
 /**
- * DOCUMENT ME!
+ * StateRestorer that restores state info saved by the MinimizingStateSaver.
+ *
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
 public class MinimizingStateRestorer
-    implements StateRestorer
+    extends ClientStateRestorer
 {
     private static final String STATE_MAP_REQUEST_ATTR = MinimizingStateRestorer.class.getName() + ".STATE_MAP";
 
@@ -171,17 +171,6 @@ public class MinimizingStateRestorer
                                     UIComponent uiComponent)
         throws FacesException
     {
-        //Check model instance and create it, if it does not exist:
-        /*
-        --> already happend in recreateRequestScopeBeans
-
-        String modelRef = uiComponent.getModelReference();
-        if (modelRef != null)
-        {
-            JspInfoUtils.checkModelInstance(facesContext, modelRef);
-        }
-        */
-
         //Set valid as default
         if (uiComponent.getAttribute(CommonComponentAttributes.VALID_ATTR) == null &&
             uiComponent.isValid())
@@ -270,7 +259,7 @@ public class MinimizingStateRestorer
                 }
                 catch (ConverterException e)
                 {
-                    LogUtil.getLogger().severe("Value of attribute " + attrName + " will be lost, because of converter exception restoring state of component " + uiComponent.getClientId(facesContext) + ".");
+                    LogUtil.getLogger().severe("Value of attribute " + attrName + " will be lost, because of converter exception restoring state of component " + UIComponentUtils.toString(uiComponent) + ".");
                     return;
                 }
             }
@@ -280,11 +269,11 @@ public class MinimizingStateRestorer
             //we have no converter, so MinimizingStateSaver did serialize the value
             try
             {
-                objValue = ConverterUtils.deserialize(strValue);
+                objValue = ConverterUtils.deserializeAndDecodeBase64(strValue);
             }
             catch (FacesException e)
             {
-                LogUtil.getLogger().severe("Value of attribute " + attrName + " of component " + uiComponent.getClientId(facesContext) + " will be lost, because of exception during deserialization: " + e.getMessage());
+                LogUtil.getLogger().severe("Value of attribute " + attrName + " of component " + UIComponentUtils.toString(uiComponent) + " will be lost, because of exception during deserialization: " + e.getMessage());
                 return;
             }
         }
@@ -360,7 +349,7 @@ public class MinimizingStateRestorer
             }
             else
             {
-                propValue = ConverterUtils.deserialize(paramValue);
+                propValue = ConverterUtils.deserializeAndDecodeBase64(paramValue);
             }
 
             facesContext.setModelValue(modelRef, propValue);
@@ -370,6 +359,13 @@ public class MinimizingStateRestorer
 
     public void restoreComponentState(FacesContext facesContext, UIComponent uiComponent) throws IOException
     {
+        //Check model instance and create it, if it does not exist:
+        String modelRef = uiComponent.getModelReference();
+        if (modelRef != null)
+        {
+            JspInfoUtils.checkModelInstance(facesContext, modelRef);
+        }
+
         Map stateMap = getStateMap(facesContext);
         restoreComponent(facesContext, stateMap, uiComponent);
     }
@@ -417,7 +413,7 @@ public class MinimizingStateRestorer
                 if (info.serializedListener)
                 {
                     //deserialize Listener
-                    listener = (FacesListener)ConverterUtils.deserialize(paramValue);
+                    listener = (FacesListener)ConverterUtils.deserializeAndDecodeBase64(paramValue);
                 }
                 else
                 {
@@ -502,19 +498,6 @@ public class MinimizingStateRestorer
                 set.add(values[i]);
             }
             return set;
-        }
-    }
-
-
-    protected void recreateRequestScopeBeans(FacesContext facesContext)
-    {
-        Iterator it = JspInfo.getJspBeanInfos(facesContext,
-                                              facesContext.getTree().getTreeId());
-        while (it.hasNext())
-        {
-            Map.Entry entry = (Map.Entry)it.next();
-            JspInfoUtils.checkModelInstance(facesContext,
-                                            (JspBeanInfo)entry.getValue());
         }
     }
 

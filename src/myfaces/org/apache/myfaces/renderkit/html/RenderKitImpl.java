@@ -100,6 +100,7 @@ public class RenderKitImpl
                     int mode = MyFacesConfig.getStateSavingMode(facesContext.getServletContext());
                     renderer = new StateRenderer(mode);
                     addRenderer(StateRenderer.TYPE, renderer);
+                    return renderer;
                 }
             }
 

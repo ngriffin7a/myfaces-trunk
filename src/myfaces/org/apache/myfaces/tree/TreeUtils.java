@@ -149,12 +149,20 @@ public class TreeUtils
 
     public static void printTree(Tree tree, PrintStream stream)
     {
-        printSubtree(tree.getRoot(), stream, 0);
+        printComponent(tree.getRoot(), stream, 0, true);
     }
 
-    private static void printSubtree(UIComponent comp, PrintStream stream, int depth)
+    public static void printComponent(UIComponent comp, PrintStream stream)
     {
-        printIndent(stream, depth);
+        printComponent(comp, stream, 0, false);
+    }
+
+    private static void printComponent(UIComponent comp,
+                                     PrintStream stream,
+                                     int indent,
+                                     boolean recursive)
+    {
+        printIndent(stream, indent);
         stream.print('<');
         stream.print(comp.getComponentType());
         printAttribute(stream, comp, CommonComponentAttributes.COMPONENT_ID_ATTR, "id");
@@ -174,19 +182,26 @@ public class TreeUtils
             }
         }
 
-        Iterator children = comp.getChildren();
-        if (children.hasNext())
+        if (recursive)
         {
-            stream.println('>');
-            while (children.hasNext())
+            Iterator children = comp.getChildren();
+            if (children.hasNext())
             {
-                UIComponent child = (UIComponent)children.next();
-                printSubtree(child, stream, depth + 1);
+                stream.println('>');
+                while (children.hasNext())
+                {
+                    UIComponent child = (UIComponent)children.next();
+                    printComponent(child, stream, indent + 1, true);
+                }
+                printIndent(stream, indent);
+                stream.print("</");
+                stream.print(comp.getComponentType());
+                stream.println('>');
             }
-            printIndent(stream, depth);
-            stream.print("</");
-            stream.print(comp.getComponentType());
-            stream.println('>');
+            else
+            {
+                stream.println("/>");
+            }
         }
         else
         {

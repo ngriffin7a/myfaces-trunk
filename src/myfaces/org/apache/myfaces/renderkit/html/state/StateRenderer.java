@@ -20,10 +20,9 @@ package net.sourceforge.myfaces.renderkit.html.state;
 
 import net.sourceforge.myfaces.renderkit.html.FormRenderer;
 import net.sourceforge.myfaces.renderkit.html.HTMLRenderer;
-import net.sourceforge.myfaces.renderkit.html.state.client.MinimizingStateSaver;
-import net.sourceforge.myfaces.renderkit.html.state.client.MinimizingStateRestorer;
-import net.sourceforge.myfaces.renderkit.html.state.client.ZippingStateSaver;
-import net.sourceforge.myfaces.renderkit.html.state.client.ZippingStateRestorer;
+import net.sourceforge.myfaces.renderkit.html.state.client.*;
+import net.sourceforge.myfaces.renderkit.html.state.server.HTTPSessionStateSaver;
+import net.sourceforge.myfaces.renderkit.html.state.server.HTTPSessionStateRestorer;
 import net.sourceforge.myfaces.renderkit.html.jspinfo.JspInfo;
 import net.sourceforge.myfaces.util.logging.LogUtil;
 import net.sourceforge.myfaces.MyFacesConfig;
@@ -50,10 +49,14 @@ public class StateRenderer
         switch (stateSavingMode)
         {
             case MyFacesConfig.STATE_SAVING_MODE__SERVER_SESSION:
-                throw new IllegalArgumentException("not yet supported");
+                _stateSaver = new HTTPSessionStateSaver();
+                _stateRestorer = new HTTPSessionStateRestorer();
+                break;
 
             case MyFacesConfig.STATE_SAVING_MODE__CLIENT_SERIALIZED:
-                throw new IllegalArgumentException("not yet supported");
+                _stateSaver = new SerializingStateSaver();
+                _stateRestorer = new SerializingStateRestorer();
+                break;
 
             case MyFacesConfig.STATE_SAVING_MODE__CLIENT_MINIMIZED:
                 _stateSaver = new MinimizingStateSaver();
@@ -61,8 +64,8 @@ public class StateRenderer
                 break;
 
             case MyFacesConfig.STATE_SAVING_MODE__CLIENT_MINIMIZED_ZIPPED:
-                _stateSaver = new ZippingStateSaver();
-                _stateRestorer = new ZippingStateRestorer();
+                _stateSaver = new ZipMinimizingStateSaver();
+                _stateRestorer = new ZipMinimizingStateRestorer();
                 break;
 
             default:
@@ -111,6 +114,7 @@ public class StateRenderer
         }
         else
         {
+            //TODO: can we find a better solution?
             _stateRestorer.restoreComponentState(facesContext, comp);
         }
     }

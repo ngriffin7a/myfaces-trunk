@@ -18,9 +18,10 @@
  */
 package net.sourceforge.myfaces.renderkit.html.state;
 
+import net.sourceforge.myfaces.component.CommonComponentAttributes;
+import net.sourceforge.myfaces.component.UIComponentUtils;
 import net.sourceforge.myfaces.renderkit.html.jspinfo.JspInfo;
 import net.sourceforge.myfaces.util.logging.LogUtil;
-import net.sourceforge.myfaces.component.CommonComponentAttributes;
 
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
@@ -140,7 +141,7 @@ public class TreeCopier
             return clone;
         }
 
-        LogUtil.getLogger().severe("Component " + toBeCloned.getClientId(_facesContext) + " has no creator tag attribute.");
+        LogUtil.getLogger().severe("Component " + UIComponentUtils.toString(toBeCloned) + " has no creator tag attribute.");
 
         try
         {

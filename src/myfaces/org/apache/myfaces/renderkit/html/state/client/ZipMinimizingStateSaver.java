@@ -30,11 +30,19 @@ import java.util.Map;
 import java.util.zip.GZIPOutputStream;
 
 /**
- * DOCUMENT ME!
+ * StateSaver for the "client_minimized_zipped" state saving mode.
+ * Like "client_minimal", but additionally state info is zipped (GZIP),
+ * encoded to allowed characters (Base64) and written as one query parameter
+ * or hidden form input.
+ * Meant for production environments, where high HTTP traffic "costs" more than
+ * zipping und unzipping.
+ * i.e. When running a fast server together with thin clients connected over
+ * Internet (and not LAN).
+ *
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public class ZippingStateSaver
+public class ZipMinimizingStateSaver
     extends MinimizingStateSaver
 {
     public static final String STATE_PARAM = "zState";

@@ -20,6 +20,7 @@ package net.sourceforge.myfaces.renderkit.html;
 
 import net.sourceforge.myfaces.MyFacesFactoryFinder;
 import net.sourceforge.myfaces.component.UIParameter;
+import net.sourceforge.myfaces.component.UIComponentUtils;
 import net.sourceforge.myfaces.convert.ConverterUtils;
 import net.sourceforge.myfaces.renderkit.attr.CommonRendererAttributes;
 import net.sourceforge.myfaces.renderkit.attr.HyperlinkRendererAttributes;
@@ -109,7 +110,7 @@ public class HyperlinkRenderer
             }
             else
             {
-                LogUtil.getLogger().warning("Component " + uiComponent.getClientId(facesContext) + "is no UICommand.");
+                LogUtil.getLogger().warning("Component " + UIComponentUtils.toString(uiComponent) + "is no UICommand.");
             }
         }
         else
@@ -177,7 +178,7 @@ public class HyperlinkRenderer
             }
             else
             {
-                objValue = ConverterUtils.deserialize(strV);
+                objValue = ConverterUtils.deserializeAndDecodeBase64(strV);
             }
 
             uiCommand.setAttribute(name, objValue);
@@ -301,7 +302,7 @@ public class HyperlinkRenderer
                 try
                 {
                     String strValue = conv.getAsString(facesContext, uiParameter, objValue);
-                    writer.write(URLEncoder.encode(strValue, "UTF-8"));
+                    writer.write(urlEncode(strValue));
 
                     if (uiParameter.getAttribute(CommonRendererAttributes.CONVERTER_ATTR) == null)
                     {
@@ -319,8 +320,7 @@ public class HyperlinkRenderer
             }
             else
             {
-                writer.write(URLEncoder.encode(ConverterUtils.serialize(objValue),
-                                               "UTF-8"));
+                writer.write(urlEncode(ConverterUtils.serializeAndEncodeBase64(objValue)));
             }
         }
     }

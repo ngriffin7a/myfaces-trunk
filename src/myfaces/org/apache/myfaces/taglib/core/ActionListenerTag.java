@@ -19,6 +19,7 @@
 package net.sourceforge.myfaces.taglib.core;
 
 import net.sourceforge.myfaces.util.logging.LogUtil;
+import net.sourceforge.myfaces.component.UIComponentUtils;
 
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
@@ -93,7 +94,7 @@ public class ActionListenerTag
                                                              ADD_ACTION_LISTENER_METHOD_PARAMS);
             if (method == null)
             {
-                LogUtil.getLogger().severe("Component " + uiComponent.getClientId(FacesContext.getCurrentInstance())
+                LogUtil.getLogger().severe("Component " + UIComponentUtils.toString(uiComponent)
                                            + " has no " + ADD_ACTION_LISTENER_METHOD_NAME + " method.");
             }
             else
