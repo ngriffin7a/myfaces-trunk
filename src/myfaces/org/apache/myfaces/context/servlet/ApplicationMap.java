@@ -28,6 +28,11 @@ import javax.servlet.ServletContext;
  * 
  * @author Anton Koinov (latest modification by $Author$)
  * @version $Revision$ $Date$
+ * 
+ * $Log$
+ * Revision 1.8  2004/03/30 07:43:33  dave0000
+ * add $Log
+ *
  */
 public class ApplicationMap extends AbstractAttributeMap
 {
