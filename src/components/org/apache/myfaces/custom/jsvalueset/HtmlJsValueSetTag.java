@@ -11,6 +11,9 @@ import javax.faces.component.UIComponent;
  * @author Martin Marinschek (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.2  2005/01/04 16:09:57  mmarinschek
+ * ChangeListener now uses renderer
+ *
  * Revision 1.1  2004/12/19 00:50:55  mmarinschek
  * JsValueSetTag
  *
@@ -42,7 +45,7 @@ public class HtmlJsValueSetTag
 
     // HTML event handler attributes --> already implemented in HtmlComponentTagBase
 
-    // HtmlCheckbox attributes
+    // HtmlJsValueSet attributes
     private String _name;
 
     protected void setProperties(UIComponent component)

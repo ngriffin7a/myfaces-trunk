@@ -6,6 +6,8 @@ package org.apache.myfaces.custom.jslistener;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.myfaces.component.html.util.AddResource;
+import org.apache.myfaces.custom.jsvalueset.HtmlJsValueSet;
+import org.apache.myfaces.taglib.UIComponentTagBase;
 
 import javax.faces.application.Application;
 import javax.faces.component.UIComponent;
@@ -21,6 +23,9 @@ import javax.servlet.jsp.tagext.TagSupport;
  * @author Martin Marinschek (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.4  2005/01/04 16:09:57  mmarinschek
+ * ChangeListener now uses renderer
+ *
  * Revision 1.3  2004/12/20 06:33:51  mmarinschek
  * bugs killed
  *
@@ -33,8 +38,49 @@ import javax.servlet.jsp.tagext.TagSupport;
  *
  */
 public class JsValueChangeListenerTag
-        extends TagSupport
+        extends UIComponentTagBase
 {
+
+    public String getComponentType()
+    {
+        return JsValueChangeListener.COMPONENT_TYPE;
+    }
+
+    public String getRendererType()
+    {
+        return "org.apache.myfaces.JsValueChangeListener";
+    }
+
+    private String _for;
+    private String _property;
+    private String _expressionValue;
+
+    protected void setProperties(UIComponent component)
+    {
+        super.setProperties(component);
+
+        setStringProperty(component, "for", _for);
+        setStringProperty(component, "property", _property);
+        setStringProperty(component, "expressionValue", _expressionValue);
+    }
+
+    public void setExpressionValue(String expressionValue)
+    {
+        _expressionValue = expressionValue;
+    }
+
+    public void setFor(String aFor)
+    {
+        _for = aFor;
+    }
+
+    public void setProperty(String property)
+    {
+        _property = property;
+    }
+
+    /*
+
     //private static final Log log = LogFactory.getLog(UpdateActionListenerTag.class);
 
     private String _for;
@@ -197,7 +243,7 @@ public class JsValueChangeListenerTag
     protected FacesContext getFacesContext()
     {
         return FacesContext.getCurrentInstance();
-    }
+    }           */
 }
 
 
