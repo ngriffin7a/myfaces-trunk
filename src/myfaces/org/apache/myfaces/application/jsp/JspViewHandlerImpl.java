@@ -18,7 +18,6 @@ package net.sourceforge.myfaces.application.jsp;
 import net.sourceforge.myfaces.util.DebugUtils;
 import net.sourceforge.myfaces.webapp.webxml.ServletMapping;
 import net.sourceforge.myfaces.webapp.webxml.WebXml;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -29,13 +28,11 @@ import javax.faces.component.UIViewRoot;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.render.RenderKitFactory;
-import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
@@ -44,6 +41,9 @@ import java.util.Locale;
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.29  2004/10/05 08:22:55  manolito
+ * #1031187 [PATCH] JspViewHandlerImpl: Remove dep on ServletRequest
+ *
  * Revision 1.28  2004/09/02 09:04:14  manolito
  * typing errors in comments
  *
@@ -93,12 +93,10 @@ public class JspViewHandlerImpl
 
     public Locale calculateLocale(FacesContext facesContext)
     {
-        //ExternalContext.getLocales() is missing. Next Spec will define it.
-        //But since we are in a JSP specific impl we can cast...
-        Enumeration locales = ((ServletRequest)facesContext.getExternalContext().getRequest()).getLocales();
-        while (locales.hasMoreElements())
+        Iterator locales = facesContext.getExternalContext().getRequestLocales();
+        while (locales.hasNext())
         {
-            Locale locale = (Locale) locales.nextElement();
+            Locale locale = (Locale)locales.next();
             for (Iterator it = facesContext.getApplication().getSupportedLocales(); it.hasNext();)
             {
                 Locale supportLocale = (Locale)it.next();
