@@ -133,6 +133,13 @@
             <batchtest toDir="${cactus.results.dir}/test-reports/xml">
                 <fileset dir="${cactus.classes.dir}">
                     <include name="**/*CactusTest.class"/>
+                    <exclude name="**/confignew/*CactusTest.class"/>
+               	</fileset>
+            </batchtest>
+            <!-- newconfig test may have side effects, so run them after all the other tests -->
+            <batchtest toDir="${cactus.results.dir}/test-reports/xml">
+                <fileset dir="${cactus.classes.dir}">
+                    <include name="**/confignew/*CactusTest.class"/>
                	</fileset>
             </batchtest>
             <formatter type="xml"/>
