@@ -73,7 +73,7 @@ public abstract class MyfacesComponentTag
     //Special UIComponent attributes (ValueHolder, ConvertibleValueHolder)
     private String _rendererType;
     private String _value;
-    private String _converterId;
+    private String _converter;
     //attributes id, rendered and binding are handled by UIComponentTag
 
     protected void setProperties(UIComponent component)
@@ -88,7 +88,7 @@ public abstract class MyfacesComponentTag
         //rendererType already handled by UIComponentTag
 
         setValueProperty(component, _value);
-        setConverterIdProperty(component, _converterId);
+        setConverterProperty(component, _converter);
     }
 
     public final String getRendererType()
@@ -121,9 +121,9 @@ public abstract class MyfacesComponentTag
         _visibleOnUserRole = visibleOnUserRole;
     }
 
-    public void setConverterId(String converterId)
+    public void setConverter(String converter)
     {
-        _converterId = converterId;
+        _converter = converter;
     }
 
 
@@ -150,9 +150,9 @@ public abstract class MyfacesComponentTag
         MyfacesTagUtils.setValueProperty(getFacesContext(), component, value);
     }
 
-    private void setConverterIdProperty(UIComponent component, String value)
+    private void setConverterProperty(UIComponent component, String value)
     {
-        MyfacesTagUtils.setConverterIdProperty(getFacesContext(), component, value);
+        MyfacesTagUtils.setConverterProperty(getFacesContext(), component, value);
     }
 
     protected void setActionProperty(UIComponent component, String action)

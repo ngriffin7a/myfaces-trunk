@@ -7,9 +7,9 @@
             <description>Initial value to set when rendered for the first time.</description>
         </attribute>
         <attribute>
-            <name>converterId</name>
+            <name>converter</name>
             <required>false</required>
             <rtexprvalue>false</rtexprvalue>
             <type>java.lang.String</type>
-            <description>Id of Converter to be used.</description>
+            <description>Id of Converter to be used or reference to a Converter.</description>
         </attribute>

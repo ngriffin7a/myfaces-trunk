@@ -144,7 +144,7 @@ public class MyfacesTagUtils
     }
 
 
-    public static void setConverterIdProperty(FacesContext context,
+    public static void setConverterProperty(FacesContext context,
                                         UIComponent component,
                                         String value)
     {

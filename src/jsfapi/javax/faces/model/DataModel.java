@@ -19,14 +19,15 @@
 
 package javax.faces.model;
 
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
   * @author Thomas Spiegl (latest modification by $Author$)
   * @version $Revision$ $Date$
 */
-public abstract class DataModel {
+public abstract class DataModel
+{
 
 	// FIELDS
     private List _listeners;
