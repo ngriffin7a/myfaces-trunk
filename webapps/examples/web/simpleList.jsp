@@ -33,62 +33,69 @@
 
 <f:use_faces>
 
-    <x:page_layout id="page" layoutReference="pageLayout" panelClass="pageLayout" >
+    <x:page_layout id="page" layoutReference="pageLayout"
+            panelClass="pageLayout"
+            headerClass="pageHeader"
+            navigationClass="pageNavigation"
+            bodyClass="pageBody"
+            footerClass="pageFooter" >
         <%@include file="inc/page_header.jsp" %>
         <%@include file="inc/navigation.jsp"  %>
 
-        <x:page_body id="body" panelClass="pageBody" >
+        <f:facet name="body">
+            <h:panel_group id="body">
 
-            <h:output_errors id="errors" />
+                <h:output_errors id="errors" />
 
-            <% int rows = 0, cols = 2; %>
-            <h:panel_list panelClass="standardTable"
-                    headerClass="standardTable_Header"
-                    footerClass="standardTable_Footer"
-                    rowClasses="standardTable_Row1,standardTable_Row2"
-                    columnClasses="standardTable_Column,standardTable_ColumnCentered,standardTable_Column" >
-                <!-- HEADER -->
-                <h:panel_group>
-                    <h:output_text value="Country name" />
-                    <h:output_text value="Iso-Code" />
-                    <h:output_text value="Size" />
-                </h:panel_group>
-                <!-- DATA -->
-                <h:panel_data var="country" modelReference="countryList.countries" >
-
-                    <h:command_hyperlink>
-                        <h:output_text modelReference="country.name" />
-
-                        <f:parameter name="isoCode" modelReference="country.isoCode" />
-                        <f:parameter name="name" modelReference="country.name" />
-                        <f:parameter name="size" modelReference="country.size" />
-                        <f:action_listener type="net.sourceforge.myfaces.examples.listexample.SimpleCountryController" />
-
-                    </h:command_hyperlink>
-
-                    <h:output_text modelReference="country.isoCode" />
-                    <h:output_text modelReference="country.size" />
-                    <% rows++; %>
-
-                </h:panel_data>
-                <!-- FOOTER -->
-                <h:panel_group>
-                    <h:output_text value="take a look at this runtime values ..."/>
+                <% int rows = 0, cols = 2; %>
+                <h:panel_list panelClass="standardTable"
+                        headerClass="standardTable_Header"
+                        footerClass="standardTable_Footer"
+                        rowClasses="standardTable_Row1,standardTable_Row2"
+                        columnClasses="standardTable_Column,standardTable_ColumnCentered,standardTable_Column" >
+                    <!-- HEADER -->
                     <h:panel_group>
-                        <h:output_message id="rows_msg" value="{0} rows" >
-                            <f:parameter value="<%=new Integer(rows)%>"/>
-                        </h:output_message>
-                        &nbsp; / &nbsp;
-                        <h:output_message id="cols_msg" value="{0} cols" >
-                            <f:parameter value="<%=new Integer(cols)%>"/>
-                        </h:output_message>
+                        <h:output_text value="Country name" />
+                        <h:output_text value="Iso-Code" />
+                        <h:output_text value="Size" />
                     </h:panel_group>
-                    <h:output_text value=""/>
-                </h:panel_group>
-            </h:panel_list>
-            <br>
+                    <!-- DATA -->
+                    <h:panel_data var="country" modelReference="countryList.countries" >
 
-        </x:page_body>
+                        <h:command_hyperlink>
+                            <h:output_text modelReference="country.name" />
+
+                            <f:parameter name="isoCode" modelReference="country.isoCode" />
+                            <f:parameter name="name" modelReference="country.name" />
+                            <f:parameter name="size" modelReference="country.size" />
+                            <f:action_listener type="net.sourceforge.myfaces.examples.listexample.SimpleCountryController" />
+
+                        </h:command_hyperlink>
+
+                        <h:output_text modelReference="country.isoCode" />
+                        <h:output_text modelReference="country.size" />
+                        <% rows++; %>
+
+                    </h:panel_data>
+                    <!-- FOOTER -->
+                    <h:panel_group>
+                        <h:output_text value="take a look at this runtime values ..."/>
+                        <h:panel_group>
+                            <h:output_message id="rows_msg" value="{0} rows" >
+                                <f:parameter value="<%=new Integer(rows)%>"/>
+                            </h:output_message>
+                            &nbsp; / &nbsp;
+                            <h:output_message id="cols_msg" value="{0} cols" >
+                                <f:parameter value="<%=new Integer(cols)%>"/>
+                            </h:output_message>
+                        </h:panel_group>
+                        <h:output_text value=""/>
+                    </h:panel_group>
+                </h:panel_list>
+                <br>
+
+            </h:panel_group>
+        </f:facet>
 
         <%@include file="inc/page_footer.jsp" %>
     </x:page_layout>

@@ -31,14 +31,14 @@ class CallbackRendererInfo
 {
     public UIComponent _component;
     public CallbackRenderer _callbackRenderer;
-    public boolean _onlyChildren;
+    public boolean _onlyChildrenAndFacets;
 
     public CallbackRendererInfo(UIComponent component,
                                 CallbackRenderer callbackRenderer,
-                                boolean onlyChildren)
+                                boolean onlyChildrenAndFacets)
     {
         _component = component;
         _callbackRenderer = callbackRenderer;
-        _onlyChildren = onlyChildren;
+        _onlyChildrenAndFacets = onlyChildrenAndFacets;
     }
 }

@@ -165,6 +165,7 @@
             <type>java.lang.String</type>
             <description>Resource bundle name for alternate image text.</description>
         </attribute>
+        &user_role_attributes;
     </tag>
 
 <!-- image -->

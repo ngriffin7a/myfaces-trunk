@@ -34,38 +34,45 @@
 
 <jsp:useBean id="fileUploadForm" class="net.sourceforge.myfaces.examples.misc.FileUploadForm" scope="request" />
 
-    <x:page_layout id="page" layoutReference="pageLayout" panelClass="pageLayout" >
+    <x:page_layout id="page" layoutReference="pageLayout"
+            panelClass="pageLayout"
+            headerClass="pageHeader"
+            navigationClass="pageNavigation"
+            bodyClass="pageBody"
+            footerClass="pageFooter" >
         <%@include file="inc/page_header.jsp" %>
         <%@include file="inc/navigation.jsp"  %>
 
-        <x:page_body id="body" panelClass="pageBody" >
-            <h:output_errors id="messageList" />
+        <f:facet name="body">
+            <h:panel_group id="body">
+                <h:output_errors id="messageList" />
 
-            <h4>File upload</h4>
-            <table border="1"><tr><td>
-                <h:form id="form1" formName="form1" enctype="multipart/form-data" >
-                    Gimme an image:
-                    <x:file_upload id="fileupload"
-                                   accept="image/*"
-                                   modelReference="fileUploadForm.upFile"
-                                   inputClass="fileUploadInput"
-                                   size="100" />
-                    <h:command_button label="load it up">
-                        <f:action_listener type="net.sourceforge.myfaces.examples.misc.FileUploadController" />
-                    </h:command_button>
-                </h:form>
-            </td></tr></table>
+                <h4>File upload</h4>
+                <table border="1"><tr><td>
+                    <h:form id="form1" formName="form1" enctype="multipart/form-data" >
+                        Gimme an image:
+                        <x:file_upload id="fileupload"
+                                       accept="image/*"
+                                       modelReference="fileUploadForm.upFile"
+                                       inputClass="fileUploadInput"
+                                       size="100" />
+                        <h:command_button label="load it up">
+                            <f:action_listener type="net.sourceforge.myfaces.examples.misc.FileUploadController" />
+                        </h:command_button>
+                    </h:form>
+                </td></tr></table>
 
-            <%
-            if (application.getAttribute("fileupload_file") != null)
-            {
+                <%
+                if (application.getAttribute("fileupload_file") != null)
+                {
+                    %>
+                    <p>The image you loaded up:</p>
+                    <img src="fileupload_showimg.jsp?dummy=<%=Math.random()%>"><%
+                }
                 %>
-                <p>The image you loaded up:</p>
-                <img src="fileupload_showimg.jsp?dummy=<%=Math.random()%>"><%
-            }
-            %>
 
-        </x:page_body>
+            </h:panel_group>
+        </f:facet>
 
         <%@include file="inc/page_footer.jsp" %>
     </x:page_layout>

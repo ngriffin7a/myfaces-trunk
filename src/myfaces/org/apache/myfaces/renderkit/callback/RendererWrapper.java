@@ -18,6 +18,8 @@
  */
 package net.sourceforge.myfaces.renderkit.callback;
 
+import net.sourceforge.myfaces.component.UIComponentUtils;
+
 import javax.faces.render.Renderer;
 import javax.faces.context.FacesContext;
 import javax.faces.component.UIComponent;
@@ -50,9 +52,9 @@ class RendererWrapper
         for (Iterator it = map.values().iterator(); it.hasNext(); )
         {
             CallbackRendererInfo callbackInfo = (CallbackRendererInfo)it.next();
-            if (!callbackInfo._onlyChildren ||
+            if (!callbackInfo._onlyChildrenAndFacets ||
                 uiComponent == null ||
-                uiComponent.getParent() == callbackInfo._component)
+                UIComponentUtils.getParentOrFacetOwner(uiComponent) == callbackInfo._component)
             {
                 callbackInfo._callbackRenderer
                                 .beforeEncodeBegin(facesContext,
@@ -81,9 +83,9 @@ class RendererWrapper
         for (Iterator it = map.values().iterator(); it.hasNext();)
         {
             CallbackRendererInfo callbackInfo = (CallbackRendererInfo)it.next();
-            if (!callbackInfo._onlyChildren ||
+            if (!callbackInfo._onlyChildrenAndFacets ||
                 uiComponent == null ||
-                uiComponent.getParent() == callbackInfo._component)
+                UIComponentUtils.getParentOrFacetOwner(uiComponent) == callbackInfo._component)
             {
                 callbackInfo._callbackRenderer
                     .afterEncodeEnd(facesContext,

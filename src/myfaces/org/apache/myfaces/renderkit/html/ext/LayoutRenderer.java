@@ -18,16 +18,17 @@
  */
 package net.sourceforge.myfaces.renderkit.html.ext;
 
-import net.sourceforge.myfaces.renderkit.attr.ext.LayoutRendererAttributes;
+import net.sourceforge.myfaces.component.CommonComponentAttributes;
+import net.sourceforge.myfaces.component.UIComponentUtils;
 import net.sourceforge.myfaces.renderkit.attr.CommonRendererAttributes;
-import net.sourceforge.myfaces.renderkit.callback.CallbackSupport;
+import net.sourceforge.myfaces.renderkit.attr.ext.LayoutRendererAttributes;
 import net.sourceforge.myfaces.renderkit.callback.CallbackRenderer;
+import net.sourceforge.myfaces.renderkit.callback.CallbackSupport;
 import net.sourceforge.myfaces.renderkit.html.HTMLRenderer;
-import net.sourceforge.myfaces.renderkit.html.attr.HTMLUniversalAttributes;
 import net.sourceforge.myfaces.renderkit.html.attr.HTMLEventHandlerAttributes;
 import net.sourceforge.myfaces.renderkit.html.attr.HTMLTableAttributes;
+import net.sourceforge.myfaces.renderkit.html.attr.HTMLUniversalAttributes;
 import net.sourceforge.myfaces.util.logging.LogUtil;
-import net.sourceforge.myfaces.component.CommonComponentAttributes;
 
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIPanel;
@@ -36,7 +37,6 @@ import javax.faces.context.ResponseWriter;
 import javax.faces.render.Renderer;
 import javax.servlet.jsp.tagext.BodyContent;
 import java.io.IOException;
-import java.util.Iterator;
 
 /**
  * DOCUMENT ME!
@@ -115,7 +115,7 @@ public class LayoutRenderer
     {
         if (uiComponent.getComponentType().equals(UIPanel.TYPE))
         {
-            UIComponent parent = uiComponent.getParent();
+            UIComponent parent = UIComponentUtils.getParentOrFacetOwner(uiComponent);
             if (uiComponent == parent.getFacet(HEADER_FACET))
             {
                 ResponseWriter writer = facesContext.getResponseWriter();
@@ -146,7 +146,7 @@ public class LayoutRenderer
     {
         if (uiComponent.getComponentType().equals(UIPanel.TYPE))
         {
-            UIComponent parent = uiComponent.getParent();
+            UIComponent parent = UIComponentUtils.getParentOrFacetOwner(uiComponent);
             if (uiComponent == parent.getFacet(HEADER_FACET))
             {
                 ResponseWriter writer = facesContext.getResponseWriter();

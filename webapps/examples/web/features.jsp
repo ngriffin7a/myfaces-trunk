@@ -33,15 +33,22 @@
 
 <f:use_faces>
 
-    <x:page_layout id="page" layoutReference="pageLayout" panelClass="pageLayout" >
+    <x:page_layout id="page" layoutReference="pageLayout"
+            panelClass="pageLayout"
+            headerClass="pageHeader"
+            navigationClass="pageNavigation"
+            bodyClass="pageBody"
+            footerClass="pageFooter" >
         <%@include file="inc/page_header.jsp" %>
         <%@include file="inc/navigation.jsp"  %>
 
-        <x:page_body id="body" panelClass="pageBody" >
+        <f:facet name="body">
+            <h:panel_group id="body">
 
 <%@ include file="inc/features.html"  %>
 
-        </x:page_body>
+            </h:panel_group>
+        </f:facet>
 
         <%@include file="inc/page_footer.jsp" %>
     </x:page_layout>

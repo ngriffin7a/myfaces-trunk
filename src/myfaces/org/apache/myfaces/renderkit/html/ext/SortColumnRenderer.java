@@ -75,7 +75,7 @@ public class SortColumnRenderer
 
     public void encodeBegin(FacesContext facesContext, UIComponent uiComponent) throws IOException
     {
-        UIComponent uiSortHeader = uiComponent.getParent();
+        UIComponent uiSortHeader = UIComponentUtils.getParentOrFacetOwner(uiComponent);
         if (!(uiSortHeader instanceof UISortHeader))
         {
             throw new FacesException("UISortHeader expected.");
@@ -107,7 +107,7 @@ public class SortColumnRenderer
 
     private Boolean getSortAscending(FacesContext facesContext, UIComponent uiComponent)
     {
-        UIComponent parent = uiComponent.getParent();
+        UIComponent parent = UIComponentUtils.getParentOrFacetOwner(uiComponent);
         if (!(parent instanceof UISortHeader))
         {
             throw new FacesException("UISortHeader expected.");

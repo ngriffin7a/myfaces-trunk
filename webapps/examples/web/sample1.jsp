@@ -37,69 +37,76 @@
 
 <f:use_faces>
 
-    <x:page_layout id="page" layoutReference="pageLayout" panelClass="pageLayout" >
+    <x:page_layout id="page" layoutReference="pageLayout"
+            panelClass="pageLayout"
+            headerClass="pageHeader"
+            navigationClass="pageNavigation"
+            bodyClass="pageBody"
+            footerClass="pageFooter" >
         <%@include file="inc/page_header.jsp" %>
         <%@include file="inc/navigation.jsp"  %>
 
-        <x:page_body id="body" panelClass="pageBody" >
+        <f:facet name="body">
+            <h:panel_group id="body">
 
-            <x:save_state id="save1" modelReference="calcForm.number1" />
-            <x:save_state id="save2" modelReference="calcForm.number2" />
-            <!--x:save_state id="save3" modelReference="calcForm.result" /-->
-            <x:save_state id="save4" modelReference="ucaseForm.text" />
+                <x:save_state id="save1" modelReference="calcForm.number1" />
+                <x:save_state id="save2" modelReference="calcForm.number2" />
+                <!--x:save_state id="save3" modelReference="calcForm.result" /-->
+                <x:save_state id="save4" modelReference="ucaseForm.text" />
 
-            <%
-                Date test = new Date();
-            %>
-            You entered this page on <h:output_text id="test" value="<%=test.toString()%>" /><br>
+                <%
+                    Date test = new Date();
+                %>
+                You entered this page on <h:output_text id="test" value="<%=test.toString()%>" /><br>
 
-            <h:output_errors id="messageList" />
+                <h:output_errors id="messageList" />
 
-            <h4>A Form</h4>
-            <table border="1"><tr><td>
-                <h:form id="form1" formName="calcForm">
-                    Number 1: <h:input_text id="number1" modelReference="calcForm.number1" maxlength="10" size="25" />
-                              <h:output_errors id="number1Error" clientId="number1" outputClass="error" /><br>
-                    Number 2: <h:input_text id="number2" modelReference="calcForm.number2" maxlength="10" size="25"/>
-                              <h:output_errors id="number2Error" clientId="number2" outputClass="error" /><br>
-                    Result: <h:output_text id="result" modelReference="calcForm.result" /><br>
-                    <h:command_button id="addButton" commandName="add" label="Add them">
+                <h4>A Form</h4>
+                <table border="1"><tr><td>
+                    <h:form id="form1" formName="calcForm">
+                        Number 1: <h:input_text id="number1" modelReference="calcForm.number1" maxlength="10" size="25" />
+                                  <h:output_errors id="number1Error" clientId="number1" outputClass="error" /><br>
+                        Number 2: <h:input_text id="number2" modelReference="calcForm.number2" maxlength="10" size="25"/>
+                                  <h:output_errors id="number2Error" clientId="number2" outputClass="error" /><br>
+                        Result: <h:output_text id="result" modelReference="calcForm.result" /><br>
+                        <h:command_button id="addButton" commandName="add" label="Add them">
+                            <f:action_listener type="net.sourceforge.myfaces.examples.example1.CalcController" ></f:action_listener>
+                        </h:command_button>
+                        <h:command_button id="subtractButton" commandName="subtract" label="Subtract them">
+                            <f:action_listener type="net.sourceforge.myfaces.examples.example1.CalcController" ></f:action_listener>
+                        </h:command_button>
+                        <br>
+                    </h:form>
+
+                    <h:command_hyperlink id="href1" commandName="add">Add them by clicking this link
                         <f:action_listener type="net.sourceforge.myfaces.examples.example1.CalcController" ></f:action_listener>
-                    </h:command_button>
-                    <h:command_button id="subtractButton" commandName="subtract" label="Subtract them">
+                    </h:command_hyperlink><br>
+                    <h:command_hyperlink id="href2" commandName="subtract">Subtract them by clicking this link
                         <f:action_listener type="net.sourceforge.myfaces.examples.example1.CalcController" ></f:action_listener>
-                    </h:command_button>
-                    <br>
-                </h:form>
+                    </h:command_hyperlink>
+                </td></tr></table>
 
-                <h:command_hyperlink id="href1" commandName="add">Add them by clicking this link
-                    <f:action_listener type="net.sourceforge.myfaces.examples.example1.CalcController" ></f:action_listener>
-                </h:command_hyperlink><br>
-                <h:command_hyperlink id="href2" commandName="subtract">Subtract them by clicking this link
-                    <f:action_listener type="net.sourceforge.myfaces.examples.example1.CalcController" ></f:action_listener>
-                </h:command_hyperlink>
-            </td></tr></table>
+                <br>
+                <br>
 
-            <br>
-            <br>
+                <h4>Another Form</h4>
+                <table border="1"><tr><td>
+                    <h:form id="form2" formName="ucaseForm">
+                        <h:input_text id="text" modelReference="ucaseForm.text" /><br>
+                        <h:command_button id="ucaseButton" commandName="up" label="Make it uppercase">
+                            <f:action_listener type="net.sourceforge.myfaces.examples.example1.UCaseController" ></f:action_listener>
+                        </h:command_button>
+                        <h:command_button id="lcaseButton" commandName="low" label="Make it lowercase" >
+                            <f:action_listener type="net.sourceforge.myfaces.examples.example1.UCaseController" ></f:action_listener>
+                        </h:command_button>
+                        <br>
+                    </h:form>
+                </td></tr></table>
 
-            <h4>Another Form</h4>
-            <table border="1"><tr><td>
-                <h:form id="form2" formName="ucaseForm">
-                    <h:input_text id="text" modelReference="ucaseForm.text" /><br>
-                    <h:command_button id="ucaseButton" commandName="up" label="Make it uppercase">
-                        <f:action_listener type="net.sourceforge.myfaces.examples.example1.UCaseController" ></f:action_listener>
-                    </h:command_button>
-                    <h:command_button id="lcaseButton" commandName="low" label="Make it lowercase" >
-                        <f:action_listener type="net.sourceforge.myfaces.examples.example1.UCaseController" ></f:action_listener>
-                    </h:command_button>
-                    <br>
-                </h:form>
-            </td></tr></table>
+        <br><h:command_hyperlink id="jump_home" href="home.jsf" >Go Home</h:command_hyperlink>
 
-    <br><h:command_hyperlink id="jump_home" href="home.jsf" >Go Home</h:command_hyperlink>
-
-        </x:page_body>
+            </h:panel_group>
+        </f:facet>
 
         <%@include file="inc/page_footer.jsp" %>
     </x:page_layout>

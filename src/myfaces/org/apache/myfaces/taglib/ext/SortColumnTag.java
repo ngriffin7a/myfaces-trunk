@@ -68,7 +68,8 @@ public class SortColumnTag
         {
             UICommand sortColumn = (UICommand)getComponent();
             UIComponent sortHeader = sortColumn.getParent();
-            if (!(sortHeader instanceof UISortHeader))
+            if (sortHeader == null ||
+                !(sortHeader instanceof UISortHeader))
             {
                 throw new JspException("Expected sort header component as parent");
             }

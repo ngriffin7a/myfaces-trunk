@@ -27,6 +27,7 @@ import net.sourceforge.myfaces.renderkit.html.attr.HTMLUniversalAttributes;
 import net.sourceforge.myfaces.renderkit.html.attr.HTMLEventHandlerAttributes;
 import net.sourceforge.myfaces.renderkit.html.attr.HTMLTableAttributes;
 import net.sourceforge.myfaces.component.CommonComponentAttributes;
+import net.sourceforge.myfaces.component.UIComponentUtils;
 
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIPanel;
@@ -94,7 +95,7 @@ public class GridRenderer
                                   Renderer renderer,
                                   UIComponent uiComponent) throws IOException
     {
-        UIComponent gridComponent = uiComponent.getParent();
+        UIComponent gridComponent = UIComponentUtils.getParentOrFacetOwner(uiComponent);
         int actualColumn = getAttributeValue(gridComponent, COLUMN_COUNT_ATTR);
         int actualRow = getAttributeValue(gridComponent, ROW_COUNT_ATTR);
         int columns = getAttributeValue(gridComponent, COLUMNS_ATTR);

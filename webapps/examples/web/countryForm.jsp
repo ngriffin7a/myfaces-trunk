@@ -33,21 +33,28 @@
 
 <f:use_faces>
 
-    <x:page_layout id="page" layoutReference="pageLayout" panelClass="pageLayout" >
+    <x:page_layout id="page" layoutReference="pageLayout"
+            panelClass="pageLayout"
+            headerClass="pageHeader"
+            navigationClass="pageNavigation"
+            bodyClass="pageBody"
+            footerClass="pageFooter" >
         <%@include file="inc/page_header.jsp" %>
         <%@include file="inc/navigation.jsp"  %>
 
-        <x:page_body id="body" panelClass="pageBody" >
+        <f:facet name="body">
+            <h:panel_group id="body">
 
-            <h:output_errors id="errors" />
+                <h:output_errors id="errors" />
 
-            <h:form formName="countryForm">
-                <h:input_text id="isoCode" modelReference="countryForm.isoCode"></h:input_text><br>
-                <h:input_text id="name" modelReference="countryForm.name"></h:input_text>
-                <h:input_text id="size" modelReference="countryForm.size"></h:input_text>
-            </h:form>
+                <h:form formName="countryForm">
+                    <h:input_text id="isoCode" modelReference="countryForm.isoCode"></h:input_text><br>
+                    <h:input_text id="name" modelReference="countryForm.name"></h:input_text>
+                    <h:input_text id="size" modelReference="countryForm.size"></h:input_text>
+                </h:form>
 
-        </x:page_body>
+            </h:panel_group>
+        </f:facet>
 
         <%@include file="inc/page_footer.jsp" %>
     </x:page_layout>

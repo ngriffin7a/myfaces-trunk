@@ -23,5 +23,7 @@ public interface CommonComponentAttributes
     public static final String STRING_VALUE_ATTR = "stringValue";
 
 
+    //JSF internal
+    public static final String FACET_PARENT_ATTR = "javax.faces.component.FacetParent";
 
 }

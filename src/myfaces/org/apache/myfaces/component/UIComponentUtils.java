@@ -26,6 +26,7 @@ import net.sourceforge.myfaces.renderkit.html.state.client.MinimizingStateSaver;
 import net.sourceforge.myfaces.tree.TreeUtils;
 
 import javax.faces.FacesException;
+import javax.faces.component.NamingContainer;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
@@ -37,6 +38,8 @@ import java.io.PrintStream;
 import java.lang.reflect.Field;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -45,6 +48,7 @@ import java.util.List;
  * @version $Revision$ $Date$
  */
 public class UIComponentUtils
+    implements CommonComponentAttributes
 {
     private UIComponentUtils() {}
 
@@ -298,6 +302,87 @@ public class UIComponentUtils
         return tree.getRoot().findComponent(uniqueId);
     }
 
+    public static String getClientId(FacesContext facesContext,
+                                     UIComponent uiComponent)
+    {
+        String clientId = (String)uiComponent.getAttribute(UIComponent.CLIENT_ID_ATTR);
+        if (clientId != null)
+        {
+            return clientId;
+        }
+
+        //Find namingContainer
+        UIComponent find = UIComponentUtils.getParentOrFacetOwner(uiComponent);
+        if (find == null)
+        {
+            //we have got the root component
+            if (!(uiComponent instanceof NamingContainer))
+            {
+                throw new FacesException("Root is no naming container?!");
+            }
+
+            if (uiComponent.getComponentId() == null)
+            {
+                uiComponent.setComponentId(UIRoot.ROOT_COMPONENT_ID);
+            }
+            clientId = uiComponent.getComponentId();
+        }
+        else
+        {
+            while (!(find instanceof NamingContainer))
+            {
+                find = UIComponentUtils.getParentOrFacetOwner(find);
+                if (find == null)
+                {
+                    throw new FacesException("Root is no naming container?!");
+                }
+            }
+            NamingContainer namingContainer = (NamingContainer)find;
+
+            if (uiComponent.getComponentId() == null)
+            {
+                uiComponent.setComponentId(namingContainer.generateClientId());
+            }
+
+            if (UIComponentUtils.getParentOrFacetOwner(find) == null)
+            {
+                //NamingContainer is root, so nothing to be prepended
+                clientId = uiComponent.getComponentId();
+            }
+            else
+            {
+                clientId = find.getClientId(facesContext) + UIComponent.SEPARATOR_CHAR + uiComponent.getComponentId();
+            }
+        }
+
+        uiComponent.setAttribute(UIComponent.CLIENT_ID_ATTR, clientId);
+        return clientId;
+    }
+
+
+    public static final NamingContainer findNamingContainer(UIComponent uiComponent)
+    {
+        //Find namingContainer
+        UIComponent find = getParentOrFacetOwner(uiComponent);
+        if (find == null)
+        {
+            //we have got the root component
+            throw new IllegalArgumentException("Cannot find naming container for root!");
+        }
+        while (!(find instanceof NamingContainer))
+        {
+            find = UIComponentUtils.getParentOrFacetOwner(find);
+            if (find == null)
+            {
+                throw new FacesException("Root is no naming container?!");
+            }
+        }
+        return (NamingContainer)find;
+    }
+
+
+
+
 
 
     /**
@@ -328,5 +413,52 @@ public class UIComponentUtils
         }
     }
 
+
+
+    private static final String FACETS_AND_CHILDREN_COLLECTION_ATTR
+        = UIComponentUtils.class.getName() + ".FACETS_AND_CHILDREN_COLLECTION";
+
+    public static int getFacetAndChildCount(UIComponent uiComponent)
+    {
+        return getFacetsAndChildrenCollection(uiComponent).size();
+    }
+
+    public static UIComponent getFacetOrChild(UIComponent uiComponent, int index)
+    {
+        return (UIComponent)getFacetsAndChildrenCollection(uiComponent).get(index);
+    }
+
+    private static List getFacetsAndChildrenCollection(UIComponent uiComponent)
+    {
+        List lst = (List)uiComponent.getAttribute(FACETS_AND_CHILDREN_COLLECTION_ATTR);
+        if (lst == null)
+        {
+            Iterator it = uiComponent.getFacetsAndChildren();
+            lst = new ArrayList();
+            while (it.hasNext())
+            {
+                lst.add(it.next());
+            }
+            uiComponent.setAttribute(FACETS_AND_CHILDREN_COLLECTION_ATTR, lst);
+        }
+        return lst;
+    }
+
+
+
+
+    /**
+     * Returns this component's parent. If this component is not a real
+     * child but a facet, the "facet owner" is returned. This is done by
+     * returning the "javax.faces.component.FacetParent" attribute, which is
+     * set by the addFacet method in UIComponentBase.
+     */
+    public static final UIComponent getParentOrFacetOwner(UIComponent uiComponent)
+    {
+        UIComponent parent = uiComponent.getParent();
+        return parent != null
+                ? parent
+                : (UIComponent)uiComponent.getAttribute(FACET_PARENT_ATTR);
+    }
 
 }

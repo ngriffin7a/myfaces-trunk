@@ -33,11 +33,17 @@
 
 <f:use_faces>
 
-    <x:page_layout id="page" layoutReference="pageLayout" panelClass="pageLayout" >
+    <x:page_layout id="page" layoutReference="pageLayout"
+            panelClass="pageLayout"
+            headerClass="pageHeader"
+            navigationClass="pageNavigation"
+            bodyClass="pageBody"
+            footerClass="pageFooter" >
         <%@include file="inc/page_header.jsp" %>
         <%@include file="inc/navigation.jsp"  %>
 
-        <x:page_body id="body" panelClass="pageBody" >
+        <f:facet name="body">
+            <h:panel_group id="body">
 <p>
  <h3>MyFaces - the free JSF implementation</h3>
  <h4>Copyright (C) 2003  <a href="http://myfaces.sourceforge.net/">The MyFaces Team</a></h4>
@@ -56,7 +62,8 @@
  License along with this library; if not, write to the Free Software
  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 <p>
-        </x:page_body>
+            </h:panel_group>
+        </f:facet>
 
         <%@include file="inc/page_footer.jsp" %>
     </x:page_layout>

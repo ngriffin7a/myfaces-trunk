@@ -136,13 +136,15 @@ public class ButtonRenderer
 
             //Form suchen
             UIForm form = null;
-            for (UIComponent parent = uiComponent.getParent(); parent != null; parent = parent.getParent())
+            UIComponent parent = UIComponentUtils.getParentOrFacetOwner(uiComponent);
+            while(parent != null)
             {
                 if (parent instanceof UIForm)
                 {
                     form = (UIForm)parent;
                     break;
                 }
+                parent = UIComponentUtils.getParentOrFacetOwner(parent);
             }
 
             if (form == null)

@@ -454,12 +454,12 @@ public class MyFacesTagHelper
         int lastChildIdx = getLastChildIndexForParent(facesContext,
                                                       parentClientId);
         int startSearchAt = lastChildIdx + 1;
-        int childCount = parsedParent.getChildCount();  //TODO: Also search within Facets !
+        int childAndFacetCount = UIComponentUtils.getFacetAndChildCount(parsedParent);
 
         //search from component next to last found child
-        for (int i = startSearchAt; i < childCount; i++)
+        for (int i = startSearchAt; i < childAndFacetCount; i++)
         {
-            UIComponent child = parsedParent.getChild(i);
+            UIComponent child = UIComponentUtils.getFacetOrChild(parsedParent, i);
             if (equalsParsedChild(facesTag, child, newComponent))
             {
                 //found corresponding parsed component
@@ -474,7 +474,7 @@ public class MyFacesTagHelper
             //search from first child in case this tag is within an iteration tag
             for (int i = 0; i < startSearchAt; i++)
             {
-                UIComponent child = parsedParent.getChild(i);
+                UIComponent child = UIComponentUtils.getFacetOrChild(parsedParent, i);
                 if (equalsParsedChild(facesTag, child, newComponent))
                 {
                     //found corresponding parsed component
@@ -488,12 +488,14 @@ public class MyFacesTagHelper
         if (foundParsedComp != null)
         {
             //Check if next component would also match --> ambigous component
-            if (foundIdx + 1 < childCount)
+            if (foundIdx + 1 < childAndFacetCount)
             {
-                UIComponent child = parsedParent.getChild(foundIdx + 1);
+                UIComponent child = UIComponentUtils.getFacetOrChild(parsedParent,
+                                                                     foundIdx + 1);
                 if (equalsParsedChild(facesTag, child, newComponent))
                 {
-                    UIComponent found = parsedParent.getChild(foundIdx);
+                    UIComponent found = UIComponentUtils.getFacetOrChild(parsedParent,
+                                                                         foundIdx);
                     Object[] jspPos = (Object[])found.getAttribute(JspInfo.JSP_POSITION_ATTR);
                     String pos = "";
                     if (jspPos != null)

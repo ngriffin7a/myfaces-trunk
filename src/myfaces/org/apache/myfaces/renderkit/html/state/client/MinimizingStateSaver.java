@@ -554,7 +554,7 @@ public class MinimizingStateSaver
         String modelRef = comp.getModelReference();
         if (modelRef != null)
         {
-            UIComponent parent = comp.getParent();
+            UIComponent parent = UIComponentUtils.getParentOrFacetOwner(comp);
             while (parent != null)
             {
                 if (parent.getComponentType().equals(UIPanel.TYPE))
@@ -569,7 +569,7 @@ public class MinimizingStateSaver
                         }
                     }
                 }
-                parent = parent.getParent();
+                parent = UIComponentUtils.getParentOrFacetOwner(parent);
             }
         }
 

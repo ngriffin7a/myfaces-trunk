@@ -32,48 +32,53 @@
 <f:use_faces>
 
 <jsp:useBean id="list" class="net.sourceforge.myfaces.examples.listexample.SimpleSortableCarList" scope="request" />
-<!--x:save_state id="ss1" modelReference="list.sort" /-->
-<!--x:save_state id="ss2" modelReference="list.ascending" /-->
 
-    <x:page_layout id="page" layoutReference="pageLayout" panelClass="pageLayout" >
+    <x:page_layout id="page" layoutReference="pageLayout"
+            panelClass="pageLayout"
+            headerClass="pageHeader"
+            navigationClass="pageNavigation"
+            bodyClass="pageBody"
+            footerClass="pageFooter" >
         <%@include file="inc/page_header.jsp" %>
         <%@include file="inc/navigation.jsp"  %>
 
-        <x:page_body id="body" panelClass="pageBody" >
+        <f:facet name="body">
+            <h:panel_group id="body">
 
-            <h:output_errors id="errors" />
+                <h:output_errors id="errors" />
 
-            <h:panel_list panelClass="standardTable"
-                    headerClass="standardTable_SortHeader"
-                    footerClass="standardTable_Footer"
-                    rowClasses="standardTable_Row1,standardTable_Row2" >
-                <!-- SORTHEADER -->
-                <x:sortheader column="type"
-                              ascending="<%=true%>"
-                              columnReference="list.sort"
-                              ascendingReference="list.ascending" >
-                    <x:sortcolumn column="type" cssClass="sortLink" >
-                        <h:output_text value="Car-Type" />
-                    </x:sortcolumn>
-                    <x:sortcolumn column="color" cssClass="sortLink" >
-                        <h:output_text id="list_header_iso" value="Car-Color"  />
-                    </x:sortcolumn>
-                </x:sortheader>
-                <!-- DATA -->
-                <h:panel_data var="car" modelReference="list.cars" >
-                    <h:output_text modelReference="car.type" />
-                    <h:output_text modelReference="car.color" />
-                </h:panel_data>
-                <!-- FOOTER -->
-                <h:panel_group>
-                    <h:output_text value="..."  />
-                    <h:output_text value=""/>
-                </h:panel_group>
-            </h:panel_list>
+                <h:panel_list panelClass="standardTable"
+                        headerClass="standardTable_SortHeader"
+                        footerClass="standardTable_Footer"
+                        rowClasses="standardTable_Row1,standardTable_Row2" >
+                    <!-- SORTHEADER -->
+                    <x:sortheader column="type"
+                                  ascending="<%=true%>"
+                                  columnReference="list.sort"
+                                  ascendingReference="list.ascending" >
+                        <x:sortcolumn column="type" cssClass="sortLink" >
+                            <h:output_text value="Car-Type" />
+                        </x:sortcolumn>
+                        <x:sortcolumn column="color" cssClass="sortLink" >
+                            <h:output_text id="list_header_iso" value="Car-Color"  />
+                        </x:sortcolumn>
+                    </x:sortheader>
+                    <!-- DATA -->
+                    <h:panel_data var="car" modelReference="list.cars" >
+                        <h:output_text modelReference="car.type" />
+                        <h:output_text modelReference="car.color" />
+                    </h:panel_data>
+                    <!-- FOOTER -->
+                    <h:panel_group>
+                        <h:output_text value="..."  />
+                        <h:output_text value=""/>
+                    </h:panel_group>
+                </h:panel_list>
 
-        </x:page_body>
+            </h:panel_group>
+        </f:facet>
 
-        <%@include file="inc/page_footer.jsp" %>
+            <%@include file="inc/page_footer.jsp" %>
     </x:page_layout>
 
 </f:use_faces>

@@ -34,43 +34,50 @@
 
 <f:use_faces>
 
-    <x:page_layout id="page" layoutReference="pageLayout" panelClass="pageLayout" >
+    <x:page_layout id="page" layoutReference="pageLayout"
+            panelClass="pageLayout"
+            headerClass="pageHeader"
+            navigationClass="pageNavigation"
+            bodyClass="pageBody"
+            footerClass="pageFooter" >
         <%@include file="inc/page_header.jsp" %>
         <%@include file="inc/navigation.jsp"  %>
 
-        <x:page_body id="body" panelClass="pageBody" >
+        <f:facet name="body">
+            <h:panel_group id="body">
 
-            <h:output_errors id="messageList" />
+                <h:output_errors id="messageList" />
 
-            <h:form id="q_form" formName="q_form">
-                <h:input_textarea id="text"
-                                  rows="5"
-                                  modelReference="q_form.text"
-                />
-                <br>
-                <br>
-                <h:selectone_menu id="oneoption" modelReference="q_form.quoteChar" >
-                    <h:selectitem id="item0" value="" label="select a quote character" />
-                    <h:selectitem id="item1" value="\"" label="Double" />
-                    <h:selectitem id="item2" value="'" label="Single" />
-                    <h:selectitems id="moreItems" modelReference="q_form.selectOneItems" />
-                </h:selectone_menu>
-                <h:command_button id="button1" commandName="quotationOn" label="Add quotes">
-                    <f:action_listener type="net.sourceforge.myfaces.examples.example2.QuotationController" ></f:action_listener>
-                </h:command_button>
+                <h:form id="q_form" formName="q_form">
+                    <h:input_textarea id="text"
+                                      rows="5"
+                                      modelReference="q_form.text"
+                    />
+                    <br>
+                    <br>
+                    <h:selectone_menu id="oneoption" modelReference="q_form.quoteChar" >
+                        <h:selectitem id="item0" value="" label="select a quote character" />
+                        <h:selectitem id="item1" value="\"" label="Double" />
+                        <h:selectitem id="item2" value="'" label="Single" />
+                        <h:selectitems id="moreItems" modelReference="q_form.selectOneItems" />
+                    </h:selectone_menu>
+                    <h:command_button id="button1" commandName="quotationOn" label="Add quotes">
+                        <f:action_listener type="net.sourceforge.myfaces.examples.example2.QuotationController" ></f:action_listener>
+                    </h:command_button>
 
-                <br><br>
-                <h:selectmany_listbox id="manyoptions" modelReference="q_form.selectManyValues" >
-                    <h:selectitem id="item0" value="" label="select the unquote characters" />
-                    <h:selectitems id="manyItems" modelReference="q_form.selectManyItems" />
-                </h:selectmany_listbox>
-                <h:command_button id="button2" commandName="quotationOff" label="Remove quotes"><br>
-                    <f:action_listener type="net.sourceforge.myfaces.examples.example2.QuotationController" ></f:action_listener>
-                </h:command_button>
+                    <br><br>
+                    <h:selectmany_listbox id="manyoptions" modelReference="q_form.selectManyValues" >
+                        <h:selectitem id="item0" value="" label="select the unquote characters" />
+                        <h:selectitems id="manyItems" modelReference="q_form.selectManyItems" />
+                    </h:selectmany_listbox>
+                    <h:command_button id="button2" commandName="quotationOff" label="Remove quotes"><br>
+                        <f:action_listener type="net.sourceforge.myfaces.examples.example2.QuotationController" ></f:action_listener>
+                    </h:command_button>
 
-            </h:form>
+                </h:form>
 
-        </x:page_body>
+            </h:panel_group>
+        </f:facet>
 
         <%@include file="inc/page_footer.jsp" %>
     </x:page_layout>

@@ -19,6 +19,7 @@
 package net.sourceforge.myfaces.component;
 
 import javax.faces.component.UIComponent;
+import javax.faces.context.FacesContext;
 
 
 /**
@@ -58,13 +59,27 @@ public class UIPanel
 
 
 
+//------------------------------------------------------------------------------
+// UIComponentHelper Delegation
+// HACK: Delegation, because UIComponentBase does not support Facets properly.
+//       (getClientId crashes, etc.)
 
-    /**
-     * HACK: to make getClientId work
-     */
+    private UIComponentHelper _uiComponentHelper = new UIComponentHelper(this);
+
+    public String getClientId(FacesContext context)
+    {
+        return _uiComponentHelper.getClientId(context);
+    }
+
     public void addFacet(String facetName, UIComponent facet)
     {
         super.addFacet(facetName, facet);
-        facet.setAttribute("parent", this);
+        _uiComponentHelper.addFacet(facetName, facet);
     }
+
+    public UIComponent getParent()
+    {
+        return _uiComponentHelper.getParent(super.getParent());
+    }
+//------------------------------------------------------------------------------
 }

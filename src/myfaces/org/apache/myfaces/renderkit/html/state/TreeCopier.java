@@ -91,7 +91,8 @@ public class TreeCopier
     {
         copyAttributes(fromComp, toComp);
 
-        for (Iterator it = fromComp.getFacetsAndChildren(); it.hasNext();)
+        //Real children
+        for (Iterator it = fromComp.getChildren(); it.hasNext();)
         {
             UIComponent child = (UIComponent)it.next();
             String uniqueId = UIComponentUtils.getUniqueComponentId(_facesContext, child);
@@ -128,6 +129,48 @@ public class TreeCopier
                 toComp.addChild(clone);
 
                 copyComponent(child, toTree, clone);    //Recursion
+            }
+        }
+
+        //Facets
+        for (Iterator it = fromComp.getFacetNames(); it.hasNext();)
+        {
+            String facetName = (String)it.next();
+            UIComponent facet = fromComp.getFacet(facetName);
+            String uniqueId = UIComponentUtils.getUniqueComponentId(_facesContext, facet);
+
+            if (_ignoreComponents != null &&
+                _ignoreComponents.contains(uniqueId))
+            {
+                continue;
+            }
+
+            UIComponent clone;
+
+            try
+            {
+                //destination facet already exists?
+                clone = toComp.getFacet(facetName);
+            }
+            catch (Exception e)
+            {
+                clone = null;
+            }
+
+            if (_overwriteComponents && clone != null)
+            {
+                toComp.removeFacet(facetName);
+                clone = null;
+            }
+
+            if (clone == null)
+            {
+                clone = cloneComponent(facet);
+
+                clone.setComponentId(facet.getComponentId());
+                toComp.addFacet(facetName, clone);
+
+                copyComponent(facet, toTree, clone);    //Recursion
             }
         }
     }

@@ -21,6 +21,14 @@ MyFaces Known Issues
 * Dynamic addition of components as stated in JSF.2.4.2.4 is not (yet) supported
   when using the "saveStateInClient" feature.
 
-* Facet support is not yet implemented.
+* Sun's implementation has a bug in UIComponentBase that causes a NPE when
+  getClientId is called for a Facet, that is not itself a NamingContainer. Reason
+  is, that they try to search the naming container, this component (facet) belongs
+  to. But since facets do not have a parent (see JSF.3.1.6) this is subject to fail.
+  Please delegate getClientId of your self-written components to the MyFaces
+  implementation of getClientId in UIComponentUtils!
+
+
+
 
 TODO... (Many others!)

@@ -563,10 +563,10 @@ public class MyParseEventListener
 
     private String getClientId(UIComponent comp)
     {
-        UIComponent findContainerComp = comp.getParent();
+        UIComponent findContainerComp = UIComponentUtils.getParentOrFacetOwner(comp);
         while (findContainerComp != null && !(findContainerComp instanceof NamingContainer))
         {
-            findContainerComp = findContainerComp.getParent();
+            findContainerComp = UIComponentUtils.getParentOrFacetOwner(findContainerComp);
         }
         if (findContainerComp == null)
         {
@@ -578,7 +578,7 @@ public class MyParseEventListener
         {
             throw new IllegalStateException("Component has no id?!");
         }
-        if (findContainerComp.getParent() == null)
+        if (UIComponentUtils.getParentOrFacetOwner(findContainerComp) == null)
         {
             //container is root
             return componentId;
@@ -762,7 +762,7 @@ public class MyParseEventListener
         Tag tag = getTagInstance(ti);
         if (tag != null && tag instanceof FacesTag)
         {
-            _currentComponent = _currentComponent.getParent();
+            _currentComponent = UIComponentUtils.getParentOrFacetOwner(_currentComponent);
         }
     }
 
