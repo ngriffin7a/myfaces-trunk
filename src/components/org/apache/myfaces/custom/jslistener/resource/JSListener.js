@@ -94,8 +94,27 @@ function orgApacheMyfacesJsListenerSetExpressionProperty(
 
 function orgApacheMyfacesJsListenerIsArray (array)
 {
-    return ((array != null) && (typeof array == "object") &&
-        ((array.constructor == Array) || array.constructor == HTMLCollection));
+    return false;
+
+    /*
+    if ((array != null) && (typeof array == "object"))
+    {
+        if(array.constructor == Array)
+            return true;
+
+        try
+        {
+            var elem = array[0];
+        }
+        catch(e)
+        {
+            return false;
+        }
+
+        return true;
+    }
+
+    return false; */
 }
 
 function orgApacheMyfacesJsListenerReplaceMakro(expression, macroName, elem)

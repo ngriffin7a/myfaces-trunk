@@ -21,6 +21,9 @@ import javax.servlet.jsp.tagext.TagSupport;
  * @author Martin Marinschek (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.3  2004/12/20 06:33:51  mmarinschek
+ * bugs killed
+ *
  * Revision 1.2  2004/12/19 00:50:55  mmarinschek
  * JsValueSetTag
  *
@@ -80,7 +83,7 @@ public class JsValueChangeListenerTag
                 String property = getValueOrBinding(_property);
 
                 AddResource.addJavaScriptToHeader(
-                        JsValueChangeListenerTag.class, "JSListener.js", true, getFacesContext());
+                        JsValueChangeListenerTag.class, "JSListener.js", false, getFacesContext());
 
                 //Component was just created, so we add the Listener
                 UIComponent component = componentTag.getComponentInstance();
