@@ -101,6 +101,20 @@
                  failonerror="true"/>
     </target>
 
+    <target name="tlddoc"
+            description="creates tlddoc for the extension tld">
+        <!-- resolve TLD entities -->
+        <xslt basedir="${tlds.dir}"
+              includes="myfaces_ext.tld"
+              destdir="${temp.dir}/myfaces-jar"
+              style="${tlds.dir}/resolve_entities.xsl"
+              extension=".tld" />
+
+        <java fork="true" jar="${tlddoc.jar}" failonerror="true">
+            <arg line="-d ${doc.dir}/tld"/>
+            <arg value="${temp.dir}/myfaces-jar/myfaces_ext.tld"/>
+        </java>
+    </target>
 
     <target name="bin-release"
             depends="myfaces-jar, apidoc"

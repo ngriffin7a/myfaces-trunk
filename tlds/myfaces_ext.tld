@@ -53,10 +53,10 @@
 
     <tlib-version>0.9.0</tlib-version>
     <jsp-version>1.2</jsp-version>
-    <short-name>MyFaces Extension Tag Library</short-name>
+    <short-name>MyFaces Extensions</short-name>
     <uri>http://myfaces.sourceforge.net/tld/myfaces_ext_0_9.tld</uri>
     <description>
-        Tag library for the MyFaces extensions implementation.
+        Enhanced standard JSP actions and custom MyFaces actions.
     </description>
 
 <!-- command_navigation -->
@@ -65,7 +65,11 @@
         <tag-class>net.sourceforge.myfaces.taglib.ext.HtmlCommandNavigationTag</tag-class>
         <body-content>JSP</body-content>
         <description>
-            Replaces former "navigation_item" tag.
+            Must be nested inside a panel_navigation action and renders a
+            clickable navigation item.
+            This action is derived from the standard command_link action and
+            has equal attributes.
+            (Replaces former "navigation_item" tag.)
         </description>
         &ui_component_attributes;
         &ui_command_attributes;
@@ -94,6 +98,12 @@
         <name>command_sortheader</name>
         <tag-class>net.sourceforge.myfaces.taglib.ext.HtmlCommandSortHeaderTag</tag-class>
         <body-content>JSP</body-content>
+        <description>
+            Clickable sort column header.
+            Must be nested inside an extended data_table tag.
+            This tag is derived from the standard command_link tag and
+            has the additional attributes columnName and arrow.
+        </description>
         &ui_component_attributes;
         &ui_command_attributes;
         &html_universal_attributes;
@@ -105,6 +115,14 @@
             <name>columnName</name>
             <required>true</required>
             <rtexprvalue>false</rtexprvalue>
+            <description>
+                The name of this column.
+                This name must uniquely identify this column among all other (sortable) columns
+                in the same data_table.
+                The sortColumn attribute of the embedding data_table reflects the current
+                sort column (see extended data_table).
+                Default: true
+            </description>
         </attribute>
         <attribute>
             <name>arrow</name>
@@ -122,6 +140,11 @@
         <name>data_table</name>
         <tag-class>net.sourceforge.myfaces.taglib.ext.HtmlDataTableTag</tag-class>
         <body-content>JSP</body-content>
+        <description>
+            Extended data_table that adds some additional features to the standard
+            data_table action: see attribute descriptions for preserveDataModel,
+            sortColumn, sortAscending and preserveSort.
+        </description>
         &ui_component_attributes;
         &ui_panel_attributes;
         &html_universal_attributes;
@@ -553,15 +576,6 @@
         </attribute>
 
    </tag>
-
-
-
-
-
-
-
-
-
 
 
 </taglib>

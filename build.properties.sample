@@ -33,3 +33,7 @@ javac.optimize = off
 
 # junit library (only needed for JUnit testing)
 junit.jar = ${project.dir}/lib/junit.jar
+
+
+# tlddoc library (needed for tlddoc creation)
+tlddoc.jar = ${project.dir}/lib/tlddoc.jar
