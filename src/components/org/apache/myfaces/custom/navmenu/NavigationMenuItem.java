@@ -21,6 +21,9 @@ import javax.faces.model.SelectItem;
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  *          $Log$
+ *          Revision 1.4  2004/07/05 08:32:41  royalts
+ *          changed constructor signature
+ *
  *          Revision 1.3  2004/07/05 08:28:25  royalts
  *          added example for <x:navigationMenuItems>
  *
@@ -39,9 +42,9 @@ public class NavigationMenuItem
     boolean _split;
     private NavigationMenuItem[] _navigationMenuItems = null;
 
-    public NavigationMenuItem(Object value, String label, String action, String icon, boolean split)
+    public NavigationMenuItem(String label, String action, String icon, boolean split)
     {
-        super(value, label);
+        super(label, label);
         _action = action;
         _icon = icon;
         _split = split;
