@@ -27,18 +27,26 @@ import org.apache.commons.logging.LogFactory;
 
 import javax.faces.FacesException;
 import javax.faces.FactoryFinder;
+import javax.faces.application.StateManager;
+import javax.faces.application.ViewHandler;
+import javax.faces.component.UIViewRoot;
 import javax.faces.context.FacesContext;
-import javax.faces.lifecycle.ViewHandler;
 import javax.faces.render.RenderKit;
 import javax.faces.render.RenderKitFactory;
 import javax.faces.render.Renderer;
-import javax.faces.tree.Tree;
-import javax.servlet.*;
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+
 import java.io.IOException;
+import java.util.Locale;
 
 /**
  * ViewHandler for dispatching JSP pages.
  * @author Manfred Geiler (latest modification by $Author$)
+ * @author Anton Koinov
  * @version $Revision$ $Date$
  */
 public class ViewHandlerJspImpl
@@ -46,12 +54,11 @@ public class ViewHandlerJspImpl
 {
     private static final Log log = LogFactory.getLog(ViewHandlerJspImpl.class);
 
-    public void renderView(FacesContext facesContext)
+    public void renderView(FacesContext facesContext, UIViewRoot viewRoot)
         throws IOException, FacesException
     {
         ServletRequest servletRequest = (ServletRequest)facesContext.getExternalContext().getRequest();
         ServletContext servletContext = (ServletContext)facesContext.getExternalContext().getContext();
-        Tree tree = facesContext.getTree();
 
         //Build component tree from parsed JspInfo so that all components
         //already exist in case a component needs it's children prior to
@@ -66,7 +73,7 @@ public class ViewHandlerJspImpl
 
         //Look for a StateRenderer and prepare for state saving
         RenderKitFactory rkFactory = (RenderKitFactory)FactoryFinder.getFactory(FactoryFinder.RENDER_KIT_FACTORY);
-        RenderKit renderKit = rkFactory.getRenderKit(tree.getRenderKitId());
+        RenderKit renderKit = rkFactory.getRenderKit(viewRoot.getRenderKitId());
         Renderer renderer = null;
         try
         {
@@ -92,7 +99,7 @@ public class ViewHandlerJspImpl
         //forward request to JSP page
         ServletMappingFactory smf = MyFacesFactoryFinder.getServletMappingFactory(servletContext);
         ServletMapping sm = smf.getServletMapping(servletContext);
-        String forwardURL = sm.mapTreeIdToFilename(servletContext, tree.getTreeId());
+        String forwardURL = sm.mapViewIdToFilename(servletContext, viewRoot.getViewId());
 
         RequestDispatcher requestDispatcher
             = servletRequest.getRequestDispatcher(forwardURL);
@@ -111,6 +118,36 @@ public class ViewHandlerJspImpl
             log.error("ServletException in method renderView of class " + this.getClass().getName(), se);
             throw new FacesException(se.getMessage(), se);
         }
+    }
+
+    public UIViewRoot restoreView(FacesContext arg0, String arg1) {
+        // FIXME Auto-generated method stub
+        return null;
+    }
+
+    public UIViewRoot createView(FacesContext arg0, String arg1) {
+        // FIXME Auto-generated method stub
+        return null;
+    }
+
+    public StateManager getStateManager() {
+        // FIXME Auto-generated method stub
+        return null;
+    }
+
+    public void writeState(FacesContext arg0) throws IOException {
+        // FIXME Auto-generated method stub
+        
+    }
+
+    public String getViewIdPath(FacesContext arg0, String arg1) {
+        // FIXME Auto-generated method stub
+        return null;
+    }
+
+    public Locale calculateLocale(FacesContext arg0) {
+        // FIXME Auto-generated method stub
+        return null;
     }
 
 }
