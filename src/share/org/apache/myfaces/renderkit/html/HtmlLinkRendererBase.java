@@ -39,6 +39,9 @@ import java.util.Iterator;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.4  2004/04/27 10:32:24  manolito
+ * clear hidden inputs javascript function
+ *
  * Revision 1.3  2004/04/05 11:14:05  manolito
  * removed isVisibleOnUserRole
  *
@@ -196,22 +199,20 @@ public abstract class HtmlLinkRendererBase
             parent = parent.getParent();
         }
 
-        boolean insideForm;
+        UIForm nestingForm = null;
         String formName;
         DummyFormResponseWriter dummyFormResponseWriter;
         if (parent != null)
         {
             //link is nested inside a form
-            UIForm form = (UIForm)parent;
-            formName = form.getClientId(facesContext);
-            insideForm = true;
+            nestingForm = (UIForm)parent;
+            formName = nestingForm.getClientId(facesContext);
             dummyFormResponseWriter = null;
         }
         else
         {
             //not nested in form, we must add a dummy form at the end of the document
             formName = DummyFormUtils.DUMMY_FORM_NAME;
-            insideForm = false;
             dummyFormResponseWriter = DummyFormUtils.getDummyFormResponseWriter(facesContext);
             dummyFormResponseWriter.setWriteDummyForm(true);
         }
@@ -233,16 +234,19 @@ public abstract class HtmlLinkRendererBase
             onClick.append(';');
         }
 
+        //call the clear_<formName> method
+        onClick.append(HtmlRendererUtils.getClearHiddenCommandFormParamsFunctionName(formName)).append("();");
+
         String jsForm = "document.forms['" + formName + "']";
 
         //add id parameter for decode
         onClick.append(jsForm);
         onClick.append(".elements['").append(clientId).append("']");
         onClick.append(".value='").append(clientId).append("';");
-        if (insideForm)
+        if (nestingForm != null)
         {
-            renderHiddenParam(writer, clientId);
-            //TODO: We must not render duplicate hidden params!
+            //renderHiddenParam(writer, clientId);
+            HtmlFormRendererBase.addHiddenCommandParameter(nestingForm, clientId);
         }
         else
         {
@@ -258,7 +262,7 @@ public abstract class HtmlLinkRendererBase
                 String name = ((UIParameter)child).getName();
                 Object value = ((UIParameter)child).getValue();
 
-                renderLinkParameter(writer, dummyFormResponseWriter, name, value, onClick, jsForm, insideForm);
+                renderLinkParameter(dummyFormResponseWriter, name, value, onClick, jsForm, nestingForm);
             }
         }
 
@@ -358,8 +362,12 @@ public abstract class HtmlLinkRendererBase
         writer.flush();
     }
 
-    private void renderLinkParameter(ResponseWriter writer, DummyFormResponseWriter dummyFormResponseWriter, String name, Object value, StringBuffer onClick, String jsForm, boolean insideForm)
-            throws IOException
+    private void renderLinkParameter(DummyFormResponseWriter dummyFormResponseWriter,
+                                     String name,
+                                     Object value,
+                                     StringBuffer onClick,
+                                     String jsForm,
+                                     UIForm nestingForm)
     {
         if (name == null)
         {
@@ -371,9 +379,10 @@ public abstract class HtmlLinkRendererBase
         String strParamValue = value != null ? value.toString() : ""; //TODO: Use Converter?
         onClick.append(".value='").append(strParamValue).append("';");
 
-        if (insideForm)
+        if (nestingForm != null)
         {
-            renderHiddenParam(writer, name);
+            //renderHiddenParam(writer, name);
+            HtmlFormRendererBase.addHiddenCommandParameter(nestingForm, name);
         }
         else
         {
@@ -399,6 +408,7 @@ public abstract class HtmlLinkRendererBase
         }
     }
 
+    /*
     private static void renderHiddenParam(ResponseWriter writer, String paramName)
         throws IOException
     {
@@ -407,6 +417,7 @@ public abstract class HtmlLinkRendererBase
         writer.writeAttribute(HTML.NAME_ATTR, paramName, null);
         writer.endElement(HTML.INPUT_ELEM);
     }
+    */
 
     private static void renderLinkEnd(FacesContext facesContext, UIComponent component)
             throws IOException

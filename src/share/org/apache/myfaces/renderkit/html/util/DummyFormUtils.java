@@ -19,6 +19,7 @@
 package net.sourceforge.myfaces.renderkit.html.util;
 
 import net.sourceforge.myfaces.renderkit.html.HTML;
+import net.sourceforge.myfaces.renderkit.html.HtmlRendererUtils;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -28,7 +29,6 @@ import javax.faces.application.ViewHandler;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 import java.io.IOException;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
@@ -102,16 +102,6 @@ public class DummyFormUtils
         writer.writeAttribute(HTML.METHOD_ATTR, "post", null);
         writer.writeURIAttribute(HTML.ACTION_ATTR, actionURL, null);
         writer.flush();
-        if (dummyFormParams != null)
-        {
-            for (Iterator it = dummyFormParams.iterator(); it.hasNext(); )
-            {
-                writer.startElement(HTML.INPUT_ELEM, null);
-                writer.writeAttribute(HTML.TYPE_ATTR, "hidden", null);
-                writer.writeAttribute(HTML.NAME_ATTR, (String)it.next(), null);
-                writer.endElement(HTML.INPUT_ELEM);
-            }
-        }
 
         StateManager stateManager = facesContext.getApplication().getStateManager();
         if (stateManager.isSavingStateInClient(facesContext))
@@ -120,6 +110,14 @@ public class DummyFormUtils
             //TODO: Optimize saveSerializedView call, because serialized view is built twice!
             StateManager.SerializedView serializedView = stateManager.saveSerializedView(facesContext);
             stateManager.writeState(facesContext, serializedView);
+        }
+
+        if (dummyFormParams != null)
+        {
+            HtmlRendererUtils.renderHiddenCommandFormParams(writer, dummyFormParams);
+            HtmlRendererUtils.renderClearHiddenCommandFormParamsFunction(writer,
+                                                                         DUMMY_FORM_NAME,
+                                                                         dummyFormParams);
         }
 
         writer.endElement(HTML.FORM_ELEM);

@@ -39,6 +39,9 @@ import java.util.*;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.4  2004/04/27 10:32:24  manolito
+ * clear hidden inputs javascript function
+ *
  * Revision 1.3  2004/04/06 15:34:12  manolito
  * decode methods must not set submitted value to null
  *
@@ -56,7 +59,7 @@ public class HtmlRendererUtils
 {
     private static final Log log = LogFactory.getLog(HtmlRendererUtils.class);
 
-    private static final String[] EMPTY_STRING_ARRAY = new String[0];
+    //private static final String[] EMPTY_STRING_ARRAY = new String[0];
     private static final String LINE_SEPARATOR = System.getProperty("line.separator", "\r\n");
 
     private HtmlRendererUtils() {} //no instance allowed
@@ -620,4 +623,63 @@ public class HtmlRendererUtils
         }
 
     }
+    
+    
+    public static void renderHiddenCommandFormParams(ResponseWriter writer,
+                                                     Set dummyFormParams)
+        throws IOException
+    {
+        for (Iterator it = dummyFormParams.iterator(); it.hasNext(); )
+        {
+            writer.startElement(HTML.INPUT_ELEM, null);
+            writer.writeAttribute(HTML.TYPE_ATTR, "hidden", null);
+            writer.writeAttribute(HTML.NAME_ATTR, (String)it.next(), null);
+            writer.endElement(HTML.INPUT_ELEM);
+        }
+    }
+
+    /**
+     * Render the javascript function that is called on a click on a commandLink
+     * to clear the hidden inputs.
+     * This is necessary because on a browser back, each hidden input still has it's
+     * old value (browser cache!) and therefore a new submit would cause the according action
+     * once more!
+     *
+     * @param writer
+     * @param formName
+     * @param dummyFormParams
+     * @throws IOException
+     */
+    public static void renderClearHiddenCommandFormParamsFunction(ResponseWriter writer,
+                                                                  String formName,
+                                                                  Set dummyFormParams)
+        throws IOException
+    {
+        //render the clear hidden inputs javascript function
+        writer.startElement(HTML.SCRIPT_ELEM, null);
+        writer.writeAttribute(HTML.TYPE_ATTR, "text/javascript", null);
+        writer.write("\n<!--");
+        writer.write("\nfunction ");
+        writer.write(getClearHiddenCommandFormParamsFunctionName(formName));
+        writer.write("() {");
+        if (dummyFormParams != null)
+        {
+            for (Iterator it = dummyFormParams.iterator(); it.hasNext(); )
+            {
+                writer.write("\n  document.forms['"); writer.write(formName);
+                writer.write("'].elements['"); writer.write((String)it.next());
+                writer.write("'].value=null;");
+            }
+        }
+        writer.write("\n}");
+        writer.write("\n//-->\n");
+        writer.endElement(HTML.SCRIPT_ELEM);
+    }
+
+    public static String getClearHiddenCommandFormParamsFunctionName(String formName)
+    {
+        //TODO: Remove special characters from formName, before using it as javascript function name!
+        return "clear_" + formName;
+    }
+
 }

@@ -64,36 +64,6 @@ extends HtmlRenderer
         String clientId = uiComponent.getClientId(facesContext);
         Map paramMap = facesContext.getExternalContext().getRequestParameterMap();
         return paramMap.containsKey(clientId) || paramMap.containsKey(clientId + IMAGE_BUTTON_SUFFIX);
-        
-// REVISIT: is it needed to check each value?
-//        Map paramValuesMap = facesContext.getExternalContext().getRequestParameterValuesMap();
-//        return paramValuesMap.containsKey(clientId) || paramValuesMap.containsKey(clientId + IMAGE_BUTTON_SUFFIX);
-//        
-//        boolean submitted = false;
-//        
-//        //check if button has been submitted
-//        if(!paramValuesMap.containsKey(clientId))
-//        {
-//            if(paramValuesMap.containsKey(clientId + IMAGE_BUTTON_SUFFIX))
-//            {
-//                submitted = true;
-//            }
-//        }
-//        else
-//        {
-//            String[] newValues = (String[])paramValuesMap.get(clientId);
-//
-//            if(newValues != null && newValues.length>0)
-//            {
-//                String firstNewValue = newValues[0];
-//
-//                if(firstNewValue != null && firstNewValue.length()>0)
-//                {
-//                    submitted = true;
-//                }
-//            }
-//        }
-//        return submitted;
     }
     
     public void encodeEnd(FacesContext facesContext, UIComponent uiComponent)
@@ -104,8 +74,6 @@ extends HtmlRenderer
         String clientId = uiComponent.getClientId(facesContext);
 
         ResponseWriter writer = facesContext.getResponseWriter();
-
-        //boolean hiddenParam = true;
 
         writer.startElement(HTML.INPUT_ELEM, uiComponent);
 
@@ -138,19 +106,12 @@ extends HtmlRenderer
         HtmlRendererUtils.renderHTMLAttributes(writer, uiComponent, HTML.BUTTON_PASSTHROUGH_ATTRIBUTES);
         HtmlRendererUtils.renderDisabledOnUserRole(writer, uiComponent, facesContext);
 
+        //TODO: We should call the clear_<formName> javascript method on click,
+        //because there could be following scenario:
+        //User clicks commandLink, then browser back, then commandButton
+        //--> hidden input param from commandLink still has a value and gets submitted!
+
         writer.endElement(HTML.INPUT_ELEM);
-        
-        /*
-        if (hiddenParam)
-        {
-            writer.write("<input type=\"hidden\" name=\"");
-            writer.write(getHiddenValueParamName(facesContext, uiComponent));
-            writer.write("\" value=\"");
-            String strVal = getStringValue(facesContext, uiComponent);
-            writer.write(HTMLEncoder.encode(strVal, false, false));
-            writer.write("\">");
-        }
-        */
     }
 
     private String getImage(UIComponent uiComponent)

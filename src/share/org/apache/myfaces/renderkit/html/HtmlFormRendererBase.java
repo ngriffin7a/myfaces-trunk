@@ -27,7 +27,9 @@ import javax.faces.component.html.HtmlForm;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 import java.io.IOException;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * @author Manfred Geiler (latest modification by $Author$)
@@ -35,6 +37,9 @@ import java.util.Map;
  * @author Anton Koinov
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.2  2004/04/27 10:32:24  manolito
+ * clear hidden inputs javascript function
+ *
  * Revision 1.1  2004/04/22 10:20:34  manolito
  * tree component
  *
@@ -46,6 +51,9 @@ public class HtmlFormRendererBase
 
     private static final String HIDDEN_SUBMIT_INPUT_SUFFIX = "_SUBMIT";
     private static final String HIDDEN_SUBMIT_INPUT_VALUE = "1";
+
+    private static final String HIDDEN_COMMAND_INPUTS_SET_ATTR
+            = HtmlFormRendererBase.class.getName() + ".HIDDEN_COMMAND_INPUTS_SET";
 
 
     public void encodeBegin(FacesContext facesContext, UIComponent component)
@@ -89,6 +97,16 @@ public class HtmlFormRendererBase
         writer.writeAttribute(HTML.VALUE_ATTR, HIDDEN_SUBMIT_INPUT_VALUE, null);
         writer.endElement(HTML.INPUT_ELEM);
 
+        //render hidden command inputs
+        Set set = (Set)component.getAttributes().get(HIDDEN_COMMAND_INPUTS_SET_ATTR);
+        if (set != null && !set.isEmpty())
+        {
+            HtmlRendererUtils.renderHiddenCommandFormParams(writer, set);
+            HtmlRendererUtils.renderClearHiddenCommandFormParamsFunction(writer,
+                                                                         component.getClientId(facesContext),
+                                                                         set);
+        }
+
         writer.endElement(HTML.FORM_ELEM);
     }
 
@@ -118,4 +136,17 @@ public class HtmlFormRendererBase
             htmlForm.setSubmitted(false);
         }
     }
+
+
+    public static void addHiddenCommandParameter(UIComponent form, String paramName)
+    {
+        Set set = (Set)form.getAttributes().get(HIDDEN_COMMAND_INPUTS_SET_ATTR);
+        if (set == null)
+        {
+            set = new HashSet();
+            form.getAttributes().put(HIDDEN_COMMAND_INPUTS_SET_ATTR, set);
+        }
+        set.add(paramName);
+    }
+
 }
