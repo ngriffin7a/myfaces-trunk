@@ -31,6 +31,7 @@ myfaces.jar = ${project.dir}/lib/myfaces.jar
 
 # Compiler optimize
 javac.optimize = off
+javac.debug = off
 
 
 # log4j library (only needed for examples application)

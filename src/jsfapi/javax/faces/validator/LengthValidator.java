@@ -90,7 +90,6 @@ public class LengthValidator
                 throw new ValidatorException(_MessageUtils.getErrorMessage(facesContext, MAXIMUM_MESSAGE_ID, args));
             }
         }
-
     }
 
     // SETTER & GETTER

@@ -30,7 +30,8 @@ public class XmlUtils
             }
             else
             {
-                throw new FacesException("Unexpected node type " + n.getNodeType());
+                //TODO see jsf-samples
+                //throw new FacesException("Unexpected node type " + n.getNodeType());
             }
         }
         return buf.toString();

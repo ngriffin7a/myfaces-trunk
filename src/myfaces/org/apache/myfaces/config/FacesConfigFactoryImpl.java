@@ -232,7 +232,7 @@ public class FacesConfigFactoryImpl
     {
         if (String.class.isAssignableFrom(propType))
         {
-            invoke(obj, propWriteMethod, XmlUtils.getElementText(elem));
+            invoke(obj, propWriteMethod, XmlUtils.getElementText(elem).trim());
         }
         else if (Config.class.isAssignableFrom(propType))
         {
@@ -247,7 +247,7 @@ public class FacesConfigFactoryImpl
         else
         {
             // Assume class name
-            String type = XmlUtils.getElementText(elem);
+            String type = XmlUtils.getElementText(elem).trim();
             Class clazz = ClassUtils.classForName(type);
             invoke(obj, propWriteMethod, instantiate(clazz));
         }

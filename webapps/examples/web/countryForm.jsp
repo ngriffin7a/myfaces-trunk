@@ -43,7 +43,6 @@
         <%@include file="inc/page_header.jsp" %>
         <%@include file="inc/navigation.jsp"  %>
 
-
         <f:facet name="body">
             <h:panelGroup>
                 <h:form id="countryForm" name="countryForm">

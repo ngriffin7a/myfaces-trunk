@@ -115,7 +115,7 @@ public class HtmlTableRenderer
                 }
             }
             writer.endElement("tr");
-            writer.write("\n");
+            HtmlRendererUtils.writePrettyLineSeparator(facesContext);
         }
         writer.endElement("tbody");
     }
@@ -174,7 +174,7 @@ public class HtmlTableRenderer
                 }
             }
             writer.endElement("tr");
-            writer.write("\n");
+            HtmlRendererUtils.writePrettyLineSeparator(facesContext);
             writer.endElement(elemName);
         }
     }

@@ -196,6 +196,7 @@
         <javac srcdir="${jsfapi.src}"
                destdir="${temp.dir}/myfaces-jar/classes"
                optimize="${javac.optimize}"
+               debug="${javac.debug}"
                classpathref="jsfapi.class.path">
         </javac>
     </target>
@@ -205,6 +206,7 @@
         <javac srcdir="${myfaces.src}"
                destdir="${temp.dir}/myfaces-jar/classes"
                optimize="${javac.optimize}"
+               debug="${javac.debug}"
                classpathref="myfaces.class.path">
         </javac>
     </target>
