@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V1.2//EN" "document-v12.dtd">
+
+<document>
+
+<header>
+    <title>JAR-Files</title>
+</header>
+
+<body>
+	<section>
+		<title>JAR-Files inside of Apache MyFaces</title>
+		<table>
+			<tr>
+				<td>
+					<strong>lib</strong>
+				</td>
+				<td>
+					<strong>jfsapi</strong>
+				</td>
+				<td>
+					<strong>share</strong>
+				</td>
+				<td>
+					<strong>myfaces(impl)</strong>
+				</td>
+				<td>
+					<strong>components</strong>
+				</td>
+			</tr>
+			<tr>
+				<td>servlet-2.3-jsp-1.2.jar </td>
+				<td>c</td>
+				<td>c</td>
+				<td>c</td>
+				<td>c</td>
+			</tr>
+			<tr>
+				<td>jstl.jar</td>
+				<td>x</td>
+				<td>x</td>
+				<td>x</td>
+				<td>x</td>
+			</tr>
+			<tr>
+				<td>jsp-2.0.jar</td>
+				<td></td>
+				<td>2</td>
+				<td>2</td>
+				<td>2</td>
+			</tr>
+			<tr>
+				<td>commons-el.jar</td>
+				<td></td>
+				<td>x</td>
+				<td>x</td>
+				<td>x</td>
+			</tr>
+			<tr>
+				<td>commons-logging.jar</td>
+				<td></td>
+				<td>x</td>
+				<td>x</td>
+				<td>x</td>
+			</tr>
+			<tr>
+				<td>commons-digester-1.5.jar</td>
+				<td></td>
+				<td></td>
+				<td>x</td>
+				<td>x</td>
+			</tr>
+			<tr>
+				<td>commons-beanutils-1.6.1.jar</td>
+				<td></td>
+				<td></td>
+				<td>x</td>
+				<td></td>
+			</tr>
+			<tr>
+				<td>commons-codec-1.2.jar</td>
+				<td></td>
+				<td></td>
+				<td>x</td>
+				<td></td>
+			</tr>
+			<tr>
+				<td>commons-collections-3.0.jar</td>
+				<td></td>
+				<td></td>
+				<td>x</td>
+				<td></td>
+			</tr>
+			<tr>
+				<td>optional/commons-fileupload-1.0.ja</td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td>x</td>
+			</tr>
+			<tr>
+				<td>optional/commons-validator.jar</td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td>x</td>
+			</tr>
+			<tr>
+				<td>optional/jakarta-oro.ja</td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td>x</td>
+			</tr>
+			<tr>
+				<td>junit.jar</td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+			</tr>
+			<tr>
+				<td>log4j-1.2.8.jar</td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+			</tr>
+			<tr>
+				<td>tlddoc.jar</td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+			</tr>
+		</table>
+	</section>
+	<section>
+		<title>caption</title>
+		<table>
+			<tr>
+				<td>C</td>
+				<td>compile-time only</td>
+			</tr>
+			<tr>
+				<td>2</td>
+				<td>compile-time and run-time for non JSP-2.0 containers</td>
+			</tr>
+			<tr>
+				<td>x</td>
+				<td>compile- and run-time</td>
+			</tr>
+		</table>
+	</section>
+</body>
+
+    <footer>
+    	<legal>Java, J2EE, and JCP are trademarks or registered trademarks of Sun Microsystems, Inc. in the United States and other countries.<br />
+	&copy; 2004, Apache Software Foundation
+	</legal>
+    </footer>
+
+</document>
