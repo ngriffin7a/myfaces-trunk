@@ -26,7 +26,7 @@ import net.sourceforge.myfaces.lifecycle.LifecycleFactoryImpl;
 import net.sourceforge.myfaces.renderkit.RenderKitFactoryImpl;
 import net.sourceforge.myfaces.renderkit.html.HtmlRenderKitImpl;
 import net.sourceforge.myfaces.util.ClassUtils;
-import net.sourceforge.myfaces.util.StringUtils;
+import net.sourceforge.myfaces.util.LocaleUtils;
 import org.xml.sax.SAXException;
 
 import org.apache.commons.logging.Log;
@@ -63,6 +63,9 @@ import java.util.jar.JarInputStream;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  *          $Log$
+ *          Revision 1.6  2004/08/23 05:13:39  dave0000
+ *          Externalize String-to-Locale conversion
+ *
  *          Revision 1.5  2004/08/10 10:57:38  manolito
  *          fixed StackOverflow in ClassUtils and cleaned up ClassUtils methods
  *
@@ -438,7 +441,8 @@ public class FacesConfigurator
 
         if (_dispenser.getDefaultLocale() != null)
         {
-            application.setDefaultLocale(locale(_dispenser.getDefaultLocale()));
+            application.setDefaultLocale(
+                LocaleUtils.toLocale(_dispenser.getDefaultLocale()));
         }
 
         if (_dispenser.getDefaultRenderKitId() != null)
@@ -460,7 +464,7 @@ public class FacesConfigurator
         List locales = new ArrayList();
         for (Iterator it = _dispenser.getSupportedLocalesIterator(); it.hasNext();)
         {
-            locales.add(locale((String) it.next()));
+            locales.add(LocaleUtils.toLocale((String) it.next()));
         }
         application.setSupportedLocales(locales);
 
@@ -558,36 +562,6 @@ public class FacesConfigurator
         }
 
         return current;
-    }
-
-
-    private Locale locale(String name)
-    {
-        if ((name == null) || (name.length() == 0))
-        {
-            log.error("Default locale name null or empty, ignoring");
-            return null;
-        }
-
-        char separator = (name.indexOf('_') >= 0) ? '_' : '-';
-
-        String[] nameComponents = StringUtils.splitShortString(name, separator);
-
-        switch (nameComponents.length)
-        {
-            case 1:
-                return new Locale(nameComponents[0]);
-
-            case 2:
-                return new Locale(nameComponents[0], nameComponents[1]);
-
-            case 3:
-                return new Locale(nameComponents[0], nameComponents[1], nameComponents[2]);
-
-            default:
-                log.error("Invalid default locale name, ignoring: " + name);
-        }
-        return null;
     }
 
 

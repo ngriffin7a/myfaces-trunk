@@ -32,6 +32,9 @@ import java.util.Iterator;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.13  2004/08/23 05:13:37  dave0000
+ * Externalize String-to-Locale conversion
+ *
  * Revision 1.12  2004/08/22 10:37:29  mwessendorf
  * bug #1007065
  *
@@ -189,7 +192,7 @@ public class UIViewRoot
         {
             return facesContext.getApplication().getViewHandler().calculateLocale(facesContext);
         }
-        Object locale = (Locale)vb.getValue(facesContext);
+        Object locale = vb.getValue(facesContext);
         if (locale == null)
         {
             return facesContext.getApplication().getViewHandler().calculateLocale(facesContext);
@@ -266,10 +269,6 @@ public class UIViewRoot
 
     private String _renderKitId = null;
 
-    public UIViewRoot()
-    {
-    }
-
     public String getFamily()
     {
         return COMPONENT_FAMILY;
@@ -297,7 +296,7 @@ public class UIViewRoot
         values[1] = _locale;
         values[2] = _renderKitId;
         values[3] = _viewId;
-        return ((Object) (values));
+        return values;
     }
 
     public void restoreState(FacesContext context, Object state)

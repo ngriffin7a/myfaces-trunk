@@ -18,6 +18,7 @@ package net.sourceforge.myfaces.taglib.core;
 import net.sourceforge.myfaces.application.MyfacesStateManager;
 import net.sourceforge.myfaces.application.jsp.JspViewHandlerImpl;
 import net.sourceforge.myfaces.renderkit.html.HtmlLinkRendererBase;
+import net.sourceforge.myfaces.util.LocaleUtils;
 import net.sourceforge.myfaces.MyFacesConfig;
 
 import org.apache.commons.logging.Log;
@@ -32,7 +33,6 @@ import javax.faces.el.ValueBinding;
 import javax.faces.webapp.UIComponentBodyTag;
 import javax.faces.webapp.UIComponentTag;
 import javax.servlet.ServletRequest;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.jstl.core.Config;
 import javax.servlet.jsp.tagext.BodyContent;
@@ -44,6 +44,9 @@ import java.util.Locale;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.14  2004/08/23 05:13:38  dave0000
+ * Externalize String-to-Locale conversion
+ *
  * Revision 1.13  2004/08/05 22:10:44  o_rossmueller
  * EXPERIMENTAL: JavaScript detection
  *
@@ -221,59 +224,30 @@ public class ViewTag
             {
                 FacesContext context = FacesContext.getCurrentInstance();
                 ValueBinding vb = context.getApplication().createValueBinding(_locale);
-                Class type = vb.getType(context);
-                if (Locale.class.isAssignableFrom(type))
+                Object localeValue = vb.getValue(context);
+                if (localeValue instanceof Locale)
                 {
-                    locale = (Locale)vb.getValue(context);
+                    locale = (Locale) localeValue;
                 }
-                else if (String.class.isAssignableFrom(type))
+                else if (localeValue instanceof String)
                 {
-                    locale = string2Locale((String)vb.getValue(context));
+                    locale = LocaleUtils.toLocale((String) localeValue);
                 }
                 else
                 {
-                    throw new IllegalArgumentException("Locale or String expected");
+                    throw new IllegalArgumentException(
+                        "Locale or String class expected. Expression: " + _locale 
+                        + ". Return class: " + localeValue.getClass().getName());
                 }
             }
             else
             {
-                locale = string2Locale(_locale);
+                locale = LocaleUtils.toLocale(_locale);
             }
             ((UIViewRoot)component).setLocale(locale);
             Config.set((ServletRequest)getFacesContext().getExternalContext().getRequest(),
                        Config.FMT_LOCALE,
                        locale);
         }
-    }
-
-
-    private static Locale string2Locale(String localeString)
-    {
-        String language;
-        String country;
-        String variant;
-        int underscore1 = localeString.indexOf('_');
-        if (underscore1 == -1)
-        {
-            language = localeString;
-            country = "";
-            variant = "";
-        }
-        else
-        {
-            language = localeString.substring(underscore1);
-            int underscore2 = localeString.indexOf('_', underscore1 + 1);
-            if (underscore2 == -1)
-            {
-                country = localeString.substring(underscore1 + 1);
-                variant = "";
-            }
-            else
-            {
-                country = localeString.substring(underscore1 + 1, underscore2);
-                variant = localeString.substring(underscore2 + 1);
-            }
-        }
-        return new Locale(language, country, variant);
     }
 }
