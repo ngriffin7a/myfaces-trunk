@@ -18,8 +18,8 @@ myfaces.jar = ${project.dir}/lib/myfaces.jar
 #temp.dir = temp
 
 # Compiler optimize
-javac.optimize = on
+javac.optimize = off
 
 # uncomment to use aspectj for performance measuring
 # (you must also adapt the paths in src/aspectj/build.properties!)
-use-aspectj = true
+#use-aspectj = true
