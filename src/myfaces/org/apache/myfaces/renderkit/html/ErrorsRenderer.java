@@ -133,9 +133,17 @@ public class ErrorsRenderer
                 while (it.hasNext())
                 {
                     Message msg = (Message)it.next();
+                    String summary = msg.getSummary();
+                    String detail = msg.getDetail();
                     writer.write("\n\t<li>");
                     writer.write(msg.getSummary());
-                    writer.write(": ");
+                    if (summary != null &&
+                        detail != null&&
+                        summary.length() > 0 &&
+                        detail.length() > 0)
+                    {
+                        writer.write(": ");
+                    }
                     writer.write(msg.getDetail());
                     writer.write("</li>");
                 }

@@ -24,11 +24,12 @@ package net.sourceforge.myfaces.taglib.core;
  * @version $Revision$ $Date$
  */
 import javax.faces.webapp.ValidatorTag;
+import javax.faces.validator.RequiredValidator;
 
 public class ValidateRequiredTag
     extends ValidatorTag
 {
-    private static final String TYPE = "javax.faces.validator.RequiredValidator";
+    private static final String TYPE = RequiredValidator.class.getName();
 
     public ValidateRequiredTag()
     {

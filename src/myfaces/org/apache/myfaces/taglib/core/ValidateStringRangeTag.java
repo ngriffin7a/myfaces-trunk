@@ -36,7 +36,7 @@ public class ValidateStringRangeTag
     private String _minimum;
     private String _maximum;
 
-    private static final String TYPE = "javax.faces.validator.StringRangeValidator";
+    private static final String TYPE = StringRangeValidator.class.getName();
 
     public ValidateStringRangeTag()
     {
@@ -70,15 +70,15 @@ public class ValidateStringRangeTag
     protected Validator createValidator()
         throws JspException
     {
-        StringRangeValidator result = (StringRangeValidator)super.createValidator();
+        StringRangeValidator validator = (StringRangeValidator)super.createValidator();
         if(_isMinSet)
         {
-            result.setMinimum(getMinimum());
+            validator.setMinimum(getMinimum());
         }
         if(_isMaxSet)
         {
-            result.setMaximum(getMaximum());
+            validator.setMaximum(getMaximum());
         }
-        return result;
+        return validator;
     }
 }

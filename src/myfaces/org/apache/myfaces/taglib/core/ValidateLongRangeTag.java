@@ -36,7 +36,7 @@ public class ValidateLongRangeTag
     private long _minimum;
     private long _maximum;
 
-    private static final String TYPE = "javax.faces.validator.LongRangeValidator";
+    private static final String TYPE = LongRangeValidator.class.getName();
 
     public ValidateLongRangeTag()
     {
@@ -70,15 +70,15 @@ public class ValidateLongRangeTag
     protected Validator createValidator()
         throws JspException
     {
-        LongRangeValidator result = (LongRangeValidator)super.createValidator();
+        LongRangeValidator validator = (LongRangeValidator)super.createValidator();
         if(_isMinSet)
         {
-            result.setMinimum(getMinimum());
+            validator.setMinimum(getMinimum());
         }
         if(_isMaxSet)
         {
-            result.setMaximum(getMaximum());
+            validator.setMaximum(getMaximum());
         }
-        return result;
+        return validator;
     }
 }

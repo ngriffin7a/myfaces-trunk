@@ -36,7 +36,7 @@ public class ValidateLengthTag
     private int _minimum;
     private int _maximum;
 
-    private static final String TYPE = "javax.faces.validator.LengthValidator";
+    private static final String TYPE = LengthValidator.class.getName();
 
     public ValidateLengthTag()
     {
@@ -70,15 +70,15 @@ public class ValidateLengthTag
     protected Validator createValidator()
         throws JspException
     {
-        LengthValidator result = (LengthValidator)super.createValidator();
+        LengthValidator validator = (LengthValidator)super.createValidator();
         if(_isMinSet)
         {
-            result.setMinimum(getMinimum());
+            validator.setMinimum(getMinimum());
         }
         if(_isMaxSet)
         {
-            result.setMaximum(getMaximum());
+            validator.setMaximum(getMaximum());
         }
-        return result;
+        return validator;
     }
 }
