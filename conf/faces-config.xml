@@ -549,7 +549,7 @@
   <!-- standard renderkit -->
   <render-kit>
       <render-kit-id>DEFAULT</render-kit-id>
-      <render-kit-class>net.sourceforge.myfaces.renderkit.html.HTMLRenderKitImpl</render-kit-class>
+      <render-kit-class>net.sourceforge.myfaces.renderkit.html.HtmlRenderKitImpl</render-kit-class>
 
       <renderer>
           <renderer-type>Text</renderer-type>

@@ -127,4 +127,49 @@ public class RendererUtils
     }
 
 
+    /**
+     * See JSF Spec. 8.5 Table 8-1
+     * @param value
+     * @return
+     */
+    public static boolean isDefaultAttributeValue(Object value)
+    {
+        if (value == null)
+        {
+            return true;
+        }
+        else if (value instanceof Boolean)
+        {
+            return ((Boolean)value).booleanValue() == false;
+        }
+        else if (value instanceof Number)
+        {
+            if (value instanceof Integer)
+            {
+                return ((Number)value).intValue() == Integer.MIN_VALUE;
+            }
+            else if (value instanceof Double)
+            {
+                return ((Number)value).doubleValue() == Double.MIN_VALUE;
+            }
+            else if (value instanceof Long)
+            {
+                return ((Number)value).longValue() == Long.MIN_VALUE;
+            }
+            else if (value instanceof Byte)
+            {
+                return ((Number)value).byteValue() == Byte.MIN_VALUE;
+            }
+            else if (value instanceof Float)
+            {
+                return ((Number)value).floatValue() == Float.MIN_VALUE;
+            }
+            else if (value instanceof Short)
+            {
+                return ((Number)value).shortValue() == Short.MIN_VALUE;
+            }
+        }
+        return false;
+    }
+
 }

@@ -20,8 +20,10 @@ package net.sourceforge.myfaces.taglib;
 
 import net.sourceforge.myfaces.component.UIComponentUtils;
 import net.sourceforge.myfaces.component.UIRoot;
-import net.sourceforge.myfaces.renderkit.html.HTMLRenderer;
+import net.sourceforge.myfaces.renderkit.html.HtmlRenderer;
 import net.sourceforge.myfaces.renderkit.html.jspinfo.JspInfo;
+import net.sourceforge.myfaces.taglib.legacy.MyFacesTagBaseIF;
+import net.sourceforge.myfaces.taglib.legacy.UIComponentTagHacks;
 import net.sourceforge.myfaces.util.bean.BeanUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -84,7 +86,7 @@ public class MyFacesTagHelper
 
     public boolean isComponentVisible()
     {
-        return HTMLRenderer.isComponentVisible(getFacesContext(),
+        return HtmlRenderer.isComponentVisible(getFacesContext(),
                                                _tag.getComponent());
     }
 

@@ -18,15 +18,8 @@
  */
 package net.sourceforge.myfaces.config;
 
-import org.apache.commons.collections.IteratorUtils;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
 import javax.faces.convert.Converter;
+import java.util.*;
 
 
 /**
@@ -48,7 +41,7 @@ public class ConverterConfig implements Config
 
     public Iterator getAttributeNames()
     {
-        return (_attributeConfigMap == null) ? IteratorUtils.EMPTY_ITERATOR
+        return (_attributeConfigMap == null) ? Collections.EMPTY_SET.iterator()
                                              : _attributeConfigMap.keySet().iterator();
     }
 
