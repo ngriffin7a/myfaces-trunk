@@ -33,6 +33,7 @@ public class JSFAttr
     public static final String   ESCAPE_ATTR                    = "escape";
     public static final String   TRANSIENT_ATTR                 = "transient";
     public static final String   FORCE_ID_ATTR                  = "forceId";
+    public static final String   FORCE_ID_INDEX_ATTR            = "forceIdIndex";
     
     // Common Output Attributes
     public static final String   FOR_ATTR                       = "for";

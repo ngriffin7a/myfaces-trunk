@@ -24,6 +24,9 @@ import javax.faces.webapp.UIComponentTag;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.10  2005/01/28 17:19:09  matzew
+ * Patch for MYFACES-91 form Sean Schofield
+ *
  * Revision 1.9  2005/01/25 22:15:53  matzew
  * JavaDoc patch form Sean Schofield
  *
@@ -57,6 +60,7 @@ public abstract class UIComponentTagBase
     //UIComponent attributes
     private String _transient;
     private String _forceId;
+    private String _forceIdIndex = "true";
     
     //Special UIComponent attributes (ValueHolder, ConvertibleValueHolder)
     private String _value;
@@ -69,6 +73,7 @@ public abstract class UIComponentTagBase
 
         setBooleanProperty(component, JSFAttr.TRANSIENT_ATTR, _transient);
         setBooleanProperty(component, JSFAttr.FORCE_ID_ATTR, _forceId);
+        setBooleanProperty(component, JSFAttr.FORCE_ID_INDEX_ATTR, _forceIdIndex);
 
         //rendererType already handled by UIComponentTag
 
@@ -99,6 +104,17 @@ public abstract class UIComponentTagBase
     {
         _forceId = aForceId;
     }
+    
+    /**
+     * Sets the forceIdIndex attribute of the tag.  NOTE: Not every tag that extends this class will 
+     * actually make use of this attribute.  Check the TLD to see which components actually implement it.
+     * 
+     * @param aForceIdIndex The value of the forceIdIndex attribute.
+     */
+    public void setForceIdIndex(String aForceIdIndex)
+    {
+        _forceIdIndex = aForceIdIndex;
+    }    
 
     public void setValue(String value)
     {

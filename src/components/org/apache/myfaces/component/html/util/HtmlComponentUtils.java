@@ -77,10 +77,22 @@ public class HtmlComponentUtils
             {
                 if (parentContainer instanceof UIData)
                 {
-                    int rowIndex = ((UIData)parentContainer).getRowIndex();
-                    if (rowIndex != -1)
+                    // see if the originally supplied id should be used 
+                    Boolean forceIdIndexValue = (Boolean)component.getAttributes().get(JSFAttr.FORCE_ID_INDEX_ATTR);
+                    boolean forceIdIndex = true;
+
+                    if (forceIdIndexValue != null)
                     {
-                        clientId = clientId + "[" + rowIndex + "]";
+                        forceIdIndex = forceIdIndexValue.booleanValue();
+                    }        
+
+                    // note: user may have specifically requested that we do not add the special forceId [index] suffix
+                    if (forceIdIndex)
+                    {
+                        int rowIndex = ( (UIData) parentContainer).getRowIndex();
+                        if (rowIndex != -1) {
+                            clientId = clientId + "[" + rowIndex + "]";
+                        }
                     }
                 }
             }
