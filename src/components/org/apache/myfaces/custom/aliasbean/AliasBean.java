@@ -46,6 +46,9 @@ import org.apache.commons.logging.LogFactory;
  * @author Sylvain Vieujot (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.10  2005/03/15 00:34:17  svieujot
+ * Close MYFACES-128, thanks to Mathias Broekelmann.
+ *
  * Revision 1.9  2005/03/10 22:42:26  svieujot
  * Close MYFACES-125 thanks to Mathias Broekelmann.
  *
@@ -134,15 +137,13 @@ public class AliasBean extends UIComponentBase {
     }
 
     public Object processSaveState(FacesContext context) {
-        // This is the same code as the one from UIComponentBase
-        // but it's inlined here to be sure that it matches
-        // with the code of processRestoreState.
-        // This ensures the component is portable to the JSF RI.
-
         if (context == null)
             throw new NullPointerException("context");
         if (isTransient())
             return null;
+		
+		makeAlias(context);
+		
         Map facetMap = null;
         for (Iterator it = getFacets().entrySet().iterator(); it.hasNext();) {
             Map.Entry entry = (Map.Entry) it.next();
@@ -164,6 +165,9 @@ public class AliasBean extends UIComponentBase {
                 }
             }
         }
+		
+		removeAlias(context);
+		
         return new Object[] { saveState(context), facetMap, childrenList };
     }
 

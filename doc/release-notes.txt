@@ -36,6 +36,7 @@ Changes in Release 1.0.9
 * closed MYFACES-121 in Jira
 * closed MYFACES-122 in Jira
 * closed MYFACES-126 in Jira
+* closed MYFACES-128 in Jira
 * closed MYFACES-132 in Jira
 ----------------------------------------------------------------------
 Changes in Release 1.0.8 beta_RC2
