@@ -29,6 +29,7 @@ import org.apache.commons.logging.LogFactory;
 import javax.faces.FacesException;
 import javax.faces.component.*;
 import javax.faces.component.html.HtmlSelectBooleanCheckbox;
+import javax.faces.component.html.HtmlSelectManyCheckbox;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 import javax.faces.convert.Converter;
@@ -41,6 +42,10 @@ import java.util.*;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.14  2004/06/21 23:23:37  o_rossmueller
+ * fix #976411: removed </input> tag for selectMultiCheckbox
+ * fix #972165: also check for readonly and also check for selectMultiCheckbox
+ *
  * Revision 1.13  2004/06/17 00:35:50  o_rossmueller
  * fix #972165: do not reset disabled html checkboxes (the browser does not send a form value for disabled checkboxes even if value=true)
  *
@@ -164,7 +169,7 @@ public final class HtmlRendererUtils
                 // bug #972165: for disabled components the browser does not send a form value, so we have to
                 // check this to avoid modification of disabled component
                 if (component instanceof HtmlSelectBooleanCheckbox) {
-                    if (! ((HtmlSelectBooleanCheckbox)component).isDisabled()) {
+                    if (! (((HtmlSelectBooleanCheckbox)component).isDisabled() || ((HtmlSelectBooleanCheckbox)component).isReadonly())) {
                         ((EditableValueHolder)component).setSubmittedValue(Boolean.FALSE);
                     }
                 } else {
@@ -201,7 +206,16 @@ public final class HtmlRendererUtils
             // if there is a submittedValue from a former submit!
             if (((EditableValueHolder)component).getSubmittedValue() == null)
             {
+                // bug #972165: for disabled components the browser does not send a form value, so we have to
+                // check this to avoid modification of disabled component
+                if (component instanceof HtmlSelectManyCheckbox) {
+                    if (! (((HtmlSelectManyCheckbox)component).isDisabled() || ((HtmlSelectManyCheckbox)component).isReadonly())) {
+                        ((EditableValueHolder)component).setSubmittedValue(EMPTY_STRING_ARRAY);
+                    }
+                } else {
+
                 ((EditableValueHolder)component).setSubmittedValue(EMPTY_STRING_ARRAY);
+                }
             }
         }
     }

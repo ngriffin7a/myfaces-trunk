@@ -45,6 +45,10 @@ import java.util.Set;
  * @author Anton Koinov
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.7  2004/06/21 23:23:37  o_rossmueller
+ * fix #976411: removed </input> tag for selectMultiCheckbox
+ * fix #972165: also check for readonly and also check for selectMultiCheckbox
+ *
  * Revision 1.6  2004/06/04 00:26:16  o_rossmueller
  * modified renderes to comply with JSF 1.1
  *
@@ -217,14 +221,12 @@ public class HtmlCheckboxRendererBase
         {
             writer.writeAttribute(HTML.DISABLED_ATTR, Boolean.TRUE, null);
         }
-
+        writer.writeText("", null); // close input
         if ((label != null) && (label.length() > 0))
         {
             writer.write(HTML.NBSP_ENTITY);
             writer.writeText(label, null);
         }
-
-        writer.endElement(HTML.INPUT_ELEM);
     }
 
 
