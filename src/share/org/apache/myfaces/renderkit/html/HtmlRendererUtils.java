@@ -39,6 +39,9 @@ import java.util.*;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.17  2004/07/18 22:45:11  o_rossmueller
+ * fix #992668: convert values to string for 'selected' comparision
+ *
  * Revision 1.16  2004/07/09 02:26:19  dave0000
  * cleanup
  *
@@ -433,6 +436,22 @@ public final class HtmlRendererUtils
     {
         ResponseWriter writer = context.getResponseWriter();
 
+        Set lookup = new HashSet(lookupSet.size());
+        for (Iterator iterator = lookupSet.iterator(); iterator.hasNext();)
+        {
+            Object o = iterator.next();
+
+            if (converter == null) {
+                lookup.add(o);
+            } else {
+                if (o == null) {
+                    lookup.add(null);
+                } else {
+                    lookup.add(converter.getAsString(context, component, o));
+                }
+            }
+        }
+
         for (Iterator it = selectItemList.iterator(); it.hasNext(); )
         {
             SelectItem selectItem = (SelectItem)it.next();
@@ -455,8 +474,8 @@ public final class HtmlRendererUtils
                 writer.startElement(HTML.OPTION_ELEM, null);
                 writer.writeAttribute(HTML.VALUE_ATTR, itemStrValue, null);
 
-                if ((lookupSubmittedValue && lookupSet.contains(itemStrValue)) ||
-                    (!lookupSubmittedValue && lookupSet.contains(itemValue)))
+                if ((lookupSubmittedValue && lookup.contains(itemStrValue)) ||
+                    (!lookupSubmittedValue && lookup.contains(itemStrValue)))
                 {
                     writer.writeAttribute(HTML.SELECTED_ATTR, HTML.SELECTED_ATTR, null);
                 }
