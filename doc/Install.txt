@@ -4,8 +4,9 @@ MyFaces installation instructions
 What you need
 -------------
 - JDK 1.4.0 (or higher)
-- Tomcat 4.0.4 (or higher) (get it from http://jakarta.apache.org/tomcat/index.html)
+- Tomcat 4.0.x (get it from http://jakarta.apache.org/tomcat/index.html)
 - JSF-API (get the jsf-api.jar from the "JavaServerTM Faces v1.0 Reference Implementation Early Access 3" at http://java.sun.com/j2ee/javaserverfaces/download.html)
+- mail.jar (FIXME: )
 
 
 HOWTO - Run the Example-Application
@@ -41,3 +42,4 @@ HOWTO - Use MyFaces in your own WebApp
 - Add the line
 	<%@ taglib uri="/WEB-INF/myfaces_ext.tld" prefix="x"%>
   to your JSPs to be able to use the MyFaces extensions tags.
+- FIXME: mail.jar
