@@ -19,6 +19,7 @@
 package net.sourceforge.myfaces.taglib.html;
 
 import net.sourceforge.myfaces.renderkit.JSFAttr;
+import net.sourceforge.myfaces.renderkit.html.HTML;
 
 import javax.faces.component.UIComponent;
 
@@ -27,6 +28,9 @@ import javax.faces.component.UIComponent;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.4  2004/06/22 15:31:00  prophecyslides
+ * Added readonly attribute
+ *
  * Revision 1.3  2004/04/16 15:13:31  manolito
  * validator attribute support and MethodBinding invoke exception handling fixed
  *
@@ -53,6 +57,7 @@ public abstract class HtmlInputTagBase
     private String _required;
     private String _validator;
     private String _valueChangeListener;
+    private String _readonly;
 
 
     protected void setProperties(UIComponent component)
@@ -63,6 +68,7 @@ public abstract class HtmlInputTagBase
         setBooleanProperty(component, JSFAttr.REQUIRED_ATTR, _required);
         setValidatorProperty(component, _validator);
         setValueChangedListenerProperty(component, _valueChangeListener);
+        setBooleanProperty(component, HTML.READONLY_ATTR, _readonly);
     }
 
     public void setImmediate(String immediate)
@@ -83,6 +89,9 @@ public abstract class HtmlInputTagBase
     public void setValueChangeListener(String valueChangeListener)
     {
         _valueChangeListener = valueChangeListener;
+    }
+    public void setReadonly(String _readonly) {
+        this._readonly = _readonly;
     }
 
 }
