@@ -32,6 +32,9 @@ import org.apache.myfaces.renderkit.html.util.JavascriptUtils;
  * @author Sylvain Vieujot (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.2  2004/12/03 08:31:28  manolito
+ * writer.append copy'n'paste error?
+ *
  * Revision 1.1  2004/12/02 22:28:30  svieujot
  * Add an x:htmlEditor based on the Kupu library.
  *
@@ -451,7 +454,7 @@ public class HtmlEditorRenderer extends Renderer {
              									writer.startElement(HTML.TD_ELEM, null);
              									writer.writeAttribute(HTML.COLSPAN_ATTR, "2", null);
              									writer.writeAttribute(HTML.STYLE_ATTR, "text-align: center", null);
-             										writer.append("<br/>");
+             										writer.startElement(HTML.BR_ELEM, null);
              										writer.startElement(HTML.BUTTON_ELEM, null);
              										writer.writeAttribute(HTML.TYPE_ATTR, "button", null);
              										writer.writeAttribute(HTML.ONCLICK_ATTR, "drawertool.current_drawer.createTable()", null);
@@ -533,7 +536,7 @@ public class HtmlEditorRenderer extends Renderer {
                          						writer.startElement(HTML.TD_ELEM, null);
                          						writer.writeAttribute(HTML.COLSPAN_ATTR, "2", null);
                          						writer.writeAttribute(HTML.STYLE_ATTR, "text-align: center", null);
-         											writer.append("<br/>");
+                                                    writer.startElement(HTML.BR_ELEM, null);
 	                         						writer.startElement(HTML.BUTTON_ELEM, null);
 	                         						writer.writeAttribute(HTML.TYPE_ATTR, "button", null);
 	                         						writer.writeAttribute(HTML.ONCLICK_ATTR, "drawertool.closeDrawer()", null);
