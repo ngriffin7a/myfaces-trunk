@@ -134,6 +134,7 @@ public class TextRenderer
     {
         ResponseWriter writer = facesContext.getResponseWriter();
 
+        // TODO: don't render span when empty
         writer.write("<span");
         HTMLUtil.renderCssClass(writer, uiComponent, OUTPUT_CLASS_ATTR);
         HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML_UNIVERSAL_ATTRIBUTES);

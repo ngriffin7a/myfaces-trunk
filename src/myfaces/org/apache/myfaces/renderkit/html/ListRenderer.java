@@ -457,11 +457,12 @@ public class ListRenderer
     {
         String style = null;
         int column = getActualColumnAttr(context).intValue();
+        int row = getActualRowAttr(context).intValue();
 
         Styles styles = getStyles(context);
 
         boolean hasHeaderStyle = styles.getHeaderStyle().length() > 0;
-        if (styles == null || hasHeaderStyle)
+        if (styles == null || row == 0 && hasHeaderStyle)
         {
             return null;
         }
