@@ -6,6 +6,8 @@
 
 <!-- =========== FULL CONFIGURATION FILE ================================== -->
 
+<!-- simple web app -->
+
 <faces-config>
 
     <!-- Managed Beans for sample1.jsp -->
