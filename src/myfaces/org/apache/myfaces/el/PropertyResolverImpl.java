@@ -404,9 +404,22 @@ extends PropertyResolver
             beanInfo.getPropertyDescriptors();
 
         // TODO: cache this in classLoader safe way
-        for (int i = 0, len = propDescriptors.length; i < len; i++)
+        // binary search
+        for (
+            int l = 0, h = propDescriptors.length - 1, i = h / 2; l <= h;
+                    i = (l + h) / 2)
         {
-            if (propDescriptors[i].getName().equals(propertyName))
+            int compare = propDescriptors[i].getName().compareTo(propertyName);
+
+            if (compare > 0)
+            {
+                h = i - 1;
+            }
+            else if (compare < 0)
+            {
+                l = i + 1;
+            }
+            else
             {
                 return propDescriptors[i];
             }
