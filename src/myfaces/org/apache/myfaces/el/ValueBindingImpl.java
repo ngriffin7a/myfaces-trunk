@@ -168,7 +168,7 @@ public class ValueBindingImpl
 
         if (base == null)
         {
-            return null; // (see JSF 1.0, PRD2, 5.1.2.1)
+            return null;
         }
 
         int maxIndex = _parsedReference.length - 1;
@@ -249,7 +249,7 @@ public class ValueBindingImpl
 
         if (name == null)
         {
-            return null; // (see JSF 1.0, PRD2, 5.1.2.1)
+            return null;
         }
 
         return (name instanceof String)
@@ -260,18 +260,19 @@ public class ValueBindingImpl
     }
 
     /**
-     * Get a simple (not nested) property name and type (int or String) as
-     * defined in JSF 1.0, PRD2, 5.1.2
+     * Get the name of a simple (not nested) property (as String) or index of array
+     * or <code>List</code> (as Integer) based on the <code>base</code> type
      *
      * <p>
      * We need this function, because <code>PropertyResolver</code> does not
      * provide <code>getValue</code> function where the property is of type
      * <code>Object</code>. Therefore, we must decide which
-     * <code>getValue</code> function to call
+     * <code>getValue</code> function to call. We also need to get the value
+     * of <code>name</code>, when it is a <code>ValueBinding</code> expression 
      * </p>
      *
-     * @param base the bean to access
-     * @param name the property to access, will be coerced to String or Integer
+     * @param base the bean, which property would be to accessed
+     * @param name the property/index to access, will be coerced to String or Integer
      *        as needed
      *
      * @return the name or index of the property
@@ -287,11 +288,6 @@ public class ValueBindingImpl
         if (name instanceof ValueBinding)
         {
             name = ((ValueBinding) name).getValue(facesContext);
-
-            if (name == null)
-            {
-                return null; // (see JSF 1.0, PRD2, 5.1.2.1)
-            }
         }
 
         if ((base.getClass().isArray()) || (base instanceof List))
@@ -317,8 +313,7 @@ public class ValueBindingImpl
     }
 
     /**
-     * Coerces the supplied object to String based on coercion rules defined in
-     * JSF 1.0, PRD2, 5.1.2.4
+     * Coerces the supplied object to String based on coercion rules defined for JSP EL
      *
      * <p>
      * Note: null object coerced to empty string--per JSF
@@ -366,7 +361,7 @@ public class ValueBindingImpl
 
             if (base == null)
             {
-                return null; // (see JSF 1.0, PRD2, 5.1.2.1)
+                return null;
             }
         }
 
@@ -401,8 +396,7 @@ public class ValueBindingImpl
     }
 
     /**
-     * Coerces the supplied object to Integer based on coercion rules defined
-     * in JSF 1.0, PRD2, 5.1.2.4
+     * Coerces the supplied object to Integer based on coercion rules defined for JSP EL
      *
      * <p>
      * Note: null object or empty string are coerced to 0 (zero)--per JSF
@@ -427,7 +421,7 @@ public class ValueBindingImpl
 
             if (s.length() == 0)
             {
-                return ZERO; // (see JSF 1.0, PRD2, 5.1.2.4)
+                return ZERO; // empty strings are considered to be 0
             }
 
             try
@@ -450,23 +444,16 @@ public class ValueBindingImpl
             return integer(((Number) obj).intValue());
         }
 
-        if (obj instanceof Character)
-        {
-            // REVISIT: per spec, convert to Short first. Why? Is conversion Character->Short different somehow than Character->Integer?
-            //           (see JSF 1.0, PRD2, 5.1.2.4)
-            return integer(((Character) obj).charValue());
-        }
-
-        // WARNING: JSF 1.0, PRD2, 5.1.2.4 requires that we throw ReferenceSyntaxException
-        //          for Boolean. The following implementation violates the spec
         if (obj instanceof Boolean)
         {
             return ((Boolean) obj).booleanValue() ? ONE : ZERO;
         }
 
-        // JSF spec mentions about coercion of primitive types,
-        //   we do not handle the primitive numeric types here,
-        //   since there is no way to pass those to this function
+        if (obj instanceof Character)
+        {
+            return integer(((Character) obj).charValue());
+        }
+
         throw new ReferenceSyntaxException(
             "Reference: " + _reference + "Unable to coerce " + obj.getClass() + " to int");
     }

@@ -197,7 +197,7 @@ public class PropertyResolverImpl
         {
             if (base instanceof List)
             {
-                // REVISIT: does it make sense to do this or simply return Object.class? What if the new value is not of the same class?
+                // REVISIT: does it make sense to do this or simply return Object.class? What if the new value is not of the old value's class?
                 Object value = ((List) base).get(index);
 
                 return (value != null) ? value.getClass() : Object.class; // until generics are implemented in JVM 1.5
@@ -288,7 +288,7 @@ public class PropertyResolverImpl
     {
         if ((base == null) || (name == null) || (name.length() == 0))
         {
-            return null; // (see JSF 1.0, PRD2, 5.1.2.1)
+            return null;
         }
 
         if (base instanceof Map)
@@ -338,7 +338,7 @@ public class PropertyResolverImpl
     {
         if (base == null)
         {
-            return null; // (see JSF 1.0, PRD2, 5.1.2.1)
+            return null;
         }
 
         try
@@ -361,7 +361,7 @@ public class PropertyResolverImpl
         catch (IndexOutOfBoundsException e)
         {
             // Note: ArrayIndexOutOfBoundsException also here
-            return null; // (see JSF 1.0, PRD2, 5.1.2.1)
+            return null;
         }
 
         throw new ReferenceSyntaxException(
