@@ -40,7 +40,7 @@ public class VerbatimTag
         return "javax.faces.Output";
     }
 
-    protected String getDefaultRendererType()
+    public String getRendererType()
     {
         return "javax.faces.Text";
     }

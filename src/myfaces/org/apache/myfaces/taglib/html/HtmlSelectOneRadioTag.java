@@ -26,6 +26,9 @@ import javax.faces.component.html.HtmlSelectOneRadio;
  * @author Martin Marinschek
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.11  2004/04/05 11:04:56  manolito
+ * setter for renderer type removed, no more default renderer type needed
+ *
  * Revision 1.10  2004/03/31 13:31:34  manolito
  * no message
  *
@@ -41,7 +44,7 @@ public class HtmlSelectOneRadioTag
         return HtmlSelectOneRadio.COMPONENT_TYPE;
     }
 
-    protected String getDefaultRendererType()
+    public String getRendererType()
     {
         return "javax.faces.Radio";
     }

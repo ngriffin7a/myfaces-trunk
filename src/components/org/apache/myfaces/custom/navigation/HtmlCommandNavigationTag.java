@@ -25,6 +25,9 @@ import net.sourceforge.myfaces.taglib.html.ext.HtmlCommandLinkTag;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.3  2004/04/05 11:04:53  manolito
+ * setter for renderer type removed, no more default renderer type needed
+ *
  * Revision 1.2  2004/04/01 12:57:40  manolito
  * additional extended component classes for user role support
  *
@@ -37,7 +40,7 @@ public class HtmlCommandNavigationTag
         return HtmlCommandNavigation.COMPONENT_TYPE;
     }
 
-    protected String getDefaultRendererType()
+    public String getRendererType()
     {
         return "net.sourceforge.myfaces.Navigation";
     }

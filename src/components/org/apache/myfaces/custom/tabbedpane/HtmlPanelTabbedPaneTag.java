@@ -37,7 +37,7 @@ public class HtmlPanelTabbedPaneTag
         return HtmlPanelTabbedPane.COMPONENT_TYPE;
     }
 
-    protected String getDefaultRendererType()
+    public String getRendererType()
     {
         return "net.sourceforge.myfaces.TabbedPane";
     }

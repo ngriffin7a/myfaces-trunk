@@ -38,7 +38,7 @@ public class HtmlInputFileUploadTag
         return HtmlInputFileUpload.COMPONENT_TYPE;
     }
 
-    protected String getDefaultRendererType()
+    public String getRendererType()
     {
         return "net.sourceforge.myfaces.FileUpload";
     }

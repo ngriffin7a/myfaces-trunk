@@ -36,7 +36,7 @@ public class HtmlPanelNavigationTag
         return HtmlPanelNavigation.COMPONENT_TYPE;
     }
 
-    protected String getDefaultRendererType()
+    public String getRendererType()
     {
         return "net.sourceforge.myfaces.Navigation";
     }

@@ -24,6 +24,9 @@ import javax.faces.component.html.HtmlDataTable;
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.13  2004/04/05 11:04:55  manolito
+ * setter for renderer type removed, no more default renderer type needed
+ *
  * Revision 1.12  2004/04/01 12:57:43  manolito
  * additional extended component classes for user role support
  *
@@ -39,7 +42,7 @@ public class HtmlDataTableTag
         return HtmlDataTable.COMPONENT_TYPE;
     }
 
-    protected String getDefaultRendererType()
+    public String getRendererType()
     {
         return "javax.faces.Table";
     }

@@ -27,6 +27,9 @@ import javax.faces.component.UIComponent;
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.4  2004/04/05 11:04:54  manolito
+ * setter for renderer type removed, no more default renderer type needed
+ *
  * Revision 1.3  2004/04/02 13:57:10  manolito
  * extended HtmlSelectManyCheckbox with layout "spread" and custom Checkbox component
  *
@@ -41,7 +44,7 @@ public class HtmlRadioTag
         return HtmlRadio.COMPONENT_TYPE;
     }
 
-    protected String getDefaultRendererType()
+    public String getRendererType()
     {
         return null;
     }

@@ -28,6 +28,9 @@ import javax.faces.component.UIComponent;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.2  2004/04/05 11:04:55  manolito
+ * setter for renderer type removed, no more default renderer type needed
+ *
  * Revision 1.1  2004/04/01 12:57:42  manolito
  * additional extended component classes for user role support
  *
@@ -40,7 +43,7 @@ public class HtmlSelectOneMenuTag
         return HtmlSelectOneMenu.COMPONENT_TYPE;
     }
 
-    protected String getDefaultRendererType()
+    public String getRendererType()
     {
         return "javax.faces.Menu";
     }

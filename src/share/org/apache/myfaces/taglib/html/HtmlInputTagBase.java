@@ -27,6 +27,9 @@ import javax.faces.component.UIComponent;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.2  2004/04/05 11:04:56  manolito
+ * setter for renderer type removed, no more default renderer type needed
+ *
  * Revision 1.1  2004/03/30 13:41:20  royalts
  * no message
  *
@@ -37,18 +40,6 @@ import javax.faces.component.UIComponent;
 public abstract class HtmlInputTagBase
     extends HtmlComponentTagBase
 {
-    /*
-    public String getComponentType()
-    {
-        return UIInput.COMPONENT_TYPE;
-    }
-
-    protected String getDefaultRendererType()
-    {
-        return "javax.faces.Text";
-    }
-    */
-
     // UIComponent attributes --> already implemented in UIComponentTagBase
 
     // UIOutput attributes

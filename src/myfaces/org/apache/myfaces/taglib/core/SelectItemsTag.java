@@ -34,7 +34,7 @@ public class SelectItemsTag
         return "javax.faces.SelectItems";
     }
 
-    protected String getDefaultRendererType()
+    public String getRendererType()
     {
         return null;
     }

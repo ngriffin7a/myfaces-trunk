@@ -36,7 +36,7 @@ public class HtmlPanelTabTag
         return HtmlPanelTab.COMPONENT_TYPE;
     }
 
-    protected String getDefaultRendererType()
+    public String getRendererType()
     {
         return "javax.faces.Group";
     }

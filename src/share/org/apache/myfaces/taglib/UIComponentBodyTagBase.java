@@ -34,6 +34,9 @@ import java.io.Reader;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.7  2004/04/05 11:04:56  manolito
+ * setter for renderer type removed, no more default renderer type needed
+ *
  * Revision 1.6  2004/04/01 13:18:39  manolito
  * warning message
  *
@@ -105,16 +108,10 @@ public abstract class UIComponentBodyTagBase
 
     //-------- rest is identical to UIComponentTagBase ------------------
 
-    /**
-     * Must be implemented by sub classes.
-     */
-    protected abstract String getDefaultRendererType();
-
     //UIComponent attributes
     private String _transient;
 
     //Special UIComponent attributes (ValueHolder, ConvertibleValueHolder)
-    private String _rendererType;
     private String _value;
     private String _converter;
     //attributes id, rendered and binding are handled by UIComponentTag
@@ -129,16 +126,6 @@ public abstract class UIComponentBodyTagBase
 
         setValueProperty(component, _value);
         setConverterProperty(component, _converter);
-    }
-
-    public final String getRendererType()
-    {
-        return _rendererType == null ? getDefaultRendererType() : _rendererType;
-    }
-
-    public void setRendererType(String rendererType)
-    {
-        _rendererType = rendererType;
     }
 
     public void setTransient(String aTransient)

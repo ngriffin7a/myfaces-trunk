@@ -27,6 +27,9 @@ import javax.faces.webapp.UIComponentTag;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.4  2004/04/05 11:04:57  manolito
+ * setter for renderer type removed, no more default renderer type needed
+ *
  * Revision 1.3  2004/04/01 09:33:43  manolito
  * user role support removed
  *
@@ -39,16 +42,10 @@ public abstract class UIComponentTagBase
 {
     //private static final Log log = LogFactory.getLog(UIComponentTagBase.class);
 
-    /**
-     * Must be implemented by sub classes.
-     */
-    protected abstract String getDefaultRendererType();
-
     //UIComponent attributes
     private String _transient;
 
     //Special UIComponent attributes (ValueHolder, ConvertibleValueHolder)
-    private String _rendererType;
     private String _value;
     private String _converter;
     //attributes id, rendered and binding are handled by UIComponentTag
@@ -63,16 +60,6 @@ public abstract class UIComponentTagBase
 
         setValueProperty(component, _value);
         setConverterProperty(component, _converter);
-    }
-
-    public final String getRendererType()
-    {
-        return _rendererType == null ? getDefaultRendererType() : _rendererType;
-    }
-
-    public void setRendererType(String rendererType)
-    {
-        _rendererType = rendererType;
     }
 
     public void setTransient(String aTransient)

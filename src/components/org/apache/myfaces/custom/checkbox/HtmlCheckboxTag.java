@@ -27,6 +27,9 @@ import javax.faces.component.UIComponent;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.2  2004/04/05 11:04:52  manolito
+ * setter for renderer type removed, no more default renderer type needed
+ *
  * Revision 1.1  2004/04/02 13:57:10  manolito
  * extended HtmlSelectManyCheckbox with layout "spread" and custom Checkbox component
  *
@@ -41,7 +44,7 @@ public class HtmlCheckboxTag
         return HtmlCheckbox.COMPONENT_TYPE;
     }
 
-    protected String getDefaultRendererType()
+    public String getRendererType()
     {
         return null;
     }

@@ -26,6 +26,9 @@ import javax.faces.component.html.HtmlSelectManyListbox;
  * @author Martin Marinschek
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.12  2004/04/05 11:04:56  manolito
+ * setter for renderer type removed, no more default renderer type needed
+ *
  * Revision 1.11  2004/04/01 12:57:43  manolito
  * additional extended component classes for user role support
  *
@@ -38,7 +41,7 @@ public class HtmlSelectManyListboxTag
         return HtmlSelectManyListbox.COMPONENT_TYPE;
     }
 
-    protected String getDefaultRendererType()
+    public String getRendererType()
     {
         return "javax.faces.Listbox";
     }
