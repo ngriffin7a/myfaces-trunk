@@ -254,17 +254,7 @@ public class WebXmlParser
             }
         }
         urlPattern = urlPattern.trim();
-        if ((urlPattern.startsWith("*.") && urlPattern.length() > 2) ||
-            urlPattern.indexOf("/*") >= 0)
-        {
-            _webXml.addServletMapping(servletName, urlPattern);
-        }
-        else
-        {
-            log.error("ignoring servlet-mapping for urlpattern = " +
-                      urlPattern + "(urlpattern seems to be invalid)");
-
-        }
+        _webXml.addServletMapping(servletName, urlPattern);
     }
 
 }
