@@ -90,8 +90,35 @@ public class MessageResourcesResourceBundleImpl
                 throw new FacesException("Error in MessageResourcesResourceBundle properties file: Unknown severity \"" + token + "\".");
             }
 
-            String summary = st.nextToken().trim();
-            String detail = st.nextToken().trim();
+            String summary = st.nextToken();
+            //remove leading whitespace
+            if (summary.length() > 0 &&
+                Character.isWhitespace(summary.charAt(0)))
+            {
+                summary = summary.substring(1);
+            }
+            //remove ending whitespace
+            if (summary.length() > 0 &&
+                Character.isWhitespace(summary.charAt(summary.length() - 1)))
+            {
+                summary = summary.substring(0, summary.length() - 1);
+            }
+
+            String detail;
+            if (st.hasMoreTokens())
+            {
+                detail = st.nextToken().trim();
+                //remove leading whitespace
+                if (detail.length() > 0 &&
+                    Character.isWhitespace(detail.charAt(0)))
+                {
+                    detail = detail.substring(1);
+                }
+            }
+            else
+            {
+                detail = "";
+            }
 
             if (params != null)
             {

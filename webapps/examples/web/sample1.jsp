@@ -66,13 +66,19 @@
                 <h4>A Form</h4>
                 <table border="1"><tr><td>
                     <h:form id="form1" formName="calcForm">
-                        Number 1: <h:input_text id="number1" modelReference="calcForm.number1" maxlength="10" size="25" >
-                                       <f:validate_longrange minimum="1" maximum="10" />
-                                  </h:input_text>
-                                  <h:output_errors id="number1Error" clientId="number1" outputClass="error" /><br>
-                        Number 2: <h:input_text id="number2" modelReference="calcForm.number2" maxlength="10" size="25"/>
-                                  <h:output_errors id="number2Error" clientId="number2" outputClass="error" /><br>
-                        Result: <h:output_text id="result" modelReference="calcForm.result" /><br>
+                        <h:output_label for="number1" value="Number 1" />:
+                        <h:input_text id="number1" modelReference="calcForm.number1" maxlength="10" size="25" >
+                           <f:validate_longrange minimum="1" maximum="10" />
+                        </h:input_text>
+                        <h:output_errors id="number1Error" clientId="number1" outputClass="error" /><br>
+
+                        <h:output_label for="number2" value="Number 2" />:
+                        <h:input_text id="number2" modelReference="calcForm.number2" maxlength="10" size="25"/>
+                        <h:output_errors id="number2Error" clientId="number2" outputClass="error" /><br>
+
+                        <h:output_label for="result" value="Result" />:
+                        <h:output_text id="result" modelReference="calcForm.result" /><br>
+
                         <h:command_button id="addButton" commandName="add" label="Add them">
                             <f:action_listener type="net.sourceforge.myfaces.examples.example1.CalcController" ></f:action_listener>
                         </h:command_button>
