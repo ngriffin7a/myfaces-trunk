@@ -16,23 +16,28 @@
 package org.apache.myfaces.custom.htmlEditor;
 
 import java.io.IOException;
-import java.util.Map;
 
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIForm;
+import javax.faces.component.UIOutput;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
-import javax.faces.render.Renderer;
+import javax.faces.convert.ConverterException;
 
 import org.apache.myfaces.component.html.util.AddResource;
 import org.apache.myfaces.renderkit.RendererUtils;
 import org.apache.myfaces.renderkit.html.HTML;
+import org.apache.myfaces.renderkit.html.HtmlRenderer;
+import org.apache.myfaces.renderkit.html.HtmlRendererUtils;
 import org.apache.myfaces.renderkit.html.util.JavascriptUtils;
 
 /**
  * @author Sylvain Vieujot (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.14  2004/12/09 05:19:12  svieujot
+ * Bugfix for submitted values that were not taken care of.
+ *
  * Revision 1.13  2004/12/08 04:36:27  svieujot
  * Cancel last *source attributes, and make style and styleClass more modular.
  *
@@ -72,9 +77,9 @@ import org.apache.myfaces.renderkit.html.util.JavascriptUtils;
  * Revision 1.1  2004/12/02 22:28:30  svieujot
  * Add an x:htmlEditor based on the Kupu library.
  */
-public class HtmlEditorRenderer extends Renderer {
+public class HtmlEditorRenderer extends HtmlRenderer {
     // TODO : Disabled mode
-    // TODO : Fallback on textarea whose content it converted to HTML for non kupu capable browsers (Safari)
+    // TODO : Fallback on textarea whose content it converted to HTML for non kupu capable browsers (Safari, smartphones, non javascript, ...)
 
     public void encodeEnd(FacesContext context, UIComponent component) throws IOException {
         RendererUtils.checkParamValidity(context, component, HtmlEditor.class);
@@ -880,7 +885,7 @@ public class HtmlEditorRenderer extends Renderer {
             
         writer.endElement(HTML.DIV_ELEM); // kupu-fulleditor
         
-        String value = (String) editor.getValue();
+        String value = RendererUtils.getStringValue(context, editor);
         String text = "<html><body>"+(value==null ? "" : value)+"</body></html>";
         String encodedText = text == null ? "" : JavascriptUtils.encodeString( text );
         
@@ -956,16 +961,13 @@ public class HtmlEditorRenderer extends Renderer {
 
     public void decode(FacesContext facesContext, UIComponent uiComponent) {
         RendererUtils.checkParamValidity(facesContext, uiComponent, HtmlEditor.class);
-        
-        //if( isDisabled(facesContext, uiComponent) ) // For safety, do not set the submited value if the component is disabled.
-        //    return;
-
-        HtmlEditor inputEditor = (HtmlEditor) uiComponent;
-        String clientId = inputEditor.getClientId(facesContext);
-        Map requestMap = facesContext.getExternalContext().getRequestParameterMap();
-        
-        String text = (String) requestMap.get(clientId);
-
-        inputEditor.setSubmittedValue( text );
+        HtmlRendererUtils.decodeUIInput(facesContext, uiComponent);
+    }
+    
+    public Object getConvertedValue(FacesContext facesContext, UIComponent uiComponent, Object submittedValue) throws ConverterException {
+        RendererUtils.checkParamValidity(facesContext, uiComponent, HtmlEditor.class);
+        return RendererUtils.getConvertedUIOutputValue(facesContext,
+                                                       (UIOutput)uiComponent,
+                                                       submittedValue);
     }
 }
