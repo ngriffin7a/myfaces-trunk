@@ -59,7 +59,7 @@ managed beans used:
 
             <h:panelGroup id="body">
 
-                <h:messages id="messageList" showSummary="true" showDetail="true" />
+                <x:messages id="messageList" showSummary="true" showDetail="true" summaryFormat="{0}:" />
 
                 <x:panelTabbedPane bgcolor="#FFFFCC" >
 
