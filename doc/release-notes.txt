@@ -1,6 +1,9 @@
 MyFaces Release Notes
 =====================
 
+* convert/impl/DateConverter now parses with the "formatPattern" of the component
+  if all other parsing attempts fail
+
 ----------------------------------------------------------------------
 Changes in Release 0.4.4
 * added "rendererType" attribute to tag library for all components.
