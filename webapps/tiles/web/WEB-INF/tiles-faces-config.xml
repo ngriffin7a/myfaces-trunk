@@ -13,6 +13,12 @@
         <view-handler>org.apache.myfaces.application.jsp.JspTilesViewHandlerImpl</view-handler>
     </application>
 
+	<managed-bean>
+		<managed-bean-name>tilesBacking</managed-bean-name>
+		<managed-bean-class>org.apache.myfaces.tiles.example.TilesBacking</managed-bean-class>
+		<managed-bean-scope>request</managed-bean-scope>
+	</managed-bean>
+	
     <navigation-rule>
         <from-view-id>*</from-view-id>
         <navigation-case>

@@ -12,7 +12,7 @@
         <h:outputText value="non-tiles page" />
     </h:commandLink>
     <h:form id="button">
-        <h:commandButton value="nested Tiles" action="nav_page4">
+        <h:commandButton value="nested Tiles" action="#{tilesBacking.pressMe}">
             <f:actionListener type="org.apache.myfaces.tiles.example.DemoActionListener"/>
         </h:commandButton>
     </h:form>
