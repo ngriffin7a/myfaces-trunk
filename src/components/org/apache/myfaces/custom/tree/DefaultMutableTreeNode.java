@@ -18,6 +18,7 @@ package org.apache.myfaces.custom.tree;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.List;
 
 /**
  * Default implementation of {@link MutableTreeNode}.
@@ -26,6 +27,9 @@ import java.util.Iterator;
  * @version $Revision$ $Date$
  *
  * $Log$
+ * Revision 1.5  2005/02/24 01:46:20  oros
+ * fixed constructor to use List instead of ArrayList
+ *
  * Revision 1.4  2004/11/26 12:14:10  oros
  * MYFACES-8: applied tree table patch by David Le Strat
  *
@@ -34,7 +38,7 @@ import java.util.Iterator;
 public class DefaultMutableTreeNode implements MutableTreeNode
 {
 
-    private ArrayList children = new ArrayList();
+    private List children = new ArrayList();
 
     private Object userObject;
 
@@ -54,7 +58,7 @@ public class DefaultMutableTreeNode implements MutableTreeNode
      * @param children The children.
      * @param allowsChildren The allowsChildren.
      */
-    public DefaultMutableTreeNode(ArrayList children, boolean allowsChildren)
+    public DefaultMutableTreeNode(List children, boolean allowsChildren)
     {
         this.children = children;
         this.allowsChildren = allowsChildren;
