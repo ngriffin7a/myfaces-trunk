@@ -59,22 +59,22 @@ managed beans used:
                                   ascending="true"
                                   columnReference="list.sort"
                                   ascendingReference="list.ascending" >
-                        <x:sortcolumn column="type" cssClass="sortLink" >
+                        <x:sortcolumn id="hdr1" column="type" cssClass="sortLink" >
                             <h:output_text value="Car-Type" />
                         </x:sortcolumn>
-                        <x:sortcolumn column="color" cssClass="sortLink" >
+                        <x:sortcolumn id="hdr2" column="color" cssClass="sortLink" >
                             <h:output_text id="list_header_iso" value="Car-Color"  />
                         </x:sortcolumn>
                     </x:sortheader>
                     <!-- DATA -->
                     <h:panel_data var="car" valueRef="list.cars" >
-                        <h:output_text valueRef="car.type" />
-                        <h:output_text valueRef="car.color" />
+                        <h:output_text id="col1" valueRef="car.type" />
+                        <h:output_text id="col2" valueRef="car.color" />
                     </h:panel_data>
                     <!-- FOOTER -->
                     <h:panel_group>
-                        <h:output_text value="..."  />
-                        <h:output_text value=""/>
+                        <h:output_text id="ftr1" value="..."  />
+                        <h:output_text id="ftr2" value=""/>
                     </h:panel_group>
                 </h:panel_list>
 

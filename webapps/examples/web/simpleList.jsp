@@ -58,9 +58,9 @@ managed beans used:
                         columnClasses="standardTable_Column,standardTable_ColumnCentered,standardTable_Column" >
                     <!-- HEADER -->
                     <h:panel_group>
-                        <h:output_text value="Country name" />
-                        <h:output_text value="Iso-Code" />
-                        <h:output_text value="Size" />
+                        <h:output_text id="hdr1" value="Country name" />
+                        <h:output_text id="hdr2" value="Iso-Code" />
+                        <h:output_text id="hdr3" value="Size" />
                     </h:panel_group>
                     <!-- DATA -->
                     <h:panel_data var="country" valueRef="countryList.countries" >
@@ -75,8 +75,8 @@ managed beans used:
 
                         </h:command_hyperlink>
 
-                        <h:output_text valueRef="country.isoCode" />
-                        <h:output_text valueRef="country.size" />
+                        <h:output_text id="col2" valueRef="country.isoCode" />
+                        <h:output_text id="col3" valueRef="country.size" />
                         <% rows++; %>
 
                     </h:panel_data>
