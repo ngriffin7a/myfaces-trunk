@@ -90,8 +90,7 @@ public class DateConverter
                     }
                 }
             }
-            throw new MyFacesConverterException(context,
-                                                CONVERTER_EXCEPTION_MSG_ID,
+            throw new MyFacesConverterException(CONVERTER_EXCEPTION_MSG_ID,
                                                 value);
         }
     }
@@ -128,8 +127,7 @@ public class DateConverter
         }
         else
         {
-            throw new MyFacesConverterException(context,
-                                                CONVERTER_EXCEPTION_TYPE_ERROR_MSG_ID,
+            throw new MyFacesConverterException(CONVERTER_EXCEPTION_TYPE_ERROR_MSG_ID,
                                                 value.getClass().getName());
         }
     }

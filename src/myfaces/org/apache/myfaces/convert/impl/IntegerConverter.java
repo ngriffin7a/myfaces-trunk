@@ -55,8 +55,7 @@ public class IntegerConverter
         }
         catch (ParseException e)
         {
-            throw new MyFacesConverterException(context,
-                                                CONVERTER_EXCEPTION_MSG_ID,
+            throw new MyFacesConverterException(CONVERTER_EXCEPTION_MSG_ID,
                                                 value);
         }
     }

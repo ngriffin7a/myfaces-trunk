@@ -23,6 +23,7 @@ import net.sourceforge.myfaces.component.html.MyFacesHtmlForm;
 import net.sourceforge.myfaces.renderkit.JSFAttr;
 import net.sourceforge.myfaces.renderkit.RendererUtils;
 import net.sourceforge.myfaces.renderkit.html.util.DummyFormResponseWriter;
+import net.sourceforge.myfaces.renderkit.html.util.DummyFormUtils;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLUtil;
 
 import javax.faces.application.ViewHandler;
@@ -207,20 +208,22 @@ public class HtmlLinkRenderer
 
         boolean insideForm;
         String formName;
+        DummyFormResponseWriter dummyFormResponseWriter;
         if (parent != null)
         {
             //link is nested inside a form
             UIForm form = (UIForm)parent;
             formName = MyFacesHtmlForm.getFormName(facesContext, form);
             insideForm = true;
+            dummyFormResponseWriter = null;
         }
         else
         {
             //not nested in form, we must add a dummy form at the end of the document
-            //we do this by replacing the current ResponseWriter by a wrapper
-            writer = DummyFormResponseWriter.installDummyFormResponseWriter(facesContext);
-            formName = DummyFormResponseWriter.DUMMY_FORM_NAME;
+            formName = DummyFormUtils.DUMMY_FORM_NAME;
             insideForm = false;
+            dummyFormResponseWriter = DummyFormUtils.getDummyFormResponseWriter(facesContext);
+            dummyFormResponseWriter.setWriteDummyForm(true);
         }
 
         StringBuffer onClick = new StringBuffer();
@@ -243,7 +246,7 @@ public class HtmlLinkRenderer
         }
         else
         {
-            ((DummyFormResponseWriter)writer).addHiddenParam(clientId);
+            dummyFormResponseWriter.addDummyFormParameter(clientId);
         }
 
         //add child parameters
@@ -270,7 +273,7 @@ public class HtmlLinkRenderer
                 }
                 else
                 {
-                    ((DummyFormResponseWriter)writer).addHiddenParam(name);
+                    dummyFormResponseWriter.addDummyFormParameter(name);
                 }
             }
         }

@@ -60,8 +60,7 @@ public class BooleanConverter
         Boolean b = (Boolean)BOOLEAN_MAP.get(value);
         if (b == null)
         {
-            throw new MyFacesConverterException(context,
-                                                CONVERTER_EXCEPTION_MSG_ID,
+            throw new MyFacesConverterException(CONVERTER_EXCEPTION_MSG_ID,
                                                 value);
         }
         return b;

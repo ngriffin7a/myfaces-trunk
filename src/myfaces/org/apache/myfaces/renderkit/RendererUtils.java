@@ -20,7 +20,6 @@ package net.sourceforge.myfaces.renderkit;
 
 import net.sourceforge.myfaces.component.ComponentUtils;
 import net.sourceforge.myfaces.component.UserRoleSupport;
-import net.sourceforge.myfaces.convert.ConverterUtils;
 import net.sourceforge.myfaces.util.HashMapUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -465,12 +464,11 @@ public class RendererUtils
             //No conversion needed
             return submittedValue;
         }
-
-        //Conversion
-        return ConverterUtils.getAsObjectWithErrorHandling(facesContext,
-                                                           output,
-                                                           converter,
-                                                           (String)submittedValue);
+        else
+        {
+            //Conversion
+            return converter.getAsObject(facesContext, output, (String)submittedValue);
+        }
     }
 
 
@@ -499,21 +497,19 @@ public class RendererUtils
             //No conversion needed
             return submittedValue;
         }
-
-        //Conversion
-        String[] submittedStrValues = (String[])submittedValue;
-        Object[] convertedValues;
-        convertedValues = new Object[submittedStrValues.length];
-        for (int i = 0; i < submittedStrValues.length; i++)
+        else
         {
-            convertedValues[i]
-                = ConverterUtils.getAsObjectWithErrorHandling(facesContext,
-                                                              selectMany,
-                                                              converter,
-                                                              submittedStrValues[i]);
+            //convert each item value
+            String[] submittedStrValues = (String[])submittedValue;
+            Object[] convertedValues;
+            convertedValues = new Object[submittedStrValues.length];
+            for (int i = 0; i < submittedStrValues.length; i++)
+            {
+                convertedValues[i]
+                    = converter.getAsObject(facesContext, selectMany, submittedStrValues[i]);
+            }
+            return convertedValues;
         }
-
-        return convertedValues;
     }
 
 }

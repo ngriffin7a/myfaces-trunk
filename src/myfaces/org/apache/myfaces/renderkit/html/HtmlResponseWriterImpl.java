@@ -18,11 +18,15 @@
  */
 package net.sourceforge.myfaces.renderkit.html;
 
+import net.sourceforge.myfaces.application.jsp.JspViewHandlerImpl;
+import net.sourceforge.myfaces.renderkit.html.util.DummyFormResponseWriter;
+import net.sourceforge.myfaces.renderkit.html.util.DummyFormUtils;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLEncoder;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import javax.faces.component.UIComponent;
+import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 import java.io.IOException;
 import java.io.Writer;
@@ -37,6 +41,7 @@ import java.util.Set;
  */
 public class HtmlResponseWriterImpl
         extends ResponseWriter
+        implements DummyFormResponseWriter
 {
     private static final Log log = LogFactory.getLog(HtmlResponseWriterImpl.class);
 
@@ -45,13 +50,14 @@ public class HtmlResponseWriterImpl
     private static final Set SUPPORTED_CONTENT_TYPES
             = Collections.singleton(DEFAUL_CONTENT_TYPE);
 
+    private boolean _writeDummyForm = false;
+    private Set _dummyFormParams = null;
+    
     private Writer _writer;
     private String _contentType;
     private String _characterEncoding;
 
-// currently not used
-//    private UIComponent _currentComponent = null;
-    /** 
+    /**
      * If null, then the element has been closed. This allows empty elements to be either
      * explicitly closed by calling endElement() (strongly recommeded for avoiding nesting errors)
      * or implicitly closed by closing an outer element. 
@@ -124,7 +130,11 @@ public class HtmlResponseWriterImpl
 
     public void endDocument() throws IOException
     {
-        closeStartElementIfNecessary();
+        flush();
+        if (_writeDummyForm)
+        {
+            DummyFormUtils.writeDummyForm(this, _dummyFormParams);
+        }
         _writer.flush();
     }
 
@@ -133,7 +143,6 @@ public class HtmlResponseWriterImpl
         closeStartElementIfNecessary();
         _writer.write('<');
         _writer.write(name);
-//        _currentComponent = uiComponent;
         _startElementName = name;
     }
 
@@ -207,7 +216,7 @@ public class HtmlResponseWriterImpl
         {
             throw new IllegalStateException("Must be called before the start element is closed");
         }
-        String strValue = value.toString(); //TODO: Use converter for value
+        String strValue = value.toString(); //TODO: Use converter for value?
         _writer.write(' ');
         _writer.write(name);
         _writer.write("=\"");
@@ -217,19 +226,33 @@ public class HtmlResponseWriterImpl
         }
         else
         {
-            /*
-            int queryStringIdx = strValue.indexOf('?');
-            if (queryStringIdx == -1)
+            if (_startElementName.equalsIgnoreCase(HTML.ANCHOR_ELEM) && //TODO: Also support image and button urls ?
+                name.equalsIgnoreCase(HTML.HREF_ATTR) &&
+                !strValue.startsWith("#"))
             {
-                _writer.write(strValue);
+                FacesContext facesContext = FacesContext.getCurrentInstance();
+                if (facesContext.getApplication().getStateManager().isSavingStateInClient(facesContext))
+                {
+                    //save state in client
+                    if (facesContext.getApplication().getStateManager().isSavingStateInClient(facesContext))
+                    {
+                        //TODO/HACK: saving state in url depends on the work together
+                        // of 3 (theoretically) pluggable components:
+                        // ViewHandler, ResponseWriter and ViewTag
+                        // We should try to make this HtmlResponseWriterImpl able
+                        // to handle this alone!
+                        if (strValue.indexOf('?') == -1)
+                        {
+                            strValue = strValue + '?' + JspViewHandlerImpl.URL_STATE_MARKER;
+                        }
+                        else
+                        {
+                            strValue = strValue + '&' + JspViewHandlerImpl.URL_STATE_MARKER;
+                        }
+                    }
+                }
             }
-            else
-            {
-                _writer.write(strValue, 0, queryStringIdx + 1);
-                _writer.write(URLEncoder.encode(strValue.substring(queryStringIdx + 1),
-                                                _characterEncoding));
-            }
-            */
+
             _writer.write(strValue);
         }
         _writer.write('"');
@@ -265,7 +288,11 @@ public class HtmlResponseWriterImpl
 
     public ResponseWriter cloneWithWriter(Writer writer)
     {
-        return new HtmlResponseWriterImpl(writer, getContentType(), getCharacterEncoding());
+        HtmlResponseWriterImpl newWriter
+                = new HtmlResponseWriterImpl(writer, getContentType(), getCharacterEncoding());
+        newWriter._writeDummyForm = _writeDummyForm;
+        newWriter._dummyFormParams = _dummyFormParams;
+        return newWriter;
     }
 
 
@@ -315,4 +342,28 @@ public class HtmlResponseWriterImpl
         closeStartElementIfNecessary();
         _writer.write(str, off, len);
     }
+
+
+
+    // DummyFormResponseWriter support
+
+    public void setWriteDummyForm(boolean writeDummyForm)
+    {
+        _writeDummyForm = writeDummyForm;
+    }
+
+    public String getDummyFormName()
+    {
+        return DummyFormUtils.DUMMY_FORM_NAME;
+    }
+
+    public void addDummyFormParameter(String paramName)
+    {
+        if (_dummyFormParams == null)
+        {
+            _dummyFormParams = new HashSet();
+        }
+        _dummyFormParams.add(paramName);
+    }
+
 }

@@ -127,7 +127,8 @@ public class ViewTag
             {
                 FacesContext facesContext = FacesContext.getCurrentInstance();
                 StateManager stateManager = facesContext.getApplication().getStateManager();
-                StateManager.SerializedView serializedView = stateManager.saveSerializedView(facesContext);
+                StateManager.SerializedView serializedView
+                        = stateManager.saveSerializedView(facesContext);
                 if (serializedView != null)
                 {
                     //until now we have written to a buffer

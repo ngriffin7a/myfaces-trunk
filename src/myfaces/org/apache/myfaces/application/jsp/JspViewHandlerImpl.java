@@ -164,26 +164,7 @@ public class JspViewHandlerImpl
         {
             url = path;
         }
-
         return facesContext.getExternalContext().encodeResourceURL(url);
-        /*
-        url = facesContext.getExternalContext().encodeResourceURL(url);
-        if (facesContext.getApplication().getStateManager().isSavingStateInClient(facesContext))
-        {
-            if (url.indexOf('?') == -1)
-            {
-                return url + '?' + URL_STATE_MARKER;
-            }
-            else
-            {
-                return url + '&' + URL_STATE_MARKER;
-            }
-        }
-        else
-        {
-            return url;
-        }
-        */
     }
 
     public void renderView(FacesContext facesContext, UIViewRoot viewToRender)

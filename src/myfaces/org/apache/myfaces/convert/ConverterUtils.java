@@ -301,6 +301,8 @@ public class ConverterUtils
      * @param strValue   String value to convert
      * @return converted value
      * @throws ConverterException
+     *
+     * @deprecated 
      */
     public static Object getAsObjectWithErrorHandling(FacesContext facesContext,
                                                       UIComponent uiComponent,
@@ -319,7 +321,6 @@ public class ConverterUtils
             {
                 facesContext.addMessage(uiComponent.getClientId(facesContext),
                                         ((MyFacesConverterException)e).getFacesMessage());
-                ((MyFacesConverterException)e).release();
             }
             else
             {

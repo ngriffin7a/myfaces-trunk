@@ -21,7 +21,6 @@ package net.sourceforge.myfaces.convert;
 import net.sourceforge.myfaces.application.MessageUtils;
 
 import javax.faces.application.FacesMessage;
-import javax.faces.context.FacesContext;
 import javax.faces.convert.ConverterException;
 
 /**
@@ -32,16 +31,13 @@ import javax.faces.convert.ConverterException;
 public class MyFacesConverterException
     extends ConverterException
 {
-    private FacesContext _facesContext;
     private String _messageId;
     private String _stringValue;
 
-    public MyFacesConverterException(FacesContext facesContext,
-                                     String messageId,
+    public MyFacesConverterException(String messageId,
                                      String stringValue)
     {
         super("Converter exception " + messageId);
-        _facesContext = facesContext;
         _messageId = messageId;
         _stringValue = stringValue;
     }
@@ -54,16 +50,6 @@ public class MyFacesConverterException
     public String getLocalizedMessage()
     {
         return getFacesMessage().getDetail();
-    }
-
-    /**
-     * Release reference to FacesException to help garbage collector.
-     */
-    public void release()
-    {
-        _facesContext = null;
-        _messageId = null;
-        _stringValue = null;
     }
 
     public FacesMessage getFacesMessage()
