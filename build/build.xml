@@ -208,6 +208,9 @@
             <zipfileset dir="${project.dir}/conf"
                         includes="faces-config.xml"
                         prefix="META-INF/"/>
+            <!-- components_resources -->
+        	<fileset dir="${components.src}"
+        			includes="**/resource/**"/>
 
         </jar>
 
@@ -259,6 +262,9 @@
             <zipfileset dir="${project.dir}/conf"
                         includes="faces-config.xml"
                         prefix="META-INF/"/>
+            <!-- components_resources -->
+        	<fileset dir="${components.src}"
+        			includes="**/resource/**"/>
         	
         </jar>
 
