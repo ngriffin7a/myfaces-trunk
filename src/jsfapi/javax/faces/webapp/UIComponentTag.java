@@ -35,6 +35,9 @@ import java.util.*;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.22  2004/07/05 23:43:36  o_rossmueller
+ * fix #985274: call setProperties for viewRoot
+ *
  * Revision 1.21  2004/07/01 22:00:54  mwessendorf
  * ASF switch
  *
@@ -379,6 +382,7 @@ public abstract class UIComponentTag
         {
             //This is the root
             _componentInstance = context.getViewRoot();
+            setProperties(_componentInstance);
             return _componentInstance;
         }
 
