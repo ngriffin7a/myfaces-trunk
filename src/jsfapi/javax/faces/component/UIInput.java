@@ -40,14 +40,14 @@ import java.util.List;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.12  2004/05/18 10:39:35  manolito
+ * (re)set to valid on decode, so that component automatically gets (re)validated
+ *
  * Revision 1.11  2004/04/16 15:13:33  manolito
  * validator attribute support and MethodBinding invoke exception handling fixed
  *
  * Revision 1.10  2004/04/06 13:03:35  manolito
  * x-checked getConvertedValue method in api and impl
- *
- * Revision 1.9  2004/04/05 15:25:46  manolito
- * no message
  *
  */
 public class UIInput
@@ -190,6 +190,8 @@ public class UIInput
 
     public void decode(FacesContext context)
     {
+        //We (re)set to valid, so that component automatically gets (re)validated
+        setValid(true);
         super.decode(context);
     }
 
