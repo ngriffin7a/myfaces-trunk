@@ -1,0 +1,27 @@
+APACHE MYFACES PROJECT STATUs
+Last modified at [$Date$]
+
+Web site:  http://incubator.apache.org/myfaces/
+
+Status Reports 
+==============
+
+(2004-10-17) All needed CLAs are on file. A code grant is in transit. Accounts for the committers have been created. Mailing lists are created. Committers are subscribed. The Jira setup for the project is being finalized. The project incubator page is created. Committers are preparing the SourceForge CVS for import to Apache.
+
+Downloads 
+=========
+See http://incubator.apache.org/myfaces/downloads.html
+
+Mailing Lists 
+=============
+See http://incubator.apache.org/myfaces/community/mailinglists.html
+
+Committers 
+==========
+See http://incubator.apache.org/myfaces/community/contributors.html
+
+Action Items 
+============
+See http://incubator.apache.org/myfaces/community/status.html
+
+###
