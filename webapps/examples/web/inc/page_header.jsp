@@ -6,7 +6,7 @@
         <f:verbatim>
             &nbsp;&nbsp;
             <font size="+1">MyFaces - The free JavaServer&#8482; Faces Implementation</font>
-            <font size="-1">(Version 1.0.1 alpha)</font>
+            <font size="-1">(Version 1.0.2 alpha)</font>
         </f:verbatim>
     </h:panelGroup>
 </f:facet>
