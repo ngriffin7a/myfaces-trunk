@@ -21,8 +21,6 @@ package net.sourceforge.myfaces.config;
 import net.sourceforge.myfaces.util.ClassUtils;
 import net.sourceforge.myfaces.util.xml.MyFacesErrorHandler;
 import net.sourceforge.myfaces.util.xml.XmlUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -31,6 +29,9 @@ import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import javax.faces.FacesException;
 import javax.faces.application.ViewHandler;
 import javax.xml.parsers.DocumentBuilder;
@@ -38,30 +39,33 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.reflect.Method;
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
 /**
- * DOCUMENT ME!
  * @author Manfred Geiler (latest modification by $Author$)
  * @author Anton Koinov
  * @version $Revision$ $Date$
+ * $Log$
+ * Revision 1.19  2004/05/03 09:24:34  manolito
+ * _facesConfig member must not be static
+ *
  */
 public class FacesConfigFactoryImpl
     extends FacesConfigFactoryBase
 {
     private static final Log log = LogFactory.getLog(FacesConfigFactoryImpl.class);
     private Map _propPatternCache;
-    private static FacesConfig facesConfig;
+    private FacesConfig _facesConfig;
 
     public void parseFacesConfig(FacesConfig facesConfig,
                                  InputStream in,
                                  String systemId,
                                  EntityResolver entityResolver) throws FacesException
     {
-        this.facesConfig = facesConfig;
+        _facesConfig = facesConfig;
         if (in == null)
         {
             throw new NullPointerException("InputStream must not be null.");
@@ -116,7 +120,7 @@ public class FacesConfigFactoryImpl
     }
 
 
-    public void parseChildren(Object obj, NodeList nodeList)
+    private void parseChildren(Object obj, NodeList nodeList)
     {
         for (int i = 0, len = nodeList.getLength(); i < len; i++)
         {
@@ -138,7 +142,7 @@ public class FacesConfigFactoryImpl
     private static final Class[] OBJECT_PARAM = new Class[] {Object.class};
     private static final Class[] LANG_AND_STRING_PARAM = new Class[] {String.class, String.class};
 
-    public void setProperty(Object obj, Element elem)
+    private void setProperty(Object obj, Element elem)
     {
         if (log.isTraceEnabled()) log.trace("setProperty " + obj + " : " + elem);
 
@@ -257,7 +261,7 @@ public class FacesConfigFactoryImpl
     }
 
 
-    private static Object instantiate(Class clazz)
+    private Object instantiate(Class clazz)
     {
         try
         {
@@ -267,7 +271,7 @@ public class FacesConfigFactoryImpl
                 // Now check if decorator pattern is followed
                 try {
                     Constructor c = clazz.getConstructor(new Class[]{ViewHandler.class});
-                    return c.newInstance(new ViewHandler[]{facesConfig.getApplicationConfig().getViewHandler()});
+                    return c.newInstance(new ViewHandler[]{_facesConfig.getApplicationConfig().getViewHandler()});
                 } catch (NoSuchMethodException e) {
                     // then not a decorator so instantiate normally
                 } catch (SecurityException e) {
@@ -283,7 +287,7 @@ public class FacesConfigFactoryImpl
   }
 
 
-    private static void invoke(Object obj, Method method, Object arg)
+    private void invoke(Object obj, Method method, Object arg)
     {
         try
         {
@@ -296,7 +300,7 @@ public class FacesConfigFactoryImpl
     }
 
 
-    private static void invokeWithLang(Object obj, Method method, String lang, Object arg)
+    private void invokeWithLang(Object obj, Method method, String lang, Object arg)
     {
         try
         {
@@ -309,7 +313,7 @@ public class FacesConfigFactoryImpl
     }
 
 
-    public static String resolvePropertyName(String elemName)
+    public String resolvePropertyName(String elemName)
     {
         boolean ucase = false;
         StringBuffer buf = new StringBuffer(elemName.length());
