@@ -147,7 +147,7 @@ public class FacesContextImpl
 
         return new Iterator()
             {
-                private int _next      = -1;
+                private int _next;
                 boolean     _nextFound;
 
                 public void remove()
@@ -159,10 +159,9 @@ public class FacesContextImpl
                 {
                     if (!_nextFound)
                     {
-                        while (++_next < _messageClientIds.size())
+                        for (; _next < _messageClientIds.size(); _next++)
                         {
-                            Object messageClientId = _messageClientIds.get(_next);
-                            if (messageClientId != NULL_DUMMY)
+                            if (_messageClientIds.get(_next) != NULL_DUMMY)
                             {
                                 _nextFound = true;
                                 break;

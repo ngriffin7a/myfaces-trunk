@@ -1,4 +1,4 @@
-/**
+/*
  * MyFaces - the free JSF implementation
  * Copyright (C) 2003  The MyFaces Team (http://myfaces.sourceforge.net)
  *
@@ -29,7 +29,8 @@ import org.apache.commons.logging.LogFactory;
 import javax.faces.FacesException;
 import javax.faces.FactoryFinder;
 import javax.faces.application.ApplicationFactory;
-import javax.faces.application.Message;
+import javax.faces.application.FacesMessage;
+import javax.faces.application.ViewHandler;
 import javax.faces.component.UICommand;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
@@ -37,22 +38,22 @@ import javax.faces.event.AbortProcessingException;
 import javax.faces.event.ActionListener;
 import javax.faces.event.FacesEvent;
 import javax.faces.event.PhaseId;
+import javax.faces.event.PhaseListener;
 import javax.faces.lifecycle.Lifecycle;
-import javax.faces.lifecycle.ViewHandler;
 import javax.faces.render.RenderKit;
 import javax.faces.render.RenderKitFactory;
 import javax.faces.render.Renderer;
-import javax.faces.tree.Tree;
-import javax.faces.tree.TreeFactory;
 import javax.servlet.ServletContext;
-import javax.servlet.ServletRequest;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Locale;
 
 /**
  * Implements the lifecycle as described in Spec. 1.0 PRD2 Chapter 2
  * @author Manfred Geiler (latest modification by $Author$)
+ * @author Anton Koinov
  * @version $Revision$ $Date$
  */
 public class LifecycleImpl
@@ -61,14 +62,13 @@ public class LifecycleImpl
     private static final Log log = LogFactory.getLog(LifecycleImpl.class);
 
     private ViewHandler _viewHandler = null;
-
-    private TreeFactory _treeFactory;
-    private RenderKitFactory _rkFactory;
+    private final RenderKitFactory _rkFactory;
+    private final List _phaseListeners = new ArrayList();
 
     public LifecycleImpl()
     {
-        //initPhases();
-        _treeFactory = (TreeFactory)FactoryFinder.getFactory(FactoryFinder.TREE_FACTORY);
+// FIXME        
+//        _treeFactory = (TreeFactory)FactoryFinder.getFactory(FactoryFinder.TREE_FACTORY);
         _rkFactory = (RenderKitFactory)FactoryFinder.getFactory(FactoryFinder.RENDER_KIT_FACTORY);
     }
 
@@ -93,7 +93,7 @@ public class LifecycleImpl
     public void execute(FacesContext facesContext)
         throws FacesException
     {
-        reconstituteComponentTree(facesContext);
+        restoreView(facesContext);
 
         if (applyRequestValues(facesContext))
         {
@@ -123,7 +123,7 @@ public class LifecycleImpl
     /**
      * Reconstitute Component Tree (JSF.2.2.1)
      */
-    private void reconstituteComponentTree(FacesContext facesContext)
+    private void restoreView(FacesContext facesContext)
         throws FacesException
     {
         if (log.isTraceEnabled()) log.trace("entering reconstituteComponentTree in " + LifecycleImpl.class.getName());
@@ -140,7 +140,7 @@ public class LifecycleImpl
         }
 
         //Create tree
-        Tree tree = _treeFactory.getTree(facesContext, getTreeId(facesContext));
+        Tree tree = _treeFactory.getViewRoot(facesContext, getViewId(facesContext));
         facesContext.setTree(tree);
 
         //Restore state
@@ -176,7 +176,7 @@ public class LifecycleImpl
                 {
                     while (msgIt.hasNext())
                     {
-                        Message msg = (Message)msgIt.next();
+                        FacesMessage msg = (FacesMessage)msgIt.next();
                         log.info("Message, added during reconstituteComponentTree: " + msg.getSummary() + " / " + msg.getDetail());
                     }
                 }
@@ -196,10 +196,10 @@ public class LifecycleImpl
             log.info("No StateRenderer found, cannot restore tree.");
         }
 
-        UIComponent root = facesContext.getTree().getRoot();
+        UIComponent root = facesContext.getViewRoot();
         try
         {
-            root.processReconstitutes(facesContext);
+            root.processRestoreState(facesContext, ???);
         }
         catch (IOException e)
         {
@@ -223,15 +223,8 @@ public class LifecycleImpl
     {
         if (log.isTraceEnabled()) log.trace("entering applyRequestValues in " + LifecycleImpl.class.getName());
 
-        UIComponent root = facesContext.getTree().getRoot();
-        try
-        {
-            root.processDecodes(facesContext);
-        }
-        catch (IOException e)
-        {
-            throw new FacesException(e);
-        }
+        UIComponent root = facesContext.getViewRoot();
+        root.processDecodes(facesContext);
 
         doEventProcessing(facesContext, PhaseId.APPLY_REQUEST_VALUES);
 
@@ -263,7 +256,7 @@ public class LifecycleImpl
 
         int messageCountBefore = getMessageCount(facesContext);
 
-        UIComponent root = facesContext.getTree().getRoot();
+        UIComponent root = facesContext.getViewRoot();
         root.processValidators(facesContext);
 
         doEventProcessing(facesContext, PhaseId.PROCESS_VALIDATIONS);
@@ -321,7 +314,7 @@ public class LifecycleImpl
     {
         if (log.isTraceEnabled()) log.trace("entering updateModelValues in " + LifecycleImpl.class.getName());
 
-        UIComponent root = facesContext.getTree().getRoot();
+        UIComponent root = facesContext.getViewRoot();
         root.processUpdates(facesContext);
 
         doEventProcessing(facesContext, PhaseId.UPDATE_MODEL_VALUES);
@@ -375,7 +368,7 @@ public class LifecycleImpl
 
         try
         {
-            getViewHandler().renderView(facesContext);
+            getViewHandler().renderView(facesContext, facesContext.getViewRoot());
         }
         catch (IOException e)
         {
@@ -413,10 +406,10 @@ public class LifecycleImpl
                                                    UIComponent uiComponent)
     {
         if (uiComponent instanceof UICommand &&
-            uiComponent.getAttribute(ACTION_LISTENER_FLAG) == null)
+            uiComponent.getAttributes().get(ACTION_LISTENER_FLAG) == null)
         {
             ((UICommand)uiComponent).addActionListener(actionListener);
-            uiComponent.setAttribute(ACTION_LISTENER_FLAG, Boolean.TRUE);
+            uiComponent.getAttributes().put(ACTION_LISTENER_FLAG, Boolean.TRUE);
         }
 
         for (Iterator it = uiComponent.getFacetsAndChildren(); it.hasNext(); )
@@ -427,13 +420,24 @@ public class LifecycleImpl
     }
 
 
-    public static String getTreeId(FacesContext facesContext)
+    public static String getViewId(FacesContext facesContext)
     {
-        ServletRequest request = (ServletRequest)facesContext.getExternalContext().getRequest();
         ServletContext servletContext = (ServletContext)facesContext.getExternalContext().getContext();
         ServletMappingFactory servletMappingFactory = MyFacesFactoryFinder.getServletMappingFactory(servletContext);
         ServletMapping sm = servletMappingFactory.getServletMapping(servletContext);
-        return sm.getTreeIdFromRequest(request);
+        return sm.getViewIdFromRequest(facesContext);
     }
 
+
+    public void addPhaseListener(PhaseListener phaseListener) {
+        _phaseListeners.add(phaseListener);
+    }
+
+    public PhaseListener[] getPhaseListeners() {
+        return (PhaseListener[]) _phaseListeners.toArray(new PhaseListener[_phaseListeners.size()]);
+    }
+
+    public void removePhaseListener(PhaseListener phaseListener) {
+        _phaseListeners.remove(phaseListener);
+    }
 }
