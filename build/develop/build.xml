@@ -44,7 +44,9 @@
         <copy todir="${web-inf.lib.dir}">
             <fileset file="${cos.jar}"/>
             <fileset file="${jstl.jar}"/>
+            <fileset file="${jsp-api.jar}"/>
             <fileset file="${commons-logging.jar}"/>
+            <fileset file="${commons-el.jar}"/>
             <fileset file="${log4j.jar}"/>
         </copy>
 
