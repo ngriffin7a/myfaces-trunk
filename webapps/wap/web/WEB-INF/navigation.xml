@@ -1,4 +1,4 @@
-<<navigation-rule>
+<navigation-rule>
     <from-view-id>/examples/index.jsp</from-view-id>
     <navigation-case>
       <from-outcome>commandButton</from-outcome>
