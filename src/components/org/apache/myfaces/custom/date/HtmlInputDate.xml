@@ -12,4 +12,8 @@
         <name>type</name>
         <type>java.lang.String</type>
     </field>
+	<field>
+        <name>disabled</name>
+        <type>java.lang.String</type>
+    </field>
 </component>

@@ -31,7 +31,9 @@ import javax.faces.context.ResponseWriter;
 import javax.faces.convert.ConverterException;
 import javax.faces.validator.ValidatorException;
 
+import net.sourceforge.myfaces.component.UserRoleUtils;
 import net.sourceforge.myfaces.custom.date.HtmlInputDate.UserData;
+import net.sourceforge.myfaces.custom.fileupload.HtmlInputFileUpload;
 import net.sourceforge.myfaces.renderkit.RendererUtils;
 import net.sourceforge.myfaces.renderkit.html.HTML;
 import net.sourceforge.myfaces.renderkit.html.HtmlRenderer;
@@ -40,6 +42,9 @@ import net.sourceforge.myfaces.util.MessageUtils;
 
 /**
  * $Log$
+ * Revision 1.6  2004/07/30 02:59:00  svieujot
+ * Enable disabled attribute
+ *
  * Revision 1.5  2004/07/26 02:00:05  svieujot
  * Change structure to keep the data entered by the user even if they can't be converted
  *
@@ -73,6 +78,18 @@ public class HtmlDateRenderer extends HtmlRenderer {
     private static final String ID_MINUTES_POSTFIX = ".minutes";
     private static final String ID_SECONDS_POSTFIX = ".seconds";
     
+    protected boolean isDisabled(FacesContext facesContext, UIComponent uiComponent) {
+        if( !UserRoleUtils.isEnabledOnUserRole(uiComponent) ){
+            return false;
+        }else{
+            if( uiComponent instanceof HtmlInputDate ){
+                return ((HtmlInputDate)uiComponent).isDisabled();
+            }else{
+                return RendererUtils.getBooleanAttribute(uiComponent, HTML.DISABLED_ATTR, false);
+            }
+        }
+    }
+    
     public void encodeEnd(FacesContext facesContext, UIComponent uiComponent) throws IOException {
         RendererUtils.checkParamValidity(facesContext, uiComponent, HtmlInputDate.class);
 
@@ -82,7 +99,7 @@ public class HtmlDateRenderer extends HtmlRenderer {
         String type = inputDate.getType();
         String clientId = uiComponent.getClientId(facesContext);
 
-        boolean disabled = false; // TODO : implement & use isDisabled(facesContext, uiComponent);
+        boolean disabled = isDisabled(facesContext, uiComponent);
 
         ResponseWriter writer = facesContext.getResponseWriter();
 
@@ -202,6 +219,9 @@ public class HtmlDateRenderer extends HtmlRenderer {
 
     public void decode(FacesContext facesContext, UIComponent uiComponent) {
         RendererUtils.checkParamValidity(facesContext, uiComponent, HtmlInputDate.class);
+        
+        if( isDisabled(facesContext, uiComponent) ) // For safety, do not set the submited value if the component is disabled.
+            return;
 
         HtmlInputDate inputDate = (HtmlInputDate) uiComponent;
         Locale currentLocale = facesContext.getViewRoot().getLocale();

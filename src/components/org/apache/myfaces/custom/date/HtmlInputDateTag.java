@@ -17,6 +17,7 @@ package net.sourceforge.myfaces.custom.date;
 
 import net.sourceforge.myfaces.component.UserRoleAware;
 import net.sourceforge.myfaces.custom.fileupload.HtmlInputFileUpload;
+import net.sourceforge.myfaces.renderkit.html.HTML;
 import net.sourceforge.myfaces.taglib.html.HtmlInputTagBase;
 
 import javax.faces.component.UIComponent;
@@ -39,6 +40,8 @@ public class HtmlInputDateTag extends HtmlInputTagBase {
     // HtmlInputDate attributes
     private String _type;
 
+    private String _disabled;
+    
     // UIComponent attributes --> already implemented in UIComponentTagBase
 
     // HTML universal attributes --> already implemented in HtmlComponentTagBase
@@ -72,9 +75,14 @@ public class HtmlInputDateTag extends HtmlInputTagBase {
         //setStringProperty(component, UserRoleAware.ENABLED_ON_USER_ROLE_ATTR, _enabledOnUserRole);
         //setStringProperty(component, UserRoleAware.VISIBLE_ON_USER_ROLE_ATTR, _visibleOnUserRole);
         setStringProperty(component, "type", _type);
+        setBooleanProperty(component, HTML.DISABLED_ATTR, _disabled);
     }
     
     public void setType(String type){
         _type = type;
+    }
+    
+    public void setDisabled(String disabled){
+        _disabled = disabled;
     }
 }

@@ -34,6 +34,7 @@ public class HtmlInputDate extends UIInput {
     public static final String COMPONENT_TYPE = "net.sourceforge.myfaces.HtmlInputDate";
     public static final String COMPONENT_FAMILY = "javax.faces.Input";
     private static final String DEFAULT_RENDERER_TYPE = "net.sourceforge.myfaces.Date";
+    private static final boolean DEFAULT_DISABLED = false;
     
     /**
      * Same as for f:convertDateTime 
@@ -41,6 +42,8 @@ public class HtmlInputDate extends UIInput {
      * Valid values are "date", "time", and "both". Default value is "date".
      */
     private String _type = null;
+    
+    private Boolean _disabled = null;
     
     // Values to hold the data entered by the user
     private UserData _userData = null;
@@ -70,11 +73,23 @@ public class HtmlInputDate extends UIInput {
 		_type = string;
 	}
 	
+    public boolean isDisabled() {
+        if (_disabled != null) return _disabled.booleanValue();
+        ValueBinding vb = getValueBinding("disabled");
+        Boolean v = vb != null ? (Boolean)vb.getValue(getFacesContext()) : null;
+        return v != null ? v.booleanValue() : DEFAULT_DISABLED;
+    }
+	
+    public void setDisabled(boolean disabled) {
+        _disabled = Boolean.valueOf(disabled);
+    }
+	
     public Object saveState(FacesContext context) {
-        Object values[] = new Object[3];
+        Object values[] = new Object[4];
         values[0] = super.saveState(context);
         values[1] = _type;
-        values[2] = _userData;
+        values[2] = _disabled;
+        values[3] = _userData;
         return ((Object) (values));
     }
 
@@ -82,7 +97,8 @@ public class HtmlInputDate extends UIInput {
         Object values[] = (Object[])state;
         super.restoreState(context, values[0]);
         _type = (String)values[1];
-        _userData = (UserData)values[2];
+        _disabled = (Boolean)values[2];
+        _userData = (UserData)values[3];
     }
     
     public static class UserData implements Serializable {
