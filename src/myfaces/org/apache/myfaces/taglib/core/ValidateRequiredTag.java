@@ -25,6 +25,8 @@ package net.sourceforge.myfaces.taglib.core;
  */
 import javax.faces.webapp.ValidatorTag;
 import javax.faces.validator.RequiredValidator;
+import javax.faces.validator.Validator;
+import javax.servlet.jsp.JspException;
 
 public class ValidateRequiredTag
     extends ValidatorTag
@@ -33,6 +35,11 @@ public class ValidateRequiredTag
 
     public ValidateRequiredTag()
     {
-        super.setType(TYPE);
+    }
+
+    protected Validator createValidator() throws JspException
+    {
+        setType(TYPE);
+        return super.createValidator();
     }
 }

@@ -42,7 +42,14 @@ public class ValidateDoubleRangeTag
     {
         _minimum = 0;
         _maximum = 0;
-        super.setType(TYPE);
+    }
+
+    public void release()
+    {
+        _isMaxSet = false;
+        _isMinSet = false;
+        _minimum = 0;
+        _maximum = 0;
     }
 
     public double getMinimum()
@@ -70,6 +77,7 @@ public class ValidateDoubleRangeTag
     protected Validator createValidator()
         throws JspException
     {
+        setType(TYPE);
         DoubleRangeValidator validator = (DoubleRangeValidator)super.createValidator();
         if(_isMinSet)
         {

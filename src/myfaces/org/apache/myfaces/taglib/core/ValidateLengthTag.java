@@ -42,7 +42,14 @@ public class ValidateLengthTag
     {
         _minimum = 0;
         _maximum = 0;
-        super.setType(TYPE);
+    }
+
+    public void release()
+    {
+        _isMaxSet = false;
+        _isMinSet = false;
+        _minimum = 0;
+        _maximum = 0;
     }
 
     public int getMinimum()
@@ -70,6 +77,7 @@ public class ValidateLengthTag
     protected Validator createValidator()
         throws JspException
     {
+        setType(TYPE);
         LengthValidator validator = (LengthValidator)super.createValidator();
         if(_isMinSet)
         {

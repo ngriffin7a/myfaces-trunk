@@ -42,7 +42,14 @@ public class ValidateStringRangeTag
     {
         _minimum = null;
         _maximum = null;
-        super.setType(TYPE);
+    }
+
+    public void release()
+    {
+        _isMaxSet = false;
+        _isMinSet = false;
+        _minimum = null;
+        _maximum = null;
     }
 
     public String getMinimum()
@@ -70,6 +77,7 @@ public class ValidateStringRangeTag
     protected Validator createValidator()
         throws JspException
     {
+        setType(TYPE);
         StringRangeValidator validator = (StringRangeValidator)super.createValidator();
         if(_isMinSet)
         {

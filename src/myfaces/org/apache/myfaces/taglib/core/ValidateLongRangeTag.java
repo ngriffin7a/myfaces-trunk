@@ -42,7 +42,14 @@ public class ValidateLongRangeTag
     {
         _minimum = 0;
         _maximum = 0;
-        super.setType(TYPE);
+    }
+
+    public void release()
+    {
+        _isMaxSet = false;
+        _isMinSet = false;
+        _minimum = 0;
+        _maximum = 0;
     }
 
     public long getMinimum()
@@ -70,6 +77,7 @@ public class ValidateLongRangeTag
     protected Validator createValidator()
         throws JspException
     {
+        setType(TYPE);
         LongRangeValidator validator = (LongRangeValidator)super.createValidator();
         if(_isMinSet)
         {
