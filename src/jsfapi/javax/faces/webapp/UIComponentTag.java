@@ -34,15 +34,17 @@ import java.io.IOException;
 import java.util.*;
 
 /**
+ * @author Manfred Geiler (latest modification by $Author$)
+ * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.15  2004/03/31 12:48:03  manolito
+ * bug: newly created children added always at end
+ *
  * Revision 1.14  2004/03/31 02:29:41  dave0000
  * avoid lastIndexOf scan if not needed
  *
  * Revision 1.13  2004/03/26 11:48:33  manolito
  * additional NPE check
- *
- * @author Manfred Geiler (latest modification by $Author$)
- * @version $Revision$ $Date$
  */
 public abstract class UIComponentTag
         implements Tag
@@ -380,7 +382,8 @@ public abstract class UIComponentTag
                 _componentInstance = createComponentInstance(context);
                 _componentInstance.setId(id);
                 setProperties(_componentInstance);
-                parent.getChildren().add(_componentInstance);
+                int index = getAddedChildrenCount(parentTag);
+                parent.getChildren().add(index, _componentInstance);
             }
             addChildIdToParentTag(parentTag, id);
             return _componentInstance;
@@ -443,6 +446,13 @@ public abstract class UIComponentTag
             parentTag._facetsAdded = new HashSet();
         }
         parentTag._facetsAdded.add(facetName);
+    }
+
+    private int getAddedChildrenCount(UIComponentTag parentTag)
+    {
+        return parentTag._childrenAdded != null ?
+               parentTag._childrenAdded.size() :
+               0;
     }
 
 
