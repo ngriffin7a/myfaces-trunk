@@ -31,6 +31,9 @@ import java.util.*;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.12  2004/04/29 07:24:51  manolito
+ * fixed NPE in releaseFactories
+ *
  * Revision 1.11  2004/04/13 08:25:59  manolito
  * Log
  *
@@ -217,9 +220,12 @@ public class FactoryFinder
     {
         ClassLoader classLoader = getClassLoader();
         Object[] factoryStacks = (Object[])_classLoaderFactoriesMap.get(classLoader);
-        for (int i = 0; i < factoryStacks.length; i++)
+        if (factoryStacks != null)
         {
-            factoryStacks[i] = null;
+            for (int i = 0; i < factoryStacks.length; i++)
+            {
+                factoryStacks[i] = null;
+            }
         }
         factoryStacks = null;
     }
