@@ -34,6 +34,9 @@ import java.util.Map;
  * @author Anton Koinov
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.3  2004/05/17 14:28:29  manolito
+ * new configuration concept
+ *
  * Revision 1.2  2004/05/11 04:24:10  dave0000
  * Bug 943166: add value coercion to ManagedBeanConfigurator
  *
@@ -110,7 +113,7 @@ public class ClassUtils
     {
         try
         {
-            return classForName_(type);
+            return _classForName(type);
         }
         catch (ClassNotFoundException e)
         {
@@ -119,7 +122,7 @@ public class ClassUtils
         }
     }
 
-    public static Class classForName_(String type) throws ClassNotFoundException
+    private static Class _classForName(String type) throws ClassNotFoundException
     {
         try
         {
