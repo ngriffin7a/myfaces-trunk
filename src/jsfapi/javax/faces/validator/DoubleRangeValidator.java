@@ -30,10 +30,17 @@ import javax.faces.context.FacesContext;
 public class DoubleRangeValidator
         implements Validator, StateHolder
 {
+    // FIELDS
+    public static final String VALIDATOR_ID       = "javax.faces.DoubleRange";
+    public static final String MAXIMUM_MESSAGE_ID = "javax.faces.validator.DoubleRangeValidator.MAXIMUM";
+    public static final String MINIMUM_MESSAGE_ID = "javax.faces.validator.DoubleRangeValidator.MINIMUM";
+    public static final String TYPE_MESSAGE_ID    = "javax.faces.validator.DoubleRangeValidator.TYPE";
+
     private Double _minimum = null;
     private Double _maximum = null;
     private boolean _transient = false;
 
+    // CONSTRUCTORS
     public DoubleRangeValidator()
     {
     }
@@ -50,6 +57,73 @@ public class DoubleRangeValidator
         _minimum = new Double(minimum);
     }
 
+    // VALIDATE
+    public void validate(FacesContext facesContext,
+                         UIComponent uiComponent,
+                         Object value)
+            throws ValidatorException
+    {
+        if (facesContext == null) throw new NullPointerException("facesContext");
+        if (uiComponent == null) throw new NullPointerException("uiComponent");
+
+        if (value == null)
+        {
+            return;
+        }
+
+        double dvalue = parseDoubleValue(facesContext, value);
+        if (_minimum != null && _maximum != null)
+        {
+            if (dvalue < _minimum.doubleValue() ||
+                dvalue > _maximum.doubleValue())
+            {
+                Object[] args = {_minimum, _maximum};
+                throw new ValidatorException(
+                    MessageFactory.getMessage(facesContext, NOT_IN_RANGE_MESSAGE_ID, args));
+            }
+        }
+        else if (_minimum != null)
+        {
+            if (dvalue < _minimum.doubleValue())
+            {
+                Object[] args = {_minimum};
+                throw new ValidatorException(
+                    MessageFactory.getMessage(facesContext, MINIMUM_MESSAGE_ID, args));
+            }
+        }
+        else if (_maximum != null)
+        {
+            if (dvalue > _maximum.doubleValue())
+            {
+                Object[] args = {_maximum};
+                throw new ValidatorException(
+                    MessageFactory.getMessage(facesContext, MAXIMUM_MESSAGE_ID, args));
+            }
+        }
+    }
+
+    private double parseDoubleValue(FacesContext facesContext, Object value)
+        throws ValidatorException
+    {
+        if (value instanceof Number)
+        {
+            return ((Number)value).doubleValue();
+        }
+        else
+        {
+            try
+            {
+                return Double.parseDouble(value.toString());
+            }
+            catch (NumberFormatException e)
+            {
+                throw new ValidatorException(MessageFactory.getMessage(facesContext, TYPE_MESSAGE_ID));
+            }
+        }
+    }
+
+
+    // GETTER & SETTER
     public double getMaximum()
     {
         return _maximum != null ? _maximum.doubleValue() : Double.MAX_VALUE;
@@ -70,27 +144,8 @@ public class DoubleRangeValidator
         _minimum = new Double(minimum);
     }
 
-    public void validate(FacesContext context,
-                         UIComponent component,
-                         Object value)
-            throws ValidatorException
-    {
-        //TODO
-    }
 
-    public boolean equals(Object o)
-    {
-        if (this == o) return true;
-        if (!(o instanceof DoubleRangeValidator)) return false;
-
-        final DoubleRangeValidator doubleRangeValidator = (DoubleRangeValidator)o;
-
-        if (_maximum != null ? !_maximum.equals(doubleRangeValidator._maximum) : doubleRangeValidator._maximum != null) return false;
-        if (_minimum != null ? !_minimum.equals(doubleRangeValidator._minimum) : doubleRangeValidator._minimum != null) return false;
-
-        return true;
-    }
-
+    // RESTORE/SAVE STATE
     public Object saveState(FacesContext context)
     {
         Object values[] = new Object[2];
@@ -116,4 +171,19 @@ public class DoubleRangeValidator
     {
         _transient = transientValue;
     }
+
+    // MISC
+    public boolean equals(Object o)
+    {
+        if (this == o) return true;
+        if (!(o instanceof DoubleRangeValidator)) return false;
+
+        final DoubleRangeValidator doubleRangeValidator = (DoubleRangeValidator)o;
+
+        if (_maximum != null ? !_maximum.equals(doubleRangeValidator._maximum) : doubleRangeValidator._maximum != null) return false;
+        if (_minimum != null ? !_minimum.equals(doubleRangeValidator._minimum) : doubleRangeValidator._minimum != null) return false;
+
+        return true;
+    }
+
 }

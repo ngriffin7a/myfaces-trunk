@@ -30,10 +30,17 @@ import javax.faces.context.FacesContext;
 public class LongRangeValidator
         implements Validator, StateHolder
 {
+    // FIELDS
+    public static final String MAXIMUM_MESSAGE_ID = "javax.faces.validator.LongRangeValidator.MAXIMUM";
+    public static final String MINIMUM_MESSAGE_ID =	"javax.faces.validator.LongRangeValidator.MINIMUM";
+    public static final String TYPE_MESSAGE_ID 	  = "javax.faces.validator.LongRangeValidator.TYPE";
+    public static final String VALIDATOR_ID 	  = "javax.faces.LongRange";
+
     private Long _minimum = null;
     private Long _maximum = null;
     private boolean _transient = false;
 
+    // CONSTRUCTORS
     public LongRangeValidator()
     {
     }
@@ -50,6 +57,73 @@ public class LongRangeValidator
         _minimum = new Long(minimum);
     }
 
+    // VALIDATE
+    public void validate(FacesContext facesContext,
+                         UIComponent uiComponent,
+                         Object value)
+            throws ValidatorException
+    {
+        if (facesContext == null) throw new NullPointerException("facesContext");
+        if (uiComponent == null) throw new NullPointerException("uiComponent");
+
+        if (value == null)
+        {
+            return;
+        }
+
+        double dvalue = parseLongValue(facesContext, value);
+        if (_minimum != null && _maximum != null)
+        {
+            if (dvalue < _minimum.longValue() ||
+                dvalue > _maximum.longValue())
+            {
+                Object[] args = {_minimum, _maximum};
+                throw new ValidatorException(
+                    MessageFactory.getMessage(facesContext, NOT_IN_RANGE_MESSAGE_ID, args));
+            }
+        }
+        else if (_minimum != null)
+        {
+            if (dvalue < _minimum.longValue())
+            {
+                Object[] args = {_minimum};
+                throw new ValidatorException(
+                    MessageFactory.getMessage(facesContext, MINIMUM_MESSAGE_ID, args));
+            }
+        }
+        else if (_maximum != null)
+        {
+            if (dvalue > _maximum.longValue())
+            {
+                Object[] args = {_maximum};
+                throw new ValidatorException(
+                    MessageFactory.getMessage(facesContext, MAXIMUM_MESSAGE_ID, args));
+            }
+        }
+    }
+
+    private long parseLongValue(FacesContext facesContext, Object value)
+        throws ValidatorException
+    {
+        if (value instanceof Number)
+        {
+            return ((Number)value).longValue();
+        }
+        else
+        {
+            try
+            {
+                return Long.parseLong(value.toString());
+            }
+            catch (NumberFormatException e)
+            {
+                throw new ValidatorException(MessageFactory.getMessage(facesContext, TYPE_MESSAGE_ID));
+            }
+        }
+    }
+
+
+     // GETTER & SETTER
     public long getMaximum()
     {
         return _maximum != null ? _maximum.longValue() : Long.MAX_VALUE;
@@ -70,27 +144,17 @@ public class LongRangeValidator
         _minimum = new Long(minimum);
     }
 
-    public void validate(FacesContext context,
-                         UIComponent component,
-                         Object value)
-            throws ValidatorException
+    public boolean isTransient()
     {
-        //TODO
+        return _transient;
     }
 
-    public boolean equals(Object o)
+    public void setTransient(boolean transientValue)
     {
-        if (this == o) return true;
-        if (!(o instanceof LongRangeValidator)) return false;
-
-        final LongRangeValidator longRangeValidator = (LongRangeValidator)o;
-
-        if (_maximum != null ? !_maximum.equals(longRangeValidator._maximum) : longRangeValidator._maximum != null) return false;
-        if (_minimum != null ? !_minimum.equals(longRangeValidator._minimum) : longRangeValidator._minimum != null) return false;
-
-        return true;
+        _transient = transientValue;
     }
 
+    // RESTORE & SAVE STATE
     public Object saveState(FacesContext context)
     {
         Object values[] = new Object[2];
@@ -107,13 +171,18 @@ public class LongRangeValidator
         _minimum = (Long)values[1];
     }
 
-    public boolean isTransient()
+    // MISC
+    public boolean equals(Object o)
     {
-        return _transient;
+        if (this == o) return true;
+        if (!(o instanceof LongRangeValidator)) return false;
+
+        final LongRangeValidator longRangeValidator = (LongRangeValidator)o;
+
+        if (_maximum != null ? !_maximum.equals(longRangeValidator._maximum) : longRangeValidator._maximum != null) return false;
+        if (_minimum != null ? !_minimum.equals(longRangeValidator._minimum) : longRangeValidator._minimum != null) return false;
+
+        return true;
     }
 
-    public void setTransient(boolean transientValue)
-    {
-        _transient = transientValue;
-    }
 }

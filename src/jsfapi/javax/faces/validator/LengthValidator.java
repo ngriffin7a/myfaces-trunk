@@ -30,10 +30,16 @@ import javax.faces.context.FacesContext;
 public class LengthValidator
         implements Validator, StateHolder
 {
+    // FIELDS
+    public static final String 	MAXIMUM_MESSAGE_ID = "javax.faces.validator.LengthValidator.MAXIMUM";
+    public static final String 	MINIMUM_MESSAGE_ID = "javax.faces.validator.LengthValidator.MINIMUM";
+    public static final String 	VALIDATOR_ID 	   = "javax.faces.Length";
+
     private Integer _minimum = null;
     private Integer _maximum = null;
     private boolean _transient = false;
 
+    // CONSTRUCTORS
     public LengthValidator()
     {
     }
@@ -50,6 +56,55 @@ public class LengthValidator
         _minimum = new Integer(minimum);
     }
 
+    // VALIDATE
+    public void validate(FacesContext facesContext,
+                         UIComponent uiComponent,
+                         Object value)
+            throws ValidatorException
+    {
+        if (facesContext == null) throw new NullPointerException("facesContext");
+        if (uiComponent == null) throw new NullPointerException("uiComponent");
+
+        if (value == null)
+        {
+            return;
+        }
+
+        int length = value instanceof String ?
+            ((String)value).length() : value.toString().length();
+
+        if (_minimum != null && _maximum != null)
+        {
+            if (length < _minimum.intValue() ||
+                length > _maximum.intValue())
+            {
+                Object[] args = {_minimum, _maximum};
+                throw new ValidatorException(
+                    MessageFactory.getMessage(facesContext, NOT_IN_RANGE_MESSAGE_ID, args));
+            }
+        }
+        else if (_minimum != null)
+        {
+            if (length < _minimum.intValue())
+            {
+                Object[] args = {_minimum};
+                throw new ValidatorException(
+                    MessageFactory.getMessage(facesContext, MINIMUM_MESSAGE_ID, args));
+            }
+        }
+        else if (_maximum != null)
+        {
+            if (length > _maximum.intValue())
+            {
+                Object[] args = {_maximum};
+                throw new ValidatorException(
+                    MessageFactory.getMessage(facesContext, MAXIMUM_MESSAGE_ID, args));
+            }
+        }
+
+    }
+
+    // SETTER & GETTER
     public int getMaximum()
     {
         return _maximum != null ? _maximum.intValue() : Integer.MAX_VALUE;
@@ -70,27 +125,17 @@ public class LengthValidator
         _minimum = new Integer(minimum);
     }
 
-    public void validate(FacesContext context,
-                         UIComponent component,
-                         Object value)
-            throws ValidatorException
+    public boolean isTransient()
     {
-        //TODO
+        return _transient;
     }
 
-    public boolean equals(Object o)
+    public void setTransient(boolean transientValue)
     {
-        if (this == o) return true;
-        if (!(o instanceof LengthValidator)) return false;
-
-        final LengthValidator lengthValidator = (LengthValidator)o;
-
-        if (_maximum != null ? !_maximum.equals(lengthValidator._maximum) : lengthValidator._maximum != null) return false;
-        if (_minimum != null ? !_minimum.equals(lengthValidator._minimum) : lengthValidator._minimum != null) return false;
-
-        return true;
+        _transient = transientValue;
     }
 
+    // RESTORE & SAVE STATE
     public Object saveState(FacesContext context)
     {
         Object values[] = new Object[2];
@@ -107,13 +152,17 @@ public class LengthValidator
         _minimum = (Integer)values[1];
     }
 
-    public boolean isTransient()
+    // MISC
+    public boolean equals(Object o)
     {
-        return _transient;
-    }
+        if (this == o) return true;
+        if (!(o instanceof LengthValidator)) return false;
 
-    public void setTransient(boolean transientValue)
-    {
-        _transient = transientValue;
+        final LengthValidator lengthValidator = (LengthValidator)o;
+
+        if (_maximum != null ? !_maximum.equals(lengthValidator._maximum) : lengthValidator._maximum != null) return false;
+        if (_minimum != null ? !_minimum.equals(lengthValidator._minimum) : lengthValidator._minimum != null) return false;
+
+        return true;
     }
 }
