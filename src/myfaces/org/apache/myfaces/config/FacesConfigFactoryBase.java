@@ -50,7 +50,7 @@ public abstract class FacesConfigFactoryBase
     implements FacesConfigFactory
 {
     protected static final String TLD_HTML_URI = "http://java.sun.com/jsf/html";
-    protected static final String TLD_EXT_URI = "http://myfaces.sourceforge.net/tld/myfaces_ext_0_3.tld";
+    protected static final String TLD_EXT_URI = "http://myfaces.sourceforge.net/tld/myfaces_ext_0_4.tld";
 
     private static final String CONFIG_FILES_INIT_PARAM
         = "javax.faces.application.CONFIG_FILES";

@@ -185,6 +185,7 @@
              <name>ascending</name>
              <required>false</required>
              <rtexprvalue>false</rtexprvalue>
+             <type>java.lang.String</type>
              <description>
                  the sort direction
              </description>

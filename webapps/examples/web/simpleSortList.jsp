@@ -56,7 +56,7 @@ managed beans used:
                         rowClasses="standardTable_Row1,standardTable_Row2" >
                     <!-- SORTHEADER -->
                     <x:sortheader column="type"
-                                  ascending="<%=true%>"
+                                  ascending="true"
                                   columnReference="list.sort"
                                   ascendingReference="list.ascending" >
                         <x:sortcolumn column="type" cssClass="sortLink" >

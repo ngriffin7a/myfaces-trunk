@@ -43,17 +43,17 @@ public class SortHeaderTag
 
     public void setColumn(String value)
     {
-        setValue(value);
+        setComponentPropertyString(UISortHeader.COLUMN_PROP, value);
     }
 
-    public void setAscending(String b)
+    public void setAscending(String v)
     {
-        setComponentPropertyBoolean(UISortHeader.ASCENDING_PROP, b);
+        setComponentPropertyBoolean(UISortHeader.ASCENDING_PROP, v);
     }
 
     public void setColumnReference(String value)
     {
-        setValueRef(value);
+        setComponentPropertyString(UISortHeader.COLUMN_REF_PROP, value);
     }
 
     //TODO: rename to "setAscendingRef"

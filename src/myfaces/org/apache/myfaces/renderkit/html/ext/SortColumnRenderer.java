@@ -49,10 +49,9 @@ public class SortColumnRenderer
     }
 
 
+    /*
     public void decode(FacesContext facesContext, UIComponent uiComponent) throws IOException
     {
-        /*
-        TODO:
         if (decodeValue(facesContext, (UICommand)uiComponent))
         {
             if (!(uiComponent instanceof UICommand))
@@ -64,8 +63,8 @@ public class SortColumnRenderer
             //New event processing:
             ((UICommand)uiComponent).fireActionEvent(facesContext);
         }
-        */
     }
+    */
 
 
     public void encodeBegin(FacesContext facesContext, UIComponent uiComponent) throws IOException
@@ -75,7 +74,6 @@ public class SortColumnRenderer
         {
             throw new FacesException("UISortHeader expected.");
         }
-
 
         super.encodeBegin(facesContext, uiComponent);
     }
@@ -102,29 +100,24 @@ public class SortColumnRenderer
 
     private Boolean getSortAscending(FacesContext facesContext, UISortColumn uiSortColumn)
     {
-        /*
-        TODO:
-
         UIComponent parent = UIComponentUtils.getParentOrFacetOwner(uiSortColumn);
         if (!(parent instanceof UISortHeader))
         {
             throw new FacesException("UISortHeader expected.");
         }
 
-        String column = (String)uiSortColumn.currentValue(facesContext);
-        String currentSortColumn = (String)parent.currentValue(facesContext);
-        boolean ascending = ((UISortHeader)parent).currentAscending(facesContext);
+        String column = uiSortColumn.getColumn();
+        String currentSortColumn = ((UISortHeader)parent).currentColumn(facesContext);
+        Boolean ascending = ((UISortHeader)parent).currentAscending(facesContext);
 
         if (currentSortColumn != null && column.equals(currentSortColumn))
         {
-            return ascending ? Boolean.TRUE : Boolean.FALSE;
+            return ascending;
         }
         else
         {
             return null;
         }
-        */
-        return null;
     }
 
 

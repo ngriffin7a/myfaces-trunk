@@ -36,8 +36,14 @@ public class UISortColumn
     extends MyFacesUICommand
 {
     public static final String COLUMN_PROP = "column";
+    private static final String DEFAULT_ACTION = "sort";
 
     private String _column;
+
+    public UISortColumn()
+    {
+        setAction(DEFAULT_ACTION);
+    }
 
     public String getColumn()
     {

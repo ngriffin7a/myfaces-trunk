@@ -29,7 +29,6 @@ import javax.faces.context.FacesContext;
  */
 public class MyFacesUIPanel
     extends javax.faces.component.UIPanel
-    //implements CommonComponentProperties
 {
     public MyFacesUIPanel()
     {
