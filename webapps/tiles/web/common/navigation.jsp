@@ -8,4 +8,7 @@
     <h:commandLink action="nav_page2">
         <h:outputText value="Page2" />
     </h:commandLink>
+    <h:commandLink action="nav_page3">
+        <h:outputText value="non-tiles page" />
+    </h:commandLink>
 </h:panelGrid>

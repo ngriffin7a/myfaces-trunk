@@ -15,7 +15,6 @@
 
     <navigation-rule>
         <from-view-id>*</from-view-id>
-
         <navigation-case>
             <from-outcome>nav_page1</from-outcome>
             <to-view-id>/page1.jsp</to-view-id>
@@ -24,7 +23,18 @@
             <from-outcome>nav_page2</from-outcome>
             <to-view-id>/page2.jsp</to-view-id>
         </navigation-case>
+        <navigation-case>
+            <from-outcome>nav_page3</from-outcome>
+            <to-view-id>/non-tile.jsp</to-view-id>
+        </navigation-case>
     </navigation-rule>
-    
+
+	<navigation-rule>
+		<from-view-id>/non-tile.jsp</from-view-id>
+		<navigation-case>
+			<from-outcome>back</from-outcome>
+			<to-view-id>/page1.jsp</to-view-id>
+		</navigation-case>
+	</navigation-rule>    
 
 </faces-config>

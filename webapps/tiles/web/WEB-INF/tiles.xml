@@ -55,4 +55,6 @@
         <put name="body" value="/page2.jsp" />
     </definition>
 
+<!-- workaround for non-tiles JSF pages-->
+    <definition name="non.tiles1" path="/non-tile.jsp" />	
 </tiles-definitions>
