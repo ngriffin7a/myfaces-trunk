@@ -74,7 +74,7 @@ public class RadioRenderer
                 i = new Integer(i.intValue() + 1);
             }
             parent.setAttribute(ATTR_COUNT, i);
-            renderItem(facesContext, parent, item, isLayoutPageDirection(parent), i.intValue());
+            renderItem(facesContext, parent, item, isLayoutPageDirection(parent), false, i.intValue());
         }
     }
 
@@ -103,6 +103,7 @@ public class RadioRenderer
                                (UISelectOne)uiComponent,
                                (SelectItem)it.next(),
                                isLayoutPageDirection((UISelectOne)uiComponent),
+                               true,
                                i);
                 }
                 uiComponent.setAttribute(ATTR_CALLBACK, Boolean.FALSE);
@@ -146,6 +147,7 @@ public class RadioRenderer
                               UISelectOne uiSelectOne,
                               SelectItem selectItem,
                               boolean isLayoutPageDirection,
+                              boolean useLayout,
                               int itemCount)
         throws IOException
     {
@@ -157,7 +159,7 @@ public class RadioRenderer
         Object currentValue = uiSelectOne.currentValue(facesContext);
         String currentStrValue = ((currentValue != null) ? currentValue.toString() : null);
 
-        beforeRenderItem(facesContext, uiSelectOne, selectItem, isLayoutPageDirection, itemCount);
+        beforeRenderItem(facesContext, uiSelectOne, selectItem, isLayoutPageDirection, useLayout, itemCount);
         writer.write("<input type=\"radio\"");
 
         writer.write(" name=\"");
@@ -186,18 +188,21 @@ public class RadioRenderer
         HTMLUtil.renderDisabledOnUserRole(facesContext, uiSelectOne);
 
         writer.write('>');
-        renderLabel(facesContext, (UISelectOne)uiSelectOne, selectItem);
-        afterRenderItem(facesContext, uiSelectOne, selectItem, isLayoutPageDirection);
+        renderLabel(facesContext, uiSelectOne, selectItem, useLayout);
+        afterRenderItem(facesContext, uiSelectOne, selectItem, isLayoutPageDirection, useLayout);
     }
 
-    protected void beforeRenderLabel(FacesContext facesContext, UISelectOne selectOne, SelectItem selectItem)
+    protected void beforeRenderLabel(FacesContext facesContext, UISelectOne selectOne, SelectItem selectItem, boolean useLayout)
         throws IOException
     {
-        ResponseWriter writer = facesContext.getResponseWriter();
-        writer.write("&nbsp;");
+        if (useLayout)
+        {
+            ResponseWriter writer = facesContext.getResponseWriter();
+            writer.write("&nbsp;");
+        }
     }
 
-    protected void renderLabel(FacesContext facesContext, UISelectOne selectOne, SelectItem selectItem)
+    protected void renderLabel(FacesContext facesContext, UISelectOne selectOne, SelectItem selectItem, boolean useLayout)
         throws IOException
     {
         String label = selectItem.getLabel();
@@ -205,7 +210,7 @@ public class RadioRenderer
         {
             ResponseWriter writer = facesContext.getResponseWriter();
             boolean span = selectOne.getAttribute(JSFAttr.SELECT_ONE_CLASS_ATTR) != null;
-            beforeRenderLabel(facesContext, selectOne, selectItem);
+            beforeRenderLabel(facesContext, selectOne, selectItem, useLayout);
             if (span)
             {
                 writer.write("<span ");
@@ -220,11 +225,11 @@ public class RadioRenderer
             {
                 writer.write("</span>");
             }
-            afterRenderLabel(facesContext, selectOne, selectItem);
+            afterRenderLabel(facesContext, selectOne, selectItem, useLayout);
         }
     }
 
-    protected void afterRenderLabel(FacesContext facesContext, UISelectOne selectOne, SelectItem item)
+    protected void afterRenderLabel(FacesContext facesContext, UISelectOne selectOne, SelectItem item, boolean useLayout)
         throws IOException
     {
     }
@@ -233,10 +238,11 @@ public class RadioRenderer
                                     UISelectOne uiSelectOne,
                                     SelectItem selectItem,
                                     boolean layoutPageDirection,
+                                    boolean useLayout,
                                     int itemCount)
         throws IOException
     {
-        if (itemCount > 1)
+        if (useLayout && itemCount > 1)
         {
             if (layoutPageDirection)
             {
@@ -252,7 +258,8 @@ public class RadioRenderer
     protected void afterRenderItem(FacesContext facesContext,
                                    UISelectOne uiSelectOne,
                                    SelectItem selectItem,
-                                   boolean layoutPageDirection)
+                                   boolean layoutPageDirection,
+                                   boolean useLayout)
         throws IOException
     {
     }
