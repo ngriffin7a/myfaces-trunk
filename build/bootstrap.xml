@@ -1,0 +1,150 @@
+<?xml version="1.0"?>
+
+<!--
+This is a basic ant build file that can perform a so-called "bootstrap" build of any project.
+The only requirement is that the project be checked in CVS and have its own build file.  Basically this will check out
+the project (by specific version if desired) and run the appropriate build script.  The CVS client must also be available
+through the system path.
+-->
+<project name="Bootstrap Build Script" default="nightly" basedir=".">
+
+    <!-- use properties file to determine cvs configuration info -->
+    <property file="bootstrap.properties"/>
+    <property name="checkout.dir" value="${project.name}"/>
+    <property name="build.dir" value="${basedir}/${project.name}/build"/>
+    <property name="temp.dir" value="${build.dir}/temp"/>
+
+    <target name="prepare">
+
+        <!-- make sure project.name property was set (externally) -->
+        <fail unless="project.name">
+            The project.name property must be set.  (ex. ant -buildfile bootstrap.xml -Dproject.name=cdrh-commons)
+        </fail>
+
+        <!-- use latest version if version is not specified -->
+        <condition property="cvs.tag" value="HEAD">
+            <and>
+                <not>
+                    <isset property="build.version"/>
+                </not>
+            </and>
+        </condition>
+        <condition property="cvs.tag" value="rel_${build.version}">
+            <and>
+                <isset property="build.version"/>
+            </and>
+        </condition>
+        <condition property="build.version" value="HEAD">
+            <and>
+                <not>
+                    <isset property="build.version"/>
+                </not>
+            </and>
+        </condition>
+
+        <echo message="build.version=${build.version}"/>
+        <echo message="cvs.tag=${cvs.tag}"/>
+
+        <!-- determine if the files have been checked out already -->
+        <available file="${project.name}" type="dir" property="already.checked.out"/>
+
+        <!-- classpath for <javadoc> -->
+        <path id="doclet.classpath">
+            <fileset dir="${lib.dir}">
+                <include name="*.jar"/>
+                <include name="*.JAR"/>
+            </fileset>
+        </path>
+
+    </target>
+
+    <target name="clean" description="Remove everything generated from previous builds of the same project">
+        <delete dir="${checkout.dir}"/>
+    </target>
+
+    <target name="cvs-checkout" depends="prepare" unless="already.checked.out">
+
+        <echo message="cvs.server = ${cvs.server}"/>
+        <echo message="cvs.repository = ${cvs.repository}"/>
+        <echo message="cvs.username = ${cvs.username}"/>
+        <echo message="cvs.password = ${cvs.password}"/>
+
+        <!-- login to cvs -->
+        <cvspass cvsroot=":pserver:${cvs.username}@${cvs.server}:${cvs.repository}"
+                 password="${cvs.password}"
+                 passfile=".cvspass"/>
+
+        <cvs    cvsroot=":pserver:${cvs.username}@${cvs.server}:${cvs.repository}"
+                dest="."
+                command="checkout"
+                tag="${cvs.tag}"
+                package="${project.name}"
+                quiet="true"/>
+
+    </target>
+
+    <target name="cvs-update" depends="prepare" if="already.checked.out">
+
+        <!-- login to cvs -->
+        <cvspass cvsroot=":pserver:${cvs.username}@${cvs.server}:${cvs.repository}"
+                 password="${cvs.password}"/>
+
+        <cvs cvsroot=":pserver:${cvs.username}@${cvs.server}:${cvs.repository}"
+             dest="."
+             command="update -dP"
+             package="${project.name}"
+             quiet="true"/>
+
+    </target>
+
+    <target name="cvs-list" description="Lists all of the projects in the CVS repository">
+
+        <!-- login to cvs -->
+        <cvspass cvsroot=":pserver:${cvs.username}@${cvs.server}:${cvs.repository}"
+                 password="${cvs.password}"/>
+
+        <cvs cvsroot=":pserver:${cvs.username}@${cvs.server}:${cvs.repository}"
+             dest="."
+             command="ls -q"
+             quiet="true"/>
+
+    </target>
+
+    <target name="nightly" depends="cvs-checkout,cvs-update">
+
+        <echo message="build.dir: ${build.dir}"/>
+        <echo message="building nigthly for ${project.name} ..." level="debug"/>
+
+        <!-- create new directory for nightly buld output -->
+        <tstamp>
+            <format property="TODAY" pattern="yyyyMMdd" locale="en"/>
+        </tstamp>
+        <property name="release.version" value="${TODAY}"/>
+        <property name="release.dir" value="${build.dir}/nightly/${TODAY}"/>
+        <echo message="build output directory: ${release.dir}"/>
+        <mkdir dir="${release.dir}"/>
+
+        <!-- execute the nightly build file that was just checked out -->
+        <ant dir="${build.dir}" target="release" inheritRefs="true"/>
+    </target>
+
+    <target name="release" depends="cvs-checkout,cvs-update">
+
+        <echo message="build.dir: ${build.dir}"/>
+        <echo message="building release for ${project.name} ..." level="debug"/>
+
+        <property name="release.dir" value="${build.dir}/release"/>
+        <echo message="build output directory: ${release.dir}"/>
+        <mkdir dir="${release.dir}"/>
+
+        <!-- execute the nightly build file that was just checked out -->
+        <ant dir="${build.dir}" target="release" inheritRefs="true"/>
+
+    </target>
+
+</project>
+
+
+
+
+
