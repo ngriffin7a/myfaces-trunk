@@ -62,24 +62,38 @@
                                **/package.html"/>
         </copy>
 
-        <mkdir dir="${web-inf.lib.dir}"/>
-        <copy todir="${web-inf.lib.dir}">
-            <fileset file="${cos.jar}"/>
-            <!--fileset file="${sun-jsf-api.jar}"/-->
-            <fileset file="${myfaces.jar}"/>
-            <fileset file="${commons-logging.jar}"/>
-            <fileset file="${log4j.jar}"/>
-        </copy>
-
-        <copy file="${project.dir}/conf/web.xml" todir="${examples.web}/WEB-INF" />
-
     </target>
-
-
 
     <target name="release"
             depends="compile-and-copy-libs"
             description="creates the examples release file myfaces-x.x.x-examples.tgz (don't forget to adjust manifest.properties!)">
+
+        <mkdir dir="${temp.dir}"/>
+
+        <tstamp>
+            <format property="TODAY" pattern="yyyy-MM-dd HH:mm" locale="en"/>
+        </tstamp>
+
+        <!-- create manifest -->
+        <manifest file="${temp.dir}/MANIFEST.MF">
+            <section name="${manifest.section}">
+                <attribute name="Implementation-Title" value="${manifest.impl.title}"/>
+                <attribute name="Implementation-Version" value="${manifest.impl.version} (${TODAY})"/>
+                <attribute name="Implementation-Vendor" value="${manifest.impl.vendor}"/>
+            </section>
+        </manifest>
+
+        <war destfile="${temp.dir}/myfaces-samples.war"
+             webxml="${project.dir}/conf/web.xml"
+             manifest="${temp.dir}/MANIFEST.MF">
+            <lib dir="${project.dir}/lib" excludes="jsp-api.jar, servlet-api.jar" />
+            <classes dir="${web-inf.classes.dir}" />
+            <fileset dir="${examples.web}"
+                     excludes="WEB-INF/classes/**,
+                               WEB-INF/lib/**,
+                               WEB-INF/web.xml " />
+         </war>
+
         <tar destfile="${project.dir}/myfaces-${manifest.impl.version}-examples.tgz"
              compression="gzip">
             <tarfileset dir="${myfaces.doc}"
@@ -87,17 +101,16 @@
                                   tlddoc/**/*"
                         prefix="myfaces-${manifest.impl.version}/doc"/>
             <tarfileset dir="${examples.src}"
-                        prefix="myfaces-${manifest.impl.version}/webapps/examples/src"/>
-            <tarfileset dir="${examples.web}"
-                        excludes="WEB-INF/lib/jsf-api.jar"
-                        prefix="myfaces-${manifest.impl.version}/webapps/examples/web"/>
+                        prefix="myfaces-${manifest.impl.version}/src"/>
+            <tarfileset dir="${temp.dir}"
+                        includes="myfaces-samples.war"
+                        prefix="myfaces-${manifest.impl.version}"/>
             <tarfileset dir="${examples.dir}"
                         includes="*"
                         excludes="*.properties,.cvsignore"
-                        prefix="myfaces-${manifest.impl.version}/webapps/examples"/>
+                        prefix="myfaces-${manifest.impl.version}/src"/>
         </tar>
     </target>
-
 
 
     <target name="clean"
@@ -108,10 +121,9 @@
             <fileset file="${project.dir}/myfaces-*-examples.tgz"/>
             <fileset file="${examples.web}/WEB-INF/web.xml"/>
             <fileset file="${examples.web}/WEB-INF/faces-config.xml"/>
+            <fileset file="${temp.dir}/myfaces-samples.war" />
         </delete>
     </target>
-
-
 
     <target name="prepare-for-debugging"
             depends="-check-myfaces-jar"
