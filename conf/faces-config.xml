@@ -116,21 +116,6 @@
       <component-class>net.sourceforge.myfaces.component.ext.UISortHeader</component-class>
     </component>
 
-    <component>
-      <component-type>TabbedPane</component-type>
-      <component-class>net.sourceforge.myfaces.component.ext.UITabbedPane</component-class>
-    </component>
-
-    <component>
-      <component-type>TabHeader</component-type>
-      <component-class>net.sourceforge.myfaces.component.ext.UITabHeader</component-class>
-    </component>
-
-    <component>
-      <component-type>Tab</component-type>
-      <component-class>net.sourceforge.myfaces.component.ext.UITab</component-class>
-    </component>
-
 
   <!-- standard converters -->
 
@@ -603,6 +588,10 @@
             <renderer-type>TabbedPane</renderer-type>
             <renderer-class>net.sourceforge.myfaces.renderkit.html.ext.TabbedPaneRenderer</renderer-class>
             <component-type>TabbedPane</component-type>
+            <attribute>
+                <attribute-name>selectedIndex</attribute-name>
+                <attribute-class>java.lang.Integer</attribute-class>
+            </attribute>
         </renderer>
 
         <renderer>

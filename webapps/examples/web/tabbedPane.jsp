@@ -53,33 +53,28 @@ managed beans used:
         <f:facet name="body">
             <h:panel_group id="body">
 
-                <h:form formName="tabForm" >
+                <!--h:form formName="tabForm" -->
 
-                    <x:tabbed_pane activeHeaderClass="activeHeaderTab"
-                                   inactiveHeaderClass="inactiveHeaderTab"
-                                   panelClass="tabbedPane" >
+                    <x:tabbed_pane>
 
-                        <x:tab_header id="hdr1" label="Tab1" commandClass="tabHeader" />
-                        <x:tab_header id="hdr2" label="Tab2" commandClass="tabHeader" />
-                        <x:tab_header id="hdr3" label="Tab3" commandClass="tabHeader" />
-
-                        <x:tab id="tab1">
+                        <x:tab id="tab1" label="Tab1">
                             <h:input_text id="inp1"/><br>
                             <h:input_text id="inp2"/>
                         </x:tab>
 
-                        <x:tab id="tab2">
+                        <x:tab id="tab2" label="Tab2">
                             <h:input_textarea ></h:input_textarea>
                         </x:tab>
 
-                        <x:tab id="tab3">
+                        <x:tab id="tab3" label="Tab3">
                             <h:input_text id="inp3"/><br>
                             <h:input_text id="inp4"/><br>
                             <h:input_text id="inp5"/><br>
                         </x:tab>
+
                     </x:tabbed_pane>
 
-                </h:form>
+                <!--/h:form -->
 
 
             </h:panel_group>
