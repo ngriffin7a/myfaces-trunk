@@ -37,7 +37,6 @@ public interface CommonRendererAttributes
     public static final String ROW_CLASSES_ATTR = "rowClasses";
     public static final String TIME_STYLE_ATTR = "timeStyle";
     public static final String TIMEZONE_ATTR = "timezone";
-    public static final String RENDERED_ATTR = "rendered";
 
     //xxxClass
     public static final String INPUT_CLASS_ATTR = "inputClass";

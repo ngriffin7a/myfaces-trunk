@@ -48,7 +48,6 @@ public class CommandHyperlinkTag
     //Iteration Tag support
     public int getDoAfterBodyValue() throws JspException
     {
-
         return super.getDoAfterBodyValue();
     }
 

@@ -194,6 +194,10 @@ public class HyperlinkRenderer
 
     public void encodeEnd(FacesContext facesContext, UIComponent uiComponent) throws IOException
     {
+        if (!uiComponent.isRendered())
+        {
+            return;
+        }
         ResponseWriter writer = facesContext.getResponseWriter();
         writer.write("<a href=\"");
         String href = (String)uiComponent.getAttribute(HREF_ATTR);

@@ -142,7 +142,6 @@ public abstract class MyFacesBodyTag
         setRendererAttribute(CommonRendererAttributes.CONVERTER_ATTR, converter);
     }
 
-
     //Iteration Tag support
     public int getDoAfterBodyValue() throws JspException
     {
