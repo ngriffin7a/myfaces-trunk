@@ -1,31 +1,80 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
-<project name="myfaces-tagunit" default="copy-libs">
+<!DOCTYPE project [
+    <!ENTITY tomcat-build SYSTEM "file:../tomcat/tomcat-build.xmlf">
+]>
+
+<project name="myfaces-tagunit-tests" default="war">
 
     <property environment="env"/>
 
     <!-- Constants -->
     <property name="project.dir" location="${basedir}/../.."/>
     <property name="tagunit.web" location="${project.dir}/webapps/tagunit/web"/>
-    <property name="web-inf.classes.dir" location="${tagunit.web}/WEB-INF/classes"/>
-    <property name="web-inf.lib.dir" location="${tagunit.web}/WEB-INF/lib"/>
-
+	<property name="webapp.name" value="myfaces-tagunit-tests"/>
 
     <!-- Properties -->
+    <property file="build.properties"/>
     <property file="../build.properties"/>
-
+	<property file="manifest.properties"/>
+	<property file="../manifest.properties"/>
+		
     <!-- Temporary dir. May be overridden in build.properties -->
     <property name="temp.dir" value="${env.TEMP}"/>
 
-    <target name="copy-libs"
+    <target name="war"
             depends="-check-myfaces-jar, -build-myfaces-jar"
-            description="Copies all needed libs to WEB-INF/lib">
-        <copy todir="${web-inf.lib.dir}">
-            <!--fileset file="${sun-jsf-api.jar}"/-->
-            <fileset file="${myfaces.jar}"/>
-        </copy>
-    </target>
+    	        description="creates the taglib-test war file">
 
-    <target name="clean"
+        <mkdir dir="${temp.dir}"/>
+
+        <tstamp>
+            <format property="TODAY" pattern="yyyy-MM-dd HH:mm" locale="en"/>
+        </tstamp>
+
+        <!-- create manifest - properties come from manifest.properties -->
+        <manifest file="${temp.dir}/MANIFEST.MF">
+            <section name="${manifest.section}">
+                <attribute name="Implementation-Title" value="${manifest.impl.title}"/>
+                <attribute name="Implementation-Version" value="${manifest.impl.version} (${TODAY})"/>
+                <attribute name="Implementation-Vendor" value="${manifest.impl.vendor}"/>
+            </section>
+        </manifest>
+
+        <war destfile="${temp.dir}/${webapp.name}.war"
+             webxml="${basedir}/web.xml"
+             manifest="${temp.dir}/MANIFEST.MF">
+            <lib file="${temp.dir}/${tests.jar}"/>
+            <lib file="${commons-el.jar}"/>
+        	    <lib file="${commons-logging.jar}"/>
+            <lib file="${cos.jar}"/>
+            <lib file="${jsp-api.jar}"/>
+            <lib file="${jstl.jar}"/>
+            <lib file="${myfaces.jar}"/>
+            <lib file="${log4j.jar}"/>
+    	        <lib dir="${tagunit.lib.dir}">
+    	    	        <include name="*.jar"/>
+    	        </lib>
+            <fileset dir="${tagunit.web}"
+                     excludes="WEB-INF/**" />
+        </war>
+    	</target>
+
+	<taskdef file="${basedir}/TagUnitTasks.properties">
+        <classpath>
+            <pathelement path="${tagunit.lib.dir}/tagunit.jar"/>
+        </classpath>
+    </taskdef>
+    <property file="${tomcat.build.dir}/tomcat.properties"/>
+	<target name="tomcat-tagunit-tests" description="run the tag unit tests">
+      <tagunit url="http://${tomcat.server}:${tomcat.port}/${webapp.name}/test/servlet/RunTests?uri=/test/myfaces_html.jsp"
+               ignoreWarnings="true" stopOnFail="false"/>	
+      <tagunit url="http://${tomcat.server}:${tomcat.port}/${webapp.name}/test/servlet/RunTests?uri=/test/myfaces_core.jsp"
+               ignoreWarnings="true" stopOnFail="false"/>	
+      <tagunit url="http://${tomcat.server}:${tomcat.port}/${webapp.name}/test/servlet/RunTests?uri=/test/myfaces_ext.jsp"
+               ignoreWarnings="true" stopOnFail="false"/>	
+	</target>
+
+	<target name="clean"
             description="Deletes all files that were built">
         <delete quiet="true" failonerror="false" includeEmptyDirs="true">
             <fileset file="${web-inf.lib.dir}/myfaces.jar" />
@@ -33,7 +82,6 @@
             <fileset dir="${web-inf.classes.dir}"/>
         </delete>
     </target>
-
 
     <!-- sub-targets (not to be called directly) -->
 
@@ -51,5 +99,7 @@
              target="myfaces-jar"
              inheritall="false"/>
     </target>
+
+    &tomcat-build;	
 
 </project>
