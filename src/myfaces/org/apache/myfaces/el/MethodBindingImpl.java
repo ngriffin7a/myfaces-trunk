@@ -48,6 +48,8 @@ public class MethodBindingImpl extends MethodBinding implements StateHolder
 
     public MethodBindingImpl(Application application, String reference, Class[] argClasses)
     {
+        // Note: using ValueBindingImpl, istead of creating a common subclass,
+        //       to share single Expression cache
         _valueBinding = new ValueBindingImpl(application, reference);
         _argClasses = argClasses;
     }
