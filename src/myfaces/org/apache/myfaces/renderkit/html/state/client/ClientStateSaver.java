@@ -19,15 +19,16 @@
 package net.sourceforge.myfaces.renderkit.html.state.client;
 
 import net.sourceforge.myfaces.renderkit.html.state.StateSaver;
+import net.sourceforge.myfaces.util.FacesUtils;
+import net.sourceforge.myfaces.util.StringUtils;
 
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
-import javax.servlet.ServletRequest;
 import javax.servlet.jsp.tagext.BodyContent;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
-import java.util.regex.Pattern;
+import java.util.Map;
 
 /**
  * Abstract base class for StateSavers that save state in the client.
@@ -44,12 +45,9 @@ public abstract class ClientStateSaver
     protected static final String URL_TOKEN = "__URLSTATE__";
     protected static final String HIDDEN_INPUTS_TOKEN = "__HIDDENINPUTSSTATE__";
 
-    protected static final Pattern URL_TOKEN_PATTERN = Pattern.compile(URL_TOKEN);
-    protected static final Pattern HIDDEN_INPUTS_TOKEN_PATTERN = Pattern.compile(HIDDEN_INPUTS_TOKEN);
-
-
-    public void init(FacesContext facesContext) throws IOException
+    public void init(FacesContext facesContext)
     {
+        // do nothing
     }
 
     /**
@@ -79,8 +77,8 @@ public abstract class ClientStateSaver
     public void release(FacesContext facesContext)
         throws IOException
     {
-        BodyContent bodyContent = (BodyContent)((ServletRequest)facesContext.getExternalContext().getRequest())
-            .getAttribute(ClientStateSaver.BODY_CONTENT_REQUEST_ATTR);
+        Map requestMap = FacesUtils.getRequestMap(facesContext);
+        BodyContent bodyContent = (BodyContent)(requestMap.get(ClientStateSaver.BODY_CONTENT_REQUEST_ATTR));
         if (bodyContent == null)
         {
             throw new IllegalStateException("No BodyContent!?");
@@ -94,8 +92,8 @@ public abstract class ClientStateSaver
 
         String body = bodyContent.getString();
 
-        body = URL_TOKEN_PATTERN.matcher(body).replaceAll(urlWriter.toString());
-        body = HIDDEN_INPUTS_TOKEN_PATTERN.matcher(body).replaceAll(hiddenInputsWriter.toString());
+        body = StringUtils.replace(body, URL_TOKEN, urlWriter.toString());
+        body = StringUtils.replace(body, HIDDEN_INPUTS_TOKEN, hiddenInputsWriter.toString());
 
         bodyContent.getEnclosingWriter().write(body);
     }
