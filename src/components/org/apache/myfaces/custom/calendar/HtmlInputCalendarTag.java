@@ -24,6 +24,9 @@ import javax.faces.component.UIComponent;
  * @author Martin Marinschek (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.7  2004/07/27 16:48:02  tinytoony
+ * new calendar popup, revisited
+ *
  * Revision 1.6  2004/07/27 06:28:32  tinytoony
  * new calendar component as a popup
  *
@@ -78,7 +81,6 @@ public class HtmlInputCalendarTag
     private String _renderAsPopup;
     private String _popupDateFormat;
     private String _popupButtonString;
-    private String _popupTheme;
 
     // User Role support
     private String _enabledOnUserRole;
@@ -94,7 +96,6 @@ public class HtmlInputCalendarTag
         setStringProperty(component, "currentDayCellClass", _currentDayCellClass);
         setBooleanProperty(component,"renderAsPopup",_renderAsPopup);
         setStringProperty(component,"popupDateFormat",_popupDateFormat);
-        setStringProperty(component,"popupTheme",_popupTheme);
         setStringProperty(component,"popupButtonString",_popupButtonString);
 
         setStringProperty(component, UserRoleAware.ENABLED_ON_USER_ROLE_ATTR, _enabledOnUserRole);
@@ -134,11 +135,6 @@ public class HtmlInputCalendarTag
     public void setPopupButtonString(String popupButtonString)
     {
         _popupButtonString = popupButtonString;
-    }
-
-    public void setPopupTheme(String popupTheme)
-    {
-        _popupTheme = popupTheme;
     }
 
     public void setEnabledOnUserRole(String enabledOnUserRole)

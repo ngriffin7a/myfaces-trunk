@@ -43,6 +43,9 @@ import java.util.Locale;
 
 /**
  * $Log$
+ * Revision 1.5  2004/07/27 16:48:02  tinytoony
+ * new calendar popup, revisited
+ *
  * Revision 1.4  2004/07/27 06:28:32  tinytoony
  * new calendar component as a popup
  *
@@ -140,7 +143,7 @@ public class HtmlCalendarRenderer
             writer.startElement(HTML.SCRIPT_ELEM,null);
             writer.writeAttribute(HTML.SCRIPT_LANGUAGE_ATTR,HTML.SCRIPT_LANGUAGE_JAVASCRIPT,null);
             writer.writeText(getLocalizedLanguageScript(months, weekdays,
-                    timeKeeper.getFirstDayOfWeek(), inputCalendar.getPopupTheme()),null);
+                    timeKeeper.getFirstDayOfWeek()),null);
             writer.writeText(getScriptBtnText(inputCalendar.getClientId(facesContext),
                     dateFormat,inputCalendar.getPopupButtonString()),null);
             writer.endElement(HTML.SCRIPT_ELEM);
@@ -211,16 +214,13 @@ public class HtmlCalendarRenderer
         }
     }
 
-    private String getLocalizedLanguageScript(String[] months, String[] weekdays, int firstDayOfWeek, String popupTheme)
+    private String getLocalizedLanguageScript(String[] months, String[] weekdays, int firstDayOfWeek)
     {
         StringBuffer script = new StringBuffer();
+        script.append("<!--\n");
         defineStringArray(script, "monthName", months);
         defineStringArray(script, "dayName", weekdays);
         setIntegerVariable(script, "startAt",firstDayOfWeek);
-        if(popupTheme==null)
-            popupTheme="jscalendar-WH";
-        setStringVariable(script, "imgDir","jscalendar/"+popupTheme+"/");
-        setStringVariable(script, "themePrefix",popupTheme);
 
         return script.toString();
     }
@@ -232,14 +232,14 @@ public class HtmlCalendarRenderer
         script.append(value);
         script.append(";\n");
     }
-
+/*
     private void setStringVariable(StringBuffer script, String name, String value)
     {
         script.append(name);
         script.append(" = \"");
         script.append(value);
         script.append("\";\n");
-    }
+    }*/
 
     private void defineStringArray(StringBuffer script, String arrayName, String[] array)
     {
@@ -263,7 +263,6 @@ public class HtmlCalendarRenderer
     {
 
         StringBuffer script = new StringBuffer();
-        script.append("<!--\n");
         script.append("if (!document.layers) {\n");
         script.append("document.write(");
         script.append("\"<input type='button' onclick='popUpCalendar(this,this.form.elements[\\\"");

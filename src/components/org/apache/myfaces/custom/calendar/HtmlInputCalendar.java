@@ -166,19 +166,6 @@ public class HtmlInputCalendar
         return vb != null ? (String)vb.getValue(getFacesContext()) : null;
     }
 
-    public void setPopupTheme(String popupTheme)
-    {
-        _popupTheme = popupTheme;
-    }
-
-    public String getPopupTheme()
-    {
-        if (_popupTheme != null) return _popupTheme;
-        ValueBinding vb = getValueBinding("popupTheme");
-        return vb != null ? (String)vb.getValue(getFacesContext()) : null;
-    }
-
-
     public boolean isRendered()
     {
         if (!UserRoleUtils.isVisibleOnUserRole(this)) return false;

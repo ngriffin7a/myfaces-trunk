@@ -391,12 +391,6 @@
             <description>Defines the date format used by the java-script popup on client.</description>
         </attribute>
         <attribute>
-            <name>popupTheme</name>
-            <required>false</required>
-            <rtexprvalue>false</rtexprvalue>
-            <description>Defines the theme used by the java-script popup on client (essentially, the theme files have to be included in a subfolder of the jscalendar folder in your web-directory, js-calendar-WH is assumed by default).</description>
-        </attribute>
-        <attribute>
             <name>popupButtonString</name>
             <required>false</required>
             <rtexprvalue>false</rtexprvalue>
