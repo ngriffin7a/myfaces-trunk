@@ -371,6 +371,14 @@ div.titlebar {
     font-family: Verdana, Geneva, sans-serif;
     text-decoration: none
 }
+.documentSelected
+{
+    color: blue;
+    font-size: 10px;
+    font-family: Verdana, Geneva, sans-serif;
+    text-decoration: none;
+    font-weight: bold
+}
 .childCount
 {
     color: blue;

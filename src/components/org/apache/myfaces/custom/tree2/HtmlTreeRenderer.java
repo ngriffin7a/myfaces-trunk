@@ -50,16 +50,16 @@ import java.util.HashMap;
  */
 public class HtmlTreeRenderer extends Renderer
 {
-    private static final String NODE_LEVEL = "org.apache.myfaces.tree.NODE_LEVEL";
+    protected static final String TOGGLE_SPAN = "org.apache.myfaces.tree.TOGGLE_SPAN";
+    protected static final String ROOT_NODE_ID = "0";
+    
     private static final String JAVASCRIPT_ENCODED = "org.apache.myfaces.tree.JAVASCRIPT_ENCODED";
     private static final String NAV_COMMAND = "org.apache.myfaces.tree.NAV_COMMAND";
-    private static final String TOGGLE_SPAN = "org.apache.myfaces.tree.TOGGLE_SPAN";
     private static final String ENCODING = "UTF-8";
     private static final String ATTRIB_DELIM = ";";
     private static final String ATTRIB_KEYVAL = "=";
     private static final String NODE_STATE_EXPANDED = "x";
     private static final String NODE_STATE_CLOSED = "c";
-    private static final String ROOT_NODE_ID = "0";
     private final static String SEPARATOR = String.valueOf(NamingContainer.SEPARATOR_CHAR);
     
     private static final int NOTHING = 0;
@@ -137,7 +137,8 @@ public class HtmlTreeRenderer extends Renderer
 
     public void encodeBegin(FacesContext context, UIComponent component) throws IOException
     {
-        // Rendering occurs in encodeEnd.
+        // write javascript functions
+        encodeJavascript(context);
     }
 
     /**
@@ -153,12 +154,6 @@ public class HtmlTreeRenderer extends Renderer
     {
         HtmlTree tree = (HtmlTree)component;
         boolean showRootNode = getBoolean(tree, JSFAttr.SHOW_ROOT_NODE, true);
-        
-        // write javascript functions
-        encodeJavascript(context);
-
-        // reset the nodeLevel (should already be zero but it can't hurt)
-        component.getAttributes().put(NODE_LEVEL, new Integer(0));
 
         if (!component.isRendered()) return;
 
@@ -218,7 +213,7 @@ public class HtmlTreeRenderer extends Renderer
      *  (used to construct the id of the next node to render.)
      * @throws IOException
      */
-    private void encodeTree(FacesContext context, ResponseWriter out, HtmlTree tree, String parentId, int childCount)
+    protected void encodeTree(FacesContext context, ResponseWriter out, HtmlTree tree, String parentId, int childCount)
         throws IOException
     {
         boolean clientSideToggle = getBoolean(tree, JSFAttr.CLIENT_SIDE_TOGGLE, true);
@@ -230,15 +225,14 @@ public class HtmlTreeRenderer extends Renderer
         TreeNode node = tree.getNode();       
         
         // encode the current node
+        HtmlRendererUtils.writePrettyLineSeparator(context);
+        beforeNodeEncode(context, out, tree);
         encodeCurrentNode(context, out, tree);
+        afterNodeEncode(context, out);
         
         // only encode the children if clientSideToggle is true or if this node is expanded (regardless of clientSideToggle)
         if (clientSideToggle == true || tree.isNodeExpanded())
         {
-            int nodeLevel = ((Integer)tree.getAttributes().get(NODE_LEVEL)).intValue();
-            nodeLevel++;
-            tree.getAttributes().put(NODE_LEVEL, new Integer(nodeLevel));
-
             int kidId = 0;
             String currId = tree.getNodeId();
             List children = node.getChildren();
@@ -268,10 +262,6 @@ public class HtmlTreeRenderer extends Renderer
             {
                 out.endElement(HTML.SPAN_ELEM);
             }
-
-            nodeLevel = ((Integer)tree.getAttributes().get(NODE_LEVEL)).intValue();
-            nodeLevel--;
-            tree.getAttributes().put(NODE_LEVEL, new Integer(nodeLevel));
         }
     }
 
@@ -308,17 +298,6 @@ public class HtmlTreeRenderer extends Renderer
         {
             throw new IllegalArgumentException("Unable to locate facet with the name: " + node.getType());
         }
-
-        /** @todo - format rendered html */
-
-        // start node table
-        HtmlRendererUtils.writePrettyLineSeparator(context);
-        out.startElement(HTML.TABLE_ELEM, tree);
-        out.writeAttribute(HTML.CELLPADDING_ATTR, "0", null);
-        out.writeAttribute(HTML.CELLSPACING_ATTR, "0", null);
-        out.writeAttribute(HTML.BORDER_ATTR, "0", null);
-        out.startElement(HTML.TR_ELEM, tree);
-        HtmlRendererUtils.writePrettyLineSeparator(context);
 
         // render node padding
         String[] pathInfo = tree.getPathInformation(tree.getNodeId());
@@ -357,13 +336,25 @@ public class HtmlTreeRenderer extends Renderer
         }
         encodeRecursive(context, nodeTypeFacet);
         out.endElement(HTML.TD_ELEM);
-
-        // end node table
-        out.endElement(HTML.TR_ELEM);
-        out.endElement(HTML.TABLE_ELEM);
-        HtmlRendererUtils.writePrettyLineSeparator(context);
     }
 
+    protected void beforeNodeEncode(FacesContext context, ResponseWriter out, HtmlTree tree)
+        throws IOException
+    {
+        out.startElement(HTML.TABLE_ELEM, null);
+        out.writeAttribute(HTML.CELLPADDING_ATTR, "0", null);
+        out.writeAttribute(HTML.CELLSPACING_ATTR, "0", null);
+        out.writeAttribute(HTML.BORDER_ATTR, "0", null);
+        out.startElement(HTML.TR_ELEM, null);
+    }
+    
+    protected void afterNodeEncode(FacesContext context, ResponseWriter out)
+        throws IOException
+    {
+        out.endElement(HTML.TR_ELEM);
+        out.endElement(HTML.TABLE_ELEM);
+    }    
+    
     /**
      * Handles the encoding related to the navigation functionality.  
      * 
@@ -615,7 +606,7 @@ public class HtmlTreeRenderer extends Renderer
      * @param defaultValue The default value of the attribute (to be returned if no value found).
      * @return boolean
      */
-    private boolean getBoolean(UIComponent component, String attributeName, boolean defaultValue)
+    protected boolean getBoolean(UIComponent component, String attributeName, boolean defaultValue)
     {
         Boolean booleanAttr = (Boolean)component.getAttributes().get(attributeName);
 

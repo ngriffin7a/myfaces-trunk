@@ -133,12 +133,7 @@ public class HtmlTree extends UITreeData
 
     protected void processChildNodes(FacesContext context, TreeNode parentNode, int processAction)
     {
-        String parentNodeId = getNodeId();
-
-        if (_expandedNodes.contains(parentNodeId))
-        {
-            super.processChildNodes(context, parentNode, processAction);
-        }
+        super.processChildNodes(context, parentNode, processAction);
     }
     
     /**
