@@ -36,6 +36,9 @@ import java.util.*;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.13  2004/08/27 10:45:55  manolito
+ * log a warning when getClientId implicitly creates a component id
+ *
  * Revision 1.12  2004/07/01 22:00:50  mwessendorf
  * ASF switch
  *
@@ -103,6 +106,7 @@ public abstract class UIComponentBase
 
         if (_clientId != null) return _clientId;
 
+        boolean idWasNull = false;
         String id = getId();
         if (id == null)
         {
@@ -115,9 +119,11 @@ public abstract class UIComponentBase
             }
             else
             {
-                context.getExternalContext().log("Cannot automatically create an id for component of type " + getClass().getName() + " because there is no viewRoot in the current facesContext!");
+                context.getExternalContext().log("ERROR: Cannot automatically create an id for component of type " + getClass().getName() + " because there is no viewRoot in the current facesContext!");
                 id = "ERROR";
             }
+            //We remember that the id was null and log a warning down below
+            idWasNull = true;
         }
 
         UIComponent namingContainer = _ComponentUtils.findParentNamingContainer(this, false);
@@ -134,6 +140,14 @@ public abstract class UIComponentBase
         if (renderer != null)
         {
             _clientId = renderer.convertClientId(context, _clientId);
+        }
+
+        if (idWasNull)
+        {
+            context.getExternalContext().log("WARNING: Component " + _clientId + " just got an automatic id, because there was no id assigned yet. " +
+                                             "If this component was created dynamically (i.e. not by a JSP tag) you should assign it an " +
+                                             "explicit static id or assign it the id you get from the createUniqueId from the current UIViewRoot " +
+                                             "component right after creation!");
         }
 
         return _clientId;
