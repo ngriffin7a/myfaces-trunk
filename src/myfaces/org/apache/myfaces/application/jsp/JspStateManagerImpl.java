@@ -41,6 +41,9 @@ import java.io.IOException;
  * @author Manfred Geiler
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.20  2004/08/15 15:35:26  o_rossmueller
+ * fix #1008685: hold view state by viewId
+ *
  * Revision 1.19  2004/08/15 15:31:09  o_rossmueller
  * fix #1008685: hold view state by viewId
  *
@@ -316,11 +319,8 @@ public class JspStateManagerImpl
                                                       String viewId,
                                                       SerializedView serializedView)
     {
-        //FIXME / TODO: What, if user has more than one browser windows open?!
-        // We should at least store the serializedView per viewId and not
-        // only one per session! This would solve the problem for different pages in
-        // two windows but the problem remains for the same page in different browser
-        // windows.
+        // TODO: What, if user has more than one browser window open on the same page?!
+        // only the state of the latest accessed window will be stored at the moment
         externalContext.getSessionMap().put(SERIALIZED_VIEW_SESSION_ATTR + "-" + viewId,
                                             new Object[] {viewId, serializedView});
     }
