@@ -18,7 +18,7 @@
  */
 package net.sourceforge.myfaces.renderkit.html.ext;
 
-//import com.oreilly.servlet.MultipartWrapper;
+import com.oreilly.servlet.MultipartWrapper;
 import net.sourceforge.myfaces.component.ext.UIFileUpload;
 import net.sourceforge.myfaces.renderkit.attr.TextRendererAttributes;
 import net.sourceforge.myfaces.renderkit.attr.ext.FileUploadRendererAttributes;
@@ -45,12 +45,6 @@ public class FileUploadRenderer
 {
     public static final String TYPE = "FileUpload";
 
-    /*
-    private static final Integer MAX_UPLOAD_SIZE_DEFAULT
-        = new Integer(Integer.MAX_VALUE);
-        */
-
-
     public String getRendererType()
     {
         return TYPE;
@@ -74,9 +68,6 @@ public class FileUploadRenderer
         {
             throw new IllegalArgumentException("Only UIFileUpload type supported.");
         }
-
-        /*
-        We must resolve license issues for oreilly classes first!
 
         ServletRequest multipartRequest = facescontext.getServletRequest();
         while (multipartRequest != null &&
@@ -106,8 +97,6 @@ public class FileUploadRenderer
                 uiComponent.setValid(true);
             }
         }
-        */
-
     }
 
     public void encodeEnd(FacesContext facesContext, UIComponent uiComponent)

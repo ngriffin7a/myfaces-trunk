@@ -24,7 +24,6 @@
     <!-- classpath for compiling -->
     <path id="examples.class.path">
         <pathelement location="${jsf-api.jar}"/>
-        <pathelement location="${mail.jar}"/>
         <pathelement location="${servlet.jar}"/>
         <pathelement location="${myfaces.jar}"/>
     </path>
@@ -63,7 +62,7 @@
 
         <mkdir dir="${web-inf.lib.dir}"/>
         <copy todir="${web-inf.lib.dir}">
-            <fileset file="${mail.jar}"/>
+            <fileset file="${cos.jar}"/>
             <fileset file="${jsf-api.jar}"/>
             <fileset file="${myfaces.jar}"/>
         </copy>

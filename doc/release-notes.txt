@@ -5,6 +5,11 @@ MyFaces Release Notes
 Changes in Release 0.3.2
 
 * some serious bugs fixed (Tomcat 4.1.x issues)
+* UIFileUpload with FileUploadRenderer and FileUploadTag
+* added com.oreilly.servlet package cos.jar:
+   - Base64 encoding instead of MimeUtility from mail.jar
+   - MultiPartFilter for the new UIFileUpload
+* removed mail.jar: was only needed for Base64-Encoding
 
 ----------------------------------------------------------------------
 Changes in Release 0.3.1

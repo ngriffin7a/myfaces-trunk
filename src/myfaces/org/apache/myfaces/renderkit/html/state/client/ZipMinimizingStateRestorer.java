@@ -18,9 +18,9 @@
  */
 package net.sourceforge.myfaces.renderkit.html.state.client;
 
+import net.sourceforge.myfaces.util.Base64;
+
 import javax.faces.context.FacesContext;
-import javax.mail.MessagingException;
-import javax.mail.internet.MimeUtility;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -56,7 +56,7 @@ public class ZipMinimizingStateRestorer
         try
         {
             ByteArrayInputStream byteStream = new ByteArrayInputStream(stateParam.getBytes(ZipMinimizingStateSaver.ZIP_CHARSET));
-            InputStream decodedStream = MimeUtility.decode(byteStream, ZipMinimizingStateSaver.ZIP_ENCODING);
+            InputStream decodedStream = Base64.getDecoder(byteStream);
             InputStream unzippedStream = new GZIPInputStream(decodedStream);
 
             StringBuffer buf = new StringBuffer();
@@ -98,10 +98,6 @@ public class ZipMinimizingStateRestorer
             return stateMap;
         }
         catch (IOException e)
-        {
-            throw new RuntimeException(e);
-        }
-        catch (MessagingException e)
         {
             throw new RuntimeException(e);
         }

@@ -18,10 +18,11 @@
  */
 package net.sourceforge.myfaces.convert;
 
+import net.sourceforge.myfaces.component.UIComponentUtils;
 import net.sourceforge.myfaces.renderkit.attr.CommonRendererAttributes;
+import net.sourceforge.myfaces.util.Base64;
 import net.sourceforge.myfaces.util.bean.BeanUtils;
 import net.sourceforge.myfaces.util.logging.LogUtil;
-import net.sourceforge.myfaces.component.UIComponentUtils;
 
 import javax.faces.FacesException;
 import javax.faces.FactoryFinder;
@@ -34,8 +35,6 @@ import javax.faces.convert.ConverterFactory;
 import javax.faces.render.RenderKit;
 import javax.faces.render.RenderKitFactory;
 import javax.faces.render.Renderer;
-import javax.mail.MessagingException;
-import javax.mail.internet.MimeUtility;
 import java.io.*;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
@@ -376,7 +375,6 @@ public class ConverterUtils
 
 
     private static final String SERIALIZE_CHARSET = "ISO-8859-1";
-    private static final String SERIALIZE_ENCODING = "base64";
 
     public static String serializeAndEncodeBase64(Object obj)
         throws FacesException
@@ -384,18 +382,13 @@ public class ConverterUtils
         try
         {
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            OutputStream encStream = MimeUtility.encode(baos, SERIALIZE_ENCODING);
+            OutputStream encStream = Base64.getEncoder(baos);
             ObjectOutputStream oos = new ObjectOutputStream(encStream);
             oos.writeObject(obj);
             oos.close();
             encStream.close();
             baos.close();
             return baos.toString(SERIALIZE_CHARSET);
-        }
-        catch (MessagingException e)
-        {
-            e.printStackTrace(System.err);
-            throw new FacesException(e);
         }
         catch (IOException e)
         {
@@ -417,7 +410,7 @@ public class ConverterUtils
         try
         {
             ByteArrayInputStream bais = new ByteArrayInputStream(value.getBytes(SERIALIZE_CHARSET));
-            InputStream decStream = MimeUtility.decode(bais, SERIALIZE_ENCODING);
+            InputStream decStream = Base64.getDecoder(bais);
             ObjectInputStream ois = new ObjectInputStream(decStream);
             Object obj = ois.readObject();
             ois.close();
@@ -426,11 +419,6 @@ public class ConverterUtils
             return obj;
         }
         catch (ClassNotFoundException e)
-        {
-            e.printStackTrace(System.err);
-            throw new FacesException(e);
-        }
-        catch (MessagingException e)
         {
             e.printStackTrace(System.err);
             throw new FacesException(e);

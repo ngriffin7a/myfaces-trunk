@@ -19,8 +19,8 @@
     <!-- classpath for compiling -->
     <path id="project.class.path">
         <pathelement location="${jsf-api.jar}"/>
-        <pathelement location="${mail.jar}"/>
         <pathelement location="${servlet.jar}"/>
+        <pathelement location="${cos.jar}"/>
     </path>
 
 
@@ -99,7 +99,7 @@
                         prefix="myfaces-${manifest.impl.version}/doc"/>
             <tarfileset file="${myfaces.jar}"
                         prefix="myfaces-${manifest.impl.version}/lib"/>
-            <tarfileset file="${mail.jar}"
+            <tarfileset file="${cos.jar}"
                         prefix="myfaces-${manifest.impl.version}/lib"/>
         </tar>
     </target>

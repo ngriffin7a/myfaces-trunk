@@ -20,9 +20,8 @@ package net.sourceforge.myfaces.renderkit.html.state.client;
 
 import net.sourceforge.myfaces.renderkit.html.HTMLRenderer;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLEncoder;
+import net.sourceforge.myfaces.util.Base64;
 
-import javax.mail.MessagingException;
-import javax.mail.internet.MimeUtility;
 import javax.faces.context.FacesContext;
 import java.io.*;
 import java.net.URLEncoder;
@@ -82,44 +81,37 @@ public class ZipMinimizingStateSaver
             return s;
         }
 
-        try
-        {
-            //OutputStream wos = new WriterOutputStream(origWriter, ZippingStateRenderer.ZIP_CHARSET);
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            OutputStream encStream = MimeUtility.encode(baos, ZIP_ENCODING);
-            OutputStream zos = new GZIPOutputStream(encStream);
-            OutputStreamWriter writer = new OutputStreamWriter(zos, ZIP_CHARSET);
+        //OutputStream wos = new WriterOutputStream(origWriter, ZippingStateRenderer.ZIP_CHARSET);
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        OutputStream encStream = Base64.getEncoder(baos);
+        OutputStream zos = new GZIPOutputStream(encStream);
+        OutputStreamWriter writer = new OutputStreamWriter(zos, ZIP_CHARSET);
 
-            boolean first = true;
-            for (Iterator entries = stateMap.entrySet().iterator(); entries.hasNext();)
+        boolean first = true;
+        for (Iterator entries = stateMap.entrySet().iterator(); entries.hasNext();)
+        {
+            Map.Entry entry = (Map.Entry)entries.next();
+            if (first)
             {
-                Map.Entry entry = (Map.Entry)entries.next();
-                if (first)
-                {
-                    first = false;
-                }
-                else
-                {
-                    writer.write('&');
-                }
-                writer.write((String)entry.getKey());
-                writer.write('=');
-                writer.write(URLEncoder.encode((String)entry.getValue(), ZIP_CHARSET));
+                first = false;
             }
-
-            writer.close();
-            zos.close();
-            encStream.close();
-            baos.close();
-
-            s = baos.toString(ZIP_CHARSET);
-            facesContext.getServletRequest().setAttribute(ZIPPED_PARAMS_ATTR, s);
-            return s;
+            else
+            {
+                writer.write('&');
+            }
+            writer.write((String)entry.getKey());
+            writer.write('=');
+            writer.write(URLEncoder.encode((String)entry.getValue(), ZIP_CHARSET));
         }
-        catch (MessagingException e)
-        {
-            throw new RuntimeException(e);
-        }
+
+        writer.close();
+        zos.close();
+        encStream.close();
+        baos.close();
+
+        s = baos.toString(ZIP_CHARSET);
+        facesContext.getServletRequest().setAttribute(ZIPPED_PARAMS_ATTR, s);
+        return s;
     }
 
     /*

@@ -18,8 +18,8 @@
  */
 package net.sourceforge.myfaces.util.zip;
 
-import javax.mail.internet.MimeUtility;
-import javax.mail.MessagingException;
+import net.sourceforge.myfaces.util.Base64;
+
 import java.io.*;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
@@ -32,7 +32,6 @@ import java.util.zip.GZIPOutputStream;
 public class ZipUtils
 {
     public static final String ZIP_CHARSET = "ISO-8859-1";
-    public static final String ZIP_ENCODING = "base64";
 
 
     private ZipUtils() {}
@@ -47,7 +46,7 @@ public class ZipUtils
         try
         {
             ByteArrayInputStream byteStream = new ByteArrayInputStream(s.getBytes(ZIP_CHARSET));
-            InputStream decodedStream = MimeUtility.decode(byteStream, ZIP_ENCODING);
+            InputStream decodedStream = Base64.getDecoder(byteStream);
             InputStream unzippedStream = new GZIPInputStream(decodedStream);
 
             StringBuffer buf = new StringBuffer();
@@ -67,10 +66,6 @@ public class ZipUtils
         {
             throw new RuntimeException(e);
         }
-        catch (MessagingException e)
-        {
-            throw new RuntimeException(e);
-        }
     }
 
     /**
@@ -83,7 +78,7 @@ public class ZipUtils
         {
             //OutputStream wos = new WriterOutputStream(origWriter, ZippingStateRenderer.ZIP_CHARSET);
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            OutputStream encStream = MimeUtility.encode(baos, ZIP_ENCODING);
+            OutputStream encStream = Base64.getEncoder(baos);
             OutputStream zos = new GZIPOutputStream(encStream);
             OutputStreamWriter writer = new OutputStreamWriter(zos, ZIP_CHARSET);
 
@@ -95,10 +90,6 @@ public class ZipUtils
             baos.close();
 
             return baos.toString(ZIP_CHARSET);
-        }
-        catch (MessagingException e)
-        {
-            throw new RuntimeException(e);
         }
         catch (IOException e)
         {

@@ -20,19 +20,20 @@ package net.sourceforge.myfaces.renderkit.html.state.client;
 
 import net.sourceforge.myfaces.component.ext.UISaveState;
 import net.sourceforge.myfaces.renderkit.html.HTMLRenderer;
-import net.sourceforge.myfaces.renderkit.html.state.StateUtils;
 import net.sourceforge.myfaces.renderkit.html.state.ModelValueEntry;
+import net.sourceforge.myfaces.renderkit.html.state.StateUtils;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLEncoder;
 import net.sourceforge.myfaces.tree.TreeUtils;
+import net.sourceforge.myfaces.util.Base64;
 import net.sourceforge.myfaces.util.logging.LogUtil;
 
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.tree.Tree;
-import javax.mail.MessagingException;
-import javax.mail.internet.MimeUtility;
 import java.io.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.zip.GZIPOutputStream;
 
 /**
@@ -108,7 +109,7 @@ public class SerializingStateSaver
         try
         {
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            OutputStream encStream = MimeUtility.encode(baos, ZipMinimizingStateSaver.ZIP_ENCODING);
+            OutputStream encStream = Base64.getEncoder(baos);
             OutputStream zos = new GZIPOutputStream(encStream);
             ObjectOutputStream oos = new ObjectOutputStream(zos);
             oos.writeObject(tree);
@@ -121,10 +122,6 @@ public class SerializingStateSaver
             return s;
         }
         catch (IOException e)
-        {
-            throw new RuntimeException(e);
-        }
-        catch (MessagingException e)
         {
             throw new RuntimeException(e);
         }
