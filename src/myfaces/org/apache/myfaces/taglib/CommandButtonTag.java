@@ -66,12 +66,12 @@ public class CommandButtonTag
 
     public void setKey(String v)
     {
-        setRendererAttribute(ButtonRenderer.KEY_ATTR, v);
+        setRendererAttribute(ButtonRenderer.KEY_ATTR.getName(), v);
     }
 
     public void setBundle(String v)
     {
-        setRendererAttribute(ButtonRenderer.BUNDLE_ATTR, v);
+        setRendererAttribute(ButtonRenderer.BUNDLE_ATTR.getName(), v);
     }
 
 }

@@ -53,6 +53,7 @@ public class MessageRenderer
     {
         super();
         addAttributeDescriptor(UIOutput.TYPE, KEY_ATTR);
+        addAttributeDescriptor(UIOutput.TYPE, BUNDLE_ATTR);
     }
 
     public boolean supportsComponentType(String s)
@@ -92,7 +93,7 @@ public class MessageRenderer
         if (key != null)
         {
             pattern = BundleUtils.getString(facesContext,
-                                            (String)uiComponent.getAttribute(BUNDLE_ATTR),
+                                            (String)uiComponent.getAttribute(BUNDLE_ATTR.getName()),
                                             key);
         }
         else

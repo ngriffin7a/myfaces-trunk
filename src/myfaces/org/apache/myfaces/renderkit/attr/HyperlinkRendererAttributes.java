@@ -32,7 +32,7 @@ public interface HyperlinkRendererAttributes
     public static final String HREF_ATTR = "href";
 
     public static final AttributeDescriptor KEY_ATTR = new AttrDescrImpl("key");
-    public static final String BUNDLE_ATTR = "bundle";
+    public static final AttributeDescriptor BUNDLE_ATTR = new AttrDescrImpl("bundle");
 
     public static final String ACCESSKEY_ATTR = "accesskey";
     public static final String CHARSET_ATTR = "charset";

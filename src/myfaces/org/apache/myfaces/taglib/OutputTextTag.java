@@ -55,11 +55,11 @@ public class OutputTextTag
 
     public void setKey(String value)
     {
-        setRendererAttribute(TextRenderer.KEY_ATTR, value);
+        setRendererAttribute(TextRenderer.KEY_ATTR.getName(), value);
     }
 
     public void setBundle(String value)
     {
-        setRendererAttribute(TextRenderer.BUNDLE_ATTR, value);
+        setRendererAttribute(TextRenderer.BUNDLE_ATTR.getName(), value);
     }
 }

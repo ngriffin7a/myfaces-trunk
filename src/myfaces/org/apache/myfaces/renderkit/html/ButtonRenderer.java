@@ -50,6 +50,12 @@ public class ButtonRenderer
         return TYPE;
     }
 
+    public ButtonRenderer()
+    {
+        addAttributeDescriptor(UICommand.TYPE, KEY_ATTR);
+        addAttributeDescriptor(UICommand.TYPE, BUNDLE_ATTR);
+    }
+
     private String getHiddenValueParamName(FacesContext facesContext, UIComponent uiComponent)
     {
         return uiComponent.getClientId(facesContext) + ".VALUE";
@@ -167,11 +173,11 @@ public class ButtonRenderer
             writer.write(" value=\"");
 
             String label;
-            String key = (String)uiComponent.getAttribute(KEY_ATTR);
+            String key = (String)uiComponent.getAttribute(KEY_ATTR.getName());
             if (key != null)
             {
                 label = BundleUtils.getString(facesContext,
-                                              (String)uiComponent.getAttribute(BUNDLE_ATTR),
+                                              (String)uiComponent.getAttribute(BUNDLE_ATTR.getName()),
                                               key);
             }
             else

@@ -39,14 +39,17 @@ public class TextRenderer
         extends HTMLRenderer
         implements TextRendererAttributes
 {
-    public static final String KEY_ATTR = "key";
-    public static final String BUNDLE_ATTR = "bundle";
-
     public static final String TYPE = "Text";
 
     public String getRendererType()
     {
         return TYPE;
+    }
+
+    public TextRenderer()
+    {
+        addAttributeDescriptor(UIOutput.TYPE, KEY_ATTR);
+        addAttributeDescriptor(UIOutput.TYPE, BUNDLE_ATTR);
     }
 
     public boolean supportsComponentType(String s)
@@ -120,11 +123,11 @@ public class TextRenderer
             writer.write("\">");
         }
         String text;
-        String key = (String)uiComponent.getAttribute(KEY_ATTR);
+        String key = (String)uiComponent.getAttribute(KEY_ATTR.getName());
         if (key != null)
         {
             text = BundleUtils.getString(facesContext,
-                                            (String)uiComponent.getAttribute(BUNDLE_ATTR),
+                                            (String)uiComponent.getAttribute(BUNDLE_ATTR.getName()),
                                             key);
         }
         else

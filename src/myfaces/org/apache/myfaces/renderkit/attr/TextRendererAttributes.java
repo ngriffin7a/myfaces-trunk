@@ -18,6 +18,8 @@
  */
 package net.sourceforge.myfaces.renderkit.attr;
 
+import javax.faces.component.AttributeDescriptor;
+
 /**
  * Constant definitions for the specified render dependent attributes of the
  * "Text" renderer type.
@@ -27,6 +29,9 @@ package net.sourceforge.myfaces.renderkit.attr;
 public interface TextRendererAttributes
     extends CommonRendererAttributes
 {
+    public static final AttributeDescriptor KEY_ATTR = new AttrDescrImpl("key");
+    public static final AttributeDescriptor BUNDLE_ATTR = new AttrDescrImpl("bundle");
+
     //public static final String ACCEPT_ATTR = "accept";
     public static final String ACCESSKEY_ATTR = "accesskey";
     public static final String ALIGN_ATTR = "align";

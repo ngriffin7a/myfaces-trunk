@@ -423,6 +423,11 @@
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>
         </attribute>
+        <attribute>
+            <name>contentTypeReference</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
+        </attribute>
 
     </tag>
 

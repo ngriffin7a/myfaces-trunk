@@ -29,6 +29,9 @@ import net.sourceforge.myfaces.renderkit.html.util.HTMLEncoder;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
+import javax.servlet.ServletRequest;
+import javax.servlet.http.HttpServletRequestWrapper;
+import java.io.File;
 import java.io.IOException;
 
 /**
@@ -42,8 +45,10 @@ public class FileUploadRenderer
 {
     public static final String TYPE = "FileUpload";
 
+    /*
     private static final Integer MAX_UPLOAD_SIZE_DEFAULT
         = new Integer(Integer.MAX_VALUE);
+        */
 
 
     public String getRendererType()
@@ -73,9 +78,23 @@ public class FileUploadRenderer
         /*
         We must resolve license issues for oreilly classes first!
 
-        if (facescontext.getServletRequest() instanceof MultipartWrapper)
+        ServletRequest multipartRequest = facescontext.getServletRequest();
+        while (multipartRequest != null &&
+               !(multipartRequest instanceof MultipartWrapper))
         {
-            MultipartWrapper mpReq = (MultipartWrapper)facescontext.getServletRequest();
+            if (multipartRequest instanceof HttpServletRequestWrapper)
+            {
+                multipartRequest = ((HttpServletRequestWrapper)multipartRequest).getRequest();
+            }
+            else
+            {
+                multipartRequest = null;
+            }
+        }
+
+        if (multipartRequest != null)
+        {
+            MultipartWrapper mpReq = (MultipartWrapper)multipartRequest;
 
             String paramName = uiComponent.getClientId(facescontext);
             File file = mpReq.getFile(paramName);

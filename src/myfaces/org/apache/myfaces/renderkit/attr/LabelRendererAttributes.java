@@ -18,6 +18,8 @@
  */
 package net.sourceforge.myfaces.renderkit.attr;
 
+import javax.faces.component.AttributeDescriptor;
+
 /**
  * Constant definitions for the specified render dependent attributes of the
  * "Message" renderer type.
@@ -27,8 +29,8 @@ package net.sourceforge.myfaces.renderkit.attr;
 public interface LabelRendererAttributes
     extends CommonRendererAttributes
 {
-    public static final String KEY_ATTR = "key";
-    public static final String BUNDLE_ATTR = "bundle";
+    public static final AttributeDescriptor KEY_ATTR = new AttrDescrImpl("key");
+    public static final AttributeDescriptor BUNDLE_ATTR = new AttrDescrImpl("bundle");
 
     public static final String FOR_ATTR = "for";
     public static final String ACCESSKEY_ATTR = "accesskey";

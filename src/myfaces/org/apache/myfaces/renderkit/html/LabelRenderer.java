@@ -46,6 +46,12 @@ public class LabelRenderer
         return TYPE;
     }
 
+    public LabelRenderer()
+    {
+        addAttributeDescriptor(UIOutput.TYPE, KEY_ATTR);
+        addAttributeDescriptor(UIOutput.TYPE, BUNDLE_ATTR);
+    }
+
     public boolean supportsComponentType(UIComponent component)
     {
         return component instanceof UIComponent;
@@ -67,11 +73,11 @@ public class LabelRenderer
         writer.write(">");
 
         String text;
-        String key = (String)uiComponent.getAttribute(KEY_ATTR);
+        String key = (String)uiComponent.getAttribute(KEY_ATTR.getName());
         if (key != null)
         {
             text = BundleUtils.getString(facesContext,
-                                            (String)uiComponent.getAttribute(BUNDLE_ATTR),
+                                            (String)uiComponent.getAttribute(BUNDLE_ATTR.getName()),
                                             key);
         }
         else

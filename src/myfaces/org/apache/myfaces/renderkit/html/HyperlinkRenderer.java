@@ -19,8 +19,8 @@
 package net.sourceforge.myfaces.renderkit.html;
 
 import net.sourceforge.myfaces.MyFacesFactoryFinder;
-import net.sourceforge.myfaces.component.UIParameter;
 import net.sourceforge.myfaces.component.UIComponentUtils;
+import net.sourceforge.myfaces.component.UIParameter;
 import net.sourceforge.myfaces.convert.ConverterUtils;
 import net.sourceforge.myfaces.renderkit.attr.CommonRendererAttributes;
 import net.sourceforge.myfaces.renderkit.attr.HyperlinkRendererAttributes;
@@ -72,6 +72,12 @@ public class HyperlinkRenderer
     public String getRendererType()
     {
         return TYPE;
+    }
+
+    public HyperlinkRenderer()
+    {
+        addAttributeDescriptor(UICommand.TYPE, KEY_ATTR);
+        addAttributeDescriptor(UICommand.TYPE, BUNDLE_ATTR);
     }
 
     public void decode(FacesContext facesContext, UIComponent uiComponent) throws IOException
@@ -270,7 +276,7 @@ public class HyperlinkRenderer
         if (key != null)
         {
             String text = BundleUtils.getString(facesContext,
-                                                (String)uiComponent.getAttribute(BUNDLE_ATTR),
+                                                (String)uiComponent.getAttribute(BUNDLE_ATTR.getName()),
                                                 key);
             writer.write(HTMLEncoder.encode(text, true, true));
         }

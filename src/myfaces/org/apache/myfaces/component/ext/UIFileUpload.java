@@ -21,6 +21,7 @@ package net.sourceforge.myfaces.component.ext;
 import net.sourceforge.myfaces.component.UIComponentUtils;
 import net.sourceforge.myfaces.component.UIInput;
 
+import javax.faces.context.FacesContext;
 import java.io.File;
 
 /**
@@ -33,6 +34,7 @@ public class UIFileUpload
 {
     public static final String CONTENT_TYPE_ATTR = "contentType";
     public static final String FILE_PATH_ATTR = "filePath";
+    public static final String CONTENT_TYPE_REFERENCE_ATTR = "contentTypeReference";
 
     public UIFileUpload()
     {
@@ -63,5 +65,26 @@ public class UIFileUpload
     public File getFile()
     {
         return (File)getValue();
+    }
+
+    public String getContentTypeReference()
+    {
+        return (String)getAttribute(CONTENT_TYPE_REFERENCE_ATTR);
+    }
+
+    public void setContentTypeReference(String contentTypeReference)
+    {
+        setAttribute(CONTENT_TYPE_REFERENCE_ATTR, contentTypeReference);
+    }
+
+    public void updateModel(FacesContext context)
+    {
+        super.updateModel(context);
+        String contentTypeReference = getContentTypeReference();
+        if (contentTypeReference != null)
+        {
+            context.setModelValue(contentTypeReference,
+                                  getContentType());
+        }
     }
 }

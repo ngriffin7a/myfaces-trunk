@@ -18,6 +18,8 @@
  */
 package net.sourceforge.myfaces.renderkit.attr;
 
+import javax.faces.component.AttributeDescriptor;
+
 /**
  * Constant definitions for the specified render dependent attributes of the
  * "Button" renderer type.
@@ -27,8 +29,9 @@ package net.sourceforge.myfaces.renderkit.attr;
 public interface ButtonRendererAttributes
     extends CommonRendererAttributes
 {
-    public static final String KEY_ATTR = "key";
-    public static final String BUNDLE_ATTR = "bundle";
+    public static final AttributeDescriptor KEY_ATTR = new AttrDescrImpl("key");
+    public static final AttributeDescriptor BUNDLE_ATTR = new AttrDescrImpl("bundle");
+
     public static final String TYPE_ATTR = "type";
     public static final String IMAGE_ATTR = "image";
     public static final String LABEL_ATTR = "label";

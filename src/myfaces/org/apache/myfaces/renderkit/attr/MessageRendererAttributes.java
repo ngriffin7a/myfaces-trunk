@@ -30,5 +30,5 @@ public interface MessageRendererAttributes
     extends CommonRendererAttributes
 {
     public static final AttributeDescriptor KEY_ATTR = new AttrDescrImpl("key");
-    public static final String BUNDLE_ATTR = "bundle";
+    public static final AttributeDescriptor BUNDLE_ATTR = new AttrDescrImpl("bundle");
 }

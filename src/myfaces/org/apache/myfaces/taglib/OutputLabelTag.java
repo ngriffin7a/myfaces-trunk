@@ -45,12 +45,12 @@ public class OutputLabelTag
 
     public void setKey(String value)
     {
-        setRendererAttribute(LabelRenderer.KEY_ATTR, value);
+        setRendererAttribute(LabelRenderer.KEY_ATTR.getName(), value);
     }
 
     public void setBundle(String value)
     {
-        setRendererAttribute(LabelRenderer.BUNDLE_ATTR, value);
+        setRendererAttribute(LabelRenderer.BUNDLE_ATTR.getName(), value);
     }
 
     public void setText(String value)

@@ -55,7 +55,7 @@ public class MessageTag
 
     public void setBundle(String value)
     {
-        setRendererAttribute(MessageRenderer.BUNDLE_ATTR, value);
+        setRendererAttribute(MessageRenderer.BUNDLE_ATTR.getName(), value);
     }
 
     public void setOutputClass(String value)

@@ -130,4 +130,10 @@ public class FileUploadTag
         setRendererAttribute(FileUploadRenderer.MAX_UPLOAD_SIZE_ATTR, new Integer(maxSize));
     }
 
+    public void setContentTypeReference(String value)
+    {
+        setComponentAttribute(UIFileUpload.CONTENT_TYPE_REFERENCE_ATTR, value);
+    }
+
+
 }

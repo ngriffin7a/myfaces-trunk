@@ -79,7 +79,7 @@ public class CommandHyperlinkTag
 
     public void setBundle(String v)
     {
-        setRendererAttribute(HyperlinkRenderer.BUNDLE_ATTR, v);
+        setRendererAttribute(HyperlinkRenderer.BUNDLE_ATTR.getName(), v);
     }
 
 
