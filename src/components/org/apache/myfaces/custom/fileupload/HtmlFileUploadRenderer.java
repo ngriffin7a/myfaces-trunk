@@ -18,12 +18,12 @@
  */
 package net.sourceforge.myfaces.custom.fileupload;
 
+import net.sourceforge.myfaces.component.UserRoleUtils;
+import net.sourceforge.myfaces.renderkit.RendererUtils;
 import net.sourceforge.myfaces.renderkit.html.HTML;
 import net.sourceforge.myfaces.renderkit.html.HtmlRendererUtils;
 
 import org.apache.commons.fileupload.FileItem;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
@@ -37,6 +37,9 @@ import java.io.IOException;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.8  2004/05/18 14:26:49  manolito
+ * added UserRoleAware support
+ *
  * Revision 1.7  2004/05/10 22:17:24  o_rossmueller
  * max file size configurable by filter init parameter 'maxFileSize'
  * removed default creation of file contents byte array
@@ -56,7 +59,7 @@ import java.io.IOException;
 public class HtmlFileUploadRenderer
     extends Renderer
 {
-    private static final Log log = LogFactory.getLog(HtmlFileUploadRenderer.class);
+    //private static final Log log = LogFactory.getLog(HtmlFileUploadRenderer.class);
 
     public void encodeEnd(FacesContext facesContext, UIComponent uiComponent)
         throws IOException
@@ -77,8 +80,32 @@ public class HtmlFileUploadRenderer
         		writer.writeAttribute(HTML.VALUE_ATTR, value.getName(), null);
         	}
         }
-        HtmlRendererUtils.renderHTMLAttributes(writer, uiComponent, HTML.INPUT_FILE_PASSTHROUGH_ATTRIBUTES);
+        HtmlRendererUtils.renderHTMLAttributes(writer, uiComponent, HTML.INPUT_FILE_PASSTHROUGH_ATTRIBUTES_WITHOUT_DISABLED);
+        if (isDisabled(facesContext, uiComponent))
+        {
+            writer.writeAttribute(HTML.DISABLED_ATTR, Boolean.TRUE, null);
+        }
+
         writer.endElement(HTML.INPUT_ELEM);
+    }
+
+    protected boolean isDisabled(FacesContext facesContext, UIComponent uiComponent)
+    {
+        if (!UserRoleUtils.isEnabledOnUserRole(uiComponent))
+        {
+            return false;
+        }
+        else
+        {
+            if (uiComponent instanceof HtmlInputFileUpload)
+            {
+                return ((HtmlInputFileUpload)uiComponent).isDisabled();
+            }
+            else
+            {
+                return RendererUtils.getBooleanAttribute(uiComponent, HTML.DISABLED_ATTR, false);
+            }
+        }
     }
 
 
