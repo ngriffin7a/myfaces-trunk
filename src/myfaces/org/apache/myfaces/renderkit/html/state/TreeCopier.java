@@ -109,7 +109,7 @@ public class TreeCopier
 
     private UIComponent cloneComponent(UIComponent toBeCloned)
     {
-        FacesTag tag = (FacesTag)toBeCloned.getAttribute(JspInfo.CREATOR_TAG_ATTR);
+        FacesTag tag = JspInfo.getCreatorTag(toBeCloned);
         if (tag != null)
         {
             UIComponent clone = tag.createComponent();

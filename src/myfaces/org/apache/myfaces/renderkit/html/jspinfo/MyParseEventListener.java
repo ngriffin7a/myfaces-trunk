@@ -24,6 +24,7 @@ import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.Constants;
 import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.JasperException;
 import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.JspCompilationContext;
 import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.compiler.*;
+import net.sourceforge.myfaces.taglib.core.ActionListenerTag;
 import net.sourceforge.myfaces.util.bean.BeanUtils;
 import net.sourceforge.myfaces.util.logging.LogUtil;
 import org.xml.sax.Attributes;
@@ -32,6 +33,7 @@ import javax.faces.component.UIComponent;
 import javax.faces.component.UIComponentBase;
 import javax.faces.webapp.FacesTag;
 import javax.servlet.jsp.PageContext;
+import javax.servlet.jsp.tagext.Tag;
 import javax.servlet.jsp.tagext.TagAttributeInfo;
 import javax.servlet.jsp.tagext.TagInfo;
 import javax.servlet.jsp.tagext.TagLibraryInfo;
@@ -42,8 +44,10 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.List;
 
 /**
  * DOCUMENT ME!
@@ -309,18 +313,18 @@ public class MyParseEventListener
 
 
 
-    private HashMap _tagClasses = new HashMap();
+    private HashMap _tagInstances = new HashMap();
     private static final Object NULL_DUMMY = new Object();
-    private FacesTag getFacesTag(TagInfo ti)
+    private Tag getTagInstance(TagInfo ti)
     {
-        Object obj = _tagClasses.get(ti.getTagClassName());
+        Object obj = _tagInstances.get(ti.getTagClassName());
         if (obj == NULL_DUMMY)
         {
             return null;
         }
         else if (obj != null)
         {
-            return (FacesTag)obj;
+            return (Tag)obj;
         }
 
         Class c;
@@ -333,147 +337,167 @@ public class MyParseEventListener
             throw new RuntimeException("Class for tag " + ti.getTagName() + " not found!", e);
         }
 
-        if (!FacesTag.class.isAssignableFrom(c))
+        if (FacesTag.class.isAssignableFrom(c) ||
+            ActionListenerTag.class.isAssignableFrom(c))
         {
-            LogUtil.getLogger().fine("Not a FacesTag.");
-            _tagClasses.put(ti.getTagClassName(), NULL_DUMMY);
+            try
+            {
+                obj = c.newInstance();
+            }
+            catch (InstantiationException e)
+            {
+                throw new RuntimeException(e);
+            }
+            catch (IllegalAccessException e)
+            {
+                throw new RuntimeException(e);
+            }
+
+            _tagInstances.put(ti.getTagClassName(), obj);
+            return (Tag)obj;
+        }
+        else
+        {
+            _tagInstances.put(ti.getTagClassName(), NULL_DUMMY);
             return null;
         }
-
-        try
-        {
-            obj = c.newInstance();
-        }
-        catch (InstantiationException e)
-        {
-            throw new RuntimeException(e);
-        }
-        catch (IllegalAccessException e)
-        {
-            throw new RuntimeException(e);
-        }
-
-        _tagClasses.put(ti.getTagClassName(), obj);
-        return (FacesTag)obj;
     }
 
 
     private void handleTagBegin(String prefix, String shortTagName,
                                 Attributes attrs, TagLibraryInfo tli, TagInfo ti)
     {
-        FacesTag tag = getFacesTag(ti);
-        if (tag != null)
+        Tag tag = getTagInstance(ti);
+        if (tag == null)
         {
-            String id = null;
-
-            BeanInfo beanInfo = BeanUtils.getBeanInfo(tag);
-
-            TagAttributeInfo[] attrInfos = ti.getAttributes();
-            for (int i = 0; i < attrInfos.length; i++)
-            {
-                TagAttributeInfo attrInfo = attrInfos[i];
-                String attrName = attrInfo.getName();
-                Object attrValue = attrs.getValue(attrName);
-
-                if (attrValue != null)
-                {
-                    if (attrInfo.canBeRequestTime() &&
-                        ((String)attrValue).trim().startsWith("<%"))
-                    {
-                        //Request time value --> ignore
-                        continue;
-                    }
-
-                    if (attrName.equals(CommonComponentAttributes.ID_ATTR))
-                    {
-                        id = (String)attrValue;
-                    }
-                    else
-                    {
-                        PropertyDescriptor propDescr = BeanUtils.findPropertyDescriptor(beanInfo, attrName);
-                        if (propDescr == null)
-                        {
-                            throw new RuntimeException("No PropertyDescriptor found for tag property " + attrName);
-                        }
-
-                        if (attrValue instanceof String)
-                        {
-                            if (attrInfo.getTypeName() != null)
-                            {
-                                Class type = null;
-                                try
-                                {
-                                    type = Class.forName(attrInfo.getTypeName());
-                                }
-                                catch (ClassNotFoundException e)
-                                {
-                                    throw new RuntimeException(e);
-                                }
-                                attrValue = convertStringToTargetType((String)attrValue, type);
-                            }
-                            else
-                            {
-                                attrValue = convertStringToTargetType(propDescr,
-                                                                      (String)attrValue);
-                            }
-                        }
-                        BeanUtils.setBeanPropertyValue(tag, propDescr, attrValue);
-                    }
-                }
-            }
-
-            UIComponent comp = tag.createComponent(); //Tag is instanceof FacesTag
-            if (comp == null)
-            {
-                LogUtil.getLogger().warning("Tag class " + tag.getClass().getName() + " did not create a component.");
-                //We set current component to a dummy, so that the
-                //getParent in handleEndTag returns the right component:
-                final UIComponent currComp = _currentComponent;
-                _currentComponent = new UIComponentBase() {
-                    public String getComponentType() {return "DUMMY";}
-                    public UIComponent getParent() {return currComp;}
-                };
-                tag.release();
-                return;
-            }
-
-            if (id != null)
-            {
-                comp.setComponentId(id);
-            }
-            else
-            {
-                LogUtil.getLogger().severe("Missing component id.");
-            }
-
-            String rendererType = tag.getRendererType();
-            if (rendererType != null)
-            {
-                comp.setRendererType(rendererType);
-            }
-
-            _currentComponent.addChild(comp);
-
-            overrideProperties(tag, comp);
-            tag.release(); //TODO: Do we have to call it really?
-
-            _currentComponent = comp;
-
-            /*
-            String compoundId = comp.getCompoundId();   //TODO: We need a context independent getClientId() method
-            if (compoundId != null)
-            {
-                _jspInfo.setCreatorTag(compoundId, tag);
-            }
-            */
-            comp.setAttribute(JspInfo.CREATOR_TAG_ATTR, tag);
-
-            if (comp.getComponentType().equals(UISaveState.TYPE))
-            {
-                _jspInfo.addUISaveStateComponent(comp);
-            }
+            return;
+        }
+        else if (tag instanceof FacesTag)
+        {
+            handleFacesTag(ti, (FacesTag)tag, attrs);
+        }
+        else if (tag instanceof ActionListenerTag)
+        {
+            handleActionListenerTag(ti, (ActionListenerTag)tag, attrs);
         }
     }
+
+
+    private void handleFacesTag(TagInfo ti,
+                                FacesTag facesTag,
+                                Attributes attrs)
+    {
+        String id = null;
+
+        BeanInfo beanInfo = BeanUtils.getBeanInfo(facesTag);
+
+        TagAttributeInfo[] attrInfos = ti.getAttributes();
+        for (int i = 0; i < attrInfos.length; i++)
+        {
+            TagAttributeInfo attrInfo = attrInfos[i];
+            String attrName = attrInfo.getName();
+            Object attrValue = attrs.getValue(attrName);
+
+            if (attrValue != null)
+            {
+                if (attrInfo.canBeRequestTime() &&
+                    ((String)attrValue).trim().startsWith("<%"))
+                {
+                    //Request time value --> ignore
+                    continue;
+                }
+
+                if (attrName.equals(CommonComponentAttributes.ID_ATTR))
+                {
+                    id = (String)attrValue;
+                }
+                else
+                {
+                    PropertyDescriptor propDescr = BeanUtils.findPropertyDescriptor(beanInfo, attrName);
+                    if (propDescr == null)
+                    {
+                        throw new RuntimeException("No PropertyDescriptor found for tag property " + attrName);
+                    }
+
+                    if (attrValue instanceof String)
+                    {
+                        if (attrInfo.getTypeName() != null)
+                        {
+                            Class type = null;
+                            try
+                            {
+                                type = Class.forName(attrInfo.getTypeName());
+                            }
+                            catch (ClassNotFoundException e)
+                            {
+                                throw new RuntimeException(e);
+                            }
+                            attrValue = convertStringToTargetType((String)attrValue, type);
+                        }
+                        else
+                        {
+                            attrValue = convertStringToTargetType(propDescr,
+                                                                  (String)attrValue);
+                        }
+                    }
+                    BeanUtils.setBeanPropertyValue(facesTag, propDescr, attrValue);
+                }
+            }
+        }
+
+        UIComponent comp = facesTag.createComponent(); //Tag is instanceof FacesTag
+        if (comp == null)
+        {
+            LogUtil.getLogger().warning("Tag class " + facesTag.getClass().getName() + " did not create a component.");
+            //We set current component to a dummy, so that the
+            //getParent in handleEndTag returns the right component:
+            final UIComponent currComp = _currentComponent;
+            _currentComponent = new UIComponentBase()
+            {
+                public String getComponentType()
+                {
+                    return "DUMMY";
+                }
+
+                public UIComponent getParent()
+                {
+                    return currComp;
+                }
+            };
+            facesTag.release();
+            return;
+        }
+
+        if (id != null)
+        {
+            comp.setComponentId(id);
+        }
+        else
+        {
+            LogUtil.getLogger().severe("Missing component id.");
+        }
+
+        String rendererType = facesTag.getRendererType();
+        if (rendererType != null)
+        {
+            comp.setRendererType(rendererType);
+        }
+
+        _currentComponent.addChild(comp);
+
+        overrideProperties(facesTag, comp);
+        facesTag.release(); //TODO: Do we have to call it really?
+
+        _currentComponent = comp;
+
+        comp.setAttribute(JspInfo.CREATOR_TAG_ATTR, facesTag);
+
+        if (comp.getComponentType().equals(UISaveState.TYPE))
+        {
+            _jspInfo.addUISaveStateComponent(comp);
+        }
+    }
+
 
 
     /**
@@ -637,7 +661,8 @@ public class MyParseEventListener
     private void handleTagEnd(String prefix, String shortTagName,
                               Attributes attrs, TagLibraryInfo tli, TagInfo ti)
     {
-        if (getFacesTag(ti) != null)
+        Tag tag = getTagInstance(ti);
+        if (tag != null && tag instanceof FacesTag)
         {
             _currentComponent = _currentComponent.getParent();
         }
@@ -689,5 +714,28 @@ public class MyParseEventListener
                                                     scope));
     }
 
+
+    private static final String ACTION_LISTENER_TAG_TYPE_ATTR = "type";
+
+    private void handleActionListenerTag(TagInfo ti,
+                                         ActionListenerTag actionListenerTag,
+                                         Attributes attrs)
+    {
+        List lst = (List)_currentComponent.getAttribute(JspInfo.ACTION_LISTENERS_TYPE_LIST_ATTR);
+        if (lst == null)
+        {
+            lst = new ArrayList();
+            _currentComponent.setAttribute(JspInfo.ACTION_LISTENERS_TYPE_LIST_ATTR, lst);
+        }
+
+        String type = attrs.getValue(ACTION_LISTENER_TAG_TYPE_ATTR);
+        if (type == null)
+        {
+            LogUtil.getLogger().severe("action_listener tag has no " + ACTION_LISTENER_TAG_TYPE_ATTR + " attribute!");
+            return;
+        }
+
+        lst.add(type);
+    }
 
 }

@@ -50,7 +50,7 @@ public class PageLayoutTag
 
     public void setCssClass(String value)
     {
-        setRendererAttribute(LayoutRenderer.PANEL_CLASS_ATTR, value);
+        setRendererAttribute(LayoutRenderer.PANEL_CLASS_ATTR.getName(), value);
     }
 
     public int doAfterBody() throws JspException

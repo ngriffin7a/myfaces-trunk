@@ -83,7 +83,7 @@ public class UIComponentUtils
                                           String newValue,
                                           boolean addErrorMessageOnFail)
     {
-        Converter conv = ConverterUtils.findConverter(facesContext, uiComponent);
+        Converter conv = ConverterUtils.findValueConverter(facesContext, uiComponent);
         if (conv == null)
         {
             //default to StringConverter
@@ -98,7 +98,7 @@ public class UIComponentUtils
                                           String[] newValues,
                                           boolean addErrorMessageOnFail)
     {
-        Converter conv = ConverterUtils.findConverter(facesContext, uiComponent);
+        Converter conv = ConverterUtils.findValueConverter(facesContext, uiComponent);
         if (conv == null)
         {
             //default to StringConverter

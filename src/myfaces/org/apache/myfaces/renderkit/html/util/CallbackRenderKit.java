@@ -36,14 +36,14 @@ import java.util.Map;
  * @author Manfred Geiler
  * @version $Revision$ $Date$
  */
-public class ListenerRenderKit
+public class CallbackRenderKit
     extends RenderKit
 {
-    protected static final String ID = ListenerRenderKit.class.getName() + ".ID";
+    protected static final String ID = CallbackRenderKit.class.getName() + ".ID";
 
     private Map _rendererWrappers = new HashMap();
 
-    public ListenerRenderKit()
+    public CallbackRenderKit()
     {
     }
 
@@ -90,9 +90,9 @@ public class ListenerRenderKit
 
 
     private static final String ORIGINAL_RENDER_KIT_ID_ATTR
-        = ListenerRenderKit.class.getName() + ".ORIGINAL_RENDER_ID_KIT";
+        = CallbackRenderKit.class.getName() + ".ORIGINAL_RENDER_ID_KIT";
     private static final String ORIGINAL_RENDER_KIT_ATTR
-        = ListenerRenderKit.class.getName() + ".ORIGINAL_RENDER_KIT";
+        = CallbackRenderKit.class.getName() + ".ORIGINAL_RENDER_KIT";
 
     protected static RenderKit getOriginalRenderKit(FacesContext facesContext)
     {
@@ -123,18 +123,18 @@ public class ListenerRenderKit
         facesContext.getServletRequest().setAttribute(ORIGINAL_RENDER_KIT_ATTR,
                                                       originalRenderKit);
 
-        // lookup ListenerRenderKit in RenderKitFactory...
-        RenderKit listenerRenderKit = null;
+        // lookup CallbackRenderKit in RenderKitFactory...
+        RenderKit callbackRenderKit = null;
         try
         {
-            listenerRenderKit = renderkitFactory.getRenderKit(ID, facesContext);
+            callbackRenderKit = renderkitFactory.getRenderKit(ID, facesContext);
         }
         catch (Exception e) {}
         // ...and add to RenderKitFactory if not yet registered
-        if (listenerRenderKit == null)
+        if (callbackRenderKit == null)
         {
-            listenerRenderKit = new ListenerRenderKit();
-            renderkitFactory.addRenderKit(ID, listenerRenderKit);
+            callbackRenderKit = new CallbackRenderKit();
+            renderkitFactory.addRenderKit(ID, callbackRenderKit);
         }
 
         // set tree to wrapper
@@ -150,47 +150,47 @@ public class ListenerRenderKit
 
 
 
-    private static final String LISTENERS_ATTR
-        = ListenerRenderKit.class.getName() + ".LISTENERS";
+    private static final String CALLBACK_MAP_ATTR
+        = CallbackRenderKit.class.getName() + ".CALLBACK_MAP";
 
-    protected static Map getListenerMap(FacesContext facesContext)
+    protected static Map getCallbackMap(FacesContext facesContext)
     {
-        Map map = (Map)facesContext.getServletRequest().getAttribute(LISTENERS_ATTR);
+        Map map = (Map)facesContext.getServletRequest().getAttribute(CALLBACK_MAP_ATTR);
         if (map == null)
         {
             map = new HashMap();
-            facesContext.getServletRequest().setAttribute(LISTENERS_ATTR, map);
+            facesContext.getServletRequest().setAttribute(CALLBACK_MAP_ATTR, map);
         }
         return map;
     }
 
 
     /**
-     * Register a new RendererListener, whose callback-functions are called when rendering each
+     * Register a new CallbackRenderer, whose callback-functions are called when rendering each
      * component in the subtree of the given component.
      * @param facesContext
      * @param component
-     * @param listener
+     * @param callbackRenderer
      */
-    public static void addListener(FacesContext facesContext,
-                                   UIComponent component,
-                                   RendererListener listener)
+    public static void addCallbackRenderer(FacesContext facesContext,
+                                           UIComponent component,
+                                           CallbackRenderer callbackRenderer)
     {
         //Make sure, that original RenderKit is wrapped
         wrapRenderKit(facesContext);
 
-        Map map = getListenerMap(facesContext);
+        Map map = getCallbackMap(facesContext);
         map.put(component.getClientId(facesContext),
-                new ListenerItem(component,
-                                 listener,
+                new CallbackInfo(component,
+                                 callbackRenderer,
                                  false));
     }
 
-    public static void removeListener(FacesContext facesContext,
-                                      UIComponent component,
-                                      RendererListener listener)
+    public static void removeCallbackRenderer(FacesContext facesContext,
+                                              UIComponent component,
+                                              CallbackRenderer callbackRenderer)
     {
-        Map map = getListenerMap(facesContext);
+        Map map = getCallbackMap(facesContext);
         map.remove(component.getClientId(facesContext));
         if (map.isEmpty())
         {
@@ -199,46 +199,46 @@ public class ListenerRenderKit
     }
 
     /**
-     * Register a new RendererListener, whose callback-functions are called when rendering each
+     * Register a new CallbackRenderer, whose callback-functions are called when rendering each
      * direct child component of the given component.
      * @param facesContext
      * @param component
-     * @param listener
+     * @param callbackRenderer
      */
-    public static void addChildrenListener(FacesContext facesContext,
-                                           UIComponent component,
-                                           RendererListener listener)
+    public static void addChildrenCallbackRenderer(FacesContext facesContext,
+                                                   UIComponent component,
+                                                   CallbackRenderer callbackRenderer)
     {
         //Make sure, that original RenderKit is wrapped
         wrapRenderKit(facesContext);
 
-        Map map = getListenerMap(facesContext);
+        Map map = getCallbackMap(facesContext);
         map.put(component.getClientId(facesContext),
-                new ListenerItem(component,
-                                 listener,
+                new CallbackInfo(component,
+                                 callbackRenderer,
                                  true));
     }
 
-    public static void removeChildrenListener(FacesContext facesContext,
-                                              UIComponent component,
-                                              RendererListener listener)
+    public static void removeChildrenCallbackRenderer(FacesContext facesContext,
+                                                      UIComponent component,
+                                                      CallbackRenderer callbackRenderer)
     {
-        removeListener(facesContext, component, listener);
+        removeCallbackRenderer(facesContext, component, callbackRenderer);
     }
 
 
-    private static class ListenerItem
+    private static class CallbackInfo
     {
         private UIComponent _component;
-        private RendererListener _rendererListener;
+        private CallbackRenderer _callbackRenderer;
         private boolean _onlyChildren;
 
-        public ListenerItem(UIComponent component,
-                            RendererListener rendererListener,
+        public CallbackInfo(UIComponent component,
+                            CallbackRenderer callbackRenderer,
                             boolean onlyChildren)
         {
             _component = component;
-            _rendererListener = rendererListener;
+            _callbackRenderer = callbackRenderer;
             _onlyChildren = onlyChildren;
         }
     }
@@ -260,14 +260,14 @@ public class ListenerRenderKit
             //TODO: uiComponent may be null!
             Renderer renderer = getOriginalRenderKit(facesContext).getRenderer(_rendererType);
 
-            Map map = getListenerMap(facesContext);
+            Map map = getCallbackMap(facesContext);
             for (Iterator it = map.values().iterator(); it.hasNext(); )
             {
-                ListenerItem listenerItem = (ListenerItem)it.next();
-                if (!listenerItem._onlyChildren ||
-                    uiComponent.getParent() == listenerItem._component)
+                CallbackInfo callbackInfo = (CallbackInfo)it.next();
+                if (!callbackInfo._onlyChildren ||
+                    uiComponent.getParent() == callbackInfo._component)
                 {
-                    listenerItem._rendererListener
+                    callbackInfo._callbackRenderer
                                     .beforeEncodeBegin(facesContext,
                                                        renderer,
                                                        uiComponent);
@@ -288,14 +288,14 @@ public class ListenerRenderKit
             Renderer renderer = getOriginalRenderKit(facesContext).getRenderer(_rendererType);
             renderer.encodeEnd(facesContext, uiComponent);
 
-            Map map = getListenerMap(facesContext);
+            Map map = getCallbackMap(facesContext);
             for (Iterator it = map.values().iterator(); it.hasNext();)
             {
-                ListenerItem listenerItem = (ListenerItem)it.next();
-                if (!listenerItem._onlyChildren ||
-                    uiComponent.getParent() == listenerItem._component)
+                CallbackInfo callbackInfo = (CallbackInfo)it.next();
+                if (!callbackInfo._onlyChildren ||
+                    uiComponent.getParent() == callbackInfo._component)
                 {
-                    listenerItem._rendererListener
+                    callbackInfo._callbackRenderer
                         .afterEncodeEnd(facesContext,
                                         renderer,
                                         uiComponent);
@@ -309,34 +309,37 @@ public class ListenerRenderKit
             renderer.decode(facesContext, uiComponent);
         }
 
-        public AttributeDescriptor getAttributeDescriptor(UIComponent uiComponent, String s)
+        public AttributeDescriptor getAttributeDescriptor(UIComponent uiComponent, String name)
         {
-            throw new UnsupportedOperationException();
+            return getAttributeDescriptor(uiComponent.getComponentType(), name);
         }
 
-        public AttributeDescriptor getAttributeDescriptor(String s, String s1)
+        public AttributeDescriptor getAttributeDescriptor(String componentType, String name)
         {
-            throw new UnsupportedOperationException();
+            Renderer renderer = getOriginalRenderKit(FacesContext.getCurrentInstance()).getRenderer(_rendererType);
+            return renderer.getAttributeDescriptor(componentType, name);
         }
 
         public Iterator getAttributeNames(UIComponent uiComponent)
         {
-            throw new UnsupportedOperationException();
+            return getAttributeNames(uiComponent.getComponentType());
         }
 
-        public Iterator getAttributeNames(String s)
+        public Iterator getAttributeNames(String componentType)
         {
-            throw new UnsupportedOperationException();
+            Renderer renderer = getOriginalRenderKit(FacesContext.getCurrentInstance()).getRenderer(_rendererType);
+            return renderer.getAttributeNames(componentType);
         }
 
         public boolean supportsComponentType(UIComponent uiComponent)
         {
-            throw new UnsupportedOperationException();
+            return supportsComponentType(uiComponent.getComponentType());
         }
 
-        public boolean supportsComponentType(String s)
+        public boolean supportsComponentType(String componentType)
         {
-            throw new UnsupportedOperationException();
+            Renderer renderer = getOriginalRenderKit(FacesContext.getCurrentInstance()).getRenderer(_rendererType);
+            return renderer.supportsComponentType(componentType);
         }
 
         public String getClientId(FacesContext facesContext, UIComponent uiComponent)

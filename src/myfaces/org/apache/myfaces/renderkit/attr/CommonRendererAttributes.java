@@ -18,6 +18,10 @@
  */
 package net.sourceforge.myfaces.renderkit.attr;
 
+import javax.faces.component.AttributeDescriptor;
+import java.util.Set;
+import java.util.HashSet;
+
 /**
  * "Mixin" interface that defines the commonly used renderer attributes as defined in JSF.7.6
  * @author Manfred Geiler (latest modification by $Author$)
@@ -37,9 +41,12 @@ public interface CommonRendererAttributes
     //xxxClass
     public static final String INPUT_CLASS_ATTR = "inputClass";
     public static final String OUTPUT_CLASS_ATTR = "outputClass";
-    public static final String PANEL_CLASS_ATTR = "panelClass";
     public static final String COMMAND_CLASS_ATTR = "commandClass";
+    public static final AttributeDescriptor PANEL_CLASS_ATTR = new AttrDescrImpl("panelClass", String.class);
     //TODO: continue definitions...
+
+
+
 
     //universal attributes
     public static final String DIR_ATTR   = "dir";

@@ -169,7 +169,7 @@ public class MyFacesTagHelper
                         Object rtValue = attr.value;
                         if (rtValue instanceof String)
                         {
-                            Converter conv = ConverterUtils.findConverter(facesContext,
+                            Converter conv = ConverterUtils.findValueConverter(facesContext,
                                                                           uiComponent);
                             if (conv != null)
                             {

@@ -48,7 +48,7 @@ public class ListTag
 
     public void setCssClass(String value)
     {
-        setRendererAttribute(ListRenderer.PANEL_CLASS_ATTR, value);
+        setRendererAttribute(ListRenderer.PANEL_CLASS_ATTR.getName(), value);
     }
 
     public void setColumnClasses(String value)

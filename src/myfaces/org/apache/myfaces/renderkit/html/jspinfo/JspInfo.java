@@ -23,6 +23,7 @@ import net.sourceforge.myfaces.MyFacesConfig;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.tree.Tree;
+import javax.faces.webapp.FacesTag;
 import java.util.*;
 
 /**
@@ -40,6 +41,7 @@ import java.util.*;
 public class JspInfo
 {
     public static final String CREATOR_TAG_ATTR = JspInfo.class.getName() + ".CREATOR_TAG";
+    public static final String ACTION_LISTENERS_TYPE_LIST_ATTR = JspInfo.class.getName() + ".LISTENERS";
 
     private Tree _tree = null;
     private Map _jspBeanInfosMap = new HashMap();
@@ -120,21 +122,16 @@ public class JspInfo
         return getJspInfo(facesContext, treeId).getJspBeanInfos();
     }
 
-    /*
-    public static FacesTag getCreatorTag(FacesContext facesContext,
-                                         String treeId,
-                                         String compoundId)
+    public static FacesTag getCreatorTag(UIComponent uiComponent)
     {
-        return getJspInfo(facesContext, treeId).getCreatorTag(compoundId);
+        return (FacesTag)uiComponent.getAttribute(JspInfo.CREATOR_TAG_ATTR);
     }
 
-    public static FacesTag getCreatorTag(FacesContext facesContext,
-                                         String treeId,
-                                         UIComponent uiComponent)
+    public static List getActionListenersTypeList(UIComponent uiComponent)
     {
-        return getJspInfo(facesContext, treeId).getCreatorTag(uiComponent.getCompoundId());
+        return (List)uiComponent.getAttribute(JspInfo.ACTION_LISTENERS_TYPE_LIST_ATTR);
     }
-    */
+
 
     public static Iterator getUISaveStateComponents(FacesContext facesContext,
                                                     String treeId)

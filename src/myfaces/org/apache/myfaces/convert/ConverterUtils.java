@@ -19,14 +19,21 @@
 package net.sourceforge.myfaces.convert;
 
 import net.sourceforge.myfaces.MyFacesFactoryFinder;
+import net.sourceforge.myfaces.util.bean.BeanUtils;
+import net.sourceforge.myfaces.util.logging.LogUtil;
 import net.sourceforge.myfaces.convert.map.ConverterMapFactory;
 import net.sourceforge.myfaces.renderkit.attr.CommonRendererAttributes;
 
 import javax.faces.FacesException;
+import javax.faces.FactoryFinder;
+import javax.faces.render.RenderKit;
+import javax.faces.render.Renderer;
+import javax.faces.render.RenderKitFactory;
 import javax.faces.convert.Converter;
 import javax.faces.convert.ConverterFactory;
 import javax.faces.convert.ConverterException;
 import javax.faces.component.UIComponent;
+import javax.faces.component.AttributeDescriptor;
 import javax.faces.context.FacesContext;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeUtility;
@@ -59,8 +66,23 @@ public class ConverterUtils
         return convFactory.getConverter(converterId);
     }
 
+    public static Converter findConverter(ServletContext servletContext,
+                                          Class c)
+    {
+        try
+        {
+            return getConverter(servletContext, c);
+        }
+        catch (IllegalArgumentException e)
+        {
+            return null;
+        }
+    }
 
-    public static Converter getConverter(FacesContext facesContext,
+
+
+
+    public static Converter getValueConverter(FacesContext facesContext,
                                          UIComponent uicomponent)
         throws IllegalArgumentException
     {
@@ -95,12 +117,12 @@ public class ConverterUtils
     }
 
 
-    public static Converter findConverter(ServletContext servletContext,
-                                          Class c)
+    public static Converter findValueConverter(FacesContext facesContext,
+                                               UIComponent uicomponent)
     {
         try
         {
-            return getConverter(servletContext, c);
+            return getValueConverter(facesContext, uicomponent);
         }
         catch (IllegalArgumentException e)
         {
@@ -109,24 +131,54 @@ public class ConverterUtils
     }
 
 
-    public static Converter findConverter(FacesContext facesContext,
-                                          UIComponent uicomponent)
+    public static Converter findAttributeConverter(FacesContext facesContext,
+                                                   UIComponent uiComponent,
+                                                   String attrName)
     {
+        Converter conv = null;
         try
         {
-            return getConverter(facesContext, uicomponent);
+            Class c = BeanUtils.getBeanPropertyType(uiComponent, attrName);
+            if (c != null)
+            {
+                conv = ConverterUtils.findConverter(facesContext.getServletContext(), c);
+            }
         }
         catch (IllegalArgumentException e)
         {
-            return null;
+            //probably not a component attribute but a render dependent attribute
+            String rendererType = uiComponent.getRendererType();
+            if (rendererType != null)
+            {
+                //Lookup the attribute descriptor
+                RenderKitFactory rkFactory = (RenderKitFactory)FactoryFinder.getFactory(FactoryFinder.RENDER_KIT_FACTORY);
+                RenderKit renderKit = rkFactory.getRenderKit(facesContext.getTree().getRenderKitId());
+                Renderer renderer = renderKit.getRenderer(rendererType);
+                AttributeDescriptor attrDescr = renderer.getAttributeDescriptor(uiComponent.getComponentType(),
+                                                                                attrName);
+                if (attrDescr != null)
+                {
+                    conv = ConverterUtils.findConverter(facesContext.getServletContext(),
+                                                        attrDescr.getType());
+                }
+                else
+                {
+                    LogUtil.getLogger().info("Could not find an attribute descriptor for attribute '" + attrName + "' of component " + uiComponent.getClientId(facesContext) + ".");
+                }
+            }
+            else
+            {
+                LogUtil.getLogger().info("Component " + uiComponent.getClientId(facesContext) + " has no bean getter method for attribute '" + attrName + "'.");
+            }
         }
+        return conv;
     }
 
 
     public static Object getAsObject(FacesContext facescontext, UIComponent uicomponent, String value)
         throws ConverterException
     {
-        Converter converter = findConverter(facescontext, uicomponent);
+        Converter converter = findValueConverter(facescontext, uicomponent);
         if (converter != null)
         {
             return converter.getAsObject(facescontext, uicomponent, value);
@@ -146,7 +198,7 @@ public class ConverterUtils
             return null;
         }
 
-        Converter converter = ConverterUtils.findConverter(facesContext, component);
+        Converter converter = ConverterUtils.findValueConverter(facesContext, component);
         if (converter != null)
         {
             return converter.getAsString(facesContext, component, obj);

@@ -24,17 +24,16 @@ import net.sourceforge.myfaces.convert.ConverterUtils;
 import net.sourceforge.myfaces.convert.impl.StringArrayConverter;
 import net.sourceforge.myfaces.renderkit.html.jspinfo.JspBeanInfo;
 import net.sourceforge.myfaces.renderkit.html.jspinfo.JspInfo;
+import net.sourceforge.myfaces.taglib.core.ActionListenerTag;
 import net.sourceforge.myfaces.tree.TreeUtils;
-import net.sourceforge.myfaces.util.bean.BeanUtils;
-import net.sourceforge.myfaces.util.logging.LogUtil;
 
 import javax.faces.FacesException;
-import javax.faces.convert.Converter;
-import javax.faces.convert.ConverterException;
 import javax.faces.component.UICommand;
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIInput;
 import javax.faces.context.FacesContext;
+import javax.faces.convert.Converter;
+import javax.faces.convert.ConverterException;
 import javax.faces.event.ActionListener;
 import javax.faces.event.FacesListener;
 import javax.faces.event.ValueChangedListener;
@@ -44,10 +43,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.servlet.jsp.PageContext;
 import java.io.IOException;
-import java.util.Iterator;
-import java.util.Locale;
-import java.util.Map;
-import java.util.StringTokenizer;
+import java.util.*;
 
 /**
  * DOCUMENT ME!
@@ -166,7 +162,7 @@ public class StateRestorer
                                                                                   CommonComponentAttributes.VALUE_ATTR));
         if (savedValue != null)
         {
-            Converter conv = ConverterUtils.findConverter(facesContext, uiComponent);
+            Converter conv = ConverterUtils.findValueConverter(facesContext, uiComponent);
             if (conv != null)
             {
                 UIComponentUtils.convertAndSetValue(facesContext,
@@ -189,7 +185,8 @@ public class StateRestorer
             String attrName = RequestParameterNames.restoreUIComponentStateParameterAttributeName(facesContext,
                                                                                                   uiComponent,
                                                                                                   (String)entry.getKey());
-            if (attrName != null && !attrName.equals(CommonComponentAttributes.VALUE_ATTR))
+            if (attrName != null &&
+                !attrName.equals(CommonComponentAttributes.VALUE_ATTR)) //Value was already restored above
             {
                 Object paramValue = entry.getValue();
 
@@ -205,17 +202,9 @@ public class StateRestorer
                     continue;
                 }
 
-                Converter conv = null;
-                try
-                {
-                    Class c = BeanUtils.getBeanPropertyType(uiComponent, attrName);
-                    conv = ConverterUtils.findConverter(facesContext.getServletContext(), c);
-                }
-                catch (IllegalArgumentException e)
-                {
-                    LogUtil.getLogger().warning("Component " + uiComponent.getClientId(facesContext) + " does not have a getter method for attribute '" + attrName + "'.");
-                }
-
+                Converter conv = ConverterUtils.findAttributeConverter(facesContext,
+                                                                       uiComponent,
+                                                                       attrName);
                 Object objValue;
                 if (conv != null)
                 {
@@ -260,7 +249,29 @@ public class StateRestorer
                 uiComponent.setAttribute(attrName, objValue);
             }
         }
+
+        registerTagCreatedActionListeners(facesContext, stateMap, uiComponent);
     }
+
+
+    /**
+     * Register all listeners that would normally by added via f:action_listener tags.
+     */
+    protected void registerTagCreatedActionListeners(FacesContext facesContext,
+                                                     Map stateMap,
+                                                     UIComponent uiComponent)
+    {
+        List lst = JspInfo.getActionListenersTypeList(uiComponent);
+        if (lst != null)
+        {
+            for (Iterator it = lst.iterator(); it.hasNext();)
+            {
+                String type = (String)it.next();
+                ActionListenerTag.addActionListener(uiComponent, type);
+            }
+        }
+    }
+
 
 
     protected void restoreModelValues(FacesContext facesContext, Map stateMap)
@@ -290,7 +301,7 @@ public class StateRestorer
         if (paramValue != null)
         {
             Object propValue;
-            Converter conv = ConverterUtils.findConverter(facesContext, uiSaveState);
+            Converter conv = ConverterUtils.findValueConverter(facesContext, uiSaveState);
             if (conv != null)
             {
                 try

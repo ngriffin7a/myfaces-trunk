@@ -28,20 +28,20 @@ import net.sourceforge.myfaces.renderkit.html.HTMLRenderer;
 import net.sourceforge.myfaces.renderkit.html.SecretRenderer;
 import net.sourceforge.myfaces.renderkit.html.jspinfo.JspInfo;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLEncoder;
+import net.sourceforge.myfaces.taglib.core.ActionListenerTag;
 import net.sourceforge.myfaces.tree.TreeUtils;
-import net.sourceforge.myfaces.util.bean.BeanUtils;
 import net.sourceforge.myfaces.util.logging.LogUtil;
 
 import javax.faces.FacesException;
-import javax.faces.convert.Converter;
-import javax.faces.convert.ConverterException;
-import javax.faces.component.UICommand;
 import javax.faces.component.UIComponent;
-import javax.faces.component.UIInput;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
+import javax.faces.convert.Converter;
+import javax.faces.convert.ConverterException;
+import javax.faces.event.ActionListener;
 import javax.faces.event.FacesListener;
 import javax.faces.event.PhaseId;
+import javax.faces.event.ValueChangedListener;
 import javax.faces.tree.Tree;
 import javax.servlet.jsp.tagext.BodyContent;
 import java.io.IOException;
@@ -75,7 +75,6 @@ public class StateSaver
         IGNORE_ATTRIBUTES.add(CommonComponentAttributes.PARENT_ATTR);
         IGNORE_ATTRIBUTES.add(CommonComponentAttributes.VALID_ATTR);
     }
-
 
     public void init(FacesContext facesContext) throws IOException
     {
@@ -267,7 +266,7 @@ public class StateSaver
         }
 
         String strValue;
-        Converter conv = ConverterUtils.findConverter(facesContext, uiComponent);
+        Converter conv = ConverterUtils.findValueConverter(facesContext, uiComponent);
         if (conv != null)
         {
             try
@@ -307,7 +306,7 @@ public class StateSaver
                                           Object attrValue)
     {
         Tree parsedTree = JspInfo.getTree(facesContext,
-                                                facesContext.getTree().getTreeId());
+                                          facesContext.getTree().getTreeId());
         UIComponent parsedComp = null;
         try
         {
@@ -327,21 +326,9 @@ public class StateSaver
             }
         }
 
-        Converter conv = null;
-        try
-        {
-            Class c = BeanUtils.getBeanPropertyType(uiComponent, attrName);
-            if (c != null)
-            {
-                conv = ConverterUtils.findConverter(facesContext.getServletContext(), c);
-            }
-        }
-        catch (IllegalArgumentException e)
-        {
-            //probably not a component attribute but a render dependent attribute
-            LogUtil.getLogger().info("Component " + uiComponent.getClientId(facesContext) + " does not have a getter method for attribute '" + attrName + "', assuming renderer dependent attribute.");
-        }
-
+        Converter conv = ConverterUtils.findAttributeConverter(facesContext,
+                                                               uiComponent,
+                                                               attrName);
         String strValue;
         if (conv != null)
         {
@@ -358,8 +345,6 @@ public class StateSaver
         }
         else
         {
-            //TODO: get attribute type by AttributeDescriptor
-
             if (attrValue instanceof Serializable)
             {
                 strValue = ConverterUtils.serialize(attrValue);
@@ -405,7 +390,7 @@ public class StateSaver
         if (propValue != null)
         {
             String paramValue;
-            Converter conv = ConverterUtils.findConverter(facesContext, uiSaveState);
+            Converter conv = ConverterUtils.findValueConverter(facesContext, uiSaveState);
             if (conv != null)
             {
                 try
@@ -551,29 +536,16 @@ public class StateSaver
     }
 
 
-
     protected void saveListeners(FacesContext facesContext,
                                  Map stateMap,
                                  UIComponent uiComponent)
     {
-        if (uiComponent instanceof UICommand)
-        {
-            saveListeners(facesContext, stateMap, uiComponent, StateRenderer.LISTENER_TYPE_ACTION);
-        }
-        else if (uiComponent instanceof UIInput)
-        {
-            saveListeners(facesContext, stateMap, uiComponent, StateRenderer.LISTENER_TYPE_VALUE_CHANGED);
-        }
-    }
-
-    protected void saveListeners(FacesContext facesContext,
-                                 Map stateMap,
-                                 UIComponent uiComponent,
-                                 String listenerType)
-    {
         List[] listeners = UIComponentUtils.getListeners(uiComponent);
         if (listeners != null)
         {
+            Set tagCreatedActionListenersSet
+                = (Set)facesContext.getServletRequest()
+                    .getAttribute(ActionListenerTag.TAG_CREATED_ACTION_LISTENERS_SET_ATTR);
             for (Iterator it = PhaseId.VALUES.iterator(); it.hasNext();)
             {
                 PhaseId phaseId = (PhaseId)it.next();
@@ -583,8 +555,7 @@ public class StateSaver
                     savePhaseListeners(facesContext,
                                        stateMap,
                                        uiComponent,
-                                       listenerType,
-                                       phaseId,
+                                       tagCreatedActionListenersSet,
                                        phaseListeners);
                 }
             }
@@ -594,13 +565,37 @@ public class StateSaver
     protected void savePhaseListeners(FacesContext facesContext,
                                       Map stateMap,
                                       UIComponent uiComponent,
-                                      String listenerType,
-                                      PhaseId phaseId,
+                                      Set tagCreatedActionListenersSet,
                                       List phaseListeners)
     {
         for (Iterator it = phaseListeners.iterator(); it.hasNext();)
         {
             FacesListener facesListener = (FacesListener)it.next();
+
+            if (tagCreatedActionListenersSet != null &&
+                tagCreatedActionListenersSet.contains(facesListener))
+            {
+                //Listener was created by a "f:action_listener" tag
+                //and can automatically be restored by StateRestorer.
+                return;
+            }
+
+            String listenerType;
+            if (facesListener instanceof ActionListener)
+            {
+                listenerType = StateRenderer.LISTENER_TYPE_ACTION;
+            }
+            else if (facesListener instanceof ValueChangedListener)
+            {
+                listenerType = StateRenderer.LISTENER_TYPE_VALUE_CHANGED;
+            }
+            else
+            {
+                //TODO: Support for common Listeners: find "addFooListener" method via reflection...
+                LogUtil.getLogger().warning("Unsupported Listener type " + facesListener.getClass().getName());
+                continue;
+            }
+
             if (facesListener instanceof UIComponent)
             {
                 //Listener is a component, so we only need to save the clientId
@@ -613,9 +608,9 @@ public class StateSaver
             else
             {
                 //Listener is of unknown class, so we must serialize it
-                String paramName = RequestParameterNames.getComponentListenerParameterName(facesContext,
-                                                                                           uiComponent,
-                                                                                           listenerType);
+                String paramName = RequestParameterNames.getSerializableListenerParameterName(facesContext,
+                                                                                              uiComponent,
+                                                                                              listenerType);
                 String paramValue = ConverterUtils.serialize(facesListener);
                 saveParameter(stateMap, paramName, paramValue);
             }

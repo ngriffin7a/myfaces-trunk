@@ -2,6 +2,7 @@
                  java.util.Date"%>
 <%@ page session="false"
 %><%@ taglib uri="/WEB-INF/myfaces_basic.tld" prefix="h"
+%><%@ taglib uri="/WEB-INF/myfaces_core.tld" prefix="f"
 %><%@ taglib uri="/WEB-INF/myfaces_ext.tld" prefix="x"
 %><html>
 
@@ -64,7 +65,9 @@
                     Number 1: <h:textentry_input id="number1" modelReference="calcForm.number1" maxlength="10" size="25" /><h:input_errors id="number1Error" compoundId="/form1/number1" cssClass="error" /><br>
                     Number 2: <h:textentry_input id="number2" modelReference="calcForm.number2" maxlength="10" size="25"/><h:input_errors id="number2Error" compoundId="/form1/number2" cssClass="error" /><br>
                     Result: <h:output_text id="result" modelReference="calcForm.result" /><br>
-                    <h:command_button id="addButton" commandName="add" commandReference="calcCtrl.calc" label="Add them"/>
+                    <h:command_button id="addButton" commandName="add" commandReference="calcCtrl.calc" label="Add them">
+                        <f:action_listener type="net.sourceforge.myfaces.example.controller.ActionListenerTest" ></f:action_listener>
+                    </h:command_button>
                     <h:command_button id="subtractButton" commandName="subtract" commandReference="calcCtrl.calc" label="Subtract them"/><br>
                 </h:form>
 

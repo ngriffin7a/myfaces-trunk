@@ -20,8 +20,8 @@ package net.sourceforge.myfaces.renderkit.html.ext;
 
 import net.sourceforge.myfaces.renderkit.attr.ext.LayoutRendererAttributes;
 import net.sourceforge.myfaces.renderkit.html.HTMLRenderer;
-import net.sourceforge.myfaces.renderkit.html.util.ListenerRenderKit;
-import net.sourceforge.myfaces.renderkit.html.util.RendererListener;
+import net.sourceforge.myfaces.renderkit.html.util.CallbackRenderKit;
+import net.sourceforge.myfaces.renderkit.html.util.CallbackRenderer;
 import net.sourceforge.myfaces.util.logging.LogUtil;
 
 import javax.faces.component.UIComponent;
@@ -41,7 +41,7 @@ import java.util.Iterator;
 public class LayoutRenderer
     extends HTMLRenderer
     implements LayoutRendererAttributes,
-               RendererListener
+               CallbackRenderer
 {
     static final String HEADER = "LayoutHeader";
     static final String NAVIGATION = "LayoutNavigation";
@@ -66,6 +66,12 @@ public class LayoutRenderer
         return TYPE;
     }
 
+    public LayoutRenderer()
+    {
+        super();
+        addAttributeDescriptor(UIPanel.TYPE, PANEL_CLASS_ATTR);
+    }
+
     public boolean supportsComponentType(UIComponent component)
     {
         return component instanceof UIPanel;
@@ -79,7 +85,7 @@ public class LayoutRenderer
     public void encodeBegin(FacesContext facesContext, UIComponent uiComponent)
         throws IOException
     {
-        ListenerRenderKit.addChildrenListener(facesContext, uiComponent, this);
+        CallbackRenderKit.addChildrenCallbackRenderer(facesContext, uiComponent, this);
     }
 
 
@@ -164,7 +170,7 @@ public class LayoutRenderer
         throws IOException
     {
         writeBody(facesContext, uiComponent);
-        ListenerRenderKit.removeListener(facesContext, uiComponent, this);
+        CallbackRenderKit.removeCallbackRenderer(facesContext, uiComponent, this);
     }
 
 
@@ -277,7 +283,7 @@ public class LayoutRenderer
     {
         ResponseWriter writer = facesContext.getResponseWriter();
         writer.write("<table");
-        String cssClass = (String)uiComponent.getAttribute(PANEL_CLASS_ATTR);
+        String cssClass = (String)uiComponent.getAttribute(PANEL_CLASS_ATTR.getName());
         if (cssClass != null)
         {
             writer.write(" class=\"" + cssClass + "\"");
@@ -303,7 +309,7 @@ public class LayoutRenderer
     {
         ResponseWriter writer = facesContext.getResponseWriter();
         writer.write("<table");
-        String cssClass = (String)uiComponent.getAttribute(PANEL_CLASS_ATTR);
+        String cssClass = (String)uiComponent.getAttribute(PANEL_CLASS_ATTR.getName());
         if (cssClass != null)
         {
             writer.write(" class=\"" + cssClass + "\"");
