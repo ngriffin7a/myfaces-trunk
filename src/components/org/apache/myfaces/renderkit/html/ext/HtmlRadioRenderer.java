@@ -18,8 +18,8 @@ package net.sourceforge.myfaces.renderkit.html.ext;
 import net.sourceforge.myfaces.component.UserRoleUtils;
 import net.sourceforge.myfaces.custom.radio.HtmlRadio;
 import net.sourceforge.myfaces.renderkit.RendererUtils;
-import net.sourceforge.myfaces.renderkit.html.HtmlRadioRendererBase;
 import net.sourceforge.myfaces.renderkit.html.HTML;
+import net.sourceforge.myfaces.renderkit.html.HtmlRadioRendererBase;
 
 import javax.faces.FacesException;
 import javax.faces.component.UIComponent;
@@ -37,6 +37,9 @@ import java.util.List;
  * @author Thomas Spiegl
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.8  2004/08/13 15:47:08  manolito
+ * No decode for spread checkbox or radio
+ *
  * Revision 1.7  2004/07/01 21:53:06  mwessendorf
  * ASF switch
  *
@@ -169,6 +172,19 @@ public class HtmlRadioRenderer
         else
         {
             return super.isDisabled(facesContext, uiComponent);
+        }
+    }
+
+
+    public void decode(FacesContext facesContext, UIComponent uiComponent)
+    {
+        if (uiComponent instanceof HtmlRadio)
+        {
+            //nothing to decode
+        }
+        else
+        {
+            super.decode(facesContext, uiComponent);
         }
     }
 

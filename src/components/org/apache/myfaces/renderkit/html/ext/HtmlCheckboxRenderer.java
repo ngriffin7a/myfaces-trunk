@@ -35,6 +35,9 @@ import java.util.Set;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.6  2004/08/13 15:47:08  manolito
+ * No decode for spread checkbox or radio
+ *
  * Revision 1.5  2004/07/01 21:53:06  mwessendorf
  * ASF switch
  *
@@ -158,6 +161,19 @@ public class HtmlCheckboxRenderer
         else
         {
             return super.isDisabled(facesContext, uiComponent);
+        }
+    }
+
+
+    public void decode(FacesContext facesContext, UIComponent uiComponent)
+    {
+        if (uiComponent instanceof HtmlCheckbox)
+        {
+            //nothing to decode
+        }
+        else
+        {
+            super.decode(facesContext, uiComponent);
         }
     }
 }
