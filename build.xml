@@ -98,7 +98,7 @@
         </jar>
     </target>
 
-    <target name="clean">
+    <target name="makeclean">
         <delete quiet="true" failonerror="false" includeEmptyDirs="true">
             <fileset dir="${classes.dir}"/>
             <fileset dir="${temp.dir}"/>
