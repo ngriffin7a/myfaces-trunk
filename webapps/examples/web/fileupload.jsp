@@ -34,6 +34,8 @@
 
     <f:loadBundle basename="net.sourceforge.myfaces.examples.resource.example_messages" var="example_messages"/>
 
+    <x:saveState value="#{fileUploadForm.name}"/>
+
     <x:panelLayout id="page" layout="#{globalOptions.pageLayout}"
             styleClass="pageLayout"
             headerClass="pageHeader"
@@ -59,11 +61,14 @@
                 </f:verbatim>
 
                     <h:form id="form1" name="form1" enctype="multipart/form-data" >
-                        <h:outputText value="Gimme an image:"/>
+                        <h:outputText value="Gimme an image: "/>
                         <x:inputFileUpload id="fileupload"
                                            accept="image/*"
                                            value="#{fileUploadForm.upFile}"
                                            styleClass="fileUploadInput" />
+                        <f:verbatim><br></f:verbatim>
+                        <h:outputText value="and give it a name: "/>
+                        <h:inputText value="#{fileUploadForm.name}"/>
                         <h:commandButton value="load it up" action="#{fileUploadForm.upload}" />
                     </h:form>
 
@@ -74,10 +79,12 @@
                 {
                     %>
                     <p>The image you loaded up:</p>
-                    <img src="fileupload_showimg.jsp?dummy=<%=Math.random()%>"><%
+                    <img src="fileupload_showimg.jsp?dummy=<%=Math.random()%>">
+                    <br><%
                 }
                 %>
                 </f:verbatim>
+                <h:outputText value="#{fileUploadForm.name}"/>
 
             </h:panelGroup>
         </f:facet>

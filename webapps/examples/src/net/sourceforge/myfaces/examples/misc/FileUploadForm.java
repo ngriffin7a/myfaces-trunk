@@ -31,6 +31,7 @@ import javax.faces.el.VariableResolver;
 public class FileUploadForm
 {
     private UploadedFile _upFile;
+    private String _name = "";
 
     public UploadedFile getUpFile()
     {
@@ -40,6 +41,16 @@ public class FileUploadForm
     public void setUpFile(UploadedFile upFile)
     {
         _upFile = upFile;
+    }
+
+    public String getName()
+    {
+        return _name;
+    }
+
+    public void setName(String name)
+    {
+        _name = name;
     }
 
     public String upload()
