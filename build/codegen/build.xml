@@ -34,6 +34,12 @@
                optimize="off"
                classpathref="codegen.class.path">
         </javac>
+        <copy todir="${codegen-classes.dir}">
+            <fileset dir="${codgen-src.dir}"
+                     includes="**"
+                     excludes="**/*.java
+                               **/package.html"/>
+        </copy>
     </target>
 
 
@@ -67,7 +73,7 @@
             <classpath refid="codegen.class.path"/>
         </taskdef>
         <inspect basedir="${jsfapi-src.dir}"
-                 includes="javax/faces/component/UIComponentBase.java"
+                 includes="${single-component}.java"
                  destdir="${jsfapi-src.dir}"
                  overwrite="true" />
     </target>
@@ -77,7 +83,7 @@
             <classpath refid="codegen.class.path"/>
         </taskdef>
         <generate basedir="${jsfapi-src.dir}"
-                  includes="javax/faces/component/UIComponentBase.xml"
+                  includes="${single-component}.xml"
                   destdir="${jsfapi-src.dir}"
                   velocityLoaderPath="${codgen-src.dir}/net/sourceforge/myfaces/codegen/resource" />
     </target>

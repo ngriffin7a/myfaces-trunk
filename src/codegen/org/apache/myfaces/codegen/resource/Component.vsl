@@ -92,8 +92,8 @@ $I__#if ($c.saveStateFields.size() > 0)
         Object values[] = new Object[${c.getSaveStateFieldsCountPlusOne()}];
         values[0] = super.saveState(context);
 $I____#foreach ($f in $c.saveStateFields)
-$I______#if ($f.isWrapForSavingState())
-        values[$f.saveStateFieldIndex] = wrapForStateSaving(context, _${f.name});
+$I______#if ($f.isAttachedStateSaving())
+        values[$f.saveStateFieldIndex] = saveAttachedState(context, _${f.name});
 $I______#else
         values[$f.saveStateFieldIndex] = _$f.name;
 $I______#end
@@ -106,8 +106,8 @@ $I____#end
         Object values[] = (Object[])state;
         super.restoreState(context, values[0]);
 $I____#foreach ($f in $c.saveStateFields)
-$I______#if ($f.isWrapForSavingState())
-        _$f.name = ($f.fieldType)unwrapForStateRestoring(context, values[$f.saveStateFieldIndex]);
+$I______#if ($f.isAttachedStateSaving())
+        _$f.name = ($f.fieldType)restoreAttachedState(context, values[$f.saveStateFieldIndex]);
 $I______#else
         _$f.name = ($f.fieldType)values[$f.saveStateFieldIndex];
 $I______#end

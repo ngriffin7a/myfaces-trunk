@@ -44,10 +44,12 @@ public class WebXmlParser
 {
     private static final Log log = LogFactory.getLog(WebXmlParser.class);
 
+    /*
     private static final String JAXP_SCHEMA_LANGUAGE =
         "http://java.sun.com/xml/jaxp/properties/schemaLanguage";
     private static final String W3C_XML_SCHEMA =
         "http://www.w3.org/2001/XMLSchema";
+        */
 
     private static final String WEB_XML_PATH = "/WEB-INF/web.xml";
     private static final String DEFAULT_ENCODING = "ISO-8859-1";
@@ -137,7 +139,7 @@ public class WebXmlParser
         return is;
     }
 
-    public class _EntityResolver implements EntityResolver
+    private class _EntityResolver implements EntityResolver
     {
         public InputSource resolveEntity(String publicId, String systemId) throws IOException
         {

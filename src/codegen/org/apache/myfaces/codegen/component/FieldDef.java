@@ -20,6 +20,8 @@ package net.sourceforge.myfaces.codegen.component;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @author Manfred Geiler (latest modification by $Author$)
@@ -28,6 +30,14 @@ import java.io.PrintWriter;
 public class FieldDef
 {
     //private static final Log log = LogFactory.getLog(Field.class);
+
+    private static final Set ATTACHED_CLASSES = new HashSet();
+    static
+    {
+        ATTACHED_CLASSES.add("javax.faces.convert.Converter");
+        ATTACHED_CLASSES.add("javax.faces.el.MethodBinding");
+        ATTACHED_CLASSES.add("javax.faces.el.ValueBinding");
+    }
 
     private String _qualifiedType;
     private String _name;
@@ -238,9 +248,9 @@ public class FieldDef
         _generateProperty = generateProperty;
     }
 
-    public boolean isWrapForSavingState()
+    public boolean isAttachedStateSaving()
     {
-        return _qualifiedType.equals("javax.faces.convert.Converter");
+        return ATTACHED_CLASSES.contains(_qualifiedType);
     }
 
 

@@ -38,12 +38,19 @@ class _ComponentAttributesMap
     private static final Object[] EMPTY_ARGS = new Object[0];
 
     private UIComponent _component;
-    private Map _attributes = new HashMap();    //We delegate instead of derive from HashMap, so that we can later optimize Serialization
+    private Map _attributes = null;    //We delegate instead of derive from HashMap, so that we can later optimize Serialization
     private transient Map _propertyDescriptorMap = null;
 
     _ComponentAttributesMap(UIComponent component)
     {
         _component = component;
+        _attributes = new HashMap();
+    }
+
+    _ComponentAttributesMap(UIComponent component, Map attributes)
+    {
+        _component = component;
+        _attributes = attributes;
     }
 
     public int size()

@@ -1,3 +1,7 @@
 
 ant.jar = C:\\Develop\\Tools\\apache-ant-1.6.1\\lib\\ant.jar
 velocity.jar = C:\Develop\\Tools\\velocity\\lib\\velocity-dep-1.2.jar
+
+
+single-component = javax/faces/component/UIComponentBase
+

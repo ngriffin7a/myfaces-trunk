@@ -35,8 +35,6 @@ import java.util.*;
 
 /**
  * see Javadoc of JSF Specification
- * <p/>
- * TODO
  *
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
@@ -553,26 +551,93 @@ public abstract class UIComponentBase
 
     public Object saveState(FacesContext context)
     {
-        Object values[] = new Object[4];
-        values[0] = _attributesMap != null ? _attributesMap.getUnderlyingMap() : null;
-        values[1] = _id;
-        values[2] = _rendered;
-        values[3] = _rendererType;
-        values[4] = _clientId;
+        Object values[] = new Object[7];
+        values[0] = _id;
+        values[1] = _rendered;
+        values[2] = _rendererType;
+        values[3] = _clientId;
+        values[4] = saveAttributesMap();
         values[5] = saveAttachedState(context, _facesListeners);
+        values[6] = saveValueBindingMap(context);
         return ((Object) (values));
     }
 
     public void restoreState(FacesContext context, Object state)
     {
         Object values[] = (Object[])state;
-
-        //TODO !!!
-        _id = (String)values[1];
-        _rendered = (Boolean)values[2];
-        _rendererType = (String)values[3];
+        _id = (String)values[0];
+        _rendered = (Boolean)values[1];
+        _rendererType = (String)values[2];
+        _clientId = (String)values[3];
+        restoreAttributesMap(values[4]);
+        _facesListeners = (List)restoreAttachedState(context, values[5]);
+        restoreValueBindingMap(context, values[6]);
     }
-    
+
+
+    private Object saveAttributesMap()
+    {
+        if (_attributesMap != null)
+        {
+            return _attributesMap.getUnderlyingMap();
+        }
+        else
+        {
+            return null;
+        }
+    }
+
+    private void restoreAttributesMap(Object stateObj)
+    {
+        if (stateObj != null)
+        {
+            _attributesMap = new _ComponentAttributesMap(this, (Map)stateObj);
+        }
+        else
+        {
+            _attributesMap = null;
+        }
+    }
+
+    private Object saveValueBindingMap(FacesContext context)
+    {
+        if (_valueBindingMap != null)
+        {
+            int initCapacity = (_valueBindingMap.size() * 4 + 3) / 3;
+            HashMap stateMap = new HashMap(initCapacity);
+            for (Iterator it = _valueBindingMap.entrySet().iterator(); it.hasNext(); )
+            {
+                Map.Entry entry = (Map.Entry)it.next();
+                stateMap.put(entry.getKey(),
+                             saveAttachedState(context, entry.getValue()));
+            }
+            return stateMap;
+        }
+        else
+        {
+            return null;
+        }
+    }
+
+    private void restoreValueBindingMap(FacesContext context, Object stateObj)
+    {
+        if (stateObj != null)
+        {
+            Map stateMap = (Map)stateObj;
+            int initCapacity = (stateMap.size() * 4 + 3) / 3;
+            _valueBindingMap = new HashMap(initCapacity);
+            for (Iterator it = stateMap.entrySet().iterator(); it.hasNext(); )
+            {
+                Map.Entry entry = (Map.Entry)it.next();
+                _valueBindingMap.put(entry.getKey(),
+                                     restoreAttachedState(context, entry.getValue()));
+            }
+        }
+        else
+        {
+            _valueBindingMap = null;
+        }
+    }
 
 
     //------------------ GENERATED CODE BEGIN (do not modify!) --------------------

@@ -22,11 +22,14 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * @author Manfred Geiler (latest modification by $Author$)
@@ -47,6 +50,7 @@ public class ComponentDefinitionParser
             dbf.setValidating(false);
 
             DocumentBuilder db = dbf.newDocumentBuilder();
+            db.setEntityResolver(new _EntityResolver());
 
             InputSource is = new InputSource(xmlFile.getAbsolutePath());
 
@@ -76,6 +80,12 @@ public class ComponentDefinitionParser
         if (generateConstructor != null && generateConstructor.length() > 0)
         {
             component.setGenerateConstructor(Boolean.valueOf(generateConstructor).booleanValue());
+        }
+
+        String generateStateMethods = componentElem.getAttribute("generateStateMethods");
+        if (generateStateMethods != null && generateStateMethods.length() > 0)
+        {
+            component.setGenerateStateMethods(Boolean.valueOf(generateStateMethods).booleanValue());
         }
 
         NodeList fields = componentElem.getElementsByTagName("field");
@@ -162,6 +172,43 @@ public class ComponentDefinitionParser
         return buf.toString();
     }
 
+
+
+    private InputSource createClassloaderInputSource(String publicId, String systemId)
+        throws IOException
+    {
+        //InputStream inStream = Thread.currentThread().getContextClassLoader().getResourceAsStream(systemId);
+        InputStream inStream = getClass().getClassLoader().getResourceAsStream(systemId);
+        if (inStream == null)
+        {
+            throw new IOException("Unable to find classloader resource " + systemId);
+        }
+        InputSource is = new InputSource(inStream);
+        is.setPublicId(publicId);
+        is.setSystemId(systemId);
+        is.setEncoding("ISO-8859-1");
+        return is;
+    }
+
+    public class _EntityResolver implements EntityResolver
+    {
+        public InputSource resolveEntity(String publicId, String systemId) throws IOException
+        {
+            if (systemId == null)
+            {
+                throw new UnsupportedOperationException("systemId must not be null");
+            }
+
+            if (systemId.equals("http://myfaces.sourceforge.net/dtd/Component.dtd"))
+            {
+                //Load DTD from servlet.jar
+                return createClassloaderInputSource(publicId, "net/sourceforge/myfaces/codegen/resource/Component.dtd");
+            }
+
+            throw new UnsupportedOperationException();
+        }
+
+    }
 
 
 

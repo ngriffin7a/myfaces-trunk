@@ -124,8 +124,11 @@ public class ComponentInspector
             }
 
             ComponentDef componentDef = new ComponentDef();
-            componentDef.setGenerateConstructor(oldComponentDefinition.isGenerateConstructor());
-            componentDef.setGenerateStateMethods(oldComponentDefinition.isGenerateStateMethods());
+            if (oldComponentDefinition != null)
+            {
+                componentDef.setGenerateConstructor(oldComponentDefinition.isGenerateConstructor());
+                componentDef.setGenerateStateMethods(oldComponentDefinition.isGenerateStateMethods());
+            }
 
             componentDef.setQualifiedClassName(clazz.getName());
             componentDef.setBaseClassName(clazz.getSuperclass().getName());
@@ -174,15 +177,7 @@ public class ComponentInspector
                     FieldDef oldField = oldComponentDefinition.getField(propertyDescriptor.getName());
                     if (oldField != null)
                     {
-                        if (oldField.isProprietary())
-                        {
-                            //Defined as proprietary declaredField, must not be overwritten
-                            continue;
-                        }
-                        else
-                        {
-                            field = oldField;
-                        }
+                        field = oldField;
                     }
                 }
 
