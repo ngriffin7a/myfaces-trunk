@@ -34,6 +34,19 @@ public abstract class UIComponentBase
         extends UIComponent
 {
 
+    public Object saveState(FacesContext context)
+    {
+        Object values[] = new Object[0];
+        //TODO
+        return ((Object) (values));
+    }
+
+    public void restoreState(FacesContext context, Object state)
+    {
+        //TODO
+    }
+
+
 
     Object wrapForStateSaving(FacesContext context, Object object)
     {
