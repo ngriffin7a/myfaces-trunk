@@ -39,8 +39,8 @@ import java.util.Map;
  * @author Manfred Geiler
  * @version $Revision$ $Date$
  * $Log$
- * Revision 1.16  2005/02/14 00:00:35  svieujot
- * Bugfix : Don't loose submitted values if the apply values phase isn't run
+ * Revision 1.17  2005/03/04 01:21:22  mmarinschek
+ * reverted bug fix as it introduced several new bugs with data-table
  *
  * Revision 1.15  2004/10/13 11:50:56  matze
  * renamed packages to org.apache
@@ -333,31 +333,15 @@ public class HtmlDataTable
     protected void refresh(FacesContext context)
     {
         if (log.isDebugEnabled()) log.debug("Refresh for HtmlDataTable " + getClientId(context) + " was called");
-        _saveDescendantStates = true;
-
-        if (_firstTimeRendered ) //|| isAllChildrenAndFacetsValid())
+        
+        if (_firstTimeRendered || isAllChildrenAndFacetsValid())
         {
-            /*
-TODO : Improve or discard this code.
-
-Explanation :             
-The HtmlDataTableHack has a _saveDescendantStates boolean.
-This is set by the HtmlDataTable to false if it's rendered for the first time (which seems reasonable), BUT also if all the table's childrens are valid.
-So, if you have no validation error in your table, the data model isn't preserved.
-This comes from the assumption that if there is no validation error, the values will be applied to the backing bean, and thus, we don;t need to retain them.
-Unfortunately, if you're in a tabePanel and select another tab, then the values aren't applied to the backing bean, and if you have no validation error, then the submitted values are lots.
-
-I've just commented the culprit code in HtmlDataTable, as this optimization can still be valid, but in more restricted cases.
-We have to check (if possible) that the applyValues phase will be run.
-
-I suspect this isn't easy (if possible), but at least, the code is still there before we decide to improve or discard it.
-
             // No invalid children
             // --> clear data model
             _dataModel = null;
             if (_dataModelMap != null) _dataModelMap.clear();
             _isDataModelRestored = false;
-            */
+
             _saveDescendantStates = false; // no need to save children states
         }
         else
