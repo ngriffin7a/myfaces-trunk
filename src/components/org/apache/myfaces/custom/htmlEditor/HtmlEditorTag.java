@@ -17,12 +17,16 @@ package org.apache.myfaces.custom.htmlEditor;
 
 import javax.faces.component.UIComponent;
 
+import org.apache.myfaces.component.UserRoleAware;
 import org.apache.myfaces.taglib.UIComponentTagBase;
 
 /**
  * @author Sylvain Vieujot (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.8  2004/12/10 02:16:26  svieujot
+ * Start implementing UserRoleAware.
+ *
  * Revision 1.7  2004/12/08 04:36:27  svieujot
  * Cancel last *source attributes, and make style and styleClass more modular.
  *
@@ -60,6 +64,9 @@ public class HtmlEditorTag extends UIComponentTagBase {
     private String showTablesToolBox;
     private String showDebugToolBox;
     
+    private String enabledOnUserRole;
+    private String visibleOnUserRole;
+    
     protected void setProperties(UIComponent component) {
         super.setProperties(component);
         
@@ -76,6 +83,9 @@ public class HtmlEditorTag extends UIComponentTagBase {
         setBooleanProperty(component, "showImagesToolBox", showImagesToolBox);
         setBooleanProperty(component, "showTablesToolBox", showTablesToolBox);
         setBooleanProperty(component, "showDebugToolBox", showDebugToolBox);
+        
+        setStringProperty(component, UserRoleAware.ENABLED_ON_USER_ROLE_ATTR, enabledOnUserRole);
+        setStringProperty(component, UserRoleAware.VISIBLE_ON_USER_ROLE_ATTR, visibleOnUserRole);
     }
     
     public String getComponentType() {
@@ -124,5 +134,13 @@ public class HtmlEditorTag extends UIComponentTagBase {
     
     public void setShowDebugToolBox(String showDebugToolBox){
         this.showDebugToolBox = showDebugToolBox;
+    }
+    
+    public void setEnabledOnUserRole(String enabledOnUserRole){
+        this.enabledOnUserRole = enabledOnUserRole;
+    }
+
+    public void setVisibleOnUserRole(String visibleOnUserRole){
+        this.visibleOnUserRole = visibleOnUserRole;
     }
 }

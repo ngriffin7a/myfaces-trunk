@@ -24,6 +24,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 import javax.faces.convert.ConverterException;
 
+import org.apache.myfaces.component.UserRoleUtils;
 import org.apache.myfaces.component.html.util.AddResource;
 import org.apache.myfaces.renderkit.RendererUtils;
 import org.apache.myfaces.renderkit.html.HTML;
@@ -35,6 +36,9 @@ import org.apache.myfaces.renderkit.html.util.JavascriptUtils;
  * @author Sylvain Vieujot (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.15  2004/12/10 02:16:26  svieujot
+ * Start implementing UserRoleAware.
+ *
  * Revision 1.14  2004/12/09 05:19:12  svieujot
  * Bugfix for submitted values that were not taken care of.
  *
@@ -78,9 +82,16 @@ import org.apache.myfaces.renderkit.html.util.JavascriptUtils;
  * Add an x:htmlEditor based on the Kupu library.
  */
 public class HtmlEditorRenderer extends HtmlRenderer {
-    // TODO : Disabled mode
+    // TODO : Finish Disabled mode
     // TODO : Fallback on textarea whose content it converted to HTML for non kupu capable browsers (Safari, smartphones, non javascript, ...)
 
+    protected boolean isDisabled(FacesContext facesContext, UIComponent uiComponent) {
+        if( !UserRoleUtils.isEnabledOnUserRole(uiComponent) )
+            return false;
+
+        return ((HtmlEditor)uiComponent).isDisabled();
+    }
+    
     public void encodeEnd(FacesContext context, UIComponent component) throws IOException {
         RendererUtils.checkParamValidity(context, component, HtmlEditor.class);
         HtmlEditor editor = (HtmlEditor) component;
