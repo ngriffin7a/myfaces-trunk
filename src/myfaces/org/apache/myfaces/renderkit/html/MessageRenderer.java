@@ -84,7 +84,7 @@ extends HTMLRenderer
         {
             writer.write("<span ");
             writer.write(buf.toString());
-            writer.write("\">");
+            writer.write(">");
         }
 
         String pattern;
