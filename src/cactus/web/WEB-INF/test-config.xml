@@ -122,4 +122,21 @@
         <message-bundle>messageBundleB</message-bundle>
     </application>
 
+    <render-kit>
+      <renderer>
+          <component-family>javax.faces.Command</component-family>
+          <renderer-type>javax.faces.Button</renderer-type>
+          <renderer-class>net.sourceforge.myfaces.renderkit.html.HtmlButtonRenderer</renderer-class>
+      </renderer>
+    </render-kit>
+
+    <render-kit>
+        <render-kit-id>TEST_RENDER_KIT</render-kit-id>
+        <renderer>
+            <component-family>test.Command</component-family>
+            <renderer-type>test.Button</renderer-type>
+            <renderer-class>net.sourceforge.myfaces.renderkit.html.HtmlButtonRenderer</renderer-class>
+        </renderer>
+    </render-kit>
+
 </faces-config>

@@ -21,6 +21,10 @@ package net.sourceforge.myfaces.confignew;
 
 import java.util.Iterator;
 import javax.faces.FactoryFinder;
+import javax.faces.context.ExternalContext;
+import javax.faces.render.RenderKitFactory;
+import javax.faces.render.RenderKit;
+import javax.faces.render.Renderer;
 import javax.faces.webapp.FacesServlet;
 import javax.faces.lifecycle.Lifecycle;
 import javax.faces.lifecycle.LifecycleFactory;
@@ -40,10 +44,11 @@ import net.sourceforge.myfaces.context.servlet.ServletExternalContextImpl;
 import net.sourceforge.myfaces.el.PropertyResolverImpl;
 import net.sourceforge.myfaces.el.VariableResolverImpl;
 import net.sourceforge.myfaces.confignew.element.ManagedBean;
+import net.sourceforge.myfaces.cactus.MyFacesServletTestCase;
 import org.apache.cactus.ServletTestCase;
 
 
-public class ConfigurationCactusTest extends ServletTestCase
+public class ConfigurationCactusTest extends MyFacesServletTestCase
 {
 
     protected void setUp() throws Exception
@@ -66,7 +71,7 @@ public class ConfigurationCactusTest extends ServletTestCase
 
     public void testConfiguration() throws Exception
     {
-        ServletExternalContextImpl externalContext = new ServletExternalContextImpl(request.getSession().getServletContext(), null, null);
+        ExternalContext externalContext = getContext().getExternalContext();
 
         // test decorator pattern support
 
@@ -125,7 +130,8 @@ public class ConfigurationCactusTest extends ServletTestCase
         ServletContext context = (ServletContext) externalContext.getContext();
         String lifecycleId = context.getInitParameter(FacesServlet.LIFECYCLE_ID_ATTR);
 
-        if (lifecycleId == null) {
+        if (lifecycleId == null)
+        {
             lifecycleId = LifecycleFactory.DEFAULT_LIFECYCLE;
         }
 
@@ -144,7 +150,25 @@ public class ConfigurationCactusTest extends ServletTestCase
     }
 
 
-    public void testNavigationRules() {
+    public void testRenderKit()
+    {
+        RenderKitFactory renderKitFactory = (RenderKitFactory) FactoryFinder.getFactory(FactoryFinder.RENDER_KIT_FACTORY);
+        RenderKit basicHtml = renderKitFactory.getRenderKit(getContext(), RenderKitFactory.HTML_BASIC_RENDER_KIT);
+
+        Renderer renderer = basicHtml.getRenderer("javax.faces.Command", "javax.faces.Button");
+        assertEquals(net.sourceforge.myfaces.renderkit.html.HtmlButtonRenderer.class, renderer.getClass());
+
+        RenderKit testRenderKit = renderKitFactory.getRenderKit(getContext(), "TEST_RENDER_KIT");
+
+        assertNull(basicHtml.getRenderer("test.Command", "test.Button"));
+        renderer = testRenderKit.getRenderer("test.Command", "test.Button");
+        assertEquals(net.sourceforge.myfaces.renderkit.html.HtmlButtonRenderer.class, renderer.getClass());
+
+    }
+
+
+    public void testNavigationRules()
+    {
         // TODO:
     }
 }

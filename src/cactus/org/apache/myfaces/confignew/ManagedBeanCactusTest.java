@@ -31,30 +31,28 @@ import javax.faces.webapp.FacesServlet;
 
 import org.apache.cactus.ServletTestCase;
 import net.sourceforge.myfaces.cactus.TestBean;
+import net.sourceforge.myfaces.cactus.MyFacesServletTestCase;
 
 
 /**
  * @author <a href="mailto:oliver@rossmueller.com">Oliver Rossmueller</a>
  */
-public class ManagedBeanCactusTest extends ServletTestCase
+public class ManagedBeanCactusTest extends MyFacesServletTestCase
 {
 
-    private FacesContext context;
     private VariableResolver variableResolver;
 
 
     protected void setUp() throws Exception
     {
         super.setUp();
-        context = performFacesContextConfig();
-        variableResolver = context.getApplication().getVariableResolver();
-
+        variableResolver = getContext().getApplication().getVariableResolver();
     }
 
 
     public void testManagedProperties()
     {
-        TestBean testManagedProperties = (TestBean) variableResolver.resolveVariable(context, "testManagedProperties");
+        TestBean testManagedProperties = (TestBean) variableResolver.resolveVariable(getContext(), "testManagedProperties");
 
         assertNotNull(testManagedProperties);
         assertEquals(5, testManagedProperties.getNumberPrimitiveLong());
@@ -84,7 +82,7 @@ public class ManagedBeanCactusTest extends ServletTestCase
 
     public void testManagedList()
     {
-        List list = (List) variableResolver.resolveVariable(context, "testList");
+        List list = (List) variableResolver.resolveVariable(getContext(), "testList");
 
         assertNotNull(list);
         assertEquals(4, list.size());
@@ -97,7 +95,7 @@ public class ManagedBeanCactusTest extends ServletTestCase
 
     public void testManagedMap()
     {
-        Map map = (Map) variableResolver.resolveVariable(context, "testMap");
+        Map map = (Map) variableResolver.resolveVariable(getContext(), "testMap");
 
         assertNotNull(map);
         assertEquals(4, map.size());
@@ -108,21 +106,5 @@ public class ManagedBeanCactusTest extends ServletTestCase
         assertTrue(map.containsKey("nullValue"));
     }
 
-
-    private FacesContext performFacesContextConfig()
-    {
-        LifecycleFactory lifecycleFactory = (LifecycleFactory) FactoryFinder.getFactory(FactoryFinder.LIFECYCLE_FACTORY);
-        Lifecycle lifecycle = lifecycleFactory.getLifecycle(getLifecycleId());
-        FacesContextFactory facesCtxFactory = (FacesContextFactory) FactoryFinder.getFactory(FactoryFinder.FACES_CONTEXT_FACTORY);
-        FacesContext ctx = facesCtxFactory.getFacesContext(config.getServletContext(), request, response, lifecycle);
-        return ctx;
-    }
-
-
-    private String getLifecycleId()
-    {
-        String lifecycleId = this.config.getServletContext().getInitParameter(FacesServlet.LIFECYCLE_ID_ATTR);
-        return lifecycleId != null ? lifecycleId : LifecycleFactory.DEFAULT_LIFECYCLE;
-    }
 
 }

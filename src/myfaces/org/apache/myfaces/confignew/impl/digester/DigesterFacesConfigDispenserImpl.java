@@ -21,6 +21,8 @@ package net.sourceforge.myfaces.confignew.impl.digester;
 
 import java.util.*;
 
+import javax.faces.render.RenderKitFactory;
+
 import net.sourceforge.myfaces.confignew.FacesConfigDispenser;
 import net.sourceforge.myfaces.confignew.impl.digester.elements.*;
 
@@ -113,7 +115,13 @@ public class DigesterFacesConfigDispenserImpl implements FacesConfigDispenser
         for (Iterator iterator = config.getRenderKits().iterator(); iterator.hasNext();)
         {
             RenderKit renderKit = (RenderKit) iterator.next();
-            RenderKit existing = (RenderKit) renderKits.get(renderKit.getId());
+            String renderKitId = renderKit.getId();
+
+            if (renderKitId == null) {
+                renderKitId = RenderKitFactory.HTML_BASIC_RENDER_KIT;
+            }
+
+            RenderKit existing = (RenderKit) renderKits.get(renderKitId);
 
             if (existing == null) {
                 renderKits.put(renderKit.getId(), renderKit);
