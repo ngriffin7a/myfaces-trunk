@@ -33,6 +33,7 @@ public class TreeUtils
 {
     private TreeUtils() {}
 
+    /*
     public static UIComponent findComponentById(Tree tree, String componentId)
     {
         return findComponentById(tree.getRoot(), componentId);
@@ -60,11 +61,17 @@ public class TreeUtils
         }
         return null;
     }
+    */
 
 
     public static Iterator treeIterator(Tree tree)
     {
         return new TreeIterator(tree);
+    }
+
+    public static Iterator treeIterator(UIComponent root)
+    {
+        return new TreeIterator(root);
     }
 
     private static class TreeIterator
@@ -77,7 +84,12 @@ public class TreeUtils
 
         public TreeIterator(Tree tree)
         {
-            _next = tree.getRoot();
+            this(tree.getRoot());
+        }
+
+        public TreeIterator(UIComponent root)
+        {
+            _next = root;
             _current = null;
         }
 

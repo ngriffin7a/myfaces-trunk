@@ -18,12 +18,12 @@
  */
 package net.sourceforge.myfaces.component;
 
+import net.sourceforge.myfaces.MyFacesConfig;
 import net.sourceforge.myfaces.convert.Converter;
 import net.sourceforge.myfaces.convert.ConverterException;
 import net.sourceforge.myfaces.convert.ConverterUtils;
 import net.sourceforge.myfaces.convert.impl.StringArrayConverter;
 import net.sourceforge.myfaces.renderkit.html.state.StateRenderer;
-import net.sourceforge.myfaces.MyFacesConfig;
 
 import javax.faces.FacesException;
 import javax.faces.FactoryFinder;
@@ -153,6 +153,29 @@ public class UIComponentUtils
         Message msg = msgRes.getMessage(facesContext, messageId);
         facesContext.addMessage(comp, msg);
     }
+
+
+    /*
+    protected UIComponent findLabelComponent(FacesContext facesContext,
+                                             UIComponent forComponent)
+    {
+        Tree tree = facesContext.getResponseTree();
+        for (Iterator it = TreeUtils.treeIterator(tree); it.hasNext();)
+        {
+            UIComponent comp = (UIComponent)it.next();
+            if (comp.getComponentType().equals(UIOutput.TYPE) &&
+                comp.getRendererType().equals(LabelRenderer.TYPE))
+            {
+                String forAttr = (String)comp.getAttribute(LabelRendererAttributes.FOR_ATTR);
+                if (forAttr != null && forAttr.equals(forComponent.getCompoundId()))
+                {
+                    return comp;
+                }
+            }
+        }
+        return null;
+    }
+    */
 
 
     public static void setTransient(UIComponent uiComponent, boolean b)
