@@ -72,7 +72,7 @@ public class SimpleCountryForm
 
     private SimpleCountry getSimpleCountry()
     {
-        return new SimpleCountry(_id, _name, _isoCode, null);
+        return new SimpleCountry(_id, _name, _isoCode, null, null);
     }
 
     public String save()

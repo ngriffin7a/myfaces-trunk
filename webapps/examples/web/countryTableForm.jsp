@@ -84,6 +84,7 @@ managed beans used:
                        </h:inputText>
 
                    </h:column>
+                   
 
                    <h:column>
                         <h:selectBooleanCheckbox value="#{country.remove}"/>

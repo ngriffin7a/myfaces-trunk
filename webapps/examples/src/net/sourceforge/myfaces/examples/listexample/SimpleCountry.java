@@ -17,6 +17,9 @@ package net.sourceforge.myfaces.examples.listexample;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.List;
+import java.util.Arrays;
+import java.util.Collections;
 
 /**
  * DOCUMENT ME!
@@ -31,13 +34,19 @@ public class SimpleCountry
     private String _isoCode;
     private BigDecimal _size;
     private boolean _remove = false;
+    private List _cities;
 
-    public SimpleCountry(long id, String name, String isoCode, BigDecimal size)
+    public SimpleCountry(long id, String name, String isoCode, BigDecimal size, String[] cities)
     {
         _id = id;
         _name = name;
         _isoCode = isoCode;
         _size = size;
+
+        if(cities!=null)
+            _cities = Arrays.asList(cities);
+        else
+            _cities = Collections.EMPTY_LIST;
     }
 
     public long getId()
@@ -58,6 +67,11 @@ public class SimpleCountry
     public BigDecimal getSize()
     {
         return _size;
+    }
+
+    public List getCities()
+    {
+        return _cities;
     }
 
     public void setId(long id)

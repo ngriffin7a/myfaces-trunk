@@ -94,12 +94,12 @@ public class SimpleCountryList
 
     public SimpleCountryList()
     {
-        _countries.add(new SimpleCountry(1, "AUSTRIA", "AT", new BigDecimal(123)));
-        _countries.add(new SimpleCountry(2, "AZERBAIJAN", "AZ", new BigDecimal(535)));
-        _countries.add(new SimpleCountry(3, "BAHAMAS", "BS", new BigDecimal(1345623)));
-        _countries.add(new SimpleCountry(4, "BAHRAIN", "BH", new BigDecimal(346)));
-        _countries.add(new SimpleCountry(5, "BANGLADESH", "BD", new BigDecimal(456)));
-        _countries.add(new SimpleCountry(6, "BARBADOS", "BB", new BigDecimal(45645)));
+        _countries.add(new SimpleCountry(1, "AUSTRIA", "AT", new BigDecimal(123),new String[]{"Wien","Graz","Linz","Salzburg"}));
+        _countries.add(new SimpleCountry(2, "AZERBAIJAN", "AZ", new BigDecimal(535),new String[]{"Baku","Sumgait","Qabala","Agdam"}));
+        _countries.add(new SimpleCountry(3, "BAHAMAS", "BS", new BigDecimal(1345623),new String[]{"Nassau","Alice Town","Church Grove","West End"}));
+        _countries.add(new SimpleCountry(4, "BAHRAIN", "BH", new BigDecimal(346),new String[]{"Bahrain"}));
+        _countries.add(new SimpleCountry(5, "BANGLADESH", "BD", new BigDecimal(456),new String[]{"Chittagong","Chandpur","Bogra","Feni"}));
+        _countries.add(new SimpleCountry(6, "BARBADOS", "BB", new BigDecimal(45645),new String[]{"Grantley Adams"}));
     }
 
     public List getCountries()

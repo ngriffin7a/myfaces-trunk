@@ -95,6 +95,25 @@ managed beans used:
                        <h:outputText value="#{country.isoCode}" />
                    </h:column>
 
+                   <h:column>
+                       <f:facet name="header">
+                          <h:outputText value="#{example_messages['label_country_cities']}" />
+                       </f:facet>
+                        <x:dataTable id="cities"
+                                styleClass="standardTable_Column"
+                                headerClass="standardTable_Header"
+                                footerClass="standardTable_Header"
+                                rowClasses="standardTable_Row1,standardTable_Row2"
+                                columnClasses="standardTable_Column,standardTable_ColumnCentered,standardTable_Column"
+                                var="city"
+                                value="#{country.cities}"
+                                preserveDataModel="true" >
+                           <h:column>
+                               <h:outputText value="#{city}" />
+                           </h:column>
+                        </x:dataTable>
+                   </h:column>
+
                 </x:dataTable>
 
                 <f:verbatim><br></f:verbatim>
