@@ -18,10 +18,14 @@
  */
 package net.sourceforge.myfaces.util;
 
+import org.apache.commons.el.Coercions;
+import org.apache.commons.el.Logger;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import javax.faces.FacesException;
+import javax.servlet.jsp.el.ELException;
+
 import java.util.Map;
 
 
@@ -34,6 +38,7 @@ public class ClassUtils
 {
     //~ Static fields/initializers -----------------------------------------------------------------
 
+    private static final Logger s_logger          = new Logger(System.out);    
     private static final Log  log                 = LogFactory.getLog(ClassUtils.class);
     public static final Class BYTE_ARRAY_CLASS    = byte[].class;
     public static final Class CHAR_ARRAY_CLASS    = char[].class;
@@ -95,26 +100,31 @@ public class ClassUtils
     {
         try
         {
-            return Class.forName(type, true, Thread.currentThread().getContextClassLoader());
+            return classForName_(type);
+        }
+        catch (ClassNotFoundException e)
+        {
+            log.error(e.getMessage(), e);
+            throw new FacesException(e);
+        }
+    }
+
+    public static Class classForName_(String type) throws ClassNotFoundException
+    {
+        try
+        {
+            return Class.forName(type, false, Thread.currentThread().getContextClassLoader());
         }
         catch (ClassNotFoundException ignore)
         {
-            try
-            {
-                // fallback
-                return Class.forName(type, true, ClassUtils.class.getClassLoader());
-            }
-            catch (ClassNotFoundException e)
-            {
-                log.error(e.getMessage(), e);
-                throw new FacesException(e);
-            }
+            // fallback
+            return Class.forName(type, false, ClassUtils.class.getClassLoader());
         }
-        catch (ExceptionInInitializerError e)
-        {
-            log.error("Error in static initializer of class " + type + ": " + e.getMessage(), e);
-            throw e;
-        }
+//      catch (ExceptionInInitializerError e)
+//      {
+//          log.error("Error in static initializer of class " + type + ": " + e.getMessage(), e);
+//          throw e;
+//      }
     }
 
     public static Class javaTypeToClass(String javaType)
@@ -159,7 +169,7 @@ public class ClassUtils
     }
 
 
-    public static Object convertToType(String value, Class desiredClass)
+    public static Object convertToType(Object value, Class desiredClass)
     {
         if (value == null)
         {
@@ -169,44 +179,50 @@ public class ClassUtils
         {
             return value;
         }
-
+        
         try
         {
-            if (desiredClass.equals(Byte.TYPE) || desiredClass.equals(Byte.class))
-            {
-                return new Byte(value.trim());
-            }
-            else if (desiredClass.equals(Short.TYPE) || desiredClass.equals(Short.class))
-            {
-                return new Short(value.trim());
-            }
-            else if (desiredClass.equals(Integer.TYPE) || desiredClass.equals(Integer.class))
-            {
-                return new Integer(value.trim());
-            }
-            else if (desiredClass.equals(Long.TYPE) || desiredClass.equals(Long.class))
-            {
-                return new Long(value.trim());
-            }
-            else if (desiredClass.equals(Double.TYPE) || desiredClass.equals(Double.class))
-            {
-                return new Double(value.trim());
-            }
-            else if (desiredClass.equals(Float.TYPE) || desiredClass.equals(Float.class))
-            {
-                return new Float(value.trim());
-            }
-            else if (desiredClass.equals(Boolean.TYPE) || desiredClass.equals(Boolean.class))
-            {
-                return Boolean.valueOf(value.trim());
-            }
+            return Coercions.coerce(value, desiredClass, s_logger);
+
+//            if (desiredClass.equals(Byte.TYPE) || desiredClass.equals(Byte.class))
+//            {
+//                return new Byte(value.trim());
+//            }
+//            else if (desiredClass.equals(Short.TYPE) || desiredClass.equals(Short.class))
+//            {
+//                return new Short(value.trim());
+//            }
+//            else if (desiredClass.equals(Integer.TYPE) || desiredClass.equals(Integer.class))
+//            {
+//                return new Integer(value.trim());
+//            }
+//            else if (desiredClass.equals(Long.TYPE) || desiredClass.equals(Long.class))
+//            {
+//                return new Long(value.trim());
+//            }
+//            else if (desiredClass.equals(Double.TYPE) || desiredClass.equals(Double.class))
+//            {
+//                return new Double(value.trim());
+//            }
+//            else if (desiredClass.equals(Float.TYPE) || desiredClass.equals(Float.class))
+//            {
+//                return new Float(value.trim());
+//            }
+//            else if (desiredClass.equals(Boolean.TYPE) || desiredClass.equals(Boolean.class))
+//            {
+//                return Boolean.valueOf(value.trim());
+//            }
+//        }
+//        catch (NumberFormatException e)
+//        {
+//            log.error("NumberFormatException value '" + value + "' type " + desiredClass.getName());
+//            throw e;
         }
-        catch (NumberFormatException e)
+        catch (ELException e)
         {
             log.error("NumberFormatException value '" + value + "' type " + desiredClass.getName());
-            throw e;
+            throw new FacesException(e);
         }
-        throw new UnsupportedOperationException("Conversion to " + desiredClass.getName() + " not yet supported");
     }
 
 //    public static void main(String[] args)

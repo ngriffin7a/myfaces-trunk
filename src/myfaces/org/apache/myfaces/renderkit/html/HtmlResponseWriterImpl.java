@@ -56,31 +56,25 @@ public class HtmlResponseWriterImpl
     private Writer _writer;
     private String _contentType;
     private String _characterEncoding;
-
-    /**
-     * If null, then the element has been closed. This allows empty elements to be either
-     * explicitly closed by calling endElement() (strongly recommeded for avoiding nesting errors)
-     * or implicitly closed by closing an outer element. 
-     */
     private String _startElementName;
+    private boolean _startTagOpen; 
     
-    private static final Set EMPTY_ELEMENTS = new HashSet();
-
+    private static final Set s_emptyHtmlElements = new HashSet();
     static
     {
-        EMPTY_ELEMENTS.add("area");
-        EMPTY_ELEMENTS.add("br");
-        EMPTY_ELEMENTS.add("base");
-        EMPTY_ELEMENTS.add("basefont");
-        EMPTY_ELEMENTS.add("col");
-        EMPTY_ELEMENTS.add("frame");
-        EMPTY_ELEMENTS.add("hr");
-        EMPTY_ELEMENTS.add("img");
-        EMPTY_ELEMENTS.add("input");
-        EMPTY_ELEMENTS.add("isindex");
-        EMPTY_ELEMENTS.add("link");
-        EMPTY_ELEMENTS.add("meta");
-        EMPTY_ELEMENTS.add("param");
+        s_emptyHtmlElements.add("area");
+        s_emptyHtmlElements.add("br");
+        s_emptyHtmlElements.add("base");
+        s_emptyHtmlElements.add("basefont");
+        s_emptyHtmlElements.add("col");
+        s_emptyHtmlElements.add("frame");
+        s_emptyHtmlElements.add("hr");
+        s_emptyHtmlElements.add("img");
+        s_emptyHtmlElements.add("input");
+        s_emptyHtmlElements.add("isindex");
+        s_emptyHtmlElements.add("link");
+        s_emptyHtmlElements.add("meta");
+        s_emptyHtmlElements.add("param");
     }
 
     public HtmlResponseWriterImpl(Writer writer, String contentType, String characterEncoding)
@@ -145,27 +139,31 @@ public class HtmlResponseWriterImpl
         _writer.write('<');
         _writer.write(name);
         _startElementName = name;
+        _startTagOpen = true;
     }
 
     private void closeStartElementIfNecessary() throws IOException
     {
-        if (_startElementName != null)
+        if (_startTagOpen)
         {
-            if (EMPTY_ELEMENTS.contains(_startElementName))
+            if (s_emptyHtmlElements.contains(_startElementName.toLowerCase()))
             {
                 _writer.write(" />");
+                // make null, this will cause NullPointer in some invalid element nestings 
+                // (better than doing nothing)
+                _startElementName = null;
             }
             else
             {    
                 _writer.write('>');
             }
-            _startElementName = null;
+            _startTagOpen = false;
         }
     }
 
     public void endElement(String name) throws IOException
     {
-        if(_startElementName != null)
+        if(_startTagOpen)
         {
             // we will get here only if no text was written after the start element was opened
             _writer.write(" />");
@@ -178,13 +176,14 @@ public class HtmlResponseWriterImpl
             _writer.write(name);
             _writer.write('>');
         }
-        _startElementName = null;
+        
+        _startTagOpen = false;
 //        _currentComponent = null;
     }
 
     public void writeAttribute(String name, Object value, String componentPropertyName) throws IOException
     {
-        if (_startElementName == null)
+        if (!_startTagOpen)
         {
             throw new IllegalStateException("Must be called before the start element is closed");
         }
@@ -213,7 +212,7 @@ public class HtmlResponseWriterImpl
 
     public void writeURIAttribute(String name, Object value, String componentPropertyName) throws IOException
     {
-        if (_startElementName == null)
+        if (!_startTagOpen)
         {
             throw new IllegalStateException("Must be called before the start element is closed");
         }
@@ -242,7 +241,7 @@ public class HtmlResponseWriterImpl
                         // ViewHandler, ResponseWriter and ViewTag
                         // We should try to make this HtmlResponseWriterImpl able
                         // to handle this alone!
-                        if (strValue.indexOf('?') == -1)
+                        if (strValue.indexOf('?') < 0)
                         {
                             strValue = strValue + '?' + JspViewHandlerImpl.URL_STATE_MARKER;
                         }
@@ -270,21 +269,35 @@ public class HtmlResponseWriterImpl
     public void writeText(Object value, String componentPropertyName) throws IOException
     {
         closeStartElementIfNecessary();
-        //TODO: do not escape text within script or style
-
         if(value == null)
             return;
 
         String strValue = value.toString(); //TODO: Use converter for value?
-        _writer.write(HTMLEncoder.encode(strValue, false, false));
+        
+        if (isScriptOrStyle())
+        {
+            _writer.write(strValue);
+        }
+        else
+        {
+            _writer.write(HTMLEncoder.encode(strValue, false, false));
+        }
     }
 
     public void writeText(char cbuf[], int off, int len) throws IOException
     {
         closeStartElementIfNecessary();
-        //TODO: do not escape text within script or style
-        String strValue = new String(cbuf, off, len);
-        _writer.write(HTMLEncoder.encode(strValue, false, false));  //TODO: Make HTMLEncoder support char arrays directly
+
+        if (isScriptOrStyle())
+        {
+            _writer.write(cbuf, off, len);
+        }
+        else
+        {
+            // TODO: Make HTMLEncoder support char arrays directly
+            String strValue = new String(cbuf, off, len);
+            _writer.write(HTMLEncoder.encode(strValue, false, false));
+        }
     }
 
     public ResponseWriter cloneWithWriter(Writer writer)
@@ -301,7 +314,7 @@ public class HtmlResponseWriterImpl
 
     public void close() throws IOException
     {
-        if (_startElementName != null)
+        if (_startTagOpen)
         {
             // we will get here only if no text was written after the start element was opened
             _writer.write(" />");
@@ -330,8 +343,8 @@ public class HtmlResponseWriterImpl
     public void write(String str) throws IOException
     {
         closeStartElementIfNecessary();
-        // empty string commonly used to force the start tag to be closed,
-        // do not call down the writer chain
+        // empty string commonly used to force the start tag to be closed.
+        // in such case, do not call down the writer chain
         if (str.length() > 0)
         {
             _writer.write(str);
@@ -344,6 +357,15 @@ public class HtmlResponseWriterImpl
         _writer.write(str, off, len);
     }
 
+    private boolean isScriptOrStyle()
+    {
+        char firstChar = _startElementName.charAt(0); 
+        return (
+            (firstChar == 's' || firstChar == 'S') 
+            && 
+            (_startElementName.equalsIgnoreCase(HTML.SCRIPT_ELEM) 
+                || _startElementName.equalsIgnoreCase(HTML.STYLE_ELEM)));
+    }
 
 
     // DummyFormResponseWriter support

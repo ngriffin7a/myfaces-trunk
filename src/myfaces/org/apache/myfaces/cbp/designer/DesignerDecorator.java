@@ -30,6 +30,7 @@ import net.sf.cglib.proxy.MethodInterceptor;
 import net.sf.cglib.proxy.MethodProxy;
 import net.sourceforge.myfaces.component.ext.Screen;
 import net.sourceforge.myfaces.renderkit.RenderUtil;
+import net.sourceforge.myfaces.renderkit.html.HTML;
 import net.sourceforge.myfaces.renderkit.html.ext.ScreenRenderer;
 
 
@@ -43,6 +44,7 @@ public class DesignerDecorator implements MethodInterceptor {
 	private static DesignerDecorator instance = new DesignerDecorator();
 	
 	private DesignerDecorator() {
+        // disable public instantiation
 	}
 	
 	public static DesignerDecorator getInstance() {
@@ -55,7 +57,8 @@ public class DesignerDecorator implements MethodInterceptor {
 	public Object intercept(Object obj, Method method, Object[] args, MethodProxy proxy) throws Throwable {
 		Object ret = null;
 
-		if(!DesignerContext.inDesignMode()) {
+        // during finalize() we do not have FacesContext
+		if(!method.getName().endsWith(".finalize()") || !DesignerContext.inDesignMode()) {
 			ret = proxy.invokeSuper(obj,args); 
 		} else if(obj instanceof ScreenRenderer) {
 			ret = proxy.invokeSuper(obj,args); 
@@ -106,13 +109,13 @@ public class DesignerDecorator implements MethodInterceptor {
 
 			ret = proxy.invokeSuper(obj,args);
 		} else if(obj instanceof Renderer && method.getName().equals("encodeEnd")) {
-			UIComponent component = (UIComponent) args[1];
+			// UIComponent component = (UIComponent) args[1];
 
 			FacesContext ctx = FacesContext.getCurrentInstance();
 			ResponseWriter out = ctx.getResponseWriter();
 			
 			ret = proxy.invokeSuper(obj,args); 
-			out.endElement("span");
+			out.endElement(HTML.SPAN_ELEM);
 		} else if(method.getName().equals("decode")) {
 			// Disable the decode operations in design mode. Don't want application specific event
 			// handlers firing, etc....

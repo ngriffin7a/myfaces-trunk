@@ -22,144 +22,138 @@ import javax.faces.component.UIViewRoot;
 import javax.faces.context.FacesContext;
 
 import net.sourceforge.myfaces.application.cbp.StateManagerImpl;
+import net.sourceforge.myfaces.util.ClassUtils;
 
 /**
  * @author Dimitry D'hondt
- *
+ * @author Anton Koinov
+ * 
  * Utilities for the ViewHandler and StateManager selectors.
  */
-public class SelectorUtils {
-	/**
-	 * Determines the package where the descriptor classes are located.
-	 * @param context
-	 * @return
-	 */
-	public static String getDescriptorPackage(FacesContext context) {
-		String ret = "";	// Default package.
-		String temp;
-		
-		// Try to determine descriptor package...
-		temp = context.getExternalContext().getInitParameter("net.sourceforge.smile.descriptor.package"); 
-		if(temp != null) {
-			ret = temp;
-			if(!ret.endsWith(".")) {
-				ret = ret + ".";
-			}
-		}
-		
-		return ret;
-	}
+public class SelectorUtils
+{
+    /**
+     * Determines the package where the descriptor classes are located.
+     * 
+     * @param context
+     * @return
+     */
+    public static String getDescriptorPackage(FacesContext context)
+    {
+        String ret = ""; // Default package.
 
-	/**
-	 * Determines the postfix for the descriptor class.
-	 * @param context
-	 * @return
-	 */
-	public static String getDescriptorPostfix(FacesContext context) {
-		String ret = "";	// Default.
-		String temp;
-		
-		// Try to determine descriptor package...
-		temp = context.getExternalContext().getInitParameter("net.sourceforge.smile.descriptor.postfix"); 
-		if(temp != null) {
-			ret = temp;
-		}
-		
-		return ret;
-	}
+        // Try to determine descriptor package...
+        String temp = context.getExternalContext().getInitParameter(
+            "net.sourceforge.smile.descriptor.package");
+        if (temp != null)
+        {
+            ret = temp;
+            if (!ret.endsWith("."))
+            {
+                ret = ret + ".";
+            }
+        }
 
-	/**
-	 * This operation determines if the supplied viewId maps to a CBP page.
-	 * This is basically done by determining if any of the CBT packages contain
-	 * classes that correspond to the name of the supplied viewId.
-	 *  
-	 * @param viewRoot
-	 * @return
-	 */
-	public static boolean isPageJSP(String viewId) {
-		boolean ret = false;
-		
-		if(viewId != null && getDescriptorClassNameForViewId(viewId) == null) {
-			ret = true;
-		}
-		
-		return ret;
-	}
+        return ret;
+    }
 
-	/**
-	 * This operation determines if the supplied viewRoot maps to a CBP page.
-	 * This is basically done by determining if any of the CBT packages contain
-	 * classes that correspond to the name of the supplied viewId.
-	 *  
-	 * @param viewRoot
-	 * @return
-	 */	
-	public static boolean isPageJSP(UIViewRoot viewRoot) {
-		boolean ret = false;
-		
-		if(viewRoot != null) {
-			String viewId = viewRoot.getViewId();
-			ret = isPageJSP(viewId);
-		}
-		
-		return ret;
-	}
-	
-	/**
-	 * This operation looks at the current component tree, and determines if
-	 * it is a CBP page, or JSP page.
-	 * @return
-	 */
-	public static boolean isCurrentPageJSP() {
-		boolean ret = false;
-		UIViewRoot viewRoot = null;
-		
-		viewRoot = getCurrentViewRoot();
-		if(viewRoot != null) {
-			ret = isPageJSP(viewRoot);
-		}
-		
-		return ret;
-	}
-	
-	/**
-	 * This function is responsible for finding the descriptor class for a given
-	 * viewId. The policy may change over time, like supporting multiple packages
-	 * or mory flexible mapping of viewIds to descriptor classes,etc..
-	 *  
-	 * @param viewId
-	 * @return the descriptor class for a given viewId, or null if no descriptor found.
-	 */
-	public static Class getDescriptorClassNameForViewId(String viewId) {
-		Class ret = null;
-		String className;
-		FacesContext ctx = FacesContext.getCurrentInstance();
-				
-		// TODO : We should implement a configurable scheme with more than one package.	
-		if(viewId.endsWith(".jsf") || viewId.endsWith(".jsp")) {
-			String shortClassName = viewId.substring(0,viewId.length()-4);
-			if(shortClassName.startsWith("/")) {
-				shortClassName = shortClassName.substring(1,shortClassName.length());
-			}
-			
-			className = getDescriptorPackage(ctx) + shortClassName + getDescriptorPostfix(ctx);
-			try {
-				ret = Class.forName(className);
-			} catch(ClassNotFoundException e) {
-				ret = null;
-			}
-		}
-		
-		return ret;
-	}
+    /**
+     * Determines the postfix for the descriptor class.
+     * 
+     * @param context
+     * @return
+     */
+    public static String getDescriptorPostfix(FacesContext context)
+    {
+        // Try to determine descriptor package...
+        String pacakge = context.getExternalContext().getInitParameter(
+            "net.sourceforge.smile.descriptor.postfix");
+        return (pacakge != null) ? pacakge : "";
+    }
+
+    /**
+     * This operation determines if the supplied viewId maps to a CBP page.
+     * This is basically done by determining if any of the CBT packages contain
+     * classes that correspond to the name of the supplied viewId.
+     * 
+     * @param viewId
+     * @return
+     */
+    public static boolean isPageJSP(FacesContext facesContext, String viewId)
+    {
+        return (viewId != null)
+            && getDescriptorClassNameForViewId(facesContext, viewId) == null;
+    }
+
+    /**
+     * This operation determines if the supplied viewRoot maps to a CBP page.
+     * This is basically done by determining if any of the CBT packages contain
+     * classes that correspond to the name of the supplied viewId.
+     * 
+     * @param viewRoot
+     * @return
+     */
+    public static boolean isPageJSP(FacesContext facesContext, UIViewRoot viewRoot)
+    {
+        return (viewRoot != null)
+            ? isPageJSP(facesContext, viewRoot.getViewId()) : false;
+    }
+
+    /**
+     * This operation looks at the current component tree, and determines if it
+     * is a CBP page, or JSP page.
+     * 
+     * @return
+     */
+    public static boolean isCurrentPageJSP(FacesContext facesContext)
+    {
+        UIViewRoot viewRoot = getCurrentViewRoot(facesContext);
+        return (viewRoot != null)
+            ? isPageJSP(facesContext, viewRoot) : false;
+    }
+
+    /**
+     * This function is responsible for finding the descriptor class for a
+     * given viewId. The policy may change over time, like supporting multiple
+     * packages or more flexible mapping of viewIds to descriptor classes,etc..
+     * 
+     * @param viewId
+     * @return the descriptor class for a given viewId, or null if no
+     *         descriptor found.
+     */
+    public static Class getDescriptorClassNameForViewId(FacesContext facesContext, String viewId)
+    {
+        // TODO : We should implement a configurable scheme with more than one
+        // package.
+        if (viewId.endsWith(".jsf") || viewId.endsWith(".jsp"))
+        {
+            int startIndex = viewId.charAt(0) == '/' ? 1 : 0;
+            String shortClassName = viewId.substring(startIndex, viewId.length() - 4);
+            String className = getDescriptorPackage(facesContext) + shortClassName
+                + getDescriptorPostfix(facesContext);
+            
+            try
+            {
+                return ClassUtils.classForName_(className);
+            }
+            catch (ClassNotFoundException e)
+            {
+                return null;
+            }
+        }
+
+        return null;
+    }
 
 
-	/**
-	 * Determines the current ViewRoot.
-	 * @return
-	 */
-	public static UIViewRoot getCurrentViewRoot() {
-		FacesContext ctx = FacesContext.getCurrentInstance();
-		return (UIViewRoot) ctx.getExternalContext().getSessionMap().get(StateManagerImpl.SESSION_KEY_CURRENT_VIEW);
-	}
+    /**
+     * Determines the current ViewRoot.
+     * 
+     * @return
+     */
+    public static UIViewRoot getCurrentViewRoot(FacesContext facesContext)
+    {
+        return (UIViewRoot) facesContext.getExternalContext().getSessionMap()
+            .get(StateManagerImpl.SESSION_KEY_CURRENT_VIEW);
+    }
 }

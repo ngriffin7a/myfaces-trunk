@@ -19,11 +19,13 @@
 package net.sourceforge.myfaces.config;
 
 import net.sf.cglib.proxy.Enhancer;
+import net.sourceforge.myfaces.MyFacesConfig;
 import net.sourceforge.myfaces.cbp.designer.DesignerDecorator;
-import net.sourceforge.myfaces.cbp.designer.DesignerContext;
 import net.sourceforge.myfaces.util.ClassUtils;
 import net.sourceforge.myfaces.util.NullIterator;
 
+import javax.faces.FacesException;
+import javax.faces.context.ExternalContext;
 import javax.faces.render.Renderer;
 import java.util.*;
 
@@ -196,17 +198,27 @@ public class RendererConfig implements Config
         _supportedComponentTypeSet.add(componentType);
     }
 
-    public Renderer newRenderer()
+    public Renderer newRenderer(ExternalContext externalContext)
     {
-    	Renderer ret = null;
-    	
 		Class rendererClass = getRendererClass();
-		Enhancer enhancer = new Enhancer();
-		enhancer.setSuperclass(rendererClass);
-		enhancer.setCallback(DesignerDecorator.getInstance());
-		ret = (Renderer) enhancer.create();   	
-    	
-        return ret;
+        if (MyFacesConfig.isAllowDesignMode(externalContext))
+        {
+    		Enhancer enhancer = new Enhancer();
+    		enhancer.setSuperclass(rendererClass);
+    		enhancer.setCallback(DesignerDecorator.getInstance());
+    		return (Renderer) enhancer.create();
+        }
+        else
+        {
+            try
+            {
+                return (Renderer) rendererClass.newInstance();
+            }
+            catch (Exception e)
+            {
+                throw new FacesException(e);
+            }
+        }
     }
 
     public boolean supportsComponentClass(Class componentClass)

@@ -44,9 +44,11 @@ public class MyFacesConfig
     private static final String PARAM_prettyHtml = "myfaces_pretty_html";
     private static final boolean DEFAULT_prettyHtml = true;
 
-
     private static final String PARAM_checkJspModification = "myfaces_CheckJspModification";
     private static final boolean DEFAULT_checkJspModification = true;
+    
+    private static final String PARAM_allowDesignMode = "myfaces_allow_designmode";
+    private static final boolean DEFAULT_allowDesignMode = false;
 
     public static final int STATE_SAVING_MODE__SERVER_SESSION = 1;
     public static final int STATE_SAVING_MODE__CLIENT_SERIALIZED = 2;
@@ -81,11 +83,19 @@ public class MyFacesConfig
                                        DEFAULT_prettyHtml);
     }
     
+    public static boolean isAllowDesignMode(ExternalContext externalContext)
+    {
+        return getBooleanInitParameter(externalContext,
+                                       PARAM_allowDesignMode,
+                                       DEFAULT_allowDesignMode);
+    }
+
     protected static boolean getBooleanInitParameter(ExternalContext externalContext,
                                                      String paramName,
                                                      boolean defaultValue)
     {
-        String strValue = externalContext.getInitParameter(paramName);
+        String strValue = (externalContext != null) 
+            ? externalContext.getInitParameter(paramName) : null;
         if (strValue == null)
         {
             if (log.isInfoEnabled()) log.info("No context init parameter '" + paramName + "' found, using default value " + defaultValue);

@@ -75,7 +75,7 @@ public class RenderKitFactoryConfigurator
                 rk = rkc.newRenderKit();
                 rkf.addRenderKit(id, rk);
             }
-            new RenderKitConfigurator(rkc).configure(rk, id);
+            new RenderKitConfigurator(rkc).configure(externalContext, rk, id);
         }
     }
 

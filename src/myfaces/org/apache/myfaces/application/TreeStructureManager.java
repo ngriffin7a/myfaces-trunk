@@ -153,7 +153,7 @@ public class TreeStructureManager
         private TreeStructComponent[] _children = null;    // Array of children
         private Object[] _facets = null;                   // Array of Array-tuples with Facetname and TreeStructComponent
 
-        private TreeStructComponent(String componentClass, String componentId)
+        TreeStructComponent(String componentClass, String componentId)
         {
             _componentClass = componentClass;
             _componentId = componentId;
@@ -169,22 +169,22 @@ public class TreeStructureManager
             return _componentId;
         }
 
-        private void setChildren(TreeStructComponent[] children)
+        void setChildren(TreeStructComponent[] children)
         {
             _children = children;
         }
 
-        private TreeStructComponent[] getChildren()
+        TreeStructComponent[] getChildren()
         {
             return _children;
         }
 
-        private Object[] getFacets()
+        Object[] getFacets()
         {
             return _facets;
         }
 
-        private void setFacets(Object[] facets)
+        void setFacets(Object[] facets)
         {
             _facets = facets;
         }

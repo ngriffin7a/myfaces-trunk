@@ -71,6 +71,16 @@
         </description>
     </context-param>
 
+    <context-param>
+        <param-name>myfaces_allow_designmode</param-name>
+        <param-value>false</param-value>
+        <description>
+            If true, implements design mode using CGLib binary class changes.
+            This creates a performance hit and should be used only when needed.
+            Default: "false"
+        </description>
+    </context-param>
+
 	<context-param>
 		<param-name>net.sourceforge.smile.descriptor.package</param-name>
 		<param-value>net.sourceforge.smile.demo</param-value>

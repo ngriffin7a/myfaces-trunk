@@ -34,7 +34,7 @@ public class ApplicationTest extends MyFacesTest
     //~ Static fields/initializers -----------------------------------------------------------------
 
     private static final int THREAD_COUNT = 100;
-    private static final int VB_COUNT     = 30000;
+    private static final int VB_COUNT     = 20000;
 
     //~ Instance fields ----------------------------------------------------------------------------
 

@@ -22,150 +22,132 @@ import java.io.IOException;
 import java.util.Locale;
 
 import javax.faces.FacesException;
-import javax.faces.application.StateManager;
 import javax.faces.application.ViewHandler;
 import javax.faces.component.UIViewRoot;
 import javax.faces.context.FacesContext;
 
-import net.sourceforge.myfaces.application.cbp.StateManagerImpl;
 import net.sourceforge.myfaces.application.cbp.ViewHandlerImpl;
 import net.sourceforge.myfaces.application.jsp.JspViewHandlerImpl;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 /**
- * This class selects the ViewHandler to use, on a per-request basis.
- * Basically it looks if the viewId of the page maps onto a CBP page, or not.
- * If it does it does, the ViewHandler from Smile will be used.
+ * This class selects the ViewHandler to use, on a per-request basis. Basically
+ * it looks if the viewId of the page maps onto a CBP page, or not. If it does
+ * it does, the ViewHandler from Smile will be used.
  * 
  * @author Dimitry D'hondt.
+ * @author Anton Koinov
  */
-public class ViewHandlerSelector extends ViewHandler {
-	private static Log log = LogFactory.getLog(ViewHandlerSelector.class);
-	
-	private ViewHandler jspHandler = null;
-	private ViewHandler cbpHandler = null;
-	private StateManager stateManager = null;
-	
-	/**
-	 * Default constructor
-	 */
-	public ViewHandlerSelector() {
-		jspHandler = new JspViewHandlerImpl();
-		cbpHandler = new ViewHandlerImpl();
-		stateManager = new StateManagerImpl();
-	}
-	
-	/**
-	 * @see javax.faces.application.ViewHandler#renderView(javax.faces.context.FacesContext, javax.faces.component.UIViewRoot)
-	 */
-	public void renderView(FacesContext ctx, UIViewRoot viewRoot) throws IOException, FacesException {
-		if(!SelectorUtils.isPageJSP(viewRoot)) {
-			cbpHandler.renderView(ctx,viewRoot);
-		} else {
-			jspHandler.renderView(ctx,viewRoot);
-		}
-	}
+public class ViewHandlerSelector extends ViewHandler
+{
+    private ViewHandler jspHandler = null;
+    private ViewHandler cbpHandler = null;
 
-	/**
-	 * @see javax.faces.application.ViewHandler#restoreView(javax.faces.context.FacesContext, java.lang.String)
-	 */
-	public UIViewRoot restoreView(FacesContext ctx, String viewId) {
-		UIViewRoot ret = null;
-		
-		if(!SelectorUtils.isPageJSP(viewId)) {
-			ret = cbpHandler.restoreView(ctx,viewId);
-		} else {
-			ret = jspHandler.restoreView(ctx,viewId);
-		}
-		
-		return ret;
-	}
+    //	private StateManager stateManager = null;
 
-	/**
-	 * @see javax.faces.application.ViewHandler#createView(javax.faces.context.FacesContext, java.lang.String)
-	 */
-	public UIViewRoot createView(FacesContext ctx, String viewId) {
-		UIViewRoot ret = null;
-		
-		if(!SelectorUtils.isPageJSP(viewId)) {
-			ret = cbpHandler.createView(ctx,viewId);
-		} else {
-			ret = jspHandler.createView(ctx,viewId);
-		}
-		
-		return ret;
-	}
+    /**
+     * Default constructor
+     */
+    public ViewHandlerSelector()
+    {
+        jspHandler = new JspViewHandlerImpl();
+        cbpHandler = new ViewHandlerImpl();
+        //		stateManager = new StateManagerImpl();
+    }
 
-	/**
-	 * @see javax.faces.application.ViewHandler#writeState(javax.faces.context.FacesContext)
-	 */
-	public void writeState(FacesContext ctx) throws IOException {
-		if(!SelectorUtils.isCurrentPageJSP()) {
-			cbpHandler.writeState(ctx);
-		} else {
-			jspHandler.writeState(ctx);
-		}
-	}
+    /**
+     * @see javax.faces.application.ViewHandler#renderView(javax.faces.context.FacesContext,
+     *      javax.faces.component.UIViewRoot)
+     */
+    public void renderView(FacesContext ctx, UIViewRoot viewRoot)
+        throws IOException, FacesException
+    {
+        if (!SelectorUtils.isPageJSP(ctx, viewRoot))
+        {
+            cbpHandler.renderView(ctx, viewRoot);
+        }
+        else
+        {
+            jspHandler.renderView(ctx, viewRoot);
+        }
+    }
 
-	/**
-	 * @see javax.faces.application.ViewHandler#calculateLocale(javax.faces.context.FacesContext)
-	 */
-	public Locale calculateLocale(FacesContext ctx) {
-		Locale ret = null;
-		
-		if(!SelectorUtils.isCurrentPageJSP()) {
-			ret = cbpHandler.calculateLocale(ctx);
-		} else {
-			ret = jspHandler.calculateLocale(ctx);
-		}
-		
-		return ret;
-	}
-	
-	/**
-	 * @see javax.faces.application.ViewHandler#calculateRenderKitId(javax.faces.context.FacesContext)
-	 */
-	public String calculateRenderKitId(FacesContext ctx) {
-		String ret = null;
-		
-		if(!SelectorUtils.isCurrentPageJSP()) {
-			ret = cbpHandler.calculateRenderKitId(ctx);
-		} else {
-			ret = jspHandler.calculateRenderKitId(ctx);
-		}
-		
-		return ret;
-	}
+    /**
+     * @see javax.faces.application.ViewHandler#restoreView(javax.faces.context.FacesContext,
+     *      java.lang.String)
+     */
+    public UIViewRoot restoreView(FacesContext ctx, String viewId)
+    {
+        return (!SelectorUtils.isPageJSP(ctx, viewId))
+            ? cbpHandler.restoreView(ctx, viewId)
+            : jspHandler.restoreView(ctx, viewId);
+    }
 
-	/**
-	 * @see javax.faces.application.ViewHandler#getActionURL(javax.faces.context.FacesContext, java.lang.String)
-	 */
-	public String getActionURL(FacesContext ctx, String viewId) {
-		String ret = null;
-		
-		if(!SelectorUtils.isPageJSP(viewId)) {
-			cbpHandler.getActionURL(ctx,viewId);
-		} else {
-			jspHandler.getActionURL(ctx,viewId);
-		}
-		
-		return ret;
-	}
+    /**
+     * @see javax.faces.application.ViewHandler#createView(javax.faces.context.FacesContext,
+     *      java.lang.String)
+     */
+    public UIViewRoot createView(FacesContext ctx, String viewId)
+    {
+        return (!SelectorUtils.isPageJSP(ctx, viewId))
+            ? cbpHandler.createView(ctx, viewId)
+            : jspHandler.createView(ctx, viewId);
+    }
 
-	/**
-	 * @see javax.faces.application.ViewHandler#getResourceURL(javax.faces.context.FacesContext, java.lang.String)
-	 */
-	public String getResourceURL(FacesContext ctx, String path) {
-		String ret = null;
-		
-		if(!SelectorUtils.isCurrentPageJSP()) {
-			ret = cbpHandler.getResourceURL(ctx,path);
-		} else {
-			ret = jspHandler.getResourceURL(ctx,path);
-		}
-		
-		return ret;
-	}
+    /**
+     * @see javax.faces.application.ViewHandler#writeState(javax.faces.context.FacesContext)
+     */
+    public void writeState(FacesContext ctx)
+        throws IOException
+    {
+        if (!SelectorUtils.isCurrentPageJSP(ctx))
+        {
+            cbpHandler.writeState(ctx);
+        }
+        else
+        {
+            jspHandler.writeState(ctx);
+        }
+    }
+
+    /**
+     * @see javax.faces.application.ViewHandler#calculateLocale(javax.faces.context.FacesContext)
+     */
+    public Locale calculateLocale(FacesContext ctx)
+    {
+        return (!SelectorUtils.isCurrentPageJSP(ctx))
+            ? cbpHandler.calculateLocale(ctx)
+            : jspHandler.calculateLocale(ctx);
+    }
+
+    /**
+     * @see javax.faces.application.ViewHandler#calculateRenderKitId(javax.faces.context.FacesContext)
+     */
+    public String calculateRenderKitId(FacesContext ctx)
+    {
+        return (!SelectorUtils.isCurrentPageJSP(ctx))
+            ?  cbpHandler.calculateRenderKitId(ctx)
+            :  jspHandler.calculateRenderKitId(ctx);
+    }
+
+    /**
+     * @see javax.faces.application.ViewHandler#getActionURL(javax.faces.context.FacesContext,
+     *      java.lang.String)
+     */
+    public String getActionURL(FacesContext ctx, String viewId)
+    {
+        return (!SelectorUtils.isPageJSP(ctx, viewId))
+            ? cbpHandler.getActionURL(ctx, viewId)
+            : jspHandler.getActionURL(ctx, viewId);
+    }
+
+    /**
+     * @see javax.faces.application.ViewHandler#getResourceURL(javax.faces.context.FacesContext,
+     *      java.lang.String)
+     */
+    public String getResourceURL(FacesContext ctx, String path)
+    {
+        return (!SelectorUtils.isCurrentPageJSP(ctx))
+            ? cbpHandler.getResourceURL(ctx, path)
+            : jspHandler.getResourceURL(ctx, path);
+    }
 }

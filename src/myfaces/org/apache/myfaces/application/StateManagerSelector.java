@@ -27,118 +27,124 @@ import javax.faces.context.FacesContext;
 import net.sourceforge.myfaces.application.cbp.StateManagerImpl;
 import net.sourceforge.myfaces.application.jsp.JspStateManagerImpl;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 /**
  * @author Dimitry D'hondt
- *
- * This class selects between the CBP and the JSP implementation of the
- * state manager.
+ * @author Anton Koinov
+ * 
+ * This class selects between the CBP and the JSP implementation of the state
+ * manager.
  */
-public class StateManagerSelector extends MyfacesStateManager {
+public class StateManagerSelector extends MyfacesStateManager
+{
+    private StateManager        cbpManager = null;
+    private MyfacesStateManager jspManager = null;
 
-	private static Log log = LogFactory.getLog(StateManagerSelector.class);
-	private StateManager cbpManager = null;
-	private MyfacesStateManager jspManager = null;
+    public StateManagerSelector()
+    {
+        cbpManager = new StateManagerImpl();
+        jspManager = new JspStateManagerImpl();
+    }
 
-	public StateManagerSelector() {
-		cbpManager = new StateManagerImpl();
-		jspManager = new JspStateManagerImpl();
-	}
+    /**
+     * @see javax.faces.application.StateManager#getComponentStateToSave(javax.faces.context.FacesContext)
+     */
+    protected Object getComponentStateToSave(FacesContext context)
+    {
+        throw new UnsupportedOperationException();
+    }
 
-	/**
-	 * @see javax.faces.application.StateManager#getComponentStateToSave(javax.faces.context.FacesContext)
-	 */
-	protected Object getComponentStateToSave(FacesContext context) {
-		throw new UnsupportedOperationException();
-	}
+    /**
+     * @see javax.faces.application.StateManager#getTreeStructureToSave(javax.faces.context.FacesContext)
+     */
+    protected Object getTreeStructureToSave(FacesContext context)
+    {
+        throw new UnsupportedOperationException();
+    }
 
-	/**
-	 * @see javax.faces.application.StateManager#getTreeStructureToSave(javax.faces.context.FacesContext)
-	 */
-	protected Object getTreeStructureToSave(FacesContext context) {
-		throw new UnsupportedOperationException();
-	}
+    /**
+     * @see javax.faces.application.StateManager#isSavingStateInClient(javax.faces.context.FacesContext)
+     */
+    public boolean isSavingStateInClient(FacesContext context)
+    {
+        return (SelectorUtils.isCurrentPageJSP(context)) 
+            ? jspManager.isSavingStateInClient(context) 
+            : cbpManager.isSavingStateInClient(context);
+    }
 
-	/**
-	 * @see javax.faces.application.StateManager#isSavingStateInClient(javax.faces.context.FacesContext)
-	 */
-	public boolean isSavingStateInClient(FacesContext context) {
-		boolean ret = false;
-		
-		if(SelectorUtils.isCurrentPageJSP()) {
-			ret = jspManager.isSavingStateInClient(context);
-		} else {
-			ret = cbpManager.isSavingStateInClient(context);
-		}
-		
-		return ret;
-	}
+    /**
+     * @see javax.faces.application.StateManager#restoreComponentState(javax.faces.context.FacesContext,
+     *      javax.faces.component.UIViewRoot, java.lang.String)
+     */
+    protected void restoreComponentState(FacesContext context,
+        UIViewRoot viewRoot, String renderKitId)
+    {
+        throw new UnsupportedOperationException();
+    }
 
-	/**
-	 * @see javax.faces.application.StateManager#restoreComponentState(javax.faces.context.FacesContext, javax.faces.component.UIViewRoot, java.lang.String)
-	 */
-	protected void restoreComponentState(FacesContext context, UIViewRoot viewRoot, String renderKitId) {
-		throw new UnsupportedOperationException();
-	}
+    /**
+     * @see javax.faces.application.StateManager#restoreTreeStructure(javax.faces.context.FacesContext,
+     *      java.lang.String, java.lang.String)
+     */
+    protected UIViewRoot restoreTreeStructure(FacesContext context,
+        String viewId, String renderKitId)
+    {
+        throw new UnsupportedOperationException();
+    }
 
-	/**
-	 * @see javax.faces.application.StateManager#restoreTreeStructure(javax.faces.context.FacesContext, java.lang.String, java.lang.String)
-	 */
-	protected UIViewRoot restoreTreeStructure(FacesContext context, String viewId, String renderKitId) {
-		throw new UnsupportedOperationException();
-	}
+    /**
+     * @see javax.faces.application.StateManager#restoreView(javax.faces.context.FacesContext,
+     *      java.lang.String, java.lang.String)
+     */
+    public UIViewRoot restoreView(FacesContext context, String viewId,
+        String renderKitId)
+    {
+        return (SelectorUtils.isCurrentPageJSP(context))
+            ? jspManager.restoreView(context, viewId, renderKitId)
+            : cbpManager.restoreView(context, viewId, renderKitId);
+    }
 
-	/**
-	 * @see javax.faces.application.StateManager#restoreView(javax.faces.context.FacesContext, java.lang.String, java.lang.String)
-	 */
-	public UIViewRoot restoreView(FacesContext context, String viewId, String renderKitId) {
-		UIViewRoot ret = null;
-		
-		if(SelectorUtils.isCurrentPageJSP()) {
-			ret = jspManager.restoreView(context, viewId, renderKitId);
-		} else {
-			ret = cbpManager.restoreView(context, viewId, renderKitId);
-		}
-		
-		return ret;
-	}
+    /**
+     * @see javax.faces.application.StateManager#saveSerializedView(javax.faces.context.FacesContext)
+     */
+    public SerializedView saveSerializedView(FacesContext context)
+    {
+        return (SelectorUtils.isCurrentPageJSP(context))
+            ? jspManager.saveSerializedView(context)
+            : cbpManager.saveSerializedView(context);
+    }
 
-	/**
-	 * @see javax.faces.application.StateManager#saveSerializedView(javax.faces.context.FacesContext)
-	 */
-	public SerializedView saveSerializedView(FacesContext context) {
-		SerializedView ret = null;
-		
-		if(SelectorUtils.isCurrentPageJSP()) {
-			ret = jspManager.saveSerializedView(context);
-		} else {
-			ret = cbpManager.saveSerializedView(context);
-		}
-		
-		return ret; 
-	}
+    /**
+     * @see javax.faces.application.StateManager#writeState(javax.faces.context.FacesContext,
+     *      javax.faces.application.StateManager.SerializedView)
+     */
+    public void writeState(FacesContext context, SerializedView state)
+        throws IOException
+    {
+        if (SelectorUtils.isCurrentPageJSP(context))
+        {
+            jspManager.writeState(context, state);
+        }
+        else
+        {
+            cbpManager.writeState(context, state);
+        }
+    }
 
-	/**
-	 * @see javax.faces.application.StateManager#writeState(javax.faces.context.FacesContext, javax.faces.application.StateManager.SerializedView)
-	 */
-	public void writeState(FacesContext context, SerializedView state) throws IOException {
-		if(SelectorUtils.isCurrentPageJSP()) {
-			jspManager.writeState(context, state);
-		} else {
-			cbpManager.writeState(context, state);
-		}
-	}
-	
-	/**
-	 * @see net.sourceforge.myfaces.application.MyfacesStateManager#writeStateAsUrlParams(javax.faces.context.FacesContext, javax.faces.application.StateManager.SerializedView)
-	 */
-	public void writeStateAsUrlParams(FacesContext facesContext, SerializedView serializedView) throws IOException {
-		if(SelectorUtils.isCurrentPageJSP()) {
-			jspManager.writeStateAsUrlParams(facesContext, serializedView);
-		} else {
-			throw new UnsupportedOperationException();
-		}
-	}
+    /**
+     * @see net.sourceforge.myfaces.application.MyfacesStateManager#writeStateAsUrlParams(javax.faces.context.FacesContext,
+     *      javax.faces.application.StateManager.SerializedView)
+     */
+    public void writeStateAsUrlParams(FacesContext facesContext,
+        SerializedView serializedView)
+        throws IOException
+    {
+        if (SelectorUtils.isCurrentPageJSP(facesContext))
+        {
+            jspManager.writeStateAsUrlParams(facesContext, serializedView);
+        }
+        else
+        {
+            throw new UnsupportedOperationException();
+        }
+    }
 }

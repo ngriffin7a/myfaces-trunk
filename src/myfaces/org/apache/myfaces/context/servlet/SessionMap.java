@@ -126,8 +126,8 @@ public class SessionMap
      */
     public Object get(Object key)
     {
-        return _httpSession == null ? null : _httpSession.getAttribute(key
-            .toString());
+        return _httpSession == null 
+            ? null : _httpSession.getAttribute(key.toString());
     }
 
     /**

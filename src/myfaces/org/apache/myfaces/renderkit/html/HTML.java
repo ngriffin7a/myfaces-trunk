@@ -29,7 +29,10 @@ import net.sourceforge.myfaces.util.ArrayUtils;
  */
 public class HTML
 {
-    private HTML() {} // disable instantiation
+    private HTML() 
+    {
+        // disable instantiation
+    } 
 
     public static final String INPUT_CHECKED_VALUE = "checked";
     public static final String INPUT_SELECTED_VALUE = "selected";
@@ -367,6 +370,8 @@ public class HTML
     public static final String TBODY_ELEM = "tbody";
     public static final String TFOOT_ELEM = "tfoot";
     public static final String THEAD_ELEM = "thead";
+    public static final String STYLE_ELEM = "style";
+    public static final String SCRIPT_ELEM = "script";
 
 
     //HTML simple element constants

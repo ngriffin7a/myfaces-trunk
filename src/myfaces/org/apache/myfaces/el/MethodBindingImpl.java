@@ -112,7 +112,7 @@ public class MethodBindingImpl extends MethodBinding implements StateHolder
         }
         catch (Exception e)
         {
-            log.error("Cannot get type for expression " + getExpressionString(), e);
+            log.error("Exception while invoking expression " + getExpressionString(), e);
             throw new EvaluationException("Expression: " + getExpressionString(), e);
         }
     }

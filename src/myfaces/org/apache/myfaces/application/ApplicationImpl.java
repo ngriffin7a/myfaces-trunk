@@ -45,7 +45,6 @@ import net.sourceforge.myfaces.el.MethodBindingImpl;
 import net.sourceforge.myfaces.el.PropertyResolverImpl;
 import net.sourceforge.myfaces.el.ValueBindingImpl;
 import net.sourceforge.myfaces.el.VariableResolverImpl;
-import net.sourceforge.myfaces.exception.InternalServerException;
 import net.sourceforge.myfaces.util.BiLevelCacheMap;
 import net.sourceforge.myfaces.util.ClassUtils;
 
@@ -92,7 +91,7 @@ public class ApplicationImpl
     // components, converters, and validators can be added at runtime--must synchronize
     private final Map _converterMap = Collections.synchronizedMap(new HashMap());
     private final Map _converterTypeMap = Collections.synchronizedMap(new HashMap());
-    private final Map _componentClassMap = Collections.synchronizedMap(new HashMap());
+//    private final Map _componentClassMap = Collections.synchronizedMap(new HashMap());
     private final Map _validatorClassMap = Collections.synchronizedMap(new HashMap());
 
 
@@ -289,7 +288,8 @@ public class ApplicationImpl
 					+ componentType
 					+ "> is not available !";
 			log.error(msg, e);
-			throw new InternalServerException(msg);
+//			throw new InternalServerException(msg);
+            return;
 		}
 		
 		ComponentFactory.getInstance().addComponent(componentType, clazz);

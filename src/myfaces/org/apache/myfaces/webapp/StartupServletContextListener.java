@@ -42,6 +42,8 @@ public class StartupServletContextListener
         implements ServletContextListener
 {
     private static final Log log = LogFactory.getLog(StartupServletContextListener.class);
+    
+    public static ThreadLocal s_externalContext = new ThreadLocal(); 
 
     public void contextInitialized(ServletContextEvent event)
     {
@@ -53,6 +55,9 @@ public class StartupServletContextListener
             ExternalContext externalContext = new ServletExternalContextImpl(servletContext,
                                                                              null,
                                                                              null);
+            
+            // set in ThreadLocal so that config methods cat use it
+            s_externalContext.set(externalContext);
 
             FacesConfigFactory fcf = MyFacesFactoryFinder.getFacesConfigFactory(externalContext);
             FacesConfig facesConfig = fcf.getFacesConfig(externalContext);

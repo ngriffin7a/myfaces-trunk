@@ -48,6 +48,7 @@ import net.sourceforge.myfaces.component.ext.Screen;
 
 /**
  * @author Dimitry D'hondt
+ * @author Anton Koinov
  *
  * This class provides convenience methods to make working with the class-based
  * pages easier. It provides convient access to the component tree, etc..
@@ -56,15 +57,11 @@ public class PageUtils {
 
 	/**
 	 * Finds a component a specific type.
-	 * @param id
 	 * @return
 	 */
 	public static UIViewRoot getRoot() {
-		UIViewRoot ret = null;
 		FacesContext ctx = FacesContext.getCurrentInstance();
-		ret = ctx.getViewRoot();
-		
-		return ret;
+		return ctx.getViewRoot();
 	}
 	
 	/**
@@ -275,8 +272,8 @@ public class PageUtils {
 
 	/**
 	 * Adds a component to another component
-	 * @param container
-	 * @param component
+	 * @param parent
+	 * @param facet
 	 */
 	public static void addFacet(UIComponent parent, UIComponent facet, String key) {
 		parent.getFacets().put(key,facet);
@@ -308,12 +305,8 @@ public class PageUtils {
 	}
 	
 	private static Application getApp() {
-		Application ret = null;
-		ApplicationFactory appFactory = null;
-
-		appFactory = (ApplicationFactory) FactoryFinder.getFactory(FactoryFinder.APPLICATION_FACTORY);
-		ret = appFactory.getApplication();
-	
-		return ret;		
+		ApplicationFactory appFactory = 
+            (ApplicationFactory) FactoryFinder.getFactory(FactoryFinder.APPLICATION_FACTORY);
+		return appFactory.getApplication();
 	}
 }

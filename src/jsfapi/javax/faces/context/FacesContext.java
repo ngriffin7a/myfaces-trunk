@@ -75,7 +75,7 @@ public abstract class FacesContext
         }
     };
 
-    public static javax.faces.context.FacesContext getCurrentInstance()
+    public static FacesContext getCurrentInstance()
     {
         FacesContext facesContext = (FacesContext)_currentInstance.get();
         if (facesContext == null)

@@ -23,6 +23,7 @@ import net.sourceforge.myfaces.config.RendererConfig;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import javax.faces.context.ExternalContext;
 import javax.faces.render.RenderKit;
 import javax.faces.render.Renderer;
 import java.util.Iterator;
@@ -42,14 +43,14 @@ public class RenderKitConfigurator
         _renderKitConfig = renderKitConfig;
     }
 
-    public void configure(RenderKit renderKit, String renderKitId)
+    public void configure(ExternalContext externalContext, RenderKit renderKit, String renderKitId)
     {
         if (log.isDebugEnabled()) log.debug("Completing RenderKit " + renderKitId);
 
         for (Iterator it = _renderKitConfig.getRendererConfigs(); it.hasNext();)
         {
             RendererConfig rendererConfig = (RendererConfig)it.next();
-            Renderer       renderer       = rendererConfig.newRenderer();
+            Renderer       renderer       = rendererConfig.newRenderer(externalContext);
             renderKit.addRenderer(rendererConfig.getComponentFamily(),
                                   rendererConfig.getRendererType(),
                                   renderer);

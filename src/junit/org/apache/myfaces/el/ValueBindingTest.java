@@ -403,7 +403,7 @@ public class ValueBindingTest
         assertSame(_theA, vb.getValue(_facesContext));
         
         vb     = _application.createValueBinding(
-        "#{testmap.list[4].list[testmap.list[4][1][0][testmap.list[4][0][1]]][0][0]}");
+            "#{testmap.list[4].list[testmap.list[4][1][0][testmap.list[4][0][1]]][0][0]}");
         vb.setValue(_facesContext, "zzz");
         assertSame("zzz", vb.getValue(_facesContext));
     }
