@@ -22,7 +22,7 @@
     <!-- destination dir for compiling -->
     <property name="main.classes.dir" value="${temp.dir}/main_classes"/>
 
-    <!-- source dir for compiling -->
+    <!-- dir with the TLDs -->
     <property name="tlds.dir" value="${project.dir}\tlds"/>
 
     <!-- examples dir -->

@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<project name="myfaces-examples" default="all">
+
+    <!-- allow some of the properties to be overridden -->
+    <property file="build.properties"/>
+
+    <!-- destination web dir -->
+    <property name="web.dir" value="${basedir}/web"/>
+
+    <property name="web_common.dir" value="${basedir}/web_common"/>
+    <property name="web_clientsaving.dir" value="${basedir}/web_clientsaving"/>
+    <property name="web_serversaving.dir" value="${basedir}/web_serversaving"/>
+
+    <!-- source dir for compiling -->
+    <property name="src.dir" value="${basedir}/src"/>
+
+    <!-- destination dir for compiling -->
+    <property name="classes.dir" value="${web.dir}/WEB-INF/classes"/>
+
+    <!-- destination WEB-INF dir -->
+    <property name="web-inf.dir" value="${web.dir}/WEB-INF"/>
+
+    <!-- path to the "jsf-api.jar" file -->
+    <property name="jsf-api.jar" value="must be specified in build.properties"/>
+
+    <!-- path to the "servlet.jar" file -->
+    <property name="servlet.jar" value="must be specified in build.properties"/>
+
+    <!-- path to the "mail.jar" file -->
+    <property name="mail.jar" value="must be specified in build.properties"/>
+
+    <!-- path to the myfaces class files -->
+    <property name="myfaces.classes.dir" value="dummy"/>
+
+    <!-- path to the "myfaces.jar" file -->
+    <property name="myfaces.jar" value="dummy"/>
+
+    <!-- source dir for compiling -->
+    <property name="tlds.dir" value="${basedir}/../../tlds"/>
+
+
+
+    <!-- classpath for compiling -->
+    <path id="project.class.path">
+        <pathelement location="${jsf-api.jar}"/>
+        <pathelement location="${servlet.jar}"/>
+        <pathelement location="${myfaces.classes.dir}"/>
+        <pathelement location="${myfaces.jar}"/>
+    </path>
+
+    <target name="compile">
+        <mkdir dir="${classes.dir}"/>
+        <javac srcdir="${src.dir}"
+            destdir="${classes.dir}"
+            optimize="off"
+            classpathref="project.class.path">
+        </javac>
+        <copy todir="${classes.dir}">
+            <fileset dir="${src.dir}" includes="**"
+                                      excludes="**/*.java"/>
+        </copy>
+    </target>
+
+    <target name="-web-common" depends="compile" >
+        <mkdir dir="${web.dir}"/>
+        <copy todir="${web.dir}">
+            <fileset dir="${web_common.dir}" includes="**"/>
+        </copy>
+
+        <mkdir dir="${web-inf.dir}"/>
+
+        <mkdir dir="${web-inf.dir}/lib"/>
+        <copy todir="${web-inf.dir}/lib" file="${mail.jar}" />
+        <copy todir="${web-inf.dir}/lib" file="${jsf-api.jar}"/>
+        <copy todir="${web-inf.dir}/lib" file="${myfaces.jar}" failonerror="false" />
+
+        <mkdir dir="${web-inf.dir}/classes"/>
+        <copy todir="${web-inf.dir}/classes" failonerror="false">
+            <fileset dir="${myfaces.classes.dir}" includes="**" />
+        </copy>
+
+        <copy todir="${web-inf.dir}">
+            <fileset dir="${tlds.dir}" includes="**"/>
+        </copy>
+    </target>
+
+    <target name="web-clientsaving" depends="-web-common" >
+        <!--
+        Builds the examples web application configured to
+        use the "save minimized state in client" mode.
+        -->
+        <mkdir dir="${web-inf.dir}"/>
+        <copy todir="${web-inf.dir}" overwrite="true">
+            <fileset dir="${web_clientsaving.dir}/WEB-INF" includes="web.xml"/>
+        </copy>
+        <replace dir="${web.dir}" includes="**/*.jsp,**/*.inc">
+            <replacetoken><![CDATA[scope="session"]]></replacetoken>
+            <replacevalue><![CDATA[scope="request"]]></replacevalue>
+        </replace>
+        <replace dir="${web.dir}" includes="**/*.jsp,**/*.inc">
+            <replacetoken><![CDATA[<%@ page session="true"]]></replacetoken>
+            <replacevalue><![CDATA[<%@ page session="false"]]></replacevalue>
+        </replace>
+    </target>
+
+    <target name="web-serversaving" depends="-web-common">
+        <!--
+        Builds the examples web application configured to
+        use the "save state in server session" mode.
+        -->
+        <mkdir dir="${web-inf.dir}"/>
+        <copy todir="${web-inf.dir}" overwrite="true" >
+            <fileset dir="${web_serversaving.dir}/WEB-INF" includes="web.xml"/>
+        </copy>
+        <replace dir="${web.dir}" includes="**/*.jsp,**/*.inc">
+            <replacetoken><![CDATA[scope="request"]]></replacetoken>
+            <replacevalue><![CDATA[scope="session"]]></replacevalue>
+        </replace>
+        <replace dir="${web.dir}" includes="**/*.jsp,**/*.inc">
+            <replacetoken><![CDATA[<%@ page session="false"]]></replacetoken>
+            <replacevalue><![CDATA[<%@ page session="true"]]></replacevalue>
+        </replace>
+    </target>
+
+
+    <target name="clean">
+        <delete quiet="true" failonerror="false" includeEmptyDirs="true">
+            <fileset dir="${classes.dir}"/>
+            <fileset dir="${web.dir}"/>
+        </delete>
+    </target>
+
+
+</project>

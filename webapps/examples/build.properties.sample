@@ -1,0 +1,12 @@
+# Don't forget to use double-backslashes in windows paths!
+
+mail.jar = <path to Java Mail API archiv version 1.1>
+servlet.jar = <path to Java Servlet API archiv version 2.3>
+jsf-api.jar = <path to JavaServer Faces API archiv version 1.0 EA3>
+
+# either the path to the myfaces jar or the path to the classes must be specified:
+#myfaces.jar = <path to myfaces.jar>
+myfaces.classes.dir = <path to the myfaces classes>
+
+web.dir = <path where the new web directory should be built, e.g. "../work/web">
+
