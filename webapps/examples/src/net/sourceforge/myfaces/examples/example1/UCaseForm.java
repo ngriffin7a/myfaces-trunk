@@ -18,7 +18,6 @@
  */
 package net.sourceforge.myfaces.examples.example1;
 
-import javax.faces.application.Action;
 import java.io.Serializable;
 
 /**
@@ -51,6 +50,8 @@ public class UCaseForm
         this.text = text;
     }
 
+    /*
+    FIXME:
     public Action getJumpHome()
     {
         return new Action()
@@ -61,6 +62,7 @@ public class UCaseForm
             }
         };
     }
+    */
 
 
 }

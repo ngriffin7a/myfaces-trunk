@@ -19,9 +19,8 @@
 package net.sourceforge.myfaces.examples.util;
 
 import javax.faces.context.FacesContext;
-import java.util.ResourceBundle;
 import java.util.Enumeration;
-import java.util.HashMap;
+import java.util.ResourceBundle;
 
 /**
  * DOCUMENT ME!
@@ -36,7 +35,7 @@ public class ExampleMessagesResourceBundle
     protected ResourceBundle getMyBundle()
     {
         FacesContext facesContext = FacesContext.getCurrentInstance();
-        return ResourceBundle.getBundle(BUNDLE_NAME, facesContext.getLocale());
+        return ResourceBundle.getBundle(BUNDLE_NAME, facesContext.getViewRoot().getLocale());
     }
 
     protected Object handleGetObject(String key)

@@ -1,2 +1,3 @@
 # Don't forget to use double-backslashes in windows paths!
 
+log4j.jar = ${project.dir}/lib/log4j-1.2.8.jar

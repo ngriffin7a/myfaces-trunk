@@ -18,20 +18,12 @@
  */
 package net.sourceforge.myfaces.renderkit.html.state;
 
-import net.sourceforge.myfaces.MyFacesConfig;
-import net.sourceforge.myfaces.component.UIComponentUtils;
 import net.sourceforge.myfaces.context.FacesContextWrapper;
-import net.sourceforge.myfaces.tree.TreeUtils;
 
-import javax.faces.component.UIComponent;
 import javax.faces.component.UIViewRoot;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.convert.ConverterException;
-import javax.servlet.ServletContext;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Locale;
 
 /**
@@ -45,33 +37,12 @@ public class StateUtils
 
     private StateUtils() {}
 
+    /**
+     * @deprecated
+     */ 
     public static void discardInternalAttributes(FacesContext facesContext,
                                                  UIViewRoot viewRoot)
     {
-        if (MyFacesConfig.isDiscardInternalAttributes(((ServletContext)facesContext.getExternalContext().getContext())))
-        {
-            List lst = new ArrayList();
-            for (Iterator treeIt = TreeUtils.treeIterator(viewRoot); treeIt.hasNext();)
-            {
-                UIComponent comp = (UIComponent)treeIt.next();
-                lst.clear();
-                //FIXME
-                /*
-                for (Iterator attrIt = comp.getAttributeNames(); attrIt.hasNext();)
-                {
-                    String attrName = (String)attrIt.next();
-                    if (UIComponentUtils.isInternalAttribute(attrName))
-                    {
-                        lst.add(attrName);
-                    }
-                }
-                */
-                for (int i = 0, len = lst.size(); i < len; i++)
-                {
-                    comp.getAttributes().put((String)lst.get(i), null);
-                }
-            }
-        }
     }
 
 

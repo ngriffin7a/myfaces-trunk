@@ -20,12 +20,7 @@ package net.sourceforge.myfaces.examples.common;
 
 import net.sourceforge.myfaces.examples.util.LocalizedSelectItem;
 
-import javax.faces.component.SelectItem;
-import javax.faces.application.Action;
-import javax.faces.application.ApplicationFactory;
-import javax.faces.FactoryFinder;
-import javax.faces.context.FacesContext;
-import javax.faces.el.ValueBinding;
+import javax.faces.model.SelectItem;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -243,6 +238,8 @@ public class CarConfigurator
     }
 
 
+    /*
+    FIXME
     public Action getCalcPriceAction()
     {
         return new Action() {
@@ -257,5 +254,6 @@ public class CarConfigurator
             }
         };
     }
+    */
 
 }

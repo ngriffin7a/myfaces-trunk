@@ -16,5 +16,7 @@ Optional steps (deprecated features)
     myfaces_DefaultLanguage - no longer needed
     myfaces_LogLevel - no longer needed
     myfaces_AutoCreateRequestScopeBeans - no longer needed
+    myfaces_ServletMappingMode - no longer needed
+    myfaces_DiscardInternalAttributes - no longer needed
 
 * change <f:use_faces> tags to <f:view>

@@ -539,14 +539,14 @@
     <validator-id>LongRange</validator-id>
     <validator-class>javax.faces.validator.LongRangeValidator</validator-class>
   </validator>
-  <validator>
+  <!--validator> TODO
     <validator-id>Required</validator-id>
     <validator-class>javax.faces.validator.RequiredValidator</validator-class>
-  </validator>
-  <validator>
+  </validator-->
+  <!--validator> TODO
     <validator-id>StringRange</validator-id>
     <validator-class>javax.faces.validator.StringRangeValidator</validator-class>
-  </validator>
+  </validator-->
 
   <!-- standard renderkit -->
   <render-kit>
@@ -556,107 +556,115 @@
       <renderer>
           <renderer-type>Button</renderer-type>
           <renderer-class>net.sourceforge.myfaces.renderkit.html.ButtonRenderer</renderer-class>
-          <component-type>Command</component-type>
+          <supported-component-type><component-type>Command</component-type></supported-component-type>
       </renderer>
 
       <renderer>
           <renderer-type>Checkbox</renderer-type>
           <renderer-class>net.sourceforge.myfaces.renderkit.html.CheckboxRenderer</renderer-class>
-          <component-type>SelectBoolean</component-type>
-          <component-type>SelectMany</component-type>
+          <supported-component-type><component-type>SelectBoolean</component-type></supported-component-type>
+          <supported-component-type><component-type>SelectMany</component-type></supported-component-type>
       </renderer>
 
+      <!--
       <renderer>
           <renderer-type>Data</renderer-type>
           <renderer-class>net.sourceforge.myfaces.renderkit.html.DataRenderer</renderer-class>
-          <component-type>Panel</component-type>
+          <supported-component-type><component-type>Panel</component-type></supported-component-type>
       </renderer>
+      -->
 
       <renderer>
           <renderer-type>Date</renderer-type>
           <renderer-class>net.sourceforge.myfaces.renderkit.html.DateRenderer</renderer-class>
-          <component-type>Input</component-type>
-          <component-type>Output</component-type>
+          <supported-component-type><component-type>Input</component-type></supported-component-type>
+          <supported-component-type><component-type>Output</component-type></supported-component-type>
       </renderer>
 
       <renderer>
           <renderer-type>DateTime</renderer-type>
           <renderer-class>net.sourceforge.myfaces.renderkit.html.DateTimeRenderer</renderer-class>
-          <component-type>Input</component-type>
-          <component-type>Output</component-type>
+          <supported-component-type><component-type>Input</component-type></supported-component-type>
+          <supported-component-type><component-type>Output</component-type></supported-component-type>
       </renderer>
 
       <renderer>
           <renderer-type>Errors</renderer-type>
           <renderer-class>net.sourceforge.myfaces.renderkit.html.ErrorsRenderer</renderer-class>
-          <component-type>Output</component-type>
+          <supported-component-type><component-type>Output</component-type></supported-component-type>
       </renderer>
 
       <renderer>
           <renderer-type>Form</renderer-type>
           <renderer-class>net.sourceforge.myfaces.renderkit.html.FormRenderer</renderer-class>
-          <component-type>Form</component-type>
+          <supported-component-type><component-type>Form</component-type></supported-component-type>
       </renderer>
 
+      <!--
       <renderer>
           <renderer-type>Grid</renderer-type>
           <renderer-class>net.sourceforge.myfaces.renderkit.html.GridRenderer</renderer-class>
-          <component-type>Panel</component-type>
+          <supported-component-type><component-type>Panel</component-type></supported-component-type>
       </renderer>
+      -->
 
+      <!--
       <renderer>
           <renderer-type>Group</renderer-type>
           <renderer-class>net.sourceforge.myfaces.renderkit.html.GroupRenderer</renderer-class>
-          <component-type>Panel</component-type>
+          <supported-component-type><component-type>Panel</component-type></supported-component-type>
       </renderer>
+      -->
 
       <renderer>
           <renderer-type>Hidden</renderer-type>
           <renderer-class>net.sourceforge.myfaces.renderkit.html.HiddenRenderer</renderer-class>
-          <component-type>Input</component-type>
+          <supported-component-type><component-type>Input</component-type></supported-component-type>
       </renderer>
 
       <renderer>
           <renderer-type>Hyperlink</renderer-type>
           <renderer-class>net.sourceforge.myfaces.renderkit.html.HyperlinkRenderer</renderer-class>
-          <component-type>Command</component-type>
+          <supported-component-type><component-type>Command</component-type></supported-component-type>
       </renderer>
 
       <renderer>
           <renderer-type>Image</renderer-type>
           <renderer-class>net.sourceforge.myfaces.renderkit.html.ImageRenderer</renderer-class>
-          <component-type>Graphic</component-type>
+          <supported-component-type><component-type>Graphic</component-type></supported-component-type>
       </renderer>
 
       <renderer>
           <renderer-type>Label</renderer-type>
           <renderer-class>net.sourceforge.myfaces.renderkit.html.LabelRenderer</renderer-class>
-          <component-type>Output</component-type>
+          <supported-component-type><component-type>Output</component-type></supported-component-type>
       </renderer>
 
       <renderer>
           <renderer-type>Listbox</renderer-type>
           <renderer-class>net.sourceforge.myfaces.renderkit.html.ListboxRenderer</renderer-class>
-          <component-type>SelectOne</component-type>
+          <supported-component-type><component-type>SelectOne</component-type></supported-component-type>
       </renderer>
 
+      <!--
       <renderer>
           <renderer-type>List</renderer-type>
           <renderer-class>net.sourceforge.myfaces.renderkit.html.ListRenderer</renderer-class>
-          <component-type>Panel</component-type>
+          <supported-component-type><component-type>Panel</component-type></supported-component-type>
       </renderer>
+      -->
 
       <renderer>
           <renderer-type>Menu</renderer-type>
           <renderer-class>net.sourceforge.myfaces.renderkit.html.MenuRenderer</renderer-class>
-          <component-type>SelectOne</component-type>
-          <component-type>SelectMany</component-type>
+          <supported-component-type><component-type>SelectOne</component-type></supported-component-type>
+          <supported-component-type><component-type>SelectMany</component-type></supported-component-type>
       </renderer>
 
       <renderer>
           <renderer-type>Radio</renderer-type>
           <renderer-class>net.sourceforge.myfaces.renderkit.html.RadioRenderer</renderer-class>
-          <component-type>SelectOne</component-type>
+          <supported-component-type><component-type>SelectOne</component-type></supported-component-type>
       </renderer>
 
       <renderer>
@@ -670,33 +678,33 @@
               <attribute-name>bundle</attribute-name>
               <attribute-class>java.lang.String</attribute-class>
           </attribute>
-          <component-type>Output</component-type>
+          <supported-component-type><component-type>Output</component-type></supported-component-type>
       </renderer>
 
       <renderer>
           <renderer-type>Secret</renderer-type>
           <renderer-class>net.sourceforge.myfaces.renderkit.html.SecretRenderer</renderer-class>
-          <component-type>Input</component-type>
+          <supported-component-type><component-type>Input</component-type></supported-component-type>
       </renderer>
 
       <renderer>
           <renderer-type>Textarea</renderer-type>
           <renderer-class>net.sourceforge.myfaces.renderkit.html.TextareaRenderer</renderer-class>
-          <component-type>Input</component-type>
+          <supported-component-type><component-type>Input</component-type></supported-component-type>
       </renderer>
 
       <renderer>
           <renderer-type>Text</renderer-type>
           <renderer-class>net.sourceforge.myfaces.renderkit.html.TextRenderer</renderer-class>
-          <component-type>Input</component-type>
-          <component-type>Output</component-type>
+          <supported-component-type><component-type>Input</component-type></supported-component-type>
+          <supported-component-type><component-type>Output</component-type></supported-component-type>
       </renderer>
 
       <renderer>
           <renderer-type>Time</renderer-type>
           <renderer-class>net.sourceforge.myfaces.renderkit.html.TimeRenderer</renderer-class>
-          <component-type>Input</component-type>
-          <component-type>Output</component-type>
+          <supported-component-type><component-type>Input</component-type></supported-component-type>
+          <supported-component-type><component-type>Output</component-type></supported-component-type>
       </renderer>
 
       <renderer>
@@ -713,37 +721,39 @@
         <renderer>
             <renderer-type>FileUpload</renderer-type>
             <renderer-class>net.sourceforge.myfaces.renderkit.html.ext.FileUploadRenderer</renderer-class>
-            <component-type>FileUpload</component-type>
+            <supported-component-type><component-type>FileUpload</component-type></supported-component-type>
         </renderer>
 
+        <!--
         <renderer>
             <renderer-type>Layout</renderer-type>
             <renderer-class>net.sourceforge.myfaces.renderkit.html.ext.LayoutRenderer</renderer-class>
-            <component-type>Panel</component-type>
+            <supported-component-type><component-type>Panel</component-type></supported-component-type>
         </renderer>
+        -->
 
         <renderer>
             <renderer-type>Navigation</renderer-type>
             <renderer-class>net.sourceforge.myfaces.renderkit.html.ext.NavigationRenderer</renderer-class>
-            <component-type>Navigation</component-type>
+            <supported-component-type><component-type>Navigation</component-type></supported-component-type>
         </renderer>
 
         <renderer>
             <renderer-type>NavigationItem</renderer-type>
             <renderer-class>net.sourceforge.myfaces.renderkit.html.ext.NavigationItemRenderer</renderer-class>
-            <component-type>NavigationItem</component-type>
+            <supported-component-type><component-type>NavigationItem</component-type></supported-component-type>
         </renderer>
 
         <renderer>
             <renderer-type>NavigationSeparator</renderer-type>
             <renderer-class>net.sourceforge.myfaces.renderkit.html.ext.NavigationSeparatorRenderer</renderer-class>
-            <component-type>Output</component-type>
+            <supported-component-type><component-type>Output</component-type></supported-component-type>
         </renderer>
 
         <renderer>
             <renderer-type>SortColumn</renderer-type>
             <renderer-class>net.sourceforge.myfaces.renderkit.html.ext.SortColumnRenderer</renderer-class>
-            <component-type>SortColumn</component-type>
+            <supported-component-type><component-type>SortColumn</component-type></supported-component-type>
         </renderer>
 
         <renderer>

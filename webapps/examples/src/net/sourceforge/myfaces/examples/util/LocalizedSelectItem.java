@@ -20,8 +20,8 @@ package net.sourceforge.myfaces.examples.util;
 
 import net.sourceforge.myfaces.util.bundle.BundleUtils;
 
-import javax.faces.component.SelectItem;
 import javax.faces.context.FacesContext;
+import javax.faces.model.SelectItem;
 
 /**
  * DOCUMENT ME!

@@ -159,7 +159,7 @@
 
 
     <target name="clean"
-        description="deletes all files that were built">
+        description="deletes all files that were built (including examples and tagunit)">
         <delete quiet="true" failonerror="false" includeEmptyDirs="true">
             <fileset file="${myfaces.jar}" />
             <fileset file="myfaces-*.tgz" />

@@ -28,6 +28,7 @@ import java.util.Set;
  * @version $Revision$ $Date$
  */
 public class SupportedComponentTypeConfig
+        implements Config
 {
     private final Set _attributeName = new HashSet();
     private String _componentType;

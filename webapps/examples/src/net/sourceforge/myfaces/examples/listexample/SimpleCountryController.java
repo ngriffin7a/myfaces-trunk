@@ -18,18 +18,10 @@
  */
 package net.sourceforge.myfaces.examples.listexample;
 
-import javax.faces.FactoryFinder;
-import javax.faces.application.ApplicationFactory;
-import javax.faces.component.UIComponent;
-import javax.faces.context.FacesContext;
-import javax.faces.el.VariableResolver;
 import javax.faces.event.AbortProcessingException;
 import javax.faces.event.ActionEvent;
 import javax.faces.event.ActionListener;
 import javax.faces.event.PhaseId;
-import javax.faces.tree.Tree;
-import javax.faces.tree.TreeFactory;
-import java.math.BigDecimal;
 
 /**
  * DOCUMENT ME!
@@ -46,6 +38,8 @@ public class SimpleCountryController
 
     public void processAction(ActionEvent event) throws AbortProcessingException
     {
+        /*
+        FIXME
         FacesContext facesContext = FacesContext.getCurrentInstance();
 
         //Get isoCode from component
@@ -67,6 +61,7 @@ public class SimpleCountryController
         Tree tree = tf.getTree(facesContext, "/countryForm.jsf");
         facesContext.setTree(tree);
         facesContext.renderResponse();
+        */
     }
 
 }

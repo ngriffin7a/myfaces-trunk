@@ -18,14 +18,10 @@
  */
 package net.sourceforge.myfaces.examples.example2;
 
-import net.sourceforge.myfaces.examples.example2.QuotationForm;
-import net.sourceforge.myfaces.examples.example1.UCaseForm;
-
-import javax.faces.context.FacesContext;
-import javax.faces.event.*;
-import javax.faces.application.ApplicationFactory;
-import javax.faces.FactoryFinder;
-import javax.faces.el.ValueBinding;
+import javax.faces.event.AbortProcessingException;
+import javax.faces.event.ActionEvent;
+import javax.faces.event.ActionListener;
+import javax.faces.event.PhaseId;
 
 /**
  * DOCUMENT ME!
@@ -37,6 +33,8 @@ public class QuotationController
 {
     public void processAction(ActionEvent event) throws AbortProcessingException
     {
+        /*
+        FIXME
         String commandName = event.getActionCommand();
         FacesContext facesContext = FacesContext.getCurrentInstance();
 
@@ -56,7 +54,9 @@ public class QuotationController
         {
             throw new IllegalArgumentException("Unknown Command " + commandName);
         }
+        */
     }
+    
     public PhaseId getPhaseId()
     {
         return PhaseId.UPDATE_MODEL_VALUES;

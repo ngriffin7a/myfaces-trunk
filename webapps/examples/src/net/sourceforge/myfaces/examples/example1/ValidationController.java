@@ -18,16 +18,10 @@
  */
 package net.sourceforge.myfaces.examples.example1;
 
-import javax.faces.application.Action;
-import javax.faces.component.UIInput;
-import javax.faces.context.FacesContext;
 import javax.faces.event.AbortProcessingException;
 import javax.faces.event.ActionEvent;
 import javax.faces.event.ActionListener;
 import javax.faces.event.PhaseId;
-import javax.faces.tree.Tree;
-import javax.faces.validator.LengthValidator;
-import javax.faces.validator.LongRangeValidator;
 
 /**
  * DOCUMENT ME!
@@ -39,6 +33,8 @@ public class ValidationController
 {
     public void processAction(ActionEvent event) throws AbortProcessingException
     {
+        /*
+        FIXME
         String commandName = event.getActionCommand();
         if (commandName.equals("enableVal"))
         {
@@ -48,6 +44,7 @@ public class ValidationController
         {
             DISABLE_ACTION.invoke();
         }
+        */
     }
 
     public PhaseId getPhaseId()
@@ -56,6 +53,8 @@ public class ValidationController
     }
 
 
+    /*
+    FIXME
     private static final Action ENABLE_ACTION = new Action() {
         public String invoke()
         {
@@ -73,7 +72,10 @@ public class ValidationController
             return "ok";
         }
     };
+    */
 
+    /*
+    FIXME
     private static final Action DISABLE_ACTION = new Action() {
         public String invoke()
         {
@@ -89,6 +91,6 @@ public class ValidationController
             return "ok";
         }
     };
-
+    */
 
 }

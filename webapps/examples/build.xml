@@ -66,6 +66,7 @@
             <fileset file="${jsf-api.jar}"/>
             <fileset file="${myfaces.jar}"/>
             <fileset file="${commons-logging.jar}"/>
+            <fileset file="${log4j.jar}"/>
         </copy>
 
         <copy file="${project.dir}/conf/web.xml" todir="${examples.web}/WEB-INF" />

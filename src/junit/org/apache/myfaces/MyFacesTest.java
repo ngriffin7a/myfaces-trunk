@@ -19,26 +19,20 @@
 package net.sourceforge.myfaces;
 
 import junit.framework.TestCase;
-
-import javax.faces.application.Application;
-import javax.faces.application.ApplicationFactory;
-import javax.faces.context.FacesContext;
-import javax.faces.context.FacesContextFactory;
-import javax.faces.FactoryFinder;
-import javax.faces.lifecycle.Lifecycle;
-import javax.faces.lifecycle.LifecycleFactory;
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import net.sourceforge.myfaces.application.ApplicationImpl;
-import net.sourceforge.myfaces.application.ApplicationMockImpl;
 import net.sourceforge.myfaces.context.FacesContextMockImpl;
 import net.sourceforge.myfaces.context.ServletContextMockImpl;
 import net.sourceforge.myfaces.context.ServletRequestMockImpl;
 import net.sourceforge.myfaces.context.ServletResponseMockImpl;
 import net.sourceforge.myfaces.el.VariableResolverImpl;
 import net.sourceforge.myfaces.lifecycle.LifecycleImpl;
+
+import javax.faces.application.Application;
+import javax.faces.context.FacesContext;
+import javax.faces.lifecycle.Lifecycle;
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * DOCUMENT ME!
@@ -65,7 +59,7 @@ public class MyFacesTest
     {
         super.setUp();
         _servletContext = new ServletContextMockImpl();
-        _application = new ApplicationImpl(_facesContext.getExternalContext());
+        _application = new ApplicationImpl();
         _application.setVariableResolver(new VariableResolverImpl());
         
         _httpServletRequest = new ServletRequestMockImpl();

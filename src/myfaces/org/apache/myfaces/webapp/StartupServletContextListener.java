@@ -42,23 +42,25 @@ public class StartupServletContextListener
 {
     private static final Log log = LogFactory.getLog(StartupServletContextListener.class);
 
-    public void contextInitialized(ServletContextEvent e)
+    public void contextInitialized(ServletContextEvent event)
     {
         try
         {
-            ServletContext servletContext = e.getServletContext();
+            ServletContext servletContext = event.getServletContext();
             FacesConfigFactory fcf = MyFacesFactoryFinder.getFacesConfigFactory(servletContext);
             ExternalContext externalContext = new ServletExternalContextImpl(servletContext, null, null);
             FacesConfig facesConfig = fcf.getFacesConfig(externalContext);
-            facesConfig.configureAll();
+            facesConfig.configureAll(externalContext);
+
             // parse web.xml
             WebXml.init(externalContext);
         }
         catch (Exception ex)
         {
+            log.error("Error initializing ServletContext", ex);
             ex.printStackTrace();
         }
-        log.info("ServletContext '" + e.getServletContext().getRealPath("/") + "' initialized.");
+        log.info("ServletContext '" + event.getServletContext().getRealPath("/") + "' initialized.");
     }
 
     public void contextDestroyed(ServletContextEvent e)

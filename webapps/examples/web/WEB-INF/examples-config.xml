@@ -120,77 +120,77 @@
         <description>
             Navigation rules for navigation component.
         </description>
-        <from-tree-id>*</from-tree-id>
+        <from-view-id>*</from-view-id>
 
         <navigation-case>
             <from-outcome>go_home</from-outcome>
-            <to-tree-id>/home.jsf</to-tree-id>
+            <to-view-id>/home.jsf</to-view-id>
         </navigation-case>
 
         <navigation-case>
             <from-outcome>go_sample1</from-outcome>
-            <to-tree-id>/sample1.jsf</to-tree-id>
+            <to-view-id>/sample1.jsf</to-view-id>
         </navigation-case>
 
         <navigation-case>
             <from-outcome>go_sample2</from-outcome>
-            <to-tree-id>/sample2.jsf</to-tree-id>
+            <to-view-id>/sample2.jsf</to-view-id>
         </navigation-case>
 
         <navigation-case>
             <from-outcome>go_simpleList</from-outcome>
-            <to-tree-id>/simpleList.jsf</to-tree-id>
+            <to-view-id>/simpleList.jsf</to-view-id>
         </navigation-case>
 
         <navigation-case>
             <from-outcome>go_simpleSortList</from-outcome>
-            <to-tree-id>/simpleSortList.jsf</to-tree-id>
+            <to-view-id>/simpleSortList.jsf</to-view-id>
         </navigation-case>
 
         <navigation-case>
             <from-outcome>go_selectbox</from-outcome>
-            <to-tree-id>/selectbox.jsf</to-tree-id>
+            <to-view-id>/selectbox.jsf</to-view-id>
         </navigation-case>
 
         <navigation-case>
             <from-outcome>go_fileupload</from-outcome>
-            <to-tree-id>/fileupload.jsf</to-tree-id>
+            <to-view-id>/fileupload.jsf</to-view-id>
         </navigation-case>
 
         <navigation-case>
             <from-outcome>go_tabbedPane</from-outcome>
-            <to-tree-id>/tabbedPane.jsf</to-tree-id>
+            <to-view-id>/tabbedPane.jsf</to-view-id>
         </navigation-case>
 
         <navigation-case>
             <from-outcome>go_features</from-outcome>
-            <to-tree-id>/features.jsf</to-tree-id>
+            <to-view-id>/features.jsf</to-view-id>
         </navigation-case>
 
         <navigation-case>
             <from-outcome>go_options</from-outcome>
-            <to-tree-id>/options.jsf</to-tree-id>
+            <to-view-id>/options.jsf</to-view-id>
         </navigation-case>
 
         <navigation-case>
             <from-outcome>go_contact</from-outcome>
-            <to-tree-id>/contact.jsf</to-tree-id>
+            <to-view-id>/contact.jsf</to-view-id>
         </navigation-case>
 
         <navigation-case>
             <from-outcome>go_copyright</from-outcome>
-            <to-tree-id>/copyright.jsf</to-tree-id>
+            <to-view-id>/copyright.jsf</to-view-id>
         </navigation-case>
 
     </navigation-rule>
 
 
     <navigation-rule>
-        <from-tree-id>/sample1.jsf</from-tree-id>
+        <from-view-id>/sample1.jsf</from-view-id>
 
         <navigation-case>
             <from-outcome>jump_home</from-outcome>
-            <to-tree-id>/home.jsf</to-tree-id>
+            <to-view-id>/home.jsf</to-view-id>
         </navigation-case>
 
     </navigation-rule>

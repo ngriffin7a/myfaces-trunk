@@ -45,8 +45,7 @@ public class ActionListenerImpl
         return PhaseId.INVOKE_APPLICATION;
     }
 
-    public void processAction(ActionEvent actionEvent)
-    throws AbortProcessingException
+    public void processAction(ActionEvent actionEvent) throws AbortProcessingException
     {
         FacesContext      facesContext      = FacesContext.getCurrentInstance();
         Application       application       = facesContext.getApplication();

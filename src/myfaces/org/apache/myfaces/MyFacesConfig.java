@@ -44,9 +44,6 @@ public class MyFacesConfig
     private static final String PARAM_stateSavingMode = "myfaces_StateSavingMode";
     private static final int DEFAULT_stateSavingMode = STATE_SAVING_MODE__CLIENT_MINIMIZED;
 
-    private static final String PARAM_discardInternalAttributes = "myfaces_DiscardInternalAttributes";
-    private static final boolean DEFAULT_discardInternalAttributes = true;
-
     private static final String PARAM_disableJspParser = "myfaces_DisableJspParser";
     private static final boolean DEFAULT_disableJspParser = false;
 
@@ -120,16 +117,6 @@ public class MyFacesConfig
         return mode.intValue();
     }
 
-
-    /**
-     * See web.xml in the examples webapp for documentation!
-     */
-    public static boolean isDiscardInternalAttributes(ServletContext servletContext)
-    {
-        return getBooleanInitParameter(servletContext,
-                                       PARAM_discardInternalAttributes,
-                                       DEFAULT_discardInternalAttributes);
-    }
 
     /**
      * See web.xml in the examples webapp for documentation!

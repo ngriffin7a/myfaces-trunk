@@ -32,11 +32,10 @@ import javax.faces.FactoryFinder;
 import javax.faces.application.ApplicationFactory;
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIOutput;
-import javax.faces.context.FacesContext;
 import javax.faces.context.ExternalContext;
+import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.convert.ConverterException;
-import javax.servlet.ServletContext;
 import java.io.*;
 import java.text.*;
 import java.util.Locale;
@@ -74,7 +73,7 @@ public class ConverterUtils
         try
         {
             //FIXME
-            return af.getApplication().getConverter(converterId);
+            //return af.getApplication().getConverter(converterId);
             return null;
         }
         catch (FacesException e)

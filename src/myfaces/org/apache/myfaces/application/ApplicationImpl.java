@@ -18,13 +18,13 @@
  */
 package net.sourceforge.myfaces.application;
 
+import net.sourceforge.myfaces.application.jsp.JspViewHandlerImpl;
 import net.sourceforge.myfaces.config.ConfigUtil;
 import net.sourceforge.myfaces.el.MethodBindingImpl;
+import net.sourceforge.myfaces.el.PropertyResolverImpl;
 import net.sourceforge.myfaces.el.ValueBindingImpl;
 import net.sourceforge.myfaces.el.VariableResolverImpl;
-import net.sourceforge.myfaces.el.PropertyResolverImpl;
 import net.sourceforge.myfaces.util.BiLevelCacheMap;
-import net.sourceforge.myfaces.application.jsp.JspViewHandlerImpl;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -104,10 +104,7 @@ public class ApplicationImpl
             log.error("setting actionListener to null is not allowed");
             throw new NullPointerException("setting actionListener to null is not allowed");
         }
-        synchronized(this)
-        {
-            _actionListener = actionListener;
-        }
+        _actionListener = actionListener;
         if (log.isTraceEnabled()) log.trace("set actionListener = " + actionListener.getClass().getName());
     }
 
@@ -138,10 +135,7 @@ public class ApplicationImpl
             log.error("setting locale to null is not allowed");
             throw new NullPointerException("setting locale to null is not allowed");
         }
-        synchronized(this)
-        {
-            _defaultLocale = locale;
-        }
+        _defaultLocale = locale;
         if (log.isTraceEnabled()) log.trace("set defaultLocale = " + locale.getCountry() + " " + locale.getLanguage());
     }
 
@@ -157,10 +151,7 @@ public class ApplicationImpl
             log.error("setting messageBundle to null is not allowed");
             throw new NullPointerException("setting messageBundle to null is not allowed");
         }
-        synchronized(this)
-        {
-            _messageBundle = messageBundle;
-        }
+        _messageBundle = messageBundle;
         if (log.isTraceEnabled()) log.trace("set MessageBundle = " + messageBundle);
     }
 
@@ -176,10 +167,7 @@ public class ApplicationImpl
             log.error("setting navigationHandler to null is not allowed");
             throw new NullPointerException("setting navigationHandler to null is not allowed");
         }
-        synchronized(this)
-        {
-            _navigationHandler = navigationHandler;
-        }
+        _navigationHandler = navigationHandler;
         if (log.isTraceEnabled()) log.trace("set NavigationHandler = " + navigationHandler.getClass().getName());
     }
 
@@ -195,10 +183,7 @@ public class ApplicationImpl
             log.error("setting propertyResolver to null is not allowed");
             throw new NullPointerException("setting propertyResolver to null is not allowed");
         }
-        synchronized(this)
-        {
-            _propertyResolver = propertyResolver;
-        }
+        _propertyResolver = propertyResolver;
         if (log.isTraceEnabled()) log.trace("set PropertyResolver = " + propertyResolver.getClass().getName());
    }
 
@@ -214,10 +199,7 @@ public class ApplicationImpl
             log.error("setting supportedLocales to null is not allowed");
             throw new NullPointerException("setting supportedLocales to null is not allowed");
         }
-        synchronized(this)
-        {
-            _supportedLocales = locales;
-        }
+        _supportedLocales = locales;
         if (log.isTraceEnabled()) log.trace("set SupportedLocales");
     }
 
@@ -238,10 +220,7 @@ public class ApplicationImpl
             log.error("setting variableResolver to null is not allowed");
             throw new NullPointerException("setting variableResolver to null is not allowed");
         }
-        synchronized(this)
-        {
-            _variableResolver = variableResolver;
-        }
+        _variableResolver = variableResolver;
         if (log.isTraceEnabled()) log.trace("set VariableResolver = " + variableResolver.getClass().getName());
     }
 
@@ -257,10 +236,7 @@ public class ApplicationImpl
             log.error("setting viewHandler to null is not allowed");
             throw new NullPointerException("setting viewHandler to null is not allowed");
         }
-        synchronized(this)
-        {
-            _viewHandler = viewHandler;
-        }
+        _viewHandler = viewHandler;
         if (log.isTraceEnabled()) log.trace("set ViewHandler = " + viewHandler.getClass().getName());
     }
 
@@ -269,24 +245,29 @@ public class ApplicationImpl
         return _viewHandler;
     }
 
-    public void addComponent(String componentType, String componentClass)
+    public void addComponent(String componentType, String componentClassName)
     {
         if ((componentType == null) || (componentType.length() == 0))
         {
             log.error("addComponent: componentType = null ist not allowed");
             throw new NullPointerException("addComponent: componentType = null ist not allowed");
         }
-        if ((componentClass == null) || (componentClass.length() == 0))
+        if ((componentClassName == null) || (componentClassName.length() == 0))
         {
             log.error("addComponent: component = null is not allowed");
             throw new NullPointerException("addComponent: component = null is not allowed");
         }
-        synchronized(this)
+        try
         {
+            Class componentClass = Class.forName(componentClassName);
             _componentClassMap.put(componentType, componentClass);
+            if (log.isTraceEnabled()) log.trace("add Component class = " + componentClassName +
+                                                " for type = " + componentType);
         }
-        if (log.isTraceEnabled()) log.trace("add Component class = " + componentClass +
-                                            " for type = " + componentType);
+        catch (ClassNotFoundException e)
+        {
+            log.error("Component class " + componentClassName + " not found", e);
+        }
     }
 
     public void addConverter(String converterId, String converterClass)
@@ -301,11 +282,9 @@ public class ApplicationImpl
             log.error("addConverter: converterClass = null ist not allowed");
             throw new NullPointerException("addConverter: converterClass = null ist not allowed");
         }
-        synchronized(this)
-        {
-            Converter converter = (Converter)ConfigUtil.newInstance(converterClass);
-            _converterMap.put(converterId, converter);
-        }
+        //TODO: Using ConfigUtil here is not nice...
+        Converter converter = (Converter)ConfigUtil.newInstance(converterClass);
+        _converterMap.put(converterId, converter);
         if (log.isTraceEnabled()) log.trace("add Converter id = " + converterId +
                                             " converterClass = " + converterClass);
     }
@@ -322,11 +301,8 @@ public class ApplicationImpl
             log.error("addConverter: converterClass = null ist not allowed");
             throw new NullPointerException("addConverter: converterClass = null ist not allowed");
         }
-        synchronized(this)
-        {
-            Converter converter = (Converter)ConfigUtil.newInstance(converterClass);
-            _converterTypeMap.put(targetClass, converter);
-        }
+        Converter converter = (Converter)ConfigUtil.newInstance(converterClass);
+        _converterTypeMap.put(targetClass, converter);
         if (log.isTraceEnabled()) log.trace("add Converter targetClass = " + targetClass +
                                             " converterClass = " + converterClass);
     }
@@ -343,10 +319,7 @@ public class ApplicationImpl
             log.error("addValidator:  validatorClass = null ist not allowed");
             throw new NullPointerException("addValidator:  validatorClass = null ist not allowed");
         }
-        synchronized(this)
-        {
-            _validatorClassMap.put(validatorId, ConfigUtil.classForName(validatorClass));
-        }
+        _validatorClassMap.put(validatorId, ConfigUtil.classForName(validatorClass));
         if (log.isTraceEnabled()) log.trace("add Validator id = " + validatorId +
                                             " class = " + validatorClass);
     }
@@ -359,13 +332,27 @@ public class ApplicationImpl
             log.error("createComponent: componentType = null is not allowed");
             throw new NullPointerException("createComponent: componentType = null is not allowed");
         }
-        UIComponent uiComponent = (UIComponent)_componentClassMap.get(componentType);
-        if (uiComponent == null)
+        Class componentClass = (Class)_componentClassMap.get(componentType);
+        if (componentClass == null)
         {
-            log.error("Could not create component componentType = " + componentType);
-            throw new FacesException("Could not create component componentType = " + componentType);
+            log.error("Undefined component type " + componentType);
+            throw new FacesException("Undefined component type " + componentType);
         }
-        return uiComponent;
+
+        try
+        {
+            return (UIComponent)componentClass.newInstance();
+        }
+        catch (InstantiationException e)
+        {
+            log.error("Could not create component componentType = " + componentType, e);
+            throw new FacesException("Could not create component componentType = " + componentType, e);
+        }
+        catch (IllegalAccessException e)
+        {
+            log.error("Could not create component componentType = " + componentType, e);
+            throw new FacesException("Could not create component componentType = " + componentType, e);
+        }
     }
 
     public UIComponent createComponent(ValueBinding valueBinding,
@@ -394,10 +381,12 @@ public class ApplicationImpl
         {
             return (UIComponent) obj;
         }
-
-        UIComponent component = createComponent(componentType);
-        valueBinding.setValue(facesContext, component);
-        return component;
+        else
+        {
+            UIComponent component = createComponent(componentType);
+            valueBinding.setValue(facesContext, component);
+            return component;
+        }
     }
 
     public Converter createConverter(String converterId)
@@ -460,7 +449,7 @@ public class ApplicationImpl
     }
 
     public synchronized MethodBinding createMethodBinding(String reference, Class[] params)
-    throws ReferenceSyntaxException
+        throws ReferenceSyntaxException
     {
         if ((reference == null) || (reference.length() == 0))
         {
@@ -475,8 +464,7 @@ public class ApplicationImpl
         return new MethodBindingImpl(this, reference, params);
     }
 
-    public Validator createValidator(String validatorId)
-    throws FacesException
+    public Validator createValidator(String validatorId) throws FacesException
     {
         if ((validatorId == null) || (validatorId.length() == 0))
         {
@@ -486,8 +474,7 @@ public class ApplicationImpl
         return (Validator)_validatorClassMap.get(validatorId);
     }
 
-    public ValueBinding createValueBinding(String reference)
-    throws ReferenceSyntaxException
+    public ValueBinding createValueBinding(String reference) throws ReferenceSyntaxException
     {
         if ((reference == null) || (reference.length() == 0))
         {

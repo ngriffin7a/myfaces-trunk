@@ -23,8 +23,6 @@ import org.apache.commons.logging.LogFactory;
 
 import javax.faces.application.Application;
 import javax.faces.application.ApplicationFactory;
-import javax.faces.context.FacesContext;
-import java.util.Map;
 
 /**
  * JSF 1.0 PRD2, 7.2
@@ -37,15 +35,24 @@ public class ApplicationFactoryImpl
 {
     private static final Log log = LogFactory.getLog(ApplicationFactory.class);
 
+    //private static final String APPLICATION_ATTR = Application.class.getName();
+
+
+    //Application is thread-safe (see Application javadoc)
+    //"Application represents a per-web-application singleton object..."
+    //TODO: We assume that every web application has it's own JVM, is that ok?
+    private Application _application;
+
     public ApplicationFactoryImpl()
     {
+        _application = new ApplicationImpl();
         if (log.isTraceEnabled()) log.trace("New ApplicationFactory instance created");
     }
 
-    private static final String APPLICATION_ATTR = Application.class.getName();
 
     public Application getApplication()
     {
+        /*
         Map appMap = getApplicationMap();
         Application application = (Application)appMap.get(APPLICATION_ATTR);
 
@@ -54,15 +61,17 @@ public class ApplicationFactoryImpl
             application = new ApplicationImpl();
             appMap.put(APPLICATION_ATTR, application);
         }
-
-        return application;
+        */
+        return _application;
     }
 
     public void setApplication(Application application)
     {
-        getApplicationMap().put(APPLICATION_ATTR, application);
+        //getApplicationMap().put(APPLICATION_ATTR, application);
+        _application = application;
     }
 
+    /*
     private Map getApplicationMap()
     {
         FacesContext facesContext = FacesContext.getCurrentInstance();
@@ -73,4 +82,5 @@ public class ApplicationFactoryImpl
         }
         return facesContext.getExternalContext().getApplicationMap();
     }
+    */
 }

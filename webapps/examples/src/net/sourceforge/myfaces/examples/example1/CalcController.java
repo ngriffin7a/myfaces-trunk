@@ -18,13 +18,6 @@
  */
 package net.sourceforge.myfaces.examples.example1;
 
-import net.sourceforge.myfaces.examples.common.CarConfigurator;
-
-import javax.faces.FactoryFinder;
-import javax.faces.application.ApplicationFactory;
-import javax.faces.application.Action;
-import javax.faces.context.FacesContext;
-import javax.faces.el.ValueBinding;
 import javax.faces.event.AbortProcessingException;
 import javax.faces.event.ActionEvent;
 import javax.faces.event.ActionListener;
@@ -40,6 +33,8 @@ public class CalcController
 {
     public void processAction(ActionEvent event) throws AbortProcessingException
     {
+        /*
+        FIXME
         String commandName = event.getActionCommand();
         FacesContext facesContext = FacesContext.getCurrentInstance();
 
@@ -54,6 +49,7 @@ public class CalcController
         {
             form.subtract();
         }
+        */
     }
 
     public PhaseId getPhaseId()

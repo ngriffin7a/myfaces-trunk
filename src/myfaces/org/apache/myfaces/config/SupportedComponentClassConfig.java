@@ -31,6 +31,7 @@ import java.util.Set;
  * @version $Revision$ $Date$
  */
 public class SupportedComponentClassConfig
+        implements Config
 {
     private static final Log log = LogFactory.getLog(SupportedComponentClassConfig.class);
 

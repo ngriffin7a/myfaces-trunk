@@ -19,15 +19,6 @@
 package net.sourceforge.myfaces.examples.misc;
 
 import net.sourceforge.myfaces.component.ext.UploadedFile;
-import net.sourceforge.myfaces.examples.common.CarConfigurator;
-
-import javax.faces.application.Action;
-import javax.faces.application.ApplicationFactory;
-import javax.faces.context.FacesContext;
-import javax.faces.FactoryFinder;
-import javax.faces.el.ValueBinding;
-import javax.servlet.ServletContext;
-import java.io.File;
 
 /**
  * DOCUMENT ME!
@@ -48,7 +39,8 @@ public class FileUploadForm
         _upFile = upFile;
     }
 
-
+    /*
+    FIXME
     public Action getFileUploadAction()
     {
         return new Action() {
@@ -72,5 +64,6 @@ public class FileUploadForm
             }
         };
     }
+    */
 
 }

@@ -18,11 +18,7 @@
  */
 package net.sourceforge.myfaces.examples.misc;
 
-import javax.faces.FactoryFinder;
-import javax.faces.application.Action;
-import javax.faces.application.ApplicationFactory;
-import javax.faces.context.FacesContext;
-import javax.faces.el.VariableResolver;
+
 
 
 /**
@@ -33,14 +29,7 @@ import javax.faces.el.VariableResolver;
 public class OptionsController
 {
     /*
-    public boolean setLocale(FacesContext facesContext, CommandEvent commandEvent)
-    {
-        OptionsForm form = (OptionsForm)facesContext.getModelValue("optionsForm");
-        facesContext.setLocale(form.getLocale());
-        return false;
-    }
-    */
-
+    FIXME
     public Action getLocaleAction()
     {
         return new Action() {
@@ -55,5 +44,6 @@ public class OptionsController
             }
         };
     }
+    */
 
 }
