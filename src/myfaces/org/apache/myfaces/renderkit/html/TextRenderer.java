@@ -29,7 +29,7 @@ import javax.faces.context.ResponseWriter;
 import java.io.IOException;
 
 /**
- * TODO: description
+ * DOCUMENT ME!
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
@@ -100,7 +100,6 @@ public class TextRenderer
             writer.write("\"");
         }
         writer.write(">");
-        //InputRendererHelper.renderMessages(facesContext, uiComponent);
     }
 
 

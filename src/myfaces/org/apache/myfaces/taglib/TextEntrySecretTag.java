@@ -20,17 +20,31 @@ package net.sourceforge.myfaces.taglib;
 
 import net.sourceforge.myfaces.renderkit.html.SecretRenderer;
 
+import javax.faces.component.UIComponent;
+
 /**
- * TODO: description
+ * DOCUMENT ME!
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
 public class TextEntrySecretTag
         extends TextEntryInputTag
 {
+    public UIComponent createComponent()
+    {
+        UIComponent comp = super.createComponent();
+        comp.setAttribute(SecretRenderer.REDISPLAY_ATTR, Boolean.FALSE); //Default (JSF.7.6.4)
+        return comp;
+    }
+
     public String getRendererType()
     {
         return SecretRenderer.TYPE;
     }
 
+    public void setRedisplay(boolean b)
+    {
+        setProperty(SecretRenderer.REDISPLAY_ATTR,
+                    b ? Boolean.TRUE : Boolean.FALSE);
+    }
 }

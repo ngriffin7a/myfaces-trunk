@@ -32,7 +32,7 @@ import javax.faces.event.FormEvent;
 import java.io.IOException;
 
 /**
- * TODO: description
+ * DOCUMENT ME!
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */

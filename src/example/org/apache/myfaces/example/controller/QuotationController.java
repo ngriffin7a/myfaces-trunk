@@ -24,7 +24,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.event.CommandEvent;
 
 /**
- * TODO: description
+ * DOCUMENT ME!
  * @author Thomas Spiegl
  * @version $Revision$ $Date$
  */

@@ -32,13 +32,29 @@ import javax.faces.context.MessageResources;
 import javax.faces.context.MessageResourcesFactory;
 
 /**
- * TODO: description
+ * DOCUMENT ME!
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
 public class UIComponentUtils
 {
     private UIComponentUtils() {}
+
+    public static boolean getBooleanAttribute(UIComponent uiComponent,
+                                              String attribute,
+                                              boolean defaultValue)
+    {
+        Boolean b = (Boolean)uiComponent.getAttribute(attribute);
+        if (b == null)
+        {
+            return defaultValue;
+        }
+        else
+        {
+            return b.booleanValue();
+        }
+    }
+
 
     public static void setComponentValue(UIComponent uiComponent,
                                          Object newValue)

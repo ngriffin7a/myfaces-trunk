@@ -26,7 +26,7 @@ import javax.faces.tree.Tree;
 import javax.servlet.ServletContext;
 
 /**
- * TODO: description
+ * DOCUMENT ME!
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */

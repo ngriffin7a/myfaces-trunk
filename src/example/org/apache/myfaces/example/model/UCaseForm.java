@@ -24,7 +24,7 @@ import javax.faces.event.FacesEvent;
 import java.io.Serializable;
 
 /**
- * TODO: description
+ * DOCUMENT ME!
  * @author Manfred Geiler
  * @version $Revision$ $Date$
  */

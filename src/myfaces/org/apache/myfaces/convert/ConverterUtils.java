@@ -36,7 +36,7 @@ import java.text.NumberFormat;
 import java.util.Locale;
 
 /**
- * TODO: description
+ * DOCUMENT ME!
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */

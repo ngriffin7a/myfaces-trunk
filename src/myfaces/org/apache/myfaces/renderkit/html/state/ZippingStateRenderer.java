@@ -19,7 +19,7 @@
 package net.sourceforge.myfaces.renderkit.html.state;
 
 /**
- * TODO: description
+ * DOCUMENT ME!
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */

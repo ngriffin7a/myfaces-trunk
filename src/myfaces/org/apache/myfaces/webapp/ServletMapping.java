@@ -5,7 +5,7 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletRequest;
 
 /**
- * TODO: description
+ * DOCUMENT ME!
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */

@@ -31,7 +31,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 /**
- * TODO: description
+ * DOCUMENT ME!
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */

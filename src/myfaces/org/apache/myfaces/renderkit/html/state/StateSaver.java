@@ -45,7 +45,7 @@ import java.util.*;
 import java.util.regex.Pattern;
 
 /**
- * TODO: description
+ * DOCUMENT ME!
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
@@ -496,10 +496,16 @@ public class StateSaver
 
     protected boolean isIgnoreValue(UIComponent comp)
     {
-        //secret?
-        if (SecretRenderer.isSecretComponent(comp))
+        //Secret with redisplay == false?
+        if (comp.getComponentType().equals(SecretRenderer.TYPE))
         {
-            return true;
+            Boolean redisplay = (Boolean)comp.getAttribute(SecretRenderer.REDISPLAY_ATTR);
+            if (redisplay == null   //because false is default
+                || !redisplay.booleanValue())
+            {
+                //value must not be redisplayed, so also no (visual) state saving must occur
+                return true;
+            }
         }
 
         //transient?

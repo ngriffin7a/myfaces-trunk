@@ -21,7 +21,7 @@ package net.sourceforge.myfaces.component;
 import javax.faces.component.UIComponentBase;
 
 /**
- * TODO: description
+ * DOCUMENT ME!
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */

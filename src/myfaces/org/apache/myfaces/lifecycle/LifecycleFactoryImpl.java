@@ -21,8 +21,9 @@ package net.sourceforge.myfaces.lifecycle;
 import javax.faces.FacesException;
 import javax.faces.lifecycle.Lifecycle;
 import javax.faces.lifecycle.LifecycleFactory;
-import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 /**
  * Spec 1.0 EA - JSF.6.5 LifecycleFactory
@@ -33,33 +34,41 @@ public class LifecycleFactoryImpl
         extends LifecycleFactory
 {
     private static final Object _lock = new Object();
-    private static Lifecycle _lifecycle = null;
+    private static Map _lifecycles = new HashMap();
 
-    public void addLifecycle(String s, Lifecycle lifecycle)
+    public LifecycleFactoryImpl()
     {
-        //TODO
-        throw new UnsupportedOperationException();
+        _lifecycles.put(DEFAULT_LIFECYCLE, new LifecycleImpl());
     }
 
-    public Lifecycle getLifecycle(String s)
-            throws FacesException
+    public void addLifecycle(String id, Lifecycle lifecycle)
     {
-        if (!s.equals(DEFAULT_LIFECYCLE))
-        {
-            throw new IllegalArgumentException("Only default lifecycle supported!");
-        }
         synchronized (_lock)
         {
-            if (_lifecycle == null)
+            if (_lifecycles.get(id) != null)
             {
-                _lifecycle = new LifecycleImpl();
+                throw new IllegalArgumentException("Lifecycle with id '" + id + "' already exists.");
             }
-            return _lifecycle;
+            _lifecycles.put(id, lifecycle);
+        }
+    }
+
+    public Lifecycle getLifecycle(String id)
+            throws FacesException
+    {
+        synchronized (_lock)
+        {
+            Lifecycle lifecycle = (Lifecycle)_lifecycles.get(id);
+            if (lifecycle == null)
+            {
+                throw new IllegalArgumentException("Unknown lifecycle '" + id + "'.");
+            }
+            return lifecycle;
         }
     }
 
     public Iterator getLifecycleIds()
     {
-        return Collections.singleton(getLifecycle(DEFAULT_LIFECYCLE)).iterator();
+        return _lifecycles.keySet().iterator();
     }
 }

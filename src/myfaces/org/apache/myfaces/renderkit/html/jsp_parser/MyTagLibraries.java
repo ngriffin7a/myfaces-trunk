@@ -21,7 +21,7 @@ package net.sourceforge.myfaces.renderkit.html.jsp_parser;
 import org.apache.jasper.compiler.TagLibraries;
 
 /**
- * TODO: description
+ * DOCUMENT ME!
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */

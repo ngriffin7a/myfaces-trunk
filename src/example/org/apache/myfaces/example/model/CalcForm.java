@@ -22,7 +22,7 @@ import java.math.BigDecimal;
 import java.io.Serializable;
 
 /**
- * TODO: description
+ * DOCUMENT ME!
  * @author Manfred Geiler
  * @version $Revision$ $Date$
  */

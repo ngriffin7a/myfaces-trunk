@@ -30,7 +30,7 @@ import javax.faces.render.Renderer;
 import java.util.*;
 
 /**
- * TODO: description
+ * DOCUMENT ME!
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */

@@ -19,7 +19,7 @@
 package net.sourceforge.myfaces.convert.map;
 
 /**
- * TODO: description
+ * DOCUMENT ME!
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */

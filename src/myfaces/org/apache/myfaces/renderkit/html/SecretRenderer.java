@@ -19,6 +19,7 @@
 package net.sourceforge.myfaces.renderkit.html;
 
 import net.sourceforge.myfaces.component.UIInput;
+import net.sourceforge.myfaces.component.UIComponentUtils;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLEncoder;
 
 import javax.faces.component.UIComponent;
@@ -35,7 +36,8 @@ import java.io.IOException;
 public class SecretRenderer
         extends HTMLRenderer
 {
-    private static final String IS_SECRET_ATTR = SecretRenderer.class.getName() + ".IS_SECRET";
+    public static final String REDISPLAY_ATTR = "redisplay";
+
     public static final String TYPE = "Secret";
 
     public String getRendererType()
@@ -50,14 +52,13 @@ public class SecretRenderer
 
     public boolean supportsComponentType(UIComponent uicomponent)
     {
-        return uicomponent instanceof UITextEntry; //TODO:javax.faces.component.UIInput instead!
+        return uicomponent instanceof UITextEntry; //TODO: javax.faces.component.UIInput instead with final API release
     }
 
     public void decode(FacesContext facescontext, UIComponent uicomponent)
         throws IOException
     {
         super.decode(facescontext, uicomponent);
-        uicomponent.setAttribute(IS_SECRET_ATTR, Boolean.TRUE);
     }
 
     public void encodeEnd(FacesContext facesContext, UIComponent uiComponent)
@@ -68,12 +69,17 @@ public class SecretRenderer
         writer.write(" name=\"");
         writer.write(uiComponent.getCompoundId());
         writer.write("\"");
-        String currentValue = getStringValue(facesContext, uiComponent);
-        if (currentValue != null)
+        if (UIComponentUtils.getBooleanAttribute(uiComponent,
+                                                 SecretRenderer.REDISPLAY_ATTR,
+                                                 false))
         {
-            writer.write(" value=\"");
-            writer.write(HTMLEncoder.encode(currentValue, false, false));
-            writer.write("\"");
+            String currentValue = getStringValue(facesContext, uiComponent);
+            if (currentValue != null)
+            {
+                writer.write(" value=\"");
+                writer.write(HTMLEncoder.encode(currentValue, false, false));
+                writer.write("\"");
+            }
         }
         String size = (String)uiComponent.getAttribute(UIInput.SIZE_ATTR);
         if (size != null)
@@ -90,19 +96,6 @@ public class SecretRenderer
             writer.write("\"");
         }
         writer.write(">");
-        //InputRendererHelper.renderMessages(facesContext, uiComponent);
-    }
-
-
-    /**
-     * TODO: Handle by "redisplay" attribute (Spec. Table 7-1 JSF.7.6.4)
-     * @param comp
-     * @return
-     */
-    public static boolean isSecretComponent(UIComponent comp)
-    {
-        Boolean secret = (Boolean)comp.getAttribute(SecretRenderer.IS_SECRET_ATTR);
-        return secret != null && secret.booleanValue();
     }
 
 }

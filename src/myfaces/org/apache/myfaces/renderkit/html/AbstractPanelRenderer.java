@@ -25,7 +25,7 @@ import javax.faces.component.UIComponent;
 import java.util.StringTokenizer;
 
 /**
- * TODO: description
+ * DOCUMENT ME!
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  */

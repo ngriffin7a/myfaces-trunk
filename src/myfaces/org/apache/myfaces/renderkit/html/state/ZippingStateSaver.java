@@ -30,7 +30,7 @@ import java.util.Map;
 import java.util.zip.GZIPOutputStream;
 
 /**
- * TODO: description
+ * DOCUMENT ME!
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */

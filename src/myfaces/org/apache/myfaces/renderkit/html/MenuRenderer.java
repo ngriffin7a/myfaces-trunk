@@ -26,7 +26,7 @@ import javax.faces.context.FacesContext;
 import java.io.IOException;
 
 /**
- * TODO: description
+ * DOCUMENT ME!
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  */

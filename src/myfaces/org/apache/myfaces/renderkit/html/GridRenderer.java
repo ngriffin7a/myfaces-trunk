@@ -28,7 +28,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 /**
- * TODO: description
+ * DOCUMENT ME!
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  */

@@ -21,7 +21,7 @@ package net.sourceforge.myfaces.component.ext;
 import net.sourceforge.myfaces.component.UICommand;
 
 /**
- * TODO: description
+ * DOCUMENT ME!
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */

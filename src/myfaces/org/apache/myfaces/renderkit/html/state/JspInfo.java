@@ -27,7 +27,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * TODO: description
+ * DOCUMENT ME!
  * TODO: Move to more general package (does no longer only serve infos for state saving)
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$

@@ -34,7 +34,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 /**
- * TODO: description
+ * DOCUMENT ME!
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  */

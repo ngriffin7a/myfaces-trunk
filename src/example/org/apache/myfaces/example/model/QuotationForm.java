@@ -22,7 +22,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * TODO: description
+ * DOCUMENT ME!
  * @author Thomas Spiegl
  * @version
  */

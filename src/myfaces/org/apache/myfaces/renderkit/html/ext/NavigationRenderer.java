@@ -31,7 +31,7 @@ import java.io.IOException;
 import java.util.Iterator;
 
 /**
- * TODO: description
+ * DOCUMENT ME!
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */

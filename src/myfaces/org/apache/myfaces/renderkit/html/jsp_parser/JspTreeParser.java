@@ -39,7 +39,7 @@ import net.sourceforge.myfaces.webapp.ServletMapping;
 import net.sourceforge.myfaces.MyFacesFactoryFinder;
 
 /**
- * TODO: description
+ * DOCUMENT ME!
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */

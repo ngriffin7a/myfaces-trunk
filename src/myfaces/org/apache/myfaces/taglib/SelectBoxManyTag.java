@@ -26,7 +26,7 @@ import javax.faces.webapp.FacesTag;
 
 
 /**
- * TODO: description
+ * DOCUMENT ME!
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  */

@@ -19,7 +19,7 @@
 package net.sourceforge.myfaces.component;
 
 /**
- * TODO: description
+ * DOCUMENT ME!
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
