@@ -53,11 +53,13 @@ public class HTMLUtil
         Object value = component.getAttribute(rendererAttrName);
         if (value != null)
         {
-            if (value instanceof Boolean &&
-                ((Boolean)value).booleanValue())
+            if (value instanceof Boolean)
             {
-                buf.append(" ");
-                buf.append(htmlAttrName);
+                if (((Boolean)value).booleanValue())
+                {
+                    buf.append(" ");
+                    buf.append(htmlAttrName);
+                }
             }
             else
             {
@@ -79,11 +81,13 @@ public class HTMLUtil
         Object value = component.getAttribute(rendererAttrName);
         if (value != null)
         {
-            if (value instanceof Boolean &&
-                ((Boolean)value).booleanValue())
+            if (value instanceof Boolean)
             {
-                writer.write(" ");
-                writer.write(htmlAttrName);
+                if (((Boolean)value).booleanValue())
+                {
+                    writer.write(" ");
+                    writer.write(htmlAttrName);
+                }
             }
             else
             {
