@@ -55,6 +55,9 @@ import org.apache.commons.logging.LogFactory;
  * @version $Revision$ $Date$
  * 
  * $Log$
+ * Revision 1.53  2004/10/01 12:01:05  dave0000
+ * remove unneeded checks
+ *
  * Revision 1.52  2004/10/01 11:54:29  dave0000
  * add detailed error messages for "base is null"
  *
@@ -520,7 +523,7 @@ public class ValueBindingImpl extends ValueBinding implements StateHolder
 
         // Resolve and apply the suffixes
         List suffixes = complexValue.getSuffixes();
-        int max = (suffixes == null) ? -1 : suffixes.size() - 1;
+        int max = suffixes.size() - 1;
         for (int i = 0; i < max; i++) 
         {
             ValueSuffix suffix = (ValueSuffix) suffixes.get(i);
@@ -534,28 +537,24 @@ public class ValueBindingImpl extends ValueBinding implements StateHolder
         }
         
         // Resolve the last suffix
-        Object index = null;
-        if (max >= 0)
+        ArraySuffix arraySuffix = (ArraySuffix) suffixes.get(max);
+        Expression arraySuffixIndex = arraySuffix.getIndex();
+        
+        Object index;
+        if (arraySuffixIndex != null)
         {
-            ArraySuffix arraySuffix = (ArraySuffix) suffixes.get(max);
-            Expression arraySuffixIndex = arraySuffix.getIndex();
-            
-            if (arraySuffixIndex != null)
+            index = arraySuffixIndex.evaluate(
+                    variableResolver, s_functionMapper, 
+                    ELParserHelper.LOGGER);
+            if (index == null)
             {
-                index = arraySuffixIndex.evaluate(
-                        variableResolver, s_functionMapper, 
-                        ELParserHelper.LOGGER);
-                if (index == null)
-                {
-                    throw new PropertyNotFoundException("Index is null: " 
-                        + arraySuffixIndex.getExpressionString());
-                }
-                
+                throw new PropertyNotFoundException("Index is null: " 
+                    + arraySuffixIndex.getExpressionString());
             }
-            else
-            {
-                index = ((PropertySuffix) arraySuffix).getName();
-            }
+        }
+        else
+        {
+            index = ((PropertySuffix) arraySuffix).getName();
         }
         
         return new Object[] {base, index};
