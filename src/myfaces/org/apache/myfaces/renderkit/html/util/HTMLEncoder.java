@@ -78,7 +78,7 @@ public abstract class HTMLEncoder
                 case '\n':
                     if (encodeNewline)
                     {
-                        app = "<br>";
+                        app = "<br/>";
                     }
                     break;
 
