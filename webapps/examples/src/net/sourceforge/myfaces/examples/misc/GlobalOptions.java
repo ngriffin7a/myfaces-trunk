@@ -36,4 +36,15 @@ public class GlobalOptions
     {
         _pageLayout = pageLayout;
     }
+
+
+    public String getNumericAsString() {
+        return "23";
+    }
+
+    
+    public long getNumeric() {
+        return 23L;
+    }
+
 }

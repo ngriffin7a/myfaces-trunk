@@ -69,4 +69,10 @@ public class RenderKit
         renderer.add(value);
     }
 
+
+    public void merge(RenderKit renderKit)
+    {
+        renderer.addAll(renderKit.getRenderer());
+    }
+
 }

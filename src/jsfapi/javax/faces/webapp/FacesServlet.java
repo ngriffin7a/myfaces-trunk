@@ -80,16 +80,6 @@ public class FacesServlet
         //So we can acquire it here once:
         LifecycleFactory lifecycleFactory = (LifecycleFactory)FactoryFinder.getFactory(FactoryFinder.LIFECYCLE_FACTORY);
         _lifecycle = lifecycleFactory.getLifecycle(getLifecycleId());
-
-        // TODO: for newconfig integration
-//        ServletExternalContextImpl externalContext = new ServletExternalContextImpl(_servletConfig.getServletContext(), null, null);
-//        LifecycleConfig lifecycleConfig = LifecycleConfig.getCurrentInstance(externalContext);
-//
-//        for (Iterator iterator = lifecycleConfig.getLifecyclePhaseListeners().iterator(); iterator.hasNext();)
-//        {
-//            PhaseListener listener = (PhaseListener) iterator.next();
-//            _lifecycle.addPhaseListener(listener);
-//        }
     }
 
     public void service(ServletRequest request,

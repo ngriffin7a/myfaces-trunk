@@ -19,6 +19,9 @@
 package net.sourceforge.myfaces.el;
 
 import net.sourceforge.myfaces.MyFacesFactoryFinder;
+import net.sourceforge.myfaces.confignew.RuntimeConfig;
+import net.sourceforge.myfaces.confignew.ManagedBeanBuilder;
+import net.sourceforge.myfaces.confignew.element.ManagedBean;
 import net.sourceforge.myfaces.config.FacesConfig;
 import net.sourceforge.myfaces.config.FacesConfigFactory;
 import net.sourceforge.myfaces.config.ManagedBeanConfig;
@@ -41,6 +44,13 @@ import java.util.Map;
  * @author Anton Koinov
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.27.2.1  2004/06/13 15:59:07  o_rossmueller
+ * started integration of new config mechanism:
+ * - factories
+ * - components
+ * - render kits
+ * - managed beans + managed properties (no list/map initialization)
+ *
  * Revision 1.27  2004/05/12 07:57:43  manolito
  * Log in javadoc header
  *
@@ -240,7 +250,10 @@ public class VariableResolverImpl
      * safely cache it
      */
     private FacesConfig _facesConfig;
-    
+
+    private ManagedBeanBuilder beanBuilder = new ManagedBeanBuilder();
+
+
     //~ Methods ---------------------------------------------------------------
 
     public Object resolveVariable(FacesContext facesContext, String name)
@@ -295,14 +308,11 @@ public class VariableResolverImpl
         }
 
         // ManagedBean
-        ManagedBeanConfig mbc = 
-            getFacesConfig(facesContext).getManagedBeanConfig(name);
+        ManagedBean mbc = RuntimeConfig.getCurrentInstance(facesContext.getExternalContext()).getManagedBean(name);
+
         if (mbc != null)
         {
-            obj = ClassUtils.newInstance(mbc.getManagedBeanClass());
-            ManagedBeanConfigurator configurator = 
-                ManagedBeanConfigurator.getInstance();
-            configurator.configure(facesContext, mbc, obj);
+            obj = beanBuilder.buildManagedBean(facesContext, mbc);
 
             // put in scope
             String scopeKey = mbc.getManagedBeanScope();

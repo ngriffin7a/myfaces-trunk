@@ -113,7 +113,13 @@ public class DigesterFacesConfigDispenserImpl implements FacesConfigDispenser
         for (Iterator iterator = config.getRenderKits().iterator(); iterator.hasNext();)
         {
             RenderKit renderKit = (RenderKit) iterator.next();
-            renderKits.put(renderKit.getId(), renderKit);
+            RenderKit existing = (RenderKit) renderKits.get(renderKit.getId());
+
+            if (existing == null) {
+                renderKits.put(renderKit.getId(), renderKit);
+            } else {
+                existing.merge(renderKit);
+            }
         }
         lifecyclePhaseListeners.addAll(config.getLifecyclePhaseListener());
         managedBeans.addAll(config.getManagedBeans());

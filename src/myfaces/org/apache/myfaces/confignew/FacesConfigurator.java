@@ -46,14 +46,18 @@ import net.sourceforge.myfaces.confignew.impl.dom.DOMFacesConfigUnmarshallerImpl
 import net.sourceforge.myfaces.confignew.impl.digester.DigesterFacesConfigUnmarshallerImpl;
 import net.sourceforge.myfaces.confignew.impl.digester.DigesterFacesConfigDispenserImpl;
 import net.sourceforge.myfaces.renderkit.html.HtmlRenderKitImpl;
+import net.sourceforge.myfaces.renderkit.RenderKitFactoryImpl;
 import net.sourceforge.myfaces.util.ClassUtils;
 import net.sourceforge.myfaces.util.StringUtils;
 import net.sourceforge.myfaces.application.jsp.JspStateManagerImpl;
 import net.sourceforge.myfaces.application.jsp.JspViewHandlerImpl;
 import net.sourceforge.myfaces.application.NavigationHandlerImpl;
 import net.sourceforge.myfaces.application.ActionListenerImpl;
+import net.sourceforge.myfaces.application.ApplicationFactoryImpl;
 import net.sourceforge.myfaces.el.PropertyResolverImpl;
 import net.sourceforge.myfaces.el.VariableResolverImpl;
+import net.sourceforge.myfaces.context.FacesContextFactoryImpl;
+import net.sourceforge.myfaces.lifecycle.LifecycleFactoryImpl;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.xml.sax.SAXException;
@@ -66,6 +70,13 @@ import org.xml.sax.SAXException;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.3.2.1  2004/06/13 15:59:07  o_rossmueller
+ * started integration of new config mechanism:
+ * - factories
+ * - components
+ * - render kits
+ * - managed beans + managed properties (no list/map initialization)
+ *
  * Revision 1.3  2004/06/08 20:50:09  o_rossmueller
  * completed configurator
  *
@@ -94,6 +105,10 @@ public class FacesConfigurator
     private static final String DEFAULT_PROPERTY_RESOLVER_CLASS = PropertyResolverImpl.class.getName();
     private static final String DEFAULT_VARIABLE_RESOLVER_CLASS = VariableResolverImpl.class.getName();
     private static final String DEFAULT_ACTION_LISTENER_CLASS = ActionListenerImpl.class.getName();
+    private static final String DEFAULT_APPLICATION_FACTORY = ApplicationFactoryImpl.class.getName();
+    private static final String DEFAULT_FACES_CONTEXT_FACTORY = FacesContextFactoryImpl.class.getName();
+    private static final String DEFAULT_LIFECYCLE_FACTORY = LifecycleFactoryImpl.class.getName();
+    private static final String DEFAULT_RENDER_KIT_FACTORY = RenderKitFactoryImpl.class.getName();
 
 
     private ExternalContext _externalContext;
@@ -374,14 +389,15 @@ public class FacesConfigurator
 
     private void configureFactories()
     {
-        setFactories(FactoryFinder.APPLICATION_FACTORY, _dispenser.getApplicationFactoryIterator());
-        setFactories(FactoryFinder.FACES_CONTEXT_FACTORY, _dispenser.getFacesContextFactoryIterator());
-        setFactories(FactoryFinder.LIFECYCLE_FACTORY, _dispenser.getLifecycleFactoryIterator());
-        setFactories(FactoryFinder.RENDER_KIT_FACTORY, _dispenser.getRenderKitFactoryIterator());
+        setFactories(FactoryFinder.APPLICATION_FACTORY, _dispenser.getApplicationFactoryIterator(), DEFAULT_APPLICATION_FACTORY);
+        setFactories(FactoryFinder.FACES_CONTEXT_FACTORY, _dispenser.getFacesContextFactoryIterator(), DEFAULT_FACES_CONTEXT_FACTORY);
+        setFactories(FactoryFinder.LIFECYCLE_FACTORY, _dispenser.getLifecycleFactoryIterator(), DEFAULT_LIFECYCLE_FACTORY);
+        setFactories(FactoryFinder.RENDER_KIT_FACTORY, _dispenser.getRenderKitFactoryIterator(), DEFAULT_RENDER_KIT_FACTORY);
     }
 
-    private void setFactories(String factoryName, Iterator factories)
+    private void setFactories(String factoryName, Iterator factories, String defaultFactory)
     {
+        FactoryFinder.setFactory(factoryName, defaultFactory);
         while (factories.hasNext())
         {
             FactoryFinder.setFactory(factoryName, (String)factories.next());
@@ -595,6 +611,7 @@ public class FacesConfigurator
 
     private void configureLifecycle()
     {
+        // TODO: configure lifecycles + listeners
         LifecycleConfig lifecycleConfig = LifecycleConfig.getCurrentInstance(_externalContext);
 
         for (Iterator iterator = _dispenser.getLifecyclePhaseListeners(); iterator.hasNext();)

@@ -124,7 +124,7 @@ public class DigesterFacesConfigUnmarshallerImpl implements FacesConfigUnmarshal
 
         digester.addObjectCreate("faces-config/navigation-rule", NavigationRule.class);
         digester.addSetNext("faces-config/navigation-rule", "addNavigationRule");
-        digester.addCallMethod("faces-config/navigation-rule/from-view-id", "setFromViewId");
+        digester.addCallMethod("faces-config/navigation-rule/from-view-id", "setFromViewId", 0);
         digester.addObjectCreate("faces-config/navigation-rule/navigation-case", NavigationCase.class);
         digester.addSetNext("faces-config/navigation-rule/navigation-case", "addNavigationCase");
         digester.addCallMethod("faces-config/navigation-rule/navigation-case/from-action", "setFromAction", 0);
