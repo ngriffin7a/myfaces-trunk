@@ -41,6 +41,9 @@ import org.apache.myfaces.renderkit.html.HTML;
  * @author Sylvain Vieujot (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.16  2004/12/24 14:11:50  svieujot
+ * Return resource relative mapped path when given null context.
+ *
  * Revision 1.15  2004/12/17 13:19:10  mmarinschek
  * new component jsValueChangeListener
  *
@@ -114,7 +117,7 @@ public class AddResource {
         writer.startElement(HTML.SCRIPT_ELEM,null);
         writer.writeAttribute(HTML.SCRIPT_LANGUAGE_ATTR,HTML.SCRIPT_LANGUAGE_JAVASCRIPT,null);
         writer.writeURIAttribute(HTML.SRC_ATTR,
-                getResourceMappedPath(componentClass,resourceFileName, context),
+                getResourceMappedPath(componentClass, resourceFileName, context),
                 null);
         writer.endElement(HTML.SCRIPT_ELEM);
     }
@@ -165,16 +168,24 @@ public class AddResource {
      * 	AddResource.addJavaScriptOncePerPage(HtmlCalendarRenderer.class, "popcalendar.js", facesContext,
      * 		"jscalendarSetImageDirectory("+AddResource.getResourceMappedPath(HtmlCalendarRenderer.class, "DB", facesContext)+")");
      * </code>
+     * 
+     * Note : set context to null if you want the path after the application context path.
      */
     public static String getResourceMappedPath(Class componentClass, String resourceFileName, FacesContext context){
+        HttpServletRequest request = null;
+        if( context != null )
+            request = (HttpServletRequest)context.getExternalContext().getRequest();
+        
         return getResourceMappedPath(
                 getComponentName(componentClass),
                 resourceFileName,
-                (HttpServletRequest)context.getExternalContext().getRequest());
+                request);
     }
     
     private static String getResourceMappedPath(String componentName, String resourceFileName, HttpServletRequest request){
-        String contextPath = request.getContextPath(); 
+        String contextPath = "";
+        if( request != null )
+            contextPath = request.getContextPath();
         return contextPath+RESOURCE_VIRUAL_PATH+"/"+componentName+'/'+resourceFileName;
     }
     
