@@ -107,6 +107,8 @@ extends HTMLRenderer
             writer.write(imageSrc);
             writer.write("\" name=\"");
             writer.write(uiComponent.getClientId(facesContext));
+            writer.write("\" id=\"");
+            writer.write(uiComponent.getClientId(facesContext));
             writer.write('"');
         }
         else
@@ -121,6 +123,8 @@ extends HTMLRenderer
             writer.write('"');
             writer.write(type);
             writer.write("\" name=\"");
+            writer.write(uiComponent.getClientId(facesContext));
+            writer.write("\" id=\"");
             writer.write(uiComponent.getClientId(facesContext));
             writer.write("\" value=\"");
 
