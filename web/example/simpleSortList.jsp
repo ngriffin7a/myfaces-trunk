@@ -1,5 +1,5 @@
 <%@ page session="false"
-%><%@ taglib uri="/WEB-INF/myfaces_basic.tld" prefix="f"
+%><%@ taglib uri="/WEB-INF/myfaces_basic.tld" prefix="h"
 %><%@ taglib uri="/WEB-INF/myfaces_ext.tld" prefix="x"
 %><html>
 
@@ -30,19 +30,19 @@
 
 <jsp:useBean id="list" class="net.sourceforge.myfaces.example.model.SimpleCarList" scope="request" />
 
-<f:use_faces>
+<h:use_faces>
 
     <x:page_layout id="page" layout="classic" cssClass="<%=pageLayout%>" >
         <x:page_header id="header" cssClass="pageHeader" >
-            <f:image id="logo" url="images/logo_mini.jpg" altKey="alt_logo" altBundle="net.sourceforge.myfaces.example.example_messages" />
+            <h:image id="logo" url="images/logo_mini.jpg" altKey="alt_logo" altBundle="net.sourceforge.myfaces.example.example_messages" />
         </x:page_header>
         <%@ include file="inc/navigation.jsp"  %>
 
         <x:page_body id="body" cssClass="pageBody" >
 
-            <f:errors id="errors" />
+            <h:errors id="errors" />
 
-            <f:list id="list"
+            <h:list id="list"
                     cssClass="standardTable"
                     headerClass="standardTable_SortHeader"
                     footerClass="standardTable_Footer"
@@ -53,23 +53,23 @@
                                                columnReference="list.sort"
                                                ascendingReference="list.ascending" >
                     <x:sortcolumn id="list_header_col1" column="type" cssClass="sortLink" >
-                        <f:output_text id="list_header_name" text="Car-Type" />
+                        <h:output_text id="list_header_name" text="Car-Type" />
                     </x:sortcolumn>
                     <x:sortcolumn id="list_header_col2" column="color" cssClass="sortLink" >
-                        <f:output_text id="list_header_iso" text="Car-Color"  />
+                        <h:output_text id="list_header_iso" text="Car-Color"  />
                     </x:sortcolumn>
                 </x:sortheader>
                 <!-- DATA -->
-                <f:listrow id="list_tr" var="car" modelReference="list.cars" >
-                    <f:output_text id="list_name" modelReference="car.type" />
-                    <f:output_text id="list_isoCode" modelReference="car.color" />
-                </f:listrow>
+                <h:listrow id="list_tr" var="car" modelReference="list.cars" >
+                    <h:output_text id="list_name" modelReference="car.type" />
+                    <h:output_text id="list_isoCode" modelReference="car.color" />
+                </h:listrow>
                 <!-- FOOTER -->
-                <f:group id="list_footer" >
-                    <f:output_text id="list_footer_name" text="..."  />
-                    <f:output_text id="list_footer_iso" />
-                </f:group>
-            </f:list>
+                <h:group id="list_footer" >
+                    <h:output_text id="list_footer_name" text="..."  />
+                    <h:output_text id="list_footer_iso" />
+                </h:group>
+            </h:list>
 
         </x:page_body>
 
@@ -78,7 +78,7 @@
         </x:page_footer>
     </x:page_layout>
 
-</f:use_faces>
+</h:use_faces>
 
 </body>
 

@@ -1,7 +1,7 @@
 <%@ page import="java.math.BigDecimal,
                  java.util.Date"%>
 <%@ page session="false"
-%><%@ taglib uri="/WEB-INF/myfaces_basic.tld" prefix="f"
+%><%@ taglib uri="/WEB-INF/myfaces_basic.tld" prefix="h"
 %><%@ taglib uri="/WEB-INF/myfaces_ext.tld" prefix="x"
 %><html>
 
@@ -36,11 +36,11 @@
 <jsp:useBean id="ucaseForm" class="net.sourceforge.myfaces.example.model.UCaseForm" scope="request" />
 <jsp:useBean id="ucaseCtrl" class="net.sourceforge.myfaces.example.controller.UCaseController" scope="application" />
 
-<f:use_faces>
+<h:use_faces>
 
     <x:page_layout id="page" layout="classic" cssClass="<%=pageLayout%>" >
         <x:page_header id="header" cssClass="pageHeader" >
-            <f:image id="logo" url="images/logo_mini.jpg" altKey="alt_logo" altBundle="net.sourceforge.myfaces.example.example_messages" />
+            <h:image id="logo" url="images/logo_mini.jpg" altKey="alt_logo" altBundle="net.sourceforge.myfaces.example.example_messages" />
         </x:page_header>
         <%@ include file="inc/navigation.jsp"  %>
 
@@ -54,22 +54,22 @@
             <%
                 Date test = new Date();
             %>
-            You entered this page on <f:output_text id="test" text="<%=test.toString()%>" /><br>
+            You entered this page on <h:output_text id="test" text="<%=test.toString()%>" /><br>
 
-            <f:errors id="messageList" />
+            <h:errors id="messageList" />
 
             <h4>A Form</h4>
             <table border="1"><tr><td>
-                <f:form id="form1" formName="calcForm">
-                    Number 1: <f:textentry_input id="number1" modelReference="calcForm.number1" maxLength="10" size="25"/><f:input_errors id="number1Error" compoundId="/form1/number1" cssClass="error" /><br>
-                    Number 2: <f:textentry_input id="number2" modelReference="calcForm.number2" maxLength="10" size="25"/><f:input_errors id="number2Error" compoundId="/form1/number2" cssClass="error" /><br>
-                    Result: <f:output_text id="result" modelReference="calcForm.result" /><br>
-                    <f:command_button id="addButton" commandName="add" commandReference="calcCtrl.calc" label="Add them"/>
-                    <f:command_button id="subtractButton" commandName="subtract" commandReference="calcCtrl.calc" label="Subtract them"/><br>
-                </f:form>
+                <h:form id="form1" formName="calcForm">
+                    Number 1: <h:textentry_input id="number1" modelReference="calcForm.number1" maxLength="10" size="25"/><h:input_errors id="number1Error" compoundId="/form1/number1" cssClass="error" /><br>
+                    Number 2: <h:textentry_input id="number2" modelReference="calcForm.number2" maxLength="10" size="25"/><h:input_errors id="number2Error" compoundId="/form1/number2" cssClass="error" /><br>
+                    Result: <h:output_text id="result" modelReference="calcForm.result" /><br>
+                    <h:command_button id="addButton" commandName="add" commandReference="calcCtrl.calc" label="Add them"/>
+                    <h:command_button id="subtractButton" commandName="subtract" commandReference="calcCtrl.calc" label="Subtract them"/><br>
+                </h:form>
 
-                <f:command_hyperlink id="href1" commandName="add" commandReference="calcCtrl.calc">Add them by use of a link</f:command_hyperlink><br>
-                <f:command_hyperlink id="href2" commandName="subtract" commandReference="calcCtrl.calc">Subtract them by use of a link</f:command_hyperlink>
+                <h:command_hyperlink id="href1" commandName="add" commandReference="calcCtrl.calc">Add them by use of a link</h:command_hyperlink><br>
+                <h:command_hyperlink id="href2" commandName="subtract" commandReference="calcCtrl.calc">Subtract them by use of a link</h:command_hyperlink>
             </td></tr></table>
 
             <br>
@@ -77,14 +77,14 @@
 
             <h4>Another Form</h4>
             <table border="1"><tr><td>
-                <f:form id="form2" formName="ucaseForm">
-                    <f:textentry_input id="text" modelReference="ucaseForm.text" /><br>
-                    <f:command_button id="ucaseButton" commandName="up" commandReference="ucaseCtrl.calc" label="Make it uppercase" />
-                    <f:command_button id="lcaseButton" commandName="low" commandReference="ucaseCtrl.calc" label="Make it lowercase" /><br>
-                </f:form>
+                <h:form id="form2" formName="ucaseForm">
+                    <h:textentry_input id="text" modelReference="ucaseForm.text" /><br>
+                    <h:command_button id="ucaseButton" commandName="up" commandReference="ucaseCtrl.calc" label="Make it uppercase" />
+                    <h:command_button id="lcaseButton" commandName="low" commandReference="ucaseCtrl.calc" label="Make it lowercase" /><br>
+                </h:form>
             </td></tr></table>
 
-    <br><f:command_hyperlink id="jump_home" href="home.jsf" >Go Home</f:command_hyperlink>
+    <br><h:command_hyperlink id="jump_home" href="home.jsf" >Go Home</h:command_hyperlink>
 
         </x:page_body>
 
@@ -93,7 +93,7 @@
         </x:page_footer>
     </x:page_layout>
 
-</f:use_faces>
+</h:use_faces>
 
 </body>
 

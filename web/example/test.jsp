@@ -1,5 +1,5 @@
 <%@ page session="false"
-%><%@ taglib uri="/WEB-INF/myfaces_basic.tld" prefix="f"
+%><%@ taglib uri="/WEB-INF/myfaces_basic.tld" prefix="h"
 %><%@ taglib uri="/WEB-INF/myfaces_ext.tld" prefix="x"
 %><html>
 
@@ -27,11 +27,11 @@
 <%@include file="inc/header.inc" %>
 <body>
 
-<f:use_faces>
+<h:use_faces>
 
     <x:page_layout id="page" layout="classic" cssClass="<%=pageLayout%>" >
         <x:page_header id="header" cssClass="pageHeader" >
-            <f:image id="logo" url="images/logo.jpg"/>
+            <h:image id="logo" url="images/logo.jpg"/>
         </x:page_header>
         <%@ include file="inc/navigation.jsp"  %>
 
@@ -44,7 +44,7 @@ Body
         </x:page_footer>
     </x:page_layout>
 
-</f:use_faces>
+</h:use_faces>
 
 </body>
 

@@ -2,7 +2,7 @@
                  java.util.Date"%>
 <%@ page session="false"
 %>
-<%@ taglib uri="/WEB-INF/myfaces_basic.tld" prefix="f"
+<%@ taglib uri="/WEB-INF/myfaces_basic.tld" prefix="h"
 %>
 <%@ taglib uri="/WEB-INF/myfaces_ext.tld" prefix="x"
 %><html>
@@ -32,11 +32,11 @@
 
 <body>
 
-<f:use_faces>
+<h:use_faces>
 
     <x:page_layout id="page" layout="classic" cssClass="<%=pageLayout%>" >
         <x:page_header id="header" cssClass="pageHeader" >
-            <f:image id="logo" url="images/logo_mini.jpg" altKey="alt_logo" altBundle="net.sourceforge.myfaces.example.example_messages" />
+            <h:image id="logo" url="images/logo_mini.jpg" altKey="alt_logo" altBundle="net.sourceforge.myfaces.example.example_messages" />
         </x:page_header>
         <%@ include file="inc/navigation.jsp"  %>
 
@@ -51,7 +51,7 @@
         </x:page_footer>
     </x:page_layout>
 
-</f:use_faces>
+</h:use_faces>
 
 </body>
 

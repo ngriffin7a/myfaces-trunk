@@ -1,5 +1,5 @@
 <%@ page session="false"
-%><%@ taglib uri="/WEB-INF/myfaces_basic.tld" prefix="f"
+%><%@ taglib uri="/WEB-INF/myfaces_basic.tld" prefix="h"
 %><%@ taglib uri="/WEB-INF/myfaces_ext.tld" prefix="x"
 %><html>
 
@@ -30,52 +30,52 @@
 
 <jsp:useBean id="countryList" class="net.sourceforge.myfaces.example.model.SimpleCountryList" scope="request" />
 
-<f:use_faces>
+<h:use_faces>
 
     <x:page_layout id="page" layout="classic" cssClass="<%=pageLayout%>" >
         <x:page_header id="pageHeader" cssClass="pageHeader" >
-            <f:image id="logo" url="images/logo_mini.jpg" altKey="alt_logo" altBundle="net.sourceforge.myfaces.example.example_messages" />
+            <h:image id="logo" url="images/logo_mini.jpg" altKey="alt_logo" altBundle="net.sourceforge.myfaces.example.example_messages" />
         </x:page_header>
         <%@ include file="inc/navigation.jsp"  %>
 
         <x:page_body id="body" cssClass="pageBody" >
 
-            <f:errors id="errors" />
+            <h:errors id="errors" />
 
             <% int rows = 0, cols = 2; %>
-            <f:list id="countryList"
+            <h:list id="countryList"
                     cssClass="standardTable"
                     headerClass="standardTable_Header"
                     footerClass="standardTable_Footer"
                     rowClasses="standardTable_Row1,standardTable_Row2"
                     columnClasses="standardTable_Column,standardTable_ColumnCentered" >
                 <!-- HEADER -->
-                <f:group id="header" >
-                    <f:output_text id="header_name" text="Country name" />
-                    <f:output_text id="header_isoCode" text="Iso-Code" />
-                </f:group>
+                <h:group id="header" >
+                    <h:output_text id="header_name" text="Country name" />
+                    <h:output_text id="header_isoCode" text="Iso-Code" />
+                </h:group>
                 <!-- DATA -->
-                <f:listrow id="countryList_tr" var="country" modelReference="countryList.countries" >
-                    <f:output_text id="countryList_name" modelReference="country.name" />
-                    <f:group id="g1" >
-                        <a href="#"><f:output_text id="countryList_isoCode" modelReference="country.isoCode" /></a>
+                <h:listrow id="countryList_tr" var="country" modelReference="countryList.countries" >
+                    <h:output_text id="countryList_name" modelReference="country.name" />
+                    <h:group id="g1" >
+                        <a href="#"><h:output_text id="countryList_isoCode" modelReference="country.isoCode" /></a>
                         <% rows++; %>
-                    </f:group>
-                </f:listrow>
+                    </h:group>
+                </h:listrow>
                 <!-- FOOTER -->
-                <f:group id="footer" >
-                    <f:output_text id="footer_1" text="take a look at this runtime values ..."/>
-                    <f:group id="g2" >
-                        <f:message id="row_count" msg="{0} rows" >
-                            <f:param id="rows" value="<%=new Integer(rows)%>"/>
-                        </f:message>
+                <h:group id="footer" >
+                    <h:output_text id="footer_1" text="take a look at this runtime values ..."/>
+                    <h:group id="g2" >
+                        <h:message id="row_count" msg="{0} rows" >
+                            <h:param id="rows" value="<%=new Integer(rows)%>"/>
+                        </h:message>
                         &nbsp; / &nbsp;
-                        <f:message id="col_count" msg="{0} cols" >
-                            <f:param id="cols" value="<%=new Integer(cols)%>"/>
-                        </f:message>
-                    </f:group>
-                </f:group>
-            </f:list>
+                        <h:message id="col_count" msg="{0} cols" >
+                            <h:param id="cols" value="<%=new Integer(cols)%>"/>
+                        </h:message>
+                    </h:group>
+                </h:group>
+            </h:list>
             <br>
 
         </x:page_body>
@@ -85,7 +85,7 @@
         </x:page_footer>
     </x:page_layout>
 
-</f:use_faces>
+</h:use_faces>
 
 </body>
 

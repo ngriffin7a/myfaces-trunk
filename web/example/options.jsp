@@ -1,5 +1,5 @@
 <%@ page session="false"
-%><%@ taglib uri="/WEB-INF/myfaces_basic.tld" prefix="f"
+%><%@ taglib uri="/WEB-INF/myfaces_basic.tld" prefix="h"
 %><%@ taglib uri="/WEB-INF/myfaces_ext.tld" prefix="x"
 %><html>
 
@@ -31,26 +31,26 @@
 <jsp:useBean id="optionsForm" class="net.sourceforge.myfaces.example.model.OptionsForm" scope="request" />
 <jsp:useBean id="optionsCtrl" class="net.sourceforge.myfaces.example.controller.OptionsController" scope="application" />
 
-<f:use_faces>
+<h:use_faces>
 
     <x:page_layout id="page" layout="classic" cssClass="<%=pageLayout%>" >
         <x:page_header id="header" cssClass="pageHeader" >
-            <f:image id="logo" url="images/logo_mini.jpg" altKey="alt_logo" altBundle="net.sourceforge.myfaces.example.example_messages" />
+            <h:image id="logo" url="images/logo_mini.jpg" altKey="alt_logo" altBundle="net.sourceforge.myfaces.example.example_messages" />
         </x:page_header>
         <%@ include file="inc/navigation.jsp"  %>
 
         <x:page_body id="body" cssClass="pageBody" >
-            <f:errors id="messageList" />
+            <h:errors id="messageList" />
 
             <h4>Options</h4>
             <table border="1"><tr><td>
-                <f:form id="form1" formName="calcForm">
-                    <f:message id="msg_lang" key="option_lang" bundle="net.sourceforge.myfaces.example.example_messages" ></f:message>
-                    <f:selectbox id="locales" modelReference="optionsForm.language"  >
-                        <f:selectbox_items id="available" modelReference="optionsForm.availableLanguages" />
-                    </f:selectbox>
-                    <f:command_button id="apply" commandName="apply" commandReference="optionsCtrl.setLocale" label="Apply"/>
-                </f:form>
+                <h:form id="form1" formName="calcForm">
+                    <h:message id="msg_lang" key="option_lang" bundle="net.sourceforge.myfaces.example.example_messages" ></h:message>
+                    <h:selectbox id="locales" modelReference="optionsForm.language"  >
+                        <h:selectbox_items id="available" modelReference="optionsForm.availableLanguages" />
+                    </h:selectbox>
+                    <h:command_button id="apply" commandName="apply" commandReference="optionsCtrl.setLocale" label="Apply"/>
+                </h:form>
 
             </td></tr></table>
 
@@ -61,7 +61,7 @@
         </x:page_footer>
     </x:page_layout>
 
-</f:use_faces>
+</h:use_faces>
 
 </body>
 

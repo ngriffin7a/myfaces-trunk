@@ -1,7 +1,7 @@
 <%@ page import="java.math.BigDecimal,
                  java.util.Date"%>
 <%@ page session="false"
-%><%@ taglib uri="/WEB-INF/myfaces_basic.tld" prefix="f"
+%><%@ taglib uri="/WEB-INF/myfaces_basic.tld" prefix="h"
 %><%@ taglib uri="/WEB-INF/myfaces_ext.tld" prefix="x"
 %><html>
 
@@ -27,11 +27,11 @@
 //-->
 
 <%@include file="inc/header.inc" %>
-<f:use_faces>
+<h:use_faces>
 
     <x:page_layout id="page" layout="classic" cssClass="<%=pageLayout%>" >
         <x:page_header id="header" cssClass="pageHeader" >
-            <f:image id="logo_mini" url="images/logo_mini.jpg" altKey="alt_logo" altBundle="net.sourceforge.myfaces.example.example_messages" />
+            <h:image id="logo_mini" url="images/logo_mini.jpg" altKey="alt_logo" altBundle="net.sourceforge.myfaces.example.example_messages" />
         </x:page_header>
         <%@ include file="inc/navigation.jsp"  %>
 
@@ -39,16 +39,16 @@
             <table border="0">
                 <tr>
                     <td valign="middle">
-                        <f:message id="welcome" bundle="net.sourceforge.myfaces.example.example_messages" key="welcome" />
+                        <h:message id="welcome" bundle="net.sourceforge.myfaces.example.example_messages" key="welcome" />
                     </td>
                     <td valign="middle">
-                        <f:image id="logo" url="images/logo.jpg"/>
+                        <h:image id="logo" url="images/logo.jpg"/>
                     </td>
                 </tr>
             </table>
-            <f:message id="today" bundle="net.sourceforge.myfaces.example.example_messages" key="today" >
-                <f:param id="p0" value="<%=new Date()%>" />
-            </f:message>
+            <h:message id="today" bundle="net.sourceforge.myfaces.example.example_messages" key="today" >
+                <h:param id="p0" value="<%=new Date()%>" />
+            </h:message>
         </x:page_body>
 
         <x:page_footer id="footer" cssClass="pageFooter" >
@@ -56,7 +56,7 @@
         </x:page_footer>
     </x:page_layout>
 
-</f:use_faces>
+</h:use_faces>
 
 </body>
 
