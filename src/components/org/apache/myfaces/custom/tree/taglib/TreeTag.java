@@ -22,6 +22,8 @@ package net.sourceforge.myfaces.custom.tree.taglib;
 
 import net.sourceforge.myfaces.custom.tree.model.DefaultTreeModel;
 import net.sourceforge.myfaces.custom.tree.model.TreeModel;
+import net.sourceforge.myfaces.custom.tree.model.TreePath;
+import net.sourceforge.myfaces.custom.tree.HtmlTree;
 import net.sourceforge.myfaces.taglib.UIComponentTagBase;
 
 import javax.faces.component.UIComponent;
@@ -36,6 +38,9 @@ import javax.servlet.jsp.JspException;
  * @author <a href="mailto:oliver@rossmueller.com">Oliver Rossmueller</a>
  * @version $Revision$ $Date$
  *          $Log$
+ *          Revision 1.2  2004/04/22 21:59:17  o_rossmueller
+ *          added expandRoot attribute
+ *
  *          Revision 1.1  2004/04/22 10:20:25  manolito
  *          tree component
  *
@@ -62,6 +67,7 @@ public class TreeTag
     private String styleClass;
     private String nodeClass;
     private String selectedNodeClass;
+    private boolean expandRoot;
 
 
     public String getComponentType()
@@ -292,14 +298,27 @@ public class TreeTag
     }
 
 
+    public boolean isExpandRoot()
+    {
+        return expandRoot;
+    }
+
+
+    public void setExpandRoot(boolean expandRoot)
+    {
+        this.expandRoot = expandRoot;
+    }
+
+
     /**
      * Obtain tree model or create a default model.
      */
     public int doStartTag() throws JspException
     {
+        FacesContext context = FacesContext.getCurrentInstance();
+
         if (value != null)
         {
-            FacesContext context = FacesContext.getCurrentInstance();
             ValueBinding valueBinding = context.getApplication().createValueBinding(value);
             TreeModel treeModel = (TreeModel)(valueBinding.getValue(context));
 
@@ -310,7 +329,20 @@ public class TreeTag
                 valueBinding.setValue(context, treeModel);
             }
         }
-        return super.doStartTag();
+        int answer = super.doStartTag();
+
+        if (getCreated() && expandRoot)
+        {
+            // component was created, so expand the root node
+            HtmlTree tree = (HtmlTree) getComponentInstance();
+            TreeModel model = tree.getModel(context);
+
+            if (model != null) {
+                tree.expandPath(new TreePath(new Object[]{model.getRoot()}), context);
+            }
+        }
+
+        return answer;
     }
 
 
