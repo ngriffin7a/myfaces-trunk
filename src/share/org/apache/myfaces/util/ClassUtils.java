@@ -34,6 +34,9 @@ import java.util.Map;
  * @author Anton Koinov
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.2  2004/05/11 04:24:10  dave0000
+ * Bug 943166: add value coercion to ManagedBeanConfigurator
+ *
  * Revision 1.1  2004/03/31 11:58:45  manolito
  * custom component refactoring
  *
@@ -120,17 +123,20 @@ public class ClassUtils
     {
         try
         {
-            return Class.forName(type, false, Thread.currentThread().getContextClassLoader());
+            return Class.forName(type, false, 
+                Thread.currentThread().getContextClassLoader());
         }
         catch (ClassNotFoundException ignore)
         {
             // fallback
-            return Class.forName(type, false, ClassUtils.class.getClassLoader());
+            return Class.forName(type, false, 
+                ClassUtils.class.getClassLoader());
         }
 // we do not initialize (second param to forName() is false) for faster startup
 //      catch (ExceptionInInitializerError e)
 //      {
-//          log.error("Error in static initializer of class " + type + ": " + e.getMessage(), e);
+//          log.error("Error in static initializer of class " + type + ": " 
+//                + e.getMessage(), e);
 //          throw e;
 //      }
     }
@@ -142,7 +148,8 @@ public class ClassUtils
         if (stream == null)
         {
             // fallback
-            stream = ClassUtils.class.getClassLoader().getResourceAsStream(resource);
+            stream = 
+                ClassUtils.class.getClassLoader().getResourceAsStream(resource);
         }
         return stream;
     }
@@ -189,63 +196,23 @@ public class ClassUtils
         }
     }
 
-
     public static Object convertToType(Object value, Class desiredClass)
     {
         if (value == null)
         {
             return null;
         }
-// Cannot do this anymore, as value is Object now
-//        if (desiredClass == String.class)
-//        {
-//            return value;
-//        }
         
         try
         {
-            // Use coersion implemented by JSP EL for consistency with EL expressions.
-            // Additionally, it caches some of the coersions.
+            // Use coersion implemented by JSP EL for consistency with EL 
+            // expressions. Additionally, it caches some of the coersions.
             return Coercions.coerce(value, desiredClass, s_logger);
-
-// Old code, if we keep the above, should remove it later            
-//            if (desiredClass.equals(Byte.TYPE) || desiredClass.equals(Byte.class))
-//            {
-//                return new Byte(value.trim());
-//            }
-//            else if (desiredClass.equals(Short.TYPE) || desiredClass.equals(Short.class))
-//            {
-//                return new Short(value.trim());
-//            }
-//            else if (desiredClass.equals(Integer.TYPE) || desiredClass.equals(Integer.class))
-//            {
-//                return new Integer(value.trim());
-//            }
-//            else if (desiredClass.equals(Long.TYPE) || desiredClass.equals(Long.class))
-//            {
-//                return new Long(value.trim());
-//            }
-//            else if (desiredClass.equals(Double.TYPE) || desiredClass.equals(Double.class))
-//            {
-//                return new Double(value.trim());
-//            }
-//            else if (desiredClass.equals(Float.TYPE) || desiredClass.equals(Float.class))
-//            {
-//                return new Float(value.trim());
-//            }
-//            else if (desiredClass.equals(Boolean.TYPE) || desiredClass.equals(Boolean.class))
-//            {
-//                return Boolean.valueOf(value.trim());
-//            }
-//        }
-//        catch (NumberFormatException e)
-//        {
-//            log.error("NumberFormatException value '" + value + "' type " + desiredClass.getName());
-//            throw e;
         }
         catch (ELException e)
         {
-            log.error("Coersion error value '" + value + "' type " + desiredClass.getName(), e);
+            log.error("Cannot coerce " + value.getClass().getName() 
+                + " to " + desiredClass.getName(), e);
             throw new FacesException(e);
         }
     }

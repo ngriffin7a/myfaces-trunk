@@ -28,6 +28,9 @@ import javax.faces.el.ValueBinding;
  * @version $Revision$ $Date$
  * 
  * $Log$
+ * Revision 1.19  2004/05/11 04:24:12  dave0000
+ * Bug 943166: add value coercion to ManagedBeanConfigurator
+ *
  * Revision 1.18  2004/05/10 05:30:15  dave0000
  * Fix issue with setting Managed Bean to a wrong scope
  *
@@ -482,5 +485,35 @@ public class ValueBindingTest extends ELBaseTest
 
         vb = _application.createValueBinding("#{testBean_B.name}");
         assertEquals("testName", vb.getValue(_facesContext));
+
+        vb = _application.createValueBinding("#{testBean_B.int}");
+        assertEquals(new Integer(1), vb.getValue(_facesContext));
+
+        vb = _application.createValueBinding("#{testBean_B.double}");
+        assertEquals(new Double(1.1), vb.getValue(_facesContext));
+
+        vb = _application.createValueBinding("#{testBean_B.integer}");
+        assertEquals(new Integer(2), vb.getValue(_facesContext));
+
+        vb = _application.createValueBinding("#{testBean_B.double2}");
+        assertEquals(new Double(2.2), vb.getValue(_facesContext));
+
+        vb = _application.createValueBinding("#{testBean_B1.double2}");
+        assertEquals(new Double(2.2), vb.getValue(_facesContext));
+
+        vb = _application.createValueBinding("#{testBean_B2.name}");
+        assertEquals(B.NAME, vb.getValue(_facesContext));
+
+        vb = _application.createValueBinding("#{testBean_B2.int}");
+        assertEquals(new Integer(-1), vb.getValue(_facesContext));
+
+        vb = _application.createValueBinding("#{testBean_B2.double}");
+        assertEquals(new Double(-1.1), vb.getValue(_facesContext));
+
+        vb = _application.createValueBinding("#{testBean_B2.integer}");
+        assertEquals(new Integer(-2), vb.getValue(_facesContext));
+
+        vb = _application.createValueBinding("#{testBean_B2.double2}");
+        assertEquals(new Double(-2.2), vb.getValue(_facesContext));
     }
 }

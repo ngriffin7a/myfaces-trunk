@@ -296,8 +296,8 @@ public class VariableResolverImpl
         {
             obj = ClassUtils.newInstance(mbc.getManagedBeanClass());
             ManagedBeanConfigurator configurator = 
-                new ManagedBeanConfigurator(mbc);
-            configurator.configure(facesContext, obj);
+                ManagedBeanConfigurator.getInstance();
+            configurator.configure(facesContext, mbc, obj);
 
             // put in scope
             String scopeKey = mbc.getManagedBeanScope();

@@ -37,6 +37,9 @@ import java.lang.reflect.InvocationTargetException;
  * @author Anton Koinov (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.13  2004/05/11 04:24:10  dave0000
+ * Bug 943166: add value coercion to ManagedBeanConfigurator
+ *
  * Revision 1.12  2004/04/16 15:13:31  manolito
  * validator attribute support and MethodBinding invoke exception handling fixed
  *
@@ -185,6 +188,11 @@ public class MethodBindingImpl extends MethodBinding
             throw new ReferenceSyntaxException("Expression: "
                 + getExpressionString(), e);
         }
+    }
+    
+    public String toString()
+    {
+        return _valueBinding.toString();
     }
 
     //~ StateHolder implementation --------------------------------------------

@@ -52,6 +52,9 @@ import java.util.Map;
  * @version $Revision$ $Date$
  * 
  * $Log$
+ * Revision 1.40  2004/05/11 04:24:10  dave0000
+ * Bug 943166: add value coercion to ManagedBeanConfigurator
+ *
  * Revision 1.39  2004/05/10 05:30:14  dave0000
  * Fix issue with setting Managed Bean to a wrong scope
  *
@@ -553,6 +556,11 @@ public class ValueBindingImpl extends ValueBinding implements StateHolder
             _facesConfig = facesConfigFactory.getFacesConfig(externalContext);
         }
         return _facesConfig;
+    }
+    
+    public String toString()
+    {
+        return _expressionString;
     }
 
     //~ State Holder ------------------------------------------------------

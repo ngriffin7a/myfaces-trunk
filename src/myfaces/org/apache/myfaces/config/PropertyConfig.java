@@ -31,11 +31,11 @@ public class PropertyConfig implements Config
     //~ Instance fields ----------------------------------------------------------------------------
 
 // ignore        
-//    private String _description;
-//    private String _displayName;
-//    private IconConfig _iconConfig;
-    private Class  _propertyClass;
-    private String _propertyName;
+//    protected String _description;
+//    protected String _displayName;
+//    protected IconConfig _iconConfig;
+    protected Class  _propertyClass;
+    protected String _propertyName;
 
     //~ Methods ------------------------------------------------------------------------------------
 

@@ -62,6 +62,45 @@
             <property-name>name</property-name>
             <value>testName</value>
         </managed-property>
+
+        <managed-property>
+            <property-name>int</property-name>
+            <value>1</value>
+        </managed-property>
+
+        <managed-property>
+            <property-name>double</property-name>
+            <value>1.1</value>
+        </managed-property>
+
+        <managed-property>
+            <property-name>integer</property-name>
+            <value>2</value>
+        </managed-property>
+
+        <managed-property>
+            <property-name>double2</property-name>
+            <value>2.2</value>
+        </managed-property>
+    </managed-bean>
+
+    <managed-bean>
+        <description>Test bean</description>
+        <managed-bean-name>testBean_B1</managed-bean-name>
+        <managed-bean-class>net.sourceforge.myfaces.el.B</managed-bean-class>
+        <managed-bean-scope>session</managed-bean-scope>
+
+        <managed-property>
+            <property-name>double2</property-name>
+            <value>#{testBean_B.double2}</value>
+        </managed-property>
+    </managed-bean>
+
+    <managed-bean>
+        <description>Test bean</description>
+        <managed-bean-name>testBean_B2</managed-bean-name>
+        <managed-bean-class>net.sourceforge.myfaces.el.B</managed-bean-class>
+        <managed-bean-scope>session</managed-bean-scope>
     </managed-bean>
 
 </faces-config>

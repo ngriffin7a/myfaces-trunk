@@ -28,6 +28,10 @@ public class B
     public static final String NAME = "Dummy object B";
     
     private String _name = NAME;
+    private int _int = -1;
+    private double _double = -1.1;
+    private Integer _integer = new Integer(-2);
+    private Double _double2 = new Double(-2.2);
 
     public String getName()
     {
@@ -48,5 +52,39 @@ public class B
     public C getTheC()
     {
         return new C();
+    }
+    
+    public void setInt(int i)
+    {
+        _int = i;
+    }
+    
+    public int getInt()
+    {
+        return _int;
+    }
+    public double getDouble()
+    {
+        return _double;
+    }
+    public void setDouble(double double1)
+    {
+        _double = double1;
+    }
+    public Double getDouble2()
+    {
+        return _double2;
+    }
+    public void setDouble2(Double double2)
+    {
+        _double2 = double2;
+    }
+    public Integer getInteger()
+    {
+        return _integer;
+    }
+    public void setInteger(Integer integer)
+    {
+        _integer = integer;
     }
 }

@@ -20,6 +20,7 @@ package net.sourceforge.myfaces.config;
 
 import net.sourceforge.myfaces.util.ClassUtils;
 
+import javax.faces.el.ValueBinding;
 import javax.faces.webapp.UIComponentTag;
 
 
@@ -40,13 +41,15 @@ public class ManagedPropertyConfig extends PropertyConfig
 
     //~ Instance fields ----------------------------------------------------------------------------
 
-// ignore
+// inherited
 //    private String _description;
 //    private String _displayName;
 //    private IconConfig _iconConfig;
-    private String            _propertyName = null;
-    private Class             _propertyClass = null;
+//    private String _propertyName;
+//    private Class _propertyClass;
+    
     private Object            _value = null;
+    private ValueBinding      _valueBinding = null;
     private MapEntriesConfig  _mapEntriesConfig = null;
     private ListEntriesConfig _listEntriesConfig = null;
     private int               _type = TYPE_UNKNOWN;
@@ -76,11 +79,19 @@ public class ManagedPropertyConfig extends PropertyConfig
         _propertyClass = ClassUtils.javaTypeToClass(propertyClassName);
     }
 
+    /** 
+     * Used to update the type with later during execution 
+     */
+    public void setPropertyClass(Class clazz)
+    {
+        _propertyClass = clazz;
+    }
+
     public Class getPropertyClass()
     {
         return _propertyClass;
     }
-
+    
     public void setPropertyName(String propertyName)
     {
         _propertyName = propertyName.intern();
@@ -121,6 +132,26 @@ public class ManagedPropertyConfig extends PropertyConfig
     public Object getValue()
     {
         return _value;
+    }
+
+    /** 
+     * Used to update the value with a coerced object matching the type of the
+     * property later during execution 
+     */
+    public void setValue(Object value) {
+        _value = value;
+    }
+
+    public ValueBinding getValueBinding()
+    {
+        return _valueBinding;
+    }
+    
+    /** 
+     * Used to update the ValueBinding later during execution 
+     */
+    public void setValueBinding(ValueBinding valueBinding) {
+        _valueBinding = valueBinding;
     }
 
     public void setListEntriesConfig(ListEntriesConfig listEntriesConfig)
