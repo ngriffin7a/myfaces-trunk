@@ -37,6 +37,9 @@ import java.util.Map;
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.19  2005/01/04 01:42:23  svieujot
+ * Bugfix for last page.
+ *
  * Revision 1.18  2005/01/04 00:28:07  svieujot
  * dataScroller, add rowsCountVar, displayedRowsCountVar, firstRowIndexVar and lastRowIndexVar attributes.
  *
@@ -196,6 +199,9 @@ public class HtmlDataScrollerRenderer
         if (displayedRowsCountVar != null)
         {
             int displayedRowsCount = uiData.getRows();
+            int max = uiData.getRowCount()-uiData.getFirst();
+            if( displayedRowsCount > max )
+                displayedRowsCount = max;
             requestMap.put(displayedRowsCountVar, new Integer(displayedRowsCount));
         }
         String firstRowIndexVar = scroller.getFirstRowIndexVar();
@@ -208,6 +214,9 @@ public class HtmlDataScrollerRenderer
         if (lastRowIndexVar != null)
         {
             int lastRowIndex = uiData.getFirst()+uiData.getRows();
+            int count = uiData.getRowCount();
+            if( lastRowIndex > count )
+                lastRowIndex = count;
             requestMap.put(lastRowIndexVar, new Integer(lastRowIndex));
         }
 
