@@ -18,9 +18,14 @@
  */
 package net.sourceforge.myfaces.component.html;
 
+import net.sourceforge.myfaces.util.ClassUtils;
+
 import javax.faces.component.html.HtmlCommandLink;
 import javax.faces.context.FacesContext;
 import javax.faces.el.ValueBinding;
+import javax.faces.event.AbortProcessingException;
+import javax.faces.event.ActionEvent;
+import javax.faces.event.FacesEvent;
 
 /**
  * @author Thomas Spiegl (latest modification by $Author$)
@@ -30,6 +35,44 @@ import javax.faces.el.ValueBinding;
 public class MyFacesHtmlCommandLink
     extends HtmlCommandLink
 {
+    private ValueBinding _actionUpdateProperty;
+
+    public ValueBinding getActionUpdateProperty()
+    {
+        return _actionUpdateProperty;
+    }
+
+    public void setActionUpdateProperty(ValueBinding actionUpdateProperty)
+    {
+        _actionUpdateProperty = actionUpdateProperty;
+    }
+
+
+    public void broadcast(FacesEvent event) throws AbortProcessingException
+    {
+        if (event instanceof ActionEvent)
+        {
+            ValueBinding vb = getActionUpdateProperty();
+            if (vb != null)
+            {
+                FacesContext context = getFacesContext();
+                Object updateValue;
+                if (_actionUpdateValue != null)
+                {
+                    Class type = vb.getType(context);
+                    updateValue = ClassUtils.convertToType(_actionUpdateValue, type);
+                }
+                else
+                {
+                    updateValue = getActionUpdateValue();
+                }
+                vb.setValue(context, updateValue);
+            }
+        }
+
+        super.broadcast(event);
+    }
+
     //------------------ GENERATED CODE BEGIN (do not modify!) --------------------
 
     public static final String COMPONENT_TYPE = "net.sourceforge.myfaces.HtmlCommandLink";
@@ -37,6 +80,7 @@ public class MyFacesHtmlCommandLink
     private static final String DEFAULT_RENDERER_TYPE = "net.sourceforge.myfaces.Link";
 
     private String _target = null;
+    private String _actionUpdateValue = null;
 
     public MyFacesHtmlCommandLink()
     {
@@ -60,12 +104,26 @@ public class MyFacesHtmlCommandLink
         return vb != null ? (String)vb.getValue(getFacesContext()) : null;
     }
 
+    public void setActionUpdateValue(String actionUpdateValue)
+    {
+        _actionUpdateValue = actionUpdateValue;
+    }
+
+    public String getActionUpdateValue()
+    {
+        if (_actionUpdateValue != null) return _actionUpdateValue;
+        ValueBinding vb = getValueBinding("actionUpdateValue");
+        return vb != null ? (String)vb.getValue(getFacesContext()) : null;
+    }
+
 
     public Object saveState(FacesContext context)
     {
-        Object values[] = new Object[2];
+        Object values[] = new Object[4];
         values[0] = super.saveState(context);
         values[1] = _target;
+        values[2] = saveAttachedState(context, _actionUpdateProperty);
+        values[3] = _actionUpdateValue;
         return ((Object) (values));
     }
 
@@ -74,6 +132,8 @@ public class MyFacesHtmlCommandLink
         Object values[] = (Object[])state;
         super.restoreState(context, values[0]);
         _target = (String)values[1];
+        _actionUpdateProperty = (ValueBinding)restoreAttachedState(context, values[2]);
+        _actionUpdateValue = (String)values[3];
     }
     //------------------ GENERATED CODE END ---------------------------------------
 }

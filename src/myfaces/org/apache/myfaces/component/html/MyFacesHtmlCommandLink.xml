@@ -12,4 +12,12 @@
         <name>target</name>
         <type>java.lang.String</type>
     </field>
+    <field generateProperty="false" >
+        <name>actionUpdateProperty</name>
+        <type>javax.faces.el.ValueBinding</type>
+    </field>
+    <field>
+        <name>actionUpdateValue</name>
+        <type>java.lang.String</type>
+    </field>
 </component>

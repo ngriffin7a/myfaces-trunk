@@ -44,16 +44,30 @@ public class MyfacesHtmlCommandLinkTag
     }
 
     private String _target;
+    private String _actionUpdateProperty;
+    private String _actionUpdateValue;
 
     protected void setProperties(UIComponent component)
     {
         super.setProperties(component);
         setStringProperty(component, HTML.TARGET_ATTR, _target);
+        setValueBinding(component, "actionUpdateProperty", _actionUpdateProperty);
+        setStringProperty(component, "actionUpdateValue", _actionUpdateValue);
     }
 
     public void setTarget(String target)
     {
         _target = target;
+    }
+
+    public void setActionUpdateProperty(String actionUpdateProperty)
+    {
+        _actionUpdateProperty = actionUpdateProperty;
+    }
+
+    public void setActionUpdateValue(String actionUpdateValue)
+    {
+        _actionUpdateValue = actionUpdateValue;
     }
 
 }

@@ -158,6 +158,57 @@ public class ClassUtils
         }
     }
 
+
+    public static Object convertToType(String value, Class desiredClass)
+    {
+        if (value == null)
+        {
+            return null;
+        }
+        if (desiredClass.equals(String.class))
+        {
+            return value;
+        }
+
+        try
+        {
+            if (desiredClass.equals(Byte.TYPE) || desiredClass.equals(Byte.class))
+            {
+                return new Byte(value.trim());
+            }
+            else if (desiredClass.equals(Short.TYPE) || desiredClass.equals(Short.class))
+            {
+                return new Short(value.trim());
+            }
+            else if (desiredClass.equals(Integer.TYPE) || desiredClass.equals(Integer.class))
+            {
+                return new Integer(value.trim());
+            }
+            else if (desiredClass.equals(Long.TYPE) || desiredClass.equals(Long.class))
+            {
+                return new Long(value.trim());
+            }
+            else if (desiredClass.equals(Double.TYPE) || desiredClass.equals(Double.class))
+            {
+                return new Double(value.trim());
+            }
+            else if (desiredClass.equals(Float.TYPE) || desiredClass.equals(Float.class))
+            {
+                return new Float(value.trim());
+            }
+            else if (desiredClass.equals(Boolean.TYPE) || desiredClass.equals(Boolean.class))
+            {
+                return Boolean.valueOf(value.trim());
+            }
+        }
+        catch (NumberFormatException e)
+        {
+            log.error("NumberFormatException value '" + value + "' type " + desiredClass.getName());
+            throw e;
+        }
+        throw new UnsupportedOperationException("Conversion to " + desiredClass.getName() + " not yet supported");
+    }
+
 //    public static void main(String[] args)
 //    {
 //        // test code

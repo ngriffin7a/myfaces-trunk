@@ -109,7 +109,7 @@ public class ManagedPropertyConfig extends PropertyConfig
             _type = TYPE_OBJECT;
             if (_propertyClass != null)
             {
-                _value = ConfigUtils.convertToType(value, _propertyClass);
+                _value = ClassUtils.convertToType(value, _propertyClass);
             }
             else
             {

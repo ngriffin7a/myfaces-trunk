@@ -32,56 +32,12 @@ public class ConfigUtils
 {
     private static final Log log = LogFactory.getLog(ConfigUtils.class);
 
-    private ConfigUtils() {
+    private ConfigUtils()
+    {
         // utility class, no instance allowed
     }
 
-    /**
-     * TODO: Support for common classes.
-     */
-    public static Object convertToType(String value, Class desiredClass)
-    {
-        if (value == null)
-        {
-            return null;
-        }
-        if (desiredClass.equals(String.class))
-        {
-            return value;
-        }
 
-        try
-        {
-            if (desiredClass.equals(Byte.TYPE))
-            {
-                return new Byte(Byte.parseByte(value.trim()));
-            }
-            else if (desiredClass.equals(Short.TYPE))
-            {
-                return new Short(Short.parseShort(value.trim()));
-            }
-            else if (desiredClass.equals(Integer.TYPE))
-            {
-                return new Integer(Integer.parseInt(value.trim()));
-            }
-            else if (desiredClass.equals(Long.TYPE))
-            {
-                return new Long(Long.parseLong(value.trim()));
-            }
-            else if (desiredClass.equals(Double.TYPE))
-            {
-                return new Double(Double.parseDouble(value.trim()));
-            }
-        }
-        catch (NumberFormatException e)
-        {
-            log.error("NumberFormatException value '" + value + "' type " + desiredClass.getName());
-            throw e;
-        }
-        throw new UnsupportedOperationException("Conversion to " + desiredClass.getName() + " not yet supported");
-    }
-    
-    
     public static void checkValueBindingType(FacesContext facesContext,
                                              ValueBinding vb,
                                              Class allowedClass)

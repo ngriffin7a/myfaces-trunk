@@ -70,7 +70,7 @@ public class ListEntriesConfig
         {
             if (_valueClass != null)
             {
-                _values.add(ConfigUtils.convertToType(value, _valueClass));
+                _values.add(ClassUtils.convertToType(value, _valueClass));
             }
             else
             {

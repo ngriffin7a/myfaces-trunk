@@ -71,7 +71,7 @@ public class MapEntriesConfig
         Object key;
         if (_keyClass != null)
         {
-            key = ConfigUtils.convertToType(mapEntryConfig.getKey(), _keyClass);
+            key = ClassUtils.convertToType(mapEntryConfig.getKey(), _keyClass);
         }
         else
         {
@@ -92,7 +92,7 @@ public class MapEntriesConfig
         {
             if (_valueClass != null)
             {
-                _map.put(key, ConfigUtils.convertToType(strValue, _valueClass));
+                _map.put(key, ClassUtils.convertToType(strValue, _valueClass));
             }
             else
             {
