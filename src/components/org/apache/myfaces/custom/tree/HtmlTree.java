@@ -42,6 +42,9 @@ import net.sourceforge.myfaces.component.html.ext.HtmlPanelGroup;
  * @author <a href="mailto:oliver@rossmueller.com">Oliver Rossmueller</a>
  * @version $Revision$ $Date$
  *          $Log$
+ *          Revision 1.14  2004/07/11 23:38:57  o_rossmueller
+ *          support multiple trees in one view
+ *
  *          Revision 1.13  2004/07/01 21:53:07  mwessendorf
  *          ASF switch
  *
@@ -137,7 +140,7 @@ public class HtmlTree
 
     public String createUniqueId(FacesContext context)
     {
-        return "_node_" + uniqueIdCounter++;
+        return getClientId(context) + "_node_" + uniqueIdCounter++;
     }
 
 
