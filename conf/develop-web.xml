@@ -52,6 +52,15 @@
     </context-param>
 
     <context-param>
+        <param-name>javax.faces.STATE_SAVING_METHOD</param-name>
+        <param-value>client</param-value>
+        <description>
+            State saving method: "client" or "server" (= default)
+            See JSF Specification 2.5.2
+        </description>
+    </context-param>
+    
+    <context-param>
         <param-name>myfaces_CheckJspModification</param-name>
         <param-value>true</param-value>
         <description>

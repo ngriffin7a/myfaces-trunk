@@ -1,6 +1,7 @@
 package net.sourceforge.myfaces.application.jsp;
 
 import net.sourceforge.myfaces.application.MyfacesStateManager;
+import net.sourceforge.myfaces.application.TreeStructureManager;
 import net.sourceforge.myfaces.renderkit.MyfacesResponseStateManager;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -45,18 +46,10 @@ public class JspStateManagerImpl
         {
             return null;
         }
-
-        if (isSavingStateInClient(facesContext))
-        {
-            //TODO
-            throw new UnsupportedOperationException("not yet implemented");
-        }
-        else
-        {
-            //TODO: Remove transient components
-            return viewRoot;
-        }
+        TreeStructureManager tsm = new TreeStructureManager();
+        return tsm.buildTreeStructureToSave(viewRoot);
     }
+
 
     protected Object getComponentStateToSave(FacesContext facesContext)
     {
@@ -102,8 +95,8 @@ public class JspStateManagerImpl
             Object treeStructure = responseStateManager.getTreeStructureToRestore(facesContext, viewId);
             if (treeStructure != null)
             {
-                //TODO: Create UIViewRoot and whole structure out of treeStructure object
-                throw new UnsupportedOperationException("not yet implemented");
+                TreeStructureManager tsm = new TreeStructureManager();
+                return tsm.restoreTreeStructure((TreeStructureManager.TreeStructComponent)treeStructure);
             }
         }
         else
@@ -113,7 +106,8 @@ public class JspStateManagerImpl
             SerializedView serializedView = (SerializedView)sessionViewMap.get(viewId);
             if (serializedView != null)
             {
-                return (UIViewRoot)serializedView.getStructure();
+                TreeStructureManager tsm = new TreeStructureManager();
+                return tsm.restoreTreeStructure((TreeStructureManager.TreeStructComponent)serializedView.getStructure());
             }
         }
         return null;

@@ -47,6 +47,7 @@ public class JspViewHandlerImpl
     implements ViewHandler, MyfacesViewHandler
 {
     private static final Log log = LogFactory.getLog(JspViewHandlerImpl.class);
+    public static final String VIEW_ROOT_TYPE        = "ViewRoot";
     public static final String FORM_STATE_MARKER     = "<!--@@JSF_FORM_STATE_MARKER@@-->";
     public static final int    FORM_STATE_MARKER_LEN = FORM_STATE_MARKER.length();
     public static final String URL_STATE_MARKER      = "JSF_URL_STATE_MARKER=DUMMY";
@@ -62,7 +63,7 @@ public class JspViewHandlerImpl
 
     public UIViewRoot createView(FacesContext facesContext, String viewId)
     {
-        UIViewRoot uiViewRoot = new UIViewRoot();
+        UIViewRoot uiViewRoot = (UIViewRoot)facesContext.getApplication().createComponent(VIEW_ROOT_TYPE);
         uiViewRoot.setViewId(viewId);
         uiViewRoot.setLocale(calculateLocale(facesContext));
         if (log.isTraceEnabled()) log.trace("Created view " + viewId);
@@ -335,7 +336,7 @@ public class JspViewHandlerImpl
     {
         if (getStateManager().isSavingStateInClient(facesContext))
         {
-            facesContext.getResponseWriter().writeText(FORM_STATE_MARKER, null);
+            facesContext.getResponseWriter().write(FORM_STATE_MARKER);
         }
     }
 

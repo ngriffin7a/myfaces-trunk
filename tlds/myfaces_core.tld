@@ -89,7 +89,7 @@
     <tag>
         <name>parameter</name>
         <tag-class>net.sourceforge.myfaces.taglib.core.ParameterTag</tag-class>
-        <body-content>empty</body-content>
+        <body-content>JSP</body-content><!-- May have an embedded f:converter tag -->
         &ui_component_attributes;
         &ui_parameter_attributes;
     </tag>

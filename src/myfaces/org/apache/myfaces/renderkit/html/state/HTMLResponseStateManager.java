@@ -18,9 +18,9 @@
  */
 package net.sourceforge.myfaces.renderkit.html.state;
 
+import net.sourceforge.myfaces.renderkit.html.HTML;
 import net.sourceforge.myfaces.util.Base64;
 import net.sourceforge.myfaces.util.MyFacesObjectInputStream;
-import net.sourceforge.myfaces.renderkit.html.HTML;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -64,6 +64,7 @@ public class HTMLResponseStateManager
                 responseWriter.writeAttribute(HTML.TYPE_ATTR, HTML.INPUT_TYPE_HIDDEN, null);
                 responseWriter.writeAttribute(HTML.NAME_ATTR, TREE_PARAM, null);
                 responseWriter.writeAttribute(HTML.VALUE_ATTR, treeStruct, null);
+                responseWriter.endElement(HTML.INPUT_ELEM);
             }
             else
             {
@@ -71,6 +72,7 @@ public class HTMLResponseStateManager
                 responseWriter.writeAttribute(HTML.TYPE_ATTR, HTML.INPUT_TYPE_HIDDEN, null);
                 responseWriter.writeAttribute(HTML.NAME_ATTR, BASE64_TREE_PARAM, null);
                 responseWriter.writeAttribute(HTML.VALUE_ATTR, encode64(treeStruct), null);
+                responseWriter.endElement(HTML.INPUT_ELEM);
             }
         }
 
@@ -82,6 +84,7 @@ public class HTMLResponseStateManager
                 responseWriter.writeAttribute(HTML.TYPE_ATTR, HTML.INPUT_TYPE_HIDDEN, null);
                 responseWriter.writeAttribute(HTML.NAME_ATTR, STATE_PARAM, null);
                 responseWriter.writeAttribute(HTML.VALUE_ATTR, compStates, null);
+                responseWriter.endElement(HTML.INPUT_ELEM);
             }
             else
             {
@@ -89,6 +92,7 @@ public class HTMLResponseStateManager
                 responseWriter.writeAttribute(HTML.TYPE_ATTR, HTML.INPUT_TYPE_HIDDEN, null);
                 responseWriter.writeAttribute(HTML.NAME_ATTR, BASE64_STATE_PARAM, null);
                 responseWriter.writeAttribute(HTML.VALUE_ATTR, encode64(compStates), null);
+                responseWriter.endElement(HTML.INPUT_ELEM);
             }
         }
     }

@@ -19,19 +19,18 @@
 package net.sourceforge.myfaces.el;
 
 import net.sourceforge.myfaces.util.StringUtils;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.faces.application.Application;
+import javax.faces.component.StateHolder;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.el.PropertyNotFoundException;
 import javax.faces.el.ReferenceSyntaxException;
 import javax.faces.el.ValueBinding;
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -41,6 +40,7 @@ import javax.faces.el.ValueBinding;
  */
 public class ValueBindingImpl
     extends ValueBinding
+    implements StateHolder
 {
     //~ Static fields/initializers -----------------------------------------------------------------
 
@@ -55,9 +55,9 @@ public class ValueBindingImpl
 
     //~ Instance fields ----------------------------------------------------------------------------
 
-    protected final Application _application;
-    protected final String      _reference;
-    protected final Object[]    _parsedReference;
+    protected Application _application;
+    protected String      _reference;
+    protected Object[]    _parsedReference;
 
     //~ Constructors -------------------------------------------------------------------------------
 
@@ -685,5 +685,42 @@ public class ValueBindingImpl
         while (indexofBackslash >= 0);
 
         return sb.append(str.substring(pos)).toString();
+    }
+
+
+    //~ StateHolder support ----------------------------------------------------------------------------
+
+    private boolean _transient = false;
+
+    /**
+     * Empty constructor, so that new instances can be created when restoring state.
+     */
+    public ValueBindingImpl()
+    {
+        _application = null;
+        _reference = null;
+        _parsedReference = null;
+    }
+
+    public Object saveState(FacesContext facescontext)
+    {
+        return _reference;
+    }
+
+    public void restoreState(FacesContext facescontext, Object obj)
+    {
+        _application = facescontext.getApplication();
+        _reference = (String)obj;
+        _parsedReference = parse(stripBracketsFromModelReference(_reference));
+    }
+
+    public boolean isTransient()
+    {
+        return _transient;
+    }
+
+    public void setTransient(boolean flag)
+    {
+        _transient = flag;
     }
 }

@@ -74,7 +74,7 @@ Start of revised 1.0 conforming tags
     <tag>
         <name>output_text</name>
         <tag-class>net.sourceforge.myfaces.taglib.html.HtmlOutputTextTag</tag-class>
-        <body-content>empty</body-content>
+        <body-content>JSP</body-content>
         <description>
             Renders the value of the associated UIOutput component.
         </description>
@@ -380,7 +380,7 @@ Start of revised 1.0 conforming tags
     <tag>
         <name>graphic_image</name>
         <tag-class>net.sourceforge.myfaces.taglib.html.HtmlGraphicImageTag</tag-class>
-        <body-content>empty</body-content>
+        <body-content>JSP</body-content>
         &ui_component_attributes;
         &ui_graphic_attributes;
         &html_universal_attributes;
@@ -393,7 +393,7 @@ Start of revised 1.0 conforming tags
     <tag>
         <name>input_hidden</name>
         <tag-class>net.sourceforge.myfaces.taglib.html.HtmlInputHiddenTag</tag-class>
-        <body-content>empty</body-content>
+        <body-content>JSP</body-content>
         &ui_component_attributes;
         &ui_input_attributes;
         <!-- HiddenRenderer attributes -->
@@ -448,7 +448,7 @@ Start of legacy (EA4 conforming) tags
     <tag>
         <name>output_date</name>
         <tag-class>net.sourceforge.myfaces.taglib.legacy.OutputDateTag</tag-class>
-        <body-content>empty</body-content>
+        <body-content>JSP</body-content>
         &ui_component_attributes;
         &ui_output_attributes;
         &html_universal_attributes;
@@ -471,7 +471,7 @@ Start of legacy (EA4 conforming) tags
     <tag>
         <name>output_date_time</name>
         <tag-class>net.sourceforge.myfaces.taglib.legacy.OutputDateTimeTag</tag-class>
-        <body-content>empty</body-content>
+        <body-content>JSP</body-content>
         &ui_component_attributes;
         &ui_output_attributes;
         &html_universal_attributes;
@@ -504,7 +504,7 @@ Start of legacy (EA4 conforming) tags
     <tag>
         <name>output_errors</name>
         <tag-class>net.sourceforge.myfaces.taglib.legacy.OutputErrorsTag</tag-class>
-        <body-content>empty</body-content>
+        <body-content>JSP</body-content>
         &ui_component_attributes;
         <!-- ui_output_attributes not included because "output_errors" has no "value" -->
         &html_universal_attributes;
@@ -529,7 +529,7 @@ Start of legacy (EA4 conforming) tags
     <tag>
         <name>output_label</name>
         <tag-class>net.sourceforge.myfaces.taglib.legacy.OutputLabelTag</tag-class>
-        <body-content>empty</body-content>
+        <body-content>JSP</body-content>
         <description>
             In addition to the JSF specification, MyFaces allows it to directly
             give an output text via "value" or "key" and "bundle".
@@ -554,7 +554,7 @@ Start of legacy (EA4 conforming) tags
     <tag>
         <name>output_time</name>
         <tag-class>net.sourceforge.myfaces.taglib.legacy.OutputTimeTag</tag-class>
-        <body-content>empty</body-content>
+        <body-content>JSP</body-content>
         &ui_component_attributes;
         &ui_output_attributes;
         &html_universal_attributes;
