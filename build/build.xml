@@ -457,13 +457,14 @@
              target="release"/>
     </target>
 -->
-    <target name="wap-release"
+<!--    <target name="wap-release"
             description="creates the wap examples release file myfaces-x.x.x-tiles-example.tgz (don't forget to adjust manifest.properties!)">
         <ant dir="${project.dir}/build/wap-webapp"
              antfile="build.xml"
              inheritall="false"
              target="release"/>
     </target>
+-->
 <!--
     <target name="simple-webapp"
             description="creates the simple examples release file myfaces-x.x.x-tiles-example.tgz (don't forget to adjust manifest.properties!)">
@@ -473,7 +474,7 @@
              target="release"/>
     </target>
 -->
-    <target name="all" depends="release, wap-release" description="builds all release files"/>
+    <target name="all" depends="release" description="builds all release files"/>
 
 	<target name="all-tests"
             depends="myfaces-jar"
@@ -742,7 +743,7 @@
             <property name="myfaces.jar" location="${myfaces.jar}"/>
             <property name="web.dir" location="${apps.dir}/blank/web"/>
             <property name="webapp.dist.dir" location="${webapp.dist.dir}"/>
-            <property name="src.dir" location="${apps.dir}/blank/src"/>
+            <property name="src.dir" location="${apps.dir}/src/blank/"/>
         </ant>
 
         <!-- build tiles webapp -->
@@ -752,7 +753,7 @@
             <property name="myfaces.jar" location="${myfaces.jar}"/>
             <property name="web.dir" location="${apps.dir}/tiles/web"/>
             <property name="webapp.dist.dir" location="${webapp.dist.dir}"/>
-            <property name="src.dir" location="${apps.dir}/tiles/src"/>
+            <property name="src.dir" location="${apps.dir}/src/tiles"/>
         </ant>
 
         <!-- build simple webapp -->
@@ -780,7 +781,7 @@
             <property name="myfaces.jar" location="${myfaces.jar}"/>
             <property name="web.dir" location="${apps.dir}/wap"/>
             <property name="webapp.dist.dir" location="${webapp.dist.dir}"/>
-            <property name="src.dir" location="${apps.dir}/wap/src"/>
+            <property name="src.dir" location="${apps.dir}/src/wap"/>
         </ant>        
 
     </target>

@@ -4,7 +4,7 @@
 
     <!-- define build properties -->
     <property name="project.dir" location="${basedir}/.."/>
-    <property name="src.dir" value="${project.dir}/webapps/src"/>
+    <property name="src.dir" value="${project.dir}/webapps/src/example"/>
     <property name="lib.dir" value="${project.dir}/lib"/>
     <property name="optional.lib.dir" value="${lib.dir}/optional"/>
     <property name="build.dir" value="temp/${webapp.name}"/>
