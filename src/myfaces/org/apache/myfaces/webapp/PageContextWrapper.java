@@ -27,7 +27,17 @@ public class PageContextWrapper
 
     public void release()
     {
-        _originalPageContext.release();
+        if (_originalPageContext != null)
+        {
+            try
+            {
+                _originalPageContext.release();
+            }
+            catch (Exception e)
+            {
+                LogUtil.getLogger().throwing(getClass().getName(), "release", e);
+            }
+        }
     }
 
     public void setAttribute(String name, Object o)
