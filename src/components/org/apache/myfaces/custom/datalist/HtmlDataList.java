@@ -15,11 +15,12 @@
  */
 package net.sourceforge.myfaces.custom.datalist;
 
-import java.util.Iterator;
-import javax.faces.component.UIData;
 import javax.faces.component.UIComponent;
+import javax.faces.component.UIData;
 import javax.faces.context.FacesContext;
 import javax.faces.el.ValueBinding;
+import java.util.Iterator;
+import java.util.Map;
 
 /**
  * @author Manfred Geiler (latest modification by $Author$)
@@ -55,6 +56,42 @@ public class HtmlDataList
                         continue;
                     }
                     child.processDecodes(context);
+                }
+            }
+        }
+    }
+
+
+    public void setRowIndex(int rowIndex)
+    {
+        super.setRowIndex(rowIndex);
+        String rowIndexVar = getRowIndexVar();
+        String rowCountVar = getRowCountVar();
+        if (rowIndexVar != null || rowCountVar != null)
+        {
+            Map requestMap = FacesContext.getCurrentInstance().getExternalContext().getRequestMap();
+            if (rowIndex >= 0)
+            {
+                //regular row index, update request scope variables
+                if (rowIndexVar != null)
+                {
+                    requestMap.put(getRowIndexVar(), new Integer(rowIndex));
+                }
+                if (rowCountVar != null)
+                {
+                    requestMap.put(getRowCountVar(), new Integer(getRowCount()));
+                }
+            }
+            else
+            {
+                //rowIndex == -1 means end of loop --> remove request scope variables
+                if (rowIndexVar != null)
+                {
+                    requestMap.remove(getRowIndexVar());
+                }
+                if (rowCountVar != null)
+                {
+                    requestMap.remove(getRowCountVar());
                 }
             }
         }

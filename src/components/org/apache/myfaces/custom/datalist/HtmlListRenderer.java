@@ -26,12 +26,14 @@ import javax.faces.component.UIData;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 import java.io.IOException;
-import java.util.Map;
 
 /**
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.6  2004/08/20 07:12:00  manolito
+ * rowIndexVar and rowCountVar now handled correctly by component itself instead of renderer
+ *
  * Revision 1.5  2004/08/09 11:47:09  manolito
  * CSS style support also for non OL or UL layout
  *
@@ -89,7 +91,7 @@ public class HtmlListRenderer
 
         UIData uiData = (UIData)component;
         String layout = getLayout(component);
-        Map requestMap = facesContext.getExternalContext().getRequestMap();
+        //Map requestMap = facesContext.getExternalContext().getRequestMap();
 
         ResponseWriter writer = facesContext.getResponseWriter();
 
@@ -103,6 +105,7 @@ public class HtmlListRenderer
         int last = first + rows;
         if (last > rowCount) last = rowCount;
 
+        /*
         String rowIndexVar = getRowIndexVar(component);
         String rowCountVar = getRowCountVar(component);
 
@@ -110,16 +113,19 @@ public class HtmlListRenderer
         {
             requestMap.put(rowCountVar, new Integer(rowCount));
         }
+        */
 
         for (int i = first; i < last; i++)
         {
             uiData.setRowIndex(i);
             if (uiData.isRowAvailable())
             {
+                /*
                 if (rowIndexVar != null)
                 {
                     requestMap.put(rowIndexVar, new Integer(i));
                 }
+                */
 
                 HtmlRendererUtils.writePrettyLineSeparator(facesContext);
                 if (layout != null && (layout.equals(LAYOUT_UL) || (layout.equals(LAYOUT_OL))))
@@ -134,17 +140,21 @@ public class HtmlListRenderer
                     writer.endElement(HTML.LI_ELEM);
                 }
 
+                /*
                 if (rowIndexVar != null)
                 {
                     requestMap.remove(rowIndexVar);
                 }
+                */
             }
         }
 
+        /*
         if (rowCountVar != null)
         {
             requestMap.remove(rowCountVar);
         }
+        */
     }
 
 
@@ -186,7 +196,8 @@ public class HtmlListRenderer
             return (String)component.getAttributes().get(JSFAttr.LAYOUT_ATTR);
         }
     }
-    
+
+    /*
     private String getRowIndexVar(UIComponent component)
     {
         if (component instanceof HtmlDataList)
@@ -210,5 +221,6 @@ public class HtmlListRenderer
             return (String)component.getAttributes().get("rowCountVar");
         }
     }
+    */
 
 }
