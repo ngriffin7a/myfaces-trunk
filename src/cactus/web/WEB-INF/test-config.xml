@@ -8,6 +8,8 @@
 
 <faces-config>
 
+
+
     <managed-bean>
         <description>This bean is used to provide values for tests using value bindings</description>
         <managed-bean-name>testDataProvider</managed-bean-name>
@@ -114,6 +116,10 @@
         <property-resolver>net.sourceforge.myfaces.confignew.TestPropertyResolver</property-resolver>
         <variable-resolver>net.sourceforge.myfaces.confignew.TestVariableResolver</variable-resolver>
         <state-manager>net.sourceforge.myfaces.confignew.TestStateManager</state-manager>
+    </application>
+
+    <application>
+        <message-bundle>messageBundleB</message-bundle>
     </application>
 
 </faces-config>

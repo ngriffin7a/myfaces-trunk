@@ -31,6 +31,11 @@ import java.util.*;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.12.2.1  2004/06/16 01:25:50  o_rossmueller
+ * refactorings: FactoryFinder, decorator creation, dispenser (removed reverse order)
+ * bug fixes
+ * additional tests
+ *
  * Revision 1.12  2004/04/29 07:24:51  manolito
  * fixed NPE in releaseFactories
  *
@@ -45,37 +50,34 @@ public class FactoryFinder
     public static final String LIFECYCLE_FACTORY = "javax.faces.lifecycle.LifecycleFactory";
     public static final String RENDER_KIT_FACTORY = "javax.faces.render.RenderKitFactory";
 
-    private static Set factoryNames = new HashSet();
-    
-    private static final int FACTORY_COUNT = 4;
-    private static final Map _classLoaderFactoriesMap = new HashMap();
-    private static final Class[][] FACTORY_CONSTRUCTOR_PARAMS = {new Class[]{ApplicationFactory.class},
-                                                                 new Class[]{FacesContextFactory.class},
-                                                                 new Class[]{LifecycleFactory.class},
-                                                                 new Class[]{RenderKitFactory.class}};
-    private static final Class[] FACTORY_CONSTRUCTOR_EMPTY_PARAMS = new Class[0];
+    private static Set validFactoryNames = new HashSet();
+
+    private static final Map _registeredFactoryNames = new HashMap();
+    private static final Map _factories = new HashMap();
 
     /**
      * The returned set is immutable
      * @return
      */
-    public static Set getFactoryNames() {
-      if(factoryNames.size() == 0) {
-        factoryNames.add(FactoryFinder.APPLICATION_FACTORY);
-        factoryNames.add(FactoryFinder.FACES_CONTEXT_FACTORY);
-        factoryNames.add(FactoryFinder.LIFECYCLE_FACTORY);
-        factoryNames.add(FactoryFinder.RENDER_KIT_FACTORY);
+    public static Set getValidFactoryNames() {
+      if(validFactoryNames.size() == 0) {
+        validFactoryNames.add(FactoryFinder.APPLICATION_FACTORY);
+        validFactoryNames.add(FactoryFinder.FACES_CONTEXT_FACTORY);
+        validFactoryNames.add(FactoryFinder.LIFECYCLE_FACTORY);
+        validFactoryNames.add(FactoryFinder.RENDER_KIT_FACTORY);
+
+          validFactoryNames = Collections.unmodifiableSet(validFactoryNames);
       }
-      return Collections.unmodifiableSet(factoryNames);
+      return validFactoryNames;
     }
     
     public static Object getFactory(String factoryName)
             throws FacesException
     {
-        int factoryIdx = checkFactoryNameAndGetIndex(factoryName);
         ClassLoader classLoader = getClassLoader();
-        Object[] factoryStacks = (Object[])_classLoaderFactoriesMap.get(classLoader);
-        if (factoryStacks == null)
+        Map factoryClassNames = (Map) _registeredFactoryNames.get(classLoader);
+
+        if (factoryClassNames == null)
         {
             String message = "No Factories configured for this Application - typically this is because " +
             "a context listener is not setup in your web.xml.\n" + 
@@ -84,16 +86,22 @@ public class FactoryFinder
             "</listener>\n";
             throw new IllegalStateException(message);
         }
-        Object factory = factoryStacks[factoryIdx];
-        if (factory == null)
-        {
+
+        if (! factoryClassNames.containsKey(factoryName)) {
             throw new IllegalStateException("no factory " + factoryName + " configured for this appliction");
         }
-        else if (factory instanceof List)
-        {
-            //Not yet instantiated
-            factory = initFactory((List)factory, classLoader, factoryIdx);
-            factoryStacks[factoryIdx] = factory;
+
+        Map factoryMap = (Map) _factories.get(classLoader);
+
+        if (factoryMap == null) {
+            factoryMap = new HashMap();
+            _factories.put(classLoader, factoryMap);
+        }
+        Object factory = factoryMap.get(factoryName);
+
+        if (factory == null) {
+            factory = newFactoryInstance((String)factoryClassNames.get(factoryName), classLoader);
+            factoryMap.put(factoryName, factory);
             return factory;
         }
         else
@@ -102,64 +110,22 @@ public class FactoryFinder
         }
     }
 
-    private static Object initFactory(List factoryNames,
-                                      ClassLoader classLoader,
-                                      int factoryIdx)
-    {
-        Object parentFactory = null;
-        for (int i = 0, size = factoryNames.size(); i < size; i++)
-        {
-            String factoryImplName = (String) factoryNames.get(i);
-            parentFactory = newFactoryInstance(factoryImplName, parentFactory, classLoader, factoryIdx);
-        }
-        return parentFactory;
-    }
-
     private static Object newFactoryInstance(String factoryImplName,
-                                             Object parentFactory,
-                                             ClassLoader classLoader,
-                                             int factoryIdx)
+                                             ClassLoader classLoader)
     {
         Class factoryClass = null;
         try
         {
             factoryClass = classLoader.loadClass(factoryImplName);
+            return factoryClass.newInstance();
         }
         catch (ClassNotFoundException e)
         {
             throw new FacesException(e);
-        }
-        //Try 1 arguments constructor
-        try
+        } catch (IllegalAccessException e)
         {
-            Constructor constructor = factoryClass.getConstructor(FACTORY_CONSTRUCTOR_PARAMS[factoryIdx]);
-            try
-            {
-                return constructor.newInstance(new Object[] {parentFactory});
-            }
-            catch (Exception ex)
-            {
-                throw new FacesException(ex);
-            }
-        }
-        catch (NoSuchMethodException e)
-        {
-            // ignore
-        }
-
-        try
-        {
-            Constructor constructor = factoryClass.getConstructor(FACTORY_CONSTRUCTOR_EMPTY_PARAMS);
-            try
-            {
-                return constructor.newInstance(null);
-            }
-            catch (Exception ex)
-            {
-                throw new FacesException(ex);
-            }
-        }
-        catch (NoSuchMethodException e)
+            throw new FacesException(e);
+        } catch (InstantiationException e)
         {
             throw new FacesException(e);
         }
@@ -168,49 +134,28 @@ public class FactoryFinder
     public static void setFactory(String factoryName,
                                   String implName)
     {
-        int factoryIdx = checkFactoryNameAndGetIndex(factoryName);
-        ClassLoader classLoader = getClassLoader();
-        synchronized(_classLoaderFactoriesMap)
-        {
-            Object factory;
-            Object[] factoryStacks = (Object[])_classLoaderFactoriesMap.get(classLoader);
-            if (factoryStacks == null)
-            {
-                factoryStacks = new Object[FACTORY_COUNT];
-                _classLoaderFactoriesMap.put(classLoader, factoryStacks);
-                factory = null;
-            }
-            else
-            {
-                factory = factoryStacks[factoryIdx];
-            }
+        checkFactoryName(factoryName);
 
-            if (factory == null)
-            {
-                factory = new ArrayList();
-                ((List)factory).add(implName);
-                factoryStacks[factoryIdx] = (List)factory;
-            }
-            else if (factory instanceof List)
-            {
-                int size = ((List)factory).size();
-                if (size > 0)
-                {
-                    String topFactory = (String) ((List)factory).get(size - 1);
-                    if (implName.equals(topFactory))
-                    {
-                        //Already registered as top factory
-                        return;
-                    }
-                }
-                ((List)factory).add(implName);
-            }
-            else
-            {
-                // else do nothing:
+        ClassLoader classLoader = getClassLoader();
+        synchronized(_registeredFactoryNames)
+        {
+            Map factories = (Map) _factories.get(classLoader);
+
+            if (factories != null && factories.containsKey(factoryName)) {
                 // Javadoc says ... This method has no effect if getFactory() has already been
                 // called looking for a factory for this factoryName.
+                return;
             }
+
+            Map factoryClassNames = (Map) _registeredFactoryNames.get(classLoader);
+
+            if (factoryClassNames == null)
+            {
+                factoryClassNames = new HashMap();
+                _registeredFactoryNames.put(classLoader, factoryClassNames);
+            }
+
+            factoryClassNames.put(factoryName, implName);
         }
     }
 
@@ -219,41 +164,15 @@ public class FactoryFinder
             throws FacesException
     {
         ClassLoader classLoader = getClassLoader();
-        Object[] factoryStacks = (Object[])_classLoaderFactoriesMap.get(classLoader);
-        if (factoryStacks != null)
-        {
-            for (int i = 0; i < factoryStacks.length; i++)
-            {
-                factoryStacks[i] = null;
-            }
-        }
-        factoryStacks = null;
+        _factories.remove(classLoader);
     }
 
 
-    private static int checkFactoryNameAndGetIndex(String factoryName)
+    private static void checkFactoryName(String factoryName)
     {
-        if (factoryName == null)
-        {
-            throw new NullPointerException("factoryName");
+        if (! validFactoryNames.contains(factoryName)) {
+            throw new IllegalArgumentException("factoryName '" + factoryName + "'");
         }
-        else if (factoryName.equals(APPLICATION_FACTORY))
-        {
-            return 0;
-        }
-        else if (factoryName.equals(FACES_CONTEXT_FACTORY))
-        {
-            return 1;
-        }
-        else if (factoryName.equals(LIFECYCLE_FACTORY))
-        {
-            return 2;
-        }
-        else if (factoryName.equals(RENDER_KIT_FACTORY))
-        {
-            return 3;
-        }
-        throw new IllegalArgumentException("factoryName '" + factoryName + "'");
     }
 
 

@@ -208,12 +208,11 @@ public class DigesterFacesConfigDispenserImpl implements FacesConfigDispenser
 
 
     /**
-     * @return Iterator over ActionListener class names (in reverse order!)
+     * @return Iterator over ActionListener class names
      */
     public Iterator getActionListenerIterator()
     {
         List listeners = new ArrayList(actionListeners);
-        Collections.reverse(listeners);
         return listeners.iterator();
     }
 
@@ -228,7 +227,7 @@ public class DigesterFacesConfigDispenserImpl implements FacesConfigDispenser
 
 
     /**
-     * @return Iterator over message bundle names (in reverse order!)
+     * @return Iterator over message bundle names
      */
     public String getMessageBundle()
     {
@@ -237,58 +236,52 @@ public class DigesterFacesConfigDispenserImpl implements FacesConfigDispenser
 
 
     /**
-     * @return Iterator over NavigationHandler class names (in reverse order!)
+     * @return Iterator over NavigationHandler class names
      */
     public Iterator getNavigationHandlerIterator()
     {
         List handlers = new ArrayList(navigationHandlers);
-        Collections.reverse(handlers);
         return handlers.iterator();
     }
 
 
     /**
-     * @return Iterator over ViewHandler class names (in reverse order!)
+     * @return Iterator over ViewHandler class names
      */
     public Iterator getViewHandlerIterator()
     {
         List handlers = new ArrayList(viewHandlers);
-        Collections.reverse(handlers);
         return handlers.iterator();
     }
 
 
     /**
-     * @return Iterator over StateManager class names (in reverse order!)
+     * @return Iterator over StateManager class names
      */
     public Iterator getStateManagerIterator()
     {
         List managers = new ArrayList(stateManagers);
-        Collections.reverse(managers);
         return managers.iterator();
     }
 
 
     /**
-     * @return Iterator over PropertyResolver class names (in reverse order!)
+     * @return Iterator over PropertyResolver class names
      */
     public Iterator getPropertyResolverIterator()
     {
         List resolver = new ArrayList(propertyResolver);
-
-        Collections.reverse(resolver);
         return resolver.iterator();
     }
 
 
     /**
-     * @return Iterator over VariableResolver class names (in reverse order!)
+     * @return Iterator over VariableResolver class names
      */
     public Iterator getVariableResolverIterator()
     {
         List resolver = new ArrayList(variableResolver);
 
-        Collections.reverse(resolver);
         return resolver.iterator();
     }
 

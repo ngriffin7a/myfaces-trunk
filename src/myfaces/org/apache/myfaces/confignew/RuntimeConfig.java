@@ -24,10 +24,7 @@ import net.sourceforge.myfaces.confignew.element.NavigationRule;
 
 import javax.faces.context.ExternalContext;
 import javax.faces.event.PhaseListener;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Holds all configuration information that is needed later during runtime. 
@@ -35,6 +32,11 @@ import java.util.Map;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.2.2.1  2004/06/16 01:25:52  o_rossmueller
+ * refactorings: FactoryFinder, decorator creation, dispenser (removed reverse order)
+ * bug fixes
+ * additional tests
+ *
  * Revision 1.2  2004/06/08 20:50:09  o_rossmueller
  * completed configurator
  *
@@ -68,7 +70,7 @@ public class RuntimeConfig
      */
     public Collection getNavigationRules()
     {
-        return _navigationRules;
+        return Collections.unmodifiableCollection(_navigationRules);
     }
 
     public void addNavigationRule(NavigationRule navigationRule)

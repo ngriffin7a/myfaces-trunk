@@ -40,6 +40,11 @@ import java.util.jar.JarInputStream;
  * @author Anton Koinov
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.30.2.1  2004/06/16 01:25:51  o_rossmueller
+ * refactorings: FactoryFinder, decorator creation, dispenser (removed reverse order)
+ * bug fixes
+ * additional tests
+ *
  * Revision 1.30  2004/05/12 13:28:31  o_rossmueller
  * fix #952453: changed CONFIG_FILES context param to spec-compliant javax.faces.CONFIG_FILES
  *
@@ -196,7 +201,7 @@ public abstract class FacesConfigFactoryBase
     protected void performMetaInfFactoryConfig(FacesConfig facesConfig,
                                                ExternalContext context) throws FacesException
     {
-        Set factoryNames = FactoryFinder.getFactoryNames();
+        Set factoryNames = FactoryFinder.getValidFactoryNames();
         // keyed on resource names, factory name is the value
         Map resourceNames = expandFactoryNames(factoryNames);
         //Search for factory files in the jar file

@@ -36,7 +36,7 @@ public class FacesConfigFactoryBaseCactusTest extends ServletTestCase {
         FactoryFinder.getFactory(FactoryFinder.RENDER_KIT_FACTORY).getClass().getName());
     assertEquals("net.sourceforge.myfaces.context.FacesContextFactoryImpl",
         FactoryFinder.getFactory(FactoryFinder.FACES_CONTEXT_FACTORY).getClass().getName());
-    assertEquals("net.sourceforge.myfaces.lifecycle.LifecycleFactoryImpl",
+    assertEquals("net.sourceforge.myfaces.confignew.TestLifecycleFactory",
         FactoryFinder.getFactory(FactoryFinder.LIFECYCLE_FACTORY).getClass().getName());
   }
 
