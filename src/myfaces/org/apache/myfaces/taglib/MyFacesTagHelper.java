@@ -558,19 +558,10 @@ public class MyFacesTagHelper
      */
     protected UIComponent findComponent()
     {
-        /*
-        int mode = MyFacesConfig.getStateSavingMode((ServletContext)getFacesContext().getExternalContext().getContext());
-        if (mode != MyFacesConfig.STATE_SAVING_MODE__CLIENT_MINIMIZED &&
-            mode != MyFacesConfig.STATE_SAVING_MODE__CLIENT_MINIMIZED_ZIPPED)
-        {
-            //no "client minimized" mode, standard way of finding and creating components is ok
-            return null;
-        }
-        */
-
         String id = _tag.getId();
         if (id == null)
         {
+            //no id attribute in tag, so we must find out the automatic id
             id = findoutComponentId();
         }
 
@@ -584,7 +575,39 @@ public class MyFacesTagHelper
         }
         else
         {
-            findComp = parentComp.findComponent(id);
+            //We could find the component by a call to parentComp.findComponent(id)
+            //but we also need the child index to adapt the member variable childIndex
+            //in the UIComponentTag class.
+            //This is necessary, because there could be a mixture of tags that directly extend the
+            //UIComponentTag from the JSF API and tags that extend the MyFacesTag. To keep the
+            //JSF APIs method of finding corresponding components for tags working, we must do
+            //this hack.
+            findComp = null;
+            for (int i = 0; i < parentComp.getChildCount(); i++)
+            {
+                UIComponent c = parentComp.getChild(i);
+                if (id.equals(c.getComponentId()))
+                {
+                    //child with if was found
+                    findComp = c;
+                    //childIndex is needed for tags that extend UIComponentTag directly
+                    UIComponentTagHacks.setChildIndex(getParentUIComponentTag(), i + 1);
+                    break;
+                }
+            }
+            if (findComp == null)
+            {
+                //Perhaps a facet?
+                for (Iterator it = parentComp.getFacetNames(); it.hasNext(); )
+                {
+                    UIComponent c = parentComp.getFacet((String)it.next());
+                    if (id.equals(c.getComponentId()))
+                    {
+                        findComp = c;
+                        break;
+                    }
+                }
+            }
         }
 
         if (findComp != null)
@@ -611,6 +634,10 @@ public class MyFacesTagHelper
     }
 
 
+    /**
+     * Find out the automatic component id by searching the parsed tree for the corresponding
+     * component.
+     */
     protected String findoutComponentId()
     {
         LogUtil.getLogger().entering(Level.FINEST);
