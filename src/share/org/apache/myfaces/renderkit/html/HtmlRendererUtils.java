@@ -21,6 +21,7 @@ package net.sourceforge.myfaces.renderkit.html;
 import net.sourceforge.myfaces.MyFacesConfig;
 import net.sourceforge.myfaces.renderkit.JSFAttr;
 import net.sourceforge.myfaces.renderkit.RendererUtils;
+import net.sourceforge.myfaces.renderkit.html.util.JavascriptUtils;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -39,6 +40,9 @@ import java.util.*;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.5  2004/04/29 14:25:23  manolito
+ * javascript function name bugfix
+ *
  * Revision 1.4  2004/04/27 10:32:24  manolito
  * clear hidden inputs javascript function
  *
@@ -676,10 +680,15 @@ public class HtmlRendererUtils
         writer.endElement(HTML.SCRIPT_ELEM);
     }
 
+
+    /**
+     * Prefixes the given String with "clear_" and removes special characters
+     * @param formName
+     * @return
+     */
     public static String getClearHiddenCommandFormParamsFunctionName(String formName)
     {
-        //TODO: Remove special characters from formName, before using it as javascript function name!
-        return "clear_" + formName;
+        return "clear_" + JavascriptUtils.getValidJavascriptName(formName, false);
     }
 
 }

@@ -189,9 +189,12 @@
              compression="gzip">
             <tarfileset dir="${build.dir}"
                         includes="**/*"
-                        excludes="**/build.local.properties"
+                        excludes="**/build.local.properties,
+                                  codegen/**/*,
+                                  develop/**/*"
                         prefix="myfaces-${manifest.impl.version}/build"/>
             <tarfileset dir="${conf.dir}"
+                        excludes="develop-web.xml"
                         prefix="myfaces-${manifest.impl.version}/conf"/>
             <tarfileset dir="${doc.dir}"
                         excludes="javadoc/**/*
