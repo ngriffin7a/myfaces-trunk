@@ -20,19 +20,18 @@ package net.sourceforge.myfaces.taglib;
 
 import net.sourceforge.myfaces.component.UIComponentUtils;
 import net.sourceforge.myfaces.component.UIPanel;
-import net.sourceforge.myfaces.renderkit.html.DataRenderer;
+import net.sourceforge.myfaces.renderkit.html.ListRenderer;
 
 import javax.faces.component.UIComponent;
-import javax.servlet.jsp.JspException;
-import java.io.IOException;
+
 
 /**
  * DOCUMENT ME!
- * @author Manfred Geiler (latest modification by $Author$)
+ * @author Thomas Spiegl (latest modification by Author)
  * @version $Revision$ $Date$
  */
-public class JspListRowTag
-        extends MyFacesTag
+public class ListTag
+    extends MyFacesTag
 {
     public UIComponent createComponent()
     {
@@ -43,51 +42,39 @@ public class JspListRowTag
                 return false;
             }
         };
-
-        // donot save State
+        // donot save State and set JspListRenderer
         UIComponentUtils.setTransient(panel, true);
         return panel;
     }
 
     public String getRendererType()
     {
-        return DataRenderer.TYPE;
+        return ListRenderer.TYPE;
     }
 
-    public void setVar(String v)
+    public void setStyle(String value)
     {
-        setRendererAttribute(DataRenderer.VAR_ATTR, v);
+        setRendererAttribute(ListRenderer.PANEL_CLASS_ATTR, value);
     }
 
-    private boolean hasNext()
+    public void setColumnClasses(String value)
     {
-        Object currentObj = getComponent().getAttribute(DataRenderer.VAR_ATTR);
-        return currentObj != null;
+        setRendererAttribute(ListRenderer.COLUMN_CLASSES_ATTR, value);
     }
 
-
-    public int getDoAfterBodyValue() throws JspException
+    public void setRowClasses(String value)
     {
-        try
-        {
-            getComponent().encodeBegin(getFacesContext());
-        }
-        catch (IOException e)
-        {
-            throw new JspException(e);
-        }
-        return hasNext() ? EVAL_BODY_AGAIN : SKIP_BODY;
+        setRendererAttribute(ListRenderer.ROW_CLASSES_ATTR, value);
     }
 
-    public int getDoStartValue() throws JspException
+    public void setFooterClass(String value)
     {
-        if (hasNext())
-        {
-            return super.getDoStartValue();
-        }
-        else
-        {
-            return SKIP_BODY;
-        }
+        setRendererAttribute(ListRenderer.FOOTER_CLASS_ATTR, value);
     }
+
+    public void setHeaderClass(String value)
+    {
+        setRendererAttribute(ListRenderer.HEADER_CLASS_ATTR, value);
+    }
+
 }

@@ -43,25 +43,34 @@
 
             <f:errors id="errors" />
 
+            <% int i = 0; %>
             <f:list id="countryList"
                     style="standardTable"
                     headerClass="standardTable_Header"
                     footerClass="standardTable_Footer"
                     rowClasses="standardTable_Row1,standardTable_Row2" >
-                <f:group id="countryList.header" >
-                    <f:output_text id="countryList.header.name" text="Country"  />
-                    <f:output_text id="countryList.header.iso" text="ISO-3166 Code"  />
+                <f:group id="header" >
+                    <f:output_text id="header.name" text="Country name" />
+                    <f:output_text id="header.isoCode" text="Iso-Code" />
                 </f:group>
                 <f:listrow id="countryList.tr" var="country" modelReference="countryList.countries" >
                     <f:output_text id="countryList.name" modelReference="country.name" />
-                    <f:output_text id="countryList.isoCode" modelReference="country.isoCode" />
+                    <f:group id="g1" >
+                        <a href="#"><f:output_text id="countryList.isoCode" modelReference="country.isoCode" /></a>
+                        <% i++; %>
+                    </f:group>
                 </f:listrow>
-                <f:group id="countryList.footer" >
-                    <f:output_text id="countryList.footer.name" text="..."  />
-                    <f:output_text id="countryList.footer.iso" />
+                <f:group id="footer" >
+                    <f:output_text id="footer.1" text="look at this runntime value ..."/>
+                    <f:group id="g2" >
+                        <f:output_text id="footer.2" text="<%=Integer.toString(i)%>" />
+                        &nbsp;
+                        <f:output_text id="footer.3" text="<%=\" rows\"%>" />
+                    </f:group>
                 </f:group>
             </f:list>
             <br>
+            <!-- TODO does not work by now -->
             <f:grid id="grid"
                     columns="2"
                     style="standardTable"

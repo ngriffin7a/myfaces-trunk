@@ -23,6 +23,13 @@ import net.sourceforge.myfaces.renderkit.attr.ListRendererAttributes;
 
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
+import javax.faces.context.ResponseWriter;
+import javax.faces.render.Renderer;
+import javax.faces.render.RenderKitFactory;
+import javax.faces.render.RenderKit;
+import javax.faces.FactoryFinder;
+import javax.servlet.ServletRequest;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
@@ -37,7 +44,12 @@ public abstract class AbstractPanelRenderer
         extends HTMLRenderer
         implements CommonRendererAttributes
 {
-    protected Styles getStyles(UIComponent component)
+    private static final String ACTUAL_ROW_ATTR = AbstractPanelRenderer.class.getName() + ".actrow";
+    private static final String COMPONENT_INFO_ATTR = AbstractPanelRenderer.class.getName() + ".components";
+    private static final String ITERATOR_ATTR = AbstractPanelRenderer.class.getName() + ".iterator";
+    public static final String RENDERKIT_ATTR = ListRenderer.class.getName() + ".renderkit";
+
+    private Styles getStyles(UIComponent component)
     {
         if (component.getComponentType().equals(javax.faces.component.UIPanel.TYPE))
         {
@@ -57,12 +69,16 @@ public abstract class AbstractPanelRenderer
         return null;
     }
 
-    protected String calcStyle(Styles styles,
-                               int row,
-                               int column,
-                               boolean lastColumn)
+    private String calcStyle(FacesContext context,
+                             UIComponent listComponent,
+                             boolean isLastColumn)
     {
         String style = null;
+        int row = getActualRow(context).intValue();
+        // TODO: implement Column
+        int column = 0;
+
+        Styles styles = getStyles(listComponent);
         if (styles == null)
         {
             return null;
@@ -72,7 +88,7 @@ public abstract class AbstractPanelRenderer
         {
             style = styles.getHeaderStyle();
         }
-        else if (lastColumn && styles.getFooterStyle().length() > 0)
+        else if (isLastColumn && styles.getFooterStyle().length() > 0)
         {
             style = styles.getFooterStyle();
         }
@@ -126,7 +142,7 @@ public abstract class AbstractPanelRenderer
 
     protected Iterator getIterator(FacesContext facesContext, UIComponent uiComponent)
     {
-        Iterator iterator = (Iterator)uiComponent.getAttribute(ListRenderer.ITERATOR_ATTR);
+        Iterator iterator = (Iterator)uiComponent.getAttribute(ITERATOR_ATTR);
         if (iterator == null)
         {
             Object v = uiComponent.currentValue(facesContext);
@@ -150,7 +166,7 @@ public abstract class AbstractPanelRenderer
             {
                 throw new IllegalArgumentException("Value of component " + uiComponent.getCompoundId() + " is neither collection nor array.");
             }
-            uiComponent.setAttribute(ListRenderer.ITERATOR_ATTR, iterator);
+            uiComponent.setAttribute(ITERATOR_ATTR, iterator);
         }
         return iterator;
     }
@@ -194,5 +210,149 @@ public abstract class AbstractPanelRenderer
         }
 
     }
+
+
+    protected void writeNewRow(FacesContext context)
+        throws IOException
+    {
+        ResponseWriter writer = context.getResponseWriter();
+        setToNextRow(context);
+        writer.write("<tr>");
+    }
+
+    /**
+     * uicomponent must have parent with rendererType = List
+     * @param context
+     * @param uicomponent
+     * @throws IOException
+     */
+    protected void writeColumnStart(FacesContext context,
+                                    UIComponent uicomponent)
+        throws IOException
+    {
+        UIComponent[] componentInfo = findComponentInfo(uicomponent);
+        if (componentInfo == null)
+        {
+            throw new IllegalStateException("UIComponent + " + uicomponent + " must have a antecessor component wiht renderType=" + ListRenderer.TYPE);
+        }
+        UIComponent listComponent = componentInfo[0];
+        UIComponent listComponentsChild = componentInfo[1];
+
+        ResponseWriter writer = context.getResponseWriter();
+
+        String style = calcStyle(context,
+                                 listComponent,
+                                 isChildLastComponent(listComponent, listComponentsChild));
+        writer.write("<td");
+
+        if (style != null && style.length() > 0)
+        {
+            writer.write(" class=\"");
+            writer.write(style);
+            writer.write("\"");
+        }
+        writer.write(">");
+    }
+
+    private boolean isChildLastComponent(UIComponent parent,
+                                         UIComponent child)
+    {
+        for (Iterator it = parent.getChildren(); it.hasNext(); )
+        {
+            UIComponent parentsChild = (UIComponent)it.next();
+            if (parentsChild.getComponentId().equals(child.getComponentId()))
+            {
+                return !it.hasNext() ? true : false;
+            }
+        }
+        throw new IllegalStateException("Component " + child.getComponentId() + " not found as child of component " + parent.getCompoundId());
+    }
+
+    protected UIComponent findListComponent(UIComponent uiComponent)
+    {
+        UIComponent[] components = findComponentInfo(uiComponent);
+        if (components == null)
+        {
+            return null;
+        }
+        return components[0];
+    }
+
+    private UIComponent[] findComponentInfo(UIComponent uicomponent)
+    {
+        UIComponent[] components = (UIComponent[])uicomponent.getAttribute(COMPONENT_INFO_ATTR);
+        if (components == null)
+        {
+            components = findListComponentAndChild(uicomponent);
+            if (components != null)
+            {
+                uicomponent.setAttribute(COMPONENT_INFO_ATTR, components);
+            }
+        }
+
+        return components;
+    }
+
+    private UIComponent[] findListComponentAndChild(UIComponent uicomponent)
+    {
+        UIComponent listComponent = uicomponent.getParent();
+        UIComponent listComponentsChild = uicomponent;
+        boolean found = false;
+        while (listComponent != null)
+        {
+            if (listComponent.getRendererType().equals(ListRenderer.TYPE))
+            {
+                found = true;
+                break;
+            }
+            listComponentsChild = listComponent;
+            listComponent = listComponent.getParent();
+        }
+
+        if (!found)
+        {
+            return null;
+        }
+
+        UIComponent[] components = {listComponent, listComponentsChild};
+        return components;
+    }
+
+
+    protected int setToNextRow(FacesContext context)
+    {
+        Integer value = getActualRow(context);
+        context.getServletRequest().setAttribute(ACTUAL_ROW_ATTR, new Integer(value.intValue() + 1));
+        return value.intValue();
+    }
+
+    protected Integer getActualRow(FacesContext context)
+    {
+        ServletRequest request = context.getServletRequest();
+        Integer value = (Integer)request.getAttribute(ACTUAL_ROW_ATTR);
+        return value == null ? new Integer(-1) : new Integer(value.intValue());
+    }
+
+    protected Renderer getOriginalRenderer(FacesContext context, UIComponent component)
+    {
+        RenderKitFactory renderkitFactory = (RenderKitFactory)FactoryFinder.getFactory(FactoryFinder.RENDER_KIT_FACTORY);
+        RenderKit renderKit = renderkitFactory.getRenderKit(getOriginalRenderKitId(context, component), context);
+        return renderKit.getRenderer(component.getRendererType());
+    }
+
+    protected String getOriginalRenderKitId(FacesContext context, UIComponent uicomponent)
+    {
+        if (uicomponent.getRendererType().equals(ListRenderer.TYPE))
+        {
+            return (String)uicomponent.getAttribute(RENDERKIT_ATTR);
+        }
+        else
+        {
+            UIComponent listComponent = findListComponent(uicomponent);
+            return (String)listComponent.getAttribute(RENDERKIT_ATTR);
+        }
+    }
+
+
 
 }

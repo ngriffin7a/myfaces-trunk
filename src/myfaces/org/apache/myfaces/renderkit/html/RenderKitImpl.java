@@ -47,15 +47,13 @@ public class RenderKitImpl
         addRenderer(new SecretRenderer());
         addRenderer(new ButtonRenderer());
         addRenderer(new HyperlinkRenderer());
-        addRenderer(new DataRenderer());
         addRenderer(new ErrorsRenderer());
         addRenderer(new ListboxRenderer());
         addRenderer(new MenuRenderer());
         addRenderer(new ListRenderer());
+        addRenderer(new DataRenderer());
         addRenderer(new GroupRenderer());
         addRenderer(new GridRenderer());
-        //TODO: remove
-        addRenderer(new JspListRenderer());
 
         //State Handling
         if (MyFacesConfig.isStateZipping())

@@ -69,6 +69,7 @@ public class GridRenderer
         writer.write(">\n");
     }
 
+/*
     public void encodeChildren(FacesContext context, UIComponent uicomponent)
         throws IOException
     {
@@ -123,7 +124,7 @@ public class GridRenderer
             fillComponentList(componentList, children, max_columns);
         }
     }
-
+*/
     private void fillComponentList(ArrayList componentList, Iterator it, int elements)
     {
         componentList.clear();
