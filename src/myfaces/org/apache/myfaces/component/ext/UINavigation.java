@@ -178,6 +178,7 @@ public class UINavigation
 
                 facesContext.renderResponse();
             }
+            //TODO: always render response?
         }
     }
 

@@ -52,8 +52,10 @@ public class JspInfo
 {
     public static final String CREATOR_TAG_ATTR = JspInfo.class.getName() + ".CREATOR_TAG";
     public static final String JSP_POSITION_ATTR = JspInfo.class.getName() + ".JSP_POSITION";
-    public static final String ACTION_LISTENERS_TYPE_LIST_ATTR = JspInfo.class.getName() + ".LISTENERS";
     public static final String HARDCODED_ID_ATTR = JspInfo.class.getName() + ".HARDCODED_ID";
+
+    /**@deprecated*/
+    public static final String ACTION_LISTENERS_TYPE_LIST_ATTR = JspInfo.class.getName() + ".LISTENERS";
 
 
     private Tree _tree = null;
@@ -217,6 +219,9 @@ public class JspInfo
         return (FacesTag)uiComponent.getAttribute(JspInfo.CREATOR_TAG_ATTR);
     }
 
+    /**
+     * @deprecated
+     */
     public static List getActionListenersTypeList(UIComponent uiComponent)
     {
         return (List)uiComponent.getAttribute(JspInfo.ACTION_LISTENERS_TYPE_LIST_ATTR);

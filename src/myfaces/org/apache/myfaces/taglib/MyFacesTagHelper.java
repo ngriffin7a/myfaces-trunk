@@ -21,8 +21,8 @@ package net.sourceforge.myfaces.taglib;
 import net.sourceforge.myfaces.MyFacesConfig;
 import net.sourceforge.myfaces.component.CommonComponentAttributes;
 import net.sourceforge.myfaces.component.UIComponentUtils;
+import net.sourceforge.myfaces.renderkit.html.HTMLRenderer;
 import net.sourceforge.myfaces.renderkit.html.jspinfo.JspInfo;
-import net.sourceforge.myfaces.renderkit.attr.UserRoleAttributes;
 import net.sourceforge.myfaces.util.bean.BeanUtils;
 import net.sourceforge.myfaces.util.logging.LogUtil;
 
@@ -31,9 +31,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.tree.Tree;
 import javax.faces.webapp.FacesTag;
 import javax.servlet.jsp.PageContext;
-import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.Tag;
-import javax.servlet.http.HttpServletRequest;
 import java.beans.PropertyDescriptor;
 import java.io.Serializable;
 import java.util.*;
@@ -67,24 +65,8 @@ public class MyFacesTagHelper
 
     public boolean isComponentVisible()
     {
-        UIComponent uiComponent = _tag.getComponent();
-        if (!uiComponent.isRendered())
-        {
-            return false;
-        }
-
-        String userRole
-            = (String)uiComponent.getAttribute(UserRoleAttributes.VISIBLE_ON_USER_ROLE_ATTR);
-        if (userRole == null)
-        {
-            //no restriction
-            return true;
-        }
-
-        //is user in role?
-        HttpServletRequest httpServletRequest
-            = (HttpServletRequest)getFacesContext().getServletRequest();
-        return httpServletRequest.isUserInRole(userRole);
+        return HTMLRenderer.isComponentVisible(getFacesContext(),
+                                               _tag.getComponent());
     }
 
 

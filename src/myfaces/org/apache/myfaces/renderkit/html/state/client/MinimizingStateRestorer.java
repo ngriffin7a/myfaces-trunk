@@ -99,6 +99,9 @@ public class MinimizingStateRestorer
 
         /*
         //restore tree
+        TreeFactory tf = (TreeFactory)FactoryFinder.getFactory(FactoryFinder.TREE_FACTORY);
+        Tree tree = tf.getTree(facesContext, treeId);
+
         Tree staticTree = JspInfo.getTree(facesContext, tree.getTreeId());
         TreeCopier treeCopier = new TreeCopier(facesContext);
         treeCopier.setOverwriteAttributes(false);
@@ -110,7 +113,6 @@ public class MinimizingStateRestorer
         for (Iterator it = TreeUtils.treeIterator(tree); it.hasNext();)
         {
             UIComponent comp = (UIComponent)it.next();
-            String uniqueId = UIComponentUtils.getUniqueComponentId(facesContext, comp);
             restoreComponent(facesContext, stateMap, comp);
         }
         */
@@ -120,6 +122,7 @@ public class MinimizingStateRestorer
 
         //restore component states and remove previously unrendered components
         traverseTree(facesContext, stateMap, unrendererComponents, tree.getRoot());
+
 
         //remap tagHash
         TagHashHack.convertUniqueIdsBackToComponents(facesContext, tree);
@@ -143,7 +146,7 @@ public class MinimizingStateRestorer
             String uniqueId = UIComponentUtils.getUniqueComponentId(facesContext, child);
             if (unrendererComponents.contains(uniqueId))
             {
-                uiComponent.removeChild(i);
+                UIComponentUtils.removeChild(uiComponent, i);
                 i--;
                 len--;
             }
@@ -179,7 +182,8 @@ public class MinimizingStateRestorer
         {
             for (int i = 0; i < facetsToBeRemoved.size(); i++)
             {
-                uiComponent.removeFacet((String)facetsToBeRemoved.get(i));
+                UIComponentUtils.removeFacet(uiComponent,
+                                             (String)facetsToBeRemoved.get(i));
             }
         }
     }
@@ -286,7 +290,8 @@ public class MinimizingStateRestorer
             }
         }
 
-        registerTagCreatedActionListeners(facesContext, stateMap, uiComponent);
+        //Not any longer needed when we have cloned the full static tree
+        //registerTagCreatedActionListeners(facesContext, stateMap, uiComponent);
     }
 
 
@@ -372,6 +377,7 @@ public class MinimizingStateRestorer
 
     /**
      * Register all listeners that would normally by added via f:action_listener tags.
+     * @deprecated
      */
     protected void registerTagCreatedActionListeners(FacesContext facesContext,
                                                      Map stateMap,
@@ -447,22 +453,6 @@ public class MinimizingStateRestorer
             facesContext.setModelValue(modelRef, propValue);
         }
     }
-
-
-    /*
-    public void restoreComponentState(FacesContext facesContext, UIComponent uiComponent) throws IOException
-    {
-        //Check model instance and create it, if it does not exist:
-        String modelRef = uiComponent.getModelReference();
-        if (modelRef != null)
-        {
-            JspInfoUtils.checkModelInstance(facesContext, modelRef);
-        }
-
-        Map stateMap = getStateMap(facesContext);
-        restoreComponent(facesContext, stateMap, uiComponent);
-    }
-    */
 
 
     protected void restoreLocale(FacesContext facesContext, Map stateMap)
@@ -628,14 +618,6 @@ public class MinimizingStateRestorer
         {
             return null;
         }
-
-        /*
-        TreeFactory treeFactory = (TreeFactory)FactoryFinder.getFactory(FactoryFinder.TREE_FACTORY);
-        tree = treeFactory.getTree(facesContext, previousTreeId);
-
-        restorePreviousTree(facesContext, stateMap, tree);
-        return tree;
-        */
 
         return restorePreviousTree(facesContext, stateMap, previousTreeId);
     }

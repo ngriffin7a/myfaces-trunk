@@ -19,7 +19,6 @@
 package net.sourceforge.myfaces.context;
 
 import net.sourceforge.myfaces.util.bean.BeanUtils;
-import net.sourceforge.myfaces.util.logging.LogUtil;
 
 import javax.faces.FacesException;
 import javax.faces.component.UIComponent;
@@ -39,7 +38,6 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.*;
-import java.util.logging.Level;
 
 /**
  * DOCUMENT ME!
@@ -208,9 +206,9 @@ public class FacesContextImpl
         List lst = new ArrayList();
         for (int i = 0; i < _messages.size(); i++)
         {
-            UIComponent uic = (UIComponent)_messageComponents.get(i);
-            if ((uicomponent == null && uic == NULL_DUMMY) ||
-                uicomponent == uic)
+            Object msgComp = _messageComponents.get(i);
+            if ((msgComp == NULL_DUMMY && uicomponent == null) ||
+                 msgComp != NULL_DUMMY && uicomponent == (UIComponent)msgComp)
             {
                 lst.add(_messages.get(i));
             }

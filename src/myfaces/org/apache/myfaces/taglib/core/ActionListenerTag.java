@@ -23,7 +23,6 @@ import net.sourceforge.myfaces.util.logging.LogUtil;
 
 import javax.faces.FacesException;
 import javax.faces.component.UIComponent;
-import javax.faces.context.FacesContext;
 import javax.faces.event.ActionListener;
 import javax.faces.webapp.FacesTag;
 import javax.servlet.jsp.JspException;
@@ -31,8 +30,6 @@ import javax.servlet.jsp.tagext.Tag;
 import javax.servlet.jsp.tagext.TagSupport;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * DOCUMENT ME!
@@ -103,7 +100,7 @@ public class ActionListenerTag
                 ActionListener al = (ActionListener)c.newInstance();
                 method.invoke(uiComponent, new Object[]{al});
 
-                getTagCreatedListenersSet().add(al);
+                //getTagCreatedListenersSet().add(al);
             }
         }
         catch (ClassNotFoundException e)
@@ -133,6 +130,7 @@ public class ActionListenerTag
     }
 
 
+    /*
     public static final String TAG_CREATED_ACTION_LISTENERS_SET_ATTR
         = ActionListenerTag.class.getName() + ".TAG_CREATED_LISTENERS_SET";
     private static final Set getTagCreatedListenersSet()
@@ -146,5 +144,6 @@ public class ActionListenerTag
         }
         return set;
     }
+    */
 
 }

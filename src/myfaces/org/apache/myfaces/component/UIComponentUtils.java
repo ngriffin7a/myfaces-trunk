@@ -453,12 +453,111 @@ public class UIComponentUtils
      * returning the "javax.faces.component.FacetParent" attribute, which is
      * set by the addFacet method in UIComponentBase.
      */
-    public static final UIComponent getParentOrFacetOwner(UIComponent uiComponent)
+    public static UIComponent getParentOrFacetOwner(UIComponent uiComponent)
     {
         UIComponent parent = uiComponent.getParent();
         return parent != null
                 ? parent
                 : (UIComponent)uiComponent.getAttribute(FACET_PARENT_ATTR);
+    }
+
+
+
+    /**
+     * HACK: {@link javax.faces.component.UIComponentBase#removeChild} does not
+     * remove the child from the naming container. This hack properly removes a
+     * child from it's parent and from the naming container.
+     * @param parent
+     * @param child
+     */
+    public static void removeChild(UIComponent parent,
+                                   UIComponent child)
+    {
+        parent.removeChild(child);
+
+        NamingContainer namingContainer;
+        if (parent instanceof NamingContainer)
+        {
+            namingContainer = (NamingContainer)parent;
+        }
+        else
+        {
+            namingContainer = UIComponentUtils.findNamingContainer(parent);
+        }
+
+        recursiveRemoveFromNamingContainer(namingContainer, child);
+    }
+
+    /**
+     * HACK: {@link javax.faces.component.UIComponentBase#removeChild} does not
+     * remove the child from the naming container. This hack properly removes a
+     * child from it's parent and from the naming container.
+     * @param parent
+     * @param i
+     */
+    public static void removeChild(UIComponent parent, int i)
+    {
+        UIComponent child = parent.getChild(i);
+        parent.removeChild(i);
+
+        NamingContainer namingContainer;
+        if (parent instanceof NamingContainer)
+        {
+            namingContainer = (NamingContainer)parent;
+        }
+        else
+        {
+            namingContainer = UIComponentUtils.findNamingContainer(parent);
+        }
+
+        recursiveRemoveFromNamingContainer(namingContainer, child);
+    }
+
+
+    /**
+     * HACK: {@link javax.faces.component.UIComponentBase#removeFacet} does not
+     * remove the child from the naming container. This hack properly removes a
+     * child from it's parent and from the naming container.
+     * @param parent
+     * @param facetName
+     */
+    public static void removeFacet(UIComponent parent, String facetName)
+    {
+        UIComponent facet = parent.getFacet(facetName);
+        parent.removeFacet(facetName);
+
+        NamingContainer namingContainer;
+        if (parent instanceof NamingContainer)
+        {
+            namingContainer = (NamingContainer)parent;
+        }
+        else
+        {
+            namingContainer = UIComponentUtils.findNamingContainer(parent);
+        }
+
+        recursiveRemoveFromNamingContainer(namingContainer, facet);
+    }
+
+
+
+    private static void recursiveRemoveFromNamingContainer(NamingContainer namingContainer,
+                                                           UIComponent comp)
+    {
+        namingContainer.removeComponentFromNamespace(comp);
+
+        if (comp instanceof NamingContainer)
+        {
+            //Component is itself a naming container, all children are
+            //registered in this component and not in parent container.
+            return;
+        }
+
+        for (Iterator it = comp.getFacetsAndChildren(); it.hasNext(); )
+        {
+            recursiveRemoveFromNamingContainer(namingContainer,
+                                               (UIComponent)it.next());
+        }
     }
 
 }

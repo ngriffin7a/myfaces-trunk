@@ -35,11 +35,13 @@ import net.sourceforge.myfaces.util.logging.LogUtil;
 import org.xml.sax.Attributes;
 
 import javax.faces.FacesException;
-import javax.faces.validator.Validator;
 import javax.faces.component.NamingContainer;
+import javax.faces.component.UICommand;
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIComponentBase;
 import javax.faces.context.FacesContext;
+import javax.faces.event.ActionListener;
+import javax.faces.validator.Validator;
 import javax.faces.webapp.FacesTag;
 import javax.faces.webapp.FacetTag;
 import javax.faces.webapp.ValidatorTag;
@@ -55,7 +57,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Hashtable;
 
 /**
  * DOCUMENT ME!
@@ -823,6 +826,7 @@ public class MyParseEventListener
                                          ActionListenerTag actionListenerTag,
                                          Attributes attrs)
     {
+        /*
         List lst = (List)_currentComponent.getAttribute(JspInfo.ACTION_LISTENERS_TYPE_LIST_ATTR);
         if (lst == null)
         {
@@ -838,6 +842,42 @@ public class MyParseEventListener
         }
 
         lst.add(type);
+        */
+
+        String type = attrs.getValue(ACTION_LISTENER_TAG_TYPE_ATTR);
+        if (type == null)
+        {
+            LogUtil.getLogger().severe("action_listener tag has no " + ACTION_LISTENER_TAG_TYPE_ATTR + " attribute!");
+            return;
+        }
+
+        if (!(_currentComponent instanceof UICommand))
+        {
+            LogUtil.getLogger().severe("Cannot register action listener because component " + _currentComponent + " is no UICommand.");
+            return;
+        }
+
+        ActionListener actionListener;
+        try
+        {
+            Class clazz = Class.forName(type);
+            actionListener = (ActionListener)clazz.newInstance();
+        }
+        catch (ClassNotFoundException e)
+        {
+            throw new RuntimeException(e);
+        }
+        catch (InstantiationException e)
+        {
+            throw new RuntimeException(e);
+        }
+        catch (IllegalAccessException e)
+        {
+            throw new RuntimeException(e);
+        }
+
+        ActionListener wrapped = new StaticActionListenerWrapper(actionListener);
+        ((UICommand)_currentComponent).addActionListener(wrapped);
     }
 
     private void handleValidatorTag(TagInfo ti,
@@ -938,5 +978,6 @@ public class MyParseEventListener
         }
         _currentComponent.setAttribute(PENDING_FACET_ATTR, name);
     }
+
 
 }

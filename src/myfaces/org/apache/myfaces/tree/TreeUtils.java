@@ -19,6 +19,7 @@
 package net.sourceforge.myfaces.tree;
 
 import net.sourceforge.myfaces.component.CommonComponentAttributes;
+import net.sourceforge.myfaces.component.UICommand;
 
 import javax.faces.component.UIComponent;
 import javax.faces.tree.Tree;
@@ -26,6 +27,7 @@ import java.io.PrintStream;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.Stack;
+import java.util.List;
 
 /**
  * DOCUMENT ME!
@@ -166,6 +168,13 @@ public class TreeUtils
         printIndent(stream, indent);
         stream.print('<');
         stream.print(comp.getComponentType());
+
+        /*
+        stream.print(" component=\"");
+        stream.print(comp);
+        stream.print("\"");
+        */
+
         printAttribute(stream, comp, CommonComponentAttributes.COMPONENT_ID_ATTR, "id");
         printAttribute(stream, comp, CommonComponentAttributes.VALUE_ATTR);
         printAttribute(stream, comp, CommonComponentAttributes.MODEL_REFERENCE_ATTR);
@@ -181,6 +190,18 @@ public class TreeUtils
                 printAttribute(stream, comp, attrName);
             }
         }
+
+        /*
+        if (comp instanceof UICommand)
+        {
+            List[] listeners = (((UICommand)comp).getListeners());
+            if (listeners != null)
+            {
+                stream.println();
+                stream.println(listeners.length + " Listeners");
+            }
+        }
+        */
 
         if (recursive)
         {

@@ -26,9 +26,9 @@ import net.sourceforge.myfaces.renderkit.html.DataRenderer;
 import net.sourceforge.myfaces.renderkit.html.HTMLRenderer;
 import net.sourceforge.myfaces.renderkit.html.SecretRenderer;
 import net.sourceforge.myfaces.renderkit.html.jspinfo.JspInfo;
+import net.sourceforge.myfaces.renderkit.html.jspinfo.StaticFacesListener;
 import net.sourceforge.myfaces.renderkit.html.state.StateRenderer;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLEncoder;
-import net.sourceforge.myfaces.taglib.core.ActionListenerTag;
 import net.sourceforge.myfaces.tree.TreeUtils;
 import net.sourceforge.myfaces.util.logging.LogUtil;
 
@@ -130,8 +130,15 @@ public class MinimizingStateSaver
         while(treeIt.hasNext())
         {
             UIComponent comp = (UIComponent)treeIt.next();
-            saveComponentAttributes(facesContext, stateMap, comp);
-            saveListeners(facesContext, stateMap, comp);
+            //Find corresponding component in parsed tree
+            UIComponent parsedComp = findCorrespondingParsedComponent(facesContext,
+                                                                      comp);
+            if (parsedComp == null)
+            {
+                LogUtil.getLogger().warning("Corresponding parsed component not found for component " + UIComponentUtils.getUniqueComponentId(facesContext, comp));
+            }
+            saveComponentAttributes(facesContext, stateMap, comp, parsedComp);
+            saveListeners(facesContext, stateMap, comp, parsedComp);
             visitedComponents.add(UIComponentUtils.getUniqueComponentId(facesContext, comp));
         }
 
@@ -199,16 +206,9 @@ public class MinimizingStateSaver
 
     protected void saveComponentAttributes(FacesContext facesContext,
                                            Map stateMap,
-                                           UIComponent uiComponent)
+                                           UIComponent uiComponent,
+                                           UIComponent parsedComp)
     {
-        //Find corresponding component in parsed tree
-        UIComponent parsedComp = findCorrespondingParsedComponent(facesContext,
-                                                                  uiComponent);
-        if (parsedComp == null)
-        {
-            LogUtil.getLogger().warning("Corresponding parsed component not found for component " + UIComponentUtils.getUniqueComponentId(facesContext, uiComponent));
-        }
-
         //Remember all seen attributes of current component, so that
         //we can find "missing attributes" (i.e attributes that were set to null)
         //later
@@ -592,25 +592,35 @@ public class MinimizingStateSaver
 
     protected void saveListeners(FacesContext facesContext,
                                  Map stateMap,
-                                 UIComponent uiComponent)
+                                 UIComponent uiComponent,
+                                 UIComponent parsedComp)
     {
         List[] listeners = UIComponentUtils.getListeners(uiComponent);
+        List[] staticListeners = UIComponentUtils.getListeners(parsedComp);
         if (listeners != null)
         {
+            /*
             Set tagCreatedActionListenersSet
                 = (Set)facesContext.getServletRequest()
                     .getAttribute(ActionListenerTag.TAG_CREATED_ACTION_LISTENERS_SET_ATTR);
+            */
             for (Iterator it = PhaseId.VALUES.iterator(); it.hasNext();)
             {
                 PhaseId phaseId = (PhaseId)it.next();
                 List phaseListeners = listeners[phaseId.getOrdinal()];
+                List staticPhaseListeners = null;
+                if (staticListeners != null)
+                {
+                    staticPhaseListeners = staticListeners[phaseId.getOrdinal()];
+                }
                 if (phaseListeners != null)
                 {
                     savePhaseListeners(facesContext,
                                        stateMap,
                                        uiComponent,
-                                       tagCreatedActionListenersSet,
-                                       phaseListeners);
+                                       //tagCreatedActionListenersSet,
+                                       phaseListeners,
+                                       staticPhaseListeners);
                 }
             }
         }
@@ -619,13 +629,20 @@ public class MinimizingStateSaver
     protected void savePhaseListeners(FacesContext facesContext,
                                       Map stateMap,
                                       UIComponent uiComponent,
-                                      Set tagCreatedActionListenersSet,
-                                      List phaseListeners)
+                                      //Set tagCreatedActionListenersSet,
+                                      List phaseListeners,
+                                      List staticPhaseListeners)
     {
         for (Iterator it = phaseListeners.iterator(); it.hasNext();)
         {
             FacesListener facesListener = (FacesListener)it.next();
 
+            if (isStaticListener(facesListener, staticPhaseListeners))
+            {
+                return;
+            }
+
+            /*
             if (tagCreatedActionListenersSet != null &&
                 tagCreatedActionListenersSet.contains(facesListener))
             {
@@ -633,6 +650,7 @@ public class MinimizingStateSaver
                 //and can automatically be restored by MinimizingStateRestorer.
                 return;
             }
+            */
 
             String listenerType;
             if (facesListener instanceof ActionListener)
@@ -673,5 +691,34 @@ public class MinimizingStateSaver
 
     }
 
+
+    protected boolean isStaticListener(FacesListener facesListener,
+                                       List staticPhaseListeners)
+    {
+        if (facesListener instanceof StaticFacesListener)
+        {
+            //Listener was created by JspTreeParser
+            //and can automatically be restored by MinimizingStateRestorer.
+            return true;
+        }
+
+        if (staticPhaseListeners == null)
+        {
+            return false;
+        }
+
+        String listenerType = facesListener.getClass().getName();
+        for (Iterator it = staticPhaseListeners.iterator(); it.hasNext();)
+        {
+            StaticFacesListener staticFacesListener = (StaticFacesListener)it.next();
+            String staticType = staticFacesListener.getWrappedListener().getClass().getName();
+            if (listenerType.equals(staticType))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
 
 }
