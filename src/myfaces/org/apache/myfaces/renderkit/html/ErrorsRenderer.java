@@ -135,8 +135,11 @@ public class ErrorsRenderer
                     Message msg = (Message)it.next();
                     String summary = msg.getSummary();
                     String detail = msg.getDetail();
+
                     writer.write("\n\t<li>");
-                    writer.write(summary);
+
+                    if (summary != null)
+                        writer.write(summary);
                     if (summary != null &&
                         detail != null&&
                         summary.length() > 0 &&
@@ -144,7 +147,8 @@ public class ErrorsRenderer
                     {
                         writer.write(": ");
                     }
-                    writer.write(detail);
+                    if (detail != null)
+                        writer.write(detail);
                     writer.write("</li>");
                 }
                 writer.write("\n</ul>");
@@ -163,15 +167,17 @@ public class ErrorsRenderer
                     String summary = msg.getSummary();
                     String detail = msg.getDetail();
 
-                    writer.write(summary);
+                    if (summary != null)
+                        writer.write(summary);
                     if (summary != null &&
-                        detail != null&&
+                        detail != null &&
                         summary.length() > 0 &&
                         detail.length() > 0)
                     {
                         writer.write(": ");
                     }
-                    writer.write(detail);
+                    if (detail != null)
+                        writer.write(detail);
 
                     writer.write("</span>");
 
