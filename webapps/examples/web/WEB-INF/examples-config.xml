@@ -43,6 +43,13 @@
         <managed-bean-scope>request</managed-bean-scope>
     </managed-bean>
 
+    <!-- Managed Beans for aliasBean.jsp -->
+
+    <managed-bean>
+        <managed-bean-name>customerAddress</managed-bean-name>
+        <managed-bean-class>java.util.String</managed-bean-class>
+        <managed-bean-scope>session</managed-bean-scope>
+    </managed-bean>
 
     <!-- Managed Beans for selectbox.jsp -->
 
@@ -198,6 +205,11 @@
         <navigation-case>
             <from-outcome>go_sample2</from-outcome>
             <to-view-id>/sample2.jsp</to-view-id>
+        </navigation-case>
+
+        <navigation-case>
+            <from-outcome>go_aliasBean</from-outcome>
+            <to-view-id>/aliasBean.jsp</to-view-id>
         </navigation-case>
 
         <navigation-case>

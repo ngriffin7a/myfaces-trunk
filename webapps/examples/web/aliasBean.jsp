@@ -53,34 +53,30 @@
         <f:facet name="body">
             <h:panelGroup id="body">
 
-                <h:messages id="messageList" showSummary="true" showDetail="true" />
+				<f:verbatim>
+					<p>
+						Let's suppose you have a subform you use often but with different beans.<br/>
+						The aliasBean allows you to design the subform with a fictive bean
+						and to include it in all the pages where you use it.
+						You just need to make an alias to the real bean named after the fictive bean before invoking the fictive bean.
+					</p>
+					<p>
+						In this example, the customerAddress bean is a managed bean, but the address bean isn't defined anywhere.<br/>
+						After the aliasBean tag, we can use #{address.*} in place of #{custommerAddress.*}, so making it possible to have
+						a generic address subforms (ok, this one it a bite simple form, but here is the idea).
+					</p>
+				</f:verbatim>
+				
 
-                <f:verbatim>
-                    <h:outputText escape="false" value="<h4> #{example_messages['date_comp_header']}</h4>"/>
-                </f:verbatim>
+				<h:form>
+					<x:aliasBean sourceBean="#{customerAddress}" alias="#{address}"/>
+					<f:subview id="simulatedIncludedSubform">
+							<%-- The next tag could be inserted by an %@ include or jsp:include --%>
+	                        <h:inputText value="#{address}"/>
+					</f:subview>
 
-                    <h:form>
-                        <f:verbatim><p></f:verbatim>
-	                        <h:outputText value="#{example_messages['date_comp_text1']}"/> <h:message for="date1"/>
-	                        <x:inputDate id="date1" value="#{date1}"/>
-	                        <f:verbatim><br></f:verbatim>
-	                        <h:outputText value="#{example_messages['date_comp_text2']} #{date1}"/> <%-- TODO : print date part only --%>
-                        <f:verbatim></p></f:verbatim>
-                        
-                        <h:outputText value="#{example_messages['date_comp_text3']}"/>
-	                        <x:inputDate id="date2" value="#{date2}" type="time"/> <h:message for="date2"/>
-	                        <f:verbatim><br></f:verbatim>
-	                        <h:outputText value="#{example_messages['date_comp_text4']} #{date2}"/> <%-- TODO : print time part only --%>
-                        <f:verbatim></p></f:verbatim>
-                        
-                        <h:outputText value="#{example_messages['date_comp_text5']}"/>
-	                        <x:inputDate id="date3" value="#{date3}" type="both"/> <h:message for="date3"/>
-	                        <f:verbatim><br></f:verbatim>
-	                        <h:outputText value="#{example_messages['date_comp_text6']} #{date3}"/>
-                        <f:verbatim></p></f:verbatim>
-
-                        <h:commandButton value="#{example_messages['date_comp_button']}"/>
-                    </h:form>
+					<h:commandButton/>
+				</h:form>
 
             </h:panelGroup>
         </f:facet>
