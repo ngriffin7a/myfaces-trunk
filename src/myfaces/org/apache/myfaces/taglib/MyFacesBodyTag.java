@@ -32,6 +32,7 @@ import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
 import javax.servlet.jsp.tagext.BodyTag;
 import javax.servlet.jsp.tagext.Tag;
+import java.io.IOException;
 
 /**
  * BodyContent is automatically added as an attribute ({@link #BODY_CONTENT_ATTR)
@@ -46,8 +47,8 @@ public abstract class MyFacesBodyTag
     implements MyFacesTagBaseIF,
                CommonComponentAttributes,
                CommonRendererAttributes,
-    HTMLUniversalAttributes,
-    HTMLEventHandlerAttributes,
+               HTMLUniversalAttributes,
+               HTMLEventHandlerAttributes,
                KeyBundleAttributes,
                UserRoleAttributes
 {
@@ -62,9 +63,20 @@ public abstract class MyFacesBodyTag
         _helper = new MyFacesTagHelper(this);
     }
 
+    protected void encodeBegin()
+        throws IOException
+    {
+        if (_helper.isComponentVisible())
+        {
+            super.encodeBegin();
+        }
+    }
+
     public int getDoStartValue() throws JspException
     {
-        return BodyTag.EVAL_BODY_BUFFERED;
+        return _helper.isComponentVisible()
+                ? BodyTag.EVAL_BODY_BUFFERED
+                : Tag.SKIP_BODY;
     }
 
 

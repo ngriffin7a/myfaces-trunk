@@ -29,6 +29,7 @@ import javax.faces.webapp.FacesTag;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
 import javax.servlet.jsp.tagext.Tag;
+import java.io.IOException;
 
 /**
  * DOCUMENT ME!
@@ -59,9 +60,20 @@ public abstract class MyFacesTag
         return super.doStartTag();
     }
 
+    protected void encodeBegin()
+        throws IOException
+    {
+        if (_helper.isComponentVisible())
+        {
+            super.encodeBegin();
+        }
+    }
+
     public int getDoStartValue() throws JspException
     {
-        return Tag.EVAL_BODY_INCLUDE;
+        return _helper.isComponentVisible()
+                ? Tag.EVAL_BODY_INCLUDE
+                : Tag.SKIP_BODY;
     }
 
     public int doEndTag() throws JspException
