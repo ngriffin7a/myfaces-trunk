@@ -30,6 +30,9 @@ import java.util.ArrayList;
  * @version $Revision$ $Date$
  * 
  * $Log$
+ * Revision 1.3  2004/08/23 05:15:32  dave0000
+ * be user friendly, do not return null
+ *
  * Revision 1.2  2004/08/20 07:16:09  manolito
  * moved StringUtils to share source tree
  *
@@ -432,13 +435,8 @@ public class StringUtils
      */
     public static String[] splitLongString(String str, char separator)
     {
-        if (str == null)
-        {
-            return null;
-        }
-
-        int len = str.length();
-        if (len == 0)
+    	int len;
+        if (str == null || (len = str.length()) == 0)
         {
             return ArrayUtils.EMPTY_STRING_ARRAY;
         }
@@ -473,13 +471,8 @@ public class StringUtils
     public static String[] splitLongString(
         String str, char separator, char quote)
     {
-        if (str == null)
-        {
-            return null;
-        }
-
-        int len = str.length();
-        if (len == 0)
+    	int len;
+        if (str == null || (len = str.length()) == 0)
         {
             return ArrayUtils.EMPTY_STRING_ARRAY;
         }
@@ -543,13 +536,8 @@ public class StringUtils
      */
     public static String[] splitShortString(String str, char separator)
     {
-        if (str == null)
-        {
-            return null;
-        }
-
-        int len = str.length();
-        if (len == 0)
+    	int len;
+        if (str == null || (len = str.length()) == 0)
         {
             return ArrayUtils.EMPTY_STRING_ARRAY;
         }
@@ -599,13 +587,8 @@ public class StringUtils
     public static String[] splitShortString(
         String str, char separator, char quote)
     {
-        if (str == null)
-        {
-            return null;
-        }
-
-        int len = str.length();
-        if (len == 0)
+    	int len;
+        if (str == null || (len = str.length()) == 0)
         {
             return ArrayUtils.EMPTY_STRING_ARRAY;
         }
