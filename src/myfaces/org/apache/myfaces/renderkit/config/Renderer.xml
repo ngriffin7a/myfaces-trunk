@@ -5,11 +5,12 @@
 <definition>
 
     <renderer type="Image">
-        <attributes collection="basic" />
-        <attribute name="src" />
+        <attributes collectionRef="image-renderer" />
+        <!-- <attribute ref="src" /> -->
 
         <uiComponent type="UIGraphic">
-            <attributes collection="basic" />
+            <!-- <attributes collectionRef="basic" /> -->
+            <!-- <attribute ref="src" /> -->
         </uiComponent>
     </renderer>
 

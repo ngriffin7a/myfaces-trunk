@@ -52,6 +52,8 @@ public class RendererConfiguration
     private static final String ATTR_NAME           = "name";
     private static final String ATTR_COLLECTION     = "collection";
     private static final String ATTR_TYPE           = "type";
+    private static final String ATTR_REF            = "ref";
+    private static final String ATTR_COLLECTION_REF = "collectionRef";
 
     private static final int TYPE_ATTRIBUTE_MAP = 0;
     private static final int TYPE_COLLECTION_MAP = 1;
@@ -220,6 +222,14 @@ public class RendererConfiguration
                             {
                                 addAttributeDescriptor(collectionChild, attributeDescriptorList);
                             }
+                            else if (collectionChild.getNodeName().equals(ELEMENT_ATTRIBUTE))
+                            {
+                                addAttribute(collectionChild, _attributeMap, attributeDescriptorList);
+                            }
+                            else if (collectionChild.getNodeName().equals(ELEMENT_ATTRIBUTES))
+                            {
+                                addAttributes(collectionChild, _collectionMap, attributeDescriptorList);
+                            }
                             else
                             {
                                 LogUtil.getLogger().warning("Unknokn Element found: " + definitionChild.getNodeName() + ".");
@@ -278,7 +288,7 @@ public class RendererConfiguration
     private static void addAttribute(Element attribute, Map attributeMap, List attributeDescriptorList)
     {
         // attribute
-        String attributeName = attribute.getAttribute(ATTR_NAME);
+        String attributeName = attribute.getAttribute(ATTR_REF);
         if (attributeName != null && attributeName.length() > 0)
         {
             AttributeDescriptor descr = (AttributeDescriptor)attributeMap.get(attributeName);
@@ -295,7 +305,7 @@ public class RendererConfiguration
 
     private static void addAttributes(Element attribute, Map collectionMap, List attributeDescriptorList)
     {
-        String collectionName = attribute.getAttribute(ATTR_COLLECTION);
+        String collectionName = attribute.getAttribute(ATTR_COLLECTION_REF);
         if (collectionName != null && collectionName.length() > 0)
         {
             ArrayList descrList = (ArrayList)collectionMap.get(collectionName);
@@ -377,7 +387,6 @@ public class RendererConfiguration
         }
         return null;
     }
-
 
     public static void main(String[] argv)
     {

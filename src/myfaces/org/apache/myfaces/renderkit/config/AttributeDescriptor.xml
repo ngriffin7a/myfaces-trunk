@@ -4,6 +4,11 @@
 
 <definition>
 
+    <!--
+      ====================================================
+      Common Collections
+      ====================================================
+    -->
     <!-- common renderer attriubtes -->
     <collection name="common-renderer-attributes">
         <attrdesc name="columnClasses" type="java.lang.String"><display-name /><description /></attrdesc>
@@ -49,6 +54,37 @@
                      html-eventhandler-attributes</collections>
     </collection>
 
-    <!-- HTML 4.0 diverse attributes -->
-    <attrdesc name="src"><display-name /><description /></attrdesc>
+    <!--
+      ====================================================
+      Common HTML 4.0 attributes
+      ====================================================
+    -->
+    <attrdesc name="alt"><display-name /><description /></attrdesc>
+    <attrdesc name="align"><display-name /><description /></attrdesc>
+    <attrdesc name="border"><display-name /><description /></attrdesc>
+    <attrdesc name="height"><display-name /><description /></attrdesc>
+    <attrdesc name="width"><display-name /><description /></attrdesc>
+
+    <!--
+      ====================================================
+      Collections for Renderers and UIComponents
+      ====================================================
+    -->
+
+    <!-- Image Renderer -->
+    <collection name="image-renderer">
+        <collections>basic</collections>
+        <attrdesc name="hspace"><display-name /><description /></attrdesc>
+        <attrdesc name="ismap"><display-name /><description /></attrdesc>
+        <attrdesc name="longdesc"><display-name /><description /></attrdesc>
+        <attrdesc name="name"><display-name /><description /></attrdesc>
+        <attrdesc name="src"><display-name /><description /></attrdesc>
+        <attrdesc name="usemap"><display-name /><description /></attrdesc>
+        <attrdesc name="vspace"><display-name /><description /></attrdesc>
+        <attribute ref="alt"></attribute>
+        <attribute ref="align"></attribute>
+        <attribute ref="border"></attribute>
+        <attribute ref="height"></attribute>
+        <attribute ref="width"></attribute>
+    </collection>
 </definition>
