@@ -18,6 +18,9 @@
  */
 package net.sourceforge.myfaces.custom.fileupload;
 
+import net.sourceforge.myfaces.component.UserRoleAware;
+import net.sourceforge.myfaces.component.UserRoleUtils;
+
 import javax.faces.component.html.HtmlInputText;
 import javax.faces.context.FacesContext;
 import javax.faces.el.ValueBinding;
@@ -28,6 +31,7 @@ import javax.faces.el.ValueBinding;
  */
 public class HtmlInputFileUpload
         extends HtmlInputText
+        implements UserRoleAware
 {
     //private static final Log log = LogFactory.getLog(HtmlInputFileUpload.class);
 
@@ -48,6 +52,8 @@ public class HtmlInputFileUpload
     private static final String DEFAULT_RENDERER_TYPE = "net.sourceforge.myfaces.FileUpload";
 
     private String _accept = null;
+    private String _enabledOnUserRole = null;
+    private String _visibleOnUserRole = null;
 
     public HtmlInputFileUpload()
     {
@@ -71,12 +77,44 @@ public class HtmlInputFileUpload
         return vb != null ? (String)vb.getValue(getFacesContext()) : null;
     }
 
+    public void setEnabledOnUserRole(String enabledOnUserRole)
+    {
+        _enabledOnUserRole = enabledOnUserRole;
+    }
+
+    public String getEnabledOnUserRole()
+    {
+        if (_enabledOnUserRole != null) return _enabledOnUserRole;
+        ValueBinding vb = getValueBinding("enabledOnUserRole");
+        return vb != null ? (String)vb.getValue(getFacesContext()) : null;
+    }
+
+    public void setVisibleOnUserRole(String visibleOnUserRole)
+    {
+        _visibleOnUserRole = visibleOnUserRole;
+    }
+
+    public String getVisibleOnUserRole()
+    {
+        if (_visibleOnUserRole != null) return _visibleOnUserRole;
+        ValueBinding vb = getValueBinding("visibleOnUserRole");
+        return vb != null ? (String)vb.getValue(getFacesContext()) : null;
+    }
+
+
+    public boolean isRendered()
+    {
+        if (!UserRoleUtils.isVisibleOnUserRole(this)) return false;
+        return super.isRendered();
+    }
 
     public Object saveState(FacesContext context)
     {
-        Object values[] = new Object[2];
+        Object values[] = new Object[4];
         values[0] = super.saveState(context);
         values[1] = _accept;
+        values[2] = _enabledOnUserRole;
+        values[3] = _visibleOnUserRole;
         return ((Object) (values));
     }
 
@@ -85,6 +123,8 @@ public class HtmlInputFileUpload
         Object values[] = (Object[])state;
         super.restoreState(context, values[0]);
         _accept = (String)values[1];
+        _enabledOnUserRole = (String)values[2];
+        _visibleOnUserRole = (String)values[3];
     }
     //------------------ GENERATED CODE END ---------------------------------------
 }
