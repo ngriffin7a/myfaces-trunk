@@ -18,6 +18,7 @@
  */
 package net.sourceforge.myfaces.taglib.ext;
 
+import net.sourceforge.myfaces.component.html.MyFacesHtmlMessages;
 import net.sourceforge.myfaces.taglib.html.HtmlMessagesTag;
 
 import javax.faces.component.UIComponent;
@@ -33,7 +34,7 @@ public class MyfacesHtmlMessagesTag
 
     public String getComponentType()
     {
-        return "net.sourceforge.myfaces.HtmlMessages";
+        return MyFacesHtmlMessages.COMPONENT_TYPE;
     }
 
     public String getDefaultRendererType()

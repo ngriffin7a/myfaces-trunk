@@ -18,6 +18,7 @@
  */
 package net.sourceforge.myfaces.taglib.ext;
 
+import net.sourceforge.myfaces.component.html.MyFacesHtmlCommandLink;
 import net.sourceforge.myfaces.renderkit.html.HTML;
 import net.sourceforge.myfaces.taglib.html.HtmlCommandLinkTag;
 
@@ -34,7 +35,7 @@ public class MyfacesHtmlCommandLinkTag
 
     public String getComponentType()
     {
-        return "net.sourceforge.myfaces.HtmlCommandLink";
+        return MyFacesHtmlCommandLink.COMPONENT_TYPE;
     }
 
     protected String getDefaultRendererType()

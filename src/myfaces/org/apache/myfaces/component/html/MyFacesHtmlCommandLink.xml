@@ -5,7 +5,7 @@
 <component generateStateMethods="true">
     <component-class>net.sourceforge.myfaces.component.html.MyFacesHtmlCommandLink</component-class>
     <base-class>javax.faces.component.html.HtmlCommandLink</base-class>
-    <component-type>net.sourceforge.myfaces.CommandLink</component-type>
+    <component-type>net.sourceforge.myfaces.HtmlCommandLink</component-type>
     <component-family>javax.faces.Command</component-family>
     <renderer-type>net.sourceforge.myfaces.Link</renderer-type>
     <field>

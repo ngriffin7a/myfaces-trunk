@@ -18,6 +18,7 @@
  */
 package net.sourceforge.myfaces.taglib.ext;
 
+import net.sourceforge.myfaces.component.ext.HtmlPanelTabbedPane;
 import net.sourceforge.myfaces.renderkit.html.HTML;
 import net.sourceforge.myfaces.taglib.html.HtmlPanelGroupTag;
 
@@ -34,7 +35,7 @@ public class HtmlPanelTabbedPaneTag
 
     public String getComponentType()
     {
-        return "net.sourceforge.myfaces.PanelTabbedPane";
+        return HtmlPanelTabbedPane.COMPONENT_TYPE;
     }
 
     protected String getDefaultRendererType()

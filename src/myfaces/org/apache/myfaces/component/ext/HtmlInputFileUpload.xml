@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE component PUBLIC
+  "-//MyFaces//DTD MyFaces component def 1.0//EN"
+  "http://myfaces.sourceforge.net/dtd/Component.dtd">
+<component>
+    <component-class>net.sourceforge.myfaces.component.ext.HtmlInputFileUpload</component-class>
+    <base-class>net.sourceforge.myfaces.component.html.MyFacesHtmlInputText</base-class>
+    <component-type>net.sourceforge.myfaces.HtmlInputFileUpload</component-type>
+    <component-family>javax.faces.Input</component-family>
+    <renderer-type>net.sourceforge.myfaces.FileUpload</renderer-type>
+    <field>
+        <name>accept</name>
+        <type>java.lang.String</type>
+    </field>
+</component>

@@ -18,6 +18,7 @@
  */
 package net.sourceforge.myfaces.taglib.ext;
 
+import net.sourceforge.myfaces.component.ext.HtmlOutputNavigation;
 import net.sourceforge.myfaces.taglib.html.HtmlOutputFormatTag;
 
 
@@ -31,7 +32,7 @@ public class HtmlOutputNavigationTag
 {
     public String getComponentType()
     {
-        return "net.sourceforge.myfaces.OutputNavigation";
+        return HtmlOutputNavigation.COMPONENT_TYPE;
     }
 
     public String getDefaultRendererType()

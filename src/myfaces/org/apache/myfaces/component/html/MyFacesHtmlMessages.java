@@ -18,47 +18,35 @@
  */
 package net.sourceforge.myfaces.component.html;
 
-import net.sourceforge.myfaces.renderkit.JSFAttr;
-
 import javax.faces.component.html.HtmlMessages;
+import javax.faces.context.FacesContext;
 import javax.faces.el.ValueBinding;
 
 /**
- * TODO: save and restore state!
- * 
  * @author Thomas Spiegl (latest modification by $Author$)
+ * @author Manfred Geiler
  * @version $Revision$ $Date$
  */
 public class MyFacesHtmlMessages
     extends HtmlMessages
 {
-    private static final boolean DEFAULT_TOOLTIP = true;
-    private static final boolean DEFAULT_SHOW_INPUT_LABEL = false;
+    //------------------ GENERATED CODE BEGIN (do not modify!) --------------------
 
-    // missing in API of HtmlMessages
-    private Boolean _tooltip;
+    public static final String COMPONENT_TYPE = "net.sourceforge.myfaces.HtmlMessages";
+    public static final String COMPONENT_FAMILY = "javax.faces.Messages";
+    private static final String DEFAULT_RENDERER_TYPE = "net.sourceforge.myfaces.Messages";
+    private static final boolean DEFAULT_SHOWINPUTLABEL = false;
 
-    private Boolean _showInputLabel;
+    private Boolean _showInputLabel = null;
 
-    public boolean isTooltip()
+    public MyFacesHtmlMessages()
     {
-        if (_tooltip != null) return _tooltip.booleanValue();
-        ValueBinding vb = getValueBinding(JSFAttr.TOOLTIP_ATTR);
-        Boolean b = vb != null ? (Boolean)vb.getValue(getFacesContext()) : null;
-        return b != null ? b.booleanValue() : DEFAULT_TOOLTIP;
+        setRendererType(DEFAULT_RENDERER_TYPE);
     }
 
-    public void setTooltip(boolean tooltip)
+    public String getFamily()
     {
-        _tooltip = Boolean.valueOf(tooltip);
-    }
-
-    public boolean isShowInputLabel()
-    {
-        if (_showInputLabel != null) return _showInputLabel.booleanValue();
-        ValueBinding vb = getValueBinding("showInputLabel");
-        Boolean b = vb != null ? (Boolean)vb.getValue(getFacesContext()) : null;
-        return b != null ? b.booleanValue() : DEFAULT_SHOW_INPUT_LABEL;
+        return COMPONENT_FAMILY;
     }
 
     public void setShowInputLabel(boolean showInputLabel)
@@ -66,4 +54,28 @@ public class MyFacesHtmlMessages
         _showInputLabel = Boolean.valueOf(showInputLabel);
     }
 
+    public boolean isShowInputLabel()
+    {
+        if (_showInputLabel != null) return _showInputLabel.booleanValue();
+        ValueBinding vb = getValueBinding("showInputLabel");
+        Boolean v = vb != null ? (Boolean)vb.getValue(getFacesContext()) : null;
+        return v != null ? v.booleanValue() : DEFAULT_SHOWINPUTLABEL;
+    }
+
+
+    public Object saveState(FacesContext context)
+    {
+        Object values[] = new Object[2];
+        values[0] = super.saveState(context);
+        values[1] = _showInputLabel;
+        return ((Object) (values));
+    }
+
+    public void restoreState(FacesContext context, Object state)
+    {
+        Object values[] = (Object[])state;
+        super.restoreState(context, values[0]);
+        _showInputLabel = (Boolean)values[1];
+    }
+    //------------------ GENERATED CODE END ---------------------------------------
 }

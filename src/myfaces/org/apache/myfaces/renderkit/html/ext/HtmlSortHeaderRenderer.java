@@ -50,7 +50,7 @@ public class HtmlSortHeaderRenderer
             {
                 ResponseWriter writer = facesContext.getResponseWriter();
 
-                if (dataTable.getSortAscending())
+                if (dataTable.isSortAscending())
                 {
                     writer.write("&#x2191;");
                 }

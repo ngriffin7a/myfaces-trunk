@@ -18,10 +18,6 @@
  */
 package net.sourceforge.myfaces.component.ext;
 
-import net.sourceforge.myfaces.util.DebugUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import javax.faces.component.html.HtmlPanelGroup;
 import javax.faces.context.FacesContext;
 import javax.faces.el.ValueBinding;
@@ -33,10 +29,30 @@ import javax.faces.el.ValueBinding;
 public class HtmlPanelTab
         extends HtmlPanelGroup
 {
-    private static final Log log = LogFactory.getLog(HtmlPanelTab.class);
+    //private static final Log log = LogFactory.getLog(HtmlPanelTab.class);
 
-    private static final int ATTRIBUTE_COUNT = 1;
-    private String _label;
+    //------------------ GENERATED CODE BEGIN (do not modify!) --------------------
+
+    public static final String COMPONENT_TYPE = "net.sourceforge.myfaces.HtmlPanelTab";
+    public static final String COMPONENT_FAMILY = "javax.faces.Panel";
+    private static final String DEFAULT_RENDERER_TYPE = "javax.faces.Group";
+
+    private String _label = null;
+
+    public HtmlPanelTab()
+    {
+        setRendererType(DEFAULT_RENDERER_TYPE);
+    }
+
+    public String getFamily()
+    {
+        return COMPONENT_FAMILY;
+    }
+
+    public void setLabel(String label)
+    {
+        _label = label;
+    }
 
     public String getLabel()
     {
@@ -45,28 +61,20 @@ public class HtmlPanelTab
         return vb != null ? (String)vb.getValue(getFacesContext()) : null;
     }
 
-    public void setLabel(String label)
-    {
-        _label = label;
-    }
 
     public Object saveState(FacesContext context)
     {
-        Object values[] = new Object[ATTRIBUTE_COUNT + 1];
-        int i = 0;
-        values[i++] = super.saveState(context);
-        values[i++] = _label;
-        DebugUtils.assertFatal(i == ATTRIBUTE_COUNT + 1, log, "Number of attributes to save differs!");
+        Object values[] = new Object[2];
+        values[0] = super.saveState(context);
+        values[1] = _label;
         return ((Object) (values));
     }
 
     public void restoreState(FacesContext context, Object state)
     {
         Object values[] = (Object[])state;
-        int i = 0;
-        super.restoreState(context, values[i++]);
-        _label = (String)values[i++];
-        DebugUtils.assertFatal(i == ATTRIBUTE_COUNT + 1, log, "Number of attributes to restore differs!");
+        super.restoreState(context, values[0]);
+        _label = (String)values[1];
     }
-
+    //------------------ GENERATED CODE END ---------------------------------------
 }

@@ -18,6 +18,7 @@
  */
 package net.sourceforge.myfaces.taglib.ext;
 
+import net.sourceforge.myfaces.component.html.MyFacesHtmlDataTable;
 import net.sourceforge.myfaces.taglib.html.HtmlDataTableTag;
 
 import javax.faces.component.UIComponent;
@@ -33,7 +34,7 @@ public class MyfacesHtmlDataTableTag
 
     public String getComponentType()
     {
-        return "net.sourceforge.myfaces.HtmlDataTable";
+        return MyFacesHtmlDataTable.COMPONENT_TYPE;
     }
 
     protected String getDefaultRendererType()

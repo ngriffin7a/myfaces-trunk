@@ -41,24 +41,12 @@ import java.util.List;
 public class MyFacesHtmlDataTable
     extends HtmlDataTable
 {
-
     private static final Class OBJECT_ARRAY_CLASS = (new Object[0]).getClass();
-
-    private static final boolean DEFAULT_PRESERVE_DATAMODEL = false;
-    private static final boolean DEFAULT_PRESERVE_SORT = false;
-    private static final boolean DEFAULT_SORT_ASCENDING = true;
-
-    private Boolean _preserveDataModel;
-    private Boolean _preserveSort;
-    private String _sortColumn;
-    private Boolean _sortAscending;
-
     private Object _value;
-
 
     public void encodeBegin(FacesContext context) throws IOException
     {
-        if (getPreserveDataModel())
+        if (isPreserveDataModel())
         {
             Object value = getLocalValue();
             if (value != null &&
@@ -75,12 +63,12 @@ public class MyFacesHtmlDataTable
 
     public void processUpdates(FacesContext context)
     {
-        if (getPreserveDataModel())
+        if (isPreserveDataModel())
         {
             updateModelFromPreservedDataModel(context);
         }
 
-        if (getPreserveSort())
+        if (isPreserveSort())
         {
             if (_sortColumn != null)
             {
@@ -157,7 +145,7 @@ public class MyFacesHtmlDataTable
 
     public int getFirst()
     {
-        if (getPreserveDataModel())
+        if (isPreserveDataModel())
         {
             Object value = getLocalValue();
             if (value != null &&
@@ -171,7 +159,7 @@ public class MyFacesHtmlDataTable
 
     public int getRows()
     {
-        if (getPreserveDataModel())
+        if (isPreserveDataModel())
         {
             Object value = getLocalValue();
             if (value != null &&
@@ -185,13 +173,14 @@ public class MyFacesHtmlDataTable
 
     public Object saveState(FacesContext context)
     {
+        boolean preserveSort = isPreserveSort();
         Object values[] = new Object[6];
         values[0] = super.saveState(context);
         values[1] = _preserveDataModel;
-        values[2] = getPreserveDataModel() ? getSerializableDataModel() : null;
+        values[2] = isPreserveDataModel() ? getSerializableDataModel() : null;
         values[3] = _preserveSort;
-        values[4] = getPreserveSort() ? getSortColumn() : _sortColumn;
-        values[5] = getPreserveSort() ? Boolean.valueOf(getSortAscending()) : _sortAscending; //TODO: optimize double access
+        values[4] = preserveSort ? getSortColumn() : _sortColumn;
+        values[5] = preserveSort ? Boolean.valueOf(isSortAscending()) : _sortAscending;
         return ((Object) (values));
     }
 
@@ -205,7 +194,7 @@ public class MyFacesHtmlDataTable
         _sortColumn = (String)values[4];
         _sortAscending = (Boolean)values[5];
 
-        if (getPreserveDataModel() && serDataModel != null)
+        if (isPreserveDataModel() && serDataModel != null)
         {
             //DataModel was restored
             setValue(serDataModel);
@@ -369,59 +358,6 @@ public class MyFacesHtmlDataTable
     }
 
 
-    public boolean getPreserveDataModel()
-    {
-        if (_preserveDataModel != null) return _preserveDataModel.booleanValue();
-        ValueBinding vb = getValueBinding("preserveDataModel");
-        Boolean b = vb != null ? (Boolean)vb.getValue(getFacesContext()) : null;
-        return b != null ? b.booleanValue() : DEFAULT_PRESERVE_DATAMODEL;
-    }
-
-    public void setPreserveDataModel(boolean preserveDataModel)
-    {
-        _preserveDataModel = Boolean.valueOf(preserveDataModel);
-    }
-
-
-    public boolean getPreserveSort()
-    {
-        if (_preserveSort != null) return _preserveSort.booleanValue();
-        ValueBinding vb = getValueBinding("preserveSort");
-        Boolean b = vb != null ? (Boolean)vb.getValue(getFacesContext()) : null;
-        return b != null ? b.booleanValue() : DEFAULT_PRESERVE_SORT;
-    }
-
-    public void setPreserveSort(boolean preserveSort)
-    {
-        _preserveSort = Boolean.valueOf(preserveSort);
-    }
-
-    public String getSortColumn()
-    {
-        if (_sortColumn != null) return _sortColumn;
-        ValueBinding vb = getValueBinding("sortColumn");
-        return vb != null ? (String)vb.getValue(getFacesContext()) : null;
-    }
-
-    public void setSortColumn(String sortColumn)
-    {
-        _sortColumn = sortColumn;
-    }
-
-    public boolean getSortAscending()
-    {
-        if (_sortAscending != null) return _sortAscending.booleanValue();
-        ValueBinding vb = getValueBinding("sortAscending");
-        Boolean b = vb != null ? (Boolean)vb.getValue(getFacesContext()) : null;
-        return b != null ? b.booleanValue() : DEFAULT_SORT_ASCENDING;
-    }
-
-    public void setSortAscending(boolean sortAscending)
-    {
-        _sortAscending = Boolean.valueOf(sortAscending);
-    }
-
-
     public Object getLocalValue()
     {
         return _value;
@@ -439,5 +375,80 @@ public class MyFacesHtmlDataTable
         super.setValue(value);
     }
 
+    //------------------ GENERATED CODE BEGIN (do not modify!) --------------------
 
+    public static final String COMPONENT_TYPE = "net.sourceforge.myfaces.HtmlDataTable";
+    public static final String COMPONENT_FAMILY = "javax.faces.Data";
+    private static final String DEFAULT_RENDERER_TYPE = "net.sourceforge.myfaces.Table";
+    private static final boolean DEFAULT_PRESERVEDATAMODEL = false;
+    private static final boolean DEFAULT_PRESERVESORT = false;
+    private static final boolean DEFAULT_SORTASCENDING = true;
+
+    private Boolean _preserveDataModel = null;
+    private Boolean _preserveSort = null;
+    private String _sortColumn = null;
+    private Boolean _sortAscending = null;
+
+    public MyFacesHtmlDataTable()
+    {
+        setRendererType(DEFAULT_RENDERER_TYPE);
+    }
+
+    public String getFamily()
+    {
+        return COMPONENT_FAMILY;
+    }
+
+    public void setPreserveDataModel(boolean preserveDataModel)
+    {
+        _preserveDataModel = Boolean.valueOf(preserveDataModel);
+    }
+
+    public boolean isPreserveDataModel()
+    {
+        if (_preserveDataModel != null) return _preserveDataModel.booleanValue();
+        ValueBinding vb = getValueBinding("preserveDataModel");
+        Boolean v = vb != null ? (Boolean)vb.getValue(getFacesContext()) : null;
+        return v != null ? v.booleanValue() : DEFAULT_PRESERVEDATAMODEL;
+    }
+
+    public void setPreserveSort(boolean preserveSort)
+    {
+        _preserveSort = Boolean.valueOf(preserveSort);
+    }
+
+    public boolean isPreserveSort()
+    {
+        if (_preserveSort != null) return _preserveSort.booleanValue();
+        ValueBinding vb = getValueBinding("preserveSort");
+        Boolean v = vb != null ? (Boolean)vb.getValue(getFacesContext()) : null;
+        return v != null ? v.booleanValue() : DEFAULT_PRESERVESORT;
+    }
+
+    public void setSortColumn(String sortColumn)
+    {
+        _sortColumn = sortColumn;
+    }
+
+    public String getSortColumn()
+    {
+        if (_sortColumn != null) return _sortColumn;
+        ValueBinding vb = getValueBinding("sortColumn");
+        return vb != null ? (String)vb.getValue(getFacesContext()) : null;
+    }
+
+    public void setSortAscending(boolean sortAscending)
+    {
+        _sortAscending = Boolean.valueOf(sortAscending);
+    }
+
+    public boolean isSortAscending()
+    {
+        if (_sortAscending != null) return _sortAscending.booleanValue();
+        ValueBinding vb = getValueBinding("sortAscending");
+        Boolean v = vb != null ? (Boolean)vb.getValue(getFacesContext()) : null;
+        return v != null ? v.booleanValue() : DEFAULT_SORTASCENDING;
+    }
+
+    //------------------ GENERATED CODE END ---------------------------------------
 }

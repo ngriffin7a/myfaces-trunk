@@ -482,7 +482,7 @@
 <!-- save_state -->
     <tag>
         <name>saveState</name>
-        <tag-class>net.sourceforge.myfaces.taglib.ext.HtmlSaveStateTag</tag-class>
+        <tag-class>net.sourceforge.myfaces.taglib.ext.SaveStateTag</tag-class>
         <body-content>JSP</body-content>
         <attribute>
             <name>id</name>

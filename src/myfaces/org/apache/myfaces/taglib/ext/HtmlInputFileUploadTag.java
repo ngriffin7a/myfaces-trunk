@@ -18,6 +18,7 @@
  */
 package net.sourceforge.myfaces.taglib.ext;
 
+import net.sourceforge.myfaces.component.ext.HtmlInputFileUpload;
 import net.sourceforge.myfaces.renderkit.JSFAttr;
 import net.sourceforge.myfaces.renderkit.html.HTML;
 import net.sourceforge.myfaces.taglib.html.HtmlComponentTag;
@@ -35,7 +36,7 @@ public class HtmlInputFileUploadTag
 
     public String getComponentType()
     {
-        return "net.sourceforge.myfaces.InputFileUpload";
+        return HtmlInputFileUpload.COMPONENT_TYPE;
     }
 
     protected String getDefaultRendererType()

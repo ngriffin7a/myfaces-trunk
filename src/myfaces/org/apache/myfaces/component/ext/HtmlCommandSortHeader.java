@@ -61,7 +61,7 @@ public class HtmlCommandSortHeader
             {
                 String colName = getColumnName();
                 String currentSortColumn = dataTable.getSortColumn();
-                boolean currentAscending = dataTable.getSortAscending();
+                boolean currentAscending = dataTable.isSortAscending();
                 if (colName.equals(currentSortColumn))
                 {
                     dataTable.setSortAscending(!currentAscending);

@@ -48,7 +48,7 @@ extends HtmlRenderer
         RendererUtils.checkParamValidity(facesContext, uiComponent, UICommand.class);
 
         //super.decode must not be called, because value is handled here
-        if (!HTMLUtil.isDisabled(uiComponent) && !isReset(uiComponent) && isSubmitted(facesContext, uiComponent))
+        if (!isReset(uiComponent) && isSubmitted(facesContext, uiComponent))
         {
             uiComponent.queueEvent(new ActionEvent(uiComponent));
         }

@@ -18,6 +18,7 @@
  */
 package net.sourceforge.myfaces.taglib.ext;
 
+import net.sourceforge.myfaces.component.ext.HtmlPanelNavigation;
 import net.sourceforge.myfaces.renderkit.html.HTML;
 import net.sourceforge.myfaces.taglib.html.HtmlComponentBodyTag;
 
@@ -33,7 +34,7 @@ public class HtmlPanelNavigationTag
 {
     public String getComponentType()
     {
-        return "net.sourceforge.myfaces.PanelNavigation";
+        return HtmlPanelNavigation.COMPONENT_TYPE;
     }
 
     public String getDefaultRendererType()

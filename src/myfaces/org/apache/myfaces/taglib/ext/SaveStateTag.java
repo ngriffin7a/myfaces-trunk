@@ -18,6 +18,7 @@
  */
 package net.sourceforge.myfaces.taglib.ext;
 
+import net.sourceforge.myfaces.component.ext.UISaveState;
 import net.sourceforge.myfaces.taglib.MyfacesComponentTag;
 
 /**
@@ -25,12 +26,12 @@ import net.sourceforge.myfaces.taglib.MyfacesComponentTag;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public class HtmlSaveStateTag
+public class SaveStateTag
     extends MyfacesComponentTag
 {
     public String getComponentType()
     {
-        return "net.sourceforge.myfaces.SaveState";
+        return UISaveState.COMPONENT_TYPE;
     }
 
     public String getDefaultRendererType()
