@@ -37,8 +37,8 @@ import java.util.List;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
- * Revision 1.20  2004/04/19 13:03:20  manolito
- * Log
+ * Revision 1.21  2004/05/18 11:21:11  manolito
+ * optimized saving of descendant states: isAllChildrenAndFacetsValid loop no longer needed
  *
  */
 public class UIData
@@ -59,7 +59,7 @@ public class UIData
     private String _var = null;
     private Object[] _descendantStates;
     private int _descendantEditableValueHolderCount = -1;
-    transient private boolean _saveDescendantState = true;
+    transient private boolean _allChildrenAndFacetsValid = true;
 
     public void setFooter(UIComponent footer)
     {
@@ -354,15 +354,16 @@ public class UIData
     public void encodeBegin(javax.faces.context.FacesContext context)
             throws IOException
     {
-        if (isAllChildrenAndFacetsValid())
+        if (_allChildrenAndFacetsValid)
         {
-            _saveDescendantState = false;
-            _dataModel = null;  //Refresh DataModel for rendering
+            // refresh the DataModel from the real world (i.e. the model bean)
+            _dataModel = null;
         }
         super.encodeBegin(context);
     }
 
 
+    /*
     private boolean isAllChildrenAndFacetsValid()
     {
         int first = getFirst();
@@ -401,25 +402,37 @@ public class UIData
         }
         return true;
     }
+    */
 
 
     public void processDecodes(FacesContext context)
     {
         if (context == null) throw new NullPointerException("context");
         if (!isRendered()) return;
-        setRowIndex(-1);
-        processFacets(context, PROCESS_DECODES);
-        processColumnFacets(context, PROCESS_DECODES);
-        processColumnChildren(context, PROCESS_DECODES);
-        setRowIndex(-1);
         try
         {
-            decode(context);
+            setRowIndex(-1);
+            processFacets(context, PROCESS_DECODES);
+            processColumnFacets(context, PROCESS_DECODES);
+            processColumnChildren(context, PROCESS_DECODES);
+            setRowIndex(-1);
+            try
+            {
+                decode(context);
+            }
+            catch (RuntimeException e)
+            {
+                context.renderResponse();
+                throw e;
+            }
         }
-        catch (RuntimeException e)
+        finally
         {
-            context.renderResponse();
-            throw e;
+            if (context.getRenderResponse() || context.getResponseComplete())
+            {
+                // one of the children and facets failed during decode
+                _allChildrenAndFacetsValid = false;
+            }
         }
     }
 
@@ -427,22 +440,44 @@ public class UIData
     {
         if (context == null) throw new NullPointerException("context");
         if (!isRendered()) return;
-        setRowIndex(-1);
-        processFacets(context, PROCESS_VALIDATORS);
-        processColumnFacets(context, PROCESS_VALIDATORS);
-        processColumnChildren(context, PROCESS_VALIDATORS);
-        setRowIndex(-1);
+        try
+        {
+            setRowIndex(-1);
+            processFacets(context, PROCESS_VALIDATORS);
+            processColumnFacets(context, PROCESS_VALIDATORS);
+            processColumnChildren(context, PROCESS_VALIDATORS);
+            setRowIndex(-1);
+        }
+        finally
+        {
+            if (context.getRenderResponse() || context.getResponseComplete())
+            {
+                // one of the children and facets failed during validate
+                _allChildrenAndFacetsValid = false;
+            }
+        }
     }
 
     public void processUpdates(javax.faces.context.FacesContext context)
     {
         if (context == null) throw new NullPointerException("context");
         if (!isRendered()) return;
-        setRowIndex(-1);
-        processFacets(context, PROCESS_UPDATES);
-        processColumnFacets(context, PROCESS_UPDATES);
-        processColumnChildren(context, PROCESS_UPDATES);
-        setRowIndex(-1);
+        try
+        {
+            setRowIndex(-1);
+            processFacets(context, PROCESS_UPDATES);
+            processColumnFacets(context, PROCESS_UPDATES);
+            processColumnChildren(context, PROCESS_UPDATES);
+            setRowIndex(-1);
+        }
+        finally
+        {
+            if (context.getRenderResponse() || context.getResponseComplete())
+            {
+                // one of the children and facets failed during model update
+                _allChildrenAndFacetsValid = false;
+            }
+        }
     }
 
 
@@ -708,8 +743,8 @@ public class UIData
         values[2] = _rows;
         values[3] = _value;
         values[4] = _var;
-        values[5] = _saveDescendantState ? _descendantStates : null;
-        values[6] = _saveDescendantState ? new Integer(_descendantEditableValueHolderCount) : INTEGER_MINUS1;
+        values[5] = !_allChildrenAndFacetsValid ? _descendantStates : null;
+        values[6] = !_allChildrenAndFacetsValid ? new Integer(_descendantEditableValueHolderCount) : INTEGER_MINUS1;
         return ((Object) (values));
     }
 
