@@ -24,6 +24,9 @@ import org.apache.myfaces.util.ArrayUtils;
  * @author Anton Koinov
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.15  2004/12/02 02:34:41  svieujot
+ * Add a BUTTON_ELEM
+ *
  * Revision 1.14  2004/11/08 03:43:20  bdudney
  * Added a div element. x:div to use, inserts a div with class or style attributes
  *
@@ -420,6 +423,7 @@ public final class HTML
     public static final String SPAN_ELEM = "span";
     public static final String DIV_ELEM = "div";
     public static final String INPUT_ELEM = "input";
+    public static final String BUTTON_ELEM = "button";
     public static final String SELECT_ELEM = "select";
     public static final String OPTION_ELEM = "option";
     public static final String OPTGROUP_ELEM = "optgroup";
