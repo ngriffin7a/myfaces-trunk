@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V1.2//EN" "document-v12.dtd">
+
+<document>
+
+<header>
+    <title>Apache MyFaces - Bootstrap Build</title>
+</header>
+
+<body>
+
+<section>
+<title>Bootstrap build</title>
+
+    <p>
+        The following instructions are for the setup and usage of the bootstrap.xml build file.  This file is an Ant script 
+        which can be used to generate and publish the nightly builds using the latest CVS code.  It is also used to publish 
+        the release builds.
+    </p>  
+    <ul>
+        <li>
+            Install 
+            <link href="http://ant.apache.org">Ant</link>.
+            Make sure the ant binary is part of the <code>$PATH</code>.
+        </li>
+    </ul>
+    <ul>
+        <li>
+            Download the jsch.jar from 
+            <link href="http://wwww.jcraft.com/jsch">jcraft</link> 
+            and copy to <code>$ANT_HOME/lib</code>.  This is necessary to allow scp to the destination server.
+        </li>
+    </ul>
+    <ul>
+        <li>
+            Install  
+            <link href="https://www.cvshome.org/">CVS</link>.  
+            Make sure the cvs binary is part of the <code>$PATH</code>.
+        </li>
+    </ul>
+    <ul>
+        <li>
+            Create a directory for creating the nightly/release builds.
+        </li>
+    </ul>
+    <ul>
+        <li>
+            Copy the <code>bootstrap.xml</code> file and <code>bootstrap.properties</code> files to this directory.  
+            These files should work without any changes.  Currently these files are located in the CVS repository in 
+            the <code>incubator-myfaces/build</code> directory.  Copy the <code>bootstrap.properties.local.sample</code> 
+            file to this directory as well.  Rename this file to <code>bootstrap.properties.local</code>.  Change the 
+            username and password in this file to a valid username and password for the destination server.
+        </li>
+    </ul>
+    <ul>
+        <li>
+            You can perform the nightly build manually from the command line using: <br/>
+            <code>ant -buildfile bootstrap.xml clean nightly</code>
+        </li>
+    </ul>
+    <ul>
+        <li>
+            You can perform the release build manually from the command line using: <br/>
+            <code>ant -buildfile bootstrap.xml -Dbuild.version=1_0_9 clean nightly</code>
+            <note label="NOTE">       
+                The release target requires that the source be tagged as rel_x where build.version = x
+            </note>
+        </li>
+    </ul>
+    <ul>
+        <li>
+            A cron job similar to the following should be used on the destination server to purge files older than seven days <br/>
+            <code>03 04 * * * find /www/cvs.apache.org/builds/myfaces/nightly -mtime +7 -exec rm {\} \; >/dev/null 2>&amp;1</code>
+        </li>
+    </ul>    
+    <ul>
+        <li>
+            A cron job also needs to be added tothe machine performing the nightly build <br/>
+            <code>00 23 * * * ant -buildfile bootstrap.xml clean nightly >/dev/null 2>&amp;1</code>
+        </li>
+    </ul>        
+</section>
+
+</body>
+    
+<footer>
+    	<legal>Java, J2EE, and JCP are trademarks or registered trademarks of Sun Microsystems, Inc. in the United States and other countries.<br />
+	&copy; 2004, Apache Software Foundation
+	</legal>
+</footer>
+
+</document>

@@ -19,7 +19,11 @@
 
 <section>
     <title>Nightly Builds</title>
-    <p>Automated builds of the latest source code.  These bundles contain the latest code and should be used at your own risk.<br /><br /></p>
+    <p> Automated builds of the latest source code.  These bundles contain the latest code and should be used at your own risk.<br/>
+        Please report any issues using the binaries by following the instructions 
+        <link href="community/issue.html">here</link>.
+        <br /><br />
+    </p>
     <ul>
         <li><link href="http://cvs.apache.org/builds/myfaces/nightly">Nightly Builds</link>.</li>
     </ul>

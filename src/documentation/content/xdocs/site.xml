@@ -5,7 +5,10 @@
         <index_pm href="index.html" label="Welcome"/>
 	    <license label="License" href="license.html" />
 	    <downloads label="Downloads" href="downloads.html" />
+            <!--
+            Commented out by schof. I think we should move this link to a different tab later.
 	    <livesites label="Web apps using MyFaces" href="livesites.html"/>
+            -->
      </project-information>
 	<components href="components/" label="Components" tab="components">
 		<overview label="Overview" href="overview.html"/>
@@ -28,18 +31,19 @@
 		<jars label="JARs" href="jars.html" />
 		<javadoc label="Java Doc" href="http://myfaces.apache.org/javadoc/" />
 		<tlddoc label="Taglibs" href="http://myfaces.apache.org/tlddoc/" />
+                <bootstrap label="Bootstrap" href="bootstrap.html" />
 		<controlprogramming label="Homepage" href="sf.html" />
 	</docu>
-  <community href="community/" label="Community" tab="community">
-    <mailinglists label="Mailing Lists" href="mailinglists.html" />
-    <contributors label="Contributors" href="contributors.html" />
-    <status label="Status" href="status.html" />
-    <bylaws label="Project Bylaws" href="bylaws.html"/>
-	<issue label="Tracking System" href="issue.html"/>
-	<powered label="Powered by MyFaces" href="poweredbymyfaces.html"/>
-	<cvs label="CVS" href="versioning.html"/>
-    <wiki label="Wiki" href="http://wiki.apache.org/myfaces"/>
-    <getinvolved label="Get Involved" href="http://jakarta.apache.org/site/getinvolved.html"/>
-  </community>
+        <community href="community/" label="Community" tab="community">
+            <mailinglists label="Mailing Lists" href="mailinglists.html" />
+            <contributors label="Contributors" href="contributors.html" />
+            <status label="Status" href="status.html" />
+            <bylaws label="Project Bylaws" href="bylaws.html"/>
+            <issue label="Bug Reporting" href="issue.html"/>
+            <powered label="Powered by MyFaces" href="poweredbymyfaces.html"/>
+            <cvs label="CVS" href="versioning.html"/>
+            <wiki label="Wiki" href="http://wiki.apache.org/myfaces"/>
+            <getinvolved label="Get Involved" href="http://jakarta.apache.org/site/getinvolved.html"/>
+        </community>
 
 </site>

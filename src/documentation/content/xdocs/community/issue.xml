@@ -4,18 +4,28 @@
 <document>
 
 <header>
-    <title>Apache MyFaces - Issue Tracking </title>
+    <title>Apache MyFaces - Bug Reporting</title>
 </header>
 
 <body>
 
 <section>
-<title>Tracking System</title>
-      <p>MyFaces uses JIRA for issue tracking.</p>
-      
-      <ul>
-        <li><link href="http://issues.apache.org/jira/secure/BrowseProject.jspa?id=10600">here</link></li>
-      </ul>
+<title>Bug Reporting</title>
+
+
+    <p>
+        MyFaces uses JIRA for reporting bugs, and for suggesting/requesting enhancements.  These issues 
+        are automatically forwarded to the MyFaces development team.  Please provide as much information 
+        as possible and include steps to reproduce the bug.  If you have a solution to the bug please include a patch file.  
+        <link href="http://cocoon.apache.org/2.1/howto/howto-patch.html">Here</link>  is a good link explaining some of the 
+        details associated with patch files.                    
+    </p>  
+    
+    <ul>
+        <li>
+            <link href="http://issues.apache.org/jira/secure/BrowseProject.jspa?id=10600">Click here for JIRA.</link>
+        </li>
+    </ul>
 </section>
 
 

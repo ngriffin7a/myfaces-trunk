@@ -22,6 +22,8 @@
       	<tr><td>bdudney</td><td>Bill Dudney</td><td/></tr>
       	<tr><td>anton</td><td>Anton Koinov</td><td/></tr>
       	<tr><td>treeder</td><td>Travis Reeder</td><td/></tr>
+        <tr><td>schof</td><td>Sean Schofield</td><td/></tr>              
+        <tr><td>ssilvert</td><td>Stan Silvert</td><td/></tr>              
        </table>
     </section>
 
@@ -43,8 +45,6 @@
 		<tr><td>Heath Borders-Wing</td></tr>
 		<tr><td>Bruno Aranda</td></tr>
 		<tr><td>Jiri Zaloudek (WML RenderKit)</td></tr>
-		<tr><td>Sean Schofield</td></tr>
-		<tr><td>Stan Silvert</td></tr>
 		<tr><td>Mike Traum</td></tr>
 		<tr><td>Mathias Broekelmann</td></tr>
        </table>
