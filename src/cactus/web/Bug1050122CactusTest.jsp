@@ -30,7 +30,7 @@
 <f:view>
 
 
-                <h:form name="testform">
+                <h:form id="testForm">
 
                     <h:panelGrid columns="1">
 

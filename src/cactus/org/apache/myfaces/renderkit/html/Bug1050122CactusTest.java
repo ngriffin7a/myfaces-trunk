@@ -42,10 +42,10 @@ public class Bug1050122CactusTest
         WebConversation conversation = new WebConversation();
         response = conversation.getResponse(response.getURL().toExternalForm());
         WebForm form = response.getFormWithID("testForm");
-        form.setParameter("size", "12");
+        form.setParameter("testForm:size", "12");
         SubmitButton submitButton = form.getSubmitButtonWithID("testForm:submit");
         response = form.submit(submitButton);
-        
+
         // is it a Long?
         assertTrue(response.getText().indexOf("12class java.lang.Long") != -1);
     }
