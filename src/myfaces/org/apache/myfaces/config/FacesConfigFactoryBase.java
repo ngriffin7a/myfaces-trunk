@@ -18,24 +18,31 @@
  */
 package net.sourceforge.myfaces.config;
 
-import net.sourceforge.myfaces.util.ClassUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.xml.sax.EntityResolver;
-
-import javax.faces.FacesException;
-import javax.faces.context.ExternalContext;
-import javax.servlet.ServletContext;
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.JarURLConnection;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
+
+import javax.faces.FacesException;
+import javax.faces.FactoryFinder;
+import javax.faces.context.ExternalContext;
+import javax.servlet.ServletContext;
+
+import net.sourceforge.myfaces.util.ClassUtils;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.xml.sax.EntityResolver;
 
 /**
  * DOCUMENT ME!
@@ -46,7 +53,10 @@ import java.util.jar.JarFile;
 public abstract class FacesConfigFactoryBase
     implements FacesConfigFactory
 {
-    private static final Log log = LogFactory.getLog(FacesConfigFactoryBase.class);
+	private static final Log log = LogFactory.getLog(FacesConfigFactoryBase.class);
+
+	private static HashSet factoryNames = new HashSet(); 
+	public static final String META_INF_SERVICES_LOCATION = "/META-INF/services/";
 
     private static final String STANDARD_FACES_CONFIG_RESOURCE
         = "net.sourceforge.myfaces.resource".replace('.', '/') + "/standard-faces-config.xml";
@@ -77,72 +87,139 @@ public abstract class FacesConfigFactoryBase
                                              String systemId,
                                              EntityResolver entityResolver) throws IOException, FacesException;
 
-
     private void parseFacesConfigFiles(FacesConfig facesConfig, ExternalContext context)
         throws FacesException
     {
         InputStream stream;
 
-        //First of all load the standard faces-config
-        stream = ClassUtils.getResourceAsStream(STANDARD_FACES_CONFIG_RESOURCE);
-        if (stream == null)
-        {
-            throw new FacesException("Standard faces config " + STANDARD_FACES_CONFIG_RESOURCE + " not found");
-        }
-        if (log.isInfoEnabled()) log.info("Reading standard config " + STANDARD_FACES_CONFIG_RESOURCE);
-        parseStreamConfig(facesConfig, stream, STANDARD_FACES_CONFIG_RESOURCE,
-                          new FacesConfigEntityResolver());
+        // load the standard config stuff from my-faces
+        performStandardFacesConfig(facesConfig);
+        	
+        // this might need to use some of the code from the search through jar files
+        performMetaInfFactoryConfig(facesConfig, context);
 
+        performJarFileConfig(facesConfig, context);
 
-        //Search through JAR files
-        Set jars = context.getResourcePaths("/WEB-INF/lib/");
-        if (jars != null)
-        {
-            for (Iterator it = jars.iterator(); it.hasNext(); )
-            {
-                String path = (String)it.next();
-                if (path.toLowerCase().endsWith(".jar"))
-                {
-                    parseJarConfig(facesConfig, context, path);
-                }
-            }
-        }
+        performContextSpecifiedConfig(facesConfig, context);
 
-        //context initialization parameter config list
-        String configFiles = context.getInitParameter(CONFIG_FILES_INIT_PARAM);
-        if (configFiles != null)
-        {
-            StringTokenizer st = new StringTokenizer(configFiles, ",", false);
-            while (st.hasMoreTokens())
-            {
-                String systemId = st.nextToken().trim();
-                stream = context.getResourceAsStream(systemId);
-                if (stream == null)
-                {
-                    log.error("Faces config resource " + systemId + " not found");
-                    continue;
-                }
-
-                if (log.isInfoEnabled()) log.info("Reading config " + systemId);
-
-                parseStreamConfig(facesConfig, stream, systemId,
-                                  new FacesConfigEntityResolver(context));
-            }
-        }
-
-        //web application config
-        String systemId = "/WEB-INF/faces-config.xml";
-        stream = context.getResourceAsStream(systemId);
-        if (stream != null)
-        {
-            if (log.isInfoEnabled()) log.info("Reading config /WEB-INF/faces-config.xml");
-            parseStreamConfig(facesConfig, stream, systemId,
-                              new FacesConfigEntityResolver(context));
-        }
+        performWebAppConfig(facesConfig, context);
     }
 
 
-    private void parseJarConfig(FacesConfig facesConfig,
+    private void performWebAppConfig(FacesConfig facesConfig, ExternalContext context) {
+      //web application config
+      String systemId = "/WEB-INF/faces-config.xml";
+      InputStream stream = context.getResourceAsStream(systemId);
+      if (stream != null)
+      {
+          if (log.isInfoEnabled()) log.info("Reading config /WEB-INF/faces-config.xml");
+          parseStreamConfig(facesConfig, stream, systemId,
+                            new FacesConfigEntityResolver(context));
+      }
+    }
+
+    private void performContextSpecifiedConfig(FacesConfig facesConfig, ExternalContext context) {
+      String configFiles = context.getInitParameter(CONFIG_FILES_INIT_PARAM);
+      if (configFiles != null)
+      {
+          StringTokenizer st = new StringTokenizer(configFiles, ",", false);
+          while (st.hasMoreTokens())
+          {
+              String systemId = st.nextToken().trim();
+              InputStream stream = context.getResourceAsStream(systemId);
+              if (stream == null)
+              {
+                  log.error("Faces config resource " + systemId + " not found");
+                  continue;
+              }
+
+              if (log.isInfoEnabled()) log.info("Reading config " + systemId);
+
+              parseStreamConfig(facesConfig, stream, systemId,
+                                new FacesConfigEntityResolver(context));
+          }
+      }
+    }
+
+    private void performJarFileConfig(FacesConfig facesConfig, ExternalContext context) {
+      Set jars = context.getResourcePaths("/WEB-INF/lib/");
+      if (jars != null)
+      {
+          for (Iterator it = jars.iterator(); it.hasNext(); )
+          {
+              String path = (String)it.next();
+              if (path.toLowerCase().endsWith(".jar"))
+              {
+                  parseJarConfig(facesConfig, context, path);
+              }
+          }
+      }
+    }
+
+    private void performStandardFacesConfig(FacesConfig facesConfig) {
+      InputStream stream = ClassUtils.getResourceAsStream(STANDARD_FACES_CONFIG_RESOURCE);
+      if (stream == null)
+      {
+          throw new FacesException("Standard faces config " + STANDARD_FACES_CONFIG_RESOURCE + " not found");
+      }
+      if (log.isInfoEnabled()) log.info("Reading standard config " + STANDARD_FACES_CONFIG_RESOURCE);
+      parseStreamConfig(facesConfig, stream, STANDARD_FACES_CONFIG_RESOURCE,
+                        new FacesConfigEntityResolver());
+    }
+
+    /**
+     * This method performs part of the factory search outlined in section 10.2.6.1.
+     * Fails early if the class name can not be found.
+     * 
+     * FIXME: Should this also search through all the jar files in the WEB-INF/lib 
+     *        directory?
+	 */
+	protected void performMetaInfFactoryConfig(FacesConfig facesConfig,
+            ExternalContext context) throws FacesException {
+        Set factoryNames = FactoryFinder.getFactoryNames();
+        // keyed on resource names, factory name is the value 
+        Map resourceNames = expandFactoryNames(factoryNames);
+        //Search for factory files in the jar file
+        Set services = context.getResourcePaths(META_INF_SERVICES_LOCATION);
+        // retainAll performs the intersection of the factory names that we
+        // are looking for the ones found, only the services found that match
+        // the expected factory names will be retained
+        services.retainAll(resourceNames.keySet());
+        Iterator itr = services.iterator();
+        FactoryConfig config = new FactoryConfig();
+        while (itr.hasNext()) {
+            String resourceName = (String) itr.next();
+            InputStream is = context.getResourceAsStream(resourceName);
+            InputStreamReader isr = new InputStreamReader(is);
+            BufferedReader br = new BufferedReader(isr);
+            String className = null;
+            try {
+                className = br.readLine();
+            } catch (IOException e) {
+                throw new FacesException("Unable to read class name from file "
+                        + resourceName, e);
+            }
+            try {
+                Class.forName(className);
+            } catch (ClassNotFoundException e) {
+                throw new FacesException("Unable to find class " + className, e);
+            }
+            config.setFactory((String)resourceNames.get(resourceName), className);
+        }
+        facesConfig.setFactoryConfig(config);
+    }
+
+    private Map expandFactoryNames(Set factoryNames) {
+      Map names = new HashMap();
+      Iterator itr = factoryNames.iterator();
+      while(itr.hasNext()) {
+        String name = (String)itr.next();
+        names.put(META_INF_SERVICES_LOCATION + name, name);
+      }
+      return names;
+    }
+
+  private void parseJarConfig(FacesConfig facesConfig,
                                 ExternalContext context,
                                 String jarPath)
         throws FacesException

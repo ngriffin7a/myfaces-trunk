@@ -18,6 +18,8 @@
  */
 package net.sourceforge.myfaces.config;
 
+import javax.faces.FactoryFinder;
+
 /**
  * @author Anton Koinov (latest modification by $Author$)
  * @version $Revision$ $Date$
@@ -34,6 +36,22 @@ public class FactoryConfig
 
     //~ Methods ------------------------------------------------------------------------------------
 
+    public void setFactory(String factoryName, String className) {
+		// FIXME: Need to stop being lazy and do this via reflection...
+		if (factoryName.equals(FactoryFinder.APPLICATION_FACTORY)) {
+			setApplicationFactory(className);
+		}
+		if(factoryName.equals(FactoryFinder.FACES_CONTEXT_FACTORY)) {
+			setFacesContextFactory(className);
+		}
+		if(factoryName.equals(FactoryFinder.LIFECYCLE_FACTORY)) {
+			setLifecycleFactory(className);
+		}
+		if(factoryName.equals(FactoryFinder.RENDER_KIT_FACTORY)) {
+			setRenderKitFactory(className);
+		}
+	}
+    
     public void setApplicationFactory(String className)
     {
         if (className == null) return;

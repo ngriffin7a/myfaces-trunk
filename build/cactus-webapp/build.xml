@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<project name="myfaces-cactus-tests" default="compile">
+
+    <property environment="env"/>
+	
+    <!-- Constants -->
+    <property name="project.dir" location="${basedir}/../.."/>
+    <property name="cactus.dir" location="${project.dir}/src/cactus"/>
+    <property name="cactus.src" location="${cactus.dir}"/>
+	<property name="cactus.web" location="${cactus.dir}/web"/>
+	<property name="webapp.name" value="myfaces-cactus-tests"/>
+    <property name="web-inf.classes.dir" location="${cactus.web}/WEB-INF/classes"/>
+	<property name="web-inf.lib.dir" location="${cactus.web}/WEB-INF/lib"/>
+
+    <!-- Properties -->
+    <property file="build.properties"/>
+    <property file="../build.properties"/>
+	<property file="manifest.properties"/>
+
+    <!-- Temporary dir. May be overridden in build.properties -->
+    <property name="temp.dir" value="${env.TEMP}"/>
+
+
+    <!-- cactus classpath for compiling -->
+    <path id="cactus.class.path">
+        <pathelement location="${servlet.jar}"/>
+        <pathelement location="${jsp-api.jar}"/>
+        <pathelement location="${jstl.jar}"/>
+        <pathelement location="${myfaces.jar}"/>
+        <pathelement location="${commons-logging.jar}"/>
+    	    <fileset dir="${cactus.lib.dir}">
+    	    	    <include name="*.jar"/>
+    	    	    <exclude name="cactus-ant-1.5.jar"/>
+    	    </fileset>
+    </path>
+
+
+    <target name="-myfaces-jar" unless="myfaces.jar.available">
+        <!-- creates myfaces.jar via main buildfile if it does not exist -->
+        <ant dir="${project.dir}/build"
+             antfile="build.xml"
+             target="myfaces-jar"
+             inheritall="false"/>
+    </target>
+
+    <target name="-check-myfaces-jar">
+        <!-- check if myfaces.jar exist -->
+        <available file="${myfaces.jar}" property="myfaces.jar.available"/>
+        <antcall target="-myfaces-jar"/>
+    </target>
+
+
+    <target name="compile"
+            depends="-check-myfaces-jar"
+            description="compiles the examples java classes to WEB-INF/classes and copies all needed libs to WEB-INF/lib">
+        <mkdir dir="${web-inf.classes.dir}"/>
+        <javac srcdir="${cactus.src}"
+               destdir="${web-inf.classes.dir}"
+               optimize="${javac.optimize}"
+               debug="${javac.debug}"
+               classpathref="cactus.class.path">
+        </javac>
+        <copy todir="${web-inf.classes.dir}">
+            <fileset dir="${cactus.src}"
+                     includes="**"
+                     excludes="**/*.java
+                               **/package.html"/>
+        </copy>
+    </target>
+
+    <target name="war"
+            depends="compile"
+            description="creates the examples release file myfaces-x.x.x-examples.tgz (don't forget to adjust manifest.properties!)">
+
+        <mkdir dir="${temp.dir}"/>
+
+        <tstamp>
+            <format property="TODAY" pattern="yyyy-MM-dd HH:mm" locale="en"/>
+        </tstamp>
+
+        <!-- create manifest -->
+        <manifest file="${temp.dir}/MANIFEST.MF">
+            <section name="${manifest.section}">
+                <attribute name="Implementation-Title" value="${manifest.impl.title}"/>
+                <attribute name="Implementation-Version" value="${manifest.impl.version} (${TODAY})"/>
+                <attribute name="Implementation-Vendor" value="${manifest.impl.vendor}"/>
+            </section>
+        </manifest>
+
+        <war destfile="${temp.dir}/${webapp.name}.war"
+             webxml="${project.dir}/build/cactus-webapp/web.xml"
+             manifest="${temp.dir}/MANIFEST.MF">
+            <lib file="${commons-el.jar}"/>
+            <lib file="${commons-logging.jar}"/>
+            <lib file="${cos.jar}"/>
+            <lib file="${jsp-api.jar}"/>
+            <lib file="${jstl.jar}"/>
+            <lib file="${myfaces.jar}"/>
+            <lib file="${log4j.jar}"/>
+    	        <lib dir="${cactus.lib.dir}">
+    	    	        <include name="*.jar"/>
+    	    	        <exclude name="cactus-ant-1.5.jar"/>
+    	        </lib>
+        	    <classes dir="${web-inf.classes.dir}" />
+            <fileset dir="${cactus.web}"
+                     excludes="WEB-INF/classes/**,
+                               WEB-INF/lib/**,
+                               WEB-INF/web.xml " />
+        </war>
+    	</target>
+
+	<property file="${tomcat.build.dir}/tomcat.properties"/>
+	<taskdef file="${tomcat.build.dir}/TomcatTasks.properties">
+        <classpath>
+            <pathelement path="${tomcat.home}/server/lib/catalina-ant.jar"/>
+        </classpath>
+    </taskdef>
+
+    <property name="absolute.temp.dir" location="${temp.dir}"/>
+	<target name="tomcat-deploy-app" description="Deploy the App to Tomcat"
+        depends="war">
+	        <deploy url="${tomcat.manager.url}"
+            username="${tomcat.username}"
+            password="${tomcat.password}"
+            path="/${webapp.name}"
+            war="file:${absolute.temp.dir}/${webapp.name}.war"/>
+    </target>
+	<target name="tomcat-undeploy-app" description="Undeploy the App from Tomcat">
+        <undeploy url="${tomcat.manager.url}"
+            username="${tomcat.username}"
+            password="${tomcat.password}"
+            path="/${webapp.name}"/>
+    </target>
+
+    <target name="tomcat-reload-app" description="Reload the App in Tomcat - must be deployed">
+        <reload url="${tomcat.manager.url}"
+            username="${tomcat.username}"
+            password="${tomcat.password}"
+            path="/${webapp.name}"/>
+    </target>
+
+    <target name="tomcat-start-app" description="Start the App in Tomcat - must be deployed">
+        <start url="${tomcat.manager.url}"
+            username="${tomcat.username}"
+            password="${tomcat.password}"
+            path="/${webapp.name}"/>
+    </target>
+
+    <target name="tomcat-stop-app" description="Stop the App in Tomcat - must be deployed">
+        <stop url="${tomcat.manager.url}"
+            username="${tomcat.username}"
+            password="${tomcat.password}"
+            path="/${webapp.name}"/>
+    </target>
+
+    <target name="tomcat-list" description="List Tomcat deployed applications">
+        <list url="${tomcat.manager.url}"
+            username="${tomcat.username}"
+            password="${tomcat.password}"/>
+    </target>
+	
+	<target name="release" depends="war" description="Build a .tgz file of the tests">
+        <tar destfile="${project.dir}/myfaces-${manifest.impl.version}-${webapp.name}.tgz"
+             compression="gzip">
+            <!--tarfileset dir="${myfaces.doc}"
+                        excludes="javadoc/**/*
+                                  tlddoc/**/*"
+                        prefix="myfaces-${manifest.impl.version}/doc"/-->
+            <tarfileset dir="${cactus.src}"
+                        prefix="myfaces-${manifest.impl.version}/src"/>
+            <tarfileset dir="${temp.dir}"
+                        includes="${webapp.name}.war"
+                        prefix="myfaces-${manifest.impl.version}"/>
+            <tarfileset dir="${cactus.dir}"
+                        includes="*"
+                        excludes="*.properties,.cvsignore"
+                        prefix="myfaces-${manifest.impl.version}/src"/>
+        </tar>
+    </target>
+
+
+    <target name="clean"
+            description="deletes all files that were built">
+        <delete quiet="true" failonerror="false" includeEmptyDirs="true">
+            <fileset dir="${web-inf.classes.dir}"/>
+            <fileset dir="${web-inf.lib.dir}"/>
+            <fileset file="${project.dir}/myfaces-*-examples.tgz"/>
+            <fileset file="${examples.web}/WEB-INF/web.xml"/>
+            <fileset file="${examples.web}/WEB-INF/faces-config.xml"/>
+            <fileset file="${temp.dir}/myfaces-samples.war" />
+        </delete>
+    </target>
+
+    <target name="prepare-for-debugging"
+            depends="-check-myfaces-jar"
+            description="compiles the examples java classes to WEB-INF/classes and copies all needed libs to WEB-INF/lib">
+        <mkdir dir="${web-inf.classes.dir}"/>
+        <javac srcdir="${examples.src}"
+               destdir="${web-inf.classes.dir}"
+               optimize="${javac.optimize}"
+               debug="${javac.debug}"
+               classpathref="examples.class.path">
+        </javac>
+        <copy todir="${web-inf.classes.dir}">
+            <fileset dir="${examples.src}"
+                     includes="**"
+                     excludes="**/*.java
+                               **/package.html"/>
+        </copy>
+
+        <mkdir dir="${web-inf.lib.dir}"/>
+        <copy todir="${web-inf.lib.dir}">
+            <fileset file="${cos.jar}"/>
+            <!--fileset file="${sun-jsf-api.jar}"/-->
+            <fileset file="${myfaces.jar}"/>
+            <fileset file="${commons-logging.jar}"/>
+            <fileset file="${log4j.jar}"/>
+        </copy>
+
+        <copy file="${project.dir}/conf/web.xml" todir="${examples.web}/WEB-INF" />
+
+    </target>
+
+</project>

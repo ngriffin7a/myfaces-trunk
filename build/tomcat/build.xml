@@ -20,7 +20,7 @@
 
     <!--
     Convenient targets to deploy to tomcat (added by Bill Dudney [bdudney@mac.com]).
-    See "tomcat-install-with-ant-readme.txt" for details.
+    See "./readme.txt" for details.
     -->
 	<!-- must have 'catalina-ant.jar' in your ant class path for these to work. -->
     <taskdef name="list" classname="org.apache.catalina.ant.ListTask"/>
@@ -28,7 +28,7 @@
     <taskdef name="reload" classname="org.apache.catalina.ant.ReloadTask"/>
     <taskdef name="remove" classname="org.apache.catalina.ant.RemoveTask"/>
 
-    <!-- these properties need to be overridable in a properties file -->
+    <!-- these properties are overridable in the build.properties file -->
     <property name="tomcat.manager.url" value="http://localhost:8080/manager"/>
     <property name="tomcat.admin.user" value="admin"/>
     <property name="tomcat.admin.passwd" value="password"/>

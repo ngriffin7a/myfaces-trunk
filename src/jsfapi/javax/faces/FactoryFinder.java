@@ -18,15 +18,19 @@
  */
 package javax.faces;
 
+import java.lang.reflect.Constructor;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import javax.faces.application.ApplicationFactory;
 import javax.faces.context.FacesContextFactory;
 import javax.faces.lifecycle.LifecycleFactory;
 import javax.faces.render.RenderKitFactory;
-import java.lang.reflect.Constructor;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * TODO: The "META-INF/services/" thing
@@ -41,6 +45,8 @@ public class FactoryFinder
     public static final String LIFECYCLE_FACTORY = "javax.faces.lifecycle.LifecycleFactory";
     public static final String RENDER_KIT_FACTORY = "javax.faces.render.RenderKitFactory";
 
+    private static Set factoryNames = new HashSet();
+    
     private static final int FACTORY_COUNT = 4;
     private static final Map _classLoaderFactoriesMap = new HashMap();
     private static final Class[][] FACTORY_CONSTRUCTOR_PARAMS = {new Class[]{ApplicationFactory.class},
@@ -49,6 +55,20 @@ public class FactoryFinder
                                                                  new Class[]{RenderKitFactory.class}};
     private static final Class[] FACTORY_CONSTRUCTOR_EMPTY_PARAMS = new Class[0];
 
+    /**
+     * The returned set is immutable
+     * @return
+     */
+    public static Set getFactoryNames() {
+      if(factoryNames.size() == 0) {
+        factoryNames.add(FactoryFinder.APPLICATION_FACTORY);
+        factoryNames.add(FactoryFinder.FACES_CONTEXT_FACTORY);
+        factoryNames.add(FactoryFinder.LIFECYCLE_FACTORY);
+        factoryNames.add(FactoryFinder.RENDER_KIT_FACTORY);
+      }
+      return Collections.unmodifiableSet(factoryNames);
+    }
+    
     public static Object getFactory(String factoryName)
             throws FacesException
     {

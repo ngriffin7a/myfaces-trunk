@@ -1,0 +1,1 @@
+These tests are intended for testing the myfaces implementation and sample apps in container via cactus.
