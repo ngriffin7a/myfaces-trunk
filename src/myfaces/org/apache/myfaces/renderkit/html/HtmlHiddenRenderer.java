@@ -32,6 +32,9 @@ import java.io.IOException;
 
 /**
  * $Log$
+ * Revision 1.8  2004/05/05 21:22:50  o_rossmueller
+ * fix #948110: decode for hidden fields
+ *
  * Revision 1.7  2004/03/26 13:34:04  manolito
  * fixed value attribute output
  *
@@ -72,4 +75,20 @@ extends HtmlRenderer
                                                        (UIOutput)uiComponent,
                                                        submittedValue);
     }
+
+    
+    public void decode(FacesContext facesContext, UIComponent component)
+     {
+         RendererUtils.checkParamValidity(facesContext,component,null);
+
+         if (component instanceof UIInput)
+         {
+             HtmlRendererUtils.decodeUIInput(facesContext, component);
+         }
+         else
+         {
+             throw new IllegalArgumentException("Unsupported component class " + component.getClass().getName());
+         }
+     }
+
 }
