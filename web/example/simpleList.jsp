@@ -32,7 +32,7 @@
 
 <body>
 
-<jsp:useBean id="list" class="net.sourceforge.myfaces.example.model.SimpleCountryList" scope="request" />
+<jsp:useBean id="countryList" class="net.sourceforge.myfaces.example.model.SimpleCountryList" scope="request" />
 
 <f:use_faces>
 
@@ -42,22 +42,22 @@
 
             <f:errors id="errors" />
 
-            <f:list id="list"
+            <f:list id="countryList"
                     style="standardTable"
                     headerClass="standardTable_Header"
                     footerClass="standardTable_Footer"
                     rowClasses="standardTable_Row1,standardTable_Row2" >
-                <f:group id="list.header" >
-                    <f:output_text id="list.header.name" text="Country"  />
-                    <f:output_text id="list.header.iso" text="ISO-3166 Code"  />
+                <f:group id="countryList.header" >
+                    <f:output_text id="countryList.header.name" text="Country"  />
+                    <f:output_text id="countryList.header.iso" text="ISO-3166 Code"  />
                 </f:group>
-                <f:listrow id="list.tr" var="country" modelReference="list.countries" >
-                    <f:output_text id="list.name" modelReference="country.name" />
-                    <f:output_text id="list.isoCode" modelReference="country.isoCode" />
+                <f:listrow id="countryList.tr" var="country" modelReference="countryList.countries" >
+                    <f:output_text id="countryList.name" modelReference="country.name" />
+                    <f:output_text id="countryList.isoCode" modelReference="country.isoCode" />
                 </f:listrow>
-                <f:group id="list.footer" >
-                    <f:output_text id="list.footer.name" text="..."  />
-                    <f:output_text id="list.footer.iso" />
+                <f:group id="countryList.footer" >
+                    <f:output_text id="countryList.footer.name" text="..."  />
+                    <f:output_text id="countryList.footer.iso" />
                 </f:group>
             </f:list>
 
