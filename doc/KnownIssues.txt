@@ -11,5 +11,10 @@ MyFaces Known Issues
   Tomcat 5 tries to translate id attributes of tags to java variables without
   revision of the name. So, you must not use hyphens (or other special
   characters) in id attributes.
+  
+* to make the examples webapp war file for a version of tomcat less than 5.5,
+  you need to uncomment the lines including the connons-el.jar and jsp-2.0.jar.
+  Those 2 commented lines can be found around line 100 in the
+  /build/examples-webapp/build.xml file.
 
 TODO... (Many others!)
