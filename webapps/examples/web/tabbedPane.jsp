@@ -36,6 +36,8 @@ managed beans used:
 
 <f:view>
 
+    <x:saveState id="ss1" value="#{tabbedPaneBean}" />
+
     <f:loadBundle basename="net.sourceforge.myfaces.examples.resource.example_messages" var="example_messages"/>
 
     <x:panelLayout id="page" layout="#{globalOptions.pageLayout}"
@@ -69,7 +71,7 @@ managed beans used:
                         <p> A common paragraph </p>
                     </f:verbatim>
 
-                    <x:panelTab id="tab1" label="Tab1">
+                    <x:panelTab id="tab1" label="Tab1" rendered="#{tabbedPaneBean.tab1Visible}">
                         <h:inputText id="inp1"/><f:verbatim><br></f:verbatim>
                         <h:inputText id="inp2" required="true" /><h:message for="inp2" showSummary="false" showDetail="true" />
                     </x:panelTab>
@@ -78,13 +80,18 @@ managed beans used:
                         <jsp:include page="tab2.jsp"/>
                     </f:subview>
 
-                    <x:panelTab id="tab3" label="Tab3">
+                    <x:panelTab id="tab3" label="Tab3" rendered="#{tabbedPaneBean.tab3Visible}">
                         <h:inputText id="inp3"/><f:verbatim><br></f:verbatim>
                         <h:inputText id="inp4"/><f:verbatim><br></f:verbatim>
                         <h:inputText id="inp5"/><f:verbatim><br></f:verbatim>
                     </x:panelTab>
 
                     <f:verbatim><br></f:verbatim>
+
+                    <h:selectBooleanCheckbox value="#{tabbedPaneBean.tab1Visible}"/><f:verbatim>Tab 1 visible<br></f:verbatim>
+                    <h:selectBooleanCheckbox value="#{tabbedPaneBean.tab2Visible}"/><f:verbatim>Tab 2 visible<br></f:verbatim>
+                    <h:selectBooleanCheckbox value="#{tabbedPaneBean.tab3Visible}"/><f:verbatim>Tab 3 visible<br></f:verbatim> 
+
                     <h:commandButton value="Common submit button" />
 
                 </x:panelTabbedPane>

@@ -157,6 +157,17 @@
         <managed-bean-scope>application</managed-bean-scope>
     </managed-bean>
 
+    <!-- Managed Beans for TabbedPane example -->
+
+    <managed-bean>
+        <managed-bean-name>tabbedPaneBean</managed-bean-name>
+        <managed-bean-class>net.sourceforge.myfaces.examples.misc.TabbedPaneBean</managed-bean-class>
+        <managed-bean-scope>request</managed-bean-scope>
+    </managed-bean>
+
+
+
+
 
     <navigation-rule>
         <navigation-case>

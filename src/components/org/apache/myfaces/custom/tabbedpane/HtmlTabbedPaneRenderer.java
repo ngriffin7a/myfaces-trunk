@@ -34,6 +34,9 @@ import java.util.Map;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.5  2004/08/09 10:52:25  manolito
+ * RFE #975649 - Enhance HtmlTabbedPaneRenderer (rendered attribute for TabbedPane component)
+ *
  * Revision 1.4  2004/07/10 17:11:02  o_rossmueller
  * added attributes activeTabStyleClass, inactiveTabStyleClass, activeSubStyleClass, inactiveSubStyleClass, tagContentStyleClass to overwrite style attributes using css
  *
@@ -145,19 +148,29 @@ public class HtmlTabbedPaneRenderer
 
         //Tab headers
         int tabIdx = 0;
+        int visibleTabCount = 0;
+        int visibleTabSelectedIdx = -1;
         List children = tabbedPane.getChildren();
         for (int i = 0, len = children.size(); i < len; i++)
         {
             UIComponent child = getUIComponent((UIComponent)children.get(i));
             if (child instanceof HtmlPanelTab)
             {
-                writeHeaderCell(writer, facesContext, tabbedPane,
-                                (HtmlPanelTab)child, tabIdx, tabIdx == selectedIndex);
+                if (child.isRendered())
+                {
+                    writeHeaderCell(writer, facesContext, tabbedPane,
+                                    (HtmlPanelTab)child, tabIdx, tabIdx == selectedIndex);
+                    if (tabIdx == selectedIndex)
+                    {
+                        visibleTabSelectedIdx = visibleTabCount;
+                    }
+                    visibleTabCount++;
+                }
                 tabIdx++;
             }
         }
-        int tabCount = tabIdx;
 
+        //Empty tab cell on the right for better look
         HtmlRendererUtils.writePrettyLineSeparator(facesContext);
         HtmlRendererUtils.writePrettyIndent(facesContext);
         writer.startElement(HTML.TD_ELEM, uiComponent);
@@ -170,14 +183,14 @@ public class HtmlTabbedPaneRenderer
         //Sub header cells
         HtmlRendererUtils.writePrettyLineSeparator(facesContext);
         writer.startElement(HTML.TR_ELEM, uiComponent);
-        writeSubHeaderCells(writer,  facesContext, tabbedPane, tabCount, selectedIndex);
+        writeSubHeaderCells(writer,  facesContext, tabbedPane, visibleTabCount, visibleTabSelectedIdx);
         HtmlRendererUtils.writePrettyLineSeparator(facesContext);
         writer.endElement(HTML.TR_ELEM);
 
         //Tab
         HtmlRendererUtils.writePrettyLineSeparator(facesContext);
         writer.startElement(HTML.TR_ELEM, uiComponent);
-        writeTabCell(writer,  facesContext, tabbedPane, tabCount, selectedIndex);
+        writeTabCell(writer,  facesContext, tabbedPane, visibleTabCount, selectedIndex);
         HtmlRendererUtils.writePrettyLineSeparator(facesContext);
         writer.endElement(HTML.TR_ELEM);
 
@@ -332,25 +345,25 @@ public class HtmlTabbedPaneRenderer
     protected void writeSubHeaderCells(ResponseWriter writer,
                                        FacesContext facesContext,
                                        HtmlPanelTabbedPane tabbedPane,
-                                       int tabCount,
-                                       int selectedIndex)
+                                       int visibleTabCount,
+                                       int visibleTabSelectedIndex)
             throws IOException
     {
         StringBuffer buf = new StringBuffer();
-        for (int i = 0, cnt = tabCount + 1; i < cnt; i++)
+        for (int i = 0, cnt = visibleTabCount + 1; i < cnt; i++)
         {
             HtmlRendererUtils.writePrettyLineSeparator(facesContext);
             HtmlRendererUtils.writePrettyIndent(facesContext);
             writer.startElement(HTML.TD_ELEM, tabbedPane);
             buf.setLength(0);
             buf.append(SUB_HEADER_CELL_STYLE);
-            buf.append("border-top:").append(i == selectedIndex ? NO_BORDER_STYLE : BORDER_STYLE);
+            buf.append("border-top:").append(i == visibleTabSelectedIndex ? NO_BORDER_STYLE : BORDER_STYLE);
             buf.append("border-right:").append(i + 1 < cnt ? NO_BORDER_STYLE : BORDER_STYLE);
             buf.append("border-left:").append(i > 0 ? NO_BORDER_STYLE : BORDER_STYLE);
             buf.append("background-color:").append(tabbedPane.getBgcolor());
             writer.writeAttribute(HTML.STYLE_ATTR, buf.toString(), null);
 
-            if (i == selectedIndex) {
+            if (i == visibleTabSelectedIndex) {
                 HtmlRendererUtils.renderHTMLAttribute(writer, tabbedPane, "activeSubStyleClass", HTML.STYLE_CLASS_ATTR);
             } else {
                 HtmlRendererUtils.renderHTMLAttribute(writer, tabbedPane, "inactiveSubStyleClass", HTML.STYLE_CLASS_ATTR);
