@@ -73,34 +73,13 @@ public class HyperlinkRenderer
 {
     public static final String TYPE = "Hyperlink";
 
-    private static final String TYPE_SUFFIX = ".TYPE";
+    //private static final String TYPE_SUFFIX = ".TYPE";
     private static final String URL_PARAM_VALUE = "1";
 
     public String getRendererType()
     {
         return TYPE;
     }
-
-    /*
-    public boolean supportsComponentType(String s)
-    {
-        return s.equals(UICommand.TYPE);
-    }
-
-    public boolean supportsComponentType(UIComponent uiComponent)
-    {
-        return uiComponent instanceof javax.faces.component.UICommand;
-    }
-
-    protected void initAttributeDescriptors()
-    {
-        addAttributeDescriptors(UICommand.TYPE, TLD_HTML_URI, "command_hyperlink", HTML_UNIVERSAL_ATTRIBUTES);
-        addAttributeDescriptors(UICommand.TYPE, TLD_HTML_URI, "command_hyperlink", HTML_EVENT_HANDLER_ATTRIBUTES);
-        addAttributeDescriptors(UICommand.TYPE, TLD_HTML_URI, "command_hyperlink", HTML_ANCHOR_ATTRIBUTES);
-        addAttributeDescriptors(UICommand.TYPE, TLD_HTML_URI, "command_hyperlink", COMMAND_HYPERLINK_ATTRIBUTES);
-        addAttributeDescriptors(UICommand.TYPE, TLD_HTML_URI, "command_hyperlink", USER_ROLE_ATTRIBUTES);
-    }
-    */
 
 
     public void decode(FacesContext facesContext, UIComponent uiComponent) throws IOException
@@ -133,6 +112,7 @@ public class HyperlinkRenderer
     }
 
 
+    /*
     protected void decodeNestedParameter(FacesContext facesContext,
                                          UICommand uiCommand,
                                          UIParameter uiParameter) throws IOException
@@ -178,6 +158,7 @@ public class HyperlinkRenderer
             uiCommand.setAttribute(name, objValue);
         }
     }
+    */
 
 
     public void encodeBegin(FacesContext context, UIComponent uiComponent) throws IOException
