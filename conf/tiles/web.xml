@@ -89,6 +89,11 @@
     </context-param>
 
 
+    <!-- JavaScriptDetector Filter -->
+<!--    <filter>-->
+<!--        <filter-name>javascriptDetector</filter-name>-->
+<!--        <filter-class>org.apache.myfaces.webapp.filter.JavaScriptDetectorFilter</filter-class>-->
+<!--    </filter>-->
 
     <!-- Extensions Filter -->
     <filter>
