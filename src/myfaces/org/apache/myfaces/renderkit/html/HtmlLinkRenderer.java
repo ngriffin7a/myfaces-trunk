@@ -41,10 +41,6 @@ import java.net.URLEncoder;
 import java.util.Iterator;
 
 /**
- * HyperlinkRenderer-Extension:
- * MyFaces HyperlinkRenderer decodes nested UIParameters and stores the
- * values as attributes in the UICommand.
- *
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
