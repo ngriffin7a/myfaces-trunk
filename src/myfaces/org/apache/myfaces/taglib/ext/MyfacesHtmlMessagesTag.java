@@ -18,57 +18,37 @@
  */
 package net.sourceforge.myfaces.taglib.ext;
 
+import net.sourceforge.myfaces.taglib.html.HtmlMessagesTag;
+
 import javax.faces.component.UIComponent;
 
 /**
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public class HtmlDataTableTag
-        extends net.sourceforge.myfaces.taglib.html.HtmlDataTableTag
+public class MyfacesHtmlMessagesTag
+        extends HtmlMessagesTag
 {
-    //private static final Log log = LogFactory.getLog(HtmlDataTableTag.class);
+    //private static final Log log = LogFactory.getLog(MyfacesHtmlMessagesTag.class);
 
     public String getComponentType()
     {
-        return "MyfacesDataTable";
+        return "MyFacesMessages";
     }
 
-    private String _preserveDataModel;
-    private String _sortColumn;
-    private String _sortAscending;
-    private String _preserveSort;
+    private String _showInputLabel;
 
     protected void setProperties(UIComponent component)
     {
         super.setProperties(component);
 
-        if (_preserveDataModel == null) _preserveDataModel = "true";
-        if (_preserveSort == null) _preserveSort = "true";
+        if (_showInputLabel == null) _showInputLabel = "true";
 
-        setBooleanProperty(component, "preserveDataModel", _preserveDataModel);
-        setValueBinding(component, "sortColumn", _sortColumn);
-        setValueBinding(component, "sortAscending", _sortAscending);
-        setBooleanProperty(component, "preserveSort", _preserveSort);
+        setBooleanProperty(component, "showInputLabel", _showInputLabel);
     }
 
-    public void setPreserveDataModel(String preserveDataModel)
+    public void setShowInputLabel(String showInputLabel)
     {
-        _preserveDataModel = preserveDataModel;
-    }
-
-    public void setSortColumn(String sortColumn)
-    {
-        _sortColumn = sortColumn;
-    }
-
-    public void setSortAscending(String sortAscending)
-    {
-        _sortAscending = sortAscending;
-    }
-
-    public void setPreserveSort(String preserveSort)
-    {
-        _preserveSort = preserveSort;
+        _showInputLabel = showInputLabel;
     }
 }

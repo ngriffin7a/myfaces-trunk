@@ -49,6 +49,8 @@
 <!ENTITY ui_select_many_attributes      SYSTEM "entities/ui_select_many_attributes.xml">
 <!ENTITY ui_select_one_attributes       SYSTEM "entities/ui_select_one_attributes.xml">
 <!ENTITY user_role_attributes           SYSTEM "entities/user_role_attributes.xml">
+<!ENTITY standard_data_table_attributes SYSTEM "entities/standard_data_table_attributes.xml">
+<!ENTITY standard_messages_attributes   SYSTEM "entities/standard_messages_attributes.xml">
 ]>
 
 <taglib>
@@ -114,49 +116,7 @@ Start of revised 1.0 conforming tags (in alphabetical order)
         <name>data_table</name>
         <tag-class>net.sourceforge.myfaces.taglib.html.HtmlDataTableTag</tag-class>
         <body-content>JSP</body-content>
-        &ui_component_attributes;
-        &ui_panel_attributes;
-        &html_universal_attributes;
-        &html_event_handler_attributes;
-        &html_table_attributes;
-        &user_role_attributes;
-        <!-- UIData attributes -->
-        <attribute>
-            <name>var</name>
-            <required>true</required>
-            <rtexprvalue>false</rtexprvalue>
-        </attribute>
-        <attribute>
-            <name>rows</name>
-            <required>false</required>
-            <rtexprvalue>false</rtexprvalue>
-        </attribute>
-        <attribute>
-            <name>first</name>
-            <required>false</required>
-            <rtexprvalue>false</rtexprvalue>
-        </attribute>
-        <!-- TableRenderer attributes -->
-        <attribute>
-            <name>columnClasses</name>
-            <required>false</required>
-            <rtexprvalue>false</rtexprvalue>
-        </attribute>
-        <attribute>
-            <name>footerClass</name>
-            <required>false</required>
-            <rtexprvalue>false</rtexprvalue>
-        </attribute>          
-        <attribute>
-            <name>headerClass</name>
-            <required>false</required>
-            <rtexprvalue>false</rtexprvalue>
-        </attribute>
-        <attribute>
-            <name>rowClasses</name>
-            <required>false</required>
-            <rtexprvalue>false</rtexprvalue>
-        </attribute>
+        &standard_data_table_attributes;
      </tag>
 
 <!-- form -->
@@ -346,74 +306,7 @@ Start of revised 1.0 conforming tags (in alphabetical order)
               by the "for" attribute, are displayed
             - else all messages are displayed.
         </description>
-        &ui_component_attributes;
-        &ui_messages_attributes;
-        &html_universal_attributes;
-        &html_event_handler_attributes;
-        &user_role_attributes;
-        <!-- HtmlMessages attributes -->
-        <attribute>
-            <name>infoClass</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-            <description>CSS class to be used for messages with severity "INFO".</description>
-        </attribute>
-        <attribute>
-            <name>infoStyle</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-            <description>CSS style to be used for messages with severity "INFO".</description>
-        </attribute>
-        <attribute>
-            <name>warnClass</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-            <description>CSS class to be used for messages with severity "WARN".</description>
-        </attribute>
-        <attribute>
-            <name>warnStyle</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-            <description>CSS style to be used for messages with severity "WARN".</description>
-        </attribute>
-        <attribute>
-            <name>errorClass</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-            <description>CSS class to be used for messages with severity "ERROR".</description>
-        </attribute>
-        <attribute>
-            <name>errorStyle</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-            <description>CSS style to be used for messages with severity "ERROR".</description>
-        </attribute>
-        <attribute>
-            <name>fatalClass</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-            <description>CSS class to be used for messages with severity "FATAL".</description>
-        </attribute>
-        <attribute>
-            <name>fatalStyle</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-            <description>CSS style to be used for messages with severity "FATAL".</description>
-        </attribute>
-        <attribute>
-            <name>layout</name>
-            <required>false</required>
-            <rtexprvalue>false</rtexprvalue>
-            <description>The layout: "table" or "list". Default: list</description>
-        </attribute>
-        <attribute>
-            <name>tooltip</name>
-            <required>false</required>
-            <rtexprvalue>false</rtexprvalue>
-            <description>
-                If true, the message summary will be rendered as a tooltip (i.e. HTML title attribute).
-            </description>
-        </attribute>
+        &standard_messages_attributes;
     </tag>
 
 <!-- output_label -->

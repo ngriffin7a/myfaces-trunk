@@ -148,21 +148,9 @@ public class NavigationHandlerImpl
             }
             else
             {
-                Locale currentLocale = null;
-                UIViewRoot viewRoot = facesContext.getViewRoot();
-                if (viewRoot != null)
-                {
-                    //Remember current locale
-                    currentLocale = viewRoot.getLocale();
-                }
                 ViewHandler viewHandler = facesContext.getApplication().getViewHandler();
                 //create new view
-                viewRoot = viewHandler.createView(facesContext, navigationCase.getToViewId());
-                if (currentLocale != null)
-                {
-                    //set old locale
-                    viewRoot.setLocale(currentLocale);
-                }
+                UIViewRoot viewRoot = viewHandler.createView(facesContext, navigationCase.getToViewId());
                 facesContext.setViewRoot(viewRoot);
                 facesContext.renderResponse();
             }

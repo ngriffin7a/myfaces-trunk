@@ -61,11 +61,37 @@ public class JspViewHandlerImpl
         if (log.isTraceEnabled()) log.trace("New ViewHandler instance created");
     }
 
+    /**
+     * MyFaces extension: if there is a current locale, this locale will be set in
+     * the newly created ViewRoot instead of calling calculateLocale.
+     * @param facesContext
+     * @param viewId
+     * @return
+     */
     public UIViewRoot createView(FacesContext facesContext, String viewId)
     {
-        UIViewRoot uiViewRoot = (UIViewRoot)facesContext.getApplication().createComponent(VIEW_ROOT_TYPE);
+        Locale currentLocale = null;
+        UIViewRoot uiViewRoot = facesContext.getViewRoot();
+        if (uiViewRoot != null)
+        {
+            //Remember current locale
+            currentLocale = uiViewRoot.getLocale();
+        }
+
+        uiViewRoot = (UIViewRoot)facesContext.getApplication().createComponent(VIEW_ROOT_TYPE);
         uiViewRoot.setViewId(viewId);
-        uiViewRoot.setLocale(calculateLocale(facesContext));
+
+        if (currentLocale != null)
+        {
+            //set old locale
+            uiViewRoot.setLocale(currentLocale);
+        }
+        else
+        {
+            //calculate locale
+            uiViewRoot.setLocale(calculateLocale(facesContext));
+        }
+
         if (log.isTraceEnabled()) log.trace("Created view " + viewId);
         return uiViewRoot;
     }

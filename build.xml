@@ -16,6 +16,8 @@
     <!-- Temporary dir. May be overridden in build.properties -->
     <property name="temp.dir" value="${env.TEMP}"/>
 
+    <property name="resolved-tlds.dir" location="${temp.dir}/myfaces-tlds"/>
+
     <!-- classpath for normal compiling -->
     <path id="project.class.path">
         <pathelement location="${jsf-api.jar}"/>
@@ -26,7 +28,8 @@
 
 
     <target name="myfaces-jar"
-            description="builds the myfaces.jar file">
+            description="builds the myfaces.jar file"
+            depends="-resolve-tld-entities" >
 
         <!-- temporary dir -->
         <mkdir dir="${temp.dir}/myfaces-jar"/>
@@ -34,33 +37,24 @@
         <!-- compile main classes -->
         <mkdir dir="${temp.dir}/myfaces-jar/classes"/>
         <antcall target="-compile-with-javac"/>
-        <antcall target="-compile-with-aspectj"/>
 
         <!-- timestamp for the manifest -->
         <tstamp>
             <format property="TODAY_DE" pattern="dd.MM.yyyy HH:mm" locale="de"/>
         </tstamp>
 
-        <!-- create manifest -->
-        <manifest file="${temp.dir}/myfaces-jar/MANIFEST.MF">
-            <attribute name="Built-By" value="${user.name}"/>
-            <section name="myfaces.sourceforge.net">
-                <attribute name="Implementation-Title" value="${manifest.impl.title}"/>
-                <attribute name="Implementation-Version" value="${manifest.impl.version} ${TODAY_DE}"/>
-                <attribute name="Implementation-Vendor" value="${manifest.impl.vendor}"/>
-            </section>
-        </manifest>
-
-        <!-- resolve TLD entities (for containers that do not support entities within TLDs) -->
-        <xslt basedir="${tlds.dir}"
-              includes="*.tld"
-              destdir="${temp.dir}/myfaces-jar"
-              style="${tlds.dir}/resolve_entities.xsl"
-              extension=".tld" />
-
         <!-- build the jar -->
-        <jar destfile="${myfaces.jar}"
-             manifest="${temp.dir}/myfaces-jar/MANIFEST.MF">
+        <jar destfile="${myfaces.jar}">
+            <!-- manifest -->
+            <manifest>
+                <attribute name="Built-By" value="${user.name}"/>
+                <section name="myfaces.sourceforge.net">
+                    <attribute name="Implementation-Title" value="${manifest.impl.title}"/>
+                    <attribute name="Implementation-Version" value="${manifest.impl.version} ${TODAY_DE}"/>
+                    <attribute name="Implementation-Vendor" value="${manifest.impl.vendor}"/>
+                </section>
+            </manifest>
+
             <!-- classes -->
             <fileset dir="${temp.dir}/myfaces-jar/classes"
                      includes="**"
@@ -71,7 +65,7 @@
                      excludes="**/*.java
                                **/package.html"/>
             <!-- TLDs -->
-            <zipfileset dir="${temp.dir}/myfaces-jar"
+            <zipfileset dir="${resolved-tlds.dir}"
                         includes="*.tld"
                         prefix="META-INF/"/>
             <!-- faces-config.xml -->
@@ -102,22 +96,16 @@
     </target>
 
     <target name="tlddoc"
-            description="creates tlddoc for the extension tld">
-        <!-- resolve TLD entities -->
-        <xslt basedir="${tlds.dir}"
-              includes="myfaces_ext.tld"
-              destdir="${temp.dir}/myfaces-jar"
-              style="${tlds.dir}/resolve_entities.xsl"
-              extension=".tld" />
-
+            description="creates tlddoc for the extension tld"
+            depends="-resolve-tld-entities" >
         <java fork="true" jar="${tlddoc.jar}" failonerror="true">
             <arg line="-d ${doc.dir}/tld"/>
-            <arg value="${temp.dir}/myfaces-jar/myfaces_ext.tld"/>
+            <arg value="${resolved-tlds.dir}/myfaces_ext.tld"/>
         </java>
     </target>
 
     <target name="bin-release"
-            depends="myfaces-jar, apidoc"
+            depends="myfaces-jar, apidoc, tlddoc"
             description="creates the binary release file myfaces-x.x.x.tgz (don't forget to adjust manifest.properties!)">
         <tar destfile="myfaces-${manifest.impl.version}.tgz"
              compression="gzip">
@@ -135,7 +123,7 @@
 
 
     <target name="src-release"
-            depends="apidoc"
+            depends="apidoc, tlddoc"
             description="creates the source release file myfaces-x.x.x-src.tgz (don't forget to adjust manifest.properties!)">
         <tar destfile="myfaces-${manifest.impl.version}-src.tgz"
              compression="gzip">
@@ -179,7 +167,8 @@
             <fileset file="myfaces-*.tgz" />
             <fileset file="${doc.dir}/web.xml.sample" />
             <fileset dir="${doc.dir}/api" />
-            <fileset dir="${temp.dir}/myfaces-jar"/>    <!-- in case of interrupted builds -->
+            <fileset dir="${temp.dir}/myfaces-jar"/>  <!-- in case of interrupted builds -->
+            <fileset dir="${resolved-tlds.dir}"/>     <!-- in case of interrupted builds -->
         </delete>
         <ant dir="webapps/examples"
             antfile="build.xml"
@@ -192,7 +181,7 @@
     </target>
 
 
-    <target name="-compile-with-javac" unless="use-aspectj">
+    <target name="-compile-with-javac">
         <javac srcdir="${myfaces.src}"
                destdir="${temp.dir}/myfaces-jar/classes"
                optimize="${javac.optimize}"
@@ -200,13 +189,20 @@
         </javac>
     </target>
 
-    <target name="-compile-with-aspectj" if="use-aspectj">
-        <ant antfile="${project.dir}/src/aspectj/build.xml"
-             dir="${project.dir}"
-             inheritall="true"
-             inheritrefs="true"
-             target="compile"/>
-    </target>
 
+    <target name="-resolve-tld-entities">
+        <mkdir dir="${resolved-tlds.dir}"/>
+        <!-- resolve TLD entities (for containers that do not support entities within TLDs) -->
+        <xslt basedir="${tlds.dir}"
+              includes="*.tld"
+              destdir="${resolved-tlds.dir}"
+              style="${tlds.dir}/resolve_entities.xsl"
+              extension=".tld">
+            <xmlcatalog>
+                <dtd publicId="-//Sun Microsystems, Inc.//DTD JSP Tag Library 1.2//EN"
+                     location="${tlds.dir}/web-jsptaglibrary_1_2.dtd"/>
+            </xmlcatalog>
+        </xslt>
+    </target>
 
 </project>

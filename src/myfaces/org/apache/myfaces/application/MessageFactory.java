@@ -51,6 +51,16 @@ public class MessageFactory
 
     public FacesMessage getMessage(FacesContext facesContext,
                                    String messageId,
+                                   Object arg1)
+    {
+        return getMessage(facesContext,
+                          facesContext.getViewRoot().getLocale(),
+                          messageId,
+                          new Object[] {arg1});
+    }
+
+    public FacesMessage getMessage(FacesContext facesContext,
+                                   String messageId,
                                    Object args[])
     {
         return getMessage(facesContext,
@@ -162,23 +172,6 @@ public class MessageFactory
             return null;
         }
     }
-
-    /*
-    private ResourceBundle getMyFacesBundle(Locale locale)
-    {
-        try
-        {
-            return ResourceBundle.getBundle(MYFACES_BUNDLE,
-                                            locale,
-                                            Thread.currentThread().getContextClassLoader());
-        }
-        catch (MissingResourceException e)
-        {
-            log.error("Resource bundle " + MYFACES_BUNDLE + " could not be found.");
-            return null;
-        }
-    }
-    */
 
     private ResourceBundle getDefaultBundle(Locale locale)
     {

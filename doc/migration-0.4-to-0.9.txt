@@ -65,6 +65,9 @@ Mandatory steps
 * rename <x:tab> tags to <x:panel_tab> and change attributes:
     label --> value
 
+faces-config
+------------
+* navigation-rules: replace <from-action-ref>x.y</from-action-ref> by <from-action>#{x.y}</from-action>     
 
 Optional steps (deprecated features)
 ------------------------------------

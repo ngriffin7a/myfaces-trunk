@@ -30,7 +30,7 @@ import javax.faces.component.UIComponent;
 public class HtmlDataTableTag
         extends HtmlComponentBodyTag
 {
-    //private static final Log log = LogFactory.getLog(HtmlDataTableTag.class);
+    //private static final Log log = LogFactory.getLog(MyfacesHtmlDataTableTag.class);
 
     protected String getDefaultRendererType()
     {

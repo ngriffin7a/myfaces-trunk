@@ -204,7 +204,12 @@
   </component>
 
   <component>
-    <component-type>MyfacesDataTable</component-type>
+    <component-type>MyFacesMessages</component-type>
+    <component-class>net.sourceforge.myfaces.component.html.MyFacesHtmlMessages</component-class>
+  </component>
+
+  <component>
+    <component-type>MyFacesDataTable</component-type>
     <component-class>net.sourceforge.myfaces.component.html.MyFacesHtmlDataTable</component-class>
   </component>
 
