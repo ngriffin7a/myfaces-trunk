@@ -51,7 +51,7 @@ public class DoubleConverter
             {
                 try
                 {
-                    Double.valueOf(value);
+                    return Double.valueOf(value);
                 }
                 catch (NumberFormatException e)
                 {

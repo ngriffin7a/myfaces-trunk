@@ -22,6 +22,7 @@ import net.sourceforge.myfaces.renderkit.RendererUtils;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLUtil;
 
 import javax.faces.component.UIComponent;
+import javax.faces.component.UIOutput;
 import javax.faces.component.html.HtmlOutputLabel;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
@@ -40,7 +41,7 @@ extends HtmlRenderer
     public void encodeBegin(FacesContext facesContext, UIComponent uiComponent)
             throws IOException
     {
-        RendererUtils.checkParamValidity(facesContext, uiComponent, HtmlOutputLabel.class);
+        RendererUtils.checkParamValidity(facesContext, uiComponent, UIOutput.class);
         ResponseWriter writer = facesContext.getResponseWriter();
 
         writer.startElement(HTML.LABEL_ELEM, uiComponent);

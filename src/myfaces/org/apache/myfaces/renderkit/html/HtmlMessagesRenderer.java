@@ -69,54 +69,47 @@ public class HtmlMessagesRenderer
     public void encodeEnd(FacesContext facesContext, UIComponent component)
             throws IOException
     {
-        RendererUtils.checkParamValidity(facesContext, component, HtmlMessages.class);
+        RendererUtils.checkParamValidity(facesContext, component, UIMessages.class);
         if (!RendererUtils.isVisibleOnUserRole(facesContext, component)) return;
 
-        if (component instanceof UIMessages)
+        UIMessages uiMessages = (UIMessages)component;
+
+        MessageIterator messageIterator;
+
+        messageIterator = new MessageIterator(facesContext, uiMessages.isGlobalOnly());
+
+        if (messageIterator.hasNext())
         {
-            UIMessages uiMessages = (UIMessages)component;
-
-            MessageIterator messageIterator;
-
-            messageIterator = new MessageIterator(facesContext, uiMessages.isGlobalOnly());
-
-            if (messageIterator.hasNext())
+            String layout;
+            if (uiMessages instanceof HtmlMessages)
             {
-                String layout;
-                if (uiMessages instanceof HtmlMessages)
-                {
-                    layout = ((HtmlMessages)uiMessages).getLayout();
-                }
-                else
-                {
-                    layout = (String)uiMessages.getAttributes().get(JSFAttr.LAYOUT_ATTR);
-                }
-
-                if (layout == null)
-                {
-                    if (log.isDebugEnabled())
-                    {
-                        log.debug("No messages layout given, using default layout 'list'.");
-                    }
-                    renderList(facesContext, uiMessages, messageIterator);
-                }
-                else if (layout.equalsIgnoreCase(LAYOUT_TABLE))
-                {
-                    renderTable(facesContext, uiMessages, messageIterator);
-                }
-                else
-                {
-                    if (log.isWarnEnabled() && !layout.equalsIgnoreCase(LAYOUT_LIST))
-                    {
-                        log.warn("Unsupported messages layout '" + layout + "' - using default layout 'list'.");
-                    }
-                    renderList(facesContext, uiMessages, messageIterator);
-                }
+                layout = ((HtmlMessages)uiMessages).getLayout();
             }
-        }
-        else
-        {
-            throw new IllegalArgumentException("Unsupported component class " + component.getClass().getName());
+            else
+            {
+                layout = (String)uiMessages.getAttributes().get(JSFAttr.LAYOUT_ATTR);
+            }
+
+            if (layout == null)
+            {
+                if (log.isDebugEnabled())
+                {
+                    log.debug("No messages layout given, using default layout 'list'.");
+                }
+                renderList(facesContext, uiMessages, messageIterator);
+            }
+            else if (layout.equalsIgnoreCase(LAYOUT_TABLE))
+            {
+                renderTable(facesContext, uiMessages, messageIterator);
+            }
+            else
+            {
+                if (log.isWarnEnabled() && !layout.equalsIgnoreCase(LAYOUT_LIST))
+                {
+                    log.warn("Unsupported messages layout '" + layout + "' - using default layout 'list'.");
+                }
+                renderList(facesContext, uiMessages, messageIterator);
+            }
         }
     }
 

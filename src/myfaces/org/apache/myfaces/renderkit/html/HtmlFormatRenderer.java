@@ -25,6 +25,7 @@ import org.apache.commons.logging.LogFactory;
 
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIParameter;
+import javax.faces.component.UIOutput;
 import javax.faces.component.html.HtmlOutputFormat;
 import javax.faces.context.FacesContext;
 import java.io.IOException;
@@ -58,7 +59,7 @@ public class HtmlFormatRenderer
     public void encodeEnd(FacesContext facesContext, UIComponent component)
             throws IOException
     {
-        RendererUtils.checkParamValidity(facesContext, component, HtmlOutputFormat.class);
+        RendererUtils.checkParamValidity(facesContext, component, UIOutput.class);
         if (!RendererUtils.isVisibleOnUserRole(facesContext, component)) return;
 
         String text = getOutputFormatText(facesContext, component);

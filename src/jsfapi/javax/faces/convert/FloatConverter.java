@@ -51,7 +51,7 @@ public class FloatConverter
             {
                 try
                 {
-                    Float.valueOf(value);
+                    return Float.valueOf(value);
                 }
                 catch (NumberFormatException e)
                 {

@@ -51,7 +51,7 @@ public class HtmlRadioRenderer
 
     public void encodeEnd(FacesContext facesContext, UIComponent uiComponent) throws IOException
     {
-        RendererUtils.checkParamValidity(facesContext, uiComponent, HtmlSelectOneRadio.class);
+        RendererUtils.checkParamValidity(facesContext, uiComponent, UISelectOne.class);
 
         UISelectOne selectOne = (UISelectOne)uiComponent;
 

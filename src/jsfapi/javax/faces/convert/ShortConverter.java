@@ -51,7 +51,7 @@ public class ShortConverter
             {
                 try
                 {
-                    Short.valueOf(value);
+                    return Short.valueOf(value);
                 }
                 catch (NumberFormatException e)
                 {

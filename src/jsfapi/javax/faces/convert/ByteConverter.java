@@ -51,7 +51,7 @@ public class ByteConverter
             {
                 try
                 {
-                    Byte.valueOf(value);
+                    return Byte.valueOf(value);
                 }
                 catch (NumberFormatException e)
                 {

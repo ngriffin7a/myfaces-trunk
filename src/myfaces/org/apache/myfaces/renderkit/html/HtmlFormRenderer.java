@@ -48,7 +48,7 @@ public class HtmlFormRenderer
     public void encodeBegin(FacesContext facesContext, UIComponent component)
             throws IOException
     {
-        RendererUtils.checkParamValidity(facesContext, component, HtmlForm.class);
+        RendererUtils.checkParamValidity(facesContext, component, UIForm.class);
 
         UIForm htmlForm = (HtmlForm)component;
 

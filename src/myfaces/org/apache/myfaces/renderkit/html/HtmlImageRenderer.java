@@ -25,6 +25,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import javax.faces.component.UIComponent;
+import javax.faces.component.UIGraphic;
 import javax.faces.component.html.HtmlGraphicImage;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
@@ -44,7 +45,7 @@ extends HtmlRenderer
     public void encodeEnd(FacesContext facesContext, UIComponent uiComponent)
             throws IOException
     {
-        RendererUtils.checkParamValidity(facesContext, uiComponent, HtmlGraphicImage.class);
+        RendererUtils.checkParamValidity(facesContext, uiComponent, UIGraphic.class);
 
         ResponseWriter writer = facesContext.getResponseWriter();
 

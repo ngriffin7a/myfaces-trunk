@@ -51,7 +51,7 @@ public class LongConverter
             {
                 try
                 {
-                    Long.valueOf(value);
+                    return Long.valueOf(value);
                 }
                 catch (NumberFormatException e)
                 {

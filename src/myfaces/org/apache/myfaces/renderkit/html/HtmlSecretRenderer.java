@@ -44,7 +44,7 @@ public class HtmlSecretRenderer
     public void encodeEnd(FacesContext facesContext, UIComponent uiComponent)
             throws IOException
     {
-        RendererUtils.checkParamValidity(facesContext, uiComponent, HtmlInputSecret.class);
+        RendererUtils.checkParamValidity(facesContext, uiComponent, UIInput.class);
         
         ResponseWriter writer = facesContext.getResponseWriter();
         writer.startElement(HTML.INPUT_ELEM, uiComponent);

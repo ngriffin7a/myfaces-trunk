@@ -25,6 +25,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import javax.faces.component.UIComponent;
+import javax.faces.component.UIPanel;
 import javax.faces.component.html.HtmlPanelGrid;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
@@ -59,7 +60,7 @@ public class HtmlGridRenderer
     public void encodeEnd(FacesContext facesContext, UIComponent component)
             throws IOException
     {
-        RendererUtils.checkParamValidity(facesContext, component, HtmlPanelGrid.class);
+        RendererUtils.checkParamValidity(facesContext, component, UIPanel.class);
 
         int columns;
         if (component instanceof HtmlPanelGrid)

@@ -56,17 +56,10 @@ public class HtmlMessageRenderer
     public void encodeEnd(FacesContext facesContext, UIComponent component)
             throws IOException
     {
-        RendererUtils.checkParamValidity(facesContext, component, HtmlMessage.class);
+        RendererUtils.checkParamValidity(facesContext, component, UIMessage.class);
         if (!RendererUtils.isVisibleOnUserRole(facesContext, component)) return;
 
-        if (component instanceof UIMessage)
-        {
-            renderMessage(facesContext, (UIMessage)component);
-        }
-        else
-        {
-            throw new IllegalArgumentException("Unsupported component class " + component.getClass().getName());
-        }
+        renderMessage(facesContext, (UIMessage)component);
     }
 
     /**

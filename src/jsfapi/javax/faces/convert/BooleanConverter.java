@@ -51,7 +51,7 @@ public class BooleanConverter
             {
                 try
                 {
-                    Boolean.valueOf(value);
+                    return Boolean.valueOf(value);
                 }
                 catch (Exception e)
                 {
