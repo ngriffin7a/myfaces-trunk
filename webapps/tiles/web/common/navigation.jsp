@@ -1,6 +1,6 @@
-<%@ taglib uri="http://myfaces.apache.org" prefix="x"
-%><%@ taglib uri="http://java.sun.com/jsf/html" prefix="h"
-%><%@ taglib uri="http://java.sun.com/jsf/core" prefix="f"%>
+<%@ taglib uri="http://myfaces.apache.org/extensions" prefix="x"%>
+<%@ taglib uri="http://java.sun.com/jsf/html" prefix="h"%>
+<%@ taglib uri="http://java.sun.com/jsf/core" prefix="f"%>
 <h:panelGrid columns="1" >
     <h:commandLink action="nav_page1">
         <h:outputText value="Page1" />
