@@ -81,8 +81,9 @@ public class HtmlTree extends UITreeData
     }
 
     /**
-     * Gets the expand/collapse control that can be used to handle expand/collapse actions.  This methods supports
-     * renderers that are supplying client-side toggling functionality.
+     * Gets the expand/collapse control that can be used to handle expand/collapse nodes.  This is only used in server-side 
+     * mode.  It allows the nagivation controls (if any) to be clickable as well as any commandLinks the user has set up in 
+     * their JSP.
      *
      * @return UICommand
      */

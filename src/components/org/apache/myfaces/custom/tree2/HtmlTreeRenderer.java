@@ -468,6 +468,7 @@ public class HtmlTreeRenderer extends Renderer
 
         // add the appropriate image for the nav control
         UIGraphic image = new UIGraphic();
+        image.setId(context.getViewRoot().createUniqueId());
         image.setUrl(navSrcUrl);
         Map imageAttrs = image.getAttributes();
         imageAttrs.put(HTML.WIDTH_ATTR, "19");
@@ -491,7 +492,7 @@ public class HtmlTreeRenderer extends Renderer
                 expandImgSrc = expandImg.getUrl();
                 if (expandImg.isRendered())
                 {
-                    expandImg.setId(null);
+                    expandImg.setId(context.getViewRoot().createUniqueId());
                     nodeImageId = expandImg.getClientId(context);
                     nodeImgFacet = expandFacet;
                 }
@@ -504,7 +505,7 @@ public class HtmlTreeRenderer extends Renderer
                 collapseImgSrc = collapseImg.getUrl();
                 if (collapseImg.isRendered())
                 {
-                    collapseImg.setId(null);
+                    collapseImg.setId(context.getViewRoot().createUniqueId());
                     nodeImageId = collapseImg.getClientId(context);
                     nodeImgFacet = collapseFacet;
                 }
@@ -543,6 +544,7 @@ public class HtmlTreeRenderer extends Renderer
         {
             // set up the expand control and remove whatever children (if any) this control had previously
             UICommand expandControl = tree.getExpandControl();
+            expandControl.setId(context.getViewRoot().createUniqueId());
             expandControl.getChildren().clear();
 
             UIParameter param = new UIParameter();
@@ -550,8 +552,6 @@ public class HtmlTreeRenderer extends Renderer
             param.setValue(tree.getNodeId());
             expandControl.getChildren().add(param);
             expandControl.getChildren().add(image);
-
-            tree.getChildren().add(expandControl);
 
             encodeRecursive(context, expandControl);
         }
