@@ -54,7 +54,7 @@ public class HTMLUtil
 
     public static int getColspan(UIComponent component)
     {
-        Object value = component.getAttribute("colspan");
+        Object value = component.getAttribute(JSFAttr.COLSPAN_ATTR);
         int    count;
 
         count =
@@ -66,7 +66,7 @@ public class HTMLUtil
 
     public static int getColumns(UIComponent component)
     {
-        Object value = component.getAttribute("columns");
+        Object value = component.getAttribute(JSFAttr.COLUMNS_ATTR);
         int    count;
 
         count =

@@ -44,7 +44,7 @@ extends HTMLRenderer
     //~ Static fields/initializers -----------------------------------------------------------------
 
     public static final String TYPE      = "Grid";
-    private static final char  DELIMITER = ',';
+    public static final char  CLASS_LIST_DELIMITER = ',';
 
     //~ Methods ------------------------------------------------------------------------------------
 
@@ -110,10 +110,10 @@ extends HTMLRenderer
         {
             String[] rowClasses    =
                 StringUtils.splitShortString(
-                    (String) component.getAttribute(JSFAttr.ROW_CLASSES_ATTR), DELIMITER);
+                    (String) component.getAttribute(JSFAttr.ROW_CLASSES_ATTR), CLASS_LIST_DELIMITER);
             String[] columnClasses =
                 StringUtils.splitShortString(
-                    (String) component.getAttribute(JSFAttr.COLUMN_CLASSES_ATTR), DELIMITER);
+                    (String) component.getAttribute(JSFAttr.COLUMN_CLASSES_ATTR), CLASS_LIST_DELIMITER);
 
             HTMLUtil.renderTableRows(
                 context, children, columns, rowClasses, columnClasses, "td", "tbody");

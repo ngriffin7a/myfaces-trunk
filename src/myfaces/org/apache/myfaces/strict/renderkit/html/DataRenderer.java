@@ -24,6 +24,7 @@ import net.sourceforge.myfaces.renderkit.html.*;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLUtil;
 import net.sourceforge.myfaces.util.ArrayIterator;
 import net.sourceforge.myfaces.util.FacesUtils;
+import net.sourceforge.myfaces.util.StringUtils;
 
 import java.io.IOException;
 
@@ -113,8 +114,14 @@ extends HTMLRenderer
         String         varName       = (String) component.getAttribute(JSFAttr.VAR_ATTR);
         ServletRequest request       = FacesUtils.getRequest(context);
         int            columns       = HTMLUtil.getColumns(grid);
-        String[]       rowClasses    = GridRenderer.getRowClasses(grid);
-        String[]       columnClasses = GridRenderer.getColumnClasses(grid);
+        String[]       rowClasses    =
+            StringUtils.splitShortString(
+                (String) grid.getAttribute(JSFAttr.ROW_CLASSES_ATTR),
+                GridRenderer.CLASS_LIST_DELIMITER);
+        String[]       columnClasses =
+            StringUtils.splitShortString(
+                (String) grid.getAttribute(JSFAttr.COLUMN_CLASSES_ATTR),
+                GridRenderer.CLASS_LIST_DELIMITER);
 
         // main loop on data iterator
         while (it.hasNext())

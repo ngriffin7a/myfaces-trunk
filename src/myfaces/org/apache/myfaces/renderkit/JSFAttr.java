@@ -92,6 +92,7 @@ public class JSFAttr
 
     // Panel_Grid Attributes
     public static final String   COLUMNS_ATTR          = "columns";
+    public static final String   COLSPAN_ATTR          = "colspan"; // extension
 
     // Panel_Data Attributes
     public static final String VAR_ATTR                = "var";
