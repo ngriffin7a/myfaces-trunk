@@ -311,3 +311,7 @@ div.titlebar {
    text-decoration: none;
    font-weight: bold;
 }
+
+table .selectOneRadio {
+    font-weight: bold;
+}
