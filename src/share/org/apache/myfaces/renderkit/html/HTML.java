@@ -26,6 +26,10 @@ import net.sourceforge.myfaces.util.ArrayUtils;
  * @author Manfred Geiler (latest modification by $Author$)
  * @author Anton Koinov
  * @version $Revision$ $Date$
+ * $Log$
+ * Revision 1.5  2004/05/18 11:58:16  manolito
+ * typing error fixed
+ *
  */
 public class HTML
 {
@@ -192,7 +196,7 @@ public class HTML
     public static final String USEMAP_ATTR = "usemap";
     public static final String VSPACE_ATTR = "vspace";
 
-    public static final String[] IMG_ATTRUBUTES =
+    public static final String[] IMG_ATTRIBUTES =
     {
         ALIGN_ATTR,
         ALT_ATTR,
@@ -207,7 +211,7 @@ public class HTML
     };
     public static final String[] IMG_PASSTHROUGH_ATTRIBUTES =
         (String[]) ArrayUtils.concat(
-           IMG_ATTRUBUTES,
+           IMG_ATTRIBUTES,
            COMMON_PASSTROUGH_ATTRIBUTES);
 
     // <input>
