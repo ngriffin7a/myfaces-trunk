@@ -97,9 +97,9 @@ public class TextRenderer
         String css = (String)uiComponent.getAttribute(INPUT_CLASS_ATTR);
         if (css != null)
         {
-            writer.write("<span class=\"");
+            writer.write(" class=\"");
             writer.write(css);
-            writer.write("\">");
+            writer.write("\"");
         }
         CommonAttributes.renderHTMLEventHandlerAttributes(facesContext, uiComponent);
         CommonAttributes.renderUniversalHTMLAttributes(facesContext, uiComponent);
