@@ -1,36 +1,33 @@
 /*
- * $Id$
+ * MyFaces - the free JSF implementation
+ * Copyright (C) 2003, 2004  The MyFaces Team (http://myfaces.sourceforge.net)
  *
- * Copyright 2004 Oliver Rossmueller
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
  *
- * This file is part of tuxerra.
- *
- * tuxerra is free software; you can redistribute it and/or modify
- * it under the terms of version 2 of the GNU General Public License
- * as published by the Free Software Foundation.
- *
- * tuxerra is distributed in the hope that it will be useful,
+ * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with welofunc; if not, mailto:oliver@tuxerra.com or have a look at
- * http://www.gnu.org/licenses/licenses.html#GPL
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
+
 package net.sourceforge.myfaces.confignew;
 
 import java.util.*;
 import javax.faces.FacesException;
+import javax.faces.application.Application;
 import javax.faces.webapp.UIComponentTag;
 import javax.faces.el.ValueBinding;
 import javax.faces.el.PropertyResolver;
 import javax.faces.context.FacesContext;
 
-import net.sourceforge.myfaces.confignew.element.ManagedBean;
-import net.sourceforge.myfaces.confignew.element.ListEntries;
-import net.sourceforge.myfaces.confignew.element.MapEntries;
-import net.sourceforge.myfaces.confignew.element.ManagedProperty;
+import net.sourceforge.myfaces.confignew.element.*;
 import net.sourceforge.myfaces.util.ClassUtils;
 import net.sourceforge.myfaces.config.ManagedPropertyConfig;
 
@@ -100,9 +97,11 @@ public class ManagedBeanBuilder
                 case ManagedProperty.TYPE_LIST:
                     value = new ArrayList();
                     initializeList(facesContext, property.getListEntries(), (List) value);
+                    break;
                 case ManagedProperty.TYPE_MAP:
                     value = new HashMap();
                     initializeMap(facesContext, property.getMapEntries(), (Map) value);
+                    break;
                 case ManagedProperty.TYPE_NULL:
                     value = null;
                     break;
@@ -145,12 +144,61 @@ public class ManagedBeanBuilder
 
     private void initializeMap(FacesContext facesContext, MapEntries mapEntries, Map map)
     {
+        Application application = facesContext.getApplication();
+        Class keyClass = mapEntries.getKeyClass() == null ? String.class : ClassUtils.classForName(mapEntries.getKeyClass());
+        Class valueClass = mapEntries.getValueClass() == null ? String.class : ClassUtils.classForName(mapEntries.getValueClass());
+        ValueBinding valueBinding;
 
+        for (Iterator iterator = mapEntries.getMapEntries(); iterator.hasNext();)
+        {
+            MapEntry entry = (MapEntry) iterator.next();
+            Object key = entry.getKey();
+
+            if (UIComponentTag.isValueReference((String) key))
+            {
+                valueBinding = application.createValueBinding((String) key);
+                key = valueBinding.getValue(facesContext);
+            }
+
+            if (entry.isNullValue())
+            {
+                map.put(ClassUtils.convertToType(key, keyClass), null);
+            } else
+            {
+                Object value = entry.getValue();
+                if (UIComponentTag.isValueReference((String) value))
+                {
+                    valueBinding = application.createValueBinding((String) value);
+                    value = valueBinding.getValue(facesContext);
+                }
+                map.put(ClassUtils.convertToType(key, keyClass), ClassUtils.convertToType(value, valueClass));
+            }
+        }
     }
 
 
     private void initializeList(FacesContext facesContext, ListEntries listEntries, List list)
     {
+        Application application = facesContext.getApplication();
+        Class valueClass = listEntries.getValueClass() == null ? String.class : ClassUtils.classForName(listEntries.getValueClass());
+        ValueBinding valueBinding;
 
+        for (Iterator iterator = listEntries.getListEntries(); iterator.hasNext();)
+        {
+            ListEntry entry = (ListEntry) iterator.next();
+            if (entry.isNullValue())
+            {
+                list.add(null);
+            } else
+            {
+                Object value = entry.getValue();
+                if (UIComponentTag.isValueReference((String) value))
+                {
+                    valueBinding = application.createValueBinding((String) value);
+                    value = valueBinding.getValue(facesContext);
+                }
+                list.add(ClassUtils.convertToType(value, valueClass));
+            }
+        }
     }
 }

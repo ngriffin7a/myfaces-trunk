@@ -90,7 +90,7 @@ public class DigesterFacesConfigUnmarshallerImpl implements FacesConfigUnmarshal
         digester.addCallMethod("faces-config/managed-bean/managed-property/null-value", "setNullValue");
         digester.addCallMethod("faces-config/managed-bean/managed-property/value", "setValue", 0);
         digester.addObjectCreate("faces-config/managed-bean/managed-property/map-entries", MapEntries.class);
-        digester.addObjectCreate("faces-config/managed-bean/managed-property/map-entries", "setMapEntries");
+        digester.addSetNext("faces-config/managed-bean/managed-property/map-entries", "setMapEntries");
         digester.addCallMethod("faces-config/managed-bean/managed-property/map-entries/key-class", "setKeyClass", 0);
         digester.addCallMethod("faces-config/managed-bean/managed-property/map-entries/value-class", "setValueClass", 0);
         digester.addObjectCreate("faces-config/managed-bean/managed-property/map-entries/map-entry", MapEntries.Entry.class);
@@ -101,10 +101,14 @@ public class DigesterFacesConfigUnmarshallerImpl implements FacesConfigUnmarshal
         digester.addObjectCreate("faces-config/managed-bean/managed-property/list-entries", ListEntries.class);
         digester.addSetNext("faces-config/managed-bean/managed-property/list-entries", "setListEntries");
         digester.addCallMethod("faces-config/managed-bean/managed-property/list-entries/value-class", "setValueClass", 0);
-        digester.addCallMethod("faces-config/managed-bean/managed-property/list-entries/null-value", "addNullValue");
-        digester.addCallMethod("faces-config/managed-bean/managed-property/list-entries/value", "addValue", 0);
+        digester.addObjectCreate("faces-config/managed-bean/managed-property/list-entries/null-value", ListEntries.Entry.class);
+        digester.addSetNext("faces-config/managed-bean/managed-property/list-entries/null-value", "addEntry");
+        digester.addCallMethod("faces-config/managed-bean/managed-property/list-entries/null-value", "setNullValue");
+        digester.addObjectCreate("faces-config/managed-bean/managed-property/list-entries/value", ListEntries.Entry.class);
+        digester.addSetNext("faces-config/managed-bean/managed-property/list-entries/value", "addEntry");
+        digester.addCallMethod("faces-config/managed-bean/managed-property/list-entries/value", "setValue", 0);
         digester.addObjectCreate("faces-config/managed-bean/map-entries", MapEntries.class);
-        digester.addObjectCreate("faces-config/managed-bean/map-entries", "setMapEntries");
+        digester.addSetNext("faces-config/managed-bean/map-entries", "setMapEntries");
         digester.addCallMethod("faces-config/managed-bean/map-entries/key-class", "setKeyClass", 0);
         digester.addCallMethod("faces-config/managed-bean/map-entries/value-class", "setValueClass", 0);
         digester.addObjectCreate("faces-config/managed-bean/map-entries/map-entry", MapEntries.Entry.class);
