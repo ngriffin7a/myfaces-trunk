@@ -40,6 +40,10 @@ public class HtmlPanelLayout
     private String _navigationClass;
     private String _bodyClass;
     private String _footerClass;
+    private String _headerStyle;
+    private String _navigationStyle;
+    private String _bodyStyle;
+    private String _footerStyle;
 
     public String getLayout()
     {
@@ -103,6 +107,56 @@ public class HtmlPanelLayout
     public void setFooterClass(String footerClass)
     {
         _footerClass = footerClass;
+    }
+
+    public String getHeaderStyle()
+    {
+        if (_headerStyle != null) return _headerStyle;
+        ValueBinding vb = getValueBinding("headerStyle");
+        return vb != null ?
+               (String)vb.getValue(getFacesContext()) :
+               null;
+    }
+
+    public void setHeaderStyle(String headerStyle)
+    {
+        _headerStyle = headerStyle;
+    }
+
+    public String getNavigationStyle()
+    {
+        if (_navigationStyle != null) return _navigationStyle;
+        ValueBinding vb = getValueBinding("navigationStyle");
+        return vb != null ? (String)vb.getValue(getFacesContext()) : null;
+    }
+
+    public void setNavigationStyle(String navigationStyle)
+    {
+        _navigationStyle = navigationStyle;
+    }
+
+    public String getBodyStyle()
+    {
+        if (_bodyStyle != null) return _bodyStyle;
+        ValueBinding vb = getValueBinding("bodyStyle");
+        return vb != null ? (String)vb.getValue(getFacesContext()) : null;
+    }
+
+    public void setBodyStyle(String bodyStyle)
+    {
+        _bodyStyle = bodyStyle;
+    }
+
+    public String getFooterStyle()
+    {
+        if (_footerStyle != null) return _footerStyle;
+        ValueBinding vb = getValueBinding("footerStyle");
+        return vb != null ? (String)vb.getValue(getFacesContext()) : null;
+    }
+
+    public void setFooterStyle(String footerStyle)
+    {
+        _footerStyle = footerStyle;
     }
 
 

@@ -17,7 +17,6 @@
         </f:facet>
 
         <f:facet name="body">
-            <p>
             <h:form id="testform">
                 <h:output_text value="#{text['empty_selitem']}" />
                 <h:input_text id="testinput1" value="#{calcForm.number1}" />
@@ -25,8 +24,11 @@
                 <h:input_text id="testinput2" value="#{calcForm.number2}" />
                     <h:message for="testform:testinput2" showSummary="false" showDetail="true" />
                 <h:command_button id="testbutton" />
+                <f:verbatim><p>TEST1</p></f:verbatim>
             </h:form>
         </f:facet>
+
+        <f:verbatim><p>TEST2</p></f:verbatim>
 
     </x:panel_layout>
 

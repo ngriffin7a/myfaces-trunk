@@ -29,7 +29,6 @@ import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 import java.io.IOException;
-import java.util.Iterator;
 
 /**
  * @author Manfred Geiler (latest modification by $Author$)
@@ -74,11 +73,11 @@ public class HtmlLayoutRenderer
         }
         else if (layout.equals(NAV_RIGHT_LAYOUT))
         {
-            //TODO
+            renderNavRight(facesContext, panelLayout);
         }
         else if (layout.equals(UPSIDE_DOWN_LAYOUT))
         {
-            //TODO
+            renderUpsideDown(facesContext, panelLayout);
         }
         else
         {
@@ -99,13 +98,10 @@ public class HtmlLayoutRenderer
         if (header != null)
         {
             writer.startElement(HTML.TR_ELEM, null);
-            writer.startElement(HTML.TD_ELEM, null);
-            if (navigation != null && body != null)
-            {
-                writer.writeAttribute(HTML.COLSPAN_ATTR, "2", null);
-            }
-            renderChild(facesContext, header);
-            writer.endElement(HTML.TD_ELEM);
+            renderTableCell(facesContext, writer, header,
+                            (navigation != null && body != null) ? 2 : 1,
+                            panelLayout.getHeaderClass(),
+                            panelLayout.getHeaderStyle());
             writer.endElement(HTML.TR_ELEM);
         }
         if (navigation != null || body != null)
@@ -113,33 +109,155 @@ public class HtmlLayoutRenderer
             writer.startElement(HTML.TR_ELEM, null);
             if (navigation != null)
             {
-                writer.startElement(HTML.TD_ELEM, null);
-                renderChild(facesContext, navigation);
-                writer.endElement(HTML.TD_ELEM);
+                renderTableCell(facesContext, writer, navigation, 0,
+                                panelLayout.getNavigationClass(),
+                                panelLayout.getNavigationStyle());
             }
             if (body != null)
             {
-                writer.startElement(HTML.TD_ELEM, null);
-                renderChild(facesContext, body);
-                writer.endElement(HTML.TD_ELEM);
+                renderTableCell(facesContext, writer, body, 0,
+                                panelLayout.getBodyClass(),
+                                panelLayout.getBodyStyle());
             }
             writer.endElement(HTML.TR_ELEM);
         }
         if (footer != null)
         {
             writer.startElement(HTML.TR_ELEM, null);
-            writer.startElement(HTML.TD_ELEM, null);
-            if (navigation != null && body != null)
-            {
-                writer.writeAttribute(HTML.COLSPAN_ATTR, "2", null);
-            }
-            renderChild(facesContext, footer);
-            writer.endElement(HTML.TD_ELEM);
+            renderTableCell(facesContext, writer, footer,
+                            (navigation != null && body != null) ? 2 : 1,
+                            panelLayout.getFooterClass(),
+                            panelLayout.getFooterStyle());
             writer.endElement(HTML.TR_ELEM);
         }
         writer.endElement(HTML.TABLE_ELEM);
     }
 
+
+    protected void renderNavRight(FacesContext facesContext, HtmlPanelLayout panelLayout)
+            throws IOException
+    {
+        ResponseWriter writer = facesContext.getResponseWriter();
+        UIComponent header = panelLayout.getHeader();
+        UIComponent navigation = panelLayout.getNavigation();
+        UIComponent body = panelLayout.getBody();
+        UIComponent footer = panelLayout.getFooter();
+
+        writer.startElement(HTML.TABLE_ELEM, null);
+        if (header != null)
+        {
+            writer.startElement(HTML.TR_ELEM, null);
+            renderTableCell(facesContext, writer, header,
+                            (navigation != null && body != null) ? 2 : 1,
+                            panelLayout.getHeaderClass(),
+                            panelLayout.getHeaderStyle());
+            writer.endElement(HTML.TR_ELEM);
+        }
+        if (navigation != null || body != null)
+        {
+            writer.startElement(HTML.TR_ELEM, null);
+            if (body != null)
+            {
+                renderTableCell(facesContext, writer, body, 0,
+                                panelLayout.getBodyClass(),
+                                panelLayout.getBodyStyle());
+            }
+            if (navigation != null)
+            {
+                renderTableCell(facesContext, writer, navigation, 0,
+                                panelLayout.getNavigationClass(),
+                                panelLayout.getNavigationStyle());
+            }
+            writer.endElement(HTML.TR_ELEM);
+        }
+        if (footer != null)
+        {
+            writer.startElement(HTML.TR_ELEM, null);
+            renderTableCell(facesContext, writer, footer,
+                            (navigation != null && body != null) ? 2 : 1,
+                            panelLayout.getFooterClass(),
+                            panelLayout.getFooterStyle());
+            writer.endElement(HTML.TR_ELEM);
+        }
+        writer.endElement(HTML.TABLE_ELEM);
+    }
+
+
+    protected void renderUpsideDown(FacesContext facesContext, HtmlPanelLayout panelLayout)
+            throws IOException
+    {
+        ResponseWriter writer = facesContext.getResponseWriter();
+        UIComponent header = panelLayout.getHeader();
+        UIComponent navigation = panelLayout.getNavigation();
+        UIComponent body = panelLayout.getBody();
+        UIComponent footer = panelLayout.getFooter();
+
+        writer.startElement(HTML.TABLE_ELEM, null);
+        if (footer != null)
+        {
+            writer.startElement(HTML.TR_ELEM, null);
+            renderTableCell(facesContext, writer, footer,
+                            (navigation != null && body != null) ? 2 : 1,
+                            panelLayout.getFooterClass(),
+                            panelLayout.getFooterStyle());
+            writer.endElement(HTML.TR_ELEM);
+        }
+        if (navigation != null || body != null)
+        {
+            writer.startElement(HTML.TR_ELEM, null);
+            if (navigation != null)
+            {
+                renderTableCell(facesContext, writer, navigation, 0,
+                                panelLayout.getNavigationClass(),
+                                panelLayout.getNavigationStyle());
+            }
+            if (body != null)
+            {
+                renderTableCell(facesContext, writer, body, 0,
+                                panelLayout.getBodyClass(),
+                                panelLayout.getBodyStyle());
+            }
+            writer.endElement(HTML.TR_ELEM);
+        }
+        if (header != null)
+        {
+            writer.startElement(HTML.TR_ELEM, null);
+            renderTableCell(facesContext, writer, header,
+                            (navigation != null && body != null) ? 2 : 1,
+                            panelLayout.getHeaderClass(),
+                            panelLayout.getHeaderStyle());
+            writer.endElement(HTML.TR_ELEM);
+        }
+        writer.endElement(HTML.TABLE_ELEM);
+    }
+
+
+    protected void renderTableCell(FacesContext facesContext,
+                                   ResponseWriter writer,
+                                   UIComponent component,
+                                   int colspan,
+                                   String styleClass,
+                                   String style)
+            throws IOException
+    {
+        writer.startElement(HTML.TD_ELEM, null);
+        if (colspan > 0)
+        {
+            writer.writeAttribute(HTML.COLSPAN_ATTR, Integer.toString(colspan), null);
+        }
+        if (styleClass != null)
+        {
+            writer.writeAttribute(HTML.CLASS_ATTR, styleClass, null);
+        }
+        if (style != null)
+        {
+            writer.writeAttribute(HTML.STYLE_ATTR, style, null);
+        }
+
+        renderChild(facesContext, component);
+
+        writer.endElement(HTML.TD_ELEM);
+    }
 
     protected void renderChild(FacesContext facesContext, UIComponent component)
             throws IOException

@@ -55,6 +55,10 @@ public class HtmlPanelLayoutTag
     private String _navigationClass;
     private String _bodyClass;
     private String _footerClass;
+    private String _headerStyle;
+    private String _navigationStyle;
+    private String _bodyStyle;
+    private String _footerStyle;
 
     // HTML table attributes
     private String _align;
@@ -79,6 +83,10 @@ public class HtmlPanelLayoutTag
         setStringProperty(component, "navigationClass", _navigationClass);
         setStringProperty(component, "bodyClass", _bodyClass);
         setStringProperty(component, "footerClass", _footerClass);
+        setStringProperty(component, "headerStyle", _headerStyle);
+        setStringProperty(component, "navigationStyle", _navigationStyle);
+        setStringProperty(component, "bodyStyle", _bodyStyle);
+        setStringProperty(component, "footerStyle", _footerStyle);
 
         setStringProperty(component, HTML.ALIGN_ATTR, _align);
         setStringProperty(component, HTML.BGCOLOR_ATTR, _bgcolor);
@@ -117,6 +125,26 @@ public class HtmlPanelLayoutTag
     public void setFooterClass(String footerClass)
     {
         _footerClass = footerClass;
+    }
+
+    public void setHeaderStyle(String headerStyle)
+    {
+        _headerStyle = headerStyle;
+    }
+
+    public void setNavigationStyle(String navigationStyle)
+    {
+        _navigationStyle = navigationStyle;
+    }
+
+    public void setBodyStyle(String bodyStyle)
+    {
+        _bodyStyle = bodyStyle;
+    }
+
+    public void setFooterStyle(String footerStyle)
+    {
+        _footerStyle = footerStyle;
     }
 
     public void setAlign(String align)

@@ -19,9 +19,15 @@
 package net.sourceforge.myfaces.taglib;
 
 import net.sourceforge.myfaces.renderkit.JSFAttr;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import javax.faces.component.UIComponent;
 import javax.faces.webapp.UIComponentBodyTag;
+import javax.servlet.jsp.JspException;
+import javax.servlet.jsp.tagext.BodyContent;
+import java.io.IOException;
+import java.io.Reader;
 
 /**
  * @author Manfred Geiler (latest modification by $Author$)
@@ -30,7 +36,51 @@ import javax.faces.webapp.UIComponentBodyTag;
 public abstract class MyfacesComponentBodyTag
         extends UIComponentBodyTag
 {
-    //private static final Log log = LogFactory.getLog(MyfacesComponentBodyTag.class);
+    private static final Log log = LogFactory.getLog(MyfacesComponentBodyTag.class);
+
+    public int doEndTag() throws JspException
+    {
+        if (log.isWarnEnabled())
+        {
+            UIComponent component = getComponentInstance();
+            if (component != null &&
+                component.getRendersChildren() &&
+                !isBodyContentEmpty())
+            {
+                log.warn("Component id " + component.getClientId(context) + " (" + getClass().getName() + " tag) renders it's children, but has embedded JSP or HTML code. Use the <f:verbatim> tag for nested JSP or HTML code!");
+            }
+        }
+        return super.doEndTag();
+    }
+
+    private boolean isBodyContentEmpty()
+    {
+        BodyContent bodyContent = getBodyContent();
+        if (bodyContent == null)
+        {
+            return true;
+        }
+        try
+        {
+            Reader reader = bodyContent.getReader();
+            int c;
+            while ((c = reader.read()) != -1)
+            {
+                if (!Character.isWhitespace((char)c))
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+        catch (IOException e)
+        {
+            log.error("Error inspecting BodyContent", e);
+            return false;
+        }
+    }
+
+    //-------- rest is identical to MyfacesComponentTag ------------------
 
     /**
      * Must be implemented by sub classes.
