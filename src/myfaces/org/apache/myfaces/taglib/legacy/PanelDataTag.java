@@ -19,7 +19,8 @@
 package net.sourceforge.myfaces.taglib.legacy;
 
 import net.sourceforge.myfaces.renderkit.JSFAttr;
-import net.sourceforge.myfaces.renderkit.html.DataRenderer;
+import net.sourceforge.myfaces.renderkit.html.legacy.DataRenderer;
+import net.sourceforge.myfaces.renderkit.html.legacy.DataRenderer;
 
 import javax.faces.FacesException;
 import javax.servlet.ServletRequest;

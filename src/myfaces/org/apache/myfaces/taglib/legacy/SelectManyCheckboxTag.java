@@ -19,8 +19,9 @@
 package net.sourceforge.myfaces.taglib.legacy;
 
 import net.sourceforge.myfaces.renderkit.JSFAttr;
-import net.sourceforge.myfaces.renderkit.html.CheckboxRenderer;
+import net.sourceforge.myfaces.renderkit.html.legacy.CheckboxRenderer;
 import net.sourceforge.myfaces.renderkit.html.HTML;
+import net.sourceforge.myfaces.renderkit.html.legacy.CheckboxRenderer;
 
 
 /**

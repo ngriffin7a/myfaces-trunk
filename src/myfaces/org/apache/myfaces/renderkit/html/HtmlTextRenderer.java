@@ -55,7 +55,8 @@ public class HtmlTextRenderer
     public void encodeEnd(FacesContext facesContext, UIComponent component)
         throws IOException
     {
-        if (null == facesContext || null == component) throw new NullPointerException();
+        RendererUtils.checkParamValidity(facesContext,component,null);
+
         if (RendererUtils.isVisibleOnUserRole(facesContext, component))
         {
             if (component instanceof HtmlOutputText)
@@ -84,7 +85,6 @@ public class HtmlTextRenderer
         StringWriter buf = new StringWriter();
         ResponseWriter bufWriter = writer.cloneWithWriter(buf);
         bufWriter.startElement(HTML.SPAN_ELEM, htmlOutput);
-        span |= HTMLUtil.renderStyleClass(bufWriter, htmlOutput);
         span |= HTMLUtil.renderHTMLAttributes(bufWriter, htmlOutput, HTML.UNIVERSAL_ATTRIBUTES);
         span |= HTMLUtil.renderHTMLAttributes(bufWriter, htmlOutput, HTML.EVENT_HANDLER_ATTRIBUTES);
         bufWriter.close();
@@ -128,11 +128,9 @@ public class HtmlTextRenderer
             writer.writeAttribute(HTML.VALUE_ATTR, value, JSFAttr.VALUE_ATTR);
         }
 
-        HTMLUtil.renderStyleClass(writer, htmlInput);
         HTMLUtil.renderHTMLAttributes(writer, htmlInput, HTML.UNIVERSAL_ATTRIBUTES);
         HTMLUtil.renderHTMLAttributes(writer, htmlInput, HTML.EVENT_HANDLER_ATTRIBUTES);
         HTMLUtil.renderHTMLAttributes(writer, htmlInput, HTML.INPUT_ATTRIBUTES);
-        HTMLUtil.renderHTMLAttribute(writer, htmlInput, JSFAttr.MAXLENGTH_ATTR, HTML.MAXLENGTH_ATTR);
         HTMLUtil.renderDisabledOnUserRole(writer, htmlInput, facesContext);
 
         writer.endElement(HTML.INPUT_ELEM);
@@ -141,11 +139,19 @@ public class HtmlTextRenderer
 
     public void decode(FacesContext facesContext, UIComponent component)
     {
-        if (null == facesContext || null == component) throw new NullPointerException();
+        RendererUtils.checkParamValidity(facesContext,component,null);
 
         if (component instanceof HtmlInputText)
         {
             decodeInput(facesContext, (HtmlInputText)component);
+        }
+        else if (component instanceof HtmlOutputText)
+        {
+            //nothing to decode
+        }
+        else
+        {
+            throw new IllegalArgumentException("Unsupported component class " + component.getClass().getName());
         }
     }
 

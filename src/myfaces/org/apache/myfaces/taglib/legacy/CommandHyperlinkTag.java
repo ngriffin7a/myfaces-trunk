@@ -21,7 +21,8 @@ package net.sourceforge.myfaces.taglib.legacy;
 import net.sourceforge.myfaces.component.MyFacesUICommand;
 import net.sourceforge.myfaces.renderkit.JSFAttr;
 import net.sourceforge.myfaces.renderkit.html.HTML;
-import net.sourceforge.myfaces.renderkit.html.HyperlinkRenderer;
+import net.sourceforge.myfaces.renderkit.html.legacy.HyperlinkRenderer;
+import net.sourceforge.myfaces.renderkit.html.legacy.HyperlinkRenderer;
 
 import javax.servlet.jsp.JspException;
 

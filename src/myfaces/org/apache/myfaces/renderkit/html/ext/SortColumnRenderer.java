@@ -21,7 +21,8 @@ package net.sourceforge.myfaces.renderkit.html.ext;
 import net.sourceforge.myfaces.component.ext.UISortColumn;
 import net.sourceforge.myfaces.component.ext.UISortHeader;
 import net.sourceforge.myfaces.renderkit.attr.ext.SortColumnRendererAttributes;
-import net.sourceforge.myfaces.renderkit.html.HyperlinkRenderer;
+import net.sourceforge.myfaces.renderkit.html.legacy.HyperlinkRenderer;
+import net.sourceforge.myfaces.renderkit.html.legacy.HyperlinkRenderer;
 
 import javax.faces.FacesException;
 import javax.faces.component.UIComponent;

@@ -19,6 +19,7 @@
 package net.sourceforge.myfaces.renderkit.html;
 
 import net.sourceforge.myfaces.renderkit.html.util.HTMLUtil;
+import net.sourceforge.myfaces.renderkit.RendererUtils;
 
 import javax.faces.application.ViewHandler;
 import javax.faces.component.UIComponent;
@@ -45,10 +46,8 @@ public class HtmlFormRenderer
     public void encodeBegin(FacesContext facesContext, UIComponent component)
             throws IOException
     {
-        if (!(component instanceof HtmlForm))
-        {
-            throw new IllegalArgumentException("Not a HtmlForm component");
-        }
+        RendererUtils.checkParamValidity(facesContext, component, HtmlForm.class);
+
         HtmlForm htmlForm = (HtmlForm)component;
 
         ExternalContext externalContext = facesContext.getExternalContext();
@@ -73,7 +72,7 @@ public class HtmlFormRenderer
         writer.writeAttribute(HTML.NAME_ATTR, clientId, null);
         writer.writeAttribute(HTML.METHOD_ATTR, "post", null);
         writer.writeAttribute(HTML.ACTION_ATTR,
-                              facesContext.getExternalContext().encodeActionURL(actionURL),
+                              externalContext.encodeActionURL(actionURL),
                               null);
 
         HTMLUtil.renderStyleClass(writer, htmlForm);
@@ -105,10 +104,8 @@ public class HtmlFormRenderer
 
     public void decode(FacesContext facesContext, UIComponent component)
     {
-        if (!(component instanceof HtmlForm))
-        {
-            throw new IllegalArgumentException("Not a HtmlForm component");
-        }
+        RendererUtils.checkParamValidity(facesContext, component, HtmlForm.class);
+
         HtmlForm htmlForm = (HtmlForm)component;
 
         Map paramMap = facesContext.getExternalContext().getRequestParameterMap();

@@ -16,10 +16,12 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package net.sourceforge.myfaces.renderkit.html;
+package net.sourceforge.myfaces.renderkit.html.legacy;
 
 import net.sourceforge.myfaces.renderkit.html.util.HTMLUtil;
 import net.sourceforge.myfaces.renderkit.html.util.SelectItemUtil;
+import net.sourceforge.myfaces.renderkit.html.HtmlRenderer;
+import net.sourceforge.myfaces.renderkit.html.HTML;
 
 import javax.faces.component.UIComponent;
 import javax.faces.component.UISelectBoolean;

@@ -20,17 +20,15 @@ package net.sourceforge.myfaces.renderkit.html;
 
 import net.sourceforge.myfaces.renderkit.JSFAttr;
 import net.sourceforge.myfaces.renderkit.RendererUtils;
-import net.sourceforge.myfaces.renderkit.html.util.HTMLEncoder;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLUtil;
-import net.sourceforge.myfaces.util.bundle.BundleUtils;
 
 import javax.faces.component.UICommand;
 import javax.faces.component.UIComponent;
+import javax.faces.component.html.HtmlCommandButton;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 import javax.faces.context.ExternalContext;
-import javax.faces.application.ViewHandler;
-import javax.servlet.ServletRequest;
+import javax.faces.event.ActionEvent;
 import java.io.IOException;
 import java.util.Map;
 
@@ -45,7 +43,8 @@ public class HtmlButtonRenderer
 extends HtmlRenderer
 {
     private static final String IMAGE_BUTTON_SUFFIX = ".x";
-    private static final String DEFAULT_BUTTON_TYPE = "submit";
+    private static final String SUBMIT_BUTTON_TYPE = "submit";
+    private String IMAGE_BUTTON_TYPE = "image";
 
     public void decode(FacesContext facesContext, UIComponent uiComponent)
     {
@@ -61,12 +60,8 @@ extends HtmlRenderer
 
         if (submitted)
         {
-            //FIXME
-            //uiCommand.fireActionEvent(facesContext);
+            uiCommand.queueEvent(new ActionEvent(uiCommand));
         }
-
-        //FIXME
-        //uiCommand.setValid(true);
     }
 
     private static boolean isSubmitted(ExternalContext externalContext, String clientId)
@@ -103,10 +98,10 @@ extends HtmlRenderer
     public void encodeEnd(FacesContext facesContext, UIComponent uiComponent)
     throws IOException
     {
-        RendererUtils.checkParamValidity(facesContext, uiComponent, UICommand.class);
+        RendererUtils.checkParamValidity(facesContext, uiComponent, HtmlCommandButton.class);
 
-        UICommand uiCommand = (UICommand) uiComponent;
-        String clientId = uiCommand.getClientId(facesContext);
+        HtmlCommandButton htmlCommand = (HtmlCommandButton) uiComponent;
+        String clientId = htmlCommand.getClientId(facesContext);
 
         ResponseWriter writer = facesContext.getResponseWriter();
 
@@ -114,14 +109,12 @@ extends HtmlRenderer
 
         writer.startElement(HTML.INPUT_ELEM, uiComponent);
 
-        String imageSrc = (String) uiCommand.getAttributes().get(JSFAttr.IMAGE_ATTR);
+        String imageSrc = (String) htmlCommand.getAttributes().get(JSFAttr.IMAGE_ATTR);
 
         if (imageSrc != null)
         {
-            writer.writeAttribute(HTML.TYPE_ATTR, "image", null);
+            writer.writeAttribute(HTML.TYPE_ATTR, IMAGE_BUTTON_TYPE, null);
             writer.writeAttribute(HTML.SRC_ATTR, imageSrc, JSFAttr.IMAGE_ATTR);
-            writer.writeAttribute(HTML.NAME_ATTR, clientId, null);
-            writer.writeAttribute(HTML.ID_ATTR, clientId, null);
         }
         else
         {
@@ -129,47 +122,20 @@ extends HtmlRenderer
 
             if (type == null)
             {
-                type = DEFAULT_BUTTON_TYPE;
-                //todo: should this be done???
-                //uiComponent.getAttributes().put(JSFAttr.TYPE_ATTR, type);
+                type = SUBMIT_BUTTON_TYPE;
             }
             writer.writeAttribute(HTML.TYPE_ATTR, type, JSFAttr.TYPE_ATTR);
-            writer.writeAttribute(HTML.NAME_ATTR, clientId, null);
-            writer.writeAttribute(HTML.ID_ATTR, clientId, null);
-
-            writer.write("\" value=\"");
-
-            String label;
-            String key = (String) uiComponent.getAttributes().get(JSFAttr.KEY_ATTR);
-
-            if (key != null)
-            {
-                label =
-                    BundleUtils.getString(
-                        facesContext, (String) uiComponent.getAttributes().get(JSFAttr.BUNDLE_ATTR), key);
-            }
-            else
-            {
-                label = (String) uiComponent.getAttributes().get(JSFAttr.LABEL_ATTR);
-            }
-
-            if (label == null)
-            {
-                //FIXME
-                //label = uiCommand.getCommandName();
-            }
-
-            writer.write(HTMLEncoder.encode(label, false, false));
-            writer.write('"');
+            writer.writeAttribute(HTML.VALUE_ATTR, htmlCommand.getTitle(), null);
         }
 
-        HTMLUtil.renderStyleClass(writer, uiComponent);
+        writer.writeAttribute(HTML.NAME_ATTR, clientId, null);
+        writer.writeAttribute(HTML.ID_ATTR, clientId, null);
+
         HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML.UNIVERSAL_ATTRIBUTES);
         HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML.EVENT_HANDLER_ATTRIBUTES);
         HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML.BUTTON_ATTRIBUTES);
-        HTMLUtil.renderDisabledOnUserRole(facesContext, uiComponent);
+        HTMLUtil.renderDisabledOnUserRole(writer, uiComponent, facesContext);
 
-        writer.write('>');
 
         /*
         if (hiddenParam)

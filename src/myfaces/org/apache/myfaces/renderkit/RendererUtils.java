@@ -205,4 +205,18 @@ public class RendererUtils
         return converter;
     }
 
+    public static void checkParamValidity(FacesContext facesContext, UIComponent uiComponent, Class compClass)
+    {
+        if(facesContext == null)
+            throw new NullPointerException("facesContext may not be null");
+        if(uiComponent == null)
+            throw new NullPointerException("uiComponent may not be null");
+
+        if (compClass != null && !(compClass.isInstance(uiComponent)))
+        {
+            throw new IllegalArgumentException("uiComponent is instanceof "
+                + uiComponent.getClass().getName()+" and not of "+compClass.getName()+" as it should be");
+        }
+    }
+
 }

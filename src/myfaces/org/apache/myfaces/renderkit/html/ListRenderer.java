@@ -22,6 +22,7 @@ import net.sourceforge.myfaces.renderkit.JSFAttr;
 import net.sourceforge.myfaces.renderkit.callback.CallbackRenderer;
 import net.sourceforge.myfaces.renderkit.callback.CallbackSupport;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLUtil;
+import net.sourceforge.myfaces.renderkit.html.legacy.DataRenderer;
 
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIPanel;

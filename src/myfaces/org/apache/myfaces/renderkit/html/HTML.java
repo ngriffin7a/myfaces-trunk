@@ -20,6 +20,9 @@ package net.sourceforge.myfaces.renderkit.html;
 
 import net.sourceforge.myfaces.util.ArrayUtils;
 
+import javax.faces.context.ResponseWriter;
+import java.io.IOException;
+
 
 
 /**
@@ -29,6 +32,7 @@ import net.sourceforge.myfaces.util.ArrayUtils;
  */
 public class HTML
 {
+
     private HTML() {}
 
     // Common attributes
@@ -156,6 +160,7 @@ public class HTML
     };
 
     // <img>
+    public static final String SRC_ATTR = "src";
     public static final String ALT_ATTR = "alt";
     public static final String HEIGHT_ATTR = "height";
     public static final String HSPACE_ATTR = "hspace";
@@ -163,6 +168,7 @@ public class HTML
     public static final String LONGDESC_ATTR = "longdesc";
     public static final String USEMAP_ATTR = "usemap";
     public static final String VSPACE_ATTR = "vspace";
+
     public static final String[] IMG_ATTRUBUTES =
     {
         ALIGN_ATTR,
@@ -172,6 +178,7 @@ public class HTML
         HSPACE_ATTR,
         ISMAP_ATTR,
         LONGDESC_ATTR,
+        SRC_ATTR,
         USEMAP_ATTR,
         VSPACE_ATTR,
         WIDTH_ATTR
@@ -179,11 +186,14 @@ public class HTML
 
     // <input>
     public static final String SIZE_ATTR = "size";
+    public static final String CHECKED_ATTR = "checked";
     public static final String MAXLENGTH_ATTR = "maxlength";
+
     public static final String[] INPUT_ATTRIBUTES = {
         ACCESSKEY_ATTR,
         ALIGN_ATTR,
         ALT_ATTR,
+        CHECKED_ATTR,
         DATAFLD_ATTR,
         DATASRC_ATTR,
         DATAFORMATAS_ATTR,
@@ -297,7 +307,36 @@ public class HTML
     public static final String SPAN_ELEM = "span";
     public static final String INPUT_ELEM = "input";
     public static final String FORM_ELEM = "form";
+    public static final String ANCHOR_ELEM = "a";
+
+    //HTML simple element constants
+    public static final String BR_ELEM = "<br>";
 
 
+    //HTML entities
+    public static final String NBSP_ENTITY = "&nbsp;";
 
+    public static final char HREF_PATH_FROM_PARAM_SEPARATOR = '?';
+    public static final char HEF_PARAM_SEPARATOR = '&';
+    public static final char HEF_PARAM_NAME_FROM_VALUE_SEPARATOR = '=';
+
+    public static String addAttributeToHref(String href, String name, String value)
+    {
+        StringBuffer buf = new StringBuffer();
+        buf.append(href);
+
+        if (href.indexOf(HREF_PATH_FROM_PARAM_SEPARATOR) == -1)
+        {
+            buf.append(HREF_PATH_FROM_PARAM_SEPARATOR);
+        }
+        else
+        {
+            buf.append(HEF_PARAM_SEPARATOR);
+        }
+        buf.append(name);
+        buf.append(HEF_PARAM_NAME_FROM_VALUE_SEPARATOR);
+        buf.append(value);
+
+        return buf.toString();
+    }
 }

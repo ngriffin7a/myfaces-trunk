@@ -23,7 +23,7 @@ import net.sourceforge.myfaces.component.ext.UINavigationItem;
 import net.sourceforge.myfaces.renderkit.JSFAttr;
 import net.sourceforge.myfaces.renderkit.attr.ext.NavigationRendererAttributes;
 import net.sourceforge.myfaces.renderkit.html.HTML;
-import net.sourceforge.myfaces.renderkit.html.HyperlinkRenderer;
+import net.sourceforge.myfaces.renderkit.html.legacy.HyperlinkRenderer;
 import net.sourceforge.myfaces.renderkit.html.state.StateRenderer;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLEncoder;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLUtil;

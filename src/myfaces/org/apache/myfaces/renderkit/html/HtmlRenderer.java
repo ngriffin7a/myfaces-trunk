@@ -92,24 +92,6 @@ extends Renderer
     }
 
 
-    /**@deprecated use {@link net.sourceforge.myfaces.renderkit.RendererUtils#isEnabledOnUserRole(javax.faces.context.FacesContext, javax.faces.component.UIComponent)} */
-    public static boolean isEnabledOnUserRole(FacesContext facesContext, UIComponent uiComponent)
-    {
-        String userRole =
-            (String) uiComponent.getAttributes().get(JSFAttr.ENABLED_ON_USER_ROLE_ATTR);
-
-        if (userRole == null)
-        {
-            //no restriction
-            return true;
-        }
-
-        //is user in role?
-        HttpServletRequest httpServletRequest =
-            (HttpServletRequest) facesContext.getExternalContext().getRequest();
-
-        return httpServletRequest.isUserInRole(userRole);
-    }
 
     /*
     public void decode(FacesContext facescontext, UIComponent uicomponent)
