@@ -290,7 +290,7 @@ public class FacesConfigFactoryImpl
         }
     }
 
-
+    
     private static void invoke(Object obj, Method method, Object arg)
     {
         try
@@ -299,18 +299,19 @@ public class FacesConfigFactoryImpl
         }
         catch (IllegalAccessException e)
         {
-            throw new FacesException(e);
+            throw new FacesException("base: " + obj.getClass() + "; method: " + method + "; arg: " + arg.getClass(), e);
         }
         catch (IllegalArgumentException e)
         {
-            throw new FacesException(e);
+            throw new FacesException("base: " + obj.getClass() + "; method: " + method + "; arg: " + arg.getClass(), e);
         }
         catch (InvocationTargetException e)
         {
-            throw new FacesException(e);
+            throw new FacesException("base: " + obj.getClass() + "; method: " + method + "; arg: " + arg.getClass(), e);
         }
     }
 
+    
     private static void invokeWithLang(Object obj, Method method, String lang, Object arg)
     {
         try
@@ -319,20 +320,19 @@ public class FacesConfigFactoryImpl
         }
         catch (IllegalAccessException e)
         {
-            throw new FacesException(e);
+            throw new FacesException("base: " + obj.getClass() + "; method: " + method + "; arg: " + arg.getClass(), e);
         }
         catch (IllegalArgumentException e)
         {
-            throw new FacesException(e);
+            throw new FacesException("base: " + obj.getClass() + "; method: " + method + "; arg: " + arg.getClass(), e);
         }
         catch (InvocationTargetException e)
         {
-            throw new FacesException(e);
+            throw new FacesException("base: " + obj.getClass() + "; method: " + method + "; arg: " + arg.getClass(), e);
         }
     }
 
-
-
+    
     public static String resolvePropertyName(String elemName)
     {
         boolean ucase = false;
@@ -386,6 +386,4 @@ public class FacesConfigFactoryImpl
         }
     }
     */
-
-
 }
