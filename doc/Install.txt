@@ -25,7 +25,7 @@ To run the examples you must add the myfaces context to your Tomcat's configurat
         </Context>
 
 - (Re)start Tomcat
-- Enter "http://localhost:8080/myfaces" into the adress field of your browser and follow the link.
+- Enter "http://localhost:8080/myfaces/example/" into the adress field of your browser and follow the link.
 
 
 HOWTO - Use MyFaces in your own WebApp
