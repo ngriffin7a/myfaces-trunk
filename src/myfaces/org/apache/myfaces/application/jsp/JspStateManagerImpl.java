@@ -15,12 +15,15 @@ import javax.faces.render.RenderKit;
 import javax.faces.render.RenderKitFactory;
 import javax.faces.render.ResponseStateManager;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Map;
 
 /**
- * DOCUMENT ME!
+ * Default StateManager implementation.
+ *
+ * $Log$
+ * Revision 1.11  2004/03/25 08:52:40  manolito
+ * fixed server state saving
+ *
  * 
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
@@ -29,8 +32,12 @@ public class JspStateManagerImpl
     extends MyfacesStateManager
 {
     private static final Log log = LogFactory.getLog(JspStateManagerImpl.class);
+    private static final String SERIALIZED_VIEW_PARAM
+            = JspStateManagerImpl.class.getName() + ".SERIALIZED_VIEW";
+    /*
     private static final String VIEW_MAP_SESSION_PARAM
             = JspStateManagerImpl.class.getName() + ".VIEW_MAP";
+            */
 
     private RenderKitFactory _renderKitFactory = null;
 
@@ -43,7 +50,7 @@ public class JspStateManagerImpl
     protected Object getComponentStateToSave(FacesContext facesContext)
     {
         UIViewRoot viewRoot = facesContext.getViewRoot();
-        if (viewRoot.isTransient() || !isSavingStateInClient(facesContext))
+        if (viewRoot.isTransient())
         {
             return null;
         }
@@ -82,20 +89,16 @@ public class JspStateManagerImpl
         }
         else
         {
-            Map sessionViewMap = getSessionViewMap(facesContext.getExternalContext());
-            SerializedView serializedView = (SerializedView)sessionViewMap.get(uiViewRoot.getViewId());
-            if (serializedView != null)
-            {
-                serializedComponentStates = serializedView.getState();
-                if (serializedComponentStates == null)
-                {
-                    log.error("No serialized component state found in server session!");
-                    return;
-                }
-            }
-            else
+            SerializedView serializedView = getSerializedViewFromServletSession(facesContext.getExternalContext());
+            if (serializedView == null)
             {
                 log.error("No serialized view found in server session!");
+                return;
+            }
+            serializedComponentStates = serializedView.getState();
+            if (serializedComponentStates == null)
+            {
+                log.error("No serialized component state found in server session!");
                 return;
             }
         }
@@ -120,32 +123,36 @@ public class JspStateManagerImpl
             RenderKit rk = getRenderKitFactory().getRenderKit(facesContext, renderKitId);
             ResponseStateManager responseStateManager = rk.getResponseStateManager();
             Object treeStructure = responseStateManager.getTreeStructureToRestore(facesContext, viewId);
-            if (treeStructure != null)
-            {
-                TreeStructureManager tsm = new TreeStructureManager();
-                uiViewRoot = tsm.restoreTreeStructure((TreeStructureManager.TreeStructComponent)treeStructure);
-                if (log.isTraceEnabled()) log.trace("Tree structure restored from client request");
-            }
-            else
+            if (treeStructure == null)
             {
                 if (log.isDebugEnabled()) log.debug("No tree structure state found in client request");
+                return null;
             }
+
+            TreeStructureManager tsm = new TreeStructureManager();
+            uiViewRoot = tsm.restoreTreeStructure((TreeStructureManager.TreeStructComponent)treeStructure);
+            if (log.isTraceEnabled()) log.trace("Tree structure restored from client request");
         }
         else
         {
-            //get component tree from server session
-            Map sessionViewMap = getSessionViewMap(facesContext.getExternalContext());
-            SerializedView serializedView = (SerializedView)sessionViewMap.get(viewId);
-            if (serializedView != null && serializedView.getStructure() != null)
+            //reconstruct tree structure from ServletSession
+            SerializedView serializedView = getSerializedViewFromServletSession(facesContext.getExternalContext());
+            if (serializedView == null)
             {
-                TreeStructureManager tsm = new TreeStructureManager();
-                uiViewRoot = tsm.restoreTreeStructure((TreeStructureManager.TreeStructComponent)serializedView.getStructure());
-                if (log.isTraceEnabled()) log.trace("Tree structure restored from server session");
+                if (log.isDebugEnabled()) log.debug("No serialized view found in server session!");
+                return null;
             }
-            else
+
+            Object treeStructure = serializedView.getStructure();
+            if (treeStructure == null)
             {
-                if (log.isDebugEnabled()) log.debug("No tree structure state found in server session");
+                if (log.isDebugEnabled()) log.debug("No tree structure state found in server session, former UIViewRoot must have been transient");
+                return null;
             }
+
+            TreeStructureManager tsm = new TreeStructureManager();
+            uiViewRoot = tsm.restoreTreeStructure((TreeStructureManager.TreeStructComponent)serializedView.getStructure());
+            if (log.isTraceEnabled()) log.trace("Tree structure restored from server session");
         }
 
         return uiViewRoot;
@@ -158,13 +165,18 @@ public class JspStateManagerImpl
         {
             uiViewRoot.setViewId(viewId);
             restoreComponentState(facescontext, uiViewRoot, renderKitId);
+
+            if (!isSavingStateInClient(facescontext))
+            {
+                removeSerializedViewFromServletSession(facescontext.getExternalContext());
+            }
         }
         return uiViewRoot;
     }
 
     public SerializedView saveSerializedView(FacesContext facesContext) throws IllegalStateException
     {
-        //Sun's UIComponentBase has a bug:
+        //Sun's UIComponentBase has (had?) a bug:
         //Component state saving and restoring does not work right if there
         //are transient components. So, we must remove transient components
         //before calling viewRoots processSaveState method.
@@ -180,10 +192,9 @@ public class JspStateManagerImpl
         else
         {
             //save state in server session
-            ExternalContext externalContext = facesContext.getExternalContext();
-            Map sessionViewMap = getSessionViewMap(externalContext);
-            sessionViewMap.put(facesContext.getViewRoot().getViewId(), serializedView);
-            return null;
+            saveSerializedViewInServletSession(facesContext.getExternalContext(),
+                                               serializedView);
+            return null;    //return null to signal that saving is done
         }
     }
 
@@ -242,7 +253,24 @@ public class JspStateManagerImpl
         }
         return _renderKitFactory;
     }
+    
+    protected void saveSerializedViewInServletSession(ExternalContext externalContext,
+                                                      SerializedView serializedView)
+    {
+        externalContext.getSessionMap().put(SERIALIZED_VIEW_PARAM, serializedView);
+    }
+    
+    protected SerializedView getSerializedViewFromServletSession(ExternalContext externalContext)
+    {
+        return (SerializedView)externalContext.getSessionMap().get(SERIALIZED_VIEW_PARAM);
+    }
 
+    protected void removeSerializedViewFromServletSession(ExternalContext externalContext)
+    {
+        externalContext.getSessionMap().remove(SERIALIZED_VIEW_PARAM);
+    }
+
+    /*
     protected Map getSessionViewMap(ExternalContext externalContext)
     {
         Map sessionMap = externalContext.getSessionMap();
@@ -254,8 +282,12 @@ public class JspStateManagerImpl
         }
         return viewMap;
     }
+    */
 
 
+    /**
+     * @deprecated TODO: longer needed?
+     */
     protected void removeTransientComponents(UIComponent root)
     {
         if (root.getChildCount() > 0)
