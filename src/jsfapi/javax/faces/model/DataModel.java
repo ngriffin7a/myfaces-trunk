@@ -29,11 +29,11 @@ public abstract class DataModel
     private List _listeners;
 
 	// CONSTRUCTORS
-	public DataModel()
+/*	public DataModel()
 	{
 		setWrappedData(null);
  	}
-
+*/
 	// METHODS
 	public void addDataModelListener(DataModelListener listener)
 	{
