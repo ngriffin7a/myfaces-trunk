@@ -18,21 +18,21 @@
  */
 package net.sourceforge.myfaces.taglib.core;
 
-import net.sourceforge.myfaces.util.logging.LogUtil;
 import net.sourceforge.myfaces.component.UIComponentUtils;
+import net.sourceforge.myfaces.util.logging.LogUtil;
 
+import javax.faces.FacesException;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionListener;
 import javax.faces.webapp.FacesTag;
-import javax.faces.FacesException;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.Tag;
 import javax.servlet.jsp.tagext.TagSupport;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.Set;
 import java.util.HashSet;
+import java.util.Set;
 
 /**
  * DOCUMENT ME!

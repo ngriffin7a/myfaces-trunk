@@ -18,7 +18,6 @@
  */
 package net.sourceforge.myfaces.taglib;
 
-import net.sourceforge.myfaces.component.UISelectOne;
 import net.sourceforge.myfaces.component.UISelectMany;
 import net.sourceforge.myfaces.renderkit.html.ListboxRenderer;
 

@@ -1,0 +1,23 @@
+<!-- MyFaces extension: user role attributes -->
+        <attribute>
+            <name>enabledOnUserRole</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
+            <type>java.lang.String</type>
+            <description>
+                If user is in given role, this hyperlink will be rendered
+                normally. If not, no hyperlink is rendered but all nested
+                tags (=body) are rendered.
+            </description>
+        </attribute>
+        <attribute>
+            <name>visibleOnUserRole</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
+            <type>java.lang.String</type>
+            <description>
+                If user is in given role, this hyperlink will be rendered
+                normally. If not, no hyperlink is rendered body of this tag
+                is skipped.
+            </description>
+        </attribute>

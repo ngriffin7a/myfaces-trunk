@@ -1,14 +1,12 @@
-<!-- HTML 4.0 textarea attributes -->
-        <attribute><name>accesskey</name>   <required>false</required>  <rtexprvalue>true</rtexprvalue></attribute>
-        <attribute><name>cols</name>        <required>false</required>  <rtexprvalue>true</rtexprvalue></attribute>
+<!-- HTML 4.0 select attributes -->
         <attribute><name>datafld</name>     <required>false</required>  <rtexprvalue>true</rtexprvalue></attribute>
         <attribute><name>datasrc</name>     <required>false</required>  <rtexprvalue>true</rtexprvalue></attribute>
         <attribute><name>dataformatas</name><required>false</required>  <rtexprvalue>true</rtexprvalue></attribute>
         <attribute><name>disabled</name>    <required>false</required>  <rtexprvalue>true</rtexprvalue></attribute>
+        <!-- "multiple" cannot be set manually -->
+        <!-- "name" cannot be set manually -->
         <attribute><name>onblur</name>      <required>false</required>  <rtexprvalue>true</rtexprvalue></attribute>
         <attribute><name>onchange</name>    <required>false</required>  <rtexprvalue>true</rtexprvalue></attribute>
         <attribute><name>onfocus</name>     <required>false</required>  <rtexprvalue>true</rtexprvalue></attribute>
-        <attribute><name>onselect</name>    <required>false</required>  <rtexprvalue>true</rtexprvalue></attribute>
-        <attribute><name>readonly</name>    <required>false</required>  <rtexprvalue>true</rtexprvalue></attribute>
-        <attribute><name>rows</name>        <required>false</required>  <rtexprvalue>true</rtexprvalue></attribute>
+        <attribute><name>size</name>        <required>false</required>  <rtexprvalue>true</rtexprvalue></attribute>
         <attribute><name>tabindex</name>    <required>false</required>  <rtexprvalue>true</rtexprvalue></attribute>

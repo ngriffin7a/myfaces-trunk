@@ -20,13 +20,13 @@ package net.sourceforge.myfaces.taglib.ext;
 
 import net.sourceforge.myfaces.util.logging.LogUtil;
 
-import javax.servlet.jsp.tagext.TagSupport;
-import javax.servlet.jsp.tagext.Tag;
+import javax.faces.context.FacesContext;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
-import javax.faces.context.FacesContext;
-import java.util.ResourceBundle;
+import javax.servlet.jsp.tagext.Tag;
+import javax.servlet.jsp.tagext.TagSupport;
 import java.util.MissingResourceException;
+import java.util.ResourceBundle;
 
 /**
  * DOCUMENT ME!

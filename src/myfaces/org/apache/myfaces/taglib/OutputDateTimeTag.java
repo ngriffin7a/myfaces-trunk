@@ -19,7 +19,6 @@
 package net.sourceforge.myfaces.taglib;
 
 import net.sourceforge.myfaces.component.UIOutput;
-import net.sourceforge.myfaces.renderkit.html.DateRenderer;
 import net.sourceforge.myfaces.renderkit.html.DateTimeRenderer;
 
 import javax.faces.component.UIComponent;

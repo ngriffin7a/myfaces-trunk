@@ -14,20 +14,4 @@
       </xsl:copy>
     </xsl:template>
 
-    <!--
-    <xsl:template match="/">
-        <xsl:processing-instruction name="xml-stylesheet">href="book.css" type="text/css"</xsl:processing-instruction>
-        <xsl:apply-templates/>
-    </xsl:template>
-
-    <xsl:template match="*">
-      <xsl:element name="{name()}">
-        <xsl:for-each select = "./@*" >
-          <xsl:attribute name="{name()}"><xsl:value-of select="."></xsl:value-of></xsl:attribute>
-        </xsl:for-each>
-        <xsl:apply-templates/>
-      </xsl:element>
-    </xsl:template>
-    -->
-
 </xsl:stylesheet>

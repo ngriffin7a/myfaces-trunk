@@ -27,6 +27,7 @@ import java.util.logging.Level;
 
 /**
  * Global configuration for MyFaces.
+ * TODO: Prefix all web.xml init paremeters with "myfaces_".
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
@@ -206,48 +207,6 @@ public class MyFacesConfig
                                        DEFAULT_disableJspParser);
     }
 
-
-
-
-
-    /*
-    private static final String _TRUE = "true";
-    private static boolean getPropertyAsBoolean(String name, boolean defaultValue)
-    {
-        String value = getProperty(name);
-        if (value == null)
-        {
-            return defaultValue;
-        }
-        if(value.equals(_TRUE))
-        {
-            return true;
-        }
-        return false;
-    }
-
-    private static Properties _myfacesProperties = null;
-    private static synchronized String getProperty(String name)
-    {
-        if (_myfacesProperties == null)
-        {
-            ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-            InputStream inputStream = classLoader.getResourceAsStream(_PROPERTY_FILE);
-            if (inputStream != null)
-            {
-                _myfacesProperties = new Properties();
-                try
-                {
-                    _myfacesProperties.load(inputStream);
-                }
-                catch (IOException e)
-                {
-                }
-            }
-        }
-        return _myfacesProperties.getProperty(name);
-    }
-    */
 
 
 

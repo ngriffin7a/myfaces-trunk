@@ -20,7 +20,6 @@ package net.sourceforge.myfaces.taglib;
 
 import net.sourceforge.myfaces.component.UIInput;
 import net.sourceforge.myfaces.renderkit.html.TextareaRenderer;
-import net.sourceforge.myfaces.taglib.common.*;
 
 import javax.faces.component.UIComponent;
 
@@ -31,11 +30,6 @@ import javax.faces.component.UIComponent;
  */
 public class InputTextareaTag
     extends MyFacesTag
-    implements CommonAttributes,
-               UIInputAttributes,
-               HTMLTextareaAttributes,
-               HTMLUniversalAttributes,
-               HTMLEventHandlerAttributes
 {
     public UIComponent createComponent()
     {

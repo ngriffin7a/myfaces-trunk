@@ -18,10 +18,10 @@
  */
 package net.sourceforge.myfaces.taglib.core;
 
+import net.sourceforge.myfaces.MyFacesConfig;
 import net.sourceforge.myfaces.renderkit.html.state.StateRenderer;
 import net.sourceforge.myfaces.renderkit.html.state.client.ClientStateSaver;
 import net.sourceforge.myfaces.util.logging.LogUtil;
-import net.sourceforge.myfaces.MyFacesConfig;
 
 import javax.faces.FactoryFinder;
 import javax.faces.context.FacesContext;

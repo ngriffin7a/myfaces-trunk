@@ -20,7 +20,6 @@ package net.sourceforge.myfaces.taglib;
 
 import net.sourceforge.myfaces.component.UIInput;
 import net.sourceforge.myfaces.renderkit.html.HiddenRenderer;
-import net.sourceforge.myfaces.taglib.common.CommonAttributes;
 
 import javax.faces.component.UIComponent;
 
@@ -31,7 +30,6 @@ import javax.faces.component.UIComponent;
  */
 public class InputHiddenTag
     extends MyFacesTag
-    implements CommonAttributes
 {
     public UIComponent createComponent()
     {

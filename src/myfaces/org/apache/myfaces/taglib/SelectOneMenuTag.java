@@ -20,7 +20,6 @@ package net.sourceforge.myfaces.taglib;
 
 import net.sourceforge.myfaces.component.UISelectOne;
 import net.sourceforge.myfaces.renderkit.html.MenuRenderer;
-import net.sourceforge.myfaces.renderkit.html.MenuRenderer;
 
 import javax.faces.component.UIComponent;
 
