@@ -101,7 +101,7 @@
                 </section>
             </manifest>
             <lib file="${commons-codec.jar}"/>
-            <lib file="${commons-el.jar}"/>
+            <!-- lib file="${commons-el.jar}"/ -->
             <lib file="${commons-fileupload.jar}"/>
             <lib file="${commons-logging.jar}"/>
             <lib file="${commons-validator.jar}"/>
@@ -109,7 +109,7 @@
             <lib file="${commons-collections.jar}"/>
             <lib file="${commons-digester.jar}"/>            
             <lib file="${jakarta-oro.jar}"/>
-            <lib file="${jsp-2.0.jar}"/>
+            <!-- lib file="${jsp-2.0.jar}"/ -->
             <lib file="${jstl.jar}"/>
             <lib file="${myfaces.jar}"/>
             <lib file="${log4j.jar}"/>
