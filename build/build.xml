@@ -71,6 +71,8 @@
         <pathelement location="${jstl.jar}"/>
         <pathelement location="${commons-logging.jar}"/>
         <pathelement location="${commons-el.jar}"/>
+        <pathelement location="${commons-validator.jar}"/>
+        <pathelement location="${jakarta-oro.jar}"/>
         <pathelement location="${commons-fileupload.jar}"/>
         <pathelement location="${cos.jar}"/>
     </path>
@@ -83,6 +85,8 @@
         <pathelement location="${commons-codec.jar}"/>
         <pathelement location="${commons-logging.jar}"/>
         <pathelement location="${commons-el.jar}"/>
+        <pathelement location="${jakarta-oro.jar}"/>
+        <pathelement location="${commons-validator.jar}"/>
         <pathelement location="${commons-fileupload.jar}"/>
         <pathelement location="${myfaces.jar}"/>
     </path>
@@ -225,6 +229,10 @@
             <tarfileset file="${commons-el.jar}"
                         prefix="myfaces-${manifest.impl.version}/lib"/>
             <tarfileset file="${commons-fileupload.jar}"
+                        prefix="myfaces-${manifest.impl.version}/lib"/>
+            <tarfileset file="${commons-validator.jar}"
+                        prefix="myfaces-${manifest.impl.version}/lib"/>
+            <tarfileset file="${jakarta-oro.jar}"
                         prefix="myfaces-${manifest.impl.version}/lib"/>
             <tarfileset file="${jstl.jar}"
                         prefix="myfaces-${manifest.impl.version}/lib"/>
