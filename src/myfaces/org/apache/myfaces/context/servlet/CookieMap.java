@@ -27,6 +27,9 @@ import javax.servlet.http.HttpServletRequest;
  * @author Anton Koinov
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.10  2004/11/24 13:40:11  manolito
+ * additional null cookies fixes
+ *
  * Revision 1.9  2004/11/24 13:36:11  manolito
  * SF-Bug #1072442 fixed
  *
@@ -88,12 +91,14 @@ public class CookieMap extends AbstractAttributeMap
 
     public boolean isEmpty()
     {
-        return _httpServletRequest.getCookies().length == 0;
+        Cookie[] cookies = _httpServletRequest.getCookies();
+        return cookies == null || cookies.length == 0;
     }
 
     public int size()
     {
-        return _httpServletRequest.getCookies().length;
+        Cookie[] cookies = _httpServletRequest.getCookies();
+        return cookies == null ? 0 : cookies.length;
     }
 
     protected Object getAttribute(String key)
