@@ -26,12 +26,16 @@ import net.sourceforge.myfaces.custom.tree.TreeNode;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Collection;
 
 
 /**
  * @author <a href="mailto:oliver@rossmueller.com">Oliver Rossmueller</a>
  * @version $Revision$ $Date$
  *          $Log$
+ *          Revision 1.3  2004/05/05 00:18:56  o_rossmueller
+ *          various fixes/modifications in model event handling and tree update
+ *
  *          Revision 1.2  2004/05/04 00:28:17  o_rossmueller
  *          model event handling
  *
@@ -97,15 +101,9 @@ public class DefaultTreeModel
     }
 
 
-    public void addTreeModelListener(TreeModelListener l)
+    public Collection getTreeModelListeners()
     {
-        listeners.add(l);
-    }
-
-
-    public void removeTreeModelListener(TreeModelListener l)
-    {
-        listeners.remove(l);
+        return listeners;
     }
 
 

@@ -38,6 +38,9 @@ import javax.servlet.jsp.JspException;
  * @author <a href="mailto:oliver@rossmueller.com">Oliver Rossmueller</a>
  * @version $Revision$ $Date$
  *          $Log$
+ *          Revision 1.3  2004/05/05 00:18:57  o_rossmueller
+ *          various fixes/modifications in model event handling and tree update
+ *
  *          Revision 1.2  2004/04/22 21:59:17  o_rossmueller
  *          added expandRoot attribute
  *
@@ -330,11 +333,11 @@ public class TreeTag
             }
         }
         int answer = super.doStartTag();
+        HtmlTree tree = (HtmlTree) getComponentInstance();
 
         if (getCreated() && expandRoot)
         {
             // component was created, so expand the root node
-            HtmlTree tree = (HtmlTree) getComponentInstance();
             TreeModel model = tree.getModel(context);
 
             if (model != null) {
@@ -342,6 +345,7 @@ public class TreeTag
             }
         }
 
+        tree.addToModelListeners();
         return answer;
     }
 

@@ -20,11 +20,16 @@
 
 package net.sourceforge.myfaces.custom.tree.model;
 
+import java.util.Collection;
+
 
 /**
  * @author <a href="mailto:oliver@rossmueller.com">Oliver Rossmueller</a>
  * @version $Revision$ $Date$
  *          $Log$
+ *          Revision 1.2  2004/05/05 00:18:56  o_rossmueller
+ *          various fixes/modifications in model event handling and tree update
+ *
  *          Revision 1.1  2004/04/22 10:20:24  manolito
  *          tree component
  *
@@ -92,20 +97,9 @@ public interface TreeModel
 
 
     /**
-     * Adds a listener for the <code>TreeModelEvent</code>
-     * posted after the tree changes.
+     * Answer the mutable collection of tree model listeners.
      *
-     * @param l the listener to add
+     * @return
      */
-    void addTreeModelListener(TreeModelListener l);
-
-
-    /**
-     * Removes a listener previously added with
-     * <code>addTreeModelListener</code>.
-     *
-     * @param l the listener to remove
-     */
-    void removeTreeModelListener(TreeModelListener l);
-
+    Collection getTreeModelListeners();
 }

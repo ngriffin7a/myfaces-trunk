@@ -36,9 +36,12 @@ import java.util.List;
  * @author <a href="mailto:oliver@rossmueller.com">Oliver Rossmueller</a>
  * @version $Revision$ $Date$
  *          $Log$
+ *          Revision 1.7  2004/05/05 00:18:57  o_rossmueller
+ *          various fixes/modifications in model event handling and tree update
+ *
  *          Revision 1.6  2004/05/04 00:28:17  o_rossmueller
  *          model event handling
- *
+ *          <p/>
  *          Revision 1.5  2004/04/23 19:09:35  o_rossmueller
  *          state transition magic
  *          <p/>
@@ -174,12 +177,26 @@ public class HtmlTreeNode
 
     void childrenAdded(int[] children, FacesContext context)
     {
+        if (getChildCount() == 0 && children.length > 0)
+        {
+            // change to CLOSED_*
+            layout[layout.length - 1] -= OFFSET;
+        }
+
+        if (!expanded)
+        {
+            // nothing to do
+            return;
+        }
+
         TreeModel model = getTreeModel(context);
         int childCount = model.getChildCount(getUserObject());
+        int pathUpdateIndex = getTranslatedPath().length;
 
         for (int i = 0; i < children.length; i++)
         {
             int index = children[i];
+            translateChildrenPath(pathUpdateIndex, index, 1);
             Object userObject = model.getChild(getUserObject(), index);
             addNode(model, userObject, index, childCount, context);
         }
@@ -188,6 +205,12 @@ public class HtmlTreeNode
 
     void childrenChanged(int[] children, FacesContext context)
     {
+        if (!expanded)
+        {
+            // nothing to do
+            return;
+        }
+
         TreeModel model = getTreeModel(context);
 
         for (int i = 0; i < children.length; i++)
@@ -196,6 +219,7 @@ public class HtmlTreeNode
             Object userObject = model.getChild(getUserObject(), index);
             HtmlTreeNode node = (HtmlTreeNode) getChildren().get(index);
             node.setUserObject(userObject);
+            // todo: modify path????
         }
     }
 
@@ -203,34 +227,82 @@ public class HtmlTreeNode
     private void addNode(TreeModel model, Object userObject, int index, int childCount, FacesContext context)
     {
         HtmlTreeNode node = createNode(model, userObject, childCount, index, context);
+        List children = getChildren();
 
-        if (index == 0)
+        if (!children.isEmpty())
         {
-            HtmlTreeNode first = (HtmlTreeNode) getChildren().get(0);
-            int[] layout = first.getLayout();
-            if (layout[layout.length - 1] % OFFSET == MOD_FIRST) {
-                // change from *_FIRST to *
-                layout[layout.length - 1]--;
-            }
-        } else if (index == childCount - 1)
-        {
-            HtmlTreeNode last = (HtmlTreeNode) getChildren().get(childCount - 2);
-            int[] layout = last.getLayout();
-            if (layout[layout.length - 1] % OFFSET == MOD_LAST) {
-                // change from *_LAST to *
-                layout[layout.length - 1] -= 2;
+            if (index == 0)
+            {
+                HtmlTreeNode first = (HtmlTreeNode) getChildren().get(0);
+                int[] layout = first.getLayout();
+                if (layout[layout.length - 1] % OFFSET == MOD_FIRST)
+                {
+                    // change from *_FIRST to *
+                    layout[layout.length - 1]--;
+                }
+            } else if (index == childCount - 1)
+            {
+                HtmlTreeNode last = (HtmlTreeNode) getChildren().get(childCount - 2);
+                int[] layout = last.getLayout();
+                if (layout[layout.length - 1] % OFFSET == MOD_LAST)
+                {
+                    // change from *_LAST to *
+                    layout[layout.length - 1] -= 2;
+                }
             }
         }
-        getChildren().add(index, node);
+
+        children.add(index, node);
     }
 
 
     void childrenRemoved(int[] children)
     {
+        if (!expanded)
+        {
+            // nothing to do
+            return;
+        }
         List childNodes = getChildren();
+        int pathUpdateIndex = getTranslatedPath().length;
+
         for (int i = children.length - 1; i >= 0; i--)
         {
+            translateChildrenPath(pathUpdateIndex, children[i], -1);
             childNodes.remove(children[i]);
+        }
+    }
+
+
+    /**
+     * Update the translatedPath of all child nodes so the path points to the same object in the model
+     * after adding/removing a node
+     *
+     * @param pathUpdateIndex
+     * @param startIndex
+     * @param offset
+     */
+    private void translateChildrenPath(int pathUpdateIndex, int startIndex, int offset) {
+        List children = getChildren();
+        int childrenSize = children.size();
+
+        for (int i = startIndex; i < childrenSize; i++) {
+            HtmlTreeNode node = (HtmlTreeNode) children.get(i);
+            node.updateTranslatedPath(pathUpdateIndex, offset);
+        }
+    }
+
+
+    private void updateTranslatedPath(int pathUpdateIndex, int offset)
+    {
+        translatedPath[pathUpdateIndex] += offset;
+        // reset path and userObject so the values are acquired from the model
+        path = null;
+        userObject = null;
+
+        if (isExpanded()) {
+            // continue with the children of this node
+            translateChildrenPath(pathUpdateIndex, 0, offset);
         }
     }
 
@@ -337,12 +409,10 @@ public class HtmlTreeNode
 
     public void setSelected(boolean selected)
     {
-        if (this.selected == selected)
+        if (selected)
         {
-            // no change
-            return;
+            getTree().getRootNode().clearSelection();
         }
-        getTree().getRootNode().clearSelection();
         this.selected = selected;
         getTree().selectionChanged(this);
     }

@@ -21,6 +21,8 @@
 package net.sourceforge.myfaces.custom.tree;
 
 import java.io.IOException;
+import java.util.Collection;
+import java.util.Iterator;
 import javax.faces.component.UIViewRoot;
 import javax.faces.component.html.HtmlForm;
 import javax.faces.context.FacesContext;
@@ -45,6 +47,9 @@ import net.sourceforge.myfaces.custom.tree.model.TreePath;
  * @author <a href="mailto:oliver@rossmueller.com">Oliver Rossmueller</a>
  * @version $Revision$ $Date$
  *          $Log$
+ *          Revision 1.10  2004/05/05 00:18:57  o_rossmueller
+ *          various fixes/modifications in model event handling and tree update
+ *
  *          Revision 1.9  2004/05/04 12:19:14  o_rossmueller
  *          added icon provider
  *
@@ -453,7 +458,11 @@ public class HtmlTree
             oldPath = HtmlTreeNode.translatePath(selectedPath, getModel(FacesContext.getCurrentInstance()));
         }
         selectedPath = node.getTranslatedPath();
-        queueEvent(new TreeSelectionEvent(this, oldPath, node.getPath()));
+        if (node.isSelected()) {
+            queueEvent(new TreeSelectionEvent(this, oldPath, node.getPath()));
+        } else {
+            queueEvent(new TreeSelectionEvent(this, oldPath, null));
+        }
     }
 
 
@@ -527,12 +536,12 @@ public class HtmlTree
         selectedNodeClass = (String) values[16];
         uniqueIdCounter = ((Integer) values[17]).intValue();
         selectedPath = (int[]) values[18];
+        addToModelListeners();
     }
 
 
     public void decode(FacesContext context)
     {
-        getModel(context).addTreeModelListener(this);
         super.decode(context);
 
         //Save the current view root for later reference...
@@ -542,8 +551,31 @@ public class HtmlTree
     }
 
 
+    public void processDecodes(FacesContext context)
+    {
+        addToModelListeners();
+        super.processDecodes(context);
+    }
+
+
+    public void processValidators(FacesContext context)
+    {
+        addToModelListeners();
+        super.processValidators(context);
+    }
+
+
+    public void processUpdates(FacesContext context)
+    {
+        addToModelListeners();
+        super.processUpdates(context);
+    }
+
+
     public void encodeBegin(FacesContext context) throws IOException
     {
+        removeFromModelListeners();
+        addToModelListeners();
         HtmlTreeNode node = getRootNode();
 
         if (node == null)
@@ -570,8 +602,8 @@ public class HtmlTree
 
     public void encodeEnd(FacesContext context) throws IOException
     {
-        getModel(context).removeTreeModelListener(this);
         super.encodeEnd(context);
+        removeFromModelListeners();
     }
 
 
@@ -637,6 +669,44 @@ public class HtmlTree
         if (isExpanded(path, context)) {
             collapsePath(path, context);
             expandPath(path, context);
+        }
+    }
+
+
+    public boolean equals(Object obj)
+    {
+        if (! (obj instanceof HtmlTree)) {
+            return false;
+        }
+        HtmlTree other = (HtmlTree) obj;
+
+        FacesContext context = FacesContext.getCurrentInstance();
+        return other.getClientId(context).equals(getClientId(context));
+    }
+
+
+    public int hashCode()
+    {
+        return getClientId(FacesContext.getCurrentInstance()).hashCode();
+    }
+
+
+    public void addToModelListeners() {
+        Collection listeners = getModel(FacesContext.getCurrentInstance()).getTreeModelListeners();
+
+        if (! listeners.contains(this)) {
+            listeners.add(this);
+        }
+    }
+
+    private void removeFromModelListeners() {
+        Collection listeners = getModel(FacesContext.getCurrentInstance()).getTreeModelListeners();
+        for (Iterator iterator = listeners.iterator(); iterator.hasNext();)
+        {
+            Object listener = iterator.next();
+            if (listener.equals(this)) {
+                iterator.remove();
+            }
         }
     }
 }
