@@ -39,6 +39,9 @@ import java.util.List;
  *
  *
  *          $Log$
+ *          Revision 1.7  2005/01/19 11:49:20  matzew
+ *          MYFACES-83. Refactored HtmlTableRendererBase supported by "power-user" Heath Borders-Wing
+ *
  *          Revision 1.6  2004/12/23 13:03:09  mmarinschek
  *          id's not rendered (or not conditionally rendered); changes in jslistener to support both ie and firefox now
  *
@@ -58,11 +61,17 @@ public class HtmlTableRendererBase extends HtmlRenderer
     /** The logger. */
     private static final Log log = LogFactory.getLog(HtmlTableRendererBase.class);
 
+	/**
+	 * @see javax.faces.render.Renderer#getRendersChildren()
+	 */
     public boolean getRendersChildren()
     {
         return true;
     }
 
+	/**
+	 * @see javax.faces.render.Renderer#encodeBegin(FacesContext, UIComponent)
+	 */
     public void encodeBegin(FacesContext facesContext, UIComponent uiComponent) throws IOException
     {
         RendererUtils.checkParamValidity(facesContext, uiComponent, UIData.class);
@@ -79,6 +88,9 @@ public class HtmlTableRendererBase extends HtmlRenderer
         renderFacet(facesContext, writer, (UIData) uiComponent, true);
     }
 
+	/**
+	 * @see javax.faces.render.Renderer#encodeChildren(FacesContext, UIComponent)
+	 */
     public void encodeChildren(FacesContext facesContext, UIComponent component) throws IOException
     {
         RendererUtils.checkParamValidity(facesContext, component, UIData.class);
@@ -127,12 +139,7 @@ public class HtmlTableRendererBase extends HtmlRenderer
             beforeRow(facesContext, uiData);
 
             HtmlRendererUtils.writePrettyLineSeparator(facesContext);
-            writer.startElement(HTML.TR_ELEM, component);
-            if (styles.hasRowStyle())
-            {
-                String rowStyle = styles.getRowStyle(i);
-                writer.writeAttribute(HTML.CLASS_ATTR, rowStyle, null);
-            }
+            renderRowStart(facesContext, writer, uiData, styles.getRowStyle(i));
 
             List children = component.getChildren();
             for (int j = 0, size = component.getChildCount(); j < size; j++)
@@ -140,25 +147,84 @@ public class HtmlTableRendererBase extends HtmlRenderer
                 UIComponent child = (UIComponent) children.get(j);
                 if (child instanceof UIColumn && ((UIColumn) child).isRendered())
                 {
-                    writer.startElement(HTML.TD_ELEM, component);
-                    if (styles.hasColumnStyle())
-                    {
-                        String columnStyle = styles.getColumnStyle(j);
-                        writer.writeAttribute(HTML.CLASS_ATTR, columnStyle, null);
-                    }
-                    RendererUtils.renderChild(facesContext, child);
-                    writer.endElement(HTML.TD_ELEM);
+                	String columnStyle = styles.getColumnStyle(j);
+                    renderColumnBody(facesContext, writer, uiData, (UIColumn) child, columnStyle);
                 }
             }
-            writer.endElement(HTML.TR_ELEM);
+            renderRowEnd(facesContext, writer, uiData);
 
             afterRow(facesContext, uiData);
         }
         writer.endElement(HTML.TBODY_ELEM);
     }
+    
+    /**
+     * Renders the body of a given <code>UIColumn</code> (everything but the header and footer facets).
+     * @param facesContext the <code>FacesContext</code>.
+     * @param writer the <code>ResponseWriter</code>.
+     * @param uiData the <code>UIData</code> being rendered.
+     * @param column the <code>UIColumn</code> to render.
+     * @param columnStyleClass the styleClass of the <code>UIColumn</code> or <code>null</code> if
+     * there is none.
+     * @throws IOException if an exception occurs.
+     */
+	protected void renderColumnBody(
+		FacesContext facesContext,
+		ResponseWriter writer,
+		UIData uiData,
+		UIColumn column,
+		String columnStyleClass) throws IOException
+	{
+		writer.startElement(HTML.TD_ELEM, uiData);
+		if (columnStyleClass != null)
+		{
+			writer.writeAttribute(HTML.CLASS_ATTR, columnStyleClass, null);
+		}
+		
+        RendererUtils.renderChild(facesContext, column);
+        writer.endElement(HTML.TD_ELEM);
+	}
+    
+    /**
+     * Renders the start of a new row of body content.
+     * @param facesContext the <code>FacesContext</code>.
+     * @param writer the <code>ResponseWriter</code>.
+     * @param uiData the <code>UIData</code> being rendered.
+     * @param rowStyleClass te styleClass of the row or <code>null</code> if there is none.
+     * @throws IOException if an exceptoin occurs.
+     */
+	protected void renderRowStart(
+		FacesContext facesContext,
+		ResponseWriter writer,
+		UIData uiData,
+		String rowStyleClass) throws IOException
+	{
+		writer.startElement(HTML.TR_ELEM, uiData);
+        if (rowStyleClass != null)
+        {
+            writer.writeAttribute(HTML.CLASS_ATTR, rowStyleClass, null);
+        }
+	}
+	
+	/**
+     * Renders the end of a row of body content.
+     * @param facesContext the <code>FacesContext</code>.
+     * @param writer the <code>ResponseWriter</code>.
+     * @param uiData the <code>UIData</code> being rendered.
+     * @throws IOException if an exceptoin occurs.
+     */
+	protected void renderRowEnd(
+		FacesContext facesContext,
+		ResponseWriter writer,
+		UIData uiData) throws IOException
+	{
+		writer.endElement(HTML.TR_ELEM);
+	}
 
     /**
      * Convenient method for derived table renderers.
+     * @param facesContext the <code>FacesContext</code>.
+     * @param uiData the <code>UIData</code> being rendered.
      */
     protected void beforeTable(FacesContext facesContext, UIData uiData) throws IOException
     {
@@ -166,6 +232,8 @@ public class HtmlTableRendererBase extends HtmlRenderer
 
     /**
      * Convenient method for derived table renderers.
+     * @param facesContext the <code>FacesContext</code>.
+     * @param uiData the <code>UIData</code> being rendered.
      */
     protected void beforeRow(FacesContext facesContext, UIData uiData) throws IOException
     {
@@ -173,6 +241,8 @@ public class HtmlTableRendererBase extends HtmlRenderer
 
     /**
      * Convenient method for derived table renderers.
+     * @param facesContext the <code>FacesContext</code>.
+     * @param uiData the <code>UIData</code> being rendered.
      */
     protected void afterRow(FacesContext facesContext, UIData uiData) throws IOException
     {
@@ -180,11 +250,16 @@ public class HtmlTableRendererBase extends HtmlRenderer
 
     /**
      * Convenient method for derived table renderers.
+     * @param facesContext the <code>FacesContext</code>.
+     * @param uiData the <code>UIData</code> being rendered.
      */
     protected void afterTable(FacesContext facesContext, UIData uiData) throws IOException
     {
     }
 
+	/**
+	 * @see javax.faces.render.Renderer#encodeEnd(FacesContext, UIComponent)
+	 */
     public void encodeEnd(FacesContext facesContext, UIComponent uiComponent) throws IOException
     {
         RendererUtils.checkParamValidity(facesContext, uiComponent, UIData.class);
@@ -197,6 +272,14 @@ public class HtmlTableRendererBase extends HtmlRenderer
         afterTable(facesContext, (UIData) uiComponent);
     }
 
+	/**
+	 * Renders either the header or the footer facets.
+	 * @param facesContext the <code>FacesContext</code>.
+	 * @param writer the <code>ResponseWriter</code>.
+	 * @param component the parent <code>UIComponent</code> containing the facets.
+	 * @param header whether this is the header facet (if not, then the footer facet).
+	 * @throws IOException if an exception occurs.
+	 */
     protected void renderFacet(FacesContext facesContext, ResponseWriter writer, UIComponent component, boolean header)
             throws IOException
     {
@@ -245,6 +328,17 @@ public class HtmlTableRendererBase extends HtmlRenderer
         }
     }
 
+	/**
+	 * Renders the header row of the table being rendered.
+	 * @param facesContext the <code>FacesContext</code>.
+	 * @param writer the <code>ResponseWriter</code>.
+	 * @param component the <code>UIComponent</code> for whom a table is being rendered.
+	 * @param headerFacet the facet for the header.
+	 * @param headerStyleClass the styleClass of the header.
+	 * @param colspan the number of columns the header should span.  Typically, this is
+	 * the number of columns in the table.
+	 * @throws IOException if an exception occurs.
+	 */
     protected void renderTableHeaderRow(FacesContext facesContext, ResponseWriter writer, UIComponent component,
             UIComponent headerFacet, String headerStyleClass, int colspan) throws IOException
     {
@@ -252,6 +346,17 @@ public class HtmlTableRendererBase extends HtmlRenderer
                 colspan);
     }
 
+	/**
+	 * Renders the footer row of the table being rendered.
+	 * @param facesContext the <code>FacesContext</code>.
+	 * @param writer the <code>ResponseWriter</code>.
+	 * @param component the <code>UIComponent</code> for whom a table is being rendered.
+	 * @param headerFacet the facet for the header.
+	 * @param headerStyleClass the styleClass of the header.
+	 * @param colspan the number of columns the header should span.  Typically, this is
+	 * the number of columns in the table.
+	 * @throws IOException if an exception occurs.
+	 */
     protected void renderTableFooterRow(FacesContext facesContext, ResponseWriter writer, UIComponent component,
             UIComponent footerFacet, String footerStyleClass, int colspan) throws IOException
     {
@@ -259,12 +364,30 @@ public class HtmlTableRendererBase extends HtmlRenderer
                 colspan);
     }
 
+	/**
+	 * Renders the header row for the columns, which is a separate row from the header row for the
+	 * <code>UIData</code> header facet.
+	 * @param facesContext the <code>FacesContext</code>.
+	 * @param writer the <code>ResponseWriter</code>.
+	 * @param component the <code>UIComponent</code> for whom a table is being rendered.
+	 * @param headerStyleClass the styleClass of the header 
+	 * @throws IOException if an exception occurs.
+	 */
     protected void renderColumnHeaderRow(FacesContext facesContext, ResponseWriter writer, UIComponent component,
             String headerStyleClass) throws IOException
     {
         renderColumnHeaderOrFooterRow(facesContext, writer, component, headerStyleClass, true);
     }
 
+	/**
+	 * Renders the footer row for the columns, which is a separate row from the footer row for the
+	 * <code>UIData</code> footer facet.
+	 * @param facesContext the <code>FacesContext</code>.
+	 * @param writer the <code>ResponseWriter</code>.
+	 * @param component the <code>UIComponent</code> for whom a table is being rendered.
+	 * @param footerStyleClass the styleClass of the footerStyleClass 
+	 * @throws IOException if an exception occurs.
+	 */
     protected void renderColumnFooterRow(FacesContext facesContext, ResponseWriter writer, UIComponent component,
             String footerStyleClass) throws IOException
     {
@@ -298,6 +421,7 @@ public class HtmlTableRendererBase extends HtmlRenderer
             String styleClass, boolean header) throws IOException
     {
         HtmlRendererUtils.writePrettyLineSeparator(facesContext);
+
         writer.startElement(HTML.TR_ELEM, component);
         for (Iterator it = component.getChildren().iterator(); it.hasNext();)
         {
@@ -317,6 +441,16 @@ public class HtmlTableRendererBase extends HtmlRenderer
         writer.endElement(HTML.TR_ELEM);
     }
 
+	/**
+	 * Renders the header facet for the given <code>UIColumn</code>.
+	 * @param facesContext the <code>FacesContext</code>.
+	 * @param writer the <code>ResponseWriter</code>.
+	 * @param uiColumn the <code>UIColumn</code>.
+	 * @param footerStyleClass the styleClass of the header facet.
+	 * @param colspan the colspan for the tableData element in which the header facet
+	 * will be wrapped.
+	 * @throws IOException
+	 */
     protected void renderColumnHeaderCell(FacesContext facesContext, ResponseWriter writer, UIColumn uiColumn,
             String headerStyleClass, int colspan) throws IOException
     {
@@ -337,6 +471,16 @@ public class HtmlTableRendererBase extends HtmlRenderer
         writer.endElement(HTML.TH_ELEM);
     }
 
+	/**
+	 * Renders the footer facet for the given <code>UIColumn</code>.
+	 * @param facesContext the <code>FacesContext</code>.
+	 * @param writer the <code>ResponseWriter</code>.
+	 * @param uiColumn the <code>UIColumn</code>.
+	 * @param footerStyleClass the styleClass of the footer facet.
+	 * @param colspan the colspan for the tableData element in which the footer facet
+	 * will be wrapped.
+	 * @throws IOException
+	 */
     protected void renderColumnFooterCell(FacesContext facesContext, ResponseWriter writer, UIColumn uiColumn,
             String footerStyleClass, int colspan) throws IOException
     {
@@ -357,6 +501,11 @@ public class HtmlTableRendererBase extends HtmlRenderer
         writer.endElement(HTML.TD_ELEM);
     }
 
+	/**
+	 * Gets the headerClass attribute of the given <code>UIComponent</code>.
+	 * @param component the <code>UIComponent</code>.
+	 * @return the headerClass attribute of the given <code>UIComponent</code>.
+	 */
     protected static String getHeaderClass(UIComponent component)
     {
         if (component instanceof HtmlDataTable)
@@ -369,6 +518,11 @@ public class HtmlTableRendererBase extends HtmlRenderer
         }
     }
 
+	/**
+	 * Gets the footerClass attribute of the given <code>UIComponent</code>.
+	 * @param component the <code>UIComponent</code>.
+	 * @return the footerClass attribute of the given <code>UIComponent</code>.
+	 */
     protected static String getFooterClass(UIComponent component)
     {
         if (component instanceof HtmlDataTable)
