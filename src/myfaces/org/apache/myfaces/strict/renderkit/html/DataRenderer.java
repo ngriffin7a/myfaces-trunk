@@ -22,11 +22,11 @@ import net.sourceforge.myfaces.component.UIComponentUtils;
 import net.sourceforge.myfaces.renderkit.*;
 import net.sourceforge.myfaces.renderkit.html.*;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLUtil;
+import net.sourceforge.myfaces.util.ArrayIterator;
 import net.sourceforge.myfaces.util.FacesUtils;
 
 import java.io.IOException;
 
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 
@@ -74,13 +74,12 @@ extends HTMLRenderer
 
         if (value.getClass().isArray())
         {
-            // FIXME: use real array iterator
-            return Arrays.asList((Object[]) value).iterator();
+            return new ArrayIterator(value);
         }
 
         throw new IllegalArgumentException(
-            "Value of component " + UIComponentUtils.toString(uiPanel)
-            + " is neither collection nor array.");
+            "Value of type " + value.getClass() + " of component "
+            + UIComponentUtils.toString(uiPanel) + " is neither collection nor array.");
     }
 
     public String getRendererType()

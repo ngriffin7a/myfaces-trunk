@@ -20,13 +20,13 @@ package net.sourceforge.myfaces.renderkit.html;
 
 import net.sourceforge.myfaces.component.UIComponentUtils;
 import net.sourceforge.myfaces.renderkit.*;
+import net.sourceforge.myfaces.util.ArrayIterator;
 
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIPanel;
 import javax.faces.context.FacesContext;
 import javax.servlet.ServletRequest;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 
@@ -113,13 +113,9 @@ public class DataRenderer
             {
                 iterator = ((Collection)v).iterator();
             }
-            else if (v instanceof Object[])
+            else if (v.getClass().isArray())
             {
-                iterator = Arrays.asList((Object[])v).iterator();
-            }
-            else if (v instanceof Iterator)
-            {
-                iterator = (Iterator)v;
+                iterator = new ArrayIterator(v);
             }
             else
             {
