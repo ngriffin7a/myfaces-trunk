@@ -15,37 +15,36 @@
  */
 package net.sourceforge.myfaces.config;
 
-import java.util.Iterator;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
+
 import javax.faces.FactoryFinder;
-import javax.faces.context.ExternalContext;
-import javax.faces.render.RenderKitFactory;
-import javax.faces.render.RenderKit;
-import javax.faces.render.Renderer;
-import javax.faces.webapp.FacesServlet;
-import javax.faces.lifecycle.Lifecycle;
-import javax.faces.lifecycle.LifecycleFactory;
 import javax.faces.application.ApplicationFactory;
 import javax.faces.application.NavigationHandler;
 import javax.faces.application.StateManager;
 import javax.faces.application.ViewHandler;
+import javax.faces.context.ExternalContext;
 import javax.faces.el.PropertyResolver;
 import javax.faces.el.VariableResolver;
 import javax.faces.event.PhaseListener;
+import javax.faces.lifecycle.Lifecycle;
+import javax.faces.lifecycle.LifecycleFactory;
+import javax.faces.render.RenderKit;
+import javax.faces.render.RenderKitFactory;
+import javax.faces.render.Renderer;
+import javax.faces.webapp.FacesServlet;
 import javax.servlet.ServletContext;
 
 import net.sourceforge.myfaces.application.NavigationHandlerImpl;
 import net.sourceforge.myfaces.application.jsp.JspStateManagerImpl;
 import net.sourceforge.myfaces.application.jsp.JspViewHandlerImpl;
+import net.sourceforge.myfaces.cactus.MyFacesServletTestCase;
+import net.sourceforge.myfaces.config.element.ManagedBean;
+import net.sourceforge.myfaces.config.element.NavigationCase;
+import net.sourceforge.myfaces.config.element.NavigationRule;
 import net.sourceforge.myfaces.el.PropertyResolverImpl;
 import net.sourceforge.myfaces.el.VariableResolverImpl;
-import net.sourceforge.myfaces.config.element.ManagedBean;
-import net.sourceforge.myfaces.config.element.NavigationRule;
-import net.sourceforge.myfaces.config.element.NavigationCase;
-import net.sourceforge.myfaces.cactus.MyFacesServletTestCase;
 import net.sourceforge.myfaces.lifecycle.LifecycleFactoryImpl;
-import net.sourceforge.myfaces.config.RuntimeConfig;
 
 
 public class ConfigurationCactusTest extends MyFacesServletTestCase

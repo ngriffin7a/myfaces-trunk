@@ -38,7 +38,7 @@ public class FacesContextWrapper
 {
     //~ Instance fields ----------------------------------------------------------------------------
 
-    private final FacesContext _facesContext;
+    private FacesContext _facesContext;
 
     //~ Constructors -------------------------------------------------------------------------------
 

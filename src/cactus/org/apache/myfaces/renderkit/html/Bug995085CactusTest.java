@@ -18,10 +18,8 @@ package net.sourceforge.myfaces.renderkit.html;
 import javax.servlet.RequestDispatcher;
 
 import org.apache.cactus.ServletTestCase;
+
 import com.meterware.httpunit.WebResponse;
-import com.meterware.httpunit.WebConversation;
-import com.meterware.httpunit.WebForm;
-import com.meterware.httpunit.SubmitButton;
 
 
 /**

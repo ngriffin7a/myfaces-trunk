@@ -15,8 +15,6 @@
  */
 package net.sourceforge.myfaces.custom.date;
 
-import net.sourceforge.myfaces.component.UserRoleAware;
-import net.sourceforge.myfaces.custom.fileupload.HtmlInputFileUpload;
 import net.sourceforge.myfaces.renderkit.html.HTML;
 import net.sourceforge.myfaces.taglib.html.HtmlInputTagBase;
 

@@ -15,15 +15,10 @@
  */
 package net.sourceforge.myfaces.custom.panelstack;
 
-import net.sourceforge.myfaces.custom.tree.model.DefaultTreeModel;
-import net.sourceforge.myfaces.custom.tree.model.TreeModel;
-import net.sourceforge.myfaces.custom.tree.model.TreePath;
-import net.sourceforge.myfaces.custom.tree.HtmlTree;
 import net.sourceforge.myfaces.taglib.UIComponentTagBase;
 
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
-import javax.faces.el.ValueBinding;
 import javax.servlet.jsp.JspException;
 
 
@@ -33,6 +28,9 @@ import javax.servlet.jsp.JspException;
  * @author <a href="mailto:oliver@rossmueller.com">Oliver Rossmueller</a>
  * @version $Revision$ $Date$
  *          $Log$
+ *          Revision 1.2  2004/09/01 18:32:55  mwessendorf
+ *          Organize Imports
+ *
  *          Revision 1.1  2004/08/15 22:42:12  o_rossmueller
  *          new custom component: HtmlPanelStack
  *

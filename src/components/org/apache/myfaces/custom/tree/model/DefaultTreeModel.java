@@ -19,7 +19,6 @@ import net.sourceforge.myfaces.custom.tree.DefaultMutableTreeNode;
 import net.sourceforge.myfaces.custom.tree.MutableTreeNode;
 import net.sourceforge.myfaces.custom.tree.TreeNode;
 
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Collection;
 import java.util.LinkedList;
@@ -29,6 +28,9 @@ import java.util.LinkedList;
  * @author <a href="mailto:oliver@rossmueller.com">Oliver Rossmueller</a>
  * @version $Revision$ $Date$
  *          $Log$
+ *          Revision 1.6  2004/09/01 18:32:57  mwessendorf
+ *          Organize Imports
+ *
  *          Revision 1.5  2004/08/15 15:28:04  o_rossmueller
  *          new model listener handling to get modified from events which occur outside the scope of a tree request
  *

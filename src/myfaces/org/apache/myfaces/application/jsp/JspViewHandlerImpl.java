@@ -15,13 +15,11 @@
  */
 package net.sourceforge.myfaces.application.jsp;
 
-import net.sourceforge.myfaces.util.DebugUtils;
-import net.sourceforge.myfaces.webapp.webxml.ServletMapping;
-import net.sourceforge.myfaces.webapp.webxml.WebXml;
-import net.sourceforge.myfaces.context.servlet.ServletExternalContextImpl;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import java.io.IOException;
+import java.util.Enumeration;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Locale;
 
 import javax.faces.FacesException;
 import javax.faces.application.Application;
@@ -32,17 +30,24 @@ import javax.faces.context.FacesContext;
 import javax.faces.render.RenderKitFactory;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.util.*;
+
+import net.sourceforge.myfaces.util.DebugUtils;
+import net.sourceforge.myfaces.webapp.webxml.ServletMapping;
+import net.sourceforge.myfaces.webapp.webxml.WebXml;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.27  2004/09/01 18:32:55  mwessendorf
+ * Organize Imports
+ *
  * Revision 1.26  2004/08/11 23:09:35  o_rossmueller
  * handle character encoding as described in section 2.5.2.2 of JSF 1.1
  *

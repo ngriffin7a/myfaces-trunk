@@ -17,14 +17,9 @@ package net.sourceforge.myfaces.custom.panelstack;
 
 import javax.faces.component.html.HtmlPanelGroup;
 import javax.faces.context.FacesContext;
-import javax.faces.el.EvaluationException;
-import javax.faces.el.MethodBinding;
-import javax.faces.el.ValueBinding;
-import javax.faces.event.AbortProcessingException;
-import javax.faces.event.FacesEvent;
 
-import net.sourceforge.myfaces.custom.tabbedpane.TabChangeListener;
-import net.sourceforge.myfaces.custom.tabbedpane.TabChangeEvent;
+import javax.faces.el.ValueBinding;
+
 
 /**
  * Manage a stack of JSF components and allow for one child component to be choosen for rendering. The behaviour
@@ -34,6 +29,9 @@ import net.sourceforge.myfaces.custom.tabbedpane.TabChangeEvent;
  * @author <a href="mailto:oliver@rossmueller.com">Oliver Rossmueller</a>
  * @version $Revision$ $Date$
  *          $Log$
+ *          Revision 1.2  2004/09/01 18:32:55  mwessendorf
+ *          Organize Imports
+ *
  *          Revision 1.1  2004/08/15 22:42:11  o_rossmueller
  *          new custom component: HtmlPanelStack
  *

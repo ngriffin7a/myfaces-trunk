@@ -16,28 +16,20 @@
 package net.sourceforge.myfaces.custom.panelstack;
 
 import net.sourceforge.myfaces.renderkit.RendererUtils;
-import net.sourceforge.myfaces.renderkit.html.HTML;
 import net.sourceforge.myfaces.renderkit.html.HtmlRenderer;
-import net.sourceforge.myfaces.renderkit.html.HtmlRendererUtils;
-import net.sourceforge.myfaces.custom.tabbedpane.HtmlPanelTabbedPane;
-import net.sourceforge.myfaces.custom.tabbedpane.HtmlPanelTab;
-import net.sourceforge.myfaces.custom.tabbedpane.TabChangeEvent;
 
-import javax.faces.application.ViewHandler;
-import javax.faces.component.NamingContainer;
 import javax.faces.component.UIComponent;
-import javax.faces.component.UIForm;
 import javax.faces.context.FacesContext;
-import javax.faces.context.ResponseWriter;
 import java.io.IOException;
-import java.util.List;
-import java.util.Map;
 
 
 /**
  * @author <a href="mailto:oliver@rossmueller.com">Oliver Rossmueller</a>
  * @version $Revision$ $Date$
  *          $Log$
+ *          Revision 1.4  2004/09/01 18:32:55  mwessendorf
+ *          Organize Imports
+ *
  *          Revision 1.3  2004/08/15 23:16:36  o_rossmueller
  *          do not overwrite decode
  *

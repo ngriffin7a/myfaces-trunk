@@ -21,7 +21,6 @@ import javax.faces.component.UIViewRoot;
 import javax.faces.context.FacesContext;
 import javax.faces.el.ValueBinding;
 
-import net.sourceforge.myfaces.custom.navigation.HtmlPanelNavigation;
 import net.sourceforge.myfaces.custom.tree.event.TreeSelectionEvent;
 import net.sourceforge.myfaces.custom.tree.event.TreeSelectionListener;
 import net.sourceforge.myfaces.custom.tree.model.TreeModel;
@@ -41,6 +40,9 @@ import net.sourceforge.myfaces.component.html.ext.HtmlPanelGroup;
  * @author <a href="mailto:oliver@rossmueller.com">Oliver Rossmueller</a>
  * @version $Revision$ $Date$
  *          $Log$
+ *          Revision 1.21  2004/09/01 18:32:54  mwessendorf
+ *          Organize Imports
+ *
  *          Revision 1.20  2004/08/15 15:28:04  o_rossmueller
  *          new model listener handling to get modified from events which occur outside the scope of a tree request
  *

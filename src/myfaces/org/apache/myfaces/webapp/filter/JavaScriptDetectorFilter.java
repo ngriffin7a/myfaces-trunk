@@ -15,18 +15,21 @@
  */
 package net.sourceforge.myfaces.webapp.filter;
 
-import javax.servlet.*;
+import java.io.IOException;
+
+import javax.servlet.Filter;
+import javax.servlet.FilterChain;
+import javax.servlet.FilterConfig;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
 
 import net.sourceforge.myfaces.MyFacesConfig;
-import org.apache.commons.logging.LogFactory;
+
 import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 
 /**
@@ -36,6 +39,9 @@ import org.apache.commons.logging.Log;
  * @author Oliver Rossmueller (latest modification by $Author$)
  *
  * $Log$
+ * Revision 1.2  2004/09/01 18:32:57  mwessendorf
+ * Organize Imports
+ *
  * Revision 1.1  2004/08/05 22:10:44  o_rossmueller
  * EXPERIMENTAL: JavaScript detection
  *

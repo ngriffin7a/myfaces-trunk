@@ -23,8 +23,6 @@ import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.Tag;
 import javax.servlet.jsp.tagext.TagSupport;
 
-import net.sourceforge.myfaces.custom.tree.HtmlTree;
-import net.sourceforge.myfaces.custom.tree.event.TreeSelectionListener;
 import net.sourceforge.myfaces.util.ClassUtils;
 
 
@@ -34,6 +32,9 @@ import net.sourceforge.myfaces.util.ClassUtils;
  * @author <a href="mailto:oliver@rossmueller.com">Oliver Rossmueller</a>
  * @version $Revision$ $Date$
  *          $Log$
+ *          Revision 1.2  2004/09/01 18:32:56  mwessendorf
+ *          Organize Imports
+ *
  *          Revision 1.1  2004/08/09 22:01:38  o_rossmueller
  *          tagChangeListener tag
  *
