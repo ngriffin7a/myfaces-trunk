@@ -29,6 +29,7 @@
         <x:navigation_item id="nav-3-1" label="Features" treeId="/example/features.jsp"/>
     </x:navigation_item>
     <x:navigation_item id="nav-4" label="Info" >
-        <x:navigation_item id="nav-4-1" label="Copyright" treeId="/example/copyright.jsp"/>
+        <x:navigation_item id="nav-4-1" label="Contact" treeId="/example/contact.jsp"/>
+        <x:navigation_item id="nav-4-2" label="Copyright" treeId="/example/copyright.jsp"/>
     </x:navigation_item>
 </x:navigation>

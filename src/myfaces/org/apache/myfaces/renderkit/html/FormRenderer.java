@@ -62,7 +62,7 @@ public class FormRenderer
         StringBuffer sb = new StringBuffer(request.getContextPath());
         sb.append("/faces");    //TODO: hardcoded?
         sb.append(context.getResponseTree().getTreeId());
-        return ((HttpServletResponse)context.getServletResponse()).encodeURL(sb.toString());
+        return response.encodeURL(sb.toString());
     }
 
     public void encodeEnd(FacesContext facesContext, UIComponent component)

@@ -55,10 +55,8 @@
             <h4>A Form</h4>
             <table border="1"><tr><td>
                 <f:form id="form1" formName="calcForm">
-                    Number 1: <f:textentry_input id="number1"
-                                       modelReference="calcForm.number1"
-                                       maxLength="5" size="25" /><br>
-                    Number 2: <f:textentry_input id="number2" modelReference="calcForm.number2" /><br>
+                    Number 1: <f:textentry_input id="number1" modelReference="calcForm.number1" maxLength="10" size="25"/><br>
+                    Number 2: <f:textentry_input id="number2" modelReference="calcForm.number2" maxLength="10" size="25"/><br>
                     Result: <f:output_text id="result" modelReference="calcForm.result" /><br>
                     <f:command_button id="addButton" commandName="add" commandReference="calcCtrl.calc" label="Add them"/>
                     <f:command_button id="subtractButton" commandName="subtract" commandReference="calcCtrl.calc" label="Subtract them"/><br>
