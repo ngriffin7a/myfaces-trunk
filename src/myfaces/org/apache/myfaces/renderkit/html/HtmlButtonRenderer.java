@@ -126,7 +126,11 @@ extends HtmlRenderer
                 type = HTML.INPUT_TYPE_SUBMIT;
             }
             writer.writeAttribute(HTML.TYPE_ATTR, type, JSFAttr.TYPE_ATTR);
-            writer.writeAttribute(HTML.VALUE_ATTR, htmlCommand.getValue(), null);
+            Object value = htmlCommand.getValue();
+            if (value != null)
+            {
+                writer.writeAttribute(HTML.VALUE_ATTR, value, null);
+            }
         }
 
         HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML.BUTTON_PASSTHROUGH_ATTRIBUTES);

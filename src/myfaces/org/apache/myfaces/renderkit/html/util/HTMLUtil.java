@@ -18,6 +18,7 @@
  */
 package net.sourceforge.myfaces.renderkit.html.util;
 
+import net.sourceforge.myfaces.component.UIComponentUtils;
 import net.sourceforge.myfaces.renderkit.JSFAttr;
 import net.sourceforge.myfaces.renderkit.RendererUtils;
 import net.sourceforge.myfaces.renderkit.html.HTML;
@@ -487,11 +488,11 @@ public class HTMLUtil
 
     public static boolean isDisabled(UIComponent component)
     {
-        return "true".equalsIgnoreCase((String) component.getAttributes().get(HTML.DISABLED_ATTR));
+        return UIComponentUtils.getBooleanAttribute(component, HTML.DISABLED_ATTR, false);
     }
 
     public static boolean isReadOnly(UIComponent component)
     {
-        return "true".equalsIgnoreCase((String) component.getAttributes().get(HTML.READONLY_ATTR));
+        return UIComponentUtils.getBooleanAttribute(component, HTML.READONLY_ATTR, false);
     }
 }
