@@ -31,11 +31,11 @@
 
 <body>
 
-<jsp:useBean id="calcForm" class="net.sourceforge.myfaces.example.model.CalcForm" scope="request" />
-<jsp:useBean id="calcCtrl" class="net.sourceforge.myfaces.example.controller.CalcController" scope="application" />
+<jsp:useBean id="calcForm" class="net.sourceforge.myfaces.examples.diverse.model.CalcForm" scope="request" />
+<jsp:useBean id="calcCtrl" class="net.sourceforge.myfaces.examples.diverse.controller.CalcController" scope="application" />
 
-<jsp:useBean id="ucaseForm" class="net.sourceforge.myfaces.example.model.UCaseForm" scope="request" />
-<jsp:useBean id="ucaseCtrl" class="net.sourceforge.myfaces.example.controller.UCaseController" scope="application" />
+<jsp:useBean id="ucaseForm" class="net.sourceforge.myfaces.examples.diverse.model.UCaseForm" scope="request" />
+<jsp:useBean id="ucaseCtrl" class="net.sourceforge.myfaces.examples.diverse.controller.UCaseController" scope="application" />
 
 <h:use_faces>
 
@@ -64,7 +64,7 @@
                     Number 2: <h:textentry_input id="number2" modelReference="calcForm.number2" maxlength="10" size="25"/><h:input_errors id="number2Error" compoundId="/form1/number2" cssClass="error" /><br>
                     Result: <h:output_text id="result" modelReference="calcForm.result" /><br>
                     <h:command_button id="addButton" commandName="add" commandReference="calcCtrl.calc" label="Add them">
-                        <f:action_listener type="net.sourceforge.myfaces.example.controller.ActionListenerTest" ></f:action_listener>
+                        <f:action_listener type="net.sourceforge.myfaces.examples.controller.ActionListenerTest" ></f:action_listener>
                     </h:command_button>
                     <h:command_button id="subtractButton" commandName="subtract" commandReference="calcCtrl.calc" label="Subtract them"/><br>
                 </h:form>

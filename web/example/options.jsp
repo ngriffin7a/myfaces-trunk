@@ -30,8 +30,8 @@
 
 <h:use_faces>
 
-<jsp:useBean id="optionsForm" class="net.sourceforge.myfaces.example.model.OptionsForm" scope="request" />
-<jsp:useBean id="optionsCtrl" class="net.sourceforge.myfaces.example.controller.OptionsController" scope="application" />
+<jsp:useBean id="optionsForm" class="net.sourceforge.myfaces.examples.diverse.model.OptionsForm" scope="request" />
+<jsp:useBean id="optionsCtrl" class="net.sourceforge.myfaces.examples.diverse.controller.OptionsController" scope="application" />
 <x:save_state id="ss1" modelReference="optionsForm.language" />
 
     <x:page_layout id="page" layoutReference="pageLayout" cssClass="pageLayout" >
@@ -44,17 +44,17 @@
             <h4>Options</h4>
             <table border="1"><tr><td>
                 <h:form id="form1" formName="calcForm">
-                    <h:message key="option_lang" bundle="net.sourceforge.myfaces.example.example_messages" />
-                    <h:selectbox id="locale" modelReference="optionsForm.language"  >
+                    <h:message key="option_lang" bundle="net.sourceforge.myfaces.examples.resource.example_messages" />
+                    <h:selectone_listbox id="locale" modelReference="optionsForm.language"  >
                         <h:selectbox_items id="available" modelReference="optionsForm.availableLanguages" />
-                    </h:selectbox><br>
+                    </h:selectone_listbox><br>
 
-                    <h:message key="option_layout" bundle="net.sourceforge.myfaces.example.example_messages" />
-                    <h:selectbox id="layout" modelReference="pageLayout"  >
+                    <h:message key="option_layout" bundle="net.sourceforge.myfaces.examples.resource.example_messages" />
+                    <h:selectone_listbox id="layout" modelReference="pageLayout"  >
                         <h:selectbox_item id="item101" label="Classic" value="classic" />
                         <h:selectbox_item id="item102" label="Navigation right" value="navigationRight" />
                         <h:selectbox_item id="item103" label="Upside down" value="upsideDown" />
-                    </h:selectbox><br>
+                    </h:selectone_listbox><br>
 
                     <h:command_button id="apply" commandName="apply" commandReference="optionsCtrl.setLocale" label="Apply"/>
                 </h:form>

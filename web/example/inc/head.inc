@@ -12,5 +12,5 @@
         application.setAttribute("pageLayout", pageLayout);
     }
 
-    String msgBundle = "net.sourceforge.myfaces.example.example_messages";
+    String msgBundle = "net.sourceforge.myfaces.examples.resource.example_messages";
 %>

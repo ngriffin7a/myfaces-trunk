@@ -28,8 +28,8 @@
 
 <body>
 
-<jsp:useBean id="q_form" class="net.sourceforge.myfaces.example.model.QuotationForm" scope="request" />
-<jsp:useBean id="q_controller" class="net.sourceforge.myfaces.example.controller.QuotationController" scope="application" />
+<jsp:useBean id="q_form" class="net.sourceforge.myfaces.examples.diverse.model.QuotationForm" scope="request" />
+<jsp:useBean id="q_controller" class="net.sourceforge.myfaces.examples.diverse.controller.QuotationController" scope="application" />
 
 
 <h:use_faces>
@@ -47,19 +47,19 @@
                                    modelReference="q_form.text"
                                    size="60" /><br>
                 <br>
-                <h:selectbox id="oneoption" modelReference="q_form.quoteChar" >
+                <h:selectone_listbox id="oneoption" modelReference="q_form.quoteChar" >
                     <h:selectbox_item id="item0" value="" label="select a quote character" />
                     <h:selectbox_item id="item1" value="\"" label="Double" />
                     <h:selectbox_item id="item2" value="'" label="Single" />
                     <h:selectbox_items id="moreItems" modelReference="q_form.selectOneItems" />
-                </h:selectbox>
+                </h:selectone_listbox>
                 <h:command_button id="button1" commandName="quotationOn" commandReference="q_controller.processEvent" label="Add quotes"/>
 
                 <br><br>
-                <h:listbox_many id="manyoptions" modelReference="q_form.selectManyValues" >
+                <h:selectmany_listbox id="manyoptions" modelReference="q_form.selectManyValues" >
                     <h:selectbox_item id="item0" value="" label="select the unquote characters" />
                     <h:selectbox_items id="manyItems" modelReference="q_form.selectManyItems" />
-                </h:listbox_many>
+                </h:selectmany_listbox>
                 <h:command_button id="button2" commandName="quotationOff"  commandReference="q_controller.processEvent" label="Remove quotes"/><br>
 
             </h:form>
