@@ -13,19 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.myfaces.tiles.example;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
-import javax.faces.event.AbortProcessingException;
-import javax.faces.event.ActionEvent;
-import javax.faces.event.ActionListener;
+public class IntegerBean {
+    private static Log log = LogFactory.getLog(IntegerBean.class);
+        
+    private Integer number;
 
-/**
- * @author <a href="mailto:matzew@apache.org">Matthias Weﬂendorf</a> 
- */
-public class DemoActionListener implements ActionListener {
-
-    public void processAction(ActionEvent actionEvent)
-            throws AbortProcessingException {
-        System.out.println("Phase: "+actionEvent.getPhaseId());
+    public Integer getNumber() {
+        return number;
     }
+
+    public void setNumber(Integer number) {
+        this.number = number;
+    }
+
 }

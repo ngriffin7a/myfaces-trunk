@@ -2,11 +2,12 @@ MyFaces Release Notes
 =====================
 
 ----------------------------------------------------------------------
-Changes in Release 1.0.9 beta
+Changes in Release 1.0.8 beta_RC2
+* added a new RenderKit, that renders WML. Thanks to Jirí Žaloudek for his contribution
 * upgrade the components use the ExtensionsFilter
   this means you don't need to include the myfaces javascripts and style sheets in your app anymore.
 ----------------------------------------------------------------------
-Changes in Release 1.0.8 beta
+Changes in Release 1.0.8 beta_RC1
 * move to Apache Incubator (root package is now "org.apache.myfaces")
 * providing a tld for MyFaces custom components, that still contains
   the 'old' sf-URI name for backward compatibility

@@ -13,19 +13,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.myfaces.tiles.example;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
-import javax.faces.event.AbortProcessingException;
-import javax.faces.event.ActionEvent;
-import javax.faces.event.ActionListener;
+public class SelectBean {
+    private static Log log = LogFactory.getLog(SelectBean.class);
 
-/**
- * @author <a href="mailto:matzew@apache.org">Matthias Weﬂendorf</a> 
- */
-public class DemoActionListener implements ActionListener {
+    private boolean boolValue;
+    private String[] equipments;
 
-    public void processAction(ActionEvent actionEvent)
-            throws AbortProcessingException {
-        System.out.println("Phase: "+actionEvent.getPhaseId());
+    public boolean isBoolValue() {
+        return boolValue;
     }
+
+    public void setBoolValue(boolean boolValue) {
+        this.boolValue = boolValue;
+    }
+
+    public String[] getEquipments() {
+        return equipments;
+    }
+
+    public void setEquipments(String[] equipments) {
+        this.equipments = equipments;
+    }
+
+
 }

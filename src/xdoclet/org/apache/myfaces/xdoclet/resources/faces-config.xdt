@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE faces-config PUBLIC
+          "-//Sun Microsystems, Inc.//DTD JavaServer Faces Config 1.1//EN"
+          "http://java.sun.com/dtd/web-facesconfig_1_1.dtd">
+
+<faces-config xmlns="http://java.sun.com/JSF/Configuration">
+    <!--<application>
+        <default-render-kit-id>WAP_BASIC</default-render-kit-id>
+    </application>-->
+    <render-kit>
+        <render-kit-id>WML_BASIC</render-kit-id> 
+        <render-kit-class>org.apache.myfaces.wap.renderkit.WmlRenderKitImpl</render-kit-class>
+
+        <XDtClass:forAllClasses>
+        <renderer>
+            <component-family><XDtWapFaces:componentFamily/></component-family>
+            <renderer-type><XDtWapFaces:rendererType/></renderer-type>
+            <renderer-class>org.apache.myfaces.wap.renderkit.wml.<XDtWapFaces:rendererType/></renderer-class>
+        </renderer>
+        </XDtClass:forAllClasses>
+    </render-kit>
+
+    <XDtClass:forAllClasses>
+    <component>
+            <component-type><XDtClass:className/></component-type>
+            <component-class>org.apache.myfaces.wap.component.<XDtClass:className/></component-class>
+            <component-extension>
+              <component-family><XDtWapFaces:componentFamily/></component-family>
+              <renderer-type><XDtWapFaces:rendererType/></renderer-type>
+            </component-extension>
+    </component>
+    </XDtClass:forAllClasses>
+</faces-config>

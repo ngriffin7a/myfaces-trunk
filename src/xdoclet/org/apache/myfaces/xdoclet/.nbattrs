@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE attributes PUBLIC "-//NetBeans//DTD DefaultAttributes 1.0//EN" "http://www.netbeans.org/dtds/attributes-1_0.dtd">
+<attributes version="1.0">
+    <fileobject name="FacesConfigSubTask.java">
+        <attr name="class_dependency_xdoclet.TemplateSubTask" stringvalue="FacesConfigSubTask"/>
+    </fileobject>
+    <fileobject name="TagLibSubTask.java">
+        <attr name="class_dependency_xdoclet.TemplateSubTask" stringvalue="TagLibSubTask"/>
+    </fileobject>
+    <fileobject name="TagSubTask.java">
+        <attr name="class_dependency_xdoclet.TemplateSubTask" stringvalue="TagSubTask"/>
+    </fileobject>
+    <fileobject name="component.xdt">
+        <attr name="org.netbeans.modules.text.IsTextFile" boolvalue="true"/>
+    </fileobject>
+    <fileobject name="tag.xdt">
+        <attr name="org.netbeans.modules.text.IsTextFile" boolvalue="true"/>
+    </fileobject>
+    <fileobject name="tld.xdt">
+        <attr name="org.netbeans.modules.text.IsTextFile" boolvalue="true"/>
+    </fileobject>
+    <fileobject name="xdoclet-xml.xdt">
+        <attr name="org.netbeans.modules.text.IsTextFile" boolvalue="true"/>
+    </fileobject>
+</attributes>

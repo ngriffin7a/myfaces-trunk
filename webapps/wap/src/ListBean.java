@@ -13,19 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.myfaces.tiles.example;
+import java.util.*;
 
-import javax.faces.event.AbortProcessingException;
-import javax.faces.event.ActionEvent;
-import javax.faces.event.ActionListener;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
-/**
- * @author <a href="mailto:matzew@apache.org">Matthias Weﬂendorf</a> 
- */
-public class DemoActionListener implements ActionListener {
+public class ListBean {
+    private static Log log = LogFactory.getLog(ListBean.class);
+        
+    private List list;
 
-    public void processAction(ActionEvent actionEvent)
-            throws AbortProcessingException {
-        System.out.println("Phase: "+actionEvent.getPhaseId());
+    public List getList() {
+        return list;
     }
+
+    public void setList(List list) {
+        this.list = list;
+    }
+
 }

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE taglib
+        PUBLIC "-//Sun Microsystems, Inc.//DTD JSP Tag Library 1.2//EN"
+        "http://java.sun.com/dtd/web-jsptaglibrary_1_2.dtd">
+
+<taglib>
+
+<!-- ============== Tag Library Description Elements ============= -->
+
+<tlib-version>1.0</tlib-version>
+<jsp-version>1.2</jsp-version>
+<short-name>wap</short-name>
+<uri>http://myfaces.apache.org/wap</uri>
+    <display-name>WAP Tags</display-name>
+<description>
+  This tag library contains JavaServer Faces component tags for generate
+  WML pages.
+</description>    
+
+<!-- ===================== WML tags version 1.1 ====================== -->
+<XDtClass:forAllClasses>
+<!--
+======================================================
+  <XDtWapFaces:tagName/>
+======================================================
+-->
+<tag>
+    <name><XDtWapFaces:tagName/></name>
+    <tag-class>org.apache.myfaces.wap.taglib.<XDtClass:className/>Tag</tag-class>
+    <body-content><XDtWapFaces:bodyContent/></body-content>
+    <display-name></display-name>
+    <description>
+      <XDtClass:classCommentText no-comment-signs="true"/>
+    </description>
+
+    <XDtField:forAllFields>
+    <attribute>
+      <XDtWapFaces:ifIsAttributeReplaced>  
+        <name><XDtWapFaces:getReplacedAttributeName/></name>
+      </XDtWapFaces:ifIsAttributeReplaced>  
+
+      <XDtWapFaces:ifIsNotAttributeReplaced>  
+        <name><XDtField:fieldName/></name>
+      </XDtWapFaces:ifIsNotAttributeReplaced>  
+
+      
+      <required><XDtWapFaces:isAttributeRequired/></required>
+      <rtexprvalue><XDtWapFaces:isRtExprValue/></rtexprvalue>
+      <type><XDtField:fieldType/></type>
+      <description><XDtField:fieldComment no-comment-signs="true"/></description>
+    </attribute>
+    </XDtField:forAllFields>
+</tag>
+</XDtClass:forAllClasses>
+</taglib>
