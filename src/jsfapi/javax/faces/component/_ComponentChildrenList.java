@@ -26,6 +26,10 @@ import java.util.List;
 /**
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
+ * $Log$
+ * Revision 1.2  2004/03/31 12:45:01  manolito
+ * add(int index, Object value) was missing
+ *
  */
 class _ComponentChildrenList
         extends AbstractList
@@ -53,7 +57,9 @@ class _ComponentChildrenList
     {
         checkValue(value);
         setNewParent((UIComponent)value);
-        return _list.set(index, value);
+        UIComponent child = (UIComponent) _list.set(index, value);
+        if (child != null) child.setParent(null);
+        return child;
     }
 
     public boolean add(Object value)
@@ -61,6 +67,13 @@ class _ComponentChildrenList
         checkValue(value);
         setNewParent((UIComponent)value);
         return _list.add(value);
+    }
+
+    public void add(int index, Object value)
+    {
+        checkValue(value);
+        setNewParent((UIComponent)value);
+        _list.add(index, value);
     }
 
     public Object remove(int index)
