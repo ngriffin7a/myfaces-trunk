@@ -56,7 +56,11 @@ public class HtmlPanelTabbedPaneTag
     private String _rules;
     private String _summary;
     private String _width;
-
+    private String _activeTabStyleClass;
+    private String _inactiveTabStyleClass;
+    private String _activeSubStyleClass;
+    private String _inactiveSubStyleClass;
+    private String _tabContentStyleClass;
     // User Role support --> already handled by HtmlPanelGroupTag
 
 
@@ -78,6 +82,11 @@ public class HtmlPanelTabbedPaneTag
         setStringProperty(component, HTML.RULES_ATTR, _rules);
         setStringProperty(component, HTML.SUMMARY_ATTR, _summary);
         setStringProperty(component, HTML.WIDTH_ATTR, _width);
+        setStringProperty(component, "activeTabStyleClass", _activeTabStyleClass);
+        setStringProperty(component, "inactiveTabStyleClass", _inactiveTabStyleClass);
+        setStringProperty(component, "activeSubStyleClass", _activeSubStyleClass);
+        setStringProperty(component, "inactiveSubStyleClass", _inactiveSubStyleClass);
+        setStringProperty(component, "tabContentStyleClass", _tabContentStyleClass);
     }
 
 
@@ -144,5 +153,35 @@ public class HtmlPanelTabbedPaneTag
     public void setWidth(String width)
     {
         _width = width;
+    }
+
+
+    public void setActiveTabStyleClass(String activeTabStyleClass)
+    {
+        _activeTabStyleClass = activeTabStyleClass;
+    }
+
+
+    public void setInactiveTabStyleClass(String inactiveTabStyleClass)
+    {
+        _inactiveTabStyleClass = inactiveTabStyleClass;
+    }
+
+
+    public void setActiveSubStyleClass(String activeSubStyleClass)
+    {
+        _activeSubStyleClass = activeSubStyleClass;
+    }
+
+
+    public void setInactiveSubStyleClass(String inactiveSubStyleClass)
+    {
+        _inactiveSubStyleClass = inactiveSubStyleClass;
+    }
+
+
+    public void setTabContentStyleClass(String tabContentStyleClass)
+    {
+        _tabContentStyleClass = tabContentStyleClass;
     }
 }

@@ -34,6 +34,9 @@ import java.util.Map;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.4  2004/07/10 17:11:02  o_rossmueller
+ * added attributes activeTabStyleClass, inactiveTabStyleClass, activeSubStyleClass, inactiveSubStyleClass, tagContentStyleClass to overwrite style attributes using css
+ *
  * Revision 1.3  2004/07/01 21:53:05  mwessendorf
  * ASF switch
  *
@@ -283,12 +286,15 @@ public class HtmlTabbedPaneRenderer
             writer.writeAttribute(HTML.STYLE_ATTR,
                                   ACTIVE_HEADER_CELL_STYLE + "background-color:" + tabbedPane.getBgcolor(),
                                   null);
+
+            HtmlRendererUtils.renderHTMLAttribute(writer, tabbedPane, "activeTabStyleClass", HTML.STYLE_CLASS_ATTR);
         }
         else
         {
             writer.writeAttribute(HTML.STYLE_ATTR,
                                   INACTIVE_HEADER_CELL_STYLE,
                                   null);
+            HtmlRendererUtils.renderHTMLAttribute(writer, tabbedPane, "inactiveTabStyleClass", HTML.STYLE_CLASS_ATTR);
         }
 
         //Button
@@ -343,6 +349,13 @@ public class HtmlTabbedPaneRenderer
             buf.append("border-left:").append(i > 0 ? NO_BORDER_STYLE : BORDER_STYLE);
             buf.append("background-color:").append(tabbedPane.getBgcolor());
             writer.writeAttribute(HTML.STYLE_ATTR, buf.toString(), null);
+
+            if (i == selectedIndex) {
+                HtmlRendererUtils.renderHTMLAttribute(writer, tabbedPane, "activeSubStyleClass", HTML.STYLE_CLASS_ATTR);
+            } else {
+                HtmlRendererUtils.renderHTMLAttribute(writer, tabbedPane, "inactiveSubStyleClass", HTML.STYLE_CLASS_ATTR);
+            }
+
             writer.write("&nbsp;");
             writer.endElement(HTML.TD_ELEM);
         }
@@ -361,6 +374,7 @@ public class HtmlTabbedPaneRenderer
         writer.startElement(HTML.TD_ELEM, tabbedPane);
         writer.writeAttribute(HTML.COLSPAN_ATTR, Integer.toString(tabCount + 1), null);
         writer.writeAttribute(HTML.STYLE_ATTR, TAB_CELL_STYLE + "background-color:" + tabbedPane.getBgcolor(), null);
+        HtmlRendererUtils.renderHTMLAttribute(writer, tabbedPane, "tabContentStyleClass", HTML.STYLE_CLASS_ATTR);
 
         int tabIdx = 0;
         List children = tabbedPane.getChildren();
