@@ -19,6 +19,7 @@
             <x:commandNavigation id="nav_2_3_5" value="#{example_messages['nav_TabbedPane']}" action="go_tabbedPane" />
             <x:commandNavigation id="nav_2_3_6" value="#{example_messages['nav_Calendar']}" action="go_calendar" />
             <x:commandNavigation id="nav_2_3_7" value="#{example_messages['nav_dataList']}" action="go_dataList" />
+            <x:commandNavigation id="nav_2_3_8" value="#{example_messages['nav_tree']}" action="go_tree" />
         </x:commandNavigation>
     </x:commandNavigation>
     <x:commandNavigation id="nav_3" value="#{example_messages['nav_Documentation']}" >

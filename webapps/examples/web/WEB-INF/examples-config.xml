@@ -178,6 +178,11 @@
         </navigation-case>
 
         <navigation-case>
+            <from-outcome>go_tree</from-outcome>
+            <to-view-id>/tree.jsp</to-view-id>
+        </navigation-case>
+
+        <navigation-case>
             <from-outcome>go_features</from-outcome>
             <to-view-id>/features.jsp</to-view-id>
         </navigation-case>

@@ -18,16 +18,7 @@
  */
 package net.sourceforge.myfaces.renderkit.html;
 
-import net.sourceforge.myfaces.renderkit.RendererUtils;
 
-import javax.faces.application.ViewHandler;
-import javax.faces.component.UIComponent;
-import javax.faces.component.UIForm;
-import javax.faces.component.html.HtmlForm;
-import javax.faces.context.FacesContext;
-import javax.faces.context.ResponseWriter;
-import java.io.IOException;
-import java.util.Map;
 
 /**
  * @author Manfred Geiler (latest modification by $Author$)
@@ -36,82 +27,8 @@ import java.util.Map;
  * @version $Revision$ $Date$
  */
 public class HtmlFormRenderer
-        extends HtmlRenderer
+        extends HtmlFormRendererBase
 {
     //private static final Log log = LogFactory.getLog(HtmlFormRenderer.class);
 
-    private static final String HIDDEN_SUBMIT_INPUT_SUFFIX = "_SUBMIT";
-    private static final String HIDDEN_SUBMIT_INPUT_VALUE = "1";
-
-
-    public void encodeBegin(FacesContext facesContext, UIComponent component)
-            throws IOException
-    {
-        RendererUtils.checkParamValidity(facesContext, component, UIForm.class);
-
-        UIForm htmlForm = (HtmlForm)component;
-
-        ResponseWriter writer = facesContext.getResponseWriter();
-        ViewHandler viewHandler = facesContext.getApplication().getViewHandler();
-        String viewId = facesContext.getViewRoot().getViewId();
-        String clientId = htmlForm.getClientId(facesContext);
-        String actionURL = viewHandler.getActionURL(facesContext, viewId);
-
-        writer.startElement(HTML.FORM_ELEM, htmlForm);
-        writer.writeAttribute(HTML.ID_ATTR, clientId, null);
-        writer.writeAttribute(HTML.NAME_ATTR, clientId, null);
-        writer.writeAttribute(HTML.METHOD_ATTR, "post", null);
-        writer.writeURIAttribute(HTML.ACTION_ATTR, actionURL, null);
-
-        HtmlRendererUtils.renderHTMLAttributes(writer, htmlForm, HTML.FORM_PASSTHROUGH_ATTRIBUTES);
-        writer.write(""); // forse start element tag to be closed
-    }
-
-
-    public void encodeEnd(FacesContext facesContext, UIComponent component)
-            throws IOException
-    {
-        ResponseWriter writer = facesContext.getResponseWriter();
-
-        //write state marker
-        ViewHandler viewHandler = facesContext.getApplication().getViewHandler();
-        viewHandler.writeState(facesContext);
-
-        //write hidden input to determine "submitted" value on decode
-        writer.startElement(HTML.INPUT_ELEM, null);
-        writer.writeAttribute(HTML.TYPE_ATTR, "hidden", null);
-        writer.writeAttribute(HTML.NAME_ATTR, component.getClientId(facesContext) +
-                                              HIDDEN_SUBMIT_INPUT_SUFFIX, null);
-        writer.writeAttribute(HTML.VALUE_ATTR, HIDDEN_SUBMIT_INPUT_VALUE, null);
-        writer.endElement(HTML.INPUT_ELEM);
-
-        writer.endElement(HTML.FORM_ELEM);
-    }
-
-
-    public void decode(FacesContext facesContext, UIComponent component)
-    {
-        RendererUtils.checkParamValidity(facesContext, component, UIForm.class);
-
-        /*
-        if (HTMLUtil.isDisabled(component))
-        {
-            return;
-        }
-        */
-
-        UIForm htmlForm = (UIForm)component;
-
-        Map paramMap = facesContext.getExternalContext().getRequestParameterMap();
-        String submittedValue = (String)paramMap.get(component.getClientId(facesContext) +
-                                                     HIDDEN_SUBMIT_INPUT_SUFFIX);
-        if (submittedValue != null && submittedValue.equals(HIDDEN_SUBMIT_INPUT_VALUE))
-        {
-            htmlForm.setSubmitted(true);
-        }
-        else
-        {
-            htmlForm.setSubmitted(false);
-        }
-    }
 }

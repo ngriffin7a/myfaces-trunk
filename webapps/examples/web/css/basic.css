@@ -289,3 +289,25 @@ div.titlebar {
     padding: 2;
     border-style: none;
 }
+
+.tree {
+   lineheight: 18px;
+   font-family: arial, sans-serif;
+}
+
+.treenode {
+   padding: 2px 2px 2px 5px;
+}
+
+.treenode a {
+   text-decoration: none;
+}
+
+.treenodeSelected {
+   padding: 2px 2px 2px 5px;
+}
+
+.treenodeSelected a {
+   text-decoration: none;
+   font-weight: bold;
+}

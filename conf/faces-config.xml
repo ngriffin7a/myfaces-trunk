@@ -130,6 +130,22 @@
     <component-class>net.sourceforge.myfaces.custom.radio.HtmlRadio</component-class>
   </component>
 
+    <component>
+        <component-type>net.sourceforge.myfaces.HtmlTree</component-type>
+        <component-class>net.sourceforge.myfaces.custom.tree.HtmlTree</component-class>
+    </component>
+
+    <component>
+          <component-type>net.sourceforge.myfaces.HtmlTreeNode</component-type>
+          <component-class>net.sourceforge.myfaces.custom.tree.HtmlTreeNode</component-class>
+    </component>
+
+    <component>
+          <component-type>net.sourceforge.myfaces.HtmlTreeImageCommandLink</component-type>
+          <component-class>net.sourceforge.myfaces.custom.tree.HtmlTreeImageCommandLink</component-class>
+    </component>
+
+
   <component>
     <component-type>net.sourceforge.myfaces.SaveState</component-type>
     <component-class>net.sourceforge.myfaces.custom.savestate.UISaveState</component-class>
@@ -279,6 +295,26 @@
           <renderer-type>net.sourceforge.myfaces.Radio</renderer-type>
           <renderer-class>net.sourceforge.myfaces.renderkit.html.ext.HtmlRadioRenderer</renderer-class>
       </renderer>
+
+
+       <renderer>
+          <component-family>net.sourceforge.myfaces.HtmlTree</component-family>
+          <renderer-type>net.sourceforge.myfaces.HtmlTree</renderer-type>
+          <renderer-class>net.sourceforge.myfaces.custom.tree.renderkit.html.HtmlTreeRenderer</renderer-class>
+       </renderer>
+
+       <renderer>
+          <component-family>net.sourceforge.myfaces.HtmlTree</component-family>
+          <renderer-type>net.sourceforge.myfaces.HtmlTreeImageCommandLink</renderer-type>
+          <renderer-class>net.sourceforge.myfaces.custom.tree.renderkit.html.HtmlTreeImageCommandLinkRenderer</renderer-class>
+       </renderer>
+
+       <renderer>
+          <component-family>javax.faces.Command</component-family>
+          <renderer-type>net.sourceforge.myfaces.HtmlTreeNode</renderer-type>
+          <renderer-class>net.sourceforge.myfaces.custom.tree.renderkit.html.HtmlTreeNodeRenderer</renderer-class>
+       </renderer>
+        
 
     </render-kit>
 
