@@ -17,6 +17,7 @@ package net.sourceforge.myfaces.custom.rssticker;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.UnknownHostException;
 
 import javax.faces.component.html.HtmlOutputText;
 import javax.faces.context.FacesContext;
@@ -25,6 +26,8 @@ import javax.faces.el.ValueBinding;
 import org.apache.commons.digester.rss.Channel;
 import org.apache.commons.digester.rss.Item;
 import org.apache.commons.digester.rss.RSSDigester;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.xml.sax.SAXException;
 
 
@@ -32,6 +35,9 @@ import org.xml.sax.SAXException;
  * @author mwessendorf (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.5  2004/09/15 07:27:01  mwessendorf
+ * RssTicker works now behind a firewall
+ *
  * Revision 1.4  2004/07/01 21:53:10  mwessendorf
  * ASF switch
  *
@@ -42,6 +48,7 @@ import org.xml.sax.SAXException;
  */
 public class HtmlRssTicker extends HtmlOutputText{
 	
+    private static final Log log = LogFactory.getLog(HtmlRssTicker.class);
 	public static final String COMPONENT_TYPE = "net.sourceforge.myfaces.RssTicker";
 	public static final String COMPONENT_FAMILY = "javax.faces.Output";
 	private static final String DEFAULT_RENDERER_TYPE = "net.sourceforge.myfaces.Ticker";
@@ -99,7 +106,11 @@ public class HtmlRssTicker extends HtmlOutputText{
 			
 			this._channel = (Channel)_digester.parse(string); 
 		  } catch(MalformedURLException mue){ 
-			mue.printStackTrace(); 
+			_channel = null;
+			log.warn("NO CONNECTION TO THE INTERNET. CAN NOT READ RSS-FEED");
+		  }catch (UnknownHostException uhe){
+				_channel = null;
+				log.warn("NO CONNECTION TO THE INTERNET. CAN NOT READ RSS-FEED");
 		  } catch (IOException e1) { 
 			e1.printStackTrace(); 
 		  } catch (SAXException e) { 
