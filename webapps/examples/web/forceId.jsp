@@ -64,11 +64,12 @@ managed beans used:
 			   <h:panelGrid columns="3">
 
                     <h:outputText id="forceOneOutput" value="#{example_messages['forceOne']}"/>
-                    <h:inputText id="forceOne" value="#{forceIdBean.valueOne}"/>
+                    <h:inputText required="true" id="forceOne" value="#{forceIdBean.valueOne}"/>
                     <h:message id="forceOneMessage" for="forceOne" styleClass="error" />
 
                     <h:outputText id="forceTwoOutput" value="#{example_messages['forceTwo']}"/>
-                    <x:inputText id="forceTwo" value="#{forceIdBean.valueTwo}" forceId="true"/>
+                    <x:inputText required="true" id="forceTwo" value="#{forceIdBean.valueTwo}" forceId="true"/>
+                    <h:message id="forceTwoMessage" for="forceTwo" styleClass="error" />
 
 				<h:panelGroup/>
 			  	<h:commandButton id="button" value="#{example_messages['button_submit']}" action="go_home"/>

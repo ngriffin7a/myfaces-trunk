@@ -15,13 +15,13 @@
  */
 package org.apache.myfaces.component.html.util;
 
-import org.apache.myfaces.renderkit.JSFAttr;
-import javax.faces.component.UIComponent;
 import javax.faces.component.NamingContainer;
+import javax.faces.component.UIComponent;
 import javax.faces.component.UIData;
 import javax.faces.context.FacesContext;
 import javax.faces.render.Renderer;
-import java.util.HashMap;
+
+import org.apache.myfaces.renderkit.JSFAttr;
 
 /**
  * <p>Utility class for providing basic functionality to the HTML faces 
@@ -84,35 +84,6 @@ public class HtmlComponentUtils
             if (renderer != null)
             {
                 clientId = renderer.convertClientId(context, clientId);
-            }
-            
-            /**
-             * Since components that use this utility are intended to be 
-             * rendered in HTML they should conform to the XHTML standard 
-             * which mandates that each component have a unique id.  
-             * Right now this is pretty much impossible to enforce in the 
-             * appropriate Renderer class so its being done here.
-             */
-            HashMap idMap = (HashMap)context.getViewRoot().getAttributes().get(KEY_COMPONENT_ID_MAP);
-
-            if (idMap == null)
-            {
-                idMap = new HashMap();
-                context.getViewRoot().getAttributes().put(KEY_COMPONENT_ID_MAP, idMap);
-            }
-
-            if (idMap.containsKey(clientId))
-            {
-                UIComponent mappedComponent = (UIComponent)idMap.get(clientId);
-                if (component.equals(mappedComponent))
-                {
-                    throw new IllegalArgumentException(
-                        "Duplicate cliientId not allowed.  View already contains the id: " + clientId);
-                }
-            }
-            else
-            {
-                idMap.put(clientId, component);
             }
             
             return clientId;
