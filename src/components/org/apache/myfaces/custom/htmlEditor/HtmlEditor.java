@@ -21,6 +21,7 @@ import javax.faces.el.ValueBinding;
 
 import org.apache.myfaces.component.UserRoleAware;
 import org.apache.myfaces.component.UserRoleUtils;
+import org.apache.myfaces.component.html.ext.HtmlInputText;
 
 /**
  * HTML Editor using the kupu library.
@@ -29,6 +30,9 @@ import org.apache.myfaces.component.UserRoleUtils;
  * @author Sylvain Vieujot (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.12  2004/12/09 05:16:44  svieujot
+ * Simplify by extending html.ext.HtmlInputText instead of extending UIInput and implementing UserRolesAware.
+ *
  * Revision 1.11  2004/12/08 04:36:27  svieujot
  * Cancel last *source attributes, and make style and styleClass more modular.
  *
@@ -62,7 +66,7 @@ import org.apache.myfaces.component.UserRoleUtils;
  * Revision 1.1  2004/12/02 22:28:30  svieujot
  * Add an x:htmlEditor based on the Kupu library.
  */
-public class HtmlEditor extends UIInput implements UserRoleAware {
+public class HtmlEditor extends HtmlInputText {
     public static final String COMPONENT_TYPE = "org.apache.myfaces.HtmlEditor";
 
     private static final String DEFAULT_RENDERER_TYPE = "org.apache.myfaces.HtmlEditor";
@@ -80,9 +84,6 @@ public class HtmlEditor extends UIInput implements UserRoleAware {
     private Boolean _showDebugToolBox;
     
     private Boolean _enableFlexiTools; // Formular mode
-    
-    private String _enabledOnUserRole;
-    private String _visibleOnUserRole;
 
     public HtmlEditor() {
         setRendererType(DEFAULT_RENDERER_TYPE);
@@ -93,7 +94,7 @@ public class HtmlEditor extends UIInput implements UserRoleAware {
     }
 
     public Object saveState(FacesContext context) {
-        Object values[] = new Object[6];
+        Object values[] = new Object[5];
         values[0] = super.saveState(context);
         
         String[] display = new String[2];
@@ -122,12 +123,6 @@ public class HtmlEditor extends UIInput implements UserRoleAware {
         
         values[4] = tools;
         
-        String[] roleAware = new String[2];
-        roleAware[0] = _enabledOnUserRole;
-        roleAware[1] = _visibleOnUserRole;
-        
-        values[5] = roleAware;
-        
         return values;
     }
 
@@ -152,10 +147,6 @@ public class HtmlEditor extends UIInput implements UserRoleAware {
         
         Boolean[] tools = (Boolean[]) values[4];
         _enableFlexiTools = tools[0];
-
-        String[] roleAware = (String[]) values[5];
-        _enabledOnUserRole = roleAware[0];
-        _visibleOnUserRole = roleAware[1];
     }
     
     public String getStyle(){
@@ -261,28 +252,5 @@ public class HtmlEditor extends UIInput implements UserRoleAware {
     }
     public void setEnableFlexiTools(boolean formularMode){
         this._enableFlexiTools = Boolean.valueOf(formularMode);
-    }
-    
-    public String getEnabledOnUserRole(){
-        if (_enabledOnUserRole != null) return _enabledOnUserRole;
-        ValueBinding vb = getValueBinding("enabledOnUserRole");
-        return vb != null ? (String)vb.getValue(getFacesContext()) : null;
-    }
-    public void setEnabledOnUserRole(String enabledOnUserRole){
-        _enabledOnUserRole = enabledOnUserRole;
-    }
-
-    public String getVisibleOnUserRole(){
-        if (_visibleOnUserRole != null) return _visibleOnUserRole;
-        ValueBinding vb = getValueBinding("visibleOnUserRole");
-        return vb != null ? (String)vb.getValue(getFacesContext()) : null;
-    }
-    public void setVisibleOnUserRole(String visibleOnUserRole){
-        _visibleOnUserRole = visibleOnUserRole;
-    }
-
-    public boolean isRendered(){
-        if (!UserRoleUtils.isVisibleOnUserRole(this)) return false;
-        return super.isRendered();
     }
 }
