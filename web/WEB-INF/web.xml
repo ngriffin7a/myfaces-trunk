@@ -24,6 +24,20 @@
   "http://java.sun.com/dtd/web-app_2_3.dtd">
 
 <web-app>
+
+    <!-- MyFaces Filter -->
+    <filter>
+        <filter-name>MyFaces Filter</filter-name>
+        <filter-class>net.sourceforge.myfaces.webapp.filter.MyFacesFilter</filter-class>
+    </filter>
+
+    <!-- MyFaces Filter Mapping -->
+    <filter-mapping>
+        <filter-name>MyFaces Filter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
+
     <listener>
         <listener-class>net.sourceforge.myfaces.webapp.DefaultServletContextListener</listener-class>
     </listener>
@@ -41,5 +55,12 @@
         <!--url-pattern>/faces/*</url-pattern-->
         <url-pattern>*.jsf</url-pattern>
     </servlet-mapping>
+
+
+    <welcome-file-list>
+        <welcome-file>index.jsp</welcome-file>
+        <welcome-file>index.html</welcome-file>
+    </welcome-file-list>
+
 
 </web-app>

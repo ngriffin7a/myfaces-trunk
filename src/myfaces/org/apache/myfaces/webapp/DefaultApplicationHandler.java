@@ -31,7 +31,12 @@ import javax.faces.lifecycle.ApplicationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-public class DefaultApplicationHandler
+/**
+ * TODO: description
+ * @author Manfred Geiler
+ * @version $Revision$ $Date${DATE} ${TIME} $
+ */
+ public class DefaultApplicationHandler
         implements ApplicationHandler
 {
 
