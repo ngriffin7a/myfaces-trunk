@@ -43,6 +43,9 @@ import java.util.Locale;
 
 /**
  * $Log$
+ * Revision 1.6  2004/07/28 17:13:54  tinytoony
+ * new calendar popup, revisited, global variables renamed to help with uniqueness
+ *
  * Revision 1.5  2004/07/27 16:48:02  tinytoony
  * new calendar popup, revisited
  *
@@ -79,8 +82,10 @@ public class HtmlCalendarRenderer
 
         Locale currentLocale = facesContext.getViewRoot().getLocale();
 
+        Date value = (Date) inputCalendar.getValue();
+
         Calendar timeKeeper = Calendar.getInstance(currentLocale);
-        timeKeeper.setTime((Date) inputCalendar.getValue());
+        timeKeeper.setTime(value!=null?value:new Date());
 
         DateFormatSymbols symbols = new DateFormatSymbols(currentLocale);
 
@@ -218,9 +223,9 @@ public class HtmlCalendarRenderer
     {
         StringBuffer script = new StringBuffer();
         script.append("<!--\n");
-        defineStringArray(script, "monthName", months);
-        defineStringArray(script, "dayName", weekdays);
-        setIntegerVariable(script, "startAt",firstDayOfWeek);
+        defineStringArray(script, "jscalendarMonthName", months);
+        defineStringArray(script, "jscalendarDayName", weekdays);
+        setIntegerVariable(script, "jscalendarStartAt",firstDayOfWeek);
 
         return script.toString();
     }
@@ -265,7 +270,7 @@ public class HtmlCalendarRenderer
         StringBuffer script = new StringBuffer();
         script.append("if (!document.layers) {\n");
         script.append("document.write(");
-        script.append("\"<input type='button' onclick='popUpCalendar(this,this.form.elements[\\\"");
+        script.append("\"<input type='button' onclick='jscalendarPopUpCalendar(this,this.form.elements[\\\"");
         script.append(clientId);
         script.append("\\\"],\\\"");
         script.append(dateFormat);
@@ -565,6 +570,9 @@ public class HtmlCalendarRenderer
 
         public Object getAsObject(FacesContext facesContext, UIComponent uiComponent, String s)
         {
+            if(s==null || s.trim().length()==0)
+                return null;
+
             DateFormat dateFormat = null;
 
             if(uiComponent instanceof HtmlInputCalendar && ((HtmlInputCalendar) uiComponent).isRenderAsPopup())
@@ -623,6 +631,9 @@ public class HtmlCalendarRenderer
         public String getAsString(FacesContext facesContext, UIComponent uiComponent, Object o)
         {
             Date date = (Date) o;
+
+            if(date==null)
+                return null;
 
             DateFormat dateFormat = null;
 
