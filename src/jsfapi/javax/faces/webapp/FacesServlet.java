@@ -107,6 +107,10 @@ public class FacesServlet
             {
                 throw (ServletException)e;
             }
+            else if (e.getMessage() != null)
+            {
+                throw new ServletException(e.getMessage(), e);
+            }
             else
             {
                 throw new ServletException(e);
@@ -145,11 +149,14 @@ public class FacesServlet
         }
 
          _servletConfig.getServletContext().log(msg, e);
+        e.printStackTrace();
 
         Throwable cause = e.getCause();
-        if (e != cause)
+        if (cause != null && cause != e)
         {
             logException(cause, "Root cause");
         }
     }
+
+
 }

@@ -270,7 +270,7 @@ public class ApplicationImpl
             if (log.isTraceEnabled()) log.trace("add Component class = " + componentClass +
                                                 " for type = " + componentType);
         }
-        catch (FacesException e)
+        catch (Exception e)
         {
             log.error("Component class " + componentClass + " not found", e);
         }
@@ -296,7 +296,7 @@ public class ApplicationImpl
             if (log.isTraceEnabled()) log.trace("add Converter id = " + converterId +
                     " converterClass = " + converterClass);
            }
-        catch (FacesException e)
+        catch (Exception e)
         {
             log.error("Converter class " + converterClass + " not found", e);
         }
@@ -321,7 +321,7 @@ public class ApplicationImpl
             if (log.isTraceEnabled()) log.trace("add Converter for class = " + targetClass +
                     " converterClass = " + converterClass);
         }
-        catch (FacesException e)
+        catch (Exception e)
         {
             log.error("Converter class " + converterClass + " not found", e);
         }

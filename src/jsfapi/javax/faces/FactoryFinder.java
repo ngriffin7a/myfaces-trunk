@@ -23,10 +23,10 @@ import javax.faces.context.FacesContextFactory;
 import javax.faces.lifecycle.LifecycleFactory;
 import javax.faces.render.RenderKitFactory;
 import java.lang.reflect.Constructor;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Stack;
 
 /**
  * TODO: The "META-INF/services/" thing
@@ -64,13 +64,17 @@ public class FactoryFinder
         {
             throw new IllegalStateException("no factory " + factoryName + " configured for this appliction");
         }
-        if (!(factory instanceof List))
+        else if (factory instanceof List)
+        {
+            //Not yet instantiated
+            factory = initFactory((List)factory, classLoader, factoryIdx);
+            factoryStacks[factoryIdx] = factory;
+            return factory;
+        }
+        else
         {
             return factory;
         }
-        factory = initFactory((List)factory, classLoader, factoryIdx);
-        factoryStacks[factoryIdx] = factory;
-        return factory;
     }
 
     private static Object initFactory(List factoryNames,
@@ -142,21 +146,34 @@ public class FactoryFinder
         ClassLoader classLoader = getClassLoader();
         synchronized(_classLoaderFactoriesMap)
         {
-            Stack[] factoryStacks = (Stack[])_classLoaderFactoriesMap.get(classLoader);
+            Object factory = null;
+            Object[] factoryStacks = (Object[])_classLoaderFactoriesMap.get(classLoader);
             if (factoryStacks == null)
             {
-                factoryStacks = new Stack[FACTORY_COUNT];
+                factoryStacks = new Object[FACTORY_COUNT];
                 _classLoaderFactoriesMap.put(classLoader, factoryStacks);
             }
+            else
+            {
+                factory = factoryStacks[factoryIdx];
+            }
 
-            Object factory = factoryStacks[factoryIdx];
-            if (factory instanceof List)
+            if (factory == null)
+            {
+                factory = new ArrayList();
+                ((List)factory).add(implName);
+                factoryStacks[factoryIdx] = (List)factory;
+            }
+            else if (factory instanceof List)
             {
                 ((List)factory).add(implName);
             }
-            // else do nothing
-            // Javadoc says ... This method has no effect if getFactory() has already been
-            // called looking for a factory for this factoryName.
+            else
+            {
+                // else do nothing:
+                // Javadoc says ... This method has no effect if getFactory() has already been
+                // called looking for a factory for this factoryName.
+            }
         }
     }
 
@@ -165,7 +182,7 @@ public class FactoryFinder
             throws FacesException
     {
         ClassLoader classLoader = getClassLoader();
-        Stack[] factoryStacks = (Stack[])_classLoaderFactoriesMap.get(classLoader);
+        Object[] factoryStacks = (Object[])_classLoaderFactoriesMap.get(classLoader);
         for (int i = 0; i < factoryStacks.length; i++)
         {
             factoryStacks[i] = null;

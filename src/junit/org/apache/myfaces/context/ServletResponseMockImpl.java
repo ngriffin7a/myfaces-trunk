@@ -184,4 +184,15 @@ public class ServletResponseMockImpl
     {
         _locale = locale;
     }
+
+    public String getContentType()
+    {
+        throw new UnsupportedOperationException();
+    }
+
+    public void setCharacterEncoding(String s)
+    {
+        throw new UnsupportedOperationException();
+    }
+
 }

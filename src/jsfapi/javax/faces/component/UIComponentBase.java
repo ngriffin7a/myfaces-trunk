@@ -642,6 +642,7 @@ public abstract class UIComponentBase
 
     //------------------ GENERATED CODE BEGIN (do not modify!) --------------------
 
+    private static final boolean DEFAULT_RENDERED = true;
 
     private Boolean _rendered = null;
     private String _rendererType = null;
@@ -658,7 +659,7 @@ public abstract class UIComponentBase
         if (_rendered != null) return _rendered.booleanValue();
         ValueBinding vb = getValueBinding("rendered");
         Boolean v = vb != null ? (Boolean)vb.getValue(getFacesContext()) : null;
-        return v != null ? v.booleanValue() : false;
+        return v != null ? v.booleanValue() : DEFAULT_RENDERED;
     }
 
     public void setRendererType(String rendererType)

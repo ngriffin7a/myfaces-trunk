@@ -172,13 +172,6 @@ public abstract class UIComponentTag
         setupResponseWriter();
         FacesContext facesContext = getFacesContext();
         UIComponent component = findComponent(facesContext);
-        UIComponentTag parentTag = getParentUIComponentTag(_pageContext);
-        if (parentTag != null)
-        {
-            UIComponent parent = parentTag.getComponentInstance();
-            if (parent == null) throw new NullPointerException("No component instance in parent tag");
-            parent.getChildren().add(component);    //TODO: javadoc says something about an addChild method!?
-        }
         if (!isSuppressed() && !component.getRendersChildren())
         {
             try
@@ -205,12 +198,15 @@ public abstract class UIComponentTag
 
         try
         {
-            if (component.getRendersChildren())
+            if (!isSuppressed())
             {
-                encodeBegin();
-                encodeChildren();
+                if (component.getRendersChildren())
+                {
+                    encodeBegin();
+                    encodeChildren();
+                }
+                encodeEnd();
             }
-            encodeEnd();
         }
         catch (IOException e)
         {
@@ -336,7 +332,8 @@ public abstract class UIComponentTag
         if (parentTag == null)
         {
             //This is the root
-            return context.getViewRoot();
+            _componentInstance = context.getViewRoot();
+            return _componentInstance;
         }
 
         UIComponent parent = parentTag.getComponentInstance();
@@ -483,6 +480,7 @@ public abstract class UIComponentTag
                     {
                         return (_suppressed = Boolean.TRUE).booleanValue();
                     }
+                    parent = parent.getParent();
                 }
             }
             return (_suppressed = Boolean.FALSE).booleanValue();
@@ -524,8 +522,8 @@ public abstract class UIComponentTag
             ServletRequest request = (ServletRequest)facesContext.getExternalContext().getRequest();
 
             _writer = renderKit.createResponseWriter(_pageContext.getOut(),
-                                                    request.getContentType(),
-                                                    request.getCharacterEncoding());
+                                                     request.getContentType(), //TODO: is this the correct content type?
+                                                     request.getCharacterEncoding());
             facesContext.setResponseWriter(_writer);
         }
     }

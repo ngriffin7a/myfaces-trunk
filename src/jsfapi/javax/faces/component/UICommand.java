@@ -31,6 +31,7 @@ import javax.faces.event.*;
  */
 public class UICommand
         extends UIComponentBase
+        implements ActionSource
 {
     private MethodBinding _action = null;
     private MethodBinding _actionListener = null;

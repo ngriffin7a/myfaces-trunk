@@ -91,7 +91,7 @@ public class ClassUtils
     //~ Methods ------------------------------------------------------------------------------------
 
     public static Class classForName(String type)
-    throws FacesException
+        throws FacesException
     {
         try
         {
@@ -101,6 +101,11 @@ public class ClassUtils
         {
             log.error(e.getMessage(), e);
             throw new FacesException(e);
+        }
+        catch (ExceptionInInitializerError e)
+        {
+            log.error("Error in static initializer of class " + type + ": " + e.getMessage(), e);
+            throw e;
         }
     }
 

@@ -124,8 +124,12 @@ public class JspStateManagerImpl
             {
                 TreeStructureManager tsm = new TreeStructureManager();
                 uiViewRoot = tsm.restoreTreeStructure((TreeStructureManager.TreeStructComponent)treeStructure);
+                if (log.isTraceEnabled()) log.trace("Tree structure restored from client request");
             }
-            if (log.isDebugEnabled()) log.debug("No tree structure state found in client request!");
+            else
+            {
+                if (log.isDebugEnabled()) log.debug("No tree structure state found in client request");
+            }
         }
         else
         {
@@ -136,8 +140,12 @@ public class JspStateManagerImpl
             {
                 TreeStructureManager tsm = new TreeStructureManager();
                 uiViewRoot = tsm.restoreTreeStructure((TreeStructureManager.TreeStructComponent)serializedView.getStructure());
+                if (log.isTraceEnabled()) log.trace("Tree structure restored from server session");
             }
-            if (log.isDebugEnabled()) log.debug("No tree structure state found in server session!");
+            else
+            {
+                if (log.isDebugEnabled()) log.debug("No tree structure state found in server session");
+            }
         }
 
         return uiViewRoot;

@@ -291,4 +291,24 @@ public class ServletRequestMockImpl
     {
         throw new UnsupportedOperationException();
     }
+
+    public int getRemotePort()
+    {
+        throw new UnsupportedOperationException();
+    }
+
+    public String getLocalName()
+    {
+        throw new UnsupportedOperationException();
+    }
+
+    public String getLocalAddr()
+    {
+        throw new UnsupportedOperationException();
+    }
+
+    public int getLocalPort()
+    {
+        throw new UnsupportedOperationException();
+    }
 }

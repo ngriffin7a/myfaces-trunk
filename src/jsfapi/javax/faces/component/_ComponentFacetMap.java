@@ -105,19 +105,19 @@ class _ComponentFacetMap
     {
         checkKey(key);
         checkValue(value);
-        setNewParent((UIComponent)value);
+        setNewParent((String)key, (UIComponent)value);
         return _map.put(key, value);
     }
 
 
-    private void setNewParent(UIComponent child)
+    private void setNewParent(String facetName, UIComponent facet)
     {
-        UIComponent oldParent = child.getParent();
+        UIComponent oldParent = facet.getParent();
         if (oldParent != null)
         {
-            oldParent.getChildren().remove(child);
+            oldParent.getFacets().remove(facetName);
         }
-        child.setParent(_component);
+        facet.setParent(_component);
     }
 
     private void checkKey(Object key)

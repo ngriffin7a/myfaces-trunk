@@ -102,7 +102,8 @@ public class HtmlResponseWriterImpl
 
     public static boolean supportsContentType(String contentType)
     {
-        return SUPPORTED_CONTENT_TYPES.contains(contentType);   //TODO: Match according to Section 14.1 of RFC 2616
+        //return SUPPORTED_CONTENT_TYPES.contains(contentType);   //TODO: Match according to Section 14.1 of RFC 2616
+        return true;
     }
 
     public String getContentType()

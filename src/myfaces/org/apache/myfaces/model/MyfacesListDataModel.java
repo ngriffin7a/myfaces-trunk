@@ -31,6 +31,8 @@ import java.util.List;
 /**
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
+ *
+ * @deprecated
  */
 public class MyfacesListDataModel
         extends DataModel
