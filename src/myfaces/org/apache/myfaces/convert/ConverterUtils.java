@@ -27,7 +27,6 @@ import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.convert.ConverterException;
-import java.text.DateFormat;
 
 /**
  * DOCUMENT ME!
@@ -42,11 +41,7 @@ public class ConverterUtils
     private static final String DEFAULT_CONVERTER_EXCEPTION_MSG_ID
             = "net.sourceforge.myfaces.convert.Converter.EXCEPTION";
 
-    private static final int DEFAULT_DATE_STYLE = DateFormat.SHORT;
-    private static final int DEFAULT_TIME_STYLE = DateFormat.SHORT;
-
     private ConverterUtils() {}
-
 
 
     public static int convertToInt(Object value)

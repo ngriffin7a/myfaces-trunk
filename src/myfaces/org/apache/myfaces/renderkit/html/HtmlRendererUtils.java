@@ -146,6 +146,7 @@ public class HtmlRendererUtils
             {
                 try
                 {
+                    //TODO: 
                     convertedValues[i]
                     = ConverterUtils.getAsObjectWithErrorHandling(facesContext,
                                                                   selectMany,

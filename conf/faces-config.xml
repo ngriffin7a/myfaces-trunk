@@ -260,37 +260,37 @@
 
     <converter>
         <converter-id>javax.faces.Byte</converter-id>
-        <converter-class>javax.faces.convert.impl.ByteConverter</converter-class>
+        <converter-class>javax.faces.convert.ByteConverter</converter-class>
     </converter>
 
     <converter>
         <converter-id>javax.faces.Character</converter-id>
-        <converter-class>javax.faces.convert.impl.CharacterConverter</converter-class>
+        <converter-class>javax.faces.convert.CharacterConverter</converter-class>
     </converter>
 
     <converter>
         <converter-id>javax.faces.DateTime</converter-id>
-        <converter-class>javax.faces.convert.impl.DateTimeConverter</converter-class>
+        <converter-class>javax.faces.convert.DateTimeConverter</converter-class>
     </converter>
 
     <converter>
         <converter-id>javax.faces.Double</converter-id>
-        <converter-class>javax.faces.convert.impl.DoubleConverter</converter-class>
+        <converter-class>javax.faces.convert.DoubleConverter</converter-class>
     </converter>
 
     <converter>
         <converter-id>javax.faces.Float</converter-id>
-        <converter-class>javax.faces.convert.impl.FloatConverter</converter-class>
+        <converter-class>javax.faces.convert.FloatConverter</converter-class>
     </converter>
 
     <converter>
         <converter-id>javax.faces.Integer</converter-id>
-        <converter-class>javax.faces.convert.impl.IntegerConverter</converter-class>
+        <converter-class>javax.faces.convert.IntegerConverter</converter-class>
     </converter>
 
     <converter>
         <converter-id>javax.faces.Long</converter-id>
-        <converter-class>javax.faces.convert.impl.LongConverter</converter-class>
+        <converter-class>javax.faces.convert.LongConverter</converter-class>
     </converter>
 
     <converter>
