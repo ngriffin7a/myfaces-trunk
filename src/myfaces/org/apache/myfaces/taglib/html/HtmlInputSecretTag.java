@@ -30,17 +30,17 @@ import javax.faces.component.UIComponent;
  * @author Martin Marinschek
  * @version $Revision$ $Date$
  */
-public class HtmlCommandButtonTag
+public class HtmlInputSecretTag
     extends HtmlComponentTag
 {
     public String getComponentType()
     {
-        return "CommandButton";
+        return "InputSecret";
     }
 
     public String getDefaultRendererType()
     {
-        return "Button";
+        return "Secret";
     }
 
     // UIComponent attributes --> already implemented in MyfacesComponentTag
@@ -51,22 +51,28 @@ public class HtmlCommandButtonTag
 
     // HTML event handler attributes --> already implemented in HtmlComponentTag
 
-    // HTML input attributes relevant for command-button
+    // HTML input attributes relevant for password-input
     private String _accesskey;
     private String _alt;
     private String _disabled;
+    private String _maxlength;
     private String _onblur;
     private String _onchange;
     private String _onfocus;
     private String _onselect;
+    private String _readonly;
     private String _size;
     private String _tabindex;
 
-    // UICommand attributes
-    private String _action;
+    // UIOutput attributes
+    // value and converterId --> already implemented in MyfacesComponentTag
 
-    // HTMLCommandButton attributes
-    private String _image;
+    // UIInput attributes
+    private String _required;
+    private String _validator;
+
+    // HTMLInputSecret attributes
+    private String _redisplay;
 
     protected void setProperties(UIComponent component)
     {
@@ -75,16 +81,19 @@ public class HtmlCommandButtonTag
         setStringProperty(component, HTML.ACCESSKEY_ATTR, _accesskey);
         setStringProperty(component, HTML.ALT_ATTR, _alt);
         setBooleanProperty(component, HTML.DISABLED_ATTR, _disabled);
+        setStringProperty(component, HTML.MAXLENGTH_ATTR, _maxlength);
         setStringProperty(component, HTML.ONBLUR_ATTR, _onblur);
         setStringProperty(component, HTML.ONCHANGE_ATTR, _onchange);
         setStringProperty(component, HTML.ONFOCUS_ATTR, _onfocus);
         setStringProperty(component, HTML.ONSELECT_ATTR, _onselect);
+        setBooleanProperty(component, HTML.READONLY_ATTR, _readonly);
         setStringProperty(component, HTML.SIZE_ATTR, _size);
         setStringProperty(component, HTML.TABINDEX_ATTR, _tabindex);
 
-        setStringProperty(component, JSFAttr.ACTION_ATTR, _action);
+        setBooleanProperty(component, JSFAttr.REQUIRED_ATTR, _required);
+        setStringProperty(component, JSFAttr.VALIDATOR_ATTR, _validator);
 
-        setStringProperty(component, JSFAttr.IMAGE_ATTR, _image);
+        setBooleanProperty(component, JSFAttr.REDISPLAY_ATTR, _redisplay);
    }
 
     public void setAccesskey(String accesskey)
@@ -100,6 +109,11 @@ public class HtmlCommandButtonTag
     public void setDisabled(String disabled)
     {
         _disabled = disabled;
+    }
+
+    public void setMaxlength(String maxlength)
+    {
+        _maxlength = maxlength;
     }
 
     public void setOnblur(String onblur)
@@ -122,6 +136,11 @@ public class HtmlCommandButtonTag
         _onselect = onselect;
     }
 
+    public void setReadonly(String readonly)
+    {
+        _readonly = readonly;
+    }
+
     public void setSize(String size)
     {
         _size = size;
@@ -132,13 +151,18 @@ public class HtmlCommandButtonTag
         _tabindex = tabindex;
     }
 
-    public void setAction(String action)
+    public void setRequired(String required)
     {
-        _action = action;
+        _required = required;
     }
 
-    public void setImage(String image)
+    public void setValidator(String validator)
     {
-        _image = image;
+        _validator = validator;
+    }
+
+    public void setRedisplay(String redisplay)
+    {
+        _redisplay = redisplay;
     }
 }

@@ -29,6 +29,8 @@ import java.io.Writer;
 import java.net.URLEncoder;
 import java.util.Collections;
 import java.util.Set;
+import java.util.Map;
+import java.util.HashMap;
 
 /**
  * @author Manfred Geiler (latest modification by $Author$)
@@ -43,6 +45,25 @@ public class HtmlResponseWriterImpl
     private static final String DEFAULT_CHARACTER_ENCODING = "ISO-8859-1";
     private static final Set SUPPORTED_CONTENT_TYPES
             = Collections.singleton(DEFAUL_CONTENT_TYPE);
+
+    private static final Map EMPTY_ELEMENTS = new HashMap();
+
+    static
+    {
+        EMPTY_ELEMENTS.put("area", Boolean.TRUE);
+        EMPTY_ELEMENTS.put("br", Boolean.TRUE);
+        EMPTY_ELEMENTS.put("base", Boolean.TRUE);
+        EMPTY_ELEMENTS.put("basefont", Boolean.TRUE);
+        EMPTY_ELEMENTS.put("col", Boolean.TRUE);
+        EMPTY_ELEMENTS.put("frame", Boolean.TRUE);
+        EMPTY_ELEMENTS.put("hr", Boolean.TRUE);
+        EMPTY_ELEMENTS.put("img", Boolean.TRUE);
+        EMPTY_ELEMENTS.put("input", Boolean.TRUE);
+        EMPTY_ELEMENTS.put("isindex", Boolean.TRUE);
+        EMPTY_ELEMENTS.put("link", Boolean.TRUE);
+        EMPTY_ELEMENTS.put("meta", Boolean.TRUE);
+        EMPTY_ELEMENTS.put("param", Boolean.TRUE);
+    }
 
     private Writer _writer;
     private String _contentType;
@@ -66,6 +87,11 @@ public class HtmlResponseWriterImpl
             if (log.isInfoEnabled()) log.info("No character encoding given, using default character encoding " + DEFAULT_CHARACTER_ENCODING);
             _characterEncoding = DEFAULT_CHARACTER_ENCODING;
         }
+    }
+
+    public static boolean isEmptyElement(String name)
+    {
+        return EMPTY_ELEMENTS.containsKey(name);
     }
 
     public static boolean supportsContentType(String contentType)
@@ -119,8 +145,20 @@ public class HtmlResponseWriterImpl
 
     public void endElement(String name) throws IOException
     {
-        closeStartElementIfNecessary();
-        //TODO: Do not close empty html elements such as br, input, ...
+        if(_startElementMustBeClosed)
+        {
+            boolean isEmptyElement = isEmptyElement(name);
+
+            if(isEmptyElement)
+            {
+                _writer.write(" />");
+                _startElementMustBeClosed = false;
+                return;
+            }
+            _writer.write(">");
+            _startElementMustBeClosed = false;
+        }
+
         _writer.write("</");
         _writer.write(name);
         _writer.write('>');

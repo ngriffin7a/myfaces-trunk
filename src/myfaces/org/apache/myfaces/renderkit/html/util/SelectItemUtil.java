@@ -37,9 +37,8 @@ public class SelectItemUtil
 
     public static void addSelectItems(FacesContext facesContext, UISelectItems uiSelectItems, List list)
     {
-        //FIXME
-        //Object value = uiSelectItems.currentValue(facesContext);
-        Object value = null;
+        Object value = uiSelectItems.getValue();
+
         if (value instanceof SelectItem)
         {
             list.add(value);

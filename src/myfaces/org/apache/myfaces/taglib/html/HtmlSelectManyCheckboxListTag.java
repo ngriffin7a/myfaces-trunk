@@ -20,6 +20,7 @@ package net.sourceforge.myfaces.taglib.html;
 
 import net.sourceforge.myfaces.renderkit.JSFAttr;
 import net.sourceforge.myfaces.renderkit.html.HTML;
+import net.sourceforge.myfaces.taglib.html.HtmlComponentTag;
 
 import javax.faces.component.UIComponent;
 
@@ -30,17 +31,17 @@ import javax.faces.component.UIComponent;
  * @author Martin Marinschek
  * @version $Revision$ $Date$
  */
-public class HtmlCommandButtonTag
+public class HtmlSelectManyCheckboxListTag
     extends HtmlComponentTag
 {
     public String getComponentType()
     {
-        return "CommandButton";
+        return "SelectManyCheckboxList";
     }
 
     public String getDefaultRendererType()
     {
-        return "Button";
+        return "CheckboxList";
     }
 
     // UIComponent attributes --> already implemented in MyfacesComponentTag
@@ -51,7 +52,7 @@ public class HtmlCommandButtonTag
 
     // HTML event handler attributes --> already implemented in HtmlComponentTag
 
-    // HTML input attributes relevant for command-button
+    // HTML input attributes relevant for checkbox-list
     private String _accesskey;
     private String _alt;
     private String _disabled;
@@ -59,14 +60,20 @@ public class HtmlCommandButtonTag
     private String _onchange;
     private String _onfocus;
     private String _onselect;
+    private String _readonly;
     private String _size;
     private String _tabindex;
 
-    // UICommand attributes
-    private String _action;
+    // UIInput attributes
+    private String _required;
+    private String _validator;
 
-    // HTMLCommandButton attributes
-    private String _image;
+    // UISelectMany attributes
+    //selectedValues cannot be set here, is set in JSP-parsing
+
+    // HTMLSelectManyAttributes attributes
+    private String _disabledClass;
+    private String _enabledClass;
 
     protected void setProperties(UIComponent component)
     {
@@ -79,12 +86,15 @@ public class HtmlCommandButtonTag
         setStringProperty(component, HTML.ONCHANGE_ATTR, _onchange);
         setStringProperty(component, HTML.ONFOCUS_ATTR, _onfocus);
         setStringProperty(component, HTML.ONSELECT_ATTR, _onselect);
+        setBooleanProperty(component, HTML.READONLY_ATTR, _readonly);
         setStringProperty(component, HTML.SIZE_ATTR, _size);
         setStringProperty(component, HTML.TABINDEX_ATTR, _tabindex);
 
-        setStringProperty(component, JSFAttr.ACTION_ATTR, _action);
+        setBooleanProperty(component, JSFAttr.REQUIRED_ATTR, _required);
+        setStringProperty(component, JSFAttr.VALIDATOR_ATTR, _validator);
 
-        setStringProperty(component, JSFAttr.IMAGE_ATTR, _image);
+        setStringProperty(component, JSFAttr.DISABLED_CLASS_ATTR, _disabledClass);
+        setStringProperty(component, JSFAttr.ENABLED_CLASS_ATTR, _enabledClass);
    }
 
     public void setAccesskey(String accesskey)
@@ -122,6 +132,11 @@ public class HtmlCommandButtonTag
         _onselect = onselect;
     }
 
+    public void setReadonly(String readonly)
+    {
+        _readonly = readonly;
+    }
+
     public void setSize(String size)
     {
         _size = size;
@@ -132,13 +147,23 @@ public class HtmlCommandButtonTag
         _tabindex = tabindex;
     }
 
-    public void setAction(String action)
+    public void setRequired(String required)
     {
-        _action = action;
+        _required = required;
     }
 
-    public void setImage(String image)
+    public void setValidator(String validator)
     {
-        _image = image;
+        _validator = validator;
+    }
+
+    public void setDisabledClass(String disabledClass)
+    {
+        _disabledClass = disabledClass;
+    }
+
+    public void setEnabledClass(String enabledClass)
+    {
+        _enabledClass = enabledClass;
     }
 }

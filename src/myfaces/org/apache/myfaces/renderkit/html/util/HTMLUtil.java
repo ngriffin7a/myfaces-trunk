@@ -211,9 +211,6 @@ public class HTMLUtil
             writer.writeAttribute(HTML.MULTIPLE_ATTR, HTML.MULTIPLE_ATTR, null);
         }
 
-        //close started element
-        writer.writeText(null,null);
-
         Iterator it = SelectItemUtil.getSelectItems(facesContext, uiComponent);
 
         if (it.hasNext())

@@ -18,6 +18,8 @@
  */
 package net.sourceforge.myfaces.renderkit.html.util;
 
+import java.text.CharacterIterator;
+
 
 /**
  * Converts Strings so that they can be used within HTML-Code.
@@ -54,6 +56,7 @@ public abstract class HTMLEncoder
 		{
 			return "";
 		}
+
 		StringBuffer sb = null;	//create later on demand
 		String app;
 		char c;

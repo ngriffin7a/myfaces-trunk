@@ -98,12 +98,18 @@ public class JSFAttr
     // Select_Menu Attributes
     public static final String   SIZE_ATTR                     = "size";
 
+    // SelectMany Checkbox List Attributes
+    public static final String DISABLED_CLASS_ATTR         = "disabledClass";
+    public static final String ENABLED_CLASS_ATTR          = "enabledClass";
+
     // Common Command Attributes
     /**@deprecated */
     public static final String   COMMAND_CLASS_ATTR           = "commandClass";
     public static final String   LABEL_ATTR                   = "label";
     public static final String   IMAGE_ATTR                   = "image";
     public static final String   ACTION_ATTR                 = "action";
+    public static final String   IMMEDIATE_ATTR              = "immediate";
+
 
     // Command_Button Attributes
     public static final String   TYPE_ATTR                    = "type";
@@ -142,8 +148,6 @@ public class JSFAttr
 
     // GraphicImage attributes
     public static final String URL_ATTR                    = "url";
-
-
 
     //~ Constructors -------------------------------------------------------------------------------
 

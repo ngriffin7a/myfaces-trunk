@@ -20,25 +20,21 @@ package net.sourceforge.myfaces.renderkit.html;
 
 import net.sourceforge.myfaces.renderkit.JSFAttr;
 import net.sourceforge.myfaces.renderkit.RendererUtils;
-import net.sourceforge.myfaces.renderkit.html.util.HTMLEncoder;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLUtil;
-import net.sourceforge.myfaces.renderkit.html.HtmlRenderer;
-import net.sourceforge.myfaces.renderkit.html.HTML;
-import net.sourceforge.myfaces.util.bundle.BundleUtils;
 
 import javax.faces.component.UIComponent;
-import javax.faces.component.UIOutput;
 import javax.faces.component.html.HtmlOutputLabel;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
+import javax.faces.el.ValueBinding;
 import java.io.IOException;
-import java.io.StringWriter;
 
 
 /**
  * DOCUMENT ME!
  * @author Thomas Spiegl (latest modification by $Author$)
  * @author Anton Koinov
+ * @author Martin Marinschek
  * @version $Revision$ $Date$
  */
 public class HtmlLabelRenderer
@@ -48,27 +44,20 @@ extends HtmlRenderer
     throws IOException
     {
         RendererUtils.checkParamValidity(facesContext, uiComponent, HtmlOutputLabel.class);
-
-        HtmlOutputLabel label = (HtmlOutputLabel) uiComponent;
-
         ResponseWriter writer = facesContext.getResponseWriter();
 
-        StringWriter buf = new StringWriter();
+        writer.startElement(HTML.LABEL_ELEM, uiComponent);
 
-        ResponseWriter bufWriter = writer.cloneWithWriter(writer);
+        HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML.UNIVERSAL_ATTRIBUTES);
+        HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML.EVENT_HANDLER_ATTRIBUTES);
 
-        bufWriter.startElement(HTML.LABEL_ELEM, uiComponent);
+        ValueBinding vb = uiComponent.getValueBinding(JSFAttr.VALUE_ATTR);
+        Object value = vb.getValue(facesContext);
 
-        HTMLUtil.renderHTMLAttributes(bufWriter, uiComponent, HTML.UNIVERSAL_ATTRIBUTES);
-        HTMLUtil.renderHTMLAttributes(bufWriter, uiComponent, HTML.EVENT_HANDLER_ATTRIBUTES);
-
-        bufWriter.close();
-
-        writer.write(buf.toString());
-
-        //FIXME: what should be rendered as text after the closed label?
-        //the getTitle()? or the getValue()?
-        writer.write(label.getTitle());
+        if(value != null)
+        {
+            writer.write(value.toString());
+        }
     }
 
     public void encodeEnd(FacesContext facesContext, UIComponent uiComponent)

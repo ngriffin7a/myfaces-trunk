@@ -62,11 +62,11 @@ public class HtmlGraphicImageTag
     private String _usemap;
     private String _width;
 
-    // HtmlGraphicImage attributes
-    private String _longdesc;
-
     //UIGraphic attributes
     private String _url;
+
+    // HtmlGraphicImage attributes
+    private String _longdesc;    
 
     protected void setProperties(UIComponent component)
     {

@@ -27,20 +27,19 @@ import javax.faces.component.UIComponent;
 /**
  * DOCUMENT ME!
  * @author Manfred Geiler (latest modification by $Author$)
- * @author Martin Marinschek
  * @version $Revision$ $Date$
  */
-public class HtmlCommandButtonTag
+public class HtmlInputTextareaTag
     extends HtmlComponentTag
 {
     public String getComponentType()
     {
-        return "CommandButton";
+        return "InputTextarea";
     }
 
     public String getDefaultRendererType()
     {
-        return "Button";
+        return "Textarea";
     }
 
     // UIComponent attributes --> already implemented in MyfacesComponentTag
@@ -51,22 +50,28 @@ public class HtmlCommandButtonTag
 
     // HTML event handler attributes --> already implemented in HtmlComponentTag
 
-    // HTML input attributes relevant for command-button
+    // HTML input attributes
     private String _accesskey;
     private String _alt;
+    private String _cols;
+    private String _datafld; //not in API so far
+    private String _datasrc; //not in API so far
+    private String _dataformatas; //not in API so far
     private String _disabled;
     private String _onblur;
     private String _onchange;
     private String _onfocus;
     private String _onselect;
-    private String _size;
+    private String _readonly;
+    private String _rows;
     private String _tabindex;
 
-    // UICommand attributes
-    private String _action;
+    // UIOutput attributes
+    // value and converterId --> already implemented in MyfacesComponentTag
 
-    // HTMLCommandButton attributes
-    private String _image;
+    // UIInput attributes
+    private String _required;
+    private String _validator;
 
     protected void setProperties(UIComponent component)
     {
@@ -74,18 +79,22 @@ public class HtmlCommandButtonTag
 
         setStringProperty(component, HTML.ACCESSKEY_ATTR, _accesskey);
         setStringProperty(component, HTML.ALT_ATTR, _alt);
+        setStringProperty(component, HTML.COLS_ATTR, _cols);
+        setStringProperty(component, HTML.DATAFLD_ATTR, _datafld);
+        setStringProperty(component, HTML.DATASRC_ATTR, _datasrc);
+        setStringProperty(component, HTML.DATAFORMATAS_ATTR, _dataformatas);
         setBooleanProperty(component, HTML.DISABLED_ATTR, _disabled);
         setStringProperty(component, HTML.ONBLUR_ATTR, _onblur);
         setStringProperty(component, HTML.ONCHANGE_ATTR, _onchange);
         setStringProperty(component, HTML.ONFOCUS_ATTR, _onfocus);
         setStringProperty(component, HTML.ONSELECT_ATTR, _onselect);
-        setStringProperty(component, HTML.SIZE_ATTR, _size);
+        setStringProperty(component, HTML.READONLY_ATTR, _readonly);
+        setStringProperty(component, HTML.ROWS_ATTR, _rows);
         setStringProperty(component, HTML.TABINDEX_ATTR, _tabindex);
 
-        setStringProperty(component, JSFAttr.ACTION_ATTR, _action);
-
-        setStringProperty(component, JSFAttr.IMAGE_ATTR, _image);
-   }
+        setBooleanProperty(component, JSFAttr.REQUIRED_ATTR, _required);
+        setStringProperty(component, JSFAttr.VALIDATOR_ATTR, _validator);
+    }
 
     public void setAccesskey(String accesskey)
     {
@@ -95,6 +104,26 @@ public class HtmlCommandButtonTag
     public void setAlt(String alt)
     {
         _alt = alt;
+    }
+
+    public void setCols(String cols)
+    {
+        _cols = cols;
+    }
+
+    public void setDatafld(String datafld)
+    {
+        _datafld = datafld;
+    }
+
+    public void setDatasrc(String datasrc)
+    {
+        _datasrc = datasrc;
+    }
+
+    public void setDataformatas(String dataformatas)
+    {
+        _dataformatas = dataformatas;
     }
 
     public void setDisabled(String disabled)
@@ -122,9 +151,14 @@ public class HtmlCommandButtonTag
         _onselect = onselect;
     }
 
-    public void setSize(String size)
+    public void setReadonly(String readonly)
     {
-        _size = size;
+        _readonly = readonly;
+    }
+
+    public void setRows(String rows)
+    {
+        _rows = rows;
     }
 
     public void setTabindex(String tabindex)
@@ -132,13 +166,13 @@ public class HtmlCommandButtonTag
         _tabindex = tabindex;
     }
 
-    public void setAction(String action)
+    public void setRequired(String required)
     {
-        _action = action;
+        _required = required;
     }
 
-    public void setImage(String image)
+    public void setValidator(String validator)
     {
-        _image = image;
+        _validator = validator;
     }
 }

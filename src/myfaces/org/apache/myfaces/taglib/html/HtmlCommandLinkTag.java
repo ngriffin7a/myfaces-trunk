@@ -30,17 +30,17 @@ import javax.faces.component.UIComponent;
  * @author Martin Marinschek
  * @version $Revision$ $Date$
  */
-public class HtmlCommandButtonTag
+public class HtmlCommandLinkTag
     extends HtmlComponentTag
 {
     public String getComponentType()
     {
-        return "CommandButton";
+        return "CommandLink";
     }
 
     public String getDefaultRendererType()
     {
-        return "Button";
+        return "Link";
     }
 
     // UIComponent attributes --> already implemented in MyfacesComponentTag
@@ -51,40 +51,41 @@ public class HtmlCommandButtonTag
 
     // HTML event handler attributes --> already implemented in HtmlComponentTag
 
-    // HTML input attributes relevant for command-button
+    // HTML anchor attributes relevant for command link
     private String _accesskey;
-    private String _alt;
-    private String _disabled;
+    private String _charset;
+    private String _coords;
+    private String _hreflang;
     private String _onblur;
-    private String _onchange;
     private String _onfocus;
-    private String _onselect;
-    private String _size;
+    private String _rel;
+    private String _rev;
+    private String _shape;
     private String _tabindex;
+    private String _type;
 
     // UICommand attributes
     private String _action;
-
-    // HTMLCommandButton attributes
-    private String _image;
+    private String _immediate;
 
     protected void setProperties(UIComponent component)
     {
         super.setProperties(component);
 
         setStringProperty(component, HTML.ACCESSKEY_ATTR, _accesskey);
-        setStringProperty(component, HTML.ALT_ATTR, _alt);
-        setBooleanProperty(component, HTML.DISABLED_ATTR, _disabled);
+        setStringProperty(component, HTML.CHARSET_ATTR, _charset);
+        setStringProperty(component, HTML.COORDS_ATTR, _coords);
+        setStringProperty(component, HTML.HREFLANG_ATTR, _hreflang);
         setStringProperty(component, HTML.ONBLUR_ATTR, _onblur);
-        setStringProperty(component, HTML.ONCHANGE_ATTR, _onchange);
         setStringProperty(component, HTML.ONFOCUS_ATTR, _onfocus);
-        setStringProperty(component, HTML.ONSELECT_ATTR, _onselect);
-        setStringProperty(component, HTML.SIZE_ATTR, _size);
+        setStringProperty(component, HTML.REL_ATTR, _rel);
+        setStringProperty(component, HTML.REV_ATTR, _rev);
+        setStringProperty(component, HTML.SHAPE_ATTR, _shape);
         setStringProperty(component, HTML.TABINDEX_ATTR, _tabindex);
+        setStringProperty(component, HTML.TYPE_ATTR, _type);
 
         setStringProperty(component, JSFAttr.ACTION_ATTR, _action);
-
-        setStringProperty(component, JSFAttr.IMAGE_ATTR, _image);
+        setBooleanProperty(component, JSFAttr.IMMEDIATE_ATTR, _immediate);
    }
 
     public void setAccesskey(String accesskey)
@@ -92,14 +93,19 @@ public class HtmlCommandButtonTag
         _accesskey = accesskey;
     }
 
-    public void setAlt(String alt)
+    public void setCharset(String charset)
     {
-        _alt = alt;
+        _charset = charset;
     }
 
-    public void setDisabled(String disabled)
+    public void setCoords(String coords)
     {
-        _disabled = disabled;
+        _coords = coords;
+    }
+
+    public void setHreflang(String hreflang)
+    {
+        _hreflang = hreflang;
     }
 
     public void setOnblur(String onblur)
@@ -107,24 +113,24 @@ public class HtmlCommandButtonTag
         _onblur = onblur;
     }
 
-    public void setOnchange(String onchange)
-    {
-        _onchange = onchange;
-    }
-
     public void setOnfocus(String onfocus)
     {
         _onfocus = onfocus;
     }
 
-    public void setOnselect(String onselect)
+    public void setRel(String rel)
     {
-        _onselect = onselect;
+        _rel = rel;
     }
 
-    public void setSize(String size)
+    public void setRev(String rev)
     {
-        _size = size;
+        _rev = rev;
+    }
+
+    public void setShape(String shape)
+    {
+        _shape = shape;
     }
 
     public void setTabindex(String tabindex)
@@ -132,13 +138,18 @@ public class HtmlCommandButtonTag
         _tabindex = tabindex;
     }
 
+    public void setType(String type)
+    {
+        _type = type;
+    }
+
     public void setAction(String action)
     {
         _action = action;
     }
 
-    public void setImage(String image)
+    public void setImmediate(String immediate)
     {
-        _image = image;
+        _immediate = immediate;
     }
 }

@@ -20,6 +20,7 @@ package net.sourceforge.myfaces.taglib.html;
 
 import net.sourceforge.myfaces.renderkit.JSFAttr;
 import net.sourceforge.myfaces.renderkit.html.HTML;
+import net.sourceforge.myfaces.taglib.html.HtmlComponentTag;
 
 import javax.faces.component.UIComponent;
 
@@ -30,17 +31,17 @@ import javax.faces.component.UIComponent;
  * @author Martin Marinschek
  * @version $Revision$ $Date$
  */
-public class HtmlCommandButtonTag
+public class HtmlSelectBooleanCheckboxTag
     extends HtmlComponentTag
 {
     public String getComponentType()
     {
-        return "CommandButton";
+        return "SelectBooleanCheckbox";
     }
 
     public String getDefaultRendererType()
     {
-        return "Button";
+        return "Checkbox";
     }
 
     // UIComponent attributes --> already implemented in MyfacesComponentTag
@@ -51,22 +52,26 @@ public class HtmlCommandButtonTag
 
     // HTML event handler attributes --> already implemented in HtmlComponentTag
 
-    // HTML input attributes relevant for command-button
+    // HTML input attributes relevant for checkbox-input
     private String _accesskey;
     private String _alt;
+    private String _checked;
     private String _disabled;
     private String _onblur;
     private String _onchange;
     private String _onfocus;
     private String _onselect;
+    private String _readonly;
     private String _size;
     private String _tabindex;
 
-    // UICommand attributes
-    private String _action;
 
-    // HTMLCommandButton attributes
-    private String _image;
+    // UIInput attributes
+    private String _required;
+    private String _validator;
+
+    // UISelectBoolean attributes
+    //private String _selected; //is supposedly covered by checked attribute
 
     protected void setProperties(UIComponent component)
     {
@@ -74,17 +79,18 @@ public class HtmlCommandButtonTag
 
         setStringProperty(component, HTML.ACCESSKEY_ATTR, _accesskey);
         setStringProperty(component, HTML.ALT_ATTR, _alt);
+        setBooleanProperty(component, HTML.CHECKED_ATTR, _checked);
         setBooleanProperty(component, HTML.DISABLED_ATTR, _disabled);
         setStringProperty(component, HTML.ONBLUR_ATTR, _onblur);
         setStringProperty(component, HTML.ONCHANGE_ATTR, _onchange);
         setStringProperty(component, HTML.ONFOCUS_ATTR, _onfocus);
         setStringProperty(component, HTML.ONSELECT_ATTR, _onselect);
+        setBooleanProperty(component, HTML.READONLY_ATTR, _readonly);
         setStringProperty(component, HTML.SIZE_ATTR, _size);
         setStringProperty(component, HTML.TABINDEX_ATTR, _tabindex);
 
-        setStringProperty(component, JSFAttr.ACTION_ATTR, _action);
-
-        setStringProperty(component, JSFAttr.IMAGE_ATTR, _image);
+        setBooleanProperty(component, JSFAttr.REQUIRED_ATTR, _required);
+        setStringProperty(component, JSFAttr.VALIDATOR_ATTR, _validator);
    }
 
     public void setAccesskey(String accesskey)
@@ -95,6 +101,11 @@ public class HtmlCommandButtonTag
     public void setAlt(String alt)
     {
         _alt = alt;
+    }
+
+    public void setChecked(String checked)
+    {
+        _checked = checked;
     }
 
     public void setDisabled(String disabled)
@@ -122,6 +133,11 @@ public class HtmlCommandButtonTag
         _onselect = onselect;
     }
 
+    public void setReadonly(String readonly)
+    {
+        _readonly = readonly;
+    }
+
     public void setSize(String size)
     {
         _size = size;
@@ -132,13 +148,13 @@ public class HtmlCommandButtonTag
         _tabindex = tabindex;
     }
 
-    public void setAction(String action)
+    public void setRequired(String required)
     {
-        _action = action;
+        _required = required;
     }
 
-    public void setImage(String image)
+    public void setValidator(String validator)
     {
-        _image = image;
+        _validator = validator;
     }
 }

@@ -31,8 +31,8 @@ import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 import javax.faces.context.ExternalContext;
 import javax.faces.el.ValueBinding;
+import javax.faces.model.SelectItem;
 import java.io.IOException;
-import java.io.StringWriter;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.Map;
@@ -117,25 +117,22 @@ extends HtmlRenderer
                     breakLine = true;
                 }
 
-                UISelectItem uiSelectItem = (UISelectItem) it.next();
-                String selectItemStrValue = uiSelectItem.getValue().toString();
+                SelectItem selectItem = (SelectItem) it.next();
+                String selectItemStrValue = selectItem.getValue().toString();
                 boolean checked = selectedValuesSet.contains(selectItemStrValue);
 
                 drawCheckbox(
                     facesContext,
                     uiComponent,
                     selectItemStrValue,
-                    uiSelectItem.getItemLabel(),
+                    selectItem.getLabel(),
                     checked);
             }
         }
         else if (uiComponent instanceof UISelectBoolean)
         {
-            //FIXME
-            //Boolean checked = (Boolean) ((UISelectBoolean) uiComponent).currentValue(facesContext);
-            Boolean checked = null;
+            Boolean checked = (Boolean) ((UISelectBoolean) uiComponent).getValue();
 
-            //String value = getStringValue(facesContext, (UISelectBoolean)uiComponent);
             drawCheckbox(
                 facesContext, uiComponent, "1", null,
                 (checked != null) ? checked.booleanValue() : false);
@@ -168,32 +165,25 @@ extends HtmlRenderer
 
         ResponseWriter writer = facesContext.getResponseWriter();
 
-        StringWriter buf = new StringWriter();
-        ResponseWriter inputElemWriter = writer.cloneWithWriter(buf);
-
-        inputElemWriter.startElement(HTML.INPUT_ELEM, uiComponent);
-        inputElemWriter.writeAttribute(HTML.TYPE_ATTR,HTML.INPUT_TYPE_CHECKBOX,null);
-        inputElemWriter.writeAttribute(HTML.NAME_ATTR,clientId,null);
-        inputElemWriter.writeAttribute(HTML.ID_ATTR,clientId,null);
+        writer.startElement(HTML.INPUT_ELEM, uiComponent);
+        writer.writeAttribute(HTML.TYPE_ATTR,HTML.INPUT_TYPE_CHECKBOX,null);
+        writer.writeAttribute(HTML.NAME_ATTR,clientId,null);
+        writer.writeAttribute(HTML.ID_ATTR,clientId,null);
 
         if (checked)
         {
-            inputElemWriter.writeAttribute(HTML.CHECKED_ATTR,HTML.INPUT_CHECKED_VALUE,null);
+            writer.writeAttribute(HTML.CHECKED_ATTR,HTML.INPUT_CHECKED_VALUE,null);
         }
 
         if ((value != null) && (value.length() > 0))
         {
-            inputElemWriter.writeAttribute(HTML.VALUE_ATTR,value,null);
+            writer.writeAttribute(HTML.VALUE_ATTR,value,null);
         }
 
-        HTMLUtil.renderHTMLAttributes(inputElemWriter, uiComponent, HTML.UNIVERSAL_ATTRIBUTES);
-        HTMLUtil.renderHTMLAttributes(inputElemWriter, uiComponent, HTML.EVENT_HANDLER_ATTRIBUTES);
-        HTMLUtil.renderHTMLAttributes(inputElemWriter, uiComponent, HTML.INPUT_ATTRIBUTES);
-        HTMLUtil.renderDisabledOnUserRole(inputElemWriter, uiComponent, facesContext);
-
-        inputElemWriter.close();
-
-        writer.write(buf.toString());
+        HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML.UNIVERSAL_ATTRIBUTES);
+        HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML.EVENT_HANDLER_ATTRIBUTES);
+        HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML.INPUT_ATTRIBUTES);
+        HTMLUtil.renderDisabledOnUserRole(writer, uiComponent, facesContext);
 
         if ((label != null) && (label.length() > 0))
         {

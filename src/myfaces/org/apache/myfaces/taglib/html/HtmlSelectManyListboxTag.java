@@ -30,17 +30,17 @@ import javax.faces.component.UIComponent;
  * @author Martin Marinschek
  * @version $Revision$ $Date$
  */
-public class HtmlLabelTag
+public class HtmlSelectManyListboxTag
     extends HtmlComponentTag
 {
     public String getComponentType()
     {
-        return "OutputLabel";
+        return "SelectManyListbox";
     }
 
     public String getDefaultRendererType()
     {
-        return "Label";
+        return "Listbox";
     }
 
     // UIComponent attributes --> already implemented in MyfacesComponentTag
@@ -51,33 +51,48 @@ public class HtmlLabelTag
 
     // HTML event handler attributes --> already implemented in HtmlComponentTag
 
-    // HTML label attributes
-    private String _accesskey;
+    // HTML input attributes relevant for checkbox-input
+    private String _disabled;
+    private String _name;
     private String _onblur;
+    private String _onchange;
     private String _onfocus;
+    private String _onselect;
+    private String _size;
+    private String _tabindex;
 
-    //HTMLOutputLabel attributes
-    private String _for;
+    // UIInput attributes
+    private String _required;
+    private String _validator;
 
-    // UIOutput attributes
-    private String _converter;
+    // UISelectMany attributes
+    //selectedValues cannot be set here, is set in JSP-parsing
 
     protected void setProperties(UIComponent component)
     {
         super.setProperties(component);
 
-        setStringProperty(component, HTML.ACCESSKEY_ATTR, _accesskey);
+        setBooleanProperty(component, HTML.DISABLED_ATTR, _disabled);
+        setStringProperty(component, HTML.NAME_ATTR, _name);
         setStringProperty(component, HTML.ONBLUR_ATTR, _onblur);
+        setStringProperty(component, HTML.ONCHANGE_ATTR, _onchange);
         setStringProperty(component, HTML.ONFOCUS_ATTR, _onfocus);
+        setStringProperty(component, HTML.ONSELECT_ATTR, _onselect);
+        setStringProperty(component, HTML.SIZE_ATTR, _size);
+        setStringProperty(component, HTML.TABINDEX_ATTR, _tabindex);
 
-        setStringProperty(component, JSFAttr.CONVERTER_ATTR, _converter);
-
-        setStringProperty(component, JSFAttr.FOR_ATTR, _for);
+        setBooleanProperty(component, JSFAttr.REQUIRED_ATTR, _required);
+        setStringProperty(component, JSFAttr.VALIDATOR_ATTR, _validator);
    }
 
-    public void setAccesskey(String accesskey)
+    public void setDisabled(String disabled)
     {
-        _accesskey = accesskey;
+        _disabled = disabled;
+    }
+
+    public void setName(String name)
+    {
+        _name = name;
     }
 
     public void setOnblur(String onblur)
@@ -85,18 +100,39 @@ public class HtmlLabelTag
         _onblur = onblur;
     }
 
+    public void setOnchange(String onchange)
+    {
+        _onchange = onchange;
+    }
+
     public void setOnfocus(String onfocus)
     {
         _onfocus = onfocus;
     }
 
-    public void setFor(String aFor)
+    public void setOnselect(String onselect)
     {
-        _for = aFor;
+        _onselect = onselect;
     }
 
-    public void setConverter(String converter)
+    public void setSize(String size)
     {
-        _converter = converter;
+        _size = size;
     }
+
+    public void setTabindex(String tabindex)
+    {
+        _tabindex = tabindex;
+    }
+
+    public void setRequired(String required)
+    {
+        _required = required;
+    }
+
+    public void setValidator(String validator)
+    {
+        _validator = validator;
+    }
+
 }
