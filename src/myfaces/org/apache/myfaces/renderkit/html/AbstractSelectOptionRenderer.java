@@ -35,7 +35,7 @@ import java.util.Map;
 
 /**
  * TODO: description
- * @author Thomas Spiegl (latest modification by Author)
+ * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
 public abstract class AbstractSelectOptionRenderer

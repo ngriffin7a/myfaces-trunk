@@ -28,7 +28,7 @@ import java.util.StringTokenizer;
 /**
  * TODO: Support for ',' character within StringArray?
  *
- * @author Thomas Spiegl (latest modification by Author)
+ * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
 public class StringArrayConverter
