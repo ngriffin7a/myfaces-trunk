@@ -19,7 +19,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.ResourceBundle;
@@ -42,6 +45,9 @@ import org.apache.myfaces.renderkit.html.HTML;
  * @author Sylvain Vieujot (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.23  2005/03/14 18:25:36  svieujot
+ * ExtensionsFilter : Set last modified header (and us it in the URL instead of cacheKey).
+ *
  * Revision 1.22  2005/03/14 17:49:32  svieujot
  * Cleanup.
  *
@@ -208,15 +214,26 @@ public class AddResource {
         return contextPath+RESOURCE_VIRTUAL_PATH+"/"+componentName+'/'+getCacheKey()+'/'+resourceFileName;
     }
 
-	private static String cacheKey = null;
-	private static String getCacheKey(){
-		if( cacheKey == null ){
+	private static long getCacheKey(){
+		return getLastModified(); 
+	}
+	
+	private static Date lastModified = null;
+	private static long getLastModified(){
+		if( lastModified == null ){
+			final String format = "yyyy-MM-dd HH:mm:ss Z"; // Must match the one used in the build file
 	        final String bundleName = AddResource.class.getName();
 	        ResourceBundle resources = ResourceBundle.getBundle( bundleName );
-			cacheKey = resources.getString("cacheKey");
+			String sLastModified = resources.getString("lastModified");
+			try {
+				lastModified = new SimpleDateFormat(format).parse( sLastModified );
+			} catch (ParseException e) {
+				lastModified = new Date();
+				log.error("Unparsable lastModified : "+sLastModified);
+			}
 		}
 		
-		return cacheKey; 
+		return lastModified.getTime(); 
 	}
 
     public static boolean isResourceMappedPath(HttpServletRequest request){
@@ -236,7 +253,7 @@ public class AddResource {
         int posEndComponentName = uri.indexOf("/", posStartComponentName);
         String componentName = uri.substring(posStartComponentName, posEndComponentName);
 		
-		// Skip implementation hash
+		// Skip cache key
 		int posStartResourceFileName = uri.indexOf("/", posEndComponentName+1)+1;
 
         String resourceFileName = uri.substring(posStartResourceFileName);
@@ -254,11 +271,6 @@ public class AddResource {
 
         name = name.substring( COMPONENTS_PACKAGE.length() );
 
-        /*
-        int posFirstDot = name.indexOf('.');
-        if( posFirstDot > 0 )
-            name = name.substring(0,posFirstDot);
-            */
         return name;
     }
 
@@ -307,7 +319,9 @@ public class AddResource {
             throw new IOException("Unable to find resource "+resourceFileName+" for component "+componentName+
                     ". Check that this file is available in the classpath in sub-directory /resource of the component-directory.");
         }
-        
+
+		response.setDateHeader("Last-Modified", getLastModified());
+		
 		// Set browser cache to a week.
 		// There is no risk, as the cache key is part of the URL.
 		Calendar expires = Calendar.getInstance();
