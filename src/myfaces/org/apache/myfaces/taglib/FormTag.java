@@ -19,18 +19,27 @@
 package net.sourceforge.myfaces.taglib;
 
 import net.sourceforge.myfaces.component.UIForm;
+import net.sourceforge.myfaces.component.CommonComponentAttributes;
 import net.sourceforge.myfaces.renderkit.html.FormRenderer;
+import net.sourceforge.myfaces.renderkit.attr.*;
 
 import javax.faces.component.UIComponent;
 
 
 /**
- * DOCUMENT ME!
+ * see "form" tag in myfaces_html.tld
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
 public class FormTag
     extends MyFacesTag
+    implements CommonComponentAttributes,
+               CommonRendererAttributes,
+               HTMLUniversalAttributes,
+               HTMLEventHandlerAttributes,
+               HTMLFormAttributes,
+               UserRoleAttributes,
+               FormRendererAttributes
 {
     //MyFaces tag extensions:
     public UIComponent createComponent()
@@ -43,8 +52,9 @@ public class FormTag
         return FormRenderer.TYPE;
     }
 
+    // UIComponent attributes --> already implemented in MyFacesTag
 
-    //JSF form attributes
+    // UIForm attributes
 
     public void setFormName(String v)
     {
@@ -53,40 +63,50 @@ public class FormTag
 
     public void setFormClass(String v)
     {
-        setRendererAttribute(FormRenderer.FORM_CLASS_ATTR, v);
+        setRendererAttribute(FORM_CLASS_ATTR, v);
     }
 
 
-    //HTML 4.0 form attributes
+    // HTML universal attributes --> already implemented in MyFacesTag
+
+    // HTML event handler attributes --> already implemented in MyFacesTag
+
+    // HTML form attributes
 
     public void setAccept(String value)
     {
-        setRendererAttribute(FormRenderer.ACCEPT_ATTR, value);
+        setRendererAttribute(ACCEPT_ATTR, value);
     }
 
     public void setAcceptCharset(String value)
     {
-        setRendererAttribute(FormRenderer.ACCEPT_CHARSET_ATTR, value);
+        setRendererAttribute(ACCEPT_CHARSET_ATTR, value);
     }
 
     public void setEnctype(String value)
     {
-        setRendererAttribute(FormRenderer.ENCTYPE_ATTR, value);
+        setRendererAttribute(ENCTYPE_ATTR, value);
     }
 
     public void setOnreset(String value)
     {
-        setRendererAttribute(FormRenderer.ONRESET_ATTR, value);
+        setRendererAttribute(ONRESET_ATTR, value);
     }
 
     public void setOnsubmit(String value)
     {
-        setRendererAttribute(FormRenderer.ONSUMBIT_ATTR, value);
+        setRendererAttribute(ONSUMBIT_ATTR, value);
     }
 
     public void setTarget(String value)
     {
-        setRendererAttribute(FormRenderer.TARGET_ATTR, value);
+        setRendererAttribute(TARGET_ATTR, value);
     }
+
+    // Form Renderer attributes --> no attributes yet
+
+    // key and bundle attributes --> already implemented in MyFacesTag
+
+    // user role attributes --> already implemented in MyFacesTag
 
 }

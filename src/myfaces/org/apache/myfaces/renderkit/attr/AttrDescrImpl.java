@@ -82,4 +82,26 @@ public class AttrDescrImpl
     {
         return _type;
     }
+
+
+    public boolean equals(Object o)
+    {
+        if (this == o) return true;
+        if (!(o instanceof AttrDescrImpl)) return false;
+
+        final AttrDescrImpl attrDescr = (AttrDescrImpl)o;
+
+        if (!_name.equals(attrDescr._name)) return false;
+        if (!_type.equals(attrDescr._type)) return false;
+
+        return true;
+    }
+
+    public int hashCode()
+    {
+        int result;
+        result = _name.hashCode();
+        result = 29 * result + _type.hashCode();
+        return result;
+    }
 }

@@ -19,7 +19,7 @@
 package net.sourceforge.myfaces.taglib;
 
 import net.sourceforge.myfaces.component.CommonComponentAttributes;
-import net.sourceforge.myfaces.renderkit.attr.CommonRendererAttributes;
+import net.sourceforge.myfaces.renderkit.attr.*;
 
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
@@ -35,7 +35,13 @@ import javax.servlet.jsp.tagext.Tag;
  */
 public abstract class MyFacesTag
     extends FacesTag
-    implements MyFacesTagBaseIF
+    implements MyFacesTagBaseIF,
+               CommonComponentAttributes,
+               CommonRendererAttributes,
+               HTMLUniversalAttributes,
+               HTMLEventHandlerAttributes,
+               KeyBundleAttributes,
+               UserRoleAttributes
 {
     protected MyFacesTagHelper _helper;
 
@@ -154,105 +160,6 @@ public abstract class MyFacesTag
         _helper.overrideProperties(uiComponent);
     }
 
-
-    //
-
-
-    //standard tag properties
-    public void setModelReference(String s)
-    {
-        setComponentProperty(CommonComponentAttributes.MODEL_REFERENCE_ATTR, s);
-    }
-
-    public void setConverter(Object converter)
-    {
-        setRendererAttribute(CommonRendererAttributes.CONVERTER_ATTR, converter);
-    }
-
-    /**
-     * Overwrite to make public.
-     * @param value
-     */
-    protected void setValue(Object value)
-    {
-        setComponentProperty(CommonComponentAttributes.VALUE_ATTR, value);
-    }
-
-
-    //universal tag properties
-    public void setDir(String value)
-    {
-        setRendererAttribute(CommonRendererAttributes.DIR_ATTR, value);
-    }
-
-    public void setLang(String value)
-    {
-        setRendererAttribute(CommonRendererAttributes.LANG_ATTR, value);
-    }
-
-    public void setStyle(String value)
-    {
-        setRendererAttribute(CommonRendererAttributes.STYLE_ATTR, value);
-    }
-
-    public void setTitle(String value)
-    {
-        setRendererAttribute(CommonRendererAttributes.TITLE_ATTR, value);
-    }
-
-
-    //event-hanlder attributes
-    public void setOnclick(String value)
-    {
-        setRendererAttribute(CommonRendererAttributes.ONCLICK_ATTR, value);
-    }
-
-    public void setOndblclick(String value)
-    {
-        setRendererAttribute(CommonRendererAttributes.ONDBLCLICK_ATTR, value);
-    }
-
-    public void setOnmousedown(String value)
-    {
-        setRendererAttribute(CommonRendererAttributes.ONMOUSEDOWN_ATTR, value);
-    }
-
-    public void setOnmouseup(String value)
-    {
-        setRendererAttribute(CommonRendererAttributes.ONMOUSEUP_ATTR, value);
-    }
-
-    public void setOnmouseover(String value)
-    {
-        setRendererAttribute(CommonRendererAttributes.ONMOUSEOVER_ATTR, value);
-    }
-
-    public void setOnmousemove(String value)
-    {
-        setRendererAttribute(CommonRendererAttributes.ONMOUSEMOVE_ATTR, value);
-    }
-
-    public void setOnmouseout(String value)
-    {
-        setRendererAttribute(CommonRendererAttributes.ONMOUSEOUT_ATTR, value);
-    }
-
-    public void setOnkeypress(String value)
-    {
-        setRendererAttribute(CommonRendererAttributes.ONKEYPRESS_ATTR, value);
-    }
-
-    public void setOnkeydown(String value)
-    {
-        setRendererAttribute(CommonRendererAttributes.ONKEYDOWN_ATTR, value);
-    }
-
-    public void setOnkeyup(String value)
-    {
-        setRendererAttribute(CommonRendererAttributes.ONKEYUP_ATTR, value);
-    }
-
-
     protected final UIComponent findComponent()
         throws JspException
     {
@@ -268,4 +175,151 @@ public abstract class MyFacesTag
     {
         created = b;
     }
+
+
+    /**
+     * Overwrite to make public.
+     * @param value
+     */
+    protected void setValue(Object value)
+    {
+        setComponentProperty(VALUE_ATTR, value);
+    }
+
+
+
+
+//----------------- common tag attributes -------------------------------
+
+    // UIComponent attributes
+
+    public void setId(String s)
+    {
+        super.setId(s);
+    }
+
+    public void setConverter(Object converter)
+    {
+        setRendererAttribute(CONVERTER_ATTR, converter);
+    }
+
+    public void setModelReference(String s)
+    {
+        setComponentProperty(MODEL_REFERENCE_ATTR, s);
+    }
+
+    public void setRendered(boolean rendered)
+    {
+        super.setRendered(rendered);
+    }
+
+    public void setRendered(Boolean rendered)
+    {
+        super.setRendered(rendered.booleanValue());
+    }
+
+
+    // HTML 4.0 universal attributes
+
+    public void setDir(String value)
+    {
+        setRendererAttribute(DIR_ATTR, value);
+    }
+
+    public void setLang(String value)
+    {
+        setRendererAttribute(LANG_ATTR, value);
+    }
+
+    public void setStyle(String value)
+    {
+        setRendererAttribute(STYLE_ATTR, value);
+    }
+
+    public void setTitle(String value)
+    {
+        setRendererAttribute(TITLE_ATTR, value);
+    }
+
+
+
+    // HTML 4.0 event-handler attributes
+
+    public void setOnclick(String value)
+    {
+        setRendererAttribute(ONCLICK_ATTR, value);
+    }
+
+    public void setOndblclick(String value)
+    {
+        setRendererAttribute(ONDBLCLICK_ATTR, value);
+    }
+
+    public void setOnmousedown(String value)
+    {
+        setRendererAttribute(ONMOUSEDOWN_ATTR, value);
+    }
+
+    public void setOnmouseup(String value)
+    {
+        setRendererAttribute(ONMOUSEUP_ATTR, value);
+    }
+
+    public void setOnmouseover(String value)
+    {
+        setRendererAttribute(ONMOUSEOVER_ATTR, value);
+    }
+
+    public void setOnmousemove(String value)
+    {
+        setRendererAttribute(ONMOUSEMOVE_ATTR, value);
+    }
+
+    public void setOnmouseout(String value)
+    {
+        setRendererAttribute(ONMOUSEOUT_ATTR, value);
+    }
+
+    public void setOnkeypress(String value)
+    {
+        setRendererAttribute(ONKEYPRESS_ATTR, value);
+    }
+
+    public void setOnkeydown(String value)
+    {
+        setRendererAttribute(ONKEYDOWN_ATTR, value);
+    }
+
+    public void setOnkeyup(String value)
+    {
+        setRendererAttribute(ONKEYUP_ATTR, value);
+    }
+
+
+    // key & bundle attributes
+
+    public void setKey(String v)
+    {
+        setRendererAttribute(KEY_ATTR, v);
+    }
+
+    public void setBundle(String v)
+    {
+        setRendererAttribute(BUNDLE_ATTR, v);
+    }
+
+
+
+    // MyFaces extension: user role attributes
+
+    public void setEnabledOnUserRole(String value)
+    {
+        setRendererAttribute(ENABLED_ON_USER_ROLE_ATTR, value);
+    }
+
+    public void setVisibleOnUserRole(String value)
+    {
+        setRendererAttribute(VISIBLE_ON_USER_ROLE_ATTR, value);
+    }
+
 }

@@ -19,6 +19,8 @@
 package net.sourceforge.myfaces.taglib;
 
 import net.sourceforge.myfaces.component.UIInput;
+import net.sourceforge.myfaces.renderkit.attr.HTMLInputAttributes;
+import net.sourceforge.myfaces.renderkit.attr.TextRendererAttributes;
 import net.sourceforge.myfaces.renderkit.html.TextRenderer;
 
 import javax.faces.component.UIComponent;
@@ -30,6 +32,8 @@ import javax.faces.component.UIComponent;
  */
 public class InputTextTag
     extends MyFacesTag
+    implements HTMLInputAttributes,
+               TextRendererAttributes
 {
     public UIComponent createComponent()
     {
@@ -41,91 +45,109 @@ public class InputTextTag
         return TextRenderer.TYPE;
     }
 
-    public void setInputClass(String value)
+    // UIComponent attributes --> already implemented in MyFacesTag
+
+    // UIInput attributes
+
+    public void setValue(Object v)
     {
-        setRendererAttribute(TextRenderer.INPUT_CLASS_ATTR, value);
+        super.setValue(v);
     }
+
+    public void setInputClass(String v)
+    {
+        setRendererAttribute(INPUT_CLASS_ATTR, v);
+    }
+
+    // HTML universal attributes --> already implemented in MyFacesTag
+
+    // HTML event handler attributes --> already implemented in MyFacesTag
+
+    // HTML input attributes
 
     public void setAccesskey(String value)
     {
-        setRendererAttribute(TextRenderer.ACCESSKEY_ATTR, value);
+        setRendererAttribute(ACCESSKEY_ATTR, value);
     }
 
     public void setAlign(String value)
     {
-        setRendererAttribute(TextRenderer.ALIGN_ATTR, value);
+        setRendererAttribute(ALIGN_ATTR, value);
     }
 
     public void setAlt(String value)
     {
-        setRendererAttribute(TextRenderer.ALT_ATTR, value);
+        setRendererAttribute(ALT_ATTR, value);
     }
 
     public void setDatafld(String value)
     {
-        setRendererAttribute(TextRenderer.DATAFLD_ATTR, value);
+        setRendererAttribute(DATAFLD_ATTR, value);
     }
 
     public void setDatasrc(String value)
     {
-        setRendererAttribute(TextRenderer.DATASRC_ATTR, value);
+        setRendererAttribute(DATASRC_ATTR, value);
     }
 
     public void setDataformatas(String value)
     {
-        setRendererAttribute(TextRenderer.DATAFORMATAS_ATTR, value);
+        setRendererAttribute(DATAFORMATAS_ATTR, value);
     }
 
     public void setDisabled(boolean value)
     {
-        setRendererAttribute(TextRenderer.DISABLED_ATTR, value);
+        setRendererAttribute(DISABLED_ATTR, value);
     }
 
     public void setOnblur(String value)
     {
-        setRendererAttribute(TextRenderer.ONBLUR_ATTR, value);
+        setRendererAttribute(ONBLUR_ATTR, value);
     }
 
     public void setOnchange(String value)
     {
-        setRendererAttribute(TextRenderer.ONCHANGE_ATTR, value);
+        setRendererAttribute(ONCHANGE_ATTR, value);
     }
 
     public void setOnfocus(String value)
     {
-        setRendererAttribute(TextRenderer.ONFOCUS_ATTR, value);
+        setRendererAttribute(ONFOCUS_ATTR, value);
     }
 
     public void setOnselect(String value)
     {
-        setRendererAttribute(TextRenderer.ONSELECT_ATTR, value);
+        setRendererAttribute(ONSELECT_ATTR, value);
     }
 
     public void setReadonly(boolean value)
     {
-        setRendererAttribute(TextRenderer.READONLY_ATTR, value);
+        setRendererAttribute(READONLY_ATTR, value);
     }
 
     public void setSize(String value)
     {
-        setRendererAttribute(TextRenderer.SIZE_ATTR, value);
+        setRendererAttribute(SIZE_ATTR, value);
     }
 
     public void setTabindex(int value)
     {
-        setRendererAttribute(TextRenderer.TABINDEX_ATTR, value);
+        setRendererAttribute(TABINDEX_ATTR, value);
     }
 
 
-    public void setText(String value)
+    // Text Renderer attributes
+
+    public void setMaxlength(int v)
     {
-        setValue(value);
+        setRendererAttribute(MAX_LENGTH_ATTR, v);
     }
 
-    public void setMaxlength(String value)
+    public void setMaxlength(Integer v)
     {
-        setRendererAttribute(TextRenderer.MAX_LENGTH_ATTR, value);
+        setRendererAttribute(MAX_LENGTH_ATTR, v);
     }
 
+    // user role attributes --> already implemented in MyFacesTag
 
 }

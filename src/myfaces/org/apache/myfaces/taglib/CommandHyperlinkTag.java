@@ -19,19 +19,28 @@
 package net.sourceforge.myfaces.taglib;
 
 import net.sourceforge.myfaces.component.UICommand;
+import net.sourceforge.myfaces.component.CommonComponentAttributes;
 import net.sourceforge.myfaces.renderkit.html.HyperlinkRenderer;
+import net.sourceforge.myfaces.renderkit.attr.*;
 
 import javax.faces.component.UIComponent;
 import javax.servlet.jsp.JspException;
 
 
 /**
- * DOCUMENT ME!
+ * see "command_hyperlink" tag in myfaces_html.tld
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
 public class CommandHyperlinkTag
-        extends MyFacesBodyTag
+    extends MyFacesBodyTag
+    implements CommonComponentAttributes,
+               CommonRendererAttributes,
+               HTMLUniversalAttributes,
+               HTMLEventHandlerAttributes,
+               HTMLAnchorAttributes,
+               UserRoleAttributes,
+               HyperlinkRendererAttributes
 {
     //MyFaces tag extensions:
     public UIComponent createComponent()
@@ -44,102 +53,102 @@ public class CommandHyperlinkTag
         return HyperlinkRenderer.TYPE;
     }
 
-
     //Iteration Tag support
     public int getDoAfterBodyValue() throws JspException
     {
         return super.getDoAfterBodyValue();
     }
 
+    // UIComponent attributes --> already implemented in MyFacesTag
+
+    // UICommand attributes
 
     public void setCommandName(String v)
     {
         setValue(v);
     }
 
-    public void setCommandReference(String v)
-    {
-        setComponentAttribute(UICommand.COMMAND_REFERENCE_ATTR, v);
-    }
-
-    public void setHref(String v)
-    {
-        setRendererAttribute(HyperlinkRenderer.HREF_ATTR, v);
-    }
-
     public void setCommandClass(String v)
     {
-        setRendererAttribute(HyperlinkRenderer.COMMAND_CLASS_ATTR, v);
+        setRendererAttribute(COMMAND_CLASS_ATTR, v);
     }
 
-    public void setKey(String v)
-    {
-        setRendererAttribute(HyperlinkRenderer.KEY_ATTR.getName(), v);
-    }
+    // HTML universal attributes --> already implemented in MyFacesTag
 
-    public void setBundle(String v)
-    {
-        setRendererAttribute(HyperlinkRenderer.BUNDLE_ATTR.getName(), v);
-    }
+    // HTML event handler attributes --> already implemented in MyFacesTag
 
+    // HTML anchor attributes
 
     public void setAccesskey(String value)
     {
-        setRendererAttribute(HyperlinkRenderer.ACCESSKEY_ATTR, value);
+        setRendererAttribute(ACCESSKEY_ATTR, value);
     }
 
     public void setCharset(String value)
     {
-        setRendererAttribute(HyperlinkRenderer.CHARSET_ATTR, value);
+        setRendererAttribute(CHARSET_ATTR, value);
     }
 
     public void setCoords(String value)
     {
-        setRendererAttribute(HyperlinkRenderer.COORDS_ATTR, value);
+        setRendererAttribute(COORDS_ATTR, value);
     }
 
     public void setHreflang(String value)
     {
-        setRendererAttribute(HyperlinkRenderer.HREFLANG_ATTR, value);
+        setRendererAttribute(HREFLANG_ATTR, value);
     }
 
     public void setRel(String value)
     {
-        setRendererAttribute(HyperlinkRenderer.REL_ATTR, value);
+        setRendererAttribute(REL_ATTR, value);
     }
 
     public void setRev(String value)
     {
-        setRendererAttribute(HyperlinkRenderer.REV_ATTR, value);
+        setRendererAttribute(REV_ATTR, value);
     }
 
     public void setShape(String value)
     {
-        setRendererAttribute(HyperlinkRenderer.SHAPE_ATTR, value);
+        setRendererAttribute(SHAPE_ATTR, value);
     }
 
-    public void setTabindex(String value)
+    public void setTabindex(int value)
     {
-        setRendererAttribute(HyperlinkRenderer.TABINDEX_ATTR, value);
+        setRendererAttribute(TABINDEX_ATTR, value);
     }
 
     public void setTarget(String value)
     {
-        setRendererAttribute(HyperlinkRenderer.TARGET_ATTR, value);
+        setRendererAttribute(TARGET_ATTR, value);
     }
 
     public void setType(String value)
     {
-        setRendererAttribute(HyperlinkRenderer.TYPE_ATTR, value);
+        setRendererAttribute(TYPE_ATTR, value);
     }
 
-    public void setEnabledOnUserRole(String value)
+
+
+    // Hyperlink Renderer attributes
+
+    public void setHref(String v)
     {
-        setRendererAttribute(HyperlinkRenderer.ENABLED_ON_USER_ROLE_ATTR, value);
+        setRendererAttribute(HREF_ATTR, v);
     }
 
-    public void setVisibleOnUserRole(String value)
+
+    // key and bundle attributes --> already implemented in MyFacesTag
+
+    // user role attributes --> already implemented in MyFacesTag
+
+
+
+
+    public void setCommandReference(String v)
     {
-        setRendererAttribute(HyperlinkRenderer.VISIBLE_ON_USER_ROLE_ATTR, value);
+        setComponentProperty(UICommand.COMMAND_REFERENCE_ATTR, v);
     }
+
 }

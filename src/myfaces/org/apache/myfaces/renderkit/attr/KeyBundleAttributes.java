@@ -19,20 +19,17 @@
 package net.sourceforge.myfaces.renderkit.attr;
 
 /**
- * Constant definitions for the specified render dependent attributes of the
- * "Secret" renderer type.
+ * see /tlds/entities/key_bundle_attributes.xml
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public interface SecretRendererAttributes
-    extends TextRendererAttributes
+public interface KeyBundleAttributes
 {
-    public static final String REDISPLAY_ATTR = "redisplay";
+    public static final String KEY_ATTR     = "key";
+    public static final String BUNDLE_ATTR  = "bundle";
 
-    public static final String[] INPUT_SECRET_ATTRIBUTES = {
-        INPUT_CLASS_ATTR,
-        MAX_LENGTH_ATTR,
-        REDISPLAY_ATTR
+    public static final String[] KEY_BUNDLE_ATTRIBUTES = {
+        KEY_ATTR,
+        BUNDLE_ATTR
     };
-
 }

@@ -10,13 +10,3 @@
         <attribute><name>onchange</name>    <required>false</required>  <rtexprvalue>true</rtexprvalue></attribute>
         <attribute><name>onfocus</name>     <required>false</required>  <rtexprvalue>true</rtexprvalue></attribute>
         <attribute><name>tabindex</name>    <required>false</required>  <rtexprvalue>true</rtexprvalue></attribute>
-        <attribute>
-            <name>type</name>
-            <required>false</required>
-            <rtexprvalue>false</rtexprvalue>
-            <type>java.lang.String</type>
-            <description>
-                The button type "submit" or "reset" (see JSF.7.4.1).
-                Default is "submit".
-            </description>
-        </attribute>

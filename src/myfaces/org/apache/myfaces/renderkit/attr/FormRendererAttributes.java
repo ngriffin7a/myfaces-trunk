@@ -18,29 +18,15 @@
  */
 package net.sourceforge.myfaces.renderkit.attr;
 
-import net.sourceforge.myfaces.renderkit.attr.CommonRendererAttributes;
+
 
 /**
- * DOCUMENT ME!
+ * see JSF 7.4.2
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
 public interface FormRendererAttributes
-    extends CommonRendererAttributes
 {
-    public static final String ACCEPT_ATTR = "accept";
-    public static final String ACCEPT_CHARSET_ATTR = "accept-charset";
-    public static final String ENCTYPE_ATTR = "enctype";
-    public static final String ONRESET_ATTR = "onreset";
-    public static final String ONSUMBIT_ATTR = "onsubmit";
-    public static final String TARGET_ATTR = "target";
-    public static final String[] COMMON_FORM_ATTRIBUTES =
-    {
-        ACCEPT_ATTR,
-        ACCEPT_CHARSET_ATTR,
-        ENCTYPE_ATTR,
-        ONRESET_ATTR,
-        ONSUMBIT_ATTR,
-        TARGET_ATTR,
+    public static final String[] FORM_FORM_ATTRIBUTES = {
     };
 }

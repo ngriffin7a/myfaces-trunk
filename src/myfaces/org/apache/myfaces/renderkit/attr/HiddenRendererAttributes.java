@@ -19,11 +19,12 @@
 package net.sourceforge.myfaces.renderkit.attr;
 
 /**
- * DOCUMENT ME!
+ * see JSF 7.4.4
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
 public interface HiddenRendererAttributes
-    extends CommonRendererAttributes
 {
+    public static final String[] HIDDEN_RENDERER_ATTRIBUTES = {
+    };
 }

@@ -19,8 +19,10 @@
 package net.sourceforge.myfaces.renderkit.html;
 
 import net.sourceforge.myfaces.component.UIComponentUtils;
-import net.sourceforge.myfaces.renderkit.attr.SecretRendererAttributes;
+import net.sourceforge.myfaces.component.CommonComponentAttributes;
+import net.sourceforge.myfaces.renderkit.attr.*;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLEncoder;
+import net.sourceforge.myfaces.renderkit.html.util.CommonAttributes;
 
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIInput;
@@ -35,10 +37,14 @@ import java.io.IOException;
  */
 public class SecretRenderer
         extends HTMLRenderer
-        implements SecretRendererAttributes
+    implements CommonComponentAttributes,
+               CommonRendererAttributes,
+               HTMLUniversalAttributes,
+               HTMLEventHandlerAttributes,
+               HTMLInputAttributes,
+               SecretRendererAttributes,
+               UserRoleAttributes
 {
-    public static final String REDISPLAY_ATTR = "redisplay";
-
     public static final String TYPE = "Secret";
 
     public String getRendererType()
@@ -56,6 +62,17 @@ public class SecretRenderer
         return uicomponent instanceof UIInput;
     }
 
+    protected void initAttributeDescriptors()
+    {
+        addAttributeDescriptors(UIInput.TYPE, TLD_HTML_URI, "input_secret", HTML_UNIVERSAL_ATTRIBUTES);
+        addAttributeDescriptors(UIInput.TYPE, TLD_HTML_URI, "input_secret", HTML_EVENT_HANDLER_ATTRIBUTES);
+        addAttributeDescriptors(UIInput.TYPE, TLD_HTML_URI, "input_secret", HTML_INPUT_ATTRIBUTES);
+        addAttributeDescriptors(UIInput.TYPE, TLD_HTML_URI, "input_secret", INPUT_SECRET_ATTRIBUTES);
+        addAttributeDescriptors(UIInput.TYPE, TLD_HTML_URI, "input_secret", USER_ROLE_ATTRIBUTES);
+    }
+
+
+
     public void encodeEnd(FacesContext facesContext, UIComponent uiComponent)
         throws IOException
     {
@@ -65,7 +82,7 @@ public class SecretRenderer
         writer.write(uiComponent.getClientId(facesContext));
         writer.write("\"");
         if (UIComponentUtils.getBooleanAttribute(uiComponent,
-                                                 SecretRenderer.REDISPLAY_ATTR,
+                                                 REDISPLAY_ATTR,
                                                  false))
         {
             String currentValue = getStringValue(facesContext, uiComponent);
@@ -90,6 +107,12 @@ public class SecretRenderer
             writer.write(maxLength);
             writer.write("\"");
         }
+
+        CommonAttributes.renderCssClass(writer, uiComponent, INPUT_CLASS_ATTR);
+        CommonAttributes.renderHTMLAttributes(writer, uiComponent, HTML_UNIVERSAL_ATTRIBUTES);
+        CommonAttributes.renderHTMLAttributes(writer, uiComponent, HTML_EVENT_HANDLER_ATTRIBUTES);
+        CommonAttributes.renderHTMLAttributes(writer, uiComponent, HTML_INPUT_ATTRIBUTES);
+
         writer.write(">");
     }
 

@@ -19,20 +19,34 @@
 package net.sourceforge.myfaces.renderkit.attr;
 
 /**
- * Constant definitions for the specified render dependent attributes of the
- * "Secret" renderer type.
+ * see /tlds/entities/html_img_attributes.xml
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public interface SecretRendererAttributes
-    extends TextRendererAttributes
+public interface HTMLImgAttributes
 {
-    public static final String REDISPLAY_ATTR = "redisplay";
+    public static final String ALIGN_ATTR = "align";
+    public static final String ALT_ATTR = "alt";
+    public static final String BORDER_ATTR = "border";
+    public static final String HEIGHT_ATTR = "height";
+    public static final String HSPACE_ATTR = "hspace";
+    public static final String ISMAP_ATTR = "ismap";
+    public static final String LONGDESC_ATTR = "longdesc";
+    public static final String USEMAP_ATTR = "usemap";
+    public static final String VSPACE_ATTR = "vspace";
+    public static final String WIDTH_ATTR = "width";
 
-    public static final String[] INPUT_SECRET_ATTRIBUTES = {
-        INPUT_CLASS_ATTR,
-        MAX_LENGTH_ATTR,
-        REDISPLAY_ATTR
+    public static final String[] HTML_IMG_ATTRUBUTES =
+    {
+        ALIGN_ATTR,
+        ALT_ATTR,
+        BORDER_ATTR,
+        HEIGHT_ATTR,
+        HSPACE_ATTR,
+        ISMAP_ATTR,
+        LONGDESC_ATTR,
+        USEMAP_ATTR,
+        VSPACE_ATTR,
+        WIDTH_ATTR
     };
-
 }

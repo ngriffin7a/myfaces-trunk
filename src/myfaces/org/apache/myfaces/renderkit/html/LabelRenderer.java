@@ -18,16 +18,15 @@
  */
 package net.sourceforge.myfaces.renderkit.html;
 
-import net.sourceforge.myfaces.renderkit.attr.LabelRendererAttributes;
-import net.sourceforge.myfaces.renderkit.attr.TextRendererAttributes;
+import net.sourceforge.myfaces.renderkit.attr.*;
 import net.sourceforge.myfaces.renderkit.html.util.CommonAttributes;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLEncoder;
 import net.sourceforge.myfaces.util.bundle.BundleUtils;
 
-import javax.faces.component.UIComponent;
-import javax.faces.component.UIOutput;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
+import javax.faces.component.UIOutput;
+import javax.faces.component.UIComponent;
 import java.io.IOException;
 
 /**
@@ -37,7 +36,11 @@ import java.io.IOException;
  */
 public class LabelRenderer
     extends HTMLRenderer
-    implements LabelRendererAttributes
+    implements CommonRendererAttributes,
+               HTMLUniversalAttributes,
+               HTMLEventHandlerAttributes,
+               LabelRendererAttributes,
+               UserRoleAttributes
 {
     public static final String TYPE = "Label";
 
@@ -54,7 +57,7 @@ public class LabelRenderer
 
     public boolean supportsComponentType(UIComponent component)
     {
-        return component instanceof UIComponent;
+        return component instanceof UIOutput;
     }
 
     public boolean supportsComponentType(String s)
@@ -67,9 +70,11 @@ public class LabelRenderer
     {
         ResponseWriter writer = facesContext.getResponseWriter();
         writer.write("<label");
-        CommonAttributes.renderHTMLEventHandlerAttributes(facesContext, uiComponent);
-        CommonAttributes.renderUniversalHTMLAttributes(facesContext, uiComponent);
-        CommonAttributes.renderAttributes(facesContext, uiComponent, TextRendererAttributes.COMMON_TEXT_ATTRIBUTES);
+
+        CommonAttributes.renderCssClass(writer, uiComponent, OUTPUT_CLASS_ATTR);
+        CommonAttributes.renderHTMLAttributes(writer, uiComponent, HTML_UNIVERSAL_ATTRIBUTES);
+        CommonAttributes.renderHTMLAttributes(writer, uiComponent, HTML_EVENT_HANDLER_ATTRIBUTES);
+
         writer.write(">");
 
         String text;

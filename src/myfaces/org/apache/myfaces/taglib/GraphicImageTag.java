@@ -19,18 +19,27 @@
 package net.sourceforge.myfaces.taglib;
 
 import net.sourceforge.myfaces.component.UIGraphic;
+import net.sourceforge.myfaces.component.CommonComponentAttributes;
 import net.sourceforge.myfaces.renderkit.html.ImageRenderer;
+import net.sourceforge.myfaces.renderkit.attr.*;
 
 import javax.faces.component.UIComponent;
 
 
 /**
- * DOCUMENT ME!
+ * see "graphic_image" tag in myfaces_html.tld
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
 public class GraphicImageTag
     extends MyFacesTag
+    implements CommonComponentAttributes,
+               CommonRendererAttributes,
+               HTMLUniversalAttributes,
+               HTMLEventHandlerAttributes,
+               HTMLImgAttributes,
+               UserRoleAttributes,
+               ImageRendererAttributes
 {
     public UIComponent createComponent()
     {
@@ -42,78 +51,93 @@ public class GraphicImageTag
         return ImageRenderer.TYPE;
     }
 
+    // UIComponent attributes --> already implemented in MyFacesTag
+
+    // UIGraphic attributes
+
     public void setUrl(String value)
     {
         setComponentProperty(UIGraphic.URL_ATTR, value);
     }
 
-    public void setKey(String value)
+    public void setGraphicClass(String v)
     {
-        setRendererAttribute(ImageRenderer.KEY_ATTR, value);
+        setRendererAttribute(GRAPHIC_CLASS_ATTR, v);
     }
 
-    public void setBundle(String value)
+    // HTML universal attributes --> already implemented in MyFacesTag
+
+    // HTML event handler attributes --> already implemented in MyFacesTag
+
+    // HTML img attributes
+
+    public void setAlign(String value)
     {
-        setRendererAttribute(ImageRenderer.BUNDLE_ATTR, value);
+        setRendererAttribute(ALIGN_ATTR, value);
     }
 
     public void setAlt(String value)
     {
-        setRendererAttribute("alt", value);
-    }
-
-    public void setAltKey(String value)
-    {
-        setRendererAttribute(ImageRenderer.ALT_KEY_ATTR, value);
-    }
-
-    public void setAltBundle(String value)
-    {
-        setRendererAttribute(ImageRenderer.ALT_BUNDLE_ATTR, value);
-    }
-
-    public void setAlign(String value)
-    {
-        setRendererAttribute(ImageRenderer.ALIGN_ATTR, value);
+        setRendererAttribute(ALT_ATTR, value);
     }
 
     public void setBorder(String value)
     {
-        setRendererAttribute(ImageRenderer.BORDER_ATTR, value);
+        setRendererAttribute(BORDER_ATTR, value);
     }
 
     public void setHeight(String value)
     {
-        setRendererAttribute(ImageRenderer.HEIGHT_ATTR, value);
+        setRendererAttribute(HEIGHT_ATTR, value);
     }
 
     public void setHspace(String value)
     {
-        setRendererAttribute(ImageRenderer.HSPACE_ATTR, value);
+        setRendererAttribute(HSPACE_ATTR, value);
     }
 
     public void setIsmap(String value)
     {
-        setRendererAttribute(ImageRenderer.ISMAP_ATTR, value);
+        setRendererAttribute(ISMAP_ATTR, value);
     }
 
     public void setLongdesc(String value)
     {
-        setRendererAttribute(ImageRenderer.LONGDESC_ATTR, value);
+        setRendererAttribute(LONGDESC_ATTR, value);
     }
 
     public void setUsemap(String value)
     {
-        setRendererAttribute(ImageRenderer.USEMAP_ATTR, value);
+        setRendererAttribute(USEMAP_ATTR, value);
     }
 
     public void setVspace(String value)
     {
-        setRendererAttribute(ImageRenderer.VSPACE_ATTR, value);
+        setRendererAttribute(VSPACE_ATTR, value);
     }
 
     public void setWidth(String value)
     {
-        setRendererAttribute(ImageRenderer.WIDTH_ATTR, value);
+        setRendererAttribute(WIDTH_ATTR, value);
     }
+
+
+
+    // Image Renderer attributes
+
+    public void setAltKey(String value)
+    {
+        setRendererAttribute(ALT_KEY_ATTR, value);
+    }
+
+    public void setAltBundle(String value)
+    {
+        setRendererAttribute(ALT_BUNDLE_ATTR, value);
+    }
+
+
+    // key and bundle attributes --> already implemented in MyFacesTag
+
+    // user role attributes --> already implemented in MyFacesTag
+
 }

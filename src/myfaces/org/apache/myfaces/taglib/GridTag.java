@@ -54,7 +54,7 @@ public class GridTag
 
     public void setCssClass(String value)
     {
-        setRendererAttribute(GridRenderer.PANEL_CLASS_ATTR.getName(), value);
+        setRendererAttribute(GridRenderer.PANEL_CLASS_ATTR, value);
     }
 
     public void setColumnClasses(String value)

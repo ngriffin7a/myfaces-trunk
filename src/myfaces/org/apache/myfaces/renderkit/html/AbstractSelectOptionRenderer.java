@@ -62,7 +62,7 @@ public abstract class AbstractSelectOptionRenderer
             writer.write("\"");
 
             CommonAttributes.renderHTMLEventHandlerAttributes(facesContext, uiComponent);
-            CommonAttributes.renderUniversalHTMLAttributes(facesContext, uiComponent);
+            CommonAttributes.renderHTMLUniversalAttributes(facesContext, uiComponent);
             if (rendererType.equals(ListboxRenderer.TYPE))
             {
                 writer.write(" size=\"");

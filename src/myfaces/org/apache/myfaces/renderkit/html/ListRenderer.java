@@ -127,7 +127,7 @@ public class ListRenderer
         {
             pushListComponent(context, uicomponent);
             writer.write("<table");
-            String style = (String)uicomponent.getAttribute(PANEL_CLASS_ATTR.getName());
+            String style = (String)uicomponent.getAttribute(PANEL_CLASS_ATTR);
             if (style != null && style.length() > 0)
             {
                 writer.write(" class=\"");

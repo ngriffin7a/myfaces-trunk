@@ -21,9 +21,9 @@ package net.sourceforge.myfaces.renderkit.html;
 import net.sourceforge.myfaces.MyFacesFactoryFinder;
 import net.sourceforge.myfaces.component.UIComponentUtils;
 import net.sourceforge.myfaces.component.UIParameter;
+import net.sourceforge.myfaces.component.CommonComponentAttributes;
 import net.sourceforge.myfaces.convert.ConverterUtils;
-import net.sourceforge.myfaces.renderkit.attr.CommonRendererAttributes;
-import net.sourceforge.myfaces.renderkit.attr.HyperlinkRendererAttributes;
+import net.sourceforge.myfaces.renderkit.attr.*;
 import net.sourceforge.myfaces.renderkit.html.state.StateRenderer;
 import net.sourceforge.myfaces.renderkit.html.util.CommonAttributes;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLEncoder;
@@ -62,8 +62,14 @@ import java.util.Iterator;
  * @version $Revision$ $Date$
  */
 public class HyperlinkRenderer
-        extends HTMLRenderer
-        implements HyperlinkRendererAttributes
+    extends HTMLRenderer
+    implements CommonComponentAttributes,
+               CommonRendererAttributes,
+               HTMLUniversalAttributes,
+               HTMLEventHandlerAttributes,
+               HTMLAnchorAttributes,
+               HyperlinkRendererAttributes,
+               UserRoleAttributes
 {
     public static final String TYPE = "Hyperlink";
 
@@ -74,11 +80,25 @@ public class HyperlinkRenderer
         return TYPE;
     }
 
-    public HyperlinkRenderer()
+    public boolean supportsComponentType(String s)
     {
-        addAttributeDescriptor(UICommand.TYPE, KEY_ATTR);
-        addAttributeDescriptor(UICommand.TYPE, BUNDLE_ATTR);
+        return s.equals(UICommand.TYPE);
     }
+
+    public boolean supportsComponentType(UIComponent uiComponent)
+    {
+        return uiComponent instanceof javax.faces.component.UICommand;
+    }
+
+    protected void initAttributeDescriptors()
+    {
+        addAttributeDescriptors(UICommand.TYPE, TLD_HTML_URI, "command_hyperlink", HTML_UNIVERSAL_ATTRIBUTES);
+        addAttributeDescriptors(UICommand.TYPE, TLD_HTML_URI, "command_hyperlink", HTML_EVENT_HANDLER_ATTRIBUTES);
+        addAttributeDescriptors(UICommand.TYPE, TLD_HTML_URI, "command_hyperlink", HTML_ANCHOR_ATTRIBUTES);
+        addAttributeDescriptors(UICommand.TYPE, TLD_HTML_URI, "command_hyperlink", COMMAND_HYPERLINK_ATTRIBUTES);
+        addAttributeDescriptors(UICommand.TYPE, TLD_HTML_URI, "command_hyperlink", USER_ROLE_ATTRIBUTES);
+    }
+
 
     public void decode(FacesContext facesContext, UIComponent uiComponent) throws IOException
     {
@@ -156,7 +176,7 @@ public class HyperlinkRenderer
             }
             else
             {
-                Object converterAttr = uiParameter.getAttribute(CommonRendererAttributes.CONVERTER_ATTR);
+                Object converterAttr = uiParameter.getAttribute(CONVERTER_ATTR);
                 if (converterAttr != null)
                 {
                     if (converterAttr instanceof Converter)
@@ -275,27 +295,19 @@ public class HyperlinkRenderer
 
         writer.write("\"");
 
-        //css class:
-        String cssClass = (String)uiComponent.getAttribute(COMMAND_CLASS_ATTR);
-        if (cssClass != null)
-        {
-            writer.write(" class=\"");
-            writer.write(cssClass);
-            writer.write("\"");
-        }
-
-        CommonAttributes.renderHTMLEventHandlerAttributes(facesContext, uiComponent);
-        CommonAttributes.renderUniversalHTMLAttributes(facesContext, uiComponent);
-        CommonAttributes.renderAttributes(facesContext, uiComponent, HyperlinkRendererAttributes.COMMON_HYPERLINK_ATTRIBUTES);
+        CommonAttributes.renderCssClass(writer, uiComponent, COMMAND_CLASS_ATTR);
+        CommonAttributes.renderHTMLAttributes(writer, uiComponent, HTML_UNIVERSAL_ATTRIBUTES);
+        CommonAttributes.renderHTMLAttributes(writer, uiComponent, HTML_EVENT_HANDLER_ATTRIBUTES);
+        CommonAttributes.renderHTMLAttributes(writer, uiComponent, HTML_ANCHOR_ATTRIBUTES);
 
         writer.write(">");
 
         //write link text
-        String key = (String)uiComponent.getAttribute(KEY_ATTR.getName());
+        String key = (String)uiComponent.getAttribute(KEY_ATTR);
         if (key != null)
         {
             String text = BundleUtils.getString(facesContext,
-                                                (String)uiComponent.getAttribute(BUNDLE_ATTR.getName()),
+                                                (String)uiComponent.getAttribute(BUNDLE_ATTR),
                                                 key);
             writer.write(HTMLEncoder.encode(text, true, true));
         }
@@ -333,7 +345,7 @@ public class HyperlinkRenderer
                     String strValue = conv.getAsString(facesContext, uiParameter, objValue);
                     writer.write(urlEncode(strValue));
 
-                    if (uiParameter.getAttribute(CommonRendererAttributes.CONVERTER_ATTR) == null)
+                    if (uiParameter.getAttribute(CONVERTER_ATTR) == null)
                     {
                         //send type of parameter
                         writer.write('&');
@@ -354,14 +366,4 @@ public class HyperlinkRenderer
         }
     }
 
-
-    public boolean supportsComponentType(String s)
-    {
-        return s.equals(UICommand.TYPE);
-    }
-
-    public boolean supportsComponentType(UIComponent uiComponent)
-    {
-        return uiComponent instanceof javax.faces.component.UICommand;
-    }
 }

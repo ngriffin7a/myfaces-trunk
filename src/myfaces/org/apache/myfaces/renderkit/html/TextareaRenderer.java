@@ -18,13 +18,13 @@
  */
 package net.sourceforge.myfaces.renderkit.html;
 
-import net.sourceforge.myfaces.renderkit.attr.TextareaRendererAttributes;
+import net.sourceforge.myfaces.component.CommonComponentAttributes;
+import net.sourceforge.myfaces.renderkit.attr.*;
 import net.sourceforge.myfaces.renderkit.html.util.CommonAttributes;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLEncoder;
 
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIInput;
-import javax.faces.component.UIOutput;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 import java.io.IOException;
@@ -35,8 +35,14 @@ import java.io.IOException;
  * @version $Revision$ $Date$
  */
 public class TextareaRenderer
-        extends HTMLRenderer
-        implements TextareaRendererAttributes
+    extends HTMLRenderer
+    implements CommonComponentAttributes,
+               CommonRendererAttributes,
+               HTMLUniversalAttributes,
+               HTMLEventHandlerAttributes,
+               HTMLTextareaAttributes,
+               TextareaRendererAttributes,
+               UserRoleAttributes
 {
     public static final String TYPE = "Textarea";
 
@@ -47,14 +53,24 @@ public class TextareaRenderer
 
     public boolean supportsComponentType(String s)
     {
-        return s.equals(UIInput.TYPE) || s.equals(UIOutput.TYPE);
+        return s.equals(UIInput.TYPE);
     }
 
     public boolean supportsComponentType(UIComponent uicomponent)
     {
-        return uicomponent instanceof UIInput ||
-               uicomponent instanceof UIOutput;
+        return uicomponent instanceof UIInput;
     }
+
+    protected void initAttributeDescriptors()
+    {
+        addAttributeDescriptors(UIInput.TYPE, TLD_HTML_URI, "input_text", HTML_UNIVERSAL_ATTRIBUTES);
+        addAttributeDescriptors(UIInput.TYPE, TLD_HTML_URI, "input_text", HTML_EVENT_HANDLER_ATTRIBUTES);
+        addAttributeDescriptors(UIInput.TYPE, TLD_HTML_URI, "input_text", HTML_TEXTAREA_ATTRIBUTES);
+        addAttributeDescriptors(UIInput.TYPE, TLD_HTML_URI, "input_text", INPUT_TEXTAREA_ATTRIBUTES);
+        addAttributeDescriptors(UIInput.TYPE, TLD_HTML_URI, "input_text", USER_ROLE_ATTRIBUTES);
+    }
+
+
 
     public void encodeEnd(FacesContext facesContext, UIComponent uiComponent)
         throws IOException
@@ -68,16 +84,12 @@ public class TextareaRenderer
         writer.write(" id=\"");
         writer.write(coumpoundId);
         writer.write("\"");
-        String css = (String)uiComponent.getAttribute(INPUT_CLASS_ATTR);
-        if (css != null)
-        {
-            writer.write(" class=\"");
-            writer.write(css);
-            writer.write("\"");
-        }
-        CommonAttributes.renderHTMLEventHandlerAttributes(facesContext, uiComponent);
-        CommonAttributes.renderUniversalHTMLAttributes(facesContext, uiComponent);
-        CommonAttributes.renderAttributes(facesContext, uiComponent, TextareaRendererAttributes.COMMON_TEXTAREA_ATTRIBUTES);
+
+        CommonAttributes.renderCssClass(writer, uiComponent, INPUT_CLASS_ATTR);
+        CommonAttributes.renderHTMLAttributes(writer, uiComponent, HTML_UNIVERSAL_ATTRIBUTES);
+        CommonAttributes.renderHTMLAttributes(writer, uiComponent, HTML_EVENT_HANDLER_ATTRIBUTES);
+        CommonAttributes.renderHTMLAttributes(writer, uiComponent, HTML_TEXTAREA_ATTRIBUTES);
+
         writer.write(">");
         String currentValue = getStringValue(facesContext, uiComponent);
         if (currentValue != null)

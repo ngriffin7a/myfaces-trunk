@@ -19,7 +19,7 @@
 package net.sourceforge.myfaces.taglib;
 
 import net.sourceforge.myfaces.component.CommonComponentAttributes;
-import net.sourceforge.myfaces.renderkit.attr.CommonRendererAttributes;
+import net.sourceforge.myfaces.renderkit.attr.*;
 
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
@@ -39,7 +39,13 @@ import javax.servlet.jsp.tagext.Tag;
  */
 public abstract class MyFacesBodyTag
     extends FacesBodyTag
-    implements MyFacesTagBaseIF
+    implements MyFacesTagBaseIF,
+               CommonComponentAttributes,
+               CommonRendererAttributes,
+               HTMLUniversalAttributes,
+               HTMLEventHandlerAttributes,
+               KeyBundleAttributes,
+               UserRoleAttributes
 {
     public static final String BODY_CONTENT_ATTR
         = MyFacesBodyTag.class.getName() + ".BODY_CONTENT";
@@ -90,6 +96,13 @@ public abstract class MyFacesBodyTag
     }
 
 
+    //Iteration Tag support
+    public int getDoAfterBodyValue() throws JspException
+    {
+        return Tag.SKIP_BODY;
+    }
+
+
     //subclass helpers
     public void setPageContext(PageContext pageContext)
     {
@@ -109,12 +122,12 @@ public abstract class MyFacesBodyTag
 
 
     //property helpers
-    protected void setComponentAttribute(String attrName, Object attrValue)
+    protected void setComponentProperty(String attrName, Object attrValue)
     {
         _helper.setComponentProperty(attrName, attrValue);
     }
 
-    protected void setComponentAttribute(String attrName, boolean attrValue)
+    protected void setComponentProperty(String attrName, boolean attrValue)
     {
         _helper.setComponentProperty(attrName, attrValue);
     }
@@ -129,35 +142,16 @@ public abstract class MyFacesBodyTag
         _helper.setRendererAttribute(attrName, attrValue);
     }
 
+    protected void setRendererAttribute(String attrName, int attrValue)
+    {
+        _helper.setRendererAttribute(attrName, attrValue);
+    }
+
     public void overrideProperties(UIComponent uiComponent)
     {
         super.overrideProperties(uiComponent);
         _helper.overrideProperties(uiComponent);
     }
-
-
-    //standard tag properties
-    public void setModelReference(String s)
-    {
-        setComponentAttribute(CommonComponentAttributes.MODEL_REFERENCE_ATTR, s);
-    }
-
-    public void setValue(Object value)
-    {
-        setComponentAttribute(CommonComponentAttributes.VALUE_ATTR, value);
-    }
-
-    public void setConverter(Object converter)
-    {
-        setRendererAttribute(CommonRendererAttributes.CONVERTER_ATTR, converter);
-    }
-
-    //Iteration Tag support
-    public int getDoAfterBodyValue() throws JspException
-    {
-        return Tag.SKIP_BODY;
-    }
-
 
     protected final UIComponent findComponent()
         throws JspException
@@ -174,4 +168,150 @@ public abstract class MyFacesBodyTag
     {
         created = b;
     }
+
+    /**
+     * Overwrite to make public.
+     * @param value
+     */
+    protected void setValue(Object value)
+    {
+        setComponentProperty(CommonComponentAttributes.VALUE_ATTR, value);
+    }
+
+
+
+
+//----------------- common tag attributes -------------------------------
+
+    // UIComponent attributes
+
+    public void setId(String s)
+    {
+        super.setId(s);
+    }
+
+    public void setConverter(Object converter)
+    {
+        setRendererAttribute(CONVERTER_ATTR, converter);
+    }
+
+    public void setModelReference(String s)
+    {
+        setComponentProperty(MODEL_REFERENCE_ATTR, s);
+    }
+
+    public void setRendered(boolean rendered)
+    {
+        super.setRendered(rendered);
+    }
+
+    public void setRendered(Boolean rendered)
+    {
+        super.setRendered(rendered.booleanValue());
+    }
+
+
+    // HTML 4.0 universal attributes
+
+    public void setDir(String value)
+    {
+        setRendererAttribute(DIR_ATTR, value);
+    }
+
+    public void setLang(String value)
+    {
+        setRendererAttribute(LANG_ATTR, value);
+    }
+
+    public void setStyle(String value)
+    {
+        setRendererAttribute(STYLE_ATTR, value);
+    }
+
+    public void setTitle(String value)
+    {
+        setRendererAttribute(TITLE_ATTR, value);
+    }
+
+
+
+    // HTML 4.0 event-handler attributes
+
+    public void setOnclick(String value)
+    {
+        setRendererAttribute(ONCLICK_ATTR, value);
+    }
+
+    public void setOndblclick(String value)
+    {
+        setRendererAttribute(ONDBLCLICK_ATTR, value);
+    }
+
+    public void setOnmousedown(String value)
+    {
+        setRendererAttribute(ONMOUSEDOWN_ATTR, value);
+    }
+
+    public void setOnmouseup(String value)
+    {
+        setRendererAttribute(ONMOUSEUP_ATTR, value);
+    }
+
+    public void setOnmouseover(String value)
+    {
+        setRendererAttribute(ONMOUSEOVER_ATTR, value);
+    }
+
+    public void setOnmousemove(String value)
+    {
+        setRendererAttribute(ONMOUSEMOVE_ATTR, value);
+    }
+
+    public void setOnmouseout(String value)
+    {
+        setRendererAttribute(ONMOUSEOUT_ATTR, value);
+    }
+
+    public void setOnkeypress(String value)
+    {
+        setRendererAttribute(ONKEYPRESS_ATTR, value);
+    }
+
+    public void setOnkeydown(String value)
+    {
+        setRendererAttribute(ONKEYDOWN_ATTR, value);
+    }
+
+    public void setOnkeyup(String value)
+    {
+        setRendererAttribute(ONKEYUP_ATTR, value);
+    }
+
+
+    // key & bundle attributes
+
+    public void setKey(String v)
+    {
+        setRendererAttribute(KEY_ATTR, v);
+    }
+
+    public void setBundle(String v)
+    {
+        setRendererAttribute(BUNDLE_ATTR, v);
+    }
+
+
+
+    // MyFaces extension: user role attributes
+
+    public void setEnabledOnUserRole(String value)
+    {
+        setRendererAttribute(ENABLED_ON_USER_ROLE_ATTR, value);
+    }
+
+    public void setVisibleOnUserRole(String value)
+    {
+        setRendererAttribute(VISIBLE_ON_USER_ROLE_ATTR, value);
+    }
+
 }

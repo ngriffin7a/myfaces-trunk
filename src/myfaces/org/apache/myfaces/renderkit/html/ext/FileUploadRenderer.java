@@ -21,7 +21,7 @@ package net.sourceforge.myfaces.renderkit.html.ext;
 import com.oreilly.servlet.MultipartWrapper;
 import net.sourceforge.myfaces.component.ext.UIFileUpload;
 import net.sourceforge.myfaces.component.ext.UploadedFile;
-import net.sourceforge.myfaces.renderkit.attr.TextRendererAttributes;
+import net.sourceforge.myfaces.renderkit.attr.*;
 import net.sourceforge.myfaces.renderkit.attr.ext.FileUploadRendererAttributes;
 import net.sourceforge.myfaces.renderkit.html.HTMLRenderer;
 import net.sourceforge.myfaces.renderkit.html.util.CommonAttributes;
@@ -41,8 +41,13 @@ import java.io.IOException;
  * @version $Revision$ $Date$
  */
 public class FileUploadRenderer
-        extends HTMLRenderer
-        implements FileUploadRendererAttributes
+    extends HTMLRenderer
+    implements CommonRendererAttributes,
+               HTMLUniversalAttributes,
+               HTMLEventHandlerAttributes,
+               HTMLInputAttributes,
+               FileUploadRendererAttributes,
+               UserRoleAttributes
 {
     public static final String TYPE = "FileUpload";
 
@@ -136,10 +141,13 @@ public class FileUploadRenderer
             writer.write(css);
             writer.write("\"");
         }
-        CommonAttributes.renderHTMLEventHandlerAttributes(facesContext, uiComponent);
-        CommonAttributes.renderUniversalHTMLAttributes(facesContext, uiComponent);
-        CommonAttributes.renderAttributes(facesContext, uiComponent, TextRendererAttributes.COMMON_TEXT_ATTRIBUTES);
-        CommonAttributes.renderAttributes(facesContext, uiComponent, FileUploadRendererAttributes.COMMON_FILE_UPLOAD_ATTRIBUTES);
+
+        //TODO: CommonAttributes.renderCssClass(writer, uiComponent, FILE_UPLOAD_CLASS_ATTR);
+        CommonAttributes.renderHTMLAttributes(writer, uiComponent, HTML_UNIVERSAL_ATTRIBUTES);
+        CommonAttributes.renderHTMLAttributes(writer, uiComponent, HTML_EVENT_HANDLER_ATTRIBUTES);
+        CommonAttributes.renderHTMLAttributes(writer, uiComponent, HTML_INPUT_ATTRIBUTES);
+        //TODO: HTML file upload input
+
         writer.write(">");
     }
 

@@ -165,7 +165,7 @@ public class GridRenderer
         ResponseWriter writer = context.getResponseWriter();
 
         writer.write("<table");
-        String style = (String)uiComponent.getAttribute(PANEL_CLASS_ATTR.getName());
+        String style = (String)uiComponent.getAttribute(PANEL_CLASS_ATTR);
         if (style != null && style.length() > 0)
         {
             writer.write(" class=\"");

@@ -18,7 +18,7 @@
  */
 package net.sourceforge.myfaces.renderkit.html;
 
-import net.sourceforge.myfaces.renderkit.attr.ButtonRendererAttributes;
+import net.sourceforge.myfaces.renderkit.attr.*;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLEncoder;
 import net.sourceforge.myfaces.renderkit.html.util.CommonAttributes;
 import net.sourceforge.myfaces.util.logging.LogUtil;
@@ -41,8 +41,13 @@ import java.io.IOException;
  * @version $Revision$ $Date$
  */
 public class ButtonRenderer
-        extends HTMLRenderer
-        implements ButtonRendererAttributes
+    extends HTMLRenderer
+    implements CommonRendererAttributes,
+               HTMLUniversalAttributes,
+               HTMLEventHandlerAttributes,
+               HTMLButtonAttributes,
+               ButtonRendererAttributes,
+               UserRoleAttributes
 {
     public static final String TYPE = "Button";
     public String getRendererType()
@@ -50,11 +55,25 @@ public class ButtonRenderer
         return TYPE;
     }
 
-    public ButtonRenderer()
+    public boolean supportsComponentType(String s)
     {
-        addAttributeDescriptor(UICommand.TYPE, KEY_ATTR);
-        addAttributeDescriptor(UICommand.TYPE, BUNDLE_ATTR);
+        return s.equals(UICommand.TYPE);
     }
+
+    public boolean supportsComponentType(UIComponent uiComponent)
+    {
+        return uiComponent instanceof UICommand;
+    }
+
+    protected void initAttributeDescriptors()
+    {
+        addAttributeDescriptors(UICommand.TYPE, TLD_HTML_URI, "command_button", HTML_UNIVERSAL_ATTRIBUTES);
+        addAttributeDescriptors(UICommand.TYPE, TLD_HTML_URI, "command_button", HTML_EVENT_HANDLER_ATTRIBUTES);
+        addAttributeDescriptors(UICommand.TYPE, TLD_HTML_URI, "command_button", HTML_BUTTON_ATTRIBUTES);
+        addAttributeDescriptors(UICommand.TYPE, TLD_HTML_URI, "command_button", COMMAND_BUTTON_ATTRIBUTES);
+        addAttributeDescriptors(UICommand.TYPE, TLD_HTML_URI, "command_button", USER_ROLE_ATTRIBUTES);
+    }
+
 
     private String getHiddenValueParamName(FacesContext facesContext, UIComponent uiComponent)
     {
@@ -167,23 +186,29 @@ public class ButtonRenderer
         }
         else
         {
-            writer.write("\"submit\" name=\"");
+            String type = (String)uiComponent.getAttribute(TYPE_ATTR);
+            if (type == null)
+            {
+                type = "submit";
+            }
+            writer.write("\"");
+            writer.write(type);
+            writer.write("\" name=\"");
             writer.write(uiComponent.getClientId(facesContext));
             writer.write("\"");
             writer.write(" value=\"");
 
             String label;
-            String key = (String)uiComponent.getAttribute(KEY_ATTR.getName());
+            String key = (String)uiComponent.getAttribute(KEY_ATTR);
             if (key != null)
             {
                 label = BundleUtils.getString(facesContext,
-                                              (String)uiComponent.getAttribute(BUNDLE_ATTR.getName()),
+                                              (String)uiComponent.getAttribute(BUNDLE_ATTR),
                                               key);
             }
             else
             {
                 label = (String)uiComponent.getAttribute(LABEL_ATTR);
-
             }
             if (label == null)
             {
@@ -194,18 +219,10 @@ public class ButtonRenderer
             writer.write("\"");
         }
 
-        //css class:
-        String cssClass = (String)uiComponent.getAttribute(COMMAND_CLASS_ATTR);
-        if (cssClass != null)
-        {
-            writer.write(" class=\"");
-            writer.write(cssClass);
-            writer.write("\"");
-        }
-
-        CommonAttributes.renderHTMLEventHandlerAttributes(facesContext, uiComponent);
-        CommonAttributes.renderUniversalHTMLAttributes(facesContext, uiComponent);
-        CommonAttributes.renderAttributes(facesContext, uiComponent, ButtonRendererAttributes.COMMON_BUTTON_ATTRIBUTES);
+        CommonAttributes.renderCssClass(writer, uiComponent, COMMAND_CLASS_ATTR);
+        CommonAttributes.renderHTMLAttributes(writer, uiComponent, HTML_UNIVERSAL_ATTRIBUTES);
+        CommonAttributes.renderHTMLAttributes(writer, uiComponent, HTML_EVENT_HANDLER_ATTRIBUTES);
+        CommonAttributes.renderHTMLAttributes(writer, uiComponent, HTML_BUTTON_ATTRIBUTES);
 
         writer.write(">");
 
@@ -220,13 +237,4 @@ public class ButtonRenderer
         }
     }
 
-    public boolean supportsComponentType(String s)
-    {
-        return s.equals(UICommand.TYPE);
-    }
-
-    public boolean supportsComponentType(UIComponent uiComponent)
-    {
-        return uiComponent instanceof UICommand;
-    }
 }

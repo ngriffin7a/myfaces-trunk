@@ -16,22 +16,31 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package net.sourceforge.myfaces.renderkit.config;
+package net.sourceforge.myfaces.renderkit.attr;
+
+
 
 /**
+ * see /tlds/entities/html_form_attributes.xml
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public class DocumentParseException
-    extends Exception
+public interface HTMLFormAttributes
 {
-    public DocumentParseException(Exception ex)
-    {
-        super(ex);
-    }
+    public static final String ACCEPT_ATTR = "accept";
+    public static final String ACCEPT_CHARSET_ATTR = "accept-charset";
+    public static final String ENCTYPE_ATTR = "enctype";
+    public static final String ONRESET_ATTR = "onreset";
+    public static final String ONSUMBIT_ATTR = "onsubmit";
+    public static final String TARGET_ATTR = "target";
 
-    public DocumentParseException(String message)
+    public static final String[] HTML_FORM_ATTRIBUTES =
     {
-        super(message);
-    }
+        ACCEPT_ATTR,
+        ACCEPT_CHARSET_ATTR,
+        ENCTYPE_ATTR,
+        ONRESET_ATTR,
+        ONSUMBIT_ATTR,
+        TARGET_ATTR,
+    };
 }

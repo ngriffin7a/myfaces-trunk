@@ -18,21 +18,24 @@
  */
 package net.sourceforge.myfaces.renderkit.attr;
 
+
+
 /**
- * Constant definitions for the specified render dependent attributes of the
- * "Secret" renderer type.
+ * see /tlds/entities/html_universal_attributes.xml
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public interface SecretRendererAttributes
-    extends TextRendererAttributes
+public interface HTMLUniversalAttributes
 {
-    public static final String REDISPLAY_ATTR = "redisplay";
-
-    public static final String[] INPUT_SECRET_ATTRIBUTES = {
-        INPUT_CLASS_ATTR,
-        MAX_LENGTH_ATTR,
-        REDISPLAY_ATTR
+    public static final String DIR_ATTR   = "dir";
+    public static final String LANG_ATTR  = "lang";
+    public static final String STYLE_ATTR = "style";
+    public static final String TITLE_ATTR = "title";
+    public static final String[] HTML_UNIVERSAL_ATTRIBUTES =
+    {
+        DIR_ATTR,
+        LANG_ATTR,
+        STYLE_ATTR,
+        TITLE_ATTR,
     };
-
 }

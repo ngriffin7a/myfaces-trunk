@@ -18,21 +18,37 @@
  */
 package net.sourceforge.myfaces.renderkit.attr;
 
+
+
 /**
- * Constant definitions for the specified render dependent attributes of the
- * "Secret" renderer type.
+ * see /tlds/entities/html_button_attributes.xml
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public interface SecretRendererAttributes
-    extends TextRendererAttributes
+public interface HTMLAnchorAttributes
 {
-    public static final String REDISPLAY_ATTR = "redisplay";
+    public static final String ACCESSKEY_ATTR   = "accesskey";
+    public static final String CHARSET_ATTR     = "charset";
+    public static final String COORDS_ATTR      = "coords";
+    public static final String HREFLANG_ATTR    = "hreflang";
+    public static final String REL_ATTR         = "rel";
+    public static final String REV_ATTR         = "rev";
+    public static final String SHAPE_ATTR       = "shape";
+    public static final String TABINDEX_ATTR    = "tabindex";
+    public static final String TARGET_ATTR      = "target";
+    public static final String TYPE_ATTR        = "type";
 
-    public static final String[] INPUT_SECRET_ATTRIBUTES = {
-        INPUT_CLASS_ATTR,
-        MAX_LENGTH_ATTR,
-        REDISPLAY_ATTR
+    public static final String[] HTML_ANCHOR_ATTRIBUTES =
+    {
+        ACCESSKEY_ATTR,
+        CHARSET_ATTR,
+        COORDS_ATTR,
+        HREFLANG_ATTR,
+        REL_ATTR,
+        REV_ATTR,
+        SHAPE_ATTR,
+        TABINDEX_ATTR,
+        TARGET_ATTR,
+        TYPE_ATTR
     };
-
 }

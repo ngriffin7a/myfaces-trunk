@@ -18,13 +18,13 @@
  */
 package net.sourceforge.myfaces.renderkit.html;
 
+import net.sourceforge.myfaces.renderkit.attr.CommonRendererAttributes;
 import net.sourceforge.myfaces.renderkit.attr.HiddenRendererAttributes;
-import net.sourceforge.myfaces.renderkit.attr.TextRendererAttributes;
+import net.sourceforge.myfaces.renderkit.attr.UserRoleAttributes;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLEncoder;
-import net.sourceforge.myfaces.renderkit.html.util.CommonAttributes;
 
-import javax.faces.component.UIInput;
 import javax.faces.component.UIComponent;
+import javax.faces.component.UIInput;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 import java.io.IOException;
@@ -35,9 +35,15 @@ import java.io.IOException;
  * @version $Revision$ $Date$
  */
 public class HiddenRenderer
-        extends HTMLRenderer
-        implements HiddenRendererAttributes
+    extends HTMLRenderer
+    implements CommonRendererAttributes,
+               HiddenRendererAttributes,
+               UserRoleAttributes
 {
+    private static final String[] INPUT_HIDDEN_ATTRIBUTES = {
+        INPUT_CLASS_ATTR
+    };
+
     public static final String TYPE = "Hidden";
 
     public String getRendererType()
@@ -54,6 +60,14 @@ public class HiddenRenderer
     {
         return uicomponent instanceof UIInput;
     }
+
+    protected void initAttributeDescriptors()
+    {
+        addAttributeDescriptors(UIInput.TYPE, TLD_HTML_URI, "input_hidden", HIDDEN_RENDERER_ATTRIBUTES);
+        addAttributeDescriptors(UIInput.TYPE, TLD_HTML_URI, "input_hidden", USER_ROLE_ATTRIBUTES);
+        addAttributeDescriptors(UIInput.TYPE, TLD_HTML_URI, "input_hidden", INPUT_HIDDEN_ATTRIBUTES);
+    }
+
 
     public void encodeEnd(FacesContext facesContext, UIComponent uiComponent)
         throws IOException

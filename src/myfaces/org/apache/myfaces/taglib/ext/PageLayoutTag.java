@@ -49,17 +49,17 @@ public class PageLayoutTag
 
     public void setLayout(String value)
     {
-        setComponentAttribute(CommonComponentAttributes.VALUE_ATTR, value);
+        setComponentProperty(CommonComponentAttributes.VALUE_ATTR, value);
     }
 
     public void setLayoutReference(String value)
     {
-        setComponentAttribute(CommonComponentAttributes.MODEL_REFERENCE_ATTR, value);
+        setComponentProperty(CommonComponentAttributes.MODEL_REFERENCE_ATTR, value);
     }
 
     public void setCssClass(String value)
     {
-        setRendererAttribute(LayoutRenderer.PANEL_CLASS_ATTR.getName(), value);
+        setRendererAttribute(LayoutRenderer.PANEL_CLASS_ATTR, value);
     }
 
 }

@@ -18,8 +18,6 @@
  */
 package net.sourceforge.myfaces.renderkit.attr;
 
-import javax.faces.component.AttributeDescriptor;
-
 /**
  * Constant definitions for the specified render dependent attributes of the
  * "Hyperlink" renderer type.
@@ -27,36 +25,15 @@ import javax.faces.component.AttributeDescriptor;
  * @version $Revision$ $Date$
  */
 public interface HyperlinkRendererAttributes
-    extends CommonRendererAttributes
+    extends CommonRendererAttributes, KeyBundleAttributes
 {
     public static final String HREF_ATTR = "href";
 
-    public static final AttributeDescriptor KEY_ATTR = new AttrDescrImpl("key");
-    public static final AttributeDescriptor BUNDLE_ATTR = new AttrDescrImpl("bundle");
-
-    public static final String ACCESSKEY_ATTR = "accesskey";
-    public static final String CHARSET_ATTR = "charset";
-    public static final String COORDS_ATTR = "coords";
-    public static final String HREFLANG_ATTR = "hreflang";
-    public static final String REL_ATTR = "rel";
-    public static final String REV_ATTR = "rev";
-    public static final String SHAPE_ATTR = "shape";
-    public static final String TABINDEX_ATTR = "tabindex";
-    public static final String TARGET_ATTR = "target";
-    public static final String TYPE_ATTR = "type";
-
-    public static final String[] COMMON_HYPERLINK_ATTRIBUTES =
-    {
-        ACCESSKEY_ATTR,
-        CHARSET_ATTR,
-        COORDS_ATTR,
-        //HREF_ATTR, href is not a common attribute!
-        HREFLANG_ATTR,
-        REL_ATTR,
-        REV_ATTR,
-        SHAPE_ATTR,
-        TABINDEX_ATTR,
-        TARGET_ATTR,
-        TYPE_ATTR
+    public static final String[] COMMAND_HYPERLINK_ATTRIBUTES = {
+        COMMAND_CLASS_ATTR,
+        HREF_ATTR,
+        KEY_ATTR,
+        BUNDLE_ATTR
     };
+
 }

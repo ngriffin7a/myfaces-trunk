@@ -19,6 +19,7 @@
 package net.sourceforge.myfaces.convert;
 
 import net.sourceforge.myfaces.component.UIComponentUtils;
+import net.sourceforge.myfaces.component.CommonComponentAttributes;
 import net.sourceforge.myfaces.renderkit.attr.CommonRendererAttributes;
 import net.sourceforge.myfaces.util.Base64;
 import net.sourceforge.myfaces.util.bean.BeanUtils;
@@ -97,7 +98,7 @@ public class ConverterUtils
                                               UIComponent uicomponent)
         throws IllegalArgumentException
     {
-        Object converterAttr = uicomponent.getAttribute(CommonRendererAttributes.CONVERTER_ATTR);
+        Object converterAttr = uicomponent.getAttribute(CommonComponentAttributes.CONVERTER_ATTR);
         if (converterAttr != null && converterAttr instanceof Converter)
         {
             return (Converter)converterAttr;

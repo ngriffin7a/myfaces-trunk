@@ -20,40 +20,12 @@ package net.sourceforge.myfaces.renderkit.attr;
 
 /**
  * Constant definitions for the specified render dependent attributes of the
- * "Text" renderer type.
+ * "Textarea" renderer type.
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
 public interface TextareaRendererAttributes
-    extends CommonRendererAttributes
 {
-    public static final String ACCESSKEY_ATTR = "accesskey";
-    public static final String COLS_ATTR = "cols";
-    public static final String DATAFLD_ATTR = "datafld";
-    public static final String DATASRC_ATTR = "datasrc";
-    public static final String DATAFORMATAS_ATTR = "dataformatas";
-    public static final String DISABLED_ATTR = "disabled";
-    public static final String ONBLUR_ATTR = "onblur";
-    public static final String ONCHANGE_ATTR = "onchange";
-    public static final String ONFOCUS_ATTR = "onfocus";
-    public static final String ONSELECT_ATTR = "onselect";
-    public static final String READONLY_ATTR = "readonly";
-    public static final String ROWS_ATTR = "rows";
-    public static final String TABINDEX_ATTR = "tabindex";
-    public static final String[] COMMON_TEXTAREA_ATTRIBUTES =
-    {
-        ACCESSKEY_ATTR,
-        COLS_ATTR,
-        DATAFLD_ATTR,
-        DATASRC_ATTR,
-        DATAFORMATAS_ATTR,
-        DISABLED_ATTR,
-        ONBLUR_ATTR,
-        ONCHANGE_ATTR,
-        ONFOCUS_ATTR,
-        ONSELECT_ATTR,
-        READONLY_ATTR,
-        ROWS_ATTR,
-        TABINDEX_ATTR,
+    public static final String[] INPUT_TEXTAREA_ATTRIBUTES = {
     };
 }

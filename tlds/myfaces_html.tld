@@ -53,6 +53,74 @@
         Tag library for the MyFaces basic implementation.
     </description>
 
+<!-- command_button -->
+    <tag>
+        <name>command_button</name>
+        <tag-class>net.sourceforge.myfaces.taglib.CommandButtonTag</tag-class>
+        &ui_component_attributes;
+        &ui_command_attributes;
+        &html_universal_attributes;
+        &html_event_handler_attributes;
+        &html_button_attributes;
+
+        <!-- ButtonRenderer attributes -->
+        <attribute>
+            <name>label</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
+        </attribute>
+        &key_bundle_attributes;
+        <attribute>
+            <name>type</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
+            <type>java.lang.String</type>
+            <description>
+                The button type "submit" or "reset" (see JSF.7.4.1).
+                Default is "submit".
+            </description>
+        </attribute>
+        &user_role_attributes;
+
+        <attribute>
+            <!-- TODO deprecated: commandReference no longer needed in new event model? -->
+            <name>commandReference</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
+        </attribute>
+
+        <!-- TODO What about image buttons: attributes imageKey, image, ... -->
+    </tag>
+
+<!-- command_hyperlink -->
+    <tag>
+        <name>command_hyperlink</name>
+        <tag-class>net.sourceforge.myfaces.taglib.CommandHyperlinkTag</tag-class>
+        <body-content>JSP</body-content>
+        &ui_component_attributes;
+        &ui_command_attributes;
+        &html_universal_attributes;
+        &html_event_handler_attributes;
+        &html_anchor_attributes;
+
+        <!-- HyperlinkRenderer attributes -->
+        <attribute>
+            <name>href</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        &key_bundle_attributes;
+        &user_role_attributes;
+
+        <attribute>
+            <!-- TODO deprecated: commandReference no longer needed in new event model? -->
+            <name>commandReference</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
+        </attribute>
+        <!-- TODO attributes image, label-->
+    </tag>
+
 <!-- form -->
     <tag>
         <name>form</name>
@@ -63,7 +131,66 @@
         &html_universal_attributes;
         &html_event_handler_attributes;
         &html_form_attributes;
+        <!-- FormRenderer attributes -->
+        &user_role_attributes;
     </tag>
+
+<!-- graphic_image -->
+    <tag>
+        <name>graphic_image</name>
+        <tag-class>net.sourceforge.myfaces.taglib.GraphicImageTag</tag-class>
+        <body-content>JSP</body-content>
+        &ui_component_attributes;
+        &ui_graphic_attributes;
+        &html_universal_attributes;
+        &html_event_handler_attributes;
+        &html_img_attributes;
+        &key_bundle_attributes;
+        <attribute>
+            <name>altKey</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>java.lang.String</type>
+            <description>Resource key for alternate image text.</description>
+        </attribute>
+        <attribute>
+            <name>altBundle</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>java.lang.String</type>
+            <description>Resource bundle name for alternate image text.</description>
+        </attribute>
+    </tag>
+
+<!-- image -->
+    <tag>
+        <!-- deprecated: identical to 'graphic_image' -->
+        <name>image</name>
+        <tag-class>net.sourceforge.myfaces.taglib.GraphicImageTag</tag-class>
+        <body-content>JSP</body-content>
+        &ui_component_attributes;
+        &ui_graphic_attributes;
+        &html_universal_attributes;
+        &html_event_handler_attributes;
+        &html_img_attributes;
+        &key_bundle_attributes;
+        <attribute>
+            <name>altKey</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>altBundle</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>
+
+<!-- input_date -->
+    <!-- TODO -->
+
+<!-- input_date_time -->
+    <!-- TODO -->
 
 <!-- input_hidden -->
     <tag>
@@ -74,22 +201,8 @@
         &ui_input_attributes;
     </tag>
 
-<!-- input_text -->
-    <tag>
-        <name>input_text</name>
-        <tag-class>net.sourceforge.myfaces.taglib.InputTextTag</tag-class>
-        <body-content>JSP</body-content>
-        &ui_component_attributes;
-        &ui_input_attributes;
-        &html_input_attributes;
-        &html_universal_attributes;
-        &html_event_handler_attributes;
-        <attribute>
-            <name>maxlength</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-        </attribute>
-    </tag>
+<!-- input_number -->
+    <!-- TODO -->
 
 <!-- input_secret -->
     <tag>
@@ -118,6 +231,25 @@
                 is rerendered (see JSF.7.4.4). Default is false.
             </description>
         </attribute>
+        &user_role_attributes;
+    </tag>
+
+<!-- input_text -->
+    <tag>
+        <name>input_text</name>
+        <tag-class>net.sourceforge.myfaces.taglib.InputTextTag</tag-class>
+        <body-content>JSP</body-content>
+        &ui_component_attributes;
+        &ui_input_attributes;
+        &html_input_attributes;
+        &html_universal_attributes;
+        &html_event_handler_attributes;
+        <attribute>
+            <name>maxlength</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        &user_role_attributes;
     </tag>
 
 <!-- input_textarea -->
@@ -130,88 +262,26 @@
         &html_textarea_attributes;
         &html_universal_attributes;
         &html_event_handler_attributes;
+        &user_role_attributes;
    </tag>
 
-<!-- command_button -->
-    <tag>
-        <name>command_button</name>
-        <tag-class>net.sourceforge.myfaces.taglib.CommandButtonTag</tag-class>
-        &ui_component_attributes;
-        &ui_command_attributes;
-        &html_universal_attributes;
-        &html_event_handler_attributes;
-        &html_button_attributes;
-        <attribute>
-            <name>label</name>
-            <required>false</required>
-            <rtexprvalue>false</rtexprvalue>
-        </attribute>
-        &key_bundle_attributes;
+<!-- input_date_time -->
+    <!-- TODO -->
 
-        <attribute>
-            <!-- TODO deprecated: commandReference no longer needed in new event model? -->
-            <name>commandReference</name>
-            <required>false</required>
-            <rtexprvalue>false</rtexprvalue>
-        </attribute>
 
-        <!-- TODO What about image buttons: attributes imageKey, image, ... -->
-    </tag>
 
-<!-- command_hyperlink -->
-    <tag>
-        <name>command_hyperlink</name>
-        <tag-class>net.sourceforge.myfaces.taglib.CommandHyperlinkTag</tag-class>
-        <body-content>JSP</body-content>
-        &ui_component_attributes;
-        &ui_command_attributes;
-        &html_universal_attributes;
-        &html_event_handler_attributes;
-        &html_anchor_attributes;
-        &key_bundle_attributes;
-        &user_role_attributes;
-        <attribute>
-            <name>href</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-        </attribute>
-        <attribute>
-            <!-- TODO deprecated: commandReference no longer needed in new event model? -->
-            <name>commandReference</name>
-            <required>false</required>
-            <rtexprvalue>false</rtexprvalue>
-        </attribute>
-        <!-- TODO attributes image, label-->
-    </tag>
 
-<!-- output_label -->
-    <tag>
-        <name>output_label</name>
-        <tag-class>net.sourceforge.myfaces.taglib.OutputLabelTag</tag-class>
-        <body-content>JSP</body-content>
-        &ui_component_attributes;
-        &ui_output_attributes;
-        &html_universal_attributes;
-        &html_event_handler_attributes;
-        &html_label_attributes;
-        &key_bundle_attributes;
-        <!-- LabelRenderer attributes -->
-        <attribute>
-          <name>for</name>
-          <required>true</required>
-          <rtexprvalue>false</rtexprvalue>
-        </attribute>
-    </tag>
 
-<!-- output_text -->
-    <tag>
-        <name>output_text</name>
-        <tag-class>net.sourceforge.myfaces.taglib.OutputTextTag</tag-class>
-        <body-content>JSP</body-content>
-        &ui_component_attributes;
-        &ui_output_attributes;
-        &key_bundle_attributes;
-    </tag>
+
+<!-- TODO: refactor from here... -->
+
+
+
+
+
+
+
+
 
 <!-- output_date -->
     <tag>
@@ -258,6 +328,35 @@
         </attribute>
     </tag>
 
+<!-- output_label -->
+    <tag>
+        <name>output_label</name>
+        <tag-class>net.sourceforge.myfaces.taglib.OutputLabelTag</tag-class>
+        <body-content>JSP</body-content>
+        &ui_component_attributes;
+        &ui_output_attributes;
+        &html_universal_attributes;
+        &html_event_handler_attributes;
+        &html_label_attributes;
+        &key_bundle_attributes;
+        <!-- LabelRenderer attributes -->
+        <attribute>
+          <name>for</name>
+          <required>true</required>
+          <rtexprvalue>false</rtexprvalue>
+        </attribute>
+    </tag>
+
+<!-- output_text -->
+    <tag>
+        <name>output_text</name>
+        <tag-class>net.sourceforge.myfaces.taglib.OutputTextTag</tag-class>
+        <body-content>JSP</body-content>
+        &ui_component_attributes;
+        &ui_output_attributes;
+        &key_bundle_attributes;
+    </tag>
+
 <!-- output_time -->
     <tag>
         <name>output_time</name>
@@ -287,54 +386,6 @@
         &ui_output_attributes;
         &key_bundle_attributes;
     </tag>
-
-<!-- graphic_image -->
-    <tag>
-        <name>graphic_image</name>
-        <tag-class>net.sourceforge.myfaces.taglib.GraphicImageTag</tag-class>
-        <body-content>JSP</body-content>
-        &ui_component_attributes;
-        &ui_graphic_attributes;
-        &key_bundle_attributes;
-        &html_universal_attributes;
-        &html_event_handler_attributes;
-        &html_img_attributes;
-        <attribute>
-            <name>altKey</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-        </attribute>
-        <attribute>
-            <name>altBundle</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-        </attribute>
-    </tag>
-
-<!-- image -->
-    <tag>
-        <!-- deprecated: identical to 'graphic_image' -->
-        <name>image</name>
-        <tag-class>net.sourceforge.myfaces.taglib.GraphicImageTag</tag-class>
-        <body-content>JSP</body-content>
-        &ui_component_attributes;
-        &ui_graphic_attributes;
-        &key_bundle_attributes;
-        &html_universal_attributes;
-        &html_event_handler_attributes;
-        &html_img_attributes;
-        <attribute>
-            <name>altKey</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-        </attribute>
-        <attribute>
-            <name>altBundle</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-        </attribute>
-    </tag>
-
 
 <!-- selectone_listbox -->
     <tag>

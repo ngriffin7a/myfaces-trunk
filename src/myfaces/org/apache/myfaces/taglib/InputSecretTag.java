@@ -18,17 +18,19 @@
  */
 package net.sourceforge.myfaces.taglib;
 
+import net.sourceforge.myfaces.renderkit.attr.SecretRendererAttributes;
 import net.sourceforge.myfaces.renderkit.html.SecretRenderer;
 
 import javax.faces.component.UIComponent;
 
 /**
- * DOCUMENT ME!
+ * see "input_secret" tag in myfaces_html.tld
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
 public class InputSecretTag
-        extends InputTextTag
+    extends InputTextTag
+    implements SecretRendererAttributes
 {
     public UIComponent createComponent()
     {
@@ -42,9 +44,18 @@ public class InputSecretTag
         return SecretRenderer.TYPE;
     }
 
+
+    // Secret Renderer attributes
+
     public void setRedisplay(boolean b)
     {
-        setRendererAttribute(SecretRenderer.REDISPLAY_ATTR,
-                             b ? Boolean.TRUE : Boolean.FALSE);
+        setRendererAttribute(REDISPLAY_ATTR, b);
     }
+
+    public void setRedisplay(Boolean b)
+    {
+        setRendererAttribute(REDISPLAY_ATTR, b);
+    }
+
+    // setMaxLength() already defined in InoputTextTag
 }

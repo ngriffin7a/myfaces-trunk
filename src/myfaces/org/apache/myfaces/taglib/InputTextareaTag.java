@@ -19,6 +19,8 @@
 package net.sourceforge.myfaces.taglib;
 
 import net.sourceforge.myfaces.component.UIInput;
+import net.sourceforge.myfaces.renderkit.attr.HTMLTextareaAttributes;
+import net.sourceforge.myfaces.renderkit.attr.TextareaRendererAttributes;
 import net.sourceforge.myfaces.renderkit.html.TextareaRenderer;
 
 import javax.faces.component.UIComponent;
@@ -30,6 +32,8 @@ import javax.faces.component.UIComponent;
  */
 public class InputTextareaTag
     extends MyFacesTag
+    implements HTMLTextareaAttributes,
+               TextareaRendererAttributes
 {
     public UIComponent createComponent()
     {
@@ -41,80 +45,118 @@ public class InputTextareaTag
         return TextareaRenderer.TYPE;
     }
 
+    // UIComponent attributes --> already implemented in MyFacesTag
+
+    // UIInput attributes
+
+    public void setValue(Object v)
+    {
+        super.setValue(v);
+    }
+
     public void setInputClass(String value)
     {
         setRendererAttribute(TextareaRenderer.INPUT_CLASS_ATTR, value);
     }
 
+    // HTML universal attributes --> already implemented in MyFacesTag
+
+    // HTML event handler attributes --> already implemented in MyFacesTag
+
+    // HTML textarea attributes
+
     public void setAccesskey(String value)
     {
-        setRendererAttribute(TextareaRenderer.ACCESSKEY_ATTR, value);
+        setRendererAttribute(ACCESSKEY_ATTR, value);
     }
 
     public void setCols(int value)
     {
-        setRendererAttribute(TextareaRenderer.COLS_ATTR, value);
+        setRendererAttribute(COLS_ATTR, value);
+    }
+
+    public void setCols(Integer value)
+    {
+        setRendererAttribute(COLS_ATTR, value);
     }
 
     public void setDatafld(String value)
     {
-        setRendererAttribute(TextareaRenderer.DATAFLD_ATTR, value);
+        setRendererAttribute(DATAFLD_ATTR, value);
     }
 
     public void setDatasrc(String value)
     {
-        setRendererAttribute(TextareaRenderer.DATASRC_ATTR, value);
+        setRendererAttribute(DATASRC_ATTR, value);
     }
 
     public void setDataformatas(String value)
     {
-        setRendererAttribute(TextareaRenderer.DATAFORMATAS_ATTR, value);
+        setRendererAttribute(DATAFORMATAS_ATTR, value);
     }
 
     public void setDisabled(boolean value)
     {
-        setRendererAttribute(TextareaRenderer.DISABLED_ATTR, value);
+        setRendererAttribute(DISABLED_ATTR, value);
+    }
+
+    public void setDisabled(Boolean value)
+    {
+        setRendererAttribute(DISABLED_ATTR, value);
     }
 
     public void setOnblur(String value)
     {
-        setRendererAttribute(TextareaRenderer.ONBLUR_ATTR, value);
+        setRendererAttribute(ONBLUR_ATTR, value);
     }
 
     public void setOnchange(String value)
     {
-        setRendererAttribute(TextareaRenderer.ONCHANGE_ATTR, value);
+        setRendererAttribute(ONCHANGE_ATTR, value);
     }
 
     public void setOnfocus(String value)
     {
-        setRendererAttribute(TextareaRenderer.ONFOCUS_ATTR, value);
+        setRendererAttribute(ONFOCUS_ATTR, value);
     }
 
     public void setOnselect(String value)
     {
-        setRendererAttribute(TextareaRenderer.ONSELECT_ATTR, value);
+        setRendererAttribute(ONSELECT_ATTR, value);
     }
 
     public void setReadonly(boolean value)
     {
-        setRendererAttribute(TextareaRenderer.READONLY_ATTR, value);
+        setRendererAttribute(READONLY_ATTR, value);
+    }
+
+    public void setReadonly(Boolean value)
+    {
+        setRendererAttribute(READONLY_ATTR, value);
     }
 
     public void setRows(int value)
     {
-        setRendererAttribute(TextareaRenderer.ROWS_ATTR, value);
+        setRendererAttribute(ROWS_ATTR, value);
+    }
+
+    public void setRows(Integer value)
+    {
+        setRendererAttribute(ROWS_ATTR, value);
     }
 
     public void setTabindex(int value)
     {
-        setRendererAttribute(TextareaRenderer.TABINDEX_ATTR, value);
+        setRendererAttribute(TABINDEX_ATTR, value);
     }
 
-
-    public void setText(String value)
+    public void setTabindex(Integer value)
     {
-        setValue(value);
+        setRendererAttribute(TABINDEX_ATTR, value);
     }
+
+    // Textarea Renderer attributes
+
+    // user role attributes --> already implemented in MyFacesTag
 
 }

@@ -18,24 +18,25 @@
  */
 package net.sourceforge.myfaces.renderkit.attr;
 
-import javax.faces.component.AttributeDescriptor;
-
 /**
- * Constant definitions for the specified render dependent attributes of the
- * "Button" renderer type.
+ * see JSF 7.4.1
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
 public interface ButtonRendererAttributes
-    extends CommonRendererAttributes
+    extends CommonRendererAttributes, KeyBundleAttributes
 {
-    public static final AttributeDescriptor KEY_ATTR = new AttrDescrImpl("key");
-    public static final AttributeDescriptor BUNDLE_ATTR = new AttrDescrImpl("bundle");
+    public static final String LABEL_ATTR   = "label";
+    public static final String TYPE_ATTR    = "type";
 
-    public static final String TYPE_ATTR = "type";
-    public static final String IMAGE_ATTR = "image";
-    public static final String LABEL_ATTR = "label";
+    public static final String IMAGE_ATTR = "image";    //TODO: Taglib ?
 
-    public static final String[] COMMON_BUTTON_ATTRIBUTES
-        = TextRendererAttributes.COMMON_TEXT_ATTRIBUTES;
+
+    public static final String[] COMMAND_BUTTON_ATTRIBUTES = {
+        COMMAND_CLASS_ATTR,
+        LABEL_ATTR,
+        TYPE_ATTR,
+        KEY_ATTR,
+        BUNDLE_ATTR
+    };
 }

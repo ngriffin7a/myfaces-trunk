@@ -166,7 +166,7 @@ public class CheckboxRenderer
             writer.write("\"");
         }
         CommonAttributes.renderHTMLEventHandlerAttributes(facesContext, uiComponent);
-        CommonAttributes.renderUniversalHTMLAttributes(facesContext, uiComponent);
+        CommonAttributes.renderHTMLUniversalAttributes(facesContext, uiComponent);
         CommonAttributes.renderAttributes(facesContext, uiComponent, COMMON_CHECKBOX_ATTRIBUTES);
         writer.write(">");
         if (label != null && label.length() > 0)

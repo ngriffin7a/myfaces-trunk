@@ -63,12 +63,6 @@ public class LayoutRenderer
         return TYPE;
     }
 
-    public LayoutRenderer()
-    {
-        super();
-        addAttributeDescriptor(UIPanel.TYPE, PANEL_CLASS_ATTR);
-        //addAttributeDescriptor(UIPanel.TYPE, LAYOUT_ATTR);
-    }
 
     public boolean supportsComponentType(UIComponent component)
     {
@@ -282,7 +276,7 @@ public class LayoutRenderer
     {
         ResponseWriter writer = facesContext.getResponseWriter();
         writer.write("<table");
-        String cssClass = (String)uiComponent.getAttribute(PANEL_CLASS_ATTR.getName());
+        String cssClass = (String)uiComponent.getAttribute(PANEL_CLASS_ATTR);
         if (cssClass != null)
         {
             writer.write(" class=\"" + cssClass + "\"");
@@ -308,7 +302,7 @@ public class LayoutRenderer
     {
         ResponseWriter writer = facesContext.getResponseWriter();
         writer.write("<table");
-        String cssClass = (String)uiComponent.getAttribute(PANEL_CLASS_ATTR.getName());
+        String cssClass = (String)uiComponent.getAttribute(PANEL_CLASS_ATTR);
         if (cssClass != null)
         {
             writer.write(" class=\"" + cssClass + "\"");
@@ -334,7 +328,7 @@ public class LayoutRenderer
     {
         ResponseWriter writer = facesContext.getResponseWriter();
         writer.write("<table");
-        String cssClass = (String)uiComponent.getAttribute(PANEL_CLASS_ATTR.getName());
+        String cssClass = (String)uiComponent.getAttribute(PANEL_CLASS_ATTR);
         if (cssClass != null)
         {
             writer.write(" class=\"" + cssClass + "\"");

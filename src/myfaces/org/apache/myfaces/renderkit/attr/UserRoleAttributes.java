@@ -19,20 +19,17 @@
 package net.sourceforge.myfaces.renderkit.attr;
 
 /**
- * Constant definitions for the specified render dependent attributes of the
- * "Secret" renderer type.
+ * see /tlds/entities/user_role_attributes.xml
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public interface SecretRendererAttributes
-    extends TextRendererAttributes
+public interface UserRoleAttributes
 {
-    public static final String REDISPLAY_ATTR = "redisplay";
+    public static final String ENABLED_ON_USER_ROLE_ATTR = "enabledOnUserRole";
+    public static final String VISIBLE_ON_USER_ROLE_ATTR = "visibleOnUserRole";
 
-    public static final String[] INPUT_SECRET_ATTRIBUTES = {
-        INPUT_CLASS_ATTR,
-        MAX_LENGTH_ATTR,
-        REDISPLAY_ATTR
+    public static final String[] USER_ROLE_ATTRIBUTES = {
+        ENABLED_ON_USER_ROLE_ATTR,
+        VISIBLE_ON_USER_ROLE_ATTR
     };
-
 }

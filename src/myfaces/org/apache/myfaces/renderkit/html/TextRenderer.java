@@ -18,10 +18,11 @@
  */
 package net.sourceforge.myfaces.renderkit.html;
 
-import net.sourceforge.myfaces.renderkit.attr.TextRendererAttributes;
+import net.sourceforge.myfaces.renderkit.attr.*;
 import net.sourceforge.myfaces.renderkit.html.util.CommonAttributes;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLEncoder;
 import net.sourceforge.myfaces.util.bundle.BundleUtils;
+import net.sourceforge.myfaces.component.CommonComponentAttributes;
 
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIInput;
@@ -36,20 +37,20 @@ import java.io.IOException;
  * @version $Revision$ $Date$
  */
 public class TextRenderer
-        extends HTMLRenderer
-        implements TextRendererAttributes
+    extends HTMLRenderer
+    implements CommonComponentAttributes,
+               CommonRendererAttributes,
+               HTMLUniversalAttributes,
+               HTMLEventHandlerAttributes,
+               HTMLInputAttributes,
+               TextRendererAttributes,
+               UserRoleAttributes
 {
     public static final String TYPE = "Text";
 
     public String getRendererType()
     {
         return TYPE;
-    }
-
-    public TextRenderer()
-    {
-        addAttributeDescriptor(UIOutput.TYPE, KEY_ATTR);
-        addAttributeDescriptor(UIOutput.TYPE, BUNDLE_ATTR);
     }
 
     public boolean supportsComponentType(String s)
@@ -62,6 +63,17 @@ public class TextRenderer
         return uicomponent instanceof UIInput ||
                uicomponent instanceof UIOutput;
     }
+
+    protected void initAttributeDescriptors()
+    {
+        addAttributeDescriptors(UIInput.TYPE, TLD_HTML_URI, "input_text", HTML_UNIVERSAL_ATTRIBUTES);
+        addAttributeDescriptors(UIInput.TYPE, TLD_HTML_URI, "input_text", HTML_EVENT_HANDLER_ATTRIBUTES);
+        addAttributeDescriptors(UIInput.TYPE, TLD_HTML_URI, "input_text", HTML_INPUT_ATTRIBUTES);
+        addAttributeDescriptors(UIInput.TYPE, TLD_HTML_URI, "input_text", INPUT_TEXT_ATTRIBUTES);
+        addAttributeDescriptors(UIInput.TYPE, TLD_HTML_URI, "input_text", USER_ROLE_ATTRIBUTES);
+        //TODO: output
+    }
+
 
 
 
@@ -97,16 +109,12 @@ public class TextRenderer
             writer.write(HTMLEncoder.encode(currentValue, false, false));
             writer.write("\"");
         }
-        String css = (String)uiComponent.getAttribute(INPUT_CLASS_ATTR);
-        if (css != null)
-        {
-            writer.write(" class=\"");
-            writer.write(css);
-            writer.write("\"");
-        }
-        CommonAttributes.renderHTMLEventHandlerAttributes(facesContext, uiComponent);
-        CommonAttributes.renderUniversalHTMLAttributes(facesContext, uiComponent);
-        CommonAttributes.renderAttributes(facesContext, uiComponent, TextRendererAttributes.COMMON_TEXT_ATTRIBUTES);
+
+        CommonAttributes.renderCssClass(writer, uiComponent, INPUT_CLASS_ATTR);
+        CommonAttributes.renderHTMLAttributes(writer, uiComponent, HTML_UNIVERSAL_ATTRIBUTES);
+        CommonAttributes.renderHTMLAttributes(writer, uiComponent, HTML_EVENT_HANDLER_ATTRIBUTES);
+        CommonAttributes.renderHTMLAttributes(writer, uiComponent, HTML_INPUT_ATTRIBUTES);
+
         writer.write(">");
     }
 
@@ -123,11 +131,11 @@ public class TextRenderer
             writer.write("\">");
         }
         String text;
-        String key = (String)uiComponent.getAttribute(KEY_ATTR.getName());
+        String key = (String)uiComponent.getAttribute(KEY_ATTR);
         if (key != null)
         {
             text = BundleUtils.getString(facesContext,
-                                            (String)uiComponent.getAttribute(BUNDLE_ATTR.getName()),
+                                            (String)uiComponent.getAttribute(BUNDLE_ATTR),
                                             key);
         }
         else

@@ -46,6 +46,7 @@
         <delete quiet="true" failonerror="false" includeEmptyDirs="true">
             <fileset file="${web-inf.lib.dir}/myfaces.jar" />
             <fileset file="${web-inf.lib.dir}/jsf-api.jar" />
+            <fileset dir="${web-inf.classes.dir}"/>
         </delete>
     </target>
 

@@ -19,18 +19,22 @@
 package net.sourceforge.myfaces.taglib;
 
 import net.sourceforge.myfaces.component.UICommand;
+import net.sourceforge.myfaces.renderkit.attr.ButtonRendererAttributes;
+import net.sourceforge.myfaces.renderkit.attr.HTMLButtonAttributes;
 import net.sourceforge.myfaces.renderkit.html.ButtonRenderer;
 
 import javax.faces.component.UIComponent;
 
 
 /**
- * DOCUMENT ME!
+ * see "command_button" tag in myfaces_html.tld
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
 public class CommandButtonTag
-        extends InputTextTag
+    extends MyFacesTag
+    implements HTMLButtonAttributes,
+               ButtonRendererAttributes
 {
     //MyFaces tag extensions:
     public UIComponent createComponent()
@@ -43,35 +47,107 @@ public class CommandButtonTag
         return ButtonRenderer.TYPE;
     }
 
+    // UIComponent attributes --> already implemented in MyFacesTag
 
-    public void setLabel(String v)
-    {
-        setRendererAttribute(ButtonRenderer.LABEL_ATTR, v);
-    }
+    // UICommand attributes
 
     public void setCommandName(String v)
     {
         setValue(v);
     }
 
+    public void setCommandClass(String v)
+    {
+        setRendererAttribute(COMMAND_CLASS_ATTR, v);
+    }
+
+    // HTML universal attributes --> already implemented in MyFacesTag
+
+    // HTML event handler attributes --> already implemented in MyFacesTag
+
+    // HTML button attributes
+
+    public void setAccesskey(String value)
+    {
+        setRendererAttribute(ACCESSKEY_ATTR, value);
+    }
+
+    public void setAlign(String value)
+    {
+        setRendererAttribute(ALIGN_ATTR, value);
+    }
+
+    public void setAlt(String value)
+    {
+        setRendererAttribute(ALT_ATTR, value);
+    }
+
+    public void setDatafld(String value)
+    {
+        setRendererAttribute(DATAFLD_ATTR, value);
+    }
+
+    public void setDatasrc(String value)
+    {
+        setRendererAttribute(DATASRC_ATTR, value);
+    }
+
+    public void setDataformatas(String value)
+    {
+        setRendererAttribute(DATAFORMATAS_ATTR, value);
+    }
+
+    public void setDisabled(boolean value)
+    {
+        setRendererAttribute(DISABLED_ATTR, value);
+    }
+
+    public void setOnblur(String value)
+    {
+        setRendererAttribute(ONBLUR_ATTR, value);
+    }
+
+    public void setOnchange(String value)
+    {
+        setRendererAttribute(ONCHANGE_ATTR, value);
+    }
+
+    public void setOnfocus(String value)
+    {
+        setRendererAttribute(ONFOCUS_ATTR, value);
+    }
+
+    public void setTabindex(int value)
+    {
+        setRendererAttribute(TABINDEX_ATTR, value);
+    }
+
+
+
+    // Button Renderer attributes
+
+    public void setLabel(String v)
+    {
+        setRendererAttribute(LABEL_ATTR, v);
+    }
+
+    public void setType(String value)
+    {
+        setRendererAttribute(TYPE_ATTR, value);
+    }
+
+
+    // key & bundle attributes --> already implemented in MyFacesTag
+
+    // user role attributes --> already implemented in MyFacesTag
+
+
+
+    //deprecated
+
     public void setCommandReference(String v)
     {
         setComponentProperty(UICommand.COMMAND_REFERENCE_ATTR, v);
-    }
-
-    public void setCommandClass(String v)
-    {
-        setRendererAttribute(ButtonRenderer.COMMAND_CLASS_ATTR, v);
-    }
-
-    public void setKey(String v)
-    {
-        setRendererAttribute(ButtonRenderer.KEY_ATTR.getName(), v);
-    }
-
-    public void setBundle(String v)
-    {
-        setRendererAttribute(ButtonRenderer.BUNDLE_ATTR.getName(), v);
     }
 
 }

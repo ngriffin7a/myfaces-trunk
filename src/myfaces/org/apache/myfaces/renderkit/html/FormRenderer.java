@@ -19,7 +19,7 @@
 package net.sourceforge.myfaces.renderkit.html;
 
 import net.sourceforge.myfaces.MyFacesFactoryFinder;
-import net.sourceforge.myfaces.renderkit.attr.FormRendererAttributes;
+import net.sourceforge.myfaces.renderkit.attr.*;
 import net.sourceforge.myfaces.renderkit.html.state.StateRenderer;
 import net.sourceforge.myfaces.renderkit.html.util.CommonAttributes;
 import net.sourceforge.myfaces.webapp.ServletMapping;
@@ -45,7 +45,12 @@ import java.io.IOException;
  */
 public class FormRenderer
         extends HTMLRenderer
-        implements FormRendererAttributes
+        implements CommonRendererAttributes,
+                   HTMLUniversalAttributes,
+                   HTMLEventHandlerAttributes,
+                   HTMLFormAttributes,
+                   FormRendererAttributes,
+                   UserRoleAttributes
 {
     public static final String TYPE = "Form";
     public String getRendererType()
@@ -53,16 +58,37 @@ public class FormRenderer
         return TYPE;
     }
 
-    public void encodeBegin(FacesContext context, UIComponent component)
+    public boolean supportsComponentType(String s)
+    {
+        return s.equals(UIForm.TYPE);
+    }
+
+    public boolean supportsComponentType(UIComponent uicomponent)
+    {
+        return uicomponent instanceof UIForm;
+    }
+
+    protected void initAttributeDescriptors()
+    {
+        addAttributeDescriptors(UIForm.TYPE, TLD_HTML_URI, "form", HTML_UNIVERSAL_ATTRIBUTES);
+        addAttributeDescriptors(UIForm.TYPE, TLD_HTML_URI, "form", HTML_EVENT_HANDLER_ATTRIBUTES);
+        addAttributeDescriptors(UIForm.TYPE, TLD_HTML_URI, "form", HTML_FORM_ATTRIBUTES);
+        addAttributeDescriptors(UIForm.TYPE, TLD_HTML_URI, "form", FORM_FORM_ATTRIBUTES);
+        addAttributeDescriptors(UIForm.TYPE, TLD_HTML_URI, "form", USER_ROLE_ATTRIBUTES);
+    }
+
+
+    public void encodeBegin(FacesContext context, UIComponent uiComponent)
             throws IOException
     {
         ResponseWriter writer = context.getResponseWriter();
         writer.write("<form method=\"post\" action=\"");
-        writer.write(getActionStr(context, component));
+        writer.write(getActionStr(context, uiComponent));
         writer.write("\"");
-        CommonAttributes.renderHTMLEventHandlerAttributes(context, component);
-        CommonAttributes.renderUniversalHTMLAttributes(context, component);
-        CommonAttributes.renderAttributes(context, component, FormRendererAttributes.COMMON_FORM_ATTRIBUTES);
+        CommonAttributes.renderCssClass(writer, uiComponent, FORM_CLASS_ATTR);
+        CommonAttributes.renderHTMLAttributes(writer, uiComponent, HTML_UNIVERSAL_ATTRIBUTES);
+        CommonAttributes.renderHTMLAttributes(writer, uiComponent, HTML_EVENT_HANDLER_ATTRIBUTES);
+        CommonAttributes.renderHTMLAttributes(writer, uiComponent, HTML_FORM_ATTRIBUTES);
         writer.write(">");
     }
 
@@ -95,16 +121,6 @@ public class FormRenderer
 
         ResponseWriter writer = facesContext.getResponseWriter();
         writer.write("</form>");
-    }
-
-    public boolean supportsComponentType(String s)
-    {
-        return s.equals(UIForm.TYPE);
-    }
-
-    public boolean supportsComponentType(UIComponent uicomponent)
-    {
-        return uicomponent instanceof UIForm;
     }
 
 }

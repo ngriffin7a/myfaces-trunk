@@ -18,9 +18,9 @@
  */
 package net.sourceforge.myfaces.renderkit.html;
 
-import net.sourceforge.myfaces.renderkit.attr.ImageRendererAttributes;
-import net.sourceforge.myfaces.renderkit.html.util.HTMLEncoder;
+import net.sourceforge.myfaces.renderkit.attr.*;
 import net.sourceforge.myfaces.renderkit.html.util.CommonAttributes;
+import net.sourceforge.myfaces.renderkit.html.util.HTMLEncoder;
 import net.sourceforge.myfaces.util.bundle.BundleUtils;
 
 import javax.faces.component.UIComponent;
@@ -37,7 +37,12 @@ import java.io.IOException;
  */
 public class ImageRenderer
         extends HTMLRenderer
-        implements ImageRendererAttributes
+        implements CommonRendererAttributes,
+                   HTMLUniversalAttributes,
+                   HTMLEventHandlerAttributes,
+                   HTMLImgAttributes,
+                   ImageRendererAttributes,
+                   UserRoleAttributes
 {
     public static final String TYPE = "Image";
     public String getRendererType()
@@ -55,6 +60,17 @@ public class ImageRenderer
         return s.equals(UIGraphic.TYPE);
     }
 
+    protected void initAttributeDescriptors()
+    {
+        addAttributeDescriptors(UIGraphic.TYPE, TLD_HTML_URI, "graphic_image", HTML_UNIVERSAL_ATTRIBUTES);
+        addAttributeDescriptors(UIGraphic.TYPE, TLD_HTML_URI, "graphic_image", HTML_EVENT_HANDLER_ATTRIBUTES);
+        addAttributeDescriptors(UIGraphic.TYPE, TLD_HTML_URI, "graphic_image", HTML_IMG_ATTRUBUTES);
+        addAttributeDescriptors(UIGraphic.TYPE, TLD_HTML_URI, "graphic_image", GRAPHIC_IMAGE_ATTRIBUTES);
+        addAttributeDescriptors(UIGraphic.TYPE, TLD_HTML_URI, "graphic_image", USER_ROLE_ATTRIBUTES);
+    }
+
+
+
     public void encodeBegin(FacesContext facesContext, UIComponent uiComponent)
         throws IOException
     {
@@ -65,22 +81,22 @@ public class ImageRenderer
     {
     }
 
-    public void encodeEnd(FacesContext context, UIComponent component) throws IOException
+    public void encodeEnd(FacesContext context, UIComponent uiComponent) throws IOException
     {
         javax.faces.context.ResponseWriter writer = context.getResponseWriter();
 
         String value;
 
-        String key = (String)component.getAttribute(KEY_ATTR);
+        String key = (String)uiComponent.getAttribute(KEY_ATTR);
         if (key != null)
         {
             value = BundleUtils.getString(context,
-                                          (String)component.getAttribute(BUNDLE_ATTR),
+                                          (String)uiComponent.getAttribute(BUNDLE_ATTR),
                                           key);
         }
         else
         {
-            value = getStringValue(context, component);
+            value = getStringValue(context, uiComponent);
         }
 
         if (value != null && value.length() > 0)
@@ -107,16 +123,16 @@ public class ImageRenderer
             writer.write("\"");
 
             String alt;
-            String altKey = (String)component.getAttribute(ALT_KEY_ATTR);
+            String altKey = (String)uiComponent.getAttribute(ALT_KEY_ATTR);
             if (altKey != null)
             {
                 alt = BundleUtils.getString(context,
-                                              (String)component.getAttribute(ALT_BUNDLE_ATTR),
+                                              (String)uiComponent.getAttribute(ALT_BUNDLE_ATTR),
                                               altKey);
             }
             else
             {
-                alt = (String)component.getAttribute(ALT_ATTR);
+                alt = (String)uiComponent.getAttribute(ALT_ATTR);
             }
             if (alt != null && alt.length() > 0)
             {
@@ -125,9 +141,10 @@ public class ImageRenderer
                 writer.write("\"");
             }
 
-            CommonAttributes.renderHTMLEventHandlerAttributes(context, component);
-            CommonAttributes.renderUniversalHTMLAttributes(context, component);
-            CommonAttributes.renderAttributes(context, component, ImageRendererAttributes.COMMON_IMAGE_ATTRUBUTES);
+            CommonAttributes.renderCssClass(writer, uiComponent, GRAPHIC_CLASS_ATTR);
+            CommonAttributes.renderHTMLAttributes(writer, uiComponent, HTML_UNIVERSAL_ATTRIBUTES);
+            CommonAttributes.renderHTMLAttributes(writer, uiComponent, HTML_EVENT_HANDLER_ATTRIBUTES);
+            CommonAttributes.renderHTMLAttributes(writer, uiComponent, HTML_IMG_ATTRUBUTES);
 
             writer.write(">");
         }

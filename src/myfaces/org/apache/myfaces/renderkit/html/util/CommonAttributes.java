@@ -18,11 +18,12 @@
  */
 package net.sourceforge.myfaces.renderkit.html.util;
 
-import net.sourceforge.myfaces.renderkit.attr.CommonRendererAttributes;
+import net.sourceforge.myfaces.renderkit.attr.HTMLEventHandlerAttributes;
+import net.sourceforge.myfaces.renderkit.attr.HTMLUniversalAttributes;
 
+import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
-import javax.faces.component.UIComponent;
 import java.io.IOException;
 
 /**
@@ -32,19 +33,36 @@ import java.io.IOException;
  */
 public class CommonAttributes
 {
-    public static void renderUniversalHTMLAttributes(FacesContext context, UIComponent component)
+    /**
+     * @deprecated
+     */
+    public static void renderHTMLUniversalAttributes(FacesContext context,
+                                                     UIComponent component)
         throws IOException
     {
-        renderAttributes(context, component, CommonRendererAttributes.UNIVERSAL_ATTRIBUTES);
+        renderAttributes(context,
+                         component,
+                         HTMLUniversalAttributes.HTML_UNIVERSAL_ATTRIBUTES);
     }
 
-    public static void renderHTMLEventHandlerAttributes(FacesContext context, UIComponent component)
+    /**
+     * @deprecated
+     */
+    public static void renderHTMLEventHandlerAttributes(FacesContext context,
+                                                        UIComponent component)
         throws IOException
     {
-        renderAttributes(context, component, CommonRendererAttributes.EVENT_HANDLER_ATTRIBUTES);
+        renderAttributes(context,
+                         component,
+                         HTMLEventHandlerAttributes.HTML_EVENT_HANDLER_ATTRIBUTES);
     }
 
-    public static void renderAttributes(FacesContext context, UIComponent component, String[] attributes)
+    /**
+     * @deprecated
+     */
+    public static void renderAttributes(FacesContext context,
+                                        UIComponent component,
+                                        String[] attributes)
         throws IOException
     {
         ResponseWriter writer = context.getResponseWriter();
@@ -65,6 +83,7 @@ public class CommonAttributes
                 }
                 else if (value instanceof Boolean)
                 {
+                    //TODO: Some html boolean attributes must not be rendered when false
                     writer.write(" ");
                     writer.write(attrName);
                     writer.write("=\"");
@@ -88,4 +107,48 @@ public class CommonAttributes
             }
         }
     }
+
+    public static void renderHTMLAttributes(ResponseWriter writer,
+                                            UIComponent component,
+                                            String[] attributes)
+        throws IOException
+    {
+        for (int i = 0; i < attributes.length; i++)
+        {
+            String attrName = attributes[i];
+            Object value = component.getAttribute(attrName);
+            if (value != null)
+            {
+                if (value instanceof Boolean &&
+                    ((Boolean)value).booleanValue())
+                {
+                    writer.write(" ");
+                    writer.write(attrName);
+                }
+                else
+                {
+                    writer.write(" ");
+                    writer.write(attrName);
+                    writer.write("=\"");
+                    writer.write(value.toString());
+                    writer.write("\"");
+                }
+            }
+        }
+    }
+
+    public static void renderCssClass(ResponseWriter writer,
+                                      UIComponent uiComponent,
+                                      String classAttrName)
+        throws IOException
+    {
+        String cssClass = (String)uiComponent.getAttribute(classAttrName);
+        if (cssClass != null)
+        {
+            writer.write(" class=\"");
+            writer.write(cssClass);
+            writer.write("\"");
+        }
+    }
+
 }
