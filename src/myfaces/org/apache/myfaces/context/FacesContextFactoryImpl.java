@@ -21,6 +21,9 @@ import javax.faces.FacesException;
 import javax.faces.context.FacesContext;
 import javax.faces.context.FacesContextFactory;
 import javax.faces.lifecycle.Lifecycle;
+import javax.portlet.PortletContext;
+import javax.portlet.PortletRequest;
+import javax.portlet.PortletResponse;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
@@ -45,9 +48,14 @@ public class FacesContextFactoryImpl
                                                (ServletRequest)request,
                                                (ServletResponse)response);
         }
-        else
+        
+        if (context instanceof PortletContext)
         {
-            throw new FacesException("Unsupported context type " + context.getClass().getName());
+            return new ServletFacesContextImpl((PortletContext)context,
+                                               (PortletRequest)request,
+                                               (PortletResponse)response);
         }
+        
+        throw new FacesException("Unsupported context type " + context.getClass().getName());
     }
 }

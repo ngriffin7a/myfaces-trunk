@@ -15,6 +15,46 @@
  */
 package org.apache.myfaces.config;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.StringTokenizer;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
+import java.util.jar.JarInputStream;
+
+import javax.faces.FacesException;
+import javax.faces.FactoryFinder;
+import javax.faces.application.Application;
+import javax.faces.application.ApplicationFactory;
+import javax.faces.application.NavigationHandler;
+import javax.faces.application.StateManager;
+import javax.faces.application.ViewHandler;
+import javax.faces.context.ExternalContext;
+import javax.faces.el.PropertyResolver;
+import javax.faces.el.VariableResolver;
+import javax.faces.event.ActionListener;
+import javax.faces.event.PhaseListener;
+import javax.faces.lifecycle.Lifecycle;
+import javax.faces.lifecycle.LifecycleFactory;
+import javax.faces.render.RenderKit;
+import javax.faces.render.RenderKitFactory;
+import javax.faces.webapp.FacesServlet;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.myfaces.application.ApplicationFactoryImpl;
 import org.apache.myfaces.config.element.ManagedBean;
 import org.apache.myfaces.config.element.NavigationRule;
@@ -29,31 +69,6 @@ import org.apache.myfaces.util.ClassUtils;
 import org.apache.myfaces.util.LocaleUtils;
 import org.xml.sax.SAXException;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
-import javax.faces.FacesException;
-import javax.faces.FactoryFinder;
-import javax.faces.application.*;
-import javax.faces.context.ExternalContext;
-import javax.faces.el.PropertyResolver;
-import javax.faces.el.VariableResolver;
-import javax.faces.event.ActionListener;
-import javax.faces.event.PhaseListener;
-import javax.faces.lifecycle.Lifecycle;
-import javax.faces.lifecycle.LifecycleFactory;
-import javax.faces.render.RenderKit;
-import javax.faces.render.RenderKitFactory;
-import javax.faces.webapp.FacesServlet;
-import javax.servlet.ServletContext;
-import java.io.*;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-import java.util.*;
-import java.util.jar.JarEntry;
-import java.util.jar.JarFile;
-import java.util.jar.JarInputStream;
-
 
 /**
  * Configures everything for a given context.
@@ -63,6 +78,9 @@ import java.util.jar.JarInputStream;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  *          $Log$
+ *          Revision 1.10  2005/01/26 17:03:11  matzew
+ *          MYFACES-86. portlet support provided by Stan Silver (JBoss Group)
+ *
  *          Revision 1.9  2004/12/13 22:20:34  oros
  *          fix #1046763: close temporary jar file before trying to delete it
  *
@@ -292,30 +310,22 @@ public class FacesConfigurator
         }
     }
 
-
     private void feedJarConfig(String jarPath)
         throws FacesException
     {
         try
         {
-            if (!(_externalContext.getContext() instanceof ServletContext))
-            {
-                log.error("ServletContext expected");
-                return;
-            }
-            ServletContext servletContext = (ServletContext) _externalContext.getContext();
-
             // not all containers expand archives, so we have to do it the generic way:
-            // 1. get the stream from servlet context
-            InputStream in = servletContext.getResourceAsStream(jarPath);
+            // 1. get the stream from external context
+            InputStream in = _externalContext.getResourceAsStream(jarPath);
             if (in == null)
             {
                 if (jarPath.startsWith("/"))
                 {
-                    in = servletContext.getResourceAsStream(jarPath.substring(1));
+                    in = _externalContext.getResourceAsStream(jarPath.substring(1));
                 } else
                 {
-                    in = servletContext.getResourceAsStream("/" + jarPath);
+                    in = _externalContext.getResourceAsStream("/" + jarPath);
                 }
             }
             if (in == null)
@@ -348,7 +358,7 @@ public class FacesConfigurator
             if (found)
             {
                 tmp = File.createTempFile("myfaces", ".jar");
-                in = servletContext.getResourceAsStream(jarPath);
+                in = _externalContext.getResourceAsStream(jarPath);
                 FileOutputStream out = new FileOutputStream(tmp);
                 byte[] buffer = new byte[4096];
                 int r;
@@ -654,19 +664,13 @@ public class FacesConfigurator
 
     private String getLifecycleId()
     {
-        if (_externalContext.getContext() instanceof ServletContext)
-        {
-            ServletContext context = (ServletContext) _externalContext.getContext();
-            String id = context.getInitParameter(FacesServlet.LIFECYCLE_ID_ATTR);
+        String id = _externalContext.getInitParameter(FacesServlet.LIFECYCLE_ID_ATTR);
 
-            if (id != null)
-            {
-                return id;
-            }
-        } else
+        if (id != null)
         {
-            log.warn("No servlet context available, don't know how to obtain LIFECYCLE_ID. Using default!");
+            return id;
         }
+
         return LifecycleFactory.DEFAULT_LIFECYCLE;
     }
 }

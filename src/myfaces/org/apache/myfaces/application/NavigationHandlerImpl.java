@@ -32,12 +32,16 @@ import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.*;
+import javax.portlet.PortletRequest;
 
 /**
  * @author Thomas Spiegl (latest modification by $Author$)
  * @author Anton Koinov
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.34  2005/01/26 17:03:09  matzew
+ * MYFACES-86. portlet support provided by Stan Silver (JBoss Group)
+ *
  * Revision 1.33  2004/10/13 11:50:59  matze
  * renamed packages to org.apache
  *
@@ -147,8 +151,9 @@ public class NavigationHandlerImpl
                           " toViewId =" + navigationCase.getToViewId() +
                           " redirect=" + navigationCase.isRedirect());
             }
-            if (navigationCase.isRedirect())
-            {
+            if (navigationCase.isRedirect() && 
+               (!(facesContext.getExternalContext().getRequest() instanceof PortletRequest)))
+            { // Spec section 7.4.2 says "redirects not possible" in this case for portlets
                 ExternalContext externalContext = facesContext.getExternalContext();
                 ViewHandler viewHandler = facesContext.getApplication().getViewHandler();
                 String redirectPath = viewHandler.getActionURL(facesContext, navigationCase.getToViewId());
@@ -168,10 +173,7 @@ public class NavigationHandlerImpl
                         }
                     }
                 }
-                else
-                {
-                    //TODO: What about Portlet requests?
-                }
+                
                 try
                 {
                     externalContext.redirect(externalContext.encodeActionURL(redirectPath));

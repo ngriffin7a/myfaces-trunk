@@ -34,6 +34,7 @@ import java.lang.reflect.Method;
 
 import org.apache.commons.logging.LogFactory;
 import org.apache.commons.logging.Log;
+import org.apache.myfaces.context.ReleaseableExternalContext;
 
 /**
  * JSF 1.0 PRD2, 6.1.1
@@ -45,7 +46,7 @@ import org.apache.commons.logging.Log;
  * Forward the message when an exception is thrown in dispatch
  */
 public class ServletExternalContextImpl
-    extends ExternalContext
+    extends ExternalContext implements ReleaseableExternalContext
 {
 
     private static final Log log = LogFactory.getLog(ServletExternalContextImpl.class);

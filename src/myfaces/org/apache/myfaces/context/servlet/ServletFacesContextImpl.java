@@ -32,6 +32,11 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import java.util.*;
+import javax.portlet.PortletContext;
+import javax.portlet.PortletRequest;
+import javax.portlet.PortletResponse;
+import org.apache.myfaces.context.ReleaseableExternalContext;
+import org.apache.myfaces.context.portlet.PortletExternalContextImpl;
 
 
 /**
@@ -39,6 +44,9 @@ import java.util.*;
  * @author Anton Koinov
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.18  2005/01/26 17:03:11  matzew
+ * MYFACES-86. portlet support provided by Stan Silver (JBoss Group)
+ *
  * Revision 1.17  2004/10/13 11:51:00  matze
  * renamed packages to org.apache
  *
@@ -67,7 +75,7 @@ public class ServletFacesContextImpl
     List                                _messageClientIds = null;
     private List                        _messages         = null;
     private Application                 _application;
-    private ServletExternalContextImpl  _externalContext;
+    private ReleaseableExternalContext  _externalContext;
     private ResponseStream              _responseStream   = null;
     private ResponseWriter              _responseWriter   = null;
     private FacesMessage.Severity       _maximumSeverity  = FacesMessage.SEVERITY_INFO;
@@ -78,16 +86,31 @@ public class ServletFacesContextImpl
 
     //~ Constructors -------------------------------------------------------------------------------
 
+    // TODO: FIXME: the name of this class should be changed.
+    public ServletFacesContextImpl(PortletContext portletContext,
+                                   PortletRequest portletRequest,
+                                   PortletResponse portletResponse) 
+    {
+        this(new PortletExternalContextImpl(portletContext,
+                                            portletRequest,
+                                            portletResponse));
+    }
+    
     public ServletFacesContextImpl(ServletContext servletContext,
                                    ServletRequest servletRequest,
                                    ServletResponse servletResponse)
     {
+        this(new ServletExternalContextImpl(servletContext, 
+                                            servletRequest,
+                                            servletResponse));
+    }
+        
+    private ServletFacesContextImpl(ReleaseableExternalContext externalContext)
+    {
         _application = ((ApplicationFactory)FactoryFinder.getFactory(FactoryFinder.APPLICATION_FACTORY))
                             .getApplication();
         _renderKitFactory = (RenderKitFactory) FactoryFinder.getFactory(FactoryFinder.RENDER_KIT_FACTORY);
-        _externalContext = new ServletExternalContextImpl(servletContext,
-                                                          servletRequest,
-                                                          servletResponse);
+        _externalContext = externalContext;
         FacesContext.setCurrentInstance(this);  //protected method, therefore must be called from here
     }
 
@@ -95,7 +118,7 @@ public class ServletFacesContextImpl
 
     public ExternalContext getExternalContext()
     {
-        return _externalContext;
+        return (ExternalContext)_externalContext;
     }
 
     public FacesMessage.Severity getMaximumSeverity()
@@ -298,5 +321,13 @@ public class ServletFacesContextImpl
     public void responseComplete()
     {
         _responseComplete = true;
+    }
+    
+    // Portlet need to do this to change from ActionRequest/Response to
+    // RenderRequest/Response
+    public void setExternalContext(ReleaseableExternalContext extContext)
+    {
+        _externalContext = extContext;
+        FacesContext.setCurrentInstance(this); //TODO: figure out if I really need to do this
     }
 }

@@ -66,6 +66,7 @@
         <pathelement location="${commons-beanutils.jar}"/>
         <pathelement location="${commons-collections.jar}"/>
         <pathelement location="${commons-digester.jar}"/>
+        <pathelement location="${portlet.jar}"/>
         <pathelement location="${api.classes}"/>
         <pathelement location="${share.classes}"/>
     </path>

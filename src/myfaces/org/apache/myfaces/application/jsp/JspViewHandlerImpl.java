@@ -36,11 +36,18 @@ import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import javax.portlet.PortletRequest;
+import javax.portlet.PortletURL;
+import javax.portlet.RenderResponse;
+import org.apache.myfaces.portlet.MyFacesGenericPortlet;
 
 /**
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.31  2005/01/26 17:03:12  matzew
+ * MYFACES-86. portlet support provided by Stan Silver (JBoss Group)
+ *
  * Revision 1.30  2004/10/13 11:50:59  matze
  * renamed packages to org.apache
  *
@@ -174,6 +181,14 @@ public class JspViewHandlerImpl
 
     public String getActionURL(FacesContext facesContext, String viewId)
     {
+        if (facesContext.getExternalContext().getResponse() instanceof RenderResponse)
+        {
+            RenderResponse response = (RenderResponse)facesContext.getExternalContext().getResponse();
+            PortletURL url = response.createActionURL();
+            url.setParameter(MyFacesGenericPortlet.VIEW_ID, viewId);
+            return url.toString();
+        }
+        
         String path = getViewIdPath(facesContext, viewId);
         if (path.length() > 0 && path.charAt(0) == '/')
         {
@@ -209,6 +224,12 @@ public class JspViewHandlerImpl
         ExternalContext externalContext = facesContext.getExternalContext();
 
         String viewId = facesContext.getViewRoot().getViewId();
+
+        if (externalContext.getRequest() instanceof PortletRequest) {
+            externalContext.dispatch(viewId);
+            return;
+        }
+        
         ServletMapping servletMapping = getServletMapping(externalContext);
         if (servletMapping.isExtensionMapping())
         {
@@ -240,6 +261,8 @@ public class JspViewHandlerImpl
             ServletResponse response = (ServletResponse) externalContext.getResponse();
             response.setLocale(viewToRender.getLocale());
         }
+        
+        // TODO: 2.5.2.2 for Portlet?  What do I do?
 
         externalContext.dispatch(viewId);
 
@@ -297,6 +320,11 @@ public class JspViewHandlerImpl
         }
 
         ExternalContext externalContext = facescontext.getExternalContext();
+        
+        if (externalContext.getRequest() instanceof PortletRequest) {
+            return viewId;
+        }
+        
         ServletMapping servletMapping = getServletMapping(externalContext);
 
         if (servletMapping.isExtensionMapping())

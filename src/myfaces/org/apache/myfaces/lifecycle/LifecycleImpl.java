@@ -38,12 +38,17 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import javax.portlet.PortletRequest;
+import org.apache.myfaces.portlet.MyFacesGenericPortlet;
 
 /**
  * Implements the lifecycle as described in Spec. 1.0 PFD Chapter 2
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.42  2005/01/26 17:03:11  matzew
+ * MYFACES-86. portlet support provided by Stan Silver (JBoss Group)
+ *
  * Revision 1.41  2004/10/13 11:51:00  matze
  * renamed packages to org.apache
  *
@@ -280,9 +285,7 @@ public class LifecycleImpl
             if (log.isDebugEnabled()) log.debug("exiting renderResponse in " + LifecycleImpl.class.getName() + " (response complete)");
             return;
         }
-
         informPhaseListenersBefore(facesContext, PhaseId.RENDER_RESPONSE);
-
         Application application = facesContext.getApplication();
         ViewHandler viewHandler = application.getViewHandler();
         try
@@ -295,7 +298,6 @@ public class LifecycleImpl
         }
 
         informPhaseListenersAfter(facesContext, PhaseId.RENDER_RESPONSE);
-
         if (log.isTraceEnabled())
         {
             //Note: DebugUtils Logger must also be in trace level
@@ -310,14 +312,19 @@ public class LifecycleImpl
     {
         ExternalContext externalContext = facesContext.getExternalContext();
 
-        String viewId = externalContext.getRequestPathInfo();
+        if (externalContext.getRequest() instanceof PortletRequest)
+        {
+            PortletRequest request = (PortletRequest)externalContext.getRequest();
+            return request.getParameter(MyFacesGenericPortlet.VIEW_ID);
+        }
+        
+        String viewId = externalContext.getRequestPathInfo();  //getPathInfo
         if (viewId == null)
         {
             //No extra path info found, so it is propably extension mapping
-            viewId = externalContext.getRequestServletPath();
+            viewId = externalContext.getRequestServletPath();  //getServletPath
             DebugUtils.assertError(viewId != null,
                                    log, "RequestServletPath is null, cannot determine viewId of current page.");
-
             //TODO: JSF Spec 2.2.1 - what do they mean by "if the default ViewHandler implementation is used..." ?
             String defaultSuffix = externalContext.getInitParameter(ViewHandler.DEFAULT_SUFFIX_PARAM_NAME);
             String suffix = defaultSuffix != null ? defaultSuffix : ViewHandler.DEFAULT_SUFFIX;
