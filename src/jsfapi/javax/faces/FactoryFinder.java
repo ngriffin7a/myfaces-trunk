@@ -24,6 +24,7 @@ import javax.faces.lifecycle.LifecycleFactory;
 import javax.faces.render.RenderKitFactory;
 import java.lang.reflect.Constructor;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 
@@ -58,55 +59,67 @@ public class FactoryFinder
     {
         int factoryIdx = checkFactoryNameAndGetIndex(factoryName);
         ClassLoader classLoader = getClassLoader();
-        Stack[] factoryStacks = (Stack[])_classLoaderFactoriesMap.get(classLoader);
+        Object[] factoryStacks = (Object[])_classLoaderFactoriesMap.get(classLoader);
         if (factoryStacks == null)
         {
             throw new IllegalStateException("no factories configured for this application");
         }
-        Stack factoryStack = factoryStacks[factoryIdx];
-        if (factoryStack == null || factoryStack.isEmpty())
+        Object factory = factoryStacks[factoryIdx];
+        if (factory == null)
         {
             throw new IllegalStateException("no factory " + factoryName + " configured for this appliction");
         }
-        Object topFactory = factoryStack.peek();
-        if (!(topFactory instanceof String))
+        if (!(factory instanceof List))
         {
-            return topFactory;
+            return factory;
         }
+        factory = initFactory((List)factory, classLoader, factoryIdx);
+        factoryStacks[factoryIdx] = factory;
+        return factory;
+    }
 
-        //new instance
+    private static Object initFactory(List factoryNames,
+                                      ClassLoader classLoader,
+                                      int factoryIdx)
+    {
+        Object parentFactory = null;
+        for (int i = 0, size = factoryNames.size(); i < size; i++)
+        {
+            String factoryImplName = (String) factoryNames.get(i);
+            parentFactory = newFactoryInstance(factoryImplName, parentFactory, classLoader, factoryIdx);
+        }
+        return parentFactory;
+    }
+
+    private static Object newFactoryInstance(String factoryImplName,
+                                             Object parentFactory,
+                                             ClassLoader classLoader,
+                                             int factoryIdx)
+    {
         Class factoryClass = null;
         try
         {
-            factoryClass = classLoader.loadClass((String)topFactory);
+            factoryClass = classLoader.loadClass(factoryImplName);
         }
         catch (ClassNotFoundException e)
         {
             throw new FacesException(e);
         }
-
-        int stackSize = factoryStack.size();
-        if (stackSize > 1)
+        //Try 1 arguments constructor
+        try
         {
-            //Try 1 arguments constructor
+            Constructor constructor = factoryClass.getConstructor(FACTORY_CONSTRUCTOR_PARAMS[factoryIdx]);
             try
             {
-                Constructor constructor = factoryClass.getConstructor(FACTORY_CONSTRUCTOR_PARAMS[factoryIdx]);
-                Object previousFactory = factoryStack.get(stackSize - 2);
-                try
-                {
-                    Object factory = constructor.newInstance(new Object[] {previousFactory});
-                    factoryStack.set(stackSize - 1, factory);
-                    return factory;
-                }
-                catch (Exception ex)
-                {
-                    throw new FacesException(ex);
-                }
+                return constructor.newInstance(new Object[] {parentFactory});
             }
-            catch (NoSuchMethodException e)
+            catch (Exception ex)
             {
+                throw new FacesException(ex);
             }
+        }
+        catch (NoSuchMethodException e)
+        {
         }
 
         try
@@ -114,9 +127,7 @@ public class FactoryFinder
             Constructor constructor = factoryClass.getConstructor(FACTORY_CONSTRUCTOR_EMPTY_PARAMS);
             try
             {
-                Object factory = constructor.newInstance(null);
-                factoryStack.set(stackSize - 1, factory);
-                return factory;
+                return constructor.newInstance(null);
             }
             catch (Exception ex)
             {
@@ -143,13 +154,14 @@ public class FactoryFinder
                 _classLoaderFactoriesMap.put(classLoader, factoryStacks);
             }
 
-            Stack factoryStack = factoryStacks[factoryIdx];
-            if (factoryStack == null)
+            Object factory = factoryStacks[factoryIdx];
+            if (factory instanceof List)
             {
-                factoryStack = new Stack();
-                factoryStacks[factoryIdx] = factoryStack;
+                ((List)factory).add(implName);
             }
-            factoryStack.push(implName);
+            // else do nothing
+            // Javadoc says ... This method has no effect if getFactory() has already been
+            // called looking for a factory for this factoryName.
         }
     }
 
@@ -161,9 +173,9 @@ public class FactoryFinder
         Stack[] factoryStacks = (Stack[])_classLoaderFactoriesMap.get(classLoader);
         for (int i = 0; i < factoryStacks.length; i++)
         {
-            Stack factoryStack = factoryStacks[i];
-            factoryStack.clear();
+            factoryStacks[i] = null;
         }
+        factoryStacks = null;
     }
 
 
@@ -189,7 +201,7 @@ public class FactoryFinder
         {
             return 3;
         }
-        throw new IllegalArgumentException("factoryName " + factoryName);
+        throw new IllegalArgumentException("factoryName '" + factoryName + "'");
     }
 
 
