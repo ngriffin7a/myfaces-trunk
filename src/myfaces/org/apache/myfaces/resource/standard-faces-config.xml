@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="ISO-8859-1" ?>
 
 <!DOCTYPE faces-config PUBLIC
-  "-//Sun Microsystems, Inc.//DTD JavaServer Faces Config 1.0//EN"
-  "http://java.sun.com/dtd/web-facesconfig_1_0.dtd">
+ "-//Sun Microsystems, Inc.//DTD JavaServer Faces Config 1.1//EN"
+ "http://java.sun.com/dtd/web-facesconfig_1_1.dtd">
 
 <!--
  * Copyright 2004 The Apache Software Foundation.
@@ -21,13 +21,6 @@
 -->
 
 <faces-config xmlns="http://java.sun.com/JSF/Configuration">
-
-  <factory>
-    <application-factory>net.sourceforge.myfaces.application.ApplicationFactoryImpl</application-factory>
-    <faces-context-factory>net.sourceforge.myfaces.context.FacesContextFactoryImpl</faces-context-factory>
-    <lifecycle-factory>net.sourceforge.myfaces.lifecycle.LifecycleFactoryImpl</lifecycle-factory>
-    <render-kit-factory>net.sourceforge.myfaces.renderkit.RenderKitFactoryImpl</render-kit-factory>
-  </factory>
 
   <!-- Initial application element with partial values -->
   <application>
