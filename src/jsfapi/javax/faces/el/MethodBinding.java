@@ -21,8 +21,6 @@ package javax.faces.el;
 import javax.faces.context.FacesContext;
 
 /**
- * DOCUMENT ME!
- *
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  */

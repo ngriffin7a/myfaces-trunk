@@ -23,8 +23,6 @@ import javax.faces.context.FacesContext;
 import javax.faces.lifecycle.Lifecycle;
 
 /**
-  * DOCUMENT ME!
-  *
   * @author Thomas Spiegl (latest modification by $Author$)
   * @version $Revision$ $Date$
 */

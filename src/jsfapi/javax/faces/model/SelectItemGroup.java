@@ -20,8 +20,6 @@
 package javax.faces.model;
 
 /**
-  * DOCUMENT ME!
-  *
   * @author Thomas Spiegl (latest modification by $Author$)
   * @version $Revision$ $Date$
 */

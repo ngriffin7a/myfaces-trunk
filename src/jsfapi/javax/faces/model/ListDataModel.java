@@ -22,8 +22,6 @@ package javax.faces.model;
 import java.util.List;
 
 /**
-  * DOCUMENT ME!
-  *
   * @author Thomas Spiegl (latest modification by $Author$)
   * @version $Revision$ $Date$
 */

@@ -22,8 +22,6 @@ package javax.faces.event;
 import javax.faces.FacesException;
 
 /**
-  * DOCUMENT ME!
-  *
   * @author Thomas Spiegl (latest modification by $Author$)
   * @version $Revision$ $Date$
 */

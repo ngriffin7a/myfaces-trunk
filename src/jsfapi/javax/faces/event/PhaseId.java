@@ -23,8 +23,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 /**
-  * DOCUMENT ME!
-  *
   * @author Thomas Spiegl (latest modification by $Author$)
   * @version $Revision$ $Date$
 */

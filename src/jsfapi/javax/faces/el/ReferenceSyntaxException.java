@@ -19,8 +19,6 @@
 package javax.faces.el;
 
 /**
- * DOCUMENT ME!
- *
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  */

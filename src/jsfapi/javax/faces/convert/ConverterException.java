@@ -24,8 +24,6 @@ import javax.faces.FacesException;
 import javax.faces.application.FacesMessage;
 
 /**
- * DOCUMENT ME!
- *
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
