@@ -4,7 +4,7 @@ MyFaces installation instructions
 What you need
 -------------
 - JDK 1.4.0 (or higher)
-- Tomcat 4.0.4 (get it from http://jakarta.apache.org/tomcat/index.html)
+- Tomcat 4.0.4 (or higher) (get it from http://jakarta.apache.org/tomcat/index.html)
 - JSF-API (get it from the "JavaServerTM Faces v1.0 Reference Implementation Early Access 2" at http://java.sun.com/j2ee/javaserverfaces/download.html)
 
 

@@ -1,4 +1,10 @@
 MyFaces Known Issues
 ====================
 
-TODO... (Many!)
+* Accessing a run-time attribute in a child component during encodeBegin may return an unpredictable result.
+  Reason: Run-time values of component attributes are set by the doStart method of the
+  corresponding Tag. If a component accesses a "non-static" attribute in a child component,
+  this value might not yet be set to the right value.
+
+
+TODO... (Many others!)

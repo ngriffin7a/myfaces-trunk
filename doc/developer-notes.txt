@@ -1,0 +1,20 @@
+MyFaces Developer Notes
+=======================
+
+This document deals with issues that are important for MyFaces developers
+and custom component developers.
+
+* FacesBodyTag:
+  The FacesBodyTag in the current jsf-api EA release is not implemented fully
+  (e.g. doStartTag() does nothing). This issue has been disussed in Sun's JSF Forum.
+  To bypass that hitch, MyFaces has a patch.
+  Two ways to apply this patch:
+  1. Make sure that this class comes before the original api class in the classpath.
+     Tomcat puts the WEB-INF/classes dir before the lib dir, so normally this should
+     work.
+  or
+  2. You can also patch the jsf-api.jar directly. Just remove the original class
+     from the jar file and add this version. You can use the jar tool in the
+     Java JDK or WinZip or any other zip tool.
+  Sorry for the inconvenience, but because of current JSF license we are not allowed
+  to publish the jsf-api.jar together with MyFaces.
