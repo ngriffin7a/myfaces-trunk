@@ -35,6 +35,7 @@ import net.sourceforge.myfaces.custom.tree.model.TreeModel;
 import net.sourceforge.myfaces.custom.tree.model.TreeModelEvent;
 import net.sourceforge.myfaces.custom.tree.model.TreeModelListener;
 import net.sourceforge.myfaces.custom.tree.model.TreePath;
+import net.sourceforge.myfaces.component.html.ext.HtmlPanelGroup;
 
 
 /**
@@ -47,6 +48,9 @@ import net.sourceforge.myfaces.custom.tree.model.TreePath;
  * @author <a href="mailto:oliver@rossmueller.com">Oliver Rossmueller</a>
  * @version $Revision$ $Date$
  *          $Log$
+ *          Revision 1.12  2004/05/12 02:27:43  o_rossmueller
+ *          fix #951896: tree component works for JAVASCRIPT=false, too
+ *
  *          Revision 1.11  2004/05/10 01:24:51  o_rossmueller
  *          added iconClass attribute
  *
@@ -81,7 +85,7 @@ import net.sourceforge.myfaces.custom.tree.model.TreePath;
  *          tree component
  */
 public class HtmlTree
-    extends HtmlForm
+    extends HtmlPanelGroup
     implements TreeModelListener
 {
 

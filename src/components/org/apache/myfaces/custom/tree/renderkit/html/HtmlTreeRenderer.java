@@ -28,6 +28,7 @@ import net.sourceforge.myfaces.renderkit.RendererUtils;
 import net.sourceforge.myfaces.renderkit.html.HTML;
 import net.sourceforge.myfaces.renderkit.html.HtmlFormRendererBase;
 import net.sourceforge.myfaces.renderkit.html.HtmlRendererUtils;
+import net.sourceforge.myfaces.renderkit.html.HtmlRenderer;
 
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
@@ -42,6 +43,9 @@ import java.util.List;
  * @author <a href="mailto:oliver@rossmueller.com">Oliver Rossmueller</a>
  * @version $Revision$ $Date$
  *          $Log$
+ *          Revision 1.6  2004/05/12 02:27:43  o_rossmueller
+ *          fix #951896: tree component works for JAVASCRIPT=false, too
+ *
  *          Revision 1.5  2004/05/10 01:24:51  o_rossmueller
  *          added iconClass attribute
  *
@@ -58,7 +62,7 @@ import java.util.List;
  *          tree component
  */
 public class HtmlTreeRenderer
-    extends HtmlFormRendererBase
+    extends HtmlRenderer
 {
 
     private static final Integer ZERO = new Integer(0);
