@@ -18,70 +18,76 @@
  */
 package net.sourceforge.myfaces.application;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import net.sourceforge.myfaces.MyFacesFactoryFinder;
 import net.sourceforge.myfaces.config.FacesConfig;
 import net.sourceforge.myfaces.config.FacesConfigFactory;
 import net.sourceforge.myfaces.config.NavigationCaseConfig;
 import net.sourceforge.myfaces.config.NavigationRuleConfig;
+import net.sourceforge.myfaces.util.FacesUtils;
 
-import javax.faces.FactoryFinder;
+import javax.faces.application.Application;
 import javax.faces.application.NavigationHandler;
+import javax.faces.application.ViewHandler;
 import javax.faces.context.FacesContext;
-import javax.faces.tree.TreeFactory;
 import javax.servlet.ServletContext;
-import java.util.*;
 
 /**
  * DOCUMENT ME!
  * @author Thomas Spiegl (latest modification by $Author$)
+ * @author Anton Koinov
  * @version $Revision$ $Date$
  */
 public class NavigationHandlerImpl
     extends NavigationHandler
 {
+    private static final String ASTERISK = "*";
+    
     private static Map _cazes;
     private static List _wildcardKeys = new ArrayList();
 
-    private static final String ASTERISK = "*";
-
-    public void handleNavigation(FacesContext facesContext,
-                                 String actionRef,
-                                 String outcome)
+    public void handleNavigation(FacesContext facesContext, String fromAction, String outcome)
     {
-        if (outcome == null)
+        if(outcome == null)
         {
-            throw new NullPointerException("Parameter outcome must not be null");
+            // stay on current ViewRoot
+            return;
         }
-
-        String treeId = facesContext.getTree().getTreeId();
+        
+        String viewId = facesContext.getViewRoot().getViewId();
         Map casesMap = getNavigationCases(facesContext);
+        String newViewId = null;
 
-        String newTreeId = null;
-
-        // Excact match
-        List casesList = (List)casesMap.get(treeId);
+        // Exact match
+        List casesList = (List)casesMap.get(viewId);
         if (casesList != null)
         {
-            newTreeId = getTreeId(casesList, actionRef, outcome);
+            newViewId = getViewId(casesList, fromAction, outcome);
         }
 
-        if (newTreeId == null)
+        if (newViewId == null)
         {
             // Wildcard match
             List keys = getSortedWildcardKeys();
-            for (int i = 0, size = keys.size(); i < size && newTreeId == null; i++)
+            for (int i = 0, size = keys.size(); i < size && newViewId == null; i++)
             {
                 String fromTreeId = (String)keys.get(i);
                 if (fromTreeId.length() > 2)
                 {
                     String prefix = fromTreeId.substring(0, fromTreeId.length() - 2);
-                    if (treeId.startsWith(prefix))
+                    if (viewId.startsWith(prefix))
                     {
                         casesList = (List)casesMap.get(fromTreeId);
                         if (casesList != null)
                         {
-                            newTreeId = getTreeId(casesList, actionRef, outcome);
-                            if (newTreeId != null) break;
+                            newViewId = getViewId(casesList, fromAction, outcome);
+                            if (newViewId != null) break;
                         }
                     }
                 }
@@ -90,21 +96,22 @@ public class NavigationHandlerImpl
                     casesList = (List)casesMap.get(fromTreeId);
                     if (casesList != null)
                     {
-                        newTreeId = getTreeId(casesList, actionRef, outcome);
-                        if (newTreeId != null) break;
+                        newViewId = getViewId(casesList, fromAction, outcome);
+                        if (newViewId != null) break;
                     }
                 }
             }
         }
 
-        if (newTreeId != null)
+        if (newViewId != null)
         {
-            TreeFactory treeFactory = (TreeFactory)FactoryFinder.getFactory(FactoryFinder.TREE_FACTORY);
-            facesContext.setTree(treeFactory.getTree(facesContext, newTreeId));
+            ViewHandler viewHandler = FacesUtils.getApplication().getViewHandler();
+            facesContext.setViewRoot(viewHandler.createView(facesContext, newViewId));
         }
+        // Otherwise stay on current ViewRoot
     }
 
-    private String getTreeId(List casesList, String actionRef, String outcome)
+    private String getViewId(List casesList, String actionRef, String outcome)
     {
         for (int i = 0, size = casesList.size(); i < size; i++)
         {
@@ -134,10 +141,10 @@ public class NavigationHandlerImpl
             FacesConfig fc = fcf.getFacesConfig(servletContext);
 
             List rules = fc.getNavigationRuleConfigList();
-            int sizei = rules.size();
-            _cazes = new HashMap(sizei);
+            int rulesSize = rules.size();
+            _cazes = new HashMap(rulesSize);
 
-            for (int i = 0; i < sizei; i++)
+            for (int i = 0; i < rulesSize; i++)
             {
                 NavigationRuleConfig rule = (NavigationRuleConfig)rules.get(i);
                 List cazes = rule.getNavigationCaseConfigList();

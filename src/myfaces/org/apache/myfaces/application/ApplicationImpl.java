@@ -23,9 +23,9 @@ import net.sourceforge.myfaces.config.FacesConfig;
 import net.sourceforge.myfaces.config.FacesConfigFactory;
 import net.sourceforge.myfaces.el.MethodBindingImpl;
 import net.sourceforge.myfaces.el.ValueBindingImpl;
+import net.sourceforge.myfaces.util.BiLevelCacheMap;
 
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
@@ -60,8 +60,15 @@ public class ApplicationImpl
     //~ Instance fields ----------------------------------------------------------------------------
 
     private final FacesConfig    _facesConfig;
-    private final Map            _methodBindingCache = new HashMap();
-    private final Map            _valueBindingCache  = new HashMap();
+    private final Map            _valueBindingCache =
+        new BiLevelCacheMap(256, 128, 100)
+        {
+            protected Object newInstance(Object key)
+            {
+                return new ValueBindingImpl(ApplicationImpl.this, (String) key);
+            }
+        };
+
     private final ServletContext _servletContext;
     private Collection           _supportedLocales;
     private Locale               _defaultLocale;
@@ -84,9 +91,8 @@ public class ApplicationImpl
     {
         if (actionListener == null)
         {
-            throw new NullPointerException();
+            throw new NullPointerException("actionListener");
         }
-
         getFacesConfig().getApplicationConfig().setActionListener(actionListener);
     }
 
@@ -102,21 +108,20 @@ public class ApplicationImpl
 
     public Iterator getConverterIds()
     {
-        return getFacesConfig().getConverterTypes();
+        return getFacesConfig().getConverterIds();
     }
 
     public Iterator getConverterTypes()
     {
-        return getFacesConfig().getConverterIds();
+        return getFacesConfig().getConverterTypes();
     }
 
     public void setDefaultLocale(Locale locale)
     {
         if (locale == null)
         {
-            throw new NullPointerException();
+            throw new NullPointerException("locale");
         }
-
         _defaultLocale = locale;
     }
 
@@ -129,9 +134,8 @@ public class ApplicationImpl
     {
         if (messageBundle == null)
         {
-            throw new NullPointerException();
+            throw new NullPointerException("messageBundle");
         }
-
         _messageBundle = messageBundle;
     }
 
@@ -144,9 +148,8 @@ public class ApplicationImpl
     {
         if (navigationHandler == null)
         {
-            throw new NullPointerException();
+            throw new NullPointerException("navigationHandler");
         }
-
         getFacesConfig().getApplicationConfig().setNavigationHandler(navigationHandler);
     }
 
@@ -159,9 +162,8 @@ public class ApplicationImpl
     {
         if (propertyResolver == null)
         {
-            throw new NullPointerException();
+            throw new NullPointerException("propertyResolver");
         }
-
         getFacesConfig().getApplicationConfig().setPropertyResolver(propertyResolver);
     }
 
@@ -174,9 +176,8 @@ public class ApplicationImpl
     {
         if (locales == null)
         {
-            throw new NullPointerException();
+            throw new NullPointerException("locales");
         }
-
         _supportedLocales = locales;
     }
 
@@ -194,9 +195,8 @@ public class ApplicationImpl
     {
         if (variableResolver == null)
         {
-            throw new NullPointerException();
+            throw new NullPointerException("variableResolver");
         }
-
         getFacesConfig().getApplicationConfig().setVariableResolver(variableResolver);
     }
 
@@ -209,9 +209,8 @@ public class ApplicationImpl
     {
         if (viewHandler == null)
         {
-            throw new NullPointerException();
+            throw new NullPointerException("viewHandler");
         }
-
         _viewHandler = viewHandler;
     }
 
@@ -226,12 +225,10 @@ public class ApplicationImpl
         {
             throw new NullPointerException("componentType");
         }
-
         if ((componentClass == null) || (componentClass.length() == 0))
         {
             throw new NullPointerException("componentClass");
         }
-
         getFacesConfig().addComponent(componentType, componentClass);
     }
 
@@ -241,12 +238,10 @@ public class ApplicationImpl
         {
             throw new NullPointerException("converterId");
         }
-
         if ((converterClass == null) || (converterClass.length() == 0))
         {
             throw new NullPointerException("converterClass");
         }
-
         getFacesConfig().addConverter(converterId, converterClass);
     }
 
@@ -256,7 +251,6 @@ public class ApplicationImpl
         {
             throw new NullPointerException("targetClass");
         }
-
         if ((converterClass == null) || (converterClass.length() == 0))
         {
             throw new NullPointerException("converterClass");
@@ -271,12 +265,10 @@ public class ApplicationImpl
         {
             throw new NullPointerException("validatorId");
         }
-
         if ((validatorClass == null) || (validatorClass.length() == 0))
         {
             throw new NullPointerException("validatorClass");
         }
-
         getFacesConfig().addValidator(validatorId, validatorClass);
     }
 
@@ -287,7 +279,6 @@ public class ApplicationImpl
         {
             throw new NullPointerException("converterClass");
         }
-
         return getFacesConfig().getComponent(componentType);
     }
 
@@ -299,19 +290,16 @@ public class ApplicationImpl
         {
             throw new NullPointerException("valueBinding");
         }
-
         if ((facesContext == null))
         {
             throw new NullPointerException("facesContext");
         }
-
         if ((componentType == null) || (componentType.length() == 0))
         {
             throw new NullPointerException("componentType");
         }
 
         Object obj = valueBinding.getValue(facesContext);
-
         if (obj instanceof UIComponent)
         {
             return (UIComponent) obj;
@@ -319,7 +307,6 @@ public class ApplicationImpl
 
         UIComponent component = createComponent(componentType);
         valueBinding.setValue(facesContext, component);
-
         return component;
     }
 
@@ -329,7 +316,6 @@ public class ApplicationImpl
         {
             throw new NullPointerException("componentType");
         }
-
         return getFacesConfig().getConverter(converterId);
     }
 
@@ -337,7 +323,7 @@ public class ApplicationImpl
     {
         if (targetClass == null)
         {
-            throw new NullPointerException();
+            throw new NullPointerException("targetClass");
         }
 
         // FIXME Auto-generated method stub
@@ -352,17 +338,11 @@ public class ApplicationImpl
             throw new NullPointerException("reference");
         }
 
-        // TODO: redesign to avoid synchronization issues
-        // FIXME: this caching does not work when overriden functions with different params are used
-        MethodBinding mb = (MethodBinding) _methodBindingCache.get(reference);
-
-        if (mb == null)
-        {
-            mb = new MethodBindingImpl(this, reference, params);
-            _valueBindingCache.put(reference, mb);
-        }
-
-        return mb;
+        // We choose to instantiate a new MethodBinding every time as this is much easier 
+        // and about as efficient as implementing a cache specifically for MethodBinding,
+        // which is complicated by the need to use a conposite key=(reference, params)
+        // (significant part of MethodBinding is already cached by ValueBinding implicitly)
+        return new MethodBindingImpl(this, reference, params);
     }
 
     public Validator createValidator(String validatorId)
@@ -372,29 +352,17 @@ public class ApplicationImpl
         {
             throw new NullPointerException("validatorId");
         }
-
         return getFacesConfig().getValidator(validatorId);
     }
 
-    public synchronized ValueBinding createValueBinding(String reference)
+    public ValueBinding createValueBinding(String reference)
     throws ReferenceSyntaxException
     {
         if ((reference == null) || (reference.length() == 0))
         {
             throw new NullPointerException("reference");
         }
-
-        // TODO: redesign to avoid synchronization issues
-        ValueBinding vb = (ValueBinding) _valueBindingCache.get(reference);
-
-        if (vb == null)
-        {
-            // Note: we cannot cache VariableResolver and PropertyResolver directly in ValueBinding since those can change through the set methods
-            vb = new ValueBindingImpl(reference, this);
-            _valueBindingCache.put(reference, vb);
-        }
-
-        return vb;
+        return (ValueBinding) _valueBindingCache.get(reference);
     }
 
     protected FacesConfig getFacesConfig()
