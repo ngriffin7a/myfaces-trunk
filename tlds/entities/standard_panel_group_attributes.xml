@@ -1,4 +1,0 @@
-        <!-- all standard attributes of the panelGroup tag -->
-        &ui_panel_attributes;
-        &html_universal_attributes;
-        &html_event_handler_attributes;
