@@ -39,11 +39,6 @@ public class UISaveState
 
     private boolean _global = false;
 
-    public UISaveState()
-    {
-        UIComponentUtils.setTransient(this, true);  //No need to save state of the component itself
-    }
-
     public final boolean isValid()
     {
         return true;   //model update must not occur!

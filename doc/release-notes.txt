@@ -11,6 +11,7 @@ Changes in Release 0.4.3
 * TextRenderer: empty <span> element (span without attributes) is not rendered anymore
 * New configuration option "defaultLanguage" in MyFacesConfig
 * New Renderer "TabbedPane" that renderes a swing-like tabbed Pane.
+* Rudimentary support for <jsp:include>. See known issues for details.
 
 ----------------------------------------------------------------------
 Changes in Release 0.4.2

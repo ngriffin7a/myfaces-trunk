@@ -16,28 +16,38 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package net.sourceforge.myfaces.taglib;
+package net.sourceforge.myfaces.el;
 
-import javax.faces.component.UIComponent;
-import javax.faces.webapp.UIComponentTag;
-import javax.servlet.jsp.tagext.Tag;
+import net.sourceforge.myfaces.util.logging.LogUtil;
+
+import javax.faces.el.VariableResolver;
+import javax.faces.context.FacesContext;
+import java.util.Map;
+import java.util.HashMap;
 
 /**
  * DOCUMENT ME!
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public interface MyFacesTagBaseIF
-    extends Tag
+public class VariableResolverMockImpl
+    extends VariableResolver
 {
-    public void overrideProperties(UIComponent uiComponent);
-    public void setCreated(boolean b);
-    public String getComponentType();
-    public void setId(String id);
-    public String getId();
-    public UIComponent getComponent();
-    public boolean getCreated();
-    public String getFacetName();
+    private Map _map = new HashMap();
 
-    public UIComponentTag getParentUIComponentTag();
+    public Object resolveVariable(FacesContext facesContext, String name)
+    {
+        Object o = _map.get(name);
+        if (o == null)
+        {
+            LogUtil.getLogger().info("Variable '" + name + "' could not be resolved.");
+        }
+        return o;
+    }
+
+    public void addVariable(String name, Object obj)
+    {
+        _map.put(name, obj);
+    }
+
 }

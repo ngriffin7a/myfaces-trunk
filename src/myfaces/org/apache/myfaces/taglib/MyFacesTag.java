@@ -59,6 +59,12 @@ public abstract class MyFacesTag
         _helper = new MyFacesTagHelper(this);
     }
 
+    public int doStartTag() throws JspException
+    {
+        _helper.getUIComponentTagStack().push(this);
+        return super.doStartTag();
+    }
+
     public int getDoStartValue() throws JspException
     {
         return _helper.isComponentVisible()
@@ -75,6 +81,7 @@ public abstract class MyFacesTag
         }
         finally
         {
+            _helper.getUIComponentTagStack().pop();
             _helper.release();
             setId(null);
             setRendered(true);
@@ -106,6 +113,23 @@ public abstract class MyFacesTag
         return Tag.SKIP_BODY;
     }
 
+
+    /**
+     * HACK:
+     * Tomcat does not call the setParent method for the first tag of a file
+     * that is included via <jsp:include>. So, as a quick hack we maintain a
+     * Stack that holds the current UIComponentTag hierarchy, which we use when
+     * the default method returns null.
+     */
+    public UIComponentTag getParentUIComponentTag()
+    {
+        UIComponentTag tag = super.getParentUIComponentTag();
+        if (tag == null)
+        {
+            tag = _helper.getParentUIComponentTag();
+        }
+        return tag;
+    }
 
 
     //Make protected properties accessible:

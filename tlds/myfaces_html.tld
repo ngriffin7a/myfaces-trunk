@@ -381,7 +381,7 @@
     <tag>
         <name>output_message</name>
         <tag-class>net.sourceforge.myfaces.taglib.OutputMessageTag</tag-class>
-        <body-content>empty</body-content>
+        <body-content>JSP</body-content>
         &ui_component_attributes;
         &ui_output_attributes;
         &converter_attributes;

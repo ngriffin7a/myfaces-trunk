@@ -18,11 +18,8 @@
  */
 package net.sourceforge.myfaces.taglib;
 
-import net.sourceforge.myfaces.component.UIComponentUtils;
 import net.sourceforge.myfaces.renderkit.attr.GroupRendererAttributes;
 import net.sourceforge.myfaces.renderkit.html.GroupRenderer;
-
-import javax.faces.component.UIComponent;
 
 
 
@@ -38,12 +35,6 @@ public class PanelGroupTag
     public String getComponentType()
     {
         return "Panel";
-    }
-
-    public void overrideProperties(UIComponent uiComponent)
-    {
-        super.overrideProperties(uiComponent);
-        UIComponentUtils.setTransient(uiComponent, true);
     }
 
     public String getRendererType()

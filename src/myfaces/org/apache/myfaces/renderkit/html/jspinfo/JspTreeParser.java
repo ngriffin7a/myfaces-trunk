@@ -117,6 +117,31 @@ public class JspTreeParser
         parseFile(absFileName, stream);
     }
 
+    protected void parseIncludePage(String pageName)
+        throws FacesException
+    {
+        if (pageName.startsWith("<%"))
+        {
+            LogUtil.getLogger().fine("Cannot parse dynamically included page '" + pageName + "'.");
+            return;
+        }
+
+        pageName = pageName.replace('\\', '/');
+        boolean isAbsolute = pageName.startsWith("/");
+        if (!isAbsolute)
+        {
+            LogUtil.getLogger().warning("Relative includes with <jsp:include> are not supported yet!");
+            return;
+        }
+
+        String absFileName = pageName;
+        InputStream stream = _servletContext.getResourceAsStream(absFileName);
+        if (stream == null)
+        {
+            throw new FacesException("File " + absFileName + " not found.");
+        }
+        parseFile(absFileName, stream);
+    }
 
     private void parseFile(String absFileName,
                            InputStream stream)

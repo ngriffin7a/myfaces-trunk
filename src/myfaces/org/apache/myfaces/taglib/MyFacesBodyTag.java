@@ -29,6 +29,7 @@ import net.sourceforge.myfaces.renderkit.html.attr.HTMLUniversalAttributes;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.webapp.UIComponentBodyTag;
+import javax.faces.webapp.UIComponentTag;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
 import javax.servlet.jsp.tagext.BodyTag;
@@ -63,6 +64,12 @@ public abstract class MyFacesBodyTag
         _helper = new MyFacesTagHelper(this);
     }
 
+    public int doStartTag() throws JspException
+    {
+        _helper.getUIComponentTagStack().push(this);
+        return super.doStartTag();
+    }
+
     public int getDoStartValue() throws JspException
     {
         return _helper.isComponentVisible()
@@ -83,6 +90,7 @@ public abstract class MyFacesBodyTag
         }
         finally
         {
+            _helper.getUIComponentTagStack().pop();
             _helper.release();
             setId(null);
             setRendered(true);
@@ -152,6 +160,21 @@ public abstract class MyFacesBodyTag
     {
         return _helper.getFacesContext();
     }
+
+
+
+
+    public UIComponentTag getParentUIComponentTag()
+    {
+        UIComponentTag tag = super.getParentUIComponentTag();
+        if (tag == null)
+        {
+            tag = _helper.getParentUIComponentTag();
+        }
+        return tag;
+    }
+
+
 
 
     //property helpers

@@ -18,6 +18,9 @@
  */
 package net.sourceforge.myfaces.context;
 
+import net.sourceforge.myfaces.util.logging.LogUtil;
+import net.sourceforge.myfaces.TestConfig;
+
 import javax.servlet.ServletContext;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.Servlet;
@@ -26,6 +29,8 @@ import java.util.*;
 import java.net.URL;
 import java.net.MalformedURLException;
 import java.io.InputStream;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 
 /**
  * DOCUMENT ME!
@@ -59,17 +64,51 @@ public class ServletContextMockImpl
 
     public Set getResourcePaths(String s)
     {
-        throw new UnsupportedOperationException();
+        if (s.equals("/WEB-INF/lib/"))
+        {
+            return Collections.singleton("/WEB-INF/lib/myfaces.jar");
+        }
+        else
+        {
+            return null;
+        }
     }
 
     public URL getResource(String s) throws MalformedURLException
     {
-        throw new UnsupportedOperationException();
+        if (s.startsWith("/WEB-INF/"))
+        {
+            String webInfPath = TestConfig.getWebInfPath();
+            String fn = webInfPath + s.substring(9);
+            return new URL("file://" + fn);
+        }
+        else
+        {
+            LogUtil.getLogger().warning("Resource '" + s + "' cannot be resolved.");
+            return null;
+        }
     }
 
     public InputStream getResourceAsStream(String s)
     {
-        throw new UnsupportedOperationException();
+        if (s.startsWith("/WEB-INF/"))
+        {
+            String webInfPath = TestConfig.getWebInfPath();
+            String fn = webInfPath + s.substring(9);
+            try
+            {
+                return new FileInputStream(fn);
+            }
+            catch (FileNotFoundException e)
+            {
+                throw new RuntimeException(e);
+            }
+        }
+        else
+        {
+            LogUtil.getLogger().warning("Resource '" + s + "' cannot be resolved.");
+            return null;
+        }
     }
 
     public RequestDispatcher getRequestDispatcher(String s)
@@ -101,6 +140,7 @@ public class ServletContextMockImpl
     {
     }
 
+    /**@deprecated*/
     public void log(Exception exception, String s)
     {
     }
@@ -121,7 +161,7 @@ public class ServletContextMockImpl
 
     public String getInitParameter(String s)
     {
-        throw new UnsupportedOperationException();
+        return null;
     }
 
     public Enumeration getInitParameterNames()

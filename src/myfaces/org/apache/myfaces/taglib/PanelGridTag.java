@@ -18,12 +18,9 @@
  */
 package net.sourceforge.myfaces.taglib;
 
-import net.sourceforge.myfaces.component.UIComponentUtils;
 import net.sourceforge.myfaces.renderkit.attr.GridRendererAttributes;
 import net.sourceforge.myfaces.renderkit.html.GridRenderer;
 import net.sourceforge.myfaces.renderkit.html.attr.HTMLTableAttributes;
-
-import javax.faces.component.UIComponent;
 
 
 /**
@@ -39,12 +36,6 @@ public class PanelGridTag
     public String getComponentType()
     {
         return "Panel";
-    }
-
-    public void overrideProperties(UIComponent uiComponent)
-    {
-        super.overrideProperties(uiComponent);
-        UIComponentUtils.setTransient(uiComponent, true);
     }
 
     public String getRendererType()

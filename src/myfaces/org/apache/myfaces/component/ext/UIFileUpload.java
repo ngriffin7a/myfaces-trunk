@@ -31,7 +31,6 @@ public class UIFileUpload
 {
     public UIFileUpload()
     {
-        UIComponentUtils.setTransient(this, true);  //No state to be saved
         setValid(true);
     }
 

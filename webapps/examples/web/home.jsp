@@ -39,8 +39,10 @@
             navigationClass="pageNavigation"
             bodyClass="pageBody"
             footerClass="pageFooter" >
+
         <%@include file="inc/page_header.jsp" %>
-        <%@include file="inc/navigation.jsp"  %>
+        <!--%@include file="inc/navigation.jsp"  %-->
+        <jsp:include page="/inc/navigation.jsp" flush="false" />
 
         <f:facet name="body">
             <h:panel_group id="body">

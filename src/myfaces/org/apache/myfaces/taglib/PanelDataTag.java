@@ -18,12 +18,10 @@
  */
 package net.sourceforge.myfaces.taglib;
 
-import net.sourceforge.myfaces.component.UIComponentUtils;
 import net.sourceforge.myfaces.renderkit.attr.DataRendererAttributes;
 import net.sourceforge.myfaces.renderkit.html.DataRenderer;
 
 import javax.faces.FacesException;
-import javax.faces.component.UIComponent;
 import javax.servlet.ServletRequest;
 import javax.servlet.jsp.JspException;
 import java.io.IOException;
@@ -40,12 +38,6 @@ public class PanelDataTag
     public String getComponentType()
     {
         return "Panel";
-    }
-
-    public void overrideProperties(UIComponent uiComponent)
-    {
-        super.overrideProperties(uiComponent);
-        UIComponentUtils.setTransient(uiComponent, true);
     }
 
     public String getRendererType()

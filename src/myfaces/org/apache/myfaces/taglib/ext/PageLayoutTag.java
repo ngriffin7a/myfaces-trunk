@@ -18,13 +18,10 @@
  */
 package net.sourceforge.myfaces.taglib.ext;
 
-import net.sourceforge.myfaces.component.UIComponentUtils;
 import net.sourceforge.myfaces.renderkit.attr.ext.LayoutRendererAttributes;
 import net.sourceforge.myfaces.renderkit.html.attr.HTMLTableAttributes;
 import net.sourceforge.myfaces.renderkit.html.ext.LayoutRenderer;
 import net.sourceforge.myfaces.taglib.MyFacesBodyTag;
-
-import javax.faces.component.UIComponent;
 
 /**
  * DOCUMENT ME!
@@ -39,12 +36,6 @@ public class PageLayoutTag
     public String getComponentType()
     {
         return "Panel";
-    }
-
-    public void overrideProperties(UIComponent uiComponent)
-    {
-        super.overrideProperties(uiComponent);
-        UIComponentUtils.setTransient(uiComponent, true);
     }
 
     public String getRendererType()

@@ -39,41 +39,74 @@ public class ValueBindingTest
     protected void setUp() throws Exception
     {
         super.setUp();
+        /*
         _httpServletRequest.setAttribute("theA", _theA);
-        _httpServletRequest.setAttribute("A", _a);
+        _httpServletRequest.setAttribute("a", _a);
+        */
+
+        VariableResolverMockImpl vr = new VariableResolverMockImpl();
+        vr.addVariable("theA", _theA);
+        vr.addVariable("a", _a);
+
+        _application.setVariableResolver(vr);
     }
 
-    public void testGetValueWithLongNames() throws Exception
+    public void testGetValueWithLongName1() throws Exception
     {
         Object v;
-
         v = _application.getValueBinding("theA").getValue(_facesContext);
         assertTrue(v == _theA);
-
-        v = _application.getValueBinding("theA.name").getValue(_facesContext);
-        assertEquals(v, A.NAME);
-
-        v = _application.getValueBinding("theA.theB.name").getValue(_facesContext);
-        assertEquals(v, B.NAME);
-
-        v = _application.getValueBinding("theA.theB.theC.name").getValue(_facesContext);
-        assertEquals(v, C.NAME);
     }
 
-    public void testGetValueWithShortNames() throws Exception
+    public void testGetValueWithLongName2() throws Exception
     {
         Object v;
-
-        v = _application.getValueBinding("a").getValue(_facesContext);
-        assertTrue(v == _theA);
-
-        v = _application.getValueBinding("a.name").getValue(_facesContext);
-        assertEquals(v, A.NAME);
-
-        v = _application.getValueBinding("a.b.name").getValue(_facesContext);
-        assertEquals(v, B.NAME);
-
-        v = _application.getValueBinding("a.b.c.name").getValue(_facesContext);
-        assertEquals(v, C.NAME);
+        v = _application.getValueBinding("theA.name").getValue(_facesContext);
+        assertEquals(A.NAME, v);
     }
+
+    public void testGetValueWithLongName3() throws Exception
+    {
+        Object v;
+        v = _application.getValueBinding("theA.theB.name").getValue(_facesContext);
+        assertEquals(B.NAME, v);
+    }
+
+    public void testGetValueWithLongName4() throws Exception
+    {
+        Object v;
+        v = _application.getValueBinding("theA.theB.theC.name").getValue(_facesContext);
+        assertEquals(C.NAME, v);
+    }
+
+
+
+    public void testGetValueWithShortName1() throws Exception
+    {
+        Object v;
+        v = _application.getValueBinding("a").getValue(_facesContext);
+        assertTrue(v == _a);
+    }
+
+    public void testGetValueWithShortName2() throws Exception
+    {
+        Object v;
+        v = _application.getValueBinding("a.name").getValue(_facesContext);
+        assertEquals(A.NAME, v);
+    }
+
+    public void testGetValueWithShortName3() throws Exception
+    {
+        Object v;
+        v = _application.getValueBinding("a.b.name").getValue(_facesContext);
+        assertEquals(B.NAME, v);
+    }
+
+    public void testGetValueWithShortName4() throws Exception
+    {
+        Object v;
+        v = _application.getValueBinding("a.b.c.name").getValue(_facesContext);
+        assertEquals(C.NAME, v);
+    }
+
 }

@@ -35,14 +35,23 @@ MyFaces Known Issues
   revision of the name. So, you must not use hyphens (or other special
   characters) in id attributes.
 
-* Dynamically included JSP code by means of the <jsp:include> tag must not
-  contain JSF tags when using the "Minimizing State Saving" feature.
-  The MinimizingStateSaver relies on the fact, that the current page is
-  fully parsable. This is necessary, because MinimizingStateSaver needs
+* There are some issues with <jsp:include> when using the "Minimizing State
+  Saving" feature. The MinimizingStateSaver relies on the fact, that the current
+  page is fully parsable. This is necessary, because MinimizingStateSaver needs
   static information about each component: Initial property and attribute
   values, for example. Also, MinimizingStateRestorer must be able to
   build and reconstitute the whole tree from static information before
   anything is rendered.
+  - If you include JSF code by means of <jsp:include>, the page attribute must
+    be an absolute path. Relative paths are not supported yet.
+  - Dynamically including JSF code via <jsp:include page="<%=dynamicPage%>">
+    is not supported.
+  - Tomcat does not call the setParent method of the first included tag. MyFaces
+    implements a hack to solve this issue. Well, this hack only works for tags
+    that are subclasses of MyFacesTag or MyFacesBodyTag. So, if you have
+    implemented your own tags/components, keep in mind that the last tag before
+    the <jsp:include> and the first tag in the included code must both be
+    derived from MyFacesTag or MyFacesBodyTag.
 
 * Statically including code by means of the <%@include%> directive is
   supported. Unfortunatly, there is an annoying issue with the included

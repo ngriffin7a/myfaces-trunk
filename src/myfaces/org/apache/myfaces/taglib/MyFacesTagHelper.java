@@ -26,8 +26,8 @@ import net.sourceforge.myfaces.util.bean.BeanUtils;
 import net.sourceforge.myfaces.util.logging.LogUtil;
 
 import javax.faces.FactoryFinder;
-import javax.faces.application.ApplicationFactory;
 import javax.faces.application.Application;
+import javax.faces.application.ApplicationFactory;
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIOutput;
 import javax.faces.context.FacesContext;
@@ -133,6 +133,46 @@ public class MyFacesTagHelper
         }
         return _facesContext;
     }
+
+
+    private static final String UI_COMPONENT_TAG_STACK_ATTR
+        = MyFacesTagHelper.class.getName() + ".UI_COMPONENT_TAG_STACK";
+
+    protected Stack getUIComponentTagStack()
+    {
+        ServletRequest request = (ServletRequest)getFacesContext().getExternalContext().getRequest();
+        Stack stack = (Stack)request.getAttribute(UI_COMPONENT_TAG_STACK_ATTR);
+        if (stack == null)
+        {
+            stack = new Stack();
+            request.setAttribute(UI_COMPONENT_TAG_STACK_ATTR, stack);
+        }
+        return stack;
+    }
+
+    public UIComponentTag getParentUIComponentTag()
+    {
+        Stack stack = getUIComponentTagStack();
+        if (stack.isEmpty())
+        {
+            return null;
+        }
+
+        UIComponentTag tag = (UIComponentTag)stack.peek();
+        if (tag == _tag)
+        {
+            //This tag is already on the stack, so we must return the second top
+            if (stack.size() < 2)
+            {
+                return null;
+            }
+            tag = (UIComponentTag)stack.get(stack.size() - 2);
+        }
+
+        return tag;
+    }
+
+
 
 
     //property helpers
@@ -606,7 +646,7 @@ public class MyFacesTagHelper
                                                   newComponent);
         if (parsedChild == null)
         {
-            throw new IllegalStateException("FacesTag " + _tag.getClass().getName() + ": Corresponding component in parsed tree could not be found!");
+            throw new IllegalStateException("UIComponentTag " + _tag.getClass().getName() + ": Corresponding component in parsed tree could not be found!");
         }
 
         //Parsed component found, get id
@@ -623,6 +663,7 @@ public class MyFacesTagHelper
         if (!_parentComponentOk)
         {
             //determine current parent
+            /*
             Tag parentTag = _tag.getParent();
             while (parentTag != null &&
                    (!(parentTag instanceof UIComponentTag) ||
@@ -630,6 +671,22 @@ public class MyFacesTagHelper
             {
                 parentTag = parentTag.getParent();
             }
+            */
+            Tag parentTag = _tag.getParentUIComponentTag();
+            while (parentTag != null &&
+                   (!(parentTag instanceof UIComponentTag) ||
+                    (((UIComponentTag)parentTag).getComponent() == null)))
+            {
+                if (parentTag instanceof MyFacesTagBaseIF)
+                {
+                    parentTag = ((MyFacesTagBaseIF)parentTag).getParentUIComponentTag();
+                }
+                else
+                {
+                    parentTag = parentTag.getParent();
+                }
+            }
+
             if (parentTag == null)
             {
                 _parentComponent = null;

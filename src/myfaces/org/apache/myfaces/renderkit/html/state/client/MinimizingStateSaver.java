@@ -86,9 +86,6 @@ public class MinimizingStateSaver
     protected static final String LOCALE_REQUEST_PARAM = "_locale";
     protected static final String LOCALE_REQUEST_PARAM_DELIMITER = "_";
 
-    public static final String TRANSIENT_ATTR
-        = StateRenderer.class.getName() + ".TRANSIENT";
-
     private static final Set IGNORE_ATTRIBUTES = new HashSet();
     static
     {
@@ -662,14 +659,6 @@ public class MinimizingStateSaver
                 return true;
             }
         }
-
-        //transient?
-        /*
-        if (UIComponentUtils.isTransient(comp))
-        {
-            return true;
-        }
-        */
 
         //is it a DataRenderer variable (= "var" attribute of a UIPanel) ?
         String modelRef = comp.getValueRef();

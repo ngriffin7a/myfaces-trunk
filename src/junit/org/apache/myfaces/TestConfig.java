@@ -16,28 +16,23 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package net.sourceforge.myfaces.taglib;
-
-import javax.faces.component.UIComponent;
-import javax.faces.webapp.UIComponentTag;
-import javax.servlet.jsp.tagext.Tag;
+package net.sourceforge.myfaces;
 
 /**
  * DOCUMENT ME!
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public interface MyFacesTagBaseIF
-    extends Tag
+public class TestConfig
 {
-    public void overrideProperties(UIComponent uiComponent);
-    public void setCreated(boolean b);
-    public String getComponentType();
-    public void setId(String id);
-    public String getId();
-    public UIComponent getComponent();
-    public boolean getCreated();
-    public String getFacetName();
+    private static final String PROJECT_BASE_PATH
+        = "C:/Develop/myfaces.sourceforge/myfaces/";    //TODO: must go to properties file, of course!
 
-    public UIComponentTag getParentUIComponentTag();
+    private TestConfig() {}
+
+    public static String getWebInfPath()
+    {
+        return PROJECT_BASE_PATH + "conf/";
+    }
+
 }

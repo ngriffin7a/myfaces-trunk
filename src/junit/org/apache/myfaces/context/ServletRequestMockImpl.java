@@ -139,12 +139,12 @@ public class ServletRequestMockImpl
 
     public HttpSession getSession(boolean b)
     {
-        throw new UnsupportedOperationException();
+        return null;
     }
 
     public HttpSession getSession()
     {
-        throw new UnsupportedOperationException();
+        return null;
     }
 
     public boolean isRequestedSessionIdValid()

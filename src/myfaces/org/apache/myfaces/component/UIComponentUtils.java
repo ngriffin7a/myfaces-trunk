@@ -22,7 +22,6 @@ import net.sourceforge.myfaces.convert.ConversionErrorMessage;
 import net.sourceforge.myfaces.convert.ConverterUtils;
 import net.sourceforge.myfaces.convert.MyFacesConverterException;
 import net.sourceforge.myfaces.convert.impl.StringArrayConverter;
-import net.sourceforge.myfaces.renderkit.html.state.client.MinimizingStateSaver;
 import net.sourceforge.myfaces.tree.TreeUtils;
 
 import javax.faces.FacesException;
@@ -161,34 +160,6 @@ public class UIComponentUtils
         else
         {
             facesContext.addMessage(comp, new ConversionErrorMessage(e.getMessage()));
-        }
-    }
-
-
-    /**
-     * @deprecated obsolet?
-     */
-    public static void setTransient(UIComponent uiComponent, boolean b)
-    {
-        uiComponent.setAttribute(MinimizingStateSaver.TRANSIENT_ATTR,
-                                 b ? Boolean.TRUE : Boolean.FALSE);
-    }
-
-
-    /**
-     * @deprecated obsolet?
-     */
-    public static boolean isTransient(UIComponent uiComponent)
-    {
-        Boolean trans = (Boolean)uiComponent.getAttribute(MinimizingStateSaver.TRANSIENT_ATTR);
-        if (trans == null)
-        {
-            //return MyFacesConfig.isComponentsTransientByDefault();
-            return false; //Components never transient by default
-        }
-        else
-        {
-            return trans.booleanValue();
         }
     }
 

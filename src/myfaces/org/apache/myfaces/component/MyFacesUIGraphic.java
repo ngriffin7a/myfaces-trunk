@@ -34,7 +34,6 @@ public class MyFacesUIGraphic
 
     public MyFacesUIGraphic()
     {
-        UIComponentUtils.setTransient(this, true);  //No state to be saved
         setValid(true);
     }
 

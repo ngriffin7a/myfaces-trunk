@@ -211,13 +211,19 @@ public class MyParseEventListener
     public void handleInclude(Mark start, Mark stop, Attributes attrs, Hashtable param)
             throws JasperException
     {
-        System.out.println("MyParseEventListener.handleInclude");
+        handleInclude(start, stop, attrs, param, false);
     }
 
     public void handleInclude(Mark start, Mark stop, Attributes attrs, Hashtable param, boolean isXml)
             throws JasperException
     {
-        System.out.println("MyParseEventListener.handleInclude");
+        String page = attrs.getValue("page");
+        if (page == null)
+        {
+            throw new CompileException(start,
+                                       Constants.getString("jsp.error.include.tag"));
+        }
+        _parser.parseIncludePage(page);
     }
 
     public void handleJspCdata(Mark start, Mark stop, char[] data)
