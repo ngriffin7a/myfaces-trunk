@@ -15,6 +15,7 @@
  */
 package javax.faces.application;
 
+import java.io.Serializable;
 
 
 /**
@@ -76,7 +77,7 @@ public abstract class StateManager
     }
 
 
-    public class SerializedView
+    public class SerializedView implements Serializable
     {
         private Object _structure;
         private Object _state;
