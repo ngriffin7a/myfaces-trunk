@@ -18,11 +18,7 @@
  */
 package net.sourceforge.myfaces.renderkit.html.util;
 
-import net.sourceforge.myfaces.renderkit.html.attr.HTMLEventHandlerAttributes;
-import net.sourceforge.myfaces.renderkit.html.attr.HTMLUniversalAttributes;
-
 import javax.faces.component.UIComponent;
-import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 import java.io.IOException;
 
@@ -33,80 +29,8 @@ import java.io.IOException;
  */
 public class CommonAttributes
 {
-    /**
-     * @deprecated
-     */
-    public static void renderHTMLUniversalAttributes(FacesContext context,
-                                                     UIComponent component)
-        throws IOException
-    {
-        renderAttributes(context,
-                         component,
-                         HTMLUniversalAttributes.HTML_UNIVERSAL_ATTRIBUTES);
-    }
+    private CommonAttributes() {}   //Utility class
 
-    /**
-     * @deprecated
-     */
-    public static void renderHTMLEventHandlerAttributes(FacesContext context,
-                                                        UIComponent component)
-        throws IOException
-    {
-        renderAttributes(context,
-                         component,
-                         HTMLEventHandlerAttributes.HTML_EVENT_HANDLER_ATTRIBUTES);
-    }
-
-    /**
-     * @deprecated
-     */
-    public static void renderAttributes(FacesContext context,
-                                        UIComponent component,
-                                        String[] attributes)
-        throws IOException
-    {
-        ResponseWriter writer = context.getResponseWriter();
-        for (int i = 0; i < attributes.length; i++)
-        {
-            String attrName = attributes[i];
-            Object value = component.getAttribute(attrName);
-            if (value != null)
-            {
-                if (value instanceof String &&
-                    ((String)value).length() > 0)
-                {
-                    writer.write(" ");
-                    writer.write(attrName);
-                    writer.write("=\"");
-                    writer.write(HTMLEncoder.encode((String)value, false, false));
-                    writer.write("\"");
-                }
-                else if (value instanceof Boolean)
-                {
-                    //TODO: Some html boolean attributes must not be rendered when false
-                    writer.write(" ");
-                    writer.write(attrName);
-                    writer.write("=\"");
-                    writer.write(HTMLEncoder.encode(
-                        ((Boolean)value).booleanValue() ? "true" : "false",
-                        false,
-                        false));
-                    writer.write("\"");
-                }
-                else
-                {
-                    writer.write(" ");
-                    writer.write(attrName);
-                    writer.write("=\"");
-                    writer.write(HTMLEncoder.encode(
-                        value.toString(),
-                        false,
-                        false));
-                    writer.write("\"");
-                }
-            }
-        }
-    }
 
     public static void renderHTMLAttributes(ResponseWriter writer,
                                             UIComponent component,
