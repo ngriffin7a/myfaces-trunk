@@ -74,7 +74,7 @@ managed beans used:
                     <h:outputLabel for="form1:number1" value="Number 1" />
                     <h:outputText value="#{validationController.number1ValidationLabel}"/>
                     <f:verbatim>: </f:verbatim>
-                    <h:inputText id="number1" value="#{calcForm.number1}" maxlength="10" size="25" >
+                    <h:inputText id="number1" value="#{calcForm.number1}" maxlength="10" size="25" required="true" >
                        <f:validateLongRange minimum="1" maximum="10" />
                     </h:inputText>
                     <h:message id="number1Error" for="form1:number1" styleClass="error" /><f:verbatim><br></f:verbatim>
@@ -82,7 +82,7 @@ managed beans used:
                     <h:outputLabel for="form1:number2" value="Number 2" />
                     <h:outputText value="#{validationController.number2ValidationLabel}"/>
                     <f:verbatim>: </f:verbatim>
-                    <h:inputText id="number2" value="#{calcForm.number2}" maxlength="10" size="25">
+                    <h:inputText id="number2" value="#{calcForm.number2}" maxlength="10" size="25" required="true" >
                        <f:validateLongRange minimum="20" maximum="50" />
                     </h:inputText>
                     <h:message id="number2Error" for="form1:number2" styleClass="error" /><f:verbatim><br></f:verbatim>

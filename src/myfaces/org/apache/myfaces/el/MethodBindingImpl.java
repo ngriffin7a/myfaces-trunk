@@ -18,25 +18,28 @@
  */
 package net.sourceforge.myfaces.el;
 
-import javax.faces.application.Application;
-import javax.faces.component.StateHolder;
-import javax.faces.context.FacesContext;
-import javax.faces.el.EvaluationException;
-import javax.faces.el.MethodBinding;
-import javax.faces.el.MethodNotFoundException;
-import javax.faces.el.PropertyNotFoundException;
-import javax.faces.el.ReferenceSyntaxException;
-import javax.servlet.jsp.el.ELException;
-
 import net.sourceforge.myfaces.el.ValueBindingImpl.NotVariableReferenceException;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import javax.faces.application.Application;
+import javax.faces.component.StateHolder;
+import javax.faces.context.FacesContext;
+import javax.faces.el.*;
+import javax.faces.event.AbortProcessingException;
+import javax.faces.validator.ValidatorException;
+import javax.servlet.jsp.el.ELException;
+import java.lang.reflect.InvocationTargetException;
+
 
 /**
  * @author Anton Koinov (latest modification by $Author$)
  * @version $Revision$ $Date$
+ * $Log$
+ * Revision 1.12  2004/04/16 15:13:31  manolito
+ * validator attribute support and MethodBinding invoke exception handling fixed
+ *
  */
 public class MethodBindingImpl extends MethodBinding
     implements StateHolder
@@ -119,6 +122,32 @@ public class MethodBindingImpl extends MethodBinding
             // ArrayIndexOutOfBoundsException also here
             throw new PropertyNotFoundException("Expression: "
                 + getExpressionString(), e);
+        }
+        catch (InvocationTargetException e)
+        {
+            Throwable cause = e.getCause();
+            if (cause != null)
+            {
+                if (cause instanceof ValidatorException ||
+                    cause instanceof AbortProcessingException)
+                {
+                    throw new EvaluationException(cause);
+                }
+                else
+                {
+                    log.error("Exception while invoking expression "
+                        + getExpressionString(), cause);
+                    throw new EvaluationException("Expression: "
+                        + getExpressionString(), cause);
+                }
+            }
+            else
+            {
+                log.error("Exception while invoking expression "
+                    + getExpressionString(), e);
+                throw new EvaluationException("Expression: "
+                    + getExpressionString(), e);
+            }
         }
         catch (Exception e)
         {

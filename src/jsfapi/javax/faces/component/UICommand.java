@@ -19,6 +19,7 @@
 package javax.faces.component;
 
 import javax.faces.context.FacesContext;
+import javax.faces.el.EvaluationException;
 import javax.faces.el.MethodBinding;
 import javax.faces.el.ValueBinding;
 import javax.faces.event.*;
@@ -83,7 +84,22 @@ public class UICommand
             MethodBinding actionListenerBinding = getActionListener();
             if (actionListenerBinding != null)
             {
-                actionListenerBinding.invoke(context, new Object[] {event});
+                try
+                {
+                    actionListenerBinding.invoke(context, new Object[] {event});
+                }
+                catch (EvaluationException e)
+                {
+                    Throwable cause = e.getCause();
+                    if (cause != null && cause instanceof AbortProcessingException)
+                    {
+                        throw (AbortProcessingException)cause;
+                    }
+                    else
+                    {
+                        throw e;
+                    }
+                }
             }
 
             ActionListener defaultActionListener

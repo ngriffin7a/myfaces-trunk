@@ -20,6 +20,7 @@ package net.sourceforge.myfaces.custom.tabbedpane;
 
 import javax.faces.component.html.HtmlPanelGroup;
 import javax.faces.context.FacesContext;
+import javax.faces.el.EvaluationException;
 import javax.faces.el.MethodBinding;
 import javax.faces.el.ValueBinding;
 import javax.faces.event.AbortProcessingException;
@@ -29,6 +30,9 @@ import javax.faces.event.FacesEvent;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.3  2004/04/16 15:13:31  manolito
+ * validator attribute support and MethodBinding invoke exception handling fixed
+ *
  * Revision 1.2  2004/04/06 15:36:31  manolito
  * go to render phase after tab switching
  *
@@ -78,7 +82,22 @@ public class HtmlPanelTabbedPane
         MethodBinding tabChangeListenerBinding = getTabChangeListener();
         if (tabChangeListenerBinding != null)
         {
-            tabChangeListenerBinding.invoke(getFacesContext(), new Object[]{event});
+            try
+            {
+                tabChangeListenerBinding.invoke(getFacesContext(), new Object[]{event});
+            }
+            catch (EvaluationException e)
+            {
+                Throwable cause = e.getCause();
+                if (cause != null && cause instanceof AbortProcessingException)
+                {
+                    throw (AbortProcessingException)cause;
+                }
+                else
+                {
+                    throw e;
+                }
+            }
         }
     }
 

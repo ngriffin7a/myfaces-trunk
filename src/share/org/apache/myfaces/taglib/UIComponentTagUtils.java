@@ -20,6 +20,7 @@ package net.sourceforge.myfaces.taglib;
 
 import net.sourceforge.myfaces.el.SimpleActionMethodBinding;
 import net.sourceforge.myfaces.renderkit.JSFAttr;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -28,12 +29,17 @@ import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.el.MethodBinding;
 import javax.faces.el.ValueBinding;
+import javax.faces.event.ActionEvent;
+import javax.faces.event.ValueChangeEvent;
 import javax.faces.webapp.UIComponentTag;
 
 /**
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.3  2004/04/16 15:13:33  manolito
+ * validator attribute support and MethodBinding invoke exception handling fixed
+ *
  * Revision 1.2  2004/03/30 12:16:08  manolito
  * header comments
  *
@@ -41,6 +47,12 @@ import javax.faces.webapp.UIComponentTag;
 public class UIComponentTagUtils
 {
     private static final Log log = LogFactory.getLog(UIComponentTagUtils.class);
+
+    private static final Class[] VALIDATOR_ARGS = {FacesContext.class,
+                                                   UIComponent.class,
+                                                   Object.class};
+    private static final Class[] ACTION_LISTENER_ARGS = {ActionEvent.class};
+    private static final Class[] VALUE_LISTENER_ARGS = {ValueChangeEvent.class};
 
     private UIComponentTagUtils() {}    //util class, no instantiation allowed
 
@@ -176,6 +188,29 @@ public class UIComponentTagUtils
     }
 
 
+    public static void setValidatorProperty(FacesContext context,
+                                            UIComponent component,
+                                            String validator)
+    {
+        if (validator != null)
+        {
+            if (!(component instanceof EditableValueHolder))
+            {
+                throw new IllegalArgumentException("Component " + component.getClientId(context) + " is no EditableValueHolder");
+            }
+            if (isValueReference(validator))
+            {
+                MethodBinding mb = context.getApplication().createMethodBinding(validator,
+                                                                                VALIDATOR_ARGS);
+                ((EditableValueHolder)component).setValidator(mb);
+            }
+            else
+            {
+                log.error("Invalid expression " + validator);
+            }
+        }
+    }
+
     public static void setValueBinding(FacesContext context,
                                        UIComponent component,
                                        String propName,
@@ -230,8 +265,8 @@ public class UIComponentTagUtils
             }
             if (isValueReference(actionListener))
             {
-                Class args[] = {javax.faces.event.ActionEvent.class};
-                MethodBinding mb = context.getApplication().createMethodBinding(actionListener, args);
+                MethodBinding mb = context.getApplication().createMethodBinding(actionListener,
+                                                                                ACTION_LISTENER_ARGS);
                 ((ActionSource)component).setActionListener(mb);
             }
             else
@@ -253,8 +288,8 @@ public class UIComponentTagUtils
             }
             if (isValueReference(valueChangedListener))
             {
-                Class args[] = {javax.faces.event.ValueChangeEvent.class};
-                MethodBinding mb = context.getApplication().createMethodBinding(valueChangedListener, args);
+                MethodBinding mb = context.getApplication().createMethodBinding(valueChangedListener,
+                                                                                VALUE_LISTENER_ARGS);
                 ((EditableValueHolder)component).setValueChangeListener(mb);
             }
             else

@@ -56,12 +56,16 @@ managed beans used:
 
         <f:facet name="body">
             <h:panelGroup id="body">
+
+                <x:messages id="messageList" styleClass="error" showDetail="true" summaryFormat="{0} " />
+
                 <h:form name="formName">
 
                     <h:panelGrid columns="2">
 
                         <h:outputLabel for="selone_lb" value="#{example_messages['label_cars']}" />
-                        <h:selectOneListbox id="selone_lb" size="3" value="#{carconf.car}">
+                        <h:selectOneListbox id="selone_lb" size="3" value="#{carconf.car}"
+                                            validator="#{carconf.validateCar}" >
                             <f:selectItems id="selone_lb_cars" value="#{carconf.cars}" />
                         </h:selectOneListbox>
 

@@ -22,6 +22,7 @@ import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.convert.ConverterException;
+import javax.faces.el.EvaluationException;
 import javax.faces.el.MethodBinding;
 import javax.faces.el.ValueBinding;
 import javax.faces.event.AbortProcessingException;
@@ -39,6 +40,9 @@ import java.util.List;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.11  2004/04/16 15:13:33  manolito
+ * validator attribute support and MethodBinding invoke exception handling fixed
+ *
  * Revision 1.10  2004/04/06 13:03:35  manolito
  * x-checked getConvertedValue method in api and impl
  *
@@ -202,8 +206,23 @@ public class UIInput
         MethodBinding valueChangeListenerBinding = getValueChangeListener();
         if (valueChangeListenerBinding != null)
         {
-            valueChangeListenerBinding.invoke(getFacesContext(),
-                                              new Object[]{event});
+            try
+            {
+                valueChangeListenerBinding.invoke(getFacesContext(),
+                                                  new Object[]{event});
+            }
+            catch (EvaluationException e)
+            {
+                Throwable cause = e.getCause();
+                if (cause != null && cause instanceof AbortProcessingException)
+                {
+                    throw (AbortProcessingException)cause;
+                }
+                else
+                {
+                    throw e;
+                }
+            }
         }
     }
 

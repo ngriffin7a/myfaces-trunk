@@ -25,6 +25,7 @@ import javax.faces.application.Application;
 import javax.faces.application.NavigationHandler;
 import javax.faces.component.ActionSource;
 import javax.faces.context.FacesContext;
+import javax.faces.el.EvaluationException;
 import javax.faces.el.MethodBinding;
 import javax.faces.event.AbortProcessingException;
 import javax.faces.event.ActionEvent;
@@ -63,10 +64,23 @@ public class ActionListenerImpl
             {
                 outcome = (String) methodBinding.invoke(facesContext, null);
             }
-            catch (Exception e)
+            catch (EvaluationException e)
+            {
+                Throwable cause = e.getCause();
+                if (cause != null && cause instanceof AbortProcessingException)
+                {
+                    throw (AbortProcessingException)cause;
+                }
+                else
+                {
+                    log.error("Error calling action method of component with id " + actionEvent.getComponent().getClientId(facesContext), e);
+                    throw e;
+                }
+            }
+            catch (RuntimeException e)
             {
                 log.error("Error calling action method of component with id " + actionEvent.getComponent().getClientId(facesContext), e);
-                return;
+                throw e;
             }
         }
 

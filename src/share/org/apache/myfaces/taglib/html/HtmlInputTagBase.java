@@ -27,6 +27,9 @@ import javax.faces.component.UIComponent;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.3  2004/04/16 15:13:31  manolito
+ * validator attribute support and MethodBinding invoke exception handling fixed
+ *
  * Revision 1.2  2004/04/05 11:04:56  manolito
  * setter for renderer type removed, no more default renderer type needed
  *
@@ -58,7 +61,7 @@ public abstract class HtmlInputTagBase
 
         setBooleanProperty(component, JSFAttr.IMMEDIATE_ATTR, _immediate);
         setBooleanProperty(component, JSFAttr.REQUIRED_ATTR, _required);
-        setStringProperty(component, JSFAttr.VALIDATOR_ATTR, _validator);
+        setValidatorProperty(component, _validator);
         setValueChangedListenerProperty(component, _valueChangeListener);
     }
 

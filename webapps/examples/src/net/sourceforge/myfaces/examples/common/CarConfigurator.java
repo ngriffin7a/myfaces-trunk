@@ -20,7 +20,11 @@ package net.sourceforge.myfaces.examples.common;
 
 import net.sourceforge.myfaces.examples.util.LocalizedSelectItem;
 
+import javax.faces.application.FacesMessage;
+import javax.faces.component.UIComponent;
+import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
+import javax.faces.validator.ValidatorException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -64,6 +68,7 @@ public class CarConfigurator
             _cars.add(new SelectItem("c3", "Masta ZX7", null));
             _cars.add(new SelectItem("c4", "Renolt ESP", null));
             _cars.add(new SelectItem("c5", "WV Lumpo", null));
+            _cars.add(new SelectItem("c6", "James Blond Car", null));
 
             _colors.add(new LocalizedSelectItem("color_black"));
             _colors.add(new LocalizedSelectItem("color_blue"));
@@ -80,6 +85,7 @@ public class CarConfigurator
             _priceList.put("c3", new BigDecimal(20000));
             _priceList.put("c4", new BigDecimal(25000));
             _priceList.put("c5", new BigDecimal(10000));
+            _priceList.put("c6", new BigDecimal(100000000));
 
             _priceFactorColors.put("color_black", new BigDecimal(1.15));
             _priceFactorColors.put("color_blue", new BigDecimal(1.10));
@@ -249,5 +255,15 @@ public class CarConfigurator
 
         return "ok";
     }
+
+
+    public void validateCar(FacesContext context, UIComponent component, Object value) throws ValidatorException
+    {
+        if (value instanceof String && value.equals("c6"))
+        {
+            throw new ValidatorException(new FacesMessage("Are you kinding?", "You cannot buy a James Blond car!"));
+        }
+    }
+
 
 }

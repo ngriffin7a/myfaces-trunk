@@ -34,6 +34,9 @@ import java.io.Reader;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.8  2004/04/16 15:13:33  manolito
+ * validator attribute support and MethodBinding invoke exception handling fixed
+ *
  * Revision 1.7  2004/04/05 11:04:56  manolito
  * setter for renderer type removed, no more default renderer type needed
  *
@@ -172,6 +175,11 @@ public abstract class UIComponentBodyTagBase
         UIComponentTagUtils.setConverterProperty(getFacesContext(), component, value);
     }
 
+    protected void setValidatorProperty(UIComponent component, String value)
+    {
+        UIComponentTagUtils.setValidatorProperty(getFacesContext(), component, value);
+    }
+    
     protected void setActionProperty(UIComponent component, String action)
     {
         UIComponentTagUtils.setActionProperty(getFacesContext(), component, action);
