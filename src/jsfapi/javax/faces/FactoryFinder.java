@@ -30,6 +30,9 @@ import javax.faces.render.RenderKitFactory;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.16  2004/07/07 08:37:06  mwessendorf
+ * final class
+ *
  * Revision 1.15  2004/07/06 23:21:19  o_rossmueller
  * fix #985217: decoration support for factories
  *
@@ -51,7 +54,7 @@ import javax.faces.render.RenderKitFactory;
  * Log
  *
  */
-public class FactoryFinder
+public final class FactoryFinder
 {
 
     public static final String APPLICATION_FACTORY = "javax.faces.application.ApplicationFactory";
