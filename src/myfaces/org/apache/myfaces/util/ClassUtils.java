@@ -35,17 +35,17 @@ public class ClassUtils
     //~ Static fields/initializers -----------------------------------------------------------------
 
     private static final Log  log                 = LogFactory.getLog(ClassUtils.class);
-    public static final Class BYTE_ARRAY_CLASS    = classForName("[B");
-    public static final Class CHAR_ARRAY_CLASS    = classForName("[C");
-    public static final Class DOUBLE_ARRAY_CLASS  = classForName("[D");
-    public static final Class FLOAT_ARRAY_CLASS   = classForName("[F");
-    public static final Class INT_ARRAY_CLASS     = classForName("[I");
-    public static final Class LONG_ARRAY_CLASS    = classForName("[J");
-    public static final Class SHORT_ARRAY_CLASS   = classForName("[S");
-    public static final Class BOOLEAN_ARRAY_CLASS = classForName("[Z");
-    public static final Class OBJECT_ARRAY_CLASS  = classForName("[Ljava.lang.Object;");
-    public static final Class STRING_ARRAY_CLASS  = classForName("[Ljava.lang.String;");
-
+    public static final Class BYTE_ARRAY_CLASS    = byte[].class;
+    public static final Class CHAR_ARRAY_CLASS    = char[].class;
+    public static final Class DOUBLE_ARRAY_CLASS  = double[].class;
+    public static final Class FLOAT_ARRAY_CLASS   = float[].class;
+    public static final Class INT_ARRAY_CLASS     = int[].class;
+    public static final Class LONG_ARRAY_CLASS    = long[].class;
+    public static final Class SHORT_ARRAY_CLASS   = short[].class;
+    public static final Class BOOLEAN_ARRAY_CLASS = boolean[].class;
+    public static final Class OBJECT_ARRAY_CLASS  = Object[].class;
+    public static final Class STRING_ARRAY_CLASS  = String[].class;
+    
 // Array of void is an invalid type
 //    public static final Class VOID_ARRAY_CLASS    = classForName("[V");
     public static final Map JAVATYPE_LOOKUP_MAP   =

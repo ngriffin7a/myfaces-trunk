@@ -21,12 +21,14 @@ package javax.faces.event;
 
 import javax.faces.component.UIComponent;
 import java.util.EventObject;
+import java.io.Serializable;
 
 /**
   * @author Thomas Spiegl (latest modification by $Author$)
   * @version $Revision$ $Date$
 */
 public abstract class FacesEvent extends EventObject
+    implements Serializable
 {
 	// FIELDS
     private PhaseId _phaseId;

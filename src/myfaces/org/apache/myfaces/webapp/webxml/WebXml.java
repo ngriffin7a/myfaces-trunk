@@ -76,30 +76,23 @@ public class WebXml
         {
             Map.Entry entry = (Map.Entry)it.next();
             String servletName = (String)entry.getKey();
-            try
+            Class servletClass = ClassUtils.classForName((String)entry.getValue());
+            if (MyFacesServlet.class.isAssignableFrom(servletClass) ||
+                FacesServlet.class.isAssignableFrom(servletClass))
             {
-                Class servletClass = ClassUtils.classForName((String)entry.getValue());
-                if (MyFacesServlet.class.isAssignableFrom(servletClass) ||
-                    FacesServlet.class.isAssignableFrom(servletClass))
+                List urlPatterns = (List)_servletMappings.get(servletName);
+                for (Iterator it2 = urlPatterns.iterator(); it2.hasNext(); )
                 {
-                    List urlPatterns = (List)_servletMappings.get(servletName);
-                    for (Iterator it2 = urlPatterns.iterator(); it2.hasNext(); )
-                    {
-                        String urlpattern = (String)it2.next();
-                        _facesServletMappings.add(new ServletMapping(servletName,
-                                                                     servletClass,
-                                                                     urlpattern));
-                    if (log.isTraceEnabled())
-                        log.trace("adding mapping for servlet + " + servletName + " urlpattern = " + urlpattern);                    }
-                }
-                else
-                {
-                    if (log.isTraceEnabled()) log.trace("ignoring servlet + " + servletName + " " + servletClass + " (no FacesServlet)");
-                }
+                    String urlpattern = (String)it2.next();
+                    _facesServletMappings.add(new ServletMapping(servletName,
+                                                                 servletClass,
+                                                                 urlpattern));
+                if (log.isTraceEnabled())
+                    log.trace("adding mapping for servlet + " + servletName + " urlpattern = " + urlpattern);                    }
             }
-            catch (ClassNotFoundException e)
+            else
             {
-                log.error("Servlet class " + entry.getValue() + " not found", e);
+                if (log.isTraceEnabled()) log.trace("ignoring servlet + " + servletName + " " + servletClass + " (no FacesServlet)");
             }
         }
         return _facesServletMappings;
