@@ -29,6 +29,9 @@ import java.util.Locale;
 
 /**
  * $Log$
+ * Revision 1.3  2004/06/26 00:34:23  o_rossmueller
+ * fix #979039: default type = number for convertNumber
+ *
  * Revision 1.2  2004/03/26 11:47:10  manolito
  * NPE fixed
  *
@@ -48,7 +51,7 @@ public class ConvertNumberTag
     private String _minFractionDigits = null;
     private String _minIntegerDigits = null;
     private String _pattern = null;
-    private String _type = null;
+    private String _type = "number"; // default value as required by the spec
 
     public ConvertNumberTag()
     {
