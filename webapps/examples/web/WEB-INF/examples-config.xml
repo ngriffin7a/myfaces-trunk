@@ -308,6 +308,11 @@
             <to-view-id>/panelstack.jsp</to-view-id>
         </navigation-case>
 
+        <navigation-case>
+            <from-outcome>go_css</from-outcome>
+            <to-view-id>/css.jsp</to-view-id>
+        </navigation-case>
+
     </navigation-rule>
 
     <navigation-rule>
