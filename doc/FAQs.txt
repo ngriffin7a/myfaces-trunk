@@ -4,11 +4,10 @@ MyFaces frequently asked questions
 1. MyFaces user FAQs
 
 Q: One of the major advantages of the MyFaces implementation has to do with
-   scalability issues, based in part on the fact that it saves state in the
-   client. Now, Sun's EA release also has this context parameter called
-   "saveStateInClient".
-   So, what's the difference. Does this (new) parameter negate that advantage?
-
+   scalability issues, based in part on the fact that it has this feature to
+   save the full state in the client. Well, Sun's EA release also has this
+   context parameter called "saveStateInClient". So, what's the difference.
+   Does this (new) parameter in Sun's API negate that advantage?
 A:
 Sun's "saveStateInClient" feature was already part of the EA2 release and was
 one of the main reasons for starting this open source project, because they
@@ -32,7 +31,7 @@ MyFaces has a different approach:
   hardcoded in the JSP can be restored from there. (BTW, this is the reason why
   MyFaces needs a JSP parser)
 
-Well, to be more "compatible", release 0.3.1 will offer 4 different state saving
+Well, to be more "compatible", release 0.3.1 offers 4 different state saving
 features:
 
 1. "server_session"

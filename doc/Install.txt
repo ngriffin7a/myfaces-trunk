@@ -6,40 +6,24 @@ What you need
 - JDK 1.4.0 (or higher)
 - Tomcat 4.0.x (get it from http://jakarta.apache.org/tomcat/index.html)
 - JSF-API (get the jsf-api.jar from the "JavaServerTM Faces v1.0 Reference Implementation Early Access 3" at http://java.sun.com/j2ee/javaserverfaces/download.html)
-- mail.jar (FIXME: )
 
 
 HOWTO - Run the Example-Application
 -----------------------------------
-if you like to use ant: see tomcat-install-with-ant-readme.txt
-otherwise:
-To run the examples you must add the myfaces context to your Tomcat's configuration in the file conf/server.xml.
-- Unzip all files to a working directory (e.g. "C:\myfaces" on a Win PC).
-- Copy the file "jsf-api.jar" from the "JSF Reference Implementation EA 2" to the directory <myfaces-working-dir>/web/WEB-INF/lib.
-- Add the following lines right after the "Tomcat Manager Context":
-
-        <!-- MyFaces Context -->
-        <Context path="/myfaces" docBase="<myfaces-working-dir>/web" debug="0" privileged="true" reloadable="true">
-                              <!--        |
-                                          +-- Adjust to the path of your installation! -->
-          <Logger className="org.apache.catalina.logger.FileLogger"
-                  prefix="localhost_myfaces_log." suffix=".txt" timestamp="true"/>
-          <Loader checkInterval="5" className="org.apache.catalina.loader.WebappLoader"/>
-        </Context>
-
-- (Re)start Tomcat
-- Enter "http://localhost:8080/myfaces/example/" into the adress field of your browser.
-
+- see webapps/examples/doc/howto-run.txt
 
 HOWTO - Use MyFaces in your own WebApp
 --------------------------------------
 - Copy the file "jsf-api.jar" from the "JSF Reference Implementation EA 3" to the WEB-INF/lib dir of your (J2EE conform) Webapplication.
-- Copy all JARs from the myfaces/lib directory to the WEB-INF/lib dir of your Webapplication.
-- Copy the two TLD files and the file web.xml from the myfaces/WEB-INF dir to the WEB-INF dir of your Webapplication.
+- Copy the lib/myfaces.jar file to the WEB-INF/lib dir of your Webapplication.
+- Copy the lib/mail.jar file to the WEB-INF/lib dir of your Webapplication.
+- Configure your webapp's web.xml file. You can find a sample web.xml in the examples webapp.
 - Add the line
-	<%@ taglib uri="/WEB-INF/myfaces_basic.tld" prefix="f"%>
-  to your JSPs to be able to use the basic JSF tags.
+    <%@ taglib uri="http://java.sun.com/jsf/html" prefix="h"%>
+    to your JSPs to be able to use the asic HTML JSF tags.
 - Add the line
-	<%@ taglib uri="/WEB-INF/myfaces_ext.tld" prefix="x"%>
-  to your JSPs to be able to use the MyFaces extensions tags.
-- FIXME: mail.jar
+    <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f"%>
+    to your JSPs to be able to use the core JSF tags.
+- Add the line
+    <%@ taglib uri="http://myfaces.sourceforge.net/tld/myfaces_ext_0_3.tld" prefix="x"%>
+    to your JSPs to be able to use the myfaces extensions tags.

@@ -2,6 +2,14 @@ MyFaces Release Notes
 =====================
 
 ----------------------------------------------------------------------
+Changes in Release 0.3.1
+
+* completely restructured directories
+* revised doumentation
+* revised build files
+* 4 different state-saving modes
+
+----------------------------------------------------------------------
 Changes in Release 0.3.0
 
 * This is a major release, that has lots of changes to make MyFaces

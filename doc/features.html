@@ -17,7 +17,7 @@ objects. This is an easy to use but poor approach:
 
 MyFaces has a different approach. It makes it possible to write sophisticated
 applications without any use of the HttpSession. All state information of
-the jsf tree and (optionally the model beans) is encoded to the client
+the jsf tree and (optionally the model beans) can be encoded to the client
 response in the form of query parameters and hidden inputs in forms.
 
 
@@ -62,7 +62,7 @@ supported by a Converter (see package myfaces/converter/map).
 
 
 <h4>State Saving</h4>
-Release 0.3.1 offers 4 different state saving features:
+Since Release 0.3.1 MyFaces offers 4 different state saving features:
 <ol>
 <li>"server_session"<br>
 Tree state is saved in a HTTPSession comparable to Sun's default saving with saveStateInClient = false.

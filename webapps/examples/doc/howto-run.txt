@@ -5,7 +5,7 @@ To run the examples you must add the myfaces context to your Tomcat's configurat
 - Add the following lines to Tomcat's server.xml right after the "Tomcat Manager Context":
 
         <!-- MyFaces Context -->
-        <Context path="/myfaces" docBase="<myfaces-working-dir>/webapps/examples/web" debug="0" privileged="true" reloadable="true">
+        <Context path="/myfaces" docBase="<myfaces-dir>/webapps/examples/web" debug="0" privileged="true" reloadable="true">
                               <!--        |
                                           +-- Adjust to the path of your installation! -->
           <Logger className="org.apache.catalina.logger.FileLogger"

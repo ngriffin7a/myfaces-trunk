@@ -1,13 +1,25 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <project name="myfaces-tomcat" default="all">
 
+    <!-- Constants -->
+    <property name="examples.web" location="${basedir}/web"/>
+
     <!-- allow some of the properties to be overridden -->
     <property file="build-tomcat.properties"/>
+
+
+    <target name="-prepare">
+        <!-- compile and copy necessary libs -->
+        <ant dir="."
+             antfile="build.xml"
+             target="all"
+             inheritall="false"/>
+    </target>
+
 
     <!--
     Convenient targets to deploy to tomcat (added by Bill Dudney [bdudney@mac.com]).
     See "tomcat-install-with-ant-readme.txt" for details.
-    Comment out, if you do not have the necessary catalina-ant.jar file.
     -->
 	<!-- must have 'catalina-ant.jar' in your ant class path for these to work. -->
     <taskdef name="list" classname="org.apache.catalina.ant.ListTask"/>
@@ -26,11 +38,12 @@
 	        password="${tomcat.admin.passwd}" />
 	</target>
 
-	<target name="install" description="Install example web application on tomcat">
+	<target name="install" description="Install example web application on tomcat"
+            depends="-prepare" >
 	  <install url="${tomcat.manager.url}" username="${tomcat.admin.user}"
 	           password="${tomcat.admin.passwd}"
                path="${tomcat.example.context.path}"
-               war="file:${project.dir}/web" />
+               war="file:${examples.web}" />
     </target>
 
 	<target name="reload" description="Reload example web application on tomcat">
