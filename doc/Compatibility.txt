@@ -1,4 +1,4 @@
-MyFaces is known to work with and tested with the following environment:
+MyFaces is known to work with and was tested with the following environment:
 - JDK 1.4.0_01 
 - Tomcat 4.0.4
 - JSF-API from the JavaServerTM Faces v1.0 Reference Implementation Early Access 2
