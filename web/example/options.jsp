@@ -28,10 +28,11 @@
 
 <body>
 
+<h:use_faces>
+
 <jsp:useBean id="optionsForm" class="net.sourceforge.myfaces.example.model.OptionsForm" scope="request" />
 <jsp:useBean id="optionsCtrl" class="net.sourceforge.myfaces.example.controller.OptionsController" scope="application" />
-
-<h:use_faces>
+<x:save_state id="ss1" modelReference="optionsForm.language" />
 
     <x:page_layout id="page" layoutReference="pageLayout" cssClass="pageLayout" >
         <%@include file="inc/page_header.jsp" %>

@@ -194,8 +194,8 @@ public class StateSaver
                 Object attrValue = comp.getAttribute(attrName);
                 if (attrValue != null && !isIgnoreAttribute(comp, attrName))
                 {
-                    if (attrName.equals(CommonComponentAttributes.VALUE_ATTR) ||
-                        attrName.equals(CommonComponentAttributes.STRING_VALUE_ATTR))
+                    if (attrName.equals(CommonComponentAttributes.VALUE_ATTR)
+                        || attrName.equals(CommonComponentAttributes.STRING_VALUE_ATTR))
                     {
                         valueSeen = true;
 
@@ -227,11 +227,15 @@ public class StateSaver
                 }
             }
 
+            //TODO: Save all attributes, that are set in the parsed tree
+            //but not in the current tree (= removed attributes).
+            //Save them by means of a special dummy value
+
             /*
             TODO: save currentValue and restore model value on restore ?
             Saving the currentValue for an UIOutput has side-effects!
-            The value is restored, although it was null. currentValue then want
-            funktion properly, because it always would return the local value!
+            The value is restored, although it was null. currentValue then wont
+            function properly, because it always would return the local value!
 
             if (!valueSeen
                 && !isIgnoreValue(comp))

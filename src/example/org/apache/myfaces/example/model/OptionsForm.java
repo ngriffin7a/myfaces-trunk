@@ -19,6 +19,7 @@
 package net.sourceforge.myfaces.example.model;
 
 import javax.faces.component.SelectItem;
+import javax.faces.context.FacesContext;
 import java.util.*;
 
 /**
@@ -32,11 +33,13 @@ public class OptionsForm
         = Arrays.asList(new Locale[] {Locale.ENGLISH,
                                       Locale.GERMAN});
 
-    private Locale _locale;
+    private Locale _locale = null;
 
     public String getLanguage()
     {
-        return _locale != null ? _locale.getLanguage() : null;
+        return _locale != null
+                ? _locale.getLanguage()
+                : FacesContext.getCurrentInstance().getLocale().getLanguage();
     }
 
     public void setLanguage(String language)

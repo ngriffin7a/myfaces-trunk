@@ -53,38 +53,21 @@ public class SortColumnRenderer
 
     public void decode(FacesContext facesContext, UIComponent uiComponent) throws IOException
     {
-        //super.decode must not be called, because value never comes from request
-
-        uiComponent.setValid(true);
-
-        String paramName = uiComponent.getClientId(facesContext);
-        String paramValue = facesContext.getServletRequest().getParameter(paramName);
-        if (paramValue != null)
+        if (decodeValue(facesContext, uiComponent))
         {
-            //link was clicked
-            String commandName = paramValue;    // = columnName
+            if (!(uiComponent instanceof UICommand))
+            {
+                LogUtil.getLogger().severe("Component " + uiComponent.getClientId(facesContext) + "is no UICommand.");
+                return;
+            }
 
             //Old event processing:
-            ApplicationEvent event = new CommandEvent(uiComponent, commandName);
+            ApplicationEvent event = new CommandEvent(uiComponent,
+                                                      ((UICommand)uiComponent).getCommandName());
             facesContext.addApplicationEvent(event);
 
-            /*
-            UIComponent uiSortHeader = uiComponent.getParent();
-            if (!(uiSortHeader instanceof UISortHeader))
-            {
-                throw new FacesException("UISortHeader expected.");
-            }
-            */
-
             //New event processing:
-            if (uiComponent instanceof UICommand)
-            {
-                ((UICommand)uiComponent).fireActionEvent(facesContext);
-            }
-            else
-            {
-                LogUtil.getLogger().warning("Component " + uiComponent.getClientId(facesContext) + "is no UICommand.");
-            }
+            ((UICommand)uiComponent).fireActionEvent(facesContext);
         }
     }
 
