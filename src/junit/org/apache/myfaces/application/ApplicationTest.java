@@ -21,8 +21,11 @@ package net.sourceforge.myfaces.application;
 import net.sourceforge.myfaces.MyFacesTest;
 
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Random;
+import java.util.Set;
 
 import javax.faces.application.Application;
 import javax.faces.el.ValueBinding;
@@ -32,13 +35,16 @@ import javax.faces.el.ValueBinding;
  * @author Anton Koinov (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public class ApplicationTest
-    extends MyFacesTest
+public class ApplicationTest extends MyFacesTest
 {
     //~ Static fields/initializers -----------------------------------------------------------------
 
-    private static final int THREAD_COUNT = 400;
-    private static final int VB_COUNT = 20000;
+    private static final int THREAD_COUNT = 100;
+    private static final int VB_COUNT     = 30000;
+
+    //~ Instance fields ----------------------------------------------------------------------------
+
+    final Map _bindingsMap                = new HashMap(VB_COUNT * 2);
 
     //~ Constructors -------------------------------------------------------------------------------
 
@@ -59,73 +65,127 @@ public class ApplicationTest
             assertSame(vb, _application.createValueBinding("#{test}"));
         }
     }
-        
+
     public void testValueBindingMutithreadedCaching()
     throws InterruptedException
     {
-        final Application application = _application;
-        final Random   random   = new Random();
+        final Random random   = new Random();
 
-        final String[] varNames = new String[VB_COUNT];
+        Set          varNames = new HashSet(VB_COUNT * 2);
         for (int i = 0; i < VB_COUNT; i++)
         {
-            varNames[i] = "#{t" + random.nextLong() + random.nextLong() + '}';
+            String name = null;
+            do
+            {
+                name =
+                    "#{t" + Math.abs(random.nextLong()) + ".t" + Math.abs(random.nextLong()) + '}';
+            }
+            while (varNames.contains(name));
+
+            varNames.add(name);
         }
 
-        final Map vbs     = new HashMap();
+        String[] names = toStringArray(varNames);
+        varNames = null; // free memory
 
-        Thread[]  threads = new Thread[THREAD_COUNT];
+        Thread[] threads = new Thread[THREAD_COUNT];
         for (int i = 0; i < THREAD_COUNT; i++)
         {
-            threads[i] =
-                new Thread()
-                    {
-                        public void run()
-                        {
-                            int start;
-                            int end;
+            threads[i] = new Thread(new ValueBindingCachingTesterThread((names = shuffle(names))));
+        }
+        names = null; // free memory
 
-                            synchronized (random)
-                            {
-                                // determine direction
-                                if (random.nextBoolean())
-                                {
-                                    start     = 0;
-                                    end       = VB_COUNT - 1;
-                                }
-                                else
-                                {
-                                    start     = VB_COUNT - 1;
-                                    end       = 0;
-                                }
-                            }
-
-                            for (
-                                int i = start; (start < end) ? (i <= end) : (i >= end);
-                                        i = (start < end) ? (i + 1) : (i - 1))
-                            {
-                                String       name = varNames[i];
-                                ValueBinding vb = application.createValueBinding(varNames[i]);
-                                synchronized (vbs)
-                                {
-                                    if (vbs.containsKey(name))
-                                    {
-                                        assertSame("Probably serious mutli-threading issues, please report to MyFaces team", vb, vbs.get(name));
-                                    }
-                                    else
-                                    {
-                                        vbs.put(name, vb);
-                                    }
-                                }
-                            }
-                        }
-                    };
+        for (int i = 0; i < THREAD_COUNT; i++)
+        {
             threads[i].start();
         }
 
         for (int i = 0; i < THREAD_COUNT; i++)
         {
             threads[i].join();
+        }
+    }
+
+    Application getApplication()
+    {
+        return _application;
+    }
+
+    private String[] shuffle(String[] strings)
+    {
+        strings = (String[]) strings.clone();
+
+        final Random random = new Random();
+
+        for (int i = 0, len = strings.length; i < len; i++)
+        {
+            int    a    = Math.abs(random.nextInt()) % len;
+            int    b    = Math.abs(random.nextInt()) % len;
+            String temp = strings[a];
+            strings[a]     = strings[b];
+            strings[b]     = temp;
+        }
+
+        return strings;
+    }
+
+    private String[] toStringArray(Set set)
+    {
+        String[] strings = new String[set.size()];
+        int      i = 0;
+        for (Iterator it = set.iterator(); it.hasNext();)
+        {
+            strings[i++] = (String) it.next();
+        }
+        return strings;
+    }
+
+    //~ Inner Classes ------------------------------------------------------------------------------
+
+    class ValueBindingCachingTesterThread implements Runnable
+    {
+        //~ Instance fields ------------------------------------------------------------------------
+
+        final String[] _names;
+
+        //~ Constructors ---------------------------------------------------------------------------
+
+        ValueBindingCachingTesterThread(String[] names)
+        {
+            _names = names;
+        }
+
+        //~ Methods --------------------------------------------------------------------------------
+
+        public void run()
+        {
+            final Application    application = getApplication();
+            final ValueBinding[] bindings = new ValueBinding[_names.length];
+            for (int i = 0, len = _names.length; i < len; i++)
+            {
+                bindings[i] = application.createValueBinding(_names[i]);
+            }
+
+            final Map bindingsMap = _bindingsMap;
+            synchronized (bindingsMap)
+            {
+                boolean put = !bindingsMap.containsKey(_names[0]);
+                for (int i = 0, len = _names.length; i < len; i++)
+                {
+                    String       name = _names[i];
+                    ValueBinding vb = bindings[i];
+                    if (put)
+                    {
+                        bindingsMap.put(name, vb);
+                    }
+                    else
+                    {
+                        assertSame(
+                            "Probably serious mutli-threading issue, please report to MyFaces team",
+                            vb, bindingsMap.get(name));
+                    }
+                }
+            }
         }
     }
 }
