@@ -1,4 +1,4 @@
-MyFaces Installation instructions
+MyFaces installation instructions
 =================================
 
 What you need
@@ -8,7 +8,7 @@ What you need
 - JSF-API (get it from the "JavaServerTM Faces v1.0 Reference Implementation Early Access 2" at http://java.sun.com/j2ee/javaserverfaces/download.html)
 
 
-HOWTO - Run the Example-Applikation
+HOWTO - Run the Example-Application
 -----------------------------------
 To run the examples you must add the myfaces context to your Tomcat's configuration in the file conf/server.xml.
 - Unzip all files to a working directory (e.g. "C:\myfaces" on a Win PC).
