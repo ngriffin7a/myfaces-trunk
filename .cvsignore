@@ -10,3 +10,7 @@ test-results
 myfaces-1.0.8-tiles-example.tgz
 myfaces-1.0.8-examples.tgz
 myfaces-1.0.8.tgz
+MyFaces.iws
+MyFaces.ipr
+MyFaces-Tiles.iml
+MyFaces.iml
