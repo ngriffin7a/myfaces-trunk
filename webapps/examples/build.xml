@@ -125,8 +125,8 @@
 
     <target name="clean">
         <delete quiet="true" failonerror="false" includeEmptyDirs="true">
-            <fileset dir="${classes.dir}"/>
-            <fileset dir="${web.dir}"/>
+            <fileset dir="${classes.dir}" />
+            <fileset dir="${web.dir}" />
         </delete>
     </target>
 
