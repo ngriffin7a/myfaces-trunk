@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 /*
- * Utilities used by MyFaces x:htmlEditor tag
+ * Utilities used by MyFaces x:inputHtml tag
  * @author Sylvain Vieujot (latest modification by $Author$)
  * @version $Revision$ $Date$
  */

@@ -34,7 +34,7 @@
                 <x:navigationMenuItem id="nav_2_4_71" itemLabel="#{example_messages['nav_Popup']}" action="go_popup" icon="images/myfaces.gif" split="true" />
                 <x:navigationMenuItem id="nav_2_4_72" itemLabel="#{example_messages['nav_JsListener']}" action="go_jslistener" icon="images/myfaces.gif" split="true" />                
             	<x:navigationMenuItem id="nav_2_4_8" itemLabel="#{example_messages['nav_Date']}" action="go_date" icon="images/myfaces.gif" />
-	            <x:navigationMenuItem id="nav_2_4_81" itemLabel="#{example_messages['nav_HtmlEditor']}" action="go_htmlEditor" icon="images/myfaces.gif" />
+	            <x:navigationMenuItem id="nav_2_4_81" itemLabel="#{example_messages['nav_InputHtml']}" action="go_inputHtml" icon="images/myfaces.gif" />
                 <x:navigationMenuItem id="nav_2_4_9" itemLabel="#{example_messages['nav_dataList']}" action="go_dataList" icon="images/myfaces.gif" />
                 <x:navigationMenuItem id="nav_2_4_10" itemLabel="#{example_messages['nav_tree']}" action="go_tree" icon="images/myfaces.gif" />
                 <x:navigationMenuItem id="nav_2_4_100" itemLabel="#{example_messages['nav_tree2']}" action="go_tree2" icon="images/myfaces.gif" />

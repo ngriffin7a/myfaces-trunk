@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.myfaces.custom.htmlEditor;
+package org.apache.myfaces.custom.inputHtml;
 
 import javax.faces.context.FacesContext;
 import javax.faces.el.ValueBinding;
@@ -30,6 +30,9 @@ import org.apache.myfaces.renderkit.RendererUtils;
  * @author Sylvain Vieujot (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.1  2005/03/26 20:31:37  svieujot
+ * Rename x:htmlEditor to x:inputHtml.
+ *
  * Revision 1.20  2005/03/22 02:13:28  svieujot
  * htmlEditor : Add a showAllToolBoxes short cut.
  *
@@ -90,10 +93,10 @@ import org.apache.myfaces.renderkit.RendererUtils;
  * Revision 1.1  2004/12/02 22:28:30  svieujot
  * Add an x:htmlEditor based on the Kupu library.
  */
-public class HtmlEditor extends HtmlInputText {
-    public static final String COMPONENT_TYPE = "org.apache.myfaces.HtmlEditor";
+public class InputHtml extends HtmlInputText {
+    public static final String COMPONENT_TYPE = "org.apache.myfaces.InputHtml";
 
-    private static final String DEFAULT_RENDERER_TYPE = "org.apache.myfaces.HtmlEditor";
+    public static final String DEFAULT_RENDERER_TYPE = "org.apache.myfaces.InputHtml";
     
     private static final Log log = LogFactory.getLog(HtmlInputText.class);
     
@@ -115,7 +118,7 @@ public class HtmlEditor extends HtmlInputText {
 	private Boolean _showCleanupExpressionsToolBox;
     private Boolean _showDebugToolBox;
 
-    public HtmlEditor() {
+    public InputHtml() {
         setRendererType(DEFAULT_RENDERER_TYPE);
     }
 

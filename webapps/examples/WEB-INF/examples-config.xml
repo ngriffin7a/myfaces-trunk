@@ -151,11 +151,11 @@
         <managed-bean-scope>request</managed-bean-scope>
     </managed-bean>
 
-    <!-- Managed Beans for htmlEditor.jsp -->
+    <!-- Managed Beans for inputHtml.jsp -->
 
     <managed-bean>
         <managed-bean-name>editor</managed-bean-name>
-        <managed-bean-class>org.apache.myfaces.examples.htmleditorexample.EditorFace</managed-bean-class>
+        <managed-bean-class>org.apache.myfaces.examples.inputhtmlexample.EditorFace</managed-bean-class>
         <managed-bean-scope>session</managed-bean-scope>
     </managed-bean>
 

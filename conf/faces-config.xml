@@ -131,8 +131,8 @@
   </component>
 
   <component>
-    <component-type>org.apache.myfaces.HtmlEditor</component-type>
-    <component-class>org.apache.myfaces.custom.htmlEditor.HtmlEditor</component-class>
+    <component-type>org.apache.myfaces.InputHtml</component-type>
+    <component-class>org.apache.myfaces.custom.inputHtml.InputHtml</component-class>
   </component>
 
   <component>
@@ -435,8 +435,8 @@
 
         <renderer>
             <component-family>javax.faces.Input</component-family>
-            <renderer-type>org.apache.myfaces.HtmlEditor</renderer-type>
-            <renderer-class>org.apache.myfaces.custom.htmlEditor.HtmlEditorRenderer</renderer-class>
+            <renderer-type>org.apache.myfaces.InputHtml</renderer-type>
+            <renderer-class>org.apache.myfaces.custom.inputHtml.InputHtmlRenderer</renderer-class>
         </renderer>
 
         <renderer>

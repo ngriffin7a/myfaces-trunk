@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.myfaces.custom.htmlEditor;
+package org.apache.myfaces.custom.inputHtml;
 
 import javax.faces.component.UIComponent;
 
@@ -25,6 +25,9 @@ import org.apache.myfaces.taglib.UIComponentTagBase;
  * @author Sylvain Vieujot (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.1  2005/03/26 20:31:37  svieujot
+ * Rename x:htmlEditor to x:inputHtml.
+ *
  * Revision 1.16  2005/03/22 02:13:28  svieujot
  * htmlEditor : Add a showAllToolBoxes short cut.
  *
@@ -73,7 +76,7 @@ import org.apache.myfaces.taglib.UIComponentTagBase;
  * Revision 1.1  2004/12/02 22:28:30  svieujot
  * Add an x:htmlEditor based on the Kupu library.
  */
-public class HtmlEditorTag extends UIComponentTagBase {
+public class InputHtmlTag extends UIComponentTagBase {
     
     private String style;
     private String styleClass;
@@ -158,11 +161,11 @@ public class HtmlEditorTag extends UIComponentTagBase {
     }
     
     public String getComponentType() {
-        return HtmlEditor.COMPONENT_TYPE;
+        return InputHtml.COMPONENT_TYPE;
     }
 
     public String getRendererType() {
-        return "org.apache.myfaces.HtmlEditor";
+        return InputHtml.DEFAULT_RENDERER_TYPE;
     }
 
     public void setStyle(String style){

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.myfaces.custom.htmlEditor;
+package org.apache.myfaces.custom.inputHtml;
 
 import java.io.IOException;
 import java.util.Map;
@@ -38,6 +38,9 @@ import org.apache.myfaces.renderkit.html.util.JavascriptUtils;
  * @author Sylvain Vieujot (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.1  2005/03/26 20:31:37  svieujot
+ * Rename x:htmlEditor to x:inputHtml.
+ *
  * Revision 1.26  2005/03/15 21:24:41  svieujot
  * Style handling improvements.
  *
@@ -116,33 +119,33 @@ import org.apache.myfaces.renderkit.html.util.JavascriptUtils;
  * Revision 1.1  2004/12/02 22:28:30  svieujot
  * Add an x:htmlEditor based on the Kupu library.
  */
-public class HtmlEditorRenderer extends HtmlRenderer {
+public class InputHtmlRenderer extends HtmlRenderer {
     // TODO : Finish Disabled mode.
-    // TODO : Fallback on textarea whose content it converted to HTML for non kupu capable browsers (Safari, smartphones, non javascript, ...).
+    // TODO : Automatic Fallback for non kupu capable browsers (Safari, smartphones, non javascript, ...).
     // TODO : Make Image & Link Library work.
 
     protected boolean isDisabled(FacesContext facesContext, UIComponent uiComponent) {
         if( !UserRoleUtils.isEnabledOnUserRole(uiComponent) )
             return false;
 
-        return ((HtmlEditor)uiComponent).isDisabled();
+        return ((InputHtml)uiComponent).isDisabled();
     }
 	
-	private static boolean useFallback(HtmlEditor editor){
+	private static boolean useFallback(InputHtml editor){
 		// TODO : Handle fallback="auto"
 		return editor.getFallback().equals("true");
 	}
     
     public void encodeEnd(FacesContext context, UIComponent uiComponent) throws IOException {
-        RendererUtils.checkParamValidity(context, uiComponent, HtmlEditor.class);
-        HtmlEditor editor = (HtmlEditor) uiComponent;
+        RendererUtils.checkParamValidity(context, uiComponent, InputHtml.class);
+		InputHtml editor = (InputHtml) uiComponent;
 		if( useFallback(editor) )
 			encodeEndFallBackMode(context, editor);
 		else
 			encodeEndNormalMode(context, editor);
     }
 	
-	private void encodeEndFallBackMode(FacesContext context, HtmlEditor editor) throws IOException {
+	private void encodeEndFallBackMode(FacesContext context, InputHtml editor) throws IOException {
 		String clientId = editor.getClientId(context);	
 		// Use only a textarea
 		ResponseWriter writer = context.getResponseWriter();
@@ -202,7 +205,7 @@ public class HtmlEditorRenderer extends HtmlRenderer {
         return html.substring(bodyStartIndex, bodyEndIndex+1).trim();
 	}
 	
-	private void encodeEndNormalMode(FacesContext context, HtmlEditor editor) throws IOException {
+	private void encodeEndNormalMode(FacesContext context, InputHtml editor) throws IOException {
 		String clientId = editor.getClientId(context);
         String formId;
         {
@@ -214,21 +217,21 @@ public class HtmlEditorRenderer extends HtmlRenderer {
         }
             
         
-        AddResource.addStyleSheet(HtmlEditorRenderer.class, "kupustyles.css", context);
-        AddResource.addStyleSheet(HtmlEditorRenderer.class, "kupudrawerstyles.css", context);
+        AddResource.addStyleSheet(InputHtmlRenderer.class, "kupustyles.css", context);
+        AddResource.addStyleSheet(InputHtmlRenderer.class, "kupudrawerstyles.css", context);
         
-        AddResource.addJavaScriptToHeader(HtmlEditorRenderer.class, "sarissa.js", context);
-        AddResource.addJavaScriptToHeader(HtmlEditorRenderer.class, "kupuhelpers.js", context);
-        AddResource.addJavaScriptToHeader(HtmlEditorRenderer.class, "kupueditor.js", context);
-        AddResource.addJavaScriptToHeader(HtmlEditorRenderer.class, "kupubasetools.js", context);
-        AddResource.addJavaScriptToHeader(HtmlEditorRenderer.class, "kupuloggers.js", context);
-        AddResource.addJavaScriptToHeader(HtmlEditorRenderer.class, "kupucontentfilters.js", context);
-		AddResource.addJavaScriptToHeader(HtmlEditorRenderer.class, "kupucleanupexpressions.js", context);
-        AddResource.addJavaScriptToHeader(HtmlEditorRenderer.class, "kupucontextmenu.js", context);
-		AddResource.addJavaScriptToHeader(HtmlEditorRenderer.class, "kupuinit.js", context);
-        AddResource.addJavaScriptToHeader(HtmlEditorRenderer.class, "kupustart_form.js", context);
-        AddResource.addJavaScriptToHeader(HtmlEditorRenderer.class, "kupusourceedit.js", context);
-        AddResource.addJavaScriptToHeader(HtmlEditorRenderer.class, "kupudrawers.js", context);
+        AddResource.addJavaScriptToHeader(InputHtmlRenderer.class, "sarissa.js", context);
+        AddResource.addJavaScriptToHeader(InputHtmlRenderer.class, "kupuhelpers.js", context);
+        AddResource.addJavaScriptToHeader(InputHtmlRenderer.class, "kupueditor.js", context);
+        AddResource.addJavaScriptToHeader(InputHtmlRenderer.class, "kupubasetools.js", context);
+        AddResource.addJavaScriptToHeader(InputHtmlRenderer.class, "kupuloggers.js", context);
+        AddResource.addJavaScriptToHeader(InputHtmlRenderer.class, "kupucontentfilters.js", context);
+		AddResource.addJavaScriptToHeader(InputHtmlRenderer.class, "kupucleanupexpressions.js", context);
+        AddResource.addJavaScriptToHeader(InputHtmlRenderer.class, "kupucontextmenu.js", context);
+		AddResource.addJavaScriptToHeader(InputHtmlRenderer.class, "kupuinit.js", context);
+        AddResource.addJavaScriptToHeader(InputHtmlRenderer.class, "kupustart_form.js", context);
+        AddResource.addJavaScriptToHeader(InputHtmlRenderer.class, "kupusourceedit.js", context);
+        AddResource.addJavaScriptToHeader(InputHtmlRenderer.class, "kupudrawers.js", context);
         
         ResponseWriter writer = context.getResponseWriter();
 
@@ -291,12 +294,12 @@ public class HtmlEditorRenderer extends HtmlRenderer {
 					  writer.endElement("set");
 		            writer.endElement("cleanup_expressions");
 	
-					writeTag(writer, "image_xsl_uri", AddResource.getResourceMappedPath(HtmlEditorRenderer.class, "kupudrawers/drawer.xsl", context));
-					writeTag(writer, "link_xsl_uri", AddResource.getResourceMappedPath(HtmlEditorRenderer.class, "kupudrawers/drawer.xsl", context));
+					writeTag(writer, "image_xsl_uri", AddResource.getResourceMappedPath(InputHtmlRenderer.class, "kupudrawers/drawer.xsl", context));
+					writeTag(writer, "link_xsl_uri", AddResource.getResourceMappedPath(InputHtmlRenderer.class, "kupudrawers/drawer.xsl", context));
 					
 					// TODO : Make this work (reference available images, ...).
-					writeTag(writer, "image_libraries_uri", AddResource.getResourceMappedPath(HtmlEditorRenderer.class, "kupudrawers/imagelibrary.xml", context));
-					writeTag(writer, "link_libraries_uri", AddResource.getResourceMappedPath(HtmlEditorRenderer.class, "kupudrawers/linklibrary.xml", context));
+					writeTag(writer, "image_libraries_uri", AddResource.getResourceMappedPath(InputHtmlRenderer.class, "kupudrawers/imagelibrary.xml", context));
+					writeTag(writer, "link_libraries_uri", AddResource.getResourceMappedPath(InputHtmlRenderer.class, "kupudrawers/linklibrary.xml", context));
 	        		writeTag(writer, "search_images_uri", "");
 	        		writeTag(writer, "search_links_uri", "");
 
@@ -585,7 +588,7 @@ public class HtmlEditorRenderer extends HtmlRenderer {
                                     writer.writeAttribute(HTML.WIDTH_ATTR, "440", null);
                                     writer.writeAttribute(HTML.HEIGHT_ATTR, "198", null);
                                     writer.writeAttribute(HTML.ID_ATTR, "kupu-linkdrawer-preview", null);
-                                    writer.writeAttribute(HTML.SRC_ATTR, AddResource.getResourceMappedPath(HtmlEditorRenderer.class, "kupublank.html", context), null);
+                                    writer.writeAttribute(HTML.SRC_ATTR, AddResource.getResourceMappedPath(InputHtmlRenderer.class, "kupublank.html", context), null);
                                     writer.endElement(HTML.IFRAME_ELEM);
                                 writer.endElement(HTML.TD_ELEM);
                             writer.endElement(HTML.TR_ELEM);
@@ -1158,9 +1161,9 @@ public class HtmlEditorRenderer extends HtmlRenderer {
         String text = editor.getValueAsHtmlDocument( context );
         String encodedText = text == null ? "" : JavascriptUtils.encodeString( text );
         
-        AddResource.addJavaScriptToHeader(HtmlEditorRenderer.class, "myFacesUtils.js", context);
+        AddResource.addJavaScriptToHeader(InputHtmlRenderer.class, "myFacesUtils.js", context);
         
-        String resourceBaseURL = AddResource.getResourceMappedPath(HtmlEditorRenderer.class, "", context);
+        String resourceBaseURL = AddResource.getResourceMappedPath(InputHtmlRenderer.class, "", context);
         
         writer.startElement(HTML.SCRIPT_ELEM, null);
         writer.writeAttribute(HTML.SCRIPT_TYPE_ATTR, HTML.SCRIPT_TYPE_TEXT_JAVASCRIPT, null);
@@ -1229,8 +1232,8 @@ public class HtmlEditorRenderer extends HtmlRenderer {
     }
 
     public void decode(FacesContext facesContext, UIComponent uiComponent) {
-        RendererUtils.checkParamValidity(facesContext, uiComponent, HtmlEditor.class);
-		HtmlEditor editor = (HtmlEditor) uiComponent;
+        RendererUtils.checkParamValidity(facesContext, uiComponent, InputHtml.class);
+		InputHtml editor = (InputHtml) uiComponent;
 
 		Map paramMap = facesContext.getExternalContext()
 	            .getRequestParameterMap();
@@ -1252,8 +1255,8 @@ public class HtmlEditorRenderer extends HtmlRenderer {
     }
     
     public Object getConvertedValue(FacesContext facesContext, UIComponent uiComponent, Object submittedValue) throws ConverterException {
-        RendererUtils.checkParamValidity(facesContext, uiComponent, HtmlEditor.class);
-        HtmlEditor editor = (HtmlEditor) uiComponent;
+        RendererUtils.checkParamValidity(facesContext, uiComponent, InputHtml.class);
+		InputHtml editor = (InputHtml) uiComponent;
         String submittedDocument = (String) RendererUtils.getConvertedUIOutputValue(facesContext, editor, submittedValue);
         return editor.getValueFromDocument( submittedDocument );
     }

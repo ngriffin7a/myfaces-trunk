@@ -8,7 +8,7 @@
  *
  *****************************************************************************/
 
-// $Id: kupueditor.js 7951 2004-12-21 15:06:38Z guido $
+// $Id$
 
 // WARNING: this file can contain non-ascii characters, *always* make sure your
 // text-editor uses 'UTF-8' as the character encoding!!

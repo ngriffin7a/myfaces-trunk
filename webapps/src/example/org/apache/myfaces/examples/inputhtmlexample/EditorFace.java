@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.myfaces.examples.htmleditorexample;
+package org.apache.myfaces.examples.inputhtmlexample;
 
 /**
  * @author Sylvain Vieujot (latest modification by $Author$)

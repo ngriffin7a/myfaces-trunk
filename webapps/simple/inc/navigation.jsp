@@ -26,7 +26,7 @@
             <x:commandNavigation id="nav_2_4_71" value="#{example_messages['nav_Popup']}" action="go_popup" />
             <x:commandNavigation id="nav_2_4_72" value="#{example_messages['nav_JsListener']}" action="go_jslistener" />            
             <x:commandNavigation id="nav_2_4_8" value="#{example_messages['nav_Date']}" action="go_date" />
-            <x:commandNavigation id="nav_2_4_81" value="#{example_messages['nav_HtmlEditor']}" action="go_htmlEditor" />
+            <x:commandNavigation id="nav_2_4_81" value="#{example_messages['nav_InputHtml']}" action="go_inputHtml" />
             <x:commandNavigation id="nav_2_4_9" value="#{example_messages['nav_dataList']}" action="go_dataList" />
             <x:commandNavigation id="nav_2_4_10" value="#{example_messages['nav_tree']}" action="go_tree" />
             <x:commandNavigation id="nav_2_4_100" value="#{example_messages['nav_tree2']}" action="go_tree2" />
