@@ -1090,6 +1090,26 @@
     </tag>
 
 
+	<!-- stylesheet -->
+	
+	<tag>
+		<name>stylesheet</name>
+		<tag-class>net.sourceforge.myfaces.custom.stylesheet.StylesheetTag</tag-class>
+		<body-content>JSP</body-content>
+		<description>a component, which renders the path to a common CSS-file</description>
+		&ui_component_attributes;
+		&user_role_attributes;
+		<attribute>
+			<name>path</name>
+			<required>true</required>
+			<rtexprvalue>false</rtexprvalue>
+			<description>
+				URL for CSS-file.
+			</description>
+		</attribute>
+	</tag>
+
+
     <!-- radio -->
     <tag>
         <name>radio</name>
