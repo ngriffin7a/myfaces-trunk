@@ -18,6 +18,9 @@ package net.sourceforge.myfaces.renderkit.html.util;
 import net.sourceforge.myfaces.config.MyfacesConfig;
 import net.sourceforge.myfaces.renderkit.html.HTML;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
@@ -32,6 +35,9 @@ import java.util.Set;
  * @author Anton Koinov
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.7  2004/09/08 15:51:15  manolito
+ * Autoscroll now also for horizontal scrolling
+ *
  * Revision 1.6  2004/09/08 15:23:11  manolito
  * Autoscroll feature
  *
@@ -53,12 +59,12 @@ import java.util.Set;
  */
 public final class JavascriptUtils
 {
-    //private static final Log log = LogFactory.getLog(JavascriptUtils.class);
+    private static final Log log = LogFactory.getLog(JavascriptUtils.class);
 
     public static final String JAVASCRIPT_DETECTED = JavascriptUtils.class + ".JAVASCRIPT_DETECTED";
 
-    private static final String AUTO_SCROLL_Y_PARAM = "autoScrollY";
-    private static final String AUTO_SCROLL_Y_FUNCTION = "getScrollY()";
+    private static final String AUTO_SCROLL_PARAM = "autoScroll";
+    private static final String AUTO_SCROLL_FUNCTION = "getScrolling()";
 
     private static final String OLD_VIEW_ID = JavascriptUtils.class + ".OLD_VIEW_ID";
 
@@ -286,8 +292,8 @@ public final class JavascriptUtils
     public static void appendAutoScrollAssignment(StringBuffer onClickValue, String formName)
     {
         onClickValue.append("document.forms['").append(formName).append("']");
-        onClickValue.append(".elements['").append(AUTO_SCROLL_Y_PARAM).append("']");
-        onClickValue.append(".value=").append(AUTO_SCROLL_Y_FUNCTION).append(";");
+        onClickValue.append(".elements['").append(AUTO_SCROLL_PARAM).append("']");
+        onClickValue.append(".value=").append(AUTO_SCROLL_FUNCTION).append(";");
     }
 
     /**
@@ -297,7 +303,7 @@ public final class JavascriptUtils
     {
         writer.startElement(HTML.INPUT_ELEM, null);
         writer.writeAttribute(HTML.TYPE_ATTR, "hidden", null);
-        writer.writeAttribute(HTML.NAME_ATTR, AUTO_SCROLL_Y_PARAM, null);
+        writer.writeAttribute(HTML.NAME_ATTR, AUTO_SCROLL_PARAM, null);
         writer.endElement(HTML.INPUT_ELEM);
     }
 
@@ -309,24 +315,43 @@ public final class JavascriptUtils
     {
         writer.write("\n<script language=\"JavaScript\">\n" +
                      "<!--\n" +
-                     "function " + AUTO_SCROLL_Y_FUNCTION + " {\n" +
-                     "    if (document.body && document.body.scrollTop && !isNaN(document.body.scrollTop)) {\n" +
-                     "        //alert('document.body.scrollTop=' + document.body.scrollTop);\n" +
-                     "        return document.body.scrollTop;\n" +
-                     "    } else if (window.pageYOffset && !isNaN(window.pageYOffset)) {\n" +
-                     "        //alert('window.pageYOffset=' + window.pageYOffset);\n" +
-                     "        return window.pageYOffset;\n" +
+                     "function " + AUTO_SCROLL_FUNCTION + " {\n" +
+                     "    x = 0; y = 0;\n" +
+                     "    if (document.body && document.body.scrollLeft && !isNaN(document.body.scrollLeft)) {\n" +
+                     "        x = document.body.scrollLeft;\n" +
+                     "    } else if (window.pageXOffset && !isNaN(window.pageXOffset)) {\n" +
+                     "        x = window.pageXOffset;\n" +
                      "    }\n" +
+                     "    if (document.body && document.body.scrollTop && !isNaN(document.body.scrollTop)) {\n" +
+                     "        y = document.body.scrollTop;\n" +
+                     "    } else if (window.pageYOffset && !isNaN(window.pageYOffset)) {\n" +
+                     "        y = window.pageYOffset;\n" +
+                     "    }\n" +
+                     "    return x + \",\" + y;\n" +
                      "}\n");
         ExternalContext externalContext = facesContext.getExternalContext();
         String oldViewId = getOldViewId(externalContext);
         if (oldViewId != null && oldViewId.equals(facesContext.getViewRoot().getViewId()))
         {
             //ok, we stayed on the same page, so let's scroll it to the former place
-            String scrollY = (String)externalContext.getRequestParameterMap().get(AUTO_SCROLL_Y_PARAM);
-            if (scrollY != null && scrollY.length() > 0 && !scrollY.equals("undefined"))
+            String scrolling = (String)externalContext.getRequestParameterMap().get(AUTO_SCROLL_PARAM);
+            if (scrolling != null && scrolling.length() > 0)
             {
-                writer.write("window.scrollTo(0," + scrollY + ");\n");
+                String x = "0";
+                String y = "0";
+                int comma = scrolling.indexOf(',');
+                if (comma == -1)
+                {
+                    log.warn("Illegal autoscroll request parameter: " + scrolling);
+                }
+                else
+                {
+                    x = scrolling.substring(0, comma);
+                    if (x.equals("undefined")) x = "0";
+                    y = scrolling.substring(comma + 1);
+                    if (y.equals("undefined")) y = "0";
+                }
+                writer.write("window.scrollTo(" + x + "," + y + ");\n");
             }
         }
         writer.write("//-->\n" +
