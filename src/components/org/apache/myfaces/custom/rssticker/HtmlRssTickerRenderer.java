@@ -19,7 +19,6 @@
 package net.sourceforge.myfaces.custom.rssticker;
 
 import java.io.IOException;
-import java.util.Iterator;
 
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
