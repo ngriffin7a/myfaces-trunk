@@ -275,8 +275,8 @@
 	function jscalendarPopUpMonth() {
 		jscalendarConstructMonth()
 		jscalendarCrossMonthObj.visibility = (jscalendarDom||jscalendarIe)? "visible"	: "show"
-		jscalendarCrossMonthObj.left = parseInt(jscalendarCrossobj.left) + 50
-		jscalendarCrossMonthObj.top =	parseInt(jscalendarCrossobj.top) + 26
+		jscalendarCrossMonthObj.left = parseInt(jscalendarCrossobj.left) + 50 + "px";
+		jscalendarCrossMonthObj.top =	parseInt(jscalendarCrossobj.top) + 26 + "px";
 
 		jscalendarHideElement( 'SELECT', document.getElementById("selectMonth") );
 		jscalendarHideElement( 'APPLET', document.getElementById("selectMonth") );
@@ -366,8 +366,8 @@
 		{
 			leftOffset += 6
 		}
-		jscalendarCrossYearObj.left =	leftOffset
-		jscalendarCrossYearObj.top = parseInt(jscalendarCrossobj.top) +	26
+		jscalendarCrossYearObj.left =	leftOffset + "px";
+		jscalendarCrossYearObj.top = parseInt(jscalendarCrossobj.top) +	26 + "px";
 	}
 
 	/*** calendar ***/
@@ -619,8 +619,8 @@
 					toppos += aTag.offsetTop;
 				} while(aTag.tagName!="BODY");
 
-				jscalendarCrossobj.left =	jscalendarFixedX==-1 ? ctl.offsetLeft	+ leftpos :	jscalendarFixedX
-				jscalendarCrossobj.top = jscalendarFixedY==-1 ?	ctl.offsetTop +	toppos + ctl.offsetHeight +	2 :	jscalendarFixedY
+				jscalendarCrossobj.left =	jscalendarFixedX==-1 ? ctl.offsetLeft	+ leftpos + "px":	jscalendarFixedX
+				jscalendarCrossobj.top = jscalendarFixedY==-1 ?	ctl.offsetTop +	toppos + ctl.offsetHeight +	2 + "px":	jscalendarFixedY
 				jscalendarConstructCalendar (1, jscalendarMonthSelected, jscalendarYearSelected);
 				jscalendarCrossobj.visibility=(jscalendarDom||jscalendarIe)? "visible" : "show"
 
