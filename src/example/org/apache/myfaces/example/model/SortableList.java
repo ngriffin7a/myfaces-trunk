@@ -34,7 +34,7 @@ public abstract class SortableList
 
     protected abstract void sort(String column, boolean ascending);
 
-    public void setSortCommand(String sortCommand)
+    public void sort(String sortCommand)
     {
         String sortColumn = getSortColumn();
 
