@@ -73,6 +73,8 @@ managed beans used:
 
 
                     <x:panelTab id="tab1" label="#{example_messages['tabbed_tab1']}" rendered="#{tabbedPaneBean.tab1Visible}">
+   	                    <h:selectBooleanCheckbox id="testCheckBox" value="#{testCheckBox.checked}"/><h:outputLabel for="testCheckBox" value="A checkbox"/>
+	                    <f:verbatim><br/><br/></f:verbatim>
                         <h:inputText id="inp1"/><f:verbatim><br></f:verbatim>
                         <h:inputText id="inp2" required="true" /><h:message for="inp2" showSummary="false" showDetail="true" />
                     </x:panelTab>
@@ -82,9 +84,14 @@ managed beans used:
                     </f:subview>
 
                     <x:panelTab id="tab3" label="#{example_messages['tabbed_tab3']}" rendered="#{tabbedPaneBean.tab3Visible}">
-                        <h:inputText id="inp3"/><f:verbatim><br></f:verbatim>
-                        <h:inputText id="inp4"/><f:verbatim><br></f:verbatim>
-                        <h:inputText id="inp5"/><f:verbatim><br></f:verbatim>
+						<x:selectOneRadio value="#{testRadioButton.choice}">
+							<f:selectItem itemValue="0" itemLabel="First Choice" />
+							<f:selectItem itemValue="1" itemLabel="Second Choice" />
+                        </x:selectOneRadio>
+	                    <f:verbatim><br/><br/></f:verbatim>
+                        <h:inputText id="inp3"/><f:verbatim><br/></f:verbatim>
+                        <h:inputText id="inp4"/><f:verbatim><br/></f:verbatim>
+                        <h:inputText id="inp5"/><f:verbatim><br/></f:verbatim>
                     </x:panelTab>
 
                     <f:verbatim><br></f:verbatim>

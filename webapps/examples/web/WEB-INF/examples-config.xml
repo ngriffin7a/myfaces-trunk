@@ -199,7 +199,18 @@
         <managed-bean-class>org.apache.myfaces.examples.misc.TabbedPaneBean</managed-bean-class>
         <managed-bean-scope>request</managed-bean-scope>
     </managed-bean>
+    
+    <managed-bean>
+        <managed-bean-name>testCheckBox</managed-bean-name>
+        <managed-bean-class>org.apache.myfaces.examples.misc.TestCheckBox</managed-bean-class>
+        <managed-bean-scope>request</managed-bean-scope>
+    </managed-bean>
 
+    <managed-bean>
+        <managed-bean-name>testRadioButton</managed-bean-name>
+        <managed-bean-class>org.apache.myfaces.examples.misc.TestRadioButton</managed-bean-class>
+        <managed-bean-scope>request</managed-bean-scope>
+    </managed-bean>
 
     <!-- Managed Beans for panelstack example -->
 
