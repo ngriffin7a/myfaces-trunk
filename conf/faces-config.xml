@@ -287,11 +287,6 @@
   </component>
 
   <component>
-    <component-type>net.sourceforge.myfaces.HtmlOutputNavigation</component-type>
-    <component-class>net.sourceforge.myfaces.component.ext.HtmlOutputNavigation</component-class>
-  </component>
-
-  <component>
     <component-type>net.sourceforge.myfaces.HtmlPanelLayout</component-type>
     <component-class>net.sourceforge.myfaces.component.ext.HtmlPanelLayout</component-class>
   </component>
@@ -315,7 +310,7 @@
     <component-type>net.sourceforge.myfaces.SaveState</component-type>
     <component-class>net.sourceforge.myfaces.component.ext.UISaveState</component-class>
   </component>
- 
+
 
   <!-- standard converters by id -->
 

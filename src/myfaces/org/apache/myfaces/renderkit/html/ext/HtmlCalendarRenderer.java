@@ -4,15 +4,12 @@ import net.sourceforge.myfaces.component.ext.HtmlInputCalendar;
 import net.sourceforge.myfaces.renderkit.JSFAttr;
 import net.sourceforge.myfaces.renderkit.RendererUtils;
 import net.sourceforge.myfaces.renderkit.html.HTML;
-import net.sourceforge.myfaces.renderkit.html.HtmlLinkRenderer;
 import net.sourceforge.myfaces.renderkit.html.HtmlRenderer;
 import net.sourceforge.myfaces.renderkit.html.HtmlRendererUtils;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLUtil;
 
-import javax.faces.component.UICommand;
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIInput;
-import javax.faces.component.UIParameter;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 import javax.faces.convert.Converter;
@@ -341,7 +338,7 @@ public class HtmlCalendarRenderer
     {
         RendererUtils.checkParamValidity(facesContext, component, HtmlInputCalendar.class);
 
-        HtmlRendererUtils.decodeUIInput(facesContext, (UIInput) component);
+        HtmlRendererUtils.decodeUIInput(facesContext, component);
     }
 
     public Object getConvertedValue(FacesContext facesContext, UIComponent uiComponent, Object submittedValue) throws ConverterException

@@ -137,6 +137,9 @@
              compression="gzip">
             <tarfileset dir="${doc.dir}"
                         prefix="myfaces-${manifest.impl.version}/doc"/>
+            <tarfileset dir="${conf.dir}"
+                        includes="web.xml"
+                        prefix="myfaces-${manifest.impl.version}/conf"/>
             <tarfileset file="${myfaces.jar}"
                         prefix="myfaces-${manifest.impl.version}/lib"/>
             <tarfileset file="${cos.jar}"

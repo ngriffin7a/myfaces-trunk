@@ -64,11 +64,11 @@ public class HtmlMenuRenderer
 
         if (uiComponent instanceof UISelectMany)
         {
-            HtmlRendererUtils.decodeUISelectMany(facesContext, (UISelectMany)uiComponent);
+            HtmlRendererUtils.decodeUISelectMany(facesContext, uiComponent);
         }
         else if (uiComponent instanceof UISelectOne)
         {
-            HtmlRendererUtils.decodeUIInput(facesContext, (UISelectOne)uiComponent);
+            HtmlRendererUtils.decodeUISelectOne(facesContext, uiComponent);
         }
         else
         {

@@ -18,8 +18,8 @@
  */
 package net.sourceforge.myfaces.renderkit.html;
 
-import net.sourceforge.myfaces.renderkit.RendererUtils;
 import net.sourceforge.myfaces.renderkit.JSFAttr;
+import net.sourceforge.myfaces.renderkit.RendererUtils;
 
 import javax.faces.component.UIComponent;
 import javax.faces.component.UISelectMany;
@@ -88,11 +88,11 @@ public class HtmlListboxRenderer
 
         if (uiComponent instanceof UISelectMany)
         {
-            HtmlRendererUtils.decodeUISelectMany(facesContext, (UISelectMany)uiComponent);
+            HtmlRendererUtils.decodeUISelectMany(facesContext, uiComponent);
         }
         else if (uiComponent instanceof UISelectOne)
         {
-            HtmlRendererUtils.decodeUIInput(facesContext, (UISelectOne)uiComponent);
+            HtmlRendererUtils.decodeUISelectOne(facesContext, uiComponent);
         }
         else
         {

@@ -53,7 +53,7 @@ public class HtmlCheckboxRenderer
     private static final String PAGE_DIRECTION = "pageDirection";
     private static final String LINE_DIRECTION = "lineDirection";
 
-    private static final String EXTERNAL_TRUE_VALUE = "1";
+    private static final String EXTERNAL_TRUE_VALUE = "true";
 
     public void encodeEnd(FacesContext facesContext, UIComponent uiComponent)
             throws IOException
@@ -161,15 +161,11 @@ public class HtmlCheckboxRenderer
         RendererUtils.checkParamValidity(facesContext, uiComponent, null);
         if (uiComponent instanceof UISelectBoolean)
         {
-            HtmlRendererUtils.decodeUISelectBoolean(facesContext,
-                                                    (UISelectBoolean)uiComponent,
-                                                    true, //set to FALSE if request param absent,
-                                                    EXTERNAL_TRUE_VALUE);
+            HtmlRendererUtils.decodeUISelectBoolean(facesContext, uiComponent);
         }
         else if (uiComponent instanceof UISelectMany)
         {
-            HtmlRendererUtils.decodeUISelectMany(facesContext,
-                                                 (UISelectMany)uiComponent);
+            HtmlRendererUtils.decodeUISelectMany(facesContext, uiComponent);
         }
         else
         {

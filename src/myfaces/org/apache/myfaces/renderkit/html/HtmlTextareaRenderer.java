@@ -64,7 +64,7 @@ public class HtmlTextareaRenderer
     public void decode(FacesContext facesContext, UIComponent component)
     {
         RendererUtils.checkParamValidity(facesContext, component, UIInput.class);
-        HtmlRendererUtils.decodeUIInput(facesContext, (UIInput)component);
+        HtmlRendererUtils.decodeUIInput(facesContext, component);
     }
 
     public Object getConvertedValue(FacesContext facesContext, UIComponent uiComponent, Object submittedValue) throws ConverterException

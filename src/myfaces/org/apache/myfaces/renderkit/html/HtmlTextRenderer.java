@@ -74,7 +74,8 @@ public class HtmlTextRenderer
         }
         else
         {
-            escape = RendererUtils.getBooleanAttribute(uiOutput, JSFAttr.ESCAPE_ATTR, true);
+            escape = RendererUtils.getBooleanAttribute(uiOutput, JSFAttr.ESCAPE_ATTR,
+                                                       true); //default is to escape
         }
         renderOutputText(facesContext, uiOutput, text, escape);
     }
@@ -86,23 +87,26 @@ public class HtmlTextRenderer
                                         boolean escape)
         throws IOException
     {
-        ResponseWriter writer = facesContext.getResponseWriter();
-
-        boolean span = HTMLUtil.renderHTMLAttributesWithOptionalStartElement(
-                writer, component, HTML.SPAN_ELEM, HTML.COMMON_PASSTROUGH_ATTRIBUTES);
-
-        if (escape)
+        if (text != null)
         {
-            writer.writeText(text, JSFAttr.VALUE_ATTR);
-        }
-        else
-        {
-            writer.write(text);
-        }
+            ResponseWriter writer = facesContext.getResponseWriter();
 
-        if (span)
-        {
-            writer.endElement(HTML.SPAN_ELEM);
+            boolean span = HTMLUtil.renderHTMLAttributesWithOptionalStartElement(
+                    writer, component, HTML.SPAN_ELEM, HTML.COMMON_PASSTROUGH_ATTRIBUTES);
+
+            if (escape)
+            {
+                writer.writeText(text, JSFAttr.VALUE_ATTR);
+            }
+            else
+            {
+                writer.write(text);
+            }
+
+            if (span)
+            {
+                writer.endElement(HTML.SPAN_ELEM);
+            }
         }
     }
 
@@ -137,7 +141,7 @@ public class HtmlTextRenderer
 
         if (component instanceof UIInput)
         {
-            HtmlRendererUtils.decodeUIInput(facesContext, (UIInput)component);
+            HtmlRendererUtils.decodeUIInput(facesContext, component);
         }
         else if (component instanceof UIOutput)
         {

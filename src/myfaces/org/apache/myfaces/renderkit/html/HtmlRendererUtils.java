@@ -19,12 +19,11 @@
 package net.sourceforge.myfaces.renderkit.html;
 
 import net.sourceforge.myfaces.MyFacesConfig;
-import net.sourceforge.myfaces.convert.impl.StringArrayConverter;
-import net.sourceforge.myfaces.renderkit.RendererUtils;
 import net.sourceforge.myfaces.renderkit.JSFAttr;
-import net.sourceforge.myfaces.renderkit.html.util.HTMLUtil;
+import net.sourceforge.myfaces.renderkit.RendererUtils;
 import net.sourceforge.myfaces.renderkit.html.util.DummyFormResponseWriter;
 import net.sourceforge.myfaces.renderkit.html.util.DummyFormUtils;
+import net.sourceforge.myfaces.renderkit.html.util.HTMLUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -38,8 +37,8 @@ import javax.faces.convert.Converter;
 import javax.faces.model.SelectItem;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.util.*;
 import java.net.URLEncoder;
+import java.util.*;
 
 /**
  * @author Manfred Geiler (latest modification by $Author$)
@@ -49,76 +48,123 @@ public class HtmlRendererUtils
 {
     private static final Log log = LogFactory.getLog(HtmlRendererUtils.class);
 
+    private static final String[] EMPTY_STRING_ARRAY = new String[0];
     private static final String LINE_SEPARATOR = System.getProperty("line.separator", "\r\n");
 
     private HtmlRendererUtils() {} //no instance allowed
 
     /**
+     * X-CHECKED: tlddoc h:inputText
      * @param facesContext
-     * @param input
+     * @param component
      */
     public static void decodeUIInput(FacesContext facesContext,
-                                     UIInput input)
+                                     UIComponent component)
     {
-        Map paramValuesMap = facesContext.getExternalContext().getRequestParameterValuesMap();
-        String clientId  = input.getClientId(facesContext);
-        if (paramValuesMap.containsKey(clientId))
+        if (!(component instanceof EditableValueHolder))
         {
-            String[] reqValues = (String[])paramValuesMap.get(clientId);
-            input.setSubmittedValue(StringArrayConverter.getAsString(reqValues, false));
-            //input.setValid(true);
+            throw new IllegalArgumentException("Component " + component.getClientId(facesContext) + " is not an EditableValueHolder");
+        }
+        Map paramMap = facesContext.getExternalContext().getRequestParameterMap();
+        String clientId  = component.getClientId(facesContext);
+        if (paramMap.containsKey(clientId))
+        {
+            //request parameter found, set submittedValue
+            ((EditableValueHolder)component).setSubmittedValue(paramMap.get(clientId));
         }
         else
         {
             //request parameter not found, nothing to decode
-            input.setSubmittedValue(null);
+            ((EditableValueHolder)component).setSubmittedValue(null);
         }
     }
 
 
+    /**
+     * X-CHECKED: tlddoc h:selectBooleanCheckbox
+     * @param facesContext
+     * @param component
+     */
     public static void decodeUISelectBoolean(FacesContext facesContext,
-                                             UISelectBoolean selectBoolean,
-                                             boolean setFalseOnAbsentParam,
-                                             String externalTrueValue)
+                                             UIComponent component)
     {
-        Map paramValuesMap = facesContext.getExternalContext().getRequestParameterValuesMap();
-        String clientId  = selectBoolean.getClientId(facesContext);
-        if (!paramValuesMap.containsKey(clientId))
+        if (!(component instanceof EditableValueHolder))
         {
-            //request parameter not found
-            if (setFalseOnAbsentParam)
-            {
-                selectBoolean.setSelected(false);  //no request param means false
-            }
-            return;
+            throw new IllegalArgumentException("Component " + component.getClientId(facesContext) + " is not an EditableValueHolder");
         }
-
-        String[] reqValues = (String[])paramValuesMap.get(clientId);
-        if (reqValues.length > 0 && reqValues[0].equals(externalTrueValue))
+        Map paramMap = facesContext.getExternalContext().getRequestParameterMap();
+        String clientId  = component.getClientId(facesContext);
+        if (paramMap.containsKey(clientId))
         {
-            selectBoolean.setSelected(true);
+            String reqValue = (String)paramMap.get(clientId);
+            if (reqValue != null &&
+                (reqValue.equalsIgnoreCase("on") ||
+                 reqValue.equalsIgnoreCase("yes") ||
+                 reqValue.equalsIgnoreCase("true")))
+            {
+                ((EditableValueHolder)component).setSubmittedValue(Boolean.TRUE);
+            }
+            else
+            {
+                ((EditableValueHolder)component).setSubmittedValue(Boolean.FALSE);
+            }
         }
         else
         {
-            selectBoolean.setSelected(false);
+            ((EditableValueHolder)component).setSubmittedValue(Boolean.FALSE);
         }
     }
 
 
+    /**
+     * X-CHECKED: tlddoc h:selectManyListbox
+     * @param facesContext
+     * @param component
+     */
     public static void decodeUISelectMany(FacesContext facesContext,
-                                          UISelectMany selectMany)
+                                          UIComponent component)
     {
+        if (!(component instanceof EditableValueHolder))
+        {
+            throw new IllegalArgumentException("Component " + component.getClientId(facesContext) + " is not an EditableValueHolder");
+        }
         Map paramValuesMap = facesContext.getExternalContext().getRequestParameterValuesMap();
-        String clientId  = selectMany.getClientId(facesContext);
+        String clientId  = component.getClientId(facesContext);
         if (paramValuesMap.containsKey(clientId))
         {
             String[] reqValues = (String[])paramValuesMap.get(clientId);
-            selectMany.setSubmittedValue(reqValues);
+            ((EditableValueHolder)component).setSubmittedValue(reqValues);
         }
         else
         {
-            selectMany.setSubmittedValue(null);
-            return;
+            ((EditableValueHolder)component).setSubmittedValue(EMPTY_STRING_ARRAY);
+        }
+    }
+
+
+    /**
+     * X-CHECKED: tlddoc h:selectManyListbox
+     * @param facesContext
+     * @param component
+     */
+    public static void decodeUISelectOne(FacesContext facesContext,
+                                         UIComponent component)
+    {
+        if (!(component instanceof EditableValueHolder))
+        {
+            throw new IllegalArgumentException("Component " + component.getClientId(facesContext) + " is not an EditableValueHolder");
+        }
+        Map paramMap = facesContext.getExternalContext().getRequestParameterMap();
+        String clientId  = component.getClientId(facesContext);
+        if (paramMap.containsKey(clientId))
+        {
+            //request parameter found, set submitted value
+            ((EditableValueHolder)component).setSubmittedValue(paramMap.get(clientId));
+        }
+        else
+        {
+            //request parameter not found, nothing to decode
+            ((EditableValueHolder)component).setSubmittedValue(null);
         }
     }
 

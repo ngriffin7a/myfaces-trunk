@@ -136,7 +136,7 @@ public class HtmlRadioRenderer
     public void decode(FacesContext facesContext, UIComponent uiComponent)
     {
         RendererUtils.checkParamValidity(facesContext, uiComponent, UISelectOne.class);
-        HtmlRendererUtils.decodeUIInput(facesContext, (UISelectOne)uiComponent);
+        HtmlRendererUtils.decodeUIInput(facesContext, uiComponent);
     }
 
 
