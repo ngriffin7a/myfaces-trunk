@@ -1,4 +1,4 @@
 MyFaces Features
 ================
 
-Read about MyFaces extensions and enhancements at http://myfaces.sourceforge.net
+Read about MyFaces extensions and enhancements at http://www.myfaces.org
