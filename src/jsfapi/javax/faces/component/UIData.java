@@ -337,6 +337,7 @@ public class UIData
         if (isAllChildrenAndFacetsValid())
         {
             _saveDescendantState = false;
+            _dataModel = null;  //Refresh DataModel for rendering
         }
         super.encodeBegin(context);
     }
