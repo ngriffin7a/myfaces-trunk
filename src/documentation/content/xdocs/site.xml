@@ -21,8 +21,8 @@
 		<compatibility label="Compatibility" href="compatibility.html"/>
 		<faq label="FAQ" href="faq.html" />
 		<jars label="JARs" href="jars.html" />
-		<javadoc label="Java Doc" href="http://incubator.apache.org/myfaces/javadoc/" />
-		<tlddoc label="Taglibs" href="http://incubator.apache.org/myfaces/tlddoc/" />
+		<javadoc label="Java Doc" href="http://myfaces.apache.org/javadoc/" />
+		<tlddoc label="Taglibs" href="http://myfaces.apache.org/tlddoc/" />
 		<controlprogramming label="Homepage" href="sf.html" />
 	</docu>
   <community href="community/" label="Community" tab="community">
