@@ -26,7 +26,6 @@ import javax.faces.component.UIComponent;
 import javax.faces.context.ResponseWriter;
 import java.io.IOException;
 import java.io.Writer;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -35,6 +34,9 @@ import java.util.Set;
  * @author Anton Koinov
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.22  2004/08/20 00:13:55  dave0000
+ * remove unused constant
+ *
  * Revision 1.21  2004/08/18 17:56:58  manolito
  * no newline to <br/> mapping for TEXTAREA elements
  *
@@ -56,8 +58,6 @@ public class HtmlResponseWriterImpl
 
     private static final String DEFAULT_CONTENT_TYPE = "text/html";
     private static final String DEFAULT_CHARACTER_ENCODING = "ISO-8859-1";
-    private static final Set SUPPORTED_CONTENT_TYPES
-            = Collections.singleton(DEFAULT_CONTENT_TYPE);
 
     private boolean _writeDummyForm = false;
     private Set _dummyFormParams = null;
@@ -457,5 +457,4 @@ public class HtmlResponseWriterImpl
         }
         _dummyFormParams.add(paramName);
     }
-
 }
