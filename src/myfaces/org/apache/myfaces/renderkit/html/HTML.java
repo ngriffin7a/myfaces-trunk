@@ -337,6 +337,9 @@ public class HTML
     public static final String ANCHOR_ELEM = "a";
     public static final String IMG_ELEM = "img";
     public static final String LABEL_ELEM = "label";
+    public static final String TABLE_ELEM = "table";
+    public static final String TR_ELEM = "tr";
+    public static final String TD_ELEM = "td";
 
 
     //HTML simple element constants

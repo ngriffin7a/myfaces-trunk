@@ -21,16 +21,16 @@ package net.sourceforge.myfaces.taglib;
 import net.sourceforge.myfaces.renderkit.JSFAttr;
 
 import javax.faces.component.UIComponent;
-import javax.faces.webapp.UIComponentTag;
+import javax.faces.webapp.UIComponentBodyTag;
 
 /**
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public abstract class MyfacesComponentTag
-        extends UIComponentTag
+public abstract class MyfacesComponentBodyTag
+        extends UIComponentBodyTag
 {
-    //private static final Log log = LogFactory.getLog(MyfacesComponentTag.class);
+    //private static final Log log = LogFactory.getLog(MyfacesComponentBodyTag.class);
 
     /**
      * Must be implemented by sub classes.

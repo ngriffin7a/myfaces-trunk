@@ -181,8 +181,15 @@
   </component>
 
 
+  <!-- MyFaces extension components -->
+  <!-- (in alphabetical order) -->
 
-    <!-- MyFaces Extension Components -->
+  <component>
+    <component-type>PanelLayout</component-type>
+    <component-class>net.sourceforge.myfaces.component.ext.HtmlPanelLayout</component-class>
+  </component>
+
+
     <!--
     <component>
       <component-type>FileUpload</component-type>
@@ -457,23 +464,21 @@
 
 
     <!-- MyFaces Renderkit Extensions -->
-    <!--
     <render-kit>
         <render-kit-id>DEFAULT</render-kit-id>
 
+        <renderer>
+            <renderer-type>Layout</renderer-type>
+            <renderer-class>net.sourceforge.myfaces.renderkit.html.ext.HtmlLayoutRenderer</renderer-class>
+            <supported-component-type><component-type>PanelLayout</component-type></supported-component-type>
+        </renderer>
+
+    <!--
         <renderer>
             <renderer-type>FileUpload</renderer-type>
             <renderer-class>net.sourceforge.myfaces.renderkit.html.ext.FileUploadRenderer</renderer-class>
             <supported-component-type>
                 <component-type>FileUpload</component-type>
-            </supported-component-type>
-        </renderer>
-
-        <renderer>
-            <renderer-type>Layout</renderer-type>
-            <renderer-class>net.sourceforge.myfaces.renderkit.html.ext.LayoutRenderer</renderer-class>
-            <supported-component-type>
-                <component-type>Panel</component-type>
             </supported-component-type>
         </renderer>
 
@@ -527,8 +532,8 @@
             <renderer-type>State</renderer-type>
             <renderer-class>net.sourceforge.myfaces.renderkit.html.state.StateRenderer</renderer-class>
         </renderer>
+    -->
 
     </render-kit>
-    -->
 
 </faces-config>

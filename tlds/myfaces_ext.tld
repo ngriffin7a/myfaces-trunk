@@ -60,6 +60,63 @@
         Tag library for the MyFaces extensions implementation.
     </description>
 
+
+    <tag>
+        <name>panel_layout</name>
+        <tag-class>net.sourceforge.myfaces.taglib.ext.HtmlPanelLayoutTag</tag-class>
+        <body-content>JSP</body-content>
+        &ui_component_attributes;
+        &ui_panel_attributes;
+        &html_universal_attributes;
+        &html_event_handler_attributes;
+        &html_table_attributes;
+        <attribute>
+            <name>layout</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
+            <type>java.lang.String</type>
+            <description>
+                The layout to be used.
+
+                                    | header | navigation | body  | footer
+                    ================|========|============|=======|========
+                    classic         | top    | left       | right | bottom
+                    navigationRight | top    | right      | left  | bottom
+                    upsideDown      | bottom | left       | right | top
+
+                Default: classic 
+            </description>
+        </attribute>
+        <attribute>
+            <name>headerClass</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>navigationClass</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>bodyClass</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>footerClass</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>
+
+
+
+
+
+
+
+
+
     <tag>
         <name>save_state</name>
         <tag-class>net.sourceforge.myfaces.taglib.ext.SaveStateTag</tag-class>
@@ -294,85 +351,6 @@
    </tag>
 
 
-    <tag>
-        <name>page_layout</name>
-        <tag-class>net.sourceforge.myfaces.taglib.ext.PageLayoutTag</tag-class>
-        <body-content>JSP</body-content>
-        &ui_component_attributes;
-        &ui_panel_attributes;
-        &html_universal_attributes;
-        &html_event_handler_attributes;
-        &html_table_attributes;
-        <attribute>
-            <name>layout</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-            <type>java.lang.String</type>
-        </attribute>
-        <attribute>
-            <name>layoutRef</name>
-            <required>false</required>
-            <rtexprvalue>false</rtexprvalue>
-            <type>java.lang.String</type>
-        </attribute>
-        <attribute>
-            <name>headerClass</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-        </attribute>
-        <attribute>
-            <name>navigationClass</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-        </attribute>
-        <attribute>
-            <name>bodyClass</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-        </attribute>
-        <attribute>
-            <name>footerClass</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-        </attribute>
-    </tag>
-
-    <tag>
-        <name>page_header</name>
-        <tag-class>net.sourceforge.myfaces.taglib.ext.PageHeaderTag</tag-class>
-        <body-content>JSP</body-content>
-        <attribute>
-            <name>id</name>
-            <required>true</required>
-            <rtexprvalue>false</rtexprvalue>
-        </attribute>
-        &ui_panel_attributes;
-    </tag>
-
-    <tag>
-        <name>page_body</name>
-        <tag-class>net.sourceforge.myfaces.taglib.ext.PageBodyTag</tag-class>
-        <body-content>JSP</body-content>
-        <attribute>
-            <name>id</name>
-            <required>true</required>
-            <rtexprvalue>false</rtexprvalue>
-        </attribute>
-        &ui_panel_attributes;
-    </tag>
-
-    <tag>
-        <name>page_footer</name>
-        <tag-class>net.sourceforge.myfaces.taglib.ext.PageFooterTag</tag-class>
-        <body-content>JSP</body-content>
-        <attribute>
-            <name>id</name>
-            <required>true</required>
-            <rtexprvalue>false</rtexprvalue>
-        </attribute>
-        &ui_panel_attributes;
-    </tag>
-
 
 
     <tag>
@@ -475,28 +453,5 @@
 
 
 
-
-    <!-- legacy tags -->
-
-    <tag>
-        <name>setBundle</name>
-        <tag-class>net.sourceforge.myfaces.taglib.legacy.SetBundleTag</tag-class>
-        <body-content>empty</body-content>
-        <attribute>
-            <name>basename</name>
-            <required>true</required>
-            <rtexprvalue>false</rtexprvalue>
-        </attribute>
-        <attribute>
-            <name>var</name>
-            <required>true</required>
-            <rtexprvalue>false</rtexprvalue>
-        </attribute>
-        <attribute>
-            <name>scope</name>
-            <required>false</required>
-            <rtexprvalue>false</rtexprvalue>
-        </attribute>
-    </tag>
 
 </taglib>

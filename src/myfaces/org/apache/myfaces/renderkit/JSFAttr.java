@@ -150,6 +150,10 @@ public class JSFAttr
     // GraphicImage attributes
     public static final String URL_ATTR                    = "url";
 
+    // HtmlPanelLayout attributes
+
+
+
     //~ Constructors -------------------------------------------------------------------------------
 
     protected JSFAttr()
