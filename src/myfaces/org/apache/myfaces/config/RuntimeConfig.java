@@ -15,23 +15,25 @@
  */
 package net.sourceforge.myfaces.config;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.faces.context.ExternalContext;
-
 import net.sourceforge.myfaces.config.element.ManagedBean;
 import net.sourceforge.myfaces.config.element.NavigationRule;
 
+import javax.faces.context.ExternalContext;
+import java.util.*;
+
 /**
- * Holds all configuration information that is needed later during runtime. 
+ * Holds all configuration information (from the faces-config xml files) that
+ * is needed later during runtime.
+ * The config information in this class is only available to the MyFaces core
+ * implementation classes (i.e. the myfaces source tree). See MyfacesConfig
+ * for config parameters that can be used for shared or component classes.
  *
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.3  2004/09/08 09:28:56  manolito
+ * moved MyfacesConfig to package config
+ *
  * Revision 1.2  2004/07/07 08:34:58  mwessendorf
  * removed unused import-statements
  *
