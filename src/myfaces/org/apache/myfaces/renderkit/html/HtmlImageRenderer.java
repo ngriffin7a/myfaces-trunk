@@ -20,6 +20,7 @@ package net.sourceforge.myfaces.renderkit.html;
 
 import net.sourceforge.myfaces.renderkit.JSFAttr;
 import net.sourceforge.myfaces.renderkit.RendererUtils;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -35,6 +36,10 @@ import java.io.IOException;
  * @author Thomas Spiegl (latest modification by $Author$)
  * @author Anton Koinov
  * @version $Revision$ $Date$
+ * $Log$
+ * Revision 1.9  2004/05/18 11:59:13  manolito
+ * id attribute is rendered now
+ *
  */
 public class HtmlImageRenderer
 extends HtmlRenderer
@@ -62,21 +67,13 @@ extends HtmlRenderer
         {
             writer.startElement(HTML.IMG_ELEM, uiComponent);
 
-            String src;
-            if (url.startsWith(HTML.HREF_PATH_SEPARATOR))
-            {
-                String path = facesContext.getExternalContext().getRequestContextPath();
-                src = path + url;
-            }
-            else
-            {
-                src = url;
-            }
-            //Encode URL
-            //Although this is an image url, encodeURL is no nonsense, because the
-            //actual image url could also be a dynamic servlet request:
-            src = facesContext.getExternalContext().encodeResourceURL(src);
-            writer.writeAttribute(HTML.SRC_ATTR, src, null);
+            writer.writeAttribute(HTML.ID_ATTR, uiComponent.getClientId(facesContext), null);
+
+            String src = facesContext.getApplication()
+                            .getViewHandler().getResourceURL(facesContext, url);
+            writer.writeURIAttribute(HTML.SRC_ATTR,
+                                     facesContext.getExternalContext().encodeResourceURL(src),
+                                     null);
 
             HtmlRendererUtils.renderHTMLAttributes(writer, uiComponent, HTML.IMG_PASSTHROUGH_ATTRIBUTES);
 
