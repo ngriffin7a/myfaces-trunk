@@ -71,14 +71,20 @@ managed beans used:
                         preserveDataModel="true">
                    <h:column>
                        <f:facet name="header">
-                          <h:outputText value="#{example_messages['label_country_name']}" />
+                          <h:panelGroup>
+                            <h:outputText value="#{example_messages['label_country_name']}" />
+                            <h:outputText value="*" style="color:red;"/>
+                          </h:panelGroup>
                        </f:facet>
                        <h:inputText id="cname" value="#{country.name}" required="true" />
                    </h:column>
 
                    <h:column>
                        <f:facet name="header">
-                          <h:outputText value="#{example_messages['label_country_iso']}" />
+                        <h:panelGroup>
+                            <h:outputText value="#{example_messages['label_country_iso']}" />
+                            <h:outputText value="*" style="color:red;"/>
+                        </h:panelGroup>
                        </f:facet>
                        <h:inputText id="ciso" value="#{country.isoCode}" required="true" >
                                 <f:validateLength maximum="2" minimum="2"/>
