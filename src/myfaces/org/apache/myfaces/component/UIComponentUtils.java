@@ -23,10 +23,14 @@ import net.sourceforge.myfaces.convert.ConverterUtils;
 import net.sourceforge.myfaces.convert.MyFacesConverterException;
 import net.sourceforge.myfaces.convert.impl.StringArrayConverter;
 import net.sourceforge.myfaces.tree.TreeUtils;
+import net.sourceforge.myfaces.util.logging.LogUtil;
 
 import javax.faces.FacesException;
 import javax.faces.component.NamingContainer;
 import javax.faces.component.UIComponent;
+import javax.faces.component.UIForm;
+import javax.faces.component.UIOutput;
+import javax.faces.component.UIParameter;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.convert.ConverterException;
@@ -40,6 +44,7 @@ import java.util.List;
 /**
  * DOCUMENT ME!
  * @author Manfred Geiler (latest modification by $Author$)
+ * @author Anton Koinov
  * @version $Revision$ $Date$
  */
 public class UIComponentUtils
@@ -468,5 +473,57 @@ public class UIComponentUtils
         {
             namingContainer.addComponentToNamespace(comp);
         }
+    }
+
+    /** 
+     * Returns the form inside which the specified <code>uiComponent</code>
+     * is nested
+     */
+    public static UIForm findForm(FacesContext context, UIComponent uiComponent) {
+        UIComponent parent;
+
+        for (
+            parent = uiComponent.getParent(); parent != null;
+                parent = parent.getParent())
+            if (parent instanceof UIForm)
+                break;
+
+        return (UIForm)parent;
+    }
+
+    /** Returns the current value of <code>uiOutput</code> component as string
+     * using the appropriate converter
+     */
+    public static String getAsString(
+        FacesContext facesContext, UIOutput uiOutput) {
+        Object outputValue = uiOutput.currentValue(facesContext);
+
+        if (outputValue == null)
+            return null;
+
+        Converter conv =
+            ConverterUtils.findValueConverter(facesContext, uiOutput);
+
+        if (conv != null) {
+            try {
+                return conv.getAsString(facesContext, uiOutput, outputValue);
+            } catch (ConverterException e) {
+                LogUtil.getLogger().severe(
+                    "Could not convert output value '" + outputValue
+                    + "' to String.");
+
+                return outputValue.toString();
+            }
+        } else
+
+            return outputValue.toString();
+    }
+
+    /** Returns the name or clientId (if name is null) of <code>uiParameter</code> */
+    public static String getName(
+        FacesContext facesContext, UIParameter uiParameter) {
+        String name = uiParameter.getName();
+
+        return (name != null) ? name : uiParameter.getClientId(facesContext);
     }
 }
