@@ -86,4 +86,10 @@ public class UIParameter
         _value = (Object)values[2];
     }
     //------------------ GENERATED CODE END ---------------------------------------
+
+   public boolean isRendered()
+    {
+        // a parameter is never rendered
+        return false;
+    }
 }
