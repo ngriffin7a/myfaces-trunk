@@ -29,4 +29,6 @@ import javax.faces.component.html.HtmlOutputLink;
 public class MyFacesHtmlOutputLink
     extends HtmlOutputLink
 {
+    //TODO: add missing target property
+
 }

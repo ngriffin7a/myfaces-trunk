@@ -9,7 +9,6 @@
         <attribute><name>rev</name>         <required>false</required>  <rtexprvalue>false</rtexprvalue><type>java.lang.String</type></attribute>
         <attribute><name>shape</name>       <required>false</required>  <rtexprvalue>false</rtexprvalue><type>java.lang.String</type></attribute>
         <attribute><name>tabindex</name>    <required>false</required>  <rtexprvalue>false</rtexprvalue><type>java.lang.String</type></attribute>
-        <attribute><name>target</name>      <required>false</required>  <rtexprvalue>false</rtexprvalue><type>java.lang.String</type></attribute>
         <attribute><name>type</name>        <required>false</required>  <rtexprvalue>false</rtexprvalue><type>java.lang.String</type></attribute>
         <!--FIXME: is in JSF API of HtmlCommandLink and HtmlOutputLink, but there is no corresponding tag in HTML 4.0.. What to do?-->
         <attribute>

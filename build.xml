@@ -167,6 +167,7 @@
             <fileset file="myfaces-*.tgz" />
             <fileset file="${doc.dir}/web.xml.sample" />
             <fileset dir="${doc.dir}/api" />
+            <fileset dir="${doc.dir}/tld" />
             <fileset dir="${temp.dir}/myfaces-jar"/>  <!-- in case of interrupted builds -->
             <fileset dir="${resolved-tlds.dir}"/>     <!-- in case of interrupted builds -->
         </delete>

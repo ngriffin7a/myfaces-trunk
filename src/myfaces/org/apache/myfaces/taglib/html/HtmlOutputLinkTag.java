@@ -59,6 +59,7 @@ public class HtmlOutputLinkTag
     private String _rev;
     private String _shape;
     private String _tabindex;
+    private String _target;
     private String _type;
     //FIXME: is mentioned in JSF API, but is no official anchor-attribute of HTML 4.0... what to do?
     private String _onblur;
@@ -82,6 +83,7 @@ public class HtmlOutputLinkTag
         setStringProperty(component, HTML.REV_ATTR, _rev);
         setStringProperty(component, HTML.SHAPE_ATTR, _shape);
         setStringProperty(component, HTML.TABINDEX_ATTR, _tabindex);
+        setStringProperty(component, HTML.TARGET_ATTR, _target);
         setStringProperty(component, HTML.TYPE_ATTR, _type);
         setStringProperty(component, HTML.ONBLUR_ATTR, _onblur);
         setStringProperty(component, HTML.ONFOCUS_ATTR, _onfocus);
@@ -135,6 +137,11 @@ public class HtmlOutputLinkTag
     public void setTabindex(String tabindex)
     {
         _tabindex = tabindex;
+    }
+
+    public void setTarget(String target)
+    {
+        _target = target;
     }
 
     public void setType(String type)
