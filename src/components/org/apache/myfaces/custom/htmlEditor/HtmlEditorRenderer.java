@@ -33,6 +33,9 @@ import org.apache.myfaces.renderkit.html.util.JavascriptUtils;
  * @author Sylvain Vieujot (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.9  2004/12/04 03:50:44  svieujot
+ * Remove bug for IE
+ *
  * Revision 1.8  2004/12/04 03:26:28  svieujot
  * Various bug fixes
  *
@@ -63,7 +66,6 @@ public class HtmlEditorRenderer extends Renderer {
         RendererUtils.checkParamValidity(context, component, HtmlEditor.class);
         HtmlEditor editor = (HtmlEditor) component;
         String clientId = editor.getClientId(context);
-        String editorFrameId = clientId.replace(":","_")+"_kupu_editorframe"; // The : in the id breaks the inline css.
         String formId;
         {
             UIComponent tmpComponent = editor.getParent();
@@ -368,7 +370,7 @@ public class HtmlEditorRenderer extends Renderer {
                      	writer.writeAttribute(HTML.ID_ATTR, "kupu-linkdrawer-input", null);
                      	writer.writeAttribute(HTML.CLASS_ATTR, "kupu-toolbox-st", null);
                      	writer.writeAttribute(HTML.TYPE_ATTR, "text", null);
-                     	writer.writeAttribute(HTML.SIZE_ATTR, "14", null);
+                     	writer.writeAttribute(HTML.SIZE_ATTR, "40", null);
                      	writer.endElement(HTML.INPUT_ELEM);
                      	writer.startElement(HTML.DIV_ELEM,null);
                      	writer.writeAttribute(HTML.STYLE_ATTR, "text-align: center", null);
@@ -849,7 +851,9 @@ public class HtmlEditorRenderer extends Renderer {
             // Edit space
             writer.startElement(HTML.DIV_ELEM, null);
             writer.writeAttribute(HTML.CLASS_ATTR, "kupu-editorframe", null);
-            writer.writeAttribute(HTML.ID_ATTR, editorFrameId, null);
+            if( !editor.isShowAnyToolBox() ){
+                writer.writeAttribute(HTML.STYLE_ATTR, "margin-right: 0.3em;", null);
+            }
             	writer.startElement(HTML.IFRAME_ELEM, null);
             	writer.writeAttribute(HTML.ID_ATTR, "kupu-editor", null);
             	writer.writeAttribute(HTML.FRAMEBORDER_ATTR, "0", null);
@@ -863,11 +867,6 @@ public class HtmlEditorRenderer extends Renderer {
             writer.endElement(HTML.DIV_ELEM);
             
         writer.endElement(HTML.DIV_ELEM); // kupu-fulleditor
-        
-        if( !editor.isShowAnyToolBox() ){
-            String largeEditorStyle = "#"+editorFrameId+"{margin-right: 0.3em;}";
-            AddResource.addInlineStyleToHeader(largeEditorStyle, context);
-        }
         
         String text = "<html><body>"+(String) editor.getValue()+"</body></html>";
         String encodedText = text == null ? "" : JavascriptUtils.encodeString( text );
