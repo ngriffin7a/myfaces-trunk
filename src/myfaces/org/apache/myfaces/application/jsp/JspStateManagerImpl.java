@@ -18,11 +18,16 @@ import java.io.IOException;
 
 /**
  * Default StateManager implementation.
+ * @author Thomas Spiegl (latest modification by $Author$)
+ * @version $Revision$ $Date$
  *
  * @author Thomas Spiegl (latest modification by $Author$)
  * @author Manfred Geiler
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.13  2004/04/06 10:26:03  royalts
+ * restoreView(...) returns null if restoredViewId != viewId
+ *
  * Revision 1.12  2004/04/06 10:20:27  manolito
  * no state restoring for different viewId
  *
@@ -166,8 +171,13 @@ public class JspStateManagerImpl
         UIViewRoot uiViewRoot = restoreTreeStructure(facescontext, viewId, renderKitId);
         if (uiViewRoot != null)
         {
-            uiViewRoot.setViewId(viewId);
+            //uiViewRoot.setViewId(viewId);
             restoreComponentState(facescontext, uiViewRoot, renderKitId);
+            String restoredViewId = uiViewRoot.getViewId();
+            if (restoredViewId == null || !(restoredViewId.equals(viewId)))
+            {
+                return null;
+            }
 
             if (!isSavingStateInClient(facescontext))
             {
