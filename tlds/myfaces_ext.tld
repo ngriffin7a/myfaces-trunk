@@ -952,6 +952,15 @@
             	default is true.
             </description>
        	</attribute>
+		<attribute>
+	        <name>allowExternalLinks</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
+            <description>
+            	Allows the user to insert external links.
+            	default is true.
+            </description>
+       	</attribute>
        	<attribute>
 	        <name>addKupuLogo</name>
             <required>false</required>

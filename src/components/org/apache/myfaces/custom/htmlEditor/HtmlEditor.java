@@ -30,6 +30,9 @@ import org.apache.myfaces.renderkit.RendererUtils;
  * @author Sylvain Vieujot (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.17  2005/02/06 19:45:32  svieujot
+ * Add allowExternalLinks attribute.
+ *
  * Revision 1.16  2005/02/05 18:51:21  svieujot
  * x:htmlEditor : Upgrade to Kupu 1.2rc1, remove formularMode (too experimental), bugfixes.
  *
@@ -91,6 +94,7 @@ public class HtmlEditor extends HtmlInputText {
     private String _type;
     
     private Boolean _allowEditSource;
+    private Boolean _allowExternalLinks;
     private Boolean _addKupuLogo;
     
     private Boolean _showPropertiesToolBox;
@@ -119,9 +123,10 @@ public class HtmlEditor extends HtmlInputText {
         
         values[2] = _type;
         
-        Boolean toolBarButtons[] = new Boolean[2];
+        Boolean toolBarButtons[] = new Boolean[3];
         toolBarButtons[0] = _allowEditSource;
-        toolBarButtons[1] = _addKupuLogo;
+        toolBarButtons[1] = _allowExternalLinks;
+        toolBarButtons[2] = _addKupuLogo;
         
         values[3] = toolBarButtons;
         
@@ -149,7 +154,8 @@ public class HtmlEditor extends HtmlInputText {
         
         Boolean[] toolBarButtons = (Boolean[]) values[3];
         _allowEditSource = toolBarButtons[0];
-        _addKupuLogo = toolBarButtons[1];
+        _allowExternalLinks = toolBarButtons[1];
+        _addKupuLogo = toolBarButtons[2];
         
         Boolean[] toolBoxes = (Boolean[]) values[4];
         _showPropertiesToolBox = toolBoxes[0];
@@ -192,11 +198,24 @@ public class HtmlEditor extends HtmlInputText {
         return getType().equals("document");
     }
     
-    public Boolean isAllowEditSource(){
+    public boolean isAllowEditSource(){
    		if (_allowEditSource != null)
-   		    return _allowEditSource;
+   		    return _allowEditSource.booleanValue();
    		ValueBinding vb = getValueBinding("allowEditSource");
-   		return vb != null ? (Boolean)vb.getValue(getFacesContext()) : Boolean.TRUE;
+   		return vb != null ? ((Boolean)vb.getValue(getFacesContext())).booleanValue() : true;
+    }
+    public void setAllowEditSource(boolean allowEditSource){
+        this._allowEditSource = Boolean.valueOf(allowEditSource);
+    }
+    
+    public boolean isAllowExternalLinks(){
+        if (_allowExternalLinks != null)
+            return _allowExternalLinks.booleanValue();
+        ValueBinding vb = getValueBinding("allowExternalLinks");
+        return vb != null ? ((Boolean)vb.getValue(getFacesContext())).booleanValue() : true;
+    }
+    public void setAllowExternalLinks(boolean allowExternalLinks){
+        this._allowExternalLinks = Boolean.valueOf(allowExternalLinks);
     }
     
     public boolean isAddKupuLogo(){

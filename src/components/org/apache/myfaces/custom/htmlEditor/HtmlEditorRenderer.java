@@ -35,6 +35,9 @@ import org.apache.myfaces.renderkit.html.util.JavascriptUtils;
  * @author Sylvain Vieujot (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.20  2005/02/06 19:45:32  svieujot
+ * Add allowExternalLinks attribute.
+ *
  * Revision 1.19  2005/02/05 23:07:45  svieujot
  * x:htmlEditor Add full page mode (zoom) & bugfixes
  *
@@ -144,7 +147,7 @@ public class HtmlEditorRenderer extends HtmlRenderer {
         		writer.startElement("kupuconfig", null);
 
 	        		writeTag(writer, "dst", "fulldoc.html");
-	        		writeTag(writer, "use_css", "1");
+	        		writeTag(writer, "use_css", "0");
 	        		writeTag(writer, "reload_after_save", "0");
 	        		writeTag(writer, "strict_output", "1");
 	        		writeTag(writer, "content_type", "application/xhtml+xml");
@@ -196,16 +199,16 @@ public class HtmlEditorRenderer extends HtmlRenderer {
                         writer.writeAttribute(HTML.ACCESSKEY_ATTR, "x",null);
                             writer.write("&#xA0;");
                         writer.endElement(HTML.BUTTON_ELEM);
-        				writer.startElement(HTML.BUTTON_ELEM,null);
-                        if( ! editor.isAddKupuLogo() )
-                            writer.writeAttribute(HTML.STYLE_ATTR,"display: none",null);
-                        writer.writeAttribute(HTML.TYPE_ATTR, "button",null);
-        				writer.writeAttribute(HTML.CLASS_ATTR, "kupu-logo",null);
-        				writer.writeAttribute(HTML.TITLE_ATTR, "Kupu 1.2rc1",null);
-        				writer.writeAttribute(HTML.ACCESSKEY_ATTR, "k",null);
-        				writer.writeAttribute(HTML.ONCLICK_ATTR, "window.open('http://kupu.oscom.org');",null);
-        					writer.write("&#xA0;");
-                  		writer.endElement(HTML.BUTTON_ELEM);
+                        if( editor.isAddKupuLogo() ){
+            				writer.startElement(HTML.BUTTON_ELEM,null);
+                            writer.writeAttribute(HTML.TYPE_ATTR, "button",null);
+            				writer.writeAttribute(HTML.CLASS_ATTR, "kupu-logo",null);
+            				writer.writeAttribute(HTML.TITLE_ATTR, "Kupu 1.2rc1",null);
+            				writer.writeAttribute(HTML.ACCESSKEY_ATTR, "k",null);
+            				writer.writeAttribute(HTML.ONCLICK_ATTR, "window.open('http://kupu.oscom.org');",null);
+            					writer.write("&#xA0;");
+                      		writer.endElement(HTML.BUTTON_ELEM);
+                        }
                 	writer.endElement(HTML.SPAN_ELEM);
     
                 	writer.startElement(HTML.SELECT_ELEM,null);
@@ -337,6 +340,9 @@ public class HtmlEditorRenderer extends HtmlRenderer {
                 	
                 	writer.startElement(HTML.SPAN_ELEM,null);
                 	writer.writeAttribute(HTML.CLASS_ATTR, "kupu-tb-buttongroup", null);
+                    if( ! editor.isAllowExternalLinks() ){
+                        writer.writeAttribute(HTML.STYLE_ATTR, "display: none", null);
+                    }
                 		writeButton(writer, "kupu-image", "image", null, "kupu-imagelibdrawer-button");
                 		writeButton(writer, "kupu-inthyperlink", "link", null, "kupu-linklibdrawer-button");
                 		writeButton(writer, "kupu-exthyperlink", "external link", null, "kupu-linkdrawer-button");
@@ -360,7 +366,7 @@ public class HtmlEditorRenderer extends HtmlRenderer {
                 	writer.startElement(HTML.SPAN_ELEM,null);
                 	writer.writeAttribute(HTML.CLASS_ATTR, "kupu-tb-buttongroup", null);
                     writer.writeAttribute(HTML.ID_ATTR, "kupu-source", null);
-                	if( ! editor.isAllowEditSource().booleanValue() ){
+                	if( ! editor.isAllowEditSource() ){
                 	    writer.writeAttribute(HTML.STYLE_ATTR, "display: none", null);
         			}
                 		writeButton(writer, "kupu-source", "edit HTML code", null);

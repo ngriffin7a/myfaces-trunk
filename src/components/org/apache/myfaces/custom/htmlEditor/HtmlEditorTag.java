@@ -24,6 +24,9 @@ import org.apache.myfaces.taglib.UIComponentTagBase;
  * @author Sylvain Vieujot (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.11  2005/02/06 19:45:32  svieujot
+ * Add allowExternalLinks attribute.
+ *
  * Revision 1.10  2005/02/05 18:51:21  svieujot
  * x:htmlEditor : Upgrade to Kupu 1.2rc1, remove formularMode (too experimental), bugfixes.
  *
@@ -62,6 +65,7 @@ public class HtmlEditorTag extends UIComponentTagBase {
     private String type;
     
     private String allowEditSource;
+    private String allowExternalLinks;
     private String addKupuLogo;
     
     private String showPropertiesToolBox;
@@ -82,6 +86,7 @@ public class HtmlEditorTag extends UIComponentTagBase {
         setBooleanProperty(component, "type", type);
         
         setBooleanProperty(component, "allowEditSource", allowEditSource);
+        setBooleanProperty(component, "allowExternalLinks", allowExternalLinks);
         setBooleanProperty(component, "addKupuLogo", addKupuLogo);
         
         setBooleanProperty(component, "showPropertiesToolBox", showPropertiesToolBox);
@@ -116,6 +121,10 @@ public class HtmlEditorTag extends UIComponentTagBase {
     
     public void setAllowEditSource(String allowEditSource){
         this.allowEditSource = allowEditSource;
+    }
+    
+    public void setAllowExternalLinks(String allowExternalLinks){
+        this.allowExternalLinks = allowExternalLinks;
     }
     
     public void setAddKupuLogo(String addKupuLogo){
