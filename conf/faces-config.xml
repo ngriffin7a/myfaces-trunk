@@ -121,6 +121,11 @@
       <component-class>net.sourceforge.myfaces.component.ext.UITab</component-class>
     </component>
 
+    <component>
+      <component-type>SelectOneRadio</component-type>
+      <component-class>net.sourceforge.myfaces.component.ext.UISelectOneRadio</component-class>
+    </component>
+
 
   <!-- standard converters -->
 
@@ -558,6 +563,12 @@
           <component-type>Input</component-type>
           <component-type>Output</component-type>
       </renderer>
+
+      <renderer>
+          <renderer-type>SelectItem</renderer-type>
+          <renderer-class>net.sourceforge.myfaces.renderkit.html.SelectItemRenderer</renderer-class>
+      </renderer>
+
   </render-kit>
 
     <!-- MyFaces Renderkit Extensions -->
@@ -618,6 +629,7 @@
             <renderer-type>State</renderer-type>
             <renderer-class>net.sourceforge.myfaces.renderkit.html.state.StateRenderer</renderer-class>
         </renderer>
+
     </render-kit>
 
 </faces-config>

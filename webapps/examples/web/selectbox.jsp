@@ -72,7 +72,6 @@ managed beans used:
 
                         <h:output_text value="" />
                         <h:panel_group >
-                            <br>
                             <h:selectone_radio id="r1" valueRef="carconf.discount" layout="PAGE_DIRECTION"  >
                                 <h:selectitem value="0" key="discount_0" bundle="example_messages" selected="true" />
                                 <h:selectitem value="1" key="discount_1" bundle="example_messages"  />
@@ -81,6 +80,17 @@ managed beans used:
                             <!-- h:output_label for="cb1" key="discount_1" bundle="example_messages"> /h:output_label> -->
                         </h:panel_group>
 
+                        <h:output_text value="" />
+                        <h:panel_group >
+                            <br>
+                            <x:selectone_radio id="r2" valueRef="carconf.discount2" layout="PAGE_DIRECTION"  >
+                                <h:selectitem value="0" key="discount_2_0" bundle="example_messages" selected="true" />
+                                <br><b>
+                                <h:output_message key="radio_hint" bundle="example_messages" /></b>
+                                <h:selectitem value="1" key="discount_2_1" bundle="example_messages"  />
+                            </x:selectone_radio>
+                            <!-- h:output_label for="cb1" key="discount_1" bundle="example_messages"> /h:output_label> -->
+                        </h:panel_group>
                         <h:output_text value="" />
                         <h:command_button actionRef="carconf.calcPriceAction" key="button_calcprice" bundle="example_messages"/>
 

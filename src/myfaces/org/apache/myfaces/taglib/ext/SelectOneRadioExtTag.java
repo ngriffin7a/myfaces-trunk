@@ -16,57 +16,27 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package net.sourceforge.myfaces.taglib;
+package net.sourceforge.myfaces.taglib.ext;
 
-import net.sourceforge.myfaces.component.MyFacesUISelectItem;
-import net.sourceforge.myfaces.renderkit.html.SelectItemRenderer;
+import net.sourceforge.myfaces.renderkit.html.RadioRenderer;
+import net.sourceforge.myfaces.taglib.SelectOneRadioTag;
+
 
 /**
  * DOCUMENT ME!
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public class SelectItemTag
-    extends MyFacesTag
+public class SelectOneRadioExtTag
+extends SelectOneRadioTag
 {
     public String getComponentType()
     {
-        return "SelectItem";
+        return "SelectOneRadio";
     }
 
     public String getDefaultRendererType()
     {
-        return SelectItemRenderer.TYPE;
-    }
-
-    public void setSelected(String v)
-    {
-        //TODO: deprecated?
-        //setComponentPropertyString(UISelectItem.SELECTED_ATTR, v);
-    }
-
-    public void setDescription(String v)
-    {
-        setComponentPropertyString(MyFacesUISelectItem.ITEM_DESCRIPTION_PROP, v);
-    }
-
-    public void setValue(Object value)
-    {
-        super.setValue(value);
-    }
-
-    public void setLabel(String v)
-    {
-        setComponentPropertyString(MyFacesUISelectItem.ITEM_LABEL_PROP, v);
-    }
-
-    public void setKey(String v)
-    {
-        setComponentPropertyString(MyFacesUISelectItem.ITEM_KEY_PROP, v);
-    }
-
-    public void setBundle(String v)
-    {
-        setComponentPropertyString(MyFacesUISelectItem.ITEM_BUNDLE_PROP, v);
+        return RadioRenderer.TYPE;
     }
 }

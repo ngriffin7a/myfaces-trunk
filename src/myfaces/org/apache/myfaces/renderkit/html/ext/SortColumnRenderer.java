@@ -65,26 +65,26 @@ public class SortColumnRenderer
     }
     */
 
-
     public void encodeBegin(FacesContext facesContext, UIComponent uiComponent) throws IOException
     {
-        UIComponent uiSortHeader = uiComponent.getParent();
-        if (!(uiSortHeader instanceof UISortHeader))
-        {
-            throw new FacesException("UISortHeader expected.");
-        }
-
+        // look for existing UISortHeader
+        findUISortHeader(uiComponent);
         super.encodeBegin(facesContext, uiComponent);
     }
 
     public void encodeEnd(FacesContext facesContext, UIComponent uiComponent) throws IOException
     {
+        encodeSortColumn(facesContext, (UISortColumn)uiComponent, isSortAscending(facesContext,  (UISortColumn)uiComponent));
         super.encodeEnd(facesContext, uiComponent);
+    }
 
-        Boolean asc = getSortAscending(facesContext, (UISortColumn)uiComponent);
-        if (asc != null)
+    protected void encodeSortColumn(FacesContext facesContext, UISortColumn uiSortColumn, Boolean ascending)
+        throws IOException
+    {
+        super.encodeEnd(facesContext, uiSortColumn);
+        if (ascending != null)
         {
-            if (asc.booleanValue())
+            if (ascending.booleanValue())
             {
                 ResponseWriter writer = facesContext.getResponseWriter();
                 writer.write("&#x2191;");
@@ -97,17 +97,28 @@ public class SortColumnRenderer
         }
     }
 
-    private Boolean getSortAscending(FacesContext facesContext, UISortColumn uiSortColumn)
+    protected UISortHeader findUISortHeader(UIComponent uiComponent)
+        throws FacesException
     {
-        UIComponent parent = uiSortColumn.getParent();
-        if (!(parent instanceof UISortHeader))
+        UIComponent uiSortHeader = uiComponent.getParent();
+        while (uiSortHeader != null && !(uiSortHeader instanceof UISortHeader))
+        {
+            uiSortHeader = uiSortHeader.getParent();
+        }
+        if (uiSortHeader == null)
         {
             throw new FacesException("UISortHeader expected.");
         }
+        return (UISortHeader)uiSortHeader;
+    }
+
+    protected Boolean isSortAscending(FacesContext facesContext, UISortColumn uiSortColumn)
+    {
+        UISortHeader uiSortHeader = findUISortHeader(uiSortColumn);
 
         String column = uiSortColumn.getColumn();
-        String currentSortColumn = ((UISortHeader)parent).currentColumn(facesContext);
-        Boolean ascending = ((UISortHeader)parent).currentAscending(facesContext);
+        String currentSortColumn = uiSortHeader.currentColumn(facesContext);
+        Boolean ascending = uiSortHeader.currentAscending(facesContext);
 
         if (currentSortColumn != null && column.equals(currentSortColumn))
         {

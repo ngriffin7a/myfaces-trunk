@@ -34,6 +34,84 @@ public class SelectItemUtil
 {
     public static final String LIST_ATTR = SelectItemUtil.class.getName() + ".LIST";
 
+    public static void addSelectItems(FacesContext facesContext, UISelectItems uiSelectItems, List list)
+    {
+        Object value = uiSelectItems.currentValue(facesContext);
+        if (value instanceof SelectItem)
+        {
+            list.add(value);
+        }
+        else if (value instanceof SelectItem[])
+        {
+            SelectItem items[] = (SelectItem[])value;
+            for (int i = 0; i < items.length; i++)
+            {
+                list.add(items[i]);
+            }
+        }
+        else if (value instanceof Collection)
+        {
+            list.addAll((Collection)value);
+        }
+        else if (value instanceof Iterator)
+        {
+            Iterator it = (Iterator)value;
+            while (it.hasNext())
+            {
+                list.add(it.next());
+            }
+        }
+        // MyFaces extension: Map is also supported.
+        // (entry.key => value, entry.value => label and description)
+        else if (value instanceof Map)
+        {
+            for (Iterator it = ((Map)value).entrySet().iterator();
+                 it.hasNext();)
+            {
+                Map.Entry entry = (Map.Entry)it.next();
+                String label = (String)entry.getValue();
+                list.add(new SelectItem(entry.getKey(),
+                                        label,
+                                        label));
+            }
+        }
+    }
+
+
+    public static void addSelectItem(FacesContext facesContext, UISelectItem uiSelectItem, List list)
+    {
+        list.add(getSelectItem(facesContext, uiSelectItem));
+
+    }
+
+    public static SelectItem getSelectItem(FacesContext facesContext, UISelectItem uiSelectItem)
+    {
+        String text;
+        if (uiSelectItem instanceof MyFacesUISelectItem)
+        {
+            String key = ((MyFacesUISelectItem)uiSelectItem).getItemKey();
+            if (key != null)
+            {
+                text = BundleUtils.getString(facesContext,
+                                             ((MyFacesUISelectItem)uiSelectItem).getItemBundle(),
+                                             key);
+            }
+            else
+            {
+                text = uiSelectItem.getItemLabel();
+            }
+        }
+        else
+        {
+            text = uiSelectItem.getItemLabel();
+        }
+
+        String itemValue = uiSelectItem.getItemValue();
+        return new SelectItem(itemValue,
+                              text,
+                              uiSelectItem.getItemDescription());
+    }
+
     private static List getSelectItemsList(FacesContext facesContext,
                                            UIComponent uiComponent)
     {
@@ -49,73 +127,11 @@ public class SelectItemUtil
             UIComponent child = (UIComponent)children.next();
             if (child instanceof UISelectItem)
             {
-                UISelectItem uiSelectItem = (UISelectItem)child;
-                String text;
-                if (uiSelectItem instanceof MyFacesUISelectItem)
-                {
-                    String key = ((MyFacesUISelectItem)uiSelectItem).getItemKey();
-                    if (key != null)
-                    {
-                        text = BundleUtils.getString(facesContext,
-                                                     ((MyFacesUISelectItem)uiSelectItem).getItemBundle(),
-                                                     key);
-                    }
-                    else
-                    {
-                        text = uiSelectItem.getItemLabel();
-                    }
-                }
-                else
-                {
-                    text = uiSelectItem.getItemLabel();
-                }
-
-                String itemValue = uiSelectItem.getItemValue();
-                list.add(new SelectItem(itemValue,
-                                        text,
-                                        uiSelectItem.getItemDescription()));
+                addSelectItem(facesContext, (UISelectItem)child, list);
             }
             else if (child instanceof UISelectItems)
             {
-                Object value = ((UISelectItems)child).currentValue(facesContext);
-                if (value instanceof SelectItem)
-                {
-                    list.add(value);
-                }
-                else if (value instanceof SelectItem[])
-                {
-                    SelectItem items[] = (SelectItem[])value;
-                    for (int i = 0; i < items.length; i++)
-                    {
-                        list.add(items[i]);
-                    }
-                }
-                else if (value instanceof Collection)
-                {
-                    list.addAll((Collection)value);
-                }
-                else if (value instanceof Iterator)
-                {
-                    Iterator it = (Iterator)value;
-                    while (it.hasNext())
-                    {
-                        list.add(it.next());
-                    }
-                }
-                // MyFaces extension: Map is also supported.
-                // (entry.key => value, entry.value => label and description)
-                else if (value instanceof Map)
-                {
-                    for (Iterator it = ((Map)value).entrySet().iterator();
-                         it.hasNext();)
-                    {
-                        Map.Entry entry = (Map.Entry)it.next();
-                        String label = (String)entry.getValue();
-                        list.add(new SelectItem(entry.getKey(),
-                                                label,
-                                                label));
-                    }
-                }
+                addSelectItems(facesContext, (UISelectItems)child, list);
             }
         }
         return list;

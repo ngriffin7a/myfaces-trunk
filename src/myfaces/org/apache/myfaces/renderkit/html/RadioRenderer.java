@@ -18,18 +18,23 @@
  */
 package net.sourceforge.myfaces.renderkit.html;
 
+import net.sourceforge.myfaces.component.ext.UISelectOneRadio;
 import net.sourceforge.myfaces.renderkit.JSFAttr;
+import net.sourceforge.myfaces.renderkit.callback.CallbackRenderer;
+import net.sourceforge.myfaces.renderkit.callback.CallbackSupport;
+import net.sourceforge.myfaces.renderkit.html.util.HTMLEncoder;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLUtil;
 import net.sourceforge.myfaces.renderkit.html.util.SelectItemUtil;
-import net.sourceforge.myfaces.renderkit.html.util.HTMLEncoder;
 import net.sourceforge.myfaces.util.logging.LogUtil;
 
+import javax.faces.FacesException;
 import javax.faces.component.SelectItem;
 import javax.faces.component.UIComponent;
-import javax.faces.component.UIInput;
+import javax.faces.component.UISelectItem;
 import javax.faces.component.UISelectOne;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
+import javax.faces.render.Renderer;
 import java.io.IOException;
 import java.util.Iterator;
 
@@ -40,87 +45,167 @@ import java.util.Iterator;
  */
 public class RadioRenderer
     extends HTMLRenderer
+    implements CallbackRenderer
 {
     public static final String TYPE = "Radio";
+    private static final String ATTR_COUNT = RadioRenderer.class.getName() + ".COUNT";
+    private static final String ATTR_CALLBACK = RadioRenderer.class.getName() + ".CALLBACK";
 
     public String getRendererType()
     {
         return TYPE;
     }
 
-    public void encodeBegin(FacesContext facesContext, UIComponent uiComponent)
-        throws IOException
+    public void beforeEncodeBegin(FacesContext facesContext,
+                                  Renderer renderer,
+                                  UIComponent uiComponent) throws IOException
     {
-        if (!(uiComponent instanceof UISelectOne))
+        if (uiComponent instanceof UISelectItem)
         {
-            LogUtil.getLogger().warning("Expected UISelectOne when rendering input radio. " +
-                                        "component: " + uiComponent.getClientId(facesContext));
-            return;
-        }
-
-        ResponseWriter writer = facesContext.getResponseWriter();
-
-        Object currentValue = ((UIInput)uiComponent).currentValue(facesContext);
-        String currentStrValue = ((currentValue != null) ? currentValue.toString() : null);
-        boolean layoutPageDirection = isLayoutPageDirection((UISelectOne)uiComponent);
-
-        Iterator it = SelectItemUtil.getSelectItems(facesContext, uiComponent);
-
-        for (int i = 1; it.hasNext(); i++)
-        {
-            SelectItem selectItem = (SelectItem)it.next();
-            String coumpoundId = uiComponent.getClientId(facesContext);
-
-            beforeRenderItem(facesContext, selectItem, i, layoutPageDirection);
-            writer.write("<input type=\"radio\"");
-
-            writer.write(" name=\"");
-            writer.write(coumpoundId);
-            writer.write("\" id=\"");
-            writer.write(coumpoundId);
-            writer.write('"');
-            Object itemValue = selectItem.getValue();
-            if (itemValue != null)
+            SelectItem item = SelectItemUtil.getSelectItem(facesContext, (UISelectItem)uiComponent);
+            UISelectOne parent = getParent(facesContext, uiComponent);
+            Integer i = (Integer)parent.getAttribute(ATTR_COUNT);
+            if (i == null)
             {
-                writer.write(" value=\"");
-                writer.write(itemValue.toString());
-                writer.write('"');
+                i = new Integer(1);
             }
-
-            if (currentStrValue != null && itemValue != null &&
-                currentStrValue.equals(itemValue))
+            else
             {
-                writer.write(" checked=\"true\"");
+                i = new Integer(i.intValue() + 1);
             }
-
-            HTMLUtil.renderCssClass(writer, uiComponent, JSFAttr.SELECT_ONE_CLASS_ATTR);
-            HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML.UNIVERSAL_ATTRIBUTES);
-            HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML.EVENT_HANDLER_ATTRIBUTES);
-            HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML.INPUT_ATTRIBUTES);
-            HTMLUtil.renderDisabledOnUserRole(facesContext, uiComponent);
-
-            writer.write('>');
-            renderLabel(facesContext, (UISelectOne)uiComponent, selectItem, i);
-            afterRenderItem(facesContext, selectItem, i, layoutPageDirection);
+            parent.setAttribute(ATTR_COUNT, i);
+            renderItem(facesContext, parent, item, isLayoutPageDirection(parent), i.intValue());
         }
     }
 
-    protected void beforeRenderLabel(FacesContext facesContext, UISelectOne selectOne, SelectItem item, int itemCount)
+    public void afterEncodeEnd(FacesContext facesContext,
+                               Renderer renderer,
+                               UIComponent uiComponent) throws IOException
+    {
+    }
+
+    public void encodeBegin(FacesContext facesContext, UIComponent uiComponent)
+        throws IOException
+    {
+        if (uiComponent instanceof UISelectOneRadio)
+        {
+            CallbackSupport.addCallbackRenderer(facesContext, uiComponent, this);
+            uiComponent.setAttribute(ATTR_CALLBACK, Boolean.TRUE);
+        }
+        else if (uiComponent instanceof UISelectOne)
+        {
+            Iterator it = SelectItemUtil.getSelectItems(facesContext, uiComponent);
+            if (it.hasNext())
+            {
+                for (int i = 1; it.hasNext(); i++)
+                {
+                    renderItem(facesContext,
+                               (UISelectOne)uiComponent,
+                               (SelectItem)it.next(),
+                               isLayoutPageDirection((UISelectOne)uiComponent),
+                               i);
+                }
+                uiComponent.setAttribute(ATTR_CALLBACK, Boolean.FALSE);
+            }
+        }
+        else
+        {
+            LogUtil.getLogger().warning("Expected UISelectOne or UISelectOneRadio when rendering input radio. " +
+                                        "component: " + uiComponent.getClientId(facesContext));
+            return;
+        }
+    }
+
+    public void encodeEnd(FacesContext facesContext, UIComponent uiComponent)
+        throws IOException
+    {
+        super.encodeEnd(facesContext, uiComponent);
+        if (((Boolean)uiComponent.getAttribute(ATTR_CALLBACK)).booleanValue())
+        {
+            CallbackSupport.removeCallbackRenderer(facesContext, uiComponent, this);
+        }
+    }
+
+    //
+    // Util
+    //
+    protected UISelectOne getParent(FacesContext facesContext, UIComponent uiComponent)
+    {
+        UIComponent parent = uiComponent.getParent();
+        if (!(parent instanceof UISelectOne))
+        {
+            throw new FacesException("expected component of type UISelectOne");
+        }
+        return (UISelectOne)parent;
+    }
+
+    //
+    // Rendering
+    //
+    protected void renderItem(FacesContext facesContext,
+                              UISelectOne uiSelectOne,
+                              SelectItem selectItem,
+                              boolean isLayoutPageDirection,
+                              int itemCount)
+        throws IOException
+    {
+
+        ResponseWriter writer = facesContext.getResponseWriter();
+
+        String coumpoundId = uiSelectOne.getClientId(facesContext);
+
+        Object currentValue = uiSelectOne.currentValue(facesContext);
+        String currentStrValue = ((currentValue != null) ? currentValue.toString() : null);
+
+        beforeRenderItem(facesContext, uiSelectOne, selectItem, isLayoutPageDirection, itemCount);
+        writer.write("<input type=\"radio\"");
+
+        writer.write(" name=\"");
+        writer.write(coumpoundId);
+        writer.write("\" id=\"");
+        writer.write(coumpoundId);
+        writer.write('"');
+        Object itemValue = selectItem.getValue();
+        if (itemValue != null)
+        {
+            writer.write(" value=\"");
+            writer.write(itemValue.toString());
+            writer.write('"');
+        }
+
+        if (currentStrValue != null && itemValue != null &&
+            currentStrValue.equals(itemValue))
+        {
+            writer.write(" checked=\"true\"");
+        }
+
+        HTMLUtil.renderCssClass(writer, uiSelectOne, JSFAttr.SELECT_ONE_CLASS_ATTR);
+        HTMLUtil.renderHTMLAttributes(writer, uiSelectOne, HTML.UNIVERSAL_ATTRIBUTES);
+        HTMLUtil.renderHTMLAttributes(writer, uiSelectOne, HTML.EVENT_HANDLER_ATTRIBUTES);
+        HTMLUtil.renderHTMLAttributes(writer, uiSelectOne, HTML.INPUT_ATTRIBUTES);
+        HTMLUtil.renderDisabledOnUserRole(facesContext, uiSelectOne);
+
+        writer.write('>');
+        renderLabel(facesContext, (UISelectOne)uiSelectOne, selectItem);
+        afterRenderItem(facesContext, uiSelectOne, selectItem, isLayoutPageDirection);
+    }
+
+    protected void beforeRenderLabel(FacesContext facesContext, UISelectOne selectOne, SelectItem selectItem)
         throws IOException
     {
         ResponseWriter writer = facesContext.getResponseWriter();
         writer.write("&nbsp;");
     }
 
-    protected void renderLabel(FacesContext facesContext, UISelectOne selectOne, SelectItem item, int itemCount)
+    protected void renderLabel(FacesContext facesContext, UISelectOne selectOne, SelectItem selectItem)
         throws IOException
     {
-        String label = item.getLabel();
+        String label = selectItem.getLabel();
         if (label != null && label.length() > 0)
         {
             ResponseWriter writer = facesContext.getResponseWriter();
             boolean span = selectOne.getAttribute(JSFAttr.SELECT_ONE_CLASS_ATTR) != null;
-            beforeRenderLabel(facesContext, selectOne, item, itemCount);
+            beforeRenderLabel(facesContext, selectOne, selectItem);
             if (span)
             {
                 writer.write("<span ");
@@ -128,26 +213,27 @@ public class RadioRenderer
                 writer.write(">");
             }
             writer.write(HTMLEncoder.encode(
-                    item.getLabel(),
+                    selectItem.getLabel(),
                     true,
                     true));
             if (span)
             {
                 writer.write("</span>");
             }
-            afterRenderLabel(facesContext, selectOne, item, itemCount);
+            afterRenderLabel(facesContext, selectOne, selectItem);
         }
     }
 
-    protected void afterRenderLabel(FacesContext facesContext, UISelectOne selectOne, SelectItem item, int itemCount)
+    protected void afterRenderLabel(FacesContext facesContext, UISelectOne selectOne, SelectItem item)
         throws IOException
     {
     }
 
     protected void beforeRenderItem(FacesContext facesContext,
-                                    SelectItem item,
-                                    int itemCount,
-                                    boolean layoutPageDirection)
+                                    UISelectOne uiSelectOne,
+                                    SelectItem selectItem,
+                                    boolean layoutPageDirection,
+                                    int itemCount)
         throws IOException
     {
         if (itemCount > 1)
@@ -164,8 +250,8 @@ public class RadioRenderer
     }
 
     protected void afterRenderItem(FacesContext facesContext,
-                                   SelectItem item,
-                                   int itemCount,
+                                   UISelectOne uiSelectOne,
+                                   SelectItem selectItem,
                                    boolean layoutPageDirection)
         throws IOException
     {
@@ -173,9 +259,9 @@ public class RadioRenderer
 
     private static final String PAGE_DIRECTION = "PAGE_DIRECTION";
 
-    protected boolean isLayoutPageDirection(UISelectOne uiSelectOne)
+    protected boolean isLayoutPageDirection(UISelectOne uiComponent)
     {
-        String layout = (String)uiSelectOne.getAttribute(JSFAttr.LAYOUT_ATTR);
+        String layout = (String)uiComponent.getAttribute(JSFAttr.LAYOUT_ATTR);
         return layout != null && layout.toUpperCase().equals(PAGE_DIRECTION) ? true : false;
     }
 }
