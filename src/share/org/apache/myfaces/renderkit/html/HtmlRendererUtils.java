@@ -48,6 +48,9 @@ import org.apache.myfaces.renderkit.html.util.JavascriptUtils;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.30  2005/03/22 12:25:30  tomsp
+ * fixed bug in renderSelectOptions - looking for itemStrValue in lookupSet did not work
+ *
  * Revision 1.29  2005/03/16 20:34:36  mmarinschek
  * fix for MYFACES-89, alien commit for Heath Borders
  *
@@ -383,22 +386,28 @@ public final class HtmlRendererUtils {
         if (selectMany) {
             UISelectMany uiSelectMany = (UISelectMany) uiComponent;
             lookupSet = RendererUtils.getSubmittedValuesAsSet(facesContext, uiComponent, converter, uiSelectMany);
-            useSubmittedValue = lookupSet != null;
-
-            if (!useSubmittedValue) {
+            if (lookupSet == null)
+            {
+                useSubmittedValue = false;
                 lookupSet = RendererUtils.getSelectedValuesAsSet(facesContext, uiComponent, converter, uiSelectMany);
+            }
+            else
+            {
+                useSubmittedValue = true;
             }
         } else {
             UISelectOne uiSelectOne = (UISelectOne) uiComponent;
             Object lookup = uiSelectOne.getSubmittedValue();
-            useSubmittedValue = lookup != null;
-
-            if (!useSubmittedValue) {
+            if (lookup == null)
+            {
+                useSubmittedValue = false;
                 lookup = uiSelectOne.getValue();
             }
-            
+            else
+            {
+                useSubmittedValue = true;
+            }
             String lookupString = RendererUtils.getConvertedStringValue(facesContext, uiComponent, converter, lookup);
-
             lookupSet = Collections.singleton(lookupString);
         }
 
@@ -447,7 +456,6 @@ public final class HtmlRendererUtils {
                         useSubmittedValue, Arrays.asList(selectItems));
                 writer.endElement(HTML.OPTGROUP_ELEM);
             } else {
-                Object itemValue = selectItem.getValue();
                 String itemStrValue = RendererUtils.getConvertedStringValue(context, component,
                         converter, selectItem);
 
@@ -457,8 +465,7 @@ public final class HtmlRendererUtils {
                     writer.writeAttribute(HTML.VALUE_ATTR, itemStrValue, null);
                 }
 
-                if ((useSubmittedValue && lookupSet.contains(itemStrValue))
-                        || (!useSubmittedValue && lookupSet.contains(itemValue))) {
+                if (lookupSet.contains(itemStrValue)) {  //TODO/FIX: we always compare the String vales, better fill lookupSet with Strings only when useSubmittedValue==true, else use the real item value Objects
                     writer.writeAttribute(HTML.SELECTED_ATTR,
                             HTML.SELECTED_ATTR, null);
                 }
