@@ -250,7 +250,11 @@
                         prefix="myfaces-${manifest.impl.version}/lib"/>
             <tarfileset file="${jsp-api.jar}"
                         prefix="myfaces-${manifest.impl.version}/lib"/>
-            <tarfileset file="${jakarta-digester.jar}"
+            <tarfileset file="${commons-digester.jar}"
+                        prefix="myfaces-${manifest.impl.version}/lib"/>
+            <tarfileset file="${commons-beanutils.jar}"
+                        prefix="myfaces-${manifest.impl.version}/lib"/>
+            <tarfileset file="${commons-collections.jar}"
                         prefix="myfaces-${manifest.impl.version}/lib"/>
             <tarfileset file="${myfaces-components.jar}"
             			prefix="myfaces-${manifest.impl.version}/lib" />
