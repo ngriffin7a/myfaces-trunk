@@ -73,16 +73,7 @@ public class LengthValidator
         int length = value instanceof String ?
             ((String)value).length() : value.toString().length();
 
-        if (_minimum != null && _maximum != null)
-        {
-            if (length < _minimum.intValue() ||
-                length > _maximum.intValue())
-            {
-                Object[] args = {_minimum, _maximum};
-                throw new ValidatorException(_MessageUtils.getErrorMessage(facesContext, NOT_IN_RANGE_MESSAGE_ID, args));
-            }
-        }
-        else if (_minimum != null)
+        if (_minimum != null)
         {
             if (length < _minimum.intValue())
             {
