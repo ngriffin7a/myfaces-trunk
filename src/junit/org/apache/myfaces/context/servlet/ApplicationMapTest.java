@@ -1,5 +1,6 @@
 package net.sourceforge.myfaces.context.servlet;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -58,6 +59,7 @@ public class ApplicationMapTest extends MyFacesTest
     
     public void testClear()
     {
+        // Map
         init();
         Map appMap = _facesContext.getExternalContext().getApplicationMap();
         
@@ -67,6 +69,45 @@ public class ApplicationMapTest extends MyFacesTest
 
         assertTrue(appMap.isEmpty());
         assertEquals(0, appMap.size());
+
+        // EntrySet
+        init();
+        Set entrySet = appMap.entrySet();
+        
+        assertFalse(entrySet.isEmpty());
+        
+        entrySet.clear();
+
+        assertTrue(appMap.isEmpty());
+        assertEquals(0, appMap.size());
+        assertTrue(entrySet.isEmpty());
+        assertEquals(0, entrySet.size());
+
+        // KeySet
+        init();
+        Set keySet = appMap.keySet();
+        
+        assertFalse(keySet.isEmpty());
+        
+        keySet.clear();
+
+        assertTrue(appMap.isEmpty());
+        assertEquals(0, appMap.size());
+        assertTrue(keySet.isEmpty());
+        assertEquals(0, keySet.size());
+
+        // Values
+        init();
+        Collection values = appMap.values();
+        
+        assertFalse(values.isEmpty());
+        
+        values.clear();
+
+        assertTrue(appMap.isEmpty());
+        assertEquals(0, appMap.size());
+        assertTrue(values.isEmpty());
+        assertEquals(0, values.size());
     }
 
     public void testEntrySet()
@@ -94,28 +135,34 @@ public class ApplicationMapTest extends MyFacesTest
         assertNull(appMap.put("test0", _test0));
         assertEquals(size + 1, appMap.size());
         
-        for (Iterator it = appMap.entrySet().iterator(); it.hasNext();)
-        {
-            Entry entry = (Entry) it.next();
-            if (entry.getKey().equals("test0"))
+        findTest0: {
+            for (Iterator it = appMap.entrySet().iterator(); it.hasNext();)
             {
-                assertTrue(appMap.entrySet().remove(entry));
-                assertEquals(size, appMap.size());
-                assertNull(appMap.remove(_test0));
-                assertFalse(appMap.entrySet().remove(new Object()));
-                assertEquals(size, appMap.size());
-                break;
+                Entry entry = (Entry) it.next();
+                if (entry.getKey().equals("test0"))
+                {
+                    assertTrue(appMap.entrySet().contains(entry));
+                    assertTrue(appMap.entrySet().remove(entry));
+                    assertEquals(size, appMap.size());
+                    assertNull(appMap.remove(_test0));
+                    assertFalse(appMap.entrySet().remove(new Object()));
+                    assertEquals(size, appMap.size());
+                    break findTest0;
+                }
             }
+            throw new IllegalStateException("Test0 not found");
         }
         
         for (Iterator it = appMap.entrySet().iterator(); it.hasNext();)
         {
+            // Only one remove() will succeed
             it.next();
             it.remove();
+            break;
         }
 
-        assertTrue(appMap.isEmpty());
-        assertEquals(0, appMap.size());
+        assertEquals(size - 1, appMap.size());
+        assertEquals(size - 1, appMap.entrySet().size());
     }
 
     public void testKeySet()
@@ -143,19 +190,34 @@ public class ApplicationMapTest extends MyFacesTest
         assertNull(appMap.put("test0", _test0));
         assertEquals(size + 1, appMap.size());
         
-        for (Iterator it = appMap.keySet().iterator(); it.hasNext();)
-        {
-            String key = (String) it.next();
-            if (key.equals("test0"))
+        findTest0: {
+            for (Iterator it = appMap.keySet().iterator(); it.hasNext();)
             {
-                assertTrue(appMap.keySet().remove(key));
-                assertEquals(size, appMap.size());
-                assertNull(appMap.remove(_test0));
-                assertFalse(appMap.keySet().remove(new Object()));
-                assertEquals(size, appMap.size());
-                break;
+                String key = (String) it.next();
+                if (key.equals("test0"))
+                {
+                    assertTrue(appMap.keySet().contains(key));
+                    assertTrue(appMap.keySet().remove(key));
+                    assertEquals(size, appMap.size());
+                    assertNull(appMap.remove(_test0));
+                    assertFalse(appMap.keySet().remove(new Object()));
+                    assertEquals(size, appMap.size());
+                    break findTest0;
+                }
             }
+            throw new IllegalStateException("Test0 not found");
         }
+        
+        for (Iterator it = appMap.entrySet().iterator(); it.hasNext();)
+        {
+            // Only one remove() will succeed
+            it.next();
+            it.remove();
+            break;
+        }
+
+        assertEquals(size - 1, appMap.size());
+        assertEquals(size - 1, appMap.keySet().size());
     }
 
     public void testValues()
@@ -181,18 +243,33 @@ public class ApplicationMapTest extends MyFacesTest
         assertNull(appMap.put("test0", _test0));
         assertEquals(size + 1, appMap.size());
         
-        for (Iterator it = appMap.values().iterator(); it.hasNext();)
-        {
-            Object value = it.next();
-            if (value.equals(_test0))
+        findTest0: {
+            for (Iterator it = appMap.values().iterator(); it.hasNext();)
             {
-                assertTrue(appMap.values().remove(value));
-                assertEquals(size, appMap.size());
-                assertNull(appMap.remove(_test0));
-                assertFalse(appMap.keySet().remove(new Object()));
-                assertEquals(size, appMap.size());
-                break;
+                Object value = it.next();
+                if (value.equals(_test0))
+                {
+                    assertTrue(appMap.values().contains(value));
+                    assertTrue(appMap.values().remove(value));
+                    assertEquals(size, appMap.size());
+                    assertNull(appMap.remove(_test0));
+                    assertFalse(appMap.keySet().remove(new Object()));
+                    assertEquals(size, appMap.size());
+                    break findTest0;
+                }
             }
+            throw new IllegalStateException("Test0 not found");
         }
+        
+        for (Iterator it = appMap.entrySet().iterator(); it.hasNext();)
+        {
+            // Only one remove() will succeed
+            it.next();
+            it.remove();
+            break;
+        }
+
+        assertEquals(size - 1, appMap.size());
+        assertEquals(size - 1, appMap.values().size());
     }
 }

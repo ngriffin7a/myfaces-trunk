@@ -21,9 +21,7 @@ package net.sourceforge.myfaces.context.servlet;
 import java.util.AbstractSet;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.ConcurrentModificationException;
 import java.util.Enumeration;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -36,12 +34,18 @@ import java.util.Set;
  * 
  * @author Anton Koinov (latest modification by $Author$)
  * @version $Revision$ $Date$
+ * 
+ * $Log$
+ * Revision 1.6  2004/03/30 05:34:56  dave0000
+ * change entrySet() to not use HashMap and avoid copying data
+ *
  */
 public abstract class AbstractAttributeMap
     implements Map
 {
     private Set              _keySet;
     private Collection       _values;
+    private Set              _entrySet;
 
     public void clear()
     {
@@ -83,13 +87,7 @@ public abstract class AbstractAttributeMap
 
     public Set entrySet()
     {
-        EntrySetMap entryMap = new EntrySetMap();
-        for (Enumeration e = getAttributeNames(); e.hasMoreElements();)
-        {
-            String key = (String) e.nextElement();
-            entryMap.putInternal(key, getAttribute(key));
-        }
-        return entryMap.entrySet();
+        return (_entrySet != null) ? _entrySet : (_entrySet = new EntrySet());
     }
 
     public Object get(Object key)
@@ -162,7 +160,7 @@ public abstract class AbstractAttributeMap
     {
         public Iterator iterator()
         {
-            return new KeyIterator(getAttributeNames());
+            return new KeyIterator();
         }
 
         public boolean isEmpty()
@@ -194,13 +192,8 @@ public abstract class AbstractAttributeMap
     private class KeyIterator
         implements Iterator
     {
-        protected final Enumeration _e;
+        protected final Enumeration _e = getAttributeNames();
         protected Object            _currentKey;
-
-        public KeyIterator(Enumeration e)
-        {
-            _e = e;
-        }
 
         public void remove()
         {
@@ -222,6 +215,7 @@ public abstract class AbstractAttributeMap
 
         public Object next()
         {
+            _currentKey = null;
             return _currentKey = _e.nextElement();
         }
     }
@@ -230,7 +224,7 @@ public abstract class AbstractAttributeMap
     {
         public Iterator iterator()
         {
-            return new ValuesIterator(getAttributeNames());
+            return new ValuesIterator();
         }
 
         public boolean contains(Object o)
@@ -260,131 +254,89 @@ public abstract class AbstractAttributeMap
 
     private class ValuesIterator extends KeyIterator
     {
-        public ValuesIterator(Enumeration e)
-        {
-            super(e);
-        }
-
         public Object next()
         {
-            _currentKey = null;
-            return AbstractAttributeMap.this.get(_currentKey = _e.nextElement());
-        }
-        
-        public void remove()
-        {
-            AbstractAttributeMap.this.remove(_currentKey);
+            super.next();
+            return AbstractAttributeMap.this.get(_currentKey);
         }
     }
 
-    private class EntrySetMap extends HashMap {
-        Set _entrySet;
-        
-        public void putInternal(Object key, Object value)
-        {
-            super.put(key, value);
-        }
-        
-        public Object put(Object key, Object value)
-        {
-            Object ret = AbstractAttributeMap.this.put(key, value);
-            if (ret != super.put(key, value))
-            {
-                throw new ConcurrentModificationException(
-                    "EntrySetMap and AttributeMap put() return values are not the same");
-            }
-            return ret;
-        }
-        
-        public void putAll(Map m)
-        {
-            AbstractAttributeMap.this.putAll(m);
-            super.putAll(m);
-        }
-        
-        public Object remove(Object key)
-        {
-            // AttributeMap.remove() must be called first to 
-            // abort remove when it throws UnsupportedOperationException
-            Object ret = AbstractAttributeMap.this.remove(key);
-            if (ret != super.remove(key))
-            {
-                throw new ConcurrentModificationException(
-                    "EntrySetMap and AttributeMap remove() return values are not the same");
-            }
-            return ret;
-        }
-        
-        public void clear()
-        {
-            AbstractAttributeMap.this.clear();
-            super.clear();
-        }
-        
-        public Set entrySet() {
-            Set es = _entrySet;
-            return (es != null ? es : (_entrySet = new EntrySetMapEntrySet()));
-        }
-
-        private class EntrySetMapEntrySet extends AbstractSet
-        {
-            final Set entrySet = EntrySetMap.super.entrySet();
-            
-            public Iterator iterator() {
-                return new EntryIterator(entrySet.iterator());
-            }
-            
-            public boolean contains(Object o) {
-                return entrySet.contains(o);
-            }
-            
-            public boolean remove(Object o) {
-                if (!(o instanceof Entry))
-                {
-                    return false;
-                }
-                return EntrySetMap.this.remove(((Entry) o).getKey()) != null;
-            }
-            
-            public int size() {
-                return entrySet.size();
-            }
-            
-            public void clear() {
-                EntrySetMap.this.clear();
-            }
-            
-        }
-    }
-
-    private class EntryIterator implements Iterator
+    private class EntrySet extends KeySet
     {
-        private final Iterator _it; 
-        private Object _current;
-
-        public EntryIterator(Iterator it)
-        {
-            _it = it;
+        public Iterator iterator() {
+            return new EntryIterator();
         }
         
-        public void remove()
-        {
-            if (_current == null)
+        public boolean contains(Object o) {
+            if (!(o instanceof Entry))
             {
-                throw new IllegalStateException("must call next() at least once");
+                return false;
             }
-            AbstractAttributeMap.this.remove(((Entry) _current).getKey());
-            _it.remove();
+            
+            Entry entry = (Entry) o;
+            Object key = entry.getKey();
+            Object value = entry.getValue();
+            if (key == null || value == null)
+            {
+                return false;
+            }
+            
+            return value.equals(AbstractAttributeMap.this.get(key));
         }
-
-        public boolean hasNext()
-        {
-            return _it.hasNext();
+        
+        public boolean remove(Object o) {
+            if (!(o instanceof Entry))
+            {
+                return false;
+            }
+            
+            Entry entry = (Entry) o;
+            Object key = entry.getKey();
+            Object value = entry.getValue();
+            if (key == null || value == null 
+                || !value.equals(AbstractAttributeMap.this.get(key)))
+            {
+                return false;
+            }
+            
+            return AbstractAttributeMap.this.remove(((Entry) o).getKey()) != null;
         }
+    }
 
+    private class EntryIterator extends KeyIterator
+    {
         public Object next()
         {
-            return _current = _it.next();
+            super.next();
+            // Must create new Entry every time, since those are supposed to be
+            // immutable
+            return new EntrySetEntry(_currentKey);
+        }
+        
+    }
+
+    private class EntrySetEntry implements Entry
+    {
+        private final Object _currentKey;
+        
+        public EntrySetEntry(Object currentKey)
+        {
+            _currentKey = currentKey;
+        }
+        
+        public Object getKey()
+        {
+            return _currentKey;
+        }
+
+        public Object getValue()
+        {
+            return AbstractAttributeMap.this.get(_currentKey);
+        }
+
+        public Object setValue(Object value)
+        {
+            return AbstractAttributeMap.this.put(_currentKey, value);
         }
     }
 }
