@@ -16,11 +16,11 @@
     <property name="myfaces.doc" location="${project.dir}/doc"/>
 
     <!-- Properties -->
-    <property file="../build.properties"/>
-    <property file="../build.properties.default"/>
+    <property file="../build.local.properties"/>
+    <property file="../build.default.properties"/>
     <property file="../manifest.properties"/>
 
-    <!-- Temporary dir. May be overridden in build.properties -->
+    <!-- Temporary dir. May be overridden in build.local.properties -->
     <property name="temp.dir" location="${env.TEMP}"/>
 
     <!-- Tomcat -->

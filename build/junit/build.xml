@@ -8,8 +8,8 @@
     <property name="junit.src.dir" location="${project.dir}/src/junit"/>
 
     <!-- Properties -->
-    <property file="../build.properties"/>
-    <property file="../build.properties.default"/>
+    <property file="../build.local.properties"/>
+    <property file="../build.default.properties"/>
 
     <!-- Temporary dir. May be overridden in build.properties -->
     <property name="temp.dir" location="${env.TEMP}"/>

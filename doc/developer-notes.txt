@@ -7,6 +7,16 @@ and custom component developers.
 (also see FAQs.txt)
 
 ======================================================================
+Getting started with the build
+
+* Copy build/build.properties to build/build.local.properties and set the properties
+  defined in that file
+* from the build directory
+  ant all
+  ant all-tests
+
+
+======================================================================
 Component developer guidelines
 
 
@@ -75,6 +85,9 @@ MyFaces developers guidelines
  * Very detailed description goes here... ;-)
  *
  * $Log$
+ * Revision 1.14  2004/04/20 18:07:16  bdudney
+ * build file refactoring
+ *
  * Revision 1.13  2004/03/25 09:14:52  manolito
  * no message
  *

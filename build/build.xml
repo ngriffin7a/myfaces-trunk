@@ -14,13 +14,14 @@
     <property name="build.dir" location="${project.dir}/build"/>
     <property name="conf.dir" location="${project.dir}/conf"/>
 
+    <!-- Temporary dir. May be overridden in build.local.properties -->
+    <property name="temp.dir" location="${env.TEMP}"/>
     <!-- Properties -->
-    <property file="build.properties"/>
-    <property file="build.properties.default"/>
+    <property file="build.local.properties"/>
+    <property file="build.default.properties"/>
     <property file="manifest.properties"/>
 
-    <!-- Temporary dir. May be overridden in build.properties -->
-    <property name="temp.dir" location="${env.TEMP}"/>
+
 
     <property name="resolved-tlds.dir" location="${temp.dir}/myfaces-tlds"/>
 
@@ -227,7 +228,7 @@
 		<ant dir="${project.dir}/build/cactus-webapp" antfile="build.xml" inheritall="false"
 		     target="cactus"/>
     </target>
-
+    
     <target name="clean"
         description="deletes all files that were built (including examples and tagunit)">
         <delete quiet="true" failonerror="false" includeEmptyDirs="true">
