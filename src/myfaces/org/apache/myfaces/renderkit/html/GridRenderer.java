@@ -19,13 +19,15 @@
 package net.sourceforge.myfaces.renderkit.html;
 
 import net.sourceforge.myfaces.renderkit.attr.GridRendererAttributes;
+import net.sourceforge.myfaces.renderkit.callback.CallbackRenderer;
+import net.sourceforge.myfaces.renderkit.callback.CallbackSupport;
 
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
+import javax.faces.render.Renderer;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.StringTokenizer;
 
 /**
  * DOCUMENT ME!
@@ -33,10 +35,14 @@ import java.util.Iterator;
  * @version $Revision$ $Date$
  */
 public class GridRenderer
-        extends AbstractPanelRenderer
-        implements GridRendererAttributes
+        extends HTMLRenderer
+        implements CallbackRenderer, GridRendererAttributes
 {
     public static final String TYPE = "Grid";
+    private static final String COLUMN_COUNT_ATTR = "colcount";
+    private static final String STYLES_ATTR = "styles";
+    private static final String ROW_COUNT_ATTR = "rowcount";
+    private static final Integer ZERO = new Integer(0);
 
     public boolean supportsComponentType(UIComponent uiComponent)
     {
@@ -53,57 +59,24 @@ public class GridRenderer
         return TYPE;
     }
 
-    public void encodeBegin(FacesContext context, UIComponent uicomponent)
-            throws IOException
+    public void beforeEncodeBegin(FacesContext facesContext,
+                                  Renderer renderer,
+                                  UIComponent uiComponent) throws IOException
     {
-        ResponseWriter writer = context.getResponseWriter();
-
-        writer.write("<table");
-        String style = (String)uicomponent.getAttribute(PANEL_CLASS_ATTR.getName());
-        if (style != null && style.length() > 0)
+        UIComponent gridComponent = uiComponent.getParent();
+        Integer actualColumn = (Integer)gridComponent.getAttribute(COLUMN_COUNT_ATTR);
+        Integer actualRow = (Integer)gridComponent.getAttribute(ROW_COUNT_ATTR);
+        Integer columns = (Integer)gridComponent.getAttribute(COLUMNS_ATTR);
+        if (actualColumn != null && columns != null)
         {
-            writer.write(" class=\"");
-            writer.write(style);
-            writer.write("\"");
-        }
-        writer.write(">\n");
-    }
-
-/*
-    public void encodeChildren(FacesContext context, UIComponent uicomponent)
-        throws IOException
-    {
-        ResponseWriter writer = context.getResponseWriter();
-
-        Styles styles = getStyles(uicomponent);
-
-        Integer obj = (Integer)uicomponent.getAttribute(COLUMNS_ATTR);
-
-        int max_columns = obj != null ? obj.intValue() : 1;
-        ArrayList componentList = new ArrayList(max_columns);
-
-        Iterator children = uicomponent.getChildren();
-
-        int row = 0;
-        int column = 0;
-
-        fillComponentList(componentList, children, max_columns);
-        while (componentList.size() > 0)
-        {
-            column = 0;
-            writer.write("\n<tr>");
-            boolean isLastRow = !children.hasNext();
-
-            for (int i = 0; i < max_columns; i++)
+            ResponseWriter writer = facesContext.getResponseWriter();
+            if (actualColumn.intValue() == 0 ||
+                (actualColumn.intValue()) % columns.intValue() == 0)
             {
-                UIComponent childComponent = (UIComponent)componentList.get(i);
-
-                writer.write("<td");
-                String style = calcStyle(styles,
-                                         row,
-                                         column,
-                                         isLastRow);
-
+                writer.write("<tr");
+                String style = calcRowStyle(gridComponent,
+                                            actualRow != null ? actualRow.intValue(): -1,
+                                            actualColumn.intValue());
                 if (style != null && style.length() > 0)
                 {
                     writer.write(" class=\"");
@@ -111,33 +84,102 @@ public class GridRenderer
                     writer.write("\"");
                 }
                 writer.write(">");
-
-                encodeComponent(context, childComponent);
-
-                writer.write("</td>\n");
-
-                column++;
             }
-
-            row++;
-            writer.write("</tr>");
-            fillComponentList(componentList, children, max_columns);
+            writer.write("<td>");
         }
     }
-*/
-    private void fillComponentList(ArrayList componentList, Iterator it, int elements)
+
+    private String calcRowStyle(UIComponent gridComponent, int actualRow, int actualColumn)
     {
-        componentList.clear();
-        for (int i = 0; it.hasNext() && i < elements; i++)
+        String style = null;
+        if (actualRow == 0)
         {
-            componentList.add(it.next());
+            style = (String)gridComponent.getAttribute(HEADER_CLASS_ATTR);
+        }
+        if (style == null)
+        {
+            String columnStyles[] = (String[])gridComponent.getAttribute(STYLES_ATTR);
+            if (columnStyles == null)
+            {
+                String columnClasses = (String)gridComponent.getAttribute(COLUMN_CLASSES_ATTR);
+                if (columnClasses != null)
+                {
+                    StringTokenizer tokenizer = new StringTokenizer(columnClasses, ",");
+                    columnStyles = new String[tokenizer.countTokens()];
+                    for (int i = 0; tokenizer.hasMoreTokens(); )
+                    {
+                        columnStyles[i] = tokenizer.nextToken();
+                    }
+                    gridComponent.setAttribute(STYLES_ATTR, columnStyles);
+                }
+                else
+                {
+                    columnStyles = new String[0];
+                    gridComponent.setAttribute(STYLES_ATTR, columnStyles);
+                }
+            }
+            if (columnStyles != null && columnStyles.length > 0)
+            {
+                style = columnStyles[(actualColumn + 1) % columnStyles.length];
+            }
+        }
+        return style;
+    }
+
+    public void afterEncodeEnd(FacesContext facesContext,
+                               Renderer renderer,
+                               UIComponent uiComponent) throws IOException
+    {
+        if (uiComponent != null)
+        {
+            UIComponent gridComponent = uiComponent.getParent();
+            Integer actualColumn = (Integer)gridComponent.getAttribute(COLUMN_COUNT_ATTR);
+            Integer columns = (Integer)gridComponent.getAttribute(COLUMNS_ATTR);
+            if (actualColumn != null && columns != null)
+            {
+                ResponseWriter writer = facesContext.getResponseWriter();
+                if (actualColumn.intValue() == 0 ||
+                    (actualColumn.intValue() + 1) % columns.intValue() == 0)
+                {
+                    Integer actualRow = (Integer)gridComponent.getAttribute(ROW_COUNT_ATTR);
+                    gridComponent.setAttribute(ROW_COUNT_ATTR, new Integer(actualRow.intValue() + 1));
+                    gridComponent.setAttribute(COLUMN_COUNT_ATTR, ZERO);
+                    writer.write("</tr>");
+                }
+                writer.write("</td>");
+            }
+            gridComponent.setAttribute(COLUMN_COUNT_ATTR, new Integer(actualColumn.intValue() + 1));
         }
     }
 
-    public void encodeEnd(FacesContext context, UIComponent uicomponent)
+    public void encodeBegin(FacesContext context, UIComponent uiComponent)
             throws IOException
     {
         ResponseWriter writer = context.getResponseWriter();
+
+        writer.write("<table");
+        String style = (String)uiComponent.getAttribute(PANEL_CLASS_ATTR.getName());
+        if (style != null && style.length() > 0)
+        {
+            writer.write(" class=\"");
+            writer.write(style);
+            writer.write("\"");
+        }
+        writer.write(">\n");
+
+        uiComponent.setAttribute(COLUMN_COUNT_ATTR, ZERO);
+        uiComponent.setAttribute(ROW_COUNT_ATTR, ZERO);
+
+        CallbackSupport.addChildrenCallbackRenderer(context, uiComponent, this);
+    }
+
+    public void encodeEnd(FacesContext facesContext, UIComponent uiComponent)
+            throws IOException
+    {
+        ResponseWriter writer = facesContext.getResponseWriter();
         writer.write("</table>\n");
+
+        CallbackSupport.removeCallbackRenderer(facesContext, uiComponent, this);
+
     }
 }
