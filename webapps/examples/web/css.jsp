@@ -71,7 +71,7 @@
 
 
         <f:facet name="body"><f:verbatim>
-A simple test for the <code>stylesheet</code>-Component<br/><br/>
+<h:outputText value="#{example_messages['css_msg']}"/><code>stylesheet</code>-Component<br />
 <a href='http://myfaces.org'>The MyFaces-Team</a>.
 </f:verbatim>
         </f:facet>
