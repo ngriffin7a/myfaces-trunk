@@ -166,6 +166,13 @@
     </managed-bean>
 
 
+    <!-- Managed Beans for panelstack example -->
+
+    <managed-bean>
+        <managed-bean-name>stackState</managed-bean-name>
+        <managed-bean-class>java.util.HashMap</managed-bean-class>
+        <managed-bean-scope>session</managed-bean-scope>
+    </managed-bean>
 
 
 
@@ -271,6 +278,11 @@
         <navigation-case>
             <from-outcome>go_datascroller</from-outcome>
             <to-view-id>/dataScroller.jsp</to-view-id>
+        </navigation-case>
+        
+        <navigation-case>
+            <from-outcome>go_panelstack</from-outcome>
+            <to-view-id>/panelstack.jsp</to-view-id>
         </navigation-case>
 
     </navigation-rule>
