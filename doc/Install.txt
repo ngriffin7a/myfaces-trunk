@@ -5,11 +5,13 @@ What you need
 -------------
 - JDK 1.4.0 (or higher)
 - Tomcat 4.0.4 (or higher) (get it from http://jakarta.apache.org/tomcat/index.html)
-- JSF-API (get it from the "JavaServerTM Faces v1.0 Reference Implementation Early Access 3" at http://java.sun.com/j2ee/javaserverfaces/download.html)
+- JSF-API (get the jsf-api.jar from the "JavaServerTM Faces v1.0 Reference Implementation Early Access 3" at http://java.sun.com/j2ee/javaserverfaces/download.html)
 
 
 HOWTO - Run the Example-Application
 -----------------------------------
+if you like to use ant: see tomcat-install-with-ant-readme.txt
+otherwise:
 To run the examples you must add the myfaces context to your Tomcat's configuration in the file conf/server.xml.
 - Unzip all files to a working directory (e.g. "C:\myfaces" on a Win PC).
 - Copy the file "jsf-api.jar" from the "JSF Reference Implementation EA 2" to the directory <myfaces-working-dir>/web/WEB-INF/lib.

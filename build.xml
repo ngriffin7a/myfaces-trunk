@@ -3,7 +3,7 @@
 
     <!-- Manifest-Infos -->
     <property name="manifest.impl.title" value="MyFaces"/>
-    <property name="manifest.impl.version" value="0.1.4"/>
+    <property name="manifest.impl.version" value="0.3.0"/>
     <property name="manifest.impl.vendor" value="MyFaces Project Team"/>
 
     <property name="project.dir" value="${basedir}"/>
