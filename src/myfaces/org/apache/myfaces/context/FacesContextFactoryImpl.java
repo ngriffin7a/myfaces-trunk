@@ -40,7 +40,6 @@ public class FacesContextFactoryImpl
                                         Lifecycle lifecycle)
             throws FacesException
     {
-        FacesContext.getCurrentInstance();
         return new FacesContextImpl((ServletContext)servletcontext,
                                     (ServletRequest)servletrequest,
                                     (ServletResponse)servletresponse);
