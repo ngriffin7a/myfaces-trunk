@@ -119,6 +119,7 @@ public class JSFAttr
     public static final String SHOW_NAV                    = "org.apache.myfaces.tree.SHOW_NAV";
     public static final String SHOW_LINES                  = "org.apache.myfaces.tree.SHOW_LINES";
     public static final String CLIENT_SIDE_TOGGLE          = "org.apache.myfaces.tree.CLIENT_SIDE_TOGGLE";
+    public static final String SHOW_ROOT_NODE              = "org.apache.myfaces.tree.SHOW_ROOT_NODE";
 
     // Alternate locations (instead of using AddResource)
     public static final String JAVASCRIPT_LOCATION         = "org.apache.myfaces.JAVASCRIPT_LOCATION";
