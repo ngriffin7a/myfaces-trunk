@@ -42,6 +42,9 @@ import net.sourceforge.myfaces.component.html.ext.HtmlPanelGroup;
  * @author <a href="mailto:oliver@rossmueller.com">Oliver Rossmueller</a>
  * @version $Revision$ $Date$
  *          $Log$
+ *          Revision 1.17  2004/07/25 11:06:38  o_rossmueller
+ *          made default image paths relative (again)
+ *
  *          Revision 1.16  2004/07/18 21:39:34  o_rossmueller
  *          fix #992452: child icon attributes are restored correctly
  *
@@ -105,20 +108,20 @@ public class HtmlTree
     private String nodeClass;
     private String selectedNodeClass;
     private String iconClass;
-    private String iconLine = "/images/tree/line.gif";
-    private String iconNoline = "/images/tree/noline.gif";
-    private String iconChild = "/images/tree/noline.gif";
-    private String iconChildFirst = "/images/tree/line_first.gif";
-    private String iconChildMiddle = "/images/tree/line_middle.gif";
-    private String iconChildLast = "/images/tree/line_last.gif";
-    private String iconNodeOpen = "/images/tree/node_open.gif";
-    private String iconNodeOpenFirst = "/images/tree/node_open_first.gif";
-    private String iconNodeOpenMiddle = "/images/tree/node_open_middle.gif";
-    private String iconNodeOpenLast = "/images/tree/node_open_last.gif";
-    private String iconNodeClose = "/images/tree/node_close.gif";
-    private String iconNodeCloseFirst = "/images/tree/node_close_first.gif";
-    private String iconNodeCloseMiddle = "/images/tree/node_close_middle.gif";
-    private String iconNodeCloseLast = "/images/tree/node_close_last.gif";
+    private String iconLine = "images/tree/line.gif";
+    private String iconNoline = "images/tree/noline.gif";
+    private String iconChild = "images/tree/noline.gif";
+    private String iconChildFirst = "images/tree/line_first.gif";
+    private String iconChildMiddle = "images/tree/line_middle.gif";
+    private String iconChildLast = "images/tree/line_last.gif";
+    private String iconNodeOpen = "images/tree/node_open.gif";
+    private String iconNodeOpenFirst = "images/tree/node_open_first.gif";
+    private String iconNodeOpenMiddle = "images/tree/node_open_middle.gif";
+    private String iconNodeOpenLast = "images/tree/node_open_last.gif";
+    private String iconNodeClose = "images/tree/node_close.gif";
+    private String iconNodeCloseFirst = "images/tree/node_close_first.gif";
+    private String iconNodeCloseMiddle = "images/tree/node_close_middle.gif";
+    private String iconNodeCloseLast = "images/tree/node_close_last.gif";
     private int uniqueIdCounter = 0;
     private int[] selectedPath;
 
