@@ -119,6 +119,7 @@ public class FactoryFinder
         }
         catch (NoSuchMethodException e)
         {
+            // ignore
         }
 
         try
@@ -146,12 +147,13 @@ public class FactoryFinder
         ClassLoader classLoader = getClassLoader();
         synchronized(_classLoaderFactoriesMap)
         {
-            Object factory = null;
+            Object factory;
             Object[] factoryStacks = (Object[])_classLoaderFactoriesMap.get(classLoader);
             if (factoryStacks == null)
             {
                 factoryStacks = new Object[FACTORY_COUNT];
                 _classLoaderFactoriesMap.put(classLoader, factoryStacks);
+                factory = null;
             }
             else
             {
