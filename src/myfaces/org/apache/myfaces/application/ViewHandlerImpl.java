@@ -115,16 +115,82 @@ public class ViewHandlerImpl
             log.error("ViewId must start with '/' (viewId = " + viewId + ")");
             throw new IllegalArgumentException("ViewId must start with '/' (viewId = " + viewId + ")");
         }
-        String servletPath = facescontext.getExternalContext().getRequestServletPath();
-        WebXml webxml = WebXml.getWebXml(facescontext.getExternalContext());
+        ExternalContext externalContext = facescontext.getExternalContext();
+        String path = getPath(externalContext);
+        if (path == null)
+        {
+            return viewId;
+        }
+        viewId = viewId.substring(1, viewId.length());
+        if (path.endsWith("*"))
+        {
+            // prefix mapping
+            return path.substring(0, path.length() - 1) + viewId;
+        }
+        else if (path.startsWith("*"))
+        {
+            // extension mapping
+            String extensionMapping = path.substring(2, path.length());
+            if (viewId.endsWith(extensionMapping))
+            {
+                return viewId;
+            }
+            else
+            {
+                int idx = viewId.lastIndexOf(".");
+                return viewId.substring(0, idx + 1) + extensionMapping;
+            }
+        }
+        return viewId;
+    }
+
+    private String getPath(ExternalContext externalContext)
+    {
+        String servletPath = externalContext.getRequestServletPath();
+        String requestPathInfo = externalContext.getRequestPathInfo();
+
+        WebXml webxml = WebXml.getWebXml(externalContext);
         List mappings = webxml.getFacesServletMappings();
+        String path = null;
+        boolean isExtensionMapping = requestPathInfo != null;
         for (int i = 0, size = mappings.size(); i < size; i++)
         {
-            ServletMapping mapping = (ServletMapping) mappings.get(i);
-            mapping.getServletClass();
+            ServletMapping servletMapping = (ServletMapping) mappings.get(i);
+            String urlpattern = servletMapping.getUrlPattern();
+            if (urlpattern.endsWith("*"))
+            {
+                urlpattern = urlpattern.substring(0, urlpattern.length() - 1);
+            }
+            else if (urlpattern.startsWith("*"))
+            {
+                urlpattern = urlpattern.substring(1, urlpattern.length());
+            }
+
+            if (isExtensionMapping)
+            {
+                //extension mapping
+                if (servletPath.endsWith(urlpattern))
+                {
+                    path = urlpattern;
+                    break;
+                }
+            }
+            else
+            {
+                //prefix mapping
+                if (servletPath.equals(urlpattern))
+                {
+                    path = urlpattern;
+                    break;
+                }
+            }
         }
-
-
+        if (path == null)
+        {
+            log.error("could not find pathMapping for servletPath = " + servletPath +
+                      " requestPathInfo = " + requestPathInfo);
+        }
+        return path;
     }
 
     public void renderView(FacesContext facesContext, UIViewRoot viewToRender) throws IOException, FacesException
