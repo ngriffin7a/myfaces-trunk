@@ -18,17 +18,15 @@
  */
 package net.sourceforge.myfaces.renderkit.html;
 
-import net.sourceforge.myfaces.component.UIParameter;
-import net.sourceforge.myfaces.renderkit.html.state.StateRenderer;
-import net.sourceforge.myfaces.renderkit.html.state.JspInfo;
-import net.sourceforge.myfaces.webapp.ServletMappingFactory;
-import net.sourceforge.myfaces.webapp.ServletMapping;
 import net.sourceforge.myfaces.MyFacesFactoryFinder;
-import net.sourceforge.myfaces.MyFacesConfig;
+import net.sourceforge.myfaces.component.UIParameter;
+import net.sourceforge.myfaces.renderkit.html.state.JspInfo;
+import net.sourceforge.myfaces.renderkit.html.state.StateRenderer;
 import net.sourceforge.myfaces.util.logging.LogUtil;
+import net.sourceforge.myfaces.webapp.ServletMapping;
+import net.sourceforge.myfaces.webapp.ServletMappingFactory;
 
 import javax.faces.FactoryFinder;
-import javax.faces.tree.Tree;
 import javax.faces.component.UICommand;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
@@ -38,9 +36,10 @@ import javax.faces.event.FacesEvent;
 import javax.faces.render.RenderKit;
 import javax.faces.render.RenderKitFactory;
 import javax.faces.render.Renderer;
+import javax.faces.tree.Tree;
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.ServletContext;
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.util.Iterator;
@@ -53,7 +52,7 @@ import java.util.Iterator;
 public class HyperlinkRenderer
         extends HTMLRenderer
 {
-    public static final String TYPE = "HyperlinkRenderer";
+    public static final String TYPE = "Hyperlink";
     public String getRendererType()
     {
         return TYPE;

@@ -20,8 +20,10 @@ package net.sourceforge.myfaces.renderkit.html;
 
 import net.sourceforge.myfaces.component.UIInput;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLEncoder;
+import net.sourceforge.myfaces.renderkit.html.util.InputRendererHelper;
 
 import javax.faces.component.UIComponent;
+import javax.faces.component.UITextEntry;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 import java.io.IOException;
@@ -32,14 +34,24 @@ import java.io.IOException;
  * @version $Revision$ $Date$
  */
 public class SecretRenderer
-        extends AbstractInputRenderer
+        extends HTMLRenderer
 {
     private static final String IS_SECRET_ATTR = SecretRenderer.class.getName() + ".IS_SECRET";
-    public static final String TYPE = "SecretRenderer";
+    public static final String TYPE = "Secret";
 
     public String getRendererType()
     {
         return TYPE;
+    }
+
+    public boolean supportsComponentType(String s)
+    {
+        return s.equals(UIInput.TYPE);
+    }
+
+    public boolean supportsComponentType(UIComponent uicomponent)
+    {
+        return uicomponent instanceof UITextEntry; //TODO:javax.faces.component.UIInput instead!
     }
 
     public void decode(FacesContext facescontext, UIComponent uicomponent)
@@ -49,8 +61,8 @@ public class SecretRenderer
         uicomponent.setAttribute(IS_SECRET_ATTR, Boolean.TRUE);
     }
 
-    public void renderInput(FacesContext facesContext, UIComponent uiComponent)
-            throws IOException
+    public void encodeEnd(FacesContext facesContext, UIComponent uiComponent)
+        throws IOException
     {
         ResponseWriter writer = facesContext.getResponseWriter();
         writer.write("<input type=\"password\"");
@@ -79,10 +91,15 @@ public class SecretRenderer
             writer.write("\"");
         }
         writer.write(">");
+        InputRendererHelper.renderMessages(facesContext, uiComponent);
     }
 
 
-
+    /**
+     * TODO: Handle by "redisplay" attribute (Spec. Table 7-1 JSF.7.6.4)
+     * @param comp
+     * @return
+     */
     public static boolean isSecretComponent(UIComponent comp)
     {
         Boolean secret = (Boolean)comp.getAttribute(SecretRenderer.IS_SECRET_ATTR);

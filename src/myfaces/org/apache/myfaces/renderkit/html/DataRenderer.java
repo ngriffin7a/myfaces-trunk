@@ -38,7 +38,7 @@ public class DataRenderer
 {
     public static final String ITERATOR_ATTR = DataRenderer.class.getName() + ".ITERATOR";
 
-    public static final String TYPE = "DataRenderer";
+    public static final String TYPE = "Data";
     public String getRendererType()
     {
         return TYPE;

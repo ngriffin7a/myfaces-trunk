@@ -39,7 +39,7 @@ import java.io.IOException;
 public class ButtonRenderer
         extends HTMLRenderer
 {
-    public static final String TYPE = "ButtonRenderer";
+    public static final String TYPE = "Button";
     public String getRendererType()
     {
         return TYPE;

@@ -18,10 +18,13 @@
  */
 package net.sourceforge.myfaces.renderkit.html;
 
-import net.sourceforge.myfaces.component.UIInput;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLEncoder;
+import net.sourceforge.myfaces.renderkit.html.util.InputRendererHelper;
+import net.sourceforge.myfaces.component.UIInput;
 
 import javax.faces.component.UIComponent;
+import javax.faces.component.UIOutput;
+import javax.faces.component.UITextEntry;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 import java.io.IOException;
@@ -32,14 +35,41 @@ import java.io.IOException;
  * @version $Revision$ $Date$
  */
 public class TextRenderer
-        extends AbstractInputRenderer
+    extends HTMLRenderer
 {
-    public static final String TYPE = "TextRenderer";
+    public static final String TYPE = "Text";
 
     public String getRendererType()
     {
         return TYPE;
     }
+
+    public boolean supportsComponentType(String s)
+    {
+        return s.equals(UIInput.TYPE) || s.equals(UIOutput.TYPE);
+    }
+
+    public boolean supportsComponentType(UIComponent uicomponent)
+    {
+        return uicomponent instanceof UITextEntry ||   //TODO:javax.faces.component.UIInput instead!
+               uicomponent instanceof UIOutput;
+    }
+
+
+
+    public void encodeEnd(FacesContext facesContext, UIComponent uiComponent)
+        throws IOException
+    {
+        if (uiComponent.getComponentType().equals(UIInput.TYPE))
+        {
+            renderInput(facesContext, uiComponent);
+        }
+        else
+        {
+            renderOutput(facesContext, uiComponent);
+        }
+    }
+
 
     public void renderInput(FacesContext facesContext, UIComponent uiComponent)
             throws IOException
@@ -71,5 +101,15 @@ public class TextRenderer
             writer.write("\"");
         }
         writer.write(">");
+        InputRendererHelper.renderMessages(facesContext, uiComponent);
     }
+
+
+    public void renderOutput(FacesContext facesContext, UIComponent uiComponent)
+        throws IOException
+    {
+        ResponseWriter writer = facesContext.getResponseWriter();
+        writer.write(HTMLEncoder.encode(getStringValue(facesContext, uiComponent), false, false));
+    }
+
 }
