@@ -42,7 +42,7 @@ public class PropertyResolverImpl extends PropertyResolver {
     //~ Static fields/initializers ---------------------------------------------
 
     private static final Object[] EMPTY_ARGS = {};
-    
+
     //~ Methods ----------------------------------------------------------------
 
     public boolean isReadOnly(Object base, String name)
@@ -255,7 +255,7 @@ public class PropertyResolverImpl extends PropertyResolver {
     }
 
     public Object getValue(Object base, String name) {
-        if ((base == null) || (name == null))
+        if ((base == null) || (name == null) || (name.length() == 0))
             return null; // (see JSF 1.0, PRD2, 5.1.2.1)
 
         if (base instanceof Map)
@@ -327,7 +327,7 @@ public class PropertyResolverImpl extends PropertyResolver {
         PropertyDescriptor[] propDescriptors =
             beanInfo.getPropertyDescriptors();
 
-		// TODO: cache this in classLoader safe way
+        // TODO: cache this in classLoader safe way
         for (int i = 0, len = propDescriptors.length; i < len; i++) {
             if (propDescriptors[i].getName().equals(propertyName))
                 return propDescriptors[i];

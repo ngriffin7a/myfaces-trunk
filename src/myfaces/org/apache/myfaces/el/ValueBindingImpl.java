@@ -36,8 +36,9 @@ import javax.faces.el.ValueBinding;
 public class ValueBindingImpl extends ValueBinding {
     //~ Static fields/initializers ---------------------------------------------
 
+    private static final Integer ZERO_FROM_EMPTY = new Integer(0);
     private static final Integer ZERO = new Integer(0);
-    private static final Integer ONE = new Integer(1);
+    private static final Integer ONE  = new Integer(1);
 
     //~ Instance fields --------------------------------------------------------
 
@@ -117,7 +118,7 @@ public class ValueBindingImpl extends ValueBinding {
         Object base = resolve(facesContext);
 
         if (base == null)
-            return null; // per JSF spec
+            return null; // (see JSF 1.0, PRD2, 5.1.2.1)
 
         int maxIndex = _parsedReference.length - 1;
 
@@ -203,8 +204,8 @@ public class ValueBindingImpl extends ValueBinding {
     }
 
     /**
-     * Coerces the supplied object to primitive int based on coercion rules
-     * defined in JSF 1.0, PRD2, 5.1.2.4
+     * Coerces the supplied object to Integer based on coercion rules defined
+     * in JSF 1.0, PRD2, 5.1.2.4
      * 
      * <p>
      * Note: null object or empty string are coerced to 0 (zero)--per JSF
@@ -218,13 +219,13 @@ public class ValueBindingImpl extends ValueBinding {
      */
     private Integer coerceToInteger(Object obj) {
         if (obj == null)
-            return ZERO; // (see JSF 1.0, PRD2, 5.1.2.4)
+            return ZERO_FROM_EMPTY; // (see JSF 1.0, PRD2, 5.1.2.4)
 
         if (obj instanceof String) {
             String s = (String)obj;
 
             if (s.length() == 0)
-                return ZERO; // (see JSF 1.0, PRD2, 5.1.2.4)
+                return ZERO_FROM_EMPTY; // (see JSF 1.0, PRD2, 5.1.2.4)
 
             try {
                 return Integer.valueOf(s);
@@ -344,6 +345,9 @@ public class ValueBindingImpl extends ValueBinding {
         FacesContext facesContext, Object base, Object name) {
         name = preprocessProperty(facesContext, base, name);
 
+        if (name == ZERO_FROM_EMPTY)
+            return null; // (see JSF 1.0, PRD2, 5.1.2.1)
+
         return (name instanceof String)
         ? _application.getPropertyResolver().getValue(base, (String)name)
         : _application.getPropertyResolver().getValue(
@@ -369,7 +373,7 @@ public class ValueBindingImpl extends ValueBinding {
             base = getPropertyValue(facesContext, base, curProperty);
 
             if (base == null)
-                return null; // per JSF spec
+                return null; // (see JSF 1.0, PRD2, 5.1.2.1)
         }
 
         return base;
