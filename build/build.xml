@@ -14,18 +14,22 @@
     <property name="tlds.dir" location="${project.dir}/tlds"/>
     <property name="doc.dir" location="${project.dir}/doc"/>
     <property name="build.dir" location="${project.dir}/build"/>
+    <property name="nightly.dir" location="${build.dir}/nightly"/>
+
     <property name="conf.dir" location="${project.dir}/conf"/>
     <property name="apps.dir" location="${project.dir}/webapps"/>
     <property name="wml.src" location="${project.dir}/src/wml"/>
     <property name="xdoclet.src" location="${project.dir}/src/xdoclet"/>
-	<property name="generated.src" location="${project.dir}/src/generated"/>
-
+    <property name="generated.src" location="${project.dir}/src/generated"/>
 
     <!-- Properties -->
     <property file="build.local.properties"/>
     <property file="build.default.properties"/>
     <property file="manifest.properties"/>
-    
+
+    <property name="src.release.bundle" location="${project.dir}/myfaces-${manifest.impl.version}-src.tgz"/>
+    <property name="bin.release.bundle" location="${project.dir}/myfaces-${manifest.impl.version}.tgz"/>
+
     <!-- Temporary dir. May be overridden in build.local.properties -->
     <property name="temp.dir" location="${env.TEMP}"/>
 
@@ -70,7 +74,7 @@
         <pathelement location="${api.classes}"/>
         <pathelement location="${share.classes}"/>
     </path>
- 
+
     <!-- classpath for compiling component classes -->
     <path id="components.class.path">
         <pathelement location="${servlet-jsp.jar}"/>
@@ -81,14 +85,14 @@
         <pathelement location="${commons-validator.jar}"/>
         <pathelement location="${jakarta-oro.jar}"/>
         <pathelement location="${struts.jar}"/>
-        <pathelement location="${commons-beanutils.jar}"/>        
+        <pathelement location="${commons-beanutils.jar}"/>
         <pathelement location="${commons-fileupload.jar}"/>
         <pathelement location="${commons-digester.jar}"/>
         <pathelement location="${commons-beanutils.jar}"/>
         <pathelement location="${api.classes}"/>
         <pathelement location="${share.classes}"/>
     </path>
-	
+
     <!-- classpath for compiling wmlRenderKit classes -->
 	<path id="wml.classpath.path">
 	    <pathelement location="${commons-codec.jar}"/>
@@ -98,14 +102,14 @@
 	    <pathelement location="${commons-logging.jar}"/>
         <pathelement location="${api.classes}"/>
         <pathelement location="${share.classes}"/>
-        <pathelement location="${impl.classes}"/>		
+        <pathelement location="${impl.classes}"/>
 	    <pathelement location="${jstl.jar}"/>
 	    <pathelement location="${build.dir}/WEB-INF/classes/"/>
 	    <pathelement location="${jsp-2.0.jar}"/>
 	    <pathelement location="${servlet-jsp.jar}"/>
-	</path> 
-	  
- 
+	</path>
+
+
     <!-- classpath for javadoc creation -->
     <path id="javadoc.class.path">
         <pathelement location="${servlet-jsp.jar}"/>
@@ -124,13 +128,13 @@
         <pathelement location="${commons-digester.jar}"/>
     </path>
 
-	  <path id="xdoclet.classpath"> 
+	  <path id="xdoclet.classpath">
 	    <pathelement location="${xdoclet.jar}"/>
 	    <pathelement location="${xjavadoc.jar}"/>
 	    <pathelement location="${commons-collections.jar}"/>
 	    <pathelement location="${commons-logging.jar}"/>
 	  </path>
-	
+
     <target name="myfaces-jsf-api-jar"
             description="builds the myfaces-jsf-api.jar file"
             depends="-compile-api">
@@ -158,7 +162,7 @@
         </jar>
 
     </target>
-	
+
     <target name="myfaces-impl-jar"
             description="builds the myfaces-impl.jar file"
             depends="-compile-share,-compile-impl,-compile-components,myfaces-jsf-api-jar,resolve-tld-entities" >
@@ -247,7 +251,7 @@
         </jar>
 
     </target>
-	
+
     <target name="myfaces-jar"
             description="builds the myfaces.jar file with the complete myfaces libraries"
             depends="-compile-share,-compile-impl,-compile-components,resolve-tld-entities" >
@@ -297,7 +301,7 @@
             <!-- components_resources -->
         	<fileset dir="${components.src}"
         			includes="**/resource/**"/>
-        	
+
         </jar>
 
     </target>
@@ -338,7 +342,7 @@
             depends="myfaces-jsf-api-jar, myfaces-impl-jar, myfaces-extensions-jar, myfaces-jar, myfaces-wap-jar, javadoc, tlddoc"
             description="creates the binary release file myfaces-x.x.x.tgz (don't forget to adjust manifest.properties!)">
 
-        <tar destfile="${project.dir}/myfaces-${manifest.impl.version}.tgz"
+        <tar destfile="${bin.release.bundle}"
             compression="gzip" >
             <tarfileset dir="${doc.dir}"
                         prefix="myfaces-${manifest.impl.version}/doc"/>
@@ -387,7 +391,7 @@
     <target name="src-release"
             depends="javadoc, tlddoc"
             description="creates the source release file myfaces-x.x.x-src.tgz (don't forget to adjust manifest.properties!)">
-        <tar destfile="${project.dir}/myfaces-${manifest.impl.version}-src.tgz"
+        <tar destfile="${src.release.bundle}"
              compression="gzip">
             <tarfileset dir="${build.dir}"
                         includes="**/*"
@@ -413,7 +417,7 @@
 			<tarfileset dir="${xdoclet.src}"
                         prefix="myfaces-${manifest.impl.version}/src/xdoclet"/>
             <tarfileset dir="${components.src}"
-                        prefix="myfaces-${manifest.impl.version}/src/components"/>         	
+                        prefix="myfaces-${manifest.impl.version}/src/components"/>
             <tarfileset dir="${cactus.src}"
                         prefix="myfaces-${manifest.impl.version}/src/cactus"/>
             <tarfileset dir="${junit.src}"
@@ -456,7 +460,7 @@
              antfile="build.xml"
              inheritall="false"
              target="release"/>
-    </target>	
+    </target>
 	<target name="all"
             depends="bin-release, src-release, examples-release, tiles-release, blank-release, wap-release"
             description="builds all release files">
@@ -550,7 +554,7 @@
     </target>
 
 
-	
+
     <target name="-compile-wml" depends="-compile-impl" >
         <mkdir dir="${wml.classes}"/>
         <javac srcdir="${share.src}"
@@ -560,24 +564,24 @@
                classpathref="share.class.path">
         </javac>
     </target>
-	
-	
+
+
 	  <!-- ============================= PREPARE XDOCLET MODULE ======================================-->
-	  <target name="prepareXDoclet" description="compile XDoclet classes and create XML module descriptor">    
+	  <target name="prepareXDoclet" description="compile XDoclet classes and create XML module descriptor">
         <mkdir dir="${xdoclet.classes}"/>
 	  	<javac srcdir="${xdoclet.src}" destdir="${xdoclet.classes}" includes="**/*.java"
 	           classpathref="xdoclet.classpath" />
-	           
+
 	    <taskdef name="xdoclet" classname="xdoclet.DocletTask" classpathref="xdoclet.classpath" />
 	    <xdoclet destdir="${xdoclet.classes}" verbose="false" >
 	        <fileset dir="${xdoclet.src}">
 	            <include name="org/apache/myfaces/xdoclet/*.java" />
-	        </fileset> 
-	        
+	        </fileset>
+
 	        <template templateFile="${xdoclet.src}/org/apache/myfaces/xdoclet/resources/xdoclet-xml.xdt"
 	                  destinationfile="xdoclet.xml" />
 	     </xdoclet>
-	     
+
 	     <jar destfile="${myfaces-xdoclet.jar}" compress="true">
             <!-- manifest -->
             <manifest>
@@ -598,35 +602,35 @@
 	        <metainf dir="${xdoclet.classes}" includes="xdoclet.xml" />
 	     </jar>
 	  </target>
-	
-	
-	
+
+
+
 	  <!-- ============================= XDOCLET - GENEREATE SOURCE CODE  =====================================-->
-	  <target name="codegen" depends="prepareXDoclet" description="generate components and taglibs">    
+	  <target name="codegen" depends="prepareXDoclet" description="generate components and taglibs">
 	    <taskdef name="wapfaces" classname="xdoclet.DocletTask" classpathref="xdoclet.classpath" >
 	        <classpath>
 	            <pathelement path="${myfaces-xdoclet.jar}" />
-	        </classpath>    
+	        </classpath>
 	    </taskdef>
-	             
+
 	  	<mkdir dir="${generated.src}" />
 	    <wapfaces destdir="${generated.src}" verbose="true"  >
 	        <fileset dir="${wml.src}">
 	            <include name="org/apache/myfaces/wap/def/*.java" />
 	        </fileset>
-	        
+
 	        <component destinationFile="{0}.java">
 	            <packageSubstitution packages="def" substituteWith="component" />
 	        </component>
-	        
+
 	        <tag destinationFile="{0}Tag.java">
 	            <packageSubstitution packages="def" substituteWith="taglib" />
 	        </tag>
-	        
+
 	        <taglib destinationFile="myfaces_wap.tld" />
 	        <facesconfig destinationFile="faces-config.xml" />
 	     </wapfaces>
-	     
+
 	     <xmlvalidate warn="false" file="${generated.src}/myfaces_wap.tld">
 	        <dtd publicId="-//Sun Microsystems, Inc.//DTD JSP Tag Library 1.2//EN"
 	             location="res/dtds/web-jsptaglibrary_1_2.dtd" />
@@ -639,7 +643,7 @@
 
 	  <!-- ============================= BUILD TAG LIBRARY ===========================================-->
 	  <target name="myfaces-wap-jar" depends="codegen"
-	     description="Compile Java files, copy static files and create jar archive." >    
+	     description="Compile Java files, copy static files and create jar archive." >
 
 	  	<mkdir dir="${wml.classes}"/>
 	    <javac srcdir="${wml.src}" destdir="${wml.classes}" classpathref="wml.classpath.path">
@@ -647,14 +651,14 @@
 	        <classpath>
 	            <pathelement location="${wml.classes}"/>
 	        </classpath>
-	    </javac>    
-	    
-	     
+	    </javac>
+
+
 	    <javac srcdir="${generated.src}" destdir="${wml.classes}">
 	    	<include name="**/*.java" />
 	        <classpath refid="wml.classpath.path"/>
 	    </javac>
-	    
+
 	    <javac srcdir="${wml.src}" destdir="${wml.classes}" classpathref="wml.classpath.path">
 	    	<include name="**/*.java" />
 	        <exclude name="org/apache/myfaces/wap/base/**/*.java" />
@@ -662,15 +666,15 @@
 	        <classpath>
 	            <pathelement location="${wml.classes}"/>
 	        </classpath>
-	    </javac>    
+	    </javac>
 
 	    <copy todir="${wml.classes}/META-INF">
 	      <fileset dir="${generated.src}">
 	            <include name="*.tld" />
 	            <include name="faces-config.xml" />
 	      </fileset>
-	    </copy> 
-	        
+	    </copy>
+
 	    <jar jarfile="${myfaces-wap.jar}"  basedir="${wml.classes}">
             <!-- manifest -->
             <manifest>
@@ -682,9 +686,9 @@
                 </section>
             </manifest>
           </jar>
-	  </target>	 
-	
-	
+	  </target>
+
+
     <target name="resolve-tld-entities">
         <mkdir dir="${resolved-tlds.dir}"/>
         <!-- resolve TLD entities (for containers that do not support entities within TLDs) -->
@@ -698,6 +702,15 @@
                      location="${tlds.dir}/web-jsptaglibrary_1_2.dtd"/>
             </xmlcatalog>
         </xslt>
+    </target>
+
+    <target name="nightly" depends="src-release,bin-release">
+
+        <!-- copy resulting builds to nightly directory -->
+        <copy  file="${src.release.bundle}" todir="${nightly.dir}"/>
+        <echo message="nightly.dir: ${nightly.dir}"/>
+        <copy file="${bin.release.bundle}" todir="${nightly.dir}" flatten="true"/>
+
     </target>
 
 </project>
