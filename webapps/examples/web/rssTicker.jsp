@@ -64,7 +64,7 @@ managed beans used:
             <h:panelGroup id="body">
 
 			   <h:panelGrid columns="1">
-					<x:rssTicker rssUrl="http://www.jsfcentral.com/jsfcentral_news.rss"/>
+					<x:rssTicker rssUrl="http://sourceforge.net/export/rss2_projnews.php?group_id=69709"/>
 			    </h:panelGrid>
 
 
