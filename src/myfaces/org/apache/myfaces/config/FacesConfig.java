@@ -41,6 +41,7 @@ import javax.servlet.jsp.tagext.TagAttributeInfo;
 import javax.servlet.jsp.tagext.TagInfo;
 import javax.servlet.jsp.tagext.TagLibraryInfo;
 import java.util.*;
+import java.util.Map.Entry;
 
 
 /**
@@ -280,31 +281,34 @@ public class FacesConfig
             app.setActionListener(actionListener);
         }
 
-        for (Iterator it = _converterMap.keySet().iterator(); it.hasNext();)
+        for (Iterator it = _converterMap.entrySet().iterator(); it.hasNext();)
         {
-            String converterId = (String)it.next();
-            String converterClass = (String)_converterMap.get(converterId);
+            Entry entry = (Entry) it.next();
+            String converterId = (String) entry.getKey();
+            String converterClass = (String) entry.getValue();
             app.addConverter(converterId, converterClass);
         }
-        for (Iterator it = _converterTypeMap.keySet().iterator(); it.hasNext();)
+        for (Iterator it = _converterTypeMap.entrySet().iterator(); it.hasNext();)
         {
-            Class targetClass = (Class)it.next();
-            String converterClass = (String)_converterTypeMap.get(targetClass);
+            Entry entry = (Entry) it.next();
+            Class targetClass = (Class) entry.getKey();
+            String converterClass = (String) entry.getValue();
             app.addConverter(targetClass, converterClass);
         }
-        for (Iterator it = _componentClassMap.keySet().iterator(); it.hasNext();)
+        for (Iterator it = _componentClassMap.entrySet().iterator(); it.hasNext();)
         {
-            String componentType = (String)it.next();
-            String componentClass = (String)_componentClassMap.get(componentType);
+            Entry entry = (Entry) it.next();
+            String componentType = (String) entry.getKey();
+            String componentClass = (String) entry.getValue();
             app.addComponent(componentType, componentClass);
         }
-        for (Iterator it = _validatorClassMap.keySet().iterator(); it.hasNext();)
+        for (Iterator it = _validatorClassMap.entrySet().iterator(); it.hasNext();)
         {
-            String validatorId = (String)it.next();
-            String validatorClass = (String)_validatorClassMap.get(validatorId);
+            Entry entry = (Entry) it.next();
+            String validatorId = (String) entry.getKey();
+            String validatorClass = (String) entry.getValue();
             app.addValidator(validatorId, validatorClass);
         }
-
     }
 
     public void configureFactoryFinder()
