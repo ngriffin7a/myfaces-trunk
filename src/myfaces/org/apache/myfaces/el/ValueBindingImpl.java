@@ -1,13 +1,18 @@
 /**
- * MyFaces - the free JSF implementation Copyright (C) 2003  The MyFaces Team
- * (http://myfaces.sourceforge.net) This library is free software; you can
- * redistribute it and/or modify it under the terms of the GNU Lesser General
- * Public License as published by the Free Software Foundation; either version
- * 2.1 of the License, or (at your option) any later version. This library is
- * distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
- * PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
- * details. You should have received a copy of the GNU Lesser General Public
+ * MyFaces - the free JSF implementation
+ * Copyright (C) 2003  The MyFaces Team (http://myfaces.sourceforge.net)
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
@@ -168,7 +173,7 @@ public class ValueBindingImpl extends ValueBinding {
     /**
      * Get a simple (not nested) property name and type (int or String) as
      * defined in JSF 1.0, PRD2, 5.1.2
-     * 
+     *
      * <p>
      * We need this function, because <code>PropertyResolver</code> does not
      * provide <code>getValue</code> function where the property is of type
@@ -206,7 +211,7 @@ public class ValueBindingImpl extends ValueBinding {
     /**
      * Coerces the supplied object to Integer based on coercion rules defined
      * in JSF 1.0, PRD2, 5.1.2.4
-     * 
+     *
      * <p>
      * Note: null object or empty string are coerced to 0 (zero)--per JSF
      * </p>
@@ -252,7 +257,7 @@ public class ValueBindingImpl extends ValueBinding {
             return ((Boolean)obj).booleanValue() ? ONE : ZERO;
 
         // JSF spec mentiones about coercion of primitive types,
-        //   we do not handle the primitive numeric types here, 
+        //   we do not handle the primitive numeric types here,
         //   since there is no way to pass those to this function
         throw new ReferenceSyntaxException(
             "Unable to coerce " + obj.getClass() + " to int");
@@ -261,7 +266,7 @@ public class ValueBindingImpl extends ValueBinding {
     /**
      * Coerces the supplied object to String based on coercion rules defined in
      * JSF 1.0, PRD2, 5.1.2.4
-     * 
+     *
      * <p>
      * Note: null object coerced to empty string--per JSF
      * </p>

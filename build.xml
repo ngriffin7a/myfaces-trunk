@@ -16,7 +16,7 @@
     <!-- Temporary dir. May be overridden in build.properties -->
     <property name="temp.dir" value="${env.TEMP}"/>
 
-    <!-- classpath for compiling -->
+    <!-- classpath for normal compiling -->
     <path id="project.class.path">
         <pathelement location="${jsf-api.jar}"/>
         <pathelement location="${servlet.jar}"/>
@@ -190,5 +190,6 @@
              inheritrefs="true"
              target="compile"/>
     </target>
+
 
 </project>

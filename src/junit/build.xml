@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<project name="myfaces-junit" default="junit">
+
+    <property environment="env"/>
+
+    <!-- Constants -->
+    <property name="project.dir" location="${basedir}/../.."/>
+    <property name="junit.src" location="${project.dir}/src/junit"/>
+
+    <!-- Properties -->
+    <property file="../../build.properties"/>
+    <property file="build.properties"/>
+
+    <!-- Temporary dir. May be overridden in build.properties -->
+    <property name="temp.dir" value="${env.TEMP}"/>
+
+
+    <!-- classpath for compiling -->
+    <path id="junit.class.path">
+        <pathelement location="${jsf-api.jar}"/>
+        <pathelement location="${servlet.jar}"/>
+        <pathelement location="${myfaces.jar}"/>
+        <pathelement location="${junit.jar}"/>
+    </path>
+
+
+    <target name="compile-for-junit">
+        <mkdir dir="${temp.dir}/myfaces-jar/classes"/>
+        <javac srcdir="${project.dir}/src/junit"
+               destdir="${temp.dir}/myfaces-jar/classes"
+               optimize="${javac.optimize}"
+               classpathref="junit.class.path">
+        </javac>
+    </target>
+
+
+
+
+
+
+    <!-- TODO... -->
+
+    <target name="junit">
+        <junit >
+            <classpath refid="junit.class.path"/>
+        </junit>
+    </target>
+
+
+</project>

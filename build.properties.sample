@@ -23,3 +23,7 @@ javac.optimize = off
 # uncomment to use aspectj for performance measuring
 # (you must also adapt the paths in src/aspectj/build.properties!)
 #use-aspectj = true
+
+
+# junit library (only needed for JUnit testing)
+junit.jar = ${project.dir}/lib/junit.jar
