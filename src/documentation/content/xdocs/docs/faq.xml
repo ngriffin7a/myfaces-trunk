@@ -31,7 +31,7 @@
       </dl>	  
 	  <dl>
         <dt>Can I use MyFaces extensions with the JSF RI?</dt>
-        <dd><anchor id="extentions" /> Yes, most of the Apache MyFaces extentions work with JSF RI. You must only copy <code>myfaces-extentions.jar</code> to your <code>WEB-INF/lib</code> folder. To be able to use the MyFaces extensions add the following line to your JSPs: <source><![CDATA[<%@ taglib uri="http://myfaces.apache.org/extensions" prefix="x"%>]]></source>
+        <dd><anchor id="extentions" /> Yes, most of the Apache MyFaces extensions work with JSF RI. You must only copy <code>myfaces-extensions.jar</code> to your <code>WEB-INF/lib</code> folder. To be able to use the MyFaces extensions add the following line to your JSPs: <source><![CDATA[<%@ taglib uri="http://myfaces.apache.org/extensions" prefix="x"%>]]></source>
 			The current version of our TilesViewHandler will not work with the JSF RI. If you notice other problems please submit a ticket on <link href="../community/issue.html">JIRA</link></dd>
       </dl>	  
  </section>
