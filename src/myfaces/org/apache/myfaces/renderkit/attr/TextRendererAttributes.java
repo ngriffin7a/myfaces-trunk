@@ -31,17 +31,5 @@ public interface TextRendererAttributes
     extends CommonRendererAttributes,
             KeyBundleAttributes
 {
-    public static final String MAX_LENGTH_ATTR = "maxLength";
-
-    public static final String[][] INPUT_TEXT_ATTRIBUTES = {
-        {INPUT_CLASS_ATTR},
-        {MAX_LENGTH_ATTR, "maxlength"},
-        {CONVERTER_ATTR}
-    };
-
-    public static final String[] OUTPUT_TEXT_ATTRIBUTES = {
-        OUTPUT_CLASS_ATTR,
-        CONVERTER_ATTR
-    };
-
+    public static final String MAXLENGTH_ATTR = "maxlength";
 }

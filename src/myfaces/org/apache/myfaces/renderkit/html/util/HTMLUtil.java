@@ -45,6 +45,32 @@ public class HTMLUtil
     private HTMLUtil() {}   //Utility class
 
 
+    public static void renderHTMLAttribute(ResponseWriter writer,
+                                           UIComponent component,
+                                           String rendererAttrName,
+                                           String htmlAttrName)
+        throws IOException
+    {
+        Object value = component.getAttribute(rendererAttrName);
+        if (value != null)
+        {
+            if (value instanceof Boolean &&
+                ((Boolean)value).booleanValue())
+            {
+                writer.write(" ");
+                writer.write(htmlAttrName);
+            }
+            else
+            {
+                writer.write(" ");
+                writer.write(htmlAttrName);
+                writer.write("=\"");
+                writer.write(value.toString());
+                writer.write("\"");
+            }
+        }
+    }
+
     public static void renderHTMLAttributes(ResponseWriter writer,
                                             UIComponent component,
                                             String[] attributes)
@@ -53,24 +79,10 @@ public class HTMLUtil
         for (int i = 0; i < attributes.length; i++)
         {
             String attrName = attributes[i];
-            Object value = component.getAttribute(attrName);
-            if (value != null)
-            {
-                if (value instanceof Boolean &&
-                    ((Boolean)value).booleanValue())
-                {
-                    writer.write(" ");
-                    writer.write(attrName);
-                }
-                else
-                {
-                    writer.write(" ");
-                    writer.write(attrName);
-                    writer.write("=\"");
-                    writer.write(value.toString());
-                    writer.write("\"");
-                }
-            }
+            renderHTMLAttribute(writer,
+                                component,
+                                attrName,
+                                attrName);
         }
     }
 

@@ -31,7 +31,7 @@ public interface SecretRendererAttributes
 
     public static final String[] INPUT_SECRET_ATTRIBUTES = {
         INPUT_CLASS_ATTR,
-        MAX_LENGTH_ATTR,
+        MAXLENGTH_ATTR,
         REDISPLAY_ATTR
     };
 

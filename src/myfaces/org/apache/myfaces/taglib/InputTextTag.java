@@ -137,7 +137,7 @@ public class InputTextTag
 
     public void setMaxlength(String v)
     {
-        setRendererAttributeString(MAX_LENGTH_ATTR, v);
+        setRendererAttributeString(MAXLENGTH_ATTR, v);
     }
 
     // converter attribute --> already implemented in MyFacesTag

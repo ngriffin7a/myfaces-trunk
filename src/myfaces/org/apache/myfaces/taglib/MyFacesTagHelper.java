@@ -30,6 +30,7 @@ import javax.faces.application.ApplicationFactory;
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIOutput;
 import javax.faces.context.FacesContext;
+import javax.faces.el.ValueBinding;
 import javax.faces.tree.Tree;
 import javax.faces.webapp.UIComponentTag;
 import javax.servlet.ServletRequest;
@@ -135,7 +136,7 @@ public class MyFacesTagHelper
 
     //property helpers
 
-    protected void setComponentPropertyObject(String attrName, Object attrValue)
+    private void internalSetComponentProperty(String attrName, Object attrValue)
     {
         if (_attributes == null)
         {
@@ -144,26 +145,35 @@ public class MyFacesTagHelper
         _attributes.add(new Attribute(attrName, attrValue, true));
     }
 
+    protected void setComponentPropertyObject(String attrName, Object attrValue)
+    {
+        Object val = evaluateSimpleELExpression(attrValue);
+        internalSetComponentProperty(attrName, val);
+    }
+
     protected void setComponentPropertyString(String attrName, Object attrValue)
     {
-        setComponentPropertyObject(attrName, attrValue.toString());
+        Object val = evaluateSimpleELExpression(attrValue);
+        internalSetComponentProperty(attrName, val.toString());
     }
 
     protected void setComponentPropertyBoolean(String attrName, Object attrValue)
     {
-        if (attrValue instanceof Boolean)
+        Object val = evaluateSimpleELExpression(attrValue);
+        if (val instanceof Boolean)
         {
-            setComponentPropertyObject(attrName, attrValue);
+            internalSetComponentProperty(attrName, val);
         }
         else
         {
-            setComponentPropertyObject(attrName,
-                                       Boolean.valueOf(attrValue.toString()));
+            internalSetComponentProperty(attrName,
+                                         Boolean.valueOf(val.toString()));
         }
     }
 
 
-    protected void setRendererAttributeObject(String attrName, Object attrValue)
+
+    private void internalSetRendererAttribute(String attrName, Object attrValue)
     {
         if (_attributes == null)
         {
@@ -172,41 +182,107 @@ public class MyFacesTagHelper
         _attributes.add(new Attribute(attrName, attrValue, false));
     }
 
+    protected void setRendererAttributeObject(String attrName, Object attrValue)
+    {
+        Object val = evaluateSimpleELExpression(attrValue);
+        internalSetRendererAttribute(attrName, val);
+    }
+
     protected void setRendererAttributeString(String attrName, Object attrValue)
     {
-        setRendererAttributeObject(attrName, attrValue.toString());
+        Object val = evaluateSimpleELExpression(attrValue);
+        internalSetRendererAttribute(attrName, val.toString());
     }
 
     protected void setRendererAttributeBoolean(String attrName, Object attrValue)
     {
-        if (attrValue instanceof Boolean)
+        Object val = evaluateSimpleELExpression(attrValue);
+        if (val instanceof Boolean)
         {
-            setRendererAttributeObject(attrName, attrValue);
+            internalSetRendererAttribute(attrName, val);
         }
         else
         {
-            setRendererAttributeObject(attrName,
-                                       Boolean.valueOf(attrValue.toString()));
+            internalSetRendererAttribute(attrName,
+                                         Boolean.valueOf(val.toString()));
         }
     }
 
     protected void setRendererAttributeInteger(String attrName, Object attrValue)
     {
-        if (attrValue instanceof Integer)
+        Object val = evaluateSimpleELExpression(attrValue);
+        if (val instanceof Integer)
         {
-            setRendererAttributeObject(attrName, attrValue);
+            setRendererAttributeObject(attrName, val);
         }
-        else if (attrValue instanceof Number)
+        else if (val instanceof Number)
         {
             setRendererAttributeObject(attrName,
-                                       new Integer(((Number)attrValue).intValue()));
+                                       new Integer(((Number)val).intValue()));
         }
         else
         {
             setRendererAttributeObject(attrName,
-                                       new Integer(attrValue.toString()));
+                                       new Integer(val.toString()));
         }
     }
+
+
+    protected Object evaluateSimpleELExpression(Object attrValue)
+    {
+        if (attrValue != null &&
+            attrValue instanceof String &&
+            ((String)attrValue).startsWith("${") &&
+            ((String)attrValue).endsWith("}"))
+        {
+            String expr = ((String)attrValue).substring(2, ((String)attrValue).length() - 1);
+            ApplicationFactory af = (ApplicationFactory)FactoryFinder.getFactory(FactoryFinder.APPLICATION_FACTORY);
+            ValueBinding vb = af.getApplication().getValueBinding(expr);
+            return vb.getValue(getFacesContext());
+        }
+        else
+        {
+            return attrValue;
+        }
+
+        /*
+        int dollarIdx = attrValue.indexOf("${");
+        if (dollarIdx == -1)
+        {
+            return attrValue;
+        }
+
+
+        StringBuffer buf = new StringBuffer(attrValue.length());
+        buf.append(attrValue.substring(0, dollarIdx));
+        while (dollarIdx >= 0)
+        {
+            int endIdx = attrValue.indexOf('}', dollarIdx + 2);
+            if (endIdx == -1)
+            {
+                LogUtil.getLogger().warning("Illegal EL expression '" + attrValue + "'.");
+                buf.append(attrValue.substring(dollarIdx + 2));
+                return buf.toString();
+            }
+
+            String expr = attrValue.substring(dollarIdx + 2, endIdx);
+            if (expr.length() > 1 &&
+                (expr.startsWith("'") && expr.endsWith("'")) ||
+                (expr.startsWith("\"") && expr.endsWith("\"")))
+            {
+                //Quoted literal
+                buf.append(expr.substring(1, expr.length() - 1));
+            }
+            else
+            {
+                ValueBinding binding = application.getValueBinding(expr);
+
+
+            }
+        }
+        */
+    }
+
 
 
     protected static class Attribute

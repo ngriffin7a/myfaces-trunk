@@ -58,36 +58,6 @@ public class TextRenderer
         return TYPE;
     }
 
-    /*
-    public boolean supportsComponentType(String s)
-    {
-        return s.equals(UIInput.TYPE) || s.equals(UIOutput.TYPE);
-    }
-
-    public boolean supportsComponentType(UIComponent uicomponent)
-    {
-        return uicomponent instanceof UIInput ||
-               uicomponent instanceof UIOutput;
-    }
-
-    protected void initAttributeDescriptors()
-    {
-        addAttributeDescriptors(UIInput.TYPE, TLD_HTML_URI, "input_text", HTML_UNIVERSAL_ATTRIBUTES);
-        addAttributeDescriptors(UIInput.TYPE, TLD_HTML_URI, "input_text", HTML_EVENT_HANDLER_ATTRIBUTES);
-        addAttributeDescriptors(UIInput.TYPE, TLD_HTML_URI, "input_text", HTML_INPUT_ATTRIBUTES);
-        addAttributeDescriptors(UIInput.TYPE, TLD_HTML_URI, "input_text", INPUT_TEXT_ATTRIBUTES);
-        addAttributeDescriptors(UIInput.TYPE, TLD_HTML_URI, "input_text", USER_ROLE_ATTRIBUTES);
-
-        addAttributeDescriptors(UIOutput.TYPE, TLD_HTML_URI, "output_text", HTML_UNIVERSAL_ATTRIBUTES);
-        addAttributeDescriptors(UIOutput.TYPE, TLD_HTML_URI, "output_text", HTML_EVENT_HANDLER_ATTRIBUTES);
-        addAttributeDescriptors(UIOutput.TYPE, TLD_HTML_URI, "output_text", OUTPUT_TEXT_ATTRIBUTES);
-        addAttributeDescriptors(UIOutput.TYPE, TLD_HTML_URI, "output_text", USER_ROLE_ATTRIBUTES);
-    }
-    */
-
-
-
-
     public void encodeEnd(FacesContext facesContext, UIComponent uiComponent)
         throws IOException
     {
@@ -125,6 +95,7 @@ public class TextRenderer
         HTMLUtil.renderHTMLAttributes(writer, uiInput, HTML_UNIVERSAL_ATTRIBUTES);
         HTMLUtil.renderHTMLAttributes(writer, uiInput, HTML_EVENT_HANDLER_ATTRIBUTES);
         HTMLUtil.renderHTMLAttributes(writer, uiInput, HTML_INPUT_ATTRIBUTES);
+        HTMLUtil.renderHTMLAttribute(writer, uiInput, MAXLENGTH_ATTR, "maxlength");
         HTMLUtil.renderDisabledOnUserRole(facesContext, uiInput);
 
         writer.write(">");

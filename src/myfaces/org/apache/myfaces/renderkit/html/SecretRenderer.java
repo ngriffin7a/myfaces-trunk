@@ -57,28 +57,6 @@ public class SecretRenderer
         return TYPE;
     }
 
-    /*
-    public boolean supportsComponentType(String s)
-    {
-        return s.equals(UIInput.TYPE);
-    }
-
-    public boolean supportsComponentType(UIComponent uicomponent)
-    {
-        return uicomponent instanceof UIInput;
-    }
-
-    protected void initAttributeDescriptors()
-    {
-        addAttributeDescriptors(UIInput.TYPE, TLD_HTML_URI, "input_secret", HTML_UNIVERSAL_ATTRIBUTES);
-        addAttributeDescriptors(UIInput.TYPE, TLD_HTML_URI, "input_secret", HTML_EVENT_HANDLER_ATTRIBUTES);
-        addAttributeDescriptors(UIInput.TYPE, TLD_HTML_URI, "input_secret", HTML_INPUT_ATTRIBUTES);
-        addAttributeDescriptors(UIInput.TYPE, TLD_HTML_URI, "input_secret", INPUT_SECRET_ATTRIBUTES);
-        addAttributeDescriptors(UIInput.TYPE, TLD_HTML_URI, "input_secret", USER_ROLE_ATTRIBUTES);
-    }
-    */
-
-
     public void encodeEnd(FacesContext facesContext, UIComponent uiComponent)
         throws IOException
     {
@@ -99,25 +77,12 @@ public class SecretRenderer
                 writer.write("\"");
             }
         }
-        String size = (String)uiComponent.getAttribute(SIZE_ATTR);
-        if (size != null)
-        {
-            writer.write(" size=\"");
-            writer.write(size);
-            writer.write("\"");
-        }
-        String maxLength = (String)uiComponent.getAttribute(MAX_LENGTH_ATTR);
-        if (maxLength != null)
-        {
-            writer.write(" maxlength=\"");
-            writer.write(maxLength);
-            writer.write("\"");
-        }
 
         HTMLUtil.renderCssClass(writer, uiComponent, INPUT_CLASS_ATTR);
         HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML_UNIVERSAL_ATTRIBUTES);
         HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML_EVENT_HANDLER_ATTRIBUTES);
         HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML_INPUT_ATTRIBUTES);
+        HTMLUtil.renderHTMLAttribute(writer, uiComponent, MAXLENGTH_ATTR, "maxlength");
         HTMLUtil.renderDisabledOnUserRole(facesContext, uiComponent);
 
         writer.write(">");
