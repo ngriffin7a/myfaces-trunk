@@ -18,6 +18,7 @@
  */
 package net.sourceforge.myfaces.util;
 
+import net.sourceforge.myfaces.config.FacesConfigFactoryBase;
 import org.apache.commons.el.Coercions;
 import org.apache.commons.el.Logger;
 import org.apache.commons.logging.Log;
@@ -25,7 +26,7 @@ import org.apache.commons.logging.LogFactory;
 
 import javax.faces.FacesException;
 import javax.servlet.jsp.el.ELException;
-
+import java.io.InputStream;
 import java.util.Map;
 
 
@@ -33,6 +34,10 @@ import java.util.Map;
  * @author Manfred Geiler (latest modification by $Author$)
  * @author Anton Koinov
  * @version $Revision$ $Date$
+ * $Log$
+ * Revision 1.12  2004/03/30 13:27:50  manolito
+ * new getResourceAsStream method
+ *
  */
 public class ClassUtils
 {
@@ -127,6 +132,20 @@ public class ClassUtils
 //          throw e;
 //      }
     }
+
+    public static InputStream getResourceAsStream(String resource)
+    {
+        InputStream stream = Thread.currentThread().getContextClassLoader()
+                                .getResourceAsStream(resource);
+        if (stream == null)
+        {
+            // fallback
+            stream = FacesConfigFactoryBase.class.getClassLoader()
+                        .getResourceAsStream(resource);
+        }
+        return stream;
+    }
+
 
     public static Class javaTypeToClass(String javaType)
     {
