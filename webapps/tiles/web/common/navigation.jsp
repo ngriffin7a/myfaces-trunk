@@ -1,4 +1,4 @@
-<%@ taglib uri="http://myfaces.sourceforge.net/tld/myfaces_ext_0_9.tld" prefix="x"
+<%@ taglib uri="http://myfaces.apache.org" prefix="x"
 %><%@ taglib uri="http://java.sun.com/jsf/html" prefix="h"
 %><%@ taglib uri="http://java.sun.com/jsf/core" prefix="f"%>
 <h:panelGrid columns="1" >

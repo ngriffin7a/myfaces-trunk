@@ -4,6 +4,8 @@ MyFaces Release Notes
 ----------------------------------------------------------------------
 Changes in Release 1.0.8 beta
 * move to Apache Incubator (root package is now "org.apache.myfaces")
+* providing a tld for MyFaces custom components, that still contains
+  the 'old' sf-URI name for backward compatibility
 
 ----------------------------------------------------------------------
 Changes in Release 1.0.7 beta

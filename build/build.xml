@@ -207,7 +207,7 @@
                      excludes=".dependency-info/**/*"/>
             <!-- TLDs -->
             <zipfileset dir="${resolved-tlds.dir}"
-                        includes="myfaces_ext.tld"
+                        includes="myfaces_ext.tld,myfaces_ext_sf.tld"
                         prefix="META-INF/"/>
             <!-- faces-config.xml -->
             <zipfileset dir="${project.dir}/conf"
