@@ -31,7 +31,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.myfaces.custom.calendar.HtmlCalendarRenderer;
 import org.apache.myfaces.renderkit.html.HTML;
 
 /**
@@ -42,6 +41,11 @@ import org.apache.myfaces.renderkit.html.HTML;
  * @author Sylvain Vieujot (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.6  2004/12/02 02:07:22  svieujot
+ * Make the Extensions filter work with resource hierarchies.
+ * A small concession had to be made though :
+ * The ExtensionsFilter must have the (additional) /faces/*
+ *
  * Revision 1.5  2004/12/02 00:25:34  oros
  * i18n issues
  * some slight refactorings
@@ -61,7 +65,6 @@ import org.apache.myfaces.renderkit.html.HTML;
  * Tested only with javascript resources right now, but should work fine with images too.
  * Some work to do to include css resources.
  * The popup component has been converted to use this new Filter.
- *
  * 
  */
 public class AddResource {
@@ -69,9 +72,11 @@ public class AddResource {
     
     private static final String COMPONENTS_PACKAGE = "org.apache.myfaces.custom.";
     
-    private static final String RESOURCE_MAP_PATH = "/myFacesExtensionResource";
+    private static final String RESOURCE_VIRUAL_PATH = "/faces/myFacesExtensionResource";
     
     private static final String ADDITIONAL_HEADER_INFO_REQUEST_ATTRUBITE_NAME = "myFacesHeaderResource2Render";
+    
+    // Methodes to Add resources
     
     public static void addJavaScript(Class componentClass, String resourceFileName, FacesContext context) throws IOException{
         addJavaScript(componentClass, resourceFileName, context, null);
@@ -111,26 +116,6 @@ public class AddResource {
         }
     }
     
-    public static void addStyleSheet(Class componentClass, String resourceFileName, FacesContext context){
-        AdditionalHeaderInfoToRender cssInfo = new AdditionalHeaderInfoToRender(AdditionalHeaderInfoToRender.TYPE_CSS, componentClass, resourceFileName);
-        getAdditionalHeaderInfoToRender(context).add( cssInfo );
-    }
-    
-    private static Set getAdditionalHeaderInfoToRender(FacesContext context){
-        HttpServletRequest request = (HttpServletRequest) context.getExternalContext().getRequest();
-        return getAdditionalHeaderInfoToRender( request );
-    }
-    
-    private static Set getAdditionalHeaderInfoToRender(HttpServletRequest request){
-        Set set = (Set) request.getAttribute(ADDITIONAL_HEADER_INFO_REQUEST_ATTRUBITE_NAME);
-        if( set == null ){
-            set = new HashSet();
-            request.setAttribute(ADDITIONAL_HEADER_INFO_REQUEST_ATTRUBITE_NAME, set);
-        }
-        
-        return set;
-    }
-    
     /**
      * Get the Path used to retrieve an internal resource for a custom component.
      * Example : You can use this to initialize javascript scripts so that they know the path of some other resources
@@ -149,20 +134,31 @@ public class AddResource {
     
     private static String getResourceMappedPath(String componentName, String resourceFileName, HttpServletRequest request){
         String contextPath = request.getContextPath(); 
-        return contextPath+getAddRessourceMaping()+"?component="+componentName
-        		+"&resource="+resourceFileName;
-    }
-    
-    private static String getAddRessourceMaping(){
-        return RESOURCE_MAP_PATH+".jsf";	// TODO Make this compliant with other mapings (/faces/* for example).
+        return contextPath+RESOURCE_VIRUAL_PATH+"/"+componentName+'/'+resourceFileName;
     }
     
     public static boolean isResourceMappedPath(HttpServletRequest request){
-        return request.getRequestURI().endsWith( getAddRessourceMaping() )
-        	&& request.getParameter("component") != null
-        	&& request.getParameter("resource") != null;
+        return request.getRequestURI().contains( RESOURCE_VIRUAL_PATH );
     }
     
+    /**
+     * Decodes the path to return the requested componentName & resourceFileName
+     * String[0] == componentName
+     * String[1] == resourceFileName
+     */
+    private static String[] getResourceInfoFromPath(HttpServletRequest request){
+        String uri = request.getRequestURI();
+        String componentNameStartsAfter = RESOURCE_VIRUAL_PATH+'/';
+
+        int posStartComponentName = uri.indexOf( componentNameStartsAfter )+componentNameStartsAfter.length();
+        int posEndComponentName = uri.indexOf("/", posStartComponentName);
+        String componentName = uri.substring(posStartComponentName, posEndComponentName);
+        
+        String resourceFileName = uri.substring(posEndComponentName+1);
+        
+        return new String[]{componentName, resourceFileName};
+    }
+        
     private static String getComponentName(Class componentClass){
         String name = componentClass.getName();
         if( ! name.startsWith(COMPONENTS_PACKAGE) ){
@@ -200,8 +196,11 @@ public class AddResource {
     }
     
     static public void serveResource(HttpServletRequest request, ServletResponse response) throws IOException{
-        String componentName = request.getParameter("component");
-        String resourceFileName = request.getParameter("resource");
+        String[] resourceInfo = getResourceInfoFromPath(request);
+        String componentName = resourceInfo[0];
+        String resourceFileName = resourceInfo[1];
+        
+        log.debug("Serving resource "+resourceFileName+" for component "+componentName);
         
         String lcResourceFileName = resourceFileName.toLowerCase();
         
@@ -232,8 +231,31 @@ public class AddResource {
         os.close();
     }
     
+    // Header stuffs
+    
+    public static void addStyleSheet(Class componentClass, String resourceFileName, FacesContext context){
+        AdditionalHeaderInfoToRender cssInfo = new AdditionalHeaderInfoToRender(AdditionalHeaderInfoToRender.TYPE_CSS, componentClass, resourceFileName);
+        getAdditionalHeaderInfoToRender(context).add( cssInfo );
+    }
+    
     static public boolean hasAdditionalHeaderInfoToRender(HttpServletRequest request){
-        return request.getAttribute(ADDITIONAL_HEADER_INFO_REQUEST_ATTRUBITE_NAME) != null;
+        boolean test = request.getAttribute(ADDITIONAL_HEADER_INFO_REQUEST_ATTRUBITE_NAME) != null;
+		return test;
+    }
+    
+    private static Set getAdditionalHeaderInfoToRender(FacesContext context){
+        HttpServletRequest request = (HttpServletRequest) context.getExternalContext().getRequest();
+        return getAdditionalHeaderInfoToRender( request );
+    }
+    
+    private static Set getAdditionalHeaderInfoToRender(HttpServletRequest request){
+        Set set = (Set) request.getAttribute(ADDITIONAL_HEADER_INFO_REQUEST_ATTRUBITE_NAME);
+        if( set == null ){
+            set = new HashSet();
+            request.setAttribute(ADDITIONAL_HEADER_INFO_REQUEST_ATTRUBITE_NAME, set);
+        }
+        
+        return set;
     }
     
     static public void writeWithFullHeader(HttpServletRequest request,
@@ -247,34 +269,33 @@ public class AddResource {
         int insertPosition = originalResponse.indexOf( "</head>" );
         
         if( insertPosition < 0 ){
-            insertPosition = originalResponse.indexOf( "<body" );
-            addHeaderTags = true;
-        }
-
-        if ( insertPosition < 0 ) {
-            insertPosition = originalResponse.indexOf( "</HEAD>" );
-
-            if( insertPosition < 0 ){
-                insertPosition = originalResponse.indexOf( "<BODY" );
-                addHeaderTags = true;
-
-                if( insertPosition < 0 ){
-                    // the two most common cases head/HEAD and body/BODY did not work, so we try it with lowercase
-                    String lowerCase = originalResponse.toLowerCase(response.getLocale());
-                    insertPosition = lowerCase.indexOf( "</head>" );
-
-                    if( insertPosition < 0 ){
-                        insertPosition = lowerCase.indexOf( "<body" );
-                        addHeaderTags = true;
-                    }
-                }
-            }
-
-        }
-
-        if( insertPosition < 0 ){
-            log.warn("Response has no <head> or <body> tag.");
-            insertPosition = 0;
+			insertPosition = originalResponse.indexOf( "</HEAD>" );
+			
+	        if( insertPosition < 0 ){
+	            insertPosition = originalResponse.indexOf( "<body" );
+	            addHeaderTags = true;
+	        
+		        if( insertPosition < 0 ){
+		        	insertPosition = originalResponse.indexOf( "<BODY" );
+		            addHeaderTags = true;
+		
+			        if( insertPosition < 0 ){
+			 	       // the two most common cases head/HEAD and body/BODY did not work, so we try it with lowercase
+			           String lowerCase = originalResponse.toLowerCase(response.getLocale());
+			           insertPosition = lowerCase.indexOf( "</head>" );
+			
+			           if( insertPosition < 0 ){
+			    	       insertPosition = lowerCase.indexOf( "<body" );
+			               addHeaderTags = true;
+			           }
+			        }
+		        }
+	        }
+	
+	        if( insertPosition < 0 ){
+	            log.warn("Response has no <head> or <body> tag.");
+	            insertPosition = 0;
+	        }
         }
         
         PrintWriter writer = response.getWriter();
