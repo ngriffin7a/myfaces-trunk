@@ -297,7 +297,7 @@ public class BeanUtils
     {
         try
         {
-            return getPropertyType(Introspector.getBeanInfo(beanClass),
+            return getPropertyType(Introspector.getBeanInfo(beanClass, 5),
                                    propertyName);
         }
         catch (IntrospectionException e)
@@ -318,7 +318,7 @@ public class BeanUtils
         PropertyDescriptor propertyDescriptor = findNestedPropertyDescriptor(beanInfo, propertyName);
         if (propertyDescriptor == null)
         {
-            throw new IllegalArgumentException("Bean " + beanInfo.getBeanDescriptor().getName() + " of class " + beanInfo.getBeanDescriptor().getBeanClass() + " does not have a property '" + propertyName + ".");
+            throw new IllegalArgumentException("Bean " + beanInfo.getBeanDescriptor().getName() + " of class " + beanInfo.getBeanDescriptor().getBeanClass() + " does not have a property '" + propertyName + "'.");
         }
         return propertyDescriptor.getPropertyType();
     }
