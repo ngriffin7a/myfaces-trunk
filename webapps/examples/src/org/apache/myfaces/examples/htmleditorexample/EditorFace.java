@@ -22,6 +22,14 @@ package org.apache.myfaces.examples.htmleditorexample;
 public class EditorFace {
     
     private String text ="default text";
+    
+    // Options
+    private boolean allowEditSource = true;
+    private boolean showPropertiesToolBox = true;
+    private boolean showLinksToolBox = true;
+    private boolean showImagesToolBox = true;
+    private boolean showTablesToolBox = true;
+    private boolean showDebugToolBox = false;
 
     public String getText() {
         return text;
@@ -29,5 +37,42 @@ public class EditorFace {
 
     public void setText(String text) {
         this.text = text;
+    }
+    
+    public boolean isAllowEditSource() {
+        return allowEditSource;
+    }
+    public void setAllowEditSource(boolean allowEditSource) {
+        this.allowEditSource = allowEditSource;
+    }
+    public boolean isShowImagesToolBox() {
+        return showImagesToolBox;
+    }
+    public void setShowImagesToolBox(boolean showImagesToolBox) {
+        this.showImagesToolBox = showImagesToolBox;
+    }
+    public boolean isShowLinksToolBox() {
+        return showLinksToolBox;
+    }
+    public void setShowLinksToolBox(boolean showLinksToolBox) {
+        this.showLinksToolBox = showLinksToolBox;
+    }
+    public boolean isShowPropertiesToolBox() {
+        return showPropertiesToolBox;
+    }
+    public void setShowPropertiesToolBox(boolean showPropertiesToolBox) {
+        this.showPropertiesToolBox = showPropertiesToolBox;
+    }
+    public boolean isShowTablesToolBox(){
+        return showTablesToolBox;
+    }
+    public void setShowTablesToolBox(boolean showTablesToolBox){
+        this.showTablesToolBox = showTablesToolBox;
+    }
+    public boolean isShowDebugToolBox(){
+        return showDebugToolBox;
+    }
+    public void setShowDebugToolBox(boolean showDebugToolBox){
+        this.showDebugToolBox = showDebugToolBox;
     }
 }

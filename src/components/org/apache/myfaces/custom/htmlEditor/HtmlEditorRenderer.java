@@ -33,6 +33,9 @@ import org.apache.myfaces.renderkit.html.util.JavascriptUtils;
  * @author Sylvain Vieujot (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.4  2004/12/03 21:59:09  svieujot
+ * Initial set of htmlEditor attributes.
+ *
  * Revision 1.3  2004/12/03 12:55:30  svieujot
  * Get ride of the save button / process.
  *
@@ -41,8 +44,6 @@ import org.apache.myfaces.renderkit.html.util.JavascriptUtils;
  *
  * Revision 1.1  2004/12/02 22:28:30  svieujot
  * Add an x:htmlEditor based on the Kupu library.
- *
- *
  */
 public class HtmlEditorRenderer extends Renderer {
 
@@ -50,6 +51,7 @@ public class HtmlEditorRenderer extends Renderer {
         RendererUtils.checkParamValidity(context, component, HtmlEditor.class);
         HtmlEditor editor = (HtmlEditor) component;
         String clientId = editor.getClientId(context);
+        String editorFrameId = clientId.replace(":","_")+"_kupu_editorframe"; // The : in the id breaks the inline css.
         String formId;
         {
             UIComponent tmpComponent = editor.getParent();
@@ -295,7 +297,9 @@ public class HtmlEditorRenderer extends Renderer {
             	
             	writer.startElement(HTML.SPAN_ELEM,null);
             	writer.writeAttribute(HTML.CLASS_ATTR, "kupu-tb-buttongroup", null);
-            	// TODO : No ID ?
+            	if( ! editor.isAllowEditSource().booleanValue() ){
+            	    writer.writeAttribute(HTML.STYLE_ATTR, "display: none", null);
+    			}
             		writeButton(writer, "kupu-source", "Edit source", null);
              	writer.endElement(HTML.SPAN_ELEM);
 
@@ -559,11 +563,17 @@ public class HtmlEditorRenderer extends Renderer {
             writer.startElement(HTML.DIV_ELEM, null);
             writer.writeAttribute("xmlns", "", null);
             writer.writeAttribute(HTML.CLASS_ATTR, "kupu-toolboxes", null);
+        	if( ! editor.isShowAnyToolBox() ){
+        	    writer.writeAttribute(HTML.STYLE_ATTR, "display: none", null);
+        	}
             	
             	// Properties tool box
             	writer.startElement(HTML.DIV_ELEM, null);
             	writer.writeAttribute(HTML.CLASS_ATTR, "kupu-toolbox", null);
             	writer.writeAttribute(HTML.ID_ATTR, "kupu-toolbox-properties", null);
+            	if( ! editor.isShowPropertiesToolBox().booleanValue() ){
+            	    writer.writeAttribute(HTML.STYLE_ATTR, "display: none", null);
+            	}
             		writer.startElement(HTML.H1_ELEM, null);
             			writer.write("Properties");
             		writer.endElement(HTML.H1_ELEM);
@@ -588,6 +598,9 @@ public class HtmlEditorRenderer extends Renderer {
             	writer.startElement(HTML.DIV_ELEM, null);
             	writer.writeAttribute(HTML.CLASS_ATTR, "kupu-toolbox", null);
             	writer.writeAttribute(HTML.ID_ATTR, "kupu-toolbox-links", null);
+            	if( ! editor.isShowLinksToolBox().booleanValue() ){
+            	    writer.writeAttribute(HTML.STYLE_ATTR, "display: none", null);
+            	}
             		writer.startElement(HTML.H1_ELEM, null);
             		writer.writeAttribute("xmlns:i18n", "http://xml.zope.org/namespaces/i18n", null);
             		writer.writeAttribute("i18n:translate", "links", null);
@@ -631,6 +644,9 @@ public class HtmlEditorRenderer extends Renderer {
             	writer.startElement(HTML.DIV_ELEM, null);
             	writer.writeAttribute(HTML.CLASS_ATTR, "kupu-toolbox", null);
             	writer.writeAttribute(HTML.ID_ATTR, "kupu-toolbox-images", null);
+            	if( ! editor.isShowImagesToolBox().booleanValue() ){
+            	    writer.writeAttribute(HTML.STYLE_ATTR, "display: none", null);
+            	}
             		writer.startElement(HTML.H1_ELEM, null);
             		writer.writeAttribute("xmlns:i18n", "http://xml.zope.org/namespaces/i18n", null);
             		writer.writeAttribute("i18n:translate", "images", null);
@@ -693,6 +709,9 @@ public class HtmlEditorRenderer extends Renderer {
             	writer.startElement(HTML.DIV_ELEM, null);
             	writer.writeAttribute(HTML.CLASS_ATTR, "kupu-toolbox", null);
             	writer.writeAttribute(HTML.ID_ATTR, "kupu-toolbox-tables", null);
+            	if( ! editor.isShowTablesToolBox().booleanValue() ){
+            	    writer.writeAttribute(HTML.STYLE_ATTR, "display: none", null);
+            	}
             		writer.startElement(HTML.H1_ELEM, null);
             		writer.writeAttribute("xmlns:i18n", "http://xml.zope.org/namespaces/i18n", null);
             		writer.writeAttribute("i18n:translate", "table-inspector", null);
@@ -785,6 +804,9 @@ public class HtmlEditorRenderer extends Renderer {
             	writer.startElement(HTML.DIV_ELEM, null);
             	writer.writeAttribute(HTML.CLASS_ATTR, "kupu-toolbox", null);
             	writer.writeAttribute(HTML.ID_ATTR, "kupu-toolbox-debug", null);
+            	if( ! editor.isShowDebugToolBox().booleanValue() ){
+            	    writer.writeAttribute(HTML.STYLE_ATTR, "display: none", null);
+            	}
             		writer.startElement(HTML.H1_ELEM, null);
             		writer.writeAttribute("xmlns:i18n", "http://xml.zope.org/namespaces/i18n", null);
             		writer.writeAttribute("i18n:translate", "debug-log", null);
@@ -810,6 +832,7 @@ public class HtmlEditorRenderer extends Renderer {
             // Edit space
             writer.startElement(HTML.DIV_ELEM, null);
             writer.writeAttribute(HTML.CLASS_ATTR, "kupu-editorframe", null);
+            writer.writeAttribute(HTML.ID_ATTR, editorFrameId, null);
             	writer.startElement(HTML.IFRAME_ELEM, null);
             	writer.writeAttribute(HTML.ID_ATTR, "kupu-editor", null);
             	writer.writeAttribute(HTML.FRAMEBORDER_ATTR, "0", null);
@@ -823,6 +846,11 @@ public class HtmlEditorRenderer extends Renderer {
             writer.endElement(HTML.DIV_ELEM);
             
         writer.endElement(HTML.DIV_ELEM); // kupu-fulleditor
+        
+        if( !editor.isShowAnyToolBox() ){
+            String largeEditorStyle = "#"+editorFrameId+"{margin-right: 0.3em;}";
+            AddResource.addInlineStyleToHeader(largeEditorStyle, context);
+        }
         
         String text = (String) editor.getValue();
         String encodedText = text == null ? "" : JavascriptUtils.encodeString( text );

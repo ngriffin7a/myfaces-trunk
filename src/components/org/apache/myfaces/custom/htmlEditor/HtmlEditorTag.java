@@ -23,6 +23,9 @@ import org.apache.myfaces.taglib.UIComponentTagBase;
  * @author Sylvain Vieujot (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.2  2004/12/03 21:59:09  svieujot
+ * Initial set of htmlEditor attributes.
+ *
  * Revision 1.1  2004/12/02 22:28:30  svieujot
  * Add an x:htmlEditor based on the Kupu library.
  *
@@ -30,12 +33,24 @@ import org.apache.myfaces.taglib.UIComponentTagBase;
  */
 public class HtmlEditorTag extends UIComponentTagBase {
     
-    private String _value;
+    private String allowEditSource;
+    
+    private String showPropertiesToolBox;
+    private String showLinksToolBox;
+    private String showImagesToolBox;
+    private String showTablesToolBox;
+    private String showDebugToolBox;
     
     protected void setProperties(UIComponent component) {
         super.setProperties(component);
 
-        setStringProperty(component, "value", _value);
+        setBooleanProperty(component, "allowEditSource", allowEditSource);
+        
+        setBooleanProperty(component, "showPropertiesToolBox", showPropertiesToolBox);
+        setBooleanProperty(component, "showLinksToolBox", showLinksToolBox);
+        setBooleanProperty(component, "showImagesToolBox", showImagesToolBox);
+        setBooleanProperty(component, "showTablesToolBox", showTablesToolBox);
+        setBooleanProperty(component, "showDebugToolBox", showDebugToolBox);
     }
     
     public String getComponentType() {
@@ -45,8 +60,28 @@ public class HtmlEditorTag extends UIComponentTagBase {
     public String getRendererType() {
         return "org.apache.myfaces.HtmlEditor";
     }
+
+    public void setAllowEditSource(String allowEditSource){
+        this.allowEditSource = allowEditSource;
+    }
     
-    public void setValue(String value){
-        _value = value;
+    public void setShowPropertiesToolBox(String showPropertiesToolBox){
+        this.showPropertiesToolBox = showPropertiesToolBox;
+    }
+    
+    public void setShowLinksToolBox(String showLinksToolBox){
+        this.showLinksToolBox = showLinksToolBox;
+    }
+    
+    public void setShowImagesToolBox(String showImagesToolBox){
+        this.showImagesToolBox = showImagesToolBox;
+    }
+    
+    public void setShowTablesToolBox(String showTablesToolBox){
+        this.showTablesToolBox = showTablesToolBox;
+    }
+    
+    public void setShowDebugToolBox(String showDebugToolBox){
+        this.showDebugToolBox = showDebugToolBox;
     }
 }

@@ -802,6 +802,36 @@
             <required>false</required>
             <rtexprvalue>false</rtexprvalue>
         </attribute>
+       <attribute>
+	        <name>allowEditSource</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
+        </attribute>
+       <attribute>
+	        <name>showPropertiesToolBox</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
+        </attribute>
+       <attribute>
+	        <name>showLinksToolBox</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
+        </attribute>
+       <attribute>
+	        <name>showImagesToolBox</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
+        </attribute>
+       <attribute>
+	        <name>showTablesToolBox</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
+        </attribute>
+       <attribute>
+	        <name>showDebugToolBox</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
+        </attribute>
     </tag>
      
     <!-- inputDate -->

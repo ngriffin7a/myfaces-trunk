@@ -52,13 +52,44 @@
         <f:facet name="body">
             <h:panelGroup id="body">
 
-				<f:verbatim>
-					Html Editor powered by the kupu library ( http://kupu.oscom.org ).
-				</f:verbatim>
-
 				<h:form>
-					<x:htmlEditor value="#{editor.text}"/>
+					<f:verbatim>
+						<h1>Html Editor powered by the Kupu library</h1>
+						See <a href="http://kupu.oscom.org">http://kupu.oscom.org</a>
+					</f:verbatim>
+
+					<x:htmlEditor value="#{editor.text}"
+						allowEditSource="#{editor.allowEditSource}"
+						showPropertiesToolBox="#{editor.showPropertiesToolBox}"
+						showLinksToolBox="#{editor.showLinksToolBox}"
+						showImagesToolBox="#{editor.showImagesToolBox}"
+						showTablesToolBox="#{editor.showTablesToolBox}"
+						showDebugToolBox="#{editor.showDebugToolBox}"/>
 					<h:commandButton value="Submit"/>
+
+					<f:verbatim>
+						<h2>Component Options</h2>
+					</f:verbatim>
+					<h:panelGrid columns="2">
+						<h:selectBooleanCheckbox value="#{editor.allowEditSource}" immediate="true"/>
+						<h:outputText value="Allow Edit Source"/>
+
+						<h:selectBooleanCheckbox value="#{editor.showPropertiesToolBox}" immediate="true"/>
+						<h:outputText value="Show Properties tool box"/>
+
+						<h:selectBooleanCheckbox value="#{editor.showLinksToolBox}" immediate="true"/>
+						<h:outputText value="Show Links tool box"/>
+
+						<h:selectBooleanCheckbox value="#{editor.showImagesToolBox}" immediate="true"/>
+						<h:outputText value="Show Images tool box"/>
+
+						<h:selectBooleanCheckbox value="#{editor.showTablesToolBox}" immediate="true"/>
+						<h:outputText value="Show Tables tool box"/>
+
+						<h:selectBooleanCheckbox value="#{editor.showDebugToolBox}" immediate="true"/>
+						<h:outputText value="Show Debug tool box"/>
+					</h:panelGrid>
+
 				</h:form>
 
             </h:panelGroup>
