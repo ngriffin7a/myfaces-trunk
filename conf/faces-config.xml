@@ -34,7 +34,7 @@
 
   <component>
     <component-type>javax.faces.HtmlCommandButton</component-type>
-    <component-class>net.sourceforge.myfaces.component.html.MyFacesHtmlCommandButton</component-class>
+    <component-class>javax.faces.component.html.HtmlCommandButton</component-class>
   </component>
 
   <component>
@@ -44,7 +44,7 @@
 
   <component>
     <component-type>javax.faces.HtmlDataTable</component-type>
-    <component-class>net.sourceforge.myfaces.component.html.MyFacesHtmlDataTable</component-class>
+    <component-class>javax.faces.component.html.HtmlDataTable</component-class>
   </component>
 
   <component>
@@ -54,37 +54,37 @@
 
   <component>
     <component-type>javax.faces.HtmlForm</component-type>
-    <component-class>net.sourceforge.myfaces.component.html.MyFacesHtmlForm</component-class>
+    <component-class>javax.faces.component.html.HtmlForm</component-class>
   </component>
 
   <component>
     <component-type>javax.faces.HtmlGraphicImage</component-type>
-    <component-class>net.sourceforge.myfaces.component.html.MyFacesHtmlGraphicImage</component-class>
+    <component-class>javax.faces.component.html.HtmlGraphicImage</component-class>
   </component>
 
   <component>
     <component-type>javax.faces.HtmlInputHidden</component-type>
-    <component-class>net.sourceforge.myfaces.component.html.MyFacesHtmlInputHidden</component-class>
+    <component-class>javax.faces.component.html.HtmlInputHidden</component-class>
   </component>
 
   <component>
     <component-type>javax.faces.HtmlInputSecret</component-type>
-    <component-class>net.sourceforge.myfaces.component.html.MyFacesHtmlInputSecret</component-class>
+    <component-class>javax.faces.component.html.HtmlInputSecret</component-class>
   </component>
 
   <component>
     <component-type>javax.faces.HtmlInputText</component-type>
-    <component-class>net.sourceforge.myfaces.component.html.MyFacesHtmlInputText</component-class>
+    <component-class>javax.faces.component.html.HtmlInputText</component-class>
   </component>
 
   <component>
     <component-type>javax.faces.HtmlInputTextarea</component-type>
-    <component-class>net.sourceforge.myfaces.component.html.MyFacesHtmlInputTextarea</component-class>
+    <component-class>javax.faces.component.html.HtmlInputTextarea</component-class>
   </component>
 
   <component>
     <component-type>javax.faces.HtmlMessage</component-type>
-    <component-class>net.sourceforge.myfaces.component.html.MyFacesHtmlMessage</component-class>
+    <component-class>javax.faces.component.html.HtmlMessage</component-class>
   </component>
 
   <component>
@@ -99,67 +99,67 @@
 
   <component>
     <component-type>javax.faces.HtmlOutputLabel</component-type>
-    <component-class>net.sourceforge.myfaces.component.html.MyFacesHtmlOutputLabel</component-class>
+    <component-class>javax.faces.component.html.HtmlOutputLabel</component-class>
   </component>
 
   <component>
     <component-type>javax.faces.HtmlOutputLink</component-type>
-    <component-class>net.sourceforge.myfaces.component.html.MyFacesHtmlOutputLink</component-class>
+    <component-class>javax.faces.component.html.HtmlOutputLink</component-class>
   </component>
 
   <component>
     <component-type>javax.faces.HtmlOutputFormat</component-type>
-    <component-class>net.sourceforge.myfaces.component.html.MyFacesHtmlOutputFormat</component-class>
+    <component-class>javax.faces.component.html.HtmlOutputFormat</component-class>
   </component>
 
   <component>
     <component-type>javax.faces.HtmlOutputText</component-type>
-    <component-class>net.sourceforge.myfaces.component.html.MyFacesHtmlOutputText</component-class>
+    <component-class>javax.faces.component.html.HtmlOutputText</component-class>
   </component>
 
   <component>
     <component-type>javax.faces.HtmlPanelGrid</component-type>
-    <component-class>net.sourceforge.myfaces.component.html.MyFacesHtmlPanelGrid</component-class>
+    <component-class>javax.faces.component.html.HtmlPanelGrid</component-class>
   </component>
 
   <component>
     <component-type>javax.faces.HtmlPanelGroup</component-type>
-    <component-class>net.sourceforge.myfaces.component.html.MyFacesHtmlPanelGroup</component-class>
+    <component-class>javax.faces.component.html.HtmlPanelGroup</component-class>
   </component>
 
   <component>
     <component-type>javax.faces.HtmlSelectBooleanCheckbox</component-type>
-    <component-class>net.sourceforge.myfaces.component.html.MyFacesHtmlSelectBooleanCheckbox</component-class>
+    <component-class>javax.faces.component.html.HtmlSelectBooleanCheckbox</component-class>
   </component>
 
   <component>
     <component-type>javax.faces.HtmlSelectManyCheckbox</component-type>
-    <component-class>net.sourceforge.myfaces.component.html.MyFacesHtmlSelectManyCheckbox</component-class>
+    <component-class>javax.faces.component.html.HtmlSelectManyCheckbox</component-class>
   </component>
 
   <component>
     <component-type>javax.faces.HtmlSelectManyListbox</component-type>
-    <component-class>net.sourceforge.myfaces.component.html.MyFacesHtmlSelectManyListbox</component-class>
+    <component-class>javax.faces.component.html.HtmlSelectManyListbox</component-class>
   </component>
 
   <component>
     <component-type>javax.faces.HtmlSelectManyMenu</component-type>
-    <component-class>net.sourceforge.myfaces.component.html.MyFacesHtmlSelectManyMenu</component-class>
+    <component-class>javax.faces.component.html.HtmlSelectManyMenu</component-class>
   </component>
 
   <component>
     <component-type>javax.faces.HtmlSelectOneListbox</component-type>
-    <component-class>net.sourceforge.myfaces.component.html.MyFacesHtmlSelectOneListbox</component-class>
+    <component-class>javax.faces.component.html.HtmlSelectOneListbox</component-class>
   </component>
 
   <component>
     <component-type>javax.faces.HtmlSelectOneMenu</component-type>
-    <component-class>net.sourceforge.myfaces.component.html.MyFacesHtmlSelectOneMenu</component-class>
+    <component-class>javax.faces.component.html.HtmlSelectOneMenu</component-class>
   </component>
 
   <component>
     <component-type>javax.faces.HtmlSelectOneRadio</component-type>
-    <component-class>net.sourceforge.myfaces.component.html.MyFacesHtmlSelectOneRadio</component-class>
+    <component-class>javax.faces.component.html.HtmlSelectOneRadio</component-class>
   </component>
 
   <!-- Other standard components -->

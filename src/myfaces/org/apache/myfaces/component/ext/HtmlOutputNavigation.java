@@ -18,7 +18,7 @@
  */
 package net.sourceforge.myfaces.component.ext;
 
-import net.sourceforge.myfaces.component.html.MyFacesHtmlOutputFormat;
+import javax.faces.component.html.HtmlOutputFormat;
 
 /**
  * Output, that represents a navigation separator.
@@ -27,7 +27,7 @@ import net.sourceforge.myfaces.component.html.MyFacesHtmlOutputFormat;
  * @version $Revision$ $Date$
  */
 public class HtmlOutputNavigation
-        extends MyFacesHtmlOutputFormat
+        extends HtmlOutputFormat
 {
     //private static final Log log = LogFactory.getLog(HtmlOutputNavigation.class);
 

@@ -52,6 +52,7 @@
 <!ENTITY user_role_attributes           SYSTEM "entities/user_role_attributes.xml">
 <!ENTITY standard_data_table_attributes SYSTEM "entities/standard_data_table_attributes.xml">
 <!ENTITY standard_messages_attributes   SYSTEM "entities/standard_messages_attributes.xml">
+<!ENTITY standard_input_text_attributes SYSTEM "entities/standard_input_text_attributes.xml">
 ]>
 
 <taglib>
@@ -233,6 +234,18 @@
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>
         </attribute>
+    </tag>
+
+<!-- input_text -->
+    <tag>
+        <name>inputText</name>
+        <tag-class>net.sourceforge.myfaces.taglib.html.HtmlInputTextTag</tag-class>
+        <body-content>JSP</body-content>
+        <description>
+            Extends standard inputText by user role support.
+        </description>
+        &standard_input_text_attributes;
+        &user_role_attributes;
     </tag>
 
 <!-- messages -->

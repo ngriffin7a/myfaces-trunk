@@ -19,7 +19,6 @@
 package net.sourceforge.myfaces.renderkit.html;
 
 import net.sourceforge.myfaces.MyFacesConfig;
-import net.sourceforge.myfaces.component.html.MyFacesHtmlForm;
 import net.sourceforge.myfaces.renderkit.JSFAttr;
 import net.sourceforge.myfaces.renderkit.RendererUtils;
 import net.sourceforge.myfaces.renderkit.html.util.DummyFormResponseWriter;
@@ -213,7 +212,7 @@ public class HtmlLinkRenderer
         {
             //link is nested inside a form
             UIForm form = (UIForm)parent;
-            formName = MyFacesHtmlForm.getFormName(facesContext, form);
+            formName = form.getClientId(facesContext);
             insideForm = true;
             dummyFormResponseWriter = null;
         }

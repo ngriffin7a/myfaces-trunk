@@ -50,9 +50,9 @@
 <!ENTITY ui_select_boolean_attributes   SYSTEM "entities/ui_select_boolean_attributes.xml">
 <!ENTITY ui_select_many_attributes      SYSTEM "entities/ui_select_many_attributes.xml">
 <!ENTITY ui_select_one_attributes       SYSTEM "entities/ui_select_one_attributes.xml">
-<!ENTITY user_role_attributes           SYSTEM "entities/user_role_attributes.xml">
 <!ENTITY standard_data_table_attributes SYSTEM "entities/standard_data_table_attributes.xml">
 <!ENTITY standard_messages_attributes   SYSTEM "entities/standard_messages_attributes.xml">
+<!ENTITY standard_input_text_attributes SYSTEM "entities/standard_input_text_attributes.xml">
 ]>
 
 <taglib>
@@ -90,7 +90,6 @@ Start of revised 1.0 conforming tags (in alphabetical order)
         &html_universal_attributes;
         &html_event_handler_attributes;
         &html_button_attributes;
-        &user_role_attributes;
         <!-- HtmlCommandButton attributes -->
         <attribute>
             <name>image</name>
@@ -109,7 +108,6 @@ Start of revised 1.0 conforming tags (in alphabetical order)
         &html_universal_attributes;
         &html_event_handler_attributes;
         &html_anchor_attributes;
-        &user_role_attributes;
         <!-- HtmlCommandLink attributes -->
     </tag>                
 
@@ -134,7 +132,6 @@ Start of revised 1.0 conforming tags (in alphabetical order)
         &html_universal_attributes;
         &html_event_handler_attributes;
         &html_form_attributes;
-        &user_role_attributes;
     </tag>
 
 <!-- graphic_image -->
@@ -147,7 +144,6 @@ Start of revised 1.0 conforming tags (in alphabetical order)
         &html_universal_attributes;
         &html_event_handler_attributes;
         &html_img_attributes;
-        &user_role_attributes;
     </tag>
 
 <!-- input_hidden -->
@@ -172,7 +168,6 @@ Start of revised 1.0 conforming tags (in alphabetical order)
         &html_input_attributes;
         &html_universal_attributes;
         &html_event_handler_attributes;
-        &user_role_attributes;
         <!-- SecretRenderer attributes -->
         <attribute>
             <name>redisplay</name>
@@ -194,20 +189,7 @@ Start of revised 1.0 conforming tags (in alphabetical order)
             Renders a HTML input element that is bound to the value (binding)
             of the associated UIOutput component.
         </description>
-        &ui_component_attributes;
-        &ui_output_attributes;
-        &ui_input_attributes;
-        &html_universal_attributes;
-        &html_event_handler_attributes;
-        &user_role_attributes;
-        &html_input_attributes;
-        <!-- HtmlInputText attributes -->
-        <attribute>
-            <name>escape</name>
-            <required>false</required>
-            <rtexprvalue>false</rtexprvalue>
-            <description>Indicates whether rendered markup should be escaped.</description>
-        </attribute>
+        &standard_input_text_attributes;
     </tag>
 
 <!-- input_textarea -->
@@ -220,7 +202,6 @@ Start of revised 1.0 conforming tags (in alphabetical order)
         &html_textarea_attributes;
         &html_universal_attributes;
         &html_event_handler_attributes;
-        &user_role_attributes;
    </tag>
 
 <!-- message -->
@@ -236,7 +217,6 @@ Start of revised 1.0 conforming tags (in alphabetical order)
         &ui_message_attributes;
         &html_universal_attributes;
         &html_event_handler_attributes;
-        &user_role_attributes;
         <!-- HtmlMessage attributes -->
         <attribute>
             <name>infoClass</name>
@@ -325,7 +305,6 @@ Start of revised 1.0 conforming tags (in alphabetical order)
         &html_universal_attributes;
         &html_event_handler_attributes;
         &html_label_attributes;
-        &user_role_attributes;
         <!-- LabelRenderer attributes -->
         <attribute>
           <name>for</name>
@@ -344,7 +323,6 @@ Start of revised 1.0 conforming tags (in alphabetical order)
         &html_universal_attributes;
         &html_event_handler_attributes;
         &html_anchor_attributes;
-        &user_role_attributes;
         <!-- HtmlOutputLink attributes -->
         <attribute>
             <name>target</name>
@@ -366,7 +344,6 @@ Start of revised 1.0 conforming tags (in alphabetical order)
         &ui_output_attributes;
         &html_universal_attributes;
         &html_event_handler_attributes;
-        &user_role_attributes;
         <!-- HtmlOutputFormat attributes -->
         <attribute>
             <name>escape</name>
@@ -391,7 +368,6 @@ Start of revised 1.0 conforming tags (in alphabetical order)
         &ui_output_attributes;
         &html_universal_attributes;
         &html_event_handler_attributes;
-        &user_role_attributes;
         <!-- HtmlOutputText attributes -->
         <attribute>
             <name>escape</name>
@@ -414,7 +390,6 @@ Start of revised 1.0 conforming tags (in alphabetical order)
         &html_universal_attributes;
         &html_event_handler_attributes;
         &html_table_attributes;
-        &user_role_attributes;
         <!-- GridRenderer attributes -->
         <attribute>
             <name>columnClasses</name>
@@ -452,7 +427,6 @@ Start of revised 1.0 conforming tags (in alphabetical order)
         &ui_panel_attributes;
         &html_universal_attributes;
         &html_event_handler_attributes;
-        &user_role_attributes;
     </tag>
 
 <!-- selectboolean_checkbox -->
@@ -465,7 +439,6 @@ Start of revised 1.0 conforming tags (in alphabetical order)
         &html_universal_attributes;
         &html_event_handler_attributes;
         &html_input_checkbox_attributes;
-        &user_role_attributes;
     </tag>
 
 <!-- selectmany_checkboxlist -->
@@ -478,7 +451,6 @@ Start of revised 1.0 conforming tags (in alphabetical order)
         &html_universal_attributes;
         &html_event_handler_attributes;
         &html_input_checkbox_attributes;
-        &user_role_attributes;
         <!-- CheckboxListRenderer attributes -->
         <attribute>
             <name>layout</name>
@@ -500,7 +472,6 @@ Start of revised 1.0 conforming tags (in alphabetical order)
         &html_universal_attributes;
         &html_event_handler_attributes;
         &html_select_attributes;
-        &user_role_attributes;
         <!-- ListboxRenderer attributes -->
         <attribute>
             <name>size</name>
@@ -521,7 +492,6 @@ Start of revised 1.0 conforming tags (in alphabetical order)
         &html_universal_attributes;
         &html_event_handler_attributes;
         &html_select_attributes;
-        &user_role_attributes;
     </tag>
 
 <!-- selectone_listbox -->
@@ -534,7 +504,6 @@ Start of revised 1.0 conforming tags (in alphabetical order)
         &html_universal_attributes;
         &html_event_handler_attributes;
         &html_select_attributes;
-        &user_role_attributes;
         <!-- ListboxRenderer attributes -->
         <attribute>
             <name>size</name>
@@ -555,7 +524,6 @@ Start of revised 1.0 conforming tags (in alphabetical order)
         &html_universal_attributes;
         &html_event_handler_attributes;
         &html_select_attributes;
-        &user_role_attributes;
     </tag>
 
 <!-- selectone_radio -->
@@ -568,7 +536,6 @@ Start of revised 1.0 conforming tags (in alphabetical order)
         &html_universal_attributes;
         &html_event_handler_attributes;
         &html_input_radio_attributes;
-        &user_role_attributes;
         <!-- RadioRenderer attributes -->
         <attribute>
             <name>layout</name>

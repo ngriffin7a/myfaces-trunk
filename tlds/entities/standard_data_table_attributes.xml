@@ -1,4 +1,4 @@
-<!-- all standard attributes of the data_table tag -->
+<!-- all standard attributes of the dataTable tag -->
         &ui_component_attributes;
         &ui_panel_attributes;
         &html_universal_attributes;

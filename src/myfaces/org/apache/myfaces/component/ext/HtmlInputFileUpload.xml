@@ -4,7 +4,7 @@
   "http://myfaces.sourceforge.net/dtd/Component.dtd">
 <component>
     <component-class>net.sourceforge.myfaces.component.ext.HtmlInputFileUpload</component-class>
-    <base-class>net.sourceforge.myfaces.component.html.MyFacesHtmlInputText</base-class>
+    <base-class>javax.faces.component.html.HtmlInputText</base-class>
     <component-type>net.sourceforge.myfaces.HtmlInputFileUpload</component-type>
     <component-family>javax.faces.Input</component-family>
     <renderer-type>net.sourceforge.myfaces.FileUpload</renderer-type>

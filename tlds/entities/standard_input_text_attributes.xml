@@ -1,0 +1,15 @@
+<!-- all standard attributes of the inputText tag -->
+        &ui_component_attributes;
+        &ui_output_attributes;
+        &ui_input_attributes;
+        &html_universal_attributes;
+        &html_event_handler_attributes;
+        &user_role_attributes;
+        &html_input_attributes;
+        <!-- HtmlInputText attributes -->
+        <attribute>
+            <name>escape</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
+            <description>Indicates whether rendered markup should be escaped.</description>
+        </attribute>

@@ -18,7 +18,6 @@
  */
 package net.sourceforge.myfaces.renderkit.html;
 
-import net.sourceforge.myfaces.component.html.MyFacesHtmlForm;
 import net.sourceforge.myfaces.renderkit.RendererUtils;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLUtil;
 
@@ -60,8 +59,8 @@ public class HtmlFormRenderer
         String actionURL = viewHandler.getActionURL(facesContext, viewId);
 
         writer.startElement(HTML.FORM_ELEM, htmlForm);
-        writer.writeAttribute(HTML.ID_ATTR, convertClientId(facesContext, clientId), null);
-        writer.writeAttribute(HTML.NAME_ATTR, MyFacesHtmlForm.getFormName(facesContext, htmlForm), null);
+        writer.writeAttribute(HTML.ID_ATTR, clientId, null);
+        writer.writeAttribute(HTML.NAME_ATTR, clientId, null);
         writer.writeAttribute(HTML.METHOD_ATTR, "post", null);
         writer.writeURIAttribute(HTML.ACTION_ATTR, actionURL, null);
 

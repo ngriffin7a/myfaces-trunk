@@ -4,7 +4,7 @@
   "http://myfaces.sourceforge.net/dtd/Component.dtd">
 <component>
     <component-class>net.sourceforge.myfaces.component.ext.HtmlOutputNavigation</component-class>
-    <base-class>net.sourceforge.myfaces.component.html.MyFacesHtmlOutputFormat</base-class>
+    <base-class>javax.faces.component.html.HtmlOutputFormat</base-class>
     <component-type>net.sourceforge.myfaces.HtmlOutputNavigation</component-type>
     <component-family>javax.faces.Output</component-family>
     <renderer-type>javax.faces.Format</renderer-type>

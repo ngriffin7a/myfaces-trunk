@@ -18,9 +18,9 @@
  */
 package net.sourceforge.myfaces.component.ext;
 
-import net.sourceforge.myfaces.component.html.MyFacesHtmlInputText;
 import net.sourceforge.myfaces.model.UploadedFile;
 
+import javax.faces.component.html.HtmlInputText;
 import javax.faces.context.FacesContext;
 import javax.faces.el.ValueBinding;
 
@@ -29,7 +29,7 @@ import javax.faces.el.ValueBinding;
  * @version $Revision$ $Date$
  */
 public class HtmlInputFileUpload
-        extends MyFacesHtmlInputText
+        extends HtmlInputText
 {
     //private static final Log log = LogFactory.getLog(HtmlInputFileUpload.class);
 
