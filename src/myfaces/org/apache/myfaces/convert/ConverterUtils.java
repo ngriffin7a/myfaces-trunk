@@ -194,7 +194,7 @@ public class ConverterUtils
                                                              String attrName)
     {
         //Is it a component property?
-        PropertyDescriptor pd = BeanUtils.findPropertyDescriptor(uiComponent,
+        PropertyDescriptor pd = BeanUtils.findBeanPropertyDescriptor(uiComponent,
                                                                  attrName);
         if (pd != null)
         {

@@ -73,7 +73,7 @@ public class PropertyResolverImpl
             throw new NullPointerException("Cannot determine readonly of property '" + s + "' for null bean.");
         }
 
-        PropertyDescriptor pd = BeanUtils.findPropertyDescriptor(obj, s);
+        PropertyDescriptor pd = BeanUtils.findBeanPropertyDescriptor(obj, s);
         if (pd == null)
         {
             throw new PropertyNotFoundException("Object " + obj + " does not have a property '" + s + "'.");

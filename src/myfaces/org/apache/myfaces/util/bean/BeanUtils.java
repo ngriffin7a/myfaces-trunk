@@ -61,14 +61,14 @@ public class BeanUtils
         }
     }
 
-    public static PropertyDescriptor findPropertyDescriptor(Object bean,
-                                                            String propertyName)
+    public static PropertyDescriptor findBeanPropertyDescriptor(Object bean,
+                                                                String propertyName)
     {
         return findPropertyDescriptor(getBeanInfo(bean), propertyName);
     }
 
-    public static PropertyDescriptor findNestedPropertyDescriptor(Object bean,
-                                                                  String propertyName)
+    public static PropertyDescriptor findNestedBeanPropertyDescriptor(Object bean,
+                                                                      String propertyName)
     {
         if (isNestedPropertyName(propertyName))
         {
@@ -77,6 +77,20 @@ public class BeanUtils
             propertyName = (String)nested[1];
         }
         return findPropertyDescriptor(getBeanInfo(bean), propertyName);
+    }
+
+    public static PropertyDescriptor findPropertyDescriptor(Class beanClass,
+                                                            String propertyName)
+    {
+        try
+        {
+            return findPropertyDescriptor(Introspector.getBeanInfo(beanClass),
+                                          propertyName);
+        }
+        catch (IntrospectionException e)
+        {
+            throw new RuntimeException(e);
+        }
     }
 
     public static PropertyDescriptor findPropertyDescriptor(BeanInfo beanInfo,
@@ -91,6 +105,32 @@ public class BeanUtils
             }
         }
         return null;
+    }
+
+    public static PropertyDescriptor findNestedPropertyDescriptor(Class beanClazz,
+                                                                  String propertyName)
+    {
+        try
+        {
+            return findNestedPropertyDescriptor(Introspector.getBeanInfo(beanClazz),
+                                                propertyName);
+        }
+        catch (IntrospectionException e)
+        {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static PropertyDescriptor findNestedPropertyDescriptor(BeanInfo beanInfo,
+                                                                  String propertyName)
+    {
+        if (isNestedPropertyName(propertyName))
+        {
+            Object[] nested = getNestedBeanInfoAndPropertyName(beanInfo, propertyName);
+            beanInfo = (BeanInfo)nested[0];
+            propertyName = (String)nested[1];
+        }
+        return findPropertyDescriptor(beanInfo, propertyName);
     }
 
 
@@ -244,31 +284,38 @@ public class BeanUtils
     public static Class getBeanPropertyType(Object bean,
                                             String propertyName)
     {
-        if (isNestedPropertyName(propertyName))
-        {
-            Object[] nested = getNestedBeanAndPropertyName(bean, propertyName);
-            bean = nested[0];
-            propertyName = (String)nested[1];
-        }
-        return getBeanPropertyType(getBeanInfo(bean), propertyName);
+        return getPropertyType(getBeanInfo(bean), propertyName);
     }
 
     /**
-     * Optimized version where BeanInfo already is available.
-     *
+     * @param beanClass
+     * @param propertyName
+     * @return
+     */
+    public static Class getPropertyType(Class beanClass,
+                                        String propertyName)
+    {
+        try
+        {
+            return getPropertyType(Introspector.getBeanInfo(beanClass),
+                                   propertyName);
+        }
+        catch (IntrospectionException e)
+        {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
      * @param beanInfo
      * @param propertyName
      * @return
      * @throws IllegalArgumentException if the bean has no property with this name
      */
-    public static Class getBeanPropertyType(BeanInfo beanInfo,
-                                            String propertyName)
+    public static Class getPropertyType(BeanInfo beanInfo,
+                                        String propertyName)
     {
-        if (isNestedPropertyName(propertyName))
-        {
-            throw new IllegalArgumentException("Optimized version cannot handle nested beans.");
-        }
-        PropertyDescriptor propertyDescriptor = findPropertyDescriptor(beanInfo, propertyName);
+        PropertyDescriptor propertyDescriptor = findNestedPropertyDescriptor(beanInfo, propertyName);
         if (propertyDescriptor == null)
         {
             throw new IllegalArgumentException("Bean " + beanInfo.getBeanDescriptor().getName() + " of class " + beanInfo.getBeanDescriptor().getBeanClass() + " does not have a property '" + propertyName + ".");
@@ -306,7 +353,7 @@ public class BeanUtils
                 return new Object[] {obj, nextProp};
             }
 
-            PropertyDescriptor propDescr = findPropertyDescriptor(obj, nextProp);
+            PropertyDescriptor propDescr = findBeanPropertyDescriptor(obj, nextProp);
             if (propDescr == null)
             {
                 throw new IllegalArgumentException("Bean " + obj + " (Class " + obj.getClass() + ") does not have a property of name '" + nextProp + "'.");
@@ -341,12 +388,14 @@ public class BeanUtils
     }
 
 
+
     /**
      * Finds a nested method that is given by the specified propertyPath.
      * @param bean
      * @param propertyPath
      * @param parameterTypes  null means find any method with this name
      * @return a Method
+     * @deprecated TODO: remove later...
      */
     public static BeanMethod findNestedBeanMethod(Object bean,
                                                   String propertyPath,
@@ -454,6 +503,39 @@ public class BeanUtils
         else
         {
             return modelReference;
+        }
+    }
+
+
+
+    private static Object[] getNestedBeanInfoAndPropertyName(BeanInfo beanInfo,
+                                                             String propertyPath)
+    {
+        BeanInfo resultBeanInfo = beanInfo;
+        StringTokenizer st = new StringTokenizer(propertyPath, ".");
+        String nextProp;
+        while (true)
+        {
+            nextProp = st.nextToken();
+            if (!st.hasMoreTokens())
+            {
+                return new Object[] {resultBeanInfo, nextProp};
+            }
+
+            PropertyDescriptor propDescr = findPropertyDescriptor(resultBeanInfo, nextProp);
+            if (propDescr == null)
+            {
+                throw new IllegalArgumentException("Bean of class " + resultBeanInfo.getBeanDescriptor().getBeanClass() + " does not have a property of name '" + nextProp + "'.");
+            }
+
+            try
+            {
+                resultBeanInfo = Introspector.getBeanInfo(propDescr.getPropertyType());
+            }
+            catch (IntrospectionException e)
+            {
+                throw new RuntimeException(e);
+            }
         }
     }
 

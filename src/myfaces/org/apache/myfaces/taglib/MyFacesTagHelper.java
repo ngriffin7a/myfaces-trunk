@@ -367,7 +367,7 @@ public class MyFacesTagHelper
         //boolean errorOccured = false;
 
         //Try bean property setter first
-        PropertyDescriptor pd = BeanUtils.findPropertyDescriptor(uiComponent,
+        PropertyDescriptor pd = BeanUtils.findBeanPropertyDescriptor(uiComponent,
                                                                  propertyName);
         if (pd != null &&
             pd.getWriteMethod() != null)
@@ -407,7 +407,7 @@ public class MyFacesTagHelper
         boolean errorOccured = false;
 
         //Try bean property setter first
-        PropertyDescriptor pd = BeanUtils.findPropertyDescriptor(uiComponent,
+        PropertyDescriptor pd = BeanUtils.findBeanPropertyDescriptor(uiComponent,
                                                                  propertyName);
         if (pd != null &&
             pd.getReadMethod() != null &&

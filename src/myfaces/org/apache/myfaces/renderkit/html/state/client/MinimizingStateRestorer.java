@@ -320,7 +320,7 @@ public class MinimizingStateRestorer
     {
         String strValue = getStateParameterValueAsString(paramValue);
         PropertyDescriptor propertyDescriptor
-            = BeanUtils.findPropertyDescriptor(uiComponent,
+            = BeanUtils.findBeanPropertyDescriptor(uiComponent,
                                                propName);
         if (propertyDescriptor == null)
         {
