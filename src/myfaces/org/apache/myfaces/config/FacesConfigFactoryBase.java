@@ -42,6 +42,9 @@ import java.util.jar.JarInputStream;
  * @author Anton Koinov
  * @version $Revision$ $Date$
  *          $Log$
+ *          Revision 1.27  2004/05/06 00:03:23  o_rossmueller
+ *          fix #948136: retrieve META-INF/faces-config.xml using classloader so it is not important where myfaces.jar is located
+ *
  *          Revision 1.26  2004/04/29 17:46:14  o_rossmueller
  *          extract faces-config.xml to temp file so it works for Weblogic, too
  *
@@ -148,18 +151,16 @@ public abstract class FacesConfigFactoryBase
 
     private void performJarFileConfig(FacesConfig facesConfig, ExternalContext context)
     {
-        Set jars = context.getResourcePaths("/WEB-INF/lib/");
-        if (jars != null)
-        {
-            for (Iterator it = jars.iterator(); it.hasNext();)
-            {
-                String path = (String) it.next();
-                if (path.toLowerCase().endsWith(".jar"))
-                {
-                    parseJarConfig(facesConfig, context, path);
-                }
-            }
+        InputStream in = ClassUtils.getResourceAsStream("META-INF/faces-config.xml");
+
+        if (in == null) {
+            return;
         }
+
+        String systemId = "faces-config.xml";
+        if (log.isInfoEnabled()) log.info("Reading config " + systemId);
+        parseStreamConfig(facesConfig, in, systemId,
+            new FacesConfigEntityResolver());
     }
 
 
@@ -240,86 +241,6 @@ public abstract class FacesConfigFactoryBase
             names.put(META_INF_SERVICES_LOCATION + name, name);
         }
         return names;
-    }
-
-
-    private void parseJarConfig(FacesConfig facesConfig,
-                                ExternalContext context,
-                                String jarPath)
-        throws FacesException
-    {
-        try
-        {
-            if (!(context.getContext() instanceof ServletContext))
-            {
-                log.error("ServletContext expected");
-            }
-            ServletContext servletContext = (ServletContext) context.getContext();
-
-            // not all containers expand archives, so we have to do it the generic way:
-            // 1. get the stream from servlet context
-            InputStream in = servletContext.getResourceAsStream(jarPath);
-            if (in == null)
-            {
-                log.error("Resource " + jarPath + " not found");
-                return;
-            }
-
-            // 2. search the jar stream for META-INF/faces-config.xml
-            JarInputStream jar = new JarInputStream(in);
-            JarEntry entry = jar.getNextJarEntry();
-            boolean found = false;
-
-            while (entry != null)
-            {
-                if (entry.getName().equals("META-INF/faces-config.xml"))
-                {
-                    if (log.isDebugEnabled()) log.debug("faces-config.xml found in " + jarPath);
-                    found = true;
-                    break;
-                }
-                entry = jar.getNextJarEntry();
-            }
-            jar.close();
-
-            File tmp = null;
-
-            // 3. if faces-config.xml was found, extract the jar and copy it to a temp file; hand over the temp file
-            // to the parser and delete it afterwards
-            if (found)
-            {
-                tmp = File.createTempFile("myfaces", ".jar");
-                in = servletContext.getResourceAsStream(jarPath);
-                FileOutputStream out = new FileOutputStream(tmp);
-                byte[] buffer = new byte[4096];
-                int r;
-
-                while ((r = in.read(buffer)) != -1)
-                {
-                    out.write(buffer, 0, r);
-                }
-                out.close();
-
-                JarFile jarFile = new JarFile(tmp);
-                JarEntry configFile = jarFile.getJarEntry("META-INF/faces-config.xml");
-                if (configFile != null)
-                {
-                    if (log.isDebugEnabled()) log.debug("faces-config.xml found in jar " + jarPath);
-                    InputStream stream = jarFile.getInputStream(configFile);
-                    String systemId = "jar:" + tmp.toURL() + "!/" + configFile.getName();
-                    if (log.isInfoEnabled()) log.info("Reading config " + systemId);
-                    parseStreamConfig(facesConfig, stream, systemId,
-                        new FacesConfigEntityResolver(jarFile));
-                }
-                tmp.delete();
-            } else
-            {
-                if (log.isDebugEnabled()) log.debug("Jar " + jarPath + " contains no faces-config.xml");
-            }
-        } catch (IOException e)
-        {
-            throw new FacesException(e);
-        }
     }
 
 
