@@ -3,6 +3,8 @@ MyFaces Release Notes
 
 ----------------------------------------------------------------------
 Changes in Release 0.4.3
+* fixed a bug in the navigation menu: open/active state was lost sometimes.
+* removed Attribute levelClasses from NavigationTag - see NavigationRenderer.indent(...)
 
 ----------------------------------------------------------------------
 Changes in Release 0.4.2
@@ -13,8 +15,7 @@ Changes in Release 0.4.2
 * getValidator() in ApplicationImpl returned always the same validator
   instance: fixed.
 * Support for converter attributes "dateStyle", "formatPattern", etc.
-* added Attribute activeItemClass to NavigationTag, removed Attribute levelClasses from NavigationTag
-  see NavigationRenderer.indent(...)
+* added Attribute activeItemClass to NavigationTag
 * refurbished navigation menu in examples application
 * replaced all usages of Class.forName(s) by Class.forName(s, true,
   Thread.currentThread().getContextClassLoader()) to (hopefully) resolve the

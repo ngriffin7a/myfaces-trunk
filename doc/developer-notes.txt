@@ -19,6 +19,14 @@ Component developer guidelines
   or "javax.". These are regarded temporary attributes and will not be saved and
   restored!
 
+* Component property getters must not behave dynamically. Avoid doing something
+  that depends on the current FacesContext.
+  Reason: Minimizing State Saver only saves a property if it's value differs
+  from the corresponding component in the parsed static tree. Now, if the getter
+  method calculates the value dynamically, both components (the current and the
+  static one in the parsed tree) will have the same value and the property will
+  not be saved.
+
 ======================================================================
 MyFaces developers guidelines
 

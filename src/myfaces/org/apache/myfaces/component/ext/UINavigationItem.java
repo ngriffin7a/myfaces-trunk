@@ -61,46 +61,20 @@ public class UINavigationItem
         _reconstituted = true;
     }
 
-    public boolean isOpen()
-    {
-        reconsitute();
-        return _open;
-    }
-
-    public void reconsitute()
+    public void encodeBegin(FacesContext context) throws IOException
     {
         if (!_reconstituted)
         {
             //item was not reconstituted but newly created,
             //so we try to determine the open state of this item in the previous tree
-            FacesContext facesContext = FacesContext.getCurrentInstance();
-            ServletRequest servletRequest = (ServletRequest)facesContext.getExternalContext().getRequest();
-            StateRestorer stateRestorer
-                = (StateRestorer)servletRequest.getAttribute(StateRestorer.STATE_RESTORER_REQUEST_ATTR);
-            if (stateRestorer != null)
-            {
-                Tree previousTree  = stateRestorer.getPreviousTree(facesContext);
-                if (previousTree != null && previousTree != facesContext.getTree())
-                {
-                    String clientId = getClientId(facesContext);
-                    UINavigationItem prevNavItem
-                        = (UINavigationItem)previousTree.getRoot().findComponent(clientId);
-                    if (prevNavItem != null)
-                    {
-                        setOpen(prevNavItem.isOpen());
-                        if (prevNavItem.isOpen() && !prevNavItem.getChildren().hasNext())
-                        {
-                            setActive(true);
-                        }
-                        else
-                        {
-                            setActive(false);
-                        }
-                    }
-                }
-            }
-            _reconstituted = true;
+            reconstituteOpenAndActiveState();
         }
+        super.encodeBegin(context);
+    }
+
+    public boolean isOpen()
+    {
+        return _open;
     }
 
     public void setOpen(boolean open)
@@ -110,7 +84,6 @@ public class UINavigationItem
 
     public boolean isActive()
     {
-        reconsitute();
         return _active;
     }
 
@@ -118,6 +91,34 @@ public class UINavigationItem
     {
         _active = active;
     }
+
+
+    protected void reconstituteOpenAndActiveState()
+    {
+        FacesContext facesContext = FacesContext.getCurrentInstance();
+        ServletRequest servletRequest = (ServletRequest)facesContext.getExternalContext().getRequest();
+        StateRestorer stateRestorer
+            = (StateRestorer)servletRequest.getAttribute(StateRestorer.STATE_RESTORER_REQUEST_ATTR);
+        if (stateRestorer != null)
+        {
+            Tree previousTree  = stateRestorer.getPreviousTree(facesContext);
+            if (previousTree != null && previousTree != facesContext.getTree())
+            {
+                String clientId = getClientId(facesContext);
+                UINavigationItem prevNavItem
+                    = (UINavigationItem)previousTree.getRoot().findComponent(clientId);
+                if (prevNavItem != null)
+                {
+                    setOpen(prevNavItem.isOpen());
+                    setActive(prevNavItem.isActive());
+                }
+            }
+        }
+        _reconstituted = true;
+    }
+
+
+
 
     /**
      * @return false, if this item is child of another UINavigationItem, which is closed
