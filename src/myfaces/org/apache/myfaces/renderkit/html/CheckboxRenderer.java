@@ -20,6 +20,8 @@ package net.sourceforge.myfaces.renderkit.html;
 
 import net.sourceforge.myfaces.renderkit.attr.CheckboxRendererAttributes;
 import net.sourceforge.myfaces.renderkit.html.util.CommonAttributes;
+import net.sourceforge.myfaces.component.UIComponentUtils;
+import net.sourceforge.myfaces.util.logging.LogUtil;
 
 import javax.faces.component.UIComponent;
 import javax.faces.component.UISelectBoolean;
@@ -114,7 +116,11 @@ public class CheckboxRenderer
         }
         else
         {
-            // TODO:
+            LogUtil.getLogger().warning(
+                "Component "
+                    + UIComponentUtils.toString(uiComponent)
+                    + "is not type SelectBoolean.");
+            return;
         }
     }
 }
