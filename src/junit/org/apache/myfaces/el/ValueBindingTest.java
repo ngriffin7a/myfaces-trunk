@@ -24,35 +24,55 @@ import javax.faces.el.ValueBinding;
 /**
  * @author Manfred Geiler (latest modification by $Author$)
  * @author Anton Koinov
- * @version $Revision$ $Date$ $Log:
- *          ValueBindingTest.java,v $ Revision 1.26 2004/09/08 07:43:52
- *          mwessendorf added TestCase Revision 1.25 2004/09/06 16:21:10
- *          mwessendorf added TestCase Revision 1.24 2004/09/02 08:40:18
- *          mwessendorf added TestCase for bug #1018239 Revision 1.23 2004/09/01
- *          18:25:19 mwessendorf added TestCase Revision 1.22 2004/07/27
- *          06:46:59 dave0000 cleanup/arange testcases, remove duplicates
- *          Revision 1.21 2004/07/27 06:28:34 dave0000 fix issue with getType of
- *          literal expressions (and other improvements) Revision 1.20
- *          2004/07/01 22:00:55 mwessendorf ASF switch Revision 1.19 2004/05/11
- *          04:24:12 dave0000 Bug 943166: add value coercion to
- *          ManagedBeanConfigurator Revision 1.18 2004/05/10 05:30:15 dave0000
- *          Fix issue with setting Managed Bean to a wrong scope Revision 1.17
- *          2004/04/07 03:54:07 dave0000 fix testcases to match removed trim()
- *          on expression string Revision 1.16 2004/03/30 07:38:11 dave0000
- *          implement mixed string-reference expressions
+ * @version $Revision$ $Date$
+ * 
+ * $Log$
+ * Revision 1.28  2004/09/27 03:12:54  dave0000
+ * *** empty log message ***
+ *
+ * Revision 1.26  2004/09/08 07:43:52  mwessendorf
+ * added TestCase
+ *
+ * Revision 1.25  2004/09/06 16:21:10  mwessendorf
+ * added TestCase
+ *
+ * Revision 1.24  2004/09/02 08:40:18  mwessendorf
+ * added TestCase for bug #1018239
+ *
+ * Revision 1.23  2004/09/01 18:25:19  mwessendorf
+ * added TestCase
+ *
+ * Revision 1.22  2004/07/27 06:46:59  dave0000
+ * cleanup/arange testcases, remove duplicates
+ *
+ * Revision 1.21  2004/07/27 06:28:34  dave0000
+ * fix issue with getType of literal expressions (and other improvements)
+ *
+ * Revision 1.20  2004/07/01 22:00:55  mwessendorf
+ * ASF switch
+ *
+ * Revision 1.19  2004/05/11 04:24:12  dave0000
+ * Bug 943166: add value coercion to ManagedBeanConfigurator
+ *
+ * Revision 1.18  2004/05/10 05:30:15  dave0000
+ * Fix issue with setting Managed Bean to a wrong scope
+ *
+ * Revision 1.17  2004/04/07 03:54:07  dave0000
+ * fix testcases to match removed trim() on expression string
+ *
+ * Revision 1.16  2004/03/30 07:38:11  dave0000
+ * implement mixed string-reference expressions
  */
 public class ValueBindingTest extends ELBaseTest
 {
-    //~ Constructors
-    // -------------------------------------------------------------------------------
+    //~ Constructors -------------------------------------------------------------------------------
 
     public ValueBindingTest(String name)
     {
         super(name);
     }
 
-    //~ Methods
-    // ------------------------------------------------------------------------------------
+    //~ Methods ------------------------------------------------------------------------------------
 
     public void testGetValueWithLongName1() throws Exception
     {
@@ -424,13 +444,10 @@ public class ValueBindingTest extends ELBaseTest
         assertEquals("#{ What? ${ ${ TRUE_ or FALSE_, that's the question! }",
             r);
 
-        //        // Test '\' as escape for #{
-        //        vb = _application.createValueBinding("\\#{ \\\\\\#{ What? ${
-        // \\\\#{false ? '${' : \"#{\\\\\"} #{testmap . true_} or
-        // #{testmap.false_}, that's the question! }");
-        //        r = vb.getValue(_facesContext);
-        //        assertEquals("#{ \\#{ What? ${ \\\\#{\\ TRUE_ or FALSE_, that's the
-        // question! }", r);
+//        // Test '\' as escape for #{
+//        vb     = _application.createValueBinding("\\#{ \\\\\\#{ What? ${ \\\\#{false ? '${' : \"#{\\\\\"} #{testmap . true_} or #{testmap.false_}, that's the question! }");
+//        r = vb.getValue(_facesContext);
+//        assertEquals("#{ \\#{ What? ${ \\\\#{\\ TRUE_ or FALSE_, that's the question! }", r);
     }
 
     public void testIsReadOnly() throws Exception
@@ -616,9 +633,7 @@ public class ValueBindingTest extends ELBaseTest
             .createValueBinding("#{facesContext.viewRoot.renderKitId}");
         assertEquals("HTML_BASIC", vb.getValue(_facesContext));
 
-        /*
-         * vb =
-         * _application.createValueBinding("#{facesContext.viewRoot.viewId}");
-         * assertNotNull(vb.getValue(_facesContext));
+    /*    vb = _application.createValueBinding("#{facesContext.viewRoot.viewId}");
+        assertNotNull(vb.getValue(_facesContext));
          */}
 }
