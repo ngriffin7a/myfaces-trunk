@@ -32,20 +32,38 @@ import javax.faces.el.ValueBinding;
 public class MyFacesHtmlMessages
     extends HtmlMessages
 {
+    private static final boolean DEFAULT_TOOLTIP = true;
+    private static final boolean DEFAULT_SHOW_INPUT_LABEL = false;
+
     // missing in API of HtmlMessages
     private Boolean _tooltip;
+
+    private Boolean _showInputLabel;
 
     public boolean isTooltip()
     {
         if (_tooltip != null) return _tooltip.booleanValue();
         ValueBinding vb = getValueBinding(JSFAttr.TOOLTIP_ATTR);
-        return vb != null ?
-               ((Boolean)vb.getValue(getFacesContext())).booleanValue() :
-               true;
+        Boolean b = vb != null ? (Boolean)vb.getValue(getFacesContext()) : null;
+        return b != null ? b.booleanValue() : DEFAULT_TOOLTIP;
     }
 
     public void setTooltip(boolean tooltip)
     {
         _tooltip = Boolean.valueOf(tooltip);
     }
+
+    public boolean isShowInputLabel()
+    {
+        if (_showInputLabel != null) return _showInputLabel.booleanValue();
+        ValueBinding vb = getValueBinding("showInputLabel");
+        Boolean b = vb != null ? (Boolean)vb.getValue(getFacesContext()) : null;
+        return b != null ? b.booleanValue() : DEFAULT_SHOW_INPUT_LABEL;
+    }
+
+    public void setShowInputLabel(boolean showInputLabel)
+    {
+        _showInputLabel = Boolean.valueOf(showInputLabel);
+    }
+
 }

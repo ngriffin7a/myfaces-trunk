@@ -18,8 +18,7 @@
  */
 package net.sourceforge.myfaces.convert;
 
-import net.sourceforge.myfaces.MyFacesFactoryFinder;
-import net.sourceforge.myfaces.application.MessageFactory;
+import net.sourceforge.myfaces.application.MessageUtils;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
@@ -69,7 +68,8 @@ public class MyFacesConverterException
 
     public FacesMessage getFacesMessage()
     {
-        MessageFactory mf = MyFacesFactoryFinder.getMessageFactory(_facesContext.getExternalContext());
-        return mf.getMessage(_facesContext, _messageId, new Object[] {_stringValue});
+        return MessageUtils.getMessage(FacesMessage.SEVERITY_ERROR,
+                                       _messageId,
+                                       new Object[] {_stringValue});
     }
 }

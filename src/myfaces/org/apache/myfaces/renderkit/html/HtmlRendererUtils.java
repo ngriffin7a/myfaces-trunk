@@ -19,8 +19,7 @@
 package net.sourceforge.myfaces.renderkit.html;
 
 import net.sourceforge.myfaces.MyFacesConfig;
-import net.sourceforge.myfaces.MyFacesFactoryFinder;
-import net.sourceforge.myfaces.application.MessageFactory;
+import net.sourceforge.myfaces.application.MessageUtils;
 import net.sourceforge.myfaces.convert.ConverterUtils;
 import net.sourceforge.myfaces.convert.impl.StringArrayConverter;
 import net.sourceforge.myfaces.renderkit.RendererUtils;
@@ -29,6 +28,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import javax.faces.FacesException;
+import javax.faces.application.FacesMessage;
 import javax.faces.component.*;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
@@ -77,10 +77,12 @@ public class HtmlRendererUtils
         }
         catch (FacesException e)
         {
-            MessageFactory mf = MyFacesFactoryFinder.getMessageFactory(facesContext.getExternalContext());
             //TODO: other message?
-            facesContext.addMessage(input.getClientId(facesContext),
-                                    mf.getMessage(facesContext, "javax.faces.component.UIInput.CONVERSION"));
+            MessageUtils.addMessage(FacesMessage.SEVERITY_ERROR,
+                                    "javax.faces.component.UIInput.CONVERSION",
+                                    null,
+                                    input.getClientId(facesContext));
+
             String strValue = StringArrayConverter.getAsString(reqValues, false);
             input.setValue(strValue);
             input.setValid(false);
@@ -183,10 +185,11 @@ public class HtmlRendererUtils
         }
         catch (FacesException e)
         {
-            MessageFactory mf = MyFacesFactoryFinder.getMessageFactory(facesContext.getExternalContext());
             //TODO: other message?
-            facesContext.addMessage(selectMany.getClientId(facesContext),
-                                    mf.getMessage(facesContext, "javax.faces.component.UIInput.CONVERSION"));
+            MessageUtils.addMessage(FacesMessage.SEVERITY_ERROR,
+                                    "javax.faces.component.UIInput.CONVERSION",
+                                    null,
+                                    selectMany.getClientId(facesContext));
             selectMany.setValue(reqValues);
             selectMany.setValid(false);
             return;

@@ -202,7 +202,7 @@ public class FacesConfig
             //check consistence
             if (oldRKC.getRenderKitClass() != null &&
                 newRKC.getRenderKitClass() != null &&
-                oldRKC.getRenderKitClass().equals(newRKC.getRenderKitClass()))
+                !oldRKC.getRenderKitClass().equals(newRKC.getRenderKitClass()))
             {
                 log.warn("RenderKit '" + newRKC.getRenderKitId() + "' defined twice with different classes!");
             }

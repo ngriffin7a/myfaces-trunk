@@ -19,7 +19,7 @@
 package net.sourceforge.myfaces.convert;
 
 import net.sourceforge.myfaces.MyFacesFactoryFinder;
-import net.sourceforge.myfaces.application.MessageFactory;
+import net.sourceforge.myfaces.application.MessageUtils;
 import net.sourceforge.myfaces.component.UIComponentUtils;
 import net.sourceforge.myfaces.config.*;
 import net.sourceforge.myfaces.renderkit.JSFAttr;
@@ -31,6 +31,7 @@ import org.apache.commons.logging.LogFactory;
 import javax.faces.FacesException;
 import javax.faces.FactoryFinder;
 import javax.faces.application.ApplicationFactory;
+import javax.faces.application.FacesMessage;
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIOutput;
 import javax.faces.context.ExternalContext;
@@ -635,9 +636,10 @@ public class ConverterUtils
             }
             else
             {
-                MessageFactory mf = MyFacesFactoryFinder.getMessageFactory(facesContext.getExternalContext());
-                facesContext.addMessage(uiComponent.getClientId(facesContext),
-                                        mf.getMessage(facesContext, DEFAULT_CONVERTER_EXCEPTION_MSG_ID));
+                MessageUtils.addMessage(FacesMessage.SEVERITY_ERROR,
+                                        DEFAULT_CONVERTER_EXCEPTION_MSG_ID,
+                                        null,
+                                        uiComponent.getClientId(facesContext));
             }
             throw e;
         }

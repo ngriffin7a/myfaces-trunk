@@ -37,40 +37,11 @@ public class MessageFactory
     private static final Log log = LogFactory.getLog(MessageFactory.class);
 
     private static final String DEFAULT_BUNDLE = "javax.faces.Messages";
-    //private static final String MYFACES_BUNDLE = "net.sourceforge.myfaces.resource.Messages";
     private static final String DETAIL_SUFFIX = "_detail";
 
     public FacesMessage getMessage(FacesContext facesContext,
-                                   String messageId)
-    {
-        return getMessage(facesContext,
-                          facesContext.getViewRoot().getLocale(),
-                          messageId,
-                          null);
-    }
-
-    public FacesMessage getMessage(FacesContext facesContext,
-                                   String messageId,
-                                   Object arg1)
-    {
-        return getMessage(facesContext,
-                          facesContext.getViewRoot().getLocale(),
-                          messageId,
-                          new Object[] {arg1});
-    }
-
-    public FacesMessage getMessage(FacesContext facesContext,
-                                   String messageId,
-                                   Object args[])
-    {
-        return getMessage(facesContext,
-                          facesContext.getViewRoot().getLocale(),
-                          messageId,
-                          args);
-    }
-
-    public FacesMessage getMessage(FacesContext facesContext,
                                    Locale locale,
+                                   FacesMessage.Severity severity,
                                    String messageId,
                                    Object args[])
     {
@@ -112,7 +83,7 @@ public class MessageFactory
                     {
                         //Neither detail nor summary found
                         if (log.isWarnEnabled()) log.warn("No message with id " + messageId + " found in any bundle");
-                        return new FacesMessage(messageId, null);
+                        return new FacesMessage(severity, messageId, null);
                     }
                 }
             }
@@ -135,7 +106,7 @@ public class MessageFactory
             }
         }
 
-        return new FacesMessage(summary, detail);
+        return new FacesMessage(severity, summary, detail);
     }
 
 

@@ -20,8 +20,8 @@ package net.sourceforge.myfaces.application;
 
 import net.sourceforge.myfaces.MyFacesFactoryFinder;
 
-import javax.faces.context.FacesContext;
 import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
 
 /**
  * DOCUMENT ME!
@@ -31,21 +31,77 @@ import javax.faces.application.FacesMessage;
  */
 public class MessageUtils
 {
-    public static FacesMessage getMessage(String messageId, Object[] args)
+    public static MessageFactory getMessageFactory(FacesContext facesContext)
     {
-        FacesContext facesContext = FacesContext.getCurrentInstance();
-        return MyFacesFactoryFinder.getMessageFactory(
-            facesContext.getExternalContext()).getMessage(facesContext, facesContext.getViewRoot().getLocale(), messageId, args);
+        return MyFacesFactoryFinder.getMessageFactory(facesContext.getExternalContext());
     }
 
-    public static void addMessage(String messageId, Object[] args)
-    {
-        addMessage(null, messageId, args);
-    }
-
-    public static void addMessage(String clientId, String messageId, Object[] args)
+    public static FacesMessage getMessage(FacesMessage.Severity severity,
+                                          String messageId,
+                                          Object[] args)
     {
         FacesContext facesContext = FacesContext.getCurrentInstance();
-        facesContext.addMessage(clientId, getMessage(messageId, args));
+        return getMessageFactory(facesContext).getMessage(facesContext,
+                                                          facesContext.getViewRoot().getLocale(),
+                                                          severity,
+                                                          messageId,
+                                                          args);
+    }
+
+    public static FacesMessage getMessage(FacesMessage.Severity severity,
+                                          String messageId,
+                                          Object[] args,
+                                          FacesContext facesContext)
+    {
+        return getMessageFactory(facesContext).getMessage(facesContext,
+                                                          facesContext.getViewRoot().getLocale(),
+                                                          severity,
+                                                          messageId,
+                                                          args);
+    }
+
+    public static FacesMessage getMessage(FacesMessage.Severity severity,
+                                          String messageId,
+                                          Object arg1)
+    {
+        FacesContext facesContext = FacesContext.getCurrentInstance();
+        return getMessageFactory(facesContext).getMessage(facesContext,
+                                                          facesContext.getViewRoot().getLocale(),
+                                                          severity,
+                                                          messageId,
+                                                          new Object[]{arg1});
+    }
+
+    public static void addMessage(FacesMessage.Severity severity,
+                                  String messageId,
+                                  Object[] args)
+    {
+        addMessage(severity, messageId, args, null, FacesContext.getCurrentInstance());
+    }
+
+    public static void addMessage(FacesMessage.Severity severity,
+                                  String messageId,
+                                  Object[] args,
+                                  FacesContext facesContext)
+    {
+        addMessage(severity, messageId, args, null, facesContext);
+    }
+
+    public static void addMessage(FacesMessage.Severity severity,
+                                  String messageId,
+                                  Object[] args,
+                                  String forClientId)
+    {
+        addMessage(severity, messageId, args, forClientId, FacesContext.getCurrentInstance());
+    }
+
+    public static void addMessage(FacesMessage.Severity severity,
+                                  String messageId,
+                                  Object[] args,
+                                  String forClientId,
+                                  FacesContext facesContext)
+    {
+        facesContext.addMessage(forClientId,
+                                getMessage(severity, messageId, args, facesContext));
     }
 }

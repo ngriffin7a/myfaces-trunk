@@ -18,21 +18,26 @@
  */
 package net.sourceforge.myfaces.renderkit.html;
 
+import net.sourceforge.myfaces.application.MessageUtils;
 import net.sourceforge.myfaces.component.html.MyFacesHtmlMessages;
 import net.sourceforge.myfaces.renderkit.JSFAttr;
 import net.sourceforge.myfaces.renderkit.RendererUtils;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLUtil;
+import net.sourceforge.myfaces.util.NullIterator;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.component.UIComponent;
 import javax.faces.component.html.HtmlMessages;
+import javax.faces.component.html.HtmlOutputLabel;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 import java.io.IOException;
 import java.io.StringWriter;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 /**
  * @author Manfred Geiler (latest modification by $Author$)
@@ -43,8 +48,11 @@ public class HtmlMessagesRenderer
 {
     private static final Log log = LogFactory.getLog(HtmlMessagesRenderer.class);
 
-    private static final String LAYOUT_LIST  = "list";
-    private static final String LAYOUT_TABLE = "table";
+    public static final String LAYOUT_LIST  = "list";
+    public static final String LAYOUT_TABLE = "table";
+
+    private static final String OUTPUT_LABEL_MAP = HtmlMessagesRenderer.class.getName() + ".OUTPUT_LABEL_MAP";
+    private static final String IN_FIELD_MSGID = "net.sourceforge.myfaces.renderkit.html.HtmlMessagesRenderer.IN_FIELD";
 
     public void encodeBegin(FacesContext facesContext, UIComponent uiComponent)
             throws IOException
@@ -64,23 +72,23 @@ public class HtmlMessagesRenderer
 
         HtmlMessages htmlMessages = (HtmlMessages)component;
 
-        Iterator messageIterator;
+        MessageIterator messageIterator;
 
         String forClientId = htmlMessages.getFor();
         if (forClientId == null)
         {
             if (htmlMessages.isGlobalOnly())
             {
-                messageIterator = facesContext.getMessages(null);
+                messageIterator = new MessageIterator(facesContext, null);
             }
             else
             {
-                messageIterator = facesContext.getMessages();
+                messageIterator = new MessageIterator(facesContext);
             }
         }
         else
         {
-            messageIterator = facesContext.getMessages(forClientId);
+            messageIterator = new MessageIterator(facesContext,forClientId);
         }
 
         if (messageIterator.hasNext())
@@ -112,7 +120,7 @@ public class HtmlMessagesRenderer
 
     protected void renderList(FacesContext facesContext,
                               HtmlMessages htmlMessages,
-                              Iterator messagesIterator)
+                              MessageIterator messagesIterator)
             throws IOException
     {
         ResponseWriter writer = facesContext.getResponseWriter();
@@ -122,7 +130,11 @@ public class HtmlMessagesRenderer
         while(messagesIterator.hasNext())
         {
             writer.startElement("li", htmlMessages);
-            renderSingleMessage(writer, htmlMessages, (FacesMessage)messagesIterator.next());
+            renderSingleMessage(facesContext,
+                                writer,
+                                htmlMessages,
+                                (FacesMessage)messagesIterator.next(),
+                                messagesIterator.getClientId());
             writer.endElement("li");
         }
 
@@ -132,7 +144,7 @@ public class HtmlMessagesRenderer
 
     protected void renderTable(FacesContext facesContext,
                                HtmlMessages htmlMessages,
-                               Iterator messagesIterator)
+                               MessageIterator messagesIterator)
             throws IOException
     {
         ResponseWriter writer = facesContext.getResponseWriter();
@@ -143,7 +155,11 @@ public class HtmlMessagesRenderer
         {
             writer.startElement("tr", htmlMessages);
             writer.startElement("td", htmlMessages);
-            renderSingleMessage(writer, htmlMessages, (FacesMessage)messagesIterator.next());
+            renderSingleMessage(facesContext,
+                                writer,
+                                htmlMessages,
+                                (FacesMessage)messagesIterator.next(),
+                                messagesIterator.getClientId());
             writer.endElement("td");
             writer.endElement("tr");
         }
@@ -156,9 +172,11 @@ public class HtmlMessagesRenderer
      * Identical to {@link HtmlMessageRenderer#renderMessage} functionality
      * but methods cannot be combined because of different component types.
      */
-    private void renderSingleMessage(ResponseWriter writer,
+    private void renderSingleMessage(FacesContext facesContext,
+                                     ResponseWriter writer,
                                      HtmlMessages htmlMessages,
-                                     FacesMessage facesMessage)
+                                     FacesMessage facesMessage,
+                                     String forClientId)
             throws IOException
     {
         // determine style and style class
@@ -211,18 +229,32 @@ public class HtmlMessagesRenderer
 
         if (showSummary)
         {
-            if (showDetail)
+            String inputLabel = null;
+            if (forClientId != null &&
+                htmlMessages instanceof MyFacesHtmlMessages &&
+                ((MyFacesHtmlMessages)htmlMessages).isShowInputLabel())
             {
-                writer.writeText(summary + ": ", null);
+                inputLabel = findInputLabel(facesContext, forClientId);
             }
-            else
+
+            writer.writeText(summary, null);
+
+            if (inputLabel != null)
             {
-                writer.writeText(summary, null);
+                FacesMessage fm = MessageUtils.getMessage(FacesMessage.SEVERITY_INFO,
+                                                          IN_FIELD_MSGID,
+                                                          inputLabel);
+                writer.writeText(fm.getSummary(), null);
             }
         }
 
         if (showDetail)
         {
+            if (showSummary)
+            {
+                writer.write(": ");
+            }
+
             writer.writeText(detail, null);
         }
 
@@ -272,5 +304,129 @@ public class HtmlMessagesRenderer
         return new String[] {style, styleClass};
     }
 
+
+    private String findInputLabel(FacesContext facesContext, String inputClientId)
+    {
+        Map outputLabelMap = getOutputLabelMap(facesContext);
+        HtmlOutputLabel outputLabel = (HtmlOutputLabel)outputLabelMap.get(inputClientId);
+        String text = RendererUtils.getStringValue(facesContext, outputLabel);
+        if (text == null)
+        {
+            //TODO: traverse children and append OutputText and/or OutputMessage texts
+        }
+        return text;
+    }
+
+
+    /**
+     * @param facesContext
+     * @return a Map that reversely maps clientIds of components to their
+     *         corresponding OutputLabel component
+     */
+    private Map getOutputLabelMap(FacesContext facesContext)
+    {
+        Map map = (Map)facesContext.getExternalContext().getRequestMap().get(OUTPUT_LABEL_MAP);
+        if (map == null)
+        {
+            map = new HashMap();
+            createOutputLabelMap(facesContext.getViewRoot(), map);
+            facesContext.getExternalContext().getRequestMap().put(OUTPUT_LABEL_MAP, map);
+        }
+        return map;
+    }
+
+
+    private void createOutputLabelMap(UIComponent root, Map map)
+    {
+        if (root.getChildCount() > 0)
+        {
+            for (Iterator it = root.getChildren().iterator(); it.hasNext(); )
+            {
+                UIComponent child = (UIComponent)it.next();
+                if (child instanceof HtmlOutputLabel)
+                {
+                    map.put(((HtmlOutputLabel)child).getFor(), child);
+                }
+                else
+                {
+                    createOutputLabelMap(child, map);
+                }
+            }
+        }
+    }
+
+
+
+    private static class MessageIterator implements Iterator
+    {
+        private FacesContext _facesContext;
+        private Iterator _globalMessagesIterator;
+        private Iterator _clientIdsWithMessagesIterator;
+        private Iterator _componentMessagesIterator = null;
+        private String _clientId = null;
+
+        public MessageIterator(FacesContext facesContext)
+        {
+            _facesContext = facesContext;
+            _globalMessagesIterator = facesContext.getMessages(null);
+            _clientIdsWithMessagesIterator = facesContext.getClientIdsWithMessages();
+            _componentMessagesIterator = null;
+            _clientId = null;
+        }
+
+        public MessageIterator(FacesContext facesContext, String forClientId)
+        {
+            _facesContext = facesContext;
+            if (forClientId != null)
+            {
+                _globalMessagesIterator = NullIterator.instance();
+                _clientIdsWithMessagesIterator = NullIterator.instance();
+                _componentMessagesIterator = _facesContext.getMessages(forClientId);
+                _clientId = forClientId;
+            }
+            else
+            {
+                _globalMessagesIterator = facesContext.getMessages(null);
+                _clientIdsWithMessagesIterator = NullIterator.instance();
+                _componentMessagesIterator = null;
+                _clientId = null;
+            }
+        }
+
+        public boolean hasNext()
+        {
+            return _globalMessagesIterator.hasNext() ||
+                   _clientIdsWithMessagesIterator.hasNext() ||
+                   (_componentMessagesIterator != null && _componentMessagesIterator.hasNext());
+        }
+
+        public Object next()
+        {
+            if (_globalMessagesIterator.hasNext())
+            {
+                return _globalMessagesIterator.next();
+            }
+            else if (_componentMessagesIterator != null && _componentMessagesIterator.hasNext())
+            {
+                return _componentMessagesIterator.next();
+            }
+            else
+            {
+                _clientId = (String)_clientIdsWithMessagesIterator.next();
+                _componentMessagesIterator = _facesContext.getMessages(_clientId);
+                return _componentMessagesIterator.next();
+            }
+        }
+
+        public void remove()
+        {
+            throw new UnsupportedOperationException();
+        }
+
+        public String getClientId()
+        {
+            return _clientId;
+        }
+    }
 
 }

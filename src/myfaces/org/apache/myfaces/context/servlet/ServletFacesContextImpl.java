@@ -106,7 +106,7 @@ public class ServletFacesContextImpl
 
     public Iterator getClientIdsWithMessages()
     {
-        if (_messages.isEmpty())
+        if (_messages == null || _messages.isEmpty())
         {
             return Collections.EMPTY_LIST.iterator();
         }
@@ -142,7 +142,7 @@ public class ServletFacesContextImpl
                     if (hasNext())
                     {
                         _nextFound = false;
-                        return _messages.get(_next++);
+                        return _messageClientIds.get(_next++);
                     }
 
                     throw new NoSuchElementException();
