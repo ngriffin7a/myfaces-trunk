@@ -35,5 +35,13 @@ MyFaces Known Issues
   revision of the name. So, you must not use hyphens (or other special
   characters) in id attributes.
 
+* Dynamically included JSP code by means of the <jsp:include> tag must not
+  contain JSF tags when using the "Minimizing State Saving" feature.
+  The MinimizingStateSaver relies on the fact, that the current page is
+  fully parsable. This is necessary, because MinimizingStateSaver needs
+  static information about each component: Initial property and attribute
+  values, for example. Also, MinimizingStateRestorer must be able to
+  build and reconstitute the whole tree from static information before
+  anything is rendered.
 
 TODO... (Many others!)
