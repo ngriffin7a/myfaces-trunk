@@ -1,6 +1,6 @@
 /**
- * Smile, the open-source JSF implementation.
- * Copyright (C) 2003  The smile team (http://smile.sourceforge.net)
+ * MyFaces - the free JSF implementation
+ * Copyright (C) 2003, 2004  The MyFaces Team (http://myfaces.sourceforge.net)
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -19,7 +19,7 @@
 package net.sourceforge.myfaces.exception;
 
 /**
- * @author codehawk
+ * @author Dimitry D'hondt
  *
  * This exception is thrown when an unexpected internal error is detected.
  * Possibly there is an error in the implementation, or some illegal combination

@@ -18,42 +18,126 @@
  */
 package net.sourceforge.myfaces.context.servlet;
 
-import javax.servlet.ServletRequest;
+import java.util.Collection;
 import java.util.Enumeration;
+import java.util.HashSet;
+import java.util.Set;
+
+import javax.servlet.ServletRequest;
 
 /**
- * Helper class for {@link net.sourceforge.myfaces.context.servlet.ServletExternalContextImpl}
- * @author Manfred Geiler (latest modification by $Author$)
- * @version $Revision$ $Date$
+ * Wrapper object that exposes the HttpServletRequest parameters as a collections API
+ * Map interface.
+ * 
+ * @author Dimitry D'hondt
  */
-public class RequestParameterMap
-    extends AbstractAttributeMap
-{
-    private ServletRequest _request;
+public class RequestParameterMap extends WrapperBaseMapImpl {
 
-    RequestParameterMap(ServletRequest request)
-    {
-        _request = request;
-    }
+	private ServletRequest req;
 
-    protected Object getAttribute(String name)
-    {
-        return _request.getParameter(name);
-    }
+	RequestParameterMap(ServletRequest req) {
+		this.req = req;
+	}
 
-    protected void setAttribute(String name, Object newVal)
-    {
-        throw new UnsupportedOperationException(this.getClass().getName() + " UnsupportedOperationException");
-    }
+	/**
+	 * @see java.util.Map#containsKey(java.lang.Object)
+	 */
+	public boolean containsKey(Object key) {
+		boolean ret = false;
+		if(key instanceof String) {
+			ret = req.getParameter((String)key) == null;
+		}
+		return ret;
+	}
 
-    protected void removeAttribute(String name)
-    {
-        throw new UnsupportedOperationException(this.getClass().getName() + " UnsupportedOperationException");
-    }
+	/**
+	 * @see java.util.Map#containsValue(java.lang.Object)
+	 */
+	public boolean containsValue(Object findValue) {
+		boolean ret = false;
+		Enumeration e = req.getParameterNames();
+		while(e.hasMoreElements()) {
+			String element = (String) e.nextElement();
+			Object value = req.getParameter(element);
+			if(value != null && value.equals(findValue)) {
+				ret = true;
+			}
+		}
+		return ret;
+	}
 
-    protected Enumeration getAttributeNames()
-    {
-        return _request.getParameterNames();
-    }
+	/**
+	 * @see java.util.Map#entrySet()
+	 */
+	public Set entrySet() {
+		Set ret = new HashSet();
+		
+		Enumeration e = req.getParameterNames();
+		while(e.hasMoreElements()) {
+			ret.add(req.getParameter((String)e.nextElement()));
+		}
+		
+		return ret;
+	}
 
+	/**
+	 * @see java.util.Map#get(java.lang.Object)
+	 */
+	public Object get(Object key) {
+		Object ret = null;
+		
+		if(key instanceof String) {
+			ret = req.getParameter((String)key);
+		}
+		
+		return ret;
+	}
+	
+	/**
+	 * @see java.util.Map#isEmpty()
+	 */
+	public boolean isEmpty() {
+		boolean ret = true;
+		
+		if(req.getParameterNames().hasMoreElements()) ret = false;
+		
+		return ret;
+	}
+
+	/**
+	 * @see java.util.Map#keySet()
+	 */
+	public Set keySet() {
+		Set ret = new HashSet();
+		
+		Enumeration e = req.getParameterNames();
+		while(e.hasMoreElements()) {
+			ret.add(e.nextElement());
+		}
+		
+		return ret;
+	}
+
+
+	/**
+	 * @see java.util.Map#size()
+	 */
+	public int size() {
+		int ret = 0;
+		
+		Enumeration e = req.getParameterNames();
+		while(e.hasMoreElements()) {
+			ret ++;
+			e.nextElement();
+		}
+		
+		return ret;
+	}
+
+	/**
+	 * @see java.util.Map#values()
+	 */
+	public Collection values() {
+		return entrySet();
+	}
 }

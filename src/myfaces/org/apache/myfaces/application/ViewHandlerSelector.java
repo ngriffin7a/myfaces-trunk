@@ -1,6 +1,6 @@
 /**
- * Smile, the open-source JSF implementation.
- * Copyright (C) 2003  The smile team (http://smile.sourceforge.net)
+ * MyFaces - the free JSF implementation
+ * Copyright (C) 2003, 2004  The MyFaces Team (http://myfaces.sourceforge.net)
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -35,9 +35,11 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
- * The default view handler implementation
+ * This class selects the ViewHandler to use, on a per-request basis.
+ * Basically it looks if the viewId of the page maps onto a CBP page, or not.
+ * If it does it does, the ViewHandler from Smile will be used.
  * 
- * @author <a href="mailto:emol@users.sourceforge.net">Edwin Mol</a>
+ * @author Dimitry D'hondt.
  */
 public class ViewHandlerSelector extends ViewHandler {
 	private static Log log = LogFactory.getLog(ViewHandlerSelector.class);

@@ -1,6 +1,6 @@
 /**
- * Smile, the open-source JSF implementation.
- * Copyright (C) 2003  The smile team (http://smile.sourceforge.net)
+ * MyFaces - the free JSF implementation
+ * Copyright (C) 2003, 2004  The MyFaces Team (http://myfaces.sourceforge.net)
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -22,7 +22,9 @@ import javax.faces.component.UIForm;
 import javax.faces.context.FacesContext;
 
 /**
- * UIScreen is the root component for smile JSF component trees. 
+ * Screen is the root component (directly under the UIVeiwRoot) for CBP pages.
+ * This class is responsible for rendering out the necessary javascript references,
+ * the main HTML form, etc.. 
  */
 public class Screen extends UIForm {
 

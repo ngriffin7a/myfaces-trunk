@@ -1,6 +1,6 @@
 /**
- * Smile, the open-source JSF implementation.
- * Copyright (C) 2003  The smile team (http://smile.sourceforge.net)
+ * MyFaces - the free JSF implementation
+ * Copyright (C) 2003, 2004  The MyFaces Team (http://myfaces.sourceforge.net)
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -23,7 +23,7 @@ import javax.faces.event.FacesEvent;
 import javax.faces.event.FacesListener;
 
 /**
- * @author codehawk
+ * @author Dimitry D'hondt
  *
  * This event is fired for a button on the toolbar that is pressed.
  * It indicated the index of the button that was pressed.

@@ -18,42 +18,164 @@
  */
 package net.sourceforge.myfaces.context.servlet;
 
-import javax.servlet.ServletContext;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Enumeration;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import javax.servlet.ServletContext;
 
 /**
- * Helper class for {@link net.sourceforge.myfaces.context.servlet.ServletExternalContextImpl}
- * @author Manfred Geiler (latest modification by $Author$)
- * @version $Revision$ $Date$
+ * Wrapper object that exposes the ServletContext attributes as a collections API
+ * Map interface.
+ * 
+ * @author Dimitry D'hondt
  */
-public class ApplicationMap
-    extends AbstractAttributeMap
-{
-    private ServletContext _servletContext;
+public class ApplicationMap implements Map {
 
-    ApplicationMap(ServletContext servletContext)
-    {
-        _servletContext = servletContext;
-    }
+	private ServletContext ctx;
 
-    protected Object getAttribute(String name)
-    {
-        return _servletContext.getAttribute(name);
-    }
+	ApplicationMap(ServletContext ctx) {
+		this.ctx = ctx;
+	}
 
-    protected void setAttribute(String name, Object newVal)
-    {
-        _servletContext.setAttribute(name, newVal);
-    }
+	/**
+	 * @see java.util.Map#clear()
+	 */
+	public void clear() {
+		List names = new ArrayList();
+		Enumeration e = ctx.getAttributeNames();
+		while(e.hasMoreElements()) {
+			names.add(e.nextElement());
+		}
+		Iterator i = names.iterator();
+		while(i.hasNext()) {
+			ctx.removeAttribute((String)i.next());
+		}
+	}
 
-    protected void removeAttribute(String name)
-    {
-        _servletContext.removeAttribute(name);
-    }
+	/**
+	 * @see java.util.Map#containsKey(java.lang.Object)
+	 */
+	public boolean containsKey(Object key) {
+		boolean ret = false;
+		if(key instanceof String) {
+			ret = ctx.getAttribute((String)key) == null;
+		}
+		return ret;
+	}
 
-    protected Enumeration getAttributeNames()
-    {
-        return _servletContext.getAttributeNames();
-    }
+	/**
+	 * @see java.util.Map#containsValue(java.lang.Object)
+	 */
+	public boolean containsValue(Object findValue) {
+		boolean ret = false;
+		Enumeration e = ctx.getAttributeNames();
+		while(e.hasMoreElements()) {
+			String element = (String) e.nextElement();
+			Object value = ctx.getAttribute(element);
+			if(value != null && value.equals(findValue)) {
+				ret = true;
+			}
+		}
+		return ret;
+	}
 
+	/**
+	 * @see java.util.Map#entrySet()
+	 */
+	public Set entrySet() {
+		Set ret = new HashSet();
+		
+		Enumeration e = ctx.getAttributeNames();
+		while(e.hasMoreElements()) {
+			ret.add(ctx.getAttribute((String)e.nextElement()));
+		}
+		
+		return ret;
+	}
+
+	/**
+	 * @see java.util.Map#get(java.lang.Object)
+	 */
+	public Object get(Object key) {
+		Object ret = null;
+		
+		if(key instanceof String) {
+			ret = ctx.getAttribute((String)key);
+		}
+		
+		return ret;
+	}
+	
+	/**
+	 * @see java.util.Map#isEmpty()
+	 */
+	public boolean isEmpty() {
+		boolean ret = true;
+		
+		if(ctx.getAttributeNames().hasMoreElements()) ret = false;
+		
+		return ret;
+	}
+
+	/**
+	 * @see java.util.Map#keySet()
+	 */
+	public Set keySet() {
+		Set ret = new HashSet();
+		
+		Enumeration e = ctx.getAttributeNames();
+		while(e.hasMoreElements()) {
+			ret.add(e.nextElement());
+		}
+		
+		return ret;
+	}
+
+	/**
+	 * @see java.util.Map#put(java.lang.Object, java.lang.Object)
+	 */
+	public Object put(Object key, Object value) {
+		return null;
+	}
+
+	/**
+	 * @see java.util.Map#putAll(java.util.Map)
+	 */
+	public void putAll(Map t) {
+	}
+
+	/**
+	 * @see java.util.Map#remove(java.lang.Object)
+	 */
+	public Object remove(Object key) {
+		return null;
+	}
+
+	/**
+	 * @see java.util.Map#size()
+	 */
+	public int size() {
+		int ret = 0;
+		
+		Enumeration e = ctx.getAttributeNames();
+		while(e.hasMoreElements()) {
+			ret ++;
+			e.nextElement();
+		}
+		
+		return ret;
+	}
+
+	/**
+	 * @see java.util.Map#values()
+	 */
+	public Collection values() {
+		return entrySet();
+	}
 }

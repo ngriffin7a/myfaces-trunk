@@ -18,20 +18,28 @@
  */
 package net.sourceforge.myfaces.context.servlet;
 
-import net.sourceforge.myfaces.util.EnumerationIterator;
-
-import javax.faces.FacesException;
-import javax.faces.context.ExternalContext;
-import javax.servlet.*;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.security.Principal;
-import java.util.*;
+import java.util.Enumeration;
+import java.util.Iterator;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
+
+import javax.faces.FacesException;
+import javax.faces.context.ExternalContext;
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import net.sourceforge.myfaces.util.EnumerationIterator;
 
 /**
  * JSF 1.0 PRD2, 6.1.1
@@ -228,12 +236,7 @@ public class ServletExternalContextImpl
             {
                 throw new IllegalArgumentException("Only HttpServletRequest supported");
             }
-            Cookie[] cookies = ((HttpServletRequest)_servletRequest).getCookies();
-            _requestCookieMap = new HashMap(cookies.length);
-            for (int i = 0; i < cookies.length; i++)
-            {
-                _requestCookieMap.put(cookies[i].getName(), cookies[i]);
-            }
+            _requestCookieMap = new CookieMap((HttpServletRequest)_servletRequest);
         }
         return _requestCookieMap;
     }

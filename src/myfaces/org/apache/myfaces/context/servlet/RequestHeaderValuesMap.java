@@ -18,42 +18,105 @@
  */
 package net.sourceforge.myfaces.context.servlet;
 
-import javax.servlet.http.HttpServletRequest;
+import java.util.Collection;
 import java.util.Enumeration;
+import java.util.HashSet;
+import java.util.Set;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
- * Helper class for {@link net.sourceforge.myfaces.context.servlet.ServletExternalContextImpl}
- * @author Manfred Geiler (latest modification by $Author$)
- * @version $Revision$ $Date$
+ * Wrapper object that exposes the header values for multi-value headers on an HttpServletRequest
+ * as a java.util.Map interface.
+ * 
+ * @author Dimitry D'hondt
  */
-public class RequestHeaderValuesMap
-    extends AbstractAttributeMap
-{
-    private HttpServletRequest _request;
+public class RequestHeaderValuesMap extends WrapperBaseMapImpl {
 
-    RequestHeaderValuesMap(HttpServletRequest request)
-    {
-        _request = request;
-    }
+	private static Log log = LogFactory.getLog(RequestHeaderValuesMap.class);
+	
+	private HttpServletRequest req;
+	
+	RequestHeaderValuesMap(HttpServletRequest req) {
+		this.req = req;
+	}
 
-    protected Object getAttribute(String name)
-    {
-        return _request.getHeaders(name);
-    }
 
-    protected void setAttribute(String name, Object newVal)
-    {
-        throw new UnsupportedOperationException(this.getClass().getName() + " UnsupportedOperationException");
-    }
+	/**
+	 * @see java.util.Map#entrySet()
+	 */
+	public Set entrySet() {
+		Set ret = new HashSet();
+		
+		Enumeration e = req.getHeaderNames();
+		while(e.hasMoreElements()) {
+			ret.add(req.getHeaders((String)e.nextElement()));
+		}
+		
+		return ret;
+	}
 
-    protected void removeAttribute(String name)
-    {
-        throw new UnsupportedOperationException(this.getClass().getName() + " UnsupportedOperationException");
-    }
+	/**
+	 * @see java.util.Map#get(java.lang.Object)
+	 */
+	public Object get(Object key) {
+		Object ret = null;
+		
+		if(key instanceof String) {
+			ret = req.getHeaders((String)key);
+		}
+		
+		return ret;
+	}
+	
+	/**
+	 * @see java.util.Map#isEmpty()
+	 */
+	public boolean isEmpty() {
+		boolean ret = true;
+		
+		if(req.getHeaderNames().hasMoreElements()) ret = false;
+		
+		return ret;
+	}
 
-    protected Enumeration getAttributeNames()
-    {
-        return _request.getHeaderNames();
-    }
+	/**
+	 * @see java.util.Map#keySet()
+	 */
+	public Set keySet() {
+		Set ret = new HashSet();
+		
+		Enumeration e = req.getHeaderNames();
+		while(e.hasMoreElements()) {
+			ret.add(e.nextElement());
+		}
+		
+		return ret;
+	}
 
+
+	/**
+	 * @see java.util.Map#size()
+	 */
+	public int size() {
+		int ret = 0;
+		
+		Enumeration e = req.getHeaderNames();
+		while(e.hasMoreElements()) {
+			ret ++;
+			e.nextElement();
+		}
+		
+		return ret;
+	}
+
+	/**
+	 * @see java.util.Map#values()
+	 */
+	public Collection values() {
+		return entrySet();
+	}
 }

@@ -19,31 +19,30 @@
 package net.sourceforge.myfaces.context.servlet;
 
 import java.util.Collection;
-import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import javax.servlet.ServletContext;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 
 /**
- * Wrapper object that exposes the ServletContext init parameters as a collections API
+ * Wrapper object that exposes the HttpServletRequest cookies as a collections API
  * Map interface.
  * @author Dimitry D'hondt
  */
-public class InitParameterMap implements Map {
+public class CookieMap implements Map {
 
-	private ServletContext ctx;
+	private HttpServletRequest req;
 
-	InitParameterMap(ServletContext ctx) {
-		this.ctx = ctx;
+	CookieMap(HttpServletRequest req) {
+		this.req = req;
 	}
 
 	/**
 	 * @see java.util.Map#clear()
 	 */
 	public void clear() {
-		throw new UnsupportedOperationException("Operation clear() is not allowed on the InitParameterMap.");
 	}
 
 	/**
@@ -51,9 +50,15 @@ public class InitParameterMap implements Map {
 	 */
 	public boolean containsKey(Object key) {
 		boolean ret = false;
-		if(key instanceof String) {
-			ret = ctx.getInitParameter((String)key) == null;
+		
+		Cookie[] cookies = req.getCookies();
+		for(int i=0; i<cookies.length; i++) {
+			if(cookies[i].getName().equals(key)) {
+				ret = true;
+				break;
+			}
 		}
+		
 		return ret;
 	}
 
@@ -62,14 +67,15 @@ public class InitParameterMap implements Map {
 	 */
 	public boolean containsValue(Object findValue) {
 		boolean ret = false;
-		Enumeration e = ctx.getInitParameterNames();
-		while(e.hasMoreElements()) {
-			String element = (String) e.nextElement();
-			Object value = ctx.getInitParameter(element);
-			if(value != null && value.equals(findValue)) {
+		
+		Cookie[] cookies = req.getCookies();
+		for(int i=0; i<cookies.length; i++) {
+			if(cookies[i].getValue().equals(findValue)) {
 				ret = true;
+				break;
 			}
 		}
+		
 		return ret;
 	}
 
@@ -79,9 +85,9 @@ public class InitParameterMap implements Map {
 	public Set entrySet() {
 		Set ret = new HashSet();
 		
-		Enumeration e = ctx.getInitParameterNames();
-		while(e.hasMoreElements()) {
-			ret.add(ctx.getInitParameter((String)e.nextElement()));
+		Cookie[] cookies = req.getCookies();
+		for(int i=0; i<cookies.length; i++) {
+			ret.add(cookies[i].getValue());
 		}
 		
 		return ret;
@@ -94,7 +100,13 @@ public class InitParameterMap implements Map {
 		Object ret = null;
 		
 		if(key instanceof String) {
-			ret = ctx.getInitParameter((String)key);
+			Cookie cookies[] = req.getCookies();
+			for(int i=0; i<cookies.length; i++)  {
+				if(cookies[i].getName().equals(key)) {
+					ret = cookies[i].getValue();
+					break;
+				}
+			}
 		}
 		
 		return ret;
@@ -104,11 +116,7 @@ public class InitParameterMap implements Map {
 	 * @see java.util.Map#isEmpty()
 	 */
 	public boolean isEmpty() {
-		boolean ret = true;
-		
-		if(ctx.getInitParameterNames().hasMoreElements()) ret = false;
-		
-		return ret;
+		return req.getCookies().length == 0;
 	}
 
 	/**
@@ -117,9 +125,9 @@ public class InitParameterMap implements Map {
 	public Set keySet() {
 		Set ret = new HashSet();
 		
-		Enumeration e = ctx.getInitParameterNames();
-		while(e.hasMoreElements()) {
-			ret.add(e.nextElement());
+		Cookie[] cookies = req.getCookies();
+		for(int i=0; i<cookies.length; i++) {
+			ret.add(cookies[i].getName());
 		}
 		
 		return ret;
@@ -129,36 +137,27 @@ public class InitParameterMap implements Map {
 	 * @see java.util.Map#put(java.lang.Object, java.lang.Object)
 	 */
 	public Object put(Object key, Object value) {
-		throw new UnsupportedOperationException("Operation put() is not allowed on the InitParameterMap.");
+		return null;
 	}
 
 	/**
 	 * @see java.util.Map#putAll(java.util.Map)
 	 */
 	public void putAll(Map t) {
-		throw new UnsupportedOperationException("Operation putAll() is not allowed on the InitParameterMap.");
 	}
 
 	/**
 	 * @see java.util.Map#remove(java.lang.Object)
 	 */
 	public Object remove(Object key) {
-		throw new UnsupportedOperationException("Operation revmoe() is not allowed on the InitParameterMap.");
+		return null;
 	}
 
 	/**
 	 * @see java.util.Map#size()
 	 */
 	public int size() {
-		int ret = 0;
-		
-		Enumeration e = ctx.getInitParameterNames();
-		while(e.hasMoreElements()) {
-			ret ++;
-			e.nextElement();
-		}
-		
-		return ret;
+		return req.getCookies().length;
 	}
 
 	/**

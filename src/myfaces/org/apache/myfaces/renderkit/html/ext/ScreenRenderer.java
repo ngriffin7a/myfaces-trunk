@@ -1,6 +1,6 @@
 /**
- * Smile, the open-source JSF implementation.
- * Copyright (C) 2003  The smile team (http://smile.sourceforge.net)
+ * MyFaces - the free JSF implementation
+ * Copyright (C) 2003, 2004  The MyFaces Team (http://myfaces.sourceforge.net)
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -30,7 +30,7 @@ import net.sourceforge.myfaces.renderkit.RenderUtils;
 import net.sourceforge.myfaces.renderkit.RendererBase;
 
 /**
- * UIScreen is the root component for smile JSF component trees. 
+ * @author Dimitry D'hondt
  */
 public class ScreenRenderer extends RendererBase {
 

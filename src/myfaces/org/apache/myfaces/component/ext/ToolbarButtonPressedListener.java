@@ -1,6 +1,6 @@
 /**
- * Smile, the open-source JSF implementation.
- * Copyright (C) 2003  The smile team (http://smile.sourceforge.net)
+ * MyFaces - the free JSF implementation
+ * Copyright (C) 2003, 2004  The MyFaces Team (http://myfaces.sourceforge.net)
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -21,10 +21,9 @@ package net.sourceforge.myfaces.component.ext;
 import javax.faces.event.FacesListener;
 
 /**
- * @author codehawk
+ * @author Dimitry D'hondt
  *
- * To change the template for this generated type comment go to
- * Window>Preferences>Java>Code Generation>Code and Comments
+ * THe event listener interface used for detecting events on the Toolbar buttons.
  */
 public interface ToolbarButtonPressedListener extends FacesListener {
 	void buttonPressed(ToolbarButtonPressedEvent e);
