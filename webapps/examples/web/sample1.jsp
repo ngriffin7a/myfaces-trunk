@@ -105,17 +105,28 @@ managed beans used:
                 <table border="1"><tr><td>
                     <h:form id="form2" formName="ucaseForm">
                         <h:input_text id="text" valueRef="ucaseForm.text">
-                            <f:validate_required />
                             <f:validate_length minimum="2" maximum="15" />
                         </h:input_text>
                         <h:output_errors id="textError" for="text" outputClass="error" /><br>
                         <h:command_button id="ucaseButton" commandName="up" label="Make it uppercase" action="none">
-                            <f:action_listener type="net.sourceforge.myfaces.examples.example1.UCaseController" ></f:action_listener>
+                            <f:action_listener type="net.sourceforge.myfaces.examples.example1.UCaseController" />
                         </h:command_button>
                         <h:command_button id="lcaseButton" commandName="low" label="Make it lowercase" action="none">
-                            <f:action_listener type="net.sourceforge.myfaces.examples.example1.UCaseController" ></f:action_listener>
+                            <f:action_listener type="net.sourceforge.myfaces.examples.example1.UCaseController" />
                         </h:command_button>
                         <br>
+                    </h:form>
+                </td></tr></table>
+
+                <h4>Validation</h4>
+                <table border="1"><tr><td>
+                    <h:form id="form3" formName="valForm">
+                        <h:command_button id="valEnable" label="Enable validation" action="none" commandName="enableVal">
+                            <f:action_listener type="net.sourceforge.myfaces.examples.example1.ValidationController" />
+                        </h:command_button>
+                        <h:command_button id="valDisable" label="Disable validation" action="none" commandName="disableVal" >
+                            <f:action_listener type="net.sourceforge.myfaces.examples.example1.ValidationController" />
+                        </h:command_button>
                     </h:form>
                 </td></tr></table>
 

@@ -29,6 +29,7 @@ import net.sourceforge.myfaces.util.logging.LogUtil;
 
 import javax.faces.FacesException;
 import javax.faces.FactoryFinder;
+import javax.faces.validator.Validator;
 import javax.faces.application.ApplicationFactory;
 import javax.faces.component.UICommand;
 import javax.faces.component.UIComponent;
@@ -306,6 +307,9 @@ public class MinimizingStateRestorer
 
         //Not any longer needed when we have cloned the full static tree
         //registerTagCreatedActionListeners(facesContext, stateMap, uiComponent);
+
+        //restore validators:
+        restoreComponentValidators(facesContext, stateMap, uiComponent);
     }
 
 
@@ -675,6 +679,140 @@ public class MinimizingStateRestorer
         }
 
         return restorePreviousTree(facesContext, stateMap, previousTreeId);
+    }
+
+
+
+    protected void restoreComponentValidators(FacesContext facesContext,
+                                              Map stateMap,
+                                              UIComponent uiComponent)
+    {
+        List toBeRemoved = null;
+
+        for (Iterator it = stateMap.entrySet().iterator(); it.hasNext();)
+        {
+            Map.Entry entry = (Map.Entry)it.next();
+            String paramName = (String)entry.getKey();
+            int valIdx = RequestParameterNames.restoreValidatorIdx(facesContext,
+                                                                   uiComponent,
+                                                                   paramName);
+            if (valIdx >= 0)
+            {
+                Validator oldVal = restoreValidator(facesContext,
+                                                    stateMap,
+                                                    uiComponent,
+                                                    valIdx,
+                                                    getStateParameterValueAsString(entry.getValue()));
+                if (toBeRemoved == null) toBeRemoved = new ArrayList();
+                toBeRemoved.add(oldVal);
+            }
+        }
+
+        if (toBeRemoved != null)
+        {
+            for (Iterator it = toBeRemoved.iterator(); it.hasNext();)
+            {
+                uiComponent.removeValidator((Validator)it.next());
+            }
+        }
+    }
+
+    protected Validator restoreValidator(FacesContext facesContext,
+                                         Map stateMap,
+                                         UIComponent uiComponent,
+                                         int validatorIdx,
+                                         String validatorClass)
+    {
+        Validator oldValidator = null;
+        int idx = 0;
+        for (Iterator it = uiComponent.getValidators(); it.hasNext(); idx++)
+        {
+            if (idx == validatorIdx)
+            {
+                oldValidator = (Validator)it.next();
+                break;
+            }
+            else
+            {
+                it.next();
+            }
+        }
+
+        if (validatorClass.length() == 0)
+        {
+            return oldValidator;
+        }
+
+        Validator newValidator = null;
+        try
+        {
+            Class valClass = Class.forName(validatorClass);
+            newValidator = (Validator)valClass.newInstance();
+        }
+        catch (ClassNotFoundException e)
+        {
+            throw new RuntimeException(e);
+        }
+        catch (InstantiationException e)
+        {
+            throw new RuntimeException(e);
+        }
+        catch (IllegalAccessException e)
+        {
+            throw new RuntimeException(e);
+        }
+
+        PropertyDescriptor[] propDescriptors = BeanUtils.getBeanInfo(newValidator).getPropertyDescriptors();
+        for (int i = 0; i < propDescriptors.length; i++)
+        {
+            PropertyDescriptor propDescr = propDescriptors[i];
+            if (propDescr.getReadMethod() != null &&
+                propDescr.getWriteMethod() != null)
+            {
+                restoreValidatorProperty(facesContext,
+                                         stateMap,
+                                         uiComponent,
+                                         validatorIdx,
+                                         newValidator,
+                                         propDescr);
+            }
+        }
+
+        uiComponent.addValidator(newValidator);
+
+        return oldValidator;
+    }
+
+
+    protected void restoreValidatorProperty(FacesContext facesContext,
+                                            Map stateMap,
+                                            UIComponent uiComponent,
+                                            int validatorIdx,
+                                            Validator validator,
+                                            PropertyDescriptor propDescr)
+    {
+        String paramName = RequestParameterNames.getComponentValidatorPropParameterName(facesContext,
+                                                                                        uiComponent,
+                                                                                        validatorIdx,
+                                                                                        propDescr.getName());
+        String strValue = getStateParameter(stateMap, paramName);
+
+        if (strValue.equals(MinimizingStateSaver.NULL_DUMMY_VALUE))
+        {
+            BeanUtils.setBeanPropertyValue(validator, propDescr, null);
+        }
+        else if (propDescr.getPropertyType().equals(String.class))
+        {
+            BeanUtils.setBeanPropertyValue(validator, propDescr, strValue);
+        }
+        else
+        {
+            Converter converter = ConverterUtils.getConverter(propDescr.getPropertyType());
+            Object objValue = converter.getAsObject(facesContext,
+                                                    facesContext.getTree().getRoot(),   //dummy component
+                                                    strValue);
+            BeanUtils.setBeanPropertyValue(validator, propDescr, objValue);
+        }
     }
 
 }

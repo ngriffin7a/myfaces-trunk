@@ -2,6 +2,13 @@ MyFaces Release Notes
 =====================
 
 ----------------------------------------------------------------------
+Changes in Release 0.4.2
+* Simple EL Support: For Tags derived from MyFacesTag you can use "${expr}"
+  Syntax. The given expr is evaluated via ValueBinding.
+* Dynamic validators (i.e. validators added during runtime) are now supported
+  by MinimizingStateSaver.
+
+----------------------------------------------------------------------
 Changes in Release 0.4.1
 * VariableResolverImpl resolves implicit objects
 * <navigation_item> does no longer have a treeId. Use action attribute and

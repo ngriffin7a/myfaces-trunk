@@ -53,8 +53,9 @@ managed beans used:
                 <h:form id="q_form" formName="q_form">
                     <h:input_textarea id="text"
                                       rows="5"
-                                      valueRef="q_form.text"
-                    />
+                                      valueRef="q_form.text">
+                            <f:validate_required />
+                    </h:input_textarea>
                     <br>
                     <br>
                     <h:selectone_menu id="oneoption" valueRef="q_form.quoteChar" >

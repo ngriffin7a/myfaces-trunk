@@ -163,4 +163,40 @@ public class RequestParameterNames
     }
 
 
+
+    protected static String getComponentValidatorClassParameterName(FacesContext facesContext,
+                                                                    UIComponent uiComponent,
+                                                                    int validatorIdx)
+    {
+        return "SVC_"   //SVC stands for "State Validator Class"
+                + uiComponent.getClientId(facesContext)
+                + "/" + validatorIdx;
+    }
+
+    protected static String getComponentValidatorPropParameterName(FacesContext facesContext,
+                                                                   UIComponent uiComponent,
+                                                                   int validatorIdx,
+                                                                   String propName)
+    {
+        return "SVP_"   //SVP stands for "State Validator Property"
+                + uiComponent.getClientId(facesContext)
+                + "/" + validatorIdx
+                + "/" + propName;
+    }
+
+    protected static int restoreValidatorIdx(FacesContext facesContext,
+                                             UIComponent uiComponent,
+                                             String paramName)
+    {
+        String prefix = "SVC_" + uiComponent.getClientId((facesContext)) + "/";
+        if (paramName.startsWith(prefix))
+        {
+            return Integer.parseInt(paramName.substring(prefix.length()));
+        }
+        else
+        {
+            return -1;
+        }
+    }
+
 }

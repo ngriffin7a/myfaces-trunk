@@ -37,6 +37,7 @@ import net.sourceforge.myfaces.util.logging.LogUtil;
 
 import javax.faces.FacesException;
 import javax.faces.FactoryFinder;
+import javax.faces.validator.Validator;
 import javax.faces.application.ApplicationFactory;
 import javax.faces.component.UICommand;
 import javax.faces.component.UIComponent;
@@ -157,6 +158,7 @@ public class MinimizingStateSaver
             saveComponentProperties(facesContext, stateMap, comp, parsedComp);
             saveComponentAttributes(facesContext, stateMap, comp, parsedComp);
             saveListeners(facesContext, stateMap, comp, parsedComp);
+            saveValidators(facesContext, stateMap, comp, parsedComp);
             visitedComponents.add(comp.getClientId(facesContext));
         }
 
@@ -831,6 +833,163 @@ public class MinimizingStateSaver
         }
 
         return false;
+    }
+
+
+
+    protected void saveValidators(FacesContext facesContext,
+                                  Map stateMap,
+                                  UIComponent uiComponent,
+                                  UIComponent parsedComp)
+    {
+        Iterator parsedIt = parsedComp.getValidators();
+        Iterator it = uiComponent.getValidators();
+        int parsedValIdx = 0;
+        for (; parsedIt.hasNext() && it.hasNext(); parsedValIdx++)
+        {
+            Validator validator = (Validator)it.next();
+            Validator parsedValidator = (Validator)parsedIt.next();
+            if (validator != parsedValidator &&
+                !equalValidators(validator, parsedValidator))
+            {
+                saveValidator(facesContext, stateMap, uiComponent, parsedValIdx, validator);
+            }
+        }
+
+        if (parsedIt.hasNext())
+        {
+            //Remember removed validators
+            for (; parsedIt.hasNext(); parsedValIdx++)
+            {
+                parsedIt.next();
+                saveParameter(stateMap,
+                              RequestParameterNames.getComponentValidatorClassParameterName(facesContext,
+                                                                                            uiComponent,
+                                                                                            parsedValIdx),
+                              "");
+            }
+        }
+        else if (it.hasNext())
+        {
+            //Save additional validators
+            for (; it.hasNext(); parsedValIdx++)
+            {
+                Validator validator = (Validator)it.next();
+                saveValidator(facesContext, stateMap, uiComponent, parsedValIdx, validator);
+            }
+        }
+    }
+
+    protected boolean equalValidators(Validator val1, Validator val2)
+    {
+        if (!val1.getClass().equals(val2.getClass()))
+        {
+            return false;
+        }
+
+        PropertyDescriptor[] propDescriptors = BeanUtils.getBeanInfo(val1).getPropertyDescriptors();
+        for (int i = 0; i < propDescriptors.length; i++)
+        {
+            PropertyDescriptor propdDescr = propDescriptors[i];
+            if (propdDescr.getReadMethod() != null &&
+                propdDescr.getWriteMethod() != null)
+            {
+                Object propVal1 = BeanUtils.getBeanPropertyValue(val1, propdDescr);
+                Object propVal2 = BeanUtils.getBeanPropertyValue(val2, propdDescr);
+                if (propVal1 == null && propVal2 == null)
+                {
+                    continue;
+                }
+                else if (propVal1 == null && propVal2 != null ||
+                         propVal1 != null && propVal2 == null ||
+                         !propVal1.equals(propVal2))
+                {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
+    protected void saveValidator(FacesContext facesContext,
+                                 Map stateMap,
+                                 UIComponent uiComponent,
+                                 int valIdx,
+                                 Validator validator)
+    {
+        saveParameter(stateMap,
+                      RequestParameterNames.getComponentValidatorClassParameterName(facesContext,
+                                                                                    uiComponent,
+                                                                                    valIdx),
+                      validator.getClass().getName());
+
+        PropertyDescriptor[] propDescriptors = BeanUtils.getBeanInfo(validator).getPropertyDescriptors();
+        for (int i = 0; i < propDescriptors.length; i++)
+        {
+            PropertyDescriptor propDescr = propDescriptors[i];
+            if (propDescr.getReadMethod() != null &&
+                propDescr.getWriteMethod() != null)
+            {
+                String propName = propDescr.getName();
+                Object propVal = BeanUtils.getBeanPropertyValue(validator, propDescr);
+                if (propVal != null)
+                {
+                    saveParameter(stateMap,
+                                  RequestParameterNames.getComponentValidatorPropParameterName(facesContext,
+                                                                                               uiComponent,
+                                                                                               valIdx,
+                                                                                               propName),
+                                  propVal.toString());  //TODO: Use converters to convert to String
+                }
+                else
+                {
+                    saveParameter(stateMap,
+                                  RequestParameterNames.getComponentValidatorPropParameterName(facesContext,
+                                                                                               uiComponent,
+                                                                                               valIdx,
+                                                                                               propName),
+                                  NULL_DUMMY_VALUE);
+                }
+            }
+        }
+    }
+
+
+    protected void saveValidatorProperty(FacesContext facesContext,
+                                         Map stateMap,
+                                         UIComponent uiComponent,
+                                         int valIdx,
+                                         Validator validator,
+                                         PropertyDescriptor propDescr)
+    {
+        String paramName = RequestParameterNames.getComponentValidatorPropParameterName(facesContext,
+                                                                                        uiComponent,
+                                                                                        valIdx,
+                                                                                        propDescr.getName());
+        Object objVal = BeanUtils.getBeanPropertyValue(validator, propDescr);
+
+        if (objVal == null)
+        {
+            saveParameter(stateMap,
+                          paramName,
+                          NULL_DUMMY_VALUE);
+        }
+        else if (propDescr.getPropertyType().equals(String.class))
+        {
+            saveParameter(stateMap,
+                          paramName,
+                          (String)objVal);
+        }
+        else
+        {
+            Converter converter = ConverterUtils.getConverter(propDescr.getPropertyType());
+            String strValue = converter.getAsString(facesContext,
+                                                    facesContext.getTree().getRoot(),   //dummy component
+                                                    objVal);
+            BeanUtils.setBeanPropertyValue(validator, propDescr, strValue);
+        }
+
     }
 
 }
