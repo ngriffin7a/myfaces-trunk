@@ -15,14 +15,14 @@
  */
 package net.sourceforge.myfaces.renderkit.html;
 
-import net.sourceforge.myfaces.MyFacesConfig;
-import net.sourceforge.myfaces.renderkit.RendererUtils;
 import net.sourceforge.myfaces.renderkit.JSFAttr;
+import net.sourceforge.myfaces.renderkit.RendererUtils;
 import net.sourceforge.myfaces.renderkit.html.util.DummyFormResponseWriter;
 import net.sourceforge.myfaces.renderkit.html.util.DummyFormUtils;
+import net.sourceforge.myfaces.renderkit.html.util.JavascriptUtils;
 
-import javax.faces.application.ViewHandler;
 import javax.faces.application.StateManager;
+import javax.faces.application.ViewHandler;
 import javax.faces.component.*;
 import javax.faces.component.html.HtmlCommandLink;
 import javax.faces.context.FacesContext;
@@ -37,6 +37,9 @@ import java.util.Iterator;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.16  2004/09/08 09:32:03  manolito
+ * MyfacesConfig moved to config package
+ *
  * Revision 1.15  2004/07/18 21:25:30  o_rossmueller
  * fix #991234: use hidden field name in link url
  *
@@ -197,7 +200,7 @@ public abstract class HtmlLinkRendererBase
     {
         ResponseWriter writer = facesContext.getResponseWriter();
 
-        if (MyFacesConfig.isAllowJavascript(facesContext.getExternalContext()))
+        if (JavascriptUtils.isJavascriptAllowed(facesContext.getExternalContext()))
         {
             renderJavaScriptAnchorStart(facesContext, writer, component, clientId);
         }
@@ -315,8 +318,29 @@ public abstract class HtmlLinkRendererBase
 
         writer.startElement(HTML.ANCHOR_ELEM, component);
         writer.writeURIAttribute(HTML.HREF_ATTR, "#", null);
-        writer.writeAttribute(HTML.ONCLICK_ATTR, onClick.toString(), null);
+        renderOnClickAttribute(facesContext, writer, nestingForm, formName, onClick.toString());
     }
+
+
+    /**
+     * Can be overwritten if additional javascript is needed on every link click.
+     * @param facesContext
+     * @param writer
+     * @param nestingForm  form, this link is nested in or null if no nesting form
+     * @param formName     name of nesting form or dummy form
+     * @param onClickValue value of onClick attribute to be rendered
+     * @throws IOException
+     */
+    protected void renderOnClickAttribute(FacesContext facesContext,
+                                          ResponseWriter writer,
+                                          UIForm nestingForm,
+                                          String formName,
+                                          String onClickValue)
+        throws IOException
+    {
+        writer.writeAttribute(HTML.ONCLICK_ATTR, onClickValue, null);
+    }
+
 
     protected void renderNonJavaScriptAnchorStart(FacesContext facesContext,
                                                   ResponseWriter writer,

@@ -15,7 +15,7 @@
  */
 package net.sourceforge.myfaces.renderkit.html;
 
-import net.sourceforge.myfaces.MyFacesConfig;
+import net.sourceforge.myfaces.config.MyfacesConfig;
 import net.sourceforge.myfaces.renderkit.RendererUtils;
 import net.sourceforge.myfaces.renderkit.html.util.DummyFormUtils;
 import net.sourceforge.myfaces.renderkit.html.util.JavascriptUtils;
@@ -39,6 +39,9 @@ import java.util.*;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.19  2004/09/08 09:32:03  manolito
+ * MyfacesConfig moved to config package
+ *
  * Revision 1.18  2004/08/09 11:47:09  manolito
  * CSS style support also for non OL or UL layout
  *
@@ -568,7 +571,7 @@ public final class HtmlRendererUtils
     public static void writePrettyLineSeparator(FacesContext facesContext)
             throws IOException
     {
-        if (MyFacesConfig.isPrettyHtml(facesContext.getExternalContext()))
+        if (MyfacesConfig.getCurrentInstance(facesContext.getExternalContext()).isPrettyHtml())
         {
             facesContext.getResponseWriter().write(LINE_SEPARATOR);
         }
@@ -577,7 +580,7 @@ public final class HtmlRendererUtils
     public static void writePrettyIndent(FacesContext facesContext)
             throws IOException
     {
-        if (MyFacesConfig.isPrettyHtml(facesContext.getExternalContext()))
+        if (MyfacesConfig.getCurrentInstance(facesContext.getExternalContext()).isPrettyHtml())
         {
             facesContext.getResponseWriter().write('\t');
         }
