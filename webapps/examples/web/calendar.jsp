@@ -63,7 +63,7 @@ managed beans used:
 
                 <h:messages id="messageList" showSummary="true" showDetail="true" />
 
-                <h:outputText  id="cdt" value="Calendar as a form."/>
+                <h:outputText  id="cdt" value="#{example_messages['js_form']}"/>
 
 				<h:form id="calendarForm">
                 <x:inputCalendar monthYearRowClass="yearMonthHeader" weekRowClass="weekHeader"
@@ -75,13 +75,13 @@ managed beans used:
 
                 <f:verbatim><br/><br/><br/></f:verbatim>
 
-                <h:outputText value="Calendar as a JavaScript popup."/>
+                <h:outputText value="#{example_messages['js_popup']}"/>
 
 				<h:form id="calendarForm2">
                 <x:inputCalendar monthYearRowClass="yearMonthHeader" weekRowClass="weekHeader"
                     currentDayCellClass="currentDayCell" value="#{calendar.date}" renderAsPopup="true"
                     popupTodayString="#{example_messages['popup_today_string']}" popupWeekString="#{example_messages['popup_week_string']}" />
-                <h:commandButton value="Submit"/>
+                <h:commandButton value="#{example_messages['js_submit']}"/>
 				</h:form>
 
                 <h:outputText value="#{calendar.date}" />

@@ -65,21 +65,21 @@ managed beans used:
                                       value="#{q_form.text}" required="true" />
                     <f:verbatim><br><br></f:verbatim>
                     <h:selectOneMenu id="oneoption" value="#{q_form.quoteChar}" >
-                        <f:selectItem itemValue="" itemLabel="select a quote character" />
+                        <f:selectItem itemValue="" itemLabel="#{example_messages['sample2_select_quote']}" />
                         <f:selectItem itemValue="\"" itemLabel="Double" />
                         <f:selectItem itemValue="'" itemLabel="Single" />
                         <f:selectItems value="#{q_form.selectOneItems}" />
                     </h:selectOneMenu>
-                    <h:commandButton id="button1" value="Add quotes" action="none">
+                    <h:commandButton id="button1" value="#{example_messages['sample2_add_quote']}" action="none">
                         <f:actionListener type="org.apache.myfaces.examples.example2.QuotationController" ></f:actionListener>
                     </h:commandButton>
 
                     <f:verbatim><br><br></f:verbatim>
                     <h:selectManyListbox id="manyoptions" value="#{q_form.selectManyValues}" >
-                        <f:selectItem itemValue="" itemLabel="select the unquote characters" />
+                        <f:selectItem itemValue="" itemLabel="#{example_messages['sample2_select_unquote']}" />
                         <f:selectItems value="#{q_form.selectManyItems}" />
                     </h:selectManyListbox>
-                    <h:commandButton id="button2" value="Remove quotes" action="none"><f:verbatim><br></f:verbatim>
+                    <h:commandButton id="button2" value="#{example_messages['sample2_remove_quote']}" action="none"><f:verbatim><br></f:verbatim>
                         <f:actionListener type="org.apache.myfaces.examples.example2.QuotationController" ></f:actionListener>
                     </h:commandButton>
 

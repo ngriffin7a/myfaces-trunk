@@ -68,10 +68,10 @@ managed beans used:
                 <x:panelTabbedPane bgcolor="#FFFFCC" >
 
                     <f:verbatim>
-                        <p> A common paragraph </p>
+                        <p><h:outputText value="#{example_messages['tabbed_common']}"/></p>
                     </f:verbatim>
 
-                    <x:panelTab id="tab1" label="Tab1" rendered="#{tabbedPaneBean.tab1Visible}">
+                    <x:panelTab id="tab1" label="#{example_messages['tabbed_tab1']}" rendered="#{tabbedPaneBean.tab1Visible}">
                         <h:inputText id="inp1"/><f:verbatim><br></f:verbatim>
                         <h:inputText id="inp2" required="true" /><h:message for="inp2" showSummary="false" showDetail="true" />
                     </x:panelTab>
@@ -80,7 +80,7 @@ managed beans used:
                         <jsp:include page="tab2.jsp"/>
                     </f:subview>
 
-                    <x:panelTab id="tab3" label="Tab3" rendered="#{tabbedPaneBean.tab3Visible}">
+                    <x:panelTab id="tab3" label="#{example_messages['tabbed_tab3']}" rendered="#{tabbedPaneBean.tab3Visible}">
                         <h:inputText id="inp3"/><f:verbatim><br></f:verbatim>
                         <h:inputText id="inp4"/><f:verbatim><br></f:verbatim>
                         <h:inputText id="inp5"/><f:verbatim><br></f:verbatim>
@@ -88,11 +88,11 @@ managed beans used:
 
                     <f:verbatim><br></f:verbatim>
 
-                    <h:selectBooleanCheckbox value="#{tabbedPaneBean.tab1Visible}"/><f:verbatim>Tab 1 visible<br></f:verbatim>
-                    <h:selectBooleanCheckbox value="#{tabbedPaneBean.tab2Visible}"/><f:verbatim>Tab 2 visible<br></f:verbatim>
-                    <h:selectBooleanCheckbox value="#{tabbedPaneBean.tab3Visible}"/><f:verbatim>Tab 3 visible<br></f:verbatim> 
+                    <h:selectBooleanCheckbox value="#{tabbedPaneBean.tab1Visible}"/><h:outputText value="#{example_messages['tabbed_visible1']}"/><br>
+                    <h:selectBooleanCheckbox value="#{tabbedPaneBean.tab2Visible}"/><h:outputText value="#{example_messages['tabbed_visible2']}" /><br>
+                    <h:selectBooleanCheckbox value="#{tabbedPaneBean.tab3Visible}"/><h:outputText value="#{example_messages['tabbed_visible3']}" /><br>
 
-                    <h:commandButton value="Common submit button" />
+                    <h:commandButton value="#{example_messages['tabbed_submit']}" />
 
                 </x:panelTabbedPane>
 

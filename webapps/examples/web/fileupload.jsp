@@ -58,12 +58,16 @@
                 <h:messages id="messageList" showSummary="true" showDetail="true" />
 
                 <f:verbatim>
-                    <h4>File upload</h4>
+
+                    <h4>
+			<h:outputText value="#{example_messages['fileupload_title']}"/>
+		    </h4>
                     <table border="1"><tr><td>
                 </f:verbatim>
 
                 <h:form id="form1" name="form1" enctype="multipart/form-data" >
-                    <h:outputText value="Gimme an image: "/>
+		<h:outputText value=""/>
+                    <h:outputText value="#{example_messages['fileupload_gimmeimage']} "/>
                     <x:inputFileUpload id="fileupload"
                                        accept="image/*"
                                        value="#{fileUploadForm.upFile}"
@@ -71,26 +75,26 @@
                                        styleClass="fileUploadInput"
                                        required="true"/>
                     <f:verbatim><br></f:verbatim>
-                    <h:outputText value="and give it a name: "/>
+                    <h:outputText value="#{example_messages['fileupload_name']}"/>
                     <h:inputText value="#{fileUploadForm.name}"/>
-                    <h:commandButton value="load it up" action="#{fileUploadForm.upload}" />
+                    <h:commandButton value="#{example_messages['fileupload_button']}" action="#{fileUploadForm.upload}" />
                 </h:form>
 
                 <h:panelGrid columns="1" rendered="#{fileUploadForm.uploaded}">
-                    <h:outputText value="The image you loaded up:" />
+                    <h:outputText value="#{example_messages['fileupload_msg1']}" />
                     <h:graphicImage url="fileupload_showimg.jsf"/>
                     <h:outputText value="#{fileUploadForm.name}"/>
-                    <h:outputText value="Link to download (and save) the image :" />
+                    <h:outputText value="#{example_messages['fileupload_msg2']}" />
                     <h:outputLink value="fileupload_showimg.jsf">
                         <f:param name="allowCache" value="true"/>
                         <f:param name="openDirectly" value="false"/>
-                        <h:outputText value="Download image"/>
+                        <h:outputText value="#{example_messages['fileupload_dlimg']}"/>
                     </h:outputLink>
-                    <h:outputText value="Link to show the image directly:" />
+                    <h:outputText value="#{example_messages['fileupload_msg3']}" />
                     <h:outputLink value="fileupload_showimg.jsf">
                         <f:param name="allowCache" value="true"/>
                         <f:param name="openDirectly" value="true"/>
-                        <h:outputText value="Download image"/>
+                        <h:outputText value="#{example_messages['fileupload_dlimg']}"/>
                     </h:outputLink>
                 </h:panelGrid>
                 <f:verbatim></td></tr></table><p></f:verbatim>
