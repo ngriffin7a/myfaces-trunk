@@ -33,6 +33,9 @@ import net.sourceforge.myfaces.renderkit.html.HtmlRendererUtils;
 
 /**
  * $Log$
+ * Revision 1.2  2004/07/17 21:03:05  svieujot
+ * Clean code
+ *
  * Revision 1.1  2004/07/17 20:52:53  svieujot
  * First version of an x:inputDate component
  *
@@ -42,15 +45,10 @@ import net.sourceforge.myfaces.renderkit.html.HtmlRendererUtils;
  */
 public class HtmlDateRenderer extends HtmlRenderer {
     private static final String ID_DAY_POSTFIX = ".day";
-
     private static final String ID_MONTH_POSTFIX = ".month";
-
     private static final String ID_YEAR_POSTFIX = ".year";
-
     private static final String ID_HOURS_POSTFIX = ".hours";
-
     private static final String ID_MINUTES_POSTFIX = ".minutes";
-
     private static final String ID_SECONDS_POSTFIX = ".seconds";
 
     public void encodeEnd(FacesContext facesContext, UIComponent uiComponent) throws IOException {
@@ -67,15 +65,12 @@ public class HtmlDateRenderer extends HtmlRenderer {
             calendar.setTime( date );
         }
 
-        boolean disabled = false; // TODO : implement & use
-        // isDisabled(facesContext, uiComponent);
+        boolean disabled = false; // TODO : implement & use isDisabled(facesContext, uiComponent);
 
         ResponseWriter writer = facesContext.getResponseWriter();
 
         HtmlRendererUtils.writePrettyLineSeparator(facesContext);
 
-        if( ! disabled )
-            //encodeHiddenInput(uiComponent, writer, clientId);
         encodeInputDay(uiComponent, writer, clientId, calendar, disabled);
         encodeInputMonth(uiComponent, writer, clientId, calendar, currentLocale, disabled);
         encodeInputYear(uiComponent, writer, clientId, calendar, disabled);
@@ -84,14 +79,6 @@ public class HtmlDateRenderer extends HtmlRenderer {
 
     }
     
-    private static void encodeHiddenInput(UIComponent uiComponent, ResponseWriter writer, String clientId) throws IOException {
-        writer.startElement(HTML.INPUT_ELEM, uiComponent);
-        writer.writeAttribute(HTML.ID_ATTR, clientId, null);
-        writer.writeAttribute(HTML.NAME_ATTR, clientId, null);
-        writer.writeAttribute(HTML.TYPE_ATTR, HTML.INPUT_TYPE_HIDDEN, null);
-        writer.endElement(HTML.INPUT_ELEM);
-    }
-
     private static void encodeInputDay(UIComponent uiComponent, ResponseWriter writer, String clientId, Calendar calendar, boolean disabled)
             throws IOException {
         writer.startElement(HTML.INPUT_ELEM, uiComponent);
