@@ -48,6 +48,9 @@ import java.util.*;
  * @author Thomas Spiegl
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.35  2004/12/03 08:46:09  manolito
+ * MYFACES-45 / ApplicationImpl does not correctly traverse a Class' hierarchy to create a Converter
+ *
  * Revision 1.34  2004/10/13 11:50:59  matze
  * renamed packages to org.apache
  *
@@ -488,12 +491,13 @@ public class ApplicationImpl
             Class interfaces[] = targetClass.getInterfaces();
             if (interfaces != null)
             {
-                for (int i = 0; i < interfaces.length; i++)
+                for (int i = 0, len = interfaces.length; i < len; i++)
                 {
-                    converterClass = (Class)_converterTypeMap.get(interfaces[i]);
-                    if(converterClass != null)
+                	// search all superinterfaces for a matching converter, create it
+                    Converter converter = internalCreateConverter(interfaces[i]);
+                    if (converter != null)
                     {
-                        break;
+                        return converter;
                     }
                 }
             }
