@@ -46,6 +46,9 @@ import java.util.List;
 
 /**
  * $Log$
+ * Revision 1.15  2004/12/10 02:08:54  svieujot
+ * Share code with HtmlInputDate.
+ *
  * Revision 1.14  2004/12/09 12:18:43  mmarinschek
  * changes in Calendar-Renderer to check for submitted-value first
  *
@@ -122,25 +125,7 @@ public class HtmlCalendarRenderer
 
         if(inputCalendar.isRenderAsPopup())
         {
-            // Add the javascript and CSS pages
-            AddResource.addStyleSheet(HtmlCalendarRenderer.class, "WH/theme.css", facesContext);
-            AddResource.addStyleSheet(HtmlCalendarRenderer.class, "DB/theme.css", facesContext);
-            AddResource.addJavaScriptToHeader(HtmlCalendarRenderer.class, "popcalendar.js", facesContext);
-            
-            ResponseWriter writer = facesContext.getResponseWriter();
-            
-            
-            writer.startElement(HTML.SCRIPT_ELEM, null);
-            writer.writeAttribute(HTML.SCRIPT_LANGUAGE_ATTR, HTML.SCRIPT_LANGUAGE_JAVASCRIPT, null);
-            writer.write(
-                    "jscalendarSetImageDirectory(\""
-                    	+JavascriptUtils.encodeString(
-                    	        AddResource.getResourceMappedPath(HtmlCalendarRenderer.class, "DB/", facesContext)
-                    	 )
-                    +"\")");
-            writer.endElement(HTML.SCRIPT_ELEM);
-            
-                    
+            addScriptAndCSSResources(facesContext);
             
             String dateFormat = CalendarDateTimeConverter.createJSPopupFormat(facesContext,
                     inputCalendar.getPopupDateFormat());
@@ -178,13 +163,17 @@ public class HtmlCalendarRenderer
             inputCalendar.getChildren().add(inputText);
 
             RendererUtils.renderChild(facesContext, inputText);
-
+            
+            ResponseWriter writer = facesContext.getResponseWriter();
+            
             writer.startElement(HTML.SCRIPT_ELEM,null);
             writer.writeAttribute(HTML.SCRIPT_LANGUAGE_ATTR,HTML.SCRIPT_LANGUAGE_JAVASCRIPT,null);
+            writer.write("<!--\n");
             writer.writeText(getLocalizedLanguageScript(symbols, months,
                     timeKeeper.getFirstDayOfWeek(),inputCalendar),null);
             writer.writeText(getScriptBtnText(inputCalendar.getClientId(facesContext),
                     dateFormat,inputCalendar.getPopupButtonString()),null);
+            writer.write("\n-->");
             writer.endElement(HTML.SCRIPT_ELEM);
 
 /*            writer.startElement(HTML.INPUT_ELEM,null);
@@ -252,8 +241,31 @@ public class HtmlCalendarRenderer
             writer.endElement(HTML.TABLE_ELEM);
         }
     }
+    
+    /**
+     * Used by the x:inputDate renderer : HTMLDateRenderer
+     * @throws IOException
+     */
+    static public void addScriptAndCSSResources(FacesContext facesContext) throws IOException{
+        // Add the javascript and CSS pages
+        AddResource.addStyleSheet(HtmlCalendarRenderer.class, "WH/theme.css", facesContext);
+        AddResource.addStyleSheet(HtmlCalendarRenderer.class, "DB/theme.css", facesContext);
+        AddResource.addJavaScriptToHeader(HtmlCalendarRenderer.class, "popcalendar.js", facesContext);
+        
+        ResponseWriter writer = facesContext.getResponseWriter();
+        
+        writer.startElement(HTML.SCRIPT_ELEM, null);
+        writer.writeAttribute(HTML.SCRIPT_LANGUAGE_ATTR, HTML.SCRIPT_LANGUAGE_JAVASCRIPT, null);
+        writer.write(
+                "jscalendarSetImageDirectory(\""
+                	+JavascriptUtils.encodeString(
+                	        AddResource.getResourceMappedPath(HtmlCalendarRenderer.class, "DB/", facesContext)
+                	 )
+                +"\")");
+        writer.endElement(HTML.SCRIPT_ELEM);
+    }
 
-    private String getLocalizedLanguageScript(DateFormatSymbols symbols,
+    public static String getLocalizedLanguageScript(DateFormatSymbols symbols,
             String[] months, int firstDayOfWeek, HtmlInputCalendar inputCalendar)
     {
         int realFirstDayOfWeek = firstDayOfWeek-1/*Java has different starting-point*/;
@@ -272,32 +284,33 @@ public class HtmlCalendarRenderer
             throw new IllegalStateException("Week may only start with sunday or monday.");
 
         StringBuffer script = new StringBuffer();
-        script.append("<!--\n");
         defineStringArray(script, "jscalendarMonthName", months);
         defineStringArray(script, "jscalendarDayName", weekDays);
         setIntegerVariable(script, "jscalendarStartAt",realFirstDayOfWeek);
 
-        if(inputCalendar.getPopupGotoString()!=null)
-            setStringVariable(script, "jscalendarGotoString",inputCalendar.getPopupGotoString());
-        if(inputCalendar.getPopupTodayString()!=null)
-            setStringVariable(script, "jscalendarTodayString",inputCalendar.getPopupTodayString());
-        if(inputCalendar.getPopupWeekString()!=null)
-            setStringVariable(script, "jscalendarWeekString",inputCalendar.getPopupWeekString());
-        if(inputCalendar.getPopupScrollLeftMessage()!=null)
-            setStringVariable(script, "jscalendarScrollLeftMessage",inputCalendar.getPopupScrollLeftMessage());
-        if(inputCalendar.getPopupScrollRightMessage()!=null)
-            setStringVariable(script, "jscalendarScrollRightMessage",inputCalendar.getPopupScrollRightMessage());
-        if(inputCalendar.getPopupSelectMonthMessage()!=null)
-            setStringVariable(script, "jscalendarSelectMonthMessage",inputCalendar.getPopupSelectMonthMessage());
-        if(inputCalendar.getPopupSelectYearMessage()!=null)
-            setStringVariable(script, "jscalendarSelectYearMessage",inputCalendar.getPopupSelectYearMessage());
-        if(inputCalendar.getPopupSelectDateMessage()!=null)
-            setStringVariable(script, "jscalendarSelectDateMessage",inputCalendar.getPopupSelectDateMessage());
+        if( inputCalendar != null ){ // To allow null parameter for inputDate tag.
+	        if(inputCalendar.getPopupGotoString()!=null)
+	            setStringVariable(script, "jscalendarGotoString",inputCalendar.getPopupGotoString());
+	        if(inputCalendar.getPopupTodayString()!=null)
+	            setStringVariable(script, "jscalendarTodayString",inputCalendar.getPopupTodayString());
+	        if(inputCalendar.getPopupWeekString()!=null)
+	            setStringVariable(script, "jscalendarWeekString",inputCalendar.getPopupWeekString());
+	        if(inputCalendar.getPopupScrollLeftMessage()!=null)
+	            setStringVariable(script, "jscalendarScrollLeftMessage",inputCalendar.getPopupScrollLeftMessage());
+	        if(inputCalendar.getPopupScrollRightMessage()!=null)
+	            setStringVariable(script, "jscalendarScrollRightMessage",inputCalendar.getPopupScrollRightMessage());
+	        if(inputCalendar.getPopupSelectMonthMessage()!=null)
+	            setStringVariable(script, "jscalendarSelectMonthMessage",inputCalendar.getPopupSelectMonthMessage());
+	        if(inputCalendar.getPopupSelectYearMessage()!=null)
+	            setStringVariable(script, "jscalendarSelectYearMessage",inputCalendar.getPopupSelectYearMessage());
+	        if(inputCalendar.getPopupSelectDateMessage()!=null)
+	            setStringVariable(script, "jscalendarSelectDateMessage",inputCalendar.getPopupSelectDateMessage());
+        }
 
         return script.toString();
     }
 
-    private void setIntegerVariable(StringBuffer script, String name, int value)
+    private static void setIntegerVariable(StringBuffer script, String name, int value)
     {
         script.append(name);
         script.append(" = ");
@@ -305,7 +318,7 @@ public class HtmlCalendarRenderer
         script.append(";\n");
     }
 
-    private void setStringVariable(StringBuffer script, String name, String value)
+    private static void setStringVariable(StringBuffer script, String name, String value)
     {
         script.append(name);
         script.append(" = \"");
@@ -313,7 +326,7 @@ public class HtmlCalendarRenderer
         script.append("\";\n");
     }
 
-    private void defineStringArray(StringBuffer script, String arrayName, String[] array)
+    private static void defineStringArray(StringBuffer script, String arrayName, String[] array)
     {
         script.append(arrayName);
         script.append(" = new Array(");
@@ -348,7 +361,6 @@ public class HtmlCalendarRenderer
         script.append("'/>\"");
         script.append(");");
         script.append("\n}");
-        script.append("\n//-->");
 
         return script.toString();
     }
@@ -566,7 +578,7 @@ public class HtmlCalendarRenderer
         }
     }
 
-    private String[] mapWeekdays(DateFormatSymbols symbols)
+    private static String[] mapWeekdays(DateFormatSymbols symbols)
     {
         String[] weekdays = new String[7];
 
@@ -583,7 +595,7 @@ public class HtmlCalendarRenderer
         return weekdays;
     }
 
-    private String[] mapWeekdaysStartingWithSunday(DateFormatSymbols symbols)
+    private static String[] mapWeekdaysStartingWithSunday(DateFormatSymbols symbols)
     {
         String[] weekdays = new String[7];
 
@@ -600,7 +612,7 @@ public class HtmlCalendarRenderer
         return weekdays;
     }
 
-    private String[] mapMonths(DateFormatSymbols symbols)
+    public static String[] mapMonths(DateFormatSymbols symbols)
     {
         String[] months = new String[12];
 
