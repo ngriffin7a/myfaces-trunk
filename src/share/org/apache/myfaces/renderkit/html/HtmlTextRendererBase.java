@@ -33,6 +33,9 @@ import java.io.IOException;
  * @author Manfred Geiler
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.4  2004/08/30 17:29:26  tinytoony
+ * fix for span-element bug
+ *
  * Revision 1.3  2004/07/01 22:00:56  mwessendorf
  * ASF switch
  *
@@ -96,8 +99,9 @@ public class HtmlTextRendererBase
         {
             ResponseWriter writer = facesContext.getResponseWriter();
 
-            boolean span = HtmlRendererUtils.renderHTMLAttributesWithOptionalStartElement(
-                    writer, component, HTML.SPAN_ELEM, HTML.COMMON_PASSTROUGH_ATTRIBUTES);
+            writer.startElement(HTML.SPAN_ELEM, component);
+
+            HtmlRendererUtils.renderHTMLAttributes(writer, component, HTML.COMMON_PASSTROUGH_ATTRIBUTES);
 
             if (escape)
             {
@@ -108,10 +112,7 @@ public class HtmlTextRendererBase
                 writer.write(text);
             }
 
-            if (span)
-            {
-                writer.endElement(HTML.SPAN_ELEM);
-            }
+            writer.endElement(HTML.SPAN_ELEM);
         }
     }
 
