@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.myfaces.custom.fileupload;
+package org.apache.myfaces.component.html.util;
 
 import org.apache.commons.fileupload.*;
 import org.apache.commons.logging.Log;
@@ -28,6 +28,12 @@ import java.util.*;
  * @author Sylvain Vieujot (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.1  2004/12/01 16:32:03  svieujot
+ * Convert the Multipart filter in an ExtensionsFilter that provides an additional facility to include resources in a page.
+ * Tested only with javascript resources right now, but should work fine with images too.
+ * Some work to do to include css resources.
+ * The popup component has been converted to use this new Filter.
+ *
  * Revision 1.8  2004/11/16 16:25:52  mmarinschek
  * new popup - component; not yet finished
  *

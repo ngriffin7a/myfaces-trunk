@@ -210,6 +210,8 @@
                         includes="faces-config.xml"
                         prefix="META-INF/"/>
             <!-- components_resources -->
+        	<fileset dir="${components.src}"
+        			includes="**/resource/**"/>
             <zipfileset dir="${components_resource.src}"
                         includes="**"
                         prefix="resource"/>
@@ -265,6 +267,8 @@
                         includes="faces-config.xml"
                         prefix="META-INF/"/>
             <!-- components_resources -->
+        	<fileset dir="${components.src}"
+        			includes="**/resource/**"/>
             <zipfileset dir="${components_resource.src}"
                         includes="**"
                         prefix="resource"/>

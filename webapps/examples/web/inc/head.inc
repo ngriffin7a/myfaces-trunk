@@ -19,7 +19,4 @@
   <link rel="stylesheet" href="jscalendar/jscalendar-WH/theme.css" type="text/css">
   <link rel="stylesheet" href="jscalendar/jscalendar-DB/theme.css" type="text/css">
 
-  <!-- JSPopup -->
-  <script language="JavaScript" src="jspopup/JSPopup.js" type="text/javascript"></script>
-
 </head>

@@ -16,6 +16,7 @@
 package org.apache.myfaces.custom.fileupload;
 
 import org.apache.myfaces.component.UserRoleUtils;
+import org.apache.myfaces.component.html.util.MultipartRequestWrapper;
 import org.apache.myfaces.renderkit.RendererUtils;
 import org.apache.myfaces.renderkit.html.HTML;
 import org.apache.myfaces.renderkit.html.HtmlRendererUtils;
@@ -37,6 +38,12 @@ import java.io.IOException;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.15  2004/12/01 16:32:03  svieujot
+ * Convert the Multipart filter in an ExtensionsFilter that provides an additional facility to include resources in a page.
+ * Tested only with javascript resources right now, but should work fine with images too.
+ * Some work to do to include css resources.
+ * The popup component has been converted to use this new Filter.
+ *
  * Revision 1.14  2004/10/13 11:50:57  matze
  * renamed packages to org.apache
  *

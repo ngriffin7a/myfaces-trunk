@@ -16,6 +16,7 @@
 package org.apache.myfaces.custom.fileupload;
 
 import org.apache.commons.fileupload.FileUpload;
+import org.apache.myfaces.component.html.util.MultipartRequestWrapper;
 
 import java.io.IOException;
 
@@ -24,6 +25,9 @@ import javax.servlet.http.*;
 
 
 /**
+ * Note : This filter is deprecated.
+ * It has been replaced by the new org.apache.myfaces.component.html.util.ExtensionsFilter.
+ * 
  * @author Sylvain Vieujot (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
