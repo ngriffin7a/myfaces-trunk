@@ -62,7 +62,9 @@ managed beans used:
                         var="car"
                         value="#{list.cars}"
                         sortColumn="#{list.sort}"
-                        sortAscending="#{list.ascending}">
+                        sortAscending="#{list.ascending}"
+                        preserveDataModel="true"
+                        preserveSort="true">
 
                     <f:facet name="header">
                         <h:outputText value="(header table)"  />
