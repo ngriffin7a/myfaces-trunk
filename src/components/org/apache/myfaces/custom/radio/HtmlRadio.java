@@ -26,6 +26,9 @@ import javax.faces.el.ValueBinding;
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.3  2004/03/31 13:43:30  royalts
+ * no message
+ *
  * Revision 1.2  2004/03/31 13:26:07  manolito
  * extended radio renderer
  *
@@ -43,6 +46,7 @@ public class HtmlRadio
 
     public static final String COMPONENT_TYPE = "net.sourceforge.myfaces.HtmlRadio";
     public static final String COMPONENT_FAMILY = "net.sourceforge.myfaces.Radio";
+    private static final String DEFAULT_RENDERER_TYPE = "net.sourceforge.myfaces.Radio";
     private static final int DEFAULT_INDEX = -1;
 
     private String _for = null;
@@ -50,6 +54,7 @@ public class HtmlRadio
 
     public HtmlRadio()
     {
+        setRendererType(DEFAULT_RENDERER_TYPE);
     }
 
     public String getFamily()
@@ -81,6 +86,7 @@ public class HtmlRadio
         Integer v = vb != null ? (Integer)vb.getValue(getFacesContext()) : null;
         return v != null ? v.intValue() : DEFAULT_INDEX;
     }
+
 
 
     public Object saveState(FacesContext context)

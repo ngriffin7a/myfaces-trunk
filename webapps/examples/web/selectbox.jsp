@@ -90,11 +90,11 @@ managed beans used:
 
                         <f:verbatim>&nbsp;</f:verbatim>
                         <h:panelGrid columns="1"  >
-                            <h:selectOneRadio id="discount2" value="#{carconf.discount2}" rendered="false" >
+                            <x:selectOneRadio id="discount2" value="#{carconf.discount2}" layout="spread" >
                                 <f:selectItem itemValue="0" itemLabel="#{example_messages['discount_2_0']}" />
                                 <f:selectItem itemValue="1" itemLabel="#{example_messages['discount_2_1']}" />
                                 <f:selectItem itemValue="2" itemLabel="#{example_messages['discount_2_2']}" />
-                            </h:selectOneRadio>
+                            </x:selectOneRadio>
                             <h:panelGroup>
                                 <x:radio for="discount2" index="2" /><f:verbatim>&nbsp;</f:verbatim>
                                 <h:inputText value="#{carconf.bandName}" />

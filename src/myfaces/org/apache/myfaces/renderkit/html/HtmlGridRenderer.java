@@ -37,6 +37,9 @@ import java.util.StringTokenizer;
  * X-CHECKED: tlddoc h:panelGrid 1.0 final
  *
  * $Log$
+ * Revision 1.8  2004/03/31 13:43:29  royalts
+ * no message
+ *
  * Revision 1.7  2004/03/29 14:56:55  manolito
  * refactoring for implementation and non-standard component split
  *
@@ -216,7 +219,7 @@ public class HtmlGridRenderer
                         writer.startElement(HTML.TR_ELEM, component);
                         rowStarted = true;
                     }
-
+                    
                     writer.startElement(HTML.TD_ELEM, component);
                     if (c < columnClassesCount)
                     {
