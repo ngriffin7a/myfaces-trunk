@@ -28,6 +28,8 @@ import javax.servlet.*;
  * DOCUMENT ME!
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
+ *
+ * @deprecated TODO: remove
  */
 public class MyFacesServlet
     implements Servlet
@@ -54,16 +56,7 @@ public class MyFacesServlet
     public void init(ServletConfig servletConfig)
         throws ServletException
     {
-        //synchronized (System.out)
-        //{
-            //PrintStream oldOut = System.out;
-            //Sun's copyright is nice and important, but drives me crazy during testing...
-            //Uncomment the following line during development if you feel the same:
-            //System.setOut(new PrintStream(new ByteArrayOutputStream()));
-            _facesServlet.init(servletConfig);
-            //System.setOut(oldOut);
-        //}
-
+        _facesServlet.init(servletConfig);
         log.info("MyFacesServlet for context '" + servletConfig.getServletContext().getRealPath("/") + "' initialized.");
     }
 

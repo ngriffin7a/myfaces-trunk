@@ -24,6 +24,7 @@ import net.sourceforge.myfaces.config.FacesConfigFactory;
 import net.sourceforge.myfaces.config.configure.FacesConfigurator;
 import net.sourceforge.myfaces.context.servlet.ServletExternalContextImpl;
 import net.sourceforge.myfaces.webapp.webxml.WebXml;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -34,7 +35,8 @@ import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
 /**
- * DOCUMENT ME!
+ * TODO: Add listener to myfaces-core.tld instead of web.xml
+ *
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */

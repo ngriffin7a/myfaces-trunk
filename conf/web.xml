@@ -47,7 +47,7 @@
     </context-param>
 
     <context-param>
-        <param-name>myfaces_allow_javascript</param-name>
+        <param-name>net.sourceforge.myfaces.ALLOW_JAVASCRIPT</param-name>
         <param-value>true</param-value>
         <description>
             This parameter tells MyFaces if javascript code should be allowed in the
@@ -61,7 +61,7 @@
     </context-param>
 
     <context-param>
-        <param-name>myfaces_pretty_html</param-name>
+        <param-name>net.sourceforge.myfaces.PRETTY_HTML</param-name>
         <param-value>true</param-value>
         <description>
             If true, rendered HTML code will be formatted, so that it is "human readable".
@@ -71,26 +71,7 @@
         </description>
     </context-param>
 
-    <context-param>
-        <param-name>myfaces_allow_designmode</param-name>
-        <param-value>false</param-value>
-        <description>
-            If true, implements design mode using CGLib binary class changes.
-            This creates a performance hit and should be used only when needed.
-            Default: "false"
-        </description>
-    </context-param>
 
-	<context-param>
-		<param-name>net.sourceforge.smile.descriptor.package</param-name>
-		<param-value>net.sourceforge.smile.demo</param-value>
-		<description>The package where the screen descriptors are located.</description>
-	</context-param>		
-	<context-param>
-		<param-name>net.sourceforge.smile.descriptor.postfix</param-name>
-		<param-value></param-value>
-		<description>The postfix to append to descriptor class names.</description>
-	</context-param>	
 
     <!-- WelcomeFile Filter -->
     <!--
@@ -151,7 +132,7 @@
     <!-- Faces Servlet -->
     <servlet>
         <servlet-name>Faces Servlet</servlet-name>
-        <servlet-class>net.sourceforge.myfaces.webapp.MyFacesServlet</servlet-class>
+        <servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
         <load-on-startup>1</load-on-startup>
     </servlet>
 
