@@ -26,11 +26,13 @@ import net.sourceforge.myfaces.renderkit.html.util.CommonAttributes;
 import net.sourceforge.myfaces.renderkit.attr.ListboxRendererAttributes;
 import net.sourceforge.myfaces.renderkit.attr.MenuRendererAttributes;
 import net.sourceforge.myfaces.util.bundle.BundleUtils;
+import net.sourceforge.myfaces.convert.ConverterUtils;
 
 import javax.faces.component.SelectItem;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
+import javax.faces.convert.Converter;
 import java.io.IOException;
 import java.util.*;
 
@@ -102,7 +104,7 @@ public abstract class AbstractSelectOptionRenderer
                     writer.write(" value=\"");
                     writer.write(HTMLEncoder.encode(str, false, false));
                     writer.write("\"");
-                    if (isItemSelected(currentValue, item))
+                    if (isItemSelected(facesContext, uicomponent, currentValue, item))
                     {
                         writer.write(" selected");
                     }
@@ -116,28 +118,43 @@ public abstract class AbstractSelectOptionRenderer
         }
     }
 
-    public boolean isItemSelected(Object currentValue, SelectItem item)
+    public boolean isItemSelected(FacesContext facesContext, UIComponent uiComponent, Object currentValue, SelectItem item)
     {
         Object itemValue = item.getValue();
         if (itemValue != null && currentValue != null)
         {
-            if (currentValue instanceof Object[])
+            Converter converter = ConverterUtils.findConverter(itemValue.getClass());
+            if (converter != null)
+            {
+                Object convObj = converter.getAsObject(facesContext, uiComponent, currentValue.toString());
+                if (itemValue.equals(convObj))
+                {
+                    return true;
+                }
+            }
+            else if (currentValue instanceof Object[])
             {
                 for (int i = 0; i < ((Object[])currentValue).length; i++)
                 {
                     Object obj = ((Object[])currentValue)[i];
-                    if (itemValue.equals(obj))
+                    converter = ConverterUtils.findConverter(obj.getClass());
+                    if (converter != null)
+                    {
+                        Object convObj = converter.getAsObject(facesContext, uiComponent, obj.toString());
+                        if (itemValue.equals(convObj))
+                        {
+                            return true;
+                        }
+                    }
+                    else if (itemValue.equals(obj))
                     {
                         return true;
                     }
                 }
             }
-            else
+            else if (itemValue.equals(currentValue))
             {
-                if (itemValue.equals(currentValue))
-                {
-                    return true;
-                }
+                return true;
             }
         }
         return false;

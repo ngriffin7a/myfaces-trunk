@@ -89,8 +89,15 @@ public class TagHashHack
             if (newMap || !saveTagHash.containsKey(entry.getKey()))
             {
                 UIComponent comp = (UIComponent)entry.getValue();
-                saveTagHash.put(entry.getKey(),
-                                JspInfo.getUniqueComponentId(comp));
+                if (comp != null)
+                {
+                    saveTagHash.put(entry.getKey(),
+                                    JspInfo.getUniqueComponentId(comp));
+                }
+                else
+                {
+                    LogUtil.getLogger().severe("Component not found for entry " + entry.getKey());
+                }
             }
         }
 
