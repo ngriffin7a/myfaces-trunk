@@ -22,8 +22,12 @@ import java.util.Set;
 
 /**
  * @author Manfred Geiler (latest modification by $Author$)
+ * @author Anton Koinov
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.3  2004/07/09 02:44:55  dave0000
+ * More efficient implementation
+ *
  * Revision 1.2  2004/07/01 22:00:53  mwessendorf
  * ASF switch
  *
@@ -37,13 +41,11 @@ public final class JavascriptUtils
     
     private JavascriptUtils()
     {
-    }    //Util class
-
-    private static final Set RESERVED_WORDS;
-
-    static
-    {
-        RESERVED_WORDS = new HashSet(Arrays.asList(new String[]{
+        // utility class, do not instantiate
+    }
+    
+    private static final Set RESERVED_WORDS = 
+        new HashSet(Arrays.asList(new String[]{
             "abstract",
             "boolean",
             "break",
@@ -99,77 +101,76 @@ public final class JavascriptUtils
             "while",
             "with"
         }));
-    }
-
-    private static byte[] COLON_BYTES = new byte[] {':'};
-    private static byte[] HYPHEN_BYTES = new byte[] {'-'};
-    private static byte[] UNDERSCORE_BYTES = new byte[] {'_'};
-
+    
     public static String getValidJavascriptName(String s, boolean checkForReservedWord)
     {
         if (checkForReservedWord && RESERVED_WORDS.contains(s))
         {
             return s + "_";
         }
-
+        
         StringBuffer buf = null;
         for (int i = 0, len = s.length(); i < len; i++)
         {
             char c = s.charAt(i);
-            byte[] bytesToAdd = null;
-
-            if (Character.isLetter(c) ||
-                Character.isDigit(c))
+            
+            if (Character.isLetterOrDigit(c))
             {
-                //allowed char
-            }
-            else if (c == ':')
-            {
-                bytesToAdd = COLON_BYTES;
-            }
-            else if (c == '-')
-            {
-                bytesToAdd = HYPHEN_BYTES;
-            }
-            else if (c == '_')
-            {
-                bytesToAdd = UNDERSCORE_BYTES;
+                // allowed char
+                if (buf != null) buf.append(c);
             }
             else
             {
-                try
-                {
-                    bytesToAdd = ("" + c).getBytes("UTF-8");
-                }
-                catch (UnsupportedEncodingException e)
-                {
-                    throw new RuntimeException(e);
-                }
-            }
-
-            if (bytesToAdd != null)
-            {
                 if (buf == null)
                 {
-                    buf = new StringBuffer();
+                    buf = new StringBuffer(s.length() + 10);
                     buf.append(s.substring(0, i));
                 }
+                
                 buf.append('_');
-                for (int j = 0; j < bytesToAdd.length; j++)
+                if (c < 16)
+                { 
+                    // pad single hex digit values with '0' on the left
+                    buf.append('0');
+                }
+                
+                if (c < 128)
                 {
-                    int b = (int)bytesToAdd[j];
-                    if (b < 0) b = 256 + b;
-                    else if (b < 16) buf.append('0');
-                    buf.append(Integer.toHexString(b).toUpperCase());
+                    // first 128 chars match their byte representation in UTF-8
+                    buf.append(Integer.toHexString(c).toUpperCase());
+                }
+                else
+                {
+                    byte[] bytes;
+                    try 
+                    {
+                        bytes = Character.toString(c).getBytes("UTF-8");
+                    }
+                    catch (UnsupportedEncodingException e)
+                    {
+                        throw new RuntimeException(e);
+                    }
+                    
+                    for (int j = 0; j < bytes.length; j++)
+                    {
+                        int intVal = bytes[j];
+                        if (intVal < 0) 
+                        {
+                            // intVal will be >= 128
+                            intVal = 256 + intVal;
+                        }
+                        else if (intVal < 16) 
+                        {
+                            // pad single hex digit values with '0' on the left
+                            buf.append('0');
+                        }
+                        buf.append(Integer.toHexString(intVal).toUpperCase());
+                    }
                 }
             }
-            else if (buf != null)
-            {
-                buf.append(c);
-            }
+            
         }
-
+        
         return buf == null ? s : buf.toString();
     }
-
 }

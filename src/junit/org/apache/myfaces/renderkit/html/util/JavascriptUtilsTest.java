@@ -15,12 +15,17 @@
  */
 package net.sourceforge.myfaces.renderkit.html.util;
 
+import junit.framework.AssertionFailedError;
 import junit.framework.TestCase;
 
 /**
  * @author Manfred Geiler (latest modification by $Author$)
+ * @author Anton Koinov
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.3  2004/07/09 02:44:55  dave0000
+ * More efficient implementation
+ *
  * Revision 1.2  2004/07/01 22:01:09  mwessendorf
  * ASF switch
  *
@@ -37,7 +42,26 @@ public class JavascriptUtilsTest
     {
         super(s);
     }
-
+    
+    /**
+     * We use the fact that the first 128 characters match their UTF-8 byte 
+     * encoding in our code. Make sure that is really the case.
+     */
+    public void testUTF()
+    {
+        for (char c = 0; c < 128; c++)
+        {
+            byte[] b = Character.toString(c).getBytes();
+            try {
+                assertTrue(b.length == 1 && c == b[0]);
+            } catch (AssertionFailedError e) {
+                System.err.println(
+                    "Incompatible: " + c + " -> " + b.length + ":" + b[0]);
+                throw e;
+            }
+        }
+    }
+    
     public void testGetValidJavascriptName()
     {
         String s, r;
@@ -101,7 +125,5 @@ public class JavascriptUtilsTest
         r = JavascriptUtils.getValidJavascriptName(s, true);
         System.out.println(s + " --> " + r);
         assertEquals("if_", r);
-
     }
-
 }
