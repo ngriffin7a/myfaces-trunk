@@ -5,7 +5,7 @@ MyFaces Release Notes
 Changes in Release 0.3.1
 
 * completely restructured directories
-* revised doumentation
+* revised documentation
 * revised build files
 * 4 different state-saving modes: see features.html for details
 

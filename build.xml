@@ -147,6 +147,7 @@
             <fileset file="${myfaces.jar}" />
             <fileset file="myfaces-*.tgz" />
             <fileset dir="${doc.dir}/api" />
+            <fileset dir="${temp.dir}/myfaces-jar"/>    <!-- in case of interrupted builds -->
         </delete>
         <ant dir="webapps/examples"
             antfile="build.xml"
