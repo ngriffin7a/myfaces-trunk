@@ -225,10 +225,11 @@ public class UIData
 
             EditableValueHolderState[] rowState
                     = (EditableValueHolderState[])_descendantStates[rowIndex];
-            if (rowState != null)
-            {
-                restoreDescendantComponentStates(this, rowState, 0);
-            }
+            restoreDescendantComponentStates(this, rowState, 0);
+        }
+        else
+        {
+            restoreDescendantComponentStates(this, null, 0);
         }
     }
 
@@ -241,7 +242,10 @@ public class UIData
             UIComponent child = (UIComponent)it.next();
             //clear this descendant's clientId:
             child.setId(child.getId()); //HACK: This assumes that setId always clears the cached clientId. Can we be sure?
-            states[counter++].restore((EditableValueHolder)child);
+            if (states != null && child instanceof EditableValueHolder)
+            {
+                states[counter++].restore((EditableValueHolder)child);
+            }
             restoreDescendantComponentStates(child, states, counter);
         }
     }

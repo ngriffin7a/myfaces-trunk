@@ -215,6 +215,7 @@ public class MyFacesHtmlDataTable
 
     public Object getSerializableDataModel()
     {
+        // TODO see UIData
         DataModel dm = getDataModelHack();
         if (dm == null)
         {
@@ -285,7 +286,6 @@ public class MyFacesHtmlDataTable
         }
     }
 
-
     public static class SerializableDataModel
         extends DataModel
         implements Serializable
@@ -300,7 +300,8 @@ public class MyFacesHtmlDataTable
         public SerializableDataModel(int first, int rows, DataModel dataModel)
         {
             _first = first;
-            _rows = rows != 0 ? rows : dataModel.getRowCount() - first;
+            _rowCount = dataModel.getRowCount();
+            _rows = rows != 0 ? rows : _rowCount - first;
             _list = new ArrayList(rows);
             for (int i = 0; i < _rows; i++)
             {
@@ -308,7 +309,6 @@ public class MyFacesHtmlDataTable
                 if (!dataModel.isRowAvailable()) break;
                 _list.add(dataModel.getRowData());
             }
-            _rowCount = dataModel.getRowCount();
             _index = -1;
 
             //TODO: take over DataModelListeners
@@ -360,13 +360,11 @@ public class MyFacesHtmlDataTable
 
         public Object getWrappedData()
         {
-            //throw new UnsupportedOperationException(this.getClass().getName() + " UnsupportedOperationException");
             return _list;
         }
 
         public void setWrappedData(Object obj)
         {
-            //throw new UnsupportedOperationException(this.getClass().getName() + " UnsupportedOperationException");
         }
     }
 

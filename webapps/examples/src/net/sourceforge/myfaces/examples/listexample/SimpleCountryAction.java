@@ -38,7 +38,7 @@ public class SimpleCountryAction
 {
     public void initCountryForm(ActionEvent actionevent) throws AbortProcessingException
     {
-        FacesContext facesContext = FacesContext.getCurrentInstance();
+        FacesContext facesContext = FacesContext.getCurrentInstance();     
         Long id = null;
         for (Iterator it = actionevent.getComponent().getChildren().iterator(); it.hasNext(); )
         {
