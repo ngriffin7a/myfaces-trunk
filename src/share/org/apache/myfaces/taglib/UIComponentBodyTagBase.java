@@ -16,6 +16,7 @@
 package org.apache.myfaces.taglib;
 
 import org.apache.myfaces.renderkit.JSFAttr;
+import org.apache.myfaces.renderkit.RendererUtils;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -31,6 +32,9 @@ import java.io.Reader;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.15  2005/03/05 10:29:56  mmarinschek
+ * better error handling
+ *
  * Revision 1.14  2005/01/30 15:24:10  matzew
  * thanks to sean schofield for removing *legacy* attributes of MyFaces
  *
@@ -87,7 +91,7 @@ public abstract class UIComponentBodyTagBase
             {
                 log.warn("Component with id '" + component.getClientId(getFacesContext()) +
                          "' (" + getClass().getName() +
-                         " tag) renders it's children, but has embedded JSP or HTML code. Use the <f:verbatim> tag for nested HTML. For comments use <%/* */%> style JSP comments instead of <!-- --> style HTML comments." +
+                         " tag) and path : "+RendererUtils.getPathToComponent(component)+"renders it's children, but has embedded JSP or HTML code. Use the <f:verbatim> tag for nested HTML. For comments use <%/* */%> style JSP comments instead of <!-- --> style HTML comments." +
                          "\n BodyContent:\n" + getBodyContent().getString().trim());
             }
         }
