@@ -249,7 +249,7 @@ public class ApplicationImpl
     {
         if ((componentType == null) || (componentType.length() == 0))
         {
-            log.error("addComponent: componentType = null ist not allowed");
+            log.error("addComponent: componentType = null is not allowed");
             throw new NullPointerException("addComponent: componentType = null ist not allowed");
         }
         if ((componentClassName == null) || (componentClassName.length() == 0))
@@ -274,12 +274,12 @@ public class ApplicationImpl
     {
         if ((converterId == null) || (converterId.length() == 0))
         {
-            log.error("addConverter: converterId = null ist not allowed");
+            log.error("addConverter: converterId = null is not allowed");
             throw new NullPointerException("addConverter: converterId = null ist not allowed");
         }
         if ((converterClass == null) || (converterClass.length() == 0))
         {
-            log.error("addConverter: converterClass = null ist not allowed");
+            log.error("addConverter: converterClass = null is not allowed");
             throw new NullPointerException("addConverter: converterClass = null ist not allowed");
         }
         //TODO: Using ConfigUtil here is not nice...
@@ -293,12 +293,12 @@ public class ApplicationImpl
     {
         if ((targetClass == null))
         {
-            log.error("addConverter: targetClass = null ist not allowed");
+            log.error("addConverter: targetClass = null is not allowed");
             throw new NullPointerException("addConverter: targetClass = null ist not allowed");
         }
         if ((converterClass == null) || (converterClass.length() == 0))
         {
-            log.error("addConverter: converterClass = null ist not allowed");
+            log.error("addConverter: converterClass = null is not allowed");
             throw new NullPointerException("addConverter: converterClass = null ist not allowed");
         }
         Converter converter = (Converter)ConfigUtil.newInstance(converterClass);
@@ -311,12 +311,12 @@ public class ApplicationImpl
     {
         if ((validatorId == null) || (validatorId.length() == 0))
         {
-            log.error("addValidator: validatorId = null ist not allowed");
+            log.error("addValidator: validatorId = null is not allowed");
             throw new NullPointerException("addValidator: validatorId = null ist not allowed");
         }
         if ((validatorClass == null) || (validatorClass.length() == 0))
         {
-            log.error("addValidator:  validatorClass = null ist not allowed");
+            log.error("addValidator:  validatorClass = null is not allowed");
             throw new NullPointerException("addValidator:  validatorClass = null ist not allowed");
         }
         _validatorClassMap.put(validatorId, ConfigUtil.classForName(validatorClass));
@@ -362,17 +362,17 @@ public class ApplicationImpl
     {
         if ((valueBinding == null))
         {
-            log.error("createComponent: valueBinding = null ist not allowed");
+            log.error("createComponent: valueBinding = null is not allowed");
             throw new NullPointerException("createComponent: valueBinding = null ist not allowed");
         }
         if ((facesContext == null))
         {
-            log.error("createComponent: facesContext = null ist not allowed");
+            log.error("createComponent: facesContext = null is not allowed");
             throw new NullPointerException("createComponent: facesContext = null ist not allowed");
         }
         if ((componentType == null) || (componentType.length() == 0))
         {
-            log.error("createComponent: componentType = null ist not allowed");
+            log.error("createComponent: componentType = null is not allowed");
             throw new NullPointerException("createComponent: componentType = null ist not allowed");
         }
 
@@ -393,7 +393,7 @@ public class ApplicationImpl
     {
         if ((converterId == null) || (converterId.length() == 0))
         {
-            log.error("createConverter: converterId = null ist not allowed");
+            log.error("createConverter: converterId = null is not allowed");
             throw new NullPointerException("createConverter: converterId = null ist not allowed");
         }
 
@@ -410,7 +410,7 @@ public class ApplicationImpl
     {
         if (targetClass == null)
         {
-            log.error("createConverter: targetClass = null ist not allowed");
+            log.error("createConverter: targetClass = null is not allowed");
             throw new NullPointerException("createConverter: targetClass = null ist not allowed");
         }
 
@@ -453,7 +453,7 @@ public class ApplicationImpl
     {
         if ((reference == null) || (reference.length() == 0))
         {
-            log.error("createMethodBinding: reference = null ist not allowed");
+            log.error("createMethodBinding: reference = null is not allowed");
             throw new NullPointerException("createMethodBinding: reference = null ist not allowed");
         }
 
@@ -468,7 +468,7 @@ public class ApplicationImpl
     {
         if ((validatorId == null) || (validatorId.length() == 0))
         {
-            log.error("createValidator: validatorId = null ist not allowed");
+            log.error("createValidator: validatorId = null is not allowed");
             throw new NullPointerException("createValidator: validatorId = null ist not allowed");
         }
         return (Validator)_validatorClassMap.get(validatorId);
@@ -478,7 +478,7 @@ public class ApplicationImpl
     {
         if ((reference == null) || (reference.length() == 0))
         {
-            log.error("createValueBinding: reference = null ist not allowed");
+            log.error("createValueBinding: reference = null is not allowed");
             throw new NullPointerException("createValueBinding: reference = null ist not allowed");
         }
         return (ValueBinding) _valueBindingCache.get(reference);
