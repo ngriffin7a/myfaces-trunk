@@ -28,7 +28,8 @@ import javax.servlet.jsp.tagext.BodyTag;
  * @version $Revision$ $Date$
  */
 public abstract class UIComponentBodyTag
-        extends UIComponentTag
+    extends UIComponentTag
+    implements BodyTag
 {
     private BodyContent _bodyContent;
 
