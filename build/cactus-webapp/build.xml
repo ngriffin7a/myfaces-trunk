@@ -92,7 +92,7 @@
         <war destfile="${tests.war}"
              webxml="${cactus.web.dir}/WEB-INF/web.xml">
             <manifest>
-                <section name="myfaces.sourceforge.net">
+                <section name="myfaces.apache.org">
                     <attribute name="Implementation-Title" value="MyFaces - Cactus Tests"/>
                     <attribute name="Implementation-Version" value="${TODAY}"/>
                     <attribute name="Implementation-Vendor" value="MyFaces Project Team"/>

@@ -111,7 +111,7 @@
             <!-- manifest -->
             <manifest>
                 <attribute name="Built-By" value="${user.name}"/>
-                <section name="myfaces.sourceforge.net">
+                <section name="myfaces.apache.org">
                     <attribute name="Implementation-Title" value="${manifest.impl.title}"/>
                     <attribute name="Implementation-Version" value="${manifest.impl.version} (${TODAY})"/>
                     <attribute name="Implementation-Vendor" value="${manifest.impl.vendor}"/>
@@ -161,7 +161,7 @@
             <!-- manifest -->
             <manifest>
                 <attribute name="Built-By" value="${user.name}"/>
-                <section name="myfaces.sourceforge.net">
+                <section name="myfaces.apache.org">
                     <attribute name="Implementation-Title" value="${manifest.impl.title}"/>
                     <attribute name="Implementation-Version" value="${manifest.impl.version} (${TODAY})"/>
                     <attribute name="Implementation-Vendor" value="${manifest.impl.vendor}"/>
@@ -191,7 +191,7 @@
             <!-- manifest -->
             <manifest>
                 <attribute name="Built-By" value="${user.name}"/>
-                <section name="myfaces.sourceforge.net">
+                <section name="myfaces.apache.org">
                     <attribute name="Implementation-Title" value="${manifest.impl.title.components}"/>
                     <attribute name="Implementation-Version" value="${manifest.impl.version} (${TODAY})"/>
                     <attribute name="Implementation-Vendor" value="${manifest.impl.vendor}"/>

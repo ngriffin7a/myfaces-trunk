@@ -48,7 +48,7 @@
         <war destfile="${tests.war}"
              webxml="${basedir}/web.xml">
             <manifest>
-                <section name="myfaces.sourceforge.net">
+                <section name="myfaces.apache.org">
                     <attribute name="Implementation-Title" value="MyFaces - Tagunit Tests"/>
                     <attribute name="Implementation-Version" value="${TODAY}"/>
                     <attribute name="Implementation-Vendor" value="MyFaces Project Team"/>
