@@ -20,6 +20,7 @@ package net.sourceforge.myfaces.renderkit.html.state;
 
 import net.sourceforge.myfaces.renderkit.html.jspinfo.JspInfo;
 import net.sourceforge.myfaces.util.logging.LogUtil;
+import net.sourceforge.myfaces.component.CommonComponentAttributes;
 
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
@@ -166,7 +167,15 @@ public class TreeCopier
             {
                 Object attrValue = fromComp.getAttribute(attrName);
 
-                toComp.setAttribute(attrName, attrValue);
+                //TODO: always try bean property setter first!
+                if (attrName.equals(CommonComponentAttributes.COMPONENT_ID_ATTR))
+                {
+                    toComp.setComponentId((String)attrValue);
+                }
+                else
+                {
+                    toComp.setAttribute(attrName, attrValue);
+                }
             }
         }
     }
