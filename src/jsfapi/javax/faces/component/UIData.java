@@ -48,11 +48,14 @@ public class UIData
     private static final int PROCESS_VALIDATORS = 2;
     private static final int PROCESS_UPDATES = 3;
 
+    private static final Integer INTEGER_MINUS1 = new Integer(-1);
+    
     private int _rowIndex = -1;
     private DataModel _dataModel;
     private String _var = null;
     private Object[] _descendantStates;
     private int _descendantEditableValueHolderCount = -1;
+    transient private boolean _saveDescendantState = true;
 
     public void setFooter(UIComponent footer)
     {
@@ -160,8 +163,13 @@ public class UIData
             if (_descendantEditableValueHolderCount > 0)
             {
                 EditableValueHolderState[] rowState
-                        = (EditableValueHolderState[])list.toArray(new EditableValueHolder[list.size()]);
-                _descendantStates = new Object[getRows() + 1];
+                        = (EditableValueHolderState[])list.toArray(new EditableValueHolderState[list.size()]);
+                int rows = getRows();
+                if (rows <= 0)
+                {
+                    rows = getRowCount() - getFirst();
+                }
+                _descendantStates = new Object[rows + 1];
                 int rowIndex = getDescendantStatesRowIndex();
                 _descendantStates[rowIndex] = rowState;
             }
@@ -198,7 +206,7 @@ public class UIData
         }
     }
 
-    private static void saveDescendantComponentStates(UIComponent component,
+    private static int saveDescendantComponentStates(UIComponent component,
                                                       EditableValueHolderState[] states,
                                                       int counter)
     {
@@ -209,8 +217,9 @@ public class UIData
             {
                 states[counter++] = new EditableValueHolderState((EditableValueHolder)child);
             }
-            saveDescendantComponentStates(child, states, counter);
+            counter = saveDescendantComponentStates(child, states, counter);
         }
+        return counter;
     }
 
     private void restoreDescendantComponentStates()
@@ -233,7 +242,7 @@ public class UIData
         }
     }
 
-    private static void restoreDescendantComponentStates(UIComponent component,
+    private static int restoreDescendantComponentStates(UIComponent component,
                                                          EditableValueHolderState[] states,
                                                          int counter)
     {
@@ -246,8 +255,9 @@ public class UIData
             {
                 states[counter++].restore((EditableValueHolder)child);
             }
-            restoreDescendantComponentStates(child, states, counter);
+            counter = restoreDescendantComponentStates(child, states, counter);
         }
+        return counter;
     }
 
 
@@ -326,8 +336,7 @@ public class UIData
     {
         if (isAllChildrenAndFacetsValid())
         {
-            _descendantStates = null;
-            _descendantEditableValueHolderCount = -1;
+            _saveDescendantState = false;
         }
         super.encodeBegin(context);
     }
@@ -335,14 +344,39 @@ public class UIData
 
     private boolean isAllChildrenAndFacetsValid()
     {
-        for (Iterator it = getFacetsAndChildren(); it.hasNext(); )
+        int first = getFirst();
+        int rows = getRows();
+        int last;
+        if (rows == 0)
         {
-            UIComponent child = (UIComponent)it.next();
-            if (child instanceof EditableValueHolder &&
-                !((EditableValueHolder)child).isValid())
+            last = getRowCount();
+        }
+        else
+        {
+            last = first + rows;
+        }
+        try
+        {
+            for (int rowIndex = first; rowIndex < last; rowIndex++)
             {
-                return false;
+                setRowIndex(rowIndex);
+                if (isRowAvailable())
+                {
+                    for (Iterator it = getFacetsAndChildren(); it.hasNext(); )
+                    {
+                        UIComponent child = (UIComponent)it.next();
+                        if (child instanceof EditableValueHolder &&
+                            !((EditableValueHolder)child).isValid())
+                        {
+                            return false;
+                        }
+                    }
+                }
             }
+        }
+        finally
+        {
+            setRowIndex(-1);
         }
         return true;
     }
@@ -653,8 +687,8 @@ public class UIData
         values[2] = _rows;
         values[3] = _value;
         values[4] = _var;
-        values[5] = _descendantStates;
-        values[6] = new Integer(_descendantEditableValueHolderCount);
+        values[5] = _saveDescendantState ? _descendantStates : null;
+        values[6] = _saveDescendantState ? new Integer(_descendantEditableValueHolderCount) : INTEGER_MINUS1;
         return ((Object) (values));
     }
 

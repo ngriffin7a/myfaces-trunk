@@ -109,4 +109,9 @@ public class SimpleCountryList
     {
         return _countries;
     }
+
+    public void setCountries(List countries)
+    {
+        _countries = countries;
+    }
 }

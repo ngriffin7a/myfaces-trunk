@@ -57,6 +57,8 @@ public class MyFacesHtmlDataTable
 
     public void processUpdates(FacesContext context)
     {
+        super.processUpdates(context);
+        
         if (isPreserveDataModel())
         {
             updateModelFromPreservedDataModel(context);
@@ -85,7 +87,6 @@ public class MyFacesHtmlDataTable
             }
         }
 
-        super.processUpdates(context);
     }
 
 

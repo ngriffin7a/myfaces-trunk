@@ -211,6 +211,22 @@
     </navigation-rule>
 
     <navigation-rule>
+        <from-view-id>/simpleList.jsp</from-view-id>
+        <navigation-case>
+            <from-outcome>go_edit_list</from-outcome>
+            <to-view-id>/countryListForm.jsp</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+
+    <navigation-rule>
+        <from-view-id>/countryListForm.jsp</from-view-id>
+        <navigation-case>
+            <from-outcome>countryList</from-outcome>
+            <to-view-id>/simpleList.jsp</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+
+    <navigation-rule>
         <from-view-id>/countryForm.jsp</from-view-id>
         <navigation-case>
             <from-outcome>cancel</from-outcome>

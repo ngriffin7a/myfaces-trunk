@@ -288,6 +288,11 @@
   </component>
 
   <component>
+    <component-type>net.sourceforge.myfaces.HtmlOutputNavigation</component-type>
+    <component-class>net.sourceforge.myfaces.component.ext.HtmlOutputNavigation</component-class>
+  </component>
+
+  <component>
     <component-type>net.sourceforge.myfaces.HtmlPanelLayout</component-type>
     <component-class>net.sourceforge.myfaces.component.ext.HtmlPanelLayout</component-class>
   </component>

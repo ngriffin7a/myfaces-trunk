@@ -55,11 +55,15 @@ managed beans used:
         <f:facet name="body">
             <h:panelGroup id="body">
 
-               <h:commandLink action="go_country" immediate="true">
-                    <h:outputText value="#{example_messages['new_country']}" styleClass="standard" />
-               </h:commandLink>
-               <f:verbatim><br><br>
-</f:verbatim>
+               <h:panelGrid columns="1">
+                   <h:commandLink action="go_country" immediate="true">
+                        <h:outputText value="#{example_messages['new_country']}" styleClass="standard" />
+                   </h:commandLink>
+                   <h:commandLink action="go_edit_list" immediate="true">
+                        <h:outputText value="#{example_messages['country_edit_list']}" styleClass="standard" />
+                   </h:commandLink>
+               </h:panelGrid>
+               <f:verbatim><br></f:verbatim>
 
                 <x:dataTable id="data"
                         styleClass="standardTable"
@@ -69,7 +73,7 @@ managed beans used:
                         columnClasses="standardTable_Column,standardTable_ColumnCentered,standardTable_Column"
                         var="country"
                         value="#{countryList.countries}"
-
+                        preserveDataModel="true"
                    >
                    <h:column>
                        <f:facet name="header">
@@ -78,7 +82,7 @@ managed beans used:
                        <x:commandLink action="go_country" immediate="true" >
                             <h:outputText value="#{country.name}" />
                             <!-- for convenience: MyFaces extension. sets id of current row in countryForm -->
-                            <!-- you don't have to implement custom action! -->
+                            <!-- you don't have to implement a custom action! -->
                             <x:updateActionListener property="#{countryForm.id}" value="#{country.id}" />
                        </x:commandLink>
                    </h:column>
@@ -89,7 +93,6 @@ managed beans used:
                        </f:facet>
                        <h:outputText value="#{country.isoCode}" />
                    </h:column>
-                   <h:outputText value="#{country.isoCode}" />
 
                 </x:dataTable>
                 <f:verbatim><br></f:verbatim>
