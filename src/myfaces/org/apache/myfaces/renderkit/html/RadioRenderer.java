@@ -69,14 +69,15 @@ public class RadioRenderer
         for (int i = 1; it.hasNext(); i++)
         {
             SelectItem selectItem = (SelectItem)it.next();
+            String coumpoundId = uiComponent.getClientId(facesContext);
 
             beforeRenderItem(facesContext, selectItem, i, layoutPageDirection);
             writer.write("<input type=\"radio\"");
 
             writer.write(" name=\"");
-            writer.write(calcRadioName(facesContext, (UISelectOne)uiComponent));
+            writer.write(coumpoundId);
             writer.write("\" id=\"");
-            writer.write(calcRadioName(facesContext, (UISelectOne)uiComponent));
+            writer.write(coumpoundId);
             writer.write('"');
             Object itemValue = selectItem.getValue();
             if (itemValue != null)
@@ -102,16 +103,6 @@ public class RadioRenderer
             renderLabel(facesContext, (UISelectOne)uiComponent, selectItem);
             afterRenderItem(facesContext, selectItem, i, layoutPageDirection);
         }
-    }
-
-    protected String calcRadioName(FacesContext facesContext, UISelectOne selectOne)
-    {
-        return selectOne.getClientId(facesContext);
-    }
-
-    protected String calcRadioId(FacesContext facesContext, UISelectOne selectOne)
-    {
-        return selectOne.getClientId(facesContext);
     }
 
     protected void beforeRenderLabel(FacesContext facesContext, UISelectOne selectOne, SelectItem item)
