@@ -282,11 +282,16 @@
             description="creates javadoc for MyFaces classes"
             depends="myfaces-jar" >
         <mkdir dir="${doc.dir}/javadoc"/>
-        <javadoc sourcepath="${myfaces.src}"
-                 destdir="${doc.dir}/javadoc"
+        <javadoc destdir="${doc.dir}/javadoc"
                  packagenames="org.apache.myfaces.*"
                  classpathref="javadoc.class.path"
-                 failonerror="true"/>
+                 failonerror="true">
+        	<sourcepath>
+           		<pathelement location="${myfaces.src}"/>
+           		<pathelement location="${share.src}"/>
+           		<pathelement location="${components.src}"/>
+		   	</sourcepath>
+        </javadoc>
     </target>
 
     <target name="tlddoc"
