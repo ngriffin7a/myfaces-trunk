@@ -48,6 +48,9 @@ import java.util.Map;
  * @version $Revision$ $Date$
  * 
  * $Log$
+ * Revision 1.33  2004/04/07 01:40:13  dave0000
+ * fix set "root" variable bug
+ *
  * Revision 1.32  2004/03/30 07:40:08  dave0000
  * implement mixed string-reference expressions
  *
@@ -186,15 +189,17 @@ public class ValueBindingImpl extends ValueBinding implements StateHolder
                 //       any Object is allowed.
                 return (val == null) ? Object.class : val.getClass();
             }
-            
-            Object[] baseAndProperty = (Object[]) base_;
-            Object base      = baseAndProperty[0];
-            Object property  = baseAndProperty[1];
-            
-            Integer index = toIndex(base, property);
-            return (index == null)
-                ? _application.getPropertyResolver().getType(base, property)
-                : _application.getPropertyResolver().getType(base, index.intValue());
+            else
+            {
+                Object[] baseAndProperty = (Object[]) base_;
+                Object base      = baseAndProperty[0];
+                Object property  = baseAndProperty[1];
+                
+                Integer index = toIndex(base, property);
+                return (index == null)
+                    ? _application.getPropertyResolver().getType(base, property)
+                    : _application.getPropertyResolver().getType(base, index.intValue());
+            }
         }
         catch (IndexOutOfBoundsException e) 
         {
@@ -227,19 +232,21 @@ public class ValueBindingImpl extends ValueBinding implements StateHolder
 
                 setValueInScope(facesContext, name, newValue);
             }
-            
-            Object[] baseAndProperty = (Object[]) base_;
-            Object base      = baseAndProperty[0];
-            Object property  = baseAndProperty[1];
-
-            Integer index = toIndex(base, property);
-            if (index == null)
-            {
-                _application.getPropertyResolver().setValue(base, property, newValue);
-            }
             else
             {
-                _application.getPropertyResolver().setValue(base, index.intValue(), newValue);
+                Object[] baseAndProperty = (Object[]) base_;
+                Object base      = baseAndProperty[0];
+                Object property  = baseAndProperty[1];
+    
+                Integer index = toIndex(base, property);
+                if (index == null)
+                {
+                    _application.getPropertyResolver().setValue(base, property, newValue);
+                }
+                else
+                {
+                    _application.getPropertyResolver().setValue(base, index.intValue(), newValue);
+                }
             }
         }
         catch (IndexOutOfBoundsException e) 
@@ -275,7 +282,7 @@ public class ValueBindingImpl extends ValueBinding implements StateHolder
             // Request context
             scopeMap = externalContext.getRequestMap();
             obj = scopeMap.get(name);
-            if (obj == null)
+            if (obj != null)
             {
                 break findObject;
             }

@@ -61,4 +61,18 @@ public class SetValueBindingTest extends ELBaseTest
         vb.setValue(_facesContext, "zzz");
         assertSame("zzz", vb.getValue(_facesContext));
     }
+    
+    public void testSetRootValue()
+    {
+        ValueBinding vb;
+
+        // set to a new vatiable
+        vb = _application.createValueBinding("#{newVar}");
+        vb.setValue(_facesContext, "test-value");
+        assertSame("test-value", vb.getValue(_facesContext));
+
+        // update existing variable
+        vb.setValue(_facesContext, "another-value");
+        assertSame("another-value", vb.getValue(_facesContext));
+    }
 }
