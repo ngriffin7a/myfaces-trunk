@@ -196,11 +196,6 @@ implements CallbackRenderer
 
     protected Integer getCurrentRowAttr(FacesContext context)
     {
-        if (peekListComponent(context) == null)
-        {
-            System.out.println("-->");
-        }
-
         Integer value = (Integer) peekListComponent(context).getAttribute(ACTUAL_ROW_ATTR);
 
         return (value == null) ? INITIAL_VALUE : new Integer(value.intValue());

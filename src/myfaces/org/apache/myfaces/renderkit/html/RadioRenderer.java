@@ -100,19 +100,19 @@ public class RadioRenderer
             HTMLUtil.renderDisabledOnUserRole(facesContext, uiComponent);
 
             writer.write('>');
-            renderLabel(facesContext, (UISelectOne)uiComponent, selectItem);
+            renderLabel(facesContext, (UISelectOne)uiComponent, selectItem, i);
             afterRenderItem(facesContext, selectItem, i, layoutPageDirection);
         }
     }
 
-    protected void beforeRenderLabel(FacesContext facesContext, UISelectOne selectOne, SelectItem item)
+    protected void beforeRenderLabel(FacesContext facesContext, UISelectOne selectOne, SelectItem item, int itemCount)
         throws IOException
     {
         ResponseWriter writer = facesContext.getResponseWriter();
         writer.write("&nbsp;");
     }
 
-    protected void renderLabel(FacesContext facesContext, UISelectOne selectOne, SelectItem item)
+    protected void renderLabel(FacesContext facesContext, UISelectOne selectOne, SelectItem item, int itemCount)
         throws IOException
     {
         String label = item.getLabel();
@@ -120,7 +120,7 @@ public class RadioRenderer
         {
             ResponseWriter writer = facesContext.getResponseWriter();
             boolean span = selectOne.getAttribute(JSFAttr.SELECT_ONE_CLASS_ATTR) != null;
-            beforeRenderLabel(facesContext, selectOne, item);
+            beforeRenderLabel(facesContext, selectOne, item, itemCount);
             if (span)
             {
                 writer.write("<span ");
@@ -135,11 +135,11 @@ public class RadioRenderer
             {
                 writer.write("</span>");
             }
-            afterRenderLabel(facesContext, selectOne, item);
+            afterRenderLabel(facesContext, selectOne, item, itemCount);
         }
     }
 
-    protected void afterRenderLabel(FacesContext facesContext, UISelectOne selectOne, SelectItem item)
+    protected void afterRenderLabel(FacesContext facesContext, UISelectOne selectOne, SelectItem item, int itemCount)
         throws IOException
     {
     }
