@@ -18,7 +18,7 @@
  */
 package net.sourceforge.myfaces.context;
 
-import net.sourceforge.myfaces.renderkit.html.state.JspInfo;
+import net.sourceforge.myfaces.renderkit.html.jspinfo.JspInfo;
 import net.sourceforge.myfaces.util.bean.BeanUtils;
 import net.sourceforge.myfaces.util.logging.LogUtil;
 
@@ -509,15 +509,13 @@ public class FacesContextImpl
     {
         String className = null;
 
-        Map beanClasses = JspInfo.getBeanClassesMap(this, getRequestTree().getTreeId());
-        className = (String)beanClasses.get(modelId);
+        className = JspInfo.getBeanType(this, getRequestTree().getTreeId(), modelId);
         if (className == null)
         {
             String responseTreeId = getResponseTree().getTreeId();
             if (!responseTreeId.equals(getRequestTree().getTreeId()))
             {
-                beanClasses = JspInfo.getBeanClassesMap(this, responseTreeId);
-                className = (String)beanClasses.get(modelId);
+                className = JspInfo.getBeanType(this, responseTreeId, modelId);
             }
         }
 

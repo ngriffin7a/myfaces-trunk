@@ -19,7 +19,7 @@
 package net.sourceforge.myfaces.lifecycle;
 
 import net.sourceforge.myfaces.MyFacesFactoryFinder;
-import net.sourceforge.myfaces.renderkit.html.state.JspInfo;
+import net.sourceforge.myfaces.renderkit.html.jspinfo.JspInfo;
 import net.sourceforge.myfaces.renderkit.html.state.StateRenderer;
 import net.sourceforge.myfaces.renderkit.html.state.TreeCopier;
 import net.sourceforge.myfaces.webapp.ServletMapping;
