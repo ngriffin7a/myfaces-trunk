@@ -24,6 +24,9 @@ import org.apache.myfaces.taglib.UIComponentTagBase;
  * @author Sylvain Vieujot (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.13  2005/03/09 04:07:22  svieujot
+ * htmlEditor : Kupu 1.2rc2 update
+ *
  * Revision 1.12  2005/02/18 17:19:30  matzew
  * added release() to tag clazzes.
  *
@@ -75,6 +78,7 @@ public class HtmlEditorTag extends UIComponentTagBase {
     private String showLinksToolBox;
     private String showImagesToolBox;
     private String showTablesToolBox;
+	private String showCleanupExpressionsToolBox;
     private String showDebugToolBox;
     
     private String enabledOnUserRole;
@@ -92,6 +96,7 @@ public class HtmlEditorTag extends UIComponentTagBase {
         showLinksToolBox=null;
         showImagesToolBox=null;
         showTablesToolBox=null;
+		showCleanupExpressionsToolBox=null;
         showDebugToolBox=null;
         enabledOnUserRole=null;
         visibleOnUserRole=null;
@@ -113,6 +118,7 @@ public class HtmlEditorTag extends UIComponentTagBase {
         setBooleanProperty(component, "showLinksToolBox", showLinksToolBox);
         setBooleanProperty(component, "showImagesToolBox", showImagesToolBox);
         setBooleanProperty(component, "showTablesToolBox", showTablesToolBox);
+		setBooleanProperty(component, "showCleanupExpressionsToolBox", showCleanupExpressionsToolBox);
         setBooleanProperty(component, "showDebugToolBox", showDebugToolBox);
         
         setStringProperty(component, UserRoleAware.ENABLED_ON_USER_ROLE_ATTR, enabledOnUserRole);
@@ -167,6 +173,10 @@ public class HtmlEditorTag extends UIComponentTagBase {
         this.showTablesToolBox = showTablesToolBox;
     }
     
+	public void setShowCleanupExpressionsToolBox(String showCleanupExpressionsToolBox){
+        this.showCleanupExpressionsToolBox = showCleanupExpressionsToolBox;
+    }
+	
     public void setShowDebugToolBox(String showDebugToolBox){
         this.showDebugToolBox = showDebugToolBox;
     }

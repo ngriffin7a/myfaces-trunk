@@ -1019,6 +1019,15 @@
             	default is false.
             </description>
         </attribute>
+		<attribute>
+	        <name>showCleanupExpressionsToolBox</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
+			<description>
+            	Show the Cleanup Expressions tool box next to the text.
+            	default is false.
+            </description>
+        </attribute>
        	<attribute>
 	        <name>showDebugToolBox</name>
             <required>false</required>

@@ -35,6 +35,9 @@ import org.apache.myfaces.renderkit.html.util.JavascriptUtils;
  * @author Sylvain Vieujot (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.23  2005/03/09 04:07:22  svieujot
+ * htmlEditor : Kupu 1.2rc2 update
+ *
  * Revision 1.22  2005/02/08 14:24:45  svieujot
  * Temporarily hide unimplemented functionalities (internal images library & internal links library).
  *
@@ -129,7 +132,6 @@ public class HtmlEditorRenderer extends HtmlRenderer {
         
         AddResource.addStyleSheet(HtmlEditorRenderer.class, "kupustyles.css", context);
         AddResource.addStyleSheet(HtmlEditorRenderer.class, "kupudrawerstyles.css", context);
-        AddResource.addStyleSheet(HtmlEditorRenderer.class, "myFaces_kupustyles.css", context); // Additional styles fixes.
         
         AddResource.addJavaScriptToHeader(HtmlEditorRenderer.class, "sarissa.js", context);
         AddResource.addJavaScriptToHeader(HtmlEditorRenderer.class, "kupuhelpers.js", context);
@@ -137,8 +139,10 @@ public class HtmlEditorRenderer extends HtmlRenderer {
         AddResource.addJavaScriptToHeader(HtmlEditorRenderer.class, "kupubasetools.js", context);
         AddResource.addJavaScriptToHeader(HtmlEditorRenderer.class, "kupuloggers.js", context);
         AddResource.addJavaScriptToHeader(HtmlEditorRenderer.class, "kupucontentfilters.js", context);
+		AddResource.addJavaScriptToHeader(HtmlEditorRenderer.class, "kupucleanupexpressions.js", context);
         AddResource.addJavaScriptToHeader(HtmlEditorRenderer.class, "kupucontextmenu.js", context);
-        AddResource.addJavaScriptToHeader(HtmlEditorRenderer.class, "myFaces_kupuinit_form.js", context); // Replaces the standard kupuinit_form.js with a few fixes.
+        //AddResource.addJavaScriptToHeader(HtmlEditorRenderer.class, "myFaces_kupuinit_form.js", context); // Replaces the standard kupuinit_form.js with a few fixes.
+		AddResource.addJavaScriptToHeader(HtmlEditorRenderer.class, "kupuinit.js", context);
         AddResource.addJavaScriptToHeader(HtmlEditorRenderer.class, "kupustart_form.js", context);
         AddResource.addJavaScriptToHeader(HtmlEditorRenderer.class, "kupusourceedit.js", context);
         AddResource.addJavaScriptToHeader(HtmlEditorRenderer.class, "kupudrawers.js", context);
@@ -166,6 +170,43 @@ public class HtmlEditorRenderer extends HtmlRenderer {
 	        			writeTag(writer, "class", "grid");
 	        			writeTag(writer, "class", "data");
 					writer.endElement("table_classes");
+					
+					writer.startElement("cleanup_expressions",null);
+						writer.startElement("set",null);
+							writer.startElement("name",null);
+								writer.write("Convert single quotes to curly ones");
+							writer.endElement("name");
+							writer.startElement("expression",null);
+								writer.startElement("reg",null);
+									writer.write("(\\W)'");
+								writer.endElement("reg");
+								writer.startElement("replacement",null);
+									writer.write("\\1&#x2018;");
+								writer.endElement("replacement");
+							writer.endElement("expression");
+							writer.startElement("expression",null);
+								writer.startElement("reg",null);
+									writer.write("'");
+								writer.endElement("reg");
+								writer.startElement("replacement",null);
+									writer.write("&#x2019;");
+								writer.endElement("replacement");
+							writer.endElement("expression");
+		                writer.endElement("set");
+						writer.startElement("set",null);
+						writer.startElement("name",null);
+							writer.write("Reduce whitespace");
+						writer.endElement("name");
+						writer.startElement("expression",null);
+							writer.startElement("reg",null);
+								writer.write("[ ]{2}");
+							writer.endElement("reg");
+							writer.startElement("replacement",null);
+								writer.write("\\x20");
+							writer.endElement("replacement");
+						writer.endElement("expression");
+					  writer.endElement("set");
+		            writer.endElement("cleanup_expressions");
 	
 					writeTag(writer, "image_xsl_uri", AddResource.getResourceMappedPath(HtmlEditorRenderer.class, "kupudrawers/drawer.xsl", context));
 					writeTag(writer, "link_xsl_uri", AddResource.getResourceMappedPath(HtmlEditorRenderer.class, "kupudrawers/drawer.xsl", context));
@@ -210,7 +251,7 @@ public class HtmlEditorRenderer extends HtmlRenderer {
             				writer.startElement(HTML.BUTTON_ELEM,null);
                             writer.writeAttribute(HTML.TYPE_ATTR, "button",null);
             				writer.writeAttribute(HTML.CLASS_ATTR, "kupu-logo",null);
-            				writer.writeAttribute(HTML.TITLE_ATTR, "Kupu 1.2rc1",null);
+            				writer.writeAttribute(HTML.TITLE_ATTR, "Kupu 1.2rc2",null);
             				writer.writeAttribute(HTML.ACCESSKEY_ATTR, "k",null);
             				writer.writeAttribute(HTML.ONCLICK_ATTR, "window.open('http://kupu.oscom.org');",null);
             					writer.write("&#xA0;");
@@ -296,6 +337,12 @@ public class HtmlEditorRenderer extends HtmlRenderer {
                 	
                 	writer.endElement(HTML.SELECT_ELEM);
                 	
+					writer.startElement(HTML.SPAN_ELEM,null);
+                	writer.writeAttribute(HTML.CLASS_ATTR, "kupu-tb-buttongroup", null);
+					writer.writeAttribute(HTML.STYLE_ATTR, "display: none", null);
+                		writeButton(writer, "kupu-save", "Save", "s");
+                	writer.endElement(HTML.SPAN_ELEM);
+					
                 	writer.startElement(HTML.SPAN_ELEM,null);
                 	writer.writeAttribute(HTML.CLASS_ATTR, "kupu-tb-buttongroup", null);
                 	writer.writeAttribute(HTML.ID_ATTR, "kupu-bg-basicmarkup", null);
@@ -930,6 +977,41 @@ public class HtmlEditorRenderer extends HtmlRenderer {
 
         			writer.endElement(HTML.DIV_ELEM); // Edit table
         			
+            	writer.endElement(HTML.DIV_ELEM);
+				
+            	// Cleanup expressions tool box
+            	writer.startElement(HTML.DIV_ELEM, null);
+            	writer.writeAttribute(HTML.CLASS_ATTR, "kupu-toolbox", null);
+            	writer.writeAttribute(HTML.ID_ATTR, "kupu-toolbox-cleanupexpressions", null);
+            	if( ! editor.isShowCleanupExpressionsToolBox() ){
+            	    writer.writeAttribute(HTML.STYLE_ATTR, "display: none", null);
+            	}
+            		writer.startElement(HTML.H1_ELEM, null);
+            		writer.writeAttribute("xmlns:i18n", "http://xml.zope.org/namespaces/i18n", null);
+            		writer.writeAttribute("i18n:translate", "", null);
+            			writer.write("Cleanup expressions");
+            		writer.endElement(HTML.H1_ELEM);
+            		writer.startElement(HTML.DIV_ELEM, null);
+            		writer.writeAttribute(HTML.CLASS_ATTR, "kupu-toolbox-label", null);
+						writer.startElement(HTML.SPAN_ELEM,null);
+						writer.writeAttribute("xmlns:i18n", "http://xml.zope.org/namespaces/i18n", null);
+	            		writer.writeAttribute("i18n:translate", "", null);
+							writer.write("Select a cleanup action:");
+						writer.endElement(HTML.SPAN_ELEM);
+            		writer.endElement(HTML.DIV_ELEM);
+					writer.startElement(HTML.SELECT_ELEM,null);
+					writer.writeAttribute(HTML.ID_ATTR, "kupucleanupexpressionselect", null);
+					writer.writeAttribute(HTML.CLASS_ATTR, "kupu-toolbox-st", null);
+					writer.endElement(HTML.SELECT_ELEM);
+					writer.startElement(HTML.DIV_ELEM,null);
+					writer.writeAttribute(HTML.STYLE_ATTR,"text-align: center",null);
+						writer.startElement(HTML.BUTTON_ELEM,null);
+						writer.writeAttribute(HTML.TYPE_ATTR,"button",null);
+						writer.writeAttribute(HTML.ID_ATTR,"kupucleanupexpressionbutton",null);
+						writer.writeAttribute(HTML.CLASS_ATTR,"kupu-toolbox-action",null);
+							writer.write("Perform action");
+						writer.endElement(HTML.BUTTON_ELEM);
+					writer.endElement(HTML.DIV_ELEM);
             	writer.endElement(HTML.DIV_ELEM);
             	
             	// Debug tool box

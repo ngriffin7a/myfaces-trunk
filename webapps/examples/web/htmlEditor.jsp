@@ -65,6 +65,7 @@
 						showLinksToolBox="#{editor.showLinksToolBox}"
 						showImagesToolBox="#{editor.showImagesToolBox}"
 						showTablesToolBox="#{editor.showTablesToolBox}"
+						showCleanupExpressionsToolBox="#{editor.showCleanupExpressionsToolBox}"
 						showDebugToolBox="#{editor.showDebugToolBox}"/>
 					
 					<x:div>
@@ -92,6 +93,9 @@
 						<h:selectBooleanCheckbox value="#{editor.showTablesToolBox}" immediate="true"/>
 						<h:outputText value="Show Tables tool box"/>
 
+						<h:selectBooleanCheckbox value="#{editor.showCleanupExpressionsToolBox}" immediate="true"/>
+						<h:outputText value="Show Cleanup expressions tool box"/>
+						
 						<h:selectBooleanCheckbox value="#{editor.showDebugToolBox}" immediate="true"/>
 						<h:outputText value="Show Debug tool box"/>
 					</h:panelGrid>

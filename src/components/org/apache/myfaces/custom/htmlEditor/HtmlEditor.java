@@ -30,6 +30,9 @@ import org.apache.myfaces.renderkit.RendererUtils;
  * @author Sylvain Vieujot (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.18  2005/03/09 04:07:22  svieujot
+ * htmlEditor : Kupu 1.2rc2 update
+ *
  * Revision 1.17  2005/02/06 19:45:32  svieujot
  * Add allowExternalLinks attribute.
  *
@@ -101,6 +104,7 @@ public class HtmlEditor extends HtmlInputText {
     private Boolean _showLinksToolBox;
     private Boolean _showImagesToolBox;
     private Boolean _showTablesToolBox;
+	private Boolean _showCleanupExpressionsToolBox;
     private Boolean _showDebugToolBox;
 
     public HtmlEditor() {
@@ -130,12 +134,13 @@ public class HtmlEditor extends HtmlInputText {
         
         values[3] = toolBarButtons;
         
-        Boolean toolBoxes[] = new Boolean[5];
+        Boolean toolBoxes[] = new Boolean[6];
         toolBoxes[0] = _showPropertiesToolBox;
         toolBoxes[1] = _showLinksToolBox;
         toolBoxes[2] = _showImagesToolBox;
         toolBoxes[3] = _showTablesToolBox;
-        toolBoxes[4] = _showDebugToolBox;
+		toolBoxes[4] = _showCleanupExpressionsToolBox;
+        toolBoxes[5] = _showDebugToolBox;
         
         values[4] = toolBoxes;
         
@@ -162,7 +167,8 @@ public class HtmlEditor extends HtmlInputText {
         _showLinksToolBox = toolBoxes[1];
         _showImagesToolBox = toolBoxes[2];
         _showTablesToolBox = toolBoxes[3];
-        _showDebugToolBox = toolBoxes[4];
+		_showCleanupExpressionsToolBox = toolBoxes[4];
+        _showDebugToolBox = toolBoxes[5];
     }
     
     public String getStyle(){
@@ -267,6 +273,16 @@ public class HtmlEditor extends HtmlInputText {
     public void setShowTablesToolBox(boolean showTablesToolBox){
         this._showTablesToolBox = Boolean.valueOf(showTablesToolBox);
     }
+	
+	public boolean isShowCleanupExpressionsToolBox(){
+   		if (_showCleanupExpressionsToolBox != null)
+   		    return _showCleanupExpressionsToolBox.booleanValue();
+    	ValueBinding vb = getValueBinding("showCleanupExpressionsToolBox");
+    	return vb != null ? ((Boolean)vb.getValue(getFacesContext())).booleanValue() : false;
+    }
+    public void setShowCleanupExpressionsToolBox(boolean showCleanupExpressionsToolBox){
+        this._showCleanupExpressionsToolBox = Boolean.valueOf(showCleanupExpressionsToolBox);
+    }
     
     public boolean isShowDebugToolBox(){
    		if (_showDebugToolBox != null)
@@ -283,6 +299,7 @@ public class HtmlEditor extends HtmlInputText {
    			|| isShowLinksToolBox()
    			|| isShowImagesToolBox()
    			|| isShowTablesToolBox()
+   			|| isShowCleanupExpressionsToolBox()
    			|| isShowDebugToolBox();
     }
 

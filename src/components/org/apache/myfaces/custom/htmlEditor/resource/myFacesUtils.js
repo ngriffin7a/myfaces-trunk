@@ -55,7 +55,6 @@ function myFacesKupuInit(){
 
 function myFacesKupuSubmit(){
 	kupu.prepareForm(document.forms[myFacesKupuFormId], myFacesKupuClientId);
-
 	if( myFacesKupuOriginalDocOnSubmit )
 		return myFacesKupuOriginalDocOnSubmit();
 }

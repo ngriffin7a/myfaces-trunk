@@ -214,6 +214,20 @@ function KupuEditor(document, config, logger) {
         // set the window status so people can see we're actually saving
         window.status= "Please wait while saving document...";
 
+        // call (optional) beforeSave() method on all tools
+        for (var id in this.tools) {
+            var tool = this.tools[id];
+            if (tool.beforeSave) {
+                try {
+                    tool.beforeSave();
+                } catch(e) {
+                    alert(e);
+                    this._initialized = true;
+                    return;
+                };
+            };
+        };
+        
         // pass the content through the filters
         this.logMessage("Starting HTML cleanup");
         var transform = this._filterContent(this.getInnerDocument().documentElement);
@@ -257,7 +271,22 @@ function KupuEditor(document, config, logger) {
         
         // set the window status so people can see we're actually saving
         window.status= "Please wait while saving document...";
-
+/* Removed for MyFaces
+   TODO : Evaluate how to handle this.
+        // call (optional) beforeSave() method on all tools
+        for (var id in this.tools) {
+            var tool = this.tools[id];
+            if (tool.beforeSave) {
+                try {
+                    tool.beforeSave();
+                } catch(e) {
+                    alert(e);
+                    this._initialized = true;
+                    return;
+                };
+            };
+        };
+*/
         // set a default id
         if (!id) {
             id = 'kupu';
@@ -541,7 +570,11 @@ function KupuEditor(document, config, logger) {
 
     this._isDocumentSelected = function() {
         var editable_body = this.getInnerDocument().getElementsByTagName('body')[0];
-        var selrange = this.getInnerDocument().selection.createRange();
+        try {
+            var selrange = this.getInnerDocument().selection.createRange();
+        } catch(e) {
+            return false;
+        }
         var someelement = selrange.parentElement ? selrange.parentElement() : selrange.item(0);
 
         while (someelement.nodeName.toLowerCase() != 'body') {
