@@ -19,7 +19,6 @@
 package net.sourceforge.myfaces.renderkit.html;
 
 import net.sourceforge.myfaces.MyFacesConfig;
-import net.sourceforge.myfaces.renderkit.html.ext.MessageListRenderer;
 import net.sourceforge.myfaces.renderkit.html.ext.NavigationItemRenderer;
 import net.sourceforge.myfaces.renderkit.html.ext.NavigationRenderer;
 import net.sourceforge.myfaces.renderkit.html.state.StateRenderer;
@@ -49,6 +48,7 @@ public class RenderKitImpl
         addRenderer(new ButtonRenderer());
         addRenderer(new HyperlinkRenderer());
         addRenderer(new DataRenderer());
+        addRenderer(new ErrorsRenderer());
         addRenderer(new ListboxRenderer());
         addRenderer(new MenuRenderer());
 
@@ -63,7 +63,6 @@ public class RenderKitImpl
         }
 
         //MyFaces Extensions
-        addRenderer(new MessageListRenderer());
         addRenderer(new NavigationRenderer());
         addRenderer(new NavigationItemRenderer());
     }

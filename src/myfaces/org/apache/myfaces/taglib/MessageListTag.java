@@ -19,7 +19,8 @@
 package net.sourceforge.myfaces.taglib;
 
 import net.sourceforge.myfaces.component.ext.UIMessageList;
-import net.sourceforge.myfaces.renderkit.html.ext.MessageListRenderer;
+import net.sourceforge.myfaces.component.UIOutput;
+import net.sourceforge.myfaces.renderkit.html.ErrorsRenderer;
 
 import javax.faces.component.UIComponent;
 
@@ -35,11 +36,11 @@ public class MessageListTag
     //MyFaces tag extensions:
     public UIComponent createComponent()
     {
-        return new UIMessageList();
+        return new UIOutput();
     }
 
     public String getRendererType()
     {
-        return MessageListRenderer.TYPE;
+        return ErrorsRenderer.TYPE;
     }
 }
