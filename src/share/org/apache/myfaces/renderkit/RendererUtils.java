@@ -36,6 +36,9 @@ import java.util.*;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.17  2005/01/05 23:06:43  svieujot
+ * Fix bug : checkbox wasn't looking at the submitted value.
+ *
  * Revision 1.16  2004/12/14 14:12:33  mmarinschek
  * PR:
  * Obtained from:
@@ -81,6 +84,58 @@ public class RendererUtils
     private static final Log log = LogFactory.getLog(RendererUtils.class);
 
     public static final String SELECT_ITEM_LIST_ATTR = RendererUtils.class.getName() + ".LIST";
+    
+    public static Object getValue(UIComponent component)
+    {
+        if (!(component instanceof ValueHolder))
+        {
+            throw new IllegalArgumentException("Component is not a ValueHolder");
+        }
+
+        if (component instanceof EditableValueHolder)
+        {
+            Object submittedValue = ((EditableValueHolder)component).getSubmittedValue();
+            if (submittedValue != null)
+                return (Boolean)submittedValue;
+        }
+
+        return ((ValueHolder)component).getValue();
+    }
+    
+    public static Boolean getBooleanValue(UIComponent component)
+    {
+        if (!(component instanceof ValueHolder))
+        {
+            throw new IllegalArgumentException("Component is not a ValueHolder");
+        }
+
+        if (component instanceof EditableValueHolder)
+        {
+            Object submittedValue = ((EditableValueHolder)component).getSubmittedValue();
+            if (submittedValue != null)
+            {
+                if (submittedValue instanceof Boolean)
+                {
+                    return (Boolean)submittedValue;
+                }
+                else
+                {
+                    throw new IllegalArgumentException("Expected submitted value of type Date");
+                }
+            }
+        }
+
+        Object value = ((ValueHolder)component).getValue();
+
+        if (value==null || value instanceof Boolean)
+        {
+            return (Boolean) value;
+        }
+        else
+        {
+            throw new IllegalArgumentException("Expected submitted value of type Date");
+        }
+    }
     
     public static Date getDateValue(UIComponent component)
     {

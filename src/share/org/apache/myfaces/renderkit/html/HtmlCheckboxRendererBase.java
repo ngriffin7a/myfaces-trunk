@@ -78,8 +78,10 @@ public class HtmlCheckboxRendererBase extends HtmlRenderer {
             throws IOException {
         RendererUtils.checkParamValidity(facesContext, uiComponent, null);
         if (uiComponent instanceof UISelectBoolean) {
+            Boolean value = RendererUtils.getBooleanValue( uiComponent );
+            boolean isChecked = value != null ? value.booleanValue() : false;;
             renderCheckbox(facesContext, uiComponent, EXTERNAL_TRUE_VALUE,
-                    null, ((UISelectBoolean) uiComponent).isSelected(), true);
+                    null, isChecked, true);
         } else if (uiComponent instanceof UISelectMany) {
             renderCheckboxList(facesContext, (UISelectMany) uiComponent);
         } else {
@@ -134,7 +136,8 @@ public class HtmlCheckboxRendererBase extends HtmlRenderer {
         for (Iterator it = RendererUtils.getSelectItemList(selectMany)
                 .iterator(); it.hasNext();) {
             SelectItem selectItem = (SelectItem) it.next();
-            Object itemValue = selectItem.getValue();
+            Object itemValue = selectItem.getValue(); // TODO : Check here for getSubmittedValue. Look at RendererUtils.getValue
+            
             String itemStrValue;
             if (converter == null) {
                 itemStrValue = itemValue.toString();
