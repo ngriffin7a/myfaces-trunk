@@ -5,7 +5,11 @@ MyFaces Release Notes
 Changes in Release 1.0.2 alpha
 * refactored custom components to net.sourceforge.myfaces.custom package
 * custom message and messages component with new attributes summaryFormat and detailFormat
-* replaces com.oreilly.servlet package cos.jar by commons-codec  
+* replaced com.oreilly.servlet lib cos.jar by commons-codec for Base64 encoding
+* fileupload component now uses commons-fileupload instead of com.oreilly.servlet lib cos.jar
+* Weblogic startup issue now fixed when MyFacesServlet is used instead of FacesServlet
+* validator attribute now supported
+* many many bugfixes
 
 ----------------------------------------------------------------------
 Changes in Release 1.0.1 alpha
