@@ -35,6 +35,9 @@ import java.util.Set;
  * @author Anton Koinov
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.11  2004/12/23 09:15:15  mmarinschek
+ * changes to utils to handle ie better
+ *
  * Revision 1.10  2004/12/02 21:31:56  svieujot
  * Bugfix in encodeString
  *
@@ -326,7 +329,7 @@ public final class JavascriptUtils
         writer.write("\n<script language=\"JavaScript\">\n" +
                      "<!--\n" +
                      "function " + AUTO_SCROLL_FUNCTION + " {\n" +
-                     "    x = 0; y = 0;\n" +
+                     "    var x = 0; var y = 0;\n" +
                      "    if (document.body && document.body.scrollLeft && !isNaN(document.body.scrollLeft)) {\n" +
                      "        x = document.body.scrollLeft;\n" +
                      "    } else if (window.pageXOffset && !isNaN(window.pageXOffset)) {\n" +

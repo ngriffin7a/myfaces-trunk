@@ -78,7 +78,7 @@
                     <h:selectOneMenu id="selone_menu_colors" value="red" styleClass="selectOneMenu">
                         <f:selectItem itemValue="" itemLabel="#{example_messages['empty_selitem']}" />
                         <f:selectItems value="#{carconf.colors}" />
-                        <x:jsValueChangeListener for="selone_menu_subcolors" expressionValue="($srcElem[0].options[$srcElem[0].selectedIndex].value=='color_black')?$destElem.style.display='inline':$destElem.style.display='none';"/>
+                        <x:jsValueChangeListener for="selone_menu_subcolors" expressionValue="($srcElem.item(0).options[$srcElem.item(0).options.selectedIndex].value=='color_black')?$destElem.style.display='inline':$destElem.style.display='none';"/>
                     </h:selectOneMenu>
                     <h:inputText id="selone_menu_subcolors"/>
                 </h:panelGrid>
