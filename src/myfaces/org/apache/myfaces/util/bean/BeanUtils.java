@@ -66,7 +66,9 @@ public class BeanUtils
     {
         if (isNestedPropertyName(propertyName))
         {
-            bean = getNestedBean(bean, propertyName);
+            Object[] nested = getNestedBeanAndPropertyName(bean, propertyName);
+            bean = nested[0];
+            propertyName = (String)nested[1];
         }
         return findPropertyDescriptor(getBeanInfo(bean), propertyName);
     }
@@ -96,7 +98,9 @@ public class BeanUtils
     {
         if (isNestedPropertyName(propertyName))
         {
-            bean = getNestedBean(bean, propertyName);
+            Object[] nested = getNestedBeanAndPropertyName(bean, propertyName);
+            bean = nested[0];
+            propertyName = (String)nested[1];
         }
         return getBeanPropertyValue(bean, propertyName, getBeanInfo(bean));
     }
@@ -140,15 +144,15 @@ public class BeanUtils
         }
         catch (IllegalAccessException e)
         {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Cannot invoke " + bean.getClass() + "." + m.getName() + "() with return type " + m.getReturnType() + "\n", e);
         }
         catch (IllegalArgumentException e)
         {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Cannot invoke " + bean.getClass() + "." + m.getName() + "() with return type " + m.getReturnType() + "\n", e);
         }
         catch (InvocationTargetException e)
         {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Exception when invoking " + bean.getClass() + "." + m.getName() + "() with return type " + m.getReturnType() + "\n", e);
         }
     }
 
@@ -159,7 +163,9 @@ public class BeanUtils
     {
         if (isNestedPropertyName(propertyName))
         {
-            bean = getNestedBean(bean, propertyName);
+            Object[] nested = getNestedBeanAndPropertyName(bean, propertyName);
+            bean = nested[0];
+            propertyName = (String)nested[1];
         }
         setBeanPropertyValue(bean, propertyName, propertyValue, getBeanInfo(bean));
     }
@@ -222,7 +228,9 @@ public class BeanUtils
     {
         if (isNestedPropertyName(propertyName))
         {
-            bean = getNestedBean(bean, propertyName);
+            Object[] nested = getNestedBeanAndPropertyName(bean, propertyName);
+            bean = nested[0];
+            propertyName = (String)nested[1];
         }
         return getBeanPropertyType(getBeanInfo(bean), propertyName);
     }
@@ -256,8 +264,14 @@ public class BeanUtils
         return propertyName.indexOf('.') >= 0;
     }
 
-    private static Object getNestedBean(Object bean,
-                                        String propertyPath)
+    /**
+     *
+     * @param bean
+     * @param propertyPath
+     * @return {NestedBean, PropertyName}
+     */
+    private static Object[] getNestedBeanAndPropertyName(Object bean,
+                                                         String propertyPath)
     {
         Object obj = bean;
         if (obj == null)
@@ -271,7 +285,7 @@ public class BeanUtils
             nextProp = st.nextToken();
             if (!st.hasMoreTokens())
             {
-                return obj;
+                return new Object[] {obj, nextProp};
             }
 
             PropertyDescriptor propDescr = findPropertyDescriptor(obj, nextProp);
@@ -303,7 +317,7 @@ public class BeanUtils
             if (obj == null)
             {
                 LogUtil.getLogger().info("Nested property '" + nextProp + "' of bean " + obj + " is null.");
-                return null;
+                return new Object[2];
             }
         }
     }
@@ -322,17 +336,17 @@ public class BeanUtils
     {
         Object obj;
         String methodName;
-        int dot = propertyPath.lastIndexOf('.');
-        if (dot == -1)
+
+        if (isNestedPropertyName(propertyPath))
         {
-            obj = bean;
-            methodName = propertyPath;
+            Object[] nested = getNestedBeanAndPropertyName(bean, propertyPath);
+            obj = nested[0];
+            methodName = (String)nested[1];
         }
         else
         {
-            //Nested beans
-            obj = getNestedBean(bean, propertyPath);
-            methodName = propertyPath.substring(dot + 1);
+            obj = bean;
+            methodName = propertyPath;
         }
 
         if (obj == null)

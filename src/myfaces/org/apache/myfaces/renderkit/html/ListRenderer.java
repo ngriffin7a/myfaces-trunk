@@ -42,9 +42,9 @@ public class ListRenderer
 {
     public static final String TYPE = "List";
     private static final String ITERATOR_ATTR = ListRenderer.class.getName() + ".iterator";
-    private static final String ACTUAL_ROW_ATTR = AbstractPanelRenderer.class.getName() + ".actrow";
-    private static final String ACTUAL_COLUMN_ATTR = AbstractPanelRenderer.class.getName() + ".actcol";
-    private static final String COMPONENT_COUNT_ATTR = AbstractPanelRenderer.class.getName() + ".compcount";
+    private static final String ACTUAL_ROW_ATTR = ListRenderer.class.getName() + ".actrow";
+    private static final String ACTUAL_COLUMN_ATTR = ListRenderer.class.getName() + ".actcol";
+    private static final String COMPONENT_COUNT_ATTR = ListRenderer.class.getName() + ".compcount";
 
     public boolean supportsComponentType(UIComponent uiComponent)
     {

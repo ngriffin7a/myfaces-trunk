@@ -42,7 +42,7 @@ import java.util.*;
  * @version $Revision$ $Date$
  */
 public abstract class AbstractSelectOptionRenderer
-        extends HTMLRenderer
+    extends HTMLRenderer
 {
     public static final String LIST_ATTR = AbstractSelectOptionRenderer.class.getName() + ".LIST";
 
@@ -51,36 +51,36 @@ public abstract class AbstractSelectOptionRenderer
     {
     }
 
-    public void encodeEnd(FacesContext facesContext, UIComponent uicomponent, int size, String rendererType)
+    public void encodeEnd(FacesContext facesContext, UIComponent uiComponent, int size, String rendererType)
             throws IOException
     {
         ResponseWriter writer = facesContext.getResponseWriter();
 
-        boolean multipleSelect = uicomponent.getComponentType() == UISelectMany.TYPE ? true : false;
+        boolean multipleSelect = uiComponent.getComponentType() == UISelectMany.TYPE ? true : false;
 
-        Iterator it = getSelectItems(facesContext, uicomponent);
+        Iterator it = getSelectItems(facesContext, uiComponent);
         if (it.hasNext())
         {
             writer.write("<select");
             writer.write(" name=\"");
-            writer.write(uicomponent.getClientId(facesContext));
+            writer.write(uiComponent.getClientId(facesContext));
             writer.write("\"");
 
-            CommonAttributes.renderHTMLEventHandlerAttributes(facesContext, uicomponent);
-            CommonAttributes.renderUniversalHTMLAttributes(facesContext, uicomponent);
+            CommonAttributes.renderHTMLEventHandlerAttributes(facesContext, uiComponent);
+            CommonAttributes.renderUniversalHTMLAttributes(facesContext, uiComponent);
             if (rendererType.equals(ListboxRenderer.TYPE))
             {
                 writer.write(" size=\"");
                 writer.write(new Integer(size).toString());
                 writer.write("\"");
                 CommonAttributes.renderAttributes(facesContext,
-                                                  uicomponent,
+                                                  uiComponent,
                                                   ListboxRendererAttributes.COMMON_LISTBOX_ATTRIBUTES);
             }
             else if (rendererType.equals(MenuRenderer.TYPE))
             {
                 CommonAttributes.renderAttributes(facesContext,
-                                                  uicomponent,
+                                                  uiComponent,
                                                   MenuRendererAttributes.COMMON_MENU_ATTRIBUTES);
             }
             else
@@ -91,7 +91,7 @@ public abstract class AbstractSelectOptionRenderer
             if (multipleSelect) writer.write(" multiple ");
             writer.write(">\n");
 
-            Object currentValue = uicomponent.currentValue(facesContext);
+            Object currentValue = uiComponent.currentValue(facesContext);
 
             while (it.hasNext())
             {
@@ -104,13 +104,14 @@ public abstract class AbstractSelectOptionRenderer
                     writer.write(" value=\"");
                     writer.write(HTMLEncoder.encode(str, false, false));
                     writer.write("\"");
-                    if (isItemSelected(facesContext, uicomponent, currentValue, item))
+                    if (isItemSelected(facesContext, uiComponent, currentValue, item))
                     {
                         writer.write(" selected");
                     }
                 }
                 writer.write(">");
                 writer.write(HTMLEncoder.encode(item.getLabel(), true, true));
+
                 writer.write("</option>\n");
             }
 

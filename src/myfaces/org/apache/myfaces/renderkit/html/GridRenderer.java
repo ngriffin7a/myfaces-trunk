@@ -39,9 +39,9 @@ public class GridRenderer
         implements CallbackRenderer, GridRendererAttributes
 {
     public static final String TYPE = "Grid";
-    private static final String COLUMN_COUNT_ATTR = "colcount";
-    private static final String STYLES_ATTR = "styles";
-    private static final String ROW_COUNT_ATTR = "rowcount";
+    private static final String COLUMN_COUNT_ATTR = GridRenderer.class.getName() + ".colcount";
+    private static final String STYLES_ATTR = GridRenderer.class.getName() + ".styles";
+    private static final String ROW_COUNT_ATTR = GridRenderer.class.getName() + ".rowcount";
     private static final Integer ZERO = new Integer(0);
 
     public boolean supportsComponentType(UIComponent uiComponent)

@@ -169,6 +169,7 @@ public class CallbackSupport
     {
         String originalRenderKitId = (String)facesContext.getServletRequest().getAttribute(ORIGINAL_RENDER_KIT_ID_ATTR);
         facesContext.getTree().setRenderKitId(originalRenderKitId);
+        facesContext.getServletRequest().setAttribute(ORIGINAL_RENDER_KIT_ATTR, null);
     }
 
 
