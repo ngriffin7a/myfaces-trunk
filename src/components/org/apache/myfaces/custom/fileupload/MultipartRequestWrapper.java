@@ -18,17 +18,26 @@ package net.sourceforge.myfaces.custom.fileupload;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
-import javax.servlet.http.*;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletRequestWrapper;
 
-import org.apache.commons.fileupload.*;
+import org.apache.commons.fileupload.DefaultFileItemFactory;
+import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.FileUpload;
+import org.apache.commons.fileupload.FileUploadBase;
+import org.apache.commons.fileupload.FileUploadException;
 
 /**
  * @author Sylvain Vieujot (latest modification by $Author$)
  * @version $Revision$ $Date$
+ * $Log$
+ * Revision 1.4  2004/08/02 04:26:06  svieujot
+ * Fix for bug #1001511 : setHeaderEncoding
+ *
  */
 public class MultipartRequestWrapper
 		extends HttpServletRequestWrapper
@@ -49,6 +58,7 @@ public class MultipartRequestWrapper
 		fileUpload = new FileUpload();
 		fileUpload.setSizeMax(maxSize);
 		fileUpload.setFileItemFactory(new DefaultFileItemFactory());
+		fileUpload.setHeaderEncoding( request.getCharacterEncoding() );
 		
 		List requestParameters = null;
 		try{
