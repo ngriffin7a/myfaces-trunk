@@ -39,6 +39,7 @@ import net.sourceforge.myfaces.el.PropertyResolverImpl;
 import net.sourceforge.myfaces.el.VariableResolverImpl;
 import net.sourceforge.myfaces.confignew.element.ManagedBean;
 import net.sourceforge.myfaces.cactus.MyFacesServletTestCase;
+import net.sourceforge.myfaces.lifecycle.LifecycleFactoryImpl;
 
 
 public class ConfigurationCactusTest extends MyFacesServletTestCase
@@ -79,6 +80,11 @@ public class ConfigurationCactusTest extends MyFacesServletTestCase
         LifecycleFactory lifecycleFactory = (LifecycleFactory) FactoryFinder.getFactory(FactoryFinder.LIFECYCLE_FACTORY);
         assertEquals(TestLifecycleFactory.class, lifecycleFactory.getClass());
 
+        LifecycleFactory lifecycleFactoryDelegate = ((TestLifecycleFactory) lifecycleFactory).getDelegate();
+
+        assertNotNull(lifecycleFactoryDelegate);
+        assertEquals(LifecycleFactoryImpl.class, lifecycleFactoryDelegate.getClass());
+        
         // view handler
         ViewHandler viewHandler = application.getViewHandler();
 

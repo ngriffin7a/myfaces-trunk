@@ -16,11 +16,13 @@
 package javax.faces;
 
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.util.*;
+import javax.faces.application.ApplicationFactory;
+import javax.faces.context.FacesContextFactory;
+import javax.faces.lifecycle.LifecycleFactory;
+import javax.faces.render.RenderKitFactory;
 
 /**
  * TODO: The "META-INF/services/" thing
@@ -28,6 +30,9 @@ import java.util.Set;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.15  2004/07/06 23:21:19  o_rossmueller
+ * fix #985217: decoration support for factories
+ *
  * Revision 1.14  2004/07/01 22:00:47  mwessendorf
  * ASF switch
  *
@@ -48,29 +53,38 @@ import java.util.Set;
  */
 public class FactoryFinder
 {
+
     public static final String APPLICATION_FACTORY = "javax.faces.application.ApplicationFactory";
     public static final String FACES_CONTEXT_FACTORY = "javax.faces.context.FacesContextFactory";
     public static final String LIFECYCLE_FACTORY = "javax.faces.lifecycle.LifecycleFactory";
     public static final String RENDER_KIT_FACTORY = "javax.faces.render.RenderKitFactory";
 
-    private static Set validFactoryNames = new HashSet();
+    private static Set validFactoryNames;
+    private static Map abstractFactoryClasses = new HashMap();
 
     private static final Map _registeredFactoryNames = new HashMap();
     private static final Map _factories = new HashMap();
+
+
+    static {
+        validFactoryNames = new HashSet();
+        validFactoryNames.add(FactoryFinder.APPLICATION_FACTORY);
+        validFactoryNames.add(FactoryFinder.FACES_CONTEXT_FACTORY);
+        validFactoryNames.add(FactoryFinder.LIFECYCLE_FACTORY);
+        validFactoryNames.add(FactoryFinder.RENDER_KIT_FACTORY);
+        validFactoryNames = Collections.unmodifiableSet(validFactoryNames);
+
+        abstractFactoryClasses.put(APPLICATION_FACTORY, ApplicationFactory.class);
+        abstractFactoryClasses.put(FACES_CONTEXT_FACTORY, FacesContextFactory.class);
+        abstractFactoryClasses.put(LIFECYCLE_FACTORY, LifecycleFactory.class);
+        abstractFactoryClasses.put(RENDER_KIT_FACTORY, RenderKitFactory.class);
+    }
 
     /**
      * The returned set is immutable
      * @return
      */
     public static Set getValidFactoryNames() {
-      if(validFactoryNames.size() == 0) {
-        validFactoryNames.add(FactoryFinder.APPLICATION_FACTORY);
-        validFactoryNames.add(FactoryFinder.FACES_CONTEXT_FACTORY);
-        validFactoryNames.add(FactoryFinder.LIFECYCLE_FACTORY);
-        validFactoryNames.add(FactoryFinder.RENDER_KIT_FACTORY);
-
-          validFactoryNames = Collections.unmodifiableSet(validFactoryNames);
-      }
       return validFactoryNames;
     }
     
@@ -103,7 +117,8 @@ public class FactoryFinder
         Object factory = factoryMap.get(factoryName);
 
         if (factory == null) {
-            factory = newFactoryInstance((String)factoryClassNames.get(factoryName), classLoader);
+            List classNames = (List) factoryClassNames.get(factoryName);
+            factory = newFactoryInstance((Class)abstractFactoryClasses.get(factoryName), classNames.iterator(), classLoader);
             factoryMap.put(factoryName, factory);
             return factory;
         }
@@ -113,26 +128,70 @@ public class FactoryFinder
         }
     }
 
-    private static Object newFactoryInstance(String factoryImplName,
-                                             ClassLoader classLoader)
+
+    private static Object newFactoryInstance(Class interfaceClass, Iterator classNamesIterator, ClassLoader classLoader)
     {
-        Class factoryClass = null;
         try
         {
-            factoryClass = classLoader.loadClass(factoryImplName);
-            return factoryClass.newInstance();
-        }
-        catch (ClassNotFoundException e)
-        {
-            throw new FacesException(e);
-        } catch (IllegalAccessException e)
+            Object current = null;
+
+            while (classNamesIterator.hasNext())
+            {
+                String implClassName = (String) classNamesIterator.next();
+                Class implClass = classLoader.loadClass(implClassName);
+
+                // check, if class is of expected interface type
+                if (!interfaceClass.isAssignableFrom(implClass))
+                {
+                    throw new IllegalArgumentException("Class " + implClassName + " is no " + interfaceClass.getName());
+                }
+
+                if (current == null)
+                {
+                    // nothing to decorate
+                    current = implClass.newInstance();
+                } else
+                {
+                    // let's check if class supports the decorator pattern
+                    try
+                    {
+                        Constructor delegationConstructor = implClass.getConstructor(new Class[]{interfaceClass});
+                        // impl class supports decorator pattern,
+                        try
+                        {
+                            // create new decorator wrapping current
+                            current = delegationConstructor.newInstance(new Object[]{current});
+                        } catch (InstantiationException e)
+                        {
+                            throw new FacesException(e);
+                        } catch (IllegalAccessException e)
+                        {
+                            throw new FacesException(e);
+                        } catch (InvocationTargetException e)
+                        {
+                            throw new FacesException(e);
+                        }
+                    } catch (NoSuchMethodException e)
+                    {
+                        // no decorator pattern support
+                        current = implClass.newInstance();
+                    }
+                }
+            }
+
+            return current;
+        } catch (ClassNotFoundException e)
         {
             throw new FacesException(e);
         } catch (InstantiationException e)
         {
             throw new FacesException(e);
+        } catch (IllegalAccessException e)
+        {
+            throw new FacesException(e);
         }
     }
+
 
     public static void setFactory(String factoryName,
                                   String implName)
@@ -158,7 +217,13 @@ public class FactoryFinder
                 _registeredFactoryNames.put(classLoader, factoryClassNames);
             }
 
-            factoryClassNames.put(factoryName, implName);
+            List classNameList = (List) factoryClassNames.get(factoryName);
+
+            if (classNameList == null) {
+                classNameList = new ArrayList();
+                factoryClassNames.put(factoryName, classNameList);
+            }
+            classNameList.add(implName);
         }
     }
 

@@ -15,13 +15,52 @@
  */
 package net.sourceforge.myfaces.confignew;
 
-import net.sourceforge.myfaces.lifecycle.LifecycleFactoryImpl;
+import java.util.Iterator;
+import javax.faces.FacesException;
+import javax.faces.lifecycle.Lifecycle;
+import javax.faces.lifecycle.LifecycleFactory;
 
 
 /**
  * @author <a href="mailto:oliver@rossmueller.com">Oliver Rossmueller</a>
  */
-public class TestLifecycleFactory extends LifecycleFactoryImpl
+public class TestLifecycleFactory extends LifecycleFactory
 {
+    private LifecycleFactory delegate;
 
+
+    public TestLifecycleFactory(LifecycleFactory delegate)
+    {
+        this.delegate = delegate;
+    }
+
+
+    public TestLifecycleFactory()
+    {
+        super();
+    }
+
+
+    public void addLifecycle(String id, Lifecycle lifecycle)
+    {
+        delegate.addLifecycle(id, lifecycle);
+    }
+
+
+    public Lifecycle getLifecycle(String id) throws FacesException
+    {
+        return delegate.getLifecycle(id);
+    }
+
+
+    public Iterator getLifecycleIds()
+    {
+        return delegate.getLifecycleIds();
+    }
+
+
+    public LifecycleFactory getDelegate()
+    {
+        return delegate;
+    }
 }

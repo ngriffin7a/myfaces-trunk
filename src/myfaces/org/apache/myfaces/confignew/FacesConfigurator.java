@@ -68,6 +68,9 @@ import org.xml.sax.SAXException;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  *          $Log$
+ *          Revision 1.7  2004/07/06 23:21:19  o_rossmueller
+ *          fix #985217: decoration support for factories
+ *
  *          Revision 1.6  2004/07/01 22:05:09  mwessendorf
  *          ASF switch
  *
@@ -114,12 +117,6 @@ public class FacesConfigurator
     public static final String META_INF_SERVICES_LOCATION = "/META-INF/services/";
 
     private static final String DEFAULT_RENDER_KIT_CLASS = HtmlRenderKitImpl.class.getName();
-    private static final String DEFAULT_STATE_MANAGER_CLASS = JspStateManagerImpl.class.getName();
-    private static final String DEFAULT_VIEW_HANDLER_CLASS = JspViewHandlerImpl.class.getName();
-    private static final String DEFAULT_NAVIGATION_HANDLER_CLASS = NavigationHandlerImpl.class.getName();
-    private static final String DEFAULT_PROPERTY_RESOLVER_CLASS = PropertyResolverImpl.class.getName();
-    private static final String DEFAULT_VARIABLE_RESOLVER_CLASS = VariableResolverImpl.class.getName();
-    private static final String DEFAULT_ACTION_LISTENER_CLASS = ActionListenerImpl.class.getName();
     private static final String DEFAULT_APPLICATION_FACTORY = ApplicationFactoryImpl.class.getName();
     private static final String DEFAULT_FACES_CONTEXT_FACTORY = FacesContextFactoryImpl.class.getName();
     private static final String DEFAULT_LIFECYCLE_FACTORY = LifecycleFactoryImpl.class.getName();
@@ -399,6 +396,7 @@ public class FacesConfigurator
 
     private void configureFactories()
     {
+
         setFactories(FactoryFinder.APPLICATION_FACTORY, _dispenser.getApplicationFactoryIterator(), DEFAULT_APPLICATION_FACTORY);
         setFactories(FactoryFinder.FACES_CONTEXT_FACTORY, _dispenser.getFacesContextFactoryIterator(), DEFAULT_FACES_CONTEXT_FACTORY);
         setFactories(FactoryFinder.LIFECYCLE_FACTORY, _dispenser.getLifecycleFactoryIterator(), DEFAULT_LIFECYCLE_FACTORY);
