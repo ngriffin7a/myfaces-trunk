@@ -130,6 +130,10 @@ public class VariableResolverImpl
                                           ManagedBeanConfig mbc)
     {
     	List managedPropertyConfigList = mbc.getManagedPropertyConfigList();
+        
+        if (managedPropertyConfigList == null)
+            return;
+            
         for (int i = 0, len = managedPropertyConfigList.size(); i < len; i++)
         {
             ManagedPropertyConfig propConfig = 
