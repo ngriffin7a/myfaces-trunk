@@ -19,7 +19,6 @@
 package net.sourceforge.myfaces.renderkit.html.util;
 
 import net.sourceforge.myfaces.component.UISelectMany;
-import net.sourceforge.myfaces.convert.ConverterUtils;
 import net.sourceforge.myfaces.renderkit.attr.CommonRendererAttributes;
 import net.sourceforge.myfaces.renderkit.html.HTMLRenderer;
 import net.sourceforge.myfaces.renderkit.html.ListboxRenderer;
@@ -146,9 +145,14 @@ public class HTMLUtil
             else
             {
                 Object currentValue = uiComponent.currentValue(facesContext);
+                /*
                 currentStrValue = ConverterUtils.getComponentValueAsString(facesContext,
                                                                            uiComponent,
                                                                            currentValue);
+                                                                           */
+                currentStrValue = (currentValue != null
+                                    ? currentValue.toString()
+                                    : null);
             }
 
             while (it.hasNext())

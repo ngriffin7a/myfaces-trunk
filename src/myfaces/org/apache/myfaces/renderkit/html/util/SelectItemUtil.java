@@ -20,7 +20,6 @@ package net.sourceforge.myfaces.renderkit.html.util;
 
 import net.sourceforge.myfaces.component.UISelectItem;
 import net.sourceforge.myfaces.component.UISelectItems;
-import net.sourceforge.myfaces.convert.ConverterUtils;
 import net.sourceforge.myfaces.util.bundle.BundleUtils;
 
 import javax.faces.component.SelectItem;
@@ -142,9 +141,14 @@ public class SelectItemUtil
         for (int i = 0; i < selectedValues.length; i++)
         {
             Object objValue = selectedValues[i];
+            /*
             String strValue = ConverterUtils.getComponentValueAsString(facesContext,
                                                                        uiSelectMany,
                                                                        objValue);
+                                                                       */
+            String strValue = (objValue != null
+                                ? objValue.toString()
+                                : null);
             set.add(strValue);
         }
 
