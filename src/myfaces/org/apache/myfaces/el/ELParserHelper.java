@@ -1,3 +1,21 @@
+/**
+ * MyFaces - the free JSF implementation
+ * Copyright (C) 2003, 2004  The MyFaces Team (http://myfaces.sourceforge.net)
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+ */
 package net.sourceforge.myfaces.el;
 
 import java.io.StringReader;
@@ -34,6 +52,18 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 
+/**
+ * Utility class to implement support functionality to "morph" JSP EL into JSF
+ * EL
+ * 
+ * @author Anton Koinov (latest modification by $Author$)
+ * @version $Revision$ $Date$
+ * 
+ * $Log$
+ * Revision 1.2  2004/04/08 23:22:18  dave0000
+ * remove assert statements
+ *
+ */
 public class ELParserHelper
 {
     static final Log           log      = LogFactory
@@ -52,7 +82,7 @@ public class ELParserHelper
     public static Object parseExpression(String expressionString)
     {
         expressionString = toJspElExpression(expressionString);
-        
+
         ELParser parser = new ELParser(new StringReader(expressionString));
         try
         {
@@ -266,7 +296,12 @@ public class ELParserHelper
             }
 
             // ignore other elements
-            assert expression instanceof String;
+            else if (!(expression instanceof String))
+            {
+                throw new IllegalStateException(
+                    "Expression element of unknown class: "
+                        + expression.getClass().getName());
+            }
         }
     }
 
@@ -292,11 +327,15 @@ public class ELParserHelper
             replaceSuffixes(((UnaryOperatorExpression) expression)
                 .getExpression());
         }
-        
+
         // ignore the remaining expression types
-        assert expression instanceof FunctionInvocation
-            || expression instanceof Literal
-            || expression instanceof NamedValue;
+        else if (!(expression instanceof FunctionInvocation
+            || expression instanceof Literal || expression instanceof NamedValue))
+        {
+            throw new IllegalStateException(
+                "Expression element of unknown class: "
+                    + expression.getClass().getName());
+        }
     }
 
     private static void replaceSuffixes(ComplexValue complexValue)
@@ -310,13 +349,23 @@ public class ELParserHelper
             ValueSuffix suffix = (ValueSuffix) suffixes.get(i);
             if (suffix instanceof PropertySuffix)
             {
-                assert !(suffix instanceof MyPropertySuffix);
+                if (suffix instanceof MyPropertySuffix)
+                {
+                    throw new IllegalStateException(
+                        "Suffix of is MyPropertySuffix and must not be");
+                }
+
                 suffixes.set(i, new MyPropertySuffix((PropertySuffix) suffix,
                     application));
             }
             else if (suffix instanceof ArraySuffix)
             {
-                assert !(suffix instanceof MyArraySuffix);
+                if (suffix instanceof MyArraySuffix)
+                {
+                    throw new IllegalStateException(
+                        "Suffix of is MyArraySuffix and must not be");
+                }
+
                 suffixes.set(i, new MyArraySuffix((ArraySuffix) suffix,
                     application));
             }
