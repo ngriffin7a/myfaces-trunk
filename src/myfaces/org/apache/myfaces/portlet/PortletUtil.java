@@ -36,13 +36,23 @@ public final class PortletUtil
     {
         if (!isPortletRequest(facesContext)) return false;
         
-        return facesContext.getExternalContext().getResponse() instanceof RenderResponse;
+        try{
+            return facesContext.getExternalContext().getResponse() instanceof RenderResponse;
+        }catch(NoClassDefFoundError e){
+            // noop
+        }
+        return false;
     }
     
     public static boolean isPortletRequest(FacesContext facesContext)
     {
-        return facesContext.getExternalContext()
+        try{
+            return facesContext.getExternalContext()
                            .getSessionMap()
                            .get(MyFacesGenericPortlet.PORTLET_REQUEST_FLAG) != null;
+        }catch(NoClassDefFoundError e){
+            // noop
+        }
+        return false;
     }
 }
