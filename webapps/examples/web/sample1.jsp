@@ -68,12 +68,16 @@ managed beans used:
                 <x:messages id="messageList" styleClass="error" summaryFormat="{0} in {1}" />
 
                 <f:verbatim>
-                    <h4>A Form</h4>
+                    <h4>
+                </f:verbatim>
+			<h:outputText value="#{example_messages['sample1_form']}"/>
+                <f:verbatim>
+		    </h4>
                     <table border="1"><tr><td>
                 </f:verbatim>
 
                 <h:form id="form1" name="calcForm">
-                    <h:outputLabel for="form1:number1" value="Number 1" />
+                    <h:outputLabel for="form1:number1" value="#{example_messages['sample1_number']} 1" />
                     <h:outputText value="#{validationController.number1ValidationLabel}"/>
                     <f:verbatim>: </f:verbatim>
                     <h:inputText id="number1" value="#{calcForm.number1}" maxlength="10" size="25" required="true" >
@@ -81,7 +85,7 @@ managed beans used:
                     </h:inputText>
                     <h:message id="number1Error" for="form1:number1" styleClass="error" /><f:verbatim><br></f:verbatim>
 
-                    <h:outputLabel for="form1:number2" value="Number 2" />
+                    <h:outputLabel for="form1:number2" value="#{example_messages['sample1_form']} 2" />
                     <h:outputText value="#{validationController.number2ValidationLabel}"/>
                     <f:verbatim>: </f:verbatim>
                     <h:inputText id="number2" value="#{calcForm.number2}" maxlength="10" size="25" required="true" >
@@ -89,43 +93,49 @@ managed beans used:
                     </h:inputText>
                     <h:message id="number2Error" for="form1:number2" styleClass="error" /><f:verbatim><br></f:verbatim>
 
-                    <h:outputLabel for="form1:result" value="Result" /><f:verbatim>: </f:verbatim>
+                    <h:outputLabel for="form1:result" value="#{example_messages['sample1_result']}" /><f:verbatim>: </f:verbatim>
                     <h:outputText id="result" value="#{calcForm.result}" /><f:verbatim><br></f:verbatim>
 
-                    <h:commandButton id="addButton" value="Add them" action="none">
+                    <h:commandButton id="addButton" value="#{example_messages['sample1_add']}" action="none">
                         <f:actionListener type="net.sourceforge.myfaces.examples.example1.CalcActionListener" ></f:actionListener>
                     </h:commandButton>
-                    <h:commandButton id="subtractButton" value="Subtract them" action="none">
+                    <h:commandButton id="subtractButton" value="#{example_messages['sample1_sub']}" action="none">
                         <f:actionListener type="net.sourceforge.myfaces.examples.example1.CalcActionListener" ></f:actionListener>
                     </h:commandButton>
                     <f:verbatim><br></f:verbatim>
 
-                    <h:commandLink id="href1" action="none"><f:verbatim>Add them by clicking this link</f:verbatim>
+                    <h:commandLink id="href1" action="none">
+                        <h:outputText value="#{example_messages['sample1_add_link']}"/>
                         <f:actionListener type="net.sourceforge.myfaces.examples.example1.CalcActionListener" ></f:actionListener>
                     </h:commandLink><f:verbatim><br></f:verbatim>
-                    <h:commandLink id="href2" action="none"><f:verbatim>Subtract them by clicking this link</f:verbatim>
+                    <h:commandLink id="href2" action="none">
+                        <h:outputText value="#{example_messages['sample1_sub_link']}"/>
                         <f:actionListener type="net.sourceforge.myfaces.examples.example1.CalcActionListener" ></f:actionListener>
                     </h:commandLink>
                 </h:form>
 
                 <f:verbatim>
                     </td></tr></table>
-                    <h4>Another Form</h4>
+                    <h4>
+                </f:verbatim>
+                    <h:outputText value="#{example_messages['sample1_another_form']}"/>
+                <f:verbatim>
+		    </h4>
                     <table border="1"><tr><td>
                 </f:verbatim>
 
                 <h:form id="form2" name="ucaseForm">
-                    <h:outputLabel for="form2:text" value="Text" />
+                    <h:outputLabel for="form2:text" value="#{example_messages['sample1_text']}" />
                     <h:outputText value="#{validationController.textValidationLabel}"/>
                     <f:verbatim>: </f:verbatim>
                     <h:inputText id="text" value="#{ucaseForm.text}">
                         <f:validateLength minimum="3" maximum="7"/>
                     </h:inputText>
                     <h:message id="textError" for="form2:text" styleClass="error" /><f:verbatim><br></f:verbatim>
-                    <h:commandButton id="ucaseButton" value="Make it uppercase" action="none">
+                    <h:commandButton id="ucaseButton" value="#{example_messages['sample1_uppercase']}" action="none">
                         <f:actionListener type="net.sourceforge.myfaces.examples.example1.UCaseActionListener" />
                     </h:commandButton>
-                    <h:commandButton id="lcaseButton" value="Make it lowercase" action="none">
+                    <h:commandButton id="lcaseButton" value="#{example_messages['sample1_lowercase']}" action="none">
                         <f:actionListener type="net.sourceforge.myfaces.examples.example1.UCaseActionListener" />
                     </h:commandButton>
                     <f:verbatim><br></f:verbatim>
@@ -133,14 +143,17 @@ managed beans used:
 
                 <f:verbatim>
                     </td></tr></table>
-
-                    <h4>Validation</h4>
+                    <h4>
+                </f:verbatim>
+                    <h:outputText value="#{example_messages['sample1_validation']}"/>
+                <f:verbatim>
+		    </h4>
                     <table border="1"><tr><td>
                 </f:verbatim>
 
                 <h:form id="form3" name="valForm">
-                    <h:commandButton id="valDisable" value="Disable validation" action="#{validationController.disableValidation}" />
-                    <h:commandButton id="valEnable" value="Enable validation" action="#{validationController.enableValidation}" />
+                    <h:commandButton id="valDisable" value="#{example_messages['sample1_disable_validation']}" action="#{validationController.disableValidation}" />
+                    <h:commandButton id="valEnable" value="#{example_messages['sample1_enable_validation']}" action="#{validationController.enableValidation}" />
                 </h:form>
 
                 <f:verbatim>

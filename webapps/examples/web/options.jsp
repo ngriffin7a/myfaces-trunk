@@ -81,7 +81,7 @@ managed beans used:
                             <f:selectItem id="item103" itemLabel="Upside down" itemValue="upsideDown" />
                         </h:selectOneMenu>
 <f:verbatim><br></f:verbatim>
-                        <h:commandButton id="apply" value="Apply" action="#{optionsCtrl.changeLocale}"/>
+                        <h:commandButton id="apply" value="#{example_messages['button_apply']}" action="#{optionsCtrl.changeLocale}"/>
                     </h:form>
 
 <f:verbatim>
