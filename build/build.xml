@@ -25,7 +25,7 @@
 
     <!-- classpath for compiling api classes -->
     <path id="jsfapi.class.path">
-        <pathelement location="${servlet-api.jar}"/>
+        <pathelement location="${servlet.jar}"/>
         <pathelement location="${jsp-api.jar}"/>
         <pathelement location="${jstl.jar}"/>
     </path>
@@ -33,7 +33,7 @@
     <!-- classpath for compiling shared classes -->
     <path id="share.class.path">
         <pathelement location="${jsfapi.src}"/>
-        <pathelement location="${servlet-api.jar}"/>
+        <pathelement location="${servlet.jar}"/>
         <pathelement location="${jsp-api.jar}"/>
         <pathelement location="${jstl.jar}"/>
         <pathelement location="${commons-logging.jar}"/>
@@ -44,7 +44,7 @@
     <path id="myfaces.class.path">
         <pathelement location="${jsfapi.src}"/>
         <pathelement location="${share.src}"/>
-        <pathelement location="${servlet-api.jar}"/>
+        <pathelement location="${servlet.jar}"/>
         <pathelement location="${jsp-api.jar}"/>
         <pathelement location="${jstl.jar}"/>
         <pathelement location="${cos.jar}"/>    <!-- Base64 classes -->
@@ -56,7 +56,7 @@
     <path id="components.class.path">
         <pathelement location="${jsfapi.src}"/>
         <pathelement location="${share.src}"/>
-        <pathelement location="${servlet-api.jar}"/>
+        <pathelement location="${servlet.jar}"/>
         <pathelement location="${jsp-api.jar}"/>
         <pathelement location="${jstl.jar}"/>
         <pathelement location="${cos.jar}"/>
@@ -66,7 +66,7 @@
 
     <!-- classpath for javadoc creation -->
     <path id="javadoc.class.path">
-        <pathelement location="${servlet-api.jar}"/>
+        <pathelement location="${servlet.jar}"/>
         <pathelement location="${jsp-api.jar}"/>
         <pathelement location="${jstl.jar}"/>
         <pathelement location="${cos.jar}"/>
