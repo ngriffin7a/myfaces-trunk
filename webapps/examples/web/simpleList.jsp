@@ -68,7 +68,7 @@ managed beans used:
                    >
                    <h:column>
                        <f:facet name="header">
-                          <h:output_text value="Country name" />
+                          <h:output_text value="#{example_messages['label_country_name']}" />
                        </f:facet>
                        <h:command_link actionListener="#{countryAction.initCountryForm}" action="go_country" >
                             <h:output_text value="#{country.name}" />
@@ -78,7 +78,7 @@ managed beans used:
 
                    <h:column>
                        <f:facet name="header">
-                          <h:output_text value="Iso-Code" />
+                          <h:output_text value="#{example_messages['label_country_iso']}" />
                        </f:facet>
                        <h:output_text value="#{country.isoCode}" />
                    </h:column>

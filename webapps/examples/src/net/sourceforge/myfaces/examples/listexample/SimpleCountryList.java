@@ -61,7 +61,7 @@ public class SimpleCountryList
             SimpleCountry country = (SimpleCountry)_countries.get(i);
             if (country.getId() > maxId)
             {
-                maxId = maxId;
+                maxId = country.getId();
             }
         }
         return maxId + 1;
