@@ -23,6 +23,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import javax.faces.FactoryFinder;
+import javax.faces.application.StateManager;
 import javax.faces.component.UIViewRoot;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
@@ -40,6 +41,9 @@ import java.io.IOException;
  * @author Manfred Geiler
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.17  2004/07/21 11:22:40  mwessendorf
+ * last modification in effect of Adam Winer bug-report.
+ *
  * Revision 1.16  2004/07/01 22:05:20  mwessendorf
  * ASF switch
  *
@@ -223,7 +227,7 @@ public class JspStateManagerImpl
             // first call to saveSerializedView --> create SerializedView
             Object treeStruct = getTreeStructureToSave(facesContext);
             Object compStates = getComponentStateToSave(facesContext);
-            serializedView = new SerializedView(treeStruct, compStates);
+            serializedView = new StateManager.SerializedView(treeStruct, compStates);
             externalContext.getRequestMap().put(SERIALIZED_VIEW_REQUEST_ATTR,
                                                 serializedView);
         }
