@@ -18,14 +18,15 @@
  */
 package net.sourceforge.myfaces.config;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
- * DOCUMENT ME!
+ * Implements the configureation class for managed beans defined with &lt;managed-bean&gt;
+ * in faces-config.xml
+ *  
  * @author Manfred Geiler (latest modification by $Author$)
+ * @author Anton Koinov
  * @version $Revision$ $Date$
  */
 public class ManagedBeanConfig
@@ -34,7 +35,7 @@ public class ManagedBeanConfig
     private String _managedBeanName;
     private String _managedBeanClass;
     private String _managedBeanScope;
-    private Map _managedPropertyConfigMap;
+    private List _managedPropertyConfigList;
 
     public String getManagedBeanName()
     {
@@ -70,25 +71,15 @@ public class ManagedBeanConfig
 
     public void addManagedPropertyConfig(ManagedPropertyConfig propertyConfig)
     {
-        if (_managedPropertyConfigMap == null)
+        if (_managedPropertyConfigList == null)
         {
-            _managedPropertyConfigMap = new HashMap();
+            _managedPropertyConfigList = new ArrayList();
         }
-        _managedPropertyConfigMap.put(propertyConfig.getPropertyName(),
-                                      propertyConfig);
+		_managedPropertyConfigList.add(propertyConfig);
     }
 
-    public Iterator getManagedPropertyNames()
-    {
-        return _managedPropertyConfigMap == null
-                ? Collections.EMPTY_SET.iterator()
-                : _managedPropertyConfigMap.keySet().iterator();
+    public List getManagedPropertyConfigList() {
+        return _managedPropertyConfigList;
     }
-
-    public ManagedPropertyConfig getManagedPropertyConfig(String propertyName)
-    {
-        return (ManagedPropertyConfig)_managedPropertyConfigMap.get(propertyName);
-    }
-
 
 }

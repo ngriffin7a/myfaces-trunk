@@ -33,7 +33,7 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.util.Iterator;
+import java.util.List;
 
 /**
  * JSF 1.0 PRD2, 5.2.1
@@ -131,9 +131,11 @@ public class VariableResolverImpl
                                           Object bean,
                                           ManagedBeanConfig mbc)
     {
-        for (Iterator it = mbc.getManagedPropertyNames(); it.hasNext(); )
+    	List managedPropertyConfigList = mbc.getManagedPropertyConfigList();
+        for (int i = 0, len = managedPropertyConfigList.size(); i < len; i++)
         {
-            ManagedPropertyConfig propConfig = mbc.getManagedPropertyConfig((String)it.next());
+            ManagedPropertyConfig propConfig = 
+            	(ManagedPropertyConfig)managedPropertyConfigList.get(i);
 
             if (propConfig.getMapEntriesConfig() != null)
             {
