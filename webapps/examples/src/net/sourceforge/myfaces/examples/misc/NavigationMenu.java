@@ -29,16 +29,16 @@ public class NavigationMenu
         String label = GuiUtil.getMessageResource("nav_Info", null);
         NavigationMenuItem[] menu= new NavigationMenuItem[1];
 
-        menu[0] = new NavigationMenuItem(label, label, null, null, true);
+        menu[0] = new NavigationMenuItem(label, null, null, true);
 
         NavigationMenuItem[] items = new NavigationMenuItem[2];
         menu[0].setNavigationMenuItems(items);
 
         label = GuiUtil.getMessageResource("nav_Contact", null);
-        items[0] = new NavigationMenuItem(label, label, "go_contact", "jscookmenu/ThemeOffice/help.gif", false);
+        items[0] = new NavigationMenuItem(label, "go_contact", "jscookmenu/ThemeOffice/help.gif", false);
 
         label = GuiUtil.getMessageResource("nav_Copyright", null);
-        items[1] = new NavigationMenuItem(label, label, "go_copyright", "jscookmenu/ThemeOffice/help.gif", false);
+        items[1] = new NavigationMenuItem(label, "go_copyright", "jscookmenu/ThemeOffice/help.gif", false);
 
         return menu;
     }
