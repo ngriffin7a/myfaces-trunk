@@ -44,6 +44,9 @@ import java.util.Set;
  * @author Anton Koinov
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.4  2004/05/05 18:03:00  o_rossmueller
+ * fix #948110: render span element for styleClass
+ *
  * Revision 1.3  2004/04/02 13:57:13  manolito
  * extended HtmlSelectManyCheckbox with layout "spread" and custom Checkbox component
  *
@@ -106,6 +109,14 @@ public class HtmlCheckboxRendererBase
         }
 
         ResponseWriter writer = facesContext.getResponseWriter();
+        String styleClass = getStyleClass(selectMany);
+
+        if (styleClass != null && styleClass.length() > 0) {
+            writer.startElement(HTML.SPAN_ELEM, selectMany);
+            writer.writeAttribute(HTML.CLASS_ATTR, styleClass, null);
+        }
+
+
         writer.startElement(HTML.TABLE_ELEM, selectMany);
         if (!pageDirectionLayout) writer.startElement(HTML.TR_ELEM, selectMany);
 
@@ -150,6 +161,9 @@ public class HtmlCheckboxRendererBase
 
         if (!pageDirectionLayout) writer.endElement(HTML.TR_ELEM);
         writer.endElement(HTML.TABLE_ELEM);
+        if (styleClass != null && styleClass.length() > 0) {
+            writer.endElement(HTML.SPAN_ELEM);
+        }
     }
 
 
@@ -164,6 +178,19 @@ public class HtmlCheckboxRendererBase
             return (String)selectMany.getAttributes().get(JSFAttr.LAYOUT_ATTR);
         }
     }
+
+    protected String getStyleClass(UISelectMany selectMany)
+        {
+            if (selectMany instanceof HtmlSelectManyCheckbox)
+            {
+                return ((HtmlSelectManyCheckbox)selectMany).getStyleClass();
+            }
+            else
+            {
+                return (String)selectMany.getAttributes().get(JSFAttr.STYLE_CLASS_ATTR);
+            }
+        }
+
 
     public void decode(FacesContext facesContext, UIComponent uiComponent)
     {
