@@ -32,6 +32,9 @@ import java.io.IOException;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.4  2004/06/04 12:10:35  royalts
+ * added check on isArrow
+ *
  * Revision 1.3  2004/05/18 14:31:38  manolito
  * user role support completely moved to components source tree
  *
@@ -53,7 +56,7 @@ public class HtmlSortHeaderRenderer
             HtmlCommandSortHeader sortHeader = (HtmlCommandSortHeader)component;
             HtmlDataTable dataTable = sortHeader.findParentDataTable();
 
-            if (sortHeader.getColumnName().equals(dataTable.getSortColumn()))
+            if (sortHeader.isArrow() && sortHeader.getColumnName().equals(dataTable.getSortColumn()))
             {
                 ResponseWriter writer = facesContext.getResponseWriter();
 
