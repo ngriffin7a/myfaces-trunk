@@ -24,7 +24,7 @@
     <property name="web-inf.dir" value="${project.dir}/web/WEB-INF"/>
 
     <!-- Destination Verzeichnis fürs Kompilieren -->
-    <property name="classes.dir" value="${temp.dir}/classes"/>
+    <property name="classes.dir" value="${project.dir}/web/WEB-INF/classes"/>
 
     <!-- Compiletime libraries (servlet.jar) -->
     <property name="lib.dir" value="${project.dir}/lib"/>
@@ -102,7 +102,6 @@
         <delete quiet="true" failonerror="false" includeEmptyDirs="true">
             <fileset dir="${classes.dir}"/>
             <fileset dir="${temp.dir}"/>
-            <fileset dir="${project.dir}/web/WEB-INF/classes"/>
         </delete>
     </target>
 
@@ -134,7 +133,10 @@
                                   temp/**,
                                   *.ipr,*.iws"/>
             <tarfileset dir="${temp.dir}/api"
-                prefix="myfaces-${manifest.impl.version}/doc/api" />
+                        prefix="myfaces-${manifest.impl.version}/doc/api" />
+            <tarfileset dir="${temp.dir}"
+                        includes="myfaces.jar,myfaces-examples.jar"
+                        prefix="myfaces-${manifest.impl.version}/web/WEB-INF/lib"/>
         </tar>
     </target>
 

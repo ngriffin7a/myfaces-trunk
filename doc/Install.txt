@@ -17,8 +17,8 @@ To run the examples you must add the myfaces context to your Tomcat's configurat
 
         <!-- MyFaces Context -->
         <Context path="/myfaces" docBase="<myfaces-working-dir>/web" debug="0" privileged="true" reloadable="true">
-                                     <!-- |
-                                          Adjust to the path of your installation! -->
+                              <!--        |
+                                          +-- Adjust to the path of your installation! -->
           <Logger className="org.apache.catalina.logger.FileLogger"
                   prefix="localhost_myfaces_log." suffix=".txt" timestamp="true"/>
           <Loader checkInterval="5" className="org.apache.catalina.loader.WebappLoader"/>
