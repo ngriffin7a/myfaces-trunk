@@ -310,7 +310,7 @@ public class HtmlLinkRenderer
 
         //submit
         onClick.append(jsForm);
-        onClick.append(".submit()");
+        onClick.append(".submit();");
 
         writer.startElement(HTML.ANCHOR_ELEM, commandLink);
         writer.writeURIAttribute(HTML.HREF_ATTR, "#", null);
