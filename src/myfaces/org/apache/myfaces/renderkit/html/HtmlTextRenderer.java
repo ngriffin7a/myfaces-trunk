@@ -23,6 +23,8 @@ import net.sourceforge.myfaces.renderkit.RendererUtils;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLUtil;
 
 import javax.faces.component.UIComponent;
+import javax.faces.component.UIInput;
+import javax.faces.component.UIOutput;
 import javax.faces.component.html.HtmlInputText;
 import javax.faces.component.html.HtmlOutputText;
 import javax.faces.context.FacesContext;
@@ -46,13 +48,13 @@ public class HtmlTextRenderer
 
         if (RendererUtils.isVisibleOnUserRole(facesContext, component))
         {
-            if (component instanceof HtmlOutputText)
+            if (component instanceof UIInput)
             {
-                renderOutput(facesContext, (HtmlOutputText)component);
+                renderInput(facesContext, (UIInput)component);
             }
-            else if (component instanceof HtmlInputText)
+            else if (component instanceof UIOutput)
             {
-                renderInput(facesContext, (HtmlInputText)component);
+                renderOutput(facesContext, (UIOutput)component);
             }
             else
             {
@@ -62,11 +64,20 @@ public class HtmlTextRenderer
     }
 
 
-    public static void renderOutput(FacesContext facesContext, HtmlOutputText htmlOutput)
+    protected static void renderOutput(FacesContext facesContext, UIOutput uiOutput)
         throws IOException
     {
-        String text = RendererUtils.getStringValue(facesContext, htmlOutput);
-        renderOutputText(facesContext, htmlOutput, text, htmlOutput.isEscape());
+        String text = RendererUtils.getStringValue(facesContext, uiOutput);
+        boolean escape;
+        if (uiOutput instanceof HtmlOutputText)
+        {
+            escape = ((HtmlOutputText)uiOutput).isEscape();
+        }
+        else
+        {
+            escape = RendererUtils.getBooleanAttribute(uiOutput, JSFAttr.ESCAPE_ATTR, true);
+        }
+        renderOutputText(facesContext, uiOutput, text, escape);
     }
 
 
@@ -97,15 +108,15 @@ public class HtmlTextRenderer
     }
 
 
-    public static void renderInput(FacesContext facesContext, HtmlInputText htmlInput)
+    protected static void renderInput(FacesContext facesContext, UIInput uiInput)
         throws IOException
     {
         ResponseWriter writer = facesContext.getResponseWriter();
 
-        String clientId = htmlInput.getClientId(facesContext);
-        String value = RendererUtils.getStringValue(facesContext, htmlInput);
+        String clientId = uiInput.getClientId(facesContext);
+        String value = RendererUtils.getStringValue(facesContext, uiInput);
 
-        writer.startElement(HTML.INPUT_ELEM, htmlInput);
+        writer.startElement(HTML.INPUT_ELEM, uiInput);
         writer.writeAttribute(HTML.ID_ATTR, clientId, null);
         writer.writeAttribute(HTML.NAME_ATTR, clientId, null);
         writer.writeAttribute(HTML.TYPE_ATTR, HTML.INPUT_TYPE_TEXT, null);
@@ -114,8 +125,8 @@ public class HtmlTextRenderer
             writer.writeAttribute(HTML.VALUE_ATTR, value, JSFAttr.VALUE_ATTR);
         }
 
-        HTMLUtil.renderHTMLAttributes(writer, htmlInput, HTML.INPUT_PASSTHROUGH_ATTRIBUTES);
-        HTMLUtil.renderDisabledOnUserRole(writer, htmlInput, facesContext);
+        HTMLUtil.renderHTMLAttributes(writer, uiInput, HTML.INPUT_PASSTHROUGH_ATTRIBUTES);
+        HTMLUtil.renderDisabledOnUserRole(writer, uiInput, facesContext);
 
         writer.endElement(HTML.INPUT_ELEM);
     }
@@ -125,11 +136,11 @@ public class HtmlTextRenderer
     {
         RendererUtils.checkParamValidity(facesContext,component,null);
 
-        if (component instanceof HtmlInputText)
+        if (component instanceof UIInput)
         {
-            HtmlRendererUtils.decodeUIInput(facesContext, (HtmlInputText)component);
+            HtmlRendererUtils.decodeUIInput(facesContext, (UIInput)component);
         }
-        else if (component instanceof HtmlOutputText)
+        else if (component instanceof UIOutput)
         {
             //nothing to decode
         }

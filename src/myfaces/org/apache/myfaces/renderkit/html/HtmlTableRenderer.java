@@ -18,6 +18,7 @@
  */
 package net.sourceforge.myfaces.renderkit.html;
 
+import net.sourceforge.myfaces.renderkit.JSFAttr;
 import net.sourceforge.myfaces.renderkit.RendererUtils;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLUtil;
 import org.apache.commons.logging.Log;
@@ -25,6 +26,7 @@ import org.apache.commons.logging.LogFactory;
 
 import javax.faces.component.UIColumn;
 import javax.faces.component.UIComponent;
+import javax.faces.component.UIData;
 import javax.faces.component.html.HtmlDataTable;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
@@ -50,39 +52,52 @@ public class HtmlTableRenderer
 
     public void encodeBegin(FacesContext facesContext, UIComponent uiComponent) throws IOException
     {
-        RendererUtils.checkParamValidity(facesContext, uiComponent, HtmlDataTable.class);
-
-        HtmlDataTable dataTable = (HtmlDataTable)uiComponent;
+        RendererUtils.checkParamValidity(facesContext, uiComponent, UIData.class);
 
         ResponseWriter writer = facesContext.getResponseWriter();
 
         writer.write("\n");
-        writer.startElement(HTML.TABLE_ELEM, dataTable);
+        writer.startElement(HTML.TABLE_ELEM, uiComponent);
         HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML.TABLE_PASSTHROUGH_ATTRIBUTES);
 
-        writeFacet(facesContext, dataTable, "header");
+        writeFacet(facesContext, uiComponent, "header");
     }
 
-    public void encodeChildren(FacesContext facesContext, UIComponent uiComponent) throws IOException
+    public void encodeChildren(FacesContext facesContext, UIComponent component) throws IOException
     {
-        RendererUtils.checkParamValidity(facesContext, uiComponent, HtmlDataTable.class);
+        RendererUtils.checkParamValidity(facesContext, component, UIData.class);
+
+        UIData uiData = (UIData)component;
 
         ResponseWriter writer = facesContext.getResponseWriter();
-        HtmlDataTable uiData = (HtmlDataTable)uiComponent;
 
-        writer.startElement("tbody", uiComponent);
+        writer.startElement("tbody", component);
+
+        String rowClasses;
+        String columnClasses;
+        if (component instanceof HtmlDataTable)
+        {
+            rowClasses = ((HtmlDataTable)component).getRowClasses();
+            columnClasses = ((HtmlDataTable)component).getColumnClasses();
+        }
+        else
+        {
+            rowClasses = (String)component.getAttributes().get(JSFAttr.ROW_CLASSES_ATTR);
+            columnClasses = (String)component.getAttributes().get(JSFAttr.COLUMN_CLASSES_ATTR);
+        }
+        Styles styles = new Styles(rowClasses, columnClasses);
 
         int first = uiData.getFirst();
+        int rows = uiData.getRows();
         int rowCount = uiData.getRowCount();
-        int maxRows = uiData.getRows();
-        if (maxRows <= 0)
+        if (rows <= 0)
         {
-            maxRows = rowCount - first;
+            rows = rowCount - first;
         }
+        int last = first + rows;
+        if (last > rowCount) last = rowCount;
 
-        Styles styles = new Styles(uiData.getRowClasses(), uiData.getColumnClasses());
-
-        for (int i = first; i < rowCount && i < maxRows; i++)
+        for (int i = first; i < last; i++)
         {
             uiData.setRowIndex(i);
             if (!uiData.isRowAvailable())
@@ -91,20 +106,20 @@ public class HtmlTableRenderer
                 return;
             }
 
-            writer.startElement("tr", uiComponent);
+            writer.startElement("tr", component);
             if (styles.hasRowStyle())
             {
                 String rowStyle = styles.getRowStyle(i);
                 writer.writeAttribute("class", rowStyle, null);
             }
 
-            List children = uiComponent.getChildren();
-            for (int j = 0, size = uiComponent.getChildCount(); j < size; j++)
+            List children = component.getChildren();
+            for (int j = 0, size = component.getChildCount(); j < size; j++)
             {
                 UIColumn uiColumn = (UIColumn)children.get(j);
                 if (uiColumn.isRendered())
                 {
-                    writer.startElement("td", uiComponent);
+                    writer.startElement("td", component);
                     if (styles.hasColumnStyle())
                     {
                         String columnStyle = styles.getColumnStyle(j);
@@ -122,17 +137,17 @@ public class HtmlTableRenderer
 
     public void encodeEnd(FacesContext facesContext, UIComponent uiComponent) throws IOException
     {
-        RendererUtils.checkParamValidity(facesContext, uiComponent, HtmlDataTable.class);
+        RendererUtils.checkParamValidity(facesContext, uiComponent, UIData.class);
 
         ResponseWriter writer = facesContext.getResponseWriter();
-        writeFacet(facesContext, (HtmlDataTable)uiComponent, "footer");
+        writeFacet(facesContext, uiComponent, "footer");
         writer.endElement(HTML.TABLE_ELEM);
     }
 
-    private void writeFacet(FacesContext facesContext, HtmlDataTable uiData, String facetName) throws IOException
+    private void writeFacet(FacesContext facesContext, UIComponent component, String facetName) throws IOException
     {
         boolean foundFacet = false;
-        for (Iterator it = uiData.getChildren().iterator(); it.hasNext(); )
+        for (Iterator it = component.getChildren().iterator(); it.hasNext(); )
         {
             UIColumn uiColumn = (UIColumn)it.next();
             if (uiColumn.isRendered())
@@ -151,21 +166,21 @@ public class HtmlTableRenderer
 
             boolean isHeader = facetName.equals("header");
             String elemName = isHeader ? "thead" : "tfoot";
-            writer.startElement(elemName, uiData);
-            writer.startElement("tr", uiData);
-            String style = isHeader ? uiData.getHeaderClass() : uiData.getFooterClass();
+            writer.startElement(elemName, component);
+            writer.startElement("tr", component);
+            String style = isHeader ? getHeaderClass(component) : getFooterClass(component);
             if (style != null && style.length() > 0)
             {
                 writer.writeAttribute("class", style, null);
             }
-            for (Iterator it = uiData.getChildren().iterator(); it.hasNext(); )
+            for (Iterator it = component.getChildren().iterator(); it.hasNext(); )
             {
                 UIColumn uiColumn = (UIColumn)it.next();
                 if (uiColumn.isRendered())
                 {
                     UIComponent facetComp = (UIComponent)uiColumn.getFacet(facetName);
 
-                    writer.startElement("td", uiData);
+                    writer.startElement("td", component);
                     if (facetComp != null)
                     {
                         RendererUtils.renderChild(facesContext, facetComp);
@@ -176,6 +191,31 @@ public class HtmlTableRenderer
             writer.endElement("tr");
             HtmlRendererUtils.writePrettyLineSeparator(facesContext);
             writer.endElement(elemName);
+        }
+    }
+
+
+    private static String getHeaderClass(UIComponent component)
+    {
+        if (component instanceof HtmlDataTable)
+        {
+            return ((HtmlDataTable)component).getHeaderClass();
+        }
+        else
+        {
+            return (String)component.getAttributes().get(JSFAttr.HEADER_CLASS_ATTR);
+        }
+    }
+
+    private static String getFooterClass(UIComponent component)
+    {
+        if (component instanceof HtmlDataTable)
+        {
+            return ((HtmlDataTable)component).getFooterClass();
+        }
+        else
+        {
+            return (String)component.getAttributes().get(JSFAttr.FOOTER_CLASS_ATTR);
         }
     }
 

@@ -23,7 +23,8 @@ import net.sourceforge.myfaces.renderkit.RendererUtils;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLUtil;
 
 import javax.faces.component.UIComponent;
-import javax.faces.component.html.HtmlInputTextarea;
+import javax.faces.component.UIInput;
+import javax.faces.component.UIOutput;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 import javax.faces.convert.ConverterException;
@@ -42,7 +43,7 @@ public class HtmlTextareaRenderer
     public void encodeEnd(FacesContext facesContext, UIComponent uiComponent)
             throws IOException
     {
-        RendererUtils.checkParamValidity(facesContext, uiComponent, HtmlInputTextarea.class);
+        RendererUtils.checkParamValidity(facesContext, uiComponent, UIInput.class);
 
         ResponseWriter writer = facesContext.getResponseWriter();
         writer.startElement(HTML.TEXTAREA_ELEM, uiComponent);
@@ -62,15 +63,15 @@ public class HtmlTextareaRenderer
 
     public void decode(FacesContext facesContext, UIComponent component)
     {
-        RendererUtils.checkParamValidity(facesContext, component, HtmlInputTextarea.class);
-        HtmlRendererUtils.decodeUIInput(facesContext, (HtmlInputTextarea)component);
+        RendererUtils.checkParamValidity(facesContext, component, UIInput.class);
+        HtmlRendererUtils.decodeUIInput(facesContext, (UIInput)component);
     }
 
     public Object getConvertedValue(FacesContext facesContext, UIComponent uiComponent, Object submittedValue) throws ConverterException
     {
-        RendererUtils.checkParamValidity(facesContext, uiComponent, HtmlInputTextarea.class);
+        RendererUtils.checkParamValidity(facesContext, uiComponent, UIOutput.class);
         return RendererUtils.getConvertedUIOutputValue(facesContext,
-                                                       (HtmlInputTextarea)uiComponent,
+                                                       (UIOutput)uiComponent,
                                                        submittedValue);
     }
 
