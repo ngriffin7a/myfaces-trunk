@@ -44,29 +44,28 @@ import javax.faces.el.ValueBinding;
 public class ValueBindingImpl
 extends ValueBinding
 {
-    //~ Static fields/initializers ---------------------------------------------
+    //~ Static fields/initializers -----------------------------------------------------------------
 
     private static final Integer ZERO_FROM_EMPTY  = new Integer(0);
     private static final Integer ZERO             = new Integer(0);
     private static final Integer ONE              = new Integer(1);
 
-    //~ Instance fields --------------------------------------------------------
+    //~ Instance fields ----------------------------------------------------------------------------
 
     protected Application _application;
     protected String      _reference;
     protected Object[]    _parsedReference;
 
-    //~ Constructors -----------------------------------------------------------
+    //~ Constructors -------------------------------------------------------------------------------
 
     public ValueBindingImpl(String reference, Application application)
     {
         _application         = application;
         _reference           = reference;
-        _parsedReference     = parse(
-                stripBracketsFromModelReference(reference));
+        _parsedReference     = parse(stripBracketsFromModelReference(reference));
     }
 
-    //~ Methods ----------------------------------------------------------------
+    //~ Methods ------------------------------------------------------------------------------------
 
     public boolean isReadOnly(FacesContext facesContext)
     throws PropertyNotFoundException
@@ -75,16 +74,14 @@ extends ValueBinding
 
         if (base == null)
         {
-            throw new NullPointerException(
-                "Null bean, property: " + _reference);
+            throw new NullPointerException("Null bean, property: " + _reference);
         }
 
         int maxIndex = _parsedReference.length - 1;
 
         if (maxIndex > 0)
         {
-            return isPropertyReadOnly(
-                facesContext, base, _parsedReference[maxIndex]);
+            return isPropertyReadOnly(facesContext, base, _parsedReference[maxIndex]);
         }
 
         return true;
@@ -97,16 +94,14 @@ extends ValueBinding
 
         if (base == null)
         {
-            throw new NullPointerException(
-                "Null bean, property: " + _reference);
+            throw new NullPointerException("Null bean, property: " + _reference);
         }
 
         int maxIndex = _parsedReference.length - 1;
 
         if (maxIndex > 0)
         {
-            return getPropertyType(
-                facesContext, base, _parsedReference[maxIndex]);
+            return getPropertyType(facesContext, base, _parsedReference[maxIndex]);
         }
 
         return base.getClass();
@@ -122,32 +117,37 @@ extends ValueBinding
 
             if (base == null)
             {
-                throw new NullPointerException(
-                    "Null bean, property: " + _reference);
+                throw new NullPointerException("Null bean, property: " + _reference);
             }
 
             int maxIndex = _parsedReference.length - 1;
 
             if (maxIndex > 0)
             {
-                setPropertyValue(
-                    facesContext, base, _parsedReference[maxIndex], newValue);
+                setPropertyValue(facesContext, base, _parsedReference[maxIndex], newValue);
             }
             else
             {
-                throw new EvaluationException("Cannot set base class");
+                throw new EvaluationException(
+                    "Setting a model variable not supported, you must specify property name. Variable name: "
+                    + _parsedReference[0]);
             }
         }
         catch (RuntimeException ex)
         {
             if (newValue == null)
             {
-                LogUtil.getLogger().severe("Exception setting value of reference '" + _reference + "' to null: " + ex.getMessage());
+                LogUtil.getLogger().severe(
+                    "Exception setting value of reference '" + _reference + "' to null: "
+                    + ex.getMessage());
             }
             else
             {
-                LogUtil.getLogger().severe("Exception setting value of reference '" + _reference + "' to object of type '" + newValue.getClass().getName() + "': " + ex.getMessage());
+                LogUtil.getLogger().severe(
+                    "Exception setting value of reference '" + _reference + "' to object of type '"
+                    + newValue.getClass().getName() + "': " + ex.getMessage());
             }
+
             throw ex;
         }
     }
@@ -166,16 +166,13 @@ extends ValueBinding
 
         if (maxIndex > 0)
         {
-            base =
-                getPropertyValue(
-                    facesContext, base, _parsedReference[maxIndex]);
+            base = getPropertyValue(facesContext, base, _parsedReference[maxIndex]);
         }
 
         return base;
     }
 
-    protected boolean isPropertyReadOnly(
-        FacesContext facesContext, Object base, Object name)
+    protected boolean isPropertyReadOnly(FacesContext facesContext, Object base, Object name)
     {
         name = preprocessProperty(facesContext, base, name);
 
@@ -187,8 +184,7 @@ extends ValueBinding
             ((Integer) name).intValue());
     }
 
-    protected Class getPropertyType(
-        FacesContext facesContext, Object base, Object name)
+    protected Class getPropertyType(FacesContext facesContext, Object base, Object name)
     {
         name = preprocessProperty(facesContext, base, name);
 
@@ -208,8 +204,7 @@ extends ValueBinding
         // Map is a special case, need to use the String property
         if (name instanceof String)
         {
-            _application.getPropertyResolver().setValue(
-                base, (String) name, newValue);
+            _application.getPropertyResolver().setValue(base, (String) name, newValue);
         }
         else
         {
@@ -232,8 +227,7 @@ extends ValueBinding
      *
      * @return the value of requested property
      */
-    protected Object getPropertyValue(
-        FacesContext facesContext, Object base, Object name)
+    protected Object getPropertyValue(FacesContext facesContext, Object base, Object name)
     {
         name = preprocessProperty(facesContext, base, name);
 
@@ -388,8 +382,7 @@ extends ValueBinding
         // JSF spec mentiones about coercion of primitive types,
         //   we do not handle the primitive numeric types here,
         //   since there is no way to pass those to this function
-        throw new ReferenceSyntaxException(
-            "Unable to coerce " + obj.getClass() + " to int");
+        throw new ReferenceSyntaxException("Unable to coerce " + obj.getClass() + " to int");
     }
 
     /**
@@ -428,15 +421,14 @@ extends ValueBinding
      * Return the index of the matching (posibly multi-level nested) closing
      * bracket
      *
-     * @param str string to search param indexofOpeningBracket the start index
+     * @param str string to search 
      * @param indexofOpeningBracket the location of opening bracket to match
      *
      * @return the index of the matching closing bracket
      *
      * @throws ReferenceSyntaxException if matching bracket cannot be found
      */
-    private static int indexOfMatchingClosingBracket(
-        String str, int indexofOpeningBracket)
+    private static int indexOfMatchingClosingBracket(String str, int indexofOpeningBracket)
     {
         int curpos       = indexofOpeningBracket + 1;
 
@@ -448,16 +440,14 @@ extends ValueBinding
         {
             if (indexofClose < 0)
             {
-                throw new ReferenceSyntaxException(
-                    "Invalid property '" + str + "'--missing ']'");
+                throw new ReferenceSyntaxException("Invalid property '" + str + "'--missing ']'");
             }
 
             // We check for '\' before the bracket to skip quoted brackets
             if ((indexofOpen < 0) || (indexofClose < indexofOpen))
             {
                 if (
-                    ((indexofClose == 0)
-                            || (str.charAt(indexofClose - 1) != '\\'))
+                    ((indexofClose == 0) || (str.charAt(indexofClose - 1) != '\\'))
                             && (--nestingDepth == 0))
                 {
                     return indexofClose;
@@ -476,12 +466,10 @@ extends ValueBinding
             }
         }
 
-        throw new ReferenceSyntaxException(
-            "Invalid property '" + str + "'--missing ']'");
+        throw new ReferenceSyntaxException("Invalid property '" + str + "'--missing ']'");
     }
 
-    private Object preprocessProperty(
-        FacesContext facesContext, Object base, Object name)
+    private Object preprocessProperty(FacesContext facesContext, Object base, Object name)
     {
         // Map is a special case, need to force property to String
         return (name instanceof ValueBinding)
@@ -498,8 +486,7 @@ extends ValueBinding
      *
      * @return the model reference, with "${" and "}" removed
      */
-    private static String stripBracketsFromModelReference(
-        String modelReference)
+    private static String stripBracketsFromModelReference(String modelReference)
     {
         modelReference = modelReference.trim();
 
@@ -513,8 +500,7 @@ extends ValueBinding
         }
     }
 
-    private Object getIndex(
-        String reference, int indexofOpeningBracket, int indexofClosingBracket)
+    private Object getIndex(String reference, int indexofOpeningBracket, int indexofClosingBracket)
     {
         char quote = reference.charAt(indexofOpeningBracket + 1);
 
@@ -527,18 +513,14 @@ extends ValueBinding
                 (reference.charAt(indexofClosingBracket - 1) != quote)
                         || (indexofOpeningBracket >= (indexofClosingBracket - 3)))
             {
-                throw new ReferenceSyntaxException(
-                    "Invalid indexed property: " + reference);
+                throw new ReferenceSyntaxException("Invalid indexed property: " + reference);
             }
 
             return unescape(
-                reference.substring(
-                    indexofOpeningBracket + 2, indexofClosingBracket - 1));
+                reference.substring(indexofOpeningBracket + 2, indexofClosingBracket - 1));
         }
 
-        String index =
-            reference.substring(
-                indexofOpeningBracket + 1, indexofClosingBracket);
+        String index = reference.substring(indexofOpeningBracket + 1, indexofClosingBracket);
 
         // Case 2: index is integer (e.g., for arrays)
         if (StringUtils.isUnsignedInteger(index))
@@ -553,8 +535,7 @@ extends ValueBinding
     {
         if ((reference == null) || (reference.length() == 0))
         {
-            throw new ReferenceSyntaxException(
-                "Invalid reference: " + reference);
+            throw new ReferenceSyntaxException("Invalid reference: " + reference);
         }
 
         ArrayList parsedReference = new ArrayList();
@@ -569,19 +550,16 @@ extends ValueBinding
                 if ((pos == 0) || (reference.charAt(pos - 1) == '.'))
                 {
                     throw new ReferenceSyntaxException(
-                        "Invalid indexed property '" + reference
-                        + "'--'[' following '.'");
+                        "Invalid indexed property '" + reference + "'--'[' following '.'");
                 }
 
-                int indexofClosingBracket =
-                    indexOfMatchingClosingBracket(reference, pos);
+                int indexofClosingBracket = indexOfMatchingClosingBracket(reference, pos);
 
                 // Is index empty? (case 'a.b[]')
                 if (pos == (indexofClosingBracket - 1))
                 {
                     throw new ReferenceSyntaxException(
-                        "Invalid indexed property '" + reference
-                        + "'--empty index");
+                        "Invalid indexed property '" + reference + "'--empty index");
                 }
 
                 Object index = getIndex(reference, pos, indexofClosingBracket);
@@ -656,8 +634,7 @@ extends ValueBinding
             // check for ["ashklhj\"] error
             if (indexofBackslash == lastIndex)
             {
-                throw new ReferenceSyntaxException(
-                    "'\\' at the end of index string '" + str + "'");
+                throw new ReferenceSyntaxException("'\\' at the end of index string '" + str + "'");
             }
 
             sb.append(str.substring(curpos, indexofBackslash));
