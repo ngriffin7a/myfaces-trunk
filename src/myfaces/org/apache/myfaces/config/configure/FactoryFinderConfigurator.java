@@ -47,8 +47,8 @@ public class FactoryFinderConfigurator
         FactoryConfig factoryConfig = _facesConfig.getFactoryConfig();
         if (factoryConfig == null)
         {
-            log.error("Could not find factory configuration in faces-factoryConfig");
-            throw new NullPointerException("Could not find factory configuration in faces-factoryConfig");
+            log.error("Could not find factory configuration in faces-config");
+            throw new NullPointerException("Could not find factory configuration in faces-config");
         }
         FactoryFinder.setFactory(FactoryFinder.APPLICATION_FACTORY,
                                  factoryConfig.getApplicationFactory());

@@ -20,7 +20,7 @@
             depends="-check-myfaces-jar, -build-myfaces-jar"
             description="Copies all needed libs to WEB-INF/lib">
         <copy todir="${web-inf.lib.dir}">
-            <fileset file="${jsf-api.jar}"/>
+            <fileset file="${sun-jsf-api.jar}"/>
             <fileset file="${myfaces.jar}"/>
         </copy>
     </target>

@@ -11,7 +11,7 @@ commons-logging.jar = ${project.dir}/lib/commons-logging.jar
 
 # File path to JavaServer Faces API version 1.0 final
 # (not included, please download from http://java.sun.com/j2ee/javaserverfaces/download.html)
-jsf-api.jar = ${project.dir}/lib/jsf-api.jar
+sun-jsf-api.jar = ${project.dir}/lib/jsf-api.jar
 
 # Destination file path of MyFaces archive to be created
 myfaces.jar = ${project.dir}/lib/myfaces.jar
