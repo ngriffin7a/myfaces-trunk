@@ -11,6 +11,7 @@ Changes in Release 1.0.9
 * added HOWTO Portlet-API (MYFACES/docs/portlet_quick_start.txt)
 * improvements for tree2 component from Sean Schofield
 * added caching to the ExtensionsFilter
+* closed MYFACES-38 in Jira
 * closed MYFACES-85 in Jira
 * closed MYFACES-96 in Jira (Jason Hoo)
 * closed MYFACES-91 in Jira 
@@ -20,6 +21,8 @@ Changes in Release 1.0.9
 * closed MYFACES-83 in Jira (Refactored HtmlTableRendererBase)
 * closed MYFACES-82 in Jira (Use submitted value for Radio Buttons)
 * closed MYFACES-81 in Jira (StateManager.SerializedView should not implement Serializable)
+* closed MYFACES-88 in Jira
+* closed MYFACES-89 in Jira
 * closed MFACES-76 in Jira
 * closed MFACES-74 in Jira
 * closed MFACES-104 in Jira
@@ -31,6 +34,7 @@ Changes in Release 1.0.9
 * closed MYFACES-97 in Jira
 * closed MYFACES-98 in Jira
 * closed MYFACES-109 in Jira
+* closed MYFACES-111 in Jira
 * closed MYFACES-112 in Jira
 * closed MYFACES-125 in Jira
 * closed MYFACES-121 in Jira
@@ -38,6 +42,7 @@ Changes in Release 1.0.9
 * closed MYFACES-126 in Jira
 * closed MYFACES-128 in Jira
 * closed MYFACES-132 in Jira
+
 * add a fallback textarea mode to the htmlEditor
 ----------------------------------------------------------------------
 Changes in Release 1.0.8 beta_RC2
