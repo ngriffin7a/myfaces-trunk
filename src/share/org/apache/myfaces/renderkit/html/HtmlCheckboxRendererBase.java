@@ -39,9 +39,12 @@ import java.util.Set;
 /**
  * @author Thomas Spiegl (latest modification by $Author$)
  * @author Anton Koinov
- * @version $Revision$ $Date$ $Log:
- *          HtmlCheckboxRendererBase.java,v $ Revision 1.9 2004/10/13 11:51:01
- *          matze renamed packages to org.apache
+ * @version $Revision$ $Date$
+ * $Log$
+ * Revision 1.13  2005/01/07 01:54:36  svieujot
+ * radioRenderer wasn't looking at the submitted value.
+ *
+ * Revision 1.9 2004/10/13 11:51:01 matze renamed packages to org.apache
  * 
  * Revision 1.8 2004/07/01 22:00:56 mwessendorf ASF switch
  * 

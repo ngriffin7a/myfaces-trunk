@@ -36,6 +36,9 @@ import java.util.*;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.18  2005/01/07 01:54:35  svieujot
+ * radioRenderer wasn't looking at the submitted value.
+ *
  * Revision 1.17  2005/01/05 23:06:43  svieujot
  * Fix bug : checkbox wasn't looking at the submitted value.
  *
@@ -427,7 +430,7 @@ public class RendererUtils
             UIComponent child = (UIComponent)children.next();
             if (child instanceof UISelectItem)
             {
-                Object value = ((UISelectItem)child).getValue();
+                Object value = getValue( child );
                 if (value != null)
                 {
                     //get SelectItem from model via value binding
@@ -460,7 +463,7 @@ public class RendererUtils
             {
                 UISelectItems items = ((UISelectItems) child);
 
-                Object value = items.getValue();
+                Object value = items.getValue(); // TODO : Check here for getSubmittedValue.
 
                 if (value instanceof SelectItem)
                 {
