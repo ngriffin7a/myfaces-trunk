@@ -841,22 +841,22 @@
         </attribute>
     </tag>
 
-	<!-- rdf ticker component -->
+	<!-- rss ticker component -->
     <tag>
-        <name>rdfTicker</name>
-        <tag-class>net.sourceforge.myfaces.custom.rdfticker.HtmlRdfTickerTag</tag-class>
+        <name>rssTicker</name>
+        <tag-class>net.sourceforge.myfaces.custom.rssticker.HtmlRssTickerTag</tag-class>
         <body-content>JSP</body-content>
         <description>
             Extends standard commandButton by user role support.
         </description>
         &html_universal_attributes;
-		<!-- attribute(s) for the rdf ticker... -->
+		<!-- attribute(s) for the rss ticker... -->
 		<attribute>
-			<name>rdfUrl</name>
+			<name>rssUrl</name>
 			<required>true</required>
 			<rtexprvalue>false</rtexprvalue>
 			<description>
-				URL on whichs the rss/rdf-information are available.
+				URL on whichs the rss-information are available.
 			</description>
 		</attribute>
 	</tag>

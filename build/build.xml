@@ -77,8 +77,8 @@
         <pathelement location="${commons-validator.jar}"/>
         <pathelement location="${jakarta-oro.jar}"/>
         <pathelement location="${commons-fileupload.jar}"/>
-        <pathelement location="${informa.jar}"/>
         <pathelement location="${jdom.jar}"/>
+        <pathelement location="${commons-digester.jar}"/>
     </path>
  
     <!-- classpath for javadoc creation -->
@@ -93,7 +93,6 @@
         <pathelement location="${commons-validator.jar}"/>
         <pathelement location="${commons-fileupload.jar}"/>
         <pathelement location="${myfaces.jar}"/>
-        <pathelement location="${informa.jar}"/>
         <pathelement location="${jdom.jar}"/>
         <pathelement location="${commons-beanutils.jar}"/>
         <pathelement location="${commons-collections.jar}"/>
@@ -247,7 +246,7 @@
                         prefix="myfaces-${manifest.impl.version}/lib"/>
             <tarfileset file="${jsp-api.jar}"
                         prefix="myfaces-${manifest.impl.version}/lib"/>
-            <tarfileset file="${informa.jar}"
+            <tarfileset file="${jakarta-digester.jar}"
                         prefix="myfaces-${manifest.impl.version}/lib"/>
             <tarfileset file="${jdom.jar}"
                         prefix="myfaces-${manifest.impl.version}/lib"/>

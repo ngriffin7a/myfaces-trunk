@@ -59,7 +59,7 @@ managed beans used:
             <h:panelGroup id="body">
 
 			   <h:panelGrid columns="1">
-					<x:rdfTicker rdfUrl="http://www.oreillynet.com/meerkat/?_fl=rss10&t=ALL&c=5136"/>
+					<x:rssTicker rssUrl="http://www.jsfcentral.com/jsfcentral_news.rss"/>
 			    </h:panelGrid>
 		
 			

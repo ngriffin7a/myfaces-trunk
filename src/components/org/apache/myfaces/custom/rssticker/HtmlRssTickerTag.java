@@ -16,7 +16,7 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package net.sourceforge.myfaces.custom.rdfticker;
+package net.sourceforge.myfaces.custom.rssticker;
 
 import javax.faces.component.UIComponent;
 
@@ -27,11 +27,11 @@ import net.sourceforge.myfaces.taglib.html.HtmlOutputTextTagBase;
  * @author mwessendorf
  *
  */
-public class HtmlRdfTickerTag extends HtmlOutputTextTagBase{
+public class HtmlRssTickerTag extends HtmlOutputTextTagBase{
 
 	public String getComponentType()
 	{
-		return HtmlRdfTicker.COMPONENT_TYPE;
+		return HtmlRssTicker.COMPONENT_TYPE;
 	}
 
 	public String getRendererType()
@@ -40,7 +40,7 @@ public class HtmlRdfTickerTag extends HtmlOutputTextTagBase{
 	}
 
 	//Ticker attribute
-	private String _rdfUrl = null;
+	private String _rssUrl = null;
 
 	// User Role support
 	private String _enabledOnUserRole;
@@ -53,7 +53,7 @@ public class HtmlRdfTickerTag extends HtmlOutputTextTagBase{
 	{
 		super.setProperties(component);
 
-		setStringProperty(component, "rdfUrl", _rdfUrl);
+		setStringProperty(component, "rssUrl", _rssUrl);
 		setStringProperty(component, UserRoleAware.ENABLED_ON_USER_ROLE_ATTR, _enabledOnUserRole);
 		setStringProperty(component, UserRoleAware.VISIBLE_ON_USER_ROLE_ATTR, _visibleOnUserRole);
 	}
@@ -61,8 +61,8 @@ public class HtmlRdfTickerTag extends HtmlOutputTextTagBase{
 
    //---------------------------------------------only the Setters
 	
-	public void setRdfUrl(String string) {
-		_rdfUrl = string;
+	public void setRssUrl(String string) {
+		_rssUrl = string;
 	}
 
 	public void setEnabledOnUserRole(String string) {

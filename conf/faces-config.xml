@@ -131,8 +131,8 @@
   </component>
 
     <component>
-        <component-type>net.sourceforge.myfaces.RdfTicker</component-type>
-        <component-class>net.sourceforge.myfaces.custom.rdfticker.HtmlRdfTicker</component-class>
+        <component-type>net.sourceforge.myfaces.RssTicker</component-type>
+        <component-class>net.sourceforge.myfaces.custom.rssticker.HtmlRssTicker</component-class>
     </component>
 
     <component>
@@ -317,7 +317,7 @@
       <renderer>
           <component-family>javax.faces.Output</component-family>
           <renderer-type>net.sourceforge.myfaces.Ticker</renderer-type>
-          <renderer-class>net.sourceforge.myfaces.custom.rdfticker.HtmlRdfTickerRenderer</renderer-class>
+          <renderer-class>net.sourceforge.myfaces.custom.rssticker.HtmlRssTickerRenderer</renderer-class>
       </renderer>
 
       <renderer>

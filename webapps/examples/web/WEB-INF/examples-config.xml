@@ -226,8 +226,8 @@
         </navigation-case>        
 
         <navigation-case>
-            <from-outcome>go_rdfticker</from-outcome>
-            <to-view-id>/rdfTicker.jsp</to-view-id>
+            <from-outcome>go_rssticker</from-outcome>
+            <to-view-id>/rssTicker.jsp</to-view-id>
         </navigation-case>        
 
         <navigation-case>

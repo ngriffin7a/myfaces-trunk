@@ -3,13 +3,13 @@
   "-//MyFaces//DTD MyFaces component def 1.0//EN"
   "http://myfaces.sourceforge.net/dtd/Component.dtd">
 <component>
-    <component-class>net.sourceforge.myfaces.custom.rdfticker.HtmlRdfTicker</component-class>
+    <component-class>net.sourceforge.myfaces.custom.rdfticker.HtmlRssTicker</component-class>
     <base-class>javax.faces.component.UIOutput</base-class>
-    <component-type>net.sourceforge.myfaces.RdfTicker</component-type>
+    <component-type>net.sourceforge.myfaces.RssTicker</component-type>
     <component-family>javax.faces.Output</component-family>
     <renderer-type>net.sourceforge.myfaces.Ticker</renderer-type>
     <field>
-        <name>rdfUrl</name>
+        <name>rssUrl</name>
         <type>java.lang.String</type>
     </field>
 </component>
