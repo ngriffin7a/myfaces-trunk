@@ -29,7 +29,7 @@ import javax.faces.webapp.FacesTag;
  * @version $Revision$ $Date$
  */
 public class ParamTag
-    extends FacesTag
+    extends MyFacesTag
 {
     //MyFaces tag extensions:
     public UIComponent createComponent()

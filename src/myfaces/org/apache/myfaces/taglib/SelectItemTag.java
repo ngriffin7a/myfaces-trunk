@@ -30,7 +30,7 @@ import javax.faces.webapp.FacesTag;
  * @version $Revision$ $Date$
  */
 public class SelectItemTag
-    extends FacesTag
+    extends MyFacesTag
 {
     public UIComponent createComponent()
     {

@@ -47,34 +47,6 @@ public class RenderResponsePhase
     public int execute(FacesContext facesContext)
             throws FacesException
     {
-        //Restore state
-        RenderKitFactory rkFactory = (RenderKitFactory)FactoryFinder.getFactory(FactoryFinder.RENDER_KIT_FACTORY);
-        RenderKit renderKit = rkFactory.getRenderKit(facesContext.getResponseTree().getRenderKitId());
-
-        Renderer renderer = null;
-        try
-        {
-            renderer = renderKit.getRenderer(StateRenderer.TYPE);
-        }
-        catch (Exception e)
-        {
-            //No StateRenderer
-        }
-
-        if (renderer != null)
-        {
-            try
-            {
-                //LogUtil.logInfo("StateRenderer found, calling encode...");
-                renderer.encodeBegin(facesContext, null);
-            }
-            catch (IOException e)
-            {
-                throw new FacesException("Error saving state", e);
-            }
-        }
-
-
         try
         {
             _lifecycle.getViewHandler().renderView(facesContext);

@@ -124,7 +124,7 @@ public class LifecycleImpl
     {
         if (_viewHandler == null)
         {
-            _viewHandler = new ViewHandlerImpl();
+            _viewHandler = new ViewHandlerJspImpl();
         }
         return _viewHandler;
     }

@@ -629,7 +629,7 @@ public class MyParseEventListener
             return s;
         }
         else if (targetClass.equals(Boolean.TYPE) ||
-            targetClass.equals(Boolean.class))
+                 targetClass.equals(Boolean.class))
         {
             return Boolean.valueOf(s);
         }
@@ -667,6 +667,10 @@ public class MyParseEventListener
                  targetClass.equals(Short.class))
         {
             return Short.valueOf(s);
+        }
+        else if (targetClass.getName().equals("java.lang.Object"))
+        {
+            return s;
         }
         else
         {

@@ -31,7 +31,7 @@ import javax.faces.webapp.FacesTag;
  * @version $Revision$ $Date$
  */
 public class GroupTag
-    extends FacesTag
+    extends MyFacesTag
 {
     public UIComponent createComponent()
     {

@@ -21,9 +21,24 @@ package javax.faces.webapp;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.BodyContent;
 import javax.servlet.jsp.tagext.BodyTag;
+import javax.servlet.jsp.tagext.Tag;
 
 /**
- * TODO: description
+ * Patch for the EA2 release of Sun's JSF API that corrects the
+ * "doStartTag() does nothing" issue.
+ *
+ * Two ways to apply this patch:
+ * 1. Make sure that this class comes before the original api class in the classpath.
+ *    Tomcat puts the WEB-INF/classes dir before the lib dir, so normally this should
+ *    work.
+ * or
+ * 2. You can also patch the jsf-api.jar directly. Just remove the original class
+ *    from the jar file and add this version. You can use the jar tool in the
+ *    Java JDK or WinZip or any other zip tool.
+ *
+ * Sorry for the inconvenience, but because of current JSF license we are not allowed
+ * to publish the jsf-api.jar together with MyFaces.
+ *
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
@@ -31,34 +46,22 @@ public abstract class FacesBodyTag
         extends FacesTag
         implements BodyTag
 {
-    private BodyContent _bodyContent;
-
-    protected void init()
+    public int getDoStartValue() throws JspException
     {
-        super.init();
-        _bodyContent = null;
+        return BodyTag.EVAL_BODY_BUFFERED;
     }
-
-
-    protected int getDoStartValue() throws JspException
-    {
-        return EVAL_BODY_BUFFERED;
-    }
-
-
-    //body tag support
 
     public void doInitBody() throws JspException
     {
     }
 
-    public void setBodyContent(BodyContent bodyContent)
+    public int doAfterBody() throws JspException
     {
-        _bodyContent = bodyContent;
+        return SKIP_BODY;
     }
 
-    protected BodyContent getBodyContent()
+    public int getDoEndValue() throws JspException
     {
-        return _bodyContent;
+        return Tag.EVAL_PAGE;
     }
 }
