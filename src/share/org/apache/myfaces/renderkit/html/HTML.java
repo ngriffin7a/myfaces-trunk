@@ -24,6 +24,9 @@ import org.apache.myfaces.util.ArrayUtils;
  * @author Anton Koinov
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.18  2004/12/02 15:34:43  svieujot
+ * Add iframe attributes
+ *
  * Revision 1.17  2004/12/02 15:22:06  svieujot
  * Add IFRAME_ELEM
  *
@@ -310,6 +313,10 @@ public final class HTML
         (String[]) ArrayUtils.concat(
             BUTTON_ATTRIBUTES,
             COMMON_FIELD_PASSTROUGH_ATTRIBUTES_WITHOUT_DISABLED_AND_ONCLICK);
+    
+    // <iframe>
+    public static final String FRAMEBORDER_ATTR = "frameborder";
+    public static final String SCROLLING_ATTR = "scrolling";
     
     // <label>
     public static final String FOR_ATTR = "for";
