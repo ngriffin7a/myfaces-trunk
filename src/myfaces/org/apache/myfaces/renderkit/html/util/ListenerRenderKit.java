@@ -179,6 +179,10 @@ public class ListenerRenderKit
     {
         Map map = getListenerMap(facesContext);
         map.remove(component.getCompoundId());
+        if (map.isEmpty())
+        {
+            //TODO: unwrap
+        }
     }
 
     public static void addChildrenListener(FacesContext facesContext,
