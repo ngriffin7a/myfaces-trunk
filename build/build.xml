@@ -65,6 +65,7 @@
         <pathelement location="${commons-collections.jar}"/>
         <pathelement location="${commons-digester.jar}"/>
 		<pathelement location="${myfaces-jsf-api.jar}"/>
+        <pathelement location="${api.classes}"/>
     </path>
  
     <!-- classpath for compiling component classes -->
@@ -74,6 +75,7 @@
         <pathelement location="${jsp-api.jar}"/>
         <pathelement location="${jstl.jar}"/>
         <pathelement location="${myfaces-jsf-api.jar}"/>
+        <pathelement location="${api.classes}"/>
         <pathelement location="${commons-logging.jar}"/>
         <pathelement location="${commons-el.jar}"/>
         <pathelement location="${commons-validator.jar}"/>
@@ -366,6 +368,9 @@
             <fileset dir="${impl.classes}"/>
             <fileset dir="${components.classes}"/>
             <fileset dir="${resolved-tlds.dir}"/>     <!-- in case of interrupted builds -->
+        	<fileset dir="${project.dir}/src"> <!-- Temp files created by the IDE -->
+				<include name="**/*.class"/>
+        	</fileset>
         </delete>
     </target>
 
