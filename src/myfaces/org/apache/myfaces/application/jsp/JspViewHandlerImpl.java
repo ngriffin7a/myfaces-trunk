@@ -264,6 +264,9 @@ public class JspViewHandlerImpl
                 else
                 {
                     urlpattern = urlpattern.substring(0, urlpattern.length() - 2);
+                    // servletPath starts with "/" except in the case where the
+                    // request is matched with the "/*" pattern, in which case
+                    // it is the empty string (see Servlet Sepc 2.3 SRV4.4)
                     if (servletPath.equals(urlpattern))
                     {
                         return servletMapping;
