@@ -31,6 +31,9 @@ import java.util.List;
  * @author Martin Marinschek (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.8  2004/12/17 13:19:10  mmarinschek
+ * new component jsValueChangeListener
+ *
  * Revision 1.7  2004/12/03 20:52:11  svieujot
  * Defer script loading for additional performance.
  *
@@ -167,14 +170,23 @@ public class HtmlPopupRenderer
 
     private void callMethod(UIComponent uiComponent, String propName, String value)
     {
-        uiComponent.getAttributes().put(propName, value);
+        Object oldValue = uiComponent.getAttributes().get(propName);
 
-        try
+        if(oldValue != null)
         {
-            BeanUtils.setProperty(uiComponent,propName,value);
+            String oldValueStr = oldValue.toString().trim();
+
+            //check if method call has already been added...
+            if(oldValueStr.indexOf(value)!=-1)
+                return;
+
+            if(oldValueStr.length()>0 && !oldValueStr.endsWith(";"))
+                oldValueStr +=";";
+
+            value = oldValueStr + value;
+
         }
-        catch (Throwable th)
-        {
-        }
+
+        uiComponent.getAttributes().put(propName, value);
     }
 }

@@ -488,6 +488,29 @@
         </attribute>
     </tag>
 
+    <!-- jsValueChangeListener -->
+    <tag>
+        <name>jsValueChangeListener</name>
+        <tag-class>org.apache.myfaces.custom.jslistener.JsValueChangeListenerTag</tag-class>
+        <body-content>empty</body-content>
+        <description>Value change listener on client side.</description>
+        <attribute>
+          <name>for</name>
+          <required>false</required>
+          <rtexprvalue>false</rtexprvalue>
+        </attribute>
+        <attribute>
+          <name>property</name>
+          <required>false</required>
+          <rtexprvalue>false</rtexprvalue>
+        </attribute>
+        <attribute>
+          <name>expressionValue</name>
+          <required>false</required>
+          <rtexprvalue>false</rtexprvalue>
+        </attribute>
+    </tag>
+
     <!-- checkbox -->
     <tag>
         <name>checkbox</name>

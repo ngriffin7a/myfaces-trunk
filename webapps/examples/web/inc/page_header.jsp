@@ -33,6 +33,7 @@
                 <x:navigationMenuItem id="nav_2_4_5" itemLabel="#{example_messages['nav_TabbedPane']}" action="go_tabbedPane" icon="images/myfaces.gif" />
                 <x:navigationMenuItem id="nav_2_4_6" itemLabel="#{example_messages['nav_Calendar']}" action="go_calendar" icon="images/myfaces.gif" split="true" />
                 <x:navigationMenuItem id="nav_2_4_6_1" itemLabel="#{example_messages['nav_Popup']}" action="go_popup" icon="images/myfaces.gif" split="true" />
+                <x:navigationMenuItem id="nav_2_4_6_2" itemLabel="#{example_messages['nav_JsListener']}" action="go_jslistener" icon="images/myfaces.gif" split="true" />                
                 <x:navigationMenuItem id="nav_2_4_7" itemLabel="#{example_messages['nav_dataList']}" action="go_dataList" icon="images/myfaces.gif" />
                 <x:navigationMenuItem id="nav_2_4_8" itemLabel="#{example_messages['nav_tree']}" action="go_tree" icon="images/myfaces.gif" />
                 <x:navigationMenuItem id="nav_2_4_9" itemLabel="#{example_messages['nav_treeTable']}" action="go_treeTable" icon="images/myfaces.gif" />

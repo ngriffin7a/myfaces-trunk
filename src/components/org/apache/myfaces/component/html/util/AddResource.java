@@ -41,6 +41,9 @@ import org.apache.myfaces.renderkit.html.HTML;
  * @author Sylvain Vieujot (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.15  2004/12/17 13:19:10  mmarinschek
+ * new component jsValueChangeListener
+ *
  * Revision 1.14  2004/12/06 01:02:02  svieujot
  * Write the response in the log messages (mainly to debug problems due to filters order).
  *
@@ -259,7 +262,8 @@ public class AddResource {
         
         InputStream is = getResource(componentName, resourceFileName);
         if( is == null ){
-            throw new IOException("Unable to find resource "+resourceFileName+" for component "+componentName);
+            throw new IOException("Unable to find resource "+resourceFileName+" for component "+componentName+
+                    ". Check that this file is available in the classpath in sub-directory /resource of the component-directory.");
         }
         OutputStream os = response.getOutputStream();
         int c;

@@ -21,6 +21,7 @@
             <x:commandNavigation id="nav_2_4_6" value="#{example_messages['nav_TabbedPane']}" action="go_tabbedPane" />
             <x:commandNavigation id="nav_2_4_7" value="#{example_messages['nav_Calendar']}" action="go_calendar" />
             <x:commandNavigation id="nav_2_4_71" value="#{example_messages['nav_Popup']}" action="go_popup" />
+            <x:commandNavigation id="nav_2_4_72" value="#{example_messages['nav_JsListener']}" action="go_jslistener" />            
             <x:commandNavigation id="nav_2_4_8" value="#{example_messages['nav_Date']}" action="go_date" />
             <x:commandNavigation id="nav_2_4_81" value="#{example_messages['nav_HtmlEditor']}" action="go_htmlEditor" />
             <x:commandNavigation id="nav_2_4_9" value="#{example_messages['nav_dataList']}" action="go_dataList" />

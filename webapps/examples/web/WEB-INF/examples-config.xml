@@ -268,6 +268,11 @@
         </navigation-case>
 
         <navigation-case>
+            <from-outcome>go_jslistener</from-outcome>
+            <to-view-id>/jslistener.jsp</to-view-id>
+        </navigation-case>
+
+        <navigation-case>
             <from-outcome>go_date</from-outcome>
             <to-view-id>/date.jsp</to-view-id>
         </navigation-case>
