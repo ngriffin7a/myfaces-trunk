@@ -24,12 +24,13 @@ import net.sourceforge.myfaces.renderkit.html.HTMLRenderer;
 import net.sourceforge.myfaces.renderkit.html.state.client.*;
 import net.sourceforge.myfaces.renderkit.html.state.server.HTTPSessionStateRestorer;
 import net.sourceforge.myfaces.renderkit.html.state.server.HTTPSessionStateSaver;
+import net.sourceforge.myfaces.util.FacesUtils;
 import net.sourceforge.myfaces.util.logging.LogUtil;
 
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.servlet.ServletContext;
-import javax.servlet.ServletRequest;
+
 import java.io.IOException;
 
 /**
@@ -118,9 +119,7 @@ public class StateRenderer
         _stateRestorer.restoreState(facesContext);
         LogUtil.printTreeToConsole("Current tree after restoring state");
 
-        ((ServletRequest)facesContext.getExternalContext().getRequest())
-            .setAttribute(StateRestorer.STATE_RESTORER_REQUEST_ATTR,
-                          _stateRestorer);
+        FacesUtils.getRequestMap(facesContext).put(StateRestorer.STATE_RESTORER_REQUEST_ATTR, _stateRestorer);
     }
 
     /**

@@ -29,13 +29,12 @@ import java.io.IOException;
 
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.Map;
 
 import javax.faces.FacesException;
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIPanel;
 import javax.faces.context.FacesContext;
-
-import javax.servlet.ServletRequest;
 
 
 /**
@@ -120,13 +119,13 @@ extends TableRendererSupport
             return;
         }
 
-        String         varName       = (String) panel.getAttribute(JSFAttr.VAR_ATTR);
-        ServletRequest request       = FacesUtils.getRequest(context);
-        String[]       rowClasses    =
+        String   varName       = (String) panel.getAttribute(JSFAttr.VAR_ATTR);
+        Map      requestMap    = FacesUtils.getRequestMap(context);
+        String[] rowClasses    =
             StringUtils.trim(
                 StringUtils.splitShortString(
                     (String) component.getAttribute(JSFAttr.ROW_CLASSES_ATTR), CLASS_LIST_DELIMITER));
-        String[]       columnClasses =
+        String[] columnClasses =
             StringUtils.trim(
                 StringUtils.splitShortString(
                     (String) component.getAttribute(JSFAttr.COLUMN_CLASSES_ATTR),
@@ -136,7 +135,7 @@ extends TableRendererSupport
         for (int row = 0; it.hasNext();)
         {
             // set var
-            request.setAttribute(
+            requestMap.put(
                 varName,
                 it.next());
 
@@ -147,11 +146,11 @@ extends TableRendererSupport
             if ((children != null) && children.hasNext())
             {
                 row = HTMLUtil.renderTableRows(
-                    context, children, columns, rowClasses, columnClasses, "td", "tbody", row);
+                        context, children, columns, rowClasses, columnClasses, "td", "tbody", row);
             }
         }
 
         // clear var
-        request.setAttribute(varName, null);
+        requestMap.put(varName, null);
     }
 }

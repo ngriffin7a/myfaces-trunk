@@ -18,6 +18,8 @@
  */
 package net.sourceforge.myfaces.util;
 
+import java.util.Map;
+
 import javax.faces.FactoryFinder;
 import javax.faces.application.Application;
 import javax.faces.application.ApplicationFactory;
@@ -29,9 +31,6 @@ import javax.faces.render.RenderKitFactory;
 import javax.faces.render.Renderer;
 import javax.faces.tree.Tree;
 import javax.faces.tree.TreeFactory;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 
 
 /**
@@ -55,6 +54,16 @@ public class FacesUtils
         return getApplication().getMessageResources(name);
     }
 
+    public static String getPathInfo(FacesContext ctx)
+    {
+        return ctx.getExternalContext().getRequestPathInfo();
+    }
+
+    public static String getPathInfo()
+    {
+        return getPathInfo(FacesContext.getCurrentInstance());
+    }
+
     public static Renderer getRenderer(String rendererType)
     {
         return getRenderer(
@@ -69,24 +78,24 @@ public class FacesUtils
                 .getRenderer(rendererType);
     }
 
-    public static HttpServletRequest getRequest()
+    public static Map getRequestMap()
     {
-        return getRequest(FacesContext.getCurrentInstance());
+        return getRequestMap(FacesContext.getCurrentInstance());
     }
 
-    public static HttpServletRequest getRequest(FacesContext ctx)
+    public static Map getRequestMap(FacesContext ctx)
     {
-        return (HttpServletRequest) ctx.getExternalContext().getRequest();
+        return ctx.getExternalContext().getRequestMap();
     }
 
-    public static HttpSession getSession()
+    public static Map getSessionMap()
     {
-        return getSession(FacesContext.getCurrentInstance());
+        return getSessionMap(FacesContext.getCurrentInstance());
     }
 
-    public static HttpSession getSession(FacesContext ctx)
+    public static Map getSessionMap(FacesContext ctx)
     {
-        return getRequest(ctx).getSession();
+        return ctx.getExternalContext().getSessionMap();
     }
 
     public static Tree getTree(String treeId)
