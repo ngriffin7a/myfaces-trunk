@@ -14,6 +14,7 @@ Changes in Release 1.0.7 beta
 * full revision of extended HtmlDataTable so that there is no more cache problem
 * HtmlCommandSortHeader now supports immediate attribute
 * bug fix: No decode for spread checkbox or radio
+* bug fix: NPE in MessageUtils when there was no ViewRoot
 
 ----------------------------------------------------------------------
 Changes in Release 1.0.6 beta
