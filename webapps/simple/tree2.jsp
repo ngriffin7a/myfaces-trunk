@@ -78,7 +78,7 @@
         </f:facet>
         <f:facet name="document">
             <h:panelGroup>
-                <h:commandLink immediate="true" styleClass="document">
+                <h:commandLink immediate="true" styleClass="#{t.nodeSelected ? 'documentSelected':'document'}" actionListener="#{t.setNodeSelected}">
                     <h:graphicImage value="images/document.png" border="0"/>
                     <h:outputText value="#{node.description}"/>
                     <f:param name="docNum" value="#{node.identifier}"/>
@@ -123,7 +123,7 @@
         </f:facet>
         <f:facet name="document">
             <h:panelGroup>
-                <h:commandLink immediate="true" styleClass="document">
+                <h:commandLink immediate="true" styleClass="#{t.nodeSelected ? 'documentSelected':'document'}" actionListener="#{t.setNodeSelected}">
                     <h:graphicImage value="/images/document.png" border="0"/>
                     <h:outputText value="#{node.description}"/>
                     <f:param name="docNum" value="#{node.identifier}"/>
