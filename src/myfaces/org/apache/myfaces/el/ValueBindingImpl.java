@@ -18,11 +18,16 @@ package net.sourceforge.myfaces.el;
 import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Map;
+
 import javax.faces.application.Application;
 import javax.faces.component.StateHolder;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
-import javax.faces.el.*;
+import javax.faces.el.EvaluationException;
+import javax.faces.el.PropertyNotFoundException;
+import javax.faces.el.PropertyResolver;
+import javax.faces.el.ReferenceSyntaxException;
+import javax.faces.el.ValueBinding;
 import javax.servlet.jsp.el.ELException;
 import javax.servlet.jsp.el.FunctionMapper;
 import javax.servlet.jsp.el.VariableResolver;
@@ -30,8 +35,17 @@ import javax.servlet.jsp.el.VariableResolver;
 import net.sourceforge.myfaces.config.RuntimeConfig;
 import net.sourceforge.myfaces.config.element.ManagedBean;
 import net.sourceforge.myfaces.util.BiLevelCacheMap;
-import net.sourceforge.myfaces.config.RuntimeConfig;
-import org.apache.commons.el.*;
+
+import org.apache.commons.el.ArraySuffix;
+import org.apache.commons.el.Coercions;
+import org.apache.commons.el.ComplexValue;
+import org.apache.commons.el.ConditionalExpression;
+import org.apache.commons.el.Expression;
+import org.apache.commons.el.ExpressionEvaluatorImpl;
+import org.apache.commons.el.ExpressionString;
+import org.apache.commons.el.NamedValue;
+import org.apache.commons.el.PropertySuffix;
+import org.apache.commons.el.ValueSuffix;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -42,6 +56,9 @@ import org.apache.commons.logging.LogFactory;
  * @version $Revision$ $Date$
  * 
  * $Log$
+ * Revision 1.47  2004/07/07 08:34:58  mwessendorf
+ * removed unused import-statements
+ *
  * Revision 1.46  2004/07/07 00:25:07  o_rossmueller
  * tidy up config/confignew package (moved confignew classes to package config)
  *

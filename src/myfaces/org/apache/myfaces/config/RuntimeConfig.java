@@ -15,12 +15,16 @@
  */
 package net.sourceforge.myfaces.config;
 
-import net.sourceforge.myfaces.config.element.ManagedBean;
-import net.sourceforge.myfaces.config.element.NavigationRule;
-import net.sourceforge.myfaces.config.element.ManagedBean;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.faces.context.ExternalContext;
-import java.util.*;
+
+import net.sourceforge.myfaces.config.element.ManagedBean;
+import net.sourceforge.myfaces.config.element.NavigationRule;
 
 /**
  * Holds all configuration information that is needed later during runtime. 
@@ -28,6 +32,9 @@ import java.util.*;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.2  2004/07/07 08:34:58  mwessendorf
+ * removed unused import-statements
+ *
  * Revision 1.1  2004/07/07 00:25:05  o_rossmueller
  * tidy up config/confignew package (moved confignew classes to package config)
  *

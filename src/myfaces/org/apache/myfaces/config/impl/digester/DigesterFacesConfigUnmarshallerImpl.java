@@ -22,7 +22,6 @@ import javax.faces.context.ExternalContext;
 import net.sourceforge.myfaces.config.FacesConfigUnmarshaller;
 import net.sourceforge.myfaces.config.impl.digester.elements.*;
 import net.sourceforge.myfaces.config.impl.FacesConfigEntityResolver;
-import net.sourceforge.myfaces.config.impl.FacesConfigEntityResolver;
 import org.apache.commons.digester.Digester;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -32,6 +31,9 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:oliver@rossmueller.com">Oliver Rossmueller</a>
  *
  * $Log$
+ * Revision 1.2  2004/07/07 08:34:58  mwessendorf
+ * removed unused import-statements
+ *
  * Revision 1.1  2004/07/07 00:25:05  o_rossmueller
  * tidy up config/confignew package (moved confignew classes to package config)
  *

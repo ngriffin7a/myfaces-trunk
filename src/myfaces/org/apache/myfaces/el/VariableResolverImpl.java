@@ -17,6 +17,7 @@ package net.sourceforge.myfaces.el;
 
 import java.util.HashMap;
 import java.util.Map;
+
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.el.ReferenceSyntaxException;
@@ -25,7 +26,7 @@ import javax.faces.el.VariableResolver;
 import net.sourceforge.myfaces.config.ManagedBeanBuilder;
 import net.sourceforge.myfaces.config.RuntimeConfig;
 import net.sourceforge.myfaces.config.element.ManagedBean;
-import net.sourceforge.myfaces.config.element.ManagedBean;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -35,6 +36,9 @@ import org.apache.commons.logging.LogFactory;
  * @author Anton Koinov
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.31  2004/07/07 08:34:58  mwessendorf
+ * removed unused import-statements
+ *
  * Revision 1.30  2004/07/07 00:25:07  o_rossmueller
  * tidy up config/confignew package (moved confignew classes to package config)
  *

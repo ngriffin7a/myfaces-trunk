@@ -26,8 +26,6 @@ import javax.faces.context.FacesContext;
 
 import net.sourceforge.myfaces.config.RuntimeConfig;
 import net.sourceforge.myfaces.config.element.NavigationCase;
-import net.sourceforge.myfaces.config.element.NavigationCase;
-import net.sourceforge.myfaces.config.element.NavigationRule;
 import net.sourceforge.myfaces.config.element.NavigationRule;
 import net.sourceforge.myfaces.util.HashMapUtils;
 import org.apache.commons.logging.Log;
@@ -38,6 +36,9 @@ import org.apache.commons.logging.LogFactory;
  * @author Anton Koinov
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.30  2004/07/07 08:34:57  mwessendorf
+ * removed unused import-statements
+ *
  * Revision 1.29  2004/07/07 00:25:04  o_rossmueller
  * tidy up config/confignew package (moved confignew classes to package config)
  *

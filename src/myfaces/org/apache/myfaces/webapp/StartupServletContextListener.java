@@ -24,7 +24,6 @@ import javax.servlet.ServletContextListener;
 import net.sourceforge.myfaces.config.FacesConfigurator;
 import net.sourceforge.myfaces.context.servlet.ServletExternalContextImpl;
 import net.sourceforge.myfaces.webapp.webxml.WebXml;
-import net.sourceforge.myfaces.config.FacesConfigurator;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -34,6 +33,9 @@ import org.apache.commons.logging.LogFactory;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.25  2004/07/07 08:34:57  mwessendorf
+ * removed unused import-statements
+ *
  * Revision 1.24  2004/07/07 00:25:08  o_rossmueller
  * tidy up config/confignew package (moved confignew classes to package config)
  *
