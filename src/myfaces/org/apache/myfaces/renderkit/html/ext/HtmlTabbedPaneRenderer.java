@@ -28,9 +28,9 @@ import net.sourceforge.myfaces.renderkit.html.HtmlRendererUtils;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLUtil;
 
 import javax.faces.application.ViewHandler;
+import javax.faces.component.NamingContainer;
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIForm;
-import javax.faces.component.UIComponentBase;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
@@ -146,7 +146,7 @@ public class HtmlTabbedPaneRenderer
         List children = tabbedPane.getChildren();
         for (int i = 0, len = children.size(); i < len; i++)
         {
-            UIComponent child = (UIComponent)children.get(i);
+            UIComponent child = getUIComponent((UIComponent)children.get(i));
             if (child instanceof HtmlPanelTab)
             {
                 writeHeaderCell(writer, facesContext, tabbedPane,
@@ -201,7 +201,7 @@ public class HtmlTabbedPaneRenderer
         List children = tabbedPane.getChildren();
         for (int i = 0, len = children.size(); i < len; i++)
         {
-            UIComponent child = (UIComponent)children.get(i);
+            UIComponent child = getUIComponent((UIComponent)children.get(i));
             if (child instanceof HtmlPanelTab)
             {
                 String paramName = tabbedPane.getClientId(facesContext) + "." + tabIdx;
@@ -366,7 +366,7 @@ public class HtmlTabbedPaneRenderer
         List children = tabbedPane.getChildren();
         for (int i = 0, len = children.size(); i < len; i++)
         {
-            UIComponent child = (UIComponent)children.get(i);
+            UIComponent child = getUIComponent((UIComponent)children.get(i));
             if (child instanceof HtmlPanelTab)
             {
                 if (tabIdx == selectedIndex)
@@ -382,6 +382,19 @@ public class HtmlTabbedPaneRenderer
         }
 
         writer.endElement(HTML.TD_ELEM);
+    }
+
+    private UIComponent getUIComponent(UIComponent uiComponent)
+    {
+        if (uiComponent instanceof NamingContainer)
+        {
+            List children = uiComponent.getChildren();
+            for (int i = 0, len = children.size(); i < len; i++)
+            {
+                uiComponent = getUIComponent((UIComponent)children.get(i));
+            }
+        }
+        return uiComponent;
     }
 
 

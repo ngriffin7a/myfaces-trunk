@@ -72,9 +72,9 @@ managed beans used:
                         <h:inputText id="inp2" required="true" /><h:message for="inp2" showSummary="false" showDetail="true" />
                     </x:panelTab>
 
-                    <x:panelTab id="tab2" label="Tab2">
-                        <h:inputTextarea ></h:inputTextarea>
-                    </x:panelTab>
+                    <f:subview id="tab2" >
+                        <jsp:include page="tab2.jsp"/>
+                    </f:subview>
 
                     <x:panelTab id="tab3" label="Tab3">
                         <h:inputText id="inp3"/><f:verbatim><br></f:verbatim>

@@ -135,6 +135,11 @@ public class HtmlResponseWriterImpl
 
     public void startElement(String name, UIComponent uiComponent) throws IOException
     {
+        if (name == null)
+        {
+            throw new NullPointerException("elementName name must not be null");
+        }
+
         closeStartElementIfNecessary();
         _writer.write('<');
         _writer.write(name);
@@ -163,6 +168,11 @@ public class HtmlResponseWriterImpl
 
     public void endElement(String name) throws IOException
     {
+        if (name == null)
+        {
+            throw new NullPointerException("elementName name must not be null");
+        }
+
         if(_startTagOpen)
         {
             // we will get here only if no text was written after the start element was opened
@@ -170,12 +180,12 @@ public class HtmlResponseWriterImpl
         }
 
         // If we are closing an outer element, write the end tag.
-        if (!name.equals(_startElementName))
-        {
+        //if (!name.equals(_startElementName))
+        //{
             _writer.write("</");
             _writer.write(name);
             _writer.write('>');
-        }
+        //}
 
         _startTagOpen = false;
 //        _currentComponent = null;
@@ -183,10 +193,15 @@ public class HtmlResponseWriterImpl
 
     public void writeAttribute(String name, Object value, String componentPropertyName) throws IOException
     {
+        if (name == null)
+        {
+            throw new NullPointerException("attributeName name must not be null");
+        }
         if (!_startTagOpen)
         {
-            throw new IllegalStateException("Must be called before the start element is closed");
+            throw new IllegalStateException("Must be called before the start element is closed (attribute '" + name + "')");
         }
+
         if (value instanceof Boolean)
         {
             if (((Boolean)value).booleanValue())
@@ -212,10 +227,15 @@ public class HtmlResponseWriterImpl
 
     public void writeURIAttribute(String name, Object value, String componentPropertyName) throws IOException
     {
+        if (name == null)
+        {
+            throw new NullPointerException("attributeName name must not be null");
+        }
         if (!_startTagOpen)
         {
-            throw new IllegalStateException("Must be called before the start element is closed");
+            throw new IllegalStateException("Must be called before the start element is closed (attribute '" + name + "')");
         }
+
         String strValue = value.toString(); //TODO: Use converter for value?
         _writer.write(' ');
         _writer.write(name);
@@ -260,6 +280,11 @@ public class HtmlResponseWriterImpl
 
     public void writeComment(Object value) throws IOException
     {
+        if (value == null)
+        {
+            throw new NullPointerException("comment name must not be null");
+        }
+
         closeStartElementIfNecessary();
         _writer.write("<!--");
         _writer.write(value.toString());    //TODO: Escaping: must not have "-->" inside!
@@ -268,6 +293,11 @@ public class HtmlResponseWriterImpl
 
     public void writeText(Object value, String componentPropertyName) throws IOException
     {
+        if (value == null)
+        {
+            throw new NullPointerException("text name must not be null");
+        }
+
         closeStartElementIfNecessary();
         if(value == null)
             return;
@@ -286,6 +316,15 @@ public class HtmlResponseWriterImpl
 
     public void writeText(char cbuf[], int off, int len) throws IOException
     {
+        if (cbuf == null)
+        {
+            throw new NullPointerException("cbuf name must not be null");
+        }
+        if (cbuf.length < off + len)
+        {
+            throw new IndexOutOfBoundsException((off + len) + " > " + cbuf.length);
+        }
+
         closeStartElementIfNecessary();
 
         if (isScriptOrStyle())

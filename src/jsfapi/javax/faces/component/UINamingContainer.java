@@ -28,6 +28,7 @@ package javax.faces.component;
  */
 public class UINamingContainer
         extends UIComponentBase
+        implements NamingContainer
 {
     //------------------ GENERATED CODE BEGIN (do not modify!) --------------------
 
