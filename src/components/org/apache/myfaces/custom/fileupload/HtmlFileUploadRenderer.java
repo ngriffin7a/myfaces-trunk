@@ -35,6 +35,9 @@ import java.io.IOException;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * 
+ * Revision 1.3 Sylvain Vieujot
+ * Fix a null pointer exception in encodeEnd if the file name is null.
+ * 
  * Revision 1.2 Sylvain Vieujot
  * Upgraded to use commons fileUpload
  */
@@ -55,7 +58,10 @@ public class HtmlFileUploadRenderer
         UploadedFile value = (UploadedFile)((HtmlInputFileUpload)uiComponent).getValue();
         if (value != null)
         {
-            writer.writeAttribute(HTML.VALUE_ATTR, value.getName(), null);
+        	if( value.getName() != null )
+        	{
+        		writer.writeAttribute(HTML.VALUE_ATTR, value.getName(), null);
+        	}
         }
         HtmlRendererUtils.renderHTMLAttributes(writer, uiComponent, HTML.INPUT_FILE_PASSTHROUGH_ATTRIBUTES);
         writer.endElement(HTML.INPUT_ELEM);
