@@ -30,7 +30,7 @@
     <target name="junit" depends="-compile-for-junit,-myfaces-jar">
         <mkdir dir="${junit.results.dir}/test-reports/xml"/>
         <mkdir dir="${junit.results.dir}/test-reports/html"/>
-        <junit fork="true">
+        <junit fork="true" printsummary="${test.printsummary}">
             <classpath refid="junit.class.path"/>
             <batchtest toDir="${junit.results.dir}/test-reports/xml">
                 <fileset dir="${junit.classes.dir}">

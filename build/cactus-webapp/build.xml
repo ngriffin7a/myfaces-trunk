@@ -123,7 +123,7 @@
             description="run the cactus tests">
         <mkdir dir="${cactus.results.dir}/test-reports/xml"/>
         <mkdir dir="${cactus.results.dir}/test-reports/html"/>
-        <junit fork="true">
+        <junit fork="true" printsummary="${test.printsummary}">
             <classpath refid="cactus.class.path"/>
       	    <classpath>
               <pathelement path="${cactus.classes.dir}"/>
