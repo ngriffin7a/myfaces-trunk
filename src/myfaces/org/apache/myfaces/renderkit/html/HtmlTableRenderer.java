@@ -20,6 +20,9 @@ package net.sourceforge.myfaces.renderkit.html;
 
 import net.sourceforge.myfaces.renderkit.JSFAttr;
 import net.sourceforge.myfaces.renderkit.RendererUtils;
+import net.sourceforge.myfaces.util.ArrayUtils;
+import net.sourceforge.myfaces.util.StringUtils;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -32,7 +35,6 @@ import javax.faces.context.ResponseWriter;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
-import java.util.StringTokenizer;
 
 /**
  * @author Thomas Spiegl (latest modification by $Author$)
@@ -300,32 +302,14 @@ public class HtmlTableRenderer
 
         Styles(String rowStyles, String columnStyles)
         {
-            if (rowStyles != null)
-            {
-                StringTokenizer tokenizer = new StringTokenizer(rowStyles, ",");
-                _rowStyle = new String[tokenizer.countTokens()];
-                for (int i = 0; tokenizer.hasMoreTokens(); i++)
-                {
-                    _rowStyle[i] = tokenizer.nextToken().trim();
-                }
-            }
-            else
-            {
-                _rowStyle = new String[0];
-            }
-            if (columnStyles != null)
-            {
-                StringTokenizer tokenizer = new StringTokenizer(columnStyles, ",");
-                _columnStyle = new String[tokenizer.countTokens()];
-                for (int i = 0; tokenizer.hasMoreTokens(); i++)
-                {
-                    _columnStyle[i] = tokenizer.nextToken().trim();
-                }
-            }
-            else
-            {
-                _columnStyle = new String[0];
-            }
+            _rowStyle = (rowStyles == null)
+                ? ArrayUtils.EMPTY_STRING_ARRAY
+                : StringUtils.trim(
+                    StringUtils.splitShortString(rowStyles, ','));
+            _columnStyle = (columnStyles == null)
+                ? ArrayUtils.EMPTY_STRING_ARRAY
+                : StringUtils.trim(
+                    StringUtils.splitShortString(columnStyles, ','));
         }
 
         public String getRowStyle(int idx)
