@@ -52,6 +52,7 @@ public class HtmlMessages
     private String _detailFormat = null;
     private String _enabledOnUserRole = null;
     private String _visibleOnUserRole = null;
+    private Boolean _replaceIdWithLabel = null;
 
     public HtmlMessages()
     {
@@ -119,6 +120,19 @@ public class HtmlMessages
         return vb != null ? (String)vb.getValue(getFacesContext()) : null;
     }
 
+    public void setReplaceIdWithLabel(boolean replaceIdWithLabel)
+    {
+        _replaceIdWithLabel = Boolean.valueOf(replaceIdWithLabel);
+    }
+
+    public boolean isReplaceIdWithLabel()
+    {
+        if (_replaceIdWithLabel != null) return _replaceIdWithLabel.booleanValue();
+        ValueBinding vb = getValueBinding("replaceIdWithLabel");
+        Boolean v = vb != null ? (Boolean)vb.getValue(getFacesContext()) : null;
+        return v != null ? v.booleanValue() : false;
+    }
+
 
     public boolean isRendered()
     {
@@ -128,13 +142,14 @@ public class HtmlMessages
 
     public Object saveState(FacesContext context)
     {
-        Object values[] = new Object[6];
+        Object values[] = new Object[7];
         values[0] = super.saveState(context);
         values[1] = _summaryFormat;
         values[2] = _globalSummaryFormat;
         values[3] = _detailFormat;
         values[4] = _enabledOnUserRole;
         values[5] = _visibleOnUserRole;
+        values[6] = _replaceIdWithLabel;
         return ((Object) (values));
     }
 
@@ -147,6 +162,7 @@ public class HtmlMessages
         _detailFormat = (String)values[3];
         _enabledOnUserRole = (String)values[4];
         _visibleOnUserRole = (String)values[5];
+        _replaceIdWithLabel = (Boolean)values[6];
     }
     //------------------ GENERATED CODE END ---------------------------------------
 }

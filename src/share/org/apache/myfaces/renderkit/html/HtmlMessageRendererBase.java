@@ -34,6 +34,9 @@ import java.util.Map;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.11  2005/01/22 19:47:44  mmarinschek
+ * Message rendering updated - if a validation exception needs to be rendered, the id of the component is replaced with a label.
+ *
  * Revision 1.10  2004/12/23 13:03:09  mmarinschek
  * id's not rendered (or not conditionally rendered); changes in jslistener to support both ie and firefox now
  *
@@ -99,7 +102,9 @@ public abstract class HtmlMessageRendererBase
             throw new FacesException("Could not render Message. Unable to find component '" + forAttr + "' (calling findComponent on component '" + message.getClientId(facesContext) + "')");
         }
 
-        Iterator messageIterator = facesContext.getMessages(forComponent.getClientId(facesContext));
+        String clientId = forComponent.getClientId(facesContext);
+
+        Iterator messageIterator = facesContext.getMessages(clientId);
         if (!messageIterator.hasNext())
         {
             // No associated message, nothing to render
@@ -110,7 +115,7 @@ public abstract class HtmlMessageRendererBase
         FacesMessage facesMessage = (FacesMessage)messageIterator.next();
 
         // and render it
-        renderSingleFacesMessage(facesContext, message, facesMessage, null);
+        renderSingleFacesMessage(facesContext, message, facesMessage, clientId);
     }
 
 

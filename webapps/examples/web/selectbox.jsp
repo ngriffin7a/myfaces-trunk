@@ -61,7 +61,7 @@ managed beans used:
         <f:facet name="body">
             <h:panelGroup id="body">
 
-                <x:messages id="messageList" styleClass="error" showDetail="true" summaryFormat="{0} " />
+                <x:messages id="messageList" styleClass="error" showDetail="true" summaryFormat="{0} "/>
 
                 <h:form name="formName">
 

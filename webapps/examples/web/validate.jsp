@@ -63,45 +63,45 @@ managed beans used:
 			<h:form id="form1" name="validateForm">
 			   <h:panelGrid columns="3">
 
-					<h:outputLabel for="form1:email" value="#{example_messages['validate_email']}" />
+					<h:outputLabel for="email" value="#{example_messages['validate_email']}" />
                     <h:inputText id="email" value="#{validateForm.email}" required="true">
                         <f:validator validatorId="org.apache.myfaces.validator.Email"/>
                     </h:inputText>
-					<h:message id="emailError" for="form1:email" styleClass="error" />
+					<x:message id="emailError" for="email" styleClass="error" />
 
-					<h:outputLabel for="form1:email2" value="#{example_messages['validate_email']}2" />
+					<h:outputLabel for="email2" value="#{example_messages['validate_email']}2" />
                     <h:inputText id="email2" value="#{validateForm.email2}" required="true">
                         <x:validateEmail />
                     </h:inputText>
-					<h:message id="emailError2" for="form1:email2" styleClass="error" />
+					<x:message id="emailError2" for="email2" styleClass="error" />
 
-					<h:outputLabel for="form1:creditCardNumber" value="#{example_messages['validate_credit']}" />
+					<h:outputLabel for="creditCardNumber" value="#{example_messages['validate_credit']}" />
                     <h:inputText id="creditCardNumber" value="#{validateForm.creditCardNumber}" required="true">
                         <x:validateCreditCard />
                     </h:inputText>
-					<h:message id="creditCardNumberError" for="form1:creditCardNumber" styleClass="error" />
+					<x:message id="creditCardNumberError" for="creditCardNumber" styleClass="error" />
 
-                         <h:outputLabel for="form1:regExprValue" value="#{example_messages['validate_regexp']}" />
+                         <h:outputLabel for="regExprValue" value="#{example_messages['validate_regexp']}" />
                     <h:inputText id="regExprValue" value="#{validateForm.regExpr}" required="true">
                         <x:validateRegExpr pattern='\d{5}' />
                     </h:inputText>
-                         <h:message id="regExprValueError" for="form1:regExprValue" styleClass="error" />
+                         <x:message id="regExprValueError" for="regExprValue" styleClass="error" />
 
-                         <h:outputLabel for="form1:isbn" value="#{example_messages['validate_isbn']}" />
+                         <h:outputLabel for="isbn" value="#{example_messages['validate_isbn']}" />
                     <h:inputText id="isbn" value="#{validateForm.isbn}" required="true">
                         <x:validateISBN />
                     </h:inputText>
-                         <h:message id="isbnError" for="form1:isbn" styleClass="error" />
+                         <x:message id="isbnError" for="isbn" styleClass="error" />
 
-					<h:outputLabel for="form1:equal" value="#{example_messages['validate_equal']}" />
+					<h:outputLabel for="equal" value="#{example_messages['validate_equal']}" />
                     <h:inputText id="equal" value="#{validateForm.equal}" required="true"/>
-					<h:message id="equalError" for="form1:equal" styleClass="error" />
+					<x:message id="equalError" for="equal" styleClass="error" />
 
-					<h:outputLabel for="form1:equal2" value="#{example_messages['validate_equal']}2" />
+					<h:outputLabel for="equal2" value="#{example_messages['validate_equal']}2" />
                     <h:inputText id="equal2" value="#{validateForm.equal2}" required="true">
-                        <x:validateEqual for="form1:equal" />
+                        <x:validateEqual for="equal" />
                     </h:inputText>
-					<h:message id="equal2Error" for="form1:equal2" styleClass="error" />
+					<x:message id="equal2Error" for="equal2" styleClass="error" />
 
                     <h:panelGroup/>
 				    <h:commandButton id="validateButton" value="#{example_messages['button_submit']}" action="#{validateForm.submit}"/>

@@ -26,6 +26,9 @@ import javax.faces.el.ValueBinding;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.10  2005/01/22 19:47:44  mmarinschek
+ * Message rendering updated - if a validation exception needs to be rendered, the id of the component is replaced with a label.
+ *
  * Revision 1.9  2005/01/16 20:09:53  matzew
  * added patch form Sean Schofield. forceId for reuse of "legacy JavaScript" (MyFaces-70)
  *
@@ -78,6 +81,7 @@ public class HtmlMessage
     private String _detailFormat = null;
     private String _enabledOnUserRole = null;
     private String _visibleOnUserRole = null;
+    private Boolean _replaceIdWithLabel = null;
 
     public HtmlMessage()
     {
@@ -133,6 +137,19 @@ public class HtmlMessage
         return vb != null ? (String)vb.getValue(getFacesContext()) : null;
     }
 
+    public void setReplaceIdWithLabel(boolean replaceIdWithLabel)
+    {
+        _replaceIdWithLabel = Boolean.valueOf(replaceIdWithLabel);
+    }
+
+    public boolean isReplaceIdWithLabel()
+    {
+        if (_replaceIdWithLabel != null) return _replaceIdWithLabel.booleanValue();
+        ValueBinding vb = getValueBinding("replaceIdWithLabel");
+        Boolean v = vb != null ? (Boolean)vb.getValue(getFacesContext()) : null;
+        return v != null ? v.booleanValue() : false;
+    }
+
 
     public boolean isRendered()
     {
@@ -142,12 +159,13 @@ public class HtmlMessage
 
     public Object saveState(FacesContext context)
     {
-        Object values[] = new Object[5];
+        Object values[] = new Object[6];
         values[0] = super.saveState(context);
         values[1] = _summaryFormat;
         values[2] = _detailFormat;
         values[3] = _enabledOnUserRole;
         values[4] = _visibleOnUserRole;
+        values[5] = _replaceIdWithLabel;
         return ((Object) (values));
     }
 
@@ -159,6 +177,7 @@ public class HtmlMessage
         _detailFormat = (String)values[2];
         _enabledOnUserRole = (String)values[3];
         _visibleOnUserRole = (String)values[4];
+        _replaceIdWithLabel = (Boolean)values[5];
     }
     //------------------ GENERATED CODE END ---------------------------------------
 }

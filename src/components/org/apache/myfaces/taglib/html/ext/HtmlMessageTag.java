@@ -25,6 +25,9 @@ import javax.faces.component.UIComponent;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.9  2005/01/22 19:47:44  mmarinschek
+ * Message rendering updated - if a validation exception needs to be rendered, the id of the component is replaced with a label.
+ *
  * Revision 1.8  2004/10/13 11:50:59  matze
  * renamed packages to org.apache
  *
@@ -69,6 +72,7 @@ public class HtmlMessageTag
     private String _detailFormat;
     private String _enabledOnUserRole;
     private String _visibleOnUserRole;
+    private String _replaceIdWithLabel;
 
     protected void setProperties(UIComponent component)
     {
@@ -78,6 +82,7 @@ public class HtmlMessageTag
         setStringProperty(component, "detailFormat", _detailFormat);
         setStringProperty(component, UserRoleAware.ENABLED_ON_USER_ROLE_ATTR, _enabledOnUserRole);
         setStringProperty(component, UserRoleAware.VISIBLE_ON_USER_ROLE_ATTR, _visibleOnUserRole);
+        setBooleanProperty(component, "replaceIdWithLabel",_replaceIdWithLabel==null?Boolean.TRUE.toString():_replaceIdWithLabel);
     }
 
     public void setSummaryFormat(String summaryFormat)
@@ -98,5 +103,10 @@ public class HtmlMessageTag
     public void setVisibleOnUserRole(String visibleOnUserRole)
     {
         _visibleOnUserRole = visibleOnUserRole;
+    }
+
+    public void setReplaceIdWithLabel(String replaceIdWithLabel)
+    {
+        _replaceIdWithLabel = replaceIdWithLabel;
     }
 }

@@ -23,4 +23,8 @@
         <name>visibleOnUserRole</name>
         <type>java.lang.String</type>
     </field>
+    <field>
+        <name>replaceIdWithLabel</name>
+        <type>boolean</type>
+    </field>
 </component>

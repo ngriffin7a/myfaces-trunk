@@ -29,6 +29,9 @@ import java.text.MessageFormat;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.6  2005/01/22 19:47:44  mmarinschek
+ * Message rendering updated - if a validation exception needs to be rendered, the id of the component is replaced with a label.
+ *
  * Revision 1.5  2004/10/13 11:50:59  matze
  * renamed packages to org.apache
  *
@@ -66,6 +69,16 @@ public class HtmlMessagesRenderer
         String msgSummary = facesMessage.getSummary();
         if (msgSummary == null) return null;
 
+        String inputLabel = null;
+        if (msgClientId != null) inputLabel = HtmlMessageRenderer.findInputLabel(facesContext, msgClientId);
+        if (inputLabel == null) inputLabel = "";
+
+        if(((message instanceof HtmlMessages && ((HtmlMessages) message).isReplaceIdWithLabel()) ||
+                (message instanceof HtmlMessage && ((HtmlMessage) message).isReplaceIdWithLabel()))&&
+                inputLabel.length()!=0)
+            msgSummary = msgSummary.replaceAll(HtmlMessageRenderer.findInputId(facesContext, msgClientId),inputLabel);
+
+
         String summaryFormat;
         if (msgClientId == null)
         {
@@ -80,10 +93,6 @@ public class HtmlMessagesRenderer
             summaryFormat = getSummaryFormat(message);
         }
         if (summaryFormat == null) return msgSummary;
-
-        String inputLabel = null;
-        if (msgClientId != null) inputLabel = HtmlMessageRenderer.findInputLabel(facesContext, msgClientId);
-        if (inputLabel == null) inputLabel = "";
 
         MessageFormat format = new MessageFormat(summaryFormat, facesContext.getViewRoot().getLocale());
         return format.format(new Object[] {msgSummary, inputLabel});
@@ -122,6 +131,15 @@ public class HtmlMessagesRenderer
         String msgDetail = facesMessage.getDetail();
         if (msgDetail == null) return null;
 
+        String inputLabel = null;
+        if (msgClientId != null) inputLabel = HtmlMessageRenderer.findInputLabel(facesContext, msgClientId);
+        if (inputLabel == null) inputLabel = "";
+
+        if(((message instanceof HtmlMessages && ((HtmlMessages) message).isReplaceIdWithLabel()) ||
+                (message instanceof HtmlMessage && ((HtmlMessage) message).isReplaceIdWithLabel()))&&
+                inputLabel.length()!=0)
+            msgDetail = msgDetail.replaceAll(HtmlMessageRenderer.findInputId(facesContext, msgClientId),inputLabel);
+
         String detailFormat;
         if (message instanceof HtmlMessage)
         {
@@ -133,10 +151,6 @@ public class HtmlMessagesRenderer
         }
 
         if (detailFormat == null) return msgDetail;
-
-        String inputLabel = null;
-        if (msgClientId != null) inputLabel = HtmlMessageRenderer.findInputLabel(facesContext, msgClientId);
-        if (inputLabel == null) inputLabel = "";
 
         MessageFormat format = new MessageFormat(detailFormat, facesContext.getViewRoot().getLocale());
         return format.format(new Object[] {msgDetail, inputLabel});

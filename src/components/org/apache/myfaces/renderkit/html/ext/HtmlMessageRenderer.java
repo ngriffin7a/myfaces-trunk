@@ -16,6 +16,7 @@
 package org.apache.myfaces.renderkit.html.ext;
 
 import org.apache.myfaces.component.html.ext.HtmlMessage;
+import org.apache.myfaces.component.html.ext.HtmlMessages;
 import org.apache.myfaces.renderkit.RendererUtils;
 import org.apache.myfaces.renderkit.html.HtmlMessageRendererBase;
 
@@ -36,6 +37,9 @@ import java.util.Map;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.7  2005/01/22 19:47:44  mmarinschek
+ * Message rendering updated - if a validation exception needs to be rendered, the id of the component is replaced with a label.
+ *
  * Revision 1.6  2004/10/13 11:50:59  matze
  * renamed packages to org.apache
  *
@@ -77,6 +81,16 @@ public class HtmlMessageRenderer
         String msgSummary = facesMessage.getSummary();
         if (msgSummary == null) return null;
 
+        String inputLabel = null;
+        if (msgClientId != null) inputLabel = findInputLabel(facesContext, msgClientId);
+        if (inputLabel == null) inputLabel = "";
+
+        if(((message instanceof HtmlMessages && ((HtmlMessages) message).isReplaceIdWithLabel()) ||
+                (message instanceof HtmlMessage && ((HtmlMessage) message).isReplaceIdWithLabel()))&&
+                inputLabel.length()!=0)
+            msgSummary = msgSummary.replaceAll(findInputId(facesContext, msgClientId),inputLabel);
+
+
         String summaryFormat;
         if (message instanceof HtmlMessage)
         {
@@ -89,11 +103,8 @@ public class HtmlMessageRenderer
 
         if (summaryFormat == null) return msgSummary;
 
-        String inputLabel = null;
-        if (msgClientId != null) inputLabel = findInputLabel(facesContext, msgClientId);
-        if (inputLabel == null) inputLabel = "";
-
         MessageFormat format = new MessageFormat(summaryFormat, facesContext.getViewRoot().getLocale());
+
         return format.format(new Object[] {msgSummary, inputLabel});
     }
 
@@ -104,6 +115,15 @@ public class HtmlMessageRenderer
     {
         String msgDetail = facesMessage.getDetail();
         if (msgDetail == null) return null;
+
+        String inputLabel = null;
+        if (msgClientId != null) inputLabel = findInputLabel(facesContext, msgClientId);
+        if (inputLabel == null) inputLabel = "";
+
+        if(((message instanceof HtmlMessages && ((HtmlMessages) message).isReplaceIdWithLabel()) ||
+                (message instanceof HtmlMessage && ((HtmlMessage) message).isReplaceIdWithLabel()))&&
+                inputLabel.length()!=0)
+            msgDetail = msgDetail.replaceAll(findInputId(facesContext, msgClientId),inputLabel);
 
         String detailFormat;
         if (message instanceof HtmlMessage)
@@ -117,10 +137,6 @@ public class HtmlMessageRenderer
 
         if (detailFormat == null) return msgDetail;
 
-        String inputLabel = null;
-        if (msgClientId != null) inputLabel = findInputLabel(facesContext, msgClientId);
-        if (inputLabel == null) inputLabel = "";
-
         MessageFormat format = new MessageFormat(detailFormat, facesContext.getViewRoot().getLocale());
         return format.format(new Object[] {msgDetail, inputLabel});
     }
@@ -129,7 +145,15 @@ public class HtmlMessageRenderer
     public static String findInputLabel(FacesContext facesContext, String inputClientId)
     {
         Map outputLabelMap = getOutputLabelMap(facesContext);
-        return (String)outputLabelMap.get(inputClientId);
+        MessageLabelInfo info = ((MessageLabelInfo)outputLabelMap.get(inputClientId));
+        return info==null?null:info.getText();
+    }
+
+    public static String findInputId(FacesContext facesContext, String inputClientId)
+    {
+        Map outputLabelMap = getOutputLabelMap(facesContext);
+        MessageLabelInfo info = ((MessageLabelInfo)outputLabelMap.get(inputClientId));
+        return info==null?null:(info.getForComponent()==null?null:info.getForComponent().getId());
     }
 
     /**
@@ -167,7 +191,8 @@ public class HtmlMessageRenderer
                 else
                 {
                     map.put(input.getClientId(facesContext),
-                            getLabelText(facesContext, (HtmlOutputLabel)child));
+                            new MessageLabelInfo(
+                                    input,getLabelText(facesContext, (HtmlOutputLabel)child)));
                 }
             }
             else
@@ -185,5 +210,37 @@ public class HtmlMessageRenderer
             //TODO: traverse children and append OutputText and/or OutputMessage texts
         }
         return text;
+    }
+
+    public static class MessageLabelInfo
+    {
+        private UIComponent _forComponent;
+        private String _text;
+
+        public MessageLabelInfo(UIComponent forComponent, String text)
+        {
+            _forComponent = forComponent;
+            _text = text;
+        }
+
+        public UIComponent getForComponent()
+        {
+            return _forComponent;
+        }
+
+        public void setForComponent(UIComponent forComponent)
+        {
+            _forComponent = forComponent;
+        }
+
+        public String getText()
+        {
+            return _text;
+        }
+
+        public void setText(String text)
+        {
+            _text = text;
+        }
     }
 }
