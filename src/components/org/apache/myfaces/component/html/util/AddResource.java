@@ -42,6 +42,9 @@ import org.apache.myfaces.renderkit.html.HTML;
  * @author Sylvain Vieujot (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.22  2005/03/14 17:49:32  svieujot
+ * Cleanup.
+ *
  * Revision 1.21  2005/03/14 15:58:42  svieujot
  * Added caching to the ExtensionsFilter
  *
@@ -211,7 +214,6 @@ public class AddResource {
 	        final String bundleName = AddResource.class.getName();
 	        ResourceBundle resources = ResourceBundle.getBundle( bundleName );
 			cacheKey = resources.getString("cacheKey");
-System.out.println("Package : "+cacheKey);
 		}
 		
 		return cacheKey; 
