@@ -43,7 +43,7 @@
 
         <copy todir="${web-inf.lib.dir}">
             <fileset file="${cos.jar}"/>
-            <!--fileset file="${sun-jsf-api.jar}"/-->
+            <fileset file="${jstl.jar}"/>
             <fileset file="${commons-logging.jar}"/>
             <fileset file="${log4j.jar}"/>
         </copy>

@@ -82,8 +82,8 @@ public abstract class MyfacesComponentTag
 
         setBooleanProperty(component, JSFAttr.TRANSIENT_ATTR, _transient);
 
-        setBooleanProperty(component, JSFAttr.ENABLED_ON_USER_ROLE_ATTR, _enabledOnUserRole);
-        setBooleanProperty(component, JSFAttr.VISIBLE_ON_USER_ROLE_ATTR, _visibleOnUserRole);
+        setStringProperty(component, JSFAttr.ENABLED_ON_USER_ROLE_ATTR, _enabledOnUserRole);
+        setStringProperty(component, JSFAttr.VISIBLE_ON_USER_ROLE_ATTR, _visibleOnUserRole);
 
         //rendererType already handled by UIComponentTag
 

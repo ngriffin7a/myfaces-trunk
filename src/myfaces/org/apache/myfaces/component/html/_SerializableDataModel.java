@@ -16,38 +16,32 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package net.sourceforge.myfaces.model;
+package net.sourceforge.myfaces.component.html;
 
-import javax.faces.component.StateHolder;
-import javax.faces.context.FacesContext;
 import javax.faces.model.DataModel;
 import javax.faces.model.DataModelEvent;
 import javax.faces.model.DataModelListener;
-import javax.servlet.jsp.jstl.sql.Result;
 import java.io.Serializable;
-import java.sql.ResultSet;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.SortedMap;
 
 /**
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public class SerializableDataModel
+class _SerializableDataModel
         extends DataModel
-        implements Serializable, StateHolder
+        implements Serializable
 {
-    //private static final Log log = LogFactory.getLog(SerializableDataModel.class);
+    //private static final Log log = LogFactory.getLog(_SerializableDataModel.class);
 
-    private int _first;
-    private int _rows;
-    private int _rowCount;
-    private List _list;
+    protected int _first;
+    protected int _rows;
+    protected int _rowCount;
+    protected List _list;
     private transient int _rowIndex = -1;
 
-    public SerializableDataModel(int first, int rows, DataModel dataModel)
+    public _SerializableDataModel(int first, int rows, DataModel dataModel)
     {
         _first = first;
         _rows = rows;
@@ -73,87 +67,8 @@ public class SerializableDataModel
         }
     }
 
-    public SerializableDataModel(int first, int rows, List list)
+    protected _SerializableDataModel()
     {
-        _first = first;
-        _rows = rows;
-        _rowCount = list.size();
-        if (_rows <= 0)
-        {
-            _rows = _rowCount - first;
-        }
-
-        if (_rows == _rowCount)
-        {
-            //whole list must be saved
-            if (list instanceof Serializable || list instanceof StateHolder)
-            {
-                _list = list;
-            }
-            else
-            {
-                //copy list
-                _list = new ArrayList(list);
-            }
-        }
-        else
-        {
-            _list = new ArrayList(_rows);
-            for (int i = 0; i < _rowCount; i++)
-            {
-                _list.add(list.get(_first + i));
-            }
-        }
-    }
-
-    public SerializableDataModel(int first, int rows, Object[] array)
-    {
-        _first = first;
-        _rows = rows;
-        _rowCount = array.length;
-        if (_rows <= 0)
-        {
-            _rows = _rowCount - first;
-        }
-        _list = new ArrayList(_rows);
-        for (int i = 0; i < _rowCount; i++)
-        {
-            _list.add(array[_first + i]);
-        }
-    }
-
-    public SerializableDataModel(int first, int rows, ResultSet resultSet)
-    {
-        throw new UnsupportedOperationException("not yet supported"); //TODO
-    }
-
-    public SerializableDataModel(int first, int rows, Result result)
-    {
-        _first = first;
-        _rows = rows;
-        _rowCount = result.getRowCount();
-        if (_rows <= 0)
-        {
-            _rows = _rowCount - first;
-        }
-        _list = new ArrayList(_rows);
-        SortedMap[] resultRows = result.getRows();
-        for (int i = 0; i < _rowCount; i++)
-        {
-            _list.add(resultRows[_first + i]);
-        }
-    }
-
-    public SerializableDataModel(int first, int rows, Object scalar)
-    {
-        _first = first;
-        _rows = rows;
-        _rowCount = 1;
-        if (_rows <= 0)
-        {
-            _rows = _rowCount - first;
-        }
-        _list = Collections.singletonList(scalar);
     }
 
     public int getFirst()
@@ -220,12 +135,13 @@ public class SerializableDataModel
     {
         if (obj != null)
         {
-            throw new IllegalArgumentException("Cannot set wrapped data of SerializableDataModel");
+            throw new IllegalArgumentException("Cannot set wrapped data of _SerializableDataModel");
         }
     }
 
 
 
+    /*
     // StateHolder interface
 
     public Object saveState(FacesContext context)
@@ -256,4 +172,5 @@ public class SerializableDataModel
     {
         throw new UnsupportedOperationException();
     }
+    */
 }

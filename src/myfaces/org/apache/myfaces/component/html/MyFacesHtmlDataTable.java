@@ -18,8 +18,6 @@
  */
 package net.sourceforge.myfaces.component.html;
 
-import net.sourceforge.myfaces.model.SerializableDataModel;
-
 import javax.faces.component.html.HtmlDataTable;
 import javax.faces.context.FacesContext;
 import javax.faces.el.ValueBinding;
@@ -46,7 +44,7 @@ public class MyFacesHtmlDataTable
         {
             Object value = getLocalValue();
             if (value != null &&
-                value instanceof SerializableDataModel &&
+                value instanceof _SerializableDataModel &&
                 getValueBinding("value") != null)
             {
                 //Clear local value, so that current data from model bean is used from now on
@@ -95,12 +93,12 @@ public class MyFacesHtmlDataTable
     {
         Object value = getLocalValue();
         if (value != null &&
-            value instanceof SerializableDataModel)
+            value instanceof _SerializableDataModel)
         {
             ValueBinding vb = getValueBinding("value");
             if (vb != null && !vb.isReadOnly(context))
             {
-                SerializableDataModel dm = (SerializableDataModel)value;
+                _SerializableDataModel dm = (_SerializableDataModel)value;
                 Class type = vb.getType(context);
                 if (DataModel.class.isAssignableFrom(type))
                 {
@@ -145,9 +143,9 @@ public class MyFacesHtmlDataTable
         {
             Object value = getLocalValue();
             if (value != null &&
-                value instanceof SerializableDataModel)
+                value instanceof _SerializableDataModel)
             {
-                return ((SerializableDataModel)value).getFirst();
+                return ((_SerializableDataModel)value).getFirst();
             }
         }
         return super.getFirst();
@@ -159,9 +157,9 @@ public class MyFacesHtmlDataTable
         {
             Object value = getLocalValue();
             if (value != null &&
-                value instanceof SerializableDataModel)
+                value instanceof _SerializableDataModel)
             {
-                return ((SerializableDataModel)value).getRows();
+                return ((_SerializableDataModel)value).getRows();
             }
         }
         return super.getRows();
@@ -206,27 +204,27 @@ public class MyFacesHtmlDataTable
         }
         else if (value instanceof DataModel)
         {
-            return new SerializableDataModel(getFirst(), getRows(), (DataModel)value);
+            return new _SerializableDataModel(getFirst(), getRows(), (DataModel)value);
         }
         else if (value instanceof List)
         {
-            return new SerializableDataModel(getFirst(), getRows(), (List)value);
+            return new _SerializableListDataModel(getFirst(), getRows(), (List)value);
         }
         else if (OBJECT_ARRAY_CLASS.isAssignableFrom(value.getClass()))
         {
-            return new SerializableDataModel(getFirst(), getRows(), (Object[])value);
+            return new _SerializableArrayDataModel(getFirst(), getRows(), (Object[])value);
         }
         else if (value instanceof ResultSet)
         {
-            return new SerializableDataModel(getFirst(), getRows(), (ResultSet)value);
+            return new _SerializableResultSetDataModel(getFirst(), getRows(), (ResultSet)value);
         }
         else if (value instanceof Result)
         {
-            return new SerializableDataModel(getFirst(), getRows(), (Result)value);
+            return new _SerializableResultDataModel(getFirst(), getRows(), (Result)value);
         }
         else
         {
-            return new SerializableDataModel(getFirst(), getRows(), (Object)value);
+            return new _SerializableScalarDataModel(getFirst(), getRows(), (Object)value);
         }
     }
 

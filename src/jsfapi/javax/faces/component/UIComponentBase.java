@@ -455,7 +455,12 @@ public abstract class UIComponentBase
         String renderKitId = context.getViewRoot().getRenderKitId();
         RenderKitFactory rkf = (RenderKitFactory)FactoryFinder.getFactory(FactoryFinder.RENDER_KIT_FACTORY);
         RenderKit renderKit = rkf.getRenderKit(context, renderKitId);
-        return renderKit.getRenderer(getFamily(), rendererType);
+        Renderer renderer = renderKit.getRenderer(getFamily(), rendererType);
+        if (renderer == null)
+        {
+            getFacesContext().getExternalContext().log("No Renderer found for component " + getClientId(context) + " (component-family=" + getFamily() + ", renderer-type=" + rendererType + ")");
+        }
+        return renderer;
     }
 
     public boolean isTransient()
@@ -530,7 +535,7 @@ public abstract class UIComponentBase
             }
             catch (InstantiationException e)
             {
-                throw new RuntimeException(e);
+                throw new RuntimeException("Could not restore StateHolder of type " + clazz.getName() + " (missing no-args constructor?)", e);
             }
             catch (IllegalAccessException e)
             {

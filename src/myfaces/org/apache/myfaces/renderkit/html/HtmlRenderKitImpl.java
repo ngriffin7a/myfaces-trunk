@@ -62,16 +62,13 @@ public class HtmlRenderKitImpl
         return componentFamily + "." + rendererType;
     }
 
-
     public Renderer getRenderer(String componentFamily, String rendererType)
     {
         Renderer renderer = (Renderer) _renderers.get(key(componentFamily, rendererType));
-
         if (renderer == null)
         {
-            throw new IllegalArgumentException("Unsupported component family / renderer type: " + componentFamily + " / " + rendererType);
+            log.warn("Unsupported component-family/renderer-type: " + componentFamily + "/" + rendererType);
         }
-
         return renderer;
     }
 

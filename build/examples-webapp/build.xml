@@ -25,6 +25,7 @@
         <!--pathelement location="${sun-jsf-api.jar}"/-->
         <pathelement location="${servlet-api.jar}"/>
         <pathelement location="${jsp-api.jar}"/>
+        <pathelement location="${jstl.jar}"/>
         <pathelement location="${myfaces.jar}"/>
     </path>
 
