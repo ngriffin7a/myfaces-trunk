@@ -42,6 +42,10 @@ import java.net.URLEncoder;
 import java.util.*;
 
 /**
+ * $Log$
+ * Revision 1.17  2004/03/26 13:39:14  manolito
+ * added javascript 'return false' to onClick attribute in render link method
+ *
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
@@ -594,7 +598,7 @@ public class HtmlRendererUtils
 
         //submit
         onClick.append(jsForm);
-        onClick.append(".submit();");
+        onClick.append(".submit();return false;");  //return false, so that browser does not handle the click
 
         writer.startElement(HTML.ANCHOR_ELEM, component);
         writer.writeURIAttribute(HTML.HREF_ATTR, "#", null);
