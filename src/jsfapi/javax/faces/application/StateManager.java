@@ -76,7 +76,7 @@ public abstract class StateManager
     }
 
 
-    public static class SerializedView
+    public class SerializedView
     {
         private Object _structure;
         private Object _state;
