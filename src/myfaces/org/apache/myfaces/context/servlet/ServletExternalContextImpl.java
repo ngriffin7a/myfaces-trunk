@@ -67,6 +67,16 @@ public class ServletExternalContextImpl
     private boolean _isHttpServletRequest;
     private String _requestServletPath;
     private String _requestPathInfo;
+    private static Method setCharacterEncodingMethod = null;
+    
+    static {
+        try {
+            setCharacterEncodingMethod = ServletRequest.class.getMethod("setCharacterEncoding", new Class[]{String.class});
+        } catch (Exception e) {
+                    log.warn("Detecting request character encoding is disable.");
+                    log.warn("Failed to obtain ServletRequest#setCharacterEncoding() method: " + e);
+        }
+    } 
 
     public ServletExternalContextImpl(ServletContext servletContext,
                                       ServletRequest servletRequest,
@@ -99,9 +109,7 @@ public class ServletExternalContextImpl
             // we have to use reflection as method setCharacterEncoding is not supported Servlet API <= 2.3
             try
             {
-                Method method = servletRequest.getClass().getMethod("setCharacterEncoding", new Class[]{String.class});
-
-                if (method != null) {
+                if (setCharacterEncodingMethod != null) {
                     String contentType = httpServletRequest.getHeader("Content-Type");
 
                     String characterEncoding = lookupCharacterEncoding(contentType);
@@ -114,7 +122,7 @@ public class ServletExternalContextImpl
                         }
 
                         if (characterEncoding != null) {
-                            method.invoke(servletRequest, new Object[]{characterEncoding});
+                            setCharacterEncodingMethod.invoke(servletRequest, new Object[]{characterEncoding});
                         }
                     }
                 }
