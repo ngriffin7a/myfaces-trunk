@@ -15,7 +15,12 @@
  */
 package net.sourceforge.myfaces.custom.date;
 
+import java.io.Serializable;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 import javax.faces.component.UIInput;
 import javax.faces.context.FacesContext;
@@ -37,15 +42,21 @@ public class HtmlInputDate extends UIInput {
      */
     private String _type = null;
     
+    // Values to hold the data entered by the user
+    private UserData _userData = null;
+    
     public HtmlInputDate() {
         setRendererType(DEFAULT_RENDERER_TYPE);
     }
+    
+    public void setUserData(UserData userData){
+        this._userData = userData;
+    }
 
-    /**
-     * Just to make things easier
-     */
-    public Date getDate() {
-        return (Date) getValue();
+    public UserData getUserData(Locale currentLocale){
+        if( _userData == null )
+            _userData = new UserData((Date) getValue(), currentLocale);
+        return _userData;
     }
     
 	public String getType() {
@@ -60,9 +71,10 @@ public class HtmlInputDate extends UIInput {
 	}
 	
     public Object saveState(FacesContext context) {
-        Object values[] = new Object[2];
+        Object values[] = new Object[3];
         values[0] = super.saveState(context);
         values[1] = _type;
+        values[2] = _userData;
         return ((Object) (values));
     }
 
@@ -70,5 +82,33 @@ public class HtmlInputDate extends UIInput {
         Object values[] = (Object[])state;
         super.restoreState(context, values[0]);
         _type = (String)values[1];
+        _userData = (UserData)values[2];
+    }
+    
+    public static class UserData implements Serializable {
+        public String day = null;
+        public String month = null;
+        public String year = null;
+        public String hours = null;
+        public String minutes = null;
+        public String seconds = null;
+        
+        public UserData(Date date, Locale currentLocale){
+            if( date != null ){
+                Calendar calendar = Calendar.getInstance(currentLocale);
+                calendar.setTime( date );
+                day = Integer.toString(calendar.get(Calendar.DAY_OF_MONTH));
+                month = Integer.toString(calendar.get(Calendar.MONTH)+1);
+                year = Integer.toString(calendar.get(Calendar.YEAR));
+                hours = Integer.toString(calendar.get(Calendar.HOUR_OF_DAY));
+                minutes = Integer.toString(calendar.get(Calendar.MINUTE));
+                seconds = Integer.toString(calendar.get(Calendar.SECOND));
+            }
+        }
+        
+        public Date parse() throws ParseException{
+            SimpleDateFormat fullFormat = new SimpleDateFormat( "dd MM yyyy hh mm ss" );
+            return fullFormat.parse(day+" "+month+" "+year+" "+hours+" "+minutes+" "+seconds);
+        }
     }
 }
