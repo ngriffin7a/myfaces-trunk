@@ -161,6 +161,19 @@ public class TreeUtils
         printAttribute(stream, comp, JspInfo.UNIQUE_COMPONENT_ID, "uniqueId");
         printAttribute(stream, comp, CommonComponentAttributes.VALUE_ATTR);
         printAttribute(stream, comp, CommonComponentAttributes.MODEL_REFERENCE_ATTR);
+
+        for (Iterator it = comp.getAttributeNames(); it.hasNext();)
+        {
+            String attrName = (String)it.next();
+            if (!(attrName.equals("id") ||
+                  attrName.equals("uniqueId") ||
+                  attrName.equals(CommonComponentAttributes.VALUE_ATTR) ||
+                  attrName.equals(CommonComponentAttributes.MODEL_REFERENCE_ATTR)))
+            {
+                printAttribute(stream, comp, attrName);
+            }
+        }
+
         Iterator children = comp.getChildren();
         if (children.hasNext())
         {
