@@ -24,7 +24,6 @@ import org.apache.commons.logging.LogFactory;
 import javax.servlet.ServletContext;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Level;
 
 /**
  * Global configuration for MyFaces.
@@ -34,23 +33,9 @@ import java.util.logging.Level;
 public class MyFacesConfig
 {
     private static final Log log = LogFactory.getLog(MyFacesConfig.class);
-    //private static final String _PROPERTY_FILE = "myfaces.properties";
 
     private static final String PARAM_checkJspModification = "myfaces_CheckJspModification";
     private static final boolean DEFAULT_checkJspModification = true;
-
-    private static final String PARAM_logLevel = "myfaces_LogLevel";
-    private static final Level  DEFAULT_logLevel = Level.INFO;
-    private static final Map LOG_LEVELS = new HashMap();
-    static
-    {
-        LOG_LEVELS.put("FINEST", Level.FINEST);
-        LOG_LEVELS.put("FINER", Level.FINER);
-        LOG_LEVELS.put("FINE", Level.FINE);
-        LOG_LEVELS.put("INFO", Level.INFO);
-        LOG_LEVELS.put("WARNING", Level.WARNING);
-        LOG_LEVELS.put("SEVERE", Level.SEVERE);
-    }
 
     public static final int STATE_SAVING_MODE__SERVER_SESSION = 1;
     public static final int STATE_SAVING_MODE__CLIENT_SERIALIZED = 2;
@@ -58,9 +43,6 @@ public class MyFacesConfig
     public static final int STATE_SAVING_MODE__CLIENT_MINIMIZED_ZIPPED = 4;
     private static final String PARAM_stateSavingMode = "myfaces_StateSavingMode";
     private static final int DEFAULT_stateSavingMode = STATE_SAVING_MODE__CLIENT_MINIMIZED;
-
-    private static final String PARAM_autoCreateRequestScopeBeans = "myfaces_AutoCreateRequestScopeBeans";
-    private static final boolean DEFAULT_autoCreateRequestScopeBeans = true;
 
     private static final String PARAM_discardInternalAttributes = "myfaces_DiscardInternalAttributes";
     private static final boolean DEFAULT_discardInternalAttributes = true;
@@ -73,7 +55,7 @@ public class MyFacesConfig
 
     private MyFacesConfig() 
     {
-        // hide from public access
+        // utility class, no instances allowed
     }
 
     /**
@@ -94,40 +76,8 @@ public class MyFacesConfig
     }
 
     /**
-     * Get the log level, that should be used.
-     * @deprecated TODO: remove this method
-     */
-    public static Level getLogLevel(ServletContext servletContext)
-    {
-        Level level = (Level)findInitParameterInMap(servletContext,
-                                                    PARAM_logLevel);
-        if (level != null)
-        {
-            return level;
-        }
-
-        String strValue = servletContext.getInitParameter(PARAM_logLevel);
-        if (strValue == null)
-        {
-            level = DEFAULT_logLevel;
-            if (log.isInfoEnabled()) log.info("No context init parameter '" + PARAM_logLevel + "' found, using default value " + DEFAULT_logLevel);
-        }
-        else
-        {
-            level = (Level)LOG_LEVELS.get(strValue);
-            if (level == null)
-            {
-                level = DEFAULT_logLevel;
-                if (log.isWarnEnabled()) log.warn("Wrong context init parameter '" + PARAM_logLevel + "' (='" + strValue + "'), using default value " + level);
-            }
-        }
-
-        saveInitParameterInMap(servletContext, PARAM_logLevel, level);
-        return level;
-    }
-
-    /**
      * See web.xml in the examples webapp for documentation!
+     * @deprecated remove, if new state saving is implemented
      */
     public static int getStateSavingMode(ServletContext servletContext)
     {
@@ -170,15 +120,6 @@ public class MyFacesConfig
         return mode.intValue();
     }
 
-    /**
-     * See web.xml in the examples webapp for documentation!
-     */
-    public static boolean isAutoCreateRequestScopeBeans(ServletContext servletContext)
-    {
-        return getBooleanInitParameter(servletContext,
-                                       PARAM_autoCreateRequestScopeBeans,
-                                       DEFAULT_autoCreateRequestScopeBeans);
-    }
 
     /**
      * See web.xml in the examples webapp for documentation!

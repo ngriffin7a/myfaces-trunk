@@ -19,17 +19,18 @@
 package net.sourceforge.myfaces.webapp;
 
 import net.sourceforge.myfaces.MyFacesFactoryFinder;
-import net.sourceforge.myfaces.webapp.webxml.WebXml;
-import net.sourceforge.myfaces.context.servlet.ServletExternalContextImpl;
 import net.sourceforge.myfaces.config.FacesConfig;
 import net.sourceforge.myfaces.config.FacesConfigFactory;
+import net.sourceforge.myfaces.context.servlet.ServletExternalContextImpl;
+import net.sourceforge.myfaces.webapp.webxml.WebXml;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import javax.faces.FactoryFinder;
+import javax.faces.context.ExternalContext;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
-import javax.faces.context.ExternalContext;
 
 /**
  * DOCUMENT ME!
@@ -46,13 +47,6 @@ public class StartupServletContextListener
         try
         {
             ServletContext servletContext = e.getServletContext();
-
-            //Set logging level
-            /*
-            setLoggerLevel(DebugUtils.getLogger(),
-                           MyFacesConfig.getLogLevel(servletContext));
-            */
-
             FacesConfigFactory fcf = MyFacesFactoryFinder.getFacesConfigFactory(servletContext);
             ExternalContext externalContext = new ServletExternalContextImpl(servletContext, null, null);
             FacesConfig facesConfig = fcf.getFacesConfig(externalContext);
@@ -69,21 +63,6 @@ public class StartupServletContextListener
 
     public void contextDestroyed(ServletContextEvent e)
     {
-        // do nothing 
+        FactoryFinder.releaseFactories();
     }
-
-
-    /*
-    private void setLoggerLevel(Logger logger, Level logLevel)
-    {
-        logger.setLevel(logLevel);
-
-        Handler[] logHandlers = logger.getHandlers();
-        for (int i = 0; i < logHandlers.length; i++)
-        {
-            logHandlers[i].setLevel(logLevel);
-        }
-    }
-    */
-
 }

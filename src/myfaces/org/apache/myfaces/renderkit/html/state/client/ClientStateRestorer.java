@@ -18,16 +18,7 @@
  */
 package net.sourceforge.myfaces.renderkit.html.state.client;
 
-import net.sourceforge.myfaces.MyFacesConfig;
-import net.sourceforge.myfaces.renderkit.html.jspinfo.JspBeanInfo;
-import net.sourceforge.myfaces.renderkit.html.jspinfo.JspInfo;
-import net.sourceforge.myfaces.renderkit.html.jspinfo.JspInfoUtils;
 import net.sourceforge.myfaces.renderkit.html.state.StateRestorer;
-
-import javax.faces.context.FacesContext;
-import javax.servlet.ServletContext;
-import java.util.Iterator;
-import java.util.Map;
 
 /**
  * Abstract base class for StateRestorers that restore state from the client.
@@ -38,19 +29,4 @@ import java.util.Map;
 public abstract class ClientStateRestorer
     implements StateRestorer
 {
-    protected void recreateRequestScopeBeans(FacesContext facesContext)
-    {
-        //autocreate request scope beans
-        if (MyFacesConfig.isAutoCreateRequestScopeBeans(((ServletContext)facesContext.getExternalContext().getContext())))
-        {
-            Iterator it = JspInfo.getJspBeanInfos(facesContext,
-                                                  facesContext.getViewRoot().getViewId());
-            while (it.hasNext())
-            {
-                Map.Entry entry = (Map.Entry)it.next();
-                JspInfoUtils.checkModelInstance(facesContext,
-                                                (JspBeanInfo)entry.getValue());
-            }
-        }
-    }
 }

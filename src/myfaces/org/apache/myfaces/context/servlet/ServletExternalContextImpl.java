@@ -21,9 +21,9 @@ package net.sourceforge.myfaces.context.servlet;
 import javax.faces.FacesException;
 import javax.faces.context.ExternalContext;
 import javax.servlet.*;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.Cookie;
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.Principal;
@@ -54,8 +54,8 @@ public class ServletExternalContextImpl
     private Map _initParameterMap;
 
     public ServletExternalContextImpl(ServletContext servletContext,
-                               ServletRequest servletRequest,
-                               ServletResponse servletResponse)
+                                      ServletRequest servletRequest,
+                                      ServletResponse servletResponse)
     {
         _servletContext = servletContext;
         _servletRequest = servletRequest;
@@ -134,18 +134,7 @@ public class ServletExternalContextImpl
             {
                 throw new IllegalStateException("Only HttpServletRequest supported");
             }
-            
             _sessionMap = new SessionMap((HttpServletRequest) _servletRequest);
-// FIXME:remove if not needed
-//            HttpSession session = ((HttpSession)getSession(false));
-//            if (session != null)
-//            {
-//                _sessionMap = new SessionMap(session);
-//            }
-//            else
-//            {
-//                _sessionMap = Collections.EMPTY_MAP;    //TODO: EMPTY_MAP throws exception on put. Better return an empty HashMap?
-//            }
         }
         return _sessionMap;
     }

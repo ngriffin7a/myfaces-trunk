@@ -7,6 +7,8 @@ Changes in Release 0.9.0
 * "myfaces_WrapPageContext" config parameter abandoned (does not work with all
   JSP containers and is obsoltete with Tomcat 5)
 * "myfaces_DefaultLanguage" config parameter abandoned (no longer needed)
+* "myfaces_LogLevel" config parameter abandoned (no longer needed)
+* "myfaces_AutoCreateRequestScopeBeans" config parameter abandoned (no longer needed)
 
 ----------------------------------------------------------------------
 Changes in Release 0.4.4
