@@ -1683,8 +1683,6 @@
             wrapping the table over a specified number of columns.
         </description>
         &standard_data_table_attributes;
-        <!-- MyFaces extensions -->
-        &user_role_attributes;
         <attribute>
             <name>newspaperColumns</name>
             <required>false</required>
