@@ -548,7 +548,7 @@
             <rtexprvalue>false</rtexprvalue>
             <description>
                 Indicates whether an arrow, that shows the sort direction should be rendered.
-                Default: true
+                Default: false
             </description>
         </attribute>
     </tag>

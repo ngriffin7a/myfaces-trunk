@@ -77,7 +77,7 @@ managed beans used:
 
                     <h:column>
                         <f:facet name="header">
-                            <x:commandSortHeader columnName="type">
+                            <x:commandSortHeader columnName="type" arrow="true">
                                 <h:outputText value="#{example_messages['sort_cartype']}" />
                             </x:commandSortHeader>
                         </f:facet>
@@ -89,7 +89,7 @@ managed beans used:
 
                     <h:column>
                         <f:facet name="header">
-                            <x:commandSortHeader columnName="color">
+                            <x:commandSortHeader columnName="color" arrow="true">
                                 <h:outputText value="#{example_messages['sort_carcolor']}" />
                             </x:commandSortHeader>
                         </f:facet>
