@@ -18,13 +18,15 @@
  */
 package net.sourceforge.myfaces.webapp.filter;
 
-import javax.servlet.*;
-import javax.servlet.http.HttpServletRequest;
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+
+import javax.servlet.*;
+import javax.servlet.http.HttpServletRequest;
+
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
 
 
 /**
@@ -38,33 +40,29 @@ import java.io.InputStream;
  * the URI of all incoming requests.
  *
  * @author Robert J. Lebowitz (latest modification by $Author$)
+ * @author Anton Koinov
  * @since February 18th, 2003
  * @version $Revision$ $Date$
  */
-public class WelcomeFileFilter implements Filter {
-    private SAXParserFactory factory;
-    private FilterConfig config;
-    private ServletContext context;
-    private String[] welcomeFiles = new String[0];
-    private StringBuffer sb = new StringBuffer();
+public class WelcomeFileFilter
+implements Filter
+{
+    //~ Instance fields --------------------------------------------------------
 
-    /**
-     * Creates a new WelcomeFileFilter object.
-     */
-    public WelcomeFileFilter() {
-        factory = SAXParserFactory.newInstance();
-        factory.setValidating(true);
-        factory.setNamespaceAware(false);
-    }
+    private FilterConfig   config;
+    private ServletContext context;
+    private String[]       welcomeFiles = new String[0];
+
+    //~ Methods ----------------------------------------------------------------
 
     /**
      * @see javax.servlet.Filter#destroy()
      */
-    public void destroy() {
-        config = null;
-        context = null;
-        welcomeFiles = null;
-        sb = null;
+    public void destroy()
+    {
+        config           = null;
+        context          = null;
+        welcomeFiles     = null;
     }
 
     /**
@@ -81,50 +79,67 @@ public class WelcomeFileFilter implements Filter {
      * error, along with a link to an appropriate help page.
      *
      * A URI is thought to represent a context and/or subdirectory(s) if
-     * it lacks a suffix following the pattern <b>.<suffix></b>.
+     * it lacks a suffix following the pattern <b>.suffix</b>.
      *
      */
-    public void doFilter(ServletRequest request, ServletResponse response,
-        FilterChain chain) throws IOException, ServletException {
-        if (config == null) {
+    public void doFilter(
+        ServletRequest request, ServletResponse response, FilterChain chain)
+    throws IOException, ServletException
+    {
+        if (config == null)
+        {
             return;
         }
 
         HttpServletRequest httpRequest = (HttpServletRequest) request;
-        String uri = httpRequest.getRequestURI();
+        String             uri = httpRequest.getRequestURI();
 
         // if the uri does not contain a suffix, we consider 
         // it to represent a directory / context, not a file.
         // file has suffix.  No need to search for welcome file
-        if (uri.lastIndexOf('.') > uri.lastIndexOf('/')) {
+        if (uri.lastIndexOf('.') > uri.lastIndexOf('/'))
+        {
             chain.doFilter(request, response);
 
             return;
         }
 
-        String contextPath = httpRequest.getContextPath();
-        String welcomeFile = null;
-        sb.setLength(0);
-        sb.append(uri);
+        String       contextPath = httpRequest.getContextPath();
+        String       welcomeFile = null;
+        StringBuffer sb          = new StringBuffer(uri);
 
-        if (!uri.endsWith("/")) {
+        if (!uri.endsWith("/"))
+        {
             sb.append('/');
         }
 
-        String baseURI = sb.delete(0, contextPath.length()).toString();
+        String baseURI = sb.delete(
+                0,
+                contextPath.length()).toString();
 
-        for (int i = 0; i < welcomeFiles.length; i++) {
+        // REVISIT: we probably can check for existence once at startup 
+        //          and know the exact welcome file by now. Of course, that 
+        //          would not work if the files change at runtime, but does it matter?
+        for (int i = 0; i < welcomeFiles.length; i++)
+        {
             sb.setLength(0);
             sb.append(baseURI).append(welcomeFiles[i]);
 
             File file = new File(context.getRealPath(sb.toString()));
 
             //            			context.log("Welcome File: " + file.getAbsolutePath());
-            if (file.exists()) {
-                if (welcomeFiles[i].endsWith(".jsp")) {
+            if (file.exists())
+            {
+                // REVISIT: This will force all "welcome" JSPs through MyFaces. 
+                //           Shouldn't we allow the user to enter *.jsf and check for *.jsp for existence, instead? 
+                if (welcomeFiles[i].endsWith(".jsp"))
+                {
                     // alter the name of the file we are requesting to
                     // force it through the MyFacesServlet
-                    sb.replace(sb.lastIndexOf(".jsp"), sb.length(), ".jsf");
+                    sb.replace(
+                        sb.lastIndexOf(".jsp"),
+                        sb.length(),
+                        ".jsf");
                     welcomeFile = sb.toString();
                 }
 
@@ -134,7 +149,8 @@ public class WelcomeFileFilter implements Filter {
             }
         }
 
-        if (welcomeFile == null) {
+        if (welcomeFile == null)
+        {
             sb.setLength(0);
             sb.append(baseURI);
             sb.append("index.jsf");
@@ -153,27 +169,39 @@ public class WelcomeFileFilter implements Filter {
      * @throws ServletException
      * @param config The filter configuration data
      */
-    public void init(FilterConfig config) throws ServletException {
-        if (config == null) {
+    public void init(FilterConfig config)
+    throws ServletException
+    {
+        if (config == null)
+        {
             return;
         }
 
-        this.config = config;
-        this.context = config.getServletContext();
+        this.config      = config;
+        this.context     = config.getServletContext();
 
-        try {
-            SAXParser parser = factory.newSAXParser();
+        try
+        {
+            SAXParserFactory factory = SAXParserFactory.newInstance();
+            factory.setValidating(true);
+            factory.setNamespaceAware(false);
+
+            SAXParser          parser  = factory.newSAXParser();
             WelcomeFileHandler handler = new WelcomeFileHandler();
-            InputStream is = context.getResourceAsStream("WEB-INF/web.xml");
+            InputStream        is      =
+                context.getResourceAsStream("WEB-INF/web.xml");
 
-            if (is == null) {
+            if (is == null)
+            {
                 context.log("Unable to get inputstream for web.xml");
             }
 
             parser.parse(is, handler);
             welcomeFiles = handler.getWelcomeFiles();
             context.log("Number of welcome files: " + welcomeFiles.length);
-        } catch (Exception ex) {
+        }
+        catch (Exception ex)
+        {
             throw new ServletException(ex);
         }
     }
