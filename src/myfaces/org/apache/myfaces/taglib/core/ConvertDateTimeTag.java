@@ -169,7 +169,7 @@ public class ConvertDateTimeTag
         }
         else
         {
-            throw new IllegalArgumentException("Attribute timeZone of type String not supported");
+            converter.setTimeZone(TimeZone.getTimeZone(value));
         }
     }
 
