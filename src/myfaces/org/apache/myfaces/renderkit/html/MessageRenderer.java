@@ -18,41 +18,43 @@
  */
 package net.sourceforge.myfaces.renderkit.html;
 
-import net.sourceforge.myfaces.renderkit.attr.ImageRendererAttributes;
+import net.sourceforge.myfaces.component.UIParameter;
+import net.sourceforge.myfaces.renderkit.attr.MessageRendererAttributes;
+import net.sourceforge.myfaces.renderkit.html.util.HTMLEncoder;
 import net.sourceforge.myfaces.util.logging.LogUtil;
 
 import javax.faces.component.UIComponent;
-import javax.faces.component.UIGraphic;
+import javax.faces.component.UIOutput;
 import javax.faces.context.FacesContext;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import javax.faces.context.ResponseWriter;
 import java.io.IOException;
-import java.util.ResourceBundle;
-import java.util.MissingResourceException;
+import java.text.MessageFormat;
+import java.util.*;
 
 /**
  * DOCUMENT ME!
- * @author Thomas Spiegl (latest modification by $Author$)
+ * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public class ImageRenderer
+public class MessageRenderer
         extends HTMLRenderer
-        implements ImageRendererAttributes
+        implements MessageRendererAttributes
 {
-    public static final String TYPE = "Image";
+    public static final String TYPE = "Message";
+
     public String getRendererType()
     {
         return TYPE;
     }
 
-    public boolean supportsComponentType(UIComponent uiComponent)
-    {
-        return uiComponent instanceof UIGraphic;
-    }
-
     public boolean supportsComponentType(String s)
     {
-        return s.equals(UIGraphic.TYPE);
+        return s.equals(UIOutput.TYPE);
+    }
+
+    public boolean supportsComponentType(UIComponent uicomponent)
+    {
+        return uicomponent instanceof javax.faces.component.UIOutput;
     }
 
     public void encodeBegin(FacesContext facesContext, UIComponent uiComponent)
@@ -65,12 +67,12 @@ public class ImageRenderer
     {
     }
 
-    public void encodeEnd(FacesContext facesContext, UIComponent uiComponent) throws IOException
+    public void encodeEnd(FacesContext facesContext, UIComponent uiComponent)
+        throws IOException
     {
-        javax.faces.context.ResponseWriter writer = facesContext.getResponseWriter();
+        ResponseWriter writer = facesContext.getResponseWriter();
 
-        String value;
-
+        String pattern;
         String key = (String)uiComponent.getAttribute(KEY_ATTR);
         if (key != null)
         {
@@ -78,42 +80,48 @@ public class ImageRenderer
             try
             {
                 ResourceBundle resBundle = ResourceBundle.getBundle(bundle, facesContext.getLocale());
-                value = resBundle.getString(key);
+                pattern = resBundle.getString(key);
             }
             catch (MissingResourceException e)
             {
                 LogUtil.getLogger().severe("ResourceBundle '" + bundle + "' could not be found!");
-                value = key;    //at least render an image with a broken url
+                pattern = key;
             }
         }
         else
         {
-            value = getStringValue(facesContext, uiComponent);
+            pattern = getStringValue(facesContext, uiComponent);
         }
 
-        if (value != null && value.length() > 0)
+        MessageFormat format = new MessageFormat(pattern, facesContext.getLocale());
+
+        //nested parameters
+        List params = null;
+        Iterator children = uiComponent.getChildren();
+        while (children.hasNext())
         {
-            writer.write("<img src=\"");
-
-            String src;
-            if (value.startsWith("/"))
+            UIComponent child = (UIComponent)children.next();
+            if (child.getComponentType().equals(UIParameter.TYPE))
             {
-                HttpServletRequest request = (HttpServletRequest)facesContext.getServletRequest();
-                src = request.getContextPath() + value;
+                if (params == null)
+                {
+                    params = new ArrayList();
+                }
+                params.add(child.currentValue(facesContext));
             }
-            else
-            {
-                src = value;
-            }
-
-            //Encode URL for those still using HttpSessions... ;-)
-            //Although this is an image url, encodeURL is no nonsense, because the
-            //actual image url could also be a dynamic servlet request:
-            src = ((HttpServletResponse)facesContext.getServletResponse()).encodeURL(src);
-
-            writer.write(src);
-            writer.write("\">");
         }
+
+        String text;
+        if (params == null)
+        {
+            text = format.format(new Object[] {});  //OPTIMIZE: static constant
+        }
+        else
+        {
+            text = format.format(params.toArray());
+        }
+
+        writer.write(HTMLEncoder.encode(text, true, true));
     }
 
 }

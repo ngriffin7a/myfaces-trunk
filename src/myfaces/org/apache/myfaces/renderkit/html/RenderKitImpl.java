@@ -44,10 +44,12 @@ public class RenderKitImpl
         //Standard Renderkit
         addRenderer(new FormRenderer());
         addRenderer(new TextRenderer());
+        addRenderer(new MessageRenderer());
         addRenderer(new SecretRenderer());
         addRenderer(new ButtonRenderer());
         addRenderer(new HyperlinkRenderer());
         addRenderer(new ErrorsRenderer());
+        addRenderer(new ImageRenderer());
         addRenderer(new ListboxRenderer());
         addRenderer(new MenuRenderer());
         addRenderer(new ListRenderer());

@@ -109,7 +109,7 @@ public class TextRenderer
         throws IOException
     {
         ResponseWriter writer = facesContext.getResponseWriter();
-        writer.write(HTMLEncoder.encode(getStringValue(facesContext, uiComponent), false, false));
+        writer.write(HTMLEncoder.encode(getStringValue(facesContext, uiComponent), true, true));
     }
 
 }

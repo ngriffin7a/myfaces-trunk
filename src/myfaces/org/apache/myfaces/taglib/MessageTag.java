@@ -16,21 +16,46 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package net.sourceforge.myfaces.component;
+package net.sourceforge.myfaces.taglib;
+
+import net.sourceforge.myfaces.component.UIOutput;
+import net.sourceforge.myfaces.renderkit.html.MessageRenderer;
+
+import javax.faces.component.UIComponent;
+
 
 /**
- * Derived class from javax.faces.UIGraphic.
- * @author Thomas Spiegl (latest modification by $Author$)
+ * DOCUMENT ME!
+ * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public class UIGraphic
-    extends javax.faces.component.UIGraphic
-    implements CommonComponentAttributes
+public class MessageTag
+        extends MyFacesTag
 {
-    public static final String URL_ATTR = "URL";
-
-    public UIGraphic()
+    //MyFaces tag extensions:
+    public UIComponent createComponent()
     {
-        UIComponentUtils.setTransient(this, true);  //No state to be saved
+        return new UIOutput();
     }
+
+    public String getRendererType()
+    {
+        return MessageRenderer.TYPE;
+    }
+
+    public void setMsg(String value)
+    {
+        setValue(value);
+    }
+
+    public void setKey(String value)
+    {
+        setRendererAttribute(MessageRenderer.KEY_ATTR, value);
+    }
+
+    public void setBundle(String value)
+    {
+        setRendererAttribute(MessageRenderer.BUNDLE_ATTR, value);
+    }
+
 }

@@ -16,21 +16,17 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package net.sourceforge.myfaces.component;
+package net.sourceforge.myfaces.renderkit.attr;
 
 /**
- * Derived class from javax.faces.UIGraphic.
- * @author Thomas Spiegl (latest modification by $Author$)
+ * Constant definitions for the specified render dependent attributes of the
+ * "Message" renderer type.
+ * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public class UIGraphic
-    extends javax.faces.component.UIGraphic
-    implements CommonComponentAttributes
+public interface MessageRendererAttributes
+    extends CommonRendererAttributes
 {
-    public static final String URL_ATTR = "URL";
-
-    public UIGraphic()
-    {
-        UIComponentUtils.setTransient(this, true);  //No state to be saved
-    }
+    public static final String KEY_ATTR = "key";
+    public static final String BUNDLE_ATTR = "bundle";
 }

@@ -34,7 +34,20 @@
         <td valign="top" width="140"><%@ include file="inc/navigation.jsp"  %></td>
         <td align="center" width="640">
 
-        Welcome to MyFaces!
+        <table border="0">
+            <tr>
+                <td valign="middle">
+                    <f:message id="welcome" bundle="net.sourceforge.myfaces.example.example_messages" key="welcome" />
+                </td>
+                <td valign="middle">
+                    <f:image id="logo" url="images/logo.jpg"/>
+                </td>
+            </tr>
+        </table>
+
+        <f:message id="today" bundle="net.sourceforge.myfaces.example.example_messages" key="today" >
+            <f:param id="date" value="<%=new Date()%>" />
+        </f:message>
 
         </td>
     </tr></table>
