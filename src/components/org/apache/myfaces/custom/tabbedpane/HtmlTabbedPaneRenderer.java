@@ -37,6 +37,9 @@ import java.util.Map;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.10  2005/02/16 00:50:37  oros
+ * SF issue #1043331: replaced all &nbsp; by the corresponding numeric entity &#160; so safari users will be happy, too, with MyFaces output
+ *
  * Revision 1.9  2005/02/11 16:03:00  mmarinschek
  * solve bug in tabbed panel when datatable was displayed not on tab, but at the bottom of the datatable...
  *
@@ -193,7 +196,7 @@ public class HtmlTabbedPaneRenderer
         HtmlRendererUtils.writePrettyIndent(facesContext);
         writer.startElement(HTML.TD_ELEM, uiComponent);
         writer.writeAttribute(HTML.STYLE_ATTR, EMPTY_HEADER_CELL_STYLE, null);
-        writer.write("&nbsp;");
+        writer.write("&#160;");
         writer.endElement(HTML.TD_ELEM);
         HtmlRendererUtils.writePrettyLineSeparator(facesContext);
         writer.endElement(HTML.TR_ELEM);
@@ -402,7 +405,7 @@ public class HtmlTabbedPaneRenderer
                 HtmlRendererUtils.renderHTMLAttribute(writer, tabbedPane, "inactiveSubStyleClass", HTML.STYLE_CLASS_ATTR);
             }
 
-            writer.write("&nbsp;");
+            writer.write("&#160;");
             writer.endElement(HTML.TD_ELEM);
         }
     }

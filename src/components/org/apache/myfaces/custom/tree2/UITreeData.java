@@ -38,7 +38,7 @@ import java.util.List;
  * TreeData is a {@link UIComponent} that supports binding data stored in a tree represented 
  * by a {@link TreeNode} instance.  During iterative processing over the tree nodes in the 
  * data model, the object for the current node is exposed as a request attribute under the key 
- * specified by the <code>var</code> property.  {@link Renderer}s of this component should use 
+ * specified by the <code>var</code> property.  {@link javax.faces.render.Renderer}s of this component should use
  * the appropriate {@link Facet} to assist in rendering.  
  * 
  * @author Sean Schofield

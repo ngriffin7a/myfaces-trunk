@@ -41,6 +41,9 @@ import org.apache.myfaces.renderkit.html.HTML;
  * @author Sylvain Vieujot (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.19  2005/02/16 00:50:37  oros
+ * SF issue #1043331: replaced all &nbsp; by the corresponding numeric entity &#160; so safari users will be happy, too, with MyFaces output
+ *
  * Revision 1.18  2005/02/08 12:13:39  svieujot
  * Bugfix : Serve xsl files with the text/xml content type.
  *
@@ -280,6 +283,7 @@ public class AddResource {
             throw new IOException("Unable to find resource "+resourceFileName+" for component "+componentName+
                     ". Check that this file is available in the classpath in sub-directory /resource of the component-directory.");
         }
+        // TODO: make this more efficent or move to servlet
         OutputStream os = response.getOutputStream();
         int c;
         while ((c = is.read()) != -1)
@@ -349,7 +353,7 @@ public class AddResource {
 	            insertPosition = 0;
 	        }
         }
-        
+                        
         PrintWriter writer = response.getWriter();
         
         if( insertPosition > 0 )

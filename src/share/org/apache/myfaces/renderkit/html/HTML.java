@@ -24,6 +24,9 @@ import org.apache.myfaces.util.ArrayUtils;
  * @author Anton Koinov
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.21  2005/02/16 00:50:37  oros
+ * SF issue #1043331: replaced all &nbsp; by the corresponding numeric entity &#160; so safari users will be happy, too, with MyFaces output
+ *
  * Revision 1.20  2004/12/27 04:11:11  mmarinschek
  * Data Table stores the state of facets of children; script tag is rendered with type attribute instead of language attribute, popup works better as a column in a data table
  *
@@ -482,7 +485,7 @@ public final class HTML
 
 
     //HTML entities
-    public static final String NBSP_ENTITY = "&nbsp;";
+    public static final String NBSP_ENTITY = "&#160;";
 
     public static final String HREF_PATH_SEPARATOR = "/";
     public static final String HREF_PATH_FROM_PARAM_SEPARATOR = "?";

@@ -13,13 +13,13 @@ var cmThemeOffice =
   	// a separate TD cell.
 
   	// HTML code to the left of the folder item
-  	mainFolderLeft: '&nbsp;',
+  	mainFolderLeft: '&#160;',
   	// HTML code to the right of the folder item
-  	mainFolderRight: '&nbsp;',
+  	mainFolderRight: '&#160;',
 	// HTML code to the left of the regular item
-	mainItemLeft: '&nbsp;',
+	mainItemLeft: '&#160;',
 	// HTML code to the right of the regular item
-	mainItemRight: '&nbsp;',
+	mainItemRight: '&#160;',
 
 	// sub menu display attributes
 

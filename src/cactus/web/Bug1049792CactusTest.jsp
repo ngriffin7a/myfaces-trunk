@@ -44,7 +44,7 @@
         <x:commandNavigation id="nav_3_1" value="#{example_messages['nav_Features']}" action="go_features"/>
     </x:commandNavigation>
     <x:commandNavigation id="nav_4" value="#{example_messages['nav_Options']}" action="go_options" />
-    <f:verbatim>&nbsp;</f:verbatim>
+    <f:verbatim>&#160;</f:verbatim>
     <x:commandNavigation id="nav_5" value="#{example_messages['nav_Info']}" >
         <x:commandNavigation id="nav_5_1" value="#{example_messages['nav_Contact']}" action="go_contact" />
         <x:commandNavigation id="nav_5_2" value="#{example_messages['nav_Copyright']}" action="go_copyright" />

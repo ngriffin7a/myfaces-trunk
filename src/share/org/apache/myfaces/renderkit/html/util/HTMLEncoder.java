@@ -72,7 +72,7 @@ public abstract class HTMLEncoder
                         (i == 0 || (i - 1 >= 0 && string.charAt(i - 1) == ' ')))
                     {
                         //Space at beginning or after another space
-                        app = "&nbsp;";
+                        app = "&#160;";
                     }
                     break;
                 case '\n':
@@ -96,7 +96,7 @@ public abstract class HTMLEncoder
                 case '\u20AC': app = "&euro;";  break;
                 case '\u00AB': app = "&laquo;"; break;
                 case '\u00BB': app = "&raquo;"; break;
-                case '\u00A0': app = "&nbsp;"; break;
+                case '\u00A0': app = "&#160;"; break;
 
                 default:
                     if (((int)c) >= 0x80)

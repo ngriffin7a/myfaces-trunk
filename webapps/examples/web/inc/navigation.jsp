@@ -7,7 +7,9 @@
               itemClass="navitem"
               activeItemClass="navitem_active"
               openItemClass="navitem_open"   >
-    <x:commandNavigation id="nav_1" value="#{example_messages['nav_Home']}" action="go_home" />
+    <x:commandNavigation id="nav_1" value="#{example_messages['nav_Home']}" action="go_home">
+        <f:param name="param" value="value"/>
+    </x:commandNavigation>
     <x:commandNavigation id="nav_2" value="#{example_messages['nav_Examples']}" >
         <x:commandNavigation id="nav_2_1" value="#{example_messages['nav_Sample_1']}" action="go_sample1" />
         <x:commandNavigation id="nav_2_2" value="#{example_messages['nav_Sample_2']}" action="go_sample2" />

@@ -34,6 +34,9 @@ import java.util.List;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.5  2005/02/16 00:50:37  oros
+ * SF issue #1043331: replaced all &nbsp; by the corresponding numeric entity &#160; so safari users will be happy, too, with MyFaces output
+ *
  * Revision 1.4  2004/10/13 11:50:57  matze
  * renamed packages to org.apache
  *
@@ -200,7 +203,7 @@ public class HtmlNavigationRenderer
         StringBuffer buf = new StringBuffer();
         for (int i = 0; i < level; i++)
         {
-            buf.append("&nbsp;&nbsp;&nbsp;&nbsp;");
+            buf.append("&#160;&#160;&#160;&#160;");
         }
         writer.write(buf.toString());
     }
