@@ -81,7 +81,6 @@ public class SortColumnRenderer
     protected void encodeSortColumn(FacesContext facesContext, UISortColumn uiSortColumn, Boolean ascending)
         throws IOException
     {
-        super.encodeEnd(facesContext, uiSortColumn);
         if (ascending != null)
         {
             if (ascending.booleanValue())
