@@ -23,6 +23,9 @@ package net.sourceforge.myfaces.cactus;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.2  2004/05/26 17:19:56  o_rossmueller
+ * test for bug 948626
+ *
  * Revision 1.1  2004/04/23 15:12:14  manolito
  * inputHidden bug reported by Travis
  *
@@ -32,6 +35,7 @@ public class CommonModelBean
     //private static final Log log = LogFactory.getLog(CommonModelBean.class);
 
     private long _primitiveLong = 0;
+    private boolean primitiveLongSet = false;
 
     public long getPrimitiveLong()
     {
@@ -41,5 +45,12 @@ public class CommonModelBean
     public void setPrimitiveLong(long primitiveLong)
     {
         _primitiveLong = primitiveLong;
+        primitiveLongSet = true;
+    }
+
+
+    public boolean isPrimitiveLongSet()
+    {
+        return primitiveLongSet;
     }
 }

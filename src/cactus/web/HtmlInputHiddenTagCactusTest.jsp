@@ -3,6 +3,9 @@
 <f:view>
     <h:form id="testForm">
         <h:inputText value="#{commonRequestScopeBean.primitiveLong}" />
-        <h:inputHidden value="#{commonRequestScopeBean.primitiveLong}" />
+        <h:inputHidden id="hidden" value="#{commonRequestScopeBean.primitiveLong}" />
+        <h:outputText id="valueSet" value="#{commonRequestScopeBean.primitiveLongSet}" />
+
+        <h:commandButton id="submit" value="Submit"/>
     </h:form>
 </f:view>
