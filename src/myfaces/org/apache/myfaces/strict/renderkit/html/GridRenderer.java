@@ -18,8 +18,7 @@
  */
 package net.sourceforge.myfaces.strict.renderkit.html;
 
-import net.sourceforge.myfaces.renderkit.*;
-import net.sourceforge.myfaces.renderkit.html.*;
+import net.sourceforge.myfaces.renderkit.JSFAttr;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLUtil;
 import net.sourceforge.myfaces.util.StringUtils;
 
@@ -29,7 +28,6 @@ import java.util.Iterator;
 
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
-import javax.faces.context.ResponseWriter;
 
 
 /**
@@ -39,12 +37,11 @@ import javax.faces.context.ResponseWriter;
  * @version $Revision$ $Date$
  */
 public class GridRenderer
-extends HTMLRenderer
+extends TableRendererSupport
 {
     //~ Static fields/initializers -----------------------------------------------------------------
 
-    public static final String TYPE      = "Grid";
-    public static final char  CLASS_LIST_DELIMITER = ',';
+    public static final String TYPE = "Grid";
 
     //~ Methods ------------------------------------------------------------------------------------
 
@@ -53,96 +50,26 @@ extends HTMLRenderer
         return TYPE;
     }
 
-    public void encodeBegin(FacesContext context, UIComponent uiComponent)
+    protected void renderBody(FacesContext context, UIComponent component, int columns)
     throws IOException
     {
-        ResponseWriter writer = context.getResponseWriter();
-
-        writer.write("\n<table");
-
-        String style = (String) uiComponent.getAttribute(JSFAttr.PANEL_CLASS_ATTR);
-
-        if ((style != null) && (style.length() > 0))
-        {
-            writer.write(" class=\"");
-            writer.write(style);
-            writer.write('"');
-        }
-
-        writer.write(">\n");
-    }
-
-    public void encodeChildren(FacesContext context, UIComponent component)
-    throws IOException
-    {
-        if (!component.isRendered())
-        {
-            return;
-        }
-
-        int         columns  = HTMLUtil.getColumns(component);
-        UIComponent facet;
-        Iterator    children;
-
-        // Render header facet
-        if ((facet = component.getFacet("header")) != null)
-        {
-            String   headerClass   = (String) component.getAttribute("headerClass");
-            String[] columnClasses = (headerClass == null) ? null : new String[] {headerClass};
-            children = facet.getChildren();
-
-            if ((children != null) && children.hasNext())
-            {
-                HTMLUtil.renderTableRows(
-                    context, children, columns, null, columnClasses, "th", "thead");
-            }
-            else
-            {
-                HTMLUtil.renderTableRowOfOneCell(
-                    context, facet, columns, null, columnClasses, "th", "thead");
-            }
-        }
-
-        // Render data rows
-        children = component.getChildren();
+        Iterator children = component.getChildren();
 
         if ((children != null) && children.hasNext())
         {
             String[] rowClasses    =
-                StringUtils.splitShortString(
-                    (String) component.getAttribute(JSFAttr.ROW_CLASSES_ATTR), CLASS_LIST_DELIMITER);
+                StringUtils.trim(
+                    StringUtils.splitShortString(
+                        (String) component.getAttribute(JSFAttr.ROW_CLASSES_ATTR),
+                        CLASS_LIST_DELIMITER));
             String[] columnClasses =
-                StringUtils.splitShortString(
-                    (String) component.getAttribute(JSFAttr.COLUMN_CLASSES_ATTR), CLASS_LIST_DELIMITER);
+                StringUtils.trim(
+                    StringUtils.splitShortString(
+                        (String) component.getAttribute(JSFAttr.COLUMN_CLASSES_ATTR),
+                        CLASS_LIST_DELIMITER));
 
             HTMLUtil.renderTableRows(
-                context, children, columns, rowClasses, columnClasses, "td", "tbody");
+                context, children, columns, rowClasses, columnClasses, "td", "tbody", 0);
         }
-
-        // Render footer facet
-        if (null != (facet = component.getFacet("footer")))
-        {
-            String   footerClass   = (String) component.getAttribute("footerClass");
-            String[] columnClasses = (footerClass == null) ? null : new String[] {footerClass};
-            children = facet.getChildren();
-
-            if ((children != null) && children.hasNext())
-            {
-                HTMLUtil.renderTableRows(
-                    context, children, columns, null, columnClasses, "th", "tfoot");
-            }
-            else
-            {
-                HTMLUtil.renderTableRowOfOneCell(
-                    context, facet, columns, null, columnClasses, "th", "tfoot");
-            }
-        }
-    }
-
-    public void encodeEnd(FacesContext facesContext, UIComponent uiComponent)
-    throws IOException
-    {
-        ResponseWriter writer = facesContext.getResponseWriter();
-        writer.write("</table>\n");
     }
 }

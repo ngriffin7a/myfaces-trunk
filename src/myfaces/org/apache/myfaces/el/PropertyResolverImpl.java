@@ -46,23 +46,21 @@ import javax.faces.el.PropertyResolver;
 public class PropertyResolverImpl
 extends PropertyResolver
 {
-    //~ Static fields/initializers ---------------------------------------------
+    //~ Static fields/initializers -----------------------------------------------------------------
 
     private static final Object[] EMPTY_ARGS = {};
 
-    //~ Methods ----------------------------------------------------------------
+    //~ Methods ------------------------------------------------------------------------------------
 
     public static void setProperty(Object base, String name, Object newValue)
     {
-        PropertyDescriptor propertyDescriptor =
-            getPropertyDescriptor(base, name);
+        PropertyDescriptor propertyDescriptor = getPropertyDescriptor(base, name);
 
         Method             m = propertyDescriptor.getWriteMethod();
 
         if (m == null)
         {
-            throw new PropertyNotFoundException(
-                "Bean: " + base.getClass() + ", property: " + name);
+            throw new PropertyNotFoundException("Bean: " + base.getClass() + ", property: " + name);
         }
 
         try
@@ -73,18 +71,15 @@ extends PropertyResolver
         }
         catch (IllegalAccessException e)
         {
-            throw new EvaluationException(
-                "Bean: " + base.getClass() + ", property: " + name, e);
+            throw new EvaluationException("Bean: " + base.getClass() + ", property: " + name, e);
         }
         catch (InvocationTargetException e)
         {
-            throw new EvaluationException(
-                "Bean: " + base.getClass() + ", property: " + name, e);
+            throw new EvaluationException("Bean: " + base.getClass() + ", property: " + name, e);
         }
     }
 
-    public static PropertyDescriptor getPropertyDescriptor(
-        Object base, String name)
+    public static PropertyDescriptor getPropertyDescriptor(Object base, String name)
     {
         PropertyDescriptor propertyDescriptor;
 
@@ -103,8 +98,7 @@ extends PropertyResolver
 
         if (propertyDescriptor == null)
         {
-            throw new PropertyNotFoundException(
-                "Bean: " + base.getClass() + ", property: " + name);
+            throw new PropertyNotFoundException("Bean: " + base.getClass() + ", property: " + name);
         }
 
         return propertyDescriptor;
@@ -136,8 +130,7 @@ extends PropertyResolver
         }
 
         // If none of the special bean types, then process as normal Bean
-        PropertyDescriptor propertyDescriptor =
-            getPropertyDescriptor(base, name);
+        PropertyDescriptor propertyDescriptor = getPropertyDescriptor(base, name);
 
         return propertyDescriptor.getWriteMethod() == null;
     }
@@ -162,8 +155,7 @@ extends PropertyResolver
         }
 
         throw new IllegalArgumentException(
-            "Must be array or List. Bean: " + base.getClass() + ", index "
-            + index);
+            "Must be array or List. Bean: " + base.getClass() + ", index " + index);
     }
 
     public Class getType(Object base, String name)
@@ -182,7 +174,9 @@ extends PropertyResolver
 
         if (base instanceof Map)
         {
-            return Object.class; // until variable datatypes are imlemented in JVM 1.5
+            Object value = ((Map) base).get(name);
+
+            return (value == null) ? Object.class : value.getClass(); // REVISIT: when generics are imlemented in JVM 1.5
         }
 
         if (base instanceof UIComponent)
@@ -191,8 +185,7 @@ extends PropertyResolver
         }
 
         // If none of the special bean types, then process as normal Bean
-        PropertyDescriptor propertyDescriptor =
-            getPropertyDescriptor(base, name);
+        PropertyDescriptor propertyDescriptor = getPropertyDescriptor(base, name);
 
         return propertyDescriptor.getPropertyType();
     }
@@ -202,8 +195,7 @@ extends PropertyResolver
     {
         if (base == null)
         {
-            throw new PropertyNotFoundException(
-                "Null bean (getting type of index " + index + ")");
+            throw new PropertyNotFoundException("Null bean (getting type of index " + index + ")");
         }
 
         try
@@ -243,8 +235,7 @@ extends PropertyResolver
         }
 
         throw new IllegalArgumentException(
-            "Must be array or List. Bean: " + base.getClass() + ", index "
-            + index);
+            "Must be array or List. Bean: " + base.getClass() + ", index " + index);
     }
 
     public void setValue(Object base, int index, Object newValue)
@@ -275,13 +266,11 @@ extends PropertyResolver
         }
         catch (IndexOutOfBoundsException e)
         {
-            throw new PropertyNotFoundException(
-                "Bean: " + base.getClass() + ", index " + index, e);
+            throw new PropertyNotFoundException("Bean: " + base.getClass() + ", index " + index, e);
         }
 
         throw new IllegalArgumentException(
-            "Must be array or List. Bean: " + base.getClass() + ", index "
-            + index);
+            "Must be array or List. Bean: " + base.getClass() + ", index " + index);
     }
 
     public void setValue(Object base, String name, Object newValue)
@@ -308,8 +297,7 @@ extends PropertyResolver
 
         if (base instanceof UIComponent)
         {
-            throw new IllegalArgumentException(
-                "Bean must not be UIComponent, property: " + name);
+            throw new IllegalArgumentException("Bean must not be UIComponent, property: " + name);
         }
 
         // If none of the special bean types, then process as normal Bean
@@ -334,15 +322,13 @@ extends PropertyResolver
         }
 
         // If none of the special bean types, then process as normal Bean
-        PropertyDescriptor propertyDescriptor =
-            getPropertyDescriptor(base, name);
+        PropertyDescriptor propertyDescriptor = getPropertyDescriptor(base, name);
 
         Method             m = propertyDescriptor.getReadMethod();
 
         if (m == null)
         {
-            throw new PropertyNotFoundException(
-                "Bean: " + base.getClass() + ", property: " + name);
+            throw new PropertyNotFoundException("Bean: " + base.getClass() + ", property: " + name);
         }
 
         try
@@ -351,13 +337,11 @@ extends PropertyResolver
         }
         catch (IllegalAccessException e)
         {
-            throw new EvaluationException(
-                "Bean: " + base.getClass() + ", property: " + name, e);
+            throw new EvaluationException("Bean: " + base.getClass() + ", property: " + name, e);
         }
         catch (InvocationTargetException e)
         {
-            throw new EvaluationException(
-                "Bean: " + base.getClass() + ", property: " + name, e);
+            throw new EvaluationException("Bean: " + base.getClass() + ", property: " + name, e);
         }
     }
 
@@ -393,21 +377,16 @@ extends PropertyResolver
         }
 
         throw new IllegalArgumentException(
-            "Must be array or List. Bean: " + base.getClass() + ", index "
-            + index);
+            "Must be array or List. Bean: " + base.getClass() + ", index " + index);
     }
 
-    public static PropertyDescriptor findPropertyDescriptor(
-        BeanInfo beanInfo, String propertyName)
+    public static PropertyDescriptor findPropertyDescriptor(BeanInfo beanInfo, String propertyName)
     {
-        PropertyDescriptor[] propDescriptors =
-            beanInfo.getPropertyDescriptors();
+        PropertyDescriptor[] propDescriptors = beanInfo.getPropertyDescriptors();
 
         // TODO: cache this in classLoader safe way
         // binary search
-        for (
-            int l = 0, h = propDescriptors.length - 1, i = h / 2; l <= h;
-                    i = (l + h) >> 1)
+        for (int l = 0, h = propDescriptors.length - 1, i = h >> 1; l <= h; i = (l + h) >> 1)
         {
             int compare = propDescriptors[i].getName().compareTo(propertyName);
 

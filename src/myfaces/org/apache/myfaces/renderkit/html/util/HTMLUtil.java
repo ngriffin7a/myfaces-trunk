@@ -44,22 +44,20 @@ import javax.faces.context.ResponseWriter;
  */
 public class HTMLUtil
 {
-    //~ Constructors -----------------------------------------------------------
+    //~ Constructors -------------------------------------------------------------------------------
 
     private HTMLUtil()
     {
     }
 
-    //~ Methods ----------------------------------------------------------------
+    //~ Methods ------------------------------------------------------------------------------------
 
     public static int getColspan(UIComponent component)
     {
         Object value = component.getAttribute(JSFAttr.COLSPAN_ATTR);
         int    count;
 
-        count =
-            ((value != null) && (value instanceof Integer))
-            ? ((Integer) value).intValue() : 1;
+        count = ((value != null) && (value instanceof Integer)) ? ((Integer) value).intValue() : 1;
 
         return count;
     }
@@ -70,14 +68,13 @@ public class HTMLUtil
         int    count;
 
         count =
-            ((value != null) && (value instanceof Integer))
-            ? ((Integer) value).intValue() : Integer.MAX_VALUE;
+            ((value != null) && (value instanceof Integer)) ? ((Integer) value).intValue()
+                                                            : Integer.MAX_VALUE;
 
         return count;
     }
 
-    public static void encodeChildrenRecursively(
-        FacesContext context, UIComponent component)
+    public static void encodeChildrenRecursively(FacesContext context, UIComponent component)
     throws IOException
     {
         component.encodeBegin(context);
@@ -129,8 +126,7 @@ public class HTMLUtil
         }
     }
 
-    public static void renderDisabledOnUserRole(
-        FacesContext facesContext, UIComponent uiComponent)
+    public static void renderDisabledOnUserRole(FacesContext facesContext, UIComponent uiComponent)
     throws IOException
     {
         if (!HTMLRenderer.isEnabledOnUserRole(facesContext, uiComponent))
@@ -141,8 +137,7 @@ public class HTMLUtil
     }
 
     public static void renderHTMLAttribute(
-        StringBuffer buf, UIComponent component, String rendererAttrName,
-        String htmlAttrName)
+        StringBuffer buf, UIComponent component, String rendererAttrName, String htmlAttrName)
     {
         Object value = component.getAttribute(rendererAttrName);
 
@@ -152,8 +147,12 @@ public class HTMLUtil
             {
                 if (((Boolean) value).booleanValue())
                 {
+                    // value as name for XHTML compatibility
                     buf.append(' ');
                     buf.append(htmlAttrName);
+                    buf.append("=\"");
+                    buf.append(htmlAttrName);
+                    buf.append('"');
                 }
             }
             else
@@ -171,8 +170,7 @@ public class HTMLUtil
     }
 
     public static void renderHTMLAttribute(
-        ResponseWriter writer, UIComponent component, String rendererAttrName,
-        String htmlAttrName)
+        ResponseWriter writer, UIComponent component, String rendererAttrName, String htmlAttrName)
     throws IOException
     {
         Object value = component.getAttribute(rendererAttrName);
@@ -183,8 +181,12 @@ public class HTMLUtil
             {
                 if (((Boolean) value).booleanValue())
                 {
+                    // value as name for XHTML compatibility
                     writer.write(' ');
                     writer.write(htmlAttrName);
+                    writer.write("=\"");
+                    writer.write(htmlAttrName);
+                    writer.write('"');
                 }
             }
             else
@@ -223,8 +225,7 @@ public class HTMLUtil
     }
 
     public static void renderSelect(
-        FacesContext facesContext, UIComponent uiComponent, String rendererType,
-        int size)
+        FacesContext facesContext, UIComponent uiComponent, String rendererType, int size)
     throws IOException
     {
         ResponseWriter writer     = facesContext.getResponseWriter();
@@ -239,16 +240,14 @@ public class HTMLUtil
         if (rendererType.equals(ListboxRenderer.TYPE))
         {
             writer.write(" size=\"");
-            writer.write(new Integer(size).toString());
+            writer.write(Integer.toString(size));
             writer.write('"');
         }
 
-        renderCssClass(writer, uiComponent, selectMany
-                                             ? JSFAttr.SELECT_MANY_CLASS_ATTR
-                                             : JSFAttr.SELECT_ONE_CLASS_ATTR);
-        renderHTMLAttributes(writer, uiComponent, HTML.UNIVERSAL_ATTRIBUTES);
-        renderHTMLAttributes(writer, uiComponent, HTML.EVENT_HANDLER_ATTRIBUTES);
-        renderHTMLAttributes(writer, uiComponent, HTML.SELECT_ATTRIBUTES);
+        renderCssClass(
+            writer, uiComponent,
+            selectMany ? JSFAttr.SELECT_MANY_CLASS_ATTR : JSFAttr.SELECT_ONE_CLASS_ATTR);
+        renderHTMLAttributes(writer, uiComponent, HTML.SELECT_PASSTHROUGH_ATTRIBUTES);
         HTMLUtil.renderDisabledOnUserRole(facesContext, uiComponent);
 
         if (selectMany)
@@ -273,16 +272,14 @@ public class HTMLUtil
             }
             else
             {
-                Object currentValue =
-                    ((UIInput) uiComponent).currentValue(facesContext);
+                Object currentValue = ((UIInput) uiComponent).currentValue(facesContext);
 
                 /*
                 currentStrValue = ConverterUtils.getComponentValueAsString(facesContext,
                                                                            uiComponent,
                                                                            currentValue);
                                                                            */
-                currentStrValue = ((currentValue != null)
-                    ? currentValue.toString() : null);
+                currentStrValue = ((currentValue != null) ? currentValue.toString() : null);
             }
 
             while (it.hasNext())
@@ -296,8 +293,7 @@ public class HTMLUtil
                 {
                     String itemStrValue = itemObjValue.toString();
                     writer.write(" value=\"");
-                    writer.write(
-                        HTMLEncoder.encode(itemStrValue, false, false));
+                    writer.write(HTMLEncoder.encode(itemStrValue, false, false));
                     writer.write('"');
 
                     if (
@@ -305,7 +301,7 @@ public class HTMLUtil
                                 || ((currentStrValue != null)
                                 && itemStrValue.equals(currentStrValue)))
                     {
-                        writer.write(" selected");
+                        writer.write(" selected=\"selected\"");
                     }
                 }
 
@@ -323,14 +319,12 @@ public class HTMLUtil
     }
 
     public static void renderTableRowOfOneCell(
-        FacesContext context, UIComponent component, int columns,
-        String rowClass, String[] columnClasses, String cellHtmlTag,
-        String rowGroupTag)
+        FacesContext context, UIComponent component, int columns, String rowClass,
+        String[] columnClasses, String cellHtmlTag, String rowGroupTag)
     throws IOException
     {
         ResponseWriter writer           = context.getResponseWriter();
-        int            columnClassCount =
-            (columnClasses == null) ? 0 : columnClasses.length;
+        int            columnClassCount = (columnClasses == null) ? 0 : columnClasses.length;
 
         if (rowGroupTag != null)
         {
@@ -400,10 +394,9 @@ public class HTMLUtil
         }
     }
 
-    public static void renderTableRows(
-        FacesContext context, Iterator children, int columns,
-        String[] rowClasses, String[] columnClasses, String cellHtmlTag,
-        String rowGroupTag)
+    public static int renderTableRows(
+        FacesContext context, Iterator fields, int columns, String[] rowClasses,
+        String[] columnClasses, String cellHtmlTag, String rowGroupTag, int row)
     throws IOException
     {
         ResponseWriter writer = context.getResponseWriter();
@@ -416,14 +409,13 @@ public class HTMLUtil
         }
 
         int     rowClassCount    = (rowClasses == null) ? 0 : rowClasses.length;
-        int     columnClassCount =
-            (columnClasses == null) ? 0 : columnClasses.length;
+        int     columnClassCount = (columnClasses == null) ? 0 : columnClasses.length;
 
         boolean closeRowTag      = false;
 
         for (
-            int row = 0, col = Integer.MAX_VALUE, colspan = 1, colClassIndex =
-                0; children.hasNext(); col += colspan)
+            int col = Integer.MAX_VALUE, colspan = 1, colClassIndex = 0; fields.hasNext();
+                    col += colspan)
         {
             if (col >= columns)
             {
@@ -451,7 +443,7 @@ public class HTMLUtil
             writer.write("\t\t\t<");
             writer.write(cellHtmlTag);
 
-            UIComponent child = (UIComponent) children.next();
+            UIComponent child = (UIComponent) fields.next();
             colspan = getColspan(child);
 
             if (colspan > 1)
@@ -493,5 +485,7 @@ public class HTMLUtil
             writer.write(rowGroupTag);
             writer.write(">\n");
         }
+
+        return row;
     }
 }

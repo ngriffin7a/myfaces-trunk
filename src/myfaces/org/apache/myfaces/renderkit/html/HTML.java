@@ -41,11 +41,7 @@ public class HTML
     public static final String READONLY_ATTR = "readonly";
     public static final String ACCEPT_ATTR = "accept";
 
-    // Event handler attributes
-    public static final String ONFOCUS_ATTR = "onfocus";
-    public static final String ONBLUR_ATTR = "onblur";
-    public static final String ONSELECT_ATTR = "onselect";
-    public static final String ONCHANGE_ATTR = "onchange";
+    // Common event handler attributes
     public static final String ONCLICK_ATTR     = "onclick";
     public static final String ONDBLCLICK_ATTR  = "ondblclick";
     public static final String ONMOUSEDOWN_ATTR = "onmousedown";
@@ -70,6 +66,19 @@ public class HTML
         ONKEYUP_ATTR
     };
 
+    // Input field event handler attributes
+    public static final String ONFOCUS_ATTR = "onfocus";
+    public static final String ONBLUR_ATTR = "onblur";
+    public static final String ONSELECT_ATTR = "onselect";
+    public static final String ONCHANGE_ATTR = "onchange";
+    public static final String[] COMMON_FIELD_EVENT_ATTRIBUTES =
+    {
+        ONFOCUS_ATTR,
+        ONBLUR_ATTR,
+        ONSELECT_ATTR,
+        ONCHANGE_ATTR
+    };
+
     // universal attributes
     public static final String DIR_ATTR   = "dir";
     public static final String LANG_ATTR  = "lang";
@@ -87,9 +96,8 @@ public class HTML
     public static final String ACCESSKEY_ATTR   = "accesskey";
     public static final String TABINDEX_ATTR    = "tabindex";
     public static final String DISABLED_ATTR = "disabled";
-    public static final String[] COMMON_FORM_FIELD_ATTRIBUTES =
+    public static final String[] COMMON_FIELD_ATTRIBUTES =
     {
-        // commmon field
         ACCESSKEY_ATTR,
         TABINDEX_ATTR,
         DISABLED_ATTR,
@@ -97,10 +105,14 @@ public class HTML
     
     // Common Attributes    
     public static final String[] COMMON_PASSTROUGH_ATTRIBUTES = 
-        (String[])ArrayUtils.concat(
+        (String[]) ArrayUtils.concat(
             EVENT_HANDLER_ATTRIBUTES, 
-            UNIVERSAL_ATTRIBUTES, 
-            COMMON_FORM_FIELD_ATTRIBUTES);
+            UNIVERSAL_ATTRIBUTES);
+    public static final String[] COMMON_FIELD_PASSTROUGH_ATTRIBUTES = 
+        (String[]) ArrayUtils.concat(
+            COMMON_PASSTROUGH_ATTRIBUTES, 
+            COMMON_FIELD_ATTRIBUTES,
+            COMMON_FIELD_EVENT_ATTRIBUTES);
 
     // <a>
     public static final String TARGET_ATTR = "target";  //used by <a> and <form>
@@ -212,12 +224,11 @@ public class HTML
         DATAFLD_ATTR,
         DATASRC_ATTR,
         DATAFORMATAS_ATTR,
-        DISABLED_ATTR,
-        ONBLUR_ATTR,
-        ONCHANGE_ATTR,
-        ONFOCUS_ATTR,
-        TABINDEX_ATTR
     };
+    public static final String[] SELECT_PASSTHROUGH_ATTRIBUTES =
+        (String[]) ArrayUtils.concat(
+            COMMON_FIELD_PASSTROUGH_ATTRIBUTES, 
+            SELECT_ATTRIBUTES);
 
     // <table>
     public static final String BGCOLOR_ATTR = "bgcolor";

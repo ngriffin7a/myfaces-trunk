@@ -18,25 +18,13 @@
  */
 package net.sourceforge.myfaces.strict.renderkit.html;
 
-import net.sourceforge.myfaces.component.UIComponentUtils;
-import net.sourceforge.myfaces.renderkit.*;
-import net.sourceforge.myfaces.renderkit.html.*;
-import net.sourceforge.myfaces.renderkit.html.util.HTMLUtil;
-import net.sourceforge.myfaces.util.ArrayIterator;
-import net.sourceforge.myfaces.util.FacesUtils;
-import net.sourceforge.myfaces.util.StringUtils;
+import net.sourceforge.myfaces.renderkit.html.HTMLRenderer;
 
 import java.io.IOException;
 
-import java.util.Collection;
-import java.util.Iterator;
-
 import javax.faces.FacesException;
 import javax.faces.component.UIComponent;
-import javax.faces.component.UIPanel;
 import javax.faces.context.FacesContext;
-
-import javax.servlet.ServletRequest;
 
 
 /**
@@ -54,35 +42,6 @@ extends HTMLRenderer
 
     //~ Methods ------------------------------------------------------------------------------------
 
-    public static Iterator getIterator(FacesContext facesContext, UIPanel uiPanel)
-    {
-        Object value = uiPanel.currentValue(facesContext);
-
-        if (value == null)
-        {
-            return null;
-        }
-
-        if (value instanceof Iterator)
-        {
-            return (Iterator) value;
-        }
-
-        if (value instanceof Collection)
-        {
-            return ((Collection) value).iterator();
-        }
-
-        if (value.getClass().isArray())
-        {
-            return new ArrayIterator(value);
-        }
-
-        throw new IllegalArgumentException(
-            "Value of type " + value.getClass() + " of component "
-            + UIComponentUtils.toString(uiPanel) + " is neither collection nor array.");
-    }
-
     public String getRendererType()
     {
         return TYPE;
@@ -91,58 +50,6 @@ extends HTMLRenderer
     public void encodeChildren(FacesContext context, UIComponent component)
     throws IOException
     {
-        if (!component.isRendered())
-        {
-            return;
-        }
-
-        UIPanel grid = (UIPanel) component.getParent();
-
-        if ((grid == null) || !GridRenderer.TYPE.equals(grid.getRendererType()))
-        {
-            throw new FacesException("the parent of panel_data must be panel_grid");
-        }
-
-        // init iterator
-        Iterator it = getIterator(context, (UIPanel) component);
-
-        if (it == null)
-        {
-            return;
-        }
-
-        String         varName       = (String) component.getAttribute(JSFAttr.VAR_ATTR);
-        ServletRequest request       = FacesUtils.getRequest(context);
-        int            columns       = HTMLUtil.getColumns(grid);
-        String[]       rowClasses    =
-            StringUtils.splitShortString(
-                (String) grid.getAttribute(JSFAttr.ROW_CLASSES_ATTR),
-                GridRenderer.CLASS_LIST_DELIMITER);
-        String[]       columnClasses =
-            StringUtils.splitShortString(
-                (String) grid.getAttribute(JSFAttr.COLUMN_CLASSES_ATTR),
-                GridRenderer.CLASS_LIST_DELIMITER);
-
-        // main loop on data iterator
-        while (it.hasNext())
-        {
-            // set var
-            request.setAttribute(
-                varName,
-                it.next());
-
-            // FIXME: clientID must be generated with an index
-            // Render data rows
-            Iterator children = component.getChildren();
-
-            if ((children != null) && children.hasNext())
-            {
-                HTMLUtil.renderTableRows(
-                    context, children, columns, rowClasses, columnClasses, "td", "tbody");
-            }
-        }
-
-        // clear var
-        request.setAttribute(varName, null);
+        throw new FacesException("the parent of panel_data must be panel_grid");
     }
 }

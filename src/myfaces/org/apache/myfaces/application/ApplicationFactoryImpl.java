@@ -41,9 +41,9 @@ public class ApplicationFactoryImpl
         if (application == null)
         {
             application = new ApplicationImpl(servletContext);
+            servletContext.setAttribute(APPLICATION_ATTR, application);
         }
 
-        servletContext.setAttribute(APPLICATION_ATTR, application);
         return application;
     }
 

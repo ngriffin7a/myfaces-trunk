@@ -155,7 +155,7 @@ extends HTMLRenderer
             writer.write(formName);
             writer.write("'].action = url; document.forms['");
             writer.write(formName);
-            writer.write("'].submit(); return true\"");
+            writer.write("'].submit()\"");
         }
 
         HTMLUtil.renderCssClass(writer, uiComponent, JSFAttr.COMMAND_CLASS_ATTR);

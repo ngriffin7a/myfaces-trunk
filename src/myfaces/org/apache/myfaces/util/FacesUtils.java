@@ -24,6 +24,9 @@ import javax.faces.application.ApplicationFactory;
 import javax.faces.context.FacesContext;
 import javax.faces.context.MessageResources;
 import javax.faces.el.ValueBinding;
+import javax.faces.render.RenderKit;
+import javax.faces.render.RenderKitFactory;
+import javax.faces.render.Renderer;
 import javax.faces.tree.Tree;
 import javax.faces.tree.TreeFactory;
 
@@ -33,102 +36,135 @@ import javax.servlet.http.HttpSession;
 
 /**
  * Utility class for access to JavaServer Faces classes.
- * 
+ *
  * @author Anton Koinov (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public class FacesUtils {
-    //~ Methods ----------------------------------------------------------------
+public class FacesUtils
+{
+    //~ Methods ------------------------------------------------------------------------------------
 
-    public static Application getApplication() {
-        return ((ApplicationFactory)FactoryFinder.getFactory(
+    public static Application getApplication()
+    {
+        return ((ApplicationFactory) FactoryFinder.getFactory(
             "javax.faces.application.ApplicationFactory")).getApplication();
     }
 
-    public static MessageResources getMessageResources(String name) {
+    public static MessageResources getMessageResources(String name)
+    {
         return getApplication().getMessageResources(name);
     }
 
-    public static HttpServletRequest getRequest() {
+    public static Renderer getRenderer(String rendererType)
+    {
+        return getRenderer(
+            FacesContext.getCurrentInstance(),
+            rendererType);
+    }
+
+    public static Renderer getRenderer(FacesContext ctx, String rendererType)
+    {
+        return ((RenderKit) ((RenderKitFactory) FactoryFinder.getFactory(
+            "javax.faces.render.RenderKitFactory")).getRenderKit(ctx.getTree().getRenderKitId()))
+                .getRenderer(rendererType);
+    }
+
+    public static HttpServletRequest getRequest()
+    {
         return getRequest(FacesContext.getCurrentInstance());
     }
 
-    public static HttpServletRequest getRequest(FacesContext ctx) {
-        return (HttpServletRequest)ctx.getExternalContext().getRequest();
+    public static HttpServletRequest getRequest(FacesContext ctx)
+    {
+        return (HttpServletRequest) ctx.getExternalContext().getRequest();
     }
 
-    public static HttpSession getSession() {
+    public static HttpSession getSession()
+    {
         return getSession(FacesContext.getCurrentInstance());
     }
 
-    public static HttpSession getSession(FacesContext ctx) {
+    public static HttpSession getSession(FacesContext ctx)
+    {
         return getRequest(ctx).getSession();
     }
 
-    public static Tree getTree(String treeId) {
+    public static Tree getTree(String treeId)
+    {
         return getTreeFactory().getTree(
-            FacesContext.getCurrentInstance(), treeId);
+            FacesContext.getCurrentInstance(),
+            treeId);
     }
 
-    public static Tree getTree(FacesContext ctx, String treeId) {
+    public static Tree getTree(FacesContext ctx, String treeId)
+    {
         return getTreeFactory().getTree(ctx, treeId);
     }
 
-    public static Tree getTree(
-        FacesContext ctx, TreeFactory treeFactory, String treeId) {
+    public static Tree getTree(FacesContext ctx, TreeFactory treeFactory, String treeId)
+    {
         return treeFactory.getTree(ctx, treeId);
     }
 
-    public static Tree getTree(TreeFactory treeFactory, String treeId) {
-        return treeFactory.getTree(FacesContext.getCurrentInstance(), treeId);
+    public static Tree getTree(TreeFactory treeFactory, String treeId)
+    {
+        return treeFactory.getTree(
+            FacesContext.getCurrentInstance(),
+            treeId);
     }
 
-    public static TreeFactory getTreeFactory() {
-        return (TreeFactory)FactoryFinder.getFactory(
-            "javax.faces.tree.TreeFactory");
+    public static TreeFactory getTreeFactory()
+    {
+        return (TreeFactory) FactoryFinder.getFactory("javax.faces.tree.TreeFactory");
     }
 
-    public static ValueBinding getValueBinding(String valueRef) {
+    public static ValueBinding getValueBinding(String valueRef)
+    {
         return getApplication().getValueBinding(valueRef);
     }
 
     public static void setValueRef(
-        Application app, FacesContext ctx, String valueRef, Object value) {
+        Application app, FacesContext ctx, String valueRef, Object value)
+    {
         app.getValueBinding(valueRef).setValue(ctx, value);
     }
 
-    public static void setValueRef(
-        Application app, String valueRef, Object value) {
+    public static void setValueRef(Application app, String valueRef, Object value)
+    {
         app.getValueBinding(valueRef).setValue(
-            FacesContext.getCurrentInstance(), value);
+            FacesContext.getCurrentInstance(),
+            value);
     }
 
-    public static void setValueRef(
-        FacesContext ctx, String valueRef, Object value) {
+    public static void setValueRef(FacesContext ctx, String valueRef, Object value)
+    {
         getApplication().getValueBinding(valueRef).setValue(ctx, value);
     }
 
-    public static void setValueRef(String valueRef, Object value) {
+    public static void setValueRef(String valueRef, Object value)
+    {
         getValueBinding(valueRef).setValue(
-            FacesContext.getCurrentInstance(), value);
+            FacesContext.getCurrentInstance(),
+            value);
     }
 
-    public static Object getValueRef(
-        Application app, FacesContext ctx, String valueRef) {
+    public static Object getValueRef(Application app, FacesContext ctx, String valueRef)
+    {
         return app.getValueBinding(valueRef).getValue(ctx);
     }
 
-    public static Object getValueRef(Application app, String valueRef) {
-        return app.getValueBinding(valueRef).getValue(
-            FacesContext.getCurrentInstance());
+    public static Object getValueRef(Application app, String valueRef)
+    {
+        return app.getValueBinding(valueRef).getValue(FacesContext.getCurrentInstance());
     }
 
-    public static Object getValueRef(FacesContext ctx, String valueRef) {
+    public static Object getValueRef(FacesContext ctx, String valueRef)
+    {
         return getValueBinding(valueRef).getValue(ctx);
     }
 
-    public static Object getValueRef(String valueRef) {
-        return getValueBinding(valueRef).getValue(
-            FacesContext.getCurrentInstance());
+    public static Object getValueRef(String valueRef)
+    {
+        return getValueBinding(valueRef).getValue(FacesContext.getCurrentInstance());
     }
 }

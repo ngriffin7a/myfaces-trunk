@@ -716,4 +716,19 @@ public class StringUtils
 
         return str.substring(begin, end);
     }
+
+    public static String[] trim(String[] strings)
+    {
+        if (strings == null)
+        {
+            return null;
+        }
+
+        for (int i = 0, len = strings.length; i < len; i++)
+        {
+            strings[i] = strings[i].trim();
+        }
+
+        return strings;
+    }
 }
