@@ -27,6 +27,9 @@ import javax.faces.el.ValueBinding;
  * @version $Revision$ $Date$
  * 
  * $Log$
+ * Revision 1.26  2004/09/08 07:43:52  mwessendorf
+ * added TestCase
+ *
  * Revision 1.25  2004/09/06 16:21:10  mwessendorf
  * added TestCase
  *
@@ -574,9 +577,9 @@ public class ValueBindingTest extends ELBaseTest
     public void testEL () throws Exception{
         ValueBinding vb;
 
-     /*   vb = _application.createValueBinding("#{facesContext}");
-        assertNotNull(vb.getValue(_facesContext));
-     */
+        vb = _application.createValueBinding("#{facesContext.application.defaultRenderKitId}");
+        assertEquals("HTML_BASIC",vb.getValue(_facesContext));
+     
         
         vb = _application.createValueBinding("#{facesContext.viewRoot.renderKitId}");
         assertEquals("HTML_BASIC",vb.getValue(_facesContext));
