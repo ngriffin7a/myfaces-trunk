@@ -32,6 +32,9 @@ import java.util.Iterator;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.12  2004/08/22 10:37:29  mwessendorf
+ * bug #1007065
+ *
  * Revision 1.11  2004/07/01 22:00:48  mwessendorf
  * ASF switch
  *
@@ -197,13 +200,58 @@ public class UIViewRoot
         }
         else if (locale instanceof String)
         {
-            return new Locale((String)locale); //TODO: what do they mean by create Locale from String?
+            return getLocale((String)locale);
         }
         else
         {
             throw new IllegalArgumentException("locale binding"); //TODO: not specified!?
         }
     }
+
+    /**
+     * Create Locale from String representation.
+     * 
+     * @see http://java.sun.com/j2se/1.4.2/docs/api/java/util/Locale.html
+     * @param locale locale representation in String.
+     * @return Locale instance
+     */
+    private static Locale getLocale(String locale){
+        int cnt = 0;
+        int pos = 0;
+        int prev = 0;
+        
+        // store locale variation.
+        // ex. "ja_JP_POSIX"
+        //  lv[0] : language(ja)
+        //  lv[1] : country(JP)
+        //  lv[2] : variant(POSIX)
+        String[] lv = new String[3];
+        Locale l=null;
+
+        while((pos=locale.indexOf('_',prev))!=-1){
+             lv[cnt++] = locale.substring(prev,pos);
+             prev = pos + 1;
+        }
+        
+        lv[cnt++] = locale.substring(prev,locale.length());
+        
+        switch(cnt){
+            case 1:
+                // create Locale from language.
+                l = new Locale(lv[0]);
+                break;
+            case 2:
+                // create Locale from language and country.
+                l = new Locale(lv[0],lv[1]);
+                break;
+            case 3:
+                // create Locale from language, country and variant.
+                l = new Locale(lv[0], lv[1], lv[2]);
+                break;
+        }
+        return l;
+    }
+
 
     public void setLocale(Locale locale)
     {
