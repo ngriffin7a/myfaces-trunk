@@ -25,22 +25,23 @@ import javax.faces.application.Application;
 import javax.faces.application.ApplicationFactory;
 
 /**
- * JSF 1.0 PRD2, 7.2
  * @author Manfred Geiler (latest modification by $Author$)
  * @author Thomas Spiegl
  * @version $Revision$ $Date$
+ * $Log$
+ * Revision 1.7  2004/04/28 08:12:45  manolito
+ * comments
+ *
  */
 public class ApplicationFactoryImpl
     extends ApplicationFactory
 {
     private static final Log log = LogFactory.getLog(ApplicationFactory.class);
 
-    //private static final String APPLICATION_ATTR = Application.class.getName();
-
-
     //Application is thread-safe (see Application javadoc)
     //"Application represents a per-web-application singleton object..."
-    //TODO: We assume that every web application has it's own JVM, is that ok?
+    //FactoryFinder has a ClassLoader-Factory Map. Since each webapp has it's
+    //own ClassLoader, each webapp will have it's own private factory instances.
     private Application _application;
 
     public ApplicationFactoryImpl()
@@ -49,38 +50,14 @@ public class ApplicationFactoryImpl
         if (log.isTraceEnabled()) log.trace("New ApplicationFactory instance created");
     }
 
-
     public Application getApplication()
     {
-        /*
-        Map appMap = getApplicationMap();
-        Application application = (Application)appMap.get(APPLICATION_ATTR);
-
-        if (application == null)
-        {
-            application = new ApplicationImpl();
-            appMap.put(APPLICATION_ATTR, application);
-        }
-        */
         return _application;
     }
 
     public void setApplication(Application application)
     {
-        //getApplicationMap().put(APPLICATION_ATTR, application);
         _application = application;
     }
 
-    /*
-    private Map getApplicationMap()
-    {
-        FacesContext facesContext = FacesContext.getCurrentInstance();
-        if (facesContext == null)
-        {
-            log.error("FacesContext is null");
-            throw new IllegalStateException("FacesContext is null");
-        }
-        return facesContext.getExternalContext().getApplicationMap();
-    }
-    */
 }
