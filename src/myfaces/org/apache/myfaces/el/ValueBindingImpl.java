@@ -52,6 +52,9 @@ import java.util.Map;
  * @version $Revision$ $Date$
  * 
  * $Log$
+ * Revision 1.41  2004/05/31 02:28:37  dave0000
+ * Fix for: [955111] RestoreState of outputText with mixed ValueBinding attribute
+ *
  * Revision 1.40  2004/05/11 04:24:10  dave0000
  * Bug 943166: add value coercion to ManagedBeanConfigurator
  *
@@ -587,7 +590,7 @@ public class ValueBindingImpl extends ValueBinding implements StateHolder
     {
         _application = facesContext.getApplication();
         _expressionString  = (String) obj;
-        _expression = (Expression) s_expressionCache.get(_expressionString);
+        _expression = s_expressionCache.get(_expressionString);
     }
 
     public boolean isTransient()
