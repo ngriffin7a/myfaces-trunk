@@ -21,6 +21,7 @@ package net.sourceforge.myfaces.context.servlet;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -30,188 +31,208 @@ import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
-import net.sourceforge.myfaces.exception.InternalServerException;
-
 /**
- * Wrapper object that exposes HttpSession attibutes as a collections API
- * Map interface.
+ * Wrapper object that exposes HttpSession attibutes as a collections API Map
+ * interface.
  * 
  * @author Dimitry D'hondt
+ * @author Anton Koinov
  */
-public class SessionMap implements Map {
-	private static Log log = LogFactory.getLog(SessionMap.class);
-	private HttpServletRequest req;
-	private HttpSession ses;
+public class SessionMap
+    implements Map
+{
+    private HttpSession _httpSession;
 
-	SessionMap(HttpServletRequest req) {
-		this.req = req;
-		this.ses = req.getSession(true);
-	}
+    SessionMap(HttpServletRequest httpRequest)
+    {
+        _httpSession = httpRequest.getSession(false);
+    }
 
-	/**
-	 * @see java.util.Map#clear()
-	 */
-	public void clear() {
-		List names = new ArrayList();
-		Enumeration e = ses.getAttributeNames();
-		while(e.hasMoreElements()) {
-			names.add(e.nextElement());
-		}
-		Iterator i = names.iterator();
-		while(i.hasNext()) {
-			ses.removeAttribute((String)i.next());
-		}
-	}
+    /**
+     * @see java.util.Map#clear()
+     */
+    public void clear()
+    {
+        if (_httpSession == null)
+        {
+            return;
+        }
 
-	/**
-	 * @see java.util.Map#containsKey(java.lang.Object)
-	 */
-	public boolean containsKey(Object key) {
-		boolean ret = false;
-		if(key instanceof String) {
-			ret = ses.getAttribute((String)key) == null;
-		}
-		return ret;
-	}
+        List names = new ArrayList();
+        for (Enumeration e = _httpSession.getAttributeNames(); e.hasMoreElements();)
+        {
+            names.add(e.nextElement());
+        }
 
-	/**
-	 * @see java.util.Map#containsValue(java.lang.Object)
-	 */
-	public boolean containsValue(Object findValue) {
-		boolean ret = false;
-		Enumeration e = ses.getAttributeNames();
-		while(e.hasMoreElements()) {
-			String element = (String) e.nextElement();
-			Object value = ses.getAttribute(element);
-			if(value != null && value.equals(findValue)) {
-				ret = true;
-			}
-		}
-		return ret;
-	}
+        Iterator it = names.iterator();
+        while (it.hasNext())
+        {
+            _httpSession.removeAttribute((String) it.next());
+        }
+    }
 
-	/**
-	 * @see java.util.Map#entrySet()
-	 */
-	public Set entrySet() {
-		Set ret = new HashSet();
-		
-		Enumeration e = ses.getAttributeNames();
-		while(e.hasMoreElements()) {
-			ret.add(ses.getAttribute((String)e.nextElement()));
-		}
-		
-		return ret;
-	}
+    /**
+     * @see java.util.Map#containsKey(java.lang.Object)
+     */
+    public boolean containsKey(Object key)
+    {
+        return _httpSession != null
+            && _httpSession.getAttribute((String) key) != null;
+    }
 
-	/**
-	 * @see java.util.Map#get(java.lang.Object)
-	 */
-	public Object get(Object key) {
-		Object ret = null;
-		
-		if(key instanceof String) {
-			ret = ses.getAttribute((String)key);
-		}
-		
-		return ret;
-	}
-	
-	/**
-	 * @see java.util.Map#isEmpty()
-	 */
-	public boolean isEmpty() {
-		boolean ret = true;
-		
-		if(ses.getAttributeNames().hasMoreElements()) ret = false;
-		
-		return ret;
-	}
+    /**
+     * @see java.util.Map#containsValue(java.lang.Object)
+     */
+    public boolean containsValue(Object findValue)
+    {
+        if (_httpSession == null || findValue == null)
+        {
+            return false;
+        }
 
-	/**
-	 * @see java.util.Map#keySet()
-	 */
-	public Set keySet() {
-		Set ret = new HashSet();
-		
-		Enumeration e = ses.getAttributeNames();
-		while(e.hasMoreElements()) {
-			ret.add(e.nextElement());
-		}
-		
-		return ret;
-	}
+        for (Enumeration e = _httpSession.getAttributeNames(); e.hasMoreElements();)
+        {
+            Object value = _httpSession.getAttribute((String) e.nextElement());
+            if (findValue.equals(value))
+            {
+                return true;
+            }
+        }
 
-	/**
-	 * @see java.util.Map#put(java.lang.Object, java.lang.Object)
-	 */
-	public Object put(Object key, Object value) {
-		Object ret = null;
-		
-		if(!(key instanceof String)) {
-			throw new InternalServerException("The keys on the session map should allways be java.lang.String objects.");
-		}
-		
-		ret = ses.getAttribute((String)key);
-		ses.setAttribute((String)key,value);
-		
-		return ret;
-	}
+        return false;
+    }
 
-	/**
-	 * @see java.util.Map#putAll(java.util.Map)
-	 */
-	public void putAll(Map t) {
-		for (Iterator iter = t.keySet().iterator(); iter.hasNext();) {
-			Object elem = iter.next();
+    /**
+     * @see java.util.Map#entrySet()
+     */
+    public Set entrySet()
+    {
+        Map ret = new HashMap();
 
-			if(!(elem instanceof String)) {
-				throw new InternalServerException("The keys on the session map should allways be java.lang.String objects.");
-			}
+        if (_httpSession != null)
+        {
+            for (Enumeration e = _httpSession.getAttributeNames(); e.hasMoreElements();)
+            {
+                String key = (String) e.nextElement();
+                ret.put(key, _httpSession.getAttribute(key));
+            }
+        }
 
-			String key = (String) elem;
-			put(key,t.get(elem));
-		}
-	}
+        return ret.entrySet();
+    }
 
-	/**
-	 * @see java.util.Map#remove(java.lang.Object)
-	 */
-	public Object remove(Object key) {
-		Object ret = null;
-		
-		if(!(key instanceof String)) {
-			throw new InternalServerException("The keys on the session map should allways be java.lang.String objects.");
-		}
-		
-		ret = ses.getAttribute((String)key);
-		ses.removeAttribute((String)key);
-		
-		return ret;
-	}
+    /**
+     * @see java.util.Map#get(java.lang.Object)
+     */
+    public Object get(Object key)
+    {
+        return _httpSession == null ? null : _httpSession.getAttribute(key
+            .toString());
+    }
 
-	/**
-	 * @see java.util.Map#size()
-	 */
-	public int size() {
-		int ret = 0;
-		
-		Enumeration e = ses.getAttributeNames();
-		while(e.hasMoreElements()) {
-			ret ++;
-			e.nextElement();
-		}
-		
-		return ret;
-	}
+    /**
+     * @see java.util.Map#isEmpty()
+     */
+    public boolean isEmpty()
+    {
+        return _httpSession == null
+            || !_httpSession.getAttributeNames().hasMoreElements();
+    }
 
-	/**
-	 * @see java.util.Map#values()
-	 */
-	public Collection values() {
-		return entrySet();
-	}
+    /**
+     * @see java.util.Map#keySet()
+     */
+    public Set keySet()
+    {
+        Set ret = new HashSet();
+
+        if (_httpSession != null)
+        {
+            for (Enumeration e = _httpSession.getAttributeNames(); e.hasMoreElements();)
+            {
+                ret.add(e.nextElement());
+            }
+        }
+
+        return ret;
+    }
+
+    /**
+     * @see java.util.Map#put(java.lang.Object, java.lang.Object)
+     */
+    public Object put(Object key, Object value)
+    {
+        if (_httpSession == null)
+        {
+            return null;
+        }
+
+        String key_ = key.toString();
+        Object retval = _httpSession.getAttribute(key_);
+        _httpSession.setAttribute(key_, value);
+        return retval;
+    }
+
+    /**
+     * @see java.util.Map#putAll(java.util.Map)
+     */
+    public void putAll(Map t)
+    {
+        if (_httpSession != null)
+        {
+            for (Iterator it = t.entrySet().iterator(); it.hasNext();)
+            {
+                Entry entry = (Entry) it.next();
+                String key = entry.getKey().toString();
+                _httpSession.setAttribute(key, entry.getValue());
+            }
+        }
+    }
+
+    /**
+     * @see java.util.Map#remove(java.lang.Object)
+     */
+    public Object remove(Object key)
+    {
+        return put(key, null);
+    }
+
+    /**
+     * @see java.util.Map#size()
+     */
+    public int size()
+    {
+        if (_httpSession == null)
+        {
+            return 0;
+        }
+
+        int ret = 0;
+
+        for (Enumeration e = _httpSession.getAttributeNames(); e.hasMoreElements();)
+        {
+            ret++;
+            e.nextElement();
+        }
+
+        return ret;
+    }
+
+    /**
+     * @see java.util.Map#values()
+     */
+    public Collection values()
+    {
+        List ret = new ArrayList();
+
+        if (_httpSession != null)
+        {
+            for (Enumeration e = _httpSession.getAttributeNames(); e.hasMoreElements();)
+            {
+                ret.add(_httpSession.getAttribute((String) e.nextElement()));
+            }
+        }
+
+        return ret;
+    }
 }

@@ -18,121 +18,183 @@
  */
 package net.sourceforge.myfaces.context.servlet;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.servlet.ServletRequest;
 
 /**
- * Wrapper object that exposes the HttpServletRequest multi-value parameters as a collections API
- * Map interface.
+ * Wrapper object that exposes the HttpServletRequest multi-value parameters as
+ * a collections API Map interface.
  * 
  * @author Dimitry D'hondt
+ * @author Anton Koinov
  */
-public class RequestParameterValuesMap extends WrapperBaseMapImpl {
+public class RequestParameterValuesMap
+    implements Map
+{
 
-	private ServletRequest req;
+    private ServletRequest _servletRequest;
 
-	RequestParameterValuesMap(ServletRequest req) {
-		this.req = req;
-	}
+    RequestParameterValuesMap(ServletRequest servletRequest)
+    {
+        _servletRequest = servletRequest;
+    }
 
-	/**
-	 * @see java.util.Map#entrySet()
-	 */
-	public Set entrySet() {
-		Set ret = new HashSet();
-		
-		Enumeration e = req.getParameterNames();
-		while(e.hasMoreElements()) {
-			ret.add(req.getParameterValues((String)e.nextElement()));
-		}
-		
-		return ret;
-	}
+    /**
+     * @see java.util.Map#clear()
+     */
+    public void clear()
+    {
+        throw new UnsupportedOperationException(
+            "Cannot clear ServletRequest parameters");
+    }
 
-	/**
-	 * @see java.util.Map#get(java.lang.Object)
-	 */
-	public Object get(Object key) {
-		Object ret = null;
-		
-		if(key instanceof String) {
-			ret = req.getParameterValues((String)key);
-		}
-		
-		return ret;
-	}
-	
-	/**
-	 * @see java.util.Map#isEmpty()
-	 */
-	public boolean isEmpty() {
-		boolean ret = true;
-		
-		if(req.getParameterNames().hasMoreElements()) ret = false;
-		
-		return ret;
-	}
+    /**
+     * @see java.util.Map#containsKey(java.lang.Object)
+     */
+    public boolean containsKey(Object key)
+    {
+        return _servletRequest.getParameterValues(key.toString()) != null;
+    }
 
-	/**
-	 * @see java.util.Map#keySet()
-	 */
-	public Set keySet() {
-		Set ret = new HashSet();
-		
-		Enumeration e = req.getParameterNames();
-		while(e.hasMoreElements()) {
-			ret.add(e.nextElement());
-		}
-		
-		return ret;
-	}
+    /**
+     * @see java.util.Map#containsValue(java.lang.Object)
+     */
+    public boolean containsValue(Object findValue)
+    {
+        if (findValue == null)
+        {
+            return false;
+        }
 
+        for (Enumeration e = _servletRequest.getParameterNames(); e.hasMoreElements();)
+        {
+            String[] values = _servletRequest.getParameterValues((String) e
+                .nextElement());
 
-	/**
-	 * @see java.util.Map#size()
-	 */
-	public int size() {
-		int ret = 0;
-		
-		Enumeration e = req.getParameterNames();
-		while(e.hasMoreElements()) {
-			ret ++;
-			e.nextElement();
-		}
-		
-		return ret;
-	}
+            for (int i = 0, len = values.length; i < len; i++)
+            {
+                if (findValue.equals(values[i]))
+                {
+                    return true;
+                }
+            }
+        }
 
-	/**
-	 * @see java.util.Map#values()
-	 */
-	public Collection values() {
-		return entrySet();
-	}
-	
-	/**
-	 * @see java.util.Map#containsKey(java.lang.Object)
-	 */
-	public boolean containsKey(Object key) {
-		boolean ret = false;
+        return false;
+    }
 
-		if(key instanceof String) {
-			if(req.getParameterValues((String)key) != null) {
-				ret = true;
-			}
-		}
-		
-		return ret;
-	}
+    /**
+     * @see java.util.Map#entrySet()
+     */
+    public Set entrySet()
+    {
+        Map ret = new HashMap();
 
-	/**
-	 * @see java.util.Map#containsValue(java.lang.Object)
-	 */
-	public boolean containsValue(Object value) {
-		return values().contains(value);
-	}
+        for (Enumeration e = _servletRequest.getParameterNames(); e.hasMoreElements();)
+        {
+            String key = (String) e.nextElement();
+            ret.put(key, _servletRequest.getParameterValues(key));
+        }
+
+        return ret.entrySet();
+    }
+
+    /**
+     * @see java.util.Map#get(java.lang.Object)
+     */
+    public Object get(Object key)
+    {
+        return _servletRequest.getParameterValues(key.toString());
+    }
+
+    /**
+     * @see java.util.Map#isEmpty()
+     */
+    public boolean isEmpty()
+    {
+        return !_servletRequest.getParameterNames().hasMoreElements();
+    }
+
+    /**
+     * @see java.util.Map#keySet()
+     */
+    public Set keySet()
+    {
+        Set ret = new HashSet();
+
+        for (Enumeration e = _servletRequest.getParameterNames(); e.hasMoreElements();)
+        {
+            ret.add(e.nextElement());
+        }
+
+        return ret;
+    }
+
+    /**
+     * @see java.util.Map#put(java.lang.Object, java.lang.Object)
+     */
+    public Object put(Object key, Object value)
+    {
+        throw new UnsupportedOperationException(
+            "Cannot set ServletRequest parameters");
+    }
+
+    /**
+     * @see java.util.Map#putAll(java.util.Map)
+     */
+    public void putAll(Map t)
+    {
+        throw new UnsupportedOperationException(
+            "Cannot set ServletRequest parameters");
+    }
+
+    /**
+     * @see java.util.Map#remove(java.lang.Object)
+     */
+    public Object remove(Object key)
+    {
+        throw new UnsupportedOperationException(
+            "Cannot remove ServletRequest parameters");
+    }
+
+    /**
+     * @see java.util.Map#size()
+     */
+    public int size()
+    {
+        int ret = 0;
+
+        for (Enumeration e = _servletRequest.getParameterNames(); e.hasMoreElements();)
+        {
+            ret++;
+            e.nextElement();
+        }
+
+        return ret;
+    }
+
+    /**
+     * @see java.util.Map#values()
+     */
+    public Collection values()
+    {
+        List ret = new ArrayList();
+
+        Enumeration e = _servletRequest.getParameterNames();
+        while (e.hasMoreElements())
+        {
+            ret.add(_servletRequest
+                .getParameterValues((String) e.nextElement()));
+        }
+
+        return ret;
+    }
 }

@@ -52,7 +52,7 @@ public class ServletFacesContextImpl
 
     //~ Instance fields ----------------------------------------------------------------------------
 
-    private List                        _messageClientIds = null;
+    List                                _messageClientIds = null;
     private List                        _messages         = null;
     private Application                 _application;
     private ServletExternalContextImpl  _externalContext;

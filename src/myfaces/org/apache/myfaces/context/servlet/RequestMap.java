@@ -21,6 +21,7 @@ package net.sourceforge.myfaces.context.servlet;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -29,186 +30,185 @@ import java.util.Set;
 
 import javax.servlet.ServletRequest;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
-import net.sourceforge.myfaces.exception.InternalServerException;
-
 /**
- * Wrapper object that exposes the ServletContext attributes as a collections API
- * Map interface.
+ * Wrapper object that exposes the ServletContext attributes as a collections
+ * API Map interface.
  * 
  * @author Dimitry D'hondt
+ * @author Anton Koinov
  */
-public class RequestMap implements Map {
-	private static Log log = LogFactory.getLog(RequestMap.class);
-	private ServletRequest req;
+public class RequestMap
+    implements Map
+{
+    private ServletRequest _servletRequest;
 
-	RequestMap(ServletRequest req) {
-		this.req = req;
-	}
+    RequestMap(ServletRequest req)
+    {
+        _servletRequest = req;
+    }
 
-	/**
-	 * @see java.util.Map#clear()
-	 */
-	public void clear() {
-		List names = new ArrayList();
-		Enumeration e = req.getAttributeNames();
-		while(e.hasMoreElements()) {
-			names.add(e.nextElement());
-		}
-		Iterator i = names.iterator();
-		while(i.hasNext()) {
-			req.removeAttribute((String)i.next());
-		}
-	}
 
-	/**
-	 * @see java.util.Map#containsKey(java.lang.Object)
-	 */
-	public boolean containsKey(Object key) {
-		boolean ret = false;
-		if(key instanceof String) {
-			ret = req.getAttribute((String)key) == null;
-		}
-		return ret;
-	}
+    /**
+     * @see java.util.Map#clear()
+     */
+    public void clear()
+    {
+        List names = new ArrayList();
+        for (Enumeration e = _servletRequest.getAttributeNames(); e
+            .hasMoreElements();)
+        {
+            names.add(e.nextElement());
+        }
 
-	/**
-	 * @see java.util.Map#containsValue(java.lang.Object)
-	 */
-	public boolean containsValue(Object findValue) {
-		boolean ret = false;
-		Enumeration e = req.getAttributeNames();
-		while(e.hasMoreElements()) {
-			String element = (String) e.nextElement();
-			Object value = req.getAttribute(element);
-			if(value != null && value.equals(findValue)) {
-				ret = true;
-			}
-		}
-		return ret;
-	}
+        for (Iterator it = names.iterator(); it.hasNext();)
+        {
+            _servletRequest.removeAttribute((String) it.next());
+        }
+    }
 
-	/**
-	 * @see java.util.Map#entrySet()
-	 */
-	public Set entrySet() {
-		Set ret = new HashSet();
-		
-		Enumeration e = req.getAttributeNames();
-		while(e.hasMoreElements()) {
-			ret.add(req.getAttribute((String)e.nextElement()));
-		}
-		
-		return ret;
-	}
+    /**
+     * @see java.util.Map#containsKey(java.lang.Object)
+     */
+    public boolean containsKey(Object key)
+    {
+        return _servletRequest.getAttribute(key.toString()) != null;
+    }
 
-	/**
-	 * @see java.util.Map#get(java.lang.Object)
-	 */
-	public Object get(Object key) {
-		Object ret = null;
-		
-		if(key instanceof String) {
-			ret = req.getAttribute((String)key);
-		}
-		
-		return ret;
-	}
-	
-	/**
-	 * @see java.util.Map#isEmpty()
-	 */
-	public boolean isEmpty() {
-		boolean ret = true;
-		
-		if(req.getAttributeNames().hasMoreElements()) ret = false;
-		
-		return ret;
-	}
+    /**
+     * @see java.util.Map#containsValue(java.lang.Object)
+     */
+    public boolean containsValue(Object findValue)
+    {
+        if (findValue == null)
+        {
+            return false;
+        }
 
-	/**
-	 * @see java.util.Map#keySet()
-	 */
-	public Set keySet() {
-		Set ret = new HashSet();
-		
-		Enumeration e = req.getAttributeNames();
-		while(e.hasMoreElements()) {
-			ret.add(e.nextElement());
-		}
-		
-		return ret;
-	}
+        for (Enumeration e = _servletRequest.getAttributeNames(); e
+            .hasMoreElements();)
+        {
+            Object value = _servletRequest.getAttribute((String) e
+                .nextElement());
+            if (findValue.equals(value))
+            {
+                return true;
+            }
+        }
 
-	/**
-	 * @see java.util.Map#put(java.lang.Object, java.lang.Object)
-	 */
-	public Object put(Object key, Object value) {
-		Object ret = null;
-		
-		if(!(key instanceof String)) {
-			throw new InternalServerException("The keys on the request map should allways be java.lang.String objects.");
-		}
+        return false;
+    }
 
-		ret = req.getAttribute((String)key);
-		req.setAttribute((String)key,value);
-		
-		return ret;
-	}
+    /**
+     * @see java.util.Map#entrySet()
+     */
+    public Set entrySet()
+    {
+        Map ret = new HashMap();
 
-	/**
-	 * @see java.util.Map#putAll(java.util.Map)
-	 */
-	public void putAll(Map t) {
-		for (Iterator iter = t.keySet().iterator(); iter.hasNext();) {
-			Object elem = iter.next();
+        for (Enumeration e = _servletRequest.getAttributeNames(); e
+            .hasMoreElements();)
+        {
+            String key = (String) e.nextElement();
+            ret.put(key, _servletRequest.getAttribute(key));
+        }
 
-			if(!(elem instanceof String)) {
-				throw new InternalServerException("The keys on the request map should allways be java.lang.String objects.");
-			}
+        return ret.entrySet();
+    }
 
-			String key = (String) elem;
-			put(key,t.get(elem));
-		}
-	}
+    /**
+     * @see java.util.Map#get(java.lang.Object)
+     */
+    public Object get(Object key)
+    {
+        return _servletRequest.getAttribute(key.toString());
+    }
 
-	/**
-	 * @see java.util.Map#remove(java.lang.Object)
-	 */
-	public Object remove(Object key) {
-		Object ret = null;
+    /**
+     * @see java.util.Map#isEmpty()
+     */
+    public boolean isEmpty()
+    {
+        return !_servletRequest.getAttributeNames().hasMoreElements();
+    }
 
-		if(!(key instanceof String)) {
-			throw new InternalServerException("The keys on the request map should allways be java.lang.String objects.");
-		}
-		
-		ret = req.getAttribute((String)key);
-		req.removeAttribute((String)key);
-		
-		return ret;
-	}
+    /**
+     * @see java.util.Map#keySet()
+     */
+    public Set keySet()
+    {
+        Set ret = new HashSet();
 
-	/**
-	 * @see java.util.Map#size()
-	 */
-	public int size() {
-		int ret = 0;
-		
-		Enumeration e = req.getAttributeNames();
-		while(e.hasMoreElements()) {
-			ret ++;
-			e.nextElement();
-		}
-		
-		return ret;
-	}
+        for (Enumeration e = _servletRequest.getAttributeNames(); e
+            .hasMoreElements();)
+        {
+            ret.add(e.nextElement());
+        }
 
-	/**
-	 * @see java.util.Map#values()
-	 */
-	public Collection values() {
-		return entrySet();
-	}
+        return ret;
+    }
+
+    /**
+     * @see java.util.Map#put(java.lang.Object, java.lang.Object)
+     */
+    public Object put(Object key, Object value)
+    {
+        String key_ = key.toString();
+        Object retval = _servletRequest.getAttribute(key_);
+        _servletRequest.setAttribute(key_, value);
+        return retval;
+    }
+
+    /**
+     * @see java.util.Map#putAll(java.util.Map)
+     */
+    public void putAll(Map t)
+    {
+        for (Iterator it = t.entrySet().iterator(); it.hasNext();)
+        {
+            Entry entry = (Entry) it.next();
+            String key = entry.getKey().toString();
+            _servletRequest.setAttribute(key, entry.getValue());
+        }
+    }
+
+    /**
+     * @see java.util.Map#remove(java.lang.Object)
+     */
+    public Object remove(Object key)
+    {
+        return put(key, null);
+    }
+
+    /**
+     * @see java.util.Map#size()
+     */
+    public int size()
+    {
+        int ret = 0;
+
+        for (Enumeration e = _servletRequest.getAttributeNames(); e
+            .hasMoreElements();)
+        {
+            ret++;
+            e.nextElement();
+        }
+
+        return ret;
+    }
+
+    /**
+     * @see java.util.Map#values()
+     */
+    public Collection values()
+    {
+        List ret = new ArrayList();
+
+        for (Enumeration e = _servletRequest.getAttributeNames(); e
+            .hasMoreElements();)
+        {
+            ret.add(_servletRequest.getAttribute((String) e.nextElement()));
+        }
+
+        return ret;
+    }
 }

@@ -18,105 +18,195 @@
  */
 package net.sourceforge.myfaces.context.servlet;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 /**
- * Wrapper object that exposes the header values for multi-value headers on an HttpServletRequest
- * as a java.util.Map interface.
+ * Wrapper object that exposes the header values for multi-value headers on an
+ * HttpServletRequest as a java.util.Map interface.
  * 
  * @author Dimitry D'hondt
+ * @author Anton Koinov
  */
-public class RequestHeaderValuesMap extends WrapperBaseMapImpl {
+public class RequestHeaderValuesMap
+    implements Map
+{
+    private HttpServletRequest _httpServletRequest;
 
-	private static Log log = LogFactory.getLog(RequestHeaderValuesMap.class);
-	
-	private HttpServletRequest req;
-	
-	RequestHeaderValuesMap(HttpServletRequest req) {
-		this.req = req;
-	}
+    RequestHeaderValuesMap(HttpServletRequest req)
+    {
+        _httpServletRequest = req;
+    }
 
+    /**
+     * @see java.util.Map#clear()
+     */
+    public void clear()
+    {
+        throw new UnsupportedOperationException(
+            "Cannot clear HTTP Servlet request headers");
+    }
 
-	/**
-	 * @see java.util.Map#entrySet()
-	 */
-	public Set entrySet() {
-		Set ret = new HashSet();
-		
-		Enumeration e = req.getHeaderNames();
-		while(e.hasMoreElements()) {
-			ret.add(req.getHeaders((String)e.nextElement()));
-		}
-		
-		return ret;
-	}
+    /**
+     * @see java.util.Map#containsKey(java.lang.Object)
+     */
+    public boolean containsKey(Object key)
+    {
+        return _httpServletRequest.getHeader(key.toString()) != null;
+    }
 
-	/**
-	 * @see java.util.Map#get(java.lang.Object)
-	 */
-	public Object get(Object key) {
-		Object ret = null;
-		
-		if(key instanceof String) {
-			ret = req.getHeaders((String)key);
-		}
-		
-		return ret;
-	}
-	
-	/**
-	 * @see java.util.Map#isEmpty()
-	 */
-	public boolean isEmpty() {
-		boolean ret = true;
-		
-		if(req.getHeaderNames().hasMoreElements()) ret = false;
-		
-		return ret;
-	}
+    /**
+     * @see java.util.Map#containsValue(java.lang.Object)
+     */
+    public boolean containsValue(Object findValue)
+    {
+        if (findValue == null)
+        {
+            return false;
+        }
 
-	/**
-	 * @see java.util.Map#keySet()
-	 */
-	public Set keySet() {
-		Set ret = new HashSet();
-		
-		Enumeration e = req.getHeaderNames();
-		while(e.hasMoreElements()) {
-			ret.add(e.nextElement());
-		}
-		
-		return ret;
-	}
+        for (Enumeration e = _httpServletRequest.getHeaderNames(); e.hasMoreElements();)
+        {
+            Enumeration eHeaders = _httpServletRequest.getHeaders((String) e
+                .nextElement());
 
+            while (e.hasMoreElements())
+            {
+                if (findValue.equals(eHeaders.nextElement()))
+                {
+                    return true;
+                }
+            }
+        }
 
-	/**
-	 * @see java.util.Map#size()
-	 */
-	public int size() {
-		int ret = 0;
-		
-		Enumeration e = req.getHeaderNames();
-		while(e.hasMoreElements()) {
-			ret ++;
-			e.nextElement();
-		}
-		
-		return ret;
-	}
+        return false;
+    }
 
-	/**
-	 * @see java.util.Map#values()
-	 */
-	public Collection values() {
-		return entrySet();
-	}
+    /**
+     * @see java.util.Map#entrySet()
+     */
+    public Set entrySet()
+    {
+        Map ret = new HashMap();
+
+        for (Enumeration e = _httpServletRequest.getHeaderNames(); e.hasMoreElements();)
+        {
+            String key = (String) e.nextElement();
+            ret.put(key, _httpServletRequest.getHeader(key));
+        }
+
+        return ret.entrySet();
+    }
+
+    /**
+     * @see java.util.Map#get(java.lang.Object)
+     */
+    public Object get(Object key)
+    {
+        return enumerationToArray(_httpServletRequest
+            .getHeaders(key.toString()));
+    }
+
+    /**
+     * @see java.util.Map#isEmpty()
+     */
+    public boolean isEmpty()
+    {
+        return !_httpServletRequest.getHeaderNames().hasMoreElements();
+    }
+
+    /**
+     * @see java.util.Map#keySet()
+     */
+    public Set keySet()
+    {
+        Set ret = new HashSet();
+
+        for (Enumeration e = _httpServletRequest.getHeaderNames(); e.hasMoreElements();)
+        {
+            ret.add(e.nextElement());
+        }
+
+        return ret;
+    }
+
+    /**
+     * @see java.util.Map#put(java.lang.Object, java.lang.Object)
+     */
+    public Object put(Object key, Object value)
+    {
+        throw new UnsupportedOperationException(
+            "Cannot set HTTP Servlet request headers");
+    }
+
+    /**
+     * @see java.util.Map#putAll(java.util.Map)
+     */
+    public void putAll(Map t)
+    {
+        throw new UnsupportedOperationException(
+            "Cannot set HTTP Servlet request headers");
+    }
+
+    /**
+     * @see java.util.Map#remove(java.lang.Object)
+     */
+    public Object remove(Object key)
+    {
+        throw new UnsupportedOperationException(
+            "Cannot remove HTTP Servlet request headers");
+    }
+
+    /**
+     * @see java.util.Map#size()
+     */
+    public int size()
+    {
+        int ret = 0;
+
+        for (Enumeration e = _httpServletRequest.getHeaderNames(); e.hasMoreElements();)
+        {
+            ret++;
+            e.nextElement();
+        }
+
+        return ret;
+    }
+
+    /**
+     * @see java.util.Map#values()
+     */
+    public Collection values()
+    {
+        List ret = new ArrayList();
+
+        for (Enumeration e = _httpServletRequest.getHeaderNames(); e.hasMoreElements();)
+        {
+            ret.add(enumerationToArray(_httpServletRequest
+                .getHeaders((String) e.nextElement())));
+        }
+
+        return ret;
+    }
+
+    private String[] enumerationToArray(Enumeration e)
+    {
+        List ret = new ArrayList();
+
+        while (e.hasMoreElements())
+        {
+            ret.add(e.nextElement());
+        }
+
+        String[] ret_ = new String[ret.size()];
+        return (String[]) ret.toArray(ret_);
+    }
 }
