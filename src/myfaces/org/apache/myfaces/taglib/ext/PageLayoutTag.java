@@ -16,65 +16,50 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package net.sourceforge.myfaces.taglib;
+package net.sourceforge.myfaces.taglib.ext;
 
-import net.sourceforge.myfaces.component.UIComponentUtils;
 import net.sourceforge.myfaces.component.UIPanel;
-import net.sourceforge.myfaces.renderkit.html.GridRenderer;
+import net.sourceforge.myfaces.renderkit.html.ext.LayoutRenderer;
+import net.sourceforge.myfaces.taglib.MyFacesBodyTag;
 
 import javax.faces.component.UIComponent;
-
+import javax.servlet.jsp.JspException;
 
 /**
  * DOCUMENT ME!
- * @author Thomas Spiegl (latest modification by Author)
+ * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public class GridTag
-    extends MyFacesTag
+public class PageLayoutTag
+        extends MyFacesBodyTag
 {
     public UIComponent createComponent()
     {
-        UIPanel panel = new UIPanel(false);
-        // donot save State
-        UIComponentUtils.setTransient(panel, true);
-        return panel;
-
+        return new UIPanel(false);
     }
 
     public String getRendererType()
     {
-        return GridRenderer.TYPE;
+        return LayoutRenderer.TYPE;
     }
 
-    public void setColumns(Integer value)
+    public void setLayout(String value)
     {
-        setRendererAttribute(GridRenderer.COLUMNS_ATTR, value);
+        setRendererAttribute(LayoutRenderer.LAYOUT_ATTR, value);
     }
 
     public void setCssClass(String value)
     {
-        setRendererAttribute(GridRenderer.PANEL_CLASS_ATTR, value);
+        setRendererAttribute(LayoutRenderer.PANEL_CLASS_ATTR, value);
     }
 
-    public void setColumnClasses(String value)
+    public int doAfterBody() throws JspException
     {
-        setRendererAttribute(GridRenderer.COLUMN_CLASSES_ATTR, value);
-    }
+        getFacesContext().getServletRequest()
+            .setAttribute(LayoutRenderer.BODY_CONTENT_REQUEST_ATTR,
+                          getBodyContent());
 
-    public void setRowClasses(String value)
-    {
-        setRendererAttribute(GridRenderer.ROW_CLASSES_ATTR, value);
-    }
-
-    public void setFooterClass(String value)
-    {
-        setRendererAttribute(GridRenderer.FOOTER_CLASS_ATTR, value);
-    }
-
-    public void setHeaderClass(String value)
-    {
-        setRendererAttribute(GridRenderer.HEADER_CLASS_ATTR, value);
+        return super.doAfterBody();
     }
 
 }

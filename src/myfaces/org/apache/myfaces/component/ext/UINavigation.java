@@ -39,9 +39,9 @@ import java.util.Iterator;
 public class UINavigation
     extends UIPanel
 {
-    public boolean getRendersChildren()
+    public UINavigation()
     {
-        return true;
+        super(true);
     }
 
     public static class ClickEvent

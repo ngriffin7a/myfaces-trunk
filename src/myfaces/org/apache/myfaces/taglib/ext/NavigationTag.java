@@ -20,6 +20,7 @@ package net.sourceforge.myfaces.taglib.ext;
 
 import net.sourceforge.myfaces.component.ext.UINavigation;
 import net.sourceforge.myfaces.renderkit.html.ext.NavigationRenderer;
+import net.sourceforge.myfaces.renderkit.attr.ext.LayoutRendererAttributes;
 import net.sourceforge.myfaces.taglib.MyFacesTag;
 
 import javax.faces.component.UIComponent;
@@ -45,6 +46,11 @@ public class NavigationTag
     public void setBundle(String value)
     {
         setRendererAttribute(NavigationRenderer.BUNDLE_ATTR, value);
+    }
+
+    public void setCssClass(String value)
+    {
+        setRendererAttribute(LayoutRendererAttributes.NAVIGATION_CLASS_ATTR, value);
     }
 
 }

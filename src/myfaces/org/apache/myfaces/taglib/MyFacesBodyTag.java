@@ -23,9 +23,10 @@ import net.sourceforge.myfaces.renderkit.attr.CommonRendererAttributes;
 
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
-import javax.faces.webapp.FacesTag;
+import javax.faces.webapp.FacesBodyTag;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
+import javax.servlet.jsp.tagext.BodyTag;
 import javax.servlet.jsp.tagext.Tag;
 
 /**
@@ -33,12 +34,12 @@ import javax.servlet.jsp.tagext.Tag;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public abstract class MyFacesTag
-    extends FacesTag
+public abstract class MyFacesBodyTag
+    extends FacesBodyTag
 {
     protected MyFacesTagHelper _helper;
 
-    public MyFacesTag()
+    public MyFacesBodyTag()
     {
         super();
         _helper = new MyFacesTagHelper(this);
@@ -53,7 +54,7 @@ public abstract class MyFacesTag
         }
         else
         {
-            return Tag.EVAL_BODY_INCLUDE;
+            return BodyTag.EVAL_BODY_BUFFERED;
         }
     }
 
@@ -137,6 +138,7 @@ public abstract class MyFacesTag
     //Iteration Tag support
     public int doAfterBody() throws JspException
     {
+        super.doAfterBody();
         return getDoAfterBodyValue();
     }
 

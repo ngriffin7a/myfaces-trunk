@@ -41,13 +41,9 @@ public class UISortHeader
 
     public UISortHeader()
     {
+        super(false);
         UIComponentUtils.setTransient(this, false); //Always remember current sort column
         setValid(true); //Value is always valid (necessary for updateModel)
-    }
-
-    public boolean getRendersChildren()
-    {
-        return false;
     }
 
     public boolean isAscending()

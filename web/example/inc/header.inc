@@ -3,3 +3,7 @@
   <title>MyFaces - a free JSF Implementation</title>
   <Link rel="stylesheet" type="text/css" href="css/basic.css">
 </head>
+<%
+    //String pageLayout = "classic";
+    String pageLayout = "navigationRight";
+%>

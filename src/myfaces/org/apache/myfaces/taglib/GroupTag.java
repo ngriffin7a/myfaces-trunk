@@ -35,14 +35,7 @@ public class GroupTag
 {
     public UIComponent createComponent()
     {
-        UIPanel panel = new UIPanel()
-        {
-            public boolean getRendersChildren()
-            {
-                return false;
-            }
-        };
-
+        UIPanel panel = new UIPanel(false);
         // donot save State
         UIComponentUtils.setTransient(panel, true);
         return panel;

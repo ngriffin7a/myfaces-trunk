@@ -27,5 +27,28 @@ public class UIPanel
     extends javax.faces.component.UIPanel
     implements CommonComponentAttributes
 {
+    private boolean _rendersChildren;
 
+    public UIPanel(boolean rendersChildren)
+    {
+        super();
+        _rendersChildren = rendersChildren;
+    }
+
+    public boolean getRendersChildren()
+    {
+        return _rendersChildren;
+    }
+
+    public Object getAttribute(String s)
+    {
+        if (s.equals("rendersChildren"))
+        {
+            return _rendersChildren ? Boolean.TRUE : Boolean.FALSE;
+        }
+        else
+        {
+            return super.getAttribute(s);
+        }
+    }
 }

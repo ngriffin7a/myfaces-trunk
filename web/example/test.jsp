@@ -1,5 +1,3 @@
-<%@ page import="java.math.BigDecimal,
-                 java.util.Date"%>
 <%@ page session="false"
 %><%@ taglib uri="/WEB-INF/myfaces_basic.tld" prefix="f"
 %><%@ taglib uri="/WEB-INF/myfaces_ext.tld" prefix="x"
@@ -27,6 +25,8 @@
 //-->
 
 <%@include file="inc/header.inc" %>
+<body>
+
 <f:use_faces>
 
     <x:page_layout id="page" layout="classic" cssClass="<%=pageLayout%>" >
@@ -35,21 +35,9 @@
         </x:page_header>
         <%@ include file="inc/navigation.jsp"  %>
 
-        <x:page_body id="body" cssClass="pageBody" >
-            <table border="0">
-                <tr>
-                    <td valign="middle">
-                        <f:message id="welcome" bundle="net.sourceforge.myfaces.example.example_messages" key="welcome" />
-                    </td>
-                    <td valign="middle">
-                        <f:image id="logo" url="images/logo.jpg"/>
-                    </td>
-                </tr>
-            </table>
-            <f:message id="today" bundle="net.sourceforge.myfaces.example.example_messages" key="today" >
-                <f:param id="p0" value="<%=new Date()%>" />
-            </f:message>
-        </x:page_body>
+<x:page_body id="body" cssClass="pageBody" >
+Body
+</x:page_body>
 
         <x:page_footer id="footer" cssClass="pageFooter" >
             Copyright (C) 2003  <a href="http://myfaces.sourceforge.net" style="color:#FFFFFF">The MyFaces Team</a>

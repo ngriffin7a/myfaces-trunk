@@ -71,3 +71,40 @@ a:hover
     text-decoration: none;
 }
 
+
+.pageLayout {
+    width:760px;
+    height:100%;
+}
+
+.pageHeader {
+    text-align: center;
+    height:1px;
+    overflow:visible;
+    background-color: #CCCCFF;
+}
+
+.navigation {
+    text-align: left;
+    vertical-align: top;
+    width: 200px;
+    background-color: #9999CC;
+    padding: 10px;
+}
+
+.pageBody {
+    text-align: left;
+    vertical-align: top;
+    width: 560px;
+    padding: 20px;
+    background-color: #FFFFFF;
+}
+
+.pageFooter {
+    text-align: right;
+    font-size: xx-small;
+    height:1px;
+    overflow:visible;
+    background-color: #333366;
+    color: #FFFFFF;
+}

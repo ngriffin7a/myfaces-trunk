@@ -35,13 +35,7 @@ public class ListTag
 {
     public UIComponent createComponent()
     {
-        UIPanel panel = new UIPanel()
-        {
-            public boolean getRendersChildren()
-            {
-                return false;
-            }
-        };
+        UIPanel panel = new UIPanel(false);
         // donot save State and set JspListRenderer
         UIComponentUtils.setTransient(panel, true);
         return panel;

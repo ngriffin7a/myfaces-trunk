@@ -72,8 +72,8 @@ import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.logging.Logger;
  * A translation unit (JSP source file and any files included via the
  * include directive) may involve the processing of JSP pages
  * written with different syntaxes (currently the original JSP syntax,
- * as well as the XML syntax (as of JSP 1.2)). This class encapsulates 
- * the behavior related to the selection and invocation of 
+ * as well as the XML syntax (as of JSP 1.2)). This class encapsulates
+ * the behavior related to the selection and invocation of
  * the proper parser.
  *
  * Note: There's some 'commented out' code that would allow
@@ -83,7 +83,8 @@ import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.logging.Logger;
  *
  * @author Pierre Delisle
  */
-public class ParserController {
+public class ParserController
+{
     /*
      * The compilation context
      */
@@ -106,12 +107,12 @@ public class ParserController {
      * kind of document we are dealing with.
      */
     private boolean isXml;
-    
+
     /*
      * Static information used in the process of figuring out
      * the kind of document we're dealing with.
      */
-    private static final String JSP_ROOT_TAG   = "<jsp:root";
+    private static final String JSP_ROOT_TAG = "<jsp:root";
 
     /*
      * Tells if the file being processed is the "top" file
@@ -124,8 +125,8 @@ public class ParserController {
      * for included files by default.
      * Defaults to "ISO-8859-1" per JSP spec.
      */
-    private String topFileEncoding = "ISO-8859-1"; 
-    
+    private String topFileEncoding = "ISO-8859-1";
+
     /*
      * The 'new' encoding required to read a page.
      */
@@ -149,24 +150,26 @@ public class ParserController {
     //*********************************************************************
     // Constructor
 
-    public ParserController(JspCompilationContext ctxt) {
+    public ParserController(JspCompilationContext ctxt)
+    {
         this.ctxt = ctxt; // @@@ can we assert that ctxt is not null?
         jspHandler = new JspParseEventListener(ctxt, this);
-	
-	/* @@@ NOT COMPILED
-	// Cache the content of the jsp DTD
-	if (jspDtd_part1 == null) {
-	    jspDtd_part1 = getFileContent("/org/apache/jasper/resources/jsp12_part1.dtd");
-	    jspDtd_part2 = getFileContent("/org/apache/jasper/resources/jsp12_part2.dtd");
-	}
-        */
+
+        /* @@@ NOT COMPILED
+        // Cache the content of the jsp DTD
+        if (jspDtd_part1 == null) {
+            jspDtd_part1 = getFileContent("/org/apache/jasper/resources/jsp12_part1.dtd");
+            jspDtd_part2 = getFileContent("/org/apache/jasper/resources/jsp12_part2.dtd");
+        }
+            */
     }
-   
+
     //*********************************************************************
     // Accessors
 
-    public ParseEventListener getParseEventListener() {
-	return jspHandler;
+    public ParseEventListener getParseEventListener()
+    {
+        return jspHandler;
     }
 
     //*********************************************************************
@@ -180,129 +183,159 @@ public class ParserController {
      * @param The name of the jsp file to be parsed.
      */
     public void parse(String inFileName)
-	throws FileNotFoundException, JasperException
+        throws FileNotFoundException, JasperException
     {
         //p("parse(" + inFileName + ")");
 
         String absFileName = resolveFileName(inFileName);
-	//p("filePath: " + filePath);
-	String encoding = topFileEncoding;
+        //p("filePath: " + filePath);
+        String encoding = topFileEncoding;
         InputStreamReader reader = null;
-        try {
+        try
+        {
             // Figure out what type of JSP document we are dealing with
             reader = getReader(absFileName, encoding);
             figureOutJspDocument(absFileName, encoding, reader);
             //p("isXml = " + isXml + "   hasTaglib = " + hasTaglib);
-	    encoding = (newEncoding!=null) ? newEncoding : encoding;
-	    if (isTopFile) {
-		// Set the "top level" file encoding that will be used
-		// for all included files where encoding is not defined.
-		topFileEncoding = encoding;
-		isTopFile = false;
-	    }
-	    try {
-		reader.close();
-	    } catch (IOException ex) {}
+            encoding = (newEncoding != null) ? newEncoding : encoding;
+            if (isTopFile)
+            {
+                // Set the "top level" file encoding that will be used
+                // for all included files where encoding is not defined.
+                topFileEncoding = encoding;
+                isTopFile = false;
+            }
+            try
+            {
+                reader.close();
+            }
+            catch (IOException ex)
+            {
+            }
 
             // dispatch to the proper parser
-	    
+
             reader = getReader(absFileName, encoding);
             jspHandler.setDefault(isXml);
-            if (isXml) {
+            if (isXml)
+            {
                 (new ParserXJspSax(absFileName, reader, jspHandler)).parse();
-            } else {
+            }
+            else
+            {
                 (new Parser(ctxt, absFileName, encoding, reader, jspHandler)).parse();
             }
-	    baseDirStack.pop();
-        } finally {
-            if (reader != null) {
-                try {
+            baseDirStack.pop();
+        }
+        finally
+        {
+            if (reader != null)
+            {
+                try
+                {
                     reader.close();
-		} catch (Exception any) {}
-	    }
+                }
+                catch (Exception any)
+                {
+                }
+            }
         }
     }
 
     //*********************************************************************
     // Figure out input Document
 
-    private void figureOutJspDocument(String file, 
-				      String encoding,
-				      InputStreamReader reader)
-	 throws JasperException
+    private void figureOutJspDocument(String file,
+                                      String encoding,
+                                      InputStreamReader reader)
+        throws JasperException
     {
-	JspReader jspReader;
-	try {
-	    jspReader = new JspReader(ctxt, file, encoding, reader);
-	} catch (FileNotFoundException ex) {
-	    throw new JasperException(ex);
-	}
+        JspReader jspReader;
+        try
+        {
+            jspReader = new JspReader(ctxt, file, encoding, reader);
+        }
+        catch (FileNotFoundException ex)
+        {
+            throw new JasperException(ex);
+        }
         jspReader.setSingleFile(true);
         Mark startMark = jspReader.mark();
 
-	// Check for the jsp:root tag
-	// No check for xml prolog, since nothing prevents a page
-	// to output XML and still use JSP syntax.
-	jspReader.reset(startMark);
-	Mark mark = jspReader.skipUntil(JSP_ROOT_TAG);
-	if (mark != null) {
-	    isXml = true;
-	} else {
-	    isXml = false;
-	}
-
-	newEncoding = null;
-
-	// Figure out the encoding of the page
-	// FIXME: We assume xml parser will take care of
-        // encoding for page in XML syntax. Correct?
-	if (!isXml) {
-	    jspReader.reset(startMark);
-	    while (jspReader.skipUntil("<%@") != null) {
-		jspReader.skipSpaces();
-		if (jspReader.matches("page")) {
-		    jspReader.advance(4);
-		    jspReader.skipSpaces();
-		    Attributes attrs = jspReader.parseTagAttributes();
-		    String attribute = "pageEncoding";
-		    newEncoding = attrs.getValue("pageEncoding");
-		    if (newEncoding == null) {
-			String contentType = attrs.getValue("contentType");
-			if (contentType != null) {
-			    int loc = contentType.indexOf("charset=");
-			    if (loc != -1) {
-				newEncoding = contentType.substring(loc+8);
-				return;
-			    }
-			}
-		    } else {
-			return;
-		    }
-		}
-	    }
-	}
-
-	/* NOT COMPILED
-        // This is an XML document. Let's see if it uses tag libraries.
+        // Check for the jsp:root tag
+        // No check for xml prolog, since nothing prevents a page
+        // to output XML and still use JSP syntax.
         jspReader.reset(startMark);
-        Vector taglibMarks = new Vector();
-        mark = jspReader.skipUntil(JSP_TAGLIB_TAG);
-        while (mark != null) {
-            taglibMarks.add(mark);
-            mark = jspReader.skipUntil(JSP_TAGLIB_TAG);
+        Mark mark = jspReader.skipUntil(JSP_ROOT_TAG);
+        if (mark != null)
+        {
+            isXml = true;
         }
-        hasTaglib = (taglibMarks.size() > 0);
-        if (!hasTaglib) return;
+        else
+        {
+            isXml = false;
+        }
 
-        // The JSP document uses tag libraries. We parse the tag libraries and then
-        // we will generate the JSP DTD on the fly to include the custom tags.
-        // This way, we can use a validating xml parser.
-	dtdInputSource = buildDtd(jspReader, taglibMarks);
-	*/
+        newEncoding = null;
+
+        // Figure out the encoding of the page
+        // FIXME: We assume xml parser will take care of
+        // encoding for page in XML syntax. Correct?
+        if (!isXml)
+        {
+            jspReader.reset(startMark);
+            while (jspReader.skipUntil("<%@") != null)
+            {
+                jspReader.skipSpaces();
+                if (jspReader.matches("page"))
+                {
+                    jspReader.advance(4);
+                    jspReader.skipSpaces();
+                    Attributes attrs = jspReader.parseTagAttributes();
+                    String attribute = "pageEncoding";
+                    newEncoding = attrs.getValue("pageEncoding");
+                    if (newEncoding == null)
+                    {
+                        String contentType = attrs.getValue("contentType");
+                        if (contentType != null)
+                        {
+                            int loc = contentType.indexOf("charset=");
+                            if (loc != -1)
+                            {
+                                newEncoding = contentType.substring(loc + 8);
+                                return;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        return;
+                    }
+                }
+            }
+        }
+
+        /* NOT COMPILED
+// This is an XML document. Let's see if it uses tag libraries.
+jspReader.reset(startMark);
+Vector taglibMarks = new Vector();
+mark = jspReader.skipUntil(JSP_TAGLIB_TAG);
+while (mark != null) {
+taglibMarks.add(mark);
+mark = jspReader.skipUntil(JSP_TAGLIB_TAG);
+}
+hasTaglib = (taglibMarks.size() > 0);
+if (!hasTaglib) return;
+
+// The JSP document uses tag libraries. We parse the tag libraries and then
+// we will generate the JSP DTD on the fly to include the custom tags.
+// This way, we can use a validating xml parser.
+        dtdInputSource = buildDtd(jspReader, taglibMarks);
+        */
     }
-    
-    /* NOT COMPILED 
-    private InputSource buildDtd(JspReader jspReader, Vector taglibMarks) 
+
+    /* NOT COMPILED
+    private InputSource buildDtd(JspReader jspReader, Vector taglibMarks)
 	throws JasperException
     {
         TagLibraries libraries = new TagLibraries(null);
@@ -332,11 +365,11 @@ public class ParserController {
                 args));
             }
         }
-        
+
         // Build a JSP DTD on the fly that will include the custom tag
         // ibraries.
-        
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();        
+
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
 	StringBuffer part1Buf = new StringBuffer();
 	StringBuffer bufXmlns = new StringBuffer();
 	StringBuffer bufTags = new StringBuffer();
@@ -369,7 +402,7 @@ public class ParserController {
 		    bufTags.append(tli.getPrefixString());
 		    bufTags.append(":");
 		    bufTags.append("tag.getTagName()");
-		    bufTags.append(' ');		    
+		    bufTags.append(' ');
 		    for (int j=0; j<tais.length; j++) {
 			TagAttributeInfo tai = tais[j];
 			bufTags.append('\n'); //@@@ newline
@@ -396,7 +429,7 @@ public class ParserController {
         p("---------ZE DTD:-----------");
         p(part1Buf.toString());
 	p("ZE DTD:----END-------");
-        
+
         CharArrayReader car = new CharArrayReader(part1Buf.toString().toCharArray());
         return new InputSource(car);
     }
@@ -413,34 +446,39 @@ public class ParserController {
      * so no need to put an initial value in the
      * baseDirStack.
      */
-    private String resolveFileName(String inFileName) {
+    private String resolveFileName(String inFileName)
+    {
         String fileName = inFileName.replace('\\', '/');
         boolean isAbsolute = fileName.startsWith("/");
-	fileName = isAbsolute ? fileName 
-            : (String) baseDirStack.peek() + fileName;
-	String baseDir = 
-	    fileName.substring(0, fileName.lastIndexOf("/") + 1);
-	baseDirStack.push(baseDir);
-	return fileName;
+        fileName = isAbsolute ? fileName
+            : (String)baseDirStack.peek() + fileName;
+        String baseDir =
+            fileName.substring(0, fileName.lastIndexOf("/") + 1);
+        baseDirStack.push(baseDir);
+        return fileName;
     }
 
     private InputStreamReader getReader(String file, String encoding)
-	throws FileNotFoundException, JasperException
+        throws FileNotFoundException, JasperException
     {
         InputStream in;
         InputStreamReader reader;
 
-	try {
+        try
+        {
             in = ctxt.getResourceAsStream(file);
-            if (in == null) {
+            if (in == null)
+            {
                 throw new FileNotFoundException(file);
             }
             return new InputStreamReader(in, encoding);
-	} catch (UnsupportedEncodingException ex) {
-	    throw new JasperException(
+        }
+        catch (UnsupportedEncodingException ex)
+        {
+            throw new JasperException(
                 Constants.getString("jsp.error.unsupported.encoding",
-				    new Object[]{encoding}));
-	}
+                                    new Object[]{encoding}));
+        }
     }
 
     /* NOT COMPILED
@@ -463,11 +501,13 @@ public class ParserController {
     }
     */
 
-    private void p(String s) {
+    private void p(String s)
+    {
         System.out.println("[ParserController] " + s);
     }
 
-    private void p(String s, Throwable ex) {
+    private void p(String s, Throwable ex)
+    {
         p(s);
         p(ex.getMessage());
         ex.printStackTrace();

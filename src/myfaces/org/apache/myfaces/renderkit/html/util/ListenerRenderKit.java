@@ -18,7 +18,6 @@
  */
 package net.sourceforge.myfaces.renderkit.html.util;
 
-import javax.faces.FacesException;
 import javax.faces.FactoryFinder;
 import javax.faces.component.AttributeDescriptor;
 import javax.faces.component.UIComponent;
@@ -28,7 +27,9 @@ import javax.faces.render.RenderKitFactory;
 import javax.faces.render.Renderer;
 import javax.faces.tree.Tree;
 import java.io.IOException;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 /**
  * DOCUMENT ME!
@@ -88,6 +89,8 @@ public class ListenerRenderKit
     }
 
 
+    private static final String ORIGINAL_RENDER_KIT_ID_ATTR
+        = ListenerRenderKit.class.getName() + ".ORIGINAL_RENDER_ID_KIT";
     private static final String ORIGINAL_RENDER_KIT_ATTR
         = ListenerRenderKit.class.getName() + ".ORIGINAL_RENDER_KIT";
 
@@ -110,12 +113,13 @@ public class ListenerRenderKit
         RenderKitFactory renderkitFactory = (RenderKitFactory)FactoryFinder.getFactory(FactoryFinder.RENDER_KIT_FACTORY);
         RenderKit originalRenderKit = renderkitFactory.getRenderKit(originalRenderKitId,
                                                                     facesContext);
-        //TODO: original renderKit should also be on a stack, in the meantime
-        //we support no nested RenderKits
+        //TODO: original renderKit should also be on a stack, in the meantime we support no nested RenderKits
         if (getOriginalRenderKit(facesContext) != null)
         {
             throw new IllegalStateException();
         }
+        facesContext.getServletRequest().setAttribute(ORIGINAL_RENDER_KIT_ID_ATTR,
+                                                      originalRenderKitId);
         facesContext.getServletRequest().setAttribute(ORIGINAL_RENDER_KIT_ATTR,
                                                       originalRenderKit);
 
@@ -125,9 +129,7 @@ public class ListenerRenderKit
         {
             listenerRenderKit = renderkitFactory.getRenderKit(ID, facesContext);
         }
-        catch (FacesException e)
-        {
-        }
+        catch (Exception e) {}
         // ...and add to RenderKitFactory if not yet registered
         if (listenerRenderKit == null)
         {
@@ -139,6 +141,11 @@ public class ListenerRenderKit
         tree.setRenderKitId(ID);
     }
 
+    protected static void unwrapRenderKit(FacesContext facesContext)
+    {
+        String originalRenderKitId = (String)facesContext.getServletRequest().getAttribute(ORIGINAL_RENDER_KIT_ID_ATTR);
+        facesContext.getResponseTree().setRenderKitId(originalRenderKitId);
+    }
 
 
 
@@ -181,7 +188,7 @@ public class ListenerRenderKit
         map.remove(component.getCompoundId());
         if (map.isEmpty())
         {
-            //TODO: unwrap
+            unwrapRenderKit(facesContext);
         }
     }
 
@@ -237,6 +244,7 @@ public class ListenerRenderKit
 
         public void encodeBegin(FacesContext facesContext, UIComponent uiComponent) throws IOException
         {
+            //TODO: uiComponent may be null!
             Renderer renderer = getOriginalRenderKit(facesContext).getRenderer(_rendererType);
 
             Map map = getListenerMap(facesContext);
@@ -284,7 +292,8 @@ public class ListenerRenderKit
 
         public void decode(FacesContext facesContext, UIComponent uiComponent) throws IOException
         {
-            throw new UnsupportedOperationException();
+            Renderer renderer = getOriginalRenderKit(facesContext).getRenderer(_rendererType);
+            renderer.decode(facesContext, uiComponent);
         }
 
         public AttributeDescriptor getAttributeDescriptor(UIComponent uiComponent, String s)

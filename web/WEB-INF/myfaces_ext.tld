@@ -64,6 +64,11 @@
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>
         </attribute>
+        <attribute>
+            <name>cssClass</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
     </tag>
 
     <tag>
@@ -156,5 +161,75 @@
             <rtexprvalue>true</rtexprvalue>
         </attribute>
    </tag>
+
+
+    <tag>
+        <name>page_layout</name>
+        <tagclass>net.sourceforge.myfaces.taglib.ext.PageLayoutTag</tagclass>
+        <bodycontent>JSP</bodycontent>
+        <attribute>
+            <name>id</name>
+            <required>true</required>
+            <rtexprvalue>false</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>layout</name>
+            <required>true</required>
+            <rtexprvalue>false</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>cssClass</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>
+
+    <tag>
+        <name>page_header</name>
+        <tagclass>net.sourceforge.myfaces.taglib.ext.PageHeaderTag</tagclass>
+        <bodycontent>JSP</bodycontent>
+        <attribute>
+            <name>id</name>
+            <required>true</required>
+            <rtexprvalue>false</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>cssClass</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>
+
+    <tag>
+        <name>page_body</name>
+        <tagclass>net.sourceforge.myfaces.taglib.ext.PageBodyTag</tagclass>
+        <bodycontent>JSP</bodycontent>
+        <attribute>
+            <name>id</name>
+            <required>true</required>
+            <rtexprvalue>false</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>cssClass</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>
+
+    <tag>
+        <name>page_footer</name>
+        <tagclass>net.sourceforge.myfaces.taglib.ext.PageFooterTag</tagclass>
+        <bodycontent>JSP</bodycontent>
+        <attribute>
+            <name>id</name>
+            <required>true</required>
+            <rtexprvalue>false</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>cssClass</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>
 
 </taglib>

@@ -16,65 +16,36 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package net.sourceforge.myfaces.taglib;
+package net.sourceforge.myfaces.taglib.ext;
 
-import net.sourceforge.myfaces.component.UIComponentUtils;
 import net.sourceforge.myfaces.component.UIPanel;
-import net.sourceforge.myfaces.renderkit.html.GridRenderer;
+import net.sourceforge.myfaces.renderkit.attr.ext.LayoutRendererAttributes;
+import net.sourceforge.myfaces.renderkit.html.GroupRenderer;
+import net.sourceforge.myfaces.taglib.MyFacesTag;
 
 import javax.faces.component.UIComponent;
 
-
 /**
  * DOCUMENT ME!
- * @author Thomas Spiegl (latest modification by Author)
+ * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public class GridTag
-    extends MyFacesTag
+public class PageBodyTag
+        extends MyFacesTag
 {
     public UIComponent createComponent()
     {
-        UIPanel panel = new UIPanel(false);
-        // donot save State
-        UIComponentUtils.setTransient(panel, true);
-        return panel;
-
+        return new UIPanel(false);
     }
 
     public String getRendererType()
     {
-        return GridRenderer.TYPE;
-    }
-
-    public void setColumns(Integer value)
-    {
-        setRendererAttribute(GridRenderer.COLUMNS_ATTR, value);
+        return GroupRenderer.TYPE;
     }
 
     public void setCssClass(String value)
     {
-        setRendererAttribute(GridRenderer.PANEL_CLASS_ATTR, value);
-    }
-
-    public void setColumnClasses(String value)
-    {
-        setRendererAttribute(GridRenderer.COLUMN_CLASSES_ATTR, value);
-    }
-
-    public void setRowClasses(String value)
-    {
-        setRendererAttribute(GridRenderer.ROW_CLASSES_ATTR, value);
-    }
-
-    public void setFooterClass(String value)
-    {
-        setRendererAttribute(GridRenderer.FOOTER_CLASS_ATTR, value);
-    }
-
-    public void setHeaderClass(String value)
-    {
-        setRendererAttribute(GridRenderer.HEADER_CLASS_ATTR, value);
+        setRendererAttribute(LayoutRendererAttributes.BODY_CLASS_ATTR, value);
     }
 
 }

@@ -31,6 +31,7 @@ import javax.faces.context.ResponseWriter;
 import javax.faces.render.Renderer;
 import javax.servlet.jsp.tagext.BodyContent;
 import java.io.IOException;
+import java.util.Iterator;
 
 /**
  * DOCUMENT ME!
@@ -46,6 +47,11 @@ public class LayoutRenderer
     static final String NAVIGATION = "LayoutNavigation";
     static final String BODY = "LayoutBody";
     static final String FOOTER = "LayoutFooter";
+
+    private static final String BEGIN_TOKEN_PREFIX = "[";
+    private static final String BEGIN_TOKEN_SUFFIX = "-BEGIN]";
+    private static final String END_TOKEN_PREFIX = "[";
+    private static final String END_TOKEN_SUFFIX = "-END]";
 
     public static final String BODY_CONTENT_REQUEST_ATTR = LayoutRenderer.class.getName() + ".BODY_CONTENT";
 
@@ -76,54 +82,6 @@ public class LayoutRenderer
         ListenerRenderKit.addChildrenListener(facesContext, uiComponent, this);
     }
 
-    public void encodeChildren(FacesContext facesContext, UIComponent uiComponent)
-        throws IOException
-    {
-    }
-
-    public void encodeEnd(FacesContext facesContext, UIComponent uiComponent)
-        throws IOException
-    {
-        writeBody(facesContext, uiComponent);
-        ListenerRenderKit.removeListener(facesContext, uiComponent, this);
-    }
-
-    protected void writeBody(FacesContext facesContext, UIComponent uiComponent)
-        throws IOException
-    {
-        BodyContent bodyContent = (BodyContent)facesContext.getServletRequest()
-            .getAttribute(BODY_CONTENT_REQUEST_ATTR);
-        if (bodyContent == null)
-        {
-            throw new IllegalStateException("No BodyContent!?");
-        }
-
-        String layout = (String)uiComponent.getAttribute(LAYOUT_ATTR);
-        if (layout == null)
-        {
-            LogUtil.getLogger().severe("No layout attribute!");
-            ResponseWriter writer = facesContext.getResponseWriter();
-            bodyContent.writeOut(writer);
-            return;
-        }
-
-        if (layout.equals(CLASSIC_LAYOUT))
-        {
-            writeClassicLayout(facesContext, bodyContent);
-        }
-        else if (layout.equals(NAV_RIGHT_LAYOUT))
-        {
-            writeNavRightLayout(facesContext, bodyContent);
-        }
-        else
-        {
-            LogUtil.getLogger().severe("Layout '" + layout + "' not supported.");
-            ResponseWriter writer = facesContext.getResponseWriter();
-            bodyContent.writeOut(writer);
-            return;
-        }
-    }
-
 
     public void beforeEncodeBegin(FacesContext facesContext,
                                   Renderer renderer,
@@ -137,7 +95,9 @@ public class LayoutRenderer
             {
                 writer.write(beginToken(LayoutRenderer.HEADER));
             }
-            else if (uiComponent.getAttribute(NAVIGATION_CLASS_ATTR) != null)
+            else if (uiComponent.getAttribute(NAVIGATION_CLASS_ATTR) != null ||
+                     (uiComponent.getRendererType() != null &&
+                      uiComponent.getRendererType().equals(NavigationRenderer.TYPE)))
             {
                 writer.write(beginToken(LayoutRenderer.NAVIGATION));
             }
@@ -164,7 +124,9 @@ public class LayoutRenderer
             {
                 writer.write(endToken(LayoutRenderer.HEADER));
             }
-            else if (uiComponent.getAttribute(NAVIGATION_CLASS_ATTR) != null)
+            else if (uiComponent.getAttribute(NAVIGATION_CLASS_ATTR) != null ||
+                (uiComponent.getRendererType() != null &&
+                uiComponent.getRendererType().equals(NavigationRenderer.TYPE)))
             {
                 writer.write(endToken(LayoutRenderer.NAVIGATION));
             }
@@ -181,31 +143,183 @@ public class LayoutRenderer
 
     protected static String beginToken(String part)
     {
-        return "__" + part + "_BEGIN__";
+        return BEGIN_TOKEN_PREFIX + part + BEGIN_TOKEN_SUFFIX;
     }
 
     protected static String endToken(String part)
     {
-        return "__" + part + "_END__";
+        return END_TOKEN_PREFIX + part + END_TOKEN_SUFFIX;
     }
 
 
+
+
+
+    public void encodeChildren(FacesContext facesContext, UIComponent uiComponent)
+        throws IOException
+    {
+    }
+
+    public void encodeEnd(FacesContext facesContext, UIComponent uiComponent)
+        throws IOException
+    {
+        writeBody(facesContext, uiComponent);
+        ListenerRenderKit.removeListener(facesContext, uiComponent, this);
+    }
+
+
+
+
+    protected void writeBody(FacesContext facesContext, UIComponent uiComponent)
+        throws IOException
+    {
+        BodyContent bodyContent = (BodyContent)facesContext.getServletRequest()
+            .getAttribute(BODY_CONTENT_REQUEST_ATTR);
+        if (bodyContent == null)
+        {
+            throw new IllegalStateException("No BodyContent!?");
+        }
+
+        String layout = (String)uiComponent.getAttribute(LAYOUT_ATTR);
+        if (layout == null)
+        {
+            LogUtil.getLogger().severe("No layout attribute!");
+            ResponseWriter writer = facesContext.getResponseWriter();
+            bodyContent.writeOut(writer);
+            return;
+        }
+
+        if (layout.equals(CLASSIC_LAYOUT))
+        {
+            writeClassicLayout(facesContext, uiComponent, bodyContent);
+        }
+        else if (layout.equals(NAV_RIGHT_LAYOUT))
+        {
+            writeNavRightLayout(facesContext, uiComponent, bodyContent);
+        }
+        else
+        {
+            LogUtil.getLogger().severe("Layout '" + layout + "' not supported.");
+            ResponseWriter writer = facesContext.getResponseWriter();
+            bodyContent.writeOut(writer);
+            return;
+        }
+    }
+
+
+    protected String findChildClassAttribute(UIComponent uiComponent,
+                                             String cssClassAttribute)
+    {
+        for (Iterator it = uiComponent.getChildren(); it.hasNext();)
+        {
+            String cssClass = (String)((UIComponent)it.next()).getAttribute(cssClassAttribute);
+            if (cssClass != null)
+            {
+                return cssClass;
+            }
+        }
+        return null;
+    }
+
+
+    protected void writePartAsTd(ResponseWriter writer,
+                                 BodyContent bodyContent,
+                                 String part,
+                                 UIComponent uiComponent,
+                                 String cssClassAttribute,
+                                 int colSpan)
+        throws IOException
+    {
+        writer.write("<td colspan=\"" + colSpan +"\"");
+        String cssClass = findChildClassAttribute(uiComponent, cssClassAttribute);
+        if (cssClass != null)
+        {
+            writer.write(" class=\"" + cssClass + "\"");
+        }
+        writer.write(">");
+        writePart(writer, bodyContent, part);
+        writer.write("</td>");
+    }
+
+
+
+    protected void writePart(ResponseWriter writer,
+                             BodyContent bodyContent,
+                             String part)
+        throws IOException
+    {
+        String bodyString = bodyContent.getString();
+
+        String beginToken = beginToken(part);
+
+        int startIdx = bodyString.indexOf(beginToken);
+        if (startIdx == -1)
+        {
+            //Part not present
+            return;
+        }
+
+        int endIdx = bodyString.indexOf(endToken(part), startIdx);
+        if (endIdx < startIdx)
+        {
+            throw new IllegalArgumentException("Curious tokens.");
+        }
+
+        writer.write(bodyString.substring(startIdx + beginToken.length(), endIdx));
+    }
+
+
+
     protected void writeClassicLayout(FacesContext facesContext,
+                                      UIComponent uiComponent,
                                       BodyContent bodyContent)
         throws IOException
     {
         ResponseWriter writer = facesContext.getResponseWriter();
-        String bodyString = bodyContent.getString();
-        //TODO
+        writer.write("<table");
+        String cssClass = (String)uiComponent.getAttribute(PANEL_CLASS_ATTR);
+        if (cssClass != null)
+        {
+            writer.write(" class=\"" + cssClass + "\"");
+        }
+        writer.write(">");
+        writer.write("<tr>");
+        writePartAsTd(writer, bodyContent, HEADER, uiComponent, HEADER_CLASS_ATTR, 2);
+        writer.write("</tr>");
+        writer.write("<tr>");
+        writePartAsTd(writer, bodyContent, NAVIGATION, uiComponent, NAVIGATION_CLASS_ATTR, 1);
+        writePartAsTd(writer, bodyContent, BODY, uiComponent, BODY_CLASS_ATTR, 1);
+        writer.write("</tr>");
+        writer.write("<tr>");
+        writePartAsTd(writer, bodyContent, FOOTER, uiComponent, FOOTER_CLASS_ATTR, 2);
+        writer.write("</tr>");
+        writer.write("</table>");
     }
 
     protected void writeNavRightLayout(FacesContext facesContext,
+                                       UIComponent uiComponent,
                                        BodyContent bodyContent)
         throws IOException
     {
         ResponseWriter writer = facesContext.getResponseWriter();
-        String bodyString = bodyContent.getString();
-        //TODO
+        writer.write("<table");
+        String cssClass = (String)uiComponent.getAttribute(PANEL_CLASS_ATTR);
+        if (cssClass != null)
+        {
+            writer.write(" class=\"" + cssClass + "\"");
+        }
+        writer.write(">");
+        writer.write("<tr>");
+        writePartAsTd(writer, bodyContent, HEADER, uiComponent, HEADER_CLASS_ATTR, 2);
+        writer.write("</tr>");
+        writer.write("<tr>");
+        writePartAsTd(writer, bodyContent, BODY, uiComponent, BODY_CLASS_ATTR, 1);
+        writePartAsTd(writer, bodyContent, NAVIGATION, uiComponent, NAVIGATION_CLASS_ATTR, 1);
+        writer.write("</tr>");
+        writer.write("<tr>");
+        writePartAsTd(writer, bodyContent, FOOTER, uiComponent, FOOTER_CLASS_ATTR, 2);
+        writer.write("</tr>");
+        writer.write("</table>");
     }
 
 

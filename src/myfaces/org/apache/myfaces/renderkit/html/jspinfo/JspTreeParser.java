@@ -33,6 +33,7 @@ import javax.servlet.ServletContext;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.io.IOException;
 import java.util.Stack;
 
 /**
@@ -131,6 +132,17 @@ public class JspTreeParser
             catch (java.io.FileNotFoundException e)
             {
                 throw new FacesException(e);
+            }
+            finally
+            {
+                try
+                {
+                    isr.close();
+                }
+                catch (IOException e)
+                {
+                    throw new FacesException(e);
+                }
             }
         }
         finally

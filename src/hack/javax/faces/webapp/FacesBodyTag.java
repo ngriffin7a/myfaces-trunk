@@ -21,6 +21,9 @@ package javax.faces.webapp;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.BodyTag;
 import javax.servlet.jsp.tagext.Tag;
+import javax.servlet.jsp.tagext.BodyContent;
+import javax.faces.context.ResponseWriter;
+import java.util.Stack;
 
 /**
  * Patch for the EA2 release of Sun's JSF API that corrects the
@@ -45,6 +48,8 @@ public abstract class FacesBodyTag
         extends FacesTag
         implements BodyTag
 {
+    private BodyContent _bodyContent = null;
+
     public int getDoStartValue() throws JspException
     {
         return BodyTag.EVAL_BODY_BUFFERED;
@@ -52,10 +57,20 @@ public abstract class FacesBodyTag
 
     public void doInitBody() throws JspException
     {
+        //Push current writer
+        getResponseWriterStack().push(context.getResponseWriter());
+        //Set new BodyContent writer
+        ResponseWriter newWriter = new JspResponseWriter(getBodyContent());
+        context.setResponseWriter(newWriter);
     }
 
     public int doAfterBody() throws JspException
     {
+        super.doAfterBody();
+        //Pop old writer
+        ResponseWriter oldWriter = (ResponseWriter)getResponseWriterStack().pop();
+        //Set old BodyContent writer
+        context.setResponseWriter(oldWriter);
         return SKIP_BODY;
     }
 
@@ -63,4 +78,37 @@ public abstract class FacesBodyTag
     {
         return Tag.EVAL_PAGE;
     }
+
+    public void setBodyContent(BodyContent bodyContent)
+    {
+        _bodyContent = bodyContent;
+    }
+
+    public BodyContent getBodyContent()
+    {
+        return _bodyContent;
+    }
+
+    public void release()
+    {
+        super.release();
+        _bodyContent = null;
+    }
+
+
+    private static final String RESPONSE_WRITER_STACK_ATTR
+        = FacesBodyTag.class.getName() + ".RESPONSE_WRITER_STACK";
+    protected Stack getResponseWriterStack()
+    {
+        Stack responseWriterStack
+            = (Stack)context.getServletRequest().getAttribute(RESPONSE_WRITER_STACK_ATTR);
+        if (responseWriterStack == null)
+        {
+            responseWriterStack = new Stack();
+            context.getServletRequest().setAttribute(RESPONSE_WRITER_STACK_ATTR,
+                                                     responseWriterStack);
+        }
+        return responseWriterStack;
+    }
+
 }
