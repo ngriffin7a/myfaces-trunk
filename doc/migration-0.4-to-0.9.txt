@@ -17,6 +17,8 @@ Mandatory steps
 
 * in all <h:form> tags rename "formName" attributes to "name"
 
+* rename <h:command_hyperlink> tags to <h:command_link>
+
 * remove all "commandName" attributes in <h:command_button> and <h:command_link> tags
 
 * replace all actionRef attributes by the corresponding action method binding
@@ -39,8 +41,6 @@ Mandatory steps
     commandClass --> styleClass
 
 * rename <x:navigation_separator> tags to <x:output_navigation>
-
-* rename <h:command_hyperlink> tags to <h:command_link>
 
 * alter <from-view-id> and <to-view-id> values of navigation rules: use .jsp extension instead of .jsf
 
@@ -65,6 +65,12 @@ Mandatory steps
 * rename <x:tab> tags to <x:panel_tab> and change attributes:
     label --> value
 
+* rename <h:output_errors> tags to <h:message>
+
+* outputClass attribute in message -> styleClass
+
+* panelClass attribute in panel_grid -> styleClass
+
 faces-config
 ------------
 * navigation-rules: replace <from-action-ref>x.y</from-action-ref> by <from-action>#{x.y}</from-action>     
@@ -72,7 +78,7 @@ faces-config
 Optional steps (deprecated features)
 ------------------------------------
 * The following web.xml init parameters can be removed:
-    myfaces_WrapPageContext - did not work with all JSP containers and is obsoltete with Tomcat 5
+    myfaces_WrapPageContext - did not work with all JSP containers and is obsolete with Tomcat 5
     myfaces_DefaultLanguage - no longer needed
     myfaces_LogLevel - no longer needed
     myfaces_AutoCreateRequestScopeBeans - no longer needed
