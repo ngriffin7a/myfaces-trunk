@@ -41,6 +41,9 @@ import java.util.Locale;
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.9  2004/11/11 14:50:38  bdudney
+ * made getInitParameter use the defined constant instead of the string
+ *
  * Revision 1.8  2004/11/08 09:09:42  tomsp
  * no message
  *
@@ -88,7 +91,7 @@ public class JspTilesViewHandlerImpl
         {
             if (log.isDebugEnabled()) log.debug("JspTilesViewHandlerImpl init");
             ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
-            String tilesDefinitions = context.getInitParameter("tiles-definitions");
+            String tilesDefinitions = context.getInitParameter(TILES_DEF_ATTR);
             if (tilesDefinitions == null)
             {
                 log.fatal("No Tiles definition found. Specify Definition files by adding "
