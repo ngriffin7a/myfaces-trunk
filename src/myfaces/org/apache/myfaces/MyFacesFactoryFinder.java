@@ -18,7 +18,6 @@
  */
 package net.sourceforge.myfaces;
 
-import net.sourceforge.myfaces.application.MessageFactory;
 import net.sourceforge.myfaces.config.FacesConfigFactory;
 import net.sourceforge.myfaces.config.FacesConfigFactoryImpl;
 import net.sourceforge.myfaces.util.ClassUtils;
@@ -29,33 +28,28 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * DOCUMENT ME!
  * @author Manfred Geiler (latest modification by $Author$)
  * @author Thomas Spiegl
  * @version $Revision$ $Date$
+ * $Log$
+ * Revision 1.17  2004/03/30 16:59:47  manolito
+ * MessageFactory removed, MessageUtils moved to util in src/share
+ *
  */
 public class MyFacesFactoryFinder
 {
     public static final String FACES_CONFIG_FACTORY = FacesConfigFactory.class.getName();
-    public static final String MESSAGE_FACTORY = MessageFactory.class.getName();
 
     private static final HashMap DEFAULT_FACTORIES = new HashMap();
     static
     {
         DEFAULT_FACTORIES.put(FACES_CONFIG_FACTORY, FacesConfigFactoryImpl.class.getName());
-        DEFAULT_FACTORIES.put(MESSAGE_FACTORY, MessageFactory.class.getName());
     }
 
     public static FacesConfigFactory getFacesConfigFactory(ExternalContext context)
         throws FacesException
     {
         return (FacesConfigFactory)getFactory(context, FACES_CONFIG_FACTORY);
-    }
-
-    public static MessageFactory getMessageFactory(ExternalContext context)
-        throws FacesException
-    {
-        return (MessageFactory)getFactory(context, MESSAGE_FACTORY);
     }
 
     private static Object getFactory(ExternalContext context, String factoryName)

@@ -1,4 +1,4 @@
-/*
+/**
  * MyFaces - the free JSF implementation
  * Copyright (C) 2003, 2004  The MyFaces Team (http://myfaces.sourceforge.net)
  *
@@ -16,7 +16,7 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package net.sourceforge.myfaces.application;
+package net.sourceforge.myfaces.util;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -29,21 +29,94 @@ import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
 /**
- * @author Manfred Geiler (latest modification by $Author$)
+ * @author Thomas Spiegl (latest modification by $Author$)
+ * @author Manfred Geiler
  * @version $Revision$ $Date$
+ * $Log$
+ * Revision 1.1  2004/03/30 16:59:47  manolito
+ * MessageFactory removed, MessageUtils moved to util in src/share
+ *
  */
-public class MessageFactory
+public class MessageUtils
 {
-    private static final Log log = LogFactory.getLog(MessageFactory.class);
+    private static final Log log = LogFactory.getLog(MessageUtils.class);
 
     private static final String DEFAULT_BUNDLE = "javax.faces.Messages";
     private static final String DETAIL_SUFFIX = "_detail";
 
-    public FacesMessage getMessage(FacesContext facesContext,
-                                   Locale locale,
-                                   FacesMessage.Severity severity,
-                                   String messageId,
-                                   Object args[])
+    public static FacesMessage getMessage(FacesMessage.Severity severity,
+                                          String messageId,
+                                          Object arg1)
+    {
+        return getMessage(severity,
+                          messageId,
+                          new Object[]{arg1},
+                          FacesContext.getCurrentInstance());
+    }
+
+    public static FacesMessage getMessage(FacesMessage.Severity severity,
+                                          String messageId,
+                                          Object[] args)
+    {
+        return getMessage(severity,
+                          messageId,
+                          args,
+                          FacesContext.getCurrentInstance());
+    }
+
+    public static FacesMessage getMessage(FacesMessage.Severity severity,
+                                          String messageId,
+                                          Object[] args,
+                                          FacesContext facesContext)
+    {
+        return internalGetMessage(facesContext,
+                          facesContext.getViewRoot().getLocale(),
+                          severity,
+                          messageId,
+                          args);
+    }
+
+    public static void addMessage(FacesMessage.Severity severity,
+                                  String messageId,
+                                  Object[] args)
+    {
+        addMessage(severity, messageId, args, null, FacesContext.getCurrentInstance());
+    }
+
+    public static void addMessage(FacesMessage.Severity severity,
+                                  String messageId,
+                                  Object[] args,
+                                  FacesContext facesContext)
+    {
+        addMessage(severity, messageId, args, null, facesContext);
+    }
+
+    public static void addMessage(FacesMessage.Severity severity,
+                                  String messageId,
+                                  Object[] args,
+                                  String forClientId)
+    {
+        addMessage(severity, messageId, args, forClientId, FacesContext.getCurrentInstance());
+    }
+
+    public static void addMessage(FacesMessage.Severity severity,
+                                  String messageId,
+                                  Object[] args,
+                                  String forClientId,
+                                  FacesContext facesContext)
+    {
+        facesContext.addMessage(forClientId,
+                                getMessage(severity, messageId, args, facesContext));
+    }
+
+
+
+
+    private static FacesMessage internalGetMessage(FacesContext facesContext,
+                                                   Locale locale,
+                                                   FacesMessage.Severity severity,
+                                                   String messageId,
+                                                   Object args[])
     {
         ResourceBundle appBundle;
         ResourceBundle defBundle;
@@ -110,7 +183,7 @@ public class MessageFactory
     }
 
 
-    private String getBundleString(ResourceBundle bundle, String key)
+    private static String getBundleString(ResourceBundle bundle, String key)
     {
         try
         {
@@ -123,7 +196,7 @@ public class MessageFactory
     }
 
 
-    private ResourceBundle getApplicationBundle(FacesContext facesContext, Locale locale)
+    private static ResourceBundle getApplicationBundle(FacesContext facesContext, Locale locale)
     {
         String bundleName = facesContext.getApplication().getMessageBundle();
         if (bundleName != null)
@@ -144,7 +217,7 @@ public class MessageFactory
         }
     }
 
-    private ResourceBundle getDefaultBundle(Locale locale)
+    private static ResourceBundle getDefaultBundle(Locale locale)
     {
         try
         {
