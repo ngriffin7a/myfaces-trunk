@@ -32,6 +32,10 @@ import java.util.*;
  * @author Manfred Geiler (latest modification by $Author$)
  * @author Anton Koinov
  * @version $Revision$ $Date$
+ * $Log$
+ * Revision 1.6  2004/05/12 07:57:42  manolito
+ * Log in javadoc header
+ *
  */
 public class ManagedBeanConfigurator
 {

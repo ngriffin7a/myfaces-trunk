@@ -25,11 +25,14 @@ import java.util.*;
 
 
 /**
- * DOCUMENT ME!
  * @author Manfred Geiler (latest modification by $Author$)
  * @author Anton Koinov
  * @author Thomas Spiegl
  * @version $Revision$ $Date$
+ * $Log$
+ * Revision 1.30  2004/05/12 07:57:42  manolito
+ * Log in javadoc header
+ *
  */
 public class FacesConfig
     implements Config

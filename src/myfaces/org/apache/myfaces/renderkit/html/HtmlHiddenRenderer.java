@@ -31,16 +31,18 @@ import java.io.IOException;
 
 
 /**
+ * @author Thomas Spiegl (latest modification by $Author$)
+ * @author Anton Koinov
+ * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.9  2004/05/12 07:57:44  manolito
+ * Log in javadoc header
+ *
  * Revision 1.8  2004/05/05 21:22:50  o_rossmueller
  * fix #948110: decode for hidden fields
  *
  * Revision 1.7  2004/03/26 13:34:04  manolito
  * fixed value attribute output
- *
- * @author Thomas Spiegl (latest modification by $Author$)
- * @author Anton Koinov
- * @version $Revision$ $Date$
  */
 public class HtmlHiddenRenderer
 extends HtmlRenderer

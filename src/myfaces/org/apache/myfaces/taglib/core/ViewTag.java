@@ -18,8 +18,13 @@
  */
 package net.sourceforge.myfaces.taglib.core;
 
-import java.io.IOException;
-import java.util.Locale;
+import net.sourceforge.myfaces.application.MyfacesStateManager;
+import net.sourceforge.myfaces.application.jsp.JspViewHandlerImpl;
+import net.sourceforge.myfaces.renderkit.html.HtmlLinkRendererBase;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import javax.faces.application.StateManager;
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIViewRoot;
@@ -33,16 +38,16 @@ import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.jstl.core.Config;
 import javax.servlet.jsp.tagext.BodyContent;
 import javax.servlet.jsp.tagext.BodyTag;
-
-import net.sourceforge.myfaces.application.MyfacesStateManager;
-import net.sourceforge.myfaces.application.jsp.JspViewHandlerImpl;
-import net.sourceforge.myfaces.renderkit.html.HtmlLinkRendererBase;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import java.io.IOException;
+import java.util.Locale;
 
 /**
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
+ * $Log$
+ * Revision 1.11  2004/05/12 07:57:45  manolito
+ * Log in javadoc header
+ *
  */
 public class ViewTag
         extends UIComponentBodyTag

@@ -29,8 +29,6 @@ import javax.faces.FactoryFinder;
 import javax.faces.context.ExternalContext;
 import javax.servlet.ServletContext;
 import java.io.*;
-import java.net.JarURLConnection;
-import java.net.URL;
 import java.util.*;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
@@ -41,18 +39,21 @@ import java.util.jar.JarInputStream;
  * @author Manfred Geiler (latest modification by $Author$)
  * @author Anton Koinov
  * @version $Revision$ $Date$
- *          $Log$
- *          Revision 1.28  2004/05/12 00:16:49  o_rossmueller
- *          fix #951988: search all jars in WEB-INF/lib for faces-config.xml (undo of previous changes for bug #948136)
+ * $Log$
+ * Revision 1.29  2004/05/12 07:57:43  manolito
+ * Log in javadoc header
  *
- *          Revision 1.27  2004/05/06 00:03:23  o_rossmueller
- *          fix #948136: retrieve META-INF/faces-config.xml using classloader so it is not important where myfaces.jar is located
+ * Revision 1.28  2004/05/12 00:16:49  o_rossmueller
+ * fix #951988: search all jars in WEB-INF/lib for faces-config.xml (undo of previous changes for bug #948136)
  *
- *          Revision 1.26  2004/04/29 17:46:14  o_rossmueller
- *          extract faces-config.xml to temp file so it works for Weblogic, too
+ * Revision 1.27  2004/05/06 00:03:23  o_rossmueller
+ * fix #948136: retrieve META-INF/faces-config.xml using classloader so it is not important where myfaces.jar is located
  *
- *          Revision 1.25  2004/04/13 08:26:49  manolito
- *          Log
+ * Revision 1.26  2004/04/29 17:46:14  o_rossmueller
+ * extract faces-config.xml to temp file so it works for Weblogic, too
+ *
+ * Revision 1.25  2004/04/13 08:26:49  manolito
+ * Log
  */
 public abstract class FacesConfigFactoryBase
     implements FacesConfigFactory

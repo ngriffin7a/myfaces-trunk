@@ -28,6 +28,10 @@ import javax.faces.webapp.UIComponentTag;
  * @author Manfred Geiler (latest modification by $Author$)
  * @author Anton Koinov
  * @version $Revision$ $Date$
+ * $Log$
+ * Revision 1.7  2004/05/12 07:57:43  manolito
+ * Log in javadoc header
+ *
  */
 public class ManagedPropertyConfig extends PropertyConfig
 {

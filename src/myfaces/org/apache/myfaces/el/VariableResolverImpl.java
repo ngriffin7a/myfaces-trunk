@@ -24,6 +24,7 @@ import net.sourceforge.myfaces.config.FacesConfigFactory;
 import net.sourceforge.myfaces.config.ManagedBeanConfig;
 import net.sourceforge.myfaces.config.configure.ManagedBeanConfigurator;
 import net.sourceforge.myfaces.util.ClassUtils;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -39,6 +40,10 @@ import java.util.Map;
  * @author Manfred Geiler (latest modification by $Author$)
  * @author Anton Koinov
  * @version $Revision$ $Date$
+ * $Log$
+ * Revision 1.27  2004/05/12 07:57:43  manolito
+ * Log in javadoc header
+ *
  */
 public class VariableResolverImpl
     extends VariableResolver

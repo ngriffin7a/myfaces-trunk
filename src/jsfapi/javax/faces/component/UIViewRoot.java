@@ -33,6 +33,10 @@ import java.util.Locale;
  * 
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
+ * $Log$
+ * Revision 1.9  2004/05/12 07:57:40  manolito
+ * Log in javadoc header
+ *
  */
 public class UIViewRoot
         extends UIComponentBase
