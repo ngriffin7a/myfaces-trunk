@@ -204,6 +204,11 @@
     <component-class>net.sourceforge.myfaces.component.ext.HtmlOutputNavigation</component-class>
   </component>
 
+  <component>
+    <component-type>SaveState</component-type>
+    <component-class>net.sourceforge.myfaces.component.ext.UISaveState</component-class>
+  </component>
+
     <!--
     <component>
       <component-type>FileUpload</component-type>
@@ -218,11 +223,6 @@
     <component>
       <component-type>NavigationItem</component-type>
       <component-class>net.sourceforge.myfaces.component.ext.UINavigationItem</component-class>
-    </component>
-
-    <component>
-      <component-type>SaveState</component-type>
-      <component-class>net.sourceforge.myfaces.component.ext.UISaveState</component-class>
     </component>
 
     <component>

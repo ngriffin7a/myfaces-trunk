@@ -18,68 +18,37 @@
  */
 package net.sourceforge.myfaces.component.ext;
 
-import net.sourceforge.myfaces.component.MyFacesUIParameter;
-
+import javax.faces.component.UIParameter;
 import javax.faces.context.FacesContext;
-import java.io.IOException;
+import javax.faces.el.ValueBinding;
 
 /**
- * This component defines a model value (via the "modelReference" attribute),
+ * This component defines a model value (via the "value" attribute),
  * of which the state has to be saved and restored by the StateRenderer.
- * A UISaveState component is only a "parameter" for the StateRenderer, it does no rendering
- * of its own. The decode and encodeXxx methods do nothing.
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
 public class UISaveState
-    extends MyFacesUIParameter
+    extends UIParameter
 {
-    public static final String GLOBAL_PROP = "global";
-
-    private boolean _global = false;
-
-    public final boolean isValid()
+    public Object saveState(FacesContext context)
     {
-        return true;   //model update must not occur!
+        Object values[] = new Object[2];
+        values[0] = super.saveState(context);
+        values[1] = getValue();
+        return ((Object) (values));
     }
 
-    public boolean isGlobal()
+    public void restoreState(FacesContext context, Object state)
     {
-        return _global;
+        Object values[] = (Object[])state;
+        super.restoreState(context, values[0]);
+        Object value = values[1];
+        ValueBinding vb = getValueBinding("value");
+        if (vb != null)
+        {
+            vb.setValue(context, value);
+        }
     }
 
-    public void setGlobal(boolean global)
-    {
-        _global = global;
-    }
-
-    public void decode(FacesContext context)
-    {
-        //all decoding and encoding is done by StateRenderer
-        //FIXME
-        //setValid(true);
-    }
-
-    public void encodeBegin(FacesContext context)
-        throws IOException
-    {
-        //all decoding and encoding is done by StateRenderer
-    }
-
-    public void encodeChildren(FacesContext context)
-        throws IOException
-    {
-        //all decoding and encoding is done by StateRenderer
-    }
-
-    public void encodeEnd(FacesContext context)
-        throws IOException
-    {
-        //all decoding and encoding is done by StateRenderer
-    }
-
-    public void updateModel(FacesContext context)
-    {
-        //do not update the model
-    }
 }

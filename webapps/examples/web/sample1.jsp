@@ -51,10 +51,9 @@ managed beans used:
         <f:facet name="body">
             <h:panel_group id="body">
 
-                <x:save_state id="save1" valueRef="calcForm.number1" />
-                <x:save_state id="save2" valueRef="calcForm.number2" />
-                <!--x:save_state id="save3" valueRef="calcForm.result" /-->
-                <x:save_state id="save4" valueRef="ucaseForm.text" />
+                <x:save_state id="save1" value="#{calcForm.number1}" />
+                <x:save_state id="save2" value="#{calcForm.number2}" />
+                <x:save_state id="save3" value="#{ucaseForm.text}" />
 
                 <h:messages id="messageList" />
 
