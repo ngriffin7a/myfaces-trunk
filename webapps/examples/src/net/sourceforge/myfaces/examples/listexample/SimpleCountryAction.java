@@ -18,9 +18,6 @@
  */
 package net.sourceforge.myfaces.examples.listexample;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import javax.faces.FactoryFinder;
 import javax.faces.application.ApplicationFactory;
 import javax.faces.component.UIComponent;
@@ -39,8 +36,6 @@ import java.util.Iterator;
  */
 public class SimpleCountryAction
 {
-    private static final Log log = LogFactory.getLog(SimpleCountryAction.class);
-
     public void initCountryForm(ActionEvent actionevent) throws AbortProcessingException
     {
         FacesContext facesContext = FacesContext.getCurrentInstance();
@@ -60,7 +55,6 @@ public class SimpleCountryAction
 
         if (id == null)
         {
-            log.fatal("No id parameter given.");
             throw new AbortProcessingException("No id parameter given.");
         }
 

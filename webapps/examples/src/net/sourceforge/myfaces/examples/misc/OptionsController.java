@@ -18,7 +18,8 @@
  */
 package net.sourceforge.myfaces.examples.misc;
 
-
+import javax.faces.context.FacesContext;
+import javax.faces.el.VariableResolver;
 
 
 /**
@@ -28,22 +29,12 @@ package net.sourceforge.myfaces.examples.misc;
  */
 public class OptionsController
 {
-    /*
-    FIXME
-    public Action getLocaleAction()
+    public String changeLocale()
     {
-        return new Action() {
-            public String invoke()
-            {
-                FacesContext facesContext = FacesContext.getCurrentInstance();
-                ApplicationFactory af = (ApplicationFactory)FactoryFinder.getFactory(FactoryFinder.APPLICATION_FACTORY);
-                VariableResolver vr = af.getApplication().getVariableResolver();
-                OptionsForm form = (OptionsForm)vr.resolveVariable(facesContext, "optionsForm");
-                facesContext.setLocale(form.getLocale());
-                return "ok";
-            }
-        };
+        FacesContext facesContext = FacesContext.getCurrentInstance();
+        VariableResolver vr = facesContext.getApplication().getVariableResolver();
+        OptionsForm form = (OptionsForm)vr.resolveVariable(facesContext, "optionsForm");
+        facesContext.getViewRoot().setLocale(form.getLocale());
+        return "ok";
     }
-    */
-
 }

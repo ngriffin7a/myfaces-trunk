@@ -42,6 +42,9 @@
             bodyClass="pageBody"
             footerClass="pageFooter" >
 
+        <%@include file="inc/page_header.jsp" %>
+        <%@include file="inc/navigation.jsp"  %>
+
         <f:facet name="body">
             <h:panel_group id="body">
                 <f:verbatim>

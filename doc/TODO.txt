@@ -9,6 +9,6 @@ http://sourceforge.net/pm/?group_id=69709
 
 TODOs (HACKs, FIXMEs, ...)
 --------------------------
-Please use your editors search function to find all "TODO" occurrences...
+Please use your editors search function to find all "TODO" occurrences in code...
 
 

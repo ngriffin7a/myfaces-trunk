@@ -66,17 +66,17 @@ managed beans used:
                 </f:verbatim>
 
                 <h:form id="form1" name="calcForm">
-                    <h:output_label for="form1:number1" value="Number 1" /><f:verbatim>:</f:verbatim>
+                    <h:output_label for="form1:number1" value="Number 1" /><f:verbatim>: </f:verbatim>
                     <h:input_text id="number1" value="#{calcForm.number1}" maxlength="10" size="25" >
                        <f:validate_longrange minimum="1" maximum="10" />
                     </h:input_text>
                     <h:message id="number1Error" for="form1:number1" styleClass="error" /><f:verbatim><br></f:verbatim>
 
-                    <h:output_label for="form1:number2" value="Number 2" /><f:verbatim>:</f:verbatim>
+                    <h:output_label for="form1:number2" value="Number 2" /><f:verbatim>: </f:verbatim>
                     <h:input_text id="number2" value="#{calcForm.number2}" maxlength="10" size="25"/>
                     <h:message id="number2Error" for="form1:number2" styleClass="error" /><f:verbatim><br></f:verbatim>
 
-                    <h:output_label for="form1:result" value="Result" /><f:verbatim>:</f:verbatim>
+                    <h:output_label for="form1:result" value="Result" /><f:verbatim>: </f:verbatim>
                     <h:output_text id="result" value="#{calcForm.result}" /><f:verbatim><br></f:verbatim>
 
                     <h:command_button id="addButton" value="Add them" action="none">

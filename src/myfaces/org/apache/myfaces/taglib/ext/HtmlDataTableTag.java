@@ -43,6 +43,9 @@ public class HtmlDataTableTag
     {
         super.setProperties(component);
 
+        if (_preserveDataModel == null) _preserveDataModel = "true";
+        if (_preserveSort == null) _preserveSort = "true";
+
         setBooleanProperty(component, "preserveDataModel", _preserveDataModel);
         setValueBinding(component, "sortColumn", _sortColumn);
         setValueBinding(component, "sortAscending", _sortAscending);

@@ -68,7 +68,7 @@ managed beans used:
                         </f:facet>
                         <h:output_text value="#{car.type}" />
                         <f:facet name="footer">
-                            <h:output_text id="ftr1" value="..."  />
+                            <h:output_text id="ftr1" value="(footer 1)"  />
                         </f:facet>
                     </h:column>
 
@@ -80,10 +80,10 @@ managed beans used:
                         </f:facet>
                         <h:output_text value="#{car.color}" />
                         <f:facet name="footer">
-                            <h:output_text id="ftr2" value=""  />
+                            <h:output_text id="ftr2" value="(footer 2)"  />
                         </f:facet>
                     </h:column>
-                    
+
                 </x:data_table>
 
             </h:panel_group>

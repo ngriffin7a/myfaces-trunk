@@ -57,7 +57,7 @@ managed beans used:
                <f:verbatim><br><br>
 </f:verbatim>
 
-                <h:data_table styleClass="standardTable"
+                <x:data_table styleClass="standardTable"
                         headerClass="standardTable_Header"
                         footerClass="standardTable_Footer"
                         rowClasses="standardTable_Row1,standardTable_Row2"
@@ -83,7 +83,7 @@ managed beans used:
                        <h:output_text value="#{country.isoCode}" />
                    </h:column>
 
-                </h:data_table>
+                </x:data_table>
                 <br>
 
             </h:panel_group>

@@ -37,7 +37,7 @@ managed beans used:
 
 <f:view>
 
-    <x:save_state id="ss1" valueRef="optionsForm.language" />
+    <x:save_state id="ss1" value="#{optionsForm.language}" />
 
     <f:loadBundle basename="net.sourceforge.myfaces.examples.resource.example_messages" var="example_messages"/>
 
@@ -53,27 +53,33 @@ managed beans used:
 
         <f:facet name="body">
             <h:panel_group id="body">
-                <h:output_errors id="messageList" />
+                <h:messages id="messageList" />
 
+<f:verbatim>
                 <h4>Options</h4>
                 <table border="1"><tr><td>
-                    <h:form id="form1" formName="optionsForm">
-                        <h:output_message key="option_lang" bundle="example_messages" />
-                        <h:selectone_menu id="locale" valueRef="optionsForm.language">
-                            <h:selectitems id="available" valueRef="optionsForm.availableLanguages" />
-                        </h:selectone_menu><br>
-
-                        <h:output_message key="option_layout" bundle="example_messages" />
-                        <h:selectone_menu id="layout" valueRef="globalOptions.pageLayout"  >
-                            <h:selectitem id="item101" label="Classic" value="classic" />
-                            <h:selectitem id="item102" label="Navigation right" value="navigationRight" />
-                            <h:selectitem id="item103" label="Upside down" value="upsideDown" />
-                        </h:selectone_menu><br>
-
-                        <h:command_button id="apply" commandName="apply" actionRef="optionsCtrl.localeAction" label="Apply"/>
+</f:verbatim>
+                    <h:form id="form1" name="optionsForm">
+                        <h:output_text value="#{example_messages['option_lang']}" />
+<f:verbatim>:&nbsp;</f:verbatim>
+                        <h:selectone_menu id="locale" value="#{optionsForm.language}">
+                            <f:selectitems id="available" value="#{optionsForm.availableLanguages}" />
+                        </h:selectone_menu>
+<f:verbatim><br></f:verbatim>
+                        <h:output_text value="#{example_messages['option_layout']}" />
+<f:verbatim>:&nbsp;</f:verbatim>
+                        <h:selectone_menu id="layout" value="#{globalOptions.pageLayout}"  >
+                            <f:selectitem id="item101" itemLabel="Classic" itemValue="classic" />
+                            <f:selectitem id="item102" itemLabel="Navigation right" itemValue="navigationRight" />
+                            <f:selectitem id="item103" itemLabel="Upside down" itemValue="upsideDown" />
+                        </h:selectone_menu>
+<f:verbatim><br></f:verbatim>
+                        <h:command_button id="apply" value="Apply" action="#{optionsCtrl.changeLocale}"/>
                     </h:form>
 
+<f:verbatim>
                 </td></tr></table>
+</f:verbatim>
 
             </h:panel_group>
         </f:facet>

@@ -20,8 +20,8 @@ package net.sourceforge.myfaces.examples.misc;
 
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
+import java.util.AbstractList;
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 
@@ -55,25 +55,20 @@ public class OptionsForm
         return _locale;
     }
 
-    public Iterator getAvailableLanguages()
+    public List getAvailableLanguages()
     {
-        final Iterator it = AVAILABLE_LOCALES.iterator();
-        return new Iterator() {
-            public boolean hasNext()
+        return new AbstractList()
+        {
+            public Object get(int index)
             {
-                return it.hasNext();
-            }
-
-            public Object next()
-            {
-                Locale locale = (Locale)it.next();
+                Locale locale = (Locale)AVAILABLE_LOCALES.get(index);
                 String language = locale.getDisplayLanguage(locale);
                 return new SelectItem(locale.getLanguage(), language, language);
             }
 
-            public void remove()
+            public int size()
             {
-                throw new UnsupportedOperationException();
+                return AVAILABLE_LOCALES.size();
             }
         };
     }

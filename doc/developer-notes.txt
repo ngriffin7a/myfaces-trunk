@@ -9,32 +9,6 @@ and custom component developers.
 ======================================================================
 Component developer guidelines
 
-* Properties and attributes
-  MyFaces' MinimizingStateSaver is only able to save the state of a component,
-  if all important (state relevant) values are stored as bean properties. So,
-  every member field that should be saved between requests, must have a public
-  getter and also a public setter method.
-  Also have in mind, that StateSaver does not save renderer dependent attributes
-  that have names starting with "net.sourceforge.myfaces.", "net.sf.myfaces."
-  or "javax.". These are regarded temporary attributes and will not be saved and
-  restored!
-
-* Component property getters must not behave dynamically. Avoid doing something
-  that depends on the current FacesContext.
-  Reason: Minimizing State Saver only saves a property if it's value differs
-  from the corresponding component in the parsed static tree. Now, if the getter
-  method calculates the value dynamically, both components (the current and the
-  static one in the parsed tree) will have the same value and the property will
-  not be saved.
-
-* To achieve universal usability default HTML renderers must not render any
-  client-side scripting (JavaScript) and must not depend on stylesheets.
-  - There are plans to start a parallel package "html_javascript" in the future
-    where such renderers will reside. But keep in mind that these renderers
-    must always be seen as alternative (extended) renderers.
-  - Default renderers may use style attributes to embellish visible components.
-    Despite this, the functionality of a component must never be affected when
-    displayed without style (e.g. user mode in Opera).
 
 ======================================================================
 MyFaces developers guidelines
@@ -99,6 +73,6 @@ MyFaces developers guidelines
 /**
  * Very detailed description goes here... ;-)
  *
- * @author Arnold Schwarzenegger (latest modification by $Author$)
+ * @author Bug Rogers (latest modification by $Author$)
  * @version $Revision$ $Date$
  */

@@ -30,6 +30,7 @@ import org.apache.commons.logging.LogFactory;
 import javax.faces.FacesException;
 import javax.faces.application.NavigationHandler;
 import javax.faces.application.ViewHandler;
+import javax.faces.component.UIViewRoot;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletResponse;
@@ -147,9 +148,22 @@ public class NavigationHandlerImpl
             }
             else
             {
+                Locale currentLocale = null;
+                UIViewRoot viewRoot = facesContext.getViewRoot();
+                if (viewRoot != null)
+                {
+                    //Remember current locale
+                    currentLocale = viewRoot.getLocale();
+                }
                 ViewHandler viewHandler = facesContext.getApplication().getViewHandler();
-                facesContext.setViewRoot(viewHandler.createView(facesContext,
-                                                                navigationCase.getToViewId()));
+                //create new view
+                viewRoot = viewHandler.createView(facesContext, navigationCase.getToViewId());
+                if (currentLocale != null)
+                {
+                    //set old locale
+                    viewRoot.setLocale(currentLocale);
+                }
+                facesContext.setViewRoot(viewRoot);
                 facesContext.renderResponse();
             }
         }
