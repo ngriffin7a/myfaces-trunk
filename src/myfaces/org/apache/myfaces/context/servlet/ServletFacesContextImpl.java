@@ -41,6 +41,9 @@ import java.util.*;
  * @author Anton Koinov
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.14  2004/04/16 13:56:59  manolito
+ * Bug #922317 - ClassCastException in action handler after adding message
+ *
  * Revision 1.13  2004/03/31 11:58:38  manolito
  * custom component refactoring
  *
@@ -158,13 +161,13 @@ public class ServletFacesContextImpl
         for (int i = 0; i < _messages.size(); i++)
         {
             Object savedClientId = _messageClientIds.get(i);
-            if ((savedClientId == NULL_DUMMY) && (clientId == null))
+            if (clientId == null)
             {
-                lst.add(_messages.get(i));
+                if (savedClientId == NULL_DUMMY) lst.add(_messages.get(i));
             }
-            if(savedClientId instanceof String && ((String)savedClientId).equals(clientId)) 
+            else
             {
-				lst.add(_messages.get(i));
+                if (clientId.equals(savedClientId)) lst.add(_messages.get(i));
             }
         }
         return lst.iterator();
