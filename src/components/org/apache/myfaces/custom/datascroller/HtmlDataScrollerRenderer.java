@@ -32,6 +32,9 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 /**
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
@@ -39,6 +42,8 @@ import java.util.Map;
 public class HtmlDataScrollerRenderer
     extends HtmlRenderer
 {
+    private static final Log log = LogFactory.getLog(HtmlDataScrollerRenderer.class);
+
     private static final String FACET_FIRST         = "first".intern();
     private static final String FACET_PREVOIUS      = "previous".intern();
     private static final String FACET_NEXT          = "next".intern();
@@ -60,6 +65,10 @@ public class HtmlDataScrollerRenderer
         HtmlDataScroller scroller = (HtmlDataScroller)component;
 
         UIData uiData = findUIData(scroller, component);
+        if (uiData == null)
+        {
+            return;
+        }
 
         Map parameter = context.getExternalContext().getRequestParameterMap();
         String param = (String)parameter.get(component.getClientId(context));
@@ -119,29 +128,6 @@ public class HtmlDataScrollerRenderer
         }
     }
 
-    private UIData findUIData(HtmlDataScroller scroller, UIComponent component)
-    {
-        String forStr = scroller.getFor();
-        UIComponent forComp;
-        if (forStr == null)
-        {
-            // DataScroller may be a child of uiData
-            forComp = component.getParent();
-        }
-        else
-        {
-            forComp = component.findComponent(scroller.getFor());
-            if (forComp == null)
-            {
-                throw new IllegalArgumentException("dataScroller's for attribute is mandatory if dataScroller is defined outside of UIData");
-            }
-        }
-        if (!(forComp instanceof UIData))
-        {
-            throw new IllegalArgumentException("uiComponent referenced by attribute tableScroller@for must be of type " + UIData.class.getName());
-        }
-        return (UIData)forComp;
-    }
 
     public void encodeChildren(FacesContext facescontext, UIComponent uicomponent) throws IOException
     {
@@ -151,6 +137,10 @@ public class HtmlDataScrollerRenderer
         HtmlDataScroller scroller = (HtmlDataScroller)uicomponent;
 
         UIData uiData = findUIData(scroller, uicomponent);
+        if (uiData == null)
+        {
+            return;
+        }
 
         int rows = uiData.getRows();
         int pageCount;
@@ -164,6 +154,7 @@ public class HtmlDataScrollerRenderer
         }
         else
         {
+            rows = 1;
             pageCount = 1;
         }
 
@@ -277,4 +268,27 @@ public class HtmlDataScrollerRenderer
         return link;
     }
 
+    private UIData findUIData(HtmlDataScroller scroller, UIComponent component)
+    {
+        String forStr = scroller.getFor();
+        UIComponent forComp;
+        if (forStr == null)
+        {
+            // DataScroller may be a child of uiData
+            forComp = component.getParent();
+        }
+        else
+        {
+            forComp = component.findComponent(scroller.getFor());
+            if (forComp == null)
+            {
+                log.warn("could not find UIData referenced by attribute dataScroller@for = '" + scroller.getFor() + "'");
+            }
+        }
+        if (!(forComp instanceof UIData))
+        {
+            throw new IllegalArgumentException("uiComponent referenced by attribute tableScroller@for must be of type " + UIData.class.getName());
+        }
+        return (UIData)forComp;
+    }
 }
