@@ -70,7 +70,7 @@ public class VerbatimTag
     {
         _escape = escape;
     }
-
+    
     public int doAfterBody() throws JspException
     {
         BodyContent bodyContent = getBodyContent();

@@ -79,20 +79,29 @@ managed beans used:
                         <f:verbatim>&nbsp;</f:verbatim>
                         <h:panelGroup >
                             <h:selectOneRadio id="r1" value="#{carconf.discount}" layout="pageDirection" >
-                                <f:selectItem itemValue="0" itemLabel="#{example_messages['discount_0']}" />
-                                <f:selectItem itemValue="1" itemLabel="#{example_messages['discount_1']}"  />
-                                <f:selectItem itemValue="2" itemLabel="#{example_messages['discount_2']}"  />
+                                <f:selectItem itemValue="1" itemLabel="#{example_messages['discount_0']}" />
+                                <f:selectItem itemValue="2" itemLabel="#{example_messages['discount_1']}"  />
+                                <f:selectItem itemValue="3" itemLabel="#{example_messages['discount_2']}"  />
                             </h:selectOneRadio>
                         </h:panelGroup>
 
+                        <h:panelGroup ></h:panelGroup>
+                        <h:panelGroup ></h:panelGroup>
+
                         <f:verbatim>&nbsp;</f:verbatim>
-                        <h:panelGroup >
-                            <f:verbatim><br></f:verbatim>
-                            <h:selectOneRadio id="r2" value="#{carconf.discount2}" layout="pageDirection" >
+                        <h:panelGrid columns="1"  >
+                            <h:selectOneRadio id="discount2" value="#{carconf.discount2}" rendered="false" >
                                 <f:selectItem itemValue="0" itemLabel="#{example_messages['discount_2_0']}" />
                                 <f:selectItem itemValue="1" itemLabel="#{example_messages['discount_2_1']}" />
+                                <f:selectItem itemValue="2" itemLabel="#{example_messages['discount_2_2']}" />
                             </h:selectOneRadio>
-                        </h:panelGroup>
+                            <h:panelGroup>
+                                <x:radio for="discount2" index="2" /><f:verbatim>&nbsp;</f:verbatim>
+                                <h:inputText value="#{carconf.bandName}" />
+                            </h:panelGroup>
+                            <x:radio for="discount2" index="0" />
+                            <x:radio for="discount2" index="1" />
+                        </h:panelGrid>
 
                         <f:verbatim>&nbsp;</f:verbatim>
                         <h:commandButton action="#{carconf.calcPrice}" value="#{example_messages['button_calcprice']}" />

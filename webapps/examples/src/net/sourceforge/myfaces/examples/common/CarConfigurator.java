@@ -40,6 +40,7 @@ public class CarConfigurator
     private String[] _extras;
     private String _discount = "0";
     private String _discount2 = "0";
+    private String _bandName;
     private String _car;
     private String _color;
     private HashMap _priceList = new HashMap();
@@ -170,6 +171,16 @@ public class CarConfigurator
         _discount2 = discount2;
     }
 
+    public String getBandName()
+    {
+        return _bandName;
+    }
+
+    public void setBandName(String bandName)
+    {
+        _bandName = bandName;
+    }
+
     public String calcPrice()
     {
         init();
@@ -226,8 +237,9 @@ public class CarConfigurator
                 int i = Integer.parseInt(_discount2);
                 switch (i)
                 {
-                    case 0: _price = _price.multiply(new BigDecimal(2)); break;
-                    case 1: _price = _price.multiply(new BigDecimal(0.80)); break;
+                    case 1: _price = _price.multiply(new BigDecimal(0.85)); break;
+                    case 2: _price = _price.multiply(new BigDecimal(0.80)); break;
+                    case 3: _price = _price.multiply(new BigDecimal(0.6)); break;
                 }
             }
             catch (NumberFormatException e)

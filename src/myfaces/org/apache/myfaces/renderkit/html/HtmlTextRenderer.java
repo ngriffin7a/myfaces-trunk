@@ -31,7 +31,7 @@ import javax.faces.convert.ConverterException;
 import java.io.IOException;
 
 /**
- * @author Manfred Geiler (latest modification by $Author$)
+ * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
 public class HtmlTextRenderer
