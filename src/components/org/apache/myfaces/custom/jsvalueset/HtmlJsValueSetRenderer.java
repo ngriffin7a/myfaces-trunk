@@ -30,6 +30,9 @@ import java.util.Map;
 
 /**
  * $Log$
+ * Revision 1.3  2005/03/12 02:15:18  mmarinschek
+ * jsvalueset now supports maps of maps; ui component logging enhanced
+ *
  * Revision 1.2  2004/12/27 04:11:11  mmarinschek
  * Data Table stores the state of facets of children; script tag is rendered with type attribute instead of language attribute, popup works better as a column in a data table
  *
@@ -114,7 +117,25 @@ public class HtmlJsValueSetRenderer
     private void writeArrayElement(ResponseWriter writer, String name, Object key, Object obj)
         throws IOException
     {
-        writer.writeText(name+"["+getValueString(key)+"]="+getValueString(obj)+";",null);
+        String prefix = name+"["+getValueString(key)+"]";
+
+        if(obj instanceof Map)
+        {
+            writer.writeText(prefix + "= new Array();",null);
+
+            Iterator it = ((Map) obj).entrySet().iterator();
+
+            while (it.hasNext())
+            {
+                Map.Entry entry = (Map.Entry) it.next();
+
+                writeArrayElement(writer,prefix,entry.getKey(),entry.getValue());
+            }
+        }
+        else
+        {
+            writer.writeText(prefix + "="+getValueString(obj)+";",null);
+        }
     }
 
     private void writeArrayElement(ResponseWriter writer, String name, int i, Object obj)

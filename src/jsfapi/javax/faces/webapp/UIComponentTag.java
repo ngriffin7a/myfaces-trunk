@@ -15,6 +15,8 @@
  */
 package javax.faces.webapp;
 
+import org.apache.myfaces.renderkit.RendererUtils;
+
 import javax.faces.FacesException;
 import javax.faces.FactoryFinder;
 import javax.faces.application.Application;
@@ -35,6 +37,9 @@ import java.util.*;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.24  2005/03/12 02:15:18  mmarinschek
+ * jsvalueset now supports maps of maps; ui component logging enhanced
+ *
  * Revision 1.23  2004/08/27 12:47:52  manolito
  * automatically assign IDs to facets and children of components that where created by binding
  *
@@ -425,7 +430,9 @@ public abstract class UIComponentTag
                 }
                 else
                 {
-                    throw new FacesException("cannot add component '" + _componentInstance.getId() + "'");
+                    throw new FacesException("cannot add component with id '" +
+                            _componentInstance.getId() + "' and path : "
+                            +RendererUtils.getPathToComponent(_componentInstance)+" to its parent component. This might be a problem due to duplicate ids.");
                 }
             }
             addChildIdToParentTag(parentTag, id);
