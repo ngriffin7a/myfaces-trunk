@@ -7,6 +7,7 @@ Checklist for tasks to be done, when releasing of a new version
 - ant "clean-all"
 - ant "all"
 - upload files to SF
+- update file types (".gz" for examples.tgz and myfaces.tgz, "Source .gz" for src.tgz)
 - add new release at SF
 - switch release to "active" and try out downloading (sometimes downloads where broken in past at SF)
 - deploy the downloaded myfaces-examples.war and test
