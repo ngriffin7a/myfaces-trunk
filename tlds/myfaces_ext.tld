@@ -675,6 +675,17 @@
             </description>
         </attribute>
      </tag>
+     
+    <!-- inputDate -->
+    <tag>
+        <name>inputDate</name>
+        <tag-class>net.sourceforge.myfaces.custom.date.HtmlInputDateTag</tag-class>
+        <body-content>JSP</body-content>
+        &ui_input_attributes;
+        &html_universal_attributes;
+        &html_event_handler_attributes;
+        &html_input_attributes;
+    </tag>
 
     <!-- inputFileUpload -->
     <tag>
@@ -682,7 +693,7 @@
         <tag-class>net.sourceforge.myfaces.custom.fileupload.HtmlInputFileUploadTag</tag-class>
         <body-content>JSP</body-content>
         <description>
-            You must enable O'Reillys MultiPart Filter to make this component
+            You must enable the MultiPart Filter to make this component
             work (see web.xml). Also, don't forget to set the form's attribute
             "enctype" to "multipart/form-data".
             See "examples/web/fileupload.jsp" for an example!

@@ -105,6 +105,11 @@
     <component-type>net.sourceforge.myfaces.HtmlInputCalendar</component-type>
     <component-class>net.sourceforge.myfaces.custom.calendar.HtmlInputCalendar</component-class>
   </component>
+  
+  <component>
+    <component-type>net.sourceforge.myfaces.HtmlInputDate</component-type>
+    <component-class>net.sourceforge.myfaces.custom.date.HtmlInputDate</component-class>
+  </component>
 
   <component>
     <component-type>net.sourceforge.myfaces.HtmlInputFileUpload</component-type>
@@ -298,6 +303,12 @@
             <component-family>javax.faces.Input</component-family>
             <renderer-type>net.sourceforge.myfaces.Calendar</renderer-type>
             <renderer-class>net.sourceforge.myfaces.custom.calendar.HtmlCalendarRenderer</renderer-class>
+        </renderer>
+
+        <renderer>
+            <component-family>javax.faces.Input</component-family>
+            <renderer-type>net.sourceforge.myfaces.Date</renderer-type>
+            <renderer-class>net.sourceforge.myfaces.custom.date.HtmlDateRenderer</renderer-class>
         </renderer>
 
         <renderer>
