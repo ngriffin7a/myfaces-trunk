@@ -44,6 +44,11 @@ public class WebXmlParser
 {
     private static final Log log = LogFactory.getLog(WebXmlParser.class);
 
+    private static final String JAXP_SCHEMA_LANGUAGE =
+        "http://java.sun.com/xml/jaxp/properties/schemaLanguage";
+    private static final String W3C_XML_SCHEMA =
+        "http://www.w3.org/2001/XMLSchema";
+
     private static final String WEB_XML_PATH = "/WEB-INF/web.xml";
     private static final String DEFAULT_ENCODING = "ISO-8859-1";
 
@@ -69,9 +74,11 @@ public class WebXmlParser
         try
         {
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-            dbf.setIgnoringComments(true);
-            dbf.setValidating(true);
             dbf.setIgnoringElementContentWhitespace(true);
+            dbf.setIgnoringComments(true);
+            dbf.setNamespaceAware(true);
+//            dbf.setValidating(true); // Needed false to allow use of version 2.4 spec (there should be a way to do this better)
+//            dbf.setAttribute(JAXP_SCHEMA_LANGUAGE, W3C_XML_SCHEMA);
 
             DocumentBuilder db = dbf.newDocumentBuilder();
             db.setEntityResolver(new _EntityResolver());

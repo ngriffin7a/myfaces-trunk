@@ -19,6 +19,9 @@
 package net.sourceforge.myfaces.config;
 
 import javax.faces.convert.Converter;
+
+import net.sourceforge.myfaces.util.NullIterator;
+
 import java.util.*;
 
 
@@ -41,7 +44,7 @@ public class ConverterConfig implements Config
 
     public Iterator getAttributeNames()
     {
-        return (_attributeConfigMap == null) ? Collections.EMPTY_SET.iterator()
+        return (_attributeConfigMap == null) ? NullIterator.instance()
                                              : _attributeConfigMap.keySet().iterator();
     }
 

@@ -74,11 +74,11 @@ public class ApplicationImpl
     private PropertyResolver     _propertyResolver;
     private ActionListener       _actionListener;
 
-    private final Map _converterMap = new HashMap();
-    private final Map _converterTypeMap = new HashMap();
-    private final Map _componentClassMap = new HashMap();
-
-    private final Map _validatorClassMap = new HashMap();
+    // components, converters, and validators can be added at runtime--must synchronize
+    private final Map _converterMap = Collections.synchronizedMap(new HashMap());
+    private final Map _converterTypeMap = Collections.synchronizedMap(new HashMap());
+    private final Map _componentClassMap = Collections.synchronizedMap(new HashMap());
+    private final Map _validatorClassMap = Collections.synchronizedMap(new HashMap());
 
 
     //~ Constructors -------------------------------------------------------------------------------
@@ -245,28 +245,28 @@ public class ApplicationImpl
         return _viewHandler;
     }
 
-    public void addComponent(String componentType, String componentClassName)
+    public void addComponent(String componentType, String componentClass)
     {
         if ((componentType == null) || (componentType.length() == 0))
         {
             log.error("addComponent: componentType = null is not allowed");
             throw new NullPointerException("addComponent: componentType = null ist not allowed");
         }
-        if ((componentClassName == null) || (componentClassName.length() == 0))
+        if ((componentClass == null) || (componentClass.length() == 0))
         {
             log.error("addComponent: component = null is not allowed");
             throw new NullPointerException("addComponent: component = null is not allowed");
         }
+        
         try
         {
-            Class componentClass = Class.forName(componentClassName);
-            _componentClassMap.put(componentType, componentClass);
-            if (log.isTraceEnabled()) log.trace("add Component class = " + componentClassName +
+            _componentClassMap.put(componentType, Class.forName(componentClass));
+            if (log.isTraceEnabled()) log.trace("add Component class = " + componentClass +
                                                 " for type = " + componentType);
         }
         catch (ClassNotFoundException e)
         {
-            log.error("Component class " + componentClassName + " not found", e);
+            log.error("Component class " + componentClass + " not found", e);
         }
     }
 
@@ -282,11 +282,18 @@ public class ApplicationImpl
             log.error("addConverter: converterClass = null is not allowed");
             throw new NullPointerException("addConverter: converterClass = null ist not allowed");
         }
-        //TODO: Using ConfigUtil here is not nice...
-        Converter converter = (Converter)ConfigUtil.newInstance(converterClass);
-        _converterMap.put(converterId, converter);
-        if (log.isTraceEnabled()) log.trace("add Converter id = " + converterId +
-                                            " converterClass = " + converterClass);
+
+        
+        try
+        {
+            _converterMap.put(converterId, ConfigUtil.classForName(converterClass));
+            if (log.isTraceEnabled()) log.trace("add Converter id = " + converterId +
+                    " converterClass = " + converterClass);
+           }
+        catch (Exception e)
+        {
+            log.error("Converter class " + converterClass + " not found", e);
+        }
     }
 
     public void addConverter(Class targetClass, String converterClass)
@@ -301,10 +308,17 @@ public class ApplicationImpl
             log.error("addConverter: converterClass = null is not allowed");
             throw new NullPointerException("addConverter: converterClass = null ist not allowed");
         }
-        Converter converter = (Converter)ConfigUtil.newInstance(converterClass);
-        _converterTypeMap.put(targetClass, converter);
-        if (log.isTraceEnabled()) log.trace("add Converter targetClass = " + targetClass +
-                                            " converterClass = " + converterClass);
+        
+        try
+        {
+            _converterMap.put(targetClass, ConfigUtil.classForName(converterClass));
+            if (log.isTraceEnabled()) log.trace("add Converter for class = " + converterClass +
+                    " converterClass = " + converterClass);
+        }
+        catch (Exception e)
+        {
+            log.error("Converter class " + converterClass + " not found", e);
+        }
     }
 
     public void addValidator(String validatorId, String validatorClass)
@@ -319,9 +333,17 @@ public class ApplicationImpl
             log.error("addValidator:  validatorClass = null is not allowed");
             throw new NullPointerException("addValidator:  validatorClass = null ist not allowed");
         }
-        _validatorClassMap.put(validatorId, ConfigUtil.classForName(validatorClass));
-        if (log.isTraceEnabled()) log.trace("add Validator id = " + validatorId +
+        
+        try
+        {
+            _validatorClassMap.put(validatorId, ConfigUtil.classForName(validatorClass));
+            if (log.isTraceEnabled()) log.trace("add Validator id = " + validatorId +
                                             " class = " + validatorClass);
+        }
+        catch (Exception e)
+        {
+            log.error("Validator class " + validatorClass + " not found", e);
+        }
     }
 
     public UIComponent createComponent(String componentType)
@@ -332,7 +354,12 @@ public class ApplicationImpl
             log.error("createComponent: componentType = null is not allowed");
             throw new NullPointerException("createComponent: componentType = null is not allowed");
         }
-        Class componentClass = (Class)_componentClassMap.get(componentType);
+        
+        Class componentClass;
+        synchronized (_componentClassMap)
+        {
+            componentClass = (Class) _componentClassMap.get(componentType);
+        }
         if (componentClass == null)
         {
             log.error("Undefined component type " + componentType);
@@ -341,17 +368,12 @@ public class ApplicationImpl
 
         try
         {
-            return (UIComponent)componentClass.newInstance();
+            return (UIComponent) componentClass.newInstance();
         }
-        catch (InstantiationException e)
+        catch (Exception e)
         {
-            log.error("Could not create component componentType = " + componentType, e);
-            throw new FacesException("Could not create component componentType = " + componentType, e);
-        }
-        catch (IllegalAccessException e)
-        {
-            log.error("Could not create component componentType = " + componentType, e);
-            throw new FacesException("Could not create component componentType = " + componentType, e);
+            log.error("Could not instantiate component componentType = " + componentType, e);
+            throw new FacesException("Could not instantiate component componentType = " + componentType, e);
         }
     }
 
@@ -397,13 +419,22 @@ public class ApplicationImpl
             throw new NullPointerException("createConverter: converterId = null ist not allowed");
         }
 
-        Converter converter = (Converter)_converterMap.get(converterId);
-        if (converter == null)
+        Class converterClass = (Class) _converterMap.get(converterId);
+        if (converterClass == null)
         {
             log.error("Unknown converter id '" + converterId + "'.");
             throw new FacesException("Unknown converter id '" + converterId + "'.");
         }
-        return converter;
+
+        try
+        {
+            return (Converter) converterClass.newInstance();
+        }
+        catch (Exception e)
+        {
+            log.error("Could not instantiate converter " + converterClass, e);
+            throw new FacesException("Could not instantiate converter: " + converterClass, e);
+        }
     }
 
     public Converter createConverter(Class targetClass)
@@ -415,19 +446,19 @@ public class ApplicationImpl
         }
 
         // Locate a Converter registered for the target class itself.
-        Converter converter = (Converter)_converterTypeMap.get(targetClass);
+        Class converterClass = (Class)_converterTypeMap.get(targetClass);
 
         //Locate a Converter registered for interfaces that are
         // implemented by the target class (directly or indirectly).
-        if (converter == null)
+        if (converterClass == null)
         {
             Class interfaces[] = targetClass.getInterfaces();
             if (interfaces != null)
             {
                 for (int i = 0; i < interfaces.length; i++)
                 {
-                    converter = (Converter)_converterTypeMap.get(interfaces[i]);
-                    if(converter != null)
+                    converterClass = (Class)_converterTypeMap.get(interfaces[i]);
+                    if(converterClass != null)
                     {
                         break;
                     }
@@ -435,23 +466,28 @@ public class ApplicationImpl
             }
         }
 
-        //Locate a Converter registered for the superclass (if any) of the target class,
-        // recursively working up the inheritance hierarchy.
-        if (converter == null)
+        if (converterClass != null)
         {
-            Class superClazz = targetClass.getSuperclass();
-            if (superClazz != null)
+            try
             {
-                converter = createConverter(superClazz);
+                return (Converter) converterClass.newInstance();
+            }
+            catch (Exception e)
+            {
+                log.error("Could not instantiate converter " + converterClass, e);
+                throw new FacesException("Could not instantiate converter: " + converterClass, e);
             }
         }
 
-        if (converter == null)
+        //Locate a Converter registered for the superclass (if any) of the target class,
+        // recursively working up the inheritance hierarchy.
+        Class superClazz = targetClass.getSuperclass();
+        if (superClazz != null)
         {
-            throw new FacesException("There is no registered converter for class " + targetClass.getName());
+            return createConverter(superClazz);
         }
 
-        return converter;
+        throw new FacesException("There is no registered converter for class " + targetClass.getName());
     }
 
     public synchronized MethodBinding createMethodBinding(String reference, Class[] params)
@@ -477,7 +513,24 @@ public class ApplicationImpl
             log.error("createValidator: validatorId = null is not allowed");
             throw new NullPointerException("createValidator: validatorId = null ist not allowed");
         }
-        return (Validator)_validatorClassMap.get(validatorId);
+        
+        Class validatorClass = (Class) _validatorClassMap.get(validatorId);
+        if (validatorClass == null)
+        {
+            String message = "Unknown converter id '" + validatorId + "'."; 
+            log.error(message);
+            throw new FacesException(message);
+        }
+        
+        try
+        {
+            return (Validator) validatorClass.newInstance();
+        }
+        catch (Exception e)
+        {
+            log.error("Could not instantiate converter " + validatorClass, e);
+            throw new FacesException("Could not instantiate converter: " + validatorClass, e);
+        }
     }
 
     public ValueBinding createValueBinding(String reference) throws ReferenceSyntaxException

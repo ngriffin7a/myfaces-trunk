@@ -18,7 +18,6 @@
  */
 package net.sourceforge.myfaces.config;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -27,9 +26,10 @@ import java.util.Set;
 
 import javax.faces.render.Renderer;
 
+import net.sourceforge.myfaces.util.NullIterator;
+
 
 /**
- * DOCUMENT ME!
  * @author Manfred Geiler (latest modification by $Author$)
  * @author Anton Koinov
  * @version $Revision$ $Date$
@@ -58,7 +58,7 @@ public class RendererConfig implements Config
 
     public Iterator getAttributeNames()
     {
-        return (_attributeConfigMap == null) ? Collections.EMPTY_SET.iterator()
+        return (_attributeConfigMap == null) ? NullIterator.instance()
                                              : _attributeConfigMap.keySet().iterator();
     }
 
@@ -104,7 +104,7 @@ public class RendererConfig implements Config
     {
         if (_supportedComponentClassSet == null)
         {
-            return Collections.EMPTY_SET.iterator();
+            return NullIterator.instance();
         }
 
         final Iterator it = _supportedComponentClassSet.iterator();
@@ -131,7 +131,7 @@ public class RendererConfig implements Config
     {
         if (_supportedComponentTypeSet == null)
         {
-            return Collections.EMPTY_SET.iterator();
+            return NullIterator.instance();
         }
 
         final Iterator it = _supportedComponentTypeSet.iterator();

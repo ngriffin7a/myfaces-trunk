@@ -250,6 +250,7 @@ public class ValueBindingImpl
      * of <code>name</code>, when it is a <code>ValueBinding</code> expression
      * </p>
      *
+     * @param facesContext the current context to resolve against
      * @param base the bean, which property would be to accessed
      * @param name the property/index to access, will be coerced to String or Integer
      *        as needed

@@ -1,4 +1,4 @@
-/**
+/*
  * MyFaces - the free JSF implementation
  * Copyright (C) 2003, 2004  The MyFaces Team (http://myfaces.sourceforge.net)
  *
@@ -21,6 +21,7 @@ package net.sourceforge.myfaces.renderkit.html;
 import net.sourceforge.myfaces.renderkit.JSFAttr;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLEncoder;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLUtil;
+import net.sourceforge.myfaces.util.NullIterator;
 import net.sourceforge.myfaces.util.bundle.BundleUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -30,7 +31,6 @@ import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 import java.io.IOException;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -107,7 +107,7 @@ extends HTMLRenderer
             {
                 log.warn("Attribute 'for' of component '" + uiComponent.getClientId(facesContext)
                          + "' references unknown component '" + forAttr + "'.");
-                it = Collections.EMPTY_SET.iterator();
+                it = NullIterator.instance();
             }
 
             renderSingleComponentErrors(writer, uiComponent, it);

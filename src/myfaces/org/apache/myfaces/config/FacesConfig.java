@@ -22,7 +22,6 @@ import net.sourceforge.myfaces.renderkit.html.jspinfo.TLDInfo;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import javax.faces.FacesException;
 import javax.faces.FactoryFinder;
 import javax.faces.application.Application;
 import javax.faces.application.ApplicationFactory;
@@ -454,29 +453,12 @@ public class FacesConfig
 
     private void completeRendererAttributesByTagInfo(TagInfo tagInfo)
     {
-        Tag tag = null;
-        try
-        {
-            Class tagClass = Class.forName(tagInfo.getTagClassName(), true, Thread.currentThread().getContextClassLoader());
-            tag = (Tag)tagClass.newInstance();
-        }
-        catch (ClassNotFoundException e)
-        {
-            throw new FacesException(e);
-        }
-        catch (InstantiationException e)
-        {
-            throw new FacesException(e);
-        }
-        catch (IllegalAccessException e)
-        {
-            throw new FacesException(e);
-        }
-
+        Tag tag = (Tag) ConfigUtil.newInstance(tagInfo.getTagClassName());
         if (!(tag instanceof UIComponentTag))
         {
             return;
         }
+
         String rendererType = ((UIComponentTag)tag).getRendererType();
         TagAttributeInfo[] tagAttributeInfos = tagInfo.getAttributes();
 

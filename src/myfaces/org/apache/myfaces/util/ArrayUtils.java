@@ -23,7 +23,8 @@ import java.lang.reflect.Array;
 
 /**
  * Utility class for managing arrays
- * @author Anton Koinov
+ * 
+ * @author Anton Koinov (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
 public class ArrayUtils
