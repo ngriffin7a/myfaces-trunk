@@ -18,7 +18,10 @@ package org.apache.myfaces.custom.htmlEditor;
 import javax.faces.context.FacesContext;
 import javax.faces.el.ValueBinding;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.myfaces.component.html.ext.HtmlInputText;
+import org.apache.myfaces.renderkit.RendererUtils;
 
 /**
  * HTML Editor using the kupu library.
@@ -27,6 +30,9 @@ import org.apache.myfaces.component.html.ext.HtmlInputText;
  * @author Sylvain Vieujot (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.14  2005/01/02 20:39:16  svieujot
+ * HtmlEditor can now process HTML documents and HTML fragments.
+ *
  * Revision 1.13  2004/12/24 13:21:50  matzew
  * organized imports
  *
@@ -71,8 +77,12 @@ public class HtmlEditor extends HtmlInputText {
 
     private static final String DEFAULT_RENDERER_TYPE = "org.apache.myfaces.HtmlEditor";
     
+    private static final Log log = LogFactory.getLog(HtmlInputText.class);
+    
     private String _style;
     private String _styleClass;
+    
+    private String _type;
     
     private Boolean _allowEditSource;
     private Boolean _addKupuLogo;
@@ -94,7 +104,7 @@ public class HtmlEditor extends HtmlInputText {
     }
 
     public Object saveState(FacesContext context) {
-        Object values[] = new Object[5];
+        Object values[] = new Object[6];
         values[0] = super.saveState(context);
         
         String[] display = new String[2];
@@ -103,11 +113,13 @@ public class HtmlEditor extends HtmlInputText {
         
         values[1] = display;
         
+        values[2] = _type;
+        
         Boolean toolBarButtons[] = new Boolean[2];
         toolBarButtons[0] = _allowEditSource;
         toolBarButtons[1] = _addKupuLogo;
         
-        values[2] = toolBarButtons;
+        values[3] = toolBarButtons;
         
         Boolean toolBoxes[] = new Boolean[5];
         toolBoxes[0] = _showPropertiesToolBox;
@@ -116,12 +128,12 @@ public class HtmlEditor extends HtmlInputText {
         toolBoxes[3] = _showTablesToolBox;
         toolBoxes[4] = _showDebugToolBox;
         
-        values[3] = toolBoxes;
+        values[4] = toolBoxes;
         
         Boolean tools[] = new Boolean[1];
         tools[0] = _enableFlexiTools;
         
-        values[4] = tools;
+        values[5] = tools;
         
         return values;
     }
@@ -134,18 +146,20 @@ public class HtmlEditor extends HtmlInputText {
         _style = display[0];
         _styleClass = display[1];
         
-        Boolean[] toolBarButtons = (Boolean[]) values[2];
+        _type = (String) values[2];
+        
+        Boolean[] toolBarButtons = (Boolean[]) values[3];
         _allowEditSource = toolBarButtons[0];
         _addKupuLogo = toolBarButtons[1];
         
-        Boolean[] toolBoxes = (Boolean[]) values[3];
+        Boolean[] toolBoxes = (Boolean[]) values[4];
         _showPropertiesToolBox = toolBoxes[0];
         _showLinksToolBox = toolBoxes[1];
         _showImagesToolBox = toolBoxes[2];
         _showTablesToolBox = toolBoxes[3];
         _showDebugToolBox = toolBoxes[4];
         
-        Boolean[] tools = (Boolean[]) values[4];
+        Boolean[] tools = (Boolean[]) values[5];
         _enableFlexiTools = tools[0];
     }
     
@@ -167,6 +181,19 @@ public class HtmlEditor extends HtmlInputText {
     }
     public void setStyleClass(String styleClass){
    		this._styleClass = styleClass;
+    }
+    
+    public String getType(){
+        if (_type != null)
+            return _type;
+        ValueBinding vb = getValueBinding("type");
+        return vb != null ? (String)vb.getValue(getFacesContext()) : "fragment";
+    }
+    public void setType(String _type){
+        this._type = _type;
+    }
+    public boolean isTypeDocument(){
+        return getType().equals("document");
     }
     
     public Boolean isAllowEditSource(){
@@ -252,5 +279,65 @@ public class HtmlEditor extends HtmlInputText {
     }
     public void setEnableFlexiTools(boolean formularMode){
         this._enableFlexiTools = Boolean.valueOf(formularMode);
+    }
+    
+    public String getValueAsHtmlDocument(FacesContext context){
+        String val = RendererUtils.getStringValue(context, this);
+        if( isHtmlDocument( val ) )
+            return val;
+        
+        return "<html><body>"+(val==null ? "" : val)+"</body></html>";
+    }
+    
+    private static boolean isHtmlDocument(String text){
+        if( text == null )
+            return false;
+        
+        if( text.indexOf("<body>")!=-1 || text.indexOf("<body ")!=-1
+            || text.indexOf("<BODY>")!=-1 || text.indexOf("<BODY ")!=-1 )
+            return true;
+        
+        return false;
+    }
+    
+    public String getValueFromDocument(String text){
+        if( isTypeDocument() )
+            return text;
+        
+        if( !isHtmlDocument(text) )
+            return text;
+        
+        // Extract the fragment from the document.
+        String lcText = text.toLowerCase();
+        int textLength = lcText.length();
+        int bodyStartIndex = 0;
+        while(bodyStartIndex < textLength){
+            bodyStartIndex = lcText.indexOf("<body");
+            if( bodyStartIndex == -1 )
+                break; // not found.
+            
+            bodyStartIndex += 5;
+            char c = lcText.charAt(bodyStartIndex);
+            if( c=='>' ){
+                break;
+            }
+            
+            if( c!=' ' && c!='\t' )
+                continue;
+            
+            bodyStartIndex = lcText.indexOf('>', bodyStartIndex);
+        }
+        bodyStartIndex++;
+        
+        int bodyEndIndex = lcText.lastIndexOf("</body>")-1;
+        
+        if( bodyStartIndex<0 || bodyEndIndex<0
+           || bodyStartIndex > bodyEndIndex
+           || bodyStartIndex>=textLength || bodyEndIndex>=textLength ){
+            log.warn("Couldn't extract HTML body from :\n"+text);
+            return text;
+        }
+        
+        return text.substring(bodyStartIndex, bodyEndIndex+1);
     }
 }

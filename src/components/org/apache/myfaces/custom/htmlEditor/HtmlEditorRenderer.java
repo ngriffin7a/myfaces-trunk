@@ -36,6 +36,9 @@ import org.apache.myfaces.renderkit.html.util.JavascriptUtils;
  * @author Sylvain Vieujot (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.17  2005/01/02 20:39:16  svieujot
+ * HtmlEditor can now process HTML documents and HTML fragments.
+ *
  * Revision 1.16  2004/12/27 04:11:11  mmarinschek
  * Data Table stores the state of facets of children; script tag is rendered with type attribute instead of language attribute, popup works better as a column in a data table
  *
@@ -95,9 +98,9 @@ public class HtmlEditorRenderer extends HtmlRenderer {
         return ((HtmlEditor)uiComponent).isDisabled();
     }
     
-    public void encodeEnd(FacesContext context, UIComponent component) throws IOException {
-        RendererUtils.checkParamValidity(context, component, HtmlEditor.class);
-        HtmlEditor editor = (HtmlEditor) component;
+    public void encodeEnd(FacesContext context, UIComponent uiComponent) throws IOException {
+        RendererUtils.checkParamValidity(context, uiComponent, HtmlEditor.class);
+        HtmlEditor editor = (HtmlEditor) uiComponent;
         String clientId = editor.getClientId(context);
         String formId;
         {
@@ -899,8 +902,7 @@ public class HtmlEditorRenderer extends HtmlRenderer {
             
         writer.endElement(HTML.DIV_ELEM); // kupu-fulleditor
         
-        String value = RendererUtils.getStringValue(context, editor);
-        String text = "<html><body>"+(value==null ? "" : value)+"</body></html>";
+        String text = editor.getValueAsHtmlDocument( context );
         String encodedText = text == null ? "" : JavascriptUtils.encodeString( text );
         
         boolean formularMode = editor.isEnableFlexiTools();
@@ -980,8 +982,8 @@ public class HtmlEditorRenderer extends HtmlRenderer {
     
     public Object getConvertedValue(FacesContext facesContext, UIComponent uiComponent, Object submittedValue) throws ConverterException {
         RendererUtils.checkParamValidity(facesContext, uiComponent, HtmlEditor.class);
-        return RendererUtils.getConvertedUIOutputValue(facesContext,
-                                                       (UIOutput)uiComponent,
-                                                       submittedValue);
+        HtmlEditor editor = (HtmlEditor) uiComponent;
+        String submittedDocument = (String) RendererUtils.getConvertedUIOutputValue(facesContext, editor, submittedValue);
+        return editor.getValueFromDocument( submittedDocument );
     }
 }

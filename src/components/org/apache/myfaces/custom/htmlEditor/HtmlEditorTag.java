@@ -24,6 +24,9 @@ import org.apache.myfaces.taglib.UIComponentTagBase;
  * @author Sylvain Vieujot (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.9  2005/01/02 20:39:16  svieujot
+ * HtmlEditor can now process HTML documents and HTML fragments.
+ *
  * Revision 1.8  2004/12/10 02:16:26  svieujot
  * Start implementing UserRoleAware.
  *
@@ -53,6 +56,7 @@ public class HtmlEditorTag extends UIComponentTagBase {
     private String style;
     private String styleClass;
     
+    private String type;
     private String formularMode;
     
     private String allowEditSource;
@@ -73,6 +77,7 @@ public class HtmlEditorTag extends UIComponentTagBase {
         setStringProperty(component, "style", style);
         setStringProperty(component, "styleClass", styleClass);
         
+        setBooleanProperty(component, "type", type);
         setBooleanProperty(component, "formularMode", formularMode);
         
         setBooleanProperty(component, "allowEditSource", allowEditSource);
@@ -102,6 +107,10 @@ public class HtmlEditorTag extends UIComponentTagBase {
     
     public void setStyleClass(String styleClass){
         this.styleClass = styleClass;
+    }
+
+    public void setType(String type){
+        this.type = type;
     }
     
     public void setFormularMode(String formularMode){

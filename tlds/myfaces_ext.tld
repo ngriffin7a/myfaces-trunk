@@ -855,6 +855,15 @@
             <rtexprvalue>false</rtexprvalue>
         </attribute>
         <attribute>
+	        <name>type</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
+            <description>
+            	The type of the value. It can be either fragment for an HTML fragment (default)
+            	or document for a full HTML document, with head, title, body, ... tags.
+            </description>
+        </attribute>
+        <attribute>
 	        <name>formularMode</name>
             <required>false</required>
             <rtexprvalue>false</rtexprvalue>
