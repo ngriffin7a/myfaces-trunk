@@ -7,6 +7,7 @@ Changes in Release 1.0.2 alpha
 * custom message and messages component with new attributes summaryFormat and detailFormat
 * replaced com.oreilly.servlet lib cos.jar by commons-codec for Base64 encoding
 * fileupload component now uses commons-fileupload instead of com.oreilly.servlet lib cos.jar
+* new tree component
 * Weblogic startup issue now fixed when MyFacesServlet is used instead of FacesServlet
 * validator attribute now supported
 * many many bugfixes

@@ -24,6 +24,7 @@ import net.sourceforge.myfaces.config.FacesConfigFactory;
 import net.sourceforge.myfaces.config.NavigationCaseConfig;
 import net.sourceforge.myfaces.config.NavigationRuleConfig;
 import net.sourceforge.myfaces.util.HashMapUtils;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -37,10 +38,13 @@ import java.io.IOException;
 import java.util.*;
 
 /**
- * DOCUMENT ME!
  * @author Thomas Spiegl (latest modification by $Author$)
  * @author Anton Koinov
  * @version $Revision$ $Date$
+ * $Log$
+ * Revision 1.24  2004/04/26 11:28:16  manolito
+ * global navigation-rule with no from-view-id NPE bug
+ *
  */
 public class NavigationHandlerImpl
     extends NavigationHandler
@@ -49,8 +53,8 @@ public class NavigationHandlerImpl
 
     private static final String ASTERISK = "*";
     
-    private static Map _cazes;
-    private static List _wildcardKeys = new ArrayList();
+    private Map _cazes = null;
+    private List _wildcardKeys = new ArrayList();
 
     public NavigationHandlerImpl()
     {
@@ -191,6 +195,17 @@ public class NavigationHandlerImpl
                 int sizej = cazes.size();
 
                 String fromViewId = rule.getFromViewId();
+
+                //specification 7.4.2 footnote 4 - missing fromViewId is allowed:
+                if (fromViewId == null)
+                {
+                    fromViewId = ASTERISK;
+                }
+                else
+                {
+                    fromViewId = fromViewId.trim();
+                }
+
                 List list = (List)_cazes.get(fromViewId);
                 if (list == null)
                 {

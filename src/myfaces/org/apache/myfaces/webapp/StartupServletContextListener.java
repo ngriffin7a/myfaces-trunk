@@ -40,6 +40,9 @@ import javax.servlet.ServletContextListener;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.20  2004/04/26 11:28:17  manolito
+ * global navigation-rule with no from-view-id NPE bug
+ *
  * Revision 1.19  2004/04/16 13:21:39  manolito
  * Weblogic startup issue
  *
@@ -67,15 +70,14 @@ public class StartupServletContextListener
             {
                 log.trace("Initializing MyFaces");
 
-                //TODO: Add default factories to FactoryFinder before parsing config!
-
+                //Load the configuration
                 ExternalContext externalContext = new ServletExternalContextImpl(servletContext,
                                                                                  null,
                                                                                  null);
-
                 FacesConfigFactory fcf = MyFacesFactoryFinder.getFacesConfigFactory(externalContext);
                 FacesConfig facesConfig = fcf.getFacesConfig(externalContext);
 
+                //And configure everything
                 new FacesConfigurator(facesConfig, externalContext).configure();
 
                 // parse web.xml
