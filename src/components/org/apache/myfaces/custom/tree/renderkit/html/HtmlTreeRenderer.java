@@ -37,6 +37,9 @@ import java.util.List;
  * @author <a href="mailto:oliver@rossmueller.com">Oliver Rossmueller</a>
  * @version $Revision$ $Date$
  *          $Log$
+ *          Revision 1.9  2004/07/18 21:36:25  o_rossmueller
+ *          fix #991740: getResourceURL for tree image urls
+ *
  *          Revision 1.8  2004/07/01 21:53:10  mwessendorf
  *          ASF switch
  *
@@ -249,17 +252,17 @@ public class HtmlTreeRenderer
         throws IOException
     {
         writer.startElement(HTML.IMG_ELEM, child);
-        String src;
-        if (url.startsWith(HTML.HREF_PATH_SEPARATOR))
-        {
-            String path = facesContext.getExternalContext().getRequestContextPath();
-            src = path + url;
-        } else
-        {
-            src = url;
-        }
-        //Encode URL
-        src = facesContext.getExternalContext().encodeResourceURL(src);
+        String src =facesContext.getApplication().getViewHandler().getResourceURL(facesContext, url);
+//        if (url.startsWith(HTML.HREF_PATH_SEPARATOR))
+//        {
+//            String path = facesContext.getExternalContext().getRequestContextPath();
+//            src = path + url;
+//        } else
+//        {
+//            src = url;
+//        }
+//        //Encode URL
+//        src = facesContext.getExternalContext().encodeResourceURL(src);
         writer.writeAttribute(HTML.SRC_ATTR, src, null);
         writer.writeAttribute(HTML.BORDER_ATTR, ZERO, null);
 
