@@ -9,6 +9,7 @@ Changes in Release 1.0.7 beta
 * new Autoscroll feature (restores horizontal and vertical browser page scrolling)
 * new previousRowDataVar attribute in extended HtmlDataTable (see tld description)
 * Japanese translation
+* fixed problems with nested UIData and HtmlDataTable components
 * writeText method in default ResponseWriter now maps newlines to <br/> and
   successive spaces to &nbsp; entities
 * corrected some problems with rowIndexVar and rowCountVar in HtmlDataList

@@ -27,6 +27,7 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
@@ -34,6 +35,9 @@ import java.util.List;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.26  2004/09/13 15:59:44  manolito
+ * fixed problems with nested UIData and HtmlDataTable components
+ *
  * Revision 1.25  2004/07/01 22:00:50  mwessendorf
  * ASF switch
  *
@@ -64,7 +68,6 @@ public class UIData
     private static final Integer INTEGER_MINUS1 = new Integer(-1);
     
     private int _rowIndex = -1;
-    private DataModel _dataModel;
     private String _var = null;
     private Object[] _descendantStates;
     private int _descendantEditableValueHolderCount = -1;
@@ -74,6 +77,11 @@ public class UIData
 
     //Flag to detect if component is rendered for the first time (restoreState sets it to false)
     transient private boolean _firstTimeRendered = true;
+
+    private Boolean _isEmbeddedUIData = null;
+    private UIData _embeddingUIData = null;
+    private DataModel _dataModel = null;
+    private HashMap _dataModelMap = null;
 
 
     public void setFooter(UIComponent footer)
@@ -415,7 +423,9 @@ public class UIData
         if (_firstTimeRendered || isAllChildrenAndFacetsValid())
         {
             _saveDescendantStates = false; // no need to save children states
-            _dataModel = null;  //Refresh DataModel for rendering
+            //Refresh DataModel for rendering:
+            _dataModel = null;
+            if (_dataModelMap != null) _dataModelMap.clear();
         }
         else
         {
@@ -610,41 +620,109 @@ public class UIData
 
     private DataModel getDataModel()
     {
-        if (_dataModel == null)
+        UIData embeddingUIData = getEmbeddingUIData();
+        if (embeddingUIData != null)
         {
-            Object value = getValue();
-            if (value == null)
+            //This UIData is nested in another UIData, so we must not
+            //do simple caching of the current DataModel. We must associate
+            //the DataModel that we want to cache with the clientId of the
+            //embedding UIData. This clientId will be different for every
+            //row of the embedding UIData.
+            if (_dataModelMap == null)
             {
-                _dataModel = EMPTY_DATA_MODEL;
+                _dataModelMap = new HashMap();
             }
-            else if (value instanceof DataModel)
+            String embeddingClientId = embeddingUIData.getClientId(FacesContext.getCurrentInstance());
+            DataModel dataModel = (DataModel) _dataModelMap.get(embeddingClientId);
+            if (dataModel == null)
             {
-                _dataModel = (DataModel)value;
+                dataModel = createDataModel();
+                _dataModelMap.put(embeddingClientId, dataModel);
             }
-            else if (value instanceof List)
+            return dataModel;
+        }
+        else
+        {
+            //This UIData is not nested within another UIData. So there
+            //is no need for the DataModel Map.
+            if (_dataModel == null)
             {
-                _dataModel = new ListDataModel((List)value);
+                _dataModel = createDataModel();
             }
-            else if (OBJECT_ARRAY_CLASS.isAssignableFrom(value.getClass()))
+            return _dataModel;
+        }
+    }
+
+    /**
+     * Creates a new DataModel around the current value.
+     */
+    private DataModel createDataModel()
+    {
+        Object value = getValue();
+        if (value == null)
+        {
+            return EMPTY_DATA_MODEL;
+        }
+        else if (value instanceof DataModel)
+        {
+            return (DataModel)value;
+        }
+        else if (value instanceof List)
+        {
+            return new ListDataModel((List)value);
+        }
+        else if (OBJECT_ARRAY_CLASS.isAssignableFrom(value.getClass()))
+        {
+            return new ArrayDataModel((Object[])value);
+        }
+        else if (value instanceof ResultSet)
+        {
+            return new ResultSetDataModel((ResultSet)value);
+        }
+        else if (value instanceof Result)
+        {
+            return new ResultDataModel((Result)value);
+        }
+        else
+        {
+            return new ScalarDataModel(value);
+        }
+    }
+
+    /**
+     * Looks for an embedding UIData component
+     * @return the embedding UIData or null
+     */
+    private UIData getEmbeddingUIData()
+    {
+        if (_isEmbeddedUIData == null)
+        {
+            UIComponent findParentUIData = getParent();
+            while (findParentUIData != null &&
+                   !(findParentUIData instanceof UIData))
             {
-                _dataModel = new ArrayDataModel((Object[])value);
+                findParentUIData = findParentUIData.getParent();
             }
-            else if (value instanceof ResultSet)
+            if (findParentUIData != null)
             {
-                _dataModel = new ResultSetDataModel((ResultSet)value);
-            }
-            else if (value instanceof Result)
-            {
-                _dataModel = new ResultDataModel((Result)value);
+                _embeddingUIData = (UIData)findParentUIData;
+                _isEmbeddedUIData = Boolean.TRUE;
             }
             else
             {
-                _dataModel = new ScalarDataModel(value);
+                _isEmbeddedUIData = Boolean.FALSE;
             }
         }
-        return _dataModel;
-    }
 
+        if (_isEmbeddedUIData.booleanValue())
+        {
+            return _embeddingUIData;
+        }
+        else
+        {
+            return null;
+        }
+    }
 
 
     private static class FacesEventWrapper

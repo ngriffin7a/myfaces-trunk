@@ -103,7 +103,7 @@ managed beans used:
                                 styleClass="standardTable_Column"
                                 var="city"
                                 value="#{country.cities}"
-                                preserveDataModel="false" >
+                                preserveDataModel="false">
                            <h:column>
                                <h:outputText value="#{city}" style="font-size: 11px" />
                            </h:column>

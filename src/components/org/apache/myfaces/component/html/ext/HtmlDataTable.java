@@ -17,7 +17,6 @@ package net.sourceforge.myfaces.component.html.ext;
 
 import net.sourceforge.myfaces.component.UserRoleAware;
 import net.sourceforge.myfaces.component.UserRoleUtils;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -40,6 +39,9 @@ import java.util.Map;
  * @author Manfred Geiler
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.14  2004/09/13 15:59:44  manolito
+ * fixed problems with nested UIData and HtmlDataTable components
+ *
  * Revision 1.13  2004/09/10 14:15:00  manolito
  * new previousRowDataVar attribute in extended HtmlDataTable
  *
@@ -84,9 +86,6 @@ public class HtmlDataTable
     private static final Class OBJECT_ARRAY_CLASS = (new Object[0]).getClass();
 
     private transient boolean _isDataModelRestored = false;
-    //private transient DataModel _dataModel;
-    //transient private _SerializableDataModel _restoredDataModel = null;
-    //transient private Object _cachedValue = null;
 
     //Flag to detect if component is rendered for the first time (restoreState sets it to false)
     transient private boolean _firstTimeRendered = true;
@@ -334,6 +333,7 @@ public class HtmlDataTable
             // No invalid children
             // --> clear data model
             _dataModel = null;
+            if (_dataModelMap != null) _dataModelMap.clear();
             _isDataModelRestored = false;
 
             _saveDescendantStates = false; // no need to save children states
