@@ -17,6 +17,12 @@
     </managed-bean>
 
     <managed-bean>
+        <managed-bean-name>validateForm</managed-bean-name>
+        <managed-bean-class>net.sourceforge.myfaces.examples.validate.ValidateForm</managed-bean-class>
+        <managed-bean-scope>request</managed-bean-scope>        
+    </managed-bean>
+
+    <managed-bean>
         <managed-bean-name>ucaseForm</managed-bean-name>
         <managed-bean-class>net.sourceforge.myfaces.examples.example1.UCaseForm</managed-bean-class>
         <managed-bean-scope>request</managed-bean-scope>
@@ -206,12 +212,25 @@
             <to-view-id>/copyright.jsp</to-view-id>
         </navigation-case>
 
+        <navigation-case>
+            <from-outcome>go_validate</from-outcome>
+            <to-view-id>/validate.jsp</to-view-id>
+        </navigation-case>        
+
     </navigation-rule>
 
     <navigation-rule>
         <from-view-id>/sample1.jsp</from-view-id>
         <navigation-case>
             <from-outcome>jump_home</from-outcome>
+            <to-view-id>/home.jsp</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    
+     <navigation-rule>
+        <from-view-id>/validate.jsp</from-view-id>
+        <navigation-case>
+            <from-outcome>valid</from-outcome>
             <to-view-id>/home.jsp</to-view-id>
         </navigation-case>
     </navigation-rule>
