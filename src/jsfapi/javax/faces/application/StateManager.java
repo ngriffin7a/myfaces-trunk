@@ -77,7 +77,7 @@ public abstract class StateManager
     }
 
 
-    public class SerializedView implements Serializable
+    public class SerializedView
     {
         private Object _structure;
         private Object _state;

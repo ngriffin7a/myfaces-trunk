@@ -32,6 +32,7 @@ import javax.faces.render.RenderKitFactory;
 import javax.faces.render.ResponseStateManager;
 import java.io.IOException;
 
+
 /**
  * Default StateManager implementation.
  * @author Thomas Spiegl (latest modification by $Author$)
@@ -41,6 +42,9 @@ import java.io.IOException;
  * @author Manfred Geiler
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.22  2005/01/18 07:03:15  matzew
+ * added patch form Sean Schofield to solve state saving issue on server side. (MyFaces-81)
+ *
  * Revision 1.21  2004/10/13 11:50:59  matze
  * renamed packages to org.apache
  *
@@ -324,25 +328,21 @@ public class JspStateManagerImpl
     {
         // TODO: What, if user has more than one browser window open on the same page?!
         // only the state of the latest accessed window will be stored at the moment
-        externalContext.getSessionMap().put(SERIALIZED_VIEW_SESSION_ATTR + "-" + viewId,
-                                            new Object[] {viewId, serializedView});
+        Object sv[] = new Object[] {serializedView.getStructure(), serializedView.getState()};
+        externalContext.getSessionMap().put(SERIALIZED_VIEW_SESSION_ATTR + "-" + viewId, sv);
     }
     
     protected SerializedView getSerializedViewFromServletSession(ExternalContext externalContext,
                                                                  String viewId)
     {
-        Object[] ar = (Object[])externalContext.getSessionMap().get(SERIALIZED_VIEW_SESSION_ATTR + "-" + viewId);
-        if (ar == null) return null;    // no state information in session
-        String savedViewId = (String)ar[0];
-        if (viewId == null || viewId.equals(savedViewId))
+        String key = SERIALIZED_VIEW_SESSION_ATTR + "-" + viewId;
+        if (externalContext.getSessionMap().get(key) == null)
         {
-            return (SerializedView)ar[1];
+            return null; // no state information in session
         }
-        else
-        {
-            //saved state applies to different viewId
-            return null;
-        }
+
+        Object sv[] = (Object[])externalContext.getSessionMap().get(key);
+        return new SerializedView(sv[0], sv[1]);
     }
 
     protected void removeSerializedViewFromServletSession(ExternalContext externalContext, String viewId)
