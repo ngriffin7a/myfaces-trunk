@@ -33,6 +33,9 @@ import org.apache.myfaces.renderkit.html.util.JavascriptUtils;
  * @author Sylvain Vieujot (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.5  2004/12/04 00:20:00  svieujot
+ * htmlEditor : Add a formular mode, and more sensible defaults.
+ *
  * Revision 1.4  2004/12/03 21:59:09  svieujot
  * Initial set of htmlEditor attributes.
  *
@@ -852,13 +855,18 @@ public class HtmlEditorRenderer extends Renderer {
             AddResource.addInlineStyleToHeader(largeEditorStyle, context);
         }
         
-        String text = (String) editor.getValue();
+        String text = "<html><body>"+(String) editor.getValue()+"</body></html>";
         String encodedText = text == null ? "" : JavascriptUtils.encodeString( text );
+        
+        Boolean formularMode = editor.isEnableFlexiTools();
+        
+        if( formularMode.booleanValue() )
+            AddResource.addJavaScriptToHeader(HtmlEditorRenderer.class, "flexitools/flexitools.js", context);
         
         AddResource.addJavaScriptToHeader(HtmlEditorRenderer.class, "myFacesUtils.js", context);
         writer.startElement(HTML.SCRIPT_ELEM, null);
         writer.writeAttribute(HTML.SCRIPT_LANGUAGE_ATTR, HTML.SCRIPT_LANGUAGE_JAVASCRIPT, null);
-        	writer.write("myFacesKupuSet(\""+encodedText+"\",\""+clientId+"\",\""+formId+"\");");
+        	writer.write("myFacesKupuSet(\""+encodedText+"\",\""+clientId+"\",\""+formId+"\","+formularMode+");");
         writer.endElement(HTML.SCRIPT_ELEM);
     }
     

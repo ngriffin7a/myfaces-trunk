@@ -23,6 +23,9 @@ import org.apache.myfaces.taglib.UIComponentTagBase;
  * @author Sylvain Vieujot (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.3  2004/12/04 00:20:00  svieujot
+ * htmlEditor : Add a formular mode, and more sensible defaults.
+ *
  * Revision 1.2  2004/12/03 21:59:09  svieujot
  * Initial set of htmlEditor attributes.
  *
@@ -32,6 +35,8 @@ import org.apache.myfaces.taglib.UIComponentTagBase;
  *
  */
 public class HtmlEditorTag extends UIComponentTagBase {
+    
+    private String formularMode;
     
     private String allowEditSource;
     
@@ -43,7 +48,9 @@ public class HtmlEditorTag extends UIComponentTagBase {
     
     protected void setProperties(UIComponent component) {
         super.setProperties(component);
-
+        
+        setBooleanProperty(component, "formularMode", formularMode);
+        
         setBooleanProperty(component, "allowEditSource", allowEditSource);
         
         setBooleanProperty(component, "showPropertiesToolBox", showPropertiesToolBox);
@@ -59,6 +66,10 @@ public class HtmlEditorTag extends UIComponentTagBase {
 
     public String getRendererType() {
         return "org.apache.myfaces.HtmlEditor";
+    }
+    
+    public void setFormularMode(String formularMode){
+        this.formularMode = formularMode;
     }
 
     public void setAllowEditSource(String allowEditSource){

@@ -26,6 +26,9 @@ import javax.faces.el.ValueBinding;
  * @author Sylvain Vieujot (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.3  2004/12/04 00:20:00  svieujot
+ * htmlEditor : Add a formular mode, and more sensible defaults.
+ *
  * Revision 1.2  2004/12/03 21:59:09  svieujot
  * Initial set of htmlEditor attributes.
  *
@@ -46,6 +49,8 @@ public class HtmlEditor extends UIInput {
     private Boolean _showImagesToolBox;
     private Boolean _showTablesToolBox;
     private Boolean _showDebugToolBox;
+    
+    private Boolean _enableFlexiTools; // Formular mode
 
     public HtmlEditor() {
         setRendererType(DEFAULT_RENDERER_TYPE);
@@ -56,7 +61,7 @@ public class HtmlEditor extends UIInput {
     }
 
     public Object saveState(FacesContext context) {
-        Object values[] = new Object[3];
+        Object values[] = new Object[4];
         values[0] = super.saveState(context);
         
         Boolean toolBarButtons[] = new Boolean[1];
@@ -72,6 +77,11 @@ public class HtmlEditor extends UIInput {
         toolBoxes[4] = _showDebugToolBox;
         
         values[2] = toolBoxes;
+        
+        Boolean tools[] = new Boolean[1];
+        tools[0] = _enableFlexiTools;
+        
+        values[3] = tools;
         
         return values;
     }
@@ -89,6 +99,9 @@ public class HtmlEditor extends UIInput {
         _showImagesToolBox = toolBoxes[2];
         _showTablesToolBox = toolBoxes[3];
         _showDebugToolBox = toolBoxes[4];
+        
+        Boolean[] tools = (Boolean[]) values[3];
+        _enableFlexiTools = tools[0];
     }
     
     public Boolean isAllowEditSource(){
@@ -100,25 +113,25 @@ public class HtmlEditor extends UIInput {
     public Boolean isShowPropertiesToolBox(){
    		if (_showPropertiesToolBox != null) return _showPropertiesToolBox;
     		ValueBinding vb = getValueBinding("showPropertiesToolBox");
-   		return vb != null ? (Boolean)vb.getValue(getFacesContext()) : Boolean.TRUE;
+   		return vb != null ? (Boolean)vb.getValue(getFacesContext()) : Boolean.FALSE;
     }
     
     public Boolean isShowLinksToolBox(){
    		if (_showLinksToolBox != null) return _showLinksToolBox;
     		ValueBinding vb = getValueBinding("showLinksToolBox");
-   		return vb != null ? (Boolean)vb.getValue(getFacesContext()) : Boolean.TRUE;
+   		return vb != null ? (Boolean)vb.getValue(getFacesContext()) : Boolean.FALSE;
     }
     
     public Boolean isShowImagesToolBox(){
    		if (_showImagesToolBox != null) return _showImagesToolBox;
     		ValueBinding vb = getValueBinding("showImagesToolBox");
-   		return vb != null ? (Boolean)vb.getValue(getFacesContext()) : Boolean.TRUE;
+   		return vb != null ? (Boolean)vb.getValue(getFacesContext()) : Boolean.FALSE;
     }
     
     public Boolean isShowTablesToolBox(){
    		if (_showTablesToolBox != null) return _showTablesToolBox;
     		ValueBinding vb = getValueBinding("showTablesToolBox");
-   		return vb != null ? (Boolean)vb.getValue(getFacesContext()) : Boolean.TRUE;
+   		return vb != null ? (Boolean)vb.getValue(getFacesContext()) : Boolean.FALSE;
     }
     
     public Boolean isShowDebugToolBox(){
@@ -133,5 +146,11 @@ public class HtmlEditor extends UIInput {
    			|| isShowImagesToolBox().booleanValue()
    			|| isShowTablesToolBox().booleanValue()
    			|| isShowDebugToolBox().booleanValue();
+    }
+    
+    public Boolean isEnableFlexiTools(){
+   		if (_enableFlexiTools != null) return _enableFlexiTools;
+    		ValueBinding vb = getValueBinding("formularMode");
+   		return vb != null ? (Boolean)vb.getValue(getFacesContext()) : Boolean.FALSE;
     }
 }

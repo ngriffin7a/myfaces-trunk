@@ -21,12 +21,14 @@
 var myFacesKupuTextToLoad;
 var myFacesKupuClientId;
 var myFacesKupuFormId;
+var myFacesKupuEnableFlexiTools;
 var myFacesKupuOriginalDocOnSubmit;
 
-function myFacesKupuSet(text, clientId, formId){
+function myFacesKupuSet(text, clientId, formId, enableFlexiTools){
 	myFacesKupuTextToLoad = text;
 	myFacesKupuClientId = clientId;
 	myFacesKupuFormId = formId;
+	myFacesKupuEnableFlexiTools = enableFlexiTools;
 	
 	var onLoadSrc;
     if( document.all ) // IE
@@ -47,6 +49,10 @@ function myFacesKupuInit(){
 		myFacesKupuOriginalDocOnLoad();
 
 	kupu = startKupu();
+	if( myFacesKupuEnableFlexiTools ){
+		var myfxWritable = new fxWritable();
+		kupu.registerTool('fxWritable', myfxWritable);
+	}
 	kupu.getInnerDocument().documentElement.getElementsByTagName('body')[0].innerHTML = myFacesKupuTextToLoad;
 }
 

@@ -21,24 +21,40 @@ package org.apache.myfaces.examples.htmleditorexample;
  */
 public class EditorFace {
     
-    private String text ="default text";
+    private String text =
+        "This is a Form where you can enter your name and Job.<br/>" +
+        "Only those fields are editable.<br/>" +
+        "<p><span><u>Name</u> : [ </span><span editable=\"yes\">_________</span><span> ]</span></p>" +
+        "<p><span><u>Job</u> : [ </span><span editable=\"yes\">_________</span> ]</span></p>" +
+        "<br/>" +
+        "<p><i>To edit the all document, disable the <b>formular mode</b> bellow.</i></p>" +
+        "<br/>" +
+        "<p><i>Note : formular isn't the default mode, but this is just for the demonstration.</i></p>";
+    
+    private boolean formularMode = true;
     
     // Options
     private boolean allowEditSource = true;
-    private boolean showPropertiesToolBox = true;
-    private boolean showLinksToolBox = true;
-    private boolean showImagesToolBox = true;
-    private boolean showTablesToolBox = true;
+    private boolean showPropertiesToolBox = false;
+    private boolean showLinksToolBox = false;
+    private boolean showImagesToolBox = false;
+    private boolean showTablesToolBox = false;
     private boolean showDebugToolBox = false;
 
     public String getText() {
         return text;
     }
-
     public void setText(String text) {
         this.text = text;
     }
     
+    public boolean isFormularMode() {
+        return formularMode;
+    }
+    public void setFormularMode(boolean formularMode) {
+        this.formularMode = formularMode;
+    }
+
     public boolean isAllowEditSource() {
         return allowEditSource;
     }

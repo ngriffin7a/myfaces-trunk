@@ -54,11 +54,12 @@
 
 				<h:form>
 					<f:verbatim>
-						<h1>Html Editor powered by the Kupu library</h1>
-						See <a href="http://kupu.oscom.org">http://kupu.oscom.org</a>
+						<h1>Html Editor</h1>
+						Powered by the <a href="http://kupu.oscom.org">Kupu library</a>
 					</f:verbatim>
 
 					<x:htmlEditor value="#{editor.text}"
+						formularMode="#{editor.formularMode}"
 						allowEditSource="#{editor.allowEditSource}"
 						showPropertiesToolBox="#{editor.showPropertiesToolBox}"
 						showLinksToolBox="#{editor.showLinksToolBox}"
@@ -71,6 +72,9 @@
 						<h2>Component Options</h2>
 					</f:verbatim>
 					<h:panelGrid columns="2">
+						<h:selectBooleanCheckbox value="#{editor.formularMode}" immediate="true"/>
+						<h:outputText value="Formular mode"/>
+
 						<h:selectBooleanCheckbox value="#{editor.allowEditSource}" immediate="true"/>
 						<h:outputText value="Allow Edit Source"/>
 
