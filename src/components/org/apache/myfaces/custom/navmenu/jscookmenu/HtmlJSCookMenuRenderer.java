@@ -24,6 +24,7 @@ import net.sourceforge.myfaces.el.SimpleActionMethodBinding;
 import net.sourceforge.myfaces.renderkit.RendererUtils;
 import net.sourceforge.myfaces.renderkit.html.HtmlRenderer;
 import net.sourceforge.myfaces.renderkit.html.util.DummyFormUtils;
+import net.sourceforge.myfaces.renderkit.html.util.DummyFormResponseWriter;
 
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
@@ -39,6 +40,9 @@ import java.util.Map;
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  *          $Log$
+ *          Revision 1.4  2004/06/25 10:58:43  royalts
+ *          fixed bug 979038
+ *
  *          Revision 1.3  2004/06/23 14:17:31  royalts
  *          no message
  *
@@ -91,7 +95,10 @@ public class HtmlJSCookMenuRenderer
         List list = NavigationMenuUtils.getNavigationMenuItemList(component);
         if (list.size() > 0)
         {
-            DummyFormUtils.getDummyFormResponseWriter(context).addDummyFormParameter(JSCOOK_ACTION_PARAM);
+            DummyFormResponseWriter dummyFormResponseWriter = DummyFormUtils.getDummyFormResponseWriter(context);
+            dummyFormResponseWriter.addDummyFormParameter(JSCOOK_ACTION_PARAM);
+            dummyFormResponseWriter.setWriteDummyForm(true);
+
             ResponseWriter writer = context.getResponseWriter();
 
             writer.write("\n<script language=\"JavaScript\"><!--\n" +
