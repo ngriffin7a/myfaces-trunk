@@ -4,6 +4,7 @@ MyFaces Release Notes
 ----------------------------------------------------------------------
 Changes in Release 1.0.6 beta
 * switch to apache license
+* bug #992452 HtmlTree doesn't properly restore state
 * bug #991740 HtmlTreeRender icon URL conversion
 * bug #991234 command links not working with javascript disabled
 * bug #990395 myfaces.jar has bad taglib descriptor
