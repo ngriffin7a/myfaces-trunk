@@ -1,6 +1,6 @@
 
 // directory of where all the images are
-var cmThemeOfficeBase = '/~heng/JSCookMenu/ThemeOffice/';
+var cmThemeOfficeBase = 'jscookmenu/ThemeOffice/';
 
 var cmThemeOffice =
 {

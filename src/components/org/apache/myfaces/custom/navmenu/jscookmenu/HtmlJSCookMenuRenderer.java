@@ -39,6 +39,9 @@ import java.util.Map;
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  *          $Log$
+ *          Revision 1.3  2004/06/23 14:17:31  royalts
+ *          no message
+ *
  *          Revision 1.2  2004/06/23 13:50:18  royalts
  *          no message
  *
@@ -138,7 +141,7 @@ public class HtmlJSCookMenuRenderer
         String menuId = component.getId() + "_menu";
         writer.write("<div id=" + menuId + "></div>\n" +
                      "<script language=\"JavaScript\"><!--\n" +
-                     "\tcmDraw ('" + menuId + "', myMenu, 'hbr', cm" + menu.getTheme() + ", '" + menu.getTheme() + "');\n" +
+                     "\tcmDraw ('" + menuId + "', myMenu, '" + menu.getLayout() + "', cm" + menu.getTheme() + ", '" + menu.getTheme() + "');\n" +
                      "--></script>\n");
     }
 
