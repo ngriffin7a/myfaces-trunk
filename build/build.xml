@@ -300,6 +300,8 @@
                         includes="**/resource/**"/>
             <fileset    dir="${components.src}"
                         includes="**/*.properties"/>
+            <fileset    dir="${components.classes}"
+                        includes="**/*.properties"/>
         </jar>
 
     </target>

@@ -12,7 +12,7 @@ Changes in Release 1.0.9
 * improvements for tree2 component from Sean Schofield
 * added caching to the ExtensionsFilter
 * rename x:htmlEditor to x:inputHtml
-* add a fallback textarea mode to inputHtml
+* added fallback textarea mode to inputHtml
 * added crosstable component (x:columns)
 * closed MYFACES-38 in Jira
 * closed MYFACES-85 in Jira
@@ -47,6 +47,7 @@ Changes in Release 1.0.9
 * closed MYFACES-128 in Jira
 * closed MYFACES-132 in Jira
 * closed MYFACES-138 in Jira
+* closed MYFACES-153 in Jira
 ----------------------------------------------------------------------
 Changes in Release 1.0.8 beta_RC2
 * added a new RenderKit, that renders WML. Thanks to Jiri Zaloudek for his contribution
