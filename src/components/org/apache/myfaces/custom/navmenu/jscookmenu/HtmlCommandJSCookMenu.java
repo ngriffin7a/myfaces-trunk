@@ -29,6 +29,9 @@ import javax.faces.context.FacesContext;
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  *          $Log$
+ *          Revision 1.2  2004/06/23 14:35:18  royalts
+ *          no message
+ *
  *          Revision 1.1  2004/06/23 13:44:31  royalts
  *          no message
  *
@@ -56,6 +59,11 @@ public class HtmlCommandJSCookMenu
     public String getFamily()
     {
         return COMPONENT_FAMILY;
+    }
+
+    public boolean isImmediate()
+    {
+        return true;
     }
 
     public void setLayout(String layout)
