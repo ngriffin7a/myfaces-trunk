@@ -30,5 +30,20 @@ public class UIColumn
         extends UIComponentBase
 {
     //------------------ GENERATED CODE BEGIN (do not modify!) --------------------
+
+    public static final String COMPONENT_TYPE = "javax.faces.Column";
+    public static final String COMPONENT_FAMILY = "javax.faces.Column";
+
+
+    public UIColumn()
+    {
+    }
+
+    public String getFamily()
+    {
+        return COMPONENT_FAMILY;
+    }
+
+
     //------------------ GENERATED CODE END ---------------------------------------
 }

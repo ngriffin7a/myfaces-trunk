@@ -665,7 +665,7 @@ public class UIData
         values[1] = _first;
         values[2] = _rows;
         values[3] = _value;
-        return ((Object)(values));
+        return ((Object) (values));
     }
 
     public void restoreState(FacesContext context, Object state)
