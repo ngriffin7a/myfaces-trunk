@@ -42,18 +42,20 @@
     </path>
 
 
-    <target name="cactus" depends="-war">
+    <target name="cactus" depends="war">
         <antcall target="tomcat-deploy-app"/>
-        <antcall target="-tomcat-cactus-tests"/>
+        <antcall target="tomcat-cactus-tests"/>
         <antcall target="tomcat-undeploy-app"/>
     </target>
 
 	<target name="clean"
-            description="deletes all files that were built">
+            description="deletes all files that were built and tries to undeploy webapp">
 		<delete dir="${cactus.results.dir}"/>
 		<delete dir="${cactus.classes.dir}"/>
 		<delete file="${tests.jar}"/>
 		<delete file="${tests.war}"/>
+		<delete file="${project.dir}/build/cactus-webapp/TESTS-TestSuites.xml"/>
+        <antcall target="tomcat-undeploy-app"/>
     </target>
 
 
@@ -70,13 +72,13 @@
     	<jar basedir="${cactus.classes.dir}" destfile="${tests.jar}"/>
     </target>
 
-    <target name="-war" depends="-compile"
+    <target name="war" depends="-compile"
             description="creates the test war file">
         <tstamp>
             <format property="TODAY" pattern="yyyy-MM-dd HH:mm" locale="en"/>
         </tstamp>
         <war destfile="${tests.war}"
-             webxml="${project.dir}/build/cactus-webapp/web.xml">
+             webxml="${cactus.web.dir}/WEB-INF/web.xml">
             <manifest>
                 <section name="myfaces.sourceforge.net">
                     <attribute name="Implementation-Title" value="MyFaces - Cactus Tests"/>
@@ -98,15 +100,16 @@
                 <exclude name="cactus-ant-1.5.jar"/>
                 <exclude name="commons-logging-1.0.3.jar"/>
             </lib>
-            <fileset dir="${cactus.web.dir}"/>
+            <fileset dir="${cactus.web.dir}"
+                     excludes="**/WEB-INF/web.xml" />
         </war>
     </target>
 
-	<target name="-tomcat-cactus-tests" depends="-war"
+	<target name="tomcat-cactus-tests" depends="war"
             description="run the cactus tests">
         <mkdir dir="${cactus.results.dir}/test-reports/xml"/>
         <mkdir dir="${cactus.results.dir}/test-reports/html"/>
-        <junit fork="true">
+        <junit fork="false">
             <classpath refid="cactus.class.path"/>
       	    <classpath>
               <pathelement path="${basedir}"/>

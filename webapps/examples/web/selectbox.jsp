@@ -80,6 +80,8 @@ managed beans used:
                             <f:selectItems value="#{carconf.extrasList}" />
                         </h:selectManyCheckbox>
 
+                        <h:selectBooleanCheckbox
+
                         <f:verbatim>&nbsp;</f:verbatim>
                         <h:panelGroup >
                             <h:selectOneRadio id="r1" value="#{carconf.discount}" layout="pageDirection" >
