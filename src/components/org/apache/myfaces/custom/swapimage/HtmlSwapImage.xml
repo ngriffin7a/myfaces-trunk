@@ -13,6 +13,10 @@
         <type>java.lang.String</type>
     </field>
     <field>
+        <name>activeImageUrl</name>
+        <type>java.lang.String</type>
+    </field>
+    <field>
         <name>alt</name>
         <type>java.lang.String</type>
     </field>

@@ -27,6 +27,7 @@ import javax.faces.event.ActionEvent;
 import javax.faces.event.FacesEvent;
 import javax.faces.event.PhaseId;
 import java.util.Iterator;
+import java.util.List;
 
 /**
  * Command, that represents a navigation item.
@@ -135,7 +136,7 @@ public class HtmlCommandNavigation
             }
             // p is now the HtmlPanelNavigation
 
-            if (getChildCount() == 0)
+            if (!hasCommandNavigationChildren())
             {
                 //item is an end node --> deactivate all other nodes, and then...
                 if (!(p instanceof HtmlPanelNavigation))
@@ -156,6 +157,23 @@ public class HtmlCommandNavigation
                 setOpen(true);
             }
         }
+    }
+
+    private boolean hasCommandNavigationChildren()
+    {
+        if (getChildCount() == 0)
+        {
+            return false;
+        }
+        List list = getChildren();
+        for (int i = 0, sizei = list.size(); i < sizei; i++)
+        {
+            if (list.get(i) instanceof HtmlCommandNavigation)
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
 

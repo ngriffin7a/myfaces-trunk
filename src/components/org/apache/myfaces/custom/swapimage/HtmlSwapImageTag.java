@@ -23,6 +23,9 @@ import javax.faces.component.UIComponent;
  * @author Thomas Spiegl
  * @version $Revision$ $Date$
  *          $Log$
+ *          Revision 1.2  2005/01/09 21:56:33  tomsp
+ *          added new component swapimage
+ *
  *          Revision 1.1  2005/01/09 12:36:58  tomsp
  *          added new component swapimage
  *
@@ -33,6 +36,7 @@ public class HtmlSwapImageTag
     private static final String RENDERER_TYPE = "org.apache.myfaces.SwapImage";
 
     private String _swapImageUrl;
+    private String _activeImageUrl;
 
     public String getComponentType()
     {
@@ -49,11 +53,17 @@ public class HtmlSwapImageTag
         super.setProperties(component);
 
         ((HtmlSwapImage) component).setSwapImageUrl(_swapImageUrl);
+        ((HtmlSwapImage) component).setActiveImageUrl(_activeImageUrl);
     }
 
     public void setSwapImageUrl(String swapImageUrl)
     {
         _swapImageUrl = swapImageUrl;
+    }
+
+    public void setActiveImageUrl(String activeImageUrl)
+    {
+        _activeImageUrl = activeImageUrl;
     }
 
     public void setOnmouseover(String onmouseover)

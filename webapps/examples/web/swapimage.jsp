@@ -51,7 +51,7 @@ managed beans used:
         </f:facet>
 
         <f:facet name="navigation">
-            <f:subview id="menu" >
+            <f:subview id="menu">
                 <jsp:include page="inc/navigation.jsp" />
             </f:subview>
         </f:facet>

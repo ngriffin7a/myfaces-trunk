@@ -23,6 +23,7 @@ import org.apache.myfaces.renderkit.RendererUtils;
 import org.apache.myfaces.renderkit.html.HTML;
 import org.apache.myfaces.renderkit.html.HtmlRenderer;
 import org.apache.myfaces.renderkit.html.HtmlRendererUtils;
+import org.apache.myfaces.custom.navigation.HtmlCommandNavigation;
 
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIGraphic;
@@ -34,6 +35,9 @@ import java.io.IOException;
  * @author Thomas Spiegl
  * @version $Revision$ $Date$
  *          $Log$
+ *          Revision 1.2  2005/01/09 21:56:33  tomsp
+ *          added new component swapimage
+ *
  *          Revision 1.1  2005/01/09 12:36:58  tomsp
  *          added new component swapimage
  *
@@ -50,13 +54,20 @@ public class HtmlSwapImageRenderer
 
         ResponseWriter writer = facesContext.getResponseWriter();
 
-        AddResource.addJavaScriptToHeader(
-                HtmlSwapImage.class, "swapimage.js", true, facesContext);
+        AddResource.addJavaScriptToHeader(HtmlSwapImage.class, "swapimage.js", facesContext);
 
         String url;
         if (uiComponent instanceof HtmlSwapImage)
         {
-            url = ((HtmlSwapImage)uiComponent).getUrl();
+            if (uiComponent.getParent() instanceof HtmlCommandNavigation)
+            {
+                url = ((HtmlCommandNavigation) uiComponent.getParent()).isActive() ?
+                    ((HtmlSwapImage) uiComponent).getActiveImageUrl() : ((HtmlSwapImage)uiComponent).getUrl();
+            }
+            else
+            {
+                url = ((HtmlSwapImage)uiComponent).getUrl();
+            }
         }
         else
         {

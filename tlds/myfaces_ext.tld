@@ -1901,6 +1901,15 @@
 				the url of the image displayed onmouseover
             </description>
         </attribute>
+        <attribute>
+            <name>activeImageUrl</name>
+            <required>true</required>
+            <rtexprvalue>false</rtexprvalue>
+            <description>
+				activeImage will be rendered if: swapImage is a direct child of commandNavigation
+                and the commandNavigation.isActive
+            </description>
+        </attribute>
         &ui_graphic_attributes;
         &html_universal_attributes;
         &html_img_attributes;

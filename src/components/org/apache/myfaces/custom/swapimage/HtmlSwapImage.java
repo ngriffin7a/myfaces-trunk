@@ -25,6 +25,9 @@ import javax.faces.context.FacesContext;
  * @author Thomas Spiegl
  * @version $Revision$ $Date$
  *          $Log$
+ *          Revision 1.2  2005/01/09 21:56:33  tomsp
+ *          added new component swapimage
+ *
  *          Revision 1.1  2005/01/09 12:36:58  tomsp
  *          added new component swapimage
  *
@@ -40,6 +43,7 @@ public class HtmlSwapImage extends UIGraphic
     private static final boolean DEFAULT_ISMAP = false;
 
     private String _swapImageUrl = null;
+    private String _activeImageUrl = null;
     private String _alt = null;
     private String _dir = null;
     private String _height = null;
@@ -76,6 +80,18 @@ public class HtmlSwapImage extends UIGraphic
     {
         if (_swapImageUrl != null) return _swapImageUrl;
         ValueBinding vb = getValueBinding("swapImageUrl");
+        return vb != null ? (String)vb.getValue(getFacesContext()) : null;
+    }
+
+    public void setActiveImageUrl(String activeImageUrl)
+    {
+        _activeImageUrl = activeImageUrl;
+    }
+
+    public String getActiveImageUrl()
+    {
+        if (_activeImageUrl != null) return _activeImageUrl;
+        ValueBinding vb = getValueBinding("activeImageUrl");
         return vb != null ? (String)vb.getValue(getFacesContext()) : null;
     }
 
@@ -281,25 +297,26 @@ public class HtmlSwapImage extends UIGraphic
 
     public Object saveState(FacesContext context)
     {
-        Object values[] = new Object[18];
+        Object values[] = new Object[19];
         values[0] = super.saveState(context);
         values[1] = _swapImageUrl;
-        values[2] = _alt;
-        values[3] = _dir;
-        values[4] = _height;
-        values[5] = _ismap;
-        values[6] = _lang;
-        values[7] = _longdesc;
-        values[8] = _onclick;
-        values[9] = _ondblclick;
-        values[10] = _onkeydown;
-        values[11] = _onkeypress;
-        values[12] = _onkeyup;
-        values[13] = _style;
-        values[14] = _styleClass;
-        values[15] = _title;
-        values[16] = _usemap;
-        values[17] = _width;
+        values[2] = _activeImageUrl;
+        values[3] = _alt;
+        values[4] = _dir;
+        values[5] = _height;
+        values[6] = _ismap;
+        values[7] = _lang;
+        values[8] = _longdesc;
+        values[9] = _onclick;
+        values[10] = _ondblclick;
+        values[11] = _onkeydown;
+        values[12] = _onkeypress;
+        values[13] = _onkeyup;
+        values[14] = _style;
+        values[15] = _styleClass;
+        values[16] = _title;
+        values[17] = _usemap;
+        values[18] = _width;
         return ((Object) (values));
     }
 
@@ -308,22 +325,23 @@ public class HtmlSwapImage extends UIGraphic
         Object values[] = (Object[])state;
         super.restoreState(context, values[0]);
         _swapImageUrl = (String)values[1];
-        _alt = (String)values[2];
-        _dir = (String)values[3];
-        _height = (String)values[4];
-        _ismap = (Boolean)values[5];
-        _lang = (String)values[6];
-        _longdesc = (String)values[7];
-        _onclick = (String)values[8];
-        _ondblclick = (String)values[9];
-        _onkeydown = (String)values[10];
-        _onkeypress = (String)values[11];
-        _onkeyup = (String)values[12];
-        _style = (String)values[13];
-        _styleClass = (String)values[14];
-        _title = (String)values[15];
-        _usemap = (String)values[16];
-        _width = (String)values[17];
+        _activeImageUrl = (String)values[2];
+        _alt = (String)values[3];
+        _dir = (String)values[4];
+        _height = (String)values[5];
+        _ismap = (Boolean)values[6];
+        _lang = (String)values[7];
+        _longdesc = (String)values[8];
+        _onclick = (String)values[9];
+        _ondblclick = (String)values[10];
+        _onkeydown = (String)values[11];
+        _onkeypress = (String)values[12];
+        _onkeyup = (String)values[13];
+        _style = (String)values[14];
+        _styleClass = (String)values[15];
+        _title = (String)values[16];
+        _usemap = (String)values[17];
+        _width = (String)values[18];
     }
     //------------------ GENERATED CODE END ---------------------------------------
 }
