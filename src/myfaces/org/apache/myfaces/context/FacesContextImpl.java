@@ -424,7 +424,7 @@ public class FacesContextImpl
             return;
         }
 
-        //FINAL: request scope as default - not yet specified in JSF Spec.
+        //TODO: request scope as default? - not yet specified in JSF Spec.
         _servletrequest.setAttribute(modelId, modelObj);
     }
 

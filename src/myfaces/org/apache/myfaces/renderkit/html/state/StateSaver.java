@@ -238,7 +238,7 @@ public class StateSaver
 
         // Save all attributes, that are set in the parsed tree
         // but not in the current tree (= removed attributes).
-        // Save them by means of a special dummy value
+        // Save them by means of a special null dummy value
         if (parsedComp != null)
         {
             for (Iterator parsedCompIt = parsedComp.getAttributeNames(); parsedCompIt.hasNext();)
@@ -274,25 +274,20 @@ public class StateSaver
                                    CommonComponentAttributes.VALID_ATTR,
                                    Boolean.FALSE,
                                    null);
+            visitedAttributes.add(CommonComponentAttributes.VALID_ATTR);
         }
 
-
-        /*
-        TODO: save currentValue and restore model value on restore ?
-        Saving the currentValue for an UIOutput has side-effects!
-        The value is restored, although it was null. currentValue then wont
-        function properly, because it always would return the local value!
-
-        if (!valueSeen
-        && !isIgnoreValue(comp))
+        if (!visitedAttributes.contains(CommonComponentAttributes.VALUE_ATTR) &&
+            uiComponent.getModelReference() != null &&
+            !UIComponentUtils.isTransient(uiComponent))
         {
-        Object currValue = comp.currentValue(facesContext);
-        if (currValue != null)
-        {
-        saveComponentValue(facesContext, stateMap, comp, currValue);
+            saveComponentAttribute(facesContext,
+                                   stateMap,
+                                   uiComponent,
+                                   CommonComponentAttributes.VALUE_ATTR,
+                                   uiComponent.currentValue(facesContext),
+                                   null);
         }
-        }
-        */
     }
 
 
