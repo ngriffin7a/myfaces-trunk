@@ -1409,7 +1409,6 @@
         &ui_panel_attributes;
         &html_universal_attributes;
         &html_event_handler_attributes;
-        &html_table_attributes;
         &user_role_attributes;
         <attribute>
             <name>collapsed</name>
