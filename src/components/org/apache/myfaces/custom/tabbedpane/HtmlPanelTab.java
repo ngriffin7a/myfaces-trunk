@@ -19,6 +19,8 @@ import javax.faces.component.html.HtmlPanelGroup;
 import javax.faces.context.FacesContext;
 import javax.faces.el.ValueBinding;
 
+import org.apache.myfaces.component.UserRoleUtils;
+
 /**
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
@@ -27,6 +29,7 @@ public class HtmlPanelTab
         extends HtmlPanelGroup
 {
     //private static final Log log = LogFactory.getLog(HtmlPanelTab.class);
+
 
     //------------------ GENERATED CODE BEGIN (do not modify!) --------------------
 
@@ -74,4 +77,13 @@ public class HtmlPanelTab
         _label = (String)values[1];
     }
     //------------------ GENERATED CODE END ---------------------------------------
+
+
+    public boolean isRendered()
+    {
+        if (!UserRoleUtils.isVisibleOnUserRole(this)) {
+            return false;
+        }
+        return super.isRendered();
+    }
 }

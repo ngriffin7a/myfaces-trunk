@@ -58,6 +58,7 @@ public class HtmlPanelTabbedPaneTag
     private String _width;
     private String _activeTabStyleClass;
     private String _inactiveTabStyleClass;
+    private String _disabledTabStyleClass;
     private String _activeSubStyleClass;
     private String _inactiveSubStyleClass;
     private String _tabContentStyleClass;
@@ -84,6 +85,7 @@ public class HtmlPanelTabbedPaneTag
         setStringProperty(component, HTML.WIDTH_ATTR, _width);
         setStringProperty(component, "activeTabStyleClass", _activeTabStyleClass);
         setStringProperty(component, "inactiveTabStyleClass", _inactiveTabStyleClass);
+        setStringProperty(component, "disabledTabStyleClass", _disabledTabStyleClass);
         setStringProperty(component, "activeSubStyleClass", _activeSubStyleClass);
         setStringProperty(component, "inactiveSubStyleClass", _inactiveSubStyleClass);
         setStringProperty(component, "tabContentStyleClass", _tabContentStyleClass);
@@ -184,4 +186,17 @@ public class HtmlPanelTabbedPaneTag
     {
         _tabContentStyleClass = tabContentStyleClass;
     }
+
+
+    public String getDisabledTabStyleClass()
+    {
+        return _disabledTabStyleClass;
+    }
+
+
+    public void setDisabledTabStyleClass(String disabledTabStyleClass)
+    {
+        this._disabledTabStyleClass = disabledTabStyleClass;
+    }
+
 }

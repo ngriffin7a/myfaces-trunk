@@ -27,6 +27,9 @@ import javax.faces.event.FacesEvent;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.8  2004/11/26 14:29:12  oros
+ * bug fix #1006636: VisibleOnUserRole attribute for x:panelTab tag
+ *
  * Revision 1.7  2004/10/13 11:50:58  matze
  * renamed packages to org.apache
  *
@@ -121,6 +124,7 @@ public class HtmlPanelTabbedPane
     private String _bgcolor = null;
     private String _activeTabStyleClass = null;
     private String _inactiveTabStyleClass = null;
+    private String _disabledTabStyleClass = null;
     private String _activeSubStyleClass = null;
     private String _inactiveSubStyleClass = null;
     private String _tabContentStyleClass = null;
@@ -221,10 +225,21 @@ public class HtmlPanelTabbedPane
     }
 
 
+    public String getDisabledTabStyleClass()
+    {
+        return _disabledTabStyleClass;
+    }
+
+
+    public void setDisabledTabStyleClass(String disabledTabStyleClass)
+    {
+        this._disabledTabStyleClass = disabledTabStyleClass;
+    }
+
 
     public Object saveState(FacesContext context)
     {
-        Object values[] = new Object[9];
+        Object values[] = new Object[10];
         values[0] = super.saveState(context);
         values[1] = _selectedIndex;
         values[2] = _bgcolor;
@@ -234,6 +249,7 @@ public class HtmlPanelTabbedPane
         values[6] = _activeSubStyleClass;
         values[7] = _inactiveSubStyleClass;
         values[8] = _tabContentStyleClass;
+        values[9] = _disabledTabStyleClass;
         return ((Object) (values));
     }
 
@@ -249,6 +265,7 @@ public class HtmlPanelTabbedPane
         _activeSubStyleClass = (String)values[6];
         _inactiveSubStyleClass = (String)values[7];
         _tabContentStyleClass = (String)values[8];
+        _disabledTabStyleClass = (String)values[9];
     }
     //------------------ GENERATED CODE END ---------------------------------------
 }

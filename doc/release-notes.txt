@@ -9,6 +9,7 @@ Changes in Release 1.0.8 beta
 * i18n support for Brazilian Portuguese; thanks to Rogerio Pereira
 * bug fix #1045363 New <br> and &nbsp; 'feature'
 * bug fix MYFACES-9: store iconChildMiddle in component state
+* bug fix #1006636 VisibleOnUserRole attribute for x:panelTab tag
 * refactor the jar files :
   - myfaces-jsf-api.jar contains the api classes (no change)
   - myfaces-impl.jar contains the standard jsf implementation

@@ -30,6 +30,10 @@
         <type>java.lang.String</type>
     </field>
     <field>
+        <name>disabledTabStyleClass</name>
+        <type>java.lang.String</type>
+    </field>
+    <field>
         <name>activeSubStyleClass</name>
         <type>java.lang.String</type>
     </field>

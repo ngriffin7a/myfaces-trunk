@@ -19,6 +19,7 @@ import org.apache.myfaces.renderkit.RendererUtils;
 import org.apache.myfaces.renderkit.html.HTML;
 import org.apache.myfaces.renderkit.html.HtmlRenderer;
 import org.apache.myfaces.renderkit.html.HtmlRendererUtils;
+import org.apache.myfaces.component.UserRoleUtils;
 
 import javax.faces.application.ViewHandler;
 import javax.faces.component.NamingContainer;
@@ -34,6 +35,9 @@ import java.util.Map;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.7  2004/11/26 14:29:12  oros
+ * bug fix #1006636: VisibleOnUserRole attribute for x:panelTab tag
+ *
  * Revision 1.6  2004/10/13 11:50:58  matze
  * renamed packages to org.apache
  *
@@ -105,6 +109,9 @@ public class HtmlTabbedPaneRenderer
     private static final String BUTTON_STYLE_INACTIVE
         = "border-style:none; width:100%; cursor:pointer; background-color:#CCCCCC;";
 
+    private static final String BUTTON_STYLE_DISABLED
+        = "border-style:none; width:100%; cursor:normal;";
+
     private static final String DEFAULT_BG_COLOR = "#FFFFFF";
 
     private static final String AUTO_FORM_SUFFIX = ".autoform";
@@ -162,7 +169,7 @@ public class HtmlTabbedPaneRenderer
                 if (child.isRendered())
                 {
                     writeHeaderCell(writer, facesContext, tabbedPane,
-                                    (HtmlPanelTab)child, tabIdx, tabIdx == selectedIndex);
+                                    (HtmlPanelTab)child, tabIdx, tabIdx == selectedIndex, isDisabled(facesContext, child));
                     if (tabIdx == selectedIndex)
                     {
                         visibleTabSelectedIdx = visibleTabCount;
@@ -186,7 +193,7 @@ public class HtmlTabbedPaneRenderer
         //Sub header cells
         HtmlRendererUtils.writePrettyLineSeparator(facesContext);
         writer.startElement(HTML.TR_ELEM, uiComponent);
-        writeSubHeaderCells(writer,  facesContext, tabbedPane, visibleTabCount, visibleTabSelectedIdx);
+        writeSubHeaderCells(writer,  facesContext, tabbedPane, visibleTabCount, visibleTabSelectedIdx, false);
         HtmlRendererUtils.writePrettyLineSeparator(facesContext);
         writer.endElement(HTML.TR_ELEM);
 
@@ -291,7 +298,8 @@ public class HtmlTabbedPaneRenderer
                                    HtmlPanelTabbedPane tabbedPane,
                                    HtmlPanelTab tab,
                                    int tabIndex,
-                                   boolean active)
+                                   boolean active,
+                                   boolean disabled)
         throws IOException
     {
         HtmlRendererUtils.writePrettyLineSeparator(facesContext);
@@ -305,6 +313,13 @@ public class HtmlTabbedPaneRenderer
 
             HtmlRendererUtils.renderHTMLAttribute(writer, tabbedPane, "activeTabStyleClass", HTML.STYLE_CLASS_ATTR);
         }
+        else if (disabled)
+        {
+            writer.writeAttribute(HTML.STYLE_ATTR,
+                                  INACTIVE_HEADER_CELL_STYLE,
+                                  null);
+            HtmlRendererUtils.renderHTMLAttribute(writer, tabbedPane, "disabledTabStyleClass", HTML.STYLE_CLASS_ATTR);
+        }
         else
         {
             writer.writeAttribute(HTML.STYLE_ATTR,
@@ -313,34 +328,40 @@ public class HtmlTabbedPaneRenderer
             HtmlRendererUtils.renderHTMLAttribute(writer, tabbedPane, "inactiveTabStyleClass", HTML.STYLE_CLASS_ATTR);
         }
 
-        //Button
-        writer.startElement(HTML.INPUT_ELEM, tabbedPane);
-        writer.writeAttribute(HTML.TYPE_ATTR, "submit", null);
-        writer.writeAttribute(HTML.NAME_ATTR, tabbedPane.getClientId(facesContext) + "." + tabIndex, null);
 
         String label = tab.getLabel();
         if (label == null || label.length() == 0)
         {
             label = "Tab " + tabIndex;
         }
-        writer.writeAttribute(HTML.VALUE_ATTR, label, null);
 
+        if (disabled) {
+            writer.startElement(HTML.LABEL_ELEM, tabbedPane);
+            writer.writeAttribute(HTML.NAME_ATTR, tabbedPane.getClientId(facesContext) + "." + tabIndex, null);
+            writer.writeAttribute(HTML.STYLE_ATTR, BUTTON_STYLE_DISABLED, null);
+            writer.writeText(label, null);
+            writer.endElement(HTML.LABEL_ELEM);
+        } else {
+            //Button
+            writer.startElement(HTML.INPUT_ELEM, tabbedPane);
+            writer.writeAttribute(HTML.TYPE_ATTR, "submit", null);
+            writer.writeAttribute(HTML.NAME_ATTR, tabbedPane.getClientId(facesContext) + "." + tabIndex, null);
+            writer.writeAttribute(HTML.VALUE_ATTR, label, null);
 
-
-        if (active)
-        {
-            writer.writeAttribute(HTML.STYLE_ATTR,
-                                  BUTTON_STYLE_ACTIVE + "background-color:" + tabbedPane.getBgcolor(),
-                                  null);
+            if (active)
+            {
+                writer.writeAttribute(HTML.STYLE_ATTR,
+                    BUTTON_STYLE_ACTIVE + "background-color:" + tabbedPane.getBgcolor(),
+                    null);
+            }
+            else
+            {
+                writer.writeAttribute(HTML.STYLE_ATTR,
+                    BUTTON_STYLE_INACTIVE,
+                    null);
+            }
+            writer.endElement(HTML.INPUT_ELEM);
         }
-        else
-        {
-            writer.writeAttribute(HTML.STYLE_ATTR,
-                                  BUTTON_STYLE_INACTIVE,
-                                  null);
-        }
-        writer.endElement(HTML.INPUT_ELEM);
-
         writer.endElement(HTML.TD_ELEM);
     }
 
@@ -349,7 +370,8 @@ public class HtmlTabbedPaneRenderer
                                        FacesContext facesContext,
                                        HtmlPanelTabbedPane tabbedPane,
                                        int visibleTabCount,
-                                       int visibleTabSelectedIndex)
+                                       int visibleTabSelectedIndex,
+                                       boolean disabled)
             throws IOException
     {
         StringBuffer buf = new StringBuffer();
@@ -439,4 +461,9 @@ public class HtmlTabbedPaneRenderer
         writer.endElement(HTML.FORM_ELEM);
     }
 
+
+    protected boolean isDisabled(FacesContext facesContext, UIComponent uiComponent)
+    {
+        return !UserRoleUtils.isEnabledOnUserRole(uiComponent);
+    }
 }
