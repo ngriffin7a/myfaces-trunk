@@ -16,7 +16,7 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package net.sourceforge.myfaces.context;
+package net.sourceforge.myfaces.context.servlet;
 
 import net.sourceforge.myfaces.util.IteratorEnumeration;
 
@@ -45,6 +45,8 @@ public class ServletContextMockImpl
 
     private Map _attributes = new HashMap();
     private Map _initParameters = new HashMap();
+    private Map _resourceMap = new HashMap();
+
 
     public ServletContext getContext(String s)
     {
@@ -68,6 +70,7 @@ public class ServletContextMockImpl
 
     public Set getResourcePaths(String s)
     {
+        /* is this needed by any test?
         if (s.equals("/WEB-INF/lib/"))
         {
             return Collections.singleton("/WEB-INF/lib/myfaces.jar");
@@ -76,19 +79,17 @@ public class ServletContextMockImpl
         {
             return null;
         }
+        */
+        return Collections.EMPTY_SET;
     }
 
     public URL getResource(String s) throws MalformedURLException
     {
-        if (s.startsWith("/WEB-INF/"))
+        String path = (String)_resourceMap.get(s);
+        if (path != null)
         {
-            return getClass().getClassLoader().getResource(s);
-//            try {
-//                return new URL("file://" + 
-//                        new File(TestConfig.getContextPath(), s).getCanonicalPath());
-//            } catch (IOException e) {
-//                throw new RuntimeException(e);
-//            }
+            return Thread.currentThread().getContextClassLoader()
+                    .getResource(path);
         }
         else
         {
@@ -99,19 +100,11 @@ public class ServletContextMockImpl
 
     public InputStream getResourceAsStream(String s)
     {
-        if (s.startsWith("/WEB-INF/"))
+        String path = (String)_resourceMap.get(s);
+        if (path != null)
         {
-            return Thread.currentThread().getContextClassLoader().getResourceAsStream(s.substring(1));
-//            return getClass().getClassLoader().getResourceAsStream(s);
-//            try
-//            {
-//                return new FileInputStream(
-//                        new File(TestConfig.getContextPath(), s).getCanonicalFile());
-//            }
-//            catch (IOException e)
-//            {
-//                throw new RuntimeException(e);
-//            }
+            return Thread.currentThread().getContextClassLoader()
+                    .getResourceAsStream(path);
         }
         else
         {
@@ -163,7 +156,7 @@ public class ServletContextMockImpl
 
     public String getRealPath(String s)
     {
-        throw new UnsupportedOperationException();
+        return "/junit_dummy_real_path";
     }
 
     public String getServerInfo()
@@ -205,4 +198,14 @@ public class ServletContextMockImpl
     {
         throw new UnsupportedOperationException();
     }
+
+
+    // mock methods
+
+    public void addResource(String webPath, String classPath)
+    {
+        _resourceMap.put(webPath, classPath);
+    }
+
+
 }

@@ -18,44 +18,46 @@
  */
 package net.sourceforge.myfaces.application.jsp;
 
-import javax.faces.context.FacesContext;
+import net.sourceforge.myfaces.MyFacesBaseTest;
+import net.sourceforge.myfaces.context.servlet.ServletContextMockImpl;
+import net.sourceforge.myfaces.context.servlet.ServletFacesContextImpl;
+import net.sourceforge.myfaces.context.servlet.ServletRequestMockImpl;
 
-import junit.framework.TestCase;
-import net.sourceforge.myfaces.application.jsp.JspViewHandlerImpl;
-import net.sourceforge.myfaces.context.ExternalContextMockImpl;
-import net.sourceforge.myfaces.context.FacesContextMockImpl;
-import net.sourceforge.myfaces.webapp.webxml.WebXml;
+import javax.servlet.ServletContext;
 
 /**
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
 public class JspViewHandlerImplTest
-    extends TestCase
+    extends MyFacesBaseTest
 {
-    private FacesContext _facesContext;
-
-    private static final String WEB_XML_SYSTEM_ID = "/WEB-INF/web.xml";    
+    private static final String WEB_XML_SYSTEM_ID = "/WEB-INF/web.xml";
     private static final String WEB_XML_PATH_TEST = 
         "net.sourceforge.myfaces.resource".replace('.','/') + "/servletmapping_web.xml";
 
-    protected void setUp() throws Exception
+    public JspViewHandlerImplTest(String name)
     {
-        _facesContext = new FacesContextMockImpl();
-        ExternalContextMockImpl externalContext = (ExternalContextMockImpl)_facesContext.getExternalContext();
-        externalContext.addResourceMapping(WEB_XML_SYSTEM_ID, WEB_XML_PATH_TEST);
-        externalContext.setRequestPathInfo(null);
-        WebXml.init(externalContext);
+        super(name);
+    }
+
+    protected ServletContext setUpServletContext()
+    {
+        ServletContextMockImpl servletContextMock
+                = (ServletContextMockImpl)super.setUpServletContext();
+        servletContextMock.addResource(WEB_XML_SYSTEM_ID, WEB_XML_PATH_TEST);
+        return servletContextMock;
     }
 
     public void testViewIdPathSimple() throws Exception
     {
         testViewIdPath("/myfaces", "/test", "/abc.jsp", "/myfaces/abc.jsp");
     }
+
     public void testViewIdPathNoServletPath() throws Exception {
         testViewIdPath("", "/test.jsf", "/xyz.jsp", "/xyz.jsp");
     }
-    
+
     public void testViewIdPathJSFExtensionWithJSP() throws Exception {
         testViewIdPath("/extension/test.jsf", null, "/myfaces/abc.jsp", "/myfaces/abc.jsf");
     }
@@ -66,16 +68,18 @@ public class JspViewHandlerImplTest
 
     private void testViewIdPath(String servletPath, String pathInfo, String viewId, String viewIdexp)
     {
-        ExternalContextMockImpl externalContext = (ExternalContextMockImpl)_facesContext.getExternalContext();
+        ((ServletRequestMockImpl)_httpServletRequest).setServletPath(servletPath);
+        ((ServletRequestMockImpl)_httpServletRequest).setPathInfo(pathInfo);
+
+        //Standard implementation caches servlet path, so we must create a new FacesContext
+        //for each test:
+        _facesContext = new ServletFacesContextImpl(_servletContext,
+                                                    _httpServletRequest,
+                                                    _httpServletResponse);
+
         JspViewHandlerImpl viewHandler = new JspViewHandlerImpl();
-        externalContext.setRequestServletPath(servletPath);
-        externalContext.setRequestPathInfo(pathInfo);
         String viewpath = viewHandler.getViewIdPath(_facesContext, viewId);
         assertEquals(viewIdexp, viewpath);
     }
 
-    protected void tearDown() throws Exception
-    {
-        _facesContext = null;
-    }
 }

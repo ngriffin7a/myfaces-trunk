@@ -1,0 +1,55 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE faces-config PUBLIC
+  "-//Sun Microsystems, Inc.//DTD JavaServer Faces Config 1.0//EN"
+  "http://java.sun.com/dtd/web-facesconfig_1_0.dtd">
+
+<faces-config>
+
+    <navigation-rule>
+        <navigation-case>
+            <description>case 1: no from-view-id</description>
+            <from-outcome>outcome1</from-outcome>
+            <to-view-id>/page1.jsp</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+
+    <navigation-rule>
+        <from-view-id>*</from-view-id>
+        <navigation-case>
+            <description>case 2: from-view-id = *, with from-outcome, no from-action</description>
+            <from-outcome>outcome2</from-outcome>
+            <to-view-id>/page2.jsp</to-view-id>
+        </navigation-case>
+        <navigation-case>
+            <description>case 3: from-view-id = *, with from-outcome and from-action</description>
+            <from-action>#{action3}</from-action>
+            <from-outcome>outcome3</from-outcome>
+            <to-view-id>/page3.jsp</to-view-id>
+        </navigation-case>
+        <navigation-case>
+            <description>case 4: from-view-id = *, no from-outcome, with from-action</description>
+            <from-action>#{action4}</from-action>
+            <to-view-id>/page4.jsp</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+
+    <navigation-rule>
+        <from-view-id>/from5.jsp</from-view-id>
+        <navigation-case>
+            <description>case 5: exact from-view-id match, with from-outcome, no from-action</description>
+            <from-outcome>outcome5</from-outcome>
+            <to-view-id>/page5.jsp</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+
+    <navigation-rule>
+        <from-view-id>/context6/*</from-view-id>
+        <navigation-case>
+            <description>case 6: wildcard from-view-id match, with from-outcome, no from-action</description>
+            <from-outcome>outcome6</from-outcome>
+            <to-view-id>/page6.jsp</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+
+</faces-config>

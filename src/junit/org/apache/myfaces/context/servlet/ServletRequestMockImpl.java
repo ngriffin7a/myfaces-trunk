@@ -16,24 +16,20 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package net.sourceforge.myfaces.context;
+package net.sourceforge.myfaces.context.servlet;
+
+import net.sourceforge.myfaces.util.IteratorEnumeration;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletInputStream;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-
-import net.sourceforge.myfaces.util.IteratorEnumeration;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.security.Principal;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 
 /**
  * DOCUMENT ME!
@@ -43,8 +39,13 @@ import java.util.Map;
 public class ServletRequestMockImpl
     implements HttpServletRequest
 {
+
+    private static final Locale[] LOCALES = {Locale.US, Locale.GERMAN};
+
     private Map _attributes = new HashMap();
     private Cookie[] _cookies;
+    private String _servletPath = "/myfaces";
+    private String _pathInfo = "";
 
     public ServletRequestMockImpl(Cookie[] cookies)
     {
@@ -93,7 +94,7 @@ public class ServletRequestMockImpl
 
     public String getPathInfo()
     {
-        throw new UnsupportedOperationException();
+        return _pathInfo;
     }
 
     public String getPathTranslated()
@@ -143,7 +144,7 @@ public class ServletRequestMockImpl
 
     public String getServletPath()
     {
-        return "/myfaces";
+        return _servletPath;
     }
 
     public HttpSession getSession(boolean b)
@@ -278,12 +279,12 @@ public class ServletRequestMockImpl
 
     public Locale getLocale()
     {
-        throw new UnsupportedOperationException();
+        return LOCALES[0];
     }
 
     public Enumeration getLocales()
     {
-        throw new UnsupportedOperationException();
+        return new IteratorEnumeration(Arrays.asList(LOCALES).iterator());
     }
 
     public boolean isSecure()
@@ -320,4 +321,20 @@ public class ServletRequestMockImpl
     {
         throw new UnsupportedOperationException();
     }
+
+
+
+
+    // mock setters
+
+    public void setServletPath(String servletPath)
+    {
+        _servletPath = servletPath;
+    }
+
+    public void setPathInfo(String pathInfo)
+    {
+        _pathInfo = pathInfo;
+    }
+
 }

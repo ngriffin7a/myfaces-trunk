@@ -18,7 +18,13 @@
  */
 package net.sourceforge.myfaces;
 
-import javax.faces.FactoryFinder;
+import junit.framework.TestCase;
+import net.sourceforge.myfaces.context.servlet.ServletContextMockImpl;
+import net.sourceforge.myfaces.context.servlet.ServletFacesContextImpl;
+import net.sourceforge.myfaces.context.servlet.ServletRequestMockImpl;
+import net.sourceforge.myfaces.context.servlet.ServletResponseMockImpl;
+import net.sourceforge.myfaces.webapp.StartupServletContextListener;
+
 import javax.faces.application.Application;
 import javax.faces.context.FacesContext;
 import javax.faces.lifecycle.Lifecycle;
@@ -26,14 +32,6 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import junit.framework.TestCase;
-import net.sourceforge.myfaces.application.ApplicationFactoryImpl;
-import net.sourceforge.myfaces.context.ServletContextMockImpl;
-import net.sourceforge.myfaces.context.ServletRequestMockImpl;
-import net.sourceforge.myfaces.context.ServletResponseMockImpl;
-import net.sourceforge.myfaces.context.servlet.ServletFacesContextImpl;
-import net.sourceforge.myfaces.lifecycle.LifecycleImpl;
 
 /**
  * @author Manfred Geiler (latest modification by $Author$)
@@ -43,6 +41,10 @@ import net.sourceforge.myfaces.lifecycle.LifecycleImpl;
 public class MyFacesBaseTest
     extends TestCase
 {
+    //private static final Log log = LogFactory.getLog(MyFacesBaseTest.class);
+
+    private static final String RESOURCE_PATH = "net.sourceforge.myfaces.resource".replace('.', '/');
+
     protected Application _application;
     protected ServletContext _servletContext;
     protected HttpServletRequest _httpServletRequest;
@@ -59,23 +61,28 @@ public class MyFacesBaseTest
     protected void setUp() throws Exception
     {
         super.setUp();
-        
-        FactoryFinder.setFactory(FactoryFinder.APPLICATION_FACTORY, 
-            ApplicationFactoryImpl.class.getName());
-        
-//        FIXME
-        //LifecycleFactory lf = (LifecycleFactory)FactoryFinder.getFactory(FactoryFinder.LIFECYCLE_FACTORY);
-        //_lifecycle = lf.getLifecycle(LifecycleFactory.DEFAULT_LIFECYCLE);
-        _lifecycle = new LifecycleImpl();
-        
-        _servletContext = new ServletContextMockImpl();
+
+        _servletContext = setUpServletContext();
+        StartupServletContextListener.initFaces(_servletContext);
+
         _httpServletRequest = new ServletRequestMockImpl(getCookies());
         _httpServletResponse = new ServletResponseMockImpl();
 
-        _facesContext = new ServletFacesContextImpl(
-            _servletContext, _httpServletRequest, _httpServletResponse);
-
+        _facesContext = new ServletFacesContextImpl(_servletContext,
+                                                    _httpServletRequest,
+                                                    _httpServletResponse);
         _application = _facesContext.getApplication();
+    }
+
+
+    protected ServletContext setUpServletContext()
+    {
+        ServletContextMockImpl servletContext = new ServletContextMockImpl();
+        servletContext.addResource("/WEB-INF/faces-config.xml",
+                                   RESOURCE_PATH + "/junit-faces-config.xml");
+        servletContext.addResource("/WEB-INF/web.xml",
+                                   RESOURCE_PATH + "/junit-web.xml");
+        return servletContext;
     }
 
     protected void tearDown() throws Exception
