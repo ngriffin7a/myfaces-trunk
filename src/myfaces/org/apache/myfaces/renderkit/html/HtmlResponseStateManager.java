@@ -19,9 +19,9 @@
 package net.sourceforge.myfaces.renderkit.html;
 
 import net.sourceforge.myfaces.renderkit.MyfacesResponseStateManager;
-import net.sourceforge.myfaces.util.Base64;
 import net.sourceforge.myfaces.util.MyFacesObjectInputStream;
 
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -39,6 +39,12 @@ import java.util.zip.GZIPOutputStream;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.3  2004/04/13 08:57:00  manolito
+ * commons codec
+ *
+ * Revision 1.3 2004/04/09 21:13:10 Sylvain Vieujot
+ * Replace oreilly's Base64 encoder and decoder with Jakarta Commons Codec  
+ * 
  * Revision 1.2  2004/04/06 10:20:26  manolito
  * no state restoring for different viewId
  *
@@ -175,15 +181,14 @@ public class HtmlResponseStateManager
         try
         {
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            OutputStream encStream = Base64.getEncoder(baos);
-            OutputStream zos = new GZIPOutputStream(encStream);
+            OutputStream zos = new GZIPOutputStream(baos);
             ObjectOutputStream oos = new ObjectOutputStream(zos);
             oos.writeObject(obj);
             oos.close();
             zos.close();
-            encStream.close();
             baos.close();
-            return baos.toString(ZIP_CHARSET);
+            Base64 base64Codec = new Base64();
+            return new String(base64Codec.encode( baos.toByteArray() ), ZIP_CHARSET);
         }
         catch (IOException e)
         {
@@ -240,15 +245,14 @@ public class HtmlResponseStateManager
     {
         try
         {
-            ByteArrayInputStream byteStream = new ByteArrayInputStream(s.getBytes(ZIP_CHARSET));
-            InputStream decodedStream = Base64.getDecoder(byteStream);
+        	Base64 base64Codec = new Base64();
+            ByteArrayInputStream decodedStream = new ByteArrayInputStream( base64Codec.decode( s.getBytes(ZIP_CHARSET) ) );
             InputStream unzippedStream = new GZIPInputStream(decodedStream);
             ObjectInputStream ois = new MyFacesObjectInputStream(unzippedStream);
             Object obj = ois.readObject();
             ois.close();
             unzippedStream.close();
             decodedStream.close();
-            byteStream.close();
             return obj;
         }
         catch (IOException e)
@@ -275,3 +279,4 @@ public class HtmlResponseStateManager
 
 
 }
+

@@ -18,7 +18,7 @@
  */
 package net.sourceforge.myfaces.util.zip;
 
-import net.sourceforge.myfaces.util.Base64;
+import org.apache.commons.codec.binary.Base64;
 
 import java.io.*;
 import java.util.zip.GZIPInputStream;
@@ -28,6 +28,9 @@ import java.util.zip.GZIPOutputStream;
  * DOCUMENT ME!
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
+ * 
+ * Revision 1.7 2004/04/09 21:13:10 Sylvain Vieujot
+ * Replace oreilly's Base64 encoder and decoder with Jakarta Commons Codec  
  */
 public class ZipUtils
 {
@@ -46,8 +49,8 @@ public class ZipUtils
     {
         try
         {
-            ByteArrayInputStream byteStream = new ByteArrayInputStream(s.getBytes(ZIP_CHARSET));
-            InputStream decodedStream = Base64.getDecoder(byteStream);
+        	Base64 base64Codec = new Base64();
+            ByteArrayInputStream decodedStream = new ByteArrayInputStream( base64Codec.decode( s.getBytes(ZIP_CHARSET) ) );
             InputStream unzippedStream = new GZIPInputStream(decodedStream);
 
             StringBuffer buf = new StringBuffer();
@@ -59,7 +62,6 @@ public class ZipUtils
 
             unzippedStream.close();
             decodedStream.close();
-            byteStream.close();
 
             return buf.toString();
         }
@@ -75,20 +77,18 @@ public class ZipUtils
     {
         try
         {
-            //OutputStream wos = new WriterOutputStream(origWriter, ZippingStateRenderer.ZIP_CHARSET);
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            OutputStream encStream = Base64.getEncoder(baos);
-            OutputStream zos = new GZIPOutputStream(encStream);
+            OutputStream zos = new GZIPOutputStream(baos);
             OutputStreamWriter writer = new OutputStreamWriter(zos, ZIP_CHARSET);
 
             writer.write(s);
 
             writer.close();
             zos.close();
-            encStream.close();
             baos.close();
 
-            return baos.toString(ZIP_CHARSET);
+            Base64 base64Codec = new Base64();
+            return new String(base64Codec.encode( baos.toByteArray() ), ZIP_CHARSET);
         }
         catch (IOException e)
         {
@@ -98,3 +98,4 @@ public class ZipUtils
 
 
 }
+
