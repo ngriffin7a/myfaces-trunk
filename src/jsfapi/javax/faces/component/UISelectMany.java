@@ -30,6 +30,9 @@ import java.util.List;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.13  2004/12/07 21:33:31  matzew
+ * closing MYFACES-6, thanks to  Heath Borders-Wing for patching it!
+ *
  * Revision 1.12  2004/07/01 22:00:50  mwessendorf
  * ASF switch
  *
@@ -247,10 +250,11 @@ public class UISelectMany
         Object convertedValue = getConvertedValue(context, submittedValue);
         if (!isValid()) return;
 
-        boolean empty = convertedValue == null ||
-                        (convertedValue instanceof Object[] &&
-                         ((Object[])convertedValue).length == 0);
-        if (isRequired() && empty)
+		boolean empty =
+			convertedValue == null
+				|| ((convertedValue instanceof Object[]) && (((Object[]) convertedValue).length == 0))
+				|| ((convertedValue instanceof List) && ((List) convertedValue).isEmpty());
+		if (isRequired() && empty)
         {
             _MessageUtils.addErrorMessage(context, this, REQUIRED_MESSAGE_ID,new Object[]{getId()});
             setValid(false);
