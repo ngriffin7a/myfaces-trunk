@@ -45,16 +45,7 @@ public abstract class MethodBinding
         throw new UnsupportedOperationException();
 	}
 
-	public Class getType(FacesContext facesContext)
-	{
-        //TODO
-        throw new UnsupportedOperationException();
-	}
+	public abstract Class getType(FacesContext facesContext);
 
-	public Object invoke(FacesContext facesContext, java.lang.Object[] value)
-	{
-        //TODO
-        throw new UnsupportedOperationException();
-	}
-
+	public abstract Object invoke(FacesContext facesContext, java.lang.Object[] value);
 }

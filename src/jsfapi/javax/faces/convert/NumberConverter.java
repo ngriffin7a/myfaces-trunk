@@ -23,8 +23,6 @@ import javax.faces.component.UIComponent;
 import java.util.Locale;
 
 /**
- * DOCUMENT ME!
- *
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  */

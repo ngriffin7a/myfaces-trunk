@@ -43,13 +43,13 @@ public class EvaluationException extends FacesException
 		throw new UnsupportedOperationException();
 	}
 
-	public EvaluationException(String value, Throwable throwable)
+	public EvaluationException(String value, Throwable cause)
 	{
 		//TODO
 		throw new UnsupportedOperationException();
 	}
     
-	public EvaluationException(Throwable throwable)
+	public EvaluationException(Throwable cause)
 	{
 		//TODO
 		throw new UnsupportedOperationException();

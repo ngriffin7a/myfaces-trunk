@@ -24,8 +24,6 @@ import java.util.Locale;
 import java.util.TimeZone;
 
 /**
- * DOCUMENT ME!
- *
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  */

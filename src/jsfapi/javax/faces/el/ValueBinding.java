@@ -45,28 +45,11 @@ public abstract class ValueBinding
         throw new UnsupportedOperationException();
 	}
 
-	public Class getType(FacesContext facesContext)
-	{
-        //TODO
-        throw new UnsupportedOperationException();
-	}
+	abstract public Class getType(FacesContext facesContext);
 
-	public Object getValue(FacesContext facesContext)
-	{
-        //TODO
-        throw new UnsupportedOperationException();
-	}
+	public abstract Object getValue(FacesContext facesContext);
 
-	public boolean isReadOnly(FacesContext facesContext)
-	{
-        //TODO
-        throw new UnsupportedOperationException();
-	}
+	public abstract boolean isReadOnly(FacesContext facesContext);
 
-	public void setValue(FacesContext facesContext, Object value)
-	{
-        //TODO
-        throw new UnsupportedOperationException();
-	}
-
+	public abstract void setValue(FacesContext facesContext, Object value);
 }

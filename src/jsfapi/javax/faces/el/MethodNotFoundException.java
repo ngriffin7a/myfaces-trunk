@@ -43,13 +43,13 @@ public class MethodNotFoundException extends EvaluationException
 		throw new UnsupportedOperationException();
 	}
 
-	public MethodNotFoundException(String message, Throwable throwable)
+	public MethodNotFoundException(String message, Throwable cause)
 	{
 		//TODO
 		throw new UnsupportedOperationException();
 	}
 
-	public MethodNotFoundException(Throwable throwable)
+	public MethodNotFoundException(Throwable cause)
 	{
 		//TODO
 		throw new UnsupportedOperationException();

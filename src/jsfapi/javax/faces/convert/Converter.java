@@ -29,11 +29,11 @@ import javax.faces.component.UIComponent;
  */
 public interface Converter
 {
-    public Object getAsObject(FacesContext context,
-                              UIComponent component,
-                              String value);
+    Object getAsObject(FacesContext context,
+                       UIComponent component,
+                       String value);
 
-    public String getAsString(FacesContext context,
-                              UIComponent component,
-                              Object value);
+    String getAsString(FacesContext context,
+                       UIComponent component,
+                       Object value);
 }

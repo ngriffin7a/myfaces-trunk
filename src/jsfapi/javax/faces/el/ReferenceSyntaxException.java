@@ -42,13 +42,13 @@ public class ReferenceSyntaxException extends EvaluationException
 		throw new UnsupportedOperationException();
 	}
 
-	public ReferenceSyntaxException(String message, Throwable throwable)
+	public ReferenceSyntaxException(String message, Throwable cause)
 	{
 		//TODO
 		throw new UnsupportedOperationException();
 	}
 
-	public ReferenceSyntaxException(Throwable throwable)
+	public ReferenceSyntaxException(Throwable cause)
 	{
 		//TODO
 		throw new UnsupportedOperationException();

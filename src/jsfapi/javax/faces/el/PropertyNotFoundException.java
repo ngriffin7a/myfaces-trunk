@@ -41,13 +41,13 @@ public class PropertyNotFoundException extends EvaluationException
 		throw new UnsupportedOperationException();
 	}
 
-	public PropertyNotFoundException(String message, Throwable throwable)
+	public PropertyNotFoundException(String message, Throwable cause)
 	{
 		//TODO
 		throw new UnsupportedOperationException();
 	}
 
-	public PropertyNotFoundException(Throwable throwable)
+	public PropertyNotFoundException(Throwable cause)
 	{
 		//TODO
 		throw new UnsupportedOperationException();

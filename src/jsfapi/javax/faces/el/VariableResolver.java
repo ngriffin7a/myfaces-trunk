@@ -38,9 +38,5 @@ public abstract class VariableResolver
 	}
 
 	// METHODS
-	public Object resolveVariable(FacesContext facesContext, String name)
-	{
-        //TODO
-        throw new UnsupportedOperationException();
-	}
+	public abstract Object resolveVariable(FacesContext facesContext, String name);
 }

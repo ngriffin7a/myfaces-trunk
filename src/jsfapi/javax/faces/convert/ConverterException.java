@@ -46,7 +46,7 @@ public class ConverterException extends FacesException {
         throw new UnsupportedOperationException();
 	}
 
-	public ConverterException(FacesMessage facesMessage, java.lang.Throwable throwable)
+	public ConverterException(FacesMessage facesMessage, Throwable cause)
     {
         //TODO
         throw new UnsupportedOperationException();
@@ -58,13 +58,13 @@ public class ConverterException extends FacesException {
         throw new UnsupportedOperationException();
 	}
 
-	public ConverterException(String value, Throwable throwable)
+	public ConverterException(String value, Throwable cause)
     {
         //TODO
         throw new UnsupportedOperationException();
 	}
 
-	public ConverterException(java.lang.Throwable throwable)
+	public ConverterException(Throwable cause)
     {
         //TODO
         throw new UnsupportedOperationException();

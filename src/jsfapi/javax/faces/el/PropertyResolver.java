@@ -37,52 +37,19 @@ public abstract class PropertyResolver
 	}
 
 	// METHODS
-	public Class getType(Object base, int index)
-	{
-        //TODO
-        throw new UnsupportedOperationException();
-	}
+	public abstract Class getType(Object base, int index);
 
-	public Class getType(Object base, java.lang.Object property)
-	{
-        //TODO
-        throw new UnsupportedOperationException();
-	}
+	public abstract Class getType(Object base, java.lang.Object property);
 
-	public Object getValue(Object base, int index)
-	{
-        //TODO
-        throw new UnsupportedOperationException();
-	}
+	public abstract Object getValue(Object base, int index);
 
-	public Object getValue(Object base, java.lang.Object property)
-	{
-        //TODO
-        throw new UnsupportedOperationException();
-	}
+	public abstract Object getValue(Object base, java.lang.Object property);
 
-	public boolean isReadOnly(Object base, int index)
-	{
-        //TODO
-        throw new UnsupportedOperationException();
-	}
+	public abstract boolean isReadOnly(Object base, int index);
 
-	public boolean isReadOnly(Object base, java.lang.Object property)
-	{
-        //TODO
-        throw new UnsupportedOperationException();
-	}
+	public abstract boolean isReadOnly(Object base, java.lang.Object property);
 
-	public void setValue(Object base, int index, java.lang.Object value)
-	{
-        //TODO
-        throw new UnsupportedOperationException();
-	}
+	public abstract void setValue(Object base, int index, java.lang.Object value);
 
-	public void setValue(Object base, Object property, java.lang.Object value)
-	{
-        //TODO
-        throw new UnsupportedOperationException();
-	}
-
+	public abstract void setValue(Object base, Object property, java.lang.Object value);
 }
