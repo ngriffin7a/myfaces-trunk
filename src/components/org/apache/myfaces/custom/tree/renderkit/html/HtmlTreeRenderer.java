@@ -26,9 +26,8 @@ import net.sourceforge.myfaces.custom.tree.HtmlTreeNode;
 import net.sourceforge.myfaces.custom.tree.IconProvider;
 import net.sourceforge.myfaces.renderkit.RendererUtils;
 import net.sourceforge.myfaces.renderkit.html.HTML;
-import net.sourceforge.myfaces.renderkit.html.HtmlFormRendererBase;
-import net.sourceforge.myfaces.renderkit.html.HtmlRendererUtils;
 import net.sourceforge.myfaces.renderkit.html.HtmlRenderer;
+import net.sourceforge.myfaces.renderkit.html.HtmlRendererUtils;
 
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
@@ -43,6 +42,9 @@ import java.util.List;
  * @author <a href="mailto:oliver@rossmueller.com">Oliver Rossmueller</a>
  * @version $Revision$ $Date$
  *          $Log$
+ *          Revision 1.7  2004/05/27 15:06:39  manolito
+ *          bugfix: node labels not rendered any more
+ *
  *          Revision 1.6  2004/05/12 02:27:43  o_rossmueller
  *          fix #951896: tree component works for JAVASCRIPT=false, too
  *
@@ -76,7 +78,8 @@ public class HtmlTreeRenderer
 
     public void encodeChildren(FacesContext facesContext, UIComponent component) throws IOException
     {
-        super.encodeChildren(facesContext, component);
+        //super.encodeChildren(facesContext, component);
+        // children are rendered in encodeEnd
     }
 
 

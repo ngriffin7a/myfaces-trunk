@@ -22,6 +22,7 @@ package net.sourceforge.myfaces.custom.tree.renderkit.html;
 
 import net.sourceforge.myfaces.custom.tree.HtmlTreeImageCommandLink;
 import net.sourceforge.myfaces.custom.tree.HtmlTreeNode;
+import net.sourceforge.myfaces.renderkit.JSFAttr;
 import net.sourceforge.myfaces.renderkit.html.HTML;
 import net.sourceforge.myfaces.renderkit.html.HtmlLinkRendererBase;
 import net.sourceforge.myfaces.renderkit.html.HtmlRendererUtils;
@@ -37,6 +38,9 @@ import java.util.Map;
  * @author <a href="mailto:oliver@rossmueller.com">Oliver Rossmueller</a>
  * @version $Revision$ $Date$
  *          $Log$
+ *          Revision 1.2  2004/05/27 15:06:39  manolito
+ *          bugfix: node labels not rendered any more
+ *
  *          Revision 1.1  2004/04/22 10:20:24  manolito
  *          tree component
  *
@@ -73,6 +77,13 @@ public class HtmlTreeImageCommandLinkRenderer
     {
 
         super.renderCommandLinkStart(facesContext, component, clientId, value, style, styleClass);
+
+        // render value as anchor text:
+        if (value != null)
+        {
+            ResponseWriter writer = facesContext.getResponseWriter();
+            writer.writeText(value.toString(), JSFAttr.VALUE_ATTR);
+        }
 
         String url = ((HtmlTreeImageCommandLink)component).getImage();
 

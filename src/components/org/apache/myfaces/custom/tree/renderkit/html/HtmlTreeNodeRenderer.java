@@ -21,10 +21,13 @@
 package net.sourceforge.myfaces.custom.tree.renderkit.html;
 
 import net.sourceforge.myfaces.custom.tree.HtmlTreeNode;
+import net.sourceforge.myfaces.renderkit.JSFAttr;
 import net.sourceforge.myfaces.renderkit.html.HtmlLinkRendererBase;
 
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
+import javax.faces.context.ResponseWriter;
+import java.io.IOException;
 import java.util.Map;
 
 
@@ -32,6 +35,9 @@ import java.util.Map;
  * @author <a href="mailto:oliver@rossmueller.com">Oliver Rossmueller</a>
  * @version $Revision$ $Date$
  *          $Log$
+ *          Revision 1.3  2004/05/27 15:06:39  manolito
+ *          bugfix: node labels not rendered any more
+ *
  *          Revision 1.2  2004/04/29 18:48:07  o_rossmueller
  *          node selection handling
  *
@@ -57,5 +63,25 @@ public class HtmlTreeNodeRenderer
             node.setSelected(true);
         }
     }
+
+
+    protected void renderCommandLinkStart(FacesContext facesContext,
+                                          UIComponent component,
+                                          String clientId,
+                                          Object value,
+                                          String style,
+                                          String styleClass) throws IOException
+    {
+
+        super.renderCommandLinkStart(facesContext, component, clientId, value, style, styleClass);
+
+        // render value as anchor text:
+        if (value != null)
+        {
+            ResponseWriter writer = facesContext.getResponseWriter();
+            writer.writeText(value.toString(), JSFAttr.VALUE_ATTR);
+        }
+    }
+
 
 }
