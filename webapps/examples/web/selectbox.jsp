@@ -119,6 +119,13 @@ managed beans used:
 
                         </h:panelGrid>
 
+                        <h:outputLabel for="doos" value="#{example_messages['doors']}" />
+                        <h:selectOneMenu id="doors" value="#{carconf.doors}">
+                                <f:selectItem itemValue="2" itemLabel="2" />
+                                <f:selectItem itemValue="4" itemLabel="4" />
+                                <f:selectItem itemValue="7" itemLabel="7" />
+                        </h:selectOneMenu>
+
                         <h:outputLabel for="selboolean" value="#{example_messages['sales_tax']}" />
                         <h:selectBooleanCheckbox id="selboolean" value="#{carconf.salesTax}"/>
 

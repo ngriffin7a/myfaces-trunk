@@ -89,12 +89,26 @@ public class CarConfigurator
     private String _discount2 = "0";
     private String _bandName;
     private String _car;
-    private String _color;
+    private String _color = "color_blue";
     private boolean _salesTax = false;
+    private int _doors = 4;
 
     public CarConfigurator()
     {
     }
+
+
+    public int getDoors()
+    {
+        return _doors;
+    }
+
+
+    public void setDoors(int doors)
+    {
+        this._doors = doors;
+    }
+
 
     public List getCars()
     {
