@@ -40,6 +40,9 @@ import java.util.List;
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.17  2004/06/21 23:12:46  prophecyslides
+ * headerClass style propogates to the <th> elements, not just the <tr>
+ *
  * Revision 1.16  2004/06/21 10:57:59  manolito
  * missing CVS Log keyword
  *
@@ -171,7 +174,7 @@ public class HtmlTableRenderer
                 }
             }
         }
-        
+
         UIComponent facet = header ? uiData.getHeader() : uiData.getFooter();
         if (facet != null || hasColumnFacet)
         {
@@ -179,7 +182,7 @@ public class HtmlTableRenderer
             String elemName = header ? HTML.THEAD_ELEM : HTML.TFOOT_ELEM;
             String columnElemName = header ? HTML.TH_ELEM : HTML.TD_ELEM;
             String style = header ? getHeaderClass(uiData) : getFooterClass(uiData);
-            
+
             HtmlRendererUtils.writePrettyLineSeparator(facesContext);
             writer.startElement(elemName, uiData);
             if (header)
@@ -224,6 +227,10 @@ public class HtmlTableRenderer
                 UIComponent facet = header ?
                     ((UIColumn)uiComponent).getHeader() : ((UIColumn)uiComponent).getFooter();
                 writer.startElement(colElementName, uiComponent);
+                if(style != null)
+                {
+                     writer.writeAttribute(HTML.CLASS_ATTR, style, null);
+                }
                 if (facet != null)
                 {
                     RendererUtils.renderChild(facesContext, facet);
