@@ -20,6 +20,14 @@ Look at <link href="http://java.sun.com/j2ee/javaserverfaces/">Sun's JavaServer(
     </section>
 
     <section>
+        <title>April 5, 2005 - MyFaces 1.0.9 RC3 now available</title>
+        <p>
+            MyFaces 1.0.9 RC3 is now available <link href="http://cvs.apache.org/builds/myfaces/release">here</link>.              
+            Please help us prepare for the official release by testing and providing feedback.  If you think you have found a
+            bug, please report it <link href="http://issues.apache.org/jira/secure/BrowseProject.jspa?id=10600">here</link>.
+        </p>
+    </section>
+    <section>
         <title>April 1, 2005 - Nightly builds are now available</title>
         <p>
             Nightly builds are now available <link href="http://cvs.apache.org/builds/myfaces/nightly">here</link>.  Go ahead and download
@@ -29,7 +37,7 @@ Look at <link href="http://java.sun.com/j2ee/javaserverfaces/">Sun's JavaServer(
     <section>
         <title>March 29, 2005 - MyFaces 1.0.9 RC2 now available</title>
         <p>
-            My Faces 1.0.9 RC2 is now available <link href="http://cvs.apache.org/dist/myfaces/builds/1.0.9/rc2/">here</link>.
+            MyFaces 1.0.9 RC2 is now available <link href="http://cvs.apache.org/dist/myfaces/builds/1.0.9/rc2/">here</link>.
             Please help us prepare for the official release by testing and providing feedback.  If you think you have found a
             bug, please report it <link href="http://issues.apache.org/jira/secure/BrowseProject.jspa?id=10600">here</link>.
         </p>

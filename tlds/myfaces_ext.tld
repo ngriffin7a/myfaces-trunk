@@ -1803,6 +1803,7 @@
             <description>Include the root node when rendering the tree (default is true.)</description>
         </attribute>
         &alt_location_attributes;
+        &ui_component_attributes;
     </tag>
 
     <!-- panelStack -->
