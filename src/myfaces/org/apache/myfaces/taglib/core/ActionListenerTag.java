@@ -41,7 +41,7 @@ public class ActionListenerTag
 
     private String _type = null;
 
-    protected ActionListenerTag()
+    public ActionListenerTag()
     {
     }
 

@@ -39,6 +39,9 @@ import java.util.Iterator;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.2  2004/03/31 14:50:34  manolito
+ * bug fix
+ *
  * Revision 1.1  2004/03/31 11:58:44  manolito
  * custom component refactoring
  *
@@ -133,7 +136,6 @@ public abstract class HtmlLinkRendererBase
 
     public void encodeChildren(FacesContext facesContext, UIComponent component) throws IOException
     {
-        super.encodeChildren(facesContext, component);  //check for NP
         RendererUtils.renderChildren(facesContext, component);
     }
 
