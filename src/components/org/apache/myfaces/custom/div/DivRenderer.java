@@ -27,6 +27,9 @@ import org.apache.myfaces.renderkit.html.HtmlRenderer;
  * @author bdudney (latest modification by $Author$) 
  * @version $Revision$ $Date$ 
  * $Log$
+ * Revision 1.3  2004/11/27 00:00:09  svieujot
+ * Remove the limitation to have a style or a styleClass attribute because sometimes, just a plain <div> can be useful.
+ *
  * Revision 1.2  2004/11/10 11:09:52  bdudney
  * div renderer now puts the class/style in quotes
  *
@@ -48,9 +51,6 @@ public class DivRenderer extends HtmlRenderer {
     writer.write("<" + HTML.DIV_ELEM +" ");
     String styleClass = div.getStyleClass();
     String style = div.getStyle();
-    if(null == styleClass && null == style) {
-      throw new IllegalStateException("Either style or styleClass must be specified");
-    }
     if(null != styleClass && null != style) {
       throw new IllegalStateException("Only one of style or styleClass can be specified");
     }
