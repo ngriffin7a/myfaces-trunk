@@ -40,12 +40,15 @@ import net.sourceforge.myfaces.component.html.ext.HtmlPanelGroup;
  * @author <a href="mailto:oliver@rossmueller.com">Oliver Rossmueller</a>
  * @version $Revision$ $Date$
  *          $Log$
+ *          Revision 1.22  2004/10/10 11:21:18  o_rossmueller
+ *          expandAll/collapseAll (contributed by Hamidreza Sattari <hhreza@yahoo.com>)
+ *
  *          Revision 1.21  2004/09/01 18:32:54  mwessendorf
  *          Organize Imports
- *
+ *          <p/>
  *          Revision 1.20  2004/08/15 15:28:04  o_rossmueller
  *          new model listener handling to get modified from events which occur outside the scope of a tree request
- *
+ *          <p/>
  *          Revision 1.19  2004/07/26 22:55:10  o_rossmueller
  *          use ids instead of clientIds
  *          <p/>
@@ -813,6 +816,70 @@ public class HtmlTree
                 break;
             }
         }
+    }
+
+
+    public void collapseAll()
+    {
+        HtmlTreeNode root = getRootNode();
+        FacesContext context = FacesContext.getCurrentInstance();
+        for (int i = 0; i < root.getChildren().size(); i++)
+        {
+            HtmlTreeNode child = (HtmlTreeNode) (root.getChildren().get(i));
+            collapsePath(child.getPath(), context);
+            if (!child.isLeaf(context))
+            {
+                collapseChildren(context, child);
+            }
+        }
+    }
+
+
+    private void collapseChildren(FacesContext context, HtmlTreeNode parent)
+    {
+        for (int i = 0; i < parent.getChildren().size(); i++)
+        {
+            HtmlTreeNode child = (HtmlTreeNode) (parent.getChildren().get(i));
+            collapsePath(child.getPath(), context);
+            if (!child.isLeaf(context))
+            {
+                collapseChildren(context, child);
+            }
+        }
+
+    }
+
+
+    public void expandAll()
+    {
+        HtmlTreeNode root = getRootNode();
+        FacesContext context = FacesContext.getCurrentInstance();
+        for (int i = 0; i < root.getChildren().size(); i++)
+        {
+            HtmlTreeNode child = (HtmlTreeNode) (root.getChildren().get(i));
+            expandPath(child.getPath(), context);
+            if (!child.isLeaf(context))
+            {
+                expandChildren(context, child);
+            }
+        }
+
+
+    }
+
+
+    private void expandChildren(FacesContext context, HtmlTreeNode parent)
+    {
+        for (int i = 0; i < parent.getChildren().size(); i++)
+        {
+            HtmlTreeNode child = (HtmlTreeNode) (parent.getChildren().get(i));
+            expandPath(child.getPath(), context);
+            if (!child.isLeaf(context))
+            {
+                expandChildren(context, child);
+            }
+        }
+
     }
 
 
