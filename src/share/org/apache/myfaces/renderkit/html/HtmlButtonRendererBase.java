@@ -1,12 +1,12 @@
 /*
  * Copyright 2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -40,6 +40,9 @@ import java.util.Map;
  * @author Anton Koinov
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.9  2005/03/16 20:41:12  mmarinschek
+ * fix for MYFACES-111, alien commit for Heath Borders
+ *
  * Revision 1.8  2004/10/13 11:51:01  matze
  * renamed packages to org.apache
  *
@@ -94,7 +97,7 @@ public class HtmlButtonRendererBase
         Map paramMap = facesContext.getExternalContext().getRequestParameterMap();
         return paramMap.containsKey(clientId) || paramMap.containsKey(clientId + IMAGE_BUTTON_SUFFIX_X) || paramMap.containsKey(clientId + IMAGE_BUTTON_SUFFIX_Y);
     }
-    
+
     public void encodeEnd(FacesContext facesContext, UIComponent uiComponent)
             throws IOException
     {
@@ -133,7 +136,8 @@ public class HtmlButtonRendererBase
         }
         if (JavascriptUtils.isJavascriptAllowed(facesContext.getExternalContext()))
         {
-            renderClearFormOnClick(uiComponent, facesContext, writer);
+            StringBuffer onClick = buildOnClick(uiComponent, facesContext, writer);
+            writer.writeAttribute(HTML.ONCLICK_ATTR, onClick.toString(), null);
             HtmlRendererUtils.renderHTMLAttributes(writer, uiComponent,
                                                    HTML.BUTTON_PASSTHROUGH_ATTRIBUTES_WITHOUT_DISABLED_AND_ONCLICK);
         }
@@ -152,7 +156,7 @@ public class HtmlButtonRendererBase
     }
 
 
-    private void renderClearFormOnClick(UIComponent uiComponent, FacesContext facesContext, ResponseWriter writer)
+    protected StringBuffer buildOnClick(UIComponent uiComponent, FacesContext facesContext, ResponseWriter writer)
         throws IOException
     {
         //Find form
@@ -207,7 +211,7 @@ public class HtmlButtonRendererBase
             dummyFormResponseWriter.addDummyFormParameter(hiddenFieldName);
         }
 
-        writer.writeAttribute(HTML.ONCLICK_ATTR, onClick.toString(), null);
+        return onClick;
     }
 
 
