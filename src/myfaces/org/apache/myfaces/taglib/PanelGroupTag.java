@@ -55,7 +55,7 @@ public class PanelGroupTag
 
     public void setPanelClass(String v)
     {
-        setRendererAttribute(PANEL_CLASS_ATTR, v);
+        setRendererAttributeString(PANEL_CLASS_ATTR, v);
     }
 
     // Group Renderer attributes  --> none

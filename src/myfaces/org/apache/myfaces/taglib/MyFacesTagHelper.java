@@ -97,55 +97,91 @@ public class MyFacesTagHelper
 
     //property helpers
 
-    protected void setComponentProperty(String attrName, Object attrValue)
+    protected void setComponentPropertyString(String attrName, Object attrValue)
     {
         if (_attributes == null)
         {
             _attributes = new HashSet();
         }
-        _attributes.add(new Attribute(attrName, attrValue, true));
+        _attributes.add(new Attribute(attrName, attrValue.toString(), true));
     }
 
-    protected void setComponentProperty(String attrName, boolean attrValue)
+    protected void setComponentPropertyBoolean(String attrName, Object attrValue)
     {
         if (_attributes == null)
         {
             _attributes = new HashSet();
         }
-        _attributes.add(new Attribute(attrName,
-                                      attrValue ? Boolean.TRUE : Boolean.FALSE,
-                                      true));
+
+        if (attrValue instanceof Boolean)
+        {
+            _attributes.add(new Attribute(attrName,
+                                          attrValue,
+                                          true));
+        }
+        else
+        {
+            _attributes.add(new Attribute(attrName,
+                                          Boolean.valueOf(attrValue.toString()),
+                                          true));
+        }
     }
 
-    protected void setRendererAttribute(String attrName, Object attrValue)
+    protected void setRendererAttributeString(String attrName, Object attrValue)
     {
         if (_attributes == null)
         {
             _attributes = new HashSet();
         }
-        _attributes.add(new Attribute(attrName, attrValue, false));
+        _attributes.add(new Attribute(attrName, attrValue.toString(), false));
     }
 
-    protected void setRendererAttribute(String attrName, boolean attrValue)
+    protected void setRendererAttributeBoolean(String attrName, Object attrValue)
     {
         if (_attributes == null)
         {
             _attributes = new HashSet();
         }
-        _attributes.add(new Attribute(attrName,
-                                      attrValue ? Boolean.TRUE : Boolean.FALSE,
-                                      false));
+
+        if (attrValue instanceof Boolean)
+        {
+            _attributes.add(new Attribute(attrName,
+                                          attrValue,
+                                          false));
+        }
+        else
+        {
+            _attributes.add(new Attribute(attrName,
+                                          Boolean.valueOf(attrValue.toString()),
+                                          false));
+        }
     }
 
-    protected void setRendererAttribute(String attrName, int attrValue)
+    protected void setRendererAttributeInteger(String attrName, Object attrValue)
     {
         if (_attributes == null)
         {
             _attributes = new HashSet();
         }
-        _attributes.add(new Attribute(attrName,
-                                      new Integer(attrValue),
-                                      false));
+
+        if (attrValue instanceof Integer)
+        {
+            _attributes.add(new Attribute(attrName,
+                                          attrValue,
+                                          false));
+        }
+        else if (attrValue instanceof Number)
+        {
+            _attributes.add(new Attribute(attrName,
+                                          new Integer(((Number)attrValue).intValue()),
+                                          false));
+        }
+        else
+        {
+            _attributes.add(new Attribute(attrName,
+                                          new Integer(attrValue.toString()),
+                                          false));
+        }
     }
 
 

@@ -45,7 +45,6 @@
 <!ENTITY ui_select_one_attributes       SYSTEM "entities/ui_select_one_attributes.xml">
 <!ENTITY key_bundle_attributes          SYSTEM "entities/key_bundle_attributes.xml">
 <!ENTITY user_role_attributes           SYSTEM "entities/user_role_attributes.xml">
-<!ENTITY converter_attribute            SYSTEM "entities/converter_attribute.xml">
 ]>
 
 <taglib>
@@ -206,7 +205,6 @@
         &ui_component_attributes;
         &ui_input_attributes;
         <!-- HiddenRenderer attributes -->
-        &converter_attribute;
     </tag>
 
 <!-- input_number -->
@@ -223,21 +221,19 @@
         &html_universal_attributes;
         &html_event_handler_attributes;
         <!-- SecretRenderer attributes -->
-        &converter_attribute;
         <attribute>
             <name>maxlength</name>
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>
-            <type>java.lang.Integer</type>
+            <type>java.lang.String</type>
             <description>Corresponds to the HTML maxlength attribute.</description>
         </attribute>
         <attribute>
             <name>redisplay</name>
             <required>false</required>
             <rtexprvalue>false</rtexprvalue>
-            <type>java.lang.Boolean</type>
             <description>
-                If true, the value will be resent (in plaintext) when the form
+                If true, the value will be re-sent (in plaintext) when the form
                 is rerendered (see JSF.7.4.4). Default is false.
             </description>
         </attribute>
@@ -260,7 +256,6 @@
             <rtexprvalue>true</rtexprvalue>
         </attribute>
         <!-- TextRenderer attributes -->
-        &converter_attribute;
         &user_role_attributes;
     </tag>
 
@@ -275,7 +270,6 @@
         &html_universal_attributes;
         &html_event_handler_attributes;
         <!-- TextareaRenderer attributes -->
-        &converter_attribute;
         &user_role_attributes;
    </tag>
 
@@ -398,7 +392,6 @@
         &html_universal_attributes;
         &html_event_handler_attributes;
         <!-- MessageRenderer attributes -->
-        &converter_attribute;
         &key_bundle_attributes;
         &user_role_attributes;
     </tag>
@@ -416,7 +409,6 @@
         &html_universal_attributes;
         &html_event_handler_attributes;
         <!-- TextRenderer attributes -->
-        &converter_attribute;
         &user_role_attributes;
     </tag>
 

@@ -19,7 +19,7 @@
 package net.sourceforge.myfaces.renderkit.html;
 
 import net.sourceforge.myfaces.renderkit.attr.*;
-import net.sourceforge.myfaces.renderkit.html.util.CommonAttributes;
+import net.sourceforge.myfaces.renderkit.html.util.HTMLUtil;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLEncoder;
 import net.sourceforge.myfaces.renderkit.html.attr.HTMLEventHandlerAttributes;
 import net.sourceforge.myfaces.renderkit.html.attr.HTMLImgAttributes;
@@ -29,6 +29,7 @@ import net.sourceforge.myfaces.util.bundle.BundleUtils;
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIGraphic;
 import javax.faces.context.FacesContext;
+import javax.faces.context.ResponseWriter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -84,22 +85,27 @@ public class ImageRenderer
     {
     }
 
-    public void encodeEnd(FacesContext context, UIComponent uiComponent) throws IOException
+    public void encodeEnd(FacesContext facesContext, UIComponent uiComponent) throws IOException
     {
-        javax.faces.context.ResponseWriter writer = context.getResponseWriter();
+        if (!isVisible(facesContext, uiComponent))
+        {
+            return;
+        }
+
+        ResponseWriter writer = facesContext.getResponseWriter();
 
         String value;
 
         String key = (String)uiComponent.getAttribute(KEY_ATTR);
         if (key != null)
         {
-            value = BundleUtils.getString(context,
+            value = BundleUtils.getString(facesContext,
                                           (String)uiComponent.getAttribute(BUNDLE_ATTR),
                                           key);
         }
         else
         {
-            value = getStringValue(context, uiComponent);
+            value = getStringValue(facesContext, uiComponent);
         }
 
         if (value != null && value.length() > 0)
@@ -109,7 +115,7 @@ public class ImageRenderer
             String src;
             if (value.startsWith("/"))
             {
-                HttpServletRequest request = (HttpServletRequest)context.getServletRequest();
+                HttpServletRequest request = (HttpServletRequest)facesContext.getServletRequest();
                 src = request.getContextPath() + value;
             }
             else
@@ -120,7 +126,7 @@ public class ImageRenderer
             //Encode URL for those still using HttpSessions... ;-)
             //Although this is an image url, encodeURL is no nonsense, because the
             //actual image url could also be a dynamic servlet request:
-            src = ((HttpServletResponse)context.getServletResponse()).encodeURL(src);
+            src = ((HttpServletResponse)facesContext.getServletResponse()).encodeURL(src);
 
             writer.write(src);
             writer.write("\"");
@@ -129,7 +135,7 @@ public class ImageRenderer
             String altKey = (String)uiComponent.getAttribute(ALT_KEY_ATTR);
             if (altKey != null)
             {
-                alt = BundleUtils.getString(context,
+                alt = BundleUtils.getString(facesContext,
                                               (String)uiComponent.getAttribute(ALT_BUNDLE_ATTR),
                                               altKey);
             }
@@ -144,10 +150,10 @@ public class ImageRenderer
                 writer.write("\"");
             }
 
-            CommonAttributes.renderCssClass(writer, uiComponent, GRAPHIC_CLASS_ATTR);
-            CommonAttributes.renderHTMLAttributes(writer, uiComponent, HTML_UNIVERSAL_ATTRIBUTES);
-            CommonAttributes.renderHTMLAttributes(writer, uiComponent, HTML_EVENT_HANDLER_ATTRIBUTES);
-            CommonAttributes.renderHTMLAttributes(writer, uiComponent, HTML_IMG_ATTRUBUTES);
+            HTMLUtil.renderCssClass(writer, uiComponent, GRAPHIC_CLASS_ATTR);
+            HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML_UNIVERSAL_ATTRIBUTES);
+            HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML_EVENT_HANDLER_ATTRIBUTES);
+            HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML_IMG_ATTRUBUTES);
 
             writer.write(">");
         }

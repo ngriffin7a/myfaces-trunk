@@ -83,6 +83,11 @@ public class ErrorsRenderer
     public void encodeEnd(FacesContext facesContext, UIComponent uiComponent)
         throws IOException
     {
+        if (!isVisible(facesContext, uiComponent))
+        {
+            return;
+        }
+
         boolean ulLayout;
         ResponseWriter writer = facesContext.getResponseWriter();
         Iterator it;

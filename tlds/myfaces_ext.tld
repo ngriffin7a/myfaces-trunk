@@ -45,7 +45,6 @@
 <!ENTITY ui_select_one_attributes       SYSTEM "entities/ui_select_one_attributes.xml">
 <!ENTITY key_bundle_attributes          SYSTEM "entities/key_bundle_attributes.xml">
 <!ENTITY user_role_attributes           SYSTEM "entities/user_role_attributes.xml">
-<!ENTITY converter_attribute            SYSTEM "entities/converter_attribute.xml">
 ]>
 
 <taglib>
@@ -133,7 +132,10 @@
             <name>open</name>
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>
-            <type>java.lang.Boolean</type>
+            <type>java.lang.String</type>
+            <description>
+                If true, this item will be open.
+            </description>
         </attribute>
         &user_role_attributes;
     </tag>
@@ -162,8 +164,7 @@
          <attribute>
              <name>ascending</name>
              <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-             <type>java.lang.Boolean</type>
+             <rtexprvalue>false</rtexprvalue>
              <description>
                  the sort direction
              </description>

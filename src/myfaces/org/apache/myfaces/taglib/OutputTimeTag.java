@@ -58,7 +58,7 @@ public class OutputTimeTag
 
     public void setOutputClass(String value)
     {
-        setRendererAttribute(OUTPUT_CLASS_ATTR, value);
+        setRendererAttributeString(OUTPUT_CLASS_ATTR, value);
     }
 
     // HTML universal attributes --> already implemented in MyFacesTag
@@ -69,12 +69,12 @@ public class OutputTimeTag
 
     public void setTimeStyle(String value)
     {
-        setRendererAttribute(TIME_STYLE_ATTR, value);
+        setRendererAttributeString(TIME_STYLE_ATTR, value);
     }
 
     public void setTimezone(String value)
     {
-        setRendererAttribute(TIMEZONE_ATTR, value);
+        setRendererAttributeString(TIMEZONE_ATTR, value);
     }
 
     // user role attributes --> already implemented in MyFacesTag

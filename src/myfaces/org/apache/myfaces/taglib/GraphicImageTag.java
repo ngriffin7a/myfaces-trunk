@@ -60,12 +60,12 @@ public class GraphicImageTag
 
     public void setUrl(String value)
     {
-        setComponentProperty(UIGraphic.URL_ATTR, value);
+        setComponentPropertyString(UIGraphic.URL_ATTR, value);
     }
 
     public void setGraphicClass(String v)
     {
-        setRendererAttribute(GRAPHIC_CLASS_ATTR, v);
+        setRendererAttributeString(GRAPHIC_CLASS_ATTR, v);
     }
 
     // HTML universal attributes --> already implemented in MyFacesTag
@@ -76,52 +76,52 @@ public class GraphicImageTag
 
     public void setAlign(String value)
     {
-        setRendererAttribute(ALIGN_ATTR, value);
+        setRendererAttributeString(ALIGN_ATTR, value);
     }
 
     public void setAlt(String value)
     {
-        setRendererAttribute(ALT_ATTR, value);
+        setRendererAttributeString(ALT_ATTR, value);
     }
 
     public void setBorder(String value)
     {
-        setRendererAttribute(BORDER_ATTR, value);
+        setRendererAttributeString(BORDER_ATTR, value);
     }
 
     public void setHeight(String value)
     {
-        setRendererAttribute(HEIGHT_ATTR, value);
+        setRendererAttributeString(HEIGHT_ATTR, value);
     }
 
     public void setHspace(String value)
     {
-        setRendererAttribute(HSPACE_ATTR, value);
+        setRendererAttributeString(HSPACE_ATTR, value);
     }
 
     public void setIsmap(String value)
     {
-        setRendererAttribute(ISMAP_ATTR, value);
+        setRendererAttributeString(ISMAP_ATTR, value);
     }
 
     public void setLongdesc(String value)
     {
-        setRendererAttribute(LONGDESC_ATTR, value);
+        setRendererAttributeString(LONGDESC_ATTR, value);
     }
 
     public void setUsemap(String value)
     {
-        setRendererAttribute(USEMAP_ATTR, value);
+        setRendererAttributeString(USEMAP_ATTR, value);
     }
 
     public void setVspace(String value)
     {
-        setRendererAttribute(VSPACE_ATTR, value);
+        setRendererAttributeString(VSPACE_ATTR, value);
     }
 
     public void setWidth(String value)
     {
-        setRendererAttribute(WIDTH_ATTR, value);
+        setRendererAttributeString(WIDTH_ATTR, value);
     }
 
 
@@ -130,12 +130,12 @@ public class GraphicImageTag
 
     public void setAltKey(String value)
     {
-        setRendererAttribute(ALT_KEY_ATTR, value);
+        setRendererAttributeString(ALT_KEY_ATTR, value);
     }
 
     public void setAltBundle(String value)
     {
-        setRendererAttribute(ALT_BUNDLE_ATTR, value);
+        setRendererAttributeString(ALT_BUNDLE_ATTR, value);
     }
 
 

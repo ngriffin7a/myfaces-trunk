@@ -23,7 +23,7 @@ import net.sourceforge.myfaces.component.UISelectMany;
 import net.sourceforge.myfaces.component.UISelectOne;
 import net.sourceforge.myfaces.renderkit.attr.*;
 import net.sourceforge.myfaces.renderkit.html.util.SelectItemUtil;
-import net.sourceforge.myfaces.renderkit.html.util.HTMLSelectUtil;
+import net.sourceforge.myfaces.renderkit.html.util.HTMLUtil;
 import net.sourceforge.myfaces.renderkit.html.attr.HTMLEventHandlerAttributes;
 import net.sourceforge.myfaces.renderkit.html.attr.HTMLSelectAttributes;
 import net.sourceforge.myfaces.renderkit.html.attr.HTMLUniversalAttributes;
@@ -85,20 +85,19 @@ public class ListboxRenderer
     public void encodeBegin(FacesContext facescontext, UIComponent uicomponent)
             throws IOException
     {
-        if (uicomponent.getComponentType() != UISelectMany.TYPE &&
-            uicomponent.getComponentType() != UISelectOne.TYPE)
-        {
-            throw new IllegalArgumentException("UIComponent must be of type " + UISelectMany.class.getName() +
-                                               " or " + UISelectOne.class.getName());
-        }
     }
 
-    public void encodeEnd(FacesContext facescontext, UIComponent uicomponent)
+    public void encodeEnd(FacesContext facesContext, UIComponent uiComponent)
         throws IOException
     {
-        int size = SelectItemUtil.getSelectItemsCount(facescontext, uicomponent);
-        HTMLSelectUtil.drawHTMLSelect(facescontext,
-                                      uicomponent,
+        if (!isVisible(facesContext, uiComponent))
+        {
+            return;
+        }
+
+        int size = SelectItemUtil.getSelectItemsCount(facesContext, uiComponent);
+        HTMLUtil.renderSelect(facesContext,
+                                      uiComponent,
                                       TYPE,
                                       size);
     }

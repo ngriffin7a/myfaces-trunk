@@ -56,7 +56,7 @@ public class OutputMessageTag
 
     public void setOutputClass(String value)
     {
-        setRendererAttribute(OUTPUT_CLASS_ATTR, value);
+        setRendererAttributeString(OUTPUT_CLASS_ATTR, value);
     }
 
     // HTML universal attributes --> already implemented in MyFacesTag

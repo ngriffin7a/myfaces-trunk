@@ -19,14 +19,15 @@
 package net.sourceforge.myfaces.taglib;
 
 import net.sourceforge.myfaces.component.CommonComponentAttributes;
-import net.sourceforge.myfaces.renderkit.attr.*;
+import net.sourceforge.myfaces.renderkit.attr.CommonRendererAttributes;
+import net.sourceforge.myfaces.renderkit.attr.KeyBundleAttributes;
+import net.sourceforge.myfaces.renderkit.attr.UserRoleAttributes;
 import net.sourceforge.myfaces.renderkit.html.attr.HTMLEventHandlerAttributes;
 import net.sourceforge.myfaces.renderkit.html.attr.HTMLUniversalAttributes;
 
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.webapp.FacesBodyTag;
-import javax.faces.webapp.FacesTag;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
 import javax.servlet.jsp.tagext.BodyTag;
@@ -125,29 +126,29 @@ public abstract class MyFacesBodyTag
 
 
     //property helpers
-    protected void setComponentProperty(String attrName, Object attrValue)
+    protected void setComponentPropertyString(String attrName, Object attrValue)
     {
-        _helper.setComponentProperty(attrName, attrValue);
+        _helper.setComponentPropertyString(attrName, attrValue);
     }
 
-    protected void setComponentProperty(String attrName, boolean attrValue)
+    protected void setComponentPropertyBoolean(String attrName, Object attrValue)
     {
-        _helper.setComponentProperty(attrName, attrValue);
+        _helper.setComponentPropertyBoolean(attrName, attrValue);
     }
 
-    protected void setRendererAttribute(String attrName, Object attrValue)
+    protected void setRendererAttributeString(String attrName, Object attrValue)
     {
-        _helper.setRendererAttribute(attrName, attrValue);
+        _helper.setRendererAttributeString(attrName, attrValue);
     }
 
-    protected void setRendererAttribute(String attrName, boolean attrValue)
+    protected void setRendererAttributeBoolean(String attrName, Object attrValue)
     {
-        _helper.setRendererAttribute(attrName, attrValue);
+        _helper.setRendererAttributeBoolean(attrName, attrValue);
     }
 
-    protected void setRendererAttribute(String attrName, int attrValue)
+    protected void setRendererAttributeInteger(String attrName, Object attrValue)
     {
-        _helper.setRendererAttribute(attrName, attrValue);
+        _helper.setRendererAttributeInteger(attrName, attrValue);
     }
 
     public void overrideProperties(UIComponent uiComponent)
@@ -178,7 +179,7 @@ public abstract class MyFacesBodyTag
      */
     protected void setValue(Object value)
     {
-        setComponentProperty(CommonComponentAttributes.VALUE_ATTR, value);
+        setComponentPropertyString(CommonComponentAttributes.VALUE_ATTR, value);
     }
 
 
@@ -195,12 +196,12 @@ public abstract class MyFacesBodyTag
 
     public void setConverter(Object converter)
     {
-        setRendererAttribute(CONVERTER_ATTR, converter);
+        setRendererAttributeString(CONVERTER_ATTR, converter);
     }
 
     public void setModelReference(String s)
     {
-        setComponentProperty(MODEL_REFERENCE_ATTR, s);
+        setComponentPropertyString(MODEL_REFERENCE_ATTR, s);
     }
 
     public void setRendered(boolean rendered)
@@ -218,22 +219,22 @@ public abstract class MyFacesBodyTag
 
     public void setDir(String value)
     {
-        setRendererAttribute(DIR_ATTR, value);
+        setRendererAttributeString(DIR_ATTR, value);
     }
 
     public void setLang(String value)
     {
-        setRendererAttribute(LANG_ATTR, value);
+        setRendererAttributeString(LANG_ATTR, value);
     }
 
     public void setStyle(String value)
     {
-        setRendererAttribute(STYLE_ATTR, value);
+        setRendererAttributeString(STYLE_ATTR, value);
     }
 
     public void setTitle(String value)
     {
-        setRendererAttribute(TITLE_ATTR, value);
+        setRendererAttributeString(TITLE_ATTR, value);
     }
 
 
@@ -242,52 +243,52 @@ public abstract class MyFacesBodyTag
 
     public void setOnclick(String value)
     {
-        setRendererAttribute(ONCLICK_ATTR, value);
+        setRendererAttributeString(ONCLICK_ATTR, value);
     }
 
     public void setOndblclick(String value)
     {
-        setRendererAttribute(ONDBLCLICK_ATTR, value);
+        setRendererAttributeString(ONDBLCLICK_ATTR, value);
     }
 
     public void setOnmousedown(String value)
     {
-        setRendererAttribute(ONMOUSEDOWN_ATTR, value);
+        setRendererAttributeString(ONMOUSEDOWN_ATTR, value);
     }
 
     public void setOnmouseup(String value)
     {
-        setRendererAttribute(ONMOUSEUP_ATTR, value);
+        setRendererAttributeString(ONMOUSEUP_ATTR, value);
     }
 
     public void setOnmouseover(String value)
     {
-        setRendererAttribute(ONMOUSEOVER_ATTR, value);
+        setRendererAttributeString(ONMOUSEOVER_ATTR, value);
     }
 
     public void setOnmousemove(String value)
     {
-        setRendererAttribute(ONMOUSEMOVE_ATTR, value);
+        setRendererAttributeString(ONMOUSEMOVE_ATTR, value);
     }
 
     public void setOnmouseout(String value)
     {
-        setRendererAttribute(ONMOUSEOUT_ATTR, value);
+        setRendererAttributeString(ONMOUSEOUT_ATTR, value);
     }
 
     public void setOnkeypress(String value)
     {
-        setRendererAttribute(ONKEYPRESS_ATTR, value);
+        setRendererAttributeString(ONKEYPRESS_ATTR, value);
     }
 
     public void setOnkeydown(String value)
     {
-        setRendererAttribute(ONKEYDOWN_ATTR, value);
+        setRendererAttributeString(ONKEYDOWN_ATTR, value);
     }
 
     public void setOnkeyup(String value)
     {
-        setRendererAttribute(ONKEYUP_ATTR, value);
+        setRendererAttributeString(ONKEYUP_ATTR, value);
     }
 
 
@@ -295,12 +296,12 @@ public abstract class MyFacesBodyTag
 
     public void setKey(String v)
     {
-        setRendererAttribute(KEY_ATTR, v);
+        setRendererAttributeString(KEY_ATTR, v);
     }
 
     public void setBundle(String v)
     {
-        setRendererAttribute(BUNDLE_ATTR, v);
+        setRendererAttributeString(BUNDLE_ATTR, v);
     }
 
 
@@ -309,12 +310,12 @@ public abstract class MyFacesBodyTag
 
     public void setEnabledOnUserRole(String value)
     {
-        setRendererAttribute(ENABLED_ON_USER_ROLE_ATTR, value);
+        setRendererAttributeString(ENABLED_ON_USER_ROLE_ATTR, value);
     }
 
     public void setVisibleOnUserRole(String value)
     {
-        setRendererAttribute(VISIBLE_ON_USER_ROLE_ATTR, value);
+        setRendererAttributeString(VISIBLE_ON_USER_ROLE_ATTR, value);
     }
 
 }

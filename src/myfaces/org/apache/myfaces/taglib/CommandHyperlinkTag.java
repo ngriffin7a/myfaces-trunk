@@ -73,7 +73,7 @@ public class CommandHyperlinkTag
 
     public void setCommandClass(String v)
     {
-        setRendererAttribute(COMMAND_CLASS_ATTR, v);
+        setRendererAttributeString(COMMAND_CLASS_ATTR, v);
     }
 
     // HTML universal attributes --> already implemented in MyFacesTag
@@ -84,52 +84,52 @@ public class CommandHyperlinkTag
 
     public void setAccesskey(String value)
     {
-        setRendererAttribute(ACCESSKEY_ATTR, value);
+        setRendererAttributeString(ACCESSKEY_ATTR, value);
     }
 
     public void setCharset(String value)
     {
-        setRendererAttribute(CHARSET_ATTR, value);
+        setRendererAttributeString(CHARSET_ATTR, value);
     }
 
     public void setCoords(String value)
     {
-        setRendererAttribute(COORDS_ATTR, value);
+        setRendererAttributeString(COORDS_ATTR, value);
     }
 
     public void setHreflang(String value)
     {
-        setRendererAttribute(HREFLANG_ATTR, value);
+        setRendererAttributeString(HREFLANG_ATTR, value);
     }
 
     public void setRel(String value)
     {
-        setRendererAttribute(REL_ATTR, value);
+        setRendererAttributeString(REL_ATTR, value);
     }
 
     public void setRev(String value)
     {
-        setRendererAttribute(REV_ATTR, value);
+        setRendererAttributeString(REV_ATTR, value);
     }
 
     public void setShape(String value)
     {
-        setRendererAttribute(SHAPE_ATTR, value);
+        setRendererAttributeString(SHAPE_ATTR, value);
     }
 
-    public void setTabindex(int value)
+    public void setTabindex(String value)
     {
-        setRendererAttribute(TABINDEX_ATTR, value);
+        setRendererAttributeString(TABINDEX_ATTR, value);
     }
 
     public void setTarget(String value)
     {
-        setRendererAttribute(TARGET_ATTR, value);
+        setRendererAttributeString(TARGET_ATTR, value);
     }
 
     public void setType(String value)
     {
-        setRendererAttribute(TYPE_ATTR, value);
+        setRendererAttributeString(TYPE_ATTR, value);
     }
 
 
@@ -138,7 +138,7 @@ public class CommandHyperlinkTag
 
     public void setHref(String v)
     {
-        setRendererAttribute(HREF_ATTR, v);
+        setRendererAttributeString(HREF_ATTR, v);
     }
 
 
@@ -151,7 +151,7 @@ public class CommandHyperlinkTag
 
     public void setCommandReference(String v)
     {
-        setComponentProperty(UICommand.COMMAND_REFERENCE_ATTR, v);
+        setComponentPropertyString(UICommand.COMMAND_REFERENCE_ATTR, v);
     }
 
 }

@@ -62,7 +62,7 @@ public class OutputLabelTag
 
     public void setOutputClass(String value)
     {
-        setRendererAttribute(OUTPUT_CLASS_ATTR, value);
+        setRendererAttributeString(OUTPUT_CLASS_ATTR, value);
     }
 
     // HTML universal attributes --> already implemented in MyFacesTag
@@ -73,24 +73,24 @@ public class OutputLabelTag
 
     public void setAccesskey(String value)
     {
-        setRendererAttribute(ACCESSKEY_ATTR, value);
+        setRendererAttributeString(ACCESSKEY_ATTR, value);
     }
 
     public void setOnblur(String value)
     {
-        setRendererAttribute(ONBLUR_ATTR, value);
+        setRendererAttributeString(ONBLUR_ATTR, value);
     }
 
     public void setOnfocus(String value)
     {
-        setRendererAttribute(ONFOCUS_ATTR, value);
+        setRendererAttributeString(ONFOCUS_ATTR, value);
     }
 
     // Label Renderer attributes
 
     public void setFor(String value)
     {
-        setRendererAttribute(FOR_ATTR, value);
+        setRendererAttributeString(FOR_ATTR, value);
     }
 
     // user role attributes --> already implemented in MyFacesTag

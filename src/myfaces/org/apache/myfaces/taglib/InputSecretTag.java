@@ -47,14 +47,9 @@ public class InputSecretTag
 
     // Secret Renderer attributes
 
-    public void setRedisplay(boolean b)
+    public void setRedisplay(String b)
     {
-        setRendererAttribute(REDISPLAY_ATTR, b);
-    }
-
-    public void setRedisplay(Boolean b)
-    {
-        setRendererAttribute(REDISPLAY_ATTR, b);
+        setRendererAttributeBoolean(REDISPLAY_ATTR, b);
     }
 
     // converter attribute --> already implemented in MyFacesTag

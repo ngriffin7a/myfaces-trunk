@@ -56,14 +56,14 @@ public class PanelDataTag
 
     public void setPanelClass(String v)
     {
-        setRendererAttribute(PANEL_CLASS_ATTR, v);
+        setRendererAttributeString(PANEL_CLASS_ATTR, v);
     }
 
     // Data Renderer attributes
 
     public void setVar(String v)
     {
-        setRendererAttribute(VAR_ATTR, v);
+        setRendererAttributeString(VAR_ATTR, v);
     }
 
 

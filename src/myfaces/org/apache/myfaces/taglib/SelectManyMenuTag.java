@@ -57,7 +57,7 @@ public class SelectManyMenuTag
 
     public void setSelectManyClass(String value)
     {
-        setRendererAttribute(SELECT_MANY_CLASS_ATTR, value);
+        setRendererAttributeString(SELECT_MANY_CLASS_ATTR, value);
     }
 
     // HTML universal attributes --> already implemented in MyFacesTag
@@ -68,59 +68,49 @@ public class SelectManyMenuTag
 
     public void setDatafld(String value)
     {
-        setRendererAttribute(DATAFLD_ATTR, value);
+        setRendererAttributeString(DATAFLD_ATTR, value);
     }
 
     public void setDatasrc(String value)
     {
-        setRendererAttribute(DATASRC_ATTR, value);
+        setRendererAttributeString(DATASRC_ATTR, value);
     }
 
     public void setDataformatas(String value)
     {
-        setRendererAttribute(DATAFORMATAS_ATTR, value);
+        setRendererAttributeString(DATAFORMATAS_ATTR, value);
     }
 
-    public void setDisabled(boolean value)
+    public void setDisabled(String value)
     {
-        setRendererAttribute(DISABLED_ATTR, value);
-    }
-
-    public void setDisabled(Boolean value)
-    {
-        setRendererAttribute(DISABLED_ATTR, value);
+        setRendererAttributeBoolean(DISABLED_ATTR, value);
     }
 
     public void setOnblur(String value)
     {
-        setRendererAttribute(ONBLUR_ATTR, value);
+        setRendererAttributeString(ONBLUR_ATTR, value);
     }
 
     public void setOnchange(String value)
     {
-        setRendererAttribute(ONCHANGE_ATTR, value);
+        setRendererAttributeString(ONCHANGE_ATTR, value);
     }
 
     public void setOnfocus(String value)
     {
-        setRendererAttribute(ONFOCUS_ATTR, value);
+        setRendererAttributeString(ONFOCUS_ATTR, value);
     }
 
-    public void setTabindex(int value)
+    public void setTabindex(String value)
     {
-        setRendererAttribute(TABINDEX_ATTR, value);
-    }
-
-    public void setTabindex(Integer value)
-    {
-        setRendererAttribute(TABINDEX_ATTR, value);
+        setRendererAttributeString(TABINDEX_ATTR, value);
     }
 
     // Menu Renderer attributes
 
     public void setSize(String value)
     {
-        setRendererAttribute(SIZE_ATTR, value);
+        setRendererAttributeString(SIZE_ATTR, value);
     }
 
     // user role attributes --> already implemented in MyFacesTag

@@ -27,7 +27,7 @@ import net.sourceforge.myfaces.renderkit.html.HTMLRenderer;
 import net.sourceforge.myfaces.renderkit.html.attr.HTMLEventHandlerAttributes;
 import net.sourceforge.myfaces.renderkit.html.attr.HTMLInputAttributes;
 import net.sourceforge.myfaces.renderkit.html.attr.HTMLUniversalAttributes;
-import net.sourceforge.myfaces.renderkit.html.util.CommonAttributes;
+import net.sourceforge.myfaces.renderkit.html.util.HTMLUtil;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLEncoder;
 
 import javax.faces.component.UIComponent;
@@ -148,11 +148,12 @@ public class FileUploadRenderer
             writer.write("\"");
         }
 
-        CommonAttributes.renderCssClass(writer, uiComponent,INPUT_CLASS_ATTR);
-        CommonAttributes.renderHTMLAttributes(writer, uiComponent, HTML_UNIVERSAL_ATTRIBUTES);
-        CommonAttributes.renderHTMLAttributes(writer, uiComponent, HTML_EVENT_HANDLER_ATTRIBUTES);
-        CommonAttributes.renderHTMLAttributes(writer, uiComponent, HTML_INPUT_ATTRIBUTES);
-        CommonAttributes.renderHTMLAttributes(writer, uiComponent, HTML_INPUT_FILE_UPLOAD_ATTRIBUTES);
+        HTMLUtil.renderCssClass(writer, uiComponent,INPUT_CLASS_ATTR);
+        HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML_UNIVERSAL_ATTRIBUTES);
+        HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML_EVENT_HANDLER_ATTRIBUTES);
+        HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML_INPUT_ATTRIBUTES);
+        HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML_INPUT_FILE_UPLOAD_ATTRIBUTES);
+        HTMLUtil.renderDisabledOnUserRole(facesContext, uiComponent);
 
         writer.write(">");
     }

@@ -93,6 +93,11 @@ public class MessageRenderer
     public void encodeEnd(FacesContext facesContext, UIComponent uiComponent)
         throws IOException
     {
+        if (!isVisible(facesContext, uiComponent))
+        {
+            return;
+        }
+
         ResponseWriter writer = facesContext.getResponseWriter();
         String css = (String)uiComponent.getAttribute(OUTPUT_CLASS_ATTR);
         if (css != null)

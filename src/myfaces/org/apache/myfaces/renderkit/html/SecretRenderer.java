@@ -22,7 +22,7 @@ import net.sourceforge.myfaces.component.UIComponentUtils;
 import net.sourceforge.myfaces.component.CommonComponentAttributes;
 import net.sourceforge.myfaces.renderkit.attr.*;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLEncoder;
-import net.sourceforge.myfaces.renderkit.html.util.CommonAttributes;
+import net.sourceforge.myfaces.renderkit.html.util.HTMLUtil;
 import net.sourceforge.myfaces.renderkit.html.attr.HTMLEventHandlerAttributes;
 import net.sourceforge.myfaces.renderkit.html.attr.HTMLInputAttributes;
 import net.sourceforge.myfaces.renderkit.html.attr.HTMLUniversalAttributes;
@@ -79,6 +79,11 @@ public class SecretRenderer
     public void encodeEnd(FacesContext facesContext, UIComponent uiComponent)
         throws IOException
     {
+        if (!isVisible(facesContext, uiComponent))
+        {
+            return;
+        }
+
         ResponseWriter writer = facesContext.getResponseWriter();
         writer.write("<input type=\"password\"");
         writer.write(" name=\"");
@@ -111,10 +116,11 @@ public class SecretRenderer
             writer.write("\"");
         }
 
-        CommonAttributes.renderCssClass(writer, uiComponent, INPUT_CLASS_ATTR);
-        CommonAttributes.renderHTMLAttributes(writer, uiComponent, HTML_UNIVERSAL_ATTRIBUTES);
-        CommonAttributes.renderHTMLAttributes(writer, uiComponent, HTML_EVENT_HANDLER_ATTRIBUTES);
-        CommonAttributes.renderHTMLAttributes(writer, uiComponent, HTML_INPUT_ATTRIBUTES);
+        HTMLUtil.renderCssClass(writer, uiComponent, INPUT_CLASS_ATTR);
+        HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML_UNIVERSAL_ATTRIBUTES);
+        HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML_EVENT_HANDLER_ATTRIBUTES);
+        HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML_INPUT_ATTRIBUTES);
+        HTMLUtil.renderDisabledOnUserRole(facesContext, uiComponent);
 
         writer.write(">");
     }

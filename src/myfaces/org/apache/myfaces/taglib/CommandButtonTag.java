@@ -58,7 +58,7 @@ public class CommandButtonTag
 
     public void setCommandClass(String v)
     {
-        setRendererAttribute(COMMAND_CLASS_ATTR, v);
+        setRendererAttributeString(COMMAND_CLASS_ATTR, v);
     }
 
     // HTML universal attributes --> already implemented in MyFacesTag
@@ -69,57 +69,57 @@ public class CommandButtonTag
 
     public void setAccesskey(String value)
     {
-        setRendererAttribute(ACCESSKEY_ATTR, value);
+        setRendererAttributeString(ACCESSKEY_ATTR, value);
     }
 
     public void setAlign(String value)
     {
-        setRendererAttribute(ALIGN_ATTR, value);
+        setRendererAttributeString(ALIGN_ATTR, value);
     }
 
     public void setAlt(String value)
     {
-        setRendererAttribute(ALT_ATTR, value);
+        setRendererAttributeString(ALT_ATTR, value);
     }
 
     public void setDatafld(String value)
     {
-        setRendererAttribute(DATAFLD_ATTR, value);
+        setRendererAttributeString(DATAFLD_ATTR, value);
     }
 
     public void setDatasrc(String value)
     {
-        setRendererAttribute(DATASRC_ATTR, value);
+        setRendererAttributeString(DATASRC_ATTR, value);
     }
 
     public void setDataformatas(String value)
     {
-        setRendererAttribute(DATAFORMATAS_ATTR, value);
+        setRendererAttributeString(DATAFORMATAS_ATTR, value);
     }
 
-    public void setDisabled(boolean value)
+    public void setDisabled(String value)
     {
-        setRendererAttribute(DISABLED_ATTR, value);
+        setRendererAttributeBoolean(DISABLED_ATTR, value);
     }
 
     public void setOnblur(String value)
     {
-        setRendererAttribute(ONBLUR_ATTR, value);
+        setRendererAttributeString(ONBLUR_ATTR, value);
     }
 
     public void setOnchange(String value)
     {
-        setRendererAttribute(ONCHANGE_ATTR, value);
+        setRendererAttributeString(ONCHANGE_ATTR, value);
     }
 
     public void setOnfocus(String value)
     {
-        setRendererAttribute(ONFOCUS_ATTR, value);
+        setRendererAttributeString(ONFOCUS_ATTR, value);
     }
 
-    public void setTabindex(int value)
+    public void setTabindex(String value)
     {
-        setRendererAttribute(TABINDEX_ATTR, value);
+        setRendererAttributeString(TABINDEX_ATTR, value);
     }
 
 
@@ -128,12 +128,12 @@ public class CommandButtonTag
 
     public void setLabel(String v)
     {
-        setRendererAttribute(LABEL_ATTR, v);
+        setRendererAttributeString(LABEL_ATTR, v);
     }
 
     public void setType(String value)
     {
-        setRendererAttribute(TYPE_ATTR, value);
+        setRendererAttributeString(TYPE_ATTR, value);
     }
 
 
@@ -147,7 +147,7 @@ public class CommandButtonTag
 
     public void setCommandReference(String v)
     {
-        setComponentProperty(UICommand.COMMAND_REFERENCE_ATTR, v);
+        setComponentPropertyString(UICommand.COMMAND_REFERENCE_ATTR, v);
     }
 
 }

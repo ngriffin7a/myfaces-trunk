@@ -41,8 +41,8 @@ public class SaveStateTag
         return null;
     }
 
-    public void setGlobal(boolean global)
+    public void setGlobal(String global)
     {
-        setComponentProperty(UISaveState.GLOBAL_ATTR, global);
+        setComponentPropertyBoolean(UISaveState.GLOBAL_ATTR, global);
     }
 }

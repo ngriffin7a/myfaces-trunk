@@ -19,12 +19,14 @@
 package net.sourceforge.myfaces.renderkit.html;
 
 import net.sourceforge.myfaces.MyFacesFactoryFinder;
-import net.sourceforge.myfaces.renderkit.attr.*;
-import net.sourceforge.myfaces.renderkit.html.state.StateRenderer;
-import net.sourceforge.myfaces.renderkit.html.util.CommonAttributes;
+import net.sourceforge.myfaces.renderkit.attr.CommonRendererAttributes;
+import net.sourceforge.myfaces.renderkit.attr.FormRendererAttributes;
+import net.sourceforge.myfaces.renderkit.attr.UserRoleAttributes;
 import net.sourceforge.myfaces.renderkit.html.attr.HTMLEventHandlerAttributes;
 import net.sourceforge.myfaces.renderkit.html.attr.HTMLFormAttributes;
 import net.sourceforge.myfaces.renderkit.html.attr.HTMLUniversalAttributes;
+import net.sourceforge.myfaces.renderkit.html.state.StateRenderer;
+import net.sourceforge.myfaces.renderkit.html.util.HTMLUtil;
 import net.sourceforge.myfaces.webapp.ServletMapping;
 import net.sourceforge.myfaces.webapp.ServletMappingFactory;
 
@@ -81,22 +83,26 @@ public class FormRenderer
     }
 
 
-    public void encodeBegin(FacesContext context, UIComponent uiComponent)
+    public void encodeBegin(FacesContext facesContext, UIComponent uiComponent)
             throws IOException
     {
-        ResponseWriter writer = context.getResponseWriter();
+        if (!isVisible(facesContext, uiComponent))
+        {
+            return;
+        }
+
+        ResponseWriter writer = facesContext.getResponseWriter();
         writer.write("<form method=\"post\" action=\"");
-        writer.write(getActionStr(context, uiComponent));
+        writer.write(getActionStr(facesContext, uiComponent));
         writer.write("\"");
-        CommonAttributes.renderCssClass(writer, uiComponent, FORM_CLASS_ATTR);
-        CommonAttributes.renderHTMLAttributes(writer, uiComponent, HTML_UNIVERSAL_ATTRIBUTES);
-        CommonAttributes.renderHTMLAttributes(writer, uiComponent, HTML_EVENT_HANDLER_ATTRIBUTES);
-        CommonAttributes.renderHTMLAttributes(writer, uiComponent, HTML_FORM_ATTRIBUTES);
+        HTMLUtil.renderCssClass(writer, uiComponent, FORM_CLASS_ATTR);
+        HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML_UNIVERSAL_ATTRIBUTES);
+        HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML_EVENT_HANDLER_ATTRIBUTES);
+        HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML_FORM_ATTRIBUTES);
         writer.write(">");
     }
 
     private String getActionStr(FacesContext facesContext, UIComponent form)
-        throws IOException
     {
         HttpServletRequest request = (HttpServletRequest)facesContext.getServletRequest();
         HttpServletResponse response = (HttpServletResponse)facesContext.getServletResponse();
@@ -114,13 +120,18 @@ public class FormRenderer
         return action;
     }
 
-    public void encodeEnd(FacesContext facesContext, UIComponent component)
+    public void encodeEnd(FacesContext facesContext, UIComponent uiComponent)
             throws IOException
     {
+        if (!isVisible(facesContext, uiComponent))
+        {
+            return;
+        }
+
         RenderKitFactory rkFactory = (RenderKitFactory)FactoryFinder.getFactory(FactoryFinder.RENDER_KIT_FACTORY);
         RenderKit renderKit = rkFactory.getRenderKit(facesContext.getTree().getRenderKitId());
         Renderer renderer = renderKit.getRenderer(StateRenderer.TYPE);
-        renderer.encodeChildren(facesContext, component);
+        renderer.encodeChildren(facesContext, uiComponent);
 
         ResponseWriter writer = facesContext.getResponseWriter();
         writer.write("</form>");

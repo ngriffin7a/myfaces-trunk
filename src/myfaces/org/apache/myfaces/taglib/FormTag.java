@@ -66,7 +66,7 @@ public class FormTag
 
     public void setFormClass(String v)
     {
-        setRendererAttribute(FORM_CLASS_ATTR, v);
+        setRendererAttributeString(FORM_CLASS_ATTR, v);
     }
 
 
@@ -78,32 +78,32 @@ public class FormTag
 
     public void setAccept(String value)
     {
-        setRendererAttribute(ACCEPT_ATTR, value);
+        setRendererAttributeString(ACCEPT_ATTR, value);
     }
 
     public void setAcceptCharset(String value)
     {
-        setRendererAttribute(ACCEPT_CHARSET_ATTR, value);
+        setRendererAttributeString(ACCEPT_CHARSET_ATTR, value);
     }
 
     public void setEnctype(String value)
     {
-        setRendererAttribute(ENCTYPE_ATTR, value);
+        setRendererAttributeString(ENCTYPE_ATTR, value);
     }
 
     public void setOnreset(String value)
     {
-        setRendererAttribute(ONRESET_ATTR, value);
+        setRendererAttributeString(ONRESET_ATTR, value);
     }
 
     public void setOnsubmit(String value)
     {
-        setRendererAttribute(ONSUMBIT_ATTR, value);
+        setRendererAttributeString(ONSUMBIT_ATTR, value);
     }
 
     public void setTarget(String value)
     {
-        setRendererAttribute(TARGET_ATTR, value);
+        setRendererAttributeString(TARGET_ATTR, value);
     }
 
     // Form Renderer attributes --> no attributes yet

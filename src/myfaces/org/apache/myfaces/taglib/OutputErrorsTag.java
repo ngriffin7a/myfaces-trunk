@@ -53,7 +53,7 @@ public class OutputErrorsTag
 
     public void setOutputClass(String value)
     {
-        setRendererAttribute(OUTPUT_CLASS_ATTR, value);
+        setRendererAttributeString(OUTPUT_CLASS_ATTR, value);
     }
 
     // HTML universal attributes --> already implemented in MyFacesTag
@@ -64,7 +64,7 @@ public class OutputErrorsTag
 
     public void setClientId(String v)
     {
-        setRendererAttribute(CLIENT_ID_ATTR, v);
+        setRendererAttributeString(CLIENT_ID_ATTR, v);
     }
 
     // user role attributes --> already implemented in MyFacesTag

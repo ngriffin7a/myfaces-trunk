@@ -58,7 +58,7 @@ public class InputHiddenTag
 
     public void setInputClass(String v)
     {
-        setRendererAttribute(INPUT_CLASS_ATTR, v);
+        setRendererAttributeString(INPUT_CLASS_ATTR, v);
     }
 
     // converter attribute --> already implemented in MyFacesTag

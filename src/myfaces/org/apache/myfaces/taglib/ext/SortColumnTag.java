@@ -50,15 +50,14 @@ public class SortColumnTag
         setValue(v);
     }
 
-    public void setDefaultAscending(boolean b)
+    public void setDefaultAscending(String b)
     {
-        setRendererAttribute(SortColumnRenderer.DEFAULT_ASCENDING_ATTR,
-                             b ? Boolean.TRUE : Boolean.FALSE);
+        setRendererAttributeBoolean(SortColumnRenderer.DEFAULT_ASCENDING_ATTR, b);
     }
 
     public void setCssClass(String v)
     {
-        setRendererAttribute(SortColumnRenderer.COMMAND_CLASS_ATTR, v);
+        setRendererAttributeString(SortColumnRenderer.COMMAND_CLASS_ATTR, v);
     }
 
 

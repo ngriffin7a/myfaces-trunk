@@ -23,7 +23,7 @@ import net.sourceforge.myfaces.renderkit.attr.*;
 import net.sourceforge.myfaces.renderkit.html.attr.HTMLEventHandlerAttributes;
 import net.sourceforge.myfaces.renderkit.html.attr.HTMLSelectAttributes;
 import net.sourceforge.myfaces.renderkit.html.attr.HTMLUniversalAttributes;
-import net.sourceforge.myfaces.renderkit.html.util.HTMLSelectUtil;
+import net.sourceforge.myfaces.renderkit.html.util.HTMLUtil;
 
 import javax.faces.component.UIComponent;
 import javax.faces.component.UISelectMany;
@@ -89,10 +89,15 @@ public class MenuRenderer
     {
     }
 
-    public void encodeEnd(FacesContext facescontext, UIComponent uicomponent)
+    public void encodeEnd(FacesContext facesContext, UIComponent uiComponent)
         throws IOException
     {
-        String strSize = (String)uicomponent.getAttribute(SIZE_ATTR);
+        if (!isVisible(facesContext, uiComponent))
+        {
+            return;
+        }
+
+        String strSize = (String)uiComponent.getAttribute(SIZE_ATTR);
         int size;
         try
         {
@@ -103,8 +108,8 @@ public class MenuRenderer
             size = DEFAULT_SIZE;
         }
 
-        HTMLSelectUtil.drawHTMLSelect(facescontext,
-                                      uicomponent,
+        HTMLUtil.renderSelect(facesContext,
+                                      uiComponent,
                                       TYPE,
                                       size);
     }

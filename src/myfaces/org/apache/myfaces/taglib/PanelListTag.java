@@ -56,7 +56,7 @@ public class PanelListTag
 
     public void setPanelClass(String v)
     {
-        setRendererAttribute(PANEL_CLASS_ATTR, v);
+        setRendererAttributeString(PANEL_CLASS_ATTR, v);
     }
 
     // HTML universal attributes --> already implemented in MyFacesTag
@@ -67,62 +67,62 @@ public class PanelListTag
 
     public void setAlign(String value)
     {
-        setRendererAttribute(ALIGN_ATTR, value);
+        setRendererAttributeString(ALIGN_ATTR, value);
     }
 
     public void setBgcolor(String value)
     {
-        setRendererAttribute(BGCOLOR_ATTR, value);
+        setRendererAttributeString(BGCOLOR_ATTR, value);
     }
 
     public void setBorder(String value)
     {
-        setRendererAttribute(BORDER_ATTR, value);
+        setRendererAttributeString(BORDER_ATTR, value);
     }
 
-    public void setCellpadding(boolean value)
+    public void setCellpadding(String value)
     {
-        setRendererAttribute(CELLPADDING_ATTR, value);
+        setRendererAttributeString(CELLPADDING_ATTR, value);
     }
 
     public void setCellspacing(String value)
     {
-        setRendererAttribute(CELLSPACING_ATTR, value);
+        setRendererAttributeString(CELLSPACING_ATTR, value);
     }
 
     public void setDatafld(String value)
     {
-        setRendererAttribute(DATAFLD_ATTR, value);
+        setRendererAttributeString(DATAFLD_ATTR, value);
     }
 
     public void setDatasrc(String value)
     {
-        setRendererAttribute(DATASRC_ATTR, value);
+        setRendererAttributeString(DATASRC_ATTR, value);
     }
 
     public void setDataformatas(String value)
     {
-        setRendererAttribute(DATAFORMATAS_ATTR, value);
+        setRendererAttributeString(DATAFORMATAS_ATTR, value);
     }
 
     public void setFrame(String value)
     {
-        setRendererAttribute(FRAME_ATTR, value);
+        setRendererAttributeString(FRAME_ATTR, value);
     }
 
     public void setRules(String value)
     {
-        setRendererAttribute(RULES_ATTR, value);
+        setRendererAttributeString(RULES_ATTR, value);
     }
 
     public void setSummary(String value)
     {
-        setRendererAttribute(SUMMARY_ATTR, value);
+        setRendererAttributeString(SUMMARY_ATTR, value);
     }
 
-    public void setWidth(boolean value)
+    public void setWidth(String value)
     {
-        setRendererAttribute(WIDTH_ATTR, value);
+        setRendererAttributeString(WIDTH_ATTR, value);
     }
 
 
@@ -130,22 +130,22 @@ public class PanelListTag
 
     public void setColumnClasses(String value)
     {
-        setRendererAttribute(COLUMN_CLASSES_ATTR, value);
+        setRendererAttributeString(COLUMN_CLASSES_ATTR, value);
     }
 
     public void setFooterClass(String value)
     {
-        setRendererAttribute(FOOTER_CLASS_ATTR, value);
+        setRendererAttributeString(FOOTER_CLASS_ATTR, value);
     }
 
     public void setHeaderClass(String value)
     {
-        setRendererAttribute(HEADER_CLASS_ATTR, value);
+        setRendererAttributeString(HEADER_CLASS_ATTR, value);
     }
 
     public void setRowClasses(String value)
     {
-        setRendererAttribute(ROW_CLASSES_ATTR, value);
+        setRendererAttributeString(ROW_CLASSES_ATTR, value);
     }
 
     // user role attributes --> already implemented in MyFacesTag

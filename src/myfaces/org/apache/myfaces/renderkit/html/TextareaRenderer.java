@@ -20,7 +20,7 @@ package net.sourceforge.myfaces.renderkit.html;
 
 import net.sourceforge.myfaces.component.CommonComponentAttributes;
 import net.sourceforge.myfaces.renderkit.attr.*;
-import net.sourceforge.myfaces.renderkit.html.util.CommonAttributes;
+import net.sourceforge.myfaces.renderkit.html.util.HTMLUtil;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLEncoder;
 import net.sourceforge.myfaces.renderkit.html.attr.HTMLEventHandlerAttributes;
 import net.sourceforge.myfaces.renderkit.html.attr.HTMLTextareaAttributes;
@@ -78,6 +78,11 @@ public class TextareaRenderer
     public void encodeEnd(FacesContext facesContext, UIComponent uiComponent)
         throws IOException
     {
+        if (!isVisible(facesContext, uiComponent))
+        {
+            return;
+        }
+
         ResponseWriter writer = facesContext.getResponseWriter();
         writer.write("<textarea");
         String coumpoundId = uiComponent.getClientId(facesContext);
@@ -88,10 +93,11 @@ public class TextareaRenderer
         writer.write(coumpoundId);
         writer.write("\"");
 
-        CommonAttributes.renderCssClass(writer, uiComponent, INPUT_CLASS_ATTR);
-        CommonAttributes.renderHTMLAttributes(writer, uiComponent, HTML_UNIVERSAL_ATTRIBUTES);
-        CommonAttributes.renderHTMLAttributes(writer, uiComponent, HTML_EVENT_HANDLER_ATTRIBUTES);
-        CommonAttributes.renderHTMLAttributes(writer, uiComponent, HTML_TEXTAREA_ATTRIBUTES);
+        HTMLUtil.renderCssClass(writer, uiComponent, INPUT_CLASS_ATTR);
+        HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML_UNIVERSAL_ATTRIBUTES);
+        HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML_EVENT_HANDLER_ATTRIBUTES);
+        HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML_TEXTAREA_ATTRIBUTES);
+        HTMLUtil.renderDisabledOnUserRole(facesContext, uiComponent);
 
         writer.write(">");
         String currentValue = getStringValue(facesContext, uiComponent);

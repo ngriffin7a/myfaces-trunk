@@ -18,39 +18,91 @@
  */
 package net.sourceforge.myfaces.renderkit.html.util;
 
-import net.sourceforge.myfaces.component.UISelectMany;
-import net.sourceforge.myfaces.convert.ConverterUtils;
-import net.sourceforge.myfaces.renderkit.attr.CommonRendererAttributes;
+import net.sourceforge.myfaces.renderkit.html.HTMLRenderer;
 import net.sourceforge.myfaces.renderkit.html.ListboxRenderer;
+import net.sourceforge.myfaces.renderkit.html.attr.HTMLUniversalAttributes;
 import net.sourceforge.myfaces.renderkit.html.attr.HTMLEventHandlerAttributes;
 import net.sourceforge.myfaces.renderkit.html.attr.HTMLSelectAttributes;
-import net.sourceforge.myfaces.renderkit.html.attr.HTMLUniversalAttributes;
+import net.sourceforge.myfaces.renderkit.attr.CommonRendererAttributes;
+import net.sourceforge.myfaces.component.UISelectMany;
+import net.sourceforge.myfaces.convert.ConverterUtils;
 
-import javax.faces.component.SelectItem;
 import javax.faces.component.UIComponent;
-import javax.faces.context.FacesContext;
+import javax.faces.component.SelectItem;
 import javax.faces.context.ResponseWriter;
+import javax.faces.context.FacesContext;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.Set;
 
 /**
- * Utility for Renderers that draw a HTML select.
+ * Utility methods for rendering HTML tags.
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public class HTMLSelectUtil
-    implements HTMLUniversalAttributes,
-               HTMLEventHandlerAttributes,
-               HTMLSelectAttributes,
-               CommonRendererAttributes
+public class HTMLUtil
 {
-    private HTMLSelectUtil() {} //Utility
+    private HTMLUtil() {}   //Utility class
 
-    public static void drawHTMLSelect(FacesContext facesContext,
+
+    public static void renderHTMLAttributes(ResponseWriter writer,
+                                            UIComponent component,
+                                            String[] attributes)
+        throws IOException
+    {
+        for (int i = 0; i < attributes.length; i++)
+        {
+            String attrName = attributes[i];
+            Object value = component.getAttribute(attrName);
+            if (value != null)
+            {
+                if (value instanceof Boolean &&
+                    ((Boolean)value).booleanValue())
+                {
+                    writer.write(" ");
+                    writer.write(attrName);
+                }
+                else
+                {
+                    writer.write(" ");
+                    writer.write(attrName);
+                    writer.write("=\"");
+                    writer.write(value.toString());
+                    writer.write("\"");
+                }
+            }
+        }
+    }
+
+    public static void renderCssClass(ResponseWriter writer,
                                       UIComponent uiComponent,
-                                      String rendererType,
-                                      int size)
+                                      String classAttrName)
+        throws IOException
+    {
+        String cssClass = (String)uiComponent.getAttribute(classAttrName);
+        if (cssClass != null)
+        {
+            writer.write(" class=\"");
+            writer.write(cssClass);
+            writer.write("\"");
+        }
+    }
+
+    public static void renderDisabledOnUserRole(FacesContext facesContext,
+                                                UIComponent uiComponent)
+        throws IOException
+    {
+        if (!HTMLRenderer.isEnabledOnUserRole(facesContext, uiComponent))
+        {
+            ResponseWriter writer = facesContext.getResponseWriter();
+            writer.write(" disabled");
+        }
+    }
+
+    public static void renderSelect(FacesContext facesContext,
+                                    UIComponent uiComponent,
+                                    String rendererType,
+                                    int size)
         throws IOException
     {
         ResponseWriter writer = facesContext.getResponseWriter();
@@ -72,12 +124,13 @@ public class HTMLSelectUtil
                 writer.write("\"");
             }
 
-            CommonAttributes.renderCssClass(writer, uiComponent, selectMany
-                                                                 ? SELECT_MANY_CLASS_ATTR
-                                                                 : SELECT_ONE_CLASS_ATTR);
-            CommonAttributes.renderHTMLAttributes(writer, uiComponent, HTML_UNIVERSAL_ATTRIBUTES);
-            CommonAttributes.renderHTMLAttributes(writer, uiComponent, HTML_EVENT_HANDLER_ATTRIBUTES);
-            CommonAttributes.renderHTMLAttributes(writer, uiComponent, HTML_SELECT_ATTRIBUTES);
+            renderCssClass(writer, uiComponent, selectMany
+                                                 ? CommonRendererAttributes.SELECT_MANY_CLASS_ATTR
+                                                 : CommonRendererAttributes.SELECT_ONE_CLASS_ATTR);
+            renderHTMLAttributes(writer, uiComponent, HTMLUniversalAttributes.HTML_UNIVERSAL_ATTRIBUTES);
+            renderHTMLAttributes(writer, uiComponent, HTMLEventHandlerAttributes.HTML_EVENT_HANDLER_ATTRIBUTES);
+            renderHTMLAttributes(writer, uiComponent, HTMLSelectAttributes.HTML_SELECT_ATTRIBUTES);
+            HTMLUtil.renderDisabledOnUserRole(facesContext, uiComponent);
 
             if (selectMany) writer.write(" multiple ");
             writer.write(">\n");

@@ -46,25 +46,19 @@ public class NavigationItemTag
 
     public void setLabel(String s)
     {
-        setRendererAttribute(LABEL_ATTR, s);
+        setRendererAttributeString(LABEL_ATTR, s);
     }
 
     // key and bundle attributes --> already implemented in MyFacesTag
 
     public void setTreeId(String s)
     {
-        setRendererAttribute(NavigationItemRenderer.TREE_ID_ATTR, s);
+        setRendererAttributeString(NavigationItemRenderer.TREE_ID_ATTR, s);
     }
 
-    public void setOpen(boolean b)
+    public void setOpen(String b)
     {
-        setComponentProperty(UINavigation.UINavigationItem.OPEN_ATTR,
-                              b ? Boolean.TRUE : Boolean.FALSE);
-    }
-
-    public void setOpen(Boolean b)
-    {
-        setComponentProperty(UINavigation.UINavigationItem.OPEN_ATTR, b);
+        setComponentPropertyBoolean(UINavigation.UINavigationItem.OPEN_ATTR, b);
     }
 
     // user role attributes --> already implemented in MyFacesTag

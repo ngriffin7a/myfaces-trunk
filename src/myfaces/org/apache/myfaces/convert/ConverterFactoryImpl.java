@@ -165,7 +165,7 @@ public class ConverterFactoryImpl
     {
         synchronized (_convertersByClass)
         {
-            if (_convertersById.put(clazz, converter) != null)
+            if (_convertersByClass.put(clazz, converter) != null)
             {
                 throw new IllegalArgumentException("Duplicate converter for class " + clazz.getName());
             }

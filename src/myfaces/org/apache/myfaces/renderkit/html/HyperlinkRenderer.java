@@ -25,7 +25,7 @@ import net.sourceforge.myfaces.component.CommonComponentAttributes;
 import net.sourceforge.myfaces.convert.ConverterUtils;
 import net.sourceforge.myfaces.renderkit.attr.*;
 import net.sourceforge.myfaces.renderkit.html.state.StateRenderer;
-import net.sourceforge.myfaces.renderkit.html.util.CommonAttributes;
+import net.sourceforge.myfaces.renderkit.html.util.HTMLUtil;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLEncoder;
 import net.sourceforge.myfaces.renderkit.html.attr.HTMLAnchorAttributes;
 import net.sourceforge.myfaces.renderkit.html.attr.HTMLEventHandlerAttributes;
@@ -223,7 +223,7 @@ public class HyperlinkRenderer
 
     public void encodeEnd(FacesContext facesContext, UIComponent uiComponent) throws IOException
     {
-        if (!uiComponent.isRendered())
+        if (!isVisible(facesContext, uiComponent))
         {
             return;
         }
@@ -231,16 +231,7 @@ public class HyperlinkRenderer
         ResponseWriter writer = facesContext.getResponseWriter();
         HttpServletRequest request = (HttpServletRequest)facesContext.getServletRequest();
 
-        String visibleOnUserRole = (String)uiComponent.getAttribute(VISIBLE_ON_USER_ROLE_ATTR);
-        if (visibleOnUserRole != null &&
-            !request.isUserInRole(visibleOnUserRole))
-        {
-            return;
-        }
-
-        String enabledOnUserRole = (String)uiComponent.getAttribute(ENABLED_ON_USER_ROLE_ATTR);
-        if (enabledOnUserRole != null &&
-            !request.isUserInRole(enabledOnUserRole))
+        if (!isEnabledOnUserRole(facesContext, uiComponent))
         {
             //write out body content
             BodyContent bodyContent = getBodyContent(facesContext, uiComponent);
@@ -298,10 +289,10 @@ public class HyperlinkRenderer
 
         writer.write("\"");
 
-        CommonAttributes.renderCssClass(writer, uiComponent, COMMAND_CLASS_ATTR);
-        CommonAttributes.renderHTMLAttributes(writer, uiComponent, HTML_UNIVERSAL_ATTRIBUTES);
-        CommonAttributes.renderHTMLAttributes(writer, uiComponent, HTML_EVENT_HANDLER_ATTRIBUTES);
-        CommonAttributes.renderHTMLAttributes(writer, uiComponent, HTML_ANCHOR_ATTRIBUTES);
+        HTMLUtil.renderCssClass(writer, uiComponent, COMMAND_CLASS_ATTR);
+        HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML_UNIVERSAL_ATTRIBUTES);
+        HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML_EVENT_HANDLER_ATTRIBUTES);
+        HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML_ANCHOR_ATTRIBUTES);
 
         writer.write(">");
 

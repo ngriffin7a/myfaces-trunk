@@ -25,7 +25,7 @@ import net.sourceforge.myfaces.renderkit.attr.UserRoleAttributes;
 import net.sourceforge.myfaces.renderkit.html.attr.HTMLEventHandlerAttributes;
 import net.sourceforge.myfaces.renderkit.html.attr.HTMLInputAttributes;
 import net.sourceforge.myfaces.renderkit.html.attr.HTMLUniversalAttributes;
-import net.sourceforge.myfaces.renderkit.html.util.CommonAttributes;
+import net.sourceforge.myfaces.renderkit.html.util.HTMLUtil;
 import net.sourceforge.myfaces.renderkit.html.util.SelectItemUtil;
 
 import javax.faces.component.SelectItem;
@@ -120,6 +120,11 @@ public class CheckboxRenderer
     public void encodeEnd(FacesContext facesContext, UIComponent uiComponent)
         throws IOException
     {
+        if (!isVisible(facesContext, uiComponent))
+        {
+            return;
+        }
+
         if (uiComponent.getComponentType().equals(UISelectMany.TYPE))
         {
             Set selectedValuesSet
@@ -189,10 +194,11 @@ public class CheckboxRenderer
             writer.write("\"");
         }
 
-        CommonAttributes.renderCssClass(writer, uiComponent, SELECT_BOOLEAN_CLASS_ATTR);
-        CommonAttributes.renderHTMLAttributes(writer, uiComponent, HTML_UNIVERSAL_ATTRIBUTES);
-        CommonAttributes.renderHTMLAttributes(writer, uiComponent, HTML_EVENT_HANDLER_ATTRIBUTES);
-        CommonAttributes.renderHTMLAttributes(writer, uiComponent, HTML_INPUT_ATTRIBUTES);
+        HTMLUtil.renderCssClass(writer, uiComponent, SELECT_BOOLEAN_CLASS_ATTR);
+        HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML_UNIVERSAL_ATTRIBUTES);
+        HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML_EVENT_HANDLER_ATTRIBUTES);
+        HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML_INPUT_ATTRIBUTES);
+        HTMLUtil.renderDisabledOnUserRole(facesContext, uiComponent);
 
         writer.write(">");
         if (label != null && label.length() > 0)

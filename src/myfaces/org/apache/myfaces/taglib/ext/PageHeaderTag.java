@@ -44,6 +44,6 @@ public class PageHeaderTag
 
     public void setPanelClass(String value)
     {
-        setRendererAttribute(PANEL_CLASS_ATTR, value);
+        setRendererAttributeString(PANEL_CLASS_ATTR, value);
     }
 }

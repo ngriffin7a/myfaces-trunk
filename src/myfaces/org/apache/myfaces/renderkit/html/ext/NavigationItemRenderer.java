@@ -114,23 +114,17 @@ public class NavigationItemRenderer
      */
     public void encodeBegin(FacesContext facesContext, UIComponent uiComponent) throws IOException
     {
-        String userRole = (String)uiComponent.getAttribute(VISIBLE_ON_USER_ROLE_ATTR);
-        if (userRole != null)
+        if (!isVisible(facesContext, uiComponent))
         {
-            //is user in role?
-            HttpServletRequest httpServletRequest = (HttpServletRequest)facesContext.getServletRequest();
-            if (!httpServletRequest.isUserInRole(userRole))
+            //for security reasons we make sure that item is closed
+            Boolean open = (Boolean)uiComponent.getAttribute(UINavigation.UINavigationItem.OPEN_ATTR);
+            if (open != null && open.booleanValue())
             {
-                //for security reasons we make sure that item is closed
-                Boolean open = (Boolean)uiComponent.getAttribute(UINavigation.UINavigationItem.OPEN_ATTR);
-                if (open != null && open.booleanValue())
-                {
-                    uiComponent.setAttribute(UINavigation.UINavigationItem.OPEN_ATTR,
-                                             Boolean.TRUE);
-                }
-                //user not in role, bye bye...
-                return;
+                uiComponent.setAttribute(UINavigation.UINavigationItem.OPEN_ATTR,
+                                         Boolean.TRUE);
             }
+            //user not in role, bye bye...
+            return;
         }
 
         ResponseWriter writer = facesContext.getResponseWriter();

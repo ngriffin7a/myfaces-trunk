@@ -56,7 +56,7 @@ public class InputTextareaTag
 
     public void setInputClass(String value)
     {
-        setRendererAttribute(TextareaRenderer.INPUT_CLASS_ATTR, value);
+        setRendererAttributeString(TextareaRenderer.INPUT_CLASS_ATTR, value);
     }
 
     // HTML universal attributes --> already implemented in MyFacesTag
@@ -67,92 +67,67 @@ public class InputTextareaTag
 
     public void setAccesskey(String value)
     {
-        setRendererAttribute(ACCESSKEY_ATTR, value);
+        setRendererAttributeString(ACCESSKEY_ATTR, value);
     }
 
-    public void setCols(int value)
+    public void setCols(String value)
     {
-        setRendererAttribute(COLS_ATTR, value);
-    }
-
-    public void setCols(Integer value)
-    {
-        setRendererAttribute(COLS_ATTR, value);
+        setRendererAttributeString(COLS_ATTR, value);
     }
 
     public void setDatafld(String value)
     {
-        setRendererAttribute(DATAFLD_ATTR, value);
+        setRendererAttributeString(DATAFLD_ATTR, value);
     }
 
     public void setDatasrc(String value)
     {
-        setRendererAttribute(DATASRC_ATTR, value);
+        setRendererAttributeString(DATASRC_ATTR, value);
     }
 
     public void setDataformatas(String value)
     {
-        setRendererAttribute(DATAFORMATAS_ATTR, value);
+        setRendererAttributeString(DATAFORMATAS_ATTR, value);
     }
 
-    public void setDisabled(boolean value)
+    public void setDisabled(String value)
     {
-        setRendererAttribute(DISABLED_ATTR, value);
-    }
-
-    public void setDisabled(Boolean value)
-    {
-        setRendererAttribute(DISABLED_ATTR, value);
+        setRendererAttributeBoolean(DISABLED_ATTR, value);
     }
 
     public void setOnblur(String value)
     {
-        setRendererAttribute(ONBLUR_ATTR, value);
+        setRendererAttributeString(ONBLUR_ATTR, value);
     }
 
     public void setOnchange(String value)
     {
-        setRendererAttribute(ONCHANGE_ATTR, value);
+        setRendererAttributeString(ONCHANGE_ATTR, value);
     }
 
     public void setOnfocus(String value)
     {
-        setRendererAttribute(ONFOCUS_ATTR, value);
+        setRendererAttributeString(ONFOCUS_ATTR, value);
     }
 
     public void setOnselect(String value)
     {
-        setRendererAttribute(ONSELECT_ATTR, value);
+        setRendererAttributeString(ONSELECT_ATTR, value);
     }
 
-    public void setReadonly(boolean value)
+    public void setReadonly(String value)
     {
-        setRendererAttribute(READONLY_ATTR, value);
+        setRendererAttributeBoolean(READONLY_ATTR, value);
     }
 
-    public void setReadonly(Boolean value)
+    public void setRows(String value)
     {
-        setRendererAttribute(READONLY_ATTR, value);
+        setRendererAttributeString(ROWS_ATTR, value);
     }
 
-    public void setRows(int value)
+    public void setTabindex(String value)
     {
-        setRendererAttribute(ROWS_ATTR, value);
-    }
-
-    public void setRows(Integer value)
-    {
-        setRendererAttribute(ROWS_ATTR, value);
-    }
-
-    public void setTabindex(int value)
-    {
-        setRendererAttribute(TABINDEX_ATTR, value);
-    }
-
-    public void setTabindex(Integer value)
-    {
-        setRendererAttribute(TABINDEX_ATTR, value);
+        setRendererAttributeString(TABINDEX_ATTR, value);
     }
 
     // Textarea Renderer attributes
