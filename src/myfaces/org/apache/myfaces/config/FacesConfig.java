@@ -43,7 +43,7 @@ public class FacesConfig
     private Map _converterMap;
     private Map _componentClassMap;
     private Map _messageRessourcesMap;
-    private Map _validatorMap;
+    private Map _validatorClassMap;
     private Map _managedBeanConfigMap;
     private List _navigationRuleConfigList;
     private Map _referencedBeanConfigMap;
@@ -149,12 +149,13 @@ public class FacesConfig
 
     public void addComponent(String componentType, String componentClass)
     {
-        getComponentClassMap().put(componentType, componentClass);
+        getComponentClassMap().put(componentType,
+                                   ConfigUtil.classForName(componentClass));
     }
 
     public UIComponent getComponent(String componentType) throws FacesException
     {
-        String componentClass = (String)getComponentClassMap().get(componentType);
+        Class componentClass = (Class)getComponentClassMap().get(componentType);
         if (componentClass == null)
         {
             throw new FacesException("Unknown component type '" + componentType + "'.");
@@ -255,32 +256,32 @@ public class FacesConfig
 
     public void addValidator(String validatorId, String validatorClass)
     {
-        Validator validator = (Validator)ConfigUtil.newInstance(validatorClass);
-        getValidatorMap().put(validatorId, validator);
+        getValidatorClassMap().put(validatorId,
+                                   ConfigUtil.classForName(validatorClass));
     }
 
     public Validator getValidator(String validatorId) throws FacesException
     {
-        Validator validator = (Validator)getValidatorMap().get(validatorId);
-        if (validator == null)
+        Class clazz = (Class)getValidatorClassMap().get(validatorId);
+        if (clazz == null)
         {
             throw new FacesException("Unknown validator id '" + validatorId + "'.");
         }
-        return validator;
+        return (Validator)ConfigUtil.newInstance(clazz);
     }
 
     public Iterator getValidatorIds()
     {
-        return getValidatorMap().keySet().iterator();
+        return getValidatorClassMap().keySet().iterator();
     }
 
-    private Map getValidatorMap()
+    private Map getValidatorClassMap()
     {
-        if (_validatorMap == null)
+        if (_validatorClassMap == null)
         {
-            _validatorMap = new HashMap();
+            _validatorClassMap = new HashMap();
         }
-        return _validatorMap;
+        return _validatorClassMap;
     }
 
 

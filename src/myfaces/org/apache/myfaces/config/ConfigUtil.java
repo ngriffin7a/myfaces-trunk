@@ -34,14 +34,14 @@ public class ConfigUtil
             return null;
         }
 
+        return newInstance(classForName(type));
+    }
+
+    public static Object newInstance(Class clazz) throws FacesException
+    {
         try
         {
-            Class clazz = Class.forName(type);
             return clazz.newInstance();
-        }
-        catch (ClassNotFoundException e)
-        {
-            throw new FacesException(e);
         }
         catch (InstantiationException e)
         {
@@ -52,6 +52,20 @@ public class ConfigUtil
             throw new FacesException(e);
         }
     }
+
+    public static Class classForName(String type) throws FacesException
+    {
+        try
+        {
+            return Class.forName(type);
+        }
+        catch (ClassNotFoundException e)
+        {
+            throw new FacesException(e);
+        }
+    }
+
+
 
     public static Class javaTypeToClass(String javaType)
     {

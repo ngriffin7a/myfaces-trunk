@@ -199,7 +199,7 @@ public class BeanUtils
         PropertyDescriptor propertyDescriptor = findPropertyDescriptor(beanInfo, propertyName);
         if (propertyDescriptor == null)
         {
-            throw new IllegalArgumentException("Bean " + bean + " of class " + bean.getClass() + " does not have a property '" + propertyName + ".");
+            throw new IllegalArgumentException("Bean " + bean + " of class " + bean.getClass() + " does not have a property '" + propertyName + "'.");
         }
         setBeanPropertyValue(bean, propertyDescriptor, propertyValue);
     }

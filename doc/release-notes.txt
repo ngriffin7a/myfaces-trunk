@@ -7,6 +7,8 @@ Changes in Release 0.4.2
   Syntax. The given expr is evaluated via ValueBinding.
 * Dynamic validators (i.e. validators added during runtime) are now supported
   by MinimizingStateSaver.
+* getValidator() in ApplicationImpl returned always the same validator
+  instance: fixed.
 
 ----------------------------------------------------------------------
 Changes in Release 0.4.1
