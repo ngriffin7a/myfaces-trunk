@@ -39,6 +39,7 @@
                 <x:navigationMenuItem id="nav_2_4_10" itemLabel="#{example_messages['nav_rssTicker']}" action="go_rssticker" icon="images/myfaces.gif" />
                 <x:navigationMenuItem id="nav_2_4_11" itemLabel="#{example_messages['nav_dataScroller']}" action="go_datascroller" icon="images/myfaces.gif" />
                 <x:navigationMenuItem id="nav_2_4_12" itemLabel="#{example_messages['nav_panelstack']}" action="go_panelstack" icon="images/myfaces.gif" />
+                <x:navigationMenuItem id="nav_2_4_13" itemLabel="#{example_messages['nav_newspaperTable']}" action="go_newspaperTable" icon="images/myfaces.gif" />
             </x:navigationMenuItem>
         </x:navigationMenuItem>
         <x:navigationMenuItem id="nav_3" itemLabel="#{example_messages['nav_Documentation']}" >

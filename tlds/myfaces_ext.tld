@@ -1484,6 +1484,30 @@
      </tag>
 
 
+    <!-- newspaperTable -->
+    <tag>
+        <name>newspaperTable</name>
+        <tag-class>org.apache.myfaces.custom.newspaper.HtmlNewspaperTableTag</tag-class>
+        <body-content>JSP</body-content>
+        <description>
+            A data table for rendering long skinny tables as short wide table by
+            wrapping the table over a specified number of columns.
+        </description>
+        &standard_data_table_attributes;
+        <!-- MyFaces extensions -->
+        &user_role_attributes;
+        <attribute>
+            <name>newspaperColumns</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
+            <description>
+                The number of columns to wrap the table over.
+                Default: 1
+            </description>
+        </attribute>
+     </tag>
+     
+     
 
 <!--     Custom non-component tags     -->
 

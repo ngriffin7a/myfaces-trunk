@@ -141,6 +141,11 @@
   </component>
 
   <component>
+    <component-type>org.apache.myfaces.HtmlNewspaperTable</component-type>
+    <component-class>org.apache.myfaces.custom.newspaper.HtmlNewspaperTable</component-class>
+  </component>
+
+  <component>
     <component-type>org.apache.myfaces.HtmlPanelLayout</component-type>
     <component-class>org.apache.myfaces.custom.layout.HtmlPanelLayout</component-class>
   </component>
@@ -416,6 +421,12 @@
           <component-family>javax.faces.Data</component-family>
           <renderer-type>org.apache.myfaces.List</renderer-type>
           <renderer-class>org.apache.myfaces.custom.datalist.HtmlListRenderer</renderer-class>
+      </renderer>
+
+      <renderer>
+          <component-family>javax.faces.Data</component-family>
+          <renderer-type>org.apache.myfaces.HtmlNewspaperTable</renderer-type>
+          <renderer-class>org.apache.myfaces.custom.newspaper.HtmlNewspaperTableRenderer</renderer-class>
       </renderer>
 
       <renderer>
