@@ -101,15 +101,11 @@ managed beans used:
                        </f:facet>
                         <x:dataTable id="cities"
                                 styleClass="standardTable_Column"
-                                headerClass="standardTable_Header"
-                                footerClass="standardTable_Header"
-                                rowClasses="standardTable_Row1,standardTable_Row2"
-                                columnClasses="standardTable_Column,standardTable_ColumnCentered,standardTable_Column"
                                 var="city"
                                 value="#{country.cities}"
-                                preserveDataModel="true" >
+                                preserveDataModel="false" >
                            <h:column>
-                               <h:outputText value="#{city}" />
+                               <h:outputText value="#{city}" style="font-size: 11px" />
                            </h:column>
                         </x:dataTable>
                    </h:column>
