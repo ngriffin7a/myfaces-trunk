@@ -76,6 +76,7 @@
         <pathelement location="${struts.jar}"/>
         <pathelement location="${commons-fileupload.jar}"/>
         <pathelement location="${commons-digester.jar}"/>
+        <pathelement location="${commons-beanutils.jar}"/>
         <pathelement location="${api.classes}"/>
         <pathelement location="${share.classes}"/>
     </path>
