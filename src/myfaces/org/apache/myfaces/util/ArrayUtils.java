@@ -24,11 +24,18 @@ import java.lang.reflect.Array;
 /**
  * Utility class for managing arrays
  *
+ * $Log$
+ * Revision 1.8  2004/03/25 12:41:19  manolito
+ * convenient constants for empty arrays
+ *
  * @author Anton Koinov (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
 public class ArrayUtils
 {
+    public static final Object[] EMPTY_OBJECT_ARRAY = new Object[0];
+    public static final String[] EMPTY_STRING_ARRAY = new String[0];
+
     //~ Constructors -------------------------------------------------------------------------------
 
     protected ArrayUtils()
