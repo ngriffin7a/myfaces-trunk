@@ -56,7 +56,7 @@ public class ViewHandlerImpl
 
     public ViewHandlerImpl()
     {
-        this._stateManager = new StateManagerImpl();
+        _stateManager = new StateManagerImpl();
         if (log.isTraceEnabled()) log.trace("New ViewHanldler instance created");
     }
 
@@ -88,9 +88,13 @@ public class ViewHandlerImpl
         return locale != null ? locale : Locale.getDefault();
     }
 
-    public UIViewRoot createView(FacesContext facescontext, String s)
+    public UIViewRoot createView(FacesContext facescontext, String viewId)
     {
-        throw new UnsupportedOperationException("not yet implemented.");
+        UIViewRoot uiViewRoot = new UIViewRoot();
+        uiViewRoot.setViewId(viewId);
+        uiViewRoot.setLocale(calculateLocale(facescontext));
+        if (log.isTraceEnabled()) log.trace("Created view " + viewId);
+        return uiViewRoot;
     }
 
     public StateManager getStateManager()
@@ -100,6 +104,7 @@ public class ViewHandlerImpl
 
     public String getViewIdPath(FacesContext facescontext, String s)
     {
+        // TODO: implement
         throw new UnsupportedOperationException("not yet implemented.");
 
     }
@@ -173,11 +178,13 @@ public class ViewHandlerImpl
 
     public UIViewRoot restoreView(FacesContext facescontext, String s)
     {
+        // TODO: implement
         throw new UnsupportedOperationException("not yet implemented.");
     }
 
     public void writeState(FacesContext facescontext) throws IOException
     {
+        // TODO: implement
         throw new UnsupportedOperationException("not yet implemented.");
     }
 }

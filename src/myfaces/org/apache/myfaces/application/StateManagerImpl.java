@@ -26,36 +26,43 @@ public class StateManagerImpl
 
     protected Object getComponentStateToSave(FacesContext facescontext)
     {
+        // TODO: implement
         throw new UnsupportedOperationException("not yet implemented.");
     }
 
     protected Object getTreeStructureToSave(FacesContext facescontext)
     {
+        // TODO: implement
         throw new UnsupportedOperationException("not yet implemented.");
     }
 
     protected void restoreComponentState(FacesContext facescontext, UIViewRoot uiviewroot) throws IOException
     {
+        // TODO: implement
         throw new UnsupportedOperationException("not yet implemented.");
     }
 
     protected UIViewRoot restoreTreeStructure(FacesContext facescontext, String s)
     {
+        // TODO: implement
         throw new UnsupportedOperationException("not yet implemented.");
     }
 
     public UIViewRoot restoreView(FacesContext facescontext, String s)
     {
+        // TODO: implement
         throw new UnsupportedOperationException("not yet implemented.");
     }
 
     public StateManager.SerializedView saveSerializedView(FacesContext facescontext) throws IllegalStateException
     {
+        // TODO: implement
         throw new UnsupportedOperationException("not yet implemented.");
     }
 
     public void writeState(FacesContext facescontext, StateManager.SerializedView serializedview) throws IOException
     {
+        // TODO: implement
         throw new UnsupportedOperationException("not yet implemented.");
     }
 }
