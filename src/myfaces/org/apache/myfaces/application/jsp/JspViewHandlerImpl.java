@@ -22,6 +22,7 @@ package net.sourceforge.myfaces.application.jsp;
 import net.sourceforge.myfaces.util.DebugUtils;
 import net.sourceforge.myfaces.webapp.webxml.ServletMapping;
 import net.sourceforge.myfaces.webapp.webxml.WebXml;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -38,10 +39,12 @@ import java.io.UnsupportedEncodingException;
 import java.util.*;
 
 /**
- * DOCUMENT ME!
- * 
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
+ * $Log$
+ * Revision 1.18  2004/04/05 09:16:24  manolito
+ * javadoc header
+ *
  */
 public class JspViewHandlerImpl
         extends ViewHandler
