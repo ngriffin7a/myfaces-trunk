@@ -25,6 +25,9 @@ import javax.faces.component.UIComponent;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.12  2005/03/19 04:27:55  svieujot
+ * Align default values for preserveDataModel and preserveSort between HtmlDataTable.java, HtmlDataTableTag.java and the TLD.
+ *
  * Revision 1.11  2005/02/18 17:19:29  matzew
  * added release() to tag clazzes.
  *
@@ -104,9 +107,6 @@ public class HtmlDataTableTag
     protected void setProperties(UIComponent component)
     {
         super.setProperties(component);
-
-        if (_preserveDataModel == null) _preserveDataModel = "true";
-        if (_preserveSort == null) _preserveSort = "true";
 
         setBooleanProperty(component, "preserveDataModel", _preserveDataModel);
         setValueBinding(component, "sortColumn", _sortColumn);

@@ -39,6 +39,9 @@ import java.util.Map;
  * @author Manfred Geiler
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.18  2005/03/19 04:27:55  svieujot
+ * Align default values for preserveDataModel and preserveSort between HtmlDataTable.java, HtmlDataTableTag.java and the TLD.
+ *
  * Revision 1.17  2005/03/04 01:21:22  mmarinschek
  * reverted bug fix as it introduced several new bugs with data-table
  *
@@ -580,8 +583,8 @@ public class HtmlDataTable
     //------------------ GENERATED CODE BEGIN (do not modify!) --------------------
 
     public static final String COMPONENT_TYPE = "org.apache.myfaces.HtmlDataTable";
-    private static final boolean DEFAULT_PRESERVEDATAMODEL = false;
-    private static final boolean DEFAULT_PRESERVESORT = false;
+    private static final boolean DEFAULT_PRESERVEDATAMODEL = true;
+    private static final boolean DEFAULT_PRESERVESORT = true;
     private static final boolean DEFAULT_RENDEREDIFEMPTY = true;
 
     private Boolean _preserveDataModel = null;
