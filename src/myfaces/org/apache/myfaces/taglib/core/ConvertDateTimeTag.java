@@ -15,6 +15,8 @@
  */
 package org.apache.myfaces.taglib.core;
 
+import java.util.Locale;
+import java.util.TimeZone;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.convert.DateTimeConverter;
@@ -22,13 +24,15 @@ import javax.faces.el.ValueBinding;
 import javax.faces.webapp.ConverterTag;
 import javax.faces.webapp.UIComponentTag;
 import javax.servlet.jsp.JspException;
-import java.util.Locale;
-import java.util.TimeZone;
+import javax.servlet.jsp.PageContext;
 
 /**
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.7  2004/11/22 16:13:08  bdudney
+ * added code to make sure the converterId is set in WebLogic8.1sp3.
+ *
  * Revision 1.6  2004/10/13 11:51:00  matze
  * renamed packages to org.apache
  *
@@ -54,7 +58,8 @@ public class ConvertDateTimeTag
 
     public ConvertDateTimeTag()
     {
-        setConverterId(DateTimeConverter.CONVERTER_ID);
+      super();
+        //setConverterId(DateTimeConverter.CONVERTER_ID);
     }
 
     public void setDateStyle(String dateStyle)
@@ -85,6 +90,12 @@ public class ConvertDateTimeTag
     public void setType(String type)
     {
         _type = type;
+    }
+
+    public void setPageContext(PageContext context) 
+    {
+        super.setPageContext(context);
+        setConverterId(DateTimeConverter.CONVERTER_ID);
     }
 
     protected Converter createConverter() throws JspException
