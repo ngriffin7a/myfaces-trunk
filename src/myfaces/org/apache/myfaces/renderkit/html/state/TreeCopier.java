@@ -142,6 +142,7 @@ public class TreeCopier
             if (_overwriteAttributes || toComp.getAttribute(attrName) == null)
             {
                 Object attrValue = fromComp.getAttribute(attrName);
+
                 toComp.setAttribute(attrName, attrValue);
             }
         }

@@ -69,6 +69,8 @@ public class StateSaver
 
     private static final String STATE_MAP_REQUEST_ATTR = StateSaver.class.getName() + ".STATE_MAP";
 
+    public static final String DUMMY_VALUE = "NULL";
+
     private static final Set IGNORE_ATTRIBUTES = new HashSet();
     static
     {
@@ -180,19 +182,35 @@ public class StateSaver
         {
             UIComponent comp = (UIComponent)treeIt.next();
 
+            /* HACK: we call getClientId() to prevent ConcurrentModificationException in getAttributeNames iterator.
+              * As an alternative we could also copy the attribute names into a temporary List first. */
+            comp.getClientId(facesContext);
+
+            Tree parsedTree = JspInfo.getTree(facesContext,
+                                              facesContext.getTree().getTreeId());
+            UIComponent parsedComp = null;
+            try
+            {
+                parsedComp = parsedTree.getRoot().findComponent(comp.getClientId(facesContext));
+            }
+            catch (IllegalArgumentException e)
+            {
+                parsedComp = null;
+            }
+
             //System.out.println("Saving " + comp.toString());
 
-            /* HACK: we call getClientId() to prevent ConcurrentModificationException in getAttributeNames iterator.
-             * As an alternative we could also copy the attribute names into a temporary List first. */
-            comp.getClientId(facesContext);
 
             boolean valueSeen = false;
 
+            Set visitedAttributes = new HashSet();
             for (Iterator compIt = comp.getAttributeNames(); compIt.hasNext();)
             {
                 String attrName = (String)compIt.next();
+                visitedAttributes.add(attrName);
                 Object attrValue = comp.getAttribute(attrName);
-                if (attrValue != null && !isIgnoreAttribute(comp, attrName))
+                if (attrValue != null &&
+                    !isIgnoreAttribute(comp, attrName))
                 {
                     if (attrName.equals(CommonComponentAttributes.VALUE_ATTR)
                         || attrName.equals(CommonComponentAttributes.STRING_VALUE_ATTR))
@@ -227,9 +245,30 @@ public class StateSaver
                 }
             }
 
-            //TODO: Save all attributes, that are set in the parsed tree
-            //but not in the current tree (= removed attributes).
-            //Save them by means of a special dummy value
+            // Save all attributes, that are set in the parsed tree
+            // but not in the current tree (= removed attributes).
+            // Save them by means of a special dummy value
+            if (parsedComp != null)
+            {
+                for (Iterator parsedCompIt = parsedComp.getAttributeNames(); parsedCompIt.hasNext();)
+                {
+                    String attrName = (String)parsedCompIt.next();
+                    if (parsedComp.getComponentId().equals("list_header") && attrName.equals("value") )
+                    {
+                        System.out.println("ls");
+                    }
+                    if (!visitedAttributes.contains(attrName) &&
+                        !isIgnoreAttribute(parsedComp, attrName))
+                    {
+                        // save dummy value
+                        saveParameter(stateMap,
+                                      RequestParameterNames.getUIComponentStateParameterName(facesContext,
+                                                                                             comp,
+                                                                                             attrName),
+                                      DUMMY_VALUE);
+                    }
+                }
+            }
 
             /*
             TODO: save currentValue and restore model value on restore ?

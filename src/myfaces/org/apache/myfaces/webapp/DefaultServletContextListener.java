@@ -50,11 +50,7 @@ public class DefaultServletContextListener
             //Set logging level
             Level logLevel = MyFacesConfig.getLogLevel();
             Logger logger = LogUtil.getLogger();
-            while (logger != null)
-            {
-                setLoggerLevel(logger, logLevel);
-                logger = logger.getParent();
-            }
+            setLoggerLevel(logger, logLevel);
 
             ApplicationHandler handler = new DefaultApplicationHandler();
             LifecycleFactory factory = (LifecycleFactory)FactoryFinder.getFactory(FactoryFinder.LIFECYCLE_FACTORY);
@@ -76,6 +72,7 @@ public class DefaultServletContextListener
     private void setLoggerLevel(Logger logger, Level logLevel)
     {
         logger.setLevel(logLevel);
+
         Handler[] logHandlers = logger.getHandlers();
         for (int i = 0; i < logHandlers.length; i++)
         {

@@ -19,6 +19,8 @@
 package net.sourceforge.myfaces.util.logging;
 
 import java.util.logging.Logger;
+import java.util.logging.Handler;
+import java.util.logging.ConsoleHandler;
 
 
 /**
@@ -29,6 +31,11 @@ import java.util.logging.Logger;
 public class LogUtil
 {
     public static final String LOGGER_NAME = "MyFacesLogger";
+    private static final Handler CONSOLE_HANDER = new ConsoleHandler();
+    static
+    {
+        Logger.getLogger(LOGGER_NAME).addHandler(CONSOLE_HANDER);
+    }
 
     private LogUtil() {}
 

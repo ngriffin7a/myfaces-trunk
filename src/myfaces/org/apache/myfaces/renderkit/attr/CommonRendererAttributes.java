@@ -42,6 +42,7 @@ public interface CommonRendererAttributes
     public static final String INPUT_CLASS_ATTR = "inputClass";
     public static final String OUTPUT_CLASS_ATTR = "outputClass";
     public static final String COMMAND_CLASS_ATTR = "commandClass";
+    //TODO: use AttributeDescription ...
     public static final AttributeDescriptor PANEL_CLASS_ATTR = new AttrDescrImpl("panelClass", String.class);
     //TODO: continue definitions...
 

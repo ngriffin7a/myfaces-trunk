@@ -16,7 +16,7 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package net.sourceforge.myfaces.renderkit.attr;
+package net.sourceforge.myfaces.renderkit.config;
 
 import javax.faces.component.AttributeDescriptor;
 import java.util.Locale;
@@ -24,8 +24,7 @@ import java.util.ResourceBundle;
 
 /**
  * DOCUMENT ME!
- * @deprecated
- * @author Manfred Geiler (latest modification by $Author$)
+ * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
 public class AttrDescrImpl

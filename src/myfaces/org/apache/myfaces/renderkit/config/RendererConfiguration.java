@@ -18,7 +18,7 @@
  */
 package net.sourceforge.myfaces.renderkit.config;
 
-import net.sourceforge.myfaces.renderkit.attr.AttrDescrImpl;
+import net.sourceforge.myfaces.renderkit.config.AttrDescrImpl;
 import net.sourceforge.myfaces.util.logging.LogUtil;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;

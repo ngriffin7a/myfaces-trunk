@@ -167,19 +167,26 @@ public class StateRestorer
                                                                                   CommonComponentAttributes.VALUE_ATTR));
         if (savedValue != null)
         {
-            Converter conv = ConverterUtils.findValueConverter(facesContext, uiComponent);
-            if (conv != null)
+            if (savedValue.equals(StateSaver.DUMMY_VALUE))
             {
-                UIComponentUtils.convertAndSetValue(facesContext,
-                                                             uiComponent,
-                                                             savedValue,
-                                                             conv,
-                                                             false);    //no error message
+                UIComponentUtils.setComponentValue(uiComponent, null);
             }
             else
             {
-                Object obj = ConverterUtils.deserialize(savedValue);
-                UIComponentUtils.setComponentValue(uiComponent, obj);
+                Converter conv = ConverterUtils.findValueConverter(facesContext, uiComponent);
+                if (conv != null)
+                {
+                    UIComponentUtils.convertAndSetValue(facesContext,
+                                                                 uiComponent,
+                                                                 savedValue,
+                                                                 conv,
+                                                                 false);    //no error message
+                }
+                else
+                {
+                    Object obj = ConverterUtils.deserialize(savedValue);
+                    UIComponentUtils.setComponentValue(uiComponent, obj);
+                }
             }
         }
 
@@ -263,7 +270,15 @@ public class StateRestorer
                     }
                 }
 
-                uiComponent.setAttribute(attrName, objValue);
+                if (paramValue instanceof String[])
+                {
+                    paramValue = StringArrayConverter.getAsString((String[])paramValue);
+                }
+
+                if (!((String)paramValue).equals(StateSaver.DUMMY_VALUE))
+                {
+                    uiComponent.setAttribute(attrName, objValue);
+                }
             }
         }
 
