@@ -149,6 +149,7 @@
             has equal attributes.
             (Replaces former "navigation_item" tag.)
         </description>
+        <!--TODO: make id attribute mandatory -->
         &ui_command_attributes;
         &html_universal_attributes;
         &html_event_handler_attributes;
