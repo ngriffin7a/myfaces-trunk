@@ -52,6 +52,7 @@
 <!ENTITY standard_command_link_attributes    SYSTEM "entities/standard_command_link_attributes.xml">
 <!ENTITY standard_data_table_attributes      SYSTEM "entities/standard_data_table_attributes.xml">
 <!ENTITY standard_input_text_attributes      SYSTEM "entities/standard_input_text_attributes.xml">
+<!ENTITY standard_input_textarea_attributes  SYSTEM "entities/standard_input_textarea_attributes.xml">
 <!ENTITY standard_message_attributes         SYSTEM "entities/standard_message_attributes.xml">
 <!ENTITY standard_messages_attributes        SYSTEM "entities/standard_messages_attributes.xml">
 <!ENTITY standard_output_label_attributes    SYSTEM "entities/standard_output_label_attributes.xml">
@@ -175,6 +176,18 @@
             Extends standard inputText by user role support.
         </description>
         &standard_input_text_attributes;
+        &user_role_attributes;
+    </tag>
+
+    <!-- inputTextarea -->
+    <tag>
+        <name>inputTextarea</name>
+        <tag-class>net.sourceforge.myfaces.taglib.html.ext.HtmlInputTextareaTag</tag-class>
+        <body-content>JSP</body-content>
+        <description>
+            Extends standard inputTextarea by user role support.
+        </description>
+        &standard_input_textarea_attributes;
         &user_role_attributes;
     </tag>
 

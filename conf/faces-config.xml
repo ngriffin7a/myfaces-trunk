@@ -49,6 +49,11 @@
   </component>
 
   <component>
+    <component-type>net.sourceforge.myfaces.HtmlInputTextarea</component-type>
+    <component-class>net.sourceforge.myfaces.component.html.ext.HtmlInputTextarea</component-class>
+  </component>
+
+  <component>
     <component-type>net.sourceforge.myfaces.HtmlMessage</component-type>
     <component-class>net.sourceforge.myfaces.component.html.ext.HtmlMessage</component-class>
   </component>
@@ -250,6 +255,12 @@
             <component-family>javax.faces.Input</component-family>
             <renderer-type>net.sourceforge.myfaces.Text</renderer-type>
             <renderer-class>net.sourceforge.myfaces.renderkit.html.ext.HtmlTextRenderer</renderer-class>
+        </renderer>
+
+        <renderer>
+            <component-family>javax.faces.Input</component-family>
+            <renderer-type>net.sourceforge.myfaces.Textarea</renderer-type>
+            <renderer-class>net.sourceforge.myfaces.renderkit.html.ext.HtmlTextareaRenderer</renderer-class>
         </renderer>
 
         <renderer>
