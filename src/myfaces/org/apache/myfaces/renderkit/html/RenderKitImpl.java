@@ -21,6 +21,7 @@ package net.sourceforge.myfaces.renderkit.html;
 import net.sourceforge.myfaces.MyFacesConfig;
 import net.sourceforge.myfaces.renderkit.html.ext.NavigationItemRenderer;
 import net.sourceforge.myfaces.renderkit.html.ext.NavigationRenderer;
+import net.sourceforge.myfaces.renderkit.html.ext.SortColumnRenderer;
 import net.sourceforge.myfaces.renderkit.html.state.StateRenderer;
 import net.sourceforge.myfaces.renderkit.html.state.ZippingStateRenderer;
 
@@ -70,6 +71,7 @@ public class RenderKitImpl
         //MyFaces Extensions
         addRenderer(new NavigationRenderer());
         addRenderer(new NavigationItemRenderer());
+        addRenderer(new SortColumnRenderer());
     }
 
     private void addRenderer(HTMLRenderer r)

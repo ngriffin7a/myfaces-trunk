@@ -133,14 +133,9 @@ public class StateRenderer
         {
             _stateSaver.encodeState(facesContext, StateSaver.HIDDEN_INPUTS_ENCODING);
         }
-        else if (commandRendererType.equals(HyperlinkRenderer.TYPE) ||
-                 commandRendererType.equals(NavigationItemRenderer.TYPE))
-        {
-            _stateSaver.encodeState(facesContext, StateSaver.URL_ENCODING);
-        }
         else
         {
-            throw new IllegalArgumentException("Renderer type " + commandRendererType + " not supported!");
+            _stateSaver.encodeState(facesContext, StateSaver.URL_ENCODING);
         }
     }
 

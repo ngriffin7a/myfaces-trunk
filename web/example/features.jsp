@@ -28,12 +28,14 @@
  */
 //-->
 
+<%@include file="inc/header.inc" %>
+
 <body>
 
 <f:use_faces>
 
     <table border="1"><tr>
-        <td valign="top" width="140"><%@ include file="inc/navigation.jsp"  %></td>
+        <td valign="top" width="150"><%@ include file="inc/navigation.jsp"  %></td>
         <td align="left" width="640">
 
 <%@ include file="inc/features.html"  %>

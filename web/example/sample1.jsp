@@ -5,6 +5,8 @@
 %><%@ taglib uri="/WEB-INF/myfaces_ext.tld" prefix="x"
 %><html>
 
+<%@include file="inc/header.inc" %>
+
 <!--
 /**
  * MyFaces - the free JSF implementation
@@ -37,8 +39,9 @@
 <f:use_faces>
 
     <table border="1"><tr>
-        <td valign="top" width="140"><%@ include file="inc/navigation.jsp"  %></td>
-        <td align="left" width="640">
+        <td valign="top" width="150"<%@ include file="inc/navigation.jsp"  %></td>
+        <td align="left" width="640" valign="top">
+            <br>
 
             <x:save_state id="save1" modelReference="calcForm.number1" />
             <x:save_state id="save2" modelReference="calcForm.number2" />

@@ -24,6 +24,8 @@
  */
 //-->
 
+<%@include file="inc/header.inc" %>
+
 <body>
 
 <jsp:useBean id="q_form" class="net.sourceforge.myfaces.example.model.QuotationForm" scope="request" />
@@ -33,8 +35,9 @@
 <f:use_faces>
 
     <table border="1"><tr>
-        <td valign="top" width="140"><%@ include file="inc/navigation.jsp"  %></td>
-        <td align="left" width="640">
+        <td valign="top" width="150"><%@ include file="inc/navigation.jsp"  %></td>
+        <td align="left" width="640" valign="top">
+            <br>
 
             <f:errors id="messageList" />
 

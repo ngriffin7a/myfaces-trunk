@@ -19,7 +19,7 @@
 package net.sourceforge.myfaces.taglib.ext;
 
 import net.sourceforge.myfaces.component.UICommand;
-import net.sourceforge.myfaces.renderkit.html.HyperlinkRenderer;
+import net.sourceforge.myfaces.renderkit.html.ext.SortColumnRenderer;
 import net.sourceforge.myfaces.taglib.MyFacesTag;
 
 import javax.faces.component.UIComponent;
@@ -40,7 +40,7 @@ public class SortColumnTag
 
     public String getRendererType()
     {
-        return HyperlinkRenderer.TYPE;
+        return SortColumnRenderer.TYPE;
     }
 
     public void setCommandName(String v)

@@ -28,13 +28,15 @@
  */
 //-->
 
+<%@include file="inc/header.inc" %>
+
 <body>
 
 <f:use_faces>
 
     <table border="1"><tr>
-        <td valign="top" width="140"><%@ include file="inc/navigation.jsp"  %></td>
-        <td align="left" width="640">
+        <td valign="top" width="150" class="standard"><%@ include file="inc/navigation.jsp"  %></td>
+        <td align="left" width="640" valign="top">
 <h3>Webpages</h3>
  <a href="http://myfaces.sourceforge.net/" target="_blank">Project Homepage</a><br>
  <a href="http://www.sourceforge.net/projects/myfaces" target="_blank">MyFaces@Sourceforge</a><br>
