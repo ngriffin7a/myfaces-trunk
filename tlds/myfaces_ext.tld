@@ -857,7 +857,7 @@
     </tag>
     <tag>
         <name>navigationMenuItems</name>
-        <tag-class>net.sourceforge.myfaces.taglib.core.SelectItemsTag</tag-class>
+        <tag-class>net.sourceforge.myfaces.custom.navmenu.HtmlNavigationMenuItemsTag</tag-class>
         <body-content>empty</body-content>
         &ui_select_items_attributes;
     </tag>
