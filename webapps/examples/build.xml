@@ -86,8 +86,7 @@
             <tarfileset dir="${examples.src}"
                         prefix="myfaces-${manifest.impl.version}/webapps/examples/src"/>
             <tarfileset dir="${examples.web}"
-                        excludes="WEB-INF/lib/jsf-api.jar,
-                                  WEB-INF/web_ss.xml"
+                        excludes="WEB-INF/lib/jsf-api.jar"
                         prefix="myfaces-${manifest.impl.version}/webapps/examples/web"/>
             <tarfileset dir="${basedir}"
                         includes="*"
