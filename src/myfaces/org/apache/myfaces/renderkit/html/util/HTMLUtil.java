@@ -161,31 +161,51 @@ public class HTMLUtil
      * @throws IOException
      */
     public static boolean renderHTMLAttributes(ResponseWriter writer,
-                                               UIComponent component,
-                                               String[] attributes)
-        throws IOException
+            UIComponent component,
+            String[] attributes)
+    throws IOException
     {
         boolean somethingDone = false;
         for (int i = 0, len = attributes.length; i < len; i++)
         {
             String attrName = attributes[i];
-            if (attrName.equals(HTML.STYLE_CLASS_ATTR))
+            // render JSF "styleClass" attribute as "class"
+            String htmlAttrName = 
+                attrName.equals(HTML.STYLE_CLASS_ATTR) ? HTML.CLASS_ATTR : attrName;
+
+            if (renderHTMLAttribute(writer, component, attrName, htmlAttrName))
             {
-                //render JSF "styleClass" attribute as "class"
-                if (renderHTMLAttribute(writer, component, attrName, HTML.CLASS_ATTR))
-                {
-                    somethingDone = true;
-                }
-            }
-            else
-            {
-                if (renderHTMLAttribute(writer, component, attrName, attrName))
-                {
-                    somethingDone = true;
-                }
+                somethingDone = true;
             }
         }
         return somethingDone;
+    }
+
+
+    public static boolean renderHTMLAttributesWithOptionalStartElement(
+            ResponseWriter writer, UIComponent component, String elementName, String[] attributes)
+    throws IOException
+    {
+        boolean startElementWritten = false;
+        for (int i = 0, len = attributes.length; i < len; i++)
+        {
+            String attrName = attributes[i];
+            Object value = component.getAttributes().get(attrName);
+            if (!RendererUtils.isDefaultAttributeValue(value))
+            {
+                if (!startElementWritten)
+                {
+                    writer.startElement(elementName, component);
+                    startElementWritten = true;
+                }
+                
+                // render JSF "styleClass" attribute as "class"
+                String htmlAttrName = 
+                    attrName.equals(HTML.STYLE_CLASS_ATTR) ? HTML.CLASS_ATTR : attrName;
+                writer.writeAttribute(htmlAttrName, value, attrName);
+            }
+        }
+        return startElementWritten;
     }
 
 
