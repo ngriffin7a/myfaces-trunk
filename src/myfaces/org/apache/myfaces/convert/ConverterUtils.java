@@ -23,6 +23,7 @@ import net.sourceforge.myfaces.component.UIComponentUtils;
 import net.sourceforge.myfaces.config.*;
 import net.sourceforge.myfaces.renderkit.attr.CommonRendererAttributes;
 import net.sourceforge.myfaces.util.Base64;
+import net.sourceforge.myfaces.util.MyFacesObjectInputStream;
 import net.sourceforge.myfaces.util.bean.BeanUtils;
 import net.sourceforge.myfaces.util.logging.LogUtil;
 
@@ -491,7 +492,7 @@ public class ConverterUtils
         {
             ByteArrayInputStream bais = new ByteArrayInputStream(value.getBytes(SERIALIZE_CHARSET));
             InputStream decStream = Base64.getDecoder(bais);
-            ObjectInputStream ois = new ObjectInputStream(decStream);
+            ObjectInputStream ois = new MyFacesObjectInputStream(decStream);
             Object obj = ois.readObject();
             ois.close();
             decStream.close();

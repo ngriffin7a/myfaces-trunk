@@ -22,6 +22,7 @@ import net.sourceforge.myfaces.MyFacesConfig;
 import net.sourceforge.myfaces.MyFacesFactoryFinder;
 import net.sourceforge.myfaces.tree.TreeImpl;
 import net.sourceforge.myfaces.util.logging.LogUtil;
+import net.sourceforge.myfaces.util.MyFacesObjectInputStream;
 import net.sourceforge.myfaces.webapp.ServletMapping;
 import net.sourceforge.myfaces.webapp.ServletMappingFactory;
 
@@ -95,7 +96,7 @@ public class JspInfo
         try
         {
             ByteArrayInputStream bais = new ByteArrayInputStream(_serializedTree);
-            ObjectInputStream ois = new ObjectInputStream(bais);
+            ObjectInputStream ois = new MyFacesObjectInputStream(bais);
             return (Tree)ois.readObject();
         }
         catch (IOException e)

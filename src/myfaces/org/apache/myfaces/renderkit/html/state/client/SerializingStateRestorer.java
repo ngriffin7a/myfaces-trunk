@@ -21,6 +21,7 @@ package net.sourceforge.myfaces.renderkit.html.state.client;
 import net.sourceforge.myfaces.renderkit.html.jspinfo.JspInfoUtils;
 import net.sourceforge.myfaces.renderkit.html.state.ModelValueEntry;
 import net.sourceforge.myfaces.util.Base64;
+import net.sourceforge.myfaces.util.MyFacesObjectInputStream;
 import net.sourceforge.myfaces.util.logging.LogUtil;
 
 import javax.faces.FactoryFinder;
@@ -147,7 +148,7 @@ public class SerializingStateRestorer
             ByteArrayInputStream byteStream = new ByteArrayInputStream(zippedTree.getBytes(ZipMinimizingStateSaver.ZIP_CHARSET));
             InputStream decodedStream = Base64.getDecoder(byteStream);
             InputStream unzippedStream = new GZIPInputStream(decodedStream);
-            ObjectInputStream ois = new ObjectInputStream(unzippedStream);
+            ObjectInputStream ois = new MyFacesObjectInputStream(unzippedStream);
             Tree tree = (Tree)ois.readObject();
             ois.close();
             unzippedStream.close();
