@@ -2,7 +2,6 @@ package net.sourceforge.myfaces.application;
 
 import net.sourceforge.myfaces.MyFacesTest;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;

@@ -27,7 +27,6 @@ import java.util.Map;
 
 import javax.faces.el.ReferenceSyntaxException;
 import javax.faces.el.ValueBinding;
-import javax.faces.el.VariableResolver;
 
 
 /**
