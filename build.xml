@@ -104,8 +104,6 @@
     <target name="bin-release"
             depends="myfaces-jar, apidoc"
             description="creates the binary release file myfaces-x.x.x.tgz (don't forget to adjust manifest.properties!)">
-        <copy file="${project.dir}/webapps/examples/web/WEB-INF/web.xml"
-              tofile="${doc.dir}/web.xml.sample"/>
         <tar destfile="myfaces-${manifest.impl.version}.tgz"
              compression="gzip">
             <tarfileset dir="${doc.dir}"
@@ -122,8 +120,6 @@
     <target name="src-release"
             depends="apidoc"
             description="creates the source release file myfaces-x.x.x-src.tgz (don't forget to adjust manifest.properties!)">
-        <copy file="${project.dir}/webapps/examples/web/WEB-INF/web.xml"
-              tofile="${doc.dir}/web.xml.sample"/>
         <tar destfile="myfaces-${manifest.impl.version}-src.tgz"
              compression="gzip">
             <tarfileset dir="${doc.dir}"
@@ -145,8 +141,6 @@
 
     <target name="examples-release"
             description="creates the examples release file myfaces-x.x.x-examples.tgz (don't forget to adjust manifest.properties!)">
-        <copy file="${project.dir}/webapps/examples/web/WEB-INF/web.xml"
-              tofile="${doc.dir}/web.xml.sample"/>
         <ant dir="webapps/examples"
              antfile="build.xml"
              inheritall="false"

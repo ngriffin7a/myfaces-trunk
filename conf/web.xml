@@ -28,17 +28,18 @@
     <context-param>
         <param-name>javax.faces.application.CONFIG_FILES</param-name>
         <param-value>
+            /WEB-INF/examples-config.xml
         </param-value>
         <description>
             Comma separated list of URIs of (additional) faces config files.
-            (e.g. /WEB-INF/my-faces-config.xml)
+            (e.g. /WEB-INF/my-config.xml)
             See JSF 1.0 PRD2, 10.3.2
         </description>
     </context-param>
 
     <context-param>
         <param-name>myfaces_LogLevel</param-name>
-        <param-value>WARNING</param-value>
+        <param-value>INFO</param-value>
         <description>
             The log level of the MyFacesLogger.
             Allowed values are "FINEST", "FINER", "FINE", "INFO", "WARNING"

@@ -35,8 +35,8 @@ public class LocalizedSelectItem
     {
         super(key,
               BundleUtils.getString(FacesContext.getCurrentInstance(),
-                                             "net.sourceforge.myfaces.examples.resource.example_messages",
-                                             key),
+                                    "example_messages",
+                                    key),
               null);
 
     }
