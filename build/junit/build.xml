@@ -18,9 +18,9 @@
 
     <!-- classpath for compiling -->
     <path id="junit.class.path">
-        <pathelement location="${servlet.jar}"/>
+        <pathelement location="${servlet-jsp.jar}"/>
         <pathelement location="${commons-el.jar}"/>
-        <pathelement location="${jsp-api.jar}"/>
+        <pathelement location="${jsp-2.0.jar}"/>
         <pathelement location="${myfaces.jar}"/>
         <pathelement location="${myfaces-jsf-api.jar}"/>
         <pathelement location="${junit.jar}"/>

@@ -57,7 +57,7 @@
             <lib file="${commons-codec.jar}"/>
             <lib file="${commons-el.jar}"/>
             <lib file="${commons-logging.jar}"/>
-            <lib file="${jsp-api.jar}"/>
+            <lib file="${jsp-2.0.jar}"/>
             <lib file="${jstl.jar}"/>
             <lib file="${myfaces.jar}"/>
             <lib file="${myfaces-jsf-api.jar}"/>

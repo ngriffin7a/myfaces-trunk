@@ -35,59 +35,54 @@
 
     <!-- classpath for compiling api classes -->
     <path id="jsfapi.class.path">
-        <pathelement location="${servlet.jar}"/>
-        <pathelement location="${jsp-api.jar}"/>
+        <pathelement location="${servlet-jsp.jar}"/>
         <pathelement location="${jstl.jar}"/>
     </path>
 
     <!-- classpath for compiling shared classes -->
     <path id="share.class.path">
-        <pathelement location="${api.classes}"/>
-        <pathelement location="${servlet.jar}"/>
-        <pathelement location="${jsp-api.jar}"/>
+        <pathelement location="${servlet-jsp.jar}"/>
         <pathelement location="${jstl.jar}"/>
+        <pathelement location="${jsp-2.0.jar}"/>
         <pathelement location="${commons-logging.jar}"/>
         <pathelement location="${commons-el.jar}"/>
-        <pathelement location="${myfaces-jsf-api.jar}"/>
+        <pathelement location="${api.classes}"/>
     </path>
 
     <!-- classpath for compiling impl classes -->
     <path id="myfaces.class.path">
-        <pathelement location="${share.classes}"/>
-        <pathelement location="${share.src}"/>
-        <pathelement location="${servlet.jar}"/>
-        <pathelement location="${jsp-api.jar}"/>
+        <pathelement location="${servlet-jsp.jar}"/>
         <pathelement location="${jstl.jar}"/>
+        <pathelement location="${jsp-2.0.jar}"/>
         <pathelement location="${commons-logging.jar}"/>
         <pathelement location="${commons-el.jar}"/>
         <pathelement location="${commons-codec.jar}"/>
         <pathelement location="${commons-beanutils.jar}"/>
         <pathelement location="${commons-collections.jar}"/>
         <pathelement location="${commons-digester.jar}"/>
-		<pathelement location="${myfaces-jsf-api.jar}"/>
         <pathelement location="${api.classes}"/>
+        <pathelement location="${share.classes}"/>
     </path>
  
     <!-- classpath for compiling component classes -->
     <path id="components.class.path">
-        <pathelement location="${share.classes}"/>
-        <pathelement location="${servlet.jar}"/>
-        <pathelement location="${jsp-api.jar}"/>
+        <pathelement location="${servlet-jsp.jar}"/>
         <pathelement location="${jstl.jar}"/>
-        <pathelement location="${myfaces-jsf-api.jar}"/>
-        <pathelement location="${api.classes}"/>
+        <pathelement location="${jsp-2.0.jar}"/>
         <pathelement location="${commons-logging.jar}"/>
         <pathelement location="${commons-el.jar}"/>
         <pathelement location="${commons-validator.jar}"/>
         <pathelement location="${jakarta-oro.jar}"/>
         <pathelement location="${commons-fileupload.jar}"/>
         <pathelement location="${commons-digester.jar}"/>
+        <pathelement location="${api.classes}"/>
+        <pathelement location="${share.classes}"/>
     </path>
  
     <!-- classpath for javadoc creation -->
     <path id="javadoc.class.path">
-        <pathelement location="${servlet.jar}"/>
-        <pathelement location="${jsp-api.jar}"/>
+        <pathelement location="${servlet-jsp.jar}"/>
+        <pathelement location="${jsp-2.0.jar}"/>
         <pathelement location="${jstl.jar}"/>
         <pathelement location="${commons-codec.jar}"/>
         <pathelement location="${commons-logging.jar}"/>
@@ -276,7 +271,7 @@
                         prefix="myfaces-${manifest.impl.version}/lib"/>
             <tarfileset file="${jstl.jar}"
                         prefix="myfaces-${manifest.impl.version}/lib"/>
-            <tarfileset file="${jsp-api.jar}"
+            <tarfileset file="${jsp-2.0.jar}"
                         prefix="myfaces-${manifest.impl.version}/lib"/>
             <tarfileset file="${commons-digester.jar}"
                         prefix="myfaces-${manifest.impl.version}/lib"/>

@@ -29,16 +29,16 @@
 
     <!-- classpath for compiling api classes -->
     <path id="jsfapi.class.path">
-        <pathelement location="${servlet.jar}"/>
-        <pathelement location="${jsp-api.jar}"/>
+        <pathelement location="${servlet-jsp.jar}"/>
+        <pathelement location="${jsp-2.0.jar}"/>
         <pathelement location="${jstl.jar}"/>
     </path>
 
     <!-- classpath for compiling shared classes -->
     <path id="share.class.path">
         <pathelement location="${jsfapi.src}"/>
-        <pathelement location="${servlet.jar}"/>
-        <pathelement location="${jsp-api.jar}"/>
+        <pathelement location="${servlet-jsp.jar}"/>
+        <pathelement location="${jsp-2.0.jar}"/>
         <pathelement location="${jstl.jar}"/>
         <pathelement location="${commons-logging.jar}"/>
         <pathelement location="${commons-el.jar}"/>
@@ -48,8 +48,8 @@
     <path id="myfaces.class.path">
         <pathelement location="${jsfapi.src}"/>
         <pathelement location="${share.src}"/>
-        <pathelement location="${servlet.jar}"/>
-        <pathelement location="${jsp-api.jar}"/>
+        <pathelement location="${servlet-jsp.jar}"/>
+        <pathelement location="${jsp-2.0.jar}"/>
         <pathelement location="${jstl.jar}"/>
         <pathelement location="${commons-codec.jar}"/>    <!-- Base64 classes -->
         <pathelement location="${commons-logging.jar}"/>
@@ -62,8 +62,8 @@
     <path id="components.class.path">
         <pathelement location="${jsfapi.src}"/>
         <pathelement location="${share.src}"/>
-        <pathelement location="${servlet.jar}"/>
-        <pathelement location="${jsp-api.jar}"/>
+        <pathelement location="${servlet-jsp.jar}"/>
+        <pathelement location="${jsp-2.0.jar}"/>
         <pathelement location="${jstl.jar}"/>
         <pathelement location="${commons-logging.jar}"/>
         <pathelement location="${commons-el.jar}"/>
@@ -74,8 +74,8 @@
 
     <path id="examples.class.path">
         <!--pathelement location="${sun-jsf-api.jar}"/-->
-        <pathelement location="${servlet.jar}"/>
-        <pathelement location="${jsp-api.jar}"/>
+        <pathelement location="${servlet-jsp.jar}"/>
+        <pathelement location="${jsp-2.0.jar}"/>
         <pathelement location="${jstl.jar}"/>
         <pathelement location="${commons-logging.jar}"/>
         <pathelement location="${commons-digester.jar}"/>
@@ -89,7 +89,7 @@
 
         <copy todir="${web-inf.lib.dir}">
             <fileset file="${jstl.jar}"/>
-            <fileset file="${jsp-api.jar}"/>
+            <fileset file="${jsp-2.0.jar}"/>
             <fileset file="${commons-codec.jar}"/>
             <fileset file="${commons-logging.jar}"/>
             <fileset file="${commons-el.jar}"/>
