@@ -37,6 +37,9 @@ import javax.faces.webapp.UIComponentTag;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.4  2004/04/23 13:57:54  manolito
+ * bug #940740
+ *
  * Revision 1.3  2004/04/16 15:13:33  manolito
  * validator attribute support and MethodBinding invoke exception handling fixed
  *
@@ -136,10 +139,6 @@ public class UIComponentTagUtils
                 ValueBinding vb = context.getApplication().createValueBinding(value);
                 component.setValueBinding(JSFAttr.VALUE_ATTR, vb);
             }
-            else if (component instanceof ValueHolder)
-            {
-                ((ValueHolder)component).setValue(value);
-            }
             else if (component instanceof UICommand)
             {
                 ((UICommand)component).setValue(value);
@@ -151,6 +150,12 @@ public class UIComponentTagUtils
             else if (component instanceof UISelectBoolean)
             {
                 ((UISelectBoolean)component).setValue(Boolean.valueOf(value));
+            }
+            //Since many input components are ValueHolders the special components
+            //must come first, ValueHolder is the last resort.
+            else if (component instanceof ValueHolder)
+            {
+                ((ValueHolder)component).setValue(value);
             }
             else
             {

@@ -19,6 +19,7 @@
 
 package net.sourceforge.myfaces.taglib.html;
 
+import com.meterware.httpunit.HTMLElement;
 import com.meterware.httpunit.WebResponse;
 
 import org.apache.cactus.ServletTestCase;
@@ -29,11 +30,15 @@ import javax.faces.context.FacesContextFactory;
 import javax.faces.lifecycle.Lifecycle;
 import javax.faces.lifecycle.LifecycleFactory;
 import javax.faces.webapp.FacesServlet;
+import javax.servlet.RequestDispatcher;
 
 /**
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.2  2004/04/23 13:57:54  manolito
+ * bug #940740
+ *
  * Revision 1.1  2004/04/23 12:09:02  manolito
  * cactus problems
  *
@@ -60,21 +65,17 @@ public class HtmlSelectBooleanCheckboxTagCactusTest
     }
 
     public void testSimpleRender() throws Exception {
-        /*
         RequestDispatcher rd = config.getServletContext().getRequestDispatcher(
                 "/HtmlSelectBooleanCheckboxTagCactusTest.jsf");
         // render the page for the first time
         rd.forward(request, response);
-        */
     }
 
     public void endSimpleRender(WebResponse response)
             throws Exception
     {
-        /*
-        HTMLElement element = response.getElementWithID("selectBooleanCheckbox1");
+        HTMLElement element = response.getElementWithID("testForm:selectBooleanCheckbox1");
         assertNotNull(element);
-        */
     }
 
 
