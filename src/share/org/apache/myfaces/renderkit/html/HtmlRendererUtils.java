@@ -139,7 +139,10 @@ public final class HtmlRendererUtils {
             //if the component has not been disabled
             if(!isDisabledOrReadOnly(component))
             {
-                ((EditableValueHolder) component).setSubmittedValue(RendererUtils.EMPTY_STRING);
+                ((EditableValueHolder) component).setSubmittedValue( null );
+                // Was .setSubmittedValue(RendererUtils.EMPTY_STRING) before.
+                // This caused a bug when the component wasn't displayed
+                // (for example if it was in a TabPanel's Tab that wasn't displayed).
             }
         }
     }
@@ -177,7 +180,10 @@ public final class HtmlRendererUtils {
             //if the component has not been disabled
             if(!isDisabledOrReadOnly(component))
             {
-                ((EditableValueHolder) component).setSubmittedValue(Boolean.FALSE);
+                ((EditableValueHolder) component).setSubmittedValue( null );
+                // Was .setSubmittedValue(Boolean.FALSE) before.
+                // This caused a bug when the component wasn't displayed
+                // (for example if it was in a TabPanel's Tab that wasn't displayed).
             }
         }
     }
@@ -220,7 +226,10 @@ public final class HtmlRendererUtils {
             //if the component has not been disabled
             if(!isDisabledOrReadOnly(component))
             {
-                ((EditableValueHolder) component).setSubmittedValue(RendererUtils.EMPTY_STRING);
+                ((EditableValueHolder) component).setSubmittedValue( null );
+                // Was .setSubmittedValue(RendererUtils.EMPTY_STRING) before.
+                // This caused a bug when the component wasn't displayed
+                // (for example if it was in a TabPanel's Tab that wasn't displayed).
             }
         }
     }
@@ -251,7 +260,10 @@ public final class HtmlRendererUtils {
 
             if(!isDisabledOrReadOnly(component))
             {
-                ((EditableValueHolder) component).setSubmittedValue(RendererUtils.EMPTY_STRING);
+                ((EditableValueHolder) component).setSubmittedValue( null );
+                // Was .setSubmittedValue(RendererUtils.EMPTY_STRING) before.
+                // This caused a bug when the component wasn't displayed
+                // (for example if it was in a TabPanel's Tab that wasn't displayed).
             }
         }
     }

@@ -30,6 +30,11 @@ import java.util.List;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.15  2005/01/23 22:06:33  svieujot
+ * Bugfix :  When no value were submitted, default values were set.
+ * This caused a bug when the component wasn't displayed (for example if it was in a TabPanel's Tab that wasn't displayed).
+ * It was reseting the backend bean's value, and sometime causing Null Pointer Exceptions.
+ *
  * Revision 1.14  2005/01/22 16:47:17  mmarinschek
  * fixing bug with validation not called if the submitted value is empty; an empty string is submitted instead if the component is enabled.
  *
@@ -252,7 +257,8 @@ public class UISelectMany
 
         if(submittedValue instanceof String && ((String) submittedValue).length()==0)
         {
-            submittedValue = null;
+            submittedValue = null; // TODO : This is a bug, if set to null, you'll get the following error :
+            // java.lang.NullPointerException at org.apache.myfaces.renderkit._SharedRendererUtils.getConvertedUISelectManyValue(_SharedRendererUtils.java:118)
         }
 
         Object convertedValue = getConvertedValue(context, submittedValue);
