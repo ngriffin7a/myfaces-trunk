@@ -30,6 +30,9 @@ import org.apache.myfaces.renderkit.RendererUtils;
  * @author Sylvain Vieujot (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.15  2005/01/03 03:49:31  svieujot
+ * trim returned text
+ *
  * Revision 1.14  2005/01/02 20:39:16  svieujot
  * HtmlEditor can now process HTML documents and HTML fragments.
  *
@@ -301,11 +304,14 @@ public class HtmlEditor extends HtmlInputText {
     }
     
     public String getValueFromDocument(String text){
+        if( text == null )
+            return "";
+        
         if( isTypeDocument() )
-            return text;
+            return text.trim();
         
         if( !isHtmlDocument(text) )
-            return text;
+            return text.trim();
         
         // Extract the fragment from the document.
         String lcText = text.toLowerCase();
@@ -335,9 +341,9 @@ public class HtmlEditor extends HtmlInputText {
            || bodyStartIndex > bodyEndIndex
            || bodyStartIndex>=textLength || bodyEndIndex>=textLength ){
             log.warn("Couldn't extract HTML body from :\n"+text);
-            return text;
+            return text.trim();
         }
         
-        return text.substring(bodyStartIndex, bodyEndIndex+1);
+        return text.substring(bodyStartIndex, bodyEndIndex+1).trim();
     }
 }
