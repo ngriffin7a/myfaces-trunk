@@ -43,7 +43,7 @@
 
 <!--
 ======================================================
- view
+ view & subview
 ======================================================
 -->
 
@@ -53,6 +53,33 @@
         <body-content>JSP</body-content>
     </tag>
 
+    <tag>
+        <name>subview</name>
+        <tag-class>net.sourceforge.myfaces.taglib.core.SubviewTag</tag-class>
+        <body-content>JSP</body-content>
+        <!-- attribute id is required! -->
+        <attribute>
+             <name>id</name>
+             <required>true</required>
+             <rtexprvalue>false</rtexprvalue>
+             <type>java.lang.String</type>
+             <description>Every component may have an unique id. Automatically created if omitted.</description>
+        </attribute>
+        <attribute>
+            <name>binding</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
+            <type>java.lang.String</type>
+            <description>Component binding.</description>
+        </attribute>
+        <attribute>
+             <name>rendered</name>
+             <required>false</required>
+             <rtexprvalue>false</rtexprvalue>
+             <type>java.lang.String</type>
+             <description>If false, this component will not be rendered.</description>
+        </attribute>
+    </tag>
 
 <!--
 ======================================================
