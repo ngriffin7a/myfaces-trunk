@@ -30,6 +30,9 @@ import org.apache.myfaces.util.MessageUtils;
  * @author mwessendorf (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.6  2004/11/30 09:37:42  matzew
+ * changes i18n-messages for validation
+ *
  * Revision 1.5  2004/10/13 11:50:57  matze
  * renamed packages to org.apache
  *
@@ -84,7 +87,7 @@ public class EqualValidator implements Validator, StateHolder {
 		if(foreignComp==null)
 			throw new FacesException("Unable to find component '" + _for + "' (calling findComponent on component '" + uiComponent.getId() + "')");
 
-		Object[] args = {uiComponent.getId(),foreignComp.getId()};
+		Object[] args = {value.toString(),(foreignComp.getValue()==null) ? foreignComp.getId():foreignComp.getValue().toString()};
 
 		if(foreignComp.getValue()==null || !foreignComp.getValue().toString().equals(value.toString())  )
 			throw new ValidatorException(MessageUtils.getMessage(FacesMessage.SEVERITY_ERROR,EQUAL_MESSAGE_ID, args));

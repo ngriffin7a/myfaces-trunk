@@ -28,6 +28,9 @@ import javax.faces.validator.ValidatorException;
  * @author mwessendorf (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.6  2004/11/30 09:37:43  matzew
+ * changes i18n-messages for validation
+ *
  * Revision 1.5  2004/10/13 11:50:57  matze
  * renamed packages to org.apache
  *
@@ -102,7 +105,7 @@ public class CreditCardValidator implements Validator,StateHolder {
 			}
 		initValidator();
 		if (!this.creditCardValidator.isValid(value.toString())){
-			Object[] args = {uiComponent.getId()};
+			Object[] args = {value.toString()};
 			throw new ValidatorException(MessageUtils.getMessage(FacesMessage.SEVERITY_ERROR,CREDITCARD_MESSAGE_ID, args));
 		}
 	}

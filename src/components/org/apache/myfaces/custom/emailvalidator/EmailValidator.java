@@ -29,6 +29,9 @@ import javax.faces.validator.ValidatorException;
  * @author mwessendorf (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.6  2004/11/30 09:37:42  matzew
+ * changes i18n-messages for validation
+ *
  * Revision 1.5  2004/10/13 11:50:57  matze
  * renamed packages to org.apache
  *
@@ -87,7 +90,7 @@ public class EmailValidator implements Validator {
 				return;
 			}
 			if (!GenericValidator.isEmail(value.toString())) {
-				Object[] args = {uiComponent.getId()};
+				Object[] args = {value.toString()};
 				throw new ValidatorException(MessageUtils.getMessage(FacesMessage.SEVERITY_ERROR,EMAIL_MESSAGE_ID, args));
 				
 			}

@@ -30,6 +30,9 @@ import org.apache.commons.validator.GenericValidator;
  * @author mwessendorf (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.5  2004/11/30 09:37:43  matzew
+ * changes i18n-messages for validation
+ *
  * Revision 1.4  2004/10/13 11:50:57  matze
  * renamed packages to org.apache
  *
@@ -78,7 +81,7 @@ public class RegExprValidator implements Validator, StateHolder {
 			{
 				return;
 		}
-		Object[] args = {uiComponent.getId()};
+		Object[] args = {value.toString()};
 		if(!GenericValidator.matchRegexp(value.toString(),"^"+_pattern+"$")){
 			throw new ValidatorException(MessageUtils.getMessage(FacesMessage.SEVERITY_ERROR,REGEXPR_MESSAGE_ID, args));
 		

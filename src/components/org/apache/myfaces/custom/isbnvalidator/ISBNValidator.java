@@ -27,6 +27,9 @@ import javax.faces.validator.ValidatorException;
  * @author <a href="mailto:matzew@apache.org">Matthias We�endorf</a> (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.3  2004/11/30 09:37:42  matzew
+ * changes i18n-messages for validation
+ *
  * Revision 1.2  2004/11/23 04:59:24  svieujot
  * Remove "unmappable character for encoding UTF8" warning.
  *
@@ -75,7 +78,7 @@ public class ISBNValidator implements Validator {
 				return;
 			}
 			if (!isbnValidator.isValid( value.toString())) {
-				Object[] args = {uiComponent.getId()};
+				Object[] args = {value.toString()};
 				throw new ValidatorException(MessageUtils.getMessage(FacesMessage.SEVERITY_ERROR,ISBN_MESSAGE_ID, args));
 				
 			}
