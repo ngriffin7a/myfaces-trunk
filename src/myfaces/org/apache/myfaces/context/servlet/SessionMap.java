@@ -16,44 +16,46 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package net.sourceforge.myfaces.context.maphelp;
+package net.sourceforge.myfaces.context.servlet;
 
-import javax.servlet.ServletContext;
+import net.sourceforge.myfaces.context.servlet.AbstractAttributeMap;
+
+import javax.servlet.http.HttpSession;
 import java.util.Enumeration;
 
 /**
- * Helper class for {@link net.sourceforge.myfaces.context.ExternalContextImpl}
+ * Helper class for {@link net.sourceforge.myfaces.context.servlet.ServletExternalContextImpl}
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public class InitParameterMap
+public class SessionMap
     extends AbstractAttributeMap
 {
-    private ServletContext _servletContext;
+    private HttpSession _session;
 
-    public InitParameterMap(ServletContext servletContext)
+    SessionMap(HttpSession session)
     {
-        _servletContext = servletContext;
+        _session = session;
     }
 
     protected Object getAttribute(String name)
     {
-        return _servletContext.getInitParameter(name);
+        return _session.getAttribute(name);
     }
 
     protected void setAttribute(String name, Object newVal)
     {
-        throw new UnsupportedOperationException();
+        _session.setAttribute(name, newVal);
     }
 
     protected void removeAttribute(String name)
     {
-        throw new UnsupportedOperationException();
+        _session.removeAttribute(name);
     }
 
     protected Enumeration getAttributeNames()
     {
-        return _servletContext.getInitParameterNames();
+        return _session.getAttributeNames();
     }
 
 }

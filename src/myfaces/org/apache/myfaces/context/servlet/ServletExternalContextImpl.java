@@ -16,9 +16,7 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package net.sourceforge.myfaces.context;
-
-import net.sourceforge.myfaces.context.maphelp.*;
+package net.sourceforge.myfaces.context.servlet;
 
 import javax.faces.FacesException;
 import javax.faces.context.ExternalContext;
@@ -38,7 +36,7 @@ import java.util.*;
  * @author Anton Koinov
  * @version $Revision$ $Date$
  */
-public class ExternalContextImpl
+public class ServletExternalContextImpl
     extends ExternalContext
 {
     private static final String INIT_PARAMETER_MAP_ATTRIBUTE = InitParameterMap.class.getName();
@@ -56,7 +54,7 @@ public class ExternalContextImpl
     private Map _requestCookieMap;
     private Map _initParameterMap;
 
-    public ExternalContextImpl(ServletContext servletContext,
+    public ServletExternalContextImpl(ServletContext servletContext,
                                ServletRequest servletRequest,
                                ServletResponse servletResponse)
     {

@@ -16,44 +16,46 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package net.sourceforge.myfaces.context.maphelp;
+package net.sourceforge.myfaces.context.servlet;
 
-import javax.servlet.ServletContext;
+import net.sourceforge.myfaces.context.servlet.AbstractAttributeMap;
+
+import javax.servlet.ServletRequest;
 import java.util.Enumeration;
 
 /**
- * Helper class for {@link net.sourceforge.myfaces.context.ExternalContextImpl}
+ * Helper class for {@link net.sourceforge.myfaces.context.servlet.ServletExternalContextImpl}
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public class ApplicationMap
+public class RequestParameterValuesMap
     extends AbstractAttributeMap
 {
-    private ServletContext _servletContext;
+    private ServletRequest _request;
 
-    public ApplicationMap(ServletContext servletContext)
+    RequestParameterValuesMap(ServletRequest request)
     {
-        _servletContext = servletContext;
+        _request = request;
     }
 
     protected Object getAttribute(String name)
     {
-        return _servletContext.getAttribute(name);
+        return _request.getParameterValues(name);
     }
 
     protected void setAttribute(String name, Object newVal)
     {
-        _servletContext.setAttribute(name, newVal);
+        throw new UnsupportedOperationException();
     }
 
     protected void removeAttribute(String name)
     {
-        _servletContext.removeAttribute(name);
+        throw new UnsupportedOperationException();
     }
 
     protected Enumeration getAttributeNames()
     {
-        return _servletContext.getAttributeNames();
+        return _request.getParameterNames();
     }
 
 }

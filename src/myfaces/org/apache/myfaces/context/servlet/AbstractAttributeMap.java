@@ -16,7 +16,7 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package net.sourceforge.myfaces.context.maphelp;
+package net.sourceforge.myfaces.context.servlet;
 
 import java.util.*;
 
@@ -32,6 +32,10 @@ public abstract class AbstractAttributeMap
     protected abstract void setAttribute(String name, Object newVal);
     protected abstract void removeAttribute(String name);
     protected abstract Enumeration getAttributeNames();
+
+    AbstractAttributeMap()
+    {
+    }
 
     public int size()
     {

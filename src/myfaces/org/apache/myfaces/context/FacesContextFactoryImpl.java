@@ -18,6 +18,8 @@
  */
 package net.sourceforge.myfaces.context;
 
+import net.sourceforge.myfaces.context.servlet.ServletFacesContextImpl;
+
 import javax.faces.FacesException;
 import javax.faces.context.FacesContext;
 import javax.faces.context.FacesContextFactory;
@@ -34,14 +36,21 @@ import javax.servlet.ServletResponse;
 public class FacesContextFactoryImpl
         extends FacesContextFactory
 {
-    public FacesContext getFacesContext(Object servletcontext,
-                                        Object servletrequest,
-                                        Object servletresponse,
+    public FacesContext getFacesContext(Object context,
+                                        Object request,
+                                        Object response,
                                         Lifecycle lifecycle)
             throws FacesException
     {
-        return new FacesContextImpl((ServletContext)servletcontext,
-                                    (ServletRequest)servletrequest,
-                                    (ServletResponse)servletresponse);
+        if (context instanceof ServletContext)
+        {
+            return new ServletFacesContextImpl((ServletContext)context,
+                                        (ServletRequest)request,
+                                        (ServletResponse)response);
+        }
+        else
+        {
+            throw new FacesException("Unsupported context type " + context.getClass().getName());
+        }
     }
 }

@@ -223,9 +223,9 @@ public class LifecycleImpl
     /*
     private int getMessageCount(FacesContext facesContext)
     {
-        if (facesContext instanceof FacesContextImpl)
+        if (facesContext instanceof ServletFacesContextImpl)
         {
-            return ((FacesContextImpl)facesContext).getMessageCount();
+            return ((ServletFacesContextImpl)facesContext).getMessageCount();
         }
         else
         {

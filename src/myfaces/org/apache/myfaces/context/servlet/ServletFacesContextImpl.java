@@ -16,7 +16,7 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package net.sourceforge.myfaces.context;
+package net.sourceforge.myfaces.context.servlet;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -47,7 +47,7 @@ import net.sourceforge.myfaces.util.FacesUtils;
  * @author Anton Koinov
  * @version $Revision$ $Date$
  */
-public class FacesContextImpl
+public class ServletFacesContextImpl
     extends FacesContext
 {
     //~ Static fields/initializers -----------------------------------------------------------------
@@ -69,13 +69,12 @@ public class FacesContextImpl
 
     //~ Constructors -------------------------------------------------------------------------------
 
-    public FacesContextImpl(
-        ServletContext servletContext, ServletRequest servletRequest,
-        ServletResponse servletResponse)
+    public ServletFacesContextImpl(ServletContext servletContext,
+                            ServletRequest servletRequest,
+                            ServletResponse servletResponse)
     {
         _application         = FacesUtils.getApplication();
-        _externalContext     = new ExternalContextImpl(
-                servletContext, servletRequest, servletResponse);
+        _externalContext     = new ServletExternalContextImpl(servletContext, servletRequest, servletResponse);
         FacesContext.setCurrentInstance(this);
     }
 

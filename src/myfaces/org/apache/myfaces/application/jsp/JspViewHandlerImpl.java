@@ -288,47 +288,14 @@ public class JspViewHandlerImpl
         }
 
         ExternalContext externalContext = facesContext.getExternalContext();
+
         //Since this is a JSP specific implementation, we are allowed to cast:
         HttpServletRequest servletRequest = (HttpServletRequest)externalContext.getRequest();
-        
 
+        String viewId = facesContext.getViewRoot().getId();
+        String uri = getViewIdPath(facesContext, viewId);
+        externalContext.dispatchMessage(uri);
 
-
-        //Build component tree from parsed JspInfo so that all components
-        //already exist in case a component needs it's children prior to
-        //rendering it's body
-        /*
-        Tree staticTree = JspInfo.getTree(facesContext, tree.getTreeId());
-        TreeCopier tc = new TreeCopier(facesContext);
-        tc.setOverwriteComponents(false);
-        tc.setOverwriteAttributes(false);
-        tc.copyTree(staticTree, tree);
-        */
-
-        //Look for a StateRenderer and prepare for state saving
-        RenderKitFactory rkFactory = (RenderKitFactory)FactoryFinder.getFactory(FactoryFinder.RENDER_KIT_FACTORY);
-        RenderKit renderKit = rkFactory.getRenderKit(viewToRender.getRenderKitId());
-        Renderer renderer = null;
-        try
-        {
-            renderer = renderKit.getRenderer(StateRenderer.TYPE);
-        }
-        catch (Exception e)
-        {
-            //No StateRenderer
-        }
-        if (renderer != null)
-        {
-            try
-            {
-                log.trace("StateRenderer found, calling encodeBegin.");
-                renderer.encodeBegin(facesContext, null);
-            }
-            catch (IOException e)
-            {
-                throw new FacesException("Error saving state", e);
-            }
-        }
 
         //forward request to JSP page
         //ServletMappingFactory smf = MyFacesFactoryFinder.getServletMappingFactory(externalContext);
