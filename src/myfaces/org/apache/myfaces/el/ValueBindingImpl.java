@@ -55,6 +55,9 @@ import org.apache.commons.logging.LogFactory;
  * @version $Revision$ $Date$
  * 
  * $Log$
+ * Revision 1.52  2004/10/01 11:54:29  dave0000
+ * add detailed error messages for "base is null"
+ *
  * Revision 1.51  2004/09/28 19:11:49  dave0000
  * uppercase static final prop
  * remove redundant code
@@ -509,20 +512,25 @@ public class ValueBindingImpl extends ValueBinding implements StateHolder
         Object base = complexValue.getPrefix()
             .evaluate(variableResolver, s_functionMapper, 
                 ELParserHelper.LOGGER);
+        if (base == null)
+        {
+            throw new PropertyNotFoundException("Base is null: " 
+                + complexValue.getPrefix().getExpressionString());
+        }
 
         // Resolve and apply the suffixes
         List suffixes = complexValue.getSuffixes();
         int max = (suffixes == null) ? -1 : suffixes.size() - 1;
-        for (int i = 0; (base != null) && (i < max); i++) 
+        for (int i = 0; i < max; i++) 
         {
             ValueSuffix suffix = (ValueSuffix) suffixes.get(i);
             base = suffix.evaluate(base, variableResolver, s_functionMapper,
                 ELParserHelper.LOGGER);
-        }
-        
-        if (base == null)
-        {
-            throw new PropertyNotFoundException("Base is null");
+            if (base == null)
+            {
+                throw new PropertyNotFoundException("Base is null: " 
+                    + suffix.getExpressionString());
+            }
         }
         
         // Resolve the last suffix
@@ -537,16 +545,17 @@ public class ValueBindingImpl extends ValueBinding implements StateHolder
                 index = arraySuffixIndex.evaluate(
                         variableResolver, s_functionMapper, 
                         ELParserHelper.LOGGER);
+                if (index == null)
+                {
+                    throw new PropertyNotFoundException("Index is null: " 
+                        + arraySuffixIndex.getExpressionString());
+                }
+                
             }
             else
             {
                 index = ((PropertySuffix) arraySuffix).getName();
             }
-        }
-        
-        if (index == null)
-        {
-            throw new PropertyNotFoundException("Index is null");
         }
         
         return new Object[] {base, index};
@@ -555,7 +564,8 @@ public class ValueBindingImpl extends ValueBinding implements StateHolder
     private Object coerce(Object value, Class clazz) throws ELException
     {
         return (value == null) ? null
-            : Coercions.coerce(value, clazz, ELParserHelper.LOGGER);
+            : (clazz == null) ? value : 
+                Coercions.coerce(value, clazz, ELParserHelper.LOGGER);
     }
     
     protected RuntimeConfig getRuntimeConfig(FacesContext facesContext)
