@@ -32,6 +32,9 @@ import java.util.List;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.4  2005/03/31 22:47:14  schof
+ * Whitney Hunter's patch for MYFACES-157
+ *
  * Revision 1.3  2004/10/13 11:50:59  matze
  * renamed packages to org.apache
  *
@@ -110,7 +113,7 @@ class _SharedRendererUtils
                 // expected type is a List
                 // --> according to javadoc of UISelectMany we assume that the element type
                 //     is java.lang.String, and copy the String array to a new List
-                int len = submittedValue.length;
+                int len = submittedValue != null ? submittedValue.length : 0;
                 List lst = new ArrayList(len);
                 for (int i = 0; i < len; i++)
                 {
@@ -143,7 +146,7 @@ class _SharedRendererUtils
         {
             // ...but have no idea of expected type
             // --> so let's convert it to an Object array
-            int len = submittedValue.length;
+            int len = submittedValue != null ? submittedValue.length : 0;
             Object[] convertedValues = new Object[len];
             for (int i = 0; i < len; i++)
             {
@@ -158,7 +161,7 @@ class _SharedRendererUtils
             // Curious case: According to specs we should assume, that the element type
             // of this List is java.lang.String. But there is a Converter set for this
             // component. Because the user must know what he is doing, we will convert the values.
-            int len = submittedValue.length;
+            int len = submittedValue != null ? submittedValue.length : 0;
             List lst = new ArrayList(len);
             for (int i = 0; i < len; i++)
             {
@@ -175,7 +178,7 @@ class _SharedRendererUtils
         if (arrayComponentType.isPrimitive())
         {
             //primitive array
-            int len = submittedValue.length;
+            int len = submittedValue != null ? submittedValue.length : 0;
             Object convertedValues = Array.newInstance(arrayComponentType, len);
             for (int i = 0; i < len; i++)
             {
@@ -187,7 +190,7 @@ class _SharedRendererUtils
         else
         {
             //Object array
-            int len = submittedValue.length;
+            int len = submittedValue != null ? submittedValue.length : 0;
             Object[] convertedValues = new Object[len];
             for (int i = 0; i < len; i++)
             {
