@@ -126,7 +126,6 @@ public class PanelDataTag
         }
         catch (FacesException e)
         {
-            LogUtil.getLogger().warning(e.getMessage());
             return false;
         }
     }
