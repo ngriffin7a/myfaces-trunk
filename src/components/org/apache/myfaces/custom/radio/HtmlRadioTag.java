@@ -1,0 +1,91 @@
+/*
+ * MyFaces - the free JSF implementation
+ * Copyright (C) 2003, 2004  The MyFaces Team (http://myfaces.sourceforge.net)
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+ */
+package net.sourceforge.myfaces.custom.radio;
+
+import net.sourceforge.myfaces.renderkit.html.HTML;
+import net.sourceforge.myfaces.renderkit.JSFAttr;
+import net.sourceforge.myfaces.taglib.html.HtmlInputTagBase;
+import net.sourceforge.myfaces.taglib.html.HtmlComponentTagBase;
+import net.sourceforge.myfaces.taglib.html.HtmlComponentBodyTagBase;
+import net.sourceforge.myfaces.taglib.UIComponentTagBase;
+import net.sourceforge.myfaces.custom.fileupload.HtmlInputFileUpload;
+
+import javax.faces.component.UIComponent;
+
+/**
+ * @author Thomas Spiegl (latest modification by $Author$)
+ * @version $Revision$ $Date$
+ * $Log:
+ */
+public class HtmlRadioTag
+        extends UIComponentTagBase
+{
+    //private static final Log log = LogFactory.getLog(HtmlInputFileUploadTag.class);
+
+    public String getComponentType()
+    {
+        return HtmlRadio.COMPONENT_TYPE;
+    }
+
+    protected String getDefaultRendererType()
+    {
+        return null;
+    }
+
+    // UIComponent attributes --> already implemented in UIComponentTagBase
+
+    // user role attributes --> already implemented in UIComponentTagBase
+
+    // HTML universal attributes --> already implemented in HtmlComponentTagBase
+
+    // HTML event handler attributes --> already implemented in HtmlComponentTagBase
+
+    // HtmlRadio attributes
+    private String _for;
+    private String _index;
+
+
+    protected void setProperties(UIComponent component)
+    {
+        super.setProperties(component);
+
+        setStringProperty(component, HtmlRadio.FOR_ATTR, _for);
+        setIntegerProperty(component, HtmlRadio.INDEX_ATTR, _index);
+    }
+
+    public String getFor()
+    {
+        return _for;
+    }
+
+    public void setFor(String aFor)
+    {
+        _for = aFor;
+    }
+
+    public String getIndex()
+    {
+        return _index;
+    }
+
+    public void setIndex(String index)
+    {
+        _index = index;
+    }
+}

@@ -686,6 +686,31 @@
         &user_role_attributes;
     </tag>
 
+<!-- selectOneRadio -->
+    <tag>
+        <name>selectOneRadio</name>
+        <tag-class>net.sourceforge.myfaces.taglib.html.ext.HtmlSelectOneRadioTag</tag-class>
+        <body-content>JSP</body-content>
+        &ui_select_one_attributes;
+        &html_universal_attributes;
+        &html_event_handler_attributes;
+        &html_input_radio_attributes;
+        <!-- RadioRenderer attributes -->
+        <attribute>
+            <name>layout</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
+            <type>java.lang.String</type>
+            <description>see JSF Spec. 8.5.10</description>
+        </attribute>
+        <attribute>
+            <name>border</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
+            <type>java.lang.String</type>
+            <description>see JSF Spec. 8.5.10</description>
+        </attribute>
+    </tag>
 
 <!-- updateActionListener -->
     <tag>
@@ -714,4 +739,40 @@
     </tag>
 
 
+
+
+
+
+
+<!-- radio -->
+    <tag>
+        <name>radio</name>
+        <tag-class>net.sourceforge.myfaces.custom.radio.HtmlRadioTag</tag-class>
+        <body-content>JSP</body-content>
+        <description>
+            Radio Button wich gets its content from an UISelectOne. The Radio
+            asks its parent to find an UISelectOne with id = for-attribute.
+        </description>
+        &user_role_attributes;
+        &html_universal_attributes;
+        &html_event_handler_attributes;
+        <!-- HtmlRadio attributes -->
+        <attribute>
+            <name>for</name>
+            <required>true</required>
+            <rtexprvalue>false</rtexprvalue>
+            <description>
+                 id of the refering UISelectOne
+            </description>
+        </attribute>
+        <attribute>
+            <name>index</name>
+            <required>true</required>
+            <rtexprvalue>false</rtexprvalue>
+            <description>
+                n-th SelectItem of refered UISelectOne starting with 0.
+            </description>
+        </attribute>
+    </tag>
+    
 </taglib>

@@ -82,6 +82,11 @@
   </component>
 
   <component>
+    <component-type>net.sourceforge.myfaces.HtmlRadio</component-type>
+    <component-class>net.sourceforge.myfaces.custom.radio.HtmlRadio</component-class>
+  </component>
+
+  <component>
     <component-type>net.sourceforge.myfaces.SaveState</component-type>
     <component-class>net.sourceforge.myfaces.component.ext.UISaveState</component-class>
   </component>
@@ -147,6 +152,11 @@
             <renderer-class>net.sourceforge.myfaces.renderkit.html.HtmlMessagesRenderer</renderer-class>
         </renderer>
 
+      <renderer>
+          <component-family>javax.faces.SelectOne</component-family>
+          <renderer-type>javax.faces.Radio</renderer-type>
+          <renderer-class>net.sourceforge.myfaces.renderkit.html.ext.HtmlRadioRenderer</renderer-class>
+      </renderer>
 
         <!-- custom component renderers -->
 

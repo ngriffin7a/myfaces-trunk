@@ -18,6 +18,9 @@ commons-logging.jar = ${project.dir}/lib/commons-logging.jar
 # File path to commons el package
 commons-el.jar = ${project.dir}/lib/commons-el.jar
 
+# File path to sun's RI-JSF-API
+sun-jsf-api.jar = ..
+
 # Destination file path of MyFaces implementation archive to be created
 myfaces.jar = ${project.dir}/lib/myfaces.jar
 

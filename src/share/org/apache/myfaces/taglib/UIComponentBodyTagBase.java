@@ -33,6 +33,9 @@ import java.io.Reader;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.3  2004/03/31 11:14:28  royalts
+ * no message
+ *
  * Revision 1.2  2004/03/30 12:16:08  manolito
  * header comments
  *
@@ -51,7 +54,10 @@ public abstract class UIComponentBodyTagBase
                 component.getRendersChildren() &&
                 !isBodyContentEmpty())
             {
-                log.warn("Component with id '" + component.getClientId(getFacesContext()) + "' (" + getClass().getName() + " tag) renders it's children, but has embedded JSP or HTML code. Use the <f:verbatim> tag for nested JSP or HTML code!");
+                log.warn("Component with id '" + component.getClientId(getFacesContext()) +
+                         "' (" + getClass().getName() +
+                         " tag) renders it's children, but has embedded JSP or HTML code. Use the <f:verbatim> tag for nested JSP or HTML code!" +
+                         "\n BodyContent:\n" + getBodyContent().getString());
             }
         }
         return super.doEndTag();
