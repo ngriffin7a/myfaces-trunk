@@ -1,3 +1,5 @@
+# Don't forget to use double-backslashes in windows paths!
+
 mail.jar = <path to Java Mail API archiv version 1.1>
 servlet.jar = <path to Java Servlet API archiv version 2.3>
 jsf-api.jar = <path to JavaServer Faces API archiv version 1.0 EA3>

@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <project name="myfaces" default="all">
 
+    <!-- allow some of the properties to be overridden -->
+    <property file="build.properties"/>
+
     <!-- Manifest-Infos -->
     <property name="manifest.impl.title" value="MyFaces"/>
     <property name="manifest.impl.version" value="0.3.0"/>
@@ -14,22 +17,22 @@
     <property name="temp.dir" value="${project.dir}/temp"/>
 
     <!-- source dir for compiling -->
-    <property name="src.dir" value="${project.dir}\src"/>
-
-    <!-- WEB-INF dir -->
-    <property name="web-inf.dir" value="${project.dir}/web/WEB-INF"/>
+    <property name="main.src.dir" value="${project.dir}\src\myfaces"/>
 
     <!-- destination dir for compiling -->
-    <property name="classes.dir" value="${project.dir}/web/WEB-INF/classes"/>
+    <property name="main.classes.dir" value="${temp.dir}/main_classes"/>
 
-    <!-- compiletime libraries (servlet.jar) -->
-    <property name="lib.dir" value="${project.dir}/lib"/>
+    <!-- source dir for compiling -->
+    <property name="tlds.dir" value="${project.dir}\tlds"/>
 
     <!-- examples dir -->
-    <property name="examples.dir" value="${project.dir}/examples"/>
+    <property name="webapps.dir" value="${project.dir}/webapps"/>
 
-    <!-- path to the "jsf-api.jar" file -->
-    <property name="jsf-api.file" value="${web-inf.dir}/lib/jsf-api.jar"/>
+    <!-- examples source dir for compiling -->
+    <property name="examples.src.dir" value="${webapps.dir}/examples_cs/WEB-INF/src"/>
+
+    <!-- destination dir for compiling -->
+    <property name="examples.classes.dir" value="${temp.dir}/examples_classes"/>
 
     <!-- path to the "jsf-api.jar" file -->
     <property name="jsf-api.jar" value="must be specified in build.properties"/>
@@ -40,29 +43,33 @@
     <!-- path to the "servlet.jar" file -->
     <property name="servlet.jar" value="must be specified in build.properties"/>
 
-    <!-- allow some of the properties to be overridden -->
-    <property file="build.properties"/>
 
     <!-- classpath for compiling -->
     <path id="project.class.path">
         <pathelement location="${jsf-api.jar}" />
         <pathelement location="${mail.jar}"/>
         <pathelement location="${servlet.jar}"/>
+        <pathelement location="${main.classes.dir}"/> <!-- for compiling the examples -->
     </path>
 
-    <target name="compile">
-        <mkdir dir="${classes.dir}"/>
-        <javac srcdir="${src.dir}/myfaces"
-               destdir="${classes.dir}"
-               optimize="off"
-               classpathref="project.class.path">
-        </javac>
-        <javac srcdir="${src.dir}/example"
-               destdir="${classes.dir}"
+    <target name="compile-main">
+        <mkdir dir="${main.classes.dir}"/>
+        <javac srcdir="${main.src.dir}"
+               destdir="${main.classes.dir}"
                optimize="off"
                classpathref="project.class.path">
         </javac>
     </target>
+
+    <target name="compile-examples" depends="compile-main" >
+        <mkdir dir="${examples.classes.dir}"/>
+        <javac srcdir="${examples.src.dir}"
+               destdir="${examples.classes.dir}"
+               optimize="off"
+               classpathref="project.class.path">
+        </javac>
+    </target>
+
 
     <target name="-timestamp">
         <tstamp>
@@ -70,7 +77,7 @@
         </tstamp>
     </target>
 
-    <target name="jar" depends="compile, -timestamp">
+    <target name="jar-main" depends="compile-main, -timestamp">
         <mkdir dir="${temp.dir}"/>
 
         <manifest file="${temp.dir}/MANIFEST.MF">
@@ -84,39 +91,39 @@
 
         <jar destfile="${temp.dir}/myfaces.jar"
              manifest="${temp.dir}/MANIFEST.MF" >
-            <fileset dir="${classes.dir}" includes="**"
-                                          excludes=".dependency-info/**/*,
-                                                    net/sourceforge/myfaces/example/**/*" />
-            <fileset dir="${src.dir}/myfaces" includes="**"
-                                              excludes="**/*.java"/>
+            <fileset dir="${main.classes.dir}" includes="**"
+                                               excludes=".dependency-info/**/*" />
+            <fileset dir="${main.src.dir}" includes="**"
+                                           excludes="**/*.java"/>
+            <zipfileset dir="${tlds.dir}" includes="*.tld" prefix="META-INF/" />
         </jar>
     </target>
 
-    <target name="examples-jar" depends="compile">
+    <target name="jar-examples" depends="compile-examples">
         <mkdir dir="${temp.dir}"/>
         <jar destfile="${temp.dir}/myfaces-examples.jar">
-            <fileset dir="${classes.dir}"
-                     includes="net/sourceforge/myfaces/example/**/*" />
-            <fileset dir="${src.dir}/example"
-                     includes="**"
-                     excludes="**/*.java"/>
+            <fileset dir="${examples.classes.dir}" includes="**"
+                                                   excludes=".dependency-info/**/*" />
+            <fileset dir="${examples.src.dir}" includes="**"
+                                               excludes="**/*.java"/>
         </jar>
     </target>
 
     <target name="makeclean">
         <delete quiet="true" failonerror="false" includeEmptyDirs="true">
-            <fileset dir="${classes.dir}"/>
+            <fileset dir="${main.classes.dir}"/>
+            <fileset dir="${examples.classes.dir}"/>
             <fileset dir="${temp.dir}"/>
         </delete>
     </target>
 
 
-    <target name="all" depends="jar,examples-jar"/>
+    <target name="all" depends="jar-main,jar-examples"/>
 
 
-    <target name="release" depends="makeclean,jar,examples-jar">
+    <target name="release" depends="makeclean,jar-main,jar-examples">
         <mkdir dir="${temp.dir}/api"/>
-        <javadoc sourcepath="${src.dir}/myfaces"
+        <javadoc sourcepath="${main.src.dir}"
                  destdir="${temp.dir}/api"
                  packagenames="net.sourceforge.myfaces.*"
                  classpathref="project.class.path"
