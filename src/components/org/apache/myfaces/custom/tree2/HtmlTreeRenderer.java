@@ -522,7 +522,7 @@ public class HtmlTreeRenderer extends Renderer
 
         // render javascript function for client-side toggle (it won't be used if user has opted for server-side toggle)
         AddResource.addJavaScriptHere(HtmlTreeRenderer.class, "javascript/tree.js", context);
-        AddResource.addJavaScriptHere(HtmlTreeRenderer.class, "javascript/cookieLib.js", context);
+        AddResource.addJavaScriptHere(HtmlTreeRenderer.class, "javascript/cookielib.js", context);
     }
 
     /**
