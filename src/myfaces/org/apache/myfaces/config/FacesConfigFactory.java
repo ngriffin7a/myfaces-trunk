@@ -27,5 +27,5 @@ import javax.faces.context.ExternalContext;
  */
 public interface FacesConfigFactory
 {
-    public FacesConfig getFacesConfig(ExternalContext servletContext);
+    public FacesConfig getFacesConfig(ExternalContext context);
 }

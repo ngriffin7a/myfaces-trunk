@@ -145,9 +145,9 @@ public class NavigationHandlerImpl
     {
         if (_cazes == null)
         {
-            ExternalContext servletContext =facesContext.getExternalContext();
-            FacesConfigFactory fcf = MyFacesFactoryFinder.getFacesConfigFactory(servletContext);
-            FacesConfig fc = fcf.getFacesConfig(servletContext);
+            ExternalContext externalContext = facesContext.getExternalContext();
+            FacesConfigFactory fcf = MyFacesFactoryFinder.getFacesConfigFactory(externalContext);
+            FacesConfig fc = fcf.getFacesConfig(externalContext);
 
             List rules = fc.getNavigationRuleConfigList();
             int rulesSize = rules.size();

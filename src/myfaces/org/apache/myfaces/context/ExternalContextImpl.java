@@ -21,12 +21,12 @@ package net.sourceforge.myfaces.context;
 import net.sourceforge.myfaces.context.maphelp.*;
 
 import javax.faces.FacesException;
-import javax.faces.context.ApplicationMap;
+import javax.faces.context.ExternalContext;
 import javax.servlet.*;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.servlet.http.Cookie;
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.Principal;
@@ -39,7 +39,7 @@ import java.util.*;
  * @version $Revision$ $Date$
  */
 public class ExternalContextImpl
-    extends ApplicationMap
+    extends ExternalContext
 {
     private static final String INIT_PARAMETER_MAP_ATTRIBUTE = InitParameterMap.class.getName();
     
@@ -238,7 +238,7 @@ public class ExternalContextImpl
 
     public Cookie[] getRequestCookies()
     {
-        return ((HttpServletRequest)_servletRequest).getCookies();
+        return new Cookie[0];  //To change body of implemented methods use Options | File Templates.
     }
 
     public String getInitParameter(String s)

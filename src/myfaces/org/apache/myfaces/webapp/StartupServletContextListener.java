@@ -19,6 +19,7 @@
 package net.sourceforge.myfaces.webapp;
 
 import net.sourceforge.myfaces.MyFacesFactoryFinder;
+import net.sourceforge.myfaces.context.ExternalContextImpl;
 import net.sourceforge.myfaces.config.FacesConfig;
 import net.sourceforge.myfaces.config.FacesConfigFactory;
 import org.apache.commons.logging.Log;
@@ -27,6 +28,7 @@ import org.apache.commons.logging.LogFactory;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
+import javax.faces.context.ExternalContext;
 
 /**
  * DOCUMENT ME!
@@ -51,7 +53,8 @@ public class StartupServletContextListener
             */
 
             FacesConfigFactory fcf = MyFacesFactoryFinder.getFacesConfigFactory(servletContext);
-            FacesConfig facesConfig = fcf.getFacesConfig(servletContext);
+            ExternalContext externalContext = new ExternalContextImpl(servletContext, null, null);
+            FacesConfig facesConfig = fcf.getFacesConfig(externalContext);
             facesConfig.configureAll();
         }
         catch (Exception ex)

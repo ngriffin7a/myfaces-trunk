@@ -28,8 +28,8 @@ import org.apache.commons.logging.LogFactory;
 import javax.faces.FactoryFinder;
 import javax.faces.application.ApplicationFactory;
 import javax.faces.component.UIComponent;
-import javax.faces.context.ApplicationMap;
 import javax.faces.context.FacesContext;
+import javax.faces.context.ExternalContext;
 import javax.faces.el.ValueBinding;
 import javax.faces.tree.Tree;
 import java.io.ByteArrayInputStream;
@@ -58,7 +58,7 @@ public class SerializingStateRestorer
 
     public Tree getPreviousTree(FacesContext facesContext)
     {
-        ApplicationMap extContext = facesContext.getExternalContext();
+        ExternalContext extContext = facesContext.getExternalContext();
         Map requestMap = extContext.getRequestMap();
         Tree restoredTree
             = (Tree)requestMap.get(RESTORED_TREE_CONTEXT_ATTR);

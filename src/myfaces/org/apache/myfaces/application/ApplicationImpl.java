@@ -78,7 +78,7 @@ public class ApplicationImpl
 
     public ApplicationImpl(ExternalContext externalContext)
     {
-        this._externalContext = externalContext;
+        _externalContext = externalContext;
 
         FacesConfigFactory fcf = MyFacesFactoryFinder.getFacesConfigFactory(_externalContext);
         _facesConfig = fcf.getFacesConfig(_externalContext);

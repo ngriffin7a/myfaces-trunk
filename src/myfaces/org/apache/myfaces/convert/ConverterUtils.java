@@ -33,6 +33,7 @@ import javax.faces.application.ApplicationFactory;
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIOutput;
 import javax.faces.context.FacesContext;
+import javax.faces.context.ExternalContext;
 import javax.faces.convert.Converter;
 import javax.faces.convert.ConverterException;
 import javax.servlet.ServletContext;
@@ -195,9 +196,9 @@ public class ConverterUtils
         }
 
         //Lookup the attribute descriptor
-        ServletContext servletContext = (ServletContext)facesContext.getExternalContext().getContext();
-        FacesConfigFactory fcf = MyFacesFactoryFinder.getFacesConfigFactory(servletContext);
-        FacesConfig facesConfig = fcf.getFacesConfig(servletContext);
+        ExternalContext externalContext = (ExternalContext)facesContext.getExternalContext();
+        FacesConfigFactory fcf = MyFacesFactoryFinder.getFacesConfigFactory(externalContext);
+        FacesConfig facesConfig = fcf.getFacesConfig(externalContext);
         RenderKitConfig rkc = facesConfig.getRenderKitConfig(facesContext.getViewRoot().getRenderKitId());
         RendererConfig rc = rkc.getRendererConfig(rendererType);
         AttributeConfig ac = rc.getAttributeConfig(attrName);

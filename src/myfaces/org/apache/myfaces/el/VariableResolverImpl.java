@@ -33,8 +33,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.faces.context.ApplicationMap;
 import javax.faces.context.FacesContext;
+import javax.faces.context.ExternalContext;
 import javax.faces.el.ReferenceSyntaxException;
 import javax.faces.el.VariableResolver;
 
@@ -191,7 +191,7 @@ public class VariableResolverImpl
             "request",
             new Scope()
             {
-                public void put(ApplicationMap extContext, String name, Object obj)
+                public void put(ExternalContext extContext, String name, Object obj)
                 {
                     extContext.getRequestMap().put(name, obj);
                 }
@@ -200,7 +200,7 @@ public class VariableResolverImpl
             "session",
             new Scope()
             {
-                public void put(ApplicationMap extContext, String name, Object obj)
+                public void put(ExternalContext extContext, String name, Object obj)
                 {
                     extContext.getSessionMap().put(name, obj);
                 }
@@ -209,16 +209,16 @@ public class VariableResolverImpl
             "application",
             new Scope()
             {
-                public void put(ApplicationMap extContext, String name, Object obj)
+                public void put(ExternalContext extContext, String name, Object obj)
                 {
-                    ((ServletContext) extContext.getContext()).setAttribute(name, obj);
+                    extContext.getApplicationMap().put(name, obj);
                 }
             });
         _scopes.put(
             "none",
             new Scope()
             {
-                public void put(ApplicationMap extContext, String name, Object obj)
+                public void put(ExternalContext extContext, String name, Object obj)
                 {
                     // do nothing
                 }
@@ -250,10 +250,10 @@ public class VariableResolverImpl
             }
         }
 
-        ApplicationMap extContext = facesContext.getExternalContext();
+        ExternalContext externalContext = facesContext.getExternalContext();
 
         // Request context
-        Map    requestMap = extContext.getRequestMap();
+        Map    requestMap = externalContext.getRequestMap();
         Object obj = requestMap.get(name);
 
         if (obj != null)
@@ -262,11 +262,11 @@ public class VariableResolverImpl
         }
 
         // Session context (try to get without creating a new session)
-        Object session = extContext.getSession(false);
+        Object session = externalContext.getSession(false);
 
         if (session != null)
         {
-            obj = extContext.getSessionMap().get(name);
+            obj = externalContext.getSessionMap().get(name);
 
             if (obj != null)
             {
@@ -275,8 +275,7 @@ public class VariableResolverImpl
         }
 
         // Application context
-        ServletContext servletContext = (ServletContext) extContext.getContext();
-        obj = servletContext.getAttribute(name);
+        obj = externalContext.getApplicationMap().get(name);
 
         if (obj != null)
         {
@@ -284,8 +283,8 @@ public class VariableResolverImpl
         }
 
         // ManagedBean
-        FacesConfigFactory fcf         = MyFacesFactoryFinder.getFacesConfigFactory(servletContext);
-        FacesConfig        facesConfig = fcf.getFacesConfig(servletContext);
+        FacesConfigFactory fcf         = MyFacesFactoryFinder.getFacesConfigFactory(externalContext);
+        FacesConfig        facesConfig = fcf.getFacesConfig(externalContext);
         ManagedBeanConfig  mbc         = facesConfig.getManagedBeanConfig(name);
 
         if (mbc != null)
@@ -298,7 +297,7 @@ public class VariableResolverImpl
 
             if (scope != null)
             {
-                scope.put(extContext, name, obj);
+                scope.put(externalContext, name, obj);
             }
             else
             {
@@ -376,5 +375,5 @@ interface Scope
 {
     //~ Methods ------------------------------------------------------------------------------------
 
-    public void put(ApplicationMap extContext, String name, Object obj);
+    public void put(ExternalContext extContext, String name, Object obj);
 }

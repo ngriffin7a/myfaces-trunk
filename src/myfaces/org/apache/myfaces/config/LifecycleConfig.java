@@ -18,9 +18,6 @@
  */
 package net.sourceforge.myfaces.config;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import javax.faces.event.PhaseListener;
 import java.util.*;
 
