@@ -41,6 +41,9 @@ import java.io.IOException;
  * @author Manfred Geiler
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.19  2004/08/15 15:31:09  o_rossmueller
+ * fix #1008685: hold view state by viewId
+ *
  * Revision 1.18  2004/08/13 13:15:20  manolito
  * FIXME comment
  *
@@ -119,16 +122,20 @@ public class JspStateManagerImpl
             if (serializedComponentStates == null)
             {
                 log.error("No serialized component state found in client request!");
+                // mark UIViewRoot invalid by resetting view id
+                uiViewRoot.setViewId(null);
                 return;
             }
         }
         else
         {
             SerializedView serializedView = getSerializedViewFromServletSession(facesContext.getExternalContext(),
-                                                                                null);
+                                                                                uiViewRoot.getViewId());
             if (serializedView == null)
             {
                 log.error("No serialized view found in server session!");
+                // mark UIViewRoot invalid by resetting view id
+                uiViewRoot.setViewId(null);
                 return;
             }
             serializedComponentStates = serializedView.getState();
@@ -200,7 +207,7 @@ public class JspStateManagerImpl
         UIViewRoot uiViewRoot = restoreTreeStructure(facescontext, viewId, renderKitId);
         if (uiViewRoot != null)
         {
-            //uiViewRoot.setViewId(viewId);
+            uiViewRoot.setViewId(viewId);
             restoreComponentState(facescontext, uiViewRoot, renderKitId);
             String restoredViewId = uiViewRoot.getViewId();
             if (restoredViewId == null || !(restoredViewId.equals(viewId)))
@@ -210,7 +217,7 @@ public class JspStateManagerImpl
 
             if (!isSavingStateInClient(facescontext))
             {
-                removeSerializedViewFromServletSession(facescontext.getExternalContext());
+                removeSerializedViewFromServletSession(facescontext.getExternalContext(), viewId);
             }
         }
         return uiViewRoot;
@@ -314,14 +321,14 @@ public class JspStateManagerImpl
         // only one per session! This would solve the problem for different pages in
         // two windows but the problem remains for the same page in different browser
         // windows.
-        externalContext.getSessionMap().put(SERIALIZED_VIEW_SESSION_ATTR,
+        externalContext.getSessionMap().put(SERIALIZED_VIEW_SESSION_ATTR + "-" + viewId,
                                             new Object[] {viewId, serializedView});
     }
     
     protected SerializedView getSerializedViewFromServletSession(ExternalContext externalContext,
                                                                  String viewId)
     {
-        Object[] ar = (Object[])externalContext.getSessionMap().get(SERIALIZED_VIEW_SESSION_ATTR);
+        Object[] ar = (Object[])externalContext.getSessionMap().get(SERIALIZED_VIEW_SESSION_ATTR + "-" + viewId);
         if (ar == null) return null;    // no state information in session
         String savedViewId = (String)ar[0];
         if (viewId == null || viewId.equals(savedViewId))
@@ -335,9 +342,9 @@ public class JspStateManagerImpl
         }
     }
 
-    protected void removeSerializedViewFromServletSession(ExternalContext externalContext)
+    protected void removeSerializedViewFromServletSession(ExternalContext externalContext, String viewId)
     {
-        externalContext.getSessionMap().remove(SERIALIZED_VIEW_SESSION_ATTR);
+        externalContext.getSessionMap().remove(SERIALIZED_VIEW_SESSION_ATTR + "-" + viewId);
     }
 
     /*
