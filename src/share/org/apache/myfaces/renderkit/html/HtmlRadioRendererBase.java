@@ -40,6 +40,9 @@ import java.util.List;
  * @author Thomas Spiegl
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.14  2005/01/22 16:47:17  mmarinschek
+ * fixing bug with validation not called if the submitted value is empty; an empty string is submitted instead if the component is enabled.
+ *
  * Revision 1.13  2005/01/19 13:34:12  mmarinschek
  * handle case that converter is null
  *
@@ -137,7 +140,6 @@ public class HtmlRadioRendererBase
         }
 
         Object currentValue = selectOne.getValue();
-
 
         String currentValueStr = null;
 

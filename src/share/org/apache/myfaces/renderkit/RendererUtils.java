@@ -37,6 +37,9 @@ import java.util.*;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.21  2005/01/22 16:47:17  mmarinschek
+ * fixing bug with validation not called if the submitted value is empty; an empty string is submitted instead if the component is enabled.
+ *
  * Revision 1.20  2005/01/18 22:43:05  svieujot
  * Fix some bugs where converter wasn't used to determine selected values.
  * This caused for examples the list, checkbox and radio based components to bug when the backing bean value type is a primitive.
@@ -95,6 +98,7 @@ public class RendererUtils
     private static final Log log = LogFactory.getLog(RendererUtils.class);
 
     public static final String SELECT_ITEM_LIST_ATTR = RendererUtils.class.getName() + ".LIST";
+    public static final String EMPTY_STRING = new String();
 
     public static String getPathToComponent(UIComponent component)
     {
@@ -649,7 +653,7 @@ public class RendererUtils
             UIComponent component, Converter converter, UISelectMany uiSelectMany,
             Object values)
     {
-        if (values == null)
+        if (values == null || values == EMPTY_STRING)
         {
             return Collections.EMPTY_SET;
         }
@@ -709,7 +713,7 @@ public class RendererUtils
                                                    Object submittedValue)
         throws ConverterException
     {
-        if (!(submittedValue instanceof String))
+        if (submittedValue!=null && !(submittedValue instanceof String))
         {
             throw new IllegalArgumentException("Submitted value of type String for component : "+
                     getPathToComponent(output)+"expected");
@@ -743,7 +747,7 @@ public class RendererUtils
                                                        Object submittedValue)
             throws ConverterException
     {
-        if (!(submittedValue instanceof String[]))
+        if (submittedValue != null && !(submittedValue instanceof String[]))
         {
             throw new ConverterException("Submitted value of type String[] for component : "+getPathToComponent(selectMany)+
                     "expected");

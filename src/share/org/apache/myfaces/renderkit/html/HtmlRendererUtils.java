@@ -107,9 +107,8 @@ public final class HtmlRendererUtils {
     private static final String LINE_SEPARATOR = System.getProperty(
             "line.separator", "\r\n");
 
-    private static final String[] EMPTY_STRING_ARRAY = new String[0];
-
     private static final String HIDDEN_COMMANDLINK_FIELD_NAME = "_link_hidden_";
+
 
     private HtmlRendererUtils() {
         // utility class, do not instantiate
@@ -136,9 +135,12 @@ public final class HtmlRendererUtils {
             ((EditableValueHolder) component).setSubmittedValue(paramMap
                     .get(clientId));
         } else {
-            //request parameter not found, nothing to decode
-            // we must not reset the submitted value of the component
-            // because there could be a submittedValue from former submits!
+            //request parameter not found, nothing to decode - set submitted value to empty
+            //if the component has not been disabled
+            if(!isDisabledOrReadOnly(component))
+            {
+                ((EditableValueHolder) component).setSubmittedValue(RendererUtils.EMPTY_STRING);
+            }
         }
     }
 
@@ -171,25 +173,27 @@ public final class HtmlRendererUtils {
                         .setSubmittedValue(Boolean.FALSE);
             }
         } else {
-            //request parameter not found,
-            // we must not reset the submitted value of the component
-            // if there is a submittedValue from a former submit!
-            if (((EditableValueHolder) component).getSubmittedValue() == null) {
-                // bug #972165: for disabled components the browser does not
-                // send a form value, so we have to
-                // check this to avoid modification of disabled component
-                if (component instanceof HtmlSelectBooleanCheckbox) {
-                    if (!(((HtmlSelectBooleanCheckbox) component).isDisabled() || ((HtmlSelectBooleanCheckbox) component)
-                            .isReadonly())) {
-                        ((EditableValueHolder) component)
-                                .setSubmittedValue(Boolean.FALSE);
-                    }
-                } else {
-                    ((EditableValueHolder) component)
-                            .setSubmittedValue(Boolean.FALSE);
-                }
+            //request parameter not found, nothing to decode - set submitted value to empty
+            //if the component has not been disabled
+            if(!isDisabledOrReadOnly(component))
+            {
+                ((EditableValueHolder) component).setSubmittedValue(Boolean.FALSE);
             }
         }
+    }
+
+    private static boolean isDisabledOrReadOnly(UIComponent component)
+    {
+        return isTrue(component.getAttributes().get("disabled")) ||
+                    isTrue(component.getAttributes().get("readOnly"));
+    }
+
+    private static boolean isTrue(Object obj)
+    {
+        if(!(obj instanceof Boolean))
+            return false;
+
+        return ((Boolean) obj).booleanValue();
     }
 
     /**
@@ -212,24 +216,11 @@ public final class HtmlRendererUtils {
             String[] reqValues = (String[]) paramValuesMap.get(clientId);
             ((EditableValueHolder) component).setSubmittedValue(reqValues);
         } else {
-            //request parameter not found,
-            // we must not reset the submitted value of the component
-            // if there is a submittedValue from a former submit!
-            if (((EditableValueHolder) component).getSubmittedValue() == null) {
-                // bug #972165: for disabled components the browser does not
-                // send a form value, so we have to
-                // check this to avoid modification of disabled component
-                if (component instanceof HtmlSelectManyCheckbox) {
-                    if (!(((HtmlSelectManyCheckbox) component).isDisabled() || ((HtmlSelectManyCheckbox) component)
-                            .isReadonly())) {
-                        ((EditableValueHolder) component)
-                                .setSubmittedValue(EMPTY_STRING_ARRAY);
-                    }
-                } else {
-
-                    ((EditableValueHolder) component)
-                            .setSubmittedValue(EMPTY_STRING_ARRAY);
-                }
+            //request parameter not found, nothing to decode - set submitted value to empty
+            //if the component has not been disabled
+            if(!isDisabledOrReadOnly(component))
+            {
+                ((EditableValueHolder) component).setSubmittedValue(RendererUtils.EMPTY_STRING);
             }
         }
     }
@@ -255,9 +246,13 @@ public final class HtmlRendererUtils {
             ((EditableValueHolder) component).setSubmittedValue(paramMap
                     .get(clientId));
         } else {
-            //request parameter not found, nothing to decode
-            // we must not reset the submitted value of the component
-            // because there could be a submittedValue from former submits!
+            //request parameter not found, nothing to decode - set submitted value to empty
+            //if the component has not been disabled
+
+            if(!isDisabledOrReadOnly(component))
+            {
+                ((EditableValueHolder) component).setSubmittedValue(RendererUtils.EMPTY_STRING);
+            }
         }
     }
 

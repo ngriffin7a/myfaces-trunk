@@ -30,6 +30,9 @@ import java.util.List;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.14  2005/01/22 16:47:17  mmarinschek
+ * fixing bug with validation not called if the submitted value is empty; an empty string is submitted instead if the component is enabled.
+ *
  * Revision 1.13  2004/12/07 21:33:31  matzew
  * closing MYFACES-6, thanks to  Heath Borders-Wing for patching it!
  *
@@ -246,6 +249,11 @@ public class UISelectMany
         if (context == null) throw new NullPointerException("context");
         Object submittedValue = getSubmittedValue();
         if (submittedValue == null) return;
+
+        if(submittedValue instanceof String && ((String) submittedValue).length()==0)
+        {
+            submittedValue = null;
+        }
 
         Object convertedValue = getConvertedValue(context, submittedValue);
         if (!isValid()) return;
