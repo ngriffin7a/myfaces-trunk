@@ -44,6 +44,9 @@ import java.util.List;
  * @author Thomas Spiegl
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.5  2004/06/04 00:26:16  o_rossmueller
+ * modified renderes to comply with JSF 1.1
+ *
  * Revision 1.4  2004/05/26 11:10:12  o_rossmueller
  * fix #959926: styleClass support for selectOneRadio, selectOneList, selectManyList
  *
@@ -91,15 +94,13 @@ public class HtmlRadioRendererBase
         }
 
         ResponseWriter writer = facesContext.getResponseWriter();
-        String styleClass = getStyleClass(selectOne);
-
-        if (styleClass != null && styleClass.length() > 0) {
-            writer.startElement(HTML.SPAN_ELEM, selectOne);
-            writer.writeAttribute(HTML.CLASS_ATTR, styleClass, null);
-        }
-
+        String clientId = selectOne.getClientId(facesContext);
 
         writer.startElement(HTML.TABLE_ELEM, selectOne);
+        HtmlRendererUtils.renderHTMLAttributes(writer, selectOne,
+                                               HTML.SELECT_TABLE_PASSTHROUGH_ATTRIBUTES);
+        writer.writeAttribute(HTML.ID_ATTR, clientId, null);
+
         if (!pageDirectionLayout) writer.startElement(HTML.TR_ELEM, selectOne);
 
         Converter converter;
@@ -133,21 +134,21 @@ public class HtmlRadioRendererBase
             writer.write("\t\t");
             if (pageDirectionLayout) writer.startElement(HTML.TR_ELEM, selectOne);
             writer.startElement(HTML.TD_ELEM, selectOne);
+            writer.startElement(HTML.LABEL_ELEM, selectOne);
             renderRadio(facesContext,
                         selectOne,
                         itemStrValue,
                         selectItem.getLabel(),
                         currentValue == null && itemValue == null ||
-                        currentValue != null && currentValue.equals(itemValue));
+                        currentValue != null && currentValue.equals(itemValue),
+                        false);
+            writer.endElement(HTML.LABEL_ELEM);
             writer.endElement(HTML.TD_ELEM);
             if (pageDirectionLayout) writer.endElement(HTML.TR_ELEM);
         }
 
         if (!pageDirectionLayout) writer.endElement(HTML.TR_ELEM);
         writer.endElement(HTML.TABLE_ELEM);
-       if (styleClass != null && styleClass.length() > 0) {
-            writer.endElement(HTML.SPAN_ELEM);
-        }
     }
 
 
@@ -181,7 +182,7 @@ public class HtmlRadioRendererBase
                                UIInput uiComponent,
                                String value,
                                String label,
-                               boolean checked)
+                               boolean checked, boolean renderId)
             throws IOException
     {
         String clientId = uiComponent.getClientId(facesContext);
@@ -191,7 +192,10 @@ public class HtmlRadioRendererBase
         writer.startElement(HTML.INPUT_ELEM, uiComponent);
         writer.writeAttribute(HTML.TYPE_ATTR, HTML.INPUT_TYPE_RADIO, null);
         writer.writeAttribute(HTML.NAME_ATTR, clientId, null);
-        writer.writeAttribute(HTML.ID_ATTR, clientId, null);
+
+        if (renderId) {
+            writer.writeAttribute(HTML.ID_ATTR, clientId, null);
+        }
 
         if (checked)
         {

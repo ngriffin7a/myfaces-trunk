@@ -22,11 +22,13 @@ import net.sourceforge.myfaces.component.UserRoleUtils;
 import net.sourceforge.myfaces.custom.radio.HtmlRadio;
 import net.sourceforge.myfaces.renderkit.RendererUtils;
 import net.sourceforge.myfaces.renderkit.html.HtmlRadioRendererBase;
+import net.sourceforge.myfaces.renderkit.html.HTML;
 
 import javax.faces.FacesException;
 import javax.faces.component.UIComponent;
 import javax.faces.component.UISelectOne;
 import javax.faces.context.FacesContext;
+import javax.faces.context.ResponseWriter;
 import javax.faces.convert.Converter;
 import javax.faces.model.SelectItem;
 import java.io.IOException;
@@ -38,6 +40,9 @@ import java.util.List;
  * @author Thomas Spiegl
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.6  2004/06/04 00:26:16  o_rossmueller
+ * modified renderes to comply with JSF 1.1
+ *
  * Revision 1.5  2004/05/18 14:31:38  manolito
  * user role support completely moved to components source tree
  *
@@ -141,13 +146,17 @@ public class HtmlRadioRenderer
         {
             itemStrValue = converter.getAsString(facesContext, uiSelectOne, itemValue);
         }
+        ResponseWriter writer = facesContext.getResponseWriter();
+
+        writer.startElement(HTML.LABEL_ELEM, uiSelectOne);
 
         renderRadio(facesContext,
                     uiSelectOne,
                     itemStrValue,
                     selectItem.getLabel(),
                     currentValue == null && itemValue == null ||
-                    currentValue != null && currentValue.equals(itemValue));
+                    currentValue != null && currentValue.equals(itemValue), false);
+        writer.endElement(HTML.LABEL_ELEM);        
     }
 
 

@@ -45,6 +45,9 @@ import java.util.Set;
  * @author Anton Koinov
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.6  2004/06/04 00:26:16  o_rossmueller
+ * modified renderes to comply with JSF 1.1
+ *
  * Revision 1.5  2004/05/18 14:31:39  manolito
  * user role support completely moved to components source tree
  *
@@ -78,7 +81,7 @@ public class HtmlCheckboxRendererBase
                            uiComponent,
                            EXTERNAL_TRUE_VALUE,
                            null,
-                           ((UISelectBoolean)uiComponent).isSelected());
+                           ((UISelectBoolean)uiComponent).isSelected(), true);
         }
         else if (uiComponent instanceof UISelectMany)
         {
@@ -94,6 +97,7 @@ public class HtmlCheckboxRendererBase
     public void renderCheckboxList(FacesContext facesContext, UISelectMany selectMany)
             throws IOException
     {
+
         String layout = getLayout(selectMany);
         boolean pageDirectionLayout = false; //Default to lineDirection
         if (layout != null)
@@ -113,15 +117,13 @@ public class HtmlCheckboxRendererBase
         }
 
         ResponseWriter writer = facesContext.getResponseWriter();
-        String styleClass = getStyleClass(selectMany);
-
-        if (styleClass != null && styleClass.length() > 0) {
-            writer.startElement(HTML.SPAN_ELEM, selectMany);
-            writer.writeAttribute(HTML.CLASS_ATTR, styleClass, null);
-        }
-
+        String clientId = selectMany.getClientId(facesContext);
 
         writer.startElement(HTML.TABLE_ELEM, selectMany);
+        HtmlRendererUtils.renderHTMLAttributes(writer, selectMany,
+                                               HTML.SELECT_TABLE_PASSTHROUGH_ATTRIBUTES);
+        writer.writeAttribute(HTML.ID_ATTR, clientId, null);
+
         if (!pageDirectionLayout) writer.startElement(HTML.TR_ELEM, selectMany);
 
         Converter converter;
@@ -154,20 +156,20 @@ public class HtmlCheckboxRendererBase
             writer.write("\t\t");
             if (pageDirectionLayout) writer.startElement(HTML.TR_ELEM, selectMany);
             writer.startElement(HTML.TD_ELEM, selectMany);
+            writer.startElement(HTML.LABEL_ELEM, selectMany);
             renderCheckbox(facesContext,
                            selectMany,
                            itemStrValue,
                            selectItem.getLabel(),
-                           lookupSet.contains(itemValue));
+                           lookupSet.contains(itemValue),
+                           false);
+            writer.endElement(HTML.LABEL_ELEM);
             writer.endElement(HTML.TD_ELEM);
             if (pageDirectionLayout) writer.endElement(HTML.TR_ELEM);
         }
 
         if (!pageDirectionLayout) writer.endElement(HTML.TR_ELEM);
         writer.endElement(HTML.TABLE_ELEM);
-        if (styleClass != null && styleClass.length() > 0) {
-            writer.endElement(HTML.SPAN_ELEM);
-        }
     }
 
 
@@ -183,24 +185,11 @@ public class HtmlCheckboxRendererBase
         }
     }
 
-    protected String getStyleClass(UISelectMany selectMany)
-    {
-        if (selectMany instanceof HtmlSelectManyCheckbox)
-        {
-            return ((HtmlSelectManyCheckbox)selectMany).getStyleClass();
-        }
-        else
-        {
-            return (String)selectMany.getAttributes().get(JSFAttr.STYLE_CLASS_ATTR);
-        }
-    }
-
-
     protected void renderCheckbox(FacesContext facesContext,
                                   UIComponent uiComponent,
                                   String value,
                                   String label,
-                                  boolean checked) throws IOException
+                                  boolean checked, boolean renderId) throws IOException
     {
         String clientId = uiComponent.getClientId(facesContext);
 
@@ -209,7 +198,9 @@ public class HtmlCheckboxRendererBase
         writer.startElement(HTML.INPUT_ELEM, uiComponent);
         writer.writeAttribute(HTML.TYPE_ATTR, HTML.INPUT_TYPE_CHECKBOX, null);
         writer.writeAttribute(HTML.NAME_ATTR, clientId, null);
-        writer.writeAttribute(HTML.ID_ATTR, clientId, null);
+        if (renderId) {
+            writer.writeAttribute(HTML.ID_ATTR, clientId, null);
+        }
 
         if (checked)
         {

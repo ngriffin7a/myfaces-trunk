@@ -27,6 +27,9 @@ import net.sourceforge.myfaces.util.ArrayUtils;
  * @author Anton Koinov
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.8  2004/06/04 00:26:16  o_rossmueller
+ * modified renderes to comply with JSF 1.1
+ *
  * Revision 1.7  2004/05/29 10:19:55  mwessendorf
  * made the class FINAL, because has only one private const
  *
@@ -356,7 +359,10 @@ public final class HTML
             new String[] {DIR_ATTR, LANG_ATTR, TITLE_ATTR, STYLE_ATTR, STYLE_CLASS_ATTR},
             EVENT_HANDLER_ATTRIBUTES);
 
-
+    // selectOne/Many table
+    public static final String[] SELECT_TABLE_PASSTHROUGH_ATTRIBUTES =
+        new String[] {STYLE_ATTR, STYLE_CLASS_ATTR, BORDER_ATTR};
+    
     //HTML attributes needed for renderding only
     public static final String ID_ATTR = "id";
     public static final String NAME_ATTR = "name";

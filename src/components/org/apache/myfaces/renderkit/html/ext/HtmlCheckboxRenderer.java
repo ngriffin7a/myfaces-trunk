@@ -38,6 +38,9 @@ import java.util.Set;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.4  2004/06/04 00:26:16  o_rossmueller
+ * modified renderes to comply with JSF 1.1
+ *
  * Revision 1.3  2004/05/18 14:31:38  manolito
  * user role support completely moved to components source tree
  *
@@ -142,7 +145,7 @@ public class HtmlCheckboxRenderer
                        uiSelectMany,
                        itemStrValue,
                        selectItem.getLabel(),
-                       lookupSet.contains(itemValue));
+                       lookupSet.contains(itemValue), true);
     }
 
 

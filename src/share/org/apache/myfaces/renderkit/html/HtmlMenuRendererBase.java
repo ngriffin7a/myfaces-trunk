@@ -37,6 +37,9 @@ import java.io.IOException;
  * @author Thomas Spiegl
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.2  2004/06/04 00:26:16  o_rossmueller
+ * modified renderes to comply with JSF 1.1
+ *
  * Revision 1.1  2004/05/18 14:31:39  manolito
  * user role support completely moved to components source tree
  *
@@ -51,43 +54,17 @@ public class HtmlMenuRendererBase
     {
         RendererUtils.checkParamValidity(facesContext, component, null);
 
-        ResponseWriter writer = facesContext.getResponseWriter();
-
         if (component instanceof UISelectMany)
         {
-            String styleClass = getStyleClass((UISelectMany)component);
-            if (styleClass != null)
-            {
-                writer.startElement(HTML.SPAN_ELEM, component);
-                writer.writeAttribute(HTML.CLASS_ATTR, styleClass, HTML.STYLE_CLASS_ATTR);
-            }
-
             HtmlRendererUtils.renderMenu(facesContext,
                                          (UISelectMany)component,
                                          isDisabled(facesContext, component));
-
-            if (styleClass != null)
-            {
-                writer.endElement(HTML.SPAN_ELEM);
-            }
         }
         else if (component instanceof UISelectOne)
         {
-            String styleClass = getStyleClass((UISelectOne)component);
-            if (styleClass != null)
-            {
-                writer.startElement(HTML.SPAN_ELEM, component);
-                writer.writeAttribute(HTML.CLASS_ATTR, styleClass, HTML.STYLE_CLASS_ATTR);
-            }
-
             HtmlRendererUtils.renderMenu(facesContext,
                                          (UISelectOne)component,
                                          isDisabled(facesContext, component));
-
-            if (styleClass != null)
-            {
-                writer.endElement(HTML.SPAN_ELEM);
-            }
         }
         else
         {
