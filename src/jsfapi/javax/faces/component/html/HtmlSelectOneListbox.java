@@ -1,12 +1,12 @@
 /*
  * Copyright 2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -31,7 +31,7 @@ public class HtmlSelectOneListbox extends UISelectOne
     private static final String DEFAULT_RENDERER_TYPE = "javax.faces.Listbox";
     private static final boolean DEFAULT_DISABLED = false;
     private static final boolean DEFAULT_READONLY = false;
-    private static final int DEFAULT_SIZE = Integer.MIN_VALUE;
+    private static final int DEFAULT_SIZE = 0;
 
     private String _accesskey = null;
     private String _dir = null;
