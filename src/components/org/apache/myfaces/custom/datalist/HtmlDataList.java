@@ -59,6 +59,8 @@ public class HtmlDataList
                 }
             }
         }
+
+        setRowIndex(-1);
     }
 
 
