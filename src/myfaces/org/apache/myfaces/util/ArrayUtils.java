@@ -23,7 +23,7 @@ import java.lang.reflect.Array;
 
 /**
  * Utility class for managing arrays
- * 
+ *
  * @author Anton Koinov (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
@@ -38,11 +38,38 @@ public class ArrayUtils
 
     //~ Methods ------------------------------------------------------------------------------------
 
+    public static Class commonClass(Class c1, Class c2)
+    {
+        if (c1 == c2)
+        {
+            return c1;
+        }
+
+        if ((c1 == Object.class) || c1.isAssignableFrom(c2))
+        {
+            return c1;
+        }
+
+        if (c2.isAssignableFrom(c1))
+        {
+            return c2;
+        }
+
+        if (c1.isPrimitive() || c2.isPrimitive())
+        {
+            // REVISIT: we could try to autoconvert to Object or something appropriate
+            throw new IllegalArgumentException("incompatible types " + c1 + " and " + c2);
+        }
+
+        // REVISIT: we could try to find a common supper class or interface
+        return Object.class;
+    }
+
     /**
-     * Concatenates two Object arrays into one. If arr1 is null, returns arr2.
-     * If arr2 is null, returns arr1. May return null if both arrays are null,
+     * Concatenates two arrays into one. If arr1 is null or empty, returns arr2.
+     * If arr2 is null or empty, returns arr1. May return null if both arrays are null,
      * or one is empty and the other null. <br>
-     * If both arrays havethe same component type, will return an array with the same component type, otherwise Object[] is returned
+     * The concatenated array has componentType which is compatible with both input arrays (or Object[])
      *
      * @param arr1 input array
      * @param arr2 input array
@@ -53,55 +80,146 @@ public class ArrayUtils
     {
         int len1 = (arr1 == null) ? (-1) : Array.getLength(arr1);
 
-        if (len1 < 0)
+        if (len1 <= 0)
         {
             return arr2;
         }
 
         int len2 = (arr2 == null) ? (-1) : Array.getLength(arr2);
 
-        if (len2 < 0)
+        if (len2 <= 0)
         {
             return arr1;
         }
 
-        Class componentType = arr1.getClass().getComponentType();
-
-        if (!componentType.equals(arr2.getClass().getComponentType()))
-        {
-            // REVISIT: create autoconverter to Object type
-            if (componentType.isPrimitive() || arr2.getClass().getComponentType().isPrimitive())
-            {
-                throw new IllegalArgumentException(
-                    "cannot concatenate arrays of different primitive types: " + componentType
-                    + ", " + arr2.getClass().getComponentType());
-            }
-
-            // If different but not primitive, then return Object[]
-            componentType = Object.class;
-        }
-
-        Object newArray = Array.newInstance(componentType, len1 + len2);
-
+        Class  commonComponentType =
+            commonClass(arr1.getClass().getComponentType(), arr2.getClass().getComponentType());
+        Object newArray = Array.newInstance(commonComponentType, len1 + len2);
         System.arraycopy(arr1, 0, newArray, 0, len1);
         System.arraycopy(arr2, 0, newArray, len1, len2);
 
         return newArray;
     }
 
+    /**
+     * Concatenates arrays into one. Any null or empty arrays are ignored.
+     * If all arrays are null or empty, returns null.
+     * Elements will be ordered in the order in which the arrays are supplied.
+     *
+     * @param arrs array of arrays
+     * @return the concatenated array
+     */
+    public static Object concat(Object[] arrs)
+    {
+        int   totalLen            = 0;
+        Class commonComponentType = null;
+        for (int i = 0, len = arrs.length; i < len; i++)
+        {
+            // skip all null arrays
+            if (arrs[i] == null)
+            {
+                continue;
+            }
+
+            int arrayLen = Array.getLength(arrs[i]);
+
+            // skip all empty arrays
+            if (arrayLen == 0)
+            {
+                continue;
+            }
+
+            totalLen += arrayLen;
+            commonComponentType =
+                (commonComponentType == null) ? arrs[i].getClass().getComponentType()
+                                              : commonClass(
+                    commonComponentType, arrs[i].getClass().getComponentType());
+        }
+
+        if (commonComponentType == null)
+        {
+            return null;
+        }
+
+        return concat(Array.newInstance(commonComponentType, totalLen), totalLen, arrs);
+    }
+
+    public static Object concat(Object toArray, int totalLen, Object[] arrs)
+    {
+        if (totalLen == 0)
+        {
+            // Should we allocate an empty array instead? But what type?
+            return toArray;
+        }
+
+        if (totalLen > Array.getLength(toArray))
+        {
+            toArray = Array.newInstance(toArray.getClass().getComponentType(), totalLen);
+        }
+
+        for (int i = 0, len = arrs.length, offset = 0; i < len; i++)
+        {
+            final Object arr = arrs[i];
+            if (arr != null)
+            {
+                int arrayLen = Array.getLength(arr);
+                if (arrayLen > 0)
+                {
+                    System.arraycopy(arr, 0, toArray, offset, arrayLen);
+                    offset += arrayLen;
+                }
+            }
+        }
+
+        return toArray;
+    }
+
     public static Object concat(Object arr1, Object arr2, Object arr3)
     {
-        // TODO: Inefficient
-        return concat(
-            concat(arr1, arr2),
-            arr3);
+        return concat(new Object[] {arr1, arr2, arr3});
     }
 
     public static Object concat(Object arr1, Object arr2, Object arr3, Object arr4)
     {
-        // TODO: Inefficient
-        return concat(
-            concat(arr1, arr2),
-            concat(arr3, arr4));
+        return concat(new Object[] {arr1, arr2, arr3, arr4});
     }
+
+    public static Object concat(Object arr1, Object arr2, Object arr3, Object arr4, Object arr5)
+    {
+        return concat(new Object[] {arr1, arr2, arr3, arr4, arr5});
+    }
+
+    public static Object concatSameType(Object toArray, Object[] arrs)
+    {
+        int totalLen = 0;
+        for (int i = 0, len = arrs.length; i < len; i++)
+        {
+            if (arrs[i] != null)
+            {
+                totalLen += Array.getLength(arrs[i]);
+            }
+        }
+
+        return concat(toArray, totalLen, arrs);
+    }
+
+//    public static void main(String[] args)
+//    {
+//        // test code
+//        System.out.println(concat(new String[] {"a"}, new Object[] {"b"}));
+//        System.out.println(concat(new String[] {"a"}, new Integer[] {new Integer(0)}));
+//        System.out.println(concat(new Number[] {new Double(0)}, new Integer[] {new Integer(0)}));
+//        System.out.println(concat(new Number[] {}, new Integer[0]));
+//        System.out.println(concat(new Integer[] {new Integer(0)}, new Number[0]));
+//        System.out.println(concat(new Integer[] {new Integer(0)}, new Number[0], new int[0]));
+//        System.out.println(
+//            concat(new Integer[] {new Integer(0)}, new Number[] {new Double(0)}, new int[0]));
+//        System.out.println(concat(new int[] {1}, new int[] {2}));
+//        System.out.println(
+//            concat(new String[] {"a"}, new Integer[] {new Integer(0)}, new Object[] {"b"}));
+//        System.out.println(
+//            concat(String.class, new Object[] {new String[] {"a"}, new Object[] {"b"}}));
+//        System.out.println(
+//            concat(new Integer[] {new Integer(0)}, new Number[] {new Double(0)}, new int[] {1}));
+//    }
 }
