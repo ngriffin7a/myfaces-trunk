@@ -89,7 +89,7 @@ public class MinimizingStateSaver
     private static final Set IGNORE_PROPERTIES = new HashSet();
     static
     {
-        IGNORE_PROPERTIES.add(CommonComponentProperties.PARENT_PROP);
+        IGNORE_PROPERTIES.add(JSFProp.PARENT_PROP);
 
         //not necessary: clientId is no property because getter has FacesContext parameter
         //IGNORE_PROPERTIES.add(CommonComponentProperties.CLIENT_ID_PROP);
@@ -255,7 +255,7 @@ public class MinimizingStateSaver
             return;
         }
 
-        if (propName.equals(CommonComponentProperties.VALID_PROP) &&
+        if (propName.equals(JSFProp.VALID_PROP) &&
             uiComponent.isValid())
         {
             //No need to save "valid" if true, because MinimizingStateRestorer
