@@ -18,9 +18,7 @@ package net.sourceforge.myfaces.custom.date;
 import java.io.IOException;
 import java.text.DateFormatSymbols;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.Locale;
 import java.util.Map;
 
@@ -29,11 +27,9 @@ import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 import javax.faces.convert.ConverterException;
-import javax.faces.validator.ValidatorException;
 
 import net.sourceforge.myfaces.component.UserRoleUtils;
 import net.sourceforge.myfaces.custom.date.HtmlInputDate.UserData;
-import net.sourceforge.myfaces.custom.fileupload.HtmlInputFileUpload;
 import net.sourceforge.myfaces.renderkit.RendererUtils;
 import net.sourceforge.myfaces.renderkit.html.HTML;
 import net.sourceforge.myfaces.renderkit.html.HtmlRenderer;
@@ -42,6 +38,9 @@ import net.sourceforge.myfaces.util.MessageUtils;
 
 /**
  * $Log$
+ * Revision 1.7  2004/07/30 13:09:04  svieujot
+ * Render numbers as 2 digits
+ *
  * Revision 1.6  2004/07/30 02:59:00  svieujot
  * Enable disabled attribute
  *
@@ -143,7 +142,7 @@ public class HtmlDateRenderer extends HtmlRenderer {
     
     private static void encodeInputDay(UIComponent uiComponent, ResponseWriter writer, String clientId, UserData userData, boolean disabled)
             throws IOException {
-        encodeInputField(uiComponent, writer, clientId + ID_DAY_POSTFIX, userData.day, 2, disabled);
+        encodeInputField(uiComponent, writer, clientId + ID_DAY_POSTFIX, userData.getDay(), 2, disabled);
     }
 
     private static void encodeInputMonth(UIComponent uiComponent, ResponseWriter writer, String clientId, UserData userData, Locale currentLocale,
@@ -156,7 +155,7 @@ public class HtmlDateRenderer extends HtmlRenderer {
             writer.writeAttribute(HTML.DISABLED_ATTR, Boolean.TRUE, null);
         }
 
-        int selectedMonth = userData.month == null ? -1 : Integer.parseInt(userData.month)-1;
+        int selectedMonth = userData.getMonth() == null ? -1 : Integer.parseInt(userData.getMonth())-1;
 
         String[] months = mapMonths(new DateFormatSymbols(currentLocale));
         for (int i = 0; i < months.length; i++) {
@@ -181,19 +180,19 @@ public class HtmlDateRenderer extends HtmlRenderer {
     }
 
     private static void encodeInputYear(UIComponent uiComponent, ResponseWriter writer, String clientId, UserData userData, boolean disabled) throws IOException {
-        encodeInputField(uiComponent, writer, clientId + ID_YEAR_POSTFIX, userData.year, 4, disabled);
+        encodeInputField(uiComponent, writer, clientId + ID_YEAR_POSTFIX, userData.getYear(), 4, disabled);
     }
     
     private static void encodeInputHours(UIComponent uiComponent, ResponseWriter writer, String clientId, UserData userData, boolean disabled) throws IOException {
-        encodeInputField(uiComponent, writer, clientId + ID_HOURS_POSTFIX, userData.hours, 2, disabled);
+        encodeInputField(uiComponent, writer, clientId + ID_HOURS_POSTFIX, userData.getHours(), 2, disabled);
     }
     
     private static void encodeInputMinutes(UIComponent uiComponent, ResponseWriter writer, String clientId, UserData userData, boolean disabled) throws IOException {
-        encodeInputField(uiComponent, writer, clientId + ID_MINUTES_POSTFIX, userData.minutes, 2, disabled);
+        encodeInputField(uiComponent, writer, clientId + ID_MINUTES_POSTFIX, userData.getMinutes(), 2, disabled);
     }
     
     private static void encodeInputSeconds(UIComponent uiComponent, ResponseWriter writer, String clientId, UserData userData, boolean disabled) throws IOException {
-        encodeInputField(uiComponent, writer, clientId + ID_SECONDS_POSTFIX, userData.seconds, 2, disabled);
+        encodeInputField(uiComponent, writer, clientId + ID_SECONDS_POSTFIX, userData.getSeconds(), 2, disabled);
     }
     
     private static String[] mapMonths(DateFormatSymbols symbols) {
@@ -231,15 +230,15 @@ public class HtmlDateRenderer extends HtmlRenderer {
         Map requestMap = facesContext.getExternalContext().getRequestParameterMap();
 
         if( ! type.equals( "time" ) ){
-            userData.day = (String) requestMap.get(clientId + ID_DAY_POSTFIX);
-            userData.month = (String) requestMap.get(clientId + ID_MONTH_POSTFIX);
-            userData.year = (String) requestMap.get(clientId + ID_YEAR_POSTFIX);
+            userData.setDay( (String) requestMap.get(clientId + ID_DAY_POSTFIX) );
+            userData.setMonth( (String) requestMap.get(clientId + ID_MONTH_POSTFIX) );
+            userData.setYear( (String) requestMap.get(clientId + ID_YEAR_POSTFIX) );
         }
         
         if( ! type.equals( "date" ) ){
-            userData.hours = (String) requestMap.get(clientId + ID_HOURS_POSTFIX);
-            userData.minutes = (String) requestMap.get(clientId + ID_MINUTES_POSTFIX);
-            userData.seconds = (String) requestMap.get(clientId + ID_SECONDS_POSTFIX);
+            userData.setHours( (String) requestMap.get(clientId + ID_HOURS_POSTFIX) );
+            userData.setMinutes( (String) requestMap.get(clientId + ID_MINUTES_POSTFIX) );
+            userData.setSeconds( (String) requestMap.get(clientId + ID_SECONDS_POSTFIX) );
         }
 
         inputDate.setSubmittedValue( userData );

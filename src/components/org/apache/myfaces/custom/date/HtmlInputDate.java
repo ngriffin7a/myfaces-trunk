@@ -102,12 +102,12 @@ public class HtmlInputDate extends UIInput {
     }
     
     public static class UserData implements Serializable {
-        public String day = null;
-        public String month = null;
-        public String year = null;
-        public String hours = null;
-        public String minutes = null;
-        public String seconds = null;
+        private String day = null;
+        private String month = null;
+        private String year = null;
+        private String hours = null;
+        private String minutes = null;
+        private String seconds = null;
         
         public UserData(Date date, Locale currentLocale){
             if( date != null ){
@@ -125,6 +125,63 @@ public class HtmlInputDate extends UIInput {
         public Date parse() throws ParseException{
             SimpleDateFormat fullFormat = new SimpleDateFormat( "dd MM yyyy hh mm ss" );
             return fullFormat.parse(day+" "+month+" "+year+" "+hours+" "+minutes+" "+seconds);
+        }
+        
+        private String formatedInt(String toFormat){
+            if( toFormat == null )
+                return null;
+            
+            int i = -1;
+            try{
+                i = Integer.parseInt( toFormat );
+            }catch(NumberFormatException nfe){
+                return toFormat;
+            }
+            if( i >= 0 && i < 10 )
+                return "0"+i;
+            return Integer.toString(i);
+        }
+        
+        
+        public String getDay() {
+            return formatedInt( day );
+        }
+        public void setDay(String day) {
+            this.day = day;
+        }
+
+        public String getMonth() {
+            return month;
+        }
+        public void setMonth(String month) {
+            this.month = month;
+        }
+        
+        public String getYear() {
+            return year;
+        }
+        public void setYear(String year) {
+            this.year = year;
+        }
+        
+        public String getHours() {
+            return formatedInt( hours );
+        }
+        public void setHours(String hours) {
+            this.hours = hours;
+        }
+        public String getMinutes() {
+            return formatedInt( minutes );
+        }
+        public void setMinutes(String minutes) {
+            this.minutes = minutes;
+        }
+
+        public String getSeconds() {
+            return formatedInt( seconds );
+        }
+        public void setSeconds(String seconds) {
+            this.seconds = seconds;
         }
     }
 }
