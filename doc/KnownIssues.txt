@@ -15,4 +15,6 @@ MyFaces Known Issues
 * to make the examples webapp war file for tomcat 5.5,
   you have to set the property tomcat.pre.5.5.version=false
 
+* x:aliasBean has some issues when the alias is used in the rendered attribute of an h:commandButton
+
 TODO... (Many others!)
