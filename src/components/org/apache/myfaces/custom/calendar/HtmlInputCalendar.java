@@ -41,6 +41,7 @@ public class HtmlInputCalendar
     private String _dayCellClass = null;
     private String _currentDayCellClass = null;
     private Boolean _renderAsPopup = null;
+    private Boolean _addResources = null;
     private String _popupButtonString = null;
     private String _popupDateFormat = null;
     private String _enabledOnUserRole = null;
@@ -121,6 +122,19 @@ public class HtmlInputCalendar
     {
         if (_renderAsPopup != null) return _renderAsPopup.booleanValue();
         ValueBinding vb = getValueBinding("renderAsPopup");
+        Boolean v = vb != null ? (Boolean)vb.getValue(getFacesContext()) : null;
+        return v != null ? v.booleanValue() : false;
+    }
+
+    public void setAddResources(boolean addResources)
+    {
+        _addResources = Boolean.valueOf(addResources);
+    }
+
+    public boolean isAddResources()
+    {
+        if (_addResources != null) return _addResources.booleanValue();
+        ValueBinding vb = getValueBinding("addResources");
         Boolean v = vb != null ? (Boolean)vb.getValue(getFacesContext()) : null;
         return v != null ? v.booleanValue() : false;
     }
@@ -278,25 +292,26 @@ public class HtmlInputCalendar
 
     public Object saveState(FacesContext context)
     {
-        Object values[] = new Object[18];
+        Object values[] = new Object[19];
         values[0] = super.saveState(context);
         values[1] = _monthYearRowClass;
         values[2] = _weekRowClass;
         values[3] = _dayCellClass;
         values[4] = _currentDayCellClass;
         values[5] = _renderAsPopup;
-        values[6] = _popupButtonString;
-        values[7] = _popupDateFormat;
-        values[8] = _enabledOnUserRole;
-        values[9] = _visibleOnUserRole;
-        values[10] = _popupGotoString;
-        values[11] = _popupTodayString;
-        values[12] = _popupWeekString;
-        values[13] = _popupScrollLeftMessage;
-        values[14] = _popupScrollRightMessage;
-        values[15] = _popupSelectMonthMessage;
-        values[16] = _popupSelectYearMessage;
-        values[17] = _popupSelectDateMessage;
+        values[6] = _addResources;
+        values[7] = _popupButtonString;
+        values[8] = _popupDateFormat;
+        values[9] = _enabledOnUserRole;
+        values[10] = _visibleOnUserRole;
+        values[11] = _popupGotoString;
+        values[12] = _popupTodayString;
+        values[13] = _popupWeekString;
+        values[14] = _popupScrollLeftMessage;
+        values[15] = _popupScrollRightMessage;
+        values[16] = _popupSelectMonthMessage;
+        values[17] = _popupSelectYearMessage;
+        values[18] = _popupSelectDateMessage;
         return ((Object) (values));
     }
 
@@ -309,18 +324,19 @@ public class HtmlInputCalendar
         _dayCellClass = (String)values[3];
         _currentDayCellClass = (String)values[4];
         _renderAsPopup = (Boolean)values[5];
-        _popupButtonString = (String)values[6];
-        _popupDateFormat = (String)values[7];
-        _enabledOnUserRole = (String)values[8];
-        _visibleOnUserRole = (String)values[9];
-        _popupGotoString = (String)values[10];
-        _popupTodayString = (String)values[11];
-        _popupWeekString = (String)values[12];
-        _popupScrollLeftMessage = (String)values[13];
-        _popupScrollRightMessage = (String)values[14];
-        _popupSelectMonthMessage = (String)values[15];
-        _popupSelectYearMessage = (String)values[16];
-        _popupSelectDateMessage = (String)values[17];
+        _addResources = (Boolean)values[6];
+        _popupButtonString = (String)values[7];
+        _popupDateFormat = (String)values[8];
+        _enabledOnUserRole = (String)values[9];
+        _visibleOnUserRole = (String)values[10];
+        _popupGotoString = (String)values[11];
+        _popupTodayString = (String)values[12];
+        _popupWeekString = (String)values[13];
+        _popupScrollLeftMessage = (String)values[14];
+        _popupScrollRightMessage = (String)values[15];
+        _popupSelectMonthMessage = (String)values[16];
+        _popupSelectYearMessage = (String)values[17];
+        _popupSelectDateMessage = (String)values[18];
     }
     //------------------ GENERATED CODE END ---------------------------------------
 }

@@ -46,6 +46,9 @@ import java.util.List;
 
 /**
  * $Log$
+ * Revision 1.18  2005/01/17 10:08:44  mmarinschek
+ * trying to fix problem with added resources to header; css and js was not changeable by the user anymore...
+ *
  * Revision 1.17  2005/01/09 18:15:12  mmarinschek
  * small changes - better error handling, label renderer supports more hooks for sub-classes
  *
@@ -131,7 +134,8 @@ public class HtmlCalendarRenderer
 
         if(inputCalendar.isRenderAsPopup())
         {
-            addScriptAndCSSResources(facesContext);
+            if(inputCalendar.isAddResources())
+                addScriptAndCSSResources(facesContext);
             
             String dateFormat = CalendarDateTimeConverter.createJSPopupFormat(facesContext,
                     inputCalendar.getPopupDateFormat());

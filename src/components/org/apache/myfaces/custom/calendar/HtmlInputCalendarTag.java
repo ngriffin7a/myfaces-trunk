@@ -24,6 +24,9 @@ import javax.faces.component.UIComponent;
  * @author Martin Marinschek (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.10  2005/01/17 10:08:44  mmarinschek
+ * trying to fix problem with added resources to header; css and js was not changeable by the user anymore...
+ *
  * Revision 1.9  2004/10/13 11:50:57  matze
  * renamed packages to org.apache
  *
@@ -85,6 +88,7 @@ public class HtmlInputCalendarTag
     private String _dayCellClass;
     private String _currentDayCellClass;
     private String _renderAsPopup;
+    private String _addResources;
     private String _popupDateFormat;
     private String _popupButtonString;
     private String _popupGotoString = null;
@@ -109,6 +113,7 @@ public class HtmlInputCalendarTag
         setStringProperty(component, "dayCellClass", _dayCellClass);
         setStringProperty(component, "currentDayCellClass", _currentDayCellClass);
         setBooleanProperty(component,"renderAsPopup",_renderAsPopup);
+        setBooleanProperty(component,"addResources",(_addResources==null?Boolean.TRUE.toString():_addResources));
         setStringProperty(component,"popupDateFormat",_popupDateFormat);
         setStringProperty(component,"popupButtonString",_popupButtonString);
         setStringProperty(component,"popupGotoString",_popupGotoString);
@@ -148,6 +153,11 @@ public class HtmlInputCalendarTag
     public void setRenderAsPopup(String renderAsPopup)
     {
         _renderAsPopup = renderAsPopup;
+    }
+
+    public void setAddResources(String addResources)
+    {
+        _addResources = addResources;
     }
 
     public void setPopupDateFormat(String popupDateFormat)

@@ -427,6 +427,12 @@
             <description>Render the input-calendar as a java-script popup on client.</description>
         </attribute>
         <attribute>
+            <name>addResources</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
+            <description>Automatically add the input-calendar scripts and css files to the header - set that to false to provide the scripts yourself.</description>
+        </attribute>
+        <attribute>
             <name>popupDateFormat</name>
             <required>false</required>
             <rtexprvalue>false</rtexprvalue>

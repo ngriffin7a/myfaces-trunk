@@ -29,6 +29,10 @@
         <type>boolean</type>
     </field>
     <field>
+        <name>addResources</name>
+        <type>boolean</type>
+    </field>
+    <field>
         <name>popupButtonString</name>
         <type>java.lang.String</type>
     </field>
