@@ -825,10 +825,7 @@
         <description>
             Extends standard commandButton by user role support.
         </description>
-        &ui_panel_attributes;
         &html_universal_attributes;
-        &html_event_handler_attributes;
-        &html_table_attributes;
 		<!-- attribute(s) for the rdf ticker... -->
 		<attribute>
 			<name>rdfUrl</name>
