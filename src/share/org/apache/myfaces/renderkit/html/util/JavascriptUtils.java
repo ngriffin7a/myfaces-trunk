@@ -15,6 +15,9 @@
  */
 package net.sourceforge.myfaces.renderkit.html.util;
 
+import net.sourceforge.myfaces.config.MyfacesConfig;
+
+import javax.faces.context.ExternalContext;
 import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -25,6 +28,9 @@ import java.util.Set;
  * @author Anton Koinov
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.5  2004/09/08 09:31:25  manolito
+ * moved isJavascriptDetected from MyFacesConfig to JavascriptUtils class
+ *
  * Revision 1.4  2004/07/16 13:06:30  manolito
  * encode javascript strings for jscook menu labels
  *
@@ -41,7 +47,10 @@ import java.util.Set;
 public final class JavascriptUtils
 {
     //private static final Log log = LogFactory.getLog(JavascriptUtils.class);
-    
+
+    public static final String JAVASCRIPT_DETECTED = JavascriptUtils.class + ".JAVASCRIPT_DETECTED";
+
+
     private JavascriptUtils()
     {
         // utility class, do not instantiate
@@ -221,6 +230,40 @@ public final class JavascriptUtils
         {
             return sb.toString();
         }
+    }
+
+
+    public static boolean isJavascriptAllowed(ExternalContext externalContext)
+    {
+        MyfacesConfig myfacesConfig = MyfacesConfig.getCurrentInstance(externalContext);
+        if (myfacesConfig.isAllowJavascript())
+        {
+            if (myfacesConfig.isDetectJavascript())
+            {
+                return isJavascriptDetected(externalContext);
+            }
+            else
+            {
+                return true;
+            }
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+
+    public static void setJavascriptDetected(ExternalContext externalContext, boolean value)
+    {
+        externalContext.getSessionMap().put(JAVASCRIPT_DETECTED, Boolean.valueOf(value));
+    }
+
+    public static boolean isJavascriptDetected(ExternalContext externalContext)
+    {
+        //TODO/FIXME (manolito): This info should be better stored in the viewroot component and not in the session
+        Boolean sessionValue = (Boolean)externalContext.getSessionMap().get(JAVASCRIPT_DETECTED);
+        return sessionValue == null ? false : sessionValue.booleanValue();
     }
 
 }

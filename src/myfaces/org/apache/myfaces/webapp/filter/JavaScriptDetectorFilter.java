@@ -15,21 +15,17 @@
  */
 package net.sourceforge.myfaces.webapp.filter;
 
-import java.io.IOException;
-
-import javax.servlet.Filter;
-import javax.servlet.FilterChain;
-import javax.servlet.FilterConfig;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import net.sourceforge.myfaces.MyFacesConfig;
+import net.sourceforge.myfaces.context.servlet.ServletExternalContextImpl;
+import net.sourceforge.myfaces.renderkit.html.util.JavascriptUtils;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+import javax.faces.context.ExternalContext;
+import javax.servlet.*;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 
 /**
@@ -39,6 +35,9 @@ import org.apache.commons.logging.LogFactory;
  * @author Oliver Rossmueller (latest modification by $Author$)
  *
  * $Log$
+ * Revision 1.3  2004/09/08 09:31:25  manolito
+ * moved isJavascriptDetected from MyFacesConfig to JavascriptUtils class
+ *
  * Revision 1.2  2004/09/01 18:32:57  mwessendorf
  * Organize Imports
  *
@@ -48,13 +47,13 @@ import org.apache.commons.logging.LogFactory;
  */
 public class JavaScriptDetectorFilter implements Filter
 {
-
     private static final Log log = LogFactory.getLog(JavaScriptDetectorFilter.class);
 
+    private ServletContext _servletContext;
 
     public void init(FilterConfig filterConfig) throws ServletException
     {
-
+        _servletContext = filterConfig.getServletContext();
     }
 
 
@@ -63,7 +62,10 @@ public class JavaScriptDetectorFilter implements Filter
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         HttpServletResponse response = (HttpServletResponse) servletResponse;
 
-        request.getSession().setAttribute(MyFacesConfig.USE_JAVASCRIPT, Boolean.TRUE); // mark the session to use javascript
+        ExternalContext externalContext = new ServletExternalContextImpl(_servletContext,
+                                                                         servletRequest,
+                                                                         servletResponse);
+        JavascriptUtils.setJavascriptDetected(externalContext, true); // mark the session to use javascript
 
         log.info("Enabled JavaScript for session - redirect to" + request.getParameter("goto"));
         response.sendRedirect(request.getParameter("goto"));
