@@ -18,7 +18,6 @@
  */
 package net.sourceforge.myfaces.renderkit.html;
 
-import net.sourceforge.myfaces.application.jsp.JspViewHandlerImpl;
 import net.sourceforge.myfaces.renderkit.html.util.DummyFormResponseWriter;
 import net.sourceforge.myfaces.renderkit.html.util.DummyFormUtils;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLEncoder;
@@ -27,7 +26,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import javax.faces.component.UIComponent;
-import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 import java.io.IOException;
 import java.io.Writer;
@@ -39,6 +37,10 @@ import java.util.Set;
  * @author Manfred Geiler (latest modification by $Author$)
  * @author Anton Koinov
  * @version $Revision$ $Date$
+ * $Log$
+ * Revision 1.18  2004/04/29 14:59:42  manolito
+ * writeURIAttribute no longer adds state saving url parameters
+ *
  */
 public class HtmlResponseWriterImpl
         extends ResponseWriter
@@ -254,6 +256,7 @@ public class HtmlResponseWriterImpl
         }
         else
         {
+            /*
             if (_startElementName.equalsIgnoreCase(HTML.ANCHOR_ELEM) && //TODO: Also support image and button urls ?
                 name.equalsIgnoreCase(HTML.HREF_ATTR) &&
                 !strValue.startsWith("#"))
@@ -261,26 +264,22 @@ public class HtmlResponseWriterImpl
                 FacesContext facesContext = FacesContext.getCurrentInstance();
                 if (facesContext.getApplication().getStateManager().isSavingStateInClient(facesContext))
                 {
-                    //save state in client
-                    if (facesContext.getApplication().getStateManager().isSavingStateInClient(facesContext))
+                    //TODO/HACK: saving state in url depends on the work together
+                    // of 3 (theoretically) pluggable components:
+                    // ViewHandler, ResponseWriter and ViewTag
+                    // We should try to make this HtmlResponseWriterImpl able
+                    // to handle this alone!
+                    if (strValue.indexOf('?') < 0)
                     {
-                        //TODO/HACK: saving state in url depends on the work together
-                        // of 3 (theoretically) pluggable components:
-                        // ViewHandler, ResponseWriter and ViewTag
-                        // We should try to make this HtmlResponseWriterImpl able
-                        // to handle this alone!
-                        if (strValue.indexOf('?') < 0)
-                        {
-                            strValue = strValue + '?' + JspViewHandlerImpl.URL_STATE_MARKER;
-                        }
-                        else
-                        {
-                            strValue = strValue + '&' + JspViewHandlerImpl.URL_STATE_MARKER;
-                        }
+                        strValue = strValue + '?' + JspViewHandlerImpl.URL_STATE_MARKER;
+                    }
+                    else
+                    {
+                        strValue = strValue + '&' + JspViewHandlerImpl.URL_STATE_MARKER;
                     }
                 }
             }
-
+            */
             _writer.write(strValue);
         }
         _writer.write('"');
