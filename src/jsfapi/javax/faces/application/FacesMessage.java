@@ -18,10 +18,8 @@
  */
 package javax.faces.application;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import java.io.Serializable;
+import java.util.*;
 
 /**
  * DOCUMENT ME!
@@ -30,18 +28,16 @@ import java.util.Map;
  * @version $Revision$ $Date$
  */
 public class FacesMessage
-        implements java.io.Serializable
+        implements Serializable
 {
-    //private static final Log log = LogFactory.getLog(FacesMessage.class);
-
-    public static final java.lang.String FACES_MESSAGES = "javax.faces.Messages";
+    public static final String FACES_MESSAGES = "javax.faces.Messages";
 
     public static final FacesMessage.Severity SEVERITY_INFO = new Severity("Info", 1);
     public static final FacesMessage.Severity SEVERITY_WARN = new Severity("Warn", 2);
     public static final FacesMessage.Severity SEVERITY_ERROR = new Severity("Error", 3);
     public static final FacesMessage.Severity SEVERITY_FATAL = new Severity("Fatal", 4);
-    public static final java.util.List VALUES;
-    public static final java.util.Map VALUES_MAP;
+    public static final List VALUES;
+    public static final Map VALUES_MAP;
     static
     {
         Map map = new HashMap(7);

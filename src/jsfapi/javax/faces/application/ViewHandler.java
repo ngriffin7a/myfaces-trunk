@@ -19,6 +19,7 @@
 package javax.faces.application;
 
 import javax.faces.FacesException;
+import java.util.Locale;
 
 /**
  * DOCUMENT ME!
@@ -28,24 +29,22 @@ import javax.faces.FacesException;
  */
 public abstract class ViewHandler
 {
-    //private static final Log log = LogFactory.getLog(ViewHandler.class);
-
     public static final String CHARACTER_ENCODING_KEY = "javax.faces.request.charset";
     public static final String DEFAULT_SUFFIX_PARAM_NAME = "javax.faces.DEFAULT_SUFFIX";
     public static final String DEFAULT_SUFFIX = ".jsp";
 
-    public abstract java.util.Locale calculateLocale(javax.faces.context.FacesContext context);
+    public abstract Locale calculateLocale(javax.faces.context.FacesContext context);
 
-    public abstract java.lang.String calculateRenderKitId(javax.faces.context.FacesContext context);
+    public abstract String calculateRenderKitId(javax.faces.context.FacesContext context);
 
     public abstract javax.faces.component.UIViewRoot createView(javax.faces.context.FacesContext context,
-                                                                java.lang.String viewId);
+                                                                String viewId);
 
-    public abstract java.lang.String getActionURL(javax.faces.context.FacesContext context,
-                                                  java.lang.String viewId);
+    public abstract String getActionURL(javax.faces.context.FacesContext context,
+                                                  String viewId);
 
-    public abstract java.lang.String getResourceURL(javax.faces.context.FacesContext context,
-                                                    java.lang.String path);
+    public abstract String getResourceURL(javax.faces.context.FacesContext context,
+                                                    String path);
 
     public abstract void renderView(javax.faces.context.FacesContext context,
                                     javax.faces.component.UIViewRoot viewToRender)
@@ -53,7 +52,7 @@ public abstract class ViewHandler
                    FacesException;
 
     public abstract javax.faces.component.UIViewRoot restoreView(javax.faces.context.FacesContext context,
-                                                                 java.lang.String viewId);
+                                                                 String viewId);
 
     public abstract void writeState(javax.faces.context.FacesContext context)
             throws java.io.IOException;

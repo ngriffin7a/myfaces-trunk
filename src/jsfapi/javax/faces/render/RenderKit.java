@@ -16,19 +16,28 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package javax.faces.application;
+package javax.faces.render;
 
-import javax.faces.context.FacesContext;
+import javax.faces.context.ResponseWriter;
+import java.io.Writer;
 
 /**
  * DOCUMENT ME!
- * 
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public abstract class NavigationHandler
+public abstract class RenderKit
 {
-    public abstract void handleNavigation(FacesContext context,
-                                          String fromAction,
-                                          String outcome);
+    public abstract void addRenderer(String family,
+                                     String rendererType,
+                                     Renderer renderer);
+
+    public abstract Renderer getRenderer(String family,
+                                         String rendererType);
+
+    public abstract ResponseStateManager getResponseStateManager();
+
+    public abstract ResponseWriter createResponseWriter(Writer writer,
+                                                        String contentTypeList,
+                                                        String characterEncoding);
 }

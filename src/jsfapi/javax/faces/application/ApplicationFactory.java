@@ -26,8 +26,6 @@ package javax.faces.application;
  */
 public abstract class ApplicationFactory
 {
-    //private static final Log log = LogFactory.getLog(ApplicationFactory.class);
-
     public abstract javax.faces.application.Application getApplication();
 
     public abstract void setApplication(javax.faces.application.Application application);

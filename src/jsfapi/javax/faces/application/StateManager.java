@@ -18,8 +18,7 @@
  */
 package javax.faces.application;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+
 
 /**
  * DOCUMENT ME!
@@ -29,8 +28,6 @@ import org.apache.commons.logging.LogFactory;
  */
 public abstract class StateManager
 {
-    private static final Log log = LogFactory.getLog(StateManager.class);
-
     public static final String STATE_SAVING_METHOD_PARAM_NAME = "javax.faces.STATE_SAVING_METHOD";
     public static final String STATE_SAVING_METHOD_CLIENT = "client";
     public static final String STATE_SAVING_METHOD_SERVER = "server";
@@ -38,25 +35,25 @@ public abstract class StateManager
 
     public abstract StateManager.SerializedView saveSerializedView(javax.faces.context.FacesContext context);
 
-    protected abstract java.lang.Object getTreeStructureToSave(javax.faces.context.FacesContext context);
+    protected abstract Object getTreeStructureToSave(javax.faces.context.FacesContext context);
 
-    protected abstract java.lang.Object getComponentStateToSave(javax.faces.context.FacesContext context);
+    protected abstract Object getComponentStateToSave(javax.faces.context.FacesContext context);
 
     public abstract void writeState(javax.faces.context.FacesContext context,
                                     StateManager.SerializedView state)
             throws java.io.IOException;
 
     public abstract javax.faces.component.UIViewRoot restoreView(javax.faces.context.FacesContext context,
-                                                                 java.lang.String viewId,
-                                                                 java.lang.String renderKitId);
+                                                                 String viewId,
+                                                                 String renderKitId);
 
     protected abstract javax.faces.component.UIViewRoot restoreTreeStructure(javax.faces.context.FacesContext context,
-                                                                             java.lang.String viewId,
-                                                                             java.lang.String renderKitId);
+                                                                             String viewId,
+                                                                             String renderKitId);
 
     protected abstract void restoreComponentState(javax.faces.context.FacesContext context,
                                                   javax.faces.component.UIViewRoot viewRoot,
-                                                  java.lang.String renderKitId);
+                                                  String renderKitId);
 
     public boolean isSavingStateInClient(javax.faces.context.FacesContext context)
     {
@@ -65,7 +62,7 @@ public abstract class StateManager
         if (stateSavingMethod == null)
         {
             _savingStateInClient = Boolean.FALSE; //Specs 10.1.3: default server saving
-            log.info("No state saving method defined, assuming default server state saving");
+            context.getExternalContext().log("No state saving method defined, assuming default server state saving");
         }
         else if (stateSavingMethod.equals(STATE_SAVING_METHOD_CLIENT))
         {
@@ -78,7 +75,7 @@ public abstract class StateManager
         else
         {
             _savingStateInClient = Boolean.FALSE; //Specs 10.1.3: default server saving
-            log.info("Illegal state saving method '" + stateSavingMethod + "', default server state saving will be used");
+            context.getExternalContext().log("Illegal state saving method '" + stateSavingMethod + "', default server state saving will be used");
         }
         return _savingStateInClient.booleanValue();
     }

@@ -16,19 +16,21 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package javax.faces.application;
+package javax.faces.lifecycle;
 
-import javax.faces.context.FacesContext;
+import java.util.Iterator;
 
 /**
  * DOCUMENT ME!
- * 
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public abstract class NavigationHandler
+public abstract class LifecycleFactory
 {
-    public abstract void handleNavigation(FacesContext context,
-                                          String fromAction,
-                                          String outcome);
+    public abstract void addLifecycle(String lifecycleId,
+                                      Lifecycle lifecycle);
+
+    public abstract Lifecycle getLifecycle(String lifecycleId);
+
+    public abstract Iterator getLifecycleIds();
 }

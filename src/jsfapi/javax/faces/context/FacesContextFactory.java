@@ -16,9 +16,10 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package javax.faces.application;
+package javax.faces.context;
 
-import javax.faces.context.FacesContext;
+import javax.faces.FacesException;
+import javax.faces.lifecycle.Lifecycle;
 
 /**
  * DOCUMENT ME!
@@ -26,9 +27,11 @@ import javax.faces.context.FacesContext;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public abstract class NavigationHandler
+public abstract class FacesContextFactory
 {
-    public abstract void handleNavigation(FacesContext context,
-                                          String fromAction,
-                                          String outcome);
+    public abstract FacesContext getFacesContext(Object context,
+                                                 Object request,
+                                                 Object response,
+                                                 Lifecycle lifecycle)
+            throws FacesException;
 }

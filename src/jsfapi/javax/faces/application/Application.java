@@ -20,6 +20,9 @@ package javax.faces.application;
 
 import javax.faces.FacesException;
 import javax.faces.el.ReferenceSyntaxException;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.Locale;
 
 /**
  * DOCUMENT ME!
@@ -29,23 +32,21 @@ import javax.faces.el.ReferenceSyntaxException;
  */
 public abstract class Application
 {
-    //private static final Log log = LogFactory.getLog(Application.class);
-
     public abstract javax.faces.event.ActionListener getActionListener();
 
     public abstract void setActionListener(javax.faces.event.ActionListener listener);
 
-    public abstract java.util.Locale getDefaultLocale();
+    public abstract Locale getDefaultLocale();
 
-    public abstract void setDefaultLocale(java.util.Locale locale);
+    public abstract void setDefaultLocale(Locale locale);
 
-    public abstract java.lang.String getDefaultRenderKitId();
+    public abstract String getDefaultRenderKitId();
 
-    public abstract void setDefaultRenderKitId(java.lang.String renderKitId);
+    public abstract void setDefaultRenderKitId(String renderKitId);
 
-    public abstract java.lang.String getMessageBundle();
+    public abstract String getMessageBundle();
 
-    public abstract void setMessageBundle(java.lang.String bundle);
+    public abstract void setMessageBundle(String bundle);
 
     public abstract javax.faces.application.NavigationHandler getNavigationHandler();
 
@@ -67,49 +68,49 @@ public abstract class Application
 
     public abstract void setStateManager(javax.faces.application.StateManager manager);
 
-    public abstract void addComponent(java.lang.String componentType,
-                                      java.lang.String componentClass);
+    public abstract void addComponent(String componentType,
+                                      String componentClass);
 
-    public abstract javax.faces.component.UIComponent createComponent(java.lang.String componentType)
+    public abstract javax.faces.component.UIComponent createComponent(String componentType)
             throws FacesException;
 
     public abstract javax.faces.component.UIComponent createComponent(javax.faces.el.ValueBinding componentBinding,
                                                                       javax.faces.context.FacesContext context,
-                                                                      java.lang.String componentType)
+                                                                      String componentType)
             throws FacesException;
 
-    public abstract java.util.Iterator getComponentTypes();
+    public abstract Iterator getComponentTypes();
 
-    public abstract void addConverter(java.lang.String converterId,
-                                      java.lang.String converterClass);
+    public abstract void addConverter(String converterId,
+                                      String converterClass);
 
-    public abstract void addConverter(java.lang.Class targetClass,
-                                      java.lang.String converterClass);
+    public abstract void addConverter(Class targetClass,
+                                      String converterClass);
 
-    public abstract javax.faces.convert.Converter createConverter(java.lang.String converterId);
+    public abstract javax.faces.convert.Converter createConverter(String converterId);
 
-    public abstract javax.faces.convert.Converter createConverter(java.lang.Class targetClass);
+    public abstract javax.faces.convert.Converter createConverter(Class targetClass);
 
-    public abstract java.util.Iterator getConverterIds();
+    public abstract Iterator getConverterIds();
 
-    public abstract java.util.Iterator getConverterTypes();
+    public abstract Iterator getConverterTypes();
 
-    public abstract javax.faces.el.MethodBinding createMethodBinding(java.lang.String ref,
-                                                                     java.lang.Class[] params)
+    public abstract javax.faces.el.MethodBinding createMethodBinding(String ref,
+                                                                     Class[] params)
             throws ReferenceSyntaxException;
 
-    public abstract java.util.Iterator getSupportedLocales();
+    public abstract Iterator getSupportedLocales();
 
-    public abstract void setSupportedLocales(java.util.Collection locales);
+    public abstract void setSupportedLocales(Collection locales);
 
-    public abstract void addValidator(java.lang.String validatorId,
-                                      java.lang.String validatorClass);
+    public abstract void addValidator(String validatorId,
+                                      String validatorClass);
 
-    public abstract javax.faces.validator.Validator createValidator(java.lang.String validatorId)
+    public abstract javax.faces.validator.Validator createValidator(String validatorId)
             throws FacesException;
 
-    public abstract java.util.Iterator getValidatorIds();
+    public abstract Iterator getValidatorIds();
 
-    public abstract javax.faces.el.ValueBinding createValueBinding(java.lang.String ref)
+    public abstract javax.faces.el.ValueBinding createValueBinding(String ref)
             throws ReferenceSyntaxException;
 }

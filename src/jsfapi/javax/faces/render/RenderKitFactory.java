@@ -16,19 +16,25 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package javax.faces.application;
+package javax.faces.render;
 
 import javax.faces.context.FacesContext;
+import java.util.Iterator;
 
 /**
  * DOCUMENT ME!
- * 
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public abstract class NavigationHandler
+public abstract class RenderKitFactory
 {
-    public abstract void handleNavigation(FacesContext context,
-                                          String fromAction,
-                                          String outcome);
+    public static final String HTML_BASIC_RENDER_KIT = "HTML_BASIC";
+
+    public abstract void addRenderKit(String renderKitId,
+                                      RenderKit renderKit);
+
+    public abstract RenderKit getRenderKit(FacesContext context,
+                                           String renderKitId);
+
+    public abstract Iterator getRenderKitIds();
 }

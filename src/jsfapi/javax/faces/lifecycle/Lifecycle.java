@@ -16,19 +16,26 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package javax.faces.application;
+package javax.faces.lifecycle;
 
-import javax.faces.context.FacesContext;
+import javax.faces.FacesException;
 
 /**
  * DOCUMENT ME!
- * 
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public abstract class NavigationHandler
+public abstract class Lifecycle
 {
-    public abstract void handleNavigation(FacesContext context,
-                                          String fromAction,
-                                          String outcome);
+    public abstract void addPhaseListener(javax.faces.event.PhaseListener listener);
+
+    public abstract void execute(javax.faces.context.FacesContext context)
+            throws FacesException;
+
+    public abstract javax.faces.event.PhaseListener[] getPhaseListeners();
+
+    public abstract void removePhaseListener(javax.faces.event.PhaseListener listener);
+
+    public abstract void render(javax.faces.context.FacesContext context)
+            throws FacesException;
 }

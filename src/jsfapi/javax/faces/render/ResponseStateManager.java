@@ -16,19 +16,26 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package javax.faces.application;
+package javax.faces.render;
 
+import javax.faces.application.StateManager;
 import javax.faces.context.FacesContext;
+import java.io.IOException;
 
 /**
  * DOCUMENT ME!
- * 
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public abstract class NavigationHandler
+public abstract class ResponseStateManager
 {
-    public abstract void handleNavigation(FacesContext context,
-                                          String fromAction,
-                                          String outcome);
+    public abstract void writeState(FacesContext context,
+                                    StateManager.SerializedView state)
+            throws IOException;
+
+    public abstract Object getTreeStructureToRestore(FacesContext context,
+                                                     String viewId);
+
+    public abstract Object getComponentStateToRestore(FacesContext context);
+
 }
