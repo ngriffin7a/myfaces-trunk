@@ -11,6 +11,7 @@
     <property name="cactus.dir" location="${project.dir}/src/cactus"/>
     <property name="cactus.src.dir" location="${cactus.dir}"/>
 	<property name="cactus.web.dir" location="${cactus.dir}/web"/>
+	<property name="cactus.build.dir" location="${project.dir}/build/cactus-webapp"/>
 
     <!-- Properties -->
     <property file="../build.local.properties"/>
@@ -22,7 +23,6 @@
     <!-- Output dirs and files -->
     <property name="cactus.classes.dir" location="${temp.dir}/cactus"/>
     <property name="cactus.results.dir" location="${test.results.dir}/cactus"/>
-    <property name="tests.jar" location="${temp.dir}/myfaces-cactus-tests.jar"/>
     <property name="tests.war" location="${temp.dir}/myfaces-cactus-tests.war"/>
 
     <!-- Tomcat -->
@@ -52,10 +52,8 @@
             description="deletes all files that were built and tries to undeploy webapp">
 		<delete dir="${cactus.results.dir}"/>
 		<delete dir="${cactus.classes.dir}"/>
-		<delete file="${tests.jar}"/>
 		<delete file="${tests.war}"/>
 		<delete file="${project.dir}/build/cactus-webapp/TESTS-TestSuites.xml"/>
-        <antcall target="tomcat-undeploy-app"/>
     </target>
 
 
@@ -69,7 +67,18 @@
                debug="${javac.debug}"
                classpathref="cactus.class.path">
         </javac>
-    	<jar basedir="${cactus.classes.dir}" destfile="${tests.jar}"/>
+        <copy todir="${cactus.classes.dir}">
+            <fileset dir="${cactus.src.dir}"
+                     includes="**/*.properties" />
+        </copy>
+        <copy file="${cactus.build.dir}/cactus.properties"
+              toFile="${cactus.classes.dir}/cactus.properties"
+              overwrite="true" >
+          <filterset>
+            <filter token="contextURL"
+                    value="http://${tomcat.server}:${tomcat.port}/${tomcat.context.path}"/>
+          </filterset>
+        </copy>
     </target>
 
     <target name="war" depends="-compile"
@@ -86,7 +95,7 @@
                     <attribute name="Implementation-Vendor" value="MyFaces Project Team"/>
                 </section>
             </manifest>
-            <lib file="${tests.jar}"/>
+            <classes dir="${cactus.classes.dir}"/>
             <lib file="${commons-el.jar}"/>
         	<lib file="${commons-logging.jar}"/>
             <lib file="${commons-codec.jar}"/>
@@ -101,19 +110,20 @@
                 <exclude name="commons-logging-1.0.3.jar"/>
             </lib>
             <fileset dir="${cactus.web.dir}"
-                     excludes="**/WEB-INF/web.xml" />
+                     excludes="**/WEB-INF/web.xml, **/cactus.properties" />
         </war>
     </target>
 
-	<target name="tomcat-cactus-tests" depends="war"
+	<target name="tomcat-cactus-tests"
             description="run the cactus tests">
         <mkdir dir="${cactus.results.dir}/test-reports/xml"/>
         <mkdir dir="${cactus.results.dir}/test-reports/html"/>
-        <junit fork="false">
+        <junit fork="true">
             <classpath refid="cactus.class.path"/>
       	    <classpath>
-              <pathelement path="${basedir}"/>
               <pathelement path="${cactus.classes.dir}"/>
+              <pathelement path="${commons-logging.jar}"/>
+              <pathelement path="${log4j.jar}"/>
           	</classpath>
             <batchtest toDir="${cactus.results.dir}/test-reports/xml">
                 <fileset dir="${cactus.classes.dir}">

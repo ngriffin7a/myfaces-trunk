@@ -86,7 +86,7 @@
                      -compile-share,
                      -compile-impl,
                      -compile-components,
-                     -resolve-tld-entities" >
+                     resolve-tld-entities" >
         <!-- timestamp for the manifest -->
         <tstamp>
             <format property="TODAY_DE" pattern="dd.MM.yyyy HH:mm" locale="de"/>
@@ -142,7 +142,7 @@
 
     <target name="tlddoc"
             description="creates tlddoc for the extension tld"
-            depends="-resolve-tld-entities" >
+            depends="resolve-tld-entities" >
         <mkdir dir="${doc.dir}/tlddoc"/>
         <java fork="true" jar="${tlddoc.jar}" failonerror="true">
             <arg line="-d ${doc.dir}/tlddoc"/>
@@ -292,7 +292,7 @@
     </target>
 
 
-    <target name="-resolve-tld-entities">
+    <target name="resolve-tld-entities">
         <mkdir dir="${resolved-tlds.dir}"/>
         <!-- resolve TLD entities (for containers that do not support entities within TLDs) -->
         <xslt basedir="${tlds.dir}"
