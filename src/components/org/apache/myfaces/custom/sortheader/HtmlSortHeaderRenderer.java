@@ -20,6 +20,7 @@ package net.sourceforge.myfaces.custom.sortheader;
 
 import net.sourceforge.myfaces.component.html.ext.HtmlDataTable;
 import net.sourceforge.myfaces.renderkit.RendererUtils;
+import net.sourceforge.myfaces.renderkit.html.HtmlLinkRendererBase;
 
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
@@ -29,9 +30,13 @@ import java.io.IOException;
 /**
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
+ * $Log$
+ * Revision 1.2  2004/04/22 09:20:55  manolito
+ * derive from HtmlLinkRendererBase instead of HtmlLinkRenderer
+ *
  */
 public class HtmlSortHeaderRenderer
-        extends net.sourceforge.myfaces.renderkit.html.HtmlLinkRenderer
+        extends HtmlLinkRendererBase
 {
     //private static final Log log = LogFactory.getLog(HtmlSortHeaderRenderer.class);
 
