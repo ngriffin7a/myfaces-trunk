@@ -23,6 +23,9 @@ import org.apache.myfaces.taglib.UIComponentTagBase;
  * @author Sylvain Vieujot (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.5  2004/12/04 03:26:28  svieujot
+ * Various bug fixes
+ *
  * Revision 1.4  2004/12/04 00:40:25  svieujot
  * htmlEditor : add style and styleClass attributes.
  *
@@ -45,6 +48,7 @@ public class HtmlEditorTag extends UIComponentTagBase {
     private String formularMode;
     
     private String allowEditSource;
+    private String addKupuLogo;
     
     private String showPropertiesToolBox;
     private String showLinksToolBox;
@@ -61,6 +65,7 @@ public class HtmlEditorTag extends UIComponentTagBase {
         setBooleanProperty(component, "formularMode", formularMode);
         
         setBooleanProperty(component, "allowEditSource", allowEditSource);
+        setBooleanProperty(component, "addKupuLogo", addKupuLogo);
         
         setBooleanProperty(component, "showPropertiesToolBox", showPropertiesToolBox);
         setBooleanProperty(component, "showLinksToolBox", showLinksToolBox);
@@ -91,6 +96,10 @@ public class HtmlEditorTag extends UIComponentTagBase {
 
     public void setAllowEditSource(String allowEditSource){
         this.allowEditSource = allowEditSource;
+    }
+    
+    public void setAddKupuLogo(String addKupuLogo){
+        this.addKupuLogo = addKupuLogo;
     }
     
     public void setShowPropertiesToolBox(String showPropertiesToolBox){

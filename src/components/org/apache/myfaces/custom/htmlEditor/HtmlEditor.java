@@ -26,6 +26,9 @@ import javax.faces.el.ValueBinding;
  * @author Sylvain Vieujot (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.5  2004/12/04 03:26:28  svieujot
+ * Various bug fixes
+ *
  * Revision 1.4  2004/12/04 00:40:25  svieujot
  * htmlEditor : add style and styleClass attributes.
  *
@@ -49,6 +52,7 @@ public class HtmlEditor extends UIInput {
     private String _styleClass;
     
     private Boolean _allowEditSource;
+    private Boolean _addKupuLogo;
     
     private Boolean _showPropertiesToolBox;
     private Boolean _showLinksToolBox;
@@ -76,8 +80,9 @@ public class HtmlEditor extends UIInput {
         
         values[1] = display;
         
-        Boolean toolBarButtons[] = new Boolean[1];
+        Boolean toolBarButtons[] = new Boolean[2];
         toolBarButtons[0] = _allowEditSource;
+        toolBarButtons[1] = _addKupuLogo;
         
         values[2] = toolBarButtons;
         
@@ -108,6 +113,7 @@ public class HtmlEditor extends UIInput {
         
         Boolean[] toolBarButtons = (Boolean[]) values[2];
         _allowEditSource = toolBarButtons[0];
+        _addKupuLogo = toolBarButtons[1];
         
         Boolean[] toolBoxes = (Boolean[]) values[3];
         _showPropertiesToolBox = toolBoxes[0];
@@ -121,50 +127,69 @@ public class HtmlEditor extends UIInput {
     }
     
     public String getStyle(){
-   		if (_style != null) return _style;
-    		ValueBinding vb = getValueBinding("style");
+   		if (_style != null)
+   		    return _style;
+    	ValueBinding vb = getValueBinding("style");
    		return vb != null ? (String)vb.getValue(getFacesContext()) : null;
     }
     
     public String getStyleClass(){
-   		if (_styleClass != null) return _styleClass;
-    		ValueBinding vb = getValueBinding("styleClass");
+   		if (_styleClass != null)
+   		    return _styleClass;
+    	ValueBinding vb = getValueBinding("styleClass");
    		return vb != null ? (String)vb.getValue(getFacesContext()) : null;
     }
     
     public Boolean isAllowEditSource(){
-   		if (_allowEditSource != null) return _allowEditSource;
-    		ValueBinding vb = getValueBinding("allowEditSource");
+   		if (_allowEditSource != null)
+   		    return _allowEditSource;
+   		ValueBinding vb = getValueBinding("allowEditSource");
    		return vb != null ? (Boolean)vb.getValue(getFacesContext()) : Boolean.TRUE;
     }
     
+    public Boolean isAddKupuLogo(){
+   		if (_addKupuLogo != null)
+   		    return _addKupuLogo;
+   		ValueBinding vb = getValueBinding("addKupuLogo");
+   		return vb != null ? (Boolean)vb.getValue(getFacesContext()) : Boolean.TRUE;
+    }
+    
+    public void setAddKupuLogo(boolean addKupuLogo){
+   		this._addKupuLogo = Boolean.valueOf(addKupuLogo);
+    }
+    
     public Boolean isShowPropertiesToolBox(){
-   		if (_showPropertiesToolBox != null) return _showPropertiesToolBox;
-    		ValueBinding vb = getValueBinding("showPropertiesToolBox");
+   		if (_showPropertiesToolBox != null)
+   		    return _showPropertiesToolBox;
+    	ValueBinding vb = getValueBinding("showPropertiesToolBox");
    		return vb != null ? (Boolean)vb.getValue(getFacesContext()) : Boolean.FALSE;
     }
     
     public Boolean isShowLinksToolBox(){
-   		if (_showLinksToolBox != null) return _showLinksToolBox;
-    		ValueBinding vb = getValueBinding("showLinksToolBox");
+   		if (_showLinksToolBox != null)
+   		    return _showLinksToolBox;
+    	ValueBinding vb = getValueBinding("showLinksToolBox");
    		return vb != null ? (Boolean)vb.getValue(getFacesContext()) : Boolean.FALSE;
     }
     
     public Boolean isShowImagesToolBox(){
-   		if (_showImagesToolBox != null) return _showImagesToolBox;
-    		ValueBinding vb = getValueBinding("showImagesToolBox");
+   		if (_showImagesToolBox != null)
+   		    return _showImagesToolBox;
+    	ValueBinding vb = getValueBinding("showImagesToolBox");
    		return vb != null ? (Boolean)vb.getValue(getFacesContext()) : Boolean.FALSE;
     }
     
     public Boolean isShowTablesToolBox(){
-   		if (_showTablesToolBox != null) return _showTablesToolBox;
-    		ValueBinding vb = getValueBinding("showTablesToolBox");
+   		if (_showTablesToolBox != null)
+   		    return _showTablesToolBox;
+    	ValueBinding vb = getValueBinding("showTablesToolBox");
    		return vb != null ? (Boolean)vb.getValue(getFacesContext()) : Boolean.FALSE;
     }
     
     public Boolean isShowDebugToolBox(){
-   		if (_showDebugToolBox != null) return _showDebugToolBox;
-    		ValueBinding vb = getValueBinding("showDebugToolBox");
+   		if (_showDebugToolBox != null)
+   		    return _showDebugToolBox;
+    	ValueBinding vb = getValueBinding("showDebugToolBox");
    		return vb != null ? (Boolean)vb.getValue(getFacesContext()) : Boolean.FALSE;
     }
     
@@ -177,8 +202,9 @@ public class HtmlEditor extends UIInput {
     }
     
     public Boolean isEnableFlexiTools(){
-   		if (_enableFlexiTools != null) return _enableFlexiTools;
-    		ValueBinding vb = getValueBinding("formularMode");
+   		if (_enableFlexiTools != null)
+   		    return _enableFlexiTools;
+    	ValueBinding vb = getValueBinding("formularMode");
    		return vb != null ? (Boolean)vb.getValue(getFacesContext()) : Boolean.FALSE;
     }
 }

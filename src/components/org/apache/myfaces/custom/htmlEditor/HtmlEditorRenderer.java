@@ -33,6 +33,9 @@ import org.apache.myfaces.renderkit.html.util.JavascriptUtils;
  * @author Sylvain Vieujot (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.8  2004/12/04 03:26:28  svieujot
+ * Various bug fixes
+ *
  * Revision 1.7  2004/12/04 02:09:42  svieujot
  * Several small fixes.
  *
@@ -147,7 +150,9 @@ public class HtmlEditorRenderer extends Renderer {
 				writer.startElement(HTML.SPAN_ELEM,null);
 				writer.writeAttribute(HTML.CLASS_ATTR, "kupu-tb-buttongroup",null);
     			writer.writeAttribute(HTML.ID_ATTR, "kupu=logo",null);
-    			writer.writeAttribute(HTML.STYLE_ATTR, "float: right",null);
+    			writer.writeAttribute(HTML.STYLE_ATTR,
+    			        editor.isAddKupuLogo().booleanValue() ? "float: right" : "display: none",
+    			        null);
     				writer.startElement(HTML.BUTTON_ELEM,null);
     				writer.writeAttribute(HTML.TYPE_ATTR, "button",null);
     				writer.writeAttribute(HTML.CLASS_ATTR, "kupu-logo",null);
