@@ -31,41 +31,56 @@ import java.util.Vector;
  * @author Robert J. Lebowitz (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public class WelcomeFileHandler extends DefaultHandler {
-    private Vector welcomeFiles; 
-    private boolean fileFlag = false;
-    private String[] files;
-    private StringBuffer sb = new StringBuffer();
+public class WelcomeFileHandler
+extends DefaultHandler
+{
+    //~ Instance fields --------------------------------------------------------
+
+    private StringBuffer sb           = new StringBuffer();
+    private Vector       welcomeFiles;
+    private String[]     files;
+    private boolean      fileFlag = false;
+
+    //~ Constructors -----------------------------------------------------------
 
     /**
      * Creates a new WelcomeFileHandler object.
      */
-    public WelcomeFileHandler() {
+    public WelcomeFileHandler()
+    {
         super();
+    }
+
+    //~ Methods ----------------------------------------------------------------
+
+    /**
+     * Accessor method used to get the array of welcome files.
+     * @return The string array of welcome files.
+     *
+     */
+    public String[] getWelcomeFiles()
+    {
+        return files;
     }
 
     /**
      *
-     *  Method called with each start element in an XML document
-     * @param ns The namespace associated with this element
-     * @param local The local name of this element
-     * @param qName The qualified name of this element
-     * @param atts Attributes associated with this element
-     * @throws SAXException 
+     * Method used to examine, modify or extract text in body of an element
+     * @param ch character array containing the tag's body information.
+     * @param start starting index of the body text in the character array.
+     * @param length length of the text found in the body.
+     * @throws SAXException
      *
      */
-    public void startElement(String ns, String local, String qName,
-        Attributes atts) throws SAXException {
-        if (qName.equals("welcome-file-list")) {
-            welcomeFiles = new Vector();
+    public void characters(char[] ch, int start, int length)
+    throws SAXException
+    {
+        if (fileFlag)
+        {
+            sb.append(ch, start, length);
         }
 
-        if (qName.equals("welcome-file")) {
-        	sb.setLength(0);
-            fileFlag = true;
-        }
-
-        super.startElement(ns, local, qName, atts);
+        super.characters(ch, start, length);
     }
 
     /**
@@ -77,44 +92,50 @@ public class WelcomeFileHandler extends DefaultHandler {
      *
      */
     public void endElement(String ns, String local, String qName)
-        throws SAXException {
-        if (qName.equals("welcome-file-list")) {
+    throws SAXException
+    {
+        if (qName.equals("welcome-file-list"))
+        {
             files = new String[welcomeFiles.size()];
             welcomeFiles.toArray(files);
             welcomeFiles = null;
         }
 
-        if (qName.equals("welcome-file")) {
-        	welcomeFiles.add(sb.toString());
-        	sb.setLength(0);
+        if (qName.equals("welcome-file"))
+        {
+            welcomeFiles.add(sb.toString());
+            sb.setLength(0);
             fileFlag = false;
         }
+
         super.endElement(ns, local, qName);
     }
 
     /**
      *
-     * Method used to examine, modify or extract text in body of an element
-     * @param ch character array containing the tag's body information.
-     * @param start starting index of the body text in the character array.
-     * @param length length of the text found in the body.
-     * @throws SAXException 
+     *  Method called with each start element in an XML document
+     * @param ns The namespace associated with this element
+     * @param local The local name of this element
+     * @param qName The qualified name of this element
+     * @param atts Attributes associated with this element
+     * @throws SAXException
      *
      */
-    public void characters(char[] ch, int start, int length)
-        throws SAXException {
-        if (fileFlag) {
-            sb.append(ch, start, length);
+    public void startElement(
+        String ns, String local, String qName, Attributes atts)
+    throws SAXException
+    {
+        if (qName.equals("welcome-file-list"))
+        {
+            welcomeFiles = new Vector();
         }
-        super.characters(ch, start, length);
-    }
 
-    /**
-     * Accessor method used to get the array of welcome files.
-     * @return The string array of welcome files.
-     *
-     */
-    public String[] getWelcomeFiles() {
-        return files;
+        if (qName.equals("welcome-file"))
+        {
+            sb.setLength(0);
+            fileFlag = true;
+        }
+
+        super.startElement(ns, local, qName, atts);
     }
 }
