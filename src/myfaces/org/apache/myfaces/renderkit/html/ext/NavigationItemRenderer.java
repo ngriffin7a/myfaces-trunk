@@ -21,13 +21,13 @@ package net.sourceforge.myfaces.renderkit.html.ext;
 import net.sourceforge.myfaces.MyFacesFactoryFinder;
 import net.sourceforge.myfaces.component.CommonComponentProperties;
 import net.sourceforge.myfaces.component.UIComponentUtils;
-import net.sourceforge.myfaces.component.ext.UINavigation;
+import net.sourceforge.myfaces.component.ext.UINavigationItem;
 import net.sourceforge.myfaces.renderkit.attr.CommonRendererAttributes;
 import net.sourceforge.myfaces.renderkit.attr.HyperlinkRendererAttributes;
 import net.sourceforge.myfaces.renderkit.attr.UserRoleAttributes;
 import net.sourceforge.myfaces.renderkit.attr.ext.NavigationItemRendererAttributes;
 import net.sourceforge.myfaces.renderkit.attr.ext.NavigationRendererAttributes;
-import net.sourceforge.myfaces.renderkit.html.HTMLRenderer;
+import net.sourceforge.myfaces.renderkit.html.HyperlinkRenderer;
 import net.sourceforge.myfaces.renderkit.html.attr.HTMLAnchorAttributes;
 import net.sourceforge.myfaces.renderkit.html.attr.HTMLEventHandlerAttributes;
 import net.sourceforge.myfaces.renderkit.html.attr.HTMLUniversalAttributes;
@@ -41,14 +41,12 @@ import net.sourceforge.myfaces.webapp.ServletMappingFactory;
 
 import javax.faces.FactoryFinder;
 import javax.faces.component.UIComponent;
-import javax.faces.component.UICommand;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 import javax.faces.render.RenderKit;
 import javax.faces.render.RenderKitFactory;
 import javax.faces.render.Renderer;
 import javax.servlet.ServletContext;
-import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
@@ -58,7 +56,7 @@ import java.io.IOException;
  * @version $Revision$ $Date$
  */
 public class NavigationItemRenderer
-    extends HTMLRenderer
+    extends HyperlinkRenderer
     implements CommonComponentProperties,
                CommonRendererAttributes,
                HTMLUniversalAttributes,
@@ -82,50 +80,7 @@ public class NavigationItemRenderer
         return TYPE;
     }
 
-    /*
-    public boolean supportsComponentType(String s)
-    {
-        return s.equals(UICommand.TYPE);
-    }
-
-    public boolean supportsComponentType(UIComponent uiComponent)
-    {
-        return uiComponent instanceof javax.faces.component.UICommand;
-    }
-
-    protected void initAttributeDescriptors()
-    {
-        addAttributeDescriptors(UICommand.TYPE, TLD_EXT_URI, "navigation_item", HTML_UNIVERSAL_ATTRIBUTES);
-        addAttributeDescriptors(UICommand.TYPE, TLD_EXT_URI, "navigation_item", HTML_EVENT_HANDLER_ATTRIBUTES);
-        addAttributeDescriptors(UICommand.TYPE, TLD_EXT_URI, "navigation_item", HTML_ANCHOR_ATTRIBUTES);
-        addAttributeDescriptors(UICommand.TYPE, TLD_EXT_URI, "navigation_item", NAVIGATION_ITEM_ATTRIBUTES);
-        addAttributeDescriptors(UICommand.TYPE, TLD_EXT_URI, "navigation_item", USER_ROLE_ATTRIBUTES);
-    }
-    */
-
-
-    public void decode(FacesContext facesContext, UIComponent uiComponent) throws IOException
-    {
-        //super.decode must not be called, because value never comes from request
-
-        //Remember, that we have decoded
-        //uiComponent.setAttribute(DECODED_ATTR, Boolean.TRUE);
-
-        uiComponent.setValid(true);
-
-        //decode
-        String paramName = uiComponent.getClientId(facesContext);
-        String paramValue = ((ServletRequest)facesContext.getExternalContext().getRequest()).getParameter(paramName);
-        if (paramValue != null)
-        {
-            //item was clicked
-            ((UICommand)uiComponent).fireActionEvent(facesContext);
-        }
-    }
-
     /**
-     * UINavigationItem common do not render themselves. Method is directly called
-     * by NavigationRenderer.
      * @param facesContext
      * @param uiComponent
      * @throws IOException
@@ -216,16 +171,21 @@ public class NavigationItemRenderer
             }
         }
 
-        boolean open = ((UINavigation.UINavigationItem)uiComponent).isOpen();
+        boolean open = ((UINavigationItem)uiComponent).isOpen();
         renderLabel(facesContext, writer, uiComponent, navigationComponent, label, open);
 
         writer.write("</a>");
 
     }
 
+
+    public void encodeChildren(FacesContext facescontext, UIComponent uicomponent)
+        throws IOException
+    {
+    }
+
+
     /**
-     * UINavigationItem common do not render themselves. Method is directly called
-     * by NavigationRenderer.
      * @param facesContext
      * @param uiComponent
      * @throws IOException

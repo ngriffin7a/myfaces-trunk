@@ -18,7 +18,6 @@
  */
 package net.sourceforge.myfaces.tree;
 
-import net.sourceforge.myfaces.component.CommonComponentProperties;
 import net.sourceforge.myfaces.util.bean.BeanUtils;
 
 import javax.faces.component.UIComponent;

@@ -18,15 +18,15 @@
  */
 package net.sourceforge.myfaces.config;
 
+import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
-import org.xml.sax.EntityResolver;
 
 import javax.servlet.ServletContext;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.jar.JarFile;
 import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
 
 /**
  * DOCUMENT ME!

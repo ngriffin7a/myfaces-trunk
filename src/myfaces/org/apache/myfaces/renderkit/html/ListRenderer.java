@@ -19,7 +19,6 @@
 package net.sourceforge.myfaces.renderkit.html;
 
 import net.sourceforge.myfaces.component.CommonComponentProperties;
-import net.sourceforge.myfaces.component.UIComponentUtils;
 import net.sourceforge.myfaces.renderkit.attr.CommonRendererAttributes;
 import net.sourceforge.myfaces.renderkit.attr.ListRendererAttributes;
 import net.sourceforge.myfaces.renderkit.attr.UserRoleAttributes;
@@ -65,28 +64,6 @@ public class ListRenderer
     {
         return TYPE;
     }
-
-    /*
-    public boolean supportsComponentType(UIComponent uiComponent)
-    {
-        return uiComponent instanceof javax.faces.component.UIPanel;
-    }
-
-    public boolean supportsComponentType(String s)
-    {
-        return s.equals(javax.faces.component.UIPanel.TYPE);
-    }
-
-    protected void initAttributeDescriptors()
-    {
-        addAttributeDescriptors(UIPanel.TYPE, TLD_HTML_URI, "panel_list", HTML_UNIVERSAL_ATTRIBUTES);
-        addAttributeDescriptors(UIPanel.TYPE, TLD_HTML_URI, "panel_list", HTML_EVENT_HANDLER_ATTRIBUTES);
-        addAttributeDescriptors(UIPanel.TYPE, TLD_HTML_URI, "panel_list", HTML_TABLE_ATTRIBUTES);
-        addAttributeDescriptors(UIPanel.TYPE, TLD_HTML_URI, "panel_list", PANEL_LIST_ATTRIBUTES);
-        addAttributeDescriptors(UIPanel.TYPE, TLD_HTML_URI, "panel_list", USER_ROLE_ATTRIBUTES);
-    }
-    */
-
 
     public void beforeEncodeBegin(FacesContext facesContext,
                                   Renderer renderer,

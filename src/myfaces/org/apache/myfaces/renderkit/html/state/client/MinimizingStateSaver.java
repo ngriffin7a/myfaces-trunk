@@ -19,9 +19,9 @@
 package net.sourceforge.myfaces.renderkit.html.state.client;
 
 import net.sourceforge.myfaces.component.CommonComponentProperties;
-import net.sourceforge.myfaces.component.UIComponentUtils;
 import net.sourceforge.myfaces.component.MyFacesUIOutput;
 import net.sourceforge.myfaces.component.UIComponentHacks;
+import net.sourceforge.myfaces.component.UIComponentUtils;
 import net.sourceforge.myfaces.component.ext.UISaveState;
 import net.sourceforge.myfaces.convert.ConverterUtils;
 import net.sourceforge.myfaces.renderkit.html.DataRenderer;
@@ -32,16 +32,16 @@ import net.sourceforge.myfaces.renderkit.html.jspinfo.StaticFacesListener;
 import net.sourceforge.myfaces.renderkit.html.state.StateRenderer;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLEncoder;
 import net.sourceforge.myfaces.tree.TreeUtils;
-import net.sourceforge.myfaces.util.logging.LogUtil;
 import net.sourceforge.myfaces.util.bean.BeanUtils;
+import net.sourceforge.myfaces.util.logging.LogUtil;
 
 import javax.faces.FacesException;
 import javax.faces.FactoryFinder;
 import javax.faces.application.ApplicationFactory;
+import javax.faces.component.UICommand;
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIOutput;
 import javax.faces.component.UIPanel;
-import javax.faces.component.UICommand;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.convert.ConverterException;
@@ -52,12 +52,12 @@ import javax.faces.event.PhaseId;
 import javax.faces.event.ValueChangedListener;
 import javax.faces.tree.Tree;
 import javax.servlet.ServletRequest;
+import java.beans.BeanInfo;
+import java.beans.PropertyDescriptor;
 import java.io.IOException;
 import java.io.Serializable;
 import java.io.Writer;
 import java.util.*;
-import java.beans.BeanInfo;
-import java.beans.PropertyDescriptor;
 
 /**
  * StateSaver for the "client_minimized" state saving mode.

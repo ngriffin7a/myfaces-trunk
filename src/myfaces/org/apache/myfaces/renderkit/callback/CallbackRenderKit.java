@@ -18,11 +18,9 @@
  */
 package net.sourceforge.myfaces.renderkit.callback;
 
-import javax.faces.component.UIComponent;
 import javax.faces.render.RenderKit;
 import javax.faces.render.Renderer;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 /**

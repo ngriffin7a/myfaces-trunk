@@ -18,10 +18,10 @@
  */
 package net.sourceforge.myfaces.taglib;
 
+import net.sourceforge.myfaces.component.MyFacesUICommand;
 import net.sourceforge.myfaces.renderkit.attr.ButtonRendererAttributes;
 import net.sourceforge.myfaces.renderkit.html.ButtonRenderer;
 import net.sourceforge.myfaces.renderkit.html.attr.HTMLButtonAttributes;
-import net.sourceforge.myfaces.component.MyFacesUICommand;
 
 
 /**

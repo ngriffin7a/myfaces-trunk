@@ -18,6 +18,7 @@
  */
 package net.sourceforge.myfaces.config;
 
+import net.sourceforge.myfaces.util.logging.LogUtil;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -32,8 +33,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-
-import net.sourceforge.myfaces.util.logging.LogUtil;
 
 /**
  * DOCUMENT ME!

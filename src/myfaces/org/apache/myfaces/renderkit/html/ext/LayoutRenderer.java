@@ -19,7 +19,6 @@
 package net.sourceforge.myfaces.renderkit.html.ext;
 
 import net.sourceforge.myfaces.component.CommonComponentProperties;
-import net.sourceforge.myfaces.component.UIComponentUtils;
 import net.sourceforge.myfaces.renderkit.attr.CommonRendererAttributes;
 import net.sourceforge.myfaces.renderkit.attr.ext.LayoutRendererAttributes;
 import net.sourceforge.myfaces.renderkit.callback.CallbackRenderer;

@@ -136,15 +136,15 @@ a.navigation_link:hover,active {
 }
 
 .navlevel1 {
-    margin-left : 0px;
+    padding-left : 0px;
 }
 
 .navlevel2 {
-    margin-left : 12px;
+    padding-left : 12px;
 }
 
 .navlevel3 {
-    margin-left : 24px;
+    padding-left : 24px;
 }
 
 .navseparator {
@@ -153,6 +153,8 @@ a.navigation_link:hover,active {
 	font-size: 0px;
     font-color: #9999CC;
 }
+
+
 
 .fileUploadInput {
 	font-family : verdana, Geneva, Arial, Helvetica, sans-serif;

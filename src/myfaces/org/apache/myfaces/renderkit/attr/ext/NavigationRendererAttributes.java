@@ -34,12 +34,14 @@ public interface NavigationRendererAttributes
     public static final String LEVEL_CLASSES = "levelClasses";
     public static final String OPEN_ITEM_CLASS_ATTR = "openItemClass";
     public static final String ITEM_CLASS_ATTR = "itemClass";
+    public static final String SEPARATOR_CLASS = "separatorClass";
 
     public static final String[] NAVIGATION_ATTRIBUTES = {
         PANEL_CLASS_ATTR,
         BUNDLE_ATTR,
         LEVEL_CLASSES,
         OPEN_ITEM_CLASS_ATTR,
-        ITEM_CLASS_ATTR
+        ITEM_CLASS_ATTR,
+        SEPARATOR_CLASS
     };
 }

@@ -19,10 +19,10 @@
 package net.sourceforge.myfaces.component;
 
 import javax.faces.component.UIComponent;
-import java.util.List;
 import java.lang.reflect.Field;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
+import java.util.List;
 
 /**
  * Misc. hacks for accessing protected fields in UIComponent.

@@ -91,19 +91,37 @@
             <rtexprvalue>false</rtexprvalue>
         </attribute>
         <attribute>
-            <name>levelClasses</name>
+            <name>itemClass</name>
             <required>false</required>
-            <rtexprvalue>false</rtexprvalue>
+            <rtexprvalue>true</rtexprvalue>
+            <description>
+                The CSS class of closed navigation items.
+            </description>
         </attribute>
         <attribute>
             <name>openItemClass</name>
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>
+            <description>
+                The CSS class of open navigation items.
+            </description>
         </attribute>
         <attribute>
-            <name>itemClass</name>
+            <name>levelClasses</name>
             <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
+            <rtexprvalue>false</rtexprvalue>
+            <description>
+                Comma separated list of CSS classes used as the td (!) class
+                for the different item levels.
+            </description>
+        </attribute>
+        <attribute>
+            <name>separatorClass</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
+            <description>
+                The CSS class for the td element of a separator.
+            </description>
         </attribute>
         &ui_panel_attributes;
         &html_universal_attributes;
@@ -127,11 +145,6 @@
             <rtexprvalue>true</rtexprvalue>
         </attribute>
         <attribute>
-            <name>treeId</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-        </attribute>
-        <attribute>
             <name>open</name>
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>
@@ -139,11 +152,6 @@
             <description>
                 If true, this item will be open.
             </description>
-        </attribute>
-        <attribute>
-            <name>columnClass</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
         </attribute>
         &ui_component_attributes;
         &ui_command_attributes;
@@ -158,6 +166,17 @@
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>
         </attribute>
+    </tag>
+
+    <tag>
+        <name>navigation_separator</name>
+        <tag-class>net.sourceforge.myfaces.taglib.ext.NavigationSeparatorTag</tag-class>
+        <body-content>JSP</body-content>
+        &ui_component_attributes;
+        &ui_output_attributes;
+        &html_universal_attributes;
+        &html_event_handler_attributes;
+        &user_role_attributes;
     </tag>
 
     <!--

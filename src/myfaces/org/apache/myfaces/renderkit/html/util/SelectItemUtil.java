@@ -18,8 +18,8 @@
  */
 package net.sourceforge.myfaces.renderkit.html.util;
 
-import net.sourceforge.myfaces.util.bundle.BundleUtils;
 import net.sourceforge.myfaces.component.MyFacesUISelectItem;
+import net.sourceforge.myfaces.util.bundle.BundleUtils;
 
 import javax.faces.component.*;
 import javax.faces.context.FacesContext;

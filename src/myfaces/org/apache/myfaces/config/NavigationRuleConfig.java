@@ -30,12 +30,23 @@ import java.util.List;
 public class NavigationRuleConfig
     implements Config
 {
+    private String _description = null;
     private String _fromTreeId = null;
     private List _navigationCaseConfigList = null;
 
     public String getFromTreeId()
     {
         return _fromTreeId;
+    }
+
+    public String getDescription()
+    {
+        return _description;
+    }
+
+    public void setDescription(String description)
+    {
+        _description = description;
     }
 
     public void setFromTreeId(String fromTreeId)

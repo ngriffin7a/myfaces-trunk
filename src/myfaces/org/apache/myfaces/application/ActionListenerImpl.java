@@ -18,17 +18,17 @@
  */
 package net.sourceforge.myfaces.application;
 
+import javax.faces.FactoryFinder;
+import javax.faces.application.Action;
+import javax.faces.application.Application;
+import javax.faces.application.ApplicationFactory;
+import javax.faces.application.NavigationHandler;
+import javax.faces.component.UICommand;
+import javax.faces.context.FacesContext;
 import javax.faces.event.AbortProcessingException;
 import javax.faces.event.ActionEvent;
 import javax.faces.event.ActionListener;
 import javax.faces.event.PhaseId;
-import javax.faces.component.UICommand;
-import javax.faces.context.FacesContext;
-import javax.faces.application.ApplicationFactory;
-import javax.faces.application.Action;
-import javax.faces.application.Application;
-import javax.faces.application.NavigationHandler;
-import javax.faces.FactoryFinder;
 
 /**
  * @author Manfred Geiler (latest modification by $Author$)

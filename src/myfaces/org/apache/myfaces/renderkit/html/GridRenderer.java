@@ -19,7 +19,6 @@
 package net.sourceforge.myfaces.renderkit.html;
 
 import net.sourceforge.myfaces.component.CommonComponentProperties;
-import net.sourceforge.myfaces.component.UIComponentUtils;
 import net.sourceforge.myfaces.renderkit.attr.CommonRendererAttributes;
 import net.sourceforge.myfaces.renderkit.attr.GridRendererAttributes;
 import net.sourceforge.myfaces.renderkit.attr.UserRoleAttributes;

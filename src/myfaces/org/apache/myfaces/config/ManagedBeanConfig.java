@@ -18,10 +18,10 @@
  */
 package net.sourceforge.myfaces.config;
 
-import java.util.Map;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Collections;
+import java.util.Map;
 
 /**
  * DOCUMENT ME!

@@ -28,8 +28,8 @@ import net.sourceforge.myfaces.util.logging.LogUtil;
 
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
-import javax.servlet.ServletRequest;
 import javax.servlet.ServletContext;
+import javax.servlet.ServletRequest;
 import java.io.IOException;
 
 /**

@@ -139,4 +139,9 @@ public class NavigationTag
     {
         setRendererAttributeString(ITEM_CLASS_ATTR, s);
     }
+
+    public void setSeparatorClass(String s)
+    {
+        setRendererAttributeString(SEPARATOR_CLASS, s);
+    }
 }

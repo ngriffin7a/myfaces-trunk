@@ -18,8 +18,6 @@
  */
 package net.sourceforge.myfaces.renderkit;
 
-import net.sourceforge.myfaces.renderkit.html.RenderKitImpl;
-
 import javax.faces.FacesException;
 import javax.faces.context.FacesContext;
 import javax.faces.render.RenderKit;

@@ -18,8 +18,8 @@
  */
 package net.sourceforge.myfaces.taglib.ext;
 
-import net.sourceforge.myfaces.component.ext.UINavigation;
 import net.sourceforge.myfaces.component.MyFacesUICommand;
+import net.sourceforge.myfaces.component.ext.UINavigationItem;
 import net.sourceforge.myfaces.renderkit.attr.CommonRendererAttributes;
 import net.sourceforge.myfaces.renderkit.attr.HyperlinkRendererAttributes;
 import net.sourceforge.myfaces.renderkit.attr.ext.NavigationItemRendererAttributes;
@@ -55,11 +55,6 @@ public class NavigationItemTag
         setRendererAttributeString(LABEL_ATTR, s);
     }
 
-    public void setColumnClass(String s)
-    {
-        setRendererAttributeString(COLUMN_CLASSES_ATTR, s);
-    }
-
     // key and bundle attributes --> already implemented in MyFacesTag
 
     public void setTreeId(String s)
@@ -69,7 +64,7 @@ public class NavigationItemTag
 
     public void setOpen(String b)
     {
-        setComponentPropertyBoolean(UINavigation.UINavigationItem.OPEN_PROP, b);
+        setComponentPropertyBoolean(UINavigationItem.OPEN_PROP, b);
     }
 
     // user role attributes --> already implemented in MyFacesTag

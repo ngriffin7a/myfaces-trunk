@@ -65,10 +65,10 @@ import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.Constants;
 import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.JasperException;
 import org.xml.sax.Attributes;
 
+import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.Enumeration;
 import java.util.Hashtable;
-import java.io.UnsupportedEncodingException;
 
 /**
  * Generator for <jsp:forward>

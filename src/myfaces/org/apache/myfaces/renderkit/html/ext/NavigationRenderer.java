@@ -20,26 +20,23 @@ package net.sourceforge.myfaces.renderkit.html.ext;
 
 import net.sourceforge.myfaces.component.CommonComponentProperties;
 import net.sourceforge.myfaces.component.ext.UINavigation;
+import net.sourceforge.myfaces.component.ext.UINavigationItem;
 import net.sourceforge.myfaces.renderkit.attr.CommonRendererAttributes;
 import net.sourceforge.myfaces.renderkit.attr.ext.NavigationRendererAttributes;
+import net.sourceforge.myfaces.renderkit.callback.CallbackRenderer;
+import net.sourceforge.myfaces.renderkit.callback.CallbackSupport;
 import net.sourceforge.myfaces.renderkit.html.HTMLRenderer;
 import net.sourceforge.myfaces.renderkit.html.attr.HTMLEventHandlerAttributes;
 import net.sourceforge.myfaces.renderkit.html.attr.HTMLTableAttributes;
 import net.sourceforge.myfaces.renderkit.html.attr.HTMLUniversalAttributes;
-import net.sourceforge.myfaces.renderkit.html.state.StateRestorer;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLUtil;
-import net.sourceforge.myfaces.tree.TreeUtils;
+import net.sourceforge.myfaces.util.logging.LogUtil;
 
-import javax.faces.FacesException;
-import javax.faces.FactoryFinder;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
-import javax.faces.render.RenderKitFactory;
-import javax.faces.tree.Tree;
-import javax.servlet.ServletRequest;
+import javax.faces.render.Renderer;
 import java.io.IOException;
-import java.util.Iterator;
 import java.util.StringTokenizer;
 
 /**
@@ -50,6 +47,7 @@ import java.util.StringTokenizer;
 public class NavigationRenderer
     extends HTMLRenderer
     implements
+    CallbackRenderer,
         CommonComponentProperties,
         CommonRendererAttributes,
         HTMLUniversalAttributes,
@@ -60,53 +58,14 @@ public class NavigationRenderer
 
     private static final String LEVEL_CLASSES_CACHE = NavigationRenderer.class.getName() + ".itemClasses";
 
-    /*
-    public static final String CURRENT_NAVIGATION_ATTR
-        = NavigationRenderer.class.getName() + ".GET_CHILDREN_FROM_REQUEST";
-        */
-    private static final String DECODED_ATTR = NavigationRenderer.class.getName() + ".DECODED";
-
-    protected RenderKitFactory _rkFactory;
-
     public NavigationRenderer()
     {
-        _rkFactory = (RenderKitFactory)FactoryFinder.getFactory(FactoryFinder.RENDER_KIT_FACTORY);
     }
 
     public static final String TYPE = "Navigation";
     public String getRendererType()
     {
         return TYPE;
-    }
-
-    /*
-    public boolean supportsComponentType(String s)
-    {
-        return s.equals(UINavigation.TYPE);
-    }
-
-    public boolean supportsComponentType(UIComponent uiComponent)
-    {
-        return uiComponent instanceof UINavigation;
-    }
-
-    protected void initAttributeDescriptors()
-    {
-        addAttributeDescriptors(UIPanel.TYPE, TLD_EXT_URI, "navigation", HTML_UNIVERSAL_ATTRIBUTES);
-        addAttributeDescriptors(UIPanel.TYPE, TLD_EXT_URI, "navigation", HTML_EVENT_HANDLER_ATTRIBUTES);
-        addAttributeDescriptors(UIPanel.TYPE, TLD_EXT_URI, "navigation", HTML_TABLE_ATTRIBUTES);
-        addAttributeDescriptors(UIPanel.TYPE, TLD_EXT_URI, "navigation", NAVIGATION_ATTRIBUTES);
-    }
-    */
-
-
-
-    public void decode(FacesContext facesContext, UIComponent uiComponent) throws IOException
-    {
-        super.decode(facesContext, uiComponent);
-
-        //Remember, that we have decoded
-        uiComponent.setAttribute(DECODED_ATTR, Boolean.TRUE);
     }
 
     public void encodeBegin(FacesContext facesContext, UIComponent uiComponent)
@@ -124,139 +83,80 @@ public class NavigationRenderer
             writer.write("border=\"0\"");
         }
         writer.write(">");
+
+        CallbackSupport.addCallbackRenderer(facesContext, uiComponent, this);
     }
+
+
+    public void beforeEncodeBegin(FacesContext facesContext,
+                                  Renderer renderer,
+                                  UIComponent item) throws IOException
+    {
+        ResponseWriter writer = facesContext.getResponseWriter();
+
+        int level = 0;
+        UIComponent findNav = item.getParent();
+        while (findNav != null)
+        {
+            if (findNav instanceof UINavigation)
+            {
+                break;
+            }
+            else if (findNav instanceof UINavigationItem)
+            {
+                level++;
+            }
+            findNav = findNav.getParent();
+        }
+        if (findNav == null)
+        {
+            LogUtil.getLogger().severe("UINavigationItem '" + item.getClientId(FacesContext.getCurrentInstance()) + " has no UINavigation parent ?!");
+            return;
+        }
+
+        writer.write("\n<tr><td");
+        String tdClass = null;
+        if (item instanceof UINavigationItem)
+        {
+            tdClass = calcLevelClass((UINavigation)findNav, level);
+        }
+        else if (item.getRendererType().equals(NavigationSeparatorRenderer.TYPE))
+        {
+            tdClass = (String)findNav.getAttribute(SEPARATOR_CLASS);
+        }
+        if (tdClass != null)
+        {
+            writer.write(" class=\"");
+            writer.write(tdClass);
+            writer.write("\"");
+        }
+        writer.write(">");
+    }
+
+
+    public void afterEncodeEnd(FacesContext facesContext,
+                               Renderer renderer,
+                               UIComponent uiComponent) throws IOException
+    {
+        ResponseWriter writer = facesContext.getResponseWriter();
+        writer.write("</td></tr>");
+    }
+
 
     public void encodeEnd(FacesContext facesContext, UIComponent uiComponent)
         throws IOException
     {
+        CallbackSupport.removeCallbackRenderer(facesContext, uiComponent, this);
+
         ResponseWriter writer = facesContext.getResponseWriter();
         writer.write("</table>");
     }
 
-    public void encodeChildren(FacesContext facesContext, UIComponent uiComponent)
-        throws IOException
-    {
-        Boolean b = (Boolean)uiComponent.getAttribute(DECODED_ATTR);
-        if (b == null || !b.booleanValue())
-        {
-            //There was no decoding, so we can assume that the state has not been
-            //restored yet and we must restore open/close state for children from
-            //previous tree.
-            ServletRequest servletRequest = (ServletRequest)facesContext.getExternalContext().getRequest();
-            StateRestorer stateRestorer
-                = (StateRestorer)servletRequest.getAttribute(StateRestorer.STATE_RESTORER_REQUEST_ATTR);
-            if (stateRestorer != null)
-            {
-                Tree previousTree  = stateRestorer.getPreviousTree(facesContext);
-                if (previousTree != null && previousTree != facesContext.getTree())
-                {
-                    for (Iterator it = TreeUtils.treeIterator(uiComponent); it.hasNext();)
-                    {
-                        UIComponent comp = (UIComponent)it.next();
-                        if (comp instanceof UINavigation.UINavigationItem)
-                        {
-                            String clientId = comp.getClientId(facesContext);
-                            UINavigation.UINavigationItem prevNavItem
-                                = (UINavigation.UINavigationItem)previousTree.getRoot().findComponent(clientId);
-                            if (prevNavItem != null)
-                            {
-                                boolean open = prevNavItem.isOpen();
-                                ((UINavigation.UINavigationItem)comp).setOpen(open);
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        renderChildren(facesContext, uiComponent, 0, uiComponent.getChildren());
-    }
-
-    protected void renderChildren(FacesContext facesContext,
-                                  UIComponent navigation,
-                                  int level,
-                                  Iterator children)
-        throws IOException
-    {
-        while(children.hasNext())
-        {
-            UIComponent child = (UIComponent)children.next();
-            if (child instanceof UINavigation.UINavigationItem)
-            {
-                renderMenuItem(facesContext, navigation, level, child);
-            }
-            else
-            {
-                throw new FacesException("Unexpected component type " + child.getClass().getName());
-            }
-        }
-    }
-
-    protected void renderMenuItem(FacesContext facesContext,
-                                  UIComponent navigation,
-                                  int level,
-                                  UIComponent item)
-        throws IOException
-    {
-        if (!isComponentVisible(facesContext, item))
-        {
-            return;
-        }
-
-        ResponseWriter writer = facesContext.getResponseWriter();
-        writer.write("\n<tr><td");
-
-        String columnClass = (String)item.getAttribute(NavigationItemRenderer.COLUMN_CLASSES_ATTR);
-        if (columnClass != null)
-        {
-            writer.write(" class=\"");
-            writer.write(columnClass);
-            writer.write("\"");
-        }
-        writer.write(">");
-
-        String itemClass = calcLevelClass(navigation, level);
-        if (itemClass != null)
-        {
-            writer.write("<span class=\"");
-            writer.write(itemClass);
-            writer.write("\">");
-
-            item.encodeBegin(facesContext);
-            item.encodeEnd(facesContext);
-            writer.write("</span>");
-        }
-        else
-        {
-            for (int i = 0; i < level; i++)
-            {
-                writer.write("&nbsp;");
-            }
-            if (level > 0)
-            {
-                writer.write("<font size=\"-" + level + "\">");
-            }
-            item.encodeBegin(facesContext);
-            item.encodeEnd(facesContext);
-
-            if (level > 0)
-            {
-                writer.write("</font>");
-            }
-        }
-        writer.write("</td></tr>");
-
-        if (((UINavigation.UINavigationItem)item).isOpen())
-        {
-            renderChildren(facesContext, navigation, level + 1, item.getChildren());
-        }
-
-    }
 
 
     private static final String DELIMITER = ",";
     private static final String[] DUMMY = {};
-    private String calcLevelClass(UIComponent navigation, int level)
+    private String calcLevelClass(UINavigation navigation, int level)
     {
         String[] levelClasses = (String[])navigation.getAttribute(LEVEL_CLASSES_CACHE);
         if (levelClasses == null)
@@ -285,4 +185,5 @@ public class NavigationRenderer
         }
         return levelClasses[level % levelClasses.length];
     }
+
 }

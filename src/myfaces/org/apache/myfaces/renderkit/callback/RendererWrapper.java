@@ -18,8 +18,6 @@
  */
 package net.sourceforge.myfaces.renderkit.callback;
 
-import net.sourceforge.myfaces.component.UIComponentUtils;
-
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.render.Renderer;

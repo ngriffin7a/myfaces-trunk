@@ -18,8 +18,8 @@
  */
 package net.sourceforge.myfaces.component.ext;
 
-import net.sourceforge.myfaces.component.UIComponentUtils;
 import net.sourceforge.myfaces.component.MyFacesUIInput;
+import net.sourceforge.myfaces.component.UIComponentUtils;
 
 /**
  * DOCUMENT ME!
