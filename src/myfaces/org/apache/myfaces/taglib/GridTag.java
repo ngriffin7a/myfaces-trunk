@@ -22,6 +22,7 @@ import net.sourceforge.myfaces.component.UIPanel;
 import net.sourceforge.myfaces.renderkit.html.GridRenderer;
 
 import javax.faces.component.UIComponent;
+import javax.faces.webapp.FacesTag;
 
 
 /**
@@ -30,7 +31,7 @@ import javax.faces.component.UIComponent;
  * @version $Revision$ $Date$
  */
 public class GridTag
-    extends MyFacesTag
+    extends FacesTag
 {
     public UIComponent createComponent()
     {
@@ -48,32 +49,32 @@ public class GridTag
 
     public void setColumns(Integer value)
     {
-        addRequestTimeValue(UIPanel.COLUMNS_ATTR, value);
+        setProperty(UIPanel.COLUMNS_ATTR, value);
     }
 
     public void setStyle(String value)
     {
-        addRequestTimeValue(UIPanel.CLASS_ATTR, value);
+        setProperty(UIPanel.CLASS_ATTR, value);
     }
 
     public void setColumnClasses(String value)
     {
-        addRequestTimeValue(UIPanel.COLUMN_CLASSES_ATTR, value);
+        setProperty(UIPanel.COLUMN_CLASSES_ATTR, value);
     }
 
     public void setRowClasses(String value)
     {
-        addRequestTimeValue(UIPanel.ROW_CLASSES_ATTR, value);
+        setProperty(UIPanel.ROW_CLASSES_ATTR, value);
     }
 
     public void setFooterClass(String value)
     {
-        addRequestTimeValue(UIPanel.FOOTER_CLASS_ATTR, value);
+        setProperty(UIPanel.FOOTER_CLASS_ATTR, value);
     }
 
     public void setHeaderClass(String value)
     {
-        addRequestTimeValue(UIPanel.HEADER_CLASS_ATTR, value);
+        setProperty(UIPanel.HEADER_CLASS_ATTR, value);
     }
 
 }

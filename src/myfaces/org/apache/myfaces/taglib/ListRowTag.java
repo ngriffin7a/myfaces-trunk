@@ -22,8 +22,7 @@ import net.sourceforge.myfaces.component.UIPanel;
 import net.sourceforge.myfaces.renderkit.html.DataRenderer;
 
 import javax.faces.component.UIComponent;
-import javax.servlet.jsp.JspException;
-import java.io.IOException;
+import javax.faces.webapp.FacesTag;
 
 /**
  * TODO: description
@@ -31,7 +30,7 @@ import java.io.IOException;
  * @version $Revision$ $Date$
  */
 public class ListRowTag
-        extends MyFacesTag
+        extends FacesTag
 {
     public UIComponent createComponent()
     {
@@ -48,7 +47,7 @@ public class ListRowTag
 
     public void setVar(String v)
     {
-        addRequestTimeValue(UIPanel.VAR_ATTR, v);
+        setProperty(UIPanel.VAR_ATTR, v);
     }
 
     /*

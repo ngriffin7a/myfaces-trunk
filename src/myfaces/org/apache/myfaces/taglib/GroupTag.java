@@ -22,6 +22,7 @@ import net.sourceforge.myfaces.component.UIPanel;
 import net.sourceforge.myfaces.renderkit.html.GroupRenderer;
 
 import javax.faces.component.UIComponent;
+import javax.faces.webapp.FacesTag;
 
 
 /**
@@ -30,7 +31,7 @@ import javax.faces.component.UIComponent;
  * @version $Revision$ $Date$
  */
 public class GroupTag
-    extends MyFacesTag
+    extends FacesTag
 {
     public UIComponent createComponent()
     {

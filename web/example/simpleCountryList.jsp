@@ -40,7 +40,7 @@
         <td valign="top" width="140"><%@ include file="inc/navigation.jsp"  %></td>
         <td align="left" width="640">
 
-            <x:message_list id="messageList" />
+            <f:errors id="messageList" />
 
             <f:list id="clist"
                     style="standardTable"
