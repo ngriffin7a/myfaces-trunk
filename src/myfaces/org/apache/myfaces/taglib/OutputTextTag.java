@@ -19,7 +19,7 @@
 package net.sourceforge.myfaces.taglib;
 
 import net.sourceforge.myfaces.component.UIOutput;
-import net.sourceforge.myfaces.renderkit.html.OutputRenderer;
+import net.sourceforge.myfaces.renderkit.html.TextRenderer;
 
 import javax.faces.component.UIComponent;
 
@@ -40,7 +40,7 @@ public class OutputTextTag
 
     public String getRendererType()
     {
-        return OutputRenderer.TYPE;
+        return TextRenderer.TYPE;
     }
 
     public void setText(String value)

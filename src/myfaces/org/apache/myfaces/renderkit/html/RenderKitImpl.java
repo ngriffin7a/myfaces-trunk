@@ -44,7 +44,6 @@ public class RenderKitImpl
     {
         //Standard Renderkit
         addRenderer(new FormRenderer());
-        addRenderer(new OutputRenderer());
         addRenderer(new TextRenderer());
         addRenderer(new SecretRenderer());
         addRenderer(new ButtonRenderer());
@@ -52,7 +51,6 @@ public class RenderKitImpl
         addRenderer(new DataRenderer());
         addRenderer(new SelectOneOptionRenderer());
         addRenderer(new SelectManyOptionRenderer());
-        addRenderer(new ParamRenderer());
 
         //State Handling
         if (MyFacesConfig.isStateZipping())

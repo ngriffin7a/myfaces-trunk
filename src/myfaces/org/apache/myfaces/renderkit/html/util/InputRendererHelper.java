@@ -16,34 +16,36 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package net.sourceforge.myfaces.taglib;
-
-import net.sourceforge.myfaces.component.UIParameter;
+package net.sourceforge.myfaces.renderkit.html.util;
 
 import javax.faces.component.UIComponent;
+import javax.faces.context.FacesContext;
+import javax.faces.context.Message;
+import javax.faces.context.ResponseWriter;
+import java.io.IOException;
+import java.util.Iterator;
 
 /**
- * TODO: description
+ * Helper functions for UIInput component renderers
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public class ParamTag
-    extends MyFacesTag
+public abstract class InputRendererHelper
 {
-    //MyFaces tag extensions:
-    public UIComponent createComponent()
+    public static void renderMessages(FacesContext facesContext, UIComponent uiComponent)
+            throws IOException
     {
-        return new UIParameter();
+        ResponseWriter writer = facesContext.getResponseWriter();
+        Iterator it = facesContext.getMessages(uiComponent);
+        if (it.hasNext())
+        {
+            writer.write(" ");
+            while (it.hasNext())
+            {
+                Message msg = (Message)it.next();
+                writer.write(msg.getSummary());
+            }
+        }
     }
 
-    public String getRendererType()
-    {
-        return null;
-    }
-
-
-    public void setName(String v)
-    {
-        addRequestTimeValue(UIParameter.NAME_ATTR, v);
-    }
 }
