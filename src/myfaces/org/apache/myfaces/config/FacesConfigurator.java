@@ -80,6 +80,9 @@ import org.xml.sax.SAXException;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  *          $Log$
+ *          Revision 1.3  2004/07/13 06:42:43  tinytoony
+ *          does not break if converter-class has not been found, instead logs as error.
+ *
  *          Revision 1.2  2004/07/07 08:34:58  mwessendorf
  *          removed unused import-statements
  *
@@ -487,8 +490,15 @@ public class FacesConfigurator
         for (Iterator it = _dispenser.getConverterClasses(); it.hasNext();)
         {
             String converterClass = (String) it.next();
-            application.addConverter(ClassUtils.classForName(converterClass),
-                _dispenser.getConverterClassByClass(converterClass));
+            try
+            {
+                application.addConverter(ClassUtils.classForName(converterClass),
+                    _dispenser.getConverterClassByClass(converterClass));
+            }
+            catch(Exception ex)
+            {
+                log.error("Converter could not be added. Reason:",ex);
+            }
         }
 
         for (Iterator it = _dispenser.getValidatorIds(); it.hasNext();)
