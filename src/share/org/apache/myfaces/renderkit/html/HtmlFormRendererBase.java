@@ -37,6 +37,9 @@ import java.util.Set;
  * @author Anton Koinov
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.3  2004/04/29 19:34:38  o_rossmueller
+ * javascript for 'target' attribute handling
+ *
  * Revision 1.2  2004/04/27 10:32:24  manolito
  * clear hidden inputs javascript function
  *
@@ -104,7 +107,8 @@ public class HtmlFormRendererBase
             HtmlRendererUtils.renderHiddenCommandFormParams(writer, set);
             HtmlRendererUtils.renderClearHiddenCommandFormParamsFunction(writer,
                                                                          component.getClientId(facesContext),
-                                                                         set);
+                                                                         set,
+                                                                         ((HtmlForm)component).getTarget());
         }
 
         writer.endElement(HTML.FORM_ELEM);

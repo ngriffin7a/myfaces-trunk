@@ -117,7 +117,7 @@ public class DummyFormUtils
             HtmlRendererUtils.renderHiddenCommandFormParams(writer, dummyFormParams);
             HtmlRendererUtils.renderClearHiddenCommandFormParamsFunction(writer,
                                                                          DUMMY_FORM_NAME,
-                                                                         dummyFormParams);
+                                                                         dummyFormParams, null);
         }
 
         writer.endElement(HTML.FORM_ELEM);

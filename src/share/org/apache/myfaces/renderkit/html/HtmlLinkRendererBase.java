@@ -39,6 +39,9 @@ import java.util.Iterator;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.5  2004/04/29 19:34:38  o_rossmueller
+ * javascript for 'target' attribute handling
+ *
  * Revision 1.4  2004/04/27 10:32:24  manolito
  * clear hidden inputs javascript function
  *
@@ -266,6 +269,14 @@ public abstract class HtmlLinkRendererBase
             }
         }
 
+        // target
+        String target = ((HtmlCommandLink)component).getTarget();
+        if (target != null && target.trim().length() > 0) {
+            onClick.append(jsForm);
+            onClick.append(".target='");
+            onClick.append(target);
+            onClick.append("';");
+        }
         //submit
         onClick.append(jsForm);
         onClick.append(".submit();return false;");  //return false, so that browser does not handle the click

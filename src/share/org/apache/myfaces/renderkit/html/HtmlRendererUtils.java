@@ -40,6 +40,9 @@ import java.util.*;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.6  2004/04/29 19:34:38  o_rossmueller
+ * javascript for 'target' attribute handling
+ *
  * Revision 1.5  2004/04/29 14:25:23  manolito
  * javascript function name bugfix
  *
@@ -652,11 +655,13 @@ public class HtmlRendererUtils
      * @param writer
      * @param formName
      * @param dummyFormParams
+     * @param formTarget
      * @throws IOException
      */
     public static void renderClearHiddenCommandFormParamsFunction(ResponseWriter writer,
                                                                   String formName,
-                                                                  Set dummyFormParams)
+                                                                  Set dummyFormParams,
+                                                                  String formTarget)
         throws IOException
     {
         //render the clear hidden inputs javascript function
@@ -674,6 +679,16 @@ public class HtmlRendererUtils
                 writer.write("'].elements['"); writer.write((String)it.next());
                 writer.write("'].value=null;");
             }
+        }
+        // clear form target
+        writer.write("\n  document.forms['"); writer.write(formName);
+        writer.write("'].target=");
+        if (formTarget == null || formTarget.length() == 0) {
+            writer.write("null;");
+        } else {
+            writer.write("'");
+            writer.write(formTarget);
+            writer.write("';");
         }
         writer.write("\n}");
         writer.write("\n//-->\n");
