@@ -15,12 +15,11 @@
  */
 package javax.faces.webapp;
 
-import org.apache.myfaces.renderkit.RendererUtils;
-
 import javax.faces.FacesException;
 import javax.faces.FactoryFinder;
 import javax.faces.application.Application;
 import javax.faces.component.UIComponent;
+import javax.faces.component.UIViewRoot;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 import javax.faces.el.ValueBinding;
@@ -37,6 +36,9 @@ import java.util.*;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.25  2005/03/12 02:17:52  mmarinschek
+ * ui component logging enhanced
+ *
  * Revision 1.24  2005/03/12 02:15:18  mmarinschek
  * jsvalueset now supports maps of maps; ui component logging enhanced
  *
@@ -432,7 +434,7 @@ public abstract class UIComponentTag
                 {
                     throw new FacesException("cannot add component with id '" +
                             _componentInstance.getId() + "' and path : "
-                            +RendererUtils.getPathToComponent(_componentInstance)+" to its parent component. This might be a problem due to duplicate ids.");
+                            +getPathToComponent(_componentInstance)+" to its parent component. This might be a problem due to duplicate ids.");
                 }
             }
             addChildIdToParentTag(parentTag, id);
@@ -651,6 +653,54 @@ public abstract class UIComponentTag
                                                      request.getContentType(), //TODO: is this the correct content type?
                                                      request.getCharacterEncoding());
             facesContext.setResponseWriter(_writer);
+        }
+    }
+
+    public static String getPathToComponent(UIComponent component)
+    {
+        StringBuffer buf = new StringBuffer();
+
+        if(component == null)
+        {
+            buf.append("{Component-Path : ");
+            buf.append("[null]}");
+            return buf.toString();
+        }
+
+        getPathToComponent(component,buf);
+
+        buf.insert(0,"{Component-Path : ");
+        buf.append("}");
+
+        return buf.toString();
+    }
+
+    private static void getPathToComponent(UIComponent component, StringBuffer buf)
+    {
+        if(component == null)
+            return;
+
+        StringBuffer intBuf = new StringBuffer();
+
+        intBuf.append("[Class: ");
+        intBuf.append(component.getClass().getName());
+        if(component instanceof UIViewRoot)
+        {
+            intBuf.append(",ViewId: ");
+            intBuf.append(((UIViewRoot) component).getViewId());
+        }
+        else
+        {
+            intBuf.append(",Id: ");
+            intBuf.append(component.getId());
+        }
+        intBuf.append("]");
+
+        buf.insert(0,intBuf);
+
+        if(component!=null)
+        {
+            getPathToComponent(component.getParent(),buf);
         }
     }
 
