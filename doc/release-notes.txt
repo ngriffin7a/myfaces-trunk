@@ -10,6 +10,7 @@ Changes in Release 0.4.3
   --> MyFaces now works in JBoss 3.2.1 (thanks to Robert Gothan!)
 * TextRenderer: empty <span> element (span without attributes) is not rendered anymore
 * New configuration option "defaultLanguage" in MyFacesConfig
+* New Renderer "TabbedPane" that renderes a swing-like tabbed Pane.
 
 ----------------------------------------------------------------------
 Changes in Release 0.4.2

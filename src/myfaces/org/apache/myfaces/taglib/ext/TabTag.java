@@ -20,6 +20,7 @@ package net.sourceforge.myfaces.taglib.ext;
 
 import net.sourceforge.myfaces.renderkit.attr.ext.TabbedPaneRendererAttributes;
 import net.sourceforge.myfaces.renderkit.html.attr.HTMLButtonAttributes;
+import net.sourceforge.myfaces.renderkit.html.ext.TabRenderer;
 import net.sourceforge.myfaces.taglib.PanelGroupTag;
 
 /**
@@ -32,6 +33,10 @@ public class TabTag
     implements TabbedPaneRendererAttributes,
                HTMLButtonAttributes
 {
+    public String getRendererType()
+    {
+        return TabRenderer.TYPE;
+    }
 
     // HTML universal attributes --> already implemented in MyFacesTag
 

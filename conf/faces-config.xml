@@ -587,11 +587,15 @@
         <renderer>
             <renderer-type>TabbedPane</renderer-type>
             <renderer-class>net.sourceforge.myfaces.renderkit.html.ext.TabbedPaneRenderer</renderer-class>
-            <component-type>TabbedPane</component-type>
             <attribute>
                 <attribute-name>selectedIndex</attribute-name>
                 <attribute-class>java.lang.Integer</attribute-class>
             </attribute>
+        </renderer>
+
+        <renderer>
+            <renderer-type>Tab</renderer-type>
+            <renderer-class>net.sourceforge.myfaces.renderkit.html.ext.TabRenderer</renderer-class>
         </renderer>
 
         <renderer>

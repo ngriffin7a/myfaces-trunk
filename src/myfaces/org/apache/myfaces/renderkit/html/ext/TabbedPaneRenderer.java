@@ -22,8 +22,6 @@ import net.sourceforge.myfaces.MyFacesFactoryFinder;
 import net.sourceforge.myfaces.component.CommonComponentProperties;
 import net.sourceforge.myfaces.renderkit.attr.CommonRendererAttributes;
 import net.sourceforge.myfaces.renderkit.attr.ext.TabbedPaneRendererAttributes;
-import net.sourceforge.myfaces.renderkit.callback.CallbackRenderer;
-import net.sourceforge.myfaces.renderkit.callback.CallbackSupport;
 import net.sourceforge.myfaces.renderkit.html.FormRenderer;
 import net.sourceforge.myfaces.renderkit.html.GroupRenderer;
 import net.sourceforge.myfaces.renderkit.html.attr.HTMLButtonAttributes;
@@ -51,6 +49,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.tagext.BodyContent;
 import java.io.IOException;
 import java.io.Writer;
+import java.util.Iterator;
 
 /**
  * DOCUMENT ME!
@@ -59,8 +58,7 @@ import java.io.Writer;
  */
 public class TabbedPaneRenderer
     extends GroupRenderer
-    implements CallbackRenderer,
-               CommonComponentProperties,
+    implements CommonComponentProperties,
                CommonRendererAttributes,
                HTMLUniversalAttributes,
                HTMLEventHandlerAttributes,
@@ -68,13 +66,8 @@ public class TabbedPaneRenderer
                HTMLButtonAttributes,
                TabbedPaneRendererAttributes
 {
-    private static final String TAB_START_TOKEN = "[TAB-START]";
-    private static final String TAB_END_TOKEN = "[/TAB-END]";
-
-
-    //private static final String CURRENT_CHILD_IDX_ATTR = TabbedPaneRenderer.class.getName() + ".CURRENT_CHILD_IDX";
-
-
+    protected static final String TAB_START_TOKEN = "[TAB-START]";
+    protected static final String TAB_END_TOKEN = "[/TAB-END]";
 
     private static final String TABLE_STYLE =
         "border-style: none; " +
@@ -85,49 +78,48 @@ public class TabbedPaneRenderer
     private static final String ACTIVE_HEADER_CELL_STYLE =
         "border-top: 2px outset #CCCCCC; " +
         "border-right: 2px outset #CCCCCC; " +
-        "border-bottom: 0px none #FFFFFF; " +
+        "border-bottom: 0px none; " +
         "border-left: 2px outset #CCCCCC; " +
-        "text-align: center; " +
-        "background-color: #FFFFFF; ";
+        "text-align: center; ";
 
     private static final String INACTIVE_HEADER_CELL_STYLE =
         "border-top: 1px outset #CCCCCC; " +
         "border-right: 1px outset #CCCCCC; " +
-        "border-bottom: 0px none #FFFFFF; " +
+        "border-bottom: 0px none; " +
         "border-left: 1px outset #CCCCCC; " +
         "text-align: center; " +
         "background-color: #CCCCCC; ";
 
     private static final String EMPTY_HEADER_CELL_STYLE =
-        "border-top: 0px none #FFFFFF; " +
-        "border-right: 0px none #FFFFFF; " +
-        "border-bottom: 0px none #FFFFFF; " +
-        "border-left: 0px none #FFFFFF; ";
+        "border-top: 0px none; " +
+        "border-right: 0px none; " +
+        "border-bottom: 0px none; " +
+        "border-left: 0px none; ";
 
     private static final String SUB_HEADER_CELL_STYLE =
         "height: 2px; " +
         "line-height: 0px; font-size: 0px; " +
-        "border-bottom: 0px none #FFFFFF; ";
+        "border-bottom: 0px none; ";
 
     private static final String TAB_CELL_STYLE =
-        "border-top: 0px none #FFFFFF; " +
+        "border-top: 0px none; " +
         "border-right: 2px outset #CCCCCC; " +
         "border-bottom: 2px outset #CCCCCC; " +
         "border-left: 2px outset #CCCCCC; " +
         "padding: 10px; ";
 
     private static final String NO_BORDER_STYLE =
-        "0px none #FFFFFF; ";
+        "0px none; ";
 
     private static final String BORDER_STYLE =
         "2px outset #CCCCCC; ";
 
-
     private static final String BUTTON_STYLE_ACTIVE
-        = "border-style:none; border-width:0px; border-color:#FFFFFF; width:100%; cursor:pointer; background-color:#FFFFFF;";
+        = "border-style:none; width:100%; cursor:pointer;";
     private static final String BUTTON_STYLE_INACTIVE
-        = "border-style:none; border-width:0px; border-color:#CCCCCC; width:100%; cursor:pointer; background-color:#CCCCCC;";
+        = "border-style:none; width:100%; cursor:pointer; background-color:#CCCCCC;";
 
+    private static final String DEFAULT_BG_COLOR = "#FFFFFF";
 
 
     public static final String TYPE = "TabbedPane";
@@ -140,32 +132,13 @@ public class TabbedPaneRenderer
     public void encodeBegin(FacesContext facesContext, UIComponent uiComponent)
         throws IOException
     {
-        CallbackSupport.addChildrenCallbackRenderer(facesContext, uiComponent, this);
-    }
-
-    public void beforeEncodeBegin(FacesContext facesContext,
-                                  Renderer renderer,
-                                  UIComponent child) throws IOException
-    {
-        ResponseWriter writer = facesContext.getResponseWriter();
-        writer.write(TAB_START_TOKEN);
-    }
-
-    public void afterEncodeEnd(FacesContext facesContext,
-                               Renderer renderer,
-                               UIComponent child) throws IOException
-    {
-        ResponseWriter writer = facesContext.getResponseWriter();
-        writer.write(TAB_END_TOKEN);
     }
 
     public void encodeEnd(FacesContext facesContext, UIComponent uiTabbedPane)
         throws IOException
     {
-        CallbackSupport.removeChildrenCallbackRenderer(facesContext, uiTabbedPane, this);
-
         ResponseWriter writer = facesContext.getResponseWriter();
-        int tabCount = uiTabbedPane.getChildCount();
+        int tabCount = getTabCount(uiTabbedPane);
         int selectedIndex = getSelectedIndex(uiTabbedPane);
 
         boolean hasParentForm = hasParentForm(uiTabbedPane);
@@ -179,10 +152,15 @@ public class TabbedPaneRenderer
 
         //Tab headers
         writer.write("\n<tr>");
-        for (int i = 0; i < tabCount; i++)
+        int tabIdx = 0;
+        for (int i = 0, len = uiTabbedPane.getChildCount(); i < len; i++)
         {
-            UIComponent tab = uiTabbedPane.getChild(i);
-            writeHeaderCell(writer, facesContext, uiTabbedPane, tab, i, i == selectedIndex);
+            UIComponent child = uiTabbedPane.getChild(i);
+            if (child.getRendererType().equals(TabRenderer.TYPE))
+            {
+                writeHeaderCell(writer, facesContext, uiTabbedPane, child, tabIdx, tabIdx == selectedIndex);
+                tabIdx++;
+            }
         }
         writer.write("<td style=\"");
         writer.write(EMPTY_HEADER_CELL_STYLE);
@@ -191,7 +169,7 @@ public class TabbedPaneRenderer
 
         //Sub header cells
         writer.write("\n<tr>");
-        writeSubHeaderCells(writer,  facesContext, tabCount, selectedIndex);
+        writeSubHeaderCells(writer,  facesContext, uiTabbedPane, tabCount, selectedIndex);
         writer.write("</tr>");
 
         //Tab
@@ -209,6 +187,20 @@ public class TabbedPaneRenderer
     }
 
 
+    protected int getTabCount(UIComponent uiTabbedPane)
+    {
+        int cnt = 0;
+        for (Iterator it = uiTabbedPane.getChildren(); it.hasNext(); )
+        {
+            UIComponent child = (UIComponent)it.next();
+            if (child.getRendererType().equals(TabRenderer.TYPE))
+            {
+                cnt++;
+            }
+        }
+        return cnt;
+    }
+
     protected int getSelectedIndex(UIComponent uiTabbedPane)
     {
         Integer intObj = (Integer)uiTabbedPane.getAttribute(SELECTED_INDEX_ATTR);
@@ -224,6 +216,12 @@ public class TabbedPaneRenderer
             parent = parent.getParent();
         }
         return (parent != null);
+    }
+
+    protected String getBgColor(UIComponent uiTabbedPane)
+    {
+        String bgColor = (String)uiTabbedPane.getAttribute(BGCOLOR_ATTR);
+        return bgColor == null ? DEFAULT_BG_COLOR : bgColor;
     }
 
 
@@ -289,6 +287,9 @@ public class TabbedPaneRenderer
             uiComponent.setAttribute(STYLE_ATTR, TABLE_STYLE + "; " + oldStyle);
         }
 
+        String oldBgColor = (String)uiComponent.getAttribute(BGCOLOR_ATTR);
+        uiComponent.setAttribute(BGCOLOR_ATTR, null);
+
         writer.write("<table cellspacing=\"0\"");
         //HTMLUtil.renderCssClass(writer, uiComponent, PANEL_CLASS_ATTR); TODO: TABBED_PANE_CLASS_ATTR
         HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML_UNIVERSAL_ATTRIBUTES);
@@ -297,6 +298,7 @@ public class TabbedPaneRenderer
         writer.write(">");
 
         uiComponent.setAttribute(STYLE_ATTR, oldStyle);
+        uiComponent.setAttribute(BGCOLOR_ATTR, oldBgColor);
     }
 
 
@@ -320,6 +322,9 @@ public class TabbedPaneRenderer
         if (active)
         {
             writer.write(ACTIVE_HEADER_CELL_STYLE);
+            writer.write("background-color: ");
+            writer.write(getBgColor(tabbedPane));
+            writer.write("; ");
         }
         else
         {
@@ -348,16 +353,24 @@ public class TabbedPaneRenderer
         writer.write(HTMLEncoder.encode(label, false, false));
         writer.write("\"");
 
-        String oldStyle = (String)tab.getAttribute(STYLE_ATTR);
-        if (oldStyle == null)
+        String style;
+        if (active)
         {
-            tab.setAttribute(STYLE_ATTR, active ? BUTTON_STYLE_ACTIVE : BUTTON_STYLE_INACTIVE);
+            style = BUTTON_STYLE_ACTIVE + "background-color:" + getBgColor(tabbedPane) + "; ";
         }
         else
         {
-            tab.setAttribute(STYLE_ATTR, active
-                                         ? BUTTON_STYLE_ACTIVE + "; " + oldStyle
-                                         : BUTTON_STYLE_INACTIVE + "; " + oldStyle);
+            style = BUTTON_STYLE_INACTIVE;
+        }
+
+        String oldStyle = (String)tab.getAttribute(STYLE_ATTR);
+        if (oldStyle == null)
+        {
+            tab.setAttribute(STYLE_ATTR, style);
+        }
+        else
+        {
+            tab.setAttribute(STYLE_ATTR, active ? style + oldStyle : style + oldStyle);
         }
 
         HTMLUtil.renderCssClass(writer, tab, COMMAND_CLASS_ATTR);//TODO: ?
@@ -375,6 +388,7 @@ public class TabbedPaneRenderer
 
     protected void writeSubHeaderCells(ResponseWriter writer,
                                        FacesContext facesContext,
+                                       UIComponent tabbedPane,
                                        int tabCount,
                                        int selectedIndex)
          throws IOException
@@ -383,9 +397,10 @@ public class TabbedPaneRenderer
          {
              writer.write("\n\t<td style=\"");
              writer.write(SUB_HEADER_CELL_STYLE);
-             writer.write("border-top:" + (i == selectedIndex ? NO_BORDER_STYLE : BORDER_STYLE));
-             writer.write("border-right:" + (i + 1 < cnt ? NO_BORDER_STYLE : BORDER_STYLE));
-             writer.write("border-left:" + (i > 0 ? NO_BORDER_STYLE : BORDER_STYLE));
+             writer.write("border-top:");   writer.write(i == selectedIndex ? NO_BORDER_STYLE : BORDER_STYLE);
+             writer.write("border-right:"); writer.write(i + 1 < cnt ? NO_BORDER_STYLE : BORDER_STYLE);
+             writer.write("border-left:");  writer.write(i > 0 ? NO_BORDER_STYLE : BORDER_STYLE);
+             writer.write("background-color:");writer.write(getBgColor(tabbedPane));writer.write(";");
              writer.write("\">&nbsp;</td>");
          }
     }
@@ -393,7 +408,7 @@ public class TabbedPaneRenderer
 
     protected void writeTabCell(ResponseWriter writer,
                                 FacesContext facesContext,
-                                UIComponent uiComponent,
+                                UIComponent tabbedPane,
                                 int tabCount,
                                 int selectedIndex)
         throws IOException
@@ -402,17 +417,24 @@ public class TabbedPaneRenderer
         writer.write(Integer.toString(tabCount + 1));
         writer.write("\" style=\"");
         writer.write(TAB_CELL_STYLE);
+        writer.write("background-color:");writer.write(getBgColor(tabbedPane));writer.write(";");
         writer.write("\">");
 
-        BodyContent bodyContent = getBodyContent(facesContext, uiComponent);
+        BodyContent bodyContent = getBodyContent(facesContext, tabbedPane);
         if (bodyContent == null)
         {
             throw new IllegalStateException("No BodyContent!?");
         }
         String bodyStr = bodyContent.getString();
 
-        int startIdx = -1;
-        for (int i = 0; i <= selectedIndex; i++)
+        int firstStartIdx = bodyStr.indexOf(TAB_START_TOKEN);
+        if (firstStartIdx == -1)
+        {
+            throw new IllegalStateException("Tab start token #0 not found!");
+        }
+
+        int startIdx = firstStartIdx;
+        for (int i = 0; i < selectedIndex; i++)
         {
             startIdx = bodyStr.indexOf(TAB_START_TOKEN, startIdx + 1);
             if (startIdx == -1)
@@ -427,9 +449,15 @@ public class TabbedPaneRenderer
             throw new IllegalStateException("Tab end token not found!");
         }
 
-        String tabContent = bodyStr.substring(startIdx + TAB_START_TOKEN.length(),
-                                              endIdx);
-        writer.write(tabContent);
+        int lastEndIdx = bodyStr.lastIndexOf(TAB_END_TOKEN);
+        if (lastEndIdx == -1)
+        {
+            throw new IllegalStateException("Last tab end token not found!");
+        }
+
+        writer.write(bodyStr.substring(0, firstStartIdx));
+        writer.write(bodyStr.substring(startIdx + TAB_START_TOKEN.length(), endIdx));
+        writer.write(bodyStr.substring(lastEndIdx + TAB_END_TOKEN.length()));
 
         writer.write("</td>");
     }
@@ -444,14 +472,19 @@ public class TabbedPaneRenderer
 
         ServletRequest servletRequest = (ServletRequest)facesContext.getExternalContext().getRequest();
 
-        for (int i = 0, len = uiComponent.getChildCount(); i < len; i++)
+        int tabIdx = 0;
+        for (Iterator it = uiComponent.getChildren(); it.hasNext(); )
         {
-            String paramName = uiComponent.getClientId(facesContext) + "." + i;
-            String paramValue = servletRequest.getParameter(paramName);
-            if (paramValue != null && paramValue.length() > 0)
+            if (((UIComponent)it.next()).getRendererType().equals(TabRenderer.TYPE))
             {
-                uiComponent.setAttribute(SELECTED_INDEX_ATTR, new Integer(i));
-                return;
+                String paramName = uiComponent.getClientId(facesContext) + "." + tabIdx;
+                String paramValue = servletRequest.getParameter(paramName);
+                if (paramValue != null && paramValue.length() > 0)
+                {
+                    uiComponent.setAttribute(SELECTED_INDEX_ATTR, new Integer(tabIdx));
+                    return;
+                }
+                tabIdx++;
             }
         }
     }
