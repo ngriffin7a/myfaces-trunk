@@ -98,13 +98,21 @@ be used to configure the chosen Forrest skin.
   <!-- Credits are typically rendered as a set of small clickable images in the
   page footer -->
   <credits>
-    <!-- credit>
+    <credit>
       <name>Built with Apache Forrest</name>
       <url>http://xml.apache.org/forrest/</url>
       <image>images/built-with-forrest-button.png</image>
       <width>88</width>
       <height>31</height>
-    </credit -->
+    </credit>
+	<credit>
+      <name>YourKit</name>
+      <url>http://www.yourkit.com/</url>
+      <image>images/yjp.gif</image>
+	  <width>88</width>
+      <height>31</height>
+    </credit>
+	
     <!-- A credit with @role='pdf' will have its name and url displayed in the
     PDF page's footer. -->
   </credits>
