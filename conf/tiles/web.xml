@@ -22,10 +22,20 @@
 
 <web-app>
 
+    <!-- This web.xml can be used during debugging, when there is no myfaces.jar
+        library available.
+
+        The faces-config.xml file (that is normally in the myfaces.jar) must be
+        copied to the /WEB-INF directory of the web context.
+
+        The TLDs (that are normally in the myfaces.jar) must be
+        copied to the /WEB-INF/lib directory of the web context.-->
+    <description>debug web.xml</description>
+
     <context-param>
         <param-name>javax.faces.CONFIG_FILES</param-name>
         <param-value>
-            /WEB-INF/examples-config.xml
+            /WEB-INF/tiles-faces-config.xml
         </param-value>
         <description>
             Comma separated list of URIs of (additional) faces config files.
@@ -68,8 +78,6 @@
         </description>
     </context-param>
 
-
-
     <!-- WelcomeFile Filter -->
     <!--
     <filter>
@@ -91,15 +99,6 @@
     <filter>
         <filter-name>multipartFilter</filter-name>
         <filter-class>net.sourceforge.myfaces.custom.fileupload.MultipartFilter</filter-class>
-        <init-param>
-            <param-name>maxFileSize</param-name>
-            <param-value>10m</param-value>
-            <description>Set the size limit for uploaded files.
-                Format: 10 - 10 bytes
-                        10k - 10 KB
-                        10m - 10 MB
-            </description>
-        </init-param>
     </filter>
 
 
@@ -115,7 +114,7 @@
 
     <filter-mapping>
         <filter-name>multipartFilter</filter-name>
-        <url-pattern>*.jsf</url-pattern>
+        <url-pattern>/*</url-pattern>
     </filter-mapping>
 
 
@@ -123,6 +122,18 @@
     <!-- Listener, that does all the startup work (configuration, init). -->
     <listener>
         <listener-class>net.sourceforge.myfaces.webapp.StartupServletContextListener</listener-class>
+    </listener>
+
+    <!-- Tiles configuration
+         definition files and a listener need to be defined.
+         the listener will initialize JspTilesViewHandlerImpl with tiles definitions.
+    -->
+    <context-param>
+        <param-name>tiles-definitions</param-name>
+        <param-value>/WEB-INF/tiles.xml</param-value>
+    </context-param>
+    <listener>
+        <listener-class>net.sourceforge.myfaces.application.jsp.JspTilesViewHandlerInitializer</listener-class>
     </listener>
 
 
@@ -154,9 +165,12 @@
     <!-- Welcome files -->
 
     <welcome-file-list>
-        <welcome-file>index.jsf</welcome-file>
-        <welcome-file>index.html</welcome-file>
+        <welcome-file>index.jsp</welcome-file>
     </welcome-file-list>
 
+    <taglib>
+        <taglib-uri>http://struts.apache.org/tags-tiles</taglib-uri>
+        <taglib-location>struts-tiles.tld</taglib-location>
+    </taglib>
 
 </web-app>

@@ -1,0 +1,19 @@
+<!DOCTYPE tiles-definitions PUBLIC
+  "-//Apache Software Foundation//DTD Tiles Configuration//EN"
+  "http://jakarta.apache.org/struts/dtds/tiles-config.dtd">
+
+<tiles-definitions>
+    <definition name="layout.example" path="/template/template.jsp" >
+        <put name="header" value="/common/header.jsp" />
+        <put name="menu" value="/common/navigation.jsp" />
+    </definition>
+
+    <definition name="/page1" extends="layout.example" >
+        <put name="body" value="/page1.jsp" />
+    </definition>
+
+    <definition name="/page2" extends="layout.example" >
+        <put name="body" value="/page2.jsp" />
+    </definition>
+
+</tiles-definitions>

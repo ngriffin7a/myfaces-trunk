@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE project [
+    <!ENTITY tomcat-build SYSTEM "file:../tomcat/tomcat-build.xmlf">
+]>
+<project name="myfaces-tiles-example" default="run-tiles">
+
+    <property environment="env"/>
+
+    <!-- Constants -->
+    <property name="project.dir" location="${basedir}/../.."/>
+    <property name="tiles.dir" location="${project.dir}/webapps/tiles"/>
+    <property name="tiles.src" location="${tiles.dir}/src"/>
+    <property name="tiles.web" location="${tiles.dir}/web"/>
+    <property name="web-inf.classes.dir" location="${tiles.web}/WEB-INF/classes"/>
+    <property name="web-inf.lib.dir" location="${tiles.web}/WEB-INF/lib"/>
+    <property name="myfaces.doc" location="${project.dir}/doc"/>
+    <property name="components_resource.src" location="${project.dir}/src/components_resource"/>
+
+    <!-- Properties -->
+    <property file="../build.local.properties"/>
+    <property file="../build.default.properties"/>
+    <property file="../manifest.properties"/>
+
+    <!-- Temporary dir. May be overridden in build.local.properties -->
+    <property name="temp.dir" location="${env.TEMP}"/>
+
+    <!-- Tomcat -->
+    <property name="tomcat.war.file" location="${temp.dir}/myfaces-tiles.war"/>
+    <property name="tomcat.context.path" value="/myfaces"/>
+
+
+    <!-- classpath for compiling -->
+    <path id="tiles.class.path">
+        <pathelement location="${servlet-jsp.jar}"/>
+        <pathelement location="${jsp-2.0.jar}"/>
+        <pathelement location="${jstl.jar}"/>
+        <pathelement location="${myfaces.jar}"/>
+        <pathelement location="${myfaces-jsf-api.jar}"/>
+        <pathelement location="${commons-logging.jar}"/>
+    </path>
+
+
+    <target name="run-tiles"
+            description="creates tiles war and deploys it" >
+        <ant dir="${project.dir}/build/tiles-webapp" antfile="build.xml" target="-war" inheritall="false"/>
+        <antcall target="tomcat-deploy-app"/>
+        <echo message="browse to http://${tomcat.server}:${tomcat.port}${tomcat.context.path}"/>
+    </target>
+
+    <target name="clean"
+            description="deletes all files that were built">
+        <delete quiet="true" failonerror="false" includeEmptyDirs="true">
+            <fileset dir="${web-inf.classes.dir}"/>
+            <fileset dir="${web-inf.lib.dir}"/>
+            <fileset file="${project.dir}/myfaces-*-tiles.tgz"/>
+            <fileset file="${tiles.web}/WEB-INF/web.xml"/>
+            <fileset file="${tiles.web}/WEB-INF/faces-config.xml"/>
+            <fileset file="${temp.dir}/myfaces-tiles-example.war" />
+        </delete>
+    </target>
+
+
+    <target name="-compile-and-copy-libs"
+            depends="-myfaces-jar, -myfaces-jsf-api-jar"
+            description="compiles the tiles java classes to WEB-INF/classes and copies all needed libs to WEB-INF/lib">
+    </target>
+
+    <target name="-war" depends="-compile-and-copy-libs">
+        <tstamp>
+            <format property="TODAY" pattern="yyyy-MM-dd HH:mm" locale="en"/>
+        </tstamp>
+        <war destfile="${temp.dir}/myfaces-tiles-example.war"
+             webxml="${project.dir}/conf/tiles/web.xml">
+            <manifest>
+                <section name="${manifest.section}">
+                    <attribute name="Implementation-Title" value="${manifest.impl.title}"/>
+                    <attribute name="Implementation-Version" value="${manifest.impl.version} (${TODAY})"/>
+                    <attribute name="Implementation-Vendor" value="${manifest.impl.vendor}"/>
+                </section>
+            </manifest>
+            <lib file="${commons-codec.jar}"/>
+            <lib file="${commons-el.jar}"/>
+            <lib file="${commons-fileupload.jar}"/>
+            <lib file="${commons-logging.jar}"/>
+            <lib file="${commons-validator.jar}"/>
+            <lib file="${commons-beanutils.jar}"/>
+            <lib file="${commons-collections.jar}"/>
+            <lib file="${commons-digester.jar}"/>            
+            <lib file="${jakarta-oro.jar}"/>
+            <lib file="${jsp-2.0.jar}"/>
+            <lib file="${jstl.jar}"/>
+            <lib file="${myfaces.jar}"/>
+            <lib file="${struts.jar}"/>
+            <lib file="${myfaces-jsf-api.jar}"/>
+            <lib file="${log4j.jar}"/>
+            <classes dir="${web-inf.classes.dir}" />
+            <fileset dir="${tiles.web}"
+                     excludes="WEB-INF/classes/**,
+                               WEB-INF/lib/**,
+                               WEB-INF/web.xml " />
+        </war>
+    </target>
+
+    <target name="release"
+            depends="-compile-and-copy-libs, -war"
+            description="creates the tiles-webapp release file myfaces-x.x.x-tiles.tgz (don't forget to adjust manifest.properties!)">
+
+        <tar destfile="${project.dir}/myfaces-${manifest.impl.version}-tiles-example.tgz"
+             compression="gzip">
+            <tarfileset dir="${myfaces.doc}"
+                        excludes="javadoc/**/*
+                                  tlddoc/**/*"
+                        prefix="myfaces-${manifest.impl.version}/doc"/>
+            <tarfileset dir="${tiles.web}"
+                        excludes="WEB-INF/classes/**/*,
+                                  WEB-INF/lib/**/*"
+                        prefix="myfaces-${manifest.impl.version}/webapps/tiles/web"/>
+            <tarfileset dir="${temp.dir}"
+                        includes="myfaces-tiles-example.war"
+                        prefix="myfaces-${manifest.impl.version}"/>
+        </tar>
+    </target>
+
+    <target name="-myfaces-jar" description="create myfaces.jar if necessary" >
+        <available file="${myfaces.jar}" property="myfaces.jar.available"/>
+        <antcall target="-create-myfaces-jar"/>
+    </target>
+    
+    <target name="-create-myfaces-jar" unless="myfaces.jar.available"
+            description="creates myfaces.jar via main buildfile" >
+        <ant dir="${project.dir}/build" antfile="build.xml" target="myfaces-jar" inheritall="false"/>
+    </target>
+
+    <target name="-myfaces-jsf-api-jar" description="create myfaces.jar if necessary" >
+        <available file="${myfaces-jsf-api.jar}" property="myfaces.jar.available"/>
+        <antcall target="-create-myfaces-jsf-api-jar"/>
+    </target>
+
+    <target name="-create-myfaces-jsf-api-jar" unless="myfaces.jar.available"
+            description="creates myfaces-jsf-api.jar via main buildfile" >
+        <ant dir="${project.dir}/build" antfile="build.xml" target="myfaces-jsf-api-jar" inheritall="false"/>
+    </target>
+
+</project>

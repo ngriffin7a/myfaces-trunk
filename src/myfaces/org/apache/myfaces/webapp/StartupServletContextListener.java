@@ -33,6 +33,9 @@ import org.apache.commons.logging.LogFactory;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.27  2004/07/16 17:46:26  royalts
+ * moved net.sourceforge.myfaces.webapp.webxml and net.sourceforge.util.xml to share src-tree (needed WebXml for JspTilesViewHandlerImpl)
+ *
  * Revision 1.26  2004/07/16 15:16:10  royalts
  * moved net.sourceforge.myfaces.webapp.webxml and net.sourceforge.util.xml to share src-tree (needed WebXml for JspTilesViewHandlerImpl)
  *
@@ -93,10 +96,10 @@ public class StartupServletContextListener
                 log.trace("Initializing MyFaces");
 
                 //Load the configuration
-                ExternalContext externalContext = new net.sourceforge.myfaces.context.servlet.ServletExternalContextImpl(servletContext, null, null);
+                ExternalContext externalContext = new ServletExternalContextImpl(servletContext, null, null);
 
                 //And configure everything
-                new net.sourceforge.myfaces.config.FacesConfigurator(externalContext).configure();
+                new FacesConfigurator(externalContext).configure();
 
                 // parse web.xml
                 WebXml.init(externalContext);

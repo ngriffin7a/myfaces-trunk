@@ -73,6 +73,7 @@
         <pathelement location="${commons-el.jar}"/>
         <pathelement location="${commons-validator.jar}"/>
         <pathelement location="${jakarta-oro.jar}"/>
+        <pathelement location="${struts.jar}"/>
         <pathelement location="${commons-fileupload.jar}"/>
         <pathelement location="${commons-digester.jar}"/>
         <pathelement location="${api.classes}"/>

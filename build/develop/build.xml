@@ -18,6 +18,8 @@
     <property name="components_resource.src" location="${project.dir}/src/components_resource"/>
     <property name="jsfapi.src" location="${project.dir}/src/jsfapi"/>
     <property name="tlds.dir" location="${project.dir}/tlds"/>
+    <property name="tiles.dir" location="${project.dir}/webapps/tiles"/>
+    <property name="tiles.web" location="${tiles.dir}/web"/>
 
     <!-- Properties -->
     <property file="../build.local.properties"/>
@@ -98,13 +100,29 @@
             <fileset file="${commons-validator.jar}"/>
             <fileset file="${jakarta-oro.jar}"/>
         </copy>
+        <copy todir="${tiles.web}/WEB-INF/lib">
+            <fileset file="${jstl.jar}"/>
+            <fileset file="${jsp-2.0.jar}"/>
+            <fileset file="${commons-codec.jar}"/>
+            <fileset file="${commons-logging.jar}"/>
+            <fileset file="${commons-el.jar}"/>
+            <fileset file="${log4j.jar}"/>
+            <fileset file="${commons-fileupload.jar}"/>
+            <fileset file="${commons-validator.jar}"/>
+            <fileset file="${jakarta-oro.jar}"/>
+        </copy>
 
         <copy todir="${examples.web}">
+            <fileset dir="${components_resource.src}"/>
+        </copy>
+        <copy todir="${tiles.web}">
             <fileset dir="${components_resource.src}"/>
         </copy>
 
 
         <copy file="${project.dir}/conf/develop-web.xml" tofile="${examples.web}/WEB-INF/web.xml" />
+        <copy file="${project.dir}/conf/tiles/develop-web.xml" tofile="${tiles.web}/WEB-INF/web.xml" />
+
         <copy file="${project.dir}/conf/faces-config.xml" todir="${examples.web}/WEB-INF" />
 
         <!-- resolve TLD entities (for containers that do not support entities within TLDs) -->
@@ -118,6 +136,9 @@
                       location="${tlds.dir}/web-jsptaglibrary_1_2.dtd"/>
              </xmlcatalog>
         </xslt>
+        <copy todir="${tiles.web}/WEB-INF/lib" >
+            <fileset dir="${web-inf.lib.dir}" includes="*.tld" />
+        </copy>
 
     </target>
 
