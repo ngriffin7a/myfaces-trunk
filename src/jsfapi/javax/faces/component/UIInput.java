@@ -38,6 +38,10 @@ import java.util.List;
  *
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
+ * $Log$
+ * Revision 1.9  2004/04/05 15:25:46  manolito
+ * no message
+ *
  */
 public class UIInput
         extends UIOutput
@@ -200,7 +204,7 @@ public class UIInput
         }
     }
 
-    public void updateModel(javax.faces.context.FacesContext context)
+    public void updateModel(FacesContext context)
     {
         if (!isValid()) return;
         if (!isLocalValueSet()) return;
