@@ -18,10 +18,12 @@
  */
 package net.sourceforge.myfaces.custom.fileupload;
 
-import org.apache.commons.fileupload.FileItem;
-
 import net.sourceforge.myfaces.renderkit.html.HTML;
 import net.sourceforge.myfaces.renderkit.html.HtmlRendererUtils;
+
+import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
@@ -47,6 +49,8 @@ import java.io.IOException;
 public class HtmlFileUploadRenderer
     extends Renderer
 {
+    private static final Log log = LogFactory.getLog(HtmlFileUploadRenderer.class);
+
     public void encodeEnd(FacesContext facesContext, UIComponent uiComponent)
         throws IOException
     {
@@ -105,12 +109,15 @@ public class HtmlFileUploadRenderer
             	{
             		if( fileItem.getName().length() > 0 )
 	            	{
-		            	try{
+		            	try
+                        {
 		            		UploadedFile upFile = new UploadedFile( fileItem );
-		            		((HtmlInputFileUpload)uiComponent).setValue(upFile);
+		            		((HtmlInputFileUpload)uiComponent).setSubmittedValue(upFile);
 		            		((HtmlInputFileUpload)uiComponent).setValid(true);
-		            	}catch(IOException ioe){
-		            		// TODO : Log, and maybe setValid(false) ??
+		            	}
+                        catch(IOException ioe)
+                        {
+                            log.error(ioe);
 		            	}
 	            	}
             	}
