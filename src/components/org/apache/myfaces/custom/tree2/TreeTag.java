@@ -16,12 +16,12 @@
 package org.apache.myfaces.custom.tree2;
 
 
-
 import org.apache.myfaces.taglib.UIComponentTagBase;
 
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.el.ValueBinding;
+
 
 /**
  * @author <a href="mailto:oliver@rossmueller.com">Oliver Rossmueller </a>
@@ -30,24 +30,29 @@ import javax.faces.el.ValueBinding;
  */
 public class TreeTag extends UIComponentTagBase //UIComponentBodyTagBase
 {
+
     private String _value;
     private String _var;
     private String _varNodeToggler;
-    
+
+
     public String getComponentType()
     {
         return "org.apache.myfaces.HtmlTree2";
     }
 
+
     public String getRendererType()
     {
         return "org.apache.myfaces.HtmlTree2";
     }
- 
+
+
     public void setValue(String value)
     {
         _value = value;
     }
+
 
     /**
      * @param var The var to set.
@@ -57,30 +62,32 @@ public class TreeTag extends UIComponentTagBase //UIComponentBodyTagBase
         _var = var;
     }
 
+
     public void setVarNodeToggler(String varNodeToggler)
     {
         _varNodeToggler = varNodeToggler;
     }
-        
+
+
     protected void setProperties(UIComponent component)
     {
         super.setProperties(component);
-        
+
         FacesContext context = getFacesContext();
         if (_value != null)
         {
             ValueBinding vb = context.getApplication().createValueBinding(_value);
             component.setValueBinding("value", vb);
         }
-        
+
         if (_var != null)
         {
-            ((HtmlTree)component).setVar(_var);
+            ((HtmlTree) component).setVar(_var);
         }
-        
+
         if (_varNodeToggler != null)
         {
-            ((HtmlTree)component).setVarNodeToggler(_varNodeToggler);
+            ((HtmlTree) component).setVarNodeToggler(_varNodeToggler);
         }
     }
 }

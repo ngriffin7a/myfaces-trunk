@@ -16,7 +16,6 @@
 package org.apache.myfaces.custom.tree2;
 
 
-
 import org.apache.myfaces.component.html.util.AddResource;
 import org.apache.myfaces.renderkit.html.HTML;
 
@@ -29,6 +28,7 @@ import javax.faces.render.Renderer;
 
 import java.io.IOException;
 import java.util.List;
+
 
 /**
  * @author <a href="mailto:oliver@rossmueller.com">Oliver Rossmueller </a>
@@ -45,8 +45,11 @@ public class HtmlTreeRenderer extends Renderer
     private static final int LINES = 4;
     private static final int LAST = 8;
 
-    /** @todo - this is not thread safe */
+    /**
+     * @todo - this is not thread safe
+     */
     int nodeLevel;
+
 
     // see superclass for documentation
     public boolean getRendersChildren()
@@ -54,17 +57,19 @@ public class HtmlTreeRenderer extends Renderer
         return true;
     }
 
+
     public void encodeBegin(FacesContext context, UIComponent uiComponent) throws IOException
     {
         // Rendering occurs in encodeEnd.
     }
+
 
     /**
      * Renders the whole tree.  It generates a <code>&lt;span></code> element with an <code>id</code>
      * attribute if the component has been given an explicit ID.  The model nodes are rendered
      * recursively by the private <code>encodeNodes</code> method.
      *
-     * @param context FacesContext
+     * @param context   FacesContext
      * @param component The component whose children are to be rendered
      * @throws IOException
      */
@@ -75,7 +80,7 @@ public class HtmlTreeRenderer extends Renderer
 
         if (!component.isRendered()) return;
 
-        if (((HtmlTree)component).getValue() == null) return;
+        if (((HtmlTree) component).getValue() == null) return;
 
         ResponseWriter out = context.getResponseWriter();
         String clientId = null;
@@ -92,14 +97,15 @@ public class HtmlTreeRenderer extends Renderer
             out.writeAttribute("id", clientId, "id");
         }
 
-        encodeNodes(context, out, (HtmlTree)component, null, 0);
+        encodeNodes(context, out, (HtmlTree) component, null, 0);
 
-        ((HtmlTree)component).setNodeId(null);
+        ((HtmlTree) component).setNodeId(null);
         if (isOuterSpanUsed)
         {
             out.endElement("span");
         }
     }
+
 
     private void encodeNodes(FacesContext context, ResponseWriter out, HtmlTree tree, String parentId, int childCount)
         throws IOException
@@ -130,11 +136,11 @@ public class HtmlTreeRenderer extends Renderer
 
         // render node padding
         String[] pathInfo = tree.getPathInformation(tree.getNodeId());
-        for (int i=0;i<pathInfo.length-1;i++)
+        for (int i = 0; i < pathInfo.length - 1; i++)
         {
             String lineSrc = (!tree.isLastChild(pathInfo[i]) && showLines)
-                             ? AddResource.getResourceMappedPath(HtmlTreeRenderer.class, "images/line-trunk.gif", context)
-                             : AddResource.getResourceMappedPath(HtmlTreeRenderer.class, "images/spacer.gif", context);
+                ? AddResource.getResourceMappedPath(HtmlTreeRenderer.class, "images/line-trunk.gif", context)
+                : AddResource.getResourceMappedPath(HtmlTreeRenderer.class, "images/spacer.gif", context);
             out.startElement(HTML.TD_ELEM, tree);
             out.writeAttribute(HTML.WIDTH_ATTR, "19", null);
             out.writeAttribute(HTML.HEIGHT_ATTR, "100%", null);
@@ -153,7 +159,7 @@ public class HtmlTreeRenderer extends Renderer
         {
             String navSrc = null;
             int bitMask = NOTHING;
-            bitMask += (node.getChildCount()>0) ? CHILDREN : NOTHING;
+            bitMask += (node.getChildCount() > 0) ? CHILDREN : NOTHING;
             bitMask += (tree.isNodeExpanded()) ? EXPANDED : NOTHING;
             bitMask += (tree.isLastChild(tree.getNodeId())) ? LAST : NOTHING;
             bitMask += (showLines) ? LINES : NOTHING;
@@ -199,14 +205,14 @@ public class HtmlTreeRenderer extends Renderer
             out.writeAttribute(HTML.WIDTH_ATTR, "19", null);
             out.writeAttribute(HTML.HEIGHT_ATTR, "100%", null);
             out.writeAttribute("valign", "top", null);
-            if ((bitMask & LINES)!=0 && (bitMask & LAST)==0)
+            if ((bitMask & LINES) != 0 && (bitMask & LAST) == 0)
             {
                 out.writeURIAttribute("background",
-                        AddResource.getResourceMappedPath(HtmlTreeRenderer.class, "images/line-trunk.gif", context),
-                        null);
+                    AddResource.getResourceMappedPath(HtmlTreeRenderer.class, "images/line-trunk.gif", context),
+                    null);
             }
             out.startElement(HTML.IMG_ELEM, tree);
-            out.writeURIAttribute(HTML.SRC_ATTR, AddResource.getResourceMappedPath(HtmlTreeRenderer.class, navSrc, context) , null);
+            out.writeURIAttribute(HTML.SRC_ATTR, AddResource.getResourceMappedPath(HtmlTreeRenderer.class, navSrc, context), null);
             out.writeAttribute(HTML.WIDTH_ATTR, "19", null);
             out.writeAttribute(HTML.HEIGHT_ATTR, "18", null);
             out.writeAttribute(HTML.BORDER_ATTR, "0", null);
@@ -230,12 +236,14 @@ public class HtmlTreeRenderer extends Renderer
             int kidId = 0;
             String currId = tree.getNodeId();
             List children = node.getChildren();
-            for (int i = 0; i < children.size(); i++) {
+            for (int i = 0; i < children.size(); i++)
+            {
                 encodeNodes(context, out, tree, currId, kidId++);
             }
             nodeLevel--;
         }
     }
+
 
     private void encodeRecursive(FacesContext context, UIComponent component) throws IOException
     {
@@ -247,13 +255,12 @@ public class HtmlTreeRenderer extends Renderer
         if (component.getRendersChildren())
         {
             component.encodeChildren(context);
-        }
-        else
+        } else
         {
             List childList = component.getChildren();
-            for (int i=0; i < childList.size(); i++)
+            for (int i = 0; i < childList.size(); i++)
             {
-                UIComponent child = (UIComponent)childList.get(i);
+                UIComponent child = (UIComponent) childList.get(i);
                 encodeRecursive(context, child);
             }
         }

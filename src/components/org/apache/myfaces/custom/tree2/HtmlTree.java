@@ -20,6 +20,7 @@ import javax.faces.context.FacesContext;
 import java.util.HashSet;
 import java.util.Map;
 
+
 /**
  * @author <a href="mailto:oliver@rossmueller.com">Oliver Rossmueller </a>
  * @author Sean Schofield
@@ -27,11 +28,13 @@ import java.util.Map;
  */
 public class HtmlTree extends UITreeData
 {
+
     public static final String COMPONENT_TYPE = "org.apache.myfaces.Tree2";
     private static final String DEFAULT_RENDERER_TYPE = "org.apache.myfaces.Tree2";
 
     private String _varNodeToggler;
     private HashSet _expandedNodes = new HashSet();
+
 
     /**
      * Constructor
@@ -40,7 +43,8 @@ public class HtmlTree extends UITreeData
     {
         setRendererType(DEFAULT_RENDERER_TYPE);
     }
-    
+
+
     // see superclass for documentation
     public Object saveState(FacesContext context)
     {
@@ -51,61 +55,67 @@ public class HtmlTree extends UITreeData
         return ((Object) (values));
     }
 
+
     // see superclass for documentation
     public void restoreState(FacesContext context, Object state)
     {
-        Object values[] = (Object[])state;
+        Object values[] = (Object[]) state;
         super.restoreState(context, values[0]);
-        _expandedNodes = (HashSet)values[1];
-        _varNodeToggler = (String)values[2];
-    }        
-    
+        _expandedNodes = (HashSet) values[1];
+        _varNodeToggler = (String) values[2];
+    }
+
+
     // see superclass for documentation
     public void setNodeId(String nodeId)
     {
         super.setNodeId(nodeId);
-        
+
         if (_varNodeToggler != null)
         {
             Map requestMap = getFacesContext().getExternalContext().getRequestMap();
             requestMap.put(_varNodeToggler, this);
-        }        
+        }
     }
-    
+
+
     public void setVarNodeToggler(String varNodeToggler)
     {
         _varNodeToggler = varNodeToggler;
     }
-    
+
+
     public String toggleExpanded()
     {
         String nodeId = getNodeId();
 
         if (_expandedNodes.contains(nodeId))
         {
-            _expandedNodes.remove(nodeId);            
-        }
-        else
+            _expandedNodes.remove(nodeId);
+        } else
         {
             _expandedNodes.add(nodeId);
         }
-        
+
         return null;
     }
-    
+
+
     /**
      * Indicates whether or not the current {@link TreeNode} is expanded.
+     *
      * @return boolean
      */
     public boolean isNodeExpanded()
     {
         return (_expandedNodes.contains(getNodeId()) && getNode().getChildCount() > 0);
     }
-    
+
+
     protected void processChildNodes(FacesContext context, TreeNode parentNode, int processAction)
     {
         String parentNodeId = getNodeId();
-        
+
         if (_expandedNodes.contains(parentNodeId))
         {
             super.processChildNodes(context, parentNode, processAction);

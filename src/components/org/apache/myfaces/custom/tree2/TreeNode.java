@@ -18,52 +18,68 @@ package org.apache.myfaces.custom.tree2;
 import java.util.List;
 import java.io.Serializable;
 
+
 /**
  * Defines the requirements for an object that can be used as a tree node for
  * use in a {@link UITreeData} component. (inspired by javax.swing.tree.TreeNode).
- * 
+ *
  * @author <a href="mailto:oliver@rossmueller.com">Oliver Rossmueller </a>
  * @author Sean Schofield
  * @version $Revision$ $Date$
  */
 public interface TreeNode extends Serializable
 {
+
     public boolean isLeaf();
-    
+
+
     public void setLeaf(boolean leaf);
+
 
     public List getChildren();
 
+
     /**
      * Gets the type of {@link TreeNode}.
+     *
      * @return The node type
      */
     public String getType();
-    
+
+
     /**
      * Sets the type of {@link TreeNode}.
+     *
      * @param type The node type
      */
     public void setType(String type);
-    
+
+
     public String getDescription();
-    
+
+
     public void setDescription(String description);
-    
+
+
     /**
      * Sets the identifier associated with the {@link TreeNode}.
+     *
      * @param id The identifier
      */
     public void setIdentifier(String identifier);
-    
+
+
     /**
      * Gets the identifier asociated with the {@link TreeNode}.
+     *
      * @return the identifier
      */
     public String getIdentifier();
-    
+
+
     /**
      * Gets the number of children this node has.
+     *
      * @return the number of children
      */
     public int getChildCount();

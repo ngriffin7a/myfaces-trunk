@@ -20,47 +20,54 @@ import javax.faces.component.NamingContainer;
 import java.util.StringTokenizer;
 import java.util.ArrayList;
 
+
 /**
  * Model class for the tree component.  It provides random access to nodes in a tree
  * made up of instances of the {@link TreeNode} class.
- * 
+ *
  * @author Sean Schofield
  * @author Hans Bergsten (Some code taken from an example in his O'Reilly JavaServer Faces book. Copied with permission)
  * @version $Revision$ $Date$
  */
-public class TreeModel 
+public class TreeModel
 {
+
     private final static String SEPARATOR = String.valueOf(NamingContainer.SEPARATOR_CHAR);
-    
+
     private TreeNode root;
     private TreeNode currentNode;
-    
+
+
     /**
-     * Constructor 
+     * Constructor
+     *
      * @param root The root TreeNode
      */
-    public TreeModel(TreeNode root) 
+    public TreeModel(TreeNode root)
     {
         this.root = root;
     }
-    
+
+
     /**
      * Gets the current {@link TreeNode} or <code>null</code> if no node ID is selected.
+     *
      * @return The current node
      */
-    public TreeNode getNode() 
+    public TreeNode getNode()
     {
-        return currentNode;    
+        return currentNode;
     }
-    
+
+
     /**
-     * Sets the current {@link TreeNode} to the specified node ID, which is a colon-separated list 
-     * of node indexes.  For instance, "0:0:1" means "the second child node of the first child node 
+     * Sets the current {@link TreeNode} to the specified node ID, which is a colon-separated list
+     * of node indexes.  For instance, "0:0:1" means "the second child node of the first child node
      * under the root node."
-     * 
+     *
      * @param nodeId The id of the node to set
      */
-    public void setNodeId(String nodeId) 
+    public void setNodeId(String nodeId)
     {
         if (nodeId == null)
         {
@@ -95,13 +102,14 @@ public class TreeModel
         
         currentNode = getNodeById(nodeId);
     }
-    
+
+
     /**
-     * Gets an array of String containing the ID's of all of the {@link TreeNode}s in the path to 
-     * the specified node.  The path information will be an array of <code>String</code> objects 
-     * representing node ID's. The array will starting with the ID of the root node and end with 
+     * Gets an array of String containing the ID's of all of the {@link TreeNode}s in the path to
+     * the specified node.  The path information will be an array of <code>String</code> objects
+     * representing node ID's. The array will starting with the ID of the root node and end with
      * the ID of the specified node.
-     * 
+     *
      * @param nodeId The id of the node for whom the path information is needed.
      * @return String[]
      */
@@ -111,30 +119,31 @@ public class TreeModel
         {
             throw new IllegalArgumentException("Cannot determine parents for a null node.");
         }
-        
+
         ArrayList pathList = new ArrayList();
         pathList.add(nodeId);
-        
+
         while (nodeId.lastIndexOf(SEPARATOR) != -1)
         {
             nodeId = nodeId.substring(0, nodeId.lastIndexOf(SEPARATOR));
             pathList.add(nodeId);
         }
-        
+
         String[] pathInfo = new String[pathList.size()];
-        
-        for (int i=0; i < pathInfo.length; i++)
+
+        for (int i = 0; i < pathInfo.length; i++)
         {
-            pathInfo[i] = (String)pathList.get(pathInfo.length - i - 1);
+            pathInfo[i] = (String) pathList.get(pathInfo.length - i - 1);
         }
 
         return pathInfo;
     }
-    
+
+
     /**
-     * Indicates whether or not the specified {@link TreeNode} is the last child in the <code>List</code> 
+     * Indicates whether or not the specified {@link TreeNode} is the last child in the <code>List</code>
      * of children.  If the node id provided corresponds to the root node, this returns <code>true</code>.
-     * 
+     *
      * @param nodeId The ID of the node to check
      * @return boolean
      */
@@ -151,10 +160,11 @@ public class TreeModel
         String childString = nodeId.substring(nodeId.lastIndexOf(SEPARATOR) + 1);
         int childId = Integer.parseInt(childString);
         TreeNode parentNode = getNodeById(parentId);
-        
-        return  childId + 1== parentNode.getChildCount();
+
+        return childId + 1 == parentNode.getChildCount();
     }
-    
+
+
     private TreeNode getNodeById(String nodeId)
     {
         TreeNode node = root;
@@ -168,18 +178,17 @@ public class TreeModel
             int nodeIndex = Integer.parseInt(st.nextToken());
             sb.append(nodeIndex);
 
-            try 
+            try
             {
-                node = (TreeNode)node.getChildren().get(nodeIndex);
-            }
-            catch (IndexOutOfBoundsException e) 
+                node = (TreeNode) node.getChildren().get(nodeIndex);
+            } catch (IndexOutOfBoundsException e)
             {
                 String msg = "Node with id " + sb.toString() + ". Failed to parse " + nodeId;
                 throw new IllegalArgumentException(msg);
             }
             sb.append(SEPARATOR);
         }
-        
+
         return node;
     }
 }

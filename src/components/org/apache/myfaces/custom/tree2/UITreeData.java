@@ -34,23 +34,25 @@ import java.util.Map;
 import java.util.HashMap;
 import java.util.List;
 
+
 /**
- * TreeData is a {@link UIComponent} that supports binding data stored in a tree represented 
- * by a {@link TreeNode} instance.  During iterative processing over the tree nodes in the 
- * data model, the object for the current node is exposed as a request attribute under the key 
+ * TreeData is a {@link UIComponent} that supports binding data stored in a tree represented
+ * by a {@link TreeNode} instance.  During iterative processing over the tree nodes in the
+ * data model, the object for the current node is exposed as a request attribute under the key
  * specified by the <code>var</code> property.  {@link javax.faces.render.Renderer}s of this component should use
- * the appropriate {@link Facet} to assist in rendering.  
- * 
+ * the appropriate {@link Facet} to assist in rendering.
+ *
  * @author Sean Schofield
  * @author Hans Bergsten (Some code taken from an example in his O'Reilly JavaServer Faces book. Copied with permission)
  * @version $Revision$ $Date$
  */
 public class UITreeData extends UIComponentBase implements NamingContainer
 {
+
     public static final String COMPONENT_TYPE = "org.apache.myfaces.Tree2";
     public static final String COMPONENT_FAMILY = "org.apache.myfaces.HtmlTree2"; //"javax.faces.Data";
     private static final String DEFAULT_RENDERER_TYPE = "org.apache.myfaces.Tree2";
-    
+
     private static final int PROCESS_DECODES = 1;
     private static final int PROCESS_VALIDATORS = 2;
     private static final int PROCESS_UPDATES = 3;
@@ -60,7 +62,8 @@ public class UITreeData extends UIComponentBase implements NamingContainer
     private String _var;
     private String _nodeId;
     private Map _saved = new HashMap();
-    
+
+
     /**
      * Constructor
      */
@@ -69,12 +72,14 @@ public class UITreeData extends UIComponentBase implements NamingContainer
         setRendererType(DEFAULT_RENDERER_TYPE);
     }
 
+
     // see superclass for documentation
     public String getFamily()
     {
         return COMPONENT_FAMILY;
-    }    
-    
+    }
+
+
     // see superclass for documentation
     public Object saveState(FacesContext context)
     {
@@ -85,38 +90,41 @@ public class UITreeData extends UIComponentBase implements NamingContainer
         return ((Object) (values));
     }
 
+
     // see superclass for documentation
     public void restoreState(FacesContext context, Object state)
     {
-        Object values[] = (Object[])state;
+        Object values[] = (Object[]) state;
         super.restoreState(context, values[0]);
-        _value = (TreeNode)values[1];
-        _var = (String)values[2];
-    }    
-    
+        _value = (TreeNode) values[1];
+        _var = (String) values[2];
+    }
+
+
     public void queueEvent(FacesEvent event)
     {
         super.queueEvent(new FacesEventWrapper(event, getNodeId(), this));
     }
 
+
     public void broadcast(FacesEvent event) throws AbortProcessingException
     {
         if (event instanceof FacesEventWrapper)
         {
-            FacesEventWrapper childEvent = (FacesEventWrapper)event;
+            FacesEventWrapper childEvent = (FacesEventWrapper) event;
             String currNodeId = getNodeId();
             setNodeId(childEvent.getNodeId());
             FacesEvent nodeEvent = childEvent.getFacesEvent();
             nodeEvent.getComponent().broadcast(nodeEvent);
             setNodeId(currNodeId);
             return;
-        }
-        else
+        } else
         {
             super.broadcast(event);
             return;
         }
     }
+
 
     // see superclass for documentation
     public void processDecodes(FacesContext context)
@@ -124,15 +132,16 @@ public class UITreeData extends UIComponentBase implements NamingContainer
         if (context == null) throw new NullPointerException("context");
         if (!isRendered()) return;
 
-        _model = null;        
+        _model = null;
         _saved = new HashMap();
-        
+
         processNodes(context, PROCESS_DECODES, null, 0);
-        
+
         setNodeId(null);
         decode(context);
-    }    
-    
+    }
+
+
     // see superclass for documentation
     public void processValidators(FacesContext context)
     {
@@ -144,6 +153,7 @@ public class UITreeData extends UIComponentBase implements NamingContainer
         setNodeId(null);
     }
 
+
     // see superclass for documentation
     public void processUpdates(FacesContext context)
     {
@@ -153,8 +163,9 @@ public class UITreeData extends UIComponentBase implements NamingContainer
         processNodes(context, PROCESS_UPDATES, null, 0);
 
         setNodeId(null);
-    }    
-    
+    }
+
+
     // see superclass for documentation
     public String getClientId(FacesContext context)
     {
@@ -162,27 +173,27 @@ public class UITreeData extends UIComponentBase implements NamingContainer
         if (_nodeId != null)
         {
             return ownClientId + NamingContainer.SEPARATOR_CHAR + _nodeId;
-        }
-        else
+        } else
         {
             return ownClientId;
         }
     }
-    
+
+
     // see superclass for documentation
     public void setValueBinding(String name, ValueBinding binding)
     {
         if ("value".equals(name))
         {
             _model = null;
-        }
-        else if ("nodeVar".equals(name) || "nodeId".equals(name) || "treeVar".equals(name))
+        } else if ("nodeVar".equals(name) || "nodeId".equals(name) || "treeVar".equals(name))
         {
             throw new IllegalArgumentException("name " + name);
         }
         super.setValueBinding(name, binding);
-    }    
-    
+    }
+
+
     // see superclass for documentation
     public void encodeBegin(FacesContext context) throws IOException
     {
@@ -196,12 +207,14 @@ public class UITreeData extends UIComponentBase implements NamingContainer
         {
             _saved = new HashMap();
         }
-        
+
         super.encodeBegin(context);
     }
-    
+
+
     /**
      * Sets the value of the TreeData.
+     *
      * @param value The new value
      */
     public void setValue(TreeNode value)
@@ -210,8 +223,10 @@ public class UITreeData extends UIComponentBase implements NamingContainer
         _value = value;
     }
 
+
     /**
      * Gets the value of the TreeData.
+     *
      * @return The value
      */
     public Object getValue()
@@ -220,11 +235,12 @@ public class UITreeData extends UIComponentBase implements NamingContainer
         ValueBinding vb = getValueBinding("value");
         return vb != null ? vb.getValue(getFacesContext()) : null;
     }
-    
+
+
     /**
-     * Set the request-scope attribute under which the data object for the current node wil be exposed 
+     * Set the request-scope attribute under which the data object for the current node wil be exposed
      * when iterating.
-     * 
+     *
      * @param var The new request-scope attribute name
      */
     public void setVar(String var)
@@ -232,74 +248,79 @@ public class UITreeData extends UIComponentBase implements NamingContainer
         _var = var;
     }
 
+
     /**
-     * Return the request-scope attribute under which the data object for the current node will be exposed 
+     * Return the request-scope attribute under which the data object for the current node will be exposed
      * when iterating. This property is not enabled for value binding expressions.
-     * 
+     *
      * @return The iterrator attribute
      */
     public String getVar()
     {
         return _var;
-    }    
-    
+    }
+
+
     /**
      * Calls through to the {@link TreeModel} and returns the current {@link TreeNode} or <code>null</code>.
+     *
      * @return The current node
      */
     public TreeNode getNode()
     {
         TreeModel model = getDataModel();
-        
+
         if (model == null)
         {
             return null;
         }
-        
+
         return model.getNode();
     }
-    
+
+
     public String getNodeId()
     {
-        return _nodeId;    
+        return _nodeId;
     }
+
 
     public void setNodeId(String nodeId)
     {
         saveDescendantState();
-        
+
         _nodeId = nodeId;
-        
+
         TreeModel model = getDataModel();
         if (model == null)
         {
             return;
         }
         model.setNodeId(nodeId);
-        
+
         restoreDescendantState();
-        
+
         Map requestMap = getFacesContext().getExternalContext().getRequestMap();
-        
+
         if (_var != null)
         {
             if (nodeId == null)
             {
                 requestMap.remove(_var);
-            }
-            else
+            } else
             {
                 requestMap.put(_var, getNode());
             }
         }
     }
-    
+
+
     /**
-     * Gets an array of String containing the ID's of all of the {@link TreeNode}s in the path to 
-     * the specified node.  The path information will be an array of <code>String</code> objects 
-     * representing node ID's. The array will starting with the ID of the root node and end with 
+     * Gets an array of String containing the ID's of all of the {@link TreeNode}s in the path to
+     * the specified node.  The path information will be an array of <code>String</code> objects
+     * representing node ID's. The array will starting with the ID of the root node and end with
      * the ID of the specified node.
-     * 
+     *
      * @param nodeId The id of the node for whom the path information is needed.
      * @return String[]
      */
@@ -307,11 +328,12 @@ public class UITreeData extends UIComponentBase implements NamingContainer
     {
         return getDataModel().getPathInformation(nodeId);
     }
-    
+
+
     /**
-     * Indicates whether or not the specified {@link TreeNode} is the last child in the <code>List</code> 
+     * Indicates whether or not the specified {@link TreeNode} is the last child in the <code>List</code>
      * of children.  If the node id provided corresponds to the root node, this returns <code>true</code>.
-     * 
+     *
      * @param nodeId The ID of the node to check
      * @return boolean
      */
@@ -319,12 +341,13 @@ public class UITreeData extends UIComponentBase implements NamingContainer
     {
         return getDataModel().isLastChild(nodeId);
     }
-    
+
+
     /**
-     * Returns a previously cached {@link TreeModel}, if any, or sets the cache variable to either the 
-     * current value (if its a {@link TreeModel}) or to a new instance of {@link TreeModel} (if it's a 
+     * Returns a previously cached {@link TreeModel}, if any, or sets the cache variable to either the
+     * current value (if its a {@link TreeModel}) or to a new instance of {@link TreeModel} (if it's a
      * {@link TreeNode}) with the provided value object as the root node.
-     * 
+     *
      * @return TreeModel
      */
     private TreeModel getDataModel()
@@ -333,22 +356,22 @@ public class UITreeData extends UIComponentBase implements NamingContainer
         {
             return _model;
         }
-        
+
         Object value = getValue();
         if (value != null)
         {
             if (value instanceof TreeModel)
             {
-                _model = (TreeModel)value;
-            }
-            else if (value instanceof TreeNode)
+                _model = (TreeModel) value;
+            } else if (value instanceof TreeNode)
             {
-                _model = new TreeModel((TreeNode)value);
+                _model = new TreeModel((TreeNode) value);
             }
         }
-        
+
         return _model;
     }
+
 
     private void processNodes(FacesContext context, int processAction, String parentId, int childLevel)
     {
@@ -357,39 +380,40 @@ public class UITreeData extends UIComponentBase implements NamingContainer
         TreeNode node = getNode();
 
         facet = getFacet(node.getType());
-        
+
         if (facet == null)
         {
             throw new IllegalArgumentException("Unable to locate facet with the name: " + node.getType());
         }
-        
+
         switch (processAction)
         {
             case PROCESS_DECODES:
-                
+
                 facet.processDecodes(context);
                 break;
-                
+
             case PROCESS_VALIDATORS:
-                
+
                 facet.processValidators(context);
                 break;
-                
+
             case PROCESS_UPDATES:
-                
+
                 facet.processUpdates(context);
                 break;
         }
-        
+
         processChildNodes(context, node, processAction);
     }
-    
+
+
     /**
-     * Process the child nodes of the supplied parent @{link TreeNode}.  This method is protected so that 
+     * Process the child nodes of the supplied parent @{link TreeNode}.  This method is protected so that
      * it can be overriden by a subclass that may want to control how child nodes are processed.
-     * 
-     * @param context FacesContext
-     * @param parentNode The parent node whose children are to be processed
+     *
+     * @param context       FacesContext
+     * @param parentNode    The parent node whose children are to be processed
      * @param processAction An <code>int</code> representing the type of action to process
      */
     protected void processChildNodes(FacesContext context, TreeNode parentNode, int processAction)
@@ -399,16 +423,17 @@ public class UITreeData extends UIComponentBase implements NamingContainer
 
         List children = parentNode.getChildren();
 
-        for (int i=0; i < children.size(); i++)
+        for (int i = 0; i < children.size(); i++)
         {
             processNodes(context, processAction, currId, kidId++);
-        }        
-    }        
-    
+        }
+    }
+
+
     /**
-     * To support using input components for the nodes (e.g., input fields, checkboxes, and selection 
-     * lists) while still only using one set of components for all nodes, the state held by the components 
-     * for the current node must be saved for a new node is selected.  
+     * To support using input components for the nodes (e.g., input fields, checkboxes, and selection
+     * lists) while still only using one set of components for all nodes, the state held by the components
+     * for the current node must be saved for a new node is selected.
      */
     private void saveDescendantState()
     {
@@ -416,24 +441,25 @@ public class UITreeData extends UIComponentBase implements NamingContainer
         Iterator i = getFacets().values().iterator();
         while (i.hasNext())
         {
-            UIComponent facet = (UIComponent)i.next();
+            UIComponent facet = (UIComponent) i.next();
             saveDescendantState(facet, context);
         }
     }
-    
+
+
     /**
      * Overloaded helper method for the no argument version of this method.
-     * 
+     *
      * @param component The component whose state needs to be saved
-     * @param context FacesContext
+     * @param context   FacesContext
      */
     private void saveDescendantState(UIComponent component, FacesContext context)
     {
         if (component instanceof EditableValueHolder)
         {
-            EditableValueHolder input = (EditableValueHolder)component;
+            EditableValueHolder input = (EditableValueHolder) component;
             String clientId = component.getClientId(context);
-            SavedState state = (SavedState)_saved.get(clientId);
+            SavedState state = (SavedState) _saved.get(clientId);
             if (state == null)
             {
                 state = new SavedState();
@@ -444,13 +470,14 @@ public class UITreeData extends UIComponentBase implements NamingContainer
             state.setSubmittedValue(input.getSubmittedValue());
             state.setLocalValueSet(input.isLocalValueSet());
         }
-        
+
         List kids = component.getChildren();
-        for (int i=0; i < kids.size(); i++)
+        for (int i = 0; i < kids.size(); i++)
         {
-            saveDescendantState((UIComponent)kids.get(i), context);
+            saveDescendantState((UIComponent) kids.get(i), context);
         }
     }
+
 
     /**
      * Used to configure a new node with the state stored previously.
@@ -461,27 +488,28 @@ public class UITreeData extends UIComponentBase implements NamingContainer
         Iterator i = getFacets().values().iterator();
         while (i.hasNext())
         {
-            UIComponent facet = (UIComponent)i.next();
+            UIComponent facet = (UIComponent) i.next();
             restoreDescendantState(facet, context);
         }
     }
-    
+
+
     /**
      * Overloaded helper method for the no argument version of this method.
      *
      * @param component The component whose state needs to be restored
-     * @param context FacesContext
+     * @param context   FacesContext
      */
     private void restoreDescendantState(UIComponent component, FacesContext context)
     {
         String id = component.getId();
         component.setId(id); // forces the cilent id to be reset
-        
+
         if (component instanceof EditableValueHolder)
         {
-            EditableValueHolder input = (EditableValueHolder)component;
+            EditableValueHolder input = (EditableValueHolder) component;
             String clientId = component.getClientId(context);
-            SavedState state = (SavedState)_saved.get(clientId);
+            SavedState state = (SavedState) _saved.get(clientId);
             if (state == null)
             {
                 state = new SavedState();
@@ -491,79 +519,92 @@ public class UITreeData extends UIComponentBase implements NamingContainer
             input.setSubmittedValue(state.getSubmittedValue());
             input.setLocalValueSet(state.isLocalValueSet());
         }
-        
+
         List kids = component.getChildren();
-        for (int i=0; i < kids.size(); i++)
+        for (int i = 0; i < kids.size(); i++)
         {
-            restoreDescendantState((UIComponent)kids.get(i), context);
-        }        
+            restoreDescendantState((UIComponent) kids.get(i), context);
+        }
     }
-    
+
+
     /**
      * A regular bean with accessor methods for all state variables.
-     * 
+     *
      * @author Sean Schofield
      * @author Hans Bergsten (Some code taken from an example in his O'Reilly JavaServer Faces book. Copied with permission)
      * @version $Revision$ $Date$
      */
     private static class SavedState implements Serializable
     {
+
         private Object submittedValue;
         private boolean valid = true;
         private Object value;
         private boolean localValueSet;
-        
+
+
         Object getSubmittedValue()
         {
             return submittedValue;
         }
-        
+
+
         void setSubmittedValue(Object submittedValue)
         {
             this.submittedValue = submittedValue;
         }
-        
+
+
         boolean isValid()
         {
             return valid;
         }
-        
+
+
         void setValid(boolean valid)
         {
             this.valid = valid;
         }
-        
+
+
         Object getValue()
         {
             return value;
         }
-        
+
+
         void setValue(Object value)
         {
             this.value = value;
         }
-        
+
+
         boolean isLocalValueSet()
         {
             return localValueSet;
         }
-        
+
+
         void setLocalValueSet(boolean localValueSet)
         {
             this.localValueSet = localValueSet;
         }
     }
-    
+
+
     /**
-     * Inner class used to wrap the original events produced by child components in the tree.  
-     * This will allow the tree to find the appropriate component later when its time to 
-     * broadcast the events to registered listeners.  Code is based on a similar private 
+     * Inner class used to wrap the original events produced by child components in the tree.
+     * This will allow the tree to find the appropriate component later when its time to
+     * broadcast the events to registered listeners.  Code is based on a similar private
      * class for UIData.
      */
     private static class FacesEventWrapper extends FacesEvent
     {
+
         private FacesEvent _wrappedFacesEvent;
         private String _nodeId;
+
 
         public FacesEventWrapper(FacesEvent facesEvent, String nodeId, UIComponent component)
         {
@@ -572,25 +613,30 @@ public class UITreeData extends UIComponentBase implements NamingContainer
             _nodeId = nodeId;
         }
 
+
         public PhaseId getPhaseId()
         {
             return _wrappedFacesEvent.getPhaseId();
         }
+
 
         public void setPhaseId(PhaseId phaseId)
         {
             _wrappedFacesEvent.setPhaseId(phaseId);
         }
 
+
         public void queue()
         {
             _wrappedFacesEvent.queue();
         }
 
+
         public String toString()
         {
             return _wrappedFacesEvent.toString();
         }
+
 
         public boolean isAppropriateListener(FacesListener faceslistener)
         {
@@ -598,46 +644,49 @@ public class UITreeData extends UIComponentBase implements NamingContainer
             return false;
         }
 
+
         public void processListener(FacesListener faceslistener)
         {
-            throw new UnsupportedOperationException(
-                "This event type is only intended for wrapping a real event"
-            );
+            throw new UnsupportedOperationException("This event type is only intended for wrapping a real event");
         }
+
 
         public FacesEvent getFacesEvent()
         {
             return _wrappedFacesEvent;
         }
 
+
         public String getNodeId()
         {
             return _nodeId;
         }
-    }    
-    
+    }
+
+
     /**
      * Returns true if there is an error message queued for at least one of the nodes.
+     *
      * @param context FacesContext
-     * @return whether an error message is present 
+     * @return whether an error message is present
      */
     private boolean keepSaved(FacesContext context)
     {
-        Iterator clientIds =_saved.keySet().iterator();
+        Iterator clientIds = _saved.keySet().iterator();
         while (clientIds.hasNext())
         {
-            String clientId = (String)clientIds.next();
+            String clientId = (String) clientIds.next();
             Iterator messages = context.getMessages(clientId);
             while (messages.hasNext())
             {
-                FacesMessage message = (FacesMessage)messages.next();
+                FacesMessage message = (FacesMessage) messages.next();
                 if (message.getSeverity().compareTo(FacesMessage.SEVERITY_ERROR) >= 0)
                 {
                     return true;
                 }
             }
         }
-        
+
         return false;
     }
 }
