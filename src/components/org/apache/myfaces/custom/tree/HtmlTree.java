@@ -42,6 +42,9 @@ import net.sourceforge.myfaces.component.html.ext.HtmlPanelGroup;
  * @author <a href="mailto:oliver@rossmueller.com">Oliver Rossmueller</a>
  * @version $Revision$ $Date$
  *          $Log$
+ *          Revision 1.18  2004/07/25 11:08:02  o_rossmueller
+ *          use HtmlTree class name for PREVIOUS_VIEW_ROOT constant
+ *
  *          Revision 1.17  2004/07/25 11:06:38  o_rossmueller
  *          made default image paths relative (again)
  *
@@ -99,7 +102,7 @@ public class HtmlTree
 {
 
     private static final String FACET_ROOTNODE = "rootNode";
-    private static final String PREVIOUS_VIEW_ROOT = HtmlPanelNavigation.class.getName() + ".PREVIOUS_VIEW_ROOT";
+    private static final String PREVIOUS_VIEW_ROOT = HtmlTree.class.getName() + ".PREVIOUS_VIEW_ROOT";
 
 
     private IconProvider iconProvider;
