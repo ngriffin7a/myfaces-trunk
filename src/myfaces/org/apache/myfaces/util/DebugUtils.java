@@ -43,6 +43,9 @@ import java.util.Map;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.16  2004/08/27 10:44:51  manolito
+ * ignore exception on property read
+ *
  * Revision 1.15  2004/07/01 22:05:15  mwessendorf
  * ASF switch
  *
@@ -232,10 +235,15 @@ public class DebugUtils
                         }
                         else if (!IGNORE_ATTRIBUTES.contains(name))
                         {
-                            Object value = comp.getAttributes().get(name);
-                            if (value != null)
+                            try
                             {
+                                Object value = comp.getAttributes().get(name);
                                 printAttribute(stream, name, value);
+                            }
+                            catch (Exception e)
+                            {
+                                log.error(e);
+                                printAttribute(stream, name, null);
                             }
                         }
                     }
