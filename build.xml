@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<project name="myfaces" default="all">
+
+    <!-- Manifest-Infos -->
+    <property name="manifest.impl.title" value="MyFaces"/>
+    <property name="manifest.impl.version" value="0.1"/>
+    <property name="manifest.impl.vendor" value="Manfred Geiler"/>
+
+    <property name="project.dir" value="${basedir}"/>
+
+    <property environment="env"/>
+
+    <!-- Verzeichnis für temp. Dateiene -->
+    <property name="temp.dir" value="${project.dir}/temp"/>
+
+    <!-- Source Verzeichnis fürs Kompilieren -->
+    <property name="src.dir" value="${project.dir}\src"/>
+
+    <!-- Verzeichnis in welches das myfaces.tld file kopiert werden soll
+         (Praktisch zum autom. Kopieren der TLD in ein Fremd-Projekt) -->
+    <property name="tld-dest.dir" value="${temp.dir}"/>
+
+    <!-- WEB-INF Dir -->
+    <property name="web-inf.dir" value="${project.dir}/web/WEB-INF"/>
+
+    <!-- Destination Verzeichnis fürs Kompilieren -->
+    <property name="classes.dir" value="${project.dir}/web/WEB-INF/classes"/>
+
+    <!-- Compiletime libraries (servlet.jar) -->
+    <property name="lib.dir" value="${project.dir}/lib"/>
+
+    <!-- Name des JARs, das erzeugt werden soll -->
+    <property name="dest.file" value="${web-inf.dir}/lib/myfaces.jar"/>
+
+    <!-- Examples dir -->
+    <property name="examples.dir" value="${project.dir}/examples"/>
+
+
+    <!-- Classpath fuer's Kompilieren -->
+    <path id="project.class.path">
+        <pathelement location="${web-inf.dir}/lib/jsf-api.jar" />
+        <pathelement location="${web-inf.dir}/lib/jasper-compiler.jar"/>
+        <pathelement location="${web-inf.dir}/lib/jasper-runtime.jar"/>
+        <pathelement location="${web-inf.dir}/lib/mail.jar"/>
+        <pathelement location="${lib.dir}/servlet.jar"/>
+    </path>
+
+    <target name="compile">
+        <mkdir dir="${classes.dir}"/>
+        <javac srcdir="${src.dir}/myfaces"
+            destdir="${classes.dir}"
+            optimize="off"
+            classpathref="project.class.path">
+        </javac>
+        <javac srcdir="${src.dir}/example"
+            destdir="${classes.dir}"
+            optimize="off"
+            classpathref="project.class.path">
+        </javac>
+    </target>
+
+    <target name="-common">
+        <tstamp>
+            <format property="TODAY_DE" pattern="dd.MM.yyyy HH:mm" locale="de"/>
+        </tstamp>
+    </target>
+
+
+    <target name="jar" depends="compile, -common">
+        <mkdir dir="${temp.dir}"/>
+
+        <manifest file="${temp.dir}/MANIFEST.MF">
+            <attribute name="Built-By" value="${user.name}"/>
+            <section name="myfaces.sourceforge.net">
+              <attribute name="Implementation-Title" value="${manifest.impl.title}" />
+              <attribute name="Implementation-Version" value="${manifest.impl.version} ${TODAY_DE}" />
+              <attribute name="Implementation-Vendor" value="${manifest.impl.vendor}" />
+            </section>
+        </manifest>
+
+        <jar destfile="${dest.file}"
+             manifest="${temp.dir}/MANIFEST.MF" >
+            <fileset dir="${classes.dir}" includes="**"
+                                          excludes=".dependency-info/**/*,
+                                                    net/sourceforge/myfaces/example/**/*" />
+            <fileset dir="${src.dir}/myfaces" includes="**"
+                                              excludes="**/*.java"/>
+        </jar>
+    </target>
+
+    <target name="examples-jar" depends="compile">
+        <mkdir dir="${temp.dir}"/>
+
+        <jar destfile="${web-inf.dir}/lib/myfaces-examples.jar">
+            <fileset dir="${classes.dir}"
+                     includes="net/sourceforge/myfaces/example/**/*" />
+            <fileset dir="${src.dir}/example"
+                     includes="**"
+                     excludes="**/*.java"/>
+        </jar>
+    </target>
+
+    <target name="clean">
+        <delete quiet="true" failonerror="false" >
+            <fileset dir="${classes.dir}" includes="**"/>
+            <fileset dir="${temp.dir}" includes="**"/>
+        </delete>
+    </target>
+
+    <target name="copy-tld">
+        <copy file="${project.dir}/web/WEB-INF/myfaces_basic.tld"
+              todir="${tld-dest.dir}" />
+        <copy file="${project.dir}/web/WEB-INF/myfaces_ext.tld"
+            todir="${tld-dest.dir}"/>
+    </target>
+
+    <target name="all" depends="jar,copy-tld"/>
+
+
+    <target name="release">
+        <!--
+        <javadoc sourcepath="${src.dir}/myfaces"
+                 destdir="${project.dir}/api"
+                 packagenames="net.sourceforge.myfaces.*"
+                 classpathref="project.class.path"/>
+        -->
+        <tar destfile="${temp.dir}/myfaces-${manifest.impl.version}.tgz"
+             compression="gzip">
+            <tarfileset dir="${project.dir}"
+                        prefix="myfaces-${manifest.impl.version}"
+                        excludes="web/WEB-INF/classes/**/*,
+                                  temp/**,
+                                  *.ipr,*.iws"/>
+        </tar>
+    </target>
+
+</project>

@@ -1,0 +1,4 @@
+MyFaces Known Issues
+====================
+
+TODO... (Many!)

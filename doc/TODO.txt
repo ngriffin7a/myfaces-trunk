@@ -1,0 +1,7 @@
+MyFaces TODO List
+=================
+
+- state_save Tag: property "passOverToNewPages" (to give StateRenderer a hint if a saved
+                    state must be encoded into external links)
+
+and many many more things...

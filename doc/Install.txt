@@ -1,0 +1,36 @@
+MyFaces Installation instructions
+=================================
+
+What you need:
+- JDK 1.4.0 (or higher)
+- Tomcat 4.0.4
+
+
+HOWTO - Run the Example-Applikation
+-----------------------------------
+To run the examples you must add the myfaces context to your Tomcat's configuration in the file conf/server.xml.
+- Add the following lines right after the "Tomcat Manager Context":
+
+        <!-- MyFaces Context -->
+        <Context path="/myfaces" docBase="C:\myfaces\web" debug="0" privileged="true" reloadable="true">
+                                     <!-- |
+                                          Adjust to the path of your installation! -->
+          <Logger className="org.apache.catalina.logger.FileLogger"
+                  prefix="localhost_myfaces_log." suffix=".txt" timestamp="true"/>
+          <Loader checkInterval="5" className="org.apache.catalina.loader.WebappLoader"/>
+        </Context>
+
+- (Re)start Tomcat
+- Enter "http://localhost:8080/myfaces" into the adress field of your browser and follow the link.
+
+
+HOWTO - Use MyFaces in your own WebApp
+--------------------------------------
+- Copy all JARs from the myfaces/lib directory to the WEB-INF/lib dir of your (J2EE conform) Webapplication.
+- Copy the two TLD files and the file web.xml from the myfaces/WEB-INF dir to the WEB-INF dir of your Webapplication.
+- Add the line
+	<%@ taglib uri="/WEB-INF/myfaces_basic.tld" prefix="f"%>
+  to your JSPs to be able to use the basic JSF tags.
+- Add the line
+	<%@ taglib uri="/WEB-INF/myfaces_ext.tld" prefix="x"%>
+  to your JSPs to be able to use the MyFaces extensions tags.

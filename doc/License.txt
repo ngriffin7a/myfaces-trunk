@@ -1,0 +1,11 @@
+MyFaces License
+===============
+
+- MyFaces is developed and distributed under the terms of the GNU Lesser General Public License
+  (see license/GNU_Lesser_General_Public_License.html)
+- MyFaces includes software developed by the Apache Software Foundation (http://www.apache.org/).
+  (see license/Apache_Software_License.txt)
+- MyFaces is developed and distributed under the terms of the JavaServerTM Faces Pre-Release Binary Software Evaluation Agreement.
+  (see license/JSF_Pre-Release_Binary_Software_Evaluation_Agreement.txt)
+- MyFaces is developed and distributed under the terms of the JavaServerTM Faces Specification EAD 1.0 License.
+  (see license/jsf-1_0-ead-spec-license.html)
