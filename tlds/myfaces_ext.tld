@@ -1283,6 +1283,20 @@
         </attribute>
     </tag>
 
+    <!-- panelStack -->
+    <tag>
+        <name>panelStack</name>
+        <tag-class>net.sourceforge.myfaces.custom.panelstack.PanelStackTag</tag-class>
+        <body-content>JSP</body-content>
+        <attribute>
+            <name>selectedPanel</name>
+            <required>true</required>
+            <rtexprvalue>false</rtexprvalue>
+            <description>Id of the child to be rendered.</description>
+        </attribute>
+    </tag>
+
+
 
 <!--     Custom non-component tags     -->
 

@@ -190,6 +190,12 @@
         <component-class>net.sourceforge.myfaces.custom.navmenu.UINavigationMenuItem</component-class>
     </component>
 
+
+    <component>
+        <component-type>net.sourceforge.myfaces.HtmlPanelStack</component-type>
+        <component-class>net.sourceforge.myfaces.custom.panelstack.HtmlPanelStack</component-class>
+    </component>
+
   <component>
       <component-type>net.sourceforge.myfaces.RssTicker</component-type>
       <component-class>net.sourceforge.myfaces.custom.rssticker.HtmlRssTicker</component-class>
@@ -404,7 +410,13 @@
           <renderer-type>net.sourceforge.myfaces.HtmlTreeNode</renderer-type>
           <renderer-class>net.sourceforge.myfaces.custom.tree.renderkit.html.HtmlTreeNodeRenderer</renderer-class>
        </renderer>
-        
+
+        <renderer>
+           <component-family>javax.faces.Panel</component-family>
+           <renderer-type>net.sourceforge.myfaces.PanelStack</renderer-type>
+           <renderer-class>net.sourceforge.myfaces.custom.panelstack.HtmlPanelStackRenderer</renderer-class>
+        </renderer>
+
 
     </render-kit>
     
