@@ -18,28 +18,19 @@
  */
 package net.sourceforge.myfaces.context.servlet;
 
+import net.sourceforge.myfaces.util.EnumerationIterator;
+
+import javax.faces.FacesException;
+import javax.faces.context.ExternalContext;
+import javax.servlet.*;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.security.Principal;
-import java.util.Enumeration;
-import java.util.Iterator;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
-
-import javax.faces.FacesException;
-import javax.faces.context.ExternalContext;
-import javax.servlet.RequestDispatcher;
-import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import net.sourceforge.myfaces.util.EnumerationIterator;
+import java.util.*;
 
 /**
  * JSF 1.0 PRD2, 6.1.1
@@ -69,6 +60,7 @@ public class ServletExternalContextImpl
     private Map _initParameterMap;
     private boolean _isHttpServletRequest;
     private String _requestServletPath;
+    private String _requestPathInfo;
 
     public ServletExternalContextImpl(ServletContext servletContext,
                                       ServletRequest servletRequest,
@@ -90,8 +82,10 @@ public class ServletExternalContextImpl
                                  servletRequest instanceof HttpServletRequest);
         if (_isHttpServletRequest)
         {
-            //HACK: MultipartWrapper scrambles the servletPath for some reason !?
+            //HACK: MultipartWrapper scrambles the servletPath for some reason in Tomcat 4.1.29 embedded in JBoss 3.2.3!?
+            // (this was reported by frederic.auge [frederic.auge@laposte.net])
             _requestServletPath = ((HttpServletRequest)servletRequest).getServletPath();
+            _requestPathInfo = ((HttpServletRequest)servletRequest).getPathInfo();
         }
     }
 
@@ -255,7 +249,9 @@ public class ServletExternalContextImpl
         {
             throw new IllegalArgumentException("Only HttpServletRequest supported");
         }
-        return ((HttpServletRequest)_servletRequest).getPathInfo();
+        //return ((HttpServletRequest)_servletRequest).getPathInfo();
+        //HACK: see constructor
+        return _requestPathInfo;
     }
 
     public String getRequestContextPath()
@@ -266,13 +262,6 @@ public class ServletExternalContextImpl
         }
         return ((HttpServletRequest)_servletRequest).getContextPath();
     }
-
-    /*
-    public Cookie[] getRequestCookies()
-    {
-        return new Cookie[0];  //To change body of implemented methods use Options | File Templates.
-    }
-    */
 
     public String getInitParameter(String s)
     {
