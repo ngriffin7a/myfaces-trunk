@@ -73,6 +73,17 @@ public class CommandHyperlinkTag
         setRendererAttribute(HyperlinkRenderer.COMMAND_CLASS_ATTR, v);
     }
 
+    public void setKey(String v)
+    {
+        setRendererAttribute(HyperlinkRenderer.KEY_ATTR.getName(), v);
+    }
+
+    public void setBundle(String v)
+    {
+        setRendererAttribute(HyperlinkRenderer.BUNDLE_ATTR, v);
+    }
+
+
     public void setAccesskey(String value)
     {
         setRendererAttribute(HyperlinkRenderer.ACCESSKEY_ATTR, value);

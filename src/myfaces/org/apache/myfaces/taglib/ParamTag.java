@@ -30,6 +30,7 @@ import javax.faces.component.UIComponent;
 public class ParamTag
     extends MyFacesTag
 {
+    // TODO: rename to ParameterTag
     //MyFaces tag extensions:
     public UIComponent createComponent()
     {
@@ -40,7 +41,6 @@ public class ParamTag
     {
         return null;
     }
-
 
     public void setName(String v)
     {

@@ -551,12 +551,12 @@
         <attribute>
           <name>key</name>
           <required>false</required>
-          <rtexprvalue>false</rtexprvalue>
+          <rtexprvalue>true</rtexprvalue>
         </attribute>
        <attribute>
          <name>bundle</name>
          <required>false</required>
-         <rtexprvalue>false</rtexprvalue>
+         <rtexprvalue>true</rtexprvalue>
        </attribute>
         <attribute>
             <name>commandClass</name>
@@ -692,10 +692,10 @@
         <name>command_hyperlink</name>
         <tagclass>net.sourceforge.myfaces.taglib.CommandHyperlinkTag</tagclass>
         <bodycontent>JSP</bodycontent>
-        <!-- TODO attributes modelReference, rendered, image, label, key bundle-->
+        <!-- TODO attributes modelReference, rendered, image, label-->
         <attribute>
             <name>id</name>
-            <required>true</required>
+            <required>false</required>
             <rtexprvalue>false</rtexprvalue>
         </attribute>
         <attribute>
@@ -721,6 +721,16 @@
         </attribute>
         <attribute>
             <name>href</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>key</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>bundle</name>
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>
         </attribute>
@@ -995,7 +1005,7 @@
         <name>output_text</name>
         <tagclass>net.sourceforge.myfaces.taglib.OutputTextTag</tagclass>
         <bodycontent>JSP</bodycontent>
-        <!-- TODO attributes rendered, key bundle, outputClass, value -->
+        <!-- TODO attributes rendered, value -->
         <attribute>
             <name>id</name>
             <required>false</required>
@@ -1016,6 +1026,11 @@
             <required>false</required>
             <rtexprvalue>false</rtexprvalue>
         </attribute>
+        <attribute>
+            <name>outputClass</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
+        </attribute>
     </tag>
 
 
@@ -1026,8 +1041,7 @@
   ======================================================
  -->
     <tag>
-        <!-- TODO rename to 'output_message' -->
-        <name>message</name>
+        <name>output_message</name>
         <tagclass>net.sourceforge.myfaces.taglib.MessageTag</tagclass>
         <bodycontent>JSP</bodycontent>
         <!-- TODO attributes rendered, value (rename msg?), outputClass-->
@@ -1060,6 +1074,38 @@
             <name>bundle</name>
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>
+
+
+<!--
+  ======================================================
+  parameter
+  ======================================================
+ -->
+    <tag>
+        <name>parameter</name>
+        <tagclass>net.sourceforge.myfaces.taglib.ParamTag</tagclass>
+        <bodycontent>empty</bodycontent>
+        <attribute>
+            <name>id</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>modelReference</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>value</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>name</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
         </attribute>
     </tag>
 
@@ -1853,12 +1899,12 @@
         <attribute>
           <name>key</name>
           <required>false</required>
-          <rtexprvalue>false</rtexprvalue>
+          <rtexprvalue>true</rtexprvalue>
         </attribute>
         <attribute>
           <name>bundle</name>
           <required>false</required>
-          <rtexprvalue>false</rtexprvalue>
+          <rtexprvalue>true</rtexprvalue>
         </attribute>
     </tag>
 
@@ -2083,12 +2129,12 @@
         <attribute>
           <name>key</name>
           <required>false</required>
-          <rtexprvalue>false</rtexprvalue>
+          <rtexprvalue>true</rtexprvalue>
         </attribute>
         <attribute>
           <name>bundle</name>
           <required>false</required>
-          <rtexprvalue>false</rtexprvalue>
+          <rtexprvalue>true</rtexprvalue>
         </attribute>
         <attribute>
           <name>selectbooleanClass</name>

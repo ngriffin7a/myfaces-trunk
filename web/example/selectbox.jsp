@@ -78,10 +78,9 @@
                 </h:command_button>
             </h:form>
 
-            <h:message key="msg_price" bundle="net.sourceforge.myfaces.examples.resource.example_messages" >
+            <h:output_message key="msg_price" bundle="net.sourceforge.myfaces.examples.resource.example_messages" >
                 <f:parameter modelReference="carconf.price" />
-            </h:message>
-
+            </h:output_message>
 
         </x:page_body>
 

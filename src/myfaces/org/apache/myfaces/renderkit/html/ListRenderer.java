@@ -66,49 +66,56 @@ public class ListRenderer
     {
         ResponseWriter writer = facesContext.getResponseWriter();
         UIComponent parent = uiComponent.getParent();
+        String rendererType = uiComponent.getRendererType();
+        String parentRendererType = parent.getRendererType();
 
-        if (parent.getRendererType().equals(ListRenderer.TYPE) &&
-            uiComponent.getRendererType().equals(DataRenderer.TYPE))
+        if (rendererType != null && parentRendererType != null)
         {
-            Object obj = uiComponent.getAttribute(ITERATOR_ATTR);
-            if (obj == null)
+            if (parentRendererType.equals(ListRenderer.TYPE) &&
+                rendererType.equals(DataRenderer.TYPE))
             {
-                // first call of encodeBegin
+                Object obj = uiComponent.getAttribute(ITERATOR_ATTR);
+                if (obj == null)
+                {
+                    // first call of encodeBegin
+                    incrementComponentCountAttr(facesContext);
+                }
+                else
+                {
+                    writer.write("</tr>\n");
+                }
+
+                Iterator it = getIterator(facesContext, uiComponent);
+
+                String varAttr = (String)uiComponent.getAttribute(DataRenderer.VAR_ATTR);
+                if (it.hasNext())
+                {
+                    facesContext.setModelValue(varAttr, it.next());
+                    // new row
+                    openNewRow(facesContext, uiComponent.getRendererType());
+                }
+                else
+                {
+                    facesContext.setModelValue(varAttr, null);
+                }
+            }
+            else if (parentRendererType.equals(ListRenderer.TYPE) &&
+                     rendererType.equals(GroupRenderer.TYPE))
+            {
                 incrementComponentCountAttr(facesContext);
-            }
-            else
-            {
-                writer.write("</tr>\n");
-            }
-
-            Iterator it = getIterator(facesContext, uiComponent);
-
-            String varAttr = (String)uiComponent.getAttribute(DataRenderer.VAR_ATTR);
-            if (it.hasNext())
-            {
-                facesContext.setModelValue(varAttr, it.next());
                 // new row
                 openNewRow(facesContext, uiComponent.getRendererType());
             }
             else
             {
-                facesContext.setModelValue(varAttr, null);
-            }
-        }
-        else if (parent.getRendererType().equals(ListRenderer.TYPE) &&
-                 uiComponent.getRendererType().equals(GroupRenderer.TYPE))
-        {
-            incrementComponentCountAttr(facesContext);
-            // new row
-            openNewRow(facesContext, uiComponent.getRendererType());
-        }
-        else
-        {
-            if ((parent.getRendererType().equals(DataRenderer.TYPE) ||
-                parent.getRendererType().equals(GroupRenderer.TYPE)) &&
-                parent.getParent().getRendererType().equals(TYPE))
-            {
-                openNewColumn(facesContext);
+                String parentParentRendererType = parent.getParent().getRendererType();
+                if ((parentRendererType.equals(DataRenderer.TYPE) ||
+                    parentRendererType.equals(GroupRenderer.TYPE)) &&
+                    (parentParentRendererType != null &&
+                     parentParentRendererType.equals(TYPE)))
+                {
+                    openNewColumn(facesContext);
+                }
             }
         }
     }
@@ -154,21 +161,30 @@ public class ListRenderer
                                UIComponent uiComponent) throws IOException
     {
         UIComponent parent = uiComponent.getParent();
-        if (parent.getRendererType().equals(TYPE) && (
-            uiComponent.getRendererType().equals(DataRenderer.TYPE) ||
-            uiComponent.getRendererType().equals(GroupRenderer.TYPE)))
+
+        String rendererType = uiComponent.getRendererType();
+        String parentRendererType = parent.getRendererType();
+
+        if (rendererType != null && parentRendererType != null)
         {
-            ResponseWriter writer = facesContext.getResponseWriter();
-            writer.write("</tr>\n");
-        }
-        else
-        {
-            if ((parent.getRendererType().equals(DataRenderer.TYPE) ||
-                parent.getRendererType().equals(GroupRenderer.TYPE)) &&
-                parent.getParent().getRendererType().equals(TYPE))
+            if (parentRendererType.equals(TYPE) && (
+                rendererType.equals(DataRenderer.TYPE) ||
+                rendererType.equals(GroupRenderer.TYPE)))
             {
                 ResponseWriter writer = facesContext.getResponseWriter();
-                writer.write("</td>\n");
+                writer.write("</tr>\n");
+            }
+            else
+            {
+                String parentParentRendererType = parent.getParent().getRendererType();
+                if ((parentRendererType.equals(DataRenderer.TYPE) ||
+                    parentRendererType.equals(GroupRenderer.TYPE)) &&
+                    (parentParentRendererType != null &&
+                     parentParentRendererType.equals(TYPE)))
+                {
+                    ResponseWriter writer = facesContext.getResponseWriter();
+                    writer.write("</td>\n");
+                }
             }
         }
     }

@@ -18,6 +18,8 @@
  */
 package net.sourceforge.myfaces.renderkit.attr;
 
+import javax.faces.component.AttributeDescriptor;
+
 /**
  * Constant definitions for the specified render dependent attributes of the
  * "Hyperlink" renderer type.
@@ -28,6 +30,9 @@ public interface HyperlinkRendererAttributes
     extends CommonRendererAttributes
 {
     public static final String HREF_ATTR = "href";
+
+    public static final AttributeDescriptor KEY_ATTR = new AttrDescrImpl("key");
+    public static final String BUNDLE_ATTR = "bundle";
 
     public static final String ACCESSKEY_ATTR = "accesskey";
     public static final String CHARSET_ATTR = "charset";

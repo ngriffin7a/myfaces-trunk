@@ -24,8 +24,10 @@ import net.sourceforge.myfaces.convert.ConverterUtils;
 import net.sourceforge.myfaces.renderkit.attr.HyperlinkRendererAttributes;
 import net.sourceforge.myfaces.renderkit.html.state.StateRenderer;
 import net.sourceforge.myfaces.renderkit.html.util.CommonAttributes;
+import net.sourceforge.myfaces.renderkit.html.util.HTMLEncoder;
 import net.sourceforge.myfaces.taglib.MyFacesBodyTag;
 import net.sourceforge.myfaces.util.logging.LogUtil;
+import net.sourceforge.myfaces.util.bundle.BundleUtils;
 import net.sourceforge.myfaces.webapp.ServletMapping;
 import net.sourceforge.myfaces.webapp.ServletMappingFactory;
 
@@ -88,6 +90,7 @@ public class HyperlinkRenderer
                 UIComponent child = (UIComponent)children.next();
                 if (child instanceof UIParameter)
                 {
+                    decodeNestedParameter(facesContext, (UICommand)uiComponent, (UIParameter)child);
                 }
             }
 
@@ -223,6 +226,16 @@ public class HyperlinkRenderer
         CommonAttributes.renderAttributes(facesContext, uiComponent, HyperlinkRendererAttributes.COMMON_HYPERLINK_ATTRIBUTES);
 
         writer.write(">");
+
+        //write link text
+        String key = (String)uiComponent.getAttribute(KEY_ATTR.getName());
+        if (key != null)
+        {
+            String text = BundleUtils.getString(facesContext,
+                                                (String)uiComponent.getAttribute(BUNDLE_ATTR),
+                                                key);
+            writer.write(HTMLEncoder.encode(text, true, true));
+        }
 
         //write out body content
         BodyContent bodyContent = (BodyContent)uiComponent.getAttribute(MyFacesBodyTag.BODY_CONTENT_ATTR);

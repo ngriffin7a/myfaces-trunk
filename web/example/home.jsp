@@ -38,16 +38,16 @@
             <table border="0">
                 <tr>
                     <td valign="middle">
-                        <h:message id="welcome" bundle="net.sourceforge.myfaces.examples.resource.example_messages" key="welcome" />
+                        <h:output_message id="welcome" bundle="net.sourceforge.myfaces.examples.resource.example_messages" key="welcome" />
                     </td>
                     <td valign="middle">
                         <h:image id="logo" url="images/logo.jpg"/>
                     </td>
                 </tr>
             </table>
-            <h:message id="today" bundle="net.sourceforge.myfaces.examples.resource.example_messages" key="today" >
+            <h:output_message id="today" bundle="net.sourceforge.myfaces.examples.resource.example_messages" key="today" >
                 <f:parameter id="p0" value="<%=new Date()%>" />
-            </h:message>
+            </h:output_message>
         </x:page_body>
 
         <%@include file="inc/page_footer.jsp" %>

@@ -62,13 +62,13 @@
                 <h:group>
                     <h:output_text text="take a look at this runtime values ..."/>
                     <h:group>
-                        <h:message msg="{0} rows" >
+                        <h:output_message msg="{0} rows" >
                             <f:parameter value="<%=new Integer(rows)%>"/>
-                        </h:message>
+                        </h:output_message>
                         &nbsp; / &nbsp;
-                        <h:message msg="{0} cols" >
-                            <f:parameter value="<%=new Integer(cols)%>"/>
-                        </h:message>
+                        <h:output_message msg="{0} cols" >
+                            <h:parameter value="<%=new Integer(cols)%>"/>
+                        </h:output_message>
                     </h:group>
                 </h:group>
             </h:list>
