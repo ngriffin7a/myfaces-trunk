@@ -55,6 +55,10 @@ import org.apache.commons.logging.LogFactory;
  * @version $Revision$ $Date$
  * 
  * $Log$
+ * Revision 1.51  2004/09/28 19:11:49  dave0000
+ * uppercase static final prop
+ * remove redundant code
+ *
  * Revision 1.50  2004/09/28 18:29:48  dave0000
  * fix for bug 1034332: ValueBinding.getExpressionString() not implemented
  *
@@ -428,10 +432,10 @@ public class ValueBindingImpl extends ValueBinding implements StateHolder
             return _expression instanceof Expression 
                 ? ((Expression) _expression).evaluate(
                     new ELVariableResolver(facesContext),
-                    s_functionMapper, ELParserHelper.s_logger)
+                    s_functionMapper, ELParserHelper.LOGGER)
                 : ((ExpressionString) _expression).evaluate(
                     new ELVariableResolver(facesContext),
-                    s_functionMapper, ELParserHelper.s_logger);
+                    s_functionMapper, ELParserHelper.LOGGER);
         }
         catch (IndexOutOfBoundsException e) 
         {
@@ -467,33 +471,30 @@ public class ValueBindingImpl extends ValueBinding implements StateHolder
             new ELVariableResolver(facesContext);
         Object expression = _expression;
         
-        if (expression instanceof Expression)
+        while (expression instanceof ConditionalExpression)
         {
-            while (expression instanceof ConditionalExpression)
-            {
-                ConditionalExpression conditionalExpression = 
-                    ((ConditionalExpression) expression);
-                // first, evaluate the condition (and coerce the result to a
-                // boolean value)
-                boolean condition =
-                  Coercions.coerceToBoolean(
-                      conditionalExpression.getCondition().evaluate(
-                          variableResolver, s_functionMapper, 
-                          ELParserHelper.s_logger), 
-                          ELParserHelper.s_logger)
-                      .booleanValue();
-    
-                // then, use this boolean to branch appropriately
-                expression = condition ? conditionalExpression.getTrueBranch()
-                    : conditionalExpression.getFalseBranch();
-            }
-    
-            if (expression instanceof NamedValue)
-            {
-                return ((NamedValue) expression).getName();
-            }
+            ConditionalExpression conditionalExpression = 
+                ((ConditionalExpression) expression);
+            // first, evaluate the condition (and coerce the result to a
+            // boolean value)
+            boolean condition =
+              Coercions.coerceToBoolean(
+                  conditionalExpression.getCondition().evaluate(
+                      variableResolver, s_functionMapper, 
+                      ELParserHelper.LOGGER), 
+                      ELParserHelper.LOGGER)
+                  .booleanValue();
+
+            // then, use this boolean to branch appropriately
+            expression = condition ? conditionalExpression.getTrueBranch()
+                : conditionalExpression.getFalseBranch();
         }
-        
+
+        if (expression instanceof NamedValue)
+        {
+            return ((NamedValue) expression).getName();
+        }
+    
         if (!(expression instanceof ComplexValue)) {
             // all other cases are not variable references
             throw new NotVariableReferenceException(
@@ -507,7 +508,7 @@ public class ValueBindingImpl extends ValueBinding implements StateHolder
         // resolve the prefix
         Object base = complexValue.getPrefix()
             .evaluate(variableResolver, s_functionMapper, 
-                ELParserHelper.s_logger);
+                ELParserHelper.LOGGER);
 
         // Resolve and apply the suffixes
         List suffixes = complexValue.getSuffixes();
@@ -516,7 +517,7 @@ public class ValueBindingImpl extends ValueBinding implements StateHolder
         {
             ValueSuffix suffix = (ValueSuffix) suffixes.get(i);
             base = suffix.evaluate(base, variableResolver, s_functionMapper,
-                ELParserHelper.s_logger);
+                ELParserHelper.LOGGER);
         }
         
         if (base == null)
@@ -535,7 +536,7 @@ public class ValueBindingImpl extends ValueBinding implements StateHolder
             {
                 index = arraySuffixIndex.evaluate(
                         variableResolver, s_functionMapper, 
-                        ELParserHelper.s_logger);
+                        ELParserHelper.LOGGER);
             }
             else
             {
@@ -554,7 +555,7 @@ public class ValueBindingImpl extends ValueBinding implements StateHolder
     private Object coerce(Object value, Class clazz) throws ELException
     {
         return (value == null) ? null
-            : Coercions.coerce(value, clazz, ELParserHelper.s_logger);
+            : Coercions.coerce(value, clazz, ELParserHelper.LOGGER);
     }
     
     protected RuntimeConfig getRuntimeConfig(FacesContext facesContext)

@@ -57,6 +57,10 @@ import org.apache.commons.logging.LogFactory;
  * @version $Revision$ $Date$
  * 
  * $Log$
+ * Revision 1.5  2004/09/28 19:11:50  dave0000
+ * uppercase static final prop
+ * remove redundant code
+ *
  * Revision 1.4  2004/07/01 22:05:11  mwessendorf
  * ASF switch
  *
@@ -69,9 +73,8 @@ import org.apache.commons.logging.LogFactory;
  */
 public class ELParserHelper
 {
-    static final Log           log      = LogFactory
-                                            .getLog(ELParserHelper.class);
-    public static final Logger s_logger = new Logger(System.out);
+    static final Log           log    = LogFactory.getLog(ELParserHelper.class);
+    public static final Logger LOGGER = new Logger(System.out);
 
     private ELParserHelper()
     {
@@ -404,7 +407,7 @@ public class ELParserHelper
     private static Integer coerceToIntegerWrapper(Object base, Object index)
         throws EvaluationException, ELException
     {
-        Integer integer = Coercions.coerceToInteger(index, s_logger);
+        Integer integer = Coercions.coerceToInteger(index, LOGGER);
         if (integer != null)
         {
             return integer;
