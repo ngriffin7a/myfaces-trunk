@@ -115,7 +115,7 @@
                         prefix="myfaces-${manifest.impl.version}/webapps/examples/web"/>
             <tarfileset dir="${basedir}"
                         includes="*"
-                        excludes="*.properties"
+                        excludes="*.properties,.cvsignore"
                         prefix="myfaces-${manifest.impl.version}/webapps/examples"/>
             <tarfileset dir="${web_ss.dir}"
                         excludes="WEB-INF/lib/jsf-api.jar"

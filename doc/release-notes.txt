@@ -7,7 +7,7 @@ Changes in Release 0.3.1
 * completely restructured directories
 * revised doumentation
 * revised build files
-* 4 different state-saving modes
+* 4 different state-saving modes: see features.html for details
 
 ----------------------------------------------------------------------
 Changes in Release 0.3.0

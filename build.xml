@@ -99,6 +99,8 @@
                         prefix="myfaces-${manifest.impl.version}/doc"/>
             <tarfileset file="${myfaces.jar}"
                         prefix="myfaces-${manifest.impl.version}/lib"/>
+            <tarfileset file="${mail.jar}"
+                        prefix="myfaces-${manifest.impl.version}/lib"/>
         </tar>
     </target>
 
@@ -114,12 +116,27 @@
                         prefix="myfaces-${manifest.impl.version}/src/myfaces"/>
             <tarfileset dir="${tlds.dir}"
                         prefix="myfaces-${manifest.impl.version}/tlds"/>
+            <tarfileset dir="${project.dir}"
+                        includes="*"
+                        excludes="build.properties,
+                                  .cvsignore,
+                                  *.tgz"
+                        prefix="myfaces-${manifest.impl.version}"/>
         </tar>
     </target>
 
 
+    <target name="examples-release"
+            description="creates the examples release file myfaces-x.x.x-examples.tgz (don't forget to adjust manifest.properties!)">
+        <ant dir="webapps/examples"
+             antfile="build.xml"
+             inheritall="false"
+             target="release"/>
+    </target>
+
+
     <target name="all"
-            depends="bin-release, src-release"
+            depends="bin-release, src-release, examples-release"
             description="builds all release files">
     </target>
 
@@ -131,6 +148,10 @@
             <fileset file="myfaces-*.tgz" />
             <fileset dir="${doc.dir}/api" />
         </delete>
+        <ant dir="webapps/examples"
+            antfile="build.xml"
+            inheritall="false"
+            target="clean"/>
     </target>
 
 
