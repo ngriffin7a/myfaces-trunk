@@ -18,7 +18,7 @@
  */
 package net.sourceforge.myfaces.renderkit.html.jspinfo;
 
-import net.sourceforge.myfaces.component.MyFacesComponent;
+import net.sourceforge.myfaces.component.CommonComponentAttributes;
 import net.sourceforge.myfaces.util.bean.BeanUtils;
 import net.sourceforge.myfaces.util.logging.LogUtil;
 import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.Constants;
@@ -388,7 +388,7 @@ public class MyParseEventListener
                         continue;
                     }
 
-                    if (attrName.equals(MyFacesComponent.ID_ATTR))
+                    if (attrName.equals(CommonComponentAttributes.ID_ATTR))
                     {
                         id = (String)attrValue;
                     }

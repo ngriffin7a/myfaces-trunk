@@ -19,8 +19,8 @@
 package net.sourceforge.myfaces.renderkit.html;
 
 import net.sourceforge.myfaces.component.UIPanel;
+import net.sourceforge.myfaces.renderkit.attr.ListRendererAttributes;
 
-import javax.faces.FacesException;
 import javax.faces.FactoryFinder;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
@@ -39,6 +39,7 @@ import java.util.Iterator;
  */
 public class JspListRenderer
         extends AbstractPanelRenderer
+        implements ListRendererAttributes
 {
     public static final String TYPE = "JspList";
     public static final String RENDERKIT_ATTR = JspListRenderer.class.getName() + ".renderkit";

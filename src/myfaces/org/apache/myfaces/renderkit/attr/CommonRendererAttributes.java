@@ -16,18 +16,27 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package net.sourceforge.myfaces.component;
+package net.sourceforge.myfaces.renderkit.attr;
 
 /**
- * DOCUMENT ME!
+ * "Mixin" interface that defines the commonly used renderer attributes as defined in JSF.7.6
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public class UIPanel
-    extends javax.faces.component.UIPanel
-    implements CommonComponentAttributes
+public interface CommonRendererAttributes
 {
-    public static final String VAR_ATTR = "var";
-    public static final String CLASS_ATTR = "class";
-    public static final String COLUMNS_ATTR = "columns";
+    public static final String COLUMN_CLASSES_ATTR = "columnClasses";
+    public static final String CONVERTER_ATTR = "converter";
+    public static final String DATE_STYLE_ATTR = "dateStyle";
+    public static final String FORMAT_PATTERN_ATTR = "formatPattern";
+    public static final String NUMBER_STYLE_ATTR = "numberStyle";
+    public static final String ROW_CLASSES_ATTR = "rowClasses";
+    public static final String TIME_STYLE_ATTR = "timeStyle";
+    public static final String TIMEZONE_ATTR = "timezone";
+
+    //xxxClass
+    public static final String INPUT_CLASS_ATTR = "inputClass";
+    public static final String OUTPUT_CLASS_ATTR = "outputClass";
+    public static final String PANEL_CLASS_ATTR = "panelClass";
+    //TODO: continue definitions...
 }

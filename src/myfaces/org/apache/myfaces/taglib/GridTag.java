@@ -18,11 +18,11 @@
  */
 package net.sourceforge.myfaces.taglib;
 
+import net.sourceforge.myfaces.component.UIComponentUtils;
 import net.sourceforge.myfaces.component.UIPanel;
 import net.sourceforge.myfaces.renderkit.html.GridRenderer;
 
 import javax.faces.component.UIComponent;
-import javax.faces.webapp.FacesTag;
 
 
 /**
@@ -37,7 +37,7 @@ public class GridTag
     {
         UIPanel panel = new UIPanel();
         // donot save State
-        panel.setTransient(true);
+        UIComponentUtils.setTransient(panel, true);
         return panel;
 
     }
@@ -59,22 +59,22 @@ public class GridTag
 
     public void setColumnClasses(String value)
     {
-        setProperty(UIPanel.COLUMN_CLASSES_ATTR, value);
+        setProperty(GridRenderer.COLUMN_CLASSES_ATTR, value);
     }
 
     public void setRowClasses(String value)
     {
-        setProperty(UIPanel.ROW_CLASSES_ATTR, value);
+        setProperty(GridRenderer.ROW_CLASSES_ATTR, value);
     }
 
     public void setFooterClass(String value)
     {
-        setProperty(UIPanel.FOOTER_CLASS_ATTR, value);
+        setProperty(GridRenderer.FOOTER_CLASS_ATTR, value);
     }
 
     public void setHeaderClass(String value)
     {
-        setProperty(UIPanel.HEADER_CLASS_ATTR, value);
+        setProperty(GridRenderer.HEADER_CLASS_ATTR, value);
     }
 
 }

@@ -19,6 +19,7 @@
 package net.sourceforge.myfaces.renderkit.html;
 
 import net.sourceforge.myfaces.component.UIPanel;
+import net.sourceforge.myfaces.renderkit.attr.ListRendererAttributes;
 
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
@@ -33,6 +34,7 @@ import java.util.Iterator;
  */
 public class ListRenderer
         extends AbstractPanelRenderer
+        implements ListRendererAttributes
 {
     public static final String TYPE = "List";
 

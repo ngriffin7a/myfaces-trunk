@@ -25,24 +25,7 @@ package net.sourceforge.myfaces.component;
  */
 public class UISelectItems
     extends javax.faces.component.UISelectItems
-    implements MyFacesComponent
+    implements CommonComponentAttributes
 {
-    public boolean getRendersSelf()
-    {
-        return false;
-    }
-
-    //MyFacesComponentDelegate
-    private MyFacesComponentDelegate _delegate = new MyFacesComponentDelegate(this);
-
-    public boolean isTransient()
-    {
-        return _delegate.isTransient();
-    }
-
-    public void setTransient(boolean b)
-    {
-        _delegate.setTransient(b);
-    }
 
 }

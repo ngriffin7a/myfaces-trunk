@@ -21,6 +21,7 @@ package net.sourceforge.myfaces.renderkit.html;
 import net.sourceforge.myfaces.component.UIInput;
 import net.sourceforge.myfaces.component.UIComponentUtils;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLEncoder;
+import net.sourceforge.myfaces.renderkit.attr.SecretRendererAttributes;
 
 import javax.faces.component.UIComponent;
 import javax.faces.component.UITextEntry;
@@ -35,6 +36,7 @@ import java.io.IOException;
  */
 public class SecretRenderer
         extends HTMLRenderer
+        implements SecretRendererAttributes
 {
     public static final String REDISPLAY_ATTR = "redisplay";
 
@@ -81,14 +83,14 @@ public class SecretRenderer
                 writer.write("\"");
             }
         }
-        String size = (String)uiComponent.getAttribute(UIInput.SIZE_ATTR);
+        String size = (String)uiComponent.getAttribute(SIZE_ATTR);
         if (size != null)
         {
             writer.write(" size=\"");
             writer.write(size);
             writer.write("\"");
         }
-        String maxLength = (String)uiComponent.getAttribute(UIInput.MAX_LENGTH_ATTR);
+        String maxLength = (String)uiComponent.getAttribute(MAX_LENGTH_ATTR);
         if (maxLength != null)
         {
             writer.write(" maxlength=\"");

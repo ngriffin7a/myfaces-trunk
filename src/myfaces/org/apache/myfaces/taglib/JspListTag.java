@@ -19,6 +19,7 @@
 package net.sourceforge.myfaces.taglib;
 
 import net.sourceforge.myfaces.component.UIPanel;
+import net.sourceforge.myfaces.component.UIComponentUtils;
 import net.sourceforge.myfaces.renderkit.html.JspListRenderer;
 
 import javax.faces.component.UIComponent;
@@ -42,7 +43,7 @@ public class JspListTag
             }
         };
         // donot save State and set JspListRenderer
-        panel.setTransient(true);
+        UIComponentUtils.setTransient(panel, true);
         return panel;
     }
 
@@ -53,27 +54,27 @@ public class JspListTag
 
     public void setStyle(String value)
     {
-        setProperty(UIPanel.CLASS_ATTR, value);
+        setProperty(JspListRenderer.PANEL_CLASS_ATTR, value);
     }
 
     public void setColumnClasses(String value)
     {
-        setProperty(UIPanel.COLUMN_CLASSES_ATTR, value);
+        setProperty(JspListRenderer.COLUMN_CLASSES_ATTR, value);
     }
 
     public void setRowClasses(String value)
     {
-        setProperty(UIPanel.ROW_CLASSES_ATTR, value);
+        setProperty(JspListRenderer.ROW_CLASSES_ATTR, value);
     }
 
     public void setFooterClass(String value)
     {
-        setProperty(UIPanel.FOOTER_CLASS_ATTR, value);
+        setProperty(JspListRenderer.FOOTER_CLASS_ATTR, value);
     }
 
     public void setHeaderClass(String value)
     {
-        setProperty(UIPanel.HEADER_CLASS_ATTR, value);
+        setProperty(JspListRenderer.HEADER_CLASS_ATTR, value);
     }
 
 }

@@ -16,18 +16,23 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package net.sourceforge.myfaces.component;
+package net.sourceforge.myfaces.renderkit.attr;
 
 /**
- * DOCUMENT ME!
+ * Constant definitions for the specified render dependent attributes of the
+ * "Image" renderer type.
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public class UIPanel
-    extends javax.faces.component.UIPanel
-    implements CommonComponentAttributes
+public interface ImageRendererAttributes
+    extends CommonRendererAttributes
 {
-    public static final String VAR_ATTR = "var";
-    public static final String CLASS_ATTR = "class";
-    public static final String COLUMNS_ATTR = "columns";
+    public static final String TYPE_ATTR = "type";
+    public static final String IMAGE_ATTR = "image";
+    public static final String LABEL_ATTR = "label";
+
+    public static final String KEY_ATTR = "key";
+    public static final String BUNDEL_ATTR = "bundel";
+
+
 }

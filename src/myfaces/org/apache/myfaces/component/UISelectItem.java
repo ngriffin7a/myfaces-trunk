@@ -25,10 +25,14 @@ package net.sourceforge.myfaces.component;
  */
 public class UISelectItem
     extends javax.faces.component.UISelectItem
-    implements MyFacesComponent
+    implements CommonComponentAttributes
 {
+    public static final String ITEM_DESCRIPTION_ATTR = "itemDescription";
+    public static final String ITEM_LABEL_ATTR = "itemLabel";
+
+    //MyFaces eextension
     public static final String SELECTED_ATTR = "selected";
-    public static final String DESCRIPTION_ATTR = "description";
+
 
     public boolean getRendersSelf()
     {
@@ -37,22 +41,22 @@ public class UISelectItem
 
     public String getItemDescription()
     {
-        return (String)getAttribute(DESCRIPTION_ATTR);
+        return (String)getAttribute(ITEM_DESCRIPTION_ATTR);
     }
 
     public void setItemDescription(String itemDescription)
     {
-        setAttribute(DESCRIPTION_ATTR, itemDescription);
+        setAttribute(ITEM_DESCRIPTION_ATTR, itemDescription);
     }
 
     public String getItemLabel()
     {
-        return (String)getAttribute(LABEL_ATTR);
+        return (String)getAttribute(ITEM_LABEL_ATTR);
     }
 
     public void setItemLabel(String itemLabel)
     {
-        setAttribute(LABEL_ATTR, itemLabel);
+        setAttribute(ITEM_LABEL_ATTR, itemLabel);
     }
 
     public String getItemValue()
@@ -64,19 +68,4 @@ public class UISelectItem
     {
         setAttribute(VALUE_ATTR, itemValue);
     }
-
-
-    //MyFacesComponentDelegate
-    private MyFacesComponentDelegate _delegate = new MyFacesComponentDelegate(this);
-
-    public boolean isTransient()
-    {
-        return _delegate.isTransient();
-    }
-
-    public void setTransient(boolean b)
-    {
-        _delegate.setTransient(b);
-    }
-
 }

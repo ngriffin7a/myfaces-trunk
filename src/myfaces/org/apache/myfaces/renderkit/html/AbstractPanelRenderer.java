@@ -18,15 +18,15 @@
  */
 package net.sourceforge.myfaces.renderkit.html;
 
-import net.sourceforge.myfaces.renderkit.html.HTMLRenderer;
-import net.sourceforge.myfaces.component.UIPanel;
+import net.sourceforge.myfaces.renderkit.attr.CommonRendererAttributes;
+import net.sourceforge.myfaces.renderkit.attr.ListRendererAttributes;
 
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
-import java.util.StringTokenizer;
-import java.util.Iterator;
-import java.util.Collection;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.StringTokenizer;
 
 /**
  * DOCUMENT ME!
@@ -35,6 +35,7 @@ import java.util.Arrays;
  */
 public abstract class AbstractPanelRenderer
         extends HTMLRenderer
+        implements CommonRendererAttributes
 {
     protected Styles getStyles(UIComponent component)
     {
@@ -46,10 +47,10 @@ public abstract class AbstractPanelRenderer
                 component = component.getParent();
             }
 
-            String headerStyle = getAttribute(component, UIPanel.HEADER_CLASS_ATTR);
-            String footerStyle = getAttribute(component, UIPanel.FOOTER_CLASS_ATTR);
-            String[] rowStyle = getAttributes(component, UIPanel.ROW_CLASSES_ATTR);
-            String[] columnStyle = getAttributes(component, UIPanel.COLUMN_CLASSES_ATTR);
+            String headerStyle = getAttribute(component, ListRendererAttributes.HEADER_CLASS_ATTR);
+            String footerStyle = getAttribute(component, ListRendererAttributes.FOOTER_CLASS_ATTR);
+            String[] rowStyle = getAttributes(component, ROW_CLASSES_ATTR);
+            String[] columnStyle = getAttributes(component, COLUMN_CLASSES_ATTR);
 
             return new Styles(headerStyle, rowStyle, columnStyle, footerStyle);
         }

@@ -18,7 +18,7 @@
  */
 package net.sourceforge.myfaces.renderkit.html.state;
 
-import net.sourceforge.myfaces.component.MyFacesComponent;
+import net.sourceforge.myfaces.component.CommonComponentAttributes;
 import net.sourceforge.myfaces.component.UIComponentUtils;
 import net.sourceforge.myfaces.convert.Converter;
 import net.sourceforge.myfaces.convert.ConverterException;
@@ -134,7 +134,7 @@ public class StateRestorer
         String savedValue = getStateParameter(stateMap,
                                               RequestParameterNames
                                                 .getUIComponentStateParameterName(uiComponent,
-                                                                                  MyFacesComponent.VALUE_ATTR));
+                                                                                  CommonComponentAttributes.VALUE_ATTR));
         if (savedValue != null)
         {
             Converter conv = ConverterUtils.findConverter(facesContext, uiComponent);
@@ -159,17 +159,17 @@ public class StateRestorer
             Map.Entry entry = (Map.Entry)it.next();
             String attrName = RequestParameterNames.restoreUIComponentStateParameterAttributeName(uiComponent,
                                                                             (String)entry.getKey());
-            if (attrName != null && !attrName.equals(MyFacesComponent.VALUE_ATTR))
+            if (attrName != null && !attrName.equals(CommonComponentAttributes.VALUE_ATTR))
             {
                 Object paramValue = entry.getValue();
 
-                if (attrName.equals(MyFacesComponent.STRING_VALUE_ATTR))
+                if (attrName.equals(CommonComponentAttributes.STRING_VALUE_ATTR))
                 {
                     if (paramValue instanceof String[])
                     {
                         paramValue = StringArrayConverter.getAsString((String[])paramValue);
                     }
-                    uiComponent.setAttribute(MyFacesComponent.STRING_VALUE_ATTR, paramValue);
+                    uiComponent.setAttribute(CommonComponentAttributes.STRING_VALUE_ATTR, paramValue);
                     uiComponent.setValue(null);
                     uiComponent.setValid(false);
                     continue;

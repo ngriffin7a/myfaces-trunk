@@ -25,13 +25,10 @@ package net.sourceforge.myfaces.component;
  */
 public class UIGraphic
     extends javax.faces.component.UIGraphic
-    implements MyFacesComponent
+    implements CommonComponentAttributes
 {
-    public static final String KEY_ATTR = "key";
-    public static final String BUNDEL = "bundel";
-
-    public boolean isTransient()
+    public UIGraphic()
     {
-        return true;
+        UIComponentUtils.setTransient(this, true);
     }
 }

@@ -49,6 +49,9 @@ import java.io.IOException;
 public class NavigationItemRenderer
     extends HTMLRenderer
 {
+    //renderer dependent attribute
+    public static final String LABEL_ATTR = "label";
+
     public static final String TYPE = "NavigationItemRenderer";
     private static final String DECODED_ATTR = NavigationItemRenderer.class.getName() + ".DECODED";
 

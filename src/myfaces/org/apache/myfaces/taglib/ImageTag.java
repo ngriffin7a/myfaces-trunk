@@ -47,11 +47,11 @@ public class ImageTag
 
     public void setKey(String value)
     {
-        setProperty(UIGraphic.KEY_ATTR, value);
+        setProperty(ImageRenderer.KEY_ATTR, value);
     }
 
     public void setBundel(String value)
     {
-        setProperty(UIGraphic.KEY_ATTR, value);
+        setProperty(ImageRenderer.BUNDEL_ATTR, value);
     }
 }

@@ -19,8 +19,8 @@
 package net.sourceforge.myfaces.convert;
 
 import net.sourceforge.myfaces.MyFacesFactoryFinder;
-import net.sourceforge.myfaces.component.MyFacesComponent;
 import net.sourceforge.myfaces.convert.map.ConverterMapFactory;
+import net.sourceforge.myfaces.renderkit.attr.CommonRendererAttributes;
 
 import javax.faces.FacesException;
 import javax.faces.component.UIComponent;
@@ -61,7 +61,13 @@ public class ConverterUtils
                                          UIComponent uicomponent)
         throws IllegalArgumentException
     {
-        String converterId = (String)uicomponent.getAttribute(MyFacesComponent.CONVERTER_ATTR);
+        Object converterAttr = uicomponent.getAttribute(CommonRendererAttributes.CONVERTER_ATTR);
+        if (converterAttr instanceof Converter)
+        {
+            return (Converter)converterAttr;
+        }
+
+        String converterId = (String)converterAttr;
         if (converterId != null)
         {
             ConverterFactory convFactory = MyFacesFactoryFinder.getConverterFactory(facesContext.getServletContext());
@@ -159,7 +165,7 @@ public class ConverterUtils
     public static NumberFormat getNumberFormat(UIComponent component, Locale locale)
     {
         NumberFormat format;
-        String numberStyle = (String)component.getAttribute(Converter.NUMBER_STYLE);
+        String numberStyle = (String)component.getAttribute(CommonRendererAttributes.NUMBER_STYLE_ATTR);
         if (numberStyle != null)
         {
             if (numberStyle.equals(Converter.NUMBER_STYLE_CURRENCY))
@@ -185,7 +191,7 @@ public class ConverterUtils
         }
         else
         {
-            String pattern = (String)component.getAttribute(MyFacesComponent.FORMAT_PATTERN_ATTR);
+            String pattern = (String)component.getAttribute(CommonRendererAttributes.FORMAT_PATTERN_ATTR);
             if (pattern != null)
             {
                 format = new DecimalFormat(pattern, new DecimalFormatSymbols(locale));
@@ -222,7 +228,7 @@ public class ConverterUtils
 
     private static int getDateStyle(UIComponent component)
     {
-        String dateStyle = (String)component.getAttribute(Converter.DATE_STYLE);
+        String dateStyle = (String)component.getAttribute(CommonRendererAttributes.DATE_STYLE_ATTR);
         if (dateStyle != null)
         {
             if (dateStyle.equals(Converter.DATE_STYLE_SHORT))
@@ -252,7 +258,7 @@ public class ConverterUtils
 
     private static int getTimeStyle(UIComponent component)
     {
-        String timeStyle = (String)component.getAttribute(Converter.TIME_STYLE);
+        String timeStyle = (String)component.getAttribute(CommonRendererAttributes.TIME_STYLE_ATTR);
         if (timeStyle != null)
         {
             if (timeStyle.equals(Converter.TIME_STYLE_SHORT))

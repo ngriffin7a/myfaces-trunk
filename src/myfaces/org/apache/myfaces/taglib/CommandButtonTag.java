@@ -18,12 +18,10 @@
  */
 package net.sourceforge.myfaces.taglib;
 
-import net.sourceforge.myfaces.component.MyFacesComponent;
 import net.sourceforge.myfaces.component.UICommand;
 import net.sourceforge.myfaces.renderkit.html.ButtonRenderer;
 
 import javax.faces.component.UIComponent;
-import javax.faces.webapp.FacesTag;
 
 
 /**
@@ -48,7 +46,7 @@ public class CommandButtonTag
 
     public void setLabel(String v)
     {
-        setProperty(MyFacesComponent.LABEL_ATTR, v);
+        setProperty(ButtonRenderer.LABEL_ATTR, v);
     }
 
     public void setCommandName(String v)

@@ -21,6 +21,7 @@ package net.sourceforge.myfaces.renderkit.html;
 import net.sourceforge.myfaces.MyFacesFactoryFinder;
 import net.sourceforge.myfaces.component.UIParameter;
 import net.sourceforge.myfaces.renderkit.html.state.StateRenderer;
+import net.sourceforge.myfaces.renderkit.attr.HyperlinkRendererAttributes;
 import net.sourceforge.myfaces.webapp.ServletMapping;
 import net.sourceforge.myfaces.webapp.ServletMappingFactory;
 
@@ -48,6 +49,7 @@ import java.util.Iterator;
  */
 public class HyperlinkRenderer
         extends HTMLRenderer
+        implements HyperlinkRendererAttributes
 {
     public static final String TYPE = "Hyperlink";
     public String getRendererType()
@@ -74,7 +76,7 @@ public class HyperlinkRenderer
     {
         ResponseWriter writer = facesContext.getResponseWriter();
         writer.write("<a href=\"");
-        String href = (String)uiComponent.getAttribute(net.sourceforge.myfaces.component.UICommand.HREF_ATTR);
+        String href = (String)uiComponent.getAttribute(HREF_ATTR);
         if (href == null)
         {
             //Modify URL for the faces servlet mapping:

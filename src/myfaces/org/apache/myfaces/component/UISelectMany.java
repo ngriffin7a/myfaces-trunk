@@ -28,7 +28,7 @@ import java.util.Iterator;
  */
 public class UISelectMany
     extends javax.faces.component.UISelectMany
-    implements MyFacesComponent
+    implements CommonComponentAttributes
 {
     public static final String SIZE_ATTR = "size";
 
@@ -67,19 +67,5 @@ public class UISelectMany
         Integer size = (Integer)getAttribute(SIZE_ATTR);
         return size == null ? 0 : size.intValue();
     }
-
-    //MyFacesComponentDelegate
-    private MyFacesComponentDelegate _delegate = new MyFacesComponentDelegate(this);
-
-    public boolean isTransient()
-    {
-        return _delegate.isTransient();
-    }
-
-    public void setTransient(boolean b)
-    {
-        _delegate.setTransient(b);
-    }
-
 
 }

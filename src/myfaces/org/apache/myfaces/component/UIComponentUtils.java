@@ -22,6 +22,7 @@ import net.sourceforge.myfaces.convert.Converter;
 import net.sourceforge.myfaces.convert.ConverterException;
 import net.sourceforge.myfaces.convert.ConverterUtils;
 import net.sourceforge.myfaces.convert.impl.StringArrayConverter;
+import net.sourceforge.myfaces.renderkit.html.state.StateRenderer;
 
 import javax.faces.FacesException;
 import javax.faces.FactoryFinder;
@@ -60,7 +61,7 @@ public class UIComponentUtils
                                          Object newValue)
     {
         uiComponent.setValue(newValue);
-        uiComponent.setAttribute(MyFacesComponent.STRING_VALUE_ATTR, null);
+        uiComponent.setAttribute(CommonComponentAttributes.STRING_VALUE_ATTR, null);
         uiComponent.setValid(true);
     }
 
@@ -120,7 +121,7 @@ public class UIComponentUtils
         catch (ConverterException e)
         {
             uiComponent.setValue(null);
-            uiComponent.setAttribute(MyFacesComponent.STRING_VALUE_ATTR, newValue);
+            uiComponent.setAttribute(CommonComponentAttributes.STRING_VALUE_ATTR, newValue);
             uiComponent.setValid(false);
             if (addErrorMessageOnFail)
             {
@@ -143,6 +144,13 @@ public class UIComponentUtils
         //TODO: Determine a label for the component and add it as a MessageFormat parameter
         Message msg = msgRes.getMessage(facesContext, messageId);
         facesContext.addMessage(comp, msg);
+    }
+
+
+    public static void setTransient(UIComponent uiComponent, boolean b)
+    {
+        uiComponent.setAttribute(StateRenderer.TRANSIENT_ATTR,
+                                 b ? Boolean.TRUE : Boolean.FALSE);
     }
 
 

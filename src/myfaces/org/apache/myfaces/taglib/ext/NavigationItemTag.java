@@ -18,13 +18,11 @@
  */
 package net.sourceforge.myfaces.taglib.ext;
 
-import net.sourceforge.myfaces.component.MyFacesComponent;
 import net.sourceforge.myfaces.component.ext.UINavigationItem;
 import net.sourceforge.myfaces.renderkit.html.ext.NavigationItemRenderer;
 import net.sourceforge.myfaces.taglib.MyFacesTag;
 
 import javax.faces.component.UIComponent;
-import javax.faces.webapp.FacesTag;
 
 /**
  * DOCUMENT ME!
@@ -46,7 +44,7 @@ public class NavigationItemTag
 
     public void setLabel(String s)
     {
-        setProperty(MyFacesComponent.LABEL_ATTR, s);
+        setProperty(NavigationItemRenderer.LABEL_ATTR, s);
     }
 
     public void setHref(String s)

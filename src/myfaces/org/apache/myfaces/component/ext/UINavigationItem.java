@@ -29,6 +29,7 @@ public class UINavigationItem
     extends UICommand
 {
     public static final String TREE_ID_ATTR = "treeId";
+    public static final String HREF_ATTR = "href";
 
     public static final String TYPE = UINavigationItem.class.getName();
 
@@ -37,27 +38,26 @@ public class UINavigationItem
         return TYPE;
     }
 
-    public String getLabel()
-    {
-        return (String)getAttribute("label");
-    }
-
-    public void setLabel(String label)
-    {
-        setAttribute("label", label);
-    }
-
 
     public String getTreeId()
     {
-        return (String)getAttribute("treeId");
+        return (String)getAttribute(TREE_ID_ATTR);
     }
 
     public void setTreeId(String treeId)
     {
-        setAttribute("treeId", treeId);
+        setAttribute(TREE_ID_ATTR, treeId);
     }
 
+    public String getHref()
+    {
+        return (String)getAttribute(HREF_ATTR);
+    }
+
+    public void setHref(String treeId)
+    {
+        setAttribute(HREF_ATTR, treeId);
+    }
 
     public boolean isOpen()
     {

@@ -18,10 +18,11 @@
  */
 package net.sourceforge.myfaces.taglib;
 
-import net.sourceforge.myfaces.component.MyFacesComponent;
+import net.sourceforge.myfaces.component.CommonComponentAttributes;
 import net.sourceforge.myfaces.component.UIComponentUtils;
 import net.sourceforge.myfaces.convert.Converter;
 import net.sourceforge.myfaces.convert.ConverterUtils;
+import net.sourceforge.myfaces.renderkit.attr.CommonRendererAttributes;
 
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
@@ -145,7 +146,7 @@ public abstract class MyFacesTag
                 Map.Entry entry = (Map.Entry)it.next();
                 String attrName = (String)entry.getKey();
                 if (facesContext != null
-                    && attrName.equals(MyFacesComponent.VALUE_ATTR))
+                    && attrName.equals(CommonComponentAttributes.VALUE_ATTR))
                 {
                     if (uiComponent.currentValue(facesContext) == null)
                     {
@@ -189,25 +190,18 @@ public abstract class MyFacesTag
 
     public void setModelReference(String s)
     {
-        setProperty(MyFacesComponent.MODEL_REFERENCE_ATTR, s);
-    }
-
-    public void setConverter(String s)
-    {
-        setProperty(MyFacesComponent.CONVERTER_ATTR, s);
+        setProperty(CommonComponentAttributes.MODEL_REFERENCE_ATTR, s);
     }
 
     public void setValue(Object value)
     {
-        setProperty(MyFacesComponent.VALUE_ATTR, value);
+        setProperty(CommonComponentAttributes.VALUE_ATTR, value);
     }
 
-    /*
-    public void setValue(String value)
+    public void setConverter(Object converter)
     {
-        setProperty(MyFacesComponent.VALUE_ATTR, value);
+        setProperty(CommonRendererAttributes.CONVERTER_ATTR, converter);
     }
-    */
 
 
     //Iteration Tag support

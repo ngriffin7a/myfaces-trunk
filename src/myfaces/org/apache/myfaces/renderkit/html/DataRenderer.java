@@ -19,14 +19,11 @@
 package net.sourceforge.myfaces.renderkit.html;
 
 import net.sourceforge.myfaces.component.UIPanel;
+import net.sourceforge.myfaces.renderkit.attr.DataRendererAttributes;
 
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
-import javax.faces.context.ResponseWriter;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Iterator;
 
 /**
  * DOCUMENT ME!
@@ -35,6 +32,7 @@ import java.util.Iterator;
  */
 public class DataRenderer
         extends AbstractPanelRenderer
+        implements DataRendererAttributes
 {
     public static final String ITERATOR_ATTR = DataRenderer.class.getName() + ".ITERATOR";
 

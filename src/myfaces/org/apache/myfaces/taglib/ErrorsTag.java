@@ -22,7 +22,6 @@ import net.sourceforge.myfaces.component.UIOutput;
 import net.sourceforge.myfaces.renderkit.html.ErrorsRenderer;
 
 import javax.faces.component.UIComponent;
-import javax.faces.webapp.FacesTag;
 
 
 /**
@@ -46,7 +45,7 @@ public class ErrorsTag
 
     public void setCompoundId(String compoundId)
     {
-        setProperty(UIOutput.COMPOUND_ID_ATTR, compoundId);
+        setProperty(ErrorsRenderer.COMPOUND_ID_ATTR, compoundId);
     }
 
 }

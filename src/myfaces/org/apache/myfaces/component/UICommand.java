@@ -25,11 +25,9 @@ package net.sourceforge.myfaces.component;
  */
 public class UICommand
     extends javax.faces.component.UICommand
-    implements MyFacesComponent
+    implements CommonComponentAttributes
 {
     public static final String COMMAND_NAME_ATTR = "commandName";
-    public static final String HREF_ATTR = "href";
-    public static final String IMAGE_SRC_ATTR = "imageSrc";
 
     //MyFaces extensions
     public static final String COMMAND_REFERENCE_ATTR = "commandReference";
@@ -70,28 +68,4 @@ public class UICommand
         setAttribute(COMMAND_REFERENCE_ATTR, commandReference);
     }
 
-
-    public String getHref()
-    {
-        return (String)getAttribute(HREF_ATTR);
-    }
-
-    public void setHref(String href)
-    {
-        setAttribute(HREF_ATTR, href);
-    }
-
-
-    //MyFacesComponentDelegate
-    private MyFacesComponentDelegate _delegate = new MyFacesComponentDelegate(this);
-
-    public boolean isTransient()
-    {
-        return _delegate.isTransient();
-    }
-
-    public void setTransient(boolean b)
-    {
-        _delegate.setTransient(b);
-    }
 }

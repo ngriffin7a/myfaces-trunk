@@ -18,11 +18,12 @@
  */
 package net.sourceforge.myfaces.renderkit.html;
 
+import net.sourceforge.myfaces.renderkit.attr.ImageRendererAttributes;
+
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIGraphic;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
@@ -31,10 +32,10 @@ import java.io.IOException;
  * @version $Revision$ $Date$
  */
 public class ImageRenderer
-    extends HTMLRenderer
+        extends HTMLRenderer
+        implements ImageRendererAttributes
 {
-    public static final String TYPE = "Form";
-
+    public static final String TYPE = "Image";
     public String getRendererType()
     {
         return TYPE;
@@ -54,34 +55,24 @@ public class ImageRenderer
     {
         javax.faces.context.ResponseWriter writer = facesContext.getResponseWriter();
 
-        String value = (String)uiComponent.currentValue(facesContext);
-        if (value != null && value.length() > 0)
+        Object value = uiComponent.currentValue(facesContext);
+        if (value != null)
         {
-            writer.write("<img src=\"");
-
-            StringBuffer buf = new StringBuffer();
-            if (value.startsWith("/"))
+            String strValue = value.toString();
+            if (strValue.length() > 0)
             {
-                HttpServletRequest request = (HttpServletRequest)facesContext.getServletRequest();
-                buf.append(request.getContextPath())
-                   .append(value);
-            }
-            else
-            {
-                buf.append(value);
-            }
+                writer.write("<img src=\"");
 
-            //Encode URL for those still using HttpSessions... ;-)
-            String href = ((HttpServletResponse)facesContext.getServletResponse()).encodeURL(buf.toString());
+                if (strValue.startsWith("/"))
+                {
+                    HttpServletRequest request = (HttpServletRequest)facesContext.getServletRequest();
+                    writer.write(request.getContextPath());
+                }
 
-            writer.write(href);
-            writer.write("\">");
+                writer.write(strValue);
+                writer.write("\">");
+            }
         }
-
-
-
-        return;
-
     }
 
 }

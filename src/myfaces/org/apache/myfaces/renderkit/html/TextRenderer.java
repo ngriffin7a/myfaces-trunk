@@ -20,6 +20,7 @@ package net.sourceforge.myfaces.renderkit.html;
 
 import net.sourceforge.myfaces.component.UIInput;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLEncoder;
+import net.sourceforge.myfaces.renderkit.attr.TextRendererAttributes;
 
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIOutput;
@@ -34,7 +35,8 @@ import java.io.IOException;
  * @version $Revision$ $Date$
  */
 public class TextRenderer
-    extends HTMLRenderer
+        extends HTMLRenderer
+        implements TextRendererAttributes
 {
     public static final String TYPE = "Text";
 
@@ -85,14 +87,14 @@ public class TextRenderer
             writer.write(HTMLEncoder.encode(currentValue, false, false));
             writer.write("\"");
         }
-        String size = (String)uiComponent.getAttribute(UIInput.SIZE_ATTR);
+        String size = (String)uiComponent.getAttribute(SIZE_ATTR);
         if (size != null)
         {
             writer.write(" size=\"");
             writer.write(size);
             writer.write("\"");
         }
-        String maxLength = (String)uiComponent.getAttribute(UIInput.MAX_LENGTH_ATTR);
+        String maxLength = (String)uiComponent.getAttribute(MAX_LENGTH_ATTR);
         if (maxLength != null)
         {
             writer.write(" maxlength=\"");

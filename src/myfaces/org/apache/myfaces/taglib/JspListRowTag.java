@@ -19,6 +19,7 @@
 package net.sourceforge.myfaces.taglib;
 
 import net.sourceforge.myfaces.component.UIPanel;
+import net.sourceforge.myfaces.component.UIComponentUtils;
 import net.sourceforge.myfaces.renderkit.html.DataRenderer;
 
 import javax.faces.component.UIComponent;
@@ -44,7 +45,7 @@ public class JspListRowTag
         };
 
         // donot save State
-        panel.setTransient(true);
+        UIComponentUtils.setTransient(panel, true);
         return panel;
     }
 

@@ -22,7 +22,6 @@ import net.sourceforge.myfaces.component.UICommand;
 import net.sourceforge.myfaces.renderkit.html.HyperlinkRenderer;
 
 import javax.faces.component.UIComponent;
-import javax.faces.webapp.FacesTag;
 
 
 /**
@@ -57,6 +56,6 @@ public class CommandHyperlinkTag
 
     public void setHref(String v)
     {
-        setProperty(UICommand.HREF_ATTR, v);
+        setProperty(HyperlinkRenderer.HREF_ATTR, v);
     }
 }

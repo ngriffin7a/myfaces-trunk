@@ -22,25 +22,22 @@ import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 
 /**
- * HACK: There is no Converter class in javax.faces yet, therefore here in the meantime...
+ * FINAL: There is no Converter class in javax.faces yet, therefore here in the meantime...
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
 public interface Converter
 {
-    public static final String NUMBER_STYLE = "numberStyle";
     public static final String NUMBER_STYLE_CURRENCY = "CURRENCY";
     public static final String NUMBER_STYLE_INTEGER  = "INTEGER";
     public static final String NUMBER_STYLE_NUMBER   = "NUMBER";
     public static final String NUMBER_STYLE_PERCENT  = "PERCENT";
 
-    public static final String DATE_STYLE = "dateStyle";
     public static final String DATE_STYLE_SHORT  = "SHORT";
     public static final String DATE_STYLE_MEDIUM = "MEDIUM";
     public static final String DATE_STYLE_LONG   = "LONG";
     public static final String DATE_STYLE_FULL   = "FULL";
 
-    public static final String TIME_STYLE = "timeStyle";
     public static final String TIME_STYLE_SHORT  = "SHORT";
     public static final String TIME_STYLE_MEDIUM = "MEDIUM";
     public static final String TIME_STYLE_LONG   = "LONG";

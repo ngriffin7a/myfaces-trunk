@@ -28,6 +28,4 @@ import javax.faces.component.UITextEntry;
 public class UIInput
         extends UITextEntry     //Spec 1.0 names it UIInput instead of UITextEntry
 {
-    public static final String SIZE_ATTR = "size";
-    public static final String MAX_LENGTH_ATTR = "maxLength";
 }

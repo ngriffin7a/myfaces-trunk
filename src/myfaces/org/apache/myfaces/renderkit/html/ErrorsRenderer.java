@@ -18,15 +18,15 @@
  */
 package net.sourceforge.myfaces.renderkit.html;
 
-import net.sourceforge.myfaces.component.UIOutput;
+import net.sourceforge.myfaces.renderkit.attr.ErrorsRendererAttributes;
 
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
-import javax.faces.context.ResponseWriter;
 import javax.faces.context.Message;
+import javax.faces.context.ResponseWriter;
 import java.io.IOException;
-import java.util.Iterator;
 import java.util.Collections;
+import java.util.Iterator;
 
 /**
  * ErrorsRenderer as specified in JSF.7.6.5
@@ -34,7 +34,8 @@ import java.util.Collections;
  * @version $Revision$ $Date$
  */
 public class ErrorsRenderer
-    extends HTMLRenderer
+        extends HTMLRenderer
+        implements ErrorsRendererAttributes
 {
     public static final String TYPE = "Errors";
     public String getRendererType()
@@ -63,7 +64,7 @@ public class ErrorsRenderer
         boolean ulLayout;
         ResponseWriter writer = facesContext.getResponseWriter();
         Iterator it;
-        String compoundId = (String)uiComponent.getAttribute(UIOutput.COMPOUND_ID_ATTR);
+        String compoundId = (String)uiComponent.getAttribute(COMPOUND_ID_ATTR);
         if (compoundId == null)
         {
             //All messages

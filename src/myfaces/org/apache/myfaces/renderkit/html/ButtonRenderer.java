@@ -18,7 +18,7 @@
  */
 package net.sourceforge.myfaces.renderkit.html;
 
-import net.sourceforge.myfaces.component.MyFacesComponent;
+import net.sourceforge.myfaces.renderkit.attr.ButtonRendererAttributes;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLEncoder;
 
 import javax.faces.component.UICommand;
@@ -38,6 +38,7 @@ import java.io.IOException;
  */
 public class ButtonRenderer
         extends HTMLRenderer
+        implements ButtonRendererAttributes
 {
     public static final String TYPE = "Button";
     public String getRendererType()
@@ -123,7 +124,7 @@ public class ButtonRenderer
         ResponseWriter writer = facesContext.getResponseWriter();
         boolean hiddenParam = true;
         writer.write("<input type=");
-        String imageSrc = (String)uiComponent.getAttribute(net.sourceforge.myfaces.component.UICommand.IMAGE_SRC_ATTR);
+        String imageSrc = (String)uiComponent.getAttribute(IMAGE_ATTR);
         if (imageSrc != null)
         {
             writer.write("\"image\" src=\"");
@@ -139,7 +140,7 @@ public class ButtonRenderer
             writer.write(uiComponent.getCompoundId());
             writer.write("\"");
             writer.write(" value=\"");
-            String label = (String)uiComponent.getAttribute(MyFacesComponent.LABEL_ATTR);
+            String label = (String)uiComponent.getAttribute(LABEL_ATTR);
             if (label == null)
             {
                 label = getStringValue(facesContext, uiComponent);

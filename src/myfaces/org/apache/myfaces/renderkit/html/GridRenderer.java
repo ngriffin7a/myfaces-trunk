@@ -19,6 +19,7 @@
 package net.sourceforge.myfaces.renderkit.html;
 
 import net.sourceforge.myfaces.component.UIPanel;
+import net.sourceforge.myfaces.renderkit.attr.GridRendererAttributes;
 
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
@@ -34,6 +35,7 @@ import java.util.Iterator;
  */
 public class GridRenderer
         extends AbstractPanelRenderer
+        implements GridRendererAttributes
 {
     public static final String TYPE = "Grid";
 

@@ -16,18 +16,18 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package net.sourceforge.myfaces.component;
+package net.sourceforge.myfaces.renderkit.attr;
 
 /**
- * DOCUMENT ME!
+ * Constant definitions for the specified render dependent attributes of the
+ * "Grid" renderer type.
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public class UIPanel
-    extends javax.faces.component.UIPanel
-    implements CommonComponentAttributes
+public interface GridRendererAttributes
+    extends CommonRendererAttributes
 {
-    public static final String VAR_ATTR = "var";
-    public static final String CLASS_ATTR = "class";
     public static final String COLUMNS_ATTR = "columns";
+    public static final String FOOTER_CLASS_ATTR = "footerClass";
+    public static final String HEADER_CLASS_ATTR = "headerClass";
 }

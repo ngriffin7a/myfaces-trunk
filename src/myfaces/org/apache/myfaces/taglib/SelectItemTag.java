@@ -18,11 +18,9 @@
  */
 package net.sourceforge.myfaces.taglib;
 
-import net.sourceforge.myfaces.component.MyFacesComponent;
 import net.sourceforge.myfaces.component.UISelectItem;
 
 import javax.faces.component.UIComponent;
-import javax.faces.webapp.FacesTag;
 
 /**
  * DOCUMENT ME!
@@ -49,11 +47,11 @@ public class SelectItemTag
 
     public void setDescription(String v)
     {
-        setProperty(UISelectItem.DESCRIPTION_ATTR, v);
+        setProperty(UISelectItem.ITEM_DESCRIPTION_ATTR, v);
     }
 
     public void setLabel(String v)
     {
-        setProperty(MyFacesComponent.LABEL_ATTR, v);
+        setProperty(UISelectItem.ITEM_LABEL_ATTR, v);
     }
 }

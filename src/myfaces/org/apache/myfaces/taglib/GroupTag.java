@@ -18,11 +18,11 @@
  */
 package net.sourceforge.myfaces.taglib;
 
+import net.sourceforge.myfaces.component.UIComponentUtils;
 import net.sourceforge.myfaces.component.UIPanel;
 import net.sourceforge.myfaces.renderkit.html.GroupRenderer;
 
 import javax.faces.component.UIComponent;
-import javax.faces.webapp.FacesTag;
 
 
 /**
@@ -37,7 +37,7 @@ public class GroupTag
     {
         UIPanel panel = new UIPanel();
         // donot save State
-        panel.setTransient(true);
+        UIComponentUtils.setTransient(panel, true);
         return panel;
     }
 

@@ -108,7 +108,8 @@ public class NavigationRenderer
         }
 
         item.encodeBegin(facesContext);
-        writer.write(HTMLEncoder.encode(item.getLabel(), true, true));
+        writer.write(HTMLEncoder.encode((String)item.getAttribute(NavigationItemRenderer.LABEL_ATTR),
+                                        true, true));
         item.encodeEnd(facesContext);
 
         if (level > 0)

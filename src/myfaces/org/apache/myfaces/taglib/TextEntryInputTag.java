@@ -22,7 +22,6 @@ import net.sourceforge.myfaces.component.UIInput;
 import net.sourceforge.myfaces.renderkit.html.TextRenderer;
 
 import javax.faces.component.UIComponent;
-import javax.faces.webapp.FacesTag;
 
 /**
  * DOCUMENT ME!
@@ -50,11 +49,11 @@ public class TextEntryInputTag
 
     public void setSize(String v)
     {
-        setProperty(UIInput.SIZE_ATTR, v);
+        setProperty(TextRenderer.SIZE_ATTR, v);
     }
 
     public void setMaxLength(String v)
     {
-        setProperty(UIInput.MAX_LENGTH_ATTR, v);
+        setProperty(TextRenderer.MAX_LENGTH_ATTR, v);
     }
 }

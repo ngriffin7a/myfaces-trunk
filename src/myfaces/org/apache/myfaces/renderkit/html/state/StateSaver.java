@@ -19,7 +19,7 @@
 package net.sourceforge.myfaces.renderkit.html.state;
 
 import net.sourceforge.myfaces.MyFacesConfig;
-import net.sourceforge.myfaces.component.MyFacesComponent;
+import net.sourceforge.myfaces.component.CommonComponentAttributes;
 import net.sourceforge.myfaces.component.UIPanel;
 import net.sourceforge.myfaces.convert.Converter;
 import net.sourceforge.myfaces.convert.ConverterException;
@@ -66,8 +66,8 @@ public class StateSaver
     private static final Set IGNORE_ATTRIBUTES = new HashSet();
     static
     {
-        IGNORE_ATTRIBUTES.add(MyFacesComponent.PARENT_ATTR);
-        IGNORE_ATTRIBUTES.add(MyFacesComponent.VALID_ATTR);
+        IGNORE_ATTRIBUTES.add(CommonComponentAttributes.PARENT_ATTR);
+        IGNORE_ATTRIBUTES.add(CommonComponentAttributes.VALID_ATTR);
     }
 
 
@@ -211,8 +211,8 @@ public class StateSaver
                 Object attrValue = comp.getAttribute(attrName);
                 if (attrValue != null && !isIgnoreAttribute(attrName))
                 {
-                    if (attrName.equals(MyFacesComponent.VALUE_ATTR) ||
-                        attrName.equals(MyFacesComponent.STRING_VALUE_ATTR))
+                    if (attrName.equals(CommonComponentAttributes.VALUE_ATTR) ||
+                        attrName.equals(CommonComponentAttributes.STRING_VALUE_ATTR))
                     {
                         valueSeen = true;
 
@@ -222,16 +222,16 @@ public class StateSaver
                             continue;
                         }
 
-                        if (attrName.equals(MyFacesComponent.VALUE_ATTR))
+                        if (attrName.equals(CommonComponentAttributes.VALUE_ATTR))
                         {
                             saveComponentValue(facesContext, stateMap, comp, attrValue);
                         }
-                        else //(attrName.equals(MyFacesComponent.STRING_VALUE_ATTR))
+                        else //(attrName.equals(CommonComponentAttributes.STRING_VALUE_ATTR))
                         {
                             saveParameter(stateMap,
                                           RequestParameterNames
                                             .getUIComponentStateParameterName(comp,
-                                                                              MyFacesComponent.STRING_VALUE_ATTR),
+                                                                              CommonComponentAttributes.STRING_VALUE_ATTR),
                                           (String)attrValue);
                         }
                     }
@@ -277,7 +277,7 @@ public class StateSaver
         }
         if (parsedComp != null)
         {
-            Object parsedValue = parsedComp.getAttribute(MyFacesComponent.VALUE_ATTR);
+            Object parsedValue = parsedComp.getAttribute(CommonComponentAttributes.VALUE_ATTR);
             if (parsedValue != null && parsedValue.equals(attrValue))
             {
                 //current value identical to hardcoded value
@@ -313,7 +313,7 @@ public class StateSaver
 
         saveParameter(stateMap,
                       RequestParameterNames.getUIComponentStateParameterName(uiComponent,
-                                                                             MyFacesComponent.VALUE_ATTR),
+                                                                             CommonComponentAttributes.VALUE_ATTR),
                       strValue);
     }
 
@@ -512,7 +512,7 @@ public class StateSaver
         }
 
         //transient?
-        Boolean trans = (Boolean)comp.getAttribute(MyFacesComponent.TRANSIENT_ATTR);
+        Boolean trans = (Boolean)comp.getAttribute(StateRenderer.TRANSIENT_ATTR);
         if (trans != null && trans.booleanValue())
         {
             return true;
