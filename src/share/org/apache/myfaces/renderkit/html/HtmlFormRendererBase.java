@@ -15,7 +15,9 @@
  */
 package net.sourceforge.myfaces.renderkit.html;
 
+import net.sourceforge.myfaces.config.MyfacesConfig;
 import net.sourceforge.myfaces.renderkit.RendererUtils;
+import net.sourceforge.myfaces.renderkit.html.util.JavascriptUtils;
 
 import javax.faces.application.ViewHandler;
 import javax.faces.component.UIComponent;
@@ -34,6 +36,9 @@ import java.util.Set;
  * @author Anton Koinov
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.8  2004/09/08 15:23:12  manolito
+ * Autoscroll feature
+ *
  * Revision 1.7  2004/07/01 22:00:57  mwessendorf
  * ASF switch
  *
@@ -111,6 +116,11 @@ public class HtmlFormRendererBase
                                               HIDDEN_SUBMIT_INPUT_SUFFIX, null);
         writer.writeAttribute(HTML.VALUE_ATTR, HIDDEN_SUBMIT_INPUT_VALUE, null);
         writer.endElement(HTML.INPUT_ELEM);
+
+        if (MyfacesConfig.getCurrentInstance(facesContext.getExternalContext()).isAutoScroll())
+        {
+            JavascriptUtils.renderAutoScrollHiddenInput(writer);
+        }
 
         //render hidden command inputs
         Set set = (Set)component.getAttributes().get(HIDDEN_COMMAND_INPUTS_SET_ATTR);

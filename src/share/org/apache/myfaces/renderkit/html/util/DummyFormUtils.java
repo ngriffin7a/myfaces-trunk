@@ -15,6 +15,7 @@
  */
 package net.sourceforge.myfaces.renderkit.html.util;
 
+import net.sourceforge.myfaces.config.MyfacesConfig;
 import net.sourceforge.myfaces.renderkit.html.HTML;
 import net.sourceforge.myfaces.renderkit.html.HtmlRendererUtils;
 
@@ -33,6 +34,9 @@ import java.util.Set;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.7  2004/09/08 15:23:11  manolito
+ * Autoscroll feature
+ *
  * Revision 1.6  2004/07/01 22:00:53  mwessendorf
  * ASF switch
  *
@@ -116,6 +120,11 @@ public class DummyFormUtils
             //TODO: Optimize saveSerializedView call, because serialized view is built twice!
             StateManager.SerializedView serializedView = stateManager.saveSerializedView(facesContext);
             stateManager.writeState(facesContext, serializedView);
+        }
+
+        if (MyfacesConfig.getCurrentInstance(facesContext.getExternalContext()).isAutoScroll())
+        {
+            JavascriptUtils.renderAutoScrollHiddenInput(writer);
         }
 
         if (dummyFormParams != null)

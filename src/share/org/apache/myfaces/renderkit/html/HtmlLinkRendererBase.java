@@ -15,6 +15,7 @@
  */
 package net.sourceforge.myfaces.renderkit.html;
 
+import net.sourceforge.myfaces.config.MyfacesConfig;
 import net.sourceforge.myfaces.renderkit.JSFAttr;
 import net.sourceforge.myfaces.renderkit.RendererUtils;
 import net.sourceforge.myfaces.renderkit.html.util.DummyFormResponseWriter;
@@ -37,6 +38,9 @@ import java.util.Iterator;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.17  2004/09/08 15:23:12  manolito
+ * Autoscroll feature
+ *
  * Revision 1.16  2004/09/08 09:32:03  manolito
  * MyfacesConfig moved to config package
  *
@@ -277,6 +281,11 @@ public abstract class HtmlLinkRendererBase
 
         String jsForm = "document.forms['" + formName + "']";
 
+        if (MyfacesConfig.getCurrentInstance(facesContext.getExternalContext()).isAutoScroll())
+        {
+            JavascriptUtils.appendAutoScrollAssignment(onClick, formName);
+        }
+
         //add id parameter for decode
         String hiddenFieldName = HtmlRendererUtils.getHiddenCommandLinkFieldName(formName);
         onClick.append(jsForm);
@@ -318,27 +327,7 @@ public abstract class HtmlLinkRendererBase
 
         writer.startElement(HTML.ANCHOR_ELEM, component);
         writer.writeURIAttribute(HTML.HREF_ATTR, "#", null);
-        renderOnClickAttribute(facesContext, writer, nestingForm, formName, onClick.toString());
-    }
-
-
-    /**
-     * Can be overwritten if additional javascript is needed on every link click.
-     * @param facesContext
-     * @param writer
-     * @param nestingForm  form, this link is nested in or null if no nesting form
-     * @param formName     name of nesting form or dummy form
-     * @param onClickValue value of onClick attribute to be rendered
-     * @throws IOException
-     */
-    protected void renderOnClickAttribute(FacesContext facesContext,
-                                          ResponseWriter writer,
-                                          UIForm nestingForm,
-                                          String formName,
-                                          String onClickValue)
-        throws IOException
-    {
-        writer.writeAttribute(HTML.ONCLICK_ATTR, onClickValue, null);
+        writer.writeAttribute(HTML.ONCLICK_ATTR, onClick.toString(), null);
     }
 
 

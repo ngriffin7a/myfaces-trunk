@@ -16,8 +16,12 @@
 package net.sourceforge.myfaces.renderkit.html.util;
 
 import net.sourceforge.myfaces.config.MyfacesConfig;
+import net.sourceforge.myfaces.renderkit.html.HTML;
 
 import javax.faces.context.ExternalContext;
+import javax.faces.context.FacesContext;
+import javax.faces.context.ResponseWriter;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -28,6 +32,9 @@ import java.util.Set;
  * @author Anton Koinov
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.6  2004/09/08 15:23:11  manolito
+ * Autoscroll feature
+ *
  * Revision 1.5  2004/09/08 09:31:25  manolito
  * moved isJavascriptDetected from MyFacesConfig to JavascriptUtils class
  *
@@ -49,6 +56,11 @@ public final class JavascriptUtils
     //private static final Log log = LogFactory.getLog(JavascriptUtils.class);
 
     public static final String JAVASCRIPT_DETECTED = JavascriptUtils.class + ".JAVASCRIPT_DETECTED";
+
+    private static final String AUTO_SCROLL_Y_PARAM = "autoScrollY";
+    private static final String AUTO_SCROLL_Y_FUNCTION = "getScrollY()";
+
+    private static final String OLD_VIEW_ID = JavascriptUtils.class + ".OLD_VIEW_ID";
 
 
     private JavascriptUtils()
@@ -266,4 +278,69 @@ public final class JavascriptUtils
         return sessionValue == null ? false : sessionValue.booleanValue();
     }
 
+
+    /**
+     * Adds the hidden form input value assignment that is necessary for the autoscroll
+     * feature to an html link or button onclick attribute.
+     */
+    public static void appendAutoScrollAssignment(StringBuffer onClickValue, String formName)
+    {
+        onClickValue.append("document.forms['").append(formName).append("']");
+        onClickValue.append(".elements['").append(AUTO_SCROLL_Y_PARAM).append("']");
+        onClickValue.append(".value=").append(AUTO_SCROLL_Y_FUNCTION).append(";");
+    }
+
+    /**
+     * Renders the hidden form input that is necessary for the autoscroll feature.
+     */
+    public static void renderAutoScrollHiddenInput(ResponseWriter writer) throws IOException
+    {
+        writer.startElement(HTML.INPUT_ELEM, null);
+        writer.writeAttribute(HTML.TYPE_ATTR, "hidden", null);
+        writer.writeAttribute(HTML.NAME_ATTR, AUTO_SCROLL_Y_PARAM, null);
+        writer.endElement(HTML.INPUT_ELEM);
+    }
+
+    /**
+     * Renders the autoscroll javascript function.
+     */
+    public static void renderAutoScrollFunction(FacesContext facesContext,
+                                                ResponseWriter writer) throws IOException
+    {
+        writer.write("\n<script language=\"JavaScript\">\n" +
+                     "<!--\n" +
+                     "function " + AUTO_SCROLL_Y_FUNCTION + " {\n" +
+                     "    if (document.body && document.body.scrollTop && !isNaN(document.body.scrollTop)) {\n" +
+                     "        //alert('document.body.scrollTop=' + document.body.scrollTop);\n" +
+                     "        return document.body.scrollTop;\n" +
+                     "    } else if (window.pageYOffset && !isNaN(window.pageYOffset)) {\n" +
+                     "        //alert('window.pageYOffset=' + window.pageYOffset);\n" +
+                     "        return window.pageYOffset;\n" +
+                     "    }\n" +
+                     "}\n");
+        ExternalContext externalContext = facesContext.getExternalContext();
+        String oldViewId = getOldViewId(externalContext);
+        if (oldViewId != null && oldViewId.equals(facesContext.getViewRoot().getViewId()))
+        {
+            //ok, we stayed on the same page, so let's scroll it to the former place
+            String scrollY = (String)externalContext.getRequestParameterMap().get(AUTO_SCROLL_Y_PARAM);
+            if (scrollY != null && scrollY.length() > 0 && !scrollY.equals("undefined"))
+            {
+                writer.write("window.scrollTo(0," + scrollY + ");\n");
+            }
+        }
+        writer.write("//-->\n" +
+                     "</script>\n");
+    }
+
+
+    public static void setOldViewId(ExternalContext externalContext, String viewId)
+    {
+        externalContext.getRequestMap().put(OLD_VIEW_ID, viewId);
+    }
+
+    public static String getOldViewId(ExternalContext externalContext)
+    {
+        return (String)externalContext.getRequestMap().get(OLD_VIEW_ID);
+    }
 }

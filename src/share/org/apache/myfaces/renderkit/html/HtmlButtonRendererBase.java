@@ -15,6 +15,7 @@
  */
 package net.sourceforge.myfaces.renderkit.html;
 
+import net.sourceforge.myfaces.config.MyfacesConfig;
 import net.sourceforge.myfaces.renderkit.JSFAttr;
 import net.sourceforge.myfaces.renderkit.RendererUtils;
 import net.sourceforge.myfaces.renderkit.html.util.DummyFormResponseWriter;
@@ -39,6 +40,9 @@ import java.util.Map;
  * @author Anton Koinov
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.7  2004/09/08 15:23:12  manolito
+ * Autoscroll feature
+ *
  * Revision 1.6  2004/09/08 09:32:03  manolito
  * MyfacesConfig moved to config package
  *
@@ -184,6 +188,11 @@ public class HtmlButtonRendererBase
         //call the clear_<formName> method
         onClick.append(HtmlRendererUtils.getClearHiddenCommandFormParamsFunctionName(formName)).append("();");
 
+        if (MyfacesConfig.getCurrentInstance(facesContext.getExternalContext()).isAutoScroll())
+        {
+            JavascriptUtils.appendAutoScrollAssignment(onClick, formName);
+        }
+
         //add hidden field for the case there is no commandLink in the form
         String hiddenFieldName = HtmlRendererUtils.getHiddenCommandLinkFieldName(formName);
         if (nestingForm != null)
@@ -195,29 +204,9 @@ public class HtmlButtonRendererBase
             dummyFormResponseWriter.addDummyFormParameter(hiddenFieldName);
         }
 
-        renderOnClickAttribute(facesContext, writer, nestingForm, formName, onClick.toString());
+        writer.writeAttribute(HTML.ONCLICK_ATTR, onClick.toString(), null);
     }
 
-
-
-    /**
-     * Can be overwritten if additional javascript is needed on every link click.
-     * @param facesContext
-     * @param writer
-     * @param nestingForm  form, this link is nested in or null if no nesting form
-     * @param formName     name of nesting form or dummy form
-     * @param onClickValue value of onClick attribute to be rendered
-     * @throws IOException
-     */
-    protected void renderOnClickAttribute(FacesContext facesContext,
-                                          ResponseWriter writer,
-                                          UIForm nestingForm,
-                                          String formName,
-                                          String onClickValue)
-        throws IOException
-    {
-        writer.writeAttribute(HTML.ONCLICK_ATTR, onClickValue, null);
-    }
 
 
     protected boolean isDisabled(FacesContext facesContext, UIComponent uiComponent)

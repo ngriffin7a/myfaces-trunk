@@ -37,6 +37,9 @@ import java.util.Set;
  * @author Anton Koinov
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.24  2004/09/08 15:23:10  manolito
+ * Autoscroll feature
+ *
  * Revision 1.23  2004/09/08 09:30:01  manolito
  * moved javascript detection to ResponseWriter
  *
@@ -154,6 +157,11 @@ public class HtmlResponseWriterImpl
             {
                 write("<script language=\"JavaScript\">\n<!--\ndocument.location.replace('" + facesContext.getApplication().getViewHandler().getResourceURL(facesContext, "/_javascriptDetector_")  + "?goto=" + facesContext.getApplication().getViewHandler().getActionURL(facesContext, facesContext.getViewRoot().getViewId()) +"');\n//-->\n</script>");
             }
+        }
+
+        if (myfacesConfig.isAutoScroll())
+        {
+            JavascriptUtils.renderAutoScrollFunction(facesContext, this);
         }
 
         _writer.flush();
