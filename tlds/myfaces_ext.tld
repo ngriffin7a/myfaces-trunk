@@ -1748,7 +1748,7 @@
         <body-content>JSP</body-content>
         <attribute>
             <name>id</name>
-            <required>false</required>
+            <required>true</required>
             <rtexprvalue>false</rtexprvalue>
         </attribute>
         <attribute>

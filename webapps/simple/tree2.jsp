@@ -64,7 +64,7 @@
     <b>Client-Side Tree</b>
     <br/>
 
-    <x:tree2 value="#{treeBacker.treeData}" var="node" varNodeToggler="t">
+    <x:tree2 id="clientTree" value="#{treeBacker.treeData}" var="node" varNodeToggler="t">
         <f:facet name="person">
             <h:panelGroup>
                 <f:facet name="expand">
@@ -115,7 +115,7 @@
     <br/>
 
     <!-- Expand/Collapse Handled By Server -->
-    <x:tree2 value="#{treeBacker.treeData}" var="node" varNodeToggler="t" clientSideToggle="false">
+    <x:tree2 id="serverTree" value="#{treeBacker.treeData}" var="node" varNodeToggler="t" clientSideToggle="false">
         <f:facet name="person">
             <h:panelGroup>
                 <h:commandLink immediate="true" action="#{t.toggleExpanded}">
