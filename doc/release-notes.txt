@@ -2,6 +2,9 @@ MyFaces Release Notes
 =====================
 
 ----------------------------------------------------------------------
+Changes in Release 1.0.7 beta
+
+----------------------------------------------------------------------
 Changes in Release 1.0.6 beta
 * switch to apache license
 * new JspTilesViewHandler for flawless Tiles support
@@ -27,7 +30,6 @@ Changes in Release 1.0.6 beta
 * splitting jar-files (myfaces.jar, myfaces-jsf-api.jar, myfaces-components.jar)
 * new EXPERIMENTAL feature to detect JavaScript support of a client browser
 
-
 ----------------------------------------------------------------------
 Changes in Release 1.0.5 beta
 * new faces configurator
@@ -45,7 +47,6 @@ Changes in Release 1.0.5 beta
 * bug #957938 	map-entries in faces-config.xml
 * bug #970747	Incorrect rendering of <select> tag
 * bug #972165	<h:selectBooleanCheckbox> and disabled attribute
-
 
 ----------------------------------------------------------------------
 Changes in Release 1.0.4 beta
