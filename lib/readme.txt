@@ -3,9 +3,9 @@ Library Dependencies
 .-------------------------------------.--------.-------.---------------.------------.
 | lib                                 | jfsapi | share | myfaces(impl) | components |
 |=====================================|========|=======|===============|============|
-| servlet-2.3-jsp-1.2.jar             |  X     |  X    |  X            |  X         |
+| servlet-2.3-jsp-1.2.jar             |  C     |  C    |  C            |  C         |
 | jstl.jar                            |  X     |  X    |  X            |  X         |
-| jsp-2.0.jar                         |        |  X    |  X            |  X         |
+| jsp-2.0.jar                         |        |  2    |  2            |  2         |
 | commons-el.jar                      |        |  X    |  X            |  X         |
 | commons-logging.jar                 |        |  X    |  X            |  X         |
 | commons-digester-1.5.jar            |        |       |  X            |  X         |
@@ -20,3 +20,6 @@ Library Dependencies
 | tlddoc.jar                          |        |       |               |            |
 '-------------------------------------'--------'-------'---------------'------------'
 
+C = compile-time only
+2 = compile-time and run-time for non JSP-2.0 containers
+X = compile- and run-time
