@@ -28,6 +28,9 @@ import javax.faces.el.ValueBinding;
  * @version $Revision$ $Date$
  * 
  * $Log$
+ * Revision 1.18  2004/05/10 05:30:15  dave0000
+ * Fix issue with setting Managed Bean to a wrong scope
+ *
  * Revision 1.17  2004/04/07 03:54:07  dave0000
  * fix testcases to match removed trim() on expression string
  *
@@ -398,6 +401,11 @@ public class ValueBindingTest extends ELBaseTest
         vb     = _application.createValueBinding("#{ '#{' } What? ${ #{true ? '${' : \"#{\\\\\"} #{testmap . true_} or #{testmap.false_}, that's the question! }");
         r      = vb.getValue(_facesContext);
         assertEquals("#{ What? ${ ${ TRUE_ or FALSE_, that's the question! }", r);
+        
+//        // Test '\' as escape for #{
+//        vb     = _application.createValueBinding("\\#{ \\\\\\#{ What? ${ \\\\#{false ? '${' : \"#{\\\\\"} #{testmap . true_} or #{testmap.false_}, that's the question! }");
+//        r      = vb.getValue(_facesContext);
+//        assertEquals("#{ \\#{ What? ${ \\\\#{\\ TRUE_ or FALSE_, that's the question! }", r);
     }
 
     public void testIsReadOnly() throws Exception
@@ -456,7 +464,6 @@ public class ValueBindingTest extends ELBaseTest
         assertSame(Object.class, vb.getType(_facesContext));
 
         vb = _application.createValueBinding("#{nonExistingValueBlahBlahBlah}");
-        vb.setValue(_facesContext, new Object());
         assertSame(Object.class, vb.getType(_facesContext));
         
         try 
@@ -467,5 +474,13 @@ public class ValueBindingTest extends ELBaseTest
         catch (Exception e) {
             // ignore, error expected
         }
+    }
+    
+    public void testManagedBean() throws Exception
+    {
+        ValueBinding vb;
+
+        vb = _application.createValueBinding("#{testBean_B.name}");
+        assertEquals("testName", vb.getValue(_facesContext));
     }
 }

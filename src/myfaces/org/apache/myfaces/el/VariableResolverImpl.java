@@ -230,7 +230,13 @@ public class VariableResolverImpl
         _scopes.putAll(s_standardScopes);
     }
 
-    //~ Methods ------------------------------------------------------------------------------------
+    /**
+     * FacesConfig is instantiated once per servlet and never changes--we can
+     * safely cache it
+     */
+    private FacesConfig _facesConfig;
+    
+    //~ Methods ---------------------------------------------------------------
 
     public Object resolveVariable(FacesContext facesContext, String name)
     {
@@ -284,14 +290,13 @@ public class VariableResolverImpl
         }
 
         // ManagedBean
-        FacesConfigFactory fcf         =
-            MyFacesFactoryFinder.getFacesConfigFactory(externalContext);
-        FacesConfig        facesConfig = fcf.getFacesConfig(externalContext);
-        ManagedBeanConfig  mbc         = facesConfig.getManagedBeanConfig(name);
+        ManagedBeanConfig mbc = 
+            getFacesConfig(facesContext).getManagedBeanConfig(name);
         if (mbc != null)
         {
             obj = ClassUtils.newInstance(mbc.getManagedBeanClass());
-            ManagedBeanConfigurator configurator = new ManagedBeanConfigurator(mbc);
+            ManagedBeanConfigurator configurator = 
+                new ManagedBeanConfigurator(mbc);
             configurator.configure(facesContext, obj);
 
             // put in scope
@@ -301,7 +306,8 @@ public class VariableResolverImpl
             Scope scope = (Scope) _scopes.get(scopeKey);
             if (scope == null)
             {
-                log.error("Managed bean '" + name + "' has illegal scope: " + scopeKey);
+                log.error("Managed bean '" + name + "' has illegal scope: "
+                    + scopeKey);
             }
             else
             {
@@ -314,12 +320,25 @@ public class VariableResolverImpl
         log.error("Variable '" + name + "' could not be resolved.");
         return null;
     }
+    
+    protected FacesConfig getFacesConfig(FacesContext facesContext)
+    {
+        if (_facesConfig == null)
+        {
+            ExternalContext externalContext = 
+                facesContext.getExternalContext();
+            FacesConfigFactory facesConfigFactory =
+                MyFacesFactoryFinder.getFacesConfigFactory(externalContext);
+            _facesConfig = facesConfigFactory.getFacesConfig(externalContext);
+        }
+        return _facesConfig;
+    }
 }
 
 
 interface ImplicitObject
 {
-    //~ Methods ------------------------------------------------------------------------------------
+    //~ Methods ---------------------------------------------------------------
 
     public Object get(FacesContext facesContext);
 }
@@ -327,7 +346,7 @@ interface ImplicitObject
 
 interface Scope
 {
-    //~ Methods ------------------------------------------------------------------------------------
+    //~ Methods ---------------------------------------------------------------
 
     public void put(ExternalContext extContext, String name, Object obj);
 }

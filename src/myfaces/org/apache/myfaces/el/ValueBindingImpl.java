@@ -18,6 +18,10 @@
  */
 package net.sourceforge.myfaces.el;
 
+import net.sourceforge.myfaces.MyFacesFactoryFinder;
+import net.sourceforge.myfaces.config.FacesConfig;
+import net.sourceforge.myfaces.config.FacesConfigFactory;
+import net.sourceforge.myfaces.config.ManagedBeanConfig;
 import net.sourceforge.myfaces.util.BiLevelCacheMap;
 
 import org.apache.commons.el.*;
@@ -48,6 +52,9 @@ import java.util.Map;
  * @version $Revision$ $Date$
  * 
  * $Log$
+ * Revision 1.39  2004/05/10 05:30:14  dave0000
+ * Fix issue with setting Managed Bean to a wrong scope
+ *
  * Revision 1.38  2004/04/26 05:54:59  dave0000
  * Add coercion to ValueBinding (and related changes)
  *
@@ -103,6 +110,12 @@ public class ValueBindingImpl extends ValueBinding implements StateHolder
     protected Application _application;
     protected String      _expressionString;
     protected Object      _expression;
+    
+    /**
+     * FacesConfig is instantiated once per servlet and never changes--we can
+     * safely cache it
+     */
+    private FacesConfig   _facesConfig;
 
     //~ Constructors ----------------------------------------------------------
 
@@ -177,13 +190,27 @@ public class ValueBindingImpl extends ValueBinding implements StateHolder
             Object base_ = resolveToBaseAndProperty(facesContext);
             if (base_ instanceof String)
             {
-                Object val = _application.getVariableResolver()
-                    .resolveVariable(facesContext, (String) base_);
+                String name = (String) base_;
                 
-                // Note: if val==null, then there is no variable with this name
-                //       in any scope. Therefore, we will create a new one, so 
+                // Check if it is a ManagedBean
+                // WARNING: must do this check first to avoid instantiating
+                //          the MB in resolveVariable()
+                ManagedBeanConfig mbConfig = 
+                    getFacesConfig(facesContext).getManagedBeanConfig(name);
+                if (mbConfig != null)
+                {
+                    // Note: if MB Class is not set, will return 
+                    //       <code>null</code>, which is a valid return value
+                    return mbConfig.getManagedBeanClass();
+                }
+
+                Object val = _application.getVariableResolver()
+                    .resolveVariable(facesContext, name);
+                
+                // Note: if there is no ManagedBean or variable with this name
+                //       in any scope,then we will create a new one and thus
                 //       any Object is allowed.
-                return (val == null) ? Object.class : val.getClass();
+                return (val != null) ? val.getClass() : Object.class;
             }
             else
             {
@@ -232,6 +259,7 @@ public class ValueBindingImpl extends ValueBinding implements StateHolder
                     throw new ReferenceSyntaxException(errorMessage);
                 }
 
+                // Note: will be coerced later
                 setValueInScope(facesContext, name, newValue);
             }
             else
@@ -282,13 +310,15 @@ public class ValueBindingImpl extends ValueBinding implements StateHolder
         }
     }
     
-    private static void setValueInScope(
+    private void setValueInScope(
         FacesContext facesContext, String name, Object newValue)
+    throws ELException
     {
         ExternalContext externalContext = facesContext.getExternalContext();
          
         Object obj = null;
         Map scopeMap;
+        Class targetClass = null;
         
       findObject: {
             // Request context
@@ -296,6 +326,7 @@ public class ValueBindingImpl extends ValueBinding implements StateHolder
             obj = scopeMap.get(name);
             if (obj != null)
             {
+                targetClass = obj.getClass();
                 break findObject;
             }
     
@@ -307,6 +338,7 @@ public class ValueBindingImpl extends ValueBinding implements StateHolder
                 obj = scopeMap.get(name);
                 if (obj != null)
                 {
+                    targetClass = obj.getClass();
                     break findObject;
                 }
             }
@@ -316,6 +348,7 @@ public class ValueBindingImpl extends ValueBinding implements StateHolder
             obj = scopeMap.get(name);
             if (obj != null)
             {
+                targetClass = obj.getClass();
                 break findObject;
             }
             
@@ -324,10 +357,45 @@ public class ValueBindingImpl extends ValueBinding implements StateHolder
         
         if (scopeMap == null)
         {
-            scopeMap = externalContext.getRequestMap();
+            // Check for ManagedBean
+            ManagedBeanConfig mbConfig = 
+                getFacesConfig(facesContext).getManagedBeanConfig(name);
+            if (mbConfig != null)
+            {
+                targetClass = mbConfig.getManagedBeanClass();
+                
+                String scopeName = mbConfig.getManagedBeanScope();
+                if ("request".equals(scopeName))
+                {
+                    scopeMap = externalContext.getRequestMap();
+                } 
+                else if ("session".equals(scopeName))
+                {
+                    scopeMap = externalContext.getSessionMap();
+                } 
+                else if ("application".equals(scopeName))
+                {
+                    scopeMap = externalContext.getApplicationMap();
+                } 
+                else if ("none".equals(scopeName))
+                {
+                    scopeMap = externalContext.getRequestMap();
+                } 
+                else
+                {
+                    log.error("Managed bean '" + name + "' has illegal scope: "
+                        + scopeName);
+                    scopeMap = externalContext.getRequestMap();
+                }
+            }
+            else
+            {
+                targetClass = Object.class;
+                scopeMap = externalContext.getRequestMap();
+            }
         }
         
-        scopeMap.put(name, newValue);
+        scopeMap.put(name, coerce(newValue, targetClass));
     }
 
     public Object getValue(FacesContext facesContext)
@@ -356,7 +424,8 @@ public class ValueBindingImpl extends ValueBinding implements StateHolder
 
             if (e instanceof ELException)
             {
-                log.error("Root cause for exception : ", ((ELException) e).getRootCause());
+                log.error("Root cause for exception : ", 
+                    ((ELException) e).getRootCause());
             }
 
             throw new EvaluationException(
@@ -389,7 +458,8 @@ public class ValueBindingImpl extends ValueBinding implements StateHolder
                 boolean condition =
                   Coercions.coerceToBoolean(
                       conditionalExpression.getCondition().evaluate(
-                          variableResolver, s_functionMapper, ELParserHelper.s_logger), 
+                          variableResolver, s_functionMapper, 
+                          ELParserHelper.s_logger), 
                           ELParserHelper.s_logger)
                       .booleanValue();
     
@@ -422,7 +492,8 @@ public class ValueBindingImpl extends ValueBinding implements StateHolder
         
         // resolve the prefix
         Object base = complexValue.getPrefix()
-            .evaluate(variableResolver, s_functionMapper, ELParserHelper.s_logger);
+            .evaluate(variableResolver, s_functionMapper, 
+                ELParserHelper.s_logger);
 
         // Resolve and apply the suffixes
         List suffixes = complexValue.getSuffixes();
@@ -449,7 +520,8 @@ public class ValueBindingImpl extends ValueBinding implements StateHolder
             if (arraySuffixIndex != null)
             {
                 index = arraySuffixIndex.evaluate(
-                        variableResolver, s_functionMapper, ELParserHelper.s_logger);
+                        variableResolver, s_functionMapper, 
+                        ELParserHelper.s_logger);
             }
             else
             {
@@ -468,6 +540,19 @@ public class ValueBindingImpl extends ValueBinding implements StateHolder
     private Object coerce(Object value, Class clazz) throws ELException
     {
         return Coercions.coerce(value, clazz, ELParserHelper.s_logger);
+    }
+    
+    protected FacesConfig getFacesConfig(FacesContext facesContext)
+    {
+        if (_facesConfig == null)
+        {
+            ExternalContext externalContext = 
+                facesContext.getExternalContext();
+            FacesConfigFactory facesConfigFactory =
+                MyFacesFactoryFinder.getFacesConfigFactory(externalContext);
+            _facesConfig = facesConfigFactory.getFacesConfig(externalContext);
+        }
+        return _facesConfig;
     }
 
     //~ State Holder ------------------------------------------------------

@@ -26,15 +26,18 @@ package net.sourceforge.myfaces.el;
 public class B
 {
     public static final String NAME = "Dummy object B";
+    
+    private String _name = NAME;
 
     public String getName()
     {
-        return NAME;
+        return _name;
     }
 
     public void setName(String name)
     {
-        // do nothing. Out test resets the object on every invocation anyway!
+        _name = name;
+        // Note: in certain cases, our tests reset the object on every invocation!
     }
 
     public C getC()

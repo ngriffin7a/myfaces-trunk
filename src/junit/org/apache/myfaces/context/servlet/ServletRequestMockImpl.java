@@ -46,6 +46,8 @@ public class ServletRequestMockImpl
     private Cookie[] _cookies;
     private String _servletPath = "/myfaces";
     private String _pathInfo = "";
+    
+    private HttpSession _session;
 
     public ServletRequestMockImpl(Cookie[] cookies)
     {
@@ -149,7 +151,11 @@ public class ServletRequestMockImpl
 
     public HttpSession getSession(boolean b)
     {
-        return null;
+        if (b && _session == null)
+        {
+            _session = new ServletSessionMock();
+        }
+        return _session;
     }
 
     public HttpSession getSession()

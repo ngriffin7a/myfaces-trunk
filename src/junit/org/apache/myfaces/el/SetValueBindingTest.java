@@ -56,10 +56,14 @@ public class SetValueBindingTest extends ELBaseTest
         vb.setValue(_facesContext, _theA);
         assertSame(_theA, vb.getValue(_facesContext));
         
-        vb     = _application.createValueBinding(
+        vb = _application.createValueBinding(
             "#{testmap.list[4].list[testmap.list[4][1][0][testmap.list[4][0][1]]][0][0]}");
         vb.setValue(_facesContext, "zzz");
         assertSame("zzz", vb.getValue(_facesContext));
+        
+        vb = _application.createValueBinding("#{nonExistingValueBlahBlahBlah}");
+        vb.setValue(_facesContext, new Double(5.5));
+        assertEquals(new Double(5.5), vb.getValue(_facesContext));
     }
     
     public void testSetRootValue()
@@ -74,6 +78,37 @@ public class SetValueBindingTest extends ELBaseTest
         // update existing variable
         vb.setValue(_facesContext, "another-value");
         assertSame("another-value", vb.getValue(_facesContext));
+    }
+    
+    public void testSetManagedBean()
+    {
+        ValueBinding vb;
+        
+        vb = _application.createValueBinding("#{testBean_B}");
+        try 
+        {
+            vb.setValue(_facesContext, new Double(5.5));
+            assertTrue(false);
+        }
+        catch (Exception e)
+        {
+            // expected: error because Double cannot be converted to Managed Bean B's class
+        }
+
+        // setValue must not create the bean
+        vb = _application.createValueBinding("#{sessionScope.testBean_B}");
+        assertNull(vb.getValue(_facesContext));
+
+        B b = new B();
+        b.setName("differentName");
+        vb = _application.createValueBinding("#{testBean_B}");
+        vb.setValue(_facesContext, b);
+        
+        vb = _application.createValueBinding("#{sessionScope.testBean_B.name}");
+        assertEquals("differentName", vb.getValue(_facesContext));
+        
+        vb = _application.createValueBinding("#{testBean_B.name}");
+        assertEquals("differentName", vb.getValue(_facesContext));
     }
     
     public void testCoercion()

@@ -60,6 +60,9 @@ import org.apache.commons.logging.LogFactory;
  * @version $Revision$ $Date$
  * 
  * $Log$
+ * Revision 1.3  2004/05/10 05:30:13  dave0000
+ * Fix issue with setting Managed Bean to a wrong scope
+ *
  * Revision 1.2  2004/04/08 23:22:18  dave0000
  * remove assert statements
  *
@@ -120,8 +123,8 @@ public class ELParserHelper
         StringBuffer sb = new StringBuffer(expressionString.length());
         int oldPos = 0;
 
-        for (int pos = expressionString.indexOf('{'); pos >= 0; pos = expressionString
-            .indexOf('{', oldPos = (pos + 1)))
+        for (int pos = expressionString.indexOf('{'); pos >= 0; 
+            pos = expressionString.indexOf('{', oldPos = (pos + 1)))
         {
             sb.append(expressionString.substring(oldPos, pos - 1));
 
@@ -134,10 +137,31 @@ public class ELParserHelper
                 }
                 else if (expressionString.charAt(pos - 1) == '#')
                 {
-                    sb.append("${");
-                    oldPos = pos + 1;
-                    pos = indexOfMatchingClosingBrace(expressionString, pos);
-                    sb.append(expressionString.substring(oldPos, pos + 1));
+//                    // TODO: should use \\ as escape for \ always, not just when before #{
+//                    // allow use of '\' as escape symbol for #{ (for compatibility with Sun's extended implementation)
+//                    if (isEscaped(expressionString, pos - 1)) 
+//                    {
+//                      escapes: {
+//                            for (int i = sb.length() - 1; i >= 0; i--)
+//                            {
+//                                if (sb.charAt(i) != '\\')
+//                                {
+//                                    sb.setLength(
+//                                        sb.length() - (sb.length() - i) / 2);
+//                                    break escapes;
+//                                }
+//                            }
+//                            sb.setLength(sb.length() / 2);
+//                        }
+//                        sb.append("#{");
+//                    }
+//                    else
+//                    {
+                        sb.append("${");
+                        oldPos = pos + 1;
+                        pos = indexOfMatchingClosingBrace(expressionString, pos);
+                        sb.append(expressionString.substring(oldPos, pos + 1));
+//                    }
                     continue;
                 }
             }
@@ -228,8 +252,8 @@ public class ELParserHelper
         int indexOfOpeningQuote)
     {
         char quote = expressionString.charAt(indexOfOpeningQuote);
-        for (int i = expressionString.indexOf(quote, indexOfOpeningQuote + 1); i >= 0; i = expressionString
-            .indexOf(quote, i + 1))
+        for (int i = expressionString.indexOf(quote, indexOfOpeningQuote + 1); 
+            i >= 0; i = expressionString.indexOf(quote, i + 1))
         {
             if (!isEscaped(expressionString, i))
             {
@@ -253,7 +277,7 @@ public class ELParserHelper
     }
 
     /**
-     * Replaces all <code>ValueSuffix</code> es with custom implementation
+     * Replaces all <code>ValueSuffix</code>es with custom implementation
      * ValueSuffexes that use JSF <code>PropertyResolver</code> insted of JSP
      * EL one.
      * 
@@ -294,14 +318,13 @@ public class ELParserHelper
             {
                 replaceSuffixes((ExpressionString) expression);
             }
-
-            // ignore other elements
             else if (!(expression instanceof String))
             {
                 throw new IllegalStateException(
                     "Expression element of unknown class: "
                         + expression.getClass().getName());
             }
+            // ignore Strings
         }
     }
 
@@ -318,7 +341,8 @@ public class ELParserHelper
         }
         else if (expression instanceof ConditionalExpression)
         {
-            ConditionalExpression conditionalExpression = (ConditionalExpression) expression;
+            ConditionalExpression conditionalExpression = 
+                (ConditionalExpression) expression;
             replaceSuffixes(conditionalExpression.getTrueBranch());
             replaceSuffixes(conditionalExpression.getFalseBranch());
         }
@@ -352,7 +376,7 @@ public class ELParserHelper
                 if (suffix instanceof MyPropertySuffix)
                 {
                     throw new IllegalStateException(
-                        "Suffix of is MyPropertySuffix and must not be");
+                        "Suffix is MyPropertySuffix and must not be");
                 }
 
                 suffixes.set(i, new MyPropertySuffix((PropertySuffix) suffix,
@@ -363,7 +387,7 @@ public class ELParserHelper
                 if (suffix instanceof MyArraySuffix)
                 {
                     throw new IllegalStateException(
-                        "Suffix of is MyArraySuffix and must not be");
+                        "Suffix is MyArraySuffix and must not be");
                 }
 
                 suffixes.set(i, new MyArraySuffix((ArraySuffix) suffix,

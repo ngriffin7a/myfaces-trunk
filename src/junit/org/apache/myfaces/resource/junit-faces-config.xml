@@ -52,4 +52,16 @@
         </navigation-case>
     </navigation-rule>
 
+    <managed-bean>
+        <description>Test bean</description>
+        <managed-bean-name>testBean_B</managed-bean-name>
+        <managed-bean-class>net.sourceforge.myfaces.el.B</managed-bean-class>
+        <managed-bean-scope>session</managed-bean-scope>
+
+        <managed-property>
+            <property-name>name</property-name>
+            <value>testName</value>
+        </managed-property>
+    </managed-bean>
+
 </faces-config>
