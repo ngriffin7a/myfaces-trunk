@@ -483,15 +483,16 @@ public class ValueBindingImpl extends ValueBinding {
             }
 
             // Not an indexed property, process simple nesting
-            int newpos = reference.indexOf('[', pos);
+            int indexofBracket = reference.indexOf('[', pos);
             int indexofDot = reference.indexOf('.', pos);
+            int newpos = len;
 
             // Find the first occurrence of any delim char
             if ((indexofDot >= 0) && (indexofDot < newpos))
                 newpos = indexofDot;
                 
-            if (newpos < 0)
-                newpos = len;
+            if ((indexofBracket >= 0) && (indexofBracket < newpos))
+                newpos = indexofBracket;
 
             // newpos is the end of the property name
             if (pos == newpos)

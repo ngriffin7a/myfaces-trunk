@@ -125,7 +125,7 @@ public class VariableResolverImpl
     }
 
 
-    private void setManagedBeanProperties(FacesContext facesContext,
+    protected void setManagedBeanProperties(FacesContext facesContext,
                                           Object bean,
                                           ManagedBeanConfig mbc)
     {
@@ -165,13 +165,13 @@ public class VariableResolverImpl
         }
     }
 
-    private void setMapEntries(Object bean,
+    protected void setMapEntries(Object bean,
                                ManagedPropertyConfig propConfig)
     {
         throw new UnsupportedOperationException("Not yet implemented"); //TODO
     }
 
-    private void setValues(Object bean,
+    protected void setValues(Object bean,
                            ManagedPropertyConfig propConfig)
     {
         throw new UnsupportedOperationException("Not yet implemented"); //TODO
