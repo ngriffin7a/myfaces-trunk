@@ -35,6 +35,7 @@
         <pathelement location="${jsp-api.jar}"/>
         <pathelement location="${jstl.jar}"/>
         <pathelement location="${myfaces.jar}"/>
+        <pathelement location="${myfaces-jsf-api.jar}"/>
         <pathelement location="${commons-logging.jar}"/>
     </path>
 
@@ -61,7 +62,7 @@
 
 
     <target name="-compile-and-copy-libs"
-            depends="-myfaces-jar, -copy-components-resource"
+            depends="-myfaces-jar, -myfaces-jsf-api-jar, -copy-components-resource"
             description="compiles the examples java classes to WEB-INF/classes and copies all needed libs to WEB-INF/lib">
         <mkdir dir="${web-inf.classes.dir}"/>
         <javac srcdir="${examples.src}"
@@ -108,11 +109,10 @@
             <lib file="${commons-collections.jar}"/>
             <lib file="${commons-digester.jar}"/>            
             <lib file="${jakarta-oro.jar}"/>
-            <lib file="${informa.jar}"/>
-            <lib file="${jdom.jar}"/>
             <lib file="${jsp-api.jar}"/>
             <lib file="${jstl.jar}"/>
             <lib file="${myfaces.jar}"/>
+            <lib file="${myfaces-jsf-api.jar}"/>
             <lib file="${log4j.jar}"/>
             <classes dir="${web-inf.classes.dir}" />
             <fileset dir="${examples.web}"
@@ -168,6 +168,7 @@
         <mkdir dir="${web-inf.lib.dir}"/>
         <copy todir="${web-inf.lib.dir}">
             <fileset file="${myfaces.jar}"/>
+            <fileset file="${myfaces-jsf-api.jar}"/>
             <fileset file="${commons-codec.jar}"/>
             <fileset file="${commons-logging.jar}"/>
             <fileset file="${log4j.jar}"/>
@@ -188,6 +189,16 @@
     <target name="-create-myfaces-jar" unless="myfaces.jar.available"
             description="creates myfaces.jar via main buildfile" >
         <ant dir="${project.dir}/build" antfile="build.xml" target="myfaces-jar" inheritall="false"/>
+    </target>
+
+    <target name="-myfaces-jsf-api-jar" description="create myfaces.jar if necessary" >
+        <available file="${myfaces-jsf-api.jar}" property="myfaces.jar.available"/>
+        <antcall target="-create-myfaces-jsf-api-jar"/>
+    </target>
+
+    <target name="-create-myfaces-jsf-api-jar" unless="myfaces.jar.available"
+            description="creates myfaces-jsf-api.jar via main buildfile" >
+        <ant dir="${project.dir}/build" antfile="build.xml" target="myfaces-jsf-api-jar" inheritall="false"/>
     </target>
 
 

@@ -58,7 +58,7 @@
 
 
     <target name="-compile"
-            depends="-myfaces-jar"
+            depends="-myfaces-jar,-myfaces-jsf-api-jar"
             description="compiles the examples java classes to WEB-INF/classes and copies all needed libs to WEB-INF/lib">
         <mkdir dir="${cactus.classes.dir}"/>
         <javac srcdir="${cactus.src.dir}"
@@ -108,6 +108,7 @@
         	<lib file="${cos.jar}"/>
             <lib file="${jstl.jar}"/>
             <lib file="${myfaces.jar}"/>
+            <lib file="${myfaces-jsf-api.jar}"/>
             <lib file="${log4j.jar}"/>
             <lib dir="${cactus.lib.dir}">
                 <include name="*.jar"/>
@@ -162,6 +163,17 @@
     <target name="-create-myfaces-jar" unless="myfaces.jar.available"
             description="creates myfaces.jar via main buildfile" >
         <ant dir="${project.dir}/build" antfile="build.xml" target="myfaces-jar" inheritall="false"/>
+    </target>
+
+
+    <target name="-myfaces-jsf-api-jar" description="create myfaces.jar if necessary" >
+        <available file="${myfaces-jsf-api.jar}" property="myfaces.jar.available"/>
+        <antcall target="-create-myfaces-jsf-api-jar"/>
+    </target>
+
+    <target name="-create-myfaces-jsf-api-jar" unless="myfaces.jar.available"
+            description="creates myfaces-jsf-api.jar via main buildfile" >
+        <ant dir="${project.dir}/build" antfile="build.xml" target="myfaces-jsf-api-jar" inheritall="false"/>
     </target>
 
 </project>

@@ -22,6 +22,7 @@
         <pathelement location="${commons-el.jar}"/>
         <pathelement location="${jsp-api.jar}"/>
         <pathelement location="${myfaces.jar}"/>
+        <pathelement location="${myfaces-jsf-api.jar}"/>
         <pathelement location="${junit.jar}"/>
         <pathelement location="${commons-logging.jar}"/>
         <pathelement location="${junit.classes.dir}"/>
@@ -30,7 +31,7 @@
         <pathelement location="${commons-digester.jar}"/>
     </path>
 
-    <target name="junit" depends="-compile-for-junit,-myfaces-jar">
+    <target name="junit" depends="-compile-for-junit,-myfaces-jsf-api-jar,-myfaces-jar">
         <mkdir dir="${junit.results.dir}/test-reports/xml"/>
         <mkdir dir="${junit.results.dir}/test-reports/html"/>
         <junit fork="true" printsummary="${test.printsummary}">
@@ -82,5 +83,14 @@
         <ant dir="${project.dir}/build" antfile="build.xml" target="myfaces-jar" inheritall="false"/>
     </target>
 
+    <target name="-myfaces-jsf-api-jar" description="create myfaces.jar if necessary" >
+        <available file="${myfaces-jsf-api.jar}" property="myfaces.jar.available"/>
+        <antcall target="-create-myfaces-jsf-api-jar"/>
+    </target>
+
+    <target name="-create-myfaces-jsf-api-jar" unless="myfaces.jar.available"
+            description="creates myfaces-jsf-api.jar via main buildfile" >
+        <ant dir="${project.dir}/build" antfile="build.xml" target="myfaces-jsf-api-jar" inheritall="false"/>
+    </target>
 
 </project>
