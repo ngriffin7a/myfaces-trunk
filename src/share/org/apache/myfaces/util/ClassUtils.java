@@ -31,6 +31,9 @@ import java.util.Map;
  * @author Anton Koinov
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.7  2004/08/05 22:55:51  o_rossmueller
+ * fix: resolve primitive classes
+ *
  * Revision 1.6  2004/07/13 04:59:25  tinytoony
  * primitive types where not retrieved (call to javaTypeToClass not used)
  *
@@ -119,13 +122,18 @@ public class ClassUtils
     {
         try
         {
-            return _classForName(type);
+            return classForNameBasic(type);
         }
         catch (ClassNotFoundException e)
         {
             log.error(e.getMessage(), e);
             throw new FacesException(e);
         }
+    }
+
+    public static Class classForNameBasic(String type)  throws ClassNotFoundException
+    {
+            return _classForName(type);
     }
 
     private static Class _classForName(String type) throws ClassNotFoundException

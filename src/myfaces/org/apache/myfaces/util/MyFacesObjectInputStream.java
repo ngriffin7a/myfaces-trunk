@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectStreamClass;
+import javax.faces.FacesException;
 
 /**
  * Tried to deploy v0.4.2 on JBoss 3.2.1 and had a classloading problem again.
@@ -39,8 +40,14 @@ public class MyFacesObjectInputStream
     }
 
     protected Class resolveClass(ObjectStreamClass desc)
-        throws ClassNotFoundException
+        throws ClassNotFoundException, IOException
     {
-        return ClassUtils.classForName(desc.getName());
+        try
+        {
+            return ClassUtils.classForNameBasic(desc.getName());
+        } catch (ClassNotFoundException e)
+        {
+            return super.resolveClass(desc);
+        }
     }
 }
