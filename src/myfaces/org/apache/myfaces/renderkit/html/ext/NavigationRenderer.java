@@ -196,6 +196,11 @@ public class NavigationRenderer
                                   UIComponent item)
         throws IOException
     {
+        if (!isComponentVisible(facesContext, item))
+        {
+            return;
+        }
+
         ResponseWriter writer = facesContext.getResponseWriter();
         writer.write("\n<tr><td");
 
