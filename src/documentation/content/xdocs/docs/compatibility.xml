@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V1.2//EN" "document-v12.dtd">
+
+<document>
+
+<header>
+    <title>Apache MyFaces' compatibility</title>
+</header>
+
+<body>
+
+<section>
+	<title>MyFaces is known to work with and was tested in the following environments:</title>
+	<ol>
+		<li>Java</li>
+		<ol>
+			<li>JDK 1.4.x</li>
+		</ol>
+		<li>Servlet Container</li>
+		<ol>
+			<li>Tomcat 4.x</li>
+			<li>Tomcat 5.x</li>
+			<li>JRun 4 (SP1a)</li>
+			<li>JBoss 3.2.x</li>
+			<li>JBoss 4.0.x</li>
+			<li>BEA Weblogic 8.1</li>
+			<li>Jonas 3.3.6 w/ Tomcat</li>
+			<li>Resin 2.1.x</li>
+			<li>Jetty 4.2.x</li>
+			<li>Websphere 5.1.2</li>
+		</ol>
+	</ol>
+</section>
+<section>
+	<title>We encourage you to try other environments as well.</title>
+	<p>Please give us as much feedback as possible! </p>
+</section>
+
+</body>
+    
+    <footer>
+    	<legal>Java, J2EE, and JCP are trademarks or registered trademarks of Sun Microsystems, Inc. in the United States and other countries.<br />
+	&copy; 2004, Apache Software Foundation
+	</legal>
+    </footer>
+
+</document>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V1.2//EN" "document-v12.dtd">
+
+<document>
+
+<header>
+    <title>Running Apache MyFaces with RI sample</title>
+</header>
+
+<body>
+
+<section>
+    <title>Steps to get Sun's cardemo sample running</title>
+	<ol>
+		<li>Download the latest JSF Reference Implementation <link href="http://java.sun.com/j2ee/javaserverfaces/download.html">here</link></li>
+		<li>In samples dir you will find the cardemo web application archive named jsf-cardemo.war</li>
+		<li>Unpack jsf-cardemo.war to a directory of your choice. If you are not familiar with deploying web applications and you are using tomcat, unpack jsf-cardemo.war to CATALINA_HOME/webapps/cardemo directory (where CATALINA_HOME = Tomcat installation directory)</li>
+		<li>Remove jsf-api.jar and jsf-impl.jar from WEB-INF/lib directory</li>
+		<li>Copy myfaces.jar and cos.jar to WEB-INF/lib directory</li>
+		<li>Replace WEB-INF/web.xml with <link href="cardemoweb.html">web.xml</link></li>
+		<li>Deploy web application. If you unpacked cardemo.war into CATALINA_HOME/webapps/cardemo start tomcat and see cardemo running at http://localhost:8080/cardemo</li>
+	</ol>
+</section>    </body>
+    
+    <footer>
+    	<legal>Java, J2EE, and JCP are trademarks or registered trademarks of Sun Microsystems, Inc. in the United States and other countries.<br />
+	&copy; 2004, Apache Software Foundation
+	</legal>
+    </footer>
+
+</document>

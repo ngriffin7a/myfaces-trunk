@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V1.2//EN" "document-v12.dtd">
+
+<document>
+
+<header>
+    <title>Apache MyFaces in use</title>
+</header>
+
+<body>
+
+<section>
+    <title>The following web apps are build with Apache MyFaces:</title>
+	<ul>
+		<li><link href="http://www.biblioteca.istitutodeglinnocenti.it/en/index.htm">Biblioteca Innocenti Library (English)</link></li>
+		<li><link href="http://www.istitutodeglinnocenti.it/">Istituto degli Innocenti (Italiano)</link></li>
+		<li><link href="http://www.emozionifotografiche.it">Emozioni fotografiche (Italiano)</link></li>
+		<li>and serveral intranet apps</li>
+	</ul>
+</section>
+</body>
+</document>

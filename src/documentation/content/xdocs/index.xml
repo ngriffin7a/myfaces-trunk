@@ -23,13 +23,16 @@ Look at <link href="http://java.sun.com/j2ee/javaserverfaces/">Sun's JavaServer(
      <title>News</title>
      <anchor id="News"></anchor>
      <ul>
-       <li>See MyFaces at <fork href="http://www.apachecon.com/">ApacheCon US2004</fork> by Bill Dudney (Wednesday, 17 November 2004).</li>
+       <li>Bill Dudney talks at at <fork href="http://www.apachecon.com/">ApacheCon US2004</fork> about MyFaces. <link href="http://bill.dudney.net/roller/resources/bill/jsfwithmyfaces.pdf">Get slides</link></li>
      </ul>
+		<p>If you are new to JavaServer Faces Technology look at the following resources to become familar with JSF:</p>
+		<ul>
+			<li><link href="http://www.jsfcentral.com/">JSFCentral</link></li>
+			<li><link href="http://www.jamesholmes.com/JavaServerFaces/">James Holmes' JSF Resources</link></li>
+		</ul>
     </section>
 	
-    <p>
-<link href="http://www.jsfcentral.com/">JSFCentral</link> is also a good place for more JSF information and resources. 
-   </p>  
+ 
     
   </body>
 </document>

@@ -5,8 +5,12 @@
         <index_pm href="index.html" label="Welcome"/>
 	    <license label="License" href="license.html" />
 	    <downloads label="Downloads" href="downloads.html" />
+	    <livesites label="Web apps using MyFaces" href="livesites.html"/>
      </project-information>
 	<docu href="docs/" label="Documentation" tab="documentation">
+		<gettingstarted label="Getting Started" href="gettingstarted.html"/>
+		<ri label="MyFaces and RI sample" href="risamples.html"/>
+		<compatibility label="Compatibility" href="compatibility.html"/>
 		<faq label="FAQ" href="faq.html" />
 		<jars label="JARs" href="jars.html" />
 		<javadoc label="Java Doc" href="http://incubator.apache.org/myfaces/javadoc/" />
@@ -18,7 +22,9 @@
     <contributors label="Contributors" href="contributors.html" />
     <status label="Status" href="status.html" />
     <bylaws label="Project Bylaws" href="bylaws.html"/>
+	<issue label="Tracking System" href="issue.html"/>
     <wiki label="Wiki" href="http://wiki.apache.org/myfaces"/>
+    <getinvolved label="Get Involved" href="http://jakarta.apache.org/site/getinvolved.html"/>
   </community>
 
 </site>

@@ -7,7 +7,7 @@
   xmlns:xlink="http://www.w3.org/1999/xlink">
 
   <tab label="Project" dir="" id="project" indexfile="index.html"/>
-  <tab label="Documentation" dir="docs/" id="documentation" indexfile="faq.html"/>
+  <tab label="Documentation" dir="docs/" id="documentation" indexfile="gettingstarted.html"/>
   <tab label="Community" dir="community/" id="community" indexfile="mailinglists.html"/>
 
 </tabs>
