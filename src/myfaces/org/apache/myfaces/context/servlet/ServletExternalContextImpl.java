@@ -1,12 +1,12 @@
 /*
  * Copyright 2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -34,7 +34,7 @@ import java.util.*;
  * @author Manfred Geiler (latest modification by $Author$)
  * @author Anton Koinov
  * @version $Revision$ $Date$
- * 
+ *
  * Revision 1.11 Sylvain Vieujot
  * Forward the message when an exception is thrown in dispatch
  */
@@ -42,7 +42,7 @@ public class ServletExternalContextImpl
     extends ExternalContext
 {
     private static final String INIT_PARAMETER_MAP_ATTRIBUTE = InitParameterMap.class.getName();
-    
+
     private ServletContext _servletContext;
     private ServletRequest _servletRequest;
     private ServletResponse _servletResponse;
@@ -178,15 +178,15 @@ public class ServletExternalContextImpl
 
     public Iterator getRequestParameterNames()
     {
-        final Enumeration enum = _servletRequest.getParameterNames();
+        final Enumeration enumer = _servletRequest.getParameterNames();
         Iterator it = new Iterator()
         {
             public boolean hasNext() {
-                return enum.hasMoreElements();
+                return enumer.hasMoreElements();
             }
 
             public Object next() {
-                return enum.nextElement();
+                return enumer.nextElement();
             }
 
             public void remove() {

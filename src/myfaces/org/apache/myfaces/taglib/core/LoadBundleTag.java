@@ -1,12 +1,12 @@
 /*
  * Copyright 2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -35,6 +35,9 @@ import java.util.*;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.7  2004/08/04 18:45:41  grantsmith
+ * renamed 'enum' to 'enumer' to allow compile in JDK 1.5
+ *
  * Revision 1.6  2004/07/01 22:05:03  mwessendorf
  * ASF switch
  *
@@ -136,9 +139,9 @@ public class LoadBundleTag
             if (_values == null)
             {
                 _values = new ArrayList();
-                for (Enumeration enum = _bundle.getKeys(); enum.hasMoreElements(); )
+                for (Enumeration enumer = _bundle.getKeys(); enumer.hasMoreElements(); )
                 {
-                    String v = _bundle.getString((String)enum.nextElement());
+                    String v = _bundle.getString((String)enumer.nextElement());
                     _values.add(v);
                 }
             }
@@ -158,9 +161,9 @@ public class LoadBundleTag
         public Set entrySet()
         {
             Set set = new HashSet();
-            for (Enumeration enum = _bundle.getKeys(); enum.hasMoreElements(); )
+            for (Enumeration enumer = _bundle.getKeys(); enumer.hasMoreElements(); )
             {
-                final String k = (String)enum.nextElement();
+                final String k = (String)enumer.nextElement();
                 set.add(new Map.Entry() {
                     public Object getKey()
                     {
@@ -184,9 +187,9 @@ public class LoadBundleTag
         public Set keySet()
         {
             Set set = new HashSet();
-            for (Enumeration enum = _bundle.getKeys(); enum.hasMoreElements(); )
+            for (Enumeration enumer = _bundle.getKeys(); enumer.hasMoreElements(); )
             {
-                set.add(enum.nextElement());
+                set.add(enumer.nextElement());
             }
             return set;
         }
