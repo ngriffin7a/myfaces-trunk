@@ -30,9 +30,15 @@ import java.util.ArrayList;
  * @version $Revision$ $Date$
  * 
  * $Log$
+ * Revision 1.2  2004/08/20 07:16:09  manolito
+ * moved StringUtils to share source tree
+ *
  * Revision 1.1  2004/08/19 16:18:54  manolito
  * moved to share dir
  *
+ *
+ * old cvs log (myfaces dir):
+ * 
  * Revision 1.9  2004/07/01 22:05:15  mwessendorf
  * ASF switch
  *
