@@ -65,6 +65,9 @@ public abstract class MyFacesTag
         finally
         {
             _helper.release();
+            id = null;
+            modelReference = null;
+            created = false;
         }
     }
 

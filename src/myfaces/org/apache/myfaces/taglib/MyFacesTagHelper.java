@@ -56,6 +56,8 @@ public class MyFacesTagHelper
     public void release()
     {
         _attributes = null;
+        _facesContext = null;
+        _pageContext = null;
     }
 
 
