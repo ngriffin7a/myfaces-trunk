@@ -1,4 +1,4 @@
-/**
+/*
  * MyFaces - the free JSF implementation
  * Copyright (C) 2003  The MyFaces Team (http://myfaces.sourceforge.net)
  *
@@ -18,78 +18,59 @@
  */
 package net.sourceforge.myfaces.context;
 
-import javax.faces.application.Message;
-import javax.faces.component.UIComponent;
+import java.util.Iterator;
+
+import javax.faces.application.Application;
+import javax.faces.application.FacesMessage;
+import javax.faces.application.FacesMessage.Severity;
+import javax.faces.component.UIViewRoot;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseStream;
 import javax.faces.context.ResponseWriter;
-import javax.faces.event.FacesEvent;
-import javax.faces.tree.Tree;
-import java.util.Iterator;
-import java.util.Locale;
+import javax.faces.render.RenderKit;
+
 
 /**
  * Convenient class to wrap the current FacesContext.
  * @author Manfred Geiler (latest modification by $Author$)
+ * @author Anton Koinov
  * @version $Revision$ $Date$
  */
 public class FacesContextWrapper
     extends FacesContext
 {
+    //~ Instance fields ----------------------------------------------------------------------------
+
     private final FacesContext _facesContext;
+
+    //~ Constructors -------------------------------------------------------------------------------
 
     public FacesContextWrapper(FacesContext facesContext)
     {
         _facesContext = facesContext;
     }
 
-    public void release()
+    //~ Methods ------------------------------------------------------------------------------------
+
+    public Application getApplication()
     {
-        _facesContext.release();
+        return _facesContext.getApplication();
     }
 
-    //JSF 6.1.1
+    public Iterator getClientIdsWithMessages()
+    {
+        return _facesContext.getClientIdsWithMessages();
+    }
+
     public ExternalContext getExternalContext()
     {
         return _facesContext.getExternalContext();
     }
 
-    //JSF.6.1.2
-    public Locale getLocale()
-    {
-        return _facesContext.getLocale();
-    }
-
-    public void setLocale(Locale locale)
-    {
-        _facesContext.setLocale(locale);
-    }
-
-    //JSF.6.1.3
-    public Tree getTree()
-    {
-        return _facesContext.getTree();
-    }
-
-    public void setTree(Tree tree)
-    {
-        _facesContext.setTree(tree);
-    }
-
-    public void addMessage(UIComponent uicomponent, Message message)
-    {
-        _facesContext.addMessage(uicomponent, message);
-    }
-
-    public int getMaximumSeverity()
+    public Severity getMaximumSeverity()
     {
         return _facesContext.getMaximumSeverity();
-    }
-
-    public Iterator getMessages(UIComponent uicomponent)
-    {
-        return _facesContext.getMessages(uicomponent);
     }
 
     public Iterator getMessages()
@@ -97,26 +78,24 @@ public class FacesContextWrapper
         return _facesContext.getMessages();
     }
 
-    //JSF.6.1.5
-    public Iterator getFacesEvents()
+    public Iterator getMessages(String clientId)
     {
-        return _facesContext.getFacesEvents();
+        return _facesContext.getMessages(clientId);
     }
 
-    public void addFacesEvent(FacesEvent facesevent)
+    public RenderKit getRenderKit()
     {
-        _facesContext.addFacesEvent(facesevent);
+        return _facesContext.getRenderKit();
     }
 
-    //JSF.6.1.6
-    public ResponseStream getResponseStream()
+    public boolean getRenderResponse()
     {
-        return _facesContext.getResponseStream();
+        return _facesContext.getRenderResponse();
     }
 
-    public ResponseWriter getResponseWriter()
+    public boolean getResponseComplete()
     {
-        return _facesContext.getResponseWriter();
+        return _facesContext.getResponseComplete();
     }
 
     public void setResponseStream(ResponseStream responsestream)
@@ -124,12 +103,41 @@ public class FacesContextWrapper
         _facesContext.setResponseStream(responsestream);
     }
 
+    public ResponseStream getResponseStream()
+    {
+        return _facesContext.getResponseStream();
+    }
+
     public void setResponseWriter(ResponseWriter responsewriter)
     {
         _facesContext.setResponseWriter(responsewriter);
     }
 
-    //JSF.6.1.7
+    public ResponseWriter getResponseWriter()
+    {
+        return _facesContext.getResponseWriter();
+    }
+
+    public void setViewRoot(UIViewRoot viewRoot)
+    {
+        _facesContext.setViewRoot(viewRoot);
+    }
+
+    public UIViewRoot getViewRoot()
+    {
+        return _facesContext.getViewRoot();
+    }
+
+    public void addMessage(String clientId, FacesMessage message)
+    {
+        _facesContext.addMessage(clientId, message);
+    }
+
+    public void release()
+    {
+        _facesContext.release();
+    }
+
     public void renderResponse()
     {
         _facesContext.renderResponse();
