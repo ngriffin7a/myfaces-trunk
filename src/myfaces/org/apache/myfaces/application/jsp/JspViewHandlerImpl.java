@@ -15,11 +15,10 @@
  */
 package org.apache.myfaces.application.jsp;
 
-import org.apache.myfaces.util.DebugUtils;
-import org.apache.myfaces.webapp.webxml.ServletMapping;
-import org.apache.myfaces.webapp.webxml.WebXml;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import java.io.IOException;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Locale;
 
 import javax.faces.FacesException;
 import javax.faces.application.Application;
@@ -28,24 +27,28 @@ import javax.faces.component.UIViewRoot;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.render.RenderKitFactory;
+import javax.portlet.PortletURL;
+import javax.portlet.RenderResponse;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.io.IOException;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Locale;
-import javax.portlet.PortletRequest;
-import javax.portlet.PortletURL;
-import javax.portlet.RenderResponse;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.myfaces.portlet.MyFacesGenericPortlet;
 import org.apache.myfaces.portlet.PortletUtil;
+import org.apache.myfaces.util.DebugUtils;
+import org.apache.myfaces.webapp.webxml.ServletMapping;
+import org.apache.myfaces.webapp.webxml.WebXml;
 
 /**
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.34  2005/02/10 20:31:21  matzew
+ * organized import statements
+ *
  * Revision 1.33  2005/02/10 20:24:17  matzew
  * closed MYFACES-101 in Jira; Thanks to Stan Silvert (JBoss Group)
  *
