@@ -15,43 +15,44 @@
  */
 package net.sourceforge.myfaces.custom.fileupload;
 
+import org.apache.commons.fileupload.FileItem;
+
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-
-import org.apache.commons.fileupload.FileItem;
 
 
 /**
  * @author Sylvain Vieujot (latest modification by $Author$)
  * @version $Revision$ $Date$
- *          $Log$
- *          Revision 1.2  2004/07/14 06:10:18  svieujot
- *          Remove debug messages
+ * $Log$
+ * Revision 1.3  2004/09/03 12:43:57  manolito
+ * File item transient in file based UploadedFile and no more empty constructors
  *
- *          Revision 1.1  2004/07/14 06:02:48  svieujot
- *          FileUpload : split file based and memory based implementation.
- *          Use the storage="memory|file" attribute.
- *          Default is memory because file based implementation fails to serialize.
+ * Revision 1.2  2004/07/14 06:10:18  svieujot
+ * Remove debug messages
  *
- *
+ * Revision 1.1  2004/07/14 06:02:48  svieujot
+ * FileUpload : split file based and memory based implementation.
+ * Use the storage="memory|file" attribute.
+ * Default is memory because file based implementation fails to serialize.
  */
 public class UploadedFileDefaultFileImpl extends UploadedFileDefaultImplBase
 {
+	private transient FileItem fileItem = null;
 
-	private FileItem fileItem = null;
-
-
+    /*
+    TODO/manolito: Do we need an empty constructor?!
     public UploadedFileDefaultFileImpl()
     {
     }
+    */
 
 
     public UploadedFileDefaultFileImpl(FileItem fileItem) throws IOException
     {
+        super(fileItem.getName(), fileItem.getContentType());
     	this.fileItem = fileItem;
-
-        _name = fileItem.getName();
-        _contentType = fileItem.getContentType();
     }
 
 
@@ -62,8 +63,8 @@ public class UploadedFileDefaultFileImpl extends UploadedFileDefaultImplBase
      */
     public byte[] getBytes() throws IOException
     {
-    	byte[] bytes = new byte[(int) fileItem.getSize()];
-        fileItem.getInputStream().read(bytes);
+    	byte[] bytes = new byte[(int)getSize()];
+        if (fileItem != null) fileItem.getInputStream().read(bytes);
         return bytes;
     }
 
@@ -76,7 +77,9 @@ public class UploadedFileDefaultFileImpl extends UploadedFileDefaultImplBase
      */
     public InputStream getInputStream() throws IOException
     {
-    	return fileItem.getInputStream();
+    	return fileItem != null
+               ? fileItem.getInputStream()
+               : new ByteArrayInputStream(new byte[0]);
     }
 
 
@@ -84,9 +87,8 @@ public class UploadedFileDefaultFileImpl extends UploadedFileDefaultImplBase
      * Answer the size of this file.
      * @return
      */
-    public long getSize() {
-    	if( fileItem == null )
-    		return 0;
-    	return fileItem.getSize();
+    public long getSize()
+    {
+    	return fileItem != null ? fileItem.getSize() : 0;
     }
 }

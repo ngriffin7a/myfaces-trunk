@@ -15,26 +15,27 @@
  */
 package net.sourceforge.myfaces.custom.fileupload;
 
+import org.apache.commons.fileupload.FileItem;
+
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-
-import org.apache.commons.fileupload.FileItem;
 
 
 /**
  * @author Sylvain Vieujot (latest modification by $Author$)
  * @version $Revision$ $Date$
- *          $Log$
- *          Revision 1.2  2004/07/14 06:10:18  svieujot
- *          Remove debug messages
+ * $Log$
+ * Revision 1.3  2004/09/03 12:43:57  manolito
+ * File item transient in file based UploadedFile and no more empty constructors
  *
- *          Revision 1.1  2004/07/14 06:02:48  svieujot
- *          FileUpload : split file based and memory based implementation.
- *          Use the storage="memory|file" attribute.
- *          Default is memory because file based implementation fails to serialize.
+ * Revision 1.2  2004/07/14 06:10:18  svieujot
+ * Remove debug messages
  *
- *
+ * Revision 1.1  2004/07/14 06:02:48  svieujot
+ * FileUpload : split file based and memory based implementation.
+ * Use the storage="memory|file" attribute.
+ * Default is memory because file based implementation fails to serialize.
  */
 public class UploadedFileDefaultMemoryImpl extends UploadedFileDefaultImplBase
 {
@@ -42,21 +43,28 @@ public class UploadedFileDefaultMemoryImpl extends UploadedFileDefaultImplBase
     private byte[] bytes;
 
 
+    /*
+    TODO/manolito: Do we need an empty constructor?!
     public UploadedFileDefaultMemoryImpl()
     {
     }
+    */
 
 
     public UploadedFileDefaultMemoryImpl(FileItem fileItem) throws IOException
     {
+        super(fileItem.getName(), fileItem.getContentType());
         int sizeInBytes = (int)fileItem.getSize();
     	bytes = new byte[sizeInBytes];
     	fileItem.getInputStream().read(bytes);
 
+        /*
+        TODO/manolito: what was the reason for this if?
     	if (bytes.length != 0) {
     		_name = fileItem.getName();
     		_contentType = fileItem.getContentType();
     	}
+        */
     }
 
 

@@ -22,13 +22,23 @@ import java.io.InputStream;
 /**
  * @author Sylvain Vieujot (latest modification by $Author$)
  * @version $Revision$ $Date$
+ * $Log$
+ * Revision 1.2  2004/09/03 12:43:57  manolito
+ * File item transient in file based UploadedFile and no more empty constructors
+ *
  */
 public abstract class UploadedFileDefaultImplBase implements UploadedFile
 {
 
-    protected String _name = null;
-    protected String _contentType = null;
+    private String _name = null;
+    private String _contentType = null;
 
+
+    protected UploadedFileDefaultImplBase(String name, String contentType)
+    {
+        _name = name;
+        _contentType = contentType;
+    }
 
     /**
      * Answer the uploaded file contents.
