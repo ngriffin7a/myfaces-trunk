@@ -27,20 +27,17 @@ import javax.servlet.*;
 import java.io.IOException;
 
 /**
-<<<<<<< FacesServlet.java
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.10  2004/06/21 10:57:58  manolito
+ * missing CVS Log keyword
+ *
  * Revision 1.9  2004/06/16 23:02:20  o_rossmueller
  * merged confignew_branch
  *
  * Revision 1.8  2004/06/14 12:55:23  manolito
  * Added missing CVS Log comment
- *
-=======
- * @author Manfred Geiler (latest modification by $Author$)
- * @version $Revision$ $Date$
->>>>>>> 1.7.2.1
  */
 public class FacesServlet
         implements Servlet

@@ -39,6 +39,10 @@ import java.util.List;
 /**
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
+ * $Log$
+ * Revision 1.16  2004/06/21 10:57:59  manolito
+ * missing CVS Log keyword
+ *
  */
 public class HtmlTableRenderer
     extends HtmlRenderer

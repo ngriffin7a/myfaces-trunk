@@ -26,6 +26,7 @@ import java.util.List;
 /**
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
+ * %Log$
  */
 class _SerializableListDataModel
         extends _SerializableDataModel
