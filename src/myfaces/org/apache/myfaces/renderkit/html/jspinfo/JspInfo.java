@@ -43,9 +43,6 @@ public class JspInfo
     public static final String CREATOR_TAG_ATTR = JspInfo.class.getName() + ".CREATOR_TAG";
     public static final String ACTION_LISTENERS_TYPE_LIST_ATTR = JspInfo.class.getName() + ".LISTENERS";
 
-    public static final String UNIQUE_COMPONENT_ID = JspInfo.class.getName() + ".UNIQUE_COMPONENT_ID";
-    public static final char UNIQUE_COMPONENT_ID_SEPARATOR_CHAR = ':';
-
 
     private Tree _tree = null;
     private Map _jspBeanInfosMap = new HashMap();

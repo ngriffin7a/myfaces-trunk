@@ -19,6 +19,7 @@
 package net.sourceforge.myfaces.tree;
 
 import net.sourceforge.myfaces.component.CommonComponentAttributes;
+import net.sourceforge.myfaces.component.UIComponentUtils;
 import net.sourceforge.myfaces.renderkit.html.jspinfo.JspInfo;
 
 import javax.faces.component.UIComponent;
@@ -166,7 +167,7 @@ public class TreeUtils
         stream.print('<');
         stream.print(comp.getComponentType());
         printAttribute(stream, comp, CommonComponentAttributes.COMPONENT_ID_ATTR, "id");
-        printAttribute(stream, comp, JspInfo.UNIQUE_COMPONENT_ID, "uniqueId");
+        printAttribute(stream, comp, UIComponentUtils.UNIQUE_COMPONENT_ID, "uniqueId");
         printAttribute(stream, comp, CommonComponentAttributes.VALUE_ATTR);
         printAttribute(stream, comp, CommonComponentAttributes.MODEL_REFERENCE_ATTR);
 

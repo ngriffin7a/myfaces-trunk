@@ -37,7 +37,6 @@ public abstract class MyFacesTag
     extends FacesTag
 {
     protected MyFacesTagHelper _helper;
-    protected boolean _bodyAgain = false;
 
     public MyFacesTag()
     {
@@ -48,8 +47,20 @@ public abstract class MyFacesTag
     public int doStartTag()
         throws JspException
     {
-        _bodyAgain = false;
-        return super.doStartTag();
+        int ret = super.doStartTag();
+
+        /*
+        UIComponent comp = getComponent();
+        if (comp.getComponentId() == null)
+        {
+            // find this component in parsed tree
+            UIComponent parent =
+
+
+        }
+        */
+
+        return ret;
     }
 
     public int getDoStartValue() throws JspException
@@ -68,7 +79,6 @@ public abstract class MyFacesTag
     {
         super.release();
         _helper.release();
-        _bodyAgain = false;
     }
 
 
@@ -226,5 +236,8 @@ public abstract class MyFacesTag
     {
         setRendererAttribute(CommonRendererAttributes.ONKEYUP_ATTR, value);
     }
+
+
+
 
 }

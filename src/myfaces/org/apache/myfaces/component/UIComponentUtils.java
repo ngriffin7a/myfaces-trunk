@@ -51,6 +51,9 @@ import java.util.Iterator;
  */
 public class UIComponentUtils
 {
+    public static final String UNIQUE_COMPONENT_ID = JspInfo.class.getName() + ".UNIQUE_COMPONENT_ID";
+    public static final char UNIQUE_COMPONENT_ID_SEPARATOR_CHAR = ':';
+
     private UIComponentUtils() {}
 
     public static boolean getBooleanAttribute(UIComponent uiComponent,
@@ -316,12 +319,13 @@ public class UIComponentUtils
      */
     public static String getUniqueComponentId(UIComponent uiComponent)
     {
-        String uniqueId = (String)uiComponent.getAttribute(JspInfo.UNIQUE_COMPONENT_ID);
+        String uniqueId = (String)uiComponent.getAttribute(UNIQUE_COMPONENT_ID);
         if (uniqueId != null)
         {
             return uniqueId;
         }
 
+        /*
         String componentId = uiComponent.getComponentId();
         if (componentId != null)
         {
@@ -355,6 +359,7 @@ public class UIComponentUtils
             uiComponent.setAttribute(JspInfo.UNIQUE_COMPONENT_ID, uniqueId);
             return uniqueId;
         }
+        */
 
         //find root
         UIComponent findRoot = uiComponent;
@@ -364,10 +369,10 @@ public class UIComponentUtils
         }
 
         //assign unique component ids:
-        findRoot.setAttribute(JspInfo.UNIQUE_COMPONENT_ID, "");
+        findRoot.setAttribute(UNIQUE_COMPONENT_ID, "");
         assignUniqueIdsToChildren(findRoot, "");
 
-        return (String)uiComponent.getAttribute(JspInfo.UNIQUE_COMPONENT_ID);
+        return (String)uiComponent.getAttribute(UNIQUE_COMPONENT_ID);
     }
 
     private static void assignUniqueIdsToChildren(UIComponent parent,
@@ -377,21 +382,21 @@ public class UIComponentUtils
         for (Iterator it = parent.getFacetsAndChildren(); it.hasNext(); childIdx++)
         {
             UIComponent comp = (UIComponent)it.next();
-            if (comp.getComponentId() == null)
-            {
-                String uniqueId = parentUniqueId + JspInfo.UNIQUE_COMPONENT_ID_SEPARATOR_CHAR + childIdx;
-                comp.setAttribute(JspInfo.UNIQUE_COMPONENT_ID, uniqueId);
+            //if (comp.getComponentId() == null)
+            //{
+                String uniqueId = parentUniqueId + UNIQUE_COMPONENT_ID_SEPARATOR_CHAR + childIdx;
+                comp.setAttribute(UNIQUE_COMPONENT_ID, uniqueId);
                 assignUniqueIdsToChildren(comp, uniqueId);
-            }
-            else
-            {
-                assignUniqueIdsToChildren(comp, getUniqueComponentId(comp));
-            }
+            //}
+            //else
+            //{
+            //    assignUniqueIdsToChildren(comp, getUniqueComponentId(comp));
+            //}
         }
     }
 
     /**
-     * TODO: We should optimize this by a HashMap
+     * TODO: We MUST optimize this by a HashMap
      */
     public static UIComponent findComponentByUniqueId(Tree tree, String uniqueId)
     {
