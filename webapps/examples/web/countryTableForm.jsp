@@ -85,12 +85,18 @@ managed beans used:
 
                    </h:column>
                    
-
                    <h:column>
                         <h:selectBooleanCheckbox value="#{country.remove}"/>
                    </h:column>
 
+                   <h:column>
+                        <x:commandLink value="#{example_messages['button_delete']}" actionListener="#{countryList.deleteCountry}" />
+                   </h:column>
+
                    <f:facet name="footer">
+                        <h:panelGrid columns="1" >
+                        <x:commandLink value="#{example_messages['new_country']}" action="#{countryList.addCountry}"   />
+                        <h:panelGroup><f:verbatim>&nbsp;</f:verbatim></h:panelGroup>
                         <h:panelGroup>
                             <h:commandButton action="go_back" value="#{example_messages['button_save']}" />
                             <f:verbatim>&nbsp;</f:verbatim>
@@ -98,6 +104,7 @@ managed beans used:
                             <f:verbatim>&nbsp;</f:verbatim>
                             <h:commandButton value="#{example_messages['button_apply']}" />
                         </h:panelGroup>
+                        </h:panelGrid>
                    </f:facet>
 
                 </x:dataTable>

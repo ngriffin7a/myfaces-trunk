@@ -15,6 +15,10 @@
  */
 package org.apache.myfaces.examples.listexample;
 
+import org.apache.myfaces.component.html.ext.HtmlDataTable;
+
+import javax.faces.event.ActionEvent;
+import javax.faces.component.UIComponent;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -110,5 +114,19 @@ public class SimpleCountryList
     public void setCountries(List countries)
     {
         _countries = countries;
+    }
+
+    public String addCountry()
+    {
+        List list = getCountries();
+        list.add(new SimpleCountry(list.size() + 1, "", "", new BigDecimal(0), new String[] {}));
+        return "ok";
+    }
+
+    public void deleteCountry(ActionEvent ev)
+    {
+        UIComponent comp = ev.getComponent();
+        HtmlDataTable dataTable = (HtmlDataTable) comp.getParent().getParent();
+        getCountries().remove(dataTable.getRowIndex());
     }
 }
