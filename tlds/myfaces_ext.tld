@@ -909,7 +909,9 @@
         <tag-class>org.apache.myfaces.custom.htmlEditor.HtmlEditorTag</tag-class>
         <body-content>JSP</body-content>
         <description>
-            An inline HTML based word processor.
+            An inline HTML based word processor based on the Kupu library. See http://kupu.oscom.org
+            Right now, the support is limited to one editor per page
+            (but you can use tabs to have multiple editors, but only one rendered at a time).
         </description>
         <attribute>
 	        <name>id</name>
@@ -945,36 +947,64 @@
 	        <name>allowEditSource</name>
             <required>false</required>
             <rtexprvalue>false</rtexprvalue>
+            <description>
+            	Allows the user to edit the HTML source code.
+            	default is true.
+            </description>
        	</attribute>
        	<attribute>
 	        <name>addKupuLogo</name>
             <required>false</required>
             <rtexprvalue>false</rtexprvalue>
+            <description>
+            	Show the Kupu Logo in the buttons bar.
+            	default is true.
+            </description>
        	</attribute>
        	<attribute>
 	        <name>showPropertiesToolBox</name>
             <required>false</required>
             <rtexprvalue>false</rtexprvalue>
+			<description>
+            	Show the Properties tool box next to the text.
+            	default is false.
+            </description>
         </attribute>
        	<attribute>
 	        <name>showLinksToolBox</name>
             <required>false</required>
             <rtexprvalue>false</rtexprvalue>
+			<description>
+            	Show the Links tool box next to the text.
+            	default is false.
+            </description>
         </attribute>
        	<attribute>
 	        <name>showImagesToolBox</name>
             <required>false</required>
             <rtexprvalue>false</rtexprvalue>
+			<description>
+            	Show the Images tool box next to the text.
+            	default is false.
+            </description>
         </attribute>
        	<attribute>
 	        <name>showTablesToolBox</name>
             <required>false</required>
             <rtexprvalue>false</rtexprvalue>
+			<description>
+            	Show the Tables tool box next to the text.
+            	default is false.
+            </description>
         </attribute>
        	<attribute>
 	        <name>showDebugToolBox</name>
             <required>false</required>
             <rtexprvalue>false</rtexprvalue>
+			<description>
+            	Show the Debug tool box next to the text.
+            	default is false.
+            </description>
         </attribute>
     </tag>
 
