@@ -38,6 +38,9 @@ import java.util.*;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.23  2005/04/06 10:21:55  manolito
+ * MYFACES-149 fix for NullPointerException in _SharedRendererUtils.getConvertedUISelectManyValue
+ *
  * Revision 1.22  2005/01/26 13:27:16  mmarinschek
  * The x:message tags are now extended to use the column-name as a label for all inputs in an x:dataTable, without having to specify additional information.
  *
@@ -784,10 +787,17 @@ public class RendererUtils
                                                        Object submittedValue)
             throws ConverterException
     {
-        if (submittedValue != null && !(submittedValue instanceof String[]))
+        if (submittedValue == null)
         {
-            throw new ConverterException("Submitted value of type String[] for component : "+getPathToComponent(selectMany)+
-                    "expected");
+            return null;
+        }
+        else
+        {
+            if (!(submittedValue instanceof String[]))
+            {
+                throw new ConverterException("Submitted value of type String[] for component : "
+                                             + getPathToComponent(selectMany) + "expected");
+            }
         }
         return _SharedRendererUtils.getConvertedUISelectManyValue(facesContext,
                                                                   selectMany,

@@ -37,6 +37,9 @@ import java.util.List;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.4  2005/04/06 10:21:55  manolito
+ * MYFACES-149 fix for NullPointerException in _SharedRendererUtils.getConvertedUISelectManyValue
+ *
  * Revision 1.3  2004/10/13 11:51:01  matze
  * renamed packages to org.apache
  *
@@ -87,6 +90,8 @@ class _SharedRendererUtils
         // Attention!
         // This code is duplicated in jsfapi component package.
         // If you change something here please do the same in the other class!
+
+        if (submittedValue == null) throw new NullPointerException("submittedValue");
 
         ValueBinding vb = component.getValueBinding("value");
         Class valueType = null;

@@ -32,6 +32,9 @@ import java.util.List;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.5  2005/04/06 10:21:55  manolito
+ * MYFACES-149 fix for NullPointerException in _SharedRendererUtils.getConvertedUISelectManyValue
+ *
  * Revision 1.4  2005/03/31 22:47:14  schof
  * Whitney Hunter's patch for MYFACES-157
  *
@@ -85,6 +88,8 @@ class _SharedRendererUtils
         // Attention!
         // This code is duplicated in myfaces implementation renderkit package.
         // If you change something here please do the same in the other class!
+
+        if (submittedValue == null) throw new NullPointerException("submittedValue");
 
         ValueBinding vb = component.getValueBinding("value");
         Class valueType = null;

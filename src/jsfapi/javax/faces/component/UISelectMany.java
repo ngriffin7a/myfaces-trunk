@@ -30,6 +30,9 @@ import java.util.List;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.18  2005/04/06 10:21:55  manolito
+ * MYFACES-149 fix for NullPointerException in _SharedRendererUtils.getConvertedUISelectManyValue
+ *
  * Revision 1.17  2005/03/04 00:41:40  mmarinschek
  * fixed myfaces-
  * 116
@@ -293,6 +296,10 @@ public class UISelectMany
             if (renderer != null)
             {
                 return renderer.getConvertedValue(context, this, submittedValue);
+            }
+            else if (submittedValue == null)
+            {
+                return null;
             }
             else if (submittedValue instanceof String[])
             {
