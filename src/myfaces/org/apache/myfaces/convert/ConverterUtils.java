@@ -74,7 +74,7 @@ public class ConverterUtils
         try
         {
             //FIXME
-            //return af.getApplication().getConverter(converterId);
+            return af.getApplication().getConverter(converterId);
             return null;
         }
         catch (FacesException e)

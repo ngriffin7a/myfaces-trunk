@@ -21,13 +21,16 @@ package net.sourceforge.myfaces.config;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import javax.faces.FacesException;
 import javax.faces.FactoryFinder;
-import javax.faces.component.UIComponent;
-import javax.faces.convert.Converter;
+import javax.faces.application.Application;
+import javax.faces.application.ApplicationFactory;
+import javax.faces.application.NavigationHandler;
+import javax.faces.application.ViewHandler;
+import javax.faces.el.PropertyResolver;
+import javax.faces.el.VariableResolver;
+import javax.faces.event.ActionListener;
 import javax.faces.render.RenderKit;
 import javax.faces.render.RenderKitFactory;
-import javax.faces.validator.Validator;
 import java.util.*;
 
 
@@ -43,13 +46,16 @@ public class FacesConfig
 {
     private static final Log log = LogFactory.getLog(FacesConfig.class);
 
-    private ApplicationConfig _applicationConfig;
     private FactoryConfig _factoryConfig;
     private LifecycleConfig _lifecycleConfig;
+
+    // Application specific
+    private ApplicationConfig _applicationConfig;
     private final Map _converterMap = new HashMap();
     private final Map _converterTypeMap = new HashMap();
     private final Map _componentClassMap = new HashMap();
     private final Map _validatorClassMap = new HashMap();
+
     private final Map _managedBeanConfigMap = new HashMap();
     private final List _navigationRuleConfigList = new ArrayList();
     private final Map _referencedBeanConfigMap = new HashMap();
@@ -88,97 +94,15 @@ public class FacesConfig
         }
     }
 
-
     public void addConverterConfig(ConverterConfig converterConfig)
     {
-        getConverterMap().put(converterConfig.getConverterId(),
-                              converterConfig.newConverter());
-    }
-
-    public void addConverter(Class targetClass, String converterClass)
-    {
-        Converter converter = (Converter)ConfigUtil.newInstance(converterClass);
-        _converterTypeMap.put(targetClass, converter);
-    }
-
-    public void addConverter(String converterId, String converterClass)
-    {
-        Converter converter = (Converter)ConfigUtil.newInstance(converterClass);
-        getConverterMap().put(converterId, converter);
-    }
-
-    public Converter getConverter(String converterId) throws FacesException
-    {
-        Converter converter = (Converter)getConverterMap().get(converterId);
-        if (converter == null)
-        {
-            if (log.isErrorEnabled()) log.error("Unknown converter id '" + converterId + "'.");
-            throw new FacesException("Unknown converter id '" + converterId + "'.");
-        }
-        return converter;
-    }
-
-    public Converter getConverter(Class targetClass) throws FacesException
-    {
-        Converter converter = (Converter)getConverterTypeMap().get(targetClass);
-        if (converter == null)
-        {
-            if (log.isErrorEnabled()) log.error("Unknown converter targetClass '" + targetClass.getName() + "'.");
-            throw new FacesException("Unknown converter targetClass '" + targetClass.getName() + "'.");
-        }
-        return converter;
-    }
-
-    public Iterator getConverterIds()
-    {
-        return getConverterMap().keySet().iterator();
-    }
-
-    public Iterator getConverterTypes()
-    {
-        return getConverterTypeMap().keySet().iterator();
-    }
-
-    private Map getConverterMap()
-    {
-        return _converterMap;
-    }
-
-    private Map getConverterTypeMap()
-    {
-        return _converterTypeMap;
+        _converterMap.put(converterConfig.getConverterId(), converterConfig.getConverterClass());
     }
 
     public void addComponentConfig(ComponentConfig componentConfig)
     {
-        addComponent(componentConfig.getComponentType(),
-                     componentConfig.getComponentClass());
-    }
-
-    public void addComponent(String componentType, String componentClass)
-    {
-        getComponentClassMap().put(componentType,
-                                   ConfigUtil.classForName(componentClass));
-    }
-
-    public UIComponent getComponent(String componentType) throws FacesException
-    {
-        Class componentClass = (Class)getComponentClassMap().get(componentType);
-        if (componentClass == null)
-        {
-            throw new FacesException("Unknown component type '" + componentType + "'.");
-        }
-        return (UIComponent)ConfigUtil.newInstance(componentClass);
-    }
-
-    public Iterator getComponentTypes()
-    {
-        return getComponentClassMap().keySet().iterator();
-    }
-
-    private Map getComponentClassMap()
-    {
-        return _componentClassMap;
+        _componentClassMap.put(componentConfig.getComponentType(),
+                               componentConfig.getComponentClass());
     }
 
     public void addValidatorConfig(ValidatorConfig validatorConfig)
@@ -189,31 +113,8 @@ public class FacesConfig
 
     public void addValidator(String validatorId, String validatorClass)
     {
-        getValidatorClassMap().put(validatorId,
-                                   ConfigUtil.classForName(validatorClass));
+        _validatorClassMap.put(validatorId, validatorClass);
     }
-
-    public Validator getValidator(String validatorId) throws FacesException
-    {
-        Class clazz = (Class)getValidatorClassMap().get(validatorId);
-        if (clazz == null)
-        {
-            throw new FacesException("Unknown validator id '" + validatorId + "'.");
-        }
-        return (Validator)ConfigUtil.newInstance(clazz);
-    }
-
-    public Iterator getValidatorIds()
-    {
-        return getValidatorClassMap().keySet().iterator();
-    }
-
-    private Map getValidatorClassMap()
-    {
-        return _validatorClassMap;
-    }
-
-
 
     public void addManagedBeanConfig(ManagedBeanConfig managedBeanConfig)
     {
@@ -325,6 +226,70 @@ public class FacesConfig
     {
         configureFactoryFinder();
         configureRenderKits();
+        configureApplication();
+    }
+
+    public void configureApplication()
+    {
+        Application app = ((ApplicationFactory)FactoryFinder.getFactory(FactoryFinder.APPLICATION_FACTORY))
+            .getApplication();
+        ApplicationConfig appConfig = getApplicationConfig();
+
+        NavigationHandler navigationHandler = appConfig.getNavigationHandler();
+        if (navigationHandler != null)
+        {
+            app.setNavigationHandler(navigationHandler);
+        }
+
+        PropertyResolver propertyResolver = appConfig.getPropertyResolver();
+        if (propertyResolver != null)
+        {
+            app.setPropertyResolver(propertyResolver);
+        }
+
+        VariableResolver variableResolver = appConfig.getVariableResolver();
+        if (variableResolver != null)
+        {
+            app.setVariableResolver(variableResolver);
+        }
+
+        ViewHandler viewHandler = appConfig.getViewHandler();
+        if (viewHandler != null)
+        {
+            app.setViewHandler(viewHandler);
+        }
+
+        ActionListener actionListener = app.getActionListener();
+        if (actionListener != null)
+        {
+            app.setActionListener(actionListener);
+        }
+
+        for (Iterator it = _converterMap.keySet().iterator(); it.hasNext();)
+        {
+            String converterId = (String)it.next();
+            String converterClass = (String)_converterMap.get(converterId);
+            app.addConverter(converterId, converterClass);
+        }
+        for (Iterator it = _converterTypeMap.keySet().iterator(); it.hasNext();)
+        {
+            Class targetClass = (Class)it.next();
+            String converterClass = (String)_converterTypeMap.get(targetClass);
+            app.addConverter(targetClass, converterClass);
+        }
+        for (Iterator it = _componentClassMap.keySet().iterator(); it.hasNext();)
+        {
+            String componentType = (String)it.next();
+            String componentClass = (String)_componentClassMap.get(componentType);
+            app.addComponent(componentType, componentClass);
+        }
+        for (Iterator it = _validatorClassMap.keySet().iterator(); it.hasNext();)
+        {
+            String validatorId = (String)it.next();
+            String validatorClass = (String)_validatorClassMap.get(validatorId);
+            app.addValidator(validatorId, validatorClass);
+        }
+
     }
 
     public void configureFactoryFinder()

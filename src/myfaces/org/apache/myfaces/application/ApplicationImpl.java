@@ -18,12 +18,13 @@
  */
 package net.sourceforge.myfaces.application;
 
-import net.sourceforge.myfaces.MyFacesFactoryFinder;
-import net.sourceforge.myfaces.config.FacesConfig;
-import net.sourceforge.myfaces.config.FacesConfigFactory;
+import net.sourceforge.myfaces.config.ConfigUtil;
 import net.sourceforge.myfaces.el.MethodBindingImpl;
 import net.sourceforge.myfaces.el.ValueBindingImpl;
+import net.sourceforge.myfaces.el.VariableResolverImpl;
+import net.sourceforge.myfaces.el.PropertyResolverImpl;
 import net.sourceforge.myfaces.util.BiLevelCacheMap;
+import net.sourceforge.myfaces.application.jsp.JspViewHandlerImpl;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -32,16 +33,12 @@ import javax.faces.application.Application;
 import javax.faces.application.NavigationHandler;
 import javax.faces.application.ViewHandler;
 import javax.faces.component.UIComponent;
-import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.el.*;
 import javax.faces.event.ActionListener;
 import javax.faces.validator.Validator;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 
 
 /**
@@ -58,7 +55,6 @@ public class ApplicationImpl
 
     //~ Instance fields ----------------------------------------------------------------------------
 
-    private final FacesConfig    _facesConfig;
     private final Map            _valueBindingCache =
         new BiLevelCacheMap(256, 128, 100)
         {
@@ -68,20 +64,27 @@ public class ApplicationImpl
             }
         };
 
-    private final ExternalContext _externalContext;
     private Collection           _supportedLocales;
     private Locale               _defaultLocale;
     private String               _messageBundle;
-    private ViewHandler          _viewHandler;
+
+    private ViewHandler          _viewHandler = new JspViewHandlerImpl();
+    private NavigationHandler    _navigationHandler = new NavigationHandlerImpl();
+    private VariableResolver     _variableResolver = new VariableResolverImpl();
+    private PropertyResolver     _propertyResolver = new PropertyResolverImpl();
+    private ActionListener       _actionListener = new ActionListenerImpl();
+
+    private final Map _converterMap = new HashMap();
+    private final Map _converterTypeMap = new HashMap();
+    private final Map _componentClassMap = new HashMap();
+
+    private final Map _validatorClassMap = new HashMap();
+
 
     //~ Constructors -------------------------------------------------------------------------------
 
-    public ApplicationImpl(ExternalContext externalContext)
+    public ApplicationImpl()
     {
-        _externalContext = externalContext;
-
-        FacesConfigFactory fcf = MyFacesFactoryFinder.getFacesConfigFactory(_externalContext);
-        _facesConfig = fcf.getFacesConfig(_externalContext);
         if (log.isTraceEnabled()) log.trace("New Application instance created");
     }
 
@@ -91,32 +94,34 @@ public class ApplicationImpl
     {
         if (actionListener == null)
         {
-            throw new NullPointerException("actionListener");
+            log.error("setting actionListener to null is not allowed");
+            throw new NullPointerException("setting actionListener to null is not allowed");
         }
         synchronized(this)
         {
-            getFacesConfig().getApplicationConfig().setActionListener(actionListener);
+            _actionListener = actionListener;
         }
+        if (log.isTraceEnabled()) log.trace("set actionListener = " + actionListener.getClass().getName());
     }
 
     public ActionListener getActionListener()
     {
-        return getFacesConfig().getApplicationConfig().getActionListener();
+        return _actionListener;
     }
 
     public Iterator getComponentTypes()
     {
-        return getFacesConfig().getComponentTypes();
+        return _componentClassMap.keySet().iterator();
     }
 
     public Iterator getConverterIds()
     {
-        return getFacesConfig().getConverterIds();
+        return _converterMap.keySet().iterator();
     }
 
     public Iterator getConverterTypes()
     {
-        return getFacesConfig().getConverterTypes();
+        return _converterTypeMap.keySet().iterator();
     }
 
     public void setDefaultLocale(Locale locale)
@@ -124,7 +129,7 @@ public class ApplicationImpl
         if (locale == null)
         {
             log.error("setting locale to null is not allowed");
-            throw new NullPointerException("locale");
+            throw new NullPointerException("setting locale to null is not allowed");
         }
         synchronized(this)
         {
@@ -143,7 +148,7 @@ public class ApplicationImpl
         if (messageBundle == null)
         {
             log.error("setting messageBundle to null is not allowed");
-            throw new NullPointerException("messageBundle");
+            throw new NullPointerException("setting messageBundle to null is not allowed");
         }
         synchronized(this)
         {
@@ -162,18 +167,18 @@ public class ApplicationImpl
         if (navigationHandler == null)
         {
             log.error("setting navigationHandler to null is not allowed");
-            throw new NullPointerException("navigationHandler");
+            throw new NullPointerException("setting navigationHandler to null is not allowed");
         }
         synchronized(this)
         {
-            getFacesConfig().getApplicationConfig().setNavigationHandler(navigationHandler);
+            _navigationHandler = navigationHandler;
         }
         if (log.isTraceEnabled()) log.trace("set NavigationHandler = " + navigationHandler.getClass().getName());
     }
 
     public NavigationHandler getNavigationHandler()
     {
-        return getFacesConfig().getApplicationConfig().getNavigationHandler();
+        return _navigationHandler;
     }
 
     public void setPropertyResolver(PropertyResolver propertyResolver)
@@ -181,18 +186,18 @@ public class ApplicationImpl
         if (propertyResolver == null)
         {
             log.error("setting propertyResolver to null is not allowed");
-            throw new NullPointerException("propertyResolver");
+            throw new NullPointerException("setting propertyResolver to null is not allowed");
         }
         synchronized(this)
         {
-            getFacesConfig().getApplicationConfig().setPropertyResolver(propertyResolver);
+            _propertyResolver = propertyResolver;
         }
         if (log.isTraceEnabled()) log.trace("set PropertyResolver = " + propertyResolver.getClass().getName());
    }
 
     public PropertyResolver getPropertyResolver()
     {
-        return getFacesConfig().getApplicationConfig().getPropertyResolver();
+        return _propertyResolver;
     }
 
     public void setSupportedLocales(Collection locales)
@@ -200,7 +205,7 @@ public class ApplicationImpl
         if (locales == null)
         {
             log.error("setting supportedLocales to null is not allowed");
-            throw new NullPointerException("locales");
+            throw new NullPointerException("setting supportedLocales to null is not allowed");
         }
         synchronized(this)
         {
@@ -216,7 +221,7 @@ public class ApplicationImpl
 
     public Iterator getValidatorIds()
     {
-        return getFacesConfig().getValidatorIds();
+        return _validatorClassMap.keySet().iterator();
     }
 
     public void setVariableResolver(VariableResolver variableResolver)
@@ -224,18 +229,18 @@ public class ApplicationImpl
         if (variableResolver == null)
         {
             log.error("setting variableResolver to null is not allowed");
-            throw new NullPointerException("variableResolver");
+            throw new NullPointerException("setting variableResolver to null is not allowed");
         }
         synchronized(this)
         {
-            getFacesConfig().getApplicationConfig().setVariableResolver(variableResolver);
+            _variableResolver = variableResolver;
         }
         if (log.isTraceEnabled()) log.trace("set VariableResolver = " + variableResolver.getClass().getName());
     }
 
     public VariableResolver getVariableResolver()
     {
-        return getFacesConfig().getApplicationConfig().getVariableResolver();
+        return _variableResolver;
     }
 
     public void setViewHandler(ViewHandler viewHandler)
@@ -243,7 +248,7 @@ public class ApplicationImpl
         if (viewHandler == null)
         {
             log.error("setting viewHandler to null is not allowed");
-            throw new NullPointerException("viewHandler");
+            throw new NullPointerException("setting viewHandler to null is not allowed");
         }
         synchronized(this)
         {
@@ -262,16 +267,16 @@ public class ApplicationImpl
         if ((componentType == null) || (componentType.length() == 0))
         {
             log.error("addComponent: componentType = null ist not allowed");
-            throw new NullPointerException("componentType");
+            throw new NullPointerException("addComponent: componentType = null ist not allowed");
         }
         if ((componentClass == null) || (componentClass.length() == 0))
         {
             log.error("addComponent: component = null is not allowed");
-            throw new NullPointerException("componentClass");
+            throw new NullPointerException("addComponent: component = null is not allowed");
         }
         synchronized(this)
         {
-            getFacesConfig().addComponent(componentType, componentClass);
+            _componentClassMap.put(componentType, componentClass);
         }
         if (log.isTraceEnabled()) log.trace("add Component class = " + componentClass +
                                             " for type = " + componentType);
@@ -282,18 +287,20 @@ public class ApplicationImpl
         if ((converterId == null) || (converterId.length() == 0))
         {
             log.error("addConverter: converterId = null ist not allowed");
-            throw new NullPointerException("converterId");
+            throw new NullPointerException("addConverter: converterId = null ist not allowed");
         }
         if ((converterClass == null) || (converterClass.length() == 0))
         {
             log.error("addConverter: converterClass = null ist not allowed");
-            throw new NullPointerException("converterClass");
+            throw new NullPointerException("addConverter: converterClass = null ist not allowed");
         }
         synchronized(this)
         {
-            getFacesConfig().addConverter(converterId, converterClass);
+            Converter converter = (Converter)ConfigUtil.newInstance(converterClass);
+            _converterMap.put(converterId, converter);
         }
-        if (log.isTraceEnabled()) log.trace("add Converter id = " + converterId + " converterClass = " + converterClass);
+        if (log.isTraceEnabled()) log.trace("add Converter id = " + converterId +
+                                            " converterClass = " + converterClass);
     }
 
     public void addConverter(Class targetClass, String converterClass)
@@ -301,18 +308,20 @@ public class ApplicationImpl
         if ((targetClass == null))
         {
             log.error("addConverter: targetClass = null ist not allowed");
-            throw new NullPointerException("targetClass");
+            throw new NullPointerException("addConverter: targetClass = null ist not allowed");
         }
         if ((converterClass == null) || (converterClass.length() == 0))
         {
             log.error("addConverter: converterClass = null ist not allowed");
-            throw new NullPointerException("converterClass");
+            throw new NullPointerException("addConverter: converterClass = null ist not allowed");
         }
         synchronized(this)
         {
-            getFacesConfig().addConverter(targetClass, converterClass);
+            Converter converter = (Converter)ConfigUtil.newInstance(converterClass);
+            _converterTypeMap.put(targetClass, converter);
         }
-        if (log.isTraceEnabled()) log.trace("add Converter targetClass = " + targetClass + " converterClass = " + converterClass);
+        if (log.isTraceEnabled()) log.trace("add Converter targetClass = " + targetClass +
+                                            " converterClass = " + converterClass);
     }
 
     public void addValidator(String validatorId, String validatorClass)
@@ -320,49 +329,57 @@ public class ApplicationImpl
         if ((validatorId == null) || (validatorId.length() == 0))
         {
             log.error("addValidator: validatorId = null ist not allowed");
-            throw new NullPointerException("validatorId");
+            throw new NullPointerException("addValidator: validatorId = null ist not allowed");
         }
         if ((validatorClass == null) || (validatorClass.length() == 0))
         {
             log.error("addValidator:  validatorClass = null ist not allowed");
-            throw new NullPointerException("validatorClass");
+            throw new NullPointerException("addValidator:  validatorClass = null ist not allowed");
         }
         synchronized(this)
         {
-            getFacesConfig().addValidator(validatorId, validatorClass);
+            _validatorClassMap.put(validatorId, ConfigUtil.classForName(validatorClass));
         }
-        if (log.isTraceEnabled()) log.trace("add Validator id = " + validatorId + " class = " + validatorClass);
+        if (log.isTraceEnabled()) log.trace("add Validator id = " + validatorId +
+                                            " class = " + validatorClass);
     }
 
     public UIComponent createComponent(String componentType)
-    throws FacesException
+        throws FacesException
     {
         if ((componentType == null) || (componentType.length() == 0))
         {
             log.error("createComponent: componentType = null is not allowed");
-            throw new NullPointerException("componentType");
+            throw new NullPointerException("createComponent: componentType = null is not allowed");
         }
-        return getFacesConfig().getComponent(componentType);
+        UIComponent uiComponent = (UIComponent)_componentClassMap.get(componentType);
+        if (uiComponent == null)
+        {
+            log.error("Could not create component componentType = " + componentType);
+            throw new FacesException("Could not create component componentType = " + componentType);
+        }
+        return uiComponent;
     }
 
-    public UIComponent createComponent(
-        ValueBinding valueBinding, FacesContext facesContext, String componentType)
-    throws FacesException
+    public UIComponent createComponent(ValueBinding valueBinding,
+                                       FacesContext facesContext,
+                                       String componentType)
+        throws FacesException
     {
         if ((valueBinding == null))
         {
             log.error("createComponent: valueBinding = null ist not allowed");
-            throw new NullPointerException("valueBinding");
+            throw new NullPointerException("createComponent: valueBinding = null ist not allowed");
         }
         if ((facesContext == null))
         {
             log.error("createComponent: facesContext = null ist not allowed");
-            throw new NullPointerException("facesContext");
+            throw new NullPointerException("createComponent: facesContext = null ist not allowed");
         }
         if ((componentType == null) || (componentType.length() == 0))
         {
             log.error("createComponent: componentType = null ist not allowed");
-            throw new NullPointerException("componentType");
+            throw new NullPointerException("createComponent: componentType = null ist not allowed");
         }
 
         Object obj = valueBinding.getValue(facesContext);
@@ -381,9 +398,16 @@ public class ApplicationImpl
         if ((converterId == null) || (converterId.length() == 0))
         {
             log.error("createConverter: converterId = null ist not allowed");
-            throw new NullPointerException("converterId");
+            throw new NullPointerException("createConverter: converterId = null ist not allowed");
         }
-        return getFacesConfig().getConverter(converterId);
+
+        Converter converter = (Converter)_converterMap.get(converterId);
+        if (converter == null)
+        {
+            log.error("Unknown converter id '" + converterId + "'.");
+            throw new FacesException("Unknown converter id '" + converterId + "'.");
+        }
+        return converter;
     }
 
     public Converter createConverter(Class targetClass)
@@ -391,11 +415,11 @@ public class ApplicationImpl
         if (targetClass == null)
         {
             log.error("createConverter: targetClass = null ist not allowed");
-            throw new NullPointerException("targetClass");
+            throw new NullPointerException("createConverter: targetClass = null ist not allowed");
         }
 
         // Locate a Converter registered for the target class itself.
-        Converter converter = getFacesConfig().getConverter(targetClass);
+        Converter converter = (Converter)_converterTypeMap.get(targetClass);
 
         //Locate a Converter registered for interfaces that are
         // implemented by the target class (directly or indirectly).
@@ -406,7 +430,7 @@ public class ApplicationImpl
             {
                 for (int i = 0; i < interfaces.length; i++)
                 {
-                    converter = getFacesConfig().getConverter(interfaces[i]);
+                    converter = (Converter)_converterTypeMap.get(interfaces[i]);
                     if(converter != null)
                     {
                         break;
@@ -434,7 +458,7 @@ public class ApplicationImpl
         if ((reference == null) || (reference.length() == 0))
         {
             log.error("createMethodBinding: reference = null ist not allowed");
-            throw new NullPointerException("reference");
+            throw new NullPointerException("createMethodBinding: reference = null ist not allowed");
         }
 
         // We choose to instantiate a new MethodBinding every time as this is much easier 
@@ -450,9 +474,9 @@ public class ApplicationImpl
         if ((validatorId == null) || (validatorId.length() == 0))
         {
             log.error("createValidator: validatorId = null ist not allowed");
-            throw new NullPointerException("validatorId");
+            throw new NullPointerException("createValidator: validatorId = null ist not allowed");
         }
-        return getFacesConfig().getValidator(validatorId);
+        return (Validator)_validatorClassMap.get(validatorId);
     }
 
     public ValueBinding createValueBinding(String reference)
@@ -461,20 +485,9 @@ public class ApplicationImpl
         if ((reference == null) || (reference.length() == 0))
         {
             log.error("createValueBinding: reference = null ist not allowed");
-            throw new NullPointerException("reference");
+            throw new NullPointerException("createValueBinding: reference = null ist not allowed");
         }
         return (ValueBinding) _valueBindingCache.get(reference);
     }
 
-    protected FacesConfig getFacesConfig()
-    {
-//        Moved _facesConfig initialization to the constructor, hope that works better
-//        
-//        if (_facesConfig == null)
-//        {
-//            FacesConfigFactory fcf = MyFacesFactoryFinder.getFacesConfigFactory(_servletContext);
-//            _facesConfig = fcf.getFacesConfig(_servletContext);
-//        }
-        return _facesConfig;
-    }
 }

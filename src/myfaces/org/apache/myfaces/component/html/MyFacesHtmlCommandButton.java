@@ -19,6 +19,7 @@
 package net.sourceforge.myfaces.component.html;
 
 import javax.faces.component.html.HtmlCommandButton;
+import javax.faces.context.FacesContext;
 
 /**
  * DOCUMENT ME!
@@ -29,4 +30,8 @@ import javax.faces.component.html.HtmlCommandButton;
 public class MyFacesHtmlCommandButton
     extends HtmlCommandButton
 {
+    public Object saveState(FacesContext context)
+    {
+        return super.saveState(context);    //To change body of overridden methods use File | Settings | File Templates.
+    }
 }

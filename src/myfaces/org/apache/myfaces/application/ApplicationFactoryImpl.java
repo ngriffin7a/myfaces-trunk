@@ -51,7 +51,7 @@ public class ApplicationFactoryImpl
 
         if (application == null)
         {
-            application = new ApplicationImpl(FacesContext.getCurrentInstance().getExternalContext());
+            application = new ApplicationImpl();
             appMap.put(APPLICATION_ATTR, application);
         }
 
