@@ -31,6 +31,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.myfaces.custom.calendar.HtmlCalendarRenderer;
 import org.apache.myfaces.renderkit.html.HTML;
 
 /**
@@ -41,6 +42,9 @@ import org.apache.myfaces.renderkit.html.HTML;
  * @author Sylvain Vieujot (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.3  2004/12/01 20:29:22  svieujot
+ * Add javadoc.
+ *
  * Revision 1.2  2004/12/01 20:25:10  svieujot
  * Make the Extensions filter support css and image resources.
  * Convert the popup calendar to use this new filter.
@@ -115,6 +119,15 @@ public class AddResource {
         return set;
     }
     
+    /**
+     * Get the Path used to retrieve an internal resource for a custom component.
+     * Example : You can use this to initialize javascript scripts so that they know the path of some other resources
+     * (image, css, ...).
+     * <code>
+     * 	AddResource.addJavaScriptOncePerPage(HtmlCalendarRenderer.class, "popcalendar.js", facesContext,
+     * 		"jscalendarSetImageDirectory("+AddResource.getResourceMappedPath(HtmlCalendarRenderer.class, "DB", facesContext)+")");
+     * </code>
+     */
     public static String getResourceMappedPath(Class componentClass, String resourceFileName, FacesContext context){
         return getResourceMappedPath(
                 getComponentName(componentClass),
