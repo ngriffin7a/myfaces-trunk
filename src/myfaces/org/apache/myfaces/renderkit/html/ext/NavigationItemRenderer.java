@@ -125,7 +125,7 @@ public class NavigationItemRenderer
         Boolean b = (Boolean)uiComponent.getAttribute(DECODED_ATTR);
         if (b == null || !b.booleanValue())
         {
-            //There was no decoding, so we can assume that the sate has not been restored and we can
+            //There was no decoding, so we can assume that the state has not been restored yet and we can
             //explicitly restore state for that component
             RenderKitFactory rkFactory = (RenderKitFactory)FactoryFinder.getFactory(FactoryFinder.RENDER_KIT_FACTORY);
             RenderKit renderKit = rkFactory.getRenderKit(facesContext.getResponseTree().getRenderKitId());

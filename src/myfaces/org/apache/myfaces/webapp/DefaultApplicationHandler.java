@@ -50,9 +50,13 @@ import java.lang.reflect.Method;
             String commandRef = (String)uiComponent.getAttribute(UICommand.COMMAND_REFERENCE_ATTR);
             if (commandRef == null)
             {
-                // look for commandReference Atttribtue at parentComponent
+                // look for commandReference Atttribute in parents
                 UIComponent parentComponent = uiComponent.getParent();
-                commandRef = (String)parentComponent.getAttribute(UICommand.COMMAND_REFERENCE_ATTR);
+                while (parentComponent != null && commandRef == null)
+                {
+                    commandRef = (String)parentComponent.getAttribute(UICommand.COMMAND_REFERENCE_ATTR);
+                    parentComponent = parentComponent.getParent();
+                }
             }
             if (commandRef != null)
             {

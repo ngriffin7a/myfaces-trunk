@@ -497,6 +497,13 @@ public class FacesContextImpl
     }
 
 
+    /**
+     * TODO: FacesContextImpl must not be specific to JSP rendering! So, we
+     * should find a better way to find out model types.
+     * @param modelId
+     * @return
+     * @throws FacesException
+     */
     private Class getModelClassFromJspInfo(String modelId)
         throws FacesException
     {

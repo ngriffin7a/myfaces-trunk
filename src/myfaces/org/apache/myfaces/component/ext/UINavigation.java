@@ -19,21 +19,15 @@
 package net.sourceforge.myfaces.component.ext;
 
 import net.sourceforge.myfaces.component.UIPanel;
-import net.sourceforge.myfaces.webapp.ServletMappingFactory;
-import net.sourceforge.myfaces.webapp.ServletMapping;
-import net.sourceforge.myfaces.MyFacesFactoryFinder;
 import net.sourceforge.myfaces.util.logging.LogUtil;
 
 import javax.faces.FactoryFinder;
-import javax.faces.FacesException;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.event.FacesEvent;
 import javax.faces.tree.Tree;
 import javax.faces.tree.TreeFactory;
-import javax.servlet.ServletContext;
 import java.util.Iterator;
-import java.net.MalformedURLException;
 
 /**
  * DOCUMENT ME!
@@ -86,7 +80,6 @@ public class UINavigation
                     //close group
                     closeAllChildren(item.getChildren());//close group children
                     item.setOpen(false);
-                    return true;
                 }
                 else
                 {

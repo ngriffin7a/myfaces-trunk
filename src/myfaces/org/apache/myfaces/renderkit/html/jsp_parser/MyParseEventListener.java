@@ -361,73 +361,6 @@ public class MyParseEventListener
         return (FacesTag)obj;
     }
 
-    /*
-    private void handleTagBegin(String prefix, String shortTagName,
-                                Attributes attrs, TagLibraryInfo tli, TagInfo ti)
-    {
-        FacesTag tag = getFacesTag(ti);
-        if (tag != null)
-        {
-            UIComponent comp = tag.createComponent(); //Tag is instanceof FacesTag
-            if (comp != null)
-            {
-                comp.setAttribute(TreeCopier.CREATOR_TAG_ATTR, tag);
-
-                String rendererType = tag.getRendererType();
-                if (rendererType != null)
-                {
-                    comp.setRendererType(rendererType);
-                }
-
-                TagAttributeInfo[] attrInfos = ti.getAttributes();
-                for (int i = 0; i < attrInfos.length; i++)
-                {
-                    String attrName = attrInfos[i].getName();
-                    Object attrValue = attrs.getValue(attrName);
-
-                    if (attrInfos[i].canBeRequestTime() &&
-                        attrValue != null &&
-                        ((String)attrValue).trim().startsWith("<%"))
-                    {
-                        //Request time value --> ignore
-                        continue;
-                    }
-
-                    if (attrName.equals(MyFacesComponent.ID_ATTR))
-                    {
-                        comp.setComponentId((String)attrValue);
-                    }
-                    else if (attrName.equals(MyFacesComponent.MODEL_REFERENCE_ATTR))
-                    {
-                        comp.setModelReference((String)attrValue);
-                    }
-                    else if (attrName.equals(MyFacesComponent.RENDERER_TYPE_ATTR))
-                    {
-                        comp.setRendererType((String)attrValue);
-                    }
-                    else if (attrName.equals(MyFacesComponent.VALUE_ATTR))
-                    {
-                        //Will be converted to Object under current FacesContext later in the TreeCopier
-                        comp.setAttribute(TreeCopier.HARDCODED_VALUE_ATTR, attrValue);
-                    }
-                    else if (attrName.equals(UICommand.COMMAND_NAME_ATTR) &&
-                             comp.getComponentType().equals(UICommand.TYPE))
-                    {
-                        ((javax.faces.component.UICommand)comp).setCommandName((String)attrValue);
-                    }
-                    //else if (attrName.equals(???)) TODO: More known attributes?
-                    else
-                    {
-                        comp.setAttribute(attrName, attrValue);
-                    }
-
-                }
-                _currentComponent.addChild(comp);
-                _currentComponent = comp;
-            }
-        }
-    }
-    */
 
     private void handleTagBegin(String prefix, String shortTagName,
                                 Attributes attrs, TagLibraryInfo tli, TagInfo ti)
@@ -442,12 +375,13 @@ public class MyParseEventListener
             TagAttributeInfo[] attrInfos = ti.getAttributes();
             for (int i = 0; i < attrInfos.length; i++)
             {
-                String attrName = attrInfos[i].getName();
+                TagAttributeInfo attrInfo = attrInfos[i];
+                String attrName = attrInfo.getName();
                 Object attrValue = attrs.getValue(attrName);
 
                 if (attrValue != null)
                 {
-                    if (attrInfos[i].canBeRequestTime() &&
+                    if (attrInfo.canBeRequestTime() &&
                         ((String)attrValue).trim().startsWith("<%"))
                     {
                         //Request time value --> ignore
@@ -468,9 +402,24 @@ public class MyParseEventListener
 
                         if (attrValue instanceof String)
                         {
-                            //TODO: If attrInfos[i].getTypeName() is given use it as the target type
-                            attrValue = convertStringToTargetType(propDescr,
-                                                                  (String)attrValue);
+                            if (attrInfo.getTypeName() != null)
+                            {
+                                Class type = null;
+                                try
+                                {
+                                    type = Class.forName(attrInfo.getTypeName());
+                                }
+                                catch (ClassNotFoundException e)
+                                {
+                                    throw new RuntimeException(e);
+                                }
+                                attrValue = convertStringToTargetType((String)attrValue, type);
+                            }
+                            else
+                            {
+                                attrValue = convertStringToTargetType(propDescr,
+                                                                      (String)attrValue);
+                            }
                         }
                         BeanUtils.setBeanPropertyValue(tag, propDescr, attrValue);
                     }
@@ -703,15 +652,8 @@ public class MyParseEventListener
             throw new IllegalArgumentException("No class attribute!");
         }
 
-        //TODO: what about scope, do we need to map application (servlet context) beans?
-        /*
-        String scope = attrs.getValue("scope");
-        if (scope == null)
-        {
-            throw new IllegalArgumentException("No scope attribute!");
-        }
-        */
-
+        //We ignore the scope for convenience, although at the moment it is not
+        //necessary to store the type of application or session scope beans.
         _beanClasses.put(id, cl);
     }
 
