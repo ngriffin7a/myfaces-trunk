@@ -32,10 +32,16 @@
 
 #foreach ($f in $c.nonProprietaryFields)
 #if ($f.isPrimitiveType())
+#if ( !$f.isProprietarySetter() )
     public void ${f.setterMethodName}($f.type $f.name)
     {
+#if ($f.isPrimitiveBoolean())
         _$f.name = ${f.fieldType}.valueOf($f.name);
+#else
+        _$f.name = new ${f.fieldType}($f.name);
+#end
     }
+#end
 
     public $f.type ${f.getterMethodName}()
     {
@@ -50,10 +56,12 @@
     }
 
 #else
+#if ( !$f.isProprietarySetter() )
     public void ${f.setterMethodName}($f.type $f.name)
     {
         _$f.name = $f.name;
     }
+#end
 
     public $f.type ${f.getterMethodName}()
     {

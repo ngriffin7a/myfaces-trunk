@@ -22,28 +22,26 @@ import javax.faces.context.FacesContext;
 import javax.faces.el.ValueBinding;
 
 /**
+ * see Javadoc of JSF Specification
+ * 
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public class UIOutput
+public class UIViewRoot
         extends UIComponentBase
-        implements ValueHolder
 {
-    //private static final Log log = LogFactory.getLog(UIOutput.class);
-
-
     //------------------ GENERATED CODE BEGIN (do not modify!) --------------------
 
-    public static final String COMPONENT_TYPE = "javax.faces.Output";
-    public static final String COMPONENT_FAMILY = "javax.faces.Output";
-    private static final String DEFAULT_RENDERER_TYPE = "javax.faces.Text";
+    public static final String COMPONENT_TYPE = "javax.faces.ViewRoot";
+    public static final String COMPONENT_FAMILY = "javax.faces.ViewRoot";
+    private static final String DEFAULT_RENDERKITID = "HTML_BASIC";
 
-    private javax.faces.convert.Converter _converter = null;
-    private Object _value = null;
+    private Locale _locale = null;
+    private String _renderKitId = null;
+    private String _viewId = null;
 
-    public UIOutput()
+    public UIViewRoot()
     {
-        setRendererType(DEFAULT_RENDERER_TYPE);
     }
 
     public String getFamily()
@@ -51,37 +49,50 @@ public class UIOutput
         return COMPONENT_FAMILY;
     }
 
-    public void setConverter(javax.faces.convert.Converter converter)
+    public void setLocale(Locale locale)
     {
-        _converter = converter;
+        _locale = locale;
     }
 
-    public javax.faces.convert.Converter getConverter()
+    public Locale getLocale()
     {
-        if (_converter != null) return _converter;
-        ValueBinding vb = getValueBinding("converter");
-        return vb != null ? (javax.faces.convert.Converter)vb.getValue(getFacesContext()) : null;
+        if (_locale != null) return _locale;
+        ValueBinding vb = getValueBinding("locale");
+        return vb != null ? (Locale)vb.getValue(getFacesContext()) : null;
     }
 
-    public void setValue(Object value)
+    public void setRenderKitId(String renderKitId)
     {
-        _value = value;
+        _renderKitId = renderKitId;
     }
 
-    public Object getValue()
+    public String getRenderKitId()
     {
-        if (_value != null) return _value;
-        ValueBinding vb = getValueBinding("value");
-        return vb != null ? (Object)vb.getValue(getFacesContext()) : null;
+        if (_renderKitId != null) return _renderKitId;
+        ValueBinding vb = getValueBinding("renderKitId");
+        return vb != null ? (String)vb.getValue(getFacesContext()) : DEFAULT_RENDERKITID;
+    }
+
+    public void setViewId(String viewId)
+    {
+        _viewId = viewId;
+    }
+
+    public String getViewId()
+    {
+        if (_viewId != null) return _viewId;
+        ValueBinding vb = getValueBinding("viewId");
+        return vb != null ? (String)vb.getValue(getFacesContext()) : null;
     }
 
 
     public Object saveState(FacesContext context)
     {
-        Object values[] = new Object[2];
+        Object values[] = new Object[3];
         values[0] = super.saveState(context);
-        values[1] = _converter;
-        values[2] = _value;
+        values[1] = _locale;
+        values[2] = _renderKitId;
+        values[3] = _viewId;
         return ((Object) (values));
     }
 
@@ -89,8 +100,9 @@ public class UIOutput
     {
         Object values[] = (Object[])state;
         super.restoreState(context, values[0]);
-        _converter = (javax.faces.convert.Converter)values[1];
-        _value = (Object)values[2];
+        _locale = (Locale)values[1];
+        _renderKitId = (String)values[2];
+        _viewId = (String)values[3];
     }
     //------------------ GENERATED CODE END ---------------------------------------
 }

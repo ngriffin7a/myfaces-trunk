@@ -35,6 +35,7 @@ public class Field
     private int _fieldIndex;
     private boolean _proprietary = false;
     private boolean _saveState = true;
+    private boolean _proprietarySetter = false;
 
     public Field(String name)
     {
@@ -151,6 +152,10 @@ public class Field
                _qualifiedType.equals("long");
     }
 
+    public boolean isPrimitiveBoolean()
+    {
+        return _qualifiedType.equals("boolean");
+    }
 
     public String getSetterMethodName()
     {
@@ -210,11 +215,21 @@ public class Field
         _saveState = saveState;
     }
 
+    public boolean isProprietarySetter()
+    {
+        return _proprietarySetter;
+    }
+
+    public void setProprietarySetter(boolean proprietarySetter)
+    {
+        _proprietarySetter = proprietarySetter;
+    }
 
     public void toXml(PrintWriter writer) throws IOException
     {
         writer.print  ("    <field");
         if (isProprietary()) writer.print(" proprietary=\"true\"");
+        if (isProprietarySetter()) writer.print(" proprietarySetter=\"true\"");
         if (!isSaveState())  writer.print(" saveState=\"false\"");
         writer.println(">");
         writer.print  ("        <name>");

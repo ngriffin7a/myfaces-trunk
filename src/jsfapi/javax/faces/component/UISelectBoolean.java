@@ -22,26 +22,24 @@ import javax.faces.context.FacesContext;
 import javax.faces.el.ValueBinding;
 
 /**
+ * see Javadoc of JSF Specification
+ * 
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public class UIOutput
-        extends UIComponentBase
-        implements ValueHolder
+public class UISelectBoolean
+        extends UIInput
 {
-    //private static final Log log = LogFactory.getLog(UIOutput.class);
-
-
     //------------------ GENERATED CODE BEGIN (do not modify!) --------------------
 
-    public static final String COMPONENT_TYPE = "javax.faces.Output";
-    public static final String COMPONENT_FAMILY = "javax.faces.Output";
-    private static final String DEFAULT_RENDERER_TYPE = "javax.faces.Text";
+    public static final String COMPONENT_TYPE = "javax.faces.SelectBoolean";
+    public static final String COMPONENT_FAMILY = "javax.faces.SelectBoolean";
+    private static final String DEFAULT_RENDERER_TYPE = "javax.faces.Checkbox";
+    private static final boolean DEFAULT_SELECTED = false;
 
-    private javax.faces.convert.Converter _converter = null;
-    private Object _value = null;
+    private Boolean _selected = null;
 
-    public UIOutput()
+    public UISelectBoolean()
     {
         setRendererType(DEFAULT_RENDERER_TYPE);
     }
@@ -51,37 +49,25 @@ public class UIOutput
         return COMPONENT_FAMILY;
     }
 
-    public void setConverter(javax.faces.convert.Converter converter)
+    public void setSelected(boolean selected)
     {
-        _converter = converter;
+        _selected = Boolean.valueOf(selected);
     }
 
-    public javax.faces.convert.Converter getConverter()
+    public boolean isSelected()
     {
-        if (_converter != null) return _converter;
-        ValueBinding vb = getValueBinding("converter");
-        return vb != null ? (javax.faces.convert.Converter)vb.getValue(getFacesContext()) : null;
-    }
-
-    public void setValue(Object value)
-    {
-        _value = value;
-    }
-
-    public Object getValue()
-    {
-        if (_value != null) return _value;
-        ValueBinding vb = getValueBinding("value");
-        return vb != null ? (Object)vb.getValue(getFacesContext()) : null;
+        if (_selected != null) return _selected.booleanValue();
+        ValueBinding vb = getValueBinding("selected");
+        Boolean v = vb != null ? (Boolean)vb.getValue(getFacesContext()) : null;
+        return v != null ? v.booleanValue() : DEFAULT_SELECTED;
     }
 
 
     public Object saveState(FacesContext context)
     {
-        Object values[] = new Object[2];
+        Object values[] = new Object[1];
         values[0] = super.saveState(context);
-        values[1] = _converter;
-        values[2] = _value;
+        values[1] = _selected;
         return ((Object) (values));
     }
 
@@ -89,8 +75,7 @@ public class UIOutput
     {
         Object values[] = (Object[])state;
         super.restoreState(context, values[0]);
-        _converter = (javax.faces.convert.Converter)values[1];
-        _value = (Object)values[2];
+        _selected = (Boolean)values[1];
     }
     //------------------ GENERATED CODE END ---------------------------------------
 }

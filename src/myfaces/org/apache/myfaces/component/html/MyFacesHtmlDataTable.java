@@ -326,7 +326,7 @@ public class MyFacesHtmlDataTable
 
         public boolean isRowAvailable()
         {
-            return _index >= 0 && _index < _rowCount;
+            return _index >= _first && _index < _first + _rows;
         }
 
         public int getRowCount()
@@ -336,7 +336,7 @@ public class MyFacesHtmlDataTable
 
         public Object getRowData()
         {
-            if (_index < _first || _index - _first >= _list.size())
+            if (!isRowAvailable())
             {
                 throw new IllegalStateException();
             }

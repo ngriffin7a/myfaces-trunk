@@ -100,6 +100,12 @@ public class ComponentDefinitionParser
             field.setProprietary(true);
         }
 
+        String proprietarySetter = fieldElem.getAttribute("proprietarySetter");
+        if (proprietarySetter != null && proprietarySetter.equals("true"))
+        {
+            field.setProprietarySetter(true);
+        }
+
         String saveState = fieldElem.getAttribute("saveState");
         if (saveState != null && saveState.equals("false"))
         {

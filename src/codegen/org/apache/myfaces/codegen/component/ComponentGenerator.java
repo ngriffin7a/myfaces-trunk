@@ -62,6 +62,7 @@ public class ComponentGenerator
 
     public void generateComponent(Component component) throws IOException
     {
+        System.out.println("Generating component " + component.getQualifiedClassName());
         String componentClass = component.getQualifiedClassName();
 
         File bakFile = new File(_destdir, componentClass.replace('.', '/') + ".bak");

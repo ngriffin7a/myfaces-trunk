@@ -150,7 +150,7 @@ public class Component
     public Collection getNonProprietaryFields()
     {
         List lst = new ArrayList();
-        for (Iterator it = _fieldsMap.values().iterator(); it.hasNext(); )
+        for (Iterator it = getFields().iterator(); it.hasNext(); )
         {
             Field field = (Field)it.next();
             if (!field.isProprietary())
@@ -164,7 +164,7 @@ public class Component
     public Collection getSaveStateFields()
     {
         List lst = new ArrayList();
-        for (Iterator it = _fieldsMap.values().iterator(); it.hasNext(); )
+        for (Iterator it = getFields().iterator(); it.hasNext(); )
         {
             Field field = (Field)it.next();
             if (field.isSaveState())

@@ -22,45 +22,28 @@ import javax.faces.context.FacesContext;
 import javax.faces.el.ValueBinding;
 
 /**
+ * see Javadoc of JSF Specification
+ * 
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public class UIOutput
+public class UISelectItems
         extends UIComponentBase
-        implements ValueHolder
 {
-    //private static final Log log = LogFactory.getLog(UIOutput.class);
-
-
     //------------------ GENERATED CODE BEGIN (do not modify!) --------------------
 
-    public static final String COMPONENT_TYPE = "javax.faces.Output";
-    public static final String COMPONENT_FAMILY = "javax.faces.Output";
-    private static final String DEFAULT_RENDERER_TYPE = "javax.faces.Text";
+    public static final String COMPONENT_TYPE = "javax.faces.SelectItems";
+    public static final String COMPONENT_FAMILY = "javax.faces.SelectItems";
 
-    private javax.faces.convert.Converter _converter = null;
     private Object _value = null;
 
-    public UIOutput()
+    public UISelectItems()
     {
-        setRendererType(DEFAULT_RENDERER_TYPE);
     }
 
     public String getFamily()
     {
         return COMPONENT_FAMILY;
-    }
-
-    public void setConverter(javax.faces.convert.Converter converter)
-    {
-        _converter = converter;
-    }
-
-    public javax.faces.convert.Converter getConverter()
-    {
-        if (_converter != null) return _converter;
-        ValueBinding vb = getValueBinding("converter");
-        return vb != null ? (javax.faces.convert.Converter)vb.getValue(getFacesContext()) : null;
     }
 
     public void setValue(Object value)
@@ -78,10 +61,9 @@ public class UIOutput
 
     public Object saveState(FacesContext context)
     {
-        Object values[] = new Object[2];
+        Object values[] = new Object[1];
         values[0] = super.saveState(context);
-        values[1] = _converter;
-        values[2] = _value;
+        values[1] = _value;
         return ((Object) (values));
     }
 
@@ -89,8 +71,7 @@ public class UIOutput
     {
         Object values[] = (Object[])state;
         super.restoreState(context, values[0]);
-        _converter = (javax.faces.convert.Converter)values[1];
-        _value = (Object)values[2];
+        _value = (Object)values[1];
     }
     //------------------ GENERATED CODE END ---------------------------------------
 }

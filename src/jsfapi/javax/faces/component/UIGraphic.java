@@ -22,26 +22,24 @@ import javax.faces.context.FacesContext;
 import javax.faces.el.ValueBinding;
 
 /**
+ * see Javadoc of JSF Specification
+ * 
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public class UIOutput
+public class UIGraphic
         extends UIComponentBase
-        implements ValueHolder
 {
-    //private static final Log log = LogFactory.getLog(UIOutput.class);
-
-
     //------------------ GENERATED CODE BEGIN (do not modify!) --------------------
 
-    public static final String COMPONENT_TYPE = "javax.faces.Output";
-    public static final String COMPONENT_FAMILY = "javax.faces.Output";
-    private static final String DEFAULT_RENDERER_TYPE = "javax.faces.Text";
+    public static final String COMPONENT_TYPE = "javax.faces.Graphic";
+    public static final String COMPONENT_FAMILY = "javax.faces.Graphic";
+    private static final String DEFAULT_RENDERER_TYPE = "javax.faces.Image";
 
-    private javax.faces.convert.Converter _converter = null;
+    private String _url = null;
     private Object _value = null;
 
-    public UIOutput()
+    public UIGraphic()
     {
         setRendererType(DEFAULT_RENDERER_TYPE);
     }
@@ -51,16 +49,16 @@ public class UIOutput
         return COMPONENT_FAMILY;
     }
 
-    public void setConverter(javax.faces.convert.Converter converter)
+    public void setUrl(String url)
     {
-        _converter = converter;
+        _url = url;
     }
 
-    public javax.faces.convert.Converter getConverter()
+    public String getUrl()
     {
-        if (_converter != null) return _converter;
-        ValueBinding vb = getValueBinding("converter");
-        return vb != null ? (javax.faces.convert.Converter)vb.getValue(getFacesContext()) : null;
+        if (_url != null) return _url;
+        ValueBinding vb = getValueBinding("url");
+        return vb != null ? (String)vb.getValue(getFacesContext()) : null;
     }
 
     public void setValue(Object value)
@@ -80,7 +78,7 @@ public class UIOutput
     {
         Object values[] = new Object[2];
         values[0] = super.saveState(context);
-        values[1] = _converter;
+        values[1] = _url;
         values[2] = _value;
         return ((Object) (values));
     }
@@ -89,7 +87,7 @@ public class UIOutput
     {
         Object values[] = (Object[])state;
         super.restoreState(context, values[0]);
-        _converter = (javax.faces.convert.Converter)values[1];
+        _url = (String)values[1];
         _value = (Object)values[2];
     }
     //------------------ GENERATED CODE END ---------------------------------------
