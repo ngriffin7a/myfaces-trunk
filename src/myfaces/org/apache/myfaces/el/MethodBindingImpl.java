@@ -18,14 +18,14 @@
  */
 package net.sourceforge.myfaces.el;
 
-import java.lang.reflect.Method;
-
 import javax.faces.application.Application;
+import javax.faces.component.StateHolder;
 import javax.faces.context.FacesContext;
 import javax.faces.el.EvaluationException;
 import javax.faces.el.MethodBinding;
 import javax.faces.el.MethodNotFoundException;
 import javax.faces.el.ValueBinding;
+import java.lang.reflect.Method;
 
 
 /**
@@ -34,6 +34,7 @@ import javax.faces.el.ValueBinding;
  */
 public class MethodBindingImpl
     extends MethodBinding
+    implements StateHolder
 {
     //~ Instance fields ----------------------------------------------------------------------------
 
@@ -143,4 +144,42 @@ public class MethodBindingImpl
                 + ", method: " + name.toString(), e);
         }
     }
+
+
+    //~ StateHolder support ----------------------------------------------------------------------------
+
+    private boolean _transient = false;
+
+    /**
+     * Empty constructor, so that new instances can be created when restoring state.
+     */
+    public MethodBindingImpl()
+    {
+        _valueBinding = null;
+        _argClasses = null;
+    }
+
+    public Object saveState(FacesContext facescontext)
+    {
+        return new Object[] {_valueBinding.saveState(facescontext), _argClasses};
+    }
+
+    public void restoreState(FacesContext facescontext, Object obj)
+    {
+        Object[] ar = (Object[])obj;
+        _valueBinding = new ValueBindingImpl();
+        _valueBinding.restoreState(facescontext, ar[0]);
+        _argClasses = (Class[])ar[1];
+    }
+
+    public boolean isTransient()
+    {
+        return _transient;
+    }
+
+    public void setTransient(boolean flag)
+    {
+        _transient = flag;
+    }
+
 }

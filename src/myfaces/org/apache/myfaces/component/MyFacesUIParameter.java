@@ -18,8 +18,7 @@
  */
 package net.sourceforge.myfaces.component;
 
-import javax.faces.component.UIComponent;
-import javax.faces.context.FacesContext;
+import javax.faces.component.UIParameter;
 
 /**
  * DOCUMENT ME!
@@ -27,30 +26,6 @@ import javax.faces.context.FacesContext;
  * @version $Revision$ $Date$
  */
 public class MyFacesUIParameter
-    extends javax.faces.component.UIParameter
+    extends UIParameter
 {
-    public static final String NAME_PROP = "name";
-
-    public MyFacesUIParameter()
-    {
-        //FIXME
-        //setValid(true);
-    }
-
-
-//------------------------------------------------------------------------------
-
-    public String getClientId(FacesContext context)
-    {
-        return UIComponentUtils.getClientId(context, this);
-    }
-
-    public void addFacet(String facetName, UIComponent facet)
-    {
-        //FIXME
-        //super.addFacet(facetName, facet);
-        UIComponentUtils.ensureComponentInNamingContainer(facet);
-    }
-
-//------------------------------------------------------------------------------
 }

@@ -47,16 +47,22 @@
 
         <f:facet name="body">
             <h:panel_group id="body">
-                <table border="0">
-                    <tr>
-                        <td valign="middle">
-                            <h:output_message id="welcome" value="#{example_messages['welcome']}" />
-                        </td>
-                        <td valign="middle">
-                            <h:graphic_image id="logo" url="images/logo.jpg"/>
-                        </td>
-                    </tr>
-                </table>
+                <f:verbatim>
+                    <table border="0">
+                        <tr>
+                            <td valign="middle">
+                </f:verbatim>
+                <h:output_message id="welcome" value="#{example_messages['welcome']}" />
+                <f:verbatim>
+                            </td>
+                            <td valign="middle">
+                </f:verbatim>
+                <h:graphic_image id="logo" url="images/logo.jpg"/>
+                <f:verbatim>
+                            </td>
+                        </tr>
+                    </table>
+                </f:verbatim>
                 <h:output_message value="#{example_messages['today']}" >
                     <% request.setAttribute("currentDate", new Date()); %>
                     <f:parameter id="p0" value="#{currentDate}" />

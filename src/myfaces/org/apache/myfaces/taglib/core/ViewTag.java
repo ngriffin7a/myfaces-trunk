@@ -141,7 +141,7 @@ public class ViewTag
                     int lastMarkerEnd = 0;
                     while (form_marker != -1 || url_marker != -1)
                     {
-                        if (url_marker == -1 || form_marker < url_marker)
+                        if (url_marker == -1 || (form_marker != -1 && form_marker < url_marker))
                         {
                             //replace form_marker
                             realWriter.write(bodyStr, lastMarkerEnd, form_marker - lastMarkerEnd);

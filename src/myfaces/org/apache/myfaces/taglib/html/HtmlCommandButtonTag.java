@@ -18,10 +18,13 @@
  */
 package net.sourceforge.myfaces.taglib.html;
 
+import net.sourceforge.myfaces.el.SimpleActionMethodBinding;
 import net.sourceforge.myfaces.renderkit.JSFAttr;
 import net.sourceforge.myfaces.renderkit.html.HTML;
 
+import javax.faces.component.UICommand;
 import javax.faces.component.UIComponent;
+import javax.faces.el.MethodBinding;
 
 
 /**
@@ -67,7 +70,7 @@ public class HtmlCommandButtonTag
     private String _action;
     private String _immediate;
 
-    // HTMLCommandButton attributes
+    // HtmlCommandButton attributes
     private String _image;
 
     protected void setProperties(UIComponent component)
@@ -85,7 +88,20 @@ public class HtmlCommandButtonTag
         setIntegerProperty(component, HTML.TABINDEX_ATTR, _tabindex);
         setStringProperty(component, HTML.TYPE_ATTR, _type);
 
-        setStringProperty(component, JSFAttr.ACTION_ATTR, _action);
+        if (_action != null)
+        {
+            MethodBinding mb;
+            if (isValueReference(_action))
+            {
+                mb = context.getApplication().createMethodBinding(_action, null);
+            }
+            else
+            {
+                mb = new SimpleActionMethodBinding(_action);
+            }
+            ((UICommand)component).setAction(mb);
+        }
+
         setBooleanProperty(component, JSFAttr.IMMEDIATE_ATTR, _immediate);
 
         setStringProperty(component, JSFAttr.IMAGE_ATTR, _image);

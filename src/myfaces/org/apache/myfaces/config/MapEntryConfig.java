@@ -18,14 +18,6 @@
  */
 package net.sourceforge.myfaces.config;
 
-import net.sourceforge.myfaces.util.FacesUtils;
-
-import java.util.Map;
-
-import javax.faces.context.FacesContext;
-import javax.faces.el.ValueBinding;
-
-
 /**
  * @author Anton Koinov
  * @version $Revision$ $Date$
@@ -34,87 +26,34 @@ public class MapEntryConfig
 {
     //~ Instance fields ----------------------------------------------------------------------------
 
-    Object       _key;
-    Object       _value;
-    ValueBinding _valueBinding;
-    private int  _type;
+    private String       _key = null;
+    private String       _value = null;
 
     //~ Methods ------------------------------------------------------------------------------------
 
     public void setKey(String key)
     {
-        if ((key == null) || (key.length() == 0))
-        {
-            throw new NullPointerException("map-entry key must not be null");
-        }
-
         _key = key.intern();
     }
 
-    public Object getKey()
+    public String getKey()
     {
         return _key;
     }
 
-    public void setNullValue(String dymmy)
+    public void setNullValue(String dummy)
     {
-        _type = ManagedPropertyConfig.TYPE_NULL;
-    }
-
-    public int getType()
-    {
-        return _type;
+        _value = null;
     }
 
     public void setValue(String value)
     {
-        if (FacesUtils.isValueBinding(value))
-        {
-            // TODO: can we prebuild VB?
-            _type     = ManagedPropertyConfig.TYPE_VALUE_BINDING;
-            value     = value.trim();
-        }
-        else
-        {
-            _type = ManagedPropertyConfig.TYPE_OBJECT;
-        }
         _value = value.intern();
     }
 
-    public Object getValue(FacesContext facesContext, Class toClass)
+    public String getValue()
     {
-        Object retval = null;
-
-        switch (_type)
-        {
-            case ManagedPropertyConfig.TYPE_NULL:
-                return null;
-
-            case ManagedPropertyConfig.TYPE_VALUE_BINDING:
-                if (_valueBinding == null)
-                {
-                    // potential concurrency, but VB cache will mitigate that
-                    _valueBinding = FacesUtils.createValueBinding(facesContext, _value.toString());
-                }
-                retval = _valueBinding.getValue(facesContext);
-                break;
-
-            case ManagedPropertyConfig.TYPE_OBJECT:
-                retval = _value;
-                break;
-        }
-
-        // TODO: convert to toClass
-        return retval;
+        return _value;
     }
 
-    public void keyToClass(Class keyClass)
-    {
-        // TODO
-    }
-
-    public void updateBean(FacesContext facesContext, Map bean, Class valueClass)
-    {
-        bean.put(_key, getValue(facesContext, valueClass));
-    }
 }

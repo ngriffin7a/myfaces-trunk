@@ -60,15 +60,15 @@ public class HtmlOutputLinkTag
     private String _shape;
     private String _tabindex;
     private String _type;
+    //FIXME: is mentioned in JSF API, but is no official anchor-attribute of HTML 4.0... what to do?
+    private String _onblur;
+    //FIXME: is mentioned in JSF API, but is no official anchor-attribute of HTML 4.0... what to do?
+    private String _onfocus;
 
     // UIOutput attributes
     // value and converterId --> already implemented in MyfacesComponentTag
 
     //HtmlCommandLink Attributes
-    //FIXME: is mentioned in JSF API, but is no official anchor-attribute of HTML 4.0... what to do?
-    private String _onblur;
-    //FIXME: is mentioned in JSF API, but is no official anchor-attribute of HTML 4.0... what to do?
-    private String _onfocus;
 
     protected void setProperties(UIComponent component)
     {
@@ -83,7 +83,6 @@ public class HtmlOutputLinkTag
         setStringProperty(component, HTML.SHAPE_ATTR, _shape);
         setStringProperty(component, HTML.TABINDEX_ATTR, _tabindex);
         setStringProperty(component, HTML.TYPE_ATTR, _type);
-
         setStringProperty(component, HTML.ONBLUR_ATTR, _onblur);
         setStringProperty(component, HTML.ONFOCUS_ATTR, _onfocus);
    }

@@ -39,7 +39,7 @@ import java.io.IOException;
 public class HtmlImageRenderer
 extends HtmlRenderer
 {
-    private static final Log log = LogFactory.getLog(HtmlTextRenderer.class);
+    private static final Log log = LogFactory.getLog(HtmlImageRenderer.class);
 
     public void encodeEnd(FacesContext facesContext, UIComponent uiComponent)
             throws IOException
@@ -71,8 +71,6 @@ extends HtmlRenderer
             //actual image url could also be a dynamic servlet request:
             src = facesContext.getExternalContext().encodeResourceURL(src);
             writer.writeAttribute(HTML.SRC_ATTR, src, null);
-
-            writer.writeAttribute(HTML.ALT_ATTR, img.getAlt(), "alt");
 
             HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML.IMG_PASSTHROUGH_ATTRIBUTES);
 

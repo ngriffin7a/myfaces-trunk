@@ -20,12 +20,9 @@ package net.sourceforge.myfaces.config;
 
 import net.sourceforge.myfaces.util.ClassUtils;
 
-import javax.faces.context.FacesContext;
-import javax.faces.el.EvaluationException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
 
 /**
@@ -38,17 +35,26 @@ import java.util.Map;
  */
 public class ManagedBeanConfig implements Config
 {
-    //~ Instance fields ----------------------------------------------------------------------------
+    //~ Static fields/initializers -----------------------------------------------------------------
 
-    private Class  _managedBeanClass;
+    public static final int TYPE_NO_INIT = 0;
+    public static final int TYPE_PROPERTIES = 1;
+    public static final int TYPE_MAP = 2;
+    public static final int TYPE_LIST = 3;
+
+    //~ Instance fields ----------------------------------------------------------------------------
 
 // ignore        
 //    private String     _description;
 //    private String     _displayName;
 //    private IconConfig _iconConfig;
-    private List   _propertyConfigList = null;
+    private List _propertyConfigList = null;
+    private MapEntriesConfig _mapEntriesConfig = null;
+    private ListEntriesConfig _listEntriesConfig = null;
+    private Class  _managedBeanClass;
     private String _managedBeanName = null;
     private String _managedBeanScope = null;
+    private int _type = TYPE_NO_INIT;
 
     //~ Methods ------------------------------------------------------------------------------------
 
@@ -100,67 +106,47 @@ public class ManagedBeanConfig implements Config
         return _managedBeanScope;
     }
 
-    public List getPropertyConfigList()
-    {
-        return (_propertyConfigList != null) ? _propertyConfigList : Collections.EMPTY_LIST;
-    }
-
-    public void addListEntriesConfig(ListEntriesConfig listEntriesConfig)
-    {
-        addToList(listEntriesConfig);
-    }
-
     public void addManagedPropertyConfig(ManagedPropertyConfig propertyConfig)
-    {
-        addToList(propertyConfig);
-    }
-
-    public void addMapEntriesConfig(MapEntriesConfig mapEntriesConfig)
-    {
-        addToList(mapEntriesConfig);
-    }
-
-    public Object createBean(FacesContext facesContext)
-    {
-        Object bean;
-        try
-        {
-            bean = _managedBeanClass.newInstance();
-        }
-        catch (Exception e)
-        {
-            throw new EvaluationException("Unable to instantiate: " + _managedBeanClass, e);
-        }
-
-        if (_propertyConfigList != null)
-        {
-            for (int i = 0, len = _propertyConfigList.size(); i < len; i++)
-            {
-                Object propConfig = _propertyConfigList.get(i);
-                if (propConfig instanceof ManagedPropertyConfig)
-                {
-                    ((ManagedPropertyConfig) propConfig).updateBean(facesContext, bean);
-                }
-                else if (propConfig instanceof MapEntriesConfig)
-                {
-                    ((MapEntriesConfig) propConfig).updateBean(facesContext, (Map) bean);
-                }
-                else if (propConfig instanceof ListEntriesConfig)
-                {
-                    ((ListEntriesConfig) propConfig).updateBean(facesContext, (List) bean);
-                }
-            }
-        }
-
-        return bean;
-    }
-
-    private void addToList(Object o)
     {
         if (_propertyConfigList == null)
         {
             _propertyConfigList = new ArrayList();
         }
-        _propertyConfigList.add(o);
+        _propertyConfigList.add(propertyConfig);
+        _type = TYPE_PROPERTIES;
     }
+
+    public List getManagedPropertyConfigList()
+    {
+        return (_propertyConfigList != null) ? _propertyConfigList : Collections.EMPTY_LIST;
+    }
+
+    public void setMapEntriesConfig(MapEntriesConfig mapEntriesConfig)
+    {
+        _mapEntriesConfig = mapEntriesConfig;
+        _type = TYPE_MAP;
+    }
+
+    public MapEntriesConfig getMapEntriesConfig()
+    {
+        return _mapEntriesConfig;
+    }
+
+    public void setListEntriesConfig(ListEntriesConfig listEntriesConfig)
+    {
+        _listEntriesConfig = listEntriesConfig;
+        _type = TYPE_LIST;
+    }
+
+    public ListEntriesConfig getListEntriesConfig()
+    {
+        return _listEntriesConfig;
+    }
+
+    public int getType()
+    {
+        return _type;
+    }
+
+
 }

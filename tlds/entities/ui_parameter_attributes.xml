@@ -11,5 +11,5 @@
             <required>false</required>
             <rtexprvalue>false</rtexprvalue>
             <type>java.lang.String</type>
-            <description>Initial value to set when rendered for the first time.</description>
+            <description>Initial value or value binding.</description>
         </attribute>

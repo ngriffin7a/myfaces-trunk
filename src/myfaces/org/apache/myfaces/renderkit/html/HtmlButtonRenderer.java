@@ -97,7 +97,7 @@ extends HtmlRenderer
     }
     
     public void encodeEnd(FacesContext facesContext, UIComponent uiComponent)
-    throws IOException
+            throws IOException
     {
         RendererUtils.checkParamValidity(facesContext, uiComponent, HtmlCommandButton.class);
 

@@ -41,7 +41,7 @@ public class HtmlLabelRenderer
 extends HtmlRenderer
 {
     public void encodeBegin(FacesContext facesContext, UIComponent uiComponent)
-    throws IOException
+            throws IOException
     {
         RendererUtils.checkParamValidity(facesContext, uiComponent, HtmlOutputLabel.class);
         ResponseWriter writer = facesContext.getResponseWriter();
@@ -66,7 +66,7 @@ extends HtmlRenderer
     }
 
     public void encodeEnd(FacesContext facesContext, UIComponent uiComponent)
-    throws IOException
+            throws IOException
     {
         ResponseWriter writer = facesContext.getResponseWriter();
         writer.endElement(HTML.LABEL_ELEM);

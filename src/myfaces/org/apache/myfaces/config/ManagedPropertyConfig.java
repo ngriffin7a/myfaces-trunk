@@ -18,9 +18,9 @@
  */
 package net.sourceforge.myfaces.config;
 
-import net.sourceforge.myfaces.el.PropertyResolverImpl;
+import net.sourceforge.myfaces.util.ClassUtils;
 
-import javax.faces.context.FacesContext;
+import javax.faces.webapp.UIComponentTag;
 
 
 /**
@@ -32,26 +32,101 @@ public class ManagedPropertyConfig extends PropertyConfig
 {
     //~ Static fields/initializers -----------------------------------------------------------------
 
-    static final int          TYPE_NOT_SET       = 0;
-    static final int          TYPE_NULL          = 1;
-    static final int          TYPE_OBJECT        = 2;
-    static final int          TYPE_VALUE_BINDING = 3;
-    static final int          TYPE_MAP           = 4;
-    static final int          TYPE_LIST          = 5;
+    public static final int TYPE_UNKNOWN       = 0;
+    public static final int TYPE_OBJECT        = 1;
+    public static final int TYPE_VALUE_BINDING = 2;
+    public static final int TYPE_MAP           = 3;
+    public static final int TYPE_LIST          = 4;
 
     //~ Instance fields ----------------------------------------------------------------------------
 
-    private ListEntriesConfig _listEntriesConfig;
-    private MapEntriesConfig  _mapEntriesConfig;
-    private Object            _value;
-    private ValuesConfig      _valuesConfig;
-    private int               _type;
+// ignore
+//    private String _description;
+//    private String _displayName;
+//    private IconConfig _iconConfig;
+    private String            _propertyName = null;
+    private Class             _propertyClass = null;
+    private Object            _value = null;
+    private MapEntriesConfig  _mapEntriesConfig = null;
+    private ListEntriesConfig _listEntriesConfig = null;
+    private int               _type = TYPE_UNKNOWN;
 
     //~ Methods ------------------------------------------------------------------------------------
+
+    public void setDescription(String description)
+    {
+// ignore
+//        _description = description;
+    }
+
+    public void setDisplayName(String displayName)
+    {
+// ignore
+//        _displayName = displayName;
+    }
+
+    public void setIconConfig(IconConfig iconConfig)
+    {
+// ignore
+//        _iconConfig = iconConfig;
+    }
+
+    public void setPropertyClass(String propertyClassName)
+    {
+        _propertyClass = ClassUtils.javaTypeToClass(propertyClassName);
+    }
+
+    public Class getPropertyClass()
+    {
+        return _propertyClass;
+    }
+
+    public void setPropertyName(String propertyName)
+    {
+        _propertyName = propertyName.intern();
+    }
+
+    public String getPropertyName()
+    {
+        return _propertyName;
+    }
+
+    public void setNullValue(String dummy)
+    {
+        _type = TYPE_OBJECT;
+        _value = null;
+    }
+
+    public void setValue(String value)
+    {
+        if (UIComponentTag.isValueReference(value))
+        {
+            _type = TYPE_VALUE_BINDING;
+            _value = value.intern();
+        }
+        else
+        {
+            _type = TYPE_OBJECT;
+            if (_propertyClass != null)
+            {
+                _value = ConfigUtils.convertToType(value, _propertyClass);
+            }
+            else
+            {
+                _value = value.intern();
+            }
+        }
+    }
+
+    public Object getValue()
+    {
+        return _value;
+    }
 
     public void setListEntriesConfig(ListEntriesConfig listEntriesConfig)
     {
         _listEntriesConfig = listEntriesConfig;
+        _type = TYPE_LIST;
     }
 
     public ListEntriesConfig getListEntriesConfig()
@@ -62,6 +137,7 @@ public class ManagedPropertyConfig extends PropertyConfig
     public void setMapEntriesConfig(MapEntriesConfig mapEntriesConfig)
     {
         _mapEntriesConfig = mapEntriesConfig;
+        _type = TYPE_MAP;
     }
 
     public MapEntriesConfig getMapEntriesConfig()
@@ -69,59 +145,9 @@ public class ManagedPropertyConfig extends PropertyConfig
         return _mapEntriesConfig;
     }
 
-    public void setNullValue(String dummy)
+    public int getType()
     {
-        _type = TYPE_NULL;
+        return _type;
     }
 
-    public void setValue(String value)
-    {
-        //TODO: convert to property type
-        _value = value.intern();
-    }
-
-    public void setValuesConfig(ValuesConfig valuesConfig)
-    {
-        _valuesConfig = valuesConfig;
-    }
-
-    public ValuesConfig getValuesConfig()
-    {
-        return _valuesConfig;
-    }
-
-    public void updateBean(FacesContext facesContext, Object bean)
-    {
-        switch (_type)
-        {
-            case TYPE_NULL:
-                PropertyResolverImpl.setProperty(bean, getPropertyName(), null);
-                return;
-
-            case TYPE_OBJECT:
-
-                // TODO: convert to property class
-                PropertyResolverImpl.setProperty(bean, getPropertyName(), _value);
-                return;
-
-            case TYPE_VALUE_BINDING:
-
-                // TODO: convert to property class
-                PropertyResolverImpl.setProperty(bean, getPropertyName(), _value);
-                return;
-
-            case TYPE_MAP:
-                _mapEntriesConfig.updateBean(
-                    facesContext, bean, getPropertyName(), getPropertyClass());
-                return;
-
-            case TYPE_LIST:
-                _listEntriesConfig.updateBean(
-                    facesContext, bean, getPropertyName(), getPropertyClass());
-                return;
-
-            default:
-                throw new IllegalStateException();
-        }
-    }
 }

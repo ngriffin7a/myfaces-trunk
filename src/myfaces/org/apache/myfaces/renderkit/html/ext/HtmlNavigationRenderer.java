@@ -43,6 +43,19 @@ public class HtmlNavigationRenderer
 {
     private static final Log log = LogFactory.getLog(HtmlNavigationRenderer.class);
 
+    public boolean getRendersChildren()
+    {
+        return true;
+    }
+
+    public void encodeBegin(FacesContext context, UIComponent component) throws IOException
+    {
+    }
+
+    public void encodeChildren(FacesContext context, UIComponent component) throws IOException
+    {
+    }
+
     public void encodeEnd(FacesContext facesContext, UIComponent component) throws IOException
     {
         RendererUtils.checkParamValidity(facesContext, component, HtmlPanelNavigation.class);

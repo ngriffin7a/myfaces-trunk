@@ -26,7 +26,6 @@ import javax.faces.component.UIComponent;
 import javax.faces.context.ResponseWriter;
 import java.io.IOException;
 import java.io.Writer;
-import java.net.URLEncoder;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
@@ -112,7 +111,10 @@ public class HtmlResponseWriterImpl
 
     public void flush() throws IOException
     {
-        _writer.flush();
+        // API doc says we should not flush the underlying writer
+        //_writer.flush();
+        // but rather clear any values buffered by this ResponseWriter:
+        closeStartElementIfNecessary();
     }
 
     public void startDocument()
@@ -215,7 +217,20 @@ public class HtmlResponseWriterImpl
         }
         else
         {
-            _writer.write(URLEncoder.encode(strValue, _characterEncoding));
+            /*
+            int queryStringIdx = strValue.indexOf('?');
+            if (queryStringIdx == -1)
+            {
+                _writer.write(strValue);
+            }
+            else
+            {
+                _writer.write(strValue, 0, queryStringIdx + 1);
+                _writer.write(URLEncoder.encode(strValue.substring(queryStringIdx + 1),
+                                                _characterEncoding));
+            }
+            */
+            _writer.write(strValue);
         }
         _writer.write('"');
     }
@@ -236,7 +251,7 @@ public class HtmlResponseWriterImpl
         if(value == null)
             return;
 
-        String strValue = value.toString(); //TODO: Use converter for value
+        String strValue = value.toString(); //TODO: Use converter for value?
         _writer.write(HTMLEncoder.encode(strValue, false, false));
     }
 
@@ -290,7 +305,7 @@ public class HtmlResponseWriterImpl
         // empty string commonly used to force the start tag to be closed,
         // do not call down the writer chain
         if (str.length() > 0)
-        {    
+        {
             _writer.write(str);
         }
     }

@@ -18,8 +18,9 @@
  */
 package net.sourceforge.myfaces.taglib.core;
 
-import net.sourceforge.myfaces.component.MyFacesUIParameter;
-import net.sourceforge.myfaces.taglib.legacy.MyFacesTag;
+import net.sourceforge.myfaces.taglib.MyfacesComponentTag;
+
+import javax.faces.component.UIComponent;
 
 /**
  * DOCUMENT ME!
@@ -27,7 +28,7 @@ import net.sourceforge.myfaces.taglib.legacy.MyFacesTag;
  * @version $Revision$ $Date$
  */
 public class ParameterTag
-    extends MyFacesTag
+    extends MyfacesComponentTag
 {
     public String getComponentType()
     {
@@ -39,13 +40,21 @@ public class ParameterTag
         return null;
     }
 
-    public void setName(String v)
+    // UIComponent attributes --> already implemented in MyfacesComponentTag
+
+    // UIParameter attributes
+    // value already implemented in MyfacesComponentTag
+    private String _name;
+
+    protected void setProperties(UIComponent component)
     {
-        setComponentPropertyString(MyFacesUIParameter.NAME_PROP, v);
+        super.setProperties(component);
+        
+        setStringProperty(component, "name", _name);
     }
 
-    public void setValue(Object value)
+    public void setName(String name)
     {
-        super.setValue(value);
+        _name = name;
     }
 }

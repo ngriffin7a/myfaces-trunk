@@ -18,14 +18,10 @@
  */
 package net.sourceforge.myfaces.config;
 
-import net.sourceforge.myfaces.el.PropertyResolverImpl;
 import net.sourceforge.myfaces.util.ClassUtils;
-import net.sourceforge.myfaces.util.HashMapUtils;
 
-import javax.faces.context.FacesContext;
-import javax.faces.el.EvaluationException;
+import javax.faces.webapp.UIComponentTag;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 
@@ -38,19 +34,16 @@ public class MapEntriesConfig
 {
     //~ Instance fields ----------------------------------------------------------------------------
 
-    private Class _keyClass;
-    private Class _valueClass;
-    private List  _mapEntryConfigList; // List to maintain ordering (is it needed here?)
+    private Class _keyClass = null;
+    private Class _valueClass = null;
+    private Map _map = null;
+    private boolean _containsValueBindings = false;
 
     //~ Methods ------------------------------------------------------------------------------------
 
     public void setKeyClass(String keyClass)
     {
-        _keyClass = ClassUtils.javaTypeToClass(keyClass);
-        for (int i = 0, len = _mapEntryConfigList.size(); i < len; i++)
-        {
-            ((MapEntryConfig) _mapEntryConfigList.get(i)).keyToClass(_keyClass);
-        }
+        _keyClass = ClassUtils.classForName(keyClass);  //no need to support primitive types
     }
 
     public Class getKeyClass()
@@ -58,14 +51,9 @@ public class MapEntriesConfig
         return _keyClass;
     }
 
-    public List getMapEntryConfigList()
+    public void setValueClass(String valueClass)
     {
-        return _mapEntryConfigList;
-    }
-
-    public void setValueClass(Class valueClass)
-    {
-        _valueClass = valueClass;
+        _valueClass = ClassUtils.classForName(valueClass);  //no need to support primitive types
     }
 
     public Class getValueClass()
@@ -75,52 +63,52 @@ public class MapEntriesConfig
 
     public void addMapEntryConfig(MapEntryConfig mapEntryConfig)
     {
+        if (_map == null)
+        {
+            _map = new HashMap();
+        }
+
+        Object key;
         if (_keyClass != null)
         {
-            mapEntryConfig.keyToClass(_keyClass);
+            key = ConfigUtils.convertToType(mapEntryConfig.getKey(), _keyClass);
         }
-        _mapEntryConfigList.add(mapEntryConfig);
-    }
+        else
+        {
+            key = mapEntryConfig.getKey();
+        }
 
-    public void updateBean(FacesContext facesContext, Map map)
-    {
-        for (int i = 0, len = _mapEntryConfigList.size(); i < len; i++)
+        String strValue = mapEntryConfig.getValue();
+        if (strValue == null)
         {
-            ((MapEntryConfig) _mapEntryConfigList.get(i)).updateBean(
-                facesContext, map, _valueClass);
+            _map.put(key, null);
         }
-    }
-
-    public void updateBean(
-        FacesContext facesContext, Object bean, String propName, Class propertyClass)
-    {
-        boolean isNew;
-        Map     map;
-        try
+        else if (UIComponentTag.isValueReference(strValue))
         {
-            map       = (Map) PropertyResolverImpl.getProperty(bean, propName);
-            isNew     = false;
+            _map.put(key, new ValueBindingExpression(strValue));
+            _containsValueBindings = true;
         }
-        catch (Exception e)
+        else
         {
-            try
+            if (_valueClass != null)
             {
-                map = (propertyClass != null) ? (Map) propertyClass.newInstance()
-                                              : new HashMap(
-                        HashMapUtils.calcCapacity(_mapEntryConfigList.size()));
+                _map.put(key, ConfigUtils.convertToType(strValue, _valueClass));
             }
-            catch (Exception e1)
+            else
             {
-                throw new EvaluationException("Unable to instantiate: " + propertyClass, e1);
+                _map.put(key, strValue);
             }
-            isNew = true;
-        }
-
-        updateBean(facesContext, map);
-
-        if (isNew)
-        {
-            PropertyResolverImpl.setProperty(bean, propName, map);
         }
     }
+
+    public Map getMap()
+    {
+        return _map;
+    }
+
+    public boolean isContainsValueBindings()
+    {
+        return _containsValueBindings;
+    }
+
 }

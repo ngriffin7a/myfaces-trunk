@@ -22,17 +22,17 @@ import net.sourceforge.myfaces.MyFacesFactoryFinder;
 import net.sourceforge.myfaces.config.FacesConfig;
 import net.sourceforge.myfaces.config.FacesConfigFactory;
 import net.sourceforge.myfaces.config.ManagedBeanConfig;
-
+import net.sourceforge.myfaces.config.configure.ManagedBeanConfigurator;
+import net.sourceforge.myfaces.util.ClassUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
-import java.util.HashMap;
-import java.util.Map;
 
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.el.ReferenceSyntaxException;
 import javax.faces.el.VariableResolver;
+import java.util.HashMap;
+import java.util.Map;
 
 
 /**
@@ -279,10 +279,13 @@ public class VariableResolverImpl
         ManagedBeanConfig  mbc         = facesConfig.getManagedBeanConfig(name);
         if (mbc != null)
         {
-            return mbc.createBean(facesContext);
+            Object bean = ClassUtils.newInstance(mbc.getManagedBeanClass());
+            ManagedBeanConfigurator configurator = new ManagedBeanConfigurator(mbc);
+            configurator.configure(facesContext, bean);
+            return bean;
         }
 
-        log.warn("Variable '" + name + "' could not be resolved.");
+        log.error("Variable '" + name + "' could not be resolved.");
         return null;
     }
 }

@@ -148,7 +148,7 @@ public class JSFAttr
     public static final String TOOLTIP_ATTR                = "tooltip";
 
     // GraphicImage attributes
-    public static final String URL_ATTR                    = "url";
+    public static final String URL_ATTR                    = "URL";
 
     // HtmlPanelLayout attributes
 

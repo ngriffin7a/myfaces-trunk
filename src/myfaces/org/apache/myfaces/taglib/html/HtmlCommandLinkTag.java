@@ -18,10 +18,13 @@
  */
 package net.sourceforge.myfaces.taglib.html;
 
+import net.sourceforge.myfaces.el.SimpleActionMethodBinding;
 import net.sourceforge.myfaces.renderkit.JSFAttr;
 import net.sourceforge.myfaces.renderkit.html.HTML;
 
+import javax.faces.component.UICommand;
 import javax.faces.component.UIComponent;
+import javax.faces.el.MethodBinding;
 
 
 /**
@@ -61,17 +64,15 @@ public class HtmlCommandLinkTag
     private String _shape;
     private String _tabindex;
     private String _type;
-
-    // UICommand attributes
-    private String _action;
-    private String _outcome;
-    private String _immediate;
-
     //HtmlCommandLink Attributes
     //FIXME: is mentioned in JSF API, but is no official anchor-attribute of HTML 4.0... what to do?
     private String _onblur;
     //FIXME: is mentioned in JSF API, but is no official anchor-attribute of HTML 4.0... what to do?
     private String _onfocus;
+
+    // UICommand attributes
+    private String _action;
+    private String _immediate;
 
     protected void setProperties(UIComponent component)
     {
@@ -86,23 +87,24 @@ public class HtmlCommandLinkTag
         setStringProperty(component, HTML.SHAPE_ATTR, _shape);
         setIntegerProperty(component, HTML.TABINDEX_ATTR, _tabindex);
         setStringProperty(component, HTML.TYPE_ATTR, _type);
-
-        setBooleanProperty(component, JSFAttr.IMMEDIATE_ATTR, _immediate);
-
         setStringProperty(component, HTML.ONBLUR_ATTR, _onblur);
         setStringProperty(component, HTML.ONFOCUS_ATTR, _onfocus);
 
-        /*TODO:
-        if (_outcome != null)
-        {
-
-        }
-
         if (_action != null)
         {
-            MethodBinding mb = context.getApplication().createMethodBinding(_action, )
+            MethodBinding mb;
+            if (isValueReference(_action))
+            {
+                mb = context.getApplication().createMethodBinding(_action, null);
+            }
+            else
+            {
+                mb = new SimpleActionMethodBinding(_action);
+            }
+            ((UICommand)component).setAction(mb);
         }
-        */
+
+        setBooleanProperty(component, JSFAttr.IMMEDIATE_ATTR, _immediate);
    }
 
     public void setAccesskey(String accesskey)

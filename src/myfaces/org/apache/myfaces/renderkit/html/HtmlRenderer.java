@@ -40,6 +40,7 @@ import javax.faces.render.Renderer;
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.tagext.BodyContent;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
@@ -93,13 +94,8 @@ public abstract class HtmlRenderer
 
 
 
-    /*
     public void decode(FacesContext facescontext, UIComponent uicomponent)
     {
-        if (uicomponent instanceof UIOutput)
-        {
-            decodeValue(facescontext, (UIOutput) uicomponent);
-        }
     }
 
     public void encodeBegin(FacesContext facesContext, UIComponent uiComponent)
@@ -110,13 +106,20 @@ public abstract class HtmlRenderer
     public void encodeChildren(FacesContext facescontext, UIComponent uicomponent)
     throws IOException
     {
+        if (getRendersChildren())
+        {
+            log.warn("Renderer " + getClass().getName() + " renders its children and should therefore implement encodeChildren.");
+        }
+        else
+        {
+            log.warn("Renderer " + getClass().getName() + " does not render its children. Method encodeChildren should not be called.");
+        }
     }
 
     public void encodeEnd(FacesContext facesContext, UIComponent uiComponent)
     throws IOException
     {
     }
-    */
 
 
     /**

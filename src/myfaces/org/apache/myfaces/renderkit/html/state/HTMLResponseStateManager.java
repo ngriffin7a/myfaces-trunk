@@ -18,6 +18,7 @@
  */
 package net.sourceforge.myfaces.renderkit.html.state;
 
+import net.sourceforge.myfaces.renderkit.MyfacesResponseStateManager;
 import net.sourceforge.myfaces.renderkit.html.HTML;
 import net.sourceforge.myfaces.util.Base64;
 import net.sourceforge.myfaces.util.MyFacesObjectInputStream;
@@ -28,8 +29,8 @@ import javax.faces.FacesException;
 import javax.faces.application.StateManager;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
-import javax.faces.render.ResponseStateManager;
 import java.io.*;
+import java.net.URLEncoder;
 import java.util.Map;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
@@ -39,7 +40,7 @@ import java.util.zip.GZIPOutputStream;
  * @version $Revision$ $Date$
  */
 public class HTMLResponseStateManager
-        extends ResponseStateManager
+        extends MyfacesResponseStateManager
 {
     private static final Log log = LogFactory.getLog(HTMLResponseStateManager.class);
 
@@ -114,11 +115,11 @@ public class HTMLResponseStateManager
         {
             if (treeStruct instanceof String)
             {
-                responseWriter.writeURIAttribute(TREE_PARAM, treeStruct, null);
+                writeStateParam(responseWriter, TREE_PARAM, (String)treeStruct);
             }
             else
             {
-                responseWriter.writeURIAttribute(BASE64_TREE_PARAM, encode64(treeStruct), null);
+                writeStateParam(responseWriter, BASE64_TREE_PARAM, encode64(treeStruct));
             }
         }
 
@@ -126,11 +127,11 @@ public class HTMLResponseStateManager
         {
             if (compStates instanceof String)
             {
-                responseWriter.writeURIAttribute(STATE_PARAM, compStates, null);
+                writeStateParam(responseWriter, STATE_PARAM, (String)compStates);
             }
             else
             {
-                responseWriter.writeURIAttribute(BASE64_STATE_PARAM, encode64(compStates), null);
+                writeStateParam(responseWriter, BASE64_STATE_PARAM, encode64(compStates));
             }
         }
     }
@@ -221,5 +222,16 @@ public class HTMLResponseStateManager
             throw new FacesException(e);
         }
     }
+
+
+
+    private void writeStateParam(ResponseWriter writer, String name, String value)
+        throws IOException
+    {
+        writer.write(name);
+        writer.write('=');
+        writer.write(URLEncoder.encode(value, writer.getCharacterEncoding()));
+    }
+
 
 }

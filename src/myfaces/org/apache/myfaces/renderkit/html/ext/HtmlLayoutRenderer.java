@@ -49,6 +49,14 @@ public class HtmlLayoutRenderer
         return true;
     }
 
+    public void encodeBegin(FacesContext context, UIComponent component) throws IOException
+    {
+    }
+
+    public void encodeChildren(FacesContext context, UIComponent component) throws IOException
+    {
+    }
+
     public void encodeEnd(FacesContext facesContext, UIComponent component) throws IOException
     {
         RendererUtils.checkParamValidity(facesContext, component, HtmlPanelLayout.class);
@@ -246,15 +254,9 @@ public class HtmlLayoutRenderer
             writer.writeAttribute(HTML.STYLE_ATTR, style, null);
         }
 
-        renderChild(facesContext, component);
+        RendererUtils.renderChild(facesContext, component);
 
         writer.endElement(HTML.TD_ELEM);
-    }
-
-    protected void renderChild(FacesContext facesContext, UIComponent component)
-            throws IOException
-    {
-        RendererUtils.renderChild(facesContext, component);
     }
 
 }
