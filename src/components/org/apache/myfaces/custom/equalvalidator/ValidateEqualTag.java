@@ -26,6 +26,9 @@ import javax.servlet.jsp.JspException;
  * @author mwessendorf (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.4  2004/07/11 16:20:21  mwessendorf
+ * typo
+ *
  * Revision 1.3  2004/07/01 21:53:10  mwessendorf
  * ASF switch
  *
@@ -36,7 +39,7 @@ import javax.servlet.jsp.JspException;
  */
 public class ValidateEqualTag extends ValidatorTag {
 	
-	//the pattern, needed by Commons-Validator.
+	//the foreign component_id on which the validation is based.
 	private String _for = null;
 	
 	public ValidateEqualTag(){
