@@ -18,8 +18,10 @@ package net.sourceforge.myfaces.taglib.core;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import javax.faces.component.UIColumn;
 import javax.faces.component.UIViewRoot;
 import javax.faces.context.FacesContext;
+import javax.faces.webapp.UIComponentTag;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.Tag;
 import javax.servlet.jsp.tagext.TagSupport;
@@ -35,6 +37,9 @@ import java.util.*;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.8  2004/08/22 10:38:54  mwessendorf
+ * bug #1013489
+ *
  * Revision 1.7  2004/08/04 18:45:41  grantsmith
  * renamed 'enum' to 'enumer' to allow compile in JDK 1.5
  *
@@ -82,15 +87,25 @@ public class LoadBundleTag
         {
             locale = facesContext.getApplication().getDefaultLocale();
         }
+        
+        String basename = null;
+        
+        if (_basename!=null) {
+            if (UIComponentTag.isValueReference(_basename)) {
+                basename = (String)facesContext.getApplication().createValueBinding(_basename).getValue(facesContext);                
+            } else {
+                basename = _basename;
+            }
+        }
 
         final ResourceBundle bundle;
         try
         {
-            bundle = ResourceBundle.getBundle(_basename, locale);
+            bundle = ResourceBundle.getBundle(basename, locale);
         }
         catch (MissingResourceException e)
         {
-            log.error("Resource bundle '" + _basename + "' could not be found.");
+            log.error("Resource bundle '" + basename + "' could not be found.");
             return Tag.SKIP_BODY;
         }
 
