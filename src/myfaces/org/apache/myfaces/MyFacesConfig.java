@@ -19,15 +19,24 @@
 package net.sourceforge.myfaces;
 
 import java.util.logging.Level;
+import java.util.Properties;
+import java.io.InputStream;
+import java.io.IOException;
 
 /**
  * Global configuration for MyFaces.
- * TODO: Get config from a "myfaces.properties" file
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
 public class MyFacesConfig
 {
+    private static String _PROPERTY_FILE = "myfaces.properties";
+    private static String _UseJspFileCache = "UseJspFileCache";
+    private static String _UseStateEncodingOnTheFly = "UseStateEncodingOnTheFly";
+    private static String _UseStateZipping = "UseStateZipping";
+    private static String _UseAlwaysSaveComponentValue = "UseAlwaysSaveComponentValue";
+    private static String _UseFileExtensionServletMapping = "UseFileExtensionServletMapping";
+
     private MyFacesConfig() {}
 
     /**
@@ -39,7 +48,7 @@ public class MyFacesConfig
      */
     public static boolean isJspInfoApplicationCaching()
     {
-        return false;   //TODO: set to true in production!
+        return getPropertyAsBoolean(_UseJspFileCache, false);
     }
 
     /**
@@ -61,7 +70,7 @@ public class MyFacesConfig
      */
     public static boolean isStateEncodingOnTheFly()
     {
-        return false;
+        return getPropertyAsBoolean(_UseStateEncodingOnTheFly, false);
     }
 
     /**
@@ -77,7 +86,7 @@ public class MyFacesConfig
      */
     public static boolean isStateZipping()
     {
-        return false;
+        return getPropertyAsBoolean(_UseStateZipping, false);
     }
 
     /**
@@ -89,7 +98,7 @@ public class MyFacesConfig
      */
     public static boolean isAlwaysSaveComponentValue()
     {
-        return true;
+        return getPropertyAsBoolean(_UseAlwaysSaveComponentValue, true);
     }
 
     /**
@@ -98,12 +107,49 @@ public class MyFacesConfig
      */
     public static boolean isFileExtensionServletMapping()
     {
-        return true;
+        return getPropertyAsBoolean(_UseFileExtensionServletMapping, true);
     }
 
 
     public static Level getLogLevel()
     {
         return Level.FINEST;
+    }
+
+    private static final String _TRUE = "true";
+    private static boolean getPropertyAsBoolean(String name, boolean defaultValue)
+    {
+        String value = getProperty(name);
+        if (value == null)
+        {
+            return defaultValue;
+        }
+        if(value.equals(_TRUE))
+        {
+            return true;
+        }
+        return false;
+    }
+
+    private static Properties _myfacesProperties = null;
+    private static synchronized String getProperty(String name)
+    {
+        if (_myfacesProperties == null)
+        {
+            ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+            InputStream inputStream = classLoader.getResourceAsStream(_PROPERTY_FILE);
+            if (inputStream != null)
+            {
+                _myfacesProperties = new Properties();
+                try
+                {
+                    _myfacesProperties.load(inputStream);
+                }
+                catch (IOException e)
+                {
+                }
+            }
+        }
+        return _myfacesProperties.getProperty(name);
     }
 }
