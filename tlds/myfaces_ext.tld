@@ -817,7 +817,29 @@
         </attribute>
     </tag>
 
-
+	<!-- rdf ticker component -->
+    <tag>
+        <name>rdfTicker</name>
+        <tag-class>net.sourceforge.myfaces.custom.rdfticker.HtmlRdfTickerTag</tag-class>
+        <body-content>JSP</body-content>
+        <description>
+            Extends standard commandButton by user role support.
+        </description>
+        &ui_panel_attributes;
+        &html_universal_attributes;
+        &html_event_handler_attributes;
+        &html_table_attributes;
+		<!-- attribute(s) for the rdf ticker... -->
+		<attribute>
+			<name>rdfUrl</name>
+			<required>true</required>
+			<rtexprvalue>false</rtexprvalue>
+			<description>
+				URL on whichs the rss/rdf-information are available.
+			</description>
+		</attribute>
+	</tag>
+	
    <!-- tree -->
     <tag>
         <name>tree</name>

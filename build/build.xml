@@ -61,7 +61,7 @@
         <pathelement location="${commons-el.jar}"/>
         <pathelement location="${commons-codec.jar}"/>
     </path>
-
+ 
     <!-- classpath for compiling component classes -->
     <path id="components.class.path">
         <pathelement location="${api.classes}"/>
@@ -74,8 +74,10 @@
         <pathelement location="${commons-validator.jar}"/>
         <pathelement location="${jakarta-oro.jar}"/>
         <pathelement location="${commons-fileupload.jar}"/>
+        <pathelement location="${informa.jar}"/>
+        <pathelement location="${jdom.jar}"/>
     </path>
-
+ 
     <!-- classpath for javadoc creation -->
     <path id="javadoc.class.path">
         <pathelement location="${servlet.jar}"/>
@@ -88,6 +90,8 @@
         <pathelement location="${commons-validator.jar}"/>
         <pathelement location="${commons-fileupload.jar}"/>
         <pathelement location="${myfaces.jar}"/>
+        <pathelement location="${informa.jar}"/>
+        <pathelement location="${jdom.jar}"/>
     </path>
 
     <target name="myfaces-jar"
@@ -236,6 +240,10 @@
             <tarfileset file="${jstl.jar}"
                         prefix="myfaces-${manifest.impl.version}/lib"/>
             <tarfileset file="${jsp-api.jar}"
+                        prefix="myfaces-${manifest.impl.version}/lib"/>
+            <tarfileset file="${informa.jar}"
+                        prefix="myfaces-${manifest.impl.version}/lib"/>
+            <tarfileset file="${jdom.jar}"
                         prefix="myfaces-${manifest.impl.version}/lib"/>
         </tar>
     </target>
