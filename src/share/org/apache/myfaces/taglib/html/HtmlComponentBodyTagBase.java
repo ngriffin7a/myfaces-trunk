@@ -26,8 +26,12 @@ import javax.faces.component.UIComponent;
 /**
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
+ * $Log$
+ * Revision 1.1  2004/03/30 13:24:59  manolito
+ * refactoring: HtmlComponentTag moved to share and renamed to HtmlComponentTagBase
+ *
  */
-public abstract class HtmlComponentBodyTag
+public abstract class HtmlComponentBodyTagBase
         extends UIComponentBodyTagBase
 {
     //private static final Log log = LogFactory.getLog(HtmlComponentTag.class);

@@ -30,7 +30,7 @@ import javax.faces.component.html.HtmlOutputText;
  * @version $Revision$ $Date$
  */
 public class HtmlOutputTextTag
-    extends HtmlComponentTag
+    extends HtmlComponentTagBase
 {
     public String getComponentType()
     {
@@ -46,9 +46,9 @@ public class HtmlOutputTextTag
 
     // user role attributes --> already implemented in UIComponentTagBase
 
-    // HTML universal attributes --> already implemented in HtmlComponentTag
+    // HTML universal attributes --> already implemented in HtmlComponentTagBase
 
-    // HTML event handler attributes --> already implemented in HtmlComponentTag
+    // HTML event handler attributes --> already implemented in HtmlComponentTagBase
 
     // UIOutput attributes
     // value and converterId --> already implemented in UIComponentTagBase

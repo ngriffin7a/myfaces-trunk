@@ -28,7 +28,7 @@ import javax.faces.component.html.HtmlOutputFormat;
  * @version $Revision$ $Date$
  */
 public class HtmlOutputFormatTag
-        extends HtmlComponentTag
+        extends HtmlComponentTagBase
 {
     //private static final Log log = LogFactory.getLog(HtmlOutputFormatTag.class);
 
@@ -46,9 +46,9 @@ public class HtmlOutputFormatTag
 
     // user role attributes --> already implemented in UIComponentTagBase
 
-    // HTML universal attributes --> already implemented in HtmlComponentTag
+    // HTML universal attributes --> already implemented in HtmlComponentTagBase
 
-    // HTML event handler attributes --> already implemented in HtmlComponentTag
+    // HTML event handler attributes --> already implemented in HtmlComponentTagBase
 
     // UIOutput attributes
     // value and converterId --> already implemented in UIComponentTagBase

@@ -32,7 +32,7 @@ import javax.faces.component.html.HtmlCommandButton;
  * @version $Revision$ $Date$
  */
 public class HtmlCommandButtonTag
-    extends HtmlComponentTag
+    extends HtmlComponentTagBase
 {
     //private static final Log log = LogFactory.getLog(HtmlCommandButtonTag.class);
 
@@ -50,9 +50,9 @@ public class HtmlCommandButtonTag
 
     // user role attributes --> already implemented in UIComponentTagBase
 
-    // HTML universal attributes --> already implemented in HtmlComponentTag
+    // HTML universal attributes --> already implemented in HtmlComponentTagBase
 
-    // HTML event handler attributes --> already implemented in HtmlComponentTag
+    // HTML event handler attributes --> already implemented in HtmlComponentTagBase
 
     // HTML input attributes relevant for command-button
     private String _accesskey;

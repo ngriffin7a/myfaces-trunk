@@ -32,7 +32,7 @@ import javax.faces.component.html.HtmlCommandLink;
  * @version $Revision$ $Date$
  */
 public class HtmlCommandLinkTag
-    extends HtmlComponentTag
+    extends HtmlComponentTagBase
 {
     //private static final Log log = LogFactory.getLog(HtmlCommandLinkTag.class);
 
@@ -52,9 +52,9 @@ public class HtmlCommandLinkTag
 
     // user role attributes --> already implemented in UIComponentTagBase
 
-    // HTML universal attributes --> already implemented in HtmlComponentTag
+    // HTML universal attributes --> already implemented in HtmlComponentTagBase
 
-    // HTML event handler attributes --> already implemented in HtmlComponentTag
+    // HTML event handler attributes --> already implemented in HtmlComponentTagBase
 
     // HTML anchor attributes relevant for command link
     private String _accesskey;

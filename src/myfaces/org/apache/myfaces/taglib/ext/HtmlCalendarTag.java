@@ -44,7 +44,7 @@ public class HtmlCalendarTag
 
     // UIComponent attributes --> already implemented in UIComponentTagBase
 
-    // HTML universal attributes --> already implemented in HtmlComponentTag
+    // HTML universal attributes --> already implemented in HtmlComponentTagBase
 
     // HTML event handler attributes --> already implemented in MyFacesTag    
 

@@ -40,9 +40,15 @@ import java.util.Iterator;
 import java.util.Map;
 
 /**
+ * 
+ *
  * @author Manfred Geiler (latest modification by $Author$)
  * @author Thomas Spiegl
  * @version $Revision$ $Date$
+ * $Log$
+ * Revision 1.9  2004/03/30 13:24:57  manolito
+ * refactoring: HtmlComponentTag moved to share and renamed to HtmlComponentTagBase
+ *
  */
 public class HtmlMessagesRenderer
         extends HtmlRenderer
@@ -120,20 +126,20 @@ public class HtmlMessagesRenderer
     {
         ResponseWriter writer = facesContext.getResponseWriter();
 
-        writer.startElement("ul", uiMessages);
+        writer.startElement(HTML.UL_ELEM, uiMessages);
 
         while(messagesIterator.hasNext())
         {
-            writer.startElement("li", uiMessages);
+            writer.startElement(HTML.LI_ELEM, uiMessages);
             renderSingleMessage(facesContext,
                                 writer,
                                 uiMessages,
                                 (FacesMessage)messagesIterator.next(),
                                 messagesIterator.getClientId());
-            writer.endElement("li");
+            writer.endElement(HTML.LI_ELEM);
         }
 
-        writer.endElement("ul");
+        writer.endElement(HTML.UL_ELEM);
     }
 
 
@@ -144,22 +150,22 @@ public class HtmlMessagesRenderer
     {
         ResponseWriter writer = facesContext.getResponseWriter();
 
-        writer.startElement("table", uiMessages);
+        writer.startElement(HTML.TABLE_ELEM, uiMessages);
 
         while(messagesIterator.hasNext())
         {
-            writer.startElement("tr", uiMessages);
-            writer.startElement("td", uiMessages);
+            writer.startElement(HTML.TR_ELEM, uiMessages);
+            writer.startElement(HTML.TD_ELEM, uiMessages);
             renderSingleMessage(facesContext,
                                 writer,
                                 uiMessages,
                                 (FacesMessage)messagesIterator.next(),
                                 messagesIterator.getClientId());
-            writer.endElement("td");
-            writer.endElement("tr");
+            writer.endElement(HTML.TD_ELEM);
+            writer.endElement(HTML.TR_ELEM);
         }
 
-        writer.endElement("table");
+        writer.endElement(HTML.TABLE_ELEM);
     }
 
 

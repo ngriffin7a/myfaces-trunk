@@ -19,7 +19,7 @@
 package net.sourceforge.myfaces.taglib.ext;
 
 import net.sourceforge.myfaces.component.ext.HtmlDataTableScroller;
-import net.sourceforge.myfaces.taglib.html.HtmlComponentBodyTag;
+import net.sourceforge.myfaces.taglib.html.HtmlComponentBodyTagBase;
 
 import javax.faces.component.UIComponent;
 
@@ -28,7 +28,7 @@ import javax.faces.component.UIComponent;
  * @version $Revision$ $Date$
  */
 public class HtmlDataTableScrollerTag
-    extends HtmlComponentBodyTag
+    extends HtmlComponentBodyTagBase
 {
     //private static final Log log = LogFactory.getLog(HtmlDataTableScrollerTag.class);
 

@@ -49,9 +49,9 @@ public class HtmlSelectManyCheckboxTag
 
     // user role attributes --> already implemented in UIComponentTagBase
 
-    // HTML universal attributes --> already implemented in HtmlComponentTag
+    // HTML universal attributes --> already implemented in HtmlComponentTagBase
 
-    // HTML event handler attributes --> already implemented in HtmlComponentTag
+    // HTML event handler attributes --> already implemented in HtmlComponentTagBase
 
     // HTML input attributes relevant for checkbox-list
     private String _accesskey;

@@ -20,7 +20,7 @@ package net.sourceforge.myfaces.taglib.ext;
 
 import net.sourceforge.myfaces.component.ext.HtmlDataList;
 import net.sourceforge.myfaces.renderkit.JSFAttr;
-import net.sourceforge.myfaces.taglib.html.HtmlComponentBodyTag;
+import net.sourceforge.myfaces.taglib.html.HtmlComponentBodyTagBase;
 
 import javax.faces.component.UIComponent;
 
@@ -29,7 +29,7 @@ import javax.faces.component.UIComponent;
  * @version $Revision$ $Date$
  */
 public class HtmlDataListTag
-        extends HtmlComponentBodyTag
+        extends HtmlComponentBodyTagBase
 {
     //private static final Log log = LogFactory.getLog(MyfacesHtmlDataTableTag.class);
 
@@ -47,9 +47,9 @@ public class HtmlDataListTag
 
     // user role attributes --> already implemented in UIComponentTagBase
 
-    // HTML universal attributes --> already implemented in HtmlComponentTag
+    // HTML universal attributes --> already implemented in HtmlComponentTagBase
 
-    // HTML event handler attributes --> already implemented in HtmlComponentTag
+    // HTML event handler attributes --> already implemented in HtmlComponentTagBase
 
     // UIData attributes
     private String _rows;

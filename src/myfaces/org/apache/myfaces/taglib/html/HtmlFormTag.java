@@ -28,7 +28,7 @@ import javax.faces.component.html.HtmlForm;
  * @version $Revision$ $Date$
  */
 public class HtmlFormTag
-        extends HtmlComponentTag
+        extends HtmlComponentTagBase
 {
     //private static final Log log = LogFactory.getLog(HtmlFormTag.class);
 
@@ -46,9 +46,9 @@ public class HtmlFormTag
 
     // user role attributes --> already implemented in UIComponentTagBase
 
-    // HTML universal attributes --> already implemented in HtmlComponentTag
+    // HTML universal attributes --> already implemented in HtmlComponentTagBase
 
-    // HTML event handler attributes --> already implemented in HtmlComponentTag
+    // HTML event handler attributes --> already implemented in HtmlComponentTagBase
 
     // HTML form attributes
 

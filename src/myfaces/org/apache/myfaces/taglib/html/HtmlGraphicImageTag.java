@@ -32,7 +32,7 @@ import javax.faces.component.html.HtmlGraphicImage;
  * @version $Revision$ $Date$
  */
 public class HtmlGraphicImageTag
-    extends HtmlComponentTag
+    extends HtmlComponentTagBase
 {
     public String getComponentType()
     {
@@ -48,9 +48,9 @@ public class HtmlGraphicImageTag
 
     // user role attributes --> already implemented in UIComponentTagBase
 
-    // HTML universal attributes --> already implemented in HtmlComponentTag
+    // HTML universal attributes --> already implemented in HtmlComponentTagBase
 
-    // HTML event handler attributes --> already implemented in HtmlComponentTag
+    // HTML event handler attributes --> already implemented in HtmlComponentTagBase
 
     // HTML img attributes relevant for graphic-image
     private String _align;  //FIXME: not in API, HTML 4.0 transitional attribute and not in strict... what to do?

@@ -21,26 +21,19 @@ package net.sourceforge.myfaces.taglib.html;
 import net.sourceforge.myfaces.renderkit.JSFAttr;
 
 import javax.faces.component.UIComponent;
-import javax.faces.component.html.HtmlMessages;
 
 /**
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
+ * $Log$
+ * Revision 1.1  2004/03/30 13:24:59  manolito
+ * refactoring: HtmlComponentTag moved to share and renamed to HtmlComponentTagBase
+ *
  */
-public class HtmlMessagesTag
+public abstract class HtmlMessageTagBase
         extends HtmlComponentTagBase
 {
     //private static final Log log = LogFactory.getLog(HtmlOutputFormatTag.class);
-
-    public String getComponentType()
-    {
-        return HtmlMessages.COMPONENT_TYPE;
-    }
-
-    protected String getDefaultRendererType()
-    {
-        return "javax.faces.Messages";
-    }
 
     // UIComponent attributes --> already implemented in UIComponentTagBase
 
@@ -50,13 +43,12 @@ public class HtmlMessagesTag
 
     // HTML event handler attributes --> already implemented in HtmlComponentTagBase
 
-    // UIMessages attributes
+    // UIMessage attributes
     private String _for;
     private String _showSummary;
     private String _showDetail;
-    private String _globalOnly;
 
-    // HtmlMessages attributes
+    // HtmlOutputMessage attributes
     private String _infoClass;
     private String _infoStyle;
     private String _warnClass;
@@ -65,7 +57,6 @@ public class HtmlMessagesTag
     private String _errorStyle;
     private String _fatalClass;
     private String _fatalStyle;
-    private String _layout;
     private String _tooltip;
 
     protected void setProperties(UIComponent component)
@@ -75,7 +66,6 @@ public class HtmlMessagesTag
         setStringProperty(component, JSFAttr.FOR_ATTR, _for);
         setBooleanProperty(component, JSFAttr.SHOW_SUMMARY_ATTR, _showSummary);
         setBooleanProperty(component, JSFAttr.SHOW_DETAIL_ATTR, _showDetail);
-        setBooleanProperty(component, JSFAttr.GLOBAL_ONLY_ATTR, _globalOnly);
 
         setStringProperty(component, JSFAttr.INFO_CLASS_ATTR, _infoClass);
         setStringProperty(component, JSFAttr.INFO_STYLE_ATTR, _infoStyle);
@@ -85,7 +75,6 @@ public class HtmlMessagesTag
         setStringProperty(component, JSFAttr.ERROR_STYLE_ATTR, _errorStyle);
         setStringProperty(component, JSFAttr.FATAL_CLASS_ATTR, _fatalClass);
         setStringProperty(component, JSFAttr.FATAL_STYLE_ATTR, _fatalStyle);
-        setStringProperty(component, JSFAttr.LAYOUT_ATTR, _layout);
         setBooleanProperty(component, JSFAttr.TOOLTIP_ATTR, _tooltip);
     }
 
@@ -102,11 +91,6 @@ public class HtmlMessagesTag
     public void setShowDetail(String showDetail)
     {
         _showDetail = showDetail;
-    }
-
-    public void setGlobalOnly(String globalOnly)
-    {
-        _globalOnly = globalOnly;
     }
 
     public void setErrorClass(String errorClass)
@@ -147,11 +131,6 @@ public class HtmlMessagesTag
     public void setWarnStyle(String warnStyle)
     {
         _warnStyle = warnStyle;
-    }
-
-    public void setLayout(String layout)
-    {
-        _layout = layout;
     }
 
     public void setTooltip(String tooltip)

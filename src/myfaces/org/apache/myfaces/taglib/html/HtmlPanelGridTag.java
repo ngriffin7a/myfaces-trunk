@@ -29,7 +29,7 @@ import javax.faces.component.html.HtmlPanelGrid;
  * @version $Revision$ $Date$
  */
 public class HtmlPanelGridTag
-        extends HtmlComponentBodyTag
+        extends HtmlComponentBodyTagBase
 {
     //private static final Log log = LogFactory.getLog(HtmlPanelGridTag.class);
 
@@ -47,9 +47,9 @@ public class HtmlPanelGridTag
 
     // user role attributes --> already implemented in UIComponentTagBase
 
-    // HTML universal attributes --> already implemented in HtmlComponentTag
+    // HTML universal attributes --> already implemented in HtmlComponentTagBase
 
-    // HTML event handler attributes --> already implemented in HtmlComponentTag
+    // HTML event handler attributes --> already implemented in HtmlComponentTagBase
 
     // HTML table attributes relevant for Grid
     private String _align;

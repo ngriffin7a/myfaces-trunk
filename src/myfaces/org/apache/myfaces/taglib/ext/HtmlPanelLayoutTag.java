@@ -20,7 +20,7 @@ package net.sourceforge.myfaces.taglib.ext;
 
 import net.sourceforge.myfaces.component.ext.HtmlPanelLayout;
 import net.sourceforge.myfaces.renderkit.html.HTML;
-import net.sourceforge.myfaces.taglib.html.HtmlComponentBodyTag;
+import net.sourceforge.myfaces.taglib.html.HtmlComponentBodyTagBase;
 
 import javax.faces.component.UIComponent;
 
@@ -30,7 +30,7 @@ import javax.faces.component.UIComponent;
  * @version $Revision$ $Date$
  */
 public class HtmlPanelLayoutTag
-    extends HtmlComponentBodyTag
+    extends HtmlComponentBodyTagBase
 {
     public String getComponentType()
     {

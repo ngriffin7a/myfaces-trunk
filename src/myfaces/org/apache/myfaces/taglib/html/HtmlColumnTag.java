@@ -26,7 +26,7 @@ import javax.faces.component.UIColumn;
  * @version $Revision$ $Date$
  */
 public class HtmlColumnTag
-        extends HtmlComponentBodyTag
+        extends HtmlComponentBodyTagBase
 {
     //private static final Log log = LogFactory.getLog(HtmlColumnTag.class);
 
@@ -44,9 +44,9 @@ public class HtmlColumnTag
 
     // user role attributes --> already implemented in UIComponentTagBase
 
-    // HTML universal attributes --> already implemented in HtmlComponentTag
+    // HTML universal attributes --> already implemented in HtmlComponentTagBase
 
-    // HTML event handler attributes --> already implemented in HtmlComponentTag
+    // HTML event handler attributes --> already implemented in HtmlComponentTagBase
 
     // HTML table attributes relevant for Table
 }

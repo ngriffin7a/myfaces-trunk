@@ -31,7 +31,7 @@ import javax.faces.component.html.HtmlOutputLink;
  * @version $Revision$ $Date$
  */
 public class HtmlOutputLinkTag
-    extends HtmlComponentTag
+    extends HtmlComponentTagBase
 {
     public String getComponentType()
     {
@@ -47,9 +47,9 @@ public class HtmlOutputLinkTag
 
     // user role attributes --> already implemented in UIComponentTagBase
 
-    // HTML universal attributes --> already implemented in HtmlComponentTag
+    // HTML universal attributes --> already implemented in HtmlComponentTagBase
 
-    // HTML event handler attributes --> already implemented in HtmlComponentTag
+    // HTML event handler attributes --> already implemented in HtmlComponentTagBase
 
     // HTML anchor attributes relevant for command link
     private String _accesskey;
