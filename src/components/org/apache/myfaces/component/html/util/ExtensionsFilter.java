@@ -84,9 +84,6 @@ public class ExtensionsFilter implements Filter {
         return numberParam;
     }
 
-    /**
-     * TODO : Add the expires Header
-     */
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         if (!(response instanceof HttpServletResponse)) {
             chain.doFilter(request, response);
@@ -127,5 +124,6 @@ public class ExtensionsFilter implements Filter {
      * Destroy method for this filter
      */
     public void destroy() {
+		// NoOp
     }
 }
