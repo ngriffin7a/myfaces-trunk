@@ -1,24 +1,14 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
-<project name="myfaces-examples" default="all">
+<project name="myfaces-examples" default="all" basedir="." >
 
     <!-- allow some of the properties to be overridden -->
     <property file="build.properties"/>
 
     <!-- destination web dir -->
-    <property name="web.dir" value="${basedir}/web"/>
-
-    <property name="web_common.dir" value="${basedir}/web_common"/>
-    <property name="web_clientsaving.dir" value="${basedir}/web_clientsaving"/>
-    <property name="web_serversaving.dir" value="${basedir}/web_serversaving"/>
-
-    <!-- source dir for compiling -->
-    <property name="src.dir" value="${basedir}/src"/>
+    <property name="dest.web.dir" value="must be specified in build.properties"/>
 
     <!-- destination dir for compiling -->
-    <property name="classes.dir" value="${web.dir}/WEB-INF/classes"/>
-
-    <!-- destination WEB-INF dir -->
-    <property name="web-inf.dir" value="${web.dir}/WEB-INF"/>
+    <property name="dest.classes.dir" value="must be specified in build.properties"/>
 
     <!-- path to the "jsf-api.jar" file -->
     <property name="jsf-api.jar" value="must be specified in build.properties"/>
@@ -29,104 +19,109 @@
     <!-- path to the "mail.jar" file -->
     <property name="mail.jar" value="must be specified in build.properties"/>
 
-    <!-- path to the myfaces class files -->
-    <property name="myfaces.classes.dir" value="dummy"/>
-
     <!-- path to the "myfaces.jar" file -->
-    <property name="myfaces.jar" value="dummy"/>
+    <property name="myfaces.jar" value="must be specified in build.properties"/>
 
     <!-- source dir for compiling -->
     <property name="tlds.dir" value="${basedir}/../../tlds"/>
-
-
+    <property name="web_common.dir" value="${basedir}/web_common"/>
+    <property name="web_clientsaving.dir" value="${basedir}/web_clientsaving"/>
+    <property name="web_serversaving.dir" value="${basedir}/web_serversaving"/>
+    <property name="examples.src.dir" value="${basedir}/src"/>
 
     <!-- classpath for compiling -->
     <path id="project.class.path">
         <pathelement location="${jsf-api.jar}"/>
         <pathelement location="${servlet.jar}"/>
-        <pathelement location="${myfaces.classes.dir}"/>
+        <pathelement location="${mail.jar}"/>
         <pathelement location="${myfaces.jar}"/>
     </path>
 
     <target name="compile">
-        <mkdir dir="${classes.dir}"/>
-        <javac srcdir="${src.dir}"
-            destdir="${classes.dir}"
+        <mkdir dir="${dest.classes.dir}"/>
+        <javac srcdir="${examples.src.dir}"
+            destdir="${dest.classes.dir}"
             optimize="off"
             classpathref="project.class.path">
         </javac>
-        <copy todir="${classes.dir}">
-            <fileset dir="${src.dir}" includes="**"
+        <copy todir="${dest.classes.dir}">
+            <fileset dir="${examples.src.dir}" includes="**"
                                       excludes="**/*.java"/>
         </copy>
     </target>
 
-    <target name="-web-common" depends="compile" >
-        <mkdir dir="${web.dir}"/>
-        <copy todir="${web.dir}">
+
+    <target name="-copy-web_common">
+        <!--
+        Copies the files from web_common to the specified destination dir.
+        -->
+        <mkdir dir="${dest.web.dir}"/>
+        <copy todir="${dest.web.dir}">
             <fileset dir="${web_common.dir}" includes="**"/>
-        </copy>
-
-        <mkdir dir="${web-inf.dir}"/>
-
-        <mkdir dir="${web-inf.dir}/lib"/>
-        <copy todir="${web-inf.dir}/lib" file="${mail.jar}" />
-        <copy todir="${web-inf.dir}/lib" file="${jsf-api.jar}"/>
-        <copy todir="${web-inf.dir}/lib" file="${myfaces.jar}" failonerror="false" />
-
-        <mkdir dir="${web-inf.dir}/classes"/>
-        <copy todir="${web-inf.dir}/classes" failonerror="false">
-            <fileset dir="${myfaces.classes.dir}" includes="**" />
-        </copy>
-
-        <copy todir="${web-inf.dir}">
-            <fileset dir="${tlds.dir}" includes="**"/>
         </copy>
     </target>
 
-    <target name="web-clientsaving" depends="-web-common" >
+    <target name="copy-web_clientsaving" depends="-copy-web_common">
         <!--
-        Builds the examples web application configured to
-        use the "save minimized state in client" mode.
+        Copies the files from web_clientsaving to the specified destination dir
+        and replaces session scope by request scope in all JSPs.
         -->
-        <mkdir dir="${web-inf.dir}"/>
-        <copy todir="${web-inf.dir}" overwrite="true">
+        <mkdir dir="${dest.web.dir}/WEB-INF"/>
+        <copy todir="${dest.web.dir}/WEB-INF" overwrite="true">
             <fileset dir="${web_clientsaving.dir}/WEB-INF" includes="web.xml"/>
         </copy>
-        <replace dir="${web.dir}" includes="**/*.jsp,**/*.inc">
+        <replace dir="${dest.web.dir}" includes="**/*.jsp,**/*.inc">
             <replacetoken><![CDATA[scope="session"]]></replacetoken>
             <replacevalue><![CDATA[scope="request"]]></replacevalue>
         </replace>
-        <replace dir="${web.dir}" includes="**/*.jsp,**/*.inc">
+        <replace dir="${dest.web.dir}" includes="**/*.jsp,**/*.inc">
             <replacetoken><![CDATA[<%@ page session="true"]]></replacetoken>
             <replacevalue><![CDATA[<%@ page session="false"]]></replacevalue>
         </replace>
     </target>
 
-    <target name="web-serversaving" depends="-web-common">
+    <target name="copy-web_serversaving" depends="-copy-web_common">
         <!--
-        Builds the examples web application configured to
-        use the "save state in server session" mode.
+        Copies the files from web_serversaving to the specified destination dir
+        and replaces request scope by session scope in all JSPs.
         -->
-        <mkdir dir="${web-inf.dir}"/>
-        <copy todir="${web-inf.dir}" overwrite="true" >
+        <mkdir dir="${dest.web.dir}/WEB-INF"/>
+        <copy todir="${dest.web.dir}/WEB-INF" overwrite="true">
             <fileset dir="${web_serversaving.dir}/WEB-INF" includes="web.xml"/>
         </copy>
-        <replace dir="${web.dir}" includes="**/*.jsp,**/*.inc">
+        <replace dir="${dest.web.dir}" includes="**/*.jsp,**/*.inc">
             <replacetoken><![CDATA[scope="request"]]></replacetoken>
             <replacevalue><![CDATA[scope="session"]]></replacevalue>
         </replace>
-        <replace dir="${web.dir}" includes="**/*.jsp,**/*.inc">
+        <replace dir="${dest.web.dir}" includes="**/*.jsp,**/*.inc">
             <replacetoken><![CDATA[<%@ page session="false"]]></replacetoken>
             <replacevalue><![CDATA[<%@ page session="true"]]></replacevalue>
         </replace>
     </target>
 
 
+    <target name="-copy-libs_and_tlds">
+        <mkdir dir="${dest.web.dir}/WEB-INF/lib"/>
+        <copy todir="${dest.web.dir}/WEB-INF/lib" file="${mail.jar}"/>
+        <copy todir="${dest.web.dir}/WEB-INF/lib" file="${jsf-api.jar}"/>
+        <copy todir="${dest.web.dir}/WEB-INF/lib" file="${myfaces.jar}" failonerror="false"/>
+        <copy todir="${dest.web.dir}/WEB-INF">
+            <fileset dir="${tlds.dir}" includes="**"/>
+        </copy>
+    </target>
+
+
+    <target name="build-web_clientsaving-workdir"
+            depends="compile, copy-web_clientsaving, -copy-libs_and_tlds"/>
+
+    <target name="build-web_serversaving-workdir"
+            depends="compile, copy-web_serversaving, -copy-libs_and_tlds"/>
+
+
     <target name="clean">
         <delete quiet="true" failonerror="false" includeEmptyDirs="true">
-            <fileset dir="${classes.dir}" />
-            <fileset dir="${web.dir}" />
+            <fileset dir="${dest.classes.dir}" />
+            <fileset dir="${dest.web.dir}" />
         </delete>
     </target>
 

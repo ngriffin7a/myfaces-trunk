@@ -6,7 +6,7 @@
 
     <!-- Manifest-Infos -->
     <property name="manifest.impl.title" value="MyFaces"/>
-    <property name="manifest.impl.version" value="0.3.0"/>
+    <property name="manifest.impl.version" value="0.3.1"/>
     <property name="manifest.impl.vendor" value="MyFaces Project Team"/>
 
     <property name="project.dir" value="${basedir}"/>
@@ -28,9 +28,6 @@
     <!-- examples dir -->
     <property name="webapps.dir" value="${project.dir}/webapps"/>
 
-    <!-- examples source dir for compiling -->
-    <property name="examples.src.dir" value="${webapps.dir}/examples_cs/WEB-INF/src"/>
-
     <!-- destination dir for compiling -->
     <property name="examples.classes.dir" value="${temp.dir}/examples_classes"/>
 
@@ -49,10 +46,9 @@
         <pathelement location="${jsf-api.jar}" />
         <pathelement location="${mail.jar}"/>
         <pathelement location="${servlet.jar}"/>
-        <pathelement location="${main.classes.dir}"/> <!-- for compiling the examples -->
     </path>
 
-    <target name="compile-main">
+    <target name="-compile-main">
         <mkdir dir="${main.classes.dir}"/>
         <javac srcdir="${main.src.dir}"
                destdir="${main.classes.dir}"
@@ -61,14 +57,47 @@
         </javac>
     </target>
 
-    <target name="compile-examples" depends="compile-main" >
-        <mkdir dir="${examples.classes.dir}"/>
-        <javac srcdir="${examples.src.dir}"
-               destdir="${examples.classes.dir}"
-               optimize="off"
-               classpathref="project.class.path">
-        </javac>
+    <target name="-jar-main" depends="-compile-main, -timestamp">
+        <mkdir dir="${temp.dir}"/>
+
+        <manifest file="${temp.dir}/MANIFEST.MF">
+            <attribute name="Built-By" value="${user.name}"/>
+            <section name="myfaces.sourceforge.net">
+                <attribute name="Implementation-Title" value="${manifest.impl.title}"/>
+                <attribute name="Implementation-Version" value="${manifest.impl.version} ${TODAY_DE}"/>
+                <attribute name="Implementation-Vendor" value="${manifest.impl.vendor}"/>
+            </section>
+        </manifest>
+
+        <jar destfile="${temp.dir}/myfaces.jar"
+            manifest="${temp.dir}/MANIFEST.MF">
+            <fileset dir="${main.classes.dir}" includes="**"
+                excludes=".dependency-info/**/*"/>
+            <fileset dir="${main.src.dir}" includes="**"
+                excludes="**/*.java"/>
+            <zipfileset dir="${tlds.dir}" includes="*.tld" prefix="META-INF/"/>
+        </jar>
     </target>
+
+
+
+    <target name="-compile-examples" depends="-jar-main" >
+        <ant antfile="${webapps.dir}/examples/build.xml"
+             target="compile">
+            <property name="dest.classes.dir" value="${examples.classes.dir}"/>
+            <property name="myfaces.jar" value="${temp.dir}/myfaces.jar"/>
+            <property name="basedir" value="${webapps.dir}/examples"/>
+        </ant>
+    </target>
+
+    <target name="-jar-examples" depends="-compile-examples">
+        <mkdir dir="${temp.dir}"/>
+        <jar destfile="${temp.dir}/myfaces-examples.jar">
+            <fileset dir="${examples.classes.dir}" includes="**"
+                excludes=".dependency-info/**/*"/>
+        </jar>
+    </target>
+
 
 
     <target name="-timestamp">
@@ -77,37 +106,6 @@
         </tstamp>
     </target>
 
-    <target name="jar-main" depends="compile-main, -timestamp">
-        <mkdir dir="${temp.dir}"/>
-
-        <manifest file="${temp.dir}/MANIFEST.MF">
-            <attribute name="Built-By" value="${user.name}"/>
-            <section name="myfaces.sourceforge.net">
-              <attribute name="Implementation-Title" value="${manifest.impl.title}" />
-              <attribute name="Implementation-Version" value="${manifest.impl.version} ${TODAY_DE}" />
-              <attribute name="Implementation-Vendor" value="${manifest.impl.vendor}" />
-            </section>
-        </manifest>
-
-        <jar destfile="${temp.dir}/myfaces.jar"
-             manifest="${temp.dir}/MANIFEST.MF" >
-            <fileset dir="${main.classes.dir}" includes="**"
-                                               excludes=".dependency-info/**/*" />
-            <fileset dir="${main.src.dir}" includes="**"
-                                           excludes="**/*.java"/>
-            <zipfileset dir="${tlds.dir}" includes="*.tld" prefix="META-INF/" />
-        </jar>
-    </target>
-
-    <target name="jar-examples" depends="compile-examples">
-        <mkdir dir="${temp.dir}"/>
-        <jar destfile="${temp.dir}/myfaces-examples.jar">
-            <fileset dir="${examples.classes.dir}" includes="**"
-                                                   excludes=".dependency-info/**/*" />
-            <fileset dir="${examples.src.dir}" includes="**"
-                                               excludes="**/*.java"/>
-        </jar>
-    </target>
 
     <target name="makeclean">
         <delete quiet="true" failonerror="false" includeEmptyDirs="true">
@@ -118,29 +116,60 @@
     </target>
 
 
-    <target name="all" depends="jar-main,jar-examples"/>
-
-
-    <target name="release" depends="makeclean,jar-main,jar-examples">
+    <target name="release" depends="makeclean, -jar-main, -jar-examples">
         <mkdir dir="${temp.dir}/api"/>
         <javadoc sourcepath="${main.src.dir}"
                  destdir="${temp.dir}/api"
                  packagenames="net.sourceforge.myfaces.*"
                  classpathref="project.class.path"
                  failonerror="true" />
-        <mkdir dir="${temp.dir}"/>
+
+        <ant antfile="${webapps.dir}/examples/build.xml"
+             target="copy-web_clientsaving">
+            <property name="dest.web.dir" value="${temp.dir}/examples_cs"/>
+            <property name="basedir" value="${webapps.dir}/examples"/>
+        </ant>
+        <replace file="${temp.dir}/examples_cs/WEB-INF/web.xml">
+            <replacetoken><![CDATA[<!-- @develop_only:start@ -->]]></replacetoken>
+            <replacevalue><![CDATA[<!--]]></replacevalue>
+        </replace>
+        <replace file="${temp.dir}/examples_cs/WEB-INF/web.xml">
+            <replacetoken><![CDATA[<!-- @develop_only:end@ -->]]></replacetoken>
+            <replacevalue><![CDATA[-->]]></replacevalue>
+        </replace>
+
+        <ant antfile="${webapps.dir}/examples/build.xml"
+            target="copy-web_serversaving">
+            <property name="dest.web.dir" value="${temp.dir}/examples_ss"/>
+            <property name="basedir" value="${webapps.dir}/examples"/>
+        </ant>
+        <replace file="${temp.dir}/examples_ss/WEB-INF/web.xml">
+            <replacetoken><![CDATA[<!-- @develop_only:start@ -->]]></replacetoken>
+            <replacevalue><![CDATA[<!--]]></replacevalue>
+        </replace>
+        <replace file="${temp.dir}/examples_ss/WEB-INF/web.xml">
+            <replacetoken><![CDATA[<!-- @develop_only:end@ -->]]></replacetoken>
+            <replacevalue><![CDATA[-->]]></replacevalue>
+        </replace>
+
         <tar destfile="${temp.dir}/myfaces-${manifest.impl.version}.tgz"
              compression="gzip">
-            <tarfileset dir="${project.dir}"
-                        prefix="myfaces-${manifest.impl.version}"
-                        excludes="web/WEB-INF/classes/**/*,
-                                  temp/**,
-                                  *.ipr,*.iws"/>
+
+            <tarfileset dir="${project.dir}/doc"
+                        prefix="myfaces-${manifest.impl.version}/doc"/>
             <tarfileset dir="${temp.dir}/api"
                         prefix="myfaces-${manifest.impl.version}/doc/api" />
             <tarfileset dir="${temp.dir}"
                         includes="myfaces.jar,myfaces-examples.jar"
-                        prefix="myfaces-${manifest.impl.version}/web/WEB-INF/lib"/>
+                        prefix="myfaces-${manifest.impl.version}/lib"/>
+            <tarfileset file="${mail.jar}"
+                        prefix="myfaces-${manifest.impl.version}/lib"/>
+
+            <tarfileset dir="${temp.dir}/examples_cs"
+                        prefix="myfaces-${manifest.impl.version}/webapps/examples_cs"/>
+            <tarfileset dir="${temp.dir}/examples_ss"
+                        prefix="myfaces-${manifest.impl.version}/webapps/examples_ss"/>
+
         </tar>
     </target>
 
@@ -168,16 +197,14 @@
 	        password="${tomcat.admin.passwd}" />
 	</target>
 
-	<target name="install" description="Install example web application on tomcat"
-	        depends="all">
+	<target name="install" description="Install example web application on tomcat">
 	  <install url="${tomcat.manager.url}" username="${tomcat.admin.user}"
 	           password="${tomcat.admin.passwd}"
                path="${tomcat.example.context.path}"
                war="file:${project.dir}/web" />
     </target>
 
-	<target name="reload" description="Reload example web application on tomcat"
-	        depends="all">
+	<target name="reload" description="Reload example web application on tomcat">
 	  <reload  url="${tomcat.manager.url}" username="${tomcat.admin.user}"
 	           password="${tomcat.admin.passwd}"
 	           path="${tomcat.example.context.path}"/>
