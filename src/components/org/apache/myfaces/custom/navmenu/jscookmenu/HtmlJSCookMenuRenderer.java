@@ -38,6 +38,9 @@ import java.util.Map;
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  *          $Log$
+ *          Revision 1.8  2004/10/05 15:11:43  manolito
+ *          #1020264 x:navigationMenuItem icon problem
+ *
  *          Revision 1.7  2004/07/16 13:06:30  manolito
  *          encode javascript strings for jscook menu labels
  *
@@ -110,7 +113,7 @@ public class HtmlJSCookMenuRenderer
 
             writer.write("\n<script language=\"JavaScript\"><!--\n" +
                          "var myMenu =\n[");
-            encodeNavigationMenuItems(writer,
+            encodeNavigationMenuItems(context, writer,
                                       (NavigationMenuItem[]) list.toArray(new NavigationMenuItem[list.size()]));
 
             writer.write("];\n" +
@@ -118,32 +121,57 @@ public class HtmlJSCookMenuRenderer
         }
     }
 
-    private void encodeNavigationMenuItems(ResponseWriter writer, NavigationMenuItem[] items)
+    private void encodeNavigationMenuItems(FacesContext context,
+                                           ResponseWriter writer,
+                                           NavigationMenuItem[] items)
         throws IOException
     {
         for (int i = 0; i < items.length; i++)
         {
-            if (i > 0)
-                writer.write(",\n");
             NavigationMenuItem item = (NavigationMenuItem)items[i];
+
+            if (i > 0)
+            {
+                writer.write(",\n");
+            }
 
             if (item.isSplit())
             {
                 writer.write("_cmSplit,");
             }
 
-            String icon = item.getIcon() != null ?
-                "'<img src=\"" + item.getIcon() + "\"/>'" : "''";
-            String action = item.getAction() != null ?
-                "'" + item.getAction() + "'" : "null";
-            String label = JavascriptUtils.encodeString(item.getLabel());
-            writer.write("[" + icon + ", '" + label + "', " + action +", '#', null");
+            writer.write("[");
+            if (item.getIcon() != null)
+            {
+                String iconSrc = context.getApplication().getViewHandler().getResourceURL(context, item.getIcon());
+                writer.write("'<img src=\"");
+                writer.write(context.getExternalContext().encodeResourceURL(iconSrc));
+                writer.write("\"/>'");
+            }
+            else
+            {
+                writer.write("''");
+            }
+            writer.write(", '");
+            writer.write(JavascriptUtils.encodeString(item.getLabel()));
+            writer.write("', ");
+            if (item.getAction() != null)
+            {
+                writer.write("'");
+                writer.write(item.getAction());
+                writer.write("'");
+            }
+            else
+            {
+                writer.write("null");
+            }
+            writer.write(", '#', null");
 
             NavigationMenuItem[] menuItems = item.getNavigationMenuItems();
             if (menuItems != null && menuItems.length > 0)
             {
                 writer.write(",");
-                encodeNavigationMenuItems(writer, menuItems);
+                encodeNavigationMenuItems(context, writer, menuItems);
             }
             writer.write("]");
         }
