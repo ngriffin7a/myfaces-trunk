@@ -18,8 +18,9 @@
  */
 package net.sourceforge.myfaces.custom.datascroller;
 
+import net.sourceforge.myfaces.component.html.ext.HtmlPanelGroup;
+
 import javax.faces.component.UIComponent;
-import javax.faces.component.UIPanel;
 import javax.faces.context.FacesContext;
 import javax.faces.el.ValueBinding;
 
@@ -28,7 +29,7 @@ import javax.faces.el.ValueBinding;
  * @version $Revision$ $Date$
  */
 public class HtmlDataScroller
-        extends UIPanel
+        extends HtmlPanelGroup
 {
     //private static final Log log = LogFactory.getLog(HtmlPanelTabbedPane.class);
 

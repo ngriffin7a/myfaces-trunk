@@ -20,6 +20,8 @@ package net.sourceforge.myfaces.custom.datascroller;
 
 import net.sourceforge.myfaces.renderkit.RendererUtils;
 import net.sourceforge.myfaces.renderkit.html.HtmlRenderer;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import javax.faces.application.Application;
 import javax.faces.component.UIComponent;
@@ -31,9 +33,6 @@ import javax.faces.context.ResponseWriter;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 /**
  * @author Thomas Spiegl (latest modification by $Author$)
@@ -192,6 +191,7 @@ public class HtmlDataScrollerRenderer
 
         ResponseWriter writer = facesContext.getResponseWriter();
         HtmlDataScroller scroller = (HtmlDataScroller)uiComponent;
+        UIData uiData = findUIData(scroller, uiComponent);
 
         UIComponent facetComp = scroller.getFirst();
         if (facetComp != null)
@@ -246,9 +246,9 @@ public class HtmlDataScrollerRenderer
     }
 
     private UIComponent getLink(FacesContext facesContext,
-                                 HtmlDataScroller scroller,
-                                 UIComponent facetComp,
-                                 String facetName)
+                                HtmlDataScroller scroller,
+                                UIComponent facetComp,
+                                String facetName)
     {
         Application application = facesContext.getApplication();
 
@@ -258,7 +258,7 @@ public class HtmlDataScrollerRenderer
         link.setTransient(true);
         UIParameter parameter
                 = (UIParameter)application.createComponent(UIParameter.COMPONENT_TYPE);
-        parameter.setId(scroller.getId() + facetName + "_param");
+        parameter.setId(facetComp.getId() + facetName + "_param");
         parameter.setTransient(true);
         parameter.setName(scroller.getClientId(facesContext));
         parameter.setValue(facetName);
@@ -290,5 +290,14 @@ public class HtmlDataScrollerRenderer
             throw new IllegalArgumentException("uiComponent referenced by attribute tableScroller@for must be of type " + UIData.class.getName());
         }
         return (UIData)forComp;
+    }
+
+    private String getLinkParameterId(UIData uiData, HtmlDataScroller scroller)
+    {
+        if (uiData == null)
+        {
+            return scroller.getId();
+        }
+        return uiData.getId();
     }
 }
