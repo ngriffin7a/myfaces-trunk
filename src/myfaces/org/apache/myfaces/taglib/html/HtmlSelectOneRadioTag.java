@@ -26,12 +26,15 @@ import javax.faces.component.html.HtmlSelectOneRadio;
  * @author Martin Marinschek
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.10  2004/03/31 13:31:34  manolito
+ * no message
+ *
  * Revision 1.9  2004/03/31 13:26:09  manolito
  * extended radio renderer
  *
  */
 public class HtmlSelectOneRadioTag
-        extends HtmlInputTagBase
+        extends HtmlSelectOneRadioTagBase
 {
     public String getComponentType()
     {

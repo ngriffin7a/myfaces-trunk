@@ -18,7 +18,7 @@
  */
 package net.sourceforge.myfaces.taglib.html.ext;
 
-import net.sourceforge.myfaces.taglib.html.HtmlInputTagBase;
+import net.sourceforge.myfaces.taglib.html.HtmlSelectOneRadioTagBase;
 
 import javax.faces.component.html.HtmlSelectOneRadio;
 
@@ -27,12 +27,15 @@ import javax.faces.component.html.HtmlSelectOneRadio;
  * @author Martin Marinschek
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.2  2004/03/31 13:30:13  manolito
+ * no message
+ *
  * Revision 1.1  2004/03/31 13:26:09  manolito
  * extended radio renderer
  *
  */
 public class HtmlSelectOneRadioTag
-        extends HtmlInputTagBase
+        extends HtmlSelectOneRadioTagBase
 {
     public String getComponentType()
     {
