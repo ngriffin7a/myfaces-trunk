@@ -57,8 +57,9 @@ class _SerializableListDataModel
         }
         else
         {
-            _list = new ArrayList(_rows);
-            for (int i = 0; i < _rowCount; i++)
+            int size = _rows > 0 && _rows < _rowCount ? _rows : _rowCount;
+            _list = new ArrayList(size);
+            for (int i = 0; i < size; i++)
             {
                 _list.add(list.get(_first + i));
             }
