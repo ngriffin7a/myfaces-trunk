@@ -82,6 +82,10 @@ public class ValueBindingTest
         _m.put("o1", new D(_a1));
         _m.put("map", _m);
         _m.put("my]bracket[", _m);
+        _m.put("my\\]bracket[", _m);
+        _m.put("my\\\\]bracket[", _m);
+        _m.put("\\]true[", "TRUE");
+        _m.put("\\]false[", "FALSE");
         _m.put("f", new Boolean(false));
         _m.put("t", new Boolean(true));
 
@@ -94,28 +98,28 @@ public class ValueBindingTest
     public void testGetValueWithLongName1() throws Exception
     {
         Object v;
-        v = _application.getValueBinding("theA").getValue(_facesContext);
+        v = _application.getValueBinding("#{theA}").getValue(_facesContext);
         assertTrue(v == _theA);
     }
 
     public void testGetValueWithLongName2() throws Exception
     {
         Object v;
-        v = _application.getValueBinding("theA.name").getValue(_facesContext);
+        v = _application.getValueBinding("#{theA.name}").getValue(_facesContext);
         assertEquals(A.NAME, v);
     }
 
     public void testGetValueWithLongName3() throws Exception
     {
         Object v;
-        v = _application.getValueBinding("theA.theB.name").getValue(_facesContext);
+        v = _application.getValueBinding("#{theA.theB.name}").getValue(_facesContext);
         assertEquals(B.NAME, v);
     }
 
     public void testGetValueWithLongName4() throws Exception
     {
         Object v;
-        v = _application.getValueBinding("theA.theB.theC.name").getValue(_facesContext);
+        v = _application.getValueBinding("#{theA.theB.theC.name}").getValue(_facesContext);
         assertEquals(C.NAME, v);
     }
 
@@ -124,28 +128,28 @@ public class ValueBindingTest
     public void testGetValueWithShortName1() throws Exception
     {
         Object v;
-        v = _application.getValueBinding("a").getValue(_facesContext);
+        v = _application.getValueBinding("#{a}").getValue(_facesContext);
         assertTrue(v == _a);
     }
 
     public void testGetValueWithShortName2() throws Exception
     {
         Object v;
-        v = _application.getValueBinding("a.name").getValue(_facesContext);
+        v = _application.getValueBinding("#{a.name}").getValue(_facesContext);
         assertEquals(A.NAME, v);
     }
 
     public void testGetValueWithShortName3() throws Exception
     {
         Object v;
-        v = _application.getValueBinding("a.b.name").getValue(_facesContext);
+        v = _application.getValueBinding("#{a.b.name}").getValue(_facesContext);
         assertEquals(B.NAME, v);
     }
 
     public void testGetValueWithShortName4() throws Exception
     {
         Object v;
-        v = _application.getValueBinding("a.b.c.name").getValue(_facesContext);
+        v = _application.getValueBinding("#{a.b.c.name}").getValue(_facesContext);
         assertEquals(C.NAME, v);
     }
     
@@ -154,103 +158,151 @@ public class ValueBindingTest
         ValueBinding vb;
         Object r;
         
-        vb = _application.getValueBinding("testmap");
+        vb = _application.getValueBinding("#{testmap}");
         r = vb.getValue(_facesContext);
-        assertEquals(r, _m);
+        assertEquals(_m, r);
 
-        vb = _application.getValueBinding("testmap.f");
+        vb = _application.getValueBinding("#{testmap.f}");
         r = vb.getValue(_facesContext);
-        assertEquals(r, new Boolean(false));
+        assertFalse(((Boolean)r).booleanValue());
 
-        vb = _application.getValueBinding("testmap.t");
+        vb = _application.getValueBinding("#{testmap.t}");
         r = vb.getValue(_facesContext);
-        assertEquals(r, new Boolean(true));
+        assertTrue(((Boolean)r).booleanValue());
 
-        vb = _application.getValueBinding("testmap[\"o\"]['obj']");
+        vb = _application.getValueBinding("#{testmap[\"o\"]['obj']}");
         r = vb.getValue(_facesContext);
-        assertEquals(r, "OBJECT");
+        assertEquals("OBJECT", r);
 
-        vb = _application.getValueBinding("testmap.true");
+        vb = _application.getValueBinding("#{ testmap [ \"o\" ] [ 'obj' ] }");
         r = vb.getValue(_facesContext);
-        assertEquals(r, "TRUE");
+        assertEquals("OBJECT", r);
 
-        vb = _application.getValueBinding("testmap[testmap.t]");
+        vb = _application.getValueBinding("#{testmap.true}");
         r = vb.getValue(_facesContext);
-        assertEquals(r, "TRUE");
+        assertEquals("TRUE", r);
 
-        vb = _application.getValueBinding("testmap.false");
+        vb = _application.getValueBinding("#{ testmap . true }");
         r = vb.getValue(_facesContext);
-        assertEquals(r, "FALSE");
+        assertEquals("TRUE", r);
 
-        vb = _application.getValueBinding("testmap[testmap.f]");
+        vb = _application.getValueBinding("#{testmap[testmap.t]}");
         r = vb.getValue(_facesContext);
-        assertEquals(r, "FALSE");
+        assertEquals("TRUE", r);
 
-        vb = _application.getValueBinding("testmap[0][0]");
+        vb = _application.getValueBinding("#{ testmap   [ testmap   . t ] }");
         r = vb.getValue(_facesContext);
-        assertEquals(r, new Integer(0));
+        assertEquals("TRUE", r);
 
-        vb = _application.getValueBinding("testmap.o0.obj[0]");
+        vb = _application.getValueBinding("#{testmap.false}");
         r = vb.getValue(_facesContext);
-        assertEquals(r, new Integer(0));
+        assertEquals("FALSE", r);
 
-        vb = _application.getValueBinding("testmap.o1.obj[0][0]");
+        vb = _application.getValueBinding("#{testmap[testmap.f]}");
         r = vb.getValue(_facesContext);
-        assertEquals(r, new Integer(0));
+        assertEquals("FALSE", r);
 
-        vb = _application.getValueBinding("testmap.list[0][0]");
+        vb = _application.getValueBinding("#{testmap[0][0]}");
         r = vb.getValue(_facesContext);
-        assertEquals(r, new Integer(0));
+        assertEquals(new Integer(0), r);
 
-        vb = _application.getValueBinding("testmap.list[1][0]");
+        vb = _application.getValueBinding("#{ testmap  [  0  ]  [  0  ]} ");
         r = vb.getValue(_facesContext);
-        assertEquals(r, _a0);
+        assertEquals(new Integer(0), r);
 
-        vb = _application.getValueBinding("testmap.list[4][0][0]");
+        vb = _application.getValueBinding("#{testmap.o0.obj[0]}");
         r = vb.getValue(_facesContext);
-        assertEquals(r, new Integer(0));
+        assertEquals(new Integer(0), r);
 
-        vb = _application.getValueBinding("testmap.list[4][1][0][0]");
+        vb = _application.getValueBinding("#{testmap.o1.obj[0][0]}");
         r = vb.getValue(_facesContext);
-        assertEquals(r, new Integer(0));
+        assertEquals(new Integer(0), r);
 
-        vb = _application.getValueBinding("testmap.list[4].list[1][0][0]");
+        vb = _application.getValueBinding("#{testmap.list[0][0]}");
         r = vb.getValue(_facesContext);
-        assertEquals(r, new Integer(0));
+        assertEquals(new Integer(0), r);
 
-        vb = _application.getValueBinding("testmap.map.map.list[4].list[4][1][0][0]");
+        vb = _application.getValueBinding("#{testmap.list[1][0]}");
         r = vb.getValue(_facesContext);
-        assertEquals(r, new Integer(0));
+        assertEquals(_a0, r);
 
-        vb = _application.getValueBinding("testmap.map.list[4].map.list[4][1][0][0]");
+        vb = _application.getValueBinding("#{testmap.list[4][0][0]}");
         r = vb.getValue(_facesContext);
-        assertEquals(r, new Integer(0));
+        assertEquals(new Integer(0), r);
 
-
-        vb = _application.getValueBinding("testmap.list[4][testmap.list[4][0][0]][0]");
+        vb = _application.getValueBinding("#{testmap.list[4][1][0][0]}");
         r = vb.getValue(_facesContext);
-        assertEquals(r, new Integer(0));
+        assertEquals(new Integer(0), r);
 
-        vb = _application.getValueBinding("testmap.list[4][1][0][testmap.list[4][0][0]]");
+        vb = _application.getValueBinding("#{testmap.list[4].list[1][0][0]}");
         r = vb.getValue(_facesContext);
-        assertEquals(r, new Integer(0));
+        assertEquals(new Integer(0), r);
 
-        vb = _application.getValueBinding("testmap.list[4].list[testmap.list[4][1][0][testmap.list[4][0][1]]][0][0]");
+        vb = _application.getValueBinding("#{testmap.map.map.list[4].list[4][1][0][0]}");
         r = vb.getValue(_facesContext);
-        assertEquals(r, new Integer(0));
+        assertEquals(new Integer(0), r);
 
-        vb = _application.getValueBinding("testmap.map.map.list[4].list[4][1][testmap.list[4].list[testmap.list[4][1][0][testmap.list[4][0][testmap.t]]][0][0]][0]");
+        vb = _application.getValueBinding("#{testmap.map.list[4].map.list[4][1][0][0]}");
         r = vb.getValue(_facesContext);
-        assertEquals(r, new Integer(0));
+        assertEquals(new Integer(0), r);
 
-        vb = _application.getValueBinding("testmap['my\\]bracket\\[']['\\m\\a\\p'].list[4]['map'][\"list\"][4][1][testmap.map.map.list[4].list[4][1][testmap.list[4].list[testmap.list[4][1][testmap.f][testmap['list'][4][0][1]]][0][0]][0]][0]");
+
+        vb = _application.getValueBinding("#{testmap.list[4][testmap.list[4][0][0]][0]}");
         r = vb.getValue(_facesContext);
-        assertEquals(r, new Integer(0));
+        assertEquals(new Integer(0), r);
+
+        vb = _application.getValueBinding("#{testmap.list[4][1][0][testmap.list[4][0][0]]}");
+        r = vb.getValue(_facesContext);
+        assertEquals(new Integer(0), r);
+
+        vb = _application.getValueBinding("#{testmap.list[4].list[testmap.list[4][1][0][testmap.list[4][0][1]]][0][0]}");
+        r = vb.getValue(_facesContext);
+        assertEquals(new Integer(0), r);
+
+        vb = _application.getValueBinding("#{testmap.map.map.list[4].list[4][1][testmap.list[4].list[testmap.list[4][1][0][testmap.list[4][0][testmap.t]]][0][0]][0]}");
+        r = vb.getValue(_facesContext);
+        assertEquals(new Integer(0), r);
+
+        vb = _application.getValueBinding("#{testmap['my]bracket[']['\\m\\a\\p'].list[4]['map'][\"list\"][4][1][testmap.map.map.list[4].list[4][1][testmap.list[4].list[testmap.list[4][1][testmap.f][testmap['list'][4][0][1]]][0][0]][0]][0]}");
+        r = vb.getValue(_facesContext);
+        assertEquals(new Integer(0), r);
+
+        vb = _application.getValueBinding("#{testmap['my\\]bracket\\[']['\\m\\a\\p'].list[4]['map'][\"list\"][4][1][testmap.map.map.list[4].list[4][1][testmap.list[4].list[testmap.list[4][1][testmap.f][testmap['list'][4][0][1]]][0][0]][0]][0]}");
+        r = vb.getValue(_facesContext);
+        assertEquals(new Integer(0), r);
+
+        vb = _application.getValueBinding("#{testmap['my\\\\]bracket\\[']['\\m\\a\\p'].list[4]['map'][\"list\"][4][1][testmap.map.map.list[4].list[4][1][testmap.list[4].list[testmap.list[4][1][testmap.f][testmap['list'][4][0][1]]][0][0]][0]][0]}");
+        r = vb.getValue(_facesContext);
+        assertEquals(new Integer(0), r);
+
+        vb = _application.getValueBinding("#{testmap['my\\\\\\]bracket\\[']['\\m\\a\\p'].list[4]['map'][\"list\"][4][1][testmap.map.map.list[4].list[4][1][testmap.list[4].list[testmap.list[4][1][testmap.f][testmap['list'][4][0][1]]][0][0]][0]][0]}");
+        r = vb.getValue(_facesContext);
+        assertEquals(new Integer(0), r);
+
+        vb = _application.getValueBinding("#{testmap[\"\\\\]true\\[\"]}");
+        r = vb.getValue(_facesContext);
+        assertEquals("TRUE", r);
+
+        vb = _application.getValueBinding("#{testmap['\\\\\\]false\\[']}");
+        r = vb.getValue(_facesContext);
+        assertEquals("FALSE", r);
 
 
+        // Now check for error conditions
         try 
         {
-            vb = _application.getValueBinding("testmap.map.list[4].map.list[][1][0][0]");
+            vb = _application.getValueBinding("#{testmap['my\\\\\\]bracket\\[']['\\m\\a\\p'].list[4]['map'][\"list\"][4][1][testmap.map.map.list[4].list[4][1][testmap.list[4].list[testmap.list[4][1][testmap.f][testmap['list'][4][0][1]]][0][0]][0][0]}");
+            assertTrue(false);
+        }
+        catch (ReferenceSyntaxException e) 
+        {
+            //System.out.println(e.getMessage());
+            // we expect this
+        }
+        
+        try 
+        {
+            vb = _application.getValueBinding("#{testmap.map.list[4].map.list[][1][0][0]}");
             assertTrue(false);
         }
         catch (ReferenceSyntaxException e) 
@@ -261,7 +313,7 @@ public class ValueBindingTest
 
         try 
         {
-            vb = _application.getValueBinding("testmap.map.list[4].map.list.[4][1][0][0]");
+            vb = _application.getValueBinding("#{testmap.map.list[4].map.list.[4][1][0][0]}");
             assertTrue(false);
         } 
         catch (ReferenceSyntaxException e) 
@@ -272,7 +324,7 @@ public class ValueBindingTest
 
         try 
         {
-            vb = _application.getValueBinding("testmap.map.list[4].map..list[4][1][0][0]");
+            vb = _application.getValueBinding("#{testmap.map.list[4].map..list[4][1][0][0]}");
             assertTrue(false);
         } 
         catch (ReferenceSyntaxException e) 
@@ -283,7 +335,7 @@ public class ValueBindingTest
 
         try 
         {
-            vb = _application.getValueBinding(".testmap.map.list[4].map.list[4][1][0][0]");
+            vb = _application.getValueBinding("#{.testmap.map.list[4].map.list[4][1][0][0]}");
             assertTrue(false);
         }
         catch (ReferenceSyntaxException e) 
@@ -294,7 +346,7 @@ public class ValueBindingTest
 
         try 
         {
-            vb = _application.getValueBinding("testmap.map.list[4].map.list[4[1][0]['0']");
+            vb = _application.getValueBinding("#{testmap.map.list[4].map.list[4[1][0]['0']}");
             assertTrue(false);
         } 
         catch (ReferenceSyntaxException e) 
@@ -305,7 +357,7 @@ public class ValueBindingTest
 
         try 
         {
-            vb = _application.getValueBinding("testmap.map.list[4].map.list[4][1][0].[0]");
+            vb = _application.getValueBinding("#{testmap.map.list[4].map.list[4][1][0].[0]}");
             assertTrue(false);
         }
         catch (ReferenceSyntaxException e) 

@@ -24,7 +24,9 @@ import net.sourceforge.myfaces.el.VariableResolverImpl;
 
 import javax.faces.application.Application;
 import javax.faces.application.NavigationHandler;
+import javax.faces.application.ViewHandler;
 import javax.faces.event.ActionListener;
+import javax.faces.el.MethodBinding;
 import javax.faces.el.PropertyResolver;
 import javax.faces.el.ValueBinding;
 import javax.faces.el.ReferenceSyntaxException;
@@ -32,9 +34,12 @@ import javax.faces.el.VariableResolver;
 import javax.faces.component.UIComponent;
 import javax.faces.FacesException;
 import javax.faces.validator.Validator;
-import javax.faces.context.MessageResources;
+import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
+
+import java.util.Collection;
 import java.util.Iterator;
+import java.util.Locale;
 
 /**
  * @author Manfred Geiler (latest modification by $Author$)
@@ -129,11 +134,6 @@ public class ApplicationMockImpl
         throw new UnsupportedOperationException();
     }
 
-    public MessageResources getMessageResources(String s) throws FacesException
-    {
-        throw new UnsupportedOperationException();
-    }
-
     public Iterator getMessageResourcesIds()
     {
         throw new UnsupportedOperationException();
@@ -151,6 +151,74 @@ public class ApplicationMockImpl
 
     public Iterator getValidatorIds()
     {
+        throw new UnsupportedOperationException();
+    }
+
+    public Locale getDefaultLocale() {
+        throw new UnsupportedOperationException();
+    }
+
+    public void setDefaultLocale(Locale arg0) {
+        throw new UnsupportedOperationException();
+    }
+
+    public String getMessageBundle() {
+        throw new UnsupportedOperationException();
+    }
+
+    public void setMessageBundle(String arg0) {
+        throw new UnsupportedOperationException();
+    }
+
+    public ViewHandler getViewHandler() {
+        throw new UnsupportedOperationException();
+    }
+
+    public void setViewHandler(ViewHandler arg0) {
+        throw new UnsupportedOperationException();
+    }
+
+    public UIComponent createComponent(String arg0) throws FacesException {
+        throw new UnsupportedOperationException();
+    }
+
+    public UIComponent createComponent(ValueBinding arg0, FacesContext arg1, String arg2) throws FacesException {
+        throw new UnsupportedOperationException();
+    }
+
+    public void addConverter(Class arg0, String arg1) {
+        throw new UnsupportedOperationException();
+    }
+
+    public Converter createConverter(String arg0) {
+        throw new UnsupportedOperationException();
+    }
+
+    public Converter createConverter(Class arg0) {
+        throw new UnsupportedOperationException();
+    }
+
+    public Iterator getConverterTypes() {
+        throw new UnsupportedOperationException();
+    }
+
+    public MethodBinding createMethodBinding(String arg0, Class[] arg1) throws ReferenceSyntaxException {
+        throw new UnsupportedOperationException();
+    }
+
+    public Iterator getSupportedLocales() {
+        throw new UnsupportedOperationException();
+    }
+
+    public void setSupportedLocales(Collection arg0) {
+        throw new UnsupportedOperationException();
+    }
+
+    public Validator createValidator(String arg0) throws FacesException {
+        throw new UnsupportedOperationException();
+    }
+
+    public ValueBinding createValueBinding(String arg0) throws ReferenceSyntaxException {
         throw new UnsupportedOperationException();
     }
 }
