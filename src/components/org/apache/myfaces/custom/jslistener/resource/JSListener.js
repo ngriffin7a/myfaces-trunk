@@ -13,9 +13,6 @@ function orgApacheMyfacesJsListenerSetExpressionProperty(
 
         if(log) logStr+="\n Source-element: "+srcElem;
         if(log) logStr+="\n Type of source-element: "+typeof(srcElem);
-        if(log && typeof(srcElem)=='object') logStr+="\n Constructor : " +srcElem.constructor;
-        if(log && orgApacheMyfacesJsListenerIsArray(srcElem))
-            logStr+="\n Source-element is an array";
 
         if(log) logStr += "\n\n  Destination-element id: "+destId;
 
@@ -23,9 +20,6 @@ function orgApacheMyfacesJsListenerSetExpressionProperty(
 
         if(log) logStr+="\n Destination-element: "+destElem;
         if(log) logStr+="\n Type of destination-element: "+typeof(destElem);
-        if(log && typeof(destElem)=='object') logStr+="Constructor : " +destElem.constructor;
-        if(log && orgApacheMyfacesJsListenerIsArray(destElem))
-            logStr+="\n Destination-element is an array";
 
         if(log) logStr+="\n\n  Expression before parsing: "+expression;
 
