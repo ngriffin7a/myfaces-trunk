@@ -24,6 +24,9 @@ import javax.faces.component.UIComponent;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.4  2005/02/18 18:24:35  matzew
+ * added release() to tag clazzes.
+ *
  * Revision 1.3  2004/10/13 11:51:01  matze
  * renamed packages to org.apache
  *
@@ -58,6 +61,25 @@ public abstract class HtmlComponentBodyTagBase
     private String _onmouseover;
     private String _onmouseup;
 
+    public void release() {
+        super.release();
+        _dir=null;
+        _lang=null;
+        _style=null;
+        _styleClass=null;
+        _title=null;
+        _onclick=null;
+        _ondblclick=null;
+        _onkeydown=null;
+        _onkeypress=null;
+        _onkeyup=null;
+        _onmousedown=null;
+        _onmousemove=null;
+        _onmouseout=null;
+        _onmouseover=null;
+        _onmouseup=null;
+    }
+    
     protected void setProperties(UIComponent component)
     {
         super.setProperties(component);

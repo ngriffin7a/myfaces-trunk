@@ -24,6 +24,9 @@ import javax.faces.component.UIComponent;
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.4  2005/02/18 18:24:35  matzew
+ * added release() to tag clazzes.
+ *
  * Revision 1.3  2004/10/13 11:51:01  matze
  * renamed packages to org.apache
  *
@@ -76,6 +79,29 @@ public abstract class HtmlDataTableTagBase
     private String _var;
     private String _first;
 
+    public void release() {
+        super.release();
+        _align=null;
+        _border=null;
+        _bgcolor=null;
+        _cellpadding=null;
+        _cellspacing=null;
+        _datafld=null;
+        _datasrc=null;
+        _dataformatas=null;
+        _frame=null;
+        _rules=null;
+        _summary=null;
+        _width=null;
+        _columnClasses=null;
+        _columns=null;
+        _footerClass=null;
+        _headerClass=null;
+        _rowClasses=null;
+        _rows=null;
+        _var=null;
+        _first=null;
+    }
 
     protected void setProperties(UIComponent component)
     {

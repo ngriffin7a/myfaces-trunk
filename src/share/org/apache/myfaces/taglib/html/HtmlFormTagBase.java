@@ -23,6 +23,9 @@ import javax.faces.component.UIComponent;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.4  2005/02/18 18:24:35  matzew
+ * added release() to tag clazzes.
+ *
  * Revision 1.3  2004/10/13 11:51:01  matze
  * renamed packages to org.apache
  *
@@ -57,7 +60,16 @@ public abstract class HtmlFormTagBase
     private String _target;
 
     // UIForm attributes --> none so far
-
+    public void release() {
+        super.release();
+        _accept=null;
+        _acceptCharset=null;
+        _enctype=null;
+        _name=null;
+        _onreset=null;
+        _onsubmit=null;
+        _target=null;
+    }
 
     protected void setProperties(UIComponent component)
     {

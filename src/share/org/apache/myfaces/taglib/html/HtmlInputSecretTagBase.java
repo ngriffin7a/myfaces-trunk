@@ -26,6 +26,9 @@ import javax.faces.component.UIComponent;
  * @author Martin Marinschek
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.4  2005/02/18 18:24:35  matzew
+ * added release() to tag clazzes.
+ *
  * Revision 1.3  2004/10/13 11:51:01  matze
  * renamed packages to org.apache
  *
@@ -72,6 +75,26 @@ public abstract class HtmlInputSecretTagBase
 
     // HTMLInputSecret attributes
     private String _redisplay;
+    
+    public void release() {
+        super.release();
+        _accesskey=null;
+        _align=null;
+        _alt=null;
+        _datafld=null;
+        _datasrc=null;
+        _dataformatas=null;
+        _disabled=null;
+        _maxlength=null;
+        _onblur=null;
+        _onchange=null;
+        _onfocus=null;
+        _onselect=null;
+        _readonly=null;
+        _size=null;
+        _tabindex=null;
+        _redisplay=null;
+    }
 
     protected void setProperties(UIComponent component)
     {

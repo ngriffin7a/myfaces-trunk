@@ -23,6 +23,9 @@ import javax.faces.component.UIComponent;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.4  2005/02/18 18:24:35  matzew
+ * added release() to tag clazzes.
+ *
  * Revision 1.3  2004/10/13 11:51:01  matze
  * renamed packages to org.apache
  *
@@ -61,6 +64,22 @@ public abstract class HtmlMessageTagBase
     private String _fatalClass;
     private String _fatalStyle;
     private String _tooltip;
+    
+    public void release() {
+        super.release();
+        _for=null;
+        _showSummary=null;
+        _showDetail=null;
+        _infoClass=null;
+        _infoStyle=null;
+        _warnClass=null;
+        _warnStyle=null;
+        _errorClass=null;
+        _errorStyle=null;
+        _fatalClass=null;
+        _fatalStyle=null;
+        _tooltip=null;
+    }
 
     protected void setProperties(UIComponent component)
     {

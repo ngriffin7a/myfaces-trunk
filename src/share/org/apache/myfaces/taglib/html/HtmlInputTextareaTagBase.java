@@ -24,6 +24,9 @@ import javax.faces.component.UIComponent;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.4  2005/02/18 18:24:35  matzew
+ * added release() to tag clazzes.
+ *
  * Revision 1.3  2004/10/13 11:51:01  matze
  * renamed packages to org.apache
  *
@@ -70,6 +73,24 @@ public abstract class HtmlInputTextareaTagBase
     // FIXME: is in RI, but not in HTML 4.0. what to do?
     private String _alt;
 
+    public void release() {
+        super.release();
+        _accesskey=null;
+        _cols=null;
+        _datafld=null; 
+        _datasrc=null;
+        _dataformatas=null; 
+        _disabled=null;
+        _onblur=null;
+        _onchange=null;
+        _onfocus=null;
+        _onselect=null;
+        _readonly=null;
+        _rows=null;
+        _tabindex=null;
+        _alt=null;
+    }
+    
     protected void setProperties(UIComponent component)
     {
         super.setProperties(component);

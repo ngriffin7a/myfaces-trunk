@@ -27,6 +27,9 @@ import javax.faces.component.UIComponent;
  * @author Martin Marinschek
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.4  2005/02/18 18:24:35  matzew
+ * added release() to tag clazzes.
+ *
  * Revision 1.3  2004/10/13 11:51:01  matze
  * renamed packages to org.apache
  *
@@ -68,6 +71,21 @@ public abstract class HtmlSelectMenuTagBase
 
     //HtmlSelectManyMenu Attributes
     private String _border;
+    
+    public void release() {
+        super.release();
+        _datafld=null;
+        _datasrc=null;
+        _dataformatas=null;
+        _disabled=null;
+        _name=null;
+        _onblur=null;
+        _onchange=null;
+        _onfocus=null;
+        _onselect=null;
+        _tabindex=null;
+        _border=null;
+    }
 
     protected void setProperties(UIComponent component)
     {

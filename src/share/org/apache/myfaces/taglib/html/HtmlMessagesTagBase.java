@@ -53,6 +53,23 @@ public abstract class HtmlMessagesTagBase
     private String _layout;
     private String _tooltip;
 
+    public void release() {
+        super.release();
+        _showSummary=null;
+        _showDetail=null;
+        _globalOnly=null;
+        _infoClass=null;
+        _infoStyle=null;
+        _warnClass=null;
+        _warnStyle=null;
+        _errorClass=null;
+        _errorStyle=null;
+        _fatalClass=null;
+        _fatalStyle=null;
+        _layout=null;
+        _tooltip=null;
+    }
+    
     protected void setProperties(UIComponent component)
     {
         super.setProperties(component);

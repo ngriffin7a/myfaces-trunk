@@ -25,6 +25,9 @@ import javax.faces.component.UIComponent;
  * @author Martin Marinschek
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.5  2005/02/18 18:24:35  matzew
+ * added release() to tag clazzes.
+ *
  * Revision 1.4  2004/10/13 11:51:01  matze
  * renamed packages to org.apache
  *
@@ -72,6 +75,25 @@ public abstract class HtmlCommandLinkTagBase
     private String _action;
     private String _immediate;
     private String _actionListener;
+    
+    public void release() {
+        super.release();
+        _accesskey=null;
+        _charset=null;
+        _coords=null;
+        _hreflang=null;
+        _rel=null;
+        _rev=null;
+        _shape=null;
+        _tabindex=null;
+        _type=null;
+        _target=null;
+        _onblur=null;
+        _onfocus=null;
+        _action=null;
+        _immediate=null;
+        _actionListener=null;
+    }
 
     protected void setProperties(UIComponent component)
     {
