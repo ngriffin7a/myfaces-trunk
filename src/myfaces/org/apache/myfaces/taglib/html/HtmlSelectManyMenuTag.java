@@ -35,12 +35,12 @@ public class HtmlSelectManyMenuTag
 {
     public String getComponentType()
     {
-        return "SelectManyMenu";
+        return "javax.faces.SelectManyMenu";
     }
 
     public String getDefaultRendererType()
     {
-        return "Menu";
+        return "javax.faces.Menu";
     }
 
     // UIComponent attributes --> already implemented in MyfacesComponentTag
@@ -61,7 +61,6 @@ public class HtmlSelectManyMenuTag
     private String _onchange;
     private String _onfocus;
     private String _onselect;
-    private String _size; //TODO: needed?
     private String _tabindex;
 
     // UIInput attributes
@@ -87,7 +86,6 @@ public class HtmlSelectManyMenuTag
         setStringProperty(component, HTML.ONCHANGE_ATTR, _onchange);
         setStringProperty(component, HTML.ONFOCUS_ATTR, _onfocus);
         setStringProperty(component, HTML.ONSELECT_ATTR, _onselect);
-        setIntegerProperty(component, HTML.SIZE_ATTR, _size);
         setIntegerProperty(component, HTML.TABINDEX_ATTR, _tabindex);
 
         setBooleanProperty(component, JSFAttr.REQUIRED_ATTR, _required);
@@ -144,11 +142,6 @@ public class HtmlSelectManyMenuTag
     public void setOnselect(String onselect)
     {
         _onselect = onselect;
-    }
-
-    public void setSize(String size)
-    {
-        _size = size;
     }
 
     public void setTabindex(String tabindex)

@@ -30,7 +30,7 @@ public class HtmlSaveStateTag
 {
     public String getComponentType()
     {
-        return "SaveState";
+        return "net.sourceforge.myfaces.SaveState";
     }
 
     public String getDefaultRendererType()

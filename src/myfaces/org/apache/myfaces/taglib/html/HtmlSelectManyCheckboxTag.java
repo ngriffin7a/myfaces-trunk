@@ -30,17 +30,17 @@ import javax.faces.component.UIComponent;
  * @author Martin Marinschek
  * @version $Revision$ $Date$
  */
-public class HtmlSelectManyCheckboxListTag
+public class HtmlSelectManyCheckboxTag
     extends HtmlComponentTag
 {
     public String getComponentType()
     {
-        return "SelectManyCheckboxList";
+        return "javax.faces.SelectManyCheckbox";
     }
 
     public String getDefaultRendererType()
     {
-        return "CheckboxList";
+        return "javax.faces.Checkbox";
     }
 
     // UIComponent attributes --> already implemented in MyfacesComponentTag

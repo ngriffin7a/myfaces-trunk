@@ -35,12 +35,12 @@ public class HtmlInputSecretTag
 {
     public String getComponentType()
     {
-        return "InputSecret";
+        return "javax.faces.InputSecret";
     }
 
     public String getDefaultRendererType()
     {
-        return "Secret";
+        return "javax.faces.Secret";
     }
 
     // UIComponent attributes --> already implemented in MyfacesComponentTag

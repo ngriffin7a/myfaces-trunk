@@ -28,11 +28,11 @@ public class HtmlSelectOneMenuTag
 {
     public String getComponentType()
     {
-        return "SelectOneMenu";
+        return "javax.faces.SelectOneMenu";
     }
 
     public String getDefaultRendererType()
     {
-        return "Menu";
+        return "javax.faces.Menu";
     }
 }

@@ -37,12 +37,12 @@ public class VerbatimTag
 
     public String getComponentType()
     {
-        return "OutputText";
+        return "javax.faces.OutputText";
     }
 
     protected String getDefaultRendererType()
     {
-        return "Text";
+        return "javax.faces.Text";
     }
 
     // HtmlOutputText attributes

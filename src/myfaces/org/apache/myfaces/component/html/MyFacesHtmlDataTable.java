@@ -53,12 +53,16 @@ public class MyFacesHtmlDataTable
     private String _sortColumn;
     private Boolean _sortAscending;
 
+    private Object _value;
+
+
     public void encodeBegin(FacesContext context) throws IOException
     {
         if (getPreserveDataModel())
         {
-            Object value = getValue();
-            if (value instanceof SerializableDataModel &&
+            Object value = getLocalValue();
+            if (value != null &&
+                value instanceof SerializableDataModel &&
                 getValueBinding("value") != null)
             {
                 //Clear local value, so that current data from model bean is used from now on
@@ -105,8 +109,9 @@ public class MyFacesHtmlDataTable
 
     private void updateModelFromPreservedDataModel(FacesContext context)
     {
-        Object value = getValue();
-        if (value instanceof SerializableDataModel)
+        Object value = getLocalValue();
+        if (value != null &&
+            value instanceof SerializableDataModel)
         {
             ValueBinding vb = getValueBinding("value");
             if (vb != null && !vb.isReadOnly(context))
@@ -154,8 +159,9 @@ public class MyFacesHtmlDataTable
     {
         if (getPreserveDataModel())
         {
-            Object value = getValue();
-            if (value instanceof SerializableDataModel)
+            Object value = getLocalValue();
+            if (value != null &&
+                value instanceof SerializableDataModel)
             {
                 return ((SerializableDataModel)value).getFirst();
             }
@@ -167,8 +173,9 @@ public class MyFacesHtmlDataTable
     {
         if (getPreserveDataModel())
         {
-            Object value = getValue();
-            if (value instanceof SerializableDataModel)
+            Object value = getLocalValue();
+            if (value != null &&
+                value instanceof SerializableDataModel)
             {
                 return ((SerializableDataModel)value).getRows();
             }
@@ -415,4 +422,24 @@ public class MyFacesHtmlDataTable
     {
         _sortAscending = Boolean.valueOf(sortAscending);
     }
+
+
+    public Object getLocalValue()
+    {
+        return _value;
+    }
+
+    public Object getValue()
+    {
+        if (_value != null) return _value;
+        return super.getValue();
+    }
+
+    public void setValue(Object value)
+    {
+        _value = value;
+        super.setValue(value);
+    }
+
+
 }

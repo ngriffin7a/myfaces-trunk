@@ -56,6 +56,7 @@ public class HtmlPanelNavigation
     private String _activeItemStyle;
     private String _separatorStyle;
 
+
     public String getItemClass()
     {
         if (_itemClass != null) return _itemClass;

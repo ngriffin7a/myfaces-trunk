@@ -1,5 +1,5 @@
 <!--
- Copyright 2003 Sun Microsystems, Inc. All rights reserved.
+ Copyright 2004 Sun Microsystems, Inc. All rights reserved.
  SUN PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
 -->
 
@@ -22,7 +22,7 @@
 
 
 <!--
-    An "Action" is a String that represents a method reference
+    An "Action" is a String that represents a method binding
     expression that points at a method with no arguments that returns a
     String.  It must be bracketed with "#{}", for example,
     "#{cardemo.buyCar}".
@@ -126,12 +126,12 @@
 
 <!--
     The "application" element provides a mechanism to define the various
-    per-application-singleton implementation classes for a particular web
+    per-application-singleton implementation artifacts for a particular web
     application that is utilizing JavaServer Faces.  For nested elements
     that are not specified, the JSF implementation must provide a suitable
     default.
 -->
-<!ELEMENT application     ((action-listener|message-bundle|navigation-handler|view-handler|property-resolver|variable-resolver|locale-config)*)>
+<!ELEMENT application     ((action-listener|default-render-kit-id|message-bundle|navigation-handler|view-handler|state-manager|property-resolver|variable-resolver|locale-config)*)>
 
 
 <!--
@@ -150,7 +150,7 @@
     Attribute names must be unique within the scope of the parent (or related)
     component.
 -->
-<!ELEMENT attribute       (description*, display-name*, icon*, attribute-name, attribute-class, suggested-value?, attribute-extension*)>
+<!ELEMENT attribute       (description*, display-name*, icon*, attribute-name, attribute-class, default-value?, suggested-value?, attribute-extension*)>
 
 <!-- 
     Extension element for attribute.  May contain implementation
@@ -219,7 +219,7 @@
     The "managed-bean" element represents a JavaBean, of a particular class,
     that will be dynamically instantiated at runtime (by the default
     VariableResolver implementation) if it is referenced as the first element
-    of a value reference expression, and no corresponding bean can be
+    of a value binding expression, and no corresponding bean can be
     identified in any scope.  In addition to the creation of the managed bean,
     and the optional storing of it into the specified scope, the nested
     managed-property elements can be used to initialize the contents of
@@ -288,7 +288,7 @@
     property names that will be recognized when performing introspection
     against that class via java.beans.Introspector.
 -->
-<!ELEMENT property        (description*, display-name*, icon*, property-name, property-class, suggested-value?, property-extension*)>
+<!ELEMENT property        (description*, display-name*, icon*, property-name, property-class, default-value?, suggested-value?, property-extension*)>
 
 <!-- 
     Extension element for property.  May contain implementation
@@ -319,46 +319,22 @@
 
 <!--
     The "renderer" element represents a concrete Renderer implementation
-    class that should be registered under the specified type identifier,
-    in the RenderKit associated with the parent render-kit element.  Renderer
-    types must be unique within the RenderKit associated with the parent
+    class that should be registered under the specified component family
+    and renderer type identifiers, in the RenderKit associated with the
+    parent "render-kit" element.  Combinations of component family and renderer
+    type must be unique within the RenderKit associated with the parent
     "render-kit" element.
 
     Nested "attribute" elements identify generic component attributes that
-    are recognized by this renderer.  Nested "supported-component-type" and
-    "supported-component-class" elements identify supported component classes,
-    by their type identifiers or the implementation class name, respectively,
-    that are supported by this Renderer.
+    are recognized by this renderer.
 -->
-<!ELEMENT renderer        (description*, display-name*, icon*, renderer-type, renderer-class, attribute*, supported-component-type*, supported-component-class*, renderer-extension*)>
+<!ELEMENT renderer        (description*, display-name*, icon*, component-family, renderer-type, renderer-class, attribute*, renderer-extension*)>
 
 <!-- 
     Extension element for renderer.  May contain implementation
     specific content.
 -->
 <!ELEMENT renderer-extension ANY>
-
-<!--
-    The "supported-component-class" element identifies a component class that
-    is supported by the surrounding renderer, and the renderer attribute names
-    that are relevant for this component class.  If no "attribute-name"
-    subelements are listed, names from all of the "attribute" declarations for
-    the surrounding renderer shall be assumed.
--->
-<!ELEMENT supported-component-class (component-class, attribute-name*)>
-    
-
-
-<!--
-    The "supported-component-type" element identifies a component type that
-    is supported by the surrounding renderer, and the renderer attribute names
-    that are relevant for this component type.  If no "attribute-name"
-    subelements are listed, names from all of the "attribute" declarations for
-    the surrounding renderer shall be assumed.
--->
-<!ELEMENT supported-component-type (component-type, attribute-name*)>
-    
-
 
 <!--
     The "validator" element represents a concrete Validator implementation
@@ -427,6 +403,13 @@
 
 
 <!--
+    The "component-family" element represents the component family for
+    which the Renderer represented by the parent "renderer" element will be
+    used.
+-->
+<!ELEMENT component-family (#PCDATA)>
+
+<!--
     The "component-type" element represents the name under which the
     corresponding UIComponent class should be registered.
 -->
@@ -456,6 +439,12 @@
 <!ELEMENT converter-id    (#PCDATA)>
 
 <!--
+    The "default-render-kit-id" element allows the application to define
+    a renderkit to be used other than the standard one. 
+-->
+<!ELEMENT default-render-kit-id   (#PCDATA)>
+
+<!--
      The "default-locale" element declares the default locale for this
      application instance.  It must be specified as
      :language:[_:country:[_:variant:]] without the colons, for example
@@ -465,11 +454,19 @@
 <!ELEMENT default-locale (#PCDATA)>
 
 <!--
+    The "default-value" contains the value for the property or attribute
+    in which this element resides.  This value differs from the
+    "suggested-value" in that the property or attribute must take the
+    value, whereas in "suggested-value" taking the value is optional.
+-->
+<!ELEMENT default-value (#PCDATA)>
+
+<!--
     The "description" element contains a textual description of the element
     it is nested in, optionally flagged with a language code using the
     "xml:lang" attribute.
 -->
-<!ELEMENT description     (#PCDATA)>
+<!ELEMENT description     ANY>
 <!ATTLIST description     xml:lang        %Language;      #IMPLIED>
 
 
@@ -629,6 +626,16 @@ registered on the Lifecycle. It must be of type "ClassName".
 <!ELEMENT view-handler (#PCDATA)>
 
 <!--
+
+    The "state-manager" element contains the fully qualified class name
+    of the concrete StateManager implementation class that will be called
+    during the Restore View and Render Response phases of the request
+    processing lifecycle.  The faces implementation must provide a
+    default implementation of this class
+-->
+<!ELEMENT state-manager (#PCDATA)>
+
+<!--
     The "null-value" element indicates that the managed property in which we
     are nested will be explicitly set to null if our managed bean is
     automatically created.  This is different from omitting the managed
@@ -661,7 +668,7 @@ registered on the Lifecycle. It must be of type "ClassName".
 <!--
     The "property-resolver" element contains the fully qualified class name
     of the concrete PropertyResolver implementation class that will be used
-    during the processing of value reference expressions.
+    during the processing of value binding expressions.
     It must be of type "ClassName".
 -->
 <!ELEMENT property-resolver (#PCDATA)>
@@ -716,7 +723,7 @@ registered on the Lifecycle. It must be of type "ClassName".
 <!ELEMENT render-kit-factory (#PCDATA)>
 
 <!--
-    The "renderer-type" element represents an identifier for the
+    The "renderer-type" element represents a renderer type identifier for the
     Renderer represented by the parent "renderer" element.
 -->
 <!ELEMENT renderer-type   (#PCDATA)>
@@ -763,7 +770,7 @@ registered on the Lifecycle. It must be of type "ClassName".
 <!--
     The "value" element is the String representation of a literal
     value to which a scalar managed property will be set, or a value
-    reference expression ("#{...}") that will be used to calculate the
+    binding expression ("#{...}") that will be used to calculate the
     required value.  It will be converted as specified for the actual
     property type.
 -->
@@ -783,7 +790,7 @@ registered on the Lifecycle. It must be of type "ClassName".
 <!--
     The "variable-resolver" element contains the fully qualified class name
     of the concrete VariableResolver implementation class that will be used
-    during the processing of value reference expressions.
+    during the processing of value binding expressions.
     It must be of type "ClassName".
 -->
 <!ELEMENT variable-resolver (#PCDATA)>
@@ -802,12 +809,15 @@ registered on the Lifecycle. It must be of type "ClassName".
 <!ATTLIST component                         id ID #IMPLIED>
 <!ATTLIST component-class                   id ID #IMPLIED>
 <!ATTLIST component-extension               id ID #IMPLIED>
+<!ATTLIST component-family                  id ID #IMPLIED>
 <!ATTLIST component-type                    id ID #IMPLIED>
 <!ATTLIST converter                         id ID #IMPLIED>
 <!ATTLIST converter-class                   id ID #IMPLIED>
 <!ATTLIST converter-for-class               id ID #IMPLIED>
 <!ATTLIST converter-id                      id ID #IMPLIED>
 <!ATTLIST default-locale                    id ID #IMPLIED>
+<!ATTLIST default-render-kit-id             id ID #IMPLIED>
+<!ATTLIST default-value                     id ID #IMPLIED>
 <!ATTLIST description                       id ID #IMPLIED>
 <!ATTLIST display-name                      id ID #IMPLIED>
 <!ATTLIST faces-config                      id ID #IMPLIED>
@@ -855,9 +865,8 @@ registered on the Lifecycle. It must be of type "ClassName".
 <!ATTLIST renderer-extension                id ID #IMPLIED>
 <!ATTLIST renderer-type                     id ID #IMPLIED>
 <!ATTLIST small-icon                        id ID #IMPLIED>
+<!ATTLIST state-manager                     id ID #IMPLIED>
 <!ATTLIST suggested-value                   id ID #IMPLIED>
-<!ATTLIST supported-component-class         id ID #IMPLIED>
-<!ATTLIST supported-component-type          id ID #IMPLIED>
 <!ATTLIST supported-locale                  id ID #IMPLIED>
 <!ATTLIST to-view-id                        id ID #IMPLIED>
 <!ATTLIST validator                         id ID #IMPLIED>

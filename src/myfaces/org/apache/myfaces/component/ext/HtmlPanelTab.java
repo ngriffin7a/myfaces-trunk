@@ -18,7 +18,13 @@
  */
 package net.sourceforge.myfaces.component.ext;
 
+import net.sourceforge.myfaces.util.DebugUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import javax.faces.component.html.HtmlPanelGroup;
+import javax.faces.context.FacesContext;
+import javax.faces.el.ValueBinding;
 
 /**
  * @author Manfred Geiler (latest modification by $Author$)
@@ -27,5 +33,40 @@ import javax.faces.component.html.HtmlPanelGroup;
 public class HtmlPanelTab
         extends HtmlPanelGroup
 {
-    //private static final Log log = LogFactory.getLog(HtmlPanelTab.class);
+    private static final Log log = LogFactory.getLog(HtmlPanelTab.class);
+
+    private static final int ATTRIBUTE_COUNT = 1;
+    private String _label;
+
+    public String getLabel()
+    {
+        if (_label != null) return _label;
+        ValueBinding vb = getValueBinding("label");
+        return vb != null ? (String)vb.getValue(getFacesContext()) : null;
+    }
+
+    public void setLabel(String label)
+    {
+        _label = label;
+    }
+
+    public Object saveState(FacesContext context)
+    {
+        Object values[] = new Object[ATTRIBUTE_COUNT + 1];
+        int i = 0;
+        values[i++] = super.saveState(context);
+        values[i++] = _label;
+        DebugUtils.assertFatal(i == ATTRIBUTE_COUNT + 1, log, "Number of attributes to save differs!");
+        return ((Object) (values));
+    }
+
+    public void restoreState(FacesContext context, Object state)
+    {
+        Object values[] = (Object[])state;
+        int i = 0;
+        super.restoreState(context, values[i++]);
+        _label = (String)values[i++];
+        DebugUtils.assertFatal(i == ATTRIBUTE_COUNT + 1, log, "Number of attributes to restore differs!");
+    }
+
 }

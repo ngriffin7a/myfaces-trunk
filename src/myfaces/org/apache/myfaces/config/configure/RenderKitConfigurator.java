@@ -46,13 +46,12 @@ public class RenderKitConfigurator
     {
         if (log.isDebugEnabled()) log.debug("Completing RenderKit " + renderKitId);
 
-        for (Iterator it = _renderKitConfig.getRendererTypes(); it.hasNext();)
+        for (Iterator it = _renderKitConfig.getRendererConfigs(); it.hasNext();)
         {
-            String         rendererType   = (String) it.next();
-            RendererConfig rendererConfig = _renderKitConfig.getRendererConfig(rendererType);
+            RendererConfig rendererConfig = (RendererConfig)it.next();
             Renderer       renderer       = rendererConfig.newRenderer();
             renderKit.addRenderer(rendererConfig.getComponentFamily(),
-                                  rendererType,
+                                  rendererConfig.getRendererType(),
                                   renderer);
         }
     }

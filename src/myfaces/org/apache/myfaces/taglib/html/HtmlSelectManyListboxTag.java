@@ -35,12 +35,12 @@ public class HtmlSelectManyListboxTag
 {
     public String getComponentType()
     {
-        return "SelectManyListbox";
+        return "javax.faces.SelectManyListbox";
     }
 
     public String getDefaultRendererType()
     {
-        return "Listbox";
+        return "javax.faces.Listbox";
     }
 
     // UIComponent attributes --> already implemented in MyfacesComponentTag

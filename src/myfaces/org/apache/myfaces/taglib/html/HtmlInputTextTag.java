@@ -34,12 +34,12 @@ public class HtmlInputTextTag
 {
     public String getComponentType()
     {
-        return "InputText";
+        return "javax.faces.InputText";
     }
 
     public String getDefaultRendererType()
     {
-        return "Text";
+        return "javax.faces.Text";
     }
 
     // UIComponent attributes --> already implemented in MyfacesComponentTag

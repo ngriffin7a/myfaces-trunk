@@ -53,7 +53,7 @@ public class HtmlListboxRenderer
         {
             HtmlRendererUtils.renderListbox(facesContext,
                                             (HtmlSelectOneListbox)uiComponent,
-                                            ((HtmlSelectManyListbox)uiComponent).getSize());
+                                            ((HtmlSelectOneListbox)uiComponent).getSize());
         }
         else
         {

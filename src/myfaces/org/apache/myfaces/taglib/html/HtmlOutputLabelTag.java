@@ -35,12 +35,12 @@ public class HtmlOutputLabelTag
 {
     public String getComponentType()
     {
-        return "OutputLabel";
+        return "javax.faces.OutputLabel";
     }
 
     public String getDefaultRendererType()
     {
-        return "Label";
+        return "javax.faces.Label";
     }
 
     // UIComponent attributes --> already implemented in MyfacesComponentTag

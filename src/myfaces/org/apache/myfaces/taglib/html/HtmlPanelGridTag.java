@@ -34,12 +34,12 @@ public class HtmlPanelGridTag
 
     protected String getDefaultRendererType()
     {
-        return "Grid";
+        return "javax.faces.Grid";
     }
 
     public String getComponentType()
     {
-        return "PanelGrid";
+        return "javax.faces.PanelGrid";
     }
 
     // UIComponent attributes --> already implemented in MyfacesComponentTag

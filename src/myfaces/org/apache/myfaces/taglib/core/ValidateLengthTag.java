@@ -39,7 +39,7 @@ public class ValidateLengthTag
     private String _minimum = null;
     private String _maximum = null;
 
-    private static final String VALIDATOR_ID = "Length";
+    private static final String VALIDATOR_ID = "javax.faces.Length";
 
     public void release()
     {

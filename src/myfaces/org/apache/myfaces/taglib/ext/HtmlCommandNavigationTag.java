@@ -31,11 +31,11 @@ public class HtmlCommandNavigationTag
 {
     public String getComponentType()
     {
-        return "CommandNavigation";
+        return "net.sourceforge.myfaces.CommandNavigation";
     }
 
     public String getDefaultRendererType()
     {
-        return "Link";
+        return "javax.faces.Link";
     }
 }

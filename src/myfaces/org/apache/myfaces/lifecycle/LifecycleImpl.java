@@ -86,8 +86,6 @@ public class LifecycleImpl
         {
             return;
         }
-
-        render(facesContext);
     }
 
 
@@ -139,8 +137,7 @@ public class LifecycleImpl
 
         if (facesContext.getRenderResponse())
         {
-            render(facesContext);
-            if (log.isDebugEnabled()) log.debug("exiting restoreView in " + LifecycleImpl.class.getName() + " (after render response)");
+            if (log.isDebugEnabled()) log.debug("exiting restoreView in " + LifecycleImpl.class.getName() + " (--> render response)");
             return true;
         }
 
@@ -172,8 +169,7 @@ public class LifecycleImpl
 
         if (facesContext.getRenderResponse())
         {
-            render(facesContext);
-            if (log.isDebugEnabled()) log.debug("exiting applyRequestValues in " + LifecycleImpl.class.getName() + " (after render response)");
+            if (log.isDebugEnabled()) log.debug("exiting applyRequestValues in " + LifecycleImpl.class.getName() + " (--> render response)");
             return true;
         }
 
@@ -192,8 +188,6 @@ public class LifecycleImpl
 
         informPhaseListenersBefore(facesContext, PhaseId.PROCESS_VALIDATIONS);
 
-        //int messageCountBefore = getMessageCount(facesContext);
-
         facesContext.getViewRoot().processValidators(facesContext);
 
         informPhaseListenersAfter(facesContext, PhaseId.PROCESS_VALIDATIONS);
@@ -206,8 +200,7 @@ public class LifecycleImpl
 
         if (facesContext.getRenderResponse())
         {
-            render(facesContext);
-            if (log.isDebugEnabled()) log.debug("exiting processValidations in " + LifecycleImpl.class.getName() + " (after render response)");
+            if (log.isDebugEnabled()) log.debug("exiting processValidations in " + LifecycleImpl.class.getName() + " (--> render response)");
             return true;
         }
 
@@ -232,14 +225,13 @@ public class LifecycleImpl
 
         if (facesContext.getResponseComplete())
         {
-            if (log.isDebugEnabled()) log.debug("exiting updateModelValues in " + LifecycleImpl.class.getName() + " (after render response)");
+            if (log.isDebugEnabled()) log.debug("exiting updateModelValues in " + LifecycleImpl.class.getName() + " (response complete)");
             return true;
         }
 
         if (facesContext.getRenderResponse())
         {
-            render(facesContext);
-            if (log.isDebugEnabled()) log.debug("exiting updateModelValues in " + LifecycleImpl.class.getName() + " (after render response)");
+            if (log.isDebugEnabled()) log.debug("exiting updateModelValues in " + LifecycleImpl.class.getName() + " (--> render response)");
             return true;
         }
 

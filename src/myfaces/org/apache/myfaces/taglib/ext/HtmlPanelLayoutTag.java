@@ -33,12 +33,12 @@ public class HtmlPanelLayoutTag
 {
     public String getComponentType()
     {
-        return "PanelLayout";
+        return "net.sourceforge.myfaces.PanelLayout";
     }
 
     public String getDefaultRendererType()
     {
-        return "Layout";
+        return "net.sourceforge.myfaces.Layout";
     }
 
     // UIComponent attributes --> already implemented in MyfacesComponentBodyTag

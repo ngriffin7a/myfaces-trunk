@@ -29,16 +29,16 @@ import javax.faces.component.UIComponent;
 public class HtmlMessagesTag
         extends HtmlComponentTag
 {
-    //private static final Log log = LogFactory.getLog(HtmlOutputMessageTag.class);
+    //private static final Log log = LogFactory.getLog(HtmlOutputFormatTag.class);
 
     public String getComponentType()
     {
-        return "Messages";
+        return "javax.faces.Messages";
     }
 
     public String getDefaultRendererType()
     {
-        return "Messages";
+        return "javax.faces.Messages";
     }
 
     // UIComponent attributes --> already implemented in MyfacesComponentTag

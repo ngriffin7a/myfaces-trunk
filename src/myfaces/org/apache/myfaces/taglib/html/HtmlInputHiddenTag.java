@@ -34,12 +34,12 @@ public class HtmlInputHiddenTag
 {
     public String getComponentType()
     {
-        return "InputHidden";
+        return "javax.faces.InputHidden";
     }
 
     public String getDefaultRendererType()
     {
-        return "Hidden";
+        return "javax.faces.Hidden";
     }
 
     // UIComponent attributes --> already implemented in MyfacesComponentTag

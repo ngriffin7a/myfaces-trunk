@@ -18,7 +18,7 @@
  */
 package net.sourceforge.myfaces.taglib.ext;
 
-import net.sourceforge.myfaces.taglib.html.HtmlOutputMessageTag;
+import net.sourceforge.myfaces.taglib.html.HtmlOutputFormatTag;
 
 
 /**
@@ -27,15 +27,15 @@ import net.sourceforge.myfaces.taglib.html.HtmlOutputMessageTag;
  * @version $Revision$ $Date$
  */
 public class HtmlOutputNavigationTag
-    extends HtmlOutputMessageTag
+    extends HtmlOutputFormatTag
 {
     public String getComponentType()
     {
-        return "OutputNavigation";
+        return "net.sourceforge.myfaces.OutputNavigation";
     }
 
     public String getDefaultRendererType()
     {
-        return "Message";
+        return "javax.faces.Format";
     }
 }

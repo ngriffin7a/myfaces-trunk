@@ -211,9 +211,9 @@ public class FacesConfig
                 oldRKC.setRenderKitClass(newRKC.getRenderKitClass());
             }
 
-            for (Iterator it = newRKC.getRendererTypes(); it.hasNext(); )
+            for (Iterator it = newRKC.getRendererConfigs(); it.hasNext(); )
             {
-                RendererConfig rc = newRKC.getRendererConfig((String)it.next());
+                RendererConfig rc = (RendererConfig)it.next();
                 oldRKC.addRendererConfig(rc);
             }
         }

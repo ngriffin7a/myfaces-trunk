@@ -71,7 +71,7 @@ public class HtmlRenderKitImpl
 
         if (renderer == null)
         {
-            throw new IllegalArgumentException("Unsupported component family / renderer type: " + componentFamily + "/" + rendererType);
+            throw new IllegalArgumentException("Unsupported component family / renderer type: " + componentFamily + " / " + rendererType);
         }
 
         return renderer;

@@ -262,8 +262,9 @@ public class HtmlLinkRenderer
                 Object value = ((UIParameter)child).getValue();
                 onClick.append(jsForm);
                 onClick.append(".elements['").append(name).append("']");
-                //UIParameter is no ConvertibleValueHolder, so no conversion possible
-                onClick.append(".value='").append(value.toString()).append("';");
+                //UIParameter is no ValueHolder, so no conversion possible
+                String strParamValue = value != null ? value.toString() : ""; //TODO: Use Converter?
+                onClick.append(".value='").append(strParamValue).append("';");
 
                 if (insideForm)
                 {

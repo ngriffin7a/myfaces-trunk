@@ -428,6 +428,14 @@
         &html_universal_attributes;
         &html_event_handler_attributes;
         &user_role_attributes;
+        <attribute>
+            <name>label</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
+            <description>
+                Label of this tab.
+            </description>
+        </attribute>
     </tag>
 
 <!-- panel_tabbedpane -->

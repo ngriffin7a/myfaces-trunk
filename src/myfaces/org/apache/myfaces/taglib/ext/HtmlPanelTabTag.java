@@ -20,6 +20,8 @@ package net.sourceforge.myfaces.taglib.ext;
 
 import net.sourceforge.myfaces.taglib.html.HtmlPanelGroupTag;
 
+import javax.faces.component.UIComponent;
+
 /**
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
@@ -29,13 +31,27 @@ public class HtmlPanelTabTag
 {
     //private static final Log log = LogFactory.getLog(HtmlPanelTabTag.class);
 
-    protected String getDefaultRendererType()
-    {
-        return "Group";
-    }
-
     public String getComponentType()
     {
-        return "PanelTab";
+        return "net.sourceforge.myfaces.PanelTab";
+    }
+
+    protected String getDefaultRendererType()
+    {
+        return "javax.faces.Group";
+    }
+
+    private String _label;
+
+    protected void setProperties(UIComponent component)
+    {
+        super.setProperties(component);
+
+        setStringProperty(component, "label", _label);
+    }
+
+    public void setLabel(String label)
+    {
+        _label = label;
     }
 }

@@ -33,12 +33,12 @@ public class HtmlFormTag
 
     public String getComponentType()
     {
-        return "Form";
+        return "javax.faces.Form";
     }
 
     protected String getDefaultRendererType()
     {
-        return "Form";
+        return "javax.faces.Form";
     }
 
     // UIComponent attributes --> already implemented in MyfacesComponentTag

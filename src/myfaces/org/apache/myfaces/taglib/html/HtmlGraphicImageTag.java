@@ -35,12 +35,12 @@ public class HtmlGraphicImageTag
 {
     public String getComponentType()
     {
-        return "GraphicImage";
+        return "javax.faces.GraphicImage";
     }
 
     public String getDefaultRendererType()
     {
-        return "Image";
+        return "javax.faces.Image";
     }
 
     // UIComponent attributes --> already implemented in MyfacesComponentTag

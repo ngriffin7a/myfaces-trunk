@@ -35,12 +35,12 @@ public class HtmlSelectBooleanCheckboxTag
 {
     public String getComponentType()
     {
-        return "SelectBooleanCheckbox";
+        return "javax.faces.SelectBooleanCheckbox";
     }
 
     public String getDefaultRendererType()
     {
-        return "Checkbox";
+        return "javax.faces.Checkbox";
     }
 
     // UIComponent attributes --> already implemented in MyfacesComponentTag

@@ -63,16 +63,16 @@ managed beans used:
                         <p> A common paragraph </p>
                     </f:verbatim>
 
-                    <x:panel_tab id="tab1" value="Tab1">
+                    <x:panel_tab id="tab1" label="Tab1">
                         <h:input_text id="inp1"/><f:verbatim><br></f:verbatim>
                         <h:input_text id="inp2" required="true" /><h:message for="inp2" showSummary="false" showDetail="true" />
                     </x:panel_tab>
 
-                    <x:panel_tab id="tab2" value="Tab2">
+                    <x:panel_tab id="tab2" label="Tab2">
                         <h:input_textarea ></h:input_textarea>
                     </x:panel_tab>
 
-                    <x:panel_tab id="tab3" value="Tab3">
+                    <x:panel_tab id="tab3" label="Tab3">
                         <h:input_text id="inp3"/><f:verbatim><br></f:verbatim>
                         <h:input_text id="inp4"/><f:verbatim><br></f:verbatim>
                         <h:input_text id="inp5"/><f:verbatim><br></f:verbatim>

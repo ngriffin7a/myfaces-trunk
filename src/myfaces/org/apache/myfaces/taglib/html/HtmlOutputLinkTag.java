@@ -34,12 +34,12 @@ public class HtmlOutputLinkTag
 {
     public String getComponentType()
     {
-        return "OutputLink";
+        return "javax.faces.OutputLink";
     }
 
     public String getDefaultRendererType()
     {
-        return "Link";
+        return "javax.faces.Link";
     }
 
     // UIComponent attributes --> already implemented in MyfacesComponentTag

@@ -22,7 +22,9 @@ import net.sourceforge.myfaces.renderkit.JSFAttr;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import javax.faces.component.UICommand;
 import javax.faces.component.UIComponent;
+import javax.faces.component.UIParameter;
 import javax.faces.component.ValueHolder;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
@@ -80,6 +82,7 @@ public class MyfacesTagUtils
             }
             else
             {
+                //TODO: Warning if component has no such property (with reflection)
                 component.getAttributes().put(propName, value);
             }
         }
@@ -113,17 +116,22 @@ public class MyfacesTagUtils
     {
         if (value != null)
         {
-            if (component instanceof ValueHolder)
+            if (isValueReference(value))
             {
-                if (isValueReference(value))
-                {
-                    ValueBinding vb = context.getApplication().createValueBinding(value);
-                    component.setValueBinding(JSFAttr.VALUE_ATTR, vb);
-                }
-                else
-                {
-                    ((ValueHolder)component).setValue(value);
-                }
+                ValueBinding vb = context.getApplication().createValueBinding(value);
+                component.setValueBinding(JSFAttr.VALUE_ATTR, vb);
+            }
+            else if (component instanceof ValueHolder)
+            {
+                ((ValueHolder)component).setValue(value);
+            }
+            else if (component instanceof UICommand)
+            {
+                ((UICommand)component).setValue(value);
+            }
+            else if (component instanceof UIParameter)
+            {
+                ((UIParameter)component).setValue(value);
             }
             else
             {

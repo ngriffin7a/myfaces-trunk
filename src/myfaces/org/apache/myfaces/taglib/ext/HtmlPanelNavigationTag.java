@@ -33,12 +33,12 @@ public class HtmlPanelNavigationTag
 {
     public String getComponentType()
     {
-        return "PanelNavigation";
+        return "net.sourceforge.myfaces.PanelNavigation";
     }
 
     public String getDefaultRendererType()
     {
-        return "Navigation";
+        return "net.sourceforge.myfaces.Navigation";
     }
 
     // UIComponent attributes --> already implemented in MyfacesComponentBodyTag

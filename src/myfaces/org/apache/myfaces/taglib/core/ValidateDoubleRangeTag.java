@@ -36,7 +36,7 @@ import javax.servlet.jsp.JspException;
 public class ValidateDoubleRangeTag
     extends ValidatorTag
 {
-    private static final String VALIDATOR_ID = "DoubleRange";
+    private static final String VALIDATOR_ID = "javax.faces.DoubleRange";
 
     private String _minimum = null;
     private String _maximum = null;

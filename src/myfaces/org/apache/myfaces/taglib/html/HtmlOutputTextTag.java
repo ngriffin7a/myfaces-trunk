@@ -33,12 +33,12 @@ public class HtmlOutputTextTag
 {
     public String getComponentType()
     {
-        return "OutputText";
+        return "javax.faces.OutputText";
     }
 
     public String getDefaultRendererType()
     {
-        return "Text";
+        return "javax.faces.Text";
     }
 
     // UIComponent attributes --> already implemented in MyfacesComponentTag

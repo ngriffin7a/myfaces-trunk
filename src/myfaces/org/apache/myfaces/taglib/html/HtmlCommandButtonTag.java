@@ -43,12 +43,12 @@ public class HtmlCommandButtonTag
 
     public String getComponentType()
     {
-        return "CommandButton";
+        return "javax.faces.CommandButton";
     }
 
     public String getDefaultRendererType()
     {
-        return "Button";
+        return "javax.faces.Button";
     }
 
     // UIComponent attributes --> already implemented in MyfacesComponentTag

@@ -33,8 +33,14 @@ public class MyfacesHtmlMessagesTag
 
     public String getComponentType()
     {
-        return "MyFacesMessages";
+        return "net.sourceforge.myfaces.Messages";
     }
+
+    public String getDefaultRendererType()
+    {
+        return "net.sourceforge.myfaces.Messages";
+    }
+
 
     private String _showInputLabel;
 

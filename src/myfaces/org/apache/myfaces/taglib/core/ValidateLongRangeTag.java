@@ -39,7 +39,7 @@ public class ValidateLongRangeTag
     private String _minimum = null;
     private String _maximum = null;
 
-    private static final String VALIDATOR_ID = "LongRange";
+    private static final String VALIDATOR_ID = "javax.faces.LongRange";
 
     public void release()
     {

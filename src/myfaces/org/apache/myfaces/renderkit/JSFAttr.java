@@ -145,7 +145,7 @@ public class JSFAttr
     public static final String TOOLTIP_ATTR                = "tooltip";
 
     // GraphicImage attributes
-    public static final String URL_ATTR                    = "URL";
+    public static final String URL_ATTR                    = "url";
 
     // UISelectItem attributes
     public static final String DISABLED_ATTR               = "disabled";

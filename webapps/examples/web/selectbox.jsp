@@ -57,20 +57,20 @@ managed beans used:
                     <h:panel_grid columns="2">
 
                         <h:output_label for="selone_lb" value="#{example_messages['label_cars']}" />
-                        <h:selectone_listbox value="#{carconf.car}" >
+                        <h:selectone_listbox size="3" value="#{carconf.car}" >
                             <f:selectitems id="selone_lb_cars" value="#{carconf.cars}" />
                         </h:selectone_listbox>
 
                         <h:output_label for="selone_menu" value="#{example_messages['label_colors']}" />
-                        <h:selectone_menu size="3" value="#{carconf.color}" >
+                        <h:selectone_menu value="#{carconf.color}" >
                             <f:selectitem itemValue="" itemLabel="#{example_messages['empty_selitem']}" />
                             <f:selectitems value="#{carconf.colors}" />
                         </h:selectone_menu>
 
                         <h:output_label for="selone_menu" value="#{example_messages['label_extras']}" />
-                        <h:selectmany_checkboxlist value="#{carconf.extras}" >
+                        <h:selectmany_checkbox value="#{carconf.extras}" >
                             <f:selectitems value="#{carconf.extrasList}" />
-                        </h:selectmany_checkboxlist>
+                        </h:selectmany_checkbox>
 
                         <f:verbatim>&nbsp;</f:verbatim>
                         <h:panel_group >
@@ -96,9 +96,9 @@ managed beans used:
                     </h:panel_grid>
                 </h:form>
 
-                <h:output_message value="#{example_messages['msg_price']}" >
+                <h:output_format value="#{example_messages['msg_price']}" >
                     <f:parameter value="#{carconf.price}" />
-                </h:output_message>
+                </h:output_format>
 
             </h:panel_group>
         </f:facet>

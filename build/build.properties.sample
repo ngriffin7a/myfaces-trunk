@@ -12,8 +12,7 @@ commons-logging.jar = ${project.dir}/lib/commons-logging.jar
 # File path to log4j library
 log4j.jar = ${project.dir}/lib/log4j-1.2.8.jar
 
-# File path to current JavaServer Faces API archive
-# (not included, please download from http://java.sun.com/j2ee/javaserverfaces/download.html)
+# File path to JavaServer Faces API library
 jsf-api.jar = ${project.dir}/lib/jsf-api.jar
 
 # File path of MyFaces archive to be created
@@ -34,3 +33,7 @@ junit.jar = ${project.dir}/lib/junit.jar
 
 # tlddoc library (needed for tlddoc creation)
 tlddoc.jar = ${project.dir}/lib/tlddoc.jar
+
+
+# log4j library (only needed for examples application)
+log4j.jar = ${project.dir}/lib/log4j.jar

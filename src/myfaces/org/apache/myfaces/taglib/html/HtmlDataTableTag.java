@@ -34,12 +34,12 @@ public class HtmlDataTableTag
 
     protected String getDefaultRendererType()
     {
-        return "Table";
+        return "javax.faces.Table";
     }
 
     public String getComponentType()
     {
-        return "DataTable";
+        return "javax.faces.DataTable";
     }
 
     // UIComponent attributes --> already implemented in MyfacesComponentTag

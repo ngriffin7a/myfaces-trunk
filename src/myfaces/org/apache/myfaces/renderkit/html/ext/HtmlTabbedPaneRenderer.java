@@ -105,6 +105,11 @@ public class HtmlTabbedPaneRenderer
     {
     }
 
+    public boolean getRendersChildren()
+    {
+        return true;
+    }
+    
     public void encodeChildren(FacesContext facescontext, UIComponent uicomponent) throws IOException
     {
     }
@@ -305,7 +310,7 @@ public class HtmlTabbedPaneRenderer
         writer.writeAttribute(HTML.TYPE_ATTR, "submit", null);
         writer.writeAttribute(HTML.NAME_ATTR, tabbedPane.getClientId(facesContext) + "." + tabIndex, null);
 
-        String label = RendererUtils.getStringValue(facesContext, tab);
+        String label = tab.getLabel();
         if (label == null || label.length() == 0)
         {
             label = "Tab " + tabIndex;

@@ -96,9 +96,9 @@ public class RenderKitConfig implements Config
         return _renderKitId;
     }
 
-    public RendererConfig getRendererConfig(String rendererType)
+    public RendererConfig getRendererConfig(String componentFamily, String rendererType)
     {
-        return (RendererConfig) getRendererConfigMap().get(rendererType);
+        return (RendererConfig) getRendererConfigMap().get(componentFamily + "/" + rendererType);
     }
 
     public Iterator getRendererConfigs()
@@ -106,14 +106,17 @@ public class RenderKitConfig implements Config
         return getRendererConfigMap().values().iterator();
     }
 
+    /*
     public Iterator getRendererTypes()
     {
         return getRendererConfigMap().keySet().iterator();
     }
+    */
 
     public void addRendererConfig(RendererConfig rendererConfig)
     {
-        getRendererConfigMap().put(rendererConfig.getRendererType(), rendererConfig);
+        getRendererConfigMap().put(rendererConfig.getComponentFamily() + "/" + rendererConfig.getRendererType(),
+                                   rendererConfig);
     }
 
     public RenderKit newRenderKit()

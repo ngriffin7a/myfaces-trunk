@@ -43,12 +43,12 @@ public class HtmlCommandLinkTag
 
     public String getComponentType()
     {
-        return "CommandLink";
+        return "javax.faces.CommandLink";
     }
 
     public String getDefaultRendererType()
     {
-        return "Link";
+        return "javax.faces.Link";
     }
 
 

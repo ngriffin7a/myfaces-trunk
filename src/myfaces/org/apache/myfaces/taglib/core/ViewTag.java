@@ -24,6 +24,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import javax.faces.application.StateManager;
+import javax.faces.component.UIViewRoot;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 import javax.faces.webapp.UIComponentBodyTag;
@@ -43,7 +44,7 @@ public class ViewTag
 
     public String getComponentType()
     {
-        return "ViewRoot";
+        return UIViewRoot.COMPONENT_TYPE;
     }
 
     public String getRendererType()

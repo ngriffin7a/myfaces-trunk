@@ -32,7 +32,7 @@ public class ParameterTag
 {
     public String getComponentType()
     {
-        return "Parameter";
+        return "javax.faces.Parameter";
     }
 
     public String getDefaultRendererType()

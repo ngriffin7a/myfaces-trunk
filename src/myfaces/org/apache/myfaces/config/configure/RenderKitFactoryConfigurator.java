@@ -18,11 +18,9 @@
  */
 package net.sourceforge.myfaces.config.configure;
 
-import net.sourceforge.myfaces.config.AttributeConfig;
 import net.sourceforge.myfaces.config.FacesConfig;
 import net.sourceforge.myfaces.config.RenderKitConfig;
 import net.sourceforge.myfaces.config.RendererConfig;
-import net.sourceforge.myfaces.renderkit.html.jspinfo.TLDInfo;
 import net.sourceforge.myfaces.util.ClassUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -30,11 +28,6 @@ import org.apache.commons.logging.LogFactory;
 import javax.faces.context.ExternalContext;
 import javax.faces.render.RenderKit;
 import javax.faces.render.RenderKitFactory;
-import javax.faces.webapp.UIComponentTag;
-import javax.servlet.jsp.tagext.Tag;
-import javax.servlet.jsp.tagext.TagAttributeInfo;
-import javax.servlet.jsp.tagext.TagInfo;
-import javax.servlet.jsp.tagext.TagLibraryInfo;
 import java.util.Iterator;
 
 /**
@@ -147,6 +140,7 @@ public class RenderKitFactoryConfigurator
     protected void completeRendererAttributesByTLD(ExternalContext context,
                                                    String taglibURI)
     {
+        /*
         TagLibraryInfo tagLibraryInfo = TLDInfo.getTagLibraryInfo(context,
                                                                   taglibURI);
         TagInfo[] tagInfos = tagLibraryInfo.getTags();
@@ -155,8 +149,10 @@ public class RenderKitFactoryConfigurator
             TagInfo tagInfo = tagInfos[i];
             completeRendererAttributesByTagInfo(tagInfo);
         }
+        */
     }
 
+    /*
     private void completeRendererAttributesByTagInfo(TagInfo tagInfo)
     {
         Tag tag = (Tag) ClassUtils.newInstance(tagInfo.getTagClassName());
@@ -182,7 +178,9 @@ public class RenderKitFactoryConfigurator
             }
         }
     }
+    */
 
+    /*
     private void addRendererAttribute(RendererConfig rendererConfig,
                                       TagAttributeInfo tagAttributeInfo)
     {
@@ -220,6 +218,7 @@ public class RenderKitFactoryConfigurator
             }
         }
     }
+    */
 
 
 

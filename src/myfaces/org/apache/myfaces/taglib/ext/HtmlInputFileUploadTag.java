@@ -35,12 +35,12 @@ public class HtmlInputFileUploadTag
 
     public String getComponentType()
     {
-        return "InputFileUpload";
+        return "net.sourceforge.myfaces.InputFileUpload";
     }
 
     protected String getDefaultRendererType()
     {
-        return "FileUpload";
+        return "net.sourceforge.myfaces.FileUpload";
     }
 
     // UIComponent attributes --> already implemented in MyfacesComponentTag

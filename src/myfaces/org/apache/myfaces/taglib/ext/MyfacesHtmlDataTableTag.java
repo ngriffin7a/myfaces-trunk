@@ -18,6 +18,8 @@
  */
 package net.sourceforge.myfaces.taglib.ext;
 
+import net.sourceforge.myfaces.taglib.html.HtmlDataTableTag;
+
 import javax.faces.component.UIComponent;
 
 /**
@@ -25,13 +27,18 @@ import javax.faces.component.UIComponent;
  * @version $Revision$ $Date$
  */
 public class MyfacesHtmlDataTableTag
-        extends net.sourceforge.myfaces.taglib.html.HtmlDataTableTag
+        extends HtmlDataTableTag
 {
     //private static final Log log = LogFactory.getLog(MyfacesHtmlDataTableTag.class);
 
     public String getComponentType()
     {
-        return "MyFacesDataTable";
+        return "net.sourceforge.myfaces.DataTable";
+    }
+
+    protected String getDefaultRendererType()
+    {
+        return "net.sourceforge.myfaces.Table";
     }
 
     private String _preserveDataModel;

@@ -28,11 +28,11 @@ public class HtmlSelectOneListboxTag
 {
     public String getComponentType()
     {
-        return "SelectOneListbox";
+        return "javax.faces.SelectOneListbox";
     }
 
     public String getDefaultRendererType()
     {
-        return "Listbox";
+        return "javax.faces.Listbox";
     }
 }

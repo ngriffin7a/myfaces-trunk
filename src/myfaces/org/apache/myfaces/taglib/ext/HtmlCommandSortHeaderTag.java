@@ -33,12 +33,12 @@ public class HtmlCommandSortHeaderTag
 
     public String getComponentType()
     {
-        return "CommandSortHeader";
+        return "net.sourceforge.myfaces.CommandSortHeader";
     }
 
     public String getDefaultRendererType()
     {
-        return "SortHeader";
+        return "net.sourceforge.myfaces.SortHeader";
     }
 
     private String _columnName;

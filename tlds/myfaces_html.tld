@@ -355,8 +355,8 @@ Start of revised 1.0 conforming tags (in alphabetical order)
 
 <!-- output_message -->
     <tag>
-        <name>output_message</name>
-        <tag-class>net.sourceforge.myfaces.taglib.html.HtmlOutputMessageTag</tag-class>
+        <name>output_format</name>
+        <tag-class>net.sourceforge.myfaces.taglib.html.HtmlOutputFormatTag</tag-class>
         <body-content>JSP</body-content>
         <description>
             Takes the value of the associated UIOutput component as a MessageFormat
@@ -367,9 +367,7 @@ Start of revised 1.0 conforming tags (in alphabetical order)
         &html_universal_attributes;
         &html_event_handler_attributes;
         &user_role_attributes;
-        <!-- HtmlOutputMessage attributes
-        (API attributes are wrong: OutputMessage has nothing to do with error messages,
-         see description above!) -->
+        <!-- HtmlOutputFormat attributes -->
         <attribute>
             <name>escape</name>
             <required>false</required>
@@ -472,8 +470,8 @@ Start of revised 1.0 conforming tags (in alphabetical order)
 
 <!-- selectmany_checkboxlist -->
     <tag>
-        <name>selectmany_checkboxlist</name>
-        <tag-class>net.sourceforge.myfaces.taglib.html.HtmlSelectManyCheckboxListTag</tag-class>
+        <name>selectmany_checkbox</name>
+        <tag-class>net.sourceforge.myfaces.taglib.html.HtmlSelectManyCheckboxTag</tag-class>
         <body-content>JSP</body-content>
         &ui_component_attributes;
         &ui_select_many_attributes;
@@ -503,6 +501,14 @@ Start of revised 1.0 conforming tags (in alphabetical order)
         &html_event_handler_attributes;
         &html_select_attributes;
         &user_role_attributes;
+        <!-- ListboxRenderer attributes -->
+        <attribute>
+            <name>size</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
+            <type>java.lang.String</type>
+            <description>see JSF Spec.</description>
+        </attribute>
     </tag>
 
 <!-- selectmany_menu -->
@@ -516,14 +522,6 @@ Start of revised 1.0 conforming tags (in alphabetical order)
         &html_event_handler_attributes;
         &html_select_attributes;
         &user_role_attributes;
-        <!-- MenuRenderer attributes -->
-        <attribute>
-            <name>size</name>
-            <required>false</required>
-            <rtexprvalue>false</rtexprvalue>
-            <type>java.lang.String</type>
-            <description>see JSF Spec. 8.5.9</description>
-        </attribute>
     </tag>
 
 <!-- selectone_listbox -->
@@ -537,6 +535,14 @@ Start of revised 1.0 conforming tags (in alphabetical order)
         &html_event_handler_attributes;
         &html_select_attributes;
         &user_role_attributes;
+        <!-- ListboxRenderer attributes -->
+        <attribute>
+            <name>size</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
+            <type>java.lang.String</type>
+            <description>see JSF Spec.</description>
+        </attribute>
     </tag>
 
 <!-- selectone_menu -->
@@ -550,14 +556,6 @@ Start of revised 1.0 conforming tags (in alphabetical order)
         &html_event_handler_attributes;
         &html_select_attributes;
         &user_role_attributes;
-        <!-- MenuRenderer attributes -->
-        <attribute>
-            <name>size</name>
-            <required>false</required>
-            <rtexprvalue>false</rtexprvalue>
-            <type>java.lang.String</type>
-            <description>see JSF Spec. 8.5.10</description>
-        </attribute>
     </tag>
 
 <!-- selectone_radio -->

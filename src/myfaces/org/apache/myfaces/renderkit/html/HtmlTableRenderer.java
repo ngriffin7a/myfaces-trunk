@@ -43,6 +43,11 @@ public class HtmlTableRenderer
 {
     private static final Log log = LogFactory.getLog(HtmlTableRenderer.class);
 
+    public boolean getRendersChildren()
+    {
+        return true;
+    }
+
     public void encodeBegin(FacesContext facesContext, UIComponent uiComponent) throws IOException
     {
         RendererUtils.checkParamValidity(facesContext, uiComponent, HtmlDataTable.class);
@@ -67,17 +72,12 @@ public class HtmlTableRenderer
 
         writer.startElement("tbody", uiComponent);
 
-        int first = uiData.getFirst() - 1;
-        if (first < 0)
-        {
-            first = 0;
-        }
-
+        int first = uiData.getFirst();
         int rowCount = uiData.getRowCount();
         int maxRows = uiData.getRows();
-        if (maxRows == 0)
+        if (maxRows <= 0)
         {
-            maxRows = rowCount;
+            maxRows = rowCount - first;
         }
 
         Styles styles = new Styles(uiData.getRowClasses(), uiData.getColumnClasses());

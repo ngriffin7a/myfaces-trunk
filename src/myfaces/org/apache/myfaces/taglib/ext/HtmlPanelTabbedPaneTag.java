@@ -32,14 +32,14 @@ public class HtmlPanelTabbedPaneTag
 {
     //private static final Log log = LogFactory.getLog(HtmlPanelTabbedPaneTag.class);
 
-    protected String getDefaultRendererType()
-    {
-        return "TabbedPane";
-    }
-
     public String getComponentType()
     {
-        return "PanelTabbedPane";
+        return "net.sourceforge.myfaces.PanelTabbedPane";
+    }
+
+    protected String getDefaultRendererType()
+    {
+        return "net.sourceforge.myfaces.TabbedPane";
     }
 
 

@@ -34,7 +34,7 @@ public class SelectItemTag
 
     public String getComponentType()
     {
-        return "SelectItem";
+        return "javax.faces.SelectItem";
     }
 
     protected String getDefaultRendererType()

@@ -20,22 +20,15 @@ package net.sourceforge.myfaces.renderkit.html;
 
 import net.sourceforge.myfaces.renderkit.RendererUtils;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLUtil;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.component.UIComponent;
-import javax.faces.component.UIParameter;
 import javax.faces.component.html.HtmlMessage;
-import javax.faces.component.html.HtmlOutputFormat;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 import java.io.IOException;
 import java.io.StringWriter;
-import java.text.MessageFormat;
-import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
 
 /**
  * @author Manfred Geiler (latest modification by $Author$)
@@ -44,9 +37,7 @@ import java.util.List;
 public class HtmlMessageRenderer
         extends HtmlRenderer
 {
-    private static final Log log = LogFactory.getLog(HtmlMessageRenderer.class);
-
-    private static final Object[] EMPTY_ARGS = new Object[0];
+    //private static final Log log = LogFactory.getLog(HtmlMessageRenderer.class);
 
     public void encodeBegin(FacesContext facesContext, UIComponent uiComponent)
             throws IOException
@@ -61,64 +52,10 @@ public class HtmlMessageRenderer
     public void encodeEnd(FacesContext facesContext, UIComponent component)
             throws IOException
     {
-        RendererUtils.checkParamValidity(facesContext, component, null);
+        RendererUtils.checkParamValidity(facesContext, component, HtmlMessage.class);
         if (!RendererUtils.isVisibleOnUserRole(facesContext, component)) return;
 
-        String text;
-        boolean escape;
-
-        if (component instanceof HtmlOutputFormat)
-        {
-            HtmlOutputFormat htmlOutputMessage = (HtmlOutputFormat)component;
-            text = getOutputMessageText(facesContext, htmlOutputMessage);
-            escape = ((HtmlOutputFormat)component).isEscape();
-            HtmlTextRenderer.renderOutputText(facesContext, component, text, escape);
-        }
-        else if (component instanceof HtmlMessage)
-        {
-            renderMessage(facesContext, (HtmlMessage)component);
-        }
-        else
-        {
-            throw new IllegalArgumentException("Unsupported component type " + component.getClass().getName());
-        }
-    }
-
-
-
-    private String getOutputMessageText(FacesContext facesContext,
-                                        HtmlOutputFormat htmlOutputMessage)
-    {
-        String pattern = RendererUtils.getStringValue(facesContext, htmlOutputMessage);
-        Object[] args;
-        if (htmlOutputMessage.getChildCount() == 0)
-        {
-            args = EMPTY_ARGS;
-        }
-        else
-        {
-            List argsList = new ArrayList();
-            for (Iterator it = htmlOutputMessage.getChildren().iterator(); it.hasNext(); )
-            {
-                UIComponent child = (UIComponent)it.next();
-                if (child instanceof UIParameter)
-                {
-                    argsList.add(((UIParameter)child).getValue());
-                }
-            }
-            args = argsList.toArray(new Object[argsList.size()]);
-        }
-
-        MessageFormat format = new MessageFormat(pattern, facesContext.getViewRoot().getLocale());
-        try
-        {
-            return format.format(args);
-        }
-        catch (Exception e)
-        {
-            log.error("Error formatting message of component " + htmlOutputMessage.getClientId(facesContext));
-            return "";
-        }
+        renderMessage(facesContext, (HtmlMessage)component);
     }
 
 

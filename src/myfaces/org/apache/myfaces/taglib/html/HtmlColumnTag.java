@@ -36,7 +36,7 @@ public class HtmlColumnTag
 
     public String getComponentType()
     {
-        return "Column";
+        return "javax.faces.Column";
     }
 
     // UIComponent attributes --> already implemented in MyfacesComponentTag

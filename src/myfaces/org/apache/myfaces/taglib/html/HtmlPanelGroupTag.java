@@ -29,12 +29,12 @@ public class HtmlPanelGroupTag
 
     protected String getDefaultRendererType()
     {
-        return "Group";
+        return "javax.faces.Group";
     }
 
     public String getComponentType()
     {
-        return "PanelGroup";
+        return "javax.faces.PanelGroup";
     }
 
     // UIComponent attributes --> already implemented in MyfacesComponentTag

@@ -63,10 +63,12 @@ public class HtmlRendererUtils
         if (!paramValuesMap.containsKey(clientId))
         {
             //request parameter not found, nothing to decode
+            input.setSubmittedValue(null);
             return;
         }
 
         String[] reqValues = (String[])paramValuesMap.get(clientId);
+        String submittedValue;
 
         Converter converter;
         try
@@ -81,8 +83,9 @@ public class HtmlRendererUtils
                                     null,
                                     input.getClientId(facesContext));
 
-            String strValue = StringArrayConverter.getAsString(reqValues, false);
-            input.setValue(strValue);
+            submittedValue = StringArrayConverter.getAsString(reqValues, false);
+            input.setSubmittedValue(submittedValue);
+            input.setValue(submittedValue);
             input.setValid(false);
             return;
         }
@@ -91,7 +94,8 @@ public class HtmlRendererUtils
         if (converter == null)
         {
             //No conversion needed, make String out of StringArray
-            convertedValue = StringArrayConverter.getAsString(reqValues, false);
+            submittedValue = StringArrayConverter.getAsString(reqValues, false);
+            convertedValue = submittedValue;
         }
         else
         {
@@ -100,29 +104,32 @@ public class HtmlRendererUtils
             {
                 //Expected type is StringArray according to MyFaces StringArrayConverter
                 // --> no conversion necessary
+                submittedValue = StringArrayConverter.getAsString(reqValues, false);
                 convertedValue = reqValues;
             }
             else
             {
                 //make String out of StringArray
-                String strValue = StringArrayConverter.getAsString(reqValues, false);
+                submittedValue = StringArrayConverter.getAsString(reqValues, false);
                 try
                 {
                     convertedValue = ConverterUtils.getAsObjectWithErrorHandling(facesContext,
                                                                                  input,
                                                                                  converter,
-                                                                                 strValue);
+                                                                                 submittedValue);
                 }
                 catch (ConverterException e)
                 {
                     //FacesMessage already handled by getAsObjectWithErrorHandling method
-                    input.setValue(strValue);
+                    input.setSubmittedValue(submittedValue);
+                    input.setValue(submittedValue);
                     input.setValid(false);
                     return;
                 }
             }
         }
 
+        input.setSubmittedValue(submittedValue);
         input.setValue(convertedValue);
         input.setValid(true);
     }

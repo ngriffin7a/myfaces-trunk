@@ -35,12 +35,12 @@ public class HtmlSelectOneRadioTag
 {
     public String getComponentType()
     {
-        return "SelectOneRadio";
+        return "javax.faces.SelectOneRadio";
     }
 
     public String getDefaultRendererType()
     {
-        return "Radio";
+        return "javax.faces.Radio";
     }
 
     // UIComponent attributes --> already implemented in MyfacesComponentTag

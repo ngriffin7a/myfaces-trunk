@@ -52,7 +52,7 @@
                         <tr>
                             <td valign="middle">
                 </f:verbatim>
-                <h:output_message id="welcome" value="#{example_messages['welcome']}" />
+                <h:output_format id="welcome" value="#{example_messages['welcome']}" />
                 <f:verbatim>
                             </td>
                             <td valign="middle">
@@ -63,10 +63,10 @@
                         </tr>
                     </table>
                 </f:verbatim>
-                <h:output_message value="#{example_messages['today']}" >
+                <h:output_format value="#{example_messages['today']}" >
                     <% request.setAttribute("currentDate", new Date()); %>
                     <f:parameter id="p0" value="#{currentDate}" />
-                </h:output_message>
+                </h:output_format>
             </h:panel_group>
         </f:facet>
 
