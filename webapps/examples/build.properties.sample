@@ -1,4 +1,4 @@
 # Don't forget to use double-backslashes in windows paths!
 
 # directory where the server-saving examples web should be copied to
-web_ss.dir = web_ss
+web_ss.dir = web_serversaving

@@ -119,7 +119,7 @@
                         prefix="myfaces-${manifest.impl.version}/webapps/examples"/>
             <tarfileset dir="${web_ss.dir}"
                         excludes="WEB-INF/lib/jsf-api.jar"
-                        prefix="myfaces-${manifest.impl.version}/webapps/examples/web_ss"/>
+                        prefix="myfaces-${manifest.impl.version}/webapps/examples/web_serversaving"/>
         </tar>
     </target>
 
