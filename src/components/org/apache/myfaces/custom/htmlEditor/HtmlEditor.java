@@ -26,6 +26,9 @@ import javax.faces.el.ValueBinding;
  * @author Sylvain Vieujot (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.4  2004/12/04 00:40:25  svieujot
+ * htmlEditor : add style and styleClass attributes.
+ *
  * Revision 1.3  2004/12/04 00:20:00  svieujot
  * htmlEditor : Add a formular mode, and more sensible defaults.
  *
@@ -41,6 +44,9 @@ public class HtmlEditor extends UIInput {
     public static final String COMPONENT_TYPE = "org.apache.myfaces.HtmlEditor";
 
     private static final String DEFAULT_RENDERER_TYPE = "org.apache.myfaces.HtmlEditor";
+    
+    private String _style;
+    private String _styleClass;
     
     private Boolean _allowEditSource;
     
@@ -61,13 +67,19 @@ public class HtmlEditor extends UIInput {
     }
 
     public Object saveState(FacesContext context) {
-        Object values[] = new Object[4];
+        Object values[] = new Object[5];
         values[0] = super.saveState(context);
+        
+        String[] display = new String[2];
+        display[0] = _style;
+        display[1] = _styleClass;
+        
+        values[1] = display;
         
         Boolean toolBarButtons[] = new Boolean[1];
         toolBarButtons[0] = _allowEditSource;
         
-        values[1] = toolBarButtons;
+        values[2] = toolBarButtons;
         
         Boolean toolBoxes[] = new Boolean[5];
         toolBoxes[0] = _showPropertiesToolBox;
@@ -76,12 +88,12 @@ public class HtmlEditor extends UIInput {
         toolBoxes[3] = _showTablesToolBox;
         toolBoxes[4] = _showDebugToolBox;
         
-        values[2] = toolBoxes;
+        values[3] = toolBoxes;
         
         Boolean tools[] = new Boolean[1];
         tools[0] = _enableFlexiTools;
         
-        values[3] = tools;
+        values[4] = tools;
         
         return values;
     }
@@ -90,18 +102,34 @@ public class HtmlEditor extends UIInput {
         Object values[] = (Object[]) state;
         super.restoreState(context, values[0]);
         
-        Boolean[] toolBarButtons = (Boolean[]) values[1];
+        String[] display = (String[]) values[1];
+        _style = display[0];
+        _styleClass = display[1];
+        
+        Boolean[] toolBarButtons = (Boolean[]) values[2];
         _allowEditSource = toolBarButtons[0];
         
-        Boolean[] toolBoxes = (Boolean[]) values[2];
+        Boolean[] toolBoxes = (Boolean[]) values[3];
         _showPropertiesToolBox = toolBoxes[0];
         _showLinksToolBox = toolBoxes[1];
         _showImagesToolBox = toolBoxes[2];
         _showTablesToolBox = toolBoxes[3];
         _showDebugToolBox = toolBoxes[4];
         
-        Boolean[] tools = (Boolean[]) values[3];
+        Boolean[] tools = (Boolean[]) values[4];
         _enableFlexiTools = tools[0];
+    }
+    
+    public String getStyle(){
+   		if (_style != null) return _style;
+    		ValueBinding vb = getValueBinding("style");
+   		return vb != null ? (String)vb.getValue(getFacesContext()) : null;
+    }
+    
+    public String getStyleClass(){
+   		if (_styleClass != null) return _styleClass;
+    		ValueBinding vb = getValueBinding("styleClass");
+   		return vb != null ? (String)vb.getValue(getFacesContext()) : null;
     }
     
     public Boolean isAllowEditSource(){

@@ -803,6 +803,16 @@
             <rtexprvalue>false</rtexprvalue>
         </attribute>
         <attribute>
+	        <name>style</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
+        </attribute>
+        <attribute>
+	        <name>styleClass</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
+        </attribute>
+        <attribute>
 	        <name>formularMode</name>
             <required>false</required>
             <rtexprvalue>false</rtexprvalue>

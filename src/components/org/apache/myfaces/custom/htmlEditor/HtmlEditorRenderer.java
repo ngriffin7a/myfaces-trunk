@@ -33,6 +33,9 @@ import org.apache.myfaces.renderkit.html.util.JavascriptUtils;
  * @author Sylvain Vieujot (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.6  2004/12/04 00:40:25  svieujot
+ * htmlEditor : add style and styleClass attributes.
+ *
  * Revision 1.5  2004/12/04 00:20:00  svieujot
  * htmlEditor : Add a formular mode, and more sensible defaults.
  *
@@ -121,7 +124,12 @@ public class HtmlEditorRenderer extends Renderer {
 
         		
 		writer.startElement(HTML.DIV_ELEM,null);
-        writer.writeAttribute(HTML.CLASS_ATTR, "kupu-fulleditor",null);
+        writer.writeAttribute(HTML.CLASS_ATTR,
+                "kupu-fulleditor"+(editor.getStyleClass()!=null ? " "+editor.getStyleClass() : ""),
+                null);
+        if( editor.getStyle() != null )
+    	    writer.writeAttribute(HTML.STYLE_ATTR, editor.getStyle(), null);
+
 
         	//
         	// Toolbar
