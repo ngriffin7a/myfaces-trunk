@@ -597,7 +597,6 @@
                 similar to the var parameter.
             </description>
         </attribute>
-        pageIndexVar
      </tag>
 
     <!-- inputFileUpload -->
