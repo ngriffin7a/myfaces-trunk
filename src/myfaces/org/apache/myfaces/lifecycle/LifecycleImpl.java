@@ -19,6 +19,7 @@
 package net.sourceforge.myfaces.lifecycle;
 
 import net.sourceforge.myfaces.MyFacesFactoryFinder;
+import net.sourceforge.myfaces.application.ViewHandlerImpl;
 import net.sourceforge.myfaces.context.FacesContextImpl;
 import net.sourceforge.myfaces.renderkit.html.state.StateRenderer;
 import net.sourceforge.myfaces.webapp.ServletMapping;
@@ -34,11 +35,7 @@ import javax.faces.application.ViewHandler;
 import javax.faces.component.UICommand;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
-import javax.faces.event.AbortProcessingException;
-import javax.faces.event.ActionListener;
-import javax.faces.event.FacesEvent;
-import javax.faces.event.PhaseId;
-import javax.faces.event.PhaseListener;
+import javax.faces.event.*;
 import javax.faces.lifecycle.Lifecycle;
 import javax.faces.render.RenderKit;
 import javax.faces.render.RenderKitFactory;
@@ -77,7 +74,7 @@ public class LifecycleImpl
     {
         if (_viewHandler == null)
         {
-            _viewHandler = new ViewHandlerJspImpl();
+            _viewHandler = new ViewHandlerImpl();
         }
         return _viewHandler;
     }

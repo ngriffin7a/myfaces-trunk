@@ -19,17 +19,27 @@
 
 package net.sourceforge.myfaces.application;
 
+import net.sourceforge.myfaces.MyFacesFactoryFinder;
+import net.sourceforge.myfaces.renderkit.html.state.StateRenderer;
+import net.sourceforge.myfaces.webapp.ServletMapping;
+import net.sourceforge.myfaces.webapp.ServletMappingFactory;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import javax.faces.application.ViewHandler;
-import javax.faces.application.StateManager;
-import javax.faces.application.Application;
-import javax.faces.context.FacesContext;
-import javax.faces.component.UIViewRoot;
 import javax.faces.FacesException;
-import java.util.Locale;
+import javax.faces.FactoryFinder;
+import javax.faces.application.StateManager;
+import javax.faces.application.ViewHandler;
+import javax.faces.component.UIViewRoot;
+import javax.faces.context.FacesContext;
+import javax.faces.render.RenderKit;
+import javax.faces.render.RenderKitFactory;
+import javax.faces.render.Renderer;
+import javax.servlet.*;
 import java.io.IOException;
+import java.util.Enumeration;
+import java.util.Iterator;
+import java.util.Locale;
 
 /**
  * DOCUMENT ME!
@@ -52,7 +62,30 @@ public class ViewHandlerImpl
 
     public Locale calculateLocale(FacesContext facescontext)
     {
-        throw new UnsupportedOperationException("not yet implemented.");
+        Enumeration locales = ((ServletRequest)facescontext.getExternalContext().getRequest()).getLocales();
+        while (locales.hasMoreElements())
+        {
+            Locale locale = (Locale) locales.nextElement();
+            for (Iterator it = facescontext.getApplication().getSupportedLocales(); it.hasNext();)
+            {
+                Locale supportLocale = (Locale)it.next();
+                // higher priority to a langauage match over an exact match
+                // that occures further down (see Jstl Reference 8.3.1)
+                if (locale.getLanguage().equals(supportLocale.getLanguage()) &&
+                    (supportLocale.getLanguage() == null ||
+                    supportLocale.getLanguage().length() == 0))
+                {
+                    return locale;
+                }
+                else if (supportLocale.equals(locale))
+                {
+                    return locale;
+                }
+            }
+        }
+
+        Locale locale = facescontext.getApplication().getDefaultLocale();
+        return locale != null ? locale : Locale.getDefault();
     }
 
     public UIViewRoot createView(FacesContext facescontext, String s)
@@ -71,9 +104,71 @@ public class ViewHandlerImpl
 
     }
 
-    public void renderView(FacesContext facescontext, UIViewRoot uiviewroot) throws IOException, FacesException
+    public void renderView(FacesContext facesContext, UIViewRoot viewRoot) throws IOException, FacesException
     {
-        throw new UnsupportedOperationException("not yet implemented.");
+        // TODO: adapt
+        ServletRequest servletRequest = (ServletRequest)facesContext.getExternalContext().getRequest();
+        ServletContext servletContext = (ServletContext)facesContext.getExternalContext().getContext();
+
+        //Build component tree from parsed JspInfo so that all components
+        //already exist in case a component needs it's children prior to
+        //rendering it's body
+        /*
+        Tree staticTree = JspInfo.getTree(facesContext, tree.getTreeId());
+        TreeCopier tc = new TreeCopier(facesContext);
+        tc.setOverwriteComponents(false);
+        tc.setOverwriteAttributes(false);
+        tc.copyTree(staticTree, tree);
+        */
+
+        //Look for a StateRenderer and prepare for state saving
+        RenderKitFactory rkFactory = (RenderKitFactory)FactoryFinder.getFactory(FactoryFinder.RENDER_KIT_FACTORY);
+        RenderKit renderKit = rkFactory.getRenderKit(viewRoot.getRenderKitId());
+        Renderer renderer = null;
+        try
+        {
+            renderer = renderKit.getRenderer(StateRenderer.TYPE);
+        }
+        catch (Exception e)
+        {
+            //No StateRenderer
+        }
+        if (renderer != null)
+        {
+            try
+            {
+                log.trace("StateRenderer found, calling encodeBegin.");
+                renderer.encodeBegin(facesContext, null);
+            }
+            catch (IOException e)
+            {
+                throw new FacesException("Error saving state", e);
+            }
+        }
+
+        //forward request to JSP page
+        ServletMappingFactory smf = MyFacesFactoryFinder.getServletMappingFactory(servletContext);
+        ServletMapping sm = smf.getServletMapping(servletContext);
+        String forwardURL = sm.mapViewIdToFilename(servletContext, viewRoot.getViewId());
+
+        RequestDispatcher requestDispatcher
+            = servletRequest.getRequestDispatcher(forwardURL);
+        try
+        {
+            requestDispatcher.forward(servletRequest,
+                                      (ServletResponse)facesContext.getExternalContext().getResponse());
+        }
+        catch(IOException ioe)
+        {
+            log.error("IOException in method renderView of class " + this.getClass().getName(), ioe);
+            throw new IOException(ioe.getMessage());
+        }
+        catch(ServletException se)
+        {
+            log.error("ServletException in method renderView of class " + this.getClass().getName(), se);
+            throw new FacesException(se.getMessage(), se);
+        }
+
     }
 
     public UIViewRoot restoreView(FacesContext facescontext, String s)

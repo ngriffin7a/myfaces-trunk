@@ -13,7 +13,7 @@ public interface ServletMapping
     /**
      * Converts the given (response) treeId, so that it can be used as the forward
      * URL by the ViewHandler or as a filename to parse the current JSP.
-     * @see net.sourceforge.myfaces.lifecycle.ViewHandlerJspImpl
+     * @see net.sourceforge.myfaces.application.ViewHandlerImpl
      * @see net.sourceforge.myfaces.renderkit.html.jspinfo.JspViewParser
      */
     public String mapViewIdToFilename(ServletContext servletContext, String viewId);
