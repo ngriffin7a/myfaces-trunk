@@ -119,9 +119,9 @@
             </manifest>
 
             <!-- classes -->
-            <!--fileset dir="${api.classes}"
+            <fileset dir="${api.classes}"
                      includes="**"
-                     excludes=".dependency-info/**/*"/-->
+                     excludes=".dependency-info/**/*"/>
             <fileset dir="${share.classes}"
                      includes="**"
                      excludes=".dependency-info/**/*"/>
