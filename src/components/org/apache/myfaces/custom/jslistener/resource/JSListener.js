@@ -21,11 +21,6 @@ function orgApacheMyfacesJsListenerSetExpressionProperty(
 
         var destElem = document.getElementById(destId);
 
-        if(!destElem)
-        {
-            destElem = document.getElementsByName(destId);
-        }
-
         if(log) logStr+="\n Destination-element: "+destElem;
         if(log) logStr+="\n Type of destination-element: "+typeof(destElem);
         if(log && typeof(destElem)=='object') logStr+="Constructor : " +destElem.constructor;
@@ -43,12 +38,7 @@ function orgApacheMyfacesJsListenerSetExpressionProperty(
 
         if(property)
         {
-            var destElemStr = "destElem";
-
-            if(orgApacheMyfacesJsListenerIsArray(destElem))
-                destElemStr+="[0]";
-
-            destElemStr+=".";
+            var destElemStr = "destElem.";
 
             var valueStr;
 
@@ -87,46 +77,21 @@ function orgApacheMyfacesJsListenerSetExpressionProperty(
 
 }
 
-function orgApacheMyfacesJsListenerIsArray (array)
-{
-    return false;
-
-    /*
-    if ((array != null) && (typeof array == "object"))
-    {
-        if(array.constructor == Array)
-            return true;
-
-        try
-        {
-            var elem = array[0];
-        }
-        catch(e)
-        {
-            return false;
-        }
-
-        return true;
-    }
-
-    return false; */
-}
-
 function orgApacheMyfacesJsListenerReplaceMakro(expression, macroName, elem)
 {
 
     var regEx = new RegExp("\\$"+macroName, "g");
+    expression = expression.replace(regEx,macroName);
 
-    if(orgApacheMyfacesJsListenerIsArray(elem))
+/*    if(orgApacheMyfacesJsListenerIsArray(elem))
     {
         var arrRegEx = new RegExp("\\$"+macroName+"[\\[]([0-9]+)[\\]]", "g");
         expression = expression.replace(arrRegEx,macroName+"[$1]");
         expression = expression.replace(regEx,macroName+"[0]");
     }
     else
-    {
-        expression = expression.replace(regEx,macroName);
-    }
+    {*/
+//    }
 
     return expression;
 }
