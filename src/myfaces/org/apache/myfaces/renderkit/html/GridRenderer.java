@@ -56,6 +56,8 @@ public class GridRenderer
     public static final String TYPE = "Grid";
     private static final String COLUMN_COUNT_ATTR = GridRenderer.class.getName() + ".colcount";
     private static final String ROW_COUNT_ATTR = GridRenderer.class.getName() + ".rowcount";
+    private static final String ROW_CLASSES_ATTR_CACHE = GridRenderer.class.getName() + ".rowclasses";
+    private static final String COLUMN_CLASSES_ATTR_CACHE = GridRenderer.class.getName() + ".colclasses";
     private static final Integer ZERO = new Integer(0);
 
     public String getRendererType()
@@ -211,7 +213,7 @@ public class GridRenderer
         }
         if (style == null)
         {
-            String[] rowStyles = getAttributes(gridComponent, ROW_CLASSES_ATTR);
+            String[] rowStyles = getRowClasses(gridComponent);
             if (rowStyles != null && rowStyles.length > 0)
             {
                 int ref = hasHeaderStyle ? actualRow - 1 : actualRow;
@@ -228,7 +230,7 @@ public class GridRenderer
      */
     private String calcColumnStyle(UIComponent gridComponent, int actualColumn)
     {
-        String[] columnClasses = getAttributes(gridComponent, COLUMN_CLASSES_ATTR);
+        String[] columnClasses = getColumnClasses(gridComponent);
 
         if (columnClasses != null && columnClasses.length > 0)
         {
@@ -238,8 +240,29 @@ public class GridRenderer
         return null;
     }
 
-    private static final String DELIMITER = ",";
+    private String[] getRowClasses(UIComponent gridComponent)
+    {
+        String[] rowClasses = (String[])gridComponent.getAttribute(ROW_CLASSES_ATTR_CACHE);
+        if (rowClasses == null)
+        {
+            rowClasses = getAttributes(gridComponent, ROW_CLASSES_ATTR);
+            gridComponent.setAttribute(ROW_CLASSES_ATTR_CACHE, rowClasses);
+        }
+        return rowClasses;
+    }
 
+    private String[] getColumnClasses(UIComponent gridComponent)
+    {
+        String[] rowClasses = (String[])gridComponent.getAttribute(COLUMN_CLASSES_ATTR_CACHE);
+        if (rowClasses == null)
+        {
+            rowClasses = getAttributes(gridComponent, COLUMN_CLASSES_ATTR);
+            gridComponent.setAttribute(COLUMN_CLASSES_ATTR_CACHE, rowClasses);
+        }
+        return rowClasses;
+    }
+
+    private static final String DELIMITER = ",";
     private String[] getAttributes(UIComponent uiComponent, String attributeName)
     {
         String[] attr = null;
@@ -265,10 +288,6 @@ public class GridRenderer
         {
             attr = new String[0];
         }
-
-        // TODO: not very nice to change uiComponent's attribute
-        //       refactor see ListRenderer
-        uiComponent.setAttribute(attributeName, attr);
 
         return attr;
     }
