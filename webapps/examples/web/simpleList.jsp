@@ -76,7 +76,7 @@ managed beans used:
                        </f:facet>
                        <h:commandLink actionListener="#{countryAction.initCountryForm}" action="go_country" immediate="true" >
                             <h:outputText value="#{country.name}" />
-                            <f:parameter name="id" value="#{country.id}" />
+                            <f:param name="id" value="#{country.id}" />
                        </h:commandLink>
                    </h:column>
 

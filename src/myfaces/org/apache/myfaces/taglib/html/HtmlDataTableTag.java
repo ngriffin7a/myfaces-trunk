@@ -33,14 +33,14 @@ public class HtmlDataTableTag
 {
     //private static final Log log = LogFactory.getLog(MyfacesHtmlDataTableTag.class);
 
-    protected String getDefaultRendererType()
+    public String getComponentType()
     {
         return HtmlDataTable.COMPONENT_TYPE;
     }
 
-    public String getComponentType()
+    protected String getDefaultRendererType()
     {
-        return "javax.faces.DataTable";
+        return "javax.faces.Table";
     }
 
     // UIComponent attributes --> already implemented in MyfacesComponentTag

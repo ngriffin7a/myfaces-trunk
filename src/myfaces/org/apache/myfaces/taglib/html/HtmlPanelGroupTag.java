@@ -29,14 +29,14 @@ public class HtmlPanelGroupTag
 {
     //private static final Log log = LogFactory.getLog(HtmlPanelGroupTag.class);
 
-    protected String getDefaultRendererType()
+    public String getComponentType()
     {
         return HtmlPanelGroup.COMPONENT_TYPE;
     }
 
-    public String getComponentType()
+    protected String getDefaultRendererType()
     {
-        return "javax.faces.PanelGroup";
+        return "javax.faces.Group";
     }
 
     // UIComponent attributes --> already implemented in MyfacesComponentTag

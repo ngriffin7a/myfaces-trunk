@@ -69,7 +69,7 @@
                 </f:verbatim>
                 <h:outputFormat value="#{example_messages['today']}" >
                     <% request.setAttribute("currentDate", new Date()); %>
-                    <f:parameter id="p0" value="#{currentDate}" />
+                    <f:param id="p0" value="#{currentDate}" />
                 </h:outputFormat>
             </h:panelGroup>
         </f:facet>

@@ -33,14 +33,14 @@ public class HtmlPanelGridTag
 {
     //private static final Log log = LogFactory.getLog(HtmlPanelGridTag.class);
 
-    protected String getDefaultRendererType()
+    public String getComponentType()
     {
         return HtmlPanelGrid.COMPONENT_TYPE;
     }
 
-    public String getComponentType()
+    protected String getDefaultRendererType()
     {
-        return "javax.faces.PanelGrid";
+        return "javax.faces.Grid";
     }
 
     // UIComponent attributes --> already implemented in MyfacesComponentTag

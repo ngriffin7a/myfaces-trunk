@@ -101,7 +101,7 @@ managed beans used:
                 </h:form>
 
                 <h:outputFormat value="#{example_messages['msg_price']}" >
-                    <f:parameter value="#{carconf.price}" />
+                    <f:param value="#{carconf.price}" />
                 </h:outputFormat>
 
             </h:panelGroup>

@@ -30,14 +30,14 @@ public class HtmlColumnTag
 {
     //private static final Log log = LogFactory.getLog(HtmlColumnTag.class);
 
-    protected String getDefaultRendererType()
-    {
-        return null;
-    }
-
     public String getComponentType()
     {
         return UIColumn.COMPONENT_TYPE;
+    }
+
+    protected String getDefaultRendererType()
+    {
+        return null;
     }
 
     // UIComponent attributes --> already implemented in MyfacesComponentTag

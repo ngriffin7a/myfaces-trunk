@@ -71,6 +71,8 @@ Mandatory steps
 
 * panelClass attribute in panel_grid -> styleClass
 
+* rename <f:parameter> to <f:param>
+
 faces-config
 ------------
 * navigation-rules: replace <from-action-ref>x.y</from-action-ref> by <from-action>#{x.y}</from-action>     
