@@ -19,6 +19,7 @@
 package net.sourceforge.myfaces.context;
 
 import net.sourceforge.myfaces.util.bean.BeanUtils;
+import net.sourceforge.myfaces.util.logging.LogUtil;
 
 import javax.faces.FacesException;
 import javax.faces.component.UIComponent;
@@ -38,6 +39,7 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.*;
+import java.util.logging.Level;
 
 /**
  * DOCUMENT ME!
@@ -265,6 +267,12 @@ public class FacesContextImpl
             String objName = modelReference.substring(0, i);
             String propName = modelReference.substring(i + 1);
             Object obj = getModelInstance(objName);
+            if (obj == null)
+            {
+                FacesException e = new FacesException("ModelReference " + objName + " is NULL.");
+                LogUtil.getLogger().log(Level.SEVERE, e.getMessage());
+                throw e;
+            }
             return BeanUtils.getBeanPropertyValue(obj, propName);
         }
     }
