@@ -15,6 +15,7 @@
  */
 package net.sourceforge.myfaces.custom.fileupload;
 
+import java.io.UnsupportedEncodingException;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -35,6 +36,9 @@ import org.apache.commons.fileupload.FileUploadException;
  * @author Sylvain Vieujot (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.5  2004/08/16 18:06:47  svieujot
+ * Another bug fix for bug #1001511. Patch submitted by Takashi Okamoto.
+ *
  * Revision 1.4  2004/08/02 04:26:06  svieujot
  * Fix for bug #1001511 : setHeaderEncoding
  *
@@ -58,7 +62,10 @@ public class MultipartRequestWrapper
 		fileUpload = new FileUpload();
 		fileUpload.setSizeMax(maxSize);
 		fileUpload.setFileItemFactory(new DefaultFileItemFactory());
-		fileUpload.setHeaderEncoding( request.getCharacterEncoding() );
+		
+	    String charset = request.getCharacterEncoding();
+		fileUpload.setHeaderEncoding(charset);
+
 		
 		List requestParameters = null;
 		try{
@@ -79,7 +86,22 @@ public class MultipartRequestWrapper
 
     		if (fileItem.isFormField()) {
     			String name = fileItem.getFieldName();
-    			String value = fileItem.getString();
+    			
+    			// The following code avoids commons-fileupload charset problem.
+    			// After fixing commons-fileupload, this code should be
+    			// 
+    			// 	String value = fileItem.getString();
+    			//
+    			String value = null;
+    			if ( charset == null) {
+    			    value = fileItem.getString();
+    			} else {
+    			    try {
+    			        value = new String(fileItem.get(), charset);
+    			    } catch (UnsupportedEncodingException e){
+    			        value = fileItem.getString();
+    			    }
+    			}
     			
     			addTextParameter(name, value);
     		} else { // fileItem is a File
