@@ -1,16 +1,16 @@
 # Don't forget to use double-backslashes in windows paths!
 
-# File path to Java Servlet API archiv version 2.3
+# File path to Java Servlet API archive version 2.3
 servlet.jar = ${project.dir}/lib/servlet.jar
 
 # File path to com.oreilly.servlet package
 cos.jar = ${project.dir}/lib/cos.jar
 
-# File path to JavaServer Faces API archiv version 1.0 EA3
+# File path to JavaServer Faces API archive version 1.0 EA3
 # (not included, please download from http://java.sun.com/j2ee/javaserverfaces/download.html)
 jsf-api.jar = ${project.dir}/lib/jsf-api.jar
 
-# File path of MyFaces archiv to be created
+# File path of MyFaces archive to be created
 myfaces.jar = ${project.dir}/lib/myfaces.jar
 
 # Temporary directory
