@@ -233,6 +233,10 @@
 		     antfile="build.xml"
 		     inheritall="false"
 		     target="tomcat-tagunit-tests"/>
+		<ant dir="${project.dir}/build/tagunit-webapp"
+		     antfile="build.xml"
+		     inheritall="false"
+		     target="tomcat-undeploy-app"/>
 		<ant dir="${project.dir}/build/cactus-webapp"
 		     antfile="build.xml"
 		     inheritall="false"
@@ -245,6 +249,10 @@
 		     antfile="build.xml"
 		     inheritall="false"
 		     target="tomcat-cactus-tests"/>
+		<ant dir="${project.dir}/build/cactus-webapp"
+		     antfile="build.xml"
+		     inheritall="false"
+		     target="tomcat-deploy-app"/>
     </target>
     <target name="clean"
         description="deletes all files that were built (including examples and tagunit)">
