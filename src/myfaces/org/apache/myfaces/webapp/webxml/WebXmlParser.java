@@ -64,7 +64,7 @@ public class WebXmlParser
         {
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
             dbf.setIgnoringComments(true);
-            dbf.setValidating(false);
+            dbf.setValidating(true);
             dbf.setIgnoringElementContentWhitespace(true);
 
             DocumentBuilder db = dbf.newDocumentBuilder();
@@ -114,22 +114,13 @@ public class WebXmlParser
     {
         public InputSource resolveEntity(String publicId, String systemId) throws SAXException, IOException
         {
-            if (systemId == null)
+            if (systemId != null)
             {
-                throw new UnsupportedOperationException("systenId must not be null");
-            }
-
-            if (systemId.equals("http://java.sun.com/dtd/web-app_2_2.dtd"))
-            {
-                return createInputSource(publicId, "javax/servlet/resources/web-app_2_2.dtd");
-            }
-            else if (systemId.equals("http://java.sun.com/dtd/web-app_2_3.dtd"))
-            {
-                return createInputSource(publicId, "javax/servlet/resources/web-app_2_3.dtd");
+                return createInputSource(publicId, systemId);
             }
             else
             {
-                return createInputSource(publicId, systemId);
+                throw new UnsupportedOperationException();
             }
         }
     }
