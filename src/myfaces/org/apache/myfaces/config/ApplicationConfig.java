@@ -91,7 +91,7 @@ public class ApplicationConfig
         _messageBundle = messageBundle.intern();
     }
     
-    public LocaleConfig getLocaleConfig(LocaleConfig localeConfig) 
+    public LocaleConfig getLocaleConfig()
     {
         return _localeConfig;
     }

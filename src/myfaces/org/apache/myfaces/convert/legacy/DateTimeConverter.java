@@ -16,7 +16,7 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package net.sourceforge.myfaces.convert.impl;
+package net.sourceforge.myfaces.convert.legacy;
 
 import net.sourceforge.myfaces.convert.ConverterUtils;
 import net.sourceforge.myfaces.convert.MyFacesConverterException;
@@ -30,14 +30,15 @@ import java.text.ParseException;
 import java.util.Locale;
 
 /**
- * DOCUMENT ME!
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
+ *
+ * @deprecated use {@link net.sourceforge.myfaces.convert.impl.DateTimeConverter}
  */
-public class TimeConverter
+public class DateTimeConverter
     implements Converter
 {
-    private static final String CONVERTER_EXCEPTION_MSG_ID = TimeConverter.class.getName() + ".EXCEPTION";
+    private static final String CONVERTER_EXCEPTION_MSG_ID = DateTimeConverter.class.getName() + ".EXCEPTION";
 
     public Object getAsObject(FacesContext context, UIComponent component, String value)
             throws ConverterException
@@ -47,10 +48,8 @@ public class TimeConverter
             return null;
         }
 
-        //FIXME
-        //Locale locale = context.getLocale();
-        Locale locale = null;
-        DateFormat format = ConverterUtils.getTimeFormat(component, locale);
+        Locale locale = context.getViewRoot().getLocale();
+        DateFormat format = ConverterUtils.getDateTimeFormat(component, locale);
         try
         {
             return format.parse(value);
@@ -58,7 +57,6 @@ public class TimeConverter
         catch (ParseException e)
         {
             throw new MyFacesConverterException(context,
-                                                component,
                                                 CONVERTER_EXCEPTION_MSG_ID,
                                                 value);
         }
@@ -71,10 +69,8 @@ public class TimeConverter
         {
             return "";
         }
-        //FIXME
-        //Locale locale = context.getLocale();
-        Locale locale = null;
-        DateFormat format = ConverterUtils.getTimeFormat(component, locale);
+        Locale locale = context.getViewRoot().getLocale();
+        DateFormat format = ConverterUtils.getDateTimeFormat(component, locale);
         return format.format(value);
     }
 

@@ -21,9 +21,11 @@
     <navigation-handler>net.sourceforge.myfaces.application.NavigationHandlerImpl</navigation-handler>
     <variable-resolver>net.sourceforge.myfaces.el.VariableResolverImpl</variable-resolver>
     <property-resolver>net.sourceforge.myfaces.el.PropertyResolverImpl</property-resolver>
-    <message-bundle><!--TODO--></message-bundle>
+    <!--message-bundle></message-bundle-->
     <locale-config>
-      <default-locale>en</default-locale>
+        <default-locale>en</default-locale>
+        <supported-locale>en</supported-locale>
+        <supported-locale>de</supported-locale>
     </locale-config>
   </application>
 
@@ -251,9 +253,15 @@
   <!-- standard converters -->
 
     <converter>
-        <converter-id>Boolean</converter-id>
-        <converter-class>net.sourceforge.myfaces.convert.impl.BooleanConverter</converter-class>
+        <converter-id>DateTime</converter-id>
+        <converter-class>net.sourceforge.myfaces.convert.impl.DateTimeConverter</converter-class>
     </converter>
+
+    <converter>
+        <converter-id>Number</converter-id>
+        <converter-class>net.sourceforge.myfaces.convert.impl.NumberConverter</converter-class>
+    </converter>
+
     <converter>
         <converter-id>java.lang.Boolean</converter-id>
         <converter-class>net.sourceforge.myfaces.convert.impl.BooleanConverter</converter-class>
@@ -264,22 +272,41 @@
     </converter>
 
     <converter>
-        <converter-id>Long</converter-id>
-        <converter-class>net.sourceforge.myfaces.convert.impl.LongConverter</converter-class>
+        <converter-id>java.lang.Byte</converter-id>
+        <converter-class>net.sourceforge.myfaces.convert.impl.ByteConverter</converter-class>
     </converter>
     <converter>
-        <converter-id>java.lang.Long</converter-id>
-        <converter-class>net.sourceforge.myfaces.convert.impl.LongConverter</converter-class>
-    </converter>
-    <converter>
-        <converter-id>long</converter-id>
-        <converter-class>net.sourceforge.myfaces.convert.impl.LongConverter</converter-class>
+        <converter-id>byte</converter-id>
+        <converter-class>net.sourceforge.myfaces.convert.impl.ByteConverter</converter-class>
     </converter>
 
     <converter>
-        <converter-id>Integer</converter-id>
-        <converter-class>net.sourceforge.myfaces.convert.impl.IntegerConverter</converter-class>
+        <converter-id>java.lang.Character</converter-id>
+        <converter-class>net.sourceforge.myfaces.convert.impl.CharacterConverter</converter-class>
     </converter>
+    <converter>
+        <converter-id>char</converter-id>
+        <converter-class>net.sourceforge.myfaces.convert.impl.CharacterConverter</converter-class>
+    </converter>
+
+    <converter>
+        <converter-id>java.lang.Double</converter-id>
+        <converter-class>net.sourceforge.myfaces.convert.impl.DoubleConverter</converter-class>
+    </converter>
+    <converter>
+        <converter-id>double</converter-id>
+        <converter-class>net.sourceforge.myfaces.convert.impl.DoubleConverter</converter-class>
+    </converter>
+
+    <converter>
+        <converter-id>java.lang.Float</converter-id>
+        <converter-class>net.sourceforge.myfaces.convert.impl.FloatConverter</converter-class>
+    </converter>
+    <converter>
+        <converter-id>float</converter-id>
+        <converter-class>net.sourceforge.myfaces.convert.impl.FloatConverter</converter-class>
+    </converter>
+
     <converter>
         <converter-id>java.lang.Integer</converter-id>
         <converter-class>net.sourceforge.myfaces.convert.impl.IntegerConverter</converter-class>
@@ -290,78 +317,39 @@
     </converter>
 
     <converter>
-        <converter-id>String</converter-id>
-        <converter-class>net.sourceforge.myfaces.convert.impl.StringConverter</converter-class>
+        <converter-id>java.lang.Long</converter-id>
+        <converter-class>net.sourceforge.myfaces.convert.impl.LongConverter</converter-class>
     </converter>
+    <converter>
+        <converter-id>long</converter-id>
+        <converter-class>net.sourceforge.myfaces.convert.impl.LongConverter</converter-class>
+    </converter>
+
+    <converter>
+        <converter-id>java.lang.Short</converter-id>
+        <converter-class>net.sourceforge.myfaces.convert.impl.ShortConverter</converter-class>
+    </converter>
+    <converter>
+        <converter-id>short</converter-id>
+        <converter-class>net.sourceforge.myfaces.convert.impl.ShortConverter</converter-class>
+    </converter>
+
+
+  <!-- MyFaces converters -->
+
     <converter>
         <converter-id>java.lang.String</converter-id>
         <converter-class>net.sourceforge.myfaces.convert.impl.StringConverter</converter-class>
     </converter>
 
     <converter>
-        <converter-id>StringArray</converter-id>
-        <converter-class>net.sourceforge.myfaces.convert.impl.StringArrayConverter</converter-class>
-    </converter>
-    <converter>
         <converter-id>[Ljava.lang.String;</converter-id>
         <converter-class>net.sourceforge.myfaces.convert.impl.StringArrayConverter</converter-class>
     </converter>
 
     <converter>
-        <converter-id>Date</converter-id>
-        <converter-class>net.sourceforge.myfaces.convert.impl.DateConverter</converter-class>
-    </converter>
-    <converter>
-        <converter-id>DateFormat</converter-id>
-        <converter-class>net.sourceforge.myfaces.convert.impl.DateConverter</converter-class>
-    </converter>
-    <converter>
-        <converter-id>java.util.Date</converter-id>
-        <converter-class>net.sourceforge.myfaces.convert.impl.DateConverter</converter-class>
-    </converter>
-    <converter>
-        <converter-id>java.sql.Date</converter-id>
-        <converter-class>net.sourceforge.myfaces.convert.impl.DateConverter</converter-class>
-    </converter>
-
-    <converter>
-        <converter-id>DateTime</converter-id>
-        <converter-class>net.sourceforge.myfaces.convert.impl.DateTimeConverter</converter-class>
-    </converter>
-    <converter>
-        <converter-id>java.sql.Timestamp</converter-id>
-        <converter-class>net.sourceforge.myfaces.convert.impl.DateTimeConverter</converter-class>
-    </converter>
-
-    <converter>
-        <converter-id>Time</converter-id>
-        <converter-class>net.sourceforge.myfaces.convert.impl.TimeConverter</converter-class>
-    </converter>
-    <converter>
-        <converter-id>java.sql.Time</converter-id>
-        <converter-class>net.sourceforge.myfaces.convert.impl.TimeConverter</converter-class>
-    </converter>
-
-    <converter>
-        <converter-id>BigDecimal</converter-id>
-        <converter-class>net.sourceforge.myfaces.convert.impl.BigDecimalConverter</converter-class>
-    </converter>
-    <converter>
         <converter-id>java.math.BigDecimal</converter-id>
         <converter-class>net.sourceforge.myfaces.convert.impl.BigDecimalConverter</converter-class>
-    </converter>
-
-    <converter>
-        <converter-id>Number</converter-id>
-        <converter-class>net.sourceforge.myfaces.convert.impl.NumberConverter</converter-class>
-    </converter>
-    <converter>
-        <converter-id>NumberFormat</converter-id>
-        <converter-class>net.sourceforge.myfaces.convert.impl.NumberConverter</converter-class>
-    </converter>
-    <converter>
-        <converter-id>java.lang.Number</converter-id>
-        <converter-class>net.sourceforge.myfaces.convert.impl.NumberConverter</converter-class>
     </converter>
 
     <converter>
@@ -369,155 +357,6 @@
         <converter-class>net.sourceforge.myfaces.convert.impl.UploadedFileConverter</converter-class>
     </converter>
 
-
-
-<!-- standard message-resources -->
-  <!--TODO: move message-resources-->
-    <!--
-  <message-resources>
-
-      <message-resources-id>javax.faces.context.FACES_API_MESSAGES</message-resources-id>
-
-      <message>
-          <message-id>javax.faces.validator.DoubleRangeValidator.LIMIT</message-id>
-          <severity>ERROR</severity>
-      </message>
-      <message>
-          <message-id>javax.faces.validator.DoubleRangeValidator.MAXIMUM</message-id>
-          <severity>ERROR</severity>
-      </message>
-      <message>
-          <message-id>javax.faces.validator.DoubleRangeValidator.MINIMUM</message-id>
-          <severity>ERROR</severity>
-      </message>
-      <message>
-          <message-id>javax.faces.validator.DoubleRangeValidator.TYPE</message-id>
-          <severity>ERROR</severity>
-      </message>
-
-      <message>
-          <message-id>javax.faces.validator.LengthValidator.LIMIT</message-id>
-          <severity>ERROR</severity>
-      </message>
-      <message>
-          <message-id>javax.faces.validator.LengthValidator.MAXIMUM</message-id>
-          <severity>ERROR</severity>
-      </message>
-      <message>
-          <message-id>javax.faces.validator.LengthValidator.MINIMUM</message-id>
-          <severity>ERROR</severity>
-      </message>
-
-      <message>
-          <message-id>javax.faces.validator.RequiredValidator.FAILED</message-id>
-          <severity>ERROR</severity>
-      </message>
-
-      <message>
-          <message-id>javax.faces.validator.LongRangeValidator.LIMIT</message-id>
-          <severity>ERROR</severity>
-      </message>
-      <message>
-          <message-id>javax.faces.validator.LongRangeValidator.MAXIMUM</message-id>
-          <severity>ERROR</severity>
-      </message>
-      <message>
-          <message-id>javax.faces.validator.LongRangeValidator.MINIMUM</message-id>
-          <severity>ERROR</severity>
-      </message>
-      <message>
-          <message-id>javax.faces.validator.LongRangeValidator.TYPE</message-id>
-          <severity>ERROR</severity>
-      </message>
-
-      <message>
-          <message-id>javax.faces.validator.StringRangeValidator.LIMIT</message-id>
-          <severity>ERROR</severity>
-      </message>
-      <message>
-          <message-id>javax.faces.validator.StringRangeValidator.MAXIMUM</message-id>
-          <severity>ERROR</severity>
-      </message>
-      <message>
-          <message-id>javax.faces.validator.StringRangeValidator.MINIMUM</message-id>
-          <severity>ERROR</severity>
-      </message>
-      <message>
-          <message-id>javax.faces.validator.StringRangeValidator.TYPE</message-id>
-          <severity>ERROR</severity>
-      </message>
-
-  </message-resources>
-        -->
-
-    <!-- RI messages -->
-  <!--TODO: move message-resources-->
-    <!--
-  <message-resources>
-
-      <message-resources-id>javax.faces.context.FACES_IMPL_MESSAGES</message-resources-id>
-
-      <message>
-          <message-id>net.sourceforge.myfaces.convert.impl.BigDecimalConverter.EXCEPTION</message-id>
-          <severity>ERROR</severity>
-      </message>
-
-      <message>
-          <message-id>net.sourceforge.myfaces.convert.impl.LongConverter.EXCEPTION</message-id>
-          <severity>ERROR</severity>
-      </message>
-
-      <message>
-          <message-id>net.sourceforge.myfaces.convert.impl.IntegerConverter.EXCEPTION</message-id>
-          <severity>ERROR</severity>
-      </message>
-
-      <message>
-          <message-id>net.sourceforge.myfaces.convert.impl.BooleanConverter.EXCEPTION</message-id>
-          <severity>ERROR</severity>
-      </message>
-
-      <message>
-          <message-id>net.sourceforge.myfaces.convert.impl.DateConverter.EXCEPTION</message-id>
-          <severity>ERROR</severity>
-      </message>
-
-      <message>
-          <message-id>net.sourceforge.myfaces.convert.impl.DateConverter.TYPE_ERROR</message-id>
-          <severity>ERROR</severity>
-      </message>
-
-      <message>
-          <message-id>net.sourceforge.myfaces.convert.impl.DateTimeConverter.EXCEPTION</message-id>
-          <severity>ERROR</severity>
-      </message>
-
-      <message>
-          <message-id>net.sourceforge.myfaces.convert.impl.TimeConverter.EXCEPTION</message-id>
-          <severity>ERROR</severity>
-      </message>
-
-      <message>
-          <message-id>net.sourceforge.myfaces.convert.impl.NumberConverter.EXCEPTION</message-id>
-          <severity>ERROR</severity>
-      </message>
-
-
-      <message>
-          <message-id>net.sourceforge.myfaces.renderkit.html.ErrorsRenderer.IN_FIELD</message-id>
-          <severity>INFO</severity>
-      </message>
-
-  </message-resources>
-        -->
-
-  <!-- Message Resources Texts -->
-
-  <!--TODO: move message-resources-->
-    <!--
-    &message_resources_en;
-    &message_resources_de;
-    -->
 
   <!-- Standard Validators -->
 

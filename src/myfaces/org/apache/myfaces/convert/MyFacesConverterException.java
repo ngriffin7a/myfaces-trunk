@@ -18,10 +18,10 @@
  */
 package net.sourceforge.myfaces.convert;
 
-import javax.faces.FactoryFinder;
-import javax.faces.application.ApplicationFactory;
+import net.sourceforge.myfaces.MyFacesFactoryFinder;
+import net.sourceforge.myfaces.application.MessageFactory;
+
 import javax.faces.application.FacesMessage;
-import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.ConverterException;
 
@@ -34,18 +34,15 @@ public class MyFacesConverterException
     extends ConverterException
 {
     private FacesContext _facesContext;
-    private UIComponent _comp;
     private String _messageId;
     private String _stringValue;
 
     public MyFacesConverterException(FacesContext facesContext,
-                                     UIComponent comp,
                                      String messageId,
                                      String stringValue)
     {
         super("Converter exception " + messageId);
         _facesContext = facesContext;
-        _comp = comp;
         _messageId = messageId;
         _stringValue = stringValue;
     }
@@ -60,11 +57,19 @@ public class MyFacesConverterException
         return getFacesMessage().getDetail();
     }
 
+    /**
+     * Release reference to FacesException to help garbage collector.
+     */
+    public void release()
+    {
+        _facesContext = null;
+        _messageId = null;
+        _stringValue = null;
+    }
+
     public FacesMessage getFacesMessage()
     {
-        //FIXME
-        // //MessageResources msgRes = facesContext.getApplication().getMessageResources(MessageResources.FACES_IMPL_MESSAGES);
-        //return msgRes.getMessage(_facesContext, _messageId);
-        return null;
+        MessageFactory mf = MyFacesFactoryFinder.getMessageFactory(_facesContext.getExternalContext());
+        return mf.getMessage(_facesContext, _messageId, new Object[] {_stringValue});
     }
 }

@@ -16,7 +16,7 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package net.sourceforge.myfaces.convert.impl;
+package net.sourceforge.myfaces.convert.legacy;
 
 import net.sourceforge.myfaces.convert.ConverterUtils;
 import net.sourceforge.myfaces.convert.MyFacesConverterException;
@@ -31,9 +31,10 @@ import java.util.Date;
 import java.util.Locale;
 
 /**
- * DOCUMENT ME!
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
+ *
+ * @deprecated use {@link net.sourceforge.myfaces.convert.impl.DateTimeConverter}
  */
 public class DateConverter
     implements Converter
@@ -49,9 +50,7 @@ public class DateConverter
             return null;
         }
 
-        //FIXME
-        //Locale locale = context.getLocale();
-        Locale locale = null;
+        Locale locale = context.getViewRoot().getLocale();
         try
         {
             return parse(component, value, DateFormat.SHORT, locale);
@@ -92,7 +91,6 @@ public class DateConverter
                 }
             }
             throw new MyFacesConverterException(context,
-                                                component,
                                                 CONVERTER_EXCEPTION_MSG_ID,
                                                 value);
         }
@@ -117,17 +115,13 @@ public class DateConverter
         }
         else if (value instanceof Date)
         {
-            //FIXME
-            //Locale locale = context.getLocale();
-            Locale locale = null;
+            Locale locale = context.getViewRoot().getLocale();
             DateFormat format = ConverterUtils.getDateFormat(component, locale);
             return format.format(value);
         }
         else if (value instanceof Number)
         {
-            //FIXME
-            //Locale locale = context.getLocale();
-            Locale locale = null;
+            Locale locale = context.getViewRoot().getLocale();
             Date dateValue = new Date(((Number)value).longValue());
             DateFormat format = ConverterUtils.getDateFormat(component, locale);
             return format.format(dateValue);
@@ -135,7 +129,6 @@ public class DateConverter
         else
         {
             throw new MyFacesConverterException(context,
-                                                component,
                                                 CONVERTER_EXCEPTION_TYPE_ERROR_MSG_ID,
                                                 value.getClass().getName());
         }

@@ -201,6 +201,10 @@ public class WebXmlParser
                 {
                     servletClass = XmlUtils.getElementText((Element)n).trim();
                 }
+                else if (n.getNodeName().equals("load-on-startup"))
+                {
+                    //ignore
+                }
                 else
                 {
                     if (log.isWarnEnabled()) log.warn("Ignored element '" + n.getNodeName() + "' as child of '" + servletElem.getNodeName() + "'.");

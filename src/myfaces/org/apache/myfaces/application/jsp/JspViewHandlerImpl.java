@@ -160,23 +160,23 @@ public class JspViewHandlerImpl
             for (Iterator it = facesContext.getApplication().getSupportedLocales(); it.hasNext();)
             {
                 Locale supportLocale = (Locale)it.next();
-                // higher priority to a langauage match over an exact match
+                // higher priority to a language match over an exact match
                 // that occures further down (see Jstl Reference 1.0 8.3.1)
                 if (locale.getLanguage().equals(supportLocale.getLanguage()) &&
                     (supportLocale.getCountry() == null ||
-                    supportLocale.getCountry().length() == 0))
+                     supportLocale.getCountry().length() == 0))
                 {
-                    return locale;
+                    return supportLocale;
                 }
                 else if (supportLocale.equals(locale))
                 {
-                    return locale;
+                    return supportLocale;
                 }
             }
         }
 
-        Locale locale = facesContext.getApplication().getDefaultLocale();
-        return locale != null ? locale : Locale.getDefault();
+        Locale defaultLocale = facesContext.getApplication().getDefaultLocale();
+        return defaultLocale != null ? defaultLocale : Locale.getDefault();
     }
 
 

@@ -22,10 +22,10 @@ package net.sourceforge.myfaces.convert.impl;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public class DateTimeConverter
-        extends javax.faces.convert.DateTimeConverter
+public class DoubleConverter
+        extends javax.faces.convert.DoubleConverter
 {
-    //private static final Log log = LogFactory.getLog(DateTimeConverter.class);
+    //private static final Log log = LogFactory.getLog(DoubleConverter.class);
 
-    //TODO: extend to old DateFormat functionality and MyFaces messages...
+    //TODO: extend to MyFaces messages...
 }

@@ -18,12 +18,12 @@
  */
 package net.sourceforge.myfaces;
 
+import net.sourceforge.myfaces.application.MessageFactory;
 import net.sourceforge.myfaces.config.FacesConfigFactory;
 import net.sourceforge.myfaces.config.FacesConfigFactoryImpl;
 
 import javax.faces.FacesException;
 import javax.faces.context.ExternalContext;
-import javax.servlet.ServletContext;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -36,25 +36,25 @@ import java.util.Map;
 public class MyFacesFactoryFinder
 {
     public static final String FACES_CONFIG_FACTORY = FacesConfigFactory.class.getName();
+    public static final String MESSAGE_FACTORY = MessageFactory.class.getName();
 
     private static final HashMap DEFAULT_FACTORIES = new HashMap();
     static
     {
         DEFAULT_FACTORIES.put(FACES_CONFIG_FACTORY, FacesConfigFactoryImpl.class.getName());
+        DEFAULT_FACTORIES.put(MESSAGE_FACTORY, MessageFactory.class.getName());
     }
 
     public static FacesConfigFactory getFacesConfigFactory(ExternalContext context)
         throws FacesException
     {
-        return (FacesConfigFactory)getFactory(context,
-                                             FACES_CONFIG_FACTORY);
+        return (FacesConfigFactory)getFactory(context, FACES_CONFIG_FACTORY);
     }
 
-    public static FacesConfigFactory getFacesConfigFactory(ServletContext context)
+    public static MessageFactory getMessageFactory(ExternalContext context)
         throws FacesException
     {
-        return (FacesConfigFactory)getFactory(context,
-                                              FACES_CONFIG_FACTORY);
+        return (MessageFactory)getFactory(context, MESSAGE_FACTORY);
     }
 
     private static Object getFactory(ExternalContext context, String factoryName)
@@ -98,43 +98,5 @@ public class MyFacesFactoryFinder
         return fact;
     }
 
-    private static Object getFactory(ServletContext context, String factoryName)
-            throws FacesException
-    {
-        Object fact = context.getAttribute(factoryName);
-        if (fact == null)
-        {
-            String compFactClass = context.getInitParameter(factoryName);
-            if (compFactClass == null)
-            {
-                compFactClass = (String)DEFAULT_FACTORIES.get(factoryName);
-                if (compFactClass == null)
-                {
-                    throw new FacesException("Unknown factory " + factoryName);
-                }
-            }
-
-            try
-            {
-                Class c = Class.forName(compFactClass, true, Thread.currentThread().getContextClassLoader());
-                fact = c.newInstance();
-            }
-            catch (ClassNotFoundException e)
-            {
-                throw new FacesException(e);
-            }
-            catch (InstantiationException e)
-            {
-                throw new FacesException(e);
-            }
-            catch (IllegalAccessException e)
-            {
-                throw new FacesException(e);
-            }
-
-            context.setAttribute(factoryName, fact);
-        }
-        return fact;
-    }
 }
 

@@ -25,8 +25,10 @@ import org.apache.commons.logging.LogFactory;
 import javax.faces.FacesException;
 import javax.faces.component.ConvertibleValueHolder;
 import javax.faces.component.UIComponent;
+import javax.faces.component.UIOutput;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
+import javax.faces.el.ValueBinding;
 
 /**
  * @author Manfred Geiler (latest modification by $Author$)
@@ -49,6 +51,11 @@ public class RendererUtils
         Converter converter = ((ConvertibleValueHolder)component).getConverter();
         if (converter == null && value != null)
         {
+            if (value instanceof String)
+            {
+                return (String)value;
+            }
+
             try
             {
                 converter = facesContext.getApplication().createConverter(value.getClass());
@@ -170,6 +177,32 @@ public class RendererUtils
             }
         }
         return false;
+    }
+
+    
+    public static Converter findValueConverter(FacesContext facesContext,
+                                               UIOutput component)
+    {
+        Converter converter = component.getConverter();
+        if (converter == null)
+        {
+            //Try to find out by value binding
+            ValueBinding vb = component.getValueBinding("value");
+            if (vb != null)
+            {
+                Class valueType = vb.getType(facesContext);
+                try
+                {
+                    converter = facesContext.getApplication().createConverter(valueType);
+                }
+                catch (FacesException e)
+                {
+                    if (log.isWarnEnabled()) log.warn("No converter found for type " + valueType.getName(), e);
+                    converter = null;
+                }
+            }
+        }
+        return converter;
     }
 
 }

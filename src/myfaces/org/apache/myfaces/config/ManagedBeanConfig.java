@@ -18,13 +18,12 @@
  */
 package net.sourceforge.myfaces.config;
 
+import javax.faces.context.FacesContext;
+import javax.faces.el.EvaluationException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-
-import javax.faces.context.FacesContext;
-import javax.faces.el.EvaluationException;
 
 
 /**
@@ -45,9 +44,9 @@ public class ManagedBeanConfig implements Config
 //    private String     _description;
 //    private String     _displayName;
 //    private IconConfig _iconConfig;
-    private List   _propertyConfigList;
-    private String _managedBeanName;
-    private String _managedBeanScope;
+    private List   _propertyConfigList = null;
+    private String _managedBeanName = null;
+    private String _managedBeanScope = null;
 
     //~ Methods ------------------------------------------------------------------------------------
 
@@ -131,20 +130,23 @@ public class ManagedBeanConfig implements Config
             throw new EvaluationException("Unable to instantiate: " + _managedBeanClass, e);
         }
 
-        for (int i = 0, len = _propertyConfigList.size(); i < len; i++)
+        if (_propertyConfigList != null)
         {
-            Object propConfig = _propertyConfigList.get(i);
-            if (propConfig instanceof ManagedPropertyConfig)
+            for (int i = 0, len = _propertyConfigList.size(); i < len; i++)
             {
-                ((ManagedPropertyConfig) propConfig).updateBean(facesContext, bean);
-            }
-            else if (propConfig instanceof MapEntriesConfig)
-            {
-                ((MapEntriesConfig) propConfig).updateBean(facesContext, (Map) bean);
-            }
-            else if (propConfig instanceof ListEntriesConfig)
-            {
-                ((ListEntriesConfig) propConfig).updateBean(facesContext, (List) bean);
+                Object propConfig = _propertyConfigList.get(i);
+                if (propConfig instanceof ManagedPropertyConfig)
+                {
+                    ((ManagedPropertyConfig) propConfig).updateBean(facesContext, bean);
+                }
+                else if (propConfig instanceof MapEntriesConfig)
+                {
+                    ((MapEntriesConfig) propConfig).updateBean(facesContext, (Map) bean);
+                }
+                else if (propConfig instanceof ListEntriesConfig)
+                {
+                    ((ListEntriesConfig) propConfig).updateBean(facesContext, (List) bean);
+                }
             }
         }
 

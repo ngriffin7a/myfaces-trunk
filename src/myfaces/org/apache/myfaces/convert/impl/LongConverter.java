@@ -23,7 +23,6 @@ import net.sourceforge.myfaces.convert.MyFacesConverterException;
 
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
-import javax.faces.convert.Converter;
 import javax.faces.convert.ConverterException;
 import java.text.NumberFormat;
 import java.text.ParseException;
@@ -35,7 +34,7 @@ import java.util.Locale;
  * @version $Revision$ $Date$
  */
 public class LongConverter
-    implements Converter
+    extends javax.faces.convert.LongConverter
 {
     private static final String CONVERTER_EXCEPTION_MSG_ID = LongConverter.class.getName() + ".EXCEPTION";
 
@@ -47,9 +46,7 @@ public class LongConverter
             return null;
         }
 
-        //FIXME
-        //Locale locale = context.getLocale();
-        Locale locale = null;
+        Locale locale = context.getViewRoot().getLocale();
         NumberFormat format = ConverterUtils.getNumberFormat(component, locale);
         try
         {
@@ -59,7 +56,6 @@ public class LongConverter
         catch (ParseException e)
         {
             throw new MyFacesConverterException(context,
-                                                component,
                                                 CONVERTER_EXCEPTION_MSG_ID,
                                                 value);
         }
@@ -72,9 +68,7 @@ public class LongConverter
         {
             return "";
         }
-        //FIXME
-        //Locale locale = context.getLocale();
-        Locale locale = null;
+        Locale locale = context.getViewRoot().getLocale();
         NumberFormat format = ConverterUtils.getNumberFormat(component, locale);
         return format.format(value);
     }

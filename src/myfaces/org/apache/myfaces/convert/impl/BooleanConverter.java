@@ -22,7 +22,6 @@ import net.sourceforge.myfaces.convert.MyFacesConverterException;
 
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
-import javax.faces.convert.Converter;
 import javax.faces.convert.ConverterException;
 import java.util.HashMap;
 import java.util.Map;
@@ -33,7 +32,7 @@ import java.util.Map;
  * @version $Revision$ $Date$
  */
 public class BooleanConverter
-    implements Converter
+    extends javax.faces.convert.BooleanConverter
 {
     private static final String CONVERTER_EXCEPTION_MSG_ID = BooleanConverter.class.getName() + ".EXCEPTION";
 
@@ -62,7 +61,6 @@ public class BooleanConverter
         if (b == null)
         {
             throw new MyFacesConverterException(context,
-                                                component,
                                                 CONVERTER_EXCEPTION_MSG_ID,
                                                 value);
         }

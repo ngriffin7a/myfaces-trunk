@@ -48,9 +48,7 @@ public class NumberConverter
         }
 
 
-        //FIXME
-        //Locale locale = context.getLocale();
-        Locale locale = null;
+        Locale locale = context.getViewRoot().getLocale();
         NumberFormat format = ConverterUtils.getNumberFormat(component, locale);
         try
         {
@@ -59,7 +57,6 @@ public class NumberConverter
         catch (ParseException e)
         {
             throw new MyFacesConverterException(context,
-                                                component,
                                                 CONVERTER_EXCEPTION_MSG_ID,
                                                 value);
         }
@@ -72,9 +69,7 @@ public class NumberConverter
         {
             return "";
         }
-        //FIXME
-        //Locale locale = context.getLocale();
-        Locale locale = null;
+        Locale locale = context.getViewRoot().getLocale();
         NumberFormat format = ConverterUtils.getNumberFormat(component, locale);
         return format.format(value);
     }

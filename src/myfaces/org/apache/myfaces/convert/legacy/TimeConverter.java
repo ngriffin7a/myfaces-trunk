@@ -16,29 +16,28 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package net.sourceforge.myfaces.convert.impl;
+package net.sourceforge.myfaces.convert.legacy;
 
 import net.sourceforge.myfaces.convert.ConverterUtils;
 import net.sourceforge.myfaces.convert.MyFacesConverterException;
 
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
+import javax.faces.convert.Converter;
 import javax.faces.convert.ConverterException;
-import java.math.BigDecimal;
-import java.text.NumberFormat;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.Locale;
 
 /**
+ * DOCUMENT ME!
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
- *
- * @deprecated use NumberConverter
  */
-public class BigDecimalConverter
-    extends javax.faces.convert.BigDecimalConverter
+public class TimeConverter
+    implements Converter
 {
-    private static final String CONVERTER_EXCEPTION_MSG_ID = BigDecimalConverter.class.getName() + ".EXCEPTION";
+    private static final String CONVERTER_EXCEPTION_MSG_ID = TimeConverter.class.getName() + ".EXCEPTION";
 
     public Object getAsObject(FacesContext context, UIComponent component, String value)
             throws ConverterException
@@ -49,11 +48,10 @@ public class BigDecimalConverter
         }
 
         Locale locale = context.getViewRoot().getLocale();
-        NumberFormat format = ConverterUtils.getNumberFormat(component, locale);
+        DateFormat format = ConverterUtils.getTimeFormat(component, locale);
         try
         {
-            Number n = format.parse(value);
-            return new BigDecimal(n.doubleValue());
+            return format.parse(value);
         }
         catch (ParseException e)
         {
@@ -71,9 +69,8 @@ public class BigDecimalConverter
             return "";
         }
         Locale locale = context.getViewRoot().getLocale();
-        NumberFormat format = ConverterUtils.getNumberFormat(component, locale);
+        DateFormat format = ConverterUtils.getTimeFormat(component, locale);
         return format.format(value);
     }
-
 
 }

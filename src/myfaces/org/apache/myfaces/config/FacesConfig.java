@@ -58,8 +58,6 @@ public class FacesConfig
     protected static final String TLD_HTML_URI = "http://java.sun.com/jsf/html";
     protected static final String TLD_EXT_URI = "http://myfaces.sourceforge.net/tld/myfaces_ext_0_4.tld";
 
-    
-
     private FactoryConfig _factoryConfig;
     private LifecycleConfig _lifecycleConfig;
 
@@ -278,6 +276,47 @@ public class FacesConfig
         if (actionListener != null)
         {
             app.setActionListener(actionListener);
+        }
+
+        String messageBundle = appConfig.getMessageBundle();
+        if (messageBundle != null)
+        {
+            app.setMessageBundle(messageBundle);
+        }
+
+        LocaleConfig localeConfig = appConfig.getLocaleConfig();
+        if (localeConfig != null)
+        {
+            if (localeConfig.getDefaultLocale() != null)
+            {
+                app.setDefaultLocale(localeConfig.getDefaultLocale());
+            }
+            else
+            {
+                if (localeConfig.getSupportedLocales() != null &&
+                    !localeConfig.getSupportedLocales().isEmpty())
+                {
+                    Locale first = (Locale)localeConfig.getSupportedLocales().iterator().next();
+                    log.warn("No default locale defined. Using first supported locale " + first);
+                    app.setDefaultLocale(first);
+                }
+                else
+                {
+                    log.error("No default locale and no supported locales defined. Using java default locale.");
+                    app.setDefaultLocale(Locale.getDefault());
+                }
+            }
+
+            if (localeConfig.getSupportedLocales() != null &&
+                !localeConfig.getSupportedLocales().isEmpty())
+            {
+                app.setSupportedLocales(localeConfig.getSupportedLocales());
+            }
+            else
+            {
+                log.warn("No supported locales defined.");
+                app.setSupportedLocales(Collections.EMPTY_SET);
+            }
         }
 
         for (Iterator it = _converterMap.entrySet().iterator(); it.hasNext();)

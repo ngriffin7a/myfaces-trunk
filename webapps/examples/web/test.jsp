@@ -12,7 +12,7 @@
     <p>
     <h:form id="testform">
         <h:output_text value="#{text['empty_selitem']}" />
-        <h:input_text id="testinput" />
+        <h:input_text id="testinput" value="#{calcForm.number1}" />
     </h:form>
 
     <p>view end

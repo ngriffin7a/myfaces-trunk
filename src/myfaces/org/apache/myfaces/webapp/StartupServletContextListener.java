@@ -51,7 +51,7 @@ public class StartupServletContextListener
                                                                              null,
                                                                              null);
 
-            FacesConfigFactory fcf = MyFacesFactoryFinder.getFacesConfigFactory(servletContext);
+            FacesConfigFactory fcf = MyFacesFactoryFinder.getFacesConfigFactory(externalContext);
             FacesConfig facesConfig = fcf.getFacesConfig(externalContext);
             facesConfig.configureAll(externalContext);
 

@@ -282,6 +282,10 @@ public class ConverterUtils
     }
 
 
+
+    /**
+     * @deprecated TODO: remove 
+     */
     public static NumberFormat getNumberFormat(UIComponent component, Locale locale)
     {
         NumberFormat format;
