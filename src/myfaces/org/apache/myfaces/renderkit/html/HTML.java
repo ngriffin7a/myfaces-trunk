@@ -29,10 +29,7 @@ import net.sourceforge.myfaces.util.ArrayUtils;
  */
 public class HTML
 {
-    protected HTML()
-    {
-        // disable public instantiation
-    }
+    private HTML() {} // disable instantiation
 
     public static final String INPUT_CHECKED_VALUE = "checked";
     public static final String INPUT_SELECTED_VALUE = "selected";
