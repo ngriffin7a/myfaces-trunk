@@ -85,6 +85,27 @@
         <managed-bean-class>net.sourceforge.myfaces.examples.listexample.SimpleCountryForm</managed-bean-class>
         <managed-bean-scope>request</managed-bean-scope>
     </managed-bean>
+    
+    <!-- Managed Beans for date.jsp -->
+
+    <managed-bean>
+        <managed-bean-name>date1</managed-bean-name>
+        <managed-bean-class>java.util.Date</managed-bean-class>
+        <managed-bean-scope>request</managed-bean-scope>
+    </managed-bean>
+    
+    <managed-bean>
+        <managed-bean-name>date2</managed-bean-name>
+        <managed-bean-class>java.util.Date</managed-bean-class>
+        <managed-bean-scope>request</managed-bean-scope>
+    </managed-bean>
+
+    <managed-bean>
+        <managed-bean-name>date3</managed-bean-name>
+        <managed-bean-class>java.util.Date</managed-bean-class>
+        <managed-bean-scope>request</managed-bean-scope>
+    </managed-bean>
+
 
 
     <!-- Managed Beans for fileupload.jsp -->
@@ -189,6 +210,11 @@
         <navigation-case>
             <from-outcome>go_calendar</from-outcome>
             <to-view-id>/calendar.jsp</to-view-id>
+        </navigation-case>
+        
+        <navigation-case>
+            <from-outcome>go_date</from-outcome>
+            <to-view-id>/date.jsp</to-view-id>
         </navigation-case>
 
         <navigation-case>
