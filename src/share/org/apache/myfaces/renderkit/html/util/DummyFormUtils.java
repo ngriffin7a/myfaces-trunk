@@ -35,6 +35,10 @@ import java.util.Set;
 /**
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
+ * $Log$
+ * Revision 1.4  2004/04/30 09:18:00  manolito
+ * Log
+ *
  */
 public class DummyFormUtils
 {
