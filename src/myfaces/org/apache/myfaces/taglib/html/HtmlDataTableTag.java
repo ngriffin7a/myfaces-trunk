@@ -73,8 +73,11 @@ public class HtmlDataTableTag
     private String _footerClass;
     private String _headerClass;
     private String _rowClasses;
+
+    // UIData attributes
     private String _rows;
     private String _var;
+    private String _first;
 
 
     protected void setProperties(UIComponent component)
@@ -101,8 +104,8 @@ public class HtmlDataTableTag
         setStringProperty(component, JSFAttr.ROW_CLASSES_ATTR, _rowClasses);
 
         setIntegerProperty(component, JSFAttr.ROWS_ATTR, _rows);
-
         setStringProperty(component, JSFAttr.VAR_ATTR, _var);
+        setIntegerProperty(component, JSFAttr.FIRST_ATTR, _first);
     }
 
 
@@ -199,5 +202,10 @@ public class HtmlDataTableTag
     public void setVar(String var)
     {
         _var = var;
+    }
+
+    public void setFirst(String first)
+    {
+        _first = first;
     }
 }

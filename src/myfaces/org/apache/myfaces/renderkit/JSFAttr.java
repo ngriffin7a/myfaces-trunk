@@ -153,9 +153,10 @@ public class JSFAttr
     public static final String ITEM_LABEL_ATTR             = "itemLabel";
     public static final String ITEM_VALUE_ATTR             = "itemValue";
 
-    // Table attributes
+    // UIData attributes
     public static final String ROWS_ATTR                   = "rows";
     public static final String VAR_ATTR                    = "var";
+    public static final String FIRST_ATTR                  = "first";
 
     //~ Constructors -------------------------------------------------------------------------------
 

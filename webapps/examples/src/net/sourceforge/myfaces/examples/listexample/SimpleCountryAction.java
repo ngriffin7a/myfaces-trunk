@@ -18,50 +18,55 @@
  */
 package net.sourceforge.myfaces.examples.listexample;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import javax.faces.FactoryFinder;
+import javax.faces.application.ApplicationFactory;
+import javax.faces.component.UIComponent;
+import javax.faces.component.UIParameter;
+import javax.faces.context.FacesContext;
+import javax.faces.el.VariableResolver;
 import javax.faces.event.AbortProcessingException;
 import javax.faces.event.ActionEvent;
-import javax.faces.event.ActionListener;
-import javax.faces.event.PhaseId;
+import java.util.Iterator;
 
 /**
  * DOCUMENT ME!
  * @author Manfred Geiler
+ * @author Thomas Spiegl
  * @version $Revision$ $Date$
  */
-public class SimpleCountryController
-    implements ActionListener
+public class SimpleCountryAction
 {
-    public PhaseId getPhaseId()
-    {
-        return PhaseId.APPLY_REQUEST_VALUES;
-    }
+    private static final Log log = LogFactory.getLog(SimpleCountryAction.class);
 
-    public void processAction(ActionEvent event) throws AbortProcessingException
+    public void initCountryForm(ActionEvent actionevent) throws AbortProcessingException
     {
-        /*
-        FIXME
         FacesContext facesContext = FacesContext.getCurrentInstance();
+        Long id = null;
+        for (Iterator it = actionevent.getComponent().getChildren().iterator(); it.hasNext(); )
+        {
+            UIComponent child = (UIComponent)it.next();
+            if (child instanceof UIParameter)
+            {
+                String name = ((UIParameter)child).getName();
+                if (name.equals("id"))
+                {
+                    id = (Long)((UIParameter)child).getValue();
+                }
+            }
+        }
 
-        //Get isoCode from component
-        UIComponent uiCommand = event.getComponent();
-        String isoCode = (String)uiCommand.getAttribute("isoCode");
-        String name = (String)uiCommand.getAttribute("name");
-        BigDecimal size = (BigDecimal)uiCommand.getAttribute("size");
+        if (id == null)
+        {
+            log.fatal("No id parameter given.");
+            throw new AbortProcessingException("No id parameter given.");
+        }
 
-        //get country form and set the isoCode
         ApplicationFactory af = (ApplicationFactory)FactoryFinder.getFactory(FactoryFinder.APPLICATION_FACTORY);
         VariableResolver vr = af.getApplication().getVariableResolver();
         SimpleCountryForm form = (SimpleCountryForm)vr.resolveVariable(facesContext, "countryForm");
-        form.setIsoCode(isoCode);
-        form.setName(name);
-        form.setSize(size);
-
-        //Jump to detail page
-        TreeFactory tf = (TreeFactory)FactoryFinder.getFactory(FactoryFinder.TREE_FACTORY);
-        Tree tree = tf.getTree(facesContext, "/countryForm.jsf");
-        facesContext.setTree(tree);
-        facesContext.renderResponse();
-        */
+        form.setId(id.longValue());
     }
-
 }

@@ -51,7 +51,12 @@ managed beans used:
         <f:facet name="body">
             <h:panel_group id="body">
 
-                <% int rows = 0, cols = 2; %>
+               <h:command_link action="go_country" >
+                    <h:output_text value="#{example_messages['new_country']}" styleClass="standard" />
+               </h:command_link>
+               <f:verbatim><br><br>
+</f:verbatim>
+
                 <h:data_table styleClass="standardTable"
                         headerClass="standardTable_Header"
                         footerClass="standardTable_Footer"
@@ -63,29 +68,19 @@ managed beans used:
                    >
                    <h:column>
                        <f:facet name="header">
-                          <h:output_text id="hdr1" value="Country name" />
+                          <h:output_text value="Country name" />
                        </f:facet>
-                       <h:command_link>
-                            <h:output_text binding="#{country.name}" />
-                            <f:parameter name="isoCode" value="#{country.isoCode}" />
-                            <f:parameter name="name" value="#{country.name}" />
-                            <f:parameter name="size" value="#{country.size}" />
-                            <f:action_listener type="net.sourceforge.myfaces.examples.listexample.SimpleCountryController" />
+                       <h:command_link actionListener="#{countryAction.initCountryForm}" action="go_country" >
+                            <h:output_text value="#{country.name}" />
+                            <f:parameter name="id" value="#{country.id}" />
                        </h:command_link>
                    </h:column>
 
                    <h:column>
                        <f:facet name="header">
-                          <h:output_text id="hdr2" value="Iso-Code" />
+                          <h:output_text value="Iso-Code" />
                        </f:facet>
-                       <h:output_text id="col2" value="country.isoCode" />
-                   </h:column>
-
-                   <h:column>
-                       <f:facet name="header">
-                          <h:output_text id="hdr3" value="Size" />
-                       </f:facet>
-                       <h:output_text id="col3" value="country.size" />
+                       <h:output_text value="#{country.isoCode}" />
                    </h:column>
 
                 </h:data_table>

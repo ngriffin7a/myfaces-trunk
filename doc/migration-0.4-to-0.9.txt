@@ -47,6 +47,17 @@ Mandatory steps
 * rename <h:selectitem> tags to <f:selectitem> and change attributes:
     label --> itemLabel
 
+* tables: see example simpleList.jsp
+          removed: <h:panel_data>
+          new tag: <h:column> (containing facet header and footer)
+          rename:
+            <h:panel_list> --> <h:data_table>
+            panel_list@panelClass --> data_table@styleClass
+          new attributes:
+             panel_list@var
+             panel_list@value
+
+
 
 
 Optional steps (deprecated features)

@@ -312,6 +312,11 @@ public class RendererUtils
     public static void renderChild(FacesContext facesContext, UIComponent child)
             throws IOException
     {
+        if (!child.isRendered())
+        {
+            return;
+        }
+        
         child.encodeBegin(facesContext);
         if (child.getRendersChildren())
         {

@@ -107,6 +107,11 @@
         <managed-bean-scope>application</managed-bean-scope>
     </managed-bean>
 
+    <managed-bean>
+        <managed-bean-name>countryAction</managed-bean-name>
+        <managed-bean-class>net.sourceforge.myfaces.examples.listexample.SimpleCountryAction</managed-bean-class>
+        <managed-bean-scope>application</managed-bean-scope>
+    </managed-bean>
 
 
     <navigation-rule>
@@ -117,75 +122,92 @@
 
         <navigation-case>
             <from-outcome>go_home</from-outcome>
-            <to-view-id>/home.jsf</to-view-id>
+            <to-view-id>/home.jsp</to-view-id>
         </navigation-case>
 
         <navigation-case>
             <from-outcome>go_sample1</from-outcome>
-            <to-view-id>/sample1.jsf</to-view-id>
+            <to-view-id>/sample1.jsp</to-view-id>
         </navigation-case>
 
         <navigation-case>
             <from-outcome>go_sample2</from-outcome>
-            <to-view-id>/sample2.jsf</to-view-id>
+            <to-view-id>/sample2.jsp</to-view-id>
         </navigation-case>
 
         <navigation-case>
             <from-outcome>go_simpleList</from-outcome>
-            <to-view-id>/simpleList.jsf</to-view-id>
+            <to-view-id>/simpleList.jsp</to-view-id>
         </navigation-case>
 
         <navigation-case>
             <from-outcome>go_simpleSortList</from-outcome>
-            <to-view-id>/simpleSortList.jsf</to-view-id>
+            <to-view-id>/simpleSortList.jsp</to-view-id>
         </navigation-case>
 
         <navigation-case>
             <from-outcome>go_selectbox</from-outcome>
-            <to-view-id>/selectbox.jsf</to-view-id>
+            <to-view-id>/selectbox.jsp</to-view-id>
         </navigation-case>
 
         <navigation-case>
             <from-outcome>go_fileupload</from-outcome>
-            <to-view-id>/fileupload.jsf</to-view-id>
+            <to-view-id>/fileupload.jsp</to-view-id>
         </navigation-case>
 
         <navigation-case>
             <from-outcome>go_tabbedPane</from-outcome>
-            <to-view-id>/tabbedPane.jsf</to-view-id>
+            <to-view-id>/tabbedPane.jsp</to-view-id>
         </navigation-case>
 
         <navigation-case>
             <from-outcome>go_features</from-outcome>
-            <to-view-id>/features.jsf</to-view-id>
+            <to-view-id>/features.jsp</to-view-id>
         </navigation-case>
 
         <navigation-case>
             <from-outcome>go_options</from-outcome>
-            <to-view-id>/options.jsf</to-view-id>
+            <to-view-id>/options.jsp</to-view-id>
         </navigation-case>
 
         <navigation-case>
             <from-outcome>go_contact</from-outcome>
-            <to-view-id>/contact.jsf</to-view-id>
+            <to-view-id>/contact.jsp</to-view-id>
         </navigation-case>
 
         <navigation-case>
             <from-outcome>go_copyright</from-outcome>
-            <to-view-id>/copyright.jsf</to-view-id>
+            <to-view-id>/copyright.jsp</to-view-id>
         </navigation-case>
 
     </navigation-rule>
 
-
     <navigation-rule>
         <from-view-id>/sample1.jsp</from-view-id>
-
         <navigation-case>
             <from-outcome>jump_home</from-outcome>
-            <to-view-id>/home.jsf</to-view-id>
+            <to-view-id>/home.jsp</to-view-id>
         </navigation-case>
+    </navigation-rule>
 
+    <navigation-rule>
+        <from-view-id>/simpleList.jsp</from-view-id>
+        <navigation-case>
+            <from-outcome>go_country</from-outcome>
+            <to-view-id>/countryForm.jsp</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+
+    <navigation-rule>
+        <from-view-id>/countryForm.jsp</from-view-id>
+        <navigation-case>
+            <from-outcome>cancel</from-outcome>
+            <to-view-id>/simpleList.jsp</to-view-id>
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>ok_next</from-outcome>
+            <to-view-id>/simpleList.jsp</to-view-id>
+        </navigation-case>
     </navigation-rule>
 
 </faces-config>

@@ -40,17 +40,43 @@
             bodyClass="pageBody"
             footerClass="pageFooter" >
 
+        <%@include file="inc/page_header.jsp" %>
+        <%@include file="inc/navigation.jsp"  %>
+
+
         <f:facet name="body">
-            <h:panel_group id="body">
+            <h:panel_group>
+            <h:form id="countryForm" name="countryForm">
+                <x:save_state value="#{countryForm.id}" />
+                <h:panel_grid columns="2" styleClass="standardTable" >
+                    <h:output_label for="name" value="#{example_messages['label_country_name']}"/>
+                    <h:panel_group>
+                        <h:input_text id="name" value="#{countryForm.name}" required="true" />
+                        <h:message for="countryForm:name" styleClass="error" showDetail="true" showSummary="false" />
+                    </h:panel_group>
 
-                <h:output_errors id="errors" />
 
-                <h:form formName="countryForm">
-                    <h:input_text id="isoCode" valueRef="countryForm.isoCode"></h:input_text><br>
-                    <h:input_text id="name" valueRef="countryForm.name"></h:input_text>
-                    <h:input_text id="size" valueRef="countryForm.size"></h:input_text>
-                </h:form>
+                    <h:output_label for="isoCode" value="#{example_messages['label_country_iso']}"/>
+                    <h:panel_group>
+                        <h:input_text id="isoCode" value="#{countryForm.isoCode}" required="true">
+                            <f:validate_length maximum="2" minimum="2"/>
+                        </h:input_text>
+                        <h:message for="countryForm:isoCode" styleClass="error" showDetail="true" showSummary="false" />
+                    </h:panel_group>
 
+                    <h:panel_group/>
+                    <h:panel_group>
+                        <h:command_button action="#{countryForm.save}" value="#{example_messages['button_save']}" />
+                        <f:verbatim>&nbsp;</f:verbatim>
+                        <h:command_button action="cancel" immediate="true" value="#{example_messages['button_cancel']}" />
+                        <f:verbatim>&nbsp;</f:verbatim>
+                        <h:command_button action="#{countryForm.delete}" immediate="true" value="#{example_messages['button_delete']}" />
+                        <f:verbatim>&nbsp;</f:verbatim>
+                        <h:command_button action="#{countryForm.apply}" value="#{example_messages['button_apply']}" />
+                    </h:panel_group>
+
+                </h:panel_grid>
+            </h:form>
             </h:panel_group>
         </f:facet>
 

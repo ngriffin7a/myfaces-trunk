@@ -24,24 +24,38 @@ import java.math.BigDecimal;
 /**
  * DOCUMENT ME!
  * @author Manfred Geiler (latest modification by $Author$)
+ * @author Thomas Spiegl
  * @version $Revision$ $Date$
  */
 public class SimpleCountryForm
 {
-    private String _isoCode = null;
-    private String _name = null;
-    private BigDecimal _size = null;
+    private long _id;
+    private String _name;
+    private String _isoCode;
+
+    public long getId()
+    {
+        return _id;
+    }
+
+    public void setId(long id)
+    {
+        _id = id;
+        if (_id > 0)
+        {
+            SimpleCountry simpleCountry = SimpleCountryList.getSimpleCountry(_id);
+            if (simpleCountry == null)
+            {
+                throw new IllegalStateException("could not find country with id " + _id);
+            }
+            _name = simpleCountry.getName();
+            _isoCode = simpleCountry.getIsoCode();
+        }
+    }
 
     public void setIsoCode(String isoCode)
     {
         _isoCode = isoCode;
-        /*
-        if (_name == null)
-        {
-            Locale currLocale = FacesContext.getCurrentInstance().getLocale();
-            _name = new Locale("", isoCode).getDisplayCountry(currLocale);
-        }
-        */
     }
 
     public String getIsoCode()
@@ -59,13 +73,26 @@ public class SimpleCountryForm
         _name = name;
     }
 
-    public BigDecimal getSize()
+    private SimpleCountry getSimpleCountry()
     {
-        return _size;
+        return new SimpleCountry(_id, _name, _isoCode, null);
     }
 
-    public void setSize(BigDecimal size)
+    public String save()
     {
-        _size = size;
+        SimpleCountryList.saveSimpleCountry(getSimpleCountry());
+        return "ok_next";
+    }
+
+    public String delete()
+    {
+        SimpleCountryList.deleteSimpleCountry(getSimpleCountry());
+        return "ok_next";
+    }
+
+    public String apply()
+    {
+        SimpleCountryList.saveSimpleCountry(getSimpleCountry());
+        return "ok";
     }
 }

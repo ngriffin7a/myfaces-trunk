@@ -20,19 +20,18 @@ package net.sourceforge.myfaces.renderkit.html;
 
 import net.sourceforge.myfaces.renderkit.RendererUtils;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLUtil;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
-import javax.faces.component.UIComponent;
-import javax.faces.component.UIData;
 import javax.faces.component.UIColumn;
+import javax.faces.component.UIComponent;
 import javax.faces.component.html.HtmlDataTable;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 import java.io.IOException;
 import java.util.Iterator;
+import java.util.StringTokenizer;
 import java.util.List;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 /**
  * DOCUMENT ME!
@@ -52,6 +51,7 @@ public class HtmlTableRenderer
 
         ResponseWriter writer = facesContext.getResponseWriter();
 
+        writer.write("\n");
         writer.startElement(HTML.TABLE_ELEM, dataTable);
         HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML.TABLE_PASSTHROUGH_ATTRIBUTES);
 
@@ -60,19 +60,29 @@ public class HtmlTableRenderer
 
     public void encodeChildren(FacesContext facesContext, UIComponent uiComponent) throws IOException
     {
+        RendererUtils.checkParamValidity(facesContext, uiComponent, HtmlDataTable.class);
+
         ResponseWriter writer = facesContext.getResponseWriter();
-        UIData uiData = (UIData)uiComponent;
-        uiData.getRows();
+        HtmlDataTable uiData = (HtmlDataTable)uiComponent;
 
         writer.startElement("tbody", uiComponent);
 
-        int displayRows = uiData.getRows();
-        if (displayRows == 0)
+        int first = uiData.getFirst() - 1;
+        if (first < 0)
         {
-            displayRows = uiData.getRowCount();
+            first = 0;
         }
 
-        for (int i = 0; i < displayRows; i++)
+        int rowCount = uiData.getRowCount();
+        int maxRows = uiData.getRows();
+        if (maxRows == 0)
+        {
+            maxRows = rowCount;
+        }
+
+        Styles styles = new Styles(uiData.getRowClasses(), uiData.getColumnClasses());
+
+        for (int i = first; i < rowCount && i < maxRows; i++)
         {
             uiData.setRowIndex(i);
             if (!uiData.isRowAvailable())
@@ -82,29 +92,44 @@ public class HtmlTableRenderer
             }
 
             writer.startElement("tr", uiComponent);
-            for (Iterator it = uiComponent.getChildren().iterator(); it.hasNext(); )
+            if (styles.hasRowStyle())
             {
-                UIColumn uiColumn = (UIColumn)it.next();
+                String rowStyle = styles.getRowStyle(i);
+                writer.writeAttribute("class", rowStyle, null);
+            }
+
+            List children = uiComponent.getChildren();
+            for (int j = 0, size = uiComponent.getChildCount(); j < size; j++)
+            {
+                UIColumn uiColumn = (UIColumn)children.get(j);
                 if (uiColumn.isRendered())
                 {
                     writer.startElement("td", uiComponent);
-                    encodeRecursive(facesContext, uiColumn);
+                    if (styles.hasColumnStyle())
+                    {
+                        String columnStyle = styles.getColumnStyle(j);
+                        writer.writeAttribute("class", columnStyle, null);
+                    }
+                    RendererUtils.renderChild(facesContext, uiColumn);
                     writer.endElement("td");
                 }
             }
             writer.endElement("tr");
+            writer.write("\n");
         }
-        writer.write("tbody");
+        writer.endElement("tbody");
     }
 
     public void encodeEnd(FacesContext facesContext, UIComponent uiComponent) throws IOException
     {
+        RendererUtils.checkParamValidity(facesContext, uiComponent, HtmlDataTable.class);
+
         ResponseWriter writer = facesContext.getResponseWriter();
-        writeFacet(facesContext, uiComponent, "footer");
+        writeFacet(facesContext, (HtmlDataTable)uiComponent, "footer");
         writer.endElement(HTML.TABLE_ELEM);
     }
 
-    private void writeFacet(FacesContext facesContext, UIComponent uiData, String facetName) throws IOException
+    private void writeFacet(FacesContext facesContext, HtmlDataTable uiData, String facetName) throws IOException
     {
         boolean foundFacet = false;
         for (Iterator it = uiData.getChildren().iterator(); it.hasNext(); )
@@ -124,9 +149,15 @@ public class HtmlTableRenderer
         {
             ResponseWriter writer = facesContext.getResponseWriter();
 
-            String elemName = facetName.equals("header") ? "thead" : "tfoot";
+            boolean isHeader = facetName.equals("header");
+            String elemName = isHeader ? "thead" : "tfoot";
             writer.startElement(elemName, uiData);
             writer.startElement("tr", uiData);
+            String style = isHeader ? uiData.getHeaderClass() : uiData.getFooterClass();
+            if (style != null && style.length() > 0)
+            {
+                writer.writeAttribute("class", style, null);
+            }
             for (Iterator it = uiData.getChildren().iterator(); it.hasNext(); )
             {
                 UIColumn uiColumn = (UIColumn)it.next();
@@ -137,32 +168,75 @@ public class HtmlTableRenderer
                     writer.startElement("td", uiData);
                     if (headerComp != null)
                     {
-                        encodeRecursive(facesContext, headerComp);
+                        RendererUtils.renderChild(facesContext, headerComp);
                     }
                     writer.endElement("td");
                 }
             }
             writer.endElement("tr");
+            writer.write("\n");
             writer.endElement(elemName);
         }
     }
 
-    private void encodeRecursive(FacesContext facesContext, UIComponent uiComponent) throws IOException
+
+    //-------------------------------------------------------------
+    // Helper class Styles
+    //-------------------------------------------------------------
+    private static class Styles
     {
-        uiComponent.encodeBegin(facesContext);
-        if (uiComponent.getRendersChildren())
+        //~ Instance fields ------------------------------------------------------------------------
+
+        private String[] _columnStyle;
+        private String[] _rowStyle;
+
+        //~ Constructors ---------------------------------------------------------------------------
+
+        Styles(String rowStyles, String columnStyles)
         {
-            uiComponent.encodeChildren(facesContext);
-        }
-        else
-        {
-            List childs = uiComponent.getChildren();
-            for (int i = 0, size = childs.size(); i < size; i++)
+            StringTokenizer tokenizer = new StringTokenizer(rowStyles, ",");
+            _rowStyle = new String[tokenizer.countTokens()];
+            for (int i = 0; tokenizer.hasMoreTokens(); i++)
             {
-                encodeRecursive (facesContext, (UIComponent)childs.get(i));
+                _rowStyle[i] = tokenizer.nextToken().trim();
+            }
+            tokenizer = new StringTokenizer(columnStyles, ",");
+            _columnStyle = new String[tokenizer.countTokens()];
+            for (int i = 0; tokenizer.hasMoreTokens(); i++)
+            {
+                _columnStyle[i] = tokenizer.nextToken().trim();
             }
         }
-        uiComponent.encodeEnd(facesContext);
+
+        public String getRowStyle(int idx)
+        {
+            if (!hasRowStyle())
+            {
+                return null;
+            }
+            return _rowStyle[idx % _rowStyle.length];
+        }
+
+        public String getColumnStyle(int idx)
+        {
+            if (!hasColumnStyle())
+            {
+                return null;
+            }
+            return _columnStyle[idx % _columnStyle.length];
+        }
+
+        public boolean hasRowStyle()
+        {
+            return _rowStyle.length > 0;
+        }
+
+        public boolean hasColumnStyle()
+        {
+            return _columnStyle.length > 0;
+        }
+
     }
+
 
 }

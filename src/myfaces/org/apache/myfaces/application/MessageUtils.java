@@ -16,67 +16,36 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package net.sourceforge.myfaces.examples.listexample;
+package net.sourceforge.myfaces.application;
 
-import java.math.BigDecimal;
+import net.sourceforge.myfaces.MyFacesFactoryFinder;
+
+import javax.faces.context.FacesContext;
+import javax.faces.application.FacesMessage;
 
 /**
  * DOCUMENT ME!
+ * 
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public class SimpleCountry
+public class MessageUtils
 {
-    private long _id;
-    private String _name;
-    private String _isoCode;
-    private BigDecimal _size;
-
-    public SimpleCountry(long id, String name, String isoCode, BigDecimal size)
+    public static FacesMessage getMessage(String messageId, Object[] args)
     {
-        _id = id;
-        _name = name;
-        _isoCode = isoCode;
-        _size = size;
+        FacesContext facesContext = FacesContext.getCurrentInstance();
+        return MyFacesFactoryFinder.getMessageFactory(
+            facesContext.getExternalContext()).getMessage(facesContext, facesContext.getViewRoot().getLocale(), messageId, args);
     }
 
-    public long getId()
+    public static void addMessage(String messageId, Object[] args)
     {
-        return _id;
+        addMessage(null, messageId, args);
     }
 
-    public String getName()
+    public static void addMessage(String clientId, String messageId, Object[] args)
     {
-        return _name;
-    }
-
-    public String getIsoCode()
-    {
-        return _isoCode;
-    }
-
-    public BigDecimal getSize()
-    {
-        return _size;
-    }
-
-    public void setId(long id)
-    {
-        _id = id;
-    }
-
-    public void setIsoCode(String isoCode)
-    {
-        _isoCode = isoCode;
-    }
-
-    public void setName(String name)
-    {
-        _name = name;
-    }
-
-    public void setSize(BigDecimal size)
-    {
-        _size = size;
+        FacesContext facesContext = FacesContext.getCurrentInstance();
+        facesContext.addMessage(clientId, getMessage(messageId, args));
     }
 }

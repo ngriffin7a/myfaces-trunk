@@ -7,6 +7,13 @@
             <description>MethodBinding pointing at the application action to be invoked, if this UIComponent is activated by the user, during the Apply Request Values or Invoke Application phase of the request processing lifecycle, depending on the value of the immediate property.</description>
         </attribute>
         <attribute>
+            <name>actionListener</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
+            <type>java.lang.String</type>
+            <description>MethodBinding pointing at method acception an ActionEvent with return type void.</description>
+        </attribute>
+        <attribute>
             <name>immediate</name>
             <required>false</required>
             <rtexprvalue>false</rtexprvalue>

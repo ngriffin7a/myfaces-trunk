@@ -21,9 +21,12 @@ package net.sourceforge.myfaces.taglib.html;
 import net.sourceforge.myfaces.el.SimpleActionMethodBinding;
 import net.sourceforge.myfaces.renderkit.JSFAttr;
 import net.sourceforge.myfaces.renderkit.html.HTML;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import javax.faces.component.UICommand;
 import javax.faces.component.UIComponent;
+import javax.faces.context.FacesContext;
 import javax.faces.el.MethodBinding;
 
 
@@ -36,6 +39,8 @@ import javax.faces.el.MethodBinding;
 public class HtmlCommandLinkTag
     extends HtmlComponentTag
 {
+    private static final Log log = LogFactory.getLog(HtmlCommandLinkTag.class);
+
     public String getComponentType()
     {
         return "CommandLink";
@@ -73,6 +78,7 @@ public class HtmlCommandLinkTag
     // UICommand attributes
     private String _action;
     private String _immediate;
+    private String _actionListener;
 
     protected void setProperties(UIComponent component)
     {
@@ -102,6 +108,20 @@ public class HtmlCommandLinkTag
                 mb = new SimpleActionMethodBinding(_action);
             }
             ((UICommand)component).setAction(mb);
+        }
+
+        if (_actionListener != null)
+        {
+            if (isValueReference(_actionListener))
+            {
+                Class args[] = {javax.faces.event.ActionEvent.class};
+                MethodBinding mb = FacesContext.getCurrentInstance().getApplication().createMethodBinding(_actionListener, args);
+                ((UICommand)component).setActionListener(mb);
+            }
+            else
+            {
+                log.error("Invalid expression " + _actionListener);
+            }
         }
 
         setBooleanProperty(component, JSFAttr.IMMEDIATE_ATTR, _immediate);
@@ -170,5 +190,10 @@ public class HtmlCommandLinkTag
     public void setImmediate(String immediate)
     {
         _immediate = immediate;
+    }
+
+    public void setActionListener(String actionListener)
+    {
+        _actionListener = actionListener;
     }
 }
