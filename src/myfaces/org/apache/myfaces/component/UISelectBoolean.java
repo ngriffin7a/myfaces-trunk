@@ -16,36 +16,14 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package net.sourceforge.myfaces.examples.common;
-
-import javax.faces.event.ActionListener;
-import javax.faces.event.ActionEvent;
-import javax.faces.event.AbortProcessingException;
-import javax.faces.event.PhaseId;
-import javax.faces.context.FacesContext;
+package net.sourceforge.myfaces.component;
 
 /**
  * DOCUMENT ME!
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public class CarConfiguratorActionListener
-    implements ActionListener
+public class UISelectBoolean
+    extends javax.faces.component.UISelectBoolean
 {
-    public void processAction(ActionEvent event) throws AbortProcessingException
-    {
-        String commandName = event.getActionCommand();
-        FacesContext context = FacesContext.getCurrentInstance();
-
-        CarConfigurator list = (CarConfigurator)context.getModelValue("carconf");
-        if (list != null && commandName.equals("calcPrice"))
-        {
-            list.calcPrice();
-        }
-    }
-
-    public PhaseId getPhaseId()
-    {
-        return PhaseId.UPDATE_MODEL_VALUES;
-    }
 }

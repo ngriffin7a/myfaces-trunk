@@ -31,7 +31,7 @@
 
 <body>
 
-<jsp:useBean id="simpleList" class="net.sourceforge.myfaces.examples.common.CarConfigurator" scope="request" />
+<jsp:useBean id="carconf" class="net.sourceforge.myfaces.examples.common.CarConfigurator" scope="request" />
 
 <h:use_faces>
 
@@ -43,26 +43,32 @@
             <h:form formName="formName" >
 
                 <h:output_label for="selone_lb" key="label_cars" bundle="net.sourceforge.myfaces.examples.resource.example_messages"></h:output_label>
-                <h:selectone_listbox modelReference="simpleList.car" >
-                    <h:selectitems id="selone_lb_cars" modelReference="simpleList.cars" />
+                <h:selectone_listbox modelReference="carconf.car" >
+                    <h:selectitems id="selone_lb_cars" modelReference="carconf.cars" />
                 </h:selectone_listbox>
 
                 <br>
                 <br>
 
                 <h:output_label for="selone_menu" key="label_colors" bundle="net.sourceforge.myfaces.examples.resource.example_messages"></h:output_label>
-                <h:selectone_menu size="3" modelReference="simpleList.color" >
+                <h:selectone_menu size="3" modelReference="carconf.color" >
                     <h:selectitem key="empty_selitem" bundle="net.sourceforge.myfaces.examples.resource.example_messages" ></h:selectitem>
-                    <h:selectitems modelReference="simpleList.colors" />
+                    <h:selectitems modelReference="carconf.colors" />
                 </h:selectone_menu>
 
                 <br>
                 <br>
 
                 <h:output_label for="selone_menu" key="label_extras" bundle="net.sourceforge.myfaces.examples.resource.example_messages"></h:output_label>
-                <h:selectmany_listbox modelReference="simpleList.extras" >
-                    <h:selectitems modelReference="simpleList.extrasList" />
+                <h:selectmany_listbox modelReference="carconf.extras" >
+                    <h:selectitems modelReference="carconf.extrasList" />
                 </h:selectmany_listbox>
+
+                <br>
+                <br>
+
+                <h:selectboolean_checkbox id="cb1" modelReference="carconf.discount"></h:selectboolean_checkbox>
+                <h:output_label for="cb1" key="discount_1" bundle="net.sourceforge.myfaces.examples.resource.example_messages"></h:output_label>
 
                 <br>
                 <br>
@@ -73,7 +79,7 @@
             </h:form>
 
             <h:message key="msg_price" bundle="net.sourceforge.myfaces.examples.resource.example_messages" >
-                <h:parameter modelReference="simpleList.price" />
+                <h:parameter modelReference="carconf.price" />
             </h:message>
 
 

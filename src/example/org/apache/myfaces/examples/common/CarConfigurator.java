@@ -39,6 +39,7 @@ public class CarConfigurator
     private List _extrasList;
     private BigDecimal _price = new BigDecimal(0);
     private String[] _extras;
+    private Boolean _discount;
     private String _car;
     private String _color;
     private HashMap _priceList = new HashMap();
@@ -61,7 +62,7 @@ public class CarConfigurator
             _cars.add(new SelectItem("c2", "PMW 321u", null));
             _cars.add(new SelectItem("c3", "Masta ZX7", null));
             _cars.add(new SelectItem("c4", "Renolt ESP", null));
-            _cars.add(new SelectItem("c5", "Greisler V", null));
+            _cars.add(new SelectItem("c5", "WV Lumpo", null));
 
             _colors.add(new LocalizedSelectItem("color_black"));
             _colors.add(new LocalizedSelectItem("color_blue"));
@@ -74,7 +75,7 @@ public class CarConfigurator
             _extrasList.add(new LocalizedSelectItem("extra_leaderseat"));
 
             _priceList.put("c1", new BigDecimal(30000));
-            _priceList.put("c2", new BigDecimal(320000));
+            _priceList.put("c2", new BigDecimal(32000));
             _priceList.put("c3", new BigDecimal(20000));
             _priceList.put("c4", new BigDecimal(25000));
             _priceList.put("c5", new BigDecimal(10000));
@@ -149,6 +150,16 @@ public class CarConfigurator
         _extras = extras;
     }
 
+    public Boolean getDiscount()
+    {
+        return _discount;
+    }
+
+    public void setDiscount(Boolean discount)
+    {
+        _discount = discount;
+    }
+
     public void calcPrice()
     {
         init();
@@ -179,6 +190,11 @@ public class CarConfigurator
                 String extra = extras[i];
                 _price = _price.add((BigDecimal)_priceListExtras.get(extra));
             }
+        }
+
+        if (_discount != null && _discount.booleanValue())
+        {
+            _price = _price.multiply(new BigDecimal(0.95));
         }
     }
 }

@@ -51,14 +51,29 @@ public class CommonAttributes
         for (int i = 0; i < attributes.length; i++)
         {
             String attrName = attributes[i];
-            String value = (String)component.getAttribute(attrName);
-            if (value != null && value.length() > 0)
+            Object value = (Object)component.getAttribute(attrName);
+            if (value != null)
             {
-                writer.write(" ");
-                writer.write(attrName);
-                writer.write("\"");
-                writer.write(HTMLEncoder.encode(value, false, false));
-                writer.write("\"");
+                if (value instanceof String &&
+                    ((String)value).length() > 0)
+                {
+                    writer.write(" ");
+                    writer.write(attrName);
+                    writer.write("\"");
+                    writer.write(HTMLEncoder.encode((String)value, false, false));
+                    writer.write("\"");
+                }
+                else if (value instanceof Boolean)
+                {
+                    writer.write(" ");
+                    writer.write(attrName);
+                    writer.write("\"");
+                    writer.write(HTMLEncoder.encode(
+                        ((Boolean)value).booleanValue() ? "true" : "false",
+                        false,
+                        false));
+                    writer.write("\"");
+                }
             }
         }
     }
