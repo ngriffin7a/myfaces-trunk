@@ -41,6 +41,9 @@ import org.apache.myfaces.renderkit.html.HTML;
  * @author Sylvain Vieujot (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.12  2004/12/03 21:15:21  svieujot
+ * define AdditionalHeaderInfoToRender.equals to prevent several include of the same header info.
+ *
  * Revision 1.11  2004/12/03 20:50:52  svieujot
  * Minor bugfix, and add <script ... defer="true"> capability.
  *
@@ -122,7 +125,7 @@ public class AddResource {
     public static void addJavaScriptToHeader(Class componentClass, String resourceFileName, boolean defer, FacesContext context){
         AdditionalHeaderInfoToRender jsInfo =
             new AdditionalHeaderInfoToRender(AdditionalHeaderInfoToRender.TYPE_JS, componentClass, resourceFileName, defer);
-        getAdditionalHeaderInfoToRender(context).add( jsInfo );
+        addAdditionalHeaderInfoToRender(context, jsInfo );
     }
 
     /**
@@ -132,7 +135,7 @@ public class AddResource {
     public static void addStyleSheet(Class componentClass, String resourceFileName, FacesContext context){
         AdditionalHeaderInfoToRender cssInfo =
             new AdditionalHeaderInfoToRender(AdditionalHeaderInfoToRender.TYPE_CSS, componentClass, resourceFileName);
-        getAdditionalHeaderInfoToRender(context).add( cssInfo );
+        addAdditionalHeaderInfoToRender(context, cssInfo );
     }
     
     /**
@@ -142,7 +145,7 @@ public class AddResource {
     public static void addInlineStyleToHeader(String inlineStyle, FacesContext context){
         AdditionalHeaderInfoToRender cssInfo =
             new AdditionalHeaderInfoToRender(AdditionalHeaderInfoToRender.TYPE_CSS_INLINE, inlineStyle);
-        getAdditionalHeaderInfoToRender(context).add( cssInfo );
+        addAdditionalHeaderInfoToRender(context, cssInfo );
     }
     
     /**
@@ -262,16 +265,6 @@ public class AddResource {
     
     // Header stuffs
     
-    static public boolean hasAdditionalHeaderInfoToRender(HttpServletRequest request){
-        boolean test = request.getAttribute(ADDITIONAL_HEADER_INFO_REQUEST_ATTRUBITE_NAME) != null;
-		return test;
-    }
-    
-    private static Set getAdditionalHeaderInfoToRender(FacesContext context){
-        HttpServletRequest request = (HttpServletRequest) context.getExternalContext().getRequest();
-        return getAdditionalHeaderInfoToRender( request );
-    }
-    
     private static Set getAdditionalHeaderInfoToRender(HttpServletRequest request){
         Set set = (Set) request.getAttribute(ADDITIONAL_HEADER_INFO_REQUEST_ATTRUBITE_NAME);
         if( set == null ){
@@ -280,6 +273,16 @@ public class AddResource {
         }
         
         return set;
+    }
+    
+    private static void addAdditionalHeaderInfoToRender(FacesContext context, AdditionalHeaderInfoToRender info){
+        HttpServletRequest request = (HttpServletRequest) context.getExternalContext().getRequest();
+        Set set = getAdditionalHeaderInfoToRender( request );
+        set.add( info );
+    }
+
+    static public boolean hasAdditionalHeaderInfoToRender(HttpServletRequest request){
+        return request.getAttribute(ADDITIONAL_HEADER_INFO_REQUEST_ATTRUBITE_NAME) != null;
     }
     
     static public void writeWithFullHeader(HttpServletRequest request,
@@ -374,7 +377,37 @@ public class AddResource {
         }
         
         public int hashCode() {
-            return (componentName+((char)7)+resourceFileName+((char)7)+type+((char)7)+inlineText).hashCode();
+            return (componentName+((char)7)
+                    +resourceFileName+((char)7)
+                    +(type+""+((char)7))
+                    +(inlineText+""+((char)7))
+                    +(deferJS+"")).hashCode();
+        }
+        
+        public boolean equals(Object obj) {
+            if( !(obj instanceof AdditionalHeaderInfoToRender) )
+                return false;
+            AdditionalHeaderInfoToRender toCompare = (AdditionalHeaderInfoToRender) obj;
+            
+            if( type != toCompare.type || deferJS != toCompare.deferJS )
+                return false;
+            
+            if( componentName == null ){
+                if( toCompare.componentName != null )
+                    return false;
+            }else if( ! componentName.equals(toCompare.componentName) )
+                return false;
+            		
+            if( resourceFileName == null ){
+                if( toCompare.resourceFileName != null )
+                    return false;
+            }else if( ! resourceFileName.equals(toCompare.resourceFileName) )
+                return false;
+            
+            if( inlineText == null )
+                return toCompare.inlineText == null;
+                
+            return inlineText.equals(toCompare.inlineText);
         }
         
         public String getString(HttpServletRequest request){
