@@ -176,7 +176,10 @@ public class ApplicationMap
      */
     public Object remove(Object key)
     {
-        return put(key, null);
+        String key_ = key.toString();
+        Object retval = _servletContext.getAttribute(key_);
+        _servletContext.removeAttribute(key_);
+        return retval;
     }
 
     /**

@@ -176,7 +176,10 @@ public class RequestMap
      */
     public Object remove(Object key)
     {
-        return put(key, null);
+        String key_ = key.toString();
+        Object retval = _servletRequest.getAttribute(key_);
+        _servletRequest.removeAttribute(key_);
+        return retval;
     }
 
     /**

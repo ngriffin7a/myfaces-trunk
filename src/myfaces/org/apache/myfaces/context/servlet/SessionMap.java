@@ -194,7 +194,15 @@ public class SessionMap
      */
     public Object remove(Object key)
     {
-        return put(key, null);
+        if (_httpSession == null)
+        {
+            return null;
+        }
+
+        String key_ = key.toString();
+        Object retval = _httpSession.getAttribute(key_);
+        _httpSession.removeAttribute(key_);
+        return retval;
     }
 
     /**
