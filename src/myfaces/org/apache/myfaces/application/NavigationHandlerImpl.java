@@ -114,7 +114,7 @@ public class NavigationHandlerImpl
 
         if (newViewId != null)
         {
-            ViewHandler viewHandler = FacesUtils.getApplication().getViewHandler();
+            ViewHandler viewHandler = facesContext.getApplication().getViewHandler();
             facesContext.setViewRoot(viewHandler.createView(facesContext, newViewId));
         }
         // Otherwise stay on current ViewRoot
