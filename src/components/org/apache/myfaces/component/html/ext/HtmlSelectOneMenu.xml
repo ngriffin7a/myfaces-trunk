@@ -2,10 +2,10 @@
 <!DOCTYPE component PUBLIC
   "-//MyFaces//DTD MyFaces component def 1.0//EN"
   "http://myfaces.sourceforge.net/dtd/Component.dtd">
-<component generateUserRoleMethods="true" >
-    <component-class>net.sourceforge.myfaces.component.html.ext.HtmlPanelGroup</component-class>
-    <base-class>javax.faces.component.html.HtmlPanelGroup</base-class>
-    <component-type>net.sourceforge.myfaces.HtmlPanelGroup</component-type>
+<component generateStateMethods="true" generateUserRoleMethods="true" >
+    <component-class>net.sourceforge.myfaces.component.html.ext.HtmlSelectOneMenu</component-class>
+    <base-class>javax.faces.component.html.HtmlSelectOneMenu</base-class>
+    <component-type>net.sourceforge.myfaces.HtmlSelectOneMenu</component-type>
     <field>
         <name>enabledOnUserRole</name>
         <type>java.lang.String</type>

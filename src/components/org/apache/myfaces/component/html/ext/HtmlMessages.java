@@ -36,8 +36,7 @@ public class HtmlMessages
     //------------------ GENERATED CODE BEGIN (do not modify!) --------------------
 
     public static final String COMPONENT_TYPE = "net.sourceforge.myfaces.HtmlMessages";
-    public static final String COMPONENT_FAMILY = "javax.faces.Messages";
-    private static final String DEFAULT_RENDERER_TYPE = "javax.faces.Messages";
+    private static final String DEFAULT_RENDERER_TYPE = "net.sourceforge.myfaces.Messages";
 
     private String _summaryFormat = null;
     private String _detailFormat = null;
@@ -49,10 +48,6 @@ public class HtmlMessages
         setRendererType(DEFAULT_RENDERER_TYPE);
     }
 
-    public String getFamily()
-    {
-        return COMPONENT_FAMILY;
-    }
 
     public void setSummaryFormat(String summaryFormat)
     {

@@ -28,6 +28,9 @@ import javax.faces.el.ValueBinding;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.2  2004/04/01 09:23:12  manolito
+ * more extended components
+ *
  * Revision 1.1  2004/03/31 11:58:33  manolito
  * custom component refactoring
  *
@@ -41,21 +44,14 @@ public class HtmlPanelGroup
     //------------------ GENERATED CODE BEGIN (do not modify!) --------------------
 
     public static final String COMPONENT_TYPE = "net.sourceforge.myfaces.HtmlPanelGroup";
-    public static final String COMPONENT_FAMILY = "javax.faces.Panel";
-    private static final String DEFAULT_RENDERER_TYPE = "javax.faces.Group";
 
     private String _enabledOnUserRole = null;
     private String _visibleOnUserRole = null;
 
     public HtmlPanelGroup()
     {
-        setRendererType(DEFAULT_RENDERER_TYPE);
     }
 
-    public String getFamily()
-    {
-        return COMPONENT_FAMILY;
-    }
 
     public void setEnabledOnUserRole(String enabledOnUserRole)
     {

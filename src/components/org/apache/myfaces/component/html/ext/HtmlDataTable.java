@@ -252,8 +252,6 @@ public class HtmlDataTable
     //------------------ GENERATED CODE BEGIN (do not modify!) --------------------
 
     public static final String COMPONENT_TYPE = "net.sourceforge.myfaces.HtmlDataTable";
-    public static final String COMPONENT_FAMILY = "javax.faces.Data";
-    private static final String DEFAULT_RENDERER_TYPE = "javax.faces.Table";
     private static final boolean DEFAULT_PRESERVEDATAMODEL = false;
     private static final boolean DEFAULT_PRESERVESORT = false;
     private static final boolean DEFAULT_SORTASCENDING = true;
@@ -267,13 +265,8 @@ public class HtmlDataTable
 
     public HtmlDataTable()
     {
-        setRendererType(DEFAULT_RENDERER_TYPE);
     }
 
-    public String getFamily()
-    {
-        return COMPONENT_FAMILY;
-    }
 
     public void setPreserveDataModel(boolean preserveDataModel)
     {

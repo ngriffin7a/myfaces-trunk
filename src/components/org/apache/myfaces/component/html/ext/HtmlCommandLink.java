@@ -36,8 +36,7 @@ public class HtmlCommandLink
     //------------------ GENERATED CODE BEGIN (do not modify!) --------------------
 
     public static final String COMPONENT_TYPE = "net.sourceforge.myfaces.HtmlCommandLink";
-    public static final String COMPONENT_FAMILY = "javax.faces.Command";
-    private static final String DEFAULT_RENDERER_TYPE = "javax.faces.Link";
+    private static final String DEFAULT_RENDERER_TYPE = "net.sourceforge.myfaces.Link";
 
     private String _target = null;
     private String _enabledOnUserRole = null;
@@ -48,10 +47,6 @@ public class HtmlCommandLink
         setRendererType(DEFAULT_RENDERER_TYPE);
     }
 
-    public String getFamily()
-    {
-        return COMPONENT_FAMILY;
-    }
 
     public void setTarget(String target)
     {

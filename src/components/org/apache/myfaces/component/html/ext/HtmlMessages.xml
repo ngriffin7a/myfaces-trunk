@@ -6,8 +6,7 @@
     <component-class>net.sourceforge.myfaces.component.html.ext.HtmlMessages</component-class>
     <base-class>javax.faces.component.html.HtmlMessages</base-class>
     <component-type>net.sourceforge.myfaces.HtmlMessages</component-type>
-    <component-family>javax.faces.Messages</component-family>
-    <renderer-type>javax.faces.Messages</renderer-type>
+    <renderer-type>net.sourceforge.myfaces.Messages</renderer-type>
     <field>
         <name>summaryFormat</name>
         <type>java.lang.String</type>

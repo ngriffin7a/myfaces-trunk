@@ -6,8 +6,6 @@
     <component-class>net.sourceforge.myfaces.component.html.ext.HtmlDataTable</component-class>
     <base-class>javax.faces.component.html.HtmlDataTable</base-class>
     <component-type>net.sourceforge.myfaces.HtmlDataTable</component-type>
-    <component-family>javax.faces.Data</component-family>
-    <renderer-type>javax.faces.Table</renderer-type>
     <field>
         <name>preserveDataModel</name>
         <type>boolean</type>
