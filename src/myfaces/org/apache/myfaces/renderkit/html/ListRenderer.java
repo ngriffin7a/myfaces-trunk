@@ -27,6 +27,7 @@ import net.sourceforge.myfaces.renderkit.callback.CallbackSupport;
 import net.sourceforge.myfaces.renderkit.html.attr.HTMLEventHandlerAttributes;
 import net.sourceforge.myfaces.renderkit.html.attr.HTMLTableAttributes;
 import net.sourceforge.myfaces.renderkit.html.attr.HTMLUniversalAttributes;
+import net.sourceforge.myfaces.renderkit.html.util.HTMLUtil;
 
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIPanel;
@@ -115,25 +116,23 @@ public class ListRenderer
         }
     }
 
-    public void encodeBegin(FacesContext context, UIComponent uicomponent)
+    public void encodeBegin(FacesContext facesContext, UIComponent uiComponent)
             throws IOException
     {
-        ResponseWriter writer = context.getResponseWriter();
+        ResponseWriter writer = facesContext.getResponseWriter();
 
-        if (uicomponent.getRendererType().equals(TYPE))
+        if (uiComponent.getRendererType().equals(TYPE))
         {
-            pushListComponent(context, uicomponent);
+            pushListComponent(facesContext, uiComponent);
             writer.write("<table");
-            String style = (String)uicomponent.getAttribute(PANEL_CLASS_ATTR);
-            if (style != null && style.length() > 0)
-            {
-                writer.write(" class=\"");
-                writer.write(style);
-                writer.write("\"");
-            }
+            HTMLUtil.renderCssClass(writer, uiComponent, PANEL_CLASS_ATTR);
+            HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML_UNIVERSAL_ATTRIBUTES);
+            HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML_EVENT_HANDLER_ATTRIBUTES);
+            HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML_TABLE_ATTRIBUTES);
+            HTMLUtil.renderDisabledOnUserRole(facesContext, uiComponent);
             writer.write(">\n");
         }
-        CallbackSupport.addCallbackRenderer(context, uicomponent, this);
+        CallbackSupport.addCallbackRenderer(facesContext, uiComponent, this);
     }
 
     public void encodeEnd(FacesContext facesContext, UIComponent uicomponent) throws IOException
