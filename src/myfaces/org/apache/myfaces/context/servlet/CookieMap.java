@@ -27,6 +27,9 @@ import javax.servlet.http.HttpServletRequest;
  * @author Anton Koinov
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.9  2004/11/24 13:36:11  manolito
+ * SF-Bug #1072442 fixed
+ *
  * Revision 1.8  2004/11/23 12:26:45  manolito
  * SF-Bug #1071640 fixed
  *
@@ -101,7 +104,7 @@ public class CookieMap extends AbstractAttributeMap
         {
             if (cookies[i].getName().equals(key))
             {
-                return cookies[i].getValue();
+                return cookies[i];
             }
         }
 
