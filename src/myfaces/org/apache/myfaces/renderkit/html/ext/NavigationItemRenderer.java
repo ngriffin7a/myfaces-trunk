@@ -147,7 +147,14 @@ public class NavigationItemRenderer
         writer.write(href);
 
         //value
-        writer.write('?');
+        if (href.indexOf('?') == -1)
+        {
+            writer.write('?');
+        }
+        else
+        {
+            writer.write('&');
+        }
         writer.write(uiComponent.getClientId(facesContext));
         writer.write("=1");
 
