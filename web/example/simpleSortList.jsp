@@ -42,32 +42,31 @@
 
             <h:errors id="errors" />
 
-            <h:list id="list"
-                    cssClass="standardTable"
+            <h:list cssClass="standardTable"
                     headerClass="standardTable_SortHeader"
                     footerClass="standardTable_Footer"
                     rowClasses="standardTable_Row1,standardTable_Row2" >
                 <!-- SORTHEADER -->
-                <x:sortheader id="list_header" column="type"
-                                               ascending="<%=true%>"
-                                               columnReference="list.sort"
-                                               ascendingReference="list.ascending" >
-                    <x:sortcolumn id="list_header_col1" column="type" cssClass="sortLink" >
-                        <h:output_text id="list_header_name" text="Car-Type" />
+                <x:sortheader column="type"
+                              ascending="<%=true%>"
+                              columnReference="list.sort"
+                              ascendingReference="list.ascending" >
+                    <x:sortcolumn column="type" cssClass="sortLink" >
+                        <h:output_text text="Car-Type" />
                     </x:sortcolumn>
-                    <x:sortcolumn id="list_header_col2" column="color" cssClass="sortLink" >
+                    <x:sortcolumn column="color" cssClass="sortLink" >
                         <h:output_text id="list_header_iso" text="Car-Color"  />
                     </x:sortcolumn>
                 </x:sortheader>
                 <!-- DATA -->
-                <h:listrow id="list_tr" var="car" modelReference="list.cars" >
-                    <h:output_text id="list_name" modelReference="car.type" />
-                    <h:output_text id="list_isoCode" modelReference="car.color" />
+                <h:listrow var="car" modelReference="list.cars" >
+                    <h:output_text modelReference="car.type" />
+                    <h:output_text modelReference="car.color" />
                 </h:listrow>
                 <!-- FOOTER -->
-                <h:group id="list_footer" >
-                    <h:output_text id="list_footer_name" text="..."  />
-                    <h:output_text id="list_footer_iso" />
+                <h:group>
+                    <h:output_text text="..."  />
+                    <h:output_text/>
                 </h:group>
             </h:list>
 

@@ -40,40 +40,40 @@
         <%@include file="inc/navigation.jsp"  %>
 
         <x:page_body id="body" cssClass="pageBody" >
-            <h:form id="form" formName="formName" >
+            <h:form formName="formName" >
 
-                <h:output_label id="label_cars" for="selone_lb" key="label_cars" bundle="net.sourceforge.myfaces.examples.resource.example_messages"></h:output_label>
-                <h:selectone_listbox id="selone_lb" modelReference="simpleList.car" >
+                <h:output_label for="selone_lb" key="label_cars" bundle="net.sourceforge.myfaces.examples.resource.example_messages"></h:output_label>
+                <h:selectone_listbox modelReference="simpleList.car" >
                     <h:selectitems id="selone_lb_cars" modelReference="simpleList.cars" />
                 </h:selectone_listbox>
 
                 <br>
                 <br>
 
-                <h:output_label id="label_colors" for="selone_menu" key="label_colors" bundle="net.sourceforge.myfaces.examples.resource.example_messages"></h:output_label>
-                <h:selectone_menu id="selone_menu" size="3" modelReference="simpleList.color" >
-                    <h:selectitem id="empty" key="empty_selitem" bundle="net.sourceforge.myfaces.examples.resource.example_messages" ></h:selectitem>
-                    <h:selectitems id="selone_lb_cars" modelReference="simpleList.colors" />
+                <h:output_label for="selone_menu" key="label_colors" bundle="net.sourceforge.myfaces.examples.resource.example_messages"></h:output_label>
+                <h:selectone_menu size="3" modelReference="simpleList.color" >
+                    <h:selectitem key="empty_selitem" bundle="net.sourceforge.myfaces.examples.resource.example_messages" ></h:selectitem>
+                    <h:selectitems modelReference="simpleList.colors" />
                 </h:selectone_menu>
 
                 <br>
                 <br>
 
-                <h:output_label id="label_extras" for="selone_menu" key="label_extras" bundle="net.sourceforge.myfaces.examples.resource.example_messages"></h:output_label>
-                <h:selectmany_listbox id="selmany" modelReference="simpleList.extras" >
-                    <h:selectitems id="items" modelReference="simpleList.extrasList" />
+                <h:output_label for="selone_menu" key="label_extras" bundle="net.sourceforge.myfaces.examples.resource.example_messages"></h:output_label>
+                <h:selectmany_listbox modelReference="simpleList.extras" >
+                    <h:selectitems modelReference="simpleList.extrasList" />
                 </h:selectmany_listbox>
 
                 <br>
                 <br>
 
-                <h:command_button id="submit" commandName="calcPrice" key="button_calcprice" bundle="net.sourceforge.myfaces.examples.resource.example_messages">
+                <h:command_button commandName="calcPrice" key="button_calcprice" bundle="net.sourceforge.myfaces.examples.resource.example_messages">
                     <f:action_listener type="net.sourceforge.myfaces.examples.common.CarConfiguratorActionListener" ></f:action_listener>
                 </h:command_button>
             </h:form>
 
-            <h:message id="msg" key="msg_price" bundle="net.sourceforge.myfaces.examples.resource.example_messages" >
-                <h:parameter id="msgp1" modelReference="simpleList.price" />
+            <h:message key="msg_price" bundle="net.sourceforge.myfaces.examples.resource.example_messages" >
+                <h:parameter modelReference="simpleList.price" />
             </h:message>
 
 

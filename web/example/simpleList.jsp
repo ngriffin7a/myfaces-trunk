@@ -41,35 +41,34 @@
             <h:errors id="errors" />
 
             <% int rows = 0, cols = 2; %>
-            <h:list id="countryList"
-                    cssClass="standardTable"
+            <h:list cssClass="standardTable"
                     headerClass="standardTable_Header"
                     footerClass="standardTable_Footer"
                     rowClasses="standardTable_Row1,standardTable_Row2"
                     columnClasses="standardTable_Column,standardTable_ColumnCentered" >
                 <!-- HEADER -->
-                <h:group id="list_header" >
-                    <h:output_text id="header_name" text="Country name" />
-                    <h:output_text id="header_isoCode" text="Iso-Code" />
+                <h:group>
+                    <h:output_text text="Country name" />
+                    <h:output_text text="Iso-Code" />
                 </h:group>
                 <!-- DATA -->
-                <h:listrow id="countryList_tr" var="country" modelReference="countryList.countries" >
-                    <h:output_text id="countryList_name" modelReference="country.name" />
-                    <h:group id="g1" >
-                        <a href="#"><h:output_text id="countryList_isoCode" modelReference="country.isoCode" /></a>
+                <h:listrow var="country" modelReference="countryList.countries" >
+                    <h:output_text modelReference="country.name" />
+                    <h:group>
+                        <a href="#"><h:output_text modelReference="country.isoCode" /></a>
                         <% rows++; %>
                     </h:group>
                 </h:listrow>
                 <!-- FOOTER -->
-                <h:group id="list_footer" >
-                    <h:output_text id="footer_1" text="take a look at this runtime values ..."/>
-                    <h:group id="g2" >
-                        <h:message id="row_count" msg="{0} rows" >
-                            <h:parameter id="rows" value="<%=new Integer(rows)%>"/>
+                <h:group>
+                    <h:output_text text="take a look at this runtime values ..."/>
+                    <h:group>
+                        <h:message msg="{0} rows" >
+                            <h:parameter value="<%=new Integer(rows)%>"/>
                         </h:message>
                         &nbsp; / &nbsp;
-                        <h:message id="col_count" msg="{0} cols" >
-                            <h:parameter id="cols" value="<%=new Integer(cols)%>"/>
+                        <h:message msg="{0} cols" >
+                            <h:parameter value="<%=new Integer(cols)%>"/>
                         </h:message>
                     </h:group>
                 </h:group>
