@@ -88,8 +88,13 @@ public class UIMessage
     {
         if (_showSummary != null) return _showSummary.booleanValue();
         ValueBinding vb = getValueBinding("showSummary");
-        Boolean v = vb != null ? (Boolean)vb.getValue(getFacesContext()) : null;
-        return v != null ? v.booleanValue() : DEFAULT_SHOWSUMMARY;
+        if (vb != null)
+        {
+            Boolean v = vb != null ? (Boolean)vb.getValue(getFacesContext()) : null;
+            return v != null ? v.booleanValue() : DEFAULT_SHOWSUMMARY;
+        }
+        // default
+        return true;
     }
 
 

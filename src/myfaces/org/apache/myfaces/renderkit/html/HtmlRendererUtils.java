@@ -334,5 +334,4 @@ public class HtmlRendererUtils
             facesContext.getResponseWriter().write('\t');
         }
     }
-
 }

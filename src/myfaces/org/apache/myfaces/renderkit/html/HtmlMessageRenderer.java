@@ -76,7 +76,14 @@ public class HtmlMessageRenderer
             throw new NullPointerException("Attribute 'for' of HtmlMessage must not be null");
         }
 
-        Iterator messageIterator = facesContext.getMessages(forClientId);
+        UIComponent forComponent = uiMessage.findComponent(forClientId);
+
+        if (forComponent == null)
+        {
+            throw new NullPointerException("Could not render Message. Component '" + forClientId + "' not found.");
+        }
+
+        Iterator messageIterator = facesContext.getMessages(forComponent.getClientId(facesContext));
         if (!messageIterator.hasNext())
         {
             // No associated message, nothing to render

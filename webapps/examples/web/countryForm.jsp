@@ -55,7 +55,7 @@
                         <h:outputLabel for="name" value="#{example_messages['label_country_name']}"/>
                         <h:panelGroup>
                             <h:inputText id="name" value="#{countryForm.name}" required="true" />
-                            <h:message for="countryForm:name" styleClass="error" showDetail="true" showSummary="false" />
+                            <h:message for="name" styleClass="error" showDetail="true" showSummary="false" />
                         </h:panelGroup>
 
 
@@ -64,7 +64,7 @@
                             <h:inputText id="isoCode" value="#{countryForm.isoCode}" required="true">
                                 <f:validateLength maximum="2" minimum="2"/>
                             </h:inputText>
-                            <h:message for="countryForm:isoCode" styleClass="error" showDetail="true" showSummary="false" />
+                            <h:message for="isoCode" styleClass="error" showDetail="true" showSummary="false" />
                         </h:panelGroup>
 
                         <h:panelGroup/>

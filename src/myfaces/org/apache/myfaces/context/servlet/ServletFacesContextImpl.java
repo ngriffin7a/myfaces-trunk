@@ -239,7 +239,8 @@ public class ServletFacesContextImpl
         }
         _messages.add(message);
         _messageClientIds.add((clientId != null) ? clientId : NULL_DUMMY);
-        if (message.getSeverity().compareTo(_maximumSeverity) > 0)
+        FacesMessage.Severity serSeverity =  message.getSeverity();
+        if (serSeverity != null && serSeverity.compareTo(_maximumSeverity) > 0)
         {
             _maximumSeverity = message.getSeverity();
         }
