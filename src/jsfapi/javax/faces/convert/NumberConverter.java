@@ -367,12 +367,16 @@ public class NumberConverter implements Converter {
     private static boolean checkJavaVersion14()
     {
         String version = System.getProperty("java.version");
+        if (version == null)
+        {
+            return false;
+        }
         byte java14 = 0;
         for (int idx = version.indexOf('.'), i = 0; idx > 0 || version != null; i++)
         {
             if (idx > 0)
             {
-                int value = Integer.parseInt(version.substring(0, 1));
+                byte value = Byte.parseByte(version.substring(0, 1));
                 version = version.substring(idx + 1, version.length());
                 idx = version.indexOf('.');
                 switch (i)
@@ -385,7 +389,7 @@ public class NumberConverter implements Converter {
             }
             else
             {
-                int value = Integer.parseInt(version.substring(0, 1));
+                byte value = Byte.parseByte(version.substring(0, 1));
                 if (java14 > 0 && value >= 4)
                 {
                     java14 = 2;
