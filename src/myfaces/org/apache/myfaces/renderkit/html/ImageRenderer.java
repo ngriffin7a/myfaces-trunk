@@ -38,7 +38,7 @@ import java.io.IOException;
  * @version $Revision$ $Date$
  */
 public class ImageRenderer
-extends HTMLRenderer
+extends HtmlRenderer
 {
     //~ Static fields/initializers -----------------------------------------------------------------
 

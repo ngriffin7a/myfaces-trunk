@@ -42,7 +42,7 @@ import java.util.StringTokenizer;
  * @version $Revision$ $Date$
  */
 public class ListRenderer
-extends HTMLRenderer
+extends HtmlRenderer
 implements CallbackRenderer
 {
     //~ Static fields/initializers -----------------------------------------------------------------

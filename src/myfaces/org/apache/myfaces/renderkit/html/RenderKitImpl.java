@@ -76,7 +76,7 @@ extends RenderKit
     }
 
     /*
-    private void _addRenderer(HTMLRenderer r)
+    private void _addRenderer(HtmlRenderer r)
     {
         _renderers.put(r.getRendererType(), r);
     }
@@ -139,7 +139,7 @@ extends RenderKit
         Iterator it = _renderers.entrySet().iterator();
         while (it.hasNext())
         {
-            HTMLRenderer r = (HTMLRenderer)it.next();
+            HtmlRenderer r = (HtmlRenderer)it.next();
             if (componentType == null ||
                 r.supportsComponentType(componentType))
             {

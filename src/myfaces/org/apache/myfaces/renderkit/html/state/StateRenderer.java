@@ -20,7 +20,7 @@ package net.sourceforge.myfaces.renderkit.html.state;
 
 import net.sourceforge.myfaces.MyFacesConfig;
 import net.sourceforge.myfaces.renderkit.html.FormRenderer;
-import net.sourceforge.myfaces.renderkit.html.HTMLRenderer;
+import net.sourceforge.myfaces.renderkit.html.HtmlRenderer;
 import net.sourceforge.myfaces.renderkit.html.state.client.*;
 import net.sourceforge.myfaces.renderkit.html.state.server.HTTPSessionStateRestorer;
 import net.sourceforge.myfaces.renderkit.html.state.server.HTTPSessionStateSaver;
@@ -40,7 +40,7 @@ import java.io.IOException;
  * @version $Revision$ $Date$
  */
 public class StateRenderer
-    extends HTMLRenderer
+    extends HtmlRenderer
 {
     private static final Log log = LogFactory.getLog(StateRenderer.class);
 

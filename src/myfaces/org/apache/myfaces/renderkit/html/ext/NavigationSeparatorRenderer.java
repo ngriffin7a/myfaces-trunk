@@ -18,7 +18,7 @@
  */
 package net.sourceforge.myfaces.renderkit.html.ext;
 
-import net.sourceforge.myfaces.renderkit.html.HTMLRenderer;
+import net.sourceforge.myfaces.renderkit.html.HtmlRenderer;
 
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
@@ -31,7 +31,7 @@ import java.io.IOException;
  * @version $Revision$ $Date$
  */
 public class NavigationSeparatorRenderer
-    extends HTMLRenderer
+    extends HtmlRenderer
 {
     public static final String TYPE = "NavigationSeparator";
 

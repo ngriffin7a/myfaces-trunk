@@ -23,7 +23,7 @@ import net.sourceforge.myfaces.component.ext.UISaveState;
 import net.sourceforge.myfaces.convert.ConverterUtils;
 import net.sourceforge.myfaces.lifecycle.LifecycleImpl;
 import net.sourceforge.myfaces.renderkit.JSFAttr;
-import net.sourceforge.myfaces.renderkit.html.HTMLRenderer;
+import net.sourceforge.myfaces.renderkit.html.HtmlRenderer;
 import net.sourceforge.myfaces.renderkit.html.SecretRenderer;
 import net.sourceforge.myfaces.renderkit.html.jspinfo.JspInfo;
 import net.sourceforge.myfaces.renderkit.html.jspinfo.StaticFacesListener;
@@ -480,7 +480,7 @@ public class MinimizingStateSaver
 
         //convert attribute value to String
         String strValue;
-        Converter conv = HTMLRenderer.findConverterForAttribute(facesContext,
+        Converter conv = HtmlRenderer.findConverterForAttribute(facesContext,
                                                                 uiComponent,
                                                                 attrName);
         if (conv != null)
@@ -607,7 +607,7 @@ public class MinimizingStateSaver
             writer.write('&');  //we assume that there were previous parameters
             writer.write((String)entry.getKey());
             writer.write('=');
-            writer.write(HTMLRenderer.urlEncode((String)entry.getValue()));
+            writer.write(HtmlRenderer.urlEncode((String)entry.getValue()));
         }
     }
 

@@ -37,7 +37,7 @@ import java.util.Iterator;
  * @version $Revision$ $Date$
  */
 public class DataRenderer
-    extends HTMLRenderer
+    extends HtmlRenderer
 {
     public static final String ITERATOR_ATTR = DataRenderer.class.getName() + ".ITERATOR";
 

@@ -19,7 +19,7 @@
 package net.sourceforge.myfaces.component;
 
 import net.sourceforge.myfaces.convert.ConverterUtils;
-import net.sourceforge.myfaces.renderkit.html.HTMLRenderer;
+import net.sourceforge.myfaces.renderkit.html.HtmlRenderer;
 import net.sourceforge.myfaces.tree.TreeUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -195,7 +195,7 @@ public class UIComponentUtils
     public static String getClientId(FacesContext facesContext,
                                      UIComponent uiComponent)
     {
-        return HTMLRenderer.getComponentClientId(facesContext, uiComponent);
+        return HtmlRenderer.getComponentClientId(facesContext, uiComponent);
     }
 
 

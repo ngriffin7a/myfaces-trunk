@@ -19,7 +19,7 @@
 package net.sourceforge.myfaces.renderkit.html.state.client;
 
 import net.sourceforge.myfaces.component.ext.UISaveState;
-import net.sourceforge.myfaces.renderkit.html.HTMLRenderer;
+import net.sourceforge.myfaces.renderkit.html.HtmlRenderer;
 import net.sourceforge.myfaces.renderkit.html.state.ModelValueEntry;
 import net.sourceforge.myfaces.renderkit.html.state.StateUtils;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLEncoder;
@@ -97,7 +97,7 @@ public class SerializingStateSaver
         writer.write('&');  //we assume that there were previous parameters
         writer.write(TREE_REQUEST_PARAM);
         writer.write('=');
-        writer.write(HTMLRenderer.urlEncode(getSerializedTree(facesContext)));
+        writer.write(HtmlRenderer.urlEncode(getSerializedTree(facesContext)));
     }
 
     protected void writeHiddenInputsState(FacesContext facesContext, Writer writer) throws IOException

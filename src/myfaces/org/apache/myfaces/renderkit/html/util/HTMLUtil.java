@@ -20,7 +20,7 @@ package net.sourceforge.myfaces.renderkit.html.util;
 
 import net.sourceforge.myfaces.renderkit.JSFAttr;
 import net.sourceforge.myfaces.renderkit.html.HTML;
-import net.sourceforge.myfaces.renderkit.html.HTMLRenderer;
+import net.sourceforge.myfaces.renderkit.html.HtmlRenderer;
 import net.sourceforge.myfaces.renderkit.html.ListboxRenderer;
 
 import javax.faces.component.SelectItem;
@@ -127,7 +127,7 @@ public class HTMLUtil
     public static void renderDisabledOnUserRole(FacesContext facesContext, UIComponent uiComponent)
     throws IOException
     {
-        if (!HTMLRenderer.isEnabledOnUserRole(facesContext, uiComponent))
+        if (!HtmlRenderer.isEnabledOnUserRole(facesContext, uiComponent))
         {
             ResponseWriter writer = facesContext.getResponseWriter();
             writer.write(" disabled");

@@ -45,7 +45,7 @@ import java.io.IOException;
  * @version $Revision$ $Date$
  */
 public class FormRenderer
-extends HTMLRenderer
+extends HtmlRenderer
 {
     //~ Static fields/initializers -----------------------------------------------------------------
 

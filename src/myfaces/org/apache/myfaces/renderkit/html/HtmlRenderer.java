@@ -55,14 +55,14 @@ import java.net.URLEncoder;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public abstract class HTMLRenderer
+public abstract class HtmlRenderer
 extends Renderer
 {
     //~ Static fields/initializers -----------------------------------------------------------------
-    private static final Log log = LogFactory.getLog(HTMLRenderer.class);
+    private static final Log log = LogFactory.getLog(HtmlRenderer.class);
 
     private static final String CLIENT_ID_ATTR          =
-        HTMLRenderer.class.getName() + ".CLIENT_ID";
+        HtmlRenderer.class.getName() + ".CLIENT_ID";
     public static final String  LOCAL_STRING_VALUE_ATTR = "LOCAL_STRING_VALUE";
 
     //~ Methods ------------------------------------------------------------------------------------

@@ -24,7 +24,7 @@ import net.sourceforge.myfaces.component.UIComponentUtils;
 import net.sourceforge.myfaces.component.ext.UISaveState;
 import net.sourceforge.myfaces.convert.ConverterUtils;
 import net.sourceforge.myfaces.convert.impl.StringArrayConverter;
-import net.sourceforge.myfaces.renderkit.html.HTMLRenderer;
+import net.sourceforge.myfaces.renderkit.html.HtmlRenderer;
 import net.sourceforge.myfaces.renderkit.html.jspinfo.JspInfo;
 import net.sourceforge.myfaces.renderkit.html.state.StateUtils;
 import net.sourceforge.myfaces.util.bean.BeanUtils;
@@ -415,7 +415,7 @@ public class MinimizingStateRestorer
         }
 
         //Find proper converter to convert back from external String
-        Converter conv = HTMLRenderer.findConverterForAttribute(facesContext,
+        Converter conv = HtmlRenderer.findConverterForAttribute(facesContext,
                                                                 uiComponent,
                                                                 attrName);
 

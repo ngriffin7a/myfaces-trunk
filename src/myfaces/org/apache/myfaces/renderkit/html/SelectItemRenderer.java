@@ -28,7 +28,7 @@ import java.io.IOException;
  * @version $Revision$ $Date$
  */
 public class SelectItemRenderer
-    extends HTMLRenderer
+    extends HtmlRenderer
 {
     public static final String TYPE = "SelectItem";
 
