@@ -351,7 +351,7 @@ Start of revised 1.0 conforming tags
 <!-- command_link -->
     <tag>
         <name>command_link</name>
-        <tag-class>net.sourceforge.myfaces.taglib.html.CommandLinkTag</tag-class>
+        <tag-class>net.sourceforge.myfaces.taglib.html.HtmlCommandLinkTag</tag-class>
         <body-content>JSP</body-content>
         &ui_component_attributes;
         &ui_command_attributes;
