@@ -11,7 +11,7 @@
 <p>
 <f:view>
     This is a wbmp image:
-    <wap:graphicImage url="./photo.wbmp" alt="Pat image" />
+    <wap:graphicImage url="./myfaces_header_logo.wbmp" alt="Apache MyFaces" />
     <wap:form>
 	    <wap:commandButton action="backToIndex" type="prev" value="examples" />
     </wap:form>
