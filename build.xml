@@ -10,32 +10,31 @@
 
     <property environment="env"/>
 
-    <!-- Verzeichnis für temp. Dateiene -->
+    <!-- dir for temporary files -->
     <property name="temp.dir" value="${project.dir}/temp"/>
 
-    <!-- Source Verzeichnis fürs Kompilieren -->
+    <!-- source dir for compiling -->
     <property name="src.dir" value="${project.dir}\src"/>
 
-    <!-- Verzeichnis in welches das myfaces.tld file kopiert werden soll
-         (Praktisch zum autom. Kopieren der TLD in ein Fremd-Projekt) -->
-    <!--property name="tld-dest.dir" value="${temp.dir}"/-->
-
-    <!-- WEB-INF Dir -->
+    <!-- WEB-INF dir -->
     <property name="web-inf.dir" value="${project.dir}/web/WEB-INF"/>
 
-    <!-- Destination Verzeichnis fürs Kompilieren -->
+    <!-- destination dir for compiling -->
     <property name="classes.dir" value="${project.dir}/web/WEB-INF/classes"/>
 
-    <!-- Compiletime libraries (servlet.jar) -->
+    <!-- compiletime libraries (servlet.jar) -->
     <property name="lib.dir" value="${project.dir}/lib"/>
 
-    <!-- Examples dir -->
+    <!-- examples dir -->
     <property name="examples.dir" value="${project.dir}/examples"/>
 
     <!-- path to the "jsf-api.jar" file -->
     <property name="jsf-api.file" value="${web-inf.dir}/lib/jsf-api.jar"/>
 
-    <!-- Classpath fuer's Kompilieren -->
+    <!-- allow some of the properties to be overridden -->
+    <property file="build.properties"/>
+
+    <!-- classpath for compiling -->
     <path id="project.class.path">
         <pathelement location="${jsf-api.file}" />
         <pathelement location="${web-inf.dir}/lib/mail.jar"/>
@@ -102,14 +101,6 @@
         </delete>
     </target>
 
-    <!--
-    <target name="copy-tld">
-        <copy file="${project.dir}/web/WEB-INF/myfaces_basic.tld"
-              todir="${tld-dest.dir}" />
-        <copy file="${project.dir}/web/WEB-INF/myfaces_ext.tld"
-            todir="${tld-dest.dir}"/>
-    </target>
-    -->
 
     <target name="all" depends="jar,examples-jar"/>
 
@@ -136,5 +127,50 @@
                         prefix="myfaces-${manifest.impl.version}/web/WEB-INF/lib"/>
         </tar>
     </target>
+
+
+
+    <!--
+    Convenient targets to deploy to tomcat (added by Bill Dudney [bdudney@mac.com]).
+    See "tomcat-install-with-ant-readme.txt" for details.
+    Comment out, if you do not have the necessary catalina-ant.jar file.
+    -->
+	<!-- must have 'catalina-ant.jar' in your ant class path for these to work. -->
+    <taskdef name="list" classname="org.apache.catalina.ant.ListTask"/>
+    <taskdef name="install" classname="org.apache.catalina.ant.InstallTask"/>
+    <taskdef name="reload" classname="org.apache.catalina.ant.ReloadTask"/>
+    <taskdef name="remove" classname="org.apache.catalina.ant.RemoveTask"/>
+
+    <!-- these properties need to be overridable in a properties file -->
+    <property name="tomcat.manager.url" value="http://localhost:8080/manager"/>
+    <property name="tomcat.admin.user" value="admin"/>
+    <property name="tomcat.admin.passwd" value="password"/>
+    <property name="tomcat.example.context.path" value="/myFacesExample"/>
+
+	<target name="list" description="List applications installed on tomcat" >
+	  <list url="${tomcat.manager.url}" username="${tomcat.admin.user}"
+	        password="${tomcat.admin.passwd}" />
+	</target>
+
+	<target name="install" description="Install example web application on tomcat"
+	        depends="all">
+	  <install url="${tomcat.manager.url}" username="${tomcat.admin.user}"
+	           password="${tomcat.admin.passwd}"
+               path="${tomcat.example.context.path}"
+               war="file:${project.dir}/web" />
+    </target>
+
+	<target name="reload" description="Reload example web application on tomcat"
+	        depends="all">
+	  <reload  url="${tomcat.manager.url}" username="${tomcat.admin.user}"
+	           password="${tomcat.admin.passwd}"
+	           path="${tomcat.example.context.path}"/>
+	</target>
+
+    <target name="remove" description="Remove example web application from tomcat">
+	  <remove url="${tomcat.manager.url}" username="${tomcat.admin.user}"
+	          password="${tomcat.admin.passwd}"
+	          path="${tomcat.example.context.path}"/>
+	</target>
 
 </project>
