@@ -38,6 +38,7 @@
 <!ENTITY ui_form_attributes             SYSTEM "entities/ui_form_attributes.xml">
 <!ENTITY ui_graphic_attributes          SYSTEM "entities/ui_graphic_attributes.xml">
 <!ENTITY ui_input_attributes            SYSTEM "entities/ui_input_attributes.xml">
+<!ENTITY ui_message_attributes          SYSTEM "entities/ui_message_attributes.xml">
 <!ENTITY ui_output_attributes           SYSTEM "entities/ui_output_attributes.xml">
 <!ENTITY ui_panel_attributes            SYSTEM "entities/ui_panel_attributes.xml">
 <!ENTITY ui_select_boolean_attributes   SYSTEM "entities/ui_select_boolean_attributes.xml">
@@ -91,7 +92,6 @@
         <body-content>JSP</body-content>
         &ui_component_attributes;
         &ui_input_attributes;
-        &converter_attributes;
         &html_input_attributes;
         &html_universal_attributes;
         &html_event_handler_attributes;
@@ -102,6 +102,100 @@
         </attribute>
         &user_role_attributes;
     </tag>
+
+<!-- input_text -->
+    <tag>
+        <name>message</name>
+        <tag-class>net.sourceforge.myfaces.taglib.html.HtmlMessageTag</tag-class>
+        <body-content>JSP</body-content>
+        &ui_component_attributes;
+        &ui_message_attributes;
+        &html_universal_attributes;
+        &html_event_handler_attributes;
+        &user_role_attributes;
+        <!-- JSF HtmlMessage attributes -->
+        <attribute>
+            <name>errorClass</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <description>CSS class to be used for messages with severity "ERROR".</description>
+        </attribute>
+        <attribute>
+            <name>errorStyle</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <description>CSS style to be used for messages with severity "ERROR".</description>
+        </attribute>
+        <attribute>
+            <name>fatalClass</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <description>CSS class to be used for messages with severity "FATAL".</description>
+        </attribute>
+        <attribute>
+            <name>fatalStyle</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <description>CSS style to be used for messages with severity "FATAL".</description>
+        </attribute>
+        <attribute>
+            <name>infoClass</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <description>CSS class to be used for messages with severity "INFO".</description>
+        </attribute>
+        <attribute>
+            <name>infoStyle</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <description>CSS style to be used for messages with severity "INFO".</description>
+        </attribute>
+        <attribute>
+            <name>warnClass</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <description>CSS class to be used for messages with severity "WARN".</description>
+        </attribute>
+        <attribute>
+            <name>warnStyle</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <description>CSS style to be used for messages with severity "WARN".</description>
+        </attribute>
+        <attribute>
+            <name>styleClass</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <description>CSS class to be used.</description>
+        </attribute>
+        <attribute>
+            <name>style</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <description>CSS style to be used.</description>
+        </attribute>
+        <attribute>
+            <name>title</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <description>Title</description>
+        </attribute>
+        <attribute>
+            <name>title</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <description>Title attribute</description>
+        </attribute>
+        <attribute>
+            <name>tooltip</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <description>Tooltip attribute</description>
+        </attribute>
+    </tag>
+
+
+
 
 
 
