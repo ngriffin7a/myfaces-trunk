@@ -35,6 +35,9 @@ import org.apache.myfaces.renderkit.html.util.JavascriptUtils;
  * @author Sylvain Vieujot (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.21  2005/02/07 01:40:42  svieujot
+ * style attribute fix.
+ *
  * Revision 1.20  2005/02/06 19:45:32  svieujot
  * Add allowExternalLinks attribute.
  *
@@ -958,14 +961,12 @@ public class HtmlEditorRenderer extends HtmlRenderer {
             if( !editor.isShowAnyToolBox() ){
                 writer.writeAttribute(HTML.STYLE_ATTR, "margin-right: 0.3em", null);
             }
-            String tempInlineStyleClass = "";
             if( editor.getStyle()!=null ){
-                // Convert the style into a style class so that the Zoom works as it's relying on changing the class
-                tempInlineStyleClass =  "kupu_tmpInlineClass"+editor.getId();
-                AddResource.addInlineStyleToHeader(tempInlineStyleClass+"{"+editor.getStyle()+"}",context);
+                // Convert the style into an style declaration so that it doesn't preempt the Zoom works as it's relying on changing the class
+                AddResource.addInlineStyleToHeader("#kupu-editor{"+editor.getStyle()+"}",context);
             }
             writer.writeAttribute(HTML.CLASS_ATTR,
-                    "kupu-editorframe "+tempInlineStyleClass+(editor.getStyleClass()==null ? "" : " "+editor.getStyleClass()), null);
+                    "kupu-editorframe"+(editor.getStyleClass()==null ? "" : " "+editor.getStyleClass()), null);
             	writer.startElement(HTML.IFRAME_ELEM, null);
             	writer.writeAttribute(HTML.ID_ATTR, "kupu-editor", null);
             	writer.writeAttribute(HTML.FRAMEBORDER_ATTR, "0", null);
