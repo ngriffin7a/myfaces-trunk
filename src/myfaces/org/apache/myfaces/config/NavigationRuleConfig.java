@@ -31,12 +31,12 @@ public class NavigationRuleConfig
     implements Config
 {
     private String _description = null;
-    private String _fromTreeId = null;
+    private String _fromViewId = null;
     private List _navigationCaseConfigList = null;
 
-    public String getFromTreeId()
+    public String getFromViewId()
     {
-        return _fromTreeId;
+        return _fromViewId;
     }
 
     public String getDescription()
@@ -49,9 +49,9 @@ public class NavigationRuleConfig
         _description = description;
     }
 
-    public void setFromTreeId(String fromTreeId)
+    public void setFromViewId(String fromViewId)
     {
-        _fromTreeId = fromTreeId;
+        _fromViewId = fromViewId;
     }
 
     public void addNavigationCaseConfig(NavigationCaseConfig navigationCaseConfig)

@@ -30,7 +30,8 @@ public class NavigationCaseConfig
 {
     private String _fromActionRef = null;
     private String _fromOutcome = null;
-    private String _toTreeId = null;
+    private String _toViewId = null;
+    private boolean _redirect = false;
 
     public String getFromActionRef()
     {
@@ -52,13 +53,23 @@ public class NavigationCaseConfig
         _fromOutcome = fromOutcome;
     }
 
-    public String getToTreeId()
+    public String getToViewId()
     {
-        return _toTreeId;
+        return _toViewId;
     }
 
-    public void setToTreeId(String toTreeId)
+    public void setToViewId(String toViewId)
     {
-        _toTreeId = toTreeId;
+        _toViewId = toViewId;
+    }
+
+    public boolean isRedirect()
+    {
+        return _redirect;
+    }
+
+    public void setRedirect(boolean redirect)
+    {
+        _redirect = redirect;
     }
 }

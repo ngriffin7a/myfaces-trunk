@@ -198,7 +198,7 @@ public class ConverterUtils
         ServletContext servletContext = (ServletContext)facesContext.getExternalContext().getContext();
         FacesConfigFactory fcf = MyFacesFactoryFinder.getFacesConfigFactory(servletContext);
         FacesConfig facesConfig = fcf.getFacesConfig(servletContext);
-        RenderKitConfig rkc = facesConfig.getRenderKitConfig(facesContext.getTree().getRenderKitId());
+        RenderKitConfig rkc = facesConfig.getRenderKitConfig(facesContext.getViewRoot().getRenderKitId());
         RendererConfig rc = rkc.getRendererConfig(rendererType);
         AttributeConfig ac = rc.getAttributeConfig(attrName);
         if (ac == null)

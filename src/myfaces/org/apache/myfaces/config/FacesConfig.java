@@ -395,26 +395,21 @@ public class FacesConfig
             _factoryConfig.update(factoryConfig);
         }
     }
-    
+
     public LifecycleConfig getLifecycleConfig()
     {
         return _lifecycleConfig;
     }
-    
-    public void setLifecycleConfig(LifecycleConfig lifecycleConfig)
-    {
-        _lifecycleConfig = lifecycleConfig;
-    }
 
     public void addLifecycleConfig(LifecycleConfig lifecycleConfig)
     {
-        if ( _lifecycleConfig == null)
+        if (_lifecycleConfig == null)
         {
             _lifecycleConfig = lifecycleConfig;
         }
         else
         {
-            _lifecycleConfig.update(lifecycleConfig);
+            _lifecycleConfig.addPhaseListenerClasses(lifecycleConfig.getPhaseListenerClasses());
         }
     }
-    }
+}

@@ -34,11 +34,11 @@ public class ApplicationConfig
     implements Config
 {
     private ActionListener _actionListener;
+    private String _messageBundle;
     private NavigationHandler _navigationHandler;
     private ViewHandler _viewHandler;
     private PropertyResolver _propertyResolver;
     private VariableResolver _variableResolver;
-    private String _messageBundle;
     private LocaleConfig _localeConfig;
     
     public void setActionListener(ActionListener actionListener)

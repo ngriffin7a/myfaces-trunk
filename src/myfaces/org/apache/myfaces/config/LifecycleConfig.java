@@ -18,37 +18,67 @@
  */
 package net.sourceforge.myfaces.config;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import javax.faces.event.PhaseListener;
+import java.util.*;
 
 
 /**
  * @author Anton Koinov (latest modification by $Author$)
+ * @author Thomas Spiegl*
  * @version $Revision$ $Date$
  */
 public class LifecycleConfig
     implements Config
 {
+    private static final Log log = LogFactory.getLog(LifecycleConfig.class);
     //~ Instance fields ----------------------------------------------------------------------------
 
-    private PhaseListener _phaseListener;
+    private ArrayList _phaseListeners;
 
     //~ Methods ------------------------------------------------------------------------------------
 
-    public void setPhaseListener(PhaseListener phaseListener)
+    public void addPhaseListenerClasses(Iterator phaseListenerClasses)
     {
-        _phaseListener = phaseListener;
-    }
-
-    public PhaseListener getPhaseListener()
-    {
-        return _phaseListener;
-    }
-
-    public void update(LifecycleConfig lifecycleConfig)
-    {
-        if (lifecycleConfig._phaseListener != null)
+        while (phaseListenerClasses.hasNext())
         {
-            _phaseListener = lifecycleConfig._phaseListener;
+            _phaseListeners.add(phaseListenerClasses.next());
         }
+    }
+
+    public void addPhaseListener(String phaseListener)
+    {
+        try
+        {
+            Class clazz = Class.forName(phaseListener, true, Thread.currentThread().getContextClassLoader());
+            if (PhaseListener.class.isAssignableFrom(clazz))
+            {
+                if (_phaseListeners == null)
+                {
+                    _phaseListeners = new ArrayList();
+                }
+                _phaseListeners.add(clazz);
+            }
+            else
+            {
+                log.error("Error in faces-config.xml - Class " + phaseListener +
+                    " must be an instance of " + PhaseListener.class.getName());
+            }
+        }
+        catch (ClassNotFoundException e)
+        {
+            log.error("Error in faces-config.xml - Class not found: " + phaseListener);
+        }
+    }
+
+    public Iterator getPhaseListenerClasses()
+    {
+        if (_phaseListeners == null)
+        {
+            return Collections.EMPTY_LIST.iterator();
+        }
+        return _phaseListeners.iterator();
     }
 }

@@ -33,6 +33,7 @@ public class ConverterConfig
     implements Config
 {
     private String _converterId;
+    private String _converterForClass;
     private String _converterClass;
     private Map _attributeConfigMap;
     private Map _propertyConfigMap;
@@ -45,6 +46,16 @@ public class ConverterConfig
     public void setConverterId(String converterId)
     {
         _converterId = converterId;
+    }
+
+    public String getConverterForClass()
+    {
+        return _converterForClass;
+    }
+
+    public void setConverterForClass(String converterForClass)
+    {
+        _converterForClass = converterForClass;
     }
 
     public String getConverterClass()

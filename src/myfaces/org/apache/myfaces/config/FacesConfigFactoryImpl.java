@@ -124,7 +124,7 @@ public class FacesConfigFactoryImpl
             }
             else
             {
-                System.out.println("Ignored node '" + n.getNodeName() + "' of type " + n.getNodeType());
+                log.warn("Ignored node '" + n.getNodeName() + "' of type " + n.getNodeType());
             }
         }
     }
@@ -137,7 +137,7 @@ public class FacesConfigFactoryImpl
 
     public void setProperty(Object obj, Element elem)
     {
-        System.out.println("setProperty " + obj + " : " + elem);
+        if (log.isTraceEnabled()) log.trace("setProperty " + obj + " : " + elem);
         String propName = resolvePropertyName(elem.getNodeName());
 
         //Look for setXxx or addXxx method
@@ -183,7 +183,7 @@ public class FacesConfigFactoryImpl
         if (method == null)
         {
             //throw new FacesException("Class " + beanClass + " has no set or add method for property '" + propName + "'.");
-            System.out.println("Class " + beanClass + " has no set or add method for property '" + propName + "'.");
+            log.error("Class " + beanClass + " has no set or add method for property '" + propName + "'.");
             return;
         }
 

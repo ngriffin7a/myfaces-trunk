@@ -130,7 +130,7 @@ public class NavigationHandlerImpl
             if ((cazeOutcome == null || cazeOutcome.equals(outcome)) &&
                 (cazeActionRef == null || cazeActionRef.equals(actionRef)))
             {
-                return caze.getToTreeId();
+                return caze.getToViewId();
             }
         }
         return null;
@@ -159,7 +159,7 @@ public class NavigationHandlerImpl
                 List cazes = rule.getNavigationCaseConfigList();
                 int sizej = cazes.size();
 
-                String fromTreeId = rule.getFromTreeId();
+                String fromTreeId = rule.getFromViewId();
                 List list = (List)_cazes.get(fromTreeId);
                 if (list == null)
                 {

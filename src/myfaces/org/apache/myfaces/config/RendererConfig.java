@@ -37,8 +37,8 @@ public class RendererConfig
     private String _rendererType = null;
     private String _rendererClass = null;
     private Map _attributeConfigMap = null;
-    private Set _componentTypeSet = null;
-    private Set _componentClassSet = null;
+    private Set _supportedComponentTypeSet = null;
+    private Set _supportedComponentClassSet = null;
 
     public String getRendererType()
     {
@@ -89,52 +89,22 @@ public class RendererConfig
     }
 
 
-    public void addComponentType(String componentType)
+    public void addSupportedComponentType(SupportedComponentTypeConfig componentType)
     {
-        if (_componentTypeSet == null)
+        if (_supportedComponentTypeSet == null)
         {
-            _componentTypeSet = new HashSet();
+            _supportedComponentTypeSet = new HashSet();
         }
-        _componentTypeSet.add(componentType);
+        _supportedComponentTypeSet.add(componentType);
     }
 
-    public Iterator getComponentTypes()
+    public Iterator getSupportedComponentTypes()
     {
-        return _componentTypeSet == null
-                ? Collections.EMPTY_SET.iterator()
-                : _componentTypeSet.iterator();
-    }
-
-    public boolean supportsComponentType(String componentType)
-    {
-        return _componentTypeSet.contains(componentType);
-    }
-
-
-
-    public void addComponentClass(String componentClassName)
-    {
-        try
-        {
-            if (_componentClassSet == null)
-            {
-                _componentClassSet = new HashSet();
-            }
-            _componentClassSet.add(Class.forName(componentClassName, true, Thread.currentThread().getContextClassLoader()));
-        }
-        catch (ClassNotFoundException e)
-        {
-            log.error("Error in faces-config.xml - Class not found: " + componentClassName);
-        }
-    }
-
-    public Iterator getComponentClassNames()
-    {
-        if (_componentClassSet == null)
+        if (_supportedComponentTypeSet == null)
         {
             return Collections.EMPTY_SET.iterator();
         }
-        final Iterator it = _componentClassSet.iterator();
+        final Iterator it = _supportedComponentTypeSet.iterator();
         return new Iterator() {
             public boolean hasNext()
             {
@@ -143,7 +113,65 @@ public class RendererConfig
 
             public Object next()
             {
-                return ((Class)it.next()).getName();
+                return ((SupportedComponentTypeConfig)it.next()).getComponentType();
+            }
+
+            public void remove()
+            {
+                it.remove();
+            }
+        };
+
+    }
+
+    public boolean supportsComponentType(String componentType)
+    {
+        for (Iterator it = getSupportedComponentTypes(); it.hasNext(); )
+        {
+            String type = (String)it.next();
+            if ( type.equals(componentType))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+
+    public void addSupportedComponentClass(SupportedComponentClassConfig componentClassName)
+    {
+        if (_supportedComponentClassSet == null)
+        {
+            _supportedComponentClassSet = new HashSet();
+        }
+        _supportedComponentClassSet.add(componentClassName);
+    }
+
+    public void addSupportedComponentClass(Class clazz)
+    {
+        if (_supportedComponentClassSet == null)
+        {
+            _supportedComponentClassSet = new HashSet();
+        }
+        _supportedComponentClassSet.add(new SupportedComponentClassConfig(clazz));
+    }
+
+    public Iterator getSupportedComponentClassNames()
+    {
+        if (_supportedComponentClassSet == null)
+        {
+            return Collections.EMPTY_SET.iterator();
+        }
+        final Iterator it = _supportedComponentClassSet.iterator();
+        return new Iterator() {
+            public boolean hasNext()
+            {
+                return it.hasNext();
+            }
+
+            public Object next()
+            {
+                return ((SupportedComponentClassConfig)it.next()).getComponentClass();
             }
 
             public void remove()
@@ -153,38 +181,18 @@ public class RendererConfig
         };
     }
 
-    Iterator getComponentClasses()
-    {
-        return _componentClassSet == null
-                ? Collections.EMPTY_SET.iterator()
-                : _componentClassSet.iterator();
-    }
-
     public boolean supportsComponentClass(Class componentClass)
     {
-        if (_componentClassSet == null)
-        {
-            return false;
-        }
-
-        if (_componentClassSet.contains(componentClass))
-        {
-            return true;
-        }
-
-        //Is it a derived class?
-        for (Iterator it = _componentClassSet.iterator(); it.hasNext(); )
+        for (Iterator it = getSupportedComponentClassNames(); it.hasNext(); )
         {
             Class c = (Class)it.next();
-            if (c.isAssignableFrom(componentClass))
+            if ( c.isAssignableFrom(componentClass))
             {
                 return true;
             }
         }
         return false;
     }
-
-
 
     public Renderer newRenderer()
     {

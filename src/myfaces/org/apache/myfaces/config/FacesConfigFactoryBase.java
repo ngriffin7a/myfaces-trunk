@@ -198,13 +198,13 @@ public abstract class FacesConfigFactoryBase
             for (Iterator rendIt = rkc.getRendererConfigs(); rendIt.hasNext(); )
             {
                 RendererConfig rc = (RendererConfig)rendIt.next();
-                for (Iterator ctIt = rc.getComponentTypes(); ctIt.hasNext(); )
+                for (Iterator ctIt = rc.getSupportedComponentTypes(); ctIt.hasNext(); )
                 {
                     String compType = (String)ctIt.next();
                     UIComponent comp = facesConfig.getComponent(compType);
                     if (!rc.supportsComponentClass(comp.getClass()))
                     {
-                        rc.addComponentClass(comp.getClass().getName());
+                        rc.addSupportedComponentClass(comp.getClass());
                     }
                 }
             }

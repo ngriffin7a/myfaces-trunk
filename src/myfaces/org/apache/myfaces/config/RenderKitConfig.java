@@ -92,8 +92,6 @@ public class RenderKitConfig
         return _rendererConfigMap;
     }
 
-
-
     public RenderKit newRenderKit()
     {
         String clazz = getRenderKitClass();
