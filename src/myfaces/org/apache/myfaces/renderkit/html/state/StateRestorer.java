@@ -518,7 +518,7 @@ public class StateRestorer
                     listener = (FacesListener)root.findComponent(paramValue);
                     if (listener == null)
                     {
-                        LogUtil.getLogger().severe("Could not find listener component for restored listener of type " + listener.getClass().getName());
+                        LogUtil.getLogger().severe("Could not find listener component for restored listener of type " + info.listenerType);
                         continue;
                     }
                 }

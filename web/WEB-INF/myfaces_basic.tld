@@ -51,7 +51,7 @@
         <!-- TODO: attribute formClass -->
         <attribute>
             <name>id</name>
-            <required>true</required>
+            <required>false</required>
             <rtexprvalue>false</rtexprvalue>
         </attribute>
         <attribute>
@@ -529,7 +529,7 @@
         <tagclass>net.sourceforge.myfaces.taglib.CommandButtonTag</tagclass>
         <attribute>
             <name>id</name>
-            <required>true</required>
+            <required>false</required>
             <rtexprvalue>false</rtexprvalue>
         </attribute>
         <attribute>
@@ -859,7 +859,7 @@
         <bodycontent>JSP</bodycontent>
         <attribute>
           <name>id</name>
-          <required>true</required>
+          <required>false</required>
           <rtexprvalue>false</rtexprvalue>
         </attribute>
         <attribute>
@@ -996,7 +996,7 @@
         <!-- TODO attributes rendered, key bundle, outputClass, value -->
         <attribute>
             <name>id</name>
-            <required>true</required>
+            <required>false</required>
             <rtexprvalue>false</rtexprvalue>
         </attribute>
         <attribute>
@@ -1073,7 +1073,7 @@
         <bodycontent>empty</bodycontent>
         <attribute>
             <name>id</name>
-            <required>true</required>
+            <required>false</required>
             <rtexprvalue>false</rtexprvalue>
         </attribute>
         <attribute>
@@ -1277,7 +1277,7 @@
         <!-- TODO attributes rendered, selectoneClass -->
         <attribute>
             <name>id</name>
-            <required>true</required>
+            <required>false</required>
             <rtexprvalue>false</rtexprvalue>
         </attribute>
         <attribute>
@@ -1417,7 +1417,7 @@
         <!-- TODO attributes rendered, selectoneClass -->
         <attribute>
             <name>id</name>
-            <required>true</required>
+            <required>false</required>
             <rtexprvalue>false</rtexprvalue>
         </attribute>
         <attribute>
@@ -1562,7 +1562,7 @@
         <!-- TODO attributes rendered, selectmanyClass -->
         <attribute>
             <name>id</name>
-            <required>true</required>
+            <required>false</required>
             <rtexprvalue>false</rtexprvalue>
         </attribute>
         <attribute>
@@ -1702,7 +1702,7 @@
         <!-- TODO attributes rendered, selectmanyClass -->
         <attribute>
             <name>id</name>
-            <required>true</required>
+            <required>false</required>
             <rtexprvalue>false</rtexprvalue>
         </attribute>
         <attribute>
@@ -1847,7 +1847,7 @@
         <bodycontent>JSP</bodycontent>
         <attribute>
             <name>id</name>
-            <required>true</required>
+            <required>false</required>
             <rtexprvalue>false</rtexprvalue>
         </attribute>
         <attribute>
@@ -1899,7 +1899,7 @@
         <bodycontent>JSP</bodycontent>
         <attribute>
             <name>id</name>
-            <required>true</required>
+            <required>false</required>
             <rtexprvalue>false</rtexprvalue>
         </attribute>
         <attribute>
@@ -1959,7 +1959,7 @@
          <bodycontent>JSP</bodycontent>
          <attribute>
              <name>id</name>
-             <required>true</required>
+             <required>false</required>
              <rtexprvalue>false</rtexprvalue>
          </attribute>
          <attribute>
@@ -2075,10 +2075,9 @@
         <bodycontent>JSP</bodycontent>
         <attribute>
             <name>id</name>
-            <required>true</required>
+            <required>false</required>
             <rtexprvalue>false</rtexprvalue>
         </attribute>
     </tag>
-
 
 </taglib>
