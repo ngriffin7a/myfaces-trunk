@@ -43,7 +43,7 @@ public class OutputDateTag
         super.overrideProperties(uiComponent);
         if (uiComponent.getConverter() == null)
         {
-            uiComponent.setConverter("DateConverter");
+            uiComponent.setConverter("Date");
         }
     }
 
