@@ -19,8 +19,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
-import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 import javax.faces.context.FacesContext;
@@ -41,6 +41,9 @@ import org.apache.myfaces.renderkit.html.HTML;
  * @author Sylvain Vieujot (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.7  2004/12/02 02:20:55  svieujot
+ * Bugfix : render the head elements in the same order as they were added (use a LinkedHashSet).
+ *
  * Revision 1.6  2004/12/02 02:07:22  svieujot
  * Make the Extensions filter work with resource hierarchies.
  * A small concession had to be made though :
@@ -114,6 +117,11 @@ public class AddResource {
             }
             request.setAttribute(javascriptRenderedAttributeName, Boolean.TRUE);
         }
+    }
+    
+    public static void addStyleSheet(Class componentClass, String resourceFileName, FacesContext context){
+        AdditionalHeaderInfoToRender cssInfo = new AdditionalHeaderInfoToRender(AdditionalHeaderInfoToRender.TYPE_CSS, componentClass, resourceFileName);
+        getAdditionalHeaderInfoToRender(context).add( cssInfo );
     }
     
     /**
@@ -233,11 +241,6 @@ public class AddResource {
     
     // Header stuffs
     
-    public static void addStyleSheet(Class componentClass, String resourceFileName, FacesContext context){
-        AdditionalHeaderInfoToRender cssInfo = new AdditionalHeaderInfoToRender(AdditionalHeaderInfoToRender.TYPE_CSS, componentClass, resourceFileName);
-        getAdditionalHeaderInfoToRender(context).add( cssInfo );
-    }
-    
     static public boolean hasAdditionalHeaderInfoToRender(HttpServletRequest request){
         boolean test = request.getAttribute(ADDITIONAL_HEADER_INFO_REQUEST_ATTRUBITE_NAME) != null;
 		return test;
@@ -251,7 +254,7 @@ public class AddResource {
     private static Set getAdditionalHeaderInfoToRender(HttpServletRequest request){
         Set set = (Set) request.getAttribute(ADDITIONAL_HEADER_INFO_REQUEST_ATTRUBITE_NAME);
         if( set == null ){
-            set = new HashSet();
+            set = new LinkedHashSet();
             request.setAttribute(ADDITIONAL_HEADER_INFO_REQUEST_ATTRUBITE_NAME, set);
         }
         
