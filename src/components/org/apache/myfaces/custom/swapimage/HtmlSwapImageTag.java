@@ -23,6 +23,9 @@ import javax.faces.component.UIComponent;
  * @author Thomas Spiegl
  * @version $Revision$ $Date$
  *          $Log$
+ *          Revision 1.4  2005/03/05 22:50:33  tomsp
+ *          changed swapimage tag
+ *
  *          Revision 1.3  2005/02/18 17:19:30  matzew
  *          added release() to tag clazzes.
  *
@@ -37,6 +40,9 @@ public class HtmlSwapImageTag
         extends HtmlGraphicImageTagBase
 {
     private static final String RENDERER_TYPE = "org.apache.myfaces.SwapImage";
+
+    private static final String SWAP_IMG_URL_ATTR = "swapImageUrl";
+    private static final String ACTIVE_IMG_URL_ATTR = "activeImageUrl";
 
     private String _swapImageUrl;
     private String _activeImageUrl;
@@ -61,8 +67,8 @@ public class HtmlSwapImageTag
     {
         super.setProperties(component);
 
-        ((HtmlSwapImage) component).setSwapImageUrl(_swapImageUrl);
-        ((HtmlSwapImage) component).setActiveImageUrl(_activeImageUrl);
+        setStringProperty(component, SWAP_IMG_URL_ATTR, _swapImageUrl);
+        setStringProperty(component, ACTIVE_IMG_URL_ATTR, _activeImageUrl);
     }
 
     public void setSwapImageUrl(String swapImageUrl)
