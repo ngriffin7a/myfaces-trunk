@@ -22,7 +22,6 @@ import net.sourceforge.myfaces.renderkit.attr.ext.LayoutRendererAttributes;
 import net.sourceforge.myfaces.renderkit.callback.CallbackSupport;
 import net.sourceforge.myfaces.renderkit.html.HTMLRenderer;
 import net.sourceforge.myfaces.util.logging.LogUtil;
-import net.sourceforge.myfaces.taglib.MyFacesBodyTag;
 
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIPanel;
@@ -178,8 +177,7 @@ public class LayoutRenderer
     protected void writeBody(FacesContext facesContext, UIComponent uiComponent)
         throws IOException
     {
-        BodyContent bodyContent
-            = (BodyContent)uiComponent.getAttribute(MyFacesBodyTag.BODY_CONTENT_ATTR);
+        BodyContent bodyContent = getBodyContent(facesContext, uiComponent);
         if (bodyContent == null)
         {
             throw new IllegalStateException("No BodyContent!?");

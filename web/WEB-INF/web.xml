@@ -25,6 +25,49 @@
 
 <web-app>
 
+
+    <context-param>
+        <param-name>logLevel</param-name>
+        <!--<param-value>INFO</param-value>-->
+        <param-value>FINER</param-value>
+        <!--<param-value>FINEST</param-value>-->
+    </context-param>
+
+    <context-param>
+        <!--
+        * Init parameter "jspInfoCaching"
+        * MyFaces needs to parse JSP files when saving state information.
+        * Setting this parameter to true, means that JSP files are cached
+        * in the servlet context (= application in JSP terminology).
+        * During development this should always be set to false, because
+        * otherwise changes in JSPs will not be recognized by MyFaces.
+        -->
+        <param-name>jspInfoCaching</param-name>
+        <param-value>false</param-value>
+    </context-param>
+
+    <context-param>
+        <!--
+        * Init parameter "servletMappingType"
+        * Allowed values:
+        * "virtual_path" = classic servlet-mapping as described in the specification.
+        * "extension" = alternative ServletMapping for the url-pattern "*.jsf".
+        -->
+        <param-name>servletMappingType</param-name>
+        <param-value>extension</param-value>
+        <!--<param-value>virtual_path</param-value>-->
+    </context-param>
+
+    <context-param>
+        <!-- TODO -->
+        <param-name>saveStateInClient</param-name>
+        <param-value>true</param-value>
+    </context-param>
+
+
+
+
+
     <!-- MyFaces Filter -->
     <!--
     <filter>
@@ -65,6 +108,5 @@
         <welcome-file>index.jsp</welcome-file>
         <welcome-file>index.html</welcome-file>
     </welcome-file-list>
-
 
 </web-app>

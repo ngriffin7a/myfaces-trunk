@@ -52,6 +52,9 @@ public class StateRenderer
 
     static final String NULL_DUMMY_VALUE = "__NULL__";
 
+    protected static final String UNRENDERED_COMPONENTS_REQUEST_PARAM = "_unrendered";
+
+
     protected StateSaver _stateSaver;
     protected StateRestorer _stateRestorer;
 

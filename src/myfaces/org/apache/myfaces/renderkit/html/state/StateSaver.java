@@ -18,7 +18,6 @@
  */
 package net.sourceforge.myfaces.renderkit.html.state;
 
-import net.sourceforge.myfaces.MyFacesConfig;
 import net.sourceforge.myfaces.component.CommonComponentAttributes;
 import net.sourceforge.myfaces.component.UIComponentUtils;
 import net.sourceforge.myfaces.component.UIPanel;
@@ -89,6 +88,7 @@ public class StateSaver
 
     public void encodeState(FacesContext facesContext, int encodingType) throws IOException
     {
+        /*
         if (MyFacesConfig.isStateEncodingOnTheFly())
         {
             Map stateMap = getStateMap(facesContext);
@@ -107,6 +107,7 @@ public class StateSaver
         }
         else
         {
+        */
             ResponseWriter writer = facesContext.getResponseWriter();
             switch (encodingType)
             {
@@ -119,16 +120,20 @@ public class StateSaver
                 default:
                     throw new IllegalArgumentException("Illegal encoding type " + encodingType);
             }
+        /*
         }
+        */
     }
 
     public void release(FacesContext facesContext)
         throws IOException
     {
+        /*
         if (MyFacesConfig.isStateEncodingOnTheFly())
         {
             return; //nothing to do
         }
+        */
 
         BodyContent bodyContent = (BodyContent)facesContext.getServletRequest()
                                     .getAttribute(StateRenderer.BODY_CONTENT_REQUEST_ATTR);
@@ -183,15 +188,59 @@ public class StateSaver
     {
         LogUtil.getLogger().entering("StateSaver", "saveComponents");
 
+        //Remember all seen components of current tree, so that
+        //we can find "missing components" later (i.e. components that are in
+        //the parsed tree, but have not been rendered)
+        Set visitedComponents = new HashSet();
+
         Iterator treeIt = TreeUtils.treeIterator(facesContext.getTree());
         while(treeIt.hasNext())
         {
             UIComponent comp = (UIComponent)treeIt.next();
             saveComponentAttributes(facesContext, stateMap, comp);
             saveListeners(facesContext, stateMap, comp);
+            visitedComponents.add(JspInfo.getUniqueComponentId(comp));
         }
 
+        saveUnrenderedComponents(facesContext, stateMap, visitedComponents);
+
         LogUtil.getLogger().exiting("StateSaver", "saveComponents");
+    }
+
+
+    /**
+     * Save "hint" for all components, that are in the parsed tree
+     * but not in the current tree.
+     */
+    protected void saveUnrenderedComponents(FacesContext facesContext,
+                                            Map stateMap,
+                                            Set visitedComponents)
+    {
+        StringBuffer unrenderedComponents = new StringBuffer();
+
+        Tree parsedTree = JspInfo.getTree(facesContext,
+                                          facesContext.getTree().getTreeId());
+        Iterator treeIt = TreeUtils.treeIterator(parsedTree);
+        while (treeIt.hasNext())
+        {
+            UIComponent parsedComp = (UIComponent)treeIt.next();
+            String uniqueId = JspInfo.getUniqueComponentId(parsedComp);
+            if (!visitedComponents.contains(uniqueId))
+            {
+                if (unrenderedComponents.length() > 0)
+                {
+                    unrenderedComponents.append(',');
+                }
+                unrenderedComponents.append(uniqueId);
+            }
+        }
+
+        if (unrenderedComponents.length() > 0)
+        {
+            saveParameter(stateMap,
+                          StateRenderer.UNRENDERED_COMPONENTS_REQUEST_PARAM,
+                          unrenderedComponents.toString());
+        }
     }
 
 

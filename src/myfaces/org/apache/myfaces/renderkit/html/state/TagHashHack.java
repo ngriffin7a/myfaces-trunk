@@ -101,7 +101,7 @@ public class TagHashHack
             }
         }
 
-        if (MyFacesConfig.isJspInfoApplicationCaching())
+        if (MyFacesConfig.isJspInfoCaching(facesContext.getServletContext()))
         {
             //Save tagHash in parsed tree and do not save in client
             parsedTree.getRoot().setAttribute(TAG_HASH_ATTR, saveTagHash);

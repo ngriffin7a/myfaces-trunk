@@ -21,7 +21,7 @@ package net.sourceforge.myfaces.taglib.ext;
 import net.sourceforge.myfaces.component.UICommand;
 import net.sourceforge.myfaces.component.ext.UISortHeader;
 import net.sourceforge.myfaces.renderkit.html.ext.SortColumnRenderer;
-import net.sourceforge.myfaces.taglib.MyFacesTag;
+import net.sourceforge.myfaces.taglib.MyFacesBodyTag;
 
 import javax.faces.component.UIComponent;
 import javax.servlet.jsp.JspException;
@@ -33,7 +33,7 @@ import javax.servlet.jsp.JspException;
  * @version $Revision$ $Date$
  */
 public class SortColumnTag
-    extends MyFacesTag
+    extends MyFacesBodyTag
 {
     public UIComponent createComponent()
     {

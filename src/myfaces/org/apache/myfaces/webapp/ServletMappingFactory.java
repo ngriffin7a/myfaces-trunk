@@ -9,5 +9,8 @@ import javax.servlet.ServletContext;
  */
 public interface ServletMappingFactory
 {
+    public static final String TYPE_EXTENSION = "extension";
+    public static final String TYPE_VIRTUAL_PATH = "virtual_path";
+
     public ServletMapping getServletMapping(ServletContext servletContext);
 }

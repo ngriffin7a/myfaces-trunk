@@ -21,20 +21,19 @@ package net.sourceforge.myfaces.renderkit.html;
 import net.sourceforge.myfaces.MyFacesFactoryFinder;
 import net.sourceforge.myfaces.component.UIParameter;
 import net.sourceforge.myfaces.convert.ConverterUtils;
-import net.sourceforge.myfaces.renderkit.attr.HyperlinkRendererAttributes;
 import net.sourceforge.myfaces.renderkit.attr.CommonRendererAttributes;
+import net.sourceforge.myfaces.renderkit.attr.HyperlinkRendererAttributes;
 import net.sourceforge.myfaces.renderkit.html.state.StateRenderer;
 import net.sourceforge.myfaces.renderkit.html.util.CommonAttributes;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLEncoder;
-import net.sourceforge.myfaces.taglib.MyFacesBodyTag;
-import net.sourceforge.myfaces.util.logging.LogUtil;
 import net.sourceforge.myfaces.util.bundle.BundleUtils;
+import net.sourceforge.myfaces.util.logging.LogUtil;
 import net.sourceforge.myfaces.webapp.ServletMapping;
 import net.sourceforge.myfaces.webapp.ServletMappingFactory;
 
 import javax.faces.FactoryFinder;
-import javax.faces.component.UIComponent;
 import javax.faces.component.UICommand;
+import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 import javax.faces.convert.Converter;
@@ -272,7 +271,7 @@ public class HyperlinkRenderer
         }
 
         //write out body content
-        BodyContent bodyContent = (BodyContent)uiComponent.getAttribute(MyFacesBodyTag.BODY_CONTENT_ATTR);
+        BodyContent bodyContent = getBodyContent(facesContext, uiComponent);
         bodyContent.writeOut(writer);
 
         //close anchor

@@ -26,6 +26,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.tree.Tree;
 import javax.faces.webapp.FacesTag;
 import java.util.Iterator;
+import java.util.Set;
 
 /**
  * DOCUMENT ME!
@@ -37,6 +38,7 @@ public class TreeCopier
     private FacesContext _facesContext;
     private boolean _overwriteComponents = false;
     private boolean _overwriteAttributes = false;
+    private Set _ignoreComponents = null;
 
     public TreeCopier(FacesContext facesContext)
     {
@@ -53,22 +55,34 @@ public class TreeCopier
         _overwriteComponents = overwriteComponents;
     }
 
+    /**
+     * @param ignoreComponents  Set of uniqueIds of components that should not be copied
+     */
+    public void setIgnoreComponents(Set ignoreComponents)
+    {
+        _ignoreComponents = ignoreComponents;
+    }
+
 
     public void copyTree(Tree fromTree, Tree toTree)
     {
-        copyComponent(fromTree.getTreeId(),
-                      fromTree.getRoot(), toTree.getRoot());
+        copyComponent(fromTree.getRoot(), toTree, toTree.getRoot());
     }
 
-    public void copySubTree(String fromTreeId,
-                            UIComponent fromComponent, UIComponent toComponent)
+    /*
+    public void copySubTree(UIComponent fromComponent, UIComponent toComponent)
     {
-        copyComponent(fromTreeId, fromComponent, toComponent);
+        copyComponent(fromComponent, toComponent);
     }
+    */
 
 
-    protected void copyComponent(String fromTreeId,
-                                 UIComponent fromComp,
+    /**
+     * @param fromComp          source components, where attributes and children should be copied from
+     * @param toComp            destination component, where attributes and children should be copied to
+     */
+    protected void copyComponent(UIComponent fromComp,
+                                 Tree toTree,
                                  UIComponent toComp)
     {
         copyAttributes(fromComp, toComp);
@@ -77,12 +91,21 @@ public class TreeCopier
         for (Iterator it = fromComp.getChildren(); it.hasNext(); childIndex++)
         {
             UIComponent child = (UIComponent)it.next();
+            String uniqueId = JspInfo.getUniqueComponentId(child);
+
+            if (_ignoreComponents != null &&
+                _ignoreComponents.contains(uniqueId))
+            {
+                continue;
+            }
+
             UIComponent clone;
 
             try
             {
                 //destination component already exists?
-                clone = toComp.findComponent(child.getComponentId());
+                //clone = toComp.findComponent(child.getComponentId());
+                clone = JspInfo.findComponentByUniqueId(toTree, uniqueId);
             }
             catch (Exception e)
             {
@@ -102,7 +125,7 @@ public class TreeCopier
                 clone.setComponentId(child.getComponentId());
                 toComp.addChild(childIndex, clone);
 
-                copyComponent(fromTreeId, child, clone);    //Recursion
+                copyComponent(child, toTree, clone);    //Recursion
             }
         }
     }
@@ -147,6 +170,5 @@ public class TreeCopier
             }
         }
     }
-
 
 }

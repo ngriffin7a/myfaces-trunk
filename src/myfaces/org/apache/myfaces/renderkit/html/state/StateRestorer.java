@@ -21,11 +21,11 @@ package net.sourceforge.myfaces.renderkit.html.state;
 import net.sourceforge.myfaces.component.CommonComponentAttributes;
 import net.sourceforge.myfaces.convert.ConverterUtils;
 import net.sourceforge.myfaces.convert.impl.StringArrayConverter;
-import net.sourceforge.myfaces.renderkit.html.jspinfo.JspBeanInfo;
 import net.sourceforge.myfaces.renderkit.html.jspinfo.JspInfo;
+import net.sourceforge.myfaces.renderkit.html.jspinfo.JspInfoUtils;
+import net.sourceforge.myfaces.renderkit.html.jspinfo.JspBeanInfo;
 import net.sourceforge.myfaces.taglib.core.ActionListenerTag;
 import net.sourceforge.myfaces.tree.TreeUtils;
-import net.sourceforge.myfaces.util.bean.BeanUtils;
 import net.sourceforge.myfaces.util.logging.LogUtil;
 
 import javax.faces.FacesException;
@@ -39,10 +39,6 @@ import javax.faces.event.ActionListener;
 import javax.faces.event.FacesListener;
 import javax.faces.event.ValueChangedListener;
 import javax.faces.tree.Tree;
-import javax.servlet.ServletRequest;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-import javax.servlet.jsp.PageContext;
 import java.io.IOException;
 import java.util.*;
 
@@ -64,14 +60,21 @@ public class StateRestorer
                                                   StateRenderer.TREE_ID_REQUEST_PARAM);
         if (previousTreeId != null && requestTree.getTreeId().equals(previousTreeId))
         {
+            //recreate beans of "request" scope
+            recreateRequestScopeBeans(facesContext);
+
             //restore model beans and values:
             restoreModelValues(facesContext, stateMap);
+
+            //restore "hint" about unrendered components
+            Set unrendererComponents = restoreUnrenderedComponents(stateMap);
 
             //restore tree
             Tree staticTree = JspInfo.getTree(facesContext, requestTree.getTreeId());
             TreeCopier treeCopier = new TreeCopier(facesContext);
             treeCopier.setOverwriteAttributes(false);
             treeCopier.setOverwriteComponents(false);
+            treeCopier.setIgnoreComponents(unrendererComponents);
             treeCopier.copyTree(staticTree, requestTree);
 
             //restore component states
@@ -166,11 +169,15 @@ public class StateRestorer
         throws FacesException
     {
         //Check model instance and create it, if it does not exist:
+        /*
+        --> already happend in recreateRequestScopeBeans
+
         String modelRef = uiComponent.getModelReference();
         if (modelRef != null)
         {
-            checkModelInstance(facesContext, modelRef);
+            JspInfoUtils.checkModelInstance(facesContext, modelRef);
         }
+        */
 
         //Set valid as default
         if (uiComponent.getAttribute(CommonComponentAttributes.VALID_ATTR) == null &&
@@ -325,7 +332,11 @@ public class StateRestorer
         }
 
         //Check model instance and create, if it does not exist:
-        checkModelInstance(facesContext, modelRef);
+        /*
+        --> already happend in recreateRequestScopeBeans
+
+        JspInfoUtils.checkModelInstance(facesContext, modelRef);
+        */
 
         String paramName = RequestParameterNames.getModelValueStateParameterName(modelRef);
         String paramValue = getStateParameter(stateMap, paramName);
@@ -360,113 +371,6 @@ public class StateRestorer
         restoreComponent(facesContext, stateMap, uiComponent);
     }
 
-
-
-    protected void checkModelInstance(FacesContext facesContext, String modelRef)
-    {
-        BeanUtils.stripBracketsFromModelReference(modelRef);
-        String modelId;
-        int dot = modelRef.indexOf('.');
-        if (dot == -1)
-        {
-            modelId = modelRef;
-        }
-        else
-        {
-            modelId = modelRef.substring(0, dot);
-        }
-
-        JspBeanInfo jspBeanInfo = JspInfo.getJspBeanInfo(facesContext,
-                                                         facesContext.getTree().getTreeId(),
-                                                         modelId);
-        if (jspBeanInfo == null)
-        {
-            //There is no JspBeanInfo for that model bean
-            // - either because of a typing error --> not our problem... :-)
-            // - or the referenced model object is the variable of a DataRenderer
-            // - or the object is created elsewhere (i.e. not via jsp:useBean)
-            // --> so, we can do nothing other than ignore this issue
-            return;
-        }
-
-        if (findModelBean(facesContext, modelId, jspBeanInfo.getScope()) == null)
-        {
-            //Create bean instance
-            if (jspBeanInfo.getClassName() == null &&
-                jspBeanInfo.getBeanName() == null)
-            {
-                throw new IllegalArgumentException("Incomplete JspBeanInfo for model " + modelId);
-            }
-
-            Object bean = jspBeanInfo.instantiate();
-            switch (jspBeanInfo.getScope())
-            {
-                case PageContext.PAGE_SCOPE:
-                    throw new IllegalArgumentException("Page scope is not supported!");
-
-                case PageContext.REQUEST_SCOPE:
-                    facesContext.getServletRequest().setAttribute(modelId, bean);
-                    break;
-
-                case PageContext.SESSION_SCOPE:
-                    ServletRequest servletRequest = facesContext.getServletRequest();
-                    if (servletRequest instanceof HttpServletRequest)
-                    {
-                        HttpSession session = ((HttpServletRequest)servletRequest).getSession();
-                        session.setAttribute(modelId, bean);
-                    }
-                    else
-                    {
-                        throw new IllegalArgumentException("Session scope is not allowed because ServletRequest is not a HttpServletRequest!");
-                    }
-                    break;
-
-                case PageContext.APPLICATION_SCOPE:
-                    facesContext.getServletContext().setAttribute(modelId, bean);
-                    break;
-
-                default:
-                    throw new IllegalArgumentException("Illegal scope " + jspBeanInfo.getScope());
-            }
-        }
-    }
-
-    private Object findModelBean(FacesContext facesContext, String id, int scope)
-    {
-        switch (scope)
-        {
-            case PageContext.PAGE_SCOPE:
-                throw new IllegalArgumentException("Page scope is not supported!");
-
-            case PageContext.REQUEST_SCOPE:
-                return facesContext.getServletRequest().getAttribute(id);
-
-            case PageContext.SESSION_SCOPE:
-                ServletRequest servletRequest = facesContext.getServletRequest();
-                if (servletRequest instanceof HttpServletRequest)
-                {
-                    HttpSession session = ((HttpServletRequest)servletRequest).getSession(false);
-                    if (session == null)
-                    {
-                        return null;
-                    }
-                    else
-                    {
-                        return session.getAttribute(id);
-                    }
-                }
-                else
-                {
-                    throw new IllegalArgumentException("Session scope is not allowed because ServletRequest is not a HttpServletRequest!");
-                }
-
-            case PageContext.APPLICATION_SCOPE:
-                return facesContext.getServletContext().getAttribute(id);
-
-            default:
-                throw new IllegalArgumentException("Unknown scope " + scope);
-        }
-    }
 
     protected void restoreLocale(FacesContext facesContext, Map stateMap)
     {
@@ -566,5 +470,50 @@ public class StateRestorer
             }
         }
     }
+
+
+
+
+    protected Set restoreUnrenderedComponents(Map stateMap)
+    {
+        String[] values = (String[])stateMap.get(StateRenderer.UNRENDERED_COMPONENTS_REQUEST_PARAM);
+        if (values == null || values.length == 0)
+        {
+            return Collections.EMPTY_SET;
+        }
+
+        Set set = new HashSet();
+        if (values.length == 1)
+        {
+            StringTokenizer st = new StringTokenizer(values[0], ",");
+            while(st.hasMoreTokens())
+            {
+                set.add(st.nextToken());
+            }
+            return set;
+        }
+        else
+        {
+            for (int i = 0; i < values.length; i++)
+            {
+                set.add(values[i]);
+            }
+            return set;
+        }
+    }
+
+
+    protected void recreateRequestScopeBeans(FacesContext facesContext)
+    {
+        Iterator it = JspInfo.getJspBeanInfos(facesContext,
+                                              facesContext.getTree().getTreeId());
+        while (it.hasNext())
+        {
+            Map.Entry entry = (Map.Entry)it.next();
+            JspInfoUtils.checkModelInstance(facesContext,
+                                            (JspBeanInfo)entry.getValue());
+        }
+    }
+
 
 }

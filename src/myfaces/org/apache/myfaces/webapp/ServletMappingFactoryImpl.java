@@ -18,11 +18,12 @@ public class ServletMappingFactoryImpl
     {
         if (_servletMapping == null)
         {
-            if (MyFacesConfig.isFileExtensionServletMapping())
+            String mapping = MyFacesConfig.getServletMappingType(servletContext);
+            if (mapping.equals(TYPE_EXTENSION))
             {
                 _servletMapping = new ServletMappingWithExtension();
             }
-            else
+            else // (mapping.equals(TYPE_VIRTUAL_PATH))
             {
                 _servletMapping = new ServletMappingWithVirtualPath();
             }

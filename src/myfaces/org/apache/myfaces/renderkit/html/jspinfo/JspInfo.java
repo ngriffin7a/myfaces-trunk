@@ -73,6 +73,11 @@ public class JspInfo
         return (JspBeanInfo)_jspBeanInfosMap.get(beanId);
     }
 
+
+    /**
+     * Returns an Iterator over the entry Set (!) of the parsed JspBeanInfos.
+     * @return
+     */
     public Iterator getJspBeanInfos()
     {
         return _jspBeanInfosMap.entrySet().iterator();
@@ -153,7 +158,7 @@ public class JspInfo
     private static Map getJspInfoMap(FacesContext facesContext)
     {
         Map map;
-        if (MyFacesConfig.isJspInfoApplicationCaching())
+        if (MyFacesConfig.isJspInfoCaching(facesContext.getServletContext()))
         {
             map = (Map)facesContext.getServletContext().getAttribute(JSP_INFO_MAP_ATTR);
         }
@@ -164,7 +169,7 @@ public class JspInfo
         if (map == null)
         {
             map = new HashMap();
-            if (MyFacesConfig.isJspInfoApplicationCaching())
+            if (MyFacesConfig.isJspInfoCaching(facesContext.getServletContext()))
             {
                 facesContext.getServletContext().setAttribute(JSP_INFO_MAP_ATTR, map);
             }
