@@ -19,7 +19,7 @@
 package net.sourceforge.myfaces.taglib.html;
 
 import net.sourceforge.myfaces.renderkit.html.HTML;
-import net.sourceforge.myfaces.taglib.UIInputTagBase;
+import net.sourceforge.myfaces.taglib.html.HtmlInputTagBase;
 
 import javax.faces.component.UIComponent;
 import javax.faces.component.html.HtmlSelectManyListbox;
@@ -32,7 +32,7 @@ import javax.faces.component.html.HtmlSelectManyListbox;
  * @version $Revision$ $Date$
  */
 public class HtmlSelectManyListboxTag
-        extends UIInputTagBase
+        extends HtmlInputTagBase
 {
     public String getComponentType()
     {
@@ -66,7 +66,7 @@ public class HtmlSelectManyListboxTag
     private String _tabindex;
 
     // UIInput attributes
-    // --> already implemented in UIInputTagBase
+    // --> already implemented in HtmlInputTagBase
 
     // UISelectMany attributes
     //selectedValues cannot be set here, is set in JSP-parsing

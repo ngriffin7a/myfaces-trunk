@@ -19,7 +19,8 @@
 package net.sourceforge.myfaces.taglib.ext;
 
 import net.sourceforge.myfaces.component.ext.HtmlInputCalendar;
-import net.sourceforge.myfaces.taglib.UIInputTagBase;
+import net.sourceforge.myfaces.taglib.html.HtmlInputTagBase;
+import net.sourceforge.myfaces.taglib.html.HtmlInputTagBase;
 
 import javax.faces.component.UIComponent;
 
@@ -28,7 +29,7 @@ import javax.faces.component.UIComponent;
  * @version $Revision$ $Date$
  */
 public class HtmlCalendarTag
-        extends UIInputTagBase
+        extends HtmlInputTagBase
 {
     //private static final Log log = LogFactory.getLog(HtmlCalendarTag.class);
 
@@ -52,7 +53,7 @@ public class HtmlCalendarTag
     // value and converterId --> already implemented in UIComponentTagBase
 
     // UIInput attributes
-    // --> already implemented in UIInputTagBase
+    // --> already implemented in HtmlInputTagBase
 
     // HtmlCalendar attributes
     private String _monthYearRowClass;

@@ -16,7 +16,7 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package net.sourceforge.myfaces.taglib;
+package net.sourceforge.myfaces.taglib.html;
 
 import net.sourceforge.myfaces.renderkit.JSFAttr;
 
@@ -27,12 +27,15 @@ import javax.faces.component.UIComponent;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.1  2004/03/30 13:41:20  royalts
+ * no message
+ *
  * Revision 1.2  2004/03/30 12:16:08  manolito
  * header comments
  *
  */
-public abstract class UIInputTagBase
-    extends UIComponentTagBase
+public abstract class HtmlInputTagBase
+    extends HtmlComponentTagBase
 {
     /*
     public String getComponentType()

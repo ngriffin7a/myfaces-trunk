@@ -20,7 +20,7 @@ package net.sourceforge.myfaces.taglib.html;
 
 import net.sourceforge.myfaces.renderkit.JSFAttr;
 import net.sourceforge.myfaces.renderkit.html.HTML;
-import net.sourceforge.myfaces.taglib.UIInputTagBase;
+import net.sourceforge.myfaces.taglib.html.HtmlInputTagBase;
 
 import javax.faces.component.UIComponent;
 import javax.faces.component.html.HtmlSelectOneRadio;
@@ -33,7 +33,7 @@ import javax.faces.component.html.HtmlSelectOneRadio;
  * @version $Revision$ $Date$
  */
 public class HtmlSelectOneRadioTag
-        extends UIInputTagBase
+        extends HtmlInputTagBase
 {
     public String getComponentType()
     {
@@ -68,7 +68,7 @@ public class HtmlSelectOneRadioTag
     private String _tabindex;
 
     // UIInput attributes
-    // --> already implemented in UIInputTagBase
+    // --> already implemented in HtmlInputTagBase
 
     // HTMLSelectOneRadio attributes
     private String _border;

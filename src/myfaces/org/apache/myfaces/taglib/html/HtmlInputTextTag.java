@@ -20,7 +20,7 @@ package net.sourceforge.myfaces.taglib.html;
 
 import net.sourceforge.myfaces.renderkit.JSFAttr;
 import net.sourceforge.myfaces.renderkit.html.HTML;
-import net.sourceforge.myfaces.taglib.UIInputTagBase;
+import net.sourceforge.myfaces.taglib.html.HtmlInputTagBase;
 
 import javax.faces.component.UIComponent;
 import javax.faces.component.html.HtmlInputText;
@@ -32,7 +32,7 @@ import javax.faces.component.html.HtmlInputText;
  * @version $Revision$ $Date$
  */
 public class HtmlInputTextTag
-        extends UIInputTagBase
+        extends HtmlInputTagBase
 {
     public String getComponentType()
     {
@@ -73,7 +73,7 @@ public class HtmlInputTextTag
     // value and converterId --> already implemented in UIComponentTagBase
 
     // UIInput attributes
-    // --> already implemented in UIInputTagBase
+    // --> already implemented in HtmlInputTagBase
 
     // HtmlInputText attributes
     private String _escape;

@@ -63,8 +63,7 @@ public class VerbatimTag
         }
 
         //No need to save component state
-        //TODO: transient not yet supported - bug in UIComponentBase on restore state?
-        // component.setTransient(true);
+        component.setTransient(true);
     }
 
     public void setEscape(String escape)

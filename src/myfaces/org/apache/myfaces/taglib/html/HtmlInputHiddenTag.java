@@ -18,7 +18,7 @@
  */
 package net.sourceforge.myfaces.taglib.html;
 
-import net.sourceforge.myfaces.taglib.UIInputTagBase;
+import net.sourceforge.myfaces.taglib.html.HtmlInputTagBase;
 
 import javax.faces.component.html.HtmlInputHidden;
 
@@ -30,7 +30,7 @@ import javax.faces.component.html.HtmlInputHidden;
  * @version $Revision$ $Date$
  */
 public class HtmlInputHiddenTag
-        extends UIInputTagBase
+        extends HtmlInputTagBase
 {
     public String getComponentType()
     {
@@ -57,6 +57,6 @@ public class HtmlInputHiddenTag
     // value and converterId --> already implemented in UIComponentTagBase
 
     // UIInput attributes
-    // --> already implemented in UIInputTagBase
+    // --> already implemented in HtmlInputTagBase
 
 }

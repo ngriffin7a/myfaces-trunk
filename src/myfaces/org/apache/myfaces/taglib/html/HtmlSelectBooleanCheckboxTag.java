@@ -19,7 +19,7 @@
 package net.sourceforge.myfaces.taglib.html;
 
 import net.sourceforge.myfaces.renderkit.html.HTML;
-import net.sourceforge.myfaces.taglib.UIInputTagBase;
+import net.sourceforge.myfaces.taglib.html.HtmlInputTagBase;
 
 import javax.faces.component.UIComponent;
 import javax.faces.component.html.HtmlSelectBooleanCheckbox;
@@ -32,7 +32,7 @@ import javax.faces.component.html.HtmlSelectBooleanCheckbox;
  * @version $Revision$ $Date$
  */
 public class HtmlSelectBooleanCheckboxTag
-        extends UIInputTagBase
+        extends HtmlInputTagBase
 {
     public String getComponentType()
     {
@@ -68,7 +68,7 @@ public class HtmlSelectBooleanCheckboxTag
     private String _tabindex;
 
     // UIInput attributes
-    // --> already implemented in UIInputTagBase
+    // --> already implemented in HtmlInputTagBase
 
     // UISelectBoolean attributes
     //private String _selected; //is already covered by checked attribute

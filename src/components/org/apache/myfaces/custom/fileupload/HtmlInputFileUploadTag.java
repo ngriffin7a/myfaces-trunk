@@ -19,7 +19,7 @@
 package net.sourceforge.myfaces.custom.fileupload;
 
 import net.sourceforge.myfaces.renderkit.html.HTML;
-import net.sourceforge.myfaces.taglib.UIInputTagBase;
+import net.sourceforge.myfaces.taglib.html.HtmlInputTagBase;
 
 import javax.faces.component.UIComponent;
 
@@ -28,7 +28,7 @@ import javax.faces.component.UIComponent;
  * @version $Revision$ $Date$
  */
 public class HtmlInputFileUploadTag
-        extends UIInputTagBase
+        extends HtmlInputTagBase
 {
     //private static final Log log = LogFactory.getLog(HtmlInputFileUploadTag.class);
 
@@ -71,7 +71,7 @@ public class HtmlInputFileUploadTag
     // value and converterId --> already implemented in UIComponentTagBase
 
     // UIInput attributes
-    // --> already implemented in UIInputTagBase
+    // --> already implemented in HtmlInputTagBase
 
     // HtmlInputFileUpload attributes
     private String _accept;
