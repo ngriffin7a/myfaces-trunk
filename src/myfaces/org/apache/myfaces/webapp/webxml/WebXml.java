@@ -20,6 +20,7 @@ package net.sourceforge.myfaces.webapp.webxml;
 
 import net.sourceforge.myfaces.util.ClassUtils;
 import net.sourceforge.myfaces.webapp.MyFacesServlet;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -30,6 +31,10 @@ import java.util.*;
 /**
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
+ * $Log$
+ * Revision 1.9  2004/04/19 13:03:21  manolito
+ * Log
+ *
  */
 public class WebXml
 {
