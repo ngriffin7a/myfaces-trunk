@@ -44,6 +44,9 @@ import java.util.Set;
  * @author Anton Koinov
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.3  2004/04/02 13:57:13  manolito
+ * extended HtmlSelectManyCheckbox with layout "spread" and custom Checkbox component
+ *
  * Revision 1.2  2004/04/02 13:37:49  manolito
  * no message
  *
@@ -84,15 +87,7 @@ public class HtmlCheckboxRendererBase
     public void renderCheckboxList(FacesContext facesContext, UISelectMany selectMany)
             throws IOException
     {
-        String layout;
-        if (selectMany instanceof HtmlSelectManyCheckbox)
-        {
-            layout = ((HtmlSelectManyCheckbox)selectMany).getLayout();
-        }
-        else
-        {
-            layout = (String)selectMany.getAttributes().get(JSFAttr.LAYOUT_ATTR);
-        }
+        String layout = getLayout(selectMany);
         boolean pageDirectionLayout = false; //Default to lineDirection
         if (layout != null)
         {
@@ -157,6 +152,18 @@ public class HtmlCheckboxRendererBase
         writer.endElement(HTML.TABLE_ELEM);
     }
 
+
+    protected String getLayout(UISelectMany selectMany)
+    {
+        if (selectMany instanceof HtmlSelectManyCheckbox)
+        {
+            return ((HtmlSelectManyCheckbox)selectMany).getLayout();
+        }
+        else
+        {
+            return (String)selectMany.getAttributes().get(JSFAttr.LAYOUT_ATTR);
+        }
+    }
 
     public void decode(FacesContext facesContext, UIComponent uiComponent)
     {

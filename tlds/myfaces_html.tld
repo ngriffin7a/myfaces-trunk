@@ -61,6 +61,7 @@
 <!ENTITY standard_panel_group_attributes     SYSTEM "entities/standard_panel_group_attributes.xml">
 <!ENTITY standard_select_one_menu_attributes  SYSTEM "entities/standard_select_one_menu_attributes.xml">
 <!ENTITY standard_select_one_radio_attributes SYSTEM "entities/standard_select_one_radio_attributes.xml">
+<!ENTITY standard_select_many_checkbox_attributes SYSTEM "entities/standard_select_many_checkbox_attributes.xml">
 ]>
 
 <taglib>
@@ -351,24 +352,12 @@ Start of revised 1.0 conforming tags (in alphabetical order)
         &html_input_checkbox_attributes;
     </tag>
 
-<!-- selectmany_checkboxlist -->
+<!-- selectManyCheckbox -->
     <tag>
         <name>selectManyCheckbox</name>
         <tag-class>net.sourceforge.myfaces.taglib.html.HtmlSelectManyCheckboxTag</tag-class>
         <body-content>JSP</body-content>
-        &ui_select_many_attributes;
-        &html_universal_attributes;
-        &html_event_handler_attributes;
-        &html_input_checkbox_attributes;
-        <!-- CheckboxListRenderer attributes -->
-        <attribute>
-            <name>layout</name>
-            <required>false</required>
-            <rtexprvalue>false</rtexprvalue>
-            <type>java.lang.String</type>
-            <description>see JSF Spec. 8.5.9</description>
-        </attribute>
-        <!--TODO: disabledClass, enabledClass -->
+        &standard_select_many_checkbox_attributes;
     </tag>
 
 <!-- selectmany_listbox -->

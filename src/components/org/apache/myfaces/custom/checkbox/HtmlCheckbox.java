@@ -16,30 +16,21 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package net.sourceforge.myfaces.custom.radio;
+package net.sourceforge.myfaces.custom.checkbox;
 
 import javax.faces.component.UIComponentBase;
 import javax.faces.context.FacesContext;
 import javax.faces.el.ValueBinding;
 
 /**
- * @author Thomas Spiegl (latest modification by $Author$)
+ * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
- * Revision 1.5  2004/04/02 13:57:10  manolito
+ * Revision 1.1  2004/04/02 13:57:10  manolito
  * extended HtmlSelectManyCheckbox with layout "spread" and custom Checkbox component
  *
- * Revision 1.4  2004/03/31 15:15:58  royalts
- * no message
- *
- * Revision 1.3  2004/03/31 13:43:30  royalts
- * no message
- *
- * Revision 1.2  2004/03/31 13:26:07  manolito
- * extended radio renderer
- *
  */
-public class HtmlRadio
+public class HtmlCheckbox
     extends UIComponentBase
 {
     //private static final Log log = LogFactory.getLog(HtmlRadio.class);
@@ -50,14 +41,14 @@ public class HtmlRadio
 
     //------------------ GENERATED CODE BEGIN (do not modify!) --------------------
 
-    public static final String COMPONENT_TYPE = "net.sourceforge.myfaces.HtmlRadio";
-    public static final String COMPONENT_FAMILY = "net.sourceforge.myfaces.Radio";
-    private static final String DEFAULT_RENDERER_TYPE = "net.sourceforge.myfaces.Radio";
+    public static final String COMPONENT_TYPE = "net.sourceforge.myfaces.HtmlCheckbox";
+    public static final String COMPONENT_FAMILY = "net.sourceforge.myfaces.Checkbox";
+    private static final String DEFAULT_RENDERER_TYPE = "net.sourceforge.myfaces.Checkbox";
 
     private String _for = null;
     private Integer _index = null;
 
-    public HtmlRadio()
+    public HtmlCheckbox()
     {
         setRendererType(DEFAULT_RENDERER_TYPE);
     }

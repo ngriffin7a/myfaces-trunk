@@ -18,38 +18,32 @@
  */
 package net.sourceforge.myfaces.renderkit.html.ext;
 
-import net.sourceforge.myfaces.custom.radio.HtmlRadio;
+import net.sourceforge.myfaces.custom.checkbox.HtmlCheckbox;
 import net.sourceforge.myfaces.renderkit.RendererUtils;
-import net.sourceforge.myfaces.renderkit.html.HtmlRadioRendererBase;
+import net.sourceforge.myfaces.renderkit.html.HtmlCheckboxRendererBase;
 import net.sourceforge.myfaces.renderkit.html.HtmlRendererUtils;
 
 import javax.faces.FacesException;
 import javax.faces.component.UIComponent;
-import javax.faces.component.UISelectOne;
+import javax.faces.component.UISelectMany;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.model.SelectItem;
 import java.io.IOException;
 import java.util.List;
+import java.util.Set;
 
 
 /**
  * @author Manfred Geiler (latest modification by $Author$)
- * @author Thomas Spiegl
  * @version $Revision$ $Date$
  * $Log$
- * Revision 1.3  2004/04/02 13:57:11  manolito
+ * Revision 1.1  2004/04/02 13:57:11  manolito
  * extended HtmlSelectManyCheckbox with layout "spread" and custom Checkbox component
  *
- * Revision 1.2  2004/03/31 15:15:59  royalts
- * no message
- *
- * Revision 1.1  2004/03/31 13:26:08  manolito
- * extended radio renderer
- *
  */
-public class HtmlRadioRenderer
-        extends HtmlRadioRendererBase
+public class HtmlCheckboxRenderer
+        extends HtmlCheckboxRendererBase
 {
     //private static final Log log = LogFactory.getLog(HtmlRadioRenderer.class);
 
@@ -60,16 +54,16 @@ public class HtmlRadioRenderer
         if (context == null) throw new NullPointerException("context");
         if (component == null) throw new NullPointerException("component");
 
-        if (component instanceof HtmlRadio)
+        if (component instanceof HtmlCheckbox)
         {
-            renderRadio(context, (HtmlRadio)component);
+            renderCheckbox(context, (HtmlCheckbox)component);
         }
-        else if (component instanceof UISelectOne)
+        else if (component instanceof UISelectMany)
         {
-            String layout = getLayout(component);
+            String layout = getLayout((UISelectMany)component);
             if (layout != null && layout.equals(LAYOUT_SPREAD))
             {
-                return; //radio inputs are rendered by spread radio components
+                return; //checkbox inputs are rendered by spread checkbox components
             }
             else
             {
@@ -83,32 +77,32 @@ public class HtmlRadioRenderer
     }
 
 
-    private void renderRadio(FacesContext facesContext, HtmlRadio radio) throws IOException
+    private void renderCheckbox(FacesContext facesContext, HtmlCheckbox checkbox) throws IOException
     {
-        String forAttr = radio.getFor();
+        String forAttr = checkbox.getFor();
         if (forAttr == null)
         {
             throw new IllegalStateException("mandatory attribute 'for'");
         }
-        int index = radio.getIndex();
+        int index = checkbox.getIndex();
         if (index < 0)
         {
             throw new IllegalStateException("positive index must be given");
         }
 
-        UIComponent uiComponent = radio.findComponent(forAttr);
+        UIComponent uiComponent = checkbox.findComponent(forAttr);
         if (uiComponent == null)
         {
             throw new IllegalStateException("Could not find component '" + forAttr + "'");
         }
-        if (!(uiComponent instanceof UISelectOne))
+        if (!(uiComponent instanceof UISelectMany))
         {
-            throw new IllegalStateException("UISelectOne expected");
+            throw new IllegalStateException("UISelectMany expected");
         }
 
-        UISelectOne uiSelectOne = (UISelectOne)uiComponent;
+        UISelectMany uiSelectMany = (UISelectMany)uiComponent;
         Converter converter;
-        List selectItemList = RendererUtils.getSelectItemList(uiSelectOne);
+        List selectItemList = RendererUtils.getSelectItemList(uiSelectMany);
         if (index >= selectItemList.size())
         {
             throw new IndexOutOfBoundsException("index " + index + " >= " + selectItemList.size());
@@ -116,14 +110,13 @@ public class HtmlRadioRenderer
 
         try
         {
-            converter = RendererUtils.findUIOutputConverter(facesContext, uiSelectOne);
+            converter = RendererUtils.findUISelectManyConverter(facesContext, uiSelectMany);
         }
         catch (FacesException e)
         {
             converter = null;
         }
 
-        Object currentValue = uiSelectOne.getValue();
         SelectItem selectItem = (SelectItem)selectItemList.get(index);
         Object itemValue = selectItem.getValue();
         String itemStrValue;
@@ -133,14 +126,16 @@ public class HtmlRadioRenderer
         }
         else
         {
-            itemStrValue = converter.getAsString(facesContext, uiSelectOne, itemValue);
+            itemStrValue = converter.getAsString(facesContext, uiSelectMany, itemValue);
         }
 
-        HtmlRendererUtils.renderRadio(facesContext,
-                                      uiSelectOne,
-                                      itemStrValue,
-                                      selectItem.getLabel(),
-                                      currentValue == null && itemValue == null ||
-                                      currentValue != null && currentValue.equals(itemValue));
+        //TODO: we must cache this Set!
+        Set lookupSet = RendererUtils.getSelectedValuesAsSet(uiSelectMany);
+
+        HtmlRendererUtils.renderCheckbox(facesContext,
+                                         uiSelectMany,
+                                         itemStrValue,
+                                         selectItem.getLabel(),
+                                         lookupSet.contains(itemValue));
     }
 }

@@ -62,6 +62,7 @@
 <!ENTITY standard_panel_group_attributes     SYSTEM "entities/standard_panel_group_attributes.xml">
 <!ENTITY standard_select_one_menu_attributes SYSTEM "entities/standard_select_one_menu_attributes.xml">
 <!ENTITY standard_select_one_radio_attributes SYSTEM "entities/standard_select_one_radio_attributes.xml">
+<!ENTITY standard_select_many_checkbox_attributes SYSTEM "entities/standard_select_many_checkbox_attributes.xml">
 ]>
 
 <taglib>
@@ -318,6 +319,19 @@
         &user_role_attributes;
     </tag>
 
+    <!-- selectManyCheckbox -->
+    <tag>
+        <name>selectManyCheckbox</name>
+        <tag-class>net.sourceforge.myfaces.taglib.html.ext.HtmlSelectManyCheckboxTag</tag-class>
+        <body-content>JSP</body-content>
+        <description>
+            Extends standard selectManyCheckbox by user role support.
+            Additionally this extended selectManyCheckbox accepts a layout attribute
+            of value "spread" (see custom checkbox tag).
+        </description>
+        &standard_select_many_checkbox_attributes;
+        &user_role_attributes;
+    </tag>
 
 
 <!--     Custom components     -->
@@ -356,6 +370,39 @@
             <required>false</required>
             <rtexprvalue>false</rtexprvalue>
             <description>CSS class to be used for the cell of the currently selected date.</description>
+        </attribute>
+    </tag>
+
+    <!-- checkbox -->
+    <tag>
+        <name>checkbox</name>
+        <tag-class>net.sourceforge.myfaces.custom.checkbox.HtmlCheckboxTag</tag-class>
+        <body-content>JSP</body-content>
+        <description>
+            Renders a HTML input of type "checkbox". The associated SelectItem comes from
+            an extended selectManyCheckbox component with layout "spread". The selectManyCheckbox
+            is referenced by the "for" attribute.
+            All HTML pass-through attributes for this input are taken from the associated
+            selectManyCheckbox.
+        </description>
+        &ui_component_attributes;
+        &user_role_attributes;
+        <!-- HtmlCheckbox attributes -->
+        <attribute>
+            <name>for</name>
+            <required>true</required>
+            <rtexprvalue>false</rtexprvalue>
+            <description>
+                id of the referenced extended selectManyCheckbox component
+            </description>
+        </attribute>
+        <attribute>
+            <name>index</name>
+            <required>true</required>
+            <rtexprvalue>false</rtexprvalue>
+            <description>
+                n-th SelectItem of referenced UISelectMany starting with 0.
+            </description>
         </attribute>
     </tag>
 

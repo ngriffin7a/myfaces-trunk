@@ -11,6 +11,7 @@
     <field>
         <name>selectedIndex</name>
         <type>int</type>
+        <default-value>0</default-value>
     </field>
     <field>
         <name>bgcolor</name>

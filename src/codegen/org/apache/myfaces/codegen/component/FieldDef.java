@@ -146,8 +146,8 @@ public class FieldDef
         if (_defaultValue == null)
         {
             if (_qualifiedType.equals("boolean")) return "false";
-            else if (_qualifiedType.equals("int")) return "0";
-            else if (_qualifiedType.equals("long")) return "0";
+            else if (_qualifiedType.equals("int")) return "Integer.MIN_VALUE";
+            else if (_qualifiedType.equals("long")) return "Long.MIN_VALUE";
             else return "null";
         }
         else
@@ -156,13 +156,13 @@ public class FieldDef
             {
                 return '\"' + _defaultValue + '\"';
             }
-            else if (_defaultValue.equals("-2147483648") && _qualifiedType.equals("int"))
+            else if (_defaultValue.equals(Integer.toString(Integer.MIN_VALUE)) && _qualifiedType.equals("int"))
             {
                 return "Integer.MIN_VALUE";
             }
-            else if (_defaultValue.equals("-2147483648") && _qualifiedType.equals("int"))
+            else if (_defaultValue.equals(Long.toString(Long.MIN_VALUE)) && _qualifiedType.equals("long"))
             {
-                return "Integer.MIN_VALUE";
+                return "Long.MIN_VALUE";
             }
             else
             {

@@ -1,4 +1,4 @@
-/*
+/**
  * MyFaces - the free JSF implementation
  * Copyright (C) 2003, 2004  The MyFaces Team (http://myfaces.sourceforge.net)
  *
@@ -16,82 +16,44 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package net.sourceforge.myfaces.custom.radio;
+package net.sourceforge.myfaces.taglib.html.ext;
 
+import net.sourceforge.myfaces.component.html.ext.HtmlSelectManyCheckbox;
 import net.sourceforge.myfaces.renderkit.JSFAttr;
-import net.sourceforge.myfaces.taglib.UIComponentTagBase;
+import net.sourceforge.myfaces.taglib.html.HtmlSelectManyCheckboxTagBase;
 
 import javax.faces.component.UIComponent;
 
+
 /**
- * @author Thomas Spiegl (latest modification by $Author$)
+ * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
- * Revision 1.3  2004/04/02 13:57:10  manolito
+ * Revision 1.1  2004/04/02 13:57:11  manolito
  * extended HtmlSelectManyCheckbox with layout "spread" and custom Checkbox component
  *
  */
-public class HtmlRadioTag
-        extends UIComponentTagBase
+public class HtmlSelectManyCheckboxTag
+        extends HtmlSelectManyCheckboxTagBase
 {
-    //private static final Log log = LogFactory.getLog(HtmlInputFileUploadTag.class);
-
     public String getComponentType()
     {
-        return HtmlRadio.COMPONENT_TYPE;
+        return HtmlSelectManyCheckbox.COMPONENT_TYPE;
     }
 
     protected String getDefaultRendererType()
     {
-        return null;
+        return "net.sourceforge.myfaces.Checkbox";
     }
 
-    // UIComponent attributes --> already implemented in UIComponentTagBase
-
-    // user role attributes --> already implemented in UIComponentTagBase
-
-    // HTML universal attributes --> already implemented in HtmlComponentTagBase
-
-    // HTML event handler attributes --> already implemented in HtmlComponentTagBase
-
-    // HtmlRadio attributes
-    private String _for;
-    private String _index;
-
-    // User Role support
     private String _enabledOnUserRole;
     private String _visibleOnUserRole;
-
 
     protected void setProperties(UIComponent component)
     {
         super.setProperties(component);
-
-        setStringProperty(component, HtmlRadio.FOR_ATTR, _for);
-        setIntegerProperty(component, HtmlRadio.INDEX_ATTR, _index);
-
         setStringProperty(component, JSFAttr.ENABLED_ON_USER_ROLE_ATTR, _enabledOnUserRole);
         setStringProperty(component, JSFAttr.VISIBLE_ON_USER_ROLE_ATTR, _visibleOnUserRole);
-    }
-
-    public String getFor()
-    {
-        return _for;
-    }
-
-    public void setFor(String aFor)
-    {
-        _for = aFor;
-    }
-
-    public String getIndex()
-    {
-        return _index;
-    }
-
-    public void setIndex(String index)
-    {
-        _index = index;
     }
 
     public void setEnabledOnUserRole(String enabledOnUserRole)
@@ -103,4 +65,5 @@ public class HtmlRadioTag
     {
         _visibleOnUserRole = visibleOnUserRole;
     }
+
 }

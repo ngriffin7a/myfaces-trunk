@@ -16,7 +16,7 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package net.sourceforge.myfaces.custom.radio;
+package net.sourceforge.myfaces.custom.checkbox;
 
 import net.sourceforge.myfaces.renderkit.JSFAttr;
 import net.sourceforge.myfaces.taglib.UIComponentTagBase;
@@ -24,21 +24,21 @@ import net.sourceforge.myfaces.taglib.UIComponentTagBase;
 import javax.faces.component.UIComponent;
 
 /**
- * @author Thomas Spiegl (latest modification by $Author$)
+ * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
- * Revision 1.3  2004/04/02 13:57:10  manolito
+ * Revision 1.1  2004/04/02 13:57:10  manolito
  * extended HtmlSelectManyCheckbox with layout "spread" and custom Checkbox component
  *
  */
-public class HtmlRadioTag
+public class HtmlCheckboxTag
         extends UIComponentTagBase
 {
     //private static final Log log = LogFactory.getLog(HtmlInputFileUploadTag.class);
 
     public String getComponentType()
     {
-        return HtmlRadio.COMPONENT_TYPE;
+        return HtmlCheckbox.COMPONENT_TYPE;
     }
 
     protected String getDefaultRendererType()
@@ -54,7 +54,7 @@ public class HtmlRadioTag
 
     // HTML event handler attributes --> already implemented in HtmlComponentTagBase
 
-    // HtmlRadio attributes
+    // HtmlCheckbox attributes
     private String _for;
     private String _index;
 
@@ -67,8 +67,8 @@ public class HtmlRadioTag
     {
         super.setProperties(component);
 
-        setStringProperty(component, HtmlRadio.FOR_ATTR, _for);
-        setIntegerProperty(component, HtmlRadio.INDEX_ATTR, _index);
+        setStringProperty(component, HtmlCheckbox.FOR_ATTR, _for);
+        setIntegerProperty(component, HtmlCheckbox.INDEX_ATTR, _index);
 
         setStringProperty(component, JSFAttr.ENABLED_ON_USER_ROLE_ATTR, _enabledOnUserRole);
         setStringProperty(component, JSFAttr.VISIBLE_ON_USER_ROLE_ATTR, _visibleOnUserRole);
