@@ -3,7 +3,7 @@
   "-//MyFaces//DTD MyFaces component def 1.0//EN"
   "http://myfaces.sourceforge.net/dtd/Component.dtd">
 <component>
-    <component-class>net.sourceforge.myfaces.component.ext.HtmlInputFileUpload</component-class>
+    <component-class>net.sourceforge.myfaces.custom.fileupload.HtmlInputFileUpload</component-class>
     <base-class>javax.faces.component.html.HtmlInputText</base-class>
     <component-type>net.sourceforge.myfaces.HtmlInputFileUpload</component-type>
     <component-family>javax.faces.Input</component-family>
