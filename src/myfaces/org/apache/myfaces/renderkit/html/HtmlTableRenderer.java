@@ -246,6 +246,10 @@ public class HtmlTableRenderer
             writer.writeAttribute("class", style, null);
         }
         writer.startElement(columnElemName, uiData);
+        if (columnElemName.equals("th"))
+        {
+            writer.writeAttribute("scope", "colgroup", null);
+        }
         writer.writeAttribute("colspan", new Integer(colspan), null);
         renderFacet(facesContext, facet);
         writer.endElement(columnElemName);
