@@ -22,6 +22,7 @@ import org.apache.commons.logging.LogFactory;
 
 import javax.faces.FacesException;
 import javax.faces.component.*;
+import javax.faces.component.html.HtmlInputText;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.convert.ConverterException;
@@ -35,6 +36,9 @@ import java.util.*;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.13  2004/09/06 08:41:49  tinytoony
+ * changes to calendar - rendering wrong weekday, check output-text behavior
+ *
  * Revision 1.12  2004/07/01 22:01:18  mwessendorf
  * ASF switch
  *
@@ -596,4 +600,41 @@ public class RendererUtils
         return null;
     }
 
+    public static void copyHtmlInputTextAttributes(HtmlInputText src, HtmlInputText dest)
+    {
+        dest.setId(src.getId());
+        dest.setImmediate(src.isImmediate());
+        dest.setTransient(src.isTransient());
+        dest.setAccesskey(src.getAccesskey());
+        dest.setAlt(src.getAlt());
+        dest.setConverter(src.getConverter());
+        dest.setDir(src.getDir());
+        dest.setDisabled(src.isDisabled());
+        dest.setLang(src.getLang());
+        dest.setLocalValueSet(src.isLocalValueSet());
+        dest.setMaxlength(src.getMaxlength());
+        dest.setOnblur(src.getOnblur());
+        dest.setOnchange(src.getOnchange());
+        dest.setOnclick(src.getOnclick());
+        dest.setOndblclick(src.getOndblclick());
+        dest.setOnfocus(src.getOnfocus());
+        dest.setOnkeydown(src.getOnkeydown());
+        dest.setOnkeypress(src.getOnkeypress());
+        dest.setOnkeyup(src.getOnkeyup());
+        dest.setOnmousedown(src.getOnmousedown());
+        dest.setOnmousemove(src.getOnmousemove());
+        dest.setOnmouseout(src.getOnmouseout());
+        dest.setOnmouseover(src.getOnmouseover());
+        dest.setOnmouseup(src.getOnmouseup());
+        dest.setOnselect(src.getOnselect());
+        dest.setReadonly(src.isReadonly());
+        dest.setRendered(src.isRendered());
+        dest.setRequired(src.isRequired());
+        dest.setSize(src.getSize());
+        dest.setStyle(src.getStyle());
+        dest.setStyleClass(src.getStyleClass());
+        dest.setTabindex(src.getTabindex());
+        dest.setTitle(src.getTitle());
+        dest.setValidator(src.getValidator());
+    }
 }

@@ -43,6 +43,9 @@ import java.util.Locale;
 
 /**
  * $Log$
+ * Revision 1.8  2004/09/06 08:41:48  tinytoony
+ * changes to calendar - rendering wrong weekday, check output-text behavior
+ *
  * Revision 1.7  2004/07/28 18:00:47  tinytoony
  * calendar; revisited again for complete i18
  *
@@ -102,44 +105,13 @@ public class HtmlCalendarRenderer
 
             Application application = facesContext.getApplication();
             HtmlInputText inputText = (HtmlInputText) application.createComponent(HtmlInputText.COMPONENT_TYPE);
-            inputText.setId(inputCalendar.getId());
+
+            RendererUtils.copyHtmlInputTextAttributes(inputCalendar, inputText);
+
             inputText.setTransient(true);
-            inputText.setImmediate(inputCalendar.isImmediate());
             inputText.setValue(getConverter(inputCalendar).getAsString(
                     facesContext,inputCalendar,inputCalendar.getValue()));
-
-            inputText.setAccesskey(inputCalendar.getAccesskey());
-            inputText.setAlt(inputCalendar.getAlt());
-            inputText.setConverter(inputCalendar.getConverter());
-            inputText.setDir(inputCalendar.getDir());
-            inputText.setDisabled(inputCalendar.isDisabled());
             inputText.setEnabledOnUserRole(inputCalendar.getEnabledOnUserRole());
-            inputText.setLang(inputCalendar.getLang());
-            inputText.setLocalValueSet(inputCalendar.isLocalValueSet());
-            inputText.setMaxlength(inputCalendar.getMaxlength());
-            inputText.setOnblur(inputCalendar.getOnblur());
-            inputText.setOnchange(inputCalendar.getOnchange());
-            inputText.setOnclick(inputCalendar.getOnclick());
-            inputText.setOndblclick(inputCalendar.getOndblclick());
-            inputText.setOnfocus(inputCalendar.getOnfocus());
-            inputText.setOnkeydown(inputCalendar.getOnkeydown());
-            inputText.setOnkeypress(inputCalendar.getOnkeypress());
-            inputText.setOnkeyup(inputCalendar.getOnkeyup());
-            inputText.setOnmousedown(inputCalendar.getOnmousedown());
-            inputText.setOnmousemove(inputCalendar.getOnmousemove());
-            inputText.setOnmouseout(inputCalendar.getOnmouseout());
-            inputText.setOnmouseover(inputCalendar.getOnmouseover());
-            inputText.setOnmouseup(inputCalendar.getOnmouseup());
-            inputText.setOnselect(inputCalendar.getOnselect());
-            inputText.setReadonly(inputCalendar.isReadonly());
-            inputText.setRendered(inputCalendar.isRendered());
-            inputText.setRequired(inputCalendar.isRequired());
-            inputText.setSize(inputCalendar.getSize());
-            inputText.setStyle(inputCalendar.getStyle());
-            inputText.setStyleClass(inputCalendar.getStyleClass());
-            inputText.setTabindex(inputCalendar.getTabindex());
-            inputText.setTitle(inputCalendar.getTitle());
-            inputText.setValidator(inputCalendar.getValidator());
             inputText.setVisibleOnUserRole(inputCalendar.getVisibleOnUserRole());
 
             inputCalendar.getChildren().add(inputText);
@@ -150,7 +122,7 @@ public class HtmlCalendarRenderer
 
             writer.startElement(HTML.SCRIPT_ELEM,null);
             writer.writeAttribute(HTML.SCRIPT_LANGUAGE_ATTR,HTML.SCRIPT_LANGUAGE_JAVASCRIPT,null);
-            writer.writeText(getLocalizedLanguageScript(months, weekdays,
+            writer.writeText(getLocalizedLanguageScript(symbols, months,
                     timeKeeper.getFirstDayOfWeek(),inputCalendar),null);
             writer.writeText(getScriptBtnText(inputCalendar.getClientId(facesContext),
                     dateFormat,inputCalendar.getPopupButtonString()),null);
@@ -222,14 +194,29 @@ public class HtmlCalendarRenderer
         }
     }
 
-    private String getLocalizedLanguageScript(
-            String[] months, String[] weekdays, int firstDayOfWeek, HtmlInputCalendar inputCalendar)
+    private String getLocalizedLanguageScript(DateFormatSymbols symbols,
+            String[] months, int firstDayOfWeek, HtmlInputCalendar inputCalendar)
     {
+        int realFirstDayOfWeek = firstDayOfWeek-1/*Java has different starting-point*/;
+
+        String[] weekDays;
+
+        if(realFirstDayOfWeek==0)
+        {
+            weekDays = mapWeekdaysStartingWithSunday(symbols);
+        }
+        else if(realFirstDayOfWeek==1)
+        {
+            weekDays = mapWeekdays(symbols);
+        }
+        else
+            throw new IllegalStateException("Week may only start with sunday or monday.");
+
         StringBuffer script = new StringBuffer();
         script.append("<!--\n");
         defineStringArray(script, "jscalendarMonthName", months);
-        defineStringArray(script, "jscalendarDayName", weekdays);
-        setIntegerVariable(script, "jscalendarStartAt",firstDayOfWeek);
+        defineStringArray(script, "jscalendarDayName", weekDays);
+        setIntegerVariable(script, "jscalendarStartAt",realFirstDayOfWeek);
 
         if(inputCalendar.getPopupGotoString()!=null)
             setStringVariable(script, "jscalendarGotoString",inputCalendar.getPopupGotoString());
@@ -533,6 +520,23 @@ public class HtmlCalendarRenderer
         weekdays[4] = localeWeekdays[Calendar.FRIDAY];
         weekdays[5] = localeWeekdays[Calendar.SATURDAY];
         weekdays[6] = localeWeekdays[Calendar.SUNDAY];
+
+        return weekdays;
+    }
+
+    private String[] mapWeekdaysStartingWithSunday(DateFormatSymbols symbols)
+    {
+        String[] weekdays = new String[7];
+
+        String[] localeWeekdays = symbols.getShortWeekdays();
+
+        weekdays[0] = localeWeekdays[Calendar.SUNDAY];
+        weekdays[1] = localeWeekdays[Calendar.MONDAY];
+        weekdays[2] = localeWeekdays[Calendar.TUESDAY];
+        weekdays[3] = localeWeekdays[Calendar.WEDNESDAY];
+        weekdays[4] = localeWeekdays[Calendar.THURSDAY];
+        weekdays[5] = localeWeekdays[Calendar.FRIDAY];
+        weekdays[6] = localeWeekdays[Calendar.SATURDAY];
 
         return weekdays;
     }

@@ -58,7 +58,7 @@
                                  footerClass="countryFormFooter"
                                  columnClasses="countryFormLabels, countryFormInputs" >
                         <f:facet name="header">
-                            <h:outputText value="(Country Form Header)"/>
+                            <h:outputText id="cfH" value="(Country Form Header)"/>
                         </f:facet>
                         <f:facet name="footer">
                             <h:outputText value="(Country Form Footer)"/>

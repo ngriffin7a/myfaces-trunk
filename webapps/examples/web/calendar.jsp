@@ -63,7 +63,7 @@ managed beans used:
 
                 <h:messages id="messageList" showSummary="true" showDetail="true" />
 
-                <h:outputText value="Calendar as a form."/>
+                <h:outputText  id="cdt" value="Calendar as a form."/>
 
 				<h:form id="calendarForm">
                 <x:inputCalendar monthYearRowClass="yearMonthHeader" weekRowClass="weekHeader"
