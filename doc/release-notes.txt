@@ -2,6 +2,12 @@ MyFaces Release Notes
 =====================
 
 ----------------------------------------------------------------------
+Changes in Release 1.0.9 
+* new CollapsiblePanel Component
+* added forceId to <x:inputText for better reuse of legacy JavaScript
+* closed MFACES-76 in Jira
+* closed MFACES-74 in Jira
+----------------------------------------------------------------------
 Changes in Release 1.0.8 beta_RC2
 * added a new RenderKit, that renders WML. Thanks to Jiri Zaloudek for his contribution
 * upgrade the components use the ExtensionsFilter
