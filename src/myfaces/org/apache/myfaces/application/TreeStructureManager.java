@@ -115,10 +115,10 @@ public class TreeStructureManager
         component.setId(compId);
 
         //children
-        List childList = component.getChildren();
         TreeStructComponent[] childArray = treeStructComp.getChildren();
         if (childArray != null)
         {
+            List childList = component.getChildren();
             for (int i = 0, len = childArray.length; i < len; i++)
             {
                 UIComponent child = internalRestoreTreeStructure(childArray[i]);
@@ -127,10 +127,10 @@ public class TreeStructureManager
         }
 
         //facets
-        Map facetMap = component.getFacets();
         Object[] facetArray = treeStructComp.getFacets();
         if (facetArray != null)
         {
+            Map facetMap = component.getFacets();
             for (int i = 0, len = facetArray.length; i < len; i++)
             {
                 Object[] tuple = (Object[])facetArray[i];

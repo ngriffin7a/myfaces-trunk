@@ -20,8 +20,8 @@ package net.sourceforge.myfaces.renderkit.html.ext;
 
 import net.sourceforge.myfaces.renderkit.JSFAttr;
 import net.sourceforge.myfaces.renderkit.attr.ext.TabbedPaneRendererAttributes;
-import net.sourceforge.myfaces.renderkit.html.HtmlGroupRenderer;
 import net.sourceforge.myfaces.renderkit.html.HTML;
+import net.sourceforge.myfaces.renderkit.html.HtmlGroupRenderer;
 import net.sourceforge.myfaces.renderkit.html.legacy.FormRenderer;
 import net.sourceforge.myfaces.renderkit.html.state.StateRenderer;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLEncoder;
@@ -46,7 +46,8 @@ import java.io.Writer;
 import java.util.Iterator;
 
 /**
- * DOCUMENT ME!
+ * TODO: Adopt to new spec HtmlTabbedPaneRenderer
+ *
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */

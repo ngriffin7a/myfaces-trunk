@@ -22,7 +22,6 @@ import net.sourceforge.myfaces.component.ext.UISortColumn;
 import net.sourceforge.myfaces.component.ext.UISortHeader;
 import net.sourceforge.myfaces.renderkit.attr.ext.SortColumnRendererAttributes;
 import net.sourceforge.myfaces.renderkit.html.legacy.HyperlinkRenderer;
-import net.sourceforge.myfaces.renderkit.html.legacy.HyperlinkRenderer;
 
 import javax.faces.FacesException;
 import javax.faces.component.UIComponent;
@@ -31,7 +30,7 @@ import javax.faces.context.ResponseWriter;
 import java.io.IOException;
 
 /**
- * DOCUMENT ME!
+ * TODO: Adopt to new spec HtmlSortColumnRenderer
  *
  * The value of the associated UICommand
  *

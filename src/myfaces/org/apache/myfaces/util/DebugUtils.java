@@ -25,11 +25,14 @@ import javax.faces.FacesException;
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIViewRoot;
 import javax.faces.context.FacesContext;
+import javax.faces.el.ValueBinding;
 import java.beans.BeanInfo;
 import java.beans.PropertyDescriptor;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Map;
 
 
 /**
@@ -40,7 +43,28 @@ import java.util.Iterator;
  */
 public class DebugUtils
 {
-    private DebugUtils() 
+    //Attributes that should not be printed
+    private static final HashSet IGNORE_ATTRIBUTES;
+    static
+    {
+        IGNORE_ATTRIBUTES = new HashSet();
+        IGNORE_ATTRIBUTES.add("attributes");
+        IGNORE_ATTRIBUTES.add("children");
+        IGNORE_ATTRIBUTES.add("childCount");
+        IGNORE_ATTRIBUTES.add("class");
+        IGNORE_ATTRIBUTES.add("facets");
+        IGNORE_ATTRIBUTES.add("facetsAndChildren");
+        IGNORE_ATTRIBUTES.add("parent");
+        IGNORE_ATTRIBUTES.add("javax.faces.webapp.COMPONENT_IDS");
+        IGNORE_ATTRIBUTES.add("javax.faces.webapp.FACET_NAMES");
+        IGNORE_ATTRIBUTES.add("javax.faces.webapp.CURRENT_VIEW_ROOT");
+    }
+
+    private static final String JSF_COMPONENT_PACKAGE = "javax.faces.component.";
+    private static final String MYFACES_COMPONENT_PACKAGE = "net.sourceforge.myfaces.component.";
+
+
+    private DebugUtils()
     {
         // hide from public access
     }
@@ -78,122 +102,144 @@ public class DebugUtils
                 return;
             }
             UIViewRoot viewRoot = facesContext.getViewRoot();
+            if (viewRoot == null)
+            {
+                log.error("Cannot not print view to console (no ViewRoot in FacesContext).");
+                return;
+            }
 
             traceView(log, additionalMsg, viewRoot);
         }
     }
 
+    /**
+     * Be careful, when using this version of traceView:
+     * Some component properties (e.g. getRenderer) assume, that there is a
+     * valid viewRoot set in the FacesContext!
+     * @param log
+     * @param additionalMsg
+     * @param viewRoot
+     */
     public static void traceView(Log log, String additionalMsg, UIViewRoot viewRoot)
     {
         if (log.isTraceEnabled())
         {
-            log.trace("========================================");
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            PrintStream ps = new PrintStream(baos);
             if (additionalMsg != null)
             {
-                log.trace(additionalMsg);
+                ps.println(additionalMsg);
             }
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            printView(viewRoot, new PrintStream(baos));
+            ps.println("========================================");
+            printView(viewRoot, ps);
+            ps.println("========================================");
+            ps.close();
             log.trace(baos.toString());
-            log.trace("========================================");
         }
-    }
-
-
-    public static void printView(UIViewRoot uiViewRoot)
-    {
-        printView(uiViewRoot, System.out);
     }
 
     public static void printView(UIViewRoot uiViewRoot, PrintStream stream)
     {
-        printComponent(uiViewRoot, stream, 0, true);
+        printComponent(uiViewRoot, stream, 0, true, null);
     }
 
     public static void printComponent(UIComponent comp, PrintStream stream)
     {
-        printComponent(comp, stream, 0, false);
+        printComponent(comp, stream, 0, false, null);
     }
 
     private static void printComponent(UIComponent comp,
                                        PrintStream stream,
                                        int indent,
-                                       boolean recursive)
+                                       boolean withChildrenAndFacets,
+                                       String facetName)
     {
         printIndent(stream, indent);
         stream.print('<');
-        stream.print(comp.getClass().getName());
 
-        /*
-        stream.print(" component=\"");
-        stream.print(comp);
-        stream.print("\"");
-        */
-
-        //printProperty(stream, comp, CommonComponentProperties.COMPONENT_ID_ATTR, "id");
-        //printProperty(stream, comp, CommonComponentProperties.RENDERER_TYPE_ATTR, "rendererType");
-        /*
-        if (comp instanceof UIOutput)
+        String compType = comp.getClass().getName();
+        if (compType.startsWith(JSF_COMPONENT_PACKAGE))
         {
-            //printProperty(stream, comp, CommonComponentProperties.VALUE_PROP);
-            //printProperty(stream, comp, CommonComponentProperties.VALUE_REF_PROP);
-            printProperty(stream, comp, net.sourceforge.myfaces.component.UIOutput.VALUE_PROP);
-            printProperty(stream, comp, net.sourceforge.myfaces.component.UIOutput.VALUE_REF_PROP);
+            compType = compType.substring(JSF_COMPONENT_PACKAGE.length());
         }
-        if (comp instanceof UICommand)
+        else if (compType.startsWith(MYFACES_COMPONENT_PACKAGE))
         {
-            printProperty(stream, comp, net.sourceforge.myfaces.component.UICommand.ACTION_PROP);
-            printProperty(stream, comp, net.sourceforge.myfaces.component.UICommand.ACTION_REF_PROP);
+            compType = compType.substring(MYFACES_COMPONENT_PACKAGE.length());
         }
-        */
+        stream.print(compType);
 
+        printAttribute(stream, "id", comp.getId());
+
+        if (facetName != null)
+        {
+            printAttribute(stream, "facetName", facetName);
+        }
+
+        for (Iterator it = comp.getAttributes().entrySet().iterator(); it.hasNext(); )
+        {
+            Map.Entry entry = (Map.Entry)it.next();
+            if (!"id".equals(entry.getKey()))
+            {
+                printAttribute(stream, entry.getKey(), entry.getValue());
+            }
+        }
+
+        //HACK: comp.getAttributes() only returns attributes, that are NOT backed
+        //by a corresponding component property. So, we must explicitly get the
+        //available properties by Introspection:
         BeanInfo beanInfo = BeanUtils.getBeanInfo(comp);
-        PropertyDescriptor[] propertyDescriptors = beanInfo.getPropertyDescriptors();
-        for (int i = 0; i < propertyDescriptors.length; i++)
+        PropertyDescriptor propDescriptors[] = beanInfo.getPropertyDescriptors();
+        for (int i = 0; i < propDescriptors.length; i++)
         {
-            PropertyDescriptor propertyDescriptor = propertyDescriptors[i];
-            if (propertyDescriptor.getReadMethod() != null &&
-                propertyDescriptor.getWriteMethod() != null)
+            String name = propDescriptors[i].getName();
+            if (!"id".equals(name))
             {
-                printProperty(stream, comp, propertyDescriptor.getName());
+                ValueBinding vb = comp.getValueBinding(name);
+                if (vb != null)
+                {
+                    printAttribute(stream, name, vb.getExpressionString());
+                }
+                else
+                {
+                    Object value = comp.getAttributes().get(name);
+                    if (value != null)
+                    {
+                        printAttribute(stream, name, value);
+                    }
+                }
             }
         }
 
-        //FIXME
-        /*
-        for (Iterator it = comp.getAttributeNames(); it.hasNext();)
-        {
-            String attrName = (String)it.next();
-            printAttribute(stream, comp, attrName);
-        }
-        */
+        //TODO: listeners, ...
 
-        /*
-        if (comp instanceof UICommand)
+        if (withChildrenAndFacets)
         {
-            List[] listeners = (((UICommand)comp).getListeners());
-            if (listeners != null)
-            {
-                stream.println();
-                stream.println(listeners.length + " Listeners");
-            }
-        }
-        */
-
-        if (recursive)
-        {
-            Iterator children = comp.getFacetsAndChildren();
-            if (children.hasNext())
+            int childCount = comp.getChildCount();
+            Map facetsMap = comp.getFacets();
+            if (childCount > 0 || !facetsMap.isEmpty())
             {
                 stream.println('>');
-                while (children.hasNext())
+
+                if (childCount > 0)
                 {
-                    UIComponent child = (UIComponent)children.next();
-                    printComponent(child, stream, indent + 1, true);
+                    for (Iterator it = comp.getChildren().iterator(); it.hasNext(); )
+                    {
+                        UIComponent child = (UIComponent)it.next();
+                        printComponent(child, stream, indent + 1, true, null);
+                    }
                 }
+
+                for (Iterator it = facetsMap.entrySet().iterator(); it.hasNext(); )
+                {
+                    Map.Entry entry = (Map.Entry)it.next();
+                    printComponent((UIComponent)entry.getValue(),
+                                   stream, indent + 1, true,
+                                   (String)entry.getKey());
+                }
+
                 printIndent(stream, indent);
                 stream.print("</");
-                stream.print(comp.getClass().getName());
+                stream.print(compType);
                 stream.println('>');
             }
             else
@@ -208,62 +254,33 @@ public class DebugUtils
     }
 
     private static void printAttribute(PrintStream stream,
-                                       UIComponent comp,
-                                       String attrName)
+                                       Object name,
+                                       Object value)
     {
-        printAttribute(stream, comp, attrName, attrName);
-    }
-
-    private static void printAttribute(PrintStream stream,
-                                       UIComponent comp,
-                                       String attrName,
-                                       String prettyAttrName)
-    {
-        Object v = comp.getAttributes().get(attrName);
-        if (v != null)
-        {
-            stream.print(' ');
-            stream.print(prettyAttrName);
-            stream.print("=\"");
-            stream.print(v.toString());
-            stream.print('"');
-        }
-    }
-
-    private static void printProperty(PrintStream stream,
-                                      UIComponent comp,
-                                      String propName)
-    {
-        printProperty(stream, comp, propName, propName);
-    }
-
-    private static void printProperty(PrintStream stream,
-                                       UIComponent comp,
-                                       String propName,
-                                       String prettyPropName)
-    {
-        Object v = null;
-        try
-        {
-            v = BeanUtils.getBeanPropertyValue(comp, propName);
-            if (v == null) v = "NULL";
-        }
-        catch (Exception e)
-        {
-        }
+        if (IGNORE_ATTRIBUTES.contains(name)) return;
         stream.print(' ');
-        stream.print(prettyPropName);
+        stream.print(name.toString());
         stream.print("=\"");
-        if (v != null)
+        if (value != null)
         {
-            stream.print(v.toString());
+            if (value instanceof UIComponent)
+            {
+                stream.print("[id:");
+                stream.print(((UIComponent)value).getId());
+                stream.print("]");
+            }
+            else
+            {
+                stream.print(value.toString());
+            }
         }
         else
         {
-            stream.print('?');
+            stream.print("NULL");
         }
         stream.print('"');
     }
+
 
     private static void printIndent(PrintStream stream, int depth)
     {

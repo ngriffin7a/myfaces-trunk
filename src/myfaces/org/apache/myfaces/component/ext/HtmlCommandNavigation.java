@@ -22,6 +22,7 @@ import net.sourceforge.myfaces.component.html.MyFacesHtmlCommandLink;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import javax.faces.component.StateHolder;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AbortProcessingException;
@@ -192,7 +193,10 @@ public class HtmlCommandNavigation
 
 
 
-    public static ActionListener NAV_ACTION_LISTENER = new ActionListener()
+    public static ActionListener NAV_ACTION_LISTENER = new NavigationActionListener();
+
+    public static class NavigationActionListener
+        implements ActionListener, StateHolder
     {
         public void processAction(ActionEvent actionEvent) throws AbortProcessingException
         {
@@ -200,6 +204,43 @@ public class HtmlCommandNavigation
             navItem.toggleOpen();
             FacesContext.getCurrentInstance().renderResponse();
         }
-    };
+
+        public Object saveState(FacesContext facescontext)
+        {
+            return null;
+        }
+
+        public void restoreState(FacesContext facescontext, Object obj)
+        {
+        }
+
+        public boolean isTransient()
+        {
+            return false;   //TODO: true?
+        }
+
+        public void setTransient(boolean flag)
+        {
+            throw new UnsupportedOperationException();
+        }
+    }
+
+
+    public Object saveState(FacesContext context)
+    {
+        Object values[] = new Object[3];
+        values[0] = super.saveState(context);
+        values[1] = Boolean.valueOf(_open);
+        values[2] = Boolean.valueOf(_active);
+        return ((Object) (values));
+    }
+
+    public void restoreState(FacesContext context, Object state)
+    {
+        Object values[] = (Object[])state;
+        super.restoreState(context, values[0]);
+        _open = ((Boolean)values[1]).booleanValue();
+        _active = ((Boolean)values[2]).booleanValue();
+    }
 
 }

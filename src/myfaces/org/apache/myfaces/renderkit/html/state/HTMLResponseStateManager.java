@@ -76,6 +76,10 @@ public class HTMLResponseStateManager
                 responseWriter.endElement(HTML.INPUT_ELEM);
             }
         }
+        else
+        {
+            log.error("No tree structure to be saved in client response!");
+        }
 
         if (compStates != null)
         {
@@ -95,6 +99,10 @@ public class HTMLResponseStateManager
                 responseWriter.writeAttribute(HTML.VALUE_ATTR, encode64(compStates), null);
                 responseWriter.endElement(HTML.INPUT_ELEM);
             }
+        }
+        else
+        {
+            log.error("No component states to be saved in client response!");
         }
     }
 
@@ -122,9 +130,17 @@ public class HTMLResponseStateManager
                 writeStateParam(responseWriter, BASE64_TREE_PARAM, encode64(treeStruct));
             }
         }
+        else
+        {
+            log.error("No tree structure to be saved in client response!");
+        }
 
         if (compStates != null)
         {
+            if (treeStruct != null)
+            {
+                responseWriter.write('&');
+            }
             if (compStates instanceof String)
             {
                 writeStateParam(responseWriter, STATE_PARAM, (String)compStates);
@@ -133,6 +149,10 @@ public class HTMLResponseStateManager
             {
                 writeStateParam(responseWriter, BASE64_STATE_PARAM, encode64(compStates));
             }
+        }
+        else
+        {
+            log.error("No component states to be saved in client response!");
         }
     }
 

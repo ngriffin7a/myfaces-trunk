@@ -26,7 +26,8 @@ import javax.faces.context.ResponseWriter;
 import java.io.IOException;
 
 /**
- * DOCUMENT ME!
+ * TODO: Adopt to new spec HtmlTabRenderer
+ *
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */

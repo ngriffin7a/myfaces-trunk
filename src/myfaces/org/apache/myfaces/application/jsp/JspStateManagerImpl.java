@@ -106,29 +106,36 @@ public class JspStateManagerImpl
                 TreeStructureManager tsm = new TreeStructureManager();
                 return tsm.restoreTreeStructure((TreeStructureManager.TreeStructComponent)treeStructure);
             }
+            if (log.isDebugEnabled()) log.debug("No tree structure state found in client request!");
         }
         else
         {
             //get component tree from server session
             Map sessionViewMap = getSessionViewMap(facesContext.getExternalContext());
             SerializedView serializedView = (SerializedView)sessionViewMap.get(viewId);
-            if (serializedView != null)
+            if (serializedView != null && serializedView.getStructure() != null)
             {
                 TreeStructureManager tsm = new TreeStructureManager();
                 return tsm.restoreTreeStructure((TreeStructureManager.TreeStructComponent)serializedView.getStructure());
             }
+            if (log.isDebugEnabled()) log.debug("No tree structure state found in server session!");
         }
         return null;
     }
 
     protected void restoreComponentState(FacesContext facesContext, UIViewRoot uiViewRoot) throws IOException
     {
-        Object serializedComponentStates = null;
+        Object serializedComponentStates;
         if (isSavingStateInClient(facesContext))
         {
             RenderKit renderKit = getRenderKitFactory().getRenderKit(uiViewRoot.getRenderKitId(), facesContext);
             ResponseStateManager responseStateManager = renderKit.getResponseStateManager();
             serializedComponentStates = responseStateManager.getComponentStateToRestore(facesContext);
+            if (serializedComponentStates == null)
+            {
+                log.error("No serialized component state found in client request!");
+                return;
+            }
         }
         else
         {
@@ -137,12 +144,19 @@ public class JspStateManagerImpl
             if (serializedView != null)
             {
                 serializedComponentStates = serializedView.getState();
+                if (serializedComponentStates == null)
+                {
+                    log.error("No serialized component state found in server session!");
+                    return;
+                }
+            }
+            else
+            {
+                log.error("No serialized view found in server session!");
+                return;
             }
         }
-        if (serializedComponentStates != null)
-        {
-            uiViewRoot.processRestoreState(facesContext, serializedComponentStates);
-        }
+        uiViewRoot.processRestoreState(facesContext, serializedComponentStates);
     }
 
     public UIViewRoot restoreView(FacesContext facescontext, String viewId)

@@ -20,6 +20,7 @@ package net.sourceforge.myfaces.component.ext;
 
 import javax.faces.component.UIComponent;
 import javax.faces.component.html.HtmlPanelGroup;
+import javax.faces.context.FacesContext;
 import javax.faces.el.ValueBinding;
 
 /**
@@ -182,5 +183,39 @@ public class HtmlPanelLayout
     {
         return (UIComponent)getFacet("footer");
     }
+
+
+
+    public Object saveState(FacesContext context)
+    {
+        Object values[] = new Object[10];
+        values[0] = super.saveState(context);
+        values[1] = _layout;
+        values[2] = _headerClass;
+        values[3] = _navigationClass;
+        values[4] = _bodyClass;
+        values[5] = _footerClass;
+        values[6] = _headerStyle;
+        values[7] = _navigationStyle;
+        values[8] = _bodyStyle;
+        values[9] = _footerStyle;
+        return ((Object) (values));
+    }
+
+    public void restoreState(FacesContext context, Object state)
+    {
+        Object values[] = (Object[])state;
+        super.restoreState(context, values[0]);
+        _layout            = (String)values[1];
+        _headerClass       = (String)values[2];
+        _navigationClass   = (String)values[3];
+        _bodyClass         = (String)values[4];
+        _footerClass       = (String)values[5];
+        _headerStyle       = (String)values[6];
+        _navigationStyle   = (String)values[7];
+        _bodyStyle         = (String)values[8];
+        _footerStyle       = (String)values[9];
+    }
+
 
 }

@@ -38,19 +38,28 @@ public class ActionListenerImpl
 {
     public void processAction(ActionEvent actionEvent) throws AbortProcessingException
     {
-        FacesContext      facesContext      = FacesContext.getCurrentInstance();
-        Application       application       = facesContext.getApplication();
+        FacesContext facesContext = FacesContext.getCurrentInstance();
+        Application application = facesContext.getApplication();
 
-        ActionSource      actionSource      = (ActionSource) actionEvent.getComponent();
-        MethodBinding     methodBinding     = actionSource.getAction();
+        ActionSource actionSource = (ActionSource)actionEvent.getComponent();
+        MethodBinding methodBinding = actionSource.getAction();
 
-        String            outcome           =
-            (methodBinding == null) ? null : (String) methodBinding.invoke(facesContext, null);
+        String fromAction;
+        String outcome;
+        if (methodBinding == null)
+        {
+            fromAction = null;
+            outcome = null;
+        }
+        else
+        {
+            fromAction = methodBinding.getExpressionString();
+            outcome = (String) methodBinding.invoke(facesContext, null);
+        }
 
         NavigationHandler navigationHandler = application.getNavigationHandler();
-        navigationHandler.handleNavigation(
-            facesContext, (methodBinding == null) ? null : methodBinding.getExpressionString(),
-            outcome);
-        facesContext.renderResponse();
+        navigationHandler.handleNavigation(facesContext,
+                                           fromAction,
+                                           outcome);
     }
 }

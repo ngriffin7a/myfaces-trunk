@@ -509,30 +509,6 @@
         </renderer>
 
         <renderer>
-            <renderer-type>Navigation</renderer-type>
-            <renderer-class>net.sourceforge.myfaces.renderkit.html.ext.NavigationRenderer</renderer-class>
-            <supported-component-type>
-                <component-type>Navigation</component-type>
-            </supported-component-type>
-        </renderer>
-
-        <renderer>
-            <renderer-type>NavigationItem</renderer-type>
-            <renderer-class>net.sourceforge.myfaces.renderkit.html.ext.NavigationItemRenderer</renderer-class>
-            <supported-component-type>
-                <component-type>NavigationItem</component-type>
-            </supported-component-type>
-        </renderer>
-
-        <renderer>
-            <renderer-type>NavigationSeparator</renderer-type>
-            <renderer-class>net.sourceforge.myfaces.renderkit.html.ext.NavigationSeparatorRenderer</renderer-class>
-            <supported-component-type>
-                <component-type>Output</component-type>
-            </supported-component-type>
-        </renderer>
-
-        <renderer>
             <renderer-type>SortColumn</renderer-type>
             <renderer-class>net.sourceforge.myfaces.renderkit.html.ext.SortColumnRenderer</renderer-class>
             <supported-component-type>

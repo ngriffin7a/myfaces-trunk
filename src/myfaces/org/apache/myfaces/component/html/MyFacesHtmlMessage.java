@@ -18,10 +18,7 @@
  */
 package net.sourceforge.myfaces.component.html;
 
-import javax.faces.component.UIComponent;
 import javax.faces.component.html.HtmlMessage;
-import javax.faces.context.FacesContext;
-import java.util.Iterator;
 
 /**
  * DOCUMENT ME!
@@ -32,62 +29,4 @@ import java.util.Iterator;
 public class MyFacesHtmlMessage
     extends HtmlMessage
 {
-    public MyFacesHtmlMessage()
-    {
-        System.out.println("now");
-    }
-
-    /**
-     * TODO: only for debugging, remove later
-     */
-    public Object saveState(FacesContext facesContext) {
-        Object obj = super.saveState(facesContext);    //To change body of overridden methods use File | Settings | File Templates.
-        return obj;
-    }
-
-    /**
-     * TODO: only for debugging, remove later
-     */
-    public void restoreState(FacesContext facesContext, Object object) {
-        super.restoreState(facesContext, object);    //To change body of overridden methods use File | Settings | File Templates.
-    }
-
-    /**
-     * TODO: only for debugging, remove later
-     */
-    public void processRestoreState(FacesContext context, Object state)
-    {
-        if (context == null)
-        {
-            throw new NullPointerException();
-        }
-        Object stateStruct[] = (Object[])state;
-        Object childState[] = (Object[])stateStruct[1];
-        restoreState(context, stateStruct[0]);
-        int i = 0;
-        UIComponent kid;
-        for (Iterator kids = getChildren().iterator(); kids.hasNext(); kid.processRestoreState(context, childState[i++]))
-        {
-            kid = (UIComponent)kids.next();
-        }
-
-        int facetsSize = getFacets().size();
-        int j = 0;
-        Object facetSaveState[][] = null;
-        String facetName = null;
-        UIComponent facet = null;
-        Object facetState = null;
-        for (; j < facetsSize; j++)
-        {
-            if (null != (facetSaveState = (Object[][])childState[i++]))
-            {
-                facetName = (String)facetSaveState[0][0];
-                facetState = facetSaveState[0][1];
-                facet = (UIComponent)getFacets().get(facetName);
-                facet.processRestoreState(context, facetState);
-            }
-        }
-
-    }
-
 }

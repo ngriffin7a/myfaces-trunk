@@ -18,7 +18,12 @@
  */
 package net.sourceforge.myfaces.component.ext;
 
+import net.sourceforge.myfaces.util.DebugUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import javax.faces.component.html.HtmlPanelGroup;
+import javax.faces.context.FacesContext;
 import javax.faces.el.ValueBinding;
 
 /**
@@ -31,7 +36,7 @@ import javax.faces.el.ValueBinding;
 public class HtmlPanelNavigation
         extends HtmlPanelGroup
 {
-    //private static final Log log = LogFactory.getLog(HtmlPanelNavigation.class);
+    private static final Log log = LogFactory.getLog(HtmlPanelNavigation.class);
 
     private String _itemClass;
     private String _openItemClass;
@@ -137,4 +142,42 @@ public class HtmlPanelNavigation
     {
         _separatorStyle = separatorStyle;
     }
+
+
+
+    private static final int ATTRIBUTE_COUNT = 9;
+
+    public Object saveState(FacesContext context)
+    {
+        Object values[] = new Object[ATTRIBUTE_COUNT];
+        int i = 0;
+        values[i++] = super.saveState(context);
+        values[i++] = _itemClass;
+        values[i++] = _openItemClass;
+        values[i++] = _activeItemClass;
+        values[i++] = _separatorClass;
+        values[i++] = _itemStyle;
+        values[i++] = _openItemStyle;
+        values[i++] = _activeItemStyle;
+        values[i++] = _separatorStyle;
+        DebugUtils.assertFatal(i == ATTRIBUTE_COUNT, log, "Number of attributes to save differs!");
+        return ((Object) (values));
+    }
+
+    public void restoreState(FacesContext context, Object state)
+    {
+        Object values[] = (Object[])state;
+        int i = 0;
+        super.restoreState(context, values[i++]);
+        _itemClass        = (String)values[i++];
+        _openItemClass    = (String)values[i++];
+        _activeItemClass  = (String)values[i++];
+        _separatorClass   = (String)values[i++];
+        _itemStyle        = (String)values[i++];
+        _openItemStyle    = (String)values[i++];
+        _activeItemStyle  = (String)values[i++];
+        _separatorStyle   = (String)values[i++];
+        DebugUtils.assertFatal(i == ATTRIBUTE_COUNT, log, "Number of attributes to restore differs!");
+    }
+
 }

@@ -35,7 +35,8 @@ import java.io.File;
 import java.io.IOException;
 
 /**
- * DOCUMENT ME!
+ * TODO: Adopt to new spec HtmlFileUploadRenderer
+ *
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */

@@ -33,6 +33,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 import java.io.IOException;
 import java.util.Iterator;
+import java.util.List;
 
 /**
  * @author Manfred Geiler (latest modification by $Author$)
@@ -71,46 +72,84 @@ public class HtmlNavigationRenderer
                 writer.writeAttribute(HTML.BORDER_ATTR, panelNav, null);
             }
 
-            for (Iterator it = panelNav.getChildren().iterator(); it.hasNext(); )
-            {
-                UIComponent child = (UIComponent)it.next();
-                if (child instanceof HtmlCommandNavigation)
-                {
-                    //navigation item
-                    writer.startElement(HTML.TR_ELEM, null);
-                    writer.startElement(HTML.TD_ELEM, null);
-                    writeItemCellAttributes(writer, panelNav, (HtmlCommandNavigation)child);
-                    RendererUtils.renderChild(facesContext, child);
-                    writer.endElement(HTML.TD_ELEM);
-                    writer.endElement(HTML.TR_ELEM);
-                }
-                else if (child instanceof HtmlOutputNavigation)
-                {
-                    //separator
-                    writer.startElement(HTML.TR_ELEM, null);
-                    writer.startElement(HTML.TD_ELEM, null);
-                    writeSeparatorAttributes(writer, panelNav, (HtmlOutputNavigation)child);
-                    RendererUtils.renderChild(facesContext, child);
-                    writer.endElement(HTML.TD_ELEM);
-                    writer.endElement(HTML.TR_ELEM);
-                }
-                else
-                {
-                    //unknown
-                    if (log.isWarnEnabled()) log.warn("Unsupported navigation item with id " + child.getClientId(facesContext) + " (renderer type " + child.getRendererType() + ").");
-                    writer.startElement(HTML.TR_ELEM, null);
-                    writer.startElement(HTML.TD_ELEM, null);
-                    RendererUtils.renderChild(facesContext, child);
-                    writer.endElement(HTML.TD_ELEM);
-                    writer.endElement(HTML.TR_ELEM);
-                }
-            }
+            renderChildren(facesContext, writer, panelNav, panelNav.getChildren(), 0);
+
             writer.endElement(HTML.TABLE_ELEM);
         }
         else
         {
             if (log.isWarnEnabled()) log.warn("Navigation panel without children.");
         }
+    }
+
+
+    protected void renderChildren(FacesContext facesContext,
+                                  ResponseWriter writer,
+                                  HtmlPanelNavigation panelNav,
+                                  List children,
+                                  int level)
+            throws IOException
+    {
+        for (Iterator it = children.iterator(); it.hasNext(); )
+        {
+            UIComponent child = (UIComponent)it.next();
+            if (!child.isRendered()) continue;
+            if (child instanceof HtmlCommandNavigation)
+            {
+                //navigation item
+                writer.startElement(HTML.TR_ELEM, null);
+                writer.startElement(HTML.TD_ELEM, null);
+                writeItemCellAttributes(writer, panelNav, (HtmlCommandNavigation)child);
+                indent(writer, level);
+                child.encodeBegin(facesContext);
+                child.encodeEnd(facesContext);
+                if (child.getChildCount() > 0)
+                {
+                    renderChildren(facesContext, writer, panelNav, child.getChildren(), level + 1);
+                }
+                writer.endElement(HTML.TD_ELEM);
+                writer.endElement(HTML.TR_ELEM);
+            }
+            else if (child instanceof HtmlOutputNavigation)
+            {
+                //separator
+                writer.startElement(HTML.TR_ELEM, null);
+                writer.startElement(HTML.TD_ELEM, null);
+                writeSeparatorAttributes(writer, panelNav, (HtmlOutputNavigation)child);
+                indent(writer, level);
+                child.encodeBegin(facesContext);
+                child.encodeEnd(facesContext);
+                if (child.getChildCount() > 0)
+                {
+                    renderChildren(facesContext, writer, panelNav, child.getChildren(), level + 1);
+                }
+                writer.endElement(HTML.TD_ELEM);
+                writer.endElement(HTML.TR_ELEM);
+            }
+            else
+            {
+                //unknown
+                if (log.isWarnEnabled()) log.warn("Unsupported navigation item with id " + child.getClientId(facesContext) + " (renderer type " + child.getRendererType() + ").");
+                writer.startElement(HTML.TR_ELEM, null);
+                writer.startElement(HTML.TD_ELEM, null);
+                indent(writer, level);
+                RendererUtils.renderChild(facesContext, child);
+                writer.endElement(HTML.TD_ELEM);
+                writer.endElement(HTML.TR_ELEM);
+            }
+        }
+    }
+
+
+    protected void indent(ResponseWriter writer, int level)
+        throws IOException
+    {
+        StringBuffer buf = new StringBuffer();
+        for (int i = 0; i < level; i++)
+        {
+            buf.append("&nbsp;&nbsp;&nbsp;&nbsp;");
+        }
+        writer.write(buf.toString());
     }
 
 

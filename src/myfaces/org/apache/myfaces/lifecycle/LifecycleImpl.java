@@ -110,20 +110,27 @@ public class LifecycleImpl
         Application application = facesContext.getApplication();
         ViewHandler viewHandler = application.getViewHandler();
 
+        boolean viewCreated = false;
         UIViewRoot viewRoot = viewHandler.restoreView(facesContext, viewId);
         if (viewRoot == null)
         {
             viewRoot = viewHandler.createView(facesContext, viewId);
             facesContext.renderResponse();
+            viewCreated = true;
+        }
+
+        facesContext.setViewRoot(viewRoot);
+
+        if (log.isTraceEnabled())
+        {
+            DebugUtils.traceView(log, viewCreated ? "Newly created view" : "Restored view");
         }
 
         if (facesContext.getExternalContext().getRequestParameterMap().isEmpty())
         {
-            //no POST or query parameters
+            //no POST or query parameters --> set render response flag
             facesContext.renderResponse();
         }
-
-        facesContext.setViewRoot(viewRoot);
 
         recursivelyHandleComponentReferencesAndSetValid(facesContext, viewRoot);
 
@@ -217,28 +224,6 @@ public class LifecycleImpl
     }
 
 
-    /*
-    private int getMessageCount(FacesContext facesContext)
-    {
-        if (facesContext instanceof ServletFacesContextImpl)
-        {
-            return ((ServletFacesContextImpl)facesContext).getMessageCount();
-        }
-        else
-        {
-            int count = 0;
-            Iterator it = facesContext.getMessages();
-            while (it.hasNext())
-            {
-                it.next();
-                count++;
-            }
-            return count;
-        }
-    }
-    */
-
-
     /**
      * Update Model Values (JSF.2.2.4)
      * @return true, if response is complete
@@ -318,6 +303,11 @@ public class LifecycleImpl
         }
 
         informPhaseListenersAfter(facesContext, PhaseId.RENDER_RESPONSE);
+
+        if (log.isTraceEnabled())
+        {
+            DebugUtils.traceView(log, "View after rendering");
+        }
 
         if (log.isTraceEnabled()) log.trace("exiting renderResponse in " + LifecycleImpl.class.getName());
     }

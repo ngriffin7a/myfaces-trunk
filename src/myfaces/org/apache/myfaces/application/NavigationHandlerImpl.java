@@ -18,30 +18,23 @@
  */
 package net.sourceforge.myfaces.application;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.io.IOException;
-
 import net.sourceforge.myfaces.MyFacesFactoryFinder;
 import net.sourceforge.myfaces.config.FacesConfig;
 import net.sourceforge.myfaces.config.FacesConfigFactory;
 import net.sourceforge.myfaces.config.NavigationCaseConfig;
 import net.sourceforge.myfaces.config.NavigationRuleConfig;
 import net.sourceforge.myfaces.util.HashMapUtils;
-
-import javax.faces.application.NavigationHandler;
-import javax.faces.application.ViewHandler;
-import javax.faces.context.FacesContext;
-import javax.faces.context.ExternalContext;
-import javax.faces.FacesException;
-import javax.servlet.http.HttpServletResponse;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+import javax.faces.FacesException;
+import javax.faces.application.NavigationHandler;
+import javax.faces.application.ViewHandler;
+import javax.faces.context.ExternalContext;
+import javax.faces.context.FacesContext;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.*;
 
 /**
  * DOCUMENT ME!
@@ -66,7 +59,7 @@ public class NavigationHandlerImpl
 
     public void handleNavigation(FacesContext facesContext, String fromAction, String outcome)
     {
-        if(outcome == null)
+        if (outcome == null)
         {
             // stay on current ViewRoot
             return;
@@ -81,19 +74,27 @@ public class NavigationHandlerImpl
         if (casesList != null)
         {
             navigationCase = calcMatchingNavigationCase(casesList, fromAction, outcome);
-        }
-
-        if (navigationCase == null)
-        {
-            // Wildcard match
-            List keys = getSortedWildcardKeys();
-            for (int i = 0, size = keys.size(); i < size; i++)
+            if (navigationCase == null)
             {
-                String fromViewId = (String)keys.get(i);
-                if (fromViewId.length() > 2)
+                // Wildcard match
+                List keys = getSortedWildcardKeys();
+                for (int i = 0, size = keys.size(); i < size; i++)
                 {
-                    String prefix = fromViewId.substring(0, fromViewId.length() - 2);
-                    if (viewId.startsWith(prefix))
+                    String fromViewId = (String)keys.get(i);
+                    if (fromViewId.length() > 2)
+                    {
+                        String prefix = fromViewId.substring(0, fromViewId.length() - 2);
+                        if (viewId.startsWith(prefix))
+                        {
+                            casesList = (List)casesMap.get(fromViewId);
+                            if (casesList != null)
+                            {
+                                navigationCase = calcMatchingNavigationCase(casesList, fromAction, outcome);
+                                if (navigationCase != null) break;
+                            }
+                        }
+                    }
+                    else
                     {
                         casesList = (List)casesMap.get(fromViewId);
                         if (casesList != null)
@@ -103,24 +104,17 @@ public class NavigationHandlerImpl
                         }
                     }
                 }
-                else
-                {
-                    casesList = (List)casesMap.get(fromViewId);
-                    if (casesList != null)
-                    {
-                        navigationCase = calcMatchingNavigationCase(casesList, fromAction, outcome);
-                        if (navigationCase != null) break;
-                    }
-                }
             }
         }
-        
+
         if (navigationCase != null)
         {
             if (log.isTraceEnabled())
+            {
                 log.trace("handleNavigation fromAction=" + fromAction + " outcome=" + outcome +
                           " toViewId =" + navigationCase.getToViewId() +
                           " redirect=" + navigationCase.isRedirect());
+            }
             if (navigationCase.isRedirect())
             {
                 ExternalContext externalContext = facesContext.getExternalContext();
@@ -141,11 +135,13 @@ public class NavigationHandlerImpl
                     {
                         throw new FacesException(e.getMessage(), e);
                     }
+                    facesContext.responseComplete();
                 }
                 else
                 {
                     log.warn("Response is no HttpServletResponse. No redirection to "
-                             + navigationCase.getToViewId());
+                             + navigationCase.getToViewId() + " possible!");
+                    facesContext.renderResponse();
                 }
             }
             else
@@ -153,15 +149,17 @@ public class NavigationHandlerImpl
                 ViewHandler viewHandler = facesContext.getApplication().getViewHandler();
                 facesContext.setViewRoot(viewHandler.createView(facesContext,
                                                                 navigationCase.getToViewId()));
+                facesContext.renderResponse();
             }
         }
         else
         {
             // no navigationcase found, stay on current ViewRoot
             if (log.isTraceEnabled())
+            {
                 log.trace("handleNavigation fromAction=" + fromAction + " outcome=" + outcome +
                           " no matching navigation-case found, staying on current ViewRoot");
-
+            }
         }
     }
 
